@@ -5,5 +5,19 @@
     "title": "Sultan Hanafi Royal Schools — A Flagship of Royal Islamic & Secular Education",
     "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising Nursery & Primary, Royal College, School of Arabic & Islamic Studies, and Qur'an College.",
     "contentFile": "pages/home.html"
+  },
+  {
+    "slug": "about",
+    "output": "about/index.html",
+    "title": "Our Story — Sultan Hanafi Royal Schools",
+    "description": "The Director's message, the founding story behind Sultan Hanafi Royal Schools, our seal, and our Mission, Vision & the CLEVER Standard.",
+    "contentFile": "pages/about.html"
+  },
+  {
+    "slug": "about-governance",
+    "output": "about/governance/index.html",
+    "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
+    "description": "The board of trustees, executive management team, and key staff members governing Sultan Hanafi Royal Schools.",
+    "contentFile": "pages/about-governance.html"
   }
 ]
