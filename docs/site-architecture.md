@@ -151,11 +151,10 @@ anchor-linked section.
 - Shared `<head>` (fonts, meta) and shared header/footer partials once
   this becomes a real multi-file build, so brand-system changes (a
   palette or type tweak) happen once, not across nine files.
-- Reserve `/ar/` as a parallel path prefix (`/ar/academics/royal-college`)
-  for the Arabic mirror decision that's still open — this architecture
-  doesn't require deciding on Arabic now, but the slug structure above is
-  chosen so a full RTL mirror can sit alongside it later without
-  renaming anything.
+- `/ar/` is built: every path above has a full Arabic (RTL) counterpart
+  at the same slug under `/ar/` (e.g. `/ar/academics/royal-college/`),
+  sharing this exact sitemap and URL structure rather than a separate
+  translated site.
 - The three open placeholders (academic calendar, fees/scholarships,
   international-student pathway) move with their sections to `/admission`
   and stay exactly as honestly flagged as they are today — splitting

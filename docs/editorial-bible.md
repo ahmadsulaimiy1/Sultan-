@@ -286,17 +286,18 @@ assumption:
 1. ~~Single flagship page vs. multi-page site~~ — **decided and built.**
    See `docs/site-architecture.md`: the site now has 14 dedicated English
    pages plus a slimmed homepage digest.
-2. ~~Arabic mirror~~ — **decided (full RTL) and underway.** The
-   `[dir="rtl"]` design system (structural mirrors, Amiri/Cairo Arabic
-   typefaces, a `/ar/` path prefix) is built and proven on the homepage
-   at `/ar/`. Pages not yet translated fall back honestly to their
-   English version with a visible "EN" marker next to the link, rather
-   than a missing or half-translated page — see the translator's note
-   on `/ar/` for the in-progress list. **Recommended before this goes
-   live**: a native Arabic speaker should review the translated copy,
-   particularly the transliteration of personal names (e.g. "Zakariya
-   Olanrewaju Anofi" → زكريا أولانريواجو أنوفي) and any Islamic
-   terminology in pages translated after this note was written.
+2. ~~Arabic mirror~~ — **decided (full RTL) and complete.** Every
+   English page now has a full Arabic counterpart under `/ar/` (14
+   pages each side, 28 total), sharing one `[dir="rtl"]` design system
+   (structural mirrors, Amiri/Cairo Arabic typefaces) rather than a
+   translation-plugin afterthought. The language switcher in the topbar
+   deep-links to each page's real counterpart. **Recommended before
+   this goes live**: a native Arabic speaker should review the
+   translated copy — particularly the transliteration of personal names
+   (e.g. "Zakariya Olanrewaju Anofi" → زكريا أولانريواجو أنوفي, and the
+   ~17 names in the governance ledger) and the Islamic terminology on
+   the Royal College and Policies pages — per the translator's note
+   still shown on `/ar/`.
 3. **What's actually missing** — term dates, fee schedule, scholarship
    criteria — needs to come from SULTAN before those sections can be
    written honestly.
