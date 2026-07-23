@@ -283,13 +283,20 @@ This is already a complete Phase 1–4 execution against the brief for a
 Before further build work, the following need a decision rather than an
 assumption:
 
-1. **Single flagship page vs. multi-page site** — the current build reads
-   beautifully as one long editorial document; splitting it risks losing
-   that "publication" feeling unless done deliberately (e.g. each school
-   as its own chapter-numbered page, not a generic sub-nav).
-2. **Arabic mirror** — full RTL redesign (recommended, given the brief's
-   own "native, not translated" standard) vs. a lighter English-first
-   approach.
+1. ~~Single flagship page vs. multi-page site~~ — **decided and built.**
+   See `docs/site-architecture.md`: the site now has 14 dedicated English
+   pages plus a slimmed homepage digest.
+2. ~~Arabic mirror~~ — **decided (full RTL) and underway.** The
+   `[dir="rtl"]` design system (structural mirrors, Amiri/Cairo Arabic
+   typefaces, a `/ar/` path prefix) is built and proven on the homepage
+   at `/ar/`. Pages not yet translated fall back honestly to their
+   English version with a visible "EN" marker next to the link, rather
+   than a missing or half-translated page — see the translator's note
+   on `/ar/` for the in-progress list. **Recommended before this goes
+   live**: a native Arabic speaker should review the translated copy,
+   particularly the transliteration of personal names (e.g. "Zakariya
+   Olanrewaju Anofi" → زكريا أولانريواجو أنوفي) and any Islamic
+   terminology in pages translated after this note was written.
 3. **What's actually missing** — term dates, fee schedule, scholarship
    criteria — needs to come from SULTAN before those sections can be
    written honestly.

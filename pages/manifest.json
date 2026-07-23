@@ -4,97 +4,121 @@
     "output": "index.html",
     "title": "Sultan Hanafi Royal Schools — A Flagship of Royal Islamic & Secular Education",
     "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising Nursery & Primary, Royal College, School of Arabic & Islamic Studies, and Qur'an College.",
-    "contentFile": "pages/home.html"
+    "contentFile": "pages/home.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "about",
     "output": "about/index.html",
     "title": "Our Story — Sultan Hanafi Royal Schools",
     "description": "The Director's message, the founding story behind Sultan Hanafi Royal Schools, our seal, and our Mission, Vision & the CLEVER Standard.",
-    "contentFile": "pages/about.html"
+    "contentFile": "pages/about.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "about-governance",
     "output": "about/governance/index.html",
     "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
     "description": "The board of trustees, executive management team, and key staff members governing Sultan Hanafi Royal Schools.",
-    "contentFile": "pages/about-governance.html"
+    "contentFile": "pages/about-governance.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "academics",
     "output": "academics/index.html",
     "title": "Academics — Sultan Hanafi Royal Schools",
     "description": "Four institutions under one board: Nursery & Primary School, Royal College, the School of Arabic & Islamic Studies, and Qur'an College. Compare them and find the right fit.",
-    "contentFile": "pages/academics.html"
+    "contentFile": "pages/academics.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "academics-nursery-primary",
     "output": "academics/nursery-primary/index.html",
     "title": "Nursery & Primary School — Sultan Hanafi Royal Schools",
     "description": "Ages 2 to 10 — holistic early-years education blending secular and Islamic teachings, led by Head Teacher Mrs. Kareemat Abdurazaq.",
-    "contentFile": "pages/academics-nursery-primary.html"
+    "contentFile": "pages/academics-nursery-primary.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "academics-royal-college",
     "output": "academics/royal-college/index.html",
     "title": "Royal College — Sultan Hanafi Royal Schools",
     "description": "Junior and senior secondary education across seven academic departments, integrating the Nigerian National Curriculum with Arabic and Islamic Sciences.",
-    "contentFile": "pages/academics-royal-college.html"
+    "contentFile": "pages/academics-royal-college.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "academics-arabic-islamic-studies",
     "output": "academics/arabic-islamic-studies/index.html",
     "title": "School of Arabic & Islamic Studies — Sultan Hanafi Royal Schools",
     "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
-    "contentFile": "pages/academics-arabic-islamic-studies.html"
+    "contentFile": "pages/academics-arabic-islamic-studies.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "academics-quran-college",
     "output": "academics/quran-college/index.html",
     "title": "Qur'an College — Sultan Hanafi Royal Schools",
     "description": "A 24-to-36 month day & boarding programme in full Qur'an memorisation, Qur'anic sciences, and Arabiyyah, culminating in Ijazaat.",
-    "contentFile": "pages/academics-quran-college.html"
+    "contentFile": "pages/academics-quran-college.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "boarding",
     "output": "boarding/index.html",
     "title": "Boarding Facility — Sultan Hanafi Royal Schools",
     "description": "Full and half boarding for College & Qur'an memorisation students aged 9–16, in a home-like, supportive environment.",
-    "contentFile": "pages/boarding.html"
+    "contentFile": "pages/boarding.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "admission",
     "output": "admission/index.html",
     "title": "Admission — Sultan Hanafi Royal Schools",
     "description": "A twelve-stage admission process, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
-    "contentFile": "pages/admission.html"
+    "contentFile": "pages/admission.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "facilities",
     "output": "facilities/index.html",
     "title": "Facilities — Sultan Hanafi Royal Schools",
     "description": "A tour of the campus estate: laboratories, library, ICT room, workshops, sick bay, and recreation grounds.",
-    "contentFile": "pages/facilities.html"
+    "contentFile": "pages/facilities.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "foundation",
     "output": "foundation/index.html",
     "title": "Sultan Zakariya Hanafi Foundation — Sultan Hanafi Royal Schools",
     "description": "The school's non-profit arm: literacy promotion, mosque construction, educational and medical support, and economic empowerment.",
-    "contentFile": "pages/foundation.html"
+    "contentFile": "pages/foundation.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "policies",
     "output": "policies/index.html",
     "title": "School Policies — Sultan Hanafi Royal Schools",
     "description": "Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity, First Aid, Health & Safety, Visitors, and Complaint policies, each prepared, reviewed, and approved by named office-holders.",
-    "contentFile": "pages/policies.html"
+    "contentFile": "pages/policies.html",
+    "altHref": "/ar/"
   },
   {
     "slug": "contact",
     "output": "contact/index.html",
     "title": "Contact — Sultan Hanafi Royal Schools",
     "description": "Address, phone, email, and social channels for Sultan Hanafi Royal Schools in Ikorodu, Lagos State.",
-    "contentFile": "pages/contact.html"
+    "contentFile": "pages/contact.html",
+    "altHref": "/ar/"
+  },
+  {
+    "slug": "home-ar",
+    "output": "ar/index.html",
+    "title": "مدارس سلطان حنفي الملكية — منارة للتعليم الملكي الإسلامي والعصري",
+    "description": "مدارس سلطان حنفي الملكية — مؤسسة تعليمية إسلامية وعصرية في إكورودو، لاغوس، تضم الحضانة والابتدائية، الكلية الملكية، مدرسة اللغة العربية والدراسات الإسلامية، وكلية القرآن الكريم.",
+    "contentFile": "pages/home.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/"
   }
 ]

@@ -24,19 +24,34 @@ function fillTokens(template, tokens) {
 }
 
 function buildPage(page) {
+  const lang = page.lang || 'en';
+  const dir = page.dir || 'ltr';
+  // Arabic (or any future locale) pages use their own chrome partials —
+  // nav labels, footer copy, etc. can't be shared text across languages
+  // the way CSS/JS/images are. Falls back to the English partial name
+  // (no suffix) for locales that don't need their own file.
+  const suffix = lang === 'en' ? '' : `.${lang}`;
+
   const head = fillTokens(read('partials/head.html'), {
     TITLE: page.title,
     DESCRIPTION: page.description,
   });
-  const topbar = read('partials/topbar.html');
-  const header = read('partials/header.html');
+  const topbar = read(`partials/topbar${suffix}.html`);
+  const header = read(`partials/header${suffix}.html`);
   const content = read(page.contentFile);
-  const footer = read('partials/footer.html');
+  const footer = read(`partials/footer${suffix}.html`);
+
+  // hreflang alternate — points at this page's translation counterpart,
+  // or a sensible fallback (e.g. the other language's homepage) when
+  // the specific page hasn't been translated yet
+  const altTag = page.altHref
+    ? `<link rel="alternate" hreflang="${page.altLang || (lang === 'ar' ? 'en' : 'ar')}" href="${page.altHref}" />\n`
+    : '';
 
   const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}" dir="${dir}">
 <head>
-${head}</head>
+${head}${altTag}</head>
 <body>
 
 ${topbar}
