@@ -19,5 +19,40 @@
     "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
     "description": "The board of trustees, executive management team, and key staff members governing Sultan Hanafi Royal Schools.",
     "contentFile": "pages/about-governance.html"
+  },
+  {
+    "slug": "academics",
+    "output": "academics/index.html",
+    "title": "Academics — Sultan Hanafi Royal Schools",
+    "description": "Four institutions under one board: Nursery & Primary School, Royal College, the School of Arabic & Islamic Studies, and Qur'an College. Compare them and find the right fit.",
+    "contentFile": "pages/academics.html"
+  },
+  {
+    "slug": "academics-nursery-primary",
+    "output": "academics/nursery-primary/index.html",
+    "title": "Nursery & Primary School — Sultan Hanafi Royal Schools",
+    "description": "Ages 2 to 10 — holistic early-years education blending secular and Islamic teachings, led by Head Teacher Mrs. Kareemat Abdurazaq.",
+    "contentFile": "pages/academics-nursery-primary.html"
+  },
+  {
+    "slug": "academics-royal-college",
+    "output": "academics/royal-college/index.html",
+    "title": "Royal College — Sultan Hanafi Royal Schools",
+    "description": "Junior and senior secondary education across seven academic departments, integrating the Nigerian National Curriculum with Arabic and Islamic Sciences.",
+    "contentFile": "pages/academics-royal-college.html"
+  },
+  {
+    "slug": "academics-arabic-islamic-studies",
+    "output": "academics/arabic-islamic-studies/index.html",
+    "title": "School of Arabic & Islamic Studies — Sultan Hanafi Royal Schools",
+    "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
+    "contentFile": "pages/academics-arabic-islamic-studies.html"
+  },
+  {
+    "slug": "academics-quran-college",
+    "output": "academics/quran-college/index.html",
+    "title": "Qur'an College — Sultan Hanafi Royal Schools",
+    "description": "A 24-to-36 month day & boarding programme in full Qur'an memorisation, Qur'anic sciences, and Arabiyyah, culminating in Ijazaat.",
+    "contentFile": "pages/academics-quran-college.html"
   }
 ]
