@@ -36,7 +36,9 @@ function buildPage(page) {
     TITLE: page.title,
     DESCRIPTION: page.description,
   });
-  const topbar = read(`partials/topbar${suffix}.html`);
+  const topbar = fillTokens(read(`partials/topbar${suffix}.html`), {
+    ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
+  });
   const header = read(`partials/header${suffix}.html`);
   const content = read(page.contentFile);
   const footer = read(`partials/footer${suffix}.html`);

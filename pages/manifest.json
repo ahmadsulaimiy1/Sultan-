@@ -13,7 +13,7 @@
     "title": "Our Story — Sultan Hanafi Royal Schools",
     "description": "The Director's message, the founding story behind Sultan Hanafi Royal Schools, our seal, and our Mission, Vision & the CLEVER Standard.",
     "contentFile": "pages/about.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/about/"
   },
   {
     "slug": "about-governance",
@@ -21,7 +21,7 @@
     "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
     "description": "The board of trustees, executive management team, and key staff members governing Sultan Hanafi Royal Schools.",
     "contentFile": "pages/about-governance.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/about/governance/"
   },
   {
     "slug": "academics",
@@ -29,7 +29,7 @@
     "title": "Academics — Sultan Hanafi Royal Schools",
     "description": "Four institutions under one board: Nursery & Primary School, Royal College, the School of Arabic & Islamic Studies, and Qur'an College. Compare them and find the right fit.",
     "contentFile": "pages/academics.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/academics/"
   },
   {
     "slug": "academics-nursery-primary",
@@ -37,7 +37,7 @@
     "title": "Nursery & Primary School — Sultan Hanafi Royal Schools",
     "description": "Ages 2 to 10 — holistic early-years education blending secular and Islamic teachings, led by Head Teacher Mrs. Kareemat Abdurazaq.",
     "contentFile": "pages/academics-nursery-primary.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/academics/nursery-primary/"
   },
   {
     "slug": "academics-royal-college",
@@ -45,7 +45,7 @@
     "title": "Royal College — Sultan Hanafi Royal Schools",
     "description": "Junior and senior secondary education across seven academic departments, integrating the Nigerian National Curriculum with Arabic and Islamic Sciences.",
     "contentFile": "pages/academics-royal-college.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/academics/royal-college/"
   },
   {
     "slug": "academics-arabic-islamic-studies",
@@ -53,7 +53,7 @@
     "title": "School of Arabic & Islamic Studies — Sultan Hanafi Royal Schools",
     "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
     "contentFile": "pages/academics-arabic-islamic-studies.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/academics/arabic-islamic-studies/"
   },
   {
     "slug": "academics-quran-college",
@@ -61,7 +61,7 @@
     "title": "Qur'an College — Sultan Hanafi Royal Schools",
     "description": "A 24-to-36 month day & boarding programme in full Qur'an memorisation, Qur'anic sciences, and Arabiyyah, culminating in Ijazaat.",
     "contentFile": "pages/academics-quran-college.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/academics/quran-college/"
   },
   {
     "slug": "boarding",
@@ -69,7 +69,7 @@
     "title": "Boarding Facility — Sultan Hanafi Royal Schools",
     "description": "Full and half boarding for College & Qur'an memorisation students aged 9–16, in a home-like, supportive environment.",
     "contentFile": "pages/boarding.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/boarding/"
   },
   {
     "slug": "admission",
@@ -77,7 +77,7 @@
     "title": "Admission — Sultan Hanafi Royal Schools",
     "description": "A twelve-stage admission process, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
     "contentFile": "pages/admission.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/admission/"
   },
   {
     "slug": "facilities",
@@ -85,7 +85,7 @@
     "title": "Facilities — Sultan Hanafi Royal Schools",
     "description": "A tour of the campus estate: laboratories, library, ICT room, workshops, sick bay, and recreation grounds.",
     "contentFile": "pages/facilities.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/facilities/"
   },
   {
     "slug": "foundation",
@@ -93,7 +93,7 @@
     "title": "Sultan Zakariya Hanafi Foundation — Sultan Hanafi Royal Schools",
     "description": "The school's non-profit arm: literacy promotion, mosque construction, educational and medical support, and economic empowerment.",
     "contentFile": "pages/foundation.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/foundation/"
   },
   {
     "slug": "policies",
@@ -101,7 +101,7 @@
     "title": "School Policies — Sultan Hanafi Royal Schools",
     "description": "Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity, First Aid, Health & Safety, Visitors, and Complaint policies, each prepared, reviewed, and approved by named office-holders.",
     "contentFile": "pages/policies.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/policies/"
   },
   {
     "slug": "contact",
@@ -109,7 +109,7 @@
     "title": "Contact — Sultan Hanafi Royal Schools",
     "description": "Address, phone, email, and social channels for Sultan Hanafi Royal Schools in Ikorodu, Lagos State.",
     "contentFile": "pages/contact.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/contact/"
   },
   {
     "slug": "home-ar",
@@ -120,5 +120,135 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/"
+  },
+  {
+    "slug": "about-ar",
+    "output": "ar/about/index.html",
+    "title": "قصتنا — مدارس سلطان حنفي الملكية",
+    "description": "كلمة المدير، وقصة تأسيس مدارس سلطان حنفي الملكية، وشعارنا، ورسالتنا ورؤيتنا ومعيار CLEVER.",
+    "contentFile": "pages/about.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/about/"
+  },
+  {
+    "slug": "about-governance-ar",
+    "output": "ar/about/governance/index.html",
+    "title": "الحوكمة والقيادة — مدارس سلطان حنفي الملكية",
+    "description": "مجلس الأمناء والفريق التنفيذي وكبار الموظفين القائمين على إدارة مدارس سلطان حنفي الملكية.",
+    "contentFile": "pages/about-governance.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/about/governance/"
+  },
+  {
+    "slug": "academics-ar",
+    "output": "ar/academics/index.html",
+    "title": "الأكاديميات — مدارس سلطان حنفي الملكية",
+    "description": "أربع مؤسسات تحت مجلس إدارة واحد: الحضانة والابتدائية، الكلية الملكية، مدرسة اللغة العربية والدراسات الإسلامية، وكلية القرآن الكريم.",
+    "contentFile": "pages/academics.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/"
+  },
+  {
+    "slug": "academics-nursery-primary-ar",
+    "output": "ar/academics/nursery-primary/index.html",
+    "title": "الحضانة والابتدائية — مدارس سلطان حنفي الملكية",
+    "description": "من سن 2 إلى 10 سنوات — تعليم شامل للسنوات الأولى يجمع بين المناهج العصرية والتعاليم الإسلامية.",
+    "contentFile": "pages/academics-nursery-primary.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/nursery-primary/"
+  },
+  {
+    "slug": "academics-royal-college-ar",
+    "output": "ar/academics/royal-college/index.html",
+    "title": "الكلية الملكية — مدارس سلطان حنفي الملكية",
+    "description": "تعليم متوسط وثانوي عبر سبعة أقسام أكاديمية، يدمج المنهج الوطني النيجيري بالعلوم العربية والإسلامية.",
+    "contentFile": "pages/academics-royal-college.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/royal-college/"
+  },
+  {
+    "slug": "academics-arabic-islamic-studies-ar",
+    "output": "ar/academics/arabic-islamic-studies/index.html",
+    "title": "مدرسة اللغة العربية والدراسات الإسلامية — مدارس سلطان حنفي الملكية",
+    "description": "دراسات إسلامية وتعليم للغة العربية أيام الأسبوع ونهايته، وحفظ للقرآن والحديث، مفتوح لعموم الأمة الإسلامية.",
+    "contentFile": "pages/academics-arabic-islamic-studies.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/arabic-islamic-studies/"
+  },
+  {
+    "slug": "academics-quran-college-ar",
+    "output": "ar/academics/quran-college/index.html",
+    "title": "كلية القرآن الكريم — مدارس سلطان حنفي الملكية",
+    "description": "برنامج نهاري وداخلي مدته 24 إلى 36 شهراً لحفظ القرآن الكريم كاملاً وعلومه واللغة العربية، يُختم بالإجازة.",
+    "contentFile": "pages/academics-quran-college.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/quran-college/"
+  },
+  {
+    "slug": "boarding-ar",
+    "output": "ar/boarding/index.html",
+    "title": "السكن الداخلي — مدارس سلطان حنفي الملكية",
+    "description": "سكن داخلي كامل ونصفي لطلاب الكلية وحفظ القرآن من سن 9 إلى 16 عاماً، في بيئة داعمة أشبه بالمنزل.",
+    "contentFile": "pages/boarding.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/boarding/"
+  },
+  {
+    "slug": "admission-ar",
+    "output": "ar/admission/index.html",
+    "title": "القبول — مدارس سلطان حنفي الملكية",
+    "description": "عملية قبول من اثنتي عشرة مرحلة، والمستندات المطلوبة، وكيفية تسجيل ابنك في مدارس سلطان حنفي الملكية.",
+    "contentFile": "pages/admission.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/admission/"
+  },
+  {
+    "slug": "facilities-ar",
+    "output": "ar/facilities/index.html",
+    "title": "المرافق — مدارس سلطان حنفي الملكية",
+    "description": "جولة داخل الحرم المدرسي: المختبرات والمكتبة وقاعة تقنية المعلومات والورش والعيادة وساحات الترفيه.",
+    "contentFile": "pages/facilities.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/facilities/"
+  },
+  {
+    "slug": "foundation-ar",
+    "output": "ar/foundation/index.html",
+    "title": "مؤسسة سلطان زكريا حنفي الخيرية — مدارس سلطان حنفي الملكية",
+    "description": "الذراع غير الربحية للمدرسة: تعزيز محو الأمية، وبناء المساجد، والدعم التعليمي والطبي، والتمكين الاقتصادي.",
+    "contentFile": "pages/foundation.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/foundation/"
+  },
+  {
+    "slug": "policies-ar",
+    "output": "ar/policies/index.html",
+    "title": "سياسات المدرسة — مدارس سلطان حنفي الملكية",
+    "description": "سياسات التقييم، ومكافحة التنمّر، والتوجيه المهني، والزي، وتكافؤ الفرص، والإسعافات الأولية، والصحة والسلامة، والزوّار، والشكاوى، كل منها مُعَدّة ومراجَعة ومعتمدة من مسؤولين معيّنين بالاسم.",
+    "contentFile": "pages/policies.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/policies/"
+  },
+  {
+    "slug": "contact-ar",
+    "output": "ar/contact/index.html",
+    "title": "اتصل بنا — مدارس سلطان حنفي الملكية",
+    "description": "العنوان والهاتف والبريد الإلكتروني وقنوات التواصل الاجتماعي لمدارس سلطان حنفي الملكية في إكورودو، ولاية لاغوس.",
+    "contentFile": "pages/contact.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/contact/"
   }
 ]
