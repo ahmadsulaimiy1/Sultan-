@@ -54,5 +54,47 @@
     "title": "Qur'an College — Sultan Hanafi Royal Schools",
     "description": "A 24-to-36 month day & boarding programme in full Qur'an memorisation, Qur'anic sciences, and Arabiyyah, culminating in Ijazaat.",
     "contentFile": "pages/academics-quran-college.html"
+  },
+  {
+    "slug": "boarding",
+    "output": "boarding/index.html",
+    "title": "Boarding Facility — Sultan Hanafi Royal Schools",
+    "description": "Full and half boarding for College & Qur'an memorisation students aged 9–16, in a home-like, supportive environment.",
+    "contentFile": "pages/boarding.html"
+  },
+  {
+    "slug": "admission",
+    "output": "admission/index.html",
+    "title": "Admission — Sultan Hanafi Royal Schools",
+    "description": "A twelve-stage admission process, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
+    "contentFile": "pages/admission.html"
+  },
+  {
+    "slug": "facilities",
+    "output": "facilities/index.html",
+    "title": "Facilities — Sultan Hanafi Royal Schools",
+    "description": "A tour of the campus estate: laboratories, library, ICT room, workshops, sick bay, and recreation grounds.",
+    "contentFile": "pages/facilities.html"
+  },
+  {
+    "slug": "foundation",
+    "output": "foundation/index.html",
+    "title": "Sultan Zakariya Hanafi Foundation — Sultan Hanafi Royal Schools",
+    "description": "The school's non-profit arm: literacy promotion, mosque construction, educational and medical support, and economic empowerment.",
+    "contentFile": "pages/foundation.html"
+  },
+  {
+    "slug": "policies",
+    "output": "policies/index.html",
+    "title": "School Policies — Sultan Hanafi Royal Schools",
+    "description": "Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity, First Aid, Health & Safety, Visitors, and Complaint policies, each prepared, reviewed, and approved by named office-holders.",
+    "contentFile": "pages/policies.html"
+  },
+  {
+    "slug": "contact",
+    "output": "contact/index.html",
+    "title": "Contact — Sultan Hanafi Royal Schools",
+    "description": "Address, phone, email, and social channels for Sultan Hanafi Royal Schools in Ikorodu, Lagos State.",
+    "contentFile": "pages/contact.html"
   }
 ]
