@@ -11,6 +11,10 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const PARTIALS = path.join(ROOT, 'partials');
 const PAGES = path.join(ROOT, 'pages');
+// Used only to make og:*/canonical tags absolute, since social-media
+// crawlers won't reliably resolve relative URLs. Update once the site
+// has a confirmed production domain.
+const SITE_ORIGIN = 'https://shroyalschools.ng';
 
 function read(relPath) {
   return fs.readFileSync(path.join(ROOT, relPath), 'utf8');
@@ -32,9 +36,12 @@ function buildPage(page) {
   // (no suffix) for locales that don't need their own file.
   const suffix = lang === 'en' ? '' : `.${lang}`;
 
+  const pagePath = '/' + page.output.replace(/index\.html$/, '');
   const head = fillTokens(read('partials/head.html'), {
     TITLE: page.title,
     DESCRIPTION: page.description,
+    OG_URL: `${SITE_ORIGIN}${pagePath}`,
+    OG_IMAGE: `${SITE_ORIGIN}/assets/images/apple-touch-icon.png`,
   });
   const topbar = fillTokens(read(`partials/topbar${suffix}.html`), {
     ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
