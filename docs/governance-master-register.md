@@ -71,7 +71,7 @@ and what's still open.
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
 | Student Handbook | **DRAFTED** (Phase B) | 1 | VP Administration | Board of Trustees | Annual | Code of Conduct (drafted), Academic Regulations (drafted) |
-| Student Code of Conduct | **DRAFTED** (Phase A) | 1 | VP Administration | Board of Trustees | Annual | Anti-Bullying Policy (exists) |
+| Student Code of Conduct | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see SD-02) | 1 | VP Administration | Board of Trustees | Annual | Anti-Bullying Policy (exists) |
 | Attendance Policy | MISSING | 2 | Registrar | CEO | Annual | Parent Portal (exists) |
 | Welfare Policy | MISSING | 2 | Guidance Counsellor / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
 | Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | VP Administration | Board of Trustees | Annual | — |

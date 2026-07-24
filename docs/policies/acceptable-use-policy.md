@@ -43,7 +43,7 @@ Privacy Policy without redefining them.
 2. A student or staff member's own credentials are never shared.
 3. Digital conduct affecting another person is held to the same
    standard as in-person conduct — this mirrors the Student Code of
-   Conduct §5's "online conduct is treated as on-campus conduct"
+   Conduct §7.9's "online conduct is treated as on-campus conduct"
    principle exactly, not a separate standard.
 
 ## 5. Student use
@@ -97,8 +97,8 @@ new monitoring obligation beyond what that policy already establishes.
 
 A student or staff member disputing an acceptable-use violation finding
 follows the same appeal pathway as the underlying disciplinary
-document that applies (Student Code of Conduct §9, or the future Staff
-Conduct Policy) — not a separate appeals process.
+document that applies (Student Code of Conduct §12, or the Staff
+Conduct Policy, HR-01, §9) — not a separate appeals process.
 
 ## 11. Exceptions
 

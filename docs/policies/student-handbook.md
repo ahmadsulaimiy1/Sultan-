@@ -85,7 +85,7 @@ second, competing version of the disciplinary procedure.
   without consent) rather than a detailed device-by-device rule set
   that doesn't exist yet.
 - Any online conduct affecting another SHRS student is treated exactly
-  like on-campus conduct, per the Student Code of Conduct §5.
+  like on-campus conduct, per the Student Code of Conduct §7.9.
 
 ## 9. Discipline procedures
 
@@ -97,8 +97,8 @@ avoided; a student reading this Handbook is pointed there directly.
 
 ## 10. Appeals procedures
 
-Also not restated — see the Student Code of Conduct §9 for a
-disciplinary appeal, and the Academic Regulations (Phase B) for an
+Also not restated — see the Student Code of Conduct §12 for a
+disciplinary appeal, and the Academic Regulations (AC-02) for an
 academic (grade/promotion) appeal. Two different situations, two
 different documents, one shared convention (an independent decision-
 maker, a defined response window) as set out in
