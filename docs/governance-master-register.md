@@ -91,9 +91,10 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Child Protection Policy | **DRAFTED** (Phase A, combined with Safeguarding Policy below — see note) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role still does not exist) | Board of Trustees | Annual | None |
+| Child Protection Policy | **DRAFTED** (Phase A, combined with Safeguarding Policy below — see note) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role fully defined, Phase D — appointment still pending) | Board of Trustees | Annual | None |
 | Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Trustees | Annual | Child Protection Policy |
-| Staff Conduct Policy | MISSING — **recommended next HR document** (HR Governance Framework, Phase C) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
+| **Designated Safeguarding Lead Framework** *(new — Phase D, resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED** (Phase D) | 1 | Board of Trustees (appointment) / CEO (document maintenance) | Board of Trustees | Annual | Child Protection Policy (drafted) |
+| Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
 | Visitor Management Policy | PARTIAL | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
 | Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7 and the new AI Usage Policy (Phase C), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
 
@@ -101,13 +102,13 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Staff Handbook | **DRAFTED** (Phase C) | 2 | VP Administration | CEO | Annual | Staff Conduct Policy (still missing), Dress Code (exists) |
+| Staff Handbook | **DRAFTED** (Phase C) | 2 | VP Administration | CEO | Annual | Staff Conduct Policy (drafted, Phase D), Dress Code (exists) |
 | Recruitment Policy | MISSING — evaluated, not urgent (HR Governance Framework) | 3 | VP Administration | CEO | Biennial | Safeguarding Policy (drafted) |
 | Performance Management Policy | MISSING — evaluated, not urgent | 3 | VP Administration | CEO | Annual | None |
 | Leave Policy | MISSING — evaluated, not urgent | 3 | VP Administration | CEO | Annual | None |
 | Professional Development Policy | MISSING — evaluated, lowest priority | 4 | Head, Research & Development | CEO | Biennial | None |
-| **Grievance Policy** *(new — surfaced by the Phase C HR Governance Framework, not in the original register)* | MISSING — recommended soon, after Staff Conduct Policy | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted) |
-| **Staff Discipline Policy** *(new — same source)* | MISSING — recommended soon | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted) |
+| **Grievance Policy** *(new — surfaced by the Phase C HR Governance Framework, not in the original register)* | MISSING — **recommended next HR document now that Staff Conduct Policy is drafted** | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
+| **Staff Discipline Policy** *(new — same source)* | MISSING — recommended next, alongside Grievance Policy | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
 
 ## 7. Finance & Administration
 
@@ -190,16 +191,30 @@ name and section number).
   fee schedule (blocks Tuition & Fees, Refund, and Scholarship
   Governance) and no Designated Safeguarding Lead appointed yet (blocks
   full activation of every safeguarding document already drafted).
+- **Phase D (two documents plus three tracking/audit deliverables):**
+  Staff Conduct Policy (closes the Staff Handbook's real dependency gap
+  named in Phase C) and Designated Safeguarding Lead Framework (defines
+  DSL/Deputy DSL responsibilities, reporting lines, and a per-campus
+  scaling model — directly resolving the structural half of the
+  Scalability Stress Test's safeguarding gap; **appointing** a DSL
+  remains a Board action this framework cannot perform on its own),
+  plus the Governance Resolution Register, a full cross-ecosystem
+  Governance Consistency Audit, and the SHRS Institutional Readiness
+  Report (see their own sections/files for detail).
 
-**21 of the 63 documents now tracked on this register are drafted**
-(up from 4 real "EXISTS" entries at the start of this register; the
-total rose from 58 to 63 because Phase C's evaluation work surfaced
-five genuinely new document needs — Grievance Policy, Staff Discipline
-Policy, Incident Response Policy, Digital Learning Policy, and
-Scholarship Governance Framework — none of which were in the original
-audit). The remainder are either genuinely lower-priority (Tier 3/4),
-blocked on real data only the school can provide, or newly identified
-rather than missed originally.
+**This register now tracks 64 rows** (up from the original 58 — Phase
+C's evaluation work surfaced five genuinely new document needs:
+Grievance Policy, Staff Discipline Policy, Incident Response Policy,
+Digital Learning Policy, and Scholarship Governance Framework; Phase D
+added a sixth, the Designated Safeguarding Lead Framework). **21 rows
+are marked DRAFTED and 4 were already EXISTS — 25 of 64 in total**
+(a "document" occasionally spans two rows where Board policy is to
+combine two named documents into one file — Child Protection Policy /
+Safeguarding Policy, and Data Protection Policy / Privacy Policy — so
+this is a row count, not a distinct-file count; the actual file count
+in `docs/policies/` is 23). The remainder are either genuinely
+lower-priority (Tier 3/4), blocked on real data only the school can
+provide, or newly identified rather than missed originally.
 
 ## Scalability stress test
 
@@ -213,13 +228,14 @@ international students, would this governance system still function?**
   assume a specific size, and multiple campuses per institution would
   extend naturally (each campus reporting to its institution's existing
   Principal) without restructuring the model itself.
-- **Safeguarding:** not yet — this is the real limiting factor, not the
-  documents. The Child Protection & Safeguarding Policy is written
-  assuming a Designated Safeguarding Lead exists; at 5,000 students
-  across multiple campuses, one DSL is almost certainly insufficient,
-  and the policy would need Deputy DSLs per campus (not just per
-  institution, as currently drafted) — a real scaling gap, named here
-  rather than assumed away.
+- **Safeguarding:** structurally yes now, operationally not yet. The
+  Designated Safeguarding Lead Framework (Phase D) defines exactly the
+  per-campus Deputy DSL scaling model this stress test originally
+  flagged as missing (Section 8 of that framework) — so the design gap
+  is closed. What remains is real, not paper: nobody has been
+  appointed DSL yet, and the framework's per-campus trigger ratio is a
+  proposed default pending professional confirmation, not a tested
+  number.
 - **Academic governance:** yes, with one open item. The Academic
   Regulations' promotion-threshold and academic-integrity gaps
   (Sections 5 and 8) need real numbers before scale arrives, not after
@@ -234,15 +250,17 @@ international students, would this governance system still function?**
   — the Financial Controls Policy's approval-threshold model already
   anticipates larger transaction volumes; the number-setting is the
   gap, not the structure.
-- **Overall answer: mostly yes, with two items that would need
-  revision before real growth, not after** — Deputy Safeguarding Leads
-  scaling per-campus rather than per-institution, and the still-unset
-  academic-integrity/promotion thresholds. Both are named as open
-  items in their respective documents already; this stress test doesn't
-  reveal a new problem so much as confirm which already-flagged gaps
-  are the ones that would actually bite at scale.
+- **Overall answer: mostly yes, with one structural item now resolved
+  and one still open** — the Designated Safeguarding Lead Framework
+  (Phase D) closes the per-campus scaling design gap this test
+  originally found; the still-unset academic-integrity/promotion
+  thresholds remain the one item that needs a real number before real
+  growth, not after. This stress test doesn't reveal a new problem so
+  much as confirm which already-flagged gaps are the ones that would
+  actually bite at scale — and track which of those Phase D has since
+  closed.
 
-## Recommended drafting order (original, Phases A–C now complete)
+## Recommended drafting order (original, Phases A–D now complete)
 
 **Phase A — highest risk, draft first:** Child Protection & Safeguarding
 Policy, Data Protection & Privacy Policy, Emergency Response Plan,
@@ -260,12 +278,21 @@ Frameworks rather than drafting every lower-tier item — see the Phase
 Completion Summary above for what was drafted versus evaluated-and-
 deferred).
 
-**Recommended next (not yet started):** Staff Conduct Policy (closes
-the Staff Handbook's one real dependency gap and a named Tier 1
-safeguarding item), Incident Response Policy (the most concrete named
-technology gap), and — highest real-world impact of all — obtaining
-SHRS's actual fee schedule, which unblocks three financial documents at
-once.
+**Phase D — institutional completion & operational readiness:** Staff
+Conduct Policy, Designated Safeguarding Lead Framework, Governance
+Resolution Register, full Governance Consistency Audit, SHRS
+Institutional Readiness Report. **Complete** — see
+`docs/policies/phase-d-consistency-audit.md` and
+`docs/shrs-institutional-readiness-report.md`.
+
+**Recommended next (not yet started):** Grievance Policy and Staff
+Discipline Policy (both now unblocked now that the Staff Conduct
+Policy exists), Incident Response Policy (the most concrete named
+technology gap), **appointing** a Designated Safeguarding Lead (the
+framework exists; a person does not), and — highest real-world impact
+of all — obtaining SHRS's actual fee schedule, which unblocks three
+financial documents at once. See the Governance Resolution Register
+for the full tracked list with owners and priority.
 
 ---
 

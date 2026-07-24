@@ -4,19 +4,18 @@
 **Owner (proposed):** VP Administration (Mrs. Anofi-Badmus Fatimat
 Omolola).
 **Review cycle:** Annual.
-**Depends on:** a **Staff Conduct Policy**, which does not yet exist
-(Governance Master Register, Safeguarding, Tier 1) — this Handbook
-names that dependency explicitly rather than improvising the content
-of a policy it doesn't own; Dress Code Policy (IV, live); Child
-Protection & Safeguarding Policy; Data Protection & Privacy Policy;
-Constitution & Governance Charter (Phase C, for the authority structure
-this Handbook operates under).
+**Depends on:** the **Staff Conduct Policy** (drafted, Phase D — this
+Handbook's Section 5 below is updated to point to it rather than the
+placeholder language this Handbook originally carried when the policy
+didn't exist yet); Dress Code Policy (IV, live); Child Protection &
+Safeguarding Policy; Data Protection & Privacy Policy; Constitution &
+Governance Charter (Phase C, for the authority structure this Handbook
+operates under).
 
-> **Before this is issued to staff:** Section 5 below (Professional
-> conduct) states what a Staff Conduct Policy would need to cover in
-> full — this Handbook does not draft that policy itself, and should be
-> updated to point to it once it exists, rather than carrying a
-> permanent placeholder.
+> **Update, Phase D:** the Staff Conduct Policy this Handbook originally
+> named as missing has since been drafted. Sections 5 and 12 below are
+> updated accordingly to point to it rather than describe what it
+> "would need to cover."
 
 ---
 
@@ -52,20 +51,17 @@ authority structure (Section 6) rather than restating it:
 
 ## 5. Professional conduct
 
-**This section names what a full Staff Conduct Policy needs to cover —
-it does not draft that policy in this Handbook's voice, since the
-Handbook is not that policy's owner:**
-- Professional boundaries with students, especially boarding students
-  (mirrors the Child Protection & Safeguarding Policy §6.6's contact
-  rules — not restated here, only cross-referenced).
-- Appearance and presentation — already governed by the live Dress
-  Code Policy (Policy IV); this Handbook does not duplicate it.
-- Conduct that could bring the institution into disrepute, on or off
-  campus.
-
-Until the Staff Conduct Policy exists, any conduct concern is handled
-directly by VP Administration under the Constitution & Governance
-Charter's general authority structure, not left unaddressed.
+**Governed in full by the Staff Conduct Policy (Phase D)** — this
+Handbook does not restate its professional-boundary, physical-contact,
+confidentiality, or off-duty-conduct standards; staff should read that
+policy directly. Two things worth flagging here rather than there:
+- Appearance and presentation are governed separately by the live
+  Dress Code Policy (Policy IV) — neither document duplicates the
+  other.
+- A conduct concern is raised the same way as before this policy
+  existed (with the relevant Principal/Head Teacher or VP
+  Administration), now formalised in the Staff Conduct Policy §7 rather
+  than handled ad hoc under general Charter authority.
 
 ## 6. Safeguarding responsibilities
 
@@ -126,12 +122,16 @@ Policy §6.6 alone.
 
 ## 12. Grievance & discipline (staff)
 
-A **Grievance Policy** and formal **Staff Discipline Policy** are
-evaluated, not drafted, in the HR Governance Framework (Phase C) — this
-Handbook does not invent a staff disciplinary procedure in their
-absence. Until they exist, a staff grievance is raised with VP
-Administration, escalating to the CEO if unresolved, under the general
-authority structure in the Constitution & Governance Charter §6.2.
+The Staff Conduct Policy (Phase D) §7 now defines the conduct-breach
+procedure and §9 its appeal pathway — this Handbook signposts rather
+than restates them. A **Grievance Policy** and a more detailed **Staff
+Discipline Policy** covering non-conduct disciplinary matters (e.g.
+performance-related dismissal) remain evaluated, not drafted, in the
+HR Governance Framework — recommended as the next two HR documents now
+that the Staff Conduct Policy itself is done. Until they exist, a
+non-conduct staff grievance is raised with VP Administration, escalating
+to the CEO if unresolved, under the general authority structure in the
+Constitution & Governance Charter §6.2.
 
 ## 13. Monitoring & compliance
 
@@ -149,4 +149,5 @@ Annual.
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| 0.1 | Draft | Initial draft from Governance Master Register, Phase C | Drafted per SHRS governance directive; not yet reviewed or adopted; depends on a Staff Conduct Policy and several HR policies not yet drafted — see the HR Governance Framework |
+| 0.1 | Draft | Initial draft from Governance Master Register, Phase C | Drafted per SHRS governance directive; not yet reviewed or adopted; depended on a Staff Conduct Policy and several HR policies not yet drafted — see the HR Governance Framework |
+| 0.2 | Draft | Sections 5, 7 (header), and 12 updated now that the Staff Conduct Policy exists (Phase D) | Grievance Policy and Staff Discipline Policy remain the two still-outstanding HR dependencies |

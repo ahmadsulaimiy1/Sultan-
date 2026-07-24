@@ -23,7 +23,7 @@ decision the school is about to face.
 
 | Policy | Needed now? | Reasoning | Tier |
 |---|---|---|---|
-| **Staff Conduct Policy** | **Yes — highest priority of the six** | The Staff Handbook (Phase C) already depends on this and cannot be complete without it; it is also a named Tier 1 safeguarding-adjacent gap (Governance Master Register, Safeguarding). Recommend drafting next, before the other five. | 1 |
+| **Staff Conduct Policy** | **Drafted, Phase D** | Closed the Staff Handbook's dependency and a named Tier 1 safeguarding-adjacent gap. | 1 |
 | **Grievance Policy** | Yes, soon | The Staff Handbook §12 currently routes any grievance through general escalation (VP Administration → CEO) with no defined procedure — workable short-term, not sustainable as staff numbers grow. | 2 |
 | **Staff Discipline Policy** | Yes, soon | Same gap as Grievance — currently informal, fine at current scale, should be formalised before staff numbers grow (see `docs/parent-portal-phase2-3-roadmap.md`'s growth assumptions). | 2 |
 | **Recruitment Policy** | Not urgent | Safer-recruitment *principles* already exist (Child Protection & Safeguarding Policy §4) — a full Recruitment Policy formalising vetting/reference-check procedure is valuable but not blocking anything today. | 3 |
@@ -33,14 +33,13 @@ decision the school is about to face.
 
 ## 3. Recommendation
 
-Draft the **Staff Conduct Policy** next — it is the one genuine
-blocking dependency (the Staff Handbook is incomplete without it, and
-it closes a named Tier 1 safeguarding gap). Treat Grievance and Staff
-Discipline as the following pair once that's done. Defer the remaining
-four until SHRS's staff headcount or a real incident makes the gap
-concrete rather than theoretical — drafting generic versions now risks
-exactly the "brochure-style, checkbox" document this whole project has
-deliberately avoided.
+The Staff Conduct Policy is done (Phase D). **Draft Grievance Policy
+and Staff Discipline Policy next** — both were already assessed as
+"yes, soon" and now have their one dependency (Staff Conduct Policy)
+satisfied. Defer the remaining four until SHRS's staff headcount or a
+real incident makes the gap concrete rather than theoretical — drafting
+generic versions now risks exactly the "brochure-style, checkbox"
+document this whole project has deliberately avoided.
 
 ## 4. Review cycle
 

@@ -118,9 +118,11 @@ raised directly by the class teacher.
 - A short, parent-facing summary only: SHRS has a Child Protection &
   Safeguarding Policy; any concern about a child's welfare should be
   raised with the class teacher or the Designated Safeguarding Lead.
-  **This Handbook must be updated the moment the DSL role is actually
-  filled** — until then, it should say plainly that concerns can be
-  raised with any senior staff member, who will escalate appropriately.
+  The DSL role is now fully defined (Designated Safeguarding Lead
+  Framework, Phase D) but nobody has been appointed to it yet — **this
+  Handbook must be updated the moment a real appointment is made**;
+  until then, it should say plainly that concerns can be raised with
+  any senior staff member, who will escalate appropriately.
 - The full safeguarding procedure is deliberately not reproduced here —
   a Parent Handbook is not the right place for disclosure-handling
   detail meant for staff, and duplicating it risks the two documents

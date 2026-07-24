@@ -2,10 +2,12 @@
 
 **Status:** DRAFT v0.1 — not yet adopted. This is the highest-priority
 document on the Governance Master Register.
-**Owner (proposed):** Designated Safeguarding Lead — **this role does
-not yet exist at SHRS and its creation is the first decision this
-policy depends on.** Until appointed, responsibility sits with the
-CEO and the Principal of each institution acting jointly.
+**Owner (proposed):** Designated Safeguarding Lead — **the role is now
+fully defined (see the Designated Safeguarding Lead Framework, Phase D)
+but nobody has been appointed to it yet; appointment is a Board
+decision that framework cannot make on its own.** Until appointed,
+responsibility sits with the CEO and the Principal of each institution
+acting jointly.
 **Review cycle:** Annual, and immediately after any serious incident
 or safeguarding referral.
 **Depends on:** none (foundational) — but the Digital Safeguarding
