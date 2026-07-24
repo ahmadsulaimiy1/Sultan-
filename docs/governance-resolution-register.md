@@ -115,8 +115,9 @@ structure below.)*
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
 | Adopt the proposed image/media consent structure (separate internal vs. public-facing consent, recorded per child) | Board of Trustees | OPEN — proposed in IT-02 §7.10, not yet adopted | High | Board of Trustees |
-| Retroactively confirm (or decline) consent for three specific photographs already held pending this decision (two identifiable-student photos, one competition/medal photo) | Registrar, in consultation with guardians | OPEN | Medium | Registrar → guardians directly |
+| Retroactively confirm (or decline) consent for two specific photographs still held (a stairwell photo pairing a student's face with their full name, and a classroom photo) | Registrar, in consultation with guardians | OPEN — a third photo (the SPELL Africa competition medal photo) was separately authorised for publication directly by the Director and is no longer part of this item | Medium | Registrar → guardians directly |
 | Build the actual admission-stage consent form/record (paper or Parent Portal field) once the structure above is adopted | Registrar / ICT Head | BLOCKED — depends on Board adoption above | Medium | Registrar / ICT Head |
+| Obtain professional photography for the two held photographs' subject matter (a group of enrolled students; a working classroom) so the school isn't limited to a single unusable candidate photo for these use cases | Registrar / ICT Head | OPEN — new, surfaced because the two specific files held above cannot be technically processed by this project's tooling at all, independent of the consent question | Low | Registrar / ICT Head |
 
 ## Summary
 
@@ -151,3 +152,4 @@ doing.
 |---|---|---|---|
 | 0.1 | Draft | Initial register, Phase D | Collects every open item already named across the 23 policy documents drafted in Phases A–D; not yet reviewed or adopted |
 | 0.2 | Draft | Phase G — added Category 7 (Image and media consent), surfaced by the first real photography batch supplied for the website; total tracked items 23 → 26 | Not yet reviewed or adopted |
+| 0.3 | Draft | Director directly authorised publication of the SPELL Africa competition photo, resolving it out of the second Category 7 item; added a new item for professional photography of the two remaining held subjects (a student group photo, a classroom photo), since those specific files cannot be technically processed by this project's tooling regardless of consent status | Not yet reviewed or adopted |
