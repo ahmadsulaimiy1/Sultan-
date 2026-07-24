@@ -490,11 +490,16 @@
   .assistant-launcher:hover{transform:translateY(-2px);background:var(--navy-deep);}
   .assistant-panel{
     position:absolute;bottom:70px;right:0;width:min(380px, calc(100vw - 40px));
-    max-height:min(620px, calc(100vh - 120px));display:flex;flex-direction:column;
+    max-height:min(620px, calc(100vh - 120px));flex-direction:column;
     background:var(--ivory);border:1px solid var(--gold);
     box-shadow:0 30px 60px -20px rgba(34,23,9,0.5);
+    display:flex;
   }
   [dir="rtl"] .assistant-panel{right:auto;left:0;}
+  /* Author-stylesheet display rules below (flex, on several widget
+     elements) otherwise beat the UA [hidden]{display:none} rule
+     regardless of selector specificity — this restores it. */
+  .assistant-root [hidden], .whatsapp-float [hidden]{display:none !important;}
   .assistant-head{
     display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
     background:var(--navy);color:var(--ivory);padding:16px 18px;border-bottom:2px solid var(--gold);
@@ -503,8 +508,25 @@
   [dir="rtl"] .assistant-head-title{letter-spacing:normal;}
   .assistant-head-sub{display:block;font-size:0.72rem;color:var(--gold-bright);margin-top:4px;}
   .assistant-close{background:none;border:none;color:var(--gold-bright);font-size:0.9rem;cursor:pointer;line-height:1;padding:2px;flex-shrink:0;}
-  .assistant-head-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-  .assistant-head-actions .assistant-icon-btn{color:var(--gold-bright);}
+  .assistant-head-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+  .assistant-head-actions .assistant-icon-btn{color:var(--gold-bright);width:26px;height:26px;border-color:rgba(233,206,138,0.4);}
+  .assistant-head-actions .assistant-icon-btn:hover{border-color:var(--gold-bright);color:#fff;}
+  .assistant-icon-btn .icon-compress{display:none;}
+  .assistant-icon-btn.is-active .icon-expand{display:none;}
+  .assistant-icon-btn.is-active .icon-compress{display:flex;}
+
+  .assistant-body{flex:1;display:flex;flex-direction:column;min-height:0;}
+  .assistant-panel.is-minimized .assistant-body{display:none;}
+  .assistant-panel.is-minimized{max-height:none;cursor:pointer;}
+
+  .assistant-panel.is-fullscreen{
+    position:fixed;inset:0;width:100vw;height:100vh;max-height:100vh;
+    border:none;box-shadow:none;
+  }
+  [dir="rtl"] .assistant-panel.is-fullscreen{left:0;}
+  .assistant-panel.is-fullscreen .assistant-body{max-width:640px;width:100%;margin:0 auto;}
+  body.assistant-fullscreen-lock{overflow:hidden;}
+
   .assistant-disclosure{
     margin:0;padding:10px 18px;font-size:0.72rem;line-height:1.5;color:var(--ink-soft);
     background:rgba(233,206,138,0.14);border-bottom:1px solid var(--line);flex-shrink:0;
@@ -538,7 +560,6 @@
     background:rgba(233,206,138,0.14);border:1px solid var(--gold);font-size:0.76rem;color:var(--navy);flex-shrink:0;
     display:flex;
   }
-  .assistant-attachment[hidden]{display:none;}
   .assistant-attachment span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .assistant-attachment button{background:none;border:none;color:var(--crimson);cursor:pointer;font-size:0.8rem;flex-shrink:0;}
 
@@ -572,9 +593,51 @@
   }
   .assistant-text-btn:hover{color:var(--crimson);}
   .assistant-text-btn[aria-pressed="true"]{color:var(--crimson);font-weight:600;}
+  .assistant-escalate{
+    align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;
+    font-family:'Inter','Cairo',sans-serif;font-size:0.78rem;font-weight:600;color:#25963f;
+    border-bottom:1px solid rgba(37,150,63,0.35);
+  }
+  .assistant-escalate:hover{border-color:#25963f;}
+
+  /* ============================================================
+     Floating WhatsApp launcher — a second, always-real contact
+     channel alongside the AI assistant, stacked above it. Hidden
+     while the assistant panel is open so the two never overlap.
+     ============================================================ */
+  .whatsapp-float{position:fixed;bottom:96px;right:26px;z-index:199;}
+  [dir="rtl"] .whatsapp-float{right:auto;left:26px;}
+  .whatsapp-float.is-hidden{display:none;}
+  .whatsapp-launcher{
+    width:52px;height:52px;border-radius:50%;background:#25D366;border:1px solid rgba(0,0,0,0.08);
+    box-shadow:0 14px 26px -12px rgba(37,211,102,0.6);display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:transform .25s ease;
+  }
+  .whatsapp-launcher:hover{transform:translateY(-2px) scale(1.04);}
+  .whatsapp-menu{
+    position:absolute;bottom:62px;right:0;width:min(280px, calc(100vw - 40px));
+    background:var(--ivory);border:1px solid var(--gold);box-shadow:0 24px 50px -18px rgba(34,23,9,0.5);
+  }
+  .whatsapp-menu[hidden]{display:none;}
+  [dir="rtl"] .whatsapp-menu{right:auto;left:0;}
+  .whatsapp-menu-head{
+    font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--navy);background:rgba(233,206,138,0.18);padding:12px 16px;border-bottom:1px solid var(--line);
+  }
+  [dir="rtl"] .whatsapp-menu-head{letter-spacing:normal;}
+  .whatsapp-menu-item{
+    display:flex;flex-direction:column;gap:2px;padding:11px 16px;border-bottom:1px solid var(--line);
+    text-decoration:none;transition:background .2s ease;
+  }
+  .whatsapp-menu-item:last-child{border-bottom:none;}
+  .whatsapp-menu-item:hover{background:rgba(37,211,102,0.08);}
+  .whatsapp-menu-item .wm-title{font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;font-weight:600;color:var(--navy);}
+  .whatsapp-menu-item .wm-sub{font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;color:var(--ink-soft);}
 
   @media (max-width:520px){
     .assistant-root{bottom:16px;right:16px;}
     [dir="rtl"] .assistant-root{left:16px;}
     .assistant-panel{width:calc(100vw - 32px);bottom:66px;}
+    .whatsapp-float{bottom:82px;right:16px;}
+    [dir="rtl"] .whatsapp-float{left:16px;}
   }

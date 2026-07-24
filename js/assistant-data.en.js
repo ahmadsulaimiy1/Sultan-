@@ -33,7 +33,9 @@ window.ASSISTANT_CONFIG = {
     "sendingLabel": "Sending…",
     "sentConfirmation": "Thank you — our admissions team will be in touch shortly.",
     "sendError": "Couldn't send just now — please reach us directly via WhatsApp, phone, or email below.",
-    "longConversation": "This conversation has gotten long. Please start a new conversation so I can keep answering accurately."
+    "longConversation": "This conversation has gotten long. Please start a new conversation so I can keep answering accurately.",
+    "continueOnWhatsapp": "Continue on WhatsApp →",
+    "whatsappPrefill": "Hello, I was chatting with your digital assistant about:"
   },
   "starters": [
     { "label": "Our four institutions", "prompt": "What are the four institutions at Sultan Hanafi Royal Schools, and how do they differ?" },

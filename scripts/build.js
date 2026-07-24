@@ -73,6 +73,7 @@ ${assistant}
 <script src="/js/site.js" defer></script>
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
+<script src="/js/whatsapp-float.js" defer></script>
 
 </body>
 </html>

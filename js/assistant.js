@@ -6,10 +6,13 @@
   var speechLang = config.speechLang || (config.lang === 'ar' ? 'ar-SA' : 'en-US');
 
   var panel = root.querySelector('[data-assistant-panel]');
+  var headEl = root.querySelector('[data-assistant-head]');
   var messagesEl = root.querySelector('[data-assistant-messages]');
   var startersEl = root.querySelector('[data-assistant-starters]');
   var toggleBtn = root.querySelector('[data-assistant-toggle]');
   var closeBtn = root.querySelector('[data-assistant-close]');
+  var minimizeBtn = root.querySelector('[data-assistant-minimize]');
+  var fullscreenBtn = root.querySelector('[data-assistant-fullscreen]');
   var newChatBtn = root.querySelector('[data-assistant-new]');
   var form = root.querySelector('[data-assistant-form]');
   var input = root.querySelector('[data-assistant-input]');
@@ -27,6 +30,7 @@
   var MAX_USER_TURNS = 40;
   var MAX_ATTACHMENT_CHARS = 6000;
   var MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
+  var WHATSAPP_NUMBER = '2348073747650';
 
   var history = [];
   var pendingAttachment = null;
@@ -36,18 +40,63 @@
   var recognition = null;
   var scriptCache = {};
 
+  function broadcastCovering(){
+    var covering = !panel.hidden && !panel.classList.contains('is-minimized');
+    document.dispatchEvent(new CustomEvent('sultan:chat-covering', { detail: { covering: covering } }));
+  }
+
   function open(){
     panel.hidden = false;
+    panel.classList.remove('is-minimized');
     toggleBtn.setAttribute('aria-expanded', 'true');
     if(!messagesEl.childElementCount) renderStarters();
     input.focus();
+    broadcastCovering();
   }
   function close(){
     panel.hidden = true;
+    panel.classList.remove('is-minimized', 'is-fullscreen');
+    fullscreenBtn.classList.remove('is-active');
+    fullscreenBtn.setAttribute('aria-pressed', 'false');
+    document.body.classList.remove('assistant-fullscreen-lock');
     toggleBtn.setAttribute('aria-expanded', 'false');
+    broadcastCovering();
   }
   toggleBtn.addEventListener('click', function(){ panel.hidden ? open() : close(); });
   closeBtn.addEventListener('click', close);
+
+  minimizeBtn.addEventListener('click', function(){
+    var minimizing = !panel.classList.contains('is-minimized');
+    panel.classList.toggle('is-minimized', minimizing);
+    minimizeBtn.setAttribute('aria-pressed', String(minimizing));
+    if(minimizing){
+      panel.classList.remove('is-fullscreen');
+      fullscreenBtn.classList.remove('is-active');
+      fullscreenBtn.setAttribute('aria-pressed', 'false');
+      document.body.classList.remove('assistant-fullscreen-lock');
+    }
+    broadcastCovering();
+  });
+  headEl.addEventListener('click', function(e){
+    if(e.target.closest('.assistant-head-actions')) return;
+    if(panel.classList.contains('is-minimized')){
+      panel.classList.remove('is-minimized');
+      minimizeBtn.setAttribute('aria-pressed', 'false');
+      broadcastCovering();
+    }
+  });
+  fullscreenBtn.addEventListener('click', function(){
+    var entering = !panel.classList.contains('is-fullscreen');
+    panel.classList.toggle('is-fullscreen', entering);
+    fullscreenBtn.classList.toggle('is-active', entering);
+    fullscreenBtn.setAttribute('aria-pressed', String(entering));
+    document.body.classList.toggle('assistant-fullscreen-lock', entering);
+    if(entering){
+      panel.classList.remove('is-minimized');
+      minimizeBtn.setAttribute('aria-pressed', 'false');
+    }
+    broadcastCovering();
+  });
 
   function scrollToBottom(){
     messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -69,6 +118,33 @@
     messagesEl.appendChild(div);
     scrollToBottom();
     return div;
+  }
+
+  function lastUserText(){
+    for(var i = history.length - 1; i >= 0; i--){
+      if(history[i].role === 'user' && typeof history[i].content === 'string' && history[i].content.trim()){
+        return history[i].content.trim();
+      }
+    }
+    return '';
+  }
+
+  function whatsappHref(){
+    var q = lastUserText();
+    var text = q ? (strings.whatsappPrefill + ' ' + q) : strings.whatsappPrefill;
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text.slice(0, 700));
+  }
+
+  function addEscalationLink(){
+    var a = document.createElement('a');
+    a.className = 'assistant-escalate';
+    a.href = whatsappHref();
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = strings.continueOnWhatsapp;
+    messagesEl.appendChild(a);
+    scrollToBottom();
+    return a;
   }
 
   function renderStarters(){
@@ -128,6 +204,7 @@
     if(!text && !pendingAttachment) return;
     if(userTurnCount() >= MAX_USER_TURNS){
       addNotice(strings.longConversation);
+      addEscalationLink();
       return;
     }
 
@@ -198,6 +275,7 @@
         botEl.classList.remove('assistant-msg-pending');
         botEl.classList.add('assistant-msg-error');
         botEl.textContent = (err && err.message) || strings.errorGeneric;
+        addEscalationLink();
       }
     } finally {
       setBusy(false);
@@ -412,6 +490,14 @@
 
   // --- On-demand lead capture (real staff handoff, not gated behind a decision tree) ---
   function renderContactForm(){
+    var waLink = document.createElement('a');
+    waLink.className = 'assistant-escalate';
+    waLink.href = whatsappHref();
+    waLink.target = '_blank';
+    waLink.rel = 'noopener';
+    waLink.textContent = strings.continueOnWhatsapp;
+    messagesEl.appendChild(waLink);
+
     var wrap = document.createElement('div');
     wrap.className = 'assistant-msg assistant-msg-bot';
     var form = document.createElement('form');
