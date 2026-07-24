@@ -158,7 +158,7 @@ operates several physical campuses. This framework proposes:
    Deputy DSL with specific training in cross-border safeguarding
    considerations (e.g. a student's guardian being outside Nigeria) —
    named here as a future requirement once international admissions
-   exist (Admissions Policy §9, still blocked), not something to build
+   exist (Admissions Policy §7.5, still blocked), not something to build
    out prematurely.
 
 ## 9. Appointment process

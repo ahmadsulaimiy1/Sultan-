@@ -85,7 +85,7 @@ timeline take SD-02 onward.)*
 | PA-02 | Parent Handbook | Drafted |
 | PA-03 | Parent Code of Conduct | Missing |
 | PA-04 | Communication Policy | Missing |
-| PA-05 | Admissions Policy | Drafted — **assigned a code only now, during the Academic Regulations Tier 1 retrofit; this document existed since Phase B but was never added to this index or the Governance Master Register as its own row, a real gap this cross-check surfaced** |
+| PA-05 | Admissions Policy | Drafted v2.0 — retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit |
 
 ## SW — Safeguarding & Welfare
 
