@@ -6,7 +6,7 @@ proposed owner as the Data Protection & Privacy Policy.
 **Review cycle:** Annual, or immediately on any material change to what
 an SHRS AI system is allowed to do.
 **Depends on:** Data Protection & Privacy Policy (Phase A), Child
-Protection & Safeguarding Policy §7 (Phase A, digital safeguarding),
+Protection & Safeguarding Policy §7.10 (digital safeguarding),
 `docs/digital-assistant.md` (the real, live system this policy
 primarily governs today).
 
@@ -63,7 +63,7 @@ Student Portal, or admissions process.
 3. Safeguarding overrides normal AI operation: an AI system must not
    attempt to handle a safeguarding disclosure itself — it must direct
    the user to a named human contact, per the Child Protection &
-   Safeguarding Policy §7. **This requires a configuration check against
+   Safeguarding Policy §7.10. **This requires a configuration check against
    the assistant's actual current behaviour** (as that section already
    notes), not just a policy statement.
 4. An AI system does not make an admission, disciplinary, academic

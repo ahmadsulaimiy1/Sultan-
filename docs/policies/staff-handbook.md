@@ -68,10 +68,10 @@ policy directly. Two things worth flagging here rather than there:
 A staff-facing summary only, pointing to the Child Protection &
 Safeguarding Policy for the full procedure:
 - Every staff member has an individual duty to report a concern the
-  same day it arises (Child Protection & Safeguarding Policy §4).
+  same day it arises (Child Protection & Safeguarding Policy §5).
 - Every staff member must know who their institution's Deputy DSL is
-  (Child Protection & Safeguarding Policy §5) — this Handbook does not
-  restate the full responding-to-a-disclosure procedure (§6.1); staff
+  (Child Protection & Safeguarding Policy §6) — this Handbook does not
+  restate the full responding-to-a-disclosure procedure (§7.2); staff
   should read that document directly, not rely on a summary for an
   actual disclosure.
 

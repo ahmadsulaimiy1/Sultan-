@@ -43,7 +43,7 @@ Policy II), boarding terms (Boarding Regulations), Ijazah-related terms
 - To be heard before a serious disciplinary consequence is applied
   (Student Code of Conduct §7.5).
 - To have a safeguarding concern taken seriously and acted on the same
-  day (Child Protection & Safeguarding Policy §6.1).
+  day (Child Protection & Safeguarding Policy §7.2).
 - To see their own attendance and academic records via the Parent
   Portal (through their guardian's account today — a direct student
   login is a Phase 2/3 product question, see

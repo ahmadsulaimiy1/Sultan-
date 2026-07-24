@@ -44,7 +44,7 @@ campus), and their reporting lines to the Board and CEO.
 
 Reuses "Designated Safeguarding Lead," "Deputy DSL," "disclosure," and
 "referral" exactly as defined in the Child Protection & Safeguarding
-Policy §3 — this framework does not redefine them, only operationalises
+Policy §4 — this framework does not redefine them, only operationalises
 the DSL role those definitions already named.
 
 ## 4. Principles
@@ -60,7 +60,7 @@ the DSL role those definitions already named.
    accordingly rather than assuming institution-level coverage
    automatically scales.
 3. The DSL's independence from day-to-day management pressure (Child
-   Protection & Safeguarding Policy §5, CEO's responsibility to
+   Protection & Safeguarding Policy §6, CEO's responsibility to
    "resource and empower" the role) is a structural requirement, not
    an aspiration — this framework states what that requires in
    practice (Section 7).
@@ -71,15 +71,15 @@ the DSL role those definitions already named.
 
 - First and final point of contact for every safeguarding disclosure
   or concern reported anywhere across SHRS (Child Protection &
-  Safeguarding Policy §6.1–6.4).
+  Safeguarding Policy §7.2–7.5).
 - Decides on internal handling versus external statutory referral for
-  every case (§6.3–6.4).
+  every case (§7.4–7.5).
 - Maintains the confidential safeguarding log across all institutions
-  (§6.2) — a single log, not four institution-siloed ones, so a
+  (§7.3) — a single log, not four institution-siloed ones, so a
   pattern spanning institutions (e.g. siblings at different schools)
   isn't missed.
 - Handles or directly oversees any allegation against a staff member
-  (§6.5), in consultation with the CEO.
+  (§7.6), in consultation with the CEO.
 - Reports to the Board annually (Constitution & Governance Charter
   §6.1) on safeguarding activity in aggregate — case volumes and
   systemic themes, never individual case detail that would breach a
@@ -93,10 +93,10 @@ the DSL role those definitions already named.
 One Deputy DSL per institution — proposed: the Principal of Royal
 College, Qur'an College, and School of Arabic & Islamic Studies, and
 the Head Teacher of Nursery & Primary (matching the Child Protection &
-Safeguarding Policy §5's existing proposal, not a new assignment).
+Safeguarding Policy §6's existing proposal, not a new assignment).
 
 - First point of contact within their institution for a concern,
-  escalating to the DSL the same day (§6.1).
+  escalating to the DSL the same day (§7.2).
 - Maintains institution-level awareness of any student flagged in the
   central log, without needing to see the DSL's full cross-institution
   picture.
@@ -127,7 +127,7 @@ The CEO sits alongside this chain, not inside it, for one specific
 reason: the DSL's independence (Principle 3) means the DSL does not
 report safeguarding case decisions to the CEO for approval — only in
 aggregate to the Board. The CEO's role is resourcing and protection of
-that independence (Child Protection & Safeguarding Policy §5), not
+that independence (Child Protection & Safeguarding Policy §6), not
 oversight of individual case handling.
 
 ## 8. Campus scaling model (the Phase C stress-test gap, resolved)

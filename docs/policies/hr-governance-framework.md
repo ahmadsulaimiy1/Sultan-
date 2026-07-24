@@ -26,7 +26,7 @@ decision the school is about to face.
 | **Staff Conduct Policy** | **Drafted, Phase D** | Closed the Staff Handbook's dependency and a named Tier 1 safeguarding-adjacent gap. | 1 |
 | **Grievance Policy** | Yes, soon | The Staff Handbook §12 currently routes any grievance through general escalation (VP Administration → CEO) with no defined procedure — workable short-term, not sustainable as staff numbers grow. | 2 |
 | **Staff Discipline Policy** | Yes, soon | Same gap as Grievance — currently informal, fine at current scale, should be formalised before staff numbers grow (see `docs/parent-portal-phase2-3-roadmap.md`'s growth assumptions). | 2 |
-| **Recruitment Policy** | Not urgent | Safer-recruitment *principles* already exist (Child Protection & Safeguarding Policy §4) — a full Recruitment Policy formalising vetting/reference-check procedure is valuable but not blocking anything today. | 3 |
+| **Recruitment Policy** | Not urgent | Safer-recruitment *principles and procedure* already exist (Child Protection & Safeguarding Policy §7.11) — a full Recruitment Policy formalising vetting/reference-check procedure is valuable but not blocking anything today. | 3 |
 | **Performance Management Policy** | Not urgent | The Staff Handbook §7 already states a general expectation; a full appraisal procedure is genuinely a "grow into it" document, not a current gap causing real friction. | 3 |
 | **Leave Policy** | Not urgent | No indication this is causing a real administrative problem today; worth drafting once staff numbers justify formalising it. | 3 |
 | **Professional Development Policy** | Lowest priority | The Head of Research & Development role already exists and can coordinate this informally at current scale. | 4 |

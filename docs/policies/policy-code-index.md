@@ -99,7 +99,7 @@ timeline take SD-02 onward.)*
 | SW-07 | Health & Safety Policy | **Live** (Policy VII) — **redeveloped in full, Phase E** |
 | SW-08 | Visitors Policy | **Live** (Policy VIII) — **redeveloped in full, Phase E; also resolves the Governance Master Register's separate "Visitor Management Policy" gap (§5), since the redeveloped version now covers the safeguarding-vetting scope that gap named** |
 | SW-09 | Emergency Response Plan | Drafted |
-| SW-10 | Digital Safeguarding Policy | Partial (addressed within SW-01 §7 and IT-05) |
+| SW-10 | Digital Safeguarding Policy | Partial (addressed within SW-01 §7.10 and IT-05) |
 
 *(A correction made while building this index, not before: Career
 Policy, Dress Code, and Equal Opportunity are grouped by the live site

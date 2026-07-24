@@ -91,12 +91,12 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Child Protection Policy | **DRAFTED** (Phase A, combined with Safeguarding Policy below — see note) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role fully defined, Phase D — appointment still pending) | Board of Trustees | Annual | None |
+| Child Protection Policy | **DRAFTED v2.0** (Phase A, combined with Safeguarding Policy below; retrofitted to the full 13-section architecture and substantially deepened in the Phase F Tier 1 retrofit — see SW-01) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role fully defined, Phase D — appointment still pending) | Board of Trustees | Annual | None |
 | Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Trustees | Annual | Child Protection Policy |
 | **Designated Safeguarding Lead Framework** *(new — Phase D, resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED** (Phase D) | 1 | Board of Trustees (appointment) / CEO (document maintenance) | Board of Trustees | Annual | Child Protection Policy (drafted) |
 | Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
 | Visitor Management Policy | **RESOLVED — the redeveloped Visitors Policy (SW-08, Phase E) now covers the safeguarding-vetting scope this row named; no separate document needed** | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
-| Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7 and the new AI Usage Policy (Phase C), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
+| Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7.10 and the AI Usage Policy (IT-05), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
 
 ## 6. Human Resources
 

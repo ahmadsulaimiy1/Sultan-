@@ -8,7 +8,7 @@ this is the regulatory document that content has never had behind it.
 programme, though this should be confirmed against which institutions
 actually board students today.
 **Review cycle:** Annual.
-**Depends on:** Child Protection & Safeguarding Policy (Section 6.6 of
+**Depends on:** Child Protection & Safeguarding Policy (Section 7.8 of
 that policy references boarding-specific provisions this document
 fulfils); Health & Safety Policy (SW-07, redeveloped in full, Phase E);
 Emergency Response Plan (Section 6.5, overnight emergencies).
@@ -55,7 +55,7 @@ with a supervisory role overnight.
    overnight period, even during sleeping hours (this is what room
    checks exist for).
 2. Boarding staff-student contact rules from the Child Protection &
-   Safeguarding Policy (Section 6.6) apply in full; boarding does not
+   Safeguarding Policy (Section 7.8) apply in full; boarding does not
    get a lighter version of safeguarding because it's "just how
    boarding works."
 3. A boarding student's guardian is informed the same day of any

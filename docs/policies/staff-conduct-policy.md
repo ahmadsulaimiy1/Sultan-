@@ -71,7 +71,7 @@ redefining them.
   social-media contact with a student; no gift-giving or favouritism
   suggesting an inappropriate individual relationship. Boarding staff
   follow this identically to day-school staff — mirrors the Child
-  Protection & Safeguarding Policy §6.6 and Boarding Regulations §6.5
+  Protection & Safeguarding Policy §7.8 and Boarding Regulations §6.5
   exactly, not a separately worded version.
 - **Physical contact:** limited to what is necessary, appropriate, and
   consistent with the child's age (e.g. first-aid response, comforting
@@ -107,7 +107,7 @@ redefining them.
 1. A conduct concern is raised with the relevant Principal/Head Teacher
    or directly with VP Administration.
 2. Where the concern has any safeguarding dimension, it is handled
-   under the Child Protection & Safeguarding Policy §6.5 (allegations
+   under the Child Protection & Safeguarding Policy §7.6 (allegations
    against a staff member) instead of this policy's general procedure —
    this policy does not create a second, competing process for the
    same situation.
