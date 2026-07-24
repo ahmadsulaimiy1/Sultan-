@@ -3,7 +3,7 @@
 **Status:** DRAFT v0.1 — not yet adopted.
 **Owner (proposed):** ICT Head (Mr. Oguntade Adebola Aliu).
 **Review cycle:** Annual.
-**Depends on:** Student Handbook §8 (Digital behaviour), Staff Handbook
+**Depends on:** Student Handbook §7.5 (Digital behaviour), Staff Handbook
 §10 (Digital conduct) — both of which currently state a general
 expectation and point forward to this policy for detail; Data
 Protection & Privacy Policy; AI Usage Policy.
