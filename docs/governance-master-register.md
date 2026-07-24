@@ -82,7 +82,7 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Parent Handbook | **DRAFTED** (Phase B) | 1 | VP Administration | Board of Trustees | Annual | Fees Policy (blocked), Academic Regulations (drafted), Complaint Policy (exists) |
+| Parent Handbook | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see PA-02) | 1 | VP Administration | Board of Trustees | Annual | Fees Policy (blocked), Academic Regulations (drafted), Complaint Policy (exists) |
 | Parent Code of Conduct | MISSING | 2 | VP Administration | CEO | Annual | Communication Policy |
 | Communication Policy | MISSING | 3 | VP Administration | CEO | Annual | Parent Portal (exists) |
 | Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Board of Trustees | Annual | — |
