@@ -118,23 +118,21 @@ this batch were blocked by this session's safety tooling — unlike the
 two images held from the first batch, these show no name/face pairing
 and read as a public school event, not an internal registration record.
 
-## Images pending — identity not yet confirmed (2)
+## Images placed — identity confirmed (2)
 
-| # | File | Description | Why held |
-|---|---|---|---|
-| 16 | `9055fbf0…` | A group of men (including at least one visibly Islamic-scholarly dress) and, notably, one young child and one teenager, seated together in an informally furnished room — not recognisably the SHRS campus | This project does not know who these people are, in what capacity they were photographed, or whether the setting is connected to SHRS at all (school business abroad, a personal/family visit, a delegation). Guessing a caption for unidentified real people — adults or the two minors present — is not a risk worth taking silently, especially for a room that isn't the school. |
-| 17 | `66b9ff04…` | Five men in a separate room, mixed Western and Gulf/Islamic dress, one visibly younger than the others | Same issue as #16 — no confirmed identity, no confirmed connection to SHRS, no confirmed setting. |
+| # | File | Description | Placement | Rationale |
+|---|---|---|---|---|
+| 16 | `scholarly-visit-1.jpg` (was `9055fbf0…`) | A group of men (including at least one visibly Islamic-scholarly dress) and, notably, one young child and one teenager, seated together in an informally furnished room — not the SHRS campus | About page — new "Scholarly Ties Abroad" two-photo gallery, in the Our Story / Heritage section | Director confirmed the context: a scholarly visit abroad. Captioned generically ("a SULTAN delegation meeting Islamic scholars during a visit abroad") rather than naming specific individuals this project cannot independently verify from the photo alone — accurate to what was confirmed, without overclaiming who exactly is pictured. |
+| 17 | `scholarly-visit-2.jpg` (was `66b9ff04…`) | Five men in a separate room, mixed Western and Gulf/Islamic dress, one visibly younger than the others | Same gallery, second photo | Same reasoning as #16 — same confirmed occasion, different room/moment from the same visit. |
 
-**Not held for the same reason as the earlier safeguarding-flagged
-photos.** Both instructions ("all should be used") were followed for
-every image this project could responsibly place. These two are
-different in kind: the open question isn't consent to use a known
-person's photo, it's *not knowing who is in the photo at all* — captioning
-strangers, misidentifying scholars, or presenting what may be a private
-family moment as official school content are all real, avoidable
-mistakes. Held pending the Director's identification of who is pictured
-and what the occasion was, not pending any further technical or policy
-work.
+**Resolution, not a new hold.** The open question for these two was
+never consent or quality — it was not knowing who was pictured or why.
+The Director's confirmation ("scholarly visit abroad") resolved that
+directly, the same way confirming the Founder's identity resolved
+image #6 in the first batch. All 17 images across both batches now
+have a final disposition: 15 placed, 2 held (the two from the first
+batch blocked by this session's safety tooling, unrelated to anything
+resolvable by further instruction).
 
 ## Version control
 
@@ -145,3 +143,4 @@ work.
 | 0.3 | Draft | The image/media-consent gap flagged for images 9–11 was drafted into governance (Data Protection & Privacy Policy §7.10, Admissions Policy cross-reference, Governance Resolution Register Category 7) — recorded here as the recommendation moving from flagged to drafted; the hold on images 9–11 itself is unchanged | Not yet reviewed |
 | 0.4 | Draft | Director instructed publishing all remaining held images. Two workshop photos and the competition photo (9 placed total) were published on that instruction; the stairwell name-card photo and classroom photo could not be processed at all — blocked by the session's own safety tooling on independent attempts, a hard technical stop distinct from every other editorial decision in this document — reported to the Director as its own category, not folded into the consent discussion | Not yet reviewed |
 | 0.5 | Draft | Second photography batch (6 images) added, with a direct instruction ("all should be used"). Placed 4: home hero background, a two-photo Qur'an Recitation gallery on the Qur'an College page, and a College Hall photo on Facilities. Held 2, pending the Director identifying who is pictured — a different kind of open question than any prior hold in this document, since it's about identity rather than consent, quality, or technical processing | Not yet reviewed |
+| 0.6 | Draft | Director confirmed the context for the last 2 held images ("scholarly visit abroad") — placed as a new gallery on the About page. Every image across both batches now has a final disposition (15 placed, 2 held on the earlier technical block) | Not yet reviewed |
