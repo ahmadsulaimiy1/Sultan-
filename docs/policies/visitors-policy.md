@@ -20,7 +20,7 @@ procedure.*
 | Version | 1.0 (redeveloped from the live Policy VIII) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Head of Security / VP Administration (Mrs. Anofi-Badmus Fatimat Omolola) |
-| Approval Authority | CEO, per the Constitution & Governance Charter §6.2 (Tier 2 document) |
+| Approval Authority | CEO, per the Constitution & Governance Charter (GV-01) §6 (Tier 2 document) |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 

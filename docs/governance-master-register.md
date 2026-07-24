@@ -45,7 +45,7 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Constitution & Governance Charter | **DRAFTED** (Phase C) | 1 | Board of Trustees | Board of Trustees | Biennial | None — foundational |
+| Constitution & Governance Charter (GV-01) | **DRAFTED v2.0** (Phase C, retrofitted Phase F Tier 3) | 1 | Board of Trustees | Board of Trustees | Biennial | None — foundational |
 | Board Charter (composition, terms, meeting cadence) | MISSING | 2 | Board of Trustees | Board of Trustees | Biennial | Governance Charter |
 | Committee Charters | PARTIAL | 2 | Board of Trustees | Board of Trustees | Biennial | Governance Charter |
 | Delegation of Authority Policy | MISSING | 2 | CEO | Board of Trustees | Biennial | Governance Charter |
@@ -271,6 +271,20 @@ name and section number).
   this; the only remaining publication-adjacent work is retrofitting
   GV-01 and SW-02 to the same architecture, which is Tier 3 drafting
   work, not a publication task.
+- **Phase G (Tier 3 retrofit, begun):** Constitution & Governance
+  Charter (GV-01) retrofitted from v0.1 to the full 13-section
+  architecture — every principle preserved unchanged, with three new
+  provisions added: an emergency-delegation clause (naming where the
+  Emergency Response Plan's Incident Commander authority comes from), a
+  governance-gap escalation procedure (so an unfilled role like the DSL
+  stays a standing Board agenda item rather than a silent assumption),
+  and a succession/vacancy principle answering this project's own
+  continuity-test question directly in the Charter itself. Every
+  citation to the Charter's old section numbers across the ecosystem
+  (Staff Handbook, Visitors Policy, Child Protection & Safeguarding
+  Policy, Designated Safeguarding Lead Framework, Health & Safety
+  Policy) was swept and fixed. Designated Safeguarding Lead Framework
+  (SW-02) — the second and final Tier 3 document — is next.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:

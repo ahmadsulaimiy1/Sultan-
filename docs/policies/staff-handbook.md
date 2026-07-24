@@ -131,7 +131,7 @@ HR Governance Framework — recommended as the next two HR documents now
 that the Staff Conduct Policy itself is done. Until they exist, a
 non-conduct staff grievance is raised with VP Administration, escalating
 to the CEO if unresolved, under the general authority structure in the
-Constitution & Governance Charter §6.2.
+Constitution & Governance Charter (GV-01) §6.
 
 ## 13. Monitoring & compliance
 

@@ -314,7 +314,7 @@ not a pre-set hierarchy of concern types.
 
 The DSL (once appointed) reviews the safeguarding log monthly for
 patterns across institutions and reports an aggregate summary to the
-Board annually, per the Constitution & Governance Charter (GV-01) §6.1.
+Board annually, per the Constitution & Governance Charter (GV-01) §6.
 Until a DSL is appointed, the CEO and each institution's Principal/Head
 Teacher jointly perform this review.
 

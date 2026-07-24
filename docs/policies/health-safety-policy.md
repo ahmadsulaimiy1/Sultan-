@@ -181,7 +181,7 @@ The Health and Safety Committee's weekly walk-around results and any
 incident reports are reviewed monthly by management staff (or the named
 Policy Owner), with an annual summary to the Board as part of the wider
 safeguarding/safety reporting the Constitution & Governance Charter
-already establishes (§6.1).
+already establishes (§6).
 
 ## 9. Records and Documentation
 

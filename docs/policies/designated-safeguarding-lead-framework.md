@@ -81,7 +81,7 @@ the DSL role those definitions already named.
 - Handles or directly oversees any allegation against a staff member
   (§7.6), in consultation with the CEO.
 - Reports to the Board annually (Constitution & Governance Charter
-  §6.1) on safeguarding activity in aggregate — case volumes and
+  §6) on safeguarding activity in aggregate — case volumes and
   systemic themes, never individual case detail that would breach a
   child's confidentiality.
 - Reviews the Child Protection & Safeguarding Policy, Boarding
