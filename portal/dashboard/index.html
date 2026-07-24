@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Parent Portal (Pilot) — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Pilot</span>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello" data-portal-hello></div>
+    <div class="portal-hello-sub">Sultan Hanafi Royal Schools — Parent Portal (Pilot). This shows only your own child(ren)'s records.</div>
+    <div data-portal-children></div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading your dashboard…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load your dashboard</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-dashboard.js" defer></script>
+</body>
+</html>

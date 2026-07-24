@@ -1,0 +1,12 @@
+{
+  "name": "sultan-hanafi-royal-schools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sultan Hanafi Royal Schools — website build scripts and Parent Portal API",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  }
+}

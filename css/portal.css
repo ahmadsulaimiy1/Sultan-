@@ -1,0 +1,77 @@
+/* Parent Portal (Pilot) — shares brand.css tokens (colors, fonts) but is
+   a functional utility surface, not a marketing page, so it keeps its
+   own simpler layout rather than reusing the site chrome. */
+body.portal-body{
+  min-height:100vh;background:var(--navy-deep);color:var(--ivory);
+  font-family:'Inter','Cairo',sans-serif;display:flex;flex-direction:column;
+}
+.portal-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(233,206,138,0.25);}
+.portal-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ivory);}
+.portal-brand img{width:32px;height:32px;}
+.portal-brand span{font-family:'Cinzel','Amiri',serif;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;}
+[dir="rtl"] .portal-brand span{letter-spacing:normal;}
+.portal-pilot-badge{
+  font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy-deep);
+  background:var(--gold-bright);padding:3px 9px;border-radius:2px;font-weight:700;
+}
+
+.portal-main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+.portal-card{
+  width:100%;max-width:420px;background:var(--ivory);color:var(--ink);border:1px solid var(--gold);
+  padding:32px 28px;box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);margin-top:20px;
+}
+.portal-card h1{font-family:'Cinzel','Amiri',serif;font-size:1.2rem;margin:0 0 6px;color:var(--navy);}
+.portal-card .sub{font-size:0.82rem;color:var(--ink-soft);margin-bottom:22px;}
+.portal-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.portal-field label{font-size:0.78rem;font-weight:600;color:var(--navy);}
+.portal-field input{
+  font-family:'Inter','Cairo',sans-serif;font-size:0.9rem;padding:10px 12px;
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+}
+.portal-field input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.portal-submit{
+  width:100%;margin-top:6px;font-family:'Cinzel','Amiri',serif;font-size:0.78rem;
+  letter-spacing:0.1em;text-transform:uppercase;font-weight:600;padding:13px;
+  background:var(--navy);color:var(--gold-bright);border:1px solid var(--navy);cursor:pointer;
+  transition:background .2s ease;
+}
+.portal-submit:hover{background:var(--navy-deep);}
+.portal-submit:disabled{opacity:0.6;cursor:default;}
+.portal-error{
+  background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);
+  font-size:0.82rem;padding:9px 12px;margin-bottom:16px;display:none;
+}
+.portal-error.is-visible{display:block;}
+.portal-notice{font-size:0.74rem;line-height:1.5;color:var(--ink-soft);margin-top:20px;border-top:1px solid var(--line);padding-top:16px;}
+.portal-back-link{display:inline-block;margin-top:14px;font-size:0.8rem;color:var(--ink-soft);}
+
+.portal-wrap{width:100%;max-width:760px;}
+.portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--gold-bright);margin-bottom:4px;}
+.portal-hello-sub{font-size:0.82rem;color:rgba(248,244,233,0.7);margin-bottom:24px;}
+.portal-logout{background:none;border:1px solid rgba(233,206,138,0.4);color:var(--gold-bright);padding:8px 16px;font-size:0.78rem;cursor:pointer;}
+.portal-logout:hover{border-color:var(--gold-bright);}
+
+.portal-child-card{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);margin-bottom:24px;}
+.portal-child-head{background:var(--navy);color:#fff;padding:16px 20px;}
+.portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;margin:0 0 4px;}
+.portal-child-head .meta{font-size:0.78rem;color:var(--gold-bright);}
+.portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;background:var(--line);}
+.portal-stat{background:var(--ivory);padding:16px 20px;}
+.portal-stat .label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:var(--navy);margin-top:4px;}
+.portal-results{padding:18px 20px;}
+.portal-results h3{font-size:0.85rem;color:var(--navy);margin:0 0 10px;}
+.portal-results-scroll{overflow-x:auto;}
+.portal-results table{width:100%;min-width:520px;border-collapse:collapse;font-size:0.82rem;}
+.portal-results th, .portal-results td{text-align:start;padding:7px 8px;border-bottom:1px solid var(--line);}
+.portal-results th{color:var(--ink-soft);font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.03em;}
+.portal-empty{padding:18px 20px;color:var(--ink-soft);font-size:0.85rem;}
+.portal-demo-flag{
+  display:inline-block;margin-top:10px;font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;
+  color:var(--crimson);border:1px solid var(--crimson);padding:2px 8px;
+}
+
+@media (max-width:520px){
+  .portal-topbar{padding:12px 16px;}
+  .portal-main{padding:24px 14px;}
+}
