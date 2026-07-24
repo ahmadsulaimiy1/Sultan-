@@ -123,8 +123,12 @@
   .nav-mark{border:1px solid var(--gold);color:var(--gold-bright) !important;padding:8px 18px !important;font-family:'Cinzel','Amiri',serif;font-size:0.66rem !important;letter-spacing:0.14em;}
   .nav-mark:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);}
   *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Inter','Cairo',sans-serif;color:var(--ink);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  html{scroll-behavior:smooth;overflow-x:hidden;}
+  body{font-family:'Inter','Cairo',sans-serif;color:var(--ink);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  /* The crest-watermark bleed and similar decorative elements intentionally
+     extend past the viewport edge; without this, that harmless extra
+     scroll width shifts the default RTL scroll origin and clips the start
+     of every right-aligned line (Arabic nav/text) on narrow screens. */
   h1,h2,h3,h4{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;color:var(--navy);line-height:1.15;}
   .crest-type{font-family:'Cinzel','Amiri',serif;}
   a{color:inherit;text-decoration:none;}
