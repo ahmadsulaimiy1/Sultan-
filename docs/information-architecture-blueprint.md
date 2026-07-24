@@ -10,6 +10,14 @@ material from the school before it can honestly go live — the same
 placeholder-honesty discipline this entire project has held to for fees,
 the academic calendar, and international admissions).
 
+**Implementation update:** every item marked LIVE-buildable in this
+document — the header mega-menu restructure, the new Student Life
+grouping, a header Parent Portal CTA, the Policies page recategorized
+into four groups, the six-zone footer, and a client-side site search —
+has since been built and shipped in the same session this document was
+written. PENDING CONTENT items remain exactly that: not built, because
+they need real material from the school first.
+
 Two real findings surfaced during this audit that belong in front of
 everything else, because they affect trust in what's already published:
 
@@ -234,11 +242,11 @@ project has handled fees and the calendar throughout.
 
 | Feature | Status | Recommendation |
 |---|---|---|
-| Sticky navigation | Not currently implemented | Add — standard expectation, low effort. |
+| Sticky navigation | **LIVE** | Correction to an earlier draft of this document — `header.nav` was already `position:sticky` before this audit; no gap here. |
 | Utility navigation (topbar) | **LIVE** | Already solid — contacts, socials, language switch. |
-| Quick-access portal CTA | Footer-only today | Promote to the header (§1). |
-| WhatsApp integration | **LIVE** | Already built this session — floating launcher with topic menu. |
-| Search system | **GAP** | No site search exists. Given the site's small, fully static page count, a lightweight client-side search (a pre-built JSON index + a simple JS search box) is genuinely buildable now with no new backend or cost — recommended over a heavier hosted search service this site doesn't need yet. |
+| Quick-access portal CTA | **LIVE** (implemented as part of this pass) | Promoted from footer-only to a real header CTA button (§1). |
+| WhatsApp integration | **LIVE** | Already built earlier this project — floating launcher with topic menu. |
+| Search system | **LIVE** (implemented as part of this pass) | Built as a lightweight client-side search — a per-language JSON index generated at build time from `pages/manifest.json`, plus a small overlay UI (`js/search.js`). No backend, no external service, indexes all real pages. |
 | Language switcher | **LIVE** | Already solid. |
 | Accessibility tools | **GAP, but be careful here** | Recommend a real accessibility *audit* (alt-text coverage, color contrast, keyboard navigation, focus states) over bolting on an "accessibility widget" — those overlay tools are frequently more theater than help, and don't substitute for genuinely accessible markup. Honest recommendation: fix the underlying HTML/CSS, don't add a gimmick layer. |
 

@@ -50,6 +50,7 @@ function buildPage(page) {
   const content = read(page.contentFile);
   const footer = read(`partials/footer${suffix}.html`);
   const assistant = read(`partials/assistant${suffix}.html`);
+  const search = read(`partials/search${suffix}.html`);
 
   // hreflang alternate — points at this page's translation counterpart,
   // or a sensible fallback (e.g. the other language's homepage) when
@@ -69,11 +70,13 @@ ${header}
 ${content}
 ${footer}
 ${assistant}
+${search}
 
 <script src="/js/site.js" defer></script>
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
+<script src="/js/search.js" defer></script>
 
 </body>
 </html>
@@ -85,9 +88,32 @@ ${assistant}
   console.log(`built ${page.output} (${(html.length / 1024).toFixed(1)} KB)`);
 }
 
+// A lightweight client-side search index — just title/description per
+// page, split by language so the search box only ever surfaces results
+// in the language the visitor is already reading. No backend, no
+// external search service; small enough to fetch in full on first use.
+function buildSearchIndex(manifest) {
+  const byLang = {};
+  manifest.forEach((page) => {
+    const lang = page.lang || 'en';
+    const url = '/' + page.output.replace(/index\.html$/, '');
+    (byLang[lang] = byLang[lang] || []).push({
+      title: page.title,
+      description: page.description,
+      url,
+    });
+  });
+  Object.entries(byLang).forEach(([lang, items]) => {
+    const outPath = path.join(ROOT, `search-index.${lang}.json`);
+    fs.writeFileSync(outPath, JSON.stringify(items));
+    console.log(`built search-index.${lang}.json (${items.length} pages)`);
+  });
+}
+
 function main() {
   const manifest = JSON.parse(read('pages/manifest.json'));
   manifest.forEach(buildPage);
+  buildSearchIndex(manifest);
 }
 
 main();

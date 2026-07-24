@@ -48,6 +48,9 @@
       <img class="brand-mark" src="/assets/images/brand-mark.png" alt="شعار مدارس سلطان حنفي الملكية" />
       <span class="brand-text"><span class="line1">سلطان حنفي</span><br/><span class="line2">المدارس الملكية</span></span>
     </a>
+    <button class="search-toggle" data-search-toggle aria-label="البحث في الموقع" title="بحث">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
     <button class="menu-toggle" aria-label="فتح القائمة" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
     <div class="navlinks">
       <div class="nav-drop">
@@ -55,25 +58,49 @@
         <div class="nav-drop-panel">
           <a href="/ar/about/">نبذتنا وقيمنا</a>
           <a href="/ar/about/governance/">الحوكمة والقيادة</a>
+          <a href="/ar/policies/">السياسات</a>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega">
+        <a href="/ar/academics/" class="nav-drop-trigger">الأكاديميات</a>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/ar/academics/nursery-primary/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 19V9l8-4 8 4v10M4 19h16M9 19v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">الحضانة والابتدائية</span><span class="d">من 2 إلى 10 سنوات · نهاري</span></span>
+            </a>
+            <a class="nav-mega-item" href="/ar/academics/royal-college/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M3 8l9-4 9 4-9 4-9-4zm0 0v6c3 2 6 3 9 3s6-1 9-3V8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">الكلية الملكية</span><span class="d">10 سنوات فأكثر · نهاري · تأسست 2021</span></span>
+            </a>
+            <a class="nav-mega-item" href="/ar/academics/arabic-islamic-studies/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M15 3a9 9 0 100 18 7.2 7.2 0 010-18z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">اللغة العربية والدراسات الإسلامية</span><span class="d">جميع الأعمار · أيام الأسبوع ونهايته</span></span>
+            </a>
+            <a class="nav-mega-item" href="/ar/academics/quran-college/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 5h7v15H4a1 1 0 01-1-1V6a1 1 0 011-1zm16 0h-7v15h7a1 1 0 001-1V6a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">كلية القرآن الكريم</span><span class="d">نهاري وداخلي · 24–36 شهراً</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">قارن</span>
+            <a class="nav-mega-featured-link" href="/ar/academics/">جميع المؤسسات الأربع ←</a>
+            <p>مجلس واحد، ومعيار كليفر واحد، وأربعة مسارات متميزة.</p>
+          </div>
         </div>
       </div>
       <div class="nav-drop">
-        <a href="/ar/academics/" class="nav-drop-trigger">الأكاديميات</a>
+        <a href="/ar/boarding/" class="nav-drop-trigger">الحياة الطلابية</a>
         <div class="nav-drop-panel">
-          <a href="/ar/academics/">جميع المؤسسات</a>
-          <a href="/ar/academics/nursery-primary/">الحضانة والابتدائية</a>
-          <a href="/ar/academics/royal-college/">الكلية الملكية</a>
-          <a href="/ar/academics/arabic-islamic-studies/">اللغة العربية والدراسات الإسلامية</a>
-          <a href="/ar/academics/quran-college/">كلية القرآن الكريم</a>
+          <a href="/ar/boarding/">السكن الداخلي</a>
+          <a href="/ar/facilities/">المرافق</a>
         </div>
       </div>
-      <a href="/ar/boarding/">السكن الداخلي</a>
       <a href="/ar/admission/">القبول</a>
-      <a href="/ar/facilities/">المرافق</a>
       <a href="/ar/foundation/">المؤسسة الخيرية</a>
-      <a href="/ar/policies/">السياسات</a>
       <a href="/ar/contact/">اتصل بنا</a>
-      <a href="/ar/admission/" class="nav-mark">سجّل الآن</a>
+      <a href="/portal/login/" class="nav-mark" dir="ltr">Parent Portal</a>
+      <a href="/ar/admission/" class="nav-mark nav-cta">سجّل الآن</a>
     </div>
   </nav>
 </header>
@@ -83,7 +110,10 @@
     <p class="eyebrow">الحوكمة</p>
     <h2 style="font-size:2.2rem;margin-top:10px;">سياسات المدرسة</h2>
     <p style="max-width:640px;color:#4a4944;margin-top:12px;">كل سياسة أدناه يُعِدّها نائب رئيس الإدارة، ويراجعها المدير، ويعتمدها الرئيس التنفيذي، مع مراجعة سنوية مقررة.</p>
-    <div class="policy-list" id="policyAccordion">
+
+    <div class="policy-category">
+      <h3 class="policy-category-title">أكاديمية</h3>
+      <div class="policy-list">
 
       <div class="policy">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">I.</span><span class="title-text">سياسة التقييم</span><span class="plus">&#10087;</span></button>
@@ -138,132 +168,12 @@
         </div>
       </div>
 
-      <div class="policy">
-        <button class="policy-head" aria-expanded="false"><span class="stat-num">II.</span><span class="title-text">سياسة مكافحة التنمّر والانضباط</span><span class="plus">&#10087;</span></button>
-        <div class="policy-body">
-          <div class="section-block"><h5>المقدمة</h5><p>البيئة الآمنة والودودة والحاضنة ضرورية للتعليم والتعلّم الفعّال. تسعى سلطان لتوفير بيئة كهذه يتطوّر فيها المتعلمون في أجواء مطمئنة وآمنة.</p></div>
-          <div class="section-block"><h5>الغرض</h5><p>التنمّر هو إيذاء متعمّد ومتكرر لشخص من قِبل آخر، وغالباً ما ينطوي على خلل في توازن القوى. في سلطان، تُحدَّد توقعات السلوك الحسن وفق عقيدتنا الإسلامية. وتشمل الأهداف:</p><ul>
-            <li>إظهار أن التنمّر يُؤخذ على محمل الجد ولن يُتسامَح معه.</li>
-            <li>منع جميع أشكال التنمّر، داخل المدرسة وخارجها.</li>
-            <li>دعم تحديد وحماية من يتعرّضون للتنمّر.</li>
-            <li>تشجيع المتعلمين على التحدّث بدلاً من المعاناة في صمت.</li>
-            <li>زيادة الوعي بالسلامة عبر الإنترنت.</li>
-            <li>مساعدة من يمارسون التنمّر على فهم ضرورة التغيير.</li>
-          </ul></div>
-          <div class="section-block"><h5>النطاق</h5><p>ينطبق على جميع أفراد مجتمع سلطان — المتعلمين والموظفين والزوّار وأولياء الأمور والأوصياء — داخل المدرسة وفي الأنشطة خارجها.</p></div>
-          <div class="section-block"><h5>أشكال التنمّر</h5><ul>
-            <li><strong>العاطفي:</strong> الإقصاء، الإيذاء النفسي، الإيماءات التهديدية، إتلاف الممتلكات أو سرقتها.</li>
-            <li><strong>الجسدي:</strong> الدفع، الركل، الضرب، اللكم، البصق، أو أي عنف جسدي.</li>
-            <li><strong>الثقافي/العرقي:</strong> الاستهزاء العرقي، الإيماءات، الكتابات المسيئة، التنميط.</li>
-            <li><strong>الديني:</strong> الاستهزاء أو الإيماءات أو الكتابات المعادية للدين أو الطائفية.</li>
-            <li><strong>الجنسي/التمييز الجنسي:</strong> التلامس غير المرغوب فيه، التعليقات أو الإيماءات المسيئة، الإشاعات.</li>
-            <li><strong>اللفظي:</strong> السخرية بالألقاب، المضايقة، الاستهزاء، الإشاعات، التعليقات المسيئة.</li>
-            <li><strong>القدرات:</strong> استهداف ذوي الاحتياجات الخاصة أو الإعاقة.</li>
-            <li><strong>الإلكتروني:</strong> إساءة استخدام الإنترنت/البريد الإلكتروني/المحادثات/الجوال/الكاميرا للإيذاء أو نشر الإشاعات.</li>
-          </ul></div>
-          <div class="section-block"><h5>الإجراءات التأديبية</h5><ul>
-            <li>منع السخرية المهينة بالألقاب؛ طلب اعتذار حقيقي.</li>
-            <li>منع إذلال البالغين للمتعلم.</li>
-            <li>تصحيح السلوك فوراً؛ الاحتفاظ بالأدلة في السجل.</li>
-            <li>إنذار رسمي؛ إبلاغ أولياء الأمور/الأوصياء؛ عقد اجتماع إذا لزم الأمر.</li>
-            <li>مراقبة خاصة داخل حرم المدرسة.</li>
-          </ul></div>
-          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير، ونائب رئيس الإدارة، والمرشد الطلابي حصراً.</p></div>
-          <div class="sign-row">
-            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
-            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
-            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
-            <div><span class="lab">المراجعة القادمة</span>—</div>
-          </div>
-        </div>
       </div>
+    </div>
 
-      <div class="policy">
-        <button class="policy-head" aria-expanded="false"><span class="stat-num">III.</span><span class="title-text">سياسة التوجيه المهني</span><span class="plus">&#10087;</span></button>
-        <div class="policy-body">
-          <div class="section-block"><h5>المقدمة</h5><p>تؤمن سلطان بأن المستقبل المهني للمتعلمين يُصاغ من خبراتهم وتقدّمهم وإنجازاتهم. يحصل المتعلمون بين سن 11 و17 عاماً على توجيه مهني مستقل.</p></div>
-          <div class="section-block"><h5>الغرض</h5><ul>
-            <li>تأهيل المتعلمين لاتخاذ قرارات مهنية صائبة.</li>
-            <li>تشجيع خيارات طموحة ومدروسة للمسار الوظيفي.</li>
-            <li>توفير خبرات تبني قابلية التوظيف ومهارات الدراسة.</li>
-            <li>خلق وعي بالفرص المهنية المحلية والعالمية.</li>
-            <li>رفع سقف الطموح تجاه آفاق العمل.</li>
-          </ul></div>
-          <div class="section-block"><h5>الأحكام</h5><ul>
-            <li>إرشاد مهني دوري؛ يوم سنوي للتوجيه المهني.</li>
-            <li>محاضرات مهنية من قدوات وموجّهين؛ زيارات لأماكن العمل.</li>
-            <li>ركن مهني في مكتبة المدرسة؛ معارض مهنية.</li>
-            <li>توجيه اختيارات الجامعة/المهنة؛ شراكات مع قطاع الأعمال.</li>
-            <li>تدريب عملي خلال العطلة الطويلة.</li>
-          </ul></div>
-          <div class="section-block"><h5>مسؤوليات أولياء الأمور</h5><ul>
-            <li>بناء علاقة ناضجة بين الوالد والطفل؛ استماع دون إصدار أحكام.</li>
-            <li>وضع توقعات واقعية دون ضغط مفرط.</li>
-            <li>مساعدة الطفل في القرارات دون فرضها؛ غرس الثقة الإيجابية بالنفس.</li>
-            <li>الاستعانة بشبكات علاقات مهنية لربط الطفل بالمدرسة.</li>
-          </ul></div>
-          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير والإدارة ووحدة الإرشاد الطلابي حصراً.</p></div>
-          <div class="sign-row">
-            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
-            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
-            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
-            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="policy">
-        <button class="policy-head" aria-expanded="false"><span class="stat-num">IV.</span><span class="title-text">سياسة الزي واللباس</span><span class="plus">&#10087;</span></button>
-        <div class="policy-body">
-          <div class="section-block"><h5>الغرض</h5><p>وضع سياسة زي موحّدة لجميع فئات الموظفين. فالمظهر يعكس صورة المدرسة أمام الطلاب وأولياء الأمور والزوّار، ويجب أن يكون نظيفاً ولائقاً ومهنياً، مع مراعاة السلامة والدور الوظيفي.</p></div>
-          <div class="section-block"><h5>النطاق</h5><p>ينطبق على جميع موظفي سلطان — الدائمين والمتعاقدين وغيرهم من العاملين.</p></div>
-          <div class="section-block"><h5>عناصر السياسة</h5><ul>
-            <li>الموظفون الذكور: زي رسمي غير رسمي (يُقبل البنطال الكاجوال، لا يُقبل الجينز)، قفطان وقبعة مناسبين. الموظفات: ملابس مريحة تغطّي الجسم بالكامل — بدلة أو قميص وبنطال مع ربطة عنق مناسبة.</li>
-            <li>يرتدي السائقون وعمال النظافة زياً موحداً من الاثنين إلى الجمعة.</li>
-            <li>يجب أن يكون الموظفون نظيفين وحسني الهندام؛ لا تُقيَّد أساليب التزيّن الدينية لكن تُرتدى بشكل لائق.</li>
-            <li>لا يُسمح باللباس غير الرسمي (الجينز، القمصان الرياضية، الشباشب) من الاثنين إلى الجمعة.</li>
-            <li>يجب أن تكون الملابس مهنية ونظيفة وخالية من التمزقات أو الطبعات المسيئة.</li>
-          </ul></div>
-          <div class="section-block"><h5>المسؤوليات والعواقب</h5><ul>
-            <li>يُسمح باللباس الرسمي أو غير الرسمي يوم الجمعة فقط؛ اللباس الرسمي مطلوب في باقي الأيام.</li>
-            <li>عدم الالتزام: إنذار شفوي، ثم إنذار خطي، ثم إيقاف عن العمل دون أجر؛ وقد يؤدي إلى الفصل في الحالات الجسيمة.</li>
-          </ul></div>
-          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير/نائب رئيس الإدارة حصراً.</p></div>
-          <div class="sign-row">
-            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
-            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
-            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
-            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="policy">
-        <button class="policy-head" aria-expanded="false"><span class="stat-num">V.</span><span class="title-text">سياسة تكافؤ الفرص</span><span class="plus">&#10087;</span></button>
-        <div class="policy-body">
-          <div class="section-block"><h5>المقدمة</h5><p>تتحمّل سلطان مسؤولية تكافؤ الفرص وصولاً ونتيجةً طوال الحياة الدراسية، بحيث تُوسَّع فرص الحياة الحاضرة والمستقبلية لا أن تُعاق — رغم أن تكافؤ الوصول لا يعني بالضرورة تكافؤ النتائج.</p></div>
-          <div class="section-block"><h5>الغرض</h5><ul>
-            <li>الإعلان عن الالتزام بتكافؤ الفرص.</li>
-            <li>القضاء على التمييز والتحرّش والإيذاء.</li>
-            <li>تعزيز المساواة بين من يشتركون في خصائص محمية ومن لا يشتركون فيها.</li>
-            <li>ضمان شعور جميع الموظفين والمتعلمين بالتقدير وتحقيق إمكاناتهم.</li>
-          </ul></div>
-          <div class="section-block"><h5>الخصائص المحمية</h5><ul><li>الجنس · الحالة الاجتماعية · العمر · الإعاقة · الحمل والأمومة · العرق · الدين أو المعتقد</li></ul></div>
-          <div class="section-block"><h5>الأحكام</h5><ul>
-            <li>تكافؤ الوصول إلى الأنشطة التعليمية والموارد للبنين والبنات.</li>
-            <li>رفع وعي الموظفين تجاه القوالب النمطية للأدوار الجندرية.</li>
-            <li>مراقبة توزيع المعدات ووقت المعلمين بين الجنسين.</li>
-            <li>تعديلات معقولة لذوي الاحتياجات الخاصة والاحتياجات الثقافية/الغذائية.</li>
-          </ul></div>
-          <div class="section-block"><h5>الخاتمة</h5><p>تُقرّ المدرسة بأوجه التشابه والتنوّع بين الأفراد والمجموعات وتحتفي بها، وتعمل جاهدةً على مساعدة كل شخص على تحقيق أقصى إنجاز شخصي.</p></div>
-          <div class="sign-row">
-            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
-            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
-            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
-            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
-          </div>
-        </div>
-      </div>
+    <div class="policy-category">
+      <h3 class="policy-category-title">السلامة والرعاية</h3>
+      <div class="policy-list">
 
       <div class="policy">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">VI.</span><span class="title-text">سياسة الإسعافات الأولية</span><span class="plus">&#10087;</span></button>
@@ -345,6 +255,147 @@
         </div>
       </div>
 
+      </div>
+    </div>
+
+    <div class="policy-category">
+      <h3 class="policy-category-title">السلوك والانضباط</h3>
+      <div class="policy-list">
+
+      <div class="policy">
+        <button class="policy-head" aria-expanded="false"><span class="stat-num">II.</span><span class="title-text">سياسة مكافحة التنمّر والانضباط</span><span class="plus">&#10087;</span></button>
+        <div class="policy-body">
+          <div class="section-block"><h5>المقدمة</h5><p>البيئة الآمنة والودودة والحاضنة ضرورية للتعليم والتعلّم الفعّال. تسعى سلطان لتوفير بيئة كهذه يتطوّر فيها المتعلمون في أجواء مطمئنة وآمنة.</p></div>
+          <div class="section-block"><h5>الغرض</h5><p>التنمّر هو إيذاء متعمّد ومتكرر لشخص من قِبل آخر، وغالباً ما ينطوي على خلل في توازن القوى. في سلطان، تُحدَّد توقعات السلوك الحسن وفق عقيدتنا الإسلامية. وتشمل الأهداف:</p><ul>
+            <li>إظهار أن التنمّر يُؤخذ على محمل الجد ولن يُتسامَح معه.</li>
+            <li>منع جميع أشكال التنمّر، داخل المدرسة وخارجها.</li>
+            <li>دعم تحديد وحماية من يتعرّضون للتنمّر.</li>
+            <li>تشجيع المتعلمين على التحدّث بدلاً من المعاناة في صمت.</li>
+            <li>زيادة الوعي بالسلامة عبر الإنترنت.</li>
+            <li>مساعدة من يمارسون التنمّر على فهم ضرورة التغيير.</li>
+          </ul></div>
+          <div class="section-block"><h5>النطاق</h5><p>ينطبق على جميع أفراد مجتمع سلطان — المتعلمين والموظفين والزوّار وأولياء الأمور والأوصياء — داخل المدرسة وفي الأنشطة خارجها.</p></div>
+          <div class="section-block"><h5>أشكال التنمّر</h5><ul>
+            <li><strong>العاطفي:</strong> الإقصاء، الإيذاء النفسي، الإيماءات التهديدية، إتلاف الممتلكات أو سرقتها.</li>
+            <li><strong>الجسدي:</strong> الدفع، الركل، الضرب، اللكم، البصق، أو أي عنف جسدي.</li>
+            <li><strong>الثقافي/العرقي:</strong> الاستهزاء العرقي، الإيماءات، الكتابات المسيئة، التنميط.</li>
+            <li><strong>الديني:</strong> الاستهزاء أو الإيماءات أو الكتابات المعادية للدين أو الطائفية.</li>
+            <li><strong>الجنسي/التمييز الجنسي:</strong> التلامس غير المرغوب فيه، التعليقات أو الإيماءات المسيئة، الإشاعات.</li>
+            <li><strong>اللفظي:</strong> السخرية بالألقاب، المضايقة، الاستهزاء، الإشاعات، التعليقات المسيئة.</li>
+            <li><strong>القدرات:</strong> استهداف ذوي الاحتياجات الخاصة أو الإعاقة.</li>
+            <li><strong>الإلكتروني:</strong> إساءة استخدام الإنترنت/البريد الإلكتروني/المحادثات/الجوال/الكاميرا للإيذاء أو نشر الإشاعات.</li>
+          </ul></div>
+          <div class="section-block"><h5>الإجراءات التأديبية</h5><ul>
+            <li>منع السخرية المهينة بالألقاب؛ طلب اعتذار حقيقي.</li>
+            <li>منع إذلال البالغين للمتعلم.</li>
+            <li>تصحيح السلوك فوراً؛ الاحتفاظ بالأدلة في السجل.</li>
+            <li>إنذار رسمي؛ إبلاغ أولياء الأمور/الأوصياء؛ عقد اجتماع إذا لزم الأمر.</li>
+            <li>مراقبة خاصة داخل حرم المدرسة.</li>
+          </ul></div>
+          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير، ونائب رئيس الإدارة، والمرشد الطلابي حصراً.</p></div>
+          <div class="sign-row">
+            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
+            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
+            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
+            <div><span class="lab">المراجعة القادمة</span>—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy">
+        <button class="policy-head" aria-expanded="false"><span class="stat-num">IV.</span><span class="title-text">سياسة الزي واللباس</span><span class="plus">&#10087;</span></button>
+        <div class="policy-body">
+          <div class="section-block"><h5>الغرض</h5><p>وضع سياسة زي موحّدة لجميع فئات الموظفين. فالمظهر يعكس صورة المدرسة أمام الطلاب وأولياء الأمور والزوّار، ويجب أن يكون نظيفاً ولائقاً ومهنياً، مع مراعاة السلامة والدور الوظيفي.</p></div>
+          <div class="section-block"><h5>النطاق</h5><p>ينطبق على جميع موظفي سلطان — الدائمين والمتعاقدين وغيرهم من العاملين.</p></div>
+          <div class="section-block"><h5>عناصر السياسة</h5><ul>
+            <li>الموظفون الذكور: زي رسمي غير رسمي (يُقبل البنطال الكاجوال، لا يُقبل الجينز)، قفطان وقبعة مناسبين. الموظفات: ملابس مريحة تغطّي الجسم بالكامل — بدلة أو قميص وبنطال مع ربطة عنق مناسبة.</li>
+            <li>يرتدي السائقون وعمال النظافة زياً موحداً من الاثنين إلى الجمعة.</li>
+            <li>يجب أن يكون الموظفون نظيفين وحسني الهندام؛ لا تُقيَّد أساليب التزيّن الدينية لكن تُرتدى بشكل لائق.</li>
+            <li>لا يُسمح باللباس غير الرسمي (الجينز، القمصان الرياضية، الشباشب) من الاثنين إلى الجمعة.</li>
+            <li>يجب أن تكون الملابس مهنية ونظيفة وخالية من التمزقات أو الطبعات المسيئة.</li>
+          </ul></div>
+          <div class="section-block"><h5>المسؤوليات والعواقب</h5><ul>
+            <li>يُسمح باللباس الرسمي أو غير الرسمي يوم الجمعة فقط؛ اللباس الرسمي مطلوب في باقي الأيام.</li>
+            <li>عدم الالتزام: إنذار شفوي، ثم إنذار خطي، ثم إيقاف عن العمل دون أجر؛ وقد يؤدي إلى الفصل في الحالات الجسيمة.</li>
+          </ul></div>
+          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير/نائب رئيس الإدارة حصراً.</p></div>
+          <div class="sign-row">
+            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
+            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
+            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
+            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy">
+        <button class="policy-head" aria-expanded="false"><span class="stat-num">V.</span><span class="title-text">سياسة تكافؤ الفرص</span><span class="plus">&#10087;</span></button>
+        <div class="policy-body">
+          <div class="section-block"><h5>المقدمة</h5><p>تتحمّل سلطان مسؤولية تكافؤ الفرص وصولاً ونتيجةً طوال الحياة الدراسية، بحيث تُوسَّع فرص الحياة الحاضرة والمستقبلية لا أن تُعاق — رغم أن تكافؤ الوصول لا يعني بالضرورة تكافؤ النتائج.</p></div>
+          <div class="section-block"><h5>الغرض</h5><ul>
+            <li>الإعلان عن الالتزام بتكافؤ الفرص.</li>
+            <li>القضاء على التمييز والتحرّش والإيذاء.</li>
+            <li>تعزيز المساواة بين من يشتركون في خصائص محمية ومن لا يشتركون فيها.</li>
+            <li>ضمان شعور جميع الموظفين والمتعلمين بالتقدير وتحقيق إمكاناتهم.</li>
+          </ul></div>
+          <div class="section-block"><h5>الخصائص المحمية</h5><ul><li>الجنس · الحالة الاجتماعية · العمر · الإعاقة · الحمل والأمومة · العرق · الدين أو المعتقد</li></ul></div>
+          <div class="section-block"><h5>الأحكام</h5><ul>
+            <li>تكافؤ الوصول إلى الأنشطة التعليمية والموارد للبنين والبنات.</li>
+            <li>رفع وعي الموظفين تجاه القوالب النمطية للأدوار الجندرية.</li>
+            <li>مراقبة توزيع المعدات ووقت المعلمين بين الجنسين.</li>
+            <li>تعديلات معقولة لذوي الاحتياجات الخاصة والاحتياجات الثقافية/الغذائية.</li>
+          </ul></div>
+          <div class="section-block"><h5>الخاتمة</h5><p>تُقرّ المدرسة بأوجه التشابه والتنوّع بين الأفراد والمجموعات وتحتفي بها، وتعمل جاهدةً على مساعدة كل شخص على تحقيق أقصى إنجاز شخصي.</p></div>
+          <div class="sign-row">
+            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
+            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
+            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
+            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="policy-category">
+      <h3 class="policy-category-title">إدارية</h3>
+      <div class="policy-list">
+
+      <div class="policy">
+        <button class="policy-head" aria-expanded="false"><span class="stat-num">III.</span><span class="title-text">سياسة التوجيه المهني</span><span class="plus">&#10087;</span></button>
+        <div class="policy-body">
+          <div class="section-block"><h5>المقدمة</h5><p>تؤمن سلطان بأن المستقبل المهني للمتعلمين يُصاغ من خبراتهم وتقدّمهم وإنجازاتهم. يحصل المتعلمون بين سن 11 و17 عاماً على توجيه مهني مستقل.</p></div>
+          <div class="section-block"><h5>الغرض</h5><ul>
+            <li>تأهيل المتعلمين لاتخاذ قرارات مهنية صائبة.</li>
+            <li>تشجيع خيارات طموحة ومدروسة للمسار الوظيفي.</li>
+            <li>توفير خبرات تبني قابلية التوظيف ومهارات الدراسة.</li>
+            <li>خلق وعي بالفرص المهنية المحلية والعالمية.</li>
+            <li>رفع سقف الطموح تجاه آفاق العمل.</li>
+          </ul></div>
+          <div class="section-block"><h5>الأحكام</h5><ul>
+            <li>إرشاد مهني دوري؛ يوم سنوي للتوجيه المهني.</li>
+            <li>محاضرات مهنية من قدوات وموجّهين؛ زيارات لأماكن العمل.</li>
+            <li>ركن مهني في مكتبة المدرسة؛ معارض مهنية.</li>
+            <li>توجيه اختيارات الجامعة/المهنة؛ شراكات مع قطاع الأعمال.</li>
+            <li>تدريب عملي خلال العطلة الطويلة.</li>
+          </ul></div>
+          <div class="section-block"><h5>مسؤوليات أولياء الأمور</h5><ul>
+            <li>بناء علاقة ناضجة بين الوالد والطفل؛ استماع دون إصدار أحكام.</li>
+            <li>وضع توقعات واقعية دون ضغط مفرط.</li>
+            <li>مساعدة الطفل في القرارات دون فرضها؛ غرس الثقة الإيجابية بالنفس.</li>
+            <li>الاستعانة بشبكات علاقات مهنية لربط الطفل بالمدرسة.</li>
+          </ul></div>
+          <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير والإدارة ووحدة الإرشاد الطلابي حصراً.</p></div>
+          <div class="sign-row">
+            <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
+            <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
+            <div><span class="lab">اعتمدها</span>زكريا أولانريواجو أنوفي (الرئيس التنفيذي)</div>
+            <div><span class="lab">المراجعة القادمة</span>يوليو 2025</div>
+          </div>
+        </div>
+      </div>
+
       <div class="policy">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IX.</span><span class="title-text">سياسة الشكاوى</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
@@ -378,17 +429,62 @@
         </div>
       </div>
 
+      </div>
     </div>
+
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div><h5>مدارس سلطان حنفي الملكية</h5><p style="max-width:340px;">تكتّل من المدارس يقدّم تعليماً عصرياً وإسلامياً راقياً لمتعلمين من مختلف الأعمار، في بيئة آمنة وهادئة.</p></div>
-      <div><h5>روابط سريعة</h5><ul><li><a href="/ar/about/">المدير وقصتنا</a></li><li><a href="/ar/about/governance/">الحوكمة</a></li><li><a href="/ar/admission/">القبول</a></li><li><a href="/ar/policies/">السياسات</a></li><li><a href="/ar/contact/">اتصل بنا</a></li><li><a href="/portal/login/" dir="ltr">Parent Portal (Pilot, English)</a></li></ul></div>
-      <div><h5>الأكاديميات</h5><ul><li><a href="/ar/academics/nursery-primary/">الحضانة والابتدائية</a></li><li><a href="/ar/academics/royal-college/">الكلية الملكية</a></li><li><a href="/ar/academics/arabic-islamic-studies/">اللغة العربية والدراسات الإسلامية</a></li><li><a href="/ar/academics/quran-college/">كلية القرآن الكريم</a></li></ul></div>
+      <div>
+        <h5>مدارس سلطان حنفي الملكية</h5>
+        <p style="max-width:320px;">تكتّل من المدارس يقدّم تعليماً عصرياً وإسلامياً راقياً لمتعلمين من مختلف الأعمار، في بيئة آمنة وهادئة.</p>
+        <ul style="margin-top:14px;">
+          <li><a href="/ar/about/">نبذتنا وقيمنا</a></li>
+          <li><a href="/ar/about/governance/">الحوكمة والقيادة</a></li>
+          <li><a href="/ar/foundation/">المؤسسة الخيرية</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>الأكاديميات</h5>
+        <ul>
+          <li><a href="/ar/academics/nursery-primary/">الحضانة والابتدائية</a></li>
+          <li><a href="/ar/academics/royal-college/">الكلية الملكية</a></li>
+          <li><a href="/ar/academics/arabic-islamic-studies/">اللغة العربية والدراسات الإسلامية</a></li>
+          <li><a href="/ar/academics/quran-college/">كلية القرآن الكريم</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>موارد أولياء الأمور</h5>
+        <ul>
+          <li><a href="/portal/login/" dir="ltr">Parent Portal (Pilot, English)</a></li>
+          <li><a href="/ar/admission/">القبول</a></li>
+          <li><a href="/ar/boarding/">السكن الداخلي</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>الحوكمة</h5>
+        <ul>
+          <li><a href="/ar/policies/">مركز السياسات</a></li>
+          <li><a href="/ar/contact/">الشكاوى والاستفسارات</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>التواصل</h5>
+        <p class="foot-contact-item" dir="ltr" style="text-align:right;">15, Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road, Ikorodu, Lagos State.</p>
+        <p class="foot-contact-item"><a href="mailto:info@shroyalschools.ng" dir="ltr">info@shroyalschools.ng</a></p>
+        <p class="foot-contact-item"><a href="tel:+2348073747650" dir="ltr">+234 807 374 7650</a></p>
+      </div>
     </div>
+
+    <div class="foot-quick-actions">
+      <a href="/ar/admission/" class="is-primary">سجّل الآن</a>
+      <a href="/portal/login/" dir="ltr">Parent Portal</a>
+      <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">تواصل عبر واتساب</a>
+    </div>
+
     <div class="foot-bottom"><span>جميع الحقوق محفوظة © مدارس سلطان حنفي الملكية</span><span>الإصدار الملكي الرائد — تصميم مفاهيمي</span></div>
   </div>
 </footer>
@@ -472,11 +568,23 @@
   </div>
 </div>
 
+<div class="search-overlay" data-search-overlay data-search-index="/search-index.ar.json" data-search-empty="لا توجد صفحات مطابقة لهذا البحث." hidden>
+  <div class="search-panel">
+    <div class="search-panel-head">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="text" data-search-input placeholder="ابحث في الموقع…" autocomplete="off" />
+      <button type="button" class="search-close" data-search-close aria-label="إغلاق البحث">&#10005;</button>
+    </div>
+    <div class="search-results" data-search-results></div>
+  </div>
+</div>
+
 
 <script src="/js/site.js" defer></script>
 <script src="/js/assistant-data.ar.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
+<script src="/js/search.js" defer></script>
 
 </body>
 </html>
