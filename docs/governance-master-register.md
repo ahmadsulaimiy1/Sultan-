@@ -118,7 +118,7 @@ and what's still open.
 | Tuition & Fees Policy | MISSING — **blocked on real fee figures, not on drafting effort** (Financial Governance Framework, Phase C) | 1 | CEO | Board of Trustees | Annual | None |
 | Refund Policy | MISSING — blocked, depends on Tuition & Fees Policy | 2 | CEO | Board of Trustees | Annual | Tuition & Fees Policy |
 | Procurement Policy | MISSING — evaluated, not urgent | 3 | COO-equivalent | CEO | Annual | Financial Controls Policy (drafted) |
-| Financial Controls Policy | **DRAFTED** (Phase C) | 2 | CEO / Board | Board of Trustees | Annual | None |
+| Financial Controls Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see FN-01) | 2 | CEO / Board | Board of Trustees | Annual | None |
 | **Scholarship Governance Framework** *(new — surfaced by the Phase C Financial Governance Framework)* | MISSING — blocked, same reason as Tuition & Fees Policy | 3 | CEO | Board of Trustees | Annual | Tuition & Fees Policy |
 
 ## 8. Technology & Digital Campus
