@@ -93,10 +93,9 @@ section can't drift silently from what the system really does.)*
 3. Staff access to guardian/student data is role-scoped, not
    all-or-nothing (admin endpoints require an admin token distinct from
    a guardian's session).
-4. Data is kept only as long as it serves a purpose — see the
-   retention section below, which currently has **no defined retention
-   period and needs one** (flagged as a real gap, not resolved by this
-   draft).
+4. Data is kept only as long as it serves a purpose — **no retention
+   period is defined yet** (flagged as a real gap in Section 10,
+   Compliance, not resolved by this draft).
 5. Security failures are disclosed, not hidden — see Section 8.
 
 ## 6. Responsibilities
