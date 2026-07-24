@@ -117,8 +117,8 @@ Mirrors the Student Code of Conduct's expectations from the staff side
 — respectful, non-discriminatory, safeguarding-conscious interaction —
 without creating a second, competing description of what "respectful
 conduct" means. Boarding-specific staff-student contact rules are in
-the Boarding Regulations §6.5 and the Child Protection & Safeguarding
-Policy §6.6 alone.
+the Boarding Regulations §7.5 and the Child Protection & Safeguarding
+Policy §7.8 alone.
 
 ## 12. Grievance & discipline (staff)
 

@@ -71,7 +71,7 @@ redefining them.
   social-media contact with a student; no gift-giving or favouritism
   suggesting an inappropriate individual relationship. Boarding staff
   follow this identically to day-school staff — mirrors the Child
-  Protection & Safeguarding Policy §7.8 and Boarding Regulations §6.5
+  Protection & Safeguarding Policy §7.8 and Boarding Regulations §7.5
   exactly, not a separately worded version.
 - **Physical contact:** limited to what is necessary, appropriate, and
   consistent with the child's age (e.g. first-aid response, comforting

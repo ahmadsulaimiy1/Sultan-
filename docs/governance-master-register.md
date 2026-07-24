@@ -76,7 +76,7 @@ and what's still open.
 | Welfare Policy | MISSING | 2 | Guidance Counsellor / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
 | Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | VP Administration | Board of Trustees | Annual | — |
 | Behaviour Policy | PARTIAL | 2 | VP Administration | CEO | Annual | Code of Conduct (drafted) |
-| Boarding Regulations | **DRAFTED** (Phase A) | 1 | Principal, Qur'an College | Board of Trustees | Annual | Safeguarding Policy (drafted), Medical Policy |
+| Boarding Regulations | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see SD-04) | 1 | Principal, Qur'an College | Board of Trustees | Annual | Safeguarding Policy (drafted), Medical Policy |
 
 ## 4. Parent Affairs
 
