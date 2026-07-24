@@ -127,7 +127,7 @@ and what's still open.
 |---|---|---|---|---|---|---|
 | Data Protection Policy | **DRAFTED v2.0** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
 | Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
-| Information Security Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
+| Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
 | Acceptable Use Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
 | AI Usage Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
 | Records Retention Policy | **DRAFTED** (Phase C) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / CTO-equivalent | CEO | Annual | Data Protection Policy (drafted) |

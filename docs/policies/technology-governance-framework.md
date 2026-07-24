@@ -35,7 +35,7 @@ honestly rather than draft all of them regardless of urgency.
 |---|---|---|---|
 | **Cybersecurity Framework** | Not urgent | The technical substance already exists at implementation level (`docs/parent-portal-audit.md`) and at policy level (Information Security Policy). A standalone Cybersecurity Framework would mostly restate both as a higher-level governance document — valuable once SHRS's systems are more numerous/complex, not blocking anything today. | 3 |
 | **Digital Learning Policy** | Not yet applicable | SHRS does not currently run a learning-management system or digital classroom platform — this project's digital footprint today is the marketing site, Parent Portal, and AI assistant, not classroom EdTech. Drafting this now would be governance for a system that doesn't exist. Revisit if/when a Student Portal or LMS is actually built (see `docs/parent-portal-phase2-3-roadmap.md`). | 4 |
-| **Incident Response Policy** | Genuinely useful soon, not yet drafted | The Information Security Policy §7 already names "no formal incident-response runbook exists yet" as an open gap. This is the most concrete unmet need in this table — recommend drafting next, once Phase C's current batch is reviewed. | 2 |
+| **Incident Response Policy** | Genuinely useful soon, not yet drafted | The Information Security Policy §7.6 already names "no formal incident-response runbook exists yet" as an open gap, with §7.4 providing only a baseline procedure until this policy exists. This is the most concrete unmet need in this table — recommend drafting next. | 2 |
 
 ## 4. Recommendation
 

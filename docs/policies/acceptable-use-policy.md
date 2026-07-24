@@ -61,7 +61,7 @@ Privacy Policy without redefining them.
 ## 6. Staff use
 
 - Admin-portal access is role-scoped and admin tokens are never shared
-  (Information Security Policy §6, Data Protection & Privacy Policy
+  (Information Security Policy §7.1, Data Protection & Privacy Policy
   §6) — restated here as a direct staff obligation, not just a
   technical control.
 - Staff use of the AI assistant or any future AI system follows the AI
