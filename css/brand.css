@@ -40,6 +40,15 @@
   .ledger.on-light .lg-name{color:var(--navy);}
   .ledger.on-light .lg-cred{color:#54534e;}
   .ledger.on-light .lg-role{color:var(--crimson);}
+  /* Founder & CEO spotlight */
+  .founder-spotlight{display:flex;align-items:center;gap:32px;margin-top:34px;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  @media (max-width:600px){.founder-spotlight{flex-direction:column;align-items:flex-start;text-align:left;gap:20px;}}
+  .founder-spotlight .fs-photo{width:132px;height:132px;flex-shrink:0;border-radius:50%;overflow:hidden;border:1px solid var(--gold);box-shadow:0 0 0 6px rgba(198,161,91,0.12);}
+  .founder-spotlight .fs-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .founder-spotlight .fs-label{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.16em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;}
+  .founder-spotlight .fs-name{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.55rem;color:#fff;display:block;}
+  .founder-spotlight .fs-cred{font-size:0.86rem;color:rgba(248,244,233,0.62);margin-top:4px;display:block;}
+  .founder-spotlight .fs-role{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);margin-top:10px;display:block;}
   /* Asymmetric Mission/Vision — replaces twin boxed cards */
   .mv-asym{display:grid;grid-template-columns:1.6fr 1fr;gap:50px;align-items:start;margin-bottom:56px;}
   @media (max-width:800px){.mv-asym{grid-template-columns:1fr;gap:28px;}}
