@@ -1,12 +1,23 @@
-# SHRS Acceptable Use Policy
+# Policy IT-03 — Acceptable Use Policy
 
-**Status:** DRAFT v0.1 — not yet adopted.
-**Owner (proposed):** ICT Head (Mr. Oguntade Adebola Aliu).
-**Review cycle:** Annual.
-**Depends on:** Student Handbook §7.5 (Digital behaviour), Staff Handbook
-§10 (Digital conduct) — both of which currently state a general
-expectation and point forward to this policy for detail; Data
-Protection & Privacy Policy; AI Usage Policy.
+*Retrofitted to the full 13-section governance architecture and
+deepened, per the Tier 2 retrofit directive. Every principle and
+scope boundary from v1.0 is preserved, including the honest "not fully
+defined" device/network section. New in v2.0: social media use when
+representing SHRS online, and account provisioning/deprovisioning.*
+
+## 1. Policy Information
+
+| Field | Value |
+|---|---|
+| Policy Code | IT-03 |
+| Policy Title | Acceptable Use Policy |
+| Version | 2.0 (retrofitted from v1.0, Phase C) |
+| Effective Date | Not yet effective — pending Board adoption |
+| Policy Owner | ICT Head (Mr. Oguntade Adebola Aliu) |
+| Approval Authority | CEO |
+| Review Cycle | Annual |
+| Next Review Date | Not yet set — to be fixed upon adoption |
 
 > **Before this governs a real decision:** device-specific rules below
 > (e.g. personal device use on campus, school Wi-Fi if one exists) are
@@ -17,7 +28,7 @@ Protection & Privacy Policy; AI Usage Policy.
 
 ---
 
-## 1. Purpose
+## 2. Purpose
 
 To give students and staff one place that defines acceptable use of
 SHRS's digital systems (the Parent Portal, the AI assistant) and any
@@ -25,61 +36,66 @@ physical digital infrastructure (school devices, network) — the
 detailed policy the Student Handbook and Staff Handbook both point to
 rather than restate.
 
-## 2. Scope
+## 3. Scope
 
 All students, staff, and any digital system operating under the SHRS
 name; personal devices only insofar as they're used to access an SHRS
 system or on an SHRS site.
 
-## 3. Definitions
+## 4. Definitions
 
 Reuses "personal data" and "processing" from the Data Protection &
-Privacy Policy without redefining them.
+Privacy Policy (IT-02) without redefining them.
 
-## 4. Principles
+## 5. Policy Statement
 
-1. Digital systems are used for their intended educational or
-   administrative purpose.
-2. A student or staff member's own credentials are never shared.
-3. Digital conduct affecting another person is held to the same
-   standard as in-person conduct — this mirrors the Student Code of
-   Conduct §7.9's "online conduct is treated as on-campus conduct"
-   principle exactly, not a separate standard.
+Digital systems are used for their intended educational or
+administrative purpose. A student or staff member's own credentials
+are never shared. Digital conduct affecting another person is held to
+the same standard as in-person conduct — this mirrors the Student
+Code of Conduct (SD-02) §7.9's "online conduct is treated as on-campus
+conduct" principle exactly, not a separate standard.
 
-## 5. Student use
+## 6. Roles and Responsibilities
 
+| Role | Responsibility |
+|---|---|
+| ICT Head | Owns this policy; provisions and deprovisions system accounts (Section 7.6); reviews access logs (Section 8). |
+| Registrar / admin-portal staff | Request account provisioning for new students/guardians; notify ICT Head promptly of a staff departure for deprovisioning. |
+| Students and staff | Follow the use standards in Section 7; report a suspected violation. |
+
+## 7. Procedures
+
+### 7.1 Student use
 - Parent Portal access today is through a guardian's account; a direct
   student login is a Phase 2/3 product question (see
   `docs/parent-portal-phase2-3-roadmap.md`) this policy doesn't
   pre-decide.
 - Use of the AI assistant for academic help is permitted per the AI
-  Usage Policy §5 and 10; misuse (attempting to have it complete
-  graded work dishonestly) is an academic-integrity matter under the
-  Academic Regulations §7.5, not a new violation category this policy
-  invents.
+  Usage Policy (IT-05) §5 and 7.6; misuse (attempting to have it
+  complete graded work dishonestly) is an academic-integrity matter
+  under the Academic Regulations (AC-02) §7.5, not a new violation
+  category this policy invents.
 
-## 6. Staff use
-
+### 7.2 Staff use
 - Admin-portal access is role-scoped and admin tokens are never shared
-  (Information Security Policy §7.1, Data Protection & Privacy Policy
-  §6) — restated here as a direct staff obligation, not just a
-  technical control.
+  (Information Security Policy, IT-01, §7.1; Data Protection & Privacy
+  Policy, IT-02, §6) — restated here as a direct staff obligation, not
+  just a technical control.
 - Staff use of the AI assistant or any future AI system follows the AI
-  Usage Policy in full.
+  Usage Policy (IT-05) in full.
 
-## 7. Prohibited use
-
+### 7.3 Prohibited use
 - Sharing another person's Parent Portal credentials or accessing an
   account that isn't one's own.
 - Using any SHRS digital system to harass, bully, or misrepresent
-  another person — handled under the Student Code of Conduct or a
-  future Staff Conduct Policy, not a separate disciplinary track
-  invented here.
+  another person — handled under the Student Code of Conduct (SD-02)
+  or the Staff Conduct Policy (HR-01), not a separate disciplinary
+  track invented here.
 - Attempting to bypass access controls (e.g. attempting to view another
   guardian's linked children's data).
 
-## 8. Personal devices & network
-
+### 7.4 Personal devices and network
 **Not fully defined.** SHRS's actual device and network infrastructure
 (whether a school Wi-Fi network exists, whether personal devices are
 permitted in classrooms) has not been described in enough detail to
@@ -87,29 +103,67 @@ write specific rules — this section remains open pending real input,
 consistent with this project's standing discipline against inventing
 operational facts.
 
-## 9. Monitoring & compliance
+### 7.5 Social media use
+- A staff member posting on social media in a capacity representing
+  SHRS (an official account, or personal use that identifies their
+  role) does not share a student's image, name, or personal data
+  without the consent already governed by the Data Protection &
+  Privacy Policy (IT-02) — no separate consent standard is created
+  here.
+- **This is a new provision, not previously stated in v1.0** — added
+  because staff social media use was never previously addressed, and
+  it's a real, present-day risk surface distinct from Parent Portal or
+  AI assistant use.
+
+### 7.6 Account provisioning and deprovisioning
+- A guardian's Parent Portal account is provisioned at enrollment
+  (Admissions Policy, PA-05, §7.7) and deactivated per the Records
+  Retention Policy's (IT-04) §7.1 account-retention period after the
+  last linked child's enrolment ends.
+- A staff member's admin-portal access is deprovisioned the same day
+  their employment ends — **this is a new provision, not previously
+  stated in v1.0**, closing a real gap: v1.0 addressed who has access
+  while employed but never stated when that access is removed.
+
+## 8. Monitoring and Compliance
 
 ICT Head reviews Parent Portal access logs for anomalies consistent
-with the Information Security Policy; this policy does not create a
-new monitoring obligation beyond what that policy already establishes.
+with the Information Security Policy (IT-01); this policy does not
+create a new monitoring obligation beyond what that policy already
+establishes.
 
-## 10. Appeals
+## 9. Records and Documentation
 
-A student or staff member disputing an acceptable-use violation finding
-follows the same appeal pathway as the underlying disciplinary
-document that applies (Student Code of Conduct §12, or the Staff
-Conduct Policy, HR-01, §9) — not a separate appeals process.
+Account provisioning and deprovisioning actions (Section 7.6) are
+logged by the ICT Head, retained per the Records Retention Policy
+(IT-04).
+
+## 10. Related Policies
+
+Student Handbook (SD-03, §7.5), Staff Handbook (HR-02, §10), Data
+Protection & Privacy Policy (IT-02), AI Usage Policy (IT-05),
+Information Security Policy (IT-01), Student Code of Conduct (SD-02),
+Staff Conduct Policy (HR-01), Records Retention Policy (IT-04),
+Admissions Policy (PA-05).
 
 ## 11. Exceptions
 
 None defined.
 
-## 12. Review cycle
+## 12. Appeals and Complaints
+
+A student or staff member disputing an acceptable-use violation finding
+follows the same appeal pathway as the underlying disciplinary
+document that applies (Student Code of Conduct, SD-02, §12, or the
+Staff Conduct Policy, HR-01, §9) — not a separate appeals process.
+
+## 13. Review and Amendment
 
 Annual.
 
-## 13. Version control
+## Version control
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| 0.1 | Draft | Initial draft from Governance Master Register, Phase C | Drafted per SHRS governance directive; not yet reviewed or adopted; device/network section intentionally left open pending real infrastructure detail |
+| 0.1 | Draft | Initial draft, Phase C | Drafted per SHRS governance directive; not yet reviewed or adopted; device/network section intentionally left open pending real infrastructure detail |
+| 2.0 | Draft | Retrofitted to the full 13-section architecture, Phase F Tier 2 retrofit — added social media use and account provisioning/deprovisioning; fixed a stale "future Staff Conduct Policy" reference now that it's drafted (HR-01) | Not yet reviewed or adopted |

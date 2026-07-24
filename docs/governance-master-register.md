@@ -128,7 +128,7 @@ and what's still open.
 | Data Protection Policy | **DRAFTED v2.0** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
 | Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
 | Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
-| Acceptable Use Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
+| Acceptable Use Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IT-03) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
 | AI Usage Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-05) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
 | Records Retention Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IT-04) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / CTO-equivalent | CEO | Annual | Data Protection Policy (drafted) |
 | Cybersecurity Framework | MISSING — evaluated, not urgent (Technology Governance Framework) | 3 | CTO-equivalent (ICT Head) | CEO | Annual | Information Security Policy (drafted) |
@@ -231,8 +231,20 @@ name and section number).
   in the Staff Handbook, a stale one in the Records Retention Policy)
   and one real structural gap: the **Admissions Policy had been drafted
   since Phase B but was never assigned a code or tracked as its own
-  register row** — now fixed as PA-05. Tier 2 retrofit and the
-  website-publication requirement are the next phases, not yet started.
+  register row** — now fixed as PA-05.
+- **Phase F continued (Tier 2 retrofit, autonomous, nonstop):** all
+  nine named Tier 2 documents retrofitted to the same standard —
+  Admissions Policy (PA-05), Parent Handbook (PA-02), Student Handbook
+  (SD-03), Emergency Response Plan (SW-09), Hifz Regulations (IQ-01),
+  Ijazah Governance Framework (IQ-02), Financial Controls Policy
+  (FN-01), Records Retention Policy (IT-04), Acceptable Use Policy
+  (IT-03). Every retrofit's cross-reference sweep continued to surface
+  real drift: stale citations were found and fixed in the Boarding
+  Regulations, First Aid Policy, Financial Controls Policy, and Ijazah
+  Governance Framework as documents around them were renumbered.
+  Website publication (a public page per applicable document, a
+  Policies Hub, search indexing, breadcrumbs) and the final Governance
+  Completion Report follow in this same pass.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:
