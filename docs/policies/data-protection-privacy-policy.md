@@ -7,7 +7,11 @@ v1.0 is preserved — none is weakened, removed, or quietly resolved
 without real input. New in v2.0: third-party processor disclosure
 (hosting/AI infrastructure), cross-border transfer awareness, a
 dedicated children's-data section, consent/legal-basis discussion, and
-a Data Protection Impact Assessment requirement for future systems.*
+a Data Protection Impact Assessment requirement for future systems. New
+in v2.1: an image and media consent procedure — a gap surfaced directly
+by the first real photography batch supplied for the website, where
+three photos of identifiable students had to be held back because no
+consent process existed to check them against.*
 
 ## 1. Policy Information
 
@@ -15,7 +19,7 @@ a Data Protection Impact Assessment requirement for future systems.*
 |---|---|
 | Policy Code | IT-02 |
 | Policy Title | Data Protection & Privacy Policy |
-| Version | 2.0 (retrofitted from v1.0, Phase A) |
+| Version | 2.1 (retrofitted from v1.0, Phase A; image-consent procedure added Phase G) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | CTO-equivalent (currently the closest real role is the ICT Head, Mr. Oguntade Adebola Aliu — this policy's ownership should be confirmed by the Board, since data protection ownership is usually a named accountable individual, not just a department) |
 | Approval Authority | Board of Trustees |
@@ -76,6 +80,12 @@ policy).
 - **Children's data** — personal data relating to a student under 18;
   treated with heightened care throughout this policy given SHRS
   enrols students from age 2.
+- **Image/media consent** — a guardian's explicit, recorded permission
+  for a specific use of their child's photograph or video, distinct
+  from the general data-processing consent discussed in Section 7.9
+  because it governs a different risk (public visibility and
+  reputational/safeguarding exposure, not just data storage). See
+  Section 7.10.
 
 ## 5. Policy Statement
 
@@ -202,6 +212,47 @@ answered honestly to a parent who asks.
   asserting a basis that hasn't actually been confirmed with legal
   input — a genuinely open item, not a formality.
 
+### 7.10 Image and media consent
+- **No image/media consent process currently exists at SHRS.** This
+  section names that gap and proposes a structure for it, rather than
+  leaving photography and video governed only by the general data-
+  processing discussion in Section 7.9, which was never written with
+  publicity/publication use in mind.
+- **The gap is not theoretical.** It was surfaced directly: a batch of
+  campus photographs supplied for the website included three images of
+  identifiable students that could not be published because no consent
+  record existed to check against — see `docs/visual-asset-integration-
+  plan.md` for the specific hold decisions this produced.
+- **Proposed structure, pending Board confirmation:**
+  1. At admission (Admissions Policy, PA-05, alongside the existing
+     documentation collected at Stage 3), a guardian is asked to
+     indicate consent separately for two distinct uses, since they
+     carry different exposure: **(a) internal/institutional use**
+     (yearbooks, ID badges, in-school displays, internal records) and
+     **(b) public-facing use** (the public website, social media,
+     prospectus, marketing materials, press).
+  2. Consent is recorded per child, not assumed for a family or a
+     class as a group, and is revocable at any time by a guardian's
+     written request to the Registrar — a revocation takes effect
+     going forward (it does not require retroactively removing
+     material already lawfully published, which is a distinct
+     question this policy does not resolve here).
+  3. **Until this structure is adopted, the operative default is
+     conservative, not permissive:** no photograph or video in which a
+     student is individually identifiable is published to a public-
+     facing SHRS channel without a specific, confirmed guardian consent
+     for that use — silence or an unanswered request is treated as "no,"
+     not as implied permission.
+- **What does not require this consent:** a photograph where no
+  individual student is reasonably identifiable (a facilities photo
+  with no one in frame, a genuinely distant crowd shot with no
+  individual as its subject) is not "children's data" in the sense
+  this section addresses, and is governed by this policy's general
+  provisions rather than Section 7.10 specifically.
+- **This is a new provision, not previously stated in v2.0** — added
+  in direct response to a real integration decision, not drafted
+  speculatively ahead of one.
+
 ## 8. Monitoring and Compliance
 
 Written with awareness of the Nigeria Data Protection Act 2023 and the
@@ -209,10 +260,10 @@ Nigeria Data Protection Commission. **Does not certify compliance.**
 Retention periods (resolved separately in the Records Retention Policy,
 IT-04), data-subject rights (Section 7.3), breach-notification
 timelines (Section 7.4), third-party processor agreements (Section
-7.6), cross-border transfer (Section 7.7), and legal basis for
-processing (Section 7.9) are the concrete open items that need legal
-input before this policy can be considered complete, not just
-reviewed.
+7.6), cross-border transfer (Section 7.7), legal basis for processing
+(Section 7.9), and the image/media consent structure (Section 7.10) are
+the concrete open items that need legal input, Board confirmation, or
+both before this policy can be considered complete, not just reviewed.
 
 ## 9. Records and Documentation
 
@@ -226,7 +277,9 @@ Child Protection & Safeguarding Policy (SW-01, for the safety-override
 exception in Section 11), Records Retention Policy (IT-04, for
 retention periods this policy deliberately does not set
 independently), Information Security Policy (IT-01, for the technical
-controls this policy's principles depend on), AI Usage Policy (IT-05).
+controls this policy's principles depend on), AI Usage Policy (IT-05),
+Admissions Policy (PA-05, the proposed point of collection for the
+image/media consent structure in Section 7.10).
 
 ## 11. Exceptions
 
@@ -258,3 +311,4 @@ changing hosting/AI infrastructure providers named in Section 7.6).
 |---|---|---|---|
 | 1.0 | Draft | Initial draft, Phase A | Drafted per SHRS governance directive; not yet reviewed or adopted |
 | 2.0 | Draft | Retrofitted to the full 13-section architecture, Phase F Tier 1 retrofit — added third-party processor disclosure, cross-border transfer awareness, a dedicated children's-data section, consent/legal-basis discussion, and a Data Protection Impact Assessment requirement | Not yet reviewed or adopted; six concrete items (Section 8) still need legal input |
+| 2.1 | Draft | Phase G — added an image and media consent procedure (Section 7.10), proposing separate internal/public-facing consent tracked per child, with a conservative default until adopted. Drafted directly in response to three real photographs that could not be published to the website for lack of a consent record — not speculative | Not yet reviewed or adopted; seven concrete items (Section 8) now need legal input, Board confirmation, or both |

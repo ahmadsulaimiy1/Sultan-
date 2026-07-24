@@ -86,7 +86,7 @@ and what's still open.
 | Parent Code of Conduct | MISSING | 2 | VP Administration | CEO | Annual | Communication Policy |
 | Communication Policy | MISSING | 3 | VP Administration | CEO | Annual | Parent Portal (exists) |
 | Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Board of Trustees | Annual | — |
-| **Admissions Policy** *(new row — drafted since Phase B but never tracked on this register until the Academic Regulations Tier 1 retrofit surfaced the gap)* | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see PA-05) | 1 | CEO | Board of Trustees | Annual | Data Protection & Privacy Policy (drafted), Academic Regulations (drafted) |
+| **Admissions Policy (PA-05)** *(new row — drafted since Phase B but never tracked on this register until the Academic Regulations Tier 1 retrofit surfaced the gap)* | **DRAFTED v2.1** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit; image-consent cross-reference added Phase G) | 1 | CEO | Board of Trustees | Annual | Data Protection & Privacy Policy (drafted), Academic Regulations (drafted) |
 
 ## 5. Safeguarding
 
@@ -125,7 +125,7 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Data Protection Policy | **DRAFTED v2.0** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
+| Data Protection Policy (IT-02) | **DRAFTED v2.1** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit; image/media consent procedure added Phase G — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
 | Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
 | Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
 | Acceptable Use Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IT-03) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
@@ -297,6 +297,26 @@ name and section number).
   and Training requirements section) were swept and fixed. **Both Tier
   3 documents are now complete** — every document this project has
   drafted to date is retrofitted to the full 13-section architecture.
+- **Phase G continued (first real photography, and a governance gap it
+  surfaced):** the website's first real campus photographs were
+  evaluated and integrated — see `docs/visual-asset-integration-plan.md`
+  for the full per-image placement record. Six of eleven supplied
+  images were published (a Facilities-page gallery, plus a Founder/CEO
+  portrait on the Governance page once the Director confirmed the
+  subject's identity); five were held — two for photographic quality,
+  three because they show identifiable students and **no image/media
+  consent process existed anywhere in this governance library to check
+  them against.** That gap did not stay theoretical: the Data
+  Protection & Privacy Policy (IT-02) was updated to v2.1 with a new
+  §7.10 proposing a consent structure (separate internal vs.
+  public-facing consent, recorded per child, revocable, defaulting to
+  "no" until confirmed), the Admissions Policy (PA-05) was updated to
+  v2.1 to point to it at the documentation stage, and the Governance
+  Resolution Register gained a new Category 7 tracking both the
+  structure's adoption and the three specific held photographs by name.
+  A real integration task produced a real governance improvement,
+  rather than being treated as a one-off content decision separate from
+  the rest of this library.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:

@@ -61,16 +61,20 @@ directly from governance work this same project already completed.
 | 10 | `54c1eaa2…` | A classroom of students, hands raised, faces clearly visible, no names visible | No name/face pairing (safer than #9), but still identifiable minors on a public page. **No record exists anywhere in this project's governance library of a parental/guardian image-consent process** — the Admissions Policy, Data Protection & Privacy Policy, and Child Protection & Safeguarding Policy all cover what data is collected and how it's protected, but none of them currently address photography/image consent for public-facing use. That is a genuine, newly-surfaced gap, not an oversight in this specific decision. |
 | 11 | `31c0a269…` | Five students displaying medals at the "SPELL Africa International Spelling Leaders Competition," a public competitive event with a visible event banner; contestant badges show **numbers only** (459, 296, 331, 410), not names | The safest of the three people-photos — no names visible, and competition photography is commonly covered by an event's own media consent at registration. But this project cannot confirm that consent was obtained, by whom, or for what use (event promotion vs. this school's own website is not automatically the same permission). Held pending that confirmation, not on quality grounds — this is otherwise a strong, genuine achievement photo that would do real work for trust and social proof once cleared. |
 
-**Recommendation, not just a hold:** SHRS should adopt a short,
-explicit photography/image-consent practice — even a single paragraph
-in the Admissions Policy or a new short policy — stating that guardians
-are asked at enrolment whether their child's image may be used in
-school publications/website/social media, with a record kept per child.
-This is a real governance gap this photo batch surfaced, not something
-this drafting pass should quietly patch by inventing a consent record
-that doesn't exist. Flagging it here for the same reason every other
-"needs real-world input" item in this project's governance library has
-been flagged rather than guessed at.
+**Update — this has now been drafted, not just recommended.** The Data
+Protection & Privacy Policy (IT-02) was updated to v2.1 with a new
+§7.10 proposing exactly this structure (separate internal vs.
+public-facing consent, recorded per child, revocable, defaulting to
+"no" until confirmed); the Admissions Policy (PA-05) was updated to
+v2.1 to point to it at the documentation stage; and the Governance
+Resolution Register gained a Category 7 tracking the structure's
+adoption and these three specific photographs by name. **This does not
+resolve the hold on images 9–11** — a proposed policy is not the same
+as an actual, Board-confirmed consent record for these specific
+children, so the hold stands until that confirmation happens. What it
+does is turn "flag it and hope someone notices" into a tracked,
+named, owned item, the same discipline every other real-world-input gap
+in this governance library has received.
 
 ## Deferred (not a flag — genuinely out of scope this pass)
 
@@ -96,3 +100,4 @@ been flagged rather than guessed at.
 |---|---|---|---|
 | 0.1 | Draft | Initial plan, first photography batch (11 images: 5 placed, 6 held) | Not yet reviewed |
 | 0.2 | Draft | Director confirmed the held selfie's subject (Founder/CEO Zakariya Olanrewaju Anofi) and approved publication — moved to Images approved and integrated, published as a cropped portrait in a new spotlight card on the Governance page (6 placed, 5 held) | Not yet reviewed |
+| 0.3 | Draft | The image/media-consent gap flagged for images 9–11 was drafted into governance (Data Protection & Privacy Policy §7.10, Admissions Policy cross-reference, Governance Resolution Register Category 7) — recorded here as the recommendation moving from flagged to drafted; the hold on images 9–11 itself is unchanged | Not yet reviewed |

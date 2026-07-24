@@ -105,6 +105,19 @@ procedures they describe. The documents are ready; the person is not.
 | Named Ijazah-granting scholar(s) and their documented chain of transmission (*sanad*) | Principal, Qur'an College | OPEN | High | Qur'an College's own scholarly leadership |
 | Nigerian labour-law confirmation for the Staff Conduct Policy's disciplinary/termination procedure | Board of Trustees | OPEN | Medium | External legal counsel |
 
+## 7. Image and media consent
+
+*(New category, surfaced by the first real photography batch supplied
+for the website — see `docs/visual-asset-integration-plan.md` and the
+Data Protection & Privacy Policy, IT-02, §7.10, which proposes the
+structure below.)*
+
+| Item | Owner | Status | Priority | Approval pathway |
+|---|---|---|---|---|
+| Adopt the proposed image/media consent structure (separate internal vs. public-facing consent, recorded per child) | Board of Trustees | OPEN — proposed in IT-02 §7.10, not yet adopted | High | Board of Trustees |
+| Retroactively confirm (or decline) consent for three specific photographs already held pending this decision (two identifiable-student photos, one competition/medal photo) | Registrar, in consultation with guardians | OPEN | Medium | Registrar → guardians directly |
+| Build the actual admission-stage consent form/record (paper or Parent Portal field) once the structure above is adopted | Registrar / ICT Head | BLOCKED — depends on Board adoption above | Medium | Registrar / ICT Head |
+
 ## Summary
 
 | Category | Items | Critical | Blocked on external party |
@@ -115,7 +128,8 @@ procedures they describe. The documents are ready; the person is not.
 | Retention periods | 2 | 0 | 1 (child-protection professional) |
 | Safeguarding appointments | 4 | 2 | 2 (depend on DSL appointment first) |
 | Legal & regulatory verification | 6 | 0 | 6 (all need external counsel/professionals) |
-| **Total** | **23** | **3** | **10** |
+| Image and media consent | 3 | 0 | 0 (school's own decision) |
+| **Total** | **26** | **3** | **10** |
 
 **The three Critical items are, in order of true dependency:** appoint
 a Designated Safeguarding Lead → confirm real external referral agency
@@ -136,3 +150,4 @@ doing.
 | Version | Date | Change | Author |
 |---|---|---|---|
 | 0.1 | Draft | Initial register, Phase D | Collects every open item already named across the 23 policy documents drafted in Phases A–D; not yet reviewed or adopted |
+| 0.2 | Draft | Phase G — added Category 7 (Image and media consent), surfaced by the first real photography batch supplied for the website; total tracked items 23 → 26 | Not yet reviewed or adopted |

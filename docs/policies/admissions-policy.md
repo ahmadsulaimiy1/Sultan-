@@ -7,7 +7,10 @@ published at `/admission/` — does not replace it, governs around it.
 Every provision from v1.0 is preserved, including the deliberate
 honesty about fees/scholarships/international arrangements not being
 invented. New in v2.0: safer-admission vetting for transfer students,
-and a waiting-list/deferred-admission procedure.*
+and a waiting-list/deferred-admission procedure. New in v2.1: a
+cross-reference to the new image/media consent structure (Data
+Protection & Privacy Policy, IT-02, §7.10), captured at the same
+documentation stage.*
 
 ## 1. Policy Information
 
@@ -15,7 +18,7 @@ and a waiting-list/deferred-admission procedure.*
 |---|---|
 | Policy Code | PA-05 |
 | Policy Title | Admissions Policy |
-| Version | 2.0 (retrofitted from v1.0, Phase B) |
+| Version | 2.1 (retrofitted from v1.0, Phase B; image-consent cross-reference added Phase G) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | CEO (Zakariya Olanrewaju Anofi), in consultation with each institution's Principal/Head Teacher for institution-specific eligibility |
 | Approval Authority | Board of Trustees |
@@ -109,7 +112,13 @@ passport photographs (2 copies), and a report sheet or testimonial
 certificate from the previous school. This policy adds one governance
 layer: documentation is verified for authenticity by the Registrar
 before an Admission Offer is confirmed (Stage 7), closing a gap the
-live page doesn't currently state.
+live page doesn't currently state. At the same stage, a guardian is
+asked to complete the image/media consent structure proposed in the
+Data Protection & Privacy Policy (IT-02) §7.10 — this policy points to
+that document as the single authoritative source for the consent
+procedure itself, rather than restating it here. **This is a new
+provision, not previously stated in v2.0** — added alongside IT-02
+§7.10, which it depends on.
 
 ### 7.4 Interviews and assessments
 The entrance exam, test, and interview (Stage 5) are conducted by
@@ -223,3 +232,4 @@ regulation is cited here because none has been verified as applicable
 |---|---|---|---|
 | 1.0 | Draft | Initial draft, Phase B | Drafted per SHRS governance directive; not yet reviewed or adopted; fees, scholarships, and international-admission sections intentionally left open pending real school input |
 | 2.0 | Draft | Retrofitted to the full 13-section architecture, Phase F Tier 2 retrofit — added safer-admission vetting for transfer students and a waiting-list/deferred-admission procedure; assigned a policy code (PA-05) for the first time, having been drafted since Phase B without one | Not yet reviewed or adopted |
+| 2.1 | Draft | Phase G — cross-referenced the new image/media consent structure (IT-02 §7.10) at the Section 7.3 documentation stage | Not yet reviewed or adopted |
