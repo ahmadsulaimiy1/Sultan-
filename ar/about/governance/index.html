@@ -127,8 +127,27 @@
   </div>
 </footer>
 
+<div class="assistant-root" data-assistant>
+  <button class="assistant-launcher" data-assistant-toggle aria-label="فتح المساعد الرقمي للقبول" aria-expanded="false">
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="#E9CE8A" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="assistant-panel" data-assistant-panel hidden>
+    <div class="assistant-head">
+      <div>
+        <span class="assistant-head-title">المساعد الرقمي للقبول</span>
+        <span class="assistant-head-sub">مكتب التسجيل وشؤون الطلاب</span>
+      </div>
+      <button class="assistant-close" data-assistant-close aria-label="إغلاق">&#10005;</button>
+    </div>
+    <div class="assistant-messages" data-assistant-messages></div>
+    <div class="assistant-options" data-assistant-options></div>
+  </div>
+  </div>
+
 
 <script src="/js/site.js" defer></script>
+<script src="/js/assistant-data.ar.js" defer></script>
+<script src="/js/assistant.js" defer></script>
 
 </body>
 </html>

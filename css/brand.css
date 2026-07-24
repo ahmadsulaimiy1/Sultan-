@@ -473,3 +473,58 @@
   [dir="rtl"] .policy-head .plus{margin-left:0;margin-right:auto;}
   [dir="rtl"] .policy-body ul{padding-left:0;padding-right:20px;}
   [dir="rtl"] .grade-table th, [dir="rtl"] .grade-table td{text-align:right;}
+
+  /* ============================================================
+     Admissions Assistant — honest digital assistant widget, not a
+     generic chat-bubble template: square corners, gold hairlines,
+     and the same type system as the rest of the site.
+     ============================================================ */
+  .assistant-root{position:fixed;bottom:26px;right:26px;z-index:200;}
+  [dir="rtl"] .assistant-root{right:auto;left:26px;}
+  .assistant-launcher{
+    width:56px;height:56px;border-radius:50%;background:var(--navy);
+    border:1px solid var(--gold);box-shadow:0 14px 30px -12px rgba(34,23,9,0.55);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:transform .25s ease, background .25s ease;
+  }
+  .assistant-launcher:hover{transform:translateY(-2px);background:var(--navy-deep);}
+  .assistant-panel{
+    position:absolute;bottom:70px;right:0;width:min(360px, calc(100vw - 40px));
+    max-height:min(560px, calc(100vh - 120px));display:flex;flex-direction:column;
+    background:var(--ivory);border:1px solid var(--gold);
+    box-shadow:0 30px 60px -20px rgba(34,23,9,0.5);
+  }
+  [dir="rtl"] .assistant-panel{right:auto;left:0;}
+  .assistant-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    background:var(--navy);color:var(--ivory);padding:16px 18px;border-bottom:2px solid var(--gold);
+  }
+  .assistant-head-title{display:block;font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;color:#fff;}
+  [dir="rtl"] .assistant-head-title{letter-spacing:normal;}
+  .assistant-head-sub{display:block;font-size:0.72rem;color:var(--gold-bright);margin-top:4px;}
+  .assistant-close{background:none;border:none;color:var(--gold-bright);font-size:0.9rem;cursor:pointer;line-height:1;padding:2px;flex-shrink:0;}
+  .assistant-messages{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-height:120px;}
+  .assistant-msg{max-width:85%;padding:10px 13px;font-size:0.88rem;line-height:1.5;}
+  .assistant-msg-bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);}
+  .assistant-msg-user{align-self:flex-end;background:var(--navy);color:var(--ivory);}
+  .assistant-link{align-self:flex-start;font-size:0.85rem;color:var(--crimson);font-weight:600;border-bottom:1px solid rgba(124,31,46,0.35);margin-top:-4px;}
+  .assistant-link:hover{border-color:var(--crimson);}
+  .assistant-options{padding:0 18px 16px;display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;}
+  .assistant-chip{
+    font-family:'Inter','Cairo',sans-serif;font-size:0.8rem;padding:8px 14px;
+    background:none;border:1px solid var(--gold);color:var(--navy);cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .assistant-chip:hover{background:var(--gold);color:var(--navy-deep);}
+  .assistant-contact-form{display:flex;flex-direction:column;gap:8px;width:100%;}
+  .assistant-contact-form input{
+    font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:9px 11px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);
+  }
+  .assistant-contact-form input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .assistant-contact-form button{margin-top:2px;font-size:0.72rem !important;padding:11px !important;}
+  @media (max-width:520px){
+    .assistant-root{bottom:16px;right:16px;}
+    [dir="rtl"] .assistant-root{left:16px;}
+    .assistant-panel{width:calc(100vw - 32px);bottom:66px;}
+  }

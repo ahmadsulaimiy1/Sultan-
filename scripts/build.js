@@ -49,6 +49,7 @@ function buildPage(page) {
   const header = read(`partials/header${suffix}.html`);
   const content = read(page.contentFile);
   const footer = read(`partials/footer${suffix}.html`);
+  const assistant = read(`partials/assistant${suffix}.html`);
 
   // hreflang alternate — points at this page's translation counterpart,
   // or a sensible fallback (e.g. the other language's homepage) when
@@ -67,8 +68,11 @@ ${topbar}
 ${header}
 ${content}
 ${footer}
+${assistant}
 
 <script src="/js/site.js" defer></script>
+<script src="/js/assistant-data.${lang}.js" defer></script>
+<script src="/js/assistant.js" defer></script>
 
 </body>
 </html>
