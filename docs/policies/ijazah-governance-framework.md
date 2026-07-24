@@ -125,7 +125,7 @@ decision for Qur'an College leadership, not assumed here).
   verifiable by a graduate or a third party years later) — this is a
   different retention standard from the Parent Portal's own data, and
   is named as an explicit exception in the Records Retention Policy
-  (IT-04) §5.
+  (IT-04) §7.1.
 - Whether the register is eventually digitised into the Parent/Student
   Portal, and if so with what public-verification mechanism, is a
   Phase 2/3 product decision (see `docs/parent-portal-phase2-3-

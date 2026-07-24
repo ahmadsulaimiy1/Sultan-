@@ -128,7 +128,7 @@ The CEO reviews transaction records against the approval thresholds
 Transaction approval records, vendor comparisons (Section 7.4), and
 conflict-of-interest disclosures (Section 7.6) are maintained by VP
 Administration, retained per the Records Retention Policy (IT-04)
-§7.5.
+§7.1's fee/payment-record period.
 
 ## 10. Related Policies
 
