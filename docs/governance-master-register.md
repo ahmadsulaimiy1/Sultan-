@@ -242,9 +242,19 @@ name and section number).
   real drift: stale citations were found and fixed in the Boarding
   Regulations, First Aid Policy, Financial Controls Policy, and Ijazah
   Governance Framework as documents around them were renumbered.
-  Website publication (a public page per applicable document, a
-  Policies Hub, search indexing, breadcrumbs) and the final Governance
-  Completion Report follow in this same pass.
+- **Phase F concluded (Website Publication Requirement):** every
+  tracked item classified Public/Internal/Internal-meta in the Policy
+  Code Index, following common institutional practice (family-facing
+  and safeguarding/data-protection documents public; staff HR and
+  technical-security specifics internal). Child Protection &
+  Safeguarding Policy (SW-01) physically published to the live site in
+  both languages as proof the pattern extends beyond the three already-
+  redeveloped live policies. Thirteen more Public-classified documents
+  remain physically unpublished — named explicitly, not implied as
+  done. See `docs/governance-completion-report.md` for the full
+  synthesis: documents drafted vs. published, remaining gaps,
+  outstanding approvals, and maturity/readiness/scalability assessments
+  across governance, academic, safeguarding, technology, and finance.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:
