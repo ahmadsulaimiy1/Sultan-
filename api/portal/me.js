@@ -32,7 +32,7 @@ module.exports = async function handler(req, res) {
     }
 
     const studentsRes = await sql`
-      SELECT s.id, s.full_name, s.admission_no, c.institution, c.name AS class_name
+      SELECT s.id, s.full_name, s.admission_no, s.status, c.institution, c.name AS class_name
       FROM students s
       JOIN guardian_student gs ON gs.student_id = s.id
       LEFT JOIN classes c ON c.id = s.class_id
@@ -50,6 +50,7 @@ module.exports = async function handler(req, res) {
         id: student.id,
         fullName: student.full_name,
         admissionNo: student.admission_no,
+        status: student.status,
         institution: student.institution,
         className: student.class_name,
         attendance: attendance.rows[0] || null,
@@ -58,7 +59,12 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    res.status(200).json({ fullName: guardian.full_name, children });
+    const notificationsRes = await sql`
+      SELECT id, message, created_at FROM notifications
+      WHERE guardian_id = ${session.guardianId} AND read_at IS NULL
+      ORDER BY created_at DESC LIMIT 20`;
+
+    res.status(200).json({ fullName: guardian.full_name, children, notifications: notificationsRes.rows });
   } catch (err) {
     console.error('portal me error', err);
     res.status(500).json({ error: 'Could not load your dashboard right now — please try again shortly.' });

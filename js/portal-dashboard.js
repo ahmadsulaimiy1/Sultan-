@@ -6,6 +6,9 @@
   var helloEl = document.querySelector('[data-portal-hello]');
   var childrenEl = document.querySelector('[data-portal-children]');
   var logoutBtn = document.querySelector('[data-portal-logout]');
+  var notificationsEl = document.querySelector('[data-portal-notifications]');
+  var notificationsListEl = document.querySelector('[data-portal-notifications-list]');
+  var notificationsClearBtn = document.querySelector('[data-portal-notifications-clear]');
 
   function el(tag, className, text){
     var e = document.createElement(tag);
@@ -29,6 +32,10 @@
     if(child.institution) metaParts.push(child.institution);
     if(child.className) metaParts.push(child.className);
     head.appendChild(el('div', 'meta', metaParts.join(' · ')));
+    if(child.status && child.status !== 'active'){
+      var statusLabel = child.status.charAt(0).toUpperCase() + child.status.slice(1);
+      head.appendChild(el('span', 'portal-status-badge', statusLabel));
+    }
     if(/^DEMO/i.test(child.admissionNo || '')){
       head.appendChild(el('span', 'portal-demo-flag', 'Sample data — not a real record'));
     }
@@ -93,6 +100,20 @@
     return card;
   }
 
+  function renderNotifications(notifications){
+    notificationsListEl.innerHTML = '';
+    if(!notifications || !notifications.length){
+      notificationsEl.hidden = true;
+      return;
+    }
+    notifications.forEach(function(n){
+      var li = document.createElement('li');
+      li.textContent = n.message;
+      notificationsListEl.appendChild(li);
+    });
+    notificationsEl.hidden = false;
+  }
+
   async function load(){
     try{
       var res = await fetch('/api/portal/me', { headers: { 'accept': 'application/json' } });
@@ -106,6 +127,8 @@
       }
 
       helloEl.textContent = 'Welcome, ' + data.fullName;
+      renderNotifications(data.notifications);
+
       childrenEl.innerHTML = '';
       if(data.children && data.children.length){
         data.children.forEach(function(child){ childrenEl.appendChild(renderChild(child)); });
@@ -125,6 +148,18 @@
   logoutBtn.addEventListener('click', async function(){
     try{ await fetch('/api/portal/logout', { method: 'POST' }); }catch(err){}
     window.location.href = '/portal/login/';
+  });
+
+  notificationsClearBtn.addEventListener('click', async function(){
+    notificationsClearBtn.disabled = true;
+    try{
+      await fetch('/api/portal/notifications/read', { method: 'POST' });
+      notificationsEl.hidden = true;
+      notificationsListEl.innerHTML = '';
+    }catch(err){
+      // leave the list as-is; user can retry
+    }
+    notificationsClearBtn.disabled = false;
   });
 
   load();

@@ -68,8 +68,8 @@ curl -X POST https://<your-domain>/api/portal/admin/students \
   -H "x-admin-token: <the PORTAL_ADMIN_TOKEN you set>" \
   -H "content-type: application/json" \
   -d '{
-    "guardian": { "fullName": "...", "email": "parent@example.com", "password": "..." },
-    "student": { "fullName": "...", "admissionNo": "SHR-2026-001", "institution": "Royal College", "className": "JSS 1" },
+    "guardian": { "fullName": "...", "email": "parent@example.com" },
+    "student": { "fullName": "...", "admissionNo": "SHR-2026-001", "institution": "Royal College", "className": "JSS 1", "status": "active" },
     "attendance": { "term": "First Term 2025/2026", "daysPresent": 58, "daysTotal": 62 },
     "results": [
       { "term": "First Term 2025/2026", "subject": "Mathematics", "caScore": 34, "examScore": 52, "teacherComment": "Good progress." }
@@ -78,16 +78,65 @@ curl -X POST https://<your-domain>/api/portal/admin/students \
   }'
 ```
 
-Calling it again with the same `admissionNo` updates that student's
-record rather than duplicating it — safe to re-run as results/attendance/
-fees change through the term. A second child for the same guardian email
-just needs a second call with a different `student.admissionNo` — an
-existing guardian's email is recognised and the new child is linked to
-their account without needing the password again.
+Note there is no `guardian.password` field — staff never choose or see a
+parent's password. When the guardian's email is new, the response
+includes an `activationLink` (e.g.
+`/portal/set-password/?token=...`) — share that link with the parent
+yourself, over WhatsApp or email (whichever they prefer). They open it
+and choose their own password; that's what activates the account. The
+link expires after 7 days — if it does, use `admin/reset-password.js`
+below to generate a fresh one.
+
+Calling this endpoint again with the same `admissionNo` updates that
+student's record rather than duplicating it — safe to re-run as
+results/attendance/fees change through the term (each update also drops
+a short in-portal notification for the family, e.g. "Updated for Yusuf
+Bello: results"). A second child for the same guardian email just needs
+a second call with a different `student.admissionNo` — an existing
+guardian's email is recognised and the new child is linked to their
+account automatically. `student.status` accepts `active` (default),
+`graduated`, `withdrawn`, or `suspended` — non-active students still show
+in the portal (families can still see a graduated child's final records)
+but carry a visible status badge.
 
 This is intentionally a raw API, not a friendly form — building an actual
 admin UI (with its own login tier for staff) is real future work, listed
 in `digital-campus-roadmap.md`.
+
+## Password reset — staff-mediated by design, not a self-service link
+
+There is deliberately **no public "forgot password" endpoint**. A public
+endpoint that emails a reset link would need a real transactional email
+service (its own signup/API key, same pattern as the Anthropic key or
+the database) — and without one, the only place left to put the reset
+link is directly in the API response to whoever submitted the request.
+That would mean anyone who knows a parent's email address could reset
+their password and log in as them. So instead: a parent who's locked out
+contacts the school (the same WhatsApp/email already shown on the login
+page), and a staff member holding `PORTAL_ADMIN_TOKEN` runs:
+
+```
+curl -X POST https://<your-domain>/api/portal/admin/reset-password \
+  -H "x-admin-token: <the PORTAL_ADMIN_TOKEN you set>" \
+  -H "content-type: application/json" \
+  -d '{ "email": "parent@example.com" }'
+```
+
+This returns a fresh `resetLink` (valid 24 hours) for staff to send the
+parent directly — the same `/portal/set-password/` page used for first
+activation. It also clears any lockout on the account. When a real email
+service is added later, this is the natural place to wire up automatic
+sending — see `digital-campus-roadmap.md`.
+
+## Login protection
+
+Five wrong password attempts locks an account for 15 minutes
+(`failed_attempts`/`locked_until` on the guardian record) — a basic but
+real defense against password-guessing on the public login endpoint.
+There's no CAPTCHA or distributed rate limiting (that would need a
+service like Upstash/Vercel KV, the same category of future work as the
+assistant's abuse protection) — fine for this phase's expected traffic,
+worth revisiting if the portal ever sees suspicious volume.
 
 ## Data protection — read this before entering real students
 

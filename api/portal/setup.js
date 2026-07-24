@@ -1,25 +1,51 @@
 // One-time (idempotent) database setup for the Parent Portal. Gated by
 // PORTAL_SETUP_TOKEN so it can't be triggered by a stranger who finds the
-// URL. See docs/parent-portal.md for how to call this.
+// URL. Safe to run again after an upgrade — every statement is additive
+// (CREATE ... IF NOT EXISTS / ADD COLUMN IF NOT EXISTS), so it never
+// drops or rewrites existing data. See docs/parent-portal.md.
 //
 // Mirrors sql/schema.sql — keep the two in sync if either changes.
 const { sql } = require('@vercel/postgres');
-const { hashPassword } = require('../../lib/session');
+const { hashPassword, timingSafeEqualString } = require('../../lib/session');
 
 const STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS guardians (
-    id            SERIAL PRIMARY KEY,
-    full_name     TEXT NOT NULL,
-    email         TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    password_salt TEXT NOT NULL,
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                  SERIAL PRIMARY KEY,
+    full_name           TEXT NOT NULL,
+    email               TEXT NOT NULL UNIQUE,
+    password_hash       TEXT,
+    password_salt       TEXT,
+    failed_attempts     INTEGER NOT NULL DEFAULT 0,
+    locked_until        TIMESTAMPTZ,
+    reset_token         TEXT,
+    reset_token_expires TIMESTAMPTZ,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
+  // Additive upgrades for a database that already ran an earlier version
+  // of this endpoint, before this audit's redesign.
+  `ALTER TABLE guardians ALTER COLUMN password_hash DROP NOT NULL`,
+  `ALTER TABLE guardians ALTER COLUMN password_salt DROP NOT NULL`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS failed_attempts INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS locked_until TIMESTAMPTZ`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS reset_token TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMPTZ`,
+
+  `CREATE TABLE IF NOT EXISTS academic_terms (
+    id         SERIAL PRIMARY KEY,
+    label      TEXT NOT NULL UNIQUE,
+    is_current BOOLEAN NOT NULL DEFAULT false
+  )`,
+
   `CREATE TABLE IF NOT EXISTS classes (
-    id            SERIAL PRIMARY KEY,
-    institution   TEXT NOT NULL,
-    name          TEXT NOT NULL
+    id          SERIAL PRIMARY KEY,
+    institution TEXT NOT NULL,
+    name        TEXT NOT NULL
   )`,
+  `DO $$ BEGIN
+    ALTER TABLE classes ADD CONSTRAINT classes_institution_name_key UNIQUE (institution, name);
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END $$`,
+
   `CREATE TABLE IF NOT EXISTS students (
     id             SERIAL PRIMARY KEY,
     full_name      TEXT NOT NULL,
@@ -27,6 +53,8 @@ const STATEMENTS = [
     class_id       INTEGER REFERENCES classes(id),
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active'`,
+
   `CREATE TABLE IF NOT EXISTS guardian_student (
     guardian_id INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
     student_id  INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -63,6 +91,13 @@ const STATEMENTS = [
     updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (student_id, term)
   )`,
+  `CREATE TABLE IF NOT EXISTS notifications (
+    id          SERIAL PRIMARY KEY,
+    guardian_id INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    message     TEXT NOT NULL,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    read_at     TIMESTAMPTZ
+  )`,
 ];
 
 module.exports = async function handler(req, res) {
@@ -76,7 +111,7 @@ module.exports = async function handler(req, res) {
     res.status(500).json({ error: 'Portal is not configured yet — PORTAL_SETUP_TOKEN is not set on this deployment.' });
     return;
   }
-  if (req.headers['x-setup-token'] !== setupToken) {
+  if (!timingSafeEqualString(req.headers['x-setup-token'], setupToken)) {
     res.status(403).json({ error: 'Invalid setup token.' });
     return;
   }
@@ -105,17 +140,19 @@ module.exports = async function handler(req, res) {
         const classId = cls.rows[0].id;
 
         const student = await sql`
-          INSERT INTO students (full_name, admission_no, class_id)
-          VALUES ('Demo Student (sample data)', 'DEMO-0001', ${classId})
+          INSERT INTO students (full_name, admission_no, class_id, status)
+          VALUES ('Demo Student (sample data)', 'DEMO-0001', ${classId}, 'active')
           RETURNING id`;
         const studentId = student.rows[0].id;
 
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${studentId})`;
+        await sql`INSERT INTO academic_terms (label, is_current) VALUES ('First Term 2025/2026', true) ON CONFLICT (label) DO NOTHING`;
         await sql`INSERT INTO attendance_summary (student_id, term, days_present, days_total) VALUES (${studentId}, 'First Term 2025/2026', 58, 62)`;
         await sql`
           INSERT INTO term_results (student_id, term, subject, ca_score, exam_score, total_score, teacher_comment)
           VALUES (${studentId}, 'First Term 2025/2026', 'Mathematics', 34, 52, 86, 'Sample data — replace via the admin API before real use.')`;
         await sql`INSERT INTO fee_status (student_id, term, amount_due, amount_paid) VALUES (${studentId}, 'First Term 2025/2026', 150000, 150000)`;
+        await sql`INSERT INTO notifications (guardian_id, message) VALUES (${guardianId}, 'Welcome — this is a sample notification. New results or attendance updates will appear here.')`;
         demoSeeded = true;
       }
     }
