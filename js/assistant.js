@@ -2,19 +2,45 @@
   var root = document.querySelector('[data-assistant]');
   if(!root || !window.ASSISTANT_CONFIG) return;
   var config = window.ASSISTANT_CONFIG;
+  var strings = config.strings;
+  var speechLang = config.speechLang || (config.lang === 'ar' ? 'ar-SA' : 'en-US');
+
   var panel = root.querySelector('[data-assistant-panel]');
   var messagesEl = root.querySelector('[data-assistant-messages]');
-  var optionsEl = root.querySelector('[data-assistant-options]');
+  var startersEl = root.querySelector('[data-assistant-starters]');
   var toggleBtn = root.querySelector('[data-assistant-toggle]');
   var closeBtn = root.querySelector('[data-assistant-close]');
+  var newChatBtn = root.querySelector('[data-assistant-new]');
+  var form = root.querySelector('[data-assistant-form]');
+  var input = root.querySelector('[data-assistant-input]');
+  var sendBtn = root.querySelector('[data-assistant-send]');
+  var stopBtn = root.querySelector('[data-assistant-stop]');
+  var micBtn = root.querySelector('[data-assistant-mic]');
+  var speakToggleBtn = root.querySelector('[data-assistant-speak-toggle]');
+  var contactToggleBtn = root.querySelector('[data-assistant-contact-toggle]');
+  var uploadBtn = root.querySelector('[data-assistant-upload-btn]');
+  var uploadInput = root.querySelector('[data-assistant-upload]');
+  var attachmentEl = root.querySelector('[data-assistant-attachment]');
+  var attachmentLabelEl = root.querySelector('[data-assistant-attachment-label]');
+  var attachmentRemoveBtn = root.querySelector('[data-assistant-attachment-remove]');
 
-  var context = { language: config.lang };
-  var stepCount = 0;
+  var MAX_USER_TURNS = 40;
+  var MAX_ATTACHMENT_CHARS = 6000;
+  var MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
+
+  var history = [];
+  var pendingAttachment = null;
+  var activeController = null;
+  var speakEnabled = false;
+  var recognizing = false;
+  var recognition = null;
+  var scriptCache = {};
 
   function open(){
     panel.hidden = false;
     toggleBtn.setAttribute('aria-expanded', 'true');
-    if(!messagesEl.childElementCount) goTo(config.start);
+    if(!messagesEl.childElementCount) renderStarters();
+    input.focus();
   }
   function close(){
     panel.hidden = true;
@@ -23,94 +49,410 @@
   toggleBtn.addEventListener('click', function(){ panel.hidden ? open() : close(); });
   closeBtn.addEventListener('click', close);
 
+  function scrollToBottom(){
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
   function addMessage(text, who){
     var div = document.createElement('div');
     div.className = 'assistant-msg assistant-msg-' + (who || 'bot');
     div.textContent = text;
     messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    scrollToBottom();
+    return div;
   }
 
-  function addLinks(links){
-    if(!links) return;
-    links.forEach(function(l){
-      var a = document.createElement('a');
-      a.href = l.href;
-      a.textContent = l.label;
-      a.className = 'assistant-link';
-      if(l.href.indexOf('http') === 0){ a.target = '_blank'; a.rel = 'noopener'; }
-      messagesEl.appendChild(a);
-    });
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+  function addNotice(text){
+    var div = document.createElement('div');
+    div.className = 'assistant-msg assistant-msg-notice';
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    scrollToBottom();
+    return div;
   }
 
-  function renderOptions(options){
-    optionsEl.innerHTML = '';
-    options.forEach(function(opt){
+  function renderStarters(){
+    startersEl.innerHTML = '';
+    if(!config.starters || !config.starters.length) return;
+    addMessage(strings.greeting, 'bot');
+    config.starters.forEach(function(s){
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'assistant-chip';
-      btn.textContent = opt.label;
+      btn.textContent = s.label;
       btn.addEventListener('click', function(){
-        addMessage(opt.label, 'user');
-        if(opt.set) Object.assign(context, opt.set);
-        optionsEl.innerHTML = '';
-        if(opt.action === 'contactForm'){
-          renderContactForm();
-        } else if(opt.next){
-          stepCount++;
-          if(stepCount > 10){ goTo(config.fallback); return; }
-          goTo(opt.next);
-        }
+        startersEl.innerHTML = '';
+        sendMessage(s.prompt);
       });
-      optionsEl.appendChild(btn);
+      startersEl.appendChild(btn);
     });
   }
 
-  function goTo(nodeId){
-    var node = config.nodes[nodeId];
-    if(!node) return;
-    addMessage(node.message, 'bot');
-    addLinks(node.links);
-    if(node.options) renderOptions(node.options);
+  function setBusy(busy){
+    input.disabled = busy;
+    sendBtn.hidden = busy;
+    stopBtn.hidden = !busy;
+    uploadBtn.disabled = busy;
+    micBtn.disabled = busy;
   }
 
+  function userTurnCount(){
+    var n = 0;
+    for(var i = 0; i < history.length; i++){ if(history[i].role === 'user') n++; }
+    return n;
+  }
+
+  function speak(text){
+    if(!speakEnabled || !window.speechSynthesis) return;
+    try{
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.lang = speechLang;
+      window.speechSynthesis.speak(utter);
+    }catch(err){ /* speech synthesis unavailable — silently skip */ }
+  }
+
+  function buildOutgoingContent(text){
+    if(!pendingAttachment) return text;
+    var blocks = [{ type: 'text', text: text || (pendingAttachment.kind === 'image' ? '(see attached image)' : '(see attached document)') }];
+    if(pendingAttachment.kind === 'text'){
+      blocks.push({ type: 'text', text: 'Attached file "' + pendingAttachment.label + '":\n' + pendingAttachment.text });
+    } else if(pendingAttachment.kind === 'image'){
+      blocks.push({ type: 'image', source: { type: 'base64', media_type: pendingAttachment.mediaType, data: pendingAttachment.data } });
+    }
+    return blocks;
+  }
+
+  function sendMessage(text){
+    text = (text || '').trim();
+    if(!text && !pendingAttachment) return;
+    if(userTurnCount() >= MAX_USER_TURNS){
+      addNotice(strings.longConversation);
+      return;
+    }
+
+    var displayText = text || (pendingAttachment ? '[' + pendingAttachment.label + ']' : '');
+    addMessage(displayText, 'user');
+
+    history.push({ role: 'user', content: buildOutgoingContent(text) });
+    clearAttachment();
+    input.value = '';
+    autosize();
+    streamReply();
+  }
+
+  async function streamReply(){
+    activeController = new AbortController();
+    setBusy(true);
+    var botEl = addMessage(strings.thinking + '…', 'bot');
+    botEl.classList.add('assistant-msg-pending');
+    var full = '';
+
+    try{
+      var res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ lang: config.lang, messages: history }),
+        signal: activeController.signal,
+      });
+
+      if(!res.ok || !res.body){
+        var errPayload = null;
+        try{ errPayload = await res.json(); }catch(e){}
+        throw new Error((errPayload && errPayload.error) || strings.errorGeneric);
+      }
+
+      var reader = res.body.getReader();
+      var decoder = new TextDecoder();
+      var startedStreaming = false;
+
+      while(true){
+        var chunk = await reader.read();
+        if(chunk.done) break;
+        var piece = decoder.decode(chunk.value, { stream: true });
+        if(!piece) continue;
+        if(!startedStreaming){
+          startedStreaming = true;
+          botEl.classList.remove('assistant-msg-pending');
+          botEl.textContent = '';
+        }
+        full += piece;
+        botEl.textContent = full;
+        scrollToBottom();
+      }
+
+      if(full.trim()){
+        history.push({ role: 'assistant', content: full });
+        speak(full);
+      } else {
+        botEl.remove();
+      }
+    }catch(err){
+      if(err && err.name === 'AbortError'){
+        if(full.trim()){
+          history.push({ role: 'assistant', content: full });
+        } else {
+          botEl.remove();
+        }
+      } else {
+        botEl.classList.remove('assistant-msg-pending');
+        botEl.classList.add('assistant-msg-error');
+        botEl.textContent = (err && err.message) || strings.errorGeneric;
+      }
+    } finally {
+      setBusy(false);
+      activeController = null;
+      input.focus();
+    }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    sendMessage(input.value);
+  });
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendMessage(input.value);
+    }
+  });
+  function autosize(){
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  }
+  input.addEventListener('input', autosize);
+
+  stopBtn.addEventListener('click', function(){
+    if(activeController) activeController.abort();
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+
+  newChatBtn.addEventListener('click', function(){
+    if(activeController) activeController.abort();
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    history = [];
+    clearAttachment();
+    messagesEl.innerHTML = '';
+    input.value = '';
+    autosize();
+    renderStarters();
+  });
+
+  // --- Voice output toggle ---
+  function updateSpeakToggleLabel(){
+    speakToggleBtn.textContent = speakEnabled ? strings.speakToggleOn : strings.speakToggleOff;
+    speakToggleBtn.setAttribute('aria-pressed', String(speakEnabled));
+  }
+  updateSpeakToggleLabel();
+  speakToggleBtn.addEventListener('click', function(){
+    speakEnabled = !speakEnabled;
+    if(!speakEnabled && window.speechSynthesis) window.speechSynthesis.cancel();
+    updateSpeakToggleLabel();
+  });
+
+  // --- Voice input ---
+  var SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SpeechRecognitionCtor){
+    recognition = new SpeechRecognitionCtor();
+    recognition.lang = speechLang;
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    recognition.addEventListener('result', function(e){
+      var transcript = '';
+      for(var i = 0; i < e.results.length; i++){
+        transcript += e.results[i][0].transcript;
+      }
+      input.value = transcript;
+      autosize();
+    });
+    recognition.addEventListener('end', function(){
+      recognizing = false;
+      micBtn.classList.remove('is-listening');
+      micBtn.setAttribute('aria-pressed', 'false');
+    });
+    recognition.addEventListener('error', function(){
+      recognizing = false;
+      micBtn.classList.remove('is-listening');
+      micBtn.setAttribute('aria-pressed', 'false');
+    });
+
+    micBtn.addEventListener('click', function(){
+      if(recognizing){
+        recognition.stop();
+        return;
+      }
+      try{
+        recognition.start();
+        recognizing = true;
+        micBtn.classList.add('is-listening');
+        micBtn.setAttribute('aria-pressed', 'true');
+      }catch(err){ /* already started or blocked — ignore */ }
+    });
+  } else {
+    micBtn.addEventListener('click', function(){
+      addNotice(strings.micUnsupported);
+    });
+  }
+
+  // --- Document / image attachment ---
+  function setAttachment(label, kind, payload){
+    pendingAttachment = Object.assign({ label: label, kind: kind }, payload);
+    attachmentLabelEl.textContent = label;
+    attachmentEl.hidden = false;
+  }
+  function clearAttachment(){
+    pendingAttachment = null;
+    attachmentEl.hidden = true;
+    attachmentLabelEl.textContent = '';
+    uploadInput.value = '';
+  }
+  attachmentRemoveBtn.addEventListener('click', clearAttachment);
+  uploadBtn.addEventListener('click', function(){ uploadInput.click(); });
+
+  function loadScriptOnce(src){
+    if(scriptCache[src]) return scriptCache[src];
+    scriptCache[src] = new Promise(function(resolve, reject){
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = function(){ reject(new Error('load failed')); };
+      document.head.appendChild(s);
+    });
+    return scriptCache[src];
+  }
+
+  function readAsText(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  }
+  function readAsArrayBuffer(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  }
+  function readAsDataURL(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function extractPdfText(file){
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    var buffer = await readAsArrayBuffer(file);
+    var doc = await window.pdfjsLib.getDocument({ data: buffer }).promise;
+    var text = '';
+    for(var i = 1; i <= doc.numPages && text.length < MAX_ATTACHMENT_CHARS; i++){
+      var page = await doc.getPage(i);
+      var content = await page.getTextContent();
+      text += content.items.map(function(it){ return it.str; }).join(' ') + '\n';
+    }
+    return text;
+  }
+
+  async function extractDocxText(file){
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+    var buffer = await readAsArrayBuffer(file);
+    var result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
+    return result.value;
+  }
+
+  uploadInput.addEventListener('change', async function(){
+    var file = uploadInput.files && uploadInput.files[0];
+    if(!file) return;
+
+    if(file.size > MAX_ATTACHMENT_BYTES){
+      addNotice(strings.uploadTooLarge);
+      uploadInput.value = '';
+      return;
+    }
+
+    var name = file.name || 'attachment';
+    var lower = name.toLowerCase();
+    var reading = addNotice(strings.uploadReading);
+
+    try{
+      if(file.type.indexOf('image/') === 0){
+        var dataUrl = await readAsDataURL(file);
+        var base64 = dataUrl.split(',')[1];
+        setAttachment(name, 'image', { mediaType: file.type, data: base64 });
+      } else if(file.type === 'text/plain' || lower.endsWith('.txt')){
+        var text = await readAsText(file);
+        setAttachment(name, 'text', { text: text.slice(0, MAX_ATTACHMENT_CHARS) });
+      } else if(file.type === 'application/pdf' || lower.endsWith('.pdf')){
+        var pdfText = await extractPdfText(file);
+        setAttachment(name, 'text', { text: pdfText.slice(0, MAX_ATTACHMENT_CHARS) });
+      } else if(lower.endsWith('.docx') || file.type.indexOf('wordprocessingml') !== -1){
+        var docxText = await extractDocxText(file);
+        setAttachment(name, 'text', { text: docxText.slice(0, MAX_ATTACHMENT_CHARS) });
+      } else {
+        addNotice(strings.uploadUnsupported);
+        uploadInput.value = '';
+        reading.remove();
+        return;
+      }
+      reading.remove();
+    }catch(err){
+      reading.remove();
+      addNotice(strings.uploadReadError);
+      uploadInput.value = '';
+    }
+  });
+
+  // --- On-demand lead capture (real staff handoff, not gated behind a decision tree) ---
   function renderContactForm(){
-    optionsEl.innerHTML = '';
-    var s = config.strings;
+    var wrap = document.createElement('div');
+    wrap.className = 'assistant-msg assistant-msg-bot';
     var form = document.createElement('form');
     form.className = 'assistant-contact-form';
     form.innerHTML =
-      '<input type="text" name="full_name" placeholder="' + s.namePlaceholder + '" required />' +
-      '<input type="text" name="contact" placeholder="' + s.contactPlaceholder + '" required />' +
-      '<input type="hidden" name="_subject" value="' + s.emailSubject + '" />' +
+      '<input type="text" name="full_name" placeholder="' + strings.namePlaceholder + '" required />' +
+      '<input type="text" name="contact" placeholder="' + strings.contactPlaceholder + '" required />' +
+      '<input type="hidden" name="_subject" value="' + strings.emailSubject + '" />' +
       '<input type="hidden" name="_template" value="table" />' +
       '<input type="hidden" name="_captcha" value="false" />' +
       '<input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />' +
-      '<button type="submit" class="btn btn-gold">' + s.sendLabel + '</button>';
+      '<button type="submit" class="btn btn-gold">' + strings.sendLabel + '</button>';
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var btn = form.querySelector('button');
       var originalLabel = btn.textContent;
       btn.disabled = true;
-      btn.textContent = s.sendingLabel;
+      btn.textContent = strings.sendingLabel;
       var fd = new FormData(form);
-      Object.keys(context).forEach(function(k){ fd.append(k, context[k]); });
+      fd.append('language', config.lang);
       fd.append('submitted_at', new Date().toISOString());
       var endpoint = config.endpoint.replace('formsubmit.co/', 'formsubmit.co/ajax/');
       fetch(endpoint, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
         .then(function(res){
           if(!res.ok) throw new Error('bad status ' + res.status);
           form.remove();
-          addMessage(s.sentConfirmation, 'bot');
+          addMessage(strings.sentConfirmation, 'bot');
         })
         .catch(function(){
           btn.disabled = false;
           btn.textContent = originalLabel;
-          addMessage(s.sendError, 'bot');
+          addMessage(strings.sendError, 'bot');
         });
     });
-    optionsEl.appendChild(form);
+    wrap.appendChild(form);
+    messagesEl.appendChild(wrap);
+    scrollToBottom();
   }
+  contactToggleBtn.addEventListener('click', function(){
+    if(!messagesEl.childElementCount) renderStarters();
+    renderContactForm();
+  });
 })();

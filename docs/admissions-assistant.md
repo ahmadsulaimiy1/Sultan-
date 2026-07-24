@@ -4,6 +4,14 @@
 pipeline, and what a future WhatsApp extension would need. Companion to
 `editorial-bible.md` (brand/voice) and `site-architecture.md` (site map).*
 
+> **Superseded by a real build.** This document designed the original
+> scripted decision-tree widget. The widget has since been rebuilt as a
+> genuine Claude-powered assistant (free-text chat, streaming, voice,
+> document upload) — see `digital-assistant.md` for how that one works and
+> what setup it needs. The knowledge-boundary principles, honesty rules,
+> and lead-capture pattern described below carried over unchanged; the
+> conversation-tree mechanics did not.
+
 ---
 
 ## Preface — What This Is and Isn't
