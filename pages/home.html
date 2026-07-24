@@ -168,10 +168,16 @@
         <div class="contact-item"><div class="ico">◆</div><div><strong>Phone</strong><span><a href="tel:+2348073747650">+234 807 374 7650</a> &nbsp;·&nbsp; <a href="tel:+2348070586860">+234 807 058 6860</a></span></div></div>
         <div class="contact-item"><div class="ico">◆</div><div><strong>Connect</strong><span><a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://www.facebook.com/share/1EnMRT3Lrq/" target="_blank" rel="noopener">Facebook</a> · <a href="https://www.instagram.com/shroyal_schools" target="_blank" rel="noopener">Instagram</a> · <a href="https://youtube.com/@shroyalschools" target="_blank" rel="noopener">YouTube</a></span></div></div>
       </div>
-      <form class="contact-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Message Sent ✓';">
-        <label for="name">Full name</label><input id="name" type="text" placeholder="Your name" required />
-        <label for="email">Email address</label><input id="email" type="email" placeholder="you@example.com" required />
-        <label for="msg">Message</label><textarea id="msg" rows="4" placeholder="How can we help?" required></textarea>
+      <form class="contact-form" action="https://formsubmit.co/info@shroyalschools.ng" method="POST"
+            data-success-text="Message Sent ✓" data-sending-text="Sending…"
+            data-error-text="Couldn't send — please email or WhatsApp us directly.">
+        <input type="hidden" name="_subject" value="New enquiry — shroyalschools.ng (English form)" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+        <label for="name">Full name</label><input id="name" name="name" type="text" placeholder="Your name" required />
+        <label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" required />
+        <label for="msg">Message</label><textarea id="msg" name="message" rows="4" placeholder="How can we help?" required></textarea>
         <button type="submit" class="btn btn-gold">Send Message</button>
       </form>
     </div>

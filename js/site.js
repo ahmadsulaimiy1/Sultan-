@@ -20,3 +20,33 @@
   }, {threshold:0.12});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   document.querySelectorAll('.stagger').forEach(el=>io.observe(el));
+
+  document.querySelectorAll('.contact-form').forEach(form=>{
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    const successText = form.dataset.successText || originalText;
+    const errorText = form.dataset.errorText || 'Error — please try again.';
+    let resetTimer;
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      clearTimeout(resetTimer);
+      btn.disabled = true;
+      btn.textContent = form.dataset.sendingText || originalText;
+      try{
+        const endpoint = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if(!res.ok) throw new Error('bad status ' + res.status);
+        btn.textContent = successText;
+        form.reset();
+        resetTimer = setTimeout(()=>{ btn.textContent = originalText; btn.disabled = false; }, 6000);
+      }catch(err){
+        btn.textContent = errorText;
+        btn.disabled = false;
+        resetTimer = setTimeout(()=>{ btn.textContent = originalText; }, 6000);
+      }
+    });
+  });
