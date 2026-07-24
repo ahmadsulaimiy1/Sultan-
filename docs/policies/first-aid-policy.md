@@ -72,7 +72,7 @@ redevelopment.
 | School nurse | Manages the sick bay, medical/allergy information collected at admission, and medicine administration. |
 | First Aiders | Act as first responders to any incident in their area; apply the appropriate response; complete an accident report form the same day — all three already stated in the live policy, restated here as the foundation this redevelopment builds on. |
 | Class teachers | First point of observation for a student injury or medical concern during class; escort or send for a First Aider, never attempt treatment beyond their own training. |
-| Boarding wardens | Apply these same procedures overnight, coordinating with the Emergency Response Plan's overnight-emergency provisions (Section 6.5 of that document) where a nurse or First Aider isn't immediately on-site. |
+| Boarding wardens | Apply these same procedures overnight, coordinating with the Emergency Response Plan's overnight-emergency provisions (Section 7.5 of that document) where a nurse or First Aider isn't immediately on-site. |
 
 ## 7. Procedures
 

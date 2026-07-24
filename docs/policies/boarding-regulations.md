@@ -185,7 +185,7 @@ assumed to be identical to an established boarder's routine.
   this section does not duplicate that plan's procedure, only confirms
   its boarding-specific application.
 - A boarding-house fire drill is held at the same interval as the
-  general site drill (Emergency Response Plan §6.1), conducted
+  general site drill (Emergency Response Plan §7.1), conducted
   overnight at least once per year in addition to the standard daytime
   drill, given the distinct overnight-evacuation challenge boarding
   presents.

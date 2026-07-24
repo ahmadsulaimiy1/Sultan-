@@ -142,7 +142,7 @@ and what's still open.
 | Health & Safety Policy | **DRAFTED — full redevelopment of Policy VII to the 13-section governance architecture (SW-07), Phase E** | 1 | Management staff (recommend the Board name a single accountable individual at adoption) | Board of Trustees | Annual | — |
 | **First Aid Policy** *(now given its own row — previously tracked only as a dependency of Medical Policy below)* | **DRAFTED — full redevelopment of Policy VI (SW-06), Phase E** | 1 | Registrar / school nurse | Board of Trustees | Annual | — |
 | Medical Policy | PARTIAL | 1 | Registrar / school nurse | Board of Trustees | Annual | First Aid Policy (drafted, SW-06) |
-| Emergency Response Plan | **DRAFTED** (Phase A) | 1 | Institutional lead (to be confirmed) | Board of Trustees | Annual | Health & Safety Policy (drafted, SW-07) |
+| Emergency Response Plan | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see SW-09) | 1 | Institutional lead (to be confirmed) | Board of Trustees | Annual | Health & Safety Policy (drafted, SW-07) |
 | Crisis Management Plan | MISSING | 2 | CEO / Principal | CEO | Annual | Emergency Response Plan (drafted) |
 | Transportation Policy | MISSING | 3 | VP Administration | CEO | Annual | None |
 
