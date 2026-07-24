@@ -47,7 +47,7 @@ the single highest-leverage action on this entire register.
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Numeric promotion threshold (cumulative term score cutoff) | Registrar + Principals/Head Teacher | OPEN | High | Board of Trustees (Academic Regulations §5) |
+| Numeric promotion threshold (cumulative term score cutoff) | Registrar + Principals/Head Teacher | OPEN | High | Board of Trustees (Academic Regulations §7.1) |
 | Academic-integrity consequence scale (specific to exam/coursework dishonesty, beyond general Student Code of Conduct discipline) | Principal, Royal College | OPEN — depends on the still-unwritten Academic Integrity Policy | High | Board of Trustees |
 | Per-Juz' Hifz assessment pass standard | Principal, Qur'an College + Qur'an College teaching staff | OPEN | High | Principal, Qur'an College (per Constitution §6.3, academic authority) |
 | Muraja'ah revision-cycle length | Qur'an College teaching staff | OPEN | Medium | Principal, Qur'an College |

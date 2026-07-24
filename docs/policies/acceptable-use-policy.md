@@ -55,7 +55,7 @@ Privacy Policy without redefining them.
 - Use of the AI assistant for academic help is permitted per the AI
   Usage Policy §5 and 10; misuse (attempting to have it complete
   graded work dishonestly) is an academic-integrity matter under the
-  Academic Regulations §8, not a new violation category this policy
+  Academic Regulations §7.5, not a new violation category this policy
   invents.
 
 ## 6. Staff use

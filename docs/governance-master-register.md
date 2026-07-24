@@ -57,13 +57,13 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Academic Regulations | **DRAFTED** (Phase B) | 1 | Registrar, Royal College | Board of Trustees | Annual | Assessment Policy (exists) |
+| Academic Regulations | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see AC-02) | 1 | Registrar, Royal College | Board of Trustees | Annual | Assessment Policy (exists) |
 | Assessment Policy | **EXISTS** (Policy I) | 1 | VP Administration | Board of Trustees | Annual | — |
 | Examination Policy | MISSING | 2 | Registrar | CEO | Annual | Academic Regulations (drafted) |
 | Academic Integrity Policy | MISSING | 1 | Principal, Royal College | Board of Trustees | Annual | Academic Regulations (drafted) |
 | Certification Policy | MISSING | 2 | Registrar | CEO | Biennial | Academic Regulations (drafted) |
-| Promotion Policy | PARTIAL — structure set in Academic Regulations §5, numeric threshold still unset | 1 | Principal, Royal College | Board of Trustees | Annual | Academic Regulations (drafted) |
-| Graduation Policy | PARTIAL — structure set in Academic Regulations §7 | 2 | Registrar | CEO | Annual | Promotion Policy |
+| Promotion Policy | PARTIAL — structure set in Academic Regulations §7.1, numeric threshold still unset | 1 | Principal, Royal College | Board of Trustees | Annual | Academic Regulations (drafted) |
+| Graduation Policy | PARTIAL — structure set in Academic Regulations §7.4 | 2 | Registrar | CEO | Annual | Promotion Policy |
 | Curriculum Framework | PARTIAL | 2 | Head, Research & Development | CEO | Biennial | None |
 
 ## 3. Student Affairs
@@ -86,6 +86,7 @@ and what's still open.
 | Parent Code of Conduct | MISSING | 2 | VP Administration | CEO | Annual | Communication Policy |
 | Communication Policy | MISSING | 3 | VP Administration | CEO | Annual | Parent Portal (exists) |
 | Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Board of Trustees | Annual | — |
+| **Admissions Policy** *(new row — drafted since Phase B but never tracked on this register until the Academic Regulations Tier 1 retrofit surfaced the gap)* | **DRAFTED** (Phase B, see PA-05) | 1 | CEO | Board of Trustees | Annual | Data Protection & Privacy Policy (drafted), Academic Regulations (drafted) |
 
 ## 5. Safeguarding
 

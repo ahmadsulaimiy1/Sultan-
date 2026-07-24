@@ -100,7 +100,7 @@ the Parent Handbook (Portal, WhatsApp, email) when communicating with
 guardians, and to escalate rather than independently promise outcomes
 outside their authority (e.g. a class teacher should not independently
 commit to an academic exception reserved for the Registrar under the
-Academic Regulations §9).
+Academic Regulations §7.6).
 
 ## 10. Digital conduct
 
