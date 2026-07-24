@@ -414,7 +414,7 @@
   .policy.open{box-shadow:0 20px 40px -28px rgba(34,23,9,0.3);}
   .policy-head{width:100%;text-align:left;background:none;border:none;cursor:pointer;display:flex;justify-content:flex-start;align-items:baseline;gap:20px;padding:24px 26px;font-family:'Cormorant Garamond','Amiri',serif;font-size:1.2rem;color:var(--navy);position:relative;transition:padding-left .3s ease;}
   .policy.open .policy-head{padding-left:34px;}
-  .policy-head .stat-num{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;color:var(--gold);letter-spacing:0.05em;flex-shrink:0;width:34px;}
+  .policy-head .stat-num{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;color:var(--gold);letter-spacing:0.05em;flex-shrink:0;width:52px;}
   .policy-head .title-text{flex:1;}
   .policy-head .plus{font-family:'Cormorant Garamond','Amiri',serif;color:var(--gold);font-size:1.1rem;transition:transform .3s ease,opacity .3s ease;font-style:italic;margin-left:auto;flex-shrink:0;}
   .policy.open .plus{transform:rotate(180deg);opacity:0.6;}

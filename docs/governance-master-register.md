@@ -95,7 +95,7 @@ and what's still open.
 | Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Trustees | Annual | Child Protection Policy |
 | **Designated Safeguarding Lead Framework** *(new — Phase D, resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED** (Phase D) | 1 | Board of Trustees (appointment) / CEO (document maintenance) | Board of Trustees | Annual | Child Protection Policy (drafted) |
 | Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
-| Visitor Management Policy | PARTIAL | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
+| Visitor Management Policy | **RESOLVED — the redeveloped Visitors Policy (SW-08, Phase E) now covers the safeguarding-vetting scope this row named; no separate document needed** | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
 | Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7 and the new AI Usage Policy (Phase C), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
 
 ## 6. Human Resources
@@ -138,9 +138,10 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Health & Safety Policy | **EXISTS** (Policy VII) | 1 | Management staff | Board of Trustees | Annual | — |
-| Medical Policy | PARTIAL | 1 | Registrar / school nurse | Board of Trustees | Annual | First Aid Policy (exists) |
-| Emergency Response Plan | **DRAFTED** (Phase A) | 1 | Institutional lead (to be confirmed) | Board of Trustees | Annual | Health & Safety Policy (exists) |
+| Health & Safety Policy | **DRAFTED — full redevelopment of Policy VII to the 13-section governance architecture (SW-07), Phase E** | 1 | Management staff (recommend the Board name a single accountable individual at adoption) | Board of Trustees | Annual | — |
+| **First Aid Policy** *(now given its own row — previously tracked only as a dependency of Medical Policy below)* | **DRAFTED — full redevelopment of Policy VI (SW-06), Phase E** | 1 | Registrar / school nurse | Board of Trustees | Annual | — |
+| Medical Policy | PARTIAL | 1 | Registrar / school nurse | Board of Trustees | Annual | First Aid Policy (drafted, SW-06) |
+| Emergency Response Plan | **DRAFTED** (Phase A) | 1 | Institutional lead (to be confirmed) | Board of Trustees | Annual | Health & Safety Policy (drafted, SW-07) |
 | Crisis Management Plan | MISSING | 2 | CEO / Principal | CEO | Annual | Emergency Response Plan (drafted) |
 | Transportation Policy | MISSING | 3 | VP Administration | CEO | Annual | None |
 
@@ -201,18 +202,38 @@ name and section number).
   plus the Governance Resolution Register, a full cross-ecosystem
   Governance Consistency Audit, and the SHRS Institutional Readiness
   Report (see their own sections/files for detail).
+- **Phase E (Governance & Policy Redevelopment):** established a
+  Policy Code Index (`docs/policies/policy-code-index.md`) applying a
+  consistent code (GV/AC/SD/PA/SW/HR/FN/IT/IQ + number) across all 32
+  named policy families, live and drafted alike. Fully redeveloped
+  three live, previously-compressed policies to the new 13-section
+  architecture: First Aid Policy (SW-06), Health & Safety Policy
+  (SW-07), and Visitors Policy (SW-08) — the last of which also
+  resolves the standalone "Visitor Management Policy" gap this register
+  used to track separately. The live site's policy numbering
+  (`pages/policies.html`, both languages) now shows these codes in
+  place of Roman numerals for all nine live policies. **Retrofitting
+  the remaining ~20 already-drafted documents to this same 13-section
+  depth is real, substantial work not attempted in this pass** — named
+  honestly rather than implied as done; see the Policy Code Index's own
+  scope note.
 
-**This register now tracks 64 rows** (up from the original 58 — Phase
+**This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:
 Grievance Policy, Staff Discipline Policy, Incident Response Policy,
 Digital Learning Policy, and Scholarship Governance Framework; Phase D
-added a sixth, the Designated Safeguarding Lead Framework). **21 rows
-are marked DRAFTED and 4 were already EXISTS — 25 of 64 in total**
-(a "document" occasionally spans two rows where Board policy is to
-combine two named documents into one file — Child Protection Policy /
-Safeguarding Policy, and Data Protection Policy / Privacy Policy — so
-this is a row count, not a distinct-file count; the actual file count
-in `docs/policies/` is 23). The remainder are either genuinely
+added a sixth, the Designated Safeguarding Lead Framework; Phase E
+added a seventh row — First Aid Policy — which existed as a live policy
+all along but had never been given its own register row). **23 rows
+are marked DRAFTED, 3 are EXISTS, and 1 is RESOLVED — 27 of 65 in
+total** (a "document" occasionally spans two rows where Board policy is
+to combine two named documents into one file — Child Protection Policy
+/ Safeguarding Policy, and Data Protection Policy / Privacy Policy — so
+this is a row count, not a distinct-file count; the actual policy/
+framework file count in `docs/policies/` is 26 — 31 total files in that
+directory, minus 5 meta/process documents (the dependency reviews,
+consistency audits, and the Policy Code Index itself, none of which
+govern institutional conduct). The remainder are either genuinely
 lower-priority (Tier 3/4), blocked on real data only the school can
 provide, or newly identified rather than missed originally.
 

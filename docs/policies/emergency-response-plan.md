@@ -9,8 +9,9 @@ lead across all four institutions — the Board should decide who that
 is, or confirm a rotating/joint arrangement.**
 **Review cycle:** Annual, plus after every drill and every real
 incident.
-**Depends on:** Health & Safety Policy (Policy VII, exists — this plan
-is the standalone crisis document that policy references but doesn't
+**Depends on:** Health & Safety Policy (SW-07, redeveloped in full,
+Phase E — this plan is the standalone crisis document that policy
+references but doesn't
 itself contain).
 
 > **Before this governs a real decision:** SHRS's site(s) in Ikorodu,
@@ -84,7 +85,7 @@ times including outside normal school hours for boarding students.
   confirmed by the Board) with results logged.
 
 ### 6.2 Medical emergency
-- First response per the existing First Aid Policy (Policy VI).
+- First response per the existing First Aid Policy (SW-06).
 - For anything beyond first-aid capability: immediate call to
   emergency medical services and to the student's guardian via the
   fastest available channel.

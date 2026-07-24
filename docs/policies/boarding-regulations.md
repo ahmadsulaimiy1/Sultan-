@@ -10,8 +10,8 @@ actually board students today.
 **Review cycle:** Annual.
 **Depends on:** Child Protection & Safeguarding Policy (Section 6.6 of
 that policy references boarding-specific provisions this document
-fulfils); Health & Safety Policy (Policy VII, exists); Emergency
-Response Plan (Section 6.5, overnight emergencies).
+fulfils); Health & Safety Policy (SW-07, redeveloped in full, Phase E);
+Emergency Response Plan (Section 6.5, overnight emergencies).
 
 > **Before this governs a real decision:** supervision ratios,
 > room-check frequency, and the specific boarding-house layout described
@@ -101,7 +101,7 @@ with a supervisory role overnight.
   guardians, not left to vary informally by warden.
 
 ### 6.4 Health and medical care
-- Per the existing First Aid Policy (Policy VI) for immediate incidents;
+- Per the existing First Aid Policy (SW-06, redeveloped in full, Phase E) for immediate incidents;
   any condition requiring ongoing management (medication, chronic
   condition) is recorded with the boarding house and the guardian
   informed of exactly who administers it and when.

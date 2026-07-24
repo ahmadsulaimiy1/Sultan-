@@ -157,9 +157,10 @@ website's AI assistant.
   official, logged channels.
 
 ### 6.7 Visitor and contractor safeguarding
-- Extends the existing Visitors Policy (Policy VIII): no visitor or
-  contractor is left unsupervised with children regardless of sign-in
-  status.
+- Extends the existing Visitors Policy (SW-08, redeveloped in full,
+  Phase E, including full safeguarding-vetting provisions): no visitor
+  or contractor is left unsupervised with children regardless of
+  sign-in status.
 
 ## 7. Digital safeguarding (Parent Portal & AI assistant)
 

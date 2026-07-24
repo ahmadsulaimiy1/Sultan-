@@ -172,7 +172,7 @@ A single signpost, not a restatement:
 Guardians are expected to communicate with staff and other families
 respectfully, raise concerns through the channels above rather than
 directly confronting another family's child, and follow the Visitors
-Policy (Policy VIII) when on any SHRS site. A dedicated Parent Code of
+Policy (SW-08, redeveloped in full, Phase E) when on any SHRS site. A dedicated Parent Code of
 Conduct (Governance Master Register, Tier 2) will expand this section
 once drafted; this Handbook states the expectation, not the full
 disciplinary consequence of breaching it.
