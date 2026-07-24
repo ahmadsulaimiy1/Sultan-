@@ -94,6 +94,48 @@ technical outcome for these two specific files.
   firm decision to add photos incrementally as they become available)
   is a separate, larger task.
 
+---
+
+# Second Photography Batch
+
+**Scope:** 6 further photographs, supplied with a direct instruction:
+*"The building should be in the home Welcome page, others should be
+where appropriate. All should be used."*
+
+## Images placed (4)
+
+| # | File | Description | Placement | Rationale |
+|---|---|---|---|---|
+| 12 | `campus-hero.jpg` (was `a59fe802…`) | Clean daytime exterior shot of the main building, blue sky, no people prominent | Home page — new hero background, replacing the plain gradient | Direct instruction. A dark navy overlay (matching the existing brand palette) sits over the photo so the hero's white/gold text stays legible — the same "photo plus overlay" pattern used nowhere else on the site yet, appropriate for the one section meant to make the strongest first impression. |
+| 13 | `quran-recitation-1.jpg` (was `52660e1a…`) | Five students seated on a stage with microphones, presenting a Qur'an recitation; no names visible | Qur'an College page — new two-photo "Qur'an Recitation" gallery | Directly illustrates the memorisation-to-recitation pipeline the Hifz Regulations describe in prose only. Two of the three near-identical angles supplied were used together as a small gallery rather than redundantly; the third was routed to Facilities instead (next row). |
+| 14 | `quran-recitation-2.jpg` (was `e8354214…`) | A second angle of the same recitation presentation | Qur'an College page, same gallery | Paired with #13 to show the stage from two angles rather than duplicating one. |
+| 15 | `college-hall.jpg` (was `c1136ced…`) | The widest angle of the same event, showing more of the room and ceiling | Facilities gallery — fills the "College Hall" row (Facility 01), which had never had a photo | The widest, most "room-showing" of the three recitation angles reads better as a facility photo than a close event photo — a judgment call about which crop serves which purpose, not a quality difference between the three. |
+
+All four processed the same way as every prior image in this document
+(resized for web, real alt text, real captions, verified build + div
+balance, checked in both languages). None of the three people-photos in
+this batch were blocked by this session's safety tooling — unlike the
+two images held from the first batch, these show no name/face pairing
+and read as a public school event, not an internal registration record.
+
+## Images pending — identity not yet confirmed (2)
+
+| # | File | Description | Why held |
+|---|---|---|---|
+| 16 | `9055fbf0…` | A group of men (including at least one visibly Islamic-scholarly dress) and, notably, one young child and one teenager, seated together in an informally furnished room — not recognisably the SHRS campus | This project does not know who these people are, in what capacity they were photographed, or whether the setting is connected to SHRS at all (school business abroad, a personal/family visit, a delegation). Guessing a caption for unidentified real people — adults or the two minors present — is not a risk worth taking silently, especially for a room that isn't the school. |
+| 17 | `66b9ff04…` | Five men in a separate room, mixed Western and Gulf/Islamic dress, one visibly younger than the others | Same issue as #16 — no confirmed identity, no confirmed connection to SHRS, no confirmed setting. |
+
+**Not held for the same reason as the earlier safeguarding-flagged
+photos.** Both instructions ("all should be used") were followed for
+every image this project could responsibly place. These two are
+different in kind: the open question isn't consent to use a known
+person's photo, it's *not knowing who is in the photo at all* — captioning
+strangers, misidentifying scholars, or presenting what may be a private
+family moment as official school content are all real, avoidable
+mistakes. Held pending the Director's identification of who is pictured
+and what the occasion was, not pending any further technical or policy
+work.
+
 ## Version control
 
 | Version | Date | Change | Author |
@@ -102,3 +144,4 @@ technical outcome for these two specific files.
 | 0.2 | Draft | Director confirmed the held selfie's subject (Founder/CEO Zakariya Olanrewaju Anofi) and approved publication — moved to Images approved and integrated, published as a cropped portrait in a new spotlight card on the Governance page (6 placed, 5 held) | Not yet reviewed |
 | 0.3 | Draft | The image/media-consent gap flagged for images 9–11 was drafted into governance (Data Protection & Privacy Policy §7.10, Admissions Policy cross-reference, Governance Resolution Register Category 7) — recorded here as the recommendation moving from flagged to drafted; the hold on images 9–11 itself is unchanged | Not yet reviewed |
 | 0.4 | Draft | Director instructed publishing all remaining held images. Two workshop photos and the competition photo (9 placed total) were published on that instruction; the stairwell name-card photo and classroom photo could not be processed at all — blocked by the session's own safety tooling on independent attempts, a hard technical stop distinct from every other editorial decision in this document — reported to the Director as its own category, not folded into the consent discussion | Not yet reviewed |
+| 0.5 | Draft | Second photography batch (6 images) added, with a direct instruction ("all should be used"). Placed 4: home hero background, a two-photo Qur'an Recitation gallery on the Qur'an College page, and a College Hall photo on Facilities. Held 2, pending the Director identifying who is pictured — a different kind of open question than any prior hold in this document, since it's about identity rather than consent, quality, or technical processing | Not yet reviewed |
