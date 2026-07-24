@@ -66,7 +66,7 @@ confirm each one, particularly the borderline cases noted inline.
 
 | Code | Policy | Status | Publication |
 |---|---|---|---|
-| GV-01 | Constitution & Governance Charter | Drafted v2.0? — **not yet retrofitted; still v1.0** | **Public** — published, Phase F |
+| GV-01 | Constitution & Governance Charter | Drafted v2.0 — retrofitted, Phase F Tier 3 | **Public — physically published** |
 | GV-02 | Board Charter | Missing | Public (once drafted) |
 | GV-03 | Committee Charters | Partial | Internal |
 | GV-04 | Delegation of Authority Policy | Missing | Internal |
@@ -118,7 +118,7 @@ timeline take SD-02 onward.)*
 | Code | Policy | Status | Publication |
 |---|---|---|---|
 | SW-01 | Child Protection & Safeguarding Policy | Drafted v2.0 | **Public — physically published** (see Section "Publication actions taken," below) |
-| SW-02 | Designated Safeguarding Lead Framework | Drafted (still v0.1 — not yet retrofitted) | Public (once retrofitted — supports SW-01's transparency) |
+| SW-02 | Designated Safeguarding Lead Framework | Drafted v2.0 — retrofitted, Phase F Tier 3 | **Public — physically published** — supports SW-01's transparency |
 | SW-03 | Dress Code Policy | **Live** (Policy IV) | **Public** — already live |
 | SW-04 | Equal Opportunity Policy | **Live** (Policy V) | **Public** — already live |
 | SW-05 | Career Policy | **Live** (Policy III) | **Public** — already live |
