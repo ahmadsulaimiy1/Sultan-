@@ -9,17 +9,37 @@
     </button>
     <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.navlinks').classList.toggle('open')">☰</button>
     <div class="navlinks">
-      <div class="nav-drop">
-        <a href="/about/" class="nav-drop-trigger">Our Story</a>
-        <div class="nav-drop-panel">
-          <a href="/about/">About</a>
-          <a href="/about/governance/">Governance</a>
-          <a href="/policies/">Policies</a>
+      <div class="nav-drop nav-mega">
+        <a href="/about/" class="nav-drop-trigger">Discover SHRS</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+            <h4>Discover SHRS</h4>
+            <p>The story, values, and people behind Sultan Hanafi Royal Schools.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/about/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 19V9l8-4 8 4v10M4 19h16M9 19v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">Our Story</span><span class="d">Mission, vision, and values</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">Featured</span>
+            <a class="nav-mega-featured-link" href="/about/governance/">Meet Our Leadership →</a>
+            <p>The board of trustees and executive team behind the school.</p>
+          </div>
         </div>
       </div>
       <div class="nav-drop nav-mega">
-        <a href="/academics/" class="nav-drop-trigger">Academics</a>
+        <a href="/academics/" class="nav-drop-trigger">Education</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8l9-4 9 4-9 4-9-4zm0 0v6c3 2 6 3 9 3s6-1 9-3V8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+            <h4>Education</h4>
+            <p>Forming scholars through academic excellence, Qur'anic mastery, and leadership development.</p>
+          </div>
           <div class="nav-mega-col">
             <a class="nav-mega-item" href="/academics/nursery-primary/">
               <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 19V9l8-4 8 4v10M4 19h16M9 19v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
@@ -45,16 +65,83 @@
           </div>
         </div>
       </div>
-      <div class="nav-drop">
+      <div class="nav-drop nav-mega">
         <a href="/boarding/" class="nav-drop-trigger">Student Life</a>
-        <div class="nav-drop-panel">
-          <a href="/boarding/">Boarding</a>
-          <a href="/facilities/">Facilities</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <h4>Student Life</h4>
+            <p>A home-like boarding community and a campus built for focused, immersive learning.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/boarding/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M3 19v-8a2 2 0 012-2h7a2 2 0 012 2v1h3a2 2 0 012 2v5M3 19h18M3 15h18M7 11V9a2 2 0 012-2h2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">Boarding</span><span class="d">Full &amp; half boarding, ages 9–16</span></span>
+            </a>
+            <a class="nav-mega-item" href="/facilities/">
+              <span class="nav-mega-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 21V9l8-6 8 6v12M4 21h16M9 21v-7h6v7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
+              <span class="nav-mega-text"><span class="t">Facilities</span><span class="d">Campus, labs, and learning spaces</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">Explore</span>
+            <a class="nav-mega-featured-link" href="/facilities/">The Campus in Pictures →</a>
+            <p>A look at classrooms, laboratories, and grounds.</p>
+          </div>
         </div>
       </div>
-      <a href="/admission/">Admission</a>
-      <a href="/foundation/">Foundation</a>
-      <a href="/contact/">Contact</a>
+      <div class="nav-drop nav-mega">
+        <a href="/admission/" class="nav-drop-trigger">Admissions</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <h4>Admissions</h4>
+            <p>A guided, 12-step pathway from enquiry to enrolment.</p>
+            <a class="nmi-cta" href="/admission/">Start Your Application →</a>
+            <a class="nmi-secondary" href="/portal/login/">Parent Portal (Pilot) →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega">
+        <a href="/about/governance/" class="nav-drop-trigger">Governance</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7L2 13a3 3 0 006 0L5 7zm14 0l-3 6a3 3 0 006 0l-3-6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <h4>Governance</h4>
+            <p>How the school is led, held accountable, and governed.</p>
+            <a class="nmi-cta" href="/about/governance/">Governance &amp; Leadership →</a>
+            <a class="nmi-secondary" href="/policies/">Policies Centre →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega">
+        <a href="/foundation/" class="nav-drop-trigger">Foundation</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+            <h4>Foundation</h4>
+            <p>Our non-profit arm — literacy, welfare, and community support beyond the classroom.</p>
+            <a class="nmi-cta" href="/foundation/">Support the Foundation →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega">
+        <a href="/contact/" class="nav-drop-trigger">Contact</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <span class="nmi-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+            <h4>Contact</h4>
+            <p>Reach the school, ask a question, or plan a visit.</p>
+            <a class="nmi-cta" href="/contact/">Get in Touch →</a>
+            <a class="nmi-secondary" href="https://wa.me/2348073747650" target="_blank" rel="noopener">Chat on WhatsApp →</a>
+          </div>
+        </div>
+      </div>
       <a href="/portal/login/" class="nav-mark">Parent Portal</a>
       <a href="/admission/" class="nav-mark nav-cta">Enrol Now <span class="arrow">→</span></a>
     </div>
