@@ -28,15 +28,21 @@ Requirement.
 - **1 is the Policy Code Index** — a meta/tracking document, no policy
   code of its own.
 
-Of the 22 true policy documents, **20 are now retrofitted to the full
-13-section architecture** (Policy Information / Purpose / Scope /
+Of the 22 true policy documents, **all 22 are now retrofitted to the
+full 13-section architecture** (Policy Information / Purpose / Scope /
 Definitions / Policy Statement / Roles & Responsibilities / Procedures
 / Monitoring & Compliance / Records & Documentation / Related Policies
 / Exceptions / Appeals & Complaints / Review & Amendment) and
-substantially deepened beyond their original content. **Two remain at
-the original architecture**: the Constitution & Governance Charter
-(GV-01) and the Designated Safeguarding Lead Framework (SW-02) — both
-real, substantial documents, just not yet retrofitted in this pass.
+substantially deepened beyond their original content. The last two —
+the Constitution & Governance Charter (GV-01) and the Designated
+Safeguarding Lead Framework (SW-02) — were retrofitted in the Tier 3
+pass: GV-01 gained an emergency-delegation clause, a governance-gap
+escalation procedure, and a succession/vacancy principle; SW-02 gained
+an interim-coverage procedure (naming who handles a safeguarding
+concern today while the role sits vacant) and a handover/succession
+procedure tied to GV-01's new principle. Every citation to both
+documents' old section numbers across the ecosystem was swept and
+fixed, the same discipline applied to every retrofit in this programme.
 
 The Governance Master Register tracks **66 rows** total (documents,
 partial-coverage items, and named gaps across all ten institutional
@@ -44,33 +50,35 @@ categories), of which **28 are marked DRAFTED, EXISTS, or RESOLVED.**
 
 ## 2. Total documents published
 
-**23 documents now physically live** on the public website
+**25 documents now physically live** on the public website
 (`pages/policies.html` / `.ar.html`, both languages, verified built
 after every single addition): the original nine live policies
 (Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity,
-First Aid, Health & Safety, Visitors, Complaint) plus all fourteen
-retrofitted Tier 1/Tier 2 documents classified Public — **Child
-Protection & Safeguarding Policy (SW-01)**, published first to prove
-the pattern, followed by Academic Regulations (AC-02), Student Code of
-Conduct (SD-02), Student Handbook (SD-03), Boarding Regulations
-(SD-04), Parent Handbook (PA-02), Admissions Policy (PA-05), Emergency
-Response Plan (SW-09), Data Protection & Privacy Policy (IT-02),
-Acceptable Use Policy (IT-03), Records Retention Policy (IT-04), AI
-Usage Policy (IT-05), Hifz Regulations (IQ-01), and Ijazah Governance
-Framework (IQ-02).
+First Aid, Health & Safety, Visitors, Complaint) plus all sixteen
+retrofitted Public-classified documents — **Child Protection &
+Safeguarding Policy (SW-01)**, published first to prove the pattern,
+followed by Academic Regulations (AC-02), Student Code of Conduct
+(SD-02), Student Handbook (SD-03), Boarding Regulations (SD-04), Parent
+Handbook (PA-02), Admissions Policy (PA-05), Emergency Response Plan
+(SW-09), Data Protection & Privacy Policy (IT-02), Acceptable Use
+Policy (IT-03), Records Retention Policy (IT-04), AI Usage Policy
+(IT-05), Hifz Regulations (IQ-01), Ijazah Governance Framework (IQ-02),
+and — completing the Tier 3 retrofit — the Constitution & Governance
+Charter (GV-01, in a new Governance category) and the Designated
+Safeguarding Lead Framework (SW-02, alongside SW-01).
 
-**Zero documents now remain classified Public but unpublished.** Every
-document this project has retrofitted to the 13-section architecture
-and classified Public per the Policy Code Index is genuinely live on
-the site today — each one added as its own accordion entry with a
-Policy Information metadata block, placed in the correct category,
-translated in full to Arabic, and individually rebuilt and verified
-(HTML div-tag balance, policy-code presence in both languages) before
-being committed. The remaining publication gap is now structural, not a
-backlog: GV-01 (Constitution & Governance Charter) and SW-02
-(Designated Safeguarding Lead Framework) are Public-classified but
-still at v1.0 — Tier 3 retrofit work, not a publication task, is what
-stands between them and the same treatment.
+**Zero documents now remain classified Public but unpublished, and zero
+remain at the original architecture.** Every document this project has
+drafted and classified Public is now both retrofitted to the full
+13-section architecture and genuinely live on the site — each one added
+as its own accordion entry with a Policy Information metadata block,
+placed in the correct category, translated in full to Arabic, and
+individually rebuilt and verified (HTML div-tag balance, policy-code
+presence in both languages) before being committed. There is no longer
+a structural or drafting gap between "written" and "published" for
+anything this programme has produced — the remaining work is entirely
+in the 38 tracked Governance Master Register items that haven't been
+drafted at all yet, not in finishing what has been.
 
 **9 documents are classified Internal** (Staff Conduct Policy, Staff
 Handbook, the three evaluation frameworks, Information Security Policy,
@@ -95,10 +103,10 @@ From the Governance Master Register (66 tracked items, 28 complete):
   (Academic Regulations), a Boarding Regulations owner/scope mismatch
   (flagged in the Phase D audit, not yet resolved), and the newly
   tracked Admissions Policy row itself (fixed).
-- **Zero documents classified Public remain unpublished** (Section 2) —
-  this line item is now closed; the two Tier 3 documents (GV-01, SW-02)
-  need retrofitting before they can be published at the same standard,
-  which is tracked as drafting work, not publication work.
+- **Zero documents classified Public remain unpublished, and zero
+  remain unretrofitted** (Section 2) — both line items are now closed;
+  every document this programme has drafted is at its full 13-section
+  depth and physically live where classified Public.
 
 ## 4. Outstanding approvals required
 
@@ -167,16 +175,19 @@ follow, not a blank slate.
 
 ## 8. Multi-campus scalability assessment
 
-**Structurally sound, two same numeric gaps as before, now joined by a
-publication-scale question.** The Phase D Scalability Stress Test's
-findings still hold: the DSL Framework's per-campus scaling model
-closes the structural safeguarding gap; the academic-integrity/
-promotion thresholds remain the concrete open item. New in this
-report: if SHRS's governance library keeps growing at this programme's
-pace (26 documents now, 38 more tracked as gaps), the website
-publication workload will grow faster than any single pass can clear —
-the Policy Code Index's Publication Status classification is the tool
-that should scale with it, not a one-time label.
+**Structurally sound, one numeric gap remains, and the publication-
+scale question is now resolved in practice, not just in principle.**
+The Phase D Scalability Stress Test's findings still hold: the DSL
+Framework's per-campus scaling model closes the structural safeguarding
+gap; the academic-integrity/promotion thresholds remain the concrete
+open item. What's new since the last report: the website publication
+workload this report flagged as a future risk has now been cleared in
+full — 16 documents published in this single programme, each verified
+individually — proving the one-at-a-time, verify-every-time discipline
+scales in practice, not just as a stated principle. As SHRS's
+governance library keeps growing (26 documents now, 38 more tracked as
+gaps), the Policy Code Index's Publication Status classification
+remains the tool that scales with it.
 
 ## The continuity test, revisited
 
@@ -185,17 +196,20 @@ if the CEO, Principal, or Registrar changed tomorrow? This report adds
 a second version of that question, specific to what changed this
 phase: **would a family reading the published policies get an accurate
 picture of SHRS's actual governance, or a partial one?** As of this
-update, the answer is: complete, for everything drafted to date. Every
-document this project has retrofitted to the 13-section architecture
-and classified Public is physically live on the site, in both
-languages, individually verified — not a partial subset silently
-presented as the whole picture. The honest remainder is narrower than
-before: two documents (the Constitution & Governance Charter, the
-Designated Safeguarding Lead Framework) still need Tier 3 retrofitting
-before they reach this same standard, and the 38 tracked gaps in the
-Governance Master Register still need drafting in the first place.
-Neither is a publication problem anymore — the publication pipeline
-itself is now proven, repeatable, and current.
+update, the answer is: complete, for everything drafted to date, at
+full depth. Every document this project has drafted is now retrofitted
+to the 13-section architecture, and every one classified Public is
+physically live on the site, in both languages, individually verified
+— not a partial subset silently presented as the whole picture, and not
+a two-tier library where the foundational Charter and the safeguarding
+leadership framework lag behind everything beneath them. The Charter's
+own new principle — that authority never lapses silently, that a
+governance gap is tracked until resolved rather than assumed away —
+now also describes how this project has treated its own remaining
+work: named explicitly, closed one document at a time, verified each
+time. The honest remainder is exactly the 38 tracked gaps in the
+Governance Master Register that still need drafting in the first place
+— a scope question now, not a depth or publication question.
 
 ## Version control
 
@@ -203,3 +217,4 @@ itself is now proven, repeatable, and current.
 |---|---|---|---|
 | 0.1 | Draft | Initial report, Phase F | Synthesises Phases A–F; not yet reviewed or adopted |
 | 0.2 | Draft | Phase F — updated Sections 2 and 3 and the continuity-test closing section to record that all 13 previously-queued Public-classified documents are now physically published, closing the Website Publication Requirement's remaining backlog | Not yet reviewed or adopted |
+| 0.3 | Draft | Phase F/G — updated Sections 1, 2, 3, 8, and the continuity-test closing section to record that GV-01 and SW-02 (the two remaining Tier 3 documents) are now retrofitted to the full 13-section architecture and physically published, closing the last gap between drafted and finished depth for every document this project has produced | Not yet reviewed or adopted |
