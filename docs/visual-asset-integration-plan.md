@@ -11,12 +11,12 @@ not just implement silently.
 **zero real photographs** — every page uses only the crest logo. That
 is very likely a real contributor to the "flat visual design, no visual
 storytelling" critique raised separately. This batch is a first, honest
-step toward fixing that — not a complete solution, since only 5 of the
+step toward fixing that — not a complete solution, since only 6 of the
 11 supplied images are usable on the public site today.
 
 ---
 
-## Images approved and integrated (5)
+## Images approved and integrated (6)
 
 | # | File | Description | Placement | Rationale |
 |---|---|---|---|---|
@@ -25,15 +25,16 @@ step toward fixing that — not a complete solution, since only 5 of the
 | 3 | `biology-laboratory.jpg` (was `dfe800db…`) | Biology lab: skeleton model, anatomical wall charts, microscopes, specimens, organised benches, no people | Facilities page gallery, captioned "Biology Laboratory" | Directly matches an existing named row in the Facilities index (`Biology Laboratory`) that has never had a photo. Well-lit, tidy, genuinely well-equipped — this is exactly the kind of image that converts a skeptical parent. |
 | 4 | `chemistry-laboratory.jpg` (was `127c97cf…`) | Chemistry lab: periodic table poster, reagent bottles, glassware, fume-extraction rig, no people | Facilities page gallery, captioned "Chemistry Laboratory" | Matches the `Chemistry Laboratory` row. Usable but not pristine — see quality flag below. |
 | 5 | `boarding-dining.jpg` (was `2be7f3ad…`) | Boarding house kitchen/dining area, table set with plates and mugs, kitchen equipment, no people | Facilities page gallery, captioned "Boarding Dining Area" | The Boarding page (`pages/boarding.html`) currently has zero photography and a fixed two-column layout that isn't a safe place to insert an image without a broader layout change (out of scope for this pass — see Deferred, below). Placing it in the Facilities gallery instead still delivers the credibility value without touching a layout this pass didn't plan to redesign. |
+| 6 | `founder-ceo.jpg` (was `52b1849e…`) | The Founder/CEO, previously held pending identity confirmation — now confirmed as Zakariya Olanrewaju Anofi | Governance & Leadership page — new "Founder" spotlight card above the Board Members ledger | Identity and publication approved directly by the Director. Cropped tighter (from the original car-interior selfie) to a close portrait framing that reads as a dignified headshot at the circular, gold-ringed size used in the spotlight card — the same car-interior background that made the full-frame original unusable for a standard rectangular photo becomes unnoticeable once cropped this close. Not a substitute for a proper studio headshot if one becomes available later, but a legitimate, respectful use of the photo that exists today. |
 
-All five: resized to a 1400px-wide JPEG (down from the original
-2248×1500 handset-camera source), quality 80, progressive encoding —
-150–205KB each, so the added gallery does not meaningfully slow the
-page. Each has real alt text (not the filename) and a real caption
-matching this table. Lazy-loaded (`loading="lazy"`) except the lead
-image. Grid is responsive: multi-column on desktop, single column on
-mobile, consistent aspect ratio via `object-fit: cover` so the layout
-doesn't jump when images of different source proportions are mixed.
+All six: resized to web-appropriate JPEGs (1400px/quality 80 for the
+gallery photos; a tighter 607×900 portrait crop/quality 82 for the
+founder photo), so the added imagery does not meaningfully slow any
+page. Each has real alt text (not the filename) and a real caption.
+Lazy-loaded except the Facilities gallery's lead image. Layouts are
+responsive: multi-column grids collapse to single-column on mobile,
+consistent aspect ratios via `object-fit: cover` so nothing jumps when
+images of different source proportions are mixed.
 
 ## Images held — quality flags, not placed (2)
 
@@ -49,13 +50,7 @@ these two are flagged, not placed. The objective is credibility, and a
 half-finished room photographed as if it were a finished facility would
 work against that.
 
-## Images held — identity/consent not yet confirmed (1)
-
-| # | File | Description | Why held |
-|---|---|---|---|
-| 8 | `52b1849e…` (adult, kufi + agbada, car interior selfie) | A single adult male, informal selfie taken inside a vehicle | Two open questions, not one: **(a)** this project has not been told who this is (a staff member? the CEO? a board member?) or in what capacity they'd be represented — I'm not going to guess a name or title onto a real person's photo. **(b)** even once identity is confirmed, a car-interior selfie is not a professional headshot — SHRS's Leadership/Faculty pages (`about-governance.html`) currently use no photos at all, and the first photo added there should be a proper portrait, not a casual selfie, to match the institutional register of the rest of the site. Recommend: confirm identity and role, and source (or schedule) a proper headshot, rather than publish this image as-is. |
-
-## Images held — safeguarding/consent (2)
+## Images held — safeguarding/consent (3)
 
 This is the most important flag in this document, and it follows
 directly from governance work this same project already completed.
@@ -86,14 +81,18 @@ been flagged rather than guessed at.
   belongs with that redesign, not slipped in piecemeal here.
 - **Boarding page.** As noted above, its fixed two-column grid has no
   safe image slot without a layout change — deferred rather than forced.
-- **Faculty/Leadership photography** on `about-governance.html` — blocked
-  on image #8's open identity question, and more broadly, that page
-  would need a full staff-photo set (or a firm decision to add photos
-  incrementally as they become available), not a single photo of one
-  unconfirmed individual.
+- **Wider Faculty/Leadership photography** on `about-governance.html`.
+  The Founder/CEO now has a photo (image #6, above); the other 16
+  Board/Executive/Staff rows on that page still don't. Adding one photo
+  for one role was a deliberate, bounded choice — a "Founder" spotlight
+  is a common, legible pattern distinct from a general staff directory
+  — not the start of an uneven rollout. A full staff-photo set (or a
+  firm decision to add photos incrementally as they become available)
+  is a separate, larger task.
 
 ## Version control
 
 | Version | Date | Change | Author |
 |---|---|---|---|
 | 0.1 | Draft | Initial plan, first photography batch (11 images: 5 placed, 6 held) | Not yet reviewed |
+| 0.2 | Draft | Director confirmed the held selfie's subject (Founder/CEO Zakariya Olanrewaju Anofi) and approved publication — moved to Images approved and integrated, published as a cropped portrait in a new spotlight card on the Governance page (6 placed, 5 held) | Not yet reviewed |
