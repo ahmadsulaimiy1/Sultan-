@@ -553,6 +553,63 @@
   @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important;animation:none !important;}}
 
   /* ============================================================
+     Phase 2 — icon-led headings, premium card polish, honest
+     image slots, stat band, Qur'an College distinct treatment
+     ============================================================ */
+  .found-card h4,.school-block h3,.mvv-card h3,.director-card h3,.ledger-heading{display:flex;align-items:center;gap:10px;}
+  .found-card h4 svg,.school-block h3 svg,.mvv-card h3 svg{flex-shrink:0;color:var(--gold);}
+  .director-card h3 svg,.ledger-heading svg{flex-shrink:0;color:var(--gold-bright);}
+
+  /* Corner-tick accents — a lighter echo of .institutional-frame, sized for cards */
+  .school-block,.mvv-card,.found-card,.director-card{position:relative;transition:transform .3s ease, box-shadow .3s ease;}
+  .school-block::before,.school-block::after,
+  .mvv-card::before,.mvv-card::after,
+  .found-card::before,.found-card::after{
+    content:"";position:absolute;width:14px;height:14px;border:1px solid var(--gold);opacity:0;transition:opacity .3s ease;pointer-events:none;
+  }
+  .school-block::before,.mvv-card::before,.found-card::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+  .school-block::after,.mvv-card::after,.found-card::after{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+  .school-block:hover::before,.school-block:hover::after,
+  .mvv-card:hover::before,.mvv-card:hover::after,
+  .found-card:hover::before,.found-card:hover::after{opacity:0.9;}
+  .school-block:hover,.mvv-card:hover,.found-card:hover{transform:translateY(-3px);}
+  .found-card:hover{box-shadow:0 22px 44px -26px rgba(34,23,9,0.4);}
+  .director-card::before,.director-card::after{content:"";position:absolute;width:16px;height:16px;border:1px solid var(--gold-bright);opacity:0.4;pointer-events:none;}
+  .director-card::before{top:10px;left:10px;border-right:none;border-bottom:none;}
+  .director-card::after{bottom:10px;right:10px;border-left:none;border-top:none;}
+
+  /* Facility index rows — subtle gold rail on hover, matches .dept-item's left-border language */
+  .fac-item{position:relative;border-left:2px solid transparent;transition:background .3s ease, border-color .3s ease;}
+  .fac-item:hover{background:#2c1e10;border-left-color:var(--gold);}
+
+  /* Honest image slot — used only where no real photograph exists yet.
+     Deliberately dashed and muted so it can never be mistaken for a real photo. */
+  .image-slot{border:1px dashed var(--line);background:linear-gradient(135deg,rgba(198,161,91,0.05),rgba(198,161,91,0.012));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:44px 26px;aspect-ratio:21/9;}
+  @media (max-width:640px){.image-slot{aspect-ratio:4/3;padding:34px 20px;}}
+  .image-slot svg{color:var(--gold);opacity:0.55;margin-bottom:14px;}
+  .image-slot .is-label{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);opacity:0.85;}
+  .image-slot .is-sub{font-size:0.85rem;color:#8a8477;margin-top:8px;font-style:italic;font-family:'Cormorant Garamond','Amiri',serif;max-width:420px;}
+  .photo-slot-band{margin-top:40px;}
+  .photo-slot-band .lpp-label{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.16em;color:var(--crimson);text-transform:uppercase;display:block;margin-bottom:14px;}
+
+  /* Stat band — real, verifiable counts only; distinct from the full-bleed .seal-quads CTA */
+  .stat-band{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  @media (max-width:760px){.stat-band{grid-template-columns:repeat(2,1fr);}}
+  .stat-tile{padding:26px 18px;text-align:center;border-right:1px solid var(--line);}
+  .stat-tile:last-child{border-right:none;}
+  @media (max-width:760px){.stat-tile{border-bottom:1px solid var(--line);} .stat-tile:nth-child(2n){border-right:none;} .stat-tile:nth-last-child(-n+2){border-bottom:none;}}
+  .stat-tile .num{font-family:'Cinzel','Amiri',serif;font-size:2.1rem;color:var(--gold-bright);display:block;line-height:1;}
+  .stat-tile .label{font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:rgba(248,244,233,0.62);display:block;margin-top:10px;}
+
+  /* Qur'an College — distinct manuscript/geometric treatment, scoped to this page only */
+  #quran-college .school-block{border-color:var(--gold);}
+  #quran-college .school-block::before,#quran-college .school-block::after{opacity:0.75;}
+  #quran-college .lpp-frame{border-color:var(--gold);}
+  #quran-college .folio::after{background:repeating-linear-gradient(90deg,var(--gold) 0 4px,transparent 4px 8px);opacity:0.75;}
+  #quran-college .light-photo-pair{position:relative;padding-top:28px;}
+  #quran-college .light-photo-pair::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,var(--gold) 0 6px,transparent 6px 12px);opacity:0.6;}
+
+  /* ============================================================
      RIGHT-TO-LEFT (Arabic) — structural mirrors only. Font-family
      falls back to Amiri/Cairo automatically per-glyph (Cinzel etc.
      have no Arabic glyphs), so no font-family overrides needed here.
@@ -598,6 +655,13 @@
   [dir="rtl"] .seal-quad{border-right:none;border-left:1px solid var(--line);}
   [dir="rtl"] .seal-quad:first-child{border-left:none;}
   [dir="rtl"] .seal-quad:last-child{border-left:1px solid var(--line);}
+
+  /* Stat band dividers mirror the seal-quad convention above */
+  [dir="rtl"] .stat-tile{border-right:none;border-left:1px solid var(--line);}
+  [dir="rtl"] .stat-tile:last-child{border-left:none;}
+  @media (max-width:760px){[dir="rtl"] .stat-tile:nth-child(2n){border-left:none;}}
+  [dir="rtl"] .fac-item{border-left:none;border-right:2px solid transparent;}
+  [dir="rtl"] .fac-item:hover{border-right-color:var(--gold);}
 
   /* Institutional corner frame + watermark bleed: mirror the diagonal */
   [dir="rtl"] .institutional-frame::before{left:auto;right:24px;border-right:1px solid var(--gold);border-left:none;}

@@ -21,6 +21,35 @@
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   document.querySelectorAll('.stagger').forEach(el=>io.observe(el));
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const statBands = document.querySelectorAll('.stat-band');
+  if(statBands.length){
+    const animateNum = (el)=>{
+      const target = parseInt(el.dataset.count, 10);
+      if(Number.isNaN(target)) return;
+      const suffix = el.dataset.suffix || '';
+      if(reduceMotion){ el.textContent = target + suffix; return; }
+      const duration = 1200;
+      const start = performance.now();
+      const step = (now)=>{
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if(p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    const statIO = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.num[data-count]').forEach(animateNum);
+          statIO.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.3});
+    statBands.forEach(el=>statIO.observe(el));
+  }
+
   document.querySelectorAll('.contact-form').forEach(form=>{
     const btn = form.querySelector('button[type="submit"]');
     const originalText = btn.textContent;
