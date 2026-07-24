@@ -7,11 +7,21 @@ recommendation to consider, not a claim that the item is legally
 required — see the caveat at the end before treating anything here as
 a compliance conclusion.*
 
+**Living-document note (updated after Phase C):** this register was
+approved for drafting to begin, and Phases A, B, and C have since been
+completed. Status values now include `DRAFTED` (written, not yet Board-
+adopted) alongside the original `EXISTS` / `PARTIAL` / `MISSING`. An
+**Approval Authority** column has been added, per the Constitution &
+Governance Charter's authority structure (§6). See the Scalability
+Stress Test and Phase Completion Summary at the end for what changed
+and what's still open.
+
 ## How to read this
 
 - **Status**: `EXISTS` (already published, cross-referenced to the real
-  policy), `PARTIAL` (something adjacent exists but doesn't cover this
-  document's full scope), or `MISSING`.
+  policy), `DRAFTED` (written in `docs/policies/`, not yet reviewed or
+  Board-adopted), `PARTIAL` (something adjacent exists but doesn't cover
+  this document's full scope), or `MISSING`.
 - **Tier 1 — Critical**: the institution carries real exposure without
   this, especially given real children (from age 2), a real boarding
   population, and a real Parent Portal now processing real personal
@@ -24,117 +34,125 @@ a compliance conclusion.*
   roadmap.md` for the growth assumptions this maps to).
 - **Owner**: the real existing SHRS role best positioned to hold this
   document, drawn from `about-governance.html` — not an invented office.
+- **Approval Authority**: per the Constitution & Governance Charter
+  §6 — Board of Trustees for Tier 1 documents, CEO for Tier 2–4 unless
+  the Board reserves a specific document to itself.
 - **Review cycle**: a reasonable default, to be confirmed by the Board.
 
 ---
 
 ## 1. Governance
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Constitution & Governance Charter | MISSING | 1 | Board of Trustees | Biennial | None — foundational |
-| Board Charter (composition, terms, meeting cadence) | MISSING | 2 | Board of Trustees | Biennial | Governance Charter |
-| Committee Charters (the Complaints Committee is already referenced inside the existing Complaint Policy but has no standalone charter) | PARTIAL | 2 | Board of Trustees | Biennial | Governance Charter |
-| Delegation of Authority Policy | MISSING | 2 | CEO (Zakariya Olanrewaju Anofi) | Biennial | Governance Charter |
-| Conflict of Interest Policy | MISSING | 2 | Board of Trustees | Annual | None |
-| Whistleblowing Policy | MISSING | 3 | Risk & Compliance (to be formed) | Annual | Complaint Policy (exists) |
-| Risk Management Framework | MISSING | 3 | COO-equivalent / CEO | Annual | None |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Constitution & Governance Charter | **DRAFTED** (Phase C) | 1 | Board of Trustees | Board of Trustees | Biennial | None — foundational |
+| Board Charter (composition, terms, meeting cadence) | MISSING | 2 | Board of Trustees | Board of Trustees | Biennial | Governance Charter |
+| Committee Charters | PARTIAL | 2 | Board of Trustees | Board of Trustees | Biennial | Governance Charter |
+| Delegation of Authority Policy | MISSING | 2 | CEO | Board of Trustees | Biennial | Governance Charter |
+| Conflict of Interest Policy | MISSING | 2 | Board of Trustees | Board of Trustees | Annual | None |
+| Whistleblowing Policy | MISSING | 3 | Risk & Compliance (to be formed) | CEO | Annual | Complaint Policy (exists) |
+| Risk Management Framework | MISSING | 3 | COO-equivalent / CEO | CEO | Annual | None |
 
 ## 2. Academic Affairs
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Academic Regulations (promotion, graduation, integrity, appeals — broader than scoring mechanics) | MISSING | 1 | Principal, Royal College | Annual | Assessment Policy (exists) |
-| Assessment Policy | **EXISTS** (`policies/` — Policy I) | 1 | VP Administration | Annual | — |
-| Examination Policy (CBT/POP conduct rules, invigilation, malpractice handling) | MISSING | 2 | Registrar | Annual | Academic Regulations |
-| Academic Integrity Policy | MISSING | 1 | Principal, Royal College | Annual | Academic Regulations |
-| Certification Policy | MISSING | 2 | Registrar | Biennial | Academic Regulations |
-| Promotion Policy | MISSING | 1 | Principal, Royal College | Annual | Academic Regulations |
-| Graduation Policy | MISSING | 2 | Registrar | Annual | Promotion Policy |
-| Curriculum Framework (a unified pedagogical statement — subject lists exist per institution today, but no single framework document) | PARTIAL | 2 | Head, Research & Development | Biennial | None |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Academic Regulations | **DRAFTED** (Phase B) | 1 | Registrar, Royal College | Board of Trustees | Annual | Assessment Policy (exists) |
+| Assessment Policy | **EXISTS** (Policy I) | 1 | VP Administration | Board of Trustees | Annual | — |
+| Examination Policy | MISSING | 2 | Registrar | CEO | Annual | Academic Regulations (drafted) |
+| Academic Integrity Policy | MISSING | 1 | Principal, Royal College | Board of Trustees | Annual | Academic Regulations (drafted) |
+| Certification Policy | MISSING | 2 | Registrar | CEO | Biennial | Academic Regulations (drafted) |
+| Promotion Policy | PARTIAL — structure set in Academic Regulations §5, numeric threshold still unset | 1 | Principal, Royal College | Board of Trustees | Annual | Academic Regulations (drafted) |
+| Graduation Policy | PARTIAL — structure set in Academic Regulations §7 | 2 | Registrar | CEO | Annual | Promotion Policy |
+| Curriculum Framework | PARTIAL | 2 | Head, Research & Development | CEO | Biennial | None |
 
 ## 3. Student Affairs
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Student Handbook | MISSING | 1 | VP Administration | Annual | Code of Conduct, Academic Regulations |
-| Student Code of Conduct | MISSING | 1 | VP Administration | Annual | Anti-Bullying Policy (exists) |
-| Attendance Policy (requirements/consequences — attendance is already tracked in the Parent Portal, but no policy defines the standard) | MISSING | 2 | Registrar | Annual | Parent Portal (exists) |
-| Welfare Policy | MISSING | 2 | Guidance Counsellor / VP Administration | Annual | Safeguarding Policy |
-| Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | VP Administration | Annual | — |
-| Behaviour Policy (currently folded into the Anti-Bullying & Disciplinary Policy; could stand alone as the institution grows) | PARTIAL | 2 | VP Administration | Annual | Code of Conduct |
-| Boarding Regulations (today's Boarding page is descriptive/marketing content, not a regulatory document) | MISSING | 1 | Principal, Qur'an College (boarders are primarily Qur'an College/College students) | Annual | Safeguarding Policy, Medical Policy |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Student Handbook | **DRAFTED** (Phase B) | 1 | VP Administration | Board of Trustees | Annual | Code of Conduct (drafted), Academic Regulations (drafted) |
+| Student Code of Conduct | **DRAFTED** (Phase A) | 1 | VP Administration | Board of Trustees | Annual | Anti-Bullying Policy (exists) |
+| Attendance Policy | MISSING | 2 | Registrar | CEO | Annual | Parent Portal (exists) |
+| Welfare Policy | MISSING | 2 | Guidance Counsellor / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
+| Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | VP Administration | Board of Trustees | Annual | — |
+| Behaviour Policy | PARTIAL | 2 | VP Administration | CEO | Annual | Code of Conduct (drafted) |
+| Boarding Regulations | **DRAFTED** (Phase A) | 1 | Principal, Qur'an College | Board of Trustees | Annual | Safeguarding Policy (drafted), Medical Policy |
 
 ## 4. Parent Affairs
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Parent Handbook | MISSING | 1 | VP Administration | Annual | Fees Policy, Academic Regulations, Complaint Policy |
-| Parent Code of Conduct | MISSING | 2 | VP Administration | Annual | Communication Policy |
-| Communication Policy (expected channels/response times — WhatsApp, Parent Portal, email are all real today but no policy states expectations) | MISSING | 3 | VP Administration | Annual | Parent Portal (exists) |
-| Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Annual | — |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Parent Handbook | **DRAFTED** (Phase B) | 1 | VP Administration | Board of Trustees | Annual | Fees Policy (blocked), Academic Regulations (drafted), Complaint Policy (exists) |
+| Parent Code of Conduct | MISSING | 2 | VP Administration | CEO | Annual | Communication Policy |
+| Communication Policy | MISSING | 3 | VP Administration | CEO | Annual | Parent Portal (exists) |
+| Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Board of Trustees | Annual | — |
 
 ## 5. Safeguarding
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Child Protection Policy | MISSING | **1 — highest-priority gap on this entire register** | Designated Safeguarding Lead (role does not yet exist — first decision needed) | Annual | None |
-| Safeguarding Policy (often combined with Child Protection into one document in practice — a decision for the Board, not assumed here) | MISSING | 1 | Designated Safeguarding Lead | Annual | Child Protection Policy |
-| Staff Conduct Policy (the existing Dress Code Policy covers appearance only, not safeguarding-adjacent staff behaviour) | MISSING | 1 | VP Administration | Annual | Safeguarding Policy |
-| Visitor Management Policy (the existing Visitors Policy — VIII — covers site-security sign-in/badging; it does not cover safeguarding-specific vetting of anyone with unsupervised student contact) | PARTIAL | 2 | Head of Security / VP Administration | Annual | Safeguarding Policy |
-| Digital Safeguarding Policy (increasingly urgent: a real Parent Portal now holds children's data, and a real AI assistant now interacts directly with families) | MISSING | 1 | CTO-equivalent / Designated Safeguarding Lead | Annual | Data Protection Policy, Parent Portal (exists) |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Child Protection Policy | **DRAFTED** (Phase A, combined with Safeguarding Policy below — see note) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role still does not exist) | Board of Trustees | Annual | None |
+| Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Trustees | Annual | Child Protection Policy |
+| Staff Conduct Policy | MISSING — **recommended next HR document** (HR Governance Framework, Phase C) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
+| Visitor Management Policy | PARTIAL | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
+| Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7 and the new AI Usage Policy (Phase C), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
 
 ## 6. Human Resources
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Staff Handbook | MISSING | 2 | VP Administration | Annual | Staff Conduct Policy, Dress Code (exists) |
-| Recruitment Policy | MISSING | 3 | VP Administration | Biennial | Safeguarding Policy (vetting requirements) |
-| Performance Management Policy | MISSING | 3 | VP Administration | Annual | None |
-| Leave Policy | MISSING | 3 | VP Administration | Annual | None |
-| Professional Development Policy | MISSING | 4 | Head, Research & Development | Biennial | None |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Staff Handbook | **DRAFTED** (Phase C) | 2 | VP Administration | CEO | Annual | Staff Conduct Policy (still missing), Dress Code (exists) |
+| Recruitment Policy | MISSING — evaluated, not urgent (HR Governance Framework) | 3 | VP Administration | CEO | Biennial | Safeguarding Policy (drafted) |
+| Performance Management Policy | MISSING — evaluated, not urgent | 3 | VP Administration | CEO | Annual | None |
+| Leave Policy | MISSING — evaluated, not urgent | 3 | VP Administration | CEO | Annual | None |
+| Professional Development Policy | MISSING — evaluated, lowest priority | 4 | Head, Research & Development | CEO | Biennial | None |
+| **Grievance Policy** *(new — surfaced by the Phase C HR Governance Framework, not in the original register)* | MISSING — recommended soon, after Staff Conduct Policy | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted) |
+| **Staff Discipline Policy** *(new — same source)* | MISSING — recommended soon | 2 | VP Administration | CEO | Annual | Staff Handbook (drafted) |
 
 ## 7. Finance & Administration
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Tuition & Fees Policy (the real prerequisite before fee figures can honestly be published on the site at all — see the Admission page's existing placeholder note) | MISSING | 1 | CEO | Annual | None |
-| Refund Policy | MISSING | 2 | CEO | Annual | Tuition & Fees Policy |
-| Procurement Policy | MISSING | 3 | COO-equivalent | Annual | Financial Controls Policy |
-| Financial Controls Policy | MISSING | 2 | CEO / Board | Annual | None |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Tuition & Fees Policy | MISSING — **blocked on real fee figures, not on drafting effort** (Financial Governance Framework, Phase C) | 1 | CEO | Board of Trustees | Annual | None |
+| Refund Policy | MISSING — blocked, depends on Tuition & Fees Policy | 2 | CEO | Board of Trustees | Annual | Tuition & Fees Policy |
+| Procurement Policy | MISSING — evaluated, not urgent | 3 | COO-equivalent | CEO | Annual | Financial Controls Policy (drafted) |
+| Financial Controls Policy | **DRAFTED** (Phase C) | 2 | CEO / Board | Board of Trustees | Annual | None |
+| **Scholarship Governance Framework** *(new — surfaced by the Phase C Financial Governance Framework)* | MISSING — blocked, same reason as Tuition & Fees Policy | 3 | CEO | Board of Trustees | Annual | Tuition & Fees Policy |
 
 ## 8. Technology & Digital Campus
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Data Protection Policy | MISSING | **1 — critical, tied directly to the live Parent Portal** | CTO-equivalent | Annual | Parent Portal (exists), NDPA 2023 |
-| Privacy Policy | MISSING | **1 — critical, same reason** | CTO-equivalent | Annual | Data Protection Policy |
-| Information Security Policy | MISSING | 2 | CTO-equivalent | Annual | Data Protection Policy |
-| Acceptable Use Policy (students/staff using school digital systems, the Portal, devices) | MISSING | 2 | CTO-equivalent | Annual | Student/Staff Handbooks |
-| AI Usage Policy (genuinely relevant now — a real AI assistant is already deployed and already self-disclosed as AI; this would formalize what it may/may not do, and data handling) | MISSING | 2 | CTO-equivalent | Annual | Data Protection Policy, `docs/digital-assistant.md` (exists) |
-| Records Retention Policy (ties directly to the graduated/withdrawn-student question already raised in `parent-portal-audit.md`) | MISSING | 2 | Registrar / CTO-equivalent | Annual | Data Protection Policy |
-| Cybersecurity Framework (much of the technical substance already exists at implementation level in `parent-portal-audit.md`; this would be the governance-level policy layer above it) | MISSING | 3 | CTO-equivalent | Annual | Information Security Policy |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Data Protection Policy | **DRAFTED** (Phase A, combined with Privacy Policy below) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
+| Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
+| Information Security Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
+| Acceptable Use Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
+| AI Usage Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
+| Records Retention Policy | **DRAFTED** (Phase C) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / CTO-equivalent | CEO | Annual | Data Protection Policy (drafted) |
+| Cybersecurity Framework | MISSING — evaluated, not urgent (Technology Governance Framework) | 3 | CTO-equivalent (ICT Head) | CEO | Annual | Information Security Policy (drafted) |
+| **Incident Response Policy** *(new — surfaced by the Phase C Technology Governance Framework as the most concrete unmet technology gap)* | MISSING — **recommended next technology document** | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Information Security Policy (drafted) |
+| **Digital Learning Policy** *(new — evaluated, not yet applicable)* | MISSING — no LMS/digital classroom system exists yet to govern | 4 | CTO-equivalent (ICT Head) | CEO | Annual | Would depend on a future Student Portal/LMS |
 
 ## 9. Health, Safety & Welfare
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Health & Safety Policy | **EXISTS** (Policy VII) | 1 | Management staff | Annual | — |
-| Medical Policy (the existing First Aid Policy — VI — covers immediate incident response; a broader Medical Policy would cover chronic conditions, medication management, and health records) | PARTIAL | 1 | Registrar / school nurse | Annual | First Aid Policy (exists) |
-| Emergency Response Plan (fire drills are mentioned inside the Health & Safety Policy; there is no standalone emergency/crisis plan) | MISSING | **1 — critical gap** | Principal | Annual | Health & Safety Policy (exists) |
-| Crisis Management Plan | MISSING | 2 | CEO / Principal | Annual | Emergency Response Plan |
-| Transportation Policy (the First Aid Policy already references "school vehicles" — worth a dedicated policy if the school runs transport) | MISSING | 3 | VP Administration | Annual | None |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Health & Safety Policy | **EXISTS** (Policy VII) | 1 | Management staff | Board of Trustees | Annual | — |
+| Medical Policy | PARTIAL | 1 | Registrar / school nurse | Board of Trustees | Annual | First Aid Policy (exists) |
+| Emergency Response Plan | **DRAFTED** (Phase A) | 1 | Institutional lead (to be confirmed) | Board of Trustees | Annual | Health & Safety Policy (exists) |
+| Crisis Management Plan | MISSING | 2 | CEO / Principal | CEO | Annual | Emergency Response Plan (drafted) |
+| Transportation Policy | MISSING | 3 | VP Administration | CEO | Annual | None |
 
-## 10. Islamic & Qur'an Education — genuinely SHRS-specific, not generic school governance
+## 10. Islamic & Qur'an Education
 
-| Document | Status | Tier | Owner | Review cycle | Dependencies |
-|---|---|---|---|---|---|
-| Hifz Regulations (formal memorisation-programme rules — today's Qur'an College page is descriptive marketing content, not a regulatory document) | MISSING | 1 | Principal, Qur'an College | Annual | None |
-| Muraja'ah (revision) Framework | MISSING | 2 | Principal, Qur'an College | Annual | Hifz Regulations |
-| Tajweed Assessment Policy | MISSING | 2 | Principal, Qur'an College | Annual | Hifz Regulations |
-| Ijazah Governance Framework (Ijazaat is the credential the site already advertises as the programme's outcome — how it's awarded, by whom, and to what standard is currently undocumented; this is a credentialing-integrity matter, not a formality) | MISSING | **1 — the credential's credibility depends on this existing** | Principal, Qur'an College | Biennial | Hifz Regulations, Tajweed Assessment Policy |
-| Qur'an Competition Regulations | MISSING | 4 | Principal, Qur'an College | As needed | Only relevant once competitions are actually run |
-| Islamic Conduct Framework (today, "Islamic creed" is referenced inside the Anti-Bullying Policy's behavioural expectations, but has no standalone framework) | PARTIAL | 2 | Principal, School of Arabic & Islamic Studies | Annual | Student Code of Conduct |
+| Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
+|---|---|---|---|---|---|---|
+| Hifz Regulations | **DRAFTED** (Phase B) | 1 | Principal, Qur'an College | Board of Trustees | Annual | None |
+| Muraja'ah Framework | PARTIAL — folded into Hifz Regulations §5.3 rather than standalone | 2 | Principal, Qur'an College | CEO | Annual | Hifz Regulations (drafted) |
+| Tajweed Assessment Policy | MISSING — the one Hifz-related document still fully outstanding, referenced as a dependency by both Hifz Regulations and the Ijazah Governance Framework | 2 | Principal, Qur'an College | CEO | Annual | Hifz Regulations (drafted) |
+| Ijazah Governance Framework | **DRAFTED** (Phase A) | **1 — the credential's credibility depends on this existing** | Principal, Qur'an College | Board of Trustees | Biennial | Hifz Regulations (drafted), Tajweed Assessment Policy (still missing) |
+| Qur'an Competition Regulations | MISSING | 4 | Principal, Qur'an College | CEO | As needed | Only relevant once competitions are actually run |
+| Islamic Conduct Framework | PARTIAL | 2 | Principal, School of Arabic & Islamic Studies | CEO | Annual | Student Code of Conduct (drafted) |
 
 ---
 
@@ -145,38 +163,122 @@ through the Parent Portal, a future Student Portal, and a future Staff
 Portal (see `parent-portal-phase2-3-roadmap.md`) — meaning short,
 addressable sections; stable anchors/IDs future portal UIs can deep-link
 to; and no assumption that a document is only ever read as a printed
-PDF. None of that changes what the documents need to *say* — it's a
-formatting discipline to build in from the first draft rather than
-retrofit later.
+PDF. All eleven Phase A/B/C documents drafted so far follow this
+discipline (numbered sections, explicit cross-references by document
+name and section number).
 
-## Recommended drafting order (once this register is approved)
+## Phase completion summary
+
+- **Phase A (six documents):** Child Protection & Safeguarding Policy,
+  Data Protection & Privacy Policy, Emergency Response Plan, Boarding
+  Regulations, Student Code of Conduct, Ijazah Governance Framework.
+  All drafted, none yet Board-adopted.
+- **Phase B (five documents):** Parent Handbook, Student Handbook,
+  Academic Regulations, Admissions Policy, Hifz Regulations. Preceded
+  by a dependency review, followed by a cross-document consistency
+  audit that found and fixed two citation defects and surfaced one new
+  authority conflict (see `docs/policies/phase-a-b-consistency-audit.md`).
+- **Phase C (ten documents):** Constitution & Governance Charter, AI
+  Usage Policy, Staff Handbook, Information Security Policy, Acceptable
+  Use Policy, Records Retention Policy, Financial Controls Policy, HR
+  Governance Framework, Technology Governance Framework, Financial
+  Governance Framework. Three "Governance Framework" documents evaluate
+  rather than draft the lower-priority remaining items, surfacing three
+  genuinely new document needs not in the original register (Grievance
+  Policy, Staff Discipline Policy, Incident Response Policy) and
+  naming, rather than pretending to close, two hard blockers: no real
+  fee schedule (blocks Tuition & Fees, Refund, and Scholarship
+  Governance) and no Designated Safeguarding Lead appointed yet (blocks
+  full activation of every safeguarding document already drafted).
+
+**21 of the 63 documents now tracked on this register are drafted**
+(up from 4 real "EXISTS" entries at the start of this register; the
+total rose from 58 to 63 because Phase C's evaluation work surfaced
+five genuinely new document needs — Grievance Policy, Staff Discipline
+Policy, Incident Response Policy, Digital Learning Policy, and
+Scholarship Governance Framework — none of which were in the original
+audit). The remainder are either genuinely lower-priority (Tier 3/4),
+blocked on real data only the school can provide, or newly identified
+rather than missed originally.
+
+## Scalability stress test
+
+Per the standing question this phase was asked to answer: **if SHRS
+grew to 5,000 students, multiple campuses, a full boarding system, a
+Parent Portal, a Student Portal, an AI admissions office, and
+international students, would this governance system still function?**
+
+- **Governance structure:** yes, structurally. The Constitution &
+  Governance Charter's Board → CEO → Principal delegation model doesn't
+  assume a specific size, and multiple campuses per institution would
+  extend naturally (each campus reporting to its institution's existing
+  Principal) without restructuring the model itself.
+- **Safeguarding:** not yet — this is the real limiting factor, not the
+  documents. The Child Protection & Safeguarding Policy is written
+  assuming a Designated Safeguarding Lead exists; at 5,000 students
+  across multiple campuses, one DSL is almost certainly insufficient,
+  and the policy would need Deputy DSLs per campus (not just per
+  institution, as currently drafted) — a real scaling gap, named here
+  rather than assumed away.
+- **Academic governance:** yes, with one open item. The Academic
+  Regulations' promotion-threshold and academic-integrity gaps
+  (Sections 5 and 8) need real numbers before scale arrives, not after
+  — undefined thresholds are tolerable at current size and genuinely
+  risky at 5,000 students across inconsistent campus practice.
+- **Digital systems:** yes, if the roadmap in
+  `docs/parent-portal-phase2-3-roadmap.md` is followed — the AI Usage
+  Policy was deliberately written to already cover an "AI admissions
+  office" as an anticipated future touchpoint (Section 5), not
+  something that would require a rewrite when it's actually built.
+- **Financial governance:** yes, once the Tuition & Fees Policy exists
+  — the Financial Controls Policy's approval-threshold model already
+  anticipates larger transaction volumes; the number-setting is the
+  gap, not the structure.
+- **Overall answer: mostly yes, with two items that would need
+  revision before real growth, not after** — Deputy Safeguarding Leads
+  scaling per-campus rather than per-institution, and the still-unset
+  academic-integrity/promotion thresholds. Both are named as open
+  items in their respective documents already; this stress test doesn't
+  reveal a new problem so much as confirm which already-flagged gaps
+  are the ones that would actually bite at scale.
+
+## Recommended drafting order (original, Phases A–C now complete)
 
 **Phase A — highest risk, draft first:** Child Protection & Safeguarding
-Policy (combined or separate, Board's call), Data Protection & Privacy
-Policy, Emergency Response Plan, Boarding Regulations, Student Code of
-Conduct, Ijazah Governance Framework.
+Policy, Data Protection & Privacy Policy, Emergency Response Plan,
+Boarding Regulations, Student Code of Conduct, Ijazah Governance
+Framework. **Complete.**
 
 **Phase B — completes the family-facing core:** Parent Handbook, Student
-Handbook, Academic Regulations, Admissions Policy expansion (fees are a
-prerequisite the Board must settle first), Hifz Regulations.
+Handbook, Academic Regulations, Admissions Policy expansion, Hifz
+Regulations. **Complete.**
 
 **Phase C — institutional maturity:** Constitution & Governance Charter,
 AI Usage Policy, Staff Handbook, remaining HR/Finance/Technology
-documents.
+documents. **Complete** (evaluated in full via three Governance
+Frameworks rather than drafting every lower-tier item — see the Phase
+Completion Summary above for what was drafted versus evaluated-and-
+deferred).
+
+**Recommended next (not yet started):** Staff Conduct Policy (closes
+the Staff Handbook's one real dependency gap and a named Tier 1
+safeguarding item), Incident Response Policy (the most concrete named
+technology gap), and — highest real-world impact of all — obtaining
+SHRS's actual fee schedule, which unblocks three financial documents at
+once.
 
 ---
 
 ## Before any of this is adopted
 
-**Nothing in this register — and nothing that would be drafted from it —
+**Nothing in this register — and nothing drafted from it —
 should be treated as legal advice or a compliance confirmation.**
 Safeguarding, data protection, academic integrity, and admissions
 policy in particular intersect with Nigerian federal and Lagos State
 education regulation and the Nigeria Data Protection Act 2023 in ways
 that need real legal and regulatory review before Board adoption — that
-review is outside what any drafting pass here can respons­ibly certify.
-The honest scope of what comes next, if you'd like to proceed to
-drafting: real, substantive, non-template policy text grounded in
-SHRS's actual structure and this register's dependencies — clearly
-marked, at every relevant document, as requiring legal/regulatory
-sign-off before it governs real decisions.
+review is outside what any drafting pass here can responsibly certify.
+This remains true for all 21 documents drafted across Phases A, B, and
+C: every one carries its own "before this governs a real decision"
+note naming exactly what still needs legal, regulatory, professional,
+or Board confirmation.
