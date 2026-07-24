@@ -341,7 +341,7 @@ Plan (SW-09).
 
 None. Where this policy conflicts with a data-protection or
 confidentiality provision elsewhere (e.g. the Data Protection & Privacy
-Policy), the child's safety takes precedence — that policy's own §9
+Policy), the child's safety takes precedence — that policy's own §11
 names this same exception, so the two documents state it consistently
 rather than one asserting it unilaterally.
 

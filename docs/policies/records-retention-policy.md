@@ -83,7 +83,7 @@ Data Protection & Privacy Policy without redefining them.
   is not automated today and should be tracked manually until the
   Parent Portal or a future system supports it directly.
 - A guardian's request for early deletion (see the Data Protection &
-  Privacy Policy §7's still-open erasure-rights question) is handled
+  Privacy Policy §7.3's still-open erasure-rights question) is handled
   under that policy once it defines the process — this policy does not
   pre-empt that decision.
 
@@ -98,8 +98,8 @@ safeguarding-record category.
 ## 9. Appeals
 
 Not generally applicable; a guardian disputing how long their data was
-kept raises it through the Complaint Policy (Policy IX) or the Data
-Protection & Privacy Policy §11, not a new channel.
+kept raises it through the Complaint Policy (PA-01) or the Data
+Protection & Privacy Policy §12, not a new channel.
 
 ## 10. Exceptions
 

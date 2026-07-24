@@ -124,7 +124,7 @@ and what's still open.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Data Protection Policy | **DRAFTED** (Phase A, combined with Privacy Policy below) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
+| Data Protection Policy | **DRAFTED v2.0** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Parent Portal (exists), NDPA 2023 |
 | Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
 | Information Security Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
 | Acceptable Use Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
