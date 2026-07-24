@@ -249,12 +249,28 @@ name and section number).
   technical-security specifics internal). Child Protection &
   Safeguarding Policy (SW-01) physically published to the live site in
   both languages as proof the pattern extends beyond the three already-
-  redeveloped live policies. Thirteen more Public-classified documents
-  remain physically unpublished — named explicitly, not implied as
-  done. See `docs/governance-completion-report.md` for the full
-  synthesis: documents drafted vs. published, remaining gaps,
-  outstanding approvals, and maturity/readiness/scalability assessments
-  across governance, academic, safeguarding, technology, and finance.
+  redeveloped live policies. See `docs/governance-completion-report.md`
+  for the full synthesis: documents drafted vs. published, remaining
+  gaps, outstanding approvals, and maturity/readiness/scalability
+  assessments across governance, academic, safeguarding, technology,
+  and finance.
+- **Phase F publication batch complete:** the thirteen remaining
+  Public-classified documents named above as unpublished are now all
+  physically live — Academic Regulations (AC-02), Student Code of
+  Conduct (SD-02), Student Handbook (SD-03), Boarding Regulations
+  (SD-04), Parent Handbook (PA-02), Admissions Policy (PA-05),
+  Emergency Response Plan (SW-09), Data Protection & Privacy Policy
+  (IT-02), Acceptable Use Policy (IT-03), Records Retention Policy
+  (IT-04), AI Usage Policy (IT-05), Hifz Regulations (IQ-01), and
+  Ijazah Governance Framework (IQ-02) — each added individually to
+  `pages/policies.html`/`.ar.html`, rebuilt, and verified (div-balance
+  and policy-code presence in both languages) before commit. Every
+  document this project has retrofitted to the 13-section architecture
+  and classified Public is now genuinely public. The Policy Code Index
+  and Governance Completion Report have both been updated to reflect
+  this; the only remaining publication-adjacent work is retrofitting
+  GV-01 and SW-02 to the same architecture, which is Tier 3 drafting
+  work, not a publication task.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:

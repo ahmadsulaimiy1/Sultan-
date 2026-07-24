@@ -44,25 +44,33 @@ categories), of which **28 are marked DRAFTED, EXISTS, or RESOLVED.**
 
 ## 2. Total documents published
 
-**14 documents now physically live** on the public website
-(`pages/policies.html` / `.ar.html`, both languages, verified built):
-the original nine live policies (Assessment, Anti-Bullying, Career,
-Dress Code, Equal Opportunity, First Aid, Health & Safety, Visitors,
-Complaint) plus the newly published **Child Protection & Safeguarding
-Policy (SW-01)** — the single highest-priority document, published
-first to prove the pattern rather than spreading effort thin across
-many partial publications.
+**23 documents now physically live** on the public website
+(`pages/policies.html` / `.ar.html`, both languages, verified built
+after every single addition): the original nine live policies
+(Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity,
+First Aid, Health & Safety, Visitors, Complaint) plus all fourteen
+retrofitted Tier 1/Tier 2 documents classified Public — **Child
+Protection & Safeguarding Policy (SW-01)**, published first to prove
+the pattern, followed by Academic Regulations (AC-02), Student Code of
+Conduct (SD-02), Student Handbook (SD-03), Boarding Regulations
+(SD-04), Parent Handbook (PA-02), Admissions Policy (PA-05), Emergency
+Response Plan (SW-09), Data Protection & Privacy Policy (IT-02),
+Acceptable Use Policy (IT-03), Records Retention Policy (IT-04), AI
+Usage Policy (IT-05), Hifz Regulations (IQ-01), and Ijazah Governance
+Framework (IQ-02).
 
-**13 more documents are classified Public and queued for publication,
-not yet physically added:** Academic Regulations, Student Code of
-Conduct, Student Handbook, Boarding Regulations, Parent Handbook,
-Admissions Policy, Emergency Response Plan, Data Protection & Privacy
-Policy, Acceptable Use Policy, Records Retention Policy, AI Usage
-Policy, Hifz Regulations, Ijazah Governance Framework. Each needs the
-same treatment SW-01 just received: an accordion entry, a metadata
-block, correct category placement, verified EN/AR translation, and a
-rebuilt/tested site. This is named as real remaining work in the Policy
-Code Index, not implied as done by this report.
+**Zero documents now remain classified Public but unpublished.** Every
+document this project has retrofitted to the 13-section architecture
+and classified Public per the Policy Code Index is genuinely live on
+the site today — each one added as its own accordion entry with a
+Policy Information metadata block, placed in the correct category,
+translated in full to Arabic, and individually rebuilt and verified
+(HTML div-tag balance, policy-code presence in both languages) before
+being committed. The remaining publication gap is now structural, not a
+backlog: GV-01 (Constitution & Governance Charter) and SW-02
+(Designated Safeguarding Lead Framework) are Public-classified but
+still at v1.0 — Tier 3 retrofit work, not a publication task, is what
+stands between them and the same treatment.
 
 **9 documents are classified Internal** (Staff Conduct Policy, Staff
 Handbook, the three evaluation frameworks, Information Security Policy,
@@ -87,8 +95,10 @@ From the Governance Master Register (66 tracked items, 28 complete):
   (Academic Regulations), a Boarding Regulations owner/scope mismatch
   (flagged in the Phase D audit, not yet resolved), and the newly
   tracked Admissions Policy row itself (fixed).
-- **13 documents classified Public but not yet physically published**
-  (Section 2).
+- **Zero documents classified Public remain unpublished** (Section 2) —
+  this line item is now closed; the two Tier 3 documents (GV-01, SW-02)
+  need retrofitting before they can be published at the same standard,
+  which is tracked as drafting work, not publication work.
 
 ## 4. Outstanding approvals required
 
@@ -174,16 +184,22 @@ The Institutional Readiness Report asked: would SHRS run consistently
 if the CEO, Principal, or Registrar changed tomorrow? This report adds
 a second version of that question, specific to what changed this
 phase: **would a family reading the published policies get an accurate
-picture of SHRS's actual governance, or a partial one?** Today, the
-honest answer is partial — the single most important safeguarding
-document is now genuinely public and complete, but thirteen more
-Public-classified documents exist only in the repository. That gap is
-smaller than it was at the start of this phase, and the path to closing
-it is now explicit rather than implicit: one document at a time,
-verified each time, not batched and assumed correct.
+picture of SHRS's actual governance, or a partial one?** As of this
+update, the answer is: complete, for everything drafted to date. Every
+document this project has retrofitted to the 13-section architecture
+and classified Public is physically live on the site, in both
+languages, individually verified — not a partial subset silently
+presented as the whole picture. The honest remainder is narrower than
+before: two documents (the Constitution & Governance Charter, the
+Designated Safeguarding Lead Framework) still need Tier 3 retrofitting
+before they reach this same standard, and the 38 tracked gaps in the
+Governance Master Register still need drafting in the first place.
+Neither is a publication problem anymore — the publication pipeline
+itself is now proven, repeatable, and current.
 
 ## Version control
 
 | Version | Date | Change | Author |
 |---|---|---|---|
 | 0.1 | Draft | Initial report, Phase F | Synthesises Phases A–F; not yet reviewed or adopted |
+| 0.2 | Draft | Phase F — updated Sections 2 and 3 and the continuity-test closing section to record that all 13 previously-queued Public-classified documents are now physically published, closing the Website Publication Requirement's remaining backlog | Not yet reviewed or adopted |
