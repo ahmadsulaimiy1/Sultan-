@@ -94,7 +94,7 @@ and what's still open.
 |---|---|---|---|---|---|---|
 | Child Protection Policy | **DRAFTED v2.0** (Phase A, combined with Safeguarding Policy below; retrofitted to the full 13-section architecture and substantially deepened in the Phase F Tier 1 retrofit — see SW-01) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role fully defined, Phase D — appointment still pending) | Board of Trustees | Annual | None |
 | Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Trustees | Annual | Child Protection Policy |
-| **Designated Safeguarding Lead Framework** *(new — Phase D, resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED** (Phase D) | 1 | Board of Trustees (appointment) / CEO (document maintenance) | Board of Trustees | Annual | Child Protection Policy (drafted) |
+| **Designated Safeguarding Lead Framework (SW-02)** *(resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED v2.0** (Phase D, retrofitted Phase F Tier 3) | 1 | Board of Trustees (appointment) / CEO (document maintenance) | Board of Trustees | Annual | Child Protection Policy (drafted) |
 | Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | VP Administration | Board of Trustees | Annual | Safeguarding Policy (drafted) |
 | Visitor Management Policy | **RESOLVED — the redeveloped Visitors Policy (SW-08, Phase E) now covers the safeguarding-vetting scope this row named; no separate document needed** | 2 | Head of Security / VP Administration | CEO | Annual | Safeguarding Policy (drafted) |
 | Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7.10 and the AI Usage Policy (IT-05), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Trustees | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
@@ -283,8 +283,20 @@ name and section number).
   citation to the Charter's old section numbers across the ecosystem
   (Staff Handbook, Visitors Policy, Child Protection & Safeguarding
   Policy, Designated Safeguarding Lead Framework, Health & Safety
-  Policy) was swept and fixed. Designated Safeguarding Lead Framework
-  (SW-02) — the second and final Tier 3 document — is next.
+  Policy) was swept and fixed. **Designated Safeguarding Lead Framework
+  (SW-02)** — the second and final Tier 3 document — is also now
+  retrofitted from v0.1 to the full 13-section architecture, with every
+  principle preserved and two new provisions added: an interim-coverage
+  procedure naming who actually handles a safeguarding concern today
+  while the DSL role sits vacant (the CEO and the relevant Principal/
+  Head Teacher jointly, per Child Protection & Safeguarding Policy §8),
+  and a handover/succession procedure for the day a serving DSL leaves
+  the role, tying directly into the Constitution & Governance Charter's
+  succession principle (§7.6). Stale citations to this framework's old
+  section numbers (Child Protection & Safeguarding Policy's Roles table
+  and Training requirements section) were swept and fixed. **Both Tier
+  3 documents are now complete** — every document this project has
+  drafted to date is retrofitted to the full 13-section architecture.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:

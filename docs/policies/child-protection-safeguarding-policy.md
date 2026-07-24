@@ -136,7 +136,7 @@ accountable escalation path.
 | Board of Trustees | Ultimate oversight; appoints/confirms the DSL (per SW-02); receives an annual aggregate safeguarding report. |
 | CEO | Ensures the DSL role is resourced and independent enough to act without institutional pressure. |
 | Designated Safeguarding Lead *(to be appointed — see SW-02)* | Receives all reports; decides on internal action and external referral; keeps the incident log; liaises with external agencies; see SW-02 for the full role definition. |
-| Deputy DSL per institution *(SW-02 §6)* | First point of contact within their institution; escalates to the DSL. |
+| Deputy DSL per institution *(SW-02 §7.3)* | First point of contact within their institution; escalates to the DSL. |
 | All staff | Report any concern the same day, using the procedure in Section 7 — never investigate personally. |
 | Boarding wardens / house staff | Additional overnight supervision duties (Boarding Regulations, SD-04); immediate reporting of any overnight incident. |
 | ICT Head | Implements the digital-safeguarding controls in Section 7.10. |
@@ -305,7 +305,7 @@ not a pre-set hierarchy of concern types.
   unsupervised contact with students, covering recognition (Section
   7.1), reporting (Section 7.2), and who their Deputy DSL is.
 - The DSL and Deputy DSLs receive additional, more advanced training
-  appropriate to their role (per the DSL Framework, SW-02 §9).
+  appropriate to their role (per the DSL Framework, SW-02 §7.5).
 - Training is refreshed at a defined interval — **the specific interval
   and accredited provider need to be confirmed by the Board**, not
   assumed by this policy.
