@@ -393,6 +393,25 @@
   .fac-item{background:var(--navy-deep);padding:26px 20px;font-family:'Cormorant Garamond','Amiri',serif;font-size:1.02rem;display:flex;align-items:center;min-height:80px;}
   .fac-item span{color:var(--gold);margin-right:10px;}
 
+  /* campus gallery — real photography, added to the facilities chapter */
+  .campus-gallery{margin-top:56px;padding-top:36px;border-top:1px solid var(--line);}
+  .campus-gallery .folio{margin-bottom:22px;}
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media (max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
+  .gallery-item{border:1px solid var(--line);background:var(--navy-deep);overflow:hidden;transition:border-color .3s ease;}
+  .gallery-item:hover{border-color:var(--gold);}
+  .gallery-item .gi-frame{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;}
+  .gallery-item .gi-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+  .gallery-item:hover .gi-frame img{transform:scale(1.04);}
+  .gallery-item .gi-cap{padding:16px 18px 18px;}
+  .gallery-item .gi-cap .gi-title{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;color:var(--ivory);display:block;}
+  .gallery-item .gi-cap .gi-sub{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-top:6px;}
+  .gallery-item.gi-lead{grid-column:span 3;}
+  .gallery-item.gi-lead .gi-frame{aspect-ratio:21/9;}
+  @media (max-width:900px){.gallery-item.gi-lead{grid-column:span 2;}}
+  @media (max-width:560px){.gallery-item.gi-lead{grid-column:span 1;} .gallery-item.gi-lead .gi-frame{aspect-ratio:4/3;}}
+
   /* foundation */
   .foundation{background:#fff;}
   .found-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:36px;}
