@@ -129,7 +129,7 @@ and what's still open.
 | Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Trustees | Annual | Data Protection Policy |
 | Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted) |
 | Acceptable Use Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Student/Staff Handbooks (both drafted) |
-| AI Usage Policy | **DRAFTED** (Phase C) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
+| AI Usage Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-05) | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
 | Records Retention Policy | **DRAFTED** (Phase C) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / CTO-equivalent | CEO | Annual | Data Protection Policy (drafted) |
 | Cybersecurity Framework | MISSING — evaluated, not urgent (Technology Governance Framework) | 3 | CTO-equivalent (ICT Head) | CEO | Annual | Information Security Policy (drafted) |
 | **Incident Response Policy** *(new — surfaced by the Phase C Technology Governance Framework as the most concrete unmet technology gap)* | MISSING — **recommended next technology document** | 2 | CTO-equivalent (ICT Head) | CEO | Annual | Information Security Policy (drafted) |
@@ -218,6 +218,21 @@ name and section number).
   depth is real, substantial work not attempted in this pass** — named
   honestly rather than implied as done; see the Policy Code Index's own
   scope note.
+- **Phase F (Tier 1 retrofit, autonomous programme):** all eight named
+  Tier 1 documents now retrofitted to the full 13-section architecture
+  and substantially deepened — Child Protection & Safeguarding Policy
+  (SW-01), Student Code of Conduct (SD-02), Staff Conduct Policy
+  (HR-01, already at this standard from Phase D), Boarding Regulations
+  (SD-04), Data Protection & Privacy Policy (IT-02), Academic
+  Regulations (AC-02), Information Security Policy (IT-01), and AI
+  Usage Policy (IT-05). Every renumbering was followed by a full
+  cross-reference sweep, which surfaced and fixed several citation
+  defects the previous phase's own audit had missed (a stale reference
+  in the Staff Handbook, a stale one in the Records Retention Policy)
+  and one real structural gap: the **Admissions Policy had been drafted
+  since Phase B but was never assigned a code or tracked as its own
+  register row** — now fixed as PA-05. Tier 2 retrofit and the
+  website-publication requirement are the next phases, not yet started.
 
 **This register now tracks 65 rows** (up from the original 58 — Phase
 C's evaluation work surfaced five genuinely new document needs:
