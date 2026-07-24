@@ -153,7 +153,7 @@ and what's still open.
 | Hifz Regulations | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IQ-01) | 1 | Principal, Qur'an College | Board of Trustees | Annual | None |
 | Muraja'ah Framework | PARTIAL — folded into Hifz Regulations §5.3 rather than standalone | 2 | Principal, Qur'an College | CEO | Annual | Hifz Regulations (drafted) |
 | Tajweed Assessment Policy | MISSING — the one Hifz-related document still fully outstanding, referenced as a dependency by both Hifz Regulations and the Ijazah Governance Framework | 2 | Principal, Qur'an College | CEO | Annual | Hifz Regulations (drafted) |
-| Ijazah Governance Framework | **DRAFTED** (Phase A) | **1 — the credential's credibility depends on this existing** | Principal, Qur'an College | Board of Trustees | Biennial | Hifz Regulations (drafted), Tajweed Assessment Policy (still missing) |
+| Ijazah Governance Framework | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IQ-02) | **1 — the credential's credibility depends on this existing** | Principal, Qur'an College | Board of Trustees | Biennial | Hifz Regulations (drafted), Tajweed Assessment Policy (still missing) |
 | Qur'an Competition Regulations | MISSING | 4 | Principal, Qur'an College | CEO | As needed | Only relevant once competitions are actually run |
 | Islamic Conduct Framework | PARTIAL | 2 | Principal, School of Arabic & Islamic Studies | CEO | Annual | Student Code of Conduct (drafted) |
 

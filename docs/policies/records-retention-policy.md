@@ -64,7 +64,7 @@ Data Protection & Privacy Policy without redefining them.
 | Application/admission records (entrance assessment results, submitted documentation) | 3 years from decision if not admitted; duration of enrolment + 7 years if admitted | Matches the academic-record period once a student is enrolled; shorter for unsuccessful applicants since the ongoing purpose is weaker. |
 | Disciplinary records (Student Code of Conduct) | Duration of enrolment + 3 years | Long enough to inform a future reference request, short enough not to follow a graduate indefinitely for a resolved matter. |
 | Safeguarding records (Child Protection & Safeguarding Policy incident log) | Until the student turns 25, or 7 years from the record's creation, whichever is longer | **This is the one category where common professional child-protection practice favours long retention** (a concern may only become clear years later) — this specific benchmark needs confirmation from a child-protection professional, not just internal Board judgement, given how much weight it carries. |
-| Ijazah register | Indefinite | Already established in the Ijazah Governance Framework §6.4 — restated here for completeness, not re-decided. |
+| Ijazah register | Indefinite | Already established in the Ijazah Governance Framework §7.4 — restated here for completeness, not re-decided. |
 | Staff records | Duration of employment + 6 years | Common employment-record benchmark; to be confirmed against actual Nigerian labour-record requirements. |
 | Fee/payment records | 7 years | Common financial-record benchmark; to be confirmed against actual Nigerian tax/financial-record requirements once the Tuition & Fees Policy exists. |
 
