@@ -26,6 +26,9 @@
   var attendanceForm = document.querySelector('[data-attendance-form]');
   var attendanceResultEl = document.querySelector('[data-attendance-result]');
 
+  var assessmentForm = document.querySelector('[data-assessment-form]');
+  var assessmentResultEl = document.querySelector('[data-assessment-result]');
+
   var currentAdmissionNo = null;
 
   function el(tag, className, text){
@@ -288,6 +291,37 @@
       if(res2.ok) renderRecord(data2);
     }catch(err){
       showResult(attendanceResultEl, false, (err && err.message) || 'Could not save that attendance record.');
+    }
+  });
+
+  assessmentForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    assessmentResultEl.hidden = true;
+    if(!currentAdmissionNo){
+      showResult(assessmentResultEl, false, 'Look up a student first.');
+      return;
+    }
+    var payload = {
+      admissionNo: currentAdmissionNo,
+      term: assessmentForm.querySelector('[data-assessment-term]').value.trim(),
+      subject: assessmentForm.querySelector('[data-assessment-subject]').value.trim(),
+      caScore: assessmentForm.querySelector('[data-assessment-ca]').value || null,
+      examScore: assessmentForm.querySelector('[data-assessment-exam]').value || null,
+      teacherComment: assessmentForm.querySelector('[data-assessment-comment]').value.trim() || null,
+    };
+    try{
+      var res = await fetch('/api/portal/staff/registrar/assessments', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not save that assessment record.');
+      showResult(assessmentResultEl, true, 'Saved ' + data.subject + ' for ' + data.term + ' — total ' + data.totalScore + '.');
+      assessmentForm.reset();
+      var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
+      var data2 = await res2.json();
+      if(res2.ok) renderRecord(data2);
+    }catch(err){
+      showResult(assessmentResultEl, false, (err && err.message) || 'Could not save that assessment record.');
     }
   });
 

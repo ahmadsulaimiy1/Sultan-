@@ -128,6 +128,24 @@ Teacher Portal, or an explicit Board decision to grant REG a
 provisional Create permission — a governance decision, not one this
 code makes on its own).
 
+## Correcting an assessment score (Migration Phase B)
+
+```
+curl -X POST https://<your-domain>/api/portal/staff/registrar/assessments \
+  -H "content-type: application/json" -b "shr_staff_session=<staff session cookie>" \
+  -d '{"admissionNo": "SHRS-2031", "term": "2024/2025 Term 2", "subject": "Mathematics", "caScore": 28, "examScore": 55}'
+```
+Replaces `admin/students.js`'s bearer-token results upsert entirely —
+that route now returns 410 for any `results` payload. Same honest split
+as attendance: the Matrix grants Subject Teacher/Muhaffiz/Arabic
+Instructor Create on `assessments`, REG only Edit/correction. No such
+Teacher account exists yet, so — same as attendance — **there is
+currently no working path to enter a brand-new subject/term score for
+the first time**, only to correct one already on file. See
+`docs/teacher-operating-model.md` for the proposed structural fix and
+`docs/academic-records-authority-map.md` for how this interacts with
+the separate, still-unenforced Results Approve/Publish step.
+
 ## Looking up a student's full record
 
 ```
@@ -141,10 +159,9 @@ scope text matches "aggregate," not just checking a boolean.
 
 ## What this phase honestly left open
 
-- **Assessment records still go through `admin/students.js`'s bearer
-  token.** Attendance moved to `registrar/attendance.js` (Migration
-  Phase A); results are Phase B, queued next in
-  `identity-migration-plan.md`, not silently left without a plan.
+- **Fee entry still goes through `admin/students.js`'s bearer token.**
+  Attendance (Phase A) and assessments (Phase B) are migrated; fees are
+  Phase C, queued next in `identity-migration-plan.md`.
 - **No approval step in this office is system-enforced.** The Matrix's
   "Registrar + Principal jointly" language for promotions, withdrawals,
   graduations, and certificates is recordable via an optional

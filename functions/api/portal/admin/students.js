@@ -11,11 +11,10 @@
 // password at /portal/set-password/. See functions/api/portal/set-password.js.
 //
 // Migration status (docs/identity-migration-plan.md): student/guardian
-// creation and results/fee entry still go through this bearer token —
-// attendance does not, as of Migration Phase A (see the guard on
-// body.attendance below, and functions/api/portal/staff/registrar/attendance.js).
-// Results (Phase B) and fees (Phase C) are the next routes queued to
-// move off this token, not silently left here without a plan.
+// creation and fee entry still go through this bearer token —
+// attendance (Phase A) and assessment/results (Phase B) do not; both
+// now return 410 pointing at their session-gated replacements under
+// functions/api/portal/staff/registrar/. Fees (Phase C) are next.
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
@@ -148,19 +147,12 @@ export async function onRequestPost({ request, env }) {
       return json({ error: 'Attendance is no longer accepted here — use POST /api/portal/staff/registrar/attendance (staff session required). See docs/registrar-office.md.' }, 410);
     }
 
-    if (Array.isArray(body.results)) {
-      for (const r of body.results) {
-        if (!r.term || !r.subject) continue;
-        const term = await ensureTerm(sql, r.term);
-        const total = r.totalScore != null ? r.totalScore : (Number(r.caScore || 0) + Number(r.examScore || 0));
-        await sql`
-          INSERT INTO term_results (student_id, term, subject, ca_score, exam_score, total_score, teacher_comment)
-          VALUES (${studentId}, ${term}, ${r.subject}, ${r.caScore || null}, ${r.examScore || null}, ${total}, ${r.teacherComment || null})
-          ON CONFLICT (student_id, term, subject) DO UPDATE SET
-            ca_score = EXCLUDED.ca_score, exam_score = EXCLUDED.exam_score,
-            total_score = EXCLUDED.total_score, teacher_comment = EXCLUDED.teacher_comment, updated_at = now()`;
-      }
-      if (body.results.length) updatedParts.push('results');
+    // Results (raw CA/exam entry) migrated to
+    // staff/registrar/assessments.js (Migration Phase B,
+    // docs/identity-migration-plan.md) — same treatment as attendance
+    // in Phase A: refused outright, not silently ignored.
+    if (body.results) {
+      return json({ error: 'Assessment/result entry is no longer accepted here — use POST /api/portal/staff/registrar/assessments (staff session required). See docs/registrar-office.md.' }, 410);
     }
 
     if (body.fees && body.fees.term) {

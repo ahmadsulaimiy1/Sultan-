@@ -134,6 +134,35 @@
       </div>
 
       <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Record an Assessment Score</h2></div>
+        <p class="registrar-hint">Same rule as attendance: first-time entry for a subject/term is a Subject Teacher, Muhaffiz, or Arabic Instructor function under the Matrix — until those accounts exist, this form only accepts corrections to a score already on file.</p>
+        <form data-assessment-form class="registrar-form-grid">
+          <div class="portal-field">
+            <label>Term</label>
+            <input type="text" data-assessment-term placeholder="e.g. 2024/2025 Term 2" required />
+          </div>
+          <div class="portal-field">
+            <label>Subject</label>
+            <input type="text" data-assessment-subject placeholder="e.g. Mathematics" required />
+          </div>
+          <div class="portal-field">
+            <label>CA Score</label>
+            <input type="number" min="0" step="0.5" data-assessment-ca />
+          </div>
+          <div class="portal-field">
+            <label>Exam Score</label>
+            <input type="number" min="0" step="0.5" data-assessment-exam />
+          </div>
+          <div class="portal-field registrar-field-wide">
+            <label>Teacher Comment</label>
+            <textarea data-assessment-comment rows="2"></textarea>
+          </div>
+          <button type="submit" class="portal-submit registrar-form-submit">Save Score</button>
+        </form>
+        <div class="registrar-form-result" data-assessment-result hidden></div>
+      </div>
+
+      <div class="portal-child-card">
         <div class="portal-child-head"><h2>Lifecycle Timeline</h2></div>
         <div class="registrar-timeline" data-record-timeline></div>
       </div>

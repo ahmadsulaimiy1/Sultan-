@@ -100,6 +100,42 @@ guessing at a role grant the Board hasn't actually decided.
 Assessment (Phase B) and Fees (Phase C) are unchanged by this update —
 still on `admin/students.js`'s bearer token, still queued next.
 
+## Status update — Migration Phase B (Assessment/Results)
+
+Raw CA/exam score entry is migrated the same way attendance was:
+`functions/api/portal/staff/registrar/assessments.js` is
+session-authenticated and Permission-Engine-gated against the
+`assessments` area, and `admin/students.js` now returns 410 for any
+`body.results` payload.
+
+**The same structural finding repeats, which makes it a pattern, not a
+one-off**: the Matrix grants TCH/MUH/ARB Create+Edit on `assessments`
+('own subject/class' scope) but REG only Edit ('correction only,
+logged' scope) — exactly the Attendance/Class-Teacher split from Phase
+A, mirrored for Subject Teacher/Muhaffiz/Arabic Instructor. None of
+those three roles has an issued staff account, so first-time entry of a
+new subject/term score has no working path anywhere in this project;
+only corrections to a score already on file. Two migrations in a row
+surfacing the identical dependency (mainstream academic operations
+require a Teacher Portal that does not exist yet) is why a Teacher
+Operating Model is now a named prerequisite — see
+`docs/teacher-operating-model.md`.
+
+**A separate, pre-existing gap this migration did not introduce or
+resolve**: the Matrix's `results` area gives REG Approve/Publish/Export
+and PRIN Approve('own institution') over the *finalised* aggregate,
+distinct from raw `assessments` entry — but `term_results` has no
+`approved_at`/`published_at` column anywhere in the schema, so a raw
+score has always been visible on a guardian/student dashboard the
+instant it's written, with no approval or publish gate ever enforced.
+This migration moved *who may write the raw score*; it does not add a
+publish gate that didn't exist before. See
+`docs/academic-records-authority-map.md` for the full accounting, and
+the Approval Workflow Architecture roadmap item for where an enforced
+gate would eventually live.
+
+Fees (Phase C) is unchanged — still on the bearer token, still queued.
+
 ## Recommended migration order
 
 1. **Student/Guardian administration + student login issuance** — done
