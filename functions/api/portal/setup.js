@@ -403,6 +403,35 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_applications (guardian_id)`,
   `CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status)`,
+
+  // Registrar's Office — real academic-lifecycle events
+  `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
+    id                   SERIAL PRIMARY KEY,
+    student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    event_type           TEXT NOT NULL CHECK (event_type IN ('enrolment', 'promotion', 'transfer', 'withdrawal', 'graduation', 'reinstatement')),
+    from_class_id        INTEGER REFERENCES classes(id),
+    to_class_id          INTEGER REFERENCES classes(id),
+    reason               TEXT,
+    effective_date       DATE NOT NULL DEFAULT CURRENT_DATE,
+    decided_by_staff_id  INTEGER REFERENCES staff(id),
+    approved_by_staff_id INTEGER REFERENCES staff(id),
+    metadata             JSONB,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifecycle_events (student_id, effective_date DESC)`,
+  `CREATE TABLE IF NOT EXISTS certificates (
+    id                 SERIAL PRIMARY KEY,
+    student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
+    student_full_name  TEXT NOT NULL,
+    certificate_type   TEXT NOT NULL,
+    reference_no       TEXT NOT NULL UNIQUE,
+    issued_at          DATE NOT NULL,
+    issued_by_staff_id INTEGER REFERENCES staff(id),
+    revoked_at         TIMESTAMPTZ,
+    revocation_note    TEXT,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id)`,
 ];
 
 async function handle({ request, env }) {

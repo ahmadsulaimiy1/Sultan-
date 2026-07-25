@@ -1,0 +1,341 @@
+(function(){
+  var loadingEl = document.querySelector('[data-portal-loading]');
+  var errorEl = document.querySelector('[data-portal-error]');
+  var errorMessageEl = document.querySelector('[data-portal-error-message]');
+  var contentEl = document.querySelector('[data-portal-content]');
+  var logoutBtn = document.querySelector('[data-portal-logout]');
+
+  var searchForm = document.querySelector('[data-registrar-search-form]');
+  var searchAdmissionNoEl = document.querySelector('[data-search-admission-no]');
+  var searchErrorEl = document.querySelector('[data-search-error]');
+  var recordEl = document.querySelector('[data-registrar-record]');
+
+  var enrolForm = document.querySelector('[data-registrar-enrol-form]');
+  var enrolResultEl = document.querySelector('[data-enrol-result]');
+
+  var lifecycleForm = document.querySelector('[data-lifecycle-form]');
+  var lifecycleActionEl = document.querySelector('[data-lifecycle-action]');
+  var lifecycleInstitutionField = document.querySelector('[data-lifecycle-institution-field]');
+  var lifecycleClassField = document.querySelector('[data-lifecycle-class-field]');
+  var lifecycleResultEl = document.querySelector('[data-lifecycle-result]');
+
+  var certIssueForm = document.querySelector('[data-certificate-issue-form]');
+  var certRevokeForm = document.querySelector('[data-certificate-revoke-form]');
+  var certResultEl = document.querySelector('[data-certificate-result]');
+
+  var currentAdmissionNo = null;
+
+  function el(tag, className, text){
+    var e = document.createElement(tag);
+    if(className) e.className = className;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+
+  function formatDate(iso){
+    if(!iso) return '—';
+    try{ return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+    catch(e){ return iso; }
+  }
+
+  function showResult(target, ok, message){
+    target.hidden = false;
+    target.textContent = message;
+    target.className = 'registrar-form-result ' + (ok ? 'is-ok' : 'is-error');
+  }
+
+  function eventLabel(type){
+    var labels = {
+      enrolment: 'Enrolled', promotion: 'Promoted', transfer: 'Transferred',
+      withdrawal: 'Withdrawn', graduation: 'Graduated', reinstatement: 'Reinstated',
+    };
+    return labels[type] || type;
+  }
+
+  function renderTimeline(events){
+    var wrap = document.querySelector('[data-record-timeline]');
+    wrap.innerHTML = '';
+    if(!events.length){
+      wrap.appendChild(el('p', 'identity-empty', 'No lifecycle events recorded yet.'));
+      return;
+    }
+    events.forEach(function(ev){
+      var row = el('div', 'registrar-timeline-row');
+      var head = el('div', 'registrar-timeline-head');
+      head.appendChild(el('span', 'registrar-timeline-type', eventLabel(ev.eventType)));
+      head.appendChild(el('span', 'registrar-timeline-date', formatDate(ev.effectiveDate)));
+      row.appendChild(head);
+      if(ev.from || ev.to){
+        var move = [];
+        if(ev.from) move.push(ev.from.className + ' (' + ev.from.institution + ')');
+        if(ev.to) move.push(ev.to.className + ' (' + ev.to.institution + ')');
+        row.appendChild(el('div', 'registrar-timeline-move', move.join(' → ')));
+      }
+      if(ev.reason) row.appendChild(el('div', 'registrar-timeline-reason', ev.reason));
+      var meta = [];
+      if(ev.decidedBy) meta.push('Decided by ' + ev.decidedBy);
+      if(ev.approvedBy) meta.push('Approved by ' + ev.approvedBy);
+      if(meta.length) row.appendChild(el('div', 'registrar-timeline-meta', meta.join(' · ')));
+      wrap.appendChild(row);
+    });
+  }
+
+  function renderCertificates(certs){
+    var wrap = document.querySelector('[data-record-certificates]');
+    wrap.innerHTML = '';
+    if(!certs.length){
+      wrap.appendChild(el('p', 'identity-empty', 'No certificates issued yet.'));
+      return;
+    }
+    certs.forEach(function(c){
+      var card = el('div', 'portal-ijazah-card' + (c.revokedAt ? ' is-revoked' : ''));
+      card.appendChild(el('div', 'pij-ref', c.referenceNo));
+      card.appendChild(el('div', 'pij-scope', c.certificateType));
+      card.appendChild(el('div', 'pij-meta', 'Issued ' + formatDate(c.issuedAt)));
+      if(c.revokedAt){
+        var rev = el('div', 'pij-revoked', 'Revoked ' + formatDate(c.revokedAt) + (c.revocationNote ? ' — ' + c.revocationNote : ''));
+        card.appendChild(rev);
+      }
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderHifz(hifz){
+    var card = document.querySelector('[data-record-hifz-card]');
+    var wrap = document.querySelector('[data-record-hifz]');
+    if(!hifz){ card.hidden = true; return; }
+    card.hidden = false;
+    wrap.innerHTML = '';
+    wrap.appendChild(el('span', 'portal-hifz-stage-badge', 'Stage ' + hifz.stageNumber + ': ' + hifz.stageLabel));
+  }
+
+  function renderResults(results){
+    var tbody = document.querySelector('[data-record-results]');
+    var wrap = document.querySelector('[data-record-results-wrap]');
+    var empty = document.querySelector('[data-record-results-empty]');
+    tbody.innerHTML = '';
+    if(!results.length){
+      wrap.hidden = true; empty.hidden = false;
+      return;
+    }
+    wrap.hidden = false; empty.hidden = true;
+    results.forEach(function(r){
+      var tr = document.createElement('tr');
+      [r.term, r.subject, r.ca_score, r.exam_score, r.total_score, r.teacher_comment || '—'].forEach(function(val){
+        var td = document.createElement('td');
+        td.textContent = val == null ? '—' : val;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderRecord(data){
+    currentAdmissionNo = data.student.admissionNo;
+    document.querySelector('[data-record-name]').textContent = data.student.fullName;
+    document.querySelector('[data-record-meta]').textContent = data.student.admissionNo;
+    document.querySelector('[data-record-institution]').textContent = data.student.primaryInstitution || '—';
+    document.querySelector('[data-record-class]').textContent = data.student.primaryClass || '—';
+    document.querySelector('[data-record-status]').textContent = data.student.status.charAt(0).toUpperCase() + data.student.status.slice(1);
+    document.querySelector('[data-record-created]').textContent = formatDate(data.student.createdAt);
+
+    var enrolWrap = document.querySelector('[data-record-enrolments]');
+    enrolWrap.innerHTML = '';
+    data.enrolments.forEach(function(e){
+      enrolWrap.appendChild(el('span', 'portal-programme-chip' + (e.isPrimary ? ' is-primary' : ''), e.className + ' — ' + e.institution));
+    });
+
+    var guardiansWrap = document.querySelector('[data-record-guardians]');
+    guardiansWrap.innerHTML = '';
+    if(data.guardians.length){
+      var head = el('div', 'registrar-guardians-head', 'Guardians');
+      guardiansWrap.appendChild(head);
+      data.guardians.forEach(function(g){
+        guardiansWrap.appendChild(el('div', 'registrar-guardian-row', g.fullName + ' (' + g.relationship + ') — ' + g.email));
+      });
+    }
+
+    var standingWrap = document.querySelector('[data-record-standing]');
+    standingWrap.innerHTML = '';
+    var attStat = el('div', 'portal-stat');
+    attStat.appendChild(el('div', 'label', 'Attendance'));
+    attStat.appendChild(el('div', 'value', data.academicStanding.attendancePct != null ? data.academicStanding.attendancePct + '%' : '—'));
+    standingWrap.appendChild(attStat);
+    var termStat = el('div', 'portal-stat');
+    termStat.appendChild(el('div', 'label', 'Latest Term'));
+    termStat.appendChild(el('div', 'value', data.academicStanding.latestTerm || '—'));
+    standingWrap.appendChild(termStat);
+    var avgStat = el('div', 'portal-stat');
+    avgStat.appendChild(el('div', 'label', 'Term Average'));
+    avgStat.appendChild(el('div', 'value', data.academicStanding.latestTermAverage != null ? data.academicStanding.latestTermAverage : '—'));
+    standingWrap.appendChild(avgStat);
+
+    renderResults(data.results);
+    renderTimeline(data.lifecycleEvents);
+    renderCertificates(data.certificates);
+    renderHifz(data.hifz);
+
+    recordEl.hidden = false;
+  }
+
+  searchForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    searchErrorEl.hidden = true;
+    recordEl.hidden = true;
+    var admissionNo = searchAdmissionNoEl.value.trim();
+    if(!admissionNo) return;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(admissionNo));
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not load that student record.');
+      renderRecord(data);
+    }catch(err){
+      searchErrorEl.hidden = false;
+      searchErrorEl.textContent = (err && err.message) || 'Could not load that student record.';
+    }
+  });
+
+  enrolForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    enrolResultEl.hidden = true;
+    var payload = {
+      applicationId: Number(document.querySelector('[data-enrol-application-id]').value),
+      admissionNo: document.querySelector('[data-enrol-admission-no]').value.trim(),
+      institution: document.querySelector('[data-enrol-institution]').value.trim(),
+      className: document.querySelector('[data-enrol-class-name]').value.trim(),
+    };
+    try{
+      var res = await fetch('/api/portal/staff/registrar/enrol', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not enrol that student.');
+      showResult(enrolResultEl, true, 'Enrolled — Institutional Student Number ' + data.admissionNo + '. Look them up above to view the new record.');
+      enrolForm.reset();
+    }catch(err){
+      showResult(enrolResultEl, false, (err && err.message) || 'Could not enrol that student.');
+    }
+  });
+
+  lifecycleActionEl.addEventListener('change', function(){
+    var needsClass = lifecycleActionEl.value === 'promote' || lifecycleActionEl.value === 'transfer';
+    lifecycleInstitutionField.hidden = !needsClass;
+    lifecycleClassField.hidden = !needsClass;
+    var reasonInput = lifecycleForm.querySelector('[data-lifecycle-reason]');
+    reasonInput.required = lifecycleActionEl.value !== 'graduate';
+  });
+
+  lifecycleForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    lifecycleResultEl.hidden = true;
+    if(!currentAdmissionNo){
+      showResult(lifecycleResultEl, false, 'Look up a student first.');
+      return;
+    }
+    var payload = {
+      action: lifecycleActionEl.value,
+      admissionNo: currentAdmissionNo,
+      reason: lifecycleForm.querySelector('[data-lifecycle-reason]').value.trim() || null,
+      effectiveDate: lifecycleForm.querySelector('[data-lifecycle-effective-date]').value || null,
+    };
+    if(payload.action === 'promote' || payload.action === 'transfer'){
+      payload.toInstitution = lifecycleForm.querySelector('[data-lifecycle-institution]').value.trim();
+      payload.toClassName = lifecycleForm.querySelector('[data-lifecycle-class-name]').value.trim();
+    }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/lifecycle-events', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not record that event.');
+      showResult(lifecycleResultEl, true, 'Recorded. Refreshing this student\'s timeline…');
+      lifecycleForm.reset();
+      lifecycleActionEl.dispatchEvent(new Event('change'));
+      var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
+      var data2 = await res2.json();
+      if(res2.ok) renderRecord(data2);
+    }catch(err){
+      showResult(lifecycleResultEl, false, (err && err.message) || 'Could not record that event.');
+    }
+  });
+
+  certIssueForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    certResultEl.hidden = true;
+    if(!currentAdmissionNo){
+      showResult(certResultEl, false, 'Look up a student first.');
+      return;
+    }
+    var payload = {
+      action: 'issue',
+      admissionNo: currentAdmissionNo,
+      certificateType: certIssueForm.querySelector('[data-cert-type]').value.trim(),
+      referenceNo: certIssueForm.querySelector('[data-cert-reference]').value.trim(),
+      issuedAt: certIssueForm.querySelector('[data-cert-issued-at]').value || null,
+      approvedByStaffNo: certIssueForm.querySelector('[data-cert-approved-by]').value.trim() || null,
+    };
+    try{
+      var res = await fetch('/api/portal/staff/registrar/certificates', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not issue that certificate.');
+      showResult(certResultEl, true, 'Certificate issued — reference ' + data.referenceNo + '.');
+      certIssueForm.reset();
+      var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
+      var data2 = await res2.json();
+      if(res2.ok) renderRecord(data2);
+    }catch(err){
+      showResult(certResultEl, false, (err && err.message) || 'Could not issue that certificate.');
+    }
+  });
+
+  certRevokeForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    certResultEl.hidden = true;
+    var payload = {
+      action: 'revoke',
+      referenceNo: certRevokeForm.querySelector('[data-revoke-reference]').value.trim(),
+      revocationNote: certRevokeForm.querySelector('[data-revoke-note]').value.trim(),
+    };
+    try{
+      var res = await fetch('/api/portal/staff/registrar/certificates', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not revoke that certificate.');
+      showResult(certResultEl, true, 'Certificate revoked.');
+      certRevokeForm.reset();
+      if(currentAdmissionNo){
+        var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
+        var data2 = await res2.json();
+        if(res2.ok) renderRecord(data2);
+      }
+    }catch(err){
+      showResult(certResultEl, false, (err && err.message) || 'Could not revoke that certificate.');
+    }
+  });
+
+  logoutBtn.addEventListener('click', async function(){
+    try{ await fetch('/api/portal/staff/logout', { method: 'POST' }); }catch(err){}
+    window.location.href = '/portal/staff/login/';
+  });
+
+  (async function init(){
+    try{
+      var res = await fetch('/api/portal/staff/me');
+      if(res.status === 401){
+        window.location.href = '/portal/staff/login/';
+        return;
+      }
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
+      loadingEl.hidden = true;
+      contentEl.hidden = false;
+    }catch(err){
+      loadingEl.hidden = true;
+      errorMessageEl.textContent = (err && err.message) || 'Could not load the Registrar\'s Office.';
+      errorEl.hidden = false;
+    }
+  })();
+})();

@@ -551,3 +551,71 @@ CREATE TABLE IF NOT EXISTS admissions_applications (
 );
 CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_applications (guardian_id);
 CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status);
+
+-- ============================================================
+-- Registrar's Office — real academic-lifecycle events
+-- ============================================================
+-- Replaces students.status as the ONLY trace of promotion, transfer,
+-- withdrawal, and graduation (a flag with no date, reason, or approving
+-- officer, per digital-institution-blueprint.md's own honest gap
+-- analysis: "Workflows with NO digital trace at all"). This table is
+-- that trace. students.status stays as the current-state summary field
+-- (cheap to filter/join on); this table is the append-only history that
+-- explains how it got there — never edited after the fact, only
+-- appended to, matching the Archive-over-Delete discipline used
+-- throughout this schema.
+--
+-- One table for six related event types (initial enrolment, promotion,
+-- transfer, withdrawal, graduation, reinstatement), not six separate
+-- tables — they share the same real shape (a student moves from one
+-- placement to another, or out of the institution entirely, with a
+-- reason and a deciding officer) and querying "this student's full
+-- academic history" across all of them is the actual, common use case.
+--
+-- students.admission_no (already unique, already required) IS the
+-- Institutional Student Number — no redundant new identifier is
+-- introduced here.
+CREATE TABLE IF NOT EXISTS student_lifecycle_events (
+  id                   SERIAL PRIMARY KEY,
+  student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  event_type           TEXT NOT NULL CHECK (event_type IN ('enrolment', 'promotion', 'transfer', 'withdrawal', 'graduation', 'reinstatement')),
+  from_class_id        INTEGER REFERENCES classes(id),
+  to_class_id          INTEGER REFERENCES classes(id),
+  reason               TEXT,
+  effective_date       DATE NOT NULL DEFAULT CURRENT_DATE,
+  decided_by_staff_id  INTEGER REFERENCES staff(id),
+  -- Joint sign-off per AC-02 ("Registrar decides; Principal co-signs
+  -- promotion/probation") — nullable because not every event type
+  -- requires it and this project doesn't yet enforce the co-sign as a
+  -- hard gate (that's a real future tightening, not assumed here).
+  approved_by_staff_id INTEGER REFERENCES staff(id),
+  metadata             JSONB,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifecycle_events (student_id, effective_date DESC);
+
+-- Certificates register — same permanence pattern as ijazah_register
+-- (ON DELETE SET NULL, frozen student_full_name, revoke-never-delete):
+-- a certificate is a credential someone may need to prove decades
+-- later, independent of whatever later happens to the live student
+-- record. "Create" here means recording that a certificate was
+-- issued, NOT generating the physical/PDF document — no document-
+-- generation system exists anywhere in this project; certificate_type
+-- is free text since no fixed taxonomy is published (AC-05 Certificate
+-- Policy is Missing per the policy index). Public verification (an
+-- unauthenticated lookup by reference_no) is explicitly deferred, same
+-- as IQ-02 §7.5's still-deferred Ijazah verification endpoint — this
+-- table's reference_no is ready for that whenever it's built.
+CREATE TABLE IF NOT EXISTS certificates (
+  id                 SERIAL PRIMARY KEY,
+  student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
+  student_full_name  TEXT NOT NULL,
+  certificate_type   TEXT NOT NULL,
+  reference_no       TEXT NOT NULL UNIQUE,
+  issued_at          DATE NOT NULL,
+  issued_by_staff_id INTEGER REFERENCES staff(id),
+  revoked_at         TIMESTAMPTZ,
+  revocation_note    TEXT,
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id);

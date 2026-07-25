@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Registrar's Office — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Registrar's Office</span>
+    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Registrar's Office</div>
+    <div class="portal-hello-sub">Academic records, enrolment, lifecycle events, and certification — one honest source per student, not a spreadsheet.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Look Up a Student</h2></div>
+      <form data-registrar-search-form class="registrar-search-row">
+        <input type="text" data-search-admission-no placeholder="Institutional Student Number (Admission No.)" required />
+        <button type="submit" class="portal-submit" style="width:auto;">Look Up</button>
+      </form>
+      <div class="registrar-search-error" data-search-error hidden></div>
+    </div>
+
+    <div class="portal-child-card" data-registrar-enrol-card>
+      <div class="portal-child-head"><h2>Enrol from Admissions Application</h2></div>
+      <p class="registrar-hint">Converts an admitted application into a real student record, keeping the same guardian account that submitted the enquiry — no second account, no manual reconciliation.</p>
+      <form data-registrar-enrol-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Admissions Application ID</label>
+          <input type="number" min="1" data-enrol-application-id required />
+        </div>
+        <div class="portal-field">
+          <label>New Institutional Student Number</label>
+          <input type="text" data-enrol-admission-no required />
+        </div>
+        <div class="portal-field">
+          <label>Institution</label>
+          <input type="text" data-enrol-institution required />
+        </div>
+        <div class="portal-field">
+          <label>Class</label>
+          <input type="text" data-enrol-class-name required />
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Enrol Student</button>
+      </form>
+      <div class="registrar-form-result" data-enrol-result hidden></div>
+    </div>
+
+    <div data-registrar-record hidden>
+
+      <div class="portal-child-card">
+        <div class="portal-child-head">
+          <h2 data-record-name></h2>
+          <div class="meta" data-record-meta></div>
+        </div>
+        <div class="identity-field-grid">
+          <div class="identity-field">
+            <div class="label">Institution</div>
+            <div class="value" data-record-institution>—</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Class</div>
+            <div class="value" data-record-class>—</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Status</div>
+            <div class="value" data-record-status>—</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Record Created</div>
+            <div class="value" data-record-created>—</div>
+          </div>
+        </div>
+        <div class="portal-programmes" data-record-enrolments style="padding:0 20px 16px;"></div>
+        <div data-record-guardians class="registrar-guardians"></div>
+      </div>
+
+      <div class="portal-child-card" data-record-hifz-card hidden>
+        <div class="portal-child-head"><h2>Hifz &amp; Ijazah Snapshot</h2></div>
+        <div data-record-hifz style="padding:16px 20px;"></div>
+      </div>
+
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Academic Standing</h2></div>
+        <div class="portal-stats" data-record-standing></div>
+        <div class="portal-results" data-record-results-wrap>
+          <h3>Latest Term Results</h3>
+          <div class="portal-results-scroll">
+            <table>
+              <thead><tr><th>Term</th><th>Subject</th><th>CA</th><th>Exam</th><th>Total</th><th>Comment</th></tr></thead>
+              <tbody data-record-results></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="portal-empty" data-record-results-empty hidden>No results have been recorded yet.</div>
+      </div>
+
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Lifecycle Timeline</h2></div>
+        <div class="registrar-timeline" data-record-timeline></div>
+      </div>
+
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Record a Lifecycle Event</h2></div>
+        <p class="registrar-hint">Every action below writes a permanent, reasoned entry to this student's timeline — nothing here silently overwrites the record.</p>
+        <form data-lifecycle-form class="registrar-form-grid">
+          <div class="portal-field">
+            <label>Action</label>
+            <select data-lifecycle-action required>
+              <option value="">Select an action…</option>
+              <option value="promote">Promote</option>
+              <option value="transfer">Transfer</option>
+              <option value="withdraw">Withdraw</option>
+              <option value="graduate">Graduate</option>
+              <option value="reinstate">Reinstate</option>
+            </select>
+          </div>
+          <div class="portal-field" data-lifecycle-institution-field hidden>
+            <label>New Institution</label>
+            <input type="text" data-lifecycle-institution />
+          </div>
+          <div class="portal-field" data-lifecycle-class-field hidden>
+            <label>New Class</label>
+            <input type="text" data-lifecycle-class-name />
+          </div>
+          <div class="portal-field">
+            <label>Effective Date</label>
+            <input type="date" data-lifecycle-effective-date />
+          </div>
+          <div class="portal-field registrar-field-wide">
+            <label>Reason (required)</label>
+            <textarea data-lifecycle-reason rows="2" required></textarea>
+          </div>
+          <button type="submit" class="portal-submit registrar-form-submit">Record Event</button>
+        </form>
+        <div class="registrar-form-result" data-lifecycle-result hidden></div>
+      </div>
+
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Certificates</h2></div>
+        <div class="registrar-certificates" data-record-certificates></div>
+        <div class="registrar-cert-forms">
+          <form data-certificate-issue-form class="registrar-form-grid">
+            <div class="portal-field">
+              <label>Certificate Type</label>
+              <input type="text" data-cert-type placeholder="e.g. Primary Leaving Certificate" required />
+            </div>
+            <div class="portal-field">
+              <label>Reference No.</label>
+              <input type="text" data-cert-reference required />
+            </div>
+            <div class="portal-field">
+              <label>Issued Date</label>
+              <input type="date" data-cert-issued-at />
+            </div>
+            <div class="portal-field">
+              <label>Approved By (Staff No., optional)</label>
+              <input type="text" data-cert-approved-by />
+            </div>
+            <button type="submit" class="portal-submit registrar-form-submit">Issue Certificate</button>
+          </form>
+          <form data-certificate-revoke-form class="registrar-form-grid">
+            <div class="portal-field">
+              <label>Reference No. to Revoke</label>
+              <input type="text" data-revoke-reference required />
+            </div>
+            <div class="portal-field registrar-field-wide">
+              <label>Revocation Note (required)</label>
+              <textarea data-revoke-note rows="2" required></textarea>
+            </div>
+            <button type="submit" class="portal-submit registrar-form-submit registrar-btn-danger">Revoke Certificate</button>
+          </form>
+        </div>
+        <div class="registrar-form-result" data-certificate-result hidden></div>
+      </div>
+
+    </div>
+
+    <p class="portal-notice">
+      Every lookup, event, and certificate action is checked against your assigned roles under the SHRS Role &amp; Permission Matrix and recorded in the staff audit log. If an action is refused and you believe it shouldn't be, contact the ICT Office at
+      <a href="mailto:info@shroyalschools.ng">info@shroyalschools.ng</a>.
+    </p>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Registrar's Office…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Registrar's Office</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-staff-registrar.js" defer></script>
+</body>
+</html>
