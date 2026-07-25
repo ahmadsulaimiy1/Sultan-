@@ -139,3 +139,17 @@ CREATE TABLE IF NOT EXISTS privacy_requests (
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   resolved_at   TIMESTAMPTZ
 );
+
+-- Family Adhkar tracking (Parent Portal). There is no separate student
+-- login in this schema — guardians are the only authenticated portal
+-- users — so this tracks "did the family complete this period today" at
+-- the guardian/household level, not per individual child. One row per
+-- guardian per period per day; used to compute a simple day-streak.
+CREATE TABLE IF NOT EXISTS adhkar_completions (
+  id               SERIAL PRIMARY KEY,
+  guardian_id      INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+  period           TEXT NOT NULL, -- morning | evening
+  completion_date  DATE NOT NULL,
+  completed_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (guardian_id, period, completion_date)
+);

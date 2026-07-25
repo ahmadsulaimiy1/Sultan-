@@ -126,6 +126,18 @@ const STATEMENTS = [
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
     resolved_at   TIMESTAMPTZ
   )`,
+
+  `CREATE TABLE IF NOT EXISTS adhkar_completions (
+    id               SERIAL PRIMARY KEY,
+    guardian_id      INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    period           TEXT NOT NULL,
+    completion_date  DATE NOT NULL,
+    completed_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `DO $$ BEGIN
+    ALTER TABLE adhkar_completions ADD CONSTRAINT adhkar_completions_guardian_period_date_key UNIQUE (guardian_id, period, completion_date);
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END $$`,
 ];
 
 async function handle({ request, env }) {

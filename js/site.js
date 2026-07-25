@@ -1,3 +1,31 @@
+  // Homepage "Today's Reflection" — one dhikr picked from the current
+  // period's list (js/adhkar-data.js), varying by visit rather than
+  // showing the same fixed entry every time.
+  (function(){
+    var teaser = document.querySelector('[data-adhkar-teaser]');
+    if(!teaser || !window.SHRS_ADHKAR) return;
+    var lang = document.documentElement.lang === 'ar' ? 'ar' : 'en';
+    var isMorning = new Date().getHours() < 12;
+    var list = isMorning ? window.SHRS_ADHKAR.morning : window.SHRS_ADHKAR.evening;
+    var item = list[Math.floor(Math.random() * list.length)];
+    var translation = lang === 'ar' ? item.translation.ar : item.translation.en;
+    var reference = lang === 'ar' ? item.reference.ar : item.reference.en;
+    var arabic = document.createElement('p');
+    arabic.className = 'at-arabic';
+    arabic.lang = 'ar';
+    arabic.dir = 'rtl';
+    arabic.textContent = item.arabic;
+    var translationEl = document.createElement('p');
+    translationEl.className = 'at-translation';
+    translationEl.textContent = translation;
+    var refEl = document.createElement('span');
+    refEl.className = 'at-ref';
+    refEl.textContent = reference;
+    teaser.appendChild(arabic);
+    teaser.appendChild(translationEl);
+    teaser.appendChild(refEl);
+  })();
+
   document.querySelectorAll('.policy-head').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const item = btn.parentElement;
@@ -74,6 +102,12 @@
     });
   });
 
+  // threshold:0.12 means a .reveal target needs 12% of ITS OWN height
+  // visible to fire — for a single section far taller than ~8x the
+  // viewport (a long reference/list page, not a normal "card" section),
+  // that ratio is mathematically unreachable and the section stays
+  // opacity:0 forever. Don't put .reveal on a section that tall; split
+  // it or drop the class (as pages/adhkar.html does).
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});

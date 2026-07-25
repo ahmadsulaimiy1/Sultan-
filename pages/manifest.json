@@ -64,6 +64,14 @@
     "altHref": "/ar/academics/quran-college/"
   },
   {
+    "slug": "adhkar",
+    "output": "adhkar/index.html",
+    "title": "Morning & Evening Adhkār — Sultan Hanafi Royal Schools",
+    "description": "The Morning & Evening Adhkār Centre — Qur'an and authenticated Hadith remembrances with Arabic text, translation, transliteration, and references.",
+    "contentFile": "pages/adhkar.html",
+    "altHref": "/ar/adhkar/"
+  },
+  {
     "slug": "boarding",
     "output": "boarding/index.html",
     "title": "Boarding Facility — Sultan Hanafi Royal Schools",
@@ -190,6 +198,16 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/academics/quran-college/"
+  },
+  {
+    "slug": "adhkar-ar",
+    "output": "ar/adhkar/index.html",
+    "title": "أذكار الصباح والمساء — مدارس سلطان حنفي الملكية",
+    "description": "مركز أذكار الصباح والمساء — أذكار من القرآن الكريم والسنة الصحيحة، مع النص العربي والترجمة والمصدر.",
+    "contentFile": "pages/adhkar.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/adhkar/"
   },
   {
     "slug": "boarding-ar",

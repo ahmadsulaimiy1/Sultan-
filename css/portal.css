@@ -89,6 +89,29 @@ body.portal-body{
 .portal-notifications li{font-size:0.82rem;color:rgba(248,244,233,0.85);padding:6px 0;border-top:1px solid rgba(233,206,138,0.2);}
 .portal-notifications li:first-child{border-top:none;}
 
+.portal-adhkar-card{
+  background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);
+  padding:22px 24px;margin-bottom:24px;
+}
+.portal-adhkar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.portal-adhkar-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.portal-adhkar-streak{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;color:var(--crimson);border:1px solid var(--crimson);padding:2px 9px;white-space:nowrap;}
+.portal-adhkar-sub{font-size:0.82rem;color:var(--ink-soft);margin-bottom:16px;}
+.portal-adhkar-periods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.portal-adhkar-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  padding:16px 10px;border:1px solid var(--line);background:#fff;color:var(--navy);cursor:pointer;
+  font-family:'Inter','Cairo',sans-serif;transition:border-color .2s ease,background .2s ease;
+}
+.portal-adhkar-btn svg{color:var(--gold-bright);}
+.portal-adhkar-btn:hover{border-color:var(--gold);}
+.portal-adhkar-btn .pab-state{font-size:0.7rem;letter-spacing:0.03em;text-transform:uppercase;color:var(--ink-soft);}
+.portal-adhkar-btn.is-done{background:var(--navy);color:var(--ivory);border-color:var(--navy);}
+.portal-adhkar-btn.is-done svg{color:var(--gold-bright);}
+.portal-adhkar-btn.is-done .pab-state{color:var(--gold-bright);}
+.portal-adhkar-btn:disabled{opacity:0.6;cursor:default;}
+@media (max-width:420px){.portal-adhkar-periods{grid-template-columns:1fr;}}
+
 @media (max-width:520px){
   .portal-topbar{padding:12px 16px;}
   .portal-main{padding:24px 14px;}

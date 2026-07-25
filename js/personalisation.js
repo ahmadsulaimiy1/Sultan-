@@ -327,9 +327,34 @@
     els.forEach(function(s){ s.textContent = timeStr; });
   }
   renderClock();
+
+  // "Today's Adhkar" quick-access link — shows Morning or Evening
+  // depending on the visitor's local clock (a UI heuristic for which
+  // litany to surface first, not a fiqh ruling on exact timing), and
+  // links straight to that section of the Adhkar Centre.
+  var sunIcon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" class="pc-strip-icon"><circle cx="12" cy="15" r="5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 3v3M4.5 8l1.8 1.8M19.5 8l-1.8 1.8M2 20h20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  var moonIcon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" class="pc-strip-icon"><path d="M20 14.5A8 8 0 1110 3.2 6.5 6.5 0 0020 14.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  function renderAdhkarLink(){
+    var els = document.querySelectorAll('[data-pc-adhkar-link]');
+    if(!els.length) return;
+    var isMorning = new Date().getHours() < 12;
+    var label = STRIP_LANG === 'ar'
+      ? (isMorning ? 'أذكار الصباح' : 'أذكار المساء')
+      : (isMorning ? 'Morning Adhkār' : 'Evening Adhkār');
+    var icon = isMorning ? sunIcon : moonIcon;
+    var period = isMorning ? 'morning' : 'evening';
+    els.forEach(function(a){
+      var base = a.getAttribute('href').split('#')[0];
+      a.href = base + '#' + period;
+      a.innerHTML = icon + '<span>' + label + '</span>';
+    });
+  }
+  renderAdhkarLink();
+
   setInterval(function(){
     renderClock();
     if(lastPrayerTimings) renderPrayerTimes(lastPrayerTimings);
+    renderAdhkarLink();
   }, 1000);
 
   function renderIslamicStrip(){
@@ -439,6 +464,38 @@
     if(hRef) hRef.textContent = hadith.ref;
   }
   renderVerseHadith();
+
+  // Today's Adhkar widget — current period (by local clock) + progress
+  // read from the same localStorage key the Adhkar Centre page writes to
+  // (js/adhkar.js). Anonymous/local only; no account needed.
+  function renderAdhkarWidget(){
+    var periodEl = root.querySelector('[data-pc-adhkar-period]');
+    if(!periodEl) return;
+    var isMorning = new Date().getHours() < 12;
+    var period = isMorning ? 'morning' : 'evening';
+    var total = (window.SHRS_ADHKAR && window.SHRS_ADHKAR[period]) ? window.SHRS_ADHKAR[period].length : 9;
+    var read = 0;
+    try{
+      var raw = localStorage.getItem('shrsAdhkarProgress');
+      var data = raw ? JSON.parse(raw) : null;
+      var today = new Date().toISOString().slice(0, 10);
+      if(data && data.date === today && data[period]) read = data[period].length;
+    }catch(e){ read = 0; }
+    periodEl.textContent = isMorning
+      ? (STRIP_LANG === 'ar' ? 'أذكار الصباح' : 'Morning Adhkār')
+      : (STRIP_LANG === 'ar' ? 'أذكار المساء' : 'Evening Adhkār');
+    var bar = root.querySelector('[data-pc-adhkar-progress-bar]');
+    var pct = total ? Math.round((read / total) * 100) : 0;
+    if(bar) bar.style.width = pct + '%';
+    var progLabel = root.querySelector('[data-pc-adhkar-progress-label]');
+    if(progLabel) progLabel.textContent = read + ' / ' + total + (STRIP_LANG === 'ar' ? ' تمّت قراءتها اليوم' : ' read today');
+    var link = root.querySelector('[data-pc-adhkar-continue]');
+    if(link){
+      var base = link.getAttribute('href').split('#')[0];
+      link.href = base + '#' + period;
+    }
+  }
+  renderAdhkarWidget();
 
   // --- Friday (Jumu'ah) reminder — real, needs no push infra: just
   // checks the visitor's local day of week. ---

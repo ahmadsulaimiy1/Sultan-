@@ -185,6 +185,13 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-hcal-dot.is-today{background:var(--accent);}
 .pc-hcal-dot.is-friday{background:var(--accent-wash);border:1px solid var(--accent);}
 
+/* --- Today's Adhkar widget --- */
+.pc-adhkar-widget-body{margin:8px 0 10px;}
+.pc-adhkar-period{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.1rem;color:var(--on-surface);display:block;margin-bottom:8px;}
+.pc-adhkar-progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+.pc-adhkar-progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s ease;}
+.pc-adhkar-progress-label{font-size:0.74rem;color:var(--on-surface-soft);display:block;margin-top:6px;}
+
 /* --- Verse / Hadith of the Day --- */
 .pc-verse-arabic{font-family:'Amiri','Cormorant Garamond',serif;font-size:1.35rem;line-height:2;color:var(--on-surface);margin:8px 0;}
 .pc-verse-arabic:empty{display:none;}
@@ -234,6 +241,8 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-strip-clock{font-family:'Cinzel','Amiri',serif;font-variant-numeric:tabular-nums;letter-spacing:0.04em;color:#3A2E17;}
 .pc-strip-countdown{font-weight:500;opacity:0.75;font-size:0.94em;}
 .pc-strip-sep{width:1px;height:12px;background:rgba(139,106,46,0.3);flex-shrink:0;}
+.pc-adhkar-link{color:#4A3B22;text-decoration:none;border-bottom:1px dotted rgba(139,106,46,0.5);transition:color .2s ease,border-color .2s ease;}
+.pc-adhkar-link:hover{color:#8B6A2E;border-color:#8B6A2E;}
 @media (max-width:640px){
   .pc-islamic-strip-inner{gap:9px;padding:6px 16px;font-size:0.68rem;}
 }

@@ -120,6 +120,17 @@ This is intentionally a raw API, not a friendly form — building an actual
 admin UI (with its own login tier for staff) is real future work, listed
 in `digital-campus-roadmap.md`.
 
+## Family Adhkār tracking
+
+The dashboard's "Family Adhkār" card (`adhkar_completions` table,
+`/api/portal/adhkar`) lets a signed-in guardian mark the household's
+Morning/Evening Adhkār as recited for the day and see a day-streak. No
+extra setup is needed — the table is created by the same `setup.js` run
+covered above. There is no separate student login in this schema, so
+tracking is at the guardian/household level, not per individual child;
+see `pages/adhkar.html` (the public Adhkar Centre) for the actual
+Arabic/English content this links to.
+
 ## Password reset — staff-mediated by design, not a self-service link
 
 There is deliberately **no public "forgot password" endpoint**. A public

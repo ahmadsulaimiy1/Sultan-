@@ -9,6 +9,9 @@
   var notificationsEl = document.querySelector('[data-portal-notifications]');
   var notificationsListEl = document.querySelector('[data-portal-notifications-list]');
   var notificationsClearBtn = document.querySelector('[data-portal-notifications-clear]');
+  var adhkarCardEl = document.querySelector('[data-portal-adhkar]');
+  var adhkarStreakEl = document.querySelector('[data-portal-adhkar-streak]');
+  var adhkarBtns = document.querySelectorAll('[data-portal-adhkar-btn]');
 
   function el(tag, className, text){
     var e = document.createElement(tag);
@@ -114,6 +117,52 @@
     notificationsEl.hidden = false;
   }
 
+  function renderAdhkarCard(status){
+    if(!adhkarCardEl) return;
+    adhkarStreakEl.textContent = status.streak > 0
+      ? status.streak + (status.streak === 1 ? ' day' : ' days') + ' streak'
+      : 'No streak yet';
+    adhkarBtns.forEach(function(btn){
+      var period = btn.getAttribute('data-portal-adhkar-btn');
+      var done = !!status.today[period];
+      var stateEl = btn.querySelector('[data-portal-adhkar-state="' + period + '"]');
+      btn.classList.toggle('is-done', done);
+      if(stateEl) stateEl.textContent = done ? 'Done today ✓' : 'Mark done';
+    });
+    adhkarCardEl.hidden = false;
+  }
+
+  async function loadAdhkar(){
+    if(!adhkarCardEl) return;
+    try{
+      var res = await fetch('/api/portal/adhkar', { headers: { 'accept': 'application/json' } });
+      if(!res.ok) return; // non-fatal — the rest of the dashboard still works
+      var status = await res.json();
+      renderAdhkarCard(status);
+    }catch(err){
+      // non-fatal
+    }
+  }
+
+  adhkarBtns.forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      if(btn.classList.contains('is-done') || btn.disabled) return;
+      var period = btn.getAttribute('data-portal-adhkar-btn');
+      btn.disabled = true;
+      try{
+        var res = await fetch('/api/portal/adhkar', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ period: period }),
+        });
+        if(res.ok) await loadAdhkar();
+      }catch(err){
+        // leave as-is; visitor can retry
+      }
+      btn.disabled = false;
+    });
+  });
+
   async function load(){
     try{
       var res = await fetch('/api/portal/me', { headers: { 'accept': 'application/json' } });
@@ -128,6 +177,7 @@
 
       helloEl.textContent = 'Welcome, ' + data.fullName;
       renderNotifications(data.notifications);
+      loadAdhkar();
 
       childrenEl.innerHTML = '';
       if(data.children && data.children.length){

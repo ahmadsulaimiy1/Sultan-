@@ -76,8 +76,10 @@ ${assistant}
 ${search}
 ${personalisation}
 
+<script src="/js/adhkar-data.js" defer></script>
 <script src="/js/personalisation.js" defer></script>
 <script src="/js/site.js" defer></script>
+<script src="/js/adhkar.js" defer></script>
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
