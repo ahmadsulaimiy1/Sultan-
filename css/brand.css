@@ -643,12 +643,30 @@
   .foot-statement p{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.5rem;font-style:italic;color:var(--gold-bright);max-width:640px;margin:0 auto;line-height:1.4;}
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;margin:38px 0 30px;}
   @media (max-width:980px){.foot-grid{grid-template-columns:1fr 1fr 1fr;gap:26px;}}
-  @media (max-width:760px){.foot-grid{grid-template-columns:1fr;gap:22px;}}
+  @media (max-width:760px){.foot-grid{grid-template-columns:1fr;gap:16px;}}
   .foot-grid h5{color:var(--gold-bright);font-family:'Cinzel','Amiri',serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .foot-grid h5 svg{flex-shrink:0;opacity:0.85;}
   .foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
   .foot-grid a:hover{color:var(--gold-bright);}
   .foot-contact-item{margin-bottom:8px;line-height:1.5;}
+
+  /* Mobile footer — each zone becomes its own card rather than a plain
+     stacked link list, with a larger icon acting as a real visual
+     anchor per zone (28px, vs. desktop's smaller inline 15px — desktop
+     doesn't need the extra weight since the 5-column grid already gives
+     each zone clear separation; single-column mobile needs the card
+     boundary + bigger icon to keep that same separation). */
+  @media (max-width:760px){
+    .foot-grid > div{
+      background:rgba(198,161,91,0.05);border:1px solid var(--line);border-top:2px solid var(--gold);
+      padding:20px 18px;
+    }
+    .foot-grid h5{font-size:0.8rem;margin-bottom:14px;gap:10px;}
+    .foot-grid h5 svg{width:26px;height:26px;color:var(--gold);opacity:1;}
+    .foot-grid ul{gap:11px;}
+    .foot-grid a{display:inline-block;padding:2px 0;}
+    .foot-contact-item{font-size:0.88rem;}
+  }
 
   .foot-quick-actions{display:flex;flex-wrap:wrap;gap:12px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px;}
   .foot-quick-actions a{
@@ -658,6 +676,10 @@
   .foot-quick-actions a:hover{border-color:var(--gold-bright);background:rgba(198,161,91,0.08);}
   .foot-quick-actions a.is-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);border-color:var(--gold);box-shadow:0 6px 16px -6px rgba(198,161,91,0.5);}
   .foot-quick-actions a.is-primary:hover{box-shadow:0 10px 22px -6px rgba(233,206,138,0.65);transform:translateY(-1px);}
+  @media (max-width:600px){
+    .foot-quick-actions{flex-direction:column;}
+    .foot-quick-actions a{text-align:center;padding:14px 20px;}
+  }
 
   /* ============================================================
      Footer campus/map destination section — full-bleed band between
@@ -695,6 +717,10 @@
   .foot-seal-text .fs-copy{font-size:0.78rem;color:rgba(248,244,233,0.7);}
   .foot-seal-text .fs-sig{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);}
   .foot-seal-badge{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(248,244,233,0.55);border:1px solid var(--line);padding:8px 16px;}
+  @media (max-width:600px){
+    .foot-seal{flex-direction:column;text-align:center;}
+    .foot-seal-brand{flex-direction:column;text-align:center;}
+  }
   .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap;gap:12px;}
 
   .seal-section{background:var(--navy-deep);color:var(--ivory);padding:110px 0;position:relative;overflow:hidden;}
@@ -1142,6 +1168,18 @@
   }
   [dir="rtl"] .apply-float{left:auto;right:26px;}
   .apply-float.is-visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+  /* Subtle gold glow pulse — a soft blurred ring breathing behind the
+     button, separate from the hover box-shadow so the two never
+     conflict. Restrained: slow (4.5s), low-amplitude, easy to miss if
+     not looking for it — a signature detail, not a flashing banner. */
+  .apply-float::before{
+    content:"";position:absolute;inset:-6px;border-radius:2px;
+    background:radial-gradient(circle,var(--accent-bright) 0%,transparent 72%);
+    opacity:0.35;filter:blur(10px);z-index:-1;
+    animation:applyGlowPulse 4.5s ease-in-out infinite;
+  }
+  @keyframes applyGlowPulse{0%,100%{opacity:0.22;transform:scale(0.97);}50%{opacity:0.5;transform:scale(1.06);}}
+  @media (prefers-reduced-motion:reduce){.apply-float::before{animation:none;opacity:0.3;}}
   .apply-float a{
     display:flex;align-items:center;gap:9px;position:relative;overflow:hidden;
     background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);
