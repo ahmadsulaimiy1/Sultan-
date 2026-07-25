@@ -105,6 +105,29 @@ system-enforced). "Issue" records that a certificate was granted — it
 does not generate a PDF/physical document, since no document-generation
 system exists in this project (same convention as the Ijazah register).
 
+## Correcting attendance (Migration Phase A)
+
+```
+curl -X POST https://<your-domain>/api/portal/staff/registrar/attendance \
+  -H "content-type: application/json" -b "shr_staff_session=<staff session cookie>" \
+  -d '{"admissionNo": "SHRS-2031", "term": "2024/2025 Term 2", "daysPresent": 55, "daysTotal": 60}'
+```
+Replaces `admin/students.js`'s bearer-token attendance upsert entirely
+— that route now returns 410 for any `attendance` payload. **Read this
+carefully before relying on it**: the Matrix grants REG/AREG only Edit
+('correction' scope) on `attendance`, not Create — first-time entry for
+a term is a Class Teacher function, and no Teacher account has ever
+been issued in this project. This endpoint enforces that split
+precisely (Create when no row exists for the student/term, Edit when
+one does), which means **there is currently no working path anywhere
+in this project to record a brand-new term's attendance for the first
+time** — only to correct a term already on file. This is a real,
+temporary gap, not a bug: see `identity-migration-plan.md`'s Phase A
+status update for the full reasoning and what would resolve it (a
+Teacher Portal, or an explicit Board decision to grant REG a
+provisional Create permission — a governance decision, not one this
+code makes on its own).
+
 ## Looking up a student's full record
 
 ```
@@ -118,12 +141,10 @@ scope text matches "aggregate," not just checking a boolean.
 
 ## What this phase honestly left open
 
-- **Attendance and assessment records still go through
-  `admin/students.js`'s bearer token.** This phase built the
-  Registrar's read view and four write actions (enrol, lifecycle
-  events, certificates) but did not extend session+Permission-Engine
-  writes to attendance/results. `identity-migration-plan.md`'s Priority
-  1 remains half-finished, not silently marked done.
+- **Assessment records still go through `admin/students.js`'s bearer
+  token.** Attendance moved to `registrar/attendance.js` (Migration
+  Phase A); results are Phase B, queued next in
+  `identity-migration-plan.md`, not silently left without a plan.
 - **No approval step in this office is system-enforced.** The Matrix's
   "Registrar + Principal jointly" language for promotions, withdrawals,
   graduations, and certificates is recordable via an optional

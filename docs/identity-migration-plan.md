@@ -70,6 +70,36 @@ Guardian password reset (Priority 2) and Hifz/Ijazah administration
 (Priority 3) are unchanged by this phase — still exactly as described
 in the table above.
 
+## Status update — Migration Phase A (Attendance)
+
+Per the user's explicit "Identity Migration Execution" directive
+following the Registrar's Office phase, attendance is now migrated:
+`functions/api/portal/staff/registrar/attendance.js` is
+session-authenticated and Permission-Engine-gated against the
+`attendance` area, and `admin/students.js` now refuses any request
+carrying a `body.attendance` payload (HTTP 410, pointing callers at the
+new route) rather than silently accepting and dropping it.
+
+**A real gap surfaced by doing this properly, not by taking a
+shortcut**: the Matrix grants REG only Edit (`scope: 'correction'`) on
+`attendance`, not Create — first-time entry for a term is a Class
+Teacher (TCH) function. No Teacher account has ever been issued in this
+project, and no staff-class-assignment table exists to enforce TCH's
+"own class, own period" scope even if one were issued. The new endpoint
+does not invent a provisional Create grant for REG to paper over this —
+it checks Create when no row exists yet for a student/term and Edit
+when one does, exactly per the Matrix, and returns a clear explanatory
+403 on the Create path rather than a generic "forbidden." **Practical
+consequence: until a Teacher Portal exists, staff can correct an
+existing term's attendance through the new endpoint but cannot enter a
+brand-new term's attendance for the first time anywhere in this
+project** — `admin/students.js`'s old path is now closed too. This is a
+real, temporary operational gap, named here rather than resolved by
+guessing at a role grant the Board hasn't actually decided.
+
+Assessment (Phase B) and Fees (Phase C) are unchanged by this update —
+still on `admin/students.js`'s bearer token, still queued next.
+
 ## Recommended migration order
 
 1. **Student/Guardian administration + student login issuance** — done

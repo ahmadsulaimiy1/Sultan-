@@ -9,6 +9,13 @@
 // gets an activation link (a reset_token) back in the response for
 // staff to relay via WhatsApp/email; the parent chooses their own
 // password at /portal/set-password/. See functions/api/portal/set-password.js.
+//
+// Migration status (docs/identity-migration-plan.md): student/guardian
+// creation and results/fee entry still go through this bearer token —
+// attendance does not, as of Migration Phase A (see the guard on
+// body.attendance below, and functions/api/portal/staff/registrar/attendance.js).
+// Results (Phase B) and fees (Phase C) are the next routes queued to
+// move off this token, not silently left here without a plan.
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
@@ -131,15 +138,14 @@ export async function onRequestPost({ request, env }) {
 
     const updatedParts = [];
 
-    if (body.attendance && body.attendance.term) {
-      const a = body.attendance;
-      const term = await ensureTerm(sql, a.term);
-      await sql`
-        INSERT INTO attendance_summary (student_id, term, days_present, days_total)
-        VALUES (${studentId}, ${term}, ${a.daysPresent || 0}, ${a.daysTotal || 0})
-        ON CONFLICT (student_id, term) DO UPDATE SET
-          days_present = EXCLUDED.days_present, days_total = EXCLUDED.days_total, updated_at = now()`;
-      updatedParts.push('attendance');
+    // Attendance migrated to staff/registrar/attendance.js (Migration
+    // Phase A, docs/identity-migration-plan.md) — session +
+    // Permission-Engine-gated, not this bearer token. A body.attendance
+    // payload sent here is intentionally ignored, not silently accepted
+    // and dropped: callers still on the old integration should see it
+    // stop working, not appear to succeed.
+    if (body.attendance) {
+      return json({ error: 'Attendance is no longer accepted here — use POST /api/portal/staff/registrar/attendance (staff session required). See docs/registrar-office.md.' }, 410);
     }
 
     if (Array.isArray(body.results)) {

@@ -13,7 +13,7 @@ procedure and a periodic data-minimisation review.*
 |---|---|
 | Policy Code | IT-04 |
 | Policy Title | Records Retention Policy |
-| Version | 2.0 (retrofitted from v1.0, Phase C) |
+| Version | 2.1 (retrofitted from v1.0, Phase C; archival/destruction-authority section added post-Registrar's-Office phase) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Registrar, Royal College (Mrs. Anofi-Abdulkareem Mariam Tope), jointly with the ICT Head for Portal-held data |
 | Approval Authority | Board of Trustees, with legal input given the intersection with the NDPA 2023 |
@@ -123,6 +123,59 @@ systems actually collect (Data Protection & Privacy Policy, IT-02, §5)
 should be added to this table before it starts accumulating
 un-governed data, not discovered after the fact.
 
+### 7.6 Archival vs. deletion — authority before mechanism
+
+*New in v2.1, added in direct response to a governance instruction
+following the Registrar's Office phase: before any deletion or purge
+mechanism is coded, this policy must say who is authorised to archive
+a record, who is authorised to destroy it, and which of those two
+things this project's actual systems do today. This section answers
+that, drawing on `docs/data-ownership-register.md` (the canonical
+per-record ownership answer) and `docs/data-lifecycle-register.md` (the
+canonical per-record technical-lifecycle answer) rather than re-deciding
+either.*
+
+**Archival and deletion are not the same event, and this project has
+built almost exclusively the first.** Archiving means a record moves to
+an inactive/superseded state but the row still exists and can still be
+read (a student's `status` becoming `withdrawn`/`graduated`/`archived`;
+a certificate's `revoked_at` being set; a delegation reaching its
+`ends_at`). Deletion means the row is gone. Every system built in this
+project so far defaults to the first and has, as a rule, never built the
+second — Section 7.2's "identify records past retention and confirm
+deletion or anonymisation" describes a manual review process this
+policy has always required, not a capability that exists in code. That
+gap is not new; what is new here is naming it precisely, category by
+category, so nobody mistakes "we have a retention *period*" for "we
+have a retention *mechanism*."
+
+| Record category | Archival mechanism, as built today | Archive authority | Destruction mechanism, as built today | Destruction authority |
+|---|---|---|---|---|
+| Student record | `students.status` flag (`withdrawn`/`graduated`/`suspended`/`archived`) + `student_lifecycle_events` trail | Registrar (per `student_records` Edit grant) | **None exists in code** | None, per the Data Ownership Register — only a data-protection deletion request, itself not yet built |
+| Guardian record | No dedicated archive flag; implicitly inactive once no linked active student remains | Registrar | **None exists in code** | Data-protection deletion request only (IT-02/`privacy_requests`) — the request-handling exists; the deletion action it would trigger does not |
+| Attendance / Assessment / Result records | Overwritten in place on correction (no archive of the prior value); bundled with the student record's own archival | Registrar (attendance, as of Migration Phase A); no equivalent yet for assessments/results | **None exists in code** | None, per the Data Ownership Register |
+| Hifz & Muraja'ah records | Overwritten in place on correction, same as above | Qur'an College Officer / Muhaffiz | **None exists in code** | None |
+| Ijazah register | `revoked_at`/`revocation_note` — **the one category where archival is enforced at the schema level**, not just by convention (`ON DELETE SET NULL`, frozen `student_full_name`) | Qur'an College Officer + Principal jointly (recordable, not system-enforced — see Section 7.6.1) | **Structurally impossible** — no delete path exists in any endpoint, by design | **None, ever** — IQ-02 §7.6, the one already-settled answer in this entire register |
+| Certificates | `revoked_at`/`revocation_note`, mirroring the Ijazah pattern deliberately | Registrar | **None exists in code** | None recommended, pending Board confirmation (arguably permanent — see Section 7.1) |
+| Admissions/application records | `admissions_applications.status` (`declined`/`withdrawn`, etc.) — never removed, so a family's history stays traceable | Registrar / Principal | **None exists in code** | After the 3-year unsuccessful-applicant window, once Board-confirmed — no code implements this today |
+| Staff portal account | `staff.status` (`active`/`suspended`/`archived`) | System Administrator, on confirmed departure | **None exists in code** | Data-protection deletion request only |
+| Delegations | `revoked_at` or natural `ends_at` expiry, checked at query time (no cron) | Self-service by the delegator, or the delegate's manager | **None exists in code** — expired delegations are never purged, only ignored by the expiry check | Not yet assigned |
+| Communication records (notifications, WhatsApp escalation logs) | None — **ungoverned**, matching the Data Ownership Register's own flag | Not yet assigned | **None exists in code** | Not yet assigned |
+
+#### 7.6.1 What this table means for future code
+
+No deletion or purge mechanism should be written for any category
+above until its **Destruction authority** column says something other
+than "None," "None recommended," "Not yet assigned," or "Data-protection
+deletion request only" *and* that request-handling path is itself
+built. Where this table says "None exists in code," that is the correct
+state to leave a category in until the Board makes an explicit
+destruction-authority decision for it — silence here is not an
+oversight to be quietly fixed by whoever next touches that endpoint.
+Where an *archival* mechanism already exists (most categories above),
+new code may extend or reuse it freely; archival was never the gated
+thing.
+
 ## 8. Monitoring and Compliance
 
 Written with awareness of the NDPA 2023's general expectation that
@@ -169,3 +222,4 @@ Privacy Policy's retention-related sections, or any legal hold (Section
 |---|---|---|---|
 | 0.1 | Draft | Initial draft, Phase C | Drafted per SHRS governance directive; not yet reviewed or adopted; every period is a proposed default pending Board and, for the safeguarding category, professional confirmation |
 | 2.0 | Draft | Retrofitted to the full 13-section architecture, Phase F Tier 2 retrofit — added a legal-hold procedure, a periodic data-minimisation review, and named visitor/security/emergency record categories as not yet covered by the retention table | Not yet reviewed or adopted |
+| 2.1 | Draft | Added Section 7.6 (Archival vs. Deletion — Authority Before Mechanism) and its per-category Archive/Destruction Authority table, per the governance instruction issued after the Registrar's Office phase: define retention, archival, and destruction authority before any deletion/purge mechanism is coded. No previously-stated period or authority changed; this section adds the archival/destruction dimension the v2.0 table didn't yet separate from "retention period." | Not yet reviewed or adopted |

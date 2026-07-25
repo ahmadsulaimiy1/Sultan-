@@ -23,6 +23,9 @@
   var certRevokeForm = document.querySelector('[data-certificate-revoke-form]');
   var certResultEl = document.querySelector('[data-certificate-result]');
 
+  var attendanceForm = document.querySelector('[data-attendance-form]');
+  var attendanceResultEl = document.querySelector('[data-attendance-result]');
+
   var currentAdmissionNo = null;
 
   function el(tag, className, text){
@@ -256,6 +259,35 @@
       if(res2.ok) renderRecord(data2);
     }catch(err){
       showResult(lifecycleResultEl, false, (err && err.message) || 'Could not record that event.');
+    }
+  });
+
+  attendanceForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    attendanceResultEl.hidden = true;
+    if(!currentAdmissionNo){
+      showResult(attendanceResultEl, false, 'Look up a student first.');
+      return;
+    }
+    var payload = {
+      admissionNo: currentAdmissionNo,
+      term: attendanceForm.querySelector('[data-attendance-term]').value.trim(),
+      daysPresent: Number(attendanceForm.querySelector('[data-attendance-present]').value),
+      daysTotal: Number(attendanceForm.querySelector('[data-attendance-total]').value),
+    };
+    try{
+      var res = await fetch('/api/portal/staff/registrar/attendance', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not save that attendance record.');
+      showResult(attendanceResultEl, true, 'Attendance saved for ' + data.term + '.');
+      attendanceForm.reset();
+      var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
+      var data2 = await res2.json();
+      if(res2.ok) renderRecord(data2);
+    }catch(err){
+      showResult(attendanceResultEl, false, (err && err.message) || 'Could not save that attendance record.');
     }
   });
 
