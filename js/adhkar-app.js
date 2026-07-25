@@ -767,6 +767,13 @@
     startSession(items, DATA.categories.filter(function (c) { return c.id === period; })[0].label[LANG]);
     renderCategoryContent(period, items, DATA.categories.filter(function (c) { return c.id === period; })[0].label[LANG]);
     markActiveCategoryBtn(period);
+
+    // Only reached once every render call above has actually succeeded —
+    // the no-JS-safe static fallback (real Morning/Evening content
+    // rendered server-side, see scripts/build.js) stays visible on any
+    // failure above this line, by simply never reaching this call.
+    var staticFallback = document.querySelector('[data-adk-static]');
+    if (staticFallback) staticFallback.hidden = true;
   }
 
   init();

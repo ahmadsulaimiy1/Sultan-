@@ -630,6 +630,30 @@
   }
   .adhkar-note strong{color:var(--ink);}
 
+  /* --- No-JS-safe static fallback: the words themselves must survive
+     JavaScript being blocked, failing, or not having loaded yet. Hidden
+     by js/adhkar-app.js only once the full interactive app has actually
+     mounted — see that file's end-of-init() call. --- */
+  .adk-static-fallback{margin-top:30px;}
+  .adk-static-jump{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px;}
+  .adk-static-jump-btn{
+    flex:1;min-width:200px;text-align:center;padding:14px 18px;background:var(--navy);color:var(--gold-bright);
+    border:1px solid var(--navy);font-family:'Cinzel','Amiri',serif;font-size:0.8rem;letter-spacing:0.06em;
+    text-transform:uppercase;text-decoration:none;transition:background .2s ease;
+  }
+  .adk-static-jump-btn:hover{background:var(--navy-deep);}
+  .adk-static-section{margin-bottom:36px;scroll-margin-top:100px;}
+  .adk-static-section h3{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;color:var(--navy);margin-bottom:16px;}
+  .adk-static-list{display:flex;flex-direction:column;gap:16px;}
+  .adk-static-item{background:var(--milk);border:1px solid var(--line);border-top:2px solid var(--gold);padding:20px 22px;}
+  .adk-static-item h4{font-family:'Cinzel','Amiri',serif;font-size:0.92rem;color:var(--navy);margin:0 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .adk-static-repeat{font-family:'Inter','Cairo',sans-serif;font-size:0.68rem;letter-spacing:0.03em;text-transform:uppercase;color:var(--gold-bright);background:var(--navy);padding:2px 9px;}
+  .adk-static-arabic{font-family:'Amiri',serif;font-size:1.2rem;line-height:1.95;color:var(--ink);margin:0 0 10px;text-align:right;}
+  .adk-static-translit{font-size:0.82rem;font-style:italic;color:var(--ink-soft);margin:0 0 8px;}
+  .adk-static-translation{font-size:0.9rem;color:var(--ink);line-height:1.6;margin:0 0 8px;}
+  .adk-static-ref{font-size:0.76rem;color:var(--ink-soft);margin:0;}
+  [dir="rtl"] .adk-static-item h4{flex-direction:row-reverse;}
+
   /* --- Priority panel: Daily Essentials / Most Rewarding / Protection --- */
   .adk-priority-panel{margin-top:36px;}
   .adk-priority-head{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-bright);background:var(--navy-deep);display:inline-block;padding:4px 12px;margin-bottom:16px;}
@@ -1308,6 +1332,22 @@
      Built only from data already published elsewhere on the site
      (admission steps, Hifz Regulations stages, governance ledger).
      ============================================================ */
+  /* --- Admissions: an immediate, real first action, not just a
+     description of the process. Step 1 of the school's own 12-stage
+     process is a human-mediated enquiry — this makes that enquiry
+     start-able in one tap, rather than leaving it as prose. --- */
+  .adm-enquiry-cta{margin-top:28px;padding:22px 26px;background:var(--navy);border-top:2px solid var(--gold);max-width:640px;}
+  .adm-enquiry-lead{color:var(--ivory);font-size:0.92rem;margin:0 0 16px;line-height:1.5;}
+  .adm-enquiry-actions{display:flex;flex-wrap:wrap;gap:10px;}
+  .adm-enquiry-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:10px 16px;font-size:0.82rem;text-decoration:none;
+    color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);transition:border-color .2s ease,background .2s ease;white-space:nowrap;
+  }
+  .adm-enquiry-btn:hover{border-color:var(--gold-bright);background:rgba(233,206,138,0.08);}
+  .adm-enquiry-btn-primary{background:var(--gold);color:var(--navy-deep);border-color:var(--gold);font-weight:600;}
+  .adm-enquiry-btn-primary:hover{background:var(--gold-bright);}
+  @media (max-width:520px){.adm-enquiry-actions{flex-direction:column;}.adm-enquiry-btn{justify-content:center;}}
+
   .flow-diagram{display:flex;align-items:stretch;margin-top:36px;flex-wrap:wrap;gap:0;}
   .flow-stage{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);padding:22px 16px;text-align:center;}
   .flow-stage .fs-num{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;}

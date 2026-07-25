@@ -11,6 +11,11 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const PARTIALS = path.join(ROOT, 'partials');
 const PAGES = path.join(ROOT, 'pages');
+// js/adhkar-data.js's IIFE is written as `(function(global){...})(typeof
+// window !== 'undefined' ? window : this)` — under Node's CommonJS wrapper,
+// top-level `this` is `module.exports`, so requiring it here hands back
+// `{ SHRS_ADHKAR: {...} }` with zero changes to the browser file itself.
+const SHRS_ADHKAR = require(path.join(ROOT, 'js/adhkar-data.js')).SHRS_ADHKAR;
 // Used only to make og:*/canonical tags absolute, since social-media
 // crawlers won't reliably resolve relative URLs. Update once the site
 // has a confirmed production domain.
@@ -25,6 +30,55 @@ function fillTokens(template, tokens) {
     (out, [key, value]) => out.split(`{{${key}}}`).join(value),
     template
   );
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Real, server-rendered content for the Adhkar Centre's Morning and
+// Evening lists — the two primary daily categories — so the words
+// themselves are present in the page's raw HTML and survive JavaScript
+// being blocked, failing, or simply not having loaded yet. js/adhkar-app.js
+// hides this block once it successfully mounts the full interactive
+// experience on top of it; if that never happens, this stays visible.
+// Content-first, enhancement-second — not the other way around.
+const ADHKAR_STATIC_STRINGS = {
+  en: { jumpMorning: 'Read Morning Adhkār', jumpEvening: 'Read Evening Adhkār', morningHead: 'Morning Adhkār', eveningHead: 'Evening Adhkār', repeatLabel: 'Repeat' },
+  ar: { jumpMorning: 'اقرأ أذكار الصباح', jumpEvening: 'اقرأ أذكار المساء', morningHead: 'أذكار الصباح', eveningHead: 'أذكار المساء', repeatLabel: 'التكرار' },
+};
+
+function renderAdhkarStaticSection(items, lang, headingText, anchorId) {
+  const cards = items.map((item) => {
+    const title = escapeHtml(item.title[lang] || item.title.en);
+    const translit = item.transliteration ? `<p class="adk-static-translit">${escapeHtml(item.transliteration)}</p>` : '';
+    const translation = item.translation ? `<p class="adk-static-translation">${escapeHtml(item.translation[lang] || item.translation.en)}</p>` : '';
+    const reference = item.reference ? `<p class="adk-static-ref">${escapeHtml(item.reference[lang] || item.reference.en)}</p>` : '';
+    const repeatBadge = item.repeat > 1 ? `<span class="adk-static-repeat">${escapeHtml(ADHKAR_STATIC_STRINGS[lang].repeatLabel)} ×${item.repeat}</span>` : '';
+    return `<article class="adk-static-item">
+      <h4>${title} ${repeatBadge}</h4>
+      <p class="adk-static-arabic" lang="ar" dir="rtl">${escapeHtml(item.arabic)}</p>
+      ${translit}${translation}${reference}
+    </article>`;
+  }).join('\n');
+  return `<div class="adk-static-section" id="${anchorId}">
+    <h3>${escapeHtml(headingText)}</h3>
+    <div class="adk-static-list">${cards}</div>
+  </div>`;
+}
+
+function renderAdhkarStatic(lang) {
+  const s = ADHKAR_STATIC_STRINGS[lang] || ADHKAR_STATIC_STRINGS.en;
+  const morning = SHRS_ADHKAR.itemsByCategory('morning');
+  const evening = SHRS_ADHKAR.itemsByCategory('evening');
+  return `<div class="adk-static-fallback" data-adk-static>
+    <div class="adk-static-jump">
+      <a href="#adhkar-static-morning" class="adk-static-jump-btn">${escapeHtml(s.jumpMorning)}</a>
+      <a href="#adhkar-static-evening" class="adk-static-jump-btn">${escapeHtml(s.jumpEvening)}</a>
+    </div>
+    ${renderAdhkarStaticSection(morning, lang, s.morningHead, 'adhkar-static-morning')}
+    ${renderAdhkarStaticSection(evening, lang, s.eveningHead, 'adhkar-static-evening')}
+  </div>`;
 }
 
 function buildPage(page) {
@@ -47,7 +101,9 @@ function buildPage(page) {
     ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
   });
   const header = read(`partials/header${suffix}.html`);
-  const content = read(page.contentFile);
+  const content = fillTokens(read(page.contentFile), {
+    ADHKAR_STATIC: renderAdhkarStatic(lang),
+  });
   const footer = read(`partials/footer${suffix}.html`);
   const assistant = read(`partials/assistant${suffix}.html`);
   const search = read(`partials/search${suffix}.html`);
