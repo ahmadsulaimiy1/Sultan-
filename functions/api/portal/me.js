@@ -1,34 +1,31 @@
-const { sql } = require('@vercel/postgres');
-const { readSessionFromRequest } = require('../../lib/session');
+import { getSql } from '../../_lib/db.js';
+import { readSessionFromRequest } from '../../_lib/session.js';
+import { json } from '../../_lib/http.js';
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+export async function onRequestGet({ request, env }) {
+  if (!env.SESSION_SECRET) {
+    return json({ error: 'Portal is not configured yet.' }, 500);
   }
 
   let session;
   try {
-    session = readSessionFromRequest(req);
+    session = readSessionFromRequest(request, env.SESSION_SECRET);
   } catch (err) {
-    res.status(500).json({ error: 'Portal is not configured yet.' });
-    return;
+    return json({ error: 'Portal is not configured yet.' }, 500);
   }
   if (!session) {
-    res.status(401).json({ error: 'Not signed in.' });
-    return;
+    return json({ error: 'Not signed in.' }, 401);
   }
-  if (!process.env.POSTGRES_URL) {
-    res.status(500).json({ error: 'Portal is not configured yet — no database is linked.' });
-    return;
+  const sql = getSql(env);
+  if (!sql) {
+    return json({ error: 'Portal is not configured yet — no database is linked.' }, 500);
   }
 
   try {
     const guardianRes = await sql`SELECT full_name FROM guardians WHERE id = ${session.guardianId}`;
     const guardian = guardianRes.rows[0];
     if (!guardian) {
-      res.status(401).json({ error: 'Not signed in.' });
-      return;
+      return json({ error: 'Not signed in.' }, 401);
     }
 
     const studentsRes = await sql`
@@ -64,9 +61,9 @@ module.exports = async function handler(req, res) {
       WHERE guardian_id = ${session.guardianId} AND read_at IS NULL
       ORDER BY created_at DESC LIMIT 20`;
 
-    res.status(200).json({ fullName: guardian.full_name, children, notifications: notificationsRes.rows });
+    return json({ fullName: guardian.full_name, children, notifications: notificationsRes.rows });
   } catch (err) {
     console.error('portal me error', err);
-    res.status(500).json({ error: 'Could not load your dashboard right now — please try again shortly.' });
+    return json({ error: 'Could not load your dashboard right now — please try again shortly.' }, 500);
   }
-};
+}

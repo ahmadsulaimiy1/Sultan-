@@ -1,32 +1,24 @@
-const { sql } = require('@vercel/postgres');
-const { createSessionCookie, verifyPassword } = require('../../lib/session');
+import { getSql } from '../../_lib/db.js';
+import { createSessionCookie, verifyPassword } from '../../_lib/session.js';
+import { json, readJsonBody } from '../../_lib/http.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+export async function onRequestPost({ request, env }) {
+  if (!env.SESSION_SECRET) {
+    return json({ error: 'Portal is not configured yet — an administrator needs to set SESSION_SECRET.' }, 500);
   }
-  if (!process.env.SESSION_SECRET) {
-    res.status(500).json({ error: 'Portal is not configured yet — an administrator needs to set SESSION_SECRET.' });
-    return;
-  }
-  if (!process.env.POSTGRES_URL) {
-    res.status(500).json({ error: 'Portal is not configured yet — no database is linked.' });
-    return;
+  const sql = getSql(env);
+  if (!sql) {
+    return json({ error: 'Portal is not configured yet — no database is linked.' }, 500);
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
-  }
+  const body = await readJsonBody(request);
   const email = ((body && body.email) || '').trim().toLowerCase();
   const password = (body && body.password) || '';
   if (!email || !password) {
-    res.status(400).json({ error: 'Email and password are required.' });
-    return;
+    return json({ error: 'Email and password are required.' }, 400);
   }
 
   try {
@@ -41,19 +33,16 @@ module.exports = async function handler(req, res) {
     const genericError = { error: 'Incorrect email or password.' };
 
     if (!guardian) {
-      res.status(401).json(genericError);
-      return;
+      return json(genericError, 401);
     }
 
     if (guardian.locked_until && new Date(guardian.locked_until).getTime() > Date.now()) {
       const minutesLeft = Math.max(1, Math.ceil((new Date(guardian.locked_until).getTime() - Date.now()) / 60000));
-      res.status(429).json({ error: `Too many failed attempts — please try again in about ${minutesLeft} minute(s).` });
-      return;
+      return json({ error: `Too many failed attempts — please try again in about ${minutesLeft} minute(s).` }, 429);
     }
 
     if (!guardian.password_hash || !guardian.password_salt) {
-      res.status(401).json({ error: 'This account hasn\'t been activated yet — check for an activation link, or contact the school.' });
-      return;
+      return json({ error: 'This account hasn\'t been activated yet — check for an activation link, or contact the school.' }, 401);
     }
 
     if (!verifyPassword(password, guardian.password_hash, guardian.password_salt)) {
@@ -65,15 +54,17 @@ module.exports = async function handler(req, res) {
       } else {
         await sql`UPDATE guardians SET failed_attempts = ${nextAttempts} WHERE id = ${guardian.id}`;
       }
-      res.status(401).json(genericError);
-      return;
+      return json(genericError, 401);
     }
 
     await sql`UPDATE guardians SET failed_attempts = 0, locked_until = NULL WHERE id = ${guardian.id}`;
-    res.setHeader('Set-Cookie', createSessionCookie(guardian.id));
-    res.status(200).json({ ok: true, fullName: guardian.full_name });
+    return json(
+      { ok: true, fullName: guardian.full_name },
+      200,
+      { 'Set-Cookie': createSessionCookie(guardian.id, env.SESSION_SECRET) }
+    );
   } catch (err) {
     console.error('portal login error', err);
-    res.status(500).json({ error: 'Could not sign in right now — please try again shortly.' });
+    return json({ error: 'Could not sign in right now — please try again shortly.' }, 500);
   }
-};
+}

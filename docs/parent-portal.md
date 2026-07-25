@@ -12,19 +12,36 @@ database, real login, real session cookies. It is **not functional at all**
 until you complete the setup below — every piece fails with a clear,
 honest error message rather than pretending to work.
 
+This site and its backend (the AI assistant and this portal) run on
+**Cloudflare Pages** (static hosting + serverless Pages Functions) with a
+**Neon** serverless Postgres database — both have a free tier, and neither
+has Vercel's deployment-count rate limiting.
+
 ## Setup steps
 
-1. **Create a database.** In your Vercel project dashboard → *Storage* →
-   *Create Database* → choose **Postgres** (this provisions a Neon
-   Postgres database and automatically adds `POSTGRES_URL` and related
-   environment variables to your project — you don't need to copy
-   anything by hand).
+1. **Create a Neon database.** Sign up free at
+   [neon.tech](https://neon.tech), create a project, and copy its
+   connection string (starts with `postgresql://...`, includes
+   `?sslmode=require`).
 
-2. **Add three more environment variables**, under *Settings* →
-   *Environment Variables*:
+2. **Create the Cloudflare Pages project.** Sign up free at
+   [dash.cloudflare.com](https://dash.cloudflare.com) → *Workers & Pages* →
+   *Create* → *Pages* → *Connect to Git* → pick this repository. Set:
+   - Build command: `npm run build`
+   - Build output directory: `.`
+   - Under *Settings* → *Functions* → *Compatibility flags*, add
+     `nodejs_compat` for both Production and Preview (the portal's crypto
+     and the Neon driver need it).
+
+3. **Add environment variables**, under *Settings* → *Environment
+   Variables* (set for Production; add to Preview too if you want portal
+   testing on preview deploys):
+   - `DATABASE_URL` — the Neon connection string from step 1.
    - `SESSION_SECRET` — any long random string (e.g. generate one with
      `openssl rand -hex 32` on any computer, or ask a developer to). This
      signs login sessions; treat it like a password.
+   - `ANTHROPIC_API_KEY` — your real Anthropic API key, for the AI
+     assistant.
    - `PORTAL_SETUP_TOKEN` — any long random string you choose. This
      protects the one-time database setup endpoint so a stranger can't
      trigger it.
@@ -36,9 +53,9 @@ honest error message rather than pretending to work.
      can see the portal working end-to-end before any real family is
      entered. Leave it unset to skip this.
 
-3. **Redeploy** so the new environment variables take effect.
+4. **Redeploy** so the new environment variables take effect.
 
-4. **Run the one-time database setup.** Send one request (from any
+5. **Run the one-time database setup.** Send one request (from any
    computer, or ask a developer to — this is a single command, not
    something that needs to be repeated):
    ```
@@ -49,7 +66,7 @@ honest error message rather than pretending to work.
    duplicate anything) and, if `PORTAL_DEMO_PASSWORD` is set, creates the
    demo login.
 
-5. **Try it.** Go to `/portal/login/` and sign in with
+6. **Try it.** Go to `/portal/login/` and sign in with
    `demo@shroyalschools.ng` and whatever you set `PORTAL_DEMO_PASSWORD`
    to. You should see one sample student's attendance, one result, and a
    fee status — all marked as sample data.
@@ -134,8 +151,8 @@ Five wrong password attempts locks an account for 15 minutes
 (`failed_attempts`/`locked_until` on the guardian record) — a basic but
 real defense against password-guessing on the public login endpoint.
 There's no CAPTCHA or distributed rate limiting (that would need a
-service like Upstash/Vercel KV, the same category of future work as the
-assistant's abuse protection) — fine for this phase's expected traffic,
+service like Upstash or Cloudflare KV, the same category of future work as
+the assistant's abuse protection) — fine for this phase's expected traffic,
 worth revisiting if the portal ever sees suspicious volume.
 
 ## Data protection — read this before entering real students
@@ -156,11 +173,13 @@ students go in:
 
 ## Costs
 
-Vercel Postgres (Neon) has a free tier sufficient for a small pilot; costs
-scale with storage and compute as real usage grows — check current
-pricing on the Vercel dashboard before scaling this to the whole school.
-There is no other new cost from this phase (no SMS/WhatsApp API, no
-payment gateway — those come with later phases, see the roadmap doc).
+Cloudflare Pages (hosting + Functions) and Neon (Postgres) both have free
+tiers sufficient for a small pilot; Neon's free tier costs scale with
+storage and compute as real usage grows — check current pricing at
+[neon.tech/pricing](https://neon.tech/pricing) before scaling this to the
+whole school. There is no other new cost from this phase (no SMS/WhatsApp
+API, no payment gateway — those come with later phases, see the roadmap
+doc).
 
 ## Testing note
 

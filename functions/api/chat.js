@@ -1,14 +1,15 @@
-// Vercel Edge Function — proxies the Digital Academic Assistant to the
-// Anthropic Messages API with streaming. Requires an ANTHROPIC_API_KEY
-// environment variable set in the Vercel project (Settings → Environment
-// Variables). Without it, this function returns a clear 500 rather than
-// silently failing. See docs/digital-assistant.md for setup steps.
+// Cloudflare Pages Function — proxies the Digital Academic Assistant to
+// the Anthropic Messages API with streaming. Ported from the Vercel Edge
+// Function (api/chat.js); logic is identical, only the handler signature
+// and env-var access changed (Workers get env vars via context.env, not
+// process.env). Requires an ANTHROPIC_API_KEY environment variable set
+// in the Cloudflare Pages project (Settings -> Environment variables).
+// Without it, this function returns a clear 500 rather than silently
+// failing. See docs/digital-assistant.md for setup steps.
 //
 // Wire format: POST { messages: [{role, content}], lang: 'en'|'ar' }
 // Response: a plain-text stream of the assistant's reply (UTF-8 chunks),
 // or a JSON { error } body on failure (before streaming starts).
-
-export const config = { runtime: 'edge' };
 
 const MAX_MESSAGES = 24; // trailing turns kept as context, regardless of what the client sends
 const MAX_MESSAGE_CHARS = 4000; // per-message cap
@@ -138,17 +139,17 @@ function sanitizeMessages(rawMessages) {
   return { messages: clean, totalChars };
 }
 
-export default async function handler(req) {
-  if (req.method !== 'POST') return jsonError('Method not allowed', 405);
+export async function onRequestPost(context) {
+  const { request, env } = context;
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return jsonError('The assistant is not configured yet — an administrator needs to add ANTHROPIC_API_KEY to this deployment.', 500);
   }
 
   let body;
   try {
-    body = await req.json();
+    body = await request.json();
   } catch {
     return jsonError('Invalid request body.', 400);
   }
@@ -174,13 +175,13 @@ export default async function handler(req) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
+        model: env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: MAX_TOKENS,
         system: buildSystemPrompt(lang),
         messages,
         stream: true,
       }),
-      signal: req.signal,
+      signal: request.signal,
     });
   } catch (err) {
     if (err && err.name === 'AbortError') return new Response(null, { status: 499 });

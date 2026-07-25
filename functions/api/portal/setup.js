@@ -5,8 +5,9 @@
 // drops or rewrites existing data. See docs/parent-portal.md.
 //
 // Mirrors sql/schema.sql — keep the two in sync if either changes.
-const { sql } = require('@vercel/postgres');
-const { hashPassword, timingSafeEqualString } = require('../../lib/session');
+import { getSql } from '../../_lib/db.js';
+import { hashPassword, timingSafeEqualString } from '../../_lib/session.js';
+import { json } from '../../_lib/http.js';
 
 const STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS guardians (
@@ -100,24 +101,17 @@ const STATEMENTS = [
   )`,
 ];
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'GET' && req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-
-  const setupToken = process.env.PORTAL_SETUP_TOKEN;
+async function handle({ request, env }) {
+  const setupToken = env.PORTAL_SETUP_TOKEN;
   if (!setupToken) {
-    res.status(500).json({ error: 'Portal is not configured yet — PORTAL_SETUP_TOKEN is not set on this deployment.' });
-    return;
+    return json({ error: 'Portal is not configured yet — PORTAL_SETUP_TOKEN is not set on this deployment.' }, 500);
   }
-  if (!timingSafeEqualString(req.headers['x-setup-token'], setupToken)) {
-    res.status(403).json({ error: 'Invalid setup token.' });
-    return;
+  if (!timingSafeEqualString(request.headers.get('x-setup-token'), setupToken)) {
+    return json({ error: 'Invalid setup token.' }, 403);
   }
-  if (!process.env.POSTGRES_URL) {
-    res.status(500).json({ error: 'No database is linked yet — add Vercel Postgres storage to this project first, then retry.' });
-    return;
+  const sql = getSql(env);
+  if (!sql) {
+    return json({ error: 'No database is linked yet — add a Neon Postgres connection string as DATABASE_URL, then retry.' }, 500);
   }
 
   try {
@@ -126,10 +120,10 @@ module.exports = async function handler(req, res) {
     }
 
     let demoSeeded = false;
-    if (process.env.PORTAL_DEMO_PASSWORD) {
+    if (env.PORTAL_DEMO_PASSWORD) {
       const existing = await sql`SELECT id FROM guardians WHERE email = 'demo@shroyalschools.ng'`;
       if (existing.rows.length === 0) {
-        const { hash, salt } = hashPassword(process.env.PORTAL_DEMO_PASSWORD);
+        const { hash, salt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
         const guardian = await sql`
           INSERT INTO guardians (full_name, email, password_hash, password_salt)
           VALUES ('Demo Guardian', 'demo@shroyalschools.ng', ${hash}, ${salt})
@@ -157,9 +151,12 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ ok: true, tablesReady: true, demoSeeded });
+    return json({ ok: true, tablesReady: true, demoSeeded });
   } catch (err) {
     console.error('portal setup error', err);
-    res.status(500).json({ error: 'Setup failed: ' + (err && err.message ? err.message : 'unknown error') });
+    return json({ error: 'Setup failed: ' + (err && err.message ? err.message : 'unknown error') }, 500);
   }
-};
+}
+
+export const onRequestGet = handle;
+export const onRequestPost = handle;

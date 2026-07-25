@@ -8,59 +8,49 @@
 // Guardians are never given a password by staff. A brand-new guardian
 // gets an activation link (a reset_token) back in the response for
 // staff to relay via WhatsApp/email; the parent chooses their own
-// password at /portal/set-password/. See api/portal/set-password.js.
-const { sql } = require('@vercel/postgres');
-const { timingSafeEqualString, generateToken } = require('../../../lib/session');
+// password at /portal/set-password/. See functions/api/portal/set-password.js.
+import { getSql } from '../../../_lib/db.js';
+import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
+import { json, readJsonBody } from '../../../_lib/http.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const VALID_STATUSES = ['active', 'graduated', 'withdrawn', 'suspended'];
 
-async function ensureTerm(rawTerm) {
+async function ensureTerm(sql, rawTerm) {
   const term = String(rawTerm || '').trim();
   if (!term) return term;
   await sql`INSERT INTO academic_terms (label) VALUES (${term}) ON CONFLICT (label) DO NOTHING`;
   return term;
 }
 
-async function notifyGuardiansOfStudent(studentId, message) {
+async function notifyGuardiansOfStudent(sql, studentId, message) {
   const links = await sql`SELECT guardian_id FROM guardian_student WHERE student_id = ${studentId}`;
   for (const row of links.rows) {
     await sql`INSERT INTO notifications (guardian_id, message) VALUES (${row.guardian_id}, ${message})`;
   }
 }
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-  const adminToken = process.env.PORTAL_ADMIN_TOKEN;
+export async function onRequestPost({ request, env }) {
+  const adminToken = env.PORTAL_ADMIN_TOKEN;
   if (!adminToken) {
-    res.status(500).json({ error: 'Portal admin is not configured yet — PORTAL_ADMIN_TOKEN is not set.' });
-    return;
+    return json({ error: 'Portal admin is not configured yet — PORTAL_ADMIN_TOKEN is not set.' }, 500);
   }
-  if (!timingSafeEqualString(req.headers['x-admin-token'], adminToken)) {
-    res.status(403).json({ error: 'Invalid admin token.' });
-    return;
+  if (!timingSafeEqualString(request.headers.get('x-admin-token'), adminToken)) {
+    return json({ error: 'Invalid admin token.' }, 403);
   }
-  if (!process.env.POSTGRES_URL) {
-    res.status(500).json({ error: 'No database is linked yet.' });
-    return;
+  const sql = getSql(env);
+  if (!sql) {
+    return json({ error: 'No database is linked yet.' }, 500);
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch { body = {}; }
-  }
+  const body = await readJsonBody(request);
   const guardianIn = body && body.guardian;
   const studentIn = body && body.student;
   if (!guardianIn || !guardianIn.email || !studentIn || !studentIn.fullName || !studentIn.admissionNo) {
-    res.status(400).json({ error: 'guardian.email, student.fullName and student.admissionNo are required.' });
-    return;
+    return json({ error: 'guardian.email, student.fullName and student.admissionNo are required.' }, 400);
   }
   if (studentIn.status && !VALID_STATUSES.includes(studentIn.status)) {
-    res.status(400).json({ error: 'student.status must be one of: ' + VALID_STATUSES.join(', ') });
-    return;
+    return json({ error: 'student.status must be one of: ' + VALID_STATUSES.join(', ') }, 400);
   }
 
   try {
@@ -72,8 +62,7 @@ module.exports = async function handler(req, res) {
       guardianId = existingGuardian.rows[0].id;
     } else {
       if (!guardianIn.fullName) {
-        res.status(400).json({ error: 'New guardian requires guardian.fullName.' });
-        return;
+        return json({ error: 'New guardian requires guardian.fullName.' }, 400);
       }
       const token = generateToken();
       const created = await sql`
@@ -121,7 +110,7 @@ module.exports = async function handler(req, res) {
 
     if (body.attendance && body.attendance.term) {
       const a = body.attendance;
-      const term = await ensureTerm(a.term);
+      const term = await ensureTerm(sql, a.term);
       await sql`
         INSERT INTO attendance_summary (student_id, term, days_present, days_total)
         VALUES (${studentId}, ${term}, ${a.daysPresent || 0}, ${a.daysTotal || 0})
@@ -133,7 +122,7 @@ module.exports = async function handler(req, res) {
     if (Array.isArray(body.results)) {
       for (const r of body.results) {
         if (!r.term || !r.subject) continue;
-        const term = await ensureTerm(r.term);
+        const term = await ensureTerm(sql, r.term);
         const total = r.totalScore != null ? r.totalScore : (Number(r.caScore || 0) + Number(r.examScore || 0));
         await sql`
           INSERT INTO term_results (student_id, term, subject, ca_score, exam_score, total_score, teacher_comment)
@@ -147,7 +136,7 @@ module.exports = async function handler(req, res) {
 
     if (body.fees && body.fees.term) {
       const f = body.fees;
-      const term = await ensureTerm(f.term);
+      const term = await ensureTerm(sql, f.term);
       await sql`
         INSERT INTO fee_status (student_id, term, amount_due, amount_paid)
         VALUES (${studentId}, ${term}, ${f.amountDue || 0}, ${f.amountPaid || 0})
@@ -157,12 +146,12 @@ module.exports = async function handler(req, res) {
     }
 
     if (updatedParts.length) {
-      await notifyGuardiansOfStudent(studentId, `Updated for ${studentIn.fullName}: ${updatedParts.join(', ')}.`);
+      await notifyGuardiansOfStudent(sql, studentId, `Updated for ${studentIn.fullName}: ${updatedParts.join(', ')}.`);
     }
 
-    res.status(200).json({ ok: true, guardianId, studentId, activationLink });
+    return json({ ok: true, guardianId, studentId, activationLink });
   } catch (err) {
     console.error('portal admin students error', err);
-    res.status(500).json({ error: 'Could not save that record: ' + (err && err.message ? err.message : 'unknown error') });
+    return json({ error: 'Could not save that record: ' + (err && err.message ? err.message : 'unknown error') }, 500);
   }
-};
+}

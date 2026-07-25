@@ -9,26 +9,31 @@ staff member or "the registration office."
 ## What you need to do before it works
 
 The widget is already built and deployed with the rest of the site, but it
-calls a backend function (`api/chat.js`) that proxies to Anthropic's
-Claude API. **Without an API key, every message will show a clear "not
-configured yet" error** — it will not silently fail or pretend to work.
+calls a backend function (`functions/api/chat.js`) that proxies to
+Anthropic's Claude API. **Without an API key, every message will show a
+clear "not configured yet" error** — it will not silently fail or pretend
+to work.
 
 1. **Create an Anthropic API key.**
    Go to [console.anthropic.com](https://console.anthropic.com), create or
    sign in to an account, add a payment method, and generate an API key
    under *API Keys*.
-2. **Add it to Vercel.**
-   In your Vercel project → *Settings* → *Environment Variables*, add:
-   - `ANTHROPIC_API_KEY` = the key you just created (mark it as a
-     **Secret**, not plain text)
+2. **Add it to Cloudflare Pages.**
+   In your Cloudflare Pages project → *Settings* → *Environment Variables*,
+   add:
+   - `ANTHROPIC_API_KEY` = the key you just created (mark it as
+     **Encrypted**, not plain text)
    - Optionally `ANTHROPIC_MODEL` = a specific model ID, if you want to
      override the default (`claude-sonnet-4-5-20250929`)
 3. **Redeploy.** Environment variable changes only take effect on the next
-   deployment — push any commit, or use Vercel's "Redeploy" button.
+   deployment — push any commit, or use Cloudflare's "Retry deployment"
+   button.
 
 There is no other setup — no database, no separate signup for the widget
-itself. `api/chat.js` is a Vercel Edge Function, auto-detected from the
-`/api` directory regardless of the framework preset already in use.
+itself. `functions/api/chat.js` is a Cloudflare Pages Function, auto-routed
+from the `functions/api` directory (make sure the `nodejs_compat`
+compatibility flag is enabled — see `parent-portal.md` for the one-time
+project setup, which covers this).
 
 ## What it costs
 
@@ -46,9 +51,9 @@ abusive use, the backend enforces:
 
 These bound the *worst case* cost per conversation, but they do not stop
 someone from opening many conversations. If usage grows, the next step
-would be real rate limiting (e.g. Vercel KV or Upstash Redis, keyed by IP)
-— not implemented here because it needs its own paid service and wasn't
-part of this build's scope. Keep an eye on usage from the Anthropic
+would be real rate limiting (e.g. Cloudflare KV or Upstash Redis, keyed by
+IP) — not implemented here because it needs its own paid service and
+wasn't part of this build's scope. Keep an eye on usage from the Anthropic
 console's billing page, especially in the first weeks after launch.
 
 ## What it can and can't say

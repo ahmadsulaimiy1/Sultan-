@@ -2,11 +2,11 @@
   "name": "sultan-hanafi-royal-schools",
   "private": true,
   "version": "1.0.0",
-  "description": "Sultan Hanafi Royal Schools — website build scripts and Parent Portal API",
+  "description": "Sultan Hanafi Royal Schools — website build scripts, Parent Portal API, and AI assistant, deployed as Cloudflare Pages + Pages Functions with a Neon Postgres database",
   "scripts": {
     "build": "node scripts/build.js"
   },
   "dependencies": {
-    "@vercel/postgres": "^0.10.0"
+    "@neondatabase/serverless": "^0.10.0"
   }
 }
