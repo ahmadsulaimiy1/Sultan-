@@ -598,6 +598,15 @@
   .clever-item .word{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--crimson);font-weight:600;margin:6px 0 8px;}
   .clever-item .desc{font-size:0.8rem;color:#55534d;}
 
+  /* Chapter band — a full-bleed nested zone for splitting a long,
+     single-section "chapter" page (governance, facilities) into two
+     distinct dark tones instead of one unbroken block, the same way
+     .contact/.foot-arrival vary their tone from the surrounding navy.
+     Ivory/gold text stays legible on either tone, so no component
+     needs a separate light-background variant to use it. */
+  .chapter-band-alt{background:var(--charcoal);border-top:1px solid var(--line);padding:64px 0;margin-top:56px;}
+  @media (max-width:760px){.chapter-band-alt{padding:44px 0;margin-top:36px;}}
+
   /* governance */
   .governance{background:var(--navy);color:var(--ivory);}
   .governance .eyebrow{color:var(--gold-bright);} .governance h2{color:#fff;}
@@ -638,7 +647,7 @@
   .curriculum p{font-size:0.9rem;color:rgba(248,244,233,0.85);}
 
   /* boarding */
-  .boarding{background:#fff;}
+  .boarding{background:var(--surface-alt);}
   .boarding-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
   @media (max-width:840px){.boarding-grid{grid-template-columns:1fr;}}
   .boarding-panel{background:var(--navy);color:var(--ivory);padding:38px 32px;}
