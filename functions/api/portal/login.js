@@ -5,6 +5,14 @@ import { json, readJsonBody } from '../../_lib/http.js';
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
 
+async function logAttempt(sql, identifier, event, actorId) {
+  try {
+    await sql`INSERT INTO auth_audit_log (actor_type, actor_id, identifier, event) VALUES ('guardian', ${actorId || null}, ${identifier}, ${event})`;
+  } catch (err) {
+    console.error('auth_audit_log insert failed', err);
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) {
     return json({ error: 'Portal is not configured yet — an administrator needs to set SESSION_SECRET.' }, 500);
@@ -33,6 +41,7 @@ export async function onRequestPost({ request, env }) {
     const genericError = { error: 'Incorrect email or password.' };
 
     if (!guardian) {
+      await logAttempt(sql, email, 'login_failed', null);
       return json(genericError, 401);
     }
 
@@ -51,13 +60,16 @@ export async function onRequestPost({ request, env }) {
         await sql`
           UPDATE guardians SET failed_attempts = 0, locked_until = now() + make_interval(mins => ${LOCKOUT_MINUTES})
           WHERE id = ${guardian.id}`;
+        await logAttempt(sql, email, 'lockout', guardian.id);
       } else {
         await sql`UPDATE guardians SET failed_attempts = ${nextAttempts} WHERE id = ${guardian.id}`;
+        await logAttempt(sql, email, 'login_failed', guardian.id);
       }
       return json(genericError, 401);
     }
 
     await sql`UPDATE guardians SET failed_attempts = 0, locked_until = NULL WHERE id = ${guardian.id}`;
+    await logAttempt(sql, email, 'login_success', guardian.id);
     return json(
       { ok: true, fullName: guardian.full_name },
       200,

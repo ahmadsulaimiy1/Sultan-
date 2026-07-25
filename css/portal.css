@@ -74,6 +74,7 @@ body.portal-body{
   display:inline-block;margin-top:10px;margin-inline-end:8px;font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;
   color:var(--gold-bright);border:1px solid var(--gold-bright);padding:2px 8px;
 }
+.portal-status-badge[hidden]{display:none;}
 
 .portal-notifications{
   background:rgba(233,206,138,0.1);border:1px solid var(--gold);margin-bottom:20px;
@@ -121,6 +122,53 @@ body.portal-body{
 .portal-adhkar-achv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:16px;}
 .portal-achv-badge{border:1px solid var(--line);padding:10px 8px;text-align:center;opacity:0.4;font-size:0.68rem;color:var(--ink-soft);}
 .portal-achv-badge.is-earned{opacity:1;border-color:var(--gold);background:rgba(198,161,91,0.08);color:var(--navy);font-weight:600;}
+
+/* --- Student Portal: Hifz & Ijazah panel --- */
+.portal-hifz-card{
+  background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);
+  padding:22px 24px;margin-bottom:24px;
+}
+.portal-hifz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.portal-hifz-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.portal-hifz-stage-badge{
+  font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.04em;color:var(--navy);
+  background:rgba(198,161,91,0.16);border:1px solid var(--gold);padding:3px 10px;white-space:nowrap;
+}
+.portal-hifz-stage-desc{font-size:0.82rem;color:var(--ink-soft);margin:6px 0 4px;}
+.portal-hifz-sub{font-size:0.78rem;color:var(--navy);font-weight:600;margin:0 0 14px;}
+
+.portal-juz-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:10px;}
+@media (max-width:520px){.portal-juz-grid{grid-template-columns:repeat(6,1fr);}}
+.portal-juz-box{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:0.66rem;font-weight:600;color:var(--ink-soft);background:var(--line);border:1px solid var(--line);
+  cursor:default;
+}
+.portal-juz-box.is-memorising{background:rgba(198,161,91,0.3);border-color:var(--gold);color:var(--navy);}
+.portal-juz-box.is-completed_pending_review{background:var(--gold);border-color:var(--gold);color:var(--navy-deep);}
+.portal-juz-box.is-verified{background:var(--navy);border-color:var(--navy);color:var(--gold-bright);}
+
+.portal-juz-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:0.7rem;color:var(--ink-soft);align-items:center;margin:0 0 4px;}
+.pjl-swatch{display:inline-block;width:11px;height:11px;margin-inline-end:4px;vertical-align:middle;background:var(--line);border:1px solid var(--line);}
+.pjl-swatch.is-memorising{background:rgba(198,161,91,0.3);border-color:var(--gold);}
+.pjl-swatch.is-completed_pending_review{background:var(--gold);border-color:var(--gold);}
+.pjl-swatch.is-verified{background:var(--navy);border-color:var(--navy);}
+
+.portal-ijazah-card{border:1px solid var(--gold);border-inline-start:3px solid var(--gold);padding:12px 14px;margin-top:10px;background:rgba(198,161,91,0.06);}
+.portal-ijazah-card.is-revoked{border-color:var(--crimson);border-inline-start-color:var(--crimson);background:rgba(124,31,46,0.05);}
+.pij-ref{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;color:var(--navy);}
+.pij-scope{font-size:0.88rem;margin-top:2px;}
+.pij-meta{font-size:0.76rem;color:var(--ink-soft);margin-top:4px;}
+.pij-revoked{font-size:0.76rem;color:var(--crimson);margin-top:6px;font-weight:600;}
+
+/* --- Parent dashboard: per-child Hifz snapshot --- */
+.portal-child-hifz-snapshot{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 20px 0;font-size:0.78rem;color:var(--navy);
+}
+.portal-child-hifz-snapshot .phs-badge{
+  font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.03em;color:var(--navy);
+  background:rgba(198,161,91,0.16);border:1px solid var(--gold);padding:2px 9px;
+}
 
 @media (max-width:520px){
   .portal-topbar{padding:12px 16px;}

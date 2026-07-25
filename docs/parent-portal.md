@@ -2,10 +2,13 @@
 
 This is Phase 1 of the "Digital Campus" ambition, scoped honestly: a real,
 database-backed Parent Portal where a guardian logs in and sees their own
-child's attendance, term results, and fee status. Nothing else from the
-original brief (student/teacher portals, ID cards, exams, Qur'an tracking,
-finance module, etc.) is built yet — see `digital-campus-roadmap.md` for
-why, and for what a fuller build would need.
+child's attendance, term results, and fee status. Phase 2 added a real,
+independent **Student Portal** login plus a Qur'an College Hifz & Ijazah
+Tracker — see `student-portal.md`. Everything else from the original
+brief (teacher/principal/admin portals, ID cards, exams beyond term
+results, a full LMS, finance module, etc.) is still not built — see
+`digital-campus-roadmap.md` for why, and for what a fuller build would
+need.
 
 It is a genuinely separate system from the rest of the site: real
 database, real login, real session cookies. It is **not functional at all**
@@ -137,6 +140,23 @@ see `pages/adhkar.html` (the public Adhkar Centre, now a full Islamic
 Spiritual Life app — categories, a Smart Tasbih Counter with prescribed
 counts, Arabic TTS, session dashboard, quick 2/5/10-minute modes) for
 the actual content this links to.
+
+## Hifz snapshot on the guardian dashboard
+
+If a linked child is recorded as a Qur'an College student (see
+`student-portal.md`), their card on the guardian dashboard now also
+shows a small Hifz snapshot — current stage (of the school's published
+5-stage Hifz Journey) and how many of the 30 Juz' are verified. This is
+a summary only; the full per-Juz' grid, Muhaffiz notes, and Ijazah
+register are on the student's own dashboard once they have a Student
+Portal login.
+
+## Login audit log
+
+Every login attempt (success, failure, or lockout) now writes a row to
+a shared `auth_audit_log` table, covering both guardians and students.
+See `student-portal.md` for what this does and doesn't cover — it's a
+real, small audit trail, not a claim of MFA or SSO readiness.
 
 ## Password reset — staff-mediated by design, not a self-service link
 

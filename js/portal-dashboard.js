@@ -72,6 +72,13 @@
 
     card.appendChild(stats);
 
+    if(child.hifz){
+      var hifzSnap = el('div', 'portal-child-hifz-snapshot');
+      hifzSnap.appendChild(el('span', 'phs-badge', 'Stage ' + child.hifz.stageNumber + ' of 5 — ' + (child.hifz.stageLabel || '')));
+      hifzSnap.appendChild(el('span', null, child.hifz.juzVerifiedCount + ' of 30 Juz’ verified'));
+      card.appendChild(hifzSnap);
+    }
+
     var resultsWrap = el('div', 'portal-results');
     resultsWrap.appendChild(el('h3', null, 'Latest Term Results'));
     if(child.results && child.results.length){

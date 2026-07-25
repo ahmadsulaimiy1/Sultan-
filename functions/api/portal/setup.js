@@ -138,6 +138,61 @@ const STATEMENTS = [
     ALTER TABLE adhkar_completions ADD CONSTRAINT adhkar_completions_guardian_period_date_key UNIQUE (guardian_id, period, completion_date);
   EXCEPTION WHEN duplicate_object THEN NULL;
   END $$`,
+
+  // Student Portal (Phase 2) — see sql/schema.sql for the commented
+  // version of each of these tables.
+  `CREATE TABLE IF NOT EXISTS student_accounts (
+    student_id          INTEGER PRIMARY KEY REFERENCES students(id) ON DELETE CASCADE,
+    password_hash       TEXT,
+    password_salt       TEXT,
+    failed_attempts     INTEGER NOT NULL DEFAULT 0,
+    locked_until        TIMESTAMPTZ,
+    reset_token         TEXT,
+    reset_token_expires TIMESTAMPTZ,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS hifz_progress (
+    id             SERIAL PRIMARY KEY,
+    student_id     INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    juz_number     INTEGER NOT NULL CHECK (juz_number BETWEEN 1 AND 30),
+    status         TEXT NOT NULL DEFAULT 'not_started',
+    murajaah_note  TEXT,
+    tajweed_note   TEXT,
+    muhaffiz_name  TEXT,
+    assessed_at    DATE,
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (student_id, juz_number)
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS hifz_enrolment (
+    student_id       INTEGER PRIMARY KEY REFERENCES students(id) ON DELETE CASCADE,
+    stage_number     INTEGER NOT NULL DEFAULT 1 CHECK (stage_number BETWEEN 1 AND 5),
+    stage_updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    enrolled_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS ijazah_register (
+    id                 SERIAL PRIMARY KEY,
+    student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
+    student_full_name  TEXT NOT NULL,
+    granted_date       DATE NOT NULL,
+    examining_scholars TEXT,
+    certified_scope    TEXT,
+    reference_no       TEXT NOT NULL UNIQUE,
+    revoked_at         TIMESTAMPTZ,
+    revocation_note    TEXT,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS auth_audit_log (
+    id         SERIAL PRIMARY KEY,
+    actor_type TEXT NOT NULL,
+    actor_id   INTEGER,
+    identifier TEXT,
+    event      TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
 ];
 
 async function handle({ request, env }) {
@@ -186,6 +241,40 @@ async function handle({ request, env }) {
           VALUES (${studentId}, 'First Term 2025/2026', 'Mathematics', 34, 52, 86, 'Sample data — replace via the admin API before real use.')`;
         await sql`INSERT INTO fee_status (student_id, term, amount_due, amount_paid) VALUES (${studentId}, 'First Term 2025/2026', 150000, 150000)`;
         await sql`INSERT INTO notifications (guardian_id, message) VALUES (${guardianId}, 'Welcome — this is a sample notification. New results or attendance updates will appear here.')`;
+
+        // A second demo child, at Qur'an College, with a Student Portal
+        // login and sample Hifz progress — so the new Student Portal +
+        // Hifz Tracker can be tried end-to-end without hand-calling the
+        // admin API. Linked to the same demo guardian so the guardian
+        // dashboard also shows a Hifz snapshot alongside the first child.
+        const qCls = await sql`INSERT INTO classes (institution, name) VALUES (${"Qur'an College"}, 'Hifz Year 2') RETURNING id`;
+        const qClassId = qCls.rows[0].id;
+        const qStudent = await sql`
+          INSERT INTO students (full_name, admission_no, class_id, status)
+          VALUES (${"Demo Student — Qur'an College (sample data)"}, 'DEMO-0002', ${qClassId}, 'active')
+          RETURNING id`;
+        const qStudentId = qStudent.rows[0].id;
+        await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${qStudentId})`;
+
+        const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
+        await sql`
+          INSERT INTO student_accounts (student_id, password_hash, password_salt)
+          VALUES (${qStudentId}, ${qHash}, ${qSalt})`;
+
+        await sql`INSERT INTO hifz_enrolment (student_id, stage_number) VALUES (${qStudentId}, 2)`;
+        const verifiedJuz = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        for (const juz of verifiedJuz) {
+          await sql`
+            INSERT INTO hifz_progress (student_id, juz_number, status, murajaah_note, tajweed_note, muhaffiz_name, assessed_at)
+            VALUES (${qStudentId}, ${juz}, 'verified', 'Sample data — weekly retention check passed.', 'Sample data — Tajweed confirmed.', 'Sample Muhaffiz', CURRENT_DATE)`;
+        }
+        const memorisingJuz = [13, 14, 15];
+        for (const juz of memorisingJuz) {
+          await sql`
+            INSERT INTO hifz_progress (student_id, juz_number, status, murajaah_note, muhaffiz_name)
+            VALUES (${qStudentId}, ${juz}, 'memorising', 'Sample data — in progress this term.', 'Sample Muhaffiz')`;
+        }
+        await sql`INSERT INTO attendance_summary (student_id, term, days_present, days_total) VALUES (${qStudentId}, 'First Term 2025/2026', 60, 62)`;
         demoSeeded = true;
       }
     }

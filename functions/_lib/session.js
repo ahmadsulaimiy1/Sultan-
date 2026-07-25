@@ -14,7 +14,6 @@
 // available. Without it, every function below throws at import time.
 import crypto from 'node:crypto';
 
-const COOKIE_NAME = 'shr_portal_session';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
 function base64url(input) {
@@ -44,24 +43,42 @@ function verify(token, secret) {
   return data;
 }
 
-export function createSessionCookie(guardianId, secret) {
-  const token = sign({ guardianId, exp: Date.now() + MAX_AGE_SECONDS * 1000 }, secret);
-  return `${COOKIE_NAME}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}`;
+// Builds a matched set of {create,read,clear}SessionCookie functions for
+// one auth'd role, all sharing the sign/verify primitives above but each
+// using its own cookie name and payload id field — so two roles (e.g.
+// guardian + student) can hold independent, non-colliding sessions in the
+// same browser without a unified role+id payload touching either role's
+// existing consumers.
+function makeSessionCookieFns(cookieName, idField) {
+  function create(id, secret) {
+    const token = sign({ [idField]: id, exp: Date.now() + MAX_AGE_SECONDS * 1000 }, secret);
+    return `${cookieName}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE_SECONDS}`;
+  }
+  function clear() {
+    return `${cookieName}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+  }
+  // `request` is a standard Web Request (Cloudflare Pages Functions pass
+  // one in on context.request), not a Node req.
+  function read(request, secret) {
+    const cookieHeader = request.headers.get('cookie') || '';
+    const match = cookieHeader.split(';').map((s) => s.trim()).find((s) => s.startsWith(`${cookieName}=`));
+    if (!match) return null;
+    const token = match.slice(cookieName.length + 1);
+    return verify(token, secret);
+  }
+  return { create, read, clear };
 }
 
-export function clearSessionCookie() {
-  return `${COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
-}
+const guardianCookie = makeSessionCookieFns('shr_portal_session', 'guardianId');
+const studentCookie = makeSessionCookieFns('shr_student_session', 'studentId');
 
-// `request` is a standard Web Request (Cloudflare Pages Functions pass
-// one in on context.request), not a Node req.
-export function readSessionFromRequest(request, secret) {
-  const cookieHeader = request.headers.get('cookie') || '';
-  const match = cookieHeader.split(';').map((s) => s.trim()).find((s) => s.startsWith(`${COOKIE_NAME}=`));
-  if (!match) return null;
-  const token = match.slice(COOKIE_NAME.length + 1);
-  return verify(token, secret);
-}
+export const createSessionCookie = guardianCookie.create;
+export const readSessionFromRequest = guardianCookie.read;
+export const clearSessionCookie = guardianCookie.clear;
+
+export const createStudentSessionCookie = studentCookie.create;
+export const readStudentSessionFromRequest = studentCookie.read;
+export const clearStudentSessionCookie = studentCookie.clear;
 
 // scrypt password hashing — no bcrypt dependency, no native binary.
 export function hashPassword(password) {

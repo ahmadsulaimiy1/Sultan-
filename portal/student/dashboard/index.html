@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Student Portal (Pilot) — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Pilot</span>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello" data-portal-hello></div>
+    <div class="portal-hello-sub">Sultan Hanafi Royal Schools — Student Portal (Pilot). This shows only your own records.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head">
+        <h2 data-portal-name></h2>
+        <div class="meta" data-portal-meta></div>
+        <span class="portal-status-badge" data-portal-status hidden></span>
+      </div>
+      <div class="portal-stats">
+        <div class="portal-stat">
+          <div class="label">Attendance</div>
+          <div class="value" data-portal-attendance-value>—</div>
+          <div class="label" data-portal-attendance-label>Not yet recorded</div>
+        </div>
+        <div class="portal-stat">
+          <div class="label">Fee Status</div>
+          <div class="value" data-portal-fee-value>—</div>
+          <div class="label" data-portal-fee-label>Not yet recorded</div>
+        </div>
+      </div>
+      <div class="portal-results">
+        <h3>Transcript Preview</h3>
+        <div data-portal-results></div>
+      </div>
+    </div>
+
+    <div class="portal-hifz-card" data-portal-hifz hidden>
+      <div class="portal-hifz-head">
+        <h2>Hifz &amp; Ijazah Record</h2>
+        <span class="portal-hifz-stage-badge" data-portal-hifz-stage></span>
+      </div>
+      <p class="portal-hifz-stage-desc" data-portal-hifz-stage-desc></p>
+      <p class="portal-hifz-sub" data-portal-hifz-count></p>
+      <div class="portal-juz-grid" data-portal-juz-grid></div>
+      <p class="portal-juz-legend">
+        <span class="pjl-swatch is-not_started"></span> Not started
+        <span class="pjl-swatch is-memorising"></span> Memorising
+        <span class="pjl-swatch is-completed_pending_review"></span> Pending review
+        <span class="pjl-swatch is-verified"></span> Verified
+      </p>
+      <div data-portal-ijazah></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-results" style="padding:18px 20px;">
+        <h3>Assignments &amp; Announcements</h3>
+        <p class="portal-empty">This activates once course content is added to the Student Portal — there isn't a live course system yet, so nothing is shown here rather than a placeholder.</p>
+      </div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading your dashboard…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load your dashboard</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/student/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-student-dashboard.js" defer></script>
+</body>
+</html>

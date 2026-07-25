@@ -12,10 +12,35 @@ never actually ship.*
 
 ## What exists today vs. what's being asked for
 
-The current build is a static marketing site (28 prebuilt HTML pages,
-English + Arabic) plus one real feature with a backend: the Digital
-Academic Assistant, a single Vercel Edge Function calling Claude. There is
-no database, no user accounts, no login, no stored student records.
+*Updated after Phase 2 (see `student-portal.md`) — the paragraph below
+described the state before either portal existed; kept for context on
+how far this has come, not as the current picture.*
+
+> The current build is a static marketing site (28 prebuilt HTML pages,
+> English + Arabic) plus one real feature with a backend: the Digital
+> Academic Assistant, a single Vercel Edge Function calling Claude. There
+> is no database, no user accounts, no login, no stored student records.
+
+**As of Phase 2**, this site runs on Cloudflare Pages Functions + a Neon
+Postgres database, and has two real, independent, database-backed
+authenticated roles: guardians (`parent-portal.md`) and students
+(`student-portal.md`), each with their own session, lockout, and
+activation flow. Real stored data: student records, attendance, term
+results, fee status, in-portal notifications, Adhkār completion tracking,
+and — the one part of this roadmap's original brief with genuine
+Qur'an-College-specific depth — per-Juz' Hifz progress, current stage of
+the school's own published 5-stage Hifz Journey, and a permanent Ijazah
+register. A small `auth_audit_log` table records login attempts across
+both roles.
+
+Still not built, and still real future work (see below, mostly
+unchanged): a full LMS (courses, modules, lessons, assessments,
+certificates, content authoring, video/PDF/slide hosting, discussion
+boards, learning analytics), Teacher/Principal/Administrator/Admissions/
+Finance roles, MFA/SSO, payment integration, ID cards, a public Ijazah
+verification endpoint, and Arabic translation / Personalisation Centre
+support for the portal (both portals are English-only, hand-authored
+pages outside the site's build pipeline — a pre-existing gap, not new).
 
 A Digital Campus with student/parent/teacher/admin portals, results,
 attendance, fees, ID cards, Qur'an memorisation tracking, and messaging is

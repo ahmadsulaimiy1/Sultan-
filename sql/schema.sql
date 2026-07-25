@@ -153,3 +153,94 @@ CREATE TABLE IF NOT EXISTS adhkar_completions (
   completed_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (guardian_id, period, completion_date)
 );
+
+-- Student Portal (Phase 2). A second, independent authenticated role —
+-- guardians and students hold separate sessions (see functions/_lib/
+-- session.js's parallel cookie helpers), not a unified role+id payload,
+-- so nothing about the existing guardian login changes shape. A student
+-- only gets a row here once staff issue an activation link via
+-- POST /api/portal/admin/create-student-login (same admin-mediated,
+-- no-self-serve-signup model as guardians — see docs/student-portal.md).
+CREATE TABLE IF NOT EXISTS student_accounts (
+  student_id          INTEGER PRIMARY KEY REFERENCES students(id) ON DELETE CASCADE,
+  password_hash       TEXT,
+  password_salt       TEXT,
+  failed_attempts     INTEGER NOT NULL DEFAULT 0,
+  locked_until        TIMESTAMPTZ,
+  reset_token         TEXT,
+  reset_token_expires TIMESTAMPTZ,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Qur'an College Hifz tracking. Assessment is per-Juz' (memorisation
+-- accuracy, retention, and Tajweed together — not separate scored
+-- tracks), matching how the school's own draft Hifz Regulations (IQ-01)
+-- and public Qur'an College page describe the process. Entered by
+-- Qur'an College staff via the token-gated POST /api/portal/admin/
+-- hifz-progress (no admin UI yet — same convention as
+-- admin/students.js). Free-text note fields deliberately, not a numeric
+-- rubric: the school hasn't published a graded scale for this yet.
+CREATE TABLE IF NOT EXISTS hifz_progress (
+  id             SERIAL PRIMARY KEY,
+  student_id     INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  juz_number     INTEGER NOT NULL CHECK (juz_number BETWEEN 1 AND 30),
+  status         TEXT NOT NULL DEFAULT 'not_started', -- not_started | memorising | completed_pending_review | verified
+  murajaah_note  TEXT,
+  tajweed_note   TEXT,
+  muhaffiz_name  TEXT,
+  assessed_at    DATE,
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_id, juz_number)
+);
+
+-- Current stage of the school's own published 5-stage Hifz Journey:
+-- 1 Memorisation & Muraja'ah, 2 Progression Through the 30 Juz',
+-- 3 Completion Standard, 4 Ijazah Examination, 5 Ijazah Granted. Stored
+-- as a number (not text mirroring the marketing page's exact wording)
+-- so the DB doesn't need editing if that copy changes — the labels live
+-- in one shared lookup used by both the student and guardian dashboards.
+CREATE TABLE IF NOT EXISTS hifz_enrolment (
+  student_id       INTEGER PRIMARY KEY REFERENCES students(id) ON DELETE CASCADE,
+  stage_number     INTEGER NOT NULL DEFAULT 1 CHECK (stage_number BETWEEN 1 AND 5),
+  stage_updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  enrolled_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Permanent Ijazah register (IQ-02 §7.4/§7.6: never deleted, only
+-- annotated) — this phase is internal display-only (student/guardian
+-- dashboards); IQ-02 §7.5's public third-party verification endpoint is
+-- separate future work with its own access-control model. student_id is
+-- ON DELETE SET NULL rather than CASCADE, and student_full_name is
+-- frozen at grant time, so a certification record survives independent
+-- of whatever later happens to the live students row. Grant fields
+-- (granted_date/examining_scholars/certified_scope) are treated as
+-- immutable by the application layer once created; only revoked_at/
+-- revocation_note are ever set afterward. No UNIQUE(student_id) — IQ-02
+-- §7.3 allows partial/juz'-level credentials, so more than one row per
+-- student can be legitimate.
+CREATE TABLE IF NOT EXISTS ijazah_register (
+  id                 SERIAL PRIMARY KEY,
+  student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
+  student_full_name  TEXT NOT NULL,
+  granted_date       DATE NOT NULL,
+  examining_scholars TEXT,
+  certified_scope    TEXT,
+  reference_no       TEXT NOT NULL UNIQUE,
+  revoked_at         TIMESTAMPTZ,
+  revocation_note    TEXT,
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Small, real audit trail of login attempts across both roles — actor_id
+-- is intentionally polymorphic (a guardian id or a student id depending
+-- on actor_type) with no FK, the same soft-reference approach already
+-- used above for academic_terms, to avoid two nullable FK columns for
+-- what's a read-seldom log table.
+CREATE TABLE IF NOT EXISTS auth_audit_log (
+  id         SERIAL PRIMARY KEY,
+  actor_type TEXT NOT NULL, -- guardian | student
+  actor_id   INTEGER,
+  identifier TEXT, -- email or admission_no, whichever was submitted
+  event      TEXT NOT NULL, -- login_success | login_failed | lockout | password_activated
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);

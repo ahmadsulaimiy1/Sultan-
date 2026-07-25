@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>Parent Portal (Pilot) — Sultan Hanafi Royal Schools</title>
+<title>Student Portal (Pilot) — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
@@ -22,15 +22,15 @@
 
 <main class="portal-main">
   <div class="portal-card">
-    <h1>Parent Portal</h1>
-    <p class="sub">Sign in to see your child's attendance, results, and fee status.</p>
+    <h1>Student Portal</h1>
+    <p class="sub">Sign in with your admission number to see your profile, attendance, results, and — for Qur'an College students — your Hifz &amp; Ijazah record.</p>
 
     <div class="portal-error" data-portal-error></div>
 
     <form data-portal-login-form>
       <div class="portal-field">
-        <label for="portal-email">Email</label>
-        <input id="portal-email" name="email" type="email" autocomplete="email" required />
+        <label for="portal-admission-no">Admission number</label>
+        <input id="portal-admission-no" name="admissionNo" type="text" autocomplete="username" required />
       </div>
       <div class="portal-field">
         <label for="portal-password">Password</label>
@@ -40,14 +40,14 @@
     </form>
 
     <p class="portal-notice">
-      This is an early pilot of our Parent Portal. Your login shows records only for your own child(ren) — nobody else can see them. If you have any questions about your data, or don't yet have login details, contact us at
+      This is an early pilot of our Student Portal. Your login shows only your own records — nobody else can see them. If you don't yet have login details, or your activation link has expired, ask your teacher or contact the school at
       <a href="mailto:info@shroyalschools.ng">info@shroyalschools.ng</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a>.
     </p>
-    <a class="portal-back-link" href="/portal/student/login/">Student? Sign in to the Student Portal →</a><br>
+    <a class="portal-back-link" href="/portal/login/">Parent or guardian? Sign in here →</a><br>
     <a class="portal-back-link" href="/">← Back to the main site</a>
   </div>
 </main>
 
-<script src="/js/portal-login.js" defer></script>
+<script src="/js/portal-student-login.js" defer></script>
 </body>
 </html>
