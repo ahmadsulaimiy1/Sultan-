@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Founder Dashboard (Pilot) — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Pilot</span>
+    <button type="button" class="portal-logout" data-founder-clear hidden>Clear Token</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" data-founder-gate>
+    <h1>Founder Dashboard</h1>
+    <p class="sub">Institution-wide, read-only view across all four SHRS institutions. Not a login — enter the Founder Dashboard token to view.</p>
+    <div class="portal-error" data-founder-error></div>
+    <form data-founder-token-form>
+      <div class="portal-field">
+        <label for="founder-token">Dashboard token</label>
+        <input id="founder-token" name="token" type="password" autocomplete="off" required />
+      </div>
+      <button type="submit" class="portal-submit" data-founder-submit>View Dashboard</button>
+    </form>
+    <p class="portal-notice">This token is held by the CEO/Board only, separate from the tokens used for day-to-day data entry. It is kept only in this browser tab's session storage — closing the tab clears it.</p>
+    <a class="portal-back-link" href="/">← Back to the main site</a>
+  </div>
+
+  <div class="portal-wrap" data-founder-content hidden>
+    <div class="portal-hello">Founder Dashboard</div>
+    <div class="portal-hello-sub" data-founder-generated></div>
+    <p class="portal-notice" style="margin-top:0;margin-bottom:20px;">Sample/demo records are excluded from every figure below. This is a read-only aggregate — nothing here can be edited from this page.</p>
+
+    <div class="pfd-section">
+      <h2>Students</h2>
+      <div class="portal-stats" data-founder-status-stats></div>
+      <h3 class="pfd-subhead">By institution</h3>
+      <div class="pfd-bars" data-founder-institution-bars></div>
+      <p class="pfd-note" data-founder-dual-note></p>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Attendance &amp; Guardians</h2>
+      <div class="portal-stats" data-founder-attendance-stats></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Qur'an College — Hifz &amp; Ijazah</h2>
+      <div class="portal-stats" data-founder-hifz-stats></div>
+      <h3 class="pfd-subhead">By stage (of the school's 5-stage Hifz Journey)</h3>
+      <div class="pfd-bars" data-founder-stage-bars></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Fees</h2>
+      <div class="portal-stats" data-founder-fee-stats></div>
+      <p class="pfd-note" data-founder-fee-note></p>
+    </div>
+
+    <div class="pfd-section pfd-unavailable">
+      <h2>Not Yet Available</h2>
+      <p class="pfd-note">Requested KPIs the system cannot honestly report yet, and why — see <code>docs/digital-institution-blueprint.md</code>.</p>
+      <div data-founder-unavailable></div>
+    </div>
+  </div>
+
+  <div class="portal-card" data-founder-error-card hidden>
+    <h1>Couldn't load the dashboard</h1>
+    <p class="sub" data-founder-error-message>Please check the token and try again.</p>
+  </div>
+</main>
+
+<script src="/js/portal-founder-dashboard.js" defer></script>
+</body>
+</html>

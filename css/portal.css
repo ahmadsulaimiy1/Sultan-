@@ -178,6 +178,21 @@ body.portal-body{
   background:rgba(198,161,91,0.16);border:1px solid var(--gold);padding:2px 9px;
 }
 
+/* --- Founder Dashboard --- */
+.pfd-section{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);padding:22px 24px;margin-bottom:20px;}
+.pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0 0 14px;color:var(--navy);}
+.pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--navy);margin:20px 0 10px;}
+.pfd-note{font-size:0.8rem;color:var(--ink-soft);margin-top:10px;}
+.pfd-bars{display:flex;flex-direction:column;gap:10px;}
+.pfd-bar-row{font-size:0.8rem;}
+.pfd-bar-label{color:var(--ink);margin-bottom:4px;}
+.pfd-bar-track{height:8px;background:var(--line);width:100%;}
+.pfd-bar-fill{height:100%;background:var(--gold);}
+.pfd-unavailable{background:#F7EDEE;border-color:var(--crimson);border-top-color:var(--crimson);}
+.pfd-unavailable-row{font-size:0.82rem;color:var(--ink-soft);padding:8px 0;border-top:1px solid var(--line);}
+.pfd-unavailable-row:first-child{border-top:none;}
+.pfd-unavailable-row strong{color:var(--ink);}
+
 @media (max-width:520px){
   .portal-topbar{padding:12px 16px;}
   .portal-main{padding:24px 14px;}
