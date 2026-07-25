@@ -737,21 +737,28 @@
   .foot-statement p{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.5rem;font-style:italic;color:var(--gold-bright);max-width:640px;margin:0 auto;line-height:1.4;}
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;margin:38px 0 30px;}
   @media (max-width:980px){.foot-grid{grid-template-columns:1fr 1fr 1fr;gap:26px;}}
-  @media (max-width:760px){.foot-grid{grid-template-columns:1fr;gap:16px;}}
   .foot-grid h5{color:var(--gold-bright);font-family:'Cinzel','Amiri',serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
   .foot-grid h5 svg{flex-shrink:0;opacity:0.85;}
   .foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
   .foot-grid a:hover{color:var(--gold-bright);}
   .foot-contact-item{margin-bottom:8px;line-height:1.5;}
 
-  /* Mobile footer — each zone becomes its own card rather than a plain
-     stacked link list, with a larger icon acting as a real visual
-     anchor per zone (28px, vs. desktop's smaller inline 15px — desktop
-     doesn't need the extra weight since the 5-column grid already gives
-     each zone clear separation; single-column mobile needs the card
-     boundary + bigger icon to keep that same separation). */
+  /* Mobile footer — horizontally-scrollable zone cards rather than a
+     tall single-column stack. Every zone keeps its full heading, icon,
+     and complete link list (nothing removed, nothing behind a tap) —
+     only the CONTAINER changes from vertical stacking to a swipeable
+     row, the same technique already used for the mobile nav ribbon.
+     A 5-zone vertical stack measured ~1000px of pure link-list height
+     alone before this; a horizontal row reduces that to one card's
+     height regardless of zone count. */
   @media (max-width:760px){
+    .foot-grid{
+      display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;
+      margin:28px 0 22px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    }
+    .foot-grid::-webkit-scrollbar{display:none;}
     .foot-grid > div{
+      scroll-snap-align:start;flex:0 0 auto;width:238px;
       background:rgba(198,161,91,0.05);border:1px solid var(--line);border-top:2px solid var(--gold);
       padding:20px 18px;
     }
@@ -800,7 +807,12 @@
   .fm-btn.is-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);font-weight:700;}
   .fm-btn.is-primary:hover{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 100%);}
   @media (max-width:760px){
-    .fm-frame{aspect-ratio:4/3;min-height:220px;}
+    /* The map itself stays real, functional, and fully visible — only
+       the surrounding whitespace tightens. Cutting padding (not the
+       map) is what actually reduces the footer's scroll length. */
+    .foot-map-section{padding:30px 0;}
+    .foot-map-intro{margin-bottom:20px;}
+    .fm-frame{aspect-ratio:16/10;min-height:190px;}
     .fm-btn{min-width:50%;flex:1 1 50%;}
   }
 
