@@ -273,7 +273,47 @@
   .navlinks a.nav-mark::after,.navlinks a.nav-cta::after{display:none;}
   .nav-cta{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep) !important;font-weight:700 !important;padding:9px 18px !important;border-radius:2px;box-shadow:0 6px 16px -6px rgba(198,161,91,0.55);transition:box-shadow .3s ease,transform .3s ease;}
   .nav-cta:hover{box-shadow:0 10px 24px -6px rgba(233,206,138,0.7);transform:translateY(-1px);}
-  .menu-toggle{display:none;color:var(--ivory);font-size:1.5rem;background:none;border:none;cursor:pointer;}
+  .menu-toggle{
+    display:none;align-items:center;gap:7px;color:var(--gold-bright);background:none;cursor:pointer;
+    border:1px solid var(--gold);padding:8px 14px;font-family:'Inter','Cairo',sans-serif;
+    font-size:0.7rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+    transition:background .25s ease,border-color .25s ease;
+  }
+  .menu-toggle:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);}
+  .menu-toggle svg{flex-shrink:0;}
+  /* Mobile quick-actions row — a persistent second strip beneath the
+     main header bar so Apply / Portal / Contact stay visible before
+     the drawer is ever opened, instead of the header reading as bare
+     crest + search + hamburger. Desktop never sees this; the row
+     duplicates the same nav-mark/nav-cta destinations already in the
+     drawer, just surfaced a level higher on narrow screens. */
+  .mobile-quick-row{display:none;}
+  .mqr-item{
+    display:flex;align-items:center;gap:6px;flex:1;justify-content:center;
+    padding:10px 8px;font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;font-weight:600;
+    letter-spacing:0.02em;color:var(--ivory);border-inline-end:1px solid rgba(198,161,91,0.18);
+    transition:background .2s ease,color .2s ease;
+  }
+  .mqr-item:last-child{border-inline-end:none;}
+  .mqr-item:hover{background:rgba(198,161,91,0.1);color:var(--gold-bright);}
+  .mqr-item svg{flex-shrink:0;color:var(--gold-bright);}
+  .mqr-item.mqr-cta{color:var(--navy-deep);background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);}
+  .mqr-item.mqr-cta svg{color:var(--navy-deep);}
+  .mqr-item.mqr-cta:hover{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 100%);color:var(--navy-deep);}
+  /* A touch more heraldic presence for the crest at true mobile
+     widths — larger mark, soft static glow behind it (no animation;
+     restraint over spectacle, matching the rest of the site's motion
+     language). */
+  @media (max-width:600px){
+    .brand{position:relative;}
+    .brand::before{
+      content:"";position:absolute;left:-7px;top:50%;transform:translateY(-50%);
+      width:54px;height:54px;border-radius:50%;
+      background:radial-gradient(circle,var(--gold-bright) 0%,transparent 70%);
+      opacity:0.2;filter:blur(9px);pointer-events:none;
+    }
+    .brand-mark{width:40px;height:40px;position:relative;}
+  }
   .search-toggle{
     display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;
     color:var(--ivory);background:none;border:1px solid transparent;cursor:pointer;transition:color .2s ease, border-color .2s ease;
@@ -339,7 +379,8 @@
   @media (max-width:1200px){
     .navlinks{position:absolute;top:100%;left:0;right:0;background:var(--navy);flex-direction:column;align-items:flex-start;padding:18px 24px 26px;display:none;border-bottom:1px solid var(--line);gap:4px;max-height:calc(100vh - 70px);overflow-y:auto;}
     .navlinks.open{display:flex;}
-    .menu-toggle{display:block;}
+    .menu-toggle{display:flex;}
+    .mobile-quick-row{display:flex;border-top:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);}
     .nav-drop{width:100%;display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(198,161,91,0.15);}
     .nav-drop:last-of-type{border-bottom:none;}
     .nav-drop-trigger{flex:1;padding:12px 0 !important;}
