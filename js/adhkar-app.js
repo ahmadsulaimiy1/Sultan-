@@ -282,8 +282,14 @@
     cards.forEach(function (c) {
       var items = DATA.itemsByCategory(c.catId);
       var secs = DATA.categoryTotalSeconds(c.catId);
+      var sample = items[0];
+      var previewHTML = sample
+        ? '<p class="apc-arabic" lang="ar" dir="rtl">' + sample.arabic + '</p>' +
+          '<p class="apc-translation">' + esc(LANG === 'ar' ? sample.translation.ar : sample.translation.en) + '</p>'
+        : '';
       html += '<button type="button" class="adk-priority-card" data-open-category="' + c.catId + '">' +
         c.icon + '<h4>' + esc(c.title) + '</h4><p>' + esc(c.sub) + '</p>' +
+        previewHTML +
         '<span class="apc-count">' + items.length + ' ' + esc(T.items) + ' · ' + fmtMinutes(secs) + '</span></button>';
     });
     html += '</div>';

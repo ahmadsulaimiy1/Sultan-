@@ -645,7 +645,15 @@
   .adk-priority-card svg{width:24px;height:24px;color:var(--gold-bright);margin-bottom:10px;}
   .adk-priority-card h4{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;margin:0 0 4px;color:#fff;}
   .adk-priority-card p{font-size:0.76rem;color:rgba(248,244,233,0.65);margin:0;}
-  .adk-priority-card .apc-count{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;color:var(--gold-bright);margin-top:8px;display:block;}
+  .adk-priority-card .apc-arabic{
+    font-family:'Amiri','Cairo',serif;font-size:0.92rem;line-height:1.55;color:var(--ivory);margin:12px 0 6px;
+    display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .adk-priority-card .apc-translation{
+    font-size:0.72rem;line-height:1.5;color:rgba(248,244,233,0.75);margin:0;font-style:italic;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .adk-priority-card .apc-count{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;color:var(--gold-bright);margin-top:10px;display:block;}
 
   /* --- Quick modes: 2 / 5 / 10-minute Essentials + Complete --- */
   .adk-quick-modes{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;}
