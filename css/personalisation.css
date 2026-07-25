@@ -62,8 +62,8 @@ html[data-pc-motion="reduced"] .pc-drawer{transition:none;}
 }
 .pc-tab svg{flex-shrink:0;opacity:0.8;}
 .pc-tab:hover{color:var(--on-surface);background:rgba(198,161,91,0.08);}
-.pc-tab.is-active{color:var(--navy);border-inline-start-color:var(--gold);background:rgba(198,161,91,0.12);font-weight:600;}
-:root[data-pc-theme="dark"] .pc-tab.is-active{color:var(--gold-bright);}
+.pc-tab.is-active{color:var(--navy);border-inline-start-color:var(--accent);background:var(--accent-wash);font-weight:600;}
+:root[data-pc-theme="dark"] .pc-tab.is-active{color:var(--accent-bright);}
 
 @media (min-width:640px){
   .pc-drawer{flex-direction:row;}
@@ -99,7 +99,7 @@ a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
   font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;
   padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--on-surface-soft);
 }
-.pc-lang-badge.is-current{border-color:var(--gold);color:var(--gold);background:rgba(198,161,91,0.1);}
+.pc-lang-badge.is-current{border-color:var(--accent);color:var(--accent);background:var(--accent-wash);}
 .pc-lang-badge.is-live{border-color:#3F6B4E;color:#3F6B4E;}
 
 /* --- Segmented control (radio-style button group) --- */
@@ -134,7 +134,7 @@ a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
   box-shadow:0 2px 4px rgba(0,0,0,0.25);transition:transform .2s ease;
 }
 [dir="rtl"] .pc-switch-knob{left:auto;right:2px;}
-.pc-switch.is-on{background:var(--gold);border-color:var(--gold);}
+.pc-switch.is-on{background:var(--accent);border-color:var(--accent);}
 .pc-switch.is-on .pc-switch-knob{transform:translateX(18px);}
 [dir="rtl"] .pc-switch.is-on .pc-switch-knob{transform:translateX(-18px);}
 html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-switch-knob{transition:none;}
@@ -145,7 +145,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-islamic-preview-label{font-size:0.76rem;color:var(--on-surface-soft);}
 .pc-islamic-preview-value{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;color:var(--on-surface);}
 .pc-text-btn{
-  background:none;border:none;color:var(--gold);font-size:0.76rem;text-decoration:underline;cursor:pointer;
+  background:none;border:none;color:var(--accent);font-size:0.76rem;text-decoration:underline;cursor:pointer;
   padding:6px 0 0;font-family:'Inter','Cairo',sans-serif;
 }
 .pc-islamic-note{margin-top:10px;}
@@ -156,10 +156,16 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
   display:flex;flex-direction:column;gap:2px;text-align:start;background:none;cursor:pointer;
   border:1px solid var(--line);border-radius:8px;padding:12px 14px;transition:border-color .2s ease,background .2s ease;
 }
-.pc-office-row:hover{border-color:var(--gold);}
-.pc-office-row[aria-checked="true"]{border-color:var(--gold);background:rgba(198,161,91,0.1);}
+.pc-office-row:hover{border-color:var(--accent);}
+.pc-office-row[aria-checked="true"]{border-color:var(--accent);background:var(--accent-wash);}
 .pc-office-name{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.02em;color:var(--on-surface);}
 .pc-office-desc{font-size:0.76rem;color:var(--on-surface-soft);}
+
+/* --- Verse / Hadith of the Day --- */
+.pc-verse-arabic{font-family:'Amiri','Cormorant Garamond',serif;font-size:1.35rem;line-height:2;color:var(--on-surface);margin:8px 0;}
+.pc-verse-arabic:empty{display:none;}
+.pc-verse-translation{font-size:0.88rem;line-height:1.6;color:var(--on-surface);font-style:italic;margin:6px 0;}
+.pc-verse-ref{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin:0;}
 
 /* --- Cards (Security tab, muted "coming soon" state) --- */
 .pc-card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
@@ -176,7 +182,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
   width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;
   background:var(--surface);color:var(--on-surface);font-family:'Inter','Cairo',sans-serif;font-size:0.84rem;
 }
-.pc-form input:focus, .pc-form select:focus, .pc-form textarea:focus{outline:1.5px solid var(--gold);border-color:var(--gold);}
+.pc-form input:focus, .pc-form select:focus, .pc-form textarea:focus{outline:1.5px solid var(--accent);border-color:var(--accent);}
 .pc-form button{align-self:flex-start;}
 .pc-form-status{font-size:0.78rem;margin:0;}
 .pc-form-status.is-success{color:#3F6B4E;}
@@ -195,6 +201,30 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 }
 .topbar > .pc-islamic-strip.is-visible{display:flex;}
 .pc-islamic-strip span{white-space:nowrap;}
+
+/* --- Reading Mode & Text Density ---
+   High Contrast strengthens the same --on-surface/--on-surface-soft/--line
+   roles already scoped safely for Theme, plus underlines links. Dyslexia
+   mode swaps to Atkinson Hyperlegible (an openly-licensed accessibility
+   typeface, loaded on demand by js/personalisation.js — not bundled into
+   every visitor's initial page weight) with wider letter/line spacing.
+   Text Density is scoped to the Personalisation Centre panel and the
+   site's existing .ledger-row component (board/staff listings) rather
+   than claimed sitewide. */
+html[data-pc-reading="high-contrast"]{
+  --on-surface:#000000; --on-surface-soft:rgba(0,0,0,0.88); --line:rgba(0,0,0,0.45);
+}
+html[data-pc-reading="high-contrast"] a{text-decoration:underline;}
+html[data-pc-reading="dyslexia"] body{
+  font-family:'Atkinson Hyperlegible', Arial, sans-serif !important;
+  letter-spacing:0.02em; line-height:1.8;
+}
+html[data-pc-reading="dyslexia"] .pc-panel-intro, html[data-pc-reading="dyslexia"] .pc-option-desc{
+  font-family:'Atkinson Hyperlegible', Arial, sans-serif;
+}
+html[data-pc-text-density="compact"] .pc-toggle-row{padding:7px 0;}
+html[data-pc-text-density="compact"] .pc-lang-row{padding:8px 4px;}
+html[data-pc-text-density="compact"] .ledger-row{padding:11px 0;}
 
 /* --- Floating element visibility (Quick Access toggles) --- */
 .assistant-root.is-pc-hidden, .whatsapp-float.is-pc-hidden, .apply-float.is-pc-hidden, .call-float.is-pc-hidden{

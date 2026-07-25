@@ -31,6 +31,9 @@
     html.setAttribute('data-pc-theme', p.theme || 'royal');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
+    html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
+    html.setAttribute('data-pc-reading', p.readingMode || 'standard');
+    html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -568,6 +571,10 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
         <span>Quick Access</span>
       </button>
+      <button type="button" class="pc-tab" data-pc-tab="dashboard" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 19V9l8-4 8 4v10M4 19h16M9 19v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>Dashboard</span>
+      </button>
     </nav>
 
     <div class="pc-body" data-pc-body>
@@ -592,6 +599,23 @@
           <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="ms">Bahasa Melayu</span><span class="pc-lang-badge">In translation</span></div>
         </div>
         <p class="pc-footnote">Every language will carry the full site, including our published policies. English remains the governing text for any legal or governance document until a translation is confirmed complete.</p>
+
+        <div class="pc-option" style="margin-top:22px;">
+          <div class="pc-option-label"><span class="pc-option-title">Date Format</span></div>
+          <div class="pc-segmented" data-pc-set="dateFormat" role="radiogroup" aria-label="Date format">
+            <button type="button" data-value="gregorian" role="radio" aria-checked="true" class="is-active">Gregorian</button>
+            <button type="button" data-value="hijri" role="radio">Hijri</button>
+            <button type="button" data-value="both" role="radio">Both</button>
+          </div>
+          <p class="pc-option-desc">Applies to the Hijri/prayer strip in the top bar.</p>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Time Format</span></div>
+          <div class="pc-segmented" data-pc-set="timeFormat" role="radiogroup" aria-label="Time format">
+            <button type="button" data-value="12h" role="radio">12 Hour</button>
+            <button type="button" data-value="24h" role="radio" aria-checked="true" class="is-active">24 Hour</button>
+          </div>
+        </div>
       </section>
 
       <section class="pc-panel" data-pc-panel="accessibility">
@@ -612,6 +636,34 @@
             <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal (Default)</button>
             <button type="button" data-value="light" role="radio">Light</button>
             <button type="button" data-value="dark" role="radio">Dark</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Accent Colour</span><p class="pc-option-desc">Recolours this panel, primary buttons, and floating actions — the crest and core brand gold stay constant.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="accent" role="radiogroup" aria-label="Accent colour">
+            <button type="button" data-value="royal-gold" role="radio" aria-checked="true" class="is-active">Royal Gold</button>
+            <button type="button" data-value="coffee-brown" role="radio">Coffee Brown</button>
+            <button type="button" data-value="emerald" role="radio">Emerald</button>
+            <button type="button" data-value="navy" role="radio">Navy</button>
+            <button type="button" data-value="burgundy" role="radio">Burgundy</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Reading Mode</span></div>
+          <div class="pc-segmented" data-pc-set="readingMode" role="radiogroup" aria-label="Reading mode">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high-contrast" role="radio">High Contrast</button>
+            <button type="button" data-value="dyslexia" role="radio">Dyslexia-Friendly</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Density</span></div>
+          <div class="pc-segmented" data-pc-set="textDensity" role="radiogroup" aria-label="Text density">
+            <button type="button" data-value="comfortable" role="radio" aria-checked="true" class="is-active">Comfortable</button>
+            <button type="button" data-value="compact" role="radio">Compact</button>
           </div>
         </div>
 
@@ -640,9 +692,26 @@
             <span class="pc-islamic-preview-label">Upcoming</span>
             <span class="pc-islamic-preview-value" data-pc-islamic-event>—</span>
           </div>
+          <div class="pc-islamic-preview-row" data-pc-jumuah-row hidden>
+            <span class="pc-islamic-preview-label">🕌</span>
+            <span class="pc-islamic-preview-value" data-pc-jumuah-text></span>
+          </div>
           <button type="button" class="pc-text-btn" data-pc-locate>Use my current location for prayer times</button>
           <p class="pc-footnote pc-islamic-note">Calculated locally (Hijri dates by standard arithmetic conversion; prayer times via the Aladhan calculation service). Moon-sighting dates such as the start of Ramadan may differ by a day — always confirm with your local mosque or moon-sighting authority for religious rulings.</p>
         </div>
+
+        <div class="pc-card" data-pc-verse-card>
+          <div class="pc-card-head"><span class="pc-option-title">Qur'an Verse of the Day</span></div>
+          <p class="pc-verse-arabic" data-pc-verse-arabic dir="rtl" lang="ar"></p>
+          <p class="pc-verse-translation" data-pc-verse-translation></p>
+          <p class="pc-verse-ref" data-pc-verse-ref></p>
+        </div>
+        <div class="pc-card" data-pc-hadith-card>
+          <div class="pc-card-head"><span class="pc-option-title">Hadith of the Day</span></div>
+          <p class="pc-verse-translation" data-pc-hadith-text></p>
+          <p class="pc-verse-ref" data-pc-hadith-ref></p>
+        </div>
+        <p class="pc-footnote">A small, carefully-sourced set of well-established verses and hadith, cycling daily — always independently verifiable from the reference cited. Reviewed for accuracy before publication; not a substitute for guidance from a qualified scholar.</p>
 
         <div class="pc-toggle-row">
           <div><span class="pc-option-title">Prayer Times</span><p class="pc-option-desc">Show today's prayer times in the site header.</p></div>
@@ -681,6 +750,14 @@
             <span class="pc-office-name">Qur'an College Office</span>
             <span class="pc-office-desc">Memorisation programme, Qur'anic sciences, Ijazaat</span>
           </button>
+        </div>
+        <div class="pc-option" style="margin-top:22px;">
+          <div class="pc-option-label"><span class="pc-option-title">Communication Style</span></div>
+          <div class="pc-segmented" data-pc-set="aiCommunicationStyle" role="radiogroup" aria-label="Communication style">
+            <button type="button" data-value="formal" role="radio">Formal</button>
+            <button type="button" data-value="professional" role="radio" aria-checked="true" class="is-active">Professional</button>
+            <button type="button" data-value="parent-friendly" role="radio">Parent-Friendly</button>
+          </div>
         </div>
         <p class="pc-footnote">The assistant automatically replies in the language you selected above.</p>
       </section>
@@ -762,6 +839,25 @@
         </div>
       </section>
 
+      <section class="pc-panel" data-pc-panel="dashboard">
+        <p class="pc-panel-intro">Your own quick-access corner — remembered on this device.</p>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Favourite School</span></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="favouriteSchool" role="radiogroup" aria-label="Favourite school">
+            <button type="button" data-value="nursery-primary" role="radio">Nursery &amp; Primary</button>
+            <button type="button" data-value="royal-college" role="radio">Royal College</button>
+            <button type="button" data-value="quran-college" role="radio">Qur'an College</button>
+            <button type="button" data-value="arabic-islamic-studies" role="radio">Arabic &amp; Islamic Studies</button>
+          </div>
+          <a class="pc-text-btn" data-pc-favourite-link href="#" hidden>Go to your favourite school's page →</a>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Recently Viewed</span></div>
+          <div data-pc-recent-list><p class="pc-notice">Pages you visit will appear here.</p></div>
+        </div>
+      </section>
     </div>
   </aside>
 </div>

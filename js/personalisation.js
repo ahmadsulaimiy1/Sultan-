@@ -5,7 +5,13 @@
   var DEFAULTS = {
     textSize: 'medium',
     theme: 'royal',
+    accent: 'royal-gold',
+    readingMode: 'standard',
+    textDensity: 'comfortable',
     motion: 'standard',
+    dateFormat: 'both',
+    timeFormat: '24h',
+    aiCommunicationStyle: 'professional',
     islamicPrayerTimes: true,
     islamicHijriCalendar: true,
     islamicEvents: true,
@@ -45,11 +51,25 @@
     floatingCall: '.call-float',
   };
 
+  var dyslexiaFontLoaded = false;
+  function ensureDyslexiaFont(){
+    if(dyslexiaFontLoaded || prefs.readingMode !== 'dyslexia') return;
+    dyslexiaFontLoaded = true;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap';
+    document.head.appendChild(link);
+  }
+
   function applyAccessibility(){
     var html = document.documentElement;
     html.setAttribute('data-pc-theme', prefs.theme);
     html.setAttribute('data-pc-text', prefs.textSize);
     html.setAttribute('data-pc-motion', prefs.motion);
+    html.setAttribute('data-pc-accent', prefs.accent);
+    html.setAttribute('data-pc-reading', prefs.readingMode);
+    html.setAttribute('data-pc-text-density', prefs.textDensity);
+    ensureDyslexiaFont();
   }
 
   function applyFloatingVisibility(){
@@ -118,6 +138,8 @@
         });
         savePrefs(prefs);
         applyAccessibility();
+        if(key === 'dateFormat' || key === 'timeFormat'){ renderHijriDate(); fetchPrayerTimes(); }
+        if(key === 'favouriteSchool'){ renderFavouriteLink(); }
       });
     });
   });
@@ -134,6 +156,10 @@
       savePrefs(prefs);
       applyFloatingVisibility();
       renderIslamicStrip();
+      if(key === 'islamicEvents'){
+        if(typeof todayHijri !== 'undefined' && todayHijri) renderIslamicEvent(todayHijri);
+        renderJumuahReminder();
+      }
     });
   });
 
@@ -174,14 +200,22 @@
     return gregorianToJD(now.getFullYear(), now.getMonth() + 1, now.getDate());
   }
 
+  function gregorianLabel(){
+    var now = new Date();
+    return now.toLocaleDateString(STRIP_LANG === 'ar' ? 'ar' : 'en', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
   function renderHijriDate(){
     var el = root.querySelector('[data-pc-hijri-date]');
     var stripEl = document.querySelectorAll('[data-pc-strip-hijri]');
     if(!el && !stripEl.length) return;
     var h = jdToHijri(todayJD());
     var names = STRIP_LANG === 'ar' ? HIJRI_MONTHS_AR : HIJRI_MONTHS_EN;
-    var text = h.day + ' ' + (names[h.month - 1] || '') + ' ' + h.year + 'H';
-    if(el) el.textContent = text;
+    var hijriText = h.day + ' ' + (names[h.month - 1] || '') + ' ' + h.year + 'H';
+    var text = prefs.dateFormat === 'gregorian' ? gregorianLabel()
+      : prefs.dateFormat === 'both' ? (hijriText + ' · ' + gregorianLabel())
+      : hijriText;
+    if(el) el.textContent = hijriText; // the preview card is always the Hijri date specifically
     stripEl.forEach(function(s){ s.textContent = prefs.islamicHijriCalendar ? '🌙 ' + text : ''; });
     return h;
   }
@@ -245,7 +279,7 @@
     }
     if(!next) next = { name: 'Fajr', time: parseHM(timings.Fajr) }; // all passed — tomorrow's Fajr (same clock time)
     var label = STRIP_LANG === 'ar' ? labelsAr[next.name] : next.name;
-    var timeStr = next.time.toLocaleTimeString(STRIP_LANG === 'ar' ? 'ar' : 'en', { hour: '2-digit', minute: '2-digit' });
+    var timeStr = next.time.toLocaleTimeString(STRIP_LANG === 'ar' ? 'ar' : 'en', { hour: '2-digit', minute: '2-digit', hour12: prefs.timeFormat === '12h' });
     var text = label + ' · ' + timeStr;
     if(el) el.textContent = text;
     stripEls.forEach(function(s){ s.textContent = prefs.islamicPrayerTimes ? '🕌 ' + text : ''; });
@@ -296,6 +330,65 @@
   if(todayHijri) renderIslamicEvent(todayHijri);
   fetchPrayerTimes();
   renderIslamicStrip();
+
+  // ================================================================
+  // Verse / Hadith of the Day — a small, deliberately conservative set:
+  // only extremely well-established, agreed-upon (Bukhari & Muslim)
+  // hadith and widely-known verses, English translation + citation only
+  // (no attempt to reproduce Qur'anic Arabic script from memory — the
+  // risk of a transcription error in sacred text outweighs the value of
+  // showing it here; families can verify against any Mushaf using the
+  // citation given). Shown in both language editions pending review by
+  // the school's own Islamic scholars — see docs/personalisation-centre.md.
+  // ================================================================
+  var VERSES = [
+    { en: 'Allah does not burden a soul beyond that it can bear.', ref: "Qur'an 2:286" },
+    { en: 'And whoever fears Allah, He will make a way out for him, and will provide for him from where he does not expect.', ref: "Qur'an 65:2-3" },
+    { en: 'So, verily, with hardship, there is relief. Verily, with hardship, there is relief.', ref: "Qur'an 94:5-6" },
+    { en: 'O you who believe, seek help through patience and prayer. Indeed, Allah is with the patient.', ref: "Qur'an 2:153" },
+    { en: 'My Lord, increase me in knowledge.', ref: "Qur'an 20:114" },
+    { en: 'Verily, in the remembrance of Allah do hearts find rest.', ref: "Qur'an 13:28" },
+  ];
+  var HADITH = [
+    { en: 'Actions are judged by intentions, and every person will get the reward according to what he has intended.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
+    { en: 'None of you truly believes until he loves for his brother what he loves for himself.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
+    { en: 'Whoever believes in Allah and the Last Day should speak good or remain silent.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
+    { en: 'The best among you are those who have the best manners and character.', ref: 'Sahih al-Bukhari' },
+    { en: 'A good word is charity.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
+  ];
+  function dayOfYear(){
+    var now = new Date();
+    var start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor((now - start) / 86400000);
+  }
+  function renderVerseHadith(){
+    var doy = dayOfYear();
+    var verse = VERSES[doy % VERSES.length];
+    var hadith = HADITH[doy % HADITH.length];
+    var vTrans = root.querySelector('[data-pc-verse-translation]');
+    var vRef = root.querySelector('[data-pc-verse-ref]');
+    var hText = root.querySelector('[data-pc-hadith-text]');
+    var hRef = root.querySelector('[data-pc-hadith-ref]');
+    if(vTrans) vTrans.textContent = '“' + verse.en + '”';
+    if(vRef) vRef.textContent = verse.ref;
+    if(hText) hText.textContent = '“' + hadith.en + '”';
+    if(hRef) hRef.textContent = hadith.ref;
+  }
+  renderVerseHadith();
+
+  // --- Friday (Jumu'ah) reminder — real, needs no push infra: just
+  // checks the visitor's local day of week. ---
+  function renderJumuahReminder(){
+    var row = root.querySelector('[data-pc-jumuah-row]');
+    var textEl = root.querySelector('[data-pc-jumuah-text]');
+    if(!row || !textEl) return;
+    if(!prefs.islamicEvents || new Date().getDay() !== 5){ row.hidden = true; return; }
+    textEl.textContent = STRIP_LANG === 'ar'
+      ? 'اليوم الجمعة — لا تنسَ صلاة الجمعة وسورة الكهف.'
+      : "It's Jumu'ah — don't forget Friday prayer and Surah Al-Kahf.";
+    row.hidden = false;
+  }
+  renderJumuahReminder();
 
   // ================================================================
   // Notifications tab — signed-in guardians only.
@@ -406,8 +499,10 @@
 
   function renderChangePasswordForm(body){
     var t = STRIP_LANG === 'ar'
-      ? { title: 'تغيير كلمة المرور', current: 'كلمة المرور الحالية', next: 'كلمة المرور الجديدة (10 أحرف على الأقل)', submit: 'تحديث كلمة المرور' }
-      : { title: 'Change Password', current: 'Current password', next: 'New password (10+ characters)', submit: 'Update Password' };
+      ? { title: 'تغيير كلمة المرور', current: 'كلمة المرور الحالية', next: 'كلمة المرور الجديدة (10 أحرف على الأقل)', submit: 'تحديث كلمة المرور',
+          dlTitle: 'تنزيل بياناتي', dlDesc: 'نسخة من بياناتك وبيانات أبنائك المسجّلة لدينا، بصيغة JSON قابلة للقراءة.', dlBtn: 'تنزيل البيانات (JSON)' }
+      : { title: 'Change Password', current: 'Current password', next: 'New password (10+ characters)', submit: 'Update Password',
+          dlTitle: 'Download My Data', dlDesc: 'A copy of your and your children\'s records held with us, as readable JSON.', dlBtn: 'Download Data (JSON)' };
     body.innerHTML =
       '<div class="pc-card"><div class="pc-card-head"><span class="pc-option-title">' + t.title + '</span></div>' +
       '<form class="pc-form" data-pc-password-form>' +
@@ -415,7 +510,28 @@
       '<input type="password" name="newPassword" placeholder="' + t.next + '" required minlength="10" />' +
       '<button type="submit" class="btn btn-gold">' + t.submit + '</button>' +
       '<p class="pc-form-status" data-pc-password-status hidden></p>' +
-      '</form></div>';
+      '</form></div>' +
+      '<div class="pc-card"><div class="pc-card-head"><span class="pc-option-title">' + t.dlTitle + '</span></div>' +
+      '<p class="pc-option-desc">' + t.dlDesc + '</p>' +
+      '<button type="button" class="btn btn-outline" data-pc-export-btn style="margin-top:10px;">' + t.dlBtn + '</button></div>';
+
+    var exportBtn = body.querySelector('[data-pc-export-btn]');
+    exportBtn.addEventListener('click', function(){
+      var original = exportBtn.textContent;
+      exportBtn.textContent = STRIP_LANG === 'ar' ? 'جارٍ التحضير…' : 'Preparing…';
+      fetch('/api/portal/export-data', { credentials: 'same-origin' })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = 'shrs-my-data.json';
+          document.body.appendChild(a); a.click(); a.remove();
+          URL.revokeObjectURL(url);
+          exportBtn.textContent = original;
+        })
+        .catch(function(){ exportBtn.textContent = original; });
+    });
 
     body.querySelector('[data-pc-password-form]').addEventListener('submit', function(e){
       e.preventDefault();
@@ -466,6 +582,55 @@
         });
     });
   }
+
+  // ================================================================
+  // Dashboard — Favourite School + Recently Viewed. Recently Viewed is
+  // automatic (no bookmark button needed on every page): every page
+  // records itself to a small localStorage history on load. Device-local
+  // only, same as every other preference here — not synced across
+  // devices, which is an honest limitation, not a bug.
+  // ================================================================
+  var RECENT_KEY = 'shrsRecentlyViewed';
+  var MAX_RECENT = 8;
+  (function recordVisit(){
+    try{
+      var raw = window.localStorage.getItem(RECENT_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      var url = location.pathname;
+      list = list.filter(function(item){ return item.url !== url; });
+      list.unshift({ url: url, title: document.title.split(' — ')[0], visitedAt: Date.now() });
+      window.localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, MAX_RECENT)));
+    }catch(err){ /* storage unavailable — dashboard just shows nothing */ }
+  })();
+
+  function renderRecentList(){
+    var container = root.querySelector('[data-pc-recent-list]');
+    if(!container) return;
+    var list = [];
+    try{ list = JSON.parse(window.localStorage.getItem(RECENT_KEY) || '[]'); }catch(err){}
+    list = list.filter(function(item){ return item.url !== location.pathname; }); // don't list the current page
+    if(!list.length){
+      container.innerHTML = '<p class="pc-notice">' + (STRIP_LANG === 'ar' ? 'ستظهر هنا الصفحات التي تزورها.' : 'Pages you visit will appear here.') + '</p>';
+      return;
+    }
+    container.innerHTML = '<div class="pc-lang-list">' + list.map(function(item){
+      return '<a class="pc-lang-row" href="' + item.url + '"><span class="pc-lang-name" style="font-size:0.92rem;">' + item.title + '</span></a>';
+    }).join('') + '</div>';
+  }
+  renderRecentList();
+
+  var FAVOURITE_SCHOOL_URLS = {
+    en: { 'nursery-primary': '/academics/nursery-primary/', 'royal-college': '/academics/royal-college/', 'quran-college': '/academics/quran-college/', 'arabic-islamic-studies': '/academics/arabic-islamic-studies/' },
+    ar: { 'nursery-primary': '/ar/academics/nursery-primary/', 'royal-college': '/ar/academics/royal-college/', 'quran-college': '/ar/academics/quran-college/', 'arabic-islamic-studies': '/ar/academics/arabic-islamic-studies/' },
+  };
+  function renderFavouriteLink(){
+    var link = root.querySelector('[data-pc-favourite-link]');
+    if(!link || !prefs.favouriteSchool) return;
+    var url = FAVOURITE_SCHOOL_URLS[STRIP_LANG][prefs.favouriteSchool];
+    if(!url) return;
+    link.href = url; link.hidden = false;
+  }
+  renderFavouriteLink();
 
   // ================================================================
   // Quick Access — default landing page redirect. The actual instant,

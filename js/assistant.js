@@ -44,14 +44,14 @@
     },
   };
 
-  function currentOffice(){
+  function currentPrefs(){
     try{
       var raw = window.localStorage.getItem(PREFS_KEY);
-      if(!raw) return null;
-      var prefs = JSON.parse(raw);
-      return (prefs && prefs.aiOffice) || null;
-    }catch(err){ return null; }
+      return raw ? JSON.parse(raw) : {};
+    }catch(err){ return {}; }
   }
+  function currentOffice(){ return currentPrefs().aiOffice || null; }
+  function currentCommunicationStyle(){ return currentPrefs().aiCommunicationStyle || null; }
 
   function updateOfficeBadge(){
     if(!headSubEl) return;
@@ -259,7 +259,7 @@
       var res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang: config.lang, office: currentOffice(), messages: history }),
+        body: JSON.stringify({ lang: config.lang, office: currentOffice(), style: currentCommunicationStyle(), messages: history }),
         signal: activeController.signal,
       });
 

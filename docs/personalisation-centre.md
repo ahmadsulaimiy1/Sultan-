@@ -52,6 +52,81 @@ nothing in the panel silently pretends to work when it doesn't.
   saved for when those channels exist, and the panel labels them
   accordingly rather than implying they're live.
 
+## Phase 2 additions
+
+A follow-up directive asked for a much larger "Prestige Personalisation &
+Digital Campus Centre" — 14 accent colours, a full Voice Experience Centre
+with named voice personas, online/busy/DND presence, Qiblah, Ramadan Mode,
+9 AI offices, and more. That message also contained the requester's own
+more disciplined counter-structure, explicitly warning against exactly
+that kind of excess and citing Eton, Harrow, King's College, GEMS, and
+Qatar Foundation as the right comparison. Phase 2 follows that restrained
+structure. New real, working additions:
+
+- **Accent Colour** — Royal Gold (default), Coffee Brown, Emerald, Navy,
+  Burgundy. Deliberately scoped to what's precisely controllable: the
+  Personalisation Centre panel itself, the sitewide primary button
+  (`.btn-gold`), and the floating action buttons — **not** the crest,
+  seal, ledger headings, or mega-menu gold treatments, which are brand
+  identity and stay constant. `var(--gold)`/`var(--gold-bright)` appear
+  149 times across `brand.css`; a blind global swap risked recolouring
+  brand-constant elements alongside genuinely interactive ones, so this
+  only touches the ~10 selectors that were already written this session
+  and are known to be safe. Extending further needs the same kind of
+  audit `--surface`/`--on-surface` got for Theme.
+- **Reading Mode** — High Contrast (strengthens `--on-surface`/`--line`,
+  underlines links) and Dyslexia-Friendly (swaps to Atkinson Hyperlegible,
+  an openly-licensed accessibility typeface, loaded on demand rather than
+  bundled into every visitor's page weight) — both real. "Screen Reader
+  Support" and "Keyboard Navigation" were **not** added as toggles: proper
+  accessibility semantics (ARIA roles, keyboard focus order, Escape-to-close)
+  should always be on for everyone, not something to switch off — the panel
+  already has them built in structurally.
+- **Text Density** — Comfortable/Compact, scoped to the panel and the
+  existing `.ledger-row` component, not claimed sitewide.
+- **Date & Time Format** — Gregorian/Hijri/Both, 12h/24h — applied to the
+  one place the site shows a live date/time, the topbar Islamic strip.
+- **AI Communication Style** — Formal/Professional/Parent-Friendly, a real
+  tone bias in `functions/api/chat.js` alongside Office.
+- **Friday reminder** and an **expanded Islamic events check** — real,
+  local-time-based, no push infrastructure needed.
+- **Verse of the Day / Hadith of the Day** — a deliberately small, and
+  english-translation-only, set (6 verses, 5 hadith — Bukhari & Muslim
+  agreed-upon only). The Arabic Qur'anic text is **not** reproduced from
+  memory here — the risk of a transcription error in sacred text
+  outweighed the value of showing it, so only the translation and a
+  checkable citation (Surah:Ayah / collection) are shown, in both
+  language editions. **This set should be reviewed by the school's own
+  Islamic scholars (Shaykh Ahmad Ibrahim, Shaykh Abubakr Solah) before
+  being treated as final** — flagged, not blocking, since every item
+  chosen is deliberately uncontroversial and independently verifiable.
+- **Download My Data** — real self-service JSON export
+  (`functions/api/portal/export-data.js`) for signed-in guardians, of
+  exactly their own guardian and children's records.
+- **Dashboard tab** — Favourite School (a quick link) and Recently
+  Viewed (automatic page-visit history, `localStorage`-only, capped at 8,
+  no new UI needed on any other page). Device-local only — doesn't sync
+  across devices, an honest limitation rather than a bug.
+
+### Explicitly not built in Phase 2, and why
+
+- **Voice Experience Centre** (named voice personas — "Academic Male,"
+  "Arabic Female," British/American English, etc.) — browsers expose
+  generic system voices, not curated professional personas; promising
+  named voices that don't exist would be exactly the kind of dishonest UI
+  this project avoids. The assistant's existing "Read replies aloud"
+  toggle already covers real text-to-speech.
+- **Online/Busy/Do Not Disturb status** — no live chat-presence system
+  exists behind it; would be a decorative toggle with nothing to control.
+- **Cookie Preferences** — the site has no tracking/analytics cookies to
+  opt out of, only the strictly-necessary Parent Portal session cookie. A
+  toggle here would be consent theatre.
+- **Region selector, 9 AI offices, Qiblah, Ramadan Experience Mode,
+  Campus Experience section** (virtual tour, event calendar, transport
+  updates) — nothing real exists behind these yet; building the control
+  before the substance is the exact pattern the requester's own message
+  warned against.
+
 ## Language
 
 English and Arabic are fully real, immediate, and cover the whole site.
@@ -108,9 +183,9 @@ styling in every theme — a deliberate scope boundary, not an oversight.
   load/save, Hijri/prayer calculation, drawer/tab wiring, and the
   Notifications/Security tabs' API calls.
 - `functions/api/portal/notifications/preferences.js`,
-  `change-password.js`, `privacy-request.js` — the three new backend
-  endpoints, following the same Cloudflare Pages Functions pattern as the
-  rest of the portal (see `docs/parent-portal.md`).
+  `change-password.js`, `privacy-request.js`, `export-data.js` — the
+  backend endpoints, following the same Cloudflare Pages Functions
+  pattern as the rest of the portal (see `docs/parent-portal.md`).
 - `sql/schema.sql` / `functions/api/portal/setup.js` — the two new tables
   (`guardian_notification_preferences`, `privacy_requests`), additive and
   idempotent like the rest of the schema.

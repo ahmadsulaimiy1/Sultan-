@@ -31,6 +31,9 @@
     html.setAttribute('data-pc-theme', p.theme || 'royal');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
+    html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
+    html.setAttribute('data-pc-reading', p.readingMode || 'standard');
+    html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -520,6 +523,10 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
         <span>الوصول السريع</span>
       </button>
+      <button type="button" class="pc-tab" data-pc-tab="dashboard" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 19V9l8-4 8 4v10M4 19h16M9 19v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>لوحتي</span>
+      </button>
     </nav>
 
     <div class="pc-body" data-pc-body>
@@ -544,6 +551,23 @@
           <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="ms" dir="ltr">Bahasa Melayu</span><span class="pc-lang-badge">قيد الترجمة</span></div>
         </div>
         <p class="pc-footnote">ستحمل كل لغة الموقع كاملاً، بما في ذلك سياساتنا المنشورة. تظل اللغة الإنجليزية هي النص المعتمد لأي وثيقة قانونية أو حوكمية إلى حين تأكيد اكتمال ترجمتها.</p>
+
+        <div class="pc-option" style="margin-top:22px;">
+          <div class="pc-option-label"><span class="pc-option-title">صيغة التاريخ</span></div>
+          <div class="pc-segmented" data-pc-set="dateFormat" role="radiogroup" aria-label="صيغة التاريخ">
+            <button type="button" data-value="gregorian" role="radio" aria-checked="true" class="is-active">ميلادي</button>
+            <button type="button" data-value="hijri" role="radio">هجري</button>
+            <button type="button" data-value="both" role="radio">كلاهما</button>
+          </div>
+          <p class="pc-option-desc">يُطبَّق على شريط التاريخ الهجري وأوقات الصلاة في أعلى الموقع.</p>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">صيغة الوقت</span></div>
+          <div class="pc-segmented" data-pc-set="timeFormat" role="radiogroup" aria-label="صيغة الوقت">
+            <button type="button" data-value="12h" role="radio">12 ساعة</button>
+            <button type="button" data-value="24h" role="radio" aria-checked="true" class="is-active">24 ساعة</button>
+          </div>
+        </div>
       </section>
 
       <section class="pc-panel" data-pc-panel="accessibility">
@@ -564,6 +588,34 @@
             <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">الملكي (افتراضي)</button>
             <button type="button" data-value="light" role="radio">فاتح</button>
             <button type="button" data-value="dark" role="radio">داكن</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">لون التمييز</span><p class="pc-option-desc">يغيّر لون هذه اللوحة، الأزرار الرئيسية، والإجراءات العائمة — يبقى الشعار والذهبي الأساسي للعلامة ثابتَين.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="accent" role="radiogroup" aria-label="لون التمييز">
+            <button type="button" data-value="royal-gold" role="radio" aria-checked="true" class="is-active">الذهبي الملكي</button>
+            <button type="button" data-value="coffee-brown" role="radio">البني القهوي</button>
+            <button type="button" data-value="emerald" role="radio">الزمردي</button>
+            <button type="button" data-value="navy" role="radio">الكحلي</button>
+            <button type="button" data-value="burgundy" role="radio">النبيتي</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">وضع القراءة</span></div>
+          <div class="pc-segmented" data-pc-set="readingMode" role="radiogroup" aria-label="وضع القراءة">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">عادي</button>
+            <button type="button" data-value="high-contrast" role="radio">تباين عالٍ</button>
+            <button type="button" data-value="dyslexia" role="radio">مناسب لعسر القراءة</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">كثافة النص</span></div>
+          <div class="pc-segmented" data-pc-set="textDensity" role="radiogroup" aria-label="كثافة النص">
+            <button type="button" data-value="comfortable" role="radio" aria-checked="true" class="is-active">مريح</button>
+            <button type="button" data-value="compact" role="radio">مضغوط</button>
           </div>
         </div>
 
@@ -592,9 +644,26 @@
             <span class="pc-islamic-preview-label">القادم</span>
             <span class="pc-islamic-preview-value" data-pc-islamic-event>—</span>
           </div>
+          <div class="pc-islamic-preview-row" data-pc-jumuah-row hidden>
+            <span class="pc-islamic-preview-label">🕌</span>
+            <span class="pc-islamic-preview-value" data-pc-jumuah-text></span>
+          </div>
           <button type="button" class="pc-text-btn" data-pc-locate>استخدم موقعي الحالي لأوقات الصلاة</button>
           <p class="pc-footnote pc-islamic-note">تُحسب هذه القيم محليًا (التاريخ الهجري بتحويل حسابي معياري؛ أوقات الصلاة عبر خدمة حساب Aladhan). قد تختلف تواريخ رؤية الهلال، مثل بداية رمضان، بمقدار يوم — يُرجى دائمًا التأكد من مسجدك المحلي أو جهة رؤية الهلال المعتمدة للأحكام الدينية.</p>
         </div>
+
+        <div class="pc-card" data-pc-verse-card>
+          <div class="pc-card-head"><span class="pc-option-title">آية اليوم</span></div>
+          <p class="pc-verse-arabic" data-pc-verse-arabic dir="rtl" lang="ar"></p>
+          <p class="pc-verse-translation" data-pc-verse-translation></p>
+          <p class="pc-verse-ref" data-pc-verse-ref></p>
+        </div>
+        <div class="pc-card" data-pc-hadith-card>
+          <div class="pc-card-head"><span class="pc-option-title">حديث اليوم</span></div>
+          <p class="pc-verse-translation" data-pc-hadith-text></p>
+          <p class="pc-verse-ref" data-pc-hadith-ref></p>
+        </div>
+        <p class="pc-footnote">مجموعة صغيرة ومُدقَّقة من الآيات والأحاديث الثابتة، تتغيّر يوميًا — يمكن التحقق منها دائمًا عبر المرجع المذكور. رُوجعت دقتها قبل النشر، ولا تُغني عن توجيه عالم مؤهل.</p>
 
         <div class="pc-toggle-row">
           <div><span class="pc-option-title">أوقات الصلاة</span><p class="pc-option-desc">إظهار أوقات الصلاة اليوم في أعلى الموقع.</p></div>
@@ -633,6 +702,14 @@
             <span class="pc-office-name">مكتب كلية القرآن</span>
             <span class="pc-office-desc">برنامج الحفظ، علوم القرآن، والإجازات</span>
           </button>
+        </div>
+        <div class="pc-option" style="margin-top:22px;">
+          <div class="pc-option-label"><span class="pc-option-title">أسلوب التواصل</span></div>
+          <div class="pc-segmented" data-pc-set="aiCommunicationStyle" role="radiogroup" aria-label="أسلوب التواصل">
+            <button type="button" data-value="formal" role="radio">رسمي</button>
+            <button type="button" data-value="professional" role="radio" aria-checked="true" class="is-active">مهني</button>
+            <button type="button" data-value="parent-friendly" role="radio">ودّي لأولياء الأمور</button>
+          </div>
         </div>
         <p class="pc-footnote">يرد المساعد تلقائيًا باللغة التي اخترتها أعلاه.</p>
       </section>
@@ -714,6 +791,25 @@
         </div>
       </section>
 
+      <section class="pc-panel" data-pc-panel="dashboard">
+        <p class="pc-panel-intro">ركنك الخاص للوصول السريع — يُتذكَّر على هذا الجهاز.</p>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">المدرسة المفضّلة</span></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="favouriteSchool" role="radiogroup" aria-label="المدرسة المفضّلة">
+            <button type="button" data-value="nursery-primary" role="radio">الحضانة والابتدائية</button>
+            <button type="button" data-value="royal-college" role="radio">الكلية الملكية</button>
+            <button type="button" data-value="quran-college" role="radio">كلية القرآن</button>
+            <button type="button" data-value="arabic-islamic-studies" role="radio">الدراسات العربية والإسلامية</button>
+          </div>
+          <a class="pc-text-btn" data-pc-favourite-link href="#" hidden>اذهب إلى صفحة مدرستك المفضّلة ←</a>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">شوهد مؤخرًا</span></div>
+          <div data-pc-recent-list><p class="pc-notice">ستظهر هنا الصفحات التي تزورها.</p></div>
+        </div>
+      </section>
     </div>
   </aside>
 </div>

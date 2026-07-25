@@ -93,7 +93,16 @@ const OFFICE_PROFILES = {
   },
 };
 
-function buildSystemPrompt(lang, office) {
+// Personalisation Centre — "Communication Style". A tone bias, not a
+// content restriction — the assistant still discloses it's an AI and
+// still only states facts from SITE_FACTS regardless of style.
+const STYLE_PROFILES = {
+  formal: 'Use a formal, institutional register — full sentences, no contractions, no emoji.',
+  professional: 'Use a warm but professional register — the current house style below.',
+  'parent-friendly': 'Use a warm, plain-language, reassuring register suited to a busy parent — short sentences, avoid jargon, still accurate and honest.',
+};
+
+function buildSystemPrompt(lang, office, style) {
   const langLine = lang === 'ar'
     ? 'The user interface is set to Arabic. Reply in Arabic (Modern Standard Arabic) unless the user writes in another language, in which case reply in that language.'
     : 'The user interface is set to English. Reply in English unless the user writes in another language, in which case reply in that language.';
@@ -102,11 +111,12 @@ function buildSystemPrompt(lang, office) {
   const officeLine = officeProfile
     ? `\n${officeProfile.focus} You can still answer any question about the school or help with any subject — this is a starting focus, not a restriction.\n`
     : '';
+  const styleLine = STYLE_PROFILES[style] ? `\n${STYLE_PROFILES[style]}\n` : '';
 
   return `You are the Digital Academic Assistant for Sultan Hanafi Royal Schools, a real school in Ikorodu, Lagos State, Nigeria. You run on Claude, an AI model by Anthropic — you are an AI, not a human staff member, and you must say so plainly whenever anyone asks what you are or seems to think they're talking to a person. Never claim to be human, never claim to be "the registration office" or any human officer.
 
 ${langLine}
-${officeLine}
+${officeLine}${styleLine}
 You have two jobs:
 1. Answer questions about Sultan Hanafi Royal Schools using ONLY the facts below. If something isn't in these facts (exact fees, term dates, scholarship criteria, international-admission specifics, staff names beyond the Director, class sizes, exam results, anything not listed), say plainly that it isn't published yet and direct the person to a real contact channel (info@shroyalschools.ng, principal@shrschools.ng, or the phone numbers below). Never invent or guess a number, date, name, or policy detail that isn't in these facts.
 2. Act as a genuine academic assistant/tutor: help with English writing and grammar, homework explanations, study techniques, exam preparation, and general academic subjects, the way a knowledgeable tutor would, using your general knowledge. Be clear when you're giving general educational help versus stating a fact about this specific school.
@@ -191,6 +201,7 @@ export async function onRequestPost(context) {
 
   const lang = body.lang === 'ar' ? 'ar' : 'en';
   const office = typeof body.office === 'string' && OFFICE_PROFILES[body.office] ? body.office : null;
+  const style = typeof body.style === 'string' && STYLE_PROFILES[body.style] ? body.style : null;
   const { messages, totalChars } = sanitizeMessages(body.messages);
 
   if (!messages.length) return jsonError('No message provided.', 400);
@@ -213,7 +224,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         model: env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: MAX_TOKENS,
-        system: buildSystemPrompt(lang, office),
+        system: buildSystemPrompt(lang, office, style),
         messages,
         stream: true,
       }),
