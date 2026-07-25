@@ -63,15 +63,50 @@ Phone: +234 807 374 7650, +234 807 058 6860.
 Social: WhatsApp, Facebook, Instagram, YouTube (linked from the site footer).
 `.trim();
 
-function buildSystemPrompt(lang) {
+// Personalisation Centre — "AI Assistant" tab lets a visitor pick which
+// office they want to talk to. This doesn't create five separate
+// assistants or unlock any facts beyond SITE_FACTS above — it biases the
+// same assistant's opening focus and tone toward the area the visitor
+// picked, the way a real front desk routes a call. Keys must match the
+// office values sent from js/assistant.js (read from the Personalisation
+// Centre's stored preference).
+const OFFICE_PROFILES = {
+  admissions: {
+    label: 'Admissions Office',
+    focus: 'You are currently framed as the Admissions Office. Lead with the 12-stage admission process, required documents, and how to start an application. If asked about fees, scholarships, or international-student specifics, say plainly those aren\'t published yet and point to info@shroyalschools.ng or the phone numbers.',
+  },
+  parent: {
+    label: 'Parent Services',
+    focus: 'You are currently framed as Parent Services. Lead with boarding arrangements, the Parent Portal (attendance/results/fee status once a family is enrolled), and how to reach the school directly. Mention the Parent Portal login at /portal/login/ when relevant.',
+  },
+  student: {
+    label: 'Student Affairs',
+    focus: 'You are currently framed as Student Affairs. Lead with student life: boarding, facilities, extracurricular activities (sports & games, debate, Islamic arts & culture), and general academic support/tutoring. Keep the tone encouraging and student-facing.',
+  },
+  academic: {
+    label: 'Academic Office',
+    focus: 'You are currently framed as the Academic Office. Lead with curriculum structure (departments within Royal College, the Nursery & Primary approach, assessment policy — CA 40 + Exam 60 = 100), and general academic/tutoring help.',
+  },
+  quran: {
+    label: "Qur'an College Office",
+    focus: "You are currently framed as the Qur'an College Office. Lead with the Qur'an College's 24-36 month day & boarding programme: full Qur'an memorisation, Qur'anic sciences, Arabiyyah, and the Ijazaat it culminates in. Principal: Shaykh Ahmad Ibrahim.",
+  },
+};
+
+function buildSystemPrompt(lang, office) {
   const langLine = lang === 'ar'
     ? 'The user interface is set to Arabic. Reply in Arabic (Modern Standard Arabic) unless the user writes in another language, in which case reply in that language.'
     : 'The user interface is set to English. Reply in English unless the user writes in another language, in which case reply in that language.';
 
+  const officeProfile = OFFICE_PROFILES[office];
+  const officeLine = officeProfile
+    ? `\n${officeProfile.focus} You can still answer any question about the school or help with any subject — this is a starting focus, not a restriction.\n`
+    : '';
+
   return `You are the Digital Academic Assistant for Sultan Hanafi Royal Schools, a real school in Ikorodu, Lagos State, Nigeria. You run on Claude, an AI model by Anthropic — you are an AI, not a human staff member, and you must say so plainly whenever anyone asks what you are or seems to think they're talking to a person. Never claim to be human, never claim to be "the registration office" or any human officer.
 
 ${langLine}
-
+${officeLine}
 You have two jobs:
 1. Answer questions about Sultan Hanafi Royal Schools using ONLY the facts below. If something isn't in these facts (exact fees, term dates, scholarship criteria, international-admission specifics, staff names beyond the Director, class sizes, exam results, anything not listed), say plainly that it isn't published yet and direct the person to a real contact channel (info@shroyalschools.ng, principal@shrschools.ng, or the phone numbers below). Never invent or guess a number, date, name, or policy detail that isn't in these facts.
 2. Act as a genuine academic assistant/tutor: help with English writing and grammar, homework explanations, study techniques, exam preparation, and general academic subjects, the way a knowledgeable tutor would, using your general knowledge. Be clear when you're giving general educational help versus stating a fact about this specific school.
@@ -155,6 +190,7 @@ export async function onRequestPost(context) {
   }
 
   const lang = body.lang === 'ar' ? 'ar' : 'en';
+  const office = typeof body.office === 'string' && OFFICE_PROFILES[body.office] ? body.office : null;
   const { messages, totalChars } = sanitizeMessages(body.messages);
 
   if (!messages.length) return jsonError('No message provided.', 400);
@@ -177,7 +213,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         model: env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: MAX_TOKENS,
-        system: buildSystemPrompt(lang),
+        system: buildSystemPrompt(lang, office),
         messages,
         stream: true,
       }),

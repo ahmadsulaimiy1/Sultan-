@@ -31,6 +31,36 @@
   var MAX_ATTACHMENT_CHARS = 6000;
   var MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
   var WHATSAPP_NUMBER = '2348073747650';
+  var PREFS_KEY = 'shrsPersonalisation';
+  var headSubEl = root.querySelector('.assistant-head-sub');
+  var OFFICE_LABELS = {
+    en: {
+      admissions: 'Admissions Office', parent: 'Parent Services', student: 'Student Affairs',
+      academic: 'Academic Office', quran: "Qur'an College Office",
+    },
+    ar: {
+      admissions: 'مكتب القبول', parent: 'خدمات أولياء الأمور', student: 'شؤون الطلاب',
+      academic: 'المكتب الأكاديمي', quran: 'مكتب كلية القرآن',
+    },
+  };
+
+  function currentOffice(){
+    try{
+      var raw = window.localStorage.getItem(PREFS_KEY);
+      if(!raw) return null;
+      var prefs = JSON.parse(raw);
+      return (prefs && prefs.aiOffice) || null;
+    }catch(err){ return null; }
+  }
+
+  function updateOfficeBadge(){
+    if(!headSubEl) return;
+    var office = currentOffice();
+    var labels = OFFICE_LABELS[config.lang] || OFFICE_LABELS.en;
+    headSubEl.textContent = (office && labels[office]) ? labels[office] : 'Sultan Hanafi Royal Schools';
+  }
+  updateOfficeBadge();
+  document.addEventListener('sultan:personalisation-changed', updateOfficeBadge);
 
   var history = [];
   var pendingAttachment = null;
@@ -229,7 +259,7 @@
       var res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang: config.lang, messages: history }),
+        body: JSON.stringify({ lang: config.lang, office: currentOffice(), messages: history }),
         signal: activeController.signal,
       });
 

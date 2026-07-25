@@ -99,6 +99,33 @@ const STATEMENTS = [
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     read_at     TIMESTAMPTZ
   )`,
+
+  `CREATE TABLE IF NOT EXISTS guardian_notification_preferences (
+    guardian_id        INTEGER PRIMARY KEY REFERENCES guardians(id) ON DELETE CASCADE,
+    channel_website     BOOLEAN NOT NULL DEFAULT true,
+    channel_email       BOOLEAN NOT NULL DEFAULT false,
+    channel_whatsapp    BOOLEAN NOT NULL DEFAULT false,
+    channel_sms         BOOLEAN NOT NULL DEFAULT false,
+    type_attendance     BOOLEAN NOT NULL DEFAULT true,
+    type_results        BOOLEAN NOT NULL DEFAULT true,
+    type_fees           BOOLEAN NOT NULL DEFAULT true,
+    type_announcements  BOOLEAN NOT NULL DEFAULT true,
+    type_events         BOOLEAN NOT NULL DEFAULT true,
+    type_emergency      BOOLEAN NOT NULL DEFAULT true,
+    language            TEXT NOT NULL DEFAULT 'en',
+    updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS privacy_requests (
+    id            SERIAL PRIMARY KEY,
+    full_name     TEXT NOT NULL,
+    email         TEXT NOT NULL,
+    request_type  TEXT NOT NULL,
+    details       TEXT,
+    status        TEXT NOT NULL DEFAULT 'open',
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_at   TIMESTAMPTZ
+  )`,
 ];
 
 async function handle({ request, env }) {

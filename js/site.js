@@ -21,7 +21,8 @@
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
   document.querySelectorAll('.stagger').forEach(el=>io.observe(el));
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    || document.documentElement.getAttribute('data-pc-motion') === 'reduced';
   const statBands = document.querySelectorAll('.stat-band');
   if(statBands.length){
     const animateNum = (el)=>{

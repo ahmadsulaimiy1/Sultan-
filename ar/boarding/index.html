@@ -21,6 +21,31 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/personalisation.css">
+<script>
+(function(){
+  try{
+    var raw = localStorage.getItem('shrsPersonalisation');
+    var p = raw ? JSON.parse(raw) : {};
+    var html = document.documentElement;
+    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-text', p.textSize || 'medium');
+    html.setAttribute('data-pc-motion', p.motion || 'standard');
+    if(p.landingPage && p.landingPage !== 'home'){
+      var path = location.pathname;
+      if(path === '/' || path === '/ar/'){
+        var lang = html.lang === 'ar' ? 'ar' : 'en';
+        var targets = {
+          en: { portal: '/portal/login/', admissions: '/admission/', quran: '/academics/quran-college/' },
+          ar: { portal: '/portal/login/', admissions: '/ar/admission/', quran: '/ar/academics/quran-college/' },
+        };
+        var target = targets[lang][p.landingPage];
+        if(target) location.replace(target);
+      }
+    }
+  }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
+})();
+</script>
 <link rel="alternate" hreflang="en" href="/boarding/" />
 </head>
 <body>
@@ -38,7 +63,15 @@
       <a href="https://www.instagram.com/shroyal_schools" target="_blank" rel="noopener">إنستغرام</a>
       <a href="https://youtube.com/@shroyalschools" target="_blank" rel="noopener">يوتيوب</a>
       <a href="/boarding/" class="lang-switch" lang="en" dir="ltr">English</a>
+      <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="افتح مركز التخصيص" title="مركز التخصيص">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span class="pc-trigger-label">التخصيص</span>
+      </button>
     </div>
+  </div>
+  <div class="pc-islamic-strip wrap" data-pc-islamic-strip>
+    <span data-pc-strip-hijri></span>
+    <span data-pc-strip-prayer></span>
   </div>
 </div>
 
@@ -401,6 +434,13 @@
   </a>
 </div>
 
+<div class="call-float" data-call-float>
+  <a href="tel:+2348073747650" aria-label="اتصل بمدارس سلطان حنفي الملكية" title="اتصل بالمدرسة">
+    <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.9c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1.1L6.6 10.8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    اتصل بالمدرسة
+  </a>
+</div>
+
 <div class="search-overlay" data-search-overlay data-search-index="/search-index.ar.json" data-search-empty="لا توجد صفحات مطابقة لهذا البحث." hidden>
   <div class="search-panel">
     <div class="search-panel-head">
@@ -412,7 +452,249 @@
   </div>
 </div>
 
+<div class="pc-root" data-personalisation>
+  <div class="pc-overlay" data-pc-overlay hidden></div>
+  <aside class="pc-drawer" data-pc-drawer hidden role="dialog" aria-modal="true" aria-labelledby="pc-title">
+    <div class="pc-head institutional-frame">
+      <div class="pc-head-id">
+        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="#E9CE8A" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <div>
+          <h2 id="pc-title" class="pc-title">مركز التخصيص</h2>
+          <p class="pc-sub">مدارس سلطان حنفي الملكية</p>
+        </div>
+      </div>
+      <button type="button" class="pc-close" data-pc-close aria-label="إغلاق مركز التخصيص">&#10005;</button>
+    </div>
 
+    <nav class="pc-tabs" data-pc-tabs role="tablist" aria-label="أقسام التخصيص">
+      <button type="button" class="pc-tab is-active" data-pc-tab="language" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+        <span>اللغة</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="accessibility" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 8v.01M9 11h6M10 16l2-5 2 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>إمكانية الوصول</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="islamic" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 3a9 9 0 100 18 7.2 7.2 0 010-18z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>التفضيلات الإسلامية</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="assistant" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 6h16v11H12l-5 4v-4H4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>المساعد الذكي</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="notifications" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 10a6 6 0 0112 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>الإشعارات</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="security" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>الأمان والخصوصية</span>
+      </button>
+      <button type="button" class="pc-tab" data-pc-tab="quick" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>الوصول السريع</span>
+      </button>
+    </nav>
+
+    <div class="pc-body" data-pc-body>
+
+      <section class="pc-panel is-active" data-pc-panel="language">
+        <p class="pc-panel-intro">اختر اللغة التي تفضّل قراءة موقع مدارس سلطان حنفي الملكية بها.</p>
+        <div class="pc-lang-list">
+          <div class="pc-lang-row is-current">
+            <span class="pc-lang-name">العربية</span>
+            <span class="pc-lang-badge is-current">الحالية</span>
+          </div>
+          <a class="pc-lang-row" href="/boarding/">
+            <span class="pc-lang-name" lang="en" dir="ltr">English</span>
+            <span class="pc-lang-badge is-live">متاحة</span>
+          </a>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="fr" dir="ltr">Français</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="yo" dir="ltr">Yorùbá</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="ha" dir="ltr">Hausa</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="ur">اردو</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="tr" dir="ltr">Türkçe</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="zh" dir="ltr">中文（简体）</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+          <div class="pc-lang-row is-queued"><span class="pc-lang-name" lang="ms" dir="ltr">Bahasa Melayu</span><span class="pc-lang-badge">قيد الترجمة</span></div>
+        </div>
+        <p class="pc-footnote">ستحمل كل لغة الموقع كاملاً، بما في ذلك سياساتنا المنشورة. تظل اللغة الإنجليزية هي النص المعتمد لأي وثيقة قانونية أو حوكمية إلى حين تأكيد اكتمال ترجمتها.</p>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="accessibility">
+        <p class="pc-panel-intro">اضبط شكل الموقع وحركته — سيتم تذكر اختيارك على هذا الجهاز.</p>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">حجم الخط</span></div>
+          <div class="pc-segmented" data-pc-set="textSize" role="radiogroup" aria-label="حجم الخط">
+            <button type="button" data-value="small" role="radio">صغير</button>
+            <button type="button" data-value="medium" role="radio" aria-checked="true" class="is-active">متوسط</button>
+            <button type="button" data-value="large" role="radio">كبير</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">المظهر</span></div>
+          <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="المظهر">
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">الملكي (افتراضي)</button>
+            <button type="button" data-value="light" role="radio">فاتح</button>
+            <button type="button" data-value="dark" role="radio">داكن</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الحركة</span></div>
+          <div class="pc-segmented" data-pc-set="motion" role="radiogroup" aria-label="الحركة">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">حركة عادية</button>
+            <button type="button" data-value="reduced" role="radio">حركة مخفّضة</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="islamic">
+        <p class="pc-panel-intro">مدارس سلطان حنفي الملكية مؤسسة تجمع بين التعليم الإسلامي والمدني — تعكس هذه التفضيلات تلك الهوية عبر الموقع.</p>
+
+        <div class="pc-islamic-preview" data-pc-islamic-preview>
+          <div class="pc-islamic-preview-row">
+            <span class="pc-islamic-preview-label">التاريخ الهجري اليوم</span>
+            <span class="pc-islamic-preview-value" data-pc-hijri-date>—</span>
+          </div>
+          <div class="pc-islamic-preview-row">
+            <span class="pc-islamic-preview-label">الصلاة القادمة</span>
+            <span class="pc-islamic-preview-value" data-pc-next-prayer>—</span>
+          </div>
+          <div class="pc-islamic-preview-row" data-pc-islamic-event-row hidden>
+            <span class="pc-islamic-preview-label">القادم</span>
+            <span class="pc-islamic-preview-value" data-pc-islamic-event>—</span>
+          </div>
+          <button type="button" class="pc-text-btn" data-pc-locate>استخدم موقعي الحالي لأوقات الصلاة</button>
+          <p class="pc-footnote pc-islamic-note">تُحسب هذه القيم محليًا (التاريخ الهجري بتحويل حسابي معياري؛ أوقات الصلاة عبر خدمة حساب Aladhan). قد تختلف تواريخ رؤية الهلال، مثل بداية رمضان، بمقدار يوم — يُرجى دائمًا التأكد من مسجدك المحلي أو جهة رؤية الهلال المعتمدة للأحكام الدينية.</p>
+        </div>
+
+        <div class="pc-toggle-row">
+          <div><span class="pc-option-title">أوقات الصلاة</span><p class="pc-option-desc">إظهار أوقات الصلاة اليوم في أعلى الموقع.</p></div>
+          <button type="button" class="pc-switch is-on" data-pc-toggle="islamicPrayerTimes" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+        </div>
+        <div class="pc-toggle-row">
+          <div><span class="pc-option-title">التقويم الهجري</span><p class="pc-option-desc">إظهار التاريخ الهجري لليوم بجانب التاريخ الميلادي.</p></div>
+          <button type="button" class="pc-switch is-on" data-pc-toggle="islamicHijriCalendar" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+        </div>
+        <div class="pc-toggle-row">
+          <div><span class="pc-option-title">إشعارات المناسبات الإسلامية</span><p class="pc-option-desc">إظهار تذكير مع اقتراب رمضان والعيدين.</p></div>
+          <button type="button" class="pc-switch is-on" data-pc-toggle="islamicEvents" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+        </div>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="assistant">
+        <p class="pc-panel-intro">اختر المكتب الذي تريد أن يركّز عليه المساعد الأكاديمي الرقمي. سيظل بإمكانه الإجابة عن أي سؤال — هذا فقط يحدد نقطة بدايته.</p>
+        <div class="pc-office-list" data-pc-set="aiOffice" role="radiogroup" aria-label="مكتب المساعد الذكي">
+          <button type="button" class="pc-office-row" data-value="admissions" role="radio" aria-checked="false">
+            <span class="pc-office-name">مكتب القبول</span>
+            <span class="pc-office-desc">إجراءات التقديم، المستندات، والتسجيل</span>
+          </button>
+          <button type="button" class="pc-office-row" data-value="parent" role="radio" aria-checked="false">
+            <span class="pc-office-name">خدمات أولياء الأمور</span>
+            <span class="pc-office-desc">السكن الداخلي، بوابة أولياء الأمور، والدعم العام للأسرة</span>
+          </button>
+          <button type="button" class="pc-office-row" data-value="student" role="radio" aria-checked="false">
+            <span class="pc-office-name">شؤون الطلاب</span>
+            <span class="pc-office-desc">الحياة الطلابية، المرافق، والأنشطة اللامنهجية</span>
+          </button>
+          <button type="button" class="pc-office-row" data-value="academic" role="radio" aria-checked="false">
+            <span class="pc-office-name">المكتب الأكاديمي</span>
+            <span class="pc-office-desc">المنهج الدراسي، الأقسام، والتقييم</span>
+          </button>
+          <button type="button" class="pc-office-row" data-value="quran" role="radio" aria-checked="false">
+            <span class="pc-office-name">مكتب كلية القرآن</span>
+            <span class="pc-office-desc">برنامج الحفظ، علوم القرآن، والإجازات</span>
+          </button>
+        </div>
+        <p class="pc-footnote">يرد المساعد تلقائيًا باللغة التي اخترتها أعلاه.</p>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="notifications">
+        <p class="pc-panel-intro">إدارة كيفية تواصل مدارس سلطان حنفي الملكية معك بشأن حضور طفلك ونتائجه ورسومه.</p>
+        <div data-pc-notifications-body>
+          <p class="pc-notice">جارٍ التحميل…</p>
+        </div>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="security">
+        <p class="pc-panel-intro">إعدادات الأمان والخصوصية لحساب بوابة أولياء الأمور الخاص بك.</p>
+
+        <div data-pc-security-body>
+          <p class="pc-notice">جارٍ التحميل…</p>
+        </div>
+
+        <div class="pc-card pc-card-muted">
+          <div class="pc-card-head"><span class="pc-option-title">المصادقة الثنائية</span><span class="pc-badge">قريبًا</span></div>
+          <p class="pc-option-desc">خطوة إضافية لتسجيل الدخول باستخدام رمز من هاتفك. مخطط لها في مرحلة قادمة من بوابة أولياء الأمور.</p>
+        </div>
+        <div class="pc-card pc-card-muted">
+          <div class="pc-card-head"><span class="pc-option-title">الجلسات النشطة</span><span class="pc-badge">قريبًا</span></div>
+          <p class="pc-option-desc">عرض الأجهزة المسجَّل الدخول منها إلى حسابك وتسجيل الخروج منها. مخطط لها في مرحلة قادمة من بوابة أولياء الأمور.</p>
+        </div>
+
+        <div class="pc-card">
+          <div class="pc-card-head"><span class="pc-option-title">طلبات الخصوصية والبيانات</span></div>
+          <p class="pc-option-desc">اطلب الاطلاع على بياناتك الشخصية لدينا أو تصحيحها أو حذفها، بموجب قانون حماية البيانات النيجيري لعام 2023. سيتابع أحد أفراد الطاقم عبر البريد الإلكتروني.</p>
+          <form class="pc-form" data-pc-privacy-form>
+            <input type="text" name="fullName" placeholder="الاسم الكامل" required />
+            <input type="email" name="email" placeholder="البريد الإلكتروني" required />
+            <select name="requestType" required>
+              <option value="access">طلب الاطلاع على بياناتي</option>
+              <option value="correction">طلب تصحيح</option>
+              <option value="deletion">طلب حذف</option>
+              <option value="other">طلب آخر</option>
+            </select>
+            <textarea name="details" placeholder="التفاصيل (اختياري)" rows="3"></textarea>
+            <button type="submit" class="btn btn-gold">إرسال الطلب</button>
+            <p class="pc-form-status" data-pc-privacy-status hidden></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="pc-panel" data-pc-panel="quick">
+        <p class="pc-panel-intro">اضبط الموقع ليفتح على القسم الذي تحتاجه أكثر.</p>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الصفحة الافتراضية عند الدخول</span></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="landingPage" role="radiogroup" aria-label="الصفحة الافتراضية">
+            <button type="button" data-value="home" role="radio" aria-checked="true" class="is-active">الصفحة الرئيسية</button>
+            <button type="button" data-value="portal" role="radio">بوابة أولياء الأمور</button>
+            <button type="button" data-value="student" role="radio" disabled title="قريبًا — لا توجد بوابة طلاب منفصلة بعد">بوابة الطلاب</button>
+            <button type="button" data-value="admissions" role="radio">القبول</button>
+            <button type="button" data-value="quran" role="radio">كلية القرآن</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الإجراءات العائمة</span></div>
+          <div class="pc-toggle-row">
+            <div><span class="pc-option-title">واتساب</span></div>
+            <button type="button" class="pc-switch is-on" data-pc-toggle="floatingWhatsapp" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+          </div>
+          <div class="pc-toggle-row">
+            <div><span class="pc-option-title">المساعد الذكي</span></div>
+            <button type="button" class="pc-switch is-on" data-pc-toggle="floatingAssistant" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+          </div>
+          <div class="pc-toggle-row">
+            <div><span class="pc-option-title">سجّل الآن</span></div>
+            <button type="button" class="pc-switch is-on" data-pc-toggle="floatingApply" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+          </div>
+          <div class="pc-toggle-row">
+            <div><span class="pc-option-title">اتصل بالمدرسة</span></div>
+            <button type="button" class="pc-switch is-on" data-pc-toggle="floatingCall" role="switch" aria-checked="true"><span class="pc-switch-knob"></span></button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </aside>
+</div>
+
+
+<script src="/js/personalisation.js" defer></script>
 <script src="/js/site.js" defer></script>
 <script src="/js/assistant-data.ar.js" defer></script>
 <script src="/js/assistant.js" defer></script>

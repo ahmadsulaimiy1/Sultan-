@@ -97,3 +97,45 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
   read_at     TIMESTAMPTZ
 );
+
+-- Personalisation Centre — Notifications tab. Records which delivery
+-- channels and notification types a guardian *wants*, even though only
+-- "website" (the notifications table above) actually delivers anything
+-- today. Saving a preference for email/whatsapp/sms is intentional: it
+-- lets a family opt in ahead of those channels existing, so nothing has
+-- to be re-asked once a transactional email/SMS provider is added (see
+-- docs/digital-campus-roadmap.md) — the portal UI must still label those
+-- channels "coming soon" rather than implying they're live.
+CREATE TABLE IF NOT EXISTS guardian_notification_preferences (
+  guardian_id       INTEGER PRIMARY KEY REFERENCES guardians(id) ON DELETE CASCADE,
+  channel_website    BOOLEAN NOT NULL DEFAULT true,
+  channel_email      BOOLEAN NOT NULL DEFAULT false,
+  channel_whatsapp   BOOLEAN NOT NULL DEFAULT false,
+  channel_sms        BOOLEAN NOT NULL DEFAULT false,
+  type_attendance    BOOLEAN NOT NULL DEFAULT true,
+  type_results       BOOLEAN NOT NULL DEFAULT true,
+  type_fees          BOOLEAN NOT NULL DEFAULT true,
+  type_announcements BOOLEAN NOT NULL DEFAULT true,
+  type_events        BOOLEAN NOT NULL DEFAULT true,
+  type_emergency     BOOLEAN NOT NULL DEFAULT true,
+  language           TEXT NOT NULL DEFAULT 'en',
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Personalisation Centre — Privacy & Data Requests. A real, working
+-- "contact the school about your data" channel under the Nigeria Data
+-- Protection Act 2023 (see docs/parent-portal.md). Deliberately open to
+-- anyone, not just signed-in guardians — a former guardian requesting
+-- deletion may no longer have portal access. Reviewed and actioned by
+-- staff directly against the database (same admin-mediated pattern as
+-- password resets); no self-service automation yet.
+CREATE TABLE IF NOT EXISTS privacy_requests (
+  id            SERIAL PRIMARY KEY,
+  full_name     TEXT NOT NULL,
+  email         TEXT NOT NULL,
+  request_type  TEXT NOT NULL, -- access | correction | deletion | other
+  details       TEXT,
+  status        TEXT NOT NULL DEFAULT 'open', -- open | in_progress | resolved
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_at   TIMESTAMPTZ
+);

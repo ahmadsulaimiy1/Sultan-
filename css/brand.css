@@ -3,6 +3,39 @@
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
     --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.62); --line:rgba(198,161,91,0.38);
     --oxford-navy:#41618C; --forest-green:#3F6B4E;
+    /* Personalisation Centre — Theme. --surface/--on-surface alias the
+       light-reading-surface roles of --ivory/--ink specifically (body
+       background and the ivory-banded content sections' text), NOT the
+       navy-banded editorial sections, where --ivory/#fff are used as
+       fixed light-text-on-dark-band pairs and must stay untouched. This
+       split keeps every theme's contrast pairing intact — see
+       docs/personalisation-centre.md for why the navy/gold dramatic
+       bands intentionally don't re-theme. */
+    --surface:var(--ivory); --on-surface:var(--ink); --on-surface-soft:var(--ink-soft);
+  }
+  :root[data-pc-theme="dark"]{
+    --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
+  }
+  :root[data-pc-theme="light"]{
+    --surface:#FFFFFF; --on-surface:#241B12; --on-surface-soft:rgba(36,27,18,0.6);
+  }
+
+  /* Personalisation Centre — Text Size. The whole site is built on rem
+     units, so scaling the root font-size scales every component
+     proportionally — genuinely functional, not a partial/cosmetic toggle. */
+  html[data-pc-text="small"]{font-size:93.75%;}
+  html[data-pc-text="large"]{font-size:112.5%;}
+
+  /* Personalisation Centre — Reduced Motion. Kills CSS animations and
+     transitions site-wide; js/site.js and js/personalisation.js also
+     check this attribute before running any requestAnimationFrame-based
+     animation (e.g. the stat-band counters), so this covers both CSS and
+     JS-driven motion, not just one or the other. */
+  html[data-pc-motion="reduced"] *,
+  html[data-pc-motion="reduced"] *::before,
+  html[data-pc-motion="reduced"] *::after{
+    animation-duration:0.001ms !important; animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important; scroll-behavior:auto !important;
   }
   /* Variable names kept as --navy/--navy-deep/--emerald for minimal diff;
      values now render Royal Coffee Brown / Deep Espresso / Warm Bronze per
@@ -147,7 +180,7 @@
   .nav-mark:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);}
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;overflow-x:hidden;}
-  body{font-family:'Inter','Cairo',sans-serif;color:var(--ink);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  body{font-family:'Inter','Cairo',sans-serif;color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   /* The crest-watermark bleed and similar decorative elements intentionally
      extend past the viewport edge; without this, that harmless extra
      scroll width shifts the default RTL scroll origin and clips the start
@@ -230,22 +263,22 @@
   .search-overlay[hidden]{display:none;}
   body.search-lock{overflow:hidden;}
   .search-panel{
-    width:100%;max-width:560px;background:var(--ivory);border:1px solid var(--gold);
+    width:100%;max-width:560px;background:var(--surface);border:1px solid var(--gold);
     box-shadow:0 40px 80px -20px rgba(0,0,0,0.6);max-height:70vh;display:flex;flex-direction:column;
   }
   .search-panel-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);color:var(--navy);flex-shrink:0;}
   .search-panel-head input{
-    flex:1;border:none;outline:none;background:none;font-family:'Inter','Cairo',sans-serif;font-size:1rem;color:var(--ink);
+    flex:1;border:none;outline:none;background:none;font-family:'Inter','Cairo',sans-serif;font-size:1rem;color:var(--on-surface);
   }
-  .search-close{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:0.9rem;flex-shrink:0;}
+  .search-close{background:none;border:none;color:var(--on-surface-soft);cursor:pointer;font-size:0.9rem;flex-shrink:0;}
   .search-results{overflow-y:auto;padding:8px 0;}
   .search-result{display:flex;flex-direction:column;gap:3px;padding:12px 18px;text-decoration:none;border-bottom:1px solid var(--line);}
   .search-result:last-child{border-bottom:none;}
   .search-result:hover{background:rgba(198,161,91,0.08);}
   .search-result-title{font-family:'Cinzel','Amiri',serif;font-size:0.88rem;color:var(--navy);}
-  .search-result-desc{font-family:'Inter','Cairo',sans-serif;font-size:0.76rem;color:var(--ink-soft);
+  .search-result-desc{font-family:'Inter','Cairo',sans-serif;font-size:0.76rem;color:var(--on-surface-soft);
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .search-empty{padding:20px 18px;color:var(--ink-soft);font-size:0.85rem;}
+  .search-empty{padding:20px 18px;color:var(--on-surface-soft);font-size:0.85rem;}
   /* "Our Story" nav dropdown — a bordered panel in the brand's own
      material, not a generic drop-shadow menu */
   .nav-drop{position:relative;}
@@ -364,7 +397,7 @@
   .director-body p:first-of-type::first-letter{font-family:'Cinzel','Amiri',serif;font-size:2.6rem;color:var(--gold);float:left;line-height:0.8;margin:6px 8px 0 0;}
 
   /* welcome/intro & mvv reused */
-  .intro{background:var(--ivory);}
+  .intro{background:var(--surface);}
   .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;}
   @media (max-width:860px){.intro-grid{grid-template-columns:1fr;gap:34px;}}
   .intro h2{font-size:2.2rem;margin:14px 0 22px;}
@@ -385,7 +418,7 @@
   .clever-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
   @media (max-width:960px){.clever-grid{grid-template-columns:repeat(3,1fr);}}
   @media (max-width:560px){.clever-grid{grid-template-columns:repeat(2,1fr);}}
-  .clever-item{background:var(--ivory);border-top:3px solid var(--gold);padding:22px 16px;text-align:center;}
+  .clever-item{background:var(--surface);border-top:3px solid var(--gold);padding:22px 16px;text-align:center;}
   .clever-item .letter{font-family:'Cinzel','Amiri',serif;font-size:2rem;color:var(--navy);font-weight:700;}
   .clever-item .word{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--crimson);font-weight:600;margin:6px 0 8px;}
   .clever-item .desc{font-size:0.8rem;color:#55534d;}
@@ -410,18 +443,18 @@
   .staff-item span{color:rgba(248,244,233,0.62);font-size:0.76rem;}
 
   /* academics */
-  .academics{background:var(--ivory);}
+  .academics{background:var(--surface);}
   .school-block{border:1px solid var(--line);background:#fff;padding:34px 32px;margin-top:26px;}
   .school-block .tag{font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;}
   .school-block h3{font-size:1.7rem;margin:8px 0 14px;}
   .school-block p{font-size:0.95rem;color:#4a4944;margin-bottom:10px;}
   .dept-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px;}
   @media (max-width:700px){.dept-grid{grid-template-columns:1fr;}}
-  .dept-item{background:var(--ivory);padding:16px 18px;border-left:2px solid var(--gold);}
+  .dept-item{background:var(--surface);padding:16px 18px;border-left:2px solid var(--gold);}
   .dept-item strong{display:block;font-size:0.86rem;color:var(--navy);margin-bottom:4px;}
   .dept-item span{font-size:0.82rem;color:#54534e;}
   .schedule-row{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;}
-  .schedule-row div{background:var(--ivory);padding:14px 18px;border-left:2px solid var(--gold);font-size:0.86rem;flex:1;min-width:200px;}
+  .schedule-row div{background:var(--surface);padding:14px 18px;border-left:2px solid var(--gold);font-size:0.86rem;flex:1;min-width:200px;}
   .schedule-row strong{display:block;color:var(--navy);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
 
   .curriculum{margin-top:40px;background:var(--emerald);color:var(--ivory);padding:44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
@@ -438,7 +471,7 @@
   .boarding-panel .stat strong{color:var(--gold-bright);font-weight:600;}
 
   /* admission (reused) */
-  .admission{background:var(--ivory);}
+  .admission{background:var(--surface);}
   .steps{counter-reset:step;margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:0 50px;}
   @media (max-width:800px){.steps{grid-template-columns:1fr;}}
   .step{counter-increment:step;display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--line);}
@@ -511,7 +544,7 @@
   .found-card p{font-size:0.88rem;color:#54534e;}
 
   /* policies (reused compact) */
-  .policies{background:var(--ivory);}
+  .policies{background:var(--surface);}
   .policy-category{margin-top:44px;}
   .policy-category:first-of-type{margin-top:40px;}
   .policy-category-title{
@@ -536,7 +569,7 @@
   .policy-body ul{padding-left:20px;margin-top:6px;display:flex;flex-direction:column;gap:5px;}
   .grade-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:0.86rem;}
   .grade-table th,.grade-table td{border:1px solid var(--line);padding:6px 10px;text-align:left;}
-  .grade-table th{background:var(--ivory);color:var(--navy);}
+  .grade-table th{background:var(--surface);color:var(--navy);}
   .sign-row{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;border-top:1px solid var(--line);padding-top:14px;}
   @media (max-width:700px){.sign-row{grid-template-columns:1fr 1fr;}}
   .sign-row div{font-size:0.76rem;}
@@ -850,7 +883,7 @@
   .assistant-panel{
     position:absolute;bottom:70px;right:0;width:min(380px, calc(100vw - 40px));
     max-height:min(620px, calc(100vh - 120px));flex-direction:column;
-    background:var(--ivory);border:1px solid var(--gold);
+    background:var(--surface);border:1px solid var(--gold);
     box-shadow:0 30px 60px -20px rgba(34,23,9,0.5);
     display:flex;
   }
@@ -887,16 +920,16 @@
   body.assistant-fullscreen-lock{overflow:hidden;}
 
   .assistant-disclosure{
-    margin:0;padding:10px 18px;font-size:0.72rem;line-height:1.5;color:var(--ink-soft);
+    margin:0;padding:10px 18px;font-size:0.72rem;line-height:1.5;color:var(--on-surface-soft);
     background:rgba(233,206,138,0.14);border-bottom:1px solid var(--line);flex-shrink:0;
   }
   .assistant-messages{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-height:120px;}
   .assistant-msg{max-width:85%;padding:10px 13px;font-size:0.88rem;line-height:1.5;white-space:pre-wrap;}
-  .assistant-msg-bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);}
+  .assistant-msg-bot{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--on-surface);}
   .assistant-msg-user{align-self:flex-end;background:var(--navy);color:var(--ivory);}
-  .assistant-msg-pending{color:var(--ink-soft);font-style:italic;}
+  .assistant-msg-pending{color:var(--on-surface-soft);font-style:italic;}
   .assistant-msg-error{align-self:flex-start;background:#fff;border:1px solid var(--crimson);color:var(--crimson);}
-  .assistant-msg-notice{align-self:center;max-width:100%;background:none;border:none;color:var(--ink-soft);font-size:0.78rem;text-align:center;padding:2px 8px;}
+  .assistant-msg-notice{align-self:center;max-width:100%;background:none;border:none;color:var(--on-surface-soft);font-size:0.78rem;text-align:center;padding:2px 8px;}
   .assistant-link{align-self:flex-start;font-size:0.85rem;color:var(--crimson);font-weight:600;border-bottom:1px solid rgba(124,31,46,0.35);margin-top:-4px;}
   .assistant-link:hover{border-color:var(--crimson);}
   .assistant-starters{padding:0 18px 12px;display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;}
@@ -909,7 +942,7 @@
   .assistant-contact-form{display:flex;flex-direction:column;gap:8px;width:100%;}
   .assistant-contact-form input{
     font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:9px 11px;
-    border:1px solid var(--line);background:#fff;color:var(--ink);
+    border:1px solid var(--line);background:#fff;color:var(--on-surface);
   }
   .assistant-contact-form input:focus{outline:2px solid var(--gold);outline-offset:1px;}
   .assistant-contact-form button{margin-top:2px;font-size:0.72rem !important;padding:11px !important;}
@@ -934,10 +967,10 @@
   .assistant-icon-btn.is-listening{border-color:var(--crimson);color:var(--crimson);background:rgba(124,31,46,0.08);}
   .assistant-input{
     flex:1;resize:none;font-family:'Inter','Cairo',sans-serif;font-size:0.86rem;line-height:1.4;
-    padding:8px 10px;border:1px solid var(--line);background:#fff;color:var(--ink);max-height:120px;
+    padding:8px 10px;border:1px solid var(--line);background:#fff;color:var(--on-surface);max-height:120px;
   }
   .assistant-input:focus{outline:2px solid var(--gold);outline-offset:1px;}
-  .assistant-input:disabled{background:var(--ivory);}
+  .assistant-input:disabled{background:var(--surface);}
   .assistant-send-btn{
     width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
     background:var(--navy);border:1px solid var(--navy);color:var(--gold-bright);cursor:pointer;
@@ -948,7 +981,7 @@
   .assistant-composer-footer{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;}
   .assistant-text-btn{
     background:none;border:none;padding:0;font-family:'Inter','Cairo',sans-serif;font-size:0.7rem;
-    color:var(--ink-soft);cursor:pointer;text-decoration:underline;text-underline-offset:2px;
+    color:var(--on-surface-soft);cursor:pointer;text-decoration:underline;text-underline-offset:2px;
   }
   .assistant-text-btn:hover{color:var(--crimson);}
   .assistant-text-btn[aria-pressed="true"]{color:var(--crimson);font-weight:600;}
@@ -975,7 +1008,7 @@
   .whatsapp-launcher:hover{transform:translateY(-2px) scale(1.04);}
   .whatsapp-menu{
     position:absolute;bottom:62px;right:0;width:min(280px, calc(100vw - 40px));
-    background:var(--ivory);border:1px solid var(--gold);box-shadow:0 24px 50px -18px rgba(34,23,9,0.5);
+    background:var(--surface);border:1px solid var(--gold);box-shadow:0 24px 50px -18px rgba(34,23,9,0.5);
   }
   .whatsapp-menu[hidden]{display:none;}
   [dir="rtl"] .whatsapp-menu{right:auto;left:0;}
@@ -991,7 +1024,7 @@
   .whatsapp-menu-item:last-child{border-bottom:none;}
   .whatsapp-menu-item:hover{background:rgba(37,211,102,0.08);}
   .whatsapp-menu-item .wm-title{font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;font-weight:600;color:var(--navy);}
-  .whatsapp-menu-item .wm-sub{font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;color:var(--ink-soft);}
+  .whatsapp-menu-item .wm-sub{font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;color:var(--on-surface-soft);}
 
   @media (max-width:520px){
     .assistant-root{bottom:16px;right:16px;}
@@ -1035,4 +1068,26 @@
     .apply-float{bottom:16px;left:16px;}
     [dir="rtl"] .apply-float{left:auto;right:16px;}
     .apply-float a{padding:12px 18px;font-size:0.7rem;}
+  }
+
+  /* Floating "Call School" — stacked above Apply Now on the same
+     (left) corner, mirroring the WhatsApp/Assistant stack on the right.
+     Always available (not scroll-gated) — a phone call is the one
+     channel that should never require a scroll to reach. */
+  .call-float{position:fixed;bottom:96px;left:26px;z-index:198;}
+  [dir="rtl"] .call-float{left:auto;right:26px;}
+  .call-float.is-hidden{display:none;}
+  .call-float a{
+    display:flex;align-items:center;gap:8px;
+    background:var(--surface);color:var(--navy);border:1px solid var(--gold);
+    padding:11px 16px;border-radius:999px;
+    font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;
+    box-shadow:0 12px 26px -14px rgba(34,23,9,0.4);text-decoration:none;
+    transition:box-shadow .25s ease,transform .25s ease,background .25s ease;
+  }
+  .call-float a:hover{box-shadow:0 16px 32px -12px rgba(198,161,91,0.5);transform:translateY(-2px);background:var(--gold-bright);}
+  @media (max-width:520px){
+    .call-float{bottom:82px;left:16px;}
+    [dir="rtl"] .call-float{left:auto;right:16px;}
+    .call-float a{padding:9px 13px;font-size:0.62rem;}
   }

@@ -18,3 +18,28 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/personalisation.css">
+<script>
+(function(){
+  try{
+    var raw = localStorage.getItem('shrsPersonalisation');
+    var p = raw ? JSON.parse(raw) : {};
+    var html = document.documentElement;
+    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-text', p.textSize || 'medium');
+    html.setAttribute('data-pc-motion', p.motion || 'standard');
+    if(p.landingPage && p.landingPage !== 'home'){
+      var path = location.pathname;
+      if(path === '/' || path === '/ar/'){
+        var lang = html.lang === 'ar' ? 'ar' : 'en';
+        var targets = {
+          en: { portal: '/portal/login/', admissions: '/admission/', quran: '/academics/quran-college/' },
+          ar: { portal: '/portal/login/', admissions: '/ar/admission/', quran: '/ar/academics/quran-college/' },
+        };
+        var target = targets[lang][p.landingPage];
+        if(target) location.replace(target);
+      }
+    }
+  }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
+})();
+</script>

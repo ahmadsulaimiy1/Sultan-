@@ -51,6 +51,9 @@ function buildPage(page) {
   const footer = read(`partials/footer${suffix}.html`);
   const assistant = read(`partials/assistant${suffix}.html`);
   const search = read(`partials/search${suffix}.html`);
+  const personalisation = fillTokens(read(`partials/personalisation${suffix}.html`), {
+    ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
+  });
 
   // hreflang alternate — points at this page's translation counterpart,
   // or a sensible fallback (e.g. the other language's homepage) when
@@ -71,7 +74,9 @@ ${content}
 ${footer}
 ${assistant}
 ${search}
+${personalisation}
 
+<script src="/js/personalisation.js" defer></script>
 <script src="/js/site.js" defer></script>
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
