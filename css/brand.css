@@ -2,10 +2,14 @@
     --navy:#3B2A1D; --navy-deep:#221709; --emerald:#6B4A2E;
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
     --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.62); --line:rgba(198,161,91,0.38);
+    --oxford-navy:#41618C; --forest-green:#3F6B4E;
   }
   /* Variable names kept as --navy/--navy-deep/--emerald for minimal diff;
      values now render Royal Coffee Brown / Deep Espresso / Warm Bronze per
-     the confirmed palette. --ivory now renders Premium Cream. */
+     the confirmed palette. --ivory now renders Premium Cream. --oxford-navy
+     and --forest-green are supporting accents used sparingly and only where
+     scoped (governance structure, Qur'an College) — the coffee/gold/cream
+     identity remains the lead instrument everywhere else. */
 
   /* === Institutional signature system === */
   .institutional-frame{position:relative;}
@@ -699,6 +703,16 @@
   .org-tier + .org-connector{margin:0 auto;}
   .org-connector{width:1px;height:22px;background:var(--gold);opacity:0.5;}
   .org-node{background:var(--navy-deep);border:1px solid var(--gold);padding:13px 20px;text-align:center;min-width:140px;}
+  /* Governance structure: a restrained Oxford Navy accent on the
+     structural lines/borders only — an "official record" register
+     distinct from the school's warm coffee/gold identity, without
+     recolouring the type or the rest of the page. */
+  .governance .org-connector{background:var(--oxford-navy);opacity:0.75;}
+  .governance .org-node{border-color:var(--oxford-navy);}
+  /* Qur'an College: a small Forest Green accent on the Hifz journey's
+     stage numerals — scholarship-and-tradition mood, distinct from the
+     gold used for the other three schools' equivalents. */
+  #quran-college .flow-stage .fs-num{color:var(--forest-green);}
   .org-node .on-role{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);}
   .org-node .on-count{font-size:0.78rem;color:rgba(248,244,233,0.6);margin-top:3px;display:block;}
   @media (max-width:640px){.org-tier{flex-direction:column;align-items:center;}}
