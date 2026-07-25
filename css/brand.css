@@ -746,6 +746,31 @@
   .foot-grid a:hover{color:var(--gold-bright);}
   .foot-contact-item{margin-bottom:8px;line-height:1.5;}
 
+  /* At-a-glance institutional dashboard — every major facet of the
+     school as a compact icon badge, all visible in one grid with no
+     scroll or tap required, sitting above the more detailed zone
+     ribbon below it. This is the honest version of "the whole
+     footer visible at once": a real overview immediately, with the
+     full link lists one swipe away rather than requiring either
+     illegibly tiny text or hiding content behind an accordion. */
+  .foot-dash-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-bright);text-align:center;margin-top:34px;margin-bottom:16px;}
+  .foot-dashboard{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+  .fd-item{
+    display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;
+    padding:14px 6px;border:1px solid rgba(198,161,91,0.2);background:rgba(198,161,91,0.04);
+    transition:background .2s ease,border-color .2s ease,transform .2s ease;
+  }
+  .fd-item:hover{background:rgba(198,161,91,0.12);border-color:var(--gold);transform:translateY(-2px);}
+  .fd-item svg{width:24px;height:24px;color:var(--gold-bright);flex-shrink:0;}
+  .fd-item span{font-size:0.66rem;font-weight:600;letter-spacing:0.01em;line-height:1.25;color:var(--ivory);}
+  @media (max-width:900px){.foot-dashboard{grid-template-columns:repeat(4,1fr);}}
+  @media (max-width:520px){
+    .foot-dashboard{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .fd-item{padding:12px 4px;}
+    .fd-item svg{width:22px;height:22px;}
+    .fd-item span{font-size:0.62rem;}
+  }
+
   /* Mobile footer — horizontally-scrollable zone cards rather than a
      tall single-column stack. Every zone keeps its full heading, icon,
      and complete link list (nothing removed, nothing behind a tap) —
