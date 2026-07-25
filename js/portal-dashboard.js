@@ -31,10 +31,16 @@
     var head = el('div', 'portal-child-head');
     var title = el('h2', null, child.fullName);
     head.appendChild(title);
-    var metaParts = [child.admissionNo];
-    if(child.institution) metaParts.push(child.institution);
-    if(child.className) metaParts.push(child.className);
-    head.appendChild(el('div', 'meta', metaParts.join(' · ')));
+    head.appendChild(el('div', 'meta', child.admissionNo));
+    if(child.enrolments && child.enrolments.length){
+      var programmes = el('div', 'portal-programmes');
+      child.enrolments.forEach(function(en){
+        var label = [en.institution, en.className].filter(Boolean).join(' · ');
+        var chip = el('span', 'portal-programme-chip' + (en.isPrimary ? ' is-primary' : ''), label);
+        programmes.appendChild(chip);
+      });
+      head.appendChild(programmes);
+    }
     if(child.status && child.status !== 'active'){
       var statusLabel = child.status.charAt(0).toUpperCase() + child.status.slice(1);
       head.appendChild(el('span', 'portal-status-badge', statusLabel));

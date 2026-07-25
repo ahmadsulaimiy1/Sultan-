@@ -123,6 +123,14 @@ body.portal-body{
 .portal-achv-badge{border:1px solid var(--line);padding:10px 8px;text-align:center;opacity:0.4;font-size:0.68rem;color:var(--ink-soft);}
 .portal-achv-badge.is-earned{opacity:1;border-color:var(--gold);background:rgba(198,161,91,0.08);color:var(--navy);font-weight:600;}
 
+/* --- Multi-programme (dual enrolment) chips --- */
+.portal-programmes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.portal-programme-chip{
+  font-size:0.7rem;letter-spacing:0.02em;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);
+  padding:2px 9px;white-space:nowrap;
+}
+.portal-programme-chip.is-primary{background:rgba(233,206,138,0.12);border-color:var(--gold-bright);font-weight:600;}
+
 /* --- Student Portal: Hifz & Ijazah panel --- */
 .portal-hifz-card{
   background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);

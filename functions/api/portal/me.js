@@ -30,27 +30,39 @@ export async function onRequestGet({ request, env }) {
     }
 
     const studentsRes = await sql`
-      SELECT s.id, s.full_name, s.admission_no, s.status, c.institution, c.name AS class_name
+      SELECT s.id, s.full_name, s.admission_no, s.status
       FROM students s
       JOIN guardian_student gs ON gs.student_id = s.id
-      LEFT JOIN classes c ON c.id = s.class_id
       WHERE gs.guardian_id = ${session.guardianId}
       ORDER BY s.full_name`;
 
     const children = [];
     for (const student of studentsRes.rows) {
-      const [attendance, results, fees] = await Promise.all([
+      const [attendance, results, fees, enrolmentsRes] = await Promise.all([
         sql`SELECT term, days_present, days_total FROM attendance_summary WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
         sql`SELECT term, subject, ca_score, exam_score, total_score, teacher_comment FROM term_results WHERE student_id = ${student.id} ORDER BY updated_at DESC`,
         sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
+        // A student may belong to more than one class at once (e.g. a
+        // Royal College student also enrolled in Qur'an College and/or
+        // Arabic & Islamic Studies) — see sql/schema.sql's student_classes.
+        sql`
+          SELECT c.institution, c.name AS class_name, sc.is_primary
+          FROM student_classes sc JOIN classes c ON c.id = sc.class_id
+          WHERE sc.student_id = ${student.id}
+          ORDER BY sc.is_primary DESC, c.institution`,
       ]);
+
+      const enrolments = enrolmentsRes.rows.map((r) => ({ institution: r.institution, className: r.class_name, isPrimary: r.is_primary }));
+      const primary = enrolments.find((e) => e.isPrimary) || enrolments[0] || null;
 
       // Guardians see a Hifz *snapshot* only (stage + Juz' verified
       // count) — the student's own portal shows the full per-Juz' grid
       // and raw Muhaffiz notes; parents don't need that level of detail
-      // in this summary card.
+      // in this summary card. Triggers off ANY Qur'an College enrolment,
+      // not just the primary one, so a dual-enrolled student's Hifz
+      // record still shows even if their primary class is elsewhere.
       let hifz = null;
-      if (isQuranCollegeInstitution(student.institution)) {
+      if (enrolments.some((e) => isQuranCollegeInstitution(e.institution))) {
         const [enrolmentRes, verifiedCountRes] = await Promise.all([
           sql`SELECT stage_number FROM hifz_enrolment WHERE student_id = ${student.id}`,
           sql`SELECT COUNT(*)::int AS n FROM hifz_progress WHERE student_id = ${student.id} AND status = 'verified'`,
@@ -68,8 +80,9 @@ export async function onRequestGet({ request, env }) {
         fullName: student.full_name,
         admissionNo: student.admission_no,
         status: student.status,
-        institution: student.institution,
-        className: student.class_name,
+        institution: primary ? primary.institution : null,
+        className: primary ? primary.className : null,
+        enrolments,
         attendance: attendance.rows[0] || null,
         results: results.rows,
         fees: fees.rows[0] || null,

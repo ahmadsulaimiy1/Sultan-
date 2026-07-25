@@ -23,6 +23,13 @@ async function ensureTerm(sql, rawTerm) {
   return term;
 }
 
+async function resolveClassId(sql, institution, className) {
+  const existingClass = await sql`SELECT id FROM classes WHERE institution = ${institution} AND name = ${className}`;
+  if (existingClass.rows.length) return existingClass.rows[0].id;
+  const createdClass = await sql`INSERT INTO classes (institution, name) VALUES (${institution}, ${className}) RETURNING id`;
+  return createdClass.rows[0].id;
+}
+
 async function notifyGuardiansOfStudent(sql, studentId, message) {
   const links = await sql`SELECT guardian_id FROM guardian_student WHERE student_id = ${studentId}`;
   for (const row of links.rows) {
@@ -75,15 +82,7 @@ export async function onRequestPost({ request, env }) {
 
     let classId = null;
     if (studentIn.institution && studentIn.className) {
-      const existingClass = await sql`
-        SELECT id FROM classes WHERE institution = ${studentIn.institution} AND name = ${studentIn.className}`;
-      if (existingClass.rows.length) {
-        classId = existingClass.rows[0].id;
-      } else {
-        const createdClass = await sql`
-          INSERT INTO classes (institution, name) VALUES (${studentIn.institution}, ${studentIn.className}) RETURNING id`;
-        classId = createdClass.rows[0].id;
-      }
+      classId = await resolveClassId(sql, studentIn.institution, studentIn.className);
     }
 
     const admissionNo = studentIn.admissionNo.trim();
@@ -99,6 +98,30 @@ export async function onRequestPost({ request, env }) {
         VALUES (${studentIn.fullName}, ${admissionNo}, ${classId}, ${status})
         RETURNING id`;
       studentId = createdStudent.rows[0].id;
+    }
+
+    // student_classes is the authoritative multi-enrolment record — the
+    // primary class above is mirrored here (is_primary = true), plus any
+    // additionalPrograms (e.g. a Royal College student also enrolled in
+    // Qur'an College and/or Arabic & Islamic Studies at the same time).
+    // Purely additive: re-calling this endpoint never removes an
+    // existing enrolment, only adds/updates ones named in this request —
+    // same upsert-only semantics as attendance/results/fees below.
+    if (classId) {
+      await sql`
+        INSERT INTO student_classes (student_id, class_id, is_primary)
+        VALUES (${studentId}, ${classId}, true)
+        ON CONFLICT (student_id, class_id) DO UPDATE SET is_primary = true`;
+    }
+    if (Array.isArray(body.additionalPrograms)) {
+      for (const p of body.additionalPrograms) {
+        if (!p || !p.institution || !p.className) continue;
+        const additionalClassId = await resolveClassId(sql, p.institution, p.className);
+        await sql`
+          INSERT INTO student_classes (student_id, class_id, is_primary)
+          VALUES (${studentId}, ${additionalClassId}, false)
+          ON CONFLICT (student_id, class_id) DO NOTHING`;
+      }
     }
 
     await sql`

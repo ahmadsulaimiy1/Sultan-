@@ -29,6 +29,40 @@ separate future work). "Assignments," "upcoming deadlines," and
 not fabricated placeholder data, because no course system exists yet to
 generate real ones.
 
+## Dual / multi-programme enrolment
+
+A student can belong to more than one class at once — e.g. a Royal
+College SS2 student who is also enrolled in Qur'an College and/or
+Arabic & Islamic Studies. `student_classes` is the authoritative
+enrolment record (each student's primary class from `admin/students.js`
+is mirrored there with `is_primary = true`); both the guardian and
+student dashboards render every enrolment as a chip, and the Hifz panel
+triggers off *any* Qur'an College enrolment, not just the primary one.
+
+To enrol a student in additional programmes beyond their primary class,
+add `additionalPrograms` to the existing `admin/students` call:
+
+```
+curl -X POST https://<your-domain>/api/portal/admin/students \
+  -H "x-admin-token: <the PORTAL_ADMIN_TOKEN you set>" \
+  -H "content-type: application/json" \
+  -d '{
+    "guardian": { "fullName": "...", "email": "parent@example.com" },
+    "student": {
+      "fullName": "...", "admissionNo": "SHR-2026-020",
+      "institution": "Royal College", "className": "SS2",
+      "additionalPrograms": [
+        { "institution": "Qur'\''an College", "className": "Hifz Year 3" },
+        { "institution": "Arabic & Islamic Studies", "className": "Thanawiyyah 1" }
+      ]
+    }
+  }'
+```
+
+This is purely additive — re-calling the endpoint never removes an
+existing enrolment, only adds or refreshes the ones named in that
+request, same as how attendance/results/fees already behave.
+
 ## Setup
 
 This shares the same Cloudflare Pages + Neon database as the Parent
@@ -49,12 +83,14 @@ only need the two new pieces below.
    curl -X POST https://<your-domain>/api/portal/setup \
      -H "x-setup-token: <the PORTAL_SETUP_TOKEN you set>"
    ```
-   This creates the five new tables (`student_accounts`, `hifz_progress`,
-   `hifz_enrolment`, `ijazah_register`, `auth_audit_log`) and, if
-   `PORTAL_DEMO_PASSWORD` is set, also creates a second demo child —
-   `DEMO-0002`, a Qur'an College student with sample Hifz progress and a
-   working Student Portal login — alongside the existing `DEMO-0001`
-   demo child, both linked to the same demo guardian.
+   This creates the six new tables (`student_accounts`, `hifz_progress`,
+   `hifz_enrolment`, `ijazah_register`, `auth_audit_log`,
+   `student_classes`) and, if `PORTAL_DEMO_PASSWORD` is set, also
+   creates a second demo child — `DEMO-0002`, a Qur'an College student
+   (dual-enrolled in Arabic & Islamic Studies too, to demonstrate
+   multi-programme support) with sample Hifz progress and a working
+   Student Portal login — alongside the existing `DEMO-0001` demo child,
+   both linked to the same demo guardian.
 
 3. **Try it.** Guardian side: sign in at `/portal/login/` with the demo
    guardian and you'll now see a Hifz snapshot on the `DEMO-0002` child's

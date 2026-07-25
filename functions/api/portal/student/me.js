@@ -1,9 +1,11 @@
 // Student Portal dashboard data: the student's own profile, attendance,
 // full result history (transcript preview), and fee status — scoped
-// directly to the session's own studentId, not via a guardian join. If
-// the student's class institution is Qur'an College, also includes
-// per-Juz' Hifz progress, current stage of the school's published
-// 5-stage Hifz Journey, and any Ijazah register entries. No
+// directly to the session's own studentId, not via a guardian join. A
+// student may be enrolled in more than one programme at once (e.g. Royal
+// College AND Qur'an College AND Arabic & Islamic Studies) — the full
+// list is returned as `enrolments`. If ANY enrolment is Qur'an College,
+// also includes per-Juz' Hifz progress, current stage of the school's
+// published 5-stage Hifz Journey, and any Ijazah register entries. No
 // assignments/deadlines/announcements are returned — no course system
 // exists yet to generate real ones (see docs/student-portal.md); the
 // frontend renders an honest empty state for that section instead of
@@ -32,24 +34,31 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
-    const studentRes = await sql`
-      SELECT s.id, s.full_name, s.admission_no, s.status, c.institution, c.name AS class_name
-      FROM students s
-      LEFT JOIN classes c ON c.id = s.class_id
-      WHERE s.id = ${session.studentId}`;
+    const studentRes = await sql`SELECT id, full_name, admission_no, status FROM students WHERE id = ${session.studentId}`;
     const student = studentRes.rows[0];
     if (!student) {
       return json({ error: 'Not signed in.' }, 401);
     }
 
-    const [attendance, results, fees] = await Promise.all([
+    const [attendance, results, fees, programmesRes] = await Promise.all([
       sql`SELECT term, days_present, days_total FROM attendance_summary WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
       sql`SELECT term, subject, ca_score, exam_score, total_score, teacher_comment FROM term_results WHERE student_id = ${student.id} ORDER BY term, subject`,
       sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
+      // A student may belong to more than one class at once (e.g. Royal
+      // College *and* Qur'an College *and* Arabic & Islamic Studies) —
+      // see sql/schema.sql's student_classes.
+      sql`
+        SELECT c.institution, c.name AS class_name, sc.is_primary
+        FROM student_classes sc JOIN classes c ON c.id = sc.class_id
+        WHERE sc.student_id = ${student.id}
+        ORDER BY sc.is_primary DESC, c.institution`,
     ]);
 
+    const enrolments = programmesRes.rows.map((r) => ({ institution: r.institution, className: r.class_name, isPrimary: r.is_primary }));
+    const primary = enrolments.find((e) => e.isPrimary) || enrolments[0] || null;
+
     let hifz = null;
-    if (isQuranCollegeInstitution(student.institution)) {
+    if (enrolments.some((e) => isQuranCollegeInstitution(e.institution))) {
       const [progressRes, enrolmentRes, ijazahRes] = await Promise.all([
         sql`SELECT juz_number, status, murajaah_note, tajweed_note, muhaffiz_name, assessed_at FROM hifz_progress WHERE student_id = ${student.id}`,
         sql`SELECT stage_number, stage_updated_at, enrolled_at FROM hifz_enrolment WHERE student_id = ${student.id}`,
@@ -72,8 +81,9 @@ export async function onRequestGet({ request, env }) {
       fullName: student.full_name,
       admissionNo: student.admission_no,
       status: student.status,
-      institution: student.institution,
-      className: student.class_name,
+      institution: primary ? primary.institution : null,
+      className: primary ? primary.className : null,
+      enrolments,
       attendance: attendance.rows[0] || null,
       results: results.rows,
       fees: fees.rows[0] || null,

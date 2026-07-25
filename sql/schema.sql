@@ -53,6 +53,21 @@ CREATE TABLE IF NOT EXISTS guardian_student (
   PRIMARY KEY (guardian_id, student_id)
 );
 
+-- Multi-programme (dual) enrolment. students.class_id remains each
+-- student's single "primary" class for backward compatibility with
+-- existing code and data, but a student can additionally belong to any
+-- number of other classes at once — e.g. Royal College SS2 *and* Qur'an
+-- College Hifz *and* Arabic & Islamic Studies simultaneously. Every
+-- student's primary class is also mirrored here (is_primary = true) so
+-- this table is the single, authoritative source of "everything this
+-- student is enrolled in."
+CREATE TABLE IF NOT EXISTS student_classes (
+  student_id  INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  class_id    INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+  is_primary  BOOLEAN NOT NULL DEFAULT false,
+  PRIMARY KEY (student_id, class_id)
+);
+
 CREATE TABLE IF NOT EXISTS attendance_summary (
   id           SERIAL PRIMARY KEY,
   student_id   INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,

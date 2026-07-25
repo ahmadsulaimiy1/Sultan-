@@ -62,6 +62,20 @@ const STATEMENTS = [
     relationship TEXT NOT NULL DEFAULT 'parent/guardian',
     PRIMARY KEY (guardian_id, student_id)
   )`,
+
+  `CREATE TABLE IF NOT EXISTS student_classes (
+    student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    class_id   INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    is_primary BOOLEAN NOT NULL DEFAULT false,
+    PRIMARY KEY (student_id, class_id)
+  )`,
+  // Backfill for students created before this table existed — safe to
+  // re-run (ON CONFLICT DO NOTHING), and a no-op once every student has
+  // a matching row (admin/students.js writes one on every create/update
+  // going forward).
+  `INSERT INTO student_classes (student_id, class_id, is_primary)
+    SELECT id, class_id, true FROM students WHERE class_id IS NOT NULL
+    ON CONFLICT (student_id, class_id) DO NOTHING`,
   `CREATE TABLE IF NOT EXISTS attendance_summary (
     id           SERIAL PRIMARY KEY,
     student_id   INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -232,6 +246,7 @@ async function handle({ request, env }) {
           VALUES ('Demo Student (sample data)', 'DEMO-0001', ${classId}, 'active')
           RETURNING id`;
         const studentId = student.rows[0].id;
+        await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${studentId}, ${classId}, true)`;
 
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${studentId})`;
         await sql`INSERT INTO academic_terms (label, is_current) VALUES ('First Term 2025/2026', true) ON CONFLICT (label) DO NOTHING`;
@@ -254,7 +269,15 @@ async function handle({ request, env }) {
           VALUES (${"Demo Student — Qur'an College (sample data)"}, 'DEMO-0002', ${qClassId}, 'active')
           RETURNING id`;
         const qStudentId = qStudent.rows[0].id;
+        await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${qClassId}, true)`;
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${qStudentId})`;
+
+        // Dual enrolment demo: this same student is also enrolled in
+        // Arabic & Islamic Studies, alongside their primary Qur'an
+        // College programme — exactly the "belongs to more than one
+        // programme at once" case the Student Portal needs to support.
+        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Arabic & Islamic Studies', 'Iʿdādiyyah 1') RETURNING id`;
+        await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${arCls.rows[0].id}, false)`;
 
         const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
         await sql`

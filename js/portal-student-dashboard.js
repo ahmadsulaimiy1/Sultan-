@@ -6,6 +6,7 @@
   var helloEl = document.querySelector('[data-portal-hello]');
   var nameEl = document.querySelector('[data-portal-name]');
   var metaEl = document.querySelector('[data-portal-meta]');
+  var programmesEl = document.querySelector('[data-portal-programmes]');
   var statusEl = document.querySelector('[data-portal-status]');
   var attendanceValueEl = document.querySelector('[data-portal-attendance-value]');
   var attendanceLabelEl = document.querySelector('[data-portal-attendance-label]');
@@ -118,10 +119,14 @@
 
       helloEl.textContent = 'Welcome, ' + data.fullName;
       nameEl.textContent = data.fullName;
-      var metaParts = [data.admissionNo];
-      if(data.institution) metaParts.push(data.institution);
-      if(data.className) metaParts.push(data.className);
-      metaEl.textContent = metaParts.join(' · ');
+      metaEl.textContent = data.admissionNo;
+
+      programmesEl.innerHTML = '';
+      (data.enrolments || []).forEach(function(en){
+        var label = [en.institution, en.className].filter(Boolean).join(' · ');
+        var chip = el('span', 'portal-programme-chip' + (en.isPrimary ? ' is-primary' : ''), label);
+        programmesEl.appendChild(chip);
+      });
 
       if(data.status && data.status !== 'active'){
         statusEl.hidden = false;
