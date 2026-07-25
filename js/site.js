@@ -55,6 +55,25 @@
     window.addEventListener('hashchange', openPolicyFromHash);
   }
 
+  // Homepage hero title — typewriter reveal. Width is measured from the
+  // rendered element (not guessed from character count), so it works
+  // correctly regardless of the serif display face's proportional metrics.
+  const reduceMotionPref = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.hero-type').forEach(el=>{
+    if(reduceMotionPref) return;
+    const target = el.getBoundingClientRect().width;
+    el.classList.add('js-type');
+    el.style.width = '0px';
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{ el.style.width = target + 'px'; });
+    });
+    el.addEventListener('transitionend', function done(e){
+      if(e.propertyName !== 'width') return;
+      el.classList.add('is-done');
+      el.removeEventListener('transitionend', done);
+    });
+  });
+
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});

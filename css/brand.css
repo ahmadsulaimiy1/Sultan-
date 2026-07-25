@@ -3,6 +3,14 @@
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
     --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.62); --line:rgba(198,161,91,0.38);
     --oxford-navy:#41618C; --forest-green:#3F6B4E; --terracotta:#C9784B;
+    /* Prestige palette — supporting tones deployed for section rhythm
+       (see docs/design-rhythm.md): the site's own brand colours are only
+       coffee-brown (--navy) and royal gold (--gold); these extend the
+       ecosystem so sections can alternate light/dark instead of
+       repeating brown on brown. */
+    --cream:#F1E4C8; --milk:#FCFAF6; --parchment:#EAE0C0;
+    --charcoal:#2A2621; --charcoal-deep:#1C1914; --on-charcoal-soft:rgba(241,231,214,0.68);
+    --bronze:#7C5430; --bronze-bright:#A47843;
     /* Personalisation Centre — Theme. --surface/--on-surface alias the
        light-reading-surface roles of --ivory/--ink specifically (body
        background and the ivory-banded content sections' text), NOT the
@@ -12,12 +20,20 @@
        docs/personalisation-centre.md for why the navy/gold dramatic
        bands intentionally don't re-theme. */
     --surface:var(--ivory); --on-surface:var(--ink); --on-surface-soft:var(--ink-soft);
+    /* Reading-surface variants — same theme-aware alias pattern as
+       --surface, so light-content sections can alternate cream/milk/
+       parchment for rhythm without breaking the reading-mode toggle:
+       every variant still collapses to the same dark/white surface
+       the user picked in the Personalisation Centre. */
+    --surface-alt:var(--cream); --surface-tertiary:var(--milk); --surface-warm:var(--parchment);
   }
   :root[data-pc-theme="dark"]{
     --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
+    --surface-alt:#1C140C; --surface-tertiary:#1C140C; --surface-warm:#1C140C;
   }
   :root[data-pc-theme="light"]{
     --surface:#FFFFFF; --on-surface:#241B12; --on-surface-soft:rgba(36,27,18,0.6);
+    --surface-alt:#FFFFFF; --surface-tertiary:#FFFFFF; --surface-warm:#FFFFFF;
   }
 
   /* Personalisation Centre — Accent Colour. Scoped deliberately: it
@@ -152,6 +168,18 @@
   /* Hero headline choreography */
   .hero h1 .word{display:inline-block;opacity:0;transform:translateY(16px);animation:wordIn .7s ease forwards;}
   @keyframes wordIn{to{opacity:1;transform:translateY(0);}}
+  /* Homepage hero title — slow, deliberate typewriter reveal (not a
+     looping gimmick: the caret blinks a handful of times, then settles).
+     Width is measured and driven by JS (see js/site.js), not guessed via
+     ch units — the serif display face's proportional metrics make a
+     fixed character-count width unreliable and risk clipping the text. */
+  .hero-type{display:inline-block;max-width:100%;vertical-align:bottom;}
+  .hero-type.js-type{
+    overflow:hidden;white-space:nowrap;border-right:2px solid var(--gold-bright);
+    transition:width 1.7s steps(27,end);animation:heroCaret .8s step-end 9;
+  }
+  .hero-type.js-type.is-done{border-right-color:transparent;}
+  @keyframes heroCaret{50%{border-color:transparent;}}
   /* Idle crest breathing — ceremonial, not gimmicky */
   .seal-inner .crest-img{animation:crestBreathe 7s ease-in-out infinite;}
   .seal-inner{position:relative;}
@@ -485,6 +513,8 @@
   .hero-inner .eyebrow{justify-content:center;margin-bottom:22px;} .hero-inner .eyebrow::before{display:none;}
   .hero h1{font-family:'Cinzel','Amiri',serif;font-size:clamp(2rem,4.6vw,3.4rem);color:#fff;letter-spacing:0.01em;animation:riseIn 1s ease both;}
   .hero h1 span{display:block;color:var(--gold-bright);font-size:0.5em;letter-spacing:0.28em;margin-top:14px;font-family:'Inter','Cairo',sans-serif;font-weight:600;}
+  .hero h1 .hero-subline{opacity:0;transform:translateY(10px);animation:riseIn .8s ease 2.1s forwards;}
+  @media (prefers-reduced-motion:reduce){.hero h1 .hero-subline{animation:none;opacity:1;transform:none;}}
   .hero p.lede{font-size:1.06rem;color:rgba(248,244,233,0.82);max-width:640px;margin:26px auto 0;animation:riseIn 1s ease .15s both;}
   .hero-ctas{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap;animation:riseIn 1s ease .3s both;}
   @keyframes riseIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
@@ -512,8 +542,15 @@
     .hero-ctas .btn{padding:8px 18px;font-size:0.64rem;justify-content:center;}
   }
   .btn{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s ease,background .3s ease,letter-spacing .3s ease;position:relative;font-family:'Cinzel','Amiri',serif;}
-  .btn-gold{background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);background-size:180% 180%;background-position:0% 0%;color:#fff;border:1px solid var(--accent);box-shadow:0 10px 26px -12px var(--accent-shadow);}
+  .btn-gold{overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);background-size:180% 180%;background-position:0% 0%;color:#fff;border:1px solid var(--accent);box-shadow:0 10px 26px -12px var(--accent-shadow);}
   .btn-gold:hover{background-position:100% 100%;box-shadow:0 14px 34px -10px var(--accent-shadow);transform:translateY(-2px);color:#fff;}
+  .btn-gold::after{
+    content:"";position:absolute;top:0;left:-60%;width:35%;height:100%;
+    background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,0.32) 50%,transparent 100%);
+    transform:skewX(-18deg);transition:left .55s ease;pointer-events:none;
+  }
+  .btn-gold:hover::after{left:130%;}
+  @media (prefers-reduced-motion:reduce){.btn-gold::after{transition:none;display:none;}}
   .btn-outline{border-top:1px solid rgba(198,161,91,0.5);border-bottom:1px solid rgba(198,161,91,0.5);color:var(--gold-bright);}
   .btn-outline::before,.btn-outline::after{content:"";position:absolute;top:3px;bottom:3px;width:1px;background:rgba(198,161,91,0.4);}
   .btn-outline::before{left:0;} .btn-outline::after{right:0;}
@@ -535,7 +572,7 @@
   .director-body p:first-of-type::first-letter{font-family:'Cinzel','Amiri',serif;font-size:2.6rem;color:var(--gold);float:left;line-height:0.8;margin:6px 8px 0 0;}
 
   /* welcome/intro & mvv reused */
-  .intro{background:var(--surface);}
+  .intro{background:var(--surface-warm);}
   .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;}
   @media (max-width:860px){.intro-grid{grid-template-columns:1fr;gap:34px;}}
   .intro h2{font-size:2.2rem;margin:14px 0 22px;}
@@ -547,7 +584,7 @@
   .quote-panel p{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:1.3rem;color:#fff;}
   .quote-panel .who{margin-top:22px;font-family:'Inter','Cairo',sans-serif;font-style:normal;font-size:0.78rem;color:var(--gold-bright);letter-spacing:0.05em;text-transform:uppercase;}
 
-  .mvv{background:#fff;}
+  .mvv{background:var(--surface-alt);}
   .mvv-top{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:56px;}
   @media (max-width:760px){.mvv-top{grid-template-columns:1fr;}}
   .mvv-card{border:1px solid var(--line);padding:34px 32px;}
@@ -581,7 +618,7 @@
   .staff-item span{color:rgba(248,244,233,0.62);font-size:0.76rem;}
 
   /* academics */
-  .academics{background:var(--surface);}
+  .academics{background:var(--surface-tertiary);}
   .school-block{border:1px solid var(--line);background:#fff;padding:34px 32px;margin-top:26px;}
   .school-block .tag{font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;}
   .school-block h3{font-size:1.7rem;margin:8px 0 14px;}
@@ -674,7 +711,7 @@
   @media (max-width:560px){.gallery-item.gi-lead{grid-column:span 1;} .gallery-item.gi-lead .gi-frame{aspect-ratio:4/3;}}
 
   /* foundation */
-  .foundation{background:#fff;}
+  .foundation{background:var(--surface-alt);}
   .found-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:36px;}
   @media (max-width:800px){.found-grid{grid-template-columns:1fr;}}
   .found-card{border:1px solid var(--line);padding:26px 24px;}
@@ -731,7 +768,7 @@
   .policy.is-highlighted .policy-head{animation:policyHighlightFade 1.6s ease;}
 
   /* contact / footer reused */
-  .contact{background:var(--navy-deep);color:var(--ivory);}
+  .contact{background:var(--charcoal);color:var(--ivory);}
   .contact .eyebrow{color:var(--gold-bright);} .contact h2{color:#fff;}
   .contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:54px;margin-top:44px;}
   @media (max-width:860px){.contact-grid{grid-template-columns:1fr;}}
@@ -750,9 +787,28 @@
   .contact-form input:focus,.contact-form textarea:focus{outline:2px solid var(--gold);border-color:var(--gold);}
   .contact-form button{width:100%;border:none;cursor:pointer;}
   footer{background:var(--navy-deep);border-top:1px solid var(--line);padding:0 0 24px;color:rgba(248,244,233,0.65);font-size:0.84rem;}
-  .foot-statement{text-align:center;padding:44px 24px 38px;border-bottom:1px solid var(--line);position:relative;}
-  .foot-statement::before{content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);width:60px;height:1px;background:var(--gold);}
-  .foot-statement p{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.5rem;font-style:italic;color:var(--gold-bright);max-width:640px;margin:0 auto;line-height:1.4;}
+
+  /* Prestige arrival zone — a deliberate transition between the page's
+     content and the footer's information architecture, on a distinct
+     charcoal ground with corner ornaments so it reads as its own
+     institutional moment rather than an abrupt drop into the footer. */
+  .foot-arrival{position:relative;background:var(--charcoal);border-bottom:1px solid var(--line);padding:88px 24px 78px;overflow:hidden;text-align:center;}
+  .foot-arrival::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(198,161,91,0.12),transparent 55%);pointer-events:none;}
+  .foot-arrival .corner{position:absolute;width:36px;height:36px;opacity:0.5;}
+  .foot-arrival .corner svg{width:100%;height:100%;}
+  .foot-arrival .corner.tl{top:22px;left:22px;} .foot-arrival .corner.tr{top:22px;right:22px;transform:scaleX(-1);}
+  .foot-arrival .corner.bl{bottom:22px;left:22px;transform:scaleY(-1);} .foot-arrival .corner.br{bottom:22px;right:22px;transform:scale(-1,-1);}
+  .foot-statement{position:relative;z-index:1;max-width:680px;margin:0 auto;}
+  .foot-statement::before{content:"";position:absolute;left:50%;top:-24px;transform:translateX(-50%);width:60px;height:1px;background:var(--gold);}
+  .foot-statement p{font-family:'Cormorant Garamond','Amiri',serif;font-size:clamp(1.3rem,2.6vw,1.7rem);font-style:italic;color:var(--gold-bright);line-height:1.5;margin:0;}
+  .foot-statement .fs-mark{margin-top:26px;display:flex;align-items:center;justify-content:center;gap:14px;opacity:0.85;}
+  .foot-statement .fs-mark::before,.foot-statement .fs-mark::after{content:"";width:34px;height:1px;background:rgba(198,161,91,0.4);}
+  .foot-statement .fs-mark svg{width:15px;height:15px;color:var(--gold);flex-shrink:0;}
+  @media (max-width:760px){
+    .foot-arrival{padding:52px 22px 46px;}
+    .foot-statement p{font-size:1.12rem;}
+    .foot-arrival .corner{width:26px;height:26px;}
+  }
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;margin:38px 0 30px;}
   @media (max-width:980px){.foot-grid{grid-template-columns:1fr 1fr 1fr;gap:26px;}}
   .foot-grid h5{color:var(--gold-bright);font-family:'Cinzel','Amiri',serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
