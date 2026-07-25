@@ -213,18 +213,30 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-form-status.is-error{color:var(--crimson);}
 
 /* --- Islamic info strip (topbar mount, populated by JS) ---
-   Specificity note: this element also carries the shared .wrap class
-   (for max-width centering), whose ".topbar .wrap{display:flex}" rule
-   would otherwise always win over a plain ".pc-islamic-strip{display:none}"
-   at equal specificity depending on load order — ".topbar >" pins this
-   rule to a higher, order-independent specificity so the JS-driven
-   is-visible toggle reliably controls visibility. */
-.topbar > .pc-islamic-strip{
-  display:none;gap:16px;padding:4px 0 8px;font-size:0.74rem;color:var(--gold-bright);
-  border-top:1px solid rgba(233,206,138,0.18);
+   Deliberately a LIGHT band (parchment/ivory on dark coffee-brown
+   text) rather than another dark strip blending into the navy topbar
+   above it — a light utility band is what reads as a distinct,
+   premium "institutional strip" rather than a continuation of the
+   same dark bar. The outer element (not sharing .wrap) carries full
+   page width and the visibility toggle; .pc-islamic-strip-inner
+   applies the shared max-width/padding for content alignment. */
+.pc-islamic-strip{
+  display:none;background:linear-gradient(180deg,#F8F2E4 0%,#F1E7D2 100%);
+  border-top:1px solid rgba(198,161,91,0.4);border-bottom:1px solid rgba(198,161,91,0.25);
 }
-.topbar > .pc-islamic-strip.is-visible{display:flex;}
-.pc-islamic-strip span{white-space:nowrap;}
+.pc-islamic-strip.is-visible{display:block;}
+.pc-islamic-strip-inner{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:6px 24px;font-size:0.74rem;color:#4A3B22;flex-wrap:wrap;
+}
+.pc-strip-item{white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:0.01em;}
+.pc-strip-icon{color:#8B6A2E;flex-shrink:0;}
+.pc-strip-clock{font-family:'Cinzel','Amiri',serif;font-variant-numeric:tabular-nums;letter-spacing:0.04em;color:#3A2E17;}
+.pc-strip-countdown{font-weight:500;opacity:0.75;font-size:0.94em;}
+.pc-strip-sep{width:1px;height:12px;background:rgba(139,106,46,0.3);flex-shrink:0;}
+@media (max-width:640px){
+  .pc-islamic-strip-inner{gap:9px;padding:6px 16px;font-size:0.68rem;}
+}
 
 /* --- Reading Mode & Text Density ---
    High Contrast strengthens the same --on-surface/--on-surface-soft/--line

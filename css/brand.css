@@ -256,8 +256,11 @@
   .topbar{background:var(--navy-deep);color:var(--gold-bright);font-size:0.76rem;}
   .topbar .wrap{display:flex;justify-content:space-between;align-items:center;padding:9px 24px;flex-wrap:wrap;gap:8px;}
   .topbar a{opacity:0.85;} .topbar a:hover{opacity:1;color:#fff;}
-  .topbar .contacts{display:flex;gap:20px;flex-wrap:wrap;}
+  .topbar .contacts{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+  .topbar .contacts a{display:inline-flex;align-items:center;gap:6px;}
+  .ci-icon{flex-shrink:0;opacity:0.75;}
   .topbar .socials{display:flex;gap:14px;align-items:center;}
+  .topbar-divider{width:1px;height:14px;background:rgba(233,206,138,0.25);flex-shrink:0;}
   /* Real recognisable platform icons rather than plain text names —
      monochrome line-icon treatment matching the site's own icon
      language (nav-mega, footer) rather than colour brand logos, which

@@ -216,7 +216,8 @@
       : prefs.dateFormat === 'both' ? (hijriText + ' · ' + gregorianLabel())
       : hijriText;
     if(el) el.textContent = hijriText; // the preview card is always the Hijri date specifically
-    stripEl.forEach(function(s){ s.textContent = prefs.islamicHijriCalendar ? '🌙 ' + text : ''; });
+    var hijriIcon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" class="pc-strip-icon"><path d="M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+    stripEl.forEach(function(s){ s.innerHTML = prefs.islamicHijriCalendar ? hijriIcon + '<span>' + text + '</span>' : ''; });
     return h;
   }
 
@@ -262,11 +263,16 @@
     return d;
   }
 
+  var lastPrayerTimings = null;
+  var prayerIcon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" class="pc-strip-icon"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+
   function renderPrayerTimes(timings){
+    lastPrayerTimings = timings || null;
     var el = root.querySelector('[data-pc-next-prayer]');
     var stripEls = document.querySelectorAll('[data-pc-strip-prayer]');
     if(!timings){
       if(el) el.textContent = STRIP_LANG === 'ar' ? 'غير متاح حاليًا' : 'Not available right now';
+      stripEls.forEach(function(s){ s.innerHTML = ''; });
       return;
     }
     var order = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
@@ -280,9 +286,20 @@
     if(!next) next = { name: 'Fajr', time: parseHM(timings.Fajr) }; // all passed — tomorrow's Fajr (same clock time)
     var label = STRIP_LANG === 'ar' ? labelsAr[next.name] : next.name;
     var timeStr = next.time.toLocaleTimeString(STRIP_LANG === 'ar' ? 'ar' : 'en', { hour: '2-digit', minute: '2-digit', hour12: prefs.timeFormat === '12h' });
+    var diffMs = next.time - now;
+    if(diffMs < 0) diffMs += 24 * 3600 * 1000;
+    var diffMin = Math.max(0, Math.round(diffMs / 60000));
+    var hh = Math.floor(diffMin / 60), mm = diffMin % 60;
+    var countdown = STRIP_LANG === 'ar'
+      ? (hh > 0 ? hh + 'س ' : '') + mm + 'د'
+      : (hh > 0 ? hh + 'h ' : '') + mm + 'm';
     var text = label + ' · ' + timeStr;
     if(el) el.textContent = text;
-    stripEls.forEach(function(s){ s.textContent = prefs.islamicPrayerTimes ? '🕌 ' + text : ''; });
+    stripEls.forEach(function(s){
+      s.innerHTML = prefs.islamicPrayerTimes
+        ? prayerIcon + '<span>' + text + ' <span class="pc-strip-countdown">(' + countdown + (STRIP_LANG === 'ar' ? ' متبقية' : ' left') + ')</span></span>'
+        : '';
+    });
   }
 
   function fetchPrayerTimes(){
@@ -298,6 +315,22 @@
       renderPrayerTimes(null);
     });
   }
+
+  // Live clock + prayer-countdown ticker for the topbar strip. The
+  // countdown re-derives from the last-fetched timings (no re-fetch
+  // needed every second — Aladhan's timings don't change intra-day).
+  function renderClock(){
+    var els = document.querySelectorAll('[data-pc-strip-clock]');
+    if(!els.length) return;
+    var now = new Date();
+    var timeStr = now.toLocaleTimeString(STRIP_LANG === 'ar' ? 'ar' : 'en', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: prefs.timeFormat === '12h' });
+    els.forEach(function(s){ s.textContent = timeStr; });
+  }
+  renderClock();
+  setInterval(function(){
+    renderClock();
+    if(lastPrayerTimings) renderPrayerTimes(lastPrayerTimings);
+  }, 1000);
 
   function renderIslamicStrip(){
     var strip = document.querySelector('[data-pc-islamic-strip]');
