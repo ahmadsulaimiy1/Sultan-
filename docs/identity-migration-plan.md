@@ -136,6 +136,39 @@ gate would eventually live.
 
 Fees (Phase C) is unchanged — still on the bearer token, still queued.
 
+## Status update — Migration Phase C (Fees)
+
+`functions/api/portal/staff/finance/fees.js` is session-authenticated
+and Permission-Engine-gated against the `finance` area;
+`admin/students.js` now returns 410 for any `body.fees` payload.
+Deliberately **no UI form exists for this endpoint** — see the reason
+below.
+
+**Per `docs/financial-authority-map.md`, produced before this
+migration was finalised as directed: this is the most severe version
+of the Attendance/Assessment finding, not another instance of the same
+partial gap.** The Matrix's `finance` area grants Create/Edit to the
+Finance Officer (`FIN`) role only — no Registrar, Principal, or
+Executive grant exists at all. `FIN` is seeded `'proposed'` in
+`setup.js`; no such account has ever been issued. Unlike Attendance and
+Assessments, where Registrar could at least correct an existing
+record, **fee entry has zero working path for anyone today** — every
+staff member, including the Registrar, receives the identical 403 this
+endpoint returns. This is enforced exactly as the Matrix specifies,
+per the standing instruction not to invent a fallback grant for an
+adjacent role to paper over a missing-role gap.
+
+This is now the **third** migration in a row surfacing the same root
+cause — an operational role the Matrix already anticipates but the
+institution has never onboarded into the Staff Identity Platform
+(Class Teacher/Subject Teacher/Muhaffiz/Arabic Instructor for
+Attendance and Assessments; Finance Officer for Fees). See
+`docs/teacher-operating-model.md` for the academic half of this and
+`docs/financial-authority-map.md`'s closing section for why this is
+recognised as one structural finding, not three independent ones. The
+next major phase after Phase D (below) is Teacher Identity & Academic
+Workforce Activation, not a fifth migration route or a new office.
+
 ## Recommended migration order
 
 1. **Student/Guardian administration + student login issuance** — done

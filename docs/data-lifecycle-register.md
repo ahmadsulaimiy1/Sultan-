@@ -37,9 +37,12 @@ answers differ, that gap is named here rather than smoothed over.*
 
 ## What this register deliberately leaves open
 
-- **Attendance (Phase A) and Assessment/Results (Phase B) are both
-  migrated now; Fees (Phase C) is next**, per
-  `identity-migration-plan.md`.
+- **Attendance (Phase A), Assessment/Results (Phase B), and Fees
+  (Phase C) are all migrated now.** Financial records specifically —
+  invoices, payments, waivers, refunds, arrears, statements — are
+  covered in depth by the dedicated `docs/financial-authority-map.md`
+  rather than duplicated in this register; only `fee_status` (a
+  due/paid snapshot, not a ledger) exists as a real record today.
 - **Migrating Attendance and Assessments surfaced the same real,
   previously-hidden operational gap twice, confirming it as a pattern
   rather than a one-off.** The Matrix grants REG only Edit/correction

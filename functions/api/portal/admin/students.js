@@ -22,25 +22,11 @@ import { json, readJsonBody } from '../../../_lib/http.js';
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const VALID_STATUSES = ['active', 'graduated', 'withdrawn', 'suspended'];
 
-async function ensureTerm(sql, rawTerm) {
-  const term = String(rawTerm || '').trim();
-  if (!term) return term;
-  await sql`INSERT INTO academic_terms (label) VALUES (${term}) ON CONFLICT (label) DO NOTHING`;
-  return term;
-}
-
 async function resolveClassId(sql, institution, className) {
   const existingClass = await sql`SELECT id FROM classes WHERE institution = ${institution} AND name = ${className}`;
   if (existingClass.rows.length) return existingClass.rows[0].id;
   const createdClass = await sql`INSERT INTO classes (institution, name) VALUES (${institution}, ${className}) RETURNING id`;
   return createdClass.rows[0].id;
-}
-
-async function notifyGuardiansOfStudent(sql, studentId, message) {
-  const links = await sql`SELECT guardian_id FROM guardian_student WHERE student_id = ${studentId}`;
-  for (const row of links.rows) {
-    await sql`INSERT INTO notifications (guardian_id, message) VALUES (${row.guardian_id}, ${message})`;
-  }
 }
 
 export async function onRequestPost({ request, env }) {
@@ -111,8 +97,7 @@ export async function onRequestPost({ request, env }) {
     // additionalPrograms (e.g. a Royal College student also enrolled in
     // Qur'an College and/or Arabic & Islamic Studies at the same time).
     // Purely additive: re-calling this endpoint never removes an
-    // existing enrolment, only adds/updates ones named in this request —
-    // same upsert-only semantics as attendance/results/fees below.
+    // existing enrolment, only adds/updates ones named in this request.
     if (classId) {
       await sql`
         INSERT INTO student_classes (student_id, class_id, is_primary)
@@ -135,39 +120,20 @@ export async function onRequestPost({ request, env }) {
       VALUES (${guardianId}, ${studentId}, ${body.relationship || 'parent/guardian'})
       ON CONFLICT (guardian_id, student_id) DO NOTHING`;
 
-    const updatedParts = [];
-
-    // Attendance migrated to staff/registrar/attendance.js (Migration
-    // Phase A, docs/identity-migration-plan.md) — session +
-    // Permission-Engine-gated, not this bearer token. A body.attendance
-    // payload sent here is intentionally ignored, not silently accepted
-    // and dropped: callers still on the old integration should see it
-    // stop working, not appear to succeed.
+    // Attendance (Migration Phase A), results (Phase B), and fees
+    // (Phase C) all moved to session + Permission-Engine-gated
+    // endpoints under functions/api/portal/staff/ — each refused
+    // outright here, not silently accepted and dropped, so a caller
+    // still on the old integration sees it stop working rather than
+    // appear to succeed. See docs/identity-migration-plan.md.
     if (body.attendance) {
       return json({ error: 'Attendance is no longer accepted here — use POST /api/portal/staff/registrar/attendance (staff session required). See docs/registrar-office.md.' }, 410);
     }
-
-    // Results (raw CA/exam entry) migrated to
-    // staff/registrar/assessments.js (Migration Phase B,
-    // docs/identity-migration-plan.md) — same treatment as attendance
-    // in Phase A: refused outright, not silently ignored.
     if (body.results) {
       return json({ error: 'Assessment/result entry is no longer accepted here — use POST /api/portal/staff/registrar/assessments (staff session required). See docs/registrar-office.md.' }, 410);
     }
-
-    if (body.fees && body.fees.term) {
-      const f = body.fees;
-      const term = await ensureTerm(sql, f.term);
-      await sql`
-        INSERT INTO fee_status (student_id, term, amount_due, amount_paid)
-        VALUES (${studentId}, ${term}, ${f.amountDue || 0}, ${f.amountPaid || 0})
-        ON CONFLICT (student_id, term) DO UPDATE SET
-          amount_due = EXCLUDED.amount_due, amount_paid = EXCLUDED.amount_paid, updated_at = now()`;
-      updatedParts.push('fee status');
-    }
-
-    if (updatedParts.length) {
-      await notifyGuardiansOfStudent(sql, studentId, `Updated for ${studentIn.fullName}: ${updatedParts.join(', ')}.`);
+    if (body.fees) {
+      return json({ error: 'Fee entry is no longer accepted here — use POST /api/portal/staff/finance/fees (staff session required). See docs/financial-authority-map.md.' }, 410);
     }
 
     return json({ ok: true, guardianId, studentId, activationLink });

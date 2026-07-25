@@ -417,6 +417,28 @@ for the full tracked list with owners and priority.
 
 ---
 
+## Open academic & financial governance findings
+
+*Added after the Registrar's Office phase's Identity Migration work
+(Phases A–C), per explicit directive that these become formal,
+tracked governance items rather than left as prose inside the technical
+docs that found them. Each is a real finding from running code and the
+live Role & Permission Matrix, not a hypothetical.*
+
+| # | Finding | Source | Status |
+|---|---|---|---|
+| 1 | **Report Cards are not a system concept.** No table, no generation endpoint, no document output. The Matrix already grants Principal Approve and Registrar Publish/Export over this record type, but nothing exists to approve or publish. | `docs/academic-records-authority-map.md` | **Decision required** — does SHRS want report cards as a generated document, and from what inputs? |
+| 2 | **Student Discipline Records are not a system concept.** Named only in governance prose (Student Code of Conduct, SD-03) and `data-ownership-register.md`'s proposed-and-unfilled Student Affairs Officer owner. No `permission-matrix.js` system area exists for it at all. | `docs/academic-records-authority-map.md` | **Decision required** — needs an owning office decision before any schema/Matrix work begins. |
+| 3 | **Co-Curricular Records are not a system concept**, and unlike the two findings above, have no prior mention anywhere in this project's governance canon — no proposed owner, no policy reference. | `docs/academic-records-authority-map.md` | **Decision required** — the least-grounded of the three; needs a first governance mention before it can be scoped at all. |
+| 4 | **Export Authority is inconsistently modelled across the Role & Permission Matrix.** `results`/`transcripts`/`student_records` carry an explicit Export (`X`) grant; `assessments`, `certificates`, `hifz_records`, and `ijazah_records` do not — and `docs/data-ownership-register.md` already names Registrar as certificates' export authority, a decision `permission-matrix.js` doesn't encode. | `docs/academic-records-authority-map.md` | **Needs harmonisation** — the Role & Permission Matrix, Data Ownership Register, and Academic Records Authority Map must agree; none should be silently edited to match another without a Board-level pass. |
+| 5 | **Ijazah grants have no second-signatory field at all** — a stricter gap than "recordable, not enforced" found elsewhere (Promotion/Graduation/Certificates at least have an optional `approvedByStaffNo` field). The Matrix requires Principal + Qur'an College Officer joint approval; the actual `admin/hifz-progress.js` request shape for `ijazah.grant` has nowhere to record a second signer even voluntarily. | `docs/academic-records-authority-map.md` | **Review required** — a permanent credential should not depend on a single actor being able to record it unilaterally; this is a schema/endpoint gap, not just a process one, once a decision is made. |
+| 6 | **Fee entry has zero working staff path.** The Matrix grants Create/Edit on `finance` to Finance Officer only — no Registrar, Principal, or Executive fallback. Finance Officer is `'proposed'`, unfilled. This is the same root cause as Findings 7–8 below, at its most severe: not a partial gap (correction still possible), a total one. | `docs/financial-authority-map.md` | **Decision required** — appoint a Finance Officer, or record an explicit Board decision to grant interim authority elsewhere; not resolved in code. |
+| 7 | **Attendance Create has no working staff path.** Class Teacher role exists in the Matrix, unfilled; Registrar can only correct. | `docs/academic-records-authority-map.md`, `docs/identity-migration-plan.md` (Phase A) | Tracked under Finding 9 below — the structural pattern, not a separate decision. |
+| 8 | **Assessment Create has no working staff path.** Subject Teacher/Muhaffiz/Arabic Instructor roles exist in the Matrix, unfilled; Registrar can only correct. | `docs/academic-records-authority-map.md`, `docs/identity-migration-plan.md` (Phase B) | Tracked under Finding 9 below — the structural pattern, not a separate decision. |
+| 9 | **Findings 6, 7, and 8 are one structural finding, not three.** The Matrix already anticipates an operational workforce (Class Teacher, Subject Teacher, Muhaffiz, Arabic/Islamic Studies Instructors, Finance Officer) that has never been hired or onboarded into the Staff Identity Platform. | `docs/teacher-operating-model.md`, `docs/financial-authority-map.md` | **Recognised as the next major foundational phase** — Teacher Identity & Academic Workforce Activation, planned after the Identity Migration Plan's remaining routes (Phase D) close. |
+
+---
+
 ## Before any of this is adopted
 
 **Nothing in this register — and nothing drafted from it —
