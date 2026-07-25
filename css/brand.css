@@ -458,6 +458,7 @@
   .hero .corner.tl{top:26px;left:26px;} .hero .corner.tr{top:26px;right:26px;transform:scaleX(-1);}
   .hero .corner.bl{bottom:26px;left:26px;transform:scaleY(-1);} .hero .corner.br{bottom:26px;right:26px;transform:scale(-1,-1);}
   .hero-inner{position:relative;z-index:2;max-width:840px;margin:0 auto;text-align:center;}
+  .hero-crest{width:150px;height:auto;margin:0 auto 30px;opacity:0;animation:crestIn 1.2s ease .1s both;}
   .hero-inner .eyebrow{justify-content:center;margin-bottom:22px;} .hero-inner .eyebrow::before{display:none;}
   .hero h1{font-family:'Cinzel','Amiri',serif;font-size:clamp(2rem,4.6vw,3.4rem);color:#fff;letter-spacing:0.01em;animation:riseIn 1s ease both;}
   .hero h1 span{display:block;color:var(--gold-bright);font-size:0.5em;letter-spacing:0.28em;margin-top:14px;font-family:'Inter','Cairo',sans-serif;font-weight:600;}
@@ -465,6 +466,28 @@
   .hero-ctas{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap;animation:riseIn 1s ease .3s both;}
   @keyframes riseIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
   @keyframes crestIn{from{opacity:0;transform:translateY(-10px) scale(.92);}to{opacity:1;transform:translateY(0) scale(1);}}
+  /* The mobile header (topbar + Hijri strip + main row + nav ribbon +
+     quick-actions row) is taller than desktop's single-row header, so
+     the hero's own top spacing has to compress on true mobile widths
+     or its heading lands underneath the fixed WhatsApp/Call buttons —
+     both of which are deliberately always-visible (see their rules
+     below) and can't be the ones that move. Same content, same order,
+     same hierarchy — just a tighter rhythm before the headline. */
+  @media (max-width:600px){
+    .hero{padding-top:14px;}
+    .hero-crest{width:40px;margin-bottom:4px;}
+    .hero-inner .eyebrow{margin-bottom:4px;}
+    .hero h1{font-size:1.15rem;}
+    .hero h1 span{margin-top:4px;}
+    .hero p.lede{margin-top:6px;font-size:0.84rem;}
+    /* Stacked full-width, not flex-wrapped — a wrapped 2-then-1 layout's
+       total height depends on exactly how much text fits per row, which
+       flips unpredictably between ~360-428px viewports and reopens the
+       clearance gap against the fixed WhatsApp/Call buttons below. A
+       single column has one fixed, calculable height at every width. */
+    .hero-ctas{margin-top:10px;gap:6px;flex-direction:column;align-items:stretch;}
+    .hero-ctas .btn{padding:8px 18px;font-size:0.64rem;justify-content:center;}
+  }
   .btn{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s ease,background .3s ease,letter-spacing .3s ease;position:relative;font-family:'Cinzel','Amiri',serif;}
   .btn-gold{background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);background-size:180% 180%;background-position:0% 0%;color:#fff;border:1px solid var(--accent);box-shadow:0 10px 26px -12px var(--accent-shadow);}
   .btn-gold:hover{background-position:100% 100%;box-shadow:0 14px 34px -10px var(--accent-shadow);transform:translateY(-2px);color:#fff;}
