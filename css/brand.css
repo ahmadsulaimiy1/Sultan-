@@ -564,6 +564,35 @@
   .foot-quick-actions a.is-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);border-color:var(--gold);box-shadow:0 6px 16px -6px rgba(198,161,91,0.5);}
   .foot-quick-actions a.is-primary:hover{box-shadow:0 10px 22px -6px rgba(233,206,138,0.65);transform:translateY(-1px);}
 
+  /* ============================================================
+     Footer campus/map destination section — full-bleed band between
+     the quick actions and the closing seal, echoing .foot-statement's
+     full-width pattern. Real address, real embed, no fabricated hours.
+     ============================================================ */
+  .foot-map-section{background:var(--navy-deep);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:52px 0;}
+  .foot-map-intro{max-width:620px;margin:0 auto 30px;text-align:center;}
+  .foot-map-intro .fm-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:10px;display:block;}
+  .foot-map-intro .fm-lede{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.15rem;font-style:italic;color:rgba(248,244,233,0.75);line-height:1.55;}
+  .foot-map-panel{border:1px solid var(--gold);}
+  .fm-label{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(198,161,91,0.08);border-bottom:1px solid var(--line);}
+  .fm-label .fm-campus-name{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);}
+  .fm-label .fm-campus-tag{font-size:0.68rem;color:rgba(248,244,233,0.5);}
+  .fm-frame{position:relative;aspect-ratio:21/8;min-height:260px;}
+  .fm-frame iframe{width:100%;height:100%;display:block;border:0;filter:saturate(0.75) contrast(1.05);}
+  .fm-overlay{position:absolute;top:16px;left:16px;background:rgba(34,23,9,0.9);border:1px solid var(--gold);padding:12px 18px;pointer-events:none;}
+  [dir="rtl"] .fm-overlay{left:auto;right:16px;}
+  .fm-overlay-title{display:block;font-family:'Cinzel','Amiri',serif;font-size:0.85rem;color:#fff;}
+  .fm-overlay-sub{display:block;font-size:0.7rem;color:var(--gold-bright);letter-spacing:0.05em;margin-top:3px;}
+  .fm-actions{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border-top:1px solid var(--gold);}
+  .fm-btn{flex:1;min-width:170px;text-align:center;padding:16px 12px;background:var(--navy-deep);font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-bright);transition:background .25s ease;}
+  .fm-btn:hover{background:rgba(198,161,91,0.12);}
+  .fm-btn.is-primary{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);font-weight:700;}
+  .fm-btn.is-primary:hover{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 100%);}
+  @media (max-width:760px){
+    .fm-frame{aspect-ratio:4/3;min-height:220px;}
+    .fm-btn{min-width:50%;flex:1 1 50%;}
+  }
+
   .foot-seal{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;}
   .foot-seal-brand{display:flex;align-items:center;gap:14px;}
   .foot-seal-brand img{width:34px;height:34px;opacity:0.9;}
