@@ -512,7 +512,8 @@
   .director{background:#fff;}
   .director-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:60px;align-items:start;}
   @media (max-width:860px){.director-grid{grid-template-columns:1fr;gap:30px;}}
-  .director-card{background:var(--navy);color:var(--ivory);padding:40px 32px;position:relative;}
+  .director-card{background:var(--navy);color:var(--ivory);padding:40px 32px;position:relative;transition:box-shadow .35s ease,transform .35s ease;}
+  .director-card:hover{transform:translateY(-3px);box-shadow:0 32px 60px -30px rgba(34,23,9,0.6);}
   .director-card .role{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.16em;color:var(--gold-bright);text-transform:uppercase;}
   .director-card h3{color:#fff;font-size:1.6rem;margin:10px 0 6px;}
   .director-card .creds{font-size:0.82rem;color:rgba(248,244,233,0.7);}
@@ -904,9 +905,24 @@
 
   /* Honest image slot — used only where no real photograph exists yet.
      Deliberately dashed and muted so it can never be mistaken for a real photo. */
-  .image-slot{border:1px dashed var(--line);background:linear-gradient(135deg,rgba(198,161,91,0.05),rgba(198,161,91,0.012));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:44px 26px;aspect-ratio:21/9;}
+  .image-slot{
+    border:1px dashed var(--line);background:linear-gradient(135deg,rgba(198,161,91,0.05),rgba(198,161,91,0.012));
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:44px 26px;aspect-ratio:21/9;position:relative;
+  }
+  /* A designed frame around the honest placeholder — the same
+     gold-corner motif used on real cards elsewhere — so the empty
+     state reads as "intentionally awaiting a photograph" rather than
+     a bare dashed box, without ever pretending to be an actual image. */
+  .image-slot::before,.image-slot::after{
+    content:"";position:absolute;width:18px;height:18px;border:1px solid rgba(198,161,91,0.4);pointer-events:none;
+  }
+  .image-slot::before{top:10px;left:10px;border-right:none;border-bottom:none;}
+  .image-slot::after{bottom:10px;right:10px;border-left:none;border-top:none;}
+  [dir="rtl"] .image-slot::before{left:auto;right:10px;border-right:1px solid rgba(198,161,91,0.4);border-left:none;}
+  [dir="rtl"] .image-slot::after{right:auto;left:10px;border-left:1px solid rgba(198,161,91,0.4);border-right:none;}
   @media (max-width:640px){.image-slot{aspect-ratio:4/3;padding:34px 20px;}}
-  .image-slot svg{color:var(--gold);opacity:0.55;margin-bottom:14px;}
+  .image-slot svg{color:var(--gold);opacity:0.55;margin-bottom:14px;width:36px;height:36px;}
   .image-slot .is-label{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);opacity:0.85;}
   .image-slot .is-sub{font-size:0.85rem;color:#8a8477;margin-top:8px;font-style:italic;font-family:'Cormorant Garamond','Amiri',serif;max-width:420px;}
   .photo-slot-band{margin-top:40px;}
@@ -965,7 +981,8 @@
      text (and the sitewide intro bullets) as a diagram instead of prose
      — no new facts, just a clearer presentation of published ones. */
   .foundations-diagram{display:flex;align-items:stretch;gap:0;margin-top:30px;flex-wrap:wrap;}
-  .foundation-card{flex:1;min-width:220px;background:#fff;border:1px solid var(--line);padding:26px 22px;}
+  .foundation-card{flex:1;min-width:220px;background:#fff;border:1px solid var(--line);padding:26px 22px;transition:box-shadow .3s ease,transform .3s ease,border-color .3s ease;}
+  .foundation-card:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(34,23,9,0.28);border-color:var(--terracotta);}
   .foundation-card .fd-icon{display:inline-flex;width:34px;height:34px;color:var(--terracotta);margin-bottom:12px;}
   .foundation-card .fd-icon svg{width:100%;height:100%;}
   .foundation-card h4{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;letter-spacing:0.03em;color:var(--navy);margin-bottom:8px;}
@@ -1012,7 +1029,8 @@
   .org-tier{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
   .org-tier + .org-connector{margin:0 auto;}
   .org-connector{width:1px;height:22px;background:var(--gold);opacity:0.5;}
-  .org-node{background:var(--navy-deep);border:1px solid var(--gold);padding:13px 20px;text-align:center;min-width:140px;}
+  .org-node{background:var(--navy-deep);border:1px solid var(--gold);padding:13px 20px;text-align:center;min-width:140px;transition:box-shadow .3s ease,border-color .3s ease,transform .3s ease;}
+  .org-node:hover{transform:translateY(-2px);border-color:var(--gold-bright);box-shadow:0 14px 30px -18px rgba(34,23,9,0.5);}
   /* Governance structure: a restrained Oxford Navy accent on the
      structural lines/borders only — an "official record" register
      distinct from the school's warm coffee/gold identity, without
