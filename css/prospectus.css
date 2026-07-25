@@ -1,0 +1,168 @@
+/* SHRS Flagship Prospectus — Production v1.0
+   Implements docs/prospectus-visual-design-system.md exactly: page
+   geometry, grid, type scale, colour ratios, component specs. Shares
+   brand.css's colour tokens and Google Fonts rather than redefining
+   them — the prospectus is the same institution as the website, not a
+   parallel brand. Print-first (@page rules for actual PDF export via
+   browser print-to-PDF), screen-viewable for review. */
+
+@page {
+  size: 240mm 300mm;
+  margin: 0;
+}
+
+.pros-body{
+  margin:0; background:var(--charcoal-deep,#1C1914); color:var(--ink);
+  font-family:'Inter','Cairo',sans-serif;
+}
+.pros-toolbar{
+  position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
+  padding:12px 24px; background:var(--navy-deep); color:var(--gold-bright);
+  font-family:'Cinzel','Amiri',serif; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
+}
+.pros-toolbar button{
+  font-family:'Cinzel','Amiri',serif; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+  background:var(--gold); color:var(--navy-deep); border:none; padding:8px 16px; cursor:pointer;
+}
+.pros-toolbar button:hover{background:var(--gold-bright);}
+
+.spread{
+  width:240mm; min-height:300mm; margin:20px auto; position:relative; overflow:hidden;
+  background:var(--ivory); box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  padding:16mm 12mm; box-sizing:border-box; page-break-after:always;
+}
+.spread + .spread{margin-top:20px;}
+.spread .folio-mark{
+  position:absolute; bottom:8mm; font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.1em;
+  color:var(--ink-soft); text-transform:uppercase;
+}
+.spread .folio-mark.left{left:12mm;} .spread .folio-mark.right{right:12mm;text-align:right;}
+
+/* ---- Cover / closing (dark, full-bleed) ---- */
+.spread.dark{background:var(--navy-deep); color:var(--ivory); padding:0;}
+.spread.cover{display:flex; align-items:flex-end;}
+.spread.cover .cover-photo{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+}
+.spread.cover .cover-scrim{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(34,23,9,0.15) 0%, rgba(34,23,9,0.55) 55%, rgba(34,23,9,0.94) 100%);
+}
+.spread.cover .cover-content{position:relative; padding:24mm 16mm; width:100%;}
+.spread.cover .cover-crest{width:64px; height:64px; margin-bottom:18px;}
+.spread.cover h1{
+  font-family:'Cinzel','Amiri',serif; font-size:34pt; line-height:1.08; letter-spacing:0.02em;
+  color:#fff; margin:0 0 10px;
+}
+.spread.cover .cover-sub{
+  font-family:'Cinzel','Amiri',serif; font-size:9.5pt; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--gold-bright); margin-bottom:22px;
+}
+.spread.cover .cover-line{
+  font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14pt;
+  color:rgba(247,238,223,0.88); max-width:70%; line-height:1.5;
+}
+
+/* ---- Eyebrow / heading system ---- */
+.eyebrow{
+  font-family:'Cinzel','Amiri',serif; font-size:8.5pt; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--gold); margin:0 0 8px;
+}
+.spread h2{
+  font-family:'Cinzel','Amiri',serif; font-size:24pt; line-height:1.15; color:var(--navy); margin:0 0 14px;
+}
+.spread h3{
+  font-family:'Cinzel','Amiri',serif; font-size:15pt; color:var(--navy); margin:0 0 8px; letter-spacing:0.01em;
+}
+.spread p{font-size:10.5pt; line-height:1.6; color:var(--ink); margin:0 0 12px;}
+.spread .lede{
+  font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14.5pt; line-height:1.55;
+  color:var(--navy); margin:0 0 16px;
+}
+.caption{font-size:8pt; color:var(--ink-soft); margin-top:6px;}
+
+/* ---- Grid ---- */
+.grid12{display:grid; grid-template-columns:repeat(12,1fr); gap:4mm;}
+.col-narrative{grid-column:span 7;}
+.col-panel{grid-column:span 5;}
+.col-full{grid-column:span 12;}
+
+/* ---- Editorial spread photo ---- */
+.spread-photo{width:100%; aspect-ratio:16/10; object-fit:cover; background:var(--parchment);}
+.spread-photo-pair{display:grid; grid-template-columns:1fr 1fr; gap:4mm;}
+
+/* ---- Feature template (Four Institutions) ---- */
+.feature-hero{position:relative; margin:-16mm -12mm 0; height:150mm;}
+.feature-hero img, .feature-hero .photo-pending{width:100%; height:100%; object-fit:cover; display:block;}
+/* Solid dark bar behind the title, not just a text-shadow relying on
+   the photo being dark enough — the photo-pending placeholder is a
+   light striped pattern, and white text with only a shadow reads as
+   near-invisible against it (the same contrast-bug class fixed
+   repeatedly elsewhere in this project: never assume a background
+   context, guarantee it). Works identically over a real photo. */
+.feature-hero .feature-title-bar{
+  position:absolute; left:0; right:0; bottom:0; padding:14mm 12mm 10mm;
+  background:linear-gradient(0deg, rgba(34,23,9,0.88) 0%, rgba(34,23,9,0) 100%);
+}
+.feature-hero .feature-title-bar h2.feature-title{
+  font-family:'Cinzel','Amiri',serif; color:#fff; font-size:26pt; margin:0;
+}
+.data-panel{
+  background:var(--parchment); border-top:2pt solid var(--gold); padding:14px 16px; height:fit-content;
+}
+.data-panel .dp-row{display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(198,161,91,0.3); font-size:9.5pt;}
+.data-panel .dp-row:last-child{border-bottom:none;}
+.data-panel .dp-label{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft);}
+.data-panel .dp-value{color:var(--navy); font-weight:600;}
+
+/* ---- Photography-pending honest placeholder (NOT a fabricated image) ---- */
+.photo-pending{
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px;
+  background:repeating-linear-gradient(45deg, var(--parchment), var(--parchment) 10px, var(--cream) 10px, var(--cream) 20px);
+  border:1.5px dashed var(--bronze); color:var(--bronze); text-align:center; padding:20px;
+}
+.photo-pending .pp-label{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.1em; text-transform:uppercase;}
+.photo-pending .pp-note{font-size:8pt; max-width:70%;}
+
+/* ---- Statistic / infographic ---- */
+.stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:4mm; margin:18px 0;}
+.stat-block{text-align:center; padding:16px 8px;}
+.stat-block .num{font-family:'Cinzel','Amiri',serif; font-size:30pt; color:var(--gold-bright);}
+.stat-block .label{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.08em; text-transform:uppercase; color:rgba(247,238,223,0.7); margin-top:4px;}
+.figure-pending{font-family:'Inter',sans-serif; font-style:italic; font-size:9pt; color:var(--crimson);}
+.spread.charcoal{background:var(--charcoal); color:var(--ivory);}
+.spread.charcoal h2, .spread.charcoal h3{color:#fff;}
+.spread.charcoal p{color:rgba(241,231,214,0.85);}
+
+/* ---- Diagram nodes ---- */
+.diagram-row{display:flex; align-items:center; justify-content:space-between; gap:6px; margin:20px 0; flex-wrap:wrap;}
+.diagram-node{
+  flex:1; min-width:110px; text-align:center; padding:14px 8px; border:2pt solid var(--gold);
+  border-radius:50%; aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.03em; text-transform:uppercase; color:var(--navy);
+}
+.diagram-connector{flex:0 0 24px; height:2pt; background:var(--gold);}
+@media (max-width:900px){.diagram-connector{display:none;}}
+
+/* ---- Pull quote ---- */
+.pull-quote{
+  font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:15pt; color:var(--navy);
+  border-inline-start:2pt solid var(--gold); padding-inline-start:16px; margin:18px 0; max-width:60%;
+}
+.pull-quote .mark{color:var(--gold); font-size:24pt; line-height:0;}
+
+/* ---- Data panel icon ---- */
+.icon-32{width:32pt; height:32pt; color:var(--gold);}
+
+@media screen and (max-width:1000px){
+  .spread{width:100%; min-height:auto; padding:8vw;}
+  .feature-hero{margin:-8vw -8vw 0; height:60vw;}
+  .grid12{display:block;}
+  .col-narrative, .col-panel{grid-column:auto;}
+  .stat-row{grid-template-columns:1fr;}
+}
+
+@media print{
+  .pros-toolbar{display:none;}
+  .spread{box-shadow:none; margin:0; width:auto; min-height:auto;}
+}
