@@ -326,8 +326,39 @@
     });
   }
 
+  // Real Hijri-month calendar grid — no fabricated events, only the two
+  // states that are actually true for every visitor: today, and Friday.
+  function daysInHijriMonth(year, month){
+    var nextMonth = month === 12 ? 1 : month + 1;
+    var nextYear = month === 12 ? year + 1 : year;
+    return hijriToJD(nextYear, nextMonth, 1) - hijriToJD(year, month, 1);
+  }
+  function renderHijriCalendar(todayH){
+    var container = root.querySelector('[data-pc-hijri-calendar]');
+    if(!container || !todayH) return;
+    var daysCount = daysInHijriMonth(todayH.year, todayH.month);
+    var jdToday = todayJD();
+    var firstDayJd = hijriToJD(todayH.year, todayH.month, 1);
+    var firstDayWeekday = ((new Date().getDay() - (jdToday - firstDayJd)) % 7 + 7) % 7;
+
+    var dowLabels = STRIP_LANG === 'ar' ? ['أحد', 'اثن', 'ثلا', 'أرب', 'خمي', 'جمعة', 'سبت'] : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    var html = '<div class="pc-hcal-dow">' + dowLabels.map(function(d){ return '<span>' + d + '</span>'; }).join('') + '</div>';
+    html += '<div class="pc-hcal-grid">';
+    for (var i = 0; i < firstDayWeekday; i++) html += '<span class="pc-hcal-cell is-empty"></span>';
+    for (var day = 1; day <= daysCount; day++) {
+      var weekday = (firstDayWeekday + (day - 1)) % 7;
+      var cls = 'pc-hcal-cell' + (day === todayH.day ? ' is-today' : '') + (weekday === 5 ? ' is-friday' : '');
+      html += '<span class="' + cls + '">' + day + '</span>';
+    }
+    html += '</div>';
+    var names = STRIP_LANG === 'ar' ? HIJRI_MONTHS_AR : HIJRI_MONTHS_EN;
+    var monthLabel = (names[todayH.month - 1] || '') + ' ' + todayH.year + 'H';
+    container.innerHTML = '<div class="pc-hcal-month">' + monthLabel + '</div>' + html;
+  }
+
   var todayHijri = renderHijriDate();
   if(todayHijri) renderIslamicEvent(todayHijri);
+  if(todayHijri) renderHijriCalendar(todayHijri);
   fetchPrayerTimes();
   renderIslamicStrip();
 

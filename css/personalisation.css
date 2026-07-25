@@ -161,6 +161,28 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-office-name{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.02em;color:var(--on-surface);}
 .pc-office-desc{font-size:0.76rem;color:var(--on-surface-soft);}
 
+/* --- Hijri mini-calendar ---
+   Pattern borrowed from a peer institution's event calendar (grid +
+   legend dots), but with zero invented data — every cell is a real
+   calculated Hijri date, "today" and "Friday" are the only two states
+   marked, no fabricated events. */
+.pc-hcal-widget{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:6px;}
+.pc-hcal-month{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);text-align:center;margin-bottom:10px;}
+.pc-hcal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.pc-hcal-dow span{text-align:center;font-size:0.62rem;color:var(--on-surface-soft);text-transform:uppercase;}
+.pc-hcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.pc-hcal-cell{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:0.76rem;color:var(--on-surface);border-radius:6px;
+}
+.pc-hcal-cell.is-empty{visibility:hidden;}
+.pc-hcal-cell.is-friday{background:var(--accent-wash);color:var(--accent);font-weight:600;}
+.pc-hcal-cell.is-today{background:var(--accent);color:#fff;font-weight:700;}
+.pc-hcal-legend{display:flex;align-items:center;gap:4px;font-size:0.74rem;color:var(--on-surface-soft);margin:8px 0 20px;}
+.pc-hcal-dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+.pc-hcal-dot.is-today{background:var(--accent);}
+.pc-hcal-dot.is-friday{background:var(--accent-wash);border:1px solid var(--accent);}
+
 /* --- Verse / Hadith of the Day --- */
 .pc-verse-arabic{font-family:'Amiri','Cormorant Garamond',serif;font-size:1.35rem;line-height:2;color:var(--on-surface);margin:8px 0;}
 .pc-verse-arabic:empty{display:none;}
