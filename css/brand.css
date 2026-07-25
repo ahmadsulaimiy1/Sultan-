@@ -287,6 +287,24 @@
      crest + search + hamburger. Desktop never sees this; the row
      duplicates the same nav-mark/nav-cta destinations already in the
      drawer, just surfaced a level higher on narrow screens. */
+  /* Mobile nav ribbon — the institutional architecture (all 7 header
+     categories) surfaced as large icon cards, swipeable, visible the
+     instant the page loads. This is the PRIMARY mobile navigation;
+     the hamburger drawer becomes a secondary "Full Menu" fallback
+     (its final card) for reaching the deeper mega-panel sub-items and
+     Featured callouts, not the only way to see the site has sections. */
+  .mobile-nav-ribbon{display:none;}
+  .mnr-item{
+    scroll-snap-align:start;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;
+    gap:7px;width:78px;padding:13px 6px 11px;text-align:center;
+    border:1px solid rgba(198,161,91,0.28);background:rgba(198,161,91,0.05);
+    font-family:'Inter','Cairo',sans-serif;color:var(--ivory);
+    transition:background .2s ease,border-color .2s ease;cursor:pointer;
+  }
+  .mnr-item:hover,.mnr-item:active{background:rgba(198,161,91,0.14);border-color:var(--gold-bright);}
+  .mnr-item svg{width:26px;height:26px;color:var(--gold-bright);flex-shrink:0;}
+  .mnr-item span{font-size:0.62rem;font-weight:600;letter-spacing:0.02em;line-height:1.25;}
+  .mnr-item.mnr-more{border-style:dashed;background:none;}
   .mobile-quick-row{display:none;}
   .mqr-item{
     display:flex;align-items:center;gap:6px;flex:1;justify-content:center;
@@ -380,7 +398,13 @@
     .navlinks{position:absolute;top:100%;left:0;right:0;background:var(--navy);flex-direction:column;align-items:flex-start;padding:18px 24px 26px;display:none;border-bottom:1px solid var(--line);gap:4px;max-height:calc(100vh - 70px);overflow-y:auto;}
     .navlinks.open{display:flex;}
     .menu-toggle{display:flex;}
-    .mobile-quick-row{display:flex;border-top:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);}
+    .mobile-nav-ribbon{
+      display:flex;gap:9px;overflow-x:auto;scroll-snap-type:x proximity;
+      padding:12px 16px;border-top:1px solid rgba(198,161,91,0.18);border-bottom:1px solid rgba(198,161,91,0.18);
+      background:rgba(0,0,0,0.16);-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    }
+    .mobile-nav-ribbon::-webkit-scrollbar{display:none;}
+    .mobile-quick-row{display:flex;border-bottom:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);}
     .nav-drop{width:100%;display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(198,161,91,0.15);}
     .nav-drop:last-of-type{border-bottom:none;}
     .nav-drop-trigger{flex:1;padding:12px 0 !important;}
