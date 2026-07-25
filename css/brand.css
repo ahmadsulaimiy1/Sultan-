@@ -259,6 +259,20 @@
   .topbar .contacts{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
   .topbar .contacts a{display:inline-flex;align-items:center;gap:6px;}
   .ci-icon{flex-shrink:0;opacity:0.75;}
+  /* Mobile: one clean aligned line (email │ phone │ phone) instead of
+     wrapping across 2-3 rows. Icons shrink rather than disappear (they
+     stay a real alignment anchor), pipe separators replace the wider
+     desktop gap, and type steps down to the same small-label size
+     already used elsewhere on the site (.fd-item, .pc-strip-item). */
+  @media (max-width:600px){
+    .topbar .contacts{flex-wrap:nowrap;gap:0;font-size:0.62rem;justify-content:flex-start;}
+    .topbar .contacts a{gap:3px;white-space:nowrap;}
+    .topbar .contacts a:not(:last-child)::after{
+      content:"";display:inline-block;width:1px;height:9px;background:rgba(233,206,138,0.3);
+      margin:0 8px;flex-shrink:0;
+    }
+    .ci-icon{width:10px;height:10px;}
+  }
   .topbar .socials{display:flex;gap:14px;align-items:center;}
   .topbar-divider{width:1px;height:14px;background:rgba(233,206,138,0.25);flex-shrink:0;}
   /* Real recognisable platform icons rather than plain text names —
@@ -1325,20 +1339,20 @@
      conflict. Restrained: slow (4.5s), low-amplitude, easy to miss if
      not looking for it — a signature detail, not a flashing banner. */
   .apply-float::before{
-    content:"";position:absolute;inset:-6px;border-radius:2px;
-    background:radial-gradient(circle,var(--accent-bright) 0%,transparent 72%);
-    opacity:0.35;filter:blur(10px);z-index:-1;
+    content:"";position:absolute;inset:-10px;border-radius:3px;
+    background:radial-gradient(circle,var(--accent-bright) 0%,transparent 70%);
+    opacity:0.45;filter:blur(13px);z-index:-1;
     animation:applyGlowPulse 4.5s ease-in-out infinite;
   }
-  @keyframes applyGlowPulse{0%,100%{opacity:0.22;transform:scale(0.97);}50%{opacity:0.5;transform:scale(1.06);}}
+  @keyframes applyGlowPulse{0%,100%{opacity:0.32;transform:scale(0.97);}50%{opacity:0.65;transform:scale(1.08);}}
   @media (prefers-reduced-motion:reduce){.apply-float::before{animation:none;opacity:0.3;}}
   .apply-float a{
-    display:flex;align-items:center;gap:9px;position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:10px;position:relative;overflow:hidden;
     background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);
     background-size:180% 180%;background-position:0% 0%;
-    color:#fff;border:1px solid var(--accent);padding:14px 22px;
-    font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;
-    box-shadow:0 14px 32px -14px var(--accent-shadow);
+    color:#fff;border:1px solid var(--accent-bright);padding:16px 26px;
+    font-family:'Cinzel','Amiri',serif;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;
+    box-shadow:0 16px 36px -14px var(--accent-shadow),0 0 0 1px rgba(233,206,138,0.15);
     transition:box-shadow .3s ease,transform .3s ease,background-position .3s ease;
   }
   .apply-float a:hover{box-shadow:0 18px 38px -12px var(--accent-shadow);transform:translateY(-2px);background-position:100% 100%;color:#fff;}
