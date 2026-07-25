@@ -23,7 +23,7 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
-    const guardianRes = await sql`SELECT full_name FROM guardians WHERE id = ${session.guardianId}`;
+    const guardianRes = await sql`SELECT full_name, email, email_verified_at FROM guardians WHERE id = ${session.guardianId}`;
     const guardian = guardianRes.rows[0];
     if (!guardian) {
       return json({ error: 'Not signed in.' }, 401);
@@ -95,7 +95,13 @@ export async function onRequestGet({ request, env }) {
       WHERE guardian_id = ${session.guardianId} AND read_at IS NULL
       ORDER BY created_at DESC LIMIT 20`;
 
-    return json({ fullName: guardian.full_name, children, notifications: notificationsRes.rows });
+    return json({
+      fullName: guardian.full_name,
+      email: guardian.email,
+      emailVerified: !!guardian.email_verified_at,
+      children,
+      notifications: notificationsRes.rows,
+    });
   } catch (err) {
     console.error('portal me error', err);
     return json({ error: 'Could not load your dashboard right now — please try again shortly.' }, 500);

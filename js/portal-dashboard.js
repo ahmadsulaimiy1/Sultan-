@@ -12,6 +12,48 @@
   var adhkarCardEl = document.querySelector('[data-portal-adhkar]');
   var adhkarStreakEl = document.querySelector('[data-portal-adhkar-streak]');
   var adhkarBtns = document.querySelectorAll('[data-portal-adhkar-btn]');
+  var verifyBanner = document.querySelector('[data-portal-verify-banner]');
+  var resendVerifyBtn = document.querySelector('[data-portal-resend-verify]');
+  var applicationsListEl = document.querySelector('[data-portal-applications-list]');
+
+  var APPLICATION_STATUS_LABEL = {
+    submitted: 'Submitted', under_review: 'Under Review', waitlisted: 'Waitlisted',
+    offered: 'Offer Made', admitted: 'Admitted', declined: 'Not Successful', withdrawn: 'Withdrawn',
+  };
+
+  function formatDate(iso){
+    if(!iso) return '';
+    try{ return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+    catch(e){ return iso; }
+  }
+
+  function renderApplications(applications){
+    applicationsListEl.innerHTML = '';
+    if(!applications || !applications.length){
+      applicationsListEl.appendChild(el('p', 'portal-empty', 'No enquiries or applications submitted yet.'));
+      return;
+    }
+    applications.forEach(function(app){
+      var card = el('div', 'portal-application-card');
+      card.appendChild(el('h4', null, app.applicantChildName));
+      var metaBits = [];
+      if(app.institution) metaBits.push(app.institution);
+      if(app.desiredClass) metaBits.push(app.desiredClass);
+      metaBits.push('Submitted ' + formatDate(app.submittedAt));
+      card.appendChild(el('div', 'portal-application-meta', metaBits.join(' · ')));
+      if(app.decisionNote) card.appendChild(el('div', 'portal-application-meta', app.decisionNote));
+      card.appendChild(el('span', 'portal-application-status', APPLICATION_STATUS_LABEL[app.status] || app.status));
+      applicationsListEl.appendChild(card);
+    });
+  }
+
+  async function loadApplications(){
+    try{
+      var res = await fetch('/api/portal/admissions-applications');
+      var data = await res.json().catch(function(){ return {}; });
+      if(res.ok) renderApplications(data.applications);
+    }catch(err){ /* leave empty state */ }
+  }
 
   function el(tag, className, text){
     var e = document.createElement(tag);
@@ -214,12 +256,19 @@
       helloEl.textContent = 'Welcome, ' + data.fullName;
       renderNotifications(data.notifications);
       loadAdhkar();
+      loadApplications();
+      verifyBanner.hidden = !!data.emailVerified;
 
       childrenEl.innerHTML = '';
       if(data.children && data.children.length){
         data.children.forEach(function(child){ childrenEl.appendChild(renderChild(child)); });
       } else {
-        childrenEl.appendChild(el('div', 'portal-empty', 'No children are linked to your account yet. Contact the school office if this seems wrong.'));
+        // .portal-empty's dark ink-soft text needs a light card behind
+        // it — bare on this page's dark background it's illegible, the
+        // same contrast bug already fixed once for .account-status-banner.
+        var emptyCard = el('div', 'portal-child-card');
+        emptyCard.appendChild(el('div', 'portal-empty', 'No children are linked to your account yet. If you\'ve just registered, this is expected — submit an admissions enquiry above, or contact the school office once your child is enrolled.'));
+        childrenEl.appendChild(emptyCard);
       }
 
       loadingEl.hidden = true;
@@ -234,6 +283,28 @@
   logoutBtn.addEventListener('click', async function(){
     try{ await fetch('/api/portal/logout', { method: 'POST' }); }catch(err){}
     window.location.href = '/portal/login/';
+  });
+
+  resendVerifyBtn.addEventListener('click', async function(){
+    resendVerifyBtn.disabled = true;
+    var originalLabel = resendVerifyBtn.textContent;
+    resendVerifyBtn.textContent = 'Sending…';
+    try{
+      var res = await fetch('/api/portal/resend-verification', { method: 'POST' });
+      var data = await res.json().catch(function(){ return {}; });
+      if(res.ok && data.verificationSent){
+        resendVerifyBtn.textContent = 'Sent!';
+      } else if(res.ok && data.verificationLink){
+        resendVerifyBtn.textContent = 'Link ready (see console)';
+        console.log('Verification link (email not configured):', data.verificationLink);
+      } else {
+        resendVerifyBtn.textContent = originalLabel;
+        resendVerifyBtn.disabled = false;
+      }
+    }catch(err){
+      resendVerifyBtn.textContent = originalLabel;
+      resendVerifyBtn.disabled = false;
+    }
   });
 
   notificationsClearBtn.addEventListener('click', async function(){

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Create Your Account — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">New Account</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" data-portal-form-card>
+    <div class="portal-steps">
+      <div class="portal-step is-active"><span class="portal-step-circle">1</span><span class="portal-step-label">Create Account</span></div>
+      <div class="portal-step-line"></div>
+      <div class="portal-step"><span class="portal-step-circle">2</span><span class="portal-step-label">Verify Email</span></div>
+      <div class="portal-step-line"></div>
+      <div class="portal-step"><span class="portal-step-circle">3</span><span class="portal-step-label">Your Dashboard</span></div>
+    </div>
+
+    <h1>Create Your Parent/Guardian Account</h1>
+    <p class="sub">One account for enquiries, admissions applications, and — once your child is enrolled — the Parent Portal. Takes about a minute.</p>
+
+    <div class="portal-error" data-portal-error></div>
+
+    <form data-portal-register-form>
+      <div class="portal-field">
+        <label for="reg-name">Full name</label>
+        <input id="reg-name" name="fullName" type="text" autocomplete="name" required />
+      </div>
+      <div class="portal-field">
+        <label for="reg-email">Email</label>
+        <input id="reg-email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="portal-field">
+        <label for="reg-phone">Phone number</label>
+        <input id="reg-phone" name="phone" type="tel" autocomplete="tel" required />
+      </div>
+      <div class="portal-field">
+        <label for="reg-password">Password</label>
+        <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+      </div>
+      <button type="submit" class="portal-submit" data-portal-submit>Create Account</button>
+    </form>
+
+    <p class="portal-notice">
+      Use at least 10 characters — a memorable phrase is safer than a short, complex password. By creating an account you agree this is for genuine enquiries or admissions on behalf of a prospective or current student.
+    </p>
+    <a class="portal-back-link" href="/portal/login/">Already have an account? Sign in →</a><br>
+    <a class="portal-back-link" href="/">← Back to the main site</a>
+  </div>
+
+  <div class="portal-card" data-portal-success-card hidden>
+    <div class="portal-steps">
+      <div class="portal-step is-done"><span class="portal-step-circle">✓</span><span class="portal-step-label">Create Account</span></div>
+      <div class="portal-step-line"></div>
+      <div class="portal-step is-active"><span class="portal-step-circle">2</span><span class="portal-step-label">Verify Email</span></div>
+      <div class="portal-step-line"></div>
+      <div class="portal-step"><span class="portal-step-circle">3</span><span class="portal-step-label">Your Dashboard</span></div>
+    </div>
+    <span class="portal-success-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <h1 style="text-align:center;">Welcome, <span data-portal-success-name></span></h1>
+    <p class="sub" style="text-align:center;" data-portal-success-message>Your account has been created. Check your email to verify your address.</p>
+    <div data-portal-dev-link hidden style="text-align:center;margin-bottom:18px;">
+      <p class="portal-notice" style="margin-top:0;">Email delivery is not yet configured on this deployment — here is your verification link for testing:</p>
+      <a data-portal-dev-link-href class="text-link" href="#"></a>
+    </div>
+    <a class="portal-submit" style="display:block;text-align:center;text-decoration:none;" href="/portal/dashboard/">Go to Your Dashboard →</a>
+  </div>
+</main>
+
+<script src="/js/portal-register.js" defer></script>
+</body>
+</html>

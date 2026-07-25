@@ -9,14 +9,30 @@ CREATE TABLE IF NOT EXISTS guardians (
   email               TEXT NOT NULL UNIQUE,
   -- Nullable: a guardian created by the admin API has no password until
   -- they activate their own account via a reset_token — staff never
-  -- choose or see a parent's password.
+  -- choose or see a parent's password. A self-service registrant sets
+  -- their own password immediately instead (see registration_source).
   password_hash       TEXT,
   password_salt       TEXT,
   failed_attempts     INTEGER NOT NULL DEFAULT 0,
   locked_until        TIMESTAMPTZ,
   reset_token         TEXT,
   reset_token_expires TIMESTAMPTZ,
-  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  -- Added for the self-service Account Creation Journey — see
+  -- docs/account-creation-journey.md. phone is collected at signup per
+  -- that directive; email_verified_at/verification_token* are a
+  -- SEPARATE token pair from reset_token* on purpose (proving email
+  -- ownership at signup and resetting a forgotten password are
+  -- different security events and must never share a token). A
+  -- self-registered guardian can sign in and use the portal before
+  -- verifying — verification protects against email-address squatting/
+  -- spam, not login, since only the real registrant knows the password
+  -- they just chose.
+  phone                       TEXT,
+  registration_source         TEXT NOT NULL DEFAULT 'admin_created' CHECK (registration_source IN ('admin_created', 'self_service')),
+  email_verified_at           TIMESTAMPTZ,
+  verification_token          TEXT,
+  verification_token_expires  TIMESTAMPTZ
 );
 
 -- Canonical term registry. Attendance/results/fees still store the term
@@ -502,3 +518,36 @@ CREATE TABLE IF NOT EXISTS staff_audit_log (
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_staff_audit_log_actor ON staff_audit_log (actor_staff_id, created_at DESC);
+
+-- ============================================================
+-- Account Creation Journey — Admissions Applications
+-- ============================================================
+-- The self-service registration answer to "Admissions Applicant
+-- Account": rather than a second, disconnected applicant identity, an
+-- application is simply owned by a guardian account (the same
+-- identity that later becomes real Parent Portal access once a child
+-- is admitted and enrolled) — see docs/account-creation-journey.md for
+-- why this was chosen over a parallel auth system. status values are
+-- an honest subset of the site's own published 12-stage admissions
+-- process (Enquiry/Application/Assessment/Offer/Enrolment/Begin
+-- Classes) — this table tracks the FIRST few stages a guardian can
+-- meaningfully self-report and a staff member can review; it does not
+-- claim to model exam scheduling, document verification detail, or
+-- payment, none of which exist as real systems yet.
+CREATE TABLE IF NOT EXISTS admissions_applications (
+  id                    SERIAL PRIMARY KEY,
+  guardian_id           INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+  applicant_child_name  TEXT NOT NULL,
+  institution_id        INTEGER REFERENCES institutions(id),
+  desired_class         TEXT,
+  notes                 TEXT,
+  status                TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN (
+                           'submitted', 'under_review', 'waitlisted', 'offered', 'admitted', 'declined', 'withdrawn'
+                         )),
+  reviewed_by_staff_id  INTEGER REFERENCES staff(id),
+  decision_note         TEXT,
+  submitted_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_applications (guardian_id);
+CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status);

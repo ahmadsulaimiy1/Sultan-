@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Verify Your Email — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">Verify</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Verifying your email…</p>
+  </div>
+  <div class="portal-card" data-portal-success hidden>
+    <span class="portal-success-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <h1 style="text-align:center;">Email Verified</h1>
+    <p class="sub" style="text-align:center;">Thank you, <span data-portal-name></span> — your email address is confirmed.</p>
+    <a class="portal-submit" style="display:block;text-align:center;text-decoration:none;" href="/portal/dashboard/">Go to Your Dashboard →</a>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't verify your email</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-verify.js" defer></script>
+</body>
+</html>

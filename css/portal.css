@@ -193,6 +193,46 @@ body.portal-body{
 .pfd-unavailable-row:first-child{border-top:none;}
 .pfd-unavailable-row strong{color:var(--ink);}
 
+/* --- Account Creation Journey --- */
+.portal-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:26px;}
+.portal-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;}
+.portal-step-circle{
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel','Amiri',serif;font-size:0.78rem;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--milk,#FCFAF6);
+}
+.portal-step-label{font-size:0.62rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+.portal-step.is-active .portal-step-circle{border-color:var(--gold);color:var(--navy);background:rgba(198,161,91,0.15);}
+.portal-step.is-active .portal-step-label{color:var(--navy);font-weight:600;}
+.portal-step.is-done .portal-step-circle{border-color:var(--gold);background:var(--gold);color:#fff;}
+.portal-step-line{width:40px;height:1px;background:var(--line);margin:0 6px 18px;flex:0 0 auto;}
+.portal-success-icon{
+  width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--gold);color:var(--gold);margin:0 auto 16px;
+}
+/* Solid background (not a translucent tint) on purpose — this banner
+   appears both on light .portal-card surfaces (student login) and
+   directly on the dark .portal-body background (dashboard), and a
+   low-alpha tint reads as illegible dark-on-dark in the second context
+   (the same bug class already fixed once for .pfd-unavailable). Solid
+   gold-bright + dark navy text guarantees contrast either way. */
+.account-status-banner{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:var(--gold-bright);border:1px solid var(--gold);padding:12px 18px;margin-bottom:20px;
+  font-size:0.85rem;font-weight:600;color:var(--navy-deep);
+}
+.account-status-banner button{
+  font-family:'Inter','Cairo',sans-serif;font-size:0.76rem;font-weight:600;color:var(--navy-deep);
+  background:rgba(255,255,255,0.35);border:1px solid var(--navy-deep);padding:6px 14px;cursor:pointer;white-space:nowrap;
+}
+.account-status-banner button:hover{background:rgba(255,255,255,0.6);}
+.portal-application-card{border:1px solid var(--line);background:var(--ivory);padding:16px 20px;margin-bottom:12px;}
+.portal-application-card h4{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.15rem;color:var(--navy);margin:0 0 4px;}
+.portal-application-meta{font-size:0.78rem;color:var(--ink-soft);}
+.portal-application-status{
+  display:inline-block;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:3px 10px;border:1px solid var(--gold);color:var(--navy);margin-top:8px;
+}
+
 /* --- Staff Identity record --- */
 .identity-field-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:1px;background:var(--line);}
 .identity-field{background:var(--ivory);padding:16px 20px;}

@@ -1,0 +1,158 @@
+# Account Creation Journey
+
+Closes a real, correctly-identified usability gap: the site had Sign In
+everywhere and no visible Sign Up. This is the answer — a real
+self-service registration workflow, built as an extension of the
+existing Identity & Access Platform (the same guardian identity, same
+session cookie, same audit log), not a second, disconnected
+authentication system.
+
+## The one deliberate design decision this document defends
+
+The brief's own example listed "Parent/Guardian Account" and
+"Admissions Applicant Account" as if they might be two different
+things. **They are the same account.** The brief's own Admissions
+Integration section says why not to split them: *"The account should
+become the foundation for enquiries, admissions applications,
+application tracking, future student onboarding — this is far more
+valuable than creating a disconnected login system."* A visitor
+registers once, as a guardian; that identity can immediately submit an
+admissions enquiry, and — once a child is admitted and enrolled by
+staff — the exact same login becomes real Parent Portal access. No
+second identity type, no second session cookie, no reconciling two
+accounts later.
+
+## What self-registers and what doesn't — unchanged governance rule
+
+| Account type | Self-service? | Why |
+|---|---|---|
+| Parent/Guardian | **Yes** — this phase | Low institutional risk; the account only carries what the registrant themselves typed in until staff link a real child to it. |
+| Admissions Applicant | **Yes — same account as above** | Not a separate identity; see above. |
+| Student | **No** | Unchanged. `/portal/student/login/` now states plainly: *"Student accounts are activated by the school after admission — there is no self-service sign-up here."* |
+| Staff | **No** | Unchanged. `/portal/staff/login/` already stated this before this phase; nothing here alters it. |
+
+Nothing in this phase touches student or staff account creation. Every
+governance boundary from `docs/staff-identity-architecture.md` (least
+privilege, institution-issued credentials for roles the school must
+control) stands exactly as before.
+
+## The journey
+
+1. **`/portal/register/`** — Full Name, Email, Phone, Password. A
+   3-step progress rail (Create Account → Verify Email → Your
+   Dashboard) sets expectations up front. Submitting **signs the
+   registrant in immediately** — verification is not a login gate (see
+   below) — and shows a real success state, never a "coming soon" page.
+2. **Email verification** — a real verification link is generated and,
+   if a transactional email provider is configured, actually emailed
+   (see "Email sending" below). The dashboard shows a persistent banner
+   until verified, with a one-click resend.
+3. **`/portal/apply/`** — once signed in, submit a real admissions
+   enquiry (child's name, institution, desired class, notes). Requires
+   a verified email — the one place verification actually gates
+   something, because this is the point an account starts carrying
+   real institutional weight (a staff member will act on it).
+4. **Dashboard — "My Enquiries & Applications"** — every submitted
+   application and its current status (Submitted → Under Review →
+   Waitlisted/Offered → Admitted, or Declined/Withdrawn), visible
+   alongside any enrolled children.
+5. **Forgot / Reset password** — `/portal/forgot-password/` requests a
+   reset link; `/portal/set-password/` (already existed) completes it —
+   no new completion flow needed, the existing activation mechanism
+   already handles this correctly.
+
+## Why verification doesn't block login
+
+Only the actual registrant knows the password they just chose — nobody
+else can sign in to a freshly self-registered account regardless of
+whether its email is verified. Verification protects against a
+*different* risk: someone registering with an email address they don't
+own (accidentally or otherwise). That risk is closed by gating the one
+action that actually matters — submitting an admissions application —
+behind `email_verified_at`, not by locking a legitimate registrant out
+of their own new account while they wait for an email that, in a
+sandbox with no email provider configured, may never arrive.
+
+## Email sending — configured for real, not exercised here
+
+`functions/_lib/email.js` calls Resend's REST API
+(`RESEND_API_KEY` + `EMAIL_FROM_ADDRESS`). **Neither is set in this
+project's sandbox** — no real account exists to configure. The system
+is built to be genuinely functional once a school administrator adds
+real credentials, and gracefully degrades when they aren't set:
+
+- **Registration & resend-verification**: if email isn't configured,
+  the verification link is returned directly in the API response and
+  shown on-screen ("Email delivery is not yet configured — here is your
+  link"). This is safe specifically because both endpoints only ever
+  return that link to the same browser session that is either
+  registering the account or already signed into it — never to an
+  unauthenticated third party.
+- **Forgot password**: deliberately **never** does this. Returning a
+  reset link to whoever merely typed in an email address — with no
+  proof they own it — is exactly the account-takeover vector
+  `admin/reset-password.js`'s original design explicitly avoided
+  (see that file's header comment, predating this phase). Without a
+  real email provider configured, self-service password reset
+  genuinely does not work end-to-end yet — the login and
+  forgot-password pages both say so and point to the existing
+  staff-mediated fallback (contact the school; staff hold
+  `PORTAL_ADMIN_TOKEN` and can issue a reset link directly, unchanged
+  from before this phase).
+
+## Staff-side integration — a real Permission Engine consumer
+
+`POST /api/portal/staff/admissions-applications` (list + update-status)
+is session-authenticated against a staff member's own login and checks
+`admissions` area permissions via `functions/_lib/permissions.js` —
+**not** a bearer token. This is the first real, non-bearer-token
+consumer of the Permission Engine built in the Staff Identity phase,
+directly closing part of the gap the Institutional Readiness Review's
+§3 named: *"most of the system doesn't call the Permission Engine
+yet."* A Registrar (REG role) sees every application; a Principal
+(PRIN role) sees only their own institution's — exactly as
+`role-permission-matrix.md` §4.11 already specifies, enforced in code
+for the first time here.
+
+## Explicitly deferred, named rather than faked
+
+- **Document upload** — no file storage backend (R2/S3/etc.) exists
+  anywhere in this project. `/portal/apply/` says so plainly rather
+  than showing an upload button that goes nowhere.
+- **A staff-facing Registrar's Office UI** for reviewing applications —
+  the endpoint is real and callable (curl examples below); a proper
+  review screen is Registrar's Office module work, per the
+  Institutional Readiness Review's own recommended sequencing.
+- **A merged/unified session model** across guardian/student/staff —
+  deliberately NOT built. The three parallel session cookies established
+  earlier in this engagement stay parallel (lower blast radius on a live
+  system); "one identity architecture" is achieved through shared
+  primitives (`session.js`, `auth_audit_log`, the Permission Engine) and
+  real cross-references (`reviewed_by_staff_id`), not by merging
+  independent trust boundaries that were deliberately kept separate.
+
+## Curl examples
+
+Reviewing applications (staff, session cookie required):
+```
+curl https://<your-domain>/api/portal/staff/admissions-applications \
+  -b "shr_staff_session=<a signed-in Registrar's session cookie>"
+
+curl -X POST https://<your-domain>/api/portal/staff/admissions-applications \
+  -b "shr_staff_session=<cookie>" -H "content-type: application/json" \
+  -d '{"action": "update-status", "applicationId": 1, "status": "offered", "decisionNote": "Offer extended for JSS 1, 2026/2027 session."}'
+```
+
+## Testing note
+
+Same limitation as every portal doc in this project: no internet
+egress in this sandbox, so no real database or email-provider call was
+exercised end-to-end. Verified locally with Playwright driving real
+Chromium: the real (DB-less) registration/forgot-password endpoints
+fail gracefully rather than crashing; the registration, verification,
+and dashboard-applications flows were also verified against mocked API
+responses covering the populated state, the zero-applications empty
+state, and the unverified-email banner. Once a real Neon database and
+(optionally) a real Resend account are configured, run the full
+register → verify → apply → staff-review loop against them before
+relying on it.

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Submit an Application — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">Admissions</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" data-portal-form-card>
+    <h1>Submit an Admissions Enquiry</h1>
+    <p class="sub">Tell us about the prospective student — this is Stage 1 of our twelve-stage admission process, and starts your application record on your account.</p>
+
+    <div class="portal-error" data-portal-error></div>
+
+    <form data-portal-apply-form>
+      <div class="portal-field">
+        <label for="apply-name">Child's full name</label>
+        <input id="apply-name" name="applicantChildName" type="text" required />
+      </div>
+      <div class="portal-field">
+        <label for="apply-institution">Institution of interest</label>
+        <select id="apply-institution" name="institutionName" required>
+          <option value="">Choose one…</option>
+          <option value="Nursery &amp; Primary">Nursery &amp; Primary</option>
+          <option value="Royal College">Royal College</option>
+          <option value="Arabic &amp; Islamic Studies">Arabic &amp; Islamic Studies</option>
+          <option value="Qur'an College">Qur'an College</option>
+        </select>
+      </div>
+      <div class="portal-field">
+        <label for="apply-class">Desired class / year (if known)</label>
+        <input id="apply-class" name="desiredClass" type="text" placeholder="e.g. JSS 1, Hifz Year 1" />
+      </div>
+      <div class="portal-field">
+        <label for="apply-notes">Anything else we should know?</label>
+        <input id="apply-notes" name="notes" type="text" placeholder="Optional" />
+      </div>
+      <button type="submit" class="portal-submit" data-portal-submit>Submit Enquiry</button>
+    </form>
+
+    <p class="portal-notice">
+      Document upload isn't available yet — once your enquiry is reviewed, the Admissions/Registrar office will contact you directly about the required documents (birth certificate, passport photographs, previous school testimonial).
+    </p>
+    <a class="portal-back-link" href="/portal/dashboard/">← Back to your dashboard</a>
+  </div>
+
+  <div class="portal-card" data-portal-success-card hidden>
+    <span class="portal-success-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <h1 style="text-align:center;">Enquiry Submitted</h1>
+    <p class="sub" style="text-align:center;">Thank you — our Admissions/Registrar office will be in touch. You can track this application from your dashboard.</p>
+    <a class="portal-submit" style="display:block;text-align:center;text-decoration:none;" href="/portal/dashboard/">Back to Your Dashboard →</a>
+  </div>
+</main>
+
+<script src="/js/portal-apply.js" defer></script>
+</body>
+</html>

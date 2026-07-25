@@ -30,6 +30,15 @@ const STATEMENTS = [
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS locked_until TIMESTAMPTZ`,
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS reset_token TEXT`,
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMPTZ`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS phone TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS registration_source TEXT NOT NULL DEFAULT 'admin_created'`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_token TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_token_expires TIMESTAMPTZ`,
+  `DO $$ BEGIN
+    ALTER TABLE guardians ADD CONSTRAINT guardians_registration_source_check CHECK (registration_source IN ('admin_created', 'self_service'));
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END $$`,
 
   `CREATE TABLE IF NOT EXISTS academic_terms (
     id         SERIAL PRIMARY KEY,
@@ -375,6 +384,25 @@ const STATEMENTS = [
     ('Finance Office', 'support', 'Owns fee records across all institutions (FN-01) — no write workflow built yet pending FN-03/04/05.'),
     ('ICT Office', 'support', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).')
     ON CONFLICT (name) DO NOTHING`,
+
+  // Account Creation Journey — Admissions Applications
+  `CREATE TABLE IF NOT EXISTS admissions_applications (
+    id                    SERIAL PRIMARY KEY,
+    guardian_id           INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    applicant_child_name  TEXT NOT NULL,
+    institution_id        INTEGER REFERENCES institutions(id),
+    desired_class         TEXT,
+    notes                 TEXT,
+    status                TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN (
+                             'submitted', 'under_review', 'waitlisted', 'offered', 'admitted', 'declined', 'withdrawn'
+                           )),
+    reviewed_by_staff_id  INTEGER REFERENCES staff(id),
+    decision_note         TEXT,
+    submitted_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_applications (guardian_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status)`,
 ];
 
 async function handle({ request, env }) {

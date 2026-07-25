@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Forgot Password — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">Reset Password</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" data-portal-form-card>
+    <h1>Forgot Your Password?</h1>
+    <p class="sub">Enter the email address on your account and we'll send you a link to choose a new password.</p>
+
+    <div class="portal-error" data-portal-error></div>
+
+    <form data-portal-forgot-form>
+      <div class="portal-field">
+        <label for="fp-email">Email</label>
+        <input id="fp-email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <button type="submit" class="portal-submit" data-portal-submit>Send Reset Link</button>
+    </form>
+
+    <p class="portal-notice">
+      If you don't receive anything within a few minutes, this deployment may not yet have email sending configured — contact the school directly at
+      <a href="mailto:info@shroyalschools.ng">info@shroyalschools.ng</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a> and staff can issue a reset link for you.
+    </p>
+    <a class="portal-back-link" href="/portal/login/">← Back to sign in</a>
+  </div>
+
+  <div class="portal-card" data-portal-success-card hidden>
+    <span class="portal-success-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 6h16v12H4V6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4.5 6.5l7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </span>
+    <h1 style="text-align:center;">Check Your Email</h1>
+    <p class="sub" style="text-align:center;">If an account exists for that address, password reset instructions are on their way.</p>
+    <a class="portal-back-link" style="display:block;text-align:center;" href="/portal/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-forgot-password.js" defer></script>
+</body>
+</html>
