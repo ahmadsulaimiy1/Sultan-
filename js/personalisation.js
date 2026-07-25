@@ -93,10 +93,18 @@
   var panels = root.querySelectorAll('[data-pc-panel]');
   var triggers = document.querySelectorAll('[data-pc-trigger]');
 
-  function openDrawer(){
+  function activateTab(key){
+    if(!key) return;
+    var tabBtn = root.querySelector('[data-pc-tab="' + key + '"]');
+    if(!tabBtn) return;
+    tabs.forEach(function(t){ t.classList.toggle('is-active', t === tabBtn); t.setAttribute('aria-selected', String(t === tabBtn)); });
+    panels.forEach(function(p){ p.classList.toggle('is-active', p.getAttribute('data-pc-panel') === key); });
+  }
+  function openDrawer(openTabKey){
     overlay.hidden = false; drawer.hidden = false;
     requestAnimationFrame(function(){ overlay.classList.add('is-visible'); drawer.classList.add('is-open'); });
     document.body.classList.add('pc-lock');
+    activateTab(openTabKey);
     loadNotificationsTabIfNeeded();
     loadSecurityTabIfNeeded();
   }
@@ -105,7 +113,14 @@
     document.body.classList.remove('pc-lock');
     setTimeout(function(){ overlay.hidden = true; drawer.hidden = true; }, 350);
   }
-  triggers.forEach(function(btn){ btn.addEventListener('click', openDrawer); });
+  // A trigger can request a specific tab open directly (e.g. a "Prayer
+  // Times" quick-access link jumping straight to the Islamic
+  // Preferences tab where the live Hijri/prayer widget actually lives)
+  // via data-pc-open-tab="<tab key>"; plain triggers open to whatever
+  // tab was last active, unchanged.
+  triggers.forEach(function(btn){
+    btn.addEventListener('click', function(){ openDrawer(btn.getAttribute('data-pc-open-tab')); });
+  });
   closeBtn.addEventListener('click', closeDrawer);
   overlay.addEventListener('click', closeDrawer);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer(); });

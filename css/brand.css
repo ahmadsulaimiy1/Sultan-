@@ -358,8 +358,8 @@
   .mnr-item.mnr-more{border-style:dashed;background:none;}
   .mobile-quick-row{display:none;}
   .mqr-item{
-    display:flex;align-items:center;gap:6px;flex:1;justify-content:center;
-    padding:10px 8px;font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;font-weight:600;
+    display:flex;align-items:center;gap:6px;flex:0 0 auto;justify-content:center;scroll-snap-align:start;
+    padding:10px 14px;font-family:'Inter','Cairo',sans-serif;font-size:0.72rem;font-weight:600;white-space:nowrap;
     letter-spacing:0.02em;color:var(--ivory);border-inline-end:1px solid rgba(198,161,91,0.18);
     transition:background .2s ease,color .2s ease;
   }
@@ -369,6 +369,11 @@
   .mqr-item.mqr-cta{color:var(--navy-deep);background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);}
   .mqr-item.mqr-cta svg{color:var(--navy-deep);}
   .mqr-item.mqr-cta:hover{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 100%);color:var(--navy-deep);}
+  /* Prayer Times opens the Personalisation Centre's Islamic tab via a
+     <button>, not a link — reset the UA button chrome so it matches
+     the surrounding <a> items exactly. */
+  button.mqr-item{background:none;border:none;border-inline-end:1px solid rgba(198,161,91,0.18);cursor:pointer;}
+  button.mqr-item:last-child{border-inline-end:none;}
   /* A touch more heraldic presence for the crest at true mobile
      widths — larger mark, soft static glow behind it (no animation;
      restraint over spectacle, matching the rest of the site's motion
@@ -455,7 +460,11 @@
       background:rgba(0,0,0,0.16);-webkit-overflow-scrolling:touch;scrollbar-width:none;
     }
     .mobile-nav-ribbon::-webkit-scrollbar{display:none;}
-    .mobile-quick-row{display:flex;border-bottom:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);}
+    .mobile-quick-row{
+      display:flex;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      border-bottom:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);
+    }
+    .mobile-quick-row::-webkit-scrollbar{display:none;}
     .nav-drop{width:100%;display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(198,161,91,0.15);}
     .nav-drop:last-of-type{border-bottom:none;}
     .nav-drop-trigger{flex:1;padding:12px 0 !important;}
@@ -1643,6 +1652,23 @@
     .assistant-panel{width:calc(100vw - 32px);bottom:66px;}
     .whatsapp-float{bottom:82px;right:16px;}
     [dir="rtl"] .whatsapp-float{left:16px;}
+  }
+
+  /* Floating-action collision reduction: four fixed-position buttons
+     (Call School, Apply Now, WhatsApp, Assistant) sit in the bottom
+     corners on every page. Below ~900px, page content is narrower and
+     more likely to have real interactive elements (buttons, forms) pass
+     through that same corner while scrolling — found and fixed one real
+     case on the admission page. Widening the compact footprint (smaller
+     padding/font, tighter inset) beyond just the 520px mobile band
+     shrinks the collision surface across tablet widths too, without
+     losing the text labels that make these discoverable. Not a
+     guarantee no content will ever momentarily pass under them during
+     active scrolling — that's normal for any fixed-position UI — but
+     meaningfully lower risk at the widths where it was actually observed.*/
+  @media (max-width:900px){
+    .call-float a{padding:9px 13px;font-size:0.62rem;}
+    .apply-float a{padding:12px 18px;font-size:0.7rem;}
   }
 
   /* ============================================================
