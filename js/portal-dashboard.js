@@ -117,6 +117,9 @@
     notificationsEl.hidden = false;
   }
 
+  var adhkarWindowsEl = document.querySelector('[data-portal-adhkar-windows]');
+  var adhkarAchvEl = document.querySelector('[data-portal-adhkar-achv]');
+
   function renderAdhkarCard(status){
     if(!adhkarCardEl) return;
     adhkarStreakEl.textContent = status.streak > 0
@@ -129,6 +132,26 @@
       btn.classList.toggle('is-done', done);
       if(stateEl) stateEl.textContent = done ? 'Done today ✓' : 'Mark done';
     });
+
+    if(adhkarWindowsEl && status.windows){
+      adhkarWindowsEl.innerHTML = '';
+      [['7 Days', status.windows.last7, 7], ['30 Days', status.windows.last30, 30], ['90 Days', status.windows.last90, 90]].forEach(function(w){
+        var box = el('div', 'paw-box');
+        box.appendChild(el('div', 'paw-value', w[1] + ' / ' + w[2]));
+        box.appendChild(el('div', 'paw-label', w[0] + ' active'));
+        adhkarWindowsEl.appendChild(box);
+      });
+    }
+
+    if(adhkarAchvEl && status.achievements){
+      adhkarAchvEl.innerHTML = '';
+      status.achievements.forEach(function(a){
+        var badge = el('div', 'portal-achv-badge' + (a.earned ? ' is-earned' : ''));
+        badge.appendChild(el('span', null, a.label.en));
+        adhkarAchvEl.appendChild(badge);
+      });
+    }
+
     adhkarCardEl.hidden = false;
   }
 

@@ -124,12 +124,19 @@ in `digital-campus-roadmap.md`.
 
 The dashboard's "Family Adhkār" card (`adhkar_completions` table,
 `/api/portal/adhkar`) lets a signed-in guardian mark the household's
-Morning/Evening Adhkār as recited for the day and see a day-streak. No
+Morning/Evening Adhkār as recited for the day and see a day-streak,
+7/30/90-day activity windows, and a small set of computed (not stored)
+achievement badges — 3/7/30-day consistency, 100 morning/evening
+completions, a 90-cumulative-day "Scholar" badge, and a "Family Adhkār
+Excellence" badge for 30 days where both periods were completed. No
 extra setup is needed — the table is created by the same `setup.js` run
-covered above. There is no separate student login in this schema, so
+covered above, and the badges are computed from it on every request, not
+a separate table. There is no separate student login in this schema, so
 tracking is at the guardian/household level, not per individual child;
-see `pages/adhkar.html` (the public Adhkar Centre) for the actual
-Arabic/English content this links to.
+see `pages/adhkar.html` (the public Adhkar Centre, now a full Islamic
+Spiritual Life app — categories, a Smart Tasbih Counter with prescribed
+counts, Arabic TTS, session dashboard, quick 2/5/10-minute modes) for
+the actual content this links to.
 
 ## Password reset — staff-mediated by design, not a self-service link
 

@@ -473,13 +473,16 @@
     if(!periodEl) return;
     var isMorning = new Date().getHours() < 12;
     var period = isMorning ? 'morning' : 'evening';
-    var total = (window.SHRS_ADHKAR && window.SHRS_ADHKAR[period]) ? window.SHRS_ADHKAR[period].length : 9;
+    var periodItems = (window.SHRS_ADHKAR && window.SHRS_ADHKAR[period]) ? window.SHRS_ADHKAR[period] : [];
+    var total = periodItems.length || 9;
     var read = 0;
     try{
       var raw = localStorage.getItem('shrsAdhkarProgress');
       var data = raw ? JSON.parse(raw) : null;
       var today = new Date().toISOString().slice(0, 10);
-      if(data && data.date === today && data[period]) read = data[period].length;
+      if(data && data.date === today && data.doneIds){
+        read = periodItems.filter(function(it){ return data.doneIds.indexOf(it.id) !== -1; }).length;
+      }
     }catch(e){ read = 0; }
     periodEl.textContent = isMorning
       ? (STRIP_LANG === 'ar' ? 'أذكار الصباح' : 'Morning Adhkār')
