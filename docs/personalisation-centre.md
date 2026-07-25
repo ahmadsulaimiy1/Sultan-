@@ -127,6 +127,46 @@ structure. New real, working additions:
   before the substance is the exact pattern the requester's own message
   warned against.
 
+## Phase 3: reference-image review (Al Qasimia University)
+
+The requester later supplied 11 screenshots as "design inspiration" for
+a redesign. On inspection, 8 of the 11 were real screenshots of
+**alqasimia.ac.ae (Al Qasimia University)**, a real UAE institution
+operating under the patronage of a named public figure — not abstract
+mockups. They included real statistics (visitor counts, nationality
+counts, graduate counts) and real photographs of real identifiable
+people. The other 3 were screenshots of SHRS's own current site
+(confirming Phase 1–2 was live and rendering correctly).
+
+Every pattern was run through suitable / suitable-with-modification /
+unsuitable before anything was built:
+
+- **Font-size accessibility toolbar** — already equivalent (SHRS's Text
+  Size control). No change.
+- **Ornamental scalloped section dividers** — already SHRS's existing
+  "folio" style. No change.
+- **Event calendar (grid + Today/Upcoming/Passed legend)** — suitable
+  *with modification*: adopted the grid+legend visual grammar, but SHRS
+  has no real events data source, so no fake events were added. Built
+  instead as a real Hijri-month calendar (today + Friday marked only —
+  both true for every visitor, zero invented data), reusing the
+  Gregorian↔Hijri conversion already in `js/personalisation.js`.
+- **Stat numbers overlaid on a photo** — unsuitable *for now*. Would need
+  real, verified SHRS numbers (enrollment, nationality count); inventing
+  numbers to match the visual style was not on the table. Revisit if/when
+  the school supplies verified statistics.
+- **Resource card grid, stacked sub-hub nav bars** — not relevant to the
+  Personalisation Centre specifically; these are academics/admissions
+  hub-page patterns, out of scope here.
+- **"X Years of Excellence" anniversary badge** — suitable *later*. SHRS
+  was registered December 2017; a real milestone badge becomes honest at
+  the next round number, not manufactured now.
+
+Nothing from Al Qasimia's actual content — its statistics, its people,
+its patronage framing — was carried over. Only the reusable structural
+idea (a small calendar grid with a legend) was, and only once it could be
+filled with real SHRS data.
+
 ## Language
 
 English and Arabic are fully real, immediate, and cover the whole site.
