@@ -257,7 +257,13 @@
   .topbar .wrap{display:flex;justify-content:space-between;align-items:center;padding:9px 24px;flex-wrap:wrap;gap:8px;}
   .topbar a{opacity:0.85;} .topbar a:hover{opacity:1;color:#fff;}
   .topbar .contacts{display:flex;gap:20px;flex-wrap:wrap;}
-  .topbar .socials{display:flex;gap:14px;}
+  .topbar .socials{display:flex;gap:14px;align-items:center;}
+  /* Real recognisable platform icons rather than plain text names —
+     monochrome line-icon treatment matching the site's own icon
+     language (nav-mega, footer) rather than colour brand logos, which
+     would clash with the topbar's refined gold/ivory palette. */
+  .social-icon{display:flex;align-items:center;justify-content:center;width:26px;height:26px;flex-shrink:0;opacity:0.85;transition:opacity .2s ease,transform .2s ease;}
+  .social-icon:hover{opacity:1;color:#fff;transform:translateY(-1px);}
   header.nav{position:sticky;top:0;z-index:50;background:var(--navy);border-bottom:1px solid var(--line);position:relative;}
   header.nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);opacity:0.85;pointer-events:none;}
   nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;}
