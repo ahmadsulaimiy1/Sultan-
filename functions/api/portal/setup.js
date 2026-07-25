@@ -207,6 +207,30 @@ const STATEMENTS = [
     event      TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
+
+  `CREATE TABLE IF NOT EXISTS announcements (
+    id            SERIAL PRIMARY KEY,
+    category      TEXT NOT NULL CHECK (category IN (
+                     'admissions', 'events', 'academic_notices', 'quran_college',
+                     'arabic_studies', 'scholarships', 'parent_notices', 'general'
+                   )),
+    title         TEXT NOT NULL,
+    summary       TEXT NOT NULL,
+    body          TEXT,
+    image_url     TEXT,
+    venue         TEXT,
+    event_date    DATE,
+    event_time    TEXT,
+    action_label  TEXT,
+    action_url    TEXT,
+    is_featured   BOOLEAN NOT NULL DEFAULT false,
+    status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+    published_at  TIMESTAMPTZ,
+    created_by    TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC)`,
 ];
 
 async function handle({ request, env }) {

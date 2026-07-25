@@ -101,6 +101,7 @@ function buildPage(page) {
     ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
   });
   const header = read(`partials/header${suffix}.html`);
+  const announcementRibbon = read(`partials/announcement-ribbon${suffix}.html`);
   const content = fillTokens(read(page.contentFile), {
     ADHKAR_STATIC: renderAdhkarStatic(lang),
   });
@@ -126,6 +127,7 @@ ${head}${altTag}</head>
 
 ${topbar}
 ${header}
+${announcementRibbon}
 ${content}
 ${footer}
 ${assistant}
@@ -136,6 +138,7 @@ ${personalisation}
 <script src="/js/personalisation.js" defer></script>
 <script src="/js/site.js" defer></script>
 <script src="/js/adhkar-app.js" defer></script>
+<script src="/js/announcements.js" defer></script>
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>

@@ -259,3 +259,43 @@ CREATE TABLE IF NOT EXISTS auth_audit_log (
   event      TEXT NOT NULL, -- login_success | login_failed | lockout | password_activated
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Institutional announcements — admissions notices, events, academic
+-- notices, and category-specific communications for the Qur'an College
+-- and Arabic & Islamic Studies. Deliberately holds zero rows until real
+-- content exists; every public-facing surface (ribbon, homepage hero,
+-- countdown, archive) is built to render an honest, deliberate empty
+-- state rather than assume a row exists. Entered by staff via the
+-- token-gated POST /api/portal/admin/announcements (no admin UI yet —
+-- same "protected raw API" convention as admin/students.js and
+-- admin/hifz-progress.js). Re-gate this to a proper Communications/
+-- Front-Office role once the Staff Identity & Role System's permission
+-- engine exists — PORTAL_ADMIN_TOKEN is reused for now only because no
+-- narrower role boundary is implementable yet.
+CREATE TABLE IF NOT EXISTS announcements (
+  id            SERIAL PRIMARY KEY,
+  category      TEXT NOT NULL CHECK (category IN (
+                   'admissions', 'events', 'academic_notices', 'quran_college',
+                   'arabic_studies', 'scholarships', 'parent_notices', 'general'
+                 )),
+  title         TEXT NOT NULL,
+  summary       TEXT NOT NULL,
+  body          TEXT,
+  image_url     TEXT,
+  venue         TEXT,
+  event_date    DATE,       -- null for notices that aren't tied to a single date
+  event_time    TEXT,       -- free text ("10:00 AM"), not every notice has a precise time
+  action_label  TEXT,
+  action_url    TEXT,
+  -- At most one row should be featured at a time in practice (the hero
+  -- picks the most recently featured), but this isn't DB-enforced —
+  -- the admin endpoint unsets any prior featured row on each feature
+  -- action so the application layer keeps it to one.
+  is_featured   BOOLEAN NOT NULL DEFAULT false,
+  status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+  published_at  TIMESTAMPTZ,
+  created_by    TEXT, -- staff name/identifier, free text until Staff Identity exists
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC);

@@ -1,0 +1,161 @@
+# Institutional Announcement & Communication System
+
+This is the "Priority 2" build authorised after the header/footer
+prestige rebuild — a real, working announcement pipeline (admissions
+notices, ceremonies, academic notices, category-specific communications
+for the Qur'an College and Arabic & Islamic Studies) rather than a
+mockup with sample content. **No announcement, event, date, or venue has
+been fabricated anywhere in this build.** The system currently holds
+zero rows and is designed to look deliberately, honestly complete in
+that state — every surface below has a real, load-bearing empty state
+defined server-side, not a placeholder that reads as broken or
+unfinished.
+
+## What ships
+
+- **`announcements` table** — one row per notice, with a category, a
+  status workflow (`draft` → `published` → `archived`, never deleted),
+  an optional event date/time/venue, an optional image and action
+  button, and a single `is_featured` flag that drives the homepage hero.
+- **Public read API** — `GET /api/portal/announcements/list` — no
+  authentication, since this is public communications content, not
+  student/guardian data. Powers all three frontend surfaces below.
+- **Staff write API** — `POST /api/portal/admin/announcements` —
+  token-gated, same "protected raw API, no admin UI yet" convention as
+  `admin/students.js` and `admin/hifz-progress.js`.
+- **The ribbon** — a thin strip between the header and page content on
+  every page, site-wide, EN+AR. Shows the latest published
+  announcements as a horizontally scrollable row of pills; shows "No
+  active announcements." when there are none.
+- **The homepage hero** — a flagship section on `/` and `/ar/` showing
+  the single featured announcement (title, category, summary, image,
+  venue, date/time, action button) in full; shows a real institutional
+  placeholder message ("Nothing scheduled at present…") when nothing is
+  featured, never a blank box.
+- **The countdown** — inside the hero, counts down to the featured
+  item's event date/time if it has one; shows "No upcoming scheduled
+  events." otherwise. Recomputed client-side every 60 seconds.
+- **The archive** — `/announcements/` and `/ar/announcements/`, a
+  permanent, filterable (by category) record of every published and
+  archived notice. Nothing here is ever hard-deleted — `archive` is a
+  status, not a delete action.
+
+## Why staff-mediated, not self-service, and why `PORTAL_ADMIN_TOKEN` for now
+
+There is no Communications/Front-Office role in the Staff Identity & Role
+System yet — that system doesn't exist yet; it's Priority 3, explicitly
+scheduled after this. Rather than block the announcement system on that
+future work, `POST /api/portal/admin/announcements` is gated by the same
+`PORTAL_ADMIN_TOKEN` used for student records today. **This is a known,
+temporary compromise, not a permanent design decision** — once the
+permission engine described in `role-permission-matrix.md` exists, this
+endpoint should be re-gated to whichever role that document assigns
+front-office/communications publishing authority to, narrower than the
+general admin token. Flagging this now so it isn't forgotten once Staff
+Identity ships.
+
+## Category list
+
+`admissions`, `events`, `academic_notices`, `quran_college`,
+`arabic_studies`, `scholarships`, `parent_notices`, `general` — the
+eight categories named in the Priority 2 brief. Category display labels
+are bilingual (EN/AR) in `js/announcements.js`; announcement **content**
+itself (title/summary/body) is free text in whichever single language
+staff enter it, matching the same single-language-per-record convention
+already used for every other piece of staff-entered portal data (student
+names, Hifz notes, etc.) — there is no automatic translation, and
+Arabic-language announcements need to be entered as their own separate
+rows if wanted on the Arabic site.
+
+## Setup
+
+Shares the same Cloudflare Pages + Neon database as the rest of the
+portal.
+
+1. Redeploy, then re-run the setup endpoint (safe to run again — every
+   statement is additive):
+   ```
+   curl -X POST https://<your-domain>/api/portal/setup \
+     -H "x-setup-token: <the PORTAL_SETUP_TOKEN you set>"
+   ```
+   This creates the `announcements` table. No demo announcement is
+   seeded — unlike the demo guardian/student, inventing a sample notice
+   would violate the "no fabricated events" rule this whole system was
+   built under, even as a fixture. Use the curl examples below against a
+   real database (or the mocked responses in your own local testing) to
+   see the populated states.
+
+2. **No new environment variable** — this reuses `PORTAL_ADMIN_TOKEN`
+   (see the compromise note above).
+
+## Publishing an announcement
+
+Every request needs `x-admin-token: <PORTAL_ADMIN_TOKEN>` and an
+`action`. One action per request, never an implicit upsert — same
+pattern as the Ijazah grant/revoke calls in `admin/hifz-progress.js`.
+
+**Create** (always starts as `draft`):
+```
+curl -X POST https://<your-domain>/api/portal/admin/announcements \
+  -H "x-admin-token: <token>" -H "content-type: application/json" \
+  -d '{
+    "action": "create",
+    "category": "admissions",
+    "title": "2026/2027 Admission Now Open",
+    "summary": "Applications for the next academic session are open across all four institutions.",
+    "actionLabel": "Start Your Application",
+    "actionUrl": "/admission/",
+    "createdBy": "Admissions Office"
+  }'
+```
+
+**Update** (send only the fields that changed):
+```
+curl -X POST https://<your-domain>/api/portal/admin/announcements \
+  -H "x-admin-token: <token>" -H "content-type: application/json" \
+  -d '{"action": "update", "id": 1, "summary": "Revised wording."}'
+```
+
+**Publish / unpublish / archive:**
+```
+curl -X POST .../api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "publish", "id": 1}'
+curl -X POST .../api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "unpublish", "id": 1}'
+curl -X POST .../api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "archive", "id": 1}'
+```
+
+**Feature on the homepage hero** (must already be published; unfeatures
+every other row first, so only one item is ever featured at once):
+```
+curl -X POST .../api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "feature", "id": 1}'
+curl -X POST .../api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "unfeature", "id": 1}'
+```
+
+An **event** announcement additionally takes `eventDate` (`YYYY-MM-DD`),
+`eventTime` (free text, e.g. `"10:00 AM"`), and `venue` — these drive the
+hero's countdown and the meta row shown on both the hero and archive
+cards. A non-event notice (e.g. a policy update) can omit all three.
+
+## Reading announcements (public, no token)
+
+```
+GET /api/portal/announcements/list                         # latest 30 published, any category
+GET /api/portal/announcements/list?category=events          # one category only
+GET /api/portal/announcements/list?includeArchived=true     # archive page's full history
+```
+Returns `{ ok, items: [...], featured: {...} | null }` — `featured` is
+the single row with `is_featured = true`, independent of any category
+filter, so the hero can render regardless of what the ribbon/archive are
+currently showing.
+
+## Testing note
+
+Same limitation as `parent-portal.md` and `student-portal.md`: this
+sandbox has no internet egress, so live database calls could not be
+exercised end-to-end from here. The ribbon, hero, countdown, and archive
+were verified locally with Playwright driving real Chromium against
+`GET /api/portal/announcements/list` mocked via `page.route()` — covering
+the zero-announcements state, a populated ribbon, a featured hero item
+with and without an event date, and archive filtering — not against a
+real Neon database. Once you complete the setup above, publish a real
+announcement and confirm it appears correctly across all four surfaces
+before relying on this for a real event.
