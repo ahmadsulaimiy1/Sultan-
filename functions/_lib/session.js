@@ -71,6 +71,7 @@ function makeSessionCookieFns(cookieName, idField) {
 
 const guardianCookie = makeSessionCookieFns('shr_portal_session', 'guardianId');
 const studentCookie = makeSessionCookieFns('shr_student_session', 'studentId');
+const staffCookie = makeSessionCookieFns('shr_staff_session', 'staffId');
 
 export const createSessionCookie = guardianCookie.create;
 export const readSessionFromRequest = guardianCookie.read;
@@ -79,6 +80,10 @@ export const clearSessionCookie = guardianCookie.clear;
 export const createStudentSessionCookie = studentCookie.create;
 export const readStudentSessionFromRequest = studentCookie.read;
 export const clearStudentSessionCookie = studentCookie.clear;
+
+export const createStaffSessionCookie = staffCookie.create;
+export const readStaffSessionFromRequest = staffCookie.read;
+export const clearStaffSessionCookie = staffCookie.clear;
 
 // scrypt password hashing — no bcrypt dependency, no native binary.
 export function hashPassword(password) {

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>My Identity — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Staff</span>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello" data-identity-hello></div>
+    <div class="portal-hello-sub">Sultan Hanafi Royal Schools — Staff Identity Record. This is your directory entry, not a task dashboard.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head">
+        <h2 data-identity-name></h2>
+        <div class="meta" data-identity-meta></div>
+      </div>
+      <div class="identity-field-grid">
+        <div class="identity-field">
+          <div class="label">Office</div>
+          <div class="value" data-identity-office>—</div>
+        </div>
+        <div class="identity-field">
+          <div class="label">Institution</div>
+          <div class="value" data-identity-institution>—</div>
+        </div>
+        <div class="identity-field">
+          <div class="label">Reports To</div>
+          <div class="value" data-identity-reports-to>—</div>
+        </div>
+        <div class="identity-field">
+          <div class="label">Date Joined</div>
+          <div class="value" data-identity-joined>—</div>
+        </div>
+      </div>
+      <div class="portal-programmes" data-identity-institutions style="padding:0 20px 16px;"></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Roles &amp; Access</h2></div>
+      <div data-identity-roles class="identity-roles-list"></div>
+    </div>
+
+    <div class="portal-child-card" data-identity-delegations-held-card hidden>
+      <div class="portal-child-head"><h2>Delegated To You</h2></div>
+      <div data-identity-delegations-held style="padding:16px 20px;"></div>
+    </div>
+
+    <div class="portal-child-card" data-identity-delegations-given-card hidden>
+      <div class="portal-child-head"><h2>Delegated By You</h2></div>
+      <div data-identity-delegations-given style="padding:16px 20px;"></div>
+    </div>
+
+    <p class="portal-notice">
+      This record reflects the SHRS Role &amp; Permission Matrix — every grant above was explicitly assigned, never assumed. If something here looks wrong, contact the ICT Office at
+      <a href="mailto:info@shroyalschools.ng">info@shroyalschools.ng</a>.
+    </p>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading your identity record…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load your identity record</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-staff-identity.js" defer></script>
+</body>
+</html>

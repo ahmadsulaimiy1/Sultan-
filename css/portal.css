@@ -193,6 +193,22 @@ body.portal-body{
 .pfd-unavailable-row:first-child{border-top:none;}
 .pfd-unavailable-row strong{color:var(--ink);}
 
+/* --- Staff Identity record --- */
+.identity-field-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:1px;background:var(--line);}
+.identity-field{background:var(--ivory);padding:16px 20px;}
+.identity-field .label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.identity-field .value{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--navy);margin-top:4px;}
+.identity-roles-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
+.identity-role-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);background:var(--ivory);}
+.identity-role-name{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;color:var(--navy);}
+.identity-role-scope{font-size:0.74rem;color:var(--ink-soft);margin-top:2px;}
+.identity-role-badge{font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);color:var(--navy);white-space:nowrap;}
+.identity-role-badge.is-proposed{border-color:var(--ink-soft);color:var(--ink-soft);}
+.identity-delegation-row{padding:12px 14px;border:1px solid rgba(233,206,138,0.5);background:rgba(233,206,138,0.08);margin-bottom:10px;font-size:0.82rem;color:var(--ink);}
+.identity-delegation-row strong{color:var(--navy);}
+.identity-delegation-meta{font-size:0.72rem;color:var(--ink-soft);margin-top:4px;}
+.identity-empty{padding:16px 20px;font-size:0.85rem;color:var(--ink-soft);font-style:italic;}
+
 @media (max-width:520px){
   .portal-topbar{padding:12px 16px;}
   .portal-main{padding:24px 14px;}

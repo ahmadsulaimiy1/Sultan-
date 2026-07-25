@@ -231,6 +231,150 @@ const STATEMENTS = [
     updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC)`,
+
+  // SHRS Identity & Access Platform — see docs/staff-identity-architecture.md.
+  `CREATE TABLE IF NOT EXISTS institutions (
+    id        SERIAL PRIMARY KEY,
+    name      TEXT NOT NULL UNIQUE,
+    is_active BOOLEAN NOT NULL DEFAULT true
+  )`,
+  `CREATE TABLE IF NOT EXISTS campuses (
+    id         SERIAL PRIMARY KEY,
+    name       TEXT NOT NULL UNIQUE,
+    is_primary BOOLEAN NOT NULL DEFAULT true,
+    is_active  BOOLEAN NOT NULL DEFAULT true
+  )`,
+  `CREATE TABLE IF NOT EXISTS offices (
+    id               SERIAL PRIMARY KEY,
+    name             TEXT NOT NULL UNIQUE,
+    office_type      TEXT NOT NULL CHECK (office_type IN ('governance', 'executive', 'academic', 'support')),
+    institution_id   INTEGER REFERENCES institutions(id),
+    parent_office_id INTEGER REFERENCES offices(id),
+    description      TEXT,
+    is_active        BOOLEAN NOT NULL DEFAULT true,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS departments (
+    id             SERIAL PRIMARY KEY,
+    name           TEXT NOT NULL,
+    institution_id INTEGER REFERENCES institutions(id),
+    office_id      INTEGER REFERENCES offices(id),
+    is_active      BOOLEAN NOT NULL DEFAULT true,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS roles (
+    code               TEXT PRIMARY KEY,
+    name               TEXT NOT NULL,
+    status             TEXT NOT NULL CHECK (status IN ('established', 'proposed')),
+    scope_description  TEXT,
+    source_note        TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS staff (
+    id                  SERIAL PRIMARY KEY,
+    staff_no            TEXT NOT NULL UNIQUE,
+    full_name           TEXT NOT NULL,
+    preferred_name      TEXT,
+    office_id           INTEGER REFERENCES offices(id),
+    department_id       INTEGER REFERENCES departments(id),
+    position_title      TEXT,
+    reports_to_staff_id INTEGER REFERENCES staff(id),
+    institution_id      INTEGER REFERENCES institutions(id),
+    date_joined         DATE,
+    status              TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'archived')),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS staff_institutions (
+    staff_id       INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    institution_id INTEGER NOT NULL REFERENCES institutions(id),
+    is_primary     BOOLEAN NOT NULL DEFAULT false,
+    PRIMARY KEY (staff_id, institution_id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS staff_roles (
+    id             SERIAL PRIMARY KEY,
+    staff_id       INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    role_code      TEXT NOT NULL REFERENCES roles(code),
+    institution_id INTEGER REFERENCES institutions(id),
+    office_id      INTEGER REFERENCES offices(id),
+    granted_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    granted_by     INTEGER REFERENCES staff(id),
+    is_active      BOOLEAN NOT NULL DEFAULT true,
+    revoked_at     TIMESTAMPTZ,
+    revoked_by     INTEGER REFERENCES staff(id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS staff_accounts (
+    staff_id            INTEGER PRIMARY KEY REFERENCES staff(id) ON DELETE CASCADE,
+    password_hash       TEXT,
+    password_salt       TEXT,
+    failed_attempts     INTEGER NOT NULL DEFAULT 0,
+    locked_until        TIMESTAMPTZ,
+    reset_token         TEXT,
+    reset_token_expires TIMESTAMPTZ,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS delegations (
+    id                 SERIAL PRIMARY KEY,
+    delegator_staff_id INTEGER NOT NULL REFERENCES staff(id),
+    delegate_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+    role_code          TEXT NOT NULL REFERENCES roles(code),
+    institution_id     INTEGER REFERENCES institutions(id),
+    office_id          INTEGER REFERENCES offices(id),
+    reason             TEXT NOT NULL,
+    starts_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    ends_at            TIMESTAMPTZ NOT NULL,
+    created_by         INTEGER REFERENCES staff(id),
+    revoked_at         TIMESTAMPTZ,
+    revoked_by         INTEGER REFERENCES staff(id),
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CHECK (ends_at > starts_at)
+  )`,
+  `CREATE TABLE IF NOT EXISTS staff_audit_log (
+    id               SERIAL PRIMARY KEY,
+    actor_staff_id   INTEGER REFERENCES staff(id),
+    event_type       TEXT NOT NULL,
+    target_type      TEXT,
+    target_id        INTEGER,
+    reason           TEXT,
+    metadata         JSONB,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_staff_audit_log_actor ON staff_audit_log (actor_staff_id, created_at DESC)`,
+
+  // Reference/structural data only — real institution and role facts
+  // already public in governance docs and on the live site, safe to
+  // seed idempotently like academic_terms/classes. Deliberately NOT
+  // seeding `staff` rows for real named individuals here — that's an
+  // explicit admin action (see docs/staff-identity-architecture.md),
+  // the same "admin enters real data on purpose" convention already
+  // used for guardians/students, never auto-created by this endpoint.
+  `INSERT INTO institutions (name) VALUES
+    ('Nursery & Primary'), ('Royal College'), ('Arabic & Islamic Studies'), ('Qur''an College')
+    ON CONFLICT (name) DO NOTHING`,
+  `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
+  `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
+    ('EXE', 'CEO / Executive Leadership', 'established', 'All institutions', 'GV-01; Founder/CEO Zakariya Olanrewaju Anofi'),
+    ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
+    ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
+    ('REG', 'Registrar', 'established', 'All institutions (academic records are institution-wide)', 'AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope'),
+    ('AREG', 'Assistant Registrar', 'proposed', 'Delegated subset of Registrar''s scope', 'Not yet documented'),
+    ('ADM', 'Admissions Officer', 'proposed', 'All institutions, pre-enrolment only', 'PA-05 describes the process; no standing officer role documented yet'),
+    ('FIN', 'Finance Officer', 'proposed', 'All institutions', 'FN-01 establishes the principle; no officer role documented'),
+    ('TCH', 'Teacher', 'proposed', 'Own assigned classes/subjects only', 'Institution-agnostic'),
+    ('MUH', 'Muhaffiz / Muhaffizah', 'proposed', 'Own assigned Hifz students only', 'IQ-01, IQ-02'),
+    ('ARB', 'Arabic & Islamic Studies Instructor', 'proposed', 'Own assigned classes, School of Arabic & Islamic Studies', 'Mirrors TCH scope for that division'),
+    ('QC-OFF', 'Qur''an College Officer', 'proposed', 'Qur''an College institution-wide', 'Institution-level oversight above individual Muhaffiz assignments'),
+    ('SA', 'Student Affairs Officer', 'proposed', 'All institutions', 'SD-05/06/07 Missing/Partial — role and governing policy should arrive together'),
+    ('BRD', 'Boarding Officer', 'proposed', 'Boarding students only', 'SD-04 published; no digital officer role yet'),
+    ('ICT', 'ICT Administrator', 'proposed', 'All institutions, system-level', 'IT-06 names an ICT Head EMT member — this is that person''s operational tier'),
+    ('SYSADMIN', 'System Administrator', 'proposed', 'Everything, technical only — one account, tightly held', 'The single highest-privilege technical role'),
+    ('DSL', 'Designated Safeguarding Lead', 'established', 'All institutions, safeguarding-relevant fields only', 'SW-02 — role defined, not yet appointed')
+    ON CONFLICT (code) DO NOTHING`,
+  `INSERT INTO offices (name, office_type, description) VALUES
+    ('Board of Trustees', 'governance', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
+    ('Registrar''s Office', 'academic', 'Owns admissions verification, enrolment, results, transcripts, and certificates across all four institutions (AC-02, PA-05).'),
+    ('Finance Office', 'support', 'Owns fee records across all institutions (FN-01) — no write workflow built yet pending FN-03/04/05.'),
+    ('ICT Office', 'support', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).')
+    ON CONFLICT (name) DO NOTHING`,
 ];
 
 async function handle({ request, env }) {

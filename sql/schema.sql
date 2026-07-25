@@ -299,3 +299,206 @@ CREATE TABLE IF NOT EXISTS announcements (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC);
+
+-- ============================================================
+-- SHRS Identity & Access Platform (Staff Identity & Role System)
+-- ============================================================
+-- Implements docs/staff-identity-architecture.md, which itself
+-- implements the already-accepted docs/role-permission-matrix.md and
+-- docs/data-ownership-register.md. Read that architecture doc before
+-- editing anything below — in particular the note on why this is an
+-- ORGANISATIONAL DIRECTORY (who, where, reports-to, active/suspended/
+-- archived), not an HR personnel file (salary, leave, discipline,
+-- performance, contracts) — the latter stays out of scope until
+-- HR-04 through HR-09 exist, per role-permission-matrix.md §4.3's
+-- explicit "this entire area is ungoverned" flag.
+
+-- Formalises the institution names already used as free text in
+-- classes.institution (kept as-is, unchanged, to avoid touching live
+-- student data) into a real reference table so offices/staff/roles can
+-- scope against an id instead of repeating free text. Values below
+-- MUST match classes.institution's existing strings exactly — see the
+-- architecture doc's alignment note.
+CREATE TABLE IF NOT EXISTS institutions (
+  id        SERIAL PRIMARY KEY,
+  name      TEXT NOT NULL UNIQUE,
+  is_active BOOLEAN NOT NULL DEFAULT true
+);
+
+-- Future-campus-ready per the directive's "Future Campuses" requirement
+-- — one real row today (the only real campus), more added later without
+-- any other table changing shape.
+CREATE TABLE IF NOT EXISTS campuses (
+  id         SERIAL PRIMARY KEY,
+  name       TEXT NOT NULL UNIQUE,
+  is_primary BOOLEAN NOT NULL DEFAULT true,
+  is_active  BOOLEAN NOT NULL DEFAULT true
+);
+
+-- The Organisational Directory. institution_id NULL = school-wide (the
+-- Board, the Executive Management Team, ICT). parent_office_id is a
+-- self-reference so the directory can express real reporting structure
+-- (e.g. a future Admissions Office reporting through the Registrar's
+-- Office) without a fixed-depth hierarchy.
+CREATE TABLE IF NOT EXISTS offices (
+  id               SERIAL PRIMARY KEY,
+  name             TEXT NOT NULL UNIQUE,
+  office_type      TEXT NOT NULL CHECK (office_type IN ('governance', 'executive', 'academic', 'support')),
+  institution_id   INTEGER REFERENCES institutions(id),
+  parent_office_id INTEGER REFERENCES offices(id),
+  description      TEXT,
+  is_active        BOOLEAN NOT NULL DEFAULT true,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Subunits within an institution/office — e.g. Royal College's academic
+-- departments (the public site names "seven academic departments" but
+-- does not name them individually anywhere, so none are fabricated
+-- here; this table starts empty and is populated with real names once
+-- the school supplies them).
+CREATE TABLE IF NOT EXISTS departments (
+  id             SERIAL PRIMARY KEY,
+  name           TEXT NOT NULL,
+  institution_id INTEGER REFERENCES institutions(id),
+  office_id      INTEGER REFERENCES offices(id),
+  is_active      BOOLEAN NOT NULL DEFAULT true,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Reference table for the 16 role codes defined in
+-- role-permission-matrix.md §3 — a real, queryable representation of an
+-- already-accepted governance document, not a value invented here.
+-- status distinguishes a currently-documented role (Established) from
+-- one the Matrix recommends building system support for ahead of a
+-- formal Board appointment (Proposed) — see that document's §0 for why.
+CREATE TABLE IF NOT EXISTS roles (
+  code               TEXT PRIMARY KEY,
+  name               TEXT NOT NULL,
+  status             TEXT NOT NULL CHECK (status IN ('established', 'proposed')),
+  scope_description  TEXT,
+  source_note        TEXT
+);
+
+-- The Staff Data Model — an organisational identity record, not a
+-- personnel file. reports_to_staff_id is a self-reference so the
+-- directory can express real reporting relationships (Registrar Office
+-- staff reporting to the Registrar, etc.). institution_id is a staff
+-- member's PRIMARY institution for display purposes; staff_institutions
+-- below is the authoritative multi-institution record, mirroring the
+-- student_classes pattern already proven for dual-enrolled students.
+CREATE TABLE IF NOT EXISTS staff (
+  id                  SERIAL PRIMARY KEY,
+  staff_no            TEXT NOT NULL UNIQUE,
+  full_name           TEXT NOT NULL,
+  preferred_name      TEXT,
+  office_id           INTEGER REFERENCES offices(id),
+  department_id       INTEGER REFERENCES departments(id),
+  position_title      TEXT,
+  reports_to_staff_id INTEGER REFERENCES staff(id),
+  institution_id      INTEGER REFERENCES institutions(id),
+  date_joined         DATE,
+  status              TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'archived')),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Multiple Institutional Assignments — same is_primary-flagged
+-- many-to-many shape as student_classes, so a staff member who (for
+-- example) teaches across both Royal College and Arabic & Islamic
+-- Studies is representable without a schema change.
+CREATE TABLE IF NOT EXISTS staff_institutions (
+  staff_id       INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  institution_id INTEGER NOT NULL REFERENCES institutions(id),
+  is_primary     BOOLEAN NOT NULL DEFAULT false,
+  PRIMARY KEY (staff_id, institution_id)
+);
+
+-- The Role Assignment Engine's data — One User -> Many Roles, each
+-- assignment independently scoped (institution_id/office_id) and
+-- independently revocable, so "Principal + Arabic Studies Officer" or
+-- "Registrar + Admissions Officer" needs zero redesign: it's just two
+-- rows. Nothing here grants a permission directly — permissions are
+-- derived at request time by functions/_lib/permissions.js from
+-- role_code via the data-driven matrix in
+-- functions/_lib/permission-matrix.js, which implements
+-- role-permission-matrix.md exactly. This table only ever records WHO
+-- holds WHICH role, WHERE, granted by WHOM, and WHEN revoked — it does
+-- not itself decide what that role can do.
+CREATE TABLE IF NOT EXISTS staff_roles (
+  id             SERIAL PRIMARY KEY,
+  staff_id       INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  role_code      TEXT NOT NULL REFERENCES roles(code),
+  institution_id INTEGER REFERENCES institutions(id), -- NULL = school-wide scope for this grant
+  office_id      INTEGER REFERENCES offices(id),
+  granted_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  granted_by     INTEGER REFERENCES staff(id),
+  is_active      BOOLEAN NOT NULL DEFAULT true,
+  revoked_at     TIMESTAMPTZ,
+  revoked_by     INTEGER REFERENCES staff(id)
+);
+
+-- Staff portal login credential — deliberately separate from `staff`
+-- itself, same reason student_accounts is separate from students: staff
+-- never choose their own account's existence, and this table's shape
+-- can change without touching the directory record. Mirrors
+-- guardian/student_accounts exactly (nullable password until
+-- activation, lockout counters, reset token).
+CREATE TABLE IF NOT EXISTS staff_accounts (
+  staff_id            INTEGER PRIMARY KEY REFERENCES staff(id) ON DELETE CASCADE,
+  password_hash       TEXT,
+  password_salt       TEXT,
+  failed_attempts     INTEGER NOT NULL DEFAULT 0,
+  locked_until        TIMESTAMPTZ,
+  reset_token         TEXT,
+  reset_token_expires TIMESTAMPTZ,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- The Delegation System. A delegation grants the DELEGATE the
+-- delegator's role_code, scoped exactly like a normal staff_roles grant,
+-- for a bounded window only — ends_at is NOT NULL by design ("must
+-- expire automatically" per the directive), and expiry is computed at
+-- query time (now() BETWEEN starts_at AND ends_at AND revoked_at IS
+-- NULL) rather than relying on a scheduled job to flip a status flag:
+-- this project has no cron/background-worker infrastructure, and a
+-- computed check is more robust than a flag that depends on a job
+-- actually having run. reason is NOT NULL — every delegation must state
+-- why, per the "Who did what? When? Why?" audit standard. revoked_at/
+-- revoked_by make it reversible before its natural expiry.
+CREATE TABLE IF NOT EXISTS delegations (
+  id                 SERIAL PRIMARY KEY,
+  delegator_staff_id INTEGER NOT NULL REFERENCES staff(id),
+  delegate_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+  role_code          TEXT NOT NULL REFERENCES roles(code),
+  institution_id     INTEGER REFERENCES institutions(id),
+  office_id          INTEGER REFERENCES offices(id),
+  reason             TEXT NOT NULL,
+  starts_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ends_at            TIMESTAMPTZ NOT NULL,
+  created_by         INTEGER REFERENCES staff(id),
+  revoked_at         TIMESTAMPTZ,
+  revoked_by         INTEGER REFERENCES staff(id),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CHECK (ends_at > starts_at)
+);
+
+-- The Audit System's governance-event log — logins/failed-logins reuse
+-- the existing auth_audit_log with actor_type = 'staff' (no schema
+-- change needed there, since actor_type was always free text); this
+-- table covers everything auth_audit_log was never meant to: role
+-- grants/revocations, delegation lifecycle, record exports, and other
+-- sensitive actions the Permission Engine gates on the X (Export)
+-- permission or above. actor_staff_id is who DID the action;
+-- target_staff_id is who it was done TO, where applicable (a role grant,
+-- a delegation) — both nullable since not every event has both.
+CREATE TABLE IF NOT EXISTS staff_audit_log (
+  id               SERIAL PRIMARY KEY,
+  actor_staff_id   INTEGER REFERENCES staff(id),
+  event_type       TEXT NOT NULL, -- role_granted | role_revoked | delegation_created | delegation_revoked | record_export | sensitive_action
+  target_type      TEXT,          -- staff | staff_role | delegation | <system-area code>
+  target_id        INTEGER,
+  reason           TEXT,
+  metadata         JSONB,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_staff_audit_log_actor ON staff_audit_log (actor_staff_id, created_at DESC);
