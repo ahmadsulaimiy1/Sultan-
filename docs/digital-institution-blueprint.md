@@ -178,6 +178,17 @@ pre-enrolment pipeline don't exist yet).
 
 ---
 
+## Status update
+
+**Phase 1 (Founder/Executive Dashboard) is built** — see
+`docs/founder-dashboard.md`. Before Phase 2 (Staff Identity & Role
+System) implementation begins, the required governance artefacts have
+been produced: `docs/role-permission-matrix.md` (every role × every
+system area, established vs. proposed, least-privilege-justified) and
+`docs/data-ownership-register.md` (every record type's owner, retention,
+approval, export, and deletion authority). Staff Identity code should be
+built directly against those two documents, not designed ad hoc.
+
 ## Recommendation
 
 Build **#1 (Founder Dashboard) first** — it's cheap, safe, immediately
