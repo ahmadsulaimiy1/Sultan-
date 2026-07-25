@@ -15,6 +15,46 @@
       }
     });
   });
+
+  // Policies page — "Print / Download as PDF". The print stylesheet
+  // (css/brand.css, @media print) forces every accordion open and hides
+  // site chrome regardless of on-screen state, so this just triggers
+  // the browser's native print dialog — "Save as PDF" is a standard
+  // destination option there, no separate PDF-generation service needed.
+  document.querySelectorAll('[data-print-policies]').forEach(btn=>{
+    btn.addEventListener('click', ()=>window.print());
+  });
+
+  // Policy Related Documents cross-links — a link like #policy-SW-01
+  // (from another policy's Related Documents list, or shared directly)
+  // opens that policy's accordion entry and scrolls to it, since it's
+  // collapsed by default and a plain anchor jump alone wouldn't reveal
+  // its content.
+  function openPolicyFromHash(){
+    var id = location.hash.replace('#', '');
+    if(!id.startsWith('policy-')) return;
+    var item = document.getElementById(id);
+    if(!item || !item.classList.contains('policy')) return;
+    var head = item.querySelector('.policy-head');
+    var body = item.querySelector('.policy-body');
+    if(!head || !body) return;
+    document.querySelectorAll('.policy').forEach(p=>{
+      p.classList.remove('open');
+      p.querySelector('.policy-body').style.maxHeight = null;
+      p.querySelector('.policy-head').setAttribute('aria-expanded','false');
+    });
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 60 + 'px';
+    head.setAttribute('aria-expanded','true');
+    item.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    item.classList.add('is-highlighted');
+    setTimeout(()=>item.classList.remove('is-highlighted'), 1700);
+  }
+  if(document.querySelector('.policies')){
+    if(location.hash) setTimeout(openPolicyFromHash, 60);
+    window.addEventListener('hashchange', openPolicyFromHash);
+  }
+
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});

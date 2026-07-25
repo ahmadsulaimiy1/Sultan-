@@ -1,5 +1,11 @@
 # SHRS Site Design Audit — against the "Imperial Digital Campus Directive"
 
+**Status: all four priority findings below have been fixed** (home page
+contact icons, Nursery & Primary / Arabic & Islamic Studies visual
+identity, and the three policy-page gaps — cross-links, print stylesheet,
+revision history), across both English and Arabic. See the "Priority
+order" section at the end for what changed in each case.
+
 Page-by-page review of every live page, evaluated against the directive's
 own checklist (header/nav, iconography, visual storytelling, imagery,
 Islamic design language, typography, colour, footer, governance/policy

@@ -2,7 +2,7 @@
     --navy:#3B2A1D; --navy-deep:#221709; --emerald:#6B4A2E;
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
     --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.62); --line:rgba(198,161,91,0.38);
-    --oxford-navy:#41618C; --forest-green:#3F6B4E;
+    --oxford-navy:#41618C; --forest-green:#3F6B4E; --terracotta:#C9784B;
     /* Personalisation Centre — Theme. --surface/--on-surface alias the
        light-reading-surface roles of --ivory/--ink specifically (body
        background and the ivory-banded content sections' text), NOT the
@@ -601,6 +601,23 @@
   .sign-row div{font-size:0.76rem;}
   .sign-row .lab{text-transform:uppercase;letter-spacing:0.06em;color:var(--gold);font-weight:700;display:block;margin-bottom:3px;font-size:0.66rem;}
 
+  /* Related Documents + Revision History — real cross-references and
+     version notes drawn only from each policy's own published text,
+     not a generic "see also" list. */
+  .related-docs p{display:flex;flex-wrap:wrap;gap:6px 14px;}
+  .related-docs a{
+    font-size:0.8rem;color:var(--crimson);text-decoration:none;border-bottom:1px dotted var(--crimson);
+    transition:opacity .2s ease;
+  }
+  .related-docs a:hover{opacity:0.7;}
+  .revision-history{font-size:0.78rem;color:#8a8880;font-style:italic;margin-top:10px;line-height:1.5;}
+  /* Briefly highlight a policy jumped to from another policy's Related
+     Documents link or an external #policy-XX URL, so it's clear which
+     one the reader landed on. */
+  .policy.is-highlighted .policy-head{background:rgba(198,161,91,0.12);}
+  @keyframes policyHighlightFade{from{background:rgba(198,161,91,0.22);}to{background:rgba(198,161,91,0.12);}}
+  .policy.is-highlighted .policy-head{animation:policyHighlightFade 1.6s ease;}
+
   /* contact / footer reused */
   .contact{background:var(--navy-deep);color:var(--ivory);}
   .contact .eyebrow{color:var(--gold-bright);} .contact h2{color:#fff;}
@@ -758,6 +775,58 @@
   #quran-college .light-photo-pair{position:relative;padding-top:28px;}
   #quran-college .light-photo-pair::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,var(--forest-green) 0 6px,transparent 6px 12px);opacity:0.6;}
   #quran-college .page-hero-icon{color:var(--forest-green);}
+
+  /* Nursery & Primary — a warm terracotta accent, distinct from Qur'an
+     College's Forest Green and Governance's Oxford Navy, giving the
+     school its own scoped page personality (matching the pattern
+     already established for the other two schools) without inventing
+     any new facts — only presentational, scoped strictly to this page. */
+  #nursery-primary .school-block{border-color:var(--terracotta);}
+  #nursery-primary .school-block::before,#nursery-primary .school-block::after{border-color:var(--terracotta);opacity:0.75;}
+  #nursery-primary .school-block .tag{color:var(--terracotta);}
+  #nursery-primary .page-hero-icon{color:var(--terracotta);}
+  #nursery-primary .image-slot{border-color:rgba(201,120,75,0.4);}
+  #nursery-primary .image-slot svg{color:var(--terracotta);}
+
+  /* Arabic & Islamic Studies — a Crimson accent, in the spirit of
+     "rubrication" (the historic use of red ink for headings/emphasis in
+     illuminated manuscripts) — a real, fitting design rationale for a
+     page centred on classical Arabic/Islamic scholarship, not an
+     arbitrary colour pick. Scoped strictly to this page. */
+  #arabic-islamic-studies .school-block{border-color:var(--crimson);}
+  #arabic-islamic-studies .school-block::before,#arabic-islamic-studies .school-block::after{border-color:var(--crimson);opacity:0.75;}
+  #arabic-islamic-studies .school-block .tag{color:var(--crimson);}
+  #arabic-islamic-studies .page-hero-icon{color:var(--crimson);}
+  #arabic-islamic-studies .image-slot{border-color:rgba(124,31,46,0.35);}
+  #arabic-islamic-studies .image-slot svg{color:var(--crimson);}
+
+  /* Nursery & Primary — "Two Foundations" diagram. Visualises the same
+     secular/Islamic curriculum blend already stated in this page's own
+     text (and the sitewide intro bullets) as a diagram instead of prose
+     — no new facts, just a clearer presentation of published ones. */
+  .foundations-diagram{display:flex;align-items:stretch;gap:0;margin-top:30px;flex-wrap:wrap;}
+  .foundation-card{flex:1;min-width:220px;background:#fff;border:1px solid var(--line);padding:26px 22px;}
+  .foundation-card .fd-icon{display:inline-flex;width:34px;height:34px;color:var(--terracotta);margin-bottom:12px;}
+  .foundation-card .fd-icon svg{width:100%;height:100%;}
+  .foundation-card h4{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;letter-spacing:0.03em;color:var(--navy);margin-bottom:8px;}
+  .foundation-card p{font-size:0.86rem;color:#6b6a63;line-height:1.55;}
+  .fd-connector{display:flex;align-items:center;justify-content:center;flex:0 0 46px;font-family:'Cinzel','Amiri',serif;font-size:1.1rem;color:var(--terracotta);}
+  @media (max-width:700px){.foundations-diagram{flex-direction:column;}.fd-connector{padding:6px 0;}}
+
+  /* Arabic & Islamic Studies — visual timetable strip. Reformats the
+     page's own already-verified schedule (Mon-Wed 2-6pm, Sat-Sun
+     9am-3pm) as a 7-day strip instead of two plain text lines. */
+  .timetable-strip{display:flex;gap:6px;margin-top:28px;flex-wrap:wrap;}
+  .tt-day{flex:1;min-width:74px;text-align:center;border:1px solid var(--line);padding:14px 6px;}
+  .tt-day .tt-name{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:#8a8880;display:block;}
+  .tt-day .tt-time{font-size:0.7rem;color:#6b6a63;display:block;margin-top:6px;line-height:1.35;}
+  .tt-day.is-weekday{border-color:var(--crimson);background:rgba(124,31,46,0.05);}
+  .tt-day.is-weekday .tt-name{color:var(--crimson);}
+  .tt-day.is-weekend{border-color:var(--crimson);background:rgba(124,31,46,0.09);}
+  .tt-day.is-weekend .tt-name{color:var(--crimson);}
+  .timetable-legend{display:flex;gap:20px;margin-top:12px;font-size:0.78rem;color:#6b6a63;flex-wrap:wrap;}
+  .timetable-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .timetable-legend .tl-dot{width:9px;height:9px;border-radius:2px;background:rgba(124,31,46,0.09);border:1px solid var(--crimson);display:inline-block;}
 
   /* ============================================================
      Phase 5 — process-flow diagrams, org chart, large hero icons.
@@ -1116,4 +1185,49 @@
     .call-float{bottom:82px;left:16px;}
     [dir="rtl"] .call-float{left:auto;right:16px;}
     .call-float a{padding:9px 13px;font-size:0.62rem;}
+  }
+
+  /* ============================================================
+     Print stylesheet — built for the Policies page (25+ full
+     governance documents), but applies sitewide. Site chrome (nav,
+     floating actions, search overlay, Personalisation Centre, footer)
+     is print-noise, not content, so it's hidden. Every accordion
+     .policy-body is forced open regardless of its on-screen state —
+     a printed page has no "collapsed" concept — and the interactive-
+     only chevron is hidden. Real content — headings, tables, sign-off
+     rows — gets clean black-on-white typography with page-break
+     control so a policy's sections don't split awkwardly.
+     ============================================================ */
+  @media print{
+    .topbar, header.nav, .pc-root, .assistant-root, .whatsapp-float,
+    .apply-float, .call-float, .search-overlay, footer,
+    .policy-head .plus{ display:none !important; }
+
+    body{background:#fff;color:#1a1611;}
+    .wrap{max-width:100%;padding:0;}
+
+    .policy-body{
+      max-height:none !important; overflow:visible !important;
+      padding:0 0 18px !important; transition:none !important;
+    }
+    .policy{page-break-inside:avoid;border-bottom:1px solid #ccc;margin-bottom:14px;}
+    .policy-head{
+      background:none !important; border:none !important; color:#1a1611 !important;
+      padding:8px 0 !important; pointer-events:none;
+    }
+    .policy-head .stat-num{color:#7C1F2E !important;}
+    .section-block{page-break-inside:avoid;margin-bottom:10px;}
+    .grade-table, .grade-table th, .grade-table td{border:1px solid #999 !important;color:#1a1611 !important;}
+    .sign-row{border-top:1px solid #999;color:#1a1611 !important;}
+    .sign-row .lab{color:#555 !important;}
+    a{color:#1a1611 !important;text-decoration:underline;}
+    .related-docs a{font-weight:600;}
+    .revision-history{color:#444 !important;}
+
+    /* One clean line identifying the source, since the site's own
+       header/footer branding is hidden in print. */
+    .policies > .wrap > .policy-category:first-of-type::before{
+      content:"Sultan Hanafi Royal Schools — Policies Centre — shroyalschools.ng/policies/";
+      display:block;font-size:0.7rem;color:#888;margin-bottom:16px;
+    }
   }

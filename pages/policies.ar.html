@@ -3,6 +3,10 @@
     <p class="eyebrow">الحوكمة</p>
     <h2 style="font-size:2.2rem;margin-top:10px;">سياسات المدرسة</h2>
     <p style="max-width:640px;color:#4a4944;margin-top:12px;">كل سياسة أدناه يُعِدّها نائب رئيس الإدارة، ويراجعها المدير، ويعتمدها الرئيس التنفيذي، مع مراجعة سنوية مقررة.</p>
+    <button type="button" class="btn btn-outline" data-print-policies style="margin-top:16px;">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="margin-inline-end:6px;vertical-align:-2px;"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-6a1 1 0 011-1h16a1 1 0 011 1v6a1 1 0 01-1 1h-2M6 14h12v7H6v-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      طباعة / تنزيل كملف PDF
+    </button>
 
     <div class="stat-band" style="border-color:var(--line);">
       <div class="stat-tile"><span class="num" data-count="25" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">سياسة منشورة</span></div>
@@ -15,7 +19,7 @@
       <h3 class="policy-category-title">الحوكمة</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-GV-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">GV-01</span><span class="title-text">الدستور وميثاق الحوكمة</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -31,6 +35,7 @@
           <div class="section-block"><h5>هيكل السلطة</h5><p>يعتمد المجلس هذا الميثاق وجميع وثائق الحوكمة من الفئة الأولى، ويعيّن الرئيس التنفيذي. يوجّه الرئيس التنفيذي التشغيل اليومي عبر المؤسسات الأربع. يملك مدير كل مؤسسة أو رئيسها سلطة القرار الأكاديمي والتأديبي ضمن مؤسسته، لكن لا يجوز له اعتماد سياسة تتعارض مع وثيقة معتمَدة من المجلس عبر المؤسسات الأربع جميعها.</p></div>
           <div class="section-block"><h5>الاستمرارية وفجوات الحوكمة</h5><p>عندما يترك صاحب دور سلطة مُسمّى منصبه، تنتقل سلطته إلى خَلَف مؤكَّد أو، حتى ذلك الحين، إلى رئيسه المباشر — ولا تسقط أبداً أو تنتقل بشكل غير رسمي. وحيثما لا يوجد شاغل مُسمّى لدور يفترضه هذا الميثاق (كمسؤول الحماية المعيّن اليوم)، تُتابَع تلك الفجوة وتُرفَع إلى المجلس حتى تُحَل، بدلاً من تركها افتراضاً صامتاً.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>لا يُنشئ هذا الميثاق الشكل القانوني المؤسسي لسلطان، الذي يتطلّب تأكيداً من سجلات المدرسة القانونية والمؤسسية الخاصة، لا افتراضاً يُقدَّم هنا.</p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى معيار سلطان المؤسسي الكامل المكوَّن من 13 قسماً (معلومات السياسة، التوقيع الرسمي، وتفاصيل الحوكمة المترابطة).</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>مجلس الأمناء</div>
             <div><span class="lab">راجعها</span>فريق الإدارة التنفيذية</div>
@@ -47,7 +52,7 @@
       <h3 class="policy-category-title">أكاديمية</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-AC-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">AC-01</span><span class="title-text">سياسة التقييم</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة</h5><p>في سلطان، التقييم هو العملية التي تُقاس من خلالها كمّية ونوعية التعليم والتعلّم باستخدام أساليب متنوعة، وتُنظَّم في صور قابلة للتفسير عبر عدد من المتغيرات.</p></div>
@@ -100,7 +105,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-AC-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">AC-02</span><span class="title-text">اللوائح الأكاديمية</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -125,6 +130,8 @@
           </ul></div>
           <div class="section-block"><h5>التظلّمات</h5><p>يرفع ولي الأمر المعترض على درجة أو قرار ترقية أو وضع تحت المراقبة الأمر أولاً إلى معلم الصف، ثم عميد القبول، ثم مدير المؤسسة المعني — وهو مسار مستقل عن تظلّم مدونة سلوك الطالب التأديبي.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>حدود الترقية ومعايير المراقبة وإجراءات الاعتبار الخاص هي بنية مقترحة مبنية على سلّم درجات سياسة التقييم المعتمدة فعلياً — وليست بعد سجلاً للمعايير المطبَّقة حالياً في سلطان، وتتطلّب تأكيداً قبل الاستخدام.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-IQ-01" data-policy-jump="IQ-01"><span dir="ltr">IQ-01</span> — لوائح تحفيظ القرآن</a> · <a href="#policy-IQ-02" data-policy-jump="IQ-02"><span dir="ltr">IQ-02</span> — إطار حوكمة الإجازة</a> · <a href="#policy-SD-02" data-policy-jump="SD-02"><span dir="ltr">SD-02</span> — مدونة سلوك الطالب</a> · <a href="#policy-AC-01" data-policy-jump="AC-01"><span dir="ltr">AC-01</span> — سياسة التقييم</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة استثناء واضح لترقية كلية القرآن ومسار محدد للاستئناف.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>عميد القبول، الكلية الملكية</div>
             <div><span class="lab">راجعها</span>المدير</div>
@@ -134,7 +141,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IQ-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IQ-01</span><span class="title-text">لوائح تحفيظ القرآن</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -150,6 +157,8 @@
           <div class="section-block"><h5>التقدّم والظروف الخاصة</h5><p>التقدّم عبر الأجزاء الثلاثين قائم على الوتيرة الفردية، لا على الزمن — لا يُعتبَر الطالب المحتاج لكامل الـ36 شهراً متأخراً إذا كانت مراجعته قوية. الطالب الذي ينقطع تقدّمه بسبب مرض أو ظرف موثَّق تُعدَّل خطته الفردية وفقاً لذلك، بدلاً من معاقبته وفق الوتيرة القياسية.</p></div>
           <div class="section-block"><h5>الإتمام وعلاقته بالإجازة</h5><p>يتطلّب الإتمام الكامل حفظ الأجزاء الثلاثين، واجتياز فترة التحقق من الثبات، وتأكيد مستوى التجويد. تحكم هذه الوثيقة برنامج الحفظ نفسه — ولا تمنح الإجازة؛ فبمجرد استيفاء معايير الإتمام، يُقدِّم المدير الطالب للامتحان بموجب لوائح حوكمة الإجازة المنفصلة.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>الأهداف اليومية/الأسبوعية للحفظ ومعايير النجاح هي بنية مقترحة تنتظر مراجعة وتأكيداً من هيئة كلية القرآن العلمية والتعليمية، التي تملك السلطة الموضوعية التي تُضفي عليها هذه الوثيقة الطابع الرسمي.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-IQ-02" data-policy-jump="IQ-02"><span dir="ltr">IQ-02</span> — إطار حوكمة الإجازة</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف بند الظروف الخاصة للانقطاع الموثّق بسبب المرض أو الصعوبات، وتوضيح معيار التقدّم القائم على الوتيرة لا الزمن.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>مدير كلية القرآن الكريم</div>
             <div><span class="lab">راجعها</span>هيئة كلية القرآن العلمية</div>
@@ -159,7 +168,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IQ-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IQ-02</span><span class="title-text">إطار حوكمة الإجازة</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -175,6 +184,8 @@
           <div class="section-block"><h5>السجل الدائم والتحقق</h5><p>تُسجَّل كل إجازة تُمنَح بشكل دائم — اسم الطالب، التاريخ، العالم (العلماء) الممتحِنون، ما تم اعتماده، ورقم مرجعي فريد — وتُحفَظ إلى أجل غير مسمّى بحيث تظل قابلة للتحقق بعد عقود. يجوز لطرف ثالث طلب التحقق، ويؤكد عميد القبول فقط ما يذكره السجل، دون معلومات شخصية إضافية عن الخريج.</p></div>
           <div class="section-block"><h5>الإلغاء</h5><p>في الحالة النادرة التي يثبت فيها لاحقاً أن إجازة مُنِحت خطأً أو عبر سلوك امتحاني احتيالي، يجتمع المدير مع العلماء المُسمّين لمراجعة السجل الأصلي قبل أي قرار إلغاء. يُسجَّل الإلغاء بجانب القيد الأصلي — ولا يُحذَف أبداً، بل يُذيَّل فقط.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>ينبغي أن تُراجَع هذه الوثيقة وتُعتمَد من قِبل القيادة العلمية لكلية القرآن الكريم في سلطان قبل اعتمادها — فدورها يقتصر على إضفاء عملية مؤسسية متسقة وسجل دائم على سلطتهم الدينية القائمة بالفعل.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-IQ-01" data-policy-jump="IQ-01"><span dir="ltr">IQ-01</span> — لوائح تحفيظ القرآن</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف إجراء التحقق من طرف ثالث للإجازة وبند رسمي للإلغاء (يُدوَّن ولا يُحذف أبداً).</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>مدير كلية القرآن الكريم</div>
             <div><span class="lab">راجعها</span>العلماء المخوَّلون بمنح الإجازة</div>
@@ -191,7 +202,7 @@
       <h3 class="policy-category-title">السلامة والرعاية</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-06">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-06</span><span class="title-text">سياسة الإسعافات الأولية</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة والغرض</h5><p>توفّر سلطان إسعافات أولية كافية للمتعلمين والموظفين وأولياء الأمور والزوّار في حالات الطوارئ العرضية أو الطبية — مع ضمان الاستخدام والتخزين والصرف الآمن للأدوية، والحفاظ على الحياة.</p></div>
@@ -220,6 +231,7 @@
             <li>تُسجَّل كل استجابة — بسيطة أو جسيمة — في استمارة تقرير حادث في اليوم ذاته دون استثناء.</li>
           </ul></div>
           <div class="section-block"><h5>الخاتمة</h5><p>التفسير النهائي هو مسؤولية المدير ونائب رئيس الإدارة وأمين السجلات حصراً.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-09" data-policy-jump="SW-09"><span dir="ltr">SW-09</span> — خطة الاستجابة للطوارئ</a></p></div>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
             <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
@@ -229,7 +241,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-07">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-07</span><span class="title-text">سياسة الصحة والسلامة</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة والأهداف</h5><p>تسعى سلطان لتوفير تعليم شامل لكل طفل في بيئة مريحة وآمنة. تشمل الأهداف تعزيز بيئة آمنة، وتقليل احتمالات الإصابة، والاستعداد للمخاطر وإدارتها.</p></div>
@@ -270,7 +282,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-08">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-08</span><span class="title-text">سياسة الزوّار</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>نظرة عامة</h5><p>تندرج سلامة الزوّار وأمن الموقع ضمن أحكام الأمن الواردة في سياسة الصحة والسلامة. يوقّع كل زائر عند الدخول والخروج في نقطة الأمن، ويرتدي شارة تعريفية طوال وجوده في الحرم.</p></div>
@@ -294,6 +306,7 @@
             <li>يُتعامَل مهنياً مع أي زائر يُعَدّ تهديداً محتملاً أو لا يمتثل لتعليمات أمنية معقولة.</li>
             <li>الزائر الذي يرفض المغادرة عند الطلب تتم إحالته إلى شرطة نيجيريا الاتحادية، تماشياً مع خطة الاستجابة للطوارئ.</li>
           </ul></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-07" data-policy-jump="SW-07"><span dir="ltr">SW-07</span> — سياسة الصحة والسلامة</a> · <a href="#policy-SW-09" data-policy-jump="SW-09"><span dir="ltr">SW-09</span> — خطة الاستجابة للطوارئ</a></p></div>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>فاطمة بادموس (نائب رئيس الإدارة)</div>
             <div><span class="lab">راجعها</span>عبدالواسع أديبايو أولاديلي (المدير)</div>
@@ -303,7 +316,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-01</span><span class="title-text">سياسة حماية الطفل والحماية من الإيذاء</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -330,6 +343,8 @@
           <div class="section-block"><h5>التوظيف الآمن والزوّار</h5><p>يخضع كل بالغ له وصول غير مُشرَف عليه للأطفال للفحص قبل التعيين. لا يُترك أي زائر أو مقاول بمفرده مع طفل بغض النظر عن حالة التسجيل، وفق سياسة الزوّار (SW-08).</p></div>
           <div class="section-block"><h5>الحماية الرقمية</h5><p>تُعامَل بوابة أولياء الأمور والمساعد الذكي للموقع كأسطح حماية، لا كأنظمة تقنية معلومات فقط — يقتصر الوصول على أولياء أمور الطفل المخوّلين والموظفين المصرَّح لهم، ويُهيَّأ المساعد الذكي لتوجيه أي مخاوف حماية إلى جهة اتصال بشرية محددة بدلاً من محاولة التعامل معها بنفسه.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>هذه السياسة محدَّدة بالكامل وتنتظر اعتماد المجلس. أما دور مسؤول الحماية المعتمد الذي تعتمد عليه فقد صيغ رسمياً (انظر إطار مسؤول الحماية المعتمد) لكن لم يُشغَل بعد — تعيين شخص لهذا الدور هو الإجراء الأعلى أولوية المرتبط بهذه السياسة.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-08" data-policy-jump="SW-08"><span dir="ltr">SW-08</span> — سياسة الزوّار</a> · <a href="#policy-SW-02" data-policy-jump="SW-02"><span dir="ltr">SW-02</span> — إطار مسؤول الحماية المعتمد</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، متضمنةً الربط الصريح بإطار مسؤول الحماية المعتمد.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>مسؤول الحماية المعتمد (التعيين معلَّق)</div>
             <div><span class="lab">راجعها</span>الرئيس التنفيذي ومدير كل مؤسسة، معاً</div>
@@ -339,7 +354,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-02</span><span class="title-text">إطار مسؤول الحماية المعتمد</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -355,6 +370,8 @@
           <div class="section-block"><h5>التغطية المؤقتة اليوم</h5><p>حتى تاريخ هذه المسودة، لم يُعيَّن مسؤول حماية معتمد. وريثما يُكمِل المجلس عملية التعيين، تُعالَج مخاوف الحماية بشكل مشترك من قِبل الرئيس التنفيذي ومدير أو رئيس المؤسسة المعنية — وهو ترتيب مؤقت، لا بديل عن تعيين حقيقي، ويُتابَع كفجوة حوكمة مفتوحة تتطلّب قراراً من المجلس.</p></div>
           <div class="section-block"><h5>التعيين والاستقلالية</h5><p>تعيين مسؤول الحماية ليس أبداً غير رسمي — إنه قرار مجلس مُسمّى وموثَّق بتاريخ بدء واضح. استقلالية المسؤول عن ضغط الإدارة اليومية متطلَّب هيكلي: يوفّر الرئيس التنفيذي الموارد ويحمي تلك الاستقلالية لكنه لا يقع داخل سلسلة إبلاغ المسؤول لقرارات الحالات.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>نسب توسّع النطاق عبر الحرم الجامعي التي يقترحها هذا الإطار للنمو المستقبلي تحتاج تأكيداً من متخصص في حماية الطفل، لا مجرد حكم المجلس، نظراً للثقل الذي تحمله.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01"><span dir="ltr">SW-01</span> — سياسة حماية الطفل والحماية من الإيذاء</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع تثبيت الترتيب المؤقت الحالي لحين تعيين مسؤول الحماية.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>الرئيس التنفيذي</div>
             <div><span class="lab">راجعها</span>مجلس الأمناء</div>
@@ -364,7 +381,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SD-04</span><span class="title-text">لوائح السكن الداخلي</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -389,6 +406,8 @@
           </ul></div>
           <div class="section-block"><h5>المغادرة والتواصل</h5><p>لا يغادر طالب السكن الداخلي المبنى إلا بإذن مسبق من ولي الأمر، يُسجَّله مشرف السكن. يحق لأولياء الأمور طلب مكالمة مع مشرف السكن ضمن فترة استجابة معقولة.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>نسب الإشراف والممارسة الحالية للسكن الداخلي هي افتراضات مقترحة تنتظر تأكيداً ميدانياً، وهذه الوثيقة تنتظر اعتماد المجلس.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01"><span dir="ltr">SW-01</span> — سياسة حماية الطفل والحماية من الإيذاء</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة تفاصيل الروتين اليومي للسكن الداخلي والتواصل بشأن الخروج.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>مدير كلية القرآن الكريم</div>
             <div><span class="lab">راجعها</span>نائب رئيس الإدارة</div>
@@ -398,7 +417,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-09">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-09</span><span class="title-text">خطة الاستجابة للطوارئ</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -414,6 +433,8 @@
           <div class="section-block"><h5>الأمن والطقس القاسي</h5><p>يُؤمِّن إجراء الإغلاق الأبواب، وينقل الطلاب بعيداً عن النوافذ وخطوط الرؤية، ويحافظ على الصمت حتى يُعلن قائد الحادثة انتهاء الخطر، مع الاتصال بوحدة الأمن وقوة الشرطة النيجيرية إذا لزم الأمر. نظراً لمخاطر موسم الأمطار في لاغوس، ينقل الطقس القاسي الطلاب إلى الداخل وقد يؤخّر الانصراف إذا كان السفر غير آمن.</p></div>
           <div class="section-block"><h5>السكن الداخلي والأنشطة الخارجية والتواصل</h5><p>يحتفظ مشرفو السكن الداخلي بقائمة غرف محدَّثة في جميع الأوقات، مع وجود موظف أول متاح للاتصال ليلاً. تحمل الأنشطة خارج الموقع قائمة طلاب محدَّثة وبيانات اتصال أولياء الأمور، مع تولّي الموظف القائد للنشاط دور قائد الحادثة حتى يتم الوصول إلى القائد المؤسسي. التواصل مع أولياء الأمور هو دائماً رسالة واحدة منسّقة، لا رسائل متعددة من موظفين بشكل مستقل.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>لم يُقيَّم موقع سلطان بعد من قِبل متخصص في السلامة من الحرائق كجزء من هذه المسوّدة — يجب السير على مسارات الإخلاء ونقاط التجمّع وتأكيدها ميدانياً قبل اعتبار هذه الخطة سارية.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-06" data-policy-jump="SW-06"><span dir="ltr">SW-06</span> — سياسة الإسعافات الأولية</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيفت مراجعة ما بعد الحادثة، وتغطية السكن الداخلي والأنشطة خارج الموقع، ودورة مراجعة مرتبطة بالتدريبات والحوادث الفعلية.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>القائد المؤسسي (لم يُحدَّد بعد)</div>
             <div><span class="lab">راجعها</span>نائب رئيس الإدارة</div>
@@ -430,7 +451,7 @@
       <h3 class="policy-category-title">السلوك والانضباط</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SD-01</span><span class="title-text">سياسة مكافحة التنمّر والانضباط</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة</h5><p>البيئة الآمنة والودودة والحاضنة ضرورية للتعليم والتعلّم الفعّال. تسعى سلطان لتوفير بيئة كهذه يتطوّر فيها المتعلمون في أجواء مطمئنة وآمنة.</p></div>
@@ -470,7 +491,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SD-02</span><span class="title-text">مدونة سلوك الطالب</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -499,6 +520,8 @@
           </ul></div>
           <div class="section-block"><h5>ضمانات على الانضباط</h5><p>تفتيش ممتلكات الطالب وأي استخدام للتدخل الجسدي كلاهما محدود عمداً في نطاقه — يُستخدم فقط كملاذ أخير، ويُسجَّل دائماً، ويُبلَّغ به المدير في اليوم ذاته دائماً.</p></div>
           <div class="section-block"><h5>الاستئناف</h5><p>يجوز لولي الأمر استئناف قرار الإيقاف أو أي عقوبة أشد أمام الجهة الأعلى من المدير مباشرة، ويُقرَّر الاستئناف من قِبل شخص لم يشارك في القرار الأصلي.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SD-01" data-policy-jump="SD-01"><span dir="ltr">SD-01</span> — سياسة مكافحة التنمّر والانضباط</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة سلّم الاستجابة المتدرّجة ومسار الاستئناف.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>نائب رئيس الإدارة</div>
             <div><span class="lab">راجعها</span>المدير (حسب كل مؤسسة)</div>
@@ -508,7 +531,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SD-03</span><span class="title-text">دليل الطالب</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -527,6 +550,8 @@
           <div class="section-block"><h5>الأكاديميا والسلوك والسلوك الرقمي</h5><p>تتبع بطاقات التقرير والدرجات سياسة التقييم؛ ومعايير الترقية موجودة في اللوائح الأكاديمية. يُحكَم السلوك بالكامل بموجب مدونة سلوك الطالب — يشرح هذا الدليل سبب وجود المدونة بدلاً من تكرار إجرائها التأديبي. تُستخدَم الأجهزة الشخصية والأنظمة الرقمية المدرسية وفق سياسة الاستخدام المقبول، ويُعامَل السلوك عبر الإنترنت المؤثر على طالب آخر معاملة السلوك داخل الحرم تماماً.</p></div>
           <div class="section-block"><h5>السكن الداخلي والرعاية والسلامة</h5><p>يتبع طلاب السكن الداخلي لوائح السكن الداخلي للروتين اليومي والسلوك. يمكن لأي طالب لديه مخاوف تتعلق بالرعاية أن يرفعها لأي موظف، الذي يتصرف في اليوم ذاته وفق سياسة حماية الطفل والحماية من الإيذاء. في حالات الطوارئ، يعرف الطلاب نقطة تجمّعهم ويتبعون معلمهم، وفق خطة الاستجابة للطوارئ.</p></div>
           <div class="section-block"><h5>الزي والأنشطة اللامنهجية</h5><p>يُحكَم الزي والمظهر بموجب سياسة الزي واللباس، وتُطبَّق على كل طالب بالتساوي بغضّ النظر عن المؤسسة. يتبع الطالب الممثّل لسلطان في أي نشاط خارج الموقع توقعات السلوك في هذا الدليل تماماً كما يتبعها داخل الحرم.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01"><span dir="ltr">AC-01</span> — سياسة التقييم</a> · <a href="#policy-AC-02" data-policy-jump="AC-02"><span dir="ltr">AC-02</span> — اللوائح الأكاديمية</a> · <a href="#policy-SD-02" data-policy-jump="SD-02"><span dir="ltr">SD-02</span> — مدونة سلوك الطالب</a> · <a href="#policy-IT-03" data-policy-jump="IT-03"><span dir="ltr">IT-03</span> — سياسة الاستخدام المقبول</a> · <a href="#policy-SD-04" data-policy-jump="SD-04"><span dir="ltr">SD-04</span> — لوائح السكن الداخلي</a> · <a href="#policy-SW-01" data-policy-jump="SW-01"><span dir="ltr">SW-01</span> — سياسة حماية الطفل والحماية من الإيذاء</a> · <a href="#policy-SW-09" data-policy-jump="SW-09"><span dir="ltr">SW-09</span> — خطة الاستجابة للطوارئ</a> · <a href="#policy-SW-03" data-policy-jump="SW-03"><span dir="ltr">SW-03</span> — سياسة الزي واللباس</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف قسم الزي والأنشطة اللامنهجية، وروابط مباشرة إلى كل سياسة تحكمها هذه الوثيقة.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>نائب رئيس الإدارة</div>
             <div><span class="lab">راجعها</span>المدير (حسب كل مؤسسة)</div>
@@ -536,7 +561,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-03</span><span class="title-text">سياسة الزي واللباس</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>الغرض</h5><p>وضع سياسة زي موحّدة لجميع فئات الموظفين. فالمظهر يعكس صورة المدرسة أمام الطلاب وأولياء الأمور والزوّار، ويجب أن يكون نظيفاً ولائقاً ومهنياً، مع مراعاة السلامة والدور الوظيفي.</p></div>
@@ -562,7 +587,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-04</span><span class="title-text">سياسة تكافؤ الفرص</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة</h5><p>تتحمّل سلطان مسؤولية تكافؤ الفرص وصولاً ونتيجةً طوال الحياة الدراسية، بحيث تُوسَّع فرص الحياة الحاضرة والمستقبلية لا أن تُعاق — رغم أن تكافؤ الوصول لا يعني بالضرورة تكافؤ النتائج.</p></div>
@@ -596,7 +621,7 @@
       <h3 class="policy-category-title">إدارية</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">SW-05</span><span class="title-text">سياسة التوجيه المهني</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة</h5><p>تؤمن سلطان بأن المستقبل المهني للمتعلمين يُصاغ من خبراتهم وتقدّمهم وإنجازاتهم. يحصل المتعلمون بين سن 11 و17 عاماً على توجيه مهني مستقل.</p></div>
@@ -630,7 +655,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IT-02</span><span class="title-text">سياسة حماية البيانات والخصوصية</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -658,6 +683,7 @@
           <div class="section-block"><h5>حقوق ولي الأمر</h5><p>يمكن لولي الأمر بالفعل رؤية جميع بيانات أبنائه عبر لوحة بوابة أولياء الأمور. تُقدَّم طلبات التصحيح مباشرة إلى أمين السجلات. لا تزال حقوق نقل البيانات وحذفها قيد التحديد وتتطلب قراراً من المجلس بناءً على استشارة قانونية. هناك أيضاً هيكل مقترح لموافقة الصور والوسائط — يُسأل ولي الأمر عند التسجيل عمّا إذا كان يجوز استخدام صورة طفله داخلياً أو علناً أو عدم استخدامها إطلاقاً، ويُسجَّل ذلك لكل طفل ويمكن سحبه في أي وقت — بانتظار اعتماد المجلس؛ وريثما يُعتمَد، لا تُنشَر أي صورة لطالب يمكن التعرّف عليه في قناة عامة لسلطان دون موافقة ولي الأمر المؤكَّدة تحديداً.</p></div>
           <div class="section-block"><h5>الأطراف الخارجية والحماية</h5><p>تُستضاف بوابة أولياء الأمور والمساعد الذكي لدى مزوّدي تقنية حقيقيين يعملون بتوجيهات سلطان، وليسوا جهات تحكّم مستقلة بالبيانات. عندما تستلزم مخاوف الحماية مشاركة بيانات طفل مع جهة رسمية خارجية، يتجاوز هذا الواجب أحكام السرية في هذه السياسة.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>لا تُثبت هذه السياسة الامتثال لقانون حماية البيانات النيجيري لعام 2023 — فترات الاحتفاظ بالبيانات، وحقوق أصحاب البيانات، ومواعيد الإبلاغ عن الخروقات كلها بنود مفتوحة تتطلب استشارة قانونية قبل الاعتماد.</p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة قائمة صريحة بما تحفظه بوابة أولياء الأمور وما لا تحفظه.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>رئيس تقنية المعلومات</div>
             <div><span class="lab">راجعها</span>نائب رئيس الإدارة</div>
@@ -667,7 +693,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">PA-01</span><span class="title-text">سياسة الشكاوى</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>المقدمة</h5><p>تعمل سلطان بشكل وثيق مع أولياء الأمور والأوصياء في شراكة تخدم مصلحة كل طفل. تُعالَج الشكاوى بعدالة وشفافية وصدق، وفق التوجيهات التعليمية الوطنية وأفضل الممارسات العالمية.</p></div>
@@ -700,7 +726,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">PA-02</span><span class="title-text">دليل ولي الأمر</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -719,6 +745,8 @@
           <div class="section-block"><h5>الأكاديميا والحماية من الإيذاء والسكن الداخلي</h5><p>تتبع بطاقات التقرير والدرجات سياسة التقييم؛ وتتبع الترقية والوضع الأكاديمي اللوائح الأكاديمية. تُرفَع أي مخاوف تتعلق برعاية الطفل إلى معلم الصف أو مسؤول الحماية المعيّن، وفق سياسة حماية الطفل والحماية من الإيذاء — لا يكرّر هذا الدليل تفاصيل التعامل مع البلاغات المخصصة للموظفين. تُوجَّه أسر السكن الداخلي إلى لوائح السكن الداخلي للإجراءات الكاملة للإشراف والروتين.</p></div>
           <div class="section-block"><h5>التقنية والرسوم والطوارئ</h5><p>ما تخزّنه بوابة أولياء الأمور موصوف بالكامل في سياسة حماية البيانات والخصوصية. لم يُحدَّد بعد جدول الرسوم الفعلي لسلطان — تكشف صفحة القبول الحيّة هذه الفجوة علناً بدلاً من إخفائها. في حالات الطوارئ، يتلقّى أولياء الأمور رسالة واحدة منسّقة عبر واتساب و/أو إشعار بوابة أولياء الأمور، وفق خطة الاستجابة للطوارئ.</p></div>
           <div class="section-block"><h5>المخاوف والاستئنافات</h5><p>يُوجَّه القلق العام إلى سياسة الشكاوى؛ والقرار التأديبي إلى إجراء استئناف مدونة سلوك الطالب؛ وقرار الدرجة أو الترقية إلى إجراء استئناف اللوائح الأكاديمية؛ والمخاوف المتعلقة بحماية البيانات إلى إجراء استئناف سياسة حماية البيانات والخصوصية — إشارة واحدة لكل حالة، لا إجراء مكرر.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01"><span dir="ltr">AC-01</span> — سياسة التقييم</a> · <a href="#policy-AC-02" data-policy-jump="AC-02"><span dir="ltr">AC-02</span> — اللوائح الأكاديمية</a> · <a href="#policy-SW-01" data-policy-jump="SW-01"><span dir="ltr">SW-01</span> — سياسة حماية الطفل والحماية من الإيذاء</a> · <a href="#policy-SD-04" data-policy-jump="SD-04"><span dir="ltr">SD-04</span> — لوائح السكن الداخلي</a> · <a href="#policy-IT-02" data-policy-jump="IT-02"><span dir="ltr">IT-02</span> — سياسة حماية البيانات والخصوصية</a> · <a href="#policy-SW-09" data-policy-jump="SW-09"><span dir="ltr">SW-09</span> — خطة الاستجابة للطوارئ</a> · <a href="#policy-PA-01" data-policy-jump="PA-01"><span dir="ltr">PA-01</span> — سياسة الشكاوى</a> · <a href="#policy-SD-02" data-policy-jump="SD-02"><span dir="ltr">SD-02</span> — مدونة سلوك الطالب</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف ملخص التواصل في حالات الطوارئ، ووُحِّدت الإحالات إلى كل سياسة حاكمة حسب الموضوع.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>نائب رئيس الإدارة</div>
             <div><span class="lab">راجعها</span>عميد القبول</div>
@@ -728,7 +756,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">PA-05</span><span class="title-text">سياسة القبول</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -744,6 +772,8 @@
           <div class="section-block"><h5>الطلاب المنقولون وقائمة الانتظار</h5><p>يُراجَع تقرير المدرسة السابقة للطالب المنقول بحثاً عن أي تاريخ تأديبي أو متعلق بالحماية من الإيذاء تم الإفصاح عنه، مع استشارة مسؤول الحماية المعيّن عند نشوء سؤال، قبل تأكيد العرض. يُوضَع المتقدّم المستوفي للأهلية ولكن لا يمكن منحه مكاناً بسبب السعة على قائمة انتظار، حسب ترتيب التقييم، مع تقدير واقعي لموعد توفّر مكان.</p></div>
           <div class="section-block"><h5>الرسوم والمنح والانسحاب</h5><p>هيكل الرسوم ومعايير المنح الدراسية وترتيبات الطلاب الدوليين متروكة مفتوحة عمداً، تماماً كما تكشف صفحة القبول الحية للزوار بالفعل — لا تخترع هذه السياسة أرقاماً لملء تلك الفجوة. يُخطِر ولي الأمر المنسحب عميد القبول كتابياً؛ شروط الاسترداد غير محدَّدة بعد، ريثما يُحدَّد جدول رسوم المدرسة.</p></div>
           <div class="section-block"><h5>الاستئناف</h5><p>يجوز لولي الأمر المعترض على قرار عدم القبول طلب مراجعة من الرئيس التنفيذي، الذي لم يشارك في قرار امتحان القبول الأصلي.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SW-04" data-policy-jump="SW-04"><span dir="ltr">SW-04</span> — سياسة تكافؤ الفرص</a> · <a href="#policy-SW-02" data-policy-jump="SW-02"><span dir="ltr">SW-02</span> — إطار مسؤول الحماية المعتمد</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة أحكام الطلاب المنقولين وقائمة الانتظار.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>عميد القبول</div>
             <div><span class="lab">راجعها</span>المدير / رئيس المؤسسة (حسب كل مؤسسة)</div>
@@ -753,7 +783,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IT-03</span><span class="title-text">سياسة الاستخدام المقبول</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -772,6 +802,8 @@
           </ul></div>
           <div class="section-block"><h5>وسائل التواصل الاجتماعي ودورة حياة الحساب</h5><p>لا يشارك الموظف الذي ينشر بصفة تمثّل سلطان صورة طالب أو اسمه أو بياناته الشخصية دون موافقة محكومة بالفعل بموجب سياسة حماية البيانات والخصوصية. يُنشَأ حساب ولي الأمر في البوابة عند التسجيل ويُعطَّل وفق سياسة الاحتفاظ بالسجلات؛ ويُلغى وصول الموظف في نفس يوم انتهاء عمله.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>تظل القواعد الخاصة بالأجهزة والشبكات (الأجهزة الشخصية في الحرم، شبكة واي فاي المدرسية) مفتوحة ريثما يُوصَف البنية التحتية الفعلية لسلطان — لا تخترع هذه السياسة قواعد لبنية تحتية قد لا تكون موجودة بعد.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-SD-03" data-policy-jump="SD-03"><span dir="ltr">SD-03</span> — دليل الطالب</a> · <a href="#policy-IT-02" data-policy-jump="IT-02"><span dir="ltr">IT-02</span> — سياسة حماية البيانات والخصوصية</a> · <a href="#policy-IT-04" data-policy-jump="IT-04"><span dir="ltr">IT-04</span> — سياسة الاحتفاظ بالسجلات</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف قسم استخدام وسائل التواصل الاجتماعي ودورة حياة الحساب (عند التسجيل وعند إلغاء التفعيل).</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>رئيس تقنية المعلومات</div>
             <div><span class="lab">راجعها</span>نائب رئيس الإدارة</div>
@@ -781,7 +813,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IT-04</span><span class="title-text">سياسة الاحتفاظ بالسجلات</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -805,6 +837,8 @@
           </table></div>
           <div class="section-block"><h5>الحجز القانوني وتقليل البيانات</h5><p>حيثما يجعل التقاضي أو تحقيق تنظيمي أو تحقيق جارٍ في الحماية من الإيذاء الحذف المبكر لسجل معيّن غير مناسب، يُعلَّق الاحتفاظ العادي بذلك السجل حتى يُرفَع الحجز. في كل مراجعة سنوية، يعيد عميد القبول ورئيس تقنية المعلومات معاً النظر فيما إذا كانت كل فئة لا تزال تعكس ما تجمعه أنظمة سلطان فعلياً.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>كل فترة أعلاه هي افتراض مقترح مبني على الممارسة الشائعة لحفظ سجلات المدارس، وليست بعد فترة تطبقها سلطان فعلياً أو مؤكَّدة مقابل قانون نيجيري محدد — يلزم اعتماد المجلس مع مدخلات قانونية قبل اعتبار هذه السياسة ملزمة.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-IT-02" data-policy-jump="IT-02"><span dir="ltr">IT-02</span> — سياسة حماية البيانات والخصوصية</a> · <a href="#policy-AC-02" data-policy-jump="AC-02"><span dir="ltr">AC-02</span> — اللوائح الأكاديمية</a> · <a href="#policy-PA-05" data-policy-jump="PA-05"><span dir="ltr">PA-05</span> — سياسة القبول</a></p></div>
+          <p class="revision-history">من الإصدار 1.0 إلى 2.0: أُضيف إجراء الحجز القانوني والمراجعة الدورية لتقليل البيانات.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>عميد القبول</div>
             <div><span class="lab">راجعها</span>رئيس تقنية المعلومات</div>
@@ -814,7 +848,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num" dir="ltr">IT-05</span><span class="title-text">سياسة استخدام الذكاء الاصطناعي</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>معلومات السياسة</h5><table class="grade-table">
@@ -834,6 +868,8 @@
           </ul></div>
           <div class="section-block"><h5>الإشراف وإدارة التغيير</h5><p>يراجع موظف مُسمّى السلوك الفعلي لنظام الذكاء الاصطناعي مقابل هذه السياسة، لا مجرد إعداده المقصود. يُسجَّل أي تغيير في مزوّد الذكاء الاصطناعي أو إصدار النموذج، مع ملاحظة ما إذا كان التغيير قد اختُبِر مقابل حدود نطاق هذه السياسة. قبل إطلاق أي نقطة اتصال جديدة للذكاء الاصطناعي، تخضع لمراجعة ما قبل الإطلاق مقابل هذه السياسة ومتطلب تقييم أثر حماية البيانات في سياسة حماية البيانات والخصوصية معاً.</p></div>
           <div class="section-block"><h5>الخاتمة</h5><p>أي نظام ذكاء اصطناعي يُمنَح صلاحية أوسع مما تصفه هذه المبادئ يتطلّب تعديلاً صريحاً معتمَداً من المجلس، لا توسّعاً هادئاً في الممارسة.</p></div>
+          <div class="section-block related-docs"><h5>وثائق ذات صلة</h5><p><a href="#policy-IT-02" data-policy-jump="IT-02"><span dir="ltr">IT-02</span> — سياسة حماية البيانات والخصوصية</a></p></div>
+          <p class="revision-history">أُعيدت هيكلة هذه الوثيقة من مسودتها الأصلية (الإصدار 1.0) إلى المعيار المؤسسي الكامل المكوَّن من 13 قسماً، مع إضافة شرط المراجعة المسبقة لأي نقطة تفاعل جديدة بالذكاء الاصطناعي.</p>
           <div class="sign-row">
             <div><span class="lab">أُعِدَّت بواسطة</span>رئيس تقنية المعلومات</div>
             <div><span class="lab">راجعها</span>نائب رئيس الإدارة</div>

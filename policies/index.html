@@ -233,6 +233,10 @@
     <p class="eyebrow">Governance</p>
     <h2 style="font-size:2.2rem;margin-top:10px;">School Policies</h2>
     <p style="max-width:640px;color:#4a4944;margin-top:12px;">Every policy below is prepared by the VP Administration, reviewed by the Principal, and approved by the CEO, with a scheduled annual review.</p>
+    <button type="button" class="btn btn-outline" data-print-policies style="margin-top:16px;">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="margin-inline-end:6px;vertical-align:-2px;"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-6a1 1 0 011-1h16a1 1 0 011 1v6a1 1 0 01-1 1h-2M6 14h12v7H6v-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Print / Download as PDF
+    </button>
 
     <div class="stat-band" style="border-color:var(--line);">
       <div class="stat-tile"><span class="num" data-count="25" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">Published Policies</span></div>
@@ -245,7 +249,7 @@
       <h3 class="policy-category-title">Governance</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-GV-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">GV-01</span><span class="title-text">Constitution &amp; Governance Charter</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -261,6 +265,7 @@
           <div class="section-block"><h5>Authority Structure</h5><p>The Board approves this Charter, all Tier 1 governance documents, and appoints the CEO. The CEO directs day-to-day operation across all four institutions. Each institution's Principal or Head Teacher holds academic and disciplinary authority within their institution, but may not adopt a policy that conflicts with a Board-approved document across all four institutions.</p></div>
           <div class="section-block"><h5>Continuity &amp; Governance Gaps</h5><p>When a named authority-role holder leaves, their authority passes to a confirmed successor or, until then, to their immediate superior — it never lapses or transfers informally. Where a role this Charter assumes is filled has no named holder (such as the Designated Safeguarding Lead today), that gap is tracked and reported to the Board until resolved, rather than left as a silent assumption.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>This Charter does not establish SULTAN's legal corporate form, which requires confirmation from the school's own legal and corporate records, not an assumption made here.</p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to SULTAN's full 13-section institutional standard (Policy Information, structured sign-off, cross-referenced governance detail).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Board of Trustees</div>
             <div><span class="lab">Reviewed by</span>Executive Management Team</div>
@@ -277,7 +282,7 @@
       <h3 class="policy-category-title">Academic</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-AC-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">AC-01</span><span class="title-text">Assessment Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction</h5><p>At SULTAN, assessment is the process by which the quantity and quality of teaching and learning are measured through various techniques, and organised into interpretable forms across a number of variables.</p></div>
@@ -330,7 +335,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-AC-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">AC-02</span><span class="title-text">Academic Regulations</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -355,6 +360,8 @@
           </ul></div>
           <div class="section-block"><h5>Appeals</h5><p>A guardian disputing a grade, promotion decision, or probation placement raises it with the class teacher, then the Registrar, then the relevant Principal/Head Teacher — a distinct pathway from the Student Code of Conduct's disciplinary appeal.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Promotion thresholds, probation criteria, and special-consideration procedures are proposed structure built on the live Assessment Policy's grading scale — not yet a record of criteria SHRS currently applies, and requiring confirmation before use.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IQ-01" data-policy-jump="IQ-01">IQ-01 — Hifz Regulations</a> · <a href="#policy-IQ-02" data-policy-jump="IQ-02">IQ-02 — Ijazah Governance Framework</a> · <a href="#policy-SD-02" data-policy-jump="SD-02">SD-02 — Student Code of Conduct</a> · <a href="#policy-AC-01" data-policy-jump="AC-01">AC-01 — Assessment Policy</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the explicit Qur'an College promotion exemption and a defined appeals pathway.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar, Royal College</div>
             <div><span class="lab">Reviewed by</span>Principal / Head Teacher</div>
@@ -364,7 +371,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IQ-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IQ-01</span><span class="title-text">Hifz Regulations</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -380,6 +387,8 @@
           <div class="section-block"><h5>Progression &amp; Special Circumstances</h5><p>Progression through the 30 Juz' is pace-based, not time-based — a student needing the full 36 months is not treated as behind if retention is strong. A student whose progress is interrupted by illness or documented hardship has their individual plan adjusted accordingly, rather than being penalised against the standard pace.</p></div>
           <div class="section-block"><h5>Completion &amp; Ijazah Relationship</h5><p>Full completion requires all 30 Juz' memorised, a retention-verification period passed, and Tajweed standard confirmed. This document governs the memorisation programme itself — it does not grant the Ijazah; once completion standards are met, the Principal puts the student forward for examination under the separate Ijazah Governance Framework.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Daily/weekly memorisation targets and pass standards are proposed structure pending review and confirmation by Qur'an College's own scholarly and teaching staff, who hold the subject-matter authority this document formalises.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IQ-02" data-policy-jump="IQ-02">IQ-02 — Ijazah Governance Framework</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the special-circumstances provision for documented illness/hardship interruptions and clarified the pace-based (not time-based) progression standard.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Qur'an College</div>
             <div><span class="lab">Reviewed by</span>Qur'an College scholarly staff</div>
@@ -389,7 +398,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IQ-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IQ-02</span><span class="title-text">Ijazah Governance Framework</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -405,6 +414,8 @@
           <div class="section-block"><h5>The Permanent Register &amp; Verification</h5><p>Every Ijazah issued is recorded permanently — student name, date, examining scholar(s), what was certified, and a unique reference number — retained indefinitely so it remains verifiable decades later. A third party may request verification, and the Registrar confirms only what the register states, not additional personal information about the graduate.</p></div>
           <div class="section-block"><h5>Revocation</h5><p>In the rare event an Ijazah is later established to have been granted in error or through fraudulent conduct, the Principal convenes the named scholars to review the original record before any revocation. A revocation is recorded alongside the original entry — never deleted, only annotated.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>This framework should be reviewed and approved by SULTAN's own Qur'an College scholarly leadership before adoption — its role is purely to give their existing religious authority a consistent institutional process and a permanent record.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IQ-01" data-policy-jump="IQ-01">IQ-01 — Hifz Regulations</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the third-party Ijazah verification procedure and a formal revocation provision (annotated, never deleted).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Qur'an College</div>
             <div><span class="lab">Reviewed by</span>Named Ijazah-granting scholars</div>
@@ -421,7 +432,7 @@
       <h3 class="policy-category-title">Safety &amp; Welfare</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-06">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-06</span><span class="title-text">First Aid Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>SULTAN provides adequate first aid to learners, staff, parents, and visitors during accidental or medical emergencies — ensuring safe use, storage, and administration of medicines, and preserving life.</p></div>
@@ -450,6 +461,7 @@
             <li>Every response — minor or serious — is logged on an accident report form the same day, without exception.</li>
           </ul></div>
           <div class="section-block"><h5>Conclusion</h5><p>Final interpretation is the sole responsibility of the Principal, VP Administration, and Registrar.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a></p></div>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
@@ -459,7 +471,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-07">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-07</span><span class="title-text">Health &amp; Safety Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction &amp; Objectives</h5><p>SULTAN strives to provide every child with total education in a comfortable, safe environment. Objectives include fostering a safe environment, minimising injury potential, and preparing for and managing hazards.</p></div>
@@ -500,7 +512,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-08">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-08</span><span class="title-text">Visitors Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Overview</h5><p>Visitor safety and site security fall under the Health &amp; Safety Policy's security provisions. Every visitor signs in and out at the security post, and wears an identification badge at all times on the premises.</p></div>
@@ -524,6 +536,7 @@
             <li>Any visitor deemed a potential threat, or who does not comply with a reasonable security instruction, is professionally dispatched by the security unit.</li>
             <li>A visitor who refuses to leave when asked is referred to the Nigeria Police Force, consistent with the school's Emergency Response Plan.</li>
           </ul></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-07" data-policy-jump="SW-07">SW-07 — Health & Safety Policy</a> · <a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a></p></div>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
@@ -533,7 +546,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-01</span><span class="title-text">Child Protection &amp; Safeguarding Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -560,6 +573,8 @@
           <div class="section-block"><h5>Safer Recruitment &amp; Visitors</h5><p>Every adult with unsupervised access to children is vetted before appointment. No visitor or contractor is left unsupervised with a child, regardless of sign-in status, per the Visitors Policy (SW-08).</p></div>
           <div class="section-block"><h5>Digital Safeguarding</h5><p>The Parent Portal and the website's AI assistant are treated as safeguarding surfaces, not just IT systems — access is restricted to a child's own guardians and authorised staff, and the AI assistant is configured to direct any safeguarding concern to a named human contact rather than attempt to handle one itself.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>This policy is fully defined and awaiting Board adoption. The Designated Safeguarding Lead role it depends on has been formally framed (see the Designated Safeguarding Lead Framework) but not yet filled — appointing one is the highest-priority action tied to this policy.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-08" data-policy-jump="SW-08">SW-08 — Visitors Policy</a> · <a href="#policy-SW-02" data-policy-jump="SW-02">SW-02 — Designated Safeguarding Lead Framework</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, including the explicit link to the Designated Safeguarding Lead Framework.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Designated Safeguarding Lead (pending appointment)</div>
             <div><span class="lab">Reviewed by</span>CEO and each institution's Principal, jointly</div>
@@ -569,7 +584,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-02</span><span class="title-text">Designated Safeguarding Lead Framework</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -585,6 +600,8 @@
           <div class="section-block"><h5>Interim Coverage Today</h5><p>As of this draft, no DSL has been appointed. Until the Board completes the appointment process, a safeguarding concern is handled jointly by the CEO and the relevant institution's Principal or Head Teacher — an interim arrangement, not a substitute for a real appointment, and tracked as an open governance gap requiring Board resolution.</p></div>
           <div class="section-block"><h5>Appointment &amp; Independence</h5><p>A DSL appointment is never informal — it is a named Board decision, documented, with a clear start date. The DSL's independence from day-to-day management pressure is a structural requirement: the CEO resources and protects that independence but does not sit inside the DSL's reporting chain for case decisions.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>The campus-scaling ratios this framework proposes for future growth need confirmation from a child-protection professional, not just Board judgement, given how much weight they carry.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, formalising the interim-coverage arrangement pending a DSL appointment.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>CEO</div>
             <div><span class="lab">Reviewed by</span>Board of Trustees</div>
@@ -594,7 +611,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SD-04</span><span class="title-text">Boarding Regulations</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -619,6 +636,8 @@
           </ul></div>
           <div class="section-block"><h5>Leave-Out &amp; Communication</h5><p>A boarding student leaves the premises only with prior guardian authorisation, logged by the boarding warden. Guardians are entitled to request a call with the boarding warden within a reasonable response window.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Supervision ratios and current boarding practice are proposed defaults pending on-site confirmation, and this document is awaiting Board adoption.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the boarding daily-routine and leave-out communication detail.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Qur'an College</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
@@ -628,7 +647,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-09">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-09</span><span class="title-text">Emergency Response Plan</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -644,6 +663,8 @@
           <div class="section-block"><h5>Security &amp; Severe Weather</h5><p>A lockdown procedure secures doors, moves students from windows and sightlines, and holds silence until the Incident Commander gives the all-clear, with the security unit and Nigeria Police Force contacted if warranted. Given Lagos's rainy-season risk, severe weather moves students indoors and may delay dismissal if travel is unsafe.</p></div>
           <div class="section-block"><h5>Boarding, Off-Site &amp; Communication</h5><p>Boarding wardens hold a current room list at all times, with a named on-call senior staff member reachable overnight. Off-site activities carry a current student list and guardian contacts, with the leading staff member acting as Incident Commander until the institutional lead is reached. Parent communication is always one controlled message, never multiple staff independently messaging.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>SULTAN's site has not yet been assessed by a fire-safety professional as part of this draft — evacuation routes and assembly points must be walked and confirmed on-site before this plan is treated as operative.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-06" data-policy-jump="SW-06">SW-06 — First Aid Policy</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added post-incident review triggers, boarding/off-site coverage, and the drill-and-real-incident review cycle.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Institutional lead (to be confirmed)</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
@@ -660,7 +681,7 @@
       <h3 class="policy-category-title">Conduct &amp; Discipline</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SD-01</span><span class="title-text">Anti-Bullying &amp; Disciplinary Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction</h5><p>A caring, safe, friendly environment is necessary for effective teaching and learning. SULTAN aims to provide such an environment where learners develop in a relaxed, secure atmosphere.</p></div>
@@ -700,7 +721,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SD-02</span><span class="title-text">Student Code of Conduct</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -729,6 +750,8 @@
           </ul></div>
           <div class="section-block"><h5>Safeguards on Discipline</h5><p>Searching a student's belongings and any use of physical intervention are both deliberately narrow in scope — used only as a last resort, always logged, and always reported to the Principal the same day.</p></div>
           <div class="section-block"><h5>Appeals</h5><p>A guardian may appeal a suspension or more serious consequence to the Principal's immediate superior, decided by someone who was not part of the original decision.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SD-01" data-policy-jump="SD-01">SD-01 — Anti-Bullying & Disciplinary Policy</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the graded-response ladder and appeal pathway.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Principal (per institution)</div>
@@ -738,7 +761,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SD-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SD-03</span><span class="title-text">Student Handbook</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -757,6 +780,8 @@
           <div class="section-block"><h5>Academics, Conduct &amp; Digital Behaviour</h5><p>Report cards and grading follow the Assessment Policy; promotion criteria are in the Academic Regulations. Conduct expectations are governed in full by the Student Code of Conduct — this Handbook explains why the Code exists rather than restating its disciplinary procedure. Personal devices and school digital systems are used per the Acceptable Use Policy, and online conduct affecting another student is treated exactly like on-campus conduct.</p></div>
           <div class="section-block"><h5>Boarding, Welfare &amp; Safety</h5><p>Boarding students follow the Boarding Regulations for daily routine and conduct. A student with a welfare concern can raise it with any staff member, who acts the same day per the Child Protection &amp; Safeguarding Policy. In an emergency, students know their assembly point and follow their teacher, per the Emergency Response Plan.</p></div>
           <div class="section-block"><h5>Uniform &amp; Extra-Curricular Activities</h5><p>Uniform and presentation are governed by the Dress Code Policy, applying equally to every student regardless of institution. A student representing SULTAN at any off-site activity follows this Handbook's conduct expectations identically to on-campus conduct.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01">AC-01 — Assessment Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-SD-02" data-policy-jump="SD-02">SD-02 — Student Code of Conduct</a> · <a href="#policy-IT-03" data-policy-jump="IT-03">IT-03 — Acceptable Use Policy</a> · <a href="#policy-SD-04" data-policy-jump="SD-04">SD-04 — Boarding Regulations</a> · <a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a> · <a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a> · <a href="#policy-SW-03" data-policy-jump="SW-03">SW-03 — Dress Code Policy</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the Uniform & Extra-Curricular Activities section, and cross-links to every governing policy it summarises.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Principal (per institution)</div>
@@ -766,7 +791,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-03</span><span class="title-text">Dress Code Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Purpose</h5><p>To establish a standard dress policy across staff categories. Appearance reflects on the school before students, parents, and visitors, and must be clean, decent, and professional, mindful of safety and role.</p></div>
@@ -792,7 +817,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-04</span><span class="title-text">Equal Opportunity Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction</h5><p>SULTAN is responsible for equality of opportunity in access and outcome throughout school life, so present and future life chances are widened, not impeded — though equal access does not necessarily mean equality of outcome.</p></div>
@@ -826,7 +851,7 @@
       <h3 class="policy-category-title">Administrative</h3>
       <div class="policy-list">
 
-      <div class="policy">
+      <div class="policy" id="policy-SW-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-05</span><span class="title-text">Career Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction</h5><p>SULTAN believes learners' future careers are crafted from their experience, progress, and achievements. Learners aged 11–17 receive independent career guidance.</p></div>
@@ -860,7 +885,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IT-02</span><span class="title-text">Data Protection &amp; Privacy Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -888,6 +913,7 @@
           <div class="section-block"><h5>Guardian Rights</h5><p>A guardian can already see all data linked to their child(ren) via the Parent Portal dashboard. Correction requests are made directly to the Registrar. Data portability and erasure rights are still being defined and require a Board decision informed by legal advice. A separate image and media consent structure — asking guardians, at admission, whether a child's photo may be used internally, publicly, or not at all, recorded per child and revocable at any time — is proposed and awaiting Board adoption; until it is adopted, no identifiable student photo is published to a public SULTAN channel without the guardian's specifically confirmed consent.</p></div>
           <div class="section-block"><h5>Third Parties &amp; Safeguarding</h5><p>The Parent Portal and AI assistant are hosted by real technology providers acting on SULTAN's instructions, not independent controllers of the data. Where a safeguarding concern requires sharing a child's data with an external statutory body, that duty overrides this policy's confidentiality provisions.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>This policy does not certify compliance with the Nigeria Data Protection Act 2023 — retention periods, data-subject rights, and breach-notification timelines are open items requiring legal input before adoption.</p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the explicit list of what the Parent Portal does and does not store.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
@@ -897,7 +923,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">PA-01</span><span class="title-text">Complaint Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Introduction</h5><p>SULTAN works closely with parents and guardians in a partnership that benefits every child. Complaints are handled fairly, openly, and honestly, per national educational guidance and global best practice.</p></div>
@@ -930,7 +956,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-02">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">PA-02</span><span class="title-text">Parent Handbook</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -949,6 +975,8 @@
           <div class="section-block"><h5>Academics, Safeguarding &amp; Boarding</h5><p>Report cards and grading follow the Assessment Policy; promotion and academic standing follow the Academic Regulations. Any concern about a child's welfare is raised with the class teacher or the Designated Safeguarding Lead, per the Child Protection &amp; Safeguarding Policy — this Handbook does not reproduce disclosure-handling detail meant for staff. Boarding families are pointed to the Boarding Regulations for the full supervision and routine procedures.</p></div>
           <div class="section-block"><h5>Technology, Fees &amp; Emergencies</h5><p>What the Parent Portal stores is described in full in the Data Protection &amp; Privacy Policy. SULTAN's real fee schedule has not yet been finalised — the live admission page discloses this gap publicly rather than hiding it. In an emergency, guardians receive one controlled message via WhatsApp broadcast and/or Parent Portal notification, per the Emergency Response Plan.</p></div>
           <div class="section-block"><h5>Concerns &amp; Appeals</h5><p>A general concern goes to the Complaint Policy; a disciplinary decision to the Student Code of Conduct's appeal process; a grade or promotion decision to the Academic Regulations' appeal process; a data-protection concern to the Data Protection &amp; Privacy Policy's appeal process — one signpost per situation, not a duplicate procedure.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01">AC-01 — Assessment Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a> · <a href="#policy-SD-04" data-policy-jump="SD-04">SD-04 — Boarding Regulations</a> · <a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a> · <a href="#policy-PA-01" data-policy-jump="PA-01">PA-01 — Complaint Policy</a> · <a href="#policy-SD-02" data-policy-jump="SD-02">SD-02 — Student Code of Conduct</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the emergency-communication summary and consolidated per-topic signposting to each governing policy.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Registrar</div>
@@ -958,7 +986,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-PA-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">PA-05</span><span class="title-text">Admissions Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -974,6 +1002,8 @@
           <div class="section-block"><h5>Transfer Students &amp; Waiting List</h5><p>A transfer student's previous-school report is reviewed for any disclosed disciplinary or safeguarding history, consulting the Designated Safeguarding Lead where a question arises, before an offer is confirmed. An applicant who meets eligibility but cannot be offered a place due to capacity is placed on a waiting list, in the order assessed, with a realistic estimate of when a place might become available.</p></div>
           <div class="section-block"><h5>Fees, Scholarships &amp; Withdrawal</h5><p>Fee structure, scholarship criteria, and international-student arrangements are left deliberately open, exactly as the live Admission page already discloses to visitors — this policy does not invent figures to fill that gap. A guardian withdrawing a student notifies the Registrar in writing; refund terms are not yet defined, pending the school's fee schedule.</p></div>
           <div class="section-block"><h5>Appeals</h5><p>A guardian disputing a non-admission decision may request a review by the CEO, who was not part of the original entrance-assessment decision.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-04" data-policy-jump="SW-04">SW-04 — Equal Opportunity Policy</a> · <a href="#policy-SW-02" data-policy-jump="SW-02">SW-02 — Designated Safeguarding Lead Framework</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the transfer-student and waiting-list provisions.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar</div>
             <div><span class="lab">Reviewed by</span>Principal / Head Teacher (per institution)</div>
@@ -983,7 +1013,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-03">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IT-03</span><span class="title-text">Acceptable Use Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -1002,6 +1032,8 @@
           </ul></div>
           <div class="section-block"><h5>Social Media &amp; Account Lifecycle</h5><p>A staff member posting in a capacity representing SULTAN does not share a student's image, name, or personal data without consent already governed by the Data Protection &amp; Privacy Policy. A guardian's Portal account is provisioned at enrollment and deactivated per the Records Retention Policy; a staff member's access is deprovisioned the same day their employment ends.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Device- and network-specific rules (personal devices on campus, school Wi-Fi) remain open pending a description of SULTAN's actual infrastructure — this policy does not invent rules for infrastructure that may not exist yet.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SD-03" data-policy-jump="SD-03">SD-03 — Student Handbook</a> · <a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-IT-04" data-policy-jump="IT-04">IT-04 — Records Retention Policy</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the Social Media & Account Lifecycle section (provisioning at enrolment, deprovisioning on exit).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
@@ -1011,7 +1043,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IT-04</span><span class="title-text">Records Retention Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -1035,6 +1067,8 @@
           </table></div>
           <div class="section-block"><h5>Legal Hold &amp; Data Minimisation</h5><p>Where litigation, a regulatory inquiry, or an ongoing safeguarding investigation makes early deletion of a specific record inappropriate, normal retention is suspended for that record until the hold is lifted. At each annual review, the Registrar and ICT Head jointly reconsider whether every category still reflects what SULTAN's systems actually collect.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Every period above is a proposed default grounded in common school-record-keeping practice, not yet a period SULTAN currently applies or one verified against a specific Nigerian statute — Board confirmation with legal input is required before this policy is treated as binding.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-PA-05" data-policy-jump="PA-05">PA-05 — Admissions Policy</a></p></div>
+          <p class="revision-history">v1.0 → v2.0: added the legal-hold procedure and the periodic data-minimisation review at each annual cycle.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar</div>
             <div><span class="lab">Reviewed by</span>ICT Head</div>
@@ -1044,7 +1078,7 @@
         </div>
       </div>
 
-      <div class="policy">
+      <div class="policy" id="policy-IT-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">IT-05</span><span class="title-text">AI Usage Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Policy Information</h5><table class="grade-table">
@@ -1064,6 +1098,8 @@
           </ul></div>
           <div class="section-block"><h5>Oversight &amp; Change Management</h5><p>A named staff member reviews the AI system's actual behaviour against this policy, not just its intended configuration. A change to the AI provider or model version is logged, with a note on whether the change was tested against this policy's scope boundaries. Before any new AI touchpoint goes live, it undergoes a pre-launch review against this policy and the Data Protection &amp; Privacy Policy's Data Protection Impact Assessment requirement together.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>Any AI system granted broader authority than these principles describe would require an explicit Board-approved amendment, not a quiet expansion in practice.</p></div>
+          <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a></p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the pre-launch review requirement for any new AI touchpoint.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
