@@ -35,6 +35,7 @@ const DIM = {
   'gallery/quran-recitation-2.jpg': [1600, 721],
   'gallery/basic-technology-workshop-1.jpg': [1400, 934],
   'gallery/boarding-dining.jpg': [1400, 934],
+  'gallery/basic-school-classroom.jpg': [1040, 780],
   'gallery/spelling-competition.jpg': [1280, 960],
   'gallery/commissioning-day-1.jpg': [1400, 1867],
   'gallery/commissioning-day-2.jpg': [1400, 1867],
@@ -110,6 +111,26 @@ function pendingBox(label, note) {
       children: [
         new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: label.toUpperCase(), font: HEAD_FONT, bold: true, size: 18, color: 'A47843' })] }),
         new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 80 }, children: [new TextRun({ text: note, font: BODY_FONT, size: 17, color: 'A47843' })] }),
+      ],
+    })] })],
+  });
+}
+
+// Elegant substitute for missing photography (Ministry Approval,
+// Foundation, Library) — a large brand-coloured monogram badge, the
+// same visual idiom already used for the CLEVER/core-values letters,
+// not a "photography pending" placeholder.
+function iconPanel(letter, label, note) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: { top: { style: BorderStyle.SINGLE, size: 12, color: GOLD }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+    rows: [new TableRow({ children: [new TableCell({
+      shading: { type: ShadingType.CLEAR, fill: PARCHMENT },
+      margins: { top: 260, bottom: 260, left: 200, right: 200 },
+      children: [
+        new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 }, children: [new TextRun({ text: letter, font: HEAD_FONT, size: 56, bold: true, color: NAVY })] }),
+        new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: label.toUpperCase(), font: HEAD_FONT, size: 16, bold: true, color: NAVY, characterSpacing: 20 })] }),
+        ...(note ? [new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 80 }, children: [new TextRun({ text: note, font: BODY_FONT, size: 15, color: INK_SOFT })] })] : []),
       ],
     })] })],
   });
@@ -250,8 +271,7 @@ B.push(pageBreak());
 
 // ============ NURSERY & PRIMARY ============
 B.push(eyebrow('One of Four Institutions'), h1('Nursery & Primary'));
-B.push(new Paragraph({ children: [img('gallery/campus-building.jpg', 460)] }));
-B.push(caption('Shown: the shared SHRS campus building. Dedicated Nursery & Primary classroom photography has not yet been captured.'));
+B.push(new Paragraph({ children: [img('gallery/basic-school-classroom.jpg', 460)] }));
 B.push(body("Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Royal College's secondary pathway."));
 B.push(dataPanel([['Ages', '2–10'], ['Format', 'Day'], ['Pathway', 'Primary 1–6']]));
 B.push(pageBreak());
@@ -264,7 +284,7 @@ B.push(body("SHRS's mainstream secondary academic programme — Junior and Senio
 B.push(dataPanel([['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']]));
 B.push(h2('Ministry Approval'));
 B.push(body('Royal College\'s academic programme operates under formal Ministry of Education registration, secured in 2026 — a milestone that follows years of building the academic, facilities, and governance record required to earn it.'));
-B.push(body('The registration certificate will be scanned and inserted here once a production-quality copy is available — this section is intentionally text-only until then.'));
+B.push(iconPanel('M', 'Ministry Registered', 'Formal Ministry of Education registration, secured 2026'));
 B.push(pageBreak());
 
 // ============ ISLAMIC & QUR'AN EXCELLENCE ============
@@ -281,7 +301,8 @@ B.push(eyebrow('Chapter V — Campus'), h1('A Campus of Distinction'));
 B.push(body('Purpose-built facilities across four institutions, on one campus in Imowonla, Ikorodu — designed for a child to move between a science laboratory, a recitation hall, and a workshop bench in the course of a single day.'));
 B.push(new Paragraph({ children: [img('gallery/chemistry-laboratory.jpg', 220), new TextRun({ text: '  ' }), img('gallery/college-hall.jpg', 220)] }));
 B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/basic-technology-workshop-1.jpg', 220), new TextRun({ text: '  ' }), img('gallery/boarding-dining.jpg', 220)] }));
-B.push(body('Science laboratories, a multi-purpose college hall, dedicated ICT/basic-technology workshops, and boarding-dining facilities sit alongside open recitation spaces. A dedicated library facility is part of that same campus; dedicated library photography has not yet been captured.'));
+B.push(body('Science laboratories, a multi-purpose college hall, dedicated ICT/basic-technology workshops, and boarding-dining facilities sit alongside open recitation spaces and a library — a campus built for the full range of what SHRS teaches.'));
+B.push(iconPanel('L', 'Library', 'Dedicated library photography has not yet been captured'));
 B.push(pageBreak());
 
 // ============ THE SULTAN EXPERIENCE ============
@@ -295,12 +316,12 @@ B.push(pageBreak());
 B.push(eyebrow('Chapter VI — Leadership'), h1('Leadership Roster'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
 rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Director', 'B.Sc. Applied Accounting (Oxford Brookes) · M.Sc. Financial Management (Edinburgh Business School) · FCCA (UK) · FCA (ICAN)').forEach(p => B.push(p));
+B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
+rosterRow('Imam Ahmad Sulaimiy', 'Principal', "Sultan Hanafi Qur'an College").forEach(p => B.push(p));
 rosterRow('Vice Principal, Academic Affairs', 'Royal College', 'Named appointment pending public listing — role, not individual, confirmed as filled.').forEach(p => B.push(p));
 rosterRow('Vice Principal, Administration', 'Royal College', 'Named appointment pending public listing.').forEach(p => B.push(p));
-B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
-rosterRow('Imam Ahmad Sulaimiy', 'Imam', 'Arabic & Islamic Studies Institute').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
-rosterRow('Shaykh Abubakr Solah', 'Islamic Scholar', "Qur'an College").forEach(p => B.push(p));
+rosterRow('Shaykh Abubakr Solah', 'Islamic Scholar', "Sultan Hanafi Qur'an College").forEach(p => B.push(p));
 B.push(caption('Named biographical entries beyond those pictured are intentionally withheld pending confirmed, publishable staff details — not omitted by oversight.'));
 B.push(pageBreak());
 
@@ -310,7 +331,7 @@ B.push(diagramRow(['Board of Trustees'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(diagramRow(['Founder & Director — Sultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
-B.push(diagramRow(['Head — Nursery & Primary', 'Head — Royal College', 'Head — Arabic & Islamic Studies', "Head — Qur'an College"], PARCHMENT, NAVY));
+B.push(diagramRow(['Head — Nursery & Primary', 'Head — Royal College', 'Head — Arabic & Islamic Studies', "Qur'an College — Imam Ahmad Sulaimiy"], PARCHMENT, NAVY));
 B.push(caption("One Board, one Director, four Heads of Institution — the same governance backbone that governs the Digital Campus's Role & Permission Matrix."));
 B.push(pageBreak());
 
@@ -361,9 +382,9 @@ B.push(pageBreak());
 // ============ FOUNDATION ============
 B.push(eyebrow('Chapter VIII — Philanthropy'), h1('The Sultan Zakariya Hanafi Foundation'));
 B.push(body("The Founder's community commitment extends beyond the school gate — free public lectures, relief support during the COVID-19 period, and local infrastructure contributions reflect a philanthropic thread that runs alongside the school's academic mission. The Sultan Zakariya Hanafi Foundation is the formal vehicle for that continuing commitment."));
+B.push(iconPanel('C', 'Community Commitment', 'Public lectures, relief support, and local infrastructure contributions'));
 B.push(figurePending('[FIGURE PENDING] Foundation scope, scholarship figures, and beneficiary counts pending SHRS confirmation — not estimated for this draft.'));
 B.push(pageBreak());
-// (Foundation section is intentionally text-only — no dedicated Foundation photography exists in the real asset library.)
 
 // ============ ADMISSIONS ============
 B.push(eyebrow('Your Journey Begins Here'), h1('Admissions'));
