@@ -476,8 +476,8 @@ B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)
 rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Arabic & Islamic Studies').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
 rosterRow('Shaykh Abubakr Solah', 'Principal, School of Islamic & Arabic Studies', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
-rosterRow('Mrs Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College', 'HND Accounting · PGDE').forEach(p => B.push(p));
-rosterRow('Mrs Kareemat Abdurazaq', 'Head Teacher, Nursery & Primary School', 'BEd · NCE').forEach(p => B.push(p));
+rosterRow('Mrs. Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College', 'HND Accounting · PGDE').forEach(p => B.push(p));
+rosterRow('Mrs. Kareemat Abdurazaq', 'Head Teacher, Nursery & Primary School', 'BEd · NCE').forEach(p => B.push(p));
 B.push(pageBreak());
 
 // ============ GOVERNANCE I — STRATEGIC GOVERNANCE ============
@@ -488,7 +488,7 @@ B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(diagramRow(['Level 2 — Founder & Chief Executive Officer (CEO)\nSultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption('Level 3 — Management Team (peer institutional heads, reporting directly to the CEO)'));
-B.push(diagramRow(['VP Administration\nFatimat Anofi-Badmus', 'Head Teacher, N&P\nKareemat Abdurazaq', 'Principal, Royal College\nAdegoke Musa Olatunji', 'Principal, Islamic & Arabic\nShaykh Abubakr Solah', "Principal, Qur'an College\nImam Ahmad Sulaimiy"], PARCHMENT, NAVY));
+B.push(diagramRow(['VP Administration\nMrs. Fatimat Anofi-Badmus', 'Head Teacher, N&P\nMrs. Kareemat Abdurazaq', 'Principal, Royal College\nAdegoke Musa Olatunji', 'Principal, Islamic & Arabic\nShaykh Abubakr Solah', "Principal, Qur'an College\nImam Ahmad Sulaimiy"], PARCHMENT, NAVY));
 B.push(caption('All five Management Team members are peers — none reports to another.'));
 B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Lagos State Ministry of Education Registered 2026"));
 B.push(supportRow([

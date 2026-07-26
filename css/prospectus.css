@@ -72,17 +72,37 @@
   color:var(--gold); margin:0 0 8px;
 }
 .spread h2{
-  font-family:'Cinzel','Amiri',serif; font-size:24pt; line-height:1.15; color:var(--navy); margin:0 0 14px;
+  font-family:'Cinzel','Amiri',serif; font-size:24pt; line-height:1.15; color:var(--navy); margin:0 0 6px;
 }
+.spread h2::after{
+  content:''; display:block; width:60px; height:2px; margin:12px 0 16px;
+  background:linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
+}
+.spread.dark h2::after, .spread.charcoal h2::after{background:linear-gradient(90deg, var(--gold-bright) 0%, var(--gold) 100%);}
 .spread h3{
   font-family:'Cinzel','Amiri',serif; font-size:15pt; color:var(--navy); margin:0 0 8px; letter-spacing:0.01em;
 }
-.spread p{font-size:10.5pt; line-height:1.6; color:var(--ink); margin:0 0 12px;}
+.spread p{font-size:10.5pt; line-height:1.6; color:var(--ink); margin:0 0 12px; text-align:justify; hyphens:auto; -webkit-hyphens:auto;}
 .spread .lede{
   font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14.5pt; line-height:1.55;
-  color:var(--navy); margin:0 0 16px;
+  color:var(--navy); margin:0 0 16px; text-align:left; hyphens:none;
 }
-.caption{font-size:8pt; color:var(--ink-soft); margin-top:6px;}
+.caption{font-size:8pt; color:var(--ink-soft); margin-top:6px; text-align:left;}
+
+/* ---- Drop cap — applied by hand to a small number of major narrative
+   openings (Director's Message, Heritage, Foundation). Never automatic
+   across every paragraph — that would read as decorative clutter. ---- */
+.drop-cap::first-letter{
+  font-family:'Cinzel','Amiri',serif; font-size:44pt; line-height:0.78; font-weight:600;
+  color:var(--gold); float:left; margin:4px 8px 0 0;
+}
+
+/* ---- Corner ornament — a restrained eight-point khatam star marking a
+   handful of ceremonial section openers (Governance, Admissions, Academic
+   Pathways, Islamic & Qur'an Excellence, Student Life). Outline only, low
+   opacity, positioned clear of running text — a watermark, not a graphic. ---- */
+.corner-ornament{position:absolute; top:14mm; right:14mm; width:40px; height:40px; opacity:0.16; pointer-events:none; z-index:0;}
+.spread.dark .corner-ornament, .spread.charcoal .corner-ornament{opacity:0.22;}
 
 /* ---- Grid ---- */
 .grid12{display:grid; grid-template-columns:repeat(12,1fr); gap:4mm;}
@@ -250,7 +270,7 @@
   font-family:'Cinzel','Amiri',serif; font-size:18pt; color:var(--navy-deep); background:var(--gold); font-weight:600;
 }
 .mono-value-row .mv-body .mv-title{font-family:'Cinzel','Amiri',serif; font-size:9.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--navy); margin-bottom:2px;}
-.mono-value-row .mv-body p{font-size:9pt; color:var(--ink); margin:0; line-height:1.5;}
+.mono-value-row .mv-body p{font-size:9pt; color:var(--ink); margin:0; line-height:1.5; text-align:left;}
 
 /* ---- Org chart ---- */
 .org-chart{display:flex; flex-direction:column; align-items:center; gap:0; margin:20px 0;}
@@ -273,6 +293,30 @@
 }
 .org-row .org-node .org-title{color:var(--ink-soft);}
 
+/* ---- Org tree — vertical stem to a horizontal spine, then an individual
+   drop-line into each peer node. A designed branching chart, not a flat
+   caption pretending to describe a hierarchy. ---- */
+.org-tree-label{
+  text-align:center; font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--gold); margin:2px 0 20px;
+}
+.org-tree-label .otl-sub{
+  display:block; font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-weight:400;
+  text-transform:none; letter-spacing:0; font-size:9.5pt; color:var(--ink-soft); margin-top:5px;
+}
+.org-tree{position:relative; padding-top:16px;}
+.org-tree-spine{
+  position:absolute; top:0; left:3%; right:3%; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold) 6%, var(--gold) 94%, transparent);
+}
+.org-row-tree .org-node{position:relative;}
+.org-row-tree .org-node::before{
+  content:''; position:absolute; top:-16px; left:50%; width:1px; height:16px; background:var(--gold); transform:translateX(-50%);
+}
+.org-row-tree .org-node::after{
+  content:''; position:absolute; top:-3px; left:50%; width:4px; height:4px; transform:translateX(-50%) rotate(45deg); background:var(--gold);
+}
+
 /* ---- Leadership roster ---- */
 .roster-row{display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--line); align-items:flex-start;}
 .roster-row:last-child{border-bottom:none;}
@@ -288,12 +332,12 @@
 .step-row{display:flex; gap:14px; margin-bottom:16px;}
 .step-num{font-family:'Cinzel','Amiri',serif; font-size:26pt; color:var(--gold); line-height:1; flex:0 0 auto; width:48px;}
 .step-body .step-title{font-family:'Cinzel','Amiri',serif; font-size:8.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--navy); margin-bottom:3px;}
-.step-body p{font-size:9.5pt; color:var(--ink); margin:0; line-height:1.5;}
+.step-body p{font-size:9.5pt; color:var(--ink); margin:0; line-height:1.5; text-align:left;}
 
 /* ---- Testimonial columns ---- */
 .testimonial-cols{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:20px;}
 .testimonial-block .mark{font-family:'Cormorant Garamond','Amiri',serif; font-size:30pt; color:var(--gold); line-height:0.5; display:block; margin-bottom:8px;}
-.testimonial-block p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:12.5pt; line-height:1.6; color:var(--ivory);}
+.testimonial-block p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:12.5pt; line-height:1.6; color:var(--ivory); text-align:left;}
 .testimonial-block .who{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.05em; text-transform:uppercase; color:var(--gold-bright); margin-top:10px;}
 @media (max-width:900px){.testimonial-cols{grid-template-columns:1fr;}}
 
@@ -345,7 +389,7 @@
 .reasons-list{counter-reset:reason;}
 .reason-item{display:flex; gap:8px; padding:5px 0; border-bottom:1px solid rgba(198,161,91,0.2);}
 .reason-item .r-num{font-family:'Cinzel','Amiri',serif; font-size:11pt; color:var(--gold); flex:0 0 auto; width:22px;}
-.reason-item p{font-size:8.3pt; margin:0; color:var(--ink); line-height:1.4;}
+.reason-item p{font-size:8.3pt; margin:0; color:var(--ink); line-height:1.4; text-align:left;}
 
 /* ---- Icon panel — an elegant, deliberate substitute where no real
    photography exists, styled as a design choice (solid parchment
@@ -365,7 +409,7 @@
   font-family:'Cinzel','Amiri',serif; font-size:8.5pt; letter-spacing:0.08em;
   text-transform:uppercase; color:var(--navy); margin-bottom:5px;
 }
-.icon-panel .icon-note{font-size:8pt; color:var(--ink-soft); max-width:280px; line-height:1.5;}
+.icon-panel .icon-note{font-size:8pt; color:var(--ink-soft); max-width:280px; line-height:1.5; text-align:left;}
 .spread.dark .icon-panel, .spread.charcoal .icon-panel{
   background:rgba(255,255,255,0.05); border-top-color:var(--gold-bright);
 }
@@ -428,7 +472,7 @@
 .support-row .support-cell{flex:1; padding:16px 14px; border-inline-end:1px solid rgba(198,161,91,0.2); text-align:center;}
 .support-row .support-cell:last-child{border-inline-end:none;}
 .support-row .support-cell .support-title{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--gold); margin-bottom:4px;}
-.support-row .support-cell p{font-size:8.5pt; color:var(--ink-soft); margin:0; line-height:1.5;}
+.support-row .support-cell p{font-size:8.5pt; color:var(--ink-soft); margin:0; line-height:1.5; text-align:left;}
 .spread.dark .support-row, .spread.charcoal .support-row{border-top-color:rgba(233,206,138,0.25);}
 .spread.dark .support-row .support-cell, .spread.charcoal .support-row .support-cell{border-inline-end-color:rgba(233,206,138,0.18);}
 .spread.dark .support-row .support-cell p, .spread.charcoal .support-row .support-cell p{color:rgba(247,238,223,0.7);}
@@ -449,7 +493,9 @@
 .bio-layout{display:grid; grid-template-columns:62mm 1fr; margin:-16mm -12mm; min-height:297mm;}
 .bio-rail{background:var(--navy-deep); color:var(--ivory); padding:16mm 8mm 12mm; display:flex; flex-direction:column; box-sizing:border-box;}
 .bio-rail .bio-photo{width:100%; aspect-ratio:3/4; object-fit:cover; margin-bottom:auto;}
-.bio-rail .icon-panel{margin-bottom:auto; padding:16px 10px;}
+.bio-rail .icon-panel{margin-bottom:auto; padding:16px 10px; height:auto; width:100%; aspect-ratio:3/4; box-sizing:border-box;}
+.bio-rail .icon-panel .icon-badge{width:96px; height:96px;}
+.bio-rail .icon-panel .icon-badge span{font-size:24pt !important;}
 .bio-rail .bio-name{font-family:'Cinzel','Amiri',serif; font-size:15pt; line-height:1.2; color:#fff; margin-top:16px;}
 .bio-rail .bio-role{font-size:7.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-bright); margin-top:6px;}
 .bio-rail .bio-cred{font-size:7pt; color:rgba(247,238,223,0.6); margin-top:6px; line-height:1.5;}
@@ -461,7 +507,7 @@
 .pros-list-item{padding:11px 0; border-bottom:1px solid rgba(198,161,91,0.25);}
 .pros-list-item:last-child{border-bottom:none;}
 .pros-list-item .pl-title{font-family:'Cinzel','Amiri',serif; font-size:10pt; color:var(--navy); margin-bottom:3px;}
-.pros-list-item .pl-body{font-size:8.5pt; color:var(--ink-soft); line-height:1.5;}
+.pros-list-item .pl-body{font-size:8.5pt; color:var(--ink-soft); line-height:1.5; text-align:left;}
 .spread.dark .pros-list-item, .spread.charcoal .pros-list-item{border-bottom-color:rgba(233,206,138,0.2);}
 .spread.dark .pros-list-item .pl-title, .spread.charcoal .pros-list-item .pl-title{color:#fff;}
 .spread.dark .pros-list-item .pl-body, .spread.charcoal .pros-list-item .pl-body{color:rgba(247,238,223,0.7);}
@@ -476,7 +522,7 @@
 .quote-box .qb-tick-tl, .quote-box .qb-tick-br{position:absolute; width:14px; height:14px; border:2px solid var(--gold);}
 .quote-box::before{content:''; top:-1px; left:-1px; border-width:2px 0 0 2px;}
 .quote-box::after{content:''; bottom:-1px; right:-1px; border-width:0 2px 2px 0;}
-.quote-box p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14.5pt; line-height:1.6; color:var(--navy); margin:0;}
+.quote-box p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14.5pt; line-height:1.6; color:var(--navy); margin:0; text-align:left;}
 .quote-box .qb-who{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin-top:14px; display:block;}
 
 /* Larger monogram badge for the leadership roster, matching the
@@ -528,6 +574,24 @@
 .spread.cover h1{text-shadow:0 2px 24px rgba(0,0,0,0.45);}
 .spread.cover .cover-crest{filter:drop-shadow(0 4px 18px rgba(0,0,0,0.5));}
 
+/* ---- Front-cover photograph: the real, named building anchors the top
+   third; a deep bottom-weighted scrim gives the title block a legible,
+   authoritative field to sit on, so the cover reads as "a real, serious
+   place" rather than a flat colour panel with text on it. ---- */
+.spread.cover .cover-photo{opacity:1; z-index:-2;}
+.cover-vignette.cover-vignette-photo{
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(15,10,4,0.2) 0%, transparent 55%),
+    linear-gradient(180deg,
+      rgba(20,13,5,0.82) 0%,
+      rgba(24,16,6,0.55) 14%,
+      rgba(28,19,7,0.32) 30%,
+      rgba(28,19,7,0.4) 46%,
+      rgba(22,15,6,0.86) 62%,
+      rgba(18,12,5,0.96) 78%,
+      rgba(15,10,4,0.98) 100%);
+}
+
 /* ---- Governance tier — numbered institutional-level row, for the
    full Board-to-Class-Captain governance spread ---- */
 .gov-tier{display:flex; gap:20px; padding:26px 0; border-bottom:1px solid rgba(198,161,91,0.25); align-items:flex-start;}
@@ -541,7 +605,7 @@
 .gov-tier-body{flex:1;}
 .gov-tier-body .gov-tier-eyebrow{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:3px;}
 .gov-tier-body .gov-tier-title{font-family:'Cinzel','Amiri',serif; font-size:15pt; color:var(--navy); margin-bottom:8px;}
-.gov-tier-body .gov-tier-desc{font-size:10pt; color:var(--ink-soft); line-height:1.6; margin-bottom:10px; max-width:90%;}
+.gov-tier-body .gov-tier-desc{font-size:10pt; color:var(--ink-soft); line-height:1.6; margin-bottom:10px; max-width:90%; text-align:left;}
 .gov-tier-body .gov-tier-chips{display:flex; flex-wrap:wrap; gap:8px;}
 .gov-tier-body .gov-tier-chips span{
   font-size:9pt; color:var(--navy); background:linear-gradient(180deg, var(--cream) 0%, var(--parchment) 100%);
