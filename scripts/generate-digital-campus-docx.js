@@ -50,7 +50,7 @@ function img(relPath, widthPx) {
 
 // Future Digital Campus palette — white / charcoal / electric gold,
 // distinct from the Imperial Heritage (navy/coffee-brown/parchment) and
-// Royal Arabian (deep blue/gold/ivory) systems.
+// Luxury Aspirational (coffee/gold/cream) systems.
 const CHARCOAL = '14171C', CHARCOAL_DEEP = '0A0C10', GOLD = 'B4830F', GOLD_BRIGHT = 'E3A81E';
 const INK = '14171C', INK_SOFT = '5A6270', OFF_WHITE = 'F4F5F7', GREEN = '1F9D55';
 

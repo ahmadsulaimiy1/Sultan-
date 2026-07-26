@@ -63,7 +63,7 @@ function img(relPath, widthPx) {
 
 // Student Experience palette — deep forest green / warm terracotta /
 // cream, editorial and warm, distinct from the Imperial Heritage,
-// Royal Arabian, and Future Digital Campus systems built so far.
+// Luxury Aspirational, and Future Digital Campus systems built so far.
 const FOREST = '1F3A2E', FOREST_DEEP = '122019', TERRACOTTA = 'C4633B', AMBER = 'D89A44';
 const INK = '2B2620', INK_SOFT = '5A5248', CREAM = 'FAF3E8', PAPER = 'F3E9D8';
 

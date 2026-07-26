@@ -58,7 +58,7 @@ function img(relPath, widthPx) {
 }
 
 // Institutional Masterplan palette — steel navy / burgundy / paper,
-// distinct from the Imperial Heritage, Royal Arabian, Future Digital
+// distinct from the Imperial Heritage, Luxury Aspirational, Future Digital
 // Campus, and Student Experience systems already built.
 const NAVY = '1B3A5C', NAVY_DEEP = '122740', BURGUNDY = '7A2331', BURGUNDY_BRIGHT = '9E3A48';
 const INK = '1E2429', INK_SOFT = '5A6268', PAPER = 'F5F3EE';
