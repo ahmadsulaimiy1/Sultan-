@@ -1,0 +1,150 @@
+/* ============================================================
+   THE FUTURE DIGITAL CAMPUS EDITION — a distinct flagship design
+   system. White, charcoal, electric gold, glassmorphism. Hexagon
+   icon badges in place of circular/octagram badges. Space Grotesk
+   + Inter typography — not Cinzel/Cormorant or Amiri/Cairo.
+   Independent stylesheet — does not extend prospectus.css or
+   prospectus-royal-arabian.css.
+   ============================================================ */
+
+:root{
+  --dc-white:#FFFFFF; --dc-off:#F4F5F7; --dc-charcoal:#14171C; --dc-charcoal-deep:#0A0C10;
+  --dc-charcoal-soft:#1E222A; --dc-gold:#E3A81E; --dc-gold-bright:#FFCE54; --dc-gold-dim:#B4830F;
+  --dc-ink:#14171C; --dc-ink-soft:rgba(20,23,28,0.62); --dc-line:rgba(20,23,28,0.12);
+  --dc-glass-fill:rgba(255,255,255,0.06); --dc-glass-line:rgba(255,255,255,0.14);
+  --dc-glass-fill-light:rgba(20,23,28,0.04); --dc-glass-line-light:rgba(20,23,28,0.10);
+}
+
+*{box-sizing:border-box;}
+body.pros-body{margin:0; background:#2a2d33; font-family:'Inter','Space Grotesk',sans-serif;}
+
+.dc-toolbar{
+  position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
+  padding:12px 24px; background:var(--dc-charcoal-deep); color:var(--dc-gold-bright);
+}
+.dc-toolbar button{
+  background:var(--dc-gold); color:var(--dc-charcoal-deep); border:none; padding:8px 18px;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:0.02em; cursor:pointer; border-radius:4px;
+}
+
+.dc-spread{
+  width:210mm; min-height:297mm; margin:20px auto; position:relative; overflow:hidden; isolation:isolate;
+  background:var(--dc-white); box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  padding:18mm 16mm; box-sizing:border-box; page-break-after:always;
+}
+.dc-spread + .dc-spread{margin-top:20px;}
+.dc-spread.dark{background:var(--dc-charcoal); color:var(--dc-white);}
+.dc-spread.cover{padding:0; display:flex; align-items:flex-end;}
+
+/* ---- Tech grid overlay — faint dot/line grid, evoking a schematic
+   or campus blueprint rather than an illuminated manuscript. ---- */
+.dc-grid-bg{
+  position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0.5;
+  background-image:linear-gradient(rgba(20,23,28,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(20,23,28,0.05) 1px, transparent 1px);
+  background-size:14mm 14mm;
+}
+.dc-spread.dark .dc-grid-bg{background-image:linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);}
+
+.dc-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.12em; text-transform:uppercase; color:var(--dc-ink-soft);}
+.dc-spread.dark .dc-folio{color:rgba(255,255,255,0.5);}
+
+/* ---- Hexagon medallion — the icon/avatar shape throughout this
+   edition, replacing circular and octagram badges. ---- */
+.dc-hex{
+  position:relative; width:52px; height:52px; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--dc-gold), var(--dc-gold-dim));
+  clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+.dc-hex .dc-hex-label{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13pt; color:var(--dc-charcoal-deep);}
+.dc-hex.outline{background:none; border:1.5pt solid var(--dc-gold);}
+.dc-hex.outline .dc-hex-label{color:var(--dc-gold);}
+
+/* ---- Eyebrow / heading system ---- */
+.dc-eyebrow{
+  font-family:'Space Grotesk',sans-serif; font-size:8.5pt; font-weight:700; letter-spacing:0.24em; text-transform:uppercase;
+  color:var(--dc-gold-dim); margin:0 0 8px; display:flex; align-items:center; gap:8px;
+}
+.dc-eyebrow::before{content:''; width:20px; height:2px; background:var(--dc-gold);}
+.dc-spread.dark .dc-eyebrow{color:var(--dc-gold-bright);}
+h2.dc-h2{
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:27pt; line-height:1.12; color:var(--dc-charcoal); margin:0 0 10px; letter-spacing:-0.01em;
+}
+.dc-spread.dark h2.dc-h2{color:#fff;}
+h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt; color:var(--dc-charcoal); margin:0 0 6px;}
+.dc-spread.dark h3.dc-h3{color:var(--dc-gold-bright);}
+.dc-spread p{font-family:'Inter',sans-serif; font-size:10pt; line-height:1.7; color:var(--dc-ink); margin:0 0 12px;}
+.dc-spread.dark p{color:rgba(255,255,255,0.82);}
+.dc-lede{
+  font-family:'Inter',sans-serif; font-weight:400; font-size:13pt; line-height:1.55; color:var(--dc-ink-soft);
+  margin:0 0 18px; max-width:92%;
+}
+.dc-spread.dark .dc-lede{color:rgba(255,255,255,0.7);}
+.dc-caption{font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.05em; text-transform:uppercase; color:var(--dc-ink-soft); margin-top:6px;}
+
+/* ---- Glass panel — the signature glassmorphism callout/status card ---- */
+.dc-glass{
+  background:var(--dc-glass-fill-light); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  border:1px solid var(--dc-glass-line-light); border-radius:10px; padding:18px 20px; position:relative; margin:14px 0;
+}
+.dc-spread.dark .dc-glass{background:var(--dc-glass-fill); border-color:var(--dc-glass-line);}
+.dc-glass .dc-tag{display:inline-block; font-family:'Space Grotesk',sans-serif; font-size:7.5pt; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--dc-charcoal-deep); background:var(--dc-gold); padding:3px 9px; border-radius:20px; margin-bottom:8px;}
+.dc-glass.roadmap .dc-tag{background:transparent; border:1px solid var(--dc-gold); color:var(--dc-gold);}
+
+/* ---- Grid ---- */
+.dc-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:6mm;}
+.dc-col-4{grid-column:span 4;} .dc-col-5{grid-column:span 5;} .dc-col-6{grid-column:span 6;} .dc-col-7{grid-column:span 7;} .dc-col-8{grid-column:span 8;} .dc-col-12{grid-column:span 12;}
+
+/* ---- Feature hero photo ---- */
+.dc-hero{position:relative; margin:-18mm -16mm 0; height:118mm;}
+.dc-hero img{width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(0.15) contrast(1.05);}
+.dc-hero .dc-hero-bar{
+  position:absolute; left:0; right:0; bottom:0; padding:14mm 16mm 10mm;
+  background:linear-gradient(0deg, rgba(10,12,16,0.92) 0%, rgba(10,12,16,0) 100%);
+}
+.dc-hero .dc-hero-bar h2{color:#fff; margin:0;}
+.dc-photo{width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--dc-off); border-radius:6px;}
+
+/* ---- Feature row — hex badge + body, used for portal/feature lists ---- */
+.dc-feature{display:flex; gap:16px; padding:16px 0; border-bottom:1px solid var(--dc-line); align-items:flex-start;}
+.dc-feature:last-child{border-bottom:none;}
+.dc-feature-body{flex:1;}
+.dc-feature-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5pt; color:var(--dc-charcoal); margin-bottom:4px;}
+.dc-feature-desc{font-family:'Inter',sans-serif; font-size:9.5pt; color:var(--dc-ink-soft); line-height:1.6;}
+.dc-spread.dark .dc-feature{border-color:rgba(255,255,255,0.12);}
+.dc-spread.dark .dc-feature-title{color:#fff;}
+.dc-spread.dark .dc-feature-desc{color:rgba(255,255,255,0.68);}
+.dc-live-badge{display:inline-block; font-family:'Space Grotesk',sans-serif; font-size:7pt; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1F9D55; background:rgba(31,157,85,0.12); border:1px solid rgba(31,157,85,0.4); padding:2px 8px; border-radius:20px; margin-left:8px; vertical-align:middle;}
+
+/* ---- Stat band ---- */
+.dc-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--dc-line); margin:16px 0; border-radius:8px; overflow:hidden;}
+.dc-stats .dc-stat-cell{background:var(--dc-off); text-align:center; padding:16px 6px;}
+.dc-stats .dc-stat-num{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:21pt; color:var(--dc-charcoal);}
+.dc-stats .dc-stat-label{font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--dc-ink-soft); margin-top:2px;}
+.dc-spread.dark .dc-stats{background:rgba(255,255,255,0.1);}
+.dc-spread.dark .dc-stats .dc-stat-cell{background:var(--dc-charcoal-soft);}
+.dc-spread.dark .dc-stats .dc-stat-num{color:var(--dc-gold-bright);}
+.dc-spread.dark .dc-stats .dc-stat-label{color:rgba(255,255,255,0.55);}
+
+/* ---- Roadmap timeline — explicit future-vision presentation ---- */
+.dc-roadmap-item{display:flex; gap:16px; padding:14px 0; border-left:2px solid var(--dc-gold); padding-left:18px; margin-left:6px; position:relative;}
+.dc-roadmap-item::before{content:''; position:absolute; left:-6px; top:18px; width:10px; height:10px; background:var(--dc-gold); clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);}
+.dc-roadmap-year{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:10.5pt; color:var(--dc-gold-dim); flex:0 0 74px;}
+.dc-spread.dark .dc-roadmap-year{color:var(--dc-gold-bright);}
+.dc-roadmap-body{flex:1;}
+.dc-roadmap-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:11.5pt; color:var(--dc-charcoal); margin-bottom:3px;}
+.dc-spread.dark .dc-roadmap-title{color:#fff;}
+.dc-roadmap-desc{font-family:'Inter',sans-serif; font-size:9.5pt; color:var(--dc-ink-soft); line-height:1.6;}
+.dc-spread.dark .dc-roadmap-desc{color:rgba(255,255,255,0.65);}
+
+@media print{
+  .dc-toolbar{display:none;}
+  body.pros-body{background:#fff;}
+  .dc-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
+  @page{size:210mm 297mm; margin:0;}
+}
+@media screen and (max-width:1000px){
+  .dc-spread{width:100%; min-height:auto; padding:8vw;}
+  .dc-grid{display:block;}
+  .dc-col-4,.dc-col-5,.dc-col-6,.dc-col-7,.dc-col-8{grid-column:auto;}
+}
