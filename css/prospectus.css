@@ -499,3 +499,21 @@
 .cover-rule{width:64px; height:1pt; background:linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin:18px auto;}
 .spread.cover h1{text-shadow:0 2px 24px rgba(0,0,0,0.45);}
 .spread.cover .cover-crest{filter:drop-shadow(0 4px 18px rgba(0,0,0,0.5));}
+
+/* ---- Governance tier — numbered institutional-level row, for the
+   full Board-to-Class-Captain governance spread ---- */
+.gov-tier{display:flex; gap:20px; padding:26px 0; border-bottom:1px solid rgba(198,161,91,0.25); align-items:flex-start;}
+.gov-tier:last-child{border-bottom:none;}
+.gov-tier-num{
+  flex:0 0 auto; width:48px; height:48px; border-radius:50%; background:var(--navy); color:var(--gold-bright);
+  display:flex; align-items:center; justify-content:center; font-family:'Cinzel','Amiri',serif; font-size:15pt; font-weight:600;
+}
+.gov-tier-body{flex:1;}
+.gov-tier-body .gov-tier-eyebrow{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:3px;}
+.gov-tier-body .gov-tier-title{font-family:'Cinzel','Amiri',serif; font-size:15pt; color:var(--navy); margin-bottom:8px;}
+.gov-tier-body .gov-tier-desc{font-size:10pt; color:var(--ink-soft); line-height:1.6; margin-bottom:10px; max-width:90%;}
+.gov-tier-body .gov-tier-chips{display:flex; flex-wrap:wrap; gap:8px;}
+.gov-tier-body .gov-tier-chips span{
+  font-size:9pt; color:var(--navy); background:var(--parchment); border:1px solid rgba(198,161,91,0.4);
+  padding:7px 14px; border-radius:2px;
+}

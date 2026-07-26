@@ -231,6 +231,20 @@ function rosterRow(name, role, cred) {
   ];
 }
 
+// Numbered governance-level row, for the full Board-to-Class-Captain
+// governance spread — mirrors the HTML edition's .gov-tier.
+function govTier(num, title, desc, items) {
+  const out = [
+    new Paragraph({ spacing: { before: 180 }, children: [
+      new TextRun({ text: `LEVEL ${num}  `, font: HEAD_FONT, size: 15, color: GOLD, bold: true, characterSpacing: 10 }),
+      new TextRun({ text: title, font: HEAD_FONT, size: 22, color: NAVY, bold: true }),
+    ] }),
+  ];
+  if (desc) out.push(new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: desc, font: BODY_FONT, size: 18, color: INK_SOFT, italics: true })] }));
+  if (items && items.length) out.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: items.join(' · '), font: BODY_FONT, size: 19, color: '2A2016' })] }));
+  return out;
+}
+
 function deptItem(title, courses) {
   return [
     new Paragraph({ spacing: { before: 120 }, children: [new TextRun({ text: title, font: HEAD_FONT, size: 20, color: NAVY, bold: true })] }),
@@ -462,20 +476,43 @@ rosterRow('Mrs Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College'
 rosterRow('Mrs Kareemat Abdurazaq', 'Head Teacher, Nursery & Primary School', 'BEd · NCE').forEach(p => B.push(p));
 B.push(pageBreak());
 
-// ============ ORGANISATIONAL STRUCTURE ============
-B.push(eyebrow('Governance Framework'), h1('How We Are Governed'));
-B.push(diagramRow(['Board of Trustees'], GOLD, NAVY_DEEP));
+// ============ GOVERNANCE I — STRATEGIC GOVERNANCE ============
+B.push(eyebrow('Governance Architecture I'), h1('Strategic Governance'));
+B.push(lede("Sultan Hanafi Royal Schools operates under a complete governance architecture — from the Board's strategic oversight down to class-level student leadership. This spread traces the strategic tier: the Board, the Chief Executive, and the Management Team who lead each institution."));
+B.push(diagramRow(['Level 1 — School Board (Board of Trustees)'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
-B.push(diagramRow(['Founder & Chief Executive Officer (CEO) — Sultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
+B.push(diagramRow(['Level 2 — Founder & Chief Executive Officer (CEO)\nSultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
+B.push(caption('Level 3 — Management Team (peer institutional heads, reporting directly to the CEO)'));
 B.push(diagramRow(['VP Administration\nFatimat Anofi-Badmus', 'Head Teacher, N&P\nKareemat Abdurazaq', 'Principal, Royal College\nAdegoke Musa Olatunji', 'Principal, Islamic & Arabic\nShaykh Abubakr Solah', "Principal, Qur'an College\nImam Ahmad Sulaimiy"], PARCHMENT, NAVY));
-B.push(caption('All five institutional heads report directly to the Founder & CEO, at the same level of the governance structure.'));
-B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Governance · Compliance · Stakeholder Engagement · Lagos State Ministry of Education Registered 2026"));
+B.push(caption('All five Management Team members are peers — none reports to another.'));
+B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Lagos State Ministry of Education Registered 2026"));
 B.push(supportRow([
   ['Staff Identity Platform', 'Every staff account is verified and scoped before it can touch a family\'s data.'],
   ['Role & Permission Matrix', 'Access is granted by role, not by request.'],
   ['Audit Trail', 'Sensitive actions are logged, not merely trusted.'],
 ]));
+B.push(pageBreak());
+
+// ============ GOVERNANCE II — OPERATIONAL GOVERNANCE ============
+B.push(eyebrow('Governance Architecture II'), h1('Operational Governance'));
+B.push(lede("Beneath the Management Team, departments, educators, and standing committees carry the institution's academic and administrative operations forward day to day."));
+govTier(4, 'Heads of Department', 'Reporting to the appropriate Principal or Head Teacher.',
+  ['Mathematics & ICT', 'Science & Technology', 'Humanities', 'Other Languages', 'Arabic Language', 'Islamic Studies']).forEach(p => B.push(p));
+B.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: 'Finance & Accounts · Human Resources · ICT · Registry', font: BODY_FONT, size: 19, italics: true, color: INK_SOFT })] }));
+govTier(5, 'Educators', 'The faculty who deliver the curriculum and the Hifz Journey directly.',
+  ['Subject Teachers', 'Class Teachers', 'Arabic Teachers', 'Islamic Studies Teachers', "Qur'an Teachers", 'Muhaffiz / Muhaffizah']).forEach(p => B.push(p));
+govTier(6, 'Committees', 'Governance-support structures operating under Management Team authority — not a level above educators, but alongside them.',
+  ['Academic Committee', 'Disciplinary Committee', 'Welfare Committee', 'Examination Committee', 'Events Committee', 'Safeguarding Committee']).forEach(p => B.push(p));
+B.push(pageBreak());
+
+// ============ GOVERNANCE III — STUDENT LEADERSHIP STRUCTURE ============
+B.push(eyebrow('Governance Architecture III'), h1('Student Leadership Structure'));
+B.push(lede("Governance extends into the student body itself — a structured leadership pathway that carries the institution's standards into every classroom."));
+govTier(7, 'Student Representatives', 'Official student leadership, the formal link between the student body and school management.').forEach(p => B.push(p));
+govTier(8, 'School Prefects', null, ['Head Boy', 'Head Girl', 'Senior Prefects', 'House Prefects']).forEach(p => B.push(p));
+govTier(9, 'Class Captains', 'The student leadership tier closest to individual classes — the first point of peer accountability in daily school life.').forEach(p => B.push(p));
+B.push(quoteBox('Board → Founder & CEO → Management Team → Heads of Department → Educators → Committees → Student Representatives → Prefects → Class Captains — one governance architecture, visible at every level of the institution.'));
 B.push(pageBreak());
 
 // ============ THE COMMISSIONING ============
