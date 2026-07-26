@@ -34,7 +34,16 @@ const DIM = {
   'gallery/quran-recitation-1.jpg': [1600, 721],
   'gallery/quran-recitation-2.jpg': [1600, 721],
   'gallery/basic-technology-workshop-1.jpg': [1400, 934],
+  'gallery/boarding-dining.jpg': [1400, 934],
+  'gallery/spelling-competition.jpg': [1280, 960],
+  'gallery/commissioning-day-1.jpg': [1400, 1867],
+  'gallery/commissioning-day-2.jpg': [1400, 1867],
+  'gallery/recitation-assembly-1.jpg': [1400, 1400],
+  'gallery/recitation-assembly-2.jpg': [1400, 1400],
+  'gallery/recitation-assembly-3.jpg': [1400, 1400],
   'leadership/founder-ceo.jpg': [607, 900],
+  'leadership/imam-ahmad-sulaimiy.jpg': [900, 1390],
+  'leadership/shaykh-abubakr-solah.jpg': [900, 1600],
   'crest-full.png': [700, 623],
   'brand-mark.png': [152, 160],
 };
@@ -241,8 +250,8 @@ B.push(pageBreak());
 
 // ============ NURSERY & PRIMARY ============
 B.push(eyebrow('One of Four Institutions'), h1('Nursery & Primary'));
-B.push(pendingBox('Photography Pending', 'No dedicated Nursery & Primary photography exists yet in the real asset library. Not filled with a stock or AI-generated substitute.'));
-B.push(new Paragraph({ spacing: { before: 200 } }));
+B.push(new Paragraph({ children: [img('gallery/campus-building.jpg', 460)] }));
+B.push(caption('Shown: the shared SHRS campus building. Dedicated Nursery & Primary classroom photography has not yet been captured.'));
 B.push(body("Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Royal College's secondary pathway."));
 B.push(dataPanel([['Ages', '2–10'], ['Format', 'Day'], ['Pathway', 'Primary 1–6']]));
 B.push(pageBreak());
@@ -255,29 +264,31 @@ B.push(body("SHRS's mainstream secondary academic programme — Junior and Senio
 B.push(dataPanel([['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']]));
 B.push(h2('Ministry Approval'));
 B.push(body('Royal College\'s academic programme operates under formal Ministry of Education registration, secured in 2026 — a milestone that follows years of building the academic, facilities, and governance record required to earn it.'));
-B.push(pendingBox('Document Pending', 'Ministry registration certificate to be scanned and inserted at production time.'));
+B.push(body('The registration certificate will be scanned and inserted here once a production-quality copy is available — this section is intentionally text-only until then.'));
 B.push(pageBreak());
 
 // ============ ISLAMIC & QUR'AN EXCELLENCE ============
 B.push(eyebrow('One of Four Institutions'), h1("Islamic & Qur'an Excellence"));
-B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 220), new TextRun({ text: '  ' }), img('gallery/quran-recitation-2.jpg', 220)] }));
+B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 460)] }));
 B.push(new Paragraph({ spacing: { before: 200 } }));
 B.push(body("Dedicated Arabic language and Islamic Studies programmes, open across all ages, alongside Qur'an College's structured Hifz Journey — a five-stage memorisation pathway supervised by trained Muhaffiz and Muhaffizah instructors, culminating in Ijazah certification for students who complete it."));
+B.push(body("Recitation assemblies bring the College's students before microphones and an audience — a public, disciplined test of memorisation and tajwīd that runs alongside the private, day-to-day work of the Hifz Journey."));
+B.push(new Paragraph({ spacing: { before: 120 }, children: [img('gallery/quran-recitation-2.jpg', 220), new TextRun({ text: '  ' }), img('gallery/recitation-assembly-1.jpg', 220)] }));
 B.push(pageBreak());
 
 // ============ CAMPUS & FACILITIES ============
 B.push(eyebrow('Chapter V — Campus'), h1('A Campus of Distinction'));
 B.push(body('Purpose-built facilities across four institutions, on one campus in Imowonla, Ikorodu — designed for a child to move between a science laboratory, a recitation hall, and a workshop bench in the course of a single day.'));
 B.push(new Paragraph({ children: [img('gallery/chemistry-laboratory.jpg', 220), new TextRun({ text: '  ' }), img('gallery/college-hall.jpg', 220)] }));
-B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/basic-technology-workshop-1.jpg', 460)] }));
-B.push(pendingBox('Photography Pending', 'No dedicated library photography exists yet in the real asset library.'));
+B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/basic-technology-workshop-1.jpg', 220), new TextRun({ text: '  ' }), img('gallery/boarding-dining.jpg', 220)] }));
+B.push(body('Science laboratories, a multi-purpose college hall, dedicated ICT/basic-technology workshops, and boarding-dining facilities sit alongside open recitation spaces. A dedicated library facility is part of that same campus; dedicated library photography has not yet been captured.'));
 B.push(pageBreak());
 
 // ============ THE SULTAN EXPERIENCE ============
 B.push(eyebrow('Student Life'), h1('The Sultan Experience'));
 B.push(body('Beyond the classroom, SHRS students grow through co-curricular competition, science practicals, technology learning, and a values-led boarding-dining community where the CLEVER standard is lived daily.'));
-B.push(new Paragraph({ children: [img('gallery/biology-laboratory.jpg', 460)] }));
-B.push(pendingBox('Photography Pending', 'No dedicated food & nutrition studio or recreation-facility photography exists yet.'));
+B.push(new Paragraph({ children: [img('gallery/biology-laboratory.jpg', 220), new TextRun({ text: '  ' }), img('gallery/spelling-competition.jpg', 220)] }));
+B.push(caption('Dedicated food & nutrition studio and recreation-facility photography has not yet been captured.'));
 B.push(pageBreak());
 
 // ============ LEADERSHIP ROSTER ============
@@ -286,8 +297,11 @@ B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
 rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Director', 'B.Sc. Applied Accounting (Oxford Brookes) · M.Sc. Financial Management (Edinburgh Business School) · FCCA (UK) · FCA (ICAN)').forEach(p => B.push(p));
 rosterRow('Vice Principal, Academic Affairs', 'Royal College', 'Named appointment pending public listing — role, not individual, confirmed as filled.').forEach(p => B.push(p));
 rosterRow('Vice Principal, Administration', 'Royal College', 'Named appointment pending public listing.').forEach(p => B.push(p));
-rosterRow("Qur'an Supervisor & Ijazah Coordinator", "Qur'an College", 'Named appointment pending public listing.').forEach(p => B.push(p));
-B.push(caption('Named biographical entries beyond the Founder & Director are intentionally withheld pending confirmed, publishable staff details — not omitted by oversight.'));
+B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
+rosterRow('Imam Ahmad Sulaimiy', 'Imam', 'Arabic & Islamic Studies Institute').forEach(p => B.push(p));
+B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
+rosterRow('Shaykh Abubakr Solah', 'Islamic Scholar', "Qur'an College").forEach(p => B.push(p));
+B.push(caption('Named biographical entries beyond those pictured are intentionally withheld pending confirmed, publishable staff details — not omitted by oversight.'));
 B.push(pageBreak());
 
 // ============ ORGANISATIONAL STRUCTURE ============
@@ -303,7 +317,8 @@ B.push(pageBreak());
 // ============ THE COMMISSIONING ============
 B.push(eyebrow('Chapter VII — Recognition'), h1('The Commissioning'));
 B.push(body('In 2026, Sultan Hanafi Royal Schools was formally commissioned before the wider community, with Engr. Seyi Makinde, Executive Governor of Oyo State, in attendance as guest of honour and speaker — a recognition that placed this institution\'s work before an audience well beyond its own gates.'));
-B.push(pendingBox('Photography Pending', 'No verified photograph of the commissioning ceremony exists in the real asset library. Not filled with a fabricated or generic image of the Governor.'));
+B.push(new Paragraph({ children: [img('gallery/commissioning-day-2.jpg', 320), new TextRun({ text: '  ' }), img('gallery/commissioning-day-1.jpg', 320)] }));
+B.push(caption('Guests at the 2026 commissioning day. Individual attendees are not identified by name here.'));
 B.push(lede('"The commissioning address commended the institution\'s academic and Islamic education model and its contribution to the community."'));
 B.push(verifyNote('the quotation above is presented as a paraphrase of its general content. The exact wording of the Governor\'s remarks has not yet been checked against an official transcript or press release and must be verified — quoted precisely or not at all — before this publication goes to print.'));
 B.push(pageBreak());
@@ -311,6 +326,8 @@ B.push(pageBreak());
 // ============ AWARDS & RECOGNITION ============
 B.push(eyebrow('Chapter VII — Recognition'), h1('Awards & Recognition'));
 B.push(body('SHRS students compete for the ALA Endowment Prize, awarded by academic rank within each class tier.'));
+B.push(new Paragraph({ children: [img('gallery/recitation-assembly-2.jpg', 220), new TextRun({ text: '  ' }), img('gallery/recitation-assembly-3.jpg', 220)] }));
+B.push(new Paragraph({ spacing: { before: 120 } }));
 B.push(awardsTable([
   ['SSS 3', 'Makinde Thoirah', 'Jbaar Abdulbasit', 'Shode Aisha'],
   ['SSS 2', 'Oyebisi Abdulhameed', 'Ojewumi Fawaz', 'Anofi Sofiat'],
@@ -338,7 +355,7 @@ B.push(pageBreak());
 B.push(eyebrow('Community Voices'), h1('Testimonials'));
 B.push(lede('"Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody."'));
 B.push(caption('— Dr. Ismail Akeem Seriki, Parent & Board Member'));
-B.push(pendingBox('Collection In Progress', 'Additional named student, parent, and alumni testimonials are being gathered and will be added once confirmed — not fabricated to fill this space.'));
+B.push(caption('Additional named student, parent, and alumni testimonials are being gathered and will be added once confirmed.'));
 B.push(pageBreak());
 
 // ============ FOUNDATION ============
@@ -346,6 +363,7 @@ B.push(eyebrow('Chapter VIII — Philanthropy'), h1('The Sultan Zakariya Hanafi 
 B.push(body("The Founder's community commitment extends beyond the school gate — free public lectures, relief support during the COVID-19 period, and local infrastructure contributions reflect a philanthropic thread that runs alongside the school's academic mission. The Sultan Zakariya Hanafi Foundation is the formal vehicle for that continuing commitment."));
 B.push(figurePending('[FIGURE PENDING] Foundation scope, scholarship figures, and beneficiary counts pending SHRS confirmation — not estimated for this draft.'));
 B.push(pageBreak());
+// (Foundation section is intentionally text-only — no dedicated Foundation photography exists in the real asset library.)
 
 // ============ ADMISSIONS ============
 B.push(eyebrow('Your Journey Begins Here'), h1('Admissions'));
