@@ -118,6 +118,26 @@
 .data-panel .dp-label{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft);}
 .data-panel .dp-value{color:var(--navy); font-weight:600;}
 
+/* ---- Academic Resource Ecosystem: numbered medallions on a connecting
+   gold thread, reading as one integrated framework rather than a list ---- */
+.resource-ecosystem{margin:4px 0 2px;}
+.re-label-top{
+  font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--bronze); text-align:center; margin-bottom:10px;
+}
+.re-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:2mm; position:relative; padding-top:2px;}
+.re-grid::before{
+  content:''; position:absolute; top:15px; left:8%; right:8%; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold) 12%, var(--gold) 88%, transparent);
+}
+.re-node{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:5px;}
+.re-icon{
+  width:30px; height:30px; border-radius:50%; background:var(--navy); color:var(--gold-bright);
+  display:flex; align-items:center; justify-content:center; font-family:'Cinzel','Amiri',serif;
+  font-size:11pt; font-weight:600; border:2px solid var(--gold); position:relative; z-index:1;
+}
+.re-label{font-family:'Cinzel','Amiri',serif; font-size:6.8pt; letter-spacing:0.02em; color:var(--navy); line-height:1.3;}
+
 /* ---- Photography-pending honest placeholder (NOT a fabricated image) ---- */
 .photo-pending{
   display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px;
@@ -235,17 +255,22 @@
 /* ---- Org chart ---- */
 .org-chart{display:flex; flex-direction:column; align-items:center; gap:0; margin:20px 0;}
 .org-node{
-  background:var(--navy); color:#fff; text-align:center; padding:12px 20px; min-width:220px;
-  font-family:'Cinzel','Amiri',serif;
+  background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%); color:#fff; text-align:center;
+  padding:12px 20px; min-width:220px; font-family:'Cinzel','Amiri',serif;
+  border-top:2px solid var(--gold); box-shadow:0 6px 16px -6px rgba(34,23,9,0.45);
 }
-.org-node.org-top{background:var(--gold); color:var(--navy-deep);}
-.org-node.org-founding{background:var(--gold); color:var(--navy-deep); font-size:9pt; max-width:420px;}
+.org-node.org-top{background:linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%); color:var(--navy-deep); border-top-color:var(--navy-deep);}
+.org-node.org-founding{background:linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%); color:var(--navy-deep); font-size:9pt; max-width:420px; border-top-color:var(--navy-deep);}
 .org-node .org-title{font-size:7pt; letter-spacing:0.1em; text-transform:uppercase; opacity:0.75;}
 .org-node .org-name{font-size:10.5pt; margin-top:2px;}
 .org-node .org-cred{font-family:'Inter',sans-serif; font-style:italic; font-size:7.5pt; opacity:0.7; margin-top:3px;}
-.org-connector{width:1px; height:18px; background:var(--gold);}
+.org-connector{width:1px; height:18px; background:linear-gradient(180deg, var(--gold) 0%, var(--gold) 40%, transparent 100%); position:relative;}
+.org-connector::after{content:''; position:absolute; left:50%; bottom:-3px; width:5px; height:5px; transform:translateX(-50%) rotate(45deg); background:var(--gold);}
 .org-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
-.org-row .org-node{background:var(--parchment); color:var(--navy); flex:1; min-width:150px;}
+.org-row .org-node{
+  background:linear-gradient(180deg, var(--cream) 0%, var(--parchment) 100%); color:var(--navy); flex:1; min-width:150px;
+  box-shadow:0 4px 12px -6px rgba(34,23,9,0.3);
+}
 .org-row .org-node .org-title{color:var(--ink-soft);}
 
 /* ---- Leadership roster ---- */
@@ -283,13 +308,16 @@
 .verify-note{font-size:7.5pt; font-style:italic; color:var(--crimson); margin-top:8px;}
 
 /* ---- Quad stat bar ---- */
-.stat-bar-quad{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); margin:18px 0;}
-.stat-bar-quad .sbq-cell{background:var(--parchment); text-align:center; padding:16px 6px;}
-.stat-bar-quad .sbq-num{font-family:'Cinzel','Amiri',serif; font-size:24pt; color:var(--navy);}
+.stat-bar-quad{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--gold); margin:18px 0;
+  box-shadow:0 8px 22px -10px rgba(34,23,9,0.35);
+}
+.stat-bar-quad .sbq-cell{background:linear-gradient(180deg, var(--cream) 0%, var(--parchment) 100%); text-align:center; padding:16px 6px 14px; border-top:2px solid var(--gold);}
+.stat-bar-quad .sbq-num{font-family:'Cinzel','Amiri',serif; font-size:24pt; color:var(--navy); text-shadow:0 1px 0 rgba(255,255,255,0.4);}
 .stat-bar-quad .sbq-label{font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:2px;}
-.spread.dark .stat-bar-quad{background:rgba(233,206,138,0.2);}
-.spread.dark .stat-bar-quad .sbq-cell{background:var(--navy-deep);}
-.spread.dark .stat-bar-quad .sbq-num{color:var(--gold-bright);}
+.spread.dark .stat-bar-quad{background:var(--gold);}
+.spread.dark .stat-bar-quad .sbq-cell{background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%); border-top-color:var(--gold-bright);}
+.spread.dark .stat-bar-quad .sbq-num{color:var(--gold-bright); text-shadow:none;}
 .spread.dark .stat-bar-quad .sbq-label{color:rgba(247,238,223,0.6);}
 
 /* ---- School summary card (Four Schools spread) ---- */
@@ -505,8 +533,10 @@
 .gov-tier{display:flex; gap:20px; padding:26px 0; border-bottom:1px solid rgba(198,161,91,0.25); align-items:flex-start;}
 .gov-tier:last-child{border-bottom:none;}
 .gov-tier-num{
-  flex:0 0 auto; width:48px; height:48px; border-radius:50%; background:var(--navy); color:var(--gold-bright);
+  flex:0 0 auto; width:48px; height:48px; border-radius:50%;
+  background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); color:var(--gold-bright);
   display:flex; align-items:center; justify-content:center; font-family:'Cinzel','Amiri',serif; font-size:15pt; font-weight:600;
+  border:2px solid var(--gold); box-shadow:0 4px 12px -4px rgba(34,23,9,0.4);
 }
 .gov-tier-body{flex:1;}
 .gov-tier-body .gov-tier-eyebrow{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:3px;}
@@ -514,6 +544,7 @@
 .gov-tier-body .gov-tier-desc{font-size:10pt; color:var(--ink-soft); line-height:1.6; margin-bottom:10px; max-width:90%;}
 .gov-tier-body .gov-tier-chips{display:flex; flex-wrap:wrap; gap:8px;}
 .gov-tier-body .gov-tier-chips span{
-  font-size:9pt; color:var(--navy); background:var(--parchment); border:1px solid rgba(198,161,91,0.4);
-  padding:7px 14px; border-radius:2px;
+  font-size:9pt; color:var(--navy); background:linear-gradient(180deg, var(--cream) 0%, var(--parchment) 100%);
+  border:1px solid rgba(198,161,91,0.5); border-top:2px solid var(--gold);
+  padding:6px 14px; border-radius:2px; box-shadow:0 2px 6px -2px rgba(34,23,9,0.2);
 }

@@ -46,6 +46,8 @@ const DIM = {
   'gallery/recitation-assembly-1.jpg': [1400, 1400],
   'gallery/recitation-assembly-2.jpg': [1400, 1400],
   'gallery/recitation-assembly-3.jpg': [1400, 1400],
+  'gallery/ict-computer-laboratory.jpg': [2248, 1500],
+  'gallery/islamic-prayer-hall.jpg': [1040, 780],
   'leadership/founder-ceo.jpg': [607, 900],
   'leadership/imam-ahmad-sulaimiy.jpg': [900, 1390],
   'leadership/shaykh-abubakr-solah.jpg': [900, 1600],
@@ -421,13 +423,16 @@ B.push(pageBreak());
 
 // ============ ISLAMIC & QUR'AN EXCELLENCE ============
 B.push(eyebrow("Schools 03 & 04 — Sacred Excellence"), h1("Islamic & Qur'an Excellence"));
-B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 460)] }));
+B.push(new Paragraph({ children: [img('gallery/islamic-prayer-hall.jpg', 460)] }));
+B.push(h2('Academic Resources & Curriculum Materials'));
+B.push(body('Sultan Hanafi Royal Schools employs a carefully selected blend of educational resources drawn from: Nigerian National Curriculum requirements; International best-practice educational materials; Saudi Arabian educational resources; Established Arabic and Islamic scholarship texts; SHRS proprietary publications and institutional learning materials. For Arabic Language and Islamic Studies, many of the textbooks utilised originate from Saudi Arabia and other respected centres of Islamic scholarship, complemented by SHRS-developed resources designed specifically for our students. This combination ensures academic rigour, authentic Islamic learning, structured language acquisition, and curriculum continuity across all programmes.'));
+B.push(caption('The Academic Resource Ecosystem — Six Sources, One Integrated Framework'));
+B.push(diagramRow(['1\nNational\nCurriculum', '2\nInternational\nStandards', '3\nSaudi Educational\nResources', '4\nSHRS\nPublications', '5\nArabic Language\nResources', '6\nIslamic Scholarship\nResources'], NAVY, GOLD_BRIGHT));
 B.push(h2('School of Islamic & Arabic Studies'));
-B.push(body('Following the Saudi Arabian educational framework — using officially approved textbooks from the Kingdom of Saudi Arabia.'));
 B.push(dataPanel([['Weekday Programme', 'Mon–Wed · 2–6pm'], ['Weekend Programme', 'Sat & Sun · 9am–3pm']]));
 B.push(h2("Sultan Hanafi Qur'an College"));
-B.push(body("24–36 month programme · Day & boarding · Certified Ijazah. A full-immersion journey through complete memorisation of the Noble Qur'an, alongside Tajwid, the Sciences of the Qur'an, Classical Arabic, and Islamic moral formation. Ages 9–16."));
-B.push(new Paragraph({ spacing: { before: 120 }, children: [img('gallery/quran-recitation-2.jpg', 220), new TextRun({ text: '  ' }), img('gallery/recitation-assembly-1.jpg', 220)] }));
+B.push(body("24–36 month programme · Day & boarding · Certified Ijazah. A full-immersion journey through complete memorisation of the Noble Qur'an, alongside Tajwid, the Sciences of the Qur'an, Classical Arabic, and Islamic moral formation. Ages 9–16. Graduates receive Ijazat — formal scholarly certifications globally recognised in Qur'anic and Islamic sciences."));
+B.push(new Paragraph({ spacing: { before: 120 }, children: [img('gallery/quran-recitation-2.jpg', 460)] }));
 B.push(pageBreak());
 
 // ============ CAMPUS & FACILITIES ============
@@ -437,13 +442,12 @@ B.push(pageBreak());
 
 B.push(eyebrow('Environments Built for Excellence'), h1('Every Space Purposeful.'));
 B.push(new Paragraph({ children: [img('gallery/basic-technology-workshop-1.jpg', 220), new TextRun({ text: '  ' }), img('gallery/chemistry-laboratory.jpg', 220)] }));
-B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/college-hall.jpg', 220)] }));
-B.push(caption('The Digital Innovation Hub · Advanced Science Laboratories · The Grand College Hall'));
-B.push(iconPanel('L', 'The Royal Library', 'Knowledge · Scholarship · Inquiry — photography pending'));
+B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/college-hall.jpg', 220), new TextRun({ text: '  ' }), img('gallery/ict-computer-laboratory.jpg', 220)] }));
+B.push(caption('Basic Technology Workshop · Advanced Science Laboratories · The School Studio · ICT & Computer Laboratory'));
 B.push(supportRow([
   ['STEM Innovation', 'Science labs · Technology workshop'],
   ['Creative Studios', 'CCA room · Food & nutrition'],
-  ['Health & Wellbeing', 'Health centre · Prayer facilities'],
+  ['Health & Wellbeing', 'Sick Bay · Prayer facilities'],
   ['Boarding Facilities', 'Residential accommodation, ages 9–16'],
 ]));
 B.push(pageBreak());
