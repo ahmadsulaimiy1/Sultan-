@@ -27,7 +27,7 @@
 .pros-toolbar button:hover{background:var(--gold-bright);}
 
 .spread{
-  width:240mm; min-height:300mm; margin:20px auto; position:relative; overflow:hidden;
+  width:240mm; min-height:300mm; margin:20px auto; position:relative; overflow:hidden; isolation:isolate;
   background:var(--ivory); box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
   padding:16mm 12mm; box-sizing:border-box; page-break-after:always;
 }
@@ -41,11 +41,14 @@
 /* ---- Cover / closing (dark, full-bleed) ---- */
 .spread.dark{background:var(--navy-deep); color:var(--ivory); padding:0;}
 .spread.cover{display:flex; align-items:flex-end;}
-.spread.cover .cover-photo{
-  position:absolute; inset:0; background-size:cover; background-position:center;
+/* Unscoped so any dark spread can use a full-bleed background photo,
+   not only the literal cover — used by chapter-divider and quote
+   spreads (Campus of Distinction, Testimonials) as well as the cover. */
+.cover-photo{
+  position:absolute; inset:0; background-size:cover; background-position:center; z-index:-1;
 }
-.spread.cover .cover-scrim{
-  position:absolute; inset:0;
+.cover-scrim{
+  position:absolute; inset:0; z-index:-1;
   background:linear-gradient(180deg, rgba(34,23,9,0.15) 0%, rgba(34,23,9,0.55) 55%, rgba(34,23,9,0.94) 100%);
 }
 .spread.cover .cover-content{position:relative; padding:24mm 16mm; width:100%;}
@@ -174,9 +177,9 @@
    ============================================================ */
 
 /* ---- Dedication (in memoriam) page ---- */
-.dedication-page{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; height:100%; padding:0 20mm;
+.spread.dark .dedication-page{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:0 20mm; z-index:1;
 }
 .dedication-page .ded-eyebrow{font-family:'Cinzel','Amiri',serif; font-size:8.5pt; letter-spacing:0.2em; color:var(--gold); margin-bottom:22px;}
 .dedication-page p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:17pt; line-height:1.6; color:rgba(247,238,223,0.92); max-width:520px;}
@@ -344,3 +347,60 @@
 .icon-panel.icon-panel-inline{flex-direction:row; text-align:left; padding:18px; gap:14px;}
 .icon-panel.icon-panel-inline .icon-badge{margin-bottom:0;}
 .icon-panel.icon-panel-inline .icon-note{max-width:none;}
+
+/* ============================================================
+   Flagship visual-density pass — richer treatments for spreads
+   that were print-page-height (300mm) but content-thin, producing
+   large unintentional blank regions. These enlarge existing
+   components and add legitimate premium devices (full-bleed
+   watermarks, vertical-centring beside full-height photography,
+   larger stat displays) rather than inventing new content.
+   ============================================================ */
+
+/* Larger CLEVER value cards — more generous internal space */
+.value-card{padding:26px 20px; min-height:210px; display:flex; flex-direction:column; justify-content:center;}
+.value-card .vc-letter{font-size:42pt;}
+.value-card .vc-label{font-size:8.5pt; margin:6px 0 10px;}
+.value-card p{font-size:9.5pt;}
+
+/* Larger school-summary cards */
+.school-card{padding:22px 20px; min-height:170px; display:flex; flex-direction:column; justify-content:center;}
+.school-card .sc-title{font-size:16pt; margin:6px 0 6px;}
+.school-card .sc-meta{font-size:8.5pt; line-height:1.5;}
+
+/* Larger, more generous stat-bar-quad cells */
+.stat-bar-quad.stat-bar-quad-lg .sbq-cell{padding:28px 12px;}
+.stat-bar-quad.stat-bar-quad-lg .sbq-num{font-size:34pt;}
+.stat-bar-quad.stat-bar-quad-lg .sbq-label{font-size:8pt; margin-top:6px;}
+
+/* Full-bleed low-opacity background watermark — a deliberate luxury
+   device for otherwise text-light pages (dedication, quote spreads),
+   not a substitute for content. */
+.spread-watermark{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  pointer-events:none; z-index:-1;
+}
+.spread-watermark img{width:60%; max-width:340px; opacity:0.06;}
+
+/* Hero pull-quote — a full-scale "quote spread" treatment (Testimonials,
+   Commissioning) rather than a small inline callout */
+.pull-quote.pull-quote-hero{
+  font-size:22pt; line-height:1.5; max-width:100%; border-inline-start-width:3pt; padding-inline-start:24px;
+}
+.pull-quote.pull-quote-hero .mark{font-size:42pt;}
+
+/* Vertically centred narrative column, for pairing short copy with a
+   full-height photograph rather than leaving it stranded at the top */
+.col-narrative.col-center, .col-panel.col-center{display:flex; flex-direction:column; justify-content:center; height:100%;}
+
+/* Governance/community mini-diagram — small labelled row used to give
+   otherwise-brief pages (Org Structure, Foundation) real supporting
+   substance rather than empty lower space */
+.support-row{display:flex; gap:0; margin-top:24px; border-top:1px solid rgba(198,161,91,0.3);}
+.support-row .support-cell{flex:1; padding:16px 14px; border-inline-end:1px solid rgba(198,161,91,0.2); text-align:center;}
+.support-row .support-cell:last-child{border-inline-end:none;}
+.support-row .support-cell .support-title{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--gold); margin-bottom:4px;}
+.support-row .support-cell p{font-size:8.5pt; color:var(--ink-soft); margin:0; line-height:1.5;}
+.spread.dark .support-row, .spread.charcoal .support-row{border-top-color:rgba(233,206,138,0.25);}
+.spread.dark .support-row .support-cell, .spread.charcoal .support-row .support-cell{border-inline-end-color:rgba(233,206,138,0.18);}
+.spread.dark .support-row .support-cell p, .spread.charcoal .support-row .support-cell p{color:rgba(247,238,223,0.7);}

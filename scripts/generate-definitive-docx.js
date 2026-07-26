@@ -34,6 +34,7 @@ const DIM = {
   'gallery/quran-recitation-1.jpg': [1600, 721],
   'gallery/quran-recitation-2.jpg': [1600, 721],
   'gallery/basic-technology-workshop-1.jpg': [1400, 934],
+  'gallery/basic-technology-workshop-2.jpg': [1400, 934],
   'gallery/boarding-dining.jpg': [1400, 934],
   'gallery/basic-school-classroom.jpg': [1040, 780],
   'gallery/spelling-competition.jpg': [1280, 960],
@@ -147,6 +148,46 @@ function dataPanel(rows) {
       new TableCell({ width: { size: 5000, type: WidthType.DXA }, shading: { type: ShadingType.CLEAR, fill: PARCHMENT }, margins: { top: 120, bottom: 120, left: 80, right: 160 },
         children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: value, font: BODY_FONT, size: 20, bold: true, color: NAVY })] })] }),
     ] })),
+  });
+}
+
+// Mirrors the HTML edition's enlarged .stat-bar-quad-lg — a row of bold
+// standalone figures, used where the print edition needed more visual
+// weight than a plain data table (Campus of Distinction, BECE).
+function statQuad(cells) {
+  const w = Math.floor(10000 / cells.length);
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: cells.map(() => w),
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, bottom: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 2, color: 'D9C89A' } },
+    rows: [new TableRow({ children: cells.map(([num, label]) => new TableCell({
+      width: { size: w, type: WidthType.DXA },
+      margins: { top: 220, bottom: 220, left: 100, right: 100 },
+      children: [
+        new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: num, font: HEAD_FONT, size: 46, bold: true, color: NAVY })] }),
+        new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: label.toUpperCase(), font: HEAD_FONT, size: 14, color: INK_SOFT, characterSpacing: 10 })] }),
+      ],
+    })) })],
+  });
+}
+
+// Mirrors the HTML edition's .support-row — a labelled 3-cell strip of
+// real supporting facts, used to give already-published information
+// more physical presence on short pages.
+function supportRow(cells) {
+  const w = Math.floor(10000 / cells.length);
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: cells.map(() => w),
+    borders: { top: { style: BorderStyle.SINGLE, size: 2, color: 'D9C89A' }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.SINGLE, size: 2, color: 'D9C89A' } },
+    rows: [new TableRow({ children: cells.map(([title, text]) => new TableCell({
+      width: { size: w, type: WidthType.DXA },
+      margins: { top: 160, bottom: 160, left: 120, right: 120 },
+      children: [
+        new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: title.toUpperCase(), font: HEAD_FONT, size: 15, bold: true, color: GOLD })] }),
+        new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text, font: BODY_FONT, size: 16, color: '2A2016' })] }),
+      ],
+    })) })],
   });
 }
 
@@ -285,6 +326,12 @@ B.push(dataPanel([['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']]))
 B.push(h2('Ministry Approval'));
 B.push(body('Royal College\'s academic programme operates under formal Ministry of Education registration, secured in 2026 — a milestone that follows years of building the academic, facilities, and governance record required to earn it.'));
 B.push(iconPanel('M', 'Ministry Registered', 'Formal Ministry of Education registration, secured 2026'));
+B.push(new Paragraph({ spacing: { before: 200 } }));
+B.push(supportRow([
+  ['Founded', 'Sultan Hanafi Royal Schools registered, 2017'],
+  ['Royal College Est.', 'Extended into secondary education, 2021'],
+  ['Ministry Registered', 'Formal registration secured, 2026'],
+]));
 B.push(pageBreak());
 
 // ============ ISLAMIC & QUR'AN EXCELLENCE ============
@@ -299,8 +346,17 @@ B.push(pageBreak());
 // ============ CAMPUS & FACILITIES ============
 B.push(eyebrow('Chapter V — Campus'), h1('A Campus of Distinction'));
 B.push(body('Purpose-built facilities across four institutions, on one campus in Imowonla, Ikorodu — designed for a child to move between a science laboratory, a recitation hall, and a workshop bench in the course of a single day.'));
-B.push(new Paragraph({ children: [img('gallery/chemistry-laboratory.jpg', 220), new TextRun({ text: '  ' }), img('gallery/college-hall.jpg', 220)] }));
-B.push(new Paragraph({ spacing: { before: 160 }, children: [img('gallery/basic-technology-workshop-1.jpg', 220), new TextRun({ text: '  ' }), img('gallery/boarding-dining.jpg', 220)] }));
+B.push(statQuad([['4', 'Institutions'], ['1', 'Shared Campus'], ['2017', 'Founded'], ['1', 'Governance Model']]));
+B.push(new Paragraph({ spacing: { before: 200 }, children: [img('gallery/chemistry-laboratory.jpg', 220)] }));
+B.push(caption('Chemistry Laboratory'));
+B.push(new Paragraph({ children: [img('gallery/college-hall.jpg', 220)] }));
+B.push(caption('College Hall'));
+B.push(new Paragraph({ children: [img('gallery/basic-technology-workshop-1.jpg', 220)] }));
+B.push(caption('ICT & Basic Technology Workshop'));
+B.push(new Paragraph({ children: [img('gallery/basic-technology-workshop-2.jpg', 220)] }));
+B.push(caption('Basic Technology Workshop'));
+B.push(new Paragraph({ children: [img('gallery/boarding-dining.jpg', 220)] }));
+B.push(caption('Boarding & Dining Hall'));
 B.push(body('Science laboratories, a multi-purpose college hall, dedicated ICT/basic-technology workshops, and boarding-dining facilities sit alongside open recitation spaces and a library — a campus built for the full range of what SHRS teaches.'));
 B.push(iconPanel('L', 'Library', 'Dedicated library photography has not yet been captured'));
 B.push(pageBreak());
@@ -333,12 +389,23 @@ B.push(diagramRow(['Founder & Director — Sultan Zakariya Olanrewaju Hanafi, Ph
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(diagramRow(['Head — Nursery & Primary', 'Head — Royal College', 'Head — Arabic & Islamic Studies', "Qur'an College — Imam Ahmad Sulaimiy"], PARCHMENT, NAVY));
 B.push(caption("One Board, one Director, four Heads of Institution — the same governance backbone that governs the Digital Campus's Role & Permission Matrix."));
+B.push(new Paragraph({ spacing: { before: 200 } }));
+B.push(supportRow([
+  ['Staff Identity Platform', 'A real, working authenticated system — not asserted governance'],
+  ['Role & Permission Matrix', 'Every access right traces to a named, published policy'],
+  ['Audit Trail', 'Login, delegation, and record changes are logged, not merely claimed'],
+]));
 B.push(pageBreak());
 
 // ============ THE COMMISSIONING ============
 B.push(eyebrow('Chapter VII — Recognition'), h1('The Commissioning'));
 B.push(body('In 2026, Sultan Hanafi Royal Schools was formally commissioned before the wider community, with Engr. Seyi Makinde, Executive Governor of Oyo State, in attendance as guest of honour and speaker — a recognition that placed this institution\'s work before an audience well beyond its own gates.'));
-B.push(new Paragraph({ children: [img('gallery/commissioning-day-2.jpg', 320), new TextRun({ text: '  ' }), img('gallery/commissioning-day-1.jpg', 320)] }));
+B.push(supportRow([
+  ['2026', 'Year of commissioning'],
+  ['Guest of Honour', 'Engr. Seyi Makinde, Executive Governor of Oyo State'],
+  ['Audience', 'The wider Ikorodu community, beyond the school\'s own gates'],
+]));
+B.push(new Paragraph({ spacing: { before: 200 }, children: [img('gallery/commissioning-day-2.jpg', 320), new TextRun({ text: '  ' }), img('gallery/commissioning-day-1.jpg', 320)] }));
 B.push(caption('Guests at the 2026 commissioning day. Individual attendees are not identified by name here.'));
 B.push(lede('"The commissioning address commended the institution\'s academic and Islamic education model and its contribution to the community."'));
 B.push(verifyNote('the quotation above is presented as a paraphrase of its general content. The exact wording of the Governor\'s remarks has not yet been checked against an official transcript or press release and must be verified — quoted precisely or not at all — before this publication goes to print.'));
@@ -363,19 +430,37 @@ B.push(pageBreak());
 // ============ BECE 2026 & MINISTRY REGISTRATION ============
 B.push(eyebrow('Milestones'), h1('BECE 2026 & Ministry Registration'));
 B.push(body('Two formal milestones mark 2026: Royal College\'s inaugural cohort sat the Basic Education Certificate Examination, and Sultan Hanafi Royal Schools secured formal Ministry of Education registration.'));
+B.push(body('Both milestones close out years of preparatory work — building the academic record, the facilities, and the governance structure a Ministry registration and an examination presentation both require — rather than marking the beginning of that work.'));
 B.push(dataPanel([
   ['Inaugural BECE Cohort', '2026'],
   ['BECE Results', '[figure pending official release]'],
   ['Ministry Registration', 'Secured, 2026'],
   ['Registration No.', '[pending document]'],
 ]));
+B.push(new Paragraph({ spacing: { before: 200 } }));
+B.push(supportRow([
+  ['Junior Secondary', 'Inaugural BECE cohort presented, 2026'],
+  ['Institutional', 'Formal Ministry of Education registration secured'],
+  ['Looking Ahead', 'Senior Secondary (WASSCE) pathway follows as the first cohort progresses'],
+]));
 B.push(caption('Figures marked "pending" require confirmation against the official examination release and Ministry certificate — never estimated for print.'));
 B.push(pageBreak());
 
 // ============ TESTIMONIALS ============
 B.push(eyebrow('Community Voices'), h1('Testimonials'));
-B.push(lede('"Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody."'));
-B.push(caption('— Dr. Ismail Akeem Seriki, Parent & Board Member'));
+B.push(new Table({
+  width: { size: 100, type: WidthType.PERCENTAGE },
+  borders: { top: { style: BorderStyle.SINGLE, size: 8, color: GOLD }, bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
+  rows: [new TableRow({ children: [new TableCell({
+    shading: { type: ShadingType.CLEAR, fill: NAVY },
+    margins: { top: 500, bottom: 500, left: 500, right: 500 },
+    children: [
+      new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '"', font: HEAD_FONT, size: 72, bold: true, color: GOLD })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 100, after: 200 }, children: [new TextRun({ text: 'Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody.', font: 'Constantia', italics: true, size: 30, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '— DR. ISMAIL AKEEM SERIKI, PARENT & BOARD MEMBER', font: HEAD_FONT, size: 16, bold: true, color: GOLD_BRIGHT, characterSpacing: 10 })] }),
+    ],
+  })] })],
+}));
 B.push(caption('Additional named student, parent, and alumni testimonials are being gathered and will be added once confirmed.'));
 B.push(pageBreak());
 
@@ -383,6 +468,12 @@ B.push(pageBreak());
 B.push(eyebrow('Chapter VIII — Philanthropy'), h1('The Sultan Zakariya Hanafi Foundation'));
 B.push(body("The Founder's community commitment extends beyond the school gate — free public lectures, relief support during the COVID-19 period, and local infrastructure contributions reflect a philanthropic thread that runs alongside the school's academic mission. The Sultan Zakariya Hanafi Foundation is the formal vehicle for that continuing commitment."));
 B.push(iconPanel('C', 'Community Commitment', 'Public lectures, relief support, and local infrastructure contributions'));
+B.push(new Paragraph({ spacing: { before: 200 } }));
+B.push(supportRow([
+  ['Public Lectures', 'Free lectures open to the surrounding community'],
+  ['Relief Support', 'Provided during the COVID-19 period'],
+  ['Infrastructure', 'Local infrastructure contributions alongside the academic mission'],
+]));
 B.push(figurePending('[FIGURE PENDING] Foundation scope, scholarship figures, and beneficiary counts pending SHRS confirmation — not estimated for this draft.'));
 B.push(pageBreak());
 
