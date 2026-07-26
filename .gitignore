@@ -2,3 +2,7 @@ node_modules/
 .wrangler/
 .dev.vars
 .dev.vars.*
+
+# Regenerable binary exports — source of truth is prospectus/index.html
+# (PDF) and scripts/generate-prospectus-docx.js (DOCX), not these files.
+prospectus/exports/
