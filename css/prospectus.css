@@ -579,6 +579,22 @@
    authoritative field to sit on, so the cover reads as "a real, serious
    place" rather than a flat colour panel with text on it. ---- */
 .spread.cover .cover-photo{opacity:1; z-index:-2;}
+/* Duotone colour-grade — pulls the raw photograph into the brand's
+   navy/gold palette rather than letting it sit in untouched daylight
+   colour, the difference between "a photo on a cover" and "a cover". */
+.cover-duotone{
+  position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(135deg, rgba(198,161,91,0.22) 0%, rgba(34,23,9,0.1) 45%, rgba(20,13,5,0.35) 100%);
+  mix-blend-mode:color;
+}
+.cover-crest-glow{
+  position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+  width:220px; height:220px; border-radius:50%; z-index:-1;
+  background:radial-gradient(circle, rgba(233,206,138,0.28) 0%, rgba(233,206,138,0) 70%);
+}
+.cover-frame-triple::after{
+  content:''; position:absolute; inset:8mm; border:0.5pt solid rgba(233,206,138,0.16);
+}
 .cover-vignette.cover-vignette-photo{
   background:
     radial-gradient(ellipse at 50% 100%, rgba(15,10,4,0.2) 0%, transparent 55%),

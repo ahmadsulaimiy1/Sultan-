@@ -425,7 +425,7 @@ B.push(pageBreak());
 B.push(eyebrow("Schools 03 & 04 — Sacred Excellence"), h1("Islamic & Qur'an Excellence"));
 B.push(new Paragraph({ children: [img('gallery/islamic-prayer-hall.jpg', 460)] }));
 B.push(h2('Academic Resources & Curriculum Materials'));
-B.push(body('Sultan Hanafi Royal Schools employs a carefully selected blend of educational resources drawn from: Nigerian National Curriculum requirements; International best-practice educational materials; Saudi Arabian educational resources; Established Arabic and Islamic scholarship texts; SHRS proprietary publications and institutional learning materials. For Arabic Language and Islamic Studies, many of the textbooks utilised originate from Saudi Arabia and other respected centres of Islamic scholarship, complemented by SHRS-developed resources designed specifically for our students. This combination ensures academic rigour, authentic Islamic learning, structured language acquisition, and curriculum continuity across all programmes.'));
+B.push(body('Sultan Hanafi Royal Schools employs a carefully selected blend of educational resources drawn from: Nigerian National Curriculum requirements; International best-practice educational materials; Saudi Arabian educational resources; Established Arabic and Islamic scholarship texts; SHRS proprietary publications and institutional learning materials. For Arabic Language, Islamic Studies, and Qur\'an Studies, many of the textbooks utilised originate from Saudi Arabia and other respected centres of Islamic scholarship, complemented by SHRS-developed resources designed specifically for our students. This combination ensures academic rigour, authentic Islamic learning, structured language acquisition, and curriculum continuity across all programmes.'));
 B.push(caption('The Academic Resource Ecosystem — Six Sources, One Integrated Framework'));
 B.push(diagramRow(['1\nNational\nCurriculum', '2\nInternational\nStandards', '3\nSaudi Educational\nResources', '4\nSHRS\nPublications', '5\nArabic Language\nResources', '6\nIslamic Scholarship\nResources'], NAVY, GOLD_BRIGHT));
 B.push(h2('School of Islamic & Arabic Studies'));
@@ -433,6 +433,20 @@ B.push(dataPanel([['Weekday Programme', 'Mon–Wed · 2–6pm'], ['Weekend Progr
 B.push(h2("Sultan Hanafi Qur'an College"));
 B.push(body("24–36 month programme · Day & boarding · Certified Ijazah. A full-immersion journey through complete memorisation of the Noble Qur'an, alongside Tajwid, the Sciences of the Qur'an, Classical Arabic, and Islamic moral formation. Ages 9–16. Graduates receive Ijazat — formal scholarly certifications globally recognised in Qur'anic and Islamic sciences."));
 B.push(new Paragraph({ spacing: { before: 120 }, children: [img('gallery/quran-recitation-2.jpg', 460)] }));
+B.push(pageBreak());
+
+// ============ THE SULTAN HANAFI JOURNEY ============
+B.push(eyebrow('One Child · One Continuous Journey'), h1('The Sultan Hanafi Journey'));
+B.push(lede("From a toddler's first day in Nursery to a graduate stepping into university, every stage of a child's education at Sultan Hanafi connects to the next — a single, deliberate pathway, not a series of disconnected years."));
+govTier(1, 'Nursery (Stage 1 · Ages 2–5)', "Where every child's journey begins — play-based learning woven with numeracy, literacy, and Islamic values from the very first day.", ['Crèche', 'Nursery', 'Islamic Values', 'Play-Based Learning']).forEach(p => B.push(p));
+govTier(2, 'Primary / Basic School (Stage 2 · Ages 5–10)', 'National curriculum enriched with entrepreneurship, financial literacy, and digital fluency — the foundation for every pathway ahead.', ['National Curriculum', 'Numeracy & Literacy', 'Digital Fluency']).forEach(p => B.push(p));
+govTier(3, 'Sultan Hanafi Royal College (Stage 3 · Ages 10+)', 'A rigorous integrated curriculum across seven departments — JSS 1–3 and SSS 1–3 — where academic excellence, Islamic grounding, and modern pedagogy converge.', ['7 Departments', 'JSS 1–3', 'SSS 1–3']).forEach(p => B.push(p));
+govTier(4, "Sultan Hanafi Qur'an College (Stage 4 · Ages 9–16, Parallel Track)", 'A full-immersion 24–36 month programme — complete memorisation of the Noble Qur\'an, Tajwid, and the Sciences of the Qur\'an, culminating in a certified Ijazah.', ['Hifz Programme', 'Day & Boarding', 'Certified Ijazah']).forEach(p => B.push(p));
+B.push(pageBreak());
+govTier(5, 'School of Islamic & Arabic Studies (Stage 5 · Weekday & Weekend, Parallel Track)', 'Running alongside every other stage of the journey — carefully selected Saudi Arabian resources and SHRS-developed materials build authentic Islamic learning and structured Arabic language acquisition.', ['Weekday Programme', 'Weekend Programme']).forEach(p => B.push(p));
+govTier(6, 'Leadership & Character Development (Stage 6 · Every Year Group)', 'Guided by the CLEVER framework and a structured student leadership pathway — from Student Representatives to School Prefects to Class Captains — every student is mentored to lead.', ['The CLEVER Framework', 'Student Representatives', 'Prefects', 'Class Captains']).forEach(p => B.push(p));
+govTier(7, 'Graduation & Beyond (Stage 7 · Beyond SHRS)', 'BECE, WAEC, and NECO examinations mark the culmination of the Royal College years — opening the door to university and higher education, nationally and internationally.', ['BECE', 'WAEC / NECO', 'University & Higher Education']).forEach(p => B.push(p));
+B.push(quoteBox("Nursery → Primary → Royal College → Qur'an College → Arabic & Islamic Studies → Leadership & Character → Graduation — one ecosystem, walked by every Sultan Hanafi child.", ''));
 B.push(pageBreak());
 
 // ============ CAMPUS & FACILITIES ============
