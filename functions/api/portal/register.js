@@ -22,6 +22,16 @@ import { sendEmail, verificationEmailContent, SITE_ORIGIN } from '../../_lib/ema
 
 const VERIFICATION_TOKEN_TTL_HOURS = 24;
 
+// Phase 1A (Imperial Digital Identity & Onboarding Directive) —
+// registration collects an Identity Type and a WhatsApp number
+// alongside the original four fields, and requires Confirm Email /
+// Confirm Password to match. "Staff Member" and "Educational Partner"
+// here are self-descriptions on a guardian-type account, NOT a real
+// staff account or Permission Engine grant — those remain exclusively
+// institution-issued per docs/staff-identity-architecture.md; selecting
+// this option does not create or link one.
+const IDENTITY_TYPES = ['parent_guardian', 'applicant', 'sponsor', 'alumni', 'staff_member', 'educational_partner'];
+
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) {
     return json({ error: 'Portal is not configured yet.' }, 500);
@@ -34,8 +44,12 @@ export async function onRequestPost({ request, env }) {
   const body = await readJsonBody(request);
   const fullName = ((body && body.fullName) || '').trim();
   const email = ((body && body.email) || '').trim().toLowerCase();
+  const confirmEmail = ((body && body.confirmEmail) || '').trim().toLowerCase();
   const phone = ((body && body.phone) || '').trim();
+  const whatsappNumber = ((body && body.whatsappNumber) || '').trim();
   const password = (body && body.password) || '';
+  const confirmPassword = (body && body.confirmPassword) || '';
+  const identityType = IDENTITY_TYPES.includes(body && body.identityType) ? body.identityType : 'parent_guardian';
 
   if (!fullName || !email || !phone) {
     return json({ error: 'Full name, email, and phone number are all required.' }, 400);
@@ -43,8 +57,14 @@ export async function onRequestPost({ request, env }) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please enter a valid email address.' }, 400);
   }
+  if (confirmEmail && confirmEmail !== email) {
+    return json({ error: 'Email address and confirmation do not match.' }, 400);
+  }
   if (!isPasswordStrongEnough(password)) {
     return json({ error: `Please choose a password at least ${MIN_PASSWORD_LENGTH} characters long.` }, 400);
+  }
+  if (confirmPassword && confirmPassword !== password) {
+    return json({ error: 'Password and confirmation do not match.' }, 400);
   }
 
   try {
@@ -56,8 +76,8 @@ export async function onRequestPost({ request, env }) {
     const { hash, salt } = hashPassword(password);
     const verificationToken = generateToken();
     const created = await sql`
-      INSERT INTO guardians (full_name, email, phone, password_hash, password_salt, registration_source, verification_token, verification_token_expires)
-      VALUES (${fullName}, ${email}, ${phone}, ${hash}, ${salt}, 'self_service', ${verificationToken}, now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS}))
+      INSERT INTO guardians (full_name, email, phone, whatsapp_number, identity_type, password_hash, password_salt, registration_source, verification_token, verification_token_expires)
+      VALUES (${fullName}, ${email}, ${phone}, ${whatsappNumber || null}, ${identityType}, ${hash}, ${salt}, 'self_service', ${verificationToken}, now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS}))
       RETURNING id`;
     const guardianId = created.rows[0].id;
 

@@ -144,6 +144,7 @@
     document.querySelector('[data-record-class]').textContent = data.student.primaryClass || '—';
     document.querySelector('[data-record-status]').textContent = data.student.status.charAt(0).toUpperCase() + data.student.status.slice(1);
     document.querySelector('[data-record-created]').textContent = formatDate(data.student.createdAt);
+    document.querySelector('[data-record-sample-badge]').hidden = !data.student.isSampleData;
 
     var enrolWrap = document.querySelector('[data-record-enrolments]');
     enrolWrap.innerHTML = '';

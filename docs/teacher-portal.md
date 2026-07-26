@@ -77,17 +77,19 @@ as the rest of the Staff Identity Platform — see
      -H "x-setup-token: <the PORTAL_SETUP_TOKEN you set>"
    ```
    This creates `teacher_class_assignments` and, if `PORTAL_DEMO_PASSWORD`
-   is set, also provisions a demo Teacher — staff number `DEMO-TCH-0001`,
-   assigned as Class Teacher and Mathematics Subject Teacher for the
-   same `JSS 1` class the existing `DEMO-0001` demo student belongs to,
-   so the Teacher Portal can be tried end-to-end without hand-calling
-   the admin API.
+   is set, also provisions a Sample Institutional Record teacher — staff
+   number `SHR-STF-0901` ("Ibrahim Yusuf Garba"), assigned as Class
+   Teacher and Mathematics Subject Teacher for the same `JSS 1` class the
+   sample student `SHR-2026-901` belongs to, so the Teacher Portal can be
+   tried end-to-end without hand-calling the admin API. This row (and
+   every other seeded row) is flagged `is_sample_data = true`, so it is
+   excluded from every Founder Dashboard aggregate.
 
 2. **Try it.** Sign in at `/portal/staff/login/` with staff number
-   `DEMO-TCH-0001` and your `PORTAL_DEMO_PASSWORD`, then go to
+   `SHR-STF-0901` and your `PORTAL_DEMO_PASSWORD`, then go to
    `/portal/staff/teacher/`. You should see "JSS 1" under My Classes,
    tagged Class Teacher with a Mathematics chip. Opening it shows the
-   roster with `DEMO-0001`'s existing attendance and Mathematics score
+   roster with `SHR-2026-901`'s existing attendance and Mathematics score
    already filled in (seeded by `setup.js`) — editing and re-saving
    either confirms the Edit path; adding a second student's numbers for
    the first time confirms Create.

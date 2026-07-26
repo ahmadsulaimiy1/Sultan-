@@ -18,11 +18,30 @@
     submitBtn.textContent = 'Creating account…';
 
     var payload = {
+      identityType: form.identityType.value,
       fullName: form.fullName.value.trim(),
       email: form.email.value.trim(),
+      confirmEmail: form.confirmEmail.value.trim(),
       phone: form.phone.value.trim(),
+      whatsappNumber: form.whatsappNumber.value.trim(),
       password: form.password.value,
+      confirmPassword: form.confirmPassword.value,
     };
+
+    if(payload.email.toLowerCase() !== payload.confirmEmail.toLowerCase()){
+      errorEl.textContent = 'Email address and confirmation do not match.';
+      errorEl.classList.add('is-visible');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      return;
+    }
+    if(payload.password !== payload.confirmPassword){
+      errorEl.textContent = 'Password and confirmation do not match.';
+      errorEl.classList.add('is-visible');
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      return;
+    }
 
     try{
       var res = await fetch('/api/portal/register', {

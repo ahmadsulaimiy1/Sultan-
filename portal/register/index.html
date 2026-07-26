@@ -37,20 +37,49 @@
 
     <form data-portal-register-form>
       <div class="portal-field">
+        <label for="reg-identity-type">I am a…</label>
+        <select id="reg-identity-type" name="identityType" required>
+          <option value="parent_guardian">Parent / Guardian</option>
+          <option value="applicant">Applicant</option>
+          <option value="sponsor">Sponsor</option>
+          <option value="alumni">Alumni</option>
+          <option value="staff_member">Staff Member</option>
+          <option value="educational_partner">Educational Partner</option>
+        </select>
+      </div>
+      <div class="portal-field">
         <label for="reg-name">Full name</label>
         <input id="reg-name" name="fullName" type="text" autocomplete="name" required />
       </div>
-      <div class="portal-field">
-        <label for="reg-email">Email</label>
-        <input id="reg-email" name="email" type="email" autocomplete="email" required />
+      <div class="portal-field-row">
+        <div class="portal-field">
+          <label for="reg-email">Email</label>
+          <input id="reg-email" name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="portal-field">
+          <label for="reg-confirm-email">Confirm email</label>
+          <input id="reg-confirm-email" name="confirmEmail" type="email" autocomplete="email" required />
+        </div>
       </div>
-      <div class="portal-field">
-        <label for="reg-phone">Phone number</label>
-        <input id="reg-phone" name="phone" type="tel" autocomplete="tel" required />
+      <div class="portal-field-row">
+        <div class="portal-field">
+          <label for="reg-phone">Mobile number</label>
+          <input id="reg-phone" name="phone" type="tel" autocomplete="tel" required />
+        </div>
+        <div class="portal-field">
+          <label for="reg-whatsapp">WhatsApp number <span style="font-weight:400;">(optional)</span></label>
+          <input id="reg-whatsapp" name="whatsappNumber" type="tel" autocomplete="tel" />
+        </div>
       </div>
-      <div class="portal-field">
-        <label for="reg-password">Password</label>
-        <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+      <div class="portal-field-row">
+        <div class="portal-field">
+          <label for="reg-password">Password</label>
+          <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+        </div>
+        <div class="portal-field">
+          <label for="reg-confirm-password">Confirm password</label>
+          <input id="reg-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" required />
+        </div>
       </div>
       <button type="submit" class="portal-submit" data-portal-submit>Create Account</button>
     </form>

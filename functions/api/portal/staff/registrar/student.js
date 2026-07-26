@@ -43,7 +43,7 @@ export async function onRequestGet({ request, env }) {
 
   try {
     const studentRes = await sql`
-      SELECT s.id, s.full_name, s.admission_no, s.status, s.created_at,
+      SELECT s.id, s.full_name, s.admission_no, s.status, s.created_at, s.is_sample_data,
              c.institution AS primary_institution, c.name AS primary_class, ci.id AS primary_institution_id
       FROM students s
       LEFT JOIN classes c ON c.id = s.class_id
@@ -107,6 +107,7 @@ export async function onRequestGet({ request, env }) {
       student: {
         id: student.id, fullName: student.full_name, admissionNo: student.admission_no, status: student.status,
         createdAt: student.created_at, primaryInstitution: student.primary_institution, primaryClass: student.primary_class,
+        isSampleData: !!student.is_sample_data,
       },
       enrolments,
       guardians: guardiansRes.rows.map((g) => ({ id: g.id, fullName: g.full_name, email: g.email, relationship: g.relationship })),

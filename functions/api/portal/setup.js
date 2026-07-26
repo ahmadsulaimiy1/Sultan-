@@ -457,6 +457,60 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_tca_staff_active ON teacher_class_assignments (staff_id) WHERE revoked_at IS NULL`,
   `CREATE INDEX IF NOT EXISTS idx_tca_class_active ON teacher_class_assignments (class_id) WHERE revoked_at IS NULL`,
+
+  // Institutional Identity Profile (Phase 1A) — see the commented
+  // version of these statements in sql/schema.sql for why each exists.
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_type TEXT NOT NULL DEFAULT 'parent_guardian'`,
+  `DO $$ BEGIN
+    ALTER TABLE guardians ADD CONSTRAINT guardians_identity_type_check CHECK (identity_type IN ('parent_guardian', 'applicant', 'sponsor', 'alumni', 'staff_member', 'educational_partner'));
+  EXCEPTION WHEN duplicate_object OR duplicate_table THEN NULL;
+  END $$`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS whatsapp_number TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS secondary_phone TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS secondary_email TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS mobile_verified_at TIMESTAMPTZ`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS title TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS preferred_name TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS gender TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS date_of_birth DATE`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS nationality TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS state_of_origin TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS local_government_area TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS country_of_residence TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_address TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_city TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_state TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS postal_code TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS occupation TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS employer TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS position_title TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS business_name TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS industry TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS marital_status TEXT`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS number_of_children INTEGER`,
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE staff ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
+
+  `CREATE TABLE IF NOT EXISTS guardian_emergency_contacts (
+    id            SERIAL PRIMARY KEY,
+    guardian_id   INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    contact_order INTEGER NOT NULL DEFAULT 1,
+    full_name     TEXT NOT NULL,
+    relationship  TEXT NOT NULL,
+    phone         TEXT NOT NULL,
+    email         TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_guardian_emergency_contacts_guardian ON guardian_emergency_contacts (guardian_id)`,
+
+  `CREATE TABLE IF NOT EXISTS guardian_educational_interests (
+    guardian_id     INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    institution_key TEXT NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (guardian_id, institution_key)
+  )`,
 ];
 
 async function handle({ request, env }) {
@@ -481,10 +535,20 @@ async function handle({ request, env }) {
     if (env.PORTAL_DEMO_PASSWORD) {
       const existing = await sql`SELECT id FROM guardians WHERE email = 'demo@shroyalschools.ng'`;
       if (existing.rows.length === 0) {
+        // Sample Institutional Records: this login credential
+        // (demo@shroyalschools.ng) is an admin-configured operational
+        // account for trying the portal end-to-end — it is not itself a
+        // rendered institutional record. The NAMES and IDs below are,
+        // though, so they read like real SHRS records (not "Demo ...")
+        // and are marked via is_sample_data = true rather than by
+        // embedding "sample"/"demo" in the display string. Every table
+        // this block writes to filters is_sample_data = false on the
+        // Founder Dashboard and elsewhere real institutional numbers are
+        // reported, so these rows never inflate a real count.
         const { hash, salt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
         const guardian = await sql`
-          INSERT INTO guardians (full_name, email, password_hash, password_salt)
-          VALUES ('Demo Guardian', 'demo@shroyalschools.ng', ${hash}, ${salt})
+          INSERT INTO guardians (full_name, email, password_hash, password_salt, is_sample_data)
+          VALUES ('Amina Sani Bello', 'demo@shroyalschools.ng', ${hash}, ${salt}, true)
           RETURNING id`;
         const guardianId = guardian.rows[0].id;
 
@@ -492,8 +556,8 @@ async function handle({ request, env }) {
         const classId = cls.rows[0].id;
 
         const student = await sql`
-          INSERT INTO students (full_name, admission_no, class_id, status)
-          VALUES ('Demo Student (sample data)', 'DEMO-0001', ${classId}, 'active')
+          INSERT INTO students (full_name, admission_no, class_id, status, is_sample_data)
+          VALUES ('Abdullahi Sani Bello', 'SHR-2026-901', ${classId}, 'active', true)
           RETURNING id`;
         const studentId = student.rows[0].id;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${studentId}, ${classId}, true)`;
@@ -507,16 +571,16 @@ async function handle({ request, env }) {
         await sql`INSERT INTO fee_status (student_id, term, amount_due, amount_paid) VALUES (${studentId}, 'First Term 2025/2026', 150000, 150000)`;
         await sql`INSERT INTO notifications (guardian_id, message) VALUES (${guardianId}, 'Welcome — this is a sample notification. New results or attendance updates will appear here.')`;
 
-        // A second demo child, at Qur'an College, with a Student Portal
-        // login and sample Hifz progress — so the new Student Portal +
-        // Hifz Tracker can be tried end-to-end without hand-calling the
-        // admin API. Linked to the same demo guardian so the guardian
+        // A second sample child, at Qur'an College, with a Student Portal
+        // login and sample Hifz progress — so the Student Portal + Hifz
+        // Tracker can be tried end-to-end without hand-calling the admin
+        // API. Linked to the same sample guardian so the guardian
         // dashboard also shows a Hifz snapshot alongside the first child.
         const qCls = await sql`INSERT INTO classes (institution, name) VALUES (${"Qur'an College"}, 'Hifz Year 2') RETURNING id`;
         const qClassId = qCls.rows[0].id;
         const qStudent = await sql`
-          INSERT INTO students (full_name, admission_no, class_id, status)
-          VALUES (${"Demo Student — Qur'an College (sample data)"}, 'DEMO-0002', ${qClassId}, 'active')
+          INSERT INTO students (full_name, admission_no, class_id, status, is_sample_data)
+          VALUES ('Fatima Sani Bello', 'SHR-2026-902', ${qClassId}, 'active', true)
           RETURNING id`;
         const qStudentId = qStudent.rows[0].id;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${qClassId}, true)`;
@@ -549,18 +613,18 @@ async function handle({ request, env }) {
         }
         await sql`INSERT INTO attendance_summary (student_id, term, days_present, days_total) VALUES (${qStudentId}, 'First Term 2025/2026', 60, 62)`;
 
-        // Demo Teacher (Teacher Identity & Academic Workforce Activation)
+        // Sample Teacher (Teacher Identity & Academic Workforce Activation)
         // — a real, working TCH account so the Teacher Portal can be
         // tried end-to-end without hand-calling admin/staff.js. Assigned
         // as Class Teacher (attendance) and Mathematics Subject Teacher
-        // for the same 'JSS 1' class the first demo student (Demo
-        // Student, DEMO-0001) belongs to, so logging in as this teacher
-        // shows a real roster with the attendance/result rows already
-        // seeded above.
+        // for the same 'JSS 1' class the first sample student
+        // (Abdullahi Sani Bello, SHR-2026-901) belongs to, so logging in
+        // as this teacher shows a real roster with the attendance/result
+        // rows already seeded above.
         const royalCollegeId = (await sql`SELECT id FROM institutions WHERE name = 'Royal College'`).rows[0].id;
         const demoStaff = await sql`
-          INSERT INTO staff (staff_no, full_name, position_title, institution_id, status)
-          VALUES ('DEMO-TCH-0001', 'Demo Teacher (sample data)', 'Class Teacher, JSS 1', ${royalCollegeId}, 'active')
+          INSERT INTO staff (staff_no, full_name, position_title, institution_id, status, is_sample_data)
+          VALUES ('SHR-STF-0901', 'Ibrahim Yusuf Garba', 'Class Teacher, JSS 1', ${royalCollegeId}, 'active', true)
           RETURNING id`;
         const demoStaffId = demoStaff.rows[0].id;
         await sql`INSERT INTO staff_institutions (staff_id, institution_id, is_primary) VALUES (${demoStaffId}, ${royalCollegeId}, true)`;

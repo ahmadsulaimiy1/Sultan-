@@ -13,15 +13,16 @@
 // admissions pipeline, boarding occupancy), it says so explicitly
 // rather than fabricating a number — see the `notYetAvailable` field.
 //
-// Sample/demo records (admission numbers starting with "DEMO-") are
-// excluded from every count below, so this never quietly reports
-// sample data as real institutional numbers.
+// Sample institutional records (is_sample_data = true, seeded by
+// /api/portal/setup for admin/testing use) are excluded from every
+// count below, so this never quietly reports sample data as real
+// institutional numbers.
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { HIFZ_STAGES } from '../../../_lib/hifz.js';
 
-const DEMO_FILTER = `admission_no NOT ILIKE 'DEMO-%'`;
+const SAMPLE_FILTER = `is_sample_data = false`;
 
 export async function onRequestGet({ request, env }) {
   const founderToken = env.PORTAL_FOUNDER_TOKEN;
@@ -50,26 +51,26 @@ export async function onRequestGet({ request, env }) {
       ijazahGrantedRes,
       resultsRecordedRes,
     ] = await Promise.all([
-      sql.query(`SELECT status, COUNT(*)::int AS n FROM students WHERE ${DEMO_FILTER} GROUP BY status ORDER BY status`),
+      sql.query(`SELECT status, COUNT(*)::int AS n FROM students WHERE ${SAMPLE_FILTER} GROUP BY status ORDER BY status`),
       sql.query(`
         SELECT c.institution, COUNT(*)::int AS n
         FROM students s LEFT JOIN classes c ON c.id = s.class_id
-        WHERE ${DEMO_FILTER} AND s.status = 'active'
+        WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')} AND s.status = 'active'
         GROUP BY c.institution ORDER BY n DESC`),
       sql.query(`
         SELECT COUNT(*)::int AS n FROM (
           SELECT sc.student_id FROM student_classes sc
           JOIN students s ON s.id = sc.student_id
-          WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}
+          WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           GROUP BY sc.student_id HAVING COUNT(*) > 1
         ) t`),
-      sql.query(`SELECT COUNT(*)::int AS n FROM guardians`),
+      sql.query(`SELECT COUNT(*)::int AS n FROM guardians WHERE ${SAMPLE_FILTER}`),
       sql.query(`
         SELECT AVG(days_present::float / NULLIF(days_total, 0)) AS pct, COUNT(*)::int AS n
         FROM (
           SELECT DISTINCT ON (a.student_id) a.student_id, a.days_present, a.days_total
           FROM attendance_summary a JOIN students s ON s.id = a.student_id
-          WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}
+          WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           ORDER BY a.student_id, a.updated_at DESC
         ) latest WHERE days_total > 0`),
       sql.query(`
@@ -77,27 +78,27 @@ export async function onRequestGet({ request, env }) {
         FROM (
           SELECT DISTINCT ON (f.student_id) f.student_id, f.amount_due, f.amount_paid
           FROM fee_status f JOIN students s ON s.id = f.student_id
-          WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}
+          WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           ORDER BY f.student_id, f.updated_at DESC
         ) latest`),
       sql.query(`
         SELECT COUNT(*)::int AS n FROM hifz_enrolment he
-        JOIN students s ON s.id = he.student_id WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}`),
+        JOIN students s ON s.id = he.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
       sql.query(`
         SELECT he.stage_number, COUNT(*)::int AS n FROM hifz_enrolment he
-        JOIN students s ON s.id = he.student_id WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}
+        JOIN students s ON s.id = he.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
         GROUP BY he.stage_number ORDER BY he.stage_number`),
       sql.query(`
         SELECT COUNT(*)::int AS n FROM hifz_progress hp
         JOIN students s ON s.id = hp.student_id
-        WHERE hp.status = 'verified' AND ${DEMO_FILTER.replace('admission_no', 's.admission_no')}`),
+        WHERE hp.status = 'verified' AND ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
       sql.query(`
         SELECT COUNT(*)::int AS n FROM ijazah_register ir
         JOIN students s ON s.id = ir.student_id
-        WHERE ir.revoked_at IS NULL AND ${DEMO_FILTER.replace('admission_no', 's.admission_no')}`),
+        WHERE ir.revoked_at IS NULL AND ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
       sql.query(`
         SELECT COUNT(*)::int AS n FROM term_results tr
-        JOIN students s ON s.id = tr.student_id WHERE ${DEMO_FILTER.replace('admission_no', 's.admission_no')}`),
+        JOIN students s ON s.id = tr.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
     ]);
 
     const byStatus = {};

@@ -100,9 +100,9 @@ over-Delete throughout). `staff_institutions` mirrors the already-proven
 staff member teaching across two institutions is two rows, no schema
 change.
 
-**Deliberately NOT auto-seeded with real people.** Unlike the demo
-guardian/student seed (explicitly fake, clearly `DEMO-`-prefixed, safe
-to create on every idempotent setup run), the real EMT roster (CEO,
+**Deliberately NOT auto-seeded with real people.** Unlike the sample
+guardian/student seed (explicitly fake, flagged `is_sample_data = true`,
+safe to create on every idempotent setup run), the real EMT roster (CEO,
 four Principals/Head Teacher, Registrar, ICT Head, Head R&D — all
 already named publicly on `/about/governance/`) is **not** inserted
 automatically by `POST /api/portal/setup`. Populating real people into a

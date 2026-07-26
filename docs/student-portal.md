@@ -86,21 +86,24 @@ only need the two new pieces below.
    This creates the six new tables (`student_accounts`, `hifz_progress`,
    `hifz_enrolment`, `ijazah_register`, `auth_audit_log`,
    `student_classes`) and, if `PORTAL_DEMO_PASSWORD` is set, also
-   creates a second demo child — `DEMO-0002`, a Qur'an College student
-   (dual-enrolled in Arabic & Islamic Studies too, to demonstrate
-   multi-programme support) with sample Hifz progress and a working
-   Student Portal login — alongside the existing `DEMO-0001` demo child,
-   both linked to the same demo guardian.
+   creates a second Sample Institutional Record child — `SHR-2026-902`
+   ("Fatima Sani Bello"), a Qur'an College student (dual-enrolled in
+   Arabic & Islamic Studies too, to demonstrate multi-programme support)
+   with sample Hifz progress and a working Student Portal login —
+   alongside the existing `SHR-2026-901` sample child, both linked to
+   the same sample guardian and both flagged `is_sample_data = true` so
+   they never appear in a real Founder Dashboard count.
 
-3. **Try it.** Guardian side: sign in at `/portal/login/` with the demo
-   guardian and you'll now see a Hifz snapshot on the `DEMO-0002` child's
-   card. Student side: go to `/portal/student/login/` and sign in with
-   admission number `DEMO-0002` and the same `PORTAL_DEMO_PASSWORD` — you
-   should see the full per-Juz' progress grid, current stage, and
-   attendance/results/fees for that student. (`DEMO-0001` has no student
-   login yet — issue one with the curl command below if you want to try
-   a non-Qur'an-College student's dashboard, which correctly omits the
-   Hifz section entirely.)
+3. **Try it.** Guardian side: sign in at `/portal/login/` with the
+   sample guardian and you'll now see a Hifz snapshot on the
+   `SHR-2026-902` child's card. Student side: go to
+   `/portal/student/login/` and sign in with admission number
+   `SHR-2026-902` and the same `PORTAL_DEMO_PASSWORD` — you should see
+   the full per-Juz' progress grid, current stage, and
+   attendance/results/fees for that student. (`SHR-2026-901` has no
+   student login yet — issue one with the curl command below if you
+   want to try a non-Qur'an-College student's dashboard, which correctly
+   omits the Hifz section entirely.)
 
 ## Consent chain
 

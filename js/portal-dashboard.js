@@ -15,6 +15,31 @@
   var verifyBanner = document.querySelector('[data-portal-verify-banner]');
   var resendVerifyBtn = document.querySelector('[data-portal-resend-verify]');
   var applicationsListEl = document.querySelector('[data-portal-applications-list]');
+  var welcomePctLabelEl = document.querySelector('[data-welcome-pct-label]');
+  var welcomeProgressFillEl = document.querySelector('[data-welcome-progress-fill]');
+  var welcomeIdentityStatusEl = document.querySelector('[data-welcome-identity-status]');
+  var welcomeEmailStatusEl = document.querySelector('[data-welcome-email-status]');
+  var welcomeMobileStatusEl = document.querySelector('[data-welcome-mobile-status]');
+  var welcomeInterestsStatusEl = document.querySelector('[data-welcome-interests-status]');
+  var welcomeContactsStatusEl = document.querySelector('[data-welcome-contacts-status]');
+  var welcomeNextStepEl = document.querySelector('[data-welcome-next-step]');
+
+  function renderWelcomePanel(data){
+    welcomePctLabelEl.textContent = data.profileCompletionPct + '% complete';
+    welcomeProgressFillEl.style.width = data.profileCompletionPct + '%';
+    // Identity (KYC/biometric) verification does not exist yet — this is
+    // an honest "Pending" state, not a fabricated pass, per the Phase 1A
+    // decision to gate real KYC at admission confirmation, not sign-up.
+    welcomeIdentityStatusEl.textContent = 'Pending';
+    welcomeEmailStatusEl.textContent = data.emailVerified ? 'Verified' : 'Not Verified';
+    // No SMS/WhatsApp OTP provider is wired up yet — mobile_verified_at
+    // can never be set today, so this says so rather than showing a
+    // silent "Not Verified" that implies the feature exists and failed.
+    welcomeMobileStatusEl.textContent = 'Not Yet Available';
+    welcomeInterestsStatusEl.textContent = data.sections.educationalInterests ? 'Completed' : 'Not Selected';
+    welcomeContactsStatusEl.textContent = data.sections.emergencyContacts ? 'Completed' : 'Missing';
+    welcomeNextStepEl.textContent = data.recommendedNextStep;
+  }
 
   var APPLICATION_STATUS_LABEL = {
     submitted: 'Submitted', under_review: 'Under Review', waitlisted: 'Waitlisted',
@@ -87,8 +112,8 @@
       var statusLabel = child.status.charAt(0).toUpperCase() + child.status.slice(1);
       head.appendChild(el('span', 'portal-status-badge', statusLabel));
     }
-    if(/^DEMO/i.test(child.admissionNo || '')){
-      head.appendChild(el('span', 'portal-demo-flag', 'Sample data — not a real record'));
+    if(child.isSampleData){
+      head.appendChild(el('span', 'portal-demo-flag', 'Sample Institutional Record — not a real record'));
     }
     card.appendChild(head);
 
@@ -253,7 +278,8 @@
         throw new Error(data.error || 'Could not load your dashboard.');
       }
 
-      helloEl.textContent = 'Welcome, ' + data.fullName;
+      helloEl.textContent = 'Welcome, ' + (data.title ? data.title + ' ' : '') + (data.preferredName || data.fullName);
+      renderWelcomePanel(data);
       renderNotifications(data.notifications);
       loadAdhkar();
       loadApplications();

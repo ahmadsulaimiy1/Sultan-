@@ -33,9 +33,12 @@ live aggregate query over tables that already exist (`students`,
 
 ## What it reports, and how honestly
 
-Every count **excludes sample/demo records** (admission numbers starting
-`DEMO-`), so this never quietly reports the demo guardian's two sample
-children as real institutional numbers.
+Every count **excludes Sample Institutional Records** (rows with
+`is_sample_data = true`, set by `setup.js`'s seed block), so this never
+quietly reports the sample guardian's two sample children — or the
+sample teacher — as real institutional numbers. This also now correctly
+excludes sample guardians from the guardian total, closing a gap where
+that count previously had no filter at all.
 
 - **Students** — active count, full status breakdown (active/graduated/
   withdrawn/suspended), a per-institution bar chart, and how many

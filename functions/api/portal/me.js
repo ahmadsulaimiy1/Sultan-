@@ -2,6 +2,7 @@ import { getSql } from '../../_lib/db.js';
 import { readSessionFromRequest } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel } from '../../_lib/hifz.js';
+import { computeProfileCompletion, recommendNextStep } from '../../_lib/profile-completion.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -23,18 +24,25 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
-    const guardianRes = await sql`SELECT full_name, email, email_verified_at FROM guardians WHERE id = ${session.guardianId}`;
+    const guardianRes = await sql`SELECT * FROM guardians WHERE id = ${session.guardianId}`;
     const guardian = guardianRes.rows[0];
     if (!guardian) {
       return json({ error: 'Not signed in.' }, 401);
     }
 
-    const studentsRes = await sql`
-      SELECT s.id, s.full_name, s.admission_no, s.status
-      FROM students s
-      JOIN guardian_student gs ON gs.student_id = s.id
-      WHERE gs.guardian_id = ${session.guardianId}
-      ORDER BY s.full_name`;
+    const [studentsRes, emergencyContactsRes, educationalInterestsRes, prospectiveChildrenRes] = await Promise.all([
+      sql`
+        SELECT s.id, s.full_name, s.admission_no, s.status, s.is_sample_data
+        FROM students s
+        JOIN guardian_student gs ON gs.student_id = s.id
+        WHERE gs.guardian_id = ${session.guardianId}
+        ORDER BY s.full_name`,
+      sql`SELECT id FROM guardian_emergency_contacts WHERE guardian_id = ${session.guardianId}`,
+      sql`SELECT institution_key FROM guardian_educational_interests WHERE guardian_id = ${session.guardianId}`,
+      sql`
+        SELECT COUNT(*)::int AS n FROM admissions_applications
+        WHERE guardian_id = ${session.guardianId} AND status IN ('submitted', 'under_review', 'waitlisted', 'offered')`,
+    ]);
 
     const children = [];
     for (const student of studentsRes.rows) {
@@ -80,6 +88,7 @@ export async function onRequestGet({ request, env }) {
         fullName: student.full_name,
         admissionNo: student.admission_no,
         status: student.status,
+        isSampleData: !!student.is_sample_data,
         institution: primary ? primary.institution : null,
         className: primary ? primary.className : null,
         enrolments,
@@ -95,10 +104,24 @@ export async function onRequestGet({ request, env }) {
       WHERE guardian_id = ${session.guardianId} AND read_at IS NULL
       ORDER BY created_at DESC LIMIT 20`;
 
+    const { profileCompletionPct, sections } = computeProfileCompletion(guardian, {
+      emergencyContactCount: emergencyContactsRes.rows.length,
+      educationalInterestCount: educationalInterestsRes.rows.length,
+    });
+
     return json({
       fullName: guardian.full_name,
+      title: guardian.title,
+      preferredName: guardian.preferred_name,
+      identityType: guardian.identity_type,
       email: guardian.email,
       emailVerified: !!guardian.email_verified_at,
+      mobileVerified: !!guardian.mobile_verified_at,
+      profileCompletionPct,
+      sections,
+      recommendedNextStep: recommendNextStep(sections, !!guardian.email_verified_at),
+      existingChildrenCount: children.length,
+      prospectiveChildrenCount: prospectiveChildrenRes.rows[0] ? prospectiveChildrenRes.rows[0].n : 0,
       children,
       notifications: notificationsRes.rows,
     });

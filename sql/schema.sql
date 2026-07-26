@@ -656,3 +656,90 @@ CREATE TABLE IF NOT EXISTS teacher_class_assignments (
 );
 CREATE INDEX IF NOT EXISTS idx_tca_staff_active ON teacher_class_assignments (staff_id) WHERE revoked_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_tca_class_active ON teacher_class_assignments (class_id) WHERE revoked_at IS NULL;
+
+-- Institutional Identity Profile (Phase 1A of the Imperial Digital
+-- Identity & Onboarding Directive) — expands the four-field self-
+-- service registration into a real, multi-section institutional
+-- profile, per docs/imperial-identity-onboarding-reality-check.md's
+-- Phase 1 scope: everything buildable without a KYC/OTP vendor
+-- decision. Deliberately additive columns on `guardians` rather than a
+-- side table — this is the same entity, just with more of it filled
+-- in over time, and every field here is optional (profile_completion
+-- is a read-time computation, not a gate on using the account).
+--
+-- `state_of_origin` (Personal Details) and `residential_state`
+-- (Residential Profile) are kept as two distinct columns rather than
+-- one shared `state` field — a guardian's state of origin and their
+-- current residential state are frequently different in Nigeria, and
+-- collapsing them would silently lose one. "Country of Residence"
+-- covers the concept the directive separately listed as "Country"
+-- under Residential Profile — one column, not two identical ones.
+-- "Confirm Email"/"Confirm Password" are registration-form-only
+-- client+server validations, never persisted as their own columns.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_type TEXT NOT NULL DEFAULT 'parent_guardian'
+  CHECK (identity_type IN ('parent_guardian', 'applicant', 'sponsor', 'alumni', 'staff_member', 'educational_partner'));
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS whatsapp_number TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS secondary_phone TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS secondary_email TEXT;
+-- Mobile verification is a real, separate future gate (SMS/WhatsApp
+-- OTP via a provider — Twilio is the concrete option named in the
+-- reality-check doc) — this column exists now so the dashboard's
+-- Verification Status Panel has something real to read, honestly
+-- always NULL/unverified until that provider is actually wired up.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS mobile_verified_at TIMESTAMPTZ;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS title TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS preferred_name TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS gender TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS date_of_birth DATE;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS nationality TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS state_of_origin TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS local_government_area TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS country_of_residence TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_address TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_city TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS residential_state TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS postal_code TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS occupation TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS employer TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS position_title TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS business_name TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS industry TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS marital_status TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS number_of_children INTEGER;
+-- Marks seeded sample/testing records so they can be excluded from
+-- real institutional counts (Founder Dashboard) and flagged in staff-
+-- facing search results, without any record's NAME or ID needing to
+-- say "Demo" — see setup.js's seed block and founder/dashboard.js.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false;
+
+-- Two mandatory emergency contacts per the directive, modelled as a
+-- table (not two pairs of columns) so a guardian can hold more than
+-- two if the school later wants that, without another migration.
+CREATE TABLE IF NOT EXISTS guardian_emergency_contacts (
+  id            SERIAL PRIMARY KEY,
+  guardian_id   INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+  contact_order INTEGER NOT NULL DEFAULT 1,
+  full_name     TEXT NOT NULL,
+  relationship  TEXT NOT NULL,
+  phone         TEXT NOT NULL,
+  email         TEXT,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_guardian_emergency_contacts_guardian ON guardian_emergency_contacts (guardian_id);
+
+-- Multi-select educational interests. institution_key is a fixed,
+-- code-defined set (see functions/_lib/educational-interests.js) —
+-- Online/Weekend/Summer Programmes are included as interest signals
+-- per the directive, even though they are not yet real published
+-- offerings (see the reality-check doc's Stage 8 note); this table
+-- doesn't distinguish "real programme" from "expressed interest,"
+-- which is honestly what it is either way.
+CREATE TABLE IF NOT EXISTS guardian_educational_interests (
+  guardian_id     INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+  institution_key TEXT NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (guardian_id, institution_key)
+);

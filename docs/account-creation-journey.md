@@ -114,6 +114,16 @@ yet."* A Registrar (REG role) sees every application; a Principal
 `role-permission-matrix.md` §4.11 already specifies, enforced in code
 for the first time here.
 
+## Institutional Identity Profile (Phase 1A)
+
+Registration collects an Identity Type and a WhatsApp number alongside
+the original four fields (with Confirm Email/Confirm Password), and a
+signed-in guardian can now complete a much fuller optional profile —
+Personal, Contact, Residential, Professional, Family, Emergency
+Contacts, Educational Interests — at `/portal/profile/`, tracked by a
+computed Profile Completion %. See
+`docs/institutional-identity-phase1a.md` for the full account.
+
 ## Explicitly deferred, named rather than faked
 
 - **Document upload** — no file storage backend (R2/S3/etc.) exists
