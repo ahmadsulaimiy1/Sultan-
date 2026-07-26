@@ -5,14 +5,21 @@
 //
 // Honest gap, not smoothed over: the Matrix grants REG only Edit
 // ('correction' scope), not Create — first-time attendance entry is a
-// Class Teacher (TCH) function. No Teacher account has ever been issued
-// in this project (no Teacher Portal, no staff-class assignment table
-// exists to enforce TCH's "own class, own period" scope even if one
-// were), so this endpoint distinguishes Create (first row for a term)
-// from Edit (correcting an existing row) and only grants what the
-// Matrix actually says each role holds — it does not invent a
-// provisional Create grant for REG to paper over the gap. See
-// docs/registrar-office.md for what this means operationally today.
+// Class Teacher (TCH) function. This endpoint distinguishes Create
+// (first row for a term) from Edit (correcting an existing row) and
+// only grants what the Matrix actually says each role holds — it does
+// not invent a provisional Create grant for REG to paper over the gap.
+// See docs/registrar-office.md for what this means operationally today.
+//
+// Teacher Identity & Academic Workforce Activation added the piece this
+// endpoint was missing: teacher_class_assignments now lets a TCH grant's
+// "own class, own period" scope be checked against something real, not
+// just assumed. checkGrants() in permissions.js can only resolve
+// role+area+permission+institution generically — a specific class is
+// exactly the "finer" check that file says the calling endpoint still
+// owes, so it's enforced here: a TCH holder must have an active Class
+// Teacher assignment (is_class_teacher = true) for this student's actual
+// class, not merely hold the TCH role somewhere in the institution.
 import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
@@ -57,7 +64,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const studentRes = await sql`
-      SELECT s.id, s.full_name, ci.id AS institution_id
+      SELECT s.id, s.full_name, s.class_id, ci.id AS institution_id
       FROM students s
       LEFT JOIN classes c ON c.id = s.class_id
       LEFT JOIN institutions ci ON ci.name = c.institution
@@ -82,6 +89,14 @@ export async function onRequestPost({ request, env }) {
           ? "No attendance record exists yet for this student and term. Per the Role & Permission Matrix, first-time attendance entry is a Class Teacher function — your role does not hold it. Once a Teacher account exists for this class, they can create the initial entry; you can then correct it."
           : 'Your role does not have authority to correct attendance records.',
       }, 403);
+    }
+    if (grant.via.roleCode === 'TCH') {
+      const assignedRes = await sql`
+        SELECT 1 FROM teacher_class_assignments
+        WHERE staff_id = ${staffId} AND class_id = ${student.class_id} AND is_class_teacher = true AND revoked_at IS NULL`;
+      if (!assignedRes.rows.length) {
+        return json({ error: 'You are not the assigned Class Teacher for this student’s class.' }, 403);
+      }
     }
 
     await sql`

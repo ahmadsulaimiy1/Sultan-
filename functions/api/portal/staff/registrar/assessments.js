@@ -7,12 +7,15 @@
 // real gap: the Matrix grants TCH/MUH/ARB Create+Edit on `assessments`
 // ('own subject/class' scope) but REG only Edit ('correction only,
 // logged' scope) — first-time entry of a term's raw score is a
-// subject-teacher-tier function. No Teacher/Muhaffiz/Arabic-instructor
-// account has ever been issued with a working staff session in this
-// project (MUH and ARB are 'proposed' roles per setup.js's seed), so as
-// with attendance, there is currently no working path to record a
-// brand-new subject/term score for the first time — only to correct
-// one already on file. See docs/academic-records-authority-map.md for
+// subject-teacher-tier function.
+//
+// Teacher Identity & Academic Workforce Activation added
+// teacher_class_assignments, so a TCH grant's "own subject/class" scope
+// is now checked against a real assignment row (subject-specific, not
+// just class-teacher) rather than assumed — same pattern as
+// attendance.js. MUH and ARB remain 'proposed' roles with no account
+// ever issued, so their branch of this same gap stands as documented
+// below. See docs/academic-records-authority-map.md for
 // the full accounting of where the Matrix's Approve/Publish step for
 // the separate `results` area (finalising these into a report card) has
 // never been implemented as an enforced gate anywhere in this project —
@@ -67,7 +70,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const studentRes = await sql`
-      SELECT s.id, ci.id AS institution_id
+      SELECT s.id, s.class_id, ci.id AS institution_id
       FROM students s
       LEFT JOIN classes c ON c.id = s.class_id
       LEFT JOIN institutions ci ON ci.name = c.institution
@@ -88,6 +91,14 @@ export async function onRequestPost({ request, env }) {
           ? "No score exists yet for this student, term, and subject. Per the Role & Permission Matrix, first-time assessment entry is a Subject Teacher / Muhaffiz / Arabic Instructor function — your role does not hold it. Once that account exists, they can create the initial entry; you can then correct it."
           : 'Your role does not have authority to correct assessment records.',
       }, 403);
+    }
+    if (grant.via.roleCode === 'TCH') {
+      const assignedRes = await sql`
+        SELECT 1 FROM teacher_class_assignments
+        WHERE staff_id = ${staffId} AND class_id = ${student.class_id} AND subject = ${subject} AND revoked_at IS NULL`;
+      if (!assignedRes.rows.length) {
+        return json({ error: 'You are not the assigned Subject Teacher for this student’s class and subject.' }, 403);
+      }
     }
 
     const totalScore = body.totalScore != null ? Number(body.totalScore) : (Number(caScore || 0) + Number(examScore || 0));

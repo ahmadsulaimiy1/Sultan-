@@ -619,3 +619,40 @@ CREATE TABLE IF NOT EXISTS certificates (
   created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id);
+
+-- Teacher Identity & Academic Workforce Activation — the missing piece
+-- Migration Phases A and B both surfaced independently
+-- (docs/identity-migration-plan.md): the Matrix grants TCH "own class,
+-- own period" on attendance and "own subject/class" on assessments, but
+-- until now nothing in this schema could answer "which classes/subjects
+-- does this teacher actually teach?" — so those scopes were unenforceable
+-- by any endpoint, and no Teacher account has ever been provisioned.
+--
+-- One row per (staff, class[, subject]) grant, mirroring staff_roles's
+-- revoke-never-delete pattern (revoked_at set, row kept for history).
+-- Two distinct grant shapes, matching the Matrix's own split:
+--   subject IS NULL, is_class_teacher = true  -> Class Teacher: whole-
+--     class attendance authority (Create/Edit on attendance_summary).
+--   subject IS NOT NULL, is_class_teacher = false -> Subject Teacher:
+--     per-subject assessment authority (Create/Edit on term_results for
+--     that subject only, within that class).
+-- A person can hold both kinds of row for the same class (a Form
+-- Teacher who also teaches Mathematics to their own form is one real,
+-- common case), and multiple subject rows across different classes.
+-- No UNIQUE constraint: Postgres treats each NULL subject as distinct,
+-- so a naive UNIQUE(staff_id, class_id, subject) would not actually
+-- prevent duplicate Class Teacher rows — the admin endpoint that writes
+-- these checks for an existing active row itself instead.
+CREATE TABLE IF NOT EXISTS teacher_class_assignments (
+  id                   SERIAL PRIMARY KEY,
+  staff_id             INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  class_id             INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+  subject              TEXT,
+  is_class_teacher     BOOLEAN NOT NULL DEFAULT false,
+  assigned_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  assigned_by_staff_id INTEGER REFERENCES staff(id),
+  revoked_at           TIMESTAMPTZ,
+  revoked_by_staff_id  INTEGER REFERENCES staff(id)
+);
+CREATE INDEX IF NOT EXISTS idx_tca_staff_active ON teacher_class_assignments (staff_id) WHERE revoked_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_tca_class_active ON teacher_class_assignments (class_id) WHERE revoked_at IS NULL;

@@ -31,6 +31,14 @@
 //                            create-student-login.js — staff never choose or see their own password
 //   grant-role            — { staffNo, roleCode, institutionName?, officeName?, grantedByStaffNo?, reason? }
 //   revoke-role           — { staffRoleId, revokedByStaffNo?, reason? }
+//   assign-class          — { staffNo, institutionName, className, subject?, assignedByStaffNo?, reason? }
+//                            Omit subject for a Class Teacher assignment (whole-class attendance
+//                            authority); provide it for a Subject Teacher assignment (per-subject
+//                            assessment authority) — see teacher_class_assignments in sql/schema.sql.
+//                            This is the piece the Matrix's TCH scope ("own class, own period" /
+//                            "own subject/class") is actually checked against — see
+//                            staff/registrar/attendance.js and assessments.js.
+//   revoke-class-assignment — { assignmentId, revokedByStaffNo?, reason? }
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
@@ -228,7 +236,53 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, staffRoleId: body.staffRoleId });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, create-login, grant-role, revoke-role.' }, 400);
+    if (action === 'assign-class') {
+      if (!body.staffNo || !body.institutionName || !body.className) {
+        return json({ error: 'staffNo, institutionName, and className are required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      const classRes = await sql`SELECT id FROM classes WHERE institution = ${body.institutionName} AND name = ${body.className}`;
+      if (!classRes.rows.length) {
+        return json({ error: 'No class found with that institution and class name.' }, 404);
+      }
+      const classId = classRes.rows[0].id;
+      const subject = body.subject ? String(body.subject).trim() : null;
+      const isClassTeacher = !subject;
+      const assignedById = await staffIdByNo(sql, body.assignedByStaffNo);
+      const created = await sql`
+        INSERT INTO teacher_class_assignments (staff_id, class_id, subject, is_class_teacher, assigned_by_staff_id)
+        VALUES (${staffId}, ${classId}, ${subject}, ${isClassTeacher}, ${assignedById})
+        RETURNING id`;
+      await logStaffEvent(sql, {
+        actorStaffId: assignedById, eventType: 'sensitive_action', targetType: 'teacher_class_assignment', targetId: created.rows[0].id,
+        reason: body.reason || null, metadata: { staffNo: body.staffNo, institutionName: body.institutionName, className: body.className, subject },
+      });
+      return json({ ok: true, assignmentId: created.rows[0].id, isClassTeacher, subject });
+    }
+
+    if (action === 'revoke-class-assignment') {
+      if (!Number.isInteger(body.assignmentId)) {
+        return json({ error: 'A valid numeric assignmentId is required.' }, 400);
+      }
+      const revokedById = await staffIdByNo(sql, body.revokedByStaffNo);
+      const updated = await sql`
+        UPDATE teacher_class_assignments SET revoked_at = now(), revoked_by_staff_id = ${revokedById}
+        WHERE id = ${body.assignmentId} AND revoked_at IS NULL
+        RETURNING id, subject`;
+      if (!updated.rows.length) {
+        return json({ error: 'No active class assignment found with that id.' }, 404);
+      }
+      await logStaffEvent(sql, {
+        actorStaffId: revokedById, eventType: 'sensitive_action', targetType: 'teacher_class_assignment', targetId: body.assignmentId,
+        reason: body.reason || null, metadata: { subject: updated.rows[0].subject },
+      });
+      return json({ ok: true, assignmentId: body.assignmentId });
+    }
+
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

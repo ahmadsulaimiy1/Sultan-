@@ -251,7 +251,10 @@ panel, or a teacher dashboard. What exists instead:
   per-role controls, zero admin actions** — nothing here lets a
   Registrar do Registrar things or a Principal do Principal things.
   Those belong to whichever future office module actually needs them
-  (Registrar's Office is next — see the Institutional Readiness Review).
+  (Registrar's Office was next — see the Institutional Readiness Review
+  — and a Teacher Portal followed it: `/portal/staff/teacher/`, per
+  `docs/teacher-portal.md`, is exactly the kind of task-tool-bearing
+  module this identity card deliberately excludes).
 
 ## 9. Bootstrap token
 

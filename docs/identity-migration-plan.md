@@ -169,6 +169,53 @@ recognised as one structural finding, not three independent ones. The
 next major phase after Phase D (below) is Teacher Identity & Academic
 Workforce Activation, not a fifth migration route or a new office.
 
+## Status update — Teacher Identity & Academic Workforce Activation
+
+The gap named above — "an operational role the Matrix already
+anticipates but the institution has never onboarded" — is now closed
+for its academic half (Class Teacher / Subject Teacher, role code
+`TCH`). Two things were genuinely missing, and both are now real:
+
+1. **`teacher_class_assignments`** (`sql/schema.sql`) — the "which
+   classes/subjects does this teacher actually teach" table Phases A
+   and B both said didn't exist. One row per (staff, class[, subject]):
+   `is_class_teacher = true, subject IS NULL` grants whole-class
+   attendance authority; `subject IS NOT NULL` grants per-subject
+   assessment authority for that class. Written via `admin/staff.js`'s
+   new `assign-class`/`revoke-class-assignment` actions, same
+   token-gated bootstrap model as `grant-role`/`revoke-role`.
+2. **A real Teacher Portal** — `/portal/staff/teacher/`, backed by four
+   new endpoints (`staff/teacher/classes.js`, `roster.js`,
+   `attendance.js`, `assessments.js`). A signed-in TCH holder sees their
+   assigned classes, opens a class roster, and enters attendance or
+   scores for the whole class in one submission — the actual Create
+   path Phases A and B both said had no working route anywhere in this
+   project.
+
+The registrar-side single-student endpoints
+(`staff/registrar/attendance.js`, `assessments.js`) also gained a check
+they were missing: previously, `checkGrants()` in `permissions.js`
+could not resolve TCH's "own class, own period" / "own subject/class"
+scope at all (nothing in that scope string matches the institution-scope
+regex it enforces), so a TCH grant would have passed for *any* class in
+the institution, not just the teacher's own — a real, if previously
+theoretical, gap, since no TCH account had ever existed to exploit it.
+Both endpoints now check the new assignment table directly when
+`grant.via.roleCode === 'TCH'`.
+
+**What this phase deliberately did not touch**, named rather than
+silently dropped: `MUH` (Muhaffiz) and `ARB` (Arabic & Islamic Studies
+Instructor) remain `'proposed'` roles with no issued account and no
+onboarding path — `teacher_class_assignments` is schema-ready for them
+(nothing about it is TCH-specific), but provisioning either role and
+building their portal views is separate future work, not assumed here.
+`FIN` (Finance Officer) and the fee-entry gap from Phase C are entirely
+unaffected. Communications (Matrix §4.15, "own class only ... not yet
+built — Teacher Portal item") is still not built — this phase activated
+attendance and assessments, the two areas with a genuine record-writing
+gap; a teacher-to-guardian messaging surface is a distinct feature, not
+folded in here. See `docs/teacher-portal.md` for setup and verification.
+
 ## Recommended migration order
 
 1. **Student/Guardian administration + student login issuance** — done

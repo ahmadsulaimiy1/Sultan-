@@ -394,5 +394,16 @@ Where a module is blocked, it's blocked on a **named, real** gap (a
 Missing policy code, an unappointed role) — not on an undefined
 permission model.
 
+**Status update — Teacher Portal (TCH row).** Built per
+`docs/teacher-portal.md`: §4.4/§4.5's "own class, own period" / "own
+subject/class" scope qualifiers, which this document could only state
+in prose, now have a real data structure to be checked against
+(`teacher_class_assignments`, added by Teacher Identity & Academic
+Workforce Activation) and two endpoints that enforce it
+(`staff/teacher/attendance.js`, `assessments.js`). §4.15's TCH
+Communications row is unchanged — still "not yet built." The MUH/ARB
+halves of §4.4/§4.5 are unchanged too — still no issued account for
+either role.
+
 See `docs/data-ownership-register.md` for the companion document mapping
 each record type to its owner, retention authority, and approval chain.

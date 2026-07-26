@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Teacher Portal — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Teacher Portal</span>
+    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Teacher Portal</div>
+    <div class="portal-hello-sub">Your assigned classes, one roster at a time — attendance and scores go straight to the same record the Registrar's Office and every parent/student dashboard already read.</div>
+
+    <div class="portal-child-card" data-classes-card>
+      <div class="portal-child-head"><h2>My Classes</h2></div>
+      <div class="teacher-class-list" data-class-list></div>
+      <div class="portal-empty" data-class-list-empty hidden>You are not currently assigned to any class. Contact the ICT Office if this looks wrong.</div>
+    </div>
+
+    <div class="portal-child-card" data-roster-card hidden>
+      <div class="portal-child-head">
+        <h2 data-roster-title>Class Roster</h2>
+        <div class="meta" data-roster-meta></div>
+      </div>
+      <form data-roster-form class="registrar-form-grid" style="padding-top:16px;">
+        <div class="portal-field">
+          <label>Term</label>
+          <input type="text" data-term-input placeholder="e.g. 2024/2025 Term 2" required />
+        </div>
+      </form>
+      <div class="teacher-roster-scroll">
+        <table class="teacher-roster-table" data-roster-table>
+          <thead><tr data-roster-head></tr></thead>
+          <tbody data-roster-body></tbody>
+        </table>
+      </div>
+      <div class="teacher-save-row" data-save-row></div>
+      <div class="registrar-form-result" data-roster-result hidden></div>
+    </div>
+
+    <p class="portal-notice">
+      Every attendance and score submission is checked against your active class/subject assignments and recorded in the staff audit log. If a class you actually teach isn't listed above, contact the ICT Office at
+      <a href="mailto:info@shroyalschools.ng">info@shroyalschools.ng</a> to have your assignment added.
+    </p>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Teacher Portal…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Teacher Portal</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-staff-teacher.js" defer></script>
+</body>
+</html>

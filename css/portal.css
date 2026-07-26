@@ -297,6 +297,32 @@ body.portal-body{
 .registrar-cert-forms{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);margin-top:16px;padding-top:16px;}
 @media (max-width:680px){.registrar-cert-forms{grid-template-columns:1fr;}}
 
+.teacher-class-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;padding:16px 20px;}
+.teacher-class-card{
+  text-align:left;background:var(--milk);border:1px solid var(--line);padding:14px 16px;cursor:pointer;
+  font-family:inherit;transition:border-color 0.15s, background 0.15s;
+}
+.teacher-class-card:hover{border-color:var(--gold);background:var(--ivory);}
+.teacher-class-name{font-family:'Cinzel','Amiri',serif;font-size:0.92rem;color:var(--navy);}
+.teacher-class-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.teacher-class-count{font-size:0.74rem;color:var(--ink-soft);margin-top:8px;}
+
+.teacher-roster-scroll{overflow-x:auto;padding:0 20px 16px;}
+.teacher-roster-table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:520px;}
+.teacher-roster-table th{
+  text-align:left;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1px solid var(--gold);padding:8px 8px;white-space:nowrap;
+}
+.teacher-roster-table td{padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;}
+.teacher-roster-table td:first-child{white-space:normal;min-width:140px;}
+.teacher-roster-table input{
+  width:64px;padding:6px 8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:0.82rem;
+}
+.teacher-roster-table input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+
+.teacher-save-row{display:flex;flex-wrap:wrap;gap:10px;padding:16px 20px;}
+.teacher-save-btn{width:auto;padding:10px 18px;}
+
 @media (max-width:520px){
   .portal-topbar{padding:12px 16px;}
   .portal-main{padding:24px 14px;}

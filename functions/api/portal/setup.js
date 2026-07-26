@@ -432,6 +432,24 @@ const STATEMENTS = [
     created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id)`,
+
+  // Teacher Identity & Academic Workforce Activation — see the commented
+  // version of this table in sql/schema.sql for why it exists (the
+  // "which classes/subjects does this teacher teach" gap Migration
+  // Phases A and B both surfaced).
+  `CREATE TABLE IF NOT EXISTS teacher_class_assignments (
+    id                   SERIAL PRIMARY KEY,
+    staff_id             INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    class_id             INTEGER NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    subject              TEXT,
+    is_class_teacher     BOOLEAN NOT NULL DEFAULT false,
+    assigned_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    assigned_by_staff_id INTEGER REFERENCES staff(id),
+    revoked_at           TIMESTAMPTZ,
+    revoked_by_staff_id  INTEGER REFERENCES staff(id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_tca_staff_active ON teacher_class_assignments (staff_id) WHERE revoked_at IS NULL`,
+  `CREATE INDEX IF NOT EXISTS idx_tca_class_active ON teacher_class_assignments (class_id) WHERE revoked_at IS NULL`,
 ];
 
 async function handle({ request, env }) {
@@ -523,6 +541,32 @@ async function handle({ request, env }) {
             VALUES (${qStudentId}, ${juz}, 'memorising', 'Sample data — in progress this term.', 'Sample Muhaffiz')`;
         }
         await sql`INSERT INTO attendance_summary (student_id, term, days_present, days_total) VALUES (${qStudentId}, 'First Term 2025/2026', 60, 62)`;
+
+        // Demo Teacher (Teacher Identity & Academic Workforce Activation)
+        // — a real, working TCH account so the Teacher Portal can be
+        // tried end-to-end without hand-calling admin/staff.js. Assigned
+        // as Class Teacher (attendance) and Mathematics Subject Teacher
+        // for the same 'JSS 1' class the first demo student (Demo
+        // Student, DEMO-0001) belongs to, so logging in as this teacher
+        // shows a real roster with the attendance/result rows already
+        // seeded above.
+        const royalCollegeId = (await sql`SELECT id FROM institutions WHERE name = 'Royal College'`).rows[0].id;
+        const demoStaff = await sql`
+          INSERT INTO staff (staff_no, full_name, position_title, institution_id, status)
+          VALUES ('DEMO-TCH-0001', 'Demo Teacher (sample data)', 'Class Teacher, JSS 1', ${royalCollegeId}, 'active')
+          RETURNING id`;
+        const demoStaffId = demoStaff.rows[0].id;
+        await sql`INSERT INTO staff_institutions (staff_id, institution_id, is_primary) VALUES (${demoStaffId}, ${royalCollegeId}, true)`;
+        const { hash: tHash, salt: tSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
+        await sql`INSERT INTO staff_accounts (staff_id, password_hash, password_salt) VALUES (${demoStaffId}, ${tHash}, ${tSalt})`;
+        await sql`INSERT INTO staff_roles (staff_id, role_code, institution_id) VALUES (${demoStaffId}, 'TCH', ${royalCollegeId})`;
+        await sql`
+          INSERT INTO teacher_class_assignments (staff_id, class_id, subject, is_class_teacher)
+          VALUES (${demoStaffId}, ${classId}, NULL, true)`;
+        await sql`
+          INSERT INTO teacher_class_assignments (staff_id, class_id, subject, is_class_teacher)
+          VALUES (${demoStaffId}, ${classId}, 'Mathematics', false)`;
+
         demoSeeded = true;
       }
     }
