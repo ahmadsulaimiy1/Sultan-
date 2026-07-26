@@ -200,7 +200,10 @@ function diagramRow(steps, fill = PARCHMENT, textColor = NAVY) {
       shading: { type: ShadingType.CLEAR, fill },
       margins: { top: 160, bottom: 160, left: 80, right: 80 },
       verticalAlign: VerticalAlign.CENTER,
-      children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: s, font: HEAD_FONT, size: 15, bold: true, color: textColor })] })],
+      children: [new Paragraph({ alignment: AlignmentType.CENTER, children: s.split('\n').flatMap((line, i) =>
+        i === 0 ? [new TextRun({ text: line, font: HEAD_FONT, size: 15, bold: true, color: textColor })]
+                 : [new TextRun({ text: line, font: HEAD_FONT, size: 15, bold: true, color: textColor, break: 1 })]
+      ) })],
     })) })],
   });
 }
@@ -237,17 +240,33 @@ function deptItem(title, courses) {
 
 const sections = [];
 
+// Luxury double-rule frame — wraps cover / back-cover content in a
+// bordered single-cell table so the printed page reads as a designed
+// frame rather than text floating on a blank page.
+function coverFrame(children) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: { top: { style: BorderStyle.SINGLE, size: 8, color: GOLD }, bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD }, left: { style: BorderStyle.SINGLE, size: 8, color: GOLD }, right: { style: BorderStyle.SINGLE, size: 8, color: GOLD } },
+    rows: [new TableRow({ children: [new TableCell({
+      margins: { top: 500, bottom: 500, left: 400, right: 400 },
+      children,
+    })] })],
+  });
+}
+
 // ============ COVER ============
 sections.push({
-  properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1000, right: 1000 } } },
+  properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1400, after: 300 }, children: [img('crest-full.png', 130)] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'SULTAN HANAFI ROYAL SCHOOLS · NIGERIA', font: HEAD_FONT, size: 17, color: GOLD, bold: true, characterSpacing: 20 })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 }, children: [new TextRun({ text: 'The Flagship Institutional Publication', font: HEAD_FONT, size: 52, bold: true, color: NAVY })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: 'Brand Book & Educational Review 2026', font: 'Constantia', italics: true, size: 28, color: INK_SOFT })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'ACADEMIC EXCELLENCE · ISLAMIC SCHOLARSHIP · GLOBAL LEADERSHIP', font: HEAD_FONT, size: 15, color: INK_SOFT, characterSpacing: 20 })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 900 }, children: [new TextRun({ text: 'Est. December 2017 · Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: '2026 · Word Edition', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
+    coverFrame([
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1000, after: 300 }, children: [img('crest-full.png', 130)] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'SULTAN HANAFI ROYAL SCHOOLS · NIGERIA', font: HEAD_FONT, size: 17, color: GOLD, bold: true, characterSpacing: 20 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 }, children: [new TextRun({ text: 'The Flagship Institutional Publication', font: HEAD_FONT, size: 52, bold: true, color: NAVY })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: 'Brand Book & Educational Review 2026', font: 'Constantia', italics: true, size: 28, color: INK_SOFT })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'ACADEMIC EXCELLENCE · ISLAMIC SCHOLARSHIP · GLOBAL LEADERSHIP', font: HEAD_FONT, size: 15, color: INK_SOFT, characterSpacing: 20 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 700 }, children: [new TextRun({ text: 'Est. December 2017 · Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 800 }, children: [new TextRun({ text: '2026 · Word Edition', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
+    ]),
     pageBreak(),
   ],
 });
@@ -267,7 +286,7 @@ B.push(pageBreak());
 // ============ DIRECTOR'S MESSAGE ============
 B.push(eyebrow('In His Own Words'), h1('A School Built on Sacrifice'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
-B.push(caption('Sultan Zakariya Olanrewaju Hanafi, PhD — Founder & Director. BSc Oxford Brookes · MSc Heriot-Watt · Fellow, ACCA UK · Fellow, ICAN.'));
+B.push(caption('Sultan Zakariya Olanrewaju Hanafi, PhD — Founder & Chief Executive Officer (CEO). BSc Oxford Brookes · MSc Heriot-Watt · Fellow, ACCA UK · Fellow, ICAN.'));
 B.push(lede('Education has been the great liberator of our family. This school is my most deliberate act of gratitude.'));
 B.push(body('It is my profound honour to welcome you to Sultan Hanafi Royal Schools — conceived not as a commercial venture, but as a sacred promise to the memory of my father, Anofi Aliu Akano, who worked at the Nigeria Ports Authority with diligence and love, and understood that education was the one gift no circumstance could take away.'));
 B.push(body('My father passed away while my brother and I were completing our National Youth Service. From that grief came clarity: the most meaningful tribute was a living institution bearing his name.'));
@@ -293,7 +312,7 @@ B.push(quoteBox('Sultan Hanafi Royal Schools stands as a blueprint for how educa
 B.push(h2('A Living Timeline'));
 [['2017', 'Sultan Hanafi Royal Schools officially registered — a hybrid institution combining secular education with authentic Islamic learning, serving the Imowonla community in Ikorodu, Lagos State.'],
  ['2021', 'Sultan Hanafi Royal College established. Junior and Senior Secondary programmes (JSS 1–3 and SSS 1–3) launched for students from age ten.'],
- ['2022', "School of Arabic & Islamic Studies and the Qur'an College formalised, delivering Saudi Arabian curriculum programmes with internationally recognised Ijazah certification."],
+ ['2022', "School of Islamic & Arabic Studies and the Qur'an College formalised, delivering Saudi Arabian curriculum programmes with internationally recognised Ijazah certification."],
  ['2024', 'Inaugural Annual Ramadan Qur\'an Competition held at the Royal College Auditorium. The ALA Endowment Prize established by Mr Lukman Anofi.'],
  ['2025', 'Distinguished commissioning ceremony attended by Engr. Seyi Makinde, Executive Governor of Oyo State.'],
  ['2026', 'Royal College passes Registration Stage with the Lagos State Ministry of Education. Inaugural BECE cohort sits national examinations.']]
@@ -338,7 +357,7 @@ B.push(eyebrow('An Integrated Institution'), h1('Four Schools. One Vision.'));
 B.push(dataPanel([
   ['School 01 — Nursery & Primary', 'Ages 2–10, day format, Est. 2017'],
   ['School 02 — Royal College', 'Ages 10+, JSS 1–3 & SSS 1–3, Est. 2021'],
-  ['School 03 — Arabic & Islamic Studies', 'Saudi Arabian Curriculum, weekday & weekend'],
+  ['School 03 — Islamic & Arabic Studies', 'Saudi Arabian Curriculum, weekday & weekend'],
   ["School 04 — Qur'an College", 'Hifz Programme, 24–36 months, day & boarding, Ijazah'],
 ]));
 B.push(new Paragraph({ spacing: { before: 200 } }));
@@ -389,7 +408,7 @@ B.push(pageBreak());
 // ============ ISLAMIC & QUR'AN EXCELLENCE ============
 B.push(eyebrow("Schools 03 & 04 — Sacred Excellence"), h1("Islamic & Qur'an Excellence"));
 B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 460)] }));
-B.push(h2('School of Arabic & Islamic Studies'));
+B.push(h2('School of Islamic & Arabic Studies'));
 B.push(body('Following the Saudi Arabian educational framework — using officially approved textbooks from the Kingdom of Saudi Arabia.'));
 B.push(dataPanel([['Weekday Programme', 'Mon–Wed · 2–6pm'], ['Weekend Programme', 'Sat & Sun · 9am–3pm']]));
 B.push(h2("Sultan Hanafi Qur'an College"));
@@ -433,12 +452,12 @@ B.push(eyebrow('The People Behind the Vision'), h1('Leadership of Distinction'))
 B.push(quoteBox('Every member of the Sultan Hanafi teaching faculty is recruited against the highest professional standards — PhDs, MEds, PGDEs, specialist certifications, and TRCN registration.', 'A Faculty of Excellence'));
 B.push(h2('Executive Management Team'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
-rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Director', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
+rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Chief Executive Officer (CEO)', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
 rosterRow('Dr Adegoke Musa Olatunji', 'Principal, Sultan Hanafi Royal College', 'PhD · MEd · BSc.Edu · NCE · MTRCN (Teachers Registration Council of Nigeria)').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
 rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Arabic & Islamic Studies').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
-rosterRow('Shaykh Abubakr Solah', 'Principal, School of Arabic & Islamic Studies', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
+rosterRow('Shaykh Abubakr Solah', 'Principal, School of Islamic & Arabic Studies', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
 rosterRow('Mrs Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College', 'HND Accounting · PGDE').forEach(p => B.push(p));
 rosterRow('Mrs Kareemat Abdurazaq', 'Head Teacher, Nursery & Primary School', 'BEd · NCE').forEach(p => B.push(p));
 B.push(pageBreak());
@@ -447,11 +466,10 @@ B.push(pageBreak());
 B.push(eyebrow('Governance Framework'), h1('How We Are Governed'));
 B.push(diagramRow(['Board of Trustees'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
-B.push(diagramRow(['Founder & Director — Sultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
+B.push(diagramRow(['Founder & Chief Executive Officer (CEO) — Sultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
-B.push(diagramRow(['VP Administration — Fatimat Anofi-Badmus', 'Head Teacher, N&P — Kareemat Abdurazaq', 'Principal, Royal College — Adegoke Musa Olatunji'], PARCHMENT, NAVY));
-B.push(new Paragraph({ spacing: { before: 8, after: 8 } }));
-B.push(diagramRow(['Principal, Arabic & Islamic — Shaykh Abubakr Solah', "Principal, Qur'an College — Imam Ahmad Sulaimiy"], PARCHMENT, NAVY));
+B.push(diagramRow(['VP Administration\nFatimat Anofi-Badmus', 'Head Teacher, N&P\nKareemat Abdurazaq', 'Principal, Royal College\nAdegoke Musa Olatunji', 'Principal, Islamic & Arabic\nShaykh Abubakr Solah', "Principal, Qur'an College\nImam Ahmad Sulaimiy"], PARCHMENT, NAVY));
+B.push(caption('All five institutional heads report directly to the Founder & CEO, at the same level of the governance structure.'));
 B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Governance · Compliance · Stakeholder Engagement · Lagos State Ministry of Education Registered 2026"));
 B.push(supportRow([
   ['Staff Identity Platform', 'Every staff account is verified and scoped before it can touch a family\'s data.'],
@@ -514,7 +532,7 @@ B.push(pageBreak());
 
 // ============ THE FOUNDATION ============
 B.push(eyebrow('Beyond the School Gates'), h1('The Sultan Zakariya Hanafi Foundation'));
-B.push(quoteBox("We believe that a school's responsibility does not end at its gates. Our community is our classroom, and our obligation extends to every member of it.", 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder'));
+B.push(quoteBox("We believe that a school's responsibility does not end at its gates. Our community is our classroom, and our obligation extends to every member of it.", 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & CEO'));
 B.push(body('The Sultan Zakariya Hanafi Foundation is a non-profit, non-political organisation co-founded by Sultan Zakariya Olanrewaju Hanafi, PhD and Mallam Lukman Ayinla Anofi.'));
 [['Educational Scholarships', 'Merit- and need-based bursaries for students of exceptional potential.'],
  ['Literacy Promotion', 'Free adult literacy classes and community reading programmes.'],
@@ -522,7 +540,6 @@ B.push(body('The Sultan Zakariya Hanafi Foundation is a non-profit, non-politica
  ['Medical & Healthcare Support', 'Medical outreach, free health screenings, and family healthcare support.'],
  ['Economic Empowerment', 'Micro-enterprise grants and business development support.']]
   .forEach(([t, d]) => deptItem(t, d).forEach(p => B.push(p)));
-B.push(figurePending('[Foundation scope, scholarship figures, and beneficiary counts pending SHRS confirmation — not estimated for this draft.]'));
 B.push(pageBreak());
 
 // ============ ADMISSIONS ============
@@ -581,16 +598,19 @@ sections.push({
 
 // ============ BACK COVER ============
 sections.push({
-  properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1000, right: 1000 } } },
+  properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 2400, after: 260 }, children: [img('crest-full.png', 110)] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 34, bold: true, color: NAVY })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: "NURTURING TOMORROW'S LEADERS", font: HEAD_FONT, size: 15, color: GOLD, bold: true, characterSpacing: 20 })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 400 }, children: [new TextRun({ text: 'Excellence · Character · Faith · Leadership', font: BODY_FONT, size: 18, color: INK_SOFT })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 18 })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18 })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD, bold: true })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400 }, children: [new TextRun({ text: 'FLAGSHIP INSTITUTIONAL PUBLICATION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: INK_SOFT, characterSpacing: 15 })] }),
+    coverFrame([
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1800, after: 260 }, children: [img('crest-full.png', 110)] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 34, bold: true, color: NAVY })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: "NURTURING TOMORROW'S LEADERS", font: HEAD_FONT, size: 15, color: GOLD, bold: true, characterSpacing: 20 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'Excellence · Character · Faith · Leadership', font: BODY_FONT, size: 18, color: INK_SOFT })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: 'A Sultan Hanafi education is a standard, held for every child, for as long as it takes.', font: 'Constantia', italics: true, size: 22, color: NAVY })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 18 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'FLAGSHIP INSTITUTIONAL PUBLICATION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: INK_SOFT, characterSpacing: 15 })] }),
+    ]),
   ],
 });
 
