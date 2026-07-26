@@ -44,6 +44,13 @@
   function render(data){
     generatedEl.textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
 
+    var authStatusEl = document.querySelector('[data-founder-auth-status]');
+    if(authStatusEl){
+      authStatusEl.textContent = data.authMethod === 'staff_session'
+        ? 'Signed in as ' + (data.viewedBy || 'an Executive-role staff account')
+        : 'Viewed via the legacy Founder token — sign in with a real Executive-role staff account once one exists.';
+    }
+
     var statusStatsEl = document.querySelector('[data-founder-status-stats]');
     statusStatsEl.innerHTML = '';
     statusStatsEl.appendChild(statTile('Active students', data.students.totalActive));
@@ -106,7 +113,9 @@
 
   async function load(token){
     try{
-      var res = await fetch('/api/portal/founder/dashboard', { headers: { 'x-founder-token': token, 'accept': 'application/json' } });
+      var headers = { 'accept': 'application/json' };
+      if(token) headers['x-founder-token'] = token;
+      var res = await fetch('/api/portal/founder/dashboard', { headers: headers, credentials: 'same-origin' });
       var data = await res.json().catch(function(){ return {}; });
       if(!res.ok){
         sessionStorage.removeItem(TOKEN_KEY);
@@ -118,6 +127,7 @@
         gateSubmit.textContent = 'View Dashboard';
         return;
       }
+      gateEl.hidden = true;
       render(data);
     }catch(err){
       gateError.textContent = 'Could not reach the portal — please check your connection and try again.';
@@ -126,6 +136,25 @@
       gateSubmit.textContent = 'View Dashboard';
     }
   }
+
+  // Executive Identity migration: if this browser already holds a
+  // signed-in shr_staff_session cookie for a real EXE-role staff
+  // account, the dashboard should load directly — no token gate at
+  // all. This silent attempt sends no x-founder-token header; a 403
+  // here just means "no staff session, or not EXE" and falls through
+  // to the existing token-gate flow untouched.
+  (async function tryStaffSession(){
+    try{
+      var res = await fetch('/api/portal/founder/dashboard', { headers: { 'accept': 'application/json' }, credentials: 'same-origin' });
+      if(res.ok){
+        var data = await res.json();
+        gateEl.hidden = true;
+        render(data);
+      }
+    }catch(err){
+      // silent — falls through to the token-gate flow below
+    }
+  })();
 
   gateForm.addEventListener('submit', function(e){
     e.preventDefault();

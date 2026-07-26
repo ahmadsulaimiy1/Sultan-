@@ -1,11 +1,24 @@
 // Founder/Executive Dashboard — read-only aggregate view across all
-// four institutions. Deliberately NOT a login: gated by its own bearer
-// token (PORTAL_FOUNDER_TOKEN, separate from PORTAL_ADMIN_TOKEN and
-// PORTAL_QURAN_TOKEN — whoever holds this sees institution-wide
-// aggregates, a narrower, more sensitive trust boundary than day-to-day
-// data entry), matching the "protected API, simple page" pattern this
-// project already uses for admin endpoints. No new schema — every
-// number here is a real aggregate over tables that already exist.
+// four institutions. No new schema — every number here is a real
+// aggregate over tables that already exist.
+//
+// Executive Identity migration (docs/executive-identity-design.md,
+// docs/identity-migration-register.md item #1): the Permission Engine
+// already grants EXE the `analytics` area's View permission, scoped
+// "all institutions, aggregate" (permission-matrix.js) — the same
+// staff-session + hasPermissionFor() pattern every other staff-facing
+// endpoint in this project uses. That is now the PRIMARY auth path
+// here, so a real signed-in staff member with the EXE role views this
+// dashboard as themselves, not as an anonymous holder of a shared
+// secret.
+//
+// PORTAL_FOUNDER_TOKEN remains a FALLBACK, deliberately not removed
+// yet: no real EXE staff account has been confirmed to exist in any
+// reachable environment (see docs/digital-campus-master-deployment-directive.md),
+// so removing the only currently-working access path would lock this
+// dashboard out entirely. Retire the fallback once a real EXE account
+// is confirmed working — see the Identity Migration Register for the
+// exact condition.
 //
 // Per docs/digital-institution-blueprint.md's own finding: this
 // endpoint exists partly to make honest which requested KPIs the
@@ -18,23 +31,48 @@
 // count below, so this never quietly reports sample data as real
 // institutional numbers.
 import { getSql } from '../../../_lib/db.js';
-import { timingSafeEqualString } from '../../../_lib/session.js';
+import { readStaffSessionFromRequest, timingSafeEqualString } from '../../../_lib/session.js';
+import { hasPermissionFor } from '../../../_lib/permissions.js';
 import { json } from '../../../_lib/http.js';
 import { HIFZ_STAGES } from '../../../_lib/hifz.js';
 
 const SAMPLE_FILTER = `is_sample_data = false`;
 
 export async function onRequestGet({ request, env }) {
-  const founderToken = env.PORTAL_FOUNDER_TOKEN;
-  if (!founderToken) {
-    return json({ error: 'The Founder Dashboard is not configured yet — PORTAL_FOUNDER_TOKEN is not set.' }, 500);
-  }
-  if (!timingSafeEqualString(request.headers.get('x-founder-token'), founderToken)) {
-    return json({ error: 'Invalid token.' }, 403);
-  }
   const sql = getSql(env);
   if (!sql) {
     return json({ error: 'No database is linked yet.' }, 500);
+  }
+
+  let authMethod = null;
+  let viewedBy = null;
+
+  if (env.SESSION_SECRET) {
+    let staffSession = null;
+    try {
+      staffSession = readStaffSessionFromRequest(request, env.SESSION_SECRET);
+    } catch (err) {
+      staffSession = null;
+    }
+    if (staffSession) {
+      const grant = await hasPermissionFor(sql, staffSession.staffId, 'analytics', 'V', null);
+      if (grant.granted) {
+        authMethod = 'staff_session';
+        const staffRes = await sql`SELECT full_name FROM staff WHERE id = ${staffSession.staffId}`;
+        viewedBy = staffRes.rows[0] ? staffRes.rows[0].full_name : null;
+      }
+    }
+  }
+
+  if (!authMethod) {
+    const founderToken = env.PORTAL_FOUNDER_TOKEN;
+    if (founderToken && timingSafeEqualString(request.headers.get('x-founder-token'), founderToken)) {
+      authMethod = 'bearer_token';
+    }
+  }
+
+  if (!authMethod) {
+    return json({ error: 'Not authorised. Sign in with an Executive-role staff account, or supply a valid Founder token.' }, 403);
   }
 
   try {
@@ -114,6 +152,11 @@ export async function onRequestGet({ request, env }) {
     return json({
       generatedAt: new Date().toISOString(),
       sampleDataExcluded: true,
+      // 'staff_session' means this request was attributable to a real,
+      // named EXE-role staff account; 'bearer_token' means it used the
+      // legacy shared-secret fallback — see the header comment above.
+      authMethod,
+      viewedBy,
       students: {
         totalActive: byStatus.active || 0,
         byStatus,
