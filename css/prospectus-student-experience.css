@@ -1,0 +1,136 @@
+/* ============================================================
+   THE STUDENT EXPERIENCE EDITION — a distinct flagship design
+   system. Deep forest green, warm terracotta, cream, editorial
+   photography. Polaroid-style photo frames in place of octagram/
+   hexagon icon badges. Playfair Display + Source Sans Pro
+   typography — not Cinzel/Amiri/Space Grotesk.
+   Independent stylesheet — does not extend any other prospectus
+   stylesheet in this repo.
+   ============================================================ */
+
+:root{
+  --se-forest:#1F3A2E; --se-forest-deep:#122019; --se-forest-bright:#2E5645;
+  --se-terracotta:#C4633B; --se-terracotta-bright:#DE7E52; --se-amber:#D89A44;
+  --se-cream:#FAF3E8; --se-paper:#F3E9D8; --se-white:#FFFFFF;
+  --se-ink:#2B2620; --se-ink-soft:rgba(43,38,32,0.62);
+  --se-line:rgba(43,38,32,0.14);
+}
+
+*{box-sizing:border-box;}
+body.pros-body{margin:0; background:#3d372c; font-family:'Source Sans Pro','Playfair Display',serif;}
+
+.se-toolbar{
+  position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
+  padding:12px 24px; background:var(--se-forest-deep); color:var(--se-amber);
+}
+.se-toolbar button{
+  background:var(--se-terracotta); color:#fff; border:none; padding:8px 18px;
+  font-family:'Source Sans Pro',sans-serif; font-weight:700; letter-spacing:0.02em; cursor:pointer; border-radius:3px;
+}
+
+.se-spread{
+  width:210mm; min-height:297mm; margin:20px auto; position:relative; overflow:hidden; isolation:isolate;
+  background:var(--se-cream); box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  padding:18mm 16mm; box-sizing:border-box; page-break-after:always;
+}
+.se-spread + .se-spread{margin-top:20px;}
+.se-spread.dark{background:var(--se-forest-deep); color:var(--se-cream);}
+.se-spread.cover{padding:0; display:flex; align-items:flex-end;}
+
+.se-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--se-ink-soft);}
+.se-spread.dark .se-folio{color:rgba(250,243,232,0.55);}
+
+/* ---- Polaroid photo frame — the signature photo treatment in this
+   edition: white border, caption strip, gentle rotation — a
+   scrapbook/storybook idiom replacing octagram/hexagon badges. ---- */
+.se-polaroid{
+  background:#fff; padding:8px 8px 34px; box-shadow:0 8px 20px -6px rgba(0,0,0,0.35);
+  display:inline-block; position:relative;
+}
+.se-polaroid img{display:block; width:100%; height:auto; object-fit:cover;}
+.se-polaroid .se-polaroid-cap{
+  position:absolute; left:8px; right:8px; bottom:8px; text-align:center;
+  font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; color:var(--se-ink-soft); letter-spacing:0.02em;
+}
+.se-polaroid.tilt-l{transform:rotate(-2.5deg);}
+.se-polaroid.tilt-r{transform:rotate(2deg);}
+
+/* ---- Eyebrow / heading system ---- */
+.se-eyebrow{
+  font-family:'Source Sans Pro',sans-serif; font-size:8.5pt; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--se-terracotta); margin:0 0 8px; display:flex; align-items:center; gap:10px;
+}
+.se-eyebrow::after{content:''; flex:1; height:1px; background:var(--se-line);}
+.se-spread.dark .se-eyebrow{color:var(--se-amber);}
+.se-spread.dark .se-eyebrow::after{background:rgba(250,243,232,0.2);}
+h2.se-h2{
+  font-family:'Playfair Display',serif; font-weight:700; font-style:italic; font-size:29pt; line-height:1.12; color:var(--se-forest); margin:0 0 10px;
+}
+.se-spread.dark h2.se-h2{color:#fff;}
+h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; color:var(--se-forest); margin:0 0 6px;}
+.se-spread.dark h3.se-h3{color:var(--se-amber);}
+.se-spread p{font-family:'Source Sans Pro',sans-serif; font-size:10pt; line-height:1.75; color:var(--se-ink); margin:0 0 12px;}
+.se-spread.dark p{color:rgba(250,243,232,0.85);}
+.se-lede{
+  font-family:'Playfair Display',serif; font-style:italic; font-size:14pt; line-height:1.55; color:var(--se-forest);
+  margin:0 0 18px; max-width:92%;
+}
+.se-spread.dark .se-lede{color:var(--se-amber);}
+.se-caption{font-family:'Source Sans Pro',sans-serif; font-size:8pt; letter-spacing:0.03em; color:var(--se-ink-soft); margin-top:6px; font-style:italic;}
+
+/* ---- Pull quote — large editorial quote treatment ---- */
+.se-pullquote{
+  border-left:3px solid var(--se-terracotta); padding:6px 0 6px 20px; margin:16px 0;
+}
+.se-pullquote p{font-family:'Playfair Display',serif; font-style:italic; font-size:15pt; color:var(--se-forest); line-height:1.5; margin:0;}
+.se-spread.dark .se-pullquote p{color:#fff;}
+.se-pullquote .se-who{display:block; margin-top:8px; font-family:'Source Sans Pro',sans-serif; font-size:8.5pt; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--se-terracotta);}
+
+/* ---- Grid ---- */
+.se-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:6mm;}
+.se-col-4{grid-column:span 4;} .se-col-5{grid-column:span 5;} .se-col-6{grid-column:span 6;} .se-col-7{grid-column:span 7;} .se-col-8{grid-column:span 8;} .se-col-12{grid-column:span 12;}
+
+/* ---- Full-bleed editorial hero photo ---- */
+.se-hero{position:relative; margin:-18mm -16mm 0; height:130mm;}
+.se-hero img{width:100%; height:100%; object-fit:cover; display:block;}
+.se-hero .se-hero-bar{
+  position:absolute; left:0; right:0; bottom:0; padding:14mm 16mm 10mm;
+  background:linear-gradient(0deg, rgba(18,32,25,0.94) 0%, rgba(18,32,25,0) 100%);
+}
+.se-hero .se-hero-bar h2{color:#fff; margin:0;}
+.se-photo{width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--se-paper); border-radius:2px;}
+
+/* ---- Chapter marker — numbered circular tab, used for journey
+   stage lists, distinct from other editions' icon systems. ---- */
+.se-chapter{display:flex; gap:16px; padding:16px 0; border-bottom:1px dashed var(--se-line); align-items:flex-start;}
+.se-chapter:last-child{border-bottom:none;}
+.se-chapter-num{
+  flex:0 0 auto; width:34px; height:34px; border-radius:50%; border:2px solid var(--se-terracotta);
+  display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:700; font-size:13pt; color:var(--se-terracotta);
+}
+.se-chapter-body{flex:1;}
+.se-chapter-title{font-family:'Playfair Display',serif; font-weight:700; font-size:13pt; color:var(--se-forest); margin-bottom:4px;}
+.se-chapter-desc{font-family:'Source Sans Pro',sans-serif; font-size:9.5pt; color:var(--se-ink-soft); line-height:1.65;}
+.se-spread.dark .se-chapter-title{color:#fff;}
+.se-spread.dark .se-chapter-desc{color:rgba(250,243,232,0.75);}
+
+/* ---- Stat band ---- */
+.se-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--se-terracotta); margin:16px 0;}
+.se-stats .se-stat-cell{background:var(--se-paper); text-align:center; padding:16px 6px;}
+.se-stats .se-stat-num{font-family:'Playfair Display',serif; font-weight:700; font-size:22pt; color:var(--se-forest);}
+.se-stats .se-stat-label{font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--se-ink-soft); margin-top:2px;}
+.se-spread.dark .se-stats .se-stat-cell{background:var(--se-forest);}
+.se-spread.dark .se-stats .se-stat-num{color:var(--se-amber);}
+.se-spread.dark .se-stats .se-stat-label{color:rgba(250,243,232,0.6);}
+
+@media print{
+  .se-toolbar{display:none;}
+  body.pros-body{background:#fff;}
+  .se-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
+  @page{size:210mm 297mm; margin:0;}
+}
+@media screen and (max-width:1000px){
+  .se-spread{width:100%; min-height:auto; padding:8vw;}
+  .se-grid{display:block;}
+  .se-col-4,.se-col-5,.se-col-6,.se-col-7,.se-col-8{grid-column:auto;}
+}
