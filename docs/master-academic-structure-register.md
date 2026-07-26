@@ -1,4 +1,13 @@
-# SHRS Master Academic Structure Register v1.0
+# SHRS Master Academic Structure Register v1.1
+
+**Revision note (v1.0 → v1.1):** integrates real Royal College JSS/SSS
+subject-teacher data and real Qur'an College & Islamic Studies faculty
+data supplied directly by the school; corrects v1.0's incorrect claim
+that no academic level ladder existed (it does — `docs/teacher-operating-model.md`
+§1 — v1.0 simply failed to cross-reference it); proposes a complete
+departmental framework for Board consideration. No structural claim in
+v1.0 about what's adopted vs. proposed has changed — only what's now
+documented as real has grown.
 
 The authoritative source for every school, programme, class, subject,
 department, office, role, committee, and reporting line at Sultan
@@ -30,18 +39,23 @@ Real rows in the `institutions` table today:
 | `Arabic & Islamic Studies` | School of Islamic & Arabic Studies | "All ages · Weekday & weekend" per the site's own mega-menu copy — the only institution explicitly serving both day-school and part-time/weekend students. |
 | `Qur'an College` | Sultan Hanafi Qur'an College | The 5-Stage Hifz Journey (§3 below) — its own distinct progression model, not grade-banded like the other three. |
 
-**Gap — awaiting real institutional input:** no document anywhere in
-this project (site copy or `docs/`) names the *complete* level/grade
-ladder for Nursery & Primary or Royal College (e.g. the full
-Creche → Nursery 1–3 → Primary 1–6 → JSS 1–3 → SSS 1–3 sequence a
-Nigerian school group of this kind would typically run). Only
-individual example class names exist, seeded ad hoc for testing:
-`JSS 1` (Royal College), `Iʿdādiyyah 1` (Arabic & Islamic Studies).
-**These are examples, not a canonical curriculum ladder** — inventing
-one here would be exactly the "generic school software" drift this
-register exists to prevent. The complete ladder is real institutional
-data only the school can supply (see `docs/institutional-data-architecture.md`
-§2 for how it should be collected).
+**Correction (this register's own earlier v1.0 text was wrong here):**
+a complete level ladder for Nursery & Primary and Royal College is
+already documented — in `docs/teacher-operating-model.md` §1, not
+repeated in full here to avoid two documents drifting apart:
+
+| Institution | Level ladder |
+|---|---|
+| Nursery & Primary | Early Years (Creche, Nursery, Kindergarten/Preschool) → Primary 1–6 |
+| Royal College | Junior Secondary (JSS1–JSS3) → Senior Secondary (SS1–SS3) |
+| Qur'an College | The 5-Stage Hifz Journey (§3 below) **is** its ladder — not a grade-band sequence, a progression-stage sequence. |
+| School of Islamic & Arabic Studies | No level ladder documented yet — see the remaining gap below. |
+
+**Remaining gap:** the Iʿdādiyyah level naming convention used in one
+seeded test class (`Iʿdādiyyah 1`) has never been expanded into a full
+ladder for the School of Islamic & Arabic Studies, and no document
+states how many Iʿdādiyyah/Thānawiyyah (or equivalent) levels that
+institution actually runs. This register does not invent one.
 
 ## 2. Programmes and cross-institution enrolment
 
@@ -85,29 +99,151 @@ structure implements.
 
 ## 4. Subjects
 
-**Gap — awaiting real institutional input.** No subject list exists
-anywhere in this project for Nursery & Primary, Royal College, or
-Arabic & Islamic Studies. `term_results.subject` is a free-text field
-today (see `sql/schema.sql`) — staff have entered example values like
-"Mathematics" in seeded/sample data only. There is no `subjects`
-reference table, and inventing one here (a generic Nigerian JSS/SSS
-subject list, for instance) would misrepresent SHRS's actual offering,
-which may differ. This register recommends `docs/institutional-data-architecture.md`'s
-data-collection process gather the real subject list per institution
-per level before a `subjects` table is built — turning `term_results.subject`
-from free text into a real foreign key is future schema work, not done
-here.
+**Partially resolved as of this revision.** Real subjects for Royal
+College's JSS and SSS levels are now known, supplied directly by the
+school as part of the Academic Workforce Register (§4a below) — this
+register states them as real because they arrived as an assignment
+against real named teachers, not as an invented curriculum list.
+Nursery & Primary's and the School of Islamic & Arabic Studies'
+subjects remain a **gap** — no equivalent teacher-to-subject list has
+been supplied for either yet. `term_results.subject` is still a
+free-text column (`sql/schema.sql`) with no `subjects` reference table;
+turning JSS/SSS's now-real list into an actual table row set is a
+schema task for the next data-entry phase, not done in this document.
+
+### 4a. Royal College — Junior Secondary School subjects (real, supplied)
+
+| Subject | Teacher |
+|---|---|
+| English Studies | Miss Ogunyinka Hassanah |
+| Mathematics | Mr Oduyebo Jamiu |
+| Basic / Intermediate Science | Mrs Ganiyu Ige |
+| Social & Civic Studies | Mr Oduyebo Jamiu |
+| Digital Technology | Mrs Adeyemo Zainab |
+| Business Studies | Mr Maruf Afolabi |
+| Trade Subjects | Mrs Adeyemo Zainab |
+| Diction | Mr Yusuf Shola |
+| Coding | Mr Oguntade Adebola |
+| Yoruba | Miss Yusuf Raqeebah |
+| Cultural & Creative Arts | Miss Ogunyinka Hassanah |
+| History | Mr Oladele Abdulwasiu |
+
+### 4b. Royal College — Senior Secondary School subjects (real, supplied)
+
+| Subject | Teacher |
+|---|---|
+| English Studies | Mr Yusuf Shola |
+| Mathematics | Mrs Okoh Nimota |
+| Physics | Mr Kassim Jamal |
+| Chemistry | Mr Kassim Jamal |
+| History | Mr Oladele Abdulwasiu |
+| Literature in English | Miss Ogunyinka Hassanah |
+| Biology | Mrs Ganiyu Rukayah |
+| Digital Technology | Mr Oguntade Adebola |
+| Trade Subjects | Mrs Adeyemo Rukayah |
+| Further Mathematics | Mrs Okoh Nimota |
+| Coding | Mr Oguntade Adebola |
+| Account | Mr Maruf Afolabi |
+| Commerce | Mr Maruf Afolabi |
+| Economics | Mr Oduyebo Jamiu |
+| Yoruba | Miss Yusuf Raqeebah |
+| Cultural & Heritage Studies | Miss Yusuf Raqeebah |
+| Government | Miss Yusuf Raqeebah |
+
+**Note on two apparent name variants:** "Mrs Ganiyu Ige" (JSS Basic/
+Intermediate Science) and "Mrs Ganiyu Rukayah" (SSS Biology) were
+supplied as distinct entries — this register records them as supplied,
+without merging or assuming they are the same or different people.
+Same for "Mrs Adeyemo Zainab" (JSS) / "Mrs Adeyemo Rukayah" (SSS). This
+is exactly the kind of ambiguity real HR data entry (§4a of
+`docs/institutional-data-architecture.md`) needs to resolve with the
+school directly — this register does not guess.
+
+### 4c. School of Islamic & Arabic Studies and Qur'an College subjects (real, by faculty specialisation)
+
+No formal subject-list table was supplied for these two institutions,
+but real faculty specialisations (§4d below) name the actual programme
+components in practice: **Arabic Language, Arabic Grammar, Islamic
+Studies, Qur'anic Studies** (School of Islamic & Arabic Studies); **Hifz
+(Qur'an Memorisation), Tajweed, Qira'aat Studies, Ijazah Preparation,
+Advanced Qur'anic Sciences** (Qur'an College). The Board's own requested
+divisional structure (§5 below) adds **Fiqh, Aqeedah, Hadith, Seerah,
+Islamic Leadership** as named components of the School of Islamic &
+Arabic Studies — these are recorded here as the requested structure,
+not yet confirmed as subjects any named faculty member currently
+teaches.
+
+### 4d. Qur'an College & Islamic Studies Faculty (real, supplied)
+
+| Faculty member | Qualification | Specialisation |
+|---|---|---|
+| Ustadh Abdul-Hameed Abdurrahman | Diploma in Arabic Literature | Arabic Language, Arabic Grammar, Islamic Studies, Qur'anic Studies |
+| Ustadh Muhammad Fodio | Diploma in Qira'aat Sciences; Certified in the Ten Qira'aat | Qur'an Memorisation, Tajweed, Qira'aat Studies, Ijazah Preparation, Advanced Qur'anic Sciences |
+| Ustadh Muhammad Awwal Ishola | B.A. Leadership and Counselling | Islamic Leadership, Counselling, Character Development, Student Guidance, Islamic Studies |
+| Ustadh Sherifudeen Olaifa | To be confirmed | Qur'an and Islamic Studies |
+| Ustadh Mas'sou Abdul-Fattah | B.Sc. | Islamic Education, Qur'anic Studies |
+| Engr. Ustadhah Fatimah A. | B.Sc. Mechanical Engineering | Islamic Education, Female Student Development, STEM & Islamic Integration |
+
+"To be confirmed" for Ustadh Sherifudeen Olaifa's qualification is
+recorded exactly as supplied — this register does not fill in a
+plausible-sounding credential.
+
+**Still a gap:** Nursery & Primary's faculty and subject list, and any
+teachers for the School of Islamic & Arabic Studies specifically
+distinct from Qur'an College's faculty above, have not been supplied.
+The directive that produced this revision explicitly names this as the
+next data-gathering step.
 
 ## 5. Departments
 
-The `departments` table (`sql/schema.sql`) exists and is **empty by
-design** — its own comment states why: *"the public site names 'seven
-academic departments' but does not name them individually anywhere, so
-none are fabricated here."* This register repeats that constraint
-rather than resolving it: **the seven department names are a real gap**,
-not a technical one. Once the school supplies them, they belong in this
-table, scoped to their institution (`institution_id`) or office
-(`office_id`).
+**Status: a complete departmental framework is now proposed — still
+not adopted.** The `departments` table (`sql/schema.sql`) remains
+**empty in the running system**; nothing below has been entered as a
+real row, and it should not be until the Board formally adopts it,
+matching the exact discipline `docs/teacher-operating-model.md` already
+applies to its own proposed roles. The table's original comment (*"the
+public site names 'seven academic departments' but does not name them
+individually anywhere"*) is no longer the state of documentation — it
+is now the state of **adoption**: named, proposed, awaiting a decision.
+
+### 5a. Royal College — proposed academic departments
+
+Reconciled against `docs/teacher-operating-model.md` §2's own earlier
+department sketch (Sciences/Humanities/Languages/Technology) so the two
+documents describe one structure, not two:
+
+| Proposed department | Subjects |
+|---|---|
+| Department of Languages & Communication | English Studies, Literature in English, Diction, Yoruba |
+| Department of Mathematics & Computing | Mathematics, Further Mathematics, Coding, Digital Technology |
+| Department of Sciences | Basic/Intermediate Science, Biology, Physics, Chemistry |
+| Department of Social Sciences & Humanities | History, Government, Economics, Social & Civic Studies |
+| Department of Business & Enterprise Studies | Business Studies, Commerce, Account, Trade Subjects |
+| Department of Creative & Cultural Studies | Cultural & Creative Arts, Cultural & Heritage Studies |
+
+Each maps directly onto `docs/teacher-operating-model.md` §2's proposed
+**Department Head** role — one Head per department above, reporting to
+Vice Principal, Academics.
+
+### 5b. School of Islamic & Arabic Studies and Qur'an College — proposed divisional structure
+
+Per the directive: these are **two distinct academic entities**, never
+collapsed into one generic "Islamic Studies" label, consistently
+throughout this register, the prospectus, and all governance
+documentation.
+
+- **School of Islamic & Arabic Studies** — proposed component areas: Arabic Language, Islamic Studies, Fiqh, Aqeedah, Hadith, Seerah, Islamic Leadership.
+- **Qur'an College** — proposed component programmes: Hifz Programme, Tajweed Programme, Qira'aat Programme, Ijazah Programme, Muraja'ah Programme, Qur'anic Sciences.
+
+This maps onto `docs/teacher-operating-model.md` §3's already-proposed
+specialised roles (Muhaffiz/Muhaffizah, Qur'an Supervisor, Ijazah
+Coordinator, Arabic Language Instructor, Islamic Studies Instructor) —
+this register does not propose new roles competing with those; §4d's
+real faculty should be read against that existing role structure once
+the Board adopts it (e.g. Ustadh Muhammad Fodio's Qira'aat/Tajweed/
+Ijazah-Preparation specialisation maps naturally to Muhaffiz + Ijazah
+Coordinator functions; Ustadh Abdul-Hameed Abdurrahman's Arabic
+Language/Grammar focus maps to Arabic Language Instructor).
 
 ## 6. Offices (established, real, already seeded)
 
