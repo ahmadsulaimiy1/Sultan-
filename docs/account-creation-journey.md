@@ -145,14 +145,58 @@ curl -X POST https://<your-domain>/api/portal/staff/admissions-applications \
 
 ## Testing note
 
-Same limitation as every portal doc in this project: no internet
-egress in this sandbox, so no real database or email-provider call was
-exercised end-to-end. Verified locally with Playwright driving real
-Chromium: the real (DB-less) registration/forgot-password endpoints
-fail gracefully rather than crashing; the registration, verification,
-and dashboard-applications flows were also verified against mocked API
-responses covering the populated state, the zero-applications empty
-state, and the unverified-email banner. Once a real Neon database and
-(optionally) a real Resend account are configured, run the full
-register → verify → apply → staff-review loop against them before
-relying on it.
+**Updated — actually run end-to-end, not just mocked.** This sandbox
+still has no egress to Neon or to shroyalschools.ng (confirmed directly:
+both return a blocked-proxy error), so the real production database was
+not reachable. But `@neondatabase/serverless`'s `neon()` is an HTTP
+client with no Neon-specific behaviour beyond the transport — the exact
+same SQL and application code was run against a real local PostgreSQL
+16 instance, with `wrangler pages dev --compatibility-flags
+nodejs_compat` executing the actual, unmodified Cloudflare Pages
+Functions (a throwaway `pg`-backed shim stood in for `getSql()` only for
+the duration of this test, then was reverted — no application code was
+touched). Playwright drove real Chromium through the real HTML/CSS/JS
+against that live backend: register (real form submit) → a real
+`guardians` row created, session cookie set, immediately signed in →
+verify (using the link the API returns directly, since `RESEND_API_KEY`
+is genuinely unset — confirmed by inspection, not assumed) → `guardians.email_verified_at`
+confirmed set via direct SQL, and `GET /api/portal/me` confirmed
+returning `emailVerified: true` → dashboard reached, session survives a
+refresh → sign out → dashboard redirects to `/portal/login/` → wrong
+password rejected (401) → correct password signs in (200), repeatable
+across multiple logout/login cycles → forgot-password request writes a
+real `reset_token` (confirmed via SQL) but, exactly as designed, never
+exposes it to the caller — self-service reset genuinely cannot complete
+without a configured email provider, matching this doc's own claim
+above rather than contradicting it.
+
+**Two real bugs were found this way and fixed, not just described:**
+1. `/api/portal/setup`'s "safe to run again" claim was false — the two
+   `DO $$ ... EXCEPTION WHEN duplicate_object` blocks guarding
+   `classes_institution_name_key` and
+   `adhkar_completions_guardian_period_date_key` didn't catch
+   `duplicate_table` (42P07), which is what a repeat `ADD CONSTRAINT
+   UNIQUE` actually raises for its auto-generated backing index. Fixed
+   by also catching `duplicate_table`; verified by calling `/api/portal/setup`
+   three times in a row against an already-set-up database.
+2. `.account-status-banner{display:flex}` in `css/portal.css` had the
+   same CSS specificity as the `[hidden]` attribute's UA-stylesheet
+   default and was declared later, so it silently overrode `hidden`
+   regardless of its value — **the "please verify your email" banner
+   never actually disappeared for any real guardian, ever, even after
+   genuinely verifying**, since this class was introduced. `js/portal-dashboard.js`'s
+   `verifyBanner.hidden = !!data.emailVerified` was correct the whole
+   time; the CSS silently discarded it. Fixed with a `:not([hidden])`
+   guard; confirmed both directions (shows unverified, hides verified)
+   with `page.isVisible()` and the element's `.hidden` property, not
+   `textContent` (which doesn't reflect visibility at all — the wrong
+   assertion this bug would evade if you check by reading page text
+   instead of actual visibility).
+
+Neither finding would have surfaced from code review or from
+route-mocked testing (which supplies whatever `emailVerified` value the
+mock is told to) — only running the real code against a real database
+and reading the real DOM state caught them. Also added
+`Cache-Control: no-store` to every portal API response, since none of
+them are ever safe to serve stale — a defensible hardening independent
+of the two bugs above, not itself the fix for either.

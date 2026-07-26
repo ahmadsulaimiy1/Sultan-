@@ -51,9 +51,16 @@ const STATEMENTS = [
     institution TEXT NOT NULL,
     name        TEXT NOT NULL
   )`,
+  // A UNIQUE constraint's auto-generated backing index can collide
+  // under either duplicate_object (42710) or duplicate_table (42P07)
+  // depending on Postgres's internal check order — confirmed by actually
+  // re-running this endpoint against an already-set-up database, which
+  // raised duplicate_table and was NOT caught by `WHEN duplicate_object`
+  // alone, breaking the "safe to run again" guarantee this file's header
+  // comment makes. Both must be caught.
   `DO $$ BEGIN
     ALTER TABLE classes ADD CONSTRAINT classes_institution_name_key UNIQUE (institution, name);
-  EXCEPTION WHEN duplicate_object THEN NULL;
+  EXCEPTION WHEN duplicate_object OR duplicate_table THEN NULL;
   END $$`,
 
   `CREATE TABLE IF NOT EXISTS students (
@@ -159,7 +166,7 @@ const STATEMENTS = [
   )`,
   `DO $$ BEGIN
     ALTER TABLE adhkar_completions ADD CONSTRAINT adhkar_completions_guardian_period_date_key UNIQUE (guardian_id, period, completion_date);
-  EXCEPTION WHEN duplicate_object THEN NULL;
+  EXCEPTION WHEN duplicate_object OR duplicate_table THEN NULL;
   END $$`,
 
   // Student Portal (Phase 2) — see sql/schema.sql for the commented

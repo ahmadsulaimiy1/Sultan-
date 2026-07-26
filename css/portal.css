@@ -221,7 +221,18 @@ body.portal-body{
    low-alpha tint reads as illegible dark-on-dark in the second context
    (the same bug class already fixed once for .pfd-unavailable). Solid
    gold-bright + dark navy text guarantees contrast either way. */
-.account-status-banner{
+/* :not([hidden]) is load-bearing, not decoration — a bare .account-
+   status-banner{display:flex} has the same specificity as the UA
+   stylesheet's [hidden]{display:none} default and comes later in the
+   cascade, so it silently wins regardless of the element's `hidden`
+   attribute. Confirmed as a real, reproducible bug during the Account
+   Creation Journey's end-to-end verification: js/portal-dashboard.js
+   correctly sets `verifyBanner.hidden = true` once a guardian's email
+   is actually verified, but the banner kept rendering anyway because
+   this rule overrode it — meaning the "please verify your email"
+   banner never actually disappeared for any real user, regardless of
+   verification status, since this class was introduced. */
+.account-status-banner:not([hidden]){
   display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   background:var(--gold-bright);border:1px solid var(--gold);padding:12px 18px;margin-bottom:20px;
   font-size:0.85rem;font-weight:600;color:var(--navy-deep);
