@@ -7,7 +7,7 @@
    browser print-to-PDF), screen-viewable for review. */
 
 @page {
-  size: 240mm 300mm;
+  size: 210mm 297mm;
   margin: 0;
 }
 
@@ -27,7 +27,7 @@
 .pros-toolbar button:hover{background:var(--gold-bright);}
 
 .spread{
-  width:240mm; min-height:300mm; margin:20px auto; position:relative; overflow:hidden; isolation:isolate;
+  width:210mm; min-height:297mm; margin:20px auto; position:relative; overflow:hidden; isolation:isolate;
   background:var(--ivory); box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
   padding:16mm 12mm; box-sizing:border-box; page-break-after:always;
 }
@@ -113,7 +113,7 @@
 .data-panel{
   background:var(--parchment); border-top:2pt solid var(--gold); padding:14px 16px; height:fit-content;
 }
-.data-panel .dp-row{display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(198,161,91,0.3); font-size:9.5pt;}
+.data-panel .dp-row{display:flex; justify-content:space-between; gap:8px; padding:5px 0; border-bottom:1px solid rgba(198,161,91,0.3); font-size:9pt;}
 .data-panel .dp-row:last-child{border-bottom:none;}
 .data-panel .dp-label{font-family:'Cinzel','Amiri',serif; font-size:7.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft);}
 .data-panel .dp-value{color:var(--navy); font-weight:600;}
@@ -167,7 +167,7 @@
 
 @media print{
   .pros-toolbar{display:none;}
-  .spread{box-shadow:none; margin:0; width:auto; min-height:auto;}
+  .spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
 }
 
 /* ============================================================
@@ -315,9 +315,9 @@
 
 /* ---- Ten-reasons numbered list ---- */
 .reasons-list{counter-reset:reason;}
-.reason-item{display:flex; gap:10px; padding:8px 0; border-bottom:1px solid rgba(198,161,91,0.2);}
-.reason-item .r-num{font-family:'Cinzel','Amiri',serif; font-size:13pt; color:var(--gold); flex:0 0 auto; width:26px;}
-.reason-item p{font-size:9pt; margin:0; color:var(--ink); line-height:1.5;}
+.reason-item{display:flex; gap:8px; padding:5px 0; border-bottom:1px solid rgba(198,161,91,0.2);}
+.reason-item .r-num{font-family:'Cinzel','Amiri',serif; font-size:11pt; color:var(--gold); flex:0 0 auto; width:22px;}
+.reason-item p{font-size:8.3pt; margin:0; color:var(--ink); line-height:1.4;}
 
 /* ---- Icon panel — an elegant, deliberate substitute where no real
    photography exists, styled as a design choice (solid parchment
@@ -404,3 +404,64 @@
 .spread.dark .support-row, .spread.charcoal .support-row{border-top-color:rgba(233,206,138,0.25);}
 .spread.dark .support-row .support-cell, .spread.charcoal .support-row .support-cell{border-inline-end-color:rgba(233,206,138,0.18);}
 .spread.dark .support-row .support-cell p, .spread.charcoal .support-row .support-cell p{color:rgba(247,238,223,0.7);}
+
+/* ============================================================
+   Realignment to the approved master reference (26-page A4
+   brand book) — components matching its specific compositions:
+   the dark portrait-rail bio spread, department list, pathway
+   steps, and a bordered corner-marked quote box. Editorial
+   refinement only — these compose with the existing system
+   above rather than replacing it.
+   ============================================================ */
+
+/* Two-column bio spread: fixed-width dark portrait rail (photo +
+   name pinned to the foot) beside a wide ivory content column —
+   matches the reference Director's Message / Leadership portrait
+   pages exactly, at A4. */
+.bio-layout{display:grid; grid-template-columns:62mm 1fr; margin:-16mm -12mm; min-height:297mm;}
+.bio-rail{background:var(--navy-deep); color:var(--ivory); padding:16mm 8mm 12mm; display:flex; flex-direction:column; box-sizing:border-box;}
+.bio-rail .bio-photo{width:100%; aspect-ratio:3/4; object-fit:cover; margin-bottom:auto;}
+.bio-rail .icon-panel{margin-bottom:auto; padding:16px 10px;}
+.bio-rail .bio-name{font-family:'Cinzel','Amiri',serif; font-size:15pt; line-height:1.2; color:#fff; margin-top:16px;}
+.bio-rail .bio-role{font-size:7.5pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-bright); margin-top:6px;}
+.bio-rail .bio-cred{font-size:7pt; color:rgba(247,238,223,0.6); margin-top:6px; line-height:1.5;}
+.bio-content{padding:16mm 14mm 14mm 16mm; box-sizing:border-box; min-width:0;}
+.bio-content h2{font-size:27pt;}
+
+/* Academic department list (Royal College — Academic Pathway) */
+.pros-list{display:flex; flex-direction:column; gap:0; margin:14px 0;}
+.pros-list-item{padding:11px 0; border-bottom:1px solid rgba(198,161,91,0.25);}
+.pros-list-item:last-child{border-bottom:none;}
+.pros-list-item .pl-title{font-family:'Cinzel','Amiri',serif; font-size:10pt; color:var(--navy); margin-bottom:3px;}
+.pros-list-item .pl-body{font-size:8.5pt; color:var(--ink-soft); line-height:1.5;}
+.spread.dark .pros-list-item, .spread.charcoal .pros-list-item{border-bottom-color:rgba(233,206,138,0.2);}
+.spread.dark .pros-list-item .pl-title, .spread.charcoal .pros-list-item .pl-title{color:#fff;}
+.spread.dark .pros-list-item .pl-body, .spread.charcoal .pros-list-item .pl-body{color:rgba(247,238,223,0.7);}
+
+/* Bordered pull-quote box with corner ticks — the reference's ToC
+   feature-quote treatment */
+.quote-box{
+  position:relative; border:1px solid rgba(198,161,91,0.5); background:var(--parchment);
+  padding:26px 30px; margin:22px 0; text-align:center;
+}
+.quote-box::before, .quote-box::after,
+.quote-box .qb-tick-tl, .quote-box .qb-tick-br{position:absolute; width:14px; height:14px; border:2px solid var(--gold);}
+.quote-box::before{content:''; top:-1px; left:-1px; border-width:2px 0 0 2px;}
+.quote-box::after{content:''; bottom:-1px; right:-1px; border-width:0 2px 2px 0;}
+.quote-box p{font-family:'Cormorant Garamond','Amiri',serif; font-style:italic; font-size:14.5pt; line-height:1.6; color:var(--navy); margin:0;}
+.quote-box .qb-who{font-family:'Cinzel','Amiri',serif; font-size:8pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin-top:14px; display:block;}
+
+/* Larger monogram badge for the leadership roster, matching the
+   reference's square SZ/AO/AI/AS/FB/KA idiom */
+.roster-row{gap:16px; padding:10px 0;}
+.roster-initials{width:48px; height:48px; font-size:12.5pt; letter-spacing:0.02em;}
+.roster-row img.roster-photo{width:48px; height:48px; object-fit:cover; flex:0 0 auto;}
+.roster-body .roster-name{font-size:11.5pt;}
+
+@media screen and (max-width:1000px){
+  .bio-layout{display:block;}
+  .bio-rail{padding:8vw;}
+}
+@media print{
+  .bio-layout{margin:-16mm -12mm;}
+}
