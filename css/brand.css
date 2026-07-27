@@ -663,6 +663,21 @@
   .adk-static-ref{font-size:0.76rem;color:var(--ink-soft);margin:0;}
   [dir="rtl"] .adk-static-item h4{flex-direction:row-reverse;}
 
+  /* --- My Progress: streak, weekly/monthly completion, favourites --- */
+  .adk-progress-panel{
+    margin-top:32px;background:var(--navy-deep);color:var(--ivory);padding:22px 26px;border-top:2px solid var(--gold-bright);
+  }
+  .adk-progress-panel[hidden]{display:none;}
+  .adk-progress-head{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-bright);margin:0 0 16px;}
+  .adk-progress-stats{display:flex;flex-wrap:wrap;gap:28px;}
+  .adk-progress-stat{display:flex;flex-direction:column;align-items:flex-start;min-width:64px;}
+  [dir="rtl"] .adk-progress-stat{align-items:flex-end;}
+  .adk-progress-stat svg{width:16px;height:16px;color:var(--gold-bright);margin-bottom:4px;}
+  .adk-progress-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:#fff;line-height:1;}
+  .adk-progress-stat .label{font-size:0.64rem;letter-spacing:0.05em;text-transform:uppercase;color:rgba(248,244,233,0.6);margin-top:5px;}
+  .adk-progress-stat--streak .value{color:var(--gold-bright);}
+  .adk-progress-empty{font-size:0.8rem;color:rgba(248,244,233,0.7);margin:14px 0 0;font-style:italic;}
+
   /* --- Priority panel: Daily Essentials / Most Rewarding / Protection --- */
   .adk-priority-panel{margin-top:36px;}
   .adk-priority-head{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-bright);background:var(--navy-deep);display:inline-block;padding:4px 12px;margin-bottom:16px;}

@@ -46,6 +46,8 @@
       achv3: '3-Day Consistency', achv7: '7-Day Consistency', achv30: '30-Day Consistency', achvFirst: 'First Completion',
       estReading: 'Est. reading time',
       recentlyViewed: 'Recently Viewed',
+      myProgress: 'My Progress', daysThisWeek: 'This Week', daysThisMonth: 'This Month', totalDays: 'Total Days',
+      favouritesSaved: 'Favourites Saved', startTodayLong: 'Complete today’s adhkār to start your streak.',
     },
     ar: {
       priorityHead: 'الأذكار ذات الأولوية', dailyEssentials: 'أذكار اليوم', dailyEssentialsSub: 'الورد الأساسي لليوم',
@@ -73,6 +75,8 @@
       achv3: 'انتظام ٣ أيام', achv7: 'انتظام ٧ أيام', achv30: 'انتظام ٣٠ يوماً', achvFirst: 'أول إنجاز',
       estReading: 'وقت القراءة المقدّر',
       recentlyViewed: 'شوهد مؤخراً',
+      myProgress: 'إنجازي', daysThisWeek: 'هذا الأسبوع', daysThisMonth: 'هذا الشهر', totalDays: 'إجمالي الأيام',
+      favouritesSaved: 'المفضلة المحفوظة', startTodayLong: 'أكمل أذكار اليوم لتبدأ سلسلة انتظامك.',
     },
   }[LANG];
 
@@ -262,6 +266,39 @@
       p.completedDates.push(p.date);
       saveProgress(p);
     }
+    renderProgressPanel();
+  }
+
+  function daysWithinLast(dates, n) {
+    var cutoff = Date.now() - n * 86400000;
+    return dates.filter(function (d) { return new Date(d + 'T00:00:00Z').getTime() >= cutoff; }).length;
+  }
+
+  // "My Progress" — surfaces data this app has tracked all along
+  // (completedDates, favourites) but never previously displayed anywhere.
+  function renderProgressPanel() {
+    var mount = root.querySelector('[data-adk-progress]');
+    if (!mount) return;
+    var p = getProgress();
+    var favCount = getFavourites().length;
+    var streak = computeStreak(p.completedDates);
+    var totalDays = p.completedDates.length;
+    if (totalDays === 0 && favCount === 0) { mount.hidden = true; mount.innerHTML = ''; return; }
+    var week = daysWithinLast(p.completedDates, 7);
+    var month = daysWithinLast(p.completedDates, 30);
+    mount.hidden = false;
+    mount.innerHTML =
+      '<p class="adk-progress-head">' + esc(T.myProgress) + '</p>' +
+      '<div class="adk-progress-stats">' +
+      '<div class="adk-progress-stat adk-progress-stat--streak">' + ICONS.star +
+        '<span class="value">' + streak + '</span>' +
+        '<span class="label">' + esc(streak === 1 ? T.streakLabel.replace(/s?$/, '') : T.streakLabel) + '</span></div>' +
+      '<div class="adk-progress-stat"><span class="value">' + week + '</span><span class="label">' + esc(T.daysThisWeek) + '</span></div>' +
+      '<div class="adk-progress-stat"><span class="value">' + month + '</span><span class="label">' + esc(T.daysThisMonth) + '</span></div>' +
+      '<div class="adk-progress-stat"><span class="value">' + totalDays + '</span><span class="label">' + esc(T.totalDays) + '</span></div>' +
+      '<div class="adk-progress-stat">' + ICONS.fav + '<span class="value">' + favCount + '</span><span class="label">' + esc(T.favouritesSaved) + '</span></div>' +
+      '</div>' +
+      (totalDays === 0 ? '<p class="adk-progress-empty">' + esc(T.startTodayLong) + '</p>' : '');
   }
 
   // ============================================================
@@ -399,6 +436,7 @@
         e.stopPropagation();
         var isFav = toggleFavourite(btn.getAttribute('data-fav-toggle'));
         btn.classList.toggle('is-fav', isFav);
+        renderProgressPanel();
       });
     });
     mount.querySelectorAll('[data-item-id]').forEach(function (card) {
@@ -713,6 +751,7 @@
     modal.querySelector('[data-ctr-fav]').addEventListener('click', function (e) {
       var isFav = toggleFavourite(state.counterItem.id);
       e.currentTarget.classList.toggle('is-on', isFav);
+      renderProgressPanel();
     });
     modal.querySelector('[data-ctr-sound]').addEventListener('click', function (e) {
       settings.sound = !settings.sound; saveSettings(settings);
@@ -761,6 +800,7 @@
     renderCategoryNav();
     renderSearch();
     renderSessionDashboard();
+    renderProgressPanel();
     // Default landing content: today's period, shown immediately.
     var period = todaysPeriodId();
     var items = DATA.itemsByCategory(period);
