@@ -31,10 +31,10 @@ step-by-step walkthroughs.
 
 | Name | Purpose | Priority | Cost | Owner | Dependencies | Status |
 |---|---|---|---|---|---|---|
-| Cloudflare (account) | Hosting platform for the whole Digital Campus | Critical | Free tier — verify at signup | ICT / CTO | None | Not Started |
-| Hosting (Pages project) | Serves the static site + Pages Functions (the entire `functions/api/` backend) | Critical | Free tier | ICT | Cloudflare account | Not Started |
-| Staging environment | Safe pre-production testing at a real, reachable URL | Critical | Free (Cloudflare Pages preview deployments) | ICT | Cloudflare Pages project | Not Started |
-| Production environment | The real live site | Critical, sequenced *after* staging is verified | Free–Starter depending on usage | ICT / CEO's Office | Staging Verified | Not Started |
+| Cloudflare (account) | Hosting platform for the whole Digital Campus | Critical | Free tier — verify at signup | ICT / CTO | None | **Completed** — account exists (`Ahmadbinibrohim@gmail.com`), verified 2026-07-27 |
+| Hosting (Pages project) | Serves the static site + Pages Functions (the entire `functions/api/` backend) | Critical | Free tier | ICT | Cloudflare account | **Completed** — `shroyalschools-web` Pages project live at `shroyalschools-web.pages.dev`, first successful deploy 2026-07-27. A separate plain Worker named `shroyalschools` was created first by mistake (wrong project type — bare Workers don't support the `functions/` Pages Functions convention this codebase uses) and should be deleted or left unused; it is not part of the real deployment. `wrangler.toml` was added to the repo to set `pages_build_output_dir`, `compatibility_date`, and the `nodejs_compat` compatibility flag directly, working around a confirmed Cloudflare dashboard bug where the Compatibility Flags UI control does not reliably accept that flag. |
+| Staging environment | Safe pre-production testing at a real, reachable URL | Critical | Free (Cloudflare Pages preview deployments) | ICT | Cloudflare Pages project | **Completed** — Preview deployments build automatically from the `claude/wec-institutional-design-kt3u0t` branch (confirmed working 2026-07-27); no environment variables (database, tokens) configured yet, so only the static site is verified, not any API-backed feature |
+| Production environment | The real live site | Critical, sequenced *after* staging is verified | Free–Starter depending on usage | ICT / CEO's Office | Staging Verified | **In Progress** — `main` branch deploys automatically to `shroyalschools-web.pages.dev` and the static site is confirmed live (2026-07-27); no custom domain attached yet (still on the free `.pages.dev` subdomain — see Domain Infrastructure above) and no environment variables set, so every database-backed feature (portal, login, dashboards) is still inactive on this live URL |
 
 ## Database Infrastructure
 
@@ -97,13 +97,17 @@ step-by-step walkthroughs.
 
 ## How to read this register
 
-Almost every row reads "Not Started" for account-existence, while the
+Most rows still read "Not Started" for account-existence, while the
 *code* behind School Operations and Identity Infrastructure is already
 Completed — this is the exact "design/code quality outpaces operational
 existence" pattern the Maturity Report already documented, restated
-here in registry form. The path through this register, in dependency
-order, is: **GitHub (done) → Cloudflare account → Cloudflare Pages
-project → Neon account → Staging DB → prove one real user journey works
-at a staging URL → Resend account + domain email records → Production
-DB → Production environment → MFA/monitoring/backup as hardening before
-real institutional data goes live.**
+here in registry form. As of 2026-07-27, two links in that chain moved
+from Not Started to real: the Cloudflare account exists, and the
+`shroyalschools-web` Pages project is live and deploying automatically
+from both branches. The path through this register, in dependency
+order, is: **GitHub (done) → Cloudflare account (done) → Cloudflare
+Pages project (done) → Neon account → Staging DB → prove one real user
+journey works at a staging URL → Resend account + domain email records
+→ Production DB → environment variables on the live Pages project →
+custom domain → MFA/monitoring/backup as hardening before real
+institutional data goes live.**
