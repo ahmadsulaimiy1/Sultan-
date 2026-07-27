@@ -196,6 +196,28 @@
     repeat: 10, seconds: 60,
   });
 
+  var ASBAHTU_USHHIDUKA = it({
+    id: 'asbahtu-ushhiduka', categories: ['morning'],
+    title: { en: 'The Four-Witness Morning Testimony', ar: 'أصبحت أشهدك' },
+    arabic: 'اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ',
+    transliteration: 'Allahumma inni asbahtu ush-hiduka wa ush-hidu hamalata ‘arshik, wa mala’ikataka, wa jami‘a khalqik, annaka Antallahu la ilaha illa Ant, wahdaka la sharika lak, wa anna Muhammadan ‘abduka wa rasuluk.',
+    translation: { en: 'O Allah, I have entered the morning and call upon You and the bearers of Your Throne, Your angels, and all of Your creation to bear witness that You are Allah, none has the right to be worshipped except You alone, without partner, and that Muhammad is Your servant and Messenger.', ar: 'تُقال أربع مرات في الصباح.' },
+    reference: { en: 'Al-Bukhari (Al-Adab al-Mufrad); Sunan an-Nasa’i (‘Amal al-Yawm wal-Laylah); Ibn as-Sunni', ar: 'البخاري في الأدب المفرد، والنسائي في عمل اليوم والليلة، وابن السني' },
+    virtue: { en: 'Whoever says this four times when he enters the morning, Allah frees a quarter of him from the Fire; whoever says it four times, all of him.', ar: 'من قالها أربع مرات حين يصبح أعتق الله ربعه من النار، ومن قالها أربعاً أعتق الله كله من النار.' },
+    repeat: 4, seconds: 48,
+  });
+
+  var AMSAYTU_USHHIDUKA = it({
+    id: 'amsaytu-ushhiduka', categories: ['evening'],
+    title: { en: 'The Four-Witness Evening Testimony', ar: 'أمسيت أشهدك' },
+    arabic: 'اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ',
+    transliteration: 'Allahumma inni amsaytu ush-hiduka wa ush-hidu hamalata ‘arshik, wa mala’ikataka, wa jami‘a khalqik, annaka Antallahu la ilaha illa Ant, wahdaka la sharika lak, wa anna Muhammadan ‘abduka wa rasuluk.',
+    translation: { en: 'O Allah, I have entered the evening and call upon You and the bearers of Your Throne, Your angels, and all of Your creation to bear witness that You are Allah, none has the right to be worshipped except You alone, without partner, and that Muhammad is Your servant and Messenger.', ar: 'تُقال أربع مرات في المساء.' },
+    reference: { en: 'Al-Bukhari (Al-Adab al-Mufrad); Sunan an-Nasa’i (‘Amal al-Yawm wal-Laylah); Ibn as-Sunni', ar: 'البخاري في الأدب المفرد، والنسائي في عمل اليوم والليلة، وابن السني' },
+    virtue: { en: 'The evening counterpart, said four times upon entering the evening, for the same freeing-from-the-Fire virtue.', ar: 'نظير دعاء الصباح، تُقال أربع مرات في المساء.' },
+    repeat: 4, seconds: 48,
+  });
+
   var ASBAHNA = it({
     id: 'asbahna', categories: ['morning'],
     title: { en: 'Asbahna wa Asbaha al-Mulku Lillah', ar: 'أصبحنا وأصبح الملك لله' },
@@ -427,6 +449,17 @@
     repeat: 3, seconds: 15,
   });
 
+  var HASBUNALLAH_NIMAL_MAWLA = it({
+    id: 'hasbunallah-nimal-mawla', categories: ['morning', 'evening', 'distress'],
+    title: { en: 'Ḥasbunallāh — the Fuller Reliance Formula', ar: 'حسبنا الله ونعم الوكيل نعم المولى ونعم النصير' },
+    arabic: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ، نِعْمَ الْمَوْلَى وَنِعْمَ النَّصِيرُ',
+    transliteration: 'Hasbunallahu wa ni‘mal-wakil, ni‘mal-mawla wa ni‘man-nasir.',
+    translation: { en: 'Allah is sufficient for us, and He is the best Disposer of affairs; the best Protector and the best Helper.', ar: 'جمعٌ بين آيتين قرآنيتين في الاتكال على الله.' },
+    reference: { en: 'Qur’an 3:173 & Qur’an 8:40', ar: 'القرآن الكريم، سورة آل عمران الآية 173، وسورة الأنفال الآية 40' },
+    virtue: { en: 'Combines two of the Qur’an’s own expressions of complete reliance upon Allah — the first said by Ibrahim ‘alayhis-salam, the second describing Allah as the believers’ Protector.', ar: 'يجمع بين تعبيرين قرآنيين عن كمال التوكل على الله.' },
+    repeat: 1, seconds: 12,
+  });
+
   var HASBUNALLAH = it({
     id: 'hasbunallah', categories: ['distress'],
     title: { en: 'Hasbunallahu wa Ni‘mal Wakil', ar: 'حسبنا الله ونعم الوكيل' },
@@ -628,20 +661,22 @@
   var ITEMS = [
     AYAT_AL_KURSI, AL_IKHLAS, AL_FALAQ, AN_NAS, SAYYID_AL_ISTIGHFAR, HASBIYA_ALLAH, BISMILLAHIL_LADHI, AFIYAH,
     RADHITU_BILLAH, TASBIH_100, LA_ILAHA_10X,
+    ASBAHTU_USHHIDUKA, AMSAYTU_USHHIDUKA,
     ASBAHNA, ALLAHUMMA_BIKA_ASBAHNA, AMSAYNA, ALLAHUMMA_BIKA_AMSAYNA,
+    HASBUNALLAH_NIMAL_MAWLA,
     ASTAGHFIRULLAH_3X, ANTAS_SALAM, LA_ILAHA_MULK, TASBIH_SUBHANALLAH, TASBIH_ALHAMDULILLAH, TASBIH_ALLAHU_AKBAR,
     BISMIKA_AMUTU, QINI_ADHABAKA,
     ALHAMDU_AHYANA,
     LEAVING_HOME, ENTERING_HOME,
     ENTERING_MOSQUE, LEAVING_MOSQUE,
-    TRAVEL_DUA,
+    TRAVEL_DUA, AYIBUNA_TAIBUN,
     AUDHU_KALIMATILLAH,
     DHUN_NUN, HASBUNALLAH, LA_HAWLA, HAMM_WAL_HAZAN, RAHMATAKA_ARJU,
     RABBIGHFIRLI, ASTAGHFIRULLAH_ADHIM,
     SALAWAT_IBRAHIMIYYAH,
     HAMD_BAD_AKL, AHABB_KALAM,
     RABBI_IRHAMHUMA, QURRATA_AYUN,
-    SHAHADA_AFTER_WUDU, RABBI_ZIDNI_ILMA, BARIK_LANA_RIZQ, ALLAHUMMA_INNAKA_AFUWWUN, ADHHIB_AL_BAS, AYIBUNA_TAIBUN,
+    SHAHADA_AFTER_WUDU, RABBI_ZIDNI_ILMA, BARIK_LANA_RIZQ, ALLAHUMMA_INNAKA_AFUWWUN, ADHHIB_AL_BAS,
   ];
 
   function itemsByCategory(catId) {

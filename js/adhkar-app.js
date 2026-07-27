@@ -48,6 +48,10 @@
       recentlyViewed: 'Recently Viewed',
       myProgress: 'My Progress', daysThisWeek: 'This Week', daysThisMonth: 'This Month', totalDays: 'Total Days',
       favouritesSaved: 'Favourites Saved', startTodayLong: 'Complete today’s adhkār to start your streak.',
+      wirdHead: 'Daily Wird Programme', wirdSub: 'A complete routine, not a checklist — choose how far you go today.',
+      wirdEssential: 'Essential', wirdStandard: 'Standard', wirdAdvanced: 'Advanced',
+      wirdEssentialSub: 'The core litany', wirdStandardSub: 'Adds Protection & Forgiveness', wirdAdvancedSub: 'Adds Ṣalawāt, Gratitude & Rizq',
+      wirdQuranNote: 'Advanced practice traditionally continues with unhurried personal Qur’an recitation — “recite what is easy for you of the Qur’an” (Qur’an 73:20) — for as long as time allows.',
     },
     ar: {
       priorityHead: 'الأذكار ذات الأولوية', dailyEssentials: 'أذكار اليوم', dailyEssentialsSub: 'الورد الأساسي لليوم',
@@ -77,6 +81,10 @@
       recentlyViewed: 'شوهد مؤخراً',
       myProgress: 'إنجازي', daysThisWeek: 'هذا الأسبوع', daysThisMonth: 'هذا الشهر', totalDays: 'إجمالي الأيام',
       favouritesSaved: 'المفضلة المحفوظة', startTodayLong: 'أكمل أذكار اليوم لتبدأ سلسلة انتظامك.',
+      wirdHead: 'برنامج الورد اليومي', wirdSub: 'روتين متكامل، لا مجرد قائمة — اختر إلى أين تصل اليوم.',
+      wirdEssential: 'أساسي', wirdStandard: 'موسّع', wirdAdvanced: 'متقدّم',
+      wirdEssentialSub: 'الورد الأساسي', wirdStandardSub: 'يضيف الحماية والاستغفار', wirdAdvancedSub: 'يضيف الصلاة على النبي والشكر والرزق',
+      wirdQuranNote: 'يُستحب في الورد المتقدّم إتباع ذلك بقراءة هادئة من القرآن الكريم — ﴿فَاقْرَءُوا مَا تَيَسَّرَ مِنَ الْقُرْآنِ﴾ (المزّمّل: ٢٠) — بقدر ما يسمح الوقت.',
     },
   }[LANG];
 
@@ -359,6 +367,67 @@
         var session = buildQuickSession(mode.budget);
         startSession(session.items, mode.label + ' ' + T.essentials);
         renderCategoryContent(period, session.items, mode.label + ' — ' + (period === 'morning' ? T.dailyEssentials : T.dailyEssentials));
+        scrollToContent();
+      });
+    });
+  }
+
+  // A "programme" is the daily period's own items plus items from a set of
+  // additional real categories, deduplicated by id (many items already
+  // belong to more than one category — that overlap is real, not double
+  // counted here). Minutes shown are computed live from actual item data,
+  // never a fixed promised number.
+  var WIRD_TIERS = [
+    { key: 'essential', labelKey: 'wirdEssential', subKey: 'wirdEssentialSub', extraCats: [] },
+    { key: 'standard', labelKey: 'wirdStandard', subKey: 'wirdStandardSub', extraCats: ['protection', 'forgiveness'] },
+    { key: 'advanced', labelKey: 'wirdAdvanced', subKey: 'wirdAdvancedSub', extraCats: ['protection', 'forgiveness', 'salawat', 'gratitude', 'rizq'] },
+  ];
+
+  function buildWirdItems(period, extraCats) {
+    var seen = {}; var out = [];
+    DATA.itemsByCategory(period).concat(
+      extraCats.reduce(function (acc, c) { return acc.concat(DATA.itemsByCategory(c)); }, [])
+    ).forEach(function (item) {
+      if (seen[item.id]) return;
+      seen[item.id] = true;
+      out.push(item);
+    });
+    return out;
+  }
+
+  function renderWirdProgramme() {
+    var mount = root.querySelector('[data-adk-wird]');
+    if (!mount) return;
+    var period = todaysPeriodId();
+    var periodLabel = DATA.categories.filter(function (c) { return c.id === period; })[0].label[LANG];
+    var cards = WIRD_TIERS.map(function (tier) {
+      var items = buildWirdItems(period, tier.extraCats);
+      var secs = items.reduce(function (s, i) { return s + i.seconds; }, 0);
+      return {
+        tier: tier, items: items,
+        minutes: Math.max(1, Math.round(secs / 60)),
+      };
+    });
+    mount.innerHTML =
+      '<p class="adk-wird-head">' + esc(T.wirdHead) + '</p>' +
+      '<p class="adk-wird-sub">' + esc(T.wirdSub) + '</p>' +
+      '<div class="adk-wird-grid">' +
+      cards.map(function (c) {
+        return '<button type="button" class="adk-wird-card" data-wird-tier="' + c.tier.key + '">' +
+          '<span class="awc-time">' + c.minutes + ' ' + esc(T.min) + '</span>' +
+          '<span class="awc-label">' + esc(T[c.tier.labelKey]) + '</span>' +
+          '<span class="awc-sub">' + esc(T[c.tier.subKey]) + '</span>' +
+          '<span class="awc-count">' + c.items.length + ' ' + esc(T.items) + '</span></button>';
+      }).join('') +
+      '</div>' +
+      '<p class="adk-wird-note">' + esc(T.wirdQuranNote) + '</p>';
+    mount.querySelectorAll('[data-wird-tier]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tier = WIRD_TIERS.filter(function (t) { return t.key === btn.getAttribute('data-wird-tier'); })[0];
+        var card = cards.filter(function (c) { return c.tier.key === tier.key; })[0];
+        var label = T[tier.labelKey] + ' ' + T.wirdHead + ' — ' + periodLabel;
+        startSession(card.items, label);
+        renderCategoryContent(period, card.items, label);
         scrollToContent();
       });
     });
@@ -797,6 +866,7 @@
   function init() {
     renderPriorityPanel();
     renderQuickModes();
+    renderWirdProgramme();
     renderCategoryNav();
     renderSearch();
     renderSessionDashboard();

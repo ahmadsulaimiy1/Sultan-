@@ -714,6 +714,24 @@
   .adk-quick-btn .aqb-time{display:block;font-family:'Cinzel','Amiri',serif;font-size:1.1rem;margin-bottom:2px;}
   .adk-quick-btn .aqb-label{display:block;font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;}
 
+  /* --- Daily Wird Programme: Essential / Standard / Advanced --- */
+  .adk-wird-panel{margin-top:30px;padding:24px 26px;background:var(--milk);border:1px solid var(--gold);}
+  .adk-wird-head{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--navy);margin:0 0 4px;}
+  .adk-wird-sub{font-size:0.82rem;color:var(--ink-soft);margin:0 0 18px;}
+  .adk-wird-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media (max-width:700px){.adk-wird-grid{grid-template-columns:1fr;}}
+  .adk-wird-card{
+    text-align:left;background:var(--navy);color:var(--ivory);padding:16px 16px;border-top:2px solid var(--gold);
+    cursor:pointer;transition:transform .2s ease;
+  }
+  [dir="rtl"] .adk-wird-card{text-align:right;}
+  .adk-wird-card:hover{transform:translateY(-2px);}
+  .adk-wird-card .awc-time{display:block;font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--gold-bright);}
+  .adk-wird-card .awc-label{display:block;font-size:0.85rem;font-weight:600;margin-top:4px;color:#fff;}
+  .adk-wird-card .awc-sub{display:block;font-size:0.7rem;color:rgba(248,244,233,0.65);margin-top:2px;}
+  .adk-wird-card .awc-count{display:block;font-size:0.66rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--gold-bright);margin-top:10px;}
+  .adk-wird-note{font-size:0.74rem;font-style:italic;color:var(--ink-soft);margin:16px 0 0;line-height:1.6;}
+
   /* --- Category nav --- */
   .adk-cat-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:22px;}
   @media (max-width:900px){.adk-cat-nav{grid-template-columns:repeat(4,1fr);}}
