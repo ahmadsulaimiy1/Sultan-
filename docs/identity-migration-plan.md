@@ -36,11 +36,11 @@ the narrowest possible group per `role-permission-matrix.md` §4.20.
 | Route | Current Authentication | Current Authorisation | Future Authentication | Future Authorisation | Required Role | Required Permission | Migration Priority | Risk |
 |---|---|---|---|---|---|---|---|---|
 | **Announcements admin** (`admin/announcements.js`) | Bearer token, header `x-admin-token` | None beyond token possession — anyone holding `PORTAL_ADMIN_TOKEN` can publish/archive/feature any announcement | Staff session (`shr_staff_session`) | `hasPermissionFor(sql, staffId, 'communications', 'C'/'P', institutionId)` | REG (school-wide notices), PRIN (own institution), EXE (institution-wide) | C, P in `communications` | **Medium** — public-facing content, no PII, but a stale/shared token is a real defacement risk the longer it's reused | Low-Medium: content-only blast radius, but already explicitly flagged as a "temporary compromise" in `docs/announcements-system.md` since the phase it shipped in |
-| **Founder Dashboard** (`founder/dashboard.js`) | Bearer token, header `x-founder-token` | None beyond token possession | Staff session | `hasPermissionFor(sql, staffId, 'analytics', 'V', null)` | EXE | V in `analytics` (aggregate-only, already enforced by the query shape) | **Low** — single real user (the CEO), read-only, no write path to secure | Low: read-only aggregates, no individual PII in the response shape by design |
+| **Founder Dashboard** (`founder/dashboard.js`) | **Migrated — dual-auth.** Staff session primary, `x-founder-token` bearer fallback | **Migrated** — `hasPermissionFor(sql, staffId, 'analytics', 'V', null)` | *(target state — bearer fallback retired once a real EXE account is confirmed)* | *(target state)* | EXE | V in `analytics` (aggregate-only, already enforced by the query shape) | **Done** | Low: read-only aggregates, no individual PII in the response shape by design |
 | **Student/Guardian administration** (`admin/students.js`) | Bearer token, header `x-admin-token` | None beyond token possession — the single highest-blast-radius unmigrated route: full C/E on live student and guardian PII | Staff session | `hasPermissionFor(sql, staffId, 'student_records', 'C'/'E', institutionId)` + `guardian_records` equivalent | REG / AREG | C, E, Ar, X in `student_records` and `guardian_records` | **High** — this is the route the Registrar's Office phase directly replaces; migrating it is that phase's real work, not a side effect | **High**: live children's and families' real data; the current token is also how every existing guardian/student account was ever created, so migration must not break onboarding mid-flight |
 | **Student login issuance** (`admin/create-student-login.js`) | Bearer token, header `x-admin-token` | None beyond token possession | Staff session | `hasPermissionFor(sql, staffId, 'student_records', 'C', institutionId)` (issuing a login is a facet of managing the student record) | REG / AREG | C in `student_records` | **High** — same reasoning as above, natural to migrate together | Medium: account-provisioning action, not a data-read, but still real PII exposure via the activation link it returns |
 | **Guardian password reset** (`admin/reset-password.js`) | Bearer token, header `x-admin-token` | None beyond token possession | Staff session | `hasPermissionFor(sql, staffId, 'guardian_records', 'E', null)` | REG / AREG | E in `guardian_records` | **Medium** — lower-frequency action than the two above, but same trust boundary | Medium: an account-takeover-adjacent action (issues a working reset link) |
-| **Hifz/Ijazah administration** (`admin/hifz-progress.js`) | Bearer token, header `x-quran-token` (deliberately separate token, narrower population) | None beyond token possession | Staff session | `hasPermissionFor(sql, staffId, 'hifz_records', 'C'/'E', institutionId)` + `ijazah_records` `A` for grant/revoke | MUH (own assigned students), QC-OFF (institution-wide + stage advancement), PRIN (Qur'an College, joint grant/revoke) | C, E in `hifz_records`; A in `ijazah_records` | **Medium** — smaller population than student admin, but Ijazah is a permanent credentialing record, so correctness matters more than urgency | Medium: real credentialing data (IQ-02 permanence), but already narrower-token-scoped than the general admin token |
+| **Hifz/Ijazah administration** (`admin/hifz-progress.js`) | **Migrated — dual-auth.** Staff session primary, `x-quran-token` bearer fallback | **Migrated, per-action.** `hasPermissionFor(sql, staffId, 'hifz_records', 'C'/'A', institutionId)` for progress/stage; `ijazah_records` `C` for grant, `Ar` for revoke | *(target state — bearer fallback retired once a real QC-OFF/PRIN account is confirmed)* | *(target state)* | QC-OFF (institution-wide + stage advancement + Ijazah grant), PRIN (Qur'an-College-only stage advancement + Ijazah revocation) — MUH's "own assigned students" scope is refused outright (fails closed), not silently widened, since no assignment data exists to check it against | C, A in `hifz_records`; C, Ar in `ijazah_records` | **Done** | Low-Medium: real credentialing data (IQ-02 permanence), but already narrower-token-scoped than the general admin token, and per-action gating (not one blanket grant) matches the Matrix's actual role split |
 | **Admissions review** (`staff/admissions-applications.js`) | **Already migrated** — staff session (`shr_staff_session`) | **Already migrated** — `hasPermissionFor`/`checkGrants` against `admissions`, institution-scoped for PRIN | *(target state — no further migration needed)* | *(target state)* | ADM, REG, PRIN | V, A in `admissions` | **Done** — shipped in the Account Creation Journey phase, the first real Permission Engine consumer | Low: already on the target architecture; kept here as the worked example the rest of this table follows |
 | **Future Registrar's Office functions** (this phase) | N/A — being built now | N/A — being built now | Staff session, from day one | `hasPermissionFor` against `student_records`, `admissions`, `certificates`, `transcripts` per action | REG / AREG, PRIN (joint approvals) | Per §4.1/4.6/4.7/4.11/4.13/4.14 of the Matrix | **In progress — this phase** | Building session-gated from the start avoids adding a ninth bearer token to migrate later |
 
@@ -66,9 +66,9 @@ and its "What this register deliberately leaves open" section for the
 full accounting, and `docs/registrar-office.md` for what the new
 endpoints actually cover.
 
-Guardian password reset (Priority 2) and Hifz/Ijazah administration
-(Priority 3) are unchanged by this phase — still exactly as described
-in the table above.
+Guardian password reset (Priority 2) was unchanged by this phase — still
+exactly as described in the table above. Hifz/Ijazah administration
+(Priority 3) has since migrated — see the status update below.
 
 ## Status update — Migration Phase A (Attendance)
 
@@ -216,6 +216,55 @@ attendance and assessments, the two areas with a genuine record-writing
 gap; a teacher-to-guardian messaging surface is a distinct feature, not
 folded in here. See `docs/teacher-portal.md` for setup and verification.
 
+## Status update — Migration Phase D item #4 (Hifz/Ijazah administration)
+
+`admin/hifz-progress.js` is now migrated, following the exact dual-auth
+pattern the Founder Dashboard proved out: staff session + Permission
+Engine is the PRIMARY path, `PORTAL_QURAN_TOKEN` remains a fallback
+only (same reasoning as Founder Dashboard — MUH/QC-OFF are still
+`'proposed'` roles with no confirmed real account anywhere).
+
+Each of the endpoint's three operations is gated against the specific
+Matrix cell that actually authorises it, not one blanket grant, because
+the Matrix genuinely splits them:
+
+- **Juz' progress** (C/E on `hifz_records`): MUH or QC-OFF. MUH's own
+  Matrix scope is "own assigned students only," but — exactly as the
+  Teacher Identity status update above found for TCH's "own class"
+  scope before `teacher_class_assignments` existed — there is no
+  assignment table resolving *which* students a given Muhaffiz is
+  assigned to. Rather than silently treat a MUH grant as equivalent to
+  QC-OFF's institution-wide breadth, a MUH-role staff session is
+  refused outright here (least-privilege default, per permissions.js's
+  own "fails closed, not open" principle). This is moot in practice
+  today since no MUH account exists to hold the role, but the code is
+  written for when one does.
+- **Stage advancement** (A on `hifz_records`): QC-OFF or PRIN only —
+  the Matrix does not give MUH the 'A' permission at all.
+- **Ijazah grant** (C on `ijazah_records`): QC-OFF only. PRIN's row has
+  no 'C' — the Matrix's "A jointly with QC-OFF" note on PRIN describes
+  a two-party approval step that has no Approval Workflow Architecture
+  to enforce it (see the Roadmap item of that name); QC-OFF's 'C' grant
+  alone gates creation today, the same single-step behaviour the
+  bearer token always had. Named here as a real gap, not silently
+  smoothed into a two-step flow that doesn't exist.
+- **Ijazah revocation** (Ar on `ijazah_records`): PRIN only — QC-OFF's
+  row has no 'Ar'. Per IQ-02, revoking a permanent credential is
+  deliberately a narrower authority than granting one, and this is now
+  enforced rather than merely documented.
+
+The student's institution is still validated explicitly
+(`isQuranCollegeInstitution`) regardless of which auth path is used —
+this is the finer-scope check permissions.js's own header comment says
+the calling endpoint owes, since the Matrix's "Qur'an College only"
+scope text on PRIN's rows doesn't parse cleanly through `checkGrants()`'s
+generic institution regex (it doesn't end in "...only").
+
+**What this did not touch:** Announcements admin (Priority 4) and the
+admin/sysadmin bootstrap tokens (item #3) remain exactly as described
+above — Migration Phase D as a whole is not complete until Announcements
+admin migrates too.
+
 ## Recommended migration order
 
 1. **Student/Guardian administration + student login issuance** — done
@@ -224,10 +273,8 @@ folded in here. See `docs/teacher-portal.md` for setup and verification.
    the old route first would mean migrating it twice.
 2. **Guardian password reset** — small, low-effort, natural to fold into
    the same phase since it shares a trust boundary with the above.
-3. **Hifz/Ijazah administration** — real but smaller population;
-   recommended right after the Registrar's Office phase closes, while
-   the pattern is freshest, rather than left indefinitely on the old
-   token.
+3. **Hifz/Ijazah administration** — **done**, see the status update
+   above.
 4. **Announcements admin** — lowest content-sensitivity of the group;
    fine to defer until a Communications-role-holding office exists to
    assign it to (today, REG or EXE would hold it, per the table above).

@@ -138,11 +138,19 @@ guardians.
 
 ## Entering Hifz progress, stage, and Ijazah records
 
-Token-gated by `PORTAL_QURAN_TOKEN`, not `PORTAL_ADMIN_TOKEN`. Only
-accepts data for students recorded as Qur'an College (via `institution`
-on their class) — this is checked server-side, so a fat-fingered
-admission number can't silently attach Hifz rows to the wrong student.
-Send only the parts that changed:
+**Migrated (docs/identity-migration-plan.md, Phase D item #4):** a
+signed-in staff session with the Qur'an College Officer (`QC-OFF`) or
+Principal (`PRIN`) role is now the primary way to call this endpoint,
+checked per-action against the Permission Engine — QC-OFF can enter
+progress, advance the stage, and grant an Ijazah; only PRIN can revoke
+one. `PORTAL_QURAN_TOKEN` remains a fallback, not `PORTAL_ADMIN_TOKEN`,
+for as long as no real QC-OFF/PRIN account exists in a reachable
+environment — the curl examples below still use it since that's what
+this sandbox can exercise. Only accepts data for students recorded as
+Qur'an College (via `institution` on their class) — this is checked
+server-side regardless of auth method, so a fat-fingered admission
+number can't silently attach Hifz rows to the wrong student. Send only
+the parts that changed:
 
 ```
 curl -X POST https://<your-domain>/api/portal/admin/hifz-progress \
