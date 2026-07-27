@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Database Setup — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">ICT Only</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card">
+    <h1>One-Time Database Setup</h1>
+    <p class="sub">This creates the database tables the Portal needs. It is safe to click more than once — it will not erase anything or duplicate data if it has already run.</p>
+
+    <div class="portal-error" data-portal-error></div>
+    <div data-portal-success hidden style="border:1px solid #2f6f4f;background:rgba(47,111,79,0.08);color:#1f4a35;padding:14px 16px;border-radius:6px;margin-bottom:18px;font-size:0.92rem;"></div>
+
+    <div class="portal-field">
+      <label for="setup-token">Setup Token</label>
+      <input id="setup-token" type="password" autocomplete="off" placeholder="Paste the PORTAL_SETUP_TOKEN value here" />
+    </div>
+    <button type="button" class="portal-submit" data-run-setup>Run Setup</button>
+
+    <p class="portal-notice">
+      The "Setup Token" is the value you entered as <code>PORTAL_SETUP_TOKEN</code> in this environment's Cloudflare Pages settings — paste that exact value above, then click the button. Nothing else is needed.
+    </p>
+    <a class="portal-back-link" href="/">← Back to the main site</a>
+  </div>
+</main>
+
+<script>
+document.querySelector('[data-run-setup]').addEventListener('click', async function () {
+  var btn = this;
+  var tokenInput = document.getElementById('setup-token');
+  var errBox = document.querySelector('[data-portal-error]');
+  var okBox = document.querySelector('[data-portal-success]');
+  errBox.classList.remove('is-visible');
+  okBox.hidden = true;
+
+  var token = tokenInput.value.trim();
+  if (!token) {
+    errBox.textContent = 'Please paste the Setup Token first.';
+    errBox.classList.add('is-visible');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Running…';
+
+  try {
+    var res = await fetch('/api/portal/setup', {
+      method: 'POST',
+      headers: { 'x-setup-token': token },
+    });
+    var data = await res.json().catch(function () { return null; });
+
+    if (res.ok && data && data.ok) {
+      okBox.textContent = 'Success — the database is set up and ready. Sample/demo data was ' +
+        (data.demoSeeded ? 'added (this looks like a staging environment).' : 'not added (this looks like production — correct, since no PORTAL_DEMO_PASSWORD was set).');
+      okBox.hidden = false;
+    } else {
+      errBox.textContent = (data && data.error) ? data.error : ('Something went wrong (HTTP ' + res.status + ').');
+      errBox.classList.add('is-visible');
+    }
+  } catch (err) {
+    errBox.textContent = 'Could not reach the server. Check your internet connection and try again.';
+    errBox.classList.add('is-visible');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Run Setup';
+  }
+});
+</script>
+</body>
+</html>
