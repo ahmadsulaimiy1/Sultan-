@@ -1,4 +1,4 @@
-# SHRS Master Academic Structure Register v1.1
+# SHRS Master Academic Structure Register v1.2
 
 **Revision note (v1.0 → v1.1):** integrates real Royal College JSS/SSS
 subject-teacher data and real Qur'an College & Islamic Studies faculty
@@ -8,6 +8,19 @@ that no academic level ladder existed (it does — `docs/teacher-operating-model
 departmental framework for Board consideration. No structural claim in
 v1.0 about what's adopted vs. proposed has changed — only what's now
 documented as real has grown.
+
+**Revision note (v1.1 → v1.2):** corrects §4d's own stated rule against
+merging Qur'an College and School of Islamic & Arabic Studies faculty
+into one list — v1.1 had in fact merged them under one combined table
+heading, despite the surrounding text insisting on the distinction. The
+six faculty members are now split into the correct two tables per an
+explicit institutional correction. **Separately, a new Royal College
+JSS/SSS faculty roster was supplied this same session that conflicts
+with §4a/4b's existing "real, supplied" data** — different names against
+several subjects, several names appearing in neither list. Per this
+register's own no-guessing discipline (see the Ganiyu Ige/Rukayah note
+below), both are recorded, neither is silently preferred, and §4a/4b
+are marked **unreconciled pending confirmation** rather than overwritten.
 
 The authoritative source for every school, programme, class, subject,
 department, office, role, committee, and reporting line at Sultan
@@ -111,7 +124,7 @@ free-text column (`sql/schema.sql`) with no `subjects` reference table;
 turning JSS/SSS's now-real list into an actual table row set is a
 schema task for the next data-entry phase, not done in this document.
 
-### 4a. Royal College — Junior Secondary School subjects (real, supplied)
+### 4a. Royal College — Junior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
 
 | Subject | Teacher |
 |---|---|
@@ -128,7 +141,7 @@ schema task for the next data-entry phase, not done in this document.
 | Cultural & Creative Arts | Miss Ogunyinka Hassanah |
 | History | Mr Oladele Abdulwasiu |
 
-### 4b. Royal College — Senior Secondary School subjects (real, supplied)
+### 4b. Royal College — Senior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
 
 | Subject | Teacher |
 |---|---|
@@ -159,10 +172,55 @@ is exactly the kind of ambiguity real HR data entry (§4a of
 `docs/institutional-data-architecture.md`) needs to resolve with the
 school directly — this register does not guess.
 
+### 4a-bis. Royal College — second roster supplied this session (⚠ UNRECONCILED against §4a/4b above)
+
+A different Royal College JSS/SSS teacher-subject list arrived in the
+same message that corrected §4d's institution split below. It is
+recorded here in full, exactly as supplied, rather than merged into
+§4a/4b or treated as a silent replacement:
+
+| Teacher | Subjects |
+|---|---|
+| Mrs Ganiyu Ige (Rukayah) | English Language |
+| Mrs Kareemat | Mathematics |
+| Mrs Fatimat Badmus | Basic Science, Physics |
+| Mrs Adeyemo Zainab (Rukayah) | Biology, Agricultural Science |
+| Mrs Opakunle | Chemistry |
+| Mr Ismail | Further Mathematics, Technical Drawing |
+| Mrs Omotola | Civic Education, Social Studies |
+| Mrs Basirat | Business Studies, Commerce |
+| Mrs Lawal | Economics |
+| Mrs Amina | Government, History |
+| Mrs Mariam | Literature in English |
+| Mrs Khadijah | Home Economics |
+| Mr Yusuf | Computer Studies, Information & Communication Technology (ICT) |
+| Mrs Hafsat | French Language |
+
+**What doesn't reconcile, specifically:** "Ganiyu Ige" appears in both
+rosters but against different subjects (§4a: Basic/Intermediate
+Science; here: English Language). "Adeyemo Zainab" appears in both but
+against different subjects (§4a: Digital Technology/Trade Subjects;
+here: Biology/Agricultural Science). "Yusuf" appears in §4a/4b as "Mr
+Yusuf Shola" against English Studies/Diction; here as "Mr Yusuf"
+against Computer Studies/ICT — possibly the same person with a dropped
+surname and a different-term assignment, possibly not. Eight names in
+§4a/4b (Ogunyinka Hassanah, Oduyebo Jamiu, Maruf Afolabi, Oguntade
+Adebola, Yusuf Raqeebah, Oladele Abdulwasiu, Okoh Nimota, Kassim Jamal)
+do not appear at all in this second list; nine names here (Kareemat,
+Fatimat Badmus, Opakunle, Ismail, Omotola, Basirat, Lawal, Amina,
+Mariam, Khadijah, Hafsat) do not appear in §4a/4b.
+
+**This register cannot resolve which roster is current** — that needs
+one direct answer from the school: is this a correction/update
+superseding §4a/4b (e.g. a new term's assignments), a different cohort
+or shift, or were the two simply drafted independently and need
+reconciling by hand? Until answered, no public-facing faculty content
+for Royal College should be published from either list alone.
+
 ### 4c. School of Islamic & Arabic Studies and Qur'an College subjects (real, by faculty specialisation)
 
 No formal subject-list table was supplied for these two institutions,
-but real faculty specialisations (§4d below) name the actual programme
+but real faculty specialisations (§4d/§4e below) name the actual programme
 components in practice: **Arabic Language, Arabic Grammar, Islamic
 Studies, Qur'anic Studies** (School of Islamic & Arabic Studies); **Hifz
 (Qur'an Memorisation), Tajweed, Qira'aat Studies, Ijazah Preparation,
@@ -173,26 +231,32 @@ Arabic Studies — these are recorded here as the requested structure,
 not yet confirmed as subjects any named faculty member currently
 teaches.
 
-### 4d. Qur'an College & Islamic Studies Faculty (real, supplied)
+### 4d. Qur'an College Faculty (real, supplied — corrected split, see revision note)
 
 | Faculty member | Qualification | Specialisation |
 |---|---|---|
-| Ustadh Abdul-Hameed Abdurrahman | Diploma in Arabic Literature | Arabic Language, Arabic Grammar, Islamic Studies, Qur'anic Studies |
-| Ustadh Muhammad Fodio | Diploma in Qira'aat Sciences; Certified in the Ten Qira'aat | Qur'an Memorisation, Tajweed, Qira'aat Studies, Ijazah Preparation, Advanced Qur'anic Sciences |
-| Ustadh Muhammad Awwal Ishola | B.A. Leadership and Counselling | Islamic Leadership, Counselling, Character Development, Student Guidance, Islamic Studies |
-| Ustadh Sherifudeen Olaifa | To be confirmed | Qur'an and Islamic Studies |
-| Ustadh Mas'sou Abdul-Fattah | B.Sc. | Islamic Education, Qur'anic Studies |
-| Engr. Ustadhah Fatimah A. | B.Sc. Mechanical Engineering | Islamic Education, Female Student Development, STEM & Islamic Integration |
+| Ustadh Muhammad Fodio | Diploma in Qira'at Sciences; Specialist in the Ten Qira'at | Ḥifẓ al-Qur'an, Tajwīd, Qira'at Sciences, Qur'anic Studies, Ijazah Preparation |
+| Ustadh Muhammad Awwal Ishola | B.A. Leadership and Counselling | Ḥifẓ al-Qur'an, Student Counselling, Leadership Development, Character Building, Qur'an College Student Affairs |
 
-"To be confirmed" for Ustadh Sherifudeen Olaifa's qualification is
-recorded exactly as supplied — this register does not fill in a
-plausible-sounding credential.
+### 4e. School of Islamic & Arabic Studies Faculty (real, supplied — corrected split, see revision note)
 
-**Still a gap:** Nursery & Primary's faculty and subject list, and any
-teachers for the School of Islamic & Arabic Studies specifically
-distinct from Qur'an College's faculty above, have not been supplied.
-The directive that produced this revision explicitly names this as the
-next data-gathering step.
+| Faculty member | Qualification | Teaching areas |
+|---|---|---|
+| Ustadh Abdul-Hameed Abdurrahman | Diploma in Arabic Literature | Arabic Language, Arabic Grammar (Naḥw), Arabic Morphology (Ṣarf), Arabic Literature, Arabic Composition, Islamic Studies |
+| Ustadh Sherifudeen Olaifa | **Not yet supplied** | Islamic Studies, Qur'anic Studies, Arabic Studies |
+| Ustadh Mas'oud Abdul-Fattah | B.Sc. | Islamic Studies, Arabic Studies, Student Development |
+| Engr. Ustadhah Fatimah A. | B.Sc. Mechanical Engineering | Islamic Studies, Arabic Studies, Educational Development, STEM Awareness & Mentorship |
+
+Qualification recorded as "Not yet supplied" for Ustadh Sherifudeen
+Olaifa exactly as given — this register does not fill in a
+plausible-sounding credential. "Mas'oud Abdul-Fattah" corrects v1.1's
+"Mas'sou Abdul-Fattah" as a spelling fix supplied in the same message;
+recorded as a correction, not a second unreconciled name, since no
+conflicting qualification/specialisation data came with it.
+
+**Still a gap:** Nursery & Primary's faculty and subject list has not
+been supplied. The Administrative Workforce Register
+(`docs/workforce-data-collection-request.md` §3) also remains open.
 
 ## 5. Departments
 
@@ -225,6 +289,25 @@ Each maps directly onto `docs/teacher-operating-model.md` §2's proposed
 **Department Head** role — one Head per department above, reporting to
 Vice Principal, Academics.
 
+**A second, differently-grouped department structure arrived in the
+same message as the unreconciled §4a-bis roster above** — recorded here
+rather than silently substituted for the structure above, same
+discipline as §4a-bis:
+
+| Alternative proposed department | Subjects |
+|---|---|
+| Mathematics & ICT Department | Mathematics, Further Mathematics, Computer Studies, ICT, Technical Drawing |
+| Science & Technology Department | Basic Science, Physics, Chemistry, Biology, Agricultural Science |
+| Humanities Department | English Language, Literature in English, Government, History, Civic Education, Social Studies |
+| Business & Commercial Studies Department | Business Studies, Commerce, Economics |
+| Languages Department | French Language |
+
+Both structures remain **proposed, not adopted** — the `departments`
+table is still empty in the running system either way — but which one
+(if either) reflects the school's actual intended grouping is a Board
+decision this register cannot make unilaterally, and is now the same
+open question as the roster itself.
+
 ### 5b. School of Islamic & Arabic Studies and Qur'an College — proposed divisional structure
 
 Per the directive: these are **two distinct academic entities**, never
@@ -238,9 +321,9 @@ documentation.
 This maps onto `docs/teacher-operating-model.md` §3's already-proposed
 specialised roles (Muhaffiz/Muhaffizah, Qur'an Supervisor, Ijazah
 Coordinator, Arabic Language Instructor, Islamic Studies Instructor) —
-this register does not propose new roles competing with those; §4d's
+this register does not propose new roles competing with those; §4d/§4e's
 real faculty should be read against that existing role structure once
-the Board adopts it (e.g. Ustadh Muhammad Fodio's Qira'aat/Tajweed/
+the Board adopts it (e.g. Ustadh Muhammad Fodio's Qira'at/Tajwīd/
 Ijazah-Preparation specialisation maps naturally to Muhaffiz + Ijazah
 Coordinator functions; Ustadh Abdul-Hameed Abdurrahman's Arabic
 Language/Grammar focus maps to Arabic Language Instructor).

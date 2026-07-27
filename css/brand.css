@@ -985,6 +985,19 @@
   .light-photo-pair .lpp-frame img{width:100%;height:100%;object-fit:cover;display:block;}
   .light-photo-pair p{color:#54534e;font-size:0.9rem;margin-top:14px;}
 
+  /* faculty roster — light-theme monogram cards; real names/qualifications
+     only, with an honest "not yet supplied" state for gaps in the record */
+  .faculty-grid{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
+  @media (max-width:760px){.faculty-grid{grid-template-columns:1fr;}}
+  .faculty-card{background:#fff;padding:24px 26px;display:flex;gap:18px;align-items:flex-start;}
+  .faculty-card .fc-mono{flex:0 0 auto;width:52px;height:52px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel','Amiri',serif;font-size:1rem;letter-spacing:0.02em;color:var(--gold);background:rgba(198,161,91,0.06);}
+  .faculty-card .fc-body h4{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.15rem;color:var(--navy);line-height:1.25;}
+  .faculty-card .fc-role{display:block;font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--crimson);margin-top:5px;}
+  .faculty-card .fc-qual{font-size:0.85rem;color:#54534e;margin-top:8px;}
+  .faculty-card .fc-qual.fc-unsupplied{color:#8a8477;font-style:italic;}
+  .faculty-card .fc-areas{font-size:0.8rem;color:#8a8477;margin-top:6px;line-height:1.5;}
+  .faculty-note{font-size:0.78rem;color:#8a8477;margin-top:14px;}
+
   /* campus gallery — real photography, added to the facilities chapter */
   .campus-gallery{margin-top:56px;padding-top:36px;border-top:1px solid var(--line);}
   .campus-gallery .folio{margin-bottom:22px;}
@@ -1315,6 +1328,8 @@
   #quran-college .light-photo-pair{position:relative;padding-top:28px;}
   #quran-college .light-photo-pair::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,var(--forest-green) 0 6px,transparent 6px 12px);opacity:0.6;}
   #quran-college .page-hero-icon{color:var(--forest-green);}
+  #quran-college .faculty-card .fc-mono{border-color:var(--forest-green);color:var(--forest-green);background:rgba(63,107,78,0.06);}
+  #quran-college .faculty-card .fc-role{color:var(--forest-green);}
 
   /* Nursery & Primary — a warm terracotta accent, distinct from Qur'an
      College's Forest Green and Governance's Oxford Navy, giving the

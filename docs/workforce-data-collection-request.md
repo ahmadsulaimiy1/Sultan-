@@ -8,6 +8,13 @@ disguised as reality, no simulated institutional facts.* Once this is
 returned filled in, it becomes the input to the Human Capital Register
 (§4) and to real `staff` data entry (`docs/institutional-data-architecture.md`).
 
+**Status note:** Royal College's JSS/SSS roster (collected separately
+from this intake, before this note was added) now has **two
+conflicting versions on file** — see `master-academic-structure-register.md`
+§4a-bis for the full comparison. That conflict needs the school's
+direct answer before any Royal College names are published publicly;
+it is not something this document's own intake structure can resolve.
+
 ## 1. Nursery & Primary School Faculty
 
 For every real teacher, please supply:
@@ -16,18 +23,17 @@ For every real teacher, please supply:
 |---|---|---|---|---|
 | *(awaiting real data)* | | | | |
 
-## 2. School of Islamic & Arabic Studies Faculty
+## 2. School of Islamic & Arabic Studies Faculty — **supplied, integrated**
 
-**Distinct from Qur'an College** — do not merge these two lists. For
-every real instructor:
-
-| Full Name | Qualification | Subject | Department |
-|---|---|---|---|
-| *(awaiting real data)* | | | |
-
-Subject examples the school may draw from (not a closed list, and not
-yet confirmed as SHRS's actual offering): Arabic Language, Nahw, Sarf,
-Balaghah, Aqeedah, Fiqh, Hadith, Seerah, Islamic History.
+**Distinct from Qur'an College** — the two lists arrived merged once
+already (`master-academic-structure-register.md` v1.1's §4d error) and
+have now been correctly split. Full detail, qualifications, and
+teaching areas: `docs/master-academic-structure-register.md` §4d
+(Qur'an College — Ustadh Muhammad Fodio, Ustadh Muhammad Awwal Ishola)
+and §4e (School of Islamic & Arabic Studies — Ustadh Abdul-Hameed
+Abdurrahman, Ustadh Sherifudeen Olaifa, Ustadh Mas'oud Abdul-Fattah,
+Engr. Ustadhah Fatimah A.). Ustadh Sherifudeen Olaifa's qualification
+remains unsupplied, recorded as such, not filled in.
 
 ## 3. Administrative Workforce Register
 
