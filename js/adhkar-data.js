@@ -53,6 +53,16 @@
       description: { en: 'Praise and thanks in the Prophet’s ﷺ own words.', ar: 'الحمد والشكر بألفاظ النبي ﷺ.' } },
     { id: 'family', label: { en: 'Family', ar: 'الأسرة والذرية' }, icon: 'home', priority: false, group: 'occasions',
       description: { en: 'Qur’anic supplications for parents and offspring.', ar: 'أدعية قرآنية للوالدين والذرية.' } },
+    { id: 'wudu', label: { en: 'Wuḍūʾ', ar: 'الوضوء' }, icon: 'home', priority: false, group: 'occasions',
+      description: { en: 'Said upon completing ablution.', ar: 'تُقال عند الفراغ من الوضوء.' } },
+    { id: 'knowledge', label: { en: 'Seeking Knowledge', ar: 'طلب العلم' }, icon: 'hands', priority: false, group: 'occasions',
+      description: { en: 'For students and seekers of beneficial knowledge.', ar: 'للطلاب وطالبي العلم النافع.' } },
+    { id: 'rizq', label: { en: 'Sustenance & Barakah', ar: 'الرزق والبركة' }, icon: 'home', priority: false, group: 'occasions',
+      description: { en: 'Seeking provision and blessing in what is given.', ar: 'طلب الرزق والبركة فيما أُعطي.' } },
+    { id: 'ramadan', label: { en: 'Ramaḍān', ar: 'رمضان' }, icon: 'moon-stars', priority: false, group: 'occasions',
+      description: { en: 'Specific to the blessed month.', ar: 'خاصة بالشهر الفضيل.' } },
+    { id: 'ruqyah', label: { en: 'Ruqyah (Healing)', ar: 'الرقية الشرعية' }, icon: 'shield', priority: false, group: 'occasions',
+      description: { en: 'The Prophet’s ﷺ own words recited over the sick.', ar: 'ألفاظ النبي ﷺ التي كان يرقي بها المريض.' } },
   ];
 
   function it(o) { return o; }
@@ -543,6 +553,78 @@
     repeat: 1, seconds: 14,
   });
 
+  // --- Wudu ---
+  var SHAHADA_AFTER_WUDU = it({
+    id: 'shahada-after-wudu', categories: ['wudu'],
+    title: { en: 'Testimony After Wuḍūʾ', ar: 'الشهادة بعد الوضوء' },
+    arabic: 'أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ',
+    transliteration: 'Ash-hadu an la ilaha illallahu wahdahu la sharika lah, wa ash-hadu anna Muhammadan ‘abduhu wa rasuluh.',
+    translation: { en: 'I bear witness that there is no deity except Allah alone, without partner, and I bear witness that Muhammad is His servant and Messenger.', ar: 'تُقال عند الفراغ من الوضوء.' },
+    reference: { en: 'Sahih Muslim', ar: 'صحيح مسلم' },
+    virtue: { en: 'Whoever completes wuḍūʾ well and then says this, the eight gates of Paradise are opened for him, to enter through whichever he wishes.', ar: 'من قالها بعد إسباغ الوضوء فُتحت له أبواب الجنة الثمانية يدخل من أيها شاء.' },
+    repeat: 1, seconds: 14,
+  });
+
+  // --- Seeking Knowledge ---
+  var RABBI_ZIDNI_ILMA = it({
+    id: 'rabbi-zidni-ilma', categories: ['knowledge'],
+    title: { en: 'My Lord, Increase Me in Knowledge', ar: 'رب زدني علماً' },
+    arabic: 'رَبِّ زِدْنِي عِلْمًا',
+    transliteration: 'Rabbi zidni ‘ilma.',
+    translation: { en: 'My Lord, increase me in knowledge.', ar: 'دعاء قرآني، أُمر به النبي ﷺ.' },
+    reference: { en: 'Qur’an 20:114', ar: 'القرآن الكريم، سورة طه، الآية 114' },
+    virtue: { en: 'The only supplication the Prophet ﷺ was directly commanded in the Qur’an to say for an increase — of knowledge.', ar: 'الدعاء الوحيد الذي أُمر النبي ﷺ صراحة في القرآن أن يطلب فيه المزيد، وهو العلم.' },
+    repeat: 1, seconds: 6,
+  });
+
+  // --- Sustenance & Barakah ---
+  var BARIK_LANA_RIZQ = it({
+    id: 'barik-lana-rizq', categories: ['rizq'],
+    title: { en: 'Blessing in Provision', ar: 'اللهم بارك لنا فيما رزقتنا' },
+    arabic: 'اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ',
+    transliteration: 'Allahumma barik lana fima razaqtana wa qina ‘adhaban-nar.',
+    translation: { en: 'O Allah, bless for us what You have provided us, and protect us from the punishment of the Fire.', ar: 'تُقال قبل الطعام أو عند طلب البركة في الرزق.' },
+    reference: { en: 'Widely narrated table-dua; cited in Ibn as-Sunni’s ‘Amal al-Yawm wal-Laylah', ar: 'ذكره ابن السني في عمل اليوم والليلة' },
+    virtue: { en: 'A short, comprehensive request for blessing in what has been provided.', ar: 'طلب موجز جامع للبركة فيما رُزق.' },
+    repeat: 1, seconds: 10,
+  });
+
+  // --- Ramadan ---
+  var ALLAHUMMA_INNAKA_AFUWWUN = it({
+    id: 'allahumma-innaka-afuwwun', categories: ['ramadan'],
+    title: { en: 'Laylat al-Qadr Dua', ar: 'دعاء ليلة القدر' },
+    arabic: 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي',
+    transliteration: 'Allahumma innaka ‘afuwwun tuhibbul-‘afwa fa‘fu ‘anni.',
+    translation: { en: 'O Allah, You are Pardoning and You love to pardon, so pardon me.', ar: 'علّمها النبي ﷺ لعائشة رضي الله عنها لتقولها إن وافقت ليلة القدر.' },
+    reference: { en: 'Sunan al-Tirmidhi; Sunan Ibn Majah (graded ḥasan ṣaḥīḥ)', ar: 'سنن الترمذي وابن ماجه' },
+    virtue: { en: 'Taught by the Prophet ﷺ to ‘A’ishah as what to say if she found Laylat al-Qadr.', ar: 'علّمه النبي ﷺ لعائشة رضي الله عنها لتقوله إن أدركت ليلة القدر.' },
+    repeat: 1, seconds: 12,
+  });
+
+  // --- Ruqyah ---
+  var ADHHIB_AL_BAS = it({
+    id: 'adhhib-al-bas', categories: ['ruqyah'],
+    title: { en: 'Ruqyah for the Sick', ar: 'رقية المريض' },
+    arabic: 'أَذْهِبِ الْبَأْسَ رَبَّ النَّاسِ، اشْفِ أَنْتَ الشَّافِي، لَا شِفَاءَ إِلَّا شِفَاؤُكَ، شِفَاءً لَا يُغَادِرُ سَقَمًا',
+    transliteration: 'Adhhibil-ba’sa Rabban-nas, ishfi Antash-Shafi, la shifa’a illa shifa’uk, shifa’an la yughadiru saqama.',
+    translation: { en: 'Remove the harm, Lord of mankind, and heal — You are the Healer. There is no healing except Your healing, a healing that leaves no illness behind.', ar: 'كان النبي ﷺ يقولها إذا عاد مريضاً، يمسح بيده اليمنى.' },
+    reference: { en: 'Sahih al-Bukhari & Sahih Muslim', ar: 'صحيح البخاري ومسلم' },
+    virtue: { en: 'The Prophet’s ﷺ own ruqyah when visiting the sick, said while wiping with the right hand.', ar: 'من رقية النبي ﷺ للمريض، مع المسح باليد اليمنى.' },
+    repeat: 1, seconds: 16,
+  });
+
+  // --- Travel (return) ---
+  var AYIBUNA_TAIBUN = it({
+    id: 'ayibuna-taibun', categories: ['travel'],
+    title: { en: 'Returning from a Journey', ar: 'دعاء الرجوع من السفر' },
+    arabic: 'آيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ',
+    transliteration: 'Ayibuna ta’ibuna ‘abiduna li-Rabbina hamidun.',
+    translation: { en: 'We return, repenting, worshipping, and praising our Lord.', ar: 'كان النبي ﷺ يقولها عند القفول من السفر.' },
+    reference: { en: 'Sahih al-Bukhari & Sahih Muslim', ar: 'صحيح البخاري ومسلم' },
+    virtue: { en: 'Said by the Prophet ﷺ specifically on the way back, distinct from the outbound travel dua.', ar: 'يُقال عند الرجوع، وهو غير دعاء الذهاب.' },
+    repeat: 1, seconds: 10,
+  });
+
   var ITEMS = [
     AYAT_AL_KURSI, AL_IKHLAS, AL_FALAQ, AN_NAS, SAYYID_AL_ISTIGHFAR, HASBIYA_ALLAH, BISMILLAHIL_LADHI, AFIYAH,
     RADHITU_BILLAH, TASBIH_100, LA_ILAHA_10X,
@@ -559,6 +641,7 @@
     SALAWAT_IBRAHIMIYYAH,
     HAMD_BAD_AKL, AHABB_KALAM,
     RABBI_IRHAMHUMA, QURRATA_AYUN,
+    SHAHADA_AFTER_WUDU, RABBI_ZIDNI_ILMA, BARIK_LANA_RIZQ, ALLAHUMMA_INNAKA_AFUWWUN, ADHHIB_AL_BAS, AYIBUNA_TAIBUN,
   ];
 
   function itemsByCategory(catId) {
