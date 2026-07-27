@@ -528,7 +528,7 @@ async function handle({ request, env }) {
 
   try {
     for (const statement of STATEMENTS) {
-      await sql.query(statement);
+      await sql(statement);
     }
 
     let demoSeeded = false;

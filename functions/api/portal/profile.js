@@ -156,7 +156,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   try {
-    await sql.query(`UPDATE guardians SET ${setClauses.join(', ')} WHERE id = $1`, values);
+    await sql(`UPDATE guardians SET ${setClauses.join(', ')} WHERE id = $1`, values);
     const profile = await loadProfile(sql, guardianId);
     return json({ ok: true, ...profile });
   } catch (err) {

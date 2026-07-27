@@ -77,7 +77,7 @@ export async function onRequestGet({ request, env }) {
     let resultsByStudent = {};
     if (studentIds.length && currentTerm) {
       const placeholders = studentIds.map((_, i) => `$${i + 2}`).join(', ');
-      const attRes = await sql.query(
+      const attRes = await sql(
         `SELECT student_id, days_present, days_total FROM attendance_summary WHERE term = $1 AND student_id IN (${placeholders})`,
         [currentTerm, ...studentIds]
       );
@@ -85,7 +85,7 @@ export async function onRequestGet({ request, env }) {
 
       if (subjects.length) {
         const subjPlaceholders = subjects.map((_, i) => `$${i + 2 + studentIds.length}`).join(', ');
-        const resRes = await sql.query(
+        const resRes = await sql(
           `SELECT student_id, subject, ca_score, exam_score, total_score FROM term_results
            WHERE term = $1 AND student_id IN (${placeholders}) AND subject IN (${subjPlaceholders})`,
           [currentTerm, ...studentIds, ...subjects]

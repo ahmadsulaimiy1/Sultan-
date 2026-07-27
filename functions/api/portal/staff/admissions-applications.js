@@ -67,7 +67,7 @@ export async function onRequestGet({ request, env }) {
     } else {
       const institutionIds = [...new Set(viewable.map((g) => g.institutionId))];
       const placeholders = institutionIds.map((_, i) => `$${i + 1}`).join(', ');
-      const res = await sql.query(
+      const res = await sql(
         `SELECT aa.*, i.name AS institution_name FROM admissions_applications aa
          LEFT JOIN institutions i ON i.id = aa.institution_id
          WHERE aa.institution_id IN (${placeholders})

@@ -89,21 +89,21 @@ export async function onRequestGet({ request, env }) {
       ijazahGrantedRes,
       resultsRecordedRes,
     ] = await Promise.all([
-      sql.query(`SELECT status, COUNT(*)::int AS n FROM students WHERE ${SAMPLE_FILTER} GROUP BY status ORDER BY status`),
-      sql.query(`
+      sql(`SELECT status, COUNT(*)::int AS n FROM students WHERE ${SAMPLE_FILTER} GROUP BY status ORDER BY status`),
+      sql(`
         SELECT c.institution, COUNT(*)::int AS n
         FROM students s LEFT JOIN classes c ON c.id = s.class_id
         WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')} AND s.status = 'active'
         GROUP BY c.institution ORDER BY n DESC`),
-      sql.query(`
+      sql(`
         SELECT COUNT(*)::int AS n FROM (
           SELECT sc.student_id FROM student_classes sc
           JOIN students s ON s.id = sc.student_id
           WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           GROUP BY sc.student_id HAVING COUNT(*) > 1
         ) t`),
-      sql.query(`SELECT COUNT(*)::int AS n FROM guardians WHERE ${SAMPLE_FILTER}`),
-      sql.query(`
+      sql(`SELECT COUNT(*)::int AS n FROM guardians WHERE ${SAMPLE_FILTER}`),
+      sql(`
         SELECT AVG(days_present::float / NULLIF(days_total, 0)) AS pct, COUNT(*)::int AS n
         FROM (
           SELECT DISTINCT ON (a.student_id) a.student_id, a.days_present, a.days_total
@@ -111,7 +111,7 @@ export async function onRequestGet({ request, env }) {
           WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           ORDER BY a.student_id, a.updated_at DESC
         ) latest WHERE days_total > 0`),
-      sql.query(`
+      sql(`
         SELECT SUM(amount_due)::float AS due, SUM(amount_paid)::float AS paid, COUNT(*)::int AS n
         FROM (
           SELECT DISTINCT ON (f.student_id) f.student_id, f.amount_due, f.amount_paid
@@ -119,22 +119,22 @@ export async function onRequestGet({ request, env }) {
           WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
           ORDER BY f.student_id, f.updated_at DESC
         ) latest`),
-      sql.query(`
+      sql(`
         SELECT COUNT(*)::int AS n FROM hifz_enrolment he
         JOIN students s ON s.id = he.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
-      sql.query(`
+      sql(`
         SELECT he.stage_number, COUNT(*)::int AS n FROM hifz_enrolment he
         JOIN students s ON s.id = he.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}
         GROUP BY he.stage_number ORDER BY he.stage_number`),
-      sql.query(`
+      sql(`
         SELECT COUNT(*)::int AS n FROM hifz_progress hp
         JOIN students s ON s.id = hp.student_id
         WHERE hp.status = 'verified' AND ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
-      sql.query(`
+      sql(`
         SELECT COUNT(*)::int AS n FROM ijazah_register ir
         JOIN students s ON s.id = ir.student_id
         WHERE ir.revoked_at IS NULL AND ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
-      sql.query(`
+      sql(`
         SELECT COUNT(*)::int AS n FROM term_results tr
         JOIN students s ON s.id = tr.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
     ]);

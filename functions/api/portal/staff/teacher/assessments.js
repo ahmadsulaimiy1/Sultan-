@@ -80,7 +80,7 @@ export async function onRequestPost({ request, env }) {
     const term = await ensureTerm(sql, rawTerm);
     const studentIds = records.map((r) => Number(r.studentId));
     const placeholders = studentIds.map((_, i) => `$${i + 3}`).join(', ');
-    const existingRes = await sql.query(
+    const existingRes = await sql(
       `SELECT student_id FROM term_results WHERE term = $1 AND subject = $2 AND student_id IN (${placeholders})`,
       [term, subject, ...studentIds]
     );
