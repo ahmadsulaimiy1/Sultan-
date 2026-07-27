@@ -1,4 +1,4 @@
-# SHRS World-Class Website Enhancement Report v1.0
+# SHRS World-Class Website Enhancement Report v1.1
 
 **What this document is.** The requested deliverable from the "Supreme
 Website Excellence Directive" — a report, not a build. Per that
@@ -17,6 +17,14 @@ report's sequencing principle:** finish Cloudflare/Neon go-live before
 building anything below marked "High Priority" or heavier. Nothing here
 should pull focus from Phase 3 onward once you say "Let's continue
 Cloudflare."
+
+**v1.1 revision note.** Your "Executive Response" accepted this report as
+the strategic roadmap and asked for the Adhkār Centre target and the
+faculty-identity standard to be sharpened and stated more ambitiously.
+This revision updates Sections 5 and 6 only, and the corresponding rows
+in the ranked list, to match — still a document-only change, nothing
+below was built. As before, this is not a re-audit: every other section
+stands as originally written.
 
 **One standing discipline carried over from every other document in this
 project, restated because two items in your directive touch it
@@ -201,6 +209,26 @@ prestigious institutions specifically *because* it avoids the
 anyone. Real photographs replace the monogram the moment they're
 supplied, with no template change needed.
 
+**Confirmed and expanded per your Executive Response.** The monogram
+approach is accepted. The full institutional identity card standard, per
+person, is now specified as:
+
+| Field | Source | Notes |
+|---|---|---|
+| Initials Monogram | Generated from real name | Cinzel typeface, gold/charcoal, fixed frame size |
+| Academic Title | Real (Mr./Mrs./Dr./Shaykh/Ustadh, etc.) | Matches the honorific standard already used for the Director |
+| Qualifications | Real, as supplied | Degree + institution, never abbreviated to imply more than stated |
+| Department | Institution-appropriate | e.g. "Qur'an College — Tahfīẓ" not a generic "Teacher" |
+| Subject Specialisation | Real, as supplied | e.g. "Arabic Language, Nahw" per the existing workforce-data-collection categories |
+| Faculty Category | Real | Teaching / Academic Leadership / Administrative, per the Human Capital Register's eventual structure |
+| Institutional Colour Coding | Design system, not data | A colour tag per institution (Nursery & Primary / Royal College / Qur'an College / Arabic & Islamic Studies) reusing the palette already established for each school's page identity, so the directory visually sorts itself the way the mega-menu already does |
+
+This is a card format genuinely comparable to how respected universities
+present faculty (name/title/credentials/department, no photograph
+required to look complete) rather than a placeholder — the distinction
+your response draws (identity system vs. placeholder) is the correct
+one, and it's achieved without a single invented detail.
+
 **Everything else in the directive's ask stands as previously
 recommended** (see `shrs-website-excellence-roadmap.md` Part 3):
 group by institution, real qualifications only, no merged Qur'an
@@ -208,46 +236,96 @@ College/Arabic Studies lists.
 
 ---
 
-## 6. Adhkār Centre — Honest Gap Check Before Recommending
+## 6. Adhkār Centre — Strategic Content Objective, Not a Future Possibility
 
-**Important correction to the directive's premise, checked directly
-against `js/adhkar-data.js` and `js/adhkar-app.js` this session:** several
-of the requested features **already exist and are live**, not gaps:
-- Session time estimates and a live countdown ("session time left")
-  are already built (`fmtMinutes`, `sessionTimeLeft` in
-  `js/adhkar-app.js`).
-- Quick modes (2-minute / 5-minute / 10-minute / Complete) already exist.
-- A streak system already exists and already tracks daily completion.
+**Important correction to the directive's original premise, checked
+directly against `js/adhkar-data.js` and `js/adhkar-app.js` this session:**
+several requested features **already exist and are live**, not gaps —
+this remains true after the Executive Response and is restated here so
+the sharper target below isn't mistaken for a rebuild of things that
+already work:
+- Session time estimates and a live countdown ("session time left") —
+  already built (`fmtMinutes`, `sessionTimeLeft`).
+- Quick modes (2-minute / 5-minute / 10-minute / Complete) — already
+  built.
+- A streak system tracking daily completion — already built.
+- **Personal Favourites** — already built (`FAV_KEY`, heart-toggle on
+  every item).
+- **Recently Viewed** — already built (`recentlyViewed` label and
+  tracking already present).
 
-Reporting these as still-needed would misrepresent real, working
-features — flagged here so the ranked list below only contains genuine
-gaps.
+**Per your Executive Response, the content target is now stated as a
+firm strategic objective, not an aspiration, and it is larger than the
+original framing:** approximately **40–70 Morning Adhkār and, separately,
+40–70 Evening Adhkār** — not 40–70 combined. Against the current baseline
+of 11 Morning-tagged and 12 Evening-tagged items (31 total across every
+category), this is a substantially larger content programme than
+originally scoped: potentially **80–140 items across Morning and Evening
+alone**, before the nine additional named collections below are counted.
+Stated plainly, since honesty about scale is more useful than a
+comforting understatement: this is the single largest content-sourcing
+effort in this report, larger than any other single item in the ranked
+list, and should be resourced and scheduled as such — likely a
+phased build (e.g., 20 additional items per collection per phase) rather
+than one pass.
 
-**What is a genuine gap:**
-- **Coverage: 31 total items today** (11 tagged Morning, 12 tagged
-  Evening, the rest spread across After-Salah/Sleep/Waking/Home/Mosque/
-  Travel/Protection/Distress/Forgiveness/Salawāt) — meaningfully short of
-  the directive's 40–70 target. This is a real, specific content gap:
-  more authentic adhkar with real Qur'an/Hadith references need sourcing
-  and adding, following the exact pattern the existing 31 already use.
-- **Short-first ordering:** worth auditing directly — the current data
-  file doesn't encode an explicit short/long sort order within a
-  category; this is a small, real fix once flagged.
-- **Notifications/reminders:** genuinely absent — no scheduled
-  notification system exists. This is real, new work, and — stated
-  plainly, since it's easy to overclaim — browser/PWA notification
-  permissions on iOS Safari remain restrictive even in 2026; any
-  recommendation here should be scoped to what Chrome/Android and
-  installed-PWA contexts genuinely support, not promised universally.
-- **Add-to-home-screen / PWA:** genuinely absent, same honest caveat as
-  the notifications item above applies to install prompts and offline
-  behaviour — real, buildable, but scope the claim to what the web
-  platform actually guarantees per browser.
+**Additional named collections, checked against what already exists so
+the ask is accurate:**
 
-**Recommendation, in order:** expand coverage toward the 40–70 target
-first (content sourcing, lowest engineering cost, highest direct value);
-audit and fix short-before-long ordering (small, mechanical); scope
-notification/PWA work honestly once the above two are done.
+| Requested collection | Current status |
+|---|---|
+| Sleep Adhkār | Exists (`sleep` category, several items) — needs expansion |
+| Prayer Adhkār | Exists as `after-salah` — consider renaming/expanding to match this framing |
+| Travel Adhkār | Exists (`travel` category, 1 item) — needs expansion |
+| Protection Adhkār | Exists (`protection` category) — needs expansion |
+| Distress Adhkār | Exists (`distress` category) — needs expansion |
+| Gratitude Adhkār | **Genuinely new** — no category exists today |
+| Family Adhkār | **Genuinely new** — no category exists today |
+| Children's Adhkār | **Genuinely new** — no category exists today; would need age-appropriate, simplified presentation, not just simpler wording |
+| Daily Sunnah Adhkār | **Genuinely new** — distinct from the occasion-based categories that already exist (entering/leaving home, entering/leaving mosque) |
+
+**UX layer, re-checked against your expanded list:**
+- Session Progress, Completion Tracking, Streak Tracking, Estimated
+  Reading Time, Personal Favourites, Recently Read — **all already
+  built**, per above.
+- **Reading History** (a persistent log distinct from "recently viewed,"
+  e.g. a full dated record of every completed session) — genuinely new.
+- **Personal Collections** (user-curated custom lists, distinct from
+  Favourites) — genuinely new.
+
+**Notifications, expanded per your response:** Daily Morning Reminder,
+Daily Evening Reminder, **Prayer-linked Reminder** (tied to the site's
+existing prayer-time integration in the Personalisation Centre — a
+genuinely natural extension, not a bolt-on), Browser Notifications,
+Mobile Notifications where feasible. **Honest technical scope, stated
+plainly per your own instruction not to promise unsupported
+functionality:** browser push notifications work reliably on
+Chrome/Android and installed PWAs; iOS Safari's support remains
+restrictive even in 2026 and any commitment here should name that
+limitation up front, not discover it after building.
+
+**Progressive Web App, expanded per your response:** Add to Home Screen,
+Installable Experience, Offline Reading, **Cached Adhkār Library**
+(the full content set available with zero network connection once
+installed) — a coherent, buildable target given the content is already
+static data (`js/adhkar-data.js`), which is precisely the kind of content
+that caches well. The long-term framing — "function almost like a
+dedicated application" — is realistic for this specific feature, more so
+than for most of the rest of the site, because the content is bounded,
+text-based, and already structured as data rather than server-rendered
+pages.
+
+**Recommendation, in order, reflecting the new scale:** (1) commission
+real Qur'an/Hadith-sourced content toward the Morning and Evening targets
+first, phased rather than attempted in one pass, since this is now the
+report's single largest content effort; (2) build out the four genuinely
+new collections (Gratitude, Family, Children's, Daily Sunnah) once the
+Morning/Evening expansion establishes the sourcing workflow; (3) add
+Reading History and Personal Collections as a UX layer once content
+volume justifies them (a "collections" feature is more valuable at 100+
+items than at 31); (4) scope notifications and the offline/cached PWA
+shell last, both honestly bounded to what each platform actually
+supports.
 
 ---
 
@@ -415,7 +493,7 @@ document has since been confirmed already-built (this report's Section
 | 3 | Finish Cloudflare/Neon go-live (Phases 3–6) | Highest | Medium | Medium | Medium | Already in progress |
 | 4 | Confirm + publish WAEC/NECO affiliation | High | High | Medium | High | None (content) |
 | 5 | Anchored sub-navigation on institution hubs | High | Medium | Medium | High | Medium |
-| 6 | Expand Adhkār to 40–70 real items | Medium-High | Medium | Low | High | Low-Medium (content sourcing) |
+| 6 | Expand Adhkār: 40–70 Morning + 40–70 Evening (separately), phased | High | Medium | Low | High | Medium (largest content effort in this report) |
 | 7 | AI Assistant tone/system-prompt review | Medium-High | Medium-High | Medium | Medium-High | Low |
 | 8 | Editorial depth pass, Nursery/Arabic Studies copy | Medium | Medium | Low-Medium | Medium-High | Low |
 | 9 | Get Communications role publishing real announcements | High | Medium-High | Low | Medium | Low (infra exists) |
@@ -432,8 +510,8 @@ document has since been confirmed already-built (this report's Section
 | 20 | Native-Arabic-speaker review pass | Medium-High | Medium (GCC-aligned persona) | Low | High | Medium |
 | 21 | Replace remaining `.image-slot` placeholders | Medium | Low-Medium | Low | Medium | Low (needs real photos) |
 | 22 | Publish real Academic Calendar | Medium | Medium | Low | Low-Medium | None (content) |
-| 23 | Adhkār notification/reminder system (scoped honestly) | Low-Medium | Low | None | Low-Medium | Medium |
-| 24 | Adhkār add-to-home-screen / PWA shell | Low-Medium | Low | None | Low-Medium | Medium |
+| 23 | Adhkār notifications: morning/evening/prayer-linked (scoped honestly re: iOS) | Low-Medium | Low | None | Low-Medium | Medium |
+| 24 | Adhkār PWA: install + offline reading + cached library | Medium | Low | None | Medium | Medium |
 | 25 | Standalone pages for genuinely distinct sub-programmes | Low-Medium | Low | Low | Medium | Medium |
 | 26 | Real Lighthouse performance audit | Medium | Low | None | Low | Low |
 | 27 | Real accessibility audit (axe-core) | Medium | Low | None | Medium | Low |
@@ -445,7 +523,7 @@ document has since been confirmed already-built (this report's Section
 | 33 | Usability session on mobile accordion/footer | Medium | Low | Low | Medium | Low (research, not build) |
 | 34 | Surface Punch Newspapers citation near hero | Medium | Medium | Low | Medium-High | Low |
 | 35 | PWA manifest for portal dashboards | Low-Medium | Low-Medium | None | Low | Low |
-| 36 | Mobile-viewport pass already partly covered — dedupe with #29 | — | — | — | — | — |
+| 36 | Adhkār: Gratitude / Family / Children's / Daily Sunnah collections (genuinely new, per Executive Response) | Medium | Low-Medium | Low | Medium-High | Medium (new content, no existing pattern to extend) |
 | 37 | Scope Adhkar scripts to relevant pages only | Low | None | None | Low | Low |
 | 38 | Responsive `srcset` for gallery images | Low | Low | None | Low | Low-Medium |
 | 39 | Confirm `font-display` strategy | Low | None | None | Low | Low |
@@ -461,9 +539,15 @@ document has since been confirmed already-built (this report's Section
 | 49 | AI Assistant knowledge-depth expansion (post content gaps close) | Medium (future) | Medium | Medium | Medium | Medium |
 | 50 | Full editorial tone pass, site-wide (beyond the two named pages) | Low-Medium | Low | Low | Medium | Low-Medium |
 
-*(Row 36 is intentionally marked as a duplicate rather than padded with a
-distinct 50th item that doesn't exist — an honest ranked list should say
-so rather than manufacture a filler entry to hit a round number.)*
+*(Row 36 was originally marked as an intentional duplicate in v1.0, since
+no genuine 50th item existed at that time — an honest ranked list says so
+rather than manufacturing a filler entry. The Executive Response's
+expanded Adhkār scope supplied a genuine new item, so row 36 now reflects
+that rather than the duplicate marker. Reading History and Personal
+Collections, the two other newly-identified genuine gaps from Section 6,
+are covered under item 6's phased build rather than broken out as
+separate rows, since both depend on item 6's content volume before they
+add real value.)*
 
 ---
 
