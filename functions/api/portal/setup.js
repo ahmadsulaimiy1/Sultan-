@@ -527,8 +527,18 @@ async function handle({ request, env }) {
   }
 
   try {
-    for (const statement of STATEMENTS) {
-      await sql(statement);
+    // Batched via sql.transaction(), not one sql() call per statement: Neon's
+    // HTTP driver fires one fetch (one Cloudflare Worker subrequest) per
+    // query, and STATEMENTS is long enough (~90 entries) to exceed the
+    // platform's per-invocation subrequest limit if run one at a time.
+    // transaction() bundles a whole batch into a single fetch/subrequest,
+    // and — since every statement here is transactional DDL (CREATE TABLE/
+    // INDEX IF NOT EXISTS) — batching is also strictly safer than the old
+    // one-by-one loop: a batch either fully applies or fully rolls back.
+    const BATCH_SIZE = 25;
+    for (let i = 0; i < STATEMENTS.length; i += BATCH_SIZE) {
+      const batch = STATEMENTS.slice(i, i + BATCH_SIZE);
+      await sql.transaction(batch.map((s) => sql(s)));
     }
 
     let demoSeeded = false;
