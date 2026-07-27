@@ -40,9 +40,9 @@ step-by-step walkthroughs.
 
 | Name | Purpose | Priority | Cost | Owner | Dependencies | Status |
 |---|---|---|---|---|---|---|
-| Neon (account) | Postgres database provider — HTTP-driver-compatible with Cloudflare Workers (the reason this stack uses Neon specifically, not any Postgres host — see the Blueprint's Cloud Architecture section) | Critical | Free tier likely sufficient initially — verify at signup | ICT | None | Not Started |
-| Staging DB | Safe testing without touching real institutional data | Critical | Free | ICT | Neon account | Not Started |
-| Production DB | Real institutional data store | Critical | Free–Starter | ICT | Neon account, Staging Verified first | Not Started |
+| Neon (account) | Postgres database provider — HTTP-driver-compatible with Cloudflare Workers (the reason this stack uses Neon specifically, not any Postgres host — see the Blueprint's Cloud Architecture section) | Critical | Free tier likely sufficient initially — verify at signup | ICT | None | **Completed** — account exists (`Ahmadbinibrohim@gmail.com`), verified 2026-07-28 |
+| Staging DB | Safe testing without touching real institutional data | Critical | Free | ICT | Neon account | **Completed** — `/api/portal/setup` run successfully against a real Neon project (via the Cloudflare Preview environment) 2026-07-28; tables created, sample data seeded. Two real code bugs were found and fixed live in the process: `sql.query()` doesn't exist on `@neondatabase/serverless`'s `neon()` client (fixed to `sql()`, 7 files), and the ~90-statement schema setup exceeded Cloudflare's per-invocation subrequest limit (fixed by batching via `sql.transaction()`). See `functions/api/portal/setup.js` and the two commits fixing this. |
+| Production DB | Real institutional data store | Critical | Free–Starter | ICT | Neon account, Staging Verified first | Not Started — a **separate** Neon project from staging, per the Account Creation Playbook's non-negotiable separation |
 | Backup DB / backup strategy | Disaster-recovery data protection | High | Neon paid tiers add point-in-time recovery | ICT | Production DB existing | Not Started |
 
 ## Email Infrastructure
