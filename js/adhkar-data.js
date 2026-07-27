@@ -49,6 +49,10 @@
       description: { en: 'Istighfar — turning back to Allah in repentance.', ar: 'الاستغفار — الرجوع إلى الله تائباً.' } },
     { id: 'salawat', label: { en: 'Salawāt Collection', ar: 'الصلاة على النبي ﷺ' }, icon: 'star', priority: true, group: 'occasions',
       description: { en: 'Sending blessings upon the Prophet ﷺ.', ar: 'الصلاة والسلام على النبي ﷺ.' } },
+    { id: 'gratitude', label: { en: 'Gratitude', ar: 'الشكر والحمد' }, icon: 'hands', priority: false, group: 'occasions',
+      description: { en: 'Praise and thanks in the Prophet’s ﷺ own words.', ar: 'الحمد والشكر بألفاظ النبي ﷺ.' } },
+    { id: 'family', label: { en: 'Family', ar: 'الأسرة والذرية' }, icon: 'home', priority: false, group: 'occasions',
+      description: { en: 'Qur’anic supplications for parents and offspring.', ar: 'أدعية قرآنية للوالدين والذرية.' } },
   ];
 
   function it(o) { return o; }
@@ -149,6 +153,39 @@
     repeat: 1, seconds: 20,
   });
 
+  var RADHITU_BILLAH = it({
+    id: 'radhitu-billah', categories: ['morning', 'evening'],
+    title: { en: 'Radhitu Billahi Rabban', ar: 'رضيت بالله ربًا' },
+    arabic: 'رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا',
+    transliteration: 'Radhitu billahi rabban, wa bil-islami dinan, wa bi-Muhammadin sallallahu ‘alayhi wa sallama nabiyya.',
+    translation: { en: 'I am pleased with Allah as a Lord, Islam as a religion, and Muhammad ﷺ as a Prophet.', ar: 'تُقال ثلاث مرات صباحاً ومساءً.' },
+    reference: { en: 'Sunan Abi Dawud; Sunan al-Tirmidhi', ar: 'سنن أبي داود والترمذي' },
+    virtue: { en: 'Whoever says it three times morning and evening, Allah takes it upon Himself to please him on the Day of Resurrection.', ar: 'من قالها ثلاث مرات حين يصبح وحين يمسي كان حقاً على الله أن يرضيه يوم القيامة.' },
+    repeat: 3, seconds: 21,
+  });
+
+  var TASBIH_100 = it({
+    id: 'tasbih-100', categories: ['morning', 'evening'],
+    title: { en: 'SubhanAllahi wa bihamdihi (100x)', ar: 'سبحان الله وبحمده' },
+    arabic: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (×١٠٠)',
+    transliteration: 'SubhanAllahi wa bihamdihi (×100)',
+    translation: { en: 'Glory be to Allah and praise Him.', ar: 'تُقال مائة مرة.' },
+    reference: { en: 'Sahih Muslim', ar: 'صحيح مسلم' },
+    virtue: { en: 'Whoever says it 100 times in a day, his sins are wiped away even if they are like the foam of the sea.', ar: 'من قالها مائة مرة في يوم حُطّت خطاياه وإن كانت مثل زبد البحر.' },
+    repeat: 100, seconds: 200,
+  });
+
+  var LA_ILAHA_10X = it({
+    id: 'la-ilaha-10x', categories: ['morning', 'evening'],
+    title: { en: 'La ilaha illallah (×10)', ar: 'لا إله إلا الله (×١٠)' },
+    arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ (×١٠)',
+    transliteration: 'La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu, wa huwa ‘ala kulli shay’in qadir (×10).',
+    translation: { en: 'There is no deity except Allah alone, without partner. His is the dominion and His is the praise, and He is over all things omnipotent.', ar: 'تُقال عشر مرات صباحاً ومساءً — دون الزيادة الواردة بعد الصلاة.' },
+    reference: { en: 'Sahih al-Bukhari & Sahih Muslim', ar: 'صحيح البخاري ومسلم' },
+    virtue: { en: 'Said ten times morning and evening, equal in reward to freeing four souls from the descendants of Isma‘il, and a protection from Shayṭān that day.', ar: 'من قالها عشر مرات كانت له عدل رقبة من ولد إسماعيل، وكانت له حرساً من الشيطان حتى يمسي.' },
+    repeat: 10, seconds: 60,
+  });
+
   var ASBAHNA = it({
     id: 'asbahna', categories: ['morning'],
     title: { en: 'Asbahna wa Asbaha al-Mulku Lillah', ar: 'أصبحنا وأصبح الملك لله' },
@@ -161,6 +198,17 @@
     repeat: 1, seconds: 35,
   });
 
+  var ALLAHUMMA_BIKA_ASBAHNA = it({
+    id: 'allahumma-bika-asbahna', categories: ['morning'],
+    title: { en: 'Allahumma Bika Asbahna', ar: 'اللهم بك أصبحنا' },
+    arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ',
+    transliteration: 'Allahumma bika asbahna, wa bika amsayna, wa bika nahya, wa bika namutu wa ilaykan-nushur.',
+    translation: { en: 'O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection.', ar: 'تُقال عند الصباح.' },
+    reference: { en: 'Sunan al-Tirmidhi; Sunan Abi Dawud', ar: 'سنن الترمذي وأبي داود' },
+    virtue: { en: 'A short, comprehensive declaration of dependence on Allah alone, said each morning.', ar: 'إعلانٌ موجز بالتوكل الكامل على الله، تُقال كل صباح.' },
+    repeat: 1, seconds: 14,
+  });
+
   var AMSAYNA = it({
     id: 'amsayna', categories: ['evening'],
     title: { en: 'Amsayna wa Amsa al-Mulku Lillah', ar: 'أمسينا وأمسى الملك لله' },
@@ -171,6 +219,17 @@
     reference: { en: 'Sahih Muslim', ar: 'صحيح مسلم' },
     virtue: { en: 'The evening declaration of Allah’s sole dominion, with a prayer for the night ahead.', ar: 'إعلان بالتوحيد وطلب خير الليلة ودفع شرّها.' },
     repeat: 1, seconds: 35,
+  });
+
+  var ALLAHUMMA_BIKA_AMSAYNA = it({
+    id: 'allahumma-bika-amsayna', categories: ['evening'],
+    title: { en: 'Allahumma Bika Amsayna', ar: 'اللهم بك أمسينا' },
+    arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ',
+    transliteration: 'Allahumma bika amsayna, wa bika asbahna, wa bika nahya, wa bika namutu wa ilaykal-masir.',
+    translation: { en: 'O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the final return.', ar: 'تُقال عند المساء.' },
+    reference: { en: 'Sunan al-Tirmidhi', ar: 'سنن الترمذي' },
+    virtue: { en: 'The evening counterpart to the morning declaration of dependence on Allah alone.', ar: 'نظير دعاء الصباح، تُقال كل مساء.' },
+    repeat: 1, seconds: 14,
   });
 
   // --- After Each Prayer ---
@@ -380,6 +439,28 @@
     repeat: 1, seconds: 8,
   });
 
+  var HAMM_WAL_HAZAN = it({
+    id: 'hamm-wal-hazan', categories: ['distress'],
+    title: { en: 'Dua Against Anxiety and Grief', ar: 'دعاء الهم والحزن' },
+    arabic: 'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ',
+    transliteration: 'Allahumma inni a‘udhu bika minal-hammi wal-hazan, wal-‘ajzi wal-kasal, wal-bukhli wal-jubn, wa dala‘id-dayni wa ghalabatir-rijal.',
+    translation: { en: 'O Allah, I seek refuge in You from anxiety and grief, from incapacity and laziness, from cowardice and miserliness, from being overcome by debt and overpowered by men.', ar: 'من أدعية النبي ﷺ التي كان يكثر منها.' },
+    reference: { en: 'Sahih al-Bukhari', ar: 'صحيح البخاري' },
+    virtue: { en: 'A dua the Prophet ﷺ said often against exactly these eight afflictions.', ar: 'كان النبي ﷺ يتعوّذ بهذا الدعاء كثيراً.' },
+    repeat: 1, seconds: 24,
+  });
+
+  var RAHMATAKA_ARJU = it({
+    id: 'rahmataka-arju', categories: ['distress'],
+    title: { en: 'Rahmataka Arju', ar: 'رحمتك أرجو' },
+    arabic: 'اللَّهُمَّ رَحْمَتَكَ أَرْجُو فَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ، وَأَصْلِحْ لِي شَأْنِي كُلَّهُ، لَا إِلَٰهَ إِلَّا أَنْتَ',
+    transliteration: 'Allahumma rahmataka arju, fala takilni ila nafsi tarfata ‘ayn, wa aslih li sha’ni kullah, la ilaha illa ant.',
+    translation: { en: 'O Allah, it is Your mercy I hope for, so do not leave me to myself even for the blink of an eye, and set right all of my affairs. There is no deity except You.', ar: 'من أدعية الكرب الجامعة.' },
+    reference: { en: 'Sunan Abi Dawud (graded ḥasan)', ar: 'سنن أبي داود' },
+    virtue: { en: 'A comprehensive dua for reliance on Allah alone in every difficulty.', ar: 'دعاء جامع للتوكل على الله وحده في كل شدة.' },
+    repeat: 1, seconds: 18,
+  });
+
   // --- Forgiveness extra ---
   var RABBIGHFIRLI = it({
     id: 'rabbighfirli', categories: ['forgiveness'],
@@ -416,9 +497,56 @@
     repeat: 10, seconds: 150,
   });
 
+  // --- Gratitude ---
+  var HAMD_BAD_AKL = it({
+    id: 'hamd-bad-akl', categories: ['gratitude'],
+    title: { en: 'Praise After Eating', ar: 'الحمد بعد الطعام' },
+    arabic: 'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَٰذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ',
+    transliteration: 'Alhamdu lillahil-ladhi at‘amani hadha wa razaqanihi min ghayri hawlin minni wa la quwwah.',
+    translation: { en: 'All praise is due to Allah who fed me this and provided it for me without any might or power on my part.', ar: 'تُقال بعد الفراغ من الطعام.' },
+    reference: { en: 'Sunan Abi Dawud; Sunan al-Tirmidhi (graded ḥasan ṣaḥīḥ)', ar: 'سنن أبي داود والترمذي' },
+    virtue: { en: 'Whoever says this after eating, his past sins are forgiven.', ar: 'من قالها غُفر له ما تقدّم من ذنبه.' },
+    repeat: 1, seconds: 12,
+  });
+
+  var AHABB_KALAM = it({
+    id: 'ahabb-kalam', categories: ['gratitude'],
+    title: { en: 'The Most Beloved Words to Allah', ar: 'أحب الكلام إلى الله' },
+    arabic: 'سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَٰهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ',
+    transliteration: 'SubhanAllah, wal-hamdu lillah, wa la ilaha illallah, wallahu akbar.',
+    translation: { en: 'Glory be to Allah, praise be to Allah, there is no deity except Allah, and Allah is the Greatest.', ar: 'أحبّ الكلام إلى الله كما أخبر النبي ﷺ.' },
+    reference: { en: 'Sahih Muslim', ar: 'صحيح مسلم' },
+    virtue: { en: 'Named by the Prophet ﷺ as the most beloved speech to Allah.', ar: 'وصفها النبي ﷺ بأنها أحبّ الكلام إلى الله.' },
+    repeat: 1, seconds: 12,
+  });
+
+  // --- Family ---
+  var RABBI_IRHAMHUMA = it({
+    id: 'rabbi-irhamhuma', categories: ['family'],
+    title: { en: 'Dua for Parents', ar: 'دعاء الوالدين' },
+    arabic: 'رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا',
+    transliteration: 'Rabbi-rhamhuma kama rabbayani saghira.',
+    translation: { en: 'My Lord, have mercy upon them as they raised me when I was small.', ar: 'دعاءٌ قرآني للوالدين.' },
+    reference: { en: 'Qur’an 17:24', ar: 'القرآن الكريم، سورة الإسراء، الآية 24' },
+    virtue: { en: 'The Qur’an’s own instruction for a child’s dua for their parents.', ar: 'الدعاء الذي أمر الله به الأبناء لوالديهم.' },
+    repeat: 1, seconds: 10,
+  });
+
+  var QURRATA_AYUN = it({
+    id: 'qurrata-ayun', categories: ['family'],
+    title: { en: 'Dua for Righteous Family', ar: 'دعاء قرة الأعين' },
+    arabic: 'رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا',
+    transliteration: 'Rabbana hab lana min azwajina wa dhurriyyatina qurrata a‘yunin waj‘alna lil-muttaqina imama.',
+    translation: { en: 'Our Lord, grant us from among our spouses and offspring comfort to our eyes, and make us leaders for the righteous.', ar: 'دعاء المتقين لذريتهم في القرآن الكريم.' },
+    reference: { en: 'Qur’an 25:74', ar: 'القرآن الكريم، سورة الفرقان، الآية 74' },
+    virtue: { en: 'The Qur’an’s description of the dua of the righteous for their families.', ar: 'من صفات عباد الرحمن كما وصفهم القرآن الكريم.' },
+    repeat: 1, seconds: 14,
+  });
+
   var ITEMS = [
     AYAT_AL_KURSI, AL_IKHLAS, AL_FALAQ, AN_NAS, SAYYID_AL_ISTIGHFAR, HASBIYA_ALLAH, BISMILLAHIL_LADHI, AFIYAH,
-    ASBAHNA, AMSAYNA,
+    RADHITU_BILLAH, TASBIH_100, LA_ILAHA_10X,
+    ASBAHNA, ALLAHUMMA_BIKA_ASBAHNA, AMSAYNA, ALLAHUMMA_BIKA_AMSAYNA,
     ASTAGHFIRULLAH_3X, ANTAS_SALAM, LA_ILAHA_MULK, TASBIH_SUBHANALLAH, TASBIH_ALHAMDULILLAH, TASBIH_ALLAHU_AKBAR,
     BISMIKA_AMUTU, QINI_ADHABAKA,
     ALHAMDU_AHYANA,
@@ -426,13 +554,18 @@
     ENTERING_MOSQUE, LEAVING_MOSQUE,
     TRAVEL_DUA,
     AUDHU_KALIMATILLAH,
-    DHUN_NUN, HASBUNALLAH, LA_HAWLA,
+    DHUN_NUN, HASBUNALLAH, LA_HAWLA, HAMM_WAL_HAZAN, RAHMATAKA_ARJU,
     RABBIGHFIRLI, ASTAGHFIRULLAH_ADHIM,
     SALAWAT_IBRAHIMIYYAH,
+    HAMD_BAD_AKL, AHABB_KALAM,
+    RABBI_IRHAMHUMA, QURRATA_AYUN,
   ];
 
   function itemsByCategory(catId) {
-    return ITEMS.filter(function (i) { return i.categories.indexOf(catId) !== -1; });
+    // Short adhkar first, longer-count ones later — makes a session feel
+    // achievable from the first tap rather than opening on the longest item.
+    return ITEMS.filter(function (i) { return i.categories.indexOf(catId) !== -1; })
+      .sort(function (a, b) { return a.seconds - b.seconds; });
   }
 
   function categoryTotalSeconds(catId) {
