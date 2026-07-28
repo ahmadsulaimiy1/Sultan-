@@ -49,11 +49,15 @@ step-by-step walkthroughs.
 
 | Name | Purpose | Priority | Cost | Owner | Dependencies | Status |
 |---|---|---|---|---|---|---|
-| Resend (account) | Transactional email (verification links, password resets) — the provider `functions/_lib/email.js` is already coded against | High | Free tier for modest volume — verify at signup | ICT | None to create the account; domain confirmed to verify sending | Not Started |
+| Resend (account) | Transactional email (verification links, password resets) — the provider `functions/_lib/email.js` is already coded against | High | Free tier for modest volume | ICT | None to create the account; domain confirmed to verify sending | **Completed** — account created, sending subdomain `mail.shroyalschools.com` verified 2026-07-28, `RESEND_API_KEY` + `EMAIL_FROM_ADDRESS` (`noreply@mail.shroyalschools.com`) added to both Cloudflare Preview and Production. A real email verification round-trip was proven on both environments: a real inbox received the message and the link correctly completed verification. Two real bugs were caught and fixed in the process — see the note below. |
 | SMTP | Alternate sending method | Low | N/A | ICT | Resend account | Not Applicable — current code uses Resend's REST API, not SMTP |
-| SPF | Anti-spoofing DNS record authorising Resend to send as your domain | Critical (email deliverability) | Free | ICT | Domain DNS access | Not Started |
-| DKIM | Cryptographic signing for email authenticity | Critical | Free | ICT | Domain DNS access, Resend account | Not Started |
-| DMARC | Policy for handling SPF/DKIM failures, protects domain reputation | High | Free | ICT | SPF + DKIM configured | Not Started |
+| SPF | Anti-spoofing DNS record authorising Resend to send as your domain | Critical (email deliverability) | Free | ICT | Domain DNS access | **Completed** — `send.mail` TXT record (`v=spf1 include:amazonses.com ~all`) authorised via Cloudflare's one-click "Auto configure" for Resend, 2026-07-28 |
+| DKIM | Cryptographic signing for email authenticity | Critical | Free | ICT | Domain DNS access, Resend account | **Completed** — `resend._domainkey.mail` TXT record authorised the same way |
+| DMARC | Policy for handling SPF/DKIM failures, protects domain reputation | High | Free | ICT | SPF + DKIM configured | Not Started — Resend's auto-configure did not add a DMARC record; SPF+DKIM alone are enough for Resend to send, but a DMARC policy record is still a real gap worth closing |
+
+**Email infrastructure note (2026-07-28):** wiring Resend up surfaced two genuine, previously-undetected bugs, only findable once a real domain and a real inbox existed to test against:
+1. `functions/_lib/email.js`'s `SITE_ORIGIN` (and `scripts/build.js`'s copy, plus `sitemap.xml`/`robots.txt`/every public `info@` contact address) were still hardcoded to `shroyalschools.ng` — a domain that was never actually purchased. Fixed to `shroyalschools.com`, the real registered domain, and merged to `main`.
+2. Even after that fix, `SITE_ORIGIN` was a single hardcoded constant shared by Preview and Production — two environments with two separate Neon databases. A verification token written by a Preview request only exists in Preview's database, so a hardcoded link always pointed to Production regardless of which environment issued it, and verification failed. Fixed by deriving the link's origin from the request that issued it (`siteOriginFromRequest()`), so each environment's emails always point back to itself.
 
 ## Identity Infrastructure
 
@@ -107,8 +111,10 @@ order: **GitHub (done) → Cloudflare account (done) → Cloudflare Pages
 project (done) → Neon account (done) → Staging DB (done, verified live
 2026-07-28 — see `docs/shrs-staging-verification-report.md`) →
 Production DB (done, verified live 2026-07-28, correctly empty of
-sample data) → Resend account + domain email records → custom domain →
-MFA/monitoring/backup as hardening before real institutional data goes
-live.** What remains is genuinely the last stretch: email, domain,
-security hardening, and then real institutional data entry — not more
-plumbing.
+sample data) → custom domain (done, `shroyalschools.com`, live with SSL
+2026-07-28) → Resend account + domain email records (done, verified
+live on both Preview and Production 2026-07-28, real inbox round-trip
+proven) → MFA/monitoring/backup as hardening before real institutional
+data goes live.** What remains is genuinely the last stretch:
+`PORTAL_SETUP_TOKEN` rotation, security hardening (MFA/monitoring/
+backups), and then real institutional data entry — not more plumbing.
