@@ -197,7 +197,7 @@ the moment real data arrives**, so that work doesn't require its own
 design pass later:
 
 - **Directory structure:** group by institution (Royal College / Qur'an
-  College / Arabic & Islamic Studies / Nursery & Primary), matching the
+  College / Islamic & Arabic Studies / Nursery & Primary), matching the
   site's existing four-path framing — not one undifferentiated staff
   list.
 - **Profile standard, per person:** full name, title, real qualification
@@ -207,7 +207,7 @@ design pass later:
   placeholder line.
 - **Qualification display:** plain text, not badges/icons implying
   third-party certification unless a real certifying body is named.
-- **Department display:** Qur'an College and Arabic & Islamic Studies
+- **Department display:** Qur'an College and Islamic & Arabic Studies
   faculty should not be merged into one list — the workforce collection
   request itself already establishes them as distinct.
 - **What not to do:** do not publish a directory with any placeholder
@@ -248,7 +248,7 @@ design pass later:
 10. Commission a native-Arabic-speaker review pass on the flagged
     categories (names, Shar'i terminology) before treating the Arabic
     site as production-final.
-11. Give Nursery & Primary and Arabic & Islamic Studies campus photography
+11. Give Nursery & Primary and Islamic & Arabic Studies campus photography
     to replace their remaining `.image-slot` placeholders (Foundation
     programme photography is the third open slot).
 12. Publish a real Academic Calendar once term dates are supplied,

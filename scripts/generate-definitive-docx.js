@@ -328,7 +328,7 @@ B.push(quoteBox('Sultan Hanafi Royal Schools stands as a blueprint for how educa
 B.push(h2('A Living Timeline'));
 [['2017', 'Sultan Hanafi Royal Schools officially registered — a hybrid institution combining secular education with authentic Islamic learning, serving the Imowonla community in Ikorodu, Lagos State.'],
  ['2021', 'Sultan Hanafi Royal College established. Junior and Senior Secondary programmes (JSS 1–3 and SSS 1–3) launched for students from age ten.'],
- ['2022', "School of Arabic & Islamic Studies and the Qur'an College formalised, delivering Saudi Arabian curriculum programmes with internationally recognised Ijazah certification."],
+ ['2022', "School of Islamic & Arabic Studies and the Qur'an College formalised, delivering Saudi Arabian curriculum programmes with internationally recognised Ijazah certification."],
  ['2024', 'Inaugural Annual Ramadan Qur\'an Competition held at the Royal College Auditorium. The ALA Endowment Prize established by Mr Lukman Anofi.'],
  ['2025', 'Distinguished commissioning ceremony attended by Engr. Seyi Makinde, Executive Governor of Oyo State.'],
  ['2026', 'Royal College passes Registration Stage with the Lagos State Ministry of Education. Inaugural BECE cohort sits national examinations.']]
@@ -373,7 +373,7 @@ B.push(eyebrow('An Integrated Institution'), h1('Four Schools. One Vision.'));
 B.push(dataPanel([
   ['School 01 — Nursery & Primary', 'Ages 2–10, day format, Est. 2017'],
   ['School 02 — Royal College', 'Ages 10+, JSS 1–3 & SSS 1–3, Est. 2021'],
-  ['School 03 — Arabic & Islamic Studies', 'Saudi Arabian Curriculum, weekday & weekend'],
+  ['School 03 — Islamic & Arabic Studies', 'Saudi Arabian Curriculum, weekday & weekend'],
   ["School 04 — Qur'an College", 'Hifz Programme, 24–36 months, day & boarding, Ijazah'],
 ]));
 B.push(new Paragraph({ spacing: { before: 200 } }));
@@ -428,7 +428,7 @@ B.push(h2('Academic Resources & Curriculum Materials'));
 B.push(body('Sultan Hanafi Royal Schools employs a carefully selected blend of educational resources drawn from: Nigerian National Curriculum requirements; International best-practice educational materials; Saudi Arabian educational resources; Established Arabic and Islamic scholarship texts; SHRS proprietary publications and institutional learning materials. For Arabic Language, Islamic Studies, and Qur\'an Studies, many of the textbooks utilised originate from Saudi Arabia and other respected centres of Islamic scholarship, complemented by SHRS-developed resources designed specifically for our students. This combination ensures academic rigour, authentic Islamic learning, structured language acquisition, and curriculum continuity across all programmes.'));
 B.push(caption('The Academic Resource Ecosystem — Six Sources, One Integrated Framework'));
 B.push(diagramRow(['1\nNational\nCurriculum', '2\nInternational\nStandards', '3\nSaudi Educational\nResources', '4\nSHRS\nPublications', '5\nArabic Language\nResources', '6\nIslamic Scholarship\nResources'], NAVY, GOLD_BRIGHT));
-B.push(h2('School of Arabic & Islamic Studies'));
+B.push(h2('School of Islamic & Arabic Studies'));
 B.push(dataPanel([['Weekday Programme', 'Mon–Wed · 2–6pm'], ['Weekend Programme', 'Sat & Sun · 9am–3pm']]));
 B.push(h2("Sultan Hanafi Qur'an College"));
 B.push(body("24–36 month programme · Day & boarding · Certified Ijazah. A full-immersion journey through complete memorisation of the Noble Qur'an, alongside Tajwid, the Sciences of the Qur'an, Classical Arabic, and Islamic moral formation. Ages 9–16. Graduates receive Ijazat — formal scholarly certifications globally recognised in Qur'anic and Islamic sciences."));
@@ -443,10 +443,10 @@ govTier(2, 'Primary / Basic School (Stage 2 · Ages 5–10)', 'National curricul
 govTier(3, 'Sultan Hanafi Royal College (Stage 3 · Ages 10+)', 'A rigorous integrated curriculum across seven departments — JSS 1–3 and SSS 1–3 — where academic excellence, Islamic grounding, and modern pedagogy converge.', ['7 Departments', 'JSS 1–3', 'SSS 1–3']).forEach(p => B.push(p));
 govTier(4, "Sultan Hanafi Qur'an College (Stage 4 · Ages 9–16, Parallel Track)", 'A full-immersion 24–36 month programme — complete memorisation of the Noble Qur\'an, Tajwid, and the Sciences of the Qur\'an, culminating in a certified Ijazah.', ['Hifz Programme', 'Day & Boarding', 'Certified Ijazah']).forEach(p => B.push(p));
 B.push(pageBreak());
-govTier(5, 'School of Arabic & Islamic Studies (Stage 5 · Weekday & Weekend, Parallel Track)', 'Running alongside every other stage of the journey — carefully selected Saudi Arabian resources and SHRS-developed materials build authentic Islamic learning and structured Arabic language acquisition.', ['Weekday Programme', 'Weekend Programme']).forEach(p => B.push(p));
+govTier(5, 'School of Islamic & Arabic Studies (Stage 5 · Weekday & Weekend, Parallel Track)', 'Running alongside every other stage of the journey — carefully selected Saudi Arabian resources and SHRS-developed materials build authentic Islamic learning and structured Arabic language acquisition.', ['Weekday Programme', 'Weekend Programme']).forEach(p => B.push(p));
 govTier(6, 'Leadership & Character Development (Stage 6 · Every Year Group)', 'Guided by the CLEVER framework and a structured student leadership pathway — from Student Representatives to School Prefects to Class Captains — every student is mentored to lead.', ['The CLEVER Framework', 'Student Representatives', 'Prefects', 'Class Captains']).forEach(p => B.push(p));
 govTier(7, 'Graduation & Beyond (Stage 7 · Beyond SHRS)', 'BECE, WAEC, and NECO examinations mark the culmination of the Royal College years — opening the door to university and higher education, nationally and internationally.', ['BECE', 'WAEC / NECO', 'University & Higher Education']).forEach(p => B.push(p));
-B.push(quoteBox("Nursery → Primary → Royal College → Qur'an College → Arabic & Islamic Studies → Leadership & Character → Graduation — one ecosystem, walked by every Sultan Hanafi child.", ''));
+B.push(quoteBox("Nursery → Primary → Royal College → Qur'an College → Islamic & Arabic Studies → Leadership & Character → Graduation — one ecosystem, walked by every Sultan Hanafi child.", ''));
 B.push(pageBreak());
 
 // ============ CAMPUS & FACILITIES ============
@@ -487,9 +487,9 @@ B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
 rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Chief Executive Officer (CEO)', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
 rosterRow('Dr Adegoke Musa Olatunji', 'Principal, Sultan Hanafi Royal College', 'PhD · MEd · BSc.Edu · NCE · MTRCN (Teachers Registration Council of Nigeria)').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
-rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Arabic & Islamic Studies').forEach(p => B.push(p));
+rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Islamic & Arabic Studies').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
-rosterRow('Shaykh Abubakr Solah', 'Principal, School of Arabic & Islamic Studies', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
+rosterRow('Shaykh Abubakr Solah', 'Principal, School of Islamic & Arabic Studies', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
 rosterRow('Mrs. Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College', 'HND Accounting · PGDE').forEach(p => B.push(p));
 rosterRow('Mrs. Kareemat Abdurazaq', 'Head Teacher, Nursery & Primary School', 'BEd · NCE').forEach(p => B.push(p));
 B.push(pageBreak());

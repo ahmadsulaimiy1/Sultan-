@@ -69,7 +69,7 @@ conventions.
 A **hybrid curriculum by design, not compromise**: the Royal College and
 Nursery & Primary School run the Nigerian National Curriculum enriched with
 entrepreneurship, financial intelligence, leadership, and technology
-electives; the Arabic & Islamic School and Qur'an College run the Saudi
+electives; the Islamic & Arabic School and Qur'an College run the Saudi
 Arabian curriculum with Saudi-approved texts. Both tracks report to one
 board, one CEO, and one disciplinary and pastoral framework — the
 institution's real point of differentiation versus either a purely
@@ -117,7 +117,7 @@ Junior + senior secondary, seven academic departments:
 | Arabic | Arabic, Nahwu & Sarfu, Aruud, Balaghah, Al-Adab-Al Arabiy, Al-Inshaw |
 | Islamic Sciences | Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat |
 
-### III. School of Arabic & Islamic Studies — All ages
+### III. School of Islamic & Arabic Studies — All ages
 Weekday (Mon–Wed, 2–6pm) and weekend (Sat–Sun, 9am–3pm) tracks for the
 wider Muslim Ummah, not limited to enrolled day/boarding students.
 
@@ -132,7 +132,7 @@ progression pathways."
 Nursery & Primary → Royal College (secular + Islamic tracks run in
 parallel, not sequentially) → optional Qur'an College boarding track for
 memorisation-focused students aged 9–16 → Ijazaat on completion. The
-School of Arabic & Islamic Studies runs alongside all of the above as a
+School of Islamic & Arabic Studies runs alongside all of the above as a
 community-facing, non-exclusive offering.
 
 ### What Doesn't Exist Yet (do not fabricate)

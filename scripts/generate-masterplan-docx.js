@@ -228,7 +228,7 @@ sections[0].children.push(pageBreak());
   B.push(h1('Institutional Overview'));
   B.push(lede('Sultan Hanafi Royal Schools in structural summary — four institutions, one governance architecture, one crest.'));
   B.push(statQuad([['2017', 'Founded'], ['4', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Royal College Departments']]));
-  B.push(body("Nursery & Primary, the Royal College, the Qur'an College, and the School of Arabic & Islamic Studies operate under one foundation, one crest, and one governance architecture."));
+  B.push(body("Nursery & Primary, the Royal College, the Qur'an College, and the School of Islamic & Arabic Studies operate under one foundation, one crest, and one governance architecture."));
   B.push(pillar('1', 'Founded on Filial Honour', "Named for the founder's late father, Anofi Aliu Akano — grown from the Imowonla community outward."));
   B.push(pillar('2', 'Hybrid by Design', 'Islamic and secular education held as equally rigorous, not one subordinate to the other.'));
   B.push(pillar('3', 'Open to All', 'Open to Muslims and non-Muslims, males and females — a stated welcome, not a marketing gesture.'));

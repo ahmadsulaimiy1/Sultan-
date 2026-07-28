@@ -35,7 +35,7 @@ a real gap — not silently invented and not silently dropped.
 A hybrid Islamic-and-secular institution — the founder's own words for
 it, used consistently across the live site — built on the premise that
 faith and academic rigour are not in tension. Four institutions under
-one foundation (Nursery & Primary, Royal College, Arabic & Islamic
+one foundation (Nursery & Primary, Royal College, Islamic & Arabic
 Studies, Qur'an College) serve different ages and pathways but share
 one mission, one set of values, and one crest. SHRS represents a school
 built from a specific act of filial honour — named for the founder's
@@ -191,7 +191,7 @@ directive named, sequenced per Part II's narrative arc)
    CLEVER standard
 5. **Educational Philosophy / Why Choose SHRS**
 6. **The Four Institutions** — one feature spread each:
-   Nursery & Primary, Royal College, Arabic & Islamic Studies,
+   Nursery & Primary, Royal College, Islamic & Arabic Studies,
    Qur'an College — presented as **four equally-weighted pillars**,
    not Royal College as primary with three supplements
 7. **Student Life** — pastoral care, community, the values in practice

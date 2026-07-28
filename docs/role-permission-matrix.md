@@ -116,7 +116,7 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | **FIN** | Finance Officer (covers Accounts Officer / Bursar) | Proposed | All institutions | FN-01 establishes the *principle* of financial control; no officer role documented. Consolidated into one code — split only if the school later separates the duties |
 | **TCH** | Teacher (covers Subject Teacher / Class Teacher) | Proposed | Own assigned classes/subjects only | Institution-agnostic; the role that unlocks a real Teacher Portal |
 | **MUH** | Muhaffiz / Muhaffizah | Proposed | Own assigned Hifz students only | IQ-01, IQ-02's real term for this role |
-| **ARB** | Arabic & Islamic Studies Instructor | Proposed | Own assigned classes, School of Arabic & Islamic Studies | Mirrors TCH scope for that division |
+| **ARB** | Islamic & Arabic Studies Instructor | Proposed | Own assigned classes, School of Islamic & Arabic Studies | Mirrors TCH scope for that division |
 | **QC-OFF** | Qur'an College Officer | Proposed | Qur'an College institution-wide | Institution-level oversight above individual Muhaffiz assignments |
 | **SA** | Student Affairs Officer | Proposed | All institutions | SD-05/06/07 (Attendance/Welfare/Behaviour policies) are Missing/Partial — this role and its governing policy should arrive together |
 | **BRD** | Boarding Officer (covers House Parent) | Proposed | Boarding students only | SD-04 Boarding Regulations is published; no digital officer role yet |

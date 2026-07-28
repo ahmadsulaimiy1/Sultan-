@@ -87,7 +87,7 @@ structure, not placeholder prose standing in for their voice.
 ### 7.2 School philosophy
 Draws directly on the real, published mission and educational model
 (the dual Saudi/Islamic curriculum for Qur'an College and the School of
-Arabic & Islamic Studies, and the Nigerian National Curriculum infused
+Islamic & Arabic Studies, and the Nigerian National Curriculum infused
 with entrepreneurial and life skills for Royal College and Nursery &
 Primary). This Handbook does not restate the full curriculum
 description; it points a parent to `/academics/` for the

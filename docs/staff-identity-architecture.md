@@ -62,7 +62,7 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 
 - **`institutions`** — formalises the four institution names already
   used as free text in `classes.institution` (Nursery & Primary, Royal
-  College, Arabic & Islamic Studies, Qur'an College) into a real
+  College, Islamic & Arabic Studies, Qur'an College) into a real
   reference table, so offices/staff/roles can scope against an id.
   `classes.institution` itself is left unchanged (a live table with real
   student data — retrofitting it to a foreign key is real future work,

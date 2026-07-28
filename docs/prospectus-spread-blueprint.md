@@ -112,7 +112,7 @@ this Blueprint can resolve on its own.
 - **At-a-glance panel**: Ages 10+ · Day · Est. 2021 (real descriptor)
 - **Copy target**: 150–200 words
 
-## 8. Arabic & Islamic Studies (2pp)
+## 8. Islamic & Arabic Studies (2pp)
 
 - **Image**: `NEW PHOTOGRAPHY NEEDED` — same finding as Nursery &
   Primary; the institution's own live page uses only the generic

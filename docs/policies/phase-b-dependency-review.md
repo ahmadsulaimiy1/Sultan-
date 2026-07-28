@@ -14,7 +14,7 @@ sync with it.*
 | CEO | Zakariya Olanrewaju Anofi | Executive authority; appeal-escalation point above any single Principal. |
 | Principal, Royal College | Dr. Adegoke Musa Olatunji | |
 | Principal, Qur'an College | Shaykh Ahmad Ibrahim | Owns Boarding Regulations, Ijazah Governance Framework, Hifz Regulations. |
-| Principal, School of Arabic & Islamic Studies | Shaykh Abubakr Solah | |
+| Principal, School of Islamic & Arabic Studies | Shaykh Abubakr Solah | |
 | Head Teacher, Nursery & Primary | Mrs. Kareemat Abdurazaq | |
 | VP Administration | Mrs. Anofi-Badmus Fatimat Omolola | Signs as "Fatimah Badmus" on the live policies page — same person, name variant, not a second role. Owns Student Code of Conduct. |
 | Registrar, Royal College | Mrs. Anofi-Abdulkareem Mariam Tope | |

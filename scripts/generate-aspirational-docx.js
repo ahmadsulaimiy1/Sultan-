@@ -313,7 +313,7 @@ sections[0].children.push(pageBreak());
   feature('Nursery & Primary', 'From age two, the foundation of faith and academic discipline, laid before a child ever sits a formal exam.').forEach(p => B.push(p));
   feature('Royal College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.').forEach(p => B.push(p));
   feature("Qur'an College", 'A parallel track for full Hifz immersion, open to students aged nine to sixteen.').forEach(p => B.push(p));
-  feature('Arabic & Islamic Studies', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
+  feature('Islamic & Arabic Studies', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
   pullquote('Open to Muslims and non-Muslims, males and females — a welcome stated plainly, not a marketing gesture.', null).forEach(p => B.push(p));
   const gridRow = new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
     rows: [new TableRow({ children: [

@@ -107,7 +107,7 @@ Designated Safeguarding Lead (Executive Management level)
    (delegates institution-level first response to)
       |
 Deputy DSL — Royal College   Deputy DSL — Qur'an College
-Deputy DSL — School of Arabic & Islamic Studies
+Deputy DSL — School of Islamic & Arabic Studies
 Deputy DSL — Nursery & Primary
       |
    (all staff report a concern to their institution's Deputy DSL,
@@ -132,7 +132,7 @@ practice has revealed a gap.
 
 ### 7.3 Deputy DSL day-to-day responsibilities
 One Deputy DSL per institution — proposed: the Principal of Royal
-College, Qur'an College, and School of Arabic & Islamic Studies, and
+College, Qur'an College, and School of Islamic & Arabic Studies, and
 the Head Teacher of Nursery & Primary (matching the Child Protection &
 Safeguarding Policy §6's existing proposal, not a new assignment).
 First point of contact within their institution for a concern,

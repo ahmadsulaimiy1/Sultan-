@@ -103,7 +103,7 @@ Greeting
   → 10 to 17           → recommend Royal College (+ mention Qur'an
                           College if they want Qur'an memorisation
                           alongside)
-  → 18 or older        → recommend School of Arabic & Islamic Studies
+  → 18 or older        → recommend School of Islamic & Arabic Studies
                           (the only real programme in the current
                           catalogue open to adults; Royal College and
                           Nursery & Primary are age-bounded, and Qur'an
@@ -126,7 +126,7 @@ Greeting
 "Day or boarding?"
   → Day only
   → Open to boarding
-  → Not applicable (e.g. Arabic & Islamic Studies weekday/weekend track)
+  → Not applicable (e.g. Islamic & Arabic Studies weekday/weekend track)
 
 → Present the matched programme: one paragraph pulled from the real
   page content (not invented), a link to that programme's actual page

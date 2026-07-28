@@ -3,7 +3,7 @@
 This is the "Priority 2" build authorised after the header/footer
 prestige rebuild — a real, working announcement pipeline (admissions
 notices, ceremonies, academic notices, category-specific communications
-for the Qur'an College and Arabic & Islamic Studies) rather than a
+for the Qur'an College and Islamic & Arabic Studies) rather than a
 mockup with sample content. **No announcement, event, date, or venue has
 been fabricated anywhere in this build.** The system currently holds
 zero rows and is designed to look deliberately, honestly complete in

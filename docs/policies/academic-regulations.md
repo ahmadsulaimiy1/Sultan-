@@ -44,7 +44,7 @@ underneath.
 All students across all four institutions, in both the Nigerian
 National Curriculum programme (Royal College, Nursery & Primary) and
 the Saudi-curriculum Islamic/Qur'anic programme (Qur'an College, School
-of Arabic & Islamic Studies) — Section 7.3 addresses where these two
+of Islamic & Arabic Studies) — Section 7.3 addresses where these two
 programmes' progression logic must differ.
 
 ## 4. Definitions
@@ -110,7 +110,7 @@ Tajweed standard instead.
 - Reviewed at a fixed point (recommend end of the following term) to
   decide: return to good standing, extend probation, or non-promotion.
 
-### 7.3 Qur'an College / School of Arabic & Islamic Studies distinction
+### 7.3 Qur'an College / School of Islamic & Arabic Studies distinction
 These institutions' primary progression measure is memorisation and
 Tajweed standard, not the CA/Examination framework above — governed by
 the Hifz Regulations (IQ-01) and the Tajweed Assessment Policy
@@ -200,7 +200,7 @@ Admissions Policy (PA-05), Records Retention Policy (IT-04).
 
 ## 11. Exceptions
 
-Qur'an College and School of Arabic & Islamic Studies are explicitly
+Qur'an College and School of Islamic & Arabic Studies are explicitly
 exempted from the CA/Examination promotion mechanics (Section 7.3) —
 this is a named exception, not an oversight.
 

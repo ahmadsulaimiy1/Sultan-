@@ -102,7 +102,7 @@ boundary a digital system for it would need to enforce.
 | Nursery & Primary | "Nursery & Primary School," ages 2–10 | `academics/nursery-primary/` | Marketing only; can enrol students today (generic `institution`/`className` text) but no age/division-specific dashboard content |
 | Royal College | Junior **and** senior secondary combined | `academics/royal-college/` | Same — generic enrolment only |
 | Qur'an College | 24–36 month day & boarding Hifz programme | `academics/quran-college/` | **Fully digitized**: dual-enrolment-aware, per-Juz' progress, 5-stage journey, Ijazah register — the one institution with a real module (Phase 2 of this engagement) |
-| School of Arabic & Islamic Studies | Full name is "School of Arabic & Islamic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
+| School of Islamic & Arabic Studies | Full name is "School of Islamic & Arabic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
 
 ### Digital surfaces (built vs. not)
 

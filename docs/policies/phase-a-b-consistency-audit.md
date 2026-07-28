@@ -43,7 +43,7 @@ eleven documents.
 
 All eleven documents use the same governance structure: a Board of
 Trustees above a CEO, four institution-level Principals/Head Teacher
-(Royal College, Qur'an College, School of Arabic & Islamic Studies,
+(Royal College, Qur'an College, School of Islamic & Arabic Studies,
 Nursery & Primary — explicitly, consistently, **not** a single overall
 Principal), and named functional owners (VP Administration, Registrar,
 ICT Head) drawn from the real governance roster. No document invents a

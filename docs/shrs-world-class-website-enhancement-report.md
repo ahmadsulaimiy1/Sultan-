@@ -40,7 +40,7 @@ everywhere else on this site.
 
 **Current state, checked against the live header markup:** the mega-menu
 is one level deep. "Education" opens to four cards — Nursery & Primary,
-Royal College, Arabic & Islamic Studies, Qur'an College — each linking to
+Royal College, Islamic & Arabic Studies, Qur'an College — each linking to
 one institution-level page. There is no second tier: no per-class-level
 page (Creche through SSS3), no per-pathway page (WAEC/NECO/JAMB tracks
 under Royal College; Tahseen/Hifz/Murajaʿah/Ijazah under Qur'an College).
@@ -221,7 +221,7 @@ person, is now specified as:
 | Department | Institution-appropriate | e.g. "Qur'an College — Tahfīẓ" not a generic "Teacher" |
 | Subject Specialisation | Real, as supplied | e.g. "Arabic Language, Nahw" per the existing workforce-data-collection categories |
 | Faculty Category | Real | Teaching / Academic Leadership / Administrative, per the Human Capital Register's eventual structure |
-| Institutional Colour Coding | Design system, not data | A colour tag per institution (Nursery & Primary / Royal College / Qur'an College / Arabic & Islamic Studies) reusing the palette already established for each school's page identity, so the directory visually sorts itself the way the mega-menu already does |
+| Institutional Colour Coding | Design system, not data | A colour tag per institution (Nursery & Primary / Royal College / Qur'an College / Islamic & Arabic Studies) reusing the palette already established for each school's page identity, so the directory visually sorts itself the way the mega-menu already does |
 
 This is a card format genuinely comparable to how respected universities
 present faculty (name/title/credentials/department, no photograph
@@ -339,7 +339,7 @@ Nurture Tomorrow's Leaders") and admissions framing are restrained
 rather than hyperbolic.
 
 **Where tone genuinely could lift further:** a few programme-description
-paragraphs (Nursery & Primary, Arabic & Islamic Studies in particular,
+paragraphs (Nursery & Primary, Islamic & Arabic Studies in particular,
 per the earlier `site-design-audit.md` finding) are the shortest, plainest
 copy on the site — not undignified, just thin compared to the Royal
 College and Qur'an College pages' depth. Elevating tone here is really
@@ -348,7 +348,7 @@ Excellence Roadmap (Part 4, item under "Nice to Have" territory in that
 document) — a content-depth pass, not a rewrite of what exists.
 
 **Recommendation:** a single editorial pass across the four institution
-pages to bring Nursery & Primary and Arabic & Islamic Studies up to the
+pages to bring Nursery & Primary and Islamic & Arabic Studies up to the
 same descriptive depth as Royal College and Qur'an College — this is
 lower-cost than it sounds, since the source material (curriculum text,
 timetables) already exists per `site-design-audit.md`'s own finding; it
@@ -421,7 +421,7 @@ elegant, prestigious, international, world-class."
 ### High Priority
 4. Anchored sub-navigation on the four institution hub pages (class
    levels, named pathways) — Section 1's recommended middle path.
-5. Editorial depth pass on Nursery & Primary / Arabic & Islamic Studies
+5. Editorial depth pass on Nursery & Primary / Islamic & Arabic Studies
    copy — Section 7.
 6. Expand Adhkār coverage toward 40–70 items, sourced with real
    references — Section 6.

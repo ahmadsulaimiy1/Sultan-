@@ -89,7 +89,7 @@ icon direction (see §9 for the icon system itself).
 
 ### Academics
 - **Column — Our Institutions**: Nursery & Primary · Royal College ·
-  School of Arabic & Islamic Studies · Qur'an College — each with a
+  School of Islamic & Arabic Studies · Qur'an College — each with a
   one-line descriptor pulled verbatim from existing content (age range +
   curriculum source), not new copy.
 - **Column — Academic Framework**: Curriculum Overview (LIVE, the

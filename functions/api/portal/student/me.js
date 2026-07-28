@@ -2,7 +2,7 @@
 // full result history (transcript preview), and fee status — scoped
 // directly to the session's own studentId, not via a guardian join. A
 // student may be enrolled in more than one programme at once (e.g. Royal
-// College AND Qur'an College AND Arabic & Islamic Studies) — the full
+// College AND Qur'an College AND Islamic & Arabic Studies) — the full
 // list is returned as `enrolments`. If ANY enrolment is Qur'an College,
 // also includes per-Juz' Hifz progress, current stage of the school's
 // published 5-stage Hifz Journey, and any Ijazah register entries. No
@@ -45,7 +45,7 @@ export async function onRequestGet({ request, env }) {
       sql`SELECT term, subject, ca_score, exam_score, total_score, teacher_comment FROM term_results WHERE student_id = ${student.id} ORDER BY term, subject`,
       sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
       // A student may belong to more than one class at once (e.g. Royal
-      // College *and* Qur'an College *and* Arabic & Islamic Studies) —
+      // College *and* Qur'an College *and* Islamic & Arabic Studies) —
       // see sql/schema.sql's student_classes.
       sql`
         SELECT c.institution, c.name AS class_name, sc.is_primary

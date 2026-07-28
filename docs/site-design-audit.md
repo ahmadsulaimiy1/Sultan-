@@ -1,7 +1,7 @@
 # SHRS Site Design Audit — against the "Imperial Digital Campus Directive"
 
 **Status: all four priority findings below have been fixed** (home page
-contact icons, Nursery & Primary / Arabic & Islamic Studies visual
+contact icons, Nursery & Primary / Islamic & Arabic Studies visual
 identity, and the three policy-page gaps — cross-links, print stylesheet,
 revision history), across both English and Arabic. See the "Priority
 order" section at the end for what changed in each case.
@@ -41,16 +41,16 @@ obvious. **Recommended fix: swap the 5 `<div class="ico">◆</div>` spots in
 Phase 2/6 gave **Qur'an College** a distinct manuscript/geometric styling
 treatment and a real Hifz-journey diagram, and gave **Governance** an
 Oxford Navy accent treatment. **Nursery & Primary** and **School of
-Arabic & Islamic Studies** never received an equivalent distinct visual
+Islamic & Arabic Studies** never received an equivalent distinct visual
 identity — both are the shortest, plainest of the four school pages, each
 ending on a bare `.image-slot` placeholder with no other visual device.
 Since the site's own framing is "one board, one CLEVER standard, four
 distinct paths," two of the four currently read as visually second-class.
-**Recommended: give Nursery & Primary and Arabic & Islamic Studies each
+**Recommended: give Nursery & Primary and Islamic & Arabic Studies each
 one real, honest visual device** — e.g., Nursery & Primary could get a
 simple "A Day in Early Years" flow (arrival → circle time → mixed
 Islamic/secular instruction → play → dismissal, drawn from what's already
-described in the curriculum text, not invented), and Arabic & Islamic
+described in the curriculum text, not invented), and Islamic & Arabic
 Studies could get its weekday/weekend schedule turned into a visual
 timetable strip instead of the current plain two-column text row.
 
@@ -89,7 +89,7 @@ progress. Not a real gap, a pattern that doesn't fit this page's structure.
 - `admission.html`: tuition fees, scholarship criteria, international-
   student arrangements — same honest placeholder pattern.
 - Four `.image-slot` placeholders still open: Nursery & Primary campus,
-  Arabic & Islamic Studies classrooms, Foundation programme photography,
+  Islamic & Arabic Studies classrooms, Foundation programme photography,
   (and now, per finding #2, two schools' pages would benefit from a
   diagram in the meantime, not just a placeholder).
 
@@ -121,7 +121,7 @@ Checked against the directive's checklist line by line:
 
 1. Home page contact-icon fix (#1) — small, mechanical, highest visual
    payoff for the effort.
-2. Nursery & Primary / Arabic & Islamic Studies visual-identity parity
+2. Nursery & Primary / Islamic & Arabic Studies visual-identity parity
    (#2) — moderate effort, fixes a real asymmetry between the four
    "equal" schools.
 3. Policy related-document cross-links + print stylesheet (#3) — moderate

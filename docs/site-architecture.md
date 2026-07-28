@@ -30,7 +30,7 @@ not leaving one site for another.
 /academics                         Chapter V: hub — the four institutions, side by side
 /academics/nursery-primary         Nursery & Primary School (ages 2–10)
 /academics/royal-college           Royal College — 7 departments, curriculum tables
-/academics/arabic-islamic-studies  School of Arabic & Islamic Studies
+/academics/arabic-islamic-studies  School of Islamic & Arabic Studies
 /academics/quran-college           Qur'an College — Ijazaat pathway
 /boarding                          Chapter VI: Boarding Facility
 /admission                         Chapter VII: 12-step process, documents, [fees/calendar placeholder]
@@ -54,7 +54,7 @@ individually-linkable benefit without the fragmentation cost.
 side-by-side comparison of the four institutions (age range, curriculum
 source, credential/outcome) before the visitor picks a track. This is
 the site's real conversion fork: a parent choosing Royal College vs.
-Qur'an College vs. the weekend Arabic & Islamic program is the single
+Qur'an College vs. the weekend Islamic & Arabic program is the single
 most consequential decision the site needs to support.
 
 ---
@@ -131,7 +131,7 @@ College or Nursery & Primary → Admission → Contact/WhatsApp.
 Admission.
 
 **Community member seeking weekend Islamic studies (non-enrolling):**
-Home → Academics hub → School of Arabic & Islamic Studies → Contact
+Home → Academics hub → School of Islamic & Arabic Studies → Contact
 (this audience does not go through Admission's 12-step process, which is
 built for the day/boarding schools — the site should say so explicitly
 on that page rather than funnelling everyone through one form).

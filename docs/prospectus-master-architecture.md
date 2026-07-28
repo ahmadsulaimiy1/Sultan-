@@ -62,7 +62,7 @@ system" references the Part VIII template it uses.
 | 5 | Educational Philosophy / Why Choose SHRS | Philosophy | Editorial | 2 |
 | 6 | Nursery & Primary | Institution 1 of 4 | Feature spread (identical template, per Part III equal-weighting rule) | 2 |
 | 7 | Royal College | Institution 2 of 4 | Feature spread (identical template) | 2 |
-| 8 | Arabic & Islamic Studies | Institution 3 of 4 | Feature spread (identical template) | 2 |
+| 8 | Islamic & Arabic Studies | Institution 3 of 4 | Feature spread (identical template) | 2 |
 | 9 | Qur'an College | Institution 4 of 4 | Feature spread (identical template) + Hifz Journey diagram | 3 *(one extra page — see note below)* |
 | 10 | Student Life | Student Life | Editorial | 2 |
 | 11 | Facilities | Facilities | Editorial, image-forward | 2 |
@@ -105,7 +105,7 @@ pillars, not Royal College as primary with three supplements"): spreads
   display), one "at a glance" data panel (ages, format, established
   date — all real, already-published facts per the header nav
   descriptors: Nursery & Primary "Ages 2–10 · Day"; Royal College "Ages
-  10+ · Day · Est. 2021"; Arabic & Islamic Studies "All ages · Weekday
+  10+ · Day · Est. 2021"; Islamic & Arabic Studies "All ages · Weekday
   & weekend"; Qur'an College "Day & Boarding")
 - Page 2: narrative paragraph, one supporting image, one distinguishing
   feature callout

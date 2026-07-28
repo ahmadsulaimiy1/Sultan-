@@ -36,7 +36,7 @@ Four real institutions exist in this project today (`setup.js`'s
 | **Nursery & Primary** | Early Years (Creche, Nursery, Kindergarten/Preschool), Primary 1–6 |
 | **Royal College** | Junior Secondary (JSS1–JSS3), Senior Secondary (SS1–SS3) — the institution's mainstream academic programme |
 | **Qur'an College** | The published 5-stage Hifz Journey, Ijazah pathway |
-| **Arabic & Islamic Studies** | Arabic language and Islamic Studies programmes |
+| **Islamic & Arabic Studies** | Arabic language and Islamic Studies programmes |
 
 A fifth line — **future continuing education / adult programmes** — is
 named in the directive as a category to anticipate. No institution,
@@ -76,7 +76,7 @@ these two distinct hires.
 
 These sit **alongside** the mainstream hierarchy above, not beneath or
 above it — a deliberate correction from any framing that would make
-Qur'an College or Arabic & Islamic Studies subordinate pillars. A
+Qur'an College or Islamic & Arabic Studies subordinate pillars. A
 Muhaffiz's institutional standing relative to a Subject Teacher is
 lateral, not junior.
 
@@ -85,8 +85,8 @@ lateral, not junior.
 | **Muhaffiz / Muhaffizah** | Qur'an College | Qur'an Supervisor | Direct Hifz instruction and per-Juz' progress recording for assigned students — maps to the already-adopted `MUH` role; no change proposed here beyond adding the supervisory tier below it. |
 | **Qur'an Supervisor** | Principal, Qur'an College | New — sits between individual Muhaffiz/Muhaffizah staff and the existing `QC-OFF` (Qur'an College Officer) institution-wide role, mirroring Head of Subject's position in the mainstream hierarchy. |
 | **Ijazah Coordinator** | Qur'an College | Qur'an College Officer | A credentialing-specific role, distinct from day-to-day Hifz supervision — coordinates the Ijazah grant/verification process specifically (IQ-02), rather than folding it into `QC-OFF`'s broader institution-wide oversight as it is today. |
-| **Arabic Language Instructor** | Arabic & Islamic Studies | Head of Subject (Arabic & Islamic Studies) | Arabic language instruction — the proposed split of the existing single `ARB` code's language half. |
-| **Islamic Studies Instructor** | Arabic & Islamic Studies | Head of Subject (Arabic & Islamic Studies) | Islamic Studies instruction — the proposed split of `ARB`'s other half, mirroring the mainstream Subject Teacher tier for this institution specifically. |
+| **Arabic Language Instructor** | Islamic & Arabic Studies | Head of Subject (Islamic & Arabic Studies) | Arabic language instruction — the proposed split of the existing single `ARB` code's language half. |
+| **Islamic Studies Instructor** | Islamic & Arabic Studies | Head of Subject (Islamic & Arabic Studies) | Islamic Studies instruction — the proposed split of `ARB`'s other half, mirroring the mainstream Subject Teacher tier for this institution specifically. |
 
 ## 4. Proposed permission mapping to existing system areas
 

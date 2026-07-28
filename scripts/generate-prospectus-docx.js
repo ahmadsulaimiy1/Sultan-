@@ -220,7 +220,7 @@ institutionSpread('Royal College', 'gallery/chemistry-laboratory.jpg', 460,
   [['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']],
   "SHRS's mainstream secondary academic programme — Junior and Senior Secondary education delivered with the same rigour named in our Mission, in dedicated science and general-academic facilities.");
 
-institutionSpread('Arabic & Islamic Studies', null, null,
+institutionSpread('Islamic & Arabic Studies', null, null,
   [['Ages', 'All ages'], ['Format', 'Weekday & weekend']],
   'Dedicated Arabic language and Islamic Studies programmes, open across all ages — deepening the Islamic-knowledge half of our Mission alongside the secular academic pathways.',
   true);

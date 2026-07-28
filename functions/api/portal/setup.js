@@ -364,7 +364,7 @@ const STATEMENTS = [
   // the same "admin enters real data on purpose" convention already
   // used for guardians/students, never auto-created by this endpoint.
   `INSERT INTO institutions (name) VALUES
-    ('Nursery & Primary'), ('Royal College'), ('Arabic & Islamic Studies'), ('Qur''an College')
+    ('Nursery & Primary'), ('Royal College'), ('Islamic & Arabic Studies'), ('Qur''an College')
     ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
@@ -377,7 +377,7 @@ const STATEMENTS = [
     ('FIN', 'Finance Officer', 'proposed', 'All institutions', 'FN-01 establishes the principle; no officer role documented'),
     ('TCH', 'Teacher', 'proposed', 'Own assigned classes/subjects only', 'Institution-agnostic'),
     ('MUH', 'Muhaffiz / Muhaffizah', 'proposed', 'Own assigned Hifz students only', 'IQ-01, IQ-02'),
-    ('ARB', 'Arabic & Islamic Studies Instructor', 'proposed', 'Own assigned classes, School of Arabic & Islamic Studies', 'Mirrors TCH scope for that division'),
+    ('ARB', 'Islamic & Arabic Studies Instructor', 'proposed', 'Own assigned classes, School of Islamic & Arabic Studies', 'Mirrors TCH scope for that division'),
     ('QC-OFF', 'Qur''an College Officer', 'proposed', 'Qur''an College institution-wide', 'Institution-level oversight above individual Muhaffiz assignments'),
     ('SA', 'Student Affairs Officer', 'proposed', 'All institutions', 'SD-05/06/07 Missing/Partial — role and governing policy should arrive together'),
     ('BRD', 'Boarding Officer', 'proposed', 'Boarding students only', 'SD-04 published; no digital officer role yet'),
@@ -620,10 +620,10 @@ async function handle({ request, env }) {
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${qStudentId})`;
 
         // Dual enrolment demo: this same student is also enrolled in
-        // Arabic & Islamic Studies, alongside their primary Qur'an
+        // Islamic & Arabic Studies, alongside their primary Qur'an
         // College programme — exactly the "belongs to more than one
         // programme at once" case the Student Portal needs to support.
-        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Arabic & Islamic Studies', 'Iʿdādiyyah 1') RETURNING id`;
+        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic & Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${arCls.rows[0].id}, false)`;
 
         const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);

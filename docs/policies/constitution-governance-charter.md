@@ -64,7 +64,7 @@ the SHRS name.
   Administration, Registrar, ICT Head, Head of Research & Development),
   per `about-governance.html`.
 - **Institution** — one of the four schools operating under SHRS:
-  Royal College, Qur'an College, School of Arabic & Islamic Studies,
+  Royal College, Qur'an College, School of Islamic & Arabic Studies,
   Nursery & Primary.
 - **Delegated authority** — a decision the Board has authorised a named
   role to make without seeking Board approval each time, within stated
@@ -91,7 +91,7 @@ holds authority the Board has not knowingly delegated. Islamic
 scholarship and secular educational leadership sit together in the
 Executive Management Team by design (the CEO's finance background, the
 Royal College Principal's education background, and the Qur'an College
-and School of Arabic & Islamic Studies Principals' Islamic scholarship
+and School of Islamic & Arabic Studies Principals' Islamic scholarship
 background, per the real roster) — this Charter treats that as a
 structural strength to preserve, not something to flatten into a single
 generic "Principal" role. Accountability runs both ways: the Board

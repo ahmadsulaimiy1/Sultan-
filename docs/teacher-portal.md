@@ -40,7 +40,7 @@ if one had been.
 
 **What this phase deliberately did not build**, named rather than
 silently dropped:
-- `MUH` (Muhaffiz) and `ARB` (Arabic & Islamic Studies Instructor)
+- `MUH` (Muhaffiz) and `ARB` (Islamic & Arabic Studies Instructor)
   remain `'proposed'` roles with no issued account. `teacher_class_assignments`
   is schema-ready for them — nothing about it is TCH-specific — but
   onboarding either role and building their portal views is separate

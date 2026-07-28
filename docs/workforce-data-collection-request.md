@@ -23,14 +23,14 @@ For every real teacher, please supply:
 |---|---|---|---|---|
 | *(awaiting real data)* | | | | |
 
-## 2. School of Arabic & Islamic Studies Faculty — **supplied, integrated**
+## 2. School of Islamic & Arabic Studies Faculty — **supplied, integrated**
 
 **Distinct from Qur'an College** — the two lists arrived merged once
 already (`master-academic-structure-register.md` v1.1's §4d error) and
 have now been correctly split. Full detail, qualifications, and
 teaching areas: `docs/master-academic-structure-register.md` §4d
 (Qur'an College — Ustadh Muhammad Fodio, Ustadh Muhammad Awwal Ishola)
-and §4e (School of Arabic & Islamic Studies — Ustadh Abdul-Hameed
+and §4e (School of Islamic & Arabic Studies — Ustadh Abdul-Hameed
 Abdurrahman, Ustadh Sherifudeen Olaifa, Ustadh Mas'oud Abdul-Fattah,
 Engr. Ustadhah Fatimah A.). Ustadh Sherifudeen Olaifa's qualification
 remains unsupplied, recorded as such, not filled in.
@@ -46,7 +46,7 @@ remains unsupplied, recorded as such, not filled in.
 | ICT Officer | *(awaiting real data — role currently `proposed`)* |
 | HR Officer | *(awaiting real data — no HR role/office exists in the system at all yet)* |
 | Principal, Royal College | *(awaiting real data)* |
-| Principal, School of Arabic & Islamic Studies | *(awaiting real data)* |
+| Principal, School of Islamic & Arabic Studies | *(awaiting real data)* |
 | Head Teacher, Nursery & Primary | *(awaiting real data)* |
 
 ## 4. What happens once this is returned filled in
