@@ -20,6 +20,7 @@ function toRow(r) {
     priceNaira: r.price_naira !== null ? Number(r.price_naira) : null,
     imageUrl: r.image_url,
     isAvailable: r.is_available,
+    isSampleData: r.is_sample_data,
   };
 }
 

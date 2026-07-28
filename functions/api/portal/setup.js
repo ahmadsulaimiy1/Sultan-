@@ -517,6 +517,7 @@ const STATEMENTS = [
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
   `ALTER TABLE staff ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE marketplace_products ADD COLUMN IF NOT EXISTS is_sample_data BOOLEAN NOT NULL DEFAULT false`,
 
   `CREATE TABLE IF NOT EXISTS guardian_emergency_contacts (
     id            SERIAL PRIMARY KEY,
@@ -701,7 +702,37 @@ async function handle({ request, env }) {
       }
     }
 
-    return json({ ok: true, tablesReady: true, demoSeeded });
+    // Marketplace sample listings — unconditional (not gated behind
+    // PORTAL_DEMO_PASSWORD like the guardian/student fixtures above),
+    // because the point is a non-empty *public* storefront, not an
+    // internal demo login. Only seeds once: if any row already exists
+    // (real or sample), this is skipped entirely so it never overwrites
+    // what staff have since entered. Prices are illustrative and marked
+    // is_sample_data = true — the Bookshop should confirm real pricing
+    // and stock, then either edit these in place or archive them and add
+    // real listings alongside.
+    let marketplaceSeeded = false;
+    const existingProducts = await sql`SELECT id FROM marketplace_products LIMIT 1`;
+    if (existingProducts.rows.length === 0) {
+      const sampleProducts = [
+        ['textbooks', 'Nigerian Primary Mathematics — Basic 4', 'Core mathematics textbook aligned with the Nigerian primary curriculum.', 3500],
+        ['exercise_books', 'A5 Exercise Book (Pack of 5)', '40-leaf ruled exercise books, school-standard size.', 1500],
+        ['uniforms', 'Royal College Uniform Set (Junior)', 'Shirt, trousers/pinafore, and tie in the school colours.', 15000],
+        ['bags', 'SHRS Backpack (Standard)', 'Durable school backpack with the SHRS crest.', 8000],
+        ['stationery', 'Geometry Set', 'Ruler, compass, protractor, and set squares in a case.', 1200],
+        ['quran_materials', "Tajweed Mushaf — Pocket Size", 'Uthmani-script Mushaf with colour-coded tajweed rules.', 4500],
+        ['islamic_studies_materials', 'Islamic Studies Workbook — Junior Level', 'Structured workbook covering the basics of aqidah, fiqh, and seerah.', 2800],
+        ['shrs_publications', 'Sultan Hanafi Royal Schools Prospectus (Print Edition)', 'The full institutional prospectus in print.', 2000],
+      ];
+      for (const [category, name, description, priceNaira] of sampleProducts) {
+        await sql`
+          INSERT INTO marketplace_products (category, name, description, price_naira, status, is_sample_data, created_by)
+          VALUES (${category}, ${name}, ${description}, ${priceNaira}, 'published', true, 'Setup — sample listing')`;
+      }
+      marketplaceSeeded = true;
+    }
+
+    return json({ ok: true, tablesReady: true, demoSeeded, marketplaceSeeded });
   } catch (err) {
     console.error('portal setup error', err);
     return json({ error: 'Setup failed: ' + (err && err.message ? err.message : 'unknown error') }, 500);

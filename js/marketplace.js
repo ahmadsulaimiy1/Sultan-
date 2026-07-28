@@ -30,10 +30,12 @@
     en: {
       empty: 'Nothing listed here yet.', priceOnEnquiry: 'Price on enquiry',
       unavailable: 'Currently unavailable', order: 'Enquire to Order',
+      sample: 'Sample listing — price pending confirmation',
     },
     ar: {
       empty: 'لا توجد منتجات مدرجة هنا بعد.', priceOnEnquiry: 'السعر عند الاستفسار',
       unavailable: 'غير متوفر حالياً', order: 'استفسر للطلب',
+      sample: 'عرض توضيحي — السعر قيد التأكيد',
     },
   };
   var t = STRINGS[lang];
@@ -60,6 +62,7 @@
       '<article class="mkt-card' + (p.isAvailable ? '' : ' is-unavailable') + '">' +
       '<div class="mkt-card-media">' + (p.imageUrl ? '<img src="' + escapeHtml(p.imageUrl) + '" alt="" loading="lazy">' : '<span class="mkt-card-placeholder" aria-hidden="true"></span>') + '</div>' +
       '<div class="mkt-card-body">' +
+      (p.isSampleData ? '<span class="mkt-sample-tag">' + escapeHtml(t.sample) + '</span>' : '') +
       '<h4>' + escapeHtml(p.name) + '</h4>' +
       (p.description ? '<p>' + escapeHtml(p.description) + '</p>' : '') +
       '<div class="mkt-card-foot">' +

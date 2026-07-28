@@ -351,6 +351,13 @@ CREATE TABLE IF NOT EXISTS marketplace_products (
   is_available  BOOLEAN NOT NULL DEFAULT true,
   status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
   created_by    TEXT,
+  -- Illustrative placeholder listings (name/category real, price/stock not
+  -- yet confirmed by the Bookshop) so the storefront isn't empty before
+  -- real inventory is entered — same is_sample_data convention as
+  -- guardians/students/staff. Seeded once, unconditionally, by
+  -- functions/api/portal/setup.js if the table is empty; a real product
+  -- entered by staff never gets this flag.
+  is_sample_data BOOLEAN NOT NULL DEFAULT false,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );

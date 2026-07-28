@@ -7,12 +7,19 @@
   </div>
 
   <div class="wrap">
-    <div class="mkt-notice">
+    <div class="mkt-notice qr-verify-notice">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 8v5M12 16.2v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <p><strong>The full 604-page Mushaf reader, verse-by-verse audio, and Hifz repeat-loop tools are not live yet.</strong> This page is honest about that rather than shipping a reader with fabricated or unlicensed text. Below is exactly what's real today, what the legally-clean path forward looks like, and why it takes real data access to finish — not a Claude Code session working from memory.</p>
+      <p><strong>The reader below is a first working draft, pending scholarly verification.</strong> Its Arabic text was transcribed by an AI from memory, not fetched from a licensed source (this environment cannot reach one — see below), and has not yet been checked against a printed Mushaf. The school has asked for this best-effort version and taken responsibility for verifying every ayah before it is treated as authoritative. Please do not rely on it for worship or teaching until that review is complete.</p>
     </div>
 
-    <p class="eyebrow" style="margin-top:20px;">What's Real Today</p>
+    <p class="eyebrow" style="margin-top:20px;">Reader — Al-Fātiḥah &amp; Surahs 93–114</p>
+    <p style="max-width:700px;color:#4a4944;margin-bottom:16px;">The opening surah, plus the last block of the Qur'an — the portion most Muslim children memorise first and the one recited most often in daily prayer. The full 604-page Mushaf, verse-by-verse audio, and Hifz repeat-loop tools are a later phase (see below for why).</p>
+    <div class="qr-reader" data-quran-reader>
+      <div class="qr-surah-list" data-qr-list></div>
+      <div class="qr-pane" data-qr-pane></div>
+    </div>
+
+    <p class="eyebrow" style="margin-top:48px;">What's Real Today, Beyond the Reader</p>
     <div class="school-block">
       <h3><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3.5c-3.5 2.5-5 5.5-5 8.5a5 5 0 0010 0c0-1-.3-2-1-3 .1 1.3-.4 2-1 2.4.4-2-.5-4.5-3-7.9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>The Adhkār Centre</h3>
       <p>Morning &amp; Evening Adhkār with a Smart Tasbih Counter, Arabic recitation read aloud via text-to-speech, personal streaks, and achievement badges — fully built and live. See the <a class="text-link" href="/adhkar/">Adhkār Centre</a>.</p>
@@ -29,8 +36,8 @@
 
   <div class="chapter-band-alt">
    <div class="wrap">
-    <p class="eyebrow" style="margin-top:0;">Why the Full Reader Isn't Here Yet — and What It Needs</p>
-    <p style="max-width:700px;color:rgba(248,244,233,0.78);">Building the reader properly means the actual verse text and audio have to come from a real, licensed data source fetched programmatically — never typed from memory, even for a single well-known verse. That's a firm rule on this site (the same one behind the Personalisation Centre's Verse-of-the-Day: English translation and citation only, never the Arabic script from memory). Research into what a compliant build needs:</p>
+    <p class="eyebrow" style="margin-top:0;">Why the Reader Above Is Scoped and Unverified, and What Finishing It Needs</p>
+    <p style="max-width:700px;color:rgba(248,244,233,0.78);">Building the reader properly — the full 604-page Mushaf, verse-by-verse audio, and Hifz repeat-loop tools — means the verse text and audio need to come from a real, licensed data source fetched programmatically, then be checked by qualified reviewers before anyone relies on them. The version above is a deliberately smaller first step: 23 short, commonly-recited surahs, transcribed by AI at the school's explicit request and awaiting that same scholarly check. Research into what the fuller, licensed build needs:</p>
     <div class="school-block">
       <span class="tag">Researched</span>
       <h3>Qur'an Text</h3>
@@ -49,7 +56,7 @@
     <div class="school-block">
       <span class="tag">Blocked, Not Skipped</span>
       <h3>What Stopped This Build Going Further Today</h3>
-      <p>This working session has no outbound network access to Qur'an text/audio APIs (a sandboxing restriction, confirmed by testing), so the actual verse data could not be fetched and verified here. The reader's navigation architecture (page/juz'/hizb/surah, manual and auto-scroll modes, Hifz repeat-loop controls) is designed and ready to receive real data the moment a session with that access — or the school's own developer — wires in a Tanzil-sourced feed.</p>
+      <p>This working session has no outbound network access to Qur'an text/audio APIs (a sandboxing restriction, confirmed by testing), so the actual verse data for the fuller Mushaf could not be fetched from Tanzil and verified here, and audio recitation isn't wired in at all. The reader's navigation architecture (surah selection now; page/juz'/hizb, manual and auto-scroll modes, and Hifz repeat-loop controls next) is built to extend cleanly once a session with real network access, or the school's own developer, replaces the 23-surah AI transcript with a verified Tanzil-sourced feed.</p>
     </div>
    </div>
   </div>
