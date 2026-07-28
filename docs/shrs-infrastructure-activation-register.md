@@ -33,8 +33,8 @@ step-by-step walkthroughs.
 |---|---|---|---|---|---|---|
 | Cloudflare (account) | Hosting platform for the whole Digital Campus | Critical | Free tier — verify at signup | ICT / CTO | None | **Completed** — account exists (`Ahmadbinibrohim@gmail.com`), verified 2026-07-27 |
 | Hosting (Pages project) | Serves the static site + Pages Functions (the entire `functions/api/` backend) | Critical | Free tier | ICT | Cloudflare account | **Completed** — `shroyalschools-web` Pages project live at `shroyalschools-web.pages.dev`, first successful deploy 2026-07-27. A separate plain Worker named `shroyalschools` was created first by mistake (wrong project type — bare Workers don't support the `functions/` Pages Functions convention this codebase uses) and should be deleted or left unused; it is not part of the real deployment. `wrangler.toml` was added to the repo to set `pages_build_output_dir`, `compatibility_date`, and the `nodejs_compat` compatibility flag directly, working around a confirmed Cloudflare dashboard bug where the Compatibility Flags UI control does not reliably accept that flag. |
-| Staging environment | Safe pre-production testing at a real, reachable URL | Critical | Free (Cloudflare Pages preview deployments) | ICT | Cloudflare Pages project | **Completed** — Preview deployments build automatically from the `claude/wec-institutional-design-kt3u0t` branch (confirmed working 2026-07-27); no environment variables (database, tokens) configured yet, so only the static site is verified, not any API-backed feature |
-| Production environment | The real live site | Critical, sequenced *after* staging is verified | Free–Starter depending on usage | ICT / CEO's Office | Staging Verified | **In Progress** — `main` branch deploys automatically to `shroyalschools-web.pages.dev` and the static site is confirmed live (2026-07-27); no custom domain attached yet (still on the free `.pages.dev` subdomain — see Domain Infrastructure above) and no environment variables set, so every database-backed feature (portal, login, dashboards) is still inactive on this live URL |
+| Staging environment | Safe pre-production testing at a real, reachable URL | Critical | Free (Cloudflare Pages preview deployments) | ICT | Cloudflare Pages project | **Completed** — Preview deployments build automatically from the `claude/wec-institutional-design-kt3u0t` branch; environment variables set (database, all five tokens, plus `PORTAL_DEMO_PASSWORD`) and confirmed working end-to-end 2026-07-28 — see `docs/shrs-staging-verification-report.md` for the full evidence trail (all four seeded demo roles verified live). |
+| Production environment | The real live site | Critical, sequenced *after* staging is verified | Free–Starter depending on usage | ICT / CEO's Office | Staging Verified | **Completed** (environment + database), **In Progress** (real usage) — `main` branch deploys automatically to `shroyalschools-web.pages.dev`; environment variables now set (database, all five tokens, deliberately **no** `PORTAL_DEMO_PASSWORD`) and `/api/portal/setup` run successfully 2026-07-28, confirmed empty of sample data. No custom domain attached yet (still on the free `.pages.dev` subdomain — see Domain Infrastructure above). Every portal module is now technically live and reachable; zero real institutional records exist yet — that's the next real milestone, not an infrastructure gap. |
 
 ## Database Infrastructure
 
@@ -42,7 +42,7 @@ step-by-step walkthroughs.
 |---|---|---|---|---|---|---|
 | Neon (account) | Postgres database provider — HTTP-driver-compatible with Cloudflare Workers (the reason this stack uses Neon specifically, not any Postgres host — see the Blueprint's Cloud Architecture section) | Critical | Free tier likely sufficient initially — verify at signup | ICT | None | **Completed** — account exists (`Ahmadbinibrohim@gmail.com`), verified 2026-07-28 |
 | Staging DB | Safe testing without touching real institutional data | Critical | Free | ICT | Neon account | **Completed** — `/api/portal/setup` run successfully against a real Neon project (via the Cloudflare Preview environment) 2026-07-28; tables created, sample data seeded. Two real code bugs were found and fixed live in the process: `sql.query()` doesn't exist on `@neondatabase/serverless`'s `neon()` client (fixed to `sql()`, 7 files), and the ~90-statement schema setup exceeded Cloudflare's per-invocation subrequest limit (fixed by batching via `sql.transaction()`). See `functions/api/portal/setup.js` and the two commits fixing this. |
-| Production DB | Real institutional data store | Critical | Free–Starter | ICT | Neon account, Staging Verified first | Not Started — a **separate** Neon project from staging, per the Account Creation Playbook's non-negotiable separation |
+| Production DB | Real institutional data store | Critical | Free–Starter | ICT | Neon account, Staging Verified first | **Completed** — a genuinely **separate** Neon project from staging (per the Playbook's non-negotiable separation), connected to Cloudflare's Production environment 2026-07-28. `/api/portal/setup` run successfully with no `PORTAL_DEMO_PASSWORD` set — confirmed empty of sample data ("Sample/demo data was not added"), correctly distinct from the staging project's seeded demo accounts. Ready for real institutional data entry; still has zero real records. |
 | Backup DB / backup strategy | Disaster-recovery data protection | High | Neon paid tiers add point-in-time recovery | ICT | Production DB existing | Not Started |
 
 ## Email Infrastructure
@@ -97,17 +97,18 @@ step-by-step walkthroughs.
 
 ## How to read this register
 
-Most rows still read "Not Started" for account-existence, while the
-*code* behind School Operations and Identity Infrastructure is already
-Completed — this is the exact "design/code quality outpaces operational
-existence" pattern the Maturity Report already documented, restated
-here in registry form. As of 2026-07-27, two links in that chain moved
-from Not Started to real: the Cloudflare account exists, and the
-`shroyalschools-web` Pages project is live and deploying automatically
-from both branches. The path through this register, in dependency
-order, is: **GitHub (done) → Cloudflare account (done) → Cloudflare
-Pages project (done) → Neon account → Staging DB → prove one real user
-journey works at a staging URL → Resend account + domain email records
-→ Production DB → environment variables on the live Pages project →
-custom domain → MFA/monitoring/backup as hardening before real
-institutional data goes live.**
+Several rows still read "Not Started" for account-existence, while the
+*code* behind School Operations and Identity Infrastructure has been
+Completed for longer — this is the exact "design/code quality outpaces
+operational existence" pattern the Maturity Report already documented,
+restated here in registry form, and as of 2026-07-28 the gap has
+closed substantially. The path through this register, in dependency
+order: **GitHub (done) → Cloudflare account (done) → Cloudflare Pages
+project (done) → Neon account (done) → Staging DB (done, verified live
+2026-07-28 — see `docs/shrs-staging-verification-report.md`) →
+Production DB (done, verified live 2026-07-28, correctly empty of
+sample data) → Resend account + domain email records → custom domain →
+MFA/monitoring/backup as hardening before real institutional data goes
+live.** What remains is genuinely the last stretch: email, domain,
+security hardening, and then real institutional data entry — not more
+plumbing.
