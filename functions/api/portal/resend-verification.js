@@ -7,7 +7,7 @@
 import { getSql } from '../../_lib/db.js';
 import { readSessionFromRequest, generateToken } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
-import { sendEmail, verificationEmailContent, SITE_ORIGIN } from '../../_lib/email.js';
+import { sendEmail, verificationEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
 
 const VERIFICATION_TOKEN_TTL_HOURS = 24;
 
@@ -44,7 +44,7 @@ export async function onRequestPost({ request, env }) {
       UPDATE guardians SET verification_token = ${token}, verification_token_expires = now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS})
       WHERE id = ${guardian.id}`;
 
-    const verifyLink = SITE_ORIGIN + '/portal/verify/?token=' + token;
+    const verifyLink = siteOriginFromRequest(request) + '/portal/verify/?token=' + token;
     const { subject, text, html } = verificationEmailContent(guardian.full_name, verifyLink);
     const sendResult = await sendEmail(env, { to: guardian.email, subject, text, html });
 

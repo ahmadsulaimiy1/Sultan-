@@ -23,6 +23,22 @@
 // relative URL against).
 export const SITE_ORIGIN = 'https://shroyalschools.com';
 
+// Preview and Production are two entirely separate Cloudflare Pages
+// environments with two separate Neon databases behind two different
+// URLs. A token written by a request handled on Preview only exists in
+// Preview's database, so an email link MUST point back to the same
+// origin that issued it — never the hardcoded SITE_ORIGIN, which would
+// silently send every Preview-issued link to Production's (different,
+// token-less) database instead. Falls back to SITE_ORIGIN only if the
+// request URL can't be parsed.
+export function siteOriginFromRequest(request) {
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return SITE_ORIGIN;
+  }
+}
+
 export async function sendEmail(env, { to, subject, html, text }) {
   const apiKey = env.RESEND_API_KEY;
   const from = env.EMAIL_FROM_ADDRESS;

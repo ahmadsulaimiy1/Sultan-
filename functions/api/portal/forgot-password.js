@@ -19,7 +19,7 @@
 import { getSql } from '../../_lib/db.js';
 import { generateToken } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
-import { sendEmail, resetPasswordEmailContent, SITE_ORIGIN } from '../../_lib/email.js';
+import { sendEmail, resetPasswordEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
 
 const RESET_TOKEN_TTL_HOURS = 24;
 const GENERIC_RESPONSE = { ok: true, message: 'If an account exists for that email address, password reset instructions have been sent to it.' };
@@ -46,7 +46,7 @@ export async function onRequestPost({ request, env }) {
         WHERE id = ${guardian.id}`;
       await sql`INSERT INTO auth_audit_log (actor_type, actor_id, identifier, event) VALUES ('guardian', ${guardian.id}, ${email}, 'password_reset_requested')`;
 
-      const resetLink = SITE_ORIGIN + '/portal/set-password/?token=' + token;
+      const resetLink = siteOriginFromRequest(request) + '/portal/set-password/?token=' + token;
       const { subject, text, html } = resetPasswordEmailContent(resetLink);
       // Result intentionally discarded from the response either way —
       // see the header comment. If email sending isn't configured, the

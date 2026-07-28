@@ -18,7 +18,7 @@
 import { getSql } from '../../_lib/db.js';
 import { createSessionCookie, hashPassword, isPasswordStrongEnough, MIN_PASSWORD_LENGTH, generateToken } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
-import { sendEmail, verificationEmailContent, SITE_ORIGIN } from '../../_lib/email.js';
+import { sendEmail, verificationEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
 
 const VERIFICATION_TOKEN_TTL_HOURS = 24;
 
@@ -83,7 +83,7 @@ export async function onRequestPost({ request, env }) {
 
     await sql`INSERT INTO auth_audit_log (actor_type, actor_id, identifier, event) VALUES ('guardian', ${guardianId}, ${email}, 'self_registered')`;
 
-    const verifyLink = SITE_ORIGIN + '/portal/verify/?token=' + verificationToken;
+    const verifyLink = siteOriginFromRequest(request) + '/portal/verify/?token=' + verificationToken;
     const { subject, text, html } = verificationEmailContent(fullName, verifyLink);
     const sendResult = await sendEmail(env, { to: email, subject, text, html });
 
