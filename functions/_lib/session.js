@@ -85,6 +85,53 @@ export const createStaffSessionCookie = staffCookie.create;
 export const readStaffSessionFromRequest = staffCookie.read;
 export const clearStaffSessionCookie = staffCookie.clear;
 
+// Risk-based "trusted device" cookie — Level 3 of the identity model
+// (see docs/identity-authentication-roadmap.md). Distinct from the
+// session cookies above: it doesn't grant access by itself, it only
+// lets a login endpoint SKIP the OTP step when it's present, valid,
+// and its trustVersion still matches the account's current
+// trust_version column. A 7-day sliding window (refreshed on every
+// trusted login) implements both "frictionless within 7 days" and
+// "re-verify after 7+ days inactive" from the same mechanism. This is
+// a signed cookie proving prior successful verification on this
+// browser — not canvas/behavioral fingerprinting, no separate device
+// registry table; see the roadmap doc for what that would take.
+const TRUST_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
+
+function makeTrustCookieFns(cookieName, idField) {
+  function create(id, trustVersion, secret) {
+    const token = sign({ [idField]: id, trustVersion, exp: Date.now() + TRUST_MAX_AGE_SECONDS * 1000 }, secret);
+    return `${cookieName}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${TRUST_MAX_AGE_SECONDS}`;
+  }
+  function clear() {
+    return `${cookieName}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+  }
+  function read(request, secret) {
+    const cookieHeader = request.headers.get('cookie') || '';
+    const match = cookieHeader.split(';').map((s) => s.trim()).find((s) => s.startsWith(`${cookieName}=`));
+    if (!match) return null;
+    const token = match.slice(cookieName.length + 1);
+    return verify(token, secret);
+  }
+  return { create, read, clear };
+}
+
+const guardianTrustCookie = makeTrustCookieFns('shr_trust_guardian', 'guardianId');
+const studentTrustCookie = makeTrustCookieFns('shr_trust_student', 'studentId');
+const staffTrustCookie = makeTrustCookieFns('shr_trust_staff', 'staffId');
+
+export const createGuardianTrustCookie = guardianTrustCookie.create;
+export const readGuardianTrustFromRequest = guardianTrustCookie.read;
+export const clearGuardianTrustCookie = guardianTrustCookie.clear;
+
+export const createStudentTrustCookie = studentTrustCookie.create;
+export const readStudentTrustFromRequest = studentTrustCookie.read;
+export const clearStudentTrustCookie = studentTrustCookie.clear;
+
+export const createStaffTrustCookie = staffTrustCookie.create;
+export const readStaffTrustFromRequest = staffTrustCookie.read;
+export const clearStaffTrustCookie = staffTrustCookie.clear;
+
 // scrypt password hashing — no bcrypt dependency, no native binary.
 export function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');

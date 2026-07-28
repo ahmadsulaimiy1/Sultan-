@@ -13,11 +13,22 @@
 // pre-verification snapshot (emailVerified: false) even after
 // verification had genuinely completed server-side, because nothing
 // told the browser the response wasn't cacheable.
+// Set-Cookie is special-cased by the Fetch spec: a plain object can only
+// hold one value per key, so a single Response({headers:{...}}) can never
+// carry two Set-Cookie headers (e.g. a session cookie AND a trusted-device
+// cookie issued in the same response). Passing extraHeaders['Set-Cookie']
+// as an array routes through Headers#append, which does support repeating
+// it; a single string still works exactly as before.
 export function json(data, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store', ...extraHeaders },
-  });
+  const headers = new Headers({ 'content-type': 'application/json', 'cache-control': 'no-store' });
+  for (const [key, value] of Object.entries(extraHeaders)) {
+    if (key.toLowerCase() === 'set-cookie' && Array.isArray(value)) {
+      value.forEach((v) => headers.append('Set-Cookie', v));
+    } else {
+      headers.set(key, value);
+    }
+  }
+  return new Response(JSON.stringify(data), { status, headers });
 }
 
 export async function readJsonBody(request) {

@@ -46,6 +46,11 @@ export async function onRequestPost({ request, env }) {
         reset_token = NULL, reset_token_expires = NULL,
         failed_attempts = 0, locked_until = NULL
       WHERE staff_id = ${account.staff_id}`;
+    // trust_version lives on staff (not staff_accounts) alongside
+    // email — bumping it invalidates any previously-issued
+    // trusted-device cookie, since a password reset is exactly the
+    // security event that should force a fresh OTP on next login.
+    await sql`UPDATE staff SET trust_version = trust_version + 1 WHERE id = ${account.staff_id}`;
     await sql`INSERT INTO auth_audit_log (actor_type, actor_id, identifier, event) VALUES ('staff', ${account.staff_id}, NULL, 'password_activated')`;
 
     return json(

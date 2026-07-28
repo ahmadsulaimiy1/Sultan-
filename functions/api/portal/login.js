@@ -1,5 +1,8 @@
 import { getSql } from '../../_lib/db.js';
-import { generateToken, verifyPassword } from '../../_lib/session.js';
+import {
+  generateToken, verifyPassword, createSessionCookie,
+  readGuardianTrustFromRequest, createGuardianTrustCookie,
+} from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
 import { sendEmail, otpEmailContent, maskEmail } from '../../_lib/email.js';
 import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../_lib/otp.js';
@@ -33,7 +36,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await sql`
-      SELECT id, password_hash, password_salt, full_name, failed_attempts, locked_until
+      SELECT id, password_hash, password_salt, full_name, failed_attempts, locked_until, trust_version
       FROM guardians WHERE email = ${email}`;
     const guardian = result.rows[0];
 
@@ -71,6 +74,28 @@ export async function onRequestPost({ request, env }) {
     }
 
     await sql`UPDATE guardians SET failed_attempts = 0, locked_until = NULL WHERE id = ${guardian.id}`;
+
+    // Risk-based OTP skip: a valid, version-matching trusted-device
+    // cookie means this browser already completed OTP on this account
+    // within the last 7 days (see session.js's makeTrustCookieFns and
+    // docs/identity-authentication-roadmap.md). Refreshing the cookie
+    // here — not just reading it — is what makes the 7-day window
+    // slide forward with actual use, so an active guardian is never
+    // interrupted, while 7+ days of inactivity naturally expires it.
+    const trust = readGuardianTrustFromRequest(request, env.SESSION_SECRET);
+    if (trust && trust.guardianId === guardian.id && trust.trustVersion === guardian.trust_version) {
+      await logAttempt(sql, email, 'login_success_trusted_device', guardian.id);
+      return json(
+        { ok: true, fullName: guardian.full_name },
+        200,
+        {
+          'Set-Cookie': [
+            createSessionCookie(guardian.id, env.SESSION_SECRET),
+            createGuardianTrustCookie(guardian.id, guardian.trust_version, env.SESSION_SECRET),
+          ],
+        }
+      );
+    }
 
     // Password verified — every guardian has an email on file (required
     // at registration/admin creation), so the email OTP step below

@@ -241,6 +241,11 @@ only activates once ICT enters an email for a given student (via
 `admin/students.js`'s optional `student.email` field). Until then,
 that student's login is unchanged — password only, exactly as before.
 
+OTP doesn't repeat every login either: a signed "trusted device"
+cookie (`shr_trust_student`) skips it for 7 days of active use on the
+same browser, revoked automatically if the student's password changes.
+See `docs/identity-authentication-roadmap.md` for the full model.
+
 ## Audit log
 
 Every login attempt (guardian and student) now writes a row to

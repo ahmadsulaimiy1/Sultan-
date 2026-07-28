@@ -7,7 +7,10 @@
 // see a graduated child's records) the student here IS the sanctioned
 // account. See docs/student-portal.md.
 import { getSql } from '../../../_lib/db.js';
-import { createStudentSessionCookie, generateToken, verifyPassword } from '../../../_lib/session.js';
+import {
+  createStudentSessionCookie, generateToken, verifyPassword,
+  readStudentTrustFromRequest, createStudentTrustCookie,
+} from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { sendEmail, otpEmailContent, maskEmail } from '../../../_lib/email.js';
 import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../../_lib/otp.js';
@@ -44,7 +47,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await sql`
-      SELECT s.id, s.full_name, s.status, s.email, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
+      SELECT s.id, s.full_name, s.status, s.email, s.trust_version, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
       FROM students s
       JOIN student_accounts sa ON sa.student_id = s.id
       WHERE s.admission_no = ${admissionNo}`;
@@ -85,6 +88,22 @@ export async function onRequestPost({ request, env }) {
 
     await sql`UPDATE student_accounts SET failed_attempts = 0, locked_until = NULL WHERE student_id = ${student.id}`;
 
+    // Risk-based OTP skip (see login.js's comment for the mechanism).
+    const trust = readStudentTrustFromRequest(request, env.SESSION_SECRET);
+    if (trust && trust.studentId === student.id && trust.trustVersion === student.trust_version) {
+      await logAttempt(sql, admissionNo, 'login_success_trusted_device', student.id);
+      return json(
+        { ok: true, fullName: student.full_name },
+        200,
+        {
+          'Set-Cookie': [
+            createStudentSessionCookie(student.id, env.SESSION_SECRET),
+            createStudentTrustCookie(student.id, student.trust_version, env.SESSION_SECRET),
+          ],
+        }
+      );
+    }
+
     // Email OTP only activates once ICT has entered an email for this
     // student (see the schema note on students.email) — no email on
     // file means unchanged behavior, straight to a session cookie.
@@ -104,7 +123,12 @@ export async function onRequestPost({ request, env }) {
     return json(
       { ok: true, fullName: student.full_name },
       200,
-      { 'Set-Cookie': createStudentSessionCookie(student.id, env.SESSION_SECRET) }
+      {
+        'Set-Cookie': [
+          createStudentSessionCookie(student.id, env.SESSION_SECRET),
+          createStudentTrustCookie(student.id, student.trust_version, env.SESSION_SECRET),
+        ],
+      }
     );
   } catch (err) {
     console.error('student portal login error', err);

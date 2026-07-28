@@ -5,7 +5,10 @@
 // never from anything the client claims, so a caller can't request a
 // staff cookie for a guardian's OTP session.
 import { getSql } from '../../_lib/db.js';
-import { createSessionCookie, createStudentSessionCookie, createStaffSessionCookie } from '../../_lib/session.js';
+import {
+  createSessionCookie, createStudentSessionCookie, createStaffSessionCookie,
+  createGuardianTrustCookie, createStudentTrustCookie, createStaffTrustCookie,
+} from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
 import { verifyOtpCode, OTP_MAX_ATTEMPTS } from '../../_lib/otp.js';
 
@@ -13,15 +16,15 @@ const GENERIC_ERROR = { error: 'This code has expired or is invalid — please s
 
 async function actorLookup(sql, actorType, actorId) {
   if (actorType === 'guardian') {
-    const r = await sql`SELECT full_name, email AS identifier FROM guardians WHERE id = ${actorId}`;
+    const r = await sql`SELECT full_name, email AS identifier, trust_version FROM guardians WHERE id = ${actorId}`;
     return r.rows[0] || null;
   }
   if (actorType === 'student') {
-    const r = await sql`SELECT full_name, admission_no AS identifier FROM students WHERE id = ${actorId}`;
+    const r = await sql`SELECT full_name, admission_no AS identifier, trust_version FROM students WHERE id = ${actorId}`;
     return r.rows[0] || null;
   }
   if (actorType === 'staff') {
-    const r = await sql`SELECT full_name, staff_no AS identifier FROM staff WHERE id = ${actorId}`;
+    const r = await sql`SELECT full_name, staff_no AS identifier, trust_version FROM staff WHERE id = ${actorId}`;
     return r.rows[0] || null;
   }
   return null;
@@ -82,13 +85,21 @@ export async function onRequestPost({ request, env }) {
     await sql`UPDATE login_otp_codes SET consumed_at = now() WHERE id = ${row.id}`;
     await logAttempt(sql, row.actor_type, row.actor_id, actor.identifier, 'login_success');
 
-    let cookie;
-    if (row.actor_type === 'guardian') cookie = createSessionCookie(row.actor_id, env.SESSION_SECRET);
-    else if (row.actor_type === 'student') cookie = createStudentSessionCookie(row.actor_id, env.SESSION_SECRET);
-    else if (row.actor_type === 'staff') cookie = createStaffSessionCookie(row.actor_id, env.SESSION_SECRET);
-    else return json(GENERIC_ERROR, 500);
+    // Successful OTP entry is exactly the event that should start a new
+    // 7-day trusted-device window (see session.js) — this browser just
+    // proved it holds both the password and the emailed code.
+    let cookies;
+    if (row.actor_type === 'guardian') {
+      cookies = [createSessionCookie(row.actor_id, env.SESSION_SECRET), createGuardianTrustCookie(row.actor_id, actor.trust_version, env.SESSION_SECRET)];
+    } else if (row.actor_type === 'student') {
+      cookies = [createStudentSessionCookie(row.actor_id, env.SESSION_SECRET), createStudentTrustCookie(row.actor_id, actor.trust_version, env.SESSION_SECRET)];
+    } else if (row.actor_type === 'staff') {
+      cookies = [createStaffSessionCookie(row.actor_id, env.SESSION_SECRET), createStaffTrustCookie(row.actor_id, actor.trust_version, env.SESSION_SECRET)];
+    } else {
+      return json(GENERIC_ERROR, 500);
+    }
 
-    return json({ ok: true, fullName: actor.full_name, actorType: row.actor_type }, 200, { 'Set-Cookie': cookie });
+    return json({ ok: true, fullName: actor.full_name, actorType: row.actor_type }, 200, { 'Set-Cookie': cookies });
   } catch (err) {
     console.error('portal verify-otp error', err);
     return json({ error: 'Could not verify that code right now — please try again shortly.' }, 500);

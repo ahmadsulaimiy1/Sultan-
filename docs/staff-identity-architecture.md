@@ -246,6 +246,13 @@ per staff member only once ICT enters one for them (via
 Staff without an email on file keep signing in with password only,
 unchanged.
 
+OTP doesn't repeat every login: a signed "trusted device" cookie
+(`shr_trust_staff`) skips it for 7 days of active use on the same
+browser, revoked automatically if the staff member's password changes.
+See `docs/identity-authentication-roadmap.md` for the full risk-based
+model and what's deliberately deferred (passkeys, magic links, a real
+device registry, risk scoring).
+
 ## 8. User Experience Standard — what was deliberately NOT built
 
 Per the Phase 2 Authorisation's explicit instruction, this phase does

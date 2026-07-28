@@ -46,7 +46,10 @@ export async function onRequestPost({ request, env }) {
     }
 
     const { hash, salt } = hashPassword(newPassword);
-    await sql`UPDATE guardians SET password_hash = ${hash}, password_salt = ${salt} WHERE id = ${session.guardianId}`;
+    // trust_version + 1 invalidates every previously-issued trusted-
+    // device cookie for this account — a password change is exactly
+    // the security event that should force a fresh OTP on next login.
+    await sql`UPDATE guardians SET password_hash = ${hash}, password_salt = ${salt}, trust_version = trust_version + 1 WHERE id = ${session.guardianId}`;
     return json({ ok: true });
   } catch (err) {
     console.error('portal change-password error', err);

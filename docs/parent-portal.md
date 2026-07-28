@@ -217,6 +217,14 @@ Student and Staff Portal logins too (see `docs/student-portal.md` and
 once an email is on file for that student/staff member — neither table
 had an email column before this change.
 
+OTP does not repeat on every login: a signed "trusted device" cookie
+skips it for 7 days of active use on the same browser, and is revoked
+automatically on a password change. New account registration also now
+blocks dashboard content (not just the admissions-application action)
+until the email is verified. See
+`docs/identity-authentication-roadmap.md` for the full risk-based model
+— what's real, what's roadmap (passkeys, magic links), and why.
+
 ## Data protection — read this before entering real students
 
 This system holds children's names, attendance, academic results, and

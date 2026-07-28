@@ -14,6 +14,8 @@
   var adhkarBtns = document.querySelectorAll('[data-portal-adhkar-btn]');
   var verifyBanner = document.querySelector('[data-portal-verify-banner]');
   var resendVerifyBtn = document.querySelector('[data-portal-resend-verify]');
+  var verifyGateEl = document.querySelector('[data-portal-verify-gate]');
+  var resendVerifyGateBtn = document.querySelector('[data-portal-resend-verify-gate]');
   var applicationsListEl = document.querySelector('[data-portal-applications-list]');
   var welcomePctLabelEl = document.querySelector('[data-welcome-pct-label]');
   var welcomeProgressFillEl = document.querySelector('[data-welcome-progress-fill]');
@@ -278,6 +280,19 @@
         throw new Error(data.error || 'Could not load your dashboard.');
       }
 
+      // Hard gate: no dashboard content renders until email is
+      // verified. Only the account owner's own resend-verification
+      // action is available here — see docs/parent-portal.md's
+      // "Multi-factor authentication" section for why the account is
+      // still signed in at this point (the gate page itself needs a
+      // session to call resend-verification and to know who to greet).
+      if(!data.emailVerified){
+        loadingEl.hidden = true;
+        contentEl.hidden = true;
+        verifyGateEl.hidden = false;
+        return;
+      }
+
       helloEl.textContent = 'Welcome, ' + (data.title ? data.title + ' ' : '') + (data.preferredName || data.fullName);
       renderWelcomePanel(data);
       renderNotifications(data.notifications);
@@ -311,27 +326,32 @@
     window.location.href = '/portal/login/';
   });
 
-  resendVerifyBtn.addEventListener('click', async function(){
-    resendVerifyBtn.disabled = true;
-    var originalLabel = resendVerifyBtn.textContent;
-    resendVerifyBtn.textContent = 'Sending…';
+  async function resendVerification(btn){
+    btn.disabled = true;
+    var originalLabel = btn.textContent;
+    btn.textContent = 'Sending…';
     try{
       var res = await fetch('/api/portal/resend-verification', { method: 'POST' });
       var data = await res.json().catch(function(){ return {}; });
       if(res.ok && data.verificationSent){
-        resendVerifyBtn.textContent = 'Sent!';
+        btn.textContent = 'Sent!';
       } else if(res.ok && data.verificationLink){
-        resendVerifyBtn.textContent = 'Link ready (see console)';
+        btn.textContent = 'Link ready (see console)';
         console.log('Verification link (email not configured):', data.verificationLink);
       } else {
-        resendVerifyBtn.textContent = originalLabel;
-        resendVerifyBtn.disabled = false;
+        btn.textContent = originalLabel;
+        btn.disabled = false;
       }
     }catch(err){
-      resendVerifyBtn.textContent = originalLabel;
-      resendVerifyBtn.disabled = false;
+      btn.textContent = originalLabel;
+      btn.disabled = false;
     }
-  });
+  }
+
+  resendVerifyBtn.addEventListener('click', function(){ resendVerification(resendVerifyBtn); });
+  if(resendVerifyGateBtn){
+    resendVerifyGateBtn.addEventListener('click', function(){ resendVerification(resendVerifyGateBtn); });
+  }
 
   notificationsClearBtn.addEventListener('click', async function(){
     notificationsClearBtn.disabled = true;

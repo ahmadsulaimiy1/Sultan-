@@ -778,3 +778,19 @@ CREATE TABLE IF NOT EXISTS login_otp_codes (
   consumed_at  TIMESTAMPTZ,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Risk-based "trusted device" — a real, working slice of the
+-- directive's 5-level identity model (Level 3), scoped honestly: this
+-- is a signed cookie proving "this browser already completed OTP on
+-- this account recently," NOT canvas/behavioral device fingerprinting
+-- or a risk-scoring engine (both real future work, not built here).
+-- trust_version is the revocation mechanism for a stateless cookie
+-- token that can't otherwise be invalidated server-side: bumping it
+-- (on password change — see set-password.js/change-password.js and
+-- their student/staff equivalents) makes every previously-issued
+-- trusted-device cookie for that account fail its version check on
+-- next use, forcing a fresh OTP the next login — i.e. a real "security
+-- event revokes trust" control, not just documentation of the gap.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;

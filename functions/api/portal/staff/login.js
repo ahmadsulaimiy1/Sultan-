@@ -6,7 +6,10 @@
 // staff.status's suspended/archived in place of students' suspended/
 // withdrawn. See docs/staff-identity-architecture.md.
 import { getSql } from '../../../_lib/db.js';
-import { createStaffSessionCookie, generateToken, verifyPassword } from '../../../_lib/session.js';
+import {
+  createStaffSessionCookie, generateToken, verifyPassword,
+  readStaffTrustFromRequest, createStaffTrustCookie,
+} from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { sendEmail, otpEmailContent, maskEmail } from '../../../_lib/email.js';
 import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../../_lib/otp.js';
@@ -43,7 +46,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await sql`
-      SELECT s.id, s.full_name, s.status, s.email, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
+      SELECT s.id, s.full_name, s.status, s.email, s.trust_version, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
       FROM staff s
       JOIN staff_accounts sa ON sa.staff_id = s.id
       WHERE s.staff_no = ${staffNo}`;
@@ -84,6 +87,22 @@ export async function onRequestPost({ request, env }) {
 
     await sql`UPDATE staff_accounts SET failed_attempts = 0, locked_until = NULL WHERE staff_id = ${staff.id}`;
 
+    // Risk-based OTP skip (see login.js's comment for the mechanism).
+    const trust = readStaffTrustFromRequest(request, env.SESSION_SECRET);
+    if (trust && trust.staffId === staff.id && trust.trustVersion === staff.trust_version) {
+      await logAttempt(sql, staffNo, 'login_success_trusted_device', staff.id);
+      return json(
+        { ok: true, fullName: staff.full_name },
+        200,
+        {
+          'Set-Cookie': [
+            createStaffSessionCookie(staff.id, env.SESSION_SECRET),
+            createStaffTrustCookie(staff.id, staff.trust_version, env.SESSION_SECRET),
+          ],
+        }
+      );
+    }
+
     // Email OTP only activates once ICT has entered an email for this
     // staff member (see the schema note on staff.email) — no email on
     // file means unchanged behavior, straight to a session cookie.
@@ -103,7 +122,12 @@ export async function onRequestPost({ request, env }) {
     return json(
       { ok: true, fullName: staff.full_name },
       200,
-      { 'Set-Cookie': createStaffSessionCookie(staff.id, env.SESSION_SECRET) }
+      {
+        'Set-Cookie': [
+          createStaffSessionCookie(staff.id, env.SESSION_SECRET),
+          createStaffTrustCookie(staff.id, staff.trust_version, env.SESSION_SECRET),
+        ],
+      }
     );
   } catch (err) {
     console.error('staff portal login error', err);

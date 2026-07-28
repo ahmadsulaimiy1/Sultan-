@@ -38,11 +38,15 @@ export async function onRequestPost({ request, env }) {
     }
 
     const { hash, salt } = hashPassword(password);
+    // trust_version + 1 invalidates every previously-issued
+    // trusted-device cookie for this account (see session.js) — a
+    // password change/reset is exactly the security event that should
+    // force a fresh OTP on next login, not leave old trust standing.
     await sql`
       UPDATE guardians SET
         password_hash = ${hash}, password_salt = ${salt},
         reset_token = NULL, reset_token_expires = NULL,
-        failed_attempts = 0, locked_until = NULL
+        failed_attempts = 0, locked_until = NULL, trust_version = trust_version + 1
       WHERE id = ${guardian.id}`;
 
     return json(
