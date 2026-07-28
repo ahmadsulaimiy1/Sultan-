@@ -22,10 +22,10 @@ step-by-step walkthroughs.
 
 | Name | Purpose | Priority | Cost | Owner | Dependencies | Status |
 |---|---|---|---|---|---|---|
-| Domain registration | Canonical institutional web address (`shroyalschools.ng`/`.com`, whichever is confirmed) | Critical | Starter (annual registrar fee) | CEO's Office | None | **Unconfirmed** — this session cannot verify whether the domain is already owned; someone with unrestricted network access must check directly, per `docs/digital-campus-master-deployment-directive.md`. |
-| Domain strategy | Subdomain plan (`portal.`, `admissions.`, `lms.`, etc.) for scaling multiple services under one domain | Medium | Free (DNS records only) | ICT / CTO | Domain registration | Designed — see `docs/shrs-digital-infrastructure-blueprint.md` §1 |
-| DNS | Resolves the domain to Cloudflare | Critical | Free | ICT | Domain confirmed + Cloudflare account | Not Started |
-| SSL | HTTPS encryption for all traffic | Critical | Free (Cloudflare Universal SSL) | ICT | DNS pointed at Cloudflare | Not Started — auto-provisions once the domain is connected to a Cloudflare Pages project |
+| Domain registration | Canonical institutional web address | Critical | Starter (annual registrar fee) | CEO's Office | None | **Completed** — `shroyalschools.com` registered directly through Cloudflare Registrar 2026-07-28 (resolving the earlier "Unconfirmed" status: the school did not already own a domain, so a fresh `.com` was purchased rather than continuing to reference the previously-assumed `.ng`/`.com` pair). |
+| Domain strategy | Subdomain plan (`portal.`, `admissions.`, `lms.`, etc.) for scaling multiple services under one domain | Medium | Free (DNS records only) | ICT / CTO | Domain registration | Designed — see `docs/shrs-digital-infrastructure-blueprint.md` §1; not yet implemented (single-domain setup only so far) |
+| DNS | Resolves the domain to Cloudflare | Critical | Free | ICT | Domain confirmed + Cloudflare account | **In Progress** — domain connected as a Custom Domain on `shroyalschools-web`, CNAME record auto-created by Cloudflare (registrar + DNS + hosting all in one account). Status "Verifying" as of 2026-07-28; Cloudflare states this can take up to 48 hours. |
+| SSL | HTTPS encryption for all traffic | Critical | Free (Cloudflare Universal SSL) | ICT | DNS pointed at Cloudflare | **In Progress** — auto-provisions once DNS verification above completes; no separate action needed. |
 
 ## Cloud Infrastructure
 
