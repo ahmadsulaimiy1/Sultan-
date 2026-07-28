@@ -144,6 +144,7 @@ ${personalisation}
 <script src="/js/assistant-data.${lang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
+<script src="/js/institution-carousel.js" defer></script>
 <script src="/js/search.js" defer></script>
 
 </body>

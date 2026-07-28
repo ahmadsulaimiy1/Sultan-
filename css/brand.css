@@ -916,6 +916,72 @@
 
   /* academics */
   .academics{background:var(--surface-tertiary);}
+
+  /* ============================================================
+     Institution showcase cards — replaces the plain ledger table
+     on the homepage. Royal College and Qur'an College carry a real
+     hand-built carousel (2 real photos each, see js/institution-
+     carousel.js); Nursery & Primary and Islamic & Arabic Studies
+     have zero dedicated photography today, so their visual slot is
+     a scoped-accent identity panel (same precedent as the diagram/
+     timetable built into their own academics pages) rather than
+     fabricated stock imagery.
+     ============================================================ */
+  .institutions-showcase{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:900px){.institutions-showcase{grid-template-columns:1fr;}}
+  .institution-card{
+    background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;
+    box-shadow:0 4px 18px -12px rgba(42,32,22,0.25);transition:box-shadow .3s ease,transform .3s ease;
+  }
+  .institution-card:hover{box-shadow:0 14px 32px -14px rgba(42,32,22,0.32);transform:translateY(-3px);}
+
+  .ic-visual{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--navy-deep);flex-shrink:0;}
+  .ic-carousel .ic-slides{position:relative;width:100%;height:100%;}
+  .ic-slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .6s ease;}
+  .ic-slide.is-active{opacity:1;}
+  .ic-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .ic-dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:8px;}
+  .ic-dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.25);padding:0;cursor:pointer;transition:background .25s ease,transform .25s ease;}
+  .ic-dot.is-active{background:var(--gold-bright);border-color:var(--gold-bright);transform:scale(1.15);}
+
+  .ic-identity{display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);}
+  .ic-identity-ais{background:linear-gradient(135deg,var(--crimson) 0%,var(--navy-deep) 100%);}
+  .ic-mini-foundations{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .ic-mf-card{
+    display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+    color:var(--ivory);font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.06em;
+    border:1px solid rgba(233,206,138,0.35);padding:14px 16px;border-radius:8px;background:rgba(233,206,138,0.06);width:120px;
+  }
+  .ic-mf-card svg{color:var(--gold-bright);}
+  .ic-mf-plus{color:var(--gold-bright);font-size:1.3rem;font-weight:300;}
+  .ic-mini-timetable{display:flex;gap:6px;}
+  .ic-mt-day{
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'Cinzel','Amiri',serif;font-size:0.6rem;color:rgba(248,244,233,0.45);
+    border:1px solid rgba(248,244,233,0.2);
+  }
+  .ic-mt-day.is-on{color:var(--navy-deep);background:var(--gold-bright);border-color:var(--gold-bright);font-weight:700;}
+
+  .ic-body{padding:26px 26px 28px;display:flex;flex-direction:column;flex:1;}
+  .ic-tag{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--crimson);font-weight:700;}
+  .ic-body h3{font-size:1.28rem;margin:8px 0 10px;color:var(--navy);}
+  .ic-desc{font-size:0.88rem;color:#4a4944;line-height:1.55;margin-bottom:14px;}
+  .ic-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;padding:12px 14px;background:var(--surface-tertiary);border-inline-start:2px solid var(--gold);}
+  .ic-meta-item{font-size:0.78rem;color:#54534e;}
+  .ic-meta-item b{display:block;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--navy);margin-bottom:1px;}
+  .ic-strengths{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+  .ic-strengths li{font-size:0.82rem;color:#4a4944;padding-inline-start:16px;position:relative;}
+  .ic-strengths li::before{content:"";position:absolute;left:0;top:0.55em;width:6px;height:6px;background:var(--gold);border-radius:1px;}
+  [dir="rtl"] .ic-strengths li::before{left:auto;right:0;}
+  .ic-ctas{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;}
+  .ic-cta{
+    font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.08em;text-transform:uppercase;
+    padding:9px 14px;border:1px solid rgba(198,161,91,0.4);color:var(--crimson);border-radius:var(--btn-radius);
+    transition:background .25s ease,border-color .25s ease,transform .25s ease;
+  }
+  .ic-cta:hover{background:rgba(198,161,91,0.08);border-color:var(--gold);transform:translateY(-1px);}
+  .ic-cta.is-primary{background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);color:#fff;border-color:var(--accent);}
+  .ic-cta.is-primary:hover{box-shadow:0 8px 18px -10px var(--accent-shadow);}
   .school-block{border:1px solid var(--line);background:#fff;padding:34px 32px;margin-top:26px;}
   .school-block .tag{font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;}
   .school-block h3{font-size:1.7rem;margin:8px 0 14px;}
