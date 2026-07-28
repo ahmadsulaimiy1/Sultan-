@@ -64,6 +64,30 @@
     "altHref": "/ar/academics/quran-college/"
   },
   {
+    "slug": "faculty",
+    "output": "faculty/index.html",
+    "title": "Faculty Directory — Sultan Hanafi Royal Schools",
+    "description": "The named educators leading and teaching across our four institutions, organised by school.",
+    "contentFile": "pages/faculty.html",
+    "altHref": "/ar/faculty/"
+  },
+  {
+    "slug": "digital-campus",
+    "output": "digital-campus/index.html",
+    "title": "The Digital Campus — Sultan Hanafi Royal Schools",
+    "description": "Parent Portal, Student Portal, Staff Identity, Founder Dashboard, and more — one shared set of digital systems serving all four institutions.",
+    "contentFile": "pages/digital-campus.html",
+    "altHref": "/ar/digital-campus/"
+  },
+  {
+    "slug": "strategic-plan",
+    "output": "strategic-plan/index.html",
+    "title": "Our Direction — Sultan Hanafi Royal Schools",
+    "description": "Where Sultan Hanafi Royal Schools stands today, and what the Board and Executive Management Team are developing next.",
+    "contentFile": "pages/strategic-plan.html",
+    "altHref": "/ar/strategic-plan/"
+  },
+  {
     "slug": "adhkar",
     "output": "adhkar/index.html",
     "title": "Morning & Evening Adhkār — Sultan Hanafi Royal Schools",
@@ -206,6 +230,36 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/academics/quran-college/"
+  },
+  {
+    "slug": "faculty-ar",
+    "output": "ar/faculty/index.html",
+    "title": "دليل أعضاء هيئة التدريس — مدارس سلطان حنفي الملكية",
+    "description": "أعضاء هيئة التدريس المُسمّون الذين يقودون ويُدرّسون في مؤسساتنا الأربع، مرتّبون حسب المدرسة.",
+    "contentFile": "pages/faculty.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/faculty/"
+  },
+  {
+    "slug": "digital-campus-ar",
+    "output": "ar/digital-campus/index.html",
+    "title": "الحرم الرقمي — مدارس سلطان حنفي الملكية",
+    "description": "بوابة أولياء الأمور، بوابة الطلاب، هوية الموظفين، لوحة المؤسس، وأنظمة أخرى — مجموعة واحدة من الأنظمة الرقمية تخدم مؤسساتنا الأربع.",
+    "contentFile": "pages/digital-campus.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/digital-campus/"
+  },
+  {
+    "slug": "strategic-plan-ar",
+    "output": "ar/strategic-plan/index.html",
+    "title": "توجّهنا — مدارس سلطان حنفي الملكية",
+    "description": "أين تقف مدارس سلطان حنفي الملكية اليوم، وما الذي يطوّره مجلس الأمناء والإدارة التنفيذية لاحقاً.",
+    "contentFile": "pages/strategic-plan.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/strategic-plan/"
   },
   {
     "slug": "adhkar-ar",

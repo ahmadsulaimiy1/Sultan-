@@ -67,7 +67,7 @@ conventions.
 
 ### Educational Philosophy
 A **hybrid curriculum by design, not compromise**: the Royal College and
-Basic School run the Nigerian National Curriculum enriched with
+Nursery & Primary School run the Nigerian National Curriculum enriched with
 entrepreneurship, financial intelligence, leadership, and technology
 electives; the Arabic & Islamic School and Qur'an College run the Saudi
 Arabian curriculum with Saudi-approved texts. Both tracks report to one

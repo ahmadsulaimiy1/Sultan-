@@ -259,9 +259,9 @@ sections[0].children.push(pageBreak());
   const B = [];
   B.push(eyebrow('The Weekly Rhythm'));
   B.push(h1('A Week Has Its Own Shape Too'));
-  B.push(lede('Beyond the daily timetable, the week carries its own rhythm — anchored by Jumu’ah and the weekend Islamic & Arabic Studies programme.', { size: 22 }));
+  B.push(lede('Beyond the daily timetable, the week carries its own rhythm — anchored by Jumu’ah and the weekend Arabic & Islamic Studies programme.', { size: 22 }));
   B.push(chapter(1, "Friday, Jumu'ah", "The week's spiritual centre — congregational prayer that reorders everything around it."));
-  B.push(chapter(2, 'Weekend Islamic & Arabic Studies', "A dedicated weekend programme, open beyond the Qur'an College's weekday track."));
+  B.push(chapter(2, 'Weekend Arabic & Islamic Studies', "A dedicated weekend programme, open beyond the Qur'an College's weekday track."));
   B.push(chapter(3, 'The Ramadan Season', 'The busiest stretch of the calendar, culminating in the annual Qur’an Competition.'));
   B.push(pullquote('And say: My Lord, increase me in knowledge.', 'Surah Taha · 20:114'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -375,7 +375,7 @@ sections[0].children.push(pageBreak());
     ['Nursery & Primary', 'From age two, the foundation of faith and academic discipline is laid.'],
     ['Royal College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.'],
     ["Qur'an College", 'A parallel track for full Hifz immersion, open to students aged nine to sixteen.'],
-    ['Islamic & Arabic Studies', 'Weekday and weekend programmes running alongside every other stage.'],
+    ['Arabic & Islamic Studies', 'Weekday and weekend programmes running alongside every other stage.'],
   ].forEach(([t, d]) => { B.push(new Paragraph({ spacing: { before: 140, after: 20 }, children: [new TextRun({ text: t, font: HEAD_FONT, size: 22, bold: true, color: FOREST })] })); B.push(body(d)); });
   B.push(eyebrow('Join Their Story'));
   B.push(h2('Begin at Sultan Hanafi'));

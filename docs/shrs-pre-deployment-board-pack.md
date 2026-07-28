@@ -40,7 +40,7 @@ written.
   no disaster-recovery plan, no named incident-response owner.** All
   confirmed Absent or Initial in the Maturity Report.
 - **Two of the four institutions (Nursery & Primary, and parts of the
-  School of Islamic & Arabic Studies) have no documented faculty or
+  School of Arabic & Islamic Studies) have no documented faculty or
   subject list yet** — the next data-gathering step, not a system
   defect.
 

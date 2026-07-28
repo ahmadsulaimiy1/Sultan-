@@ -11,7 +11,7 @@
 export const EDUCATIONAL_INTEREST_OPTIONS = [
   { key: 'nursery_primary', label: 'Nursery & Primary School' },
   { key: 'royal_college', label: 'Royal College' },
-  { key: 'islamic_arabic_studies', label: 'School of Islamic & Arabic Studies' },
+  { key: 'islamic_arabic_studies', label: 'School of Arabic & Islamic Studies' },
   { key: 'quran_college', label: "Qur'an College" },
   { key: 'online_programmes', label: 'Online Programmes' },
   { key: 'weekend_programmes', label: 'Weekend Programmes' },

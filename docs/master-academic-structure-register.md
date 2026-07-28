@@ -10,7 +10,7 @@ v1.0 about what's adopted vs. proposed has changed — only what's now
 documented as real has grown.
 
 **Revision note (v1.1 → v1.2):** corrects §4d's own stated rule against
-merging Qur'an College and School of Islamic & Arabic Studies faculty
+merging Qur'an College and School of Arabic & Islamic Studies faculty
 into one list — v1.1 had in fact merged them under one combined table
 heading, despite the surrounding text insisting on the distinction. The
 six faculty members are now split into the correct two tables per an
@@ -49,7 +49,7 @@ Real rows in the `institutions` table today:
 |---|---|---|
 | `Nursery & Primary` | Sultan Hanafi Nursery & Primary School | Earliest years through primary; "Nigerian curriculum... infused with entrepreneurial skills, financial intelligence, leadership, and technology" (`academics/nursery-primary/`). |
 | `Royal College` | Sultan Hanafi Royal College | Secondary — the site's boarding copy references ages 9–16 for boarding, implying JSS/SSS-band secondary schooling (Nigerian Junior/Senior Secondary System), matching the `JSS 1` class name already seeded in code. |
-| `Arabic & Islamic Studies` | School of Islamic & Arabic Studies | "All ages · Weekday & weekend" per the site's own mega-menu copy — the only institution explicitly serving both day-school and part-time/weekend students. |
+| `Arabic & Islamic Studies` | School of Arabic & Islamic Studies | "All ages · Weekday & weekend" per the site's own mega-menu copy — the only institution explicitly serving both day-school and part-time/weekend students. |
 | `Qur'an College` | Sultan Hanafi Qur'an College | The 5-Stage Hifz Journey (§3 below) — its own distinct progression model, not grade-banded like the other three. |
 
 **Correction (this register's own earlier v1.0 text was wrong here):**
@@ -62,11 +62,11 @@ repeated in full here to avoid two documents drifting apart:
 | Nursery & Primary | Early Years (Creche, Nursery, Kindergarten/Preschool) → Primary 1–6 |
 | Royal College | Junior Secondary (JSS1–JSS3) → Senior Secondary (SS1–SS3) |
 | Qur'an College | The 5-Stage Hifz Journey (§3 below) **is** its ladder — not a grade-band sequence, a progression-stage sequence. |
-| School of Islamic & Arabic Studies | No level ladder documented yet — see the remaining gap below. |
+| School of Arabic & Islamic Studies | No level ladder documented yet — see the remaining gap below. |
 
 **Remaining gap:** the Iʿdādiyyah level naming convention used in one
 seeded test class (`Iʿdādiyyah 1`) has never been expanded into a full
-ladder for the School of Islamic & Arabic Studies, and no document
+ladder for the School of Arabic & Islamic Studies, and no document
 states how many Iʿdādiyyah/Thānawiyyah (or equivalent) levels that
 institution actually runs. This register does not invent one.
 
@@ -117,7 +117,7 @@ College's JSS and SSS levels are now known, supplied directly by the
 school as part of the Academic Workforce Register (§4a below) — this
 register states them as real because they arrived as an assignment
 against real named teachers, not as an invented curriculum list.
-Nursery & Primary's and the School of Islamic & Arabic Studies'
+Nursery & Primary's and the School of Arabic & Islamic Studies'
 subjects remain a **gap** — no equivalent teacher-to-subject list has
 been supplied for either yet. `term_results.subject` is still a
 free-text column (`sql/schema.sql`) with no `subjects` reference table;
@@ -217,12 +217,12 @@ or shift, or were the two simply drafted independently and need
 reconciling by hand? Until answered, no public-facing faculty content
 for Royal College should be published from either list alone.
 
-### 4c. School of Islamic & Arabic Studies and Qur'an College subjects (real, by faculty specialisation)
+### 4c. School of Arabic & Islamic Studies and Qur'an College subjects (real, by faculty specialisation)
 
 No formal subject-list table was supplied for these two institutions,
 but real faculty specialisations (§4d/§4e below) name the actual programme
 components in practice: **Arabic Language, Arabic Grammar, Islamic
-Studies, Qur'anic Studies** (School of Islamic & Arabic Studies); **Hifz
+Studies, Qur'anic Studies** (School of Arabic & Islamic Studies); **Hifz
 (Qur'an Memorisation), Tajweed, Qira'aat Studies, Ijazah Preparation,
 Advanced Qur'anic Sciences** (Qur'an College). The Board's own requested
 divisional structure (§5 below) adds **Fiqh, Aqeedah, Hadith, Seerah,
@@ -238,7 +238,7 @@ teaches.
 | Ustadh Muhammad Fodio | Diploma in Qira'at Sciences; Specialist in the Ten Qira'at | Ḥifẓ al-Qur'an, Tajwīd, Qira'at Sciences, Qur'anic Studies, Ijazah Preparation |
 | Ustadh Muhammad Awwal Ishola | B.A. Leadership and Counselling | Ḥifẓ al-Qur'an, Student Counselling, Leadership Development, Character Building, Qur'an College Student Affairs |
 
-### 4e. School of Islamic & Arabic Studies Faculty (real, supplied — corrected split, see revision note)
+### 4e. School of Arabic & Islamic Studies Faculty (real, supplied — corrected split, see revision note)
 
 | Faculty member | Qualification | Teaching areas |
 |---|---|---|
@@ -308,14 +308,14 @@ table is still empty in the running system either way — but which one
 decision this register cannot make unilaterally, and is now the same
 open question as the roster itself.
 
-### 5b. School of Islamic & Arabic Studies and Qur'an College — proposed divisional structure
+### 5b. School of Arabic & Islamic Studies and Qur'an College — proposed divisional structure
 
 Per the directive: these are **two distinct academic entities**, never
 collapsed into one generic "Islamic Studies" label, consistently
 throughout this register, the prospectus, and all governance
 documentation.
 
-- **School of Islamic & Arabic Studies** — proposed component areas: Arabic Language, Islamic Studies, Fiqh, Aqeedah, Hadith, Seerah, Islamic Leadership.
+- **School of Arabic & Islamic Studies** — proposed component areas: Arabic Language, Islamic Studies, Fiqh, Aqeedah, Hadith, Seerah, Islamic Leadership.
 - **Qur'an College** — proposed component programmes: Hifz Programme, Tajweed Programme, Qira'aat Programme, Ijazah Programme, Muraja'ah Programme, Qur'anic Sciences.
 
 This maps onto `docs/teacher-operating-model.md` §3's already-proposed
