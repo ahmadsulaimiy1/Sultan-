@@ -1,5 +1,13 @@
 # SHRS Imperial Digital Identity & Onboarding — Reality Check
 
+**Update:** the "Phase 1 — real today, no new infrastructure or vendor
+decisions" scope recommended below has since shipped, as a staged
+onboarding wizard with colour-banded completion and a celebration
+screen. See `docs/onboarding-experience.md` for what was built and what
+remains deferred (Stage 5 children's medical data, Stage 6 KYC, Stage 9
+document storage, and Phase 2's SMS/WhatsApp OTP + CAPTCHA are all still
+open, exactly as recommended here).
+
 *Response to the "Imperial Digital Identity & Onboarding Directive."
 Written the same way `digital-campus-roadmap.md` answered the original
 LMS mandate: taking the ambition seriously by being straight about what

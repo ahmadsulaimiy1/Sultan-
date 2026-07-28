@@ -106,11 +106,13 @@ async function loadProfile(sql, guardianId) {
     prospectiveChildrenCount: prospectiveChildrenRes.rows[0] ? prospectiveChildrenRes.rows[0].n : 0,
     emailVerified: !!guardian.email_verified_at,
     mobileVerified: !!guardian.mobile_verified_at,
+    trustedDeviceCapable: guardian.trust_version != null,
     emergencyContacts: contactsRes.rows.map((c) => ({ id: c.id, order: c.contact_order, fullName: c.full_name, relationship: c.relationship, phone: c.phone, email: c.email })),
     educationalInterests: interestsRes.rows.map((r) => r.institution_key),
     profileCompletionPct,
     sections,
     recommendedNextStep: recommendNextStep(sections, !!guardian.email_verified_at),
+    onboardingCelebrationShown: !!guardian.onboarding_celebration_shown_at,
   };
 }
 

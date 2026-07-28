@@ -79,7 +79,13 @@ body.portal-body{
 .portal-topbar-link{font-size:0.8rem;color:var(--gold-bright);text-decoration:underline;text-underline-offset:2px;}
 .portal-topbar-link:hover{color:#fff;}
 
-.portal-child-card{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);margin-bottom:24px;}
+/* Executive Dashboard Visual System: every existing card class gets the
+   same elevated-shadow/gold-hairline treatment automatically — this is
+   deliberately added to the SHARED classes (not a new .exec-card wrapper
+   requiring markup changes) so all four dashboards (parent, student,
+   staff/teacher, founder) upgrade at once without touching their data
+   logic or HTML structure. */
+.portal-child-card{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);margin-bottom:24px;}
 .portal-child-head{background:var(--navy);color:#fff;padding:16px 20px;}
 /* Explicit color, not just inherited from .portal-child-head — brand.css's
    global `h1,h2,h3,h4{color:var(--navy)}` rule otherwise wins over the
@@ -129,7 +135,7 @@ body.portal-body{
 
 .portal-adhkar-card{
   background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);
-  padding:22px 24px;margin-bottom:24px;
+  box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:24px;
 }
 .portal-adhkar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
 .portal-adhkar-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
@@ -171,7 +177,7 @@ body.portal-body{
 /* --- Student Portal: Hifz & Ijazah panel --- */
 .portal-hifz-card{
   background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);
-  padding:22px 24px;margin-bottom:24px;
+  box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:24px;
 }
 .portal-hifz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
 .portal-hifz-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
@@ -216,7 +222,7 @@ body.portal-body{
 }
 
 /* --- Founder Dashboard --- */
-.pfd-section{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);padding:22px 24px;margin-bottom:20px;}
+.pfd-section{background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:20px;}
 .pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0 0 14px;color:var(--navy);}
 .pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--navy);margin:20px 0 10px;}
 .pfd-note{font-size:0.8rem;color:var(--ink-soft);margin-top:10px;}
@@ -393,3 +399,136 @@ body.portal-body{
 .profile-interest-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:4px 16px;padding:16px 20px 0;}
 .profile-interest-option{display:flex;align-items:center;gap:8px;font-size:0.86rem;color:var(--ink);padding:6px 0;}
 .profile-interest-option input{width:auto;}
+
+/* --- Institutional Onboarding Wizard --- */
+/* Completion colour bands: red(Poor 0-30) / orange(Basic 31-60) /
+   yellow-gold(Good 61-85) / green(Excellent 86-100). Reuses existing
+   brand.css tokens (--crimson, --terracotta, --gold, --forest-green) —
+   no new palette introduced. */
+.profile-progress-fill.band-poor{background:var(--crimson);}
+.profile-progress-fill.band-basic{background:var(--terracotta);}
+.profile-progress-fill.band-good{background:var(--gold);}
+.profile-progress-fill.band-excellent{background:var(--forest-green);}
+
+.wizard-header{text-align:center;padding:20px 20px 4px;}
+.wizard-pct-badge{
+  display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;
+  font-family:'Cinzel','Amiri',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px;
+  border:2px solid var(--line);color:var(--ink);
+}
+.wizard-pct-badge.band-poor{border-color:var(--crimson);color:var(--crimson);}
+.wizard-pct-badge.band-basic{border-color:var(--terracotta);color:var(--terracotta);}
+.wizard-pct-badge.band-good{border-color:var(--gold);color:var(--navy);}
+.wizard-pct-badge.band-excellent{border-color:var(--forest-green);color:var(--forest-green);}
+.wizard-pct-label{font-family:'Cinzel','Amiri',serif;font-size:0.85rem;letter-spacing:0.03em;color:var(--navy);margin:0 0 12px;}
+
+.wizard-rail{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:14px 16px;border-bottom:1px solid var(--line);}
+.wizard-rail-step{
+  display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;
+  font-family:inherit;padding:4px 6px;width:78px;
+}
+.wizard-rail-circle{
+  width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel','Amiri',serif;font-size:0.7rem;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--milk,#FCFAF6);
+}
+.wizard-rail-label{font-size:0.6rem;letter-spacing:0.02em;text-align:center;color:var(--ink-soft);line-height:1.2;}
+.wizard-rail-step.is-active .wizard-rail-circle{border-color:var(--gold);color:var(--navy);background:rgba(198,161,91,0.15);}
+.wizard-rail-step.is-active .wizard-rail-label{color:var(--navy);font-weight:600;}
+.wizard-rail-step.is-done .wizard-rail-circle{border-color:var(--forest-green);background:var(--forest-green);color:#fff;}
+
+.wizard-step[hidden]{display:none;}
+.wizard-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;flex-wrap:wrap;}
+.wizard-nav button{
+  font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;
+  padding:10px 18px;background:var(--navy);color:var(--gold-bright);border:1px solid var(--navy);cursor:pointer;
+}
+.wizard-nav button:hover{background:var(--navy-deep);}
+.wizard-nav button:disabled{opacity:0.4;cursor:default;}
+.wizard-nav-label{font-size:0.78rem;color:var(--ink-soft);order:3;flex-basis:100%;text-align:center;}
+@media (min-width:560px){.wizard-nav-label{order:0;flex-basis:auto;}}
+
+.wizard-coming-soon{padding:24px 20px;text-align:center;color:var(--ink-soft);}
+.wizard-coming-soon .wizard-coming-soon-badge{
+  display:inline-block;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--navy-deep);
+  background:var(--gold-bright);padding:3px 10px;border-radius:2px;font-weight:700;margin-bottom:12px;
+}
+
+.wizard-security-status{padding:16px 20px;}
+
+/* --- Completion celebration overlay --- */
+.wizard-celebration-overlay{
+  position:fixed;inset:0;background:rgba(34,23,9,0.92);display:flex;align-items:center;justify-content:center;
+  z-index:1000;padding:20px;overflow:hidden;
+}
+.wizard-celebration-overlay[hidden]{display:none;}
+.wizard-celebration-card{
+  position:relative;background:var(--ivory);color:var(--ink);max-width:440px;width:100%;padding:40px 32px;text-align:center;
+  border:2px solid var(--gold);box-shadow:0 40px 80px -20px rgba(0,0,0,0.6);
+}
+.wizard-celebration-seal{
+  width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;
+}
+.wizard-celebration-card h2{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--navy);margin:0 0 8px;}
+.wizard-celebration-card p{font-size:0.9rem;color:var(--ink-soft);margin:0 0 20px;line-height:1.5;}
+.wizard-celebration-close{
+  font-family:'Cinzel','Amiri',serif;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;
+  padding:12px 24px;background:var(--navy);color:var(--gold-bright);border:1px solid var(--navy);cursor:pointer;text-decoration:none;display:inline-block;
+}
+.confetti-piece{
+  position:absolute;top:-10px;width:8px;height:14px;opacity:0.9;pointer-events:none;
+  animation:wizard-confetti-fall linear forwards;
+}
+@keyframes wizard-confetti-fall{
+  to{transform:translateY(110vh) rotate(720deg);opacity:0.2;}
+}
+@media (prefers-reduced-motion:reduce){.confetti-piece{animation:none;display:none;}}
+
+/* --- Checklist panel (dashboard) --- */
+.dashboard-checklist{padding:16px 20px;}
+.dashboard-checklist ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.dashboard-checklist li{
+  display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--ink-soft);padding:8px 10px;border:1px solid var(--line);
+}
+.dashboard-checklist li .lock-icon{flex:0 0 auto;}
+.dashboard-checklist a{color:var(--navy);font-weight:600;margin-inline-start:auto;white-space:nowrap;}
+
+/* --- Executive Dashboard Visual System --- */
+.exec-card{
+  background:var(--ivory);color:var(--ink);border:1px solid var(--gold);border-top:2px solid var(--gold);
+  box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:20px;
+}
+.exec-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.exec-card-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.exec-stat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;}
+.exec-stat{
+  background:var(--milk,#FCFAF6);border:1px solid var(--line);padding:16px 18px;position:relative;
+}
+.exec-stat-icon{color:var(--gold);margin-bottom:8px;}
+.exec-stat-label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.exec-stat-value{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--navy);margin-top:4px;}
+
+.exec-welcome{
+  background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);color:var(--ivory);
+  border:1px solid var(--gold);padding:26px 28px;margin-bottom:24px;
+}
+.exec-welcome-eyebrow{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;margin:0 0 4px;color:#fff;}
+.exec-welcome-role{font-size:0.85rem;color:rgba(248,244,233,0.75);margin-bottom:4px;}
+.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.9rem;color:var(--gold-bright);margin-bottom:16px;}
+.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px;padding-top:14px;border-top:1px solid rgba(233,206,138,0.25);}
+.exec-welcome-stat{display:flex;flex-direction:column;}
+.exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.2rem;color:var(--gold-bright);}
+.exec-welcome-stat .label{font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;color:rgba(248,244,233,0.65);}
+
+.exec-empty{padding:20px 4px;color:var(--ink-soft);font-size:0.86rem;line-height:1.5;text-align:center;}
+
+.exec-table-scroll{overflow-x:auto;}
+.exec-table{width:100%;min-width:520px;border-collapse:separate;border-spacing:0;font-size:0.84rem;}
+.exec-table th{
+  text-align:start;padding:10px 12px;background:var(--navy);color:var(--gold-bright);
+  font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;font-weight:600;
+}
+.exec-table th:first-child{border-top-left-radius:2px;}
+.exec-table td{padding:9px 12px;border-bottom:1px solid var(--line);}
+.exec-table tr:nth-child(even) td{background:rgba(198,161,91,0.05);}

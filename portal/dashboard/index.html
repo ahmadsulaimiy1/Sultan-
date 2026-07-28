@@ -34,11 +34,26 @@
   </div>
 
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello" data-portal-hello></div>
-    <div class="portal-hello-sub">Sultan Hanafi Royal Schools — Parent Portal (Pilot). This shows only your own child(ren)'s records.</div>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow">Welcome Back</div>
+      <h1 data-portal-hello>—</h1>
+      <div class="exec-welcome-role">Parent &amp; Guardian · Sultan Hanafi Royal Schools</div>
+      <div class="exec-welcome-motto">"Knowledge, Character and Excellence"</div>
+      <div class="exec-welcome-stats">
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-completion>0%</span><span class="label">Profile Complete</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-children>0</span><span class="label">Children Enrolled</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-notifications>0</span><span class="label">Notifications</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-applications>0</span><span class="label">Applications</span></div>
+      </div>
+    </div>
     <div class="account-status-banner" data-portal-verify-banner hidden>
       <span>Please verify your email address — this is required before submitting an admissions application.</span>
       <button type="button" data-portal-resend-verify>Resend verification email</button>
+    </div>
+
+    <div class="exec-card dashboard-checklist" data-dashboard-checklist hidden>
+      <div class="exec-card-head"><h2>Complete Your Institutional Profile</h2></div>
+      <ul data-dashboard-checklist-list></ul>
     </div>
 
     <div class="portal-child-card">
@@ -126,6 +141,7 @@
   </div>
 </main>
 
+<script src="/js/portal-onboarding-wizard.js" defer></script>
 <script src="/js/portal-dashboard.js" defer></script>
 </body>
 </html>

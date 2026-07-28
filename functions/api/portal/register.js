@@ -26,12 +26,18 @@ const VERIFICATION_TOKEN_TTL_HOURS = 24;
 // Phase 1A (Imperial Digital Identity & Onboarding Directive) —
 // registration collects an Identity Type and a WhatsApp number
 // alongside the original four fields, and requires Confirm Email /
-// Confirm Password to match. "Staff Member" and "Educational Partner"
-// here are self-descriptions on a guardian-type account, NOT a real
-// staff account or Permission Engine grant — those remain exclusively
-// institution-issued per docs/staff-identity-architecture.md; selecting
-// this option does not create or link one.
-const IDENTITY_TYPES = ['parent_guardian', 'applicant', 'sponsor', 'alumni', 'staff_member', 'educational_partner'];
+// Confirm Password to match. Deliberately excludes Student/Teacher/
+// Staff Member as selectable identity types here (per
+// docs/imperial-identity-onboarding-reality-check.md's flagged concern):
+// those already have their own real, institution-issued login systems
+// (see docs/staff-identity-architecture.md, student/login.js) with "no
+// self-service sign-up" stated on their own login pages. Offering them
+// as a dropdown option on this public form would create a fake or
+// misleading account type rather than a real staff/student credential.
+// "Educational Partner" remains as a genuine self-description on a
+// guardian-type account (e.g. a partner organisation contact), not a
+// staff account or Permission Engine grant.
+const IDENTITY_TYPES = ['parent_guardian', 'applicant', 'sponsor', 'alumni', 'educational_partner'];
 
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) {

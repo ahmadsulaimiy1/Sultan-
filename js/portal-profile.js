@@ -200,6 +200,7 @@
         renderCompletion(data);
         existingChildrenEl.textContent = data.existingChildrenCount;
         prospectiveChildrenEl.textContent = data.prospectiveChildrenCount;
+        if(window.SHRSOnboarding && window.SHRSOnboarding.onProfileData) window.SHRSOnboarding.onProfileData(data);
       }catch(err){
         resultEl.textContent = (err && err.message) || 'Could not save this section.';
         resultEl.className = 'profile-form-result is-error';
@@ -248,6 +249,7 @@
       renderCompletion(profile);
       existingChildrenEl.textContent = profile.existingChildrenCount;
       prospectiveChildrenEl.textContent = profile.prospectiveChildrenCount;
+      if(window.SHRSOnboarding && window.SHRSOnboarding.onProfileData) window.SHRSOnboarding.onProfileData(profile);
 
       setFormValues(document.querySelector('[data-profile-form="personal"]'), profile);
       setFormValues(document.querySelector('[data-profile-form="contact"]'), profile);

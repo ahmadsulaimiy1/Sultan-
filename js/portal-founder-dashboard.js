@@ -51,6 +51,15 @@
         : 'Viewed via the legacy Founder token — sign in with a real Executive-role staff account once one exists.';
     }
 
+    var execStatStudentsEl = document.querySelector('[data-exec-stat-students]');
+    var execStatAttendanceEl = document.querySelector('[data-exec-stat-attendance]');
+    var execStatGuardiansEl = document.querySelector('[data-exec-stat-guardians]');
+    var execStatHifzEl = document.querySelector('[data-exec-stat-hifz]');
+    if(execStatStudentsEl) execStatStudentsEl.textContent = data.students.totalActive;
+    if(execStatAttendanceEl) execStatAttendanceEl.textContent = data.attendance.averagePercent != null ? data.attendance.averagePercent + '%' : '—';
+    if(execStatGuardiansEl) execStatGuardiansEl.textContent = data.guardians.total;
+    if(execStatHifzEl) execStatHifzEl.textContent = data.hifz.enrolledCount;
+
     var statusStatsEl = document.querySelector('[data-founder-status-stats]');
     statusStatsEl.innerHTML = '';
     statusStatsEl.appendChild(statTile('Active students', data.students.totalActive));

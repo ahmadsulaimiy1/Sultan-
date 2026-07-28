@@ -25,8 +25,18 @@
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello" data-identity-hello></div>
-    <div class="portal-hello-sub">Sultan Hanafi Royal Schools — Staff Identity Record. This is your directory entry, not a task dashboard.</div>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow">Welcome Back</div>
+      <h1 data-identity-hello>—</h1>
+      <div class="exec-welcome-role" data-identity-exec-position>Staff · Sultan Hanafi Royal Schools</div>
+      <div class="exec-welcome-motto">"Knowledge, Character and Excellence"</div>
+      <div class="exec-welcome-stats">
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-roles>0</span><span class="label">Roles Assigned</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-joined>—</span><span class="label">Date Joined</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-delegations-held>0</span><span class="label">Delegated To You</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-delegations-given>0</span><span class="label">Delegated By You</span></div>
+      </div>
+    </div>
 
     <div class="portal-child-card">
       <div class="portal-child-head">
@@ -84,6 +94,7 @@
   </div>
 </main>
 
+<script src="/js/portal-onboarding-wizard.js" defer></script>
 <script src="/js/portal-staff-identity.js" defer></script>
 </body>
 </html>

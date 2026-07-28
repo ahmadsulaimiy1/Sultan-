@@ -532,6 +532,8 @@ const STATEMENTS = [
 
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_hash TEXT`,
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_attempts INTEGER NOT NULL DEFAULT 0`,
+
+  `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS onboarding_celebration_shown_at TIMESTAMPTZ`,
 ];
 
 async function handle({ request, env }) {

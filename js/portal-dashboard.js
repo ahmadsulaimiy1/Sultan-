@@ -25,10 +25,49 @@
   var welcomeInterestsStatusEl = document.querySelector('[data-welcome-interests-status]');
   var welcomeContactsStatusEl = document.querySelector('[data-welcome-contacts-status]');
   var welcomeNextStepEl = document.querySelector('[data-welcome-next-step]');
+  var execStatCompletionEl = document.querySelector('[data-exec-stat-completion]');
+  var execStatChildrenEl = document.querySelector('[data-exec-stat-children]');
+  var execStatNotificationsEl = document.querySelector('[data-exec-stat-notifications]');
+  var execStatApplicationsEl = document.querySelector('[data-exec-stat-applications]');
+  var checklistEl = document.querySelector('[data-dashboard-checklist]');
+  var checklistListEl = document.querySelector('[data-dashboard-checklist-list]');
+
+  var CHECKLIST_ITEMS = [
+    { key: 'emailVerified', label: 'Verify your email address', check: function(d){ return !!d.emailVerified; } },
+    { key: 'emergencyContacts', label: 'Add your emergency contacts', check: function(d){ return !!d.sections.emergencyContacts; } },
+    { key: 'educationalInterests', label: 'Select your educational interests', check: function(d){ return !!d.sections.educationalInterests; } },
+    { key: 'personal', label: 'Complete your personal profile', check: function(d){ return !!d.sections.personal; } },
+  ];
+
+  function renderChecklist(data){
+    if(!checklistEl || !checklistListEl) return;
+    checklistListEl.innerHTML = '';
+    var pending = CHECKLIST_ITEMS.filter(function(item){ return !item.check(data); });
+    if(!pending.length){
+      checklistEl.hidden = true;
+      return;
+    }
+    pending.forEach(function(item){
+      var li = document.createElement('li');
+      var lock = document.createElement('span');
+      lock.className = 'lock-icon';
+      lock.setAttribute('aria-hidden', 'true');
+      lock.textContent = '🔒';
+      li.appendChild(lock);
+      li.appendChild(document.createTextNode(item.label));
+      var link = document.createElement('a');
+      link.href = '/portal/profile/';
+      link.textContent = 'Complete →';
+      li.appendChild(link);
+      checklistListEl.appendChild(li);
+    });
+    checklistEl.hidden = false;
+  }
 
   function renderWelcomePanel(data){
     welcomePctLabelEl.textContent = data.profileCompletionPct + '% complete';
     welcomeProgressFillEl.style.width = data.profileCompletionPct + '%';
+    if(window.SHRSOnboarding) window.SHRSOnboarding.applyBandClass(welcomeProgressFillEl, data.profileCompletionPct);
     // Identity (KYC/biometric) verification does not exist yet — this is
     // an honest "Pending" state, not a fabricated pass, per the Phase 1A
     // decision to gate real KYC at admission confirmation, not sign-up.
@@ -41,6 +80,12 @@
     welcomeInterestsStatusEl.textContent = data.sections.educationalInterests ? 'Completed' : 'Not Selected';
     welcomeContactsStatusEl.textContent = data.sections.emergencyContacts ? 'Completed' : 'Missing';
     welcomeNextStepEl.textContent = data.recommendedNextStep;
+
+    if(execStatCompletionEl) execStatCompletionEl.textContent = data.profileCompletionPct + '%';
+    if(execStatChildrenEl) execStatChildrenEl.textContent = data.existingChildrenCount || 0;
+    if(execStatNotificationsEl) execStatNotificationsEl.textContent = (data.notifications || []).length;
+
+    renderChecklist(data);
   }
 
   var APPLICATION_STATUS_LABEL = {
@@ -55,9 +100,10 @@
   }
 
   function renderApplications(applications){
+    if(execStatApplicationsEl) execStatApplicationsEl.textContent = (applications || []).length;
     applicationsListEl.innerHTML = '';
     if(!applications || !applications.length){
-      applicationsListEl.appendChild(el('p', 'portal-empty', 'No enquiries or applications submitted yet.'));
+      applicationsListEl.appendChild(el('p', 'portal-empty', 'No enquiries or applications submitted yet — once you apply, you can track its progress here.'));
       return;
     }
     applications.forEach(function(app){

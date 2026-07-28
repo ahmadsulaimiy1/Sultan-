@@ -113,6 +113,17 @@
       reportsToEl.textContent = staff.reportsTo ? (staff.reportsTo.fullName + (staff.reportsTo.positionTitle ? ' (' + staff.reportsTo.positionTitle + ')' : '')) : '—';
       joinedEl.textContent = formatDate(staff.dateJoined);
 
+      var execPositionEl = document.querySelector('[data-identity-exec-position]');
+      var execRolesEl = document.querySelector('[data-exec-stat-roles]');
+      var execJoinedEl = document.querySelector('[data-exec-stat-joined]');
+      var execDelHeldEl = document.querySelector('[data-exec-stat-delegations-held]');
+      var execDelGivenEl = document.querySelector('[data-exec-stat-delegations-given]');
+      if(execPositionEl) execPositionEl.textContent = [staff.positionTitle, staff.institution ? staff.institution.name : 'Sultan Hanafi Royal Schools'].filter(Boolean).join(' · ');
+      if(execRolesEl) execRolesEl.textContent = (data.roles || []).length;
+      if(execJoinedEl) execJoinedEl.textContent = formatDate(staff.dateJoined);
+      if(execDelHeldEl) execDelHeldEl.textContent = (data.delegationsHeld || []).length;
+      if(execDelGivenEl) execDelGivenEl.textContent = (data.delegationsGiven || []).length;
+
       institutionsEl.innerHTML = '';
       staff.institutions.forEach(function(inst){
         var chip = el('span', 'portal-programme-chip' + (inst.isPrimary ? ' is-primary' : ''), inst.name);

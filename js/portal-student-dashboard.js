@@ -20,6 +20,10 @@
   var juzGridEl = document.querySelector('[data-portal-juz-grid]');
   var ijazahEl = document.querySelector('[data-portal-ijazah]');
   var logoutBtn = document.querySelector('[data-portal-logout]');
+  var execStatAttendanceEl = document.querySelector('[data-exec-stat-attendance]');
+  var execStatFeeEl = document.querySelector('[data-exec-stat-fee]');
+  var execStatProgrammesEl = document.querySelector('[data-exec-stat-programmes]');
+  var execStatHifzEl = document.querySelector('[data-exec-stat-hifz]');
 
   var JUZ_STATUS_LABEL = {
     not_started: 'Not started',
@@ -127,6 +131,7 @@
         var chip = el('span', 'portal-programme-chip' + (en.isPrimary ? ' is-primary' : ''), label);
         programmesEl.appendChild(chip);
       });
+      if(execStatProgrammesEl) execStatProgrammesEl.textContent = (data.enrolments || []).length;
 
       if(data.status && data.status !== 'active'){
         statusEl.hidden = false;
@@ -137,13 +142,17 @@
         var pct = Math.round((data.attendance.days_present / data.attendance.days_total) * 100);
         attendanceValueEl.textContent = pct + '%';
         attendanceLabelEl.textContent = data.attendance.days_present + ' / ' + data.attendance.days_total + ' days · ' + data.attendance.term;
+        if(execStatAttendanceEl) execStatAttendanceEl.textContent = pct + '%';
       }
 
       if(data.fees){
         var balance = Number(data.fees.amount_due || 0) - Number(data.fees.amount_paid || 0);
         feeValueEl.textContent = balance > 0 ? formatCurrency(balance) + ' due' : 'Paid in full';
         feeLabelEl.textContent = formatCurrency(data.fees.amount_paid) + ' of ' + formatCurrency(data.fees.amount_due) + ' · ' + data.fees.term;
+        if(execStatFeeEl) execStatFeeEl.textContent = balance > 0 ? 'Due' : 'Paid';
       }
+
+      if(execStatHifzEl) execStatHifzEl.textContent = data.hifz ? ('Stage ' + data.hifz.stageNumber + ' / 5') : 'N/A';
 
       renderResults(data.results);
       renderHifz(data.hifz);

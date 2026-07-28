@@ -805,3 +805,9 @@ ALTER TABLE staff ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAUL
 -- stays valid even if the code's attempts are exhausted.
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_hash TEXT;
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_attempts INTEGER NOT NULL DEFAULT 0;
+
+-- Institutional Onboarding Wizard: the 100%-completion celebration
+-- screen fires once, the first time a guardian's profile reaches full
+-- completion — this timestamp is the guard against replaying it on
+-- every subsequent login. NULL = not shown yet.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS onboarding_celebration_shown_at TIMESTAMPTZ;

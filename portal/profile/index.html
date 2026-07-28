@@ -26,203 +26,283 @@
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
     <div class="portal-hello" data-portal-hello></div>
-    <div class="portal-hello-sub">Complete your institutional profile — the more SHRS knows, the better we can serve your family. Every section below is optional but recommended.</div>
+    <div class="portal-hello-sub">Your institutional identity journey — every stage below is optional but recommended. Jump between stages freely, or use Next to move through them in order.</div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head">
-        <h2>Profile Completion</h2>
-        <div class="meta" data-profile-pct-label>0% complete</div>
-      </div>
-      <div style="padding:16px 20px;">
+    <div class="portal-child-card" data-wizard>
+      <div class="wizard-header" data-wizard-header>
+        <div class="wizard-pct-badge" data-wizard-pct-badge>0%</div>
+        <div class="wizard-pct-label" data-wizard-pct-label>Registration Started</div>
+        <div class="meta" data-profile-pct-label style="text-align:center;">0% complete</div>
         <div class="profile-progress-track"><div class="profile-progress-fill" data-profile-progress-fill style="width:0%;"></div></div>
-        <p class="profile-next-step" data-profile-next-step></p>
-        <div class="profile-section-flags" data-profile-section-flags></div>
+        <p class="profile-next-step" data-profile-next-step style="text-align:center;"></p>
+        <div class="profile-section-flags" data-profile-section-flags style="justify-content:center;"></div>
       </div>
-    </div>
+      <div class="wizard-rail" data-wizard-rail></div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Personal Profile</h2></div>
-      <form class="profile-section-form" data-profile-form="personal">
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="p-title">Title</label>
-            <select id="p-title" name="title">
-              <option value="">— Select —</option>
-            </select>
+      <div class="wizard-step" data-wizard-step data-wizard-key="identity" data-wizard-label="Identity">
+        <div class="portal-child-head"><h2>Stage 1 — Digital Identity</h2></div>
+        <div class="identity-field-grid">
+          <div class="identity-field">
+            <div class="label">Full Name</div>
+            <div class="value" data-wizard-identity-name>—</div>
           </div>
-          <div class="portal-field">
-            <label for="p-preferred-name">Preferred name</label>
-            <input id="p-preferred-name" name="preferredName" type="text" />
+          <div class="identity-field">
+            <div class="label">Identity Category</div>
+            <div class="value" data-wizard-identity-type>—</div>
           </div>
-        </div>
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="p-gender">Gender</label>
-            <select id="p-gender" name="gender">
-              <option value="">— Select —</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-            </select>
+          <div class="identity-field">
+            <div class="label">Email</div>
+            <div class="value" data-wizard-identity-email>—</div>
           </div>
-          <div class="portal-field">
-            <label for="p-dob">Date of birth</label>
-            <input id="p-dob" name="dateOfBirth" type="date" />
+          <div class="identity-field">
+            <div class="label">Mobile</div>
+            <div class="value" data-wizard-identity-phone>—</div>
           </div>
         </div>
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="p-nationality">Nationality</label>
-            <input id="p-nationality" name="nationality" type="text" />
-          </div>
-          <div class="portal-field">
-            <label for="p-state-origin">State of origin</label>
-            <input id="p-state-origin" name="stateOfOrigin" type="text" />
-          </div>
-        </div>
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="p-lga">Local government area</label>
-            <input id="p-lga" name="localGovernmentArea" type="text" />
-          </div>
-          <div class="portal-field">
-            <label for="p-country-residence">Country of residence</label>
-            <input id="p-country-residence" name="countryOfResidence" type="text" />
-          </div>
-        </div>
-        <button type="submit" class="portal-submit" style="width:auto;">Save Personal Profile</button>
-        <span class="profile-form-result" data-profile-result></span>
-      </form>
-    </div>
+        <p class="portal-notice" style="margin:0;border-top:none;padding-top:0;">Your name, category, email and phone were set when you created your account. To correct any of these, contact the school office at <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.</p>
+      </div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Contact Profile</h2></div>
-      <form class="profile-section-form" data-profile-form="contact">
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="c-secondary-phone">Secondary mobile</label>
-            <input id="c-secondary-phone" name="secondaryPhone" type="tel" />
+      <div class="wizard-step" data-wizard-step data-wizard-key="personal" data-wizard-label="Personal">
+        <div class="portal-child-head"><h2>Stage 2 — Personal Profile</h2></div>
+        <form class="profile-section-form" data-profile-form="personal">
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="p-title">Title</label>
+              <select id="p-title" name="title">
+                <option value="">— Select —</option>
+              </select>
+            </div>
+            <div class="portal-field">
+              <label for="p-preferred-name">Preferred name</label>
+              <input id="p-preferred-name" name="preferredName" type="text" />
+            </div>
           </div>
-          <div class="portal-field">
-            <label for="c-whatsapp">WhatsApp number</label>
-            <input id="c-whatsapp" name="whatsappNumber" type="tel" />
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="p-gender">Gender</label>
+              <select id="p-gender" name="gender">
+                <option value="">— Select —</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </select>
+            </div>
+            <div class="portal-field">
+              <label for="p-dob">Date of birth</label>
+              <input id="p-dob" name="dateOfBirth" type="date" />
+            </div>
           </div>
-        </div>
-        <div class="portal-field">
-          <label for="c-secondary-email">Secondary email</label>
-          <input id="c-secondary-email" name="secondaryEmail" type="email" />
-        </div>
-        <button type="submit" class="portal-submit" style="width:auto;">Save Contact Profile</button>
-        <span class="profile-form-result" data-profile-result></span>
-      </form>
-    </div>
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="p-nationality">Nationality</label>
+              <input id="p-nationality" name="nationality" type="text" />
+            </div>
+            <div class="portal-field">
+              <label for="p-state-origin">State of origin</label>
+              <input id="p-state-origin" name="stateOfOrigin" type="text" />
+            </div>
+          </div>
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="p-lga">Local government area</label>
+              <input id="p-lga" name="localGovernmentArea" type="text" />
+            </div>
+            <div class="portal-field">
+              <label for="p-country-residence">Country of residence</label>
+              <input id="p-country-residence" name="countryOfResidence" type="text" />
+            </div>
+          </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Personal Profile</button>
+          <span class="profile-form-result" data-profile-result></span>
+        </form>
+      </div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Residential Profile</h2></div>
-      <form class="profile-section-form" data-profile-form="residential">
-        <div class="portal-field">
-          <label for="r-address">Address</label>
-          <input id="r-address" name="residentialAddress" type="text" />
-        </div>
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="r-city">City</label>
-            <input id="r-city" name="residentialCity" type="text" />
+      <div class="wizard-step" data-wizard-step data-wizard-key="contact" data-wizard-label="Contact">
+        <div class="portal-child-head"><h2>Stage 3 — Contact Details</h2></div>
+        <form class="profile-section-form" data-profile-form="contact">
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="c-secondary-phone">Secondary mobile</label>
+              <input id="c-secondary-phone" name="secondaryPhone" type="tel" />
+            </div>
+            <div class="portal-field">
+              <label for="c-whatsapp">WhatsApp number</label>
+              <input id="c-whatsapp" name="whatsappNumber" type="tel" />
+            </div>
           </div>
           <div class="portal-field">
-            <label for="r-state">State</label>
-            <input id="r-state" name="residentialState" type="text" />
+            <label for="c-secondary-email">Secondary email</label>
+            <input id="c-secondary-email" name="secondaryEmail" type="email" />
           </div>
-        </div>
-        <div class="portal-field">
-          <label for="r-postal">Postal code</label>
-          <input id="r-postal" name="postalCode" type="text" />
-        </div>
-        <button type="submit" class="portal-submit" style="width:auto;">Save Residential Profile</button>
-        <span class="profile-form-result" data-profile-result></span>
-      </form>
-    </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Contact Details</button>
+          <span class="profile-form-result" data-profile-result></span>
+        </form>
+      </div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Professional Profile</h2></div>
-      <form class="profile-section-form" data-profile-form="professional">
-        <div class="portal-field-row">
+      <div class="wizard-step" data-wizard-step data-wizard-key="residential" data-wizard-label="Residential">
+        <div class="portal-child-head"><h2>Stage 4 — Residential Information</h2></div>
+        <form class="profile-section-form" data-profile-form="residential">
           <div class="portal-field">
-            <label for="pr-occupation">Occupation</label>
-            <input id="pr-occupation" name="occupation" type="text" />
+            <label for="r-address">Address</label>
+            <input id="r-address" name="residentialAddress" type="text" />
+          </div>
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="r-city">City</label>
+              <input id="r-city" name="residentialCity" type="text" />
+            </div>
+            <div class="portal-field">
+              <label for="r-state">State</label>
+              <input id="r-state" name="residentialState" type="text" />
+            </div>
           </div>
           <div class="portal-field">
-            <label for="pr-employer">Employer</label>
-            <input id="pr-employer" name="employer" type="text" />
+            <label for="r-postal">Postal code</label>
+            <input id="r-postal" name="postalCode" type="text" />
           </div>
-        </div>
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="pr-position">Position</label>
-            <input id="pr-position" name="positionTitle" type="text" />
-          </div>
-          <div class="portal-field">
-            <label for="pr-industry">Industry</label>
-            <input id="pr-industry" name="industry" type="text" />
-          </div>
-        </div>
-        <div class="portal-field">
-          <label for="pr-business">Business name <span style="font-weight:400;">(if self-employed)</span></label>
-          <input id="pr-business" name="businessName" type="text" />
-        </div>
-        <button type="submit" class="portal-submit" style="width:auto;">Save Professional Profile</button>
-        <span class="profile-form-result" data-profile-result></span>
-      </form>
-    </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Residential Information</button>
+          <span class="profile-form-result" data-profile-result></span>
+        </form>
+      </div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Family Profile</h2></div>
-      <div class="identity-field-grid">
-        <div class="identity-field">
-          <div class="label">Existing SHRS Children</div>
-          <div class="value" data-profile-existing-children>0</div>
+      <div class="wizard-step" data-wizard-step data-wizard-key="professional" data-wizard-label="Professional">
+        <div class="portal-child-head"><h2>Professional Profile</h2></div>
+        <form class="profile-section-form" data-profile-form="professional">
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="pr-occupation">Occupation</label>
+              <input id="pr-occupation" name="occupation" type="text" />
+            </div>
+            <div class="portal-field">
+              <label for="pr-employer">Employer</label>
+              <input id="pr-employer" name="employer" type="text" />
+            </div>
+          </div>
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="pr-position">Position</label>
+              <input id="pr-position" name="positionTitle" type="text" />
+            </div>
+            <div class="portal-field">
+              <label for="pr-industry">Industry</label>
+              <input id="pr-industry" name="industry" type="text" />
+            </div>
+          </div>
+          <div class="portal-field">
+            <label for="pr-business">Business name <span style="font-weight:400;">(if self-employed)</span></label>
+            <input id="pr-business" name="businessName" type="text" />
+          </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Professional Profile</button>
+          <span class="profile-form-result" data-profile-result></span>
+        </form>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="family" data-wizard-label="Family">
+        <div class="portal-child-head"><h2>Stage 5 — Family Profile</h2></div>
+        <div class="identity-field-grid">
+          <div class="identity-field">
+            <div class="label">Existing SHRS Children</div>
+            <div class="value" data-profile-existing-children>0</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Prospective SHRS Children</div>
+            <div class="value" data-profile-prospective-children>0</div>
+          </div>
         </div>
-        <div class="identity-field">
-          <div class="label">Prospective SHRS Children</div>
-          <div class="value" data-profile-prospective-children>0</div>
+        <form class="profile-section-form" data-profile-form="family">
+          <div class="portal-field-row">
+            <div class="portal-field">
+              <label for="f-marital">Marital status</label>
+              <select id="f-marital" name="maritalStatus">
+                <option value="">— Select —</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="divorced">Divorced</option>
+                <option value="widowed">Widowed</option>
+              </select>
+            </div>
+            <div class="portal-field">
+              <label for="f-children">Number of children</label>
+              <input id="f-children" name="numberOfChildren" type="number" min="0" step="1" />
+            </div>
+          </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Family Profile</button>
+          <span class="profile-form-result" data-profile-result></span>
+        </form>
+        <p class="portal-notice">Children's own records (Hifz background, medical considerations, special learning needs) are not yet collected here — see <a href="/portal/dashboard/">your Dashboard</a> for each enrolled child's real academic record, and contact the school office to update anything about a specific child.</p>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="emergencyContacts" data-wizard-label="Emergency">
+        <div class="portal-child-head">
+          <h2>Stage 6 — Emergency Contacts</h2>
+          <div class="meta">At least two are required for a complete profile</div>
+        </div>
+        <div data-profile-emergency-contacts style="padding:16px 20px;"></div>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="educationalInterests" data-wizard-label="Interests">
+        <div class="portal-child-head"><h2>Stage 7 — Educational Interests</h2></div>
+        <form data-profile-interests-form>
+          <div class="profile-interest-grid" data-profile-interest-options></div>
+          <button type="submit" class="portal-submit" style="width:auto;margin:16px 20px;">Save Educational Interests</button>
+          <span class="profile-form-result" data-profile-interests-result style="margin-inline-start:20px;"></span>
+        </form>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="communication" data-wizard-label="Communication">
+        <div class="portal-child-head"><h2>Stage 8 — Communication Preferences</h2></div>
+        <p class="portal-notice" style="margin:0;border-top:none;padding-top:16px;">Choose which updates you'd like, and how. Only the website (in-portal) channel delivers today — email/WhatsApp/SMS opt-ins are saved now so you're ready the moment those channels go live.</p>
+        <form data-wizard-comm-form style="padding:0 20px 20px;">
+          <div class="profile-interest-grid" style="padding:12px 0;">
+            <label class="profile-interest-option"><input type="checkbox" name="channel_website" /> Website (in-portal)</label>
+            <label class="profile-interest-option"><input type="checkbox" name="channel_email" /> Email <span style="font-size:0.7rem;color:var(--ink-soft);">(coming soon)</span></label>
+            <label class="profile-interest-option"><input type="checkbox" name="channel_whatsapp" /> WhatsApp <span style="font-size:0.7rem;color:var(--ink-soft);">(coming soon)</span></label>
+            <label class="profile-interest-option"><input type="checkbox" name="channel_sms" /> SMS <span style="font-size:0.7rem;color:var(--ink-soft);">(coming soon)</span></label>
+          </div>
+          <div class="profile-interest-grid" style="padding:12px 0;">
+            <label class="profile-interest-option"><input type="checkbox" name="type_attendance" /> Attendance</label>
+            <label class="profile-interest-option"><input type="checkbox" name="type_results" /> Academic Results</label>
+            <label class="profile-interest-option"><input type="checkbox" name="type_fees" /> Fees</label>
+            <label class="profile-interest-option"><input type="checkbox" name="type_announcements" /> Announcements</label>
+            <label class="profile-interest-option"><input type="checkbox" name="type_events" /> Events</label>
+            <label class="profile-interest-option"><input type="checkbox" name="type_emergency" /> Emergency Notices</label>
+          </div>
+          <button type="submit" class="portal-submit" style="width:auto;">Save Communication Preferences</button>
+          <span class="profile-form-result" data-wizard-comm-result></span>
+        </form>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="security" data-wizard-label="Security">
+        <div class="portal-child-head"><h2>Stage 9 — Security &amp; Trust</h2></div>
+        <div class="identity-field-grid wizard-security-status">
+          <div class="identity-field">
+            <div class="label">Email Verification</div>
+            <div class="value" data-wizard-security-email>—</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Trusted Device</div>
+            <div class="value" data-wizard-security-trust>—</div>
+          </div>
+          <div class="identity-field">
+            <div class="label">Sign-in Security</div>
+            <div class="value">Email verification code + link, every new device</div>
+          </div>
+        </div>
+        <p class="portal-notice">Your account is protected by email verification and a one-time code sent on new devices — after a device is trusted, sign-in is faster for 7 days before re-verifying. Read more in our <a href="/portal/login/">sign-in security notes</a>.</p>
+      </div>
+
+      <div class="wizard-step" data-wizard-step data-wizard-key="documents" data-wizard-label="Documents">
+        <div class="portal-child-head"><h2>Stage 10 — Document Centre</h2></div>
+        <div class="wizard-coming-soon">
+          <span class="wizard-coming-soon-badge">Architecture Only — Coming Soon</span>
+          <p>A secure Document Centre for passport photographs, birth certificates, results and other records is planned but not yet built. Real document storage needs a data-protection review before it goes live — nothing is uploaded or stored here today.</p>
         </div>
       </div>
-      <form class="profile-section-form" data-profile-form="family">
-        <div class="portal-field-row">
-          <div class="portal-field">
-            <label for="f-marital">Marital status</label>
-            <select id="f-marital" name="maritalStatus">
-              <option value="">— Select —</option>
-              <option value="single">Single</option>
-              <option value="married">Married</option>
-              <option value="divorced">Divorced</option>
-              <option value="widowed">Widowed</option>
-            </select>
-          </div>
-          <div class="portal-field">
-            <label for="f-children">Number of children</label>
-            <input id="f-children" name="numberOfChildren" type="number" min="0" step="1" />
-          </div>
-        </div>
-        <button type="submit" class="portal-submit" style="width:auto;">Save Family Profile</button>
-        <span class="profile-form-result" data-profile-result></span>
-      </form>
-    </div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head">
-        <h2>Emergency Contacts</h2>
-        <div class="meta">At least two are required for a complete profile</div>
+      <div class="wizard-nav" data-wizard-nav>
+        <button type="button" data-wizard-prev>← Previous</button>
+        <span class="wizard-nav-label" data-wizard-step-label>Step 1 of 11</span>
+        <button type="button" data-wizard-next>Next →</button>
       </div>
-      <div data-profile-emergency-contacts style="padding:16px 20px;"></div>
-    </div>
-
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Educational Interests</h2></div>
-      <form data-profile-interests-form>
-        <div class="profile-interest-grid" data-profile-interest-options></div>
-        <button type="submit" class="portal-submit" style="width:auto;margin:16px 20px;">Save Educational Interests</button>
-        <span class="profile-form-result" data-profile-interests-result style="margin-inline-start:20px;"></span>
-      </form>
     </div>
 
     <a class="portal-back-link" href="/portal/dashboard/">← Back to your Dashboard</a>
@@ -235,8 +315,20 @@
     <p class="sub" data-portal-error-message>Please try signing in again.</p>
     <a class="portal-back-link" href="/portal/login/">← Back to sign in</a>
   </div>
+
+  <div class="wizard-celebration-overlay" data-wizard-celebration hidden>
+    <div class="wizard-celebration-card" data-wizard-confetti-field>
+      <div class="wizard-celebration-seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2>Institutional Identity Verified</h2>
+      <p>Congratulations, <span data-wizard-celebration-name></span>. You have successfully completed your SHRS Institutional Identity Profile. Welcome to the Sultan Hanafi Royal Schools educational ecosystem.</p>
+      <button type="button" class="wizard-celebration-close" data-wizard-celebration-close>Continue to Your Dashboard</button>
+    </div>
+  </div>
 </main>
 
+<script src="/js/portal-onboarding-wizard.js" defer></script>
 <script src="/js/portal-profile.js" defer></script>
 </body>
 </html>

@@ -40,9 +40,18 @@
   </div>
 
   <div class="portal-wrap" data-founder-content hidden>
-    <div class="portal-hello">Founder Dashboard</div>
-    <div class="portal-hello-sub" data-founder-generated></div>
-    <div class="portal-hello-sub" data-founder-auth-status></div>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow">Executive Command Centre</div>
+      <h1>Founder Dashboard</h1>
+      <div class="exec-welcome-role" data-founder-auth-status>Institution-wide, read-only view</div>
+      <div class="exec-welcome-motto" data-founder-generated></div>
+      <div class="exec-welcome-stats">
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-students>—</span><span class="label">Active Students</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-attendance>—</span><span class="label">Avg Attendance</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-guardians>—</span><span class="label">Guardians</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-hifz>—</span><span class="label">Hifz Enrolled</span></div>
+      </div>
+    </div>
     <p class="portal-notice" style="margin-top:0;margin-bottom:20px;">Sample/demo records are excluded from every figure below. This is a read-only aggregate — nothing here can be edited from this page.</p>
 
     <div class="pfd-section">
@@ -85,6 +94,7 @@
 </main>
 
 <script src="/js/portal-password-toggle.js" defer></script>
+<script src="/js/portal-onboarding-wizard.js" defer></script>
 <script src="/js/portal-founder-dashboard.js" defer></script>
 </body>
 </html>
