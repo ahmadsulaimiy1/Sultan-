@@ -31,6 +31,13 @@
        .foot-quick-actions read as one consistent system instead of the
        previous mix of 0/2px sharp edges. */
     --btn-radius:10px;
+    /* Executive Refinement: type scale — a single source of truth for
+       the section-heading size that was previously hardcoded inline
+       (style="font-size:2.2rem") on ~30 individual h2 elements
+       sitewide. Scoped to the two most-repeated sizes, not a full
+       typographic rebuild (see docs/shrs-executive-refinement-audit.md
+       for the broader hardcoded-typography finding). */
+    --h2-size:2.2rem; --h3-sub-size:1.55rem;
   }
   :root[data-pc-theme="dark"]{
     --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
@@ -245,6 +252,8 @@
      scroll width shifts the default RTL scroll origin and clips the start
      of every right-aligned line (Arabic nav/text) on narrow screens. */
   h1,h2,h3,h4{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;color:var(--navy);line-height:1.15;}
+  section h2{font-size:var(--h2-size);}
+  .h3-sub{font-size:var(--h3-sub-size);}
   .crest-type{font-family:'Cinzel','Amiri',serif;}
   a{color:inherit;text-decoration:none;}
   img{max-width:100%;display:block;}
