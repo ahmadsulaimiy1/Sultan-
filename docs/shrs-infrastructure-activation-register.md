@@ -24,8 +24,8 @@ step-by-step walkthroughs.
 |---|---|---|---|---|---|---|
 | Domain registration | Canonical institutional web address | Critical | Starter (annual registrar fee) | CEO's Office | None | **Completed** — `shroyalschools.com` registered directly through Cloudflare Registrar 2026-07-28 (resolving the earlier "Unconfirmed" status: the school did not already own a domain, so a fresh `.com` was purchased rather than continuing to reference the previously-assumed `.ng`/`.com` pair). |
 | Domain strategy | Subdomain plan (`portal.`, `admissions.`, `lms.`, etc.) for scaling multiple services under one domain | Medium | Free (DNS records only) | ICT / CTO | Domain registration | Designed — see `docs/shrs-digital-infrastructure-blueprint.md` §1; not yet implemented (single-domain setup only so far) |
-| DNS | Resolves the domain to Cloudflare | Critical | Free | ICT | Domain confirmed + Cloudflare account | **In Progress** — domain connected as a Custom Domain on `shroyalschools-web`, CNAME record auto-created by Cloudflare (registrar + DNS + hosting all in one account). Status "Verifying" as of 2026-07-28; Cloudflare states this can take up to 48 hours. |
-| SSL | HTTPS encryption for all traffic | Critical | Free (Cloudflare Universal SSL) | ICT | DNS pointed at Cloudflare | **In Progress** — auto-provisions once DNS verification above completes; no separate action needed. |
+| DNS | Resolves the domain to Cloudflare | Critical | Free | ICT | Domain confirmed + Cloudflare account | **Completed** — domain connected as a Custom Domain on `shroyalschools-web`, CNAME record auto-created by Cloudflare. Status moved from "Verifying" to **Active** within minutes (registrar + DNS + hosting all in one Cloudflare account meant no external nameserver propagation was needed), confirmed 2026-07-28. |
+| SSL | HTTPS encryption for all traffic | Critical | Free (Cloudflare Universal SSL) | ICT | DNS pointed at Cloudflare | **Completed** — "SSL enabled" confirmed on the Custom Domains screen 2026-07-28. `https://shroyalschools.com` is now the real, live, secure address for the site. |
 
 ## Cloud Infrastructure
 
