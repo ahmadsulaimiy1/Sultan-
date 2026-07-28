@@ -4,7 +4,7 @@ import {
   readGuardianTrustFromRequest, createGuardianTrustCookie,
 } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
-import { sendEmail, otpEmailContent, maskEmail } from '../../_lib/email.js';
+import { sendEmail, otpEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
 import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../_lib/otp.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
@@ -108,11 +108,12 @@ export async function onRequestPost({ request, env }) {
     await sql`
       INSERT INTO login_otp_codes (actor_type, actor_id, login_token, code_hash, expires_at)
       VALUES ('guardian', ${guardian.id}, ${loginToken}, ${hashOtpCode(code)}, now() + make_interval(mins => ${OTP_CODE_TTL_MINUTES}))`;
-    const { subject, text, html } = otpEmailContent(code);
+    const magicLink = siteOriginFromRequest(request) + '/api/portal/verify-login-link?token=' + loginToken;
+    const { subject, text, html } = otpEmailContent(code, magicLink);
     await sendEmail(env, { to: email, subject, text, html });
     await logAttempt(sql, email, 'otp_sent', guardian.id);
 
-    return json({ otpRequired: true, loginToken, maskedEmail: maskEmail(email) });
+    return json({ otpRequired: true, loginToken, email });
   } catch (err) {
     console.error('portal login error', err);
     return json({ error: 'Could not sign in right now — please try again shortly.' }, 500);

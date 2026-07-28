@@ -36,7 +36,7 @@
       }
       if(data.otpRequired){
         pendingLoginToken = data.loginToken;
-        otpHint.textContent = 'We’ve emailed a 6-digit code to ' + (data.maskedEmail || 'your inbox') + '. Enter it below to finish signing in.';
+        otpHint.textContent = 'A verification code and a one-click sign-in link have both been sent to ' + (data.email || 'your inbox') + '. Enter the code below, or check that email for the link — either one signs you in.';
         form.hidden = true;
         otpForm.hidden = false;
         otpForm.code.focus();

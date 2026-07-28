@@ -76,6 +76,58 @@ than it is:
   false-positive tuning) or a new admin-facing control that doesn't
   exist yet.
 
+## Verification UX: dual method, full email, password usability
+
+A follow-up directive asked for institutional-grade verification UX
+(never force a single method, show the full email address, no
+exceptions on password show/hide). Shipped the same night:
+
+- **Dual verification method, every time.** A registration/resend
+  verification email now contains BOTH a one-click link and a typed
+  6-digit code (`verification_code_hash`/`verification_code_attempts`
+  on `guardians`, new `verify-by-code.js` endpoint, a code-entry
+  fallback added to `/portal/verify/`). A login OTP email now contains
+  BOTH the 6-digit code and a one-click "Verify & Sign In" link (new
+  `verify-login-link.js` GET endpoint, reusing the same
+  `login_otp_codes` row `verify-otp.js` already uses — whichever method
+  is used first wins, the row is consumed once). Exhausting one
+  method's attempts never strands the other: a spent code still leaves
+  the link valid, and vice versa.
+- **Full email addresses, no masking.** Every place that used to show
+  `a***@domain` now shows the real address in full. The reasoning:
+  every place this appears in this codebase, the user already typed
+  that exact email into a form seconds earlier (registration, login,
+  the account's own signed-in resend-verification) — there is no
+  scenario here where displaying it back reveals anything the user
+  didn't already know, so masking added confusion without adding
+  privacy. `maskEmail()` was removed rather than kept as dead code.
+- **Password show/hide, everywhere, no exceptions.** One universal
+  script (`js/portal-password-toggle.js`) wraps every `input[type=
+  password]` site-wide — registration, all three logins, all three
+  set-password pages, the founder/setup token fields, and the
+  Personalisation Centre's change-password fields (added to the DOM
+  after the panel opens, hence a `MutationObserver`, not a one-time
+  scan). One script tag, no per-field JS wiring needed anywhere.
+- **Live password strength meter.** `js/portal-password-strength.js`
+  attaches to any field carrying `data-password-strength` — every
+  "new password" field (registration, all three set-password pages,
+  Personalisation's newPassword), deliberately NOT login's "type your
+  existing password" fields, since strength only means something when
+  choosing a new one. Checks the same five criteria the directive
+  named (12+ chars, upper, lower, number, special) and labels
+  Very Weak → Very Strong.
+- **Password-manager compatibility.** Every password field already
+  carried correct `autocomplete="new-password"` /
+  `"current-password"` values from earlier work; this pass added the
+  same to the two Personalisation Centre fields, which were missing
+  them (plain `<input>`, no attribute) — the reason a password manager
+  couldn't previously distinguish "log me in" from "here's a new one"
+  on that specific form.
+
+Not attempted here, and not silently implied by any of the above:
+richer email **design** (illustrations, multi-column layouts) beyond
+clear branding/structure — a graphic-design task, not a code task.
+
 ## Level 4/5 — Passkeys, magic links: why not tonight
 
 **Passkeys (WebAuthn/FIDO2).** A real implementation needs: a

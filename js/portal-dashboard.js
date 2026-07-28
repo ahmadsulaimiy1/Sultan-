@@ -290,6 +290,10 @@
         loadingEl.hidden = true;
         contentEl.hidden = true;
         verifyGateEl.hidden = false;
+        var gateMsgEl = document.querySelector('[data-portal-verify-gate-message]');
+        if(gateMsgEl && data.email){
+          gateMsgEl.textContent = 'A verification code and a verification link have both been sent to ' + data.email + ' — use whichever is easier. Need a new one?';
+        }
         return;
       }
 

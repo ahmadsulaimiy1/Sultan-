@@ -645,8 +645,8 @@
     body.innerHTML =
       '<div class="pc-card"><div class="pc-card-head"><span class="pc-option-title">' + t.title + '</span></div>' +
       '<form class="pc-form" data-pc-password-form>' +
-      '<input type="password" name="currentPassword" placeholder="' + t.current + '" required />' +
-      '<input type="password" name="newPassword" placeholder="' + t.next + '" required minlength="10" />' +
+      '<input type="password" name="currentPassword" placeholder="' + t.current + '" autocomplete="current-password" required />' +
+      '<input type="password" name="newPassword" placeholder="' + t.next + '" autocomplete="new-password" required minlength="10" data-password-strength />' +
       '<button type="submit" class="btn btn-gold">' + t.submit + '</button>' +
       '<p class="pc-form-status" data-pc-password-status hidden></p>' +
       '</form></div>' +

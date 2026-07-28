@@ -37,6 +37,23 @@
     <p class="sub" data-portal-error-message>Please try signing in again.</p>
     <a class="portal-back-link" href="/portal/login/">← Back to sign in</a>
   </div>
+
+  <div class="portal-card" data-portal-code-card hidden>
+    <h1>Enter your verification code</h1>
+    <p class="sub">Every verification email includes a 6-digit code as well as the link — use whichever is easier.</p>
+    <div class="portal-error" data-portal-code-error></div>
+    <form data-portal-code-form>
+      <div class="portal-field">
+        <label for="verify-email">Email</label>
+        <input id="verify-email" name="email" type="email" autocomplete="email" required />
+      </div>
+      <div class="portal-field">
+        <label for="verify-code">6-digit code</label>
+        <input id="verify-code" name="code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" required />
+      </div>
+      <button type="submit" class="portal-submit" data-portal-code-submit>Verify with Code</button>
+    </form>
+  </div>
 </main>
 
 <script src="/js/portal-verify.js" defer></script>

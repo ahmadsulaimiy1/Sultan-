@@ -794,3 +794,14 @@ CREATE TABLE IF NOT EXISTS login_otp_codes (
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;
 ALTER TABLE students ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;
 ALTER TABLE staff ADD COLUMN IF NOT EXISTS trust_version INTEGER NOT NULL DEFAULT 1;
+
+-- Dual-method email verification: registration/resend-verification now
+-- emails BOTH a one-click link (verification_token, existing) AND a
+-- typed 6-digit code, sharing the same verification_token_expires
+-- (they're generated together and expire together — one verification
+-- event, two ways to complete it). code_hash mirrors login_otp_codes'
+-- reasoning (protect the low-entropy code even against a DB-read-only
+-- compromise); attempts caps guessing independently of the link, which
+-- stays valid even if the code's attempts are exhausted.
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_hash TEXT;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_attempts INTEGER NOT NULL DEFAULT 0;

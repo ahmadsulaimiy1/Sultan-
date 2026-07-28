@@ -30,7 +30,7 @@
     <form data-portal-set-password-form>
       <div class="portal-field">
         <label for="portal-new-password">New password</label>
-        <input id="portal-new-password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+        <input id="portal-new-password" name="password" type="password" autocomplete="new-password" minlength="10" required data-password-strength />
       </div>
       <div class="portal-field">
         <label for="portal-confirm-password">Confirm password</label>
@@ -47,6 +47,8 @@
   </div>
 </main>
 
+<script src="/js/portal-password-toggle.js" defer></script>
+<script src="/js/portal-password-strength.js" defer></script>
 <script src="/js/portal-student-set-password.js" defer></script>
 </body>
 </html>

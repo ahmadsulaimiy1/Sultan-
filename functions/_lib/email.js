@@ -62,35 +62,75 @@ export async function sendEmail(env, { to, subject, html, text }) {
   }
 }
 
-export function verificationEmailContent(fullName, verifyLink) {
+// Shared branded shell for every transactional email — real branding
+// (school name + a labelled "Digital Campus Identity Platform" line),
+// not a full design system. A verification email intentionally never
+// arrives with just a bare link or a bare code: both a one-click
+// button/link AND a typed code go out together every time, so the
+// recipient is never funnelled into a single method (see
+// docs/identity-authentication-roadmap.md's Verification UX section).
+function emailShell({ heading, bodyHtml, expiryLine }) {
+  return `
+    <div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;color:#2a2620;">
+      <div style="text-align:center;padding:18px 0 10px;border-bottom:2px solid #8a6d2f;">
+        <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8a6d2f;font-weight:bold;">Sultan Hanafi Royal Schools</div>
+        <div style="font-size:11px;color:#8a8477;margin-top:2px;">Digital Campus Identity Platform</div>
+      </div>
+      <div style="padding:24px 8px;">
+        <h1 style="font-size:19px;margin:0 0 14px;">${escapeHtml(heading)}</h1>
+        ${bodyHtml}
+        ${expiryLine ? `<p style="font-size:13px;color:#5a5650;margin-top:22px;">${escapeHtml(expiryLine)}</p>` : ''}
+        <p style="font-size:12px;color:#8a8477;margin-top:18px;border-top:1px solid #e5e0d5;padding-top:14px;">If you did not request this, please ignore this email — no action is needed and nothing changes on your account.</p>
+      </div>
+    </div>`;
+}
+
+function buttonHtml(href, label) {
+  return `<p style="text-align:center;margin:20px 0;"><a href="${href}" style="display:inline-block;background:#3a2e14;color:#fff;text-decoration:none;padding:12px 28px;border-radius:4px;font-weight:bold;">${escapeHtml(label)}</a></p>`;
+}
+
+export function verificationEmailContent(fullName, verifyLink, code) {
   const subject = 'Verify your Sultan Hanafi Royal Schools account';
-  const text = `Hello ${fullName},\n\nPlease verify your email address to finish setting up your Sultan Hanafi Royal Schools account:\n${verifyLink}\n\nThis link expires in 24 hours. If you didn't create this account, you can ignore this email.`;
-  const html = `<p>Hello ${escapeHtml(fullName)},</p><p>Please verify your email address to finish setting up your Sultan Hanafi Royal Schools account:</p><p><a href="${verifyLink}">${verifyLink}</a></p><p>This link expires in 24 hours. If you didn't create this account, you can ignore this email.</p>`;
+  const text = `Hello ${fullName},\n\nVerify your email using EITHER method below — both work, use whichever is easier:\n\n1) Click this link: ${verifyLink}\n2) Or enter this code on the verification page: ${code}\n\nThis expires in 24 hours and can only be used once.`;
+  const html = emailShell({
+    heading: `Hello ${fullName}, please verify your email`,
+    bodyHtml: `
+      <p>Use either method below to finish setting up your account — both work, whichever is easier for you.</p>
+      <p style="font-weight:bold;margin-bottom:4px;">Method 1 — one click:</p>
+      ${buttonHtml(verifyLink, 'Verify My Account')}
+      <p style="font-size:12px;color:#8a8477;word-break:break-all;">Or paste this link into your browser: ${verifyLink}</p>
+      <p style="font-weight:bold;margin:22px 0 4px;">Method 2 — enter this code instead:</p>
+      <p style="font-size:28px;font-weight:bold;letter-spacing:6px;text-align:center;">${escapeHtml(code)}</p>`,
+    expiryLine: 'This verification (both the link and the code above) expires in 24 hours and can only be used once.',
+  });
   return { subject, text, html };
 }
 
 export function resetPasswordEmailContent(resetLink) {
   const subject = 'Reset your Sultan Hanafi Royal Schools password';
   const text = `A password reset was requested for your Sultan Hanafi Royal Schools account. If this was you, choose a new password here:\n${resetLink}\n\nThis link expires in 24 hours. If you didn't request this, you can ignore this email — your password will not be changed.`;
-  const html = `<p>A password reset was requested for your Sultan Hanafi Royal Schools account. If this was you, choose a new password here:</p><p><a href="${resetLink}">${resetLink}</a></p><p>This link expires in 24 hours. If you didn't request this, you can ignore this email — your password will not be changed.</p>`;
+  const html = emailShell({
+    heading: 'Reset your password',
+    bodyHtml: `<p>A password reset was requested for your account. If this was you, choose a new password:</p>${buttonHtml(resetLink, 'Choose New Password')}<p style="font-size:12px;color:#8a8477;word-break:break-all;">Or paste this link into your browser: ${resetLink}</p>`,
+    expiryLine: 'This link expires in 24 hours. If you did not request this, your password will not be changed.',
+  });
   return { subject, text, html };
 }
 
-export function otpEmailContent(code) {
+export function otpEmailContent(code, magicLink) {
   const subject = 'Your Sultan Hanafi Royal Schools sign-in code';
-  const text = `Your one-time sign-in code is: ${code}\n\nThis code expires in 10 minutes and can only be used once. If you didn't just try to sign in, you can ignore this email — your account is still safe.`;
-  const html = `<p>Your one-time sign-in code is:</p><p style="font-size:28px;font-weight:bold;letter-spacing:6px;">${escapeHtml(code)}</p><p>This code expires in 10 minutes and can only be used once. If you didn't just try to sign in, you can ignore this email — your account is still safe.</p>`;
+  const text = `Sign in using EITHER method below:\n\n1) Enter this code: ${code}\n2) Or click this link to finish signing in directly: ${magicLink}\n\nThis expires in 10 minutes and can only be used once.`;
+  const html = emailShell({
+    heading: 'Your one-time sign-in code',
+    bodyHtml: `
+      <p style="font-weight:bold;margin-bottom:4px;">Method 1 — enter this code:</p>
+      <p style="font-size:28px;font-weight:bold;letter-spacing:6px;text-align:center;">${escapeHtml(code)}</p>
+      <p style="font-weight:bold;margin:22px 0 4px;">Method 2 — or finish signing in with one click:</p>
+      ${buttonHtml(magicLink, 'Verify & Sign In')}
+      <p style="font-size:12px;color:#8a8477;word-break:break-all;">Or paste this link into your browser: ${magicLink}</p>`,
+    expiryLine: 'This code and link expire in 10 minutes and can only be used once. If you did not just try to sign in, your account is still safe — no action is needed.',
+  });
   return { subject, text, html };
-}
-
-// Light obfuscation for a UI hint ("we sent a code to a***@domain") —
-// not a security control, purely so the person signing in can confirm
-// it's their own inbox before checking it.
-export function maskEmail(email) {
-  const s = String(email == null ? '' : email);
-  const at = s.indexOf('@');
-  if (at <= 1) return s;
-  return s[0] + '***' + s.slice(at);
 }
 
 function escapeHtml(s) {

@@ -60,7 +60,7 @@
 
       successNameEl.textContent = data.fullName;
       if(data.verificationSent){
-        successMessageEl.textContent = 'Your account has been created and you are signed in. We\'ve sent a verification link to your email — please confirm it when you can.';
+        successMessageEl.textContent = 'Your account has been created and you are signed in. A verification code and a verification link have both been sent to ' + data.email + ' — use whichever is easier.';
       } else {
         successMessageEl.textContent = 'Your account has been created and you are signed in.';
         if(data.verificationLink){

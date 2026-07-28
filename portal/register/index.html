@@ -74,7 +74,7 @@
       <div class="portal-field-row">
         <div class="portal-field">
           <label for="reg-password">Password</label>
-          <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required />
+          <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required data-password-strength />
         </div>
         <div class="portal-field">
           <label for="reg-confirm-password">Confirm password</label>
@@ -112,6 +112,8 @@
   </div>
 </main>
 
+<script src="/js/portal-password-toggle.js" defer></script>
+<script src="/js/portal-password-strength.js" defer></script>
 <script src="/js/portal-register.js" defer></script>
 </body>
 </html>

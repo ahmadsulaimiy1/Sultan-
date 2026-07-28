@@ -8,6 +8,7 @@ import { getSql } from '../../_lib/db.js';
 import { readSessionFromRequest, generateToken } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 import { sendEmail, verificationEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
+import { generateOtpCode, hashOtpCode } from '../../_lib/otp.js';
 
 const VERIFICATION_TOKEN_TTL_HOURS = 24;
 
@@ -40,15 +41,24 @@ export async function onRequestPost({ request, env }) {
     }
 
     const token = generateToken();
+    const code = generateOtpCode();
     await sql`
-      UPDATE guardians SET verification_token = ${token}, verification_token_expires = now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS})
+      UPDATE guardians SET
+        verification_token = ${token}, verification_token_expires = now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS}),
+        verification_code_hash = ${hashOtpCode(code)}, verification_code_attempts = 0
       WHERE id = ${guardian.id}`;
 
     const verifyLink = siteOriginFromRequest(request) + '/portal/verify/?token=' + token;
-    const { subject, text, html } = verificationEmailContent(guardian.full_name, verifyLink);
+    const { subject, text, html } = verificationEmailContent(guardian.full_name, verifyLink, code);
     const sendResult = await sendEmail(env, { to: guardian.email, subject, text, html });
 
-    return json({ ok: true, verificationSent: sendResult.sent, verificationLink: sendResult.sent ? undefined : verifyLink });
+    return json({
+      ok: true,
+      email: guardian.email,
+      verificationSent: sendResult.sent,
+      verificationLink: sendResult.sent ? undefined : verifyLink,
+      verificationCode: sendResult.sent ? undefined : code,
+    });
   } catch (err) {
     console.error('portal resend-verification error', err);
     return json({ error: 'Could not resend a verification email right now — please try again shortly.' }, 500);

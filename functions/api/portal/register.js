@@ -19,6 +19,7 @@ import { getSql } from '../../_lib/db.js';
 import { createSessionCookie, hashPassword, isPasswordStrongEnough, MIN_PASSWORD_LENGTH, generateToken } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
 import { sendEmail, verificationEmailContent, siteOriginFromRequest } from '../../_lib/email.js';
+import { generateOtpCode, hashOtpCode } from '../../_lib/otp.js';
 
 const VERIFICATION_TOKEN_TTL_HOURS = 24;
 
@@ -75,22 +76,33 @@ export async function onRequestPost({ request, env }) {
 
     const { hash, salt } = hashPassword(password);
     const verificationToken = generateToken();
+    // Dual verification method: a code goes out alongside the link,
+    // sharing the same expiry (one verification event, two ways to
+    // complete it) — see docs/identity-authentication-roadmap.md.
+    const verificationCode = generateOtpCode();
     const created = await sql`
-      INSERT INTO guardians (full_name, email, phone, whatsapp_number, identity_type, password_hash, password_salt, registration_source, verification_token, verification_token_expires)
-      VALUES (${fullName}, ${email}, ${phone}, ${whatsappNumber || null}, ${identityType}, ${hash}, ${salt}, 'self_service', ${verificationToken}, now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS}))
+      INSERT INTO guardians (
+        full_name, email, phone, whatsapp_number, identity_type, password_hash, password_salt, registration_source,
+        verification_token, verification_token_expires, verification_code_hash, verification_code_attempts
+      )
+      VALUES (
+        ${fullName}, ${email}, ${phone}, ${whatsappNumber || null}, ${identityType}, ${hash}, ${salt}, 'self_service',
+        ${verificationToken}, now() + make_interval(hours => ${VERIFICATION_TOKEN_TTL_HOURS}), ${hashOtpCode(verificationCode)}, 0
+      )
       RETURNING id`;
     const guardianId = created.rows[0].id;
 
     await sql`INSERT INTO auth_audit_log (actor_type, actor_id, identifier, event) VALUES ('guardian', ${guardianId}, ${email}, 'self_registered')`;
 
     const verifyLink = siteOriginFromRequest(request) + '/portal/verify/?token=' + verificationToken;
-    const { subject, text, html } = verificationEmailContent(fullName, verifyLink);
+    const { subject, text, html } = verificationEmailContent(fullName, verifyLink, verificationCode);
     const sendResult = await sendEmail(env, { to: email, subject, text, html });
 
     return json(
       {
         ok: true,
         fullName,
+        email,
         verificationSent: sendResult.sent,
         // Safe to include here specifically because this response goes
         // back to the same browser that just submitted its own
@@ -98,6 +110,7 @@ export async function onRequestPost({ request, env }) {
         // someone else's email address (that's the forgot-password
         // case, handled very differently in forgot-password.js).
         verificationLink: sendResult.sent ? undefined : verifyLink,
+        verificationCode: sendResult.sent ? undefined : verificationCode,
       },
       201,
       { 'Set-Cookie': createSessionCookie(guardianId, env.SESSION_SECRET) }
