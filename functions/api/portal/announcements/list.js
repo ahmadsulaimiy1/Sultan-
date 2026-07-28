@@ -35,6 +35,8 @@ function toRow(r) {
     isFeatured: r.is_featured,
     status: r.status,
     publishedAt: r.published_at,
+    rsvpCount: r.rsvp_count || 0,
+    galleryImages: Array.isArray(r.gallery_images) ? r.gallery_images : null,
   };
 }
 

@@ -340,5 +340,95 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/announcements/"
+  },
+  {
+    "slug": "marketplace",
+    "output": "marketplace/index.html",
+    "title": "The Marketplace — Sultan Hanafi Royal Schools",
+    "description": "Textbooks, uniforms, stationery, Qur'an and Arabic learning materials, and SHRS's own publications.",
+    "contentFile": "pages/marketplace.html",
+    "altHref": "/ar/marketplace/"
+  },
+  {
+    "slug": "marketplace-ar",
+    "output": "ar/marketplace/index.html",
+    "title": "السوق — مدارس السلطان حنفي الملكية",
+    "description": "الكتب المدرسية، الزي المدرسي، القرطاسية، ومواد تعلّم القرآن والعربية، وإصدارات المدارس.",
+    "contentFile": "pages/marketplace.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/marketplace/"
+  },
+  {
+    "slug": "press",
+    "output": "press/index.html",
+    "title": "Press & News Room — Sultan Hanafi Royal Schools",
+    "description": "Official news, notices, and a media kit for journalists and partners.",
+    "contentFile": "pages/press.html",
+    "altHref": "/ar/press/"
+  },
+  {
+    "slug": "press-ar",
+    "output": "ar/press/index.html",
+    "title": "الصحافة وغرفة الأخبار — مدارس السلطان حنفي الملكية",
+    "description": "أخبار رسمية وإشعارات وحزمة إعلامية للصحفيين والشركاء.",
+    "contentFile": "pages/press.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/press/"
+  },
+  {
+    "slug": "gallery",
+    "output": "gallery/index.html",
+    "title": "The Campus Gallery — Sultan Hanafi Royal Schools",
+    "description": "Real photographs from across Sultan Hanafi Royal Schools campus, academics, and Islamic life.",
+    "contentFile": "pages/gallery.html",
+    "altHref": "/ar/gallery/"
+  },
+  {
+    "slug": "gallery-ar",
+    "output": "ar/gallery/index.html",
+    "title": "معرض الحرم الجامعي — مدارس السلطان حنفي الملكية",
+    "description": "صور حقيقية من الحرم الجامعي والأكاديميا والحياة الإسلامية بمدارس السلطان حنفي الملكية.",
+    "contentFile": "pages/gallery.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/gallery/"
+  },
+  {
+    "slug": "online-courses",
+    "output": "online-courses/index.html",
+    "title": "Online Learning Courses — Sultan Hanafi Royal Schools",
+    "description": "What digital learning already exists at SHRS today, and what is genuinely being planned.",
+    "contentFile": "pages/online-courses.html",
+    "altHref": "/ar/online-courses/"
+  },
+  {
+    "slug": "online-courses-ar",
+    "output": "ar/online-courses/index.html",
+    "title": "الدورات التعليمية عبر الإنترنت — مدارس السلطان حنفي الملكية",
+    "description": "ما هو موجود بالفعل من التعلّم الرقمي في مدارس السلطان حنفي الملكية، وما هو مخطط له فعلياً.",
+    "contentFile": "pages/online-courses.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/online-courses/"
+  },
+  {
+    "slug": "quran-centre",
+    "output": "quran-centre/index.html",
+    "title": "Digital Qur'an Centre — Sultan Hanafi Royal Schools",
+    "description": "What's real today toward a daily Qur'an companion, and the legally-clean path for the full Madinah-style reader.",
+    "contentFile": "pages/quran-centre.html",
+    "altHref": "/ar/quran-centre/"
+  },
+  {
+    "slug": "quran-centre-ar",
+    "output": "ar/quran-centre/index.html",
+    "title": "مركز القرآن الرقمي — مدارس السلطان حنفي الملكية",
+    "description": "ما هو حقيقي اليوم نحو رفيق قرآني يومي، والمسار القانوني السليم لقارئ المصحف الكامل على طراز المدينة.",
+    "contentFile": "pages/quran-centre.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/quran-centre/"
   }
 ]

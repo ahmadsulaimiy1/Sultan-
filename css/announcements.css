@@ -102,7 +102,37 @@
   display:flex;align-items:center;gap:6px;font-size:0.82rem;color:rgba(247,238,223,0.65);
 }
 .ann-hero-meta svg{color:var(--gold);flex-shrink:0;}
-.ann-hero-body .btn{align-self:flex-start;margin-top:8px;}
+.ann-hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:8px;}
+.ann-hero-actions .btn{align-self:auto;margin-top:0;}
+
+.ann-hero-rsvp{display:flex;align-items:center;gap:10px;}
+.ann-rsvp-btn{
+  display:inline-flex;align-items:center;gap:7px;font-family:'Cinzel','Amiri',serif;font-size:0.72rem;
+  letter-spacing:0.05em;text-transform:uppercase;color:var(--gold-bright);background:transparent;
+  border:1px solid rgba(198,161,91,0.55);border-radius:var(--btn-radius);padding:9px 16px;cursor:pointer;
+  transition:background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.ann-rsvp-btn:hover:not(:disabled){background:rgba(198,161,91,0.14);transform:translateY(-1px);}
+.ann-rsvp-btn.is-done{color:var(--forest-green);border-color:var(--forest-green);cursor:default;}
+.ann-rsvp-btn:disabled{opacity:0.9;}
+.ann-rsvp-count{font-size:0.76rem;color:rgba(247,238,223,0.6);white-space:nowrap;}
+
+.ann-share-btn{
+  display:inline-flex;align-items:center;gap:7px;font-size:0.78rem;color:rgba(247,238,223,0.75);
+  background:transparent;border:1px solid rgba(247,238,223,0.28);border-radius:var(--btn-radius);
+  padding:9px 15px;cursor:pointer;transition:background 0.2s ease, border-color 0.2s ease;
+}
+.ann-share-btn:hover{background:rgba(247,238,223,0.08);border-color:rgba(247,238,223,0.5);}
+
+.ann-hero-gallery{margin-top:18px;padding-top:16px;border-top:1px solid rgba(198,161,91,0.22);}
+.ann-hero-gallery h4{
+  font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 10px;
+}
+.ann-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
+.ann-gallery-item{margin:0;aspect-ratio:1;overflow:hidden;border-radius:6px;}
+.ann-gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease;}
+.ann-gallery-item:hover img{transform:scale(1.08);}
 
 /* Countdown strip — always renders one of two states: a real countdown,
    or "No upcoming scheduled events." Never blank. */

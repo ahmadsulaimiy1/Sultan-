@@ -311,10 +311,50 @@ CREATE TABLE IF NOT EXISTS announcements (
   status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
   published_at  TIMESTAMPTZ,
   created_by    TEXT, -- staff name/identifier, free text until Staff Identity exists
+  -- RSVP is a simple honest counter, not a guest list — no name/contact
+  -- capture, so it carries no privacy-request/consent surface of its own.
+  -- Incremented by the public rsvp endpoint; the per-visitor "have you
+  -- already tapped it" guard lives client-side (localStorage), same trust
+  -- level as the Adhkar family streak toggle elsewhere in this codebase.
+  rsvp_count    INTEGER NOT NULL DEFAULT 0,
+  -- Populated by staff after the event, once real photos exist — never
+  -- auto-generated. A JSON array of {url, alt} objects (see
+  -- docs/announcements-system.md). Null/empty means no gallery yet, and
+  -- the frontend renders nothing rather than a placeholder grid.
+  gallery_images JSONB,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC);
+
+-- SHRS Marketplace (Bookshop & Learning Store) — catalog architecture
+-- only. Deliberately holds zero rows until real products, prices, and
+-- photos exist; the storefront renders an honest per-category empty
+-- state rather than fabricated products. There is NO payment/checkout
+-- column here on purpose — "buy_now"/"add_to_cart" on the public site
+-- link out to a WhatsApp order enquiry, not a cart, until the school has
+-- a registered payment processor and the associated business/legal setup
+-- (see docs/shrs-intelligent-campus-roadmap.md, Marketplace section, for
+-- why online checkout is out of scope for this pass). Same staff-
+-- mediated, token-gated admin pattern as announcements.
+CREATE TABLE IF NOT EXISTS marketplace_products (
+  id            SERIAL PRIMARY KEY,
+  category      TEXT NOT NULL CHECK (category IN (
+                   'textbooks', 'exercise_books', 'uniforms', 'bags', 'stationery',
+                   'quran_materials', 'arabic_materials', 'islamic_studies_materials',
+                   'digital_products', 'shrs_publications', 'grammar_books', 'curriculum_materials'
+                 )),
+  name          TEXT NOT NULL,
+  description   TEXT,
+  price_naira   NUMERIC(12,2), -- null means "price on enquiry"
+  image_url     TEXT,
+  is_available  BOOLEAN NOT NULL DEFAULT true,
+  status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+  created_by    TEXT,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_marketplace_products_status_category ON marketplace_products (status, category);
 
 -- ============================================================
 -- SHRS Identity & Access Platform (Staff Identity & Role System)

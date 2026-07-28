@@ -31,6 +31,10 @@ const CONTENT_FIELDS = [
   ['imageUrl', 'image_url'], ['venue', 'venue'], ['eventDate', 'event_date'], ['eventTime', 'event_time'],
   ['actionLabel', 'action_label'], ['actionUrl', 'action_url'],
 ];
+// galleryImages is handled separately from CONTENT_FIELDS below — it's a
+// JSON array (COALESCE against a bare parameter doesn't work cleanly for
+// jsonb the way it does for scalar columns), and only makes sense to set
+// post-event, typically well after the initial create.
 
 export async function onRequestPost({ request, env }) {
   const adminToken = env.PORTAL_ADMIN_TOKEN;
@@ -78,8 +82,12 @@ export async function onRequestPost({ request, env }) {
         return json({ error: `category must be one of: ${CATEGORIES.join(', ')}.` }, 400);
       }
       const touched = CONTENT_FIELDS.filter(([inKey]) => Object.prototype.hasOwnProperty.call(body, inKey));
-      if (!touched.length) {
+      const touchesGallery = Object.prototype.hasOwnProperty.call(body, 'galleryImages');
+      if (!touched.length && !touchesGallery) {
         return json({ error: 'Provide at least one field to update.' }, 400);
+      }
+      if (touchesGallery && body.galleryImages !== null && !Array.isArray(body.galleryImages)) {
+        return json({ error: 'galleryImages must be an array of {url, alt} objects, or null to clear it.' }, 400);
       }
       // COALESCE-per-field so a request only naming a subset of fields
       // leaves the rest untouched — send only what changed, same
@@ -100,7 +108,14 @@ export async function onRequestPost({ request, env }) {
           action_url = COALESCE(${body.actionUrl ?? null}, action_url),
           updated_at = now()
         WHERE id = ${body.id}`;
-      return json({ ok: true, id: body.id, updated: touched.map(([inKey]) => inKey) });
+      // Gallery is set explicitly (not COALESCEd) so it can also be
+      // cleared back to null on purpose — e.g. an event photo taken down.
+      if (touchesGallery) {
+        await sql`
+          UPDATE announcements SET gallery_images = ${body.galleryImages ? JSON.stringify(body.galleryImages) : null}, updated_at = now()
+          WHERE id = ${body.id}`;
+      }
+      return json({ ok: true, id: body.id, updated: touched.map(([inKey]) => inKey).concat(touchesGallery ? ['galleryImages'] : []) });
     }
 
     if (action === 'publish') {

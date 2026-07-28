@@ -247,6 +247,32 @@ const STATEMENTS = [
     updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_announcements_status_published ON announcements (status, published_at DESC)`,
+  // Premium event card additive upgrade (RSVP counter + post-event
+  // gallery) — see the Intelligent Campus Directive follow-up.
+  `ALTER TABLE announcements ADD COLUMN IF NOT EXISTS rsvp_count INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE announcements ADD COLUMN IF NOT EXISTS gallery_images JSONB`,
+
+  // SHRS Marketplace catalog architecture — see
+  // docs/shrs-intelligent-campus-roadmap.md for why there's no
+  // payment/checkout column.
+  `CREATE TABLE IF NOT EXISTS marketplace_products (
+    id            SERIAL PRIMARY KEY,
+    category      TEXT NOT NULL CHECK (category IN (
+                     'textbooks', 'exercise_books', 'uniforms', 'bags', 'stationery',
+                     'quran_materials', 'arabic_materials', 'islamic_studies_materials',
+                     'digital_products', 'shrs_publications', 'grammar_books', 'curriculum_materials'
+                   )),
+    name          TEXT NOT NULL,
+    description   TEXT,
+    price_naira   NUMERIC(12,2),
+    image_url     TEXT,
+    is_available  BOOLEAN NOT NULL DEFAULT true,
+    status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+    created_by    TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_marketplace_products_status_category ON marketplace_products (status, category)`,
 
   // SHRS Identity & Access Platform — see docs/staff-identity-architecture.md.
   `CREATE TABLE IF NOT EXISTS institutions (

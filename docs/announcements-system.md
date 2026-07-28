@@ -135,17 +135,89 @@ An **event** announcement additionally takes `eventDate` (`YYYY-MM-DD`),
 hero's countdown and the meta row shown on both the hero and archive
 cards. A non-event notice (e.g. a policy update) can omit all three.
 
+### RSVP counter and post-event gallery
+
+An event that's featured on the homepage hero automatically gets an
+**RSVP button** ("I'll be there") and a **Share button** — no admin
+action needed for either; they're driven by `eventDate` being present.
+RSVP taps hit the public, unauthenticated `POST
+/api/portal/announcements/rsvp` endpoint (`{"id": 1}`), which increments
+`rsvp_count`. No name or contact info is collected — it's a headline
+count, not a guest list. A visitor's own browser remembers they already
+tapped it (localStorage) so the button doesn't double-count on a refresh;
+this is an honest-count safeguard, not fraud-proofing, which matches the
+trust level of the rest of this system.
+
+Once the event has happened, archive it (`{"action": "archive", "id":
+1}`) and, when real photos exist, attach them with `galleryImages` — an
+array of `{"url": "...", "alt": "..."}` objects, set via `update`:
+```
+curl -X POST https://<your-domain>/api/portal/admin/announcements \
+  -H "x-admin-token: <token>" -H "content-type: application/json" \
+  -d '{
+    "action": "update",
+    "id": 1,
+    "galleryImages": [
+      {"url": "/assets/images/gallery/graduation-2026-1.jpg", "alt": "Graduating students receiving certificates on stage"},
+      {"url": "/assets/images/gallery/graduation-2026-2.jpg", "alt": "Families seated in the Grand Hall"}
+    ]
+  }'
+```
+The gallery only ever shows real, uploaded photos — never a placeholder
+grid — and only appears on the **archive** card once `status` is
+`archived` (a featured/upcoming event never shows a gallery, since it
+hasn't happened yet). Send `"galleryImages": null` to clear it.
+
+### Worked example — Academic Graduation Ceremony, 8 August 2026
+
+The exact sequence to make this specific event live end-to-end, ready to
+run once `PORTAL_ADMIN_TOKEN` is configured in Cloudflare (this workspace
+has no production database credentials, so these commands have not been
+run against live data — they're ready for whoever holds the token to
+run):
+```
+# 1. Create it (starts as draft)
+curl -X POST https://<your-domain>/api/portal/admin/announcements \
+  -H "x-admin-token: <token>" -H "content-type: application/json" \
+  -d '{
+    "action": "create",
+    "category": "events",
+    "title": "Academic Graduation Ceremony",
+    "summary": "Celebrating the graduating cohorts of Ibtida'\''iyyah, I'\''dadiyyah, and Sultan Hanafi Qur'\''an College — the School Grand Hall, Saturday 8 August 2026.",
+    "venue": "School Grand Hall",
+    "eventDate": "2026-08-08",
+    "eventTime": "10:00 AM",
+    "actionLabel": "Plan Your Visit",
+    "actionUrl": "/contact/",
+    "createdBy": "Registrar & Communications Office"
+  }'
+# -> note the returned id, call it <id> below
+
+# 2. Publish it, then feature it on the homepage hero
+curl -X POST https://<your-domain>/api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "publish", "id": <id>}'
+curl -X POST https://<your-domain>/api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "feature", "id": <id>}'
+
+# 3. After 8 August 2026, once real ceremony photos exist:
+curl -X POST https://<your-domain>/api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "archive", "id": <id>}'
+curl -X POST https://<your-domain>/api/portal/admin/announcements -H "x-admin-token: <token>" -H "content-type: application/json" -d '{"action": "update", "id": <id>, "galleryImages": [{"url": "...", "alt": "..."}]}'
+```
+Once step 2 runs, the homepage hero shows the full premium treatment
+covered above: banner, countdown, RSVP counter, and Share — automatically,
+with no further code changes.
+
 ## Reading announcements (public, no token)
 
 ```
 GET /api/portal/announcements/list                         # latest 30 published, any category
 GET /api/portal/announcements/list?category=events          # one category only
 GET /api/portal/announcements/list?includeArchived=true     # archive page's full history
+POST /api/portal/announcements/rsvp   {"id": 1}             # public — increments rsvp_count on a published row
 ```
 Returns `{ ok, items: [...], featured: {...} | null }` — `featured` is
 the single row with `is_featured = true`, independent of any category
 filter, so the hero can render regardless of what the ribbon/archive are
-currently showing.
+currently showing. Each item also carries `rsvpCount` and
+`galleryImages` (`null` until staff set one).
 
 ## Testing note
 

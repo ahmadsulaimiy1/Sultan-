@@ -436,39 +436,18 @@
   renderIslamicStrip();
 
   // ================================================================
-  // Verse / Hadith of the Day — a small, deliberately conservative set:
-  // only extremely well-established, agreed-upon (Bukhari & Muslim)
-  // hadith and widely-known verses, English translation + citation only
-  // (no attempt to reproduce Qur'anic Arabic script from memory — the
-  // risk of a transcription error in sacred text outweighs the value of
-  // showing it here; families can verify against any Mushaf using the
-  // citation given). Shown in both language editions pending review by
-  // the school's own Islamic scholars — see docs/personalisation-centre.md.
+  // Verse / Hadith of the Day — shared data, see js/reflections-data.js
+  // for the source set and the reasoning against reproducing Qur'anic
+  // Arabic script from memory. Shown in both language editions pending
+  // review by the school's own Islamic scholars — see
+  // docs/personalisation-centre.md.
   // ================================================================
-  var VERSES = [
-    { en: 'Allah does not burden a soul beyond that it can bear.', ref: "Qur'an 2:286" },
-    { en: 'And whoever fears Allah, He will make a way out for him, and will provide for him from where he does not expect.', ref: "Qur'an 65:2-3" },
-    { en: 'So, verily, with hardship, there is relief. Verily, with hardship, there is relief.', ref: "Qur'an 94:5-6" },
-    { en: 'O you who believe, seek help through patience and prayer. Indeed, Allah is with the patient.', ref: "Qur'an 2:153" },
-    { en: 'My Lord, increase me in knowledge.', ref: "Qur'an 20:114" },
-    { en: 'Verily, in the remembrance of Allah do hearts find rest.', ref: "Qur'an 13:28" },
-  ];
-  var HADITH = [
-    { en: 'Actions are judged by intentions, and every person will get the reward according to what he has intended.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
-    { en: 'None of you truly believes until he loves for his brother what he loves for himself.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
-    { en: 'Whoever believes in Allah and the Last Day should speak good or remain silent.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
-    { en: 'The best among you are those who have the best manners and character.', ref: 'Sahih al-Bukhari' },
-    { en: 'A good word is charity.', ref: 'Sahih al-Bukhari & Sahih Muslim' },
-  ];
-  function dayOfYear(){
-    var now = new Date();
-    var start = new Date(now.getFullYear(), 0, 0);
-    return Math.floor((now - start) / 86400000);
-  }
+  var REFL = window.SHRS_REFLECTIONS;
   function renderVerseHadith(){
-    var doy = dayOfYear();
-    var verse = VERSES[doy % VERSES.length];
-    var hadith = HADITH[doy % HADITH.length];
+    if (!REFL) return;
+    var doy = REFL.dayOfYear();
+    var verse = REFL.VERSES[doy % REFL.VERSES.length];
+    var hadith = REFL.HADITH[doy % REFL.HADITH.length];
     var vTrans = root.querySelector('[data-pc-verse-translation]');
     var vRef = root.querySelector('[data-pc-verse-ref]');
     var hText = root.querySelector('[data-pc-hadith-text]');

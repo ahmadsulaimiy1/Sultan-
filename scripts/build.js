@@ -135,6 +135,7 @@ ${search}
 ${personalisation}
 
 <script src="/js/adhkar-data.js" defer></script>
+<script src="/js/reflections-data.js" defer></script>
 <script src="/js/portal-password-toggle.js" defer></script>
 <script src="/js/portal-password-strength.js" defer></script>
 <script src="/js/personalisation.js" defer></script>
@@ -145,6 +146,7 @@ ${personalisation}
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
 <script src="/js/institution-carousel.js" defer></script>
+<script src="/js/marketplace.js" defer></script>
 <script src="/js/search.js" defer></script>
 
 </body>
@@ -157,25 +159,55 @@ ${personalisation}
   console.log(`built ${page.output} (${(html.length / 1024).toFixed(1)} KB)`);
 }
 
-// A lightweight client-side search index — just title/description per
-// page, split by language so the search box only ever surfaces results
-// in the language the visitor is already reading. No backend, no
-// external search service; small enough to fetch in full on first use.
+// Strips tags/entities down to plain text, for indexing a page's actual
+// body content rather than just its title/description. Deliberately
+// simple (no HTML parser dependency) — good enough for a substring
+// search index, not for anything that needs to preserve structure.
+function htmlToPlainText(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#39;|&rsquo;/g, "'")
+    .replace(/&ldquo;|&rdquo;/g, '"').replace(/&mdash;/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// A lightweight client-side search index — title/description PLUS the
+// page's actual body text (stripped of markup), split by language so the
+// search box only ever surfaces results in the language the visitor is
+// already reading. This is what lets a query like "Qur'an" or
+// "Mathematics" surface pages that merely *mention* the term in their
+// content, not just pages whose title/description happens to contain it —
+// the whole point being "search the website", not "search the menu".
+// Still no backend, no external search service; the index is larger now
+// but still small enough to fetch in full on first use.
 function buildSearchIndex(manifest) {
   const byLang = {};
   manifest.forEach((page) => {
     const lang = page.lang || 'en';
     const url = '/' + page.output.replace(/index\.html$/, '');
+    let body = '';
+    try {
+      const contentPath = path.join(ROOT, page.contentFile);
+      body = htmlToPlainText(fs.readFileSync(contentPath, 'utf8')).slice(0, 4000);
+    } catch (e) {
+      // Content file missing/unreadable — index still works with just
+      // title/description for this page rather than failing the build.
+    }
     (byLang[lang] = byLang[lang] || []).push({
       title: page.title,
       description: page.description,
+      body,
       url,
     });
   });
   Object.entries(byLang).forEach(([lang, items]) => {
     const outPath = path.join(ROOT, `search-index.${lang}.json`);
     fs.writeFileSync(outPath, JSON.stringify(items));
-    console.log(`built search-index.${lang}.json (${items.length} pages)`);
+    const kb = (JSON.stringify(items).length / 1024).toFixed(1);
+    console.log(`built search-index.${lang}.json (${items.length} pages, ${kb} KB)`);
   });
 }
 

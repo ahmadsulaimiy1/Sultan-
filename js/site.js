@@ -26,6 +26,30 @@
     teaser.appendChild(refEl);
   })();
 
+  // "Today's Wird" widget — reminder card (js/reflections-data.js).
+  (function(){
+    var box = document.querySelector('[data-wird-reminder]');
+    if(!box || !window.SHRS_REFLECTIONS) return;
+    var lang = document.documentElement.lang === 'ar' ? 'ar' : 'en';
+    var reminder = window.SHRS_REFLECTIONS.todaysReminder();
+    var kindLabels = {
+      en: { verse: "Qur'an", hadith: 'Hadith' },
+      ar: { verse: 'قرآن', hadith: 'حديث' },
+    };
+    var kindEl = document.createElement('p');
+    kindEl.className = 'wr-kind';
+    kindEl.textContent = (kindLabels[lang] || kindLabels.en)[reminder.kind];
+    var textEl = document.createElement('p');
+    textEl.className = 'wr-text';
+    textEl.textContent = '“' + reminder.en + '”';
+    var refEl2 = document.createElement('span');
+    refEl2.className = 'wr-ref';
+    refEl2.textContent = reminder.ref;
+    box.appendChild(kindEl);
+    box.appendChild(textEl);
+    box.appendChild(refEl2);
+  })();
+
   document.querySelectorAll('.policy-head').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const item = btn.parentElement;
