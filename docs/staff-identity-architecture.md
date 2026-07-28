@@ -233,6 +233,19 @@ same "every permission had to be justified against a real
 responsibility" discipline `role-permission-matrix.md` §2 established
 carries through unchanged into the runtime engine.
 
+## 7a. Multi-factor authentication (email OTP)
+
+A password-verified staff login does not receive a session cookie
+immediately — it goes through a second step, a 6-digit code emailed via
+Resend, using the same `login_otp_codes`/`verify-otp.js` mechanism
+shared with the guardian and student portals (see
+`docs/parent-portal.md`'s MFA section for the shared mechanics). The
+`staff` table had no email column before this change; OTP activates
+per staff member only once ICT enters one for them (via
+`admin/staff.js`'s `create-staff` action's optional `email` field).
+Staff without an email on file keep signing in with password only,
+unchanged.
+
 ## 8. User Experience Standard — what was deliberately NOT built
 
 Per the Phase 2 Authorisation's explicit instruction, this phase does

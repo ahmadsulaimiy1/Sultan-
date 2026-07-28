@@ -40,6 +40,16 @@
       <a class="portal-back-link" href="/portal/forgot-password/">Forgot your password?</a>
     </form>
 
+    <form data-portal-otp-form hidden>
+      <p class="sub" data-otp-hint>We've emailed you a 6-digit code.</p>
+      <div class="portal-field">
+        <label for="portal-otp-code">6-digit code</label>
+        <input id="portal-otp-code" name="code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" required />
+      </div>
+      <button type="submit" class="portal-submit" data-portal-otp-submit>Verify Code</button>
+      <a class="portal-back-link" href="#" data-otp-cancel>← Use a different account</a>
+    </form>
+
     <p class="portal-notice">
       This is an early pilot of our Parent Portal. Your login shows records only for your own child(ren) — nobody else can see them. If you have any questions about your data, contact us at
       <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a>.

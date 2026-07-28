@@ -72,7 +72,7 @@ step-by-step walkthroughs.
 
 | Name | Purpose | Priority | Cost | Owner | Dependencies | Status |
 |---|---|---|---|---|---|---|
-| MFA | Stronger login protection, especially for Executive/Finance accounts | High | Twilio (SMS OTP) usage-based, or a free TOTP-app-based option | ICT / Cybersecurity | A chosen provider decision | Not Started |
+| MFA | Stronger login protection, all three login roles | High | Free — reuses the Resend email infrastructure already live, no new vendor | ICT / Cybersecurity | Resend (done) | **Completed (code) 2026-07-28** — email OTP as a second step after password, on all three logins (guardian/student/staff). Guardians are covered unconditionally (email is already mandatory for them). Students and staff have no email field until this change; OTP activates per-account automatically once ICT enters an email for that student/staff member via the admin endpoints — nobody is blocked in the meantime, password-only login is unchanged for accounts with no email on file. Verified locally with Playwright (route-mocked): OTP step displays, wrong-code rejection with an attempts-remaining counter, correct-code success, and the no-email bypass path. Not yet run against a real Neon database — same sandbox limitation documented elsewhere in this register. |
 | Audit Logs | Accountability trail | High | Free — already built | ICT | None | Completed for auth events; data-change audit (who edited a result/certificate) Not Started |
 | Monitoring | Uptime/error visibility | High | Free (Cloudflare dashboard basics) to paid (dedicated APM) | ICT | Cloudflare Pages project existing | Not Started |
 | Backup Strategy | Data-loss prevention | Critical | Neon paid tier for point-in-time recovery | ICT | Production DB | Not Started |
@@ -114,7 +114,9 @@ Production DB (done, verified live 2026-07-28, correctly empty of
 sample data) → custom domain (done, `shroyalschools.com`, live with SSL
 2026-07-28) → Resend account + domain email records (done, verified
 live on both Preview and Production 2026-07-28, real inbox round-trip
-proven) → MFA/monitoring/backup as hardening before real institutional
+proven) → MFA (done, code, 2026-07-28 — email OTP on all three logins)
+→ monitoring/backup as remaining hardening before real institutional
 data goes live.** What remains is genuinely the last stretch:
-`PORTAL_SETUP_TOKEN` rotation, security hardening (MFA/monitoring/
-backups), and then real institutional data entry — not more plumbing.
+`PORTAL_SETUP_TOKEN` rotation (in progress), uptime monitoring, a
+backup-budget decision, and then real institutional data entry — not
+more plumbing.

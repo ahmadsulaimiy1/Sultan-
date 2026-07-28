@@ -23,9 +23,12 @@
 // One explicit `action` per request, never an implicit upsert:
 //   create-office        — { name, officeType, institutionName?, parentOfficeName?, description? }
 //   create-department     — { name, institutionName?, officeName? }
-//   create-staff          — { staffNo, fullName, preferredName?, officeName?, departmentName?,
+//   create-staff          — { staffNo, fullName, preferredName?, email?, officeName?, departmentName?,
 //                             positionTitle?, reportsToStaffNo?, institutionName?, dateJoined?,
 //                             additionalInstitutions?: [{ name, isPrimary? }] }
+//                             email is optional — entering it is what turns on the email OTP step
+//                             at this staff member's own login (see staff/login.js); omitting it
+//                             leaves password-only login unchanged.
 //   update-staff-status   — { staffNo, status } (active | suspended | archived)
 //   create-login          — { staffNo } -> { activationLink }, same admin-mediated model as
 //                            create-student-login.js — staff never choose or see their own password
@@ -120,6 +123,7 @@ export async function onRequestPost({ request, env }) {
       const departmentId = departmentRes.rows[0] ? departmentRes.rows[0].id : null;
       const reportsToId = await staffIdByNo(sql, body.reportsToStaffNo);
       const institutionId = await institutionIdByName(sql, body.institutionName);
+      const email = body.email ? String(body.email).trim().toLowerCase() : null;
 
       const existing = await sql`SELECT id FROM staff WHERE staff_no = ${body.staffNo}`;
       let staffId;
@@ -129,14 +133,14 @@ export async function onRequestPost({ request, env }) {
           UPDATE staff SET full_name = ${body.fullName}, preferred_name = ${body.preferredName || null},
             office_id = ${officeId}, department_id = ${departmentId}, position_title = ${body.positionTitle || null},
             reports_to_staff_id = ${reportsToId}, institution_id = ${institutionId},
-            date_joined = ${body.dateJoined || null}, updated_at = now()
+            date_joined = ${body.dateJoined || null}, email = COALESCE(${email}, email), updated_at = now()
           WHERE id = ${staffId}`;
       } else {
         const created = await sql`
           INSERT INTO staff (staff_no, full_name, preferred_name, office_id, department_id, position_title,
-                              reports_to_staff_id, institution_id, date_joined)
+                              reports_to_staff_id, institution_id, date_joined, email)
           VALUES (${body.staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
-                  ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null})
+                  ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
           RETURNING id`;
         staffId = created.rows[0].id;
       }

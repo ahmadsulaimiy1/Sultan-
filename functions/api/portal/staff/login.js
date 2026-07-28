@@ -6,8 +6,10 @@
 // staff.status's suspended/archived in place of students' suspended/
 // withdrawn. See docs/staff-identity-architecture.md.
 import { getSql } from '../../../_lib/db.js';
-import { createStaffSessionCookie, verifyPassword } from '../../../_lib/session.js';
+import { createStaffSessionCookie, generateToken, verifyPassword } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
+import { sendEmail, otpEmailContent, maskEmail } from '../../../_lib/email.js';
+import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../../_lib/otp.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -41,7 +43,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await sql`
-      SELECT s.id, s.full_name, s.status, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
+      SELECT s.id, s.full_name, s.status, s.email, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
       FROM staff s
       JOIN staff_accounts sa ON sa.staff_id = s.id
       WHERE s.staff_no = ${staffNo}`;
@@ -81,6 +83,22 @@ export async function onRequestPost({ request, env }) {
     }
 
     await sql`UPDATE staff_accounts SET failed_attempts = 0, locked_until = NULL WHERE staff_id = ${staff.id}`;
+
+    // Email OTP only activates once ICT has entered an email for this
+    // staff member (see the schema note on staff.email) — no email on
+    // file means unchanged behavior, straight to a session cookie.
+    if (staff.email) {
+      const loginToken = generateToken();
+      const code = generateOtpCode();
+      await sql`
+        INSERT INTO login_otp_codes (actor_type, actor_id, login_token, code_hash, expires_at)
+        VALUES ('staff', ${staff.id}, ${loginToken}, ${hashOtpCode(code)}, now() + make_interval(mins => ${OTP_CODE_TTL_MINUTES}))`;
+      const { subject, text, html } = otpEmailContent(code);
+      await sendEmail(env, { to: staff.email, subject, text, html });
+      await logAttempt(sql, staffNo, 'otp_sent', staff.id);
+      return json({ otpRequired: true, loginToken, maskedEmail: maskEmail(staff.email) });
+    }
+
     await logAttempt(sql, staffNo, 'login_success', staff.id);
     return json(
       { ok: true, fullName: staff.full_name },

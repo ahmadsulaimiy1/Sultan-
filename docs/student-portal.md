@@ -229,6 +229,18 @@ still view their own transcript and Ijazah entry, matching `IQ-02`'s
 call, not something fixed in stone — revisit if it doesn't match how the
 school actually wants to treat withdrawn students.
 
+## Multi-factor authentication (email OTP)
+
+Password-verified student logins go through a second step — a 6-digit
+code emailed to the student — before a session cookie is issued, using
+the same `login_otp_codes`/`verify-otp.js` mechanism as the guardian
+and staff portals (see `docs/parent-portal.md`'s MFA section for the
+mechanics). The gating condition here is specific to students: the
+`students` table had no email column at all until this change, so OTP
+only activates once ICT enters an email for a given student (via
+`admin/students.js`'s optional `student.email` field). Until then,
+that student's login is unchanged — password only, exactly as before.
+
 ## Audit log
 
 Every login attempt (guardian and student) now writes a row to

@@ -743,3 +743,38 @@ CREATE TABLE IF NOT EXISTS guardian_educational_interests (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
   PRIMARY KEY (guardian_id, institution_key)
 );
+
+-- Email OTP (MFA). Guardians already have a mandatory email (self-
+-- registration/admin creation both require one), so OTP applies to
+-- every guardian login unconditionally. Students and staff are
+-- institution-issued accounts with no email field at all until now —
+-- these two columns are optional additions; OTP only activates for a
+-- given student/staff account once ICT enters an email for them (see
+-- login.js/student/login.js/staff/login.js's conditional branch). No
+-- one is locked out by adding this: accounts without an email on file
+-- keep signing in exactly as before.
+ALTER TABLE students ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS email TEXT;
+
+-- One row per in-flight two-step login (password verified, code not
+-- yet entered). login_token is a high-entropy random value (same
+-- convention as reset_token/verification_token elsewhere in this
+-- schema — plaintext is fine given the entropy), looked up directly;
+-- code_hash protects the low-entropy 6-digit code specifically, since
+-- that's the piece worth defending even against a DB-read-only
+-- compromise. attempts enforces a hard cap independent of the code's
+-- own entropy. actor_type/actor_id is the same polymorphic
+-- soft-reference pattern as auth_audit_log — one shared table serving
+-- all three login flows (guardian/student/staff) rather than three
+-- near-identical ones, since the verification logic is identical.
+CREATE TABLE IF NOT EXISTS login_otp_codes (
+  id           SERIAL PRIMARY KEY,
+  actor_type   TEXT NOT NULL CHECK (actor_type IN ('guardian', 'student', 'staff')),
+  actor_id     INTEGER NOT NULL,
+  login_token  TEXT NOT NULL UNIQUE,
+  code_hash    TEXT NOT NULL,
+  attempts     INTEGER NOT NULL DEFAULT 0,
+  expires_at   TIMESTAMPTZ NOT NULL,
+  consumed_at  TIMESTAMPTZ,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);

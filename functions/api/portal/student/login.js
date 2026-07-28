@@ -7,8 +7,10 @@
 // see a graduated child's records) the student here IS the sanctioned
 // account. See docs/student-portal.md.
 import { getSql } from '../../../_lib/db.js';
-import { createStudentSessionCookie, verifyPassword } from '../../../_lib/session.js';
+import { createStudentSessionCookie, generateToken, verifyPassword } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
+import { sendEmail, otpEmailContent, maskEmail } from '../../../_lib/email.js';
+import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../../_lib/otp.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -42,7 +44,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     const result = await sql`
-      SELECT s.id, s.full_name, s.status, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
+      SELECT s.id, s.full_name, s.status, s.email, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
       FROM students s
       JOIN student_accounts sa ON sa.student_id = s.id
       WHERE s.admission_no = ${admissionNo}`;
@@ -82,6 +84,22 @@ export async function onRequestPost({ request, env }) {
     }
 
     await sql`UPDATE student_accounts SET failed_attempts = 0, locked_until = NULL WHERE student_id = ${student.id}`;
+
+    // Email OTP only activates once ICT has entered an email for this
+    // student (see the schema note on students.email) — no email on
+    // file means unchanged behavior, straight to a session cookie.
+    if (student.email) {
+      const loginToken = generateToken();
+      const code = generateOtpCode();
+      await sql`
+        INSERT INTO login_otp_codes (actor_type, actor_id, login_token, code_hash, expires_at)
+        VALUES ('student', ${student.id}, ${loginToken}, ${hashOtpCode(code)}, now() + make_interval(mins => ${OTP_CODE_TTL_MINUTES}))`;
+      const { subject, text, html } = otpEmailContent(code);
+      await sendEmail(env, { to: student.email, subject, text, html });
+      await logAttempt(sql, admissionNo, 'otp_sent', student.id);
+      return json({ otpRequired: true, loginToken, maskedEmail: maskEmail(student.email) });
+    }
+
     await logAttempt(sql, admissionNo, 'login_success', student.id);
     return json(
       { ok: true, fullName: student.full_name },

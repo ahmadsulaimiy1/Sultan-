@@ -76,6 +76,23 @@ export function resetPasswordEmailContent(resetLink) {
   return { subject, text, html };
 }
 
+export function otpEmailContent(code) {
+  const subject = 'Your Sultan Hanafi Royal Schools sign-in code';
+  const text = `Your one-time sign-in code is: ${code}\n\nThis code expires in 10 minutes and can only be used once. If you didn't just try to sign in, you can ignore this email — your account is still safe.`;
+  const html = `<p>Your one-time sign-in code is:</p><p style="font-size:28px;font-weight:bold;letter-spacing:6px;">${escapeHtml(code)}</p><p>This code expires in 10 minutes and can only be used once. If you didn't just try to sign in, you can ignore this email — your account is still safe.</p>`;
+  return { subject, text, html };
+}
+
+// Light obfuscation for a UI hint ("we sent a code to a***@domain") —
+// not a security control, purely so the person signing in can confirm
+// it's their own inbox before checking it.
+export function maskEmail(email) {
+  const s = String(email == null ? '' : email);
+  const at = s.indexOf('@');
+  if (at <= 1) return s;
+  return s[0] + '***' + s.slice(at);
+}
+
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

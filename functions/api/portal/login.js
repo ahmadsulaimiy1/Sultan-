@@ -1,6 +1,8 @@
 import { getSql } from '../../_lib/db.js';
-import { createSessionCookie, verifyPassword } from '../../_lib/session.js';
+import { generateToken, verifyPassword } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
+import { sendEmail, otpEmailContent, maskEmail } from '../../_lib/email.js';
+import { generateOtpCode, hashOtpCode, OTP_CODE_TTL_MINUTES } from '../../_lib/otp.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
@@ -69,12 +71,23 @@ export async function onRequestPost({ request, env }) {
     }
 
     await sql`UPDATE guardians SET failed_attempts = 0, locked_until = NULL WHERE id = ${guardian.id}`;
-    await logAttempt(sql, email, 'login_success', guardian.id);
-    return json(
-      { ok: true, fullName: guardian.full_name },
-      200,
-      { 'Set-Cookie': createSessionCookie(guardian.id, env.SESSION_SECRET) }
-    );
+
+    // Password verified — every guardian has an email on file (required
+    // at registration/admin creation), so the email OTP step below
+    // applies unconditionally, unlike student/staff logins which only
+    // gate on OTP once an email exists for that particular account (see
+    // student/login.js, staff/login.js). No session cookie is issued
+    // yet; that happens in verify-otp.js once the code is confirmed.
+    const loginToken = generateToken();
+    const code = generateOtpCode();
+    await sql`
+      INSERT INTO login_otp_codes (actor_type, actor_id, login_token, code_hash, expires_at)
+      VALUES ('guardian', ${guardian.id}, ${loginToken}, ${hashOtpCode(code)}, now() + make_interval(mins => ${OTP_CODE_TTL_MINUTES}))`;
+    const { subject, text, html } = otpEmailContent(code);
+    await sendEmail(env, { to: email, subject, text, html });
+    await logAttempt(sql, email, 'otp_sent', guardian.id);
+
+    return json({ otpRequired: true, loginToken, maskedEmail: maskEmail(email) });
   } catch (err) {
     console.error('portal login error', err);
     return json({ error: 'Could not sign in right now — please try again shortly.' }, 500);

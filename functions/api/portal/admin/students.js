@@ -79,15 +79,19 @@ export async function onRequestPost({ request, env }) {
 
     const admissionNo = studentIn.admissionNo.trim();
     const status = studentIn.status || 'active';
+    // Optional — entering it here is what turns on the email OTP step
+    // at the student's own login (see student/login.js). Not required;
+    // a student with no email keeps signing in with password only.
+    const studentEmail = studentIn.email ? studentIn.email.trim().toLowerCase() : null;
     let studentId;
     const existingStudent = await sql`SELECT id FROM students WHERE admission_no = ${admissionNo}`;
     if (existingStudent.rows.length) {
       studentId = existingStudent.rows[0].id;
-      await sql`UPDATE students SET full_name = ${studentIn.fullName}, class_id = ${classId}, status = ${status} WHERE id = ${studentId}`;
+      await sql`UPDATE students SET full_name = ${studentIn.fullName}, class_id = ${classId}, status = ${status}, email = COALESCE(${studentEmail}, email) WHERE id = ${studentId}`;
     } else {
       const createdStudent = await sql`
-        INSERT INTO students (full_name, admission_no, class_id, status)
-        VALUES (${studentIn.fullName}, ${admissionNo}, ${classId}, ${status})
+        INSERT INTO students (full_name, admission_no, class_id, status, email)
+        VALUES (${studentIn.fullName}, ${admissionNo}, ${classId}, ${status}, ${studentEmail})
         RETURNING id`;
       studentId = createdStudent.rows[0].id;
     }

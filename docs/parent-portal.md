@@ -197,6 +197,26 @@ service like Upstash or Cloudflare KV, the same category of future work as
 the assistant's abuse protection) — fine for this phase's expected traffic,
 worth revisiting if the portal ever sees suspicious volume.
 
+## Multi-factor authentication (email OTP)
+
+Every guardian login now requires a second step after the password: a
+6-digit code emailed via the Resend integration (see
+`functions/_lib/otp.js`, `functions/api/portal/verify-otp.js`). No
+session cookie is issued until the code is confirmed. The code expires
+after 10 minutes, allows 5 wrong attempts before the login has to
+restart, and is stored hashed (not plaintext) — only the opaque
+`loginToken` that ties the two requests together is stored in the
+clear, the same convention this codebase already uses for
+activation/reset tokens (high entropy, short-lived, no reason to hash
+a value nobody can guess anyway).
+
+This applies unconditionally to guardians, since email is already a
+mandatory field at registration. The same OTP mechanism protects
+Student and Staff Portal logins too (see `docs/student-portal.md` and
+`docs/staff-identity-architecture.md`), but only activates per-account
+once an email is on file for that student/staff member — neither table
+had an email column before this change.
+
 ## Data protection — read this before entering real students
 
 This system holds children's names, attendance, academic results, and

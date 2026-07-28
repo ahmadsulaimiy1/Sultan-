@@ -511,6 +511,20 @@ const STATEMENTS = [
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (guardian_id, institution_key)
   )`,
+
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS email TEXT`,
+  `ALTER TABLE staff ADD COLUMN IF NOT EXISTS email TEXT`,
+  `CREATE TABLE IF NOT EXISTS login_otp_codes (
+    id           SERIAL PRIMARY KEY,
+    actor_type   TEXT NOT NULL CHECK (actor_type IN ('guardian', 'student', 'staff')),
+    actor_id     INTEGER NOT NULL,
+    login_token  TEXT NOT NULL UNIQUE,
+    code_hash    TEXT NOT NULL,
+    attempts     INTEGER NOT NULL DEFAULT 0,
+    expires_at   TIMESTAMPTZ NOT NULL,
+    consumed_at  TIMESTAMPTZ,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
 ];
 
 async function handle({ request, env }) {
