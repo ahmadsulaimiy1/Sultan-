@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shroyalschools.ng/sitemap.xml
+Sitemap: https://shroyalschools.com/sitemap.xml

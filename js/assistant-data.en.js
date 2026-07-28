@@ -1,6 +1,6 @@
 window.ASSISTANT_CONFIG = {
   "lang": "en",
-  "endpoint": "https://formsubmit.co/info@shroyalschools.ng",
+  "endpoint": "https://formsubmit.co/info@shroyalschools.com",
   "speechLang": "en-US",
   "strings": {
     "title": "Digital Academic Assistant",

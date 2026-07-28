@@ -1829,7 +1829,7 @@
     /* One clean line identifying the source, since the site's own
        header/footer branding is hidden in print. */
     .policies > .wrap > .policy-category:first-of-type::before{
-      content:"Sultan Hanafi Royal Schools — Policies Centre — shroyalschools.ng/policies/";
+      content:"Sultan Hanafi Royal Schools — Policies Centre — shroyalschools.com/policies/";
       display:block;font-size:0.7rem;color:#888;margin-bottom:16px;
     }
   }

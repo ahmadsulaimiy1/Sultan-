@@ -1,6 +1,6 @@
 window.ASSISTANT_CONFIG = {
   "lang": "ar",
-  "endpoint": "https://formsubmit.co/info@shroyalschools.ng",
+  "endpoint": "https://formsubmit.co/info@shroyalschools.com",
   "speechLang": "ar-SA",
   "strings": {
     "title": "المساعد الرقمي للقبول",

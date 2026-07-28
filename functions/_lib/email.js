@@ -21,7 +21,7 @@
 // Matches scripts/build.js's SITE_ORIGIN — email links must be
 // absolute (there's no page context for an email client to resolve a
 // relative URL against).
-export const SITE_ORIGIN = 'https://shroyalschools.ng';
+export const SITE_ORIGIN = 'https://shroyalschools.com';
 
 export async function sendEmail(env, { to, subject, html, text }) {
   const apiKey = env.RESEND_API_KEY;

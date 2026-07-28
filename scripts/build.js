@@ -19,7 +19,7 @@ const SHRS_ADHKAR = require(path.join(ROOT, 'js/adhkar-data.js')).SHRS_ADHKAR;
 // Used only to make og:*/canonical tags absolute, since social-media
 // crawlers won't reliably resolve relative URLs. Update once the site
 // has a confirmed production domain.
-const SITE_ORIGIN = 'https://shroyalschools.ng';
+const SITE_ORIGIN = 'https://shroyalschools.com';
 
 function read(relPath) {
   return fs.readFileSync(path.join(ROOT, relPath), 'utf8');
