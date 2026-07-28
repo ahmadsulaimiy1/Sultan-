@@ -1000,6 +1000,25 @@
   .curriculum h4{color:var(--gold-bright);font-size:1.2rem;margin-bottom:10px;}
   .curriculum p{font-size:0.9rem;color:rgba(248,244,233,0.85);}
 
+  /* Digital Campus homepage teaser — links through to the full
+     /digital-campus/ page; the systems described here (portals,
+     Founder Dashboard, Adhkar Centre) are all real and already live. */
+  .digital-campus-teaser{background:var(--navy-deep);color:var(--ivory);}
+  .dc-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  @media (max-width:900px){.dc-tiles{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.dc-tiles{grid-template-columns:1fr;}}
+  .dc-tile{
+    display:flex;flex-direction:column;gap:8px;padding:22px 20px;
+    background:rgba(233,206,138,0.05);border:1px solid rgba(198,161,91,0.25);
+    color:var(--ivory);transition:background .25s ease,border-color .25s ease,transform .25s ease;
+  }
+  a.dc-tile:hover{background:rgba(233,206,138,0.1);border-color:rgba(233,206,138,0.5);transform:translateY(-3px);}
+  .dc-tile-icon{color:var(--gold-bright);}
+  .dc-tile h4{font-size:1rem;color:#fff;margin:2px 0 2px;}
+  .dc-tile p{font-size:0.8rem;color:rgba(248,244,233,0.65);line-height:1.5;flex:1;}
+  .dc-tile-link{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);margin-top:4px;}
+  .dc-tile.is-static{opacity:0.92;}
+
   /* boarding */
   .boarding{background:var(--surface-alt);}
   .boarding-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
