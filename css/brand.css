@@ -568,6 +568,11 @@
   .navlinks>.nav-drop:nth-of-type(6) .nmi-icon,.navlinks>.nav-drop:nth-of-type(6) .nav-mega-icon{color:var(--bronze-bright);}
   .navlinks>.nav-drop:nth-of-type(6) .nav-mega-intro{background:rgba(164,120,67,0.1);}
   .navlinks>.nav-drop:nth-of-type(6) .nav-drop-panel{border-top-color:var(--bronze-bright);}
+  /* Digital Campus sits far right in the nav row; now that it's a full
+     two-column mega-panel (was a narrow is-compact list), anchor it to
+     the trigger's right edge instead of the left so it opens back onto
+     the page rather than running off the viewport's right edge. */
+  .navlinks>.nav-drop:nth-of-type(6) .nav-mega-panel{left:auto;right:0;}
   .navlinks>.nav-drop:nth-of-type(7) .nmi-icon,.navlinks>.nav-drop:nth-of-type(7) .nav-mega-icon{color:var(--forest-green);}
   .navlinks>.nav-drop:nth-of-type(7) .nav-mega-intro{background:rgba(63,107,78,0.09);}
   .navlinks>.nav-drop:nth-of-type(7) .nav-drop-panel{border-top-color:var(--forest-green);}
