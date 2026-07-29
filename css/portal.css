@@ -442,6 +442,32 @@ body.portal-body{
 .registrar-form-result{margin:0 20px 20px;padding:10px 14px;font-size:0.84rem;}
 .registrar-form-result.is-ok{background:rgba(198,161,91,0.12);border:1px solid var(--gold);color:var(--navy);}
 .registrar-form-result.is-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);}
+.registrar-cert-issued{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.registrar-cert-issued-text{flex:1;min-width:200px;line-height:1.6;}
+.registrar-cert-qr{border-radius:var(--radius-sm);background:#fff;padding:4px;border:1px solid var(--line);flex-shrink:0;}
+
+/* Transcript sections on the student/guardian dashboards — new for the
+   Certificate & Transcript Verification System (SHRS Imperial Digital
+   Campus Directive, Priority 1). Built on the same exec-card/design-
+   system tokens established in Phase 0. (The public certificate
+   verification page's .cert-verify-* classes live in css/brand.css
+   instead — that page loads brand.css only, not this portal stylesheet.) */
+.transcript-section{margin-top:var(--space-md);}
+.transcript-block{margin-bottom:var(--space-lg);}
+.transcript-block h4{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size);margin-bottom:var(--space-sm);color:var(--navy);}
+.transcript-table{width:100%;border-collapse:collapse;font-size:var(--small-size);}
+.transcript-table th,.transcript-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);}
+.transcript-table th{font-family:'Cinzel','Amiri',serif;font-size:var(--caption-size);text-transform:uppercase;letter-spacing:0.06em;color:var(--on-surface-soft);}
+.transcript-unavailable{padding:var(--space-md);background:rgba(124,31,46,0.05);border:1px dashed rgba(124,31,46,0.35);border-radius:var(--radius-md);font-size:var(--small-size);color:var(--ink-soft);margin-top:var(--space-sm);}
+.transcript-average-row td{font-weight:700;background:rgba(198,161,91,0.08);border-top:2px solid var(--gold);}
+.pij-ref a{color:inherit;text-decoration:underline;text-decoration-style:dotted;}
+.pij-ref a:hover{color:var(--gold);}
+.transcript-juz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;}
+.transcript-juz-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:var(--caption-size);font-weight:600;border:1px solid var(--line);}
+.transcript-juz-cell.verified{background:var(--forest-green);color:#fff;border-color:var(--forest-green);}
+.transcript-juz-cell.completed_pending_review{background:rgba(198,161,91,0.25);border-color:var(--gold);}
+.transcript-juz-cell.memorising{background:rgba(65,97,140,0.14);border-color:var(--oxford-navy);}
+.transcript-juz-cell.not_started{background:transparent;color:var(--on-surface-soft);}
 
 .registrar-guardians{padding:0 20px 16px;}
 .registrar-guardians-head{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}

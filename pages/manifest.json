@@ -360,6 +360,24 @@
     "altHref": "/marketplace/"
   },
   {
+    "slug": "verify-certificate",
+    "output": "verify-certificate/index.html",
+    "title": "Verify a Certificate — Sultan Hanafi Royal Schools",
+    "description": "Confirm that a certificate or Ijazah issued by Sultan Hanafi Royal Schools is genuine, using its printed reference number.",
+    "contentFile": "pages/verify-certificate.html",
+    "altHref": "/ar/verify-certificate/"
+  },
+  {
+    "slug": "verify-certificate-ar",
+    "output": "ar/verify-certificate/index.html",
+    "title": "تحقق من شهادة — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة شهادة أو إجازة صادرة عن مدارس السلطان حنفي الملكية باستخدام رقمها المرجعي المطبوع.",
+    "contentFile": "pages/verify-certificate.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify-certificate/"
+  },
+  {
     "slug": "press",
     "output": "press/index.html",
     "title": "Press & News Room — Sultan Hanafi Royal Schools",

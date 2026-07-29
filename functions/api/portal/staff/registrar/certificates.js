@@ -6,11 +6,41 @@
 // `certificates` area (REG holds Create; PRIN's joint Approve is
 // recorded via approvedByStaffNo, not a separate access gate, matching
 // how student_lifecycle_events records joint sign-off).
+//
+// referenceNo is now auto-generated (SHR-<TYPE>-<YEAR>-<seq>) when the
+// staff member leaves it blank, rather than requiring them to invent a
+// consistent numbering scheme by hand — this is the public number
+// printed on the certificate and looked up at /verify-certificate/, so
+// consistency matters more than it did when this was pure internal
+// filing. Staff can still supply their own (e.g. to match a pre-2026
+// paper register) — auto-generation only fills the gap.
 import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
+
+const TYPE_ABBREVIATIONS = {
+  nursery_graduation: 'NUR', primary_graduation: 'PRI', junior_secondary: 'JSS', senior_secondary: 'SSS',
+  hifz_completion: 'HFZ', arabic_studies: 'ARB', islamic_studies: 'ISL', competition: 'CMP',
+  workshop: 'WKS', staff_training: 'TRN',
+};
+
+function abbreviateType(certificateType) {
+  const known = TYPE_ABBREVIATIONS[certificateType.toLowerCase().replace(/\s+/g, '_')];
+  if (known) return known;
+  return certificateType.replace(/[^a-z0-9]/gi, '').slice(0, 3).toUpperCase() || 'GEN';
+}
+
+async function generateReferenceNo(sql, certificateType, issuedAt) {
+  const year = new Date(issuedAt).getFullYear();
+  const abbr = abbreviateType(certificateType);
+  const countRes = await sql`
+    SELECT COUNT(*)::int AS n FROM certificates
+    WHERE certificate_type = ${certificateType} AND EXTRACT(YEAR FROM issued_at) = ${year}`;
+  const seq = (countRes.rows[0].n || 0) + 1;
+  return `SHR-${abbr}-${year}-${String(seq).padStart(6, '0')}`;
+}
 
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
@@ -44,10 +74,10 @@ export async function onRequestPost({ request, env }) {
     if (action === 'issue') {
       const admissionNo = ((body && body.admissionNo) || '').trim();
       const certificateType = ((body && body.certificateType) || '').trim();
-      const referenceNo = ((body && body.referenceNo) || '').trim();
+      let referenceNo = ((body && body.referenceNo) || '').trim();
       const issuedAt = (body && body.issuedAt) || new Date().toISOString().slice(0, 10);
-      if (!admissionNo || !certificateType || !referenceNo) {
-        return json({ error: 'admissionNo, certificateType, and referenceNo are all required.' }, 400);
+      if (!admissionNo || !certificateType) {
+        return json({ error: 'admissionNo and certificateType are required.' }, 400);
       }
 
       const studentRes = await sql`SELECT id, full_name FROM students WHERE admission_no = ${admissionNo}`;
@@ -57,6 +87,10 @@ export async function onRequestPost({ request, env }) {
       }
 
       const approvedByStaffNo = (body && body.approvedByStaffNo) || null;
+
+      if (!referenceNo) {
+        referenceNo = await generateReferenceNo(sql, certificateType, issuedAt);
+      }
 
       const created = await sql`
         INSERT INTO certificates (student_id, student_full_name, certificate_type, reference_no, issued_at, issued_by_staff_id)
@@ -68,7 +102,13 @@ export async function onRequestPost({ request, env }) {
         reason: body.reason || null, metadata: { admissionNo, certificateType, referenceNo, approvedByStaffNo },
       });
 
-      return json({ ok: true, certificateId: created.rows[0].id, referenceNo });
+      return json({
+        ok: true,
+        certificateId: created.rows[0].id,
+        referenceNo,
+        verifyUrl: `/verify-certificate/?ref=${encodeURIComponent(referenceNo)}`,
+        qrUrl: `/api/certificates/qr?ref=${encodeURIComponent(referenceNo)}`,
+      });
     }
 
     if (action === 'revoke') {

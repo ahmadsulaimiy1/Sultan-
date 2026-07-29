@@ -149,6 +149,7 @@ ${personalisation}
 <script src="/js/marketplace.js" defer></script>
 <script src="/js/quran-data.js" defer></script>
 <script src="/js/quran-reader.js" defer></script>
+<script src="/js/certificate-verify.js" defer></script>
 <script src="/js/search.js" defer></script>
 
 </body>

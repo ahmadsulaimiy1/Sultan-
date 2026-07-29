@@ -1284,6 +1284,28 @@
   .gal-item figcaption{padding:10px 12px;font-size:0.76rem;color:var(--ivory);font-family:'Cinzel','Amiri',serif;letter-spacing:0.02em;}
   .chapter-band-alt .gal-item{background:var(--navy);}
 
+  /* Public Certificate & Ijazah verification page (/verify-certificate/,
+     js/certificate-verify.js) — part of the Certificate & Transcript
+     Verification System (SHRS Imperial Digital Campus Directive,
+     Priority 1). This page loads brand.css only (not portal.css), so
+     these rules live here rather than alongside the dashboard-side
+     .registrar-cert-*/.transcript-* rules in css/portal.css. */
+  .cert-verify-form{display:flex;gap:10px;flex-wrap:wrap;margin:var(--space-lg) 0;}
+  .cert-verify-form input{flex:1;min-width:220px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--radius-md);font-size:var(--body-size);background:#fff;color:var(--ink);}
+  .cert-verify-result{margin-top:var(--space-lg);padding:var(--space-md);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);max-width:560px;}
+  .cert-verify-result.is-valid{background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);border:1px solid rgba(63,107,78,0.4);}
+  .cert-verify-result.is-revoked{background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);border:1px solid var(--crimson);}
+  .cert-verify-result.is-notfound{background:rgba(124,31,46,0.06);border:1px solid rgba(124,31,46,0.3);}
+  .cert-verify-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel','Amiri',serif;font-size:var(--caption-size);letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);}
+  .cert-verify-badge.ok{background:rgba(63,107,78,0.14);color:var(--forest-green);}
+  .cert-verify-badge.revoked{background:rgba(124,31,46,0.12);color:var(--crimson);}
+  .cert-verify-badge.notfound{background:rgba(124,31,46,0.1);color:var(--crimson);}
+  .cert-verify-field{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--small-size);}
+  .cert-verify-field:last-child{border-bottom:none;}
+  .cert-verify-field .k{color:var(--ink-soft);}
+  .cert-verify-field .v{font-weight:600;color:var(--ink);text-align:right;}
+  .cert-verify-note{padding:16px 0;font-size:0.85rem;color:rgba(248,244,233,0.7);font-style:italic;}
+
   /* SHRS Marketplace (/marketplace/) — catalog cards, no cart/checkout.
      Every "Order" action is a WhatsApp deep-link (js/marketplace.js). */
   .mkt-notice{

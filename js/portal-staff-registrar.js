@@ -50,6 +50,30 @@
     target.className = 'registrar-form-result ' + (ok ? 'is-ok' : 'is-error');
   }
 
+  // Certificate issuance gets its own richer result — the reference
+  // number plus a QR code and verification link the school can print
+  // straight onto the physical certificate, not just a plain-text
+  // confirmation string like the other registrar forms use.
+  function showCertificateIssued(referenceNo, verifyUrl, qrUrl){
+    certResultEl.hidden = false;
+    certResultEl.className = 'registrar-form-result is-ok registrar-cert-issued';
+    certResultEl.innerHTML = '';
+    var text = el('div', 'registrar-cert-issued-text');
+    text.appendChild(el('strong', null, 'Certificate issued — reference ' + referenceNo + '.'));
+    var link = document.createElement('a');
+    link.href = verifyUrl; link.target = '_blank'; link.rel = 'noopener';
+    link.className = 'text-link';
+    link.textContent = 'Open the public verification page →';
+    text.appendChild(document.createElement('br'));
+    text.appendChild(link);
+    certResultEl.appendChild(text);
+    var img = document.createElement('img');
+    img.src = qrUrl; img.alt = 'QR code linking to the verification page for ' + referenceNo;
+    img.className = 'registrar-cert-qr';
+    img.width = 96; img.height = 96;
+    certResultEl.appendChild(img);
+  }
+
   function eventLabel(type){
     var labels = {
       enrolment: 'Enrolled', promotion: 'Promoted', transfer: 'Transferred',
@@ -95,7 +119,13 @@
     }
     certs.forEach(function(c){
       var card = el('div', 'portal-ijazah-card' + (c.revokedAt ? ' is-revoked' : ''));
-      card.appendChild(el('div', 'pij-ref', c.referenceNo));
+      var refDiv = el('div', 'pij-ref');
+      var refLink = document.createElement('a');
+      refLink.href = '/verify-certificate/?ref=' + encodeURIComponent(c.referenceNo);
+      refLink.target = '_blank'; refLink.rel = 'noopener';
+      refLink.textContent = c.referenceNo + ' — verify →';
+      refDiv.appendChild(refLink);
+      card.appendChild(refDiv);
       card.appendChild(el('div', 'pij-scope', c.certificateType));
       card.appendChild(el('div', 'pij-meta', 'Issued ' + formatDate(c.issuedAt)));
       if(c.revokedAt){
@@ -347,7 +377,7 @@
       });
       var data = await res.json();
       if(!res.ok) throw new Error(data.error || 'Could not issue that certificate.');
-      showResult(certResultEl, true, 'Certificate issued — reference ' + data.referenceNo + '.');
+      showCertificateIssued(data.referenceNo, data.verifyUrl, data.qrUrl);
       certIssueForm.reset();
       var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
       var data2 = await res2.json();

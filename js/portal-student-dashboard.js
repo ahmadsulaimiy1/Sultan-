@@ -59,17 +59,40 @@
     thead.appendChild(headRow);
     table.appendChild(thead);
     var tbody = document.createElement('tbody');
+    var byTerm = {};
     results.forEach(function(r){
       var row = document.createElement('tr');
       [r.term, r.subject, r.ca_score, r.exam_score, r.total_score, r.teacher_comment || '—'].forEach(function(v){
         row.appendChild(el('td', null, v == null ? '—' : String(v)));
       });
       tbody.appendChild(row);
+      if(r.total_score != null){
+        if(!byTerm[r.term]) byTerm[r.term] = [];
+        byTerm[r.term].push(Number(r.total_score));
+      }
+    });
+    // A term average is a plain arithmetic mean of recorded totals for
+    // that term — real, computed from the same rows shown above, never
+    // a separately-fabricated figure.
+    Object.keys(byTerm).forEach(function(term){
+      var scores = byTerm[term];
+      var avg = scores.reduce(function(a,b){ return a+b; }, 0) / scores.length;
+      var row = document.createElement('tr');
+      row.className = 'transcript-average-row';
+      row.appendChild(el('td', null, term));
+      row.appendChild(el('td', null, 'Term Average'));
+      var avgCell = el('td', null, avg.toFixed(1));
+      avgCell.colSpan = 4;
+      row.appendChild(avgCell);
+      tbody.appendChild(row);
     });
     table.appendChild(tbody);
     var scrollWrap = el('div', 'portal-results-scroll');
     scrollWrap.appendChild(table);
     resultsEl.appendChild(scrollWrap);
+
+    var islamicNote = el('p', 'transcript-unavailable', 'Islamic & Arabic Studies transcript: not yet tracked separately in the Digital Campus — the School of Islamic & Arabic Studies does not yet have its own assessment records here (see the Registrar for paper records in the meantime).');
+    resultsEl.appendChild(islamicNote);
   }
 
   function renderHifz(hifz){
@@ -98,7 +121,13 @@
       ijazahEl.appendChild(head);
       hifz.ijazahRecords.forEach(function(rec){
         var card = el('div', 'portal-ijazah-card' + (rec.revoked_at ? ' is-revoked' : ''));
-        card.appendChild(el('div', 'pij-ref', 'Reference ' + rec.reference_no));
+        var refDiv = el('div', 'pij-ref');
+        var refLink = document.createElement('a');
+        refLink.href = '/verify-certificate/?ref=' + encodeURIComponent(rec.reference_no);
+        refLink.target = '_blank'; refLink.rel = 'noopener';
+        refLink.textContent = 'Reference ' + rec.reference_no + ' — verify →';
+        refDiv.appendChild(refLink);
+        card.appendChild(refDiv);
         card.appendChild(el('div', 'pij-scope', rec.certified_scope || 'Ijazah'));
         card.appendChild(el('div', 'pij-meta', 'Granted ' + rec.granted_date + (rec.examining_scholars ? ' · Examined by ' + rec.examining_scholars : '')));
         if(rec.revoked_at){
