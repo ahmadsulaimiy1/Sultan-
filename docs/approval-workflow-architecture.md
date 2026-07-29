@@ -167,6 +167,43 @@ judged out of scope here since revocation of a certificate is rare
 enough, and reversible enough (never a hard delete), that it doesn't
 carry the same integrity stakes as first issuing one.
 
+## 4b. Second real implementation — Ijazah grant
+
+`functions/api/portal/admin/hifz-progress.js`'s `ijazah.grant` action was
+the specific case named in `docs/governance-master-register.md` Finding
+#5 as the strictest version of this problem in the whole codebase: not
+"recordable, not enforced" like certificates or lifecycle events, but
+**not even recordable** — the request shape had no field at all for a
+second signer, voluntary or otherwise. It is migrated the same way:
+
+- QC-OFF's `ijazah.grant` (staff-session path only) checks `C` on
+  `ijazah_records`, then calls `createApprovalRequest` instead of
+  writing to `ijazah_register` directly.
+- Two new top-level actions, `list_pending_ijazah` and `decide_ijazah`,
+  sit outside the endpoint's existing per-`admissionNo` flow (a
+  decision-maker's queue can span many students at once, so it can't be
+  nested inside a single-student request the way `progress`/`stage`/
+  `ijazah` already are). Both require a real staff session — the legacy
+  `PORTAL_QURAN_TOKEN` bearer path has no `staff.id` to check separation
+  of duties or a real PRIN grant against, so it is refused for these two
+  actions specifically rather than silently exempted from the check.
+- `ijazah.grant` submitted via the bearer token keeps its original,
+  unchanged single-step behaviour — the same limitation every Migration
+  Phase D dual-auth endpoint already carries: a shared secret has no
+  individual identity to enforce a real approval workflow against, and
+  removing that fallback would lock the endpoint out entirely while no
+  real QC-OFF/PRIN account exists in any reachable environment.
+- Ijazah revocation (`Ar`, PRIN-only) is untouched, same reasoning as
+  certificates' `revoke`: the Matrix gives no role a *joint* grant over
+  revocation, only over the original grant.
+
+No admin UI exists for this endpoint (same "protected raw API, no admin
+UI yet" convention as `admin/students.js` and, before this document,
+`admin/announcements.js`) — `list_pending_ijazah`/`decide_ijazah` are
+callable today the same curl-driven way `docs/student-portal.md`
+already documents every other `ijazah.grant`/`revoke` action, not a new
+UI gap this document introduces.
+
 ## 5. Schema change on `certificates`
 
 ```sql
@@ -195,16 +232,27 @@ so it isn't assumed solved by this document:
 | Area | Matrix language | Current state |
 |---|---|---|
 | **Student lifecycle events** (promotions, transfers, withdrawals, graduations, reinstatements) — `staff/registrar/lifecycle-events.js` | REG/AREG `E` on `student_records`; PRIN's joint sign-off is documented but not a separate Matrix grant beyond "own institution" | `approvedByStaffId` is resolved from a real `staff_no` but never verified as a PRIN, a real session, or a distinct person from the requester. **Not migrated to `staff_approvals` in this pass** — the natural next phase, using the exact same `createApprovalRequest`/`decideApproval` calls, once `student_lifecycle_events` gains a `staff_approvals`-backed pending state (today it writes directly, with no draft/pending status on the table itself — a schema change this document does not make). |
-| **Ijazah grant** — `admin/hifz-progress.js` | PRIN "V, A jointly with QC-OFF" on `ijazah_records`, per §4's status update | Gated on QC-OFF's own `C` grant only; PRIN's joint role is not checked at all, not even recorded. Migrating this the same way certificates was migrated is straightforward — the file already has the dual-auth/session-check scaffolding — but was not done here to keep this pass scoped to one worked example. |
+| **Hifz stage advancement** — `admin/hifz-progress.js`'s `body.stage` path | PRIN "A jointly with QC-OFF" on `hifz_records`, per §4's status update | A real session grant check exists (`hifz_records`/`A`), but it accepts EITHER QC-OFF or PRIN alone — no two-party requirement for stage advancement itself, only for the Ijazah grant that follows it (now fixed, see below). Surfaced while migrating Ijazah grant, not fixed in this pass. |
 | **Admissions offer decision** — `staff/admissions-applications.js` | REG "A = verification, waiting-list"; PRIN "A = offer decision, jointly," own institution | Single-role `A` grant checked today; no second approver required. |
 | **Results release** — `staff/registrar/assessments.js` (per role-permission-matrix.md §4.5's "Requires REG + PRIN joint approval before release") | Joint approval named directly in the Matrix's prose | Not yet checked at all in code — results release has no explicit "release" action distinct from entering scores. |
 | **Refund/waiver/scholarship** — Finance Platform | EXE `A`, explicitly flagged in the Matrix itself: "no policy exists yet to route this through" | No policy, no approval step, no code path at all — the Matrix's own honest placeholder, unchanged by this document. |
 
-None of these were silently patched over or assumed resolved by shipping
-the certificates implementation. The generic engine in §3 is built
-specifically so each of them can be migrated as its own small, scoped
-follow-up — add one `createApprovalRequest`/`decideApproval` pair per
-endpoint, no new schema beyond what that endpoint's own action needs.
+**Ijazah grant** (`admin/hifz-progress.js`'s `ijazah.grant` action) has
+since been migrated the same way certificates was — `ijazah_records` `C`
+to request, `A` to decide, a distinct PRIN required for the
+staff-session path. This closes `docs/governance-master-register.md`
+Finding #5 ("Ijazah grants have no second-signatory field at all," a
+stricter gap than every row above since there was previously nowhere to
+even voluntarily record a second signer). The legacy `PORTAL_QURAN_TOKEN`
+bearer path keeps its original single-step behaviour unchanged — no real
+per-staff identity exists there to check separation of duties against.
+
+None of the rows still open above were silently patched over or assumed
+resolved by shipping certificates and Ijazah grants. The generic engine
+in §3 is built specifically so each of them can be migrated as its own
+small, scoped follow-up — add one `createApprovalRequest`/
+`decideApproval` pair per endpoint, no new schema beyond what that
+endpoint's own action needs.
 
 ## 7. Verification
 

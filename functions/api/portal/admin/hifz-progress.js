@@ -23,15 +23,22 @@
 //     not a silent one, until MUH onboarding is built.
 //   - Stage advancement (A): QC-OFF or PRIN only — the Matrix does not
 //     give MUH the 'A' permission on hifz_records at all.
-//   - Ijazah grant (C on ijazah_records): QC-OFF only — PRIN's row has
-//     no 'C'. The Matrix's "A jointly with QC-OFF" note on PRIN describes
-//     a two-party approval step that docs/identity-migration-register.md
-//     §"Approval Workflow Architecture" names as not built anywhere in
-//     this codebase yet; QC-OFF's own 'C' grant is what gates creation
-//     today, same single-step behaviour the bearer token always had.
+//   - Ijazah grant (C on ijazah_records): QC-OFF requests, PRIN approves
+//     — real, enforced joint sign-off as of the Approval Workflow
+//     Architecture (docs/approval-workflow-architecture.md), closing
+//     governance-master-register.md Finding #5 ("Ijazah grants have no
+//     second-signatory field at all" — a stricter gap than "recordable,
+//     not enforced," since there was previously nowhere to even
+//     voluntarily record a second signer). `ijazah.grant` now creates a
+//     pending `staff_approvals` row instead of writing to
+//     `ijazah_register` directly; the grant only becomes real once a
+//     distinct PRIN decides via the new `decide_ijazah` action, checked
+//     against the same Permission Engine every other endpoint uses.
 //   - Ijazah revocation (Ar on ijazah_records): PRIN only — QC-OFF's row
 //     has no 'Ar'. Per IQ-02, revoking a permanent credential is
-//     deliberately a narrower authority than granting one.
+//     deliberately a narrower authority than granting one. Left as a
+//     single-approver action, unchanged — the Matrix gives no role a
+//     joint grant over revocation, only over the original grant.
 //
 // The student's institution is still validated explicitly
 // (isQuranCollegeInstitution) regardless of auth method — this is the
@@ -45,6 +52,7 @@ import { hasPermissionFor } from '../../../_lib/permissions.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { isQuranCollegeInstitution } from '../../../_lib/hifz.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
+import { createApprovalRequest, listPendingApprovals, decideApproval } from '../../../_lib/approvals.js';
 
 const VALID_JUZ_STATUSES = ['not_started', 'memorising', 'completed_pending_review', 'verified'];
 
@@ -91,6 +99,61 @@ export async function onRequestPost({ request, env }) {
   }
 
   const body = await readJsonBody(request);
+  const action = body && body.action;
+
+  // Ijazah grant approvals (Approval Workflow Architecture) — these two
+  // actions decide across potentially many students at once, so they
+  // sit outside the per-admissionNo flow below. Staff-session only: a
+  // pending approval is only ever attributable to and decidable by a
+  // real staff.id, which the legacy bearer token has none of.
+  if (action === 'list_pending_ijazah' || action === 'decide_ijazah') {
+    if (auth.method !== 'staff_session') {
+      return json({ error: 'This action requires a real staff sign-in — the legacy Qur\'an College token has no individual identity to check against.' }, 403);
+    }
+    try {
+      if (action === 'list_pending_ijazah') {
+        const grant = await hasPermissionFor(sql, auth.staffId, 'ijazah_records', 'A', null);
+        if (!grant.granted) {
+          return json({ error: 'Your role does not have authority to decide Ijazah grant approvals.' }, 403);
+        }
+        const staffRes = await sql`SELECT institution_id FROM staff WHERE id = ${auth.staffId}`;
+        const pending = await listPendingApprovals(sql, {
+          areaCode: 'ijazah_records', institutionId: staffRes.rows[0] ? staffRes.rows[0].institution_id : null,
+        });
+        return json({
+          ok: true,
+          pending: pending.map((p) => ({ id: p.id, requestedByName: p.requested_by_name, requestedAt: p.requested_at, ...p.payload })),
+        });
+      }
+
+      if (!Number.isInteger(body.approvalId)) {
+        return json({ error: 'A valid numeric approvalId is required.' }, 400);
+      }
+      const decision = body.decision === 'reject' ? 'reject' : 'approve';
+      const result = await decideApproval(sql, {
+        approvalId: body.approvalId, decidingStaffId: auth.staffId, decision,
+        note: body.note || null, areaCode: 'ijazah_records', permissionCode: 'A',
+        performOnApprove: async ({ payload }) => {
+          await sql`
+            INSERT INTO ijazah_register (student_id, student_full_name, granted_date, examining_scholars, certified_scope, reference_no)
+            VALUES (${payload.studentId}, ${payload.studentFullName}, ${payload.grantedDate}, ${payload.examiningScholars || null}, ${payload.certifiedScope || null}, ${payload.referenceNo})`;
+          return payload.referenceNo;
+        },
+      });
+      if (result.error) return json({ error: result.error }, 403);
+
+      await logStaffEvent(sql, {
+        actorStaffId: auth.staffId, eventType: 'sensitive_action', targetType: 'ijazah_request', targetId: body.approvalId,
+        reason: body.note || null, metadata: { decision: result.status, resultRef: result.resultRef || null },
+      });
+
+      return json({ ok: true, status: result.status, referenceNo: result.status === 'approved' ? result.resultRef : undefined });
+    } catch (err) {
+      console.error('portal admin hifz-progress ijazah-approval error', err);
+      return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);
+    }
+  }
+
   const admissionNo = ((body && body.admissionNo) || '').trim();
   if (!admissionNo) {
     return json({ error: 'admissionNo is required.' }, 400);
@@ -149,19 +212,38 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (body.ijazah && body.ijazah.action === 'grant') {
-      if (auth.method === 'staff_session') {
-        const err = await checkStaffGrant(sql, auth.staffId, 'ijazah_records', 'C', student.institution_id ?? null);
-        if (err) return json({ error: err }, 403);
-      }
       const g = body.ijazah;
       if (!g.grantedDate || !g.referenceNo) {
         return json({ error: 'ijazah.grant requires grantedDate and referenceNo.' }, 400);
       }
-      await sql`
-        INSERT INTO ijazah_register (student_id, student_full_name, granted_date, examining_scholars, certified_scope, reference_no)
-        VALUES (${student.id}, ${student.full_name}, ${g.grantedDate}, ${g.examiningScholars || null}, ${g.certifiedScope || null}, ${g.referenceNo})`;
-      updatedParts.push('Ijazah grant');
-      auditMeta.ijazahReferenceNo = g.referenceNo;
+      if (auth.method === 'staff_session') {
+        const err = await checkStaffGrant(sql, auth.staffId, 'ijazah_records', 'C', student.institution_id ?? null);
+        if (err) return json({ error: err }, 403);
+        const approvalRequest = await createApprovalRequest(sql, {
+          areaCode: 'ijazah_records', targetType: 'ijazah_grant',
+          payload: {
+            studentId: student.id, studentFullName: student.full_name, grantedDate: g.grantedDate,
+            examiningScholars: g.examiningScholars || null, certifiedScope: g.certifiedScope || null, referenceNo: g.referenceNo,
+          },
+          requestedByStaffId: auth.staffId, approverRoleCode: 'PRIN', institutionId: student.institution_id ?? null,
+        });
+        updatedParts.push('Ijazah grant request (pending Principal approval)');
+        auditMeta.ijazahReferenceNo = g.referenceNo;
+        auditMeta.ijazahApprovalId = approvalRequest.id;
+      } else {
+        // Bearer-token fallback: no real per-staff identity exists to
+        // attribute a pending request to or later decide it against —
+        // same single-step behaviour this path has always had, since it
+        // is itself only a temporary stand-in until a real QC-OFF
+        // account exists. The Approval Workflow Architecture targets the
+        // staff-session path specifically; see docs/approval-workflow-
+        // architecture.md.
+        await sql`
+          INSERT INTO ijazah_register (student_id, student_full_name, granted_date, examining_scholars, certified_scope, reference_no)
+          VALUES (${student.id}, ${student.full_name}, ${g.grantedDate}, ${g.examiningScholars || null}, ${g.certifiedScope || null}, ${g.referenceNo})`;
+        updatedParts.push('Ijazah grant');
+        auditMeta.ijazahReferenceNo = g.referenceNo;
+      }
     } else if (body.ijazah && body.ijazah.action === 'revoke') {
       if (auth.method === 'staff_session') {
         const err = await checkStaffGrant(sql, auth.staffId, 'ijazah_records', 'Ar', student.institution_id ?? null);
