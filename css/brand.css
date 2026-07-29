@@ -38,6 +38,25 @@
        typographic rebuild (see docs/shrs-executive-refinement-audit.md
        for the broader hardcoded-typography finding). */
     --h2-size:2.2rem; --h3-sub-size:1.55rem;
+    /* SHRS Design System (Phase 0, docs/shrs-design-system.md) — the
+       rest of the type scale, plus spacing/radius/shadow/chart tokens
+       that previously existed only as repeated inline values. These are
+       additive: nothing above is renamed or removed, so no existing
+       page changes appearance until it's deliberately migrated onto
+       the new tokens. */
+    --h1-size:2.8rem; --h3-size:1.7rem; --h4-size:1.3rem;
+    --body-size:1rem; --small-size:0.85rem; --caption-size:0.72rem;
+    --space-xs:6px; --space-sm:12px; --space-md:20px; --space-lg:32px; --space-xl:48px; --space-2xl:72px;
+    --radius-sm:6px; --radius-md:8px; --radius-lg:var(--btn-radius); --radius-xl:16px;
+    --shadow-sm:0 6px 16px -6px rgba(20,13,4,0.25);
+    --shadow-md:0 22px 48px -26px rgba(20,13,4,0.4);
+    --shadow-lg:0 28px 56px -24px rgba(0,0,0,0.55);
+    /* Categorical sequence for future dashboard charts — reuses brand +
+       prestige-palette hues (never invented colours) so a bar/line/pie
+       chart's series automatically read as "on-brand" rather than a
+       generic charting-library default palette. */
+    --chart-1:var(--gold-bright); --chart-2:var(--forest-green); --chart-3:var(--oxford-navy);
+    --chart-4:var(--terracotta); --chart-5:var(--crimson); --chart-6:var(--bronze-bright);
   }
   :root[data-pc-theme="dark"]{
     --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
