@@ -242,6 +242,24 @@
     "altHref": "/faculty/"
   },
   {
+    "slug": "academic-calendar",
+    "output": "academic-calendar/index.html",
+    "title": "Academic Calendar — Sultan Hanafi Royal Schools",
+    "description": "Third Term 2025/2026 key dates: First Continuous Assessment, examinations, rehearsal, and Graduation & End-of-Year Programme.",
+    "contentFile": "pages/academic-calendar.html",
+    "altHref": "/ar/academic-calendar/"
+  },
+  {
+    "slug": "academic-calendar-ar",
+    "output": "ar/academic-calendar/index.html",
+    "title": "التقويم الأكاديمي — مدارس سلطان حنفي الملكية",
+    "description": "أهم مواعيد الفصل الدراسي الثالث 2025/2026: التقييم المستمر الأول، الامتحانات، بروفة التخرج، وحفل التخرج ونهاية العام.",
+    "contentFile": "pages/academic-calendar.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academic-calendar/"
+  },
+  {
     "slug": "digital-campus-ar",
     "output": "ar/digital-campus/index.html",
     "title": "الحرم الرقمي — مدارس سلطان حنفي الملكية",

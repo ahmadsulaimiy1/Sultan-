@@ -1829,6 +1829,20 @@
     .flow-arrow{transform:rotate(90deg);flex:0 0 26px;}
   }
 
+  /* Academic Calendar / exam-week schedule grid — a premium table
+     treatment for real, sourced institutional schedules (never a
+     plain HTML table with default browser borders). */
+  .exam-table-wrap{margin-top:28px;overflow-x:auto;border:1px solid var(--line);box-shadow:0 22px 48px -30px rgba(20,13,4,0.3);}
+  .exam-table{width:100%;min-width:640px;border-collapse:separate;border-spacing:0;font-size:0.86rem;background:#fff;}
+  .exam-table caption{text-align:left;font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.04em;color:var(--navy);background:var(--ivory);padding:12px 18px;border-bottom:2px solid var(--gold);}
+  .exam-table th{background:var(--navy);color:var(--gold-bright);font-weight:600;font-size:0.7rem;letter-spacing:0.05em;text-transform:uppercase;padding:10px 12px;text-align:left;white-space:nowrap;}
+  .exam-table td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  .exam-table tr:last-child td{border-bottom:none;}
+  .exam-table tr:nth-child(even) td{background:rgba(198,161,91,0.05);}
+  .exam-table td.exam-day{font-family:'Cinzel','Amiri',serif;color:var(--navy);font-weight:600;}
+  .exam-table td.exam-empty{color:#9c9a90;font-style:italic;}
+  .calendar-source-note{font-size:0.78rem;color:#6b6a63;margin-top:14px;line-height:1.6;}
+
   /* Org chart — real hierarchy only (Board → CEO → Principals/VPs → Departments) */
   .org-chart{margin-top:40px;display:flex;flex-direction:column;align-items:center;}
   .org-tier{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
