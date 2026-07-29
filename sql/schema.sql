@@ -653,18 +653,50 @@ CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifec
 -- unauthenticated lookup by reference_no) is explicitly deferred, same
 -- as IQ-02 §7.5's still-deferred Ijazah verification endpoint — this
 -- table's reference_no is ready for that whenever it's built.
+-- approved_by_staff_id: real second-party sign-off, filled only when a
+-- staff_approvals row is actually decided by a distinct PRIN-holding
+-- staff member (functions/_lib/approvals.js) — replaces the old
+-- approvedByStaffNo request field, which was never persisted here and
+-- never verified against a real role or a real second person. See
+-- docs/approval-workflow-architecture.md.
 CREATE TABLE IF NOT EXISTS certificates (
-  id                 SERIAL PRIMARY KEY,
-  student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
-  student_full_name  TEXT NOT NULL,
-  certificate_type   TEXT NOT NULL,
-  reference_no       TEXT NOT NULL UNIQUE,
-  issued_at          DATE NOT NULL,
-  issued_by_staff_id INTEGER REFERENCES staff(id),
-  revoked_at         TIMESTAMPTZ,
-  revocation_note    TEXT,
-  created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  id                   SERIAL PRIMARY KEY,
+  student_id           INTEGER REFERENCES students(id) ON DELETE SET NULL,
+  student_full_name    TEXT NOT NULL,
+  certificate_type     TEXT NOT NULL,
+  reference_no         TEXT NOT NULL UNIQUE,
+  issued_at            DATE NOT NULL,
+  issued_by_staff_id   INTEGER REFERENCES staff(id),
+  approved_by_staff_id INTEGER REFERENCES staff(id),
+  revoked_at           TIMESTAMPTZ,
+  revocation_note      TEXT,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Generic Approval Workflow (docs/approval-workflow-architecture.md) — a
+-- real second-party sign-off, not a free-text field an endpoint trusts
+-- blindly. An action the Matrix documents as requiring joint sign-off
+-- (e.g. certificates: REG 'C', PRIN 'A' jointly) creates a pending row
+-- here instead of executing immediately; functions/_lib/approvals.js's
+-- decideApproval() only performs the real side effect once a staff
+-- member who (a) actually holds the required approving permission and
+-- (b) is not the same person who requested it, decides on it.
+CREATE TABLE IF NOT EXISTS staff_approvals (
+  id                    SERIAL PRIMARY KEY,
+  area_code             TEXT NOT NULL,      -- matches a permission-matrix.js area key, e.g. 'certificates'
+  target_type           TEXT NOT NULL,      -- e.g. 'certificate_issue'
+  payload               JSONB NOT NULL,     -- the action's own parameters, so approval can actually perform it
+  requested_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+  approver_role_code    TEXT NOT NULL REFERENCES roles(code),
+  institution_id        INTEGER REFERENCES institutions(id), -- scope, when the approver role is institution-scoped
+  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'cancelled')),
+  decided_by_staff_id   INTEGER REFERENCES staff(id),
+  decision_note         TEXT,
+  result_ref            TEXT,               -- e.g. the certificate's reference_no, once the approved action executes
+  requested_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  decided_at            TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_staff_approvals_pending ON staff_approvals (area_code, status, institution_id);
 CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id);
 
 -- Teacher Identity & Academic Workforce Activation — the missing piece

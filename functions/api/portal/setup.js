@@ -453,18 +453,38 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifecycle_events (student_id, effective_date DESC)`,
   `CREATE TABLE IF NOT EXISTS certificates (
-    id                 SERIAL PRIMARY KEY,
-    student_id         INTEGER REFERENCES students(id) ON DELETE SET NULL,
-    student_full_name  TEXT NOT NULL,
-    certificate_type   TEXT NOT NULL,
-    reference_no       TEXT NOT NULL UNIQUE,
-    issued_at          DATE NOT NULL,
-    issued_by_staff_id INTEGER REFERENCES staff(id),
-    revoked_at         TIMESTAMPTZ,
-    revocation_note    TEXT,
-    created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                   SERIAL PRIMARY KEY,
+    student_id           INTEGER REFERENCES students(id) ON DELETE SET NULL,
+    student_full_name    TEXT NOT NULL,
+    certificate_type     TEXT NOT NULL,
+    reference_no         TEXT NOT NULL UNIQUE,
+    issued_at            DATE NOT NULL,
+    issued_by_staff_id   INTEGER REFERENCES staff(id),
+    approved_by_staff_id INTEGER REFERENCES staff(id),
+    revoked_at           TIMESTAMPTZ,
+    revocation_note      TEXT,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id)`,
+
+  // Generic Approval Workflow (docs/approval-workflow-architecture.md) —
+  // see sql/schema.sql's comment on this table for the full reasoning.
+  `CREATE TABLE IF NOT EXISTS staff_approvals (
+    id                    SERIAL PRIMARY KEY,
+    area_code             TEXT NOT NULL,
+    target_type           TEXT NOT NULL,
+    payload               JSONB NOT NULL,
+    requested_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+    approver_role_code    TEXT NOT NULL REFERENCES roles(code),
+    institution_id        INTEGER REFERENCES institutions(id),
+    status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'cancelled')),
+    decided_by_staff_id   INTEGER REFERENCES staff(id),
+    decision_note         TEXT,
+    result_ref            TEXT,
+    requested_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    decided_at            TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_staff_approvals_pending ON staff_approvals (area_code, status, institution_id)`,
 
   // Teacher Identity & Academic Workforce Activation — see the commented
   // version of this table in sql/schema.sql for why it exists (the

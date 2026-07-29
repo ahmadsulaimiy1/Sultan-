@@ -23,6 +23,9 @@
   var certRevokeForm = document.querySelector('[data-certificate-revoke-form]');
   var certResultEl = document.querySelector('[data-certificate-result]');
 
+  var pendingApprovalsListEl = document.querySelector('[data-pending-approvals-list]');
+  var pendingApprovalsResultEl = document.querySelector('[data-pending-approvals-result]');
+
   var attendanceForm = document.querySelector('[data-attendance-form]');
   var attendanceResultEl = document.querySelector('[data-attendance-result]');
 
@@ -72,6 +75,101 @@
     img.className = 'registrar-cert-qr';
     img.width = 96; img.height = 96;
     certResultEl.appendChild(img);
+  }
+
+  // Pending Certificate Approvals — visible to any signed-in staff
+  // member, since this page has no role-conditional hiding anywhere
+  // (the server is what actually enforces who can decide one, the same
+  // discipline every other action on this page already follows). A 403
+  // here just means this account can't decide approvals, not that
+  // something is broken — rendered as the honest empty list, not an
+  // error banner.
+  async function loadPendingApprovals(){
+    try{
+      var res = await fetch('/api/portal/staff/registrar/certificates', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'list_pending' }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        pendingApprovalsListEl.innerHTML = '';
+        pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot decide certificate approvals.'));
+        return;
+      }
+      renderPendingApprovals(data.pending || []);
+    }catch(err){
+      pendingApprovalsListEl.innerHTML = '';
+      pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending approvals.'));
+    }
+  }
+
+  function renderPendingApprovals(items){
+    pendingApprovalsListEl.innerHTML = '';
+    if(!items.length){
+      pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'No certificates awaiting approval.'));
+      return;
+    }
+    items.forEach(function(item){
+      var card = el('div', 'registrar-approval-card');
+      card.dataset.approvalId = item.id;
+      var head = el('div', 'registrar-approval-head');
+      head.appendChild(el('span', null, item.certificateType + ' — ' + item.studentFullName));
+      head.appendChild(el('span', null, formatDate(item.issuedAt)));
+      card.appendChild(head);
+      card.appendChild(el('div', 'registrar-approval-meta', 'Requested by ' + (item.requestedByName || 'a staff member') + ' on ' + formatDate(item.requestedAt) + (item.referenceNo ? ' · Reference: ' + item.referenceNo : '')));
+      var actions = el('div', 'registrar-approval-actions');
+      var noteInput = document.createElement('input');
+      noteInput.type = 'text'; noteInput.placeholder = 'Note (optional for approve, recommended for reject)';
+      actions.appendChild(noteInput);
+      var approveBtn = el('button', 'registrar-approval-approve', 'Approve');
+      approveBtn.type = 'button';
+      approveBtn.addEventListener('click', function(){ decideApproval(item.id, 'approve', noteInput.value.trim()); });
+      var rejectBtn = el('button', 'registrar-approval-reject', 'Reject');
+      rejectBtn.type = 'button';
+      rejectBtn.addEventListener('click', function(){ decideApproval(item.id, 'reject', noteInput.value.trim()); });
+      actions.appendChild(approveBtn);
+      actions.appendChild(rejectBtn);
+      card.appendChild(actions);
+      pendingApprovalsListEl.appendChild(card);
+    });
+  }
+
+  async function decideApproval(approvalId, action, note){
+    pendingApprovalsResultEl.hidden = true;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/certificates', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, approvalId: approvalId, note: note || null }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not record that decision.');
+      pendingApprovalsResultEl.hidden = false;
+      pendingApprovalsResultEl.innerHTML = '';
+      if(data.status === 'approved'){
+        pendingApprovalsResultEl.className = 'registrar-form-result is-ok registrar-cert-issued';
+        var text = el('div', 'registrar-cert-issued-text');
+        text.appendChild(el('strong', null, 'Approved — certificate issued, reference ' + data.referenceNo + '.'));
+        var link = document.createElement('a');
+        link.href = data.verifyUrl; link.target = '_blank'; link.rel = 'noopener';
+        link.className = 'text-link';
+        link.textContent = 'Open the public verification page →';
+        text.appendChild(document.createElement('br'));
+        text.appendChild(link);
+        pendingApprovalsResultEl.appendChild(text);
+        var img = document.createElement('img');
+        img.src = data.qrUrl; img.alt = 'QR code linking to the verification page for ' + data.referenceNo;
+        img.className = 'registrar-cert-qr';
+        img.width = 96; img.height = 96;
+        pendingApprovalsResultEl.appendChild(img);
+      }else{
+        pendingApprovalsResultEl.className = 'registrar-form-result is-ok';
+        pendingApprovalsResultEl.textContent = 'Rejected — no certificate was created.';
+      }
+      loadPendingApprovals();
+    }catch(err){
+      pendingApprovalsResultEl.className = 'registrar-form-result is-error';
+      pendingApprovalsResultEl.textContent = (err && err.message) || 'Could not record that decision.';
+      pendingApprovalsResultEl.hidden = false;
+    }
   }
 
   function eventLabel(type){
@@ -369,21 +467,18 @@
       certificateType: certIssueForm.querySelector('[data-cert-type]').value.trim(),
       referenceNo: certIssueForm.querySelector('[data-cert-reference]').value.trim(),
       issuedAt: certIssueForm.querySelector('[data-cert-issued-at]').value || null,
-      approvedByStaffNo: certIssueForm.querySelector('[data-cert-approved-by]').value.trim() || null,
     };
     try{
       var res = await fetch('/api/portal/staff/registrar/certificates', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
       });
       var data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Could not issue that certificate.');
-      showCertificateIssued(data.referenceNo, data.verifyUrl, data.qrUrl);
+      if(!res.ok) throw new Error(data.error || 'Could not submit that certificate request.');
+      showResult(certResultEl, true, data.message || 'Submitted — awaiting Principal approval.');
       certIssueForm.reset();
-      var res2 = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(currentAdmissionNo));
-      var data2 = await res2.json();
-      if(res2.ok) renderRecord(data2);
+      loadPendingApprovals();
     }catch(err){
-      showResult(certResultEl, false, (err && err.message) || 'Could not issue that certificate.');
+      showResult(certResultEl, false, (err && err.message) || 'Could not submit that certificate request.');
     }
   });
 
@@ -429,6 +524,7 @@
       if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
       loadingEl.hidden = true;
       contentEl.hidden = false;
+      loadPendingApprovals();
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Registrar\'s Office.';

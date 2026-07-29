@@ -545,6 +545,17 @@ body.portal-body > *{position:relative;z-index:1;}
 .registrar-certificates{padding:16px 20px 0;}
 .registrar-cert-forms{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);margin-top:16px;padding-top:16px;}
 @media (max-width:680px){.registrar-cert-forms{grid-template-columns:1fr;}}
+.registrar-field-note{grid-column:1/-1;font-size:0.78rem;color:var(--ink-soft);font-style:italic;margin:2px 0 10px;}
+
+.registrar-approvals-list{padding:0 20px 16px;display:flex;flex-direction:column;gap:10px;}
+.registrar-approval-card{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:6px;padding:12px 14px;background:#fff;}
+.registrar-approval-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:0.9rem;color:var(--navy);font-weight:600;}
+.registrar-approval-meta{font-size:0.78rem;color:var(--ink-soft);margin-top:2px;}
+.registrar-approval-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+.registrar-approval-actions input[type="text"]{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;}
+.registrar-approval-approve{background:var(--forest-green, #2f6b46);border-color:var(--forest-green, #2f6b46);color:#fff;padding:6px 14px;border-radius:4px;font-size:0.82rem;cursor:pointer;}
+.registrar-approval-reject{background:var(--crimson);border-color:var(--crimson);color:#fff;padding:6px 14px;border-radius:4px;font-size:0.82rem;cursor:pointer;}
+.registrar-approvals-empty{padding:8px 20px 16px;color:var(--ink-soft);font-size:0.86rem;}
 
 .teacher-class-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;padding:16px 20px;}
 .teacher-class-card{

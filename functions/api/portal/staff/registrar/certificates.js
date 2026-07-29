@@ -2,23 +2,33 @@
 // register (see sql/schema.sql's comment on `certificates`): "issue"
 // records that a certificate was granted, it does not generate a
 // physical/PDF document (no document-generation system exists in this
-// project). Session-authenticated, Permission-Engine-gated against the
-// `certificates` area (REG holds Create; PRIN's joint Approve is
-// recorded via approvedByStaffNo, not a separate access gate, matching
-// how student_lifecycle_events records joint sign-off).
+// project).
 //
-// referenceNo is now auto-generated (SHR-<TYPE>-<YEAR>-<seq>) when the
-// staff member leaves it blank, rather than requiring them to invent a
-// consistent numbering scheme by hand — this is the public number
-// printed on the certificate and looked up at /verify-certificate/, so
-// consistency matters more than it did when this was pure internal
-// filing. Staff can still supply their own (e.g. to match a pre-2026
-// paper register) — auto-generation only fills the gap.
+// Approval Workflow Architecture (docs/approval-workflow-architecture.md),
+// first real implementation: role-permission-matrix.md §4.13 gives REG
+// 'C' (once graduation approved) and PRIN 'A' — "jointly" — on
+// `certificates`. Until now that joint authority was recorded via an
+// optional `approvedByStaffNo` field the REQUESTING staff member typed in
+// themselves, never persisted on the certificate row and never verified
+// against a real PRIN account or a real second person — a Registrar
+// acting alone could issue any certificate regardless of what that field
+// held. `issue` now creates a pending `staff_approvals` row instead of
+// writing to `certificates` directly; the certificate is only actually
+// created once a distinct staff member who genuinely holds `certificates`
+// 'A' approves it, via functions/_lib/approvals.js's decideApproval().
+//
+// referenceNo is auto-generated (SHR-<TYPE>-<YEAR>-<seq>) at APPROVAL
+// time when left blank, not at request time — generating it earlier
+// could hand out a reference number for a certificate a Principal then
+// rejects. Staff can still supply their own reference (e.g. to match a
+// pre-2026 paper register) at request time; that value is simply carried
+// through untouched.
 import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
+import { createApprovalRequest, listPendingApprovals, decideApproval } from '../../../../_lib/approvals.js';
 
 const TYPE_ABBREVIATIONS = {
   nursery_graduation: 'NUR', primary_graduation: 'PRI', junior_secondary: 'JSS', senior_secondary: 'SSS',
@@ -66,52 +76,103 @@ export async function onRequestPost({ request, env }) {
   const action = body && body.action;
 
   try {
-    const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', null);
-    if (!grant.granted) {
-      return json({ error: 'Your role does not have authority to issue or revoke certificates.' }, 403);
-    }
-
     if (action === 'issue') {
       const admissionNo = ((body && body.admissionNo) || '').trim();
       const certificateType = ((body && body.certificateType) || '').trim();
-      let referenceNo = ((body && body.referenceNo) || '').trim();
+      const referenceNo = ((body && body.referenceNo) || '').trim() || null;
       const issuedAt = (body && body.issuedAt) || new Date().toISOString().slice(0, 10);
       if (!admissionNo || !certificateType) {
         return json({ error: 'admissionNo and certificateType are required.' }, 400);
       }
 
-      const studentRes = await sql`SELECT id, full_name FROM students WHERE admission_no = ${admissionNo}`;
+      const studentRes = await sql`
+        SELECT s.id, s.full_name, ci.id AS institution_id
+        FROM students s
+        LEFT JOIN classes c ON c.id = s.class_id
+        LEFT JOIN institutions ci ON ci.name = c.institution
+        WHERE s.admission_no = ${admissionNo}`;
       const student = studentRes.rows[0];
       if (!student) {
         return json({ error: 'No student found with that Institutional Student Number.' }, 404);
       }
 
-      const approvedByStaffNo = (body && body.approvedByStaffNo) || null;
-
-      if (!referenceNo) {
-        referenceNo = await generateReferenceNo(sql, certificateType, issuedAt);
+      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', student.institution_id ?? null);
+      if (!grant.granted) {
+        return json({ error: 'Your role does not have authority to request a certificate for this student.' }, 403);
       }
 
-      const created = await sql`
-        INSERT INTO certificates (student_id, student_full_name, certificate_type, reference_no, issued_at, issued_by_staff_id)
-        VALUES (${student.id}, ${student.full_name}, ${certificateType}, ${referenceNo}, ${issuedAt}, ${staffId})
-        RETURNING id`;
+      const approvalRequest = await createApprovalRequest(sql, {
+        areaCode: 'certificates', targetType: 'certificate_issue',
+        payload: { studentId: student.id, studentFullName: student.full_name, certificateType, referenceNo, issuedAt },
+        requestedByStaffId: staffId, approverRoleCode: 'PRIN', institutionId: student.institution_id ?? null,
+      });
 
       await logStaffEvent(sql, {
-        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'certificate', targetId: created.rows[0].id,
-        reason: body.reason || null, metadata: { admissionNo, certificateType, referenceNo, approvedByStaffNo },
+        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'certificate_request', targetId: approvalRequest.id,
+        reason: body.reason || null, metadata: { admissionNo, certificateType, referenceNo },
       });
 
       return json({
-        ok: true,
-        certificateId: created.rows[0].id,
-        referenceNo,
-        verifyUrl: `/verify-certificate/?ref=${encodeURIComponent(referenceNo)}`,
-        qrUrl: `/api/certificates/qr?ref=${encodeURIComponent(referenceNo)}`,
+        ok: true, approvalId: approvalRequest.id, status: 'pending_approval',
+        message: 'Submitted — a Principal must approve this before the certificate is issued.',
       });
     }
 
+    if (action === 'list_pending') {
+      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'A', null);
+      if (!grant.granted) {
+        return json({ error: 'Your role does not have authority to decide certificate approvals.' }, 403);
+      }
+      const staffRes = await sql`SELECT institution_id FROM staff WHERE id = ${staffId}`;
+      const pending = await listPendingApprovals(sql, {
+        areaCode: 'certificates', institutionId: staffRes.rows[0] ? staffRes.rows[0].institution_id : null,
+      });
+      return json({
+        ok: true,
+        pending: pending.map((p) => ({
+          id: p.id, requestedByName: p.requested_by_name, requestedAt: p.requested_at, ...p.payload,
+        })),
+      });
+    }
+
+    if (action === 'approve' || action === 'reject') {
+      if (!Number.isInteger(body.approvalId)) {
+        return json({ error: 'A valid numeric approvalId is required.' }, 400);
+      }
+      const result = await decideApproval(sql, {
+        approvalId: body.approvalId, decidingStaffId: staffId, decision: action === 'approve' ? 'approve' : 'reject',
+        note: body.note || null, areaCode: 'certificates', permissionCode: 'A',
+        performOnApprove: async ({ payload, approval, decidingStaffId: approverId }) => {
+          let referenceNo = payload.referenceNo;
+          if (!referenceNo) referenceNo = await generateReferenceNo(sql, payload.certificateType, payload.issuedAt);
+          await sql`
+            INSERT INTO certificates (student_id, student_full_name, certificate_type, reference_no, issued_at, issued_by_staff_id, approved_by_staff_id)
+            VALUES (${payload.studentId}, ${payload.studentFullName}, ${payload.certificateType}, ${referenceNo}, ${payload.issuedAt}, ${approval.requested_by_staff_id}, ${approverId})`;
+          return referenceNo;
+        },
+      });
+      if (result.error) return json({ error: result.error }, 403);
+
+      await logStaffEvent(sql, {
+        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'certificate_request', targetId: body.approvalId,
+        reason: body.note || null, metadata: { decision: result.status, resultRef: result.resultRef || null },
+      });
+
+      if (result.status === 'approved') {
+        return json({
+          ok: true, status: 'approved', referenceNo: result.resultRef,
+          verifyUrl: `/verify-certificate/?ref=${encodeURIComponent(result.resultRef)}`,
+          qrUrl: `/api/certificates/qr?ref=${encodeURIComponent(result.resultRef)}`,
+        });
+      }
+      return json({ ok: true, status: 'rejected' });
+    }
+
     if (action === 'revoke') {
+      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', null);
+      if (!grant.granted) {
+        return json({ error: 'Your role does not have authority to revoke certificates.' }, 403);
+      }
       const referenceNo = ((body && body.referenceNo) || '').trim();
       const revocationNote = (body && body.revocationNote) || null;
       if (!referenceNo || !revocationNote) {
@@ -131,7 +192,7 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, certificateId: updated.rows[0].id });
     }
 
-    return json({ error: 'Unknown action. Expected one of: issue, revoke.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: issue, list_pending, approve, reject, revoke.' }, 400);
   } catch (err) {
     console.error('registrar certificates error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

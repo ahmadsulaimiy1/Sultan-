@@ -86,24 +86,41 @@ institution-scoped grants (e.g. PRIN).
 
 ## Issuing or revoking a certificate
 
+Certificate issuance is now a real, enforced two-step approval
+(`docs/approval-workflow-architecture.md`) — a Registrar requests, a
+Principal approves, and the certificate does not exist until they do:
+
 ```
 curl -X POST https://<your-domain>/api/portal/staff/registrar/certificates \
-  -H "content-type: application/json" -b "shr_staff_session=<staff session cookie>" \
+  -H "content-type: application/json" -b "shr_staff_session=<REG's staff session cookie>" \
   -d '{
     "action": "issue", "admissionNo": "SHRS-2031",
     "certificateType": "Junior School Certificate", "referenceNo": "CERT-2024-009",
     "issuedAt": "2024-07-25"
   }'
+# -> { "ok": true, "approvalId": <id>, "status": "pending_approval" }
 
+curl -X POST https://<your-domain>/api/portal/staff/registrar/certificates \
+  -H "content-type: application/json" -b "shr_staff_session=<a DIFFERENT staff member's session, holding PRIN>" \
+  -d '{"action": "approve", "approvalId": <id>}'
+# -> { "ok": true, "status": "approved", "referenceNo": "...", "verifyUrl": "...", "qrUrl": "..." }
+```
+`list_pending` (`{"action": "list_pending"}`) returns the decider's own
+queue. Requires `certificates` Create (REG) to request and `certificates`
+Approve (PRIN) to decide — checked against the real Permission Engine,
+and the decider cannot be the same person who requested it. "Issue"
+records that a certificate was granted — it does not generate a
+PDF/physical document, since no document-generation system exists in
+this project (same convention as the Ijazah register).
+
+```
 curl -X POST https://<your-domain>/api/portal/staff/registrar/certificates \
   -H "content-type: application/json" -b "shr_staff_session=<staff session cookie>" \
   -d '{"action": "revoke", "referenceNo": "CERT-2024-009", "revocationNote": "Issued in error — duplicate reference."}'
 ```
-Requires the `certificates` Create permission (REG holds it; PRIN's
-joint approval is recordable via `approvedByStaffNo`, again not
-system-enforced). "Issue" records that a certificate was granted — it
-does not generate a PDF/physical document, since no document-generation
-system exists in this project (same convention as the Ijazah register).
+`revoke` is unchanged — still a single REG-held action, since the
+Matrix's §4.13 table never gave PRIN a joint grant over revocation, only
+over issuance.
 
 ## Correcting attendance (Migration Phase A)
 
@@ -162,11 +179,19 @@ scope text matches "aggregate," not just checking a boolean.
 - **Fee entry still goes through `admin/students.js`'s bearer token.**
   Attendance (Phase A) and assessments (Phase B) are migrated; fees are
   Phase C, queued next in `identity-migration-plan.md`.
-- **No approval step in this office is system-enforced.** The Matrix's
-  "Registrar + Principal jointly" language for promotions, withdrawals,
-  graduations, and certificates is recordable via an optional
-  `approvedByStaffNo` field, not gated in code. A Registrar acting alone
-  can currently record any of these actions. See
+- **Certificates now enforce a real two-person approval**
+  (`docs/approval-workflow-architecture.md`) — see above. **Promotions,
+  withdrawals, graduations, and transfers do not yet.** The Matrix's
+  "Registrar + Principal jointly" language for those four is still
+  recordable via an optional `approvedByStaffId` field
+  (`lifecycle-events.js`), resolved to a real staff row but never
+  verified as a PRIN, a real session, or a person distinct from the
+  requester — a Registrar acting alone can still record any of these
+  four. Migrating them to the same `staff_approvals` engine certificates
+  now uses is the named next phase in
+  `docs/approval-workflow-architecture.md` §6, not done yet because it
+  needs `student_lifecycle_events` to gain a pending/draft state first
+  (today it writes directly, with no such column). See
   `docs/data-lifecycle-register.md` for the full accounting of where
   this project's governance language and system behaviour diverge.
 - **No certificate/transcript view exists yet on the parent or student

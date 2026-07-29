@@ -293,6 +293,12 @@ labelled a snapshot, not a ledger.
 | REG | ✓ | ✓ (once graduation approved) | |
 | PRIN | own institution | | ✓ (jointly with REG) |
 
+This is the first area where "jointly" is a real, enforced two-step
+approval in code, not just documented text — see
+`docs/approval-workflow-architecture.md`. A Registrar's `issue` action
+creates a pending request; the certificate only exists once a distinct
+Principal actually decides on it via their own `A` grant here.
+
 Verify: same public-endpoint pattern as Ijazah — future work, not a
 staff permission.
 
