@@ -1,17 +1,31 @@
 /* Parent Portal (Pilot) — shares brand.css tokens (colors, fonts) but is
    a functional utility surface, not a marketing page, so it keeps its
-   own simpler layout rather than reusing the site chrome. */
+   own simpler layout rather than reusing the site chrome.
+
+   Executive Experience colour rebalance (Design Correction Directive):
+   the page shell was previously a full-viewport dark coffee-brown
+   gradient with cream/gold only as text and small card surfaces —
+   inverted here so cream/white is the dominant surface and coffee
+   brown/royal gold FRAME the experience (topbar border, card headers,
+   the .exec-welcome/.id-card "premium accent" cards) rather than
+   covering most of it. Every rule below that assumed light-text-on-
+   dark-page (gold-bright/ivory text sitting directly on .portal-body)
+   is updated alongside this — search this file for "cream-shell" to
+   find them all. */
 body.portal-body{
-  min-height:100vh;color:var(--ivory);
+  min-height:100vh;color:var(--ink);
   background:
-    radial-gradient(1100px 500px at 85% -10%, rgba(233,206,138,0.07), transparent 60%),
-    linear-gradient(175deg, var(--navy) 0%, var(--navy-deep) 55%, var(--navy-deep) 100%);
+    radial-gradient(1200px 560px at 88% -12%, rgba(198,161,91,0.10), transparent 62%),
+    linear-gradient(180deg, var(--milk, #FCFAF6) 0%, var(--ivory) 100%);
   font-family:'Inter','Cairo',sans-serif;display:flex;flex-direction:column;
 }
-.portal-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(233,206,138,0.25);}
-.portal-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ivory);}
-.portal-brand img{width:32px;height:32px;}
-.portal-brand span{font-family:'Cinzel','Amiri',serif;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;}
+.portal-topbar{
+  display:flex;align-items:center;justify-content:space-between;padding:18px 28px;
+  background:#fff;border-bottom:2px solid var(--gold);box-shadow:0 2px 14px -6px rgba(59,42,29,0.14);
+}
+.portal-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);}
+.portal-brand img{width:34px;height:34px;}
+.portal-brand span{font-family:'Cinzel','Amiri',serif;font-size:0.92rem;letter-spacing:0.07em;text-transform:uppercase;}
 [dir="rtl"] .portal-brand span{letter-spacing:normal;}
 .portal-pilot-badge{
   font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy-deep);
@@ -156,27 +170,30 @@ body.portal-body{
   font-size:0.82rem;padding:10px 13px;margin-bottom:16px;display:none;
 }
 .portal-error.is-visible{display:block;}
-.portal-notice{font-size:0.76rem;line-height:1.55;color:var(--ink-soft);margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
-/* .portal-notice assumes a light card surface (color:var(--ink-soft) on
-   --ivory) — several dashboard pages append a closing note directly on
-   the dark .portal-body background instead, after the last light card,
-   where that same gray reads as near-invisible dark-on-dark. This variant
-   is for that context specifically. */
+.portal-notice{font-size:0.8rem;line-height:1.6;color:var(--ink-soft);margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
+/* cream-shell: .portal-body is now a light surface everywhere, so this
+   no longer needs a separate "on dark" palette — kept as its own class
+   (rather than renamed across every template that references it) so no
+   HTML needed to change, but it now renders identically to .portal-notice. */
 .portal-notice-on-dark{
-  font-size:0.76rem;line-height:1.55;color:rgba(248,244,233,0.6);
-  margin-top:22px;border-top:1px solid rgba(233,206,138,0.25);padding-top:16px;
+  font-size:0.8rem;line-height:1.6;color:var(--ink-soft);
+  margin-top:22px;border-top:1px solid var(--line);padding-top:16px;
 }
-.portal-notice-on-dark a{color:var(--gold-bright);}
+.portal-notice-on-dark a{color:var(--navy);text-decoration:underline;text-underline-offset:2px;}
+.portal-notice-on-dark a:hover{color:var(--gold);}
 .portal-back-link{display:inline-block;margin-top:14px;font-size:0.8rem;color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;}
 .portal-back-link:hover{color:var(--navy);}
 
 .portal-wrap{width:100%;max-width:760px;}
-.portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--gold-bright);margin-bottom:4px;}
-.portal-hello-sub{font-size:0.82rem;color:rgba(248,244,233,0.7);margin-bottom:24px;}
-.portal-logout{background:none;border:1px solid rgba(233,206,138,0.4);color:var(--gold-bright);padding:8px 16px;font-size:0.78rem;cursor:pointer;}
-.portal-logout:hover{border-color:var(--gold-bright);}
-.portal-topbar-link{font-size:0.8rem;color:var(--gold-bright);text-decoration:underline;text-underline-offset:2px;}
-.portal-topbar-link:hover{color:#fff;}
+.portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;letter-spacing:0.01em;color:var(--navy);margin-bottom:6px;}
+.portal-hello-sub{font-size:0.88rem;color:var(--ink-soft);margin-bottom:26px;}
+.portal-logout{
+  background:none;border:1px solid var(--navy);border-radius:4px;color:var(--navy);
+  padding:8px 16px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background .2s ease,color .2s ease;
+}
+.portal-logout:hover{background:var(--navy);color:#fff;}
+.portal-topbar-link{font-size:0.82rem;font-weight:600;color:var(--navy);text-decoration:underline;text-underline-offset:2px;}
+.portal-topbar-link:hover{color:var(--gold);}
 
 /* Executive Dashboard Visual System: every existing card class gets the
    same elevated-shadow/gold-hairline treatment automatically — this is
@@ -189,13 +206,23 @@ body.portal-body{
   border:1px solid rgba(198,161,91,0.4);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
   box-shadow:0 22px 48px -26px rgba(20,13,4,0.42);margin-bottom:24px;
 }
-.portal-child-head{background:var(--navy);color:#fff;padding:16px 20px;}
-/* Explicit color, not just inherited from .portal-child-head — brand.css's
-   global `h1,h2,h3,h4{color:var(--navy)}` rule otherwise wins over the
-   inherited white regardless of specificity (inheritance always loses to
-   any explicit rule), rendering every card-header title navy-on-navy. */
-.portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;margin:0 0 4px;color:#fff;}
-.portal-child-head .meta{font-size:0.78rem;color:var(--gold-bright);}
+/* cream-shell: a solid navy block repeated atop every single card on a
+   dashboard (often 6-10 per page) is exactly the "brown consumes the
+   experience" problem the Design Correction Directive names — coffee
+   brown now frames each header (a thin gold-to-navy rule on the
+   leading edge) rather than filling it; the header surface itself
+   stays part of the cream field. .exec-welcome and .id-card remain the
+   deliberate solid-navy "premium accent" moments per page. */
+.portal-child-head{
+  position:relative;background:linear-gradient(180deg,#fff 0%,var(--ivory) 100%);
+  color:var(--navy);padding:18px 22px 16px 26px;border-bottom:2px solid var(--gold);
+}
+.portal-child-head::before{
+  content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--gold-bright) 0%,var(--navy) 100%);
+}
+.portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);font-weight:600;margin:0 0 4px;color:var(--navy);}
+.portal-child-head .meta{font-size:0.8rem;color:var(--ink-soft);}
 .registrar-sample-badge:not([hidden]){
   display:inline-block;margin-top:6px;padding:2px 9px;font-size:0.66rem;font-weight:700;
   letter-spacing:0.04em;text-transform:uppercase;color:var(--navy-deep);background:var(--gold-bright);
@@ -207,15 +234,15 @@ body.portal-body{
    background as a jarring solid block. Each .portal-stat carries its
    own border instead, so it never depends on the row being full. */
 .portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;}
-.portal-stat{background:var(--ivory);padding:16px 20px;border:1px solid var(--line);}
-.portal-stat .label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
-.portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:var(--navy);margin-top:4px;}
+.portal-stat{background:var(--ivory);padding:18px 20px;border:1px solid var(--line);}
+.portal-stat .label{font-size:0.76rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);}
+.portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--navy);margin-top:5px;}
 .portal-results{padding:18px 20px;}
-.portal-results h3{font-size:0.85rem;color:var(--navy);margin:0 0 10px;}
+.portal-results h3{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);color:var(--navy);margin:0 0 12px;}
 .portal-results-scroll{overflow-x:auto;}
-.portal-results table{width:100%;min-width:520px;border-collapse:collapse;font-size:0.82rem;}
-.portal-results th, .portal-results td{text-align:start;padding:7px 8px;border-bottom:1px solid var(--line);}
-.portal-results th{color:var(--ink-soft);font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.03em;}
+.portal-results table{width:100%;min-width:520px;border-collapse:collapse;font-size:0.86rem;}
+.portal-results th, .portal-results td{text-align:start;padding:9px 8px;border-bottom:1px solid var(--line);}
+.portal-results th{color:var(--navy);font-weight:700;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid var(--gold);}
 .portal-empty{padding:18px 20px;color:var(--ink-soft);font-size:0.85rem;}
 .portal-demo-flag{
   display:inline-block;margin-top:10px;margin-inline-end:8px;font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;
@@ -228,17 +255,17 @@ body.portal-body{
 .portal-status-badge[hidden]{display:none;}
 
 .portal-notifications{
-  background:rgba(233,206,138,0.1);border:1px solid var(--gold);margin-bottom:20px;
+  background:rgba(233,206,138,0.14);border:1px solid var(--gold);margin-bottom:20px;
 }
 .portal-notifications[hidden]{display:none;}
 .portal-notifications-head{
   display:flex;align-items:center;justify-content:space-between;padding:10px 16px;
-  font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--gold-bright);
+  font-family:'Cinzel','Amiri',serif;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);
 }
-.portal-text-btn{background:none;border:none;color:rgba(248,244,233,0.7);font-size:0.72rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;font-family:'Inter','Cairo',sans-serif;}
-.portal-text-btn:hover{color:var(--gold-bright);}
+.portal-text-btn{background:none;border:none;color:var(--ink-soft);font-size:0.76rem;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;font-family:'Inter','Cairo',sans-serif;}
+.portal-text-btn:hover{color:var(--navy);}
 .portal-notifications ul{list-style:none;margin:0;padding:0 16px 14px;}
-.portal-notifications li{font-size:0.82rem;color:rgba(248,244,233,0.85);padding:6px 0;border-top:1px solid rgba(233,206,138,0.2);}
+.portal-notifications li{font-size:0.86rem;color:var(--ink);padding:7px 0;border-top:1px solid rgba(198,161,91,0.25);}
 .portal-notifications li:first-child{border-top:none;}
 
 .portal-adhkar-card{
@@ -246,7 +273,7 @@ body.portal-body{
   box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:24px;
 }
 .portal-adhkar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
-.portal-adhkar-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.portal-adhkar-head h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--navy);}
 .portal-adhkar-streak{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;color:var(--crimson);border:1px solid var(--crimson);padding:2px 9px;white-space:nowrap;}
 .portal-adhkar-sub{font-size:0.82rem;color:var(--ink-soft);margin-bottom:16px;}
 .portal-adhkar-periods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
@@ -277,10 +304,10 @@ body.portal-body{
 /* --- Multi-programme (dual enrolment) chips --- */
 .portal-programmes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .portal-programme-chip{
-  font-size:0.7rem;letter-spacing:0.02em;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);
-  padding:2px 9px;white-space:nowrap;
+  font-size:0.74rem;letter-spacing:0.02em;color:var(--navy);border:1px solid var(--gold);
+  padding:3px 10px;white-space:nowrap;border-radius:2px;
 }
-.portal-programme-chip.is-primary{background:rgba(233,206,138,0.12);border-color:var(--gold-bright);font-weight:600;}
+.portal-programme-chip.is-primary{background:rgba(198,161,91,0.14);border-color:var(--navy);font-weight:600;}
 
 /* --- Student Portal: Hifz & Ijazah panel --- */
 .portal-hifz-card{
@@ -288,7 +315,7 @@ body.portal-body{
   box-shadow:0 18px 40px -24px rgba(42,32,22,0.45);padding:22px 24px;margin-bottom:24px;
 }
 .portal-hifz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
-.portal-hifz-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.portal-hifz-head h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--navy);}
 .portal-hifz-stage-badge{
   font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.04em;color:var(--navy);
   background:rgba(198,161,91,0.16);border:1px solid var(--gold);padding:3px 10px;white-space:nowrap;
@@ -336,14 +363,20 @@ body.portal-body{
   box-shadow:0 22px 48px -26px rgba(20,13,4,0.42);padding:22px 24px;margin-bottom:20px;position:relative;
 }
 .pfd-section::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);}
-.pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0 0 14px;color:var(--navy);}
-.pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--navy);margin:20px 0 10px;}
+.pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0 0 14px;color:var(--navy);}
+.pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);margin:20px 0 10px;}
 .pfd-note{font-size:0.8rem;color:var(--ink-soft);margin-top:10px;}
-.pfd-bars{display:flex;flex-direction:column;gap:10px;}
-.pfd-bar-row{font-size:0.8rem;}
-.pfd-bar-label{color:var(--ink);margin-bottom:4px;}
-.pfd-bar-track{height:8px;background:var(--line);width:100%;}
-.pfd-bar-fill{height:100%;background:var(--gold);}
+.pfd-bars{display:flex;flex-direction:column;gap:12px;}
+.pfd-bar-row{font-size:0.82rem;padding:4px 6px;margin:-4px -6px;border-radius:6px;transition:background .2s ease;}
+.pfd-bar-row:hover{background:rgba(198,161,91,0.08);}
+.pfd-bar-label{color:var(--ink);font-weight:600;margin-bottom:5px;}
+.pfd-bar-track{height:9px;background:var(--line);width:100%;border-radius:5px;overflow:hidden;}
+.pfd-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 100%);border-radius:5px;transition:width .3s ease,filter .2s ease;}
+.pfd-bar-row:hover .pfd-bar-fill{filter:brightness(1.1);}
+.pfd-infographic-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:4px 0 6px;}
+.pfd-infographic-row svg{flex:0 0 auto;}
+.pfd-infographic-caption{flex:1;min-width:200px;font-size:0.86rem;line-height:1.55;color:var(--ink-soft);}
+.pfd-infographic-caption strong{color:var(--navy);}
 .pfd-unavailable{background:#F7EDEE;border-color:var(--crimson);border-top-color:var(--crimson);}
 .pfd-unavailable-row{font-size:0.82rem;color:var(--ink-soft);padding:8px 0;border-top:1px solid var(--line);}
 .pfd-unavailable-row:first-child{border-top:none;}
@@ -356,7 +389,7 @@ body.portal-body{
   width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:'Cinzel','Amiri',serif;font-size:0.78rem;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--milk,#FCFAF6);
 }
-.portal-step-label{font-size:0.62rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+.portal-step-label{font-size:0.72rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
 .portal-step.is-active .portal-step-circle{border-color:var(--gold);color:var(--navy);background:rgba(198,161,91,0.15);}
 .portal-step.is-active .portal-step-label{color:var(--navy);font-weight:600;}
 .portal-step.is-done .portal-step-circle{border-color:var(--gold);background:var(--gold);color:#fff;}
@@ -405,11 +438,11 @@ body.portal-body{
    instead of background-through-gap, since the field count varies. */
 .identity-field-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:1px;}
 .identity-field{background:var(--ivory);padding:16px 20px;border:1px solid var(--line);}
-.identity-field .label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.identity-field .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .identity-field .value{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--navy);margin-top:4px;}
 .identity-roles-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
 .identity-role-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);background:var(--ivory);}
-.identity-role-name{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;color:var(--navy);}
+.identity-role-name{font-family:'Cinzel','Amiri',serif;font-size:1rem;font-weight:600;color:var(--navy);}
 .identity-role-scope{font-size:0.74rem;color:var(--ink-soft);margin-top:2px;}
 .identity-role-badge{font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);color:var(--navy);white-space:nowrap;}
 .identity-role-badge.is-proposed{border-color:var(--ink-soft);color:var(--ink-soft);}
@@ -572,7 +605,7 @@ body.portal-body{
   width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:'Cinzel','Amiri',serif;font-size:0.7rem;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--milk,#FCFAF6);
 }
-.wizard-rail-label{font-size:0.6rem;letter-spacing:0.02em;text-align:center;color:var(--ink-soft);line-height:1.2;}
+.wizard-rail-label{font-size:0.7rem;font-weight:600;letter-spacing:0.02em;text-align:center;color:var(--ink-soft);line-height:1.2;}
 .wizard-rail-step.is-active .wizard-rail-circle{border-color:var(--gold);color:var(--navy);background:rgba(198,161,91,0.15);}
 .wizard-rail-step.is-active .wizard-rail-label{color:var(--navy);font-weight:600;}
 .wizard-rail-step.is-done .wizard-rail-circle{border-color:var(--forest-green);background:var(--forest-green);color:#fff;}
@@ -646,7 +679,7 @@ body.portal-body{
   background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);
 }
 .exec-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.exec-card-head h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;margin:0;color:var(--navy);}
+.exec-card-head h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--navy);}
 .exec-stat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;}
 .exec-stat{
   background:var(--milk,#FCFAF6);border:1px solid var(--line);border-radius:8px;padding:18px 18px 16px;position:relative;
@@ -663,7 +696,7 @@ body.portal-body{
 .exec-stat:nth-child(2) .exec-stat-icon{background:rgba(63,107,78,0.1);border-color:rgba(63,107,78,0.3);color:var(--forest-green);}
 .exec-stat:nth-child(3) .exec-stat-icon{background:rgba(65,97,140,0.12);border-color:rgba(65,97,140,0.32);color:var(--oxford-navy);}
 .exec-stat:nth-child(4) .exec-stat-icon{background:rgba(201,120,75,0.1);border-color:rgba(201,120,75,0.3);color:var(--terracotta);}
-.exec-stat-label{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.exec-stat-label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .exec-stat-value{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--navy);margin-top:4px;}
 
 .exec-welcome{
@@ -678,14 +711,28 @@ body.portal-body{
   content:"";position:absolute;inset:0;z-index:-1;opacity:0.05;pointer-events:none;
   background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 32px);
 }
-.exec-welcome-eyebrow{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;margin:0 0 4px;color:#fff;}
+/* Institutional watermark: the same crest asset/opacity already used on
+   marketing pages (css/brand.css .crest-watermark) — reused directly
+   here (rather than sharing the class, which would collide with the
+   ::before this card already uses for its diagonal pattern) so the
+   "Welcome Back" moment on every dashboard carries the same quiet
+   institutional mark as the site's own about/governance sections. */
+.exec-welcome::after{
+  content:"";position:absolute;top:50%;right:-30px;transform:translateY(-50%);
+  width:260px;height:231px;background-image:url("/assets/images/crest-watermark.png");
+  background-size:contain;background-repeat:no-repeat;opacity:0.07;pointer-events:none;z-index:-1;
+}
+[dir="rtl"] .exec-welcome::after{right:auto;left:-30px;}
+@media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
+  [dir="rtl"] .exec-welcome::after{left:-20px;}}
+.exec-welcome-eyebrow{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h3-size,1.7rem);margin:0 0 4px;color:#fff;}
 .exec-welcome-role{font-size:0.85rem;color:rgba(248,244,233,0.75);margin-bottom:4px;}
 .exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.9rem;color:var(--gold-bright);margin-bottom:16px;}
 .exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px;padding-top:14px;border-top:1px solid rgba(233,206,138,0.25);}
 .exec-welcome-stat{display:flex;flex-direction:column;}
 .exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.2rem;color:var(--gold-bright);}
-.exec-welcome-stat .label{font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;color:rgba(248,244,233,0.65);}
+.exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(248,244,233,0.75);}
 
 .exec-empty{padding:20px 4px;color:var(--ink-soft);font-size:0.86rem;line-height:1.5;text-align:center;}
 
@@ -767,3 +814,55 @@ body.portal-body{
 .finance-receipt-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:6px 0;font-size:0.8rem;color:var(--ink-soft);}
 .finance-receipt-row a{color:var(--navy);text-decoration:underline;text-decoration-style:dotted;}
 .finance-receipt-row a:hover{color:var(--gold);}
+
+/* Executive Mobile Treatment (Design Correction Directive): the desktop
+   layout was previously served unchanged at phone widths — same padding,
+   same dense grids, same small tap targets, just narrower — which reads
+   as "a desktop page shrunk down" rather than a considered mobile
+   experience. This gives every executive surface (welcome banner, exec
+   cards, ID card, finance widget, founder dashboard sections, forms)
+   its own breathing room and touch-sized controls below 640px, without
+   changing any markup or JS. Placed at the end of the file, after the
+   finance and id-card rules it overrides, since equal-specificity CSS
+   rules resolve by source order — an earlier media query would silently
+   lose to a later unconditional rule otherwise. */
+@media (max-width:640px){
+  .portal-wrap{max-width:100%;}
+  .exec-welcome{padding:22px 18px;border-radius:calc(var(--btn-radius) - 4px);}
+  .exec-welcome h1{font-size:1.4rem;}
+  .exec-welcome-stats{gap:14px 18px;}
+  .exec-welcome-stat{flex:1 1 40%;min-width:110px;}
+  .exec-card, .portal-child-card, .pfd-section, .portal-adhkar-card, .portal-hifz-card{
+    border-radius:calc(var(--btn-radius) - 4px);
+  }
+  .exec-card{padding:18px 16px;}
+  .pfd-section{padding:18px 16px;}
+  .portal-child-head{padding:16px 16px 14px 20px;}
+  .portal-child-head h2{font-size:1.1rem;}
+  .exec-card-head h2{font-size:1.1rem;}
+  .exec-stat-grid{gap:10px;}
+  .exec-stat{padding:14px 14px 12px;}
+  .exec-stat-value{font-size:1.3rem;}
+  .portal-stats{grid-template-columns:1fr 1fr;}
+  .portal-stat{padding:14px 16px;}
+  .id-card-body{padding:18px 16px;gap:14px;}
+  .id-card-details{grid-template-columns:1fr 1fr;}
+  .id-card-detail{padding:10px 16px;}
+  .id-card-footer{padding:10px 16px;}
+  .finance-summary{padding:14px 16px;}
+  .finance-invoice-row{flex-direction:column;align-items:flex-start;gap:4px;}
+  .finance-invoice-amount{margin-inline-start:0;}
+  .finance-receipt-row{flex-direction:column;align-items:flex-start;gap:4px;}
+  .identity-field-grid{grid-template-columns:1fr 1fr;}
+  .registrar-form-grid{grid-template-columns:1fr;}
+  .registrar-search-row{flex-direction:column;}
+  .registrar-search-row input{min-width:0;}
+  /* Touch-first tap targets: 44px is the standard minimum comfortable
+     touch target (Apple HIG / Material) — the desktop controls below
+     were sized for a mouse pointer. */
+  .portal-submit, .wizard-nav button, .registrar-form-submit,
+  .account-status-banner button, .teacher-save-btn{min-height:44px;}
+  .portal-logout, .portal-topbar-link{padding:10px 14px;}
+  .wizard-nav{padding:16px 16px;}
+  .wizard-header{padding:18px 16px 4px;}
+}

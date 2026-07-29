@@ -27,6 +27,7 @@
 
   function bar(label, count, max){
     var wrap = el('div', 'pfd-bar-row');
+    wrap.title = label + ': ' + count + (max > 0 ? ' of ' + max : '');
     wrap.appendChild(el('div', 'pfd-bar-label', label + ' — ' + count));
     var track = el('div', 'pfd-bar-track');
     var fill = el('div', 'pfd-bar-fill');
@@ -41,6 +42,7 @@
   // number, since bar() conflates the two.
   function moneyBar(label, amount, max){
     var wrap = el('div', 'pfd-bar-row');
+    wrap.title = label + ': ' + formatCurrency(amount);
     wrap.appendChild(el('div', 'pfd-bar-label', label + ' — ' + formatCurrency(amount)));
     var track = el('div', 'pfd-bar-track');
     var fill = el('div', 'pfd-bar-fill');
@@ -65,24 +67,137 @@
   var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var CHART_COLORS = ['var(--chart-1)','var(--chart-2)','var(--chart-3)','var(--chart-4)','var(--chart-5)','var(--chart-6)'];
 
-  // Hand-rolled inline SVG bar chart — no charting library exists in
-  // this codebase (see docs/shrs-design-system.md's Charts section),
-  // built on the --chart-1..6 design-system tokens.
+  // Rounds a data max up to a "clean" axis ceiling (1/2/5/10 × a power of
+  // ten) — the same convention Bloomberg/TradingView-style axes use so
+  // gridlines land on round figures instead of the raw data's max.
+  function niceCeil(n){
+    if(!(n > 0)) return 1;
+    var pow = Math.pow(10, Math.floor(Math.log(n) / Math.LN10));
+    var frac = n / pow;
+    var niceFrac = frac <= 1 ? 1 : frac <= 2 ? 2 : frac <= 5 ? 5 : 10;
+    return niceFrac * pow;
+  }
+
+  // Executive-grade inline SVG bar chart — no charting library exists in
+  // this codebase (see docs/shrs-design-system.md's Charts section), so
+  // this is hand-rolled on the --chart-1..6 design-system tokens, with
+  // gridlines against a "nice" axis ceiling, a trend polyline across bar
+  // tops, a dashed average-benchmark line, an inline legend, and a native
+  // <title> per bar for a zero-JS hover tooltip (works on touch too, via
+  // a long-press, unlike a JS-driven tooltip layer).
   function revenueBarChart(rows){
-    var width = 560, height = 220, padding = 32, barGap = 10;
-    var max = Math.max.apply(null, rows.map(function(r){ return r.total; }).concat([1]));
-    var barWidth = rows.length ? (width - padding * 2) / rows.length - barGap : 0;
-    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Revenue by month">';
+    var width = 640, height = 260;
+    var padding = { top: 36, right: 18, bottom: 34, left: 60 };
+    var innerW = width - padding.left - padding.right;
+    var innerH = height - padding.top - padding.bottom;
+    var max = Math.max.apply(null, rows.map(function(r){ return r.total || 0; }).concat([1]));
+    var axisMax = niceCeil(max);
+    var barGap = 16;
+    var barWidth = rows.length ? innerW / rows.length - barGap : 0;
+    var avg = rows.reduce(function(s, r){ return s + (r.total || 0); }, 0) / (rows.length || 1);
+    var baseY = padding.top + innerH;
+
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Revenue by month, last ' + rows.length + ' months, average ' + formatCurrencyShort(avg) + '">';
+
+    // Gridlines + y-axis labels, on the rounded axisMax
+    var gridSteps = 4;
+    for(var g = 0; g <= gridSteps; g++){
+      var gv = axisMax * (g / gridSteps);
+      var gy = baseY - (gv / axisMax) * innerH;
+      svg += '<line x1="' + padding.left + '" y1="' + gy + '" x2="' + (width - padding.right) + '" y2="' + gy + '" stroke="var(--line)" stroke-width="1"' + (g === 0 ? '' : ' stroke-dasharray="2,3"') + '></line>';
+      svg += '<text x="' + (padding.left - 10) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="10.5" fill="var(--ink-soft)">' + formatCurrencyShort(gv) + '</text>';
+    }
+
+    // Average benchmark line
+    var avgY = baseY - (avg / axisMax) * innerH;
+    svg += '<line x1="' + padding.left + '" y1="' + avgY + '" x2="' + (width - padding.right) + '" y2="' + avgY + '" stroke="var(--terracotta)" stroke-width="1.4" stroke-dasharray="6,4"><title>6-month average: ' + formatCurrencyShort(avg) + '</title></line>';
+
+    // Bars, value labels, month labels, trend points
+    var points = [];
     rows.forEach(function(r, i){
-      var barHeight = max > 0 ? Math.round(((r.total || 0) / max) * (height - padding * 2)) : 0;
-      var x = padding + i * (barWidth + barGap);
-      var y = height - padding - barHeight;
-      var parts = r.month.split('-');
+      var barHeight = axisMax > 0 ? ((r.total || 0) / axisMax) * innerH : 0;
+      var x = padding.left + i * (barWidth + barGap);
+      var y = baseY - barHeight;
+      var cx = x + barWidth / 2;
+      points.push(cx + ',' + y);
+      var parts = String(r.month).split('-');
       var label = MONTH_NAMES[Number(parts[1]) - 1] || r.month;
-      svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + CHART_COLORS[i % CHART_COLORS.length] + '" rx="3"></rect>';
-      svg += '<text x="' + (x + barWidth / 2) + '" y="' + (height - padding + 16) + '" text-anchor="middle" font-size="11" fill="var(--ink-soft)">' + label + '</text>';
-      svg += '<text x="' + (x + barWidth / 2) + '" y="' + (y - 6) + '" text-anchor="middle" font-size="10" fill="var(--navy)">' + formatCurrencyShort(r.total) + '</text>';
+      svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + CHART_COLORS[i % CHART_COLORS.length] + '" rx="4"><title>' + label + ': ' + formatCurrency(r.total || 0) + '</title></rect>';
+      svg += '<text x="' + cx + '" y="' + (height - padding.bottom + 18) + '" text-anchor="middle" font-size="11" fill="var(--ink-soft)">' + label + '</text>';
+      svg += '<text x="' + cx + '" y="' + (y - 8) + '" text-anchor="middle" font-size="11" font-weight="600" fill="var(--navy)">' + formatCurrencyShort(r.total || 0) + '</text>';
     });
+
+    // Trend polyline across bar tops + point markers
+    if(points.length > 1){
+      svg += '<polyline points="' + points.join(' ') + '" fill="none" stroke="var(--oxford-navy)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity="0.55"></polyline>';
+    }
+    points.forEach(function(p){
+      var xy = p.split(',');
+      svg += '<circle cx="' + xy[0] + '" cy="' + xy[1] + '" r="2.6" fill="var(--oxford-navy)" opacity="0.7"></circle>';
+    });
+
+    // Baseline axis
+    svg += '<line x1="' + padding.left + '" y1="' + baseY + '" x2="' + (width - padding.right) + '" y2="' + baseY + '" stroke="var(--navy)" stroke-width="1.2"></line>';
+
+    // Institutional legend (trend + average) — top-right, above the bars
+    var legX = width - padding.right;
+    svg += '<g font-size="10.5" fill="var(--ink-soft)">'
+      + '<circle cx="' + (legX - 116) + '" cy="14" r="3" fill="var(--oxford-navy)"></circle>'
+      + '<text x="' + (legX - 108) + '" y="17.5">Trend</text>'
+      + '<line x1="' + (legX - 62) + '" y1="14" x2="' + (legX - 48) + '" y2="14" stroke="var(--terracotta)" stroke-width="2" stroke-dasharray="4,3"></line>'
+      + '<text x="' + (legX - 44) + '" y="17.5">Average</text>'
+      + '</g>';
+
+    svg += '</svg>';
+    return svg;
+  }
+
+  // Radial completion indicator — used for the school-wide Hifz
+  // Completion figure (juz' verified out of enrolled-students × 30).
+  // One of the demonstration infographics requested by the Executive
+  // Design Directive; built on real founder-dashboard data, not a mock.
+  function donutChart(percent, ringLabel, color){
+    var size = 176, stroke = 16, r = (size - stroke) / 2, c = size / 2;
+    var pct = Math.max(0, Math.min(100, percent));
+    var circumference = 2 * Math.PI * r;
+    var offset = circumference * (1 - pct / 100);
+    return '<svg viewBox="0 0 ' + size + ' ' + size + '" width="176" height="176" role="img" aria-label="' + ringLabel + ': ' + pct + '%">'
+      + '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="none" stroke="var(--line)" stroke-width="' + stroke + '"></circle>'
+      + '<circle cx="' + c + '" cy="' + c + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="' + stroke + '" stroke-linecap="round" '
+      + 'stroke-dasharray="' + circumference.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '" transform="rotate(-90 ' + c + ' ' + c + ')"><title>' + ringLabel + ': ' + pct + '%</title></circle>'
+      + '<text x="' + c + '" y="' + (c - 2) + '" text-anchor="middle" font-size="28" font-weight="700" fill="var(--navy)" font-family="Cinzel, Amiri, serif">' + pct + '%</text>'
+      + '<text x="' + c + '" y="' + (c + 20) + '" text-anchor="middle" font-size="10.5" letter-spacing="0.03em" fill="var(--ink-soft)">' + ringLabel.toUpperCase() + '</text>'
+      + '</svg>';
+  }
+
+  // Two-stage funnel (Invoiced -> Collected) with a taper connector and
+  // collection-rate callout — the second demonstration infographic,
+  // built on the same real totalInvoiced/totalCollected/collectionRate
+  // figures already shown as plain stat tiles above it.
+  function collectionFunnel(invoiced, collected, collectionRatePercent){
+    var width = 520, height = 176;
+    var topW = width - 40, topH = 58, topY = 8;
+    var ratio = invoiced > 0 ? Math.max(0, Math.min(1, collected / invoiced)) : 0;
+    var botW = Math.max(topW * ratio, 30);
+    var botH = 58, botY = topY + topH + 20;
+    var topX0 = (width - topW) / 2, topX1 = (width + topW) / 2;
+    var botX0 = (width - botW) / 2, botX1 = (width + botW) / 2;
+    var midX = width / 2;
+
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Fee collection funnel: ' + formatCurrencyShort(invoiced) + ' invoiced, ' + formatCurrencyShort(collected) + ' collected">';
+    svg += '<rect x="' + topX0 + '" y="' + topY + '" width="' + topW + '" height="' + topH + '" rx="6" fill="var(--oxford-navy)"><title>Total Invoiced: ' + formatCurrency(invoiced) + '</title></rect>';
+    svg += '<text x="' + midX + '" y="' + (topY + topH / 2 - 4) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Invoiced</text>';
+    svg += '<text x="' + midX + '" y="' + (topY + topH / 2 + 15) + '" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.85)">' + formatCurrencyShort(invoiced) + '</text>';
+
+    svg += '<polygon points="' + topX0 + ',' + (topY + topH) + ' ' + topX1 + ',' + (topY + topH) + ' ' + botX1 + ',' + botY + ' ' + botX0 + ',' + botY + '" fill="var(--oxford-navy)" opacity="0.22"></polygon>';
+
+    svg += '<rect x="' + botX0 + '" y="' + botY + '" width="' + botW + '" height="' + botH + '" rx="6" fill="var(--gold)"><title>Total Collected: ' + formatCurrency(collected) + '</title></rect>';
+    svg += '<text x="' + midX + '" y="' + (botY + botH / 2 - 4) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--navy-deep)">Collected</text>';
+    svg += '<text x="' + midX + '" y="' + (botY + botH / 2 + 15) + '" text-anchor="middle" font-size="12" fill="var(--navy-deep)">' + formatCurrencyShort(collected) + '</text>';
+
+    if(collectionRatePercent != null){
+      svg += '<text x="' + (width - 4) + '" y="' + (botY + botH + 22) + '" text-anchor="end" font-size="12.5" font-weight="700" fill="var(--terracotta)">' + collectionRatePercent + '% collection rate</text>';
+    }
     svg += '</svg>';
     return svg;
   }
@@ -144,6 +259,20 @@
       stageBarsEl.appendChild(bar('Stage ' + s.stageNumber + ' — ' + s.label, s.count, maxStage));
     });
 
+    var hifzDonutEl = document.querySelector('[data-founder-hifz-donut]');
+    if(hifzDonutEl){
+      var totalPossibleJuz = data.hifz.enrolledCount * 30;
+      if(totalPossibleJuz > 0){
+        var hifzPct = Math.round((data.hifz.juzVerifiedTotal / totalPossibleJuz) * 100);
+        hifzDonutEl.innerHTML = '<div class="pfd-infographic-row">'
+          + donutChart(hifzPct, "Juz' Verified", 'var(--gold)')
+          + '<div class="pfd-infographic-caption"><strong>' + data.hifz.juzVerifiedTotal + ' of ' + totalPossibleJuz + " juz' verified</strong> across " + data.hifz.enrolledCount + ' Hifz-enrolled student(s) school-wide — the theoretical ceiling assumes every enrolled student completes all 30 juz.</div>'
+          + '</div>';
+      } else {
+        hifzDonutEl.innerHTML = '<p class="pfd-note">No Hifz-enrolled students yet.</p>';
+      }
+    }
+
     var feeStatsEl = document.querySelector('[data-founder-fee-stats]');
     feeStatsEl.innerHTML = '';
     feeStatsEl.appendChild(statTile('Total due (latest term on file)', formatCurrency(data.fees.totalDue)));
@@ -158,6 +287,13 @@
       financeStatsEl.appendChild(statTile('Total Collected', formatCurrency(data.finance.totalCollected)));
       financeStatsEl.appendChild(statTile('Collection Rate', data.finance.collectionRatePercent != null ? data.finance.collectionRatePercent + '%' : '—'));
       financeStatsEl.appendChild(statTile('Scholarship Exposure', formatCurrency(data.finance.scholarshipExposure)));
+
+      var funnelEl = document.querySelector('[data-founder-collection-funnel]');
+      if(funnelEl){
+        funnelEl.innerHTML = data.finance.totalInvoiced > 0
+          ? collectionFunnel(data.finance.totalInvoiced, data.finance.totalCollected, data.finance.collectionRatePercent)
+          : '<p class="pfd-note">No invoices issued yet.</p>';
+      }
 
       var revenueChartEl = document.querySelector('[data-founder-revenue-chart]');
       if(revenueChartEl){

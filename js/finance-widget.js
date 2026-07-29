@@ -49,7 +49,7 @@
       var desc = s.scholarshipType === 'full' ? 'Full Scholarship'
         : s.scholarshipType === 'sponsored' ? 'Sponsored' + (s.sponsorName ? ' by ' + esc(s.sponsorName) : '')
         : 'Partial Scholarship' + (s.discountPercent != null ? ' (' + s.discountPercent + '% off)' : s.discountAmount != null ? ' (' + formatCurrency(s.discountAmount) + ' off)' : '');
-      scholarshipHtml = '<div class="finance-note is-scholarship">🎓 ' + desc + '</div>';
+      scholarshipHtml = '<div class="finance-note is-scholarship"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" width="15" height="15" aria-hidden="true" style="vertical-align:-2px;margin-inline-end:5px;"><path d="M2 8.5 12 4l10 4.5-10 4.5-10-4.5Z"/><path d="M6 10.7v4.3c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4.3"/><path d="M20.5 9v6"/></svg>' + desc + '</div>';
     }
 
     var planHtml = '';

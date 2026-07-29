@@ -129,17 +129,40 @@ should extend this system rather than invent a parallel one:
 
 ## Charts
 
-No charting library exists in this codebase yet (it's a dependency-
-free static site + Cloudflare Pages Functions — no bundler pushing
-back on adding one, but also no precedent for one). Recommendation for
-whoever builds the first real chart module: hand-rolled inline SVG bar/
-line charts (a handful of `<rect>`/`<path>` elements driven by the same
-data the `.exec-stat` cards already fetch) over a JS charting library —
-consistent with this codebase's "no build step, no new dependencies
-unless truly needed" architecture. Use the new `--chart-1` through
-`--chart-6` tokens for series colour, in that order, so every chart
-across every dashboard shares one palette instead of each page picking
-its own.
+No charting library exists in this codebase (dependency-free static
+site + Cloudflare Pages Functions — no bundler, no precedent for one),
+and none is needed: hand-rolled inline SVG, built from the same data
+the `.exec-stat` cards already fetch, is the established pattern.
+
+The Founder Dashboard's revenue-by-month chart
+(`revenueBarChart()` in `js/portal-founder-dashboard.js`) is the
+canonical reference implementation — extend this shape rather than
+inventing a new one:
+
+- **Gridlines against a "nice" axis ceiling** — `niceCeil()` rounds the
+  data max up to a clean 1/2/5/10-of-a-power-of-ten figure so gridlines
+  land on round numbers, not the raw data's max.
+- **A dashed average/benchmark line**, computed from the same rows the
+  bars show — never a separately-fabricated target line.
+- **A trend polyline** connecting each bar's top point, with point
+  markers.
+- **An inline legend** (small `<g>` of a dot + dashed swatch, top-right)
+  naming the trend and benchmark lines.
+- **Native `<title>` tooltips** on every bar and the benchmark line —
+  zero-JS hover/long-press tooltips, real information (exact label +
+  formatted amount) on demand without a JS tooltip layer.
+- Series colour still comes from `--chart-1`–`--chart-6`, in order.
+
+Two further patterns, added for the school-wide Hifz completion figure
+and the fee collection funnel (also in `js/portal-founder-dashboard.js`):
+`donutChart()` (a single-ring radial percentage, `stroke-dasharray`/
+`stroke-dashoffset` driven, with a `<title>` tooltip and a centred
+Cinzel percentage) and `collectionFunnel()` (a two-stage trapezoid
+funnel with a taper connector, for any "top figure narrows to a
+converted figure" story — invoiced→collected today, could be
+admissions-funnel or enrolment-funnel stages later). Both render only
+when their denominator is real and non-zero; an honest empty-state
+message otherwise.
 
 ## Icons
 
@@ -162,17 +185,61 @@ scroll) is the one motion primitive in use sitewide. Respects
 should reuse this class rather than adding bespoke scroll-animation
 JS — consistency here matters more than novelty.
 
+## Portal light-shell + mobile pattern (Executive Design Directive)
+
+The portal dashboards (`css/portal.css`) were re-balanced from a
+navy-dominant page shell to a cream/white-dominant one, with navy/gold
+reserved for framing (topbar border, card-header hairlines, table
+headers) and for two deliberate "premium accent" surfaces that stay
+solid navy on purpose: `.exec-welcome` (the per-page "Welcome Back"
+banner) and `.id-card` (the Digital ID Card). Any new dashboard section
+should default to the light card treatment (`.exec-card`/
+`.portal-child-card`) and only go solid-navy if it's genuinely a
+comparable "premium moment," not a routine data card.
+
+`.exec-welcome` also carries the site's `.crest-watermark` asset at low
+opacity via a dedicated `::after` (not the shared `.crest-watermark`
+class — that class's own `::before` would collide with the one this
+card already uses for its diagonal pattern). Reuse that `::after`
+pattern, not the shared class, on any other solid-navy accent card.
+
+A single `@media (max-width:640px)` block at the very end of
+`css/portal.css` carries the mobile treatment for every dashboard
+surface (reduced card padding, 2-column stat/ID-card-detail grids,
+finance rows stacked instead of `flex-wrap`ped, 44px-minimum touch
+targets on buttons). **It must stay the last rules in the file** —
+CSS resolves equal-specificity rules by source order, so a media query
+placed earlier than an unconditional rule of the same specificity
+silently loses to it regardless of viewport width. (This was a real,
+caught-in-verification bug during this pass: the mobile block was
+briefly mid-file, before the `.finance-*` rules it targets, and every
+mobile override was overridden right back by the unconditional rules
+below it.) When adding a new mobile override, append it inside this
+same block rather than opening a new `@media` earlier in the file.
+
 ## What's still open
 
-This pass establishes tokens and documents existing conventions. It
+This pass establishes tokens, documents existing conventions, and
+(as of the Executive Design Directive pass) rebalances the portal
+colour/typography/chart/mobile/watermark treatment described above. It
 does **not** yet:
-- Migrate the ~30 pages with hardcoded heading sizes onto `--h2-size`/
-  `--h3-size` (tracked since the Executive Refinement audit).
-- Build the first chart component (no real trend data existed to chart
-  until this session's Marketplace/Qur'an work — Founder Dashboard
-  stats are real counts, not yet time-series).
+- Migrate the ~30 marketing pages with hardcoded heading sizes onto
+  `--h2-size`/`--h3-size` (tracked since the Executive Refinement
+  audit — the portal dashboards themselves now consistently use
+  `--h3-size`/`--h4-size` for card and section titles).
+- Build most of the 15 named infographic types a Chairman-level design
+  review requested (Admissions Funnel, Attendance Heatmap, Academic
+  Performance Heatmap, Scholarship Distribution Map, Teacher
+  Performance Insights, Institutional Growth Timeline, etc.) — two were
+  built as real, data-backed reference implementations (school-wide
+  Hifz completion donut, fee collection funnel); the rest need their
+  own real underlying data model before they can be built honestly
+  rather than as decoration.
+- Build interactive/expandable mobile card behaviour (swipe, expand/
+  collapse) — the mobile pass so far is spacing, sizing, and touch
+  targets, not new interaction patterns.
 - Define standards for content types the site doesn't have yet
-  (a governance/board portal, a course/lesson player, an ID card
-  template) — those get their own addenda once each module is actually
-  scoped and built, so this document doesn't get ahead of real
-  decisions the way the rest of the site's copy deliberately doesn't.
+  (a governance/board portal, a course/lesson player) — those get
+  their own addenda once each module is actually scoped and built, so
+  this document doesn't get ahead of real decisions the way the rest
+  of the site's copy deliberately doesn't.

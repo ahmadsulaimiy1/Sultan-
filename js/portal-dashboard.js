@@ -52,7 +52,7 @@
       var lock = document.createElement('span');
       lock.className = 'lock-icon';
       lock.setAttribute('aria-hidden', 'true');
-      lock.textContent = '🔒';
+      lock.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" width="14" height="14"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
       li.appendChild(lock);
       li.appendChild(document.createTextNode(item.label));
       var link = document.createElement('a');
