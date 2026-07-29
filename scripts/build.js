@@ -151,6 +151,7 @@ ${personalisation}
 <script src="/js/quran-reader.js" defer></script>
 <script src="/js/certificate-verify.js" defer></script>
 <script src="/js/identity-verify.js" defer></script>
+<script src="/js/receipt-verify.js" defer></script>
 <script src="/js/search.js" defer></script>
 
 </body>

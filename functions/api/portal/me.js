@@ -4,6 +4,7 @@ import { json } from '../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel } from '../../_lib/hifz.js';
 import { computeProfileCompletion, recommendNextStep } from '../../_lib/profile-completion.js';
 import { ensureGuardianIdentityNo } from '../../_lib/identity-no.js';
+import { loadStudentFinanceSummary } from '../../_lib/finance-summary.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -33,7 +34,7 @@ export async function onRequestGet({ request, env }) {
 
     const [studentsRes, emergencyContactsRes, educationalInterestsRes, prospectiveChildrenRes] = await Promise.all([
       sql`
-        SELECT s.id, s.full_name, s.admission_no, s.status, s.is_sample_data
+        SELECT s.id, s.full_name, s.admission_no, s.status, s.is_sample_data, gs.relationship
         FROM students s
         JOIN guardian_student gs ON gs.student_id = s.id
         WHERE gs.guardian_id = ${session.guardianId}
@@ -84,11 +85,14 @@ export async function onRequestGet({ request, env }) {
         };
       }
 
+      const finance = await loadStudentFinanceSummary(sql, student.id);
+
       children.push({
         id: student.id,
         fullName: student.full_name,
         admissionNo: student.admission_no,
         status: student.status,
+        relationship: student.relationship,
         isSampleData: !!student.is_sample_data,
         institution: primary ? primary.institution : null,
         className: primary ? primary.className : null,
@@ -96,6 +100,7 @@ export async function onRequestGet({ request, env }) {
         attendance: attendance.rows[0] || null,
         results: results.rows,
         fees: fees.rows[0] || null,
+        finance,
         hifz,
       });
     }

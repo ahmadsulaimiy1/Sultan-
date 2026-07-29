@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Finance Office — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Finance Office</span>
+    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Finance Office</div>
+    <div class="portal-hello-sub">Fee structures, invoices, receipts, scholarships, payment plans, and the debtors ledger — one honest source of institutional revenue, not a spreadsheet.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Fee Structures</h2></div>
+      <p class="registrar-hint">A fee structure is a reusable template line item — pick which apply when creating an invoice below, rather than typing amounts from memory.</p>
+      <form data-fs-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Institution</label>
+          <select data-fs-institution required>
+            <option value="">Select…</option>
+            <option value="Nursery &amp; Primary">Nursery &amp; Primary</option>
+            <option value="Royal College">Royal College</option>
+            <option value="Islamic &amp; Arabic Studies">Islamic &amp; Arabic Studies</option>
+            <option value="Qur'an College">Qur'an College</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Class Label (optional)</label>
+          <input type="text" data-fs-class-label placeholder="e.g. SSS 1 — blank = institution-wide" />
+        </div>
+        <div class="portal-field">
+          <label>Category</label>
+          <select data-fs-category required>
+            <option value="boarder">Boarder</option>
+            <option value="new_entrant">New Entrant</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Fee Type</label>
+          <input type="text" data-fs-fee-type placeholder="e.g. tuition, registration" required />
+        </div>
+        <div class="portal-field">
+          <label>Label</label>
+          <input type="text" data-fs-label placeholder="e.g. Tuition" required />
+        </div>
+        <div class="portal-field">
+          <label>Amount (₦)</label>
+          <input type="number" min="1" step="0.01" data-fs-amount required />
+        </div>
+        <div class="portal-field">
+          <label>Applies To</label>
+          <select data-fs-gender>
+            <option value="">All students</option>
+            <option value="female">Female students only</option>
+          </select>
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Save Fee Structure</button>
+      </form>
+      <div class="registrar-form-result" data-fs-result hidden></div>
+      <div class="portal-child-head"><h3 class="pfd-subhead" style="margin:0;">Existing Fee Structures</h3></div>
+      <div data-fs-list style="padding:0 20px 20px;"></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Create an Invoice</h2></div>
+      <form data-invoice-lookup-form class="registrar-search-row">
+        <input type="text" data-invoice-admission-no placeholder="Institutional Student Number (Admission No.)" required />
+        <select data-invoice-category>
+          <option value="boarder">Boarder</option>
+          <option value="new_entrant">New Entrant</option>
+        </select>
+        <button type="submit" class="portal-submit" style="width:auto;">Load Fee Structures</button>
+      </form>
+      <div data-invoice-fs-checklist style="padding:0 20px;"></div>
+      <form data-invoice-form class="registrar-form-grid" hidden>
+        <div class="portal-field">
+          <label>Term</label>
+          <input type="text" data-invoice-term placeholder="e.g. First Term 2025/2026" required />
+        </div>
+        <div class="portal-field">
+          <label>Due Date</label>
+          <input type="date" data-invoice-due-date />
+        </div>
+        <div class="portal-field registrar-field-wide">
+          <label>Custom Line Item (optional)</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="text" data-invoice-custom-label placeholder="Label" style="flex:2;" />
+            <input type="number" min="0" step="0.01" data-invoice-custom-amount placeholder="Amount" style="flex:1;" />
+          </div>
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Create Invoice</button>
+      </form>
+      <div class="registrar-form-result" data-invoice-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Record a Payment</h2></div>
+      <form data-receipt-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Invoice No.</label>
+          <input type="text" data-receipt-invoice-no placeholder="e.g. SHR-INV-2026-000001" required />
+        </div>
+        <div class="portal-field">
+          <label>Amount (₦)</label>
+          <input type="number" min="1" step="0.01" data-receipt-amount required />
+        </div>
+        <div class="portal-field">
+          <label>Payment Method</label>
+          <select data-receipt-method>
+            <option value="cash">Cash</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="cheque">Cheque</option>
+            <option value="pos">POS</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Record Payment &amp; Generate Receipt</button>
+      </form>
+      <div class="registrar-form-result" data-receipt-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Scholarships</h2></div>
+      <form data-scholarship-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Institutional Student Number</label>
+          <input type="text" data-scholarship-admission-no required />
+        </div>
+        <div class="portal-field">
+          <label>Type</label>
+          <select data-scholarship-type>
+            <option value="full">Full Scholarship</option>
+            <option value="partial">Partial Scholarship</option>
+            <option value="sponsored">Sponsored</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Discount % (partial only)</label>
+          <input type="number" min="1" max="99" data-scholarship-percent />
+        </div>
+        <div class="portal-field">
+          <label>Discount Amount ₦ (partial only)</label>
+          <input type="number" min="1" step="0.01" data-scholarship-amount />
+        </div>
+        <div class="portal-field">
+          <label>Sponsor Name (if sponsored)</label>
+          <input type="text" data-scholarship-sponsor />
+        </div>
+        <div class="portal-field">
+          <label>Term (blank = ongoing)</label>
+          <input type="text" data-scholarship-term />
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Grant Scholarship</button>
+      </form>
+      <div class="registrar-form-result" data-scholarship-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Payment Plan</h2></div>
+      <form data-plan-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Invoice ID</label>
+          <input type="number" min="1" data-plan-invoice-id required />
+        </div>
+        <div class="portal-field">
+          <label>Plan Type</label>
+          <select data-plan-type>
+            <option value="monthly">Monthly</option>
+            <option value="termly">Termly</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Number of Instalments</label>
+          <input type="number" min="2" data-plan-count required />
+        </div>
+        <div class="portal-field">
+          <label>First Due Date</label>
+          <input type="date" data-plan-first-due required />
+        </div>
+        <button type="submit" class="portal-submit registrar-form-submit">Create Payment Plan</button>
+      </form>
+      <div class="registrar-form-result" data-plan-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head">
+        <h2>Debtors &amp; Ageing Report</h2>
+        <button type="button" class="portal-text-btn" data-debtors-refresh>Refresh</button>
+      </div>
+      <div class="portal-stats" data-debtors-summary></div>
+      <div data-debtors-list style="padding:0 20px 20px;"></div>
+    </div>
+
+    <p class="portal-notice-on-dark">
+      Every fee structure, invoice, payment, scholarship, and payment plan action is checked against your assigned roles under the SHRS Role &amp; Permission Matrix and recorded in the staff audit log. If an action is refused and you believe it shouldn't be, contact the ICT Office at
+      <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.
+    </p>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Finance Office…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Finance Office</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-staff-finance.js" defer></script>
+</body>
+</html>

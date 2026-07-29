@@ -44,6 +44,12 @@
     return '₦' + n.toLocaleString('en-NG', { minimumFractionDigits: 0 });
   }
 
+  function formatDate(iso){
+    if(!iso) return null;
+    try{ return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+    catch(e){ return iso; }
+  }
+
   function renderResults(results){
     resultsEl.innerHTML = '';
     if(!results || !results.length){
@@ -186,6 +192,11 @@
       renderResults(data.results);
       renderHifz(data.hifz);
 
+      var financeMount = document.querySelector('[data-finance-mount]');
+      if(financeMount && window.SHRSFinance){
+        window.SHRSFinance.render(financeMount, data.finance);
+      }
+
       var idCardMount = document.querySelector('[data-id-card-mount]');
       if(idCardMount && window.SHRSIdCard){
         window.SHRSIdCard.render(idCardMount, {
@@ -195,6 +206,11 @@
           roleLabel: 'Student',
           subtitle: [data.institution, data.className].filter(Boolean).join(' · '),
           status: data.status,
+          details: [
+            { label: 'Admission No.', value: data.admissionNo },
+            { label: 'Academic Session', value: data.academicSession },
+            { label: 'Admission Date', value: formatDate(data.admissionDate) },
+          ],
         });
       }
 

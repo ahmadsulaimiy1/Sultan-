@@ -143,6 +143,11 @@
           roleLabel: staff.positionTitle || 'Staff',
           subtitle: staff.institution ? staff.institution.name : 'Sultan Hanafi Royal Schools',
           status: staff.status ? staff.status.charAt(0).toUpperCase() + staff.status.slice(1) : null,
+          details: [
+            { label: 'Staff No.', value: staff.staffNo },
+            { label: 'Department', value: staff.department ? staff.department.name : null },
+            { label: 'Date Joined', value: formatDate(staff.dateJoined) },
+          ],
         });
       }
 

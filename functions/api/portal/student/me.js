@@ -15,6 +15,7 @@ import { readStudentSessionFromRequest } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel, hifzStageDescription, fillJuzGrid } from '../../../_lib/hifz.js';
 import { ensureStudentIdentityNo } from '../../../_lib/identity-no.js';
+import { loadStudentFinanceSummary } from '../../../_lib/finance-summary.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -35,13 +36,13 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
-    const studentRes = await sql`SELECT id, full_name, admission_no, status FROM students WHERE id = ${session.studentId}`;
+    const studentRes = await sql`SELECT id, full_name, admission_no, status, created_at FROM students WHERE id = ${session.studentId}`;
     const student = studentRes.rows[0];
     if (!student) {
       return json({ error: 'Not signed in.' }, 401);
     }
 
-    const [attendance, results, fees, programmesRes] = await Promise.all([
+    const [attendance, results, fees, programmesRes, currentTermRes] = await Promise.all([
       sql`SELECT term, days_present, days_total FROM attendance_summary WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
       sql`SELECT term, subject, ca_score, exam_score, total_score, teacher_comment FROM term_results WHERE student_id = ${student.id} ORDER BY term, subject`,
       sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
@@ -53,6 +54,7 @@ export async function onRequestGet({ request, env }) {
         FROM student_classes sc JOIN classes c ON c.id = sc.class_id
         WHERE sc.student_id = ${student.id}
         ORDER BY sc.is_primary DESC, c.institution`,
+      sql`SELECT label FROM academic_terms WHERE is_current = true LIMIT 1`,
     ]);
 
     const enrolments = programmesRes.rows.map((r) => ({ institution: r.institution, className: r.class_name, isPrimary: r.is_primary }));
@@ -79,11 +81,14 @@ export async function onRequestGet({ request, env }) {
     }
 
     const identityNo = await ensureStudentIdentityNo(sql, student.id);
+    const finance = await loadStudentFinanceSummary(sql, student.id);
 
     return json({
       fullName: student.full_name,
       admissionNo: student.admission_no,
       identityNo,
+      admissionDate: student.created_at,
+      academicSession: currentTermRes.rows[0] ? currentTermRes.rows[0].label : null,
       status: student.status,
       institution: primary ? primary.institution : null,
       className: primary ? primary.className : null,
@@ -91,6 +96,7 @@ export async function onRequestGet({ request, env }) {
       attendance: attendance.rows[0] || null,
       results: results.rows,
       fees: fees.rows[0] || null,
+      finance,
       hifz,
     });
   } catch (err) {

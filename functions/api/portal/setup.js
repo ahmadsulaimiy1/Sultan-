@@ -565,6 +565,157 @@ const STATEMENTS = [
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE`,
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE`,
   `ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE`,
+
+  // Finance Platform (Imperial Digital Campus Directive, Priority 3) —
+  // mirrors sql/schema.sql exactly; see that file for the full design
+  // rationale on every table below.
+  `CREATE TABLE IF NOT EXISTS fee_structures (
+    id                SERIAL PRIMARY KEY,
+    institution_id    INTEGER NOT NULL REFERENCES institutions(id),
+    class_label       TEXT NOT NULL DEFAULT '',
+    student_category  TEXT NOT NULL DEFAULT 'boarder' CHECK (student_category IN ('boarder', 'new_entrant')),
+    fee_type          TEXT NOT NULL,
+    label             TEXT NOT NULL,
+    amount            NUMERIC(12,2) NOT NULL,
+    applicable_gender TEXT,
+    is_recurring      BOOLEAN NOT NULL DEFAULT true,
+    is_active         BOOLEAN NOT NULL DEFAULT true,
+    notes             TEXT,
+    created_by_staff_id INTEGER REFERENCES staff(id),
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (institution_id, class_label, student_category, fee_type)
+  )`,
+  `CREATE TABLE IF NOT EXISTS invoices (
+    id                  SERIAL PRIMARY KEY,
+    invoice_no          TEXT NOT NULL UNIQUE,
+    student_id          INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id      INTEGER NOT NULL REFERENCES institutions(id),
+    term                TEXT NOT NULL,
+    student_category    TEXT,
+    due_date            DATE,
+    status              TEXT NOT NULL DEFAULT 'unpaid' CHECK (status IN ('unpaid', 'partial', 'paid', 'cancelled')),
+    subtotal            NUMERIC(12,2) NOT NULL DEFAULT 0,
+    scholarship_discount NUMERIC(12,2) NOT NULL DEFAULT 0,
+    total_amount        NUMERIC(12,2) NOT NULL DEFAULT 0,
+    notes               TEXT,
+    created_by_staff_id INTEGER REFERENCES staff(id),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    cancelled_at        TIMESTAMPTZ,
+    cancellation_note   TEXT
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_invoices_student ON invoices(student_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status)`,
+  `CREATE TABLE IF NOT EXISTS invoice_items (
+    id                     SERIAL PRIMARY KEY,
+    invoice_id             INTEGER NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+    fee_type               TEXT NOT NULL,
+    label                  TEXT NOT NULL,
+    amount                 NUMERIC(12,2) NOT NULL,
+    source_fee_structure_id INTEGER REFERENCES fee_structures(id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS receipts (
+    id                  SERIAL PRIMARY KEY,
+    receipt_no          TEXT NOT NULL UNIQUE,
+    invoice_id          INTEGER NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+    amount              NUMERIC(12,2) NOT NULL,
+    payment_method      TEXT NOT NULL DEFAULT 'cash' CHECK (payment_method IN ('cash', 'bank_transfer', 'cheque', 'pos', 'other')),
+    paid_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    recorded_by_staff_id INTEGER REFERENCES staff(id),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    revoked_at          TIMESTAMPTZ,
+    revocation_note     TEXT
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_receipts_invoice ON receipts(invoice_id)`,
+  `CREATE TABLE IF NOT EXISTS scholarships (
+    id                  SERIAL PRIMARY KEY,
+    student_id          INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    scholarship_type    TEXT NOT NULL CHECK (scholarship_type IN ('full', 'partial', 'sponsored')),
+    discount_percent    NUMERIC(5,2),
+    discount_amount     NUMERIC(12,2),
+    sponsor_name        TEXT,
+    term                TEXT,
+    notes               TEXT,
+    granted_by_staff_id INTEGER REFERENCES staff(id),
+    granted_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    is_active           BOOLEAN NOT NULL DEFAULT true,
+    revoked_at          TIMESTAMPTZ,
+    revocation_note     TEXT
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_scholarships_student ON scholarships(student_id)`,
+  `CREATE TABLE IF NOT EXISTS payment_plans (
+    id                  SERIAL PRIMARY KEY,
+    invoice_id          INTEGER NOT NULL UNIQUE REFERENCES invoices(id) ON DELETE CASCADE,
+    plan_type           TEXT NOT NULL DEFAULT 'monthly' CHECK (plan_type IN ('monthly', 'termly', 'custom')),
+    installment_count   INTEGER NOT NULL,
+    created_by_staff_id INTEGER REFERENCES staff(id),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS payment_plan_installments (
+    id                SERIAL PRIMARY KEY,
+    payment_plan_id   INTEGER NOT NULL REFERENCES payment_plans(id) ON DELETE CASCADE,
+    sequence          INTEGER NOT NULL,
+    due_date          DATE NOT NULL,
+    amount            NUMERIC(12,2) NOT NULL,
+    status            TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'overdue')),
+    paid_receipt_id   INTEGER REFERENCES receipts(id),
+    UNIQUE (payment_plan_id, sequence)
+  )`,
+
+  // Real fee structures, supplied directly by the school (WhatsApp,
+  // 1-2 Nov 2025) — not sample/placeholder data. Amounts are exactly as
+  // given; "Educational Resources" (boarder bills) and "Textbooks" (new
+  // entrant bills) are kept as separately-labelled rows rather than
+  // merged into one concept, even though their amounts match per class,
+  // since that was an observation made while transcribing these bills,
+  // not a fact confirmed with the Finance Office. See
+  // docs/finance-platform.md.
+  `INSERT INTO fee_structures (institution_id, class_label, student_category, fee_type, label, amount, applicable_gender, is_recurring) VALUES
+    -- Qur'an College (Tahfiz) — boarder
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'registration', 'Registration Form', 10000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'tuition', 'Tuition', 240000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'feeding_accommodation', 'Feeding & Accommodation', 360000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'first_aid', 'First Aid', 15000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'educational_resources', 'Educational Resources', 60000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'development_fee', 'Development Fee', 25000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'school_uniform', 'School Uniform (2)', 40000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'sportwear', 'Sport Wear', 20000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'hostel_wear', 'Hostel Wear', 18000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Qur''an College'), '', 'boarder', 'hijab', 'Female Hijabs (2)', 30000, 'female', false),
+    -- Royal College SSS 1 — boarder
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'registration', 'Registration Form', 10000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'tuition', 'Tuition', 240000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'feeding_accommodation', 'Feeding & Accommodation', 360000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'first_aid', 'First Aid', 15000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'educational_resources', 'Educational Resources', 110000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'development_fee', 'Development Fee', 25000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'school_uniform', 'School Uniform', 25000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'sportwear', 'Sport Wear', 25000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'hostel_wear', 'Hostel Wear', 18000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'friday_wear', 'Friday Wear', 25000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'boarder', 'hijab', 'Female Hijabs (2)', 30000, 'female', false),
+    -- Royal College SSS 1 — new entrant
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'new_entrant', 'registration', 'Registration Form', 10000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'new_entrant', 'tuition', 'Tuition', 240000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'new_entrant', 'school_uniform', 'Uniforms (school uniform, sportwear & Friday wear)', 75000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'SSS 1', 'new_entrant', 'textbooks', 'Textbooks (secular, arabiyyah, stationeries & examinations)', 110000, NULL, false),
+    -- Royal College JSS 1 — boarder
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'registration', 'Registration Form', 10000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'tuition', 'Tuition', 180000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'feeding_accommodation', 'Feeding & Accommodation', 360000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'first_aid', 'First Aid', 15000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'educational_resources', 'Educational Resources', 90000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'development_fee', 'Development Fee', 25000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'school_uniform', 'School Uniform', 20000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'sportwear', 'Sport Wear', 20000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'hostel_wear', 'Hostel Wear', 18000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'friday_wear', 'Friday Wear', 20000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'boarder', 'hijab', 'Female Hijabs (2)', 30000, 'female', false),
+    -- Royal College JSS 1 — new entrant
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'registration', 'Registration Form', 10000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'tuition', 'Tuition', 180000, NULL, true),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'school_uniform', 'Uniforms (school uniform, sportwear & Friday wear)', 60000, NULL, false),
+    ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'textbooks', 'Textbooks (secular, arabiyyah, stationeries & examinations)', 90000, NULL, false)
+    ON CONFLICT (institution_id, class_label, student_category, fee_type) DO NOTHING`,
 ];
 
 async function handle({ request, env }) {

@@ -228,6 +228,12 @@
     }
     card.appendChild(resultsWrap);
 
+    if(window.SHRSFinance){
+      var financeWrap = el('div', 'portal-finance-wrap');
+      window.SHRSFinance.render(financeWrap, child.finance);
+      card.appendChild(financeWrap);
+    }
+
     return card;
   }
 
@@ -349,12 +355,18 @@
 
       var idCardMount = document.querySelector('[data-id-card-mount]');
       if(idCardMount && window.SHRSIdCard){
+        var linkedChildren = (data.children || []).map(function(c){
+          return c.fullName + (c.relationship ? ' (' + c.relationship + ')' : '');
+        }).join(', ');
         window.SHRSIdCard.render(idCardMount, {
           kind: 'guardian',
           fullName: (data.title ? data.title + ' ' : '') + data.fullName,
           identityNo: data.identityNo,
           roleLabel: 'Parent / Guardian',
           status: data.emailVerified ? 'Verified' : 'Unverified',
+          details: [
+            { label: 'Linked Children', value: linkedChildren },
+          ],
         });
       }
       loadAdhkar();

@@ -36,9 +36,55 @@
     return wrap;
   }
 
+  // Same bar visual as bar() above, but for currency values — displays
+  // a formatted amount while computing the fill ratio from the raw
+  // number, since bar() conflates the two.
+  function moneyBar(label, amount, max){
+    var wrap = el('div', 'pfd-bar-row');
+    wrap.appendChild(el('div', 'pfd-bar-label', label + ' — ' + formatCurrency(amount)));
+    var track = el('div', 'pfd-bar-track');
+    var fill = el('div', 'pfd-bar-fill');
+    fill.style.width = (max > 0 ? Math.max(3, Math.round((amount / max) * 100)) : 0) + '%';
+    track.appendChild(fill);
+    wrap.appendChild(track);
+    return wrap;
+  }
+
   function formatCurrency(amount){
     var n = Number(amount || 0);
     return '₦' + n.toLocaleString('en-NG', { minimumFractionDigits: 0 });
+  }
+
+  function formatCurrencyShort(amount){
+    var n = Number(amount || 0);
+    if(n >= 1000000) return '₦' + (n/1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if(n >= 1000) return '₦' + (n/1000).toFixed(0) + 'k';
+    return '₦' + n;
+  }
+
+  var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var CHART_COLORS = ['var(--chart-1)','var(--chart-2)','var(--chart-3)','var(--chart-4)','var(--chart-5)','var(--chart-6)'];
+
+  // Hand-rolled inline SVG bar chart — no charting library exists in
+  // this codebase (see docs/shrs-design-system.md's Charts section),
+  // built on the --chart-1..6 design-system tokens.
+  function revenueBarChart(rows){
+    var width = 560, height = 220, padding = 32, barGap = 10;
+    var max = Math.max.apply(null, rows.map(function(r){ return r.total; }).concat([1]));
+    var barWidth = rows.length ? (width - padding * 2) / rows.length - barGap : 0;
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Revenue by month">';
+    rows.forEach(function(r, i){
+      var barHeight = max > 0 ? Math.round(((r.total || 0) / max) * (height - padding * 2)) : 0;
+      var x = padding + i * (barWidth + barGap);
+      var y = height - padding - barHeight;
+      var parts = r.month.split('-');
+      var label = MONTH_NAMES[Number(parts[1]) - 1] || r.month;
+      svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + CHART_COLORS[i % CHART_COLORS.length] + '" rx="3"></rect>';
+      svg += '<text x="' + (x + barWidth / 2) + '" y="' + (height - padding + 16) + '" text-anchor="middle" font-size="11" fill="var(--ink-soft)">' + label + '</text>';
+      svg += '<text x="' + (x + barWidth / 2) + '" y="' + (y - 6) + '" text-anchor="middle" font-size="10" fill="var(--navy)">' + formatCurrencyShort(r.total) + '</text>';
+    });
+    svg += '</svg>';
+    return svg;
   }
 
   function render(data){
@@ -104,6 +150,49 @@
     feeStatsEl.appendChild(statTile('Total paid', formatCurrency(data.fees.totalPaid)));
     feeStatsEl.appendChild(statTile('Outstanding', formatCurrency(data.fees.totalOutstanding)));
     document.querySelector('[data-founder-fee-note]').textContent = data.fees.note;
+
+    if(data.finance){
+      var financeStatsEl = document.querySelector('[data-founder-finance-stats]');
+      financeStatsEl.innerHTML = '';
+      financeStatsEl.appendChild(statTile('Total Invoiced', formatCurrency(data.finance.totalInvoiced)));
+      financeStatsEl.appendChild(statTile('Total Collected', formatCurrency(data.finance.totalCollected)));
+      financeStatsEl.appendChild(statTile('Collection Rate', data.finance.collectionRatePercent != null ? data.finance.collectionRatePercent + '%' : '—'));
+      financeStatsEl.appendChild(statTile('Scholarship Exposure', formatCurrency(data.finance.scholarshipExposure)));
+
+      var revenueChartEl = document.querySelector('[data-founder-revenue-chart]');
+      if(revenueChartEl){
+        revenueChartEl.innerHTML = data.finance.revenueByMonth && data.finance.revenueByMonth.length
+          ? revenueBarChart(data.finance.revenueByMonth)
+          : '<p class="pfd-note">No recorded payments in the last 6 months yet.</p>';
+      }
+
+      var revInstBarsEl = document.querySelector('[data-founder-revenue-institution-bars]');
+      if(revInstBarsEl){
+        revInstBarsEl.innerHTML = '';
+        var maxRevInst = Math.max.apply(null, (data.finance.revenueByInstitution || []).map(function(i){ return i.total; }).concat([1]));
+        (data.finance.revenueByInstitution || []).forEach(function(i){
+          revInstBarsEl.appendChild(moneyBar(i.institution, i.total, maxRevInst));
+        });
+        if(!(data.finance.revenueByInstitution || []).length){
+          revInstBarsEl.appendChild(el('p', 'pfd-note', 'No recorded payments yet.'));
+        }
+      }
+
+      var outInstBarsEl = document.querySelector('[data-founder-outstanding-institution-bars]');
+      if(outInstBarsEl){
+        outInstBarsEl.innerHTML = '';
+        var maxOutInst = Math.max.apply(null, (data.finance.outstandingByInstitution || []).map(function(i){ return i.outstanding; }).concat([1]));
+        (data.finance.outstandingByInstitution || []).forEach(function(i){
+          outInstBarsEl.appendChild(moneyBar(i.institution, i.outstanding, maxOutInst));
+        });
+        if(!(data.finance.outstandingByInstitution || []).length){
+          outInstBarsEl.appendChild(el('p', 'pfd-note', 'No outstanding invoices — every issued invoice on file is fully paid or none exist yet.'));
+        }
+      }
+
+      var financeNoteEl = document.querySelector('[data-founder-finance-note]');
+      if(financeNoteEl) financeNoteEl.textContent = data.finance.note;
+    }
 
     var unavailableEl = document.querySelector('[data-founder-unavailable]');
     unavailableEl.innerHTML = '';

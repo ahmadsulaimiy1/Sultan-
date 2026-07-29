@@ -139,6 +139,44 @@ export async function onRequestGet({ request, env }) {
         JOIN students s ON s.id = tr.student_id WHERE ${SAMPLE_FILTER.replace('is_sample_data', 's.is_sample_data')}`),
     ]);
 
+    // Finance Platform (Priority 3) — real revenue/collection numbers,
+    // computed from the actual invoice/receipt ledger, not the legacy
+    // fee_status due/paid snapshot below (kept separately as `fees`,
+    // unchanged, for backward compatibility with existing displays).
+    const [
+      revenueByMonthRes, revenueByInstitutionRes, outstandingByInstitutionRes, invoiceTotalsRes, scholarshipExposureRes,
+    ] = await Promise.all([
+      sql`
+        SELECT to_char(date_trunc('month', r.paid_at), 'YYYY-MM') AS month, SUM(r.amount)::float AS total
+        FROM receipts r JOIN invoices i ON i.id = r.invoice_id JOIN students s ON s.id = i.student_id
+        WHERE r.revoked_at IS NULL AND s.is_sample_data = false AND r.paid_at >= (now() - interval '6 months')
+        GROUP BY 1 ORDER BY 1`,
+      sql`
+        SELECT inst.name AS institution, SUM(r.amount)::float AS total
+        FROM receipts r JOIN invoices i ON i.id = r.invoice_id JOIN students s ON s.id = i.student_id
+        JOIN institutions inst ON inst.id = i.institution_id
+        WHERE r.revoked_at IS NULL AND s.is_sample_data = false
+        GROUP BY inst.name ORDER BY total DESC`,
+      sql`
+        SELECT inst.name AS institution, SUM(i.total_amount - COALESCE(p.paid, 0))::float AS outstanding
+        FROM invoices i
+        JOIN students s ON s.id = i.student_id
+        JOIN institutions inst ON inst.id = i.institution_id
+        LEFT JOIN (SELECT invoice_id, SUM(amount) AS paid FROM receipts WHERE revoked_at IS NULL GROUP BY invoice_id) p ON p.invoice_id = i.id
+        WHERE i.status IN ('unpaid', 'partial') AND s.is_sample_data = false
+        GROUP BY inst.name ORDER BY outstanding DESC`,
+      sql`
+        SELECT SUM(i.total_amount)::float AS total_invoiced, SUM(COALESCE(p.paid, 0))::float AS total_paid
+        FROM invoices i
+        JOIN students s ON s.id = i.student_id
+        LEFT JOIN (SELECT invoice_id, SUM(amount) AS paid FROM receipts WHERE revoked_at IS NULL GROUP BY invoice_id) p ON p.invoice_id = i.id
+        WHERE i.status != 'cancelled' AND s.is_sample_data = false`,
+      sql`
+        SELECT SUM(i.scholarship_discount)::float AS total_discount
+        FROM invoices i JOIN students s ON s.id = i.student_id
+        WHERE i.status != 'cancelled' AND s.is_sample_data = false`,
+    ]);
+
     const byStatus = {};
     for (const row of byStatusRes.rows) byStatus[row.status] = row.n;
     const totalStudents = Object.values(byStatus).reduce((a, b) => a + b, 0);
@@ -184,10 +222,23 @@ export async function onRequestGet({ request, env }) {
         totalPaid: fees && fees.paid != null ? fees.paid : 0,
         totalOutstanding: fees && fees.due != null ? fees.due - (fees.paid || 0) : 0,
         recordsOnFile: fees ? fees.n : 0,
-        note: 'The sum of amount_due/amount_paid fields staff have entered to date — a snapshot, not a real ledger with receipts or instalments. See FN-03 in the policy index.',
+        note: 'The legacy fee_status due/paid snapshot, kept for backward compatibility — superseded by the real invoice/receipt ledger in `finance` below (Priority 3).',
+      },
+      finance: {
+        revenueByMonth: revenueByMonthRes.rows.map((r) => ({ month: r.month, total: r.total || 0 })),
+        revenueByInstitution: revenueByInstitutionRes.rows.map((r) => ({ institution: r.institution, total: r.total || 0 })),
+        outstandingByInstitution: outstandingByInstitutionRes.rows.map((r) => ({ institution: r.institution, outstanding: r.outstanding || 0 })),
+        totalInvoiced: invoiceTotalsRes.rows[0] ? (invoiceTotalsRes.rows[0].total_invoiced || 0) : 0,
+        totalCollected: invoiceTotalsRes.rows[0] ? (invoiceTotalsRes.rows[0].total_paid || 0) : 0,
+        collectionRatePercent: (() => {
+          const t = invoiceTotalsRes.rows[0];
+          if (!t || !t.total_invoiced) return null;
+          return Math.round((t.total_paid / t.total_invoiced) * 1000) / 10;
+        })(),
+        scholarshipExposure: scholarshipExposureRes.rows[0] ? (scholarshipExposureRes.rows[0].total_discount || 0) : 0,
+        note: 'Real revenue and collection figures computed from the actual invoice/receipt ledger built in Priority 3 — includes only recorded, staff-entered payments; no online payment gateway exists yet.',
       },
       notYetAvailable: [
-        { label: 'Revenue', reason: 'No real fee ledger exists yet — fees.totalPaid above is a due/paid snapshot, not recognised revenue. Blocked on FN-03 Tuition & Fees Policy (listed Missing in the policy index).' },
         { label: 'Staff / teacher headcount', reason: 'No staff identity system exists yet — see docs/digital-institution-blueprint.md Phase 2.' },
         { label: 'Admissions pipeline', reason: 'Only post-enrolment records exist today; there is no applications/offers/waiting-list workflow yet.' },
         { label: 'Boarding occupancy', reason: 'Boarding classes can be recorded, but there is no room/occupancy data model yet.' },

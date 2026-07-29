@@ -378,6 +378,24 @@
     "altHref": "/verify-certificate/"
   },
   {
+    "slug": "verify-receipt",
+    "output": "verify-receipt/index.html",
+    "title": "Verify a Receipt — Sultan Hanafi Royal Schools",
+    "description": "Confirm that a fee receipt issued by Sultan Hanafi Royal Schools is genuine, using its printed receipt number.",
+    "contentFile": "pages/verify-receipt.html",
+    "altHref": "/ar/verify-receipt/"
+  },
+  {
+    "slug": "verify-receipt-ar",
+    "output": "ar/verify-receipt/index.html",
+    "title": "تحقق من إيصال — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة إيصال رسوم صادر عن مدارس السلطان حنفي الملكية باستخدام رقم الإيصال المطبوع.",
+    "contentFile": "pages/verify-receipt.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify-receipt/"
+  },
+  {
     "slug": "verify-identity",
     "output": "verify-identity/index.html",
     "title": "Verify an Identity — Sultan Hanafi Royal Schools",

@@ -25,7 +25,13 @@
     });
   }
 
-  // opts: { kind, fullName, identityNo, roleLabel, subtitle, status, emptyText }
+  // opts: { kind, fullName, identityNo, roleLabel, subtitle, status,
+  // emptyText, details: [{label, value}, ...] } — `details` is an
+  // open-ended list of extra real fields (admission date, academic
+  // session, department, linked children, relationship, etc.); entries
+  // with no value are skipped rather than shown as "—", since an empty
+  // dash on an ID card reads as a missing/broken field, not an
+  // intentionally omitted one.
   function render(container, opts) {
     if (!container) return;
     opts = opts || {};
@@ -37,6 +43,12 @@
     }
     var qrSrc = '/api/identity/qr?id=' + encodeURIComponent(opts.identityNo);
     var verifyHref = '/verify-identity/?id=' + encodeURIComponent(opts.identityNo);
+    var details = (opts.details || []).filter(function (d) { return d && d.value; });
+    var detailsHtml = details.length
+      ? '<div class="id-card-details">' + details.map(function (d) {
+          return '<div class="id-card-detail"><span class="k">' + esc(d.label) + '</span><span class="v">' + esc(d.value) + '</span></div>';
+        }).join('') + '</div>'
+      : '';
     container.innerHTML =
       '<div class="id-card" data-id-card-kind="' + esc(opts.kind || '') + '">' +
         '<div class="id-card-body">' +
@@ -49,6 +61,7 @@
           '</div>' +
           '<img class="id-card-qr" src="' + qrSrc + '" alt="Identity verification QR code" width="72" height="72" />' +
         '</div>' +
+        detailsHtml +
         '<div class="id-card-footer">' +
           '<span>Sultan Hanafi Royal Schools' + (opts.status ? ' &middot; ' + esc(opts.status) : '') + '</span>' +
           '<a href="' + verifyHref + '" target="_blank" rel="noopener">Verify &rarr;</a>' +
