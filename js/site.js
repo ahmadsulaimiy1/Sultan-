@@ -187,6 +187,30 @@
     });
   });
 
+  // Full-screen mobile navigation drawer — the "Menu"/"Full Menu"
+  // triggers already toggle .navlinks.open via their inline onclick;
+  // this only adds what a full-screen takeover additionally needs:
+  // page-scroll lock while open, the drawer's own close button, and
+  // Escape to dismiss. A MutationObserver (rather than touching the
+  // existing onclick handlers) keeps body scroll-lock in sync with
+  // whichever trigger opened the drawer.
+  (function(){
+    var navlinks = document.querySelector('.navlinks');
+    if(!navlinks) return;
+    var closeBtn = navlinks.querySelector('.nav-drawer-close');
+    function isDrawerOpen(){
+      return navlinks.classList.contains('open') && window.matchMedia('(max-width:1440px)').matches;
+    }
+    function closeDrawer(){ navlinks.classList.remove('open'); }
+    new MutationObserver(function(){
+      document.body.classList.toggle('nav-lock', isDrawerOpen());
+    }).observe(navlinks, {attributes:true, attributeFilter:['class']});
+    if(closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && isDrawerOpen()) closeDrawer();
+    });
+  })();
+
   // Floating "Apply Now" — reveals after the visitor scrolls past the
   // opening section; suppressed entirely on the Admission page itself,
   // where the CTA would just be pointing at the page already open.

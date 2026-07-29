@@ -405,6 +405,13 @@
   }
   .menu-toggle:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);}
   .menu-toggle svg{flex-shrink:0;}
+  /* Drawer-only chrome — invisible on desktop, where .navlinks is the
+     ordinary inline nav bar. display:contents on the actions wrapper
+     (rather than display:none) keeps Start Admission/Register-Login
+     as direct flex items of .navlinks on desktop, exactly as they were
+     before being wrapped for the mobile drawer's own styling. */
+  .nav-drawer-head{display:none;}
+  .nav-drawer-actions{display:contents;}
   /* Mobile quick-actions row — a persistent second strip beneath the
      main header bar so Apply / Portal / Contact stay visible before
      the drawer is ever opened, instead of the header reading as bare
@@ -530,9 +537,44 @@
   .nav-mega-featured p{font-size:0.72rem;line-height:1.5;color:rgba(248,244,233,0.6);margin:0;}
 
   @media (max-width:1440px){
-    .navlinks{position:absolute;top:100%;left:0;right:0;background:var(--navy);flex-direction:column;align-items:flex-start;padding:18px 24px 26px;display:none;border-bottom:1px solid var(--line);gap:4px;max-height:calc(100vh - 70px);overflow-y:auto;}
+    /* Full-screen navigation drawer — the "Full Menu" / hamburger
+       destination is a real immersive takeover (fixed, fills the
+       viewport, own sticky head with a large close target), not a
+       small dropdown panel squeezed under the header. Large touch
+       targets throughout (52px+ row height) per the Header & Footer
+       Master Directive's explicit "no squeezed menu" requirement. */
+    .navlinks{
+      position:fixed;inset:0;z-index:250;
+      background:linear-gradient(165deg, var(--navy-deep) 0%, #180f06 100%);
+      flex-direction:column;align-items:stretch;gap:0;
+      padding:0;display:none;
+      overflow-y:auto;-webkit-overflow-scrolling:touch;
+    }
     .navlinks.open{display:flex;}
+    body.nav-lock{overflow:hidden;}
+    /* header.nav is its own stacking context (position + z-index), so
+       .navlinks' z-index:250 only ranks against siblings inside that
+       context — it does NOT out-rank the page's floating action
+       buttons (.assistant-root/.whatsapp-float/.call-float, z-index
+       198-200), which sit outside header.nav entirely. Lifting the
+       header's own z-index while the drawer is open raises everything
+       inside it, .navlinks included, above those floats. */
+    body.nav-lock header.nav{z-index:260;}
     .menu-toggle{display:flex;}
+
+    .nav-drawer-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:20px 22px;border-bottom:1px solid var(--line);
+      position:sticky;top:0;background:var(--navy-deep);z-index:2;flex-shrink:0;
+    }
+    .ndh-title{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-bright);}
+    .nav-drawer-close{
+      display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;
+      background:none;border:1px solid var(--line);color:var(--ivory);cursor:pointer;
+      transition:border-color .2s ease,color .2s ease,background .2s ease;
+    }
+    .nav-drawer-close:hover{border-color:var(--gold-bright);color:var(--gold-bright);background:rgba(198,161,91,0.1);}
+
     .mobile-nav-ribbon{
       display:flex;gap:9px;overflow-x:auto;scroll-snap-type:x proximity;
       padding:12px 16px;border-top:1px solid rgba(198,161,91,0.18);border-bottom:1px solid rgba(198,161,91,0.18);
@@ -544,27 +586,44 @@
       border-bottom:1px solid rgba(198,161,91,0.15);background:rgba(0,0,0,0.12);
     }
     .mobile-quick-row::-webkit-scrollbar{display:none;}
-    .nav-drop{width:100%;display:flex;flex-wrap:wrap;align-items:center;border-bottom:1px solid rgba(198,161,91,0.15);}
-    .nav-drop:last-of-type{border-bottom:none;}
-    .nav-drop-trigger{flex:1;padding:12px 0 !important;}
+    .navlinks > .nav-drop{
+      width:100%;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;
+      padding:0 22px;border-bottom:1px solid rgba(198,161,91,0.15);
+    }
+    .navlinks > .nav-drop:last-of-type{border-bottom:none;}
+    .nav-drop-trigger{flex:1;padding:16px 0 !important;font-size:0.98rem !important;min-height:52px;display:flex !important;align-items:center;}
     /* Mobile-only accordion toggle — each mega-panel is now large
        (icon + description + links), too big to leave permanently
        expanded like the old simple link-list dropdowns were. */
     .nav-drop-toggle{
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
-      width:32px;height:32px;background:none;border:1px solid var(--line);color:var(--gold-bright);
+      width:44px;height:44px;background:none;border:1px solid var(--line);color:var(--gold-bright);
       cursor:pointer;transition:border-color .25s ease;
     }
     .nav-drop-toggle svg{transition:transform .25s ease;}
     .nav-drop.open .nav-drop-toggle{border-color:var(--gold-bright);}
     .nav-drop.open .nav-drop-toggle svg{transform:rotate(180deg);}
-    .nav-drop-panel{position:static;display:none;background:none;border:none;padding:2px 0 14px 14px;width:100%;}
+    .nav-drop-panel{position:static;display:none;background:none;border:none;padding:2px 0 18px 0;width:100%;}
     .nav-drop.open .nav-drop-panel{display:flex;}
-    .nav-drop-panel a{padding:8px 0;}
+    .nav-drop-panel a{padding:12px 0;min-height:44px;display:flex;align-items:center;}
     .nav-mega-panel{flex-direction:column;min-width:0;}
-    .nav-mega-item{padding:8px 0 !important;}
+    .nav-mega-item{padding:12px 0 !important;min-height:44px;}
     .nav-mega-featured{width:auto;border-inline-start:none;border-top:1px solid var(--line);margin-top:6px;padding:14px 0 6px;}
     .nav-mega-intro{width:auto !important;border-inline-end:none !important;padding:6px 0 10px !important;}
+
+    .navlinks > .nav-drawer-actions{
+      display:flex;flex-direction:column;gap:10px;padding:22px;margin-top:auto;
+    }
+    .navlinks > .nav-drawer-actions .nav-mark{
+      width:100%;box-sizing:border-box;text-align:center;padding:16px 20px !important;
+      border:1px solid rgba(233,206,138,0.4);font-size:0.9rem !important;
+    }
+    .navlinks > .nav-drawer-actions .nav-mark.nav-cta{padding:16px 20px !important;}
+  }
+  @media (prefers-reduced-motion:no-preference) and (max-width:1440px){
+    .navlinks{transition:opacity .25s ease;}
+    .navlinks:not(.open){opacity:0;}
+    .navlinks.open{opacity:1;}
   }
 
   /* === Premium mega-menu upgrade — large icon + description intro
