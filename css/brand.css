@@ -324,8 +324,11 @@
   .eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);font-weight:600;display:flex;align-items:center;gap:0.6em;}
   .eyebrow::before{content:"";width:22px;height:1px;background:var(--gold);display:inline-block;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
-  section{padding:96px 0;}
-  @media (max-width:720px){section{padding:56px 0;}}
+  /* Prestige Refinement Directive — generous, deliberate section
+     rhythm. Applies to every <section> sitewide (one change, whole
+     site), rather than tuning padding page-by-page. */
+  section{padding:120px 0;}
+  @media (max-width:720px){section{padding:68px 0;}}
   /* Extra breathing room heading into the footer specifically — the
      uniform 96px section padding read as cramped where a page's last
      section (often a dark band) butts straight into the footer's own
@@ -605,9 +608,39 @@
     .navlinks > .nav-drop{
       width:100%;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;
       padding:0 22px;border-bottom:1px solid rgba(198,161,91,0.15);
+      border-inline-start:3px solid transparent;
     }
     .navlinks > .nav-drop:last-of-type{border-bottom:none;}
-    .nav-drop-trigger{flex:1;padding:16px 0 !important;font-size:0.98rem !important;min-height:52px;display:flex !important;align-items:center;}
+    /* A thin category-colour strip (reusing the same accent rotation
+       as the desktop mega-panels) gives the list something to scan by
+       colour, not just by reading every label top to bottom. */
+    .nav-drop--academics{border-inline-start-color:var(--forest-green);}
+    .nav-drop--studentlife{border-inline-start-color:var(--terracotta);}
+    .nav-drop--admissions{border-inline-start-color:var(--crimson);}
+    .nav-drop--governance{border-inline-start-color:var(--oxford-navy);}
+    .nav-drop--digitalcampus{border-inline-start-color:var(--bronze-bright);}
+    .nav-drop--contact{border-inline-start-color:var(--forest-green);}
+    .nav-drop--portal{border-inline-start-color:var(--gold-bright);}
+    .nav-drop-trigger{
+      flex:1;padding:18px 0 !important;font-size:1.05rem !important;font-weight:600;letter-spacing:0.01em;
+      min-height:56px;display:flex !important;align-items:center;
+    }
+    /* Staggered reveal — each row settles in a beat after the last
+       rather than the whole list appearing at once, so opening the
+       drawer reads as one deliberate motion, not a flash of content. */
+    .navlinks.open > .nav-drop{animation:navRowReveal .5s cubic-bezier(.2,.7,.3,1) both;}
+    .navlinks.open > .nav-drop:nth-child(2){animation-delay:.03s;}
+    .navlinks.open > .nav-drop:nth-child(3){animation-delay:.07s;}
+    .navlinks.open > .nav-drop:nth-child(4){animation-delay:.11s;}
+    .navlinks.open > .nav-drop:nth-child(5){animation-delay:.15s;}
+    .navlinks.open > .nav-drop:nth-child(6){animation-delay:.19s;}
+    .navlinks.open > .nav-drop:nth-child(7){animation-delay:.23s;}
+    .navlinks.open > .nav-drop:nth-child(8){animation-delay:.27s;}
+    .navlinks.open > .nav-drop:nth-child(9){animation-delay:.31s;}
+    @keyframes navRowReveal{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+    @media (prefers-reduced-motion:reduce){
+      .navlinks.open > .nav-drop{animation:none;}
+    }
     /* Mobile-only accordion toggle — each mega-panel is now large
        (icon + description + links), too big to leave permanently
        expanded like the old simple link-list dropdowns were. */
@@ -655,33 +688,40 @@
 
   /* Mega-menu accent rotation — every dropdown previously read gold-
      on-navy with no variation, which is the flattest reading of the
-     site's two brand colours repeated everywhere. Each of the 8 header
-     categories now carries its own accent (icon colour, intro panel
-     tint, and the panel's top hairline) drawn from the existing
-     prestige palette — considered variety, not a new colour system. */
-  .navlinks>.nav-drop:nth-of-type(2) .nmi-icon,.navlinks>.nav-drop:nth-of-type(2) .nav-mega-icon{color:var(--forest-green);}
-  .navlinks>.nav-drop:nth-of-type(2) .nav-mega-intro{background:rgba(63,107,78,0.09);}
-  .navlinks>.nav-drop:nth-of-type(2) .nav-drop-panel{border-top-color:var(--forest-green);}
-  .navlinks>.nav-drop:nth-of-type(3) .nmi-icon,.navlinks>.nav-drop:nth-of-type(3) .nav-mega-icon{color:var(--terracotta);}
-  .navlinks>.nav-drop:nth-of-type(3) .nav-mega-intro{background:rgba(201,120,75,0.09);}
-  .navlinks>.nav-drop:nth-of-type(3) .nav-drop-panel{border-top-color:var(--terracotta);}
-  .navlinks>.nav-drop:nth-of-type(4) .nmi-icon,.navlinks>.nav-drop:nth-of-type(4) .nav-mega-icon{color:#D68A96;}
-  .navlinks>.nav-drop:nth-of-type(4) .nav-mega-intro{background:rgba(124,31,46,0.1);}
-  .navlinks>.nav-drop:nth-of-type(4) .nav-drop-panel{border-top-color:var(--crimson);}
-  .navlinks>.nav-drop:nth-of-type(5) .nmi-icon,.navlinks>.nav-drop:nth-of-type(5) .nav-mega-icon{color:#8FADD6;}
-  .navlinks>.nav-drop:nth-of-type(5) .nav-mega-intro{background:rgba(65,97,140,0.12);}
-  .navlinks>.nav-drop:nth-of-type(5) .nav-drop-panel{border-top-color:var(--oxford-navy);}
-  .navlinks>.nav-drop:nth-of-type(6) .nmi-icon,.navlinks>.nav-drop:nth-of-type(6) .nav-mega-icon{color:var(--bronze-bright);}
-  .navlinks>.nav-drop:nth-of-type(6) .nav-mega-intro{background:rgba(164,120,67,0.1);}
-  .navlinks>.nav-drop:nth-of-type(6) .nav-drop-panel{border-top-color:var(--bronze-bright);}
-  /* Digital Campus sits far right in the nav row; now that it's a full
-     two-column mega-panel (was a narrow is-compact list), anchor it to
-     the trigger's right edge instead of the left so it opens back onto
-     the page rather than running off the viewport's right edge. */
-  .navlinks>.nav-drop:nth-of-type(6) .nav-mega-panel{left:auto;right:0;}
-  .navlinks>.nav-drop:nth-of-type(7) .nmi-icon,.navlinks>.nav-drop:nth-of-type(7) .nav-mega-icon{color:var(--forest-green);}
-  .navlinks>.nav-drop:nth-of-type(7) .nav-mega-intro{background:rgba(63,107,78,0.09);}
-  .navlinks>.nav-drop:nth-of-type(7) .nav-drop-panel{border-top-color:var(--forest-green);}
+     site's two brand colours repeated everywhere. Each header category
+     now carries its own accent (icon colour, intro panel tint, and the
+     panel's top hairline) drawn from the existing prestige palette —
+     considered variety, not a new colour system. Keyed to explicit
+     per-dropdown classes rather than :nth-of-type, since positional
+     selectors silently mis-target the moment an item is added, removed,
+     or reordered (nav-drawer-head, a sibling <div>, shifted every index
+     by one under the old scheme). */
+  .nav-drop--academics .nmi-icon,.nav-drop--academics .nav-mega-icon{color:var(--forest-green);}
+  .nav-drop--academics .nav-mega-intro{background:rgba(63,107,78,0.09);}
+  .nav-drop--academics .nav-drop-panel{border-top-color:var(--forest-green);}
+  .nav-drop--studentlife .nmi-icon,.nav-drop--studentlife .nav-mega-icon{color:var(--terracotta);}
+  .nav-drop--studentlife .nav-mega-intro{background:rgba(201,120,75,0.09);}
+  .nav-drop--studentlife .nav-drop-panel{border-top-color:var(--terracotta);}
+  .nav-drop--admissions .nmi-icon,.nav-drop--admissions .nav-mega-icon{color:#D68A96;}
+  .nav-drop--admissions .nav-mega-intro{background:rgba(124,31,46,0.1);}
+  .nav-drop--admissions .nav-drop-panel{border-top-color:var(--crimson);}
+  .nav-drop--governance .nmi-icon,.nav-drop--governance .nav-mega-icon{color:#8FADD6;}
+  .nav-drop--governance .nav-mega-intro{background:rgba(65,97,140,0.12);}
+  .nav-drop--governance .nav-drop-panel{border-top-color:var(--oxford-navy);}
+  .nav-drop--digitalcampus .nmi-icon,.nav-drop--digitalcampus .nav-mega-icon{color:var(--bronze-bright);}
+  .nav-drop--digitalcampus .nav-mega-intro{background:rgba(164,120,67,0.1);}
+  .nav-drop--digitalcampus .nav-drop-panel{border-top-color:var(--bronze-bright);}
+  .nav-drop--contact .nmi-icon,.nav-drop--contact .nav-mega-icon{color:var(--forest-green);}
+  .nav-drop--contact .nav-mega-intro{background:rgba(63,107,78,0.09);}
+  .nav-drop--contact .nav-drop-panel{border-top-color:var(--forest-green);}
+  .nav-drop--portal .nmi-icon{color:var(--gold-bright);}
+  .nav-drop--portal .nav-mega-intro{background:rgba(198,161,91,0.1);}
+  .nav-drop--portal .nav-drop-panel{border-top-color:var(--gold-bright);}
+  /* The two rightmost items sit near the viewport's trailing edge; a
+     full mega-panel opening from their left edge would run off-screen,
+     so anchor those two panels to their trigger's trailing edge instead. */
+  .nav-drop--contact .nav-mega-panel,.nav-drop--portal .nav-mega-panel{left:auto;right:0;}
+  [dir="rtl"] .nav-drop--contact .nav-mega-panel,[dir="rtl"] .nav-drop--portal .nav-mega-panel{right:auto;left:0;}
   .nav-mega-panel.is-compact .nav-mega-intro{border-inline-end:none;width:auto;}
   .nav-mega-panel.is-compact .nmi-cta{margin-top:4px;align-self:flex-start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);padding:9px 16px;transition:border-color .25s ease,background .25s ease;}
   .nav-mega-panel.is-compact .nmi-cta:hover{border-color:var(--gold-bright);background:rgba(198,161,91,0.1);}
