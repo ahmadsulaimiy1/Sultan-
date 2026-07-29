@@ -21,8 +21,11 @@ unfinished.
   authentication, since this is public communications content, not
   student/guardian data. Powers all three frontend surfaces below.
 - **Staff write API** — `POST /api/portal/admin/announcements` —
-  token-gated, same "protected raw API, no admin UI yet" convention as
-  `admin/students.js` and `admin/hifz-progress.js`.
+  no admin UI yet, same "protected raw API" convention as
+  `admin/students.js`. Auth is now dual: a real staff session (Registrar,
+  Principal, or Executive, via the Permission Engine) is the primary
+  path, with `PORTAL_ADMIN_TOKEN` kept as a fallback — see the section
+  below.
 - **The ribbon** — a thin strip between the header and page content on
   every page, site-wide, EN+AR. Shows the latest published
   announcements as a horizontally scrollable row of pills; shows "No
@@ -40,19 +43,27 @@ unfinished.
   archived notice. Nothing here is ever hard-deleted — `archive` is a
   status, not a delete action.
 
-## Why staff-mediated, not self-service, and why `PORTAL_ADMIN_TOKEN` for now
+## Why staff-mediated, not self-service — and the auth model today
 
-There is no Communications/Front-Office role in the Staff Identity & Role
-System yet — that system doesn't exist yet; it's Priority 3, explicitly
-scheduled after this. Rather than block the announcement system on that
-future work, `POST /api/portal/admin/announcements` is gated by the same
-`PORTAL_ADMIN_TOKEN` used for student records today. **This is a known,
-temporary compromise, not a permanent design decision** — once the
-permission engine described in `role-permission-matrix.md` exists, this
-endpoint should be re-gated to whichever role that document assigns
-front-office/communications publishing authority to, narrower than the
-general admin token. Flagging this now so it isn't forgotten once Staff
-Identity ships.
+This endpoint has been migrated (Migration Phase D item #4b,
+`docs/identity-migration-plan.md`) off its original `PORTAL_ADMIN_TOKEN`-
+only auth onto the Staff Identity Platform, mirroring the Founder
+Dashboard and Hifz/Ijazah administration dual-auth pattern:
+
+- **Primary path — staff session + Permission Engine.** A real staff
+  session (REG, PRIN, or EXE) is checked against the `communications`
+  area in `functions/_lib/permission-matrix.js`: C for `create`, E for
+  `update`, P for `publish`/`unpublish`/`feature`/`unfeature`, Ar for
+  `archive`. E and Ar were added to those three roles' rows specifically
+  for this migration — see `docs/role-permission-matrix.md` §4.15 for the
+  full reasoning, including the one gap this migration does not solve:
+  PRIN's "own institution" scope can't be checked at the row level
+  because `announcements` has no `institution_id` column.
+- **Fallback — `PORTAL_ADMIN_TOKEN` bearer.** Kept only because no real
+  REG/PRIN/EXE staff account is confirmed to exist in any reachable
+  environment yet; removing the token now would lock the endpoint out
+  entirely. Retire it once one does (same recommendation as the Founder
+  Dashboard and Hifz/Ijazah items in `docs/identity-migration-register.md`).
 
 ## Category list
 
@@ -85,14 +96,20 @@ portal.
    real database (or the mocked responses in your own local testing) to
    see the populated states.
 
-2. **No new environment variable** — this reuses `PORTAL_ADMIN_TOKEN`
-   (see the compromise note above).
+2. **No new environment variable** — the fallback path reuses
+   `PORTAL_ADMIN_TOKEN` (see the auth model section above). The primary
+   path needs no new variable either; it uses the same staff session
+   cookie every Teacher/Registrar/Finance staff endpoint already reads.
 
 ## Publishing an announcement
 
-Every request needs `x-admin-token: <PORTAL_ADMIN_TOKEN>` and an
-`action`. One action per request, never an implicit upsert — same
-pattern as the Ijazah grant/revoke calls in `admin/hifz-progress.js`.
+Every request needs an `action`, and either a real staff session cookie
+(sign in at `/portal/staff/login/` with a REG/PRIN/EXE account) or the
+fallback header `x-admin-token: <PORTAL_ADMIN_TOKEN>`. The curl examples
+below use the token header since that's what's scriptable outside a
+browser — a signed-in staff session works identically, just via cookie
+instead of header. One action per request, never an implicit upsert —
+same pattern as the Ijazah grant/revoke calls in `admin/hifz-progress.js`.
 
 **Create** (always starts as `draft`):
 ```

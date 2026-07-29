@@ -307,12 +307,50 @@ staff permission.
 ### 4.15 Communications
 *Owner varies by content and audience.*
 
-| Role | C | P |
-|---|---|---|
-| REG | school-wide academic notices | ✓ |
-| PRIN | own-institution notices | ✓ (own institution) |
-| TCH | own-class parent messages (not yet built — Teacher Portal item) | own class only |
-| EXE | institution-wide announcements | ✓ |
+| Role | C | E | P | Ar |
+|---|---|---|---|---|
+| REG | school-wide academic notices | ✓ | ✓ | ✓ |
+| PRIN | own-institution notices | ✓ | ✓ (own institution) | ✓ |
+| TCH | own-class parent messages (not yet built — Teacher Portal item) | | own class only | |
+| EXE | institution-wide announcements | ✓ | ✓ | ✓ |
+
+**E and Ar added during the Announcements admin migration**
+(`identity-migration-plan.md`, Migration Phase D item #4b). The original
+version of this row only named C and P — enough for authoring and
+publishing a notice, but not for the real `update` and `archive` actions
+`admin/announcements.js` has had since it was first built (see
+§4.15 history: the endpoint was live before this Matrix cell was
+complete, a documentation gap rather than a code one). REG, PRIN, and EXE
+already hold full authorial + publishing authority (C+P) over
+communications; granting them E (edit a draft before publishing) and Ar
+(archive a notice once it's done, never delete) is the same authority's
+natural lifecycle, not a new one — and uses the same low-privilege codes
+this Matrix pairs with C everywhere else for that exact pattern (see
+§4.12 Finance's FIN row: C+E together). TCH is deliberately excluded: TCH
+never held C here, and its row is still "not yet built."
+
+`feature`/`unfeature` (marking a published notice as the single homepage
+hero, or clearing that slot) has no dedicated permission code — it isn't
+V/C/E/D/A/P/X/Vf/Ar/MU, it's an app-specific state on top of an already-
+published record. Rather than invent an eleventh code for one field on
+one table, the endpoint reuses **P**: a role trusted to decide what the
+public sees (Publish) is also trusted to decide which published item is
+most prominent. This is a judgement call, stated here rather than left
+implicit in code.
+
+**A named scope-enforcement gap:** PRIN's "own institution" scope cannot
+be checked at the row level today — `announcements` has no
+`institution_id` column; `category` (e.g. `quran_college`,
+`arabic_studies`) is a loose editorial label, not a foreign key to
+`institutions`. `admin/announcements.js` therefore checks the Matrix
+grant itself (does this PRIN session hold C/E/P/Ar on `communications`
+at all?) but cannot additionally confirm the specific notice belongs to
+that Principal's own institution — the same category of gap as MUH's
+missing assigned-student data in `hifz_records` (identity-migration-plan.md
+§ Hifz/Ijazah status update), named here rather than silently assumed
+away. Fixing it for real would mean adding an institution/category
+mapping to the schema, tracked as future work, not done as part of this
+migration.
 
 ### 4.16 Policies
 *Owner: policy-owning office per `policy-code-index.md` (e.g. Registrar owns AC-02). Approval: Board of Trustees for Tier 1.*

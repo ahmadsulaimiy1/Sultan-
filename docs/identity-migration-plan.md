@@ -35,7 +35,7 @@ the narrowest possible group per `role-permission-matrix.md` §4.20.
 
 | Route | Current Authentication | Current Authorisation | Future Authentication | Future Authorisation | Required Role | Required Permission | Migration Priority | Risk |
 |---|---|---|---|---|---|---|---|---|
-| **Announcements admin** (`admin/announcements.js`) | Bearer token, header `x-admin-token` | None beyond token possession — anyone holding `PORTAL_ADMIN_TOKEN` can publish/archive/feature any announcement | Staff session (`shr_staff_session`) | `hasPermissionFor(sql, staffId, 'communications', 'C'/'P', institutionId)` | REG (school-wide notices), PRIN (own institution), EXE (institution-wide) | C, P in `communications` | **Medium** — public-facing content, no PII, but a stale/shared token is a real defacement risk the longer it's reused | Low-Medium: content-only blast radius, but already explicitly flagged as a "temporary compromise" in `docs/announcements-system.md` since the phase it shipped in |
+| **Announcements admin** (`admin/announcements.js`) | **Migrated — dual-auth.** Staff session primary, `x-admin-token` bearer fallback | **Migrated, per-action.** `hasPermissionFor(sql, staffId, 'communications', permCode, null)` — C for `create`, E for `update`, P for `publish`/`unpublish`/`feature`/`unfeature`, Ar for `archive` | *(target state — bearer fallback retired once a real REG/PRIN/EXE account is confirmed)* | *(target state)* | REG (school-wide notices), PRIN (own institution), EXE (institution-wide) | C, E, P, Ar in `communications` — E and Ar added to the Matrix as part of this migration (`role-permission-matrix.md` §4.15); they didn't exist before | **Done** | Low-Medium: content-only blast radius; PRIN's "own institution" scope is not enforced at the row level (`announcements` has no `institution_id` column) — a named gap, not a silent one, same category as MUH's in the Hifz item below |
 | **Founder Dashboard** (`founder/dashboard.js`) | **Migrated — dual-auth.** Staff session primary, `x-founder-token` bearer fallback | **Migrated** — `hasPermissionFor(sql, staffId, 'analytics', 'V', null)` | *(target state — bearer fallback retired once a real EXE account is confirmed)* | *(target state)* | EXE | V in `analytics` (aggregate-only, already enforced by the query shape) | **Done** | Low: read-only aggregates, no individual PII in the response shape by design |
 | **Student/Guardian administration** (`admin/students.js`) | Bearer token, header `x-admin-token` | None beyond token possession — the single highest-blast-radius unmigrated route: full C/E on live student and guardian PII | Staff session | `hasPermissionFor(sql, staffId, 'student_records', 'C'/'E', institutionId)` + `guardian_records` equivalent | REG / AREG | C, E, Ar, X in `student_records` and `guardian_records` | **High** — this is the route the Registrar's Office phase directly replaces; migrating it is that phase's real work, not a side effect | **High**: live children's and families' real data; the current token is also how every existing guardian/student account was ever created, so migration must not break onboarding mid-flight |
 | **Student login issuance** (`admin/create-student-login.js`) | Bearer token, header `x-admin-token` | None beyond token possession | Staff session | `hasPermissionFor(sql, staffId, 'student_records', 'C', institutionId)` (issuing a login is a facet of managing the student record) | REG / AREG | C in `student_records` | **High** — same reasoning as above, natural to migrate together | Medium: account-provisioning action, not a data-read, but still real PII exposure via the activation link it returns |
@@ -260,10 +260,40 @@ the calling endpoint owes, since the Matrix's "Qur'an College only"
 scope text on PRIN's rows doesn't parse cleanly through `checkGrants()`'s
 generic institution regex (it doesn't end in "...only").
 
-**What this did not touch:** Announcements admin (Priority 4) and the
-admin/sysadmin bootstrap tokens (item #3) remain exactly as described
-above — Migration Phase D as a whole is not complete until Announcements
-admin migrates too.
+## Status update — Migration Phase D item #4b (Announcements admin)
+
+`admin/announcements.js` is now migrated, following the exact dual-auth
+pattern above: staff session (REG/PRIN/EXE) checked per-action against
+the Matrix's `communications` area is the PRIMARY path;
+`PORTAL_ADMIN_TOKEN` remains a FALLBACK ONLY, for the same reason as
+Founder Dashboard and Hifz/Ijazah — no real REG/PRIN/EXE staff account
+is confirmed to exist in any reachable environment yet.
+
+This migration also completed a real gap in the governance document
+itself, not just the code: the Matrix's `communications` area had only
+ever named C and P for any role — enough for the Priority 2 build's
+original `create`/`publish` actions, but the endpoint has always had
+`update` and `archive` too, with no Matrix cell to authorise them. E and
+Ar were added to REG/PRIN/EXE's rows, reasoned through in
+`role-permission-matrix.md` §4.15 (the same authority that can author and
+publish a notice can edit its own draft and archive it once done — not a
+new grant, the same one's natural lifecycle). `feature`/`unfeature` (the
+homepage-hero state) has no dedicated code at all and reuses P, also
+explained there.
+
+**What this did not solve:** PRIN's "own institution" scope on
+`communications` can't be checked at the row level — `announcements` has
+no `institution_id` column, only a loose `category` label. The endpoint
+checks the Matrix grant (does this PRIN hold C/E/P/Ar on `communications`
+at all?) but not which institution a given notice belongs to. Same
+category of gap as MUH's missing assigned-student data below — named,
+not silently assumed away.
+
+**Migration Phase D as a whole is now complete** — every route this plan
+identified as needing migration (Hifz/Ijazah, Announcements admin) is
+done; the admin/sysadmin bootstrap tokens (item #3) are the one
+deliberate, permanent exception named in "One necessary exception, named
+up front" above.
 
 ## Recommended migration order
 
@@ -275,9 +305,7 @@ admin migrates too.
    the same phase since it shares a trust boundary with the above.
 3. **Hifz/Ijazah administration** — **done**, see the status update
    above.
-4. **Announcements admin** — lowest content-sensitivity of the group;
-   fine to defer until a Communications-role-holding office exists to
-   assign it to (today, REG or EXE would hold it, per the table above).
+4. **Announcements admin** — **done**, see the status update above.
 5. **Founder Dashboard** — lowest urgency (single trusted user,
    read-only); migrate opportunistically, not on a deadline.
 

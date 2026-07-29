@@ -122,11 +122,23 @@ export const MATRIX = {
   transcripts: [
     { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
   ],
+  // E and Ar were added to REG/PRIN/EXE below during the Announcements
+  // admin migration (identity-migration-plan.md, Migration Phase D item
+  // #4b) — the original C/P-only grants covered authoring and publishing
+  // but named no permission for the real update/archive actions
+  // admin/announcements.js has always had. Every role here already holds
+  // C+P (full authorial + publishing authority over communications); E/Ar
+  // complete that same authority's natural lifecycle — edit your own
+  // draft before publishing it, archive a notice once it's done — using
+  // the same low-privilege codes this Matrix already pairs with C
+  // elsewhere for the identical pattern (`finance`'s FIN row: C+E
+  // together). TCH does NOT get them: TCH never held C here, and its row
+  // is still marked "not yet built."
   communications: [
-    { role: 'REG', permissions: ['C', 'P'], scope: 'school-wide academic notices' },
-    { role: 'PRIN', permissions: ['C', 'P'], scope: 'own institution' },
+    { role: 'REG', permissions: ['C', 'E', 'P', 'Ar'], scope: 'school-wide academic notices' },
+    { role: 'PRIN', permissions: ['C', 'E', 'P', 'Ar'], scope: 'own institution' },
     { role: 'TCH', permissions: ['P'], scope: 'own class only (not yet built — Teacher Portal item)' },
-    { role: 'EXE', permissions: ['C', 'P'], scope: 'institution-wide announcements' },
+    { role: 'EXE', permissions: ['C', 'E', 'P', 'Ar'], scope: 'institution-wide announcements' },
   ],
   policies: [
     // No in-system Publish permission exists — git-based, deliberately
