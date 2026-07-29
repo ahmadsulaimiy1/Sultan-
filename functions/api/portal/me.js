@@ -3,6 +3,7 @@ import { readSessionFromRequest } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel } from '../../_lib/hifz.js';
 import { computeProfileCompletion, recommendNextStep } from '../../_lib/profile-completion.js';
+import { ensureGuardianIdentityNo } from '../../_lib/identity-no.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -109,10 +110,13 @@ export async function onRequestGet({ request, env }) {
       educationalInterestCount: educationalInterestsRes.rows.length,
     });
 
+    const identityNo = await ensureGuardianIdentityNo(sql, session.guardianId);
+
     return json({
       fullName: guardian.full_name,
       title: guardian.title,
       preferredName: guardian.preferred_name,
+      identityNo,
       identityType: guardian.identity_type,
       email: guardian.email,
       emailVerified: !!guardian.email_verified_at,

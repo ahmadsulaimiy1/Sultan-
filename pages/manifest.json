@@ -378,6 +378,24 @@
     "altHref": "/verify-certificate/"
   },
   {
+    "slug": "verify-identity",
+    "output": "verify-identity/index.html",
+    "title": "Verify an Identity — Sultan Hanafi Royal Schools",
+    "description": "Confirm that a student, parent/guardian, or staff identity card issued by Sultan Hanafi Royal Schools is genuine, using its printed identity number.",
+    "contentFile": "pages/verify-identity.html",
+    "altHref": "/ar/verify-identity/"
+  },
+  {
+    "slug": "verify-identity-ar",
+    "output": "ar/verify-identity/index.html",
+    "title": "تحقق من هوية — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة بطاقة هوية طالب أو ولي أمر أو موظف صادرة عن مدارس السلطان حنفي الملكية باستخدام رقم الهوية المطبوع.",
+    "contentFile": "pages/verify-identity.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify-identity/"
+  },
+  {
     "slug": "press",
     "output": "press/index.html",
     "title": "Press & News Room — Sultan Hanafi Royal Schools",

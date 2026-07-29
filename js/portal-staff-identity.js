@@ -134,6 +134,18 @@
       renderDelegationsHeld(data.delegationsHeld);
       renderDelegationsGiven(data.delegationsGiven);
 
+      var idCardMount = document.querySelector('[data-id-card-mount]');
+      if(idCardMount && window.SHRSIdCard){
+        window.SHRSIdCard.render(idCardMount, {
+          kind: 'staff',
+          fullName: staff.fullName,
+          identityNo: staff.identityNo,
+          roleLabel: staff.positionTitle || 'Staff',
+          subtitle: staff.institution ? staff.institution.name : 'Sultan Hanafi Royal Schools',
+          status: staff.status ? staff.status.charAt(0).toUpperCase() + staff.status.slice(1) : null,
+        });
+      }
+
       loadingEl.hidden = true;
       contentEl.hidden = false;
     }catch(err){

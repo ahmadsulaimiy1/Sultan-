@@ -698,3 +698,38 @@ body.portal-body{
 .exec-table th:first-child{border-top-left-radius:2px;}
 .exec-table td{padding:9px 12px;border-bottom:1px solid var(--line);}
 .exec-table tr:nth-child(even) td{background:rgba(198,161,91,0.05);}
+
+/* --- Digital Identity System: My ID Card (SHRS Imperial Digital
+   Campus Directive, Priority 2) --- one shared component rendered by
+   js/id-card.js on the student, guardian, and staff dashboards. Same
+   navy/gold card language as .exec-welcome; monogram instead of a
+   fabricated photo, matching the Faculty Directory's fc-mono
+   convention. */
+.id-card{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+  color:var(--ivory);border:1px solid var(--gold);border-radius:calc(var(--btn-radius) - 2px);
+  box-shadow:0 20px 44px -24px rgba(0,0,0,0.5);
+}
+.id-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:0.05;pointer-events:none;
+  background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 32px);
+}
+.id-card-body{display:flex;align-items:center;gap:16px;padding:22px 24px;flex-wrap:wrap;}
+.id-card-mono{
+  flex:0 0 auto;width:56px;height:56px;border-radius:50%;border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-family:'Cinzel','Amiri',serif;
+  font-size:1.15rem;letter-spacing:0.02em;color:var(--gold-bright);background:rgba(233,206,138,0.08);
+}
+.id-card-info{flex:1;min-width:180px;}
+.id-card-role{font-size:0.68rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-bright);}
+.id-card-name{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;color:#fff;margin-top:2px;}
+.id-card-subtitle{font-size:0.8rem;color:rgba(248,244,233,0.75);margin-top:2px;}
+.id-card-no{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.04em;color:var(--gold-bright);margin-top:6px;}
+.id-card-qr{flex:0 0 auto;border-radius:var(--radius-sm);background:#fff;padding:4px;}
+.id-card-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:10px 24px;border-top:1px solid rgba(233,206,138,0.25);font-size:0.72rem;color:rgba(248,244,233,0.7);
+}
+.id-card-footer a{color:var(--gold-bright);text-decoration:none;}
+.id-card-footer a:hover{text-decoration:underline;}

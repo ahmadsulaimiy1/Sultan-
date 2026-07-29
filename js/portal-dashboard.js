@@ -346,6 +346,17 @@
       helloEl.textContent = 'Welcome, ' + (data.title ? data.title + ' ' : '') + (data.preferredName || data.fullName);
       renderWelcomePanel(data);
       renderNotifications(data.notifications);
+
+      var idCardMount = document.querySelector('[data-id-card-mount]');
+      if(idCardMount && window.SHRSIdCard){
+        window.SHRSIdCard.render(idCardMount, {
+          kind: 'guardian',
+          fullName: (data.title ? data.title + ' ' : '') + data.fullName,
+          identityNo: data.identityNo,
+          roleLabel: 'Parent / Guardian',
+          status: data.emailVerified ? 'Verified' : 'Unverified',
+        });
+      }
       loadAdhkar();
       loadApplications();
       verifyBanner.hidden = !!data.emailVerified;

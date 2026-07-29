@@ -12,6 +12,7 @@ import { getSql } from '../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { effectiveGrants } from '../../../_lib/permissions.js';
+import { ensureStaffIdentityNo } from '../../../_lib/identity-no.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -50,7 +51,7 @@ export async function onRequestGet({ request, env }) {
       return json({ error: 'Not signed in.' }, 401);
     }
 
-    const [institutionsRes, rolesRes, delegationsHeldRes, delegationsGivenRes, grants] = await Promise.all([
+    const [institutionsRes, rolesRes, delegationsHeldRes, delegationsGivenRes, grants, identityNo] = await Promise.all([
       sql`
         SELECT i.id, i.name, si.is_primary
         FROM staff_institutions si JOIN institutions i ON i.id = si.institution_id
@@ -83,11 +84,13 @@ export async function onRequestGet({ request, env }) {
         WHERE dl.delegator_staff_id = ${staff.id} AND dl.revoked_at IS NULL AND now() BETWEEN dl.starts_at AND dl.ends_at
         ORDER BY dl.ends_at`,
       effectiveGrants(sql, staff.id),
+      ensureStaffIdentityNo(sql, staff.id),
     ]);
 
     return json({
       staff: {
         staffNo: staff.staff_no,
+        identityNo,
         fullName: staff.full_name,
         preferredName: staff.preferred_name,
         positionTitle: staff.position_title,

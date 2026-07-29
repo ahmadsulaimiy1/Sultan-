@@ -858,3 +858,14 @@ ALTER TABLE guardians ADD COLUMN IF NOT EXISTS verification_code_attempts INTEGE
 -- completion — this timestamp is the guard against replaying it on
 -- every subsequent login. NULL = not shown yet.
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS onboarding_celebration_shown_at TIMESTAMPTZ;
+
+-- Digital Identity System (Imperial Digital Campus Directive, Priority
+-- 2): every student/guardian/staff record gets one public, QR-
+-- verifiable identity number — SHR-STU-<year>-<seq>, SHR-PAR-...,
+-- SHR-STF-... — generated lazily the first time that person's "My ID
+-- Card" view is opened (functions/_lib/identity-no.js), not backfilled
+-- in bulk here, so a school with years of existing records doesn't need
+-- a migration script before this feature works. Nullable until then.
+ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
+ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;

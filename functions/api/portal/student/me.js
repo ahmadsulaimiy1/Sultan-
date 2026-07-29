@@ -14,6 +14,7 @@ import { getSql } from '../../../_lib/db.js';
 import { readStudentSessionFromRequest } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel, hifzStageDescription, fillJuzGrid } from '../../../_lib/hifz.js';
+import { ensureStudentIdentityNo } from '../../../_lib/identity-no.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -77,9 +78,12 @@ export async function onRequestGet({ request, env }) {
       };
     }
 
+    const identityNo = await ensureStudentIdentityNo(sql, student.id);
+
     return json({
       fullName: student.full_name,
       admissionNo: student.admission_no,
+      identityNo,
       status: student.status,
       institution: primary ? primary.institution : null,
       className: primary ? primary.className : null,

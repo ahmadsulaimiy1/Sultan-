@@ -186,6 +186,18 @@
       renderResults(data.results);
       renderHifz(data.hifz);
 
+      var idCardMount = document.querySelector('[data-id-card-mount]');
+      if(idCardMount && window.SHRSIdCard){
+        window.SHRSIdCard.render(idCardMount, {
+          kind: 'student',
+          fullName: data.fullName,
+          identityNo: data.identityNo,
+          roleLabel: 'Student',
+          subtitle: [data.institution, data.className].filter(Boolean).join(' · '),
+          status: data.status,
+        });
+      }
+
       loadingEl.hidden = true;
       contentEl.hidden = false;
     }catch(err){
