@@ -12,13 +12,27 @@
    dark-page (gold-bright/ivory text sitting directly on .portal-body)
    is updated alongside this — search this file for "cream-shell" to
    find them all. */
+/* Imperial Design Authority Directive v2: a sitewide, near-invisible
+   (2.5%) geometric weave sits behind every portal page — the "premium
+   layered background system" ask — reusing the same diagonal motif
+   already established on .exec-welcome/.id-card rather than inventing
+   a new pattern, so the whole portal reads as one considered surface
+   rather than a flat cream fill. */
 body.portal-body{
+  position:relative;isolation:isolate;
   min-height:100vh;color:var(--ink);
   background:
     radial-gradient(1200px 560px at 88% -12%, rgba(198,161,91,0.10), transparent 62%),
     linear-gradient(180deg, var(--milk, #FCFAF6) 0%, var(--ivory) 100%);
   font-family:'Inter','Cairo',sans-serif;display:flex;flex-direction:column;
 }
+body.portal-body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.025;
+  background-image:
+    repeating-linear-gradient(45deg, var(--navy) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(-45deg, var(--navy) 0 1px, transparent 1px 46px);
+}
+body.portal-body > *{position:relative;z-index:1;}
 .portal-topbar{
   display:flex;align-items:center;justify-content:space-between;padding:18px 28px;
   background:#fff;border-bottom:2px solid var(--gold);box-shadow:0 2px 14px -6px rgba(59,42,29,0.14);
@@ -204,7 +218,11 @@ body.portal-body{
 .portal-child-card{
   background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);color:var(--ink);
   border:1px solid rgba(198,161,91,0.4);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
-  box-shadow:0 22px 48px -26px rgba(20,13,4,0.42);margin-bottom:24px;
+  box-shadow:
+    0 32px 64px -30px rgba(20,13,4,0.34),
+    0 10px 22px -12px rgba(20,13,4,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+  margin-bottom:28px;
 }
 /* cream-shell: a solid navy block repeated atop every single card on a
    dashboard (often 6-10 per page) is exactly the "brown consumes the
@@ -215,7 +233,7 @@ body.portal-body{
    deliberate solid-navy "premium accent" moments per page. */
 .portal-child-head{
   position:relative;background:linear-gradient(180deg,#fff 0%,var(--ivory) 100%);
-  color:var(--navy);padding:18px 22px 16px 26px;border-bottom:2px solid var(--gold);
+  color:var(--navy);padding:24px 28px 22px 32px;border-bottom:2px solid var(--gold);
 }
 .portal-child-head::before{
   content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;
@@ -234,10 +252,10 @@ body.portal-body{
    background as a jarring solid block. Each .portal-stat carries its
    own border instead, so it never depends on the row being full. */
 .portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;}
-.portal-stat{background:var(--ivory);padding:18px 20px;border:1px solid var(--line);}
+.portal-stat{background:var(--ivory);padding:22px 24px;border:1px solid var(--line);}
 .portal-stat .label{font-size:0.76rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);}
 .portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--navy);margin-top:5px;}
-.portal-results{padding:18px 20px;}
+.portal-results{padding:24px 26px;}
 .portal-results h3{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);color:var(--navy);margin:0 0 12px;}
 .portal-results-scroll{overflow-x:auto;}
 .portal-results table{width:100%;min-width:520px;border-collapse:collapse;font-size:0.86rem;}
@@ -360,9 +378,18 @@ body.portal-body{
 .pfd-section{
   background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);color:var(--ink);
   border:1px solid rgba(198,161,91,0.4);border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
-  box-shadow:0 22px 48px -26px rgba(20,13,4,0.42);padding:22px 24px;margin-bottom:20px;position:relative;
+  box-shadow:
+    0 32px 64px -30px rgba(20,13,4,0.34),
+    0 10px 22px -12px rgba(20,13,4,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+  padding:32px 34px;margin-bottom:28px;position:relative;
 }
-.pfd-section::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);}
+.pfd-section::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;background-size:220% 100%;
+  background-image:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 45%,var(--gold) 65%,var(--gold-bright) 100%);
+  animation:gold-edge-sweep 20s linear infinite;
+}
+@media (prefers-reduced-motion:reduce){.pfd-section::before{animation:none;}}
 .pfd-section h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0 0 14px;color:var(--navy);}
 .pfd-subhead{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);margin:20px 0 10px;}
 .pfd-note{font-size:0.8rem;color:var(--ink-soft);margin-top:10px;}
@@ -668,24 +695,42 @@ body.portal-body{
 .dashboard-checklist a{color:var(--navy);font-weight:600;margin-inline-start:auto;white-space:nowrap;}
 
 /* --- Executive Dashboard Visual System --- */
+/* Executive card depth system (Imperial Design Authority Directive v2):
+   three shadow layers instead of one flat drop-shadow — a wide, soft
+   "ambient" layer (the card lifted off the page), a tighter "contact"
+   layer close to the edge (grounds it), and an inset top highlight
+   (a 1px near-white line, the way a beveled glass or metal edge catches
+   light) — restrained, no blur/backdrop-filter theatrics since these
+   are opaque surfaces, not transparent glass. */
 .exec-card{
   position:relative;overflow:hidden;
   background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);color:var(--ink);
   border:1px solid rgba(198,161,91,0.4);border-radius:calc(var(--btn-radius) - 2px);
-  box-shadow:0 22px 48px -26px rgba(20,13,4,0.4);padding:24px 26px;margin-bottom:20px;
+  box-shadow:
+    0 32px 64px -30px rgba(20,13,4,0.32),
+    0 10px 22px -12px rgba(20,13,4,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+  padding:32px 34px;margin-bottom:28px;
 }
 .exec-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 50%,var(--gold) 100%);
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;background-size:220% 100%;
+  background-image:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 45%,var(--gold) 65%,var(--gold-bright) 100%);
+  animation:gold-edge-sweep 20s linear infinite;
 }
-.exec-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+@media (prefers-reduced-motion:reduce){.exec-card::before{animation:none;}}
+@keyframes gold-edge-sweep{
+  0%{background-position:0% 0;}
+  100%{background-position:-220% 0;}
+}
+.exec-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .exec-card-head h2{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--navy);}
-.exec-stat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;}
+.exec-stat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:16px;}
 .exec-stat{
-  background:var(--milk,#FCFAF6);border:1px solid var(--line);border-radius:8px;padding:18px 18px 16px;position:relative;
+  background:var(--milk,#FCFAF6);border:1px solid var(--line);border-radius:10px;padding:22px 22px 20px;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.8);
   transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease;
 }
-.exec-stat:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 14px 28px -18px rgba(42,32,22,0.35);}
+.exec-stat:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 16px 32px -18px rgba(42,32,22,0.38),inset 0 1px 0 rgba(255,255,255,0.8);}
 .exec-stat-icon{
   display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;
   background:rgba(198,161,91,0.12);border:1px solid rgba(198,161,91,0.3);color:var(--gold);margin-bottom:10px;
@@ -705,12 +750,25 @@ body.portal-body{
     radial-gradient(650px 260px at 88% -20%, rgba(233,206,138,0.14), transparent 65%),
     linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
   color:var(--ivory);border:1px solid var(--gold);border-radius:calc(var(--btn-radius) - 2px);
-  padding:28px 30px;margin-bottom:24px;box-shadow:0 26px 56px -28px rgba(0,0,0,0.5);
+  padding:40px 44px;margin-bottom:30px;
+  box-shadow:0 34px 68px -28px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.08);
 }
+/* Ambient gold system: the existing diagonal foil pattern now drifts
+   very slowly (18s, barely perceptible) rather than sitting static —
+   "light moving across gold foil," not an animated icon or a flashy
+   effect. Reuses the pattern that was already there; adds motion, not
+   new decoration. */
 .exec-welcome::before{
-  content:"";position:absolute;inset:0;z-index:-1;opacity:0.05;pointer-events:none;
+  content:"";position:absolute;inset:-20%;z-index:-1;opacity:0.06;pointer-events:none;
   background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 32px);
+  animation:gold-foil-drift 18s ease-in-out infinite;
 }
+@keyframes gold-foil-drift{
+  0%{transform:translate(0,0);}
+  50%{transform:translate(14px,10px);}
+  100%{transform:translate(0,0);}
+}
+@media (prefers-reduced-motion:reduce){.exec-welcome::before{animation:none;}}
 /* Institutional watermark: the same crest asset/opacity already used on
    marketing pages (css/brand.css .crest-watermark) — reused directly
    here (rather than sharing the class, which would collide with the
@@ -725,16 +783,68 @@ body.portal-body{
 [dir="rtl"] .exec-welcome::after{right:auto;left:-30px;}
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
-.exec-welcome-eyebrow{font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h3-size,1.7rem);margin:0 0 4px;color:#fff;}
-.exec-welcome-role{font-size:0.85rem;color:rgba(248,244,233,0.75);margin-bottom:4px;}
-.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.9rem;color:var(--gold-bright);margin-bottom:16px;}
-.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px;padding-top:14px;border-top:1px solid rgba(233,206,138,0.25);}
+.exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:8px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h1-size,2.8rem);line-height:1.08;margin:0 0 6px;color:#fff;}
+.exec-welcome-role{font-size:0.92rem;color:rgba(248,244,233,0.78);margin-bottom:6px;}
+.exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--gold-bright);margin-bottom:22px;}
+.exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px 30px;padding-top:20px;border-top:1px solid rgba(233,206,138,0.25);}
 .exec-welcome-stat{display:flex;flex-direction:column;}
-.exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.2rem;color:var(--gold-bright);}
+.exec-welcome-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.4rem;color:var(--gold-bright);}
 .exec-welcome-stat .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:rgba(248,244,233,0.75);}
+.exec-welcome-stat .trend{font-size:0.72rem;font-weight:600;margin-top:2px;display:inline-flex;align-items:center;gap:3px;}
+.exec-welcome-stat .trend.is-up{color:#7fd99a;}
+.exec-welcome-stat .trend.is-down{color:#e08a8a;}
+.exec-welcome-stat .trend svg{width:11px;height:11px;}
+.exec-welcome-health{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:6px 16px;
+  border:1px solid rgba(233,206,138,0.4);border-radius:999px;background:rgba(0,0,0,0.15);
+  font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;
+}
+.exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+.exec-welcome-health.is-excellent .dot{background:#7fd99a;box-shadow:0 0 8px #7fd99a;}
+.exec-welcome-health.is-strong .dot{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright);}
+.exec-welcome-health.is-developing .dot{background:var(--terracotta);box-shadow:0 0 8px var(--terracotta);}
+.exec-welcome-health.is-attention .dot{background:#e08a8a;box-shadow:0 0 8px #e08a8a;}
 
 .exec-empty{padding:20px 4px;color:var(--ink-soft);font-size:0.86rem;line-height:1.5;text-align:center;}
+
+/* Sparkline + trend-arrow micro-visualisation, for KPI tiles that have
+   real short historical series behind them (e.g. revenueByMonth) —
+   never fabricated for tiles that only have a single current snapshot. */
+.exec-stat-spark{display:block;margin-top:8px;opacity:0.85;}
+.exec-stat-trend{
+  display:inline-flex;align-items:center;gap:3px;font-size:0.72rem;font-weight:600;margin-top:6px;
+}
+.exec-stat-trend svg{width:11px;height:11px;flex:0 0 auto;}
+.exec-stat-trend.is-up{color:var(--forest-green);}
+.exec-stat-trend.is-down{color:var(--crimson);}
+.exec-stat-trend.is-flat{color:var(--ink-soft);}
+
+/* Radial gauge (financial-health style) — semi-circular arc reusing the
+   same stroke-dasharray technique as the Hifz-completion donut. */
+.pfd-gauge-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:4px 0 6px;}
+.pfd-gauge-row svg{flex:0 0 auto;}
+.pfd-gauge-caption{flex:1;min-width:200px;font-size:0.86rem;line-height:1.55;color:var(--ink-soft);}
+.pfd-gauge-caption strong{color:var(--navy);}
+
+/* Staggered card entrance — a single CSS animation (no scroll-triggered
+   IntersectionObserver needed for a dashboard whose cards all load at
+   once via fetch) with a per-position delay so cards settle into place
+   in sequence rather than all popping in together. */
+.portal-wrap > *{animation:dash-card-in 0.5s cubic-bezier(.2,.7,.3,1) both;}
+.portal-wrap > *:nth-child(1){animation-delay:0s;}
+.portal-wrap > *:nth-child(2){animation-delay:0.06s;}
+.portal-wrap > *:nth-child(3){animation-delay:0.12s;}
+.portal-wrap > *:nth-child(4){animation-delay:0.18s;}
+.portal-wrap > *:nth-child(5){animation-delay:0.24s;}
+.portal-wrap > *:nth-child(n+6){animation-delay:0.3s;}
+@keyframes dash-card-in{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@media (prefers-reduced-motion:reduce){
+  .portal-wrap > *{animation:none;}
+}
 
 .exec-table-scroll{overflow-x:auto;}
 .exec-table{width:100%;min-width:520px;border-collapse:separate;border-spacing:0;font-size:0.84rem;}
@@ -759,21 +869,42 @@ body.portal-body{
   box-shadow:0 20px 44px -24px rgba(0,0,0,0.5);
 }
 .id-card::before{
-  content:"";position:absolute;inset:0;z-index:-1;opacity:0.05;pointer-events:none;
+  content:"";position:absolute;inset:-20%;z-index:-1;opacity:0.06;pointer-events:none;
   background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 32px);
+  animation:gold-foil-drift 18s ease-in-out infinite;
 }
-.id-card-body{display:flex;align-items:center;gap:16px;padding:22px 24px;flex-wrap:wrap;}
+@media (prefers-reduced-motion:reduce){.id-card::before{animation:none;}}
+/* Role-based accent: same navy card body for every role (institutional
+   consistency), but the top edge + role label pick up a distinct
+   prestige-palette hue per audience, so a guardian glancing at their
+   own vs a child's card (or a staff member comparing to a founder
+   credential) reads the difference at a glance without a different
+   card design per role. */
+.id-card.role-guardian{border-top-color:var(--oxford-navy);}
+.id-card.role-guardian .id-card-role{color:var(--chart-3, var(--oxford-navy));}
+.id-card.role-staff{border-top-color:var(--forest-green);}
+.id-card.role-staff .id-card-role{color:var(--forest-green);}
+.id-card.role-founder{border-top-color:var(--terracotta);}
+.id-card.role-founder .id-card-role{color:var(--terracotta);}
+.id-card-body{display:flex;align-items:center;gap:20px;padding:28px 30px;flex-wrap:wrap;}
 .id-card-mono{
-  flex:0 0 auto;width:56px;height:56px;border-radius:50%;border:1.5px solid var(--gold);
+  flex:0 0 auto;width:60px;height:60px;border-radius:50%;border:1.5px solid var(--gold);
   display:flex;align-items:center;justify-content:center;font-family:'Cinzel','Amiri',serif;
-  font-size:1.15rem;letter-spacing:0.02em;color:var(--gold-bright);background:rgba(233,206,138,0.08);
+  font-size:1.2rem;letter-spacing:0.02em;color:var(--gold-bright);background:rgba(233,206,138,0.08);
+  position:relative;
+}
+/* Verification seal ring — a second, slightly larger dashed ring behind
+   the monogram, the "official seal" cue diplomatic/executive credentials
+   use, without needing a fabricated emblem graphic. */
+.id-card-mono::before{
+  content:"";position:absolute;inset:-6px;border-radius:50%;border:1px dashed rgba(233,206,138,0.45);
 }
 .id-card-info{flex:1;min-width:180px;}
-.id-card-role{font-size:0.68rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-bright);}
-.id-card-name{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;color:#fff;margin-top:2px;}
-.id-card-subtitle{font-size:0.8rem;color:rgba(248,244,233,0.75);margin-top:2px;}
-.id-card-no{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.04em;color:var(--gold-bright);margin-top:6px;}
-.id-card-qr{flex:0 0 auto;border-radius:var(--radius-sm);background:#fff;padding:4px;}
+.id-card-role{font-size:0.7rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--gold-bright);font-weight:600;}
+.id-card-name{font-family:'Cinzel','Amiri',serif;font-size:1.15rem;color:#fff;margin-top:3px;}
+.id-card-subtitle{font-size:0.82rem;color:rgba(248,244,233,0.75);margin-top:3px;}
+.id-card-no{font-family:'Cinzel','Amiri',serif;font-size:0.84rem;letter-spacing:0.04em;color:var(--gold-bright);margin-top:8px;}
+.id-card-qr{flex:0 0 auto;border-radius:var(--radius-sm);background:#fff;padding:5px;}
 .id-card-details{
   display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:1px;
   border-top:1px solid rgba(233,206,138,0.25);
@@ -827,29 +958,37 @@ body.portal-body{
    rules resolve by source order — an earlier media query would silently
    lose to a later unconditional rule otherwise. */
 @media (max-width:640px){
+  /* Imperial Design Authority Directive v2, Critical Issue 1: the
+     dashboard must fill the phone, not float as a shrunk desktop page
+     in a sea of cream margin. Outer page gutter drops to 12-16px max;
+     cards run close to the screen edges with a small radius instead of
+     sitting in a wide cream frame. */
+  .portal-main{padding:16px 12px;}
+  .portal-topbar{padding:12px 14px;}
   .portal-wrap{max-width:100%;}
-  .exec-welcome{padding:22px 18px;border-radius:calc(var(--btn-radius) - 4px);}
-  .exec-welcome h1{font-size:1.4rem;}
-  .exec-welcome-stats{gap:14px 18px;}
+  .exec-welcome{padding:26px 20px;border-radius:calc(var(--btn-radius) - 4px);}
+  .exec-welcome h1{font-size:1.9rem;}
+  .exec-welcome-stats{gap:16px 20px;}
   .exec-welcome-stat{flex:1 1 40%;min-width:110px;}
   .exec-card, .portal-child-card, .pfd-section, .portal-adhkar-card, .portal-hifz-card{
     border-radius:calc(var(--btn-radius) - 4px);
   }
-  .exec-card{padding:18px 16px;}
-  .pfd-section{padding:18px 16px;}
-  .portal-child-head{padding:16px 16px 14px 20px;}
+  .exec-card{padding:20px 18px;}
+  .pfd-section{padding:20px 18px;}
+  .portal-child-head{padding:18px 18px 16px 22px;}
   .portal-child-head h2{font-size:1.1rem;}
   .exec-card-head h2{font-size:1.1rem;}
   .exec-stat-grid{gap:10px;}
-  .exec-stat{padding:14px 14px 12px;}
+  .exec-stat{padding:16px 16px 14px;}
   .exec-stat-value{font-size:1.3rem;}
   .portal-stats{grid-template-columns:1fr 1fr;}
-  .portal-stat{padding:14px 16px;}
-  .id-card-body{padding:18px 16px;gap:14px;}
+  .portal-stat{padding:16px 18px;}
+  .portal-results{padding:18px 20px;}
+  .id-card-body{padding:20px 18px;gap:14px;}
   .id-card-details{grid-template-columns:1fr 1fr;}
   .id-card-detail{padding:10px 16px;}
   .id-card-footer{padding:10px 16px;}
-  .finance-summary{padding:14px 16px;}
+  .finance-summary{padding:16px 18px;}
   .finance-invoice-row{flex-direction:column;align-items:flex-start;gap:4px;}
   .finance-invoice-amount{margin-inline-start:0;}
   .finance-receipt-row{flex-direction:column;align-items:flex-start;gap:4px;}

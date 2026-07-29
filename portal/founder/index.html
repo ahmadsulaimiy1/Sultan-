@@ -45,12 +45,15 @@
       <h1>Founder Dashboard</h1>
       <div class="exec-welcome-role" data-founder-auth-status>Institution-wide, read-only view</div>
       <div class="exec-welcome-motto" data-founder-generated></div>
+      <p class="exec-welcome-narrative" data-founder-narrative style="max-width:560px;font-size:0.94rem;line-height:1.6;color:rgba(248,244,233,0.85);margin:0 0 6px;"></p>
       <div class="exec-welcome-stats">
-        <div class="exec-welcome-stat"><span class="value" data-exec-stat-students>—</span><span class="label">Active Students</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-students>—</span><span class="label">Active Learners</span></div>
         <div class="exec-welcome-stat"><span class="value" data-exec-stat-attendance>—</span><span class="label">Avg Attendance</span></div>
-        <div class="exec-welcome-stat"><span class="value" data-exec-stat-guardians>—</span><span class="label">Guardians</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-guardians>—</span><span class="label">Guardian Families</span></div>
         <div class="exec-welcome-stat"><span class="value" data-exec-stat-hifz>—</span><span class="label">Hifz Enrolled</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat-collection>—</span><span class="label">Collection Rate</span></div>
       </div>
+      <div class="exec-welcome-health" data-founder-health hidden><span class="dot"></span><span data-founder-health-label></span></div>
     </div>
     <p class="portal-notice-on-dark" style="margin-top:0;margin-bottom:20px;border-top:none;padding-top:0;">Sample/demo records are excluded from every figure below. This is a read-only aggregate — nothing here can be edited from this page.</p>
 
@@ -81,6 +84,8 @@
       <div class="portal-stats" data-founder-finance-stats></div>
       <h3 class="pfd-subhead">Fee Collection Funnel</h3>
       <div data-founder-collection-funnel></div>
+      <h3 class="pfd-subhead">Collection Health Gauge</h3>
+      <div data-founder-collection-gauge></div>
       <h3 class="pfd-subhead">Revenue by Month</h3>
       <div data-founder-revenue-chart></div>
       <h3 class="pfd-subhead">Revenue by School</h3>

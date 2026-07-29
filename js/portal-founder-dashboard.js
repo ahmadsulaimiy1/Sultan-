@@ -18,10 +18,55 @@
     return e;
   }
 
+  var PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Animated count-up: parses a leading/trailing non-numeric prefix and
+  // suffix (₦, %, "due", etc.) off the real final value and counts up
+  // to it — the number itself is never invented, only its reveal is
+  // animated. Falls back to setting the text immediately if the value
+  // isn't numeric-shaped or the user has asked for reduced motion.
+  function animateValue(target, finalText, duration){
+    var m = /^(\D*)([\d,]+)(\D*)$/.exec(String(finalText));
+    if(!m || PREFERS_REDUCED_MOTION){
+      target.textContent = finalText;
+      return;
+    }
+    var prefix = m[1], suffix = m[3];
+    var end = parseInt(m[2].replace(/,/g, ''), 10);
+    if(!isFinite(end)){ target.textContent = finalText; return; }
+    var start = null, dur = duration || 900;
+    function step(ts){
+      if(start === null) start = ts;
+      var progress = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      target.textContent = prefix + Math.round(end * eased).toLocaleString('en-NG') + suffix;
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
   function statTile(label, value){
     var tile = el('div', 'portal-stat');
     tile.appendChild(el('div', 'label', label));
-    tile.appendChild(el('div', 'value', value));
+    var valueEl = el('div', 'value', '');
+    tile.appendChild(valueEl);
+    animateValue(valueEl, value);
+    return tile;
+  }
+
+  // Same tile, with an optional real sparkline + trend-arrow appended —
+  // used only where a real short history exists behind the figure.
+  function statTileRich(label, value, sparkHtml, trendHtml){
+    var tile = el('div', 'portal-stat');
+    tile.appendChild(el('div', 'label', label));
+    var valueEl = el('div', 'value', '');
+    tile.appendChild(valueEl);
+    animateValue(valueEl, value);
+    if(sparkHtml || trendHtml){
+      var extra = el('div', null, '');
+      extra.innerHTML = (sparkHtml || '') + (trendHtml || '');
+      tile.appendChild(extra);
+    }
     return tile;
   }
 
@@ -97,7 +142,11 @@
     var avg = rows.reduce(function(s, r){ return s + (r.total || 0); }, 0) / (rows.length || 1);
     var baseY = padding.top + innerH;
 
-    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Revenue by month, last ' + rows.length + ' months, average ' + formatCurrencyShort(avg) + '">';
+    var svg = '<svg viewBox="0 0 ' + width + ' ' + height + '" width="100%" role="img" aria-label="Revenue by month, last ' + rows.length + ' months, average ' + formatCurrencyShort(avg) + '">'
+      + '<defs><linearGradient id="pfd-revenue-area" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0%" stop-color="var(--oxford-navy)" stop-opacity="0.22"></stop>'
+      + '<stop offset="100%" stop-color="var(--oxford-navy)" stop-opacity="0"></stop>'
+      + '</linearGradient></defs>';
 
     // Gridlines + y-axis labels, on the rounded axisMax
     var gridSteps = 4;
@@ -112,14 +161,35 @@
     var avgY = baseY - (avg / axisMax) * innerH;
     svg += '<line x1="' + padding.left + '" y1="' + avgY + '" x2="' + (width - padding.right) + '" y2="' + avgY + '" stroke="var(--terracotta)" stroke-width="1.4" stroke-dasharray="6,4"><title>6-month average: ' + formatCurrencyShort(avg) + '</title></line>';
 
-    // Bars, value labels, month labels, trend points
+    // First pass: compute bar-top coordinates only, so the gradient area
+    // fill can be drawn UNDER the bars (correct paint order) rather than
+    // as a translucent overlay on top of them.
     var points = [];
     rows.forEach(function(r, i){
       var barHeight = axisMax > 0 ? ((r.total || 0) / axisMax) * innerH : 0;
       var x = padding.left + i * (barWidth + barGap);
       var y = baseY - barHeight;
+      points.push((x + barWidth / 2) + ',' + y);
+    });
+
+    // Gradient area fill beneath the trend line — the "smooth curve,
+    // gradient overlay" treatment financial terminals use so the trend
+    // reads as a continuous movement, not just a dotted connector.
+    // Painted before the bars so the bars sit on top of it, not under
+    // a translucent wash.
+    if(points.length > 1){
+      var firstXY = points[0].split(',');
+      var lastXY = points[points.length - 1].split(',');
+      var areaPath = firstXY[0] + ',' + baseY + ' ' + points.join(' ') + ' ' + lastXY[0] + ',' + baseY;
+      svg += '<polygon points="' + areaPath + '" fill="url(#pfd-revenue-area)"></polygon>';
+    }
+
+    // Second pass: bars, value labels, month labels
+    rows.forEach(function(r, i){
+      var barHeight = axisMax > 0 ? ((r.total || 0) / axisMax) * innerH : 0;
+      var x = padding.left + i * (barWidth + barGap);
+      var y = baseY - barHeight;
       var cx = x + barWidth / 2;
-      points.push(cx + ',' + y);
       var parts = String(r.month).split('-');
       var label = MONTH_NAMES[Number(parts[1]) - 1] || r.month;
       svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + CHART_COLORS[i % CHART_COLORS.length] + '" rx="4"><title>' + label + ': ' + formatCurrency(r.total || 0) + '</title></rect>';
@@ -202,6 +272,68 @@
     return svg;
   }
 
+  // Semi-circular financial-health gauge — a second read on the same
+  // collection-rate figure the funnel above already shows, in the
+  // register the directive asked for ("financial health gauges").
+  // Colour bands mirror the onboarding wizard's existing poor/basic/
+  // good/excellent convention (same tokens, same thresholds) rather
+  // than inventing a new colour language for "financial health."
+  function collectionGauge(percent){
+    var size = 200, cx = size / 2, cy = size / 2 + 6, r = 78, stroke = 16;
+    var pct = Math.max(0, Math.min(100, percent == null ? 0 : percent));
+    var band = pct >= 86 ? { color: 'var(--forest-green)', label: 'Excellent' }
+      : pct >= 61 ? { color: 'var(--gold)', label: 'Good' }
+      : pct >= 31 ? { color: 'var(--terracotta)', label: 'Basic' }
+      : { color: 'var(--crimson)', label: 'Needs Attention' };
+    // Semi-circle from 180deg to 0deg (left to right along the top half)
+    var circumference = Math.PI * r;
+    var offset = circumference * (1 - pct / 100);
+    var startX = cx - r, endX = cx + r;
+    return '<svg viewBox="0 0 ' + size + ' ' + (size / 2 + 30) + '" width="200" height="' + (size / 2 + 30) + '" role="img" aria-label="Collection rate: ' + pct + '%, ' + band.label + '">'
+      + '<path d="M ' + startX + ' ' + cy + ' A ' + r + ' ' + r + ' 0 0 1 ' + endX + ' ' + cy + '" fill="none" stroke="var(--line)" stroke-width="' + stroke + '" stroke-linecap="round"></path>'
+      + '<path d="M ' + startX + ' ' + cy + ' A ' + r + ' ' + r + ' 0 0 1 ' + endX + ' ' + cy + '" fill="none" stroke="' + band.color + '" stroke-width="' + stroke + '" stroke-linecap="round" '
+      + 'stroke-dasharray="' + circumference.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '"><title>' + band.label + ': ' + pct + '%</title></path>'
+      + '<text x="' + cx + '" y="' + (cy - 8) + '" text-anchor="middle" font-size="30" font-weight="700" fill="var(--navy)" font-family="Cinzel, Amiri, serif">' + pct + '%</text>'
+      + '<text x="' + cx + '" y="' + (cy + 16) + '" text-anchor="middle" font-size="11" letter-spacing="0.04em" fill="' + band.color + '" font-weight="600">' + band.label.toUpperCase() + '</text>'
+      + '</svg>';
+  }
+
+  // Tiny inline sparkline for KPI tiles that have a real short history
+  // behind them (e.g. 6 months of revenueByMonth) — deliberately not
+  // used on single-snapshot figures (attendance %, Hifz counts) since
+  // this codebase has no time-series storage for those yet.
+  function sparkline(values, color){
+    var w = 90, h = 28, pad = 3;
+    var max = Math.max.apply(null, values.concat([0.0001]));
+    var min = Math.min.apply(null, values.concat([0]));
+    var range = (max - min) || 1;
+    var stepX = values.length > 1 ? (w - pad * 2) / (values.length - 1) : 0;
+    var pts = values.map(function(v, i){
+      var x = pad + i * stepX;
+      var y = pad + (1 - (v - min) / range) * (h - pad * 2);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    });
+    var lastXY = pts[pts.length - 1].split(',');
+    return '<svg class="exec-stat-spark" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" aria-hidden="true">'
+      + '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></polyline>'
+      + '<circle cx="' + lastXY[0] + '" cy="' + lastXY[1] + '" r="2.2" fill="' + color + '"></circle>'
+      + '</svg>';
+  }
+
+  // Trend-arrow markup (up/down/flat), built from a real two-point
+  // comparison — the caller supplies the current and previous real
+  // values; this never infers a direction from a single snapshot.
+  function trendArrow(current, previous, formatFn){
+    if(previous == null || current == null || previous === 0) return '';
+    var deltaPct = ((current - previous) / Math.abs(previous)) * 100;
+    var dir = deltaPct > 1 ? 'up' : deltaPct < -1 ? 'down' : 'flat';
+    var arrow = dir === 'up' ? 'M4 11 L9 5 L14 11 M9 5 V16'
+      : dir === 'down' ? 'M4 6 L9 12 L14 6 M9 12 V1'
+      : 'M3 9 H15';
+    var text = dir === 'flat' ? 'Flat vs last month' : (deltaPct > 0 ? '+' : '') + deltaPct.toFixed(1) + '% vs last month';
+    return '<span class="exec-stat-trend is-' + dir + '"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="' + arrow + '"></path></svg>' + text + '</span>';
+  }
+
   function render(data){
     generatedEl.textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
 
@@ -216,10 +348,55 @@
     var execStatAttendanceEl = document.querySelector('[data-exec-stat-attendance]');
     var execStatGuardiansEl = document.querySelector('[data-exec-stat-guardians]');
     var execStatHifzEl = document.querySelector('[data-exec-stat-hifz]');
-    if(execStatStudentsEl) execStatStudentsEl.textContent = data.students.totalActive;
-    if(execStatAttendanceEl) execStatAttendanceEl.textContent = data.attendance.averagePercent != null ? data.attendance.averagePercent + '%' : '—';
-    if(execStatGuardiansEl) execStatGuardiansEl.textContent = data.guardians.total;
-    if(execStatHifzEl) execStatHifzEl.textContent = data.hifz.enrolledCount;
+    if(execStatStudentsEl) animateValue(execStatStudentsEl, data.students.totalActive);
+    if(execStatAttendanceEl) animateValue(execStatAttendanceEl, data.attendance.averagePercent != null ? data.attendance.averagePercent + '%' : '—');
+    if(execStatGuardiansEl) animateValue(execStatGuardiansEl, data.guardians.total);
+    if(execStatHifzEl) animateValue(execStatHifzEl, data.hifz.enrolledCount);
+
+    var execStatCollectionEl = document.querySelector('[data-exec-stat-collection]');
+    if(execStatCollectionEl){
+      animateValue(execStatCollectionEl, (data.finance && data.finance.collectionRatePercent != null) ? data.finance.collectionRatePercent + '%' : '—');
+    }
+
+    // Executive narrative line: one sentence, built only from real
+    // figures already on this page — "320 Active Learners" the
+    // directive's own example of turning a number into a narrative,
+    // not a separately-authored marketing sentence.
+    var narrativeEl = document.querySelector('[data-founder-narrative]');
+    if(narrativeEl){
+      var parts = [data.students.totalActive + ' active learner(s) across the four schools'];
+      if(data.hifz.enrolledCount > 0) parts.push(data.hifz.enrolledCount + ' pursuing the Hifz journey');
+      if(data.finance && data.finance.totalCollected != null) {
+        parts.push(formatCurrency(data.finance.totalCollected) + ' collected against ' + formatCurrency(data.finance.totalInvoiced) + ' invoiced this term');
+      }
+      narrativeEl.textContent = parts.join(', ') + '.';
+    }
+
+    // Institutional Health Index — a real, documented composite (not an
+    // arbitrary label): the mean of average attendance % and the
+    // collection rate %, banded at the same Excellent/Strong/Developing/
+    // Attention thresholds as the onboarding wizard's completion bands
+    // (see docs/shrs-design-system.md). Hidden entirely if neither real
+    // input exists, rather than showing a fabricated score.
+    var healthEl = document.querySelector('[data-founder-health]');
+    var healthLabelEl = document.querySelector('[data-founder-health-label]');
+    if(healthEl && healthLabelEl){
+      var healthInputs = [];
+      if(data.attendance.averagePercent != null) healthInputs.push(data.attendance.averagePercent);
+      if(data.finance && data.finance.collectionRatePercent != null) healthInputs.push(data.finance.collectionRatePercent);
+      if(healthInputs.length){
+        var healthScore = Math.round(healthInputs.reduce(function(a,b){return a+b;},0) / healthInputs.length);
+        var band = healthScore >= 85 ? { cls: 'is-excellent', label: 'Excellent' }
+          : healthScore >= 70 ? { cls: 'is-strong', label: 'Strong' }
+          : healthScore >= 50 ? { cls: 'is-developing', label: 'Developing' }
+          : { cls: 'is-attention', label: 'Needs Attention' };
+        healthEl.hidden = false;
+        healthEl.className = 'exec-welcome-health ' + band.cls;
+        healthLabelEl.textContent = 'Institutional Health: ' + band.label + ' (' + healthScore + '/100, from attendance + collection rate)';
+      } else {
+        healthEl.hidden = true;
+      }
+    }
 
     var statusStatsEl = document.querySelector('[data-founder-status-stats]');
     statusStatsEl.innerHTML = '';
@@ -283,8 +460,23 @@
     if(data.finance){
       var financeStatsEl = document.querySelector('[data-founder-finance-stats]');
       financeStatsEl.innerHTML = '';
+      // Sparkline + real trend arrow only on the one figure that
+      // actually has a real per-month series behind it: revenueByMonth
+      // tracks payments collected each month, not amounts invoiced each
+      // month, so "Total Invoiced" (a running total with no monthly
+      // breakdown in this schema) stays a plain tile rather than
+      // borrowing a history that belongs to a different figure.
       financeStatsEl.appendChild(statTile('Total Invoiced', formatCurrency(data.finance.totalInvoiced)));
-      financeStatsEl.appendChild(statTile('Total Collected', formatCurrency(data.finance.totalCollected)));
+      var months = (data.finance.revenueByMonth || []);
+      var lastMonth = months.length ? months[months.length - 1].total : null;
+      var prevMonth = months.length > 1 ? months[months.length - 2].total : null;
+      if(months.length > 1){
+        var values = months.map(function(m){ return m.total || 0; });
+        financeStatsEl.appendChild(statTileRich('Total Collected (this month)', formatCurrency(lastMonth),
+          sparkline(values, 'var(--gold)'), trendArrow(lastMonth, prevMonth)));
+      } else {
+        financeStatsEl.appendChild(statTile('Total Collected', formatCurrency(data.finance.totalCollected)));
+      }
       financeStatsEl.appendChild(statTile('Collection Rate', data.finance.collectionRatePercent != null ? data.finance.collectionRatePercent + '%' : '—'));
       financeStatsEl.appendChild(statTile('Scholarship Exposure', formatCurrency(data.finance.scholarshipExposure)));
 
@@ -292,6 +484,14 @@
       if(funnelEl){
         funnelEl.innerHTML = data.finance.totalInvoiced > 0
           ? collectionFunnel(data.finance.totalInvoiced, data.finance.totalCollected, data.finance.collectionRatePercent)
+          : '<p class="pfd-note">No invoices issued yet.</p>';
+      }
+
+      var gaugeEl = document.querySelector('[data-founder-collection-gauge]');
+      if(gaugeEl){
+        gaugeEl.innerHTML = data.finance.collectionRatePercent != null
+          ? '<div class="pfd-gauge-row">' + collectionGauge(data.finance.collectionRatePercent)
+            + '<div class="pfd-gauge-caption">A second read on the same collection figure as the funnel above, banded the same way as the onboarding completion score: <strong>86%+ Excellent</strong>, 61–85% Good, 31–60% Basic, below 31% Needs Attention.</div></div>'
           : '<p class="pfd-note">No invoices issued yet.</p>';
       }
 

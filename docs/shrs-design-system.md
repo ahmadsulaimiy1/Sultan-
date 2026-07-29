@@ -164,6 +164,45 @@ admissions-funnel or enrolment-funnel stages later). Both render only
 when their denominator is real and non-zero; an honest empty-state
 message otherwise.
 
+**v2 additions** (Imperial Design Authority Directive): `revenueBarChart()`
+also paints a gradient area fill under the trend line (`<defs>`/
+`linearGradient`, drawn before the bars so it sits behind them, not as
+a wash on top). `collectionGauge()` is a semi-circular arc gauge — a
+second read on the same collection-rate figure the funnel shows,
+banded at the same Excellent/Good/Basic/Needs-Attention thresholds as
+the onboarding wizard's completion score (reusing that convention
+rather than inventing a new one). `sparkline()` and `trendArrow()` are
+the two building blocks for "real short history, honestly labelled" —
+**only** attach these to a figure that has an actual per-period series
+behind it (e.g. `revenueByMonth`, which is *collected* revenue by
+month); do not attach a sparkline from one series to a tile that
+reports a different figure (a real bug caught in this pass: a
+revenue-collected sparkline was briefly shown under the "Total
+Invoiced" tile, which has no monthly breakdown in this schema — fixed
+by removing the sparkline from that tile rather than fabricating an
+"invoiced by month" series). `animateValue()` in the same file is a
+generic count-up: it regex-parses a numeric core out of an already-
+final, real string (`₦62,000,000`, `92%`, `320`) and animates only the
+reveal, never the number itself; it no-ops to the plain string when
+the shape isn't numeric or `prefers-reduced-motion` is set.
+
+**Institutional Health Index**: a real, documented composite, not an
+arbitrary label — the mean of average attendance % and collection
+rate %, banded Excellent (≥85) / Strong (70–84) / Developing (50–69) /
+Needs Attention (<50). If neither real input exists yet, the badge is
+hidden entirely rather than shown with a fabricated score. See
+`render()`'s health-index block in `js/portal-founder-dashboard.js` for
+the exact computation.
+
+**Ambient gold system**: existing low-opacity diagonal foil patterns
+(`.exec-welcome::before`, `.id-card::before`) now drift slowly (18s,
+`gold-foil-drift` keyframe) instead of sitting static, and the top
+accent bar on `.exec-card`/`.pfd-section` sweeps a highlight across
+itself over 20s (`gold-edge-sweep`) — both respect
+`prefers-reduced-motion`. This is intentionally the *only* motion
+added to gold; it should stay barely perceptible, never a flashing or
+pulsing effect.
+
 ## Icons
 
 Established convention (extend, don't replace): inline SVG,
@@ -243,3 +282,19 @@ does **not** yet:
   their own addenda once each module is actually scoped and built, so
   this document doesn't get ahead of real decisions the way the rest
   of the site's copy deliberately doesn't.
+- Use any commercial/proprietary display fonts (Canela, Recoleta,
+  Editorial New, Neue Haas Grotesk, SF Pro, General Sans, etc.) that a
+  later directive may request — these aren't legally embeddable on a
+  public site without a license this project doesn't have. Cormorant
+  Garamond (display serif) + Cinzel (labels) + Inter (data/body) stay
+  the type system; a request to "upgrade typography" should be read as
+  a request to use these tokens more confidently (size, weight,
+  hierarchy), not as licence to add an unlicensed font file.
+- Fabricate new campus photography, "holographic" security effects, or
+  arbitrary composite scores. Real photography gets reused where it
+  exists and left honestly absent where it doesn't (see Icons/Colour
+  sections); "holographic" asks get built as a real CSS sheen/pattern
+  effect and documented as such, not claimed as literal holography;
+  and any new "health"/"score" figure must be a stated formula over
+  real inputs (see the Institutional Health Index above), hidden
+  entirely when its inputs don't exist yet, never invented.

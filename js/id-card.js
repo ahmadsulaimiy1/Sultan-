@@ -49,8 +49,9 @@
           return '<div class="id-card-detail"><span class="k">' + esc(d.label) + '</span><span class="v">' + esc(d.value) + '</span></div>';
         }).join('') + '</div>'
       : '';
+    var roleClass = opts.kind === 'guardian' ? ' role-guardian' : opts.kind === 'staff' ? ' role-staff' : opts.kind === 'founder' ? ' role-founder' : '';
     container.innerHTML =
-      '<div class="id-card" data-id-card-kind="' + esc(opts.kind || '') + '">' +
+      '<div class="id-card' + roleClass + '" data-id-card-kind="' + esc(opts.kind || '') + '">' +
         '<div class="id-card-body">' +
           '<div class="id-card-mono">' + esc(initials(opts.fullName)) + '</div>' +
           '<div class="id-card-info">' +
