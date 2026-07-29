@@ -153,7 +153,6 @@ ${personalisation}
 <script src="/js/identity-verify.js" defer></script>
 <script src="/js/receipt-verify.js" defer></script>
 <script src="/js/search.js" defer></script>
-<script src="/js/newsletter.js" defer></script>
 
 </body>
 </html>

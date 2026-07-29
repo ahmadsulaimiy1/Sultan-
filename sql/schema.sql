@@ -1071,15 +1071,3 @@ CREATE TABLE IF NOT EXISTS payment_plan_installments (
   paid_receipt_id   INTEGER REFERENCES receipts(id),
   UNIQUE (payment_plan_id, sequence)
 );
-
--- Footer newsletter signup (Header & Footer Master Directive, Section 8).
--- Deliberately minimal: this school has no bulk-email sending system to
--- pair it with (Resend is wired for transactional auth/receipt emails
--- only, per docs/email-*.md) — this table exists so a real subscriber
--- list is being collected honestly from day one, not so an email goes
--- out; sending real newsletters is future work once that need is real.
-CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-  id            SERIAL PRIMARY KEY,
-  email         TEXT NOT NULL UNIQUE,
-  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);

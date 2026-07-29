@@ -57,15 +57,10 @@
        generic charting-library default palette. */
     --chart-1:var(--gold-bright); --chart-2:var(--forest-green); --chart-3:var(--oxford-navy);
     --chart-4:var(--terracotta); --chart-5:var(--crimson); --chart-6:var(--bronze-bright);
-    /* Header/Footer Master Directive — font-family tokens naming the
-       3-font system that was already in use sitewide (Cormorant
-       Garamond headings / Cinzel labels & buttons / Inter body), just
-       never named as a single source of truth. Additive, same pattern
-       as the type-scale tokens above: applied here to the two truly
-       global rules (body, h1-h4) that already carried these exact font
-       stacks; the ~150 other explicit font-family declarations already
-       render the same fonts and are left as future migration work
-       rather than a mechanical rewrite with no visible effect. */
+    /* Names the 3-font system already in use sitewide (Cormorant
+       Garamond headings / Cinzel labels & buttons / Inter body) as a
+       single source of truth. Applied only to the two truly global
+       rules below that already carried these exact font stacks. */
     --font-display:'Cormorant Garamond','Amiri',serif;
     --font-label:'Cinzel','Amiri',serif;
     --font-body:'Inter','Cairo',sans-serif;
@@ -276,12 +271,11 @@
   .nav-mark{border:1px solid var(--gold);color:var(--gold-bright) !important;padding:8px 18px !important;font-family:'Cinzel','Amiri',serif;font-size:0.66rem !important;letter-spacing:0.14em;white-space:nowrap;flex-shrink:0;border-radius:var(--btn-radius);transition:background .25s ease,border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
   .nav-mark:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);transform:translateY(-1px);}
   *{box-sizing:border-box;margin:0;padding:0;}
-  /* overflow-x:hidden here (rather than :clip) used to silently defeat
-     position:sticky on header.nav — hidden/scroll/auto on html or body
-     both establish a scroll container, and sticky positioning is
-     computed relative to the nearest one. :clip suppresses the same
-     horizontal overflow without creating that container, so the
-     sticky header actually stays put while scrolling. */
+  /* overflow-x:hidden here (rather than :clip) silently defeats
+     position:sticky on header.nav below — hidden/scroll/auto on html
+     or body both establish a scroll container, and sticky positioning
+     is computed relative to the nearest one. :clip suppresses the
+     same horizontal overflow without creating that container. */
   html{scroll-behavior:smooth;overflow-x:clip;}
   body{font-family:var(--font-body);color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;}
   /* The crest-watermark bleed and similar decorative elements intentionally
@@ -369,11 +363,6 @@
       margin:0 8px;flex-shrink:0;
     }
     .ci-icon{width:10px;height:10px;}
-    /* The location line is a desktop/tablet prestige-bar signal — at
-       this width the one-line email/phone/phone strip already nearly
-       fills it, and mobile visitors reach the campus location via the
-       Contact quick-row item and the footer's own map section instead. */
-    .tb-location{display:none;}
   }
   .topbar .socials{display:flex;gap:14px;align-items:center;}
   .topbar-divider{width:1px;height:14px;background:rgba(233,206,138,0.25);flex-shrink:0;}
@@ -394,40 +383,25 @@
     background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 30px);
   }
   header.nav .wrap,header.nav nav.wrap{position:relative;z-index:1;}
+  /* Living Gold Reflection — a single slow pass of light across the
+     header's gold underline, like light crossing gold foil. 20s cycle,
+     near-invisible in motion, never a pulse or a glow. */
   header.nav::after{
     content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
     background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);
     background-size:220% 100%;opacity:0.85;pointer-events:none;z-index:1;
-    animation:header-gold-drift 14s ease-in-out infinite;
+    animation:header-gold-drift 20s ease-in-out infinite;
   }
-  /* A single slow pass of light across the underline — the "luxury watch
-     reflection" the design directive asks for, not a glow or a pulse.
-     Same restrained-motion convention as portal.css's gold-edge-sweep. */
   @keyframes header-gold-drift{0%{background-position:0% 0;}50%{background-position:-100% 0;}100%{background-position:0% 0;}}
-  @media (prefers-reduced-motion:reduce){
-    header.nav::after{animation:none;}
-  }
-  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;transition:padding .3s ease;}
+  @media (prefers-reduced-motion:reduce){header.nav::after{animation:none;}}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;}
   .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-  .brand-mark{width:36px;height:36px;flex-shrink:0;animation:crestIn .9s ease .1s both;transition:width .3s ease,height .3s ease;}
-  /* Sticky-scroll refinement — once the visitor scrolls past the
-     opening viewport, the header settles into a slightly tighter,
-     softly glassy state: a smaller crest, less vertical padding, a
-     touch of blur behind the existing gradient. Deliberately subtle
-     (per the Master Directive's "not dramatic" instruction) — no
-     colour change, no shadow pop, just restrained refinement eased
-     over the same .3s used elsewhere in the header. */
-  header.nav.is-scrolled{backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);}
-  header.nav.is-scrolled nav.wrap{padding-top:9px;padding-bottom:9px;}
-  header.nav.is-scrolled .brand-mark{width:30px;height:30px;}
-  @media (prefers-reduced-motion:reduce){
-    nav.wrap,.brand-mark{transition:none;}
-  }
+  .brand-mark{width:36px;height:36px;flex-shrink:0;animation:crestIn .9s ease .1s both;}
   .brand-text .line1{font-size:1.05rem;font-weight:700;letter-spacing:0.03em;color:#fff;font-family:'Cinzel','Amiri',serif;white-space:nowrap;}
   .brand-text .line2{font-size:0.58rem;letter-spacing:0.2em;color:var(--gold-bright);text-transform:uppercase;font-family:'Inter','Cairo',sans-serif;white-space:nowrap;}
-  .navlinks{display:flex;gap:26px;align-items:center;}
-  .navlinks a{color:var(--ivory);font-size:0.82rem;font-weight:500;padding:6px 0;border-bottom:1px solid transparent;position:relative;transition:color .25s ease;white-space:nowrap;}
-  .navlinks a::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:1px;background:var(--gold-bright);transition:width .3s cubic-bezier(.4,0,.2,1);}
+  .navlinks{display:flex;gap:30px;align-items:center;}
+  .navlinks a{color:var(--ivory);font-size:0.84rem;font-weight:500;letter-spacing:0.01em;padding:8px 0;border-bottom:1px solid transparent;position:relative;transition:color .3s ease;white-space:nowrap;}
+  .navlinks a::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:1px;background:var(--gold-bright);transition:width .35s cubic-bezier(.4,0,.2,1);}
   .navlinks a:hover{color:var(--gold-bright);border-color:transparent;}
   .navlinks a:hover::after{width:100%;}
   .navlinks a.nav-mark::after,.navlinks a.nav-cta::after{display:none;}
@@ -444,8 +418,7 @@
   /* Drawer-only chrome — invisible on desktop, where .navlinks is the
      ordinary inline nav bar. display:contents on the actions wrapper
      (rather than display:none) keeps Start Admission/Register-Login
-     as direct flex items of .navlinks on desktop, exactly as they were
-     before being wrapped for the mobile drawer's own styling. */
+     as direct flex items of .navlinks on desktop. */
   .nav-drawer-head{display:none;}
   .nav-drawer-actions{display:contents;}
   /* Mobile quick-actions row — a persistent second strip beneath the
@@ -549,7 +522,14 @@
     box-shadow:0 28px 56px -24px rgba(0,0,0,0.55);
     padding:6px 0;display:none;flex-direction:column;
   }
-  .nav-drop-panel a{padding:11px 20px;white-space:nowrap;border-bottom:none !important;}
+  /* Full-width dropdown rows read better as a soft background wash on
+     hover than the underline used for the top-level nav — the ::after
+     underline (positioned at the row's own edge) is suppressed here in
+     favour of a gentle fade + slight indent, closer to "light passing
+     over" than a hard link state. */
+  .nav-drop-panel a{padding:11px 20px;white-space:nowrap;border-bottom:none !important;transition:background .3s ease,padding-inline-start .3s ease;}
+  .nav-drop-panel a::after{display:none;}
+  .nav-drop-panel a:hover{background:rgba(198,161,91,0.08);padding-inline-start:24px;}
   .nav-drop:hover .nav-drop-panel,
   .nav-drop:focus-within .nav-drop-panel{display:flex;}
 
@@ -577,8 +557,8 @@
        destination is a real immersive takeover (fixed, fills the
        viewport, own sticky head with a large close target), not a
        small dropdown panel squeezed under the header. Large touch
-       targets throughout (52px+ row height) per the Header & Footer
-       Master Directive's explicit "no squeezed menu" requirement. */
+       targets throughout (52px+ row height) so nothing feels cramped
+       on mobile. */
     .navlinks{
       position:fixed;inset:0;z-index:250;
       background:linear-gradient(165deg, var(--navy-deep) 0%, #180f06 100%);
@@ -673,42 +653,6 @@
   .nav-mega-intro p{font-size:0.76rem;line-height:1.55;color:rgba(248,244,233,0.6);}
   .nav-mega-panel.is-compact{min-width:300px;}
 
-  /* Institutions mega-menu — each school as a premium photo card, not a
-     dropdown text row. Real photography for Royal College/Qur'an College
-     (.nsc-photo); the same scoped-accent-colour + real-content-pattern
-     substitute already established on the homepage institution cards
-     (Fix 2, Phase 2) for Nursery & Primary/Islamic & Arabic Studies,
-     since no dedicated photography exists for those two yet — never a
-     stock photo standing in for a real one. */
-  .nav-mega-panel.is-schools{min-width:700px;}
-  .nav-school-main{display:flex;flex-direction:column;flex:1;min-width:0;}
-  .nav-school-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px 20px 8px;}
-  .nav-school-card{
-    display:flex !important;flex-direction:column;overflow:hidden;border:1px solid var(--line);
-    background:rgba(0,0,0,0.12);transition:border-color .25s ease,transform .25s ease;
-    padding:0 !important;white-space:normal !important;
-  }
-  .nav-school-card:hover{border-color:var(--gold);transform:translateY(-2px);}
-  .nsc-visual{position:relative;height:92px;overflow:hidden;flex-shrink:0;}
-  .nsc-visual img{width:100%;height:100%;object-fit:cover;display:block;}
-  .nsc-accent{display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.85);}
-  .nsc-accent svg{width:30px;height:30px;}
-  .nsc-accent-np{background:linear-gradient(135deg,rgba(63,107,78,0.55),rgba(63,107,78,0.25));}
-  .nsc-accent-ais{background:linear-gradient(135deg,rgba(201,120,75,0.55),rgba(201,120,75,0.25));}
-  .nsc-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;white-space:normal;}
-  .nsc-tag{font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);white-space:normal;}
-  .nsc-name{font-family:'Cinzel','Amiri',serif;font-size:0.8rem;color:var(--ivory);line-height:1.35;white-space:normal;}
-  .nav-school-secondary{
-    display:flex;gap:14px;flex-wrap:wrap;padding:6px 20px 18px;border-top:1px solid var(--line);margin-top:4px;
-  }
-  .nav-school-secondary a{font-size:0.76rem;color:rgba(248,244,233,0.7);padding:6px 0 !important;}
-  .nav-school-secondary a:hover{color:var(--gold-bright);}
-  @media (max-width:1440px){
-    .nav-mega-panel.is-schools{min-width:0;}
-    .nav-school-grid{grid-template-columns:1fr 1fr;padding:6px 0 8px;}
-    .nav-school-secondary{padding:6px 0 10px;}
-  }
-
   /* Mega-menu accent rotation — every dropdown previously read gold-
      on-navy with no variation, which is the flattest reading of the
      site's two brand colours repeated everywhere. Each of the 8 header
@@ -748,6 +692,9 @@
   .navlinks > a.is-active{color:var(--gold-bright);}
   .navlinks > a.is-active::after{width:100%;}
   .nav-drop.is-active > .nav-drop-trigger{color:var(--gold-bright);}
+  /* Same restrained underline reveal used on hover, held open as the
+     active-page indicator — not a bright block or coloured tab. */
+  .nav-drop.is-active > .nav-drop-trigger::after{width:100%;}
 
   /* hero */
   .hero{position:relative;background-image:url("/assets/images/gallery/campus-hero.jpg");background-size:cover;background-position:center 65%;color:var(--ivory);padding:120px 0 100px;overflow:hidden;}
@@ -1642,81 +1589,37 @@
   .foot-grid a:hover{color:var(--gold-bright);}
   .foot-contact-item{margin-bottom:8px;line-height:1.5;}
 
-  /* Institutional statistics band + Four Schools Grid + social/
-     newsletter connect band — Header & Footer Master Directive,
-     footer sections 2, 6, 7 and 8. Sits between the arrival zone and
-     the detailed link grid, echoing .foot-dash-eyebrow's label style
-     established for the (now-retired) at-a-glance dashboard. */
+  /* At-a-glance institutional dashboard — every major facet of the
+     school as a compact icon badge, all visible in one grid with no
+     scroll or tap required, sitting above the more detailed zone
+     ribbon below it. This is the honest version of "the whole
+     footer visible at once": a real overview immediately, with the
+     full link lists one swipe away rather than requiring either
+     illegibly tiny text or hiding content behind an accordion. */
   .foot-dash-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-bright);text-align:center;margin-top:34px;margin-bottom:16px;}
-
-  .foot-schools{padding:6px 0 8px;}
-  .foot-schools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
-  .fs-school-card{
-    display:flex;flex-direction:column;gap:10px;padding:22px 20px;text-align:start;
-    border:1px solid rgba(198,161,91,0.22);background:rgba(198,161,91,0.04);
-    transition:background .25s ease,border-color .25s ease,transform .25s ease;
-  }
-  .fs-school-card:hover{background:rgba(198,161,91,0.1);border-color:var(--gold);transform:translateY(-3px);color:inherit;}
-  .fsc-icon{
-    width:38px;height:38px;padding:9px;box-sizing:content-box;border-radius:50%;
-    background:rgba(198,161,91,0.1);border:1px solid rgba(198,161,91,0.28);color:var(--gold-bright);
-  }
-  .fsc-icon svg{width:100%;height:100%;}
-  .fsc-name{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.08rem;font-weight:600;color:var(--ivory);line-height:1.3;}
-  .fsc-desc{font-size:0.78rem;line-height:1.55;color:rgba(248,244,233,0.6);}
-  .fsc-link{margin-top:auto;padding-top:6px;font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);}
-  .fs-school-card .arrow{display:inline-block;transition:transform .25s ease;}
-  .fs-school-card:hover .arrow{transform:translateX(4px);}
-  [dir="rtl"] .fs-school-card:hover .arrow{transform:translateX(-4px);}
-  @media (max-width:980px){.foot-schools-grid{grid-template-columns:1fr 1fr;}}
-  @media (max-width:560px){.foot-schools-grid{grid-template-columns:1fr;}}
-
-  .foot-link-soon{color:rgba(248,244,233,0.4);cursor:default;}
-  .foot-link-soon em{font-style:normal;font-size:0.72rem;letter-spacing:0.02em;}
-
-  .foot-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:26px 0;border-top:1px solid var(--line);text-align:center;}
-  .fst-item{display:flex;flex-direction:column;gap:4px;}
-  .fst-num{font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;font-weight:600;color:var(--gold-bright);line-height:1;}
-  .fst-label{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(248,244,233,0.55);}
-  @media (max-width:560px){
-    .foot-stats{grid-template-columns:1fr 1fr;gap:20px 12px;}
-    .fst-num{font-size:1.7rem;}
-  }
-
-  .foot-connect{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;padding:30px 0 8px;border-top:1px solid var(--line);align-items:start;}
-  .fc-label{display:block;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:14px;}
-  .foot-social .fc-icons{display:flex;gap:10px;}
-  .foot-social .social-icon{
-    display:flex;align-items:center;justify-content:center;width:36px;height:36px;
-    border:1px solid rgba(198,161,91,0.3);border-radius:50%;color:var(--gold-bright);
+  .foot-dashboard{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+  .fd-item{
+    display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;
+    padding:14px 6px;border:1px solid rgba(198,161,91,0.2);background:rgba(198,161,91,0.04);
     transition:background .2s ease,border-color .2s ease,transform .2s ease;
   }
-  .foot-social .social-icon:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);transform:translateY(-2px);}
-  .fn-lede{font-size:0.86rem;line-height:1.6;color:rgba(248,244,233,0.65);margin-bottom:16px;max-width:440px;}
-  .fn-form{display:flex;gap:10px;max-width:440px;}
-  .fn-form input{
-    flex:1;min-width:0;padding:12px 16px;background:rgba(247,238,223,0.06);
-    border:1px solid rgba(198,161,91,0.3);color:var(--ivory);font-size:0.86rem;border-radius:var(--btn-radius);
+  .fd-item:hover{background:rgba(198,161,91,0.12);border-color:var(--gold);transform:translateY(-2px);}
+  /* Icon reads as its own medallion badge rather than a bare glyph,
+     matching the .fd-icon/.image-slot circular-badge treatment used
+     elsewhere — breaks up the strip's otherwise uniform flatness. */
+  .fd-item svg{
+    width:24px;height:24px;padding:9px;box-sizing:content-box;border-radius:50%;
+    background:rgba(198,161,91,0.08);border:1px solid rgba(198,161,91,0.25);
+    color:var(--gold-bright);flex-shrink:0;transition:background .2s ease,border-color .2s ease;
   }
-  .fn-form input::placeholder{color:rgba(248,244,233,0.4);}
-  .fn-form input:focus{outline:none;border-color:var(--gold-bright);}
-  .fn-form button{
-    font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;
-    padding:0 20px;border:1px solid var(--gold);border-radius:var(--btn-radius);
-    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);
-    cursor:pointer;transition:box-shadow .25s ease,transform .25s ease;
-  }
-  .fn-form button:hover{box-shadow:0 10px 22px -8px rgba(233,206,138,0.6);transform:translateY(-1px);}
-  .fn-form button:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
-  .foot-newsletter-status{min-height:1.2em;margin-top:10px;font-size:0.78rem;}
-  .foot-newsletter-status.is-success{color:var(--gold-bright);}
-  .foot-newsletter-status.is-error{color:#D98A8A;}
-  @media (max-width:760px){
-    .foot-connect{grid-template-columns:1fr;gap:26px;}
-    .fn-form{max-width:none;}
-  }
-  @media (max-width:420px){
-    .fn-form{flex-direction:column;}
+  .fd-item:hover svg{background:rgba(198,161,91,0.2);border-color:var(--gold-bright);}
+  .fd-item span{font-size:0.66rem;font-weight:600;letter-spacing:0.01em;line-height:1.25;color:var(--ivory);}
+  @media (max-width:900px){.foot-dashboard{grid-template-columns:repeat(4,1fr);}}
+  @media (max-width:520px){
+    .foot-dashboard{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .fd-item{padding:12px 4px;}
+    .fd-item svg{width:20px;height:20px;padding:7px;}
+    .fd-item span{font-size:0.62rem;}
   }
 
   /* Mobile footer — horizontally-scrollable zone cards rather than a
@@ -1793,7 +1696,16 @@
     .fm-btn{min-width:50%;flex:1 1 50%;}
   }
 
-  .foot-seal{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:26px;border-top:1px solid var(--line);flex-wrap:wrap;}
+  /* Closing gold line — bookends the header's own gold underline at
+     the very bottom of the page. A true metallic gradient (dim → bright
+     → dim), not a flat tint, but static: one motion moment per page
+     (the header) is enough, so this doesn't repeat it. */
+  .foot-seal{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:26px;flex-wrap:wrap;}
+  .foot-seal::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);
+    opacity:0.7;
+  }
   .foot-seal-brand{display:flex;align-items:center;gap:14px;}
   .foot-seal-brand img{width:34px;height:34px;opacity:0.9;}
   .foot-seal-text{display:flex;flex-direction:column;gap:2px;}
