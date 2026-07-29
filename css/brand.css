@@ -57,6 +57,18 @@
        generic charting-library default palette. */
     --chart-1:var(--gold-bright); --chart-2:var(--forest-green); --chart-3:var(--oxford-navy);
     --chart-4:var(--terracotta); --chart-5:var(--crimson); --chart-6:var(--bronze-bright);
+    /* Header/Footer Master Directive — font-family tokens naming the
+       3-font system that was already in use sitewide (Cormorant
+       Garamond headings / Cinzel labels & buttons / Inter body), just
+       never named as a single source of truth. Additive, same pattern
+       as the type-scale tokens above: applied here to the two truly
+       global rules (body, h1-h4) that already carried these exact font
+       stacks; the ~150 other explicit font-family declarations already
+       render the same fonts and are left as future migration work
+       rather than a mechanical rewrite with no visible effect. */
+    --font-display:'Cormorant Garamond','Amiri',serif;
+    --font-label:'Cinzel','Amiri',serif;
+    --font-body:'Inter','Cairo',sans-serif;
   }
   :root[data-pc-theme="dark"]{
     --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
@@ -271,12 +283,12 @@
      horizontal overflow without creating that container, so the
      sticky header actually stays put while scrolling. */
   html{scroll-behavior:smooth;overflow-x:clip;}
-  body{font-family:'Inter','Cairo',sans-serif;color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;}
+  body{font-family:var(--font-body);color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;}
   /* The crest-watermark bleed and similar decorative elements intentionally
      extend past the viewport edge; without this, that harmless extra
      scroll width shifts the default RTL scroll origin and clips the start
      of every right-aligned line (Arabic nav/text) on narrow screens. */
-  h1,h2,h3,h4{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;color:var(--navy);line-height:1.15;}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;color:var(--navy);line-height:1.15;}
   section h2{font-size:var(--h2-size);}
   .h3-sub{font-size:var(--h3-sub-size);}
   .crest-type{font-family:'Cinzel','Amiri',serif;}
