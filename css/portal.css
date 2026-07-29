@@ -74,7 +74,7 @@ body.portal-body > *{position:relative;z-index:1;}
 }
 .portal-aside-eyebrow::before{content:"";width:26px;height:1px;background:var(--gold-bright);flex:0 0 auto;}
 [dir="rtl"] .portal-aside-eyebrow{letter-spacing:0.06em;}
-.portal-aside-title{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:2.15rem;line-height:1.22;color:#fff;margin:0 0 16px;max-width:420px;}
+.portal-aside-title{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:2.35rem;line-height:1.2;letter-spacing:0.005em;color:#fff;margin:0 0 18px;max-width:420px;}
 .portal-aside-copy{font-size:0.94rem;line-height:1.68;color:rgba(248,244,233,0.78);max-width:400px;margin:0 0 32px;}
 .portal-aside-points{list-style:none;margin:0 0 36px;padding:0;display:flex;flex-direction:column;gap:16px;max-width:400px;}
 .portal-aside-points li{display:flex;align-items:flex-start;gap:12px;font-size:0.87rem;color:rgba(248,244,233,0.88);line-height:1.5;}
@@ -102,27 +102,51 @@ body.portal-body > *{position:relative;z-index:1;}
 @media (max-width:960px){
   .portal-shell{grid-template-columns:1fr;}
   .portal-aside{
-    padding:34px 24px;border-right:none;border-bottom:1px solid rgba(233,206,138,0.2);
+    padding:30px 22px;border-right:none;border-bottom:1px solid rgba(233,206,138,0.2);
     text-align:center;align-items:center;
   }
   [dir="rtl"] .portal-aside{border-left:none;}
   .portal-aside-eyebrow{justify-content:center;}
   .portal-aside-eyebrow::before{display:none;}
-  .portal-aside-title{font-size:1.5rem;max-width:none;}
-  .portal-aside-copy{max-width:none;margin-bottom:20px;}
-  .portal-aside-points{display:none;}
+  .portal-aside-title{font-size:1.6rem;max-width:none;}
+  .portal-aside-copy{max-width:none;margin-bottom:18px;}
+  /* Previously hidden outright on mobile, which left the phone view
+     reading as a bare centred card in a lot of empty space — a compact
+     horizontal row of the same real points keeps the page feeling
+     designed for the screen it's actually on, not desktop content with
+     pieces removed. */
+  .portal-aside-points{
+    display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px;
+    max-width:none;margin-bottom:22px;
+  }
+  .portal-aside-points li{
+    flex:0 1 auto;font-size:0.72rem;padding:7px 12px;border:1px solid rgba(233,206,138,0.3);border-radius:99px;
+  }
   .portal-aside-cta{border-top:none;padding-top:0;margin-top:6px;max-width:none;}
-  .portal-form-col{padding:32px 20px;}
+  .portal-form-col{padding:28px 14px;}
 }
 
 .portal-main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
 .portal-card{
+  position:relative;overflow:hidden;
   width:100%;max-width:420px;background:var(--ivory);color:var(--ink);
   border:1px solid rgba(198,161,91,0.35);border-top:3px solid var(--gold);
   border-radius:calc(var(--btn-radius) + 4px);
   padding:36px 32px;box-shadow:0 30px 70px -28px rgba(20,13,4,0.4);margin-top:20px;
 }
-.portal-card h1{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:1.65rem;margin:0 0 8px;color:var(--navy);}
+/* Living Gold Reflection on the card's own top edge — same restrained
+   language as the header's gold underline, 12s cycle, easy to miss if
+   not looking for it. */
+.portal-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold-bright) 45%,#fff 50%,var(--gold-bright) 55%,transparent);
+  background-size:260% 100%;background-position:0% 0;
+  animation:portalCardSweep 12s ease-in-out infinite;
+}
+@keyframes portalCardSweep{0%,15%{background-position:0% 0;}55%,100%{background-position:-160% 0;}}
+@media (prefers-reduced-motion:reduce){.portal-card::before{animation:none;}}
+@media (max-width:600px){.portal-card{padding:28px 22px;}}
+.portal-card h1{font-family:'Cormorant Garamond','Amiri',serif;font-weight:600;font-size:1.85rem;margin:0 0 8px;color:var(--navy);letter-spacing:0.01em;}
 .portal-card .sub{font-size:0.86rem;color:var(--ink-soft);margin-bottom:24px;line-height:1.55;}
 .portal-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
 .portal-field label{font-size:0.78rem;font-weight:600;color:var(--navy);}
@@ -175,10 +199,20 @@ body.portal-body > *{position:relative;z-index:1;}
   color:var(--gold-bright);border:1px solid var(--navy);border-radius:var(--btn-radius);cursor:pointer;
   box-shadow:0 14px 30px -14px rgba(34,23,9,0.55);
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
+  animation:portalSubmitBreathe 5s ease-in-out infinite;
 }
-.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);}
+/* Soft glow breathing — the primary action on the page, so it earns
+   the one ambient-glow treatment this form uses. Slow (5s) and
+   low-amplitude; the hover/active states below still take over
+   normally on interaction. */
+@keyframes portalSubmitBreathe{
+  0%,100%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 0 0 rgba(233,206,138,0);}
+  50%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 18px 1px rgba(233,206,138,0.28);}
+}
+.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);animation-play-state:paused;}
 .portal-submit:active{transform:translateY(0);}
-.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
+.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;animation:none;}
+@media (prefers-reduced-motion:reduce){.portal-submit{animation:none;}}
 .portal-error{
   background:rgba(124,31,46,0.08);border:1px solid var(--crimson);border-radius:6px;color:var(--crimson);
   font-size:0.82rem;padding:10px 13px;margin-bottom:16px;display:none;

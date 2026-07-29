@@ -686,6 +686,52 @@
   .nav-mega-intro p{font-size:0.76rem;line-height:1.55;color:rgba(248,244,233,0.6);}
   .nav-mega-panel.is-compact{min-width:300px;}
 
+  /* Login to Portal — a premium gateway grid, not a plain link list.
+     Four real doors (Parent/Guardian, Student, Staff, Executive — the
+     last being the real token-gated Founder Dashboard, not an
+     invented destination), each with a short, honest feature summary
+     drawn from what that dashboard actually contains. */
+  .nav-mega-panel.is-portal{min-width:680px;padding:26px;flex-direction:column;gap:18px;}
+  .nav-mega-panel.is-portal .nav-mega-intro{width:auto;padding:0;background:none;border:none;flex-direction:row;align-items:center;gap:12px;}
+  .nav-mega-panel.is-portal .nav-mega-intro .nmi-icon{width:30px;height:30px;flex-shrink:0;}
+  .nav-mega-panel.is-portal .nav-mega-intro h4{margin:0;}
+  .nav-mega-panel.is-portal .nav-mega-intro p{margin:0;}
+  .portal-gateway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .portal-gateway-card{
+    position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;
+    padding:20px 20px 18px;border:1px solid rgba(198,161,91,0.24);background:rgba(0,0,0,0.14);
+    transition:border-color .3s ease,transform .3s ease,background .3s ease;
+  }
+  .portal-gateway-card:hover{border-color:var(--gold);transform:translateY(-3px);background:rgba(198,161,91,0.06);}
+  .pgc-head{display:flex;align-items:center;gap:10px;}
+  .pgc-icon{
+    display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;
+    border-radius:50%;background:rgba(198,161,91,0.1);border:1px solid rgba(198,161,91,0.3);color:var(--gold-bright);
+  }
+  .pgc-name{font-family:'Cinzel','Amiri',serif;font-size:0.84rem;color:var(--ivory);line-height:1.3;}
+  .pgc-desc{font-size:0.74rem;line-height:1.5;color:rgba(248,244,233,0.6);}
+  .pgc-features{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+  .pgc-features span{
+    font-size:0.62rem;letter-spacing:0.02em;color:rgba(248,244,233,0.75);
+    border:1px solid rgba(198,161,91,0.22);padding:3px 9px;border-radius:99px;
+  }
+  /* Executive card carries the one "premium/governance" accent in this
+     panel — a slow, near-invisible gold pass, not a glow, and only
+     here, per the "restrained, never everywhere" gold-system rule. */
+  .portal-gateway-card.is-executive{border-color:rgba(233,206,138,0.4);}
+  .portal-gateway-card.is-executive::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg,transparent 35%,rgba(233,206,138,0.14) 48%,rgba(233,206,138,0.2) 50%,rgba(233,206,138,0.14) 52%,transparent 65%);
+    background-size:260% 260%;background-position:220% 220%;
+    animation:portalExecSweep 9s ease-in-out infinite;
+  }
+  @keyframes portalExecSweep{0%,40%{background-position:220% 220%;}55%,100%{background-position:-20% -20%;}}
+  @media (prefers-reduced-motion:reduce){.portal-gateway-card.is-executive::after{animation:none;display:none;}}
+  @media (max-width:1440px){
+    .nav-mega-panel.is-portal{min-width:0;}
+    .portal-gateway-grid{grid-template-columns:1fr;}
+  }
+
   /* Mega-menu accent rotation — every dropdown previously read gold-
      on-navy with no variation, which is the flattest reading of the
      site's two brand colours repeated everywhere. Each header category
