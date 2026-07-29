@@ -1547,37 +1547,81 @@
   .foot-grid a:hover{color:var(--gold-bright);}
   .foot-contact-item{margin-bottom:8px;line-height:1.5;}
 
-  /* At-a-glance institutional dashboard — every major facet of the
-     school as a compact icon badge, all visible in one grid with no
-     scroll or tap required, sitting above the more detailed zone
-     ribbon below it. This is the honest version of "the whole
-     footer visible at once": a real overview immediately, with the
-     full link lists one swipe away rather than requiring either
-     illegibly tiny text or hiding content behind an accordion. */
+  /* Institutional statistics band + Four Schools Grid + social/
+     newsletter connect band — Header & Footer Master Directive,
+     footer sections 2, 6, 7 and 8. Sits between the arrival zone and
+     the detailed link grid, echoing .foot-dash-eyebrow's label style
+     established for the (now-retired) at-a-glance dashboard. */
   .foot-dash-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-bright);text-align:center;margin-top:34px;margin-bottom:16px;}
-  .foot-dashboard{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
-  .fd-item{
-    display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;
-    padding:14px 6px;border:1px solid rgba(198,161,91,0.2);background:rgba(198,161,91,0.04);
+
+  .foot-schools{padding:6px 0 8px;}
+  .foot-schools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .fs-school-card{
+    display:flex;flex-direction:column;gap:10px;padding:22px 20px;text-align:start;
+    border:1px solid rgba(198,161,91,0.22);background:rgba(198,161,91,0.04);
+    transition:background .25s ease,border-color .25s ease,transform .25s ease;
+  }
+  .fs-school-card:hover{background:rgba(198,161,91,0.1);border-color:var(--gold);transform:translateY(-3px);color:inherit;}
+  .fsc-icon{
+    width:38px;height:38px;padding:9px;box-sizing:content-box;border-radius:50%;
+    background:rgba(198,161,91,0.1);border:1px solid rgba(198,161,91,0.28);color:var(--gold-bright);
+  }
+  .fsc-icon svg{width:100%;height:100%;}
+  .fsc-name{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.08rem;font-weight:600;color:var(--ivory);line-height:1.3;}
+  .fsc-desc{font-size:0.78rem;line-height:1.55;color:rgba(248,244,233,0.6);}
+  .fsc-link{margin-top:auto;padding-top:6px;font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);}
+  .fs-school-card .arrow{display:inline-block;transition:transform .25s ease;}
+  .fs-school-card:hover .arrow{transform:translateX(4px);}
+  [dir="rtl"] .fs-school-card:hover .arrow{transform:translateX(-4px);}
+  @media (max-width:980px){.foot-schools-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.foot-schools-grid{grid-template-columns:1fr;}}
+
+  .foot-link-soon{color:rgba(248,244,233,0.4);cursor:default;}
+  .foot-link-soon em{font-style:normal;font-size:0.72rem;letter-spacing:0.02em;}
+
+  .foot-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:26px 0;border-top:1px solid var(--line);text-align:center;}
+  .fst-item{display:flex;flex-direction:column;gap:4px;}
+  .fst-num{font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;font-weight:600;color:var(--gold-bright);line-height:1;}
+  .fst-label{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(248,244,233,0.55);}
+  @media (max-width:560px){
+    .foot-stats{grid-template-columns:1fr 1fr;gap:20px 12px;}
+    .fst-num{font-size:1.7rem;}
+  }
+
+  .foot-connect{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;padding:30px 0 8px;border-top:1px solid var(--line);align-items:start;}
+  .fc-label{display:block;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:14px;}
+  .foot-social .fc-icons{display:flex;gap:10px;}
+  .foot-social .social-icon{
+    display:flex;align-items:center;justify-content:center;width:36px;height:36px;
+    border:1px solid rgba(198,161,91,0.3);border-radius:50%;color:var(--gold-bright);
     transition:background .2s ease,border-color .2s ease,transform .2s ease;
   }
-  .fd-item:hover{background:rgba(198,161,91,0.12);border-color:var(--gold);transform:translateY(-2px);}
-  /* Icon reads as its own medallion badge rather than a bare glyph,
-     matching the .fd-icon/.image-slot circular-badge treatment used
-     elsewhere — breaks up the strip's otherwise uniform flatness. */
-  .fd-item svg{
-    width:24px;height:24px;padding:9px;box-sizing:content-box;border-radius:50%;
-    background:rgba(198,161,91,0.08);border:1px solid rgba(198,161,91,0.25);
-    color:var(--gold-bright);flex-shrink:0;transition:background .2s ease,border-color .2s ease;
+  .foot-social .social-icon:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);transform:translateY(-2px);}
+  .fn-lede{font-size:0.86rem;line-height:1.6;color:rgba(248,244,233,0.65);margin-bottom:16px;max-width:440px;}
+  .fn-form{display:flex;gap:10px;max-width:440px;}
+  .fn-form input{
+    flex:1;min-width:0;padding:12px 16px;background:rgba(247,238,223,0.06);
+    border:1px solid rgba(198,161,91,0.3);color:var(--ivory);font-size:0.86rem;border-radius:var(--btn-radius);
   }
-  .fd-item:hover svg{background:rgba(198,161,91,0.2);border-color:var(--gold-bright);}
-  .fd-item span{font-size:0.66rem;font-weight:600;letter-spacing:0.01em;line-height:1.25;color:var(--ivory);}
-  @media (max-width:900px){.foot-dashboard{grid-template-columns:repeat(4,1fr);}}
-  @media (max-width:520px){
-    .foot-dashboard{grid-template-columns:repeat(3,1fr);gap:8px;}
-    .fd-item{padding:12px 4px;}
-    .fd-item svg{width:20px;height:20px;padding:7px;}
-    .fd-item span{font-size:0.62rem;}
+  .fn-form input::placeholder{color:rgba(248,244,233,0.4);}
+  .fn-form input:focus{outline:none;border-color:var(--gold-bright);}
+  .fn-form button{
+    font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;
+    padding:0 20px;border:1px solid var(--gold);border-radius:var(--btn-radius);
+    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep);
+    cursor:pointer;transition:box-shadow .25s ease,transform .25s ease;
+  }
+  .fn-form button:hover{box-shadow:0 10px 22px -8px rgba(233,206,138,0.6);transform:translateY(-1px);}
+  .fn-form button:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
+  .foot-newsletter-status{min-height:1.2em;margin-top:10px;font-size:0.78rem;}
+  .foot-newsletter-status.is-success{color:var(--gold-bright);}
+  .foot-newsletter-status.is-error{color:#D98A8A;}
+  @media (max-width:760px){
+    .foot-connect{grid-template-columns:1fr;gap:26px;}
+    .fn-form{max-width:none;}
+  }
+  @media (max-width:420px){
+    .fn-form{flex-direction:column;}
   }
 
   /* Mobile footer — horizontally-scrollable zone cards rather than a
