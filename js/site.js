@@ -211,6 +211,19 @@
     });
   })();
 
+  // Sticky header — a restrained "glass" state once the visitor has
+  // scrolled past the opening viewport: shrinking crest, tighter
+  // padding, a soft blur. Per the Header & Footer Master Directive,
+  // this is meant to read as subtle refinement, not a dramatic jump —
+  // a single class toggle plus a slow CSS transition, no JS animation.
+  (function(){
+    const header = document.querySelector('header.nav');
+    if(!header) return;
+    const setScrolled = ()=>{ header.classList.toggle('is-scrolled', window.scrollY > 40); };
+    setScrolled();
+    window.addEventListener('scroll', setScrolled, {passive:true});
+  })();
+
   // Floating "Apply Now" — reveals after the visitor scrolls past the
   // opening section; suppressed entirely on the Admission page itself,
   // where the CTA would just be pointing at the page already open.

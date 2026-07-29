@@ -264,8 +264,14 @@
   .nav-mark{border:1px solid var(--gold);color:var(--gold-bright) !important;padding:8px 18px !important;font-family:'Cinzel','Amiri',serif;font-size:0.66rem !important;letter-spacing:0.14em;white-space:nowrap;flex-shrink:0;border-radius:var(--btn-radius);transition:background .25s ease,border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
   .nav-mark:hover{background:rgba(198,161,91,0.12);border-color:var(--gold-bright);transform:translateY(-1px);}
   *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;overflow-x:hidden;}
-  body{font-family:'Inter','Cairo',sans-serif;color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  /* overflow-x:hidden here (rather than :clip) used to silently defeat
+     position:sticky on header.nav — hidden/scroll/auto on html or body
+     both establish a scroll container, and sticky positioning is
+     computed relative to the nearest one. :clip suppresses the same
+     horizontal overflow without creating that container, so the
+     sticky header actually stays put while scrolling. */
+  html{scroll-behavior:smooth;overflow-x:clip;}
+  body{font-family:'Inter','Cairo',sans-serif;color:var(--on-surface);background:var(--surface);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;}
   /* The crest-watermark bleed and similar decorative elements intentionally
      extend past the viewport edge; without this, that harmless extra
      scroll width shifts the default RTL scroll origin and clips the start
@@ -351,6 +357,11 @@
       margin:0 8px;flex-shrink:0;
     }
     .ci-icon{width:10px;height:10px;}
+    /* The location line is a desktop/tablet prestige-bar signal — at
+       this width the one-line email/phone/phone strip already nearly
+       fills it, and mobile visitors reach the campus location via the
+       Contact quick-row item and the footer's own map section instead. */
+    .tb-location{display:none;}
   }
   .topbar .socials{display:flex;gap:14px;align-items:center;}
   .topbar-divider{width:1px;height:14px;background:rgba(233,206,138,0.25);flex-shrink:0;}
@@ -361,7 +372,7 @@
   .social-icon{display:flex;align-items:center;justify-content:center;width:26px;height:26px;flex-shrink:0;opacity:0.85;transition:opacity .2s ease,transform .2s ease;}
   .social-icon:hover{opacity:1;color:#fff;transform:translateY(-1px);}
   header.nav{
-    position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);position:relative;
+    position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);
     background:
       radial-gradient(700px 140px at 12% 0%, rgba(233,206,138,0.1), transparent 65%),
       linear-gradient(155deg, var(--navy) 0%, var(--navy-deep) 130%);
@@ -384,9 +395,22 @@
   @media (prefers-reduced-motion:reduce){
     header.nav::after{animation:none;}
   }
-  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;transition:padding .3s ease;}
   .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-  .brand-mark{width:36px;height:36px;flex-shrink:0;animation:crestIn .9s ease .1s both;}
+  .brand-mark{width:36px;height:36px;flex-shrink:0;animation:crestIn .9s ease .1s both;transition:width .3s ease,height .3s ease;}
+  /* Sticky-scroll refinement — once the visitor scrolls past the
+     opening viewport, the header settles into a slightly tighter,
+     softly glassy state: a smaller crest, less vertical padding, a
+     touch of blur behind the existing gradient. Deliberately subtle
+     (per the Master Directive's "not dramatic" instruction) — no
+     colour change, no shadow pop, just restrained refinement eased
+     over the same .3s used elsewhere in the header. */
+  header.nav.is-scrolled{backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);}
+  header.nav.is-scrolled nav.wrap{padding-top:9px;padding-bottom:9px;}
+  header.nav.is-scrolled .brand-mark{width:30px;height:30px;}
+  @media (prefers-reduced-motion:reduce){
+    nav.wrap,.brand-mark{transition:none;}
+  }
   .brand-text .line1{font-size:1.05rem;font-weight:700;letter-spacing:0.03em;color:#fff;font-family:'Cinzel','Amiri',serif;white-space:nowrap;}
   .brand-text .line2{font-size:0.58rem;letter-spacing:0.2em;color:var(--gold-bright);text-transform:uppercase;font-family:'Inter','Cairo',sans-serif;white-space:nowrap;}
   .navlinks{display:flex;gap:26px;align-items:center;}
