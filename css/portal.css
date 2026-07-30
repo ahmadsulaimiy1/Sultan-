@@ -1182,3 +1182,51 @@ body.portal-body > *{position:relative;z-index:1;}
   .office-person-card{flex-direction:column;align-items:flex-start;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
 }
+
+/* ============================================================
+   Institutional Administration Centre — portal/admin/centre/. A real
+   premium UI over functions/api/portal/admin/staff.js so ordinary
+   administration (offices, appointments, meetings, documents,
+   governance content) never requires a raw API call. Deliberately
+   kept on the SAME bootstrap sysadmin-token model as the API it
+   wraps (see that file's header comment on why Manage Users is the
+   narrowest-held grant system-wide) — the token is entered once per
+   browser session (sessionStorage, cleared on tab close) rather than
+   typed into curl every time. See js/portal-admin-centre.js.
+   ============================================================ */
+.admin-gate{max-width:420px;margin:80px auto;padding:32px;background:#fff;border:1px solid var(--line);text-align:center;}
+.admin-gate h1{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.6rem;color:var(--navy);margin-bottom:8px;}
+.admin-gate p{font-size:0.88rem;color:var(--ink-soft);margin-bottom:18px;line-height:1.55;}
+.admin-gate input{width:100%;padding:12px 14px;border:1px solid var(--line);font-size:0.92rem;margin-bottom:12px;background:var(--ivory);}
+.admin-gate-error{color:var(--crimson);font-size:0.82rem;margin-top:10px;min-height:1.2em;}
+
+.admin-layer-group{margin-bottom:8px;}
+.admin-layer-group summary{cursor:pointer;font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-bright,var(--gold));padding:12px 4px;border-bottom:1px solid var(--line);}
+.admin-office-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 10px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s ease;}
+.admin-office-row:hover{background:rgba(198,161,91,0.06);}
+.admin-office-row.is-selected{background:rgba(198,161,91,0.12);}
+.aor-name{font-family:'Cinzel','Amiri',serif;font-size:0.88rem;color:var(--navy);}
+.aor-meta{font-size:0.74rem;color:var(--ink-soft);margin-inline-start:auto;}
+.aor-badge{font-size:0.62rem;letter-spacing:0.05em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold-bright,var(--gold));padding:2px 7px;}
+
+.admin-form{padding:20px 26px;}
+.admin-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:14px;}
+.admin-field{display:flex;flex-direction:column;gap:5px;}
+.admin-field label{font-size:0.72rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);}
+.admin-field input,.admin-field select,.admin-field textarea{padding:10px 12px;border:1px solid var(--line);background:#fff;font-family:inherit;font-size:0.9rem;color:var(--ink);}
+.admin-field textarea{min-height:80px;resize:vertical;}
+.admin-field.is-checkbox{flex-direction:row;align-items:center;gap:8px;}
+.admin-field.is-checkbox label{text-transform:none;font-weight:500;font-size:0.86rem;}
+.admin-form-actions{display:flex;align-items:center;gap:14px;margin-top:6px;}
+.admin-form-status{font-size:0.82rem;min-height:1.3em;}
+.admin-form-status.is-ok{color:var(--forest-green,#2f6b46);}
+.admin-form-status.is-err{color:var(--crimson);}
+
+.admin-table{width:100%;border-collapse:collapse;font-size:0.86rem;}
+.admin-table th{text-align:left;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--gold);padding:8px 10px;}
+.admin-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
+.admin-table tr.is-vacant td{color:var(--ink-soft);font-style:italic;}
+
+.admin-two-col{display:grid;grid-template-columns:340px 1fr;gap:0;align-items:start;}
+@media (max-width:900px){.admin-two-col{grid-template-columns:1fr;}}
+.admin-office-list{max-height:640px;overflow-y:auto;border-inline-end:1px solid var(--line);}

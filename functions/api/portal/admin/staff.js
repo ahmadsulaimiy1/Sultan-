@@ -85,18 +85,115 @@ async function staffIdByNo(sql, staffNo) {
   return res.rows[0] ? res.rows[0].id : null;
 }
 
-export async function onRequestPost({ request, env }) {
+// Shared by both handlers below — same bearer-token bootstrap model,
+// same failure modes, so GET (read) and POST (write) stay consistent.
+function checkSysadminAuth(request, env) {
   const sysadminToken = env.PORTAL_SYSADMIN_TOKEN;
   if (!sysadminToken) {
-    return json({ error: 'Staff Identity administration is not configured yet — PORTAL_SYSADMIN_TOKEN is not set.' }, 500);
+    return { error: json({ error: 'Staff Identity administration is not configured yet — PORTAL_SYSADMIN_TOKEN is not set.' }, 500) };
   }
   if (!timingSafeEqualString(request.headers.get('x-sysadmin-token'), sysadminToken)) {
-    return json({ error: 'Invalid system administrator token.' }, 403);
+    return { error: json({ error: 'Invalid system administrator token.' }, 403) };
   }
   const sql = getSql(env);
   if (!sql) {
-    return json({ error: 'No database is linked yet.' }, 500);
+    return { error: json({ error: 'No database is linked yet.' }, 500) };
   }
+  return { sql };
+}
+
+// Read-only listings for the Institutional Administration Centre UI
+// (portal/admin/centre/) — the same bootstrap token as every write
+// action above, since this data (who holds which seat, what's on the
+// governance register) is exactly as sensitive as creating it.
+// ?view=offices (default)  — every office + its current appointments
+//                             + committee sub-offices, one call.
+// ?view=resolutions&officeName=... — that office's resolutions register.
+// ?view=meetings&officeName=...    — that office's meetings.
+// ?view=documents&officeName=...   — that office's documents.
+export async function onRequestGet({ request, env }) {
+  const auth = checkSysadminAuth(request, env);
+  if (auth.error) return auth.error;
+  const sql = auth.sql;
+  const url = new URL(request.url);
+  const view = url.searchParams.get('view') || 'offices';
+
+  try {
+    if (view === 'resolutions') {
+      const officeName = url.searchParams.get('officeName');
+      const officeId = await officeIdByName(sql, officeName);
+      if (!officeId) return json({ error: 'No office found with that name.' }, 404);
+      const res = await sql`
+        SELECT id, resolution_number, title, status, summary_text, resolved_at, created_at
+        FROM office_resolutions WHERE office_id = ${officeId} ORDER BY created_at DESC LIMIT 100`;
+      return json({ resolutions: res.rows.map((r) => ({
+        id: r.id, resolutionNumber: r.resolution_number, title: r.title, status: r.status,
+        summaryText: r.summary_text, resolvedAt: r.resolved_at, createdAt: r.created_at,
+      })) });
+    }
+
+    if (view === 'meetings') {
+      const officeName = url.searchParams.get('officeName');
+      const officeId = await officeIdByName(sql, officeName);
+      if (!officeId) return json({ error: 'No office found with that name.' }, 404);
+      const res = await sql`
+        SELECT id, title, meeting_date, agenda_text, minutes_text, status, created_at
+        FROM office_meetings WHERE office_id = ${officeId} ORDER BY meeting_date DESC LIMIT 100`;
+      return json({ meetings: res.rows.map((r) => ({
+        id: r.id, title: r.title, meetingDate: r.meeting_date, agendaText: r.agenda_text,
+        minutesText: r.minutes_text, status: r.status, createdAt: r.created_at,
+      })) });
+    }
+
+    if (view === 'documents') {
+      const officeName = url.searchParams.get('officeName');
+      const officeId = await officeIdByName(sql, officeName);
+      if (!officeId) return json({ error: 'No office found with that name.' }, 404);
+      const res = await sql`
+        SELECT id, title, file_url, external_url, description, created_at
+        FROM office_documents WHERE office_id = ${officeId} ORDER BY created_at DESC LIMIT 100`;
+      return json({ documents: res.rows.map((r) => ({
+        id: r.id, title: r.title, fileUrl: r.file_url, externalUrl: r.external_url,
+        description: r.description, createdAt: r.created_at,
+      })) });
+    }
+
+    const officesRes = await sql`
+      SELECT o.id, o.name, o.office_type, o.office_kind, o.layer, o.slug, o.description,
+             o.strategic_priorities, o.annual_objectives, p.name AS parent_office_name
+      FROM offices o LEFT JOIN offices p ON p.id = o.parent_office_id
+      WHERE o.is_active = true ORDER BY o.layer, o.name`;
+    const appointmentsRes = await sql`
+      SELECT oa.office_id, oa.id, oa.appointment_title, oa.is_acting, oa.is_primary, oa.notes,
+             s.staff_no, s.full_name, s.preferred_name
+      FROM office_appointments oa LEFT JOIN staff s ON s.id = oa.staff_id
+      WHERE oa.ended_at IS NULL ORDER BY oa.office_id, oa.is_primary DESC`;
+    const byOffice = {};
+    for (const a of appointmentsRes.rows) {
+      (byOffice[a.office_id] = byOffice[a.office_id] || []).push({
+        id: a.id, title: a.appointment_title, isActing: a.is_acting, isPrimary: a.is_primary, notes: a.notes,
+        isVacant: !a.staff_no, staffNo: a.staff_no,
+        staffName: a.staff_no ? (a.preferred_name || a.full_name) : null,
+      });
+    }
+    return json({
+      offices: officesRes.rows.map((o) => ({
+        id: o.id, name: o.name, officeType: o.office_type, officeKind: o.office_kind, layer: o.layer,
+        slug: o.slug, description: o.description, parentOfficeName: o.parent_office_name,
+        strategicPriorities: o.strategic_priorities, annualObjectives: o.annual_objectives,
+        appointments: byOffice[o.id] || [],
+      })),
+    });
+  } catch (err) {
+    console.error('portal admin staff list error', err);
+    return json({ error: 'Could not load administration data: ' + (err && err.message ? err.message : 'unknown error') }, 500);
+  }
+}
+
+export async function onRequestPost({ request, env }) {
+  const auth = checkSysadminAuth(request, env);
+  if (auth.error) return auth.error;
+  const sql = auth.sql;
 
   const body = await readJsonBody(request);
   const action = body && body.action;

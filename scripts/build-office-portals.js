@@ -256,6 +256,7 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
     <p class="portal-aside-eyebrow" style="color:var(--gold);">INSTITUTIONAL PORTAL ECOSYSTEM</p>
     <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--navy);margin:6px 0 8px;">All Offices</h1>
     <p style="color:var(--ink-soft);max-width:640px;margin-bottom:8px;">Every office in the Sultan Hanafi Royal Schools digital campus, grouped by layer. Offices without a confirmed appointment show an honest "Vacant &mdash; Awaiting Appointment" seat, not a fabricated name.</p>
+    <p style="margin-bottom:28px;"><a href="/portal/admin/centre/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Institutional Administration Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(sysadmin token required)</span></p>
 ${layerBlocks}
   </div>
 </main>

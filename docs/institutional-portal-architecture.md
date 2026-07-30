@@ -193,14 +193,19 @@ public pages already say.
   real, working API (`functions/api/portal/admin/staff.js`), matching how
   every other admin action in this codebase already works (offices,
   staff, roles, class assignments — all API-only until this directive).
-  A UI wrapping it is real, scoped follow-up work, not started this pass.
-- **Reports and most Analytics are honest empty states.** No per-office
-  report generator or analytics pipeline exists — building 25 of those
-  would mean either real new data engineering per office or fabricated
-  numbers. Both are out of scope for this pass. Real analytics already
-  exist at `/portal/founder/` (institution-wide) and the Registrar's
-  Office (student records); the Analytics tab links to the Founder
-  Dashboard for the Executive office and says so plainly everywhere else.
+  A UI now exists — see "Institutional Administration Centre" below —
+  covering offices, appointments, meetings, documents, governance
+  content, and resolutions. Role/class-assignment management is still
+  API-only; not in this pass's scope.
+- **Reports and most Analytics are honest empty states**, now with a
+  real KPI-tile visual shell (Level 3 framework, above) rather than
+  prose alone. No per-office report generator or analytics pipeline
+  exists — building 28 of those would mean either real new data
+  engineering per office or fabricated numbers. Both are out of scope
+  for this pass. Real analytics already exist at `/portal/founder/`
+  (institution-wide) and the Registrar's Office (student records); the
+  Analytics tab links to the Founder Dashboard for the Executive office
+  and says so plainly everywhere else.
 - **Notifications has no per-office staff feed.** The guardian portal's
   notification system is not (yet) mirrored for staff.
 - **Workflow Centre is wired to real approval queues for exactly four
@@ -212,6 +217,38 @@ public pages already say.
 - **Board of Trustees, Management Council composition** — not
   individually published anywhere on the live site (per GV-01, 4 trustees
   exist but aren't named). Both offices are correctly all-vacant.
+
+## Institutional Administration Centre
+
+`portal/admin/centre/` (JS: `js/portal-admin-centre.js`) — a real UI
+over `functions/api/portal/admin/staff.js`, built for the Founder &
+CEO's explicit ask: "The Founder should not need API calls for
+ordinary administration." Covers Office Management (create + browse,
+grouped by layer), Appointments (create/end, vacant-or-filled table),
+Governance Content (Strategic Priorities/Annual Objectives — real text
+overrides the generic template with no redesign), Meetings, Documents,
+Resolutions (governance offices only), and a New Staff + Login form
+(creates a real staff record and generates the same admin-mediated
+activation link every other login on this platform uses).
+
+**Auth design decision, stated plainly**: the Admin Centre uses the
+*same* `PORTAL_SYSADMIN_TOKEN` bootstrap model as the API it wraps,
+entered once per browser tab into a gate screen and held in
+`sessionStorage` (cleared on tab close) rather than typed into curl
+every time. It deliberately does **not** introduce a new session-based
+"Founder logs in" auth path. `functions/api/portal/admin/staff.js`'s
+own header comment explains why Manage Users is kept on the narrowest
+possible bootstrap grant rather than folded into ordinary staff
+session auth — weakening that for UI convenience would be a real
+security regression, not a cosmetic one. The directive's actual ask
+("no raw API calls") is satisfied without touching that model: the
+Founder now clicks buttons and fills in forms, and never needs to know
+the shape of a POST body — the token is the only credential, exactly
+as before.
+
+Two new read-only `GET` views were added to the admin API to power
+this UI (`?view=offices`, `?view=meetings|documents|resolutions&officeName=`),
+gated by the identical token check as every write action.
 
 ## Verification performed
 
