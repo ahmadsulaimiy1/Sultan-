@@ -90,6 +90,10 @@
     var hasTajweedRole = (data.roles || []).some(function (r) { return r.roleCode === 'MUH'; });
     if (hasTajweedRole) add('Tajweed Compliance', 'Makharij, Sifaat, Ahkam, Application', '/portal/staff/tajweed-compliance/');
 
+    // Boarding Intelligence is owned by the Boarding Officer (BRD).
+    var hasBoardingRole = (data.roles || []).some(function (r) { return r.roleCode === 'BRD'; });
+    if (hasBoardingRole) add('Boarding Intelligence', 'Room checks, welfare, health', '/portal/staff/boarding-intelligence/');
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {

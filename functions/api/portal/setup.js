@@ -929,6 +929,55 @@ const STATEMENTS = [
     ('application', 'Applied Recitation', 'Fluent, rule-compliant recitation of continuous passages under real recitation pace.', 4)
     ON CONFLICT (code) DO NOTHING`,
 
+  // Boarding Intelligence Framework — same Institutional Capability
+  // Framework pattern. Welfare categories are transcribed from the
+  // adopted Boarding Regulations (SD-04 §7.2/7.4/7.7/7.8/7.10), not
+  // invented. Room checks are the real, policy-required nightly
+  // attendance mechanism for boarding (SD-04 §7.2) — a dedicated table
+  // rather than reusing the day-school attendance_summary table, since
+  // boarding attendance is checked nightly, not by class period. Zero
+  // transactional records exist yet (Current Records: 0).
+  `CREATE TABLE IF NOT EXISTS boarding_welfare_categories (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS boarding_welfare_logs (
+    id                    SERIAL PRIMARY KEY,
+    student_id             INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id         INTEGER REFERENCES institutions(id),
+    category_id            INTEGER NOT NULL REFERENCES boarding_welfare_categories(id),
+    severity               TEXT NOT NULL DEFAULT 'routine' CHECK (severity IN ('routine', 'concern', 'urgent')),
+    notes                  TEXT NOT NULL,
+    status                 TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'resolved')),
+    parent_notified        BOOLEAN NOT NULL DEFAULT false,
+    recorded_by_staff_id   INTEGER NOT NULL REFERENCES staff(id),
+    recorded_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_at            TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_boarding_welfare_logs_student ON boarding_welfare_logs (student_id)`,
+  `CREATE TABLE IF NOT EXISTS boarding_room_checks (
+    id                   SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id         INTEGER REFERENCES institutions(id),
+    check_date             DATE NOT NULL DEFAULT CURRENT_DATE,
+    present                BOOLEAN NOT NULL DEFAULT true,
+    notes                  TEXT,
+    recorded_by_staff_id   INTEGER NOT NULL REFERENCES staff(id),
+    recorded_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (student_id, check_date)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_boarding_room_checks_student ON boarding_room_checks (student_id)`,
+  `INSERT INTO boarding_welfare_categories (code, label, description, sort_order) VALUES
+    ('room_check', 'Room Check', 'A nightly presence/wellbeing check, per SD-04 §7.2.', 1),
+    ('health_medical', 'Health & Medical', 'Any medical or health matter arising in the boarding house, per SD-04 §7.4.', 2),
+    ('homesickness_support', 'Homesickness & Settling-In', 'Support provided for homesickness or settling-in difficulty, per SD-04 §7.10.', 3),
+    ('weekend_leave', 'Weekend & Leave-Out', 'A weekend or leave-out request and its outcome, per SD-04 §7.8.', 4),
+    ('discipline', 'Discipline', 'A boarding-specific disciplinary matter, per SD-04 §7.7 (alongside the Student Code of Conduct, SD-02).', 5)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,

@@ -49,6 +49,7 @@ export const SYSTEM_AREAS = {
   exam_readiness:         { name: 'Examination Readiness (WAEC/NECO)', ownerOffice: 'Registrar, jointly with Academic Affairs', governingPolicy: null },
   arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'School of Islamic & Arabic Studies', governingPolicy: null },
   tajweed_compliance:     { name: 'Tajweed Compliance', ownerOffice: "Qur'an College", governingPolicy: 'IQ-01, IQ-03' },
+  boarding_intelligence:  { name: 'Boarding Intelligence', ownerOffice: 'Boarding Officer / Wardens', governingPolicy: 'SD-04' },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -215,6 +216,12 @@ export const MATRIX = {
     { role: 'MUH', permissions: ['V', 'C', 'E'], scope: "Qur'an College only" },
     { role: 'PRIN', permissions: ['V', 'E'], scope: "own institution (Qur'an College)" },
     { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual assessment content)' },
+  ],
+  boarding_intelligence: [
+    { role: 'BRD', permissions: ['V', 'C', 'E', 'A'], scope: 'boarding students only' },
+    { role: 'PRIN', permissions: ['V', 'E'], scope: 'own institution' },
+    { role: 'DSL', permissions: ['V'], scope: 'safeguarding-relevant entries only' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual welfare content)' },
   ],
 };
 
