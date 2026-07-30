@@ -172,6 +172,55 @@
       });
     }
 
+    // Institutional Capability Frameworks — the Leadership Dashboards
+    // retrofit. Each card shows Framework status / Records count /
+    // Assigned staff / Last update / Compliance state / Action required,
+    // exactly per the Founder's "Leadership Dashboards" directive,
+    // instead of leaving these listed as "Not Yet Tracked" now that real
+    // infrastructure backs them. A viewer without View rights for that
+    // area (e.g. non-DSL staff and Safeguarding) sees a restricted card
+    // confirming the framework exists without any record/compliance
+    // detail — the same confidentiality-by-omission rule the framework's
+    // own page enforces.
+    var frameworksSection = document.getElementById('operations-frameworks-section');
+    var frameworksEl = document.getElementById('operations-frameworks');
+    if (frameworksSection && frameworksEl) {
+      frameworksEl.innerHTML = '';
+      var frameworks = ops.operationalFrameworks || [];
+      if (!frameworks.length) {
+        frameworksSection.hidden = true;
+      } else {
+        frameworksSection.hidden = false;
+        frameworks.forEach(function (fw) {
+          var card = document.createElement('div');
+          card.className = 'registrar-approval-card';
+          var head = document.createElement('div');
+          head.className = 'registrar-approval-head';
+          head.innerHTML = '<span>' + esc(fw.label) + '</span>';
+          var badge = document.createElement('span');
+          badge.className = 'registrar-sample-badge';
+          badge.textContent = fw.status;
+          head.appendChild(badge);
+          card.appendChild(head);
+          if (fw.restricted) {
+            card.appendChild(makeMetaRow(fw.restrictedNote || 'Detail is restricted to the owning role.'));
+          } else {
+            card.appendChild(makeMetaRow('Current Records: ' + fw.recordsCount + '  ·  Assigned Staff: ' + fw.assignedStaff));
+            card.appendChild(makeMetaRow('Last Update: ' + (fw.lastUpdate ? formatDate(fw.lastUpdate) : 'No activity yet')));
+            card.appendChild(makeMetaRow('Compliance State: ' + fw.complianceState));
+            card.appendChild(makeMetaRow('Action Required: ' + fw.actionRequired));
+          }
+          var link = document.createElement('a');
+          link.className = 'portal-back-link';
+          link.href = fw.href;
+          link.textContent = 'Open ' + fw.label + ' →';
+          link.style.cssText = 'display:inline-block;margin-top:6px;';
+          card.appendChild(link);
+          frameworksEl.appendChild(card);
+        });
+      }
+    }
+
     var notTrackedEl = document.getElementById('operations-not-tracked');
     notTrackedEl.innerHTML = '';
     if (!ops.notYetTracked.length) {
@@ -185,6 +234,16 @@
         notTrackedEl.appendChild(row);
       });
     }
+  }
+  function makeMetaRow(text) {
+    var row = document.createElement('div');
+    row.className = 'registrar-approval-meta';
+    row.textContent = text;
+    return row;
+  }
+  function formatDate(iso) {
+    try { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return iso; }
   }
 
   // Module 2 — Office overview

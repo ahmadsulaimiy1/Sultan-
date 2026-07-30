@@ -21,6 +21,170 @@ import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json } from '../../../../_lib/http.js';
 import { listPendingApprovals } from '../../../../_lib/approvals.js';
 import { isQuranCollegeInstitution, HIFZ_STAGES } from '../../../../_lib/hifz.js';
+import { effectiveGrants, checkGrants } from '../../../../_lib/permissions.js';
+
+// Operational Framework cards — the Leadership Dashboards retrofit. Seven
+// Institutional Capability Frameworks now exist with real schema and
+// Permission Engine grants (see functions/api/portal/staff/<name>.js);
+// this replaces the corresponding `notYetTracked` entries with the same
+// "Operational Framework Ready" presentation used on each framework's own
+// page — Framework status, Records count, Assigned staff, Last update,
+// Compliance state, Action required — instead of leaving them listed as
+// a gap now that the gap is closed. Genuinely untracked items (no
+// framework built yet) stay in the trimmed NOT_YET_TRACKED list below.
+//
+// Each card is gated by the SAME Permission Engine check the framework's
+// own staff API enforces (checkGrants against this office's institution)
+// — a viewer without View rights for an area (e.g. non-DSL staff and
+// Safeguarding, per SW-01 §7.3 confidentiality) sees only that the
+// framework exists and is ready, never its record counts or compliance
+// detail. This is the identical confidentiality-by-omission rule already
+// governing the framework's own page, applied here too, not a new rule.
+const FRAMEWORK_RESTRICTED_NOTE = {
+  safeguarding: 'Detail is confidential to the Designated Safeguarding Lead, per SW-01 §7.3.',
+  behaviour: "Detail is visible to this student's Class Teacher, VP Administration, and the Principal, per SD-02 §7.",
+  teacher_performance: 'Detail is visible to the Principal and VP Administration.',
+  exam_readiness: 'Detail is visible to the Registrar and Academic Registrar.',
+  arabic_fluency: 'Detail is visible to Arabic Faculty and the Principal.',
+  tajweed_compliance: 'Detail is visible to the Muhaffiz/Muhaffizah and the Principal.',
+  boarding_intelligence: 'Detail is visible to the Boarding Officer, the Principal, and (where safeguarding-relevant) the Designated Safeguarding Lead.',
+};
+
+async function safeguardingCard(sql, institutionId) {
+  const [caseRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(updated_at) AS last_update,
+        COUNT(*) FILTER (WHERE status NOT IN ('resolved', 'closed'))::int AS open_n
+        FROM safeguarding_cases WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE role_code = 'DSL' AND is_active = true`,
+  ]);
+  const r = caseRes.rows[0];
+  return {
+    recordsCount: r.n, assignedStaff: staffRes.rows[0].n, lastUpdate: r.last_update,
+    complianceState: r.n === 0 ? 'Nominal — no cases on record' : (r.open_n > 0 ? r.open_n + ' case(s) open' : 'All cases closed'),
+    actionRequired: r.open_n > 0 ? r.open_n + ' case(s) awaiting review disposition' : 'None',
+  };
+}
+
+async function behaviourCard(sql, institutionId) {
+  const [incRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(updated_at) AS last_update,
+        COUNT(*) FILTER (WHERE status NOT IN ('resolved'))::int AS open_n
+        FROM behaviour_incidents WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND (
+          role_code = 'VP' OR (role_code IN ('PRIN', 'TCH') AND institution_id = ${institutionId})
+        )`,
+  ]);
+  const r = incRes.rows[0];
+  return {
+    recordsCount: r.n, assignedStaff: staffRes.rows[0].n, lastUpdate: r.last_update,
+    complianceState: r.n === 0 ? 'Nominal — no incidents on record' : (r.open_n > 0 ? r.open_n + ' incident(s) open' : 'All incidents resolved'),
+    actionRequired: r.open_n > 0 ? r.open_n + ' incident(s) awaiting resolution' : 'None',
+  };
+}
+
+async function teacherPerformanceCard(sql, institutionId) {
+  const [obsRes, revRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(updated_at) AS last_update,
+        COUNT(*) FILTER (WHERE status IN ('scheduled', 'follow_up_required'))::int AS open_n
+        FROM teacher_observations WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(*)::int AS n, MAX(updated_at) AS last_update,
+        COUNT(*) FILTER (WHERE status IN ('scheduled', 'in_progress'))::int AS open_n
+        FROM teacher_reviews WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND (
+          role_code = 'VP' OR (role_code = 'PRIN' AND institution_id = ${institutionId})
+        )`,
+  ]);
+  const obs = obsRes.rows[0]; const rev = revRes.rows[0];
+  const n = obs.n + rev.n; const openN = obs.open_n + rev.open_n;
+  const lastDates = [obs.last_update, rev.last_update].filter(Boolean).sort();
+  return {
+    recordsCount: n, assignedStaff: staffRes.rows[0].n, lastUpdate: lastDates.length ? lastDates[lastDates.length - 1] : null,
+    complianceState: n === 0 ? 'Nominal — no observations/reviews on record' : (openN > 0 ? openN + ' item(s) in progress' : 'All observations/reviews completed'),
+    actionRequired: openN > 0 ? openN + ' observation/review item(s) awaiting completion' : 'None',
+  };
+}
+
+async function examReadinessCard(sql, institutionId) {
+  const [candRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(updated_at) AS last_update,
+        COUNT(*) FILTER (WHERE registration_status = 'not_registered')::int AS unregistered_n
+        FROM exam_candidates WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND role_code IN ('REG', 'AREG')`,
+  ]);
+  const r = candRes.rows[0];
+  return {
+    recordsCount: r.n, assignedStaff: staffRes.rows[0].n, lastUpdate: r.last_update,
+    complianceState: r.n === 0 ? 'Nominal — no candidates registered yet' : (r.unregistered_n > 0 ? r.unregistered_n + ' candidate(s) not yet registered' : 'All candidates registered'),
+    actionRequired: r.unregistered_n > 0 ? r.unregistered_n + ' candidate(s) awaiting registration' : 'None',
+  };
+}
+
+async function arabicFluencyCard(sql, institutionId) {
+  const [assessRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(assessed_at) AS last_update FROM arabic_fluency_assessments WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND role_code = 'ARB' AND institution_id = ${institutionId}`,
+  ]);
+  const r = assessRes.rows[0];
+  return {
+    recordsCount: r.n, assignedStaff: staffRes.rows[0].n, lastUpdate: r.last_update,
+    complianceState: r.n === 0 ? 'Nominal — no assessments on record yet' : 'Assessment cycle in progress',
+    actionRequired: r.n === 0 ? 'Schedule the first assessment cycle' : 'None',
+  };
+}
+
+async function tajweedComplianceCard(sql, institutionId) {
+  const [assessRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(assessed_at) AS last_update,
+        COUNT(*) FILTER (WHERE compliance_level = 'developing')::int AS developing_n
+        FROM tajweed_assessments WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND role_code = 'MUH' AND institution_id = ${institutionId}`,
+  ]);
+  const r = assessRes.rows[0];
+  return {
+    recordsCount: r.n, assignedStaff: staffRes.rows[0].n, lastUpdate: r.last_update,
+    complianceState: r.n === 0 ? 'Nominal — no assessments on record yet' : (r.developing_n > 0 ? r.developing_n + ' student(s) at developing level' : 'All assessed students at competent level or above'),
+    actionRequired: r.n === 0 ? 'Schedule the first assessment cycle' : 'None',
+  };
+}
+
+async function boardingCard(sql, institutionId) {
+  const [welfareRes, roomRes, staffRes] = await Promise.all([
+    sql`SELECT COUNT(*)::int AS n, MAX(recorded_at) AS last_update,
+        COUNT(*) FILTER (WHERE status = 'open')::int AS open_n
+        FROM boarding_welfare_logs WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(*)::int AS n, MAX(recorded_at) AS last_update FROM boarding_room_checks WHERE institution_id = ${institutionId}`,
+    sql`SELECT COUNT(DISTINCT staff_id)::int AS n FROM staff_roles WHERE is_active = true AND role_code = 'BRD'`,
+  ]);
+  const w = welfareRes.rows[0]; const rc = roomRes.rows[0];
+  const n = w.n + rc.n;
+  const lastDates = [w.last_update, rc.last_update].filter(Boolean).sort();
+  return {
+    recordsCount: n, assignedStaff: staffRes.rows[0].n, lastUpdate: lastDates.length ? lastDates[lastDates.length - 1] : null,
+    complianceState: n === 0 ? 'Nominal — no welfare entries or room checks on record yet' : (w.open_n > 0 ? w.open_n + ' welfare entry/entries open' : 'All welfare entries resolved'),
+    actionRequired: w.open_n > 0 ? w.open_n + ' welfare entry/entries awaiting resolution' : 'None',
+  };
+}
+
+// Which framework cards render on which office's Operations Centre, in
+// the order the original notYetTracked list named them.
+const OFFICE_FRAMEWORKS = {
+  'head-teacher': [
+    { key: 'safeguarding', label: 'Safeguarding Alerts', areaCode: 'safeguarding', href: '/portal/staff/safeguarding/', load: safeguardingCard },
+    { key: 'behaviour', label: 'Behaviour Cases', areaCode: 'behaviour', href: '/portal/staff/behaviour/', load: behaviourCard },
+  ],
+  'principal-royal-college': [
+    { key: 'exam_readiness', label: 'WAEC / NECO Readiness', areaCode: 'exam_readiness', href: '/portal/staff/waec-readiness/', load: examReadinessCard },
+    { key: 'teacher_performance', label: 'Teacher Performance', areaCode: 'teacher_performance', href: '/portal/staff/teacher-performance/', load: teacherPerformanceCard },
+    { key: 'behaviour', label: 'Discipline Intelligence', areaCode: 'behaviour', href: '/portal/staff/behaviour/', load: behaviourCard },
+  ],
+  raees: [
+    { key: 'arabic_fluency', label: 'Arabic Fluency Metrics', areaCode: 'arabic_fluency', href: '/portal/staff/arabic-fluency/', load: arabicFluencyCard },
+  ],
+  mudeer: [
+    { key: 'tajweed_compliance', label: 'Tajweed Compliance', areaCode: 'tajweed_compliance', href: '/portal/staff/tajweed-compliance/', load: tajweedComplianceCard },
+    { key: 'boarding_intelligence', label: 'Boarding Performance', areaCode: 'boarding_intelligence', href: '/portal/staff/boarding-intelligence/', load: boardingCard },
+  ],
+};
 
 // Operations Centre — real, institution-scoped daily-operations data for
 // the four School Leadership offices. This is the honest answer to
@@ -124,7 +288,7 @@ export async function onRequestGet({ request, env, params }) {
     const institutionName = SCHOOL_LEADERSHIP_INSTITUTION[office.slug];
     if (institutionName) {
       const [
-        studentsByStatusRes, staffCountRes2, attendanceRes, admissionsRes, hifzEnrolledRes, hifzStageRes, ijazahGrantedRes,
+        studentsByStatusRes, staffCountRes2, attendanceRes, admissionsRes, hifzEnrolledRes, hifzStageRes, ijazahGrantedRes, institutionRowRes,
       ] = await Promise.all([
         sql`
           SELECT s.status, COUNT(*)::int AS n FROM students s
@@ -160,7 +324,9 @@ export async function onRequestGet({ request, env, params }) {
         isQuranCollegeInstitution(institutionName)
           ? sql`SELECT COUNT(*)::int AS n FROM ijazah_register ir JOIN students s ON s.id = ir.student_id WHERE ir.revoked_at IS NULL AND s.is_sample_data = false`
           : Promise.resolve({ rows: [{ n: 0 }] }),
+        sql`SELECT id FROM institutions WHERE name = ${institutionName}`,
       ]);
+      const institutionId = institutionRowRes.rows[0] ? institutionRowRes.rows[0].id : null;
 
       const studentsByStatus = {};
       for (const r of studentsByStatusRes.rows) studentsByStatus[r.status] = r.n;
@@ -179,34 +345,40 @@ export async function onRequestGet({ request, env, params }) {
         };
       }
 
+      // Genuinely remaining gaps — no framework has been built for these
+      // yet, so they stay honestly named rather than upgraded.
       const NOT_YET_TRACKED = {
         'head-teacher': [
-          { label: 'Safeguarding Alerts', reason: 'No safeguarding incident/case tracking system exists yet — a real gap, not a zero.' },
           { label: 'Parent Concerns Triage', reason: 'Institutional Messaging (see the Messages tab) carries real parent correspondence, but nothing categorizes a message as a "concern" requiring escalation yet.' },
-          { label: 'Behaviour Cases', reason: 'No behaviour/discipline incident log exists yet for this age group.' },
           { label: 'Teacher Workload', reason: 'No timetable/workload data model exists yet.' },
         ],
         'principal-royal-college': [
-          { label: 'WAEC / NECO Readiness', reason: 'No external-examination registration or mock-result tracking exists yet.' },
           { label: 'Student Rankings', reason: 'Too few real term_results entries school-wide to compute a meaningful ranking — see the Founder Command Centre\'s Academic Health note.' },
-          { label: 'Teacher Performance', reason: 'No teacher performance/appraisal system exists yet.' },
-          { label: 'Discipline Intelligence', reason: 'No behaviour/discipline incident log exists yet.' },
           { label: 'Academic Intervention Cases', reason: 'No intervention/support-plan tracking exists yet.' },
           { label: 'Graduation Readiness', reason: 'No graduation-requirements checklist system exists yet.' },
         ],
         raees: [
-          { label: 'Arabic Fluency Metrics', reason: 'No fluency assessment/scoring system exists yet beyond standard term_results subject scores.' },
           { label: 'Teacher Deployment Intelligence', reason: 'No timetable/deployment data model exists yet.' },
           { label: 'Curriculum Completion', reason: 'No syllabus-coverage tracking exists yet.' },
         ],
         mudeer: [
           { label: "Muraja'ah Health", reason: 'Hifz stage progress is real (below); a separate revision-retention metric is not yet tracked.' },
-          { label: 'Boarding Performance', reason: 'No boarding/room-occupancy data model exists yet.' },
-          { label: 'Tajweed Compliance', reason: 'Tajweed confirmation is part of the real Stage 3 completion standard (see Hifz stage breakdown below), but no separate ongoing compliance score is tracked.' },
           { label: 'Teacher Capacity', reason: 'No Muhaffiz/Muhaffizah caseload-capacity model exists yet.' },
           { label: 'Student Risk Alerts', reason: 'No at-risk flagging system exists yet.' },
         ],
       };
+
+      const grants = await effectiveGrants(sql, session.staffId);
+      const frameworkConfigs = OFFICE_FRAMEWORKS[office.slug] || [];
+      const operationalFrameworks = await Promise.all(frameworkConfigs.map(async (cfg) => {
+        const base = { key: cfg.key, label: cfg.label, status: 'Operational Framework Ready', href: cfg.href };
+        const { granted } = institutionId != null ? checkGrants(grants, cfg.areaCode, 'V', institutionId) : { granted: false };
+        if (!granted) {
+          return { ...base, restricted: true, restrictedNote: FRAMEWORK_RESTRICTED_NOTE[cfg.areaCode] || null };
+        }
+        const detail = await cfg.load(sql, institutionId);
+        return { ...base, restricted: false, ...detail };
+      }));
 
       operations = {
         institution: institutionName,
@@ -215,6 +387,7 @@ export async function onRequestGet({ request, env, params }) {
         attendance: { averagePercent: attendance && attendance.pct != null ? Math.round(attendance.pct * 1000) / 10 : null, studentsWithRecordedAttendance: attendance ? attendance.n : 0 },
         admissionsPipeline: { byStatus: admissionsByStatus, total: Object.values(admissionsByStatus).reduce((a, b) => a + b, 0) },
         hifz,
+        operationalFrameworks,
         notYetTracked: NOT_YET_TRACKED[office.slug] || [],
       };
     }
