@@ -38,6 +38,7 @@ function pageHtml(office) {
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
 </head>
 <body class="portal-body" data-office-slug="${esc(office.slug)}">
 
@@ -275,11 +276,12 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
 <style>
   .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
   .office-index-layer{margin-bottom:36px;}
   .office-index-layer h3{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px;}
-  .office-index-row{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--navy);font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;font-weight:600;transition:padding-inline-start .2s ease,color .2s ease;}
+  .office-index-row{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--portal-heading);font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;font-weight:600;transition:padding-inline-start .2s ease,color .2s ease;}
   .office-index-row:hover{padding-inline-start:12px;color:var(--gold);}
 </style>
 </head>
