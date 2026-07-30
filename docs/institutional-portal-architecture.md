@@ -295,3 +295,65 @@ policy pages' print stylesheet, task history #131); Export Data (JSON)
 downloads the exact API payload for portability into other tools. Both
 "export" mechanisms are named for what they actually do rather than
 implying a bespoke PDF generator that doesn't exist.
+
+## Executive Portal Access
+
+A "Critical Executive Portal Directive" asked for dedicated login
+workflows for ten named executive portals, a unified "Login to Portal"
+chooser, an Executive Portal office picker, and an office switcher
+allowing an account to hold several offices without signing out again.
+
+**Most of this already existed** before this pass — worth stating
+plainly rather than rebuilding: all ten named offices (Founder & CEO,
+Registrar, Finance Officer, Principal, Head Teacher, Ra'ees, Mudeer, HR
+Director, Communications Director, Board of Trustees) are already real,
+session-gated portal pages (the office portal ecosystem above), and
+multi-role support already existed end-to-end — `staff_roles` is
+genuinely many-to-many (its own schema comment: "'Principal + Arabic
+Studies Officer' needs zero redesign: it's just two rows"), enforced by
+the real Permission Engine (`functions/_lib/permissions.js`), and
+already returned in full by `functions/api/portal/staff/me.js`'s
+`roles[]`. What was missing was narrower: nothing computed "which
+offices does this account hold" in the office_appointments → staff
+direction (every existing query went the other way), and nothing
+surfaced that data as a switcher.
+
+Built this pass:
+- **`myOffices`** added to `functions/api/portal/staff/me.js` — the
+  one new query (office_appointments reverse lookup) the switcher
+  actually needed.
+- **Office/role switcher** (`js/portal-office-switcher.js`) — a topbar
+  dropdown, mounted on every office portal page, the Founder Dashboard,
+  Registrar, and Finance, listing every real office/role the signed-in
+  account holds plus known deep-UI cross-links, with a Founder
+  Dashboard link whenever an `EXE` role grant is present. No fabricated
+  "executive tier" — every row is a real `office_appointments` seat or
+  `staff_roles` grant.
+- **Unified chooser** (`portal/select/`) — three doors (Parent,
+  Student, Staff & Executive), not four. Executive access is
+  deliberately **not** a separate credential set: it's staff sign-in
+  plus the switcher. The header mega-menu's four-card gateway (which
+  previously sent "Executive Portal" straight to the Founder
+  Dashboard's bearer-token page) was corrected to match — merged into
+  the same "Staff & Executive Portal" card pointing at staff login.
+- **Deep-link banners**: the generic office portal and the deeper
+  bespoke operational UI that already existed for Registrar and
+  Finance were built separately and never cross-linked. Both directions
+  now link to each other.
+
+**Left deliberately alone**: `functions/api/portal/founder/dashboard.js`
+already tries staff-session auth first and only falls back to the
+`PORTAL_FOUNDER_TOKEN` bearer token if that fails (its own comment:
+the fallback exists because "no real EXE staff account has been
+confirmed to exist in any reachable environment yet"). That design was
+already correct for this directive's goals — staff session is already
+primary — so it was not touched. Removing the token fallback now would
+lock out the only working access path until a real EXE staff account
+and login are provisioned through the Administration Centre.
+
+**Not built this pass** (flagged, not silently skipped): office-specific
+functional modules beyond the generic template — e.g. Mudeer's real
+Hifz/Muraja'ah/Ijazah data (`hifz_progress`, `ijazah_register` already
+exist and could be wired in), Communications' real Announcements admin
+API, Principal/Registrar's real Assessment/Results data. These are real
+next steps, not fabrication risks, and are tracked separately.

@@ -25,7 +25,7 @@ const OFFICES = [
   { slug: 'committee-development', name: 'Development Committee', layer: 'governance' },
 
   { slug: 'academic-affairs', name: 'Academic Affairs', layer: 'academic' },
-  { slug: 'registrar', name: "Registrar's Office", layer: 'academic' },
+  { slug: 'registrar', name: "Registrar's Office", layer: 'academic', deepLink: { href: '/portal/staff/registrar/', label: 'Open Registrar Operations' } },
   { slug: 'examinations', name: 'Examinations', layer: 'academic' },
   { slug: 'admissions', name: 'Admissions', layer: 'academic' },
 
@@ -34,11 +34,11 @@ const OFFICES = [
   { slug: 'raees', name: "Office of the Ra'ees — School of Islamic & Arabic Studies", layer: 'school_leadership' },
   { slug: 'mudeer', name: "Office of the Mudeer — Qur'an College", layer: 'school_leadership' },
 
-  { slug: 'finance', name: 'Finance Office', layer: 'operational' },
+  { slug: 'finance', name: 'Finance Office', layer: 'operational', deepLink: { href: '/portal/staff/finance/', label: 'Open Finance Operations' } },
   { slug: 'hr', name: 'Human Resources', layer: 'operational' },
   { slug: 'student-affairs', name: 'Student Affairs', layer: 'operational' },
   { slug: 'communications', name: 'Communications', layer: 'operational' },
-  { slug: 'digital-services', name: 'Digital Services (ICT)', layer: 'operational' },
+  { slug: 'digital-services', name: 'Digital Services (ICT)', layer: 'operational', deepLink: { href: '/portal/staff/identity/', label: 'Open Digital Identity Tools' } },
   { slug: 'digital-learning', name: 'Digital Learning & Innovation', layer: 'operational' },
 
   { slug: 'library', name: 'Library', layer: 'institutional_services' },

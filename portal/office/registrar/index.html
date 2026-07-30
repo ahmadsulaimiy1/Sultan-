@@ -18,6 +18,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
+    <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
     <button type="button" class="portal-logout" data-office-logout>Sign Out</button>
   </div>
@@ -42,6 +43,10 @@
         <div class="exec-welcome-stat"><span class="value" id="stat-meetings">&mdash;</span><span class="label">Meetings Logged</span></div>
       </div>
     </div>
+<a class="office-deeplink-banner" href="/portal/staff/registrar/">
+      <span>Open Registrar Operations</span>
+      <span class="odb-sub">A dedicated operational tool exists for this office beyond this general portal &rarr;</span>
+    </a>
 
     <nav class="office-tabs" role="tablist" aria-label="Office sections">
       <button type="button" class="office-tab is-active" data-tab="dashboard">Dashboard</button>
@@ -187,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 </script>
+<script src="/js/portal-office-switcher.js" defer></script>
 <script src="/js/portal-office.js" defer></script>
 </body>
 </html>

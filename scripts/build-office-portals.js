@@ -21,6 +21,12 @@ function esc(s) {
 
 function pageHtml(office) {
   const name = esc(office.name);
+  const deepLinkBanner = office.deepLink
+    ? `<a class="office-deeplink-banner" href="${esc(office.deepLink.href)}">
+      <span>${esc(office.deepLink.label)}</span>
+      <span class="odb-sub">A dedicated operational tool exists for this office beyond this general portal &rarr;</span>
+    </a>`
+    : '';
   return `<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -41,6 +47,7 @@ function pageHtml(office) {
     <span>Sultan Hanafi</span>
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
+    <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
     <button type="button" class="portal-logout" data-office-logout>Sign Out</button>
   </div>
@@ -65,6 +72,7 @@ function pageHtml(office) {
         <div class="exec-welcome-stat"><span class="value" id="stat-meetings">&mdash;</span><span class="label">Meetings Logged</span></div>
       </div>
     </div>
+${deepLinkBanner}
 
     <nav class="office-tabs" role="tablist" aria-label="Office sections">
       <button type="button" class="office-tab is-active" data-tab="dashboard">Dashboard</button>
@@ -210,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 </script>
+<script src="/js/portal-office-switcher.js" defer></script>
 <script src="/js/portal-office.js" defer></script>
 </body>
 </html>
