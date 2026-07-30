@@ -20,6 +20,26 @@ import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json } from '../../../../_lib/http.js';
 import { listPendingApprovals } from '../../../../_lib/approvals.js';
+import { isQuranCollegeInstitution, HIFZ_STAGES } from '../../../../_lib/hifz.js';
+
+// Operations Centre — real, institution-scoped daily-operations data for
+// the four School Leadership offices. This is the honest answer to
+// "governance exists, daily operations don't": every figure below is a
+// real aggregate over that specific office's own institution, computed
+// the same way the Founder Command Centre computes its institution-wide
+// versions — never a separate, less-honest code path. Where the
+// directive named a metric with no real underlying data model yet
+// (Safeguarding Alerts, Behaviour Cases, Teacher Workload/Performance,
+// WAEC/NECO Readiness, Student Rankings, Arabic Fluency Metrics, Tajweed
+// Compliance beyond stage number, Boarding Performance, Discipline
+// Intelligence, Predictive warnings), it is listed in `notYetTracked`
+// with the real reason — never a fabricated number standing in for it.
+const SCHOOL_LEADERSHIP_INSTITUTION = {
+  'head-teacher': 'Nursery & Primary',
+  'principal-royal-college': 'Royal College',
+  raees: 'Islamic & Arabic Studies',
+  mudeer: "Qur'an College",
+};
 
 // Only offices with a real, already-governed permission area get a
 // workflow queue wired in — everything else honestly has none yet.
@@ -100,6 +120,105 @@ export async function onRequestGet({ request, env, params }) {
         }))
       : [];
 
+    let operations = null;
+    const institutionName = SCHOOL_LEADERSHIP_INSTITUTION[office.slug];
+    if (institutionName) {
+      const [
+        studentsByStatusRes, staffCountRes2, attendanceRes, admissionsRes, hifzEnrolledRes, hifzStageRes, ijazahGrantedRes,
+      ] = await Promise.all([
+        sql`
+          SELECT s.status, COUNT(*)::int AS n FROM students s
+          JOIN classes c ON c.id = s.class_id
+          WHERE c.institution = ${institutionName} AND s.is_sample_data = false
+          GROUP BY s.status`,
+        sql`
+          SELECT COUNT(*)::int AS n FROM staff st
+          JOIN institutions i ON i.id = st.institution_id
+          WHERE i.name = ${institutionName} AND st.status = 'active'`,
+        sql`
+          SELECT AVG(latest.days_present::float / NULLIF(latest.days_total, 0)) AS pct, COUNT(*)::int AS n
+          FROM (
+            SELECT DISTINCT ON (a.student_id) a.student_id, a.days_present, a.days_total
+            FROM attendance_summary a JOIN students s ON s.id = a.student_id
+            WHERE s.is_sample_data = false
+            ORDER BY a.student_id, a.updated_at DESC
+          ) latest
+          JOIN students s2 ON s2.id = latest.student_id
+          JOIN classes c ON c.id = s2.class_id
+          WHERE c.institution = ${institutionName} AND latest.days_total > 0`,
+        sql`
+          SELECT aa.status, COUNT(*)::int AS n FROM admissions_applications aa
+          JOIN institutions i ON i.id = aa.institution_id
+          WHERE i.name = ${institutionName}
+          GROUP BY aa.status`,
+        isQuranCollegeInstitution(institutionName)
+          ? sql`SELECT COUNT(*)::int AS n FROM hifz_enrolment he JOIN students s ON s.id = he.student_id WHERE s.is_sample_data = false`
+          : Promise.resolve({ rows: [{ n: 0 }] }),
+        isQuranCollegeInstitution(institutionName)
+          ? sql`SELECT stage_number, COUNT(*)::int AS n FROM hifz_enrolment he JOIN students s ON s.id = he.student_id WHERE s.is_sample_data = false GROUP BY stage_number`
+          : Promise.resolve({ rows: [] }),
+        isQuranCollegeInstitution(institutionName)
+          ? sql`SELECT COUNT(*)::int AS n FROM ijazah_register ir JOIN students s ON s.id = ir.student_id WHERE ir.revoked_at IS NULL AND s.is_sample_data = false`
+          : Promise.resolve({ rows: [{ n: 0 }] }),
+      ]);
+
+      const studentsByStatus = {};
+      for (const r of studentsByStatusRes.rows) studentsByStatus[r.status] = r.n;
+      const attendance = attendanceRes.rows[0];
+      const admissionsByStatus = {};
+      for (const r of admissionsRes.rows) admissionsByStatus[r.status] = r.n;
+
+      let hifz = null;
+      if (isQuranCollegeInstitution(institutionName)) {
+        const stageCounts = new Map(hifzStageRes.rows.map((r) => [r.stage_number, r.n]));
+        hifz = {
+          enrolledCount: hifzEnrolledRes.rows[0] ? hifzEnrolledRes.rows[0].n : 0,
+          stageBreakdown: HIFZ_STAGES.map((s) => ({ stageNumber: s.number, label: s.label, count: stageCounts.get(s.number) || 0 })),
+          ijazahsCurrentlyGranted: ijazahGrantedRes.rows[0] ? ijazahGrantedRes.rows[0].n : 0,
+          awaitingExamination: stageCounts.get(4) || 0,
+        };
+      }
+
+      const NOT_YET_TRACKED = {
+        'head-teacher': [
+          { label: 'Safeguarding Alerts', reason: 'No safeguarding incident/case tracking system exists yet — a real gap, not a zero.' },
+          { label: 'Parent Concerns Triage', reason: 'Institutional Messaging (see the Messages tab) carries real parent correspondence, but nothing categorizes a message as a "concern" requiring escalation yet.' },
+          { label: 'Behaviour Cases', reason: 'No behaviour/discipline incident log exists yet for this age group.' },
+          { label: 'Teacher Workload', reason: 'No timetable/workload data model exists yet.' },
+        ],
+        'principal-royal-college': [
+          { label: 'WAEC / NECO Readiness', reason: 'No external-examination registration or mock-result tracking exists yet.' },
+          { label: 'Student Rankings', reason: 'Too few real term_results entries school-wide to compute a meaningful ranking — see the Founder Command Centre\'s Academic Health note.' },
+          { label: 'Teacher Performance', reason: 'No teacher performance/appraisal system exists yet.' },
+          { label: 'Discipline Intelligence', reason: 'No behaviour/discipline incident log exists yet.' },
+          { label: 'Academic Intervention Cases', reason: 'No intervention/support-plan tracking exists yet.' },
+          { label: 'Graduation Readiness', reason: 'No graduation-requirements checklist system exists yet.' },
+        ],
+        raees: [
+          { label: 'Arabic Fluency Metrics', reason: 'No fluency assessment/scoring system exists yet beyond standard term_results subject scores.' },
+          { label: 'Teacher Deployment Intelligence', reason: 'No timetable/deployment data model exists yet.' },
+          { label: 'Curriculum Completion', reason: 'No syllabus-coverage tracking exists yet.' },
+        ],
+        mudeer: [
+          { label: "Muraja'ah Health", reason: 'Hifz stage progress is real (below); a separate revision-retention metric is not yet tracked.' },
+          { label: 'Boarding Performance', reason: 'No boarding/room-occupancy data model exists yet.' },
+          { label: 'Tajweed Compliance', reason: 'Tajweed confirmation is part of the real Stage 3 completion standard (see Hifz stage breakdown below), but no separate ongoing compliance score is tracked.' },
+          { label: 'Teacher Capacity', reason: 'No Muhaffiz/Muhaffizah caseload-capacity model exists yet.' },
+          { label: 'Student Risk Alerts', reason: 'No at-risk flagging system exists yet.' },
+        ],
+      };
+
+      operations = {
+        institution: institutionName,
+        students: { total: Object.values(studentsByStatus).reduce((a, b) => a + b, 0), byStatus: studentsByStatus },
+        staff: { total: staffCountRes2.rows[0] ? staffCountRes2.rows[0].n : 0 },
+        attendance: { averagePercent: attendance && attendance.pct != null ? Math.round(attendance.pct * 1000) / 10 : null, studentsWithRecordedAttendance: attendance ? attendance.n : 0 },
+        admissionsPipeline: { byStatus: admissionsByStatus, total: Object.values(admissionsByStatus).reduce((a, b) => a + b, 0) },
+        hifz,
+        notYetTracked: NOT_YET_TRACKED[office.slug] || [],
+      };
+    }
+
     const appointments = appointmentsRes.rows.map((r) => ({
       id: r.id,
       title: r.appointment_title,
@@ -149,6 +268,7 @@ export async function onRequestGet({ request, env, params }) {
         summaryText: r.summary_text, resolvedAt: r.resolved_at, createdAt: r.created_at,
       })),
       workflow: { areaCode: areaCode || null, pending: pendingApprovals },
+      operations,
     });
   } catch (err) {
     console.error('office portal data error', err);

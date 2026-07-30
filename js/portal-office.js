@@ -54,6 +54,13 @@
       if (!res.ok) throw new Error(data.error || 'Could not load this office.');
       render(data);
       if (shellEl) shellEl.hidden = false;
+      // Operations Centre, where it exists, is the real answer to "what
+      // requires attention right now" for these four offices — it opens
+      // by default instead of the generic Dashboard tab.
+      if (data.operations) {
+        var opsTab = document.querySelector('.office-tab[data-tab="operations"]');
+        if (opsTab) opsTab.click();
+      }
     } catch (err) {
       if (errorEl) {
         errorEl.hidden = false;
@@ -64,6 +71,7 @@
 
   function render(data) {
     renderHeader(data);
+    renderOperations(data);
     renderOverview(data);
     renderCommittees(data);
     renderDirectory(data);
@@ -97,6 +105,86 @@
     setText('stat-appointments', String(data.appointments.length));
     setText('stat-pending-workflow', String(data.workflow.pending.length));
     setText('stat-meetings', String(data.meetings.length));
+  }
+
+  // Operations Centre — real, institution-scoped daily-operations data
+  // for the four School Leadership offices (see functions/api/portal/
+  // staff/office/[slug].js's `operations` field). Hidden entirely for
+  // every other office, since they have no single matching institution
+  // to scope by.
+  function operationsStatTile(label, value) {
+    var tile = document.createElement('div');
+    tile.className = 'exec-stat';
+    var l = document.createElement('div'); l.className = 'exec-stat-label'; l.textContent = label;
+    var v = document.createElement('div'); v.className = 'exec-stat-value'; v.textContent = value;
+    tile.appendChild(l); tile.appendChild(v);
+    return tile;
+  }
+  function renderOperations(data) {
+    var tabBtn = document.querySelector('.office-tab[data-tab="operations"]');
+    var ops = data.operations;
+    if (tabBtn) tabBtn.hidden = !ops;
+    if (!ops) return;
+
+    var statsEl = document.getElementById('operations-stats');
+    statsEl.innerHTML = '';
+    statsEl.appendChild(operationsStatTile('Active Students', String(ops.students.total)));
+    statsEl.appendChild(operationsStatTile('Staff', String(ops.staff.total)));
+    statsEl.appendChild(operationsStatTile('Attendance', ops.attendance.averagePercent != null ? ops.attendance.averagePercent + '%' : '—'));
+    statsEl.appendChild(operationsStatTile('Admissions in Pipeline', String(ops.admissionsPipeline.total)));
+
+    var hifzSection = document.getElementById('operations-hifz-section');
+    if (ops.hifz) {
+      hifzSection.hidden = false;
+      var hifzStatsEl = document.getElementById('operations-hifz-stats');
+      hifzStatsEl.innerHTML = '';
+      hifzStatsEl.appendChild(operationsStatTile('Hifz-Enrolled', String(ops.hifz.enrolledCount)));
+      hifzStatsEl.appendChild(operationsStatTile('Ijazahs Granted', String(ops.hifz.ijazahsCurrentlyGranted)));
+      hifzStatsEl.appendChild(operationsStatTile('Awaiting Examination', String(ops.hifz.awaitingExamination)));
+      var hifzBarsEl = document.getElementById('operations-hifz-bars');
+      hifzBarsEl.innerHTML = '';
+      var maxStage = Math.max.apply(null, ops.hifz.stageBreakdown.map(function (s) { return s.count; }).concat([1]));
+      ops.hifz.stageBreakdown.forEach(function (s) {
+        var row = document.createElement('div');
+        row.style.cssText = 'font-size:0.82rem;padding:4px 0;';
+        var pct = maxStage > 0 ? Math.max(3, Math.round((s.count / maxStage) * 100)) : 0;
+        row.innerHTML = '<div style="color:var(--ink);font-weight:600;margin-bottom:4px;">Stage ' + s.stageNumber + ' — ' + esc(s.label) + ' — ' + s.count + '</div>'
+          + '<div style="height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-bright) 100%);"></div></div>';
+        hifzBarsEl.appendChild(row);
+      });
+    } else {
+      hifzSection.hidden = true;
+    }
+
+    var ADMISSIONS_LABEL = { submitted: 'Submitted', under_review: 'Under Review', waitlisted: 'Waitlisted', offered: 'Offered', admitted: 'Admitted', declined: 'Declined', withdrawn: 'Withdrawn' };
+    var admissionsEl = document.getElementById('operations-admissions');
+    admissionsEl.innerHTML = '';
+    if (!ops.admissionsPipeline.total) {
+      admissionsEl.innerHTML = '<div class="portal-empty">No admissions applications on file for this school yet.</div>';
+    } else {
+      Object.keys(ADMISSIONS_LABEL).forEach(function (key) {
+        var count = ops.admissionsPipeline.byStatus[key];
+        if (!count) return;
+        var tile = document.createElement('div');
+        tile.className = 'portal-stat';
+        tile.innerHTML = '<div class="label">' + ADMISSIONS_LABEL[key] + '</div><div class="value">' + count + '</div>';
+        admissionsEl.appendChild(tile);
+      });
+    }
+
+    var notTrackedEl = document.getElementById('operations-not-tracked');
+    notTrackedEl.innerHTML = '';
+    if (!ops.notYetTracked.length) {
+      notTrackedEl.innerHTML = '<div class="portal-empty" style="padding:0 26px 20px;">Nothing outstanding.</div>';
+    } else {
+      ops.notYetTracked.forEach(function (item) {
+        var row = document.createElement('div');
+        row.className = 'pfd-unavailable-row';
+        row.style.padding = '10px 26px';
+        row.innerHTML = '<strong>' + esc(item.label) + '</strong> — ' + esc(item.reason);
+        notTrackedEl.appendChild(row);
+      });
+    }
   }
 
   // Module 2 — Office overview

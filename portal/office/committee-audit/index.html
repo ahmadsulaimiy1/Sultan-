@@ -47,6 +47,7 @@
 
     <nav class="office-tabs" role="tablist" aria-label="Office sections">
       <button type="button" class="office-tab is-active" data-tab="dashboard">Dashboard</button>
+      <button type="button" class="office-tab" data-tab="operations" hidden>Operations Centre</button>
       <button type="button" class="office-tab" data-tab="overview">Overview</button>
       <button type="button" class="office-tab" data-tab="directory">Staff Directory</button>
       <button type="button" class="office-tab" data-tab="responsibilities">Responsibilities</button>
@@ -70,6 +71,28 @@
           <div class="portal-stat"><div class="label">Staff Assigned</div><div class="value" id="dash-staff-count-echo"></div></div>
         </div>
         <div class="pfd-note" style="padding:0 26px 20px;">Use the tabs above to review the Staff Directory, Documents, Workflow Centre, and Meetings for this office.</div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-operations">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Operations Centre</h2><div class="meta">Real, institution-scoped daily-operations data &mdash; students, staff, attendance, and admissions for this school specifically.</div></div>
+        <div class="exec-stat-grid" style="padding:0 26px 22px;" id="operations-stats"></div>
+      </div>
+      <div class="portal-child-card" id="operations-hifz-section" hidden>
+        <div class="portal-child-head"><h2>Hifz Programme</h2></div>
+        <div class="exec-stat-grid" style="padding:0 26px 12px;" id="operations-hifz-stats"></div>
+        <h3 class="pfd-subhead" style="padding:0 26px;">By stage</h3>
+        <div class="pfd-bars" style="padding:0 26px 22px;" id="operations-hifz-bars"></div>
+      </div>
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Admissions Pipeline</h2><div class="meta">This school's own applications &mdash; full review at the Admissions Review Centre.</div></div>
+        <div class="portal-stats" id="operations-admissions"></div>
+        <div style="padding:0 26px 20px;"><a class="portal-back-link" href="/portal/staff/admissions/">Open Admissions Review Centre &rarr;</a></div>
+      </div>
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Not Yet Tracked</h2><div class="meta">Named honestly &mdash; no fabricated figures stand in for these.</div></div>
+        <div id="operations-not-tracked"></div>
       </div>
     </div>
 
