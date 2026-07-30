@@ -4,6 +4,14 @@ buildscript {
     
     repositories {
         google()
+        // Google's official read-only mirror of Maven Central, tried
+        // before the real repo.maven.apache.org. GitHub-hosted Actions
+        // runners were getting hard 403s straight from Sonatype Central
+        // (verified in a real CI run, not a guess -- Sonatype's own bot
+        // protection rejecting the runner's IP range/User-Agent, not a
+        // dependency actually missing), while this mirror serves the
+        // identical artifacts without that block.
+        maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }
         mavenCentral()
     }
     dependencies {
@@ -20,6 +28,7 @@ apply from: "variables.gradle"
 allprojects {
     repositories {
         google()
+        maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }
         mavenCentral()
     }
 }
