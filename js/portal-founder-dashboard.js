@@ -110,7 +110,6 @@
   }
 
   var MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var CHART_COLORS = ['var(--chart-1)','var(--chart-2)','var(--chart-3)','var(--chart-4)','var(--chart-5)','var(--chart-6)'];
 
   // Rounds a data max up to a "clean" axis ceiling (1/2/5/10 × a power of
   // ten) — the same convention Bloomberg/TradingView-style axes use so
@@ -125,7 +124,8 @@
 
   // Executive-grade inline SVG bar chart — no charting library exists in
   // this codebase (see docs/shrs-design-system.md's Charts section), so
-  // this is hand-rolled on the --chart-1..6 design-system tokens, with
+  // this is hand-rolled on a single gold hue (a time series gets one
+  // colour, not a categorical rainbow — see the loop below), with
   // gridlines against a "nice" axis ceiling, a trend polyline across bar
   // tops, a dashed average-benchmark line, an inline legend, and a native
   // <title> per bar for a zero-JS hover tooltip (works on touch too, via
@@ -184,7 +184,12 @@
       svg += '<polygon points="' + areaPath + '" fill="url(#pfd-revenue-area)"></polygon>';
     }
 
-    // Second pass: bars, value labels, month labels
+    // Second pass: bars, value labels, month labels. A single time-series
+    // metric (revenue over time) gets ONE hue, not a categorical rainbow —
+    // CHART_COLORS is for genuinely categorical breakdowns (by institution,
+    // by stage) elsewhere on this page. The most recent month is the one
+    // moment worth calling out, so it alone gets the brighter tone; every
+    // earlier month is the same muted gold.
     rows.forEach(function(r, i){
       var barHeight = axisMax > 0 ? ((r.total || 0) / axisMax) * innerH : 0;
       var x = padding.left + i * (barWidth + barGap);
@@ -192,7 +197,10 @@
       var cx = x + barWidth / 2;
       var parts = String(r.month).split('-');
       var label = MONTH_NAMES[Number(parts[1]) - 1] || r.month;
-      svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + CHART_COLORS[i % CHART_COLORS.length] + '" rx="4"><title>' + label + ': ' + formatCurrency(r.total || 0) + '</title></rect>';
+      var isLatest = i === rows.length - 1;
+      var barFill = isLatest ? 'var(--gold-bright)' : 'var(--gold)';
+      var barOpacity = isLatest ? '1' : '0.7';
+      svg += '<rect x="' + x + '" y="' + y + '" width="' + Math.max(barWidth, 1) + '" height="' + Math.max(barHeight, 1) + '" fill="' + barFill + '" opacity="' + barOpacity + '" rx="4"><title>' + label + ': ' + formatCurrency(r.total || 0) + '</title></rect>';
       svg += '<text x="' + cx + '" y="' + (height - padding.bottom + 18) + '" text-anchor="middle" font-size="11" fill="var(--ink-soft)">' + label + '</text>';
       svg += '<text x="' + cx + '" y="' + (y - 8) + '" text-anchor="middle" font-size="11" font-weight="600" fill="var(--navy)">' + formatCurrencyShort(r.total || 0) + '</text>';
     });

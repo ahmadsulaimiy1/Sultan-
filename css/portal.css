@@ -233,6 +233,25 @@ body.portal-body > *{position:relative;z-index:1;}
 .portal-back-link:hover{color:var(--navy);}
 
 .portal-wrap{width:100%;max-width:760px;}
+/* Wide-desktop dashboards previously kept the same 760px column at any
+   viewport width, which reads as a narrow page floating in a sea of
+   empty margin on a real monitor rather than an executive surface using
+   the screen it has. Widened in two steps so the column grows with the
+   viewport instead of jumping straight to full-bleed; grid-eligible
+   sections (.pfd-grid, see below) are what actually reclaims the space,
+   not just a wider single column of the same stacked cards. */
+@media (min-width:1080px){.portal-wrap{max-width:920px;}}
+@media (min-width:1400px){.portal-wrap{max-width:1120px;}}
+/* Two compact founder sections (Students / Attendance & Guardians) are
+   short enough to sit side by side once there's room — everything else
+   (Hifz, Finance) stays full-width because it holds charts that need
+   the space. Markup-only: wraps existing .pfd-section siblings, no JS
+   changes. */
+.pfd-grid{display:grid;grid-template-columns:1fr;}
+@media (min-width:820px){
+  .pfd-grid{grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px;align-items:start;}
+  .pfd-grid .pfd-section{margin-bottom:0;}
+}
 .portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;letter-spacing:0.01em;color:var(--navy);margin-bottom:6px;}
 .portal-hello-sub{font-size:0.88rem;color:var(--ink-soft);margin-bottom:26px;}
 .portal-logout{
