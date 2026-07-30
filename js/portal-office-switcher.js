@@ -69,6 +69,11 @@
     var hasBehaviourRole = (data.roles || []).some(function (r) { return r.roleCode === 'VP' || r.roleCode === 'PRIN'; });
     if (hasBehaviourRole) add('Behaviour Management', 'Student Code of Conduct (SD-02)', '/portal/staff/behaviour/');
 
+    // Teacher Performance is owned by the Principal, jointly with
+    // Academic Affairs (no adopted policy yet — Staff Handbook §7).
+    var hasTeacherPerfRole = (data.roles || []).some(function (r) { return r.roleCode === 'VP' || r.roleCode === 'PRIN'; });
+    if (hasTeacherPerfRole) add('Teacher Performance', 'Observations, PD, and reviews', '/portal/staff/teacher-performance/');
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {

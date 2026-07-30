@@ -719,6 +719,85 @@ const STATEMENTS = [
     ('serious_misconduct', 'demerit', 'Serious Misconduct', 'Referred to the Principal per SD-02 §7.3 — guardian informed the same day, may result in suspension.', -5, 8)
     ON CONFLICT (code) DO NOTHING`,
 
+  // Teacher Performance Framework — same Institutional Capability
+  // Framework pattern. Unlike Safeguarding/Behaviour, no dedicated
+  // Performance Management Policy exists yet (Staff Handbook §7 names
+  // this a real, known gap — "evaluated, not fully drafted" in the HR
+  // Governance Framework). The observation domains below are real,
+  // internationally standard classroom-observation categories (the
+  // same structure widely used in teacher evaluation frameworks), not
+  // policy-derived and not fabricated performance data — the schema is
+  // real infrastructure built ahead of that policy's completion.
+  `CREATE TABLE IF NOT EXISTS teacher_performance_categories (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS teacher_observations (
+    id                 SERIAL PRIMARY KEY,
+    observation_no     TEXT NOT NULL UNIQUE,
+    teacher_staff_id   INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    institution_id     INTEGER REFERENCES institutions(id),
+    category_id        INTEGER NOT NULL REFERENCES teacher_performance_categories(id),
+    observer_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+    rating             TEXT CHECK (rating IN ('developing', 'proficient', 'accomplished', 'distinguished')),
+    notes              TEXT NOT NULL,
+    status             TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN (
+                          'scheduled', 'completed', 'follow_up_required', 'closed'
+                        )),
+    observed_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_teacher_observations_teacher ON teacher_observations (teacher_staff_id)`,
+  `CREATE TABLE IF NOT EXISTS teacher_pd_records (
+    id                SERIAL PRIMARY KEY,
+    teacher_staff_id  INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    title             TEXT NOT NULL,
+    provider          TEXT,
+    hours             NUMERIC(5,1),
+    completed_at      DATE,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_teacher_pd_records_teacher ON teacher_pd_records (teacher_staff_id)`,
+  `CREATE TABLE IF NOT EXISTS teacher_reviews (
+    id                 SERIAL PRIMARY KEY,
+    review_no          TEXT NOT NULL UNIQUE,
+    teacher_staff_id   INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    institution_id     INTEGER REFERENCES institutions(id),
+    review_period      TEXT NOT NULL,
+    reviewer_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+    overall_rating     TEXT CHECK (overall_rating IN ('developing', 'proficient', 'accomplished', 'distinguished')),
+    strengths          TEXT,
+    growth_areas       TEXT,
+    status             TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN (
+                          'scheduled', 'in_progress', 'completed', 'acknowledged'
+                        )),
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_teacher_reviews_teacher ON teacher_reviews (teacher_staff_id)`,
+  `CREATE TABLE IF NOT EXISTS teacher_performance_log (
+    id            SERIAL PRIMARY KEY,
+    target_type   TEXT NOT NULL CHECK (target_type IN ('observation', 'review')),
+    target_id     INTEGER NOT NULL,
+    action        TEXT NOT NULL CHECK (action IN (
+                     'scheduled', 'completed', 'follow_up_assigned', 'pd_recommended', 'acknowledged', 'resolved'
+                   )),
+    actor_staff_id INTEGER NOT NULL REFERENCES staff(id),
+    notes         TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_teacher_performance_log_target ON teacher_performance_log (target_type, target_id)`,
+  `INSERT INTO teacher_performance_categories (code, label, description, sort_order) VALUES
+    ('lesson_planning', 'Lesson Planning & Preparation', 'Clarity of objectives, sequencing, and alignment to the curriculum.', 1),
+    ('classroom_management', 'Classroom Management', 'Routines, behaviour management, and use of instructional time.', 2),
+    ('instructional_delivery', 'Instructional Delivery', 'Explanation quality, questioning technique, and differentiation.', 3),
+    ('assessment_for_learning', 'Assessment for Learning', 'Use of formative checks and feedback to adjust teaching in real time.', 4),
+    ('professional_responsibilities', 'Professional Responsibilities', 'Punctuality, record-keeping, and engagement with professional development.', 5)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,

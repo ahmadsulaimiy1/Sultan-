@@ -45,6 +45,7 @@ export const SYSTEM_AREAS = {
   system_settings:        { name: 'System Settings', ownerOffice: 'ICT / System Administrator', governingPolicy: null },
   safeguarding:           { name: 'Safeguarding Intelligence', ownerOffice: 'Designated Safeguarding Lead', governingPolicy: 'SW-01, SW-02' },
   behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
+  teacher_performance:    { name: 'Teacher Performance', ownerOffice: 'Principal, jointly with Academic Affairs', governingPolicy: 'Pending — HR Governance Framework (Staff Handbook §7)' },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -183,6 +184,17 @@ export const MATRIX = {
     { role: 'VP', permissions: ['V', 'C', 'E', 'A'], scope: 'all institutions' },
     { role: 'PRIN', permissions: ['V', 'C', 'E', 'A'], scope: 'own institution' },
     { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual case content)' },
+  ],
+  // No performance-management policy exists yet (Staff Handbook §7),
+  // so this scoping is a reasonable default — Principal owns their own
+  // institution's teachers, VP mirrors that authority, a teacher can
+  // see only their own record — not a transcription of an adopted
+  // document the way Safeguarding/Behaviour are.
+  teacher_performance: [
+    { role: 'PRIN', permissions: ['V', 'C', 'E', 'A'], scope: 'own institution' },
+    { role: 'VP', permissions: ['V', 'C', 'E', 'A'], scope: 'all institutions' },
+    { role: 'TCH', permissions: ['V'], scope: 'own record only' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual record content)' },
   ],
 };
 

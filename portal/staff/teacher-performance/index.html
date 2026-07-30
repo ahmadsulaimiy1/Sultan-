@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Teacher Performance Framework — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Teacher Performance</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Teacher Performance Framework</div>
+    <div class="portal-hello-sub">No dedicated Performance Management Policy exists yet (Staff Handbook §7 names this a known gap) — this is real infrastructure built ahead of that policy, using standard classroom-observation domains, not a fabricated scorecard.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2 data-sg-status-title>Teacher Performance Status: Operational Framework Ready</h2></div>
+      <p class="registrar-hint">The system exists. The institution has not yet needed to populate it. <strong data-sg-current-records>Current Records: 0</strong></p>
+      <div class="sg-capability-grid" data-sg-capabilities></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Observation Domains</h2></div>
+      <p class="registrar-hint">Five standard classroom-observation domains — real professional-practice categories, not policy-derived.</p>
+      <ul class="sg-taxonomy-list" data-sg-domains></ul>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Classroom Observations</h2></div>
+      <div class="registrar-approvals-list" data-obs-list></div>
+      <div class="registrar-approvals-empty" data-obs-empty hidden>No observations currently on record.</div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Professional Development Log</h2></div>
+      <div class="registrar-approvals-list" data-pd-list></div>
+      <div class="registrar-approvals-empty" data-pd-empty hidden>No professional development activity currently on record.</div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Performance Reviews &amp; Growth Plans</h2></div>
+      <div class="registrar-approvals-list" data-review-list></div>
+      <div class="registrar-approvals-empty" data-review-empty hidden>No performance reviews currently on record.</div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Teacher Performance Framework…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Teacher Performance Framework</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-staff-teacher-performance.js" defer></script>
+</body>
+</html>
