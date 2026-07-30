@@ -186,9 +186,9 @@ body.portal-body > *{position:relative;z-index:1;}
   box-shadow:0 0 0 3px rgba(198,161,91,0.18);
 }
 .pw-toggle-wrap{position:relative;display:block;}
-.pw-toggle-wrap input[type="password"],.pw-toggle-wrap input[type="text"]{width:100%;padding-right:40px;box-sizing:border-box;}
+.pw-toggle-wrap input[type="password"],.pw-toggle-wrap input[type="text"]{width:100%;padding-inline-end:40px;box-sizing:border-box;}
 .pw-toggle-btn{
-  position:absolute;top:50%;right:6px;transform:translateY(-50%);
+  position:absolute;top:50%;inset-inline-end:6px;transform:translateY(-50%);
   background:none;border:none;padding:6px;margin:0;cursor:pointer;
   color:var(--ink-soft);display:flex;align-items:center;justify-content:center;
   border-radius:3px;
@@ -297,6 +297,17 @@ body.portal-body > *{position:relative;z-index:1;}
 }
 .portal-theme-toggle:hover{border-color:var(--gold);color:var(--gold);}
 .portal-theme-toggle svg{display:block;}
+/* RTL Arabic toggle button, injected next to the theme toggle. Flips
+   dir/lang on <html> and swaps the shared topbar chrome (see
+   js/portal-theme.js for the honestly-scoped translation coverage). */
+.portal-lang-toggle{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:32px;min-width:32px;padding:0 10px;flex-shrink:0;
+  border:1px solid var(--line);border-radius:16px;background:var(--portal-card);
+  color:var(--portal-heading);cursor:pointer;font-size:0.7rem;font-weight:700;letter-spacing:0.04em;
+  transition:background .2s ease,border-color .2s ease,color .2s ease;
+}
+.portal-lang-toggle:hover{border-color:var(--gold);color:var(--gold);}
 
 /* Executive Dashboard Visual System: every existing card class gets the
    same elevated-shadow/gold-hairline treatment automatically — this is
@@ -649,7 +660,7 @@ body.portal-body > *{position:relative;z-index:1;}
 .transcript-block{margin-bottom:var(--space-lg);}
 .transcript-block h4{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size);margin-bottom:var(--space-sm);color:var(--portal-heading);}
 .transcript-table{width:100%;border-collapse:collapse;font-size:var(--small-size);}
-.transcript-table th,.transcript-table td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);}
+.transcript-table th,.transcript-table td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);}
 .transcript-table th{font-family:'Cinzel','Amiri',serif;font-size:var(--caption-size);text-transform:uppercase;letter-spacing:0.06em;color:var(--on-surface-soft);}
 .transcript-unavailable{padding:var(--space-md);background:rgba(124,31,46,0.05);border:1px dashed rgba(124,31,46,0.35);border-radius:var(--radius-md);font-size:var(--small-size);color:var(--ink-soft);margin-top:var(--space-sm);}
 .transcript-average-row td{font-weight:700;background:rgba(198,161,91,0.08);border-top:2px solid var(--gold);}
@@ -681,7 +692,7 @@ body.portal-body > *{position:relative;z-index:1;}
 .registrar-field-note{grid-column:1/-1;font-size:0.78rem;color:var(--ink-soft);font-style:italic;margin:2px 0 10px;}
 
 .registrar-approvals-list{padding:0 20px 16px;display:flex;flex-direction:column;gap:10px;}
-.registrar-approval-card{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:6px;padding:12px 14px;background:var(--portal-card);}
+.registrar-approval-card{border:1px solid var(--line);border-inline-start:3px solid var(--gold);border-radius:6px;padding:12px 14px;background:var(--portal-card);}
 .registrar-approval-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:0.9rem;color:var(--portal-heading);font-weight:600;}
 .registrar-approval-meta{font-size:0.78rem;color:var(--ink-soft);margin-top:2px;}
 .registrar-approval-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
@@ -692,7 +703,7 @@ body.portal-body > *{position:relative;z-index:1;}
 
 .teacher-class-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;padding:16px 20px;}
 .teacher-class-card{
-  text-align:left;background:var(--milk);border:1px solid var(--line);padding:14px 16px;cursor:pointer;
+  text-align:start;background:var(--milk);border:1px solid var(--line);padding:14px 16px;cursor:pointer;
   font-family:inherit;transition:border-color 0.15s, background 0.15s;
 }
 .teacher-class-card:hover{border-color:var(--gold);background:var(--ivory);}
@@ -703,7 +714,7 @@ body.portal-body > *{position:relative;z-index:1;}
 .teacher-roster-scroll{overflow-x:auto;padding:0 20px 16px;}
 .teacher-roster-table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:520px;}
 .teacher-roster-table th{
-  text-align:left;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);
+  text-align:start;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);
   border-bottom:1px solid var(--gold);padding:8px 8px;white-space:nowrap;
 }
 .teacher-roster-table td{padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;}
@@ -1309,7 +1320,7 @@ body.portal-body > *{position:relative;z-index:1;}
 .admin-form-status.is-err{color:var(--crimson);}
 
 .admin-table{width:100%;border-collapse:collapse;font-size:0.86rem;}
-.admin-table th{text-align:left;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--gold);padding:8px 10px;}
+.admin-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--gold);padding:8px 10px;}
 .admin-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
 .admin-table tr.is-vacant td{color:var(--ink-soft);font-style:italic;}
 

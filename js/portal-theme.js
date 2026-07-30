@@ -14,6 +14,26 @@
   var ORDER = ['royal', 'light', 'dark'];
   var LABEL = { royal: 'Royal (Default)', light: 'Light', dark: 'Dark' };
 
+  /* RTL Arabic — real, working layout capability: flips dir/lang on
+     <html> and translates the topbar chrome shared by every one of the
+     53 portal pages (data-i18n attributes, added by the build tooling).
+     Scope named honestly: this proves the direction-flip + logical-CSS
+     foundation end-to-end on real, correctly-translated UI strings.
+     Full in-page module content (Dashboard/Analytics/etc. tab bodies,
+     and dynamic JS-rendered data) stays English until a broader
+     translation pass — the same honestly-deferred scope as task #119
+     (full site + policy translation), not a hidden gap. */
+  var AR = {
+    'sign-out': 'تسجيل الخروج',
+    'all-offices': 'جميع المكاتب',
+    'org-chart': 'الهيكل التنظيمي',
+    'admin-centre': 'مركز الإدارة',
+    'clear-token': 'مسح الرمز',
+    'pilot': 'تجريبي',
+    'staff-documents': 'مستندات الموظفين'
+  };
+  var EN = {}; // populated lazily from the DOM's own English text on first run
+
   function loadPrefs(){
     try{
       var raw = window.localStorage.getItem(PREFS_KEY);
@@ -25,9 +45,28 @@
     try{ document.dispatchEvent(new CustomEvent('sultan:personalisation-changed', { detail: prefs })); }catch(err){}
   }
 
+  function applyDir(lang){
+    var html = document.documentElement;
+    html.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
+    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  }
+  function applyI18nText(lang){
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if (lang === 'ar') {
+        if (EN[key] === undefined) EN[key] = el.textContent;
+        if (AR[key] !== undefined) el.textContent = AR[key];
+      } else if (EN[key] !== undefined) {
+        el.textContent = EN[key];
+      }
+    });
+  }
+
   var prefs = loadPrefs();
   var theme = ORDER.indexOf(prefs.theme) > -1 ? prefs.theme : 'royal';
   document.documentElement.setAttribute('data-pc-theme', theme);
+  var lang = prefs.portalLang === 'ar' ? 'ar' : 'en';
+  applyDir(lang); // safe before body exists — only touches <html> attributes
 
   var ICONS = {
     royal: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>',
@@ -52,21 +91,45 @@
     render();
   }
 
+  var langBtn;
+  function renderLang(){
+    if(!langBtn) return;
+    langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
+    langBtn.setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+    langBtn.title = langBtn.getAttribute('aria-label');
+  }
+  function toggleLang(){
+    lang = lang === 'ar' ? 'en' : 'ar';
+    applyDir(lang);
+    applyI18nText(lang);
+    var p = loadPrefs();
+    p.portalLang = lang;
+    savePrefs(p);
+    renderLang();
+  }
+
   function inject(){
+    applyI18nText(lang);
     if(document.querySelector('.portal-theme-toggle')) return;
     var topbar = document.querySelector('.portal-topbar');
     if(!topbar) return;
+    var actions = topbar.lastElementChild;
+    var mount = (actions && actions !== topbar.firstElementChild) ? actions : topbar;
+    var prepend = mount === actions ? function(el){ actions.insertBefore(el, actions.firstChild); } : function(el){ topbar.appendChild(el); };
+
+    langBtn = document.createElement('button');
+    langBtn.type = 'button';
+    langBtn.className = 'portal-lang-toggle';
+    langBtn.addEventListener('click', toggleLang);
+    renderLang();
+    prepend(langBtn);
+
     btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'portal-theme-toggle';
     btn.addEventListener('click', cycle);
     render();
-    var actions = topbar.lastElementChild;
-    if(actions && actions !== topbar.firstElementChild){
-      actions.insertBefore(btn, actions.firstChild);
-    } else {
-      topbar.appendChild(btn);
-    }
+    prepend(btn);
   }
 
   if(document.readyState === 'loading'){

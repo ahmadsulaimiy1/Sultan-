@@ -49,8 +49,8 @@ function pageHtml(office) {
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
     <div id="office-switcher-mount" hidden></div>
-    <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
-    <button type="button" class="portal-logout" data-office-logout>Sign Out</button>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <button type="button" class="portal-logout" data-office-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
 
@@ -296,7 +296,7 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 <main class="portal-main" style="align-items:flex-start;">
   <div class="office-index-wrap">
     <p class="portal-aside-eyebrow" style="color:var(--gold);">INSTITUTIONAL PORTAL ECOSYSTEM</p>
-    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--navy);margin:6px 0 8px;">All Offices</h1>
+    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--portal-heading);margin:6px 0 8px;">All Offices</h1>
     <p style="color:var(--ink-soft);max-width:640px;margin-bottom:8px;">Every office in the Sultan Hanafi Royal Schools digital campus, grouped by layer. Offices without a confirmed appointment show an honest "Vacant &mdash; Awaiting Appointment" seat, not a fabricated name.</p>
     <p style="margin-bottom:8px;"><a href="/portal/staff/org-chart/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Organisational Chart &rarr;</a></p>
     <p style="margin-bottom:28px;"><a href="/portal/admin/centre/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Institutional Administration Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(sysadmin token required)</span></p>
