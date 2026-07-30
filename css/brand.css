@@ -200,6 +200,16 @@
   .stat-band.cols-3{grid-template-columns:repeat(3,1fr);}
   @media (max-width:760px){.stat-band.cols-3{grid-template-columns:1fr 1fr 1fr;}}
   .fac-row .fdots{flex:1;border-bottom:1px dotted rgba(248,244,233,0.28);transform:translateY(-5px);}
+  .fac-row .ft{text-decoration:none;cursor:pointer;}
+  /* Facility profile cards — one per named facility, so none of them
+     exists as a bare list item. Reuses .school-block for the card
+     shell/tag/heading/paragraph; these rules only add the photo slot. */
+  .fac-profile-grid{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:820px){.fac-profile-grid{grid-template-columns:1fr;}}
+  .fac-profile{scroll-margin-top:110px;}
+  .fac-profile-photo{margin-bottom:18px;}
+  .fac-profile-photo.image-slot{padding:34px 22px;}
+  .fac-profile-photo-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
   /* Folio marker — recurring heritage device at section openings */
   .folio{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:18px;}
   .folio::after{content:"";flex:0 0 60px;height:1px;background:var(--gold);opacity:0.6;}
@@ -1405,8 +1415,13 @@
   @media (max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
   .gallery-item{border:1px solid var(--line);background:var(--navy-deep);overflow:hidden;transition:border-color .3s ease;}
   .gallery-item:hover{border-color:var(--gold);}
-  .gallery-item .gi-frame{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;}
-  .gallery-item .gi-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+  /* Base .gi-frame rules (no .gallery-item ancestor required) so the
+     same photo-frame treatment can be used standalone — e.g. inside a
+     .fac-profile facility card that isn't part of a .gallery-grid. */
+  .gi-frame{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;}
+  .gi-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+  .gallery-item .gi-frame{aspect-ratio:4/3;}
+  .gallery-item:hover .gi-frame img{transform:scale(1.04);}
   .gallery-item:hover .gi-frame img{transform:scale(1.04);}
   .gallery-item .gi-cap{padding:16px 18px 18px;}
   .gallery-item .gi-cap .gi-title{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;color:var(--ivory);display:block;}
