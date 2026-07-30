@@ -61,9 +61,10 @@
 //                             its committees); status defaults to 'draft'.
 //   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
 import { getSql } from '../../../_lib/db.js';
-import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
+import { readStaffSessionFromRequest, timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
+import { hasPermissionFor, effectiveGrants } from '../../../_lib/permissions.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
@@ -85,21 +86,60 @@ async function staffIdByNo(sql, staffNo) {
   return res.rows[0] ? res.rows[0].id : null;
 }
 
-// Shared by both handlers below — same bearer-token bootstrap model,
-// same failure modes, so GET (read) and POST (write) stay consistent.
-function checkSysadminAuth(request, env) {
+// Founder Override Directive ("Eliminate PowerShell Role Assignment"):
+// a real signed-in staff member holding Manage Users (MU) on
+// staff_records is now the PRIMARY path — per role-permission-matrix.md
+// §4.20, only SYSADMIN (unrestricted) and EXE (new-account approval)
+// hold that grant. PORTAL_SYSADMIN_TOKEN remains a FALLBACK ONLY,
+// exactly the same migration shape already applied to
+// admin/announcements.js — the bearer token was never removed because
+// no reachable environment's EXE account was confirmed working at the
+// time that endpoint migrated; here it's kept for the same reason
+// (disaster recovery / before any staff account exists at all — see
+// scripts that bootstrap the very first Founder account).
+async function resolveAuth(request, env) {
+  if (env.SESSION_SECRET) {
+    let session = null;
+    try {
+      session = readStaffSessionFromRequest(request, env.SESSION_SECRET);
+    } catch {
+      session = null;
+    }
+    if (session) return { method: 'staff_session', staffId: session.staffId };
+  }
   const sysadminToken = env.PORTAL_SYSADMIN_TOKEN;
-  if (!sysadminToken) {
-    return { error: json({ error: 'Staff Identity administration is not configured yet — PORTAL_SYSADMIN_TOKEN is not set.' }, 500) };
+  if (sysadminToken && timingSafeEqualString(request.headers.get('x-sysadmin-token'), sysadminToken)) {
+    return { method: 'bearer_token', staffId: null };
   }
-  if (!timingSafeEqualString(request.headers.get('x-sysadmin-token'), sysadminToken)) {
-    return { error: json({ error: 'Invalid system administrator token.' }, 403) };
+  return null;
+}
+
+// Staff-session grant check — bearer-token requests skip this entirely
+// (the token itself is already the highest-trust credential, same as
+// every other bearer-token endpoint in this codebase).
+async function checkMuGrant(sql, staffId) {
+  const grant = await hasPermissionFor(sql, staffId, 'staff_records', 'MU', null);
+  if (!grant.granted) {
+    return 'Your role does not have authority to administer staff, offices, or governance content (staff_records: MU).';
   }
-  const sql = getSql(env);
-  if (!sql) {
-    return { error: json({ error: 'No database is linked yet.' }, 500) };
+  return null;
+}
+
+// EXECUTIVE SAFETY (Founder Override Directive, explicit requirement):
+// granting or revoking the EXE role itself is narrower than ordinary
+// MU — only someone who already holds EXE may create or remove another
+// EXE. This is what stops an ordinary Manage-Users holder (say, a
+// future HR/ICT administrator role with MU but no EXE) from minting
+// their own Executive access. The bootstrap bearer token is exempt —
+// it's already the single highest-trust path, used before any staff
+// account exists at all.
+async function requireExeToTouchExe(sql, auth) {
+  if (auth.method === 'bearer_token') return null;
+  const grants = await effectiveGrants(sql, auth.staffId);
+  if (!grants.some((g) => g.roleCode === 'EXE')) {
+    return 'Only an existing Executive (EXE) may grant or revoke the Executive role.';
   }
-  return { sql };
+  return null;
 }
 
 // Read-only listings for the Institutional Administration Centre UI
@@ -112,13 +152,90 @@ function checkSysadminAuth(request, env) {
 // ?view=meetings&officeName=...    — that office's meetings.
 // ?view=documents&officeName=...   — that office's documents.
 export async function onRequestGet({ request, env }) {
-  const auth = checkSysadminAuth(request, env);
-  if (auth.error) return auth.error;
-  const sql = auth.sql;
+  const sql = getSql(env);
+  if (!sql) return json({ error: 'No database is linked yet.' }, 500);
+  const auth = await resolveAuth(request, env);
+  if (!auth) return json({ error: 'Not signed in, and no valid system administrator token was supplied.' }, 403);
+  if (auth.method === 'staff_session') {
+    const err = await checkMuGrant(sql, auth.staffId);
+    if (err) return json({ error: err }, 403);
+  }
   const url = new URL(request.url);
   const view = url.searchParams.get('view') || 'offices';
 
   try {
+    if (view === 'staff') {
+      const q = url.searchParams.get('q');
+      const staffRes = await sql`
+        SELECT s.id, s.staff_no, s.full_name, s.preferred_name, s.position_title, s.status, s.email,
+               o.name AS office_name, i.name AS institution_name
+        FROM staff s
+        LEFT JOIN offices o ON o.id = s.office_id
+        LEFT JOIN institutions i ON i.id = s.institution_id
+        WHERE ${q}::text IS NULL OR s.full_name ILIKE '%' || ${q} || '%' OR s.staff_no ILIKE '%' || ${q} || '%'
+        ORDER BY s.full_name LIMIT 200`;
+      const rolesRes = await sql`
+        SELECT sr.id, sr.staff_id, sr.role_code, rl.name AS role_name, sr.granted_at,
+               i.name AS institution_name, o.name AS office_name
+        FROM staff_roles sr
+        JOIN roles rl ON rl.code = sr.role_code
+        LEFT JOIN institutions i ON i.id = sr.institution_id
+        LEFT JOIN offices o ON o.id = sr.office_id
+        WHERE sr.is_active = true AND sr.revoked_at IS NULL
+        ORDER BY sr.granted_at`;
+      const rolesByStaff = {};
+      for (const r of rolesRes.rows) {
+        (rolesByStaff[r.staff_id] = rolesByStaff[r.staff_id] || []).push({
+          staffRoleId: r.id, roleCode: r.role_code, roleName: r.role_name,
+          institutionName: r.institution_name, officeName: r.office_name, grantedAt: r.granted_at,
+        });
+      }
+      return json({
+        staff: staffRes.rows.map((s) => ({
+          id: s.id, staffNo: s.staff_no, fullName: s.full_name, preferredName: s.preferred_name,
+          positionTitle: s.position_title, status: s.status, email: s.email,
+          officeName: s.office_name, institutionName: s.institution_name,
+          roles: rolesByStaff[s.id] || [],
+        })),
+      });
+    }
+
+    if (view === 'audit-log') {
+      const staffNo = url.searchParams.get('staffNo');
+      const staffId = staffNo ? await staffIdByNo(sql, staffNo) : null;
+      const res = staffId
+        ? await sql`
+            SELECT sal.id, sal.event_type, sal.target_type, sal.target_id, sal.reason, sal.metadata, sal.created_at,
+                   actor.staff_no AS actor_staff_no, actor.full_name AS actor_name
+            FROM staff_audit_log sal
+            LEFT JOIN staff actor ON actor.id = sal.actor_staff_id
+            WHERE (sal.target_type = 'staff' AND sal.target_id = ${staffId})
+               OR (sal.metadata ->> 'staffNo' = ${staffNo})
+               OR sal.actor_staff_id = ${staffId}
+            ORDER BY sal.created_at DESC LIMIT 100`
+        : await sql`
+            SELECT sal.id, sal.event_type, sal.target_type, sal.target_id, sal.reason, sal.metadata, sal.created_at,
+                   actor.staff_no AS actor_staff_no, actor.full_name AS actor_name
+            FROM staff_audit_log sal
+            LEFT JOIN staff actor ON actor.id = sal.actor_staff_id
+            ORDER BY sal.created_at DESC LIMIT 100`;
+      return json({
+        entries: res.rows.map((r) => ({
+          id: r.id, eventType: r.event_type, targetType: r.target_type, targetId: r.target_id,
+          reason: r.reason, metadata: r.metadata, createdAt: r.created_at,
+          actor: r.actor_staff_no ? { staffNo: r.actor_staff_no, fullName: r.actor_name } : null,
+        })),
+      });
+    }
+
+    if (view === 'permissions') {
+      const staffNo = url.searchParams.get('staffNo');
+      const staffId = await staffIdByNo(sql, staffNo);
+      if (!staffId) return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      const grants = await effectiveGrants(sql, staffId);
+      return json({ grants });
+    }
+
     if (view === 'resolutions') {
       const officeName = url.searchParams.get('officeName');
       const officeId = await officeIdByName(sql, officeName);
@@ -191,12 +308,21 @@ export async function onRequestGet({ request, env }) {
 }
 
 export async function onRequestPost({ request, env }) {
-  const auth = checkSysadminAuth(request, env);
-  if (auth.error) return auth.error;
-  const sql = auth.sql;
+  const sql = getSql(env);
+  if (!sql) return json({ error: 'No database is linked yet.' }, 500);
+  const auth = await resolveAuth(request, env);
+  if (!auth) return json({ error: 'Not signed in, and no valid system administrator token was supplied.' }, 403);
+  if (auth.method === 'staff_session') {
+    const err = await checkMuGrant(sql, auth.staffId);
+    if (err) return json({ error: err }, 403);
+  }
 
   const body = await readJsonBody(request);
   const action = body && body.action;
+  // A real signed-in session already tells us who's acting — prefer
+  // that over the optional *ByStaffNo body params (kept only for the
+  // bearer-token path, which has no session identity to draw from).
+  const actingStaffId = auth.method === 'staff_session' ? auth.staffId : null;
 
   try {
     if (action === 'create-office') {
@@ -290,7 +416,7 @@ export async function onRequestPost({ request, env }) {
         return json({ error: 'No staff member found with that Staff ID.' }, 404);
       }
       await sql`UPDATE staff SET status = ${body.status}, updated_at = now() WHERE id = ${staffId}`;
-      await logStaffEvent(sql, { actorStaffId: null, eventType: 'sensitive_action', targetType: 'staff', targetId: staffId, reason: `status -> ${body.status}` });
+      await logStaffEvent(sql, { actorStaffId: actingStaffId, eventType: 'sensitive_action', targetType: 'staff', targetId: staffId, reason: `status -> ${body.status}` });
       return json({ ok: true, staffId, status: body.status });
     }
 
@@ -322,9 +448,13 @@ export async function onRequestPost({ request, env }) {
       if (!roleRes.rows.length) {
         return json({ error: 'Unknown roleCode — it must exist in the roles reference table (see role-permission-matrix.md §3).' }, 400);
       }
+      if (body.roleCode === 'EXE') {
+        const exeErr = await requireExeToTouchExe(sql, auth);
+        if (exeErr) return json({ error: exeErr }, 403);
+      }
       const institutionId = await institutionIdByName(sql, body.institutionName);
       const officeId = await officeIdByName(sql, body.officeName);
-      const grantedById = await staffIdByNo(sql, body.grantedByStaffNo);
+      const grantedById = actingStaffId ?? (await staffIdByNo(sql, body.grantedByStaffNo));
       const created = await sql`
         INSERT INTO staff_roles (staff_id, role_code, institution_id, office_id, granted_by)
         VALUES (${staffId}, ${body.roleCode}, ${institutionId}, ${officeId}, ${grantedById})
@@ -340,7 +470,15 @@ export async function onRequestPost({ request, env }) {
       if (!Number.isInteger(body.staffRoleId)) {
         return json({ error: 'A valid numeric staffRoleId is required.' }, 400);
       }
-      const revokedById = await staffIdByNo(sql, body.revokedByStaffNo);
+      const targetRes = await sql`SELECT role_code FROM staff_roles WHERE id = ${body.staffRoleId} AND is_active = true`;
+      if (!targetRes.rows.length) {
+        return json({ error: 'No active role assignment found with that id.' }, 404);
+      }
+      if (targetRes.rows[0].role_code === 'EXE') {
+        const exeErr = await requireExeToTouchExe(sql, auth);
+        if (exeErr) return json({ error: exeErr }, 403);
+      }
+      const revokedById = actingStaffId ?? (await staffIdByNo(sql, body.revokedByStaffNo));
       const updated = await sql`
         UPDATE staff_roles SET is_active = false, revoked_at = now(), revoked_by = ${revokedById}
         WHERE id = ${body.staffRoleId} AND is_active = true
@@ -370,7 +508,7 @@ export async function onRequestPost({ request, env }) {
       const classId = classRes.rows[0].id;
       const subject = body.subject ? String(body.subject).trim() : null;
       const isClassTeacher = !subject;
-      const assignedById = await staffIdByNo(sql, body.assignedByStaffNo);
+      const assignedById = actingStaffId ?? (await staffIdByNo(sql, body.assignedByStaffNo));
       const created = await sql`
         INSERT INTO teacher_class_assignments (staff_id, class_id, subject, is_class_teacher, assigned_by_staff_id)
         VALUES (${staffId}, ${classId}, ${subject}, ${isClassTeacher}, ${assignedById})
@@ -386,7 +524,7 @@ export async function onRequestPost({ request, env }) {
       if (!Number.isInteger(body.assignmentId)) {
         return json({ error: 'A valid numeric assignmentId is required.' }, 400);
       }
-      const revokedById = await staffIdByNo(sql, body.revokedByStaffNo);
+      const revokedById = actingStaffId ?? (await staffIdByNo(sql, body.revokedByStaffNo));
       const updated = await sql`
         UPDATE teacher_class_assignments SET revoked_at = now(), revoked_by_staff_id = ${revokedById}
         WHERE id = ${body.assignmentId} AND revoked_at IS NULL
@@ -481,7 +619,7 @@ export async function onRequestPost({ request, env }) {
       if (!officeId) {
         return json({ error: 'No office found with that name.' }, 404);
       }
-      const createdByStaffId = await staffIdByNo(sql, body.createdByStaffNo);
+      const createdByStaffId = actingStaffId ?? (await staffIdByNo(sql, body.createdByStaffNo));
       const created = await sql`
         INSERT INTO office_meetings (office_id, title, meeting_date, agenda_text, status, created_by_staff_id)
         VALUES (${officeId}, ${body.title}, ${body.meetingDate}, ${body.agendaText || null}, ${body.status || 'scheduled'}, ${createdByStaffId})
@@ -514,7 +652,7 @@ export async function onRequestPost({ request, env }) {
       if (!officeId) {
         return json({ error: 'No office found with that name.' }, 404);
       }
-      const uploadedByStaffId = await staffIdByNo(sql, body.uploadedByStaffNo);
+      const uploadedByStaffId = actingStaffId ?? (await staffIdByNo(sql, body.uploadedByStaffNo));
       const created = await sql`
         INSERT INTO office_documents (office_id, title, file_url, external_url, description, uploaded_by_staff_id)
         VALUES (${officeId}, ${body.title}, ${body.fileUrl || null}, ${body.externalUrl || null}, ${body.description || null}, ${uploadedByStaffId})
@@ -546,7 +684,7 @@ export async function onRequestPost({ request, env }) {
       if (!officeId) {
         return json({ error: 'No office found with that name.' }, 404);
       }
-      const createdByStaffId = await staffIdByNo(sql, body.createdByStaffNo);
+      const createdByStaffId = actingStaffId ?? (await staffIdByNo(sql, body.createdByStaffNo));
       const created = await sql`
         INSERT INTO office_resolutions (office_id, resolution_number, title, status, summary_text, resolved_at, created_by_staff_id)
         VALUES (${officeId}, ${body.resolutionNumber || null}, ${body.title}, ${body.status || 'draft'}, ${body.summaryText || null}, ${body.resolvedAt || null}, ${createdByStaffId})

@@ -16,13 +16,24 @@
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
-    var stored = sessionStorage.getItem(TOKEN_KEY);
-    if (stored) {
-      state.token = stored;
-      tryLoad();
-    } else {
-      showGate();
-    }
+    // Founder Override Directive ("Eliminate PowerShell Role Assignment"):
+    // a real signed-in staff session with Manage-Users authority is now
+    // the primary path (see admin/staff.js's resolveAuth) — try that
+    // silently first, with same-origin fetch() sending the session
+    // cookie automatically. Only fall back to the sysadmin-token gate
+    // (still the disaster-recovery/bootstrap path) if no session exists
+    // or it lacks the required grant.
+    tryLoad(function (ok) {
+      if (!ok) {
+        var stored = sessionStorage.getItem(TOKEN_KEY);
+        if (stored) {
+          state.token = stored;
+          tryLoad();
+        } else {
+          showGate();
+        }
+      }
+    });
     var gateForm = document.getElementById('admin-gate-form');
     if (gateForm) gateForm.addEventListener('submit', onGateSubmit);
     var lockBtn = document.getElementById('admin-lock-btn');
@@ -31,6 +42,8 @@
     if (newOfficeBtn) newOfficeBtn.addEventListener('click', function () { renderNewOfficeForm(); });
     var newStaffBtn = document.getElementById('admin-new-staff-btn');
     if (newStaffBtn) newStaffBtn.addEventListener('click', function () { renderNewStaffForm(); });
+    var staffDirBtn = document.getElementById('admin-staff-directory-btn');
+    if (staffDirBtn) staffDirBtn.addEventListener('click', function () { renderStaffDirectory(); });
   }
 
   function esc(s) {
@@ -432,6 +445,160 @@
           } else if (out) {
             out.innerHTML = '<div class="portal-empty">Staff record created, but the activation link could not be generated: ' + esc((r2.data && r2.data.error) || 'unknown error') + '</div>';
           }
+        });
+      });
+    });
+  }
+
+  // ================================================================
+  // Staff Directory — Founder Override Directive ("Eliminate PowerShell
+  // Role Assignment"). Ordinary institutional onboarding (grant/revoke
+  // role, suspend/activate, view permission summary, view audit trail)
+  // now happens here instead of a curl/PowerShell call against
+  // admin/staff.js directly.
+  // ================================================================
+  var ROLE_LABELS = {
+    EXE: 'Executive (EXE)', PRIN: 'Principal / Head Teacher', VP: 'Vice Principal',
+    REG: 'Registrar', AREG: 'Assistant Registrar', ADM: 'Admissions Officer',
+    FIN: 'Finance Officer', TCH: 'Teacher', MUH: 'Muhaffiz/Muhaffizah',
+    ARB: 'Islamic & Arabic Studies Instructor', 'QC-OFF': "Qur'an College Officer",
+    SA: 'Student Affairs Officer', BRD: 'Boarding Officer', ICT: 'ICT Administrator',
+    SYSADMIN: 'System Administrator', DSL: 'Designated Safeguarding Lead',
+  };
+  var ROLE_CODES = Object.keys(ROLE_LABELS);
+
+  function renderStaffDirectory(q) {
+    var el = document.getElementById('admin-right-panel');
+    if (!el) return;
+    el.innerHTML =
+      '<div class="portal-child-card">'
+      + '<div class="portal-child-head"><h2>Staff Directory</h2><div class="meta">Grant/revoke roles, suspend/activate accounts, view permission summaries and the audit trail — no PowerShell required.</div></div>'
+      + '<div style="padding:0 26px 16px;display:flex;gap:10px;">'
+      + '<input type="search" id="staff-dir-search" placeholder="Search by name or Staff No." value="' + esc(q || '') + '" style="flex:1;padding:10px 12px;border:1px solid var(--line);background:var(--portal-card);font-family:inherit;font-size:0.9rem;color:var(--ink);" />'
+      + '<button type="button" class="btn-outline" id="staff-dir-search-btn">Search</button>'
+      + '</div>'
+      + '<div id="staff-dir-list" style="padding:0 26px 10px;">Loading…</div>'
+      + '</div>'
+      + '<div id="staff-dir-detail" style="margin-top:20px;"></div>';
+
+    function runSearch() {
+      var query = document.getElementById('staff-dir-search').value.trim();
+      apiGet('staff', query ? { q: query } : {}).then(function (r) {
+        var listEl = document.getElementById('staff-dir-list');
+        if (!listEl) return;
+        if (!r.ok) { listEl.innerHTML = '<div class="portal-empty">' + esc(r.data.error || 'Could not load staff.') + '</div>'; return; }
+        var rows = (r.data.staff || []);
+        if (!rows.length) { listEl.innerHTML = '<div class="portal-empty">No staff records match.</div>'; return; }
+        listEl.innerHTML = '<table class="admin-table"><thead><tr><th>Staff No.</th><th>Name</th><th>Position</th><th>Roles</th><th>Status</th></tr></thead><tbody>'
+          + rows.map(function (s) {
+            var roleBadges = (s.roles || []).map(function (rl) { return '<span class="aor-badge">' + esc(rl.roleName || rl.roleCode) + '</span>'; }).join(' ') || '<span style="color:var(--ink-soft);">No roles</span>';
+            return '<tr class="admin-office-row" data-staff-no="' + esc(s.staffNo) + '"><td>' + esc(s.staffNo) + '</td><td>' + esc(s.preferredName || s.fullName) + '</td><td>' + esc(s.positionTitle || '—') + '</td><td>' + roleBadges + '</td><td>' + esc(s.status) + '</td></tr>';
+          }).join('') + '</tbody></table>';
+        listEl.querySelectorAll('tr[data-staff-no]').forEach(function (row) {
+          row.addEventListener('click', function () { renderStaffDetail(row.dataset.staffNo); });
+        });
+      });
+    }
+    document.getElementById('staff-dir-search-btn').addEventListener('click', runSearch);
+    document.getElementById('staff-dir-search').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
+    runSearch();
+  }
+
+  function renderStaffDetail(staffNo) {
+    var detailEl = document.getElementById('staff-dir-detail');
+    if (!detailEl) return;
+    apiGet('staff', { q: staffNo }).then(function (r) {
+      if (!r.ok || !(r.data.staff || []).length) { detailEl.innerHTML = '<div class="portal-empty">Could not load that staff record.</div>'; return; }
+      var s = (r.data.staff || []).filter(function (x) { return x.staffNo === staffNo; })[0] || r.data.staff[0];
+      var roleRows = (s.roles || []).map(function (rl) {
+        return '<div class="admin-office-row" style="cursor:default;"><span>' + esc(rl.roleName || rl.roleCode)
+          + (rl.institutionName ? ' — ' + esc(rl.institutionName) : '') + (rl.officeName ? ' (' + esc(rl.officeName) + ')' : '')
+          + '</span><button type="button" class="btn-outline" data-revoke-role-id="' + rl.staffRoleId + '" style="margin-inline-start:auto;padding:4px 10px;font-size:0.72rem;">Revoke</button></div>';
+      }).join('') || '<div class="portal-empty">No active roles.</div>';
+      var statusToggleLabel = s.status === 'active' ? 'Suspend' : 'Activate';
+      var statusToggleValue = s.status === 'active' ? 'suspended' : 'active';
+
+      detailEl.innerHTML =
+        '<div class="portal-child-card">'
+        + '<div class="portal-child-head"><h2>' + esc(s.preferredName || s.fullName) + '</h2><div class="meta">' + esc(s.staffNo) + ' &middot; ' + esc(s.positionTitle || 'No position title') + ' &middot; Status: ' + esc(s.status) + '</div></div>'
+        + '<div style="padding:0 26px 20px;">'
+        + '<h4 style="font-family:\'Cinzel\',\'Amiri\',serif;font-size:0.78rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;">Active Roles</h4>'
+        + roleRows
+        + '<form id="staff-detail-grant-form" style="margin-top:16px;">'
+        + '<div class="admin-form-grid">'
+        + '<div class="admin-field"><label>Grant Role</label><select name="roleCode">' + ROLE_CODES.map(function (c) { return '<option value="' + c + '">' + esc(ROLE_LABELS[c]) + '</option>'; }).join('') + '</select></div>'
+        + '<div class="admin-field"><label>Institution (optional)</label><input name="institutionName" list="admin-institution-names" /></div>'
+        + '<div class="admin-field"><label>Office (optional)</label><input name="officeName" list="admin-office-names" /></div>'
+        + '<div class="admin-field"><label>Reason</label><input name="reason" placeholder="Why is this being granted?" /></div>'
+        + '</div>'
+        + '<datalist id="admin-institution-names">'
+        + ['Nursery & Primary School', 'Royal College', 'Islamic & Arabic Studies', "Qur'an College"].map(function (n) { return '<option value="' + esc(n) + '">'; }).join('')
+        + '</datalist>'
+        + '<datalist id="admin-office-names">' + state.offices.map(function (o) { return '<option value="' + esc(o.name) + '">'; }).join('') + '</datalist>'
+        + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Grant Role</button><span class="admin-form-status" id="staff-detail-grant-status"></span></div>'
+        + '</form>'
+        + '<div class="admin-form-actions" style="margin-top:18px;flex-wrap:wrap;">'
+        + '<button type="button" class="btn-outline" id="staff-detail-status-btn">' + statusToggleLabel + ' This Account</button>'
+        + '<button type="button" class="btn-outline" id="staff-detail-permissions-btn">View Permission Summary</button>'
+        + '<button type="button" class="btn-outline" id="staff-detail-audit-btn">View Audit Trail</button>'
+        + '</div>'
+        + '<div id="staff-detail-output" style="margin-top:14px;"></div>'
+        + '</div></div>';
+
+      detailEl.querySelectorAll('[data-revoke-role-id]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!window.confirm('Revoke this role assignment?')) return;
+          apiPost('revoke-role', { staffRoleId: Number(btn.dataset.revokeRoleId), reason: 'Revoked via Staff Directory' }).then(function (r) {
+            if (!r.ok) { window.alert(r.data.error || 'Could not revoke that role.'); return; }
+            renderStaffDetail(staffNo);
+          });
+        });
+      });
+
+      document.getElementById('staff-detail-grant-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        apiPost('grant-role', {
+          staffNo: staffNo, roleCode: fd.get('roleCode'),
+          institutionName: fd.get('institutionName') || undefined, officeName: fd.get('officeName') || undefined,
+          reason: fd.get('reason') || undefined,
+        }).then(function (r) {
+          if (!r.ok) { statusEl('staff-detail-grant-status', r.data.error || 'Could not grant that role.', false); return; }
+          statusEl('staff-detail-grant-status', 'Role granted.', true);
+          renderStaffDetail(staffNo);
+        });
+      });
+
+      document.getElementById('staff-detail-status-btn').addEventListener('click', function () {
+        if (!window.confirm(statusToggleLabel + ' ' + (s.preferredName || s.fullName) + '\'s account?')) return;
+        apiPost('update-staff-status', { staffNo: staffNo, status: statusToggleValue }).then(function (r) {
+          if (!r.ok) { window.alert(r.data.error || 'Could not update status.'); return; }
+          renderStaffDetail(staffNo);
+        });
+      });
+
+      document.getElementById('staff-detail-permissions-btn').addEventListener('click', function () {
+        apiGet('permissions', { staffNo: staffNo }).then(function (r) {
+          var out = document.getElementById('staff-detail-output');
+          if (!r.ok) { out.innerHTML = '<div class="portal-empty">' + esc(r.data.error || 'Could not load permissions.') + '</div>'; return; }
+          var grants = r.data.grants || [];
+          out.innerHTML = '<h4 style="font-family:\'Cinzel\',\'Amiri\',serif;font-size:0.78rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;">Effective Permission Grants</h4>'
+            + (grants.length ? '<table class="admin-table"><thead><tr><th>Role</th><th>Source</th><th>Institution</th></tr></thead><tbody>'
+              + grants.map(function (g) { return '<tr><td>' + esc(ROLE_LABELS[g.roleCode] || g.roleCode) + '</td><td>' + esc(g.source) + '</td><td>' + (g.institutionId ? 'Institution #' + g.institutionId : 'All') + '</td></tr>'; }).join('')
+              + '</tbody></table>' : '<div class="portal-empty">No effective grants — this account can perform no permission-gated actions.</div>');
+        });
+      });
+
+      document.getElementById('staff-detail-audit-btn').addEventListener('click', function () {
+        apiGet('audit-log', { staffNo: staffNo }).then(function (r) {
+          var out = document.getElementById('staff-detail-output');
+          if (!r.ok) { out.innerHTML = '<div class="portal-empty">' + esc(r.data.error || 'Could not load the audit trail.') + '</div>'; return; }
+          var entries = r.data.entries || [];
+          out.innerHTML = '<h4 style="font-family:\'Cinzel\',\'Amiri\',serif;font-size:0.78rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;">Audit Trail</h4>'
+            + (entries.length ? '<table class="admin-table"><thead><tr><th>When</th><th>Event</th><th>By</th><th>Reason</th></tr></thead><tbody>'
+              + entries.map(function (a) {
+                return '<tr><td>' + fmtDate(a.createdAt) + '</td><td>' + esc(a.eventType) + '</td><td>' + (a.actor ? esc(a.actor.fullName) : '—') + '</td><td>' + esc(a.reason || '—') + '</td></tr>';
+              }).join('') + '</tbody></table>' : '<div class="portal-empty">No audit entries yet for this staff member.</div>');
         });
       });
     });

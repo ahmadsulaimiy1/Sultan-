@@ -19,7 +19,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
-    <span class="portal-pilot-badge">Sysadmin Only</span>
+    <span class="portal-pilot-badge">Executive / Sysadmin</span>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <button type="button" class="portal-logout" id="admin-lock-btn">Lock</button>
   </div>
@@ -29,7 +29,7 @@
 
   <div class="admin-gate" id="admin-gate">
     <h1>Institutional Administration Centre</h1>
-    <p>Enter the system administrator token to manage offices, appointments, meetings, documents, committees, and governance content. This is the same token used by the setup/bootstrap API — nothing new to distribute, just a real interface over it.</p>
+    <p>If you're signed in at <a href="/portal/staff/login/">/portal/staff/login/</a> with an Executive or System Administrator account, this page unlocks automatically — no token needed. The token below is a fallback/bootstrap path only (before any staff account exists, or for disaster recovery).</p>
     <form id="admin-gate-form">
       <input type="password" id="admin-gate-token" placeholder="Sysadmin token" autocomplete="off" required />
       <button type="submit" class="btn-gold" style="width:100%;">Unlock</button>
@@ -47,6 +47,7 @@
     <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
       <button type="button" class="btn-outline" id="admin-new-office-btn">+ New Office</button>
       <button type="button" class="btn-outline" id="admin-new-staff-btn">+ New Staff &amp; Login</button>
+      <button type="button" class="btn-gold" id="admin-staff-directory-btn">Staff Directory — Roles, Suspend/Activate, Audit Trail</button>
     </div>
 
     <div class="admin-two-col">
