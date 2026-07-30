@@ -1970,11 +1970,33 @@
   @media (max-width:520px){.adm-enquiry-actions{flex-direction:column;}.adm-enquiry-btn{justify-content:center;}}
 
   .flow-diagram{display:flex;align-items:stretch;margin-top:36px;flex-wrap:wrap;gap:0;}
-  .flow-stage{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);padding:22px 16px;text-align:center;}
+  .flow-stage{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);padding:22px 16px;text-align:center;cursor:pointer;transition:background .2s ease,border-color .2s ease;}
+  .flow-stage:hover,.flow-stage:focus-visible{background:#faf7f0;outline:none;}
   .flow-stage .fs-num{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;}
   .flow-stage h4{font-size:1rem;margin:9px 0 6px;}
   .flow-stage p{font-size:0.78rem;color:#6b6a63;line-height:1.4;}
+  .flow-stage-toggle{display:inline-block;margin-top:8px;font-size:0.66rem;color:var(--gold);letter-spacing:0.02em;}
+  .flow-stage-detail{display:none;text-align:start;font-size:0.78rem;color:#55534d;line-height:1.55;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+  .flow-stage.is-expanded .flow-stage-detail{display:block;}
+  .flow-stage.is-expanded .flow-stage-toggle{display:none;}
+  .flow-stage.is-complete{border-top:3px solid var(--gold);}
+  .flow-stage.is-complete .fs-num::after{content:" ✓";}
+  .flow-stage.is-current{background:var(--navy);border-color:var(--gold);}
+  .flow-stage.is-current h4,.flow-stage.is-current p,.flow-stage.is-current .flow-stage-detail{color:rgba(247,238,223,0.88);}
+  .flow-stage.is-current .fs-num{color:var(--gold-bright);}
+  .flow-stage.is-terminal{border-top:3px solid #a8564a;}
   .flow-arrow{display:flex;align-items:center;justify-content:center;flex:0 0 30px;color:var(--gold);}
+  .adm-flow-hint{font-size:0.78rem;color:#8a8880;margin-top:10px;}
+  .adm-progress-banner{display:none;margin-top:20px;padding:14px 20px;background:#faf7f0;border-inline-start:3px solid var(--gold);font-size:0.88rem;color:var(--navy);line-height:1.5;}
+  .adm-progress-banner.is-visible{display:block;}
+
+  .faq-list{margin-top:18px;max-width:760px;}
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-question{width:100%;text-align:start;background:none;border:none;padding:15px 2px;font-family:inherit;font-size:0.94rem;color:var(--navy);font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .faq-question .faq-caret{flex-shrink:0;color:var(--gold);transition:transform .2s ease;}
+  .faq-item.is-open .faq-question .faq-caret{transform:rotate(180deg);}
+  .faq-answer{display:none;padding:0 2px 15px;font-size:0.86rem;color:#55534d;line-height:1.6;}
+  .faq-item.is-open .faq-answer{display:block;}
   .flow-diagram.on-dark .flow-stage{background:var(--navy-deep);border-color:var(--line);}
   .flow-diagram.on-dark .flow-stage h4{color:#fff;}
   .flow-diagram.on-dark .flow-stage p{color:rgba(248,244,233,0.6);}
