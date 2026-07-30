@@ -696,32 +696,53 @@
      last being the real token-gated Founder Dashboard, not an
      invented destination), each with a short, honest feature summary
      drawn from what that dashboard actually contains. */
-  .nav-mega-panel.is-portal{min-width:680px;padding:26px;flex-direction:column;gap:18px;}
-  .nav-mega-panel.is-portal .nav-mega-intro{width:auto;padding:0;background:none;border:none;flex-direction:row;align-items:center;gap:12px;}
-  .nav-mega-panel.is-portal .nav-mega-intro h4{margin:0;}
-  .nav-mega-panel.is-portal .nav-mega-intro p{margin:0;}
-  /* Portal gateway — four plain text doors, not cards. No icons, no
-     badges, no gradients, no feature-tag clutter; a single hairline
-     grid of dividers is the only structure, matching the panel's own
-     "one frame, not a border around every region" rule above. */
+  .nav-mega-panel.is-portal{min-width:940px;max-width:96vw;padding:26px;flex-direction:column;gap:14px;}
+  .nav-mega-panel.is-verify{min-width:640px;padding:26px;flex-direction:column;gap:14px;}
+  .nav-mega-panel.is-portal .nav-mega-intro,.nav-mega-panel.is-verify .nav-mega-intro{width:auto;padding:0;background:none;border:none;flex-direction:row;align-items:center;gap:12px;}
+  .nav-mega-panel.is-portal .nav-mega-intro h4,.nav-mega-panel.is-verify .nav-mega-intro h4{margin:0;}
+  .nav-mega-panel.is-portal .nav-mega-intro p,.nav-mega-panel.is-verify .nav-mega-intro p{margin:0;}
+  /* Founder Override Directive, Priority 1 (Header Discoverability):
+     each door now carries a small monoline icon + hover-lift, on top of
+     the existing hairline-grid structure — a restrained step up from
+     the "plain text doors" era (Round 4's icon-subtraction pass), scoped
+     to just these two discovery menus rather than reverting that
+     decision sitewide. */
+  .pg-group-label{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(233,206,138,0.65);margin:2px 2px -2px;}
   .portal-gateway-grid{
     display:grid;grid-template-columns:1fr 1fr;
     border:1px solid rgba(198,161,91,0.16);
   }
+  .portal-gateway-grid.pg-grid-3{grid-template-columns:1fr 1fr 1fr;}
+  .portal-gateway-grid.pg-grid-4{grid-template-columns:1fr 1fr 1fr 1fr;}
   .portal-gateway-card{
-    display:flex;flex-direction:column;gap:6px;padding:22px 24px;
+    display:flex;flex-direction:column;gap:6px;padding:18px 20px;
     border-inline-end:1px solid rgba(198,161,91,0.16);border-bottom:1px solid rgba(198,161,91,0.16);
-    transition:background .3s ease;
+    transition:background .3s ease,transform .3s ease;
   }
-  .portal-gateway-card:nth-child(2n){border-inline-end:none;}
-  .portal-gateway-card:nth-last-child(-n+2){border-bottom:none;}
-  .portal-gateway-card:hover{background:rgba(198,161,91,0.05);}
-  .pgc-name{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.04em;color:var(--ivory);}
-  .pgc-desc{font-size:0.76rem;line-height:1.55;color:rgba(248,244,233,0.55);}
-  .pgc-enter{font-size:0.72rem;color:var(--gold-bright);margin-top:2px;}
-  @media (max-width:1440px){
+  .pg-grid-2 .portal-gateway-card:nth-child(2n),
+  .pg-grid-3 .portal-gateway-card:nth-child(3n),
+  .pg-grid-4 .portal-gateway-card:nth-child(4n){border-inline-end:none;}
+  .pg-grid-2 .portal-gateway-card:nth-last-child(-n+2){border-bottom:none;}
+  .pg-grid-3 .portal-gateway-card:nth-last-child(-n+3){border-bottom:none;}
+  .pg-grid-4 .portal-gateway-card:nth-last-child(-n+4){border-bottom:none;}
+  .portal-gateway-card:hover{background:rgba(198,161,91,0.06);transform:translateY(-2px);}
+  .pgc-icon{display:flex;width:22px;height:22px;color:rgba(233,206,138,0.75);transition:color .3s ease;}
+  .pgc-icon svg{width:100%;height:100%;}
+  .portal-gateway-card:hover .pgc-icon{color:var(--gold-bright);}
+  .pgc-name{font-family:'Cinzel','Amiri',serif;font-size:0.8rem;letter-spacing:0.03em;color:var(--ivory);}
+  .pgc-desc{font-size:0.72rem;line-height:1.5;color:rgba(248,244,233,0.55);}
+  .pgc-enter{font-size:0.7rem;color:var(--gold-bright);margin-top:2px;}
+  @media (max-width:1600px){
     .nav-mega-panel.is-portal{min-width:0;}
-    .portal-gateway-grid{grid-template-columns:1fr;}
+    .portal-gateway-grid.pg-grid-4{grid-template-columns:1fr 1fr;}
+    .pg-grid-4 .portal-gateway-card:nth-child(4n){border-inline-end:1px solid rgba(198,161,91,0.16);}
+    .pg-grid-4 .portal-gateway-card:nth-child(2n){border-inline-end:none;}
+    .pg-grid-4 .portal-gateway-card:nth-last-child(-n+4){border-bottom:1px solid rgba(198,161,91,0.16);}
+    .pg-grid-4 .portal-gateway-card:nth-last-child(-n+2){border-bottom:none;}
+  }
+  @media (max-width:1440px){
+    .nav-mega-panel.is-verify{min-width:0;}
+    .portal-gateway-grid,.portal-gateway-grid.pg-grid-3,.portal-gateway-grid.pg-grid-4{grid-template-columns:1fr;}
     .portal-gateway-card{border-inline-end:none !important;}
     .portal-gateway-card:not(:last-child){border-bottom:1px solid rgba(198,161,91,0.16) !important;}
   }
@@ -729,8 +750,8 @@
   /* The two rightmost items sit near the viewport's trailing edge; a
      full mega-panel opening from their left edge would run off-screen,
      so anchor those two panels to their trigger's trailing edge instead. */
-  .nav-drop--contact .nav-mega-panel,.nav-drop--portal .nav-mega-panel{left:auto;right:0;}
-  [dir="rtl"] .nav-drop--contact .nav-mega-panel,[dir="rtl"] .nav-drop--portal .nav-mega-panel{right:auto;left:0;}
+  .nav-drop--contact .nav-mega-panel,.nav-drop--verify .nav-mega-panel,.nav-drop--portal .nav-mega-panel{left:auto;right:0;}
+  [dir="rtl"] .nav-drop--contact .nav-mega-panel,[dir="rtl"] .nav-drop--verify .nav-mega-panel,[dir="rtl"] .nav-drop--portal .nav-mega-panel{right:auto;left:0;}
   .nav-mega-panel.is-compact .nav-mega-intro{border-inline-end:none;width:auto;}
   .nav-mega-panel.is-compact .nmi-cta{margin-top:4px;align-self:flex-start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);padding:9px 16px;transition:border-color .25s ease,background .25s ease;}
   .nav-mega-panel.is-compact .nmi-cta:hover{border-color:var(--gold-bright);background:rgba(198,161,91,0.1);}

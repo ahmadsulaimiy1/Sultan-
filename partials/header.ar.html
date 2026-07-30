@@ -181,28 +181,107 @@
           </div>
         </div>
       </div>
+      <div class="nav-drop nav-mega nav-drop--verify">
+        <a href="/verify-certificate/" class="nav-drop-trigger">التحقق من الشهادات</a>
+        <button type="button" class="nav-drop-toggle" aria-label="فتح القائمة الفرعية" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-verify">
+          <div class="nav-mega-intro">
+            <h4>التحقق من وثيقة صادرة عن المدرسة</h4>
+            <p>تأكد من صحة وثيقة مباشرة من سجل المدرسة نفسه — دون الحاجة لحساب.</p>
+          </div>
+          <div class="portal-gateway-grid pg-grid-3">
+            <a class="portal-gateway-card" href="/verify-certificate/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">التحقق من شهادة</span>
+              <span class="pgc-desc">الشهادات وكشوف الدرجات والإجازة — برقم مرجعي أو رمز QR.</span>
+              <span class="pgc-enter">تحقق ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-identity/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">التحقق من الهوية</span>
+              <span class="pgc-desc">تأكد من صحة بطاقة هوية طالب أو ولي أمر أو موظف.</span>
+              <span class="pgc-enter">تحقق ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-receipt/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">التحقق من إيصال</span>
+              <span class="pgc-desc">تأكد من صدور إيصال دفع رسوم فعلياً عن المدرسة.</span>
+              <span class="pgc-enter">تحقق ←</span>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
-        <a href="/portal/login/" class="nav-drop-trigger nav-mark nav-cta">الدخول إلى البوابة <span class="arrow">←</span></a>
+        <a href="/portal/login/" class="nav-drop-trigger nav-mark nav-cta">الدخول إلى البوابات <span class="arrow">←</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="فتح القائمة الفرعية" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-portal">
           <div class="nav-mega-intro">
             <h4>الدخول إلى الحرم الرقمي</h4>
-            <p>أربعة أبواب آمنة إلى حرم رقمي واحد مشترك.</p>
+            <p>حرم رقمي واحد مشترك — اختر الباب الذي تدخل منه.</p>
           </div>
-          <div class="portal-gateway-grid">
+          <p class="pg-group-label">الأسرة والطلاب</p>
+          <div class="portal-gateway-grid pg-grid-2">
             <a class="portal-gateway-card" href="/portal/login/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="16.5" cy="9" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M14.3 19c.3-2.1 2-3.6 4-3.6s3.4 1.3 3.7 3.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
               <span class="pgc-name">بوابة أولياء الأمور</span>
               <span class="pgc-desc">الطلبات والحضور والرسوم والإشعارات.</span>
               <span class="pgc-enter">دخول ←</span>
             </a>
             <a class="portal-gateway-card" href="/portal/student/login/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V13M9 20V9M14 20V15M19 20V6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
               <span class="pgc-name">بوابة الطلاب</span>
               <span class="pgc-desc">الحضور والنتائج والحفظ، في مكان واحد.</span>
               <span class="pgc-enter">دخول ←</span>
             </a>
-            <a class="portal-gateway-card" href="/portal/staff/login/">
-              <span class="pgc-name">بوابة الموظفين والقيادة التنفيذية</span>
-              <span class="pgc-desc">تسجيل دخول واحد لكل مكتب — المؤسس والرئيس التنفيذي، مجلس الأمناء، شؤون الطلاب، المالية، والمزيد.</span>
+          </div>
+          <p class="pg-group-label">الموظفون والقيادة التنفيذية</p>
+          <div class="portal-gateway-grid pg-grid-4">
+            <a class="portal-gateway-card" href="/portal/founder/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">بوابة المؤسس والرئيس التنفيذي</span>
+              <span class="pgc-desc">مركز القيادة والتحليلات على مستوى المؤسسة.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/registrar/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">بوابة أمانة السجلات</span>
+              <span class="pgc-desc">السجلات والترقيات وكشوف الدرجات والشهادات.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/finance/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">بوابة المالية</span>
+              <span class="pgc-desc">هياكل الرسوم والفواتير والإيصالات والتحصيل.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/principal-royal-college/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">بوابة مدير الكلية</span>
+              <span class="pgc-desc">القيادة الأكاديمية للكلية الملكية.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/head-teacher/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5c2-1.2 5-1.2 8 0v13c-3-1.2-6-1.2-8 0V5zM20 5c-2-1.2-5-1.2-8 0v13c3-1.2 6-1.2 8 0V5z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">بوابة رئيسة المدرسة</span>
+              <span class="pgc-desc">قيادة مدرسة الحضانة والابتدائية.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/raees/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 100 16 7 7 0 010-16z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">بوابة الرئيس</span>
+              <span class="pgc-desc">قيادة مدرسة الدراسات الإسلامية والعربية.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/mudeer/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 4a7 7 0 100 14 6 6 0 010-14z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M19 3.2l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="currentColor" stroke="none"/></svg></span>
+              <span class="pgc-name">بوابة المدير</span>
+              <span class="pgc-desc">قيادة كلية القرآن الكريم والتحفيظ.</span>
+              <span class="pgc-enter">دخول ←</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/staff/teacher/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 20l3-4 3 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">بوابة المعلمين</span>
+              <span class="pgc-desc">الفصول والنتائج وسجلات الأداء.</span>
               <span class="pgc-enter">دخول ←</span>
             </a>
           </div>

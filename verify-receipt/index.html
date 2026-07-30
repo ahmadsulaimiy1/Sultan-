@@ -280,28 +280,107 @@
           </div>
         </div>
       </div>
+      <div class="nav-drop nav-mega nav-drop--verify">
+        <a href="/verify-certificate/" class="nav-drop-trigger">Verify Credentials</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-verify">
+          <div class="nav-mega-intro">
+            <h4>Verify an SHRS Credential</h4>
+            <p>Confirm a document is genuine, live against the school's own record — no account required.</p>
+          </div>
+          <div class="portal-gateway-grid pg-grid-3">
+            <a class="portal-gateway-card" href="/verify-certificate/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Verify Certificate</span>
+              <span class="pgc-desc">Certificates, transcripts &amp; Ijazah — by reference number or QR code.</span>
+              <span class="pgc-enter">Verify →</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-identity/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Verify Identity</span>
+              <span class="pgc-desc">Confirm a student, guardian, or staff ID card is real.</span>
+              <span class="pgc-enter">Verify →</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-receipt/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Verify Receipt</span>
+              <span class="pgc-desc">Confirm a fee payment receipt was genuinely issued.</span>
+              <span class="pgc-enter">Verify →</span>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
-        <a href="/portal/login/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
+        <a href="/portal/login/" class="nav-drop-trigger nav-mark nav-cta">Login to Portals <span class="arrow">→</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-portal">
           <div class="nav-mega-intro">
             <h4>Digital Campus Login</h4>
-            <p>Four secure doors into one shared Digital Campus.</p>
+            <p>One shared Digital Campus — choose where you're entering from. A first-time visitor should find their door in seconds.</p>
           </div>
-          <div class="portal-gateway-grid">
+          <p class="pg-group-label">Family &amp; Student</p>
+          <div class="portal-gateway-grid pg-grid-2">
             <a class="portal-gateway-card" href="/portal/login/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="16.5" cy="9" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M14.3 19c.3-2.1 2-3.6 4-3.6s3.4 1.3 3.7 3.2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
               <span class="pgc-name">Parent Portal</span>
               <span class="pgc-desc">Applications, attendance, fees and notifications.</span>
               <span class="pgc-enter">Enter →</span>
             </a>
             <a class="portal-gateway-card" href="/portal/student/login/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V13M9 20V9M14 20V15M19 20V6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
               <span class="pgc-name">Student Portal</span>
               <span class="pgc-desc">Attendance, results and Hifz, in one place.</span>
               <span class="pgc-enter">Enter →</span>
             </a>
-            <a class="portal-gateway-card" href="/portal/staff/login/">
-              <span class="pgc-name">Staff &amp; Executive Portal</span>
-              <span class="pgc-desc">One sign-in for every office — Founder &amp; CEO, Board, Registrar, Finance, and more.</span>
+          </div>
+          <p class="pg-group-label">Staff &amp; Executive</p>
+          <div class="portal-gateway-grid pg-grid-4">
+            <a class="portal-gateway-card" href="/portal/founder/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">Founder &amp; Executive Portal</span>
+              <span class="pgc-desc">Institution-wide command centre &amp; analytics.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/registrar/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Registrar Portal</span>
+              <span class="pgc-desc">Records, promotions, transcripts &amp; certificates.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/finance/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Finance Portal</span>
+              <span class="pgc-desc">Fee structures, invoices, receipts &amp; collections.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/principal-royal-college/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">Principal Portal</span>
+              <span class="pgc-desc">Royal College academic leadership.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/head-teacher/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5c2-1.2 5-1.2 8 0v13c-3-1.2-6-1.2-8 0V5zM20 5c-2-1.2-5-1.2-8 0v13c3-1.2 6-1.2 8 0V5z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">Head Teacher Portal</span>
+              <span class="pgc-desc">Nursery &amp; Primary School leadership.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/raees/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 100 16 7 7 0 010-16z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">Ra'ees Portal</span>
+              <span class="pgc-desc">Islamic &amp; Arabic Studies leadership.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/office/mudeer/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 4a7 7 0 100 14 6 6 0 010-14z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M19 3.2l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="currentColor" stroke="none"/></svg></span>
+              <span class="pgc-name">Mudeer Portal</span>
+              <span class="pgc-desc">Qur'an College &amp; Taḥfīẓ leadership.</span>
+              <span class="pgc-enter">Enter →</span>
+            </a>
+            <a class="portal-gateway-card" href="/portal/staff/teacher/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 20l3-4 3 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgc-name">Teacher Portal</span>
+              <span class="pgc-desc">Classes, results &amp; performance records.</span>
               <span class="pgc-enter">Enter →</span>
             </a>
           </div>
@@ -354,7 +433,7 @@
   <div class="mobile-quick-row">
     <a href="/portal/login/" class="mqr-item mqr-cta">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Login to Portal
+      Login to Portals
     </a>
     <a href="/admission/" class="mqr-item">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
