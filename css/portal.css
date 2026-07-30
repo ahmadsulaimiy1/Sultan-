@@ -979,6 +979,124 @@ body.portal-body > *{position:relative;z-index:1;}
 .exec-welcome-health.is-developing .dot{background:var(--terracotta);box-shadow:0 0 8px var(--terracotta);}
 .exec-welcome-health.is-attention .dot{background:#e08a8a;box-shadow:0 0 8px #e08a8a;}
 
+/* ============================================================
+   Portal Gateway Atmosphere System (Founder Override Directive,
+   Priority 2). Ten real portal entry points — the same ten named in
+   the header's "Login to Portals" menu — each get a real accent
+   colour, a distinct restrained background motif, and a matching
+   monoline icon (reused verbatim from the header mega-menu so the
+   two surfaces read as one system). The shared coffee-brown/gold
+   .exec-welcome shell and every other structural class stay exactly
+   as they are — atmosphere is layered on TOP via --atmos/--atmos-
+   bright/--atmos-soft, never a parallel redesign. Pages with no
+   data-atmosphere attribute (auth shells, admin centre, etc.) are
+   completely unaffected: every rule below is scoped to the attribute.
+
+   Colour reuse is deliberate, not decorative: Principal/Head Teacher/
+   Ra'ees/Mudeer reuse the exact accent already established for their
+   own school on the public site (Royal College=gold, Nursery &
+   Primary=terracotta, Islamic & Arabic Studies=crimson, Qur'an
+   College=forest-green — see css/brand.css's #quran-college etc.
+   scoped rules) rather than inventing a new colour for the same
+   institution. */
+body.portal-body[data-atmosphere="founder"]{--atmos:var(--gold);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(198,161,91,0.16);}
+body.portal-body[data-atmosphere="registrar"]{--atmos:var(--oxford-navy);--atmos-bright:#7FA0D2;--atmos-soft:rgba(65,97,140,0.14);}
+body.portal-body[data-atmosphere="finance"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.14);}
+body.portal-body[data-atmosphere="principal"]{--atmos:var(--gold);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(198,161,91,0.16);}
+body.portal-body[data-atmosphere="head-teacher"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.14);}
+body.portal-body[data-atmosphere="raees"]{--atmos:var(--crimson);--atmos-bright:#C1707D;--atmos-soft:rgba(124,31,46,0.12);}
+body.portal-body[data-atmosphere="mudeer"]{--atmos:var(--forest-green);--atmos-bright:#7CB394;--atmos-soft:rgba(63,107,78,0.14);}
+body.portal-body[data-atmosphere="teacher"]{--atmos:var(--emerald);--atmos-bright:#A98657;--atmos-soft:rgba(107,74,46,0.14);}
+body.portal-body[data-atmosphere="parent"]{--atmos:var(--rosewood);--atmos-bright:var(--rosewood-bright);--atmos-soft:rgba(140,74,87,0.14);}
+body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-bright:var(--sapphire-bright);--atmos-soft:rgba(63,76,140,0.14);}
+
+/* Topbar, tab, and card-header accents pick up the atmosphere colour
+   automatically wherever it's set; every one of these falls back to
+   the site's default gold/navy when no atmosphere attribute is
+   present, so unrelated portal pages (auth, admin centre) are
+   untouched. */
+body.portal-body[data-atmosphere] .portal-topbar{border-bottom-color:var(--atmos);}
+body.portal-body[data-atmosphere] .office-tab.is-active{border-bottom-color:var(--atmos);}
+body.portal-body[data-atmosphere] .portal-child-head{border-bottom-color:var(--atmos);}
+body.portal-body[data-atmosphere] .portal-child-head::before,
+body.portal-body[data-atmosphere] .pfd-section::before{background:linear-gradient(180deg,var(--atmos-bright) 0%,var(--atmos) 100%);}
+body.portal-body[data-atmosphere] .exec-welcome{border-color:var(--atmos);}
+body.portal-body[data-atmosphere] .exec-welcome-eyebrow{color:var(--atmos-bright);}
+body.portal-body[data-atmosphere] .exec-welcome::before{background-image:repeating-linear-gradient(45deg, var(--atmos-bright) 0 1px, transparent 1px 32px);}
+body.portal-body[data-atmosphere] .exec-welcome-stat .value{color:var(--atmos-bright);}
+body.portal-body[data-atmosphere] .portal-child-card{transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
+body.portal-body[data-atmosphere] .portal-child-card:hover{border-color:var(--atmos);transform:translateY(-2px);}
+@media (prefers-reduced-motion:reduce){body.portal-body[data-atmosphere] .portal-child-card:hover{transform:none;}}
+
+/* The eyebrow icon — one monoline SVG per atmosphere, identical paths
+   to the matching card in the header's "Login to Portals" menu (see
+   partials/header.html's .pgc-icon), so the icon a visitor clicks in
+   the header is the same icon that greets them once they're signed
+   in. Markup-only addition: an <span class="exec-atmos-icon"> the
+   page itself supplies right before its .exec-welcome-eyebrow text. */
+.exec-welcome-eyebrow-row{display:flex;align-items:center;margin-bottom:8px;}
+.exec-welcome-eyebrow-row .exec-welcome-eyebrow{margin-bottom:0;}
+.portal-hello-row{display:flex;align-items:center;margin-bottom:6px;}
+.portal-hello-row .portal-hello{margin-bottom:0;}
+.exec-atmos-icon{display:inline-flex;flex:0 0 auto;margin-inline-end:8px;color:var(--atmos-bright,var(--gold-bright));}
+.exec-atmos-icon svg{width:18px;height:18px;display:block;}
+/* Auth shell (login pages only) — a restrained preview of the
+   atmosphere the visitor is about to sign into: just the eyebrow
+   accent and its line marker, not a full redesign of the shared
+   split-screen brand pane. */
+body.portal-body[data-atmosphere] .portal-aside-eyebrow{color:var(--atmos-bright);}
+body.portal-body[data-atmosphere] .portal-aside-eyebrow::before{background:var(--atmos-bright);}
+
+/* Background watermark families — each is the SAME generic diagonal
+   weave already used sitewide (body.portal-body::before, ~2.5%
+   opacity) UNLESS a page's atmosphere calls for a genuinely different
+   motif to match its real-world register (a registry's ruled ledger,
+   a finance office's graph paper, a Qur'an college's manuscript rule,
+   an Islamic studies office's geometric lattice). Every pattern stays
+   at the same near-invisible opacity as the sitewide default — this
+   is ambiance, not decoration. */
+body.portal-body[data-atmosphere="registrar"]::before{
+  background-image:repeating-linear-gradient(180deg, var(--atmos) 0 1px, transparent 1px 22px);
+  opacity:0.05;
+}
+body.portal-body[data-atmosphere="finance"]::before{
+  background-image:
+    repeating-linear-gradient(0deg, var(--atmos) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, var(--atmos) 0 1px, transparent 1px 26px);
+  opacity:0.045;
+}
+body.portal-body[data-atmosphere="mudeer"]::before{
+  background-image:repeating-linear-gradient(90deg, var(--atmos) 0 4px, transparent 4px 12px);
+  opacity:0.05;
+}
+body.portal-body[data-atmosphere="raees"]::before{
+  background-image:
+    repeating-linear-gradient(45deg, var(--atmos) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(-45deg, var(--atmos) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(0deg, var(--atmos) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, var(--atmos) 0 1px, transparent 1px 30px);
+  opacity:0.028;
+}
+body.portal-body[data-atmosphere="head-teacher"]::before{
+  background-image:radial-gradient(var(--atmos) 1.5px, transparent 1.6px);
+  background-size:34px 34px;opacity:0.05;
+}
+body.portal-body[data-atmosphere="teacher"]::before{
+  background-image:repeating-radial-gradient(circle at 50% 100%, transparent 0 30px, var(--atmos) 31px, transparent 32px 60px);
+  opacity:0.035;
+}
+body.portal-body[data-atmosphere="parent"]::before{
+  background-image:repeating-radial-gradient(circle at 50% 0%, transparent 0 40px, var(--atmos) 41px, transparent 42px 80px);
+  opacity:0.04;
+}
+body.portal-body[data-atmosphere="student"]::before{
+  background-image:repeating-linear-gradient(60deg, var(--atmos) 0 1px, transparent 1px 40px);
+  opacity:0.04;
+}
+@media (prefers-reduced-motion:reduce){
+  body.portal-body[data-atmosphere] .exec-welcome::before{animation:none;}
+}
+
 .exec-empty{padding:20px 4px;color:var(--ink-soft);font-size:0.86rem;line-height:1.5;text-align:center;}
 
 /* Sparkline + trend-arrow micro-visualisation, for KPI tiles that have

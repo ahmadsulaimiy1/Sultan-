@@ -11,6 +11,14 @@
     --cream:#F1E4C8; --milk:#FCFAF6; --parchment:#EAE0C0;
     --charcoal:#2A2621; --charcoal-deep:#1C1914; --on-charcoal-soft:rgba(241,231,214,0.68);
     --bronze:#7C5430; --bronze-bright:#A47843;
+    /* Portal Gateway Atmosphere System — two more supporting tones so
+       the Parent and Student portals get their own real accent colour
+       rather than reusing one already claimed by a school/office
+       (Registrar=oxford-navy, Finance=bronze, Ra'ees=crimson,
+       Mudeer=forest-green, Head Teacher=terracotta). See css/portal.css
+       for the full per-portal atmosphere mapping. */
+    --rosewood:#8C4A57; --rosewood-bright:#C98E96;
+    --sapphire:#3F4C8C; --sapphire-bright:#8C97D6;
     /* Personalisation Centre — Theme. --surface/--on-surface alias the
        light-reading-surface roles of --ivory/--ink specifically (body
        background and the ivory-banded content sections' text), NOT the
