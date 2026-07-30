@@ -584,6 +584,84 @@ const STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_applications (guardian_id)`,
   `CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status)`,
 
+  // Safeguarding Intelligence Framework — real, governance-grounded
+  // infrastructure per the Founder's "Institutional Capability
+  // Framework" directive: schema + reference taxonomy + audit trail,
+  // built and populated as real structure even though transactional
+  // case records are (honestly) zero until the institution has a real
+  // concern to log. Case categories and the DSL's case-by-case
+  // decision vocabulary are transcribed directly from the adopted
+  // Child Protection & Safeguarding Policy (Section 4/7.1/7.4), not
+  // invented — see docs/policies/child-protection-safeguarding-policy.md.
+  // Deliberately separate from staff_audit_log: the policy (Section 7.3)
+  // requires the safeguarding log to be "a single, confidential...log
+  // ...separate from academic and disciplinary records, with access
+  // restricted to the DSL and Deputy DSLs" — a shared audit table
+  // would not satisfy that restriction.
+  `CREATE TABLE IF NOT EXISTS safeguarding_case_categories (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS safeguarding_risk_levels (
+    id             SERIAL PRIMARY KEY,
+    code           TEXT NOT NULL UNIQUE,
+    label          TEXT NOT NULL,
+    description    TEXT NOT NULL,
+    severity_rank  INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS safeguarding_cases (
+    id                    SERIAL PRIMARY KEY,
+    case_no               TEXT NOT NULL UNIQUE,
+    institution_id        INTEGER REFERENCES institutions(id),
+    student_id            INTEGER REFERENCES students(id),
+    category_id           INTEGER NOT NULL REFERENCES safeguarding_case_categories(id),
+    risk_level_id         INTEGER REFERENCES safeguarding_risk_levels(id),
+    status                TEXT NOT NULL DEFAULT 'reported' CHECK (status IN (
+                             'reported', 'under_review', 'early_help', 'referred_external', 'resolved', 'closed'
+                           )),
+    decision              TEXT CHECK (decision IN ('early_help', 'referral', 'both')),
+    summary               TEXT NOT NULL,
+    external_agency       TEXT,
+    parent_notified       BOOLEAN NOT NULL DEFAULT false,
+    reported_by_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+    reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_at           TIMESTAMPTZ,
+    closed_at             TIMESTAMPTZ,
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_safeguarding_cases_status ON safeguarding_cases (status)`,
+  `CREATE INDEX IF NOT EXISTS idx_safeguarding_cases_institution ON safeguarding_cases (institution_id)`,
+  `CREATE TABLE IF NOT EXISTS safeguarding_case_log (
+    id                SERIAL PRIMARY KEY,
+    case_id           INTEGER NOT NULL REFERENCES safeguarding_cases(id) ON DELETE CASCADE,
+    action            TEXT NOT NULL CHECK (action IN (
+                        'reported', 'reviewed', 'risk_assessed', 'early_help_started',
+                        'referred_external', 'parent_notified', 'resolved', 'closed', 'reopened'
+                      )),
+    actor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+    notes             TEXT,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_safeguarding_case_log_case ON safeguarding_case_log (case_id)`,
+  `INSERT INTO safeguarding_case_categories (code, label, description, sort_order) VALUES
+    ('physical_abuse', 'Physical Abuse', 'Hitting, shaking, or otherwise causing physical harm, including fabricated or induced illness.', 1),
+    ('emotional_abuse', 'Emotional Abuse', 'Persistent emotional maltreatment causing severe adverse effects on a child''s development.', 2),
+    ('sexual_abuse', 'Sexual Abuse', 'Forcing or enticing a child into sexual activity, including non-contact activities such as online grooming.', 3),
+    ('neglect', 'Neglect', 'Persistent failure to meet a child''s basic physical or psychological needs.', 4),
+    ('exploitation', 'Exploitation', 'A child manipulated or coerced into an activity for another''s advantage, including trafficking and boarding-context coercion.', 5),
+    ('peer_on_peer', 'Peer-on-Peer Abuse', 'Abuse of one child by another, treated as a distinct safeguarding category, not automatically a lesser concern.', 6),
+    ('radicalisation', 'Radicalisation Concern', 'A general awareness duty regarding a person coming to support extremist ideology.', 7)
+    ON CONFLICT (code) DO NOTHING`,
+  `INSERT INTO safeguarding_risk_levels (code, label, description, severity_rank) VALUES
+    ('low', 'Low', 'A concern worth recording; no immediate risk indicators.', 1),
+    ('medium', 'Medium', 'A concern meriting active DSL monitoring and a defined follow-up.', 2),
+    ('high', 'High', 'A concern indicating the child may be at risk of harm.', 3),
+    ('critical', 'Critical', 'An immediate risk of harm requiring same-day DSL and, where applicable, external-agency action.', 4)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,

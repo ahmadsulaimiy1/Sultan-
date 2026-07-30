@@ -43,6 +43,7 @@ export const SYSTEM_AREAS = {
   governance_documents:   { name: 'Governance Documents', ownerOffice: 'Board of Trustees', governingPolicy: null },
   analytics:              { name: 'Analytics', ownerOffice: 'Varies', governingPolicy: null },
   system_settings:        { name: 'System Settings', ownerOffice: 'ICT / System Administrator', governingPolicy: null },
+  safeguarding:           { name: 'Safeguarding Intelligence', ownerOffice: 'Designated Safeguarding Lead', governingPolicy: 'SW-01, SW-02' },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -160,6 +161,17 @@ export const MATRIX = {
     { role: 'ICT', permissions: ['V', 'E'], scope: 'operational settings only' },
     { role: 'EXE', permissions: ['V'], scope: null },
     { role: 'EXE', permissions: ['MU'], scope: 'approve new SYSADMIN/staff accounts only' },
+  ],
+  // Per the Child Protection & Safeguarding Policy (SW-01) §7.3: the
+  // safeguarding log is confidential, "separate from academic and
+  // disciplinary records, with access restricted to the DSL and Deputy
+  // DSLs" — so unlike every other area above, no PRIN/REG/TCH grant
+  // exists here at all, by design, not by omission. EXE gets aggregate
+  // counts only (no case content), matching the Matrix's existing
+  // "aggregate only, no individual PII" convention for executive grants.
+  safeguarding: [
+    { role: 'DSL', permissions: ['V', 'C', 'E', 'A', 'X'], scope: 'all institutions' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual case content)' },
   ],
 };
 

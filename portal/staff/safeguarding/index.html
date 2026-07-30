@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Safeguarding Intelligence Framework — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Safeguarding Intelligence</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Safeguarding Intelligence Framework</div>
+    <div class="portal-hello-sub">Real infrastructure, governed by Policy SW-01 (Child Protection &amp; Safeguarding) and SW-02 (Designated Safeguarding Lead Framework) — restricted to the DSL, exactly as those policies require.</div>
+
+    <div class="portal-child-card" data-sg-framework-card>
+      <div class="portal-child-head"><h2 data-sg-status-title>Safeguarding Intelligence Status: Operational Framework Ready</h2></div>
+      <p class="registrar-hint">The system exists. The institution has not yet needed to populate it. <strong data-sg-current-records>Current Records: 0</strong></p>
+      <div class="sg-capability-grid" data-sg-capabilities></div>
+    </div>
+
+    <div class="portal-child-card" data-sg-taxonomy-card>
+      <div class="portal-child-head"><h2>Case Categories &amp; Risk Levels</h2></div>
+      <p class="registrar-hint">Transcribed directly from Policy SW-01 §4 — not a generic template.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" data-sg-taxonomy-grid>
+        <div>
+          <h3 style="font-family:'Cinzel','Amiri',serif;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--portal-heading);margin-bottom:10px;">Case Categories</h3>
+          <ul class="sg-taxonomy-list" data-sg-categories></ul>
+        </div>
+        <div>
+          <h3 style="font-family:'Cinzel','Amiri',serif;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--portal-heading);margin-bottom:10px;">Risk Levels</h3>
+          <ul class="sg-taxonomy-list" data-sg-risk-levels></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-child-card" data-sg-cases-card hidden>
+      <div class="portal-child-head" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <h2>Case Register</h2>
+        <button type="button" class="registrar-btn" data-sg-report-toggle>+ Report a Concern</button>
+      </div>
+      <form class="sg-report-form" data-sg-report-form hidden>
+        <label class="registrar-field">
+          <span>Category</span>
+          <select data-sg-report-category required></select>
+        </label>
+        <label class="registrar-field">
+          <span>Summary (factual, in the child's own words where possible)</span>
+          <textarea data-sg-report-summary rows="3" required></textarea>
+        </label>
+        <div style="display:flex;gap:10px;">
+          <button type="submit" class="registrar-approval-approve">Submit Report</button>
+          <button type="button" class="registrar-btn" data-sg-report-cancel>Cancel</button>
+        </div>
+        <div class="registrar-form-result" data-sg-report-result hidden></div>
+      </form>
+      <div class="registrar-approvals-list" data-sg-cases-list></div>
+      <div class="registrar-approvals-empty" data-sg-cases-empty hidden>No cases currently on record.</div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Safeguarding Intelligence Framework…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Safeguarding Intelligence Framework</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-staff-safeguarding.js" defer></script>
+</body>
+</html>

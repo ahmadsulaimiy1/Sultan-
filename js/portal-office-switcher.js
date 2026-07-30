@@ -57,6 +57,13 @@
     var hasExe = (data.roles || []).some(function (r) { return r.roleCode === 'EXE'; });
     if (hasExe) add('Founder Dashboard', 'Institution-wide analytics', '/portal/founder/');
 
+    // Safeguarding is a Matrix-wide role grant (DSL), not an office
+    // appointment — surfaced by role code, same as the EXE check above,
+    // since it has no office_appointments seat to drive the loop over
+    // myOffices.
+    var hasDsl = (data.roles || []).some(function (r) { return r.roleCode === 'DSL'; });
+    if (hasDsl) add('Safeguarding Intelligence', 'Designated Safeguarding Lead', '/portal/staff/safeguarding/');
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {

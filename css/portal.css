@@ -631,6 +631,24 @@ body.portal-body > *{position:relative;z-index:1;}
 .registrar-search-row input:focus{outline:2px solid var(--gold);outline-offset:1px;}
 .registrar-search-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;}
 .registrar-hint{font-size:0.8rem;color:var(--ink-soft);padding:0 20px;margin:14px 0;}
+/* Safeguarding Intelligence Framework — Institutional Capability
+   Framework presentation pattern ("Operational Framework Ready" +
+   sub-capability tiles + real seeded taxonomy). Reused by every future
+   framework built to the same directive (Behaviour Management,
+   Teacher Performance, WAEC/NECO Readiness, Arabic Fluency, Tajweed
+   Compliance, Boarding Intelligence). */
+.sg-capability-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;padding:0 20px 20px;}
+.sg-capability-tile{border:1px solid var(--line);border-inline-start:3px solid var(--gold);border-radius:6px;padding:12px 14px;background:var(--portal-card);}
+.sg-capability-label{font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--portal-heading);margin-bottom:6px;}
+.sg-capability-desc{font-size:0.82rem;line-height:1.5;color:var(--ink-soft);}
+.sg-taxonomy-list{list-style:none;margin:0;padding:0;}
+.sg-taxonomy-list li{font-size:0.85rem;line-height:1.55;color:var(--ink);padding:8px 0;border-bottom:1px solid var(--line);}
+.sg-taxonomy-list li:last-child{border-bottom:none;}
+.registrar-field{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;font-size:0.85rem;font-weight:600;color:var(--portal-heading);}
+.registrar-field select,.registrar-field textarea{font-family:inherit;font-size:0.9rem;font-weight:400;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--portal-card);}
+.registrar-btn{background:none;border:1px solid var(--line);border-radius:4px;color:var(--portal-heading);padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;}
+.registrar-btn:hover{border-color:var(--gold);}
+.sg-report-form{padding:14px 20px 4px;border-top:1px solid var(--line);margin-bottom:10px;}
 .registrar-form-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:0 16px;padding:0 20px 20px;align-items:start;}
 .registrar-field-wide{grid-column:1 / -1;}
 .registrar-form-grid .portal-field select,
