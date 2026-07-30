@@ -64,6 +64,14 @@
     "altHref": "/ar/academics/quran-college/"
   },
   {
+    "slug": "curriculum-architecture",
+    "output": "curriculum/index.html",
+    "title": "The Curriculum Architecture — Sultan Hanafi Royal Schools",
+    "description": "How our two adopted curricula, one CLEVER standard, and seven-stage learning pathway fit together across all four institutions — academic progression, character formation, leadership development, entrepreneurship, financial literacy, and Islamic formation.",
+    "contentFile": "pages/curriculum-architecture.html",
+    "altHref": "/ar/curriculum/"
+  },
+  {
     "slug": "faculty",
     "output": "faculty/index.html",
     "title": "Faculty Directory — Sultan Hanafi Royal Schools",
@@ -230,6 +238,16 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/academics/quran-college/"
+  },
+  {
+    "slug": "curriculum-architecture-ar",
+    "output": "ar/curriculum/index.html",
+    "title": "بنية المنهج الدراسي — مدارس سلطان حنفي الملكية",
+    "description": "كيف يترابط منهجانا المعتمدان ومعيار CLEVER الواحد ومسار التعلّم ذو السبع مراحل عبر مؤسساتنا الأربع — التقدّم الأكاديمي، وتنمية الشخصية، وتنمية القيادة، وريادة الأعمال، والثقافة المالية، والتكوين الإسلامي.",
+    "contentFile": "pages/curriculum-architecture.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/curriculum/"
   },
   {
     "slug": "faculty-ar",
