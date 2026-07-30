@@ -342,6 +342,115 @@
     return '<span class="exec-stat-trend is-' + dir + '"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="' + arrow + '"></path></svg>' + text + '</span>';
   }
 
+  // Executive Overview — nine real tiles, per the Founder Command
+  // Centre directive's exact structure. Any percentage the API
+  // couldn't compute yet (too little underlying data) renders as
+  // "—", never a fabricated placeholder number.
+  function pct(v){ return v == null ? '—' : v + '%'; }
+  function renderOverview(overview){
+    var el2 = document.querySelector('[data-founder-overview-stats]');
+    if(!el2 || !overview) return;
+    var tiles = [
+      ['Total Students', overview.totalStudents],
+      ['Total Staff', overview.totalStaff],
+      ['Total Guardians', overview.totalGuardians],
+      ['Total Active Classes', overview.totalActiveClasses],
+      ['Total Outstanding Fees', formatCurrency(overview.totalOutstandingFees)],
+      ['Attendance Health', pct(overview.attendanceHealthPercent)],
+      ['Academic Health', pct(overview.academicHealthPercent)],
+      ['Governance Health', pct(overview.governanceHealthPercent)],
+      ['Institutional Health Score', overview.institutionalHealthScore != null ? overview.institutionalHealthScore + '/100' : '—'],
+    ];
+    el2.innerHTML = '';
+    tiles.forEach(function(t){
+      var tile = el('div', 'exec-stat');
+      tile.appendChild(el('div', 'exec-stat-label', t[0]));
+      var v = el('div', 'exec-stat-value', '');
+      v.textContent = t[1];
+      tile.appendChild(v);
+      el2.appendChild(tile);
+    });
+  }
+
+  // Four Schools Overview — one intelligence card per institution, each
+  // real: active students, staff, attendance rate, fee collection rate.
+  var SCHOOL_ACCENTS = ['var(--gold)', 'var(--forest-green)', 'var(--oxford-navy)', 'var(--terracotta)'];
+  function renderSchools(schools){
+    var el2 = document.querySelector('[data-founder-schools]');
+    if(!el2 || !schools) return;
+    el2.innerHTML = '';
+    schools.forEach(function(s, i){
+      var card = el('div', 'pfd-school-card');
+      card.style.setProperty('--school-accent', SCHOOL_ACCENTS[i % SCHOOL_ACCENTS.length]);
+      card.appendChild(el('h3', 'pfd-school-name', s.displayName));
+      var metrics = el('div', 'pfd-school-metrics');
+      [
+        ['Active Students', s.activeStudents],
+        ['Staff', s.staff],
+        ['Attendance', pct(s.attendancePercent)],
+        ['Collection Rate', pct(s.collectionRatePercent)],
+      ].forEach(function(m){
+        var box = el('div', 'pfd-school-metric');
+        var v = el('div', 'value', ''); v.textContent = m[1];
+        box.appendChild(v);
+        box.appendChild(el('div', 'label', m[0]));
+        metrics.appendChild(box);
+      });
+      card.appendChild(metrics);
+      el2.appendChild(card);
+    });
+  }
+
+  // Executive Alerts Centre — every item the directive named, each with
+  // a real count where the underlying data exists, and an honest "not
+  // yet tracked" note where it doesn't (Staff Matters, System
+  // Notifications) rather than a fabricated zero implying nothing is
+  // wrong.
+  function alertRow(label, count, detail, note){
+    var row = el('div', 'pfd-alert-row' + (count > 0 ? ' has-attention' : count === null ? ' is-quiet' : ''));
+    var left = el('div');
+    left.appendChild(el('div', 'pfd-alert-label', label));
+    if(detail) left.appendChild(el('div', 'pfd-alert-detail', detail));
+    else if(note) left.appendChild(el('div', 'pfd-alert-detail', note));
+    row.appendChild(left);
+    row.appendChild(el('div', 'pfd-alert-count', count === null ? 'Not tracked' : String(count)));
+    return row;
+  }
+  function renderAlerts(alerts){
+    var el2 = document.querySelector('[data-founder-alerts]');
+    if(!el2 || !alerts) return;
+    el2.innerHTML = '';
+    el2.appendChild(alertRow('Admissions Requiring Approval', alerts.admissionsPending, 'Applications submitted or under review.'));
+    el2.appendChild(alertRow('Outstanding Fees', alerts.outstandingInvoices,
+      alerts.outstandingInvoices > 0 ? formatCurrency(alerts.outstandingFeesTotal) + ' across all unpaid/partial invoices.' : 'No unpaid or partial invoices on file.'));
+    el2.appendChild(alertRow('Governance Deadlines', alerts.governanceMeetingsNext30Days,
+      alerts.nextGovernanceMeetingDate ? 'Next scheduled meeting: ' + new Date(alerts.nextGovernanceMeetingDate).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '.' : 'No governance meetings scheduled in the next 30 days.'));
+    el2.appendChild(alertRow('Staff Matters', null, null, alerts.staffMattersNote));
+    el2.appendChild(alertRow('Attendance Concerns', alerts.attendanceConcerns, alerts.attendanceConcernsThreshold));
+    el2.appendChild(alertRow('Academic Concerns', alerts.academicConcerns, alerts.academicConcernsThreshold));
+    el2.appendChild(alertRow('System Notifications', null, null, alerts.systemNotificationsNote));
+  }
+
+  // Strategic Progress Centre — Vision 2035 framework, explicitly
+  // labelled as not-yet-adopted (same honest pattern as office
+  // Strategic Priorities/Annual Objectives templates).
+  var STRATEGIC_ITEMS = [
+    ['Vision 2035', 'The Board of Trustees has not yet formally adopted a Vision 2035 statement.'],
+    ['Strategic Goals', 'No institution-wide strategic goals have been adopted yet.'],
+    ['Key Milestones', 'No milestones have been set against an adopted strategy yet.'],
+    ['Institutional Projects', 'No formally tracked institutional projects exist yet.'],
+  ];
+  function renderStrategicProgress(strategicProgress){
+    var el2 = document.querySelector('[data-founder-strategic-progress]');
+    if(!el2) return;
+    var badge = '<span class="template-framework-badge">Framework Only &mdash; Not Yet Adopted</span>';
+    var note = strategicProgress && strategicProgress.note ? strategicProgress.note : '';
+    var grid = '<div class="pfd-strategic-grid">' + STRATEGIC_ITEMS.map(function(item){
+      return '<div class="pfd-strategic-card"><h3>' + item[0] + '</h3><p>' + item[1] + '</p></div>';
+    }).join('') + '</div>';
+    el2.innerHTML = badge + '<p class="pfd-note" style="margin-top:10px;">' + note + '</p>' + grid;
+  }
+
   function render(data){
     generatedEl.textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
 
@@ -380,31 +489,34 @@
       narrativeEl.textContent = parts.join(', ') + '.';
     }
 
-    // Institutional Health Index — a real, documented composite (not an
-    // arbitrary label): the mean of average attendance % and the
-    // collection rate %, banded at the same Excellent/Strong/Developing/
-    // Attention thresholds as the onboarding wizard's completion bands
-    // (see docs/shrs-design-system.md). Hidden entirely if neither real
-    // input exists, rather than showing a fabricated score.
+    // Institutional Health Score — the server-computed composite
+    // (functions/api/portal/founder/dashboard.js: overview.
+    // institutionalHealthScore), banded at the same Excellent/Strong/
+    // Developing/Attention thresholds as the onboarding wizard's
+    // completion bands. Hidden entirely if no real input exists yet,
+    // rather than showing a fabricated score.
     var healthEl = document.querySelector('[data-founder-health]');
     var healthLabelEl = document.querySelector('[data-founder-health-label]');
     if(healthEl && healthLabelEl){
-      var healthInputs = [];
-      if(data.attendance.averagePercent != null) healthInputs.push(data.attendance.averagePercent);
-      if(data.finance && data.finance.collectionRatePercent != null) healthInputs.push(data.finance.collectionRatePercent);
-      if(healthInputs.length){
-        var healthScore = Math.round(healthInputs.reduce(function(a,b){return a+b;},0) / healthInputs.length);
+      var overview = data.overview || {};
+      if(overview.institutionalHealthScore != null){
+        var healthScore = overview.institutionalHealthScore;
         var band = healthScore >= 85 ? { cls: 'is-excellent', label: 'Excellent' }
           : healthScore >= 70 ? { cls: 'is-strong', label: 'Strong' }
           : healthScore >= 50 ? { cls: 'is-developing', label: 'Developing' }
           : { cls: 'is-attention', label: 'Needs Attention' };
         healthEl.hidden = false;
         healthEl.className = 'exec-welcome-health ' + band.cls;
-        healthLabelEl.textContent = 'Institutional Health: ' + band.label + ' (' + healthScore + '/100, from attendance + collection rate)';
+        healthLabelEl.textContent = 'Institutional Health: ' + band.label + ' (' + healthScore + '/100 — attendance, fee collection, governance fill)';
       } else {
         healthEl.hidden = true;
       }
     }
+
+    renderOverview(data.overview);
+    renderSchools(data.schools);
+    renderAlerts(data.alerts);
+    renderStrategicProgress(data.strategicProgress);
 
     var statusStatsEl = document.querySelector('[data-founder-status-stats]');
     statusStatsEl.innerHTML = '';
