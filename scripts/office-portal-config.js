@@ -27,7 +27,7 @@ const OFFICES = [
   { slug: 'academic-affairs', name: 'Academic Affairs', layer: 'academic' },
   { slug: 'registrar', name: "Registrar's Office", layer: 'academic', deepLink: { href: '/portal/staff/registrar/', label: 'Open Registrar Operations' } },
   { slug: 'examinations', name: 'Examinations', layer: 'academic' },
-  { slug: 'admissions', name: 'Admissions', layer: 'academic' },
+  { slug: 'admissions', name: 'Admissions', layer: 'academic', deepLink: { href: '/portal/staff/admissions/', label: 'Open Admissions Review Centre' } },
 
   { slug: 'head-teacher', name: 'Head Teacher — Nursery & Primary', layer: 'school_leadership' },
   { slug: 'principal-royal-college', name: 'Principal — Royal College', layer: 'school_leadership' },

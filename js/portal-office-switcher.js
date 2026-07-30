@@ -35,6 +35,7 @@
   var DEEP_LINKS_BY_SLUG = {
     registrar: { label: "Registrar Operations", href: '/portal/staff/registrar/' },
     finance: { label: 'Finance Operations', href: '/portal/staff/finance/' },
+    admissions: { label: 'Admissions Review Centre', href: '/portal/staff/admissions/' },
     'digital-services': { label: 'Digital Identity Tools', href: '/portal/staff/identity/' },
   };
 

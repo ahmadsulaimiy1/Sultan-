@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Admissions Review Centre — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Admissions Review Centre</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/office/admissions/">Office Governance View</a>
+    <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Admissions Review Centre</div>
+    <div class="portal-hello-sub">Every real application, from first submission to final decision — one honest queue, not a spreadsheet. Front door of the institution.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <h2>Applications</h2>
+        <select data-admissions-filter style="padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;">
+          <option value="">All statuses</option>
+          <option value="_awaiting">Awaiting Decision (Submitted + Under Review)</option>
+          <option value="submitted">Submitted</option>
+          <option value="under_review">Under Review</option>
+          <option value="waitlisted">Waitlisted</option>
+          <option value="offered">Offered</option>
+          <option value="admitted">Admitted</option>
+          <option value="declined">Declined</option>
+          <option value="withdrawn">Withdrawn</option>
+        </select>
+      </div>
+      <p class="registrar-hint">Your role determines which institutions' applications you can see and decide — Registrar/Admissions Officer roles see every institution; a Principal-scoped role sees only their own. A 403 here means your account doesn't currently hold admissions visibility, not that something is broken.</p>
+      <div class="registrar-approvals-list" data-admissions-list></div>
+      <div class="registrar-approvals-empty" data-admissions-empty hidden>No applications match this filter.</div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Admissions Review Centre…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Admissions Review Centre</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-staff-admissions.js" defer></script>
+</body>
+</html>

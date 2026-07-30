@@ -19,6 +19,12 @@ import { effectiveGrants, checkGrants } from '../../../_lib/permissions.js';
 import { hasPermission } from '../../../_lib/permission-matrix.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
 
+// Admissions Review Centre — the list/decide logic and audit logging
+// (logStaffEvent below, target_type 'admissions_application') already
+// existed; GET now also returns each application's full staff_audit_log
+// history (not just the latest decision snapshot), so the Review
+// Centre's "Audit Trail" is a real multi-entry timeline, not a label.
+
 const VALID_STATUSES = ['submitted', 'under_review', 'waitlisted', 'offered', 'admitted', 'declined', 'withdrawn'];
 
 function toApplication(r) {
@@ -76,7 +82,29 @@ export async function onRequestGet({ request, env }) {
       );
       rows = res.rows;
     }
-    return json({ ok: true, applications: rows.map(toApplication) });
+    const ids = rows.map((r) => r.id);
+    let historyByApplication = {};
+    if (ids.length) {
+      const historyRes = await sql`
+        SELECT l.target_id, l.event_type, l.reason, l.metadata, l.created_at, s.full_name AS actor_name
+        FROM staff_audit_log l LEFT JOIN staff s ON s.id = l.actor_staff_id
+        WHERE l.target_type = 'admissions_application' AND l.target_id = ANY(${ids})
+        ORDER BY l.created_at DESC`;
+      historyByApplication = historyRes.rows.reduce((acc, r) => {
+        (acc[r.target_id] ||= []).push({
+          eventType: r.event_type, reason: r.reason,
+          previousStatus: r.metadata ? r.metadata.previousStatus : null,
+          newStatus: r.metadata ? r.metadata.newStatus : null,
+          actorName: r.actor_name, occurredAt: r.created_at,
+        });
+        return acc;
+      }, {});
+    }
+
+    return json({
+      ok: true,
+      applications: rows.map((r) => ({ ...toApplication(r), history: historyByApplication[r.id] || [] })),
+    });
   } catch (err) {
     console.error('staff admissions-applications list error', err);
     return json({ error: 'Could not load applications right now — please try again shortly.' }, 500);
