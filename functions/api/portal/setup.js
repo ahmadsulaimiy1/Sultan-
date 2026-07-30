@@ -883,6 +883,16 @@ const STATEMENTS = [
     ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'school_uniform', 'Uniforms (school uniform, sportwear & Friday wear)', 60000, NULL, false),
     ((SELECT id FROM institutions WHERE name = 'Royal College'), 'JSS 1', 'new_entrant', 'textbooks', 'Textbooks (secular, arabiyyah, stationeries & examinations)', 90000, NULL, false)
     ON CONFLICT (institution_id, class_label, student_category, fee_type) DO NOTHING`,
+
+  // Organisational Chart Engine — see sql/schema.sql for the full
+  // commentary. Encodes only the reporting lines already published on
+  // the public Governance page into parent_office_id.
+  `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'board-of-trustees')
+    WHERE slug = 'executive'`,
+  `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
+    WHERE slug = 'management-council'`,
+  `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
+    WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher')`,
 ];
 
 async function handle({ request, env }) {

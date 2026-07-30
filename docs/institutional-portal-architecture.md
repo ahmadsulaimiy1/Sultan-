@@ -266,3 +266,32 @@ gated by the identical token check as every write action.
   endpoint in this codebase; it follows the exact session-auth and query
   patterns already proven in `functions/api/portal/staff/me.js` and
   `functions/api/portal/staff/registrar/student.js`.
+
+## Organisational Chart Engine (Institutional Excellence 2030, Phase 1)
+
+`portal/staff/org-chart/` (JS: `js/portal-org-chart.js`, API:
+`functions/api/portal/staff/org-chart.js`) — an interactive,
+collapsible, printable, exportable org chart built entirely from real
+`offices`/`office_appointments` rows, no chart library.
+
+This required one real data decision, stated plainly: `parent_office_id`
+existed in the schema from the start ("so the directory can express
+real reporting structure") but was unset for almost every office. A
+new migration sets it **only** for the reporting line already public
+on `pages/about-governance.html` — Board of Trustees → Executive → the
+four school-leadership offices (Principal RC, Ra'ees, Mudeer, Head
+Teacher) → Management Council also under Executive, since its own seat
+list names Founder & CEO first. Every other office (all
+academic/operational/institutional_services offices, ~17 of 28) has no
+formally published reporting line anywhere on the site, so none was
+invented — they render in an explicit "Other Institutional Offices —
+reporting line not yet documented" section instead of being guessed
+into the tree. That gap is itself real, useful information for the
+Founder, not a defect in the chart.
+
+Collapse/expand is native click/keyboard interaction (no library);
+Print/Save as PDF uses the browser's print dialog (same pattern as the
+policy pages' print stylesheet, task history #131); Export Data (JSON)
+downloads the exact API payload for portability into other tools. Both
+"export" mechanisms are named for what they actually do rather than
+implying a bespoke PDF generator that doesn't exist.

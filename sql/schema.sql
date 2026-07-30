@@ -1291,3 +1291,21 @@ WHERE NOT EXISTS (
   SELECT 1 FROM office_appointments oa
   WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
 );
+
+-- Organisational Chart Engine — encodes the reporting lines already
+-- published on the public Governance page (pages/about-governance.html:
+-- Board of Trustees -> Chief Executive Officer -> the four school
+-- heads) into parent_office_id, which the schema always intended for
+-- exactly this ("so the directory can express real reporting
+-- structure"). Only lines that are already public are set here.
+-- Everything else (Management Council's internal committees aside,
+-- every operational/academic/institutional_services office) has no
+-- formally published reporting line yet and is deliberately left at
+-- the top level rather than guessed — the org chart shows that
+-- honestly as a real gap, not a silently invented hierarchy.
+UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'board-of-trustees')
+  WHERE slug = 'executive';
+UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
+  WHERE slug = 'management-council';
+UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
+  WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher');

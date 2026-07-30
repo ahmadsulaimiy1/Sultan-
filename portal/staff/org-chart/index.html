@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Organisational Chart — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
+    <button type="button" class="portal-logout" data-office-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main" style="align-items:flex-start;">
+  <div class="portal-card" id="oc-error" hidden>
+    <h1>Couldn't load the organisational chart</h1>
+    <p class="sub" data-error-message>Please try again.</p>
+    <a class="portal-back-link" href="/portal/staff/offices/">&larr; Back to all offices</a>
+  </div>
+
+  <div class="portal-wrap" id="oc-shell" hidden>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow">ORGANISATIONAL CHART ENGINE</div>
+      <h1>Institutional Structure</h1>
+      <div class="exec-welcome-role"><span id="oc-total-offices">&mdash;</span> offices, committees, and seats — live from the Organisational Directory, not a static diagram.</div>
+    </div>
+
+    <div class="orgchart-controls" style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+      <button type="button" class="btn-outline" id="oc-expand-all">Expand All</button>
+      <button type="button" class="btn-outline" id="oc-collapse-all">Collapse All</button>
+      <button type="button" class="btn-outline" id="oc-print">Print / Save as PDF</button>
+      <button type="button" class="btn-outline" id="oc-export-json">Export Data (JSON)</button>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Governance &amp; Executive Structure</h2><div class="meta">The reporting line already published on the public Governance page, expressed as a real, live tree. Click a box with reports beneath it to collapse/expand.</div></div>
+      <div class="orgchart-wrap" id="oc-tree"></div>
+    </div>
+
+    <div class="portal-child-card" id="oc-other-section" style="margin-top:20px;">
+      <div class="portal-child-head"><h2>Other Institutional Offices</h2><div class="meta">These offices exist and are fully functional, but their formal reporting line has not yet been documented anywhere on the public site — shown honestly here rather than guessed into the tree above. They will nest automatically once a parent office is set.</div></div>
+      <div style="padding:6px 26px 26px;" id="oc-other-list"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.querySelector('[data-office-logout]');
+  if (btn) btn.addEventListener('click', function(){
+    fetch('/api/portal/staff/logout', { method: 'POST' }).catch(function(){}).then(function(){ window.location.href = '/portal/staff/login/'; });
+  });
+});
+</script>
+<script src="/js/portal-org-chart.js" defer></script>
+</body>
+</html>
