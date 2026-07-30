@@ -1192,3 +1192,102 @@ ON CONFLICT (name) DO UPDATE SET
   layer       = EXCLUDED.layer,
   slug        = EXCLUDED.slug,
   description = EXCLUDED.description;
+
+-- ============================================================
+-- Level 3 Institutional Framework (Founder & CEO directive: "complete
+-- framework with clearly designated template content" — not fabricated
+-- fact, not a blank page). Adds:
+--   1. office_kind, distinguishing a Board committee from a regular
+--      office without overloading office_type (same reasoning as the
+--      earlier layer/office_type split above).
+--   2. strategic_priorities / annual_objectives — nullable. NULL means
+--      the portal renders a generic, clearly-labelled template
+--      scaffold (computed in the client, not stored, so it can never
+--      drift into looking like adopted fact); a real value here is the
+--      office's actual Board/Executive-adopted content once set via
+--      the administration panel, replacing the template with no
+--      redesign.
+--   3. office_resolutions — a real register for governance-layer
+--      offices' "Resolution Structure," starting empty like every
+--      other module in this ecosystem.
+--   4. Five standing Board committees and Management Council's ten
+--      named seats, seeded exactly like every other office/seat in
+--      this file: real structural rows, vacant appointments. No
+--      committee member or council seat-holder is invented.
+-- ============================================================
+ALTER TABLE offices ADD COLUMN IF NOT EXISTS office_kind TEXT NOT NULL DEFAULT 'office';
+DO $$ BEGIN
+  ALTER TABLE offices ADD CONSTRAINT offices_kind_check CHECK (office_kind IN ('office', 'committee'));
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+ALTER TABLE offices ADD COLUMN IF NOT EXISTS strategic_priorities TEXT;
+ALTER TABLE offices ADD COLUMN IF NOT EXISTS annual_objectives TEXT;
+
+CREATE TABLE IF NOT EXISTS office_resolutions (
+  id                  SERIAL PRIMARY KEY,
+  office_id           INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+  resolution_number   TEXT,
+  title               TEXT NOT NULL,
+  status              TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'adopted', 'rescinded')),
+  summary_text        TEXT,
+  resolved_at         DATE,
+  created_by_staff_id INTEGER REFERENCES staff(id),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_office_resolutions_office ON office_resolutions(office_id);
+
+-- Five standing committees of the Board of Trustees, named in the
+-- directive. Real office rows, parented under Board of Trustees.
+INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
+SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
+FROM (VALUES
+  ('Finance Committee', 'committee-finance', 'Standing committee of the Board of Trustees for budget oversight, financial controls, and audit-readiness review.'),
+  ('Governance Committee', 'committee-governance', 'Standing committee of the Board of Trustees for constitution, policy, and board-conduct oversight.'),
+  ('Audit Committee', 'committee-audit', 'Standing committee of the Board of Trustees for internal controls, risk, and independent review of institutional accounts.'),
+  ('Academic Excellence Committee', 'committee-academic-excellence', 'Standing committee of the Board of Trustees for curriculum standards, academic outcomes, and teaching-quality oversight.'),
+  ('Development Committee', 'committee-development', 'Standing committee of the Board of Trustees for institutional growth, fundraising strategy, and capital planning.')
+) AS v(name, slug, description)
+CROSS JOIN (SELECT id FROM offices WHERE slug = 'board-of-trustees') AS b(id)
+ON CONFLICT (name) DO UPDATE SET
+  office_kind      = EXCLUDED.office_kind,
+  parent_office_id = EXCLUDED.parent_office_id,
+  description      = EXCLUDED.description;
+
+-- Vacant seat structure for each committee — Chair + two Members, all
+-- "Pending Appointment" until the Board makes real appointments. The
+-- NOT EXISTS guard prevents duplicate rows on a repeated setup run
+-- without needing a uniqueness constraint on appointment titles.
+INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
+SELECT o.id, seat.title, seat.is_primary, 'Pending Appointment'
+FROM offices o
+JOIN (VALUES
+  ('committee-finance', 'Chair', true), ('committee-finance', 'Member', false), ('committee-finance', 'Member', false),
+  ('committee-governance', 'Chair', true), ('committee-governance', 'Member', false), ('committee-governance', 'Member', false),
+  ('committee-audit', 'Chair', true), ('committee-audit', 'Member', false), ('committee-audit', 'Member', false),
+  ('committee-academic-excellence', 'Chair', true), ('committee-academic-excellence', 'Member', false), ('committee-academic-excellence', 'Member', false),
+  ('committee-development', 'Chair', true), ('committee-development', 'Member', false), ('committee-development', 'Member', false)
+) AS seat(office_slug, title, is_primary) ON seat.office_slug = o.slug
+WHERE NOT EXISTS (
+  SELECT 1 FROM office_appointments oa
+  WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
+);
+
+-- Management Council's ten named cross-institutional seats, as listed
+-- in the directive. Vacant until an admin explicitly links a real
+-- staff record — several of these titles already have a real,
+-- publicly-named holder elsewhere (e.g. Founder & CEO, Registrar);
+-- this table does not assume that is the same seat until linked.
+INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
+SELECT o.id, seat.title, false, 'Pending Appointment'
+FROM offices o
+JOIN (VALUES
+  ('management-council', 'Founder & CEO'), ('management-council', 'Registrar'),
+  ('management-council', 'Finance Director'), ('management-council', 'HR Director'),
+  ('management-council', 'Communications Director'), ('management-council', 'Student Affairs Director'),
+  ('management-council', 'Principal, Royal College'), ('management-council', 'Head Teacher, Nursery & Primary'),
+  ('management-council', 'Ra''ees'), ('management-council', 'Mudeer')
+) AS seat(office_slug, title) ON seat.office_slug = o.slug
+WHERE NOT EXISTS (
+  SELECT 1 FROM office_appointments oa
+  WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
+);

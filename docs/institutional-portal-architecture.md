@@ -69,7 +69,8 @@ and contact details — zero redesign, exactly as specified.
 | Operational | Finance, HR, Student Affairs, Communications, Digital Services, Digital Learning | None seeded |
 | Institutional Services | Library, Alumni, Foundation, Certificate/Transcript, Digital Identity, Knowledge Base | None seeded |
 
-All 23 office portals are live, browsable (from `/portal/staff/offices/`,
+All 28 office portals (23 offices + 5 Board committees, added in the
+Level 3 Institutional Framework pass below) are live, browsable (from `/portal/staff/offices/`,
 behind staff login), and render all 11 modules with correct empty/vacant
 states — verified via Playwright (desktop + mobile, zero console errors,
 both a filled-seat office and a fully-vacant office screenshotted).
@@ -103,6 +104,65 @@ left as a runbook, not auto-executed, since only whoever holds
 `PORTAL_SYSADMIN_TOKEN` should be creating live staff records, and this
 document has no way to verify the exact spelling/title the school wants
 on the record versus what the marketing page happens to say.
+
+## Level 3 Institutional Framework (Founder & CEO clarification)
+
+A follow-up "Founder & CEO Executive Clarification" resolved the
+tension the rest of this document originally flagged. It drew an
+explicit three-way distinction:
+
+- **Level 1 — fabricated data presented as real.** Never done, in this
+  build or any before it.
+- **Level 2 — empty pages.** Also rejected, as poor architecture.
+- **Level 3 — a complete framework with clearly designated template
+  content.** This is what got built in this pass.
+
+Four real, structural additions, all following the same discipline as
+everything above (a real row, a real vacant/labelled state, never an
+invented name or number):
+
+- **Committees.** Five standing Board of Trustees committees (Finance,
+  Governance, Audit, Academic Excellence, Development) exist as real
+  office rows (`office_kind = 'committee'`, parented to Board of
+  Trustees), each with a real Chair + two Member seats — every seat
+  "Pending Appointment," exactly like every other vacant seat in this
+  system. They appear as their own portal pages and are listed on the
+  Board of Trustees' Overview tab.
+- **Management Council seats.** Ten named cross-institutional roles
+  (Founder & CEO, Registrar, Finance Director, HR Director,
+  Communications Director, Student Affairs Director, Principal
+  (Royal College), Head Teacher, Ra'ees, Mudeer) exist as vacant
+  `office_appointments` rows under Management Council. Several titles
+  already have a real, publicly-named holder elsewhere on the site —
+  this table does not assume that is the same seat until an admin
+  explicitly links it via `create-appointment`/`update-appointment`.
+- **Strategic Priorities / Annual Objectives.** Two new nullable
+  columns on `offices`. NULL (the default for every office right now)
+  makes the portal render a generic, clearly-labelled planning
+  scaffold — a "TEMPLATE — Pending Adoption" badge plus a note stating
+  outright that it has not been reviewed or adopted — instead of a
+  blank tab. Once an admin sets the office's real, adopted content via
+  `update-office-content`, that replaces the template with no redesign
+  and no badge. The template text itself is generated in
+  `js/portal-office.js`, not stored per office, so it can never drift
+  into looking like bespoke, adopted institutional research.
+- **Resolutions.** A real `office_resolutions` register, starting
+  empty. The Resolutions tab only appears for governance-type offices
+  (Board of Trustees and its five committees) — it's hidden entirely
+  elsewhere rather than shown as a meaningless empty tab for, say, the
+  Library.
+- **Analytics KPI shells.** Every non-executive office's Analytics tab
+  now renders a real four-tile KPI grid with a tiny bar-chart shell —
+  the "visual framework" the directive asked for — but every value
+  reads "No data available," explicitly labelled as placeholder slots,
+  not real figures, in the text underneath.
+
+What did **not** change: no Board of Trustees Chairman/Vice
+Chairman/Secretary is named, no committee member is named, no
+Management Council seat is filled, and no KPI number is invented. The
+Level 3 distinction is specifically that the *structure* is complete
+and *visually finished* while every actual fact remains exactly as
+real (or as honestly vacant) as it was before this pass.
 
 ## Ra'ees / Mudeer — resolved
 

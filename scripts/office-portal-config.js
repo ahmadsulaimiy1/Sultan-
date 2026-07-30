@@ -18,6 +18,11 @@ const OFFICES = [
   { slug: 'board-of-trustees', name: 'Board of Trustees', layer: 'governance' },
   { slug: 'executive', name: 'Executive', layer: 'governance' },
   { slug: 'management-council', name: 'Management Council', layer: 'governance' },
+  { slug: 'committee-finance', name: 'Finance Committee', layer: 'governance' },
+  { slug: 'committee-governance', name: 'Governance Committee', layer: 'governance' },
+  { slug: 'committee-audit', name: 'Audit Committee', layer: 'governance' },
+  { slug: 'committee-academic-excellence', name: 'Academic Excellence Committee', layer: 'governance' },
+  { slug: 'committee-development', name: 'Development Committee', layer: 'governance' },
 
   { slug: 'academic-affairs', name: 'Academic Affairs', layer: 'academic' },
   { slug: 'registrar', name: "Registrar's Office", layer: 'academic' },

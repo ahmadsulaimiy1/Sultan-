@@ -48,12 +48,15 @@
       <button type="button" class="office-tab" data-tab="overview">Overview</button>
       <button type="button" class="office-tab" data-tab="directory">Staff Directory</button>
       <button type="button" class="office-tab" data-tab="responsibilities">Responsibilities</button>
+      <button type="button" class="office-tab" data-tab="priorities">Strategic Priorities</button>
+      <button type="button" class="office-tab" data-tab="objectives">Annual Objectives</button>
       <button type="button" class="office-tab" data-tab="documents">Documents</button>
       <button type="button" class="office-tab" data-tab="reports">Reports</button>
       <button type="button" class="office-tab" data-tab="analytics">Analytics</button>
       <button type="button" class="office-tab" data-tab="workflow">Workflow Centre</button>
       <button type="button" class="office-tab" data-tab="notifications">Notifications</button>
       <button type="button" class="office-tab" data-tab="meetings">Meetings</button>
+      <button type="button" class="office-tab" data-tab="resolutions" hidden>Resolutions</button>
       <button type="button" class="office-tab" data-tab="archive">Archive</button>
     </nav>
 
@@ -77,6 +80,10 @@
           <div class="office-overview-field"><div class="label">Parent Office</div><div class="value" id="office-parent-value"></div></div>
         </div>
       </div>
+      <div class="portal-child-card" id="committees-section" hidden>
+        <div class="portal-child-head"><h2>Committees</h2><div class="meta">Standing committees of this office.</div></div>
+        <div style="padding:6px 26px 20px;" id="committees-list"></div>
+      </div>
     </div>
 
     <div class="office-panel" id="panel-directory">
@@ -91,6 +98,20 @@
         <div class="portal-child-head"><h2>Responsibilities</h2></div>
         <p style="padding:20px 26px;line-height:1.6;color:var(--ink);" id="responsibilities-text"></p>
         <p class="pfd-note" style="padding:0 26px 20px;">See the full <a id="responsibilities-matrix-link" href="/policies/">Policies Centre</a> for governing documents.</p>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-priorities">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Strategic Priorities</h2></div>
+        <div id="priorities-panel-body"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-objectives">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Annual Objectives</h2></div>
+        <div id="objectives-panel-body"></div>
       </div>
     </div>
 
@@ -133,6 +154,13 @@
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Meetings</h2></div>
         <div style="padding:20px 26px;" id="meetings-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-resolutions">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Resolutions</h2><div class="meta">The Board's governance register for this office.</div></div>
+        <div style="padding:20px 26px;" id="resolutions-list"></div>
       </div>
     </div>
 

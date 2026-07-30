@@ -52,6 +52,14 @@
 //   create-meeting        — { officeName, title, meetingDate, agendaText?, status?, createdByStaffNo? }
 //   update-meeting        — { meetingId, status?, minutesText? }
 //   create-document       — { officeName, title, fileUrl?, externalUrl?, description?, uploadedByStaffNo? }
+//   update-office-content — { officeName, strategicPriorities?, annualObjectives? } — the office's real,
+//                            Board/Executive-adopted planning content. Leaving a field unset/null makes
+//                            the portal fall back to the generic labelled template scaffold instead —
+//                            see docs/institutional-portal-architecture.md.
+//   create-resolution     — { officeName, title, resolutionNumber?, status?, summaryText?, resolvedAt?,
+//                             createdByStaffNo? } — governance-register entries (Board of Trustees and
+//                             its committees); status defaults to 'draft'.
+//   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
@@ -417,7 +425,56 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, documentId: created.rows[0].id });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document.' }, 400);
+    if (action === 'update-office-content') {
+      if (!body.officeName) {
+        return json({ error: 'officeName is required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      await sql`
+        UPDATE offices SET
+          strategic_priorities = COALESCE(${body.strategicPriorities || null}, strategic_priorities),
+          annual_objectives = COALESCE(${body.annualObjectives || null}, annual_objectives)
+        WHERE id = ${officeId}`;
+      return json({ ok: true, officeId });
+    }
+
+    if (action === 'create-resolution') {
+      if (!body.officeName || !body.title) {
+        return json({ error: 'officeName and title are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const createdByStaffId = await staffIdByNo(sql, body.createdByStaffNo);
+      const created = await sql`
+        INSERT INTO office_resolutions (office_id, resolution_number, title, status, summary_text, resolved_at, created_by_staff_id)
+        VALUES (${officeId}, ${body.resolutionNumber || null}, ${body.title}, ${body.status || 'draft'}, ${body.summaryText || null}, ${body.resolvedAt || null}, ${createdByStaffId})
+        RETURNING id`;
+      return json({ ok: true, resolutionId: created.rows[0].id });
+    }
+
+    if (action === 'update-resolution') {
+      if (!Number.isInteger(body.resolutionId)) {
+        return json({ error: 'A valid numeric resolutionId is required.' }, 400);
+      }
+      const updated = await sql`
+        UPDATE office_resolutions SET
+          status = COALESCE(${body.status || null}, status),
+          summary_text = COALESCE(${body.summaryText || null}, summary_text),
+          resolved_at = COALESCE(${body.resolvedAt || null}, resolved_at)
+        WHERE id = ${body.resolutionId}
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No resolution found with that id.' }, 404);
+      }
+      return json({ ok: true, resolutionId: body.resolutionId });
+    }
+
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

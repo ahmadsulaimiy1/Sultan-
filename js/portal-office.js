@@ -1,9 +1,14 @@
 // Institutional Portal Ecosystem — one renderer, instantiated by every
 // office portal page via <body data-office-slug="...">. Fetches
-// /api/portal/staff/office/{slug} and renders the 11 modules the
-// directive specified. Every module that has no real backing data yet
-// (Reports, most Analytics, Notifications) says so plainly instead of
-// inventing content — see docs/institutional-portal-architecture.md.
+// /api/portal/staff/office/{slug} and renders the 11 original modules
+// plus the Level 3 Institutional Framework additions (Strategic
+// Priorities, Annual Objectives, Committees, Resolutions, KPI shells).
+// Every module that has no real backing data yet (Reports, most
+// Analytics, Notifications) says so plainly instead of inventing
+// content — see docs/institutional-portal-architecture.md. Strategic
+// Priorities/Annual Objectives are the one exception with a middle
+// state: a clearly-labelled generic TEMPLATE (never asserted as real)
+// shown until an admin sets the office's actual adopted content.
 (function () {
   'use strict';
   document.addEventListener('DOMContentLoaded', init);
@@ -60,14 +65,18 @@
   function render(data) {
     renderHeader(data);
     renderOverview(data);
+    renderCommittees(data);
     renderDirectory(data);
     renderResponsibilities(data);
+    renderStrategicPriorities(data);
+    renderAnnualObjectives(data);
     renderDocuments(data);
     renderReports(data);
     renderAnalytics(data);
     renderWorkflow(data);
     renderNotifications(data);
     renderMeetings(data);
+    renderResolutions(data);
     renderArchive(data);
   }
 
@@ -95,6 +104,21 @@
     setText('office-type-value', data.office.officeType);
     setText('office-layer-value', data.office.layer ? data.office.layer.replace(/_/g, ' ') : '—');
     setText('office-parent-value', data.office.parentOfficeName || 'None — reports directly within the institution structure.');
+  }
+
+  // Committees — only rendered (and the block only shown) for offices
+  // that actually have committee sub-offices, e.g. Board of Trustees.
+  function renderCommittees(data) {
+    var section = document.getElementById('committees-section');
+    var el = document.getElementById('committees-list');
+    if (!section || !el) return;
+    if (!data.committees || !data.committees.length) { section.hidden = true; return; }
+    section.hidden = false;
+    el.innerHTML = data.committees.map(function (c) {
+      return '<a class="office-committee-card" href="/portal/office/' + esc(c.slug) + '/">'
+        + '<span class="occ-name">' + esc(c.name) + '</span>'
+        + '<span class="occ-meta">View committee &rarr;</span></a>';
+    }).join('');
   }
 
   // Module 3 — Staff directory
@@ -135,6 +159,49 @@
     if (link) link.href = '/policies/';
   }
 
+  // Strategic Priorities / Annual Objectives — a real, admin-editable
+  // field per office (offices.strategic_priorities/annual_objectives).
+  // NULL is the default state for every office right now, so this
+  // renders a generic, clearly-labelled planning scaffold instead of a
+  // blank tab — it is explicitly NOT institution-specific content, and
+  // says so. Once an admin sets the real field via
+  // update-office-content, that replaces the template with no redesign.
+  function genericPriorities(officeName) {
+    return [
+      'Maintain accurate, up-to-date records for ' + officeName + '’s activities and communicate them clearly to staff and stakeholders.',
+      'Align ' + officeName + '’s work with the wider institutional strategy set by the Executive and Board of Trustees.',
+      'Identify and close the highest-priority gaps in ' + officeName + '’s current operations.',
+    ];
+  }
+  function genericObjectives(officeName) {
+    return [
+      'Complete a full review of ' + officeName + '’s current responsibilities and confirm them with the Executive.',
+      'Establish real, working meeting and reporting rhythms for ' + officeName + '.',
+      'Set the first set of institution-specific, adopted priorities to replace this template.',
+    ];
+  }
+  function renderTemplateField(panelBodyId, storedValue, generatedList) {
+    var el = document.getElementById(panelBodyId);
+    if (!el) return;
+    if (storedValue) {
+      el.innerHTML = '<ul class="priority-list">' + String(storedValue).split(/\n+/).filter(Boolean).map(function (line) {
+        return '<li class="priority-item is-adopted">' + esc(line) + '</li>';
+      }).join('') + '</ul>';
+      return;
+    }
+    el.innerHTML = '<span class="template-framework-badge">Template &mdash; Pending Adoption</span>'
+      + '<p class="template-framework-note">This is a generic institutional planning scaffold, generated for structural completeness. It has not been reviewed or adopted by this office or the Board of Trustees. Real, adopted content will replace it once set through the administration panel.</p>'
+      + '<ul class="priority-list">' + generatedList.map(function (line) {
+        return '<li class="priority-item">' + esc(line) + '</li>';
+      }).join('') + '</ul>';
+  }
+  function renderStrategicPriorities(data) {
+    renderTemplateField('priorities-panel-body', data.office.strategicPriorities, genericPriorities(data.office.name));
+  }
+  function renderAnnualObjectives(data) {
+    renderTemplateField('objectives-panel-body', data.office.annualObjectives, genericObjectives(data.office.name));
+  }
+
   // Module 5 — Documents
   function renderDocuments(data) {
     var el = document.getElementById('documents-list');
@@ -160,7 +227,15 @@
       + 'Real, working reporting exists today in the Registrar’s Office (student records) and the Founder Dashboard (institution-wide analytics).</div>';
   }
 
-  // Module 7 — Analytics (real where it exists, honest otherwise)
+  // Module 7 — Analytics (real where it exists; a labelled KPI-widget
+  // shell — not invented numbers — everywhere else, per the Founder &
+  // CEO's Level 3 framework directive: the visual framework should
+  // exist even before real figures do).
+  var KPI_SHELL_LABELS = ['Active Items', 'This Month', 'Pending Review', 'Completion Rate'];
+  function kpiGraphShell() {
+    return '<div class="kpi-graph-shell" aria-hidden="true"><span style="height:22%"></span><span style="height:38%"></span>'
+      + '<span style="height:18%"></span><span style="height:44%"></span><span style="height:26%"></span></div>';
+  }
   function renderAnalytics(data) {
     var el = document.getElementById('analytics-panel-body');
     if (!el) return;
@@ -168,7 +243,11 @@
       el.innerHTML = '<div class="portal-empty">Institution-wide analytics for this office live in the full <a href="/portal/founder/">Executive Command Centre</a>, not duplicated here.</div>';
       return;
     }
-    el.innerHTML = '<div class="portal-empty">No analytics configured for this office yet.</div>';
+    var grid = '<div class="kpi-grid">' + KPI_SHELL_LABELS.map(function (label) {
+      return '<div class="kpi-tile"><div class="kpi-label">' + esc(label) + '</div>'
+        + '<div class="kpi-value is-placeholder">No data available</div>' + kpiGraphShell() + '</div>';
+    }).join('') + '</div>';
+    el.innerHTML = grid + '<div class="portal-empty">These are placeholder KPI slots, not real figures &mdash; no analytics pipeline is configured for this office yet. Real, working analytics exist today in the Founder Dashboard (institution-wide) and the Registrar/Finance offices (their own real data).</div>';
   }
 
   // Module 8 — Workflow Centre
@@ -214,6 +293,28 @@
       + (m.agendaText ? '<div class="omr-agenda">' + esc(m.agendaText) + '</div>' : '')
       + (m.minutesText ? '<div class="omr-minutes"><strong>Minutes:</strong> ' + esc(m.minutesText) + '</div>' : '')
       + '<span class="omr-status">' + esc(m.status) + '</span></div>';
+  }
+
+  // Resolutions — a governance-register concept, so the tab itself is
+  // only shown for governance-layer offices (Board of Trustees and its
+  // committees); everywhere else it's hidden entirely rather than
+  // shown as a meaningless empty tab.
+  function renderResolutions(data) {
+    var tabBtn = document.querySelector('.office-tab[data-tab="resolutions"]');
+    if (tabBtn) tabBtn.hidden = data.office.officeType !== 'governance';
+    var el = document.getElementById('resolutions-list');
+    if (!el) return;
+    if (!data.resolutions || !data.resolutions.length) {
+      el.innerHTML = '<div class="portal-empty">No resolutions recorded for this office yet.</div>';
+      return;
+    }
+    el.innerHTML = data.resolutions.map(function (r) {
+      return '<div class="office-resolution-row status-' + esc(r.status) + '">'
+        + (r.resolutionNumber ? '<span class="orr-number">' + esc(r.resolutionNumber) + '</span>' : '')
+        + '<span class="orr-title">' + esc(r.title) + '</span>'
+        + '<span class="orr-status">' + esc(r.status) + '</span>'
+        + (r.summaryText ? '<span class="orr-summary">' + esc(r.summaryText) + '</span>' : '') + '</div>';
+    }).join('');
   }
 
   // Module 11 — Archive: ended appointments + held/cancelled meetings —
