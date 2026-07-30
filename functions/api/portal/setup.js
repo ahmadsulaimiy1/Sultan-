@@ -893,6 +893,36 @@ const STATEMENTS = [
     WHERE slug = 'management-council'`,
   `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
     WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher')`,
+
+  // Institutional Messaging — see sql/schema.sql for the full
+  // commentary. Real threaded correspondence between a guardian and a
+  // specific office, separate from the AI Assistant widget.
+  `CREATE TABLE IF NOT EXISTS message_threads (
+    id                SERIAL PRIMARY KEY,
+    guardian_id       INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    office_id         INTEGER NOT NULL REFERENCES offices(id),
+    subject           TEXT NOT NULL,
+    status            TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'answered', 'closed')),
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_message_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_message_threads_guardian ON message_threads(guardian_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_message_threads_office ON message_threads(office_id)`,
+  `CREATE TABLE IF NOT EXISTS thread_messages (
+    id                  SERIAL PRIMARY KEY,
+    thread_id           INTEGER NOT NULL REFERENCES message_threads(id) ON DELETE CASCADE,
+    sender_type         TEXT NOT NULL CHECK (sender_type IN ('guardian', 'staff')),
+    sender_guardian_id  INTEGER REFERENCES guardians(id),
+    sender_staff_id     INTEGER REFERENCES staff(id),
+    body                TEXT NOT NULL,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CHECK (
+      (sender_type = 'guardian' AND sender_guardian_id IS NOT NULL AND sender_staff_id IS NULL) OR
+      (sender_type = 'staff' AND sender_staff_id IS NOT NULL AND sender_guardian_id IS NULL)
+    )
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_thread_messages_thread ON thread_messages(thread_id)`,
 ];
 
 async function handle({ request, env }) {

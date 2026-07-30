@@ -122,6 +122,7 @@ export async function onRequestGet({ request, env, params }) {
 
     return json({
       office: {
+        id: office.id,
         name: office.name,
         officeType: office.office_type,
         officeKind: office.office_kind,

@@ -1090,6 +1090,12 @@ body.portal-body > *{position:relative;z-index:1;}
 }
 .office-tab:hover{color:var(--navy);}
 .office-tab.is-active{color:var(--navy);border-bottom-color:var(--gold);}
+.office-tab-badge{
+  display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;
+  margin-inline-start:5px;border-radius:8px;background:rgba(180,140,30,0.92);color:#fff;
+  font-family:'Inter',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0;text-transform:none;vertical-align:2px;
+}
+.office-tab-badge[hidden]{display:none;}
 .office-panel{display:none;}
 .office-panel.is-active{display:block;animation:dash-card-in .4s cubic-bezier(.2,.7,.3,1) both;}
 

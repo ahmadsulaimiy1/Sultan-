@@ -71,6 +71,7 @@
     renderStrategicPriorities(data);
     renderAnnualObjectives(data);
     renderDocuments(data);
+    renderMessages(data);
     renderReports(data);
     renderAnalytics(data);
     renderWorkflow(data);
@@ -217,6 +218,91 @@
         + (d.description ? '<span class="odr-desc">' + esc(d.description) + '</span>' : '')
         + '<span class="odr-date">' + fmtDate(d.createdAt) + '</span></a>';
     }).join('');
+  }
+
+  // Messages — real Institutional Messaging inbox for this office (see
+  // functions/api/portal/staff/messages/*.js). Separate from the AI
+  // Assistant widget; every thread here is a real family enquiry a
+  // staff member reads and answers, gated on actually holding this
+  // office (an appointment or a role/delegation grant scoped to it —
+  // the same population the Office Switcher already shows).
+  var MSG_STATUS_LABEL = { open: 'Awaiting Reply', answered: 'Answered', closed: 'Closed' };
+  function renderMessages(data) {
+    var el = document.getElementById('office-messages-body');
+    if (!el) return;
+    var officeId = data.office.id;
+    fetch('/api/portal/staff/messages/list?officeId=' + encodeURIComponent(officeId), { headers: { accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : { threads: [] }; })
+      .then(function (msgData) { renderMessagesList(el, officeId, msgData.threads || []); })
+      .catch(function () { el.innerHTML = '<div class="portal-empty">Could not load messages right now.</div>'; });
+  }
+  function renderMessagesList(el, officeId, threads) {
+    var badge = document.getElementById('messages-tab-badge');
+    var needsReply = threads.filter(function (t) { return t.needsReply; }).length;
+    if (badge) { badge.hidden = !needsReply; badge.textContent = String(needsReply); }
+    if (!threads.length) {
+      el.innerHTML = '<div class="portal-empty">No messages from families yet.</div>';
+      return;
+    }
+    el.innerHTML = threads.map(function (t) {
+      return '<button type="button" class="registrar-approval-row office-message-row" data-open-office-thread="' + t.id + '" style="width:100%;text-align:left;cursor:pointer;">'
+        + '<div><strong>' + esc(t.subject) + '</strong><div class="meta">' + esc(t.guardianName) + ' &middot; ' + fmtDate(t.lastMessageAt) + '</div></div>'
+        + '<span class="registrar-sample-badge" style="background:' + (t.needsReply ? 'rgba(180,140,30,0.9)' : t.status === 'closed' ? 'rgba(90,90,90,0.75)' : 'rgba(47,111,79,0.85)') + ';">'
+        + esc(t.needsReply ? 'Needs Reply' : (MSG_STATUS_LABEL[t.status] || t.status)) + '</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(el.querySelectorAll('[data-open-office-thread]'), function (btn) {
+      btn.addEventListener('click', function () { renderMessageThread(el, officeId, Number(btn.getAttribute('data-open-office-thread'))); });
+    });
+  }
+  function renderMessageThread(el, officeId, threadId) {
+    fetch('/api/portal/staff/messages/thread?id=' + threadId, { headers: { accept: 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data.thread) { renderMessages({ office: { id: officeId } }); return; }
+        var t = data.thread;
+        var messagesHtml = data.messages.map(function (m) {
+          var who = m.senderType === 'guardian' ? esc(t.guardianName) : (m.staffName ? esc(m.staffName) : 'This office');
+          return '<div class="registrar-timeline-item"><div class="meta">' + who + ' &middot; ' + fmtDate(m.createdAt) + '</div><p style="margin:4px 0 0;white-space:pre-wrap;">' + esc(m.body) + '</p></div>';
+        }).join('');
+        var replyHtml = t.status === 'closed'
+          ? '<p class="registrar-hint">This thread is closed.</p>'
+          : '<form data-office-reply-form class="registrar-form-grid">'
+            + '<div class="portal-field registrar-field-wide"><label>Reply</label><textarea data-office-reply-body rows="3" maxlength="8000" required></textarea></div>'
+            + '<div style="display:flex;gap:10px;">'
+            + '<button type="submit" class="portal-submit registrar-form-submit" style="width:auto;">Send Reply</button>'
+            + '<button type="button" class="registrar-btn-danger portal-submit" data-office-close-thread style="width:auto;">Close Thread</button>'
+            + '</div><div class="registrar-form-result" data-office-reply-result hidden></div></form>';
+        el.innerHTML = '<button type="button" class="portal-back-link" data-office-thread-back style="background:none;border:none;cursor:pointer;">&larr; All Messages</button>'
+          + '<h3 style="margin:12px 0 2px;">' + esc(t.subject) + '</h3>'
+          + '<div class="meta" style="padding:0 0 10px;">' + esc(t.guardianName) + ' (' + esc(t.guardianEmail) + ') &middot; ' + esc(MSG_STATUS_LABEL[t.status] || t.status) + '</div>'
+          + '<div class="registrar-timeline">' + messagesHtml + '</div>'
+          + '<div style="padding-top:12px;">' + replyHtml + '</div>';
+        el.querySelector('[data-office-thread-back]').addEventListener('click', function () { renderMessages({ office: { id: officeId } }); });
+        var form = el.querySelector('[data-office-reply-form]');
+        if (form) {
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            sendOfficeReply(el, officeId, threadId, form.querySelector('[data-office-reply-body]').value.trim(), false);
+          });
+          form.querySelector('[data-office-close-thread]').addEventListener('click', function () {
+            sendOfficeReply(el, officeId, threadId, form.querySelector('[data-office-reply-body]').value.trim(), true);
+          });
+        }
+      });
+  }
+  function sendOfficeReply(el, officeId, threadId, body, close) {
+    fetch('/api/portal/staff/messages/reply', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ threadId: threadId, body: body, close: close }),
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          var resultBox = el.querySelector('[data-office-reply-result]');
+          if (resultBox) { resultBox.hidden = false; resultBox.textContent = res.data.error || 'Could not send that reply.'; }
+          return;
+        }
+        renderMessageThread(el, officeId, threadId);
+      });
   }
 
   // Module 6 — Reports (honest: no per-office report generator exists yet)
