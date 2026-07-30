@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Behaviour Management Framework — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Behaviour Management</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello">Behaviour Management Framework</div>
+    <div class="portal-hello-sub">Real infrastructure governed by the Student Code of Conduct (SD-02) — the demerit tiers and escalation path below are the policy's own, not a generic template.</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2 data-sg-status-title>Behaviour Management Status: Operational Framework Ready</h2></div>
+      <p class="registrar-hint">The system exists. The institution has not yet needed to populate it. <strong data-sg-current-records>Current Records: 0</strong></p>
+      <div class="sg-capability-grid" data-sg-capabilities></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Behaviour Categories</h2></div>
+      <p class="registrar-hint">Demerit tiers transcribed from SD-02 §7.1-7.3; merit categories are new recognition structure this system introduces.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <h3 style="font-family:'Cinzel','Amiri',serif;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--portal-heading);margin-bottom:10px;">Merit</h3>
+          <ul class="sg-taxonomy-list" data-sg-merit></ul>
+        </div>
+        <div>
+          <h3 style="font-family:'Cinzel','Amiri',serif;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--portal-heading);margin-bottom:10px;">Demerit</h3>
+          <ul class="sg-taxonomy-list" data-sg-demerit></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <h2>Incident Register</h2>
+        <button type="button" class="registrar-btn" data-sg-report-toggle>+ Record an Incident</button>
+      </div>
+      <form class="sg-report-form" data-sg-report-form hidden>
+        <label class="registrar-field">
+          <span>Student ID</span>
+          <input type="number" data-sg-report-student required>
+        </label>
+        <label class="registrar-field">
+          <span>Category</span>
+          <select data-sg-report-category required></select>
+        </label>
+        <label class="registrar-field">
+          <span>Description</span>
+          <textarea data-sg-report-summary rows="3" required></textarea>
+        </label>
+        <div style="display:flex;gap:10px;">
+          <button type="submit" class="registrar-approval-approve">Submit</button>
+          <button type="button" class="registrar-btn" data-sg-report-cancel>Cancel</button>
+        </div>
+        <div class="registrar-form-result" data-sg-report-result hidden></div>
+      </form>
+      <div class="registrar-approvals-list" data-sg-cases-list></div>
+      <div class="registrar-approvals-empty" data-sg-cases-empty hidden>No incidents currently on record.</div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Behaviour Management Framework…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Behaviour Management Framework</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-staff-behaviour.js" defer></script>
+</body>
+</html>

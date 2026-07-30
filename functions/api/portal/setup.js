@@ -662,6 +662,63 @@ const STATEMENTS = [
     ('critical', 'Critical', 'An immediate risk of harm requiring same-day DSL and, where applicable, external-agency action.', 4)
     ON CONFLICT (code) DO NOTHING`,
 
+  // Behaviour Management Framework — same "Institutional Capability
+  // Framework" pattern as Safeguarding. Demerit categories and the
+  // three-tier severity escalation are transcribed from the adopted
+  // Student Code of Conduct (SD-02 §7.1-7.4), not invented; the merit
+  // side is real new structure the policy doesn't yet define — recorded
+  // as such, not asserted as policy-derived.
+  `CREATE TABLE IF NOT EXISTS behaviour_categories (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    kind         TEXT NOT NULL CHECK (kind IN ('merit', 'demerit')),
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    points       INTEGER NOT NULL DEFAULT 0,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS behaviour_incidents (
+    id                    SERIAL PRIMARY KEY,
+    incident_no           TEXT NOT NULL UNIQUE,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id        INTEGER REFERENCES institutions(id),
+    category_id           INTEGER NOT NULL REFERENCES behaviour_categories(id),
+    severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious', 'suspension_expulsion')),
+    description           TEXT NOT NULL,
+    status                TEXT NOT NULL DEFAULT 'recorded' CHECK (status IN (
+                             'recorded', 'under_review', 'intervention', 'resolved', 'escalated'
+                           )),
+    parent_notified       BOOLEAN NOT NULL DEFAULT false,
+    recorded_by_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+    occurred_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_at           TIMESTAMPTZ,
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_behaviour_incidents_student ON behaviour_incidents (student_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_behaviour_incidents_status ON behaviour_incidents (status)`,
+  `CREATE TABLE IF NOT EXISTS behaviour_intervention_log (
+    id               SERIAL PRIMARY KEY,
+    incident_id      INTEGER NOT NULL REFERENCES behaviour_incidents(id) ON DELETE CASCADE,
+    action           TEXT NOT NULL CHECK (action IN (
+                       'recorded', 'reviewed', 'intervention_started', 'parent_engaged',
+                       'escalated', 'resolved', 'reopened'
+                     )),
+    actor_staff_id    INTEGER NOT NULL REFERENCES staff(id),
+    notes            TEXT,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_behaviour_intervention_log_incident ON behaviour_intervention_log (incident_id)`,
+  `INSERT INTO behaviour_categories (code, kind, label, description, points, sort_order) VALUES
+    ('academic_excellence', 'merit', 'Academic Excellence', 'Recognised achievement in classroom work, an assessment, or a competition.', 5, 1),
+    ('leadership', 'merit', 'Leadership', 'Taking initiative or responsibility beyond what was required.', 5, 2),
+    ('islamic_character', 'merit', 'Islamic Character', 'A demonstrated act reflecting the Islamic creed expectations SD-01 establishes.', 5, 3),
+    ('community_service', 'merit', 'Community Service', 'A voluntary contribution to the school or wider community.', 5, 4),
+    ('sporting_achievement', 'merit', 'Sporting Achievement', 'Recognised achievement in sport or physical education.', 5, 5),
+    ('minor_misconduct', 'demerit', 'Minor Misconduct', 'Addressed directly by the class teacher — informal, per SD-02 §7.1, logged here only if repeated.', -1, 6),
+    ('moderate_misconduct', 'demerit', 'Repeated or Moderate Misconduct', 'Referred to VP Administration per SD-02 §7.2 — logged, guardian informed.', -3, 7),
+    ('serious_misconduct', 'demerit', 'Serious Misconduct', 'Referred to the Principal per SD-02 §7.3 — guardian informed the same day, may result in suspension.', -5, 8)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,

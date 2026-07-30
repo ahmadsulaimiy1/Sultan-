@@ -64,6 +64,11 @@
     var hasDsl = (data.roles || []).some(function (r) { return r.roleCode === 'DSL'; });
     if (hasDsl) add('Safeguarding Intelligence', 'Designated Safeguarding Lead', '/portal/staff/safeguarding/');
 
+    // Behaviour Management is owned by VP Administration (SD-02 §6) and
+    // Principals — role-code check, same reasoning as DSL above.
+    var hasBehaviourRole = (data.roles || []).some(function (r) { return r.roleCode === 'VP' || r.roleCode === 'PRIN'; });
+    if (hasBehaviourRole) add('Behaviour Management', 'Student Code of Conduct (SD-02)', '/portal/staff/behaviour/');
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {

@@ -44,6 +44,7 @@ export const SYSTEM_AREAS = {
   analytics:              { name: 'Analytics', ownerOffice: 'Varies', governingPolicy: null },
   system_settings:        { name: 'System Settings', ownerOffice: 'ICT / System Administrator', governingPolicy: null },
   safeguarding:           { name: 'Safeguarding Intelligence', ownerOffice: 'Designated Safeguarding Lead', governingPolicy: 'SW-01, SW-02' },
+  behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -171,6 +172,16 @@ export const MATRIX = {
   // "aggregate only, no individual PII" convention for executive grants.
   safeguarding: [
     { role: 'DSL', permissions: ['V', 'C', 'E', 'A', 'X'], scope: 'all institutions' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual case content)' },
+  ],
+  // Escalation line transcribed from the Student Code of Conduct
+  // (SD-02 §6/§7): class teacher records minor/repeated matters, VP
+  // Administration owns the Code and handles moderate matters, the
+  // Principal handles serious matters (own institution only).
+  behaviour: [
+    { role: 'TCH', permissions: ['V', 'C'], scope: 'own classes only' },
+    { role: 'VP', permissions: ['V', 'C', 'E', 'A'], scope: 'all institutions' },
+    { role: 'PRIN', permissions: ['V', 'C', 'E', 'A'], scope: 'own institution' },
     { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual case content)' },
   ],
 };
