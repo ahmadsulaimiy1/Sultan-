@@ -1353,4 +1353,33 @@ CREATE TABLE IF NOT EXISTS thread_messages (
     (sender_type = 'staff' AND sender_staff_id IS NOT NULL AND sender_guardian_id IS NULL)
   )
 );
+
+-- ============================================================
+-- PWA Web Push — the one delivery channel from
+-- guardian_notification_preferences that email.js's "coming soon"
+-- comment doesn't cover, because it isn't email/SMS/WhatsApp: it's the
+-- browser/OS push channel behind the installable PWA (sw.js), and it
+-- needs zero paid provider — just a VAPID key pair (see
+-- functions/_lib/web-push.js and scripts/generate-vapid-keys.js).
+-- One row per subscribed device/browser, not per guardian — the same
+-- family signed in on a phone and a laptop holds two independent
+-- PushSubscription endpoints, each delivered to separately, and either
+-- one can expire (browser data cleared, uninstall) without affecting
+-- the other. endpoint is the whole-world-unique identifier a browser's
+-- push service assigns per subscription, so it — not guardian_id — is
+-- the natural primary key for "does this device already have a row".
+-- ============================================================
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id           SERIAL PRIMARY KEY,
+  guardian_id  INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+  endpoint     TEXT NOT NULL UNIQUE,
+  p256dh       TEXT NOT NULL,
+  auth         TEXT NOT NULL,
+  user_agent   TEXT,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions(guardian_id);
+
+ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false;
 CREATE INDEX IF NOT EXISTS idx_thread_messages_thread ON thread_messages(thread_id);

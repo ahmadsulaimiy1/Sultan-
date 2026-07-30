@@ -43,6 +43,36 @@ import { readStaffSessionFromRequest, timingSafeEqualString } from '../../../_li
 import { hasPermissionFor } from '../../../_lib/permissions.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
+import { sendWebPushToGuardian } from '../../../_lib/web-push.js';
+import { siteOriginFromRequest } from '../../../_lib/email.js';
+
+// Push fan-out on publish, matching the App Architecture Directive's own
+// named use case ("push notifications for announcements/news"). Best
+// effort only — a slow or failing push provider must never block or
+// fail the publish action itself, so every step here is wrapped and
+// swallows its own errors (mirrors sendWebPush()'s own never-throw
+// contract, but the guardian-list query above it can still throw on a
+// bad connection, hence the outer try/catch too).
+async function notifyGuardiansOfPublish(sql, env, request, announcementId) {
+  try {
+    const ann = await sql`SELECT title, summary, category, action_url FROM announcements WHERE id = ${announcementId}`;
+    if (!ann.rows.length) return;
+    const { title, summary, category, action_url: actionUrl } = ann.rows[0];
+    const origin = siteOriginFromRequest(request);
+    const url = actionUrl || `${origin}/announcements/`;
+    const payload = { title, body: summary, url, tag: `announcement-${announcementId}` };
+
+    const subscribed = await sql`
+      SELECT DISTINCT guardian_id FROM push_subscriptions ps
+      JOIN guardian_notification_preferences gnp ON gnp.guardian_id = ps.guardian_id
+      WHERE gnp.channel_push = true AND gnp.type_announcements = true`;
+    for (const row of subscribed.rows) {
+      await sendWebPushToGuardian(env, sql, row.guardian_id, payload);
+    }
+  } catch (err) {
+    console.error('announcement publish push fan-out error', err);
+  }
+}
 
 async function resolveAuth(request, env) {
   if (env.SESSION_SECRET) {
@@ -204,6 +234,7 @@ export async function onRequestPost({ request, env }) {
           reason: body.reason || null, metadata: { action: 'publish' },
         });
       }
+      await notifyGuardiansOfPublish(sql, env, request, body.id);
       return json({ ok: true, id: body.id, status: 'published' });
     }
 

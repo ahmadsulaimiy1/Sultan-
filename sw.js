@@ -38,6 +38,46 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Web Push (functions/_lib/web-push.js sends the encrypted payload;
+// this is the receiving half). event.data is the decrypted JSON body —
+// the browser has already done the aes128gcm decryption by the time
+// this fires, this worker only ever sees plaintext. Falls back to a
+// generic notice if a push somehow arrives with no payload (the Push
+// API permits payload-less pushes) rather than silently dropping it.
+self.addEventListener('push', (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = {};
+  }
+  const title = data.title || 'Sultan Hanafi Royal Schools';
+  const options = {
+    body: data.body || 'You have a new notification.',
+    icon: '/assets/images/pwa-icon-192.png',
+    badge: '/assets/images/pwa-icon-192.png',
+    tag: data.tag || 'shrs-notification',
+    data: { url: data.url || '/' },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Focuses an already-open tab on the target URL if one exists, rather
+// than always opening a new one — matches how a real installed app's
+// notifications behave.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (client.url === targetUrl && 'focus' in client) return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
+    })
+  );
+});
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;

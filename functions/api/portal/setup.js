@@ -1317,6 +1317,19 @@ const STATEMENTS = [
     )
   )`,
   `CREATE INDEX IF NOT EXISTS idx_thread_messages_thread ON thread_messages(thread_id)`,
+
+  `CREATE TABLE IF NOT EXISTS push_subscriptions (
+    id           SERIAL PRIMARY KEY,
+    guardian_id  INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,
+    endpoint     TEXT NOT NULL UNIQUE,
+    p256dh       TEXT NOT NULL,
+    auth         TEXT NOT NULL,
+    user_agent   TEXT,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions(guardian_id)`,
+  `ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false`,
 ];
 
 async function handle({ request, env }) {

@@ -542,6 +542,101 @@
       });
   }
 
+  // Push is a real per-device browser subscription (Push API), not just
+  // a stored boolean like the other three "coming soon" channels — so
+  // its toggle drives an actual permission request + pushManager
+  // subscribe/unsubscribe + backend round-trip, rendered separately
+  // from the generic channel switches below and skipped entirely on
+  // browsers/deployments where it can't work (no Push API support, or
+  // the school hasn't generated VAPID keys yet — see
+  // scripts/generate-vapid-keys.js).
+  function urlBase64ToUint8Array(base64url){
+    var raw = atob(base64url.replace(/-/g, '+').replace(/_/g, '/'));
+    var out = new Uint8Array(raw.length);
+    for(var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+    return out;
+  }
+
+  function pushSupported(){
+    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  }
+
+  function renderPushRow(container, initiallyOn, state){
+    var liveBadge = STRIP_LANG === 'ar' ? 'مُفعّل' : 'Live';
+    var label = STRIP_LANG === 'ar' ? 'إشعارات الدفع (على هذا الجهاز)' : 'Push Notifications (this device)';
+    var row = document.createElement('div');
+    row.className = 'pc-toggle-row';
+    row.innerHTML = '<div><span class="pc-option-title">' + label + '</span> <span class="pc-badge">' + liveBadge + '</span></div>' +
+      '<button type="button" class="pc-switch' + (initiallyOn ? ' is-on' : '') + '" data-push-switch role="switch" aria-checked="' + initiallyOn + '"><span class="pc-switch-knob"></span></button>';
+    container.appendChild(row);
+    var statusEl = document.createElement('p');
+    statusEl.className = 'pc-form-status';
+    statusEl.hidden = true;
+    statusEl.setAttribute('data-push-status', '');
+    container.appendChild(statusEl);
+
+    var sw = row.querySelector('[data-push-switch]');
+    function setStatus(msg, isError){
+      statusEl.hidden = false;
+      statusEl.className = 'pc-form-status ' + (isError ? 'is-error' : 'is-success');
+      statusEl.textContent = msg;
+    }
+    sw.addEventListener('click', function(){
+      var turningOn = !sw.classList.contains('is-on');
+      sw.disabled = true;
+      (turningOn ? subscribeToPush() : unsubscribeFromPush())
+        .then(function(){
+          sw.classList.toggle('is-on');
+          sw.setAttribute('aria-checked', sw.classList.contains('is-on'));
+          state.channel_push = sw.classList.contains('is-on');
+          setStatus(
+            sw.classList.contains('is-on')
+              ? (STRIP_LANG === 'ar' ? 'تم تفعيل الإشعارات على هذا الجهاز.' : 'Push notifications enabled on this device.')
+              : (STRIP_LANG === 'ar' ? 'تم إيقاف الإشعارات على هذا الجهاز.' : 'Push notifications turned off on this device.'),
+            false
+          );
+        })
+        .catch(function(err){
+          setStatus(err && err.message ? err.message : (STRIP_LANG === 'ar' ? 'تعذّر تنفيذ الإجراء.' : 'Could not complete that action.'), true);
+        })
+        .then(function(){ sw.disabled = false; });
+    });
+  }
+
+  function subscribeToPush(){
+    return fetch('/api/portal/push-public-key').then(function(res){ return res.json(); })
+      .then(function(data){
+        if(!data.publicKey) throw new Error(STRIP_LANG === 'ar' ? 'إشعارات الدفع غير مُهيّأة بعد على هذا الموقع.' : 'Push notifications are not configured on this site yet.');
+        if(Notification.permission === 'denied') throw new Error(STRIP_LANG === 'ar' ? 'تم حظر إذن الإشعارات في المتصفح.' : 'Notification permission is blocked in your browser settings.');
+        return navigator.serviceWorker.ready.then(function(reg){
+          return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(data.publicKey) });
+        });
+      })
+      .then(function(subscription){
+        return fetch('/api/portal/push-subscribe', {
+          method: 'POST', credentials: 'same-origin',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ subscription: subscription.toJSON() }),
+        }).then(function(res){ if(!res.ok) throw new Error(); });
+      });
+  }
+
+  function unsubscribeFromPush(){
+    return navigator.serviceWorker.ready
+      .then(function(reg){ return reg.pushManager.getSubscription(); })
+      .then(function(subscription){
+        if(!subscription) return null;
+        var endpoint = subscription.endpoint;
+        return subscription.unsubscribe().then(function(){
+          return fetch('/api/portal/push-subscribe', {
+            method: 'DELETE', credentials: 'same-origin',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ endpoint: endpoint }),
+          });
+        });
+      });
+  }
+
   function renderNotificationsForm(body, p){
     var liveBadge = STRIP_LANG === 'ar' ? 'مُفعّل' : 'Live';
     var soonBadge = STRIP_LANG === 'ar' ? 'قريبًا' : 'Coming soon';
@@ -560,11 +655,21 @@
 
     body.innerHTML =
       '<h4 class="pc-option-title" style="display:block;margin-bottom:6px;">' + (STRIP_LANG === 'ar' ? 'قنوات التواصل' : 'Delivery Channels') + '</h4>' + channelsHtml +
+      '<div data-push-row-container></div>' +
       '<h4 class="pc-option-title" style="display:block;margin:18px 0 6px;">' + (STRIP_LANG === 'ar' ? 'أنواع الإشعارات' : 'Notification Types') + '</h4>' + typesHtml +
       '<button type="button" class="btn btn-gold" data-notif-save style="margin-top:16px;">' + saveLabel + '</button>' +
       '<p class="pc-form-status" data-notif-status hidden></p>';
 
     var state = Object.assign({}, p);
+
+    if(pushSupported()){
+      navigator.serviceWorker.ready.then(function(reg){ return reg.pushManager.getSubscription(); })
+        .then(function(subscription){
+          renderPushRow(body.querySelector('[data-push-row-container]'), !!subscription, state);
+        })
+        .catch(function(){});
+    }
+
     body.querySelectorAll('[data-notif-field]').forEach(function(sw){
       if(sw.disabled) return;
       sw.addEventListener('click', function(){
