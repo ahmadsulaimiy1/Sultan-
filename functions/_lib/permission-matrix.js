@@ -46,6 +46,7 @@ export const SYSTEM_AREAS = {
   safeguarding:           { name: 'Safeguarding Intelligence', ownerOffice: 'Designated Safeguarding Lead', governingPolicy: 'SW-01, SW-02' },
   behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
   teacher_performance:    { name: 'Teacher Performance', ownerOffice: 'Principal, jointly with Academic Affairs', governingPolicy: 'Pending — HR Governance Framework (Staff Handbook §7)' },
+  exam_readiness:         { name: 'Examination Readiness (WAEC/NECO)', ownerOffice: 'Registrar, jointly with Academic Affairs', governingPolicy: null },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -195,6 +196,13 @@ export const MATRIX = {
     { role: 'VP', permissions: ['V', 'C', 'E', 'A'], scope: 'all institutions' },
     { role: 'TCH', permissions: ['V'], scope: 'own record only' },
     { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual record content)' },
+  ],
+  exam_readiness: [
+    { role: 'REG', permissions: ['V', 'C', 'E', 'X'], scope: null },
+    { role: 'AREG', permissions: ['V', 'C', 'E', 'X'], scope: null },
+    { role: 'PRIN', permissions: ['V', 'E'], scope: 'own institution' },
+    { role: 'TCH', permissions: ['V'], scope: 'own classes only' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual candidate content)' },
   ],
 };
 

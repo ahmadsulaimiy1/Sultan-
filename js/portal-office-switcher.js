@@ -74,6 +74,14 @@
     var hasTeacherPerfRole = (data.roles || []).some(function (r) { return r.roleCode === 'VP' || r.roleCode === 'PRIN'; });
     if (hasTeacherPerfRole) add('Teacher Performance', 'Observations, PD, and reviews', '/portal/staff/teacher-performance/');
 
+    // Examination Readiness (shared WAEC/NECO engine) is owned by the
+    // Registrar, jointly with Academic Affairs.
+    var hasExamReadinessRole = (data.roles || []).some(function (r) { return r.roleCode === 'REG' || r.roleCode === 'AREG'; });
+    if (hasExamReadinessRole) {
+      add('WAEC Readiness', 'Candidate & subject readiness', '/portal/staff/waec-readiness/');
+      add('NECO Readiness', 'Candidate & subject readiness', '/portal/staff/neco-readiness/');
+    }
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {

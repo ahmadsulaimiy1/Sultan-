@@ -798,6 +798,73 @@ const STATEMENTS = [
     ('professional_responsibilities', 'Professional Responsibilities', 'Punctuality, record-keeping, and engagement with professional development.', 5)
     ON CONFLICT (code) DO NOTHING`,
 
+  // Examination Readiness Framework — one shared, real engine covering
+  // both external boards the Founder named as separate Tier 1
+  // priorities (WAEC and NECO), parametrized by exam_body rather than
+  // duplicated table-for-table: both boards need identical real
+  // structure (candidate tracking, subject readiness, mock results,
+  // risk indicators), and Registrar/Examinations offices in practice
+  // track both boards through one register, not two parallel systems.
+  // Standard, real exam-readiness risk factors — not invented data.
+  `CREATE TABLE IF NOT EXISTS exam_readiness_risk_indicators (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS exam_candidates (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    exam_body              TEXT NOT NULL CHECK (exam_body IN ('WAEC', 'NECO')),
+    exam_year              INTEGER NOT NULL,
+    institution_id         INTEGER REFERENCES institutions(id),
+    registration_status    TEXT NOT NULL DEFAULT 'not_registered' CHECK (registration_status IN (
+                              'not_registered', 'registered', 'confirmed', 'sat'
+                            )),
+    created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (student_id, exam_body, exam_year)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_exam_candidates_body_year ON exam_candidates (exam_body, exam_year)`,
+  `CREATE TABLE IF NOT EXISTS exam_subject_readiness (
+    id                SERIAL PRIMARY KEY,
+    candidate_id       INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+    subject            TEXT NOT NULL,
+    readiness_status   TEXT NOT NULL DEFAULT 'on_track' CHECK (readiness_status IN ('on_track', 'at_risk', 'critical')),
+    notes              TEXT,
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_exam_subject_readiness_candidate ON exam_subject_readiness (candidate_id)`,
+  `CREATE TABLE IF NOT EXISTS exam_mock_results (
+    id                  SERIAL PRIMARY KEY,
+    candidate_id         INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+    subject              TEXT NOT NULL,
+    mock_round           TEXT NOT NULL,
+    score                NUMERIC(5,2) NOT NULL,
+    max_score            NUMERIC(5,2) NOT NULL DEFAULT 100,
+    recorded_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+    recorded_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_exam_mock_results_candidate ON exam_mock_results (candidate_id)`,
+  `CREATE TABLE IF NOT EXISTS exam_readiness_flags (
+    id                 SERIAL PRIMARY KEY,
+    candidate_id        INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+    indicator_id        INTEGER NOT NULL REFERENCES exam_readiness_risk_indicators(id),
+    notes               TEXT,
+    flagged_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+    flagged_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_at         TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_exam_readiness_flags_candidate ON exam_readiness_flags (candidate_id)`,
+  `INSERT INTO exam_readiness_risk_indicators (code, label, description, sort_order) VALUES
+    ('registration_incomplete', 'Registration Incomplete', 'The candidate is not yet fully registered with the exam body ahead of the deadline.', 1),
+    ('subject_coverage_gap', 'Subject Coverage Gap', 'The syllabus for one or more registered subjects is behind schedule.', 2),
+    ('mock_underperformance', 'Mock Underperformance', 'A mock result fell below the pass threshold for a registered subject.', 3),
+    ('attendance_gap', 'Attendance Gap', 'Attendance below the level needed to complete subject coverage on time.', 4),
+    ('fee_outstanding', 'Fee Outstanding', 'An outstanding balance that could affect the candidate''s exam-body registration.', 5)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,
