@@ -26,10 +26,8 @@ const OFFICES = [
 
   { slug: 'head-teacher', name: 'Head Teacher — Nursery & Primary', layer: 'school_leadership' },
   { slug: 'principal-royal-college', name: 'Principal — Royal College', layer: 'school_leadership' },
-  { slug: 'principal-quran-college', name: "Principal — Qur'an College", layer: 'school_leadership' },
-  { slug: 'principal-islamic-arabic-studies', name: 'Principal — Islamic & Arabic Studies', layer: 'school_leadership' },
-  { slug: 'raees', name: "Office of the Ra'ees", layer: 'school_leadership' },
-  { slug: 'mudeer', name: 'Office of the Mudeer', layer: 'school_leadership' },
+  { slug: 'raees', name: "Office of the Ra'ees — School of Islamic & Arabic Studies", layer: 'school_leadership' },
+  { slug: 'mudeer', name: "Office of the Mudeer — Qur'an College", layer: 'school_leadership' },
 
   { slug: 'finance', name: 'Finance Office', layer: 'operational' },
   { slug: 'hr', name: 'Human Resources', layer: 'operational' },

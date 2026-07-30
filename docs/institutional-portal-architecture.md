@@ -65,11 +65,11 @@ and contact details — zero redesign, exactly as specified.
 |---|---|---|
 | Governance | Board of Trustees, Executive, Management Council | None seeded — see below |
 | Academic | Academic Affairs, Registrar's Office, Examinations, Admissions | None seeded |
-| School Leadership | Head Teacher, 3 Principals, Ra'ees, Mudeer | None seeded |
+| School Leadership | Head Teacher, Principal (Royal College), Ra'ees, Mudeer | None seeded |
 | Operational | Finance, HR, Student Affairs, Communications, Digital Services, Digital Learning | None seeded |
 | Institutional Services | Library, Alumni, Foundation, Certificate/Transcript, Digital Identity, Knowledge Base | None seeded |
 
-All 25 office portals are live, browsable (from `/portal/staff/offices/`,
+All 23 office portals are live, browsable (from `/portal/staff/offices/`,
 behind staff login), and render all 11 modules with correct empty/vacant
 states — verified via Playwright (desktop + mobile, zero console errors,
 both a filled-seat office and a fully-vacant office screenshotted).
@@ -104,19 +104,28 @@ left as a runbook, not auto-executed, since only whoever holds
 document has no way to verify the exact spelling/title the school wants
 on the record versus what the marketing page happens to say.
 
-## Two office slots that are explicitly NOT a rename
+## Ra'ees / Mudeer — resolved
 
-`raees` and `mudeer` were requested as their own offices. The real,
-published leadership titles for those two schools today are "Principal —
-Qur'an College" and "Principal — Islamic & Arabic Studies." Rather than
-silently relabel a real person's already-published title to a different
-one on the assumption the mapping is obvious, both `raees` and `mudeer`
-exist as their own office rows, correctly showing "Vacant — Awaiting
-Appointment," with a note on the seat explaining why. **This needs your
-explicit confirmation**: either (a) Ra'ees/Mudeer are the same people as
-the existing Principals under a different formal title — tell us and
-we'll add a second appointment row for each, same `staff_id`, or (b)
-they're meant to be distinct appointments — tell us who.
+The Founder & CEO has officially adopted **Ra'ees** as the Head of
+Institution title for the Sultan Hanafi School of Islamic & Arabic Studies,
+and **Mudeer** as the Head of Institution title for Sultan Hanafi Qur'an
+College, replacing "Principal" for both. This was a real naming decision
+within the owner's authority, not a fabrication — so the two former
+separate `principal-quran-college` / `principal-islamic-arabic-studies`
+office rows and their generated portal pages have been removed, and
+`raees` / `mudeer` are now the sole office slots for those two schools'
+heads, sitewide (public pages, org chart, ledger tables, faculty
+directory, office portal directory).
+
+The seats remain correctly recorded as **"Vacant — Awaiting Appointment"**
+in the HR directory — adopting a title is not the same action as filing an
+appointment record, and the appointment record still needs an explicit
+admin action (`create-appointment`) naming the actual office-holder before
+either seat shows as filled. Shaykh Abubakr Solah (Ra'ees) and Shaykh
+Ahmad Ibrahim (Mudeer) are already named on the public governance and
+faculty pages; the runbook below should be run for both once their staff
+records exist, to bring the HR-backed office portal in line with what the
+public pages already say.
 
 ## What's not built yet (honestly)
 
