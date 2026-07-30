@@ -1,0 +1,13 @@
+{
+  "appId": "com.shroyalschools.app",
+  "appName": "Sultan Hanafi Royal Schools",
+  "webDir": "www",
+  "server": {
+    "url": "https://shroyalschools.com",
+    "cleartext": false,
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
