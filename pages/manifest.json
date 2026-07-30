@@ -112,6 +112,14 @@
     "altHref": "/ar/boarding/"
   },
   {
+    "slug": "student-life",
+    "output": "student-life/index.html",
+    "title": "The Student Life Hub — Sultan Hanafi Royal Schools",
+    "description": "Clubs, competitions, leadership development, sport, spiritual life, and pastoral care — everything outside the timetable, in one place.",
+    "contentFile": "pages/student-life.html",
+    "altHref": "/ar/student-life/"
+  },
+  {
     "slug": "admission",
     "output": "admission/index.html",
     "title": "Admission — Sultan Hanafi Royal Schools",
@@ -316,6 +324,16 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/boarding/"
+  },
+  {
+    "slug": "student-life-ar",
+    "output": "ar/student-life/index.html",
+    "title": "مركز حياة الطالب — مدارس سلطان حنفي الملكية",
+    "description": "الأندية والمسابقات وتطوير القيادة والرياضة والحياة الروحية والرعاية — كل ما هو خارج الجدول الدراسي، في مكان واحد.",
+    "contentFile": "pages/student-life.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/student-life/"
   },
   {
     "slug": "admission-ar",
