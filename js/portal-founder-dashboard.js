@@ -10,6 +10,7 @@
   var errorMessageEl = document.querySelector('[data-founder-error-message]');
   var clearBtn = document.querySelector('[data-founder-clear]');
   var generatedEl = document.querySelector('[data-founder-generated]');
+  var skeletonEl = document.querySelector('[data-founder-skeleton]');
 
   function el(tag, className, text){
     var e = document.createElement(tag);
@@ -801,6 +802,7 @@
       unavailableEl.appendChild(row);
     });
 
+    if(skeletonEl) skeletonEl.hidden = true;
     gateEl.hidden = true;
     errorCardEl.hidden = true;
     contentEl.hidden = false;
@@ -815,6 +817,7 @@
       var data = await res.json().catch(function(){ return {}; });
       if(!res.ok){
         sessionStorage.removeItem(TOKEN_KEY);
+        if(skeletonEl) skeletonEl.hidden = true;
         gateEl.hidden = false;
         contentEl.hidden = true;
         gateError.textContent = data.error || 'Could not load the dashboard.';
@@ -826,6 +829,8 @@
       gateEl.hidden = true;
       render(data);
     }catch(err){
+      if(skeletonEl) skeletonEl.hidden = true;
+      gateEl.hidden = false;
       gateError.textContent = 'Could not reach the portal — please check your connection and try again.';
       gateError.classList.add('is-visible');
       gateSubmit.disabled = false;
@@ -839,6 +844,14 @@
   // all. This silent attempt sends no x-founder-token header; a 403
   // here just means "no staff session, or not EXE" and falls through
   // to the existing token-gate flow untouched.
+  // Elegant loading state: the skeleton (never a spinner) covers this
+  // silent attempt AND, if it fails, the stored-token auto-load below —
+  // so a returning Executive never sees a flash of the sign-in form
+  // before their own dashboard appears. Only revealed if neither path
+  // succeeds (see the two branches below).
+  var storedTokenAtInit = sessionStorage.getItem(TOKEN_KEY);
+  if(skeletonEl){ skeletonEl.hidden = false; gateEl.hidden = true; }
+
   (async function tryStaffSession(){
     try{
       var res = await fetch('/api/portal/founder/dashboard', { headers: { 'accept': 'application/json' }, credentials: 'same-origin' });
@@ -846,9 +859,14 @@
         var data = await res.json();
         gateEl.hidden = true;
         render(data);
+        return;
       }
     }catch(err){
-      // silent — falls through to the token-gate flow below
+      // falls through to the token-gate flow below
+    }
+    if(!storedTokenAtInit){
+      if(skeletonEl) skeletonEl.hidden = true;
+      gateEl.hidden = false;
     }
   })();
 

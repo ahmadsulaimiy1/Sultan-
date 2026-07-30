@@ -543,6 +543,36 @@ body.portal-body > *{position:relative;z-index:1;}
 .pfd-alert-count{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--ink-soft);}
 .pfd-alert-row.has-attention .pfd-alert-count{color:var(--terracotta);}
 .pfd-alert-row.is-quiet .pfd-alert-count{color:var(--line);}
+/* List-row entrance stagger — the same restrained fade+rise as the
+   page-level card stagger, but per-row, so the Executive Alerts
+   Centre, Strategic Watchlist, and Executive Timeline each read as
+   "populating" rather than appearing as one flat block. */
+.pfd-alert-row{animation:pfd-row-in 0.4s cubic-bezier(.2,.7,.3,1) both;}
+.pfd-alert-row:nth-child(1){animation-delay:0s;}
+.pfd-alert-row:nth-child(2){animation-delay:0.05s;}
+.pfd-alert-row:nth-child(3){animation-delay:0.1s;}
+.pfd-alert-row:nth-child(4){animation-delay:0.15s;}
+.pfd-alert-row:nth-child(5){animation-delay:0.2s;}
+.pfd-alert-row:nth-child(n+6){animation-delay:0.24s;}
+@keyframes pfd-row-in{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+@media (prefers-reduced-motion:reduce){.pfd-alert-row{animation:none;}}
+
+/* Elegant loading state — shown the moment a returning visitor's saved
+   session/token is used to auto-load a dashboard (see js/portal-
+   founder-dashboard.js), replacing what would otherwise be a bare
+   blank gap (or a flash of the sign-in form) while the real fetch is
+   in flight. A shimmering placeholder, never a spinner — same
+   restrained "living gold" language as the rest of the portal. */
+.portal-loading-skeleton{width:100%;max-width:920px;margin:0 auto;}
+.pls-hero{height:280px;border-radius:calc(var(--btn-radius) - 2px);margin-bottom:30px;}
+.pls-row{display:flex;gap:20px;margin-bottom:20px;}
+.pls-card{height:120px;border-radius:calc(var(--btn-radius) - 2px);flex:1;}
+.pls-hero,.pls-card{
+  background:linear-gradient(100deg, var(--line) 30%, rgba(198,161,91,0.28) 50%, var(--line) 70%);
+  background-size:220% 100%;animation:pls-shimmer 1.8s ease-in-out infinite;
+}
+@keyframes pls-shimmer{0%{background-position:120% 0;}100%{background-position:-20% 0;}}
+@media (prefers-reduced-motion:reduce){.pls-hero,.pls-card{animation:none;background-position:0 0;}}
 
 /* Founder Command Centre — Strategic Progress Centre. Same honest
    "template, not adopted fact" treatment as office Strategic
@@ -988,11 +1018,16 @@ body.portal-body > *{position:relative;z-index:1;}
   border:1px solid rgba(233,206,138,0.4);border-radius:999px;background:rgba(0,0,0,0.15);
   font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;
 }
-.exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+.exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;animation:health-dot-pulse 2.4s ease-in-out infinite;}
 .exec-welcome-health.is-excellent .dot{background:#7fd99a;box-shadow:0 0 8px #7fd99a;}
 .exec-welcome-health.is-strong .dot{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright);}
 .exec-welcome-health.is-developing .dot{background:var(--terracotta);box-shadow:0 0 8px var(--terracotta);}
 .exec-welcome-health.is-attention .dot{background:#e08a8a;box-shadow:0 0 8px #e08a8a;}
+/* Dashboard Motion System (Founder Override Directive, Priority 4) —
+   a "live" pulse on the one indicator that's genuinely a live status
+   (institutional health), not decoration applied everywhere. */
+@keyframes health-dot-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.55;transform:scale(0.82);}}
+@media (prefers-reduced-motion:reduce){.exec-welcome-health .dot{animation:none;}}
 
 /* ============================================================
    Portal Gateway Atmosphere System (Founder Override Directive,
