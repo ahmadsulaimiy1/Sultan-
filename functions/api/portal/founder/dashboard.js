@@ -191,6 +191,40 @@ export async function onRequestGet({ request, env }) {
         WHERE i.status IN ('unpaid', 'partial') AND s.is_sample_data = false`,
     ]);
 
+    // Founder Command Centre Phase 2 (Founder Override Directive,
+    // Priority 3) — Executive Timeline: a real, anonymised feed of
+    // recent institutional events, unioned from four tables that
+    // already record them (no new schema). Deliberately generic —
+    // event category and, where the underlying record already has one,
+    // its own institutional-level title (an office/committee/resolution
+    // name, never a staff or student name) — same level of disclosure
+    // the rest of this dashboard already uses for aggregate figures.
+    const [auditEventsRes, meetingsHeldRes, resolutionsAdoptedRes, approvalsDecidedRes] = await Promise.all([
+      sql`SELECT event_type, created_at FROM staff_audit_log ORDER BY created_at DESC LIMIT 6`,
+      sql`SELECT o.name AS office_name, m.title, m.meeting_date AS at FROM office_meetings m JOIN offices o ON o.id = m.office_id WHERE m.status = 'held' ORDER BY m.meeting_date DESC LIMIT 6`,
+      sql`SELECT o.name AS office_name, r.title, r.resolved_at AS at FROM office_resolutions r JOIN offices o ON o.id = r.office_id WHERE r.status = 'adopted' AND r.resolved_at IS NOT NULL ORDER BY r.resolved_at DESC LIMIT 6`,
+      sql`SELECT area_code, status, decided_at AS at FROM staff_approvals WHERE status IN ('approved', 'rejected') AND decided_at IS NOT NULL ORDER BY decided_at DESC LIMIT 6`,
+    ]);
+    const AUDIT_EVENT_LABEL = {
+      role_granted: 'A staff role was granted',
+      role_revoked: 'A staff role was revoked',
+      delegation_created: 'A delegation of authority was created',
+      delegation_revoked: 'A delegation of authority was revoked',
+      record_export: 'A data export was performed',
+      sensitive_action: 'A sensitive administrative action was recorded',
+    };
+    const timeline = []
+      .concat(auditEventsRes.rows.map((r) => ({ at: r.created_at, category: 'Governance & Access', label: AUDIT_EVENT_LABEL[r.event_type] || 'An administrative event was recorded' })))
+      .concat(meetingsHeldRes.rows.map((r) => ({ at: r.at, category: 'Meetings', label: r.office_name + ' held a meeting: ' + r.title })))
+      .concat(resolutionsAdoptedRes.rows.map((r) => ({ at: r.at, category: 'Governance', label: r.office_name + ' adopted a resolution: ' + r.title })))
+      .concat(approvalsDecidedRes.rows.map((r) => ({
+        at: r.at, category: 'Approvals',
+        label: (r.status === 'approved' ? 'An approval request was approved' : 'An approval request was declined') + ' (' + r.area_code.replace(/_/g, ' ') + ')',
+      })))
+      .filter((e) => e.at)
+      .sort((a, b) => new Date(b.at) - new Date(a.at))
+      .slice(0, 8);
+
     // Finance Platform (Priority 3) — real revenue/collection numbers,
     // computed from the actual invoice/receipt ledger, not the legacy
     // fee_status due/paid snapshot below (kept separately as `fees`,
@@ -297,6 +331,36 @@ export async function onRequestGet({ request, env }) {
       };
     });
 
+    // School Performance Ranking — a real composite (plain average of
+    // whichever of the two measured rates a school actually has),
+    // never padded with a fabricated number for a missing input. A
+    // school with neither rate yet computable is listed as unranked
+    // rather than silently dropped or given a 0.
+    const schoolRanking = schools
+      .map((s) => {
+        const inputs = [s.attendancePercent, s.collectionRatePercent].filter((v) => v != null);
+        const composite = inputs.length ? Math.round((inputs.reduce((a, b) => a + b, 0) / inputs.length) * 10) / 10 : null;
+        return { displayName: s.displayName, compositeScore: composite };
+      })
+      .sort((a, b) => (b.compositeScore == null ? -1 : b.compositeScore) - (a.compositeScore == null ? -1 : a.compositeScore))
+      .map((s, i) => ({ ...s, rank: s.compositeScore != null ? i + 1 : null }));
+
+    // Strategic Watchlist — a curated top-5 view of the real concern
+    // counts already computed for the Executive Alerts Centre above
+    // (not a separate data source). Only items with a real, non-zero
+    // count are eligible; capped at 5, most-concerning first.
+    const watchlistCandidates = [
+      { label: 'Admissions Requiring Approval', count: admissionsPendingRes.rows[0] ? admissionsPendingRes.rows[0].n : 0, href: '/portal/staff/admissions/' },
+      { label: 'Outstanding Invoices', count: outstandingInvoiceCountRes.rows[0] ? outstandingInvoiceCountRes.rows[0].n : 0, href: '/portal/office/finance/' },
+      { label: 'Attendance Concerns (below 75%)', count: attendanceConcernRes.rows[0] ? attendanceConcernRes.rows[0].n : 0, href: '/portal/office/registrar/' },
+      { label: 'Academic Concerns (sub-50 score on file)', count: academicConcernRes.rows[0] ? academicConcernRes.rows[0].n : 0, href: '/portal/office/registrar/' },
+      { label: 'Governance Meetings in Next 30 Days', count: upcomingMeetingsRes.rows[0] ? upcomingMeetingsRes.rows[0].n : 0, href: '/portal/office/executive/' },
+    ];
+    const watchlist = watchlistCandidates
+      .filter((w) => w.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
     return json({
       generatedAt: new Date().toISOString(),
       sampleDataExcluded: true,
@@ -328,6 +392,9 @@ export async function onRequestGet({ request, env }) {
           : 'Computed as the plain average of measured attendance rate, fee collection rate, and governance seat-fill rate — not a subjective rating, and it moves automatically as more real data is recorded.',
       },
       schools,
+      schoolRanking,
+      watchlist,
+      timeline,
       alerts: {
         admissionsPending: admissionsPendingRes.rows[0] ? admissionsPendingRes.rows[0].n : 0,
         outstandingInvoices: outstandingInvoiceCountRes.rows[0] ? outstandingInvoiceCountRes.rows[0].n : 0,

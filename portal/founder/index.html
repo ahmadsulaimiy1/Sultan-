@@ -18,7 +18,7 @@
     <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
     <span>Sultan Hanafi</span>
   </a>
-  <div style="display:flex;align-items:center;gap:14px;">
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;row-gap:8px;">
     <span class="portal-pilot-badge" data-i18n="pilot">Pilot</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/admin/centre/" data-i18n="admin-centre">Administration Centre</a>
@@ -62,9 +62,28 @@
     </div>
     <p class="portal-notice-on-dark" style="margin-top:0;margin-bottom:20px;border-top:none;padding-top:0;">Sample/demo records are excluded from every figure below. This is a read-only aggregate — nothing here can be edited from this page.</p>
 
+    <div class="pfd-action-bar" data-founder-action-bar>
+      <a class="pfd-action-btn" href="/portal/staff/admissions/">Admissions Review Centre</a>
+      <a class="pfd-action-btn" href="/portal/admin/centre/">Administration Centre</a>
+      <a class="pfd-action-btn" href="/portal/staff/org-chart/">Org Chart</a>
+      <a class="pfd-action-btn" href="/portal/office/registrar/">Registrar's Office</a>
+      <a class="pfd-action-btn" href="/portal/office/finance/">Finance Office</a>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Executive Briefing</h2>
+      <p class="pfd-briefing-text" data-founder-briefing></p>
+    </div>
+
     <div class="pfd-section">
       <h2>Executive Overview</h2>
       <div class="exec-stat-grid" data-founder-overview-stats></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Institutional Health Radar</h2>
+      <p class="pfd-note" style="margin-top:0;">The same four measured rates as the Institutional Health Score above, plotted as one shape — each axis is real and independently sourced; an axis with no data yet on file is drawn to the centre, not guessed at.</p>
+      <div data-founder-health-radar></div>
     </div>
 
     <div class="pfd-section">
@@ -73,8 +92,20 @@
     </div>
 
     <div class="pfd-section">
+      <h2>School Performance Ranking</h2>
+      <p class="pfd-note" style="margin-top:0;">Composite of each school's own measured attendance and fee-collection rates — plain average of whichever of the two is on file. A school without either rate yet is listed as unranked, never given a fabricated score.</p>
+      <div data-founder-school-ranking></div>
+    </div>
+
+    <div class="pfd-section">
       <h2>Executive Alerts Centre</h2>
       <div class="pfd-alerts-list" data-founder-alerts></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Strategic Watchlist</h2>
+      <p class="pfd-note" style="margin-top:0;">The five most concerning real counts from the Executive Alerts Centre above, ranked — not a separate tracking system. Empty when nothing currently exceeds zero.</p>
+      <div data-founder-watchlist></div>
     </div>
 
     <div class="pfd-section">
@@ -127,6 +158,12 @@
       <h2>Fees (Legacy Snapshot)</h2>
       <div class="portal-stats" data-founder-fee-stats></div>
       <p class="pfd-note" data-founder-fee-note></p>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Executive Timeline</h2>
+      <p class="pfd-note" style="margin-top:0;">The most recent institutional events on record — role and delegation changes, meetings held, resolutions adopted, and approval decisions. Anonymised by design: event category and, where the record already carries one, an office or committee name — never a staff or student name.</p>
+      <div data-founder-timeline></div>
     </div>
 
     <div class="pfd-section pfd-unavailable">

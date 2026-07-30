@@ -553,6 +553,21 @@ body.portal-body > *{position:relative;z-index:1;}
 .pfd-strategic-card h3{font-family:'Cinzel','Amiri',serif;font-size:0.88rem;margin:0 0 8px;color:var(--portal-heading);}
 .pfd-strategic-card p{font-size:0.82rem;color:var(--ink-soft);line-height:1.55;margin:0;}
 
+/* Founder Command Centre Phase 2 (Founder Override Directive, Priority
+   3) — Executive Action Bar, Executive Briefing text. Everything else
+   new on this page (Health Radar, School Ranking, Watchlist, Timeline)
+   reuses existing .pfd-bar-row/.pfd-alert-row/.portal-empty classes,
+   so no new CSS is needed for them beyond this. */
+.pfd-action-bar{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+.pfd-action-btn{
+  font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;
+  padding:12px 20px;border:1px solid var(--atmos,var(--gold));border-radius:var(--btn-radius);
+  color:var(--portal-heading);text-decoration:none;background:var(--portal-card);
+  transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.pfd-action-btn:hover{background:var(--atmos,var(--gold));color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(20,13,4,0.35);}
+.pfd-briefing-text{font-size:0.98rem;line-height:1.7;color:var(--ink);margin:0;}
+
 /* --- Account Creation Journey --- */
 .portal-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:26px;}
 .portal-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;}

@@ -451,6 +451,143 @@
     el2.innerHTML = badge + '<p class="pfd-note" style="margin-top:10px;">' + note + '</p>' + grid;
   }
 
+  // Executive Briefing — a fuller, multi-sentence rules-based narrative
+  // (the hero's own one-line narrative above stays as-is; this is the
+  // dedicated section the Founder Override Directive asked for).
+  // Every sentence is a plain if/then over fields this endpoint already
+  // computes — no new data, no invented commentary, and a sentence is
+  // simply omitted when its underlying figure isn't available yet.
+  function renderBriefing(data){
+    var el2 = document.querySelector('[data-founder-briefing]');
+    if(!el2) return;
+    var overview = data.overview || {};
+    var alerts = data.alerts || {};
+    var sentences = [];
+
+    if(overview.institutionalHealthScore != null){
+      var band = overview.institutionalHealthScore >= 85 ? 'excellent'
+        : overview.institutionalHealthScore >= 70 ? 'strong'
+        : overview.institutionalHealthScore >= 50 ? 'developing'
+        : 'in need of attention';
+      sentences.push('Institutional health stands at ' + overview.institutionalHealthScore + '/100 (' + band + '), computed from measured attendance, fee collection, and governance seat-fill rates.');
+    } else {
+      sentences.push('Institutional health has not been computed yet — too few of attendance, fee collection, and governance seat-fill are on file.');
+    }
+
+    sentences.push(overview.totalStudents + ' active student(s) are enrolled across the four schools, supported by ' + overview.totalStaff + ' active staff.');
+
+    var concernParts = [];
+    if(alerts.admissionsPending > 0) concernParts.push(alerts.admissionsPending + ' admissions application(s) awaiting review');
+    if(alerts.attendanceConcerns > 0) concernParts.push(alerts.attendanceConcerns + ' student(s) below the 75% attendance threshold');
+    if(alerts.academicConcerns > 0) concernParts.push(alerts.academicConcerns + ' student(s) with a recorded sub-50 subject score');
+    if(alerts.outstandingInvoices > 0) concernParts.push(alerts.outstandingInvoices + ' unpaid or partial invoice(s)');
+    if(concernParts.length){
+      sentences.push('Currently requiring attention: ' + concernParts.join('; ') + '.');
+    } else {
+      sentences.push('No admissions, attendance, academic, or fee items currently require executive attention.');
+    }
+
+    if(alerts.governanceMeetingsNext30Days > 0){
+      sentences.push(alerts.governanceMeetingsNext30Days + ' governance meeting(s) are scheduled in the next 30 days' +
+        (alerts.nextGovernanceMeetingDate ? ', the next on ' + new Date(alerts.nextGovernanceMeetingDate).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) + '.' : '.'));
+    }
+
+    el2.textContent = sentences.join(' ');
+  }
+
+  // Institutional Health Radar — the same measured rates behind the
+  // Institutional Health Score, plotted as a 4-axis shape (attendance,
+  // academic, governance seat-fill, fee collection). A fifth axis was
+  // considered but no fifth real, independently-measured institutional
+  // rate exists yet on this dashboard — four honest axes, not five with
+  // one invented.
+  function radarPoint(cx, cy, radius, angle, valuePercent){
+    var r = radius * Math.max(0, Math.min(100, valuePercent || 0)) / 100;
+    return [cx + r * Math.sin(angle), cy - r * Math.cos(angle)];
+  }
+  function renderHealthRadar(data){
+    var el2 = document.querySelector('[data-founder-health-radar]');
+    if(!el2) return;
+    var overview = data.overview || {};
+    var axes = [
+      { label: 'Attendance', value: overview.attendanceHealthPercent },
+      { label: 'Academic', value: overview.academicHealthPercent },
+      { label: 'Governance', value: overview.governanceHealthPercent },
+      { label: 'Fee Collection', value: (data.finance && data.finance.collectionRatePercent) },
+    ];
+    var w = 420, h = 260, cx = w/2, cy = h/2, radius = 78;
+    var n = axes.length;
+    var ringPaths = [0.25, 0.5, 0.75, 1].map(function(f){
+      var pts = axes.map(function(a, i){ var p = radarPoint(cx, cy, radius * f, i * 2 * Math.PI / n, 100); return p[0] + ',' + p[1]; });
+      return '<polygon points="' + pts.join(' ') + '" fill="none" stroke="var(--line)" stroke-width="1"/>';
+    }).join('');
+    var axisLines = axes.map(function(a, i){
+      var p = radarPoint(cx, cy, radius, i * 2 * Math.PI / n, 100);
+      return '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="var(--line)" stroke-width="1"/>';
+    }).join('');
+    var dataPts = axes.map(function(a, i){ var p = radarPoint(cx, cy, radius, i * 2 * Math.PI / n, a.value); return p[0] + ',' + p[1]; });
+    var dataPolygon = '<polygon points="' + dataPts.join(' ') + '" fill="var(--atmos-soft, rgba(198,161,91,0.18))" stroke="var(--atmos-bright, var(--gold-bright))" stroke-width="2"/>';
+    var dots = axes.map(function(a, i){
+      if(a.value == null) return '';
+      var p = radarPoint(cx, cy, radius, i * 2 * Math.PI / n, a.value);
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3.5" fill="var(--atmos-bright, var(--gold-bright))"/>';
+    }).join('');
+    var labels = axes.map(function(a, i){
+      var p = radarPoint(cx, cy, radius + 22, i * 2 * Math.PI / n, 100);
+      var anchor = Math.abs(p[0] - cx) < 4 ? 'middle' : (p[0] > cx ? 'start' : 'end');
+      return '<text x="' + p[0] + '" y="' + p[1] + '" text-anchor="' + anchor + '" dominant-baseline="middle" font-size="11" fill="var(--ink-soft)">' + a.label + (a.value != null ? ' (' + a.value + '%)' : ' (—)') + '</text>';
+    }).join('');
+    el2.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="max-width:460px;width:100%;display:block;margin:0 auto;">' + ringPaths + axisLines + dataPolygon + dots + labels + '</svg>';
+  }
+
+  // School Performance Ranking — server-computed composite (see
+  // schoolRanking in the API response); this just renders it as a
+  // ranked, restrained bar list.
+  function renderSchoolRanking(ranking){
+    var el2 = document.querySelector('[data-founder-school-ranking]');
+    if(!el2 || !ranking) return;
+    if(!ranking.length){ el2.innerHTML = '<div class="portal-empty">No schools on record yet.</div>'; return; }
+    el2.innerHTML = ranking.map(function(s){
+      var pctWidth = s.compositeScore != null ? Math.max(4, s.compositeScore) : 0;
+      return '<div class="pfd-bar-row">'
+        + '<div class="pfd-bar-label">' + (s.rank != null ? '#' + s.rank + ' ' : '') + s.displayName
+        + ' <span style="color:var(--ink-soft);font-weight:400;">' + (s.compositeScore != null ? s.compositeScore + '/100' : '— not yet ranked') + '</span></div>'
+        + '<div class="pfd-bar-track"><div class="pfd-bar-fill" style="width:' + pctWidth + '%;"></div></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Strategic Watchlist — server-curated top-5 concern list (see
+  // watchlist in the API response).
+  function renderWatchlist(watchlist){
+    var el2 = document.querySelector('[data-founder-watchlist]');
+    if(!el2) return;
+    if(!watchlist || !watchlist.length){ el2.innerHTML = '<div class="portal-empty">Nothing currently on the watchlist — every tracked concern count is at zero.</div>'; return; }
+    el2.innerHTML = watchlist.map(function(w){
+      return '<div class="pfd-alert-row has-attention">'
+        + '<div><div class="pfd-alert-label">' + w.label + '</div></div>'
+        + '<div style="display:flex;align-items:center;gap:14px;">'
+        + '<span class="pfd-alert-count">' + w.count + '</span>'
+        + '<a class="portal-back-link" style="margin:0;" href="' + w.href + '">Review &rarr;</a>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  // Executive Timeline — server-unioned, anonymised event feed (see
+  // timeline in the API response).
+  function renderTimeline(timeline){
+    var el2 = document.querySelector('[data-founder-timeline]');
+    if(!el2) return;
+    if(!timeline || !timeline.length){ el2.innerHTML = '<div class="portal-empty">No institutional events on record yet.</div>'; return; }
+    el2.innerHTML = timeline.map(function(t){
+      var when = new Date(t.at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+      return '<div class="pfd-alert-row">'
+        + '<div><div class="pfd-alert-label">' + t.label + '</div><div class="pfd-alert-detail">' + t.category + '</div></div>'
+        + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + when + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
   function render(data){
     generatedEl.textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
 
@@ -513,10 +650,15 @@
       }
     }
 
+    renderBriefing(data);
     renderOverview(data.overview);
+    renderHealthRadar(data);
     renderSchools(data.schools);
+    renderSchoolRanking(data.schoolRanking);
     renderAlerts(data.alerts);
+    renderWatchlist(data.watchlist);
     renderStrategicProgress(data.strategicProgress);
+    renderTimeline(data.timeline);
 
     var statusStatsEl = document.querySelector('[data-founder-status-stats]');
     statusStatsEl.innerHTML = '';
