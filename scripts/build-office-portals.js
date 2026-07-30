@@ -1,0 +1,263 @@
+#!/usr/bin/env node
+// Institutional Portal Ecosystem — stamps out one portal/office/<slug>/
+// index.html per office in scripts/office-portal-config.js, all from a
+// single template literal below. Every page is identical markup; the
+// only per-office differences are the slug (data attribute the client
+// JS reads) and the display name (title/breadcrumb) — everything else
+// (appointments, meetings, documents, workflow) is fetched at runtime
+// from /api/portal/staff/office/{slug}, so adding an office is one
+// config row, not a new hand-built page.
+//
+// Usage: node scripts/build-office-portals.js
+const fs = require('fs');
+const path = require('path');
+const { OFFICES } = require('./office-portal-config.js');
+
+const ROOT = path.join(__dirname, '..');
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function pageHtml(office) {
+  const name = esc(office.name);
+  return `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>${name} — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+</head>
+<body class="portal-body" data-office-slug="${esc(office.slug)}">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
+    <button type="button" class="portal-logout" data-office-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-card" id="office-error" hidden>
+    <h1>Couldn't load this office</h1>
+    <p class="sub" data-error-message>Please try again.</p>
+    <a class="portal-back-link" href="/portal/staff/offices/">&larr; Back to all offices</a>
+  </div>
+
+  <div class="portal-wrap" id="office-shell" hidden>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow" id="office-eyebrow">OFFICE</div>
+      <h1 id="office-name">${name}</h1>
+      <div class="exec-welcome-role" id="office-holder-line">Loading&hellip;</div>
+      <div class="exec-welcome-stats">
+        <div class="exec-welcome-stat"><span class="value" id="stat-staff-count">&mdash;</span><span class="label">Staff Assigned</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-appointments">&mdash;</span><span class="label">Seats Recorded</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-pending-workflow">&mdash;</span><span class="label">Pending Workflow</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-meetings">&mdash;</span><span class="label">Meetings Logged</span></div>
+      </div>
+    </div>
+
+    <nav class="office-tabs" role="tablist" aria-label="Office sections">
+      <button type="button" class="office-tab is-active" data-tab="dashboard">Dashboard</button>
+      <button type="button" class="office-tab" data-tab="overview">Overview</button>
+      <button type="button" class="office-tab" data-tab="directory">Staff Directory</button>
+      <button type="button" class="office-tab" data-tab="responsibilities">Responsibilities</button>
+      <button type="button" class="office-tab" data-tab="documents">Documents</button>
+      <button type="button" class="office-tab" data-tab="reports">Reports</button>
+      <button type="button" class="office-tab" data-tab="analytics">Analytics</button>
+      <button type="button" class="office-tab" data-tab="workflow">Workflow Centre</button>
+      <button type="button" class="office-tab" data-tab="notifications">Notifications</button>
+      <button type="button" class="office-tab" data-tab="meetings">Meetings</button>
+      <button type="button" class="office-tab" data-tab="archive">Archive</button>
+    </nav>
+
+    <div class="office-panel is-active" id="panel-dashboard">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Executive Dashboard</h2><div class="meta">A live summary of this office &mdash; seats, workload, and activity.</div></div>
+        <div class="portal-stats">
+          <div class="portal-stat"><div class="label">Staff Assigned</div><div class="value" id="dash-staff-count-echo"></div></div>
+        </div>
+        <div class="pfd-note" style="padding:0 26px 20px;">Use the tabs above to review the Staff Directory, Documents, Workflow Centre, and Meetings for this office.</div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-overview">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Office Overview</h2></div>
+        <p style="padding:20px 26px 0;line-height:1.6;color:var(--ink);" id="office-description"></p>
+        <div class="office-overview-grid" style="margin:16px 26px 26px;">
+          <div class="office-overview-field"><div class="label">Office Type</div><div class="value" id="office-type-value"></div></div>
+          <div class="office-overview-field"><div class="label">Layer</div><div class="value" id="office-layer-value"></div></div>
+          <div class="office-overview-field"><div class="label">Parent Office</div><div class="value" id="office-parent-value"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-directory">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Staff Directory</h2><div class="meta">Every recorded seat for this office, including any awaiting appointment.</div></div>
+        <div style="padding:20px 26px;" id="directory-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-responsibilities">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Responsibilities</h2></div>
+        <p style="padding:20px 26px;line-height:1.6;color:var(--ink);" id="responsibilities-text"></p>
+        <p class="pfd-note" style="padding:0 26px 20px;">See the full <a id="responsibilities-matrix-link" href="/policies/">Policies Centre</a> for governing documents.</p>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-documents">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Documents</h2></div>
+        <div id="documents-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-reports">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Reports</h2></div>
+        <div style="padding:20px 26px;" id="reports-panel-body"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-analytics">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Analytics</h2></div>
+        <div style="padding:20px 26px;" id="analytics-panel-body"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-workflow">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Workflow Centre</h2><div class="meta">Items awaiting this office's approval.</div></div>
+        <div id="workflow-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-notifications">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Notifications</h2></div>
+        <div style="padding:20px 26px;" id="notifications-panel-body"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-meetings">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Meetings</h2></div>
+        <div style="padding:20px 26px;" id="meetings-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-archive">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Archive</h2><div class="meta">Past meetings and closed items for this office.</div></div>
+        <div style="padding:20px 26px;" id="archive-list"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.querySelector('[data-office-logout]');
+  if (btn) btn.addEventListener('click', function(){
+    fetch('/api/portal/staff/logout', { method: 'POST' }).catch(function(){}).then(function(){ window.location.href = '/portal/staff/login/'; });
+  });
+  var staffCountEl = document.getElementById('stat-staff-count');
+  var echoEl = document.getElementById('dash-staff-count-echo');
+  if (staffCountEl && echoEl) {
+    var obs = new MutationObserver(function(){ echoEl.textContent = staffCountEl.textContent; });
+    obs.observe(staffCountEl, { childList: true });
+  }
+});
+</script>
+<script src="/js/portal-office.js" defer></script>
+</body>
+</html>
+`;
+}
+
+function directoryIndexHtml(officesByLayer, layerLabels) {
+  const layerBlocks = Object.keys(officesByLayer).map((layerKey) => {
+    const rows = officesByLayer[layerKey].map((o) =>
+      `          <a class="office-index-row" href="/portal/office/${esc(o.slug)}/">${esc(o.name)}</a>`
+    ).join('\n');
+    return `        <div class="office-index-layer">\n          <h3>${esc(layerLabels[layerKey] || layerKey)}</h3>\n${rows}\n        </div>`;
+  }).join('\n');
+
+  return `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>All Offices — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<style>
+  .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
+  .office-index-layer{margin-bottom:36px;}
+  .office-index-layer h3{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px;}
+  .office-index-row{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--navy);font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;font-weight:600;transition:padding-inline-start .2s ease,color .2s ease;}
+  .office-index-row:hover{padding-inline-start:12px;color:var(--gold);}
+</style>
+</head>
+<body class="portal-body">
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <a class="portal-topbar-link" href="/portal/staff/login/">Staff Sign In</a>
+</div>
+<main class="portal-main" style="align-items:flex-start;">
+  <div class="office-index-wrap">
+    <p class="portal-aside-eyebrow" style="color:var(--gold);">INSTITUTIONAL PORTAL ECOSYSTEM</p>
+    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--navy);margin:6px 0 8px;">All Offices</h1>
+    <p style="color:var(--ink-soft);max-width:640px;margin-bottom:8px;">Every office in the Sultan Hanafi Royal Schools digital campus, grouped by layer. Offices without a confirmed appointment show an honest "Vacant &mdash; Awaiting Appointment" seat, not a fabricated name.</p>
+${layerBlocks}
+  </div>
+</main>
+</body>
+</html>
+`;
+}
+
+function main() {
+  let written = 0;
+  for (const office of OFFICES) {
+    const dir = path.join(ROOT, 'portal', 'office', office.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), pageHtml(office));
+    written++;
+  }
+
+  const layerLabels = {
+    governance: 'Governance', academic: 'Academic', school_leadership: 'School Leadership',
+    operational: 'Operational', institutional_services: 'Institutional Services',
+  };
+  const byLayer = {};
+  for (const office of OFFICES) {
+    (byLayer[office.layer] = byLayer[office.layer] || []).push(office);
+  }
+  const indexDir = path.join(ROOT, 'portal', 'staff', 'offices');
+  fs.mkdirSync(indexDir, { recursive: true });
+  fs.writeFileSync(path.join(indexDir, 'index.html'), directoryIndexHtml(byLayer, layerLabels));
+
+  console.log(`built ${written} office portal page(s) + 1 directory index`);
+}
+
+main();

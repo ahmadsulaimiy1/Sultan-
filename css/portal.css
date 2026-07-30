@@ -1069,3 +1069,75 @@ body.portal-body > *{position:relative;z-index:1;}
   .wizard-nav{padding:16px 16px;}
   .wizard-header{padding:18px 16px 4px;}
 }
+
+/* ============================================================
+   Institutional Portal Ecosystem — the generic office-portal shell
+   every office (Board of Trustees, Registrar, Finance, HR, ...) renders
+   from. Reuses .exec-welcome / .portal-child-card / .portal-stats
+   rather than a parallel design language, so an office portal reads as
+   the same system as the Founder Dashboard and Registrar's Office, not
+   a bolted-on template. See js/portal-office.js and
+   docs/institutional-portal-architecture.md.
+   ============================================================ */
+.office-tabs{
+  display:flex;flex-wrap:wrap;gap:2px;margin-bottom:24px;
+  border-bottom:2px solid var(--gold);
+}
+.office-tab{
+  font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+  font-weight:600;color:var(--ink-soft);background:none;border:none;padding:12px 16px;cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s ease,border-color .2s ease;
+}
+.office-tab:hover{color:var(--navy);}
+.office-tab.is-active{color:var(--navy);border-bottom-color:var(--gold);}
+.office-panel{display:none;}
+.office-panel.is-active{display:block;animation:dash-card-in .4s cubic-bezier(.2,.7,.3,1) both;}
+
+.office-overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:14px;}
+.office-overview-field{background:var(--ivory);padding:16px 18px;}
+.office-overview-field .label{font-size:0.72rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.office-overview-field .value{font-family:'Cinzel','Amiri',serif;font-size:0.98rem;color:var(--navy);margin-top:4px;text-transform:capitalize;}
+
+.office-person-card{display:flex;gap:14px;padding:16px 18px;border:1px solid var(--line);background:#fff;margin-bottom:10px;align-items:flex-start;}
+.office-person-card.is-vacant{background:var(--milk,#FCFAF6);border-style:dashed;}
+.opc-avatar{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;object-fit:cover;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel','Amiri',serif;font-size:1rem;font-weight:700;color:var(--navy);
+  background:rgba(198,161,91,0.16);border:1px solid var(--gold);
+}
+.opc-name{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--navy);}
+.opc-acting{font-size:0.72rem;font-weight:500;color:var(--ink-soft);text-transform:none;}
+.opc-title{font-size:0.82rem;color:var(--ink-soft);margin-top:2px;}
+.opc-vacant-label{font-size:0.78rem;font-weight:600;color:var(--terracotta);margin-top:2px;}
+.opc-bio{font-size:0.82rem;color:var(--ink);margin-top:8px;line-height:1.55;}
+.opc-contact{font-size:0.76rem;color:var(--ink-soft);margin-top:6px;}
+.opc-notes{font-size:0.76rem;color:var(--ink-soft);margin-top:4px;font-style:italic;}
+
+.office-doc-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);}
+.office-doc-row:last-child{border-bottom:none;}
+.office-doc-row:hover{background:rgba(198,161,91,0.06);}
+.odr-title{font-family:'Cinzel','Amiri',serif;font-size:0.88rem;color:var(--navy);}
+.odr-desc{font-size:0.78rem;color:var(--ink-soft);flex:1;}
+.odr-date{font-size:0.72rem;color:var(--ink-soft);margin-inline-start:auto;}
+
+.office-workflow-row{display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:0.84rem;}
+.office-workflow-row:last-child{border-bottom:none;}
+.owr-type{font-family:'Cinzel','Amiri',serif;color:var(--navy);text-transform:capitalize;}
+.owr-by{color:var(--ink-soft);}
+.owr-date{color:var(--ink-soft);margin-inline-start:auto;}
+
+.office-meeting-row{padding:14px 18px;border:1px solid var(--line);background:#fff;margin-bottom:10px;}
+.omr-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.omr-title{font-family:'Cinzel','Amiri',serif;font-size:0.92rem;color:var(--navy);}
+.omr-date{font-size:0.78rem;color:var(--ink-soft);}
+.omr-agenda,.omr-minutes{font-size:0.82rem;color:var(--ink);margin-top:6px;line-height:1.5;}
+.omr-status{display:inline-block;margin-top:8px;font-size:0.66rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:2px 8px;}
+.office-meeting-row.status-held .omr-status{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.office-meeting-row.status-cancelled .omr-status{color:var(--crimson);border-color:var(--crimson);}
+
+@media (max-width:640px){
+  .office-tabs{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;}
+  .office-tab{flex:0 0 auto;padding:10px 12px;font-size:0.66rem;}
+  .office-person-card{flex-direction:column;align-items:flex-start;}
+}

@@ -42,6 +42,16 @@
 //                            "own subject/class") is actually checked against — see
 //                            staff/registrar/attendance.js and assessments.js.
 //   revoke-class-assignment — { assignmentId, revokedByStaffNo?, reason? }
+//   update-staff-profile  — { staffNo, photoUrl?, bio?, publicEmail?, publicPhone? } — the personnel-
+//                            directory display fields an office portal's staff card actually renders
+//   create-appointment    — { officeName, appointmentTitle, staffNo?, isActing?, isPrimary?, startedAt?, notes? }
+//                            staffNo omitted = the seat is recorded as vacant/awaiting appointment —
+//                            the real, stored form of a "temporary internal-review record"
+//   update-appointment    — { appointmentId, staffNo?, appointmentTitle?, isActing?, notes? }
+//   end-appointment       — { appointmentId, endedAt? }
+//   create-meeting        — { officeName, title, meetingDate, agendaText?, status?, createdByStaffNo? }
+//   update-meeting        — { meetingId, status?, minutesText? }
+//   create-document       — { officeName, title, fileUrl?, externalUrl?, description?, uploadedByStaffNo? }
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
@@ -286,7 +296,128 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, assignmentId: body.assignmentId });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment.' }, 400);
+    if (action === 'update-staff-profile') {
+      if (!body.staffNo) {
+        return json({ error: 'staffNo is required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      await sql`
+        UPDATE staff SET
+          photo_url = COALESCE(${body.photoUrl || null}, photo_url),
+          bio = COALESCE(${body.bio || null}, bio),
+          public_email = COALESCE(${body.publicEmail || null}, public_email),
+          public_phone = COALESCE(${body.publicPhone || null}, public_phone),
+          updated_at = now()
+        WHERE id = ${staffId}`;
+      return json({ ok: true, staffId });
+    }
+
+    // Office Appointments — the "temporary internal-review record"
+    // mechanism: staffNo omitted (or unmatched) leaves the seat
+    // recorded as vacant/pending, which is exactly what an office
+    // portal should render honestly until a real person is assigned.
+    if (action === 'create-appointment') {
+      if (!body.officeName || !body.appointmentTitle) {
+        return json({ error: 'officeName and appointmentTitle are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const staffId = body.staffNo ? await staffIdByNo(sql, body.staffNo) : null;
+      const created = await sql`
+        INSERT INTO office_appointments (office_id, staff_id, appointment_title, is_acting, is_primary, started_at, notes)
+        VALUES (${officeId}, ${staffId}, ${body.appointmentTitle}, ${!!body.isActing}, ${body.isPrimary !== false}, ${body.startedAt || null}, ${body.notes || null})
+        RETURNING id`;
+      return json({ ok: true, appointmentId: created.rows[0].id, staffId, isVacant: !staffId });
+    }
+
+    if (action === 'update-appointment') {
+      if (!Number.isInteger(body.appointmentId)) {
+        return json({ error: 'A valid numeric appointmentId is required.' }, 400);
+      }
+      const staffId = body.staffNo ? await staffIdByNo(sql, body.staffNo) : null;
+      const updated = await sql`
+        UPDATE office_appointments SET
+          staff_id = CASE WHEN ${body.staffNo != null} THEN ${staffId} ELSE staff_id END,
+          appointment_title = COALESCE(${body.appointmentTitle || null}, appointment_title),
+          is_acting = COALESCE(${body.isActing != null ? !!body.isActing : null}, is_acting),
+          notes = COALESCE(${body.notes || null}, notes)
+        WHERE id = ${body.appointmentId}
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No appointment found with that id.' }, 404);
+      }
+      return json({ ok: true, appointmentId: body.appointmentId });
+    }
+
+    if (action === 'end-appointment') {
+      if (!Number.isInteger(body.appointmentId)) {
+        return json({ error: 'A valid numeric appointmentId is required.' }, 400);
+      }
+      const updated = await sql`
+        UPDATE office_appointments SET ended_at = COALESCE(${body.endedAt || null}, CURRENT_DATE)
+        WHERE id = ${body.appointmentId} AND ended_at IS NULL
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No active appointment found with that id.' }, 404);
+      }
+      return json({ ok: true, appointmentId: body.appointmentId });
+    }
+
+    if (action === 'create-meeting') {
+      if (!body.officeName || !body.title || !body.meetingDate) {
+        return json({ error: 'officeName, title, and meetingDate are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const createdByStaffId = await staffIdByNo(sql, body.createdByStaffNo);
+      const created = await sql`
+        INSERT INTO office_meetings (office_id, title, meeting_date, agenda_text, status, created_by_staff_id)
+        VALUES (${officeId}, ${body.title}, ${body.meetingDate}, ${body.agendaText || null}, ${body.status || 'scheduled'}, ${createdByStaffId})
+        RETURNING id`;
+      return json({ ok: true, meetingId: created.rows[0].id });
+    }
+
+    if (action === 'update-meeting') {
+      if (!Number.isInteger(body.meetingId)) {
+        return json({ error: 'A valid numeric meetingId is required.' }, 400);
+      }
+      const updated = await sql`
+        UPDATE office_meetings SET
+          status = COALESCE(${body.status || null}, status),
+          minutes_text = COALESCE(${body.minutesText || null}, minutes_text),
+          updated_at = now()
+        WHERE id = ${body.meetingId}
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No meeting found with that id.' }, 404);
+      }
+      return json({ ok: true, meetingId: body.meetingId });
+    }
+
+    if (action === 'create-document') {
+      if (!body.officeName || !body.title) {
+        return json({ error: 'officeName and title are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const uploadedByStaffId = await staffIdByNo(sql, body.uploadedByStaffNo);
+      const created = await sql`
+        INSERT INTO office_documents (office_id, title, file_url, external_url, description, uploaded_by_staff_id)
+        VALUES (${officeId}, ${body.title}, ${body.fileUrl || null}, ${body.externalUrl || null}, ${body.description || null}, ${uploadedByStaffId})
+        RETURNING id`;
+      return json({ ok: true, documentId: created.rows[0].id });
+    }
+
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

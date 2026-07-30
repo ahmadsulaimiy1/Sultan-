@@ -1071,3 +1071,126 @@ CREATE TABLE IF NOT EXISTS payment_plan_installments (
   paid_receipt_id   INTEGER REFERENCES receipts(id),
   UNIQUE (payment_plan_id, sequence)
 );
+
+-- ============================================================
+-- Institutional Portal Ecosystem — extends the existing offices/staff
+-- directory (does not replace it) so every office in the requested
+-- architecture is a real row, not a hardcoded page. slug is the stable
+-- URL/config key each office's portal is generated from; layer is the
+-- six-group taxonomy the portal index groups offices under, kept as its
+-- own column rather than overloaded onto office_type (which is a
+-- narrower, pre-existing governance/executive/academic/support
+-- classification used elsewhere and left unchanged).
+-- ============================================================
+ALTER TABLE offices ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE offices ADD COLUMN IF NOT EXISTS layer TEXT;
+DO $$ BEGIN
+  ALTER TABLE offices ADD CONSTRAINT offices_layer_check CHECK (layer IN (
+    'governance', 'academic', 'school_leadership', 'operational', 'institutional_services'
+  ));
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_offices_slug ON offices(slug) WHERE slug IS NOT NULL;
+
+-- Personnel-directory display fields — photo/bio/public contact are
+-- deliberately separate from the payroll/leave/discipline fields
+-- role-permission-matrix.md §4.3 explicitly keeps out of this system;
+-- these four are pure directory presentation, nothing more.
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS photo_url TEXT;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS public_email TEXT;
+ALTER TABLE staff ADD COLUMN IF NOT EXISTS public_phone TEXT;
+
+-- Who currently holds/leads an office — separate from staff.office_id
+-- (which just means "assigned to this office's team"), because an
+-- office can have several staff assigned to it but only one (or a
+-- small named few, e.g. trustees) actually holding the seat itself.
+-- staff_id NULL + appointment_title set is the real, stored form of a
+-- "temporary internal-review record": an honest vacant seat, not a
+-- fabricated name, that the admin panel later fills in by inserting a
+-- staff_id — the portal template re-renders from this row either way,
+-- with no redesign.
+CREATE TABLE IF NOT EXISTS office_appointments (
+  id                SERIAL PRIMARY KEY,
+  office_id         INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+  staff_id          INTEGER REFERENCES staff(id), -- NULL = vacant, awaiting appointment
+  appointment_title TEXT NOT NULL,
+  is_acting         BOOLEAN NOT NULL DEFAULT false,
+  is_primary        BOOLEAN NOT NULL DEFAULT true, -- the office's principal seat vs. an additional named seat (e.g. a second trustee)
+  started_at        DATE,
+  ended_at          DATE, -- NULL = current
+  notes             TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_office_appointments_office ON office_appointments(office_id);
+CREATE INDEX IF NOT EXISTS idx_office_appointments_staff ON office_appointments(staff_id);
+
+-- Meetings module — starts empty for every office (no fabricated
+-- minutes); only populated when a real meeting is actually logged
+-- through the admin panel.
+CREATE TABLE IF NOT EXISTS office_meetings (
+  id                  SERIAL PRIMARY KEY,
+  office_id           INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+  title               TEXT NOT NULL,
+  meeting_date        DATE NOT NULL,
+  agenda_text         TEXT,
+  minutes_text        TEXT,
+  status              TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'held', 'cancelled')),
+  created_by_staff_id INTEGER REFERENCES staff(id),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_office_meetings_office ON office_meetings(office_id);
+
+-- Documents module — office-specific files/links, distinct from the
+-- site-wide Policies Centre (which already covers institution-wide
+-- governance documents); starts empty per office.
+CREATE TABLE IF NOT EXISTS office_documents (
+  id                   SERIAL PRIMARY KEY,
+  office_id            INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+  title                TEXT NOT NULL,
+  file_url             TEXT,
+  external_url         TEXT,
+  description          TEXT,
+  uploaded_by_staff_id INTEGER REFERENCES staff(id),
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_office_documents_office ON office_documents(office_id);
+
+-- Backfill slug/layer on the four offices already seeded by an earlier
+-- phase (Board of Trustees, Registrar's Office, Finance Office, ICT
+-- Office), then seed every additional office named in the Institutional
+-- Portal Ecosystem directive. ON CONFLICT (name) DO UPDATE so re-running
+-- this file against an already-seeded database fills in the new columns
+-- rather than skipping the row entirely.
+INSERT INTO offices (name, office_type, layer, slug, description) VALUES
+  ('Board of Trustees', 'governance', 'governance', 'board-of-trustees', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
+  ('Registrar''s Office', 'academic', 'academic', 'registrar', 'Owns admissions verification, enrolment, results, transcripts, and certificates across all four institutions (AC-02, PA-05).'),
+  ('Finance Office', 'support', 'operational', 'finance', 'Owns fee records across all institutions (FN-01) — no write workflow built yet pending FN-03/04/05.'),
+  ('ICT Office', 'support', 'operational', 'digital-services', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).'),
+  ('Executive', 'executive', 'governance', 'executive', 'The Founder & Chief Executive Officer''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
+  ('Management Council', 'executive', 'governance', 'management-council', 'The senior leadership team drawn from each institution and the central offices, convened for cross-institutional coordination. Composition not yet formally published.'),
+  ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
+  ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
+  ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
+  ('Head Teacher — Nursery & Primary', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Nursery & Primary School — day-to-day academic and pastoral operations.'),
+  ('Principal — Royal College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'),
+  ('Principal — Qur''an College', 'academic', 'school_leadership', 'principal-quran-college', 'Leadership of Sultan Hanafi Qur''an College — Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
+  ('Principal — Islamic & Arabic Studies', 'academic', 'school_leadership', 'principal-islamic-arabic-studies', 'Leadership of the Sultan Hanafi School of Islamic & Arabic Studies — Arabic language and Islamic studies programme oversight.'),
+  ('Office of the Ra''ees', 'academic', 'school_leadership', 'raees', 'A leadership title requested for the School of Islamic & Arabic Studies. Its correspondence to an existing appointed office has not yet been confirmed by the institution — recorded here as a vacant seat pending that confirmation, not merged into an existing Principal''s title without sign-off.'),
+  ('Office of the Mudeer', 'academic', 'school_leadership', 'mudeer', 'A leadership title requested for Qur''an College. Its correspondence to an existing appointed office has not yet been confirmed by the institution — recorded here as a vacant seat pending that confirmation, not merged into an existing Principal''s title without sign-off.'),
+  ('Human Resources', 'support', 'operational', 'hr', 'Recruitment, staff records, leave, and performance administration. Explicitly out of scope for the current Staff Identity system (an organisational directory, not a personnel/payroll file) — this office exists as a directory entry pending that system''s build.'),
+  ('Student Affairs', 'support', 'operational', 'student-affairs', 'Student welfare, leadership development, clubs, and pastoral-care coordination across all institutions.'),
+  ('Communications', 'support', 'operational', 'communications', 'Institutional news, publications, press relations, and brand oversight — currently a shared function across the Registrar, Principal, and Executive offices pending a dedicated appointment.'),
+  ('Digital Learning & Innovation', 'academic', 'operational', 'digital-learning', 'Learning-management systems, digital curriculum, and instructional-technology innovation. No LMS exists yet — see the Digital Campus roadmap.'),
+  ('Library', 'support', 'institutional_services', 'library', 'Physical and digital library services, research resources, and reading-room administration. No library catalogue system exists yet.'),
+  ('Alumni', 'support', 'institutional_services', 'alumni', 'Alumni relations, directory, and engagement. No alumni programme or records system exists yet — "alumni" is currently only a self-declared profile field on the guardian portal.'),
+  ('Sultan Hanafi Foundation', 'support', 'institutional_services', 'foundation', 'Staff-side administration of the Sultan Hanafi Foundation''s scholarship, welfare, and community programmes. The Foundation''s public page and real focus areas are already published at /foundation/.'),
+  ('Certificate & Transcript Office', 'academic', 'institutional_services', 'certificates', 'Certificate issuance, transcript generation, and public verification. The operational function already lives in the Registrar''s Office — this office is that function''s own reporting view.'),
+  ('Digital Identity Office', 'support', 'institutional_services', 'digital-identity', 'Digital ID cards, QR verification, and identity-record administration for students, staff, and guardians. The underlying system is already live at /verify-identity/.'),
+  ('Institutional Knowledge Base', 'support', 'institutional_services', 'knowledge-base', 'Central index of policies, handbooks, and institutional documents. Currently served by the public Policies Centre — this office is its internal administration view.')
+ON CONFLICT (name) DO UPDATE SET
+  office_type = EXCLUDED.office_type,
+  layer       = EXCLUDED.layer,
+  slug        = EXCLUDED.slug,
+  description = EXCLUDED.description;
