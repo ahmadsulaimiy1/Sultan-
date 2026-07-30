@@ -865,6 +865,70 @@ const STATEMENTS = [
     ('fee_outstanding', 'Fee Outstanding', 'An outstanding balance that could affect the candidate''s exam-body registration.', 5)
     ON CONFLICT (code) DO NOTHING`,
 
+  // Arabic Fluency Framework — same Institutional Capability Framework
+  // pattern. Assessment bands are a standard five-tier language-
+  // proficiency scale (the same shape used across real language
+  // programmes worldwide), not policy-derived and not fabricated
+  // student data — real professional structure, zero records yet.
+  `CREATE TABLE IF NOT EXISTS arabic_fluency_bands (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS arabic_fluency_assessments (
+    id                  SERIAL PRIMARY KEY,
+    student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id        INTEGER REFERENCES institutions(id),
+    skill                 TEXT NOT NULL CHECK (skill IN ('reading', 'writing', 'listening', 'speaking')),
+    band_id               INTEGER NOT NULL REFERENCES arabic_fluency_bands(id),
+    assessment_cycle      TEXT NOT NULL,
+    notes                 TEXT,
+    assessor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+    assessed_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_arabic_fluency_assessments_student ON arabic_fluency_assessments (student_id)`,
+  `INSERT INTO arabic_fluency_bands (code, label, description, sort_order) VALUES
+    ('beginner', 'Beginner', 'Recognises isolated letters/words; minimal independent production.', 1),
+    ('elementary', 'Elementary', 'Reads/produces simple, familiar sentences with support.', 2),
+    ('intermediate', 'Intermediate', 'Handles everyday topics independently with some errors.', 3),
+    ('advanced', 'Advanced', 'Handles a range of topics fluently with occasional support.', 4),
+    ('fluent', 'Fluent', 'Near-native command across all four skills.', 5)
+    ON CONFLICT (code) DO NOTHING`,
+
+  // Tajweed Compliance Framework — same pattern, scoped to Qur'anic
+  // recitation rules rather than general Arabic fluency. Categories
+  // (Makharij, Sifaat, Ahkam, Application) are the standard, real
+  // divisions of Tajweed study used in Qur'an education generally, not
+  // invented for this system.
+  `CREATE TABLE IF NOT EXISTS tajweed_categories (
+    id           SERIAL PRIMARY KEY,
+    code         TEXT NOT NULL UNIQUE,
+    label        TEXT NOT NULL,
+    description  TEXT NOT NULL,
+    sort_order   INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS tajweed_assessments (
+    id                  SERIAL PRIMARY KEY,
+    student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    institution_id        INTEGER REFERENCES institutions(id),
+    category_id           INTEGER NOT NULL REFERENCES tajweed_categories(id),
+    compliance_level      TEXT NOT NULL CHECK (compliance_level IN ('developing', 'competent', 'proficient', 'mastered')),
+    assessment_cycle      TEXT NOT NULL,
+    remediation_plan      TEXT,
+    notes                 TEXT,
+    assessor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+    assessed_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_tajweed_assessments_student ON tajweed_assessments (student_id)`,
+  `INSERT INTO tajweed_categories (code, label, description, sort_order) VALUES
+    ('makharij', 'Makharij al-Huruf', 'Correct articulation points of each letter.', 1),
+    ('sifaat', 'Sifaat al-Huruf', 'The inherent characteristics of each letter''s pronunciation.', 2),
+    ('ahkam', 'Ahkam al-Tajweed', 'Rules governing letter interaction — noon/meem rulings, madd, qalqalah, etc.', 3),
+    ('application', 'Applied Recitation', 'Fluent, rule-compliant recitation of continuous passages under real recitation pace.', 4)
+    ON CONFLICT (code) DO NOTHING`,
+
   // Registrar's Office — real academic-lifecycle events
   `CREATE TABLE IF NOT EXISTS student_lifecycle_events (
     id                   SERIAL PRIMARY KEY,

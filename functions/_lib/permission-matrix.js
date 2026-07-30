@@ -47,6 +47,8 @@ export const SYSTEM_AREAS = {
   behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
   teacher_performance:    { name: 'Teacher Performance', ownerOffice: 'Principal, jointly with Academic Affairs', governingPolicy: 'Pending — HR Governance Framework (Staff Handbook §7)' },
   exam_readiness:         { name: 'Examination Readiness (WAEC/NECO)', ownerOffice: 'Registrar, jointly with Academic Affairs', governingPolicy: null },
+  arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'School of Islamic & Arabic Studies', governingPolicy: null },
+  tajweed_compliance:     { name: 'Tajweed Compliance', ownerOffice: "Qur'an College", governingPolicy: 'IQ-01, IQ-03' },
 };
 
 // role, permissions[], scope — one row per Matrix cell-group.
@@ -203,6 +205,16 @@ export const MATRIX = {
     { role: 'PRIN', permissions: ['V', 'E'], scope: 'own institution' },
     { role: 'TCH', permissions: ['V'], scope: 'own classes only' },
     { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual candidate content)' },
+  ],
+  arabic_fluency: [
+    { role: 'ARB', permissions: ['V', 'C', 'E'], scope: 'own classes only' },
+    { role: 'PRIN', permissions: ['V', 'E'], scope: 'own institution' },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual assessment content)' },
+  ],
+  tajweed_compliance: [
+    { role: 'MUH', permissions: ['V', 'C', 'E'], scope: "Qur'an College only" },
+    { role: 'PRIN', permissions: ['V', 'E'], scope: "own institution (Qur'an College)" },
+    { role: 'EXE', permissions: ['V'], scope: 'aggregate only (no individual assessment content)' },
   ],
 };
 

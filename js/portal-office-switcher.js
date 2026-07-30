@@ -82,6 +82,14 @@
       add('NECO Readiness', 'Candidate & subject readiness', '/portal/staff/neco-readiness/');
     }
 
+    // Arabic Fluency (School of Islamic & Arabic Studies) and Tajweed
+    // Compliance (Qur'an College) — role-code checks, same reasoning
+    // as the frameworks above.
+    var hasArabicRole = (data.roles || []).some(function (r) { return r.roleCode === 'ARB'; });
+    if (hasArabicRole) add('Arabic Fluency', 'Reading/writing/listening/speaking', '/portal/staff/arabic-fluency/');
+    var hasTajweedRole = (data.roles || []).some(function (r) { return r.roleCode === 'MUH'; });
+    if (hasTajweedRole) add('Tajweed Compliance', 'Makharij, Sifaat, Ahkam, Application', '/portal/staff/tajweed-compliance/');
+
     var myOfficeNames = {};
     (data.myOffices || []).forEach(function (o) { myOfficeNames[o.name] = true; });
     (data.roles || []).forEach(function (r) {
