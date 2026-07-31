@@ -354,6 +354,19 @@
           greeting: 'Treasury status updated.',
         });
       }
+      // Imperial Luxury Experience Directive — scripted typewriter chain
+      // for the resting header greeting, plays once per browser session.
+      var financeGreetingEl = document.getElementById('cc-greeting');
+      if(financeGreetingEl && window.SHRSExecArrival && window.SHRSExecArrival.typewriteChain){
+        var financeTypeKey = 'shrs_typewriter_finance';
+        var financeLines = ['Treasury systems operational.', 'Collection intelligence updated.', 'Institutional resources monitored.'];
+        if(!sessionStorage.getItem(financeTypeKey)){
+          sessionStorage.setItem(financeTypeKey, '1');
+          window.SHRSExecArrival.typewriteChain(financeGreetingEl, financeLines, { pause: 850 });
+        }else{
+          financeGreetingEl.textContent = financeLines[financeLines.length - 1];
+        }
+      }
       loadFeeStructures();
       loadDebtors();
     }catch(err){

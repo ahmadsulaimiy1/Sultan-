@@ -50,6 +50,7 @@
     raees: {
       tagline: 'Islamic Academic Leadership Centre',
       greeting: 'Academic leadership systems are ready.',
+      typewriterLines: ['Academic leadership systems operational.', 'Arabic and Islamic studies intelligence updated.'],
       icon: '<path d="M15 4a8 8 0 100 16 7 7 0 010-16z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
       summary: function (ops) {
         if (!ops) return null;
@@ -59,6 +60,7 @@
     mudeer: {
       tagline: 'Qur’an Excellence Command Centre',
       greeting: 'Qur’an excellence systems are operational.',
+      typewriterLines: ['Qur’an excellence systems operational.', 'Muraja’ah intelligence updated.'],
       icon: '<path d="M15 4a7 7 0 100 14 6 6 0 010-14z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M19 3.2l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="currentColor" stroke="none"/>',
       summary: function (ops) {
         if (!ops) return null;
@@ -68,13 +70,28 @@
     },
   };
 
+  // Imperial Luxury Experience Directive — Ra'ees and Mudeer carry an
+  // exact scripted multi-line typewriter greeting (see typewriterLines
+  // above); Head Teacher and Principal keep their existing single-line
+  // instant greeting since no scripted lines were given for those two.
   function renderPersonality(slug, data) {
     var personality = PERSONALITY[slug];
     if (!personality) return;
     var taglineEl = document.getElementById('cc-tagline');
     var greetingEl = document.getElementById('cc-greeting');
     if (taglineEl) taglineEl.textContent = personality.tagline;
-    if (greetingEl) greetingEl.textContent = personality.greeting;
+    if (!greetingEl) return;
+    if (personality.typewriterLines && window.SHRSExecArrival && window.SHRSExecArrival.typewriteChain) {
+      var typeKey = 'shrs_typewriter_' + slug;
+      if (!sessionStorage.getItem(typeKey)) {
+        sessionStorage.setItem(typeKey, '1');
+        window.SHRSExecArrival.typewriteChain(greetingEl, personality.typewriterLines, { pause: 850 });
+        return;
+      }
+      greetingEl.textContent = personality.typewriterLines[personality.typewriterLines.length - 1];
+      return;
+    }
+    greetingEl.textContent = personality.greeting;
   }
 
   // Executive Arrival Sequence — restrained, not cinematic: title, then a

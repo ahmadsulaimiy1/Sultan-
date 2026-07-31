@@ -64,11 +64,10 @@
     requestAnimationFrame(step);
   }
 
-  // Typewriter reveal — used only for the Founder's own welcome line
-  // ("Welcome Back, [Name]"), never elsewhere: a single restrained
-  // executive touch, not a site-wide gimmick. Types at a steady,
-  // unhurried pace and calls opts.onDone when finished (used to chain
-  // the next reveal line). Skipped entirely under reduced motion.
+  // Typewriter reveal — a single restrained executive touch, not a
+  // site-wide gimmick. Types at a steady, unhurried pace and calls
+  // opts.onDone when finished (used to chain the next reveal line).
+  // Skipped entirely under reduced motion.
   function typewrite(el, text, opts) {
     opts = opts || {};
     if (PREFERS_REDUCED_MOTION || !el) {
@@ -92,5 +91,30 @@
     })();
   }
 
-  window.SHRSExecArrival = { play: playExecArrival, animateValue: animateValue, typewrite: typewrite };
+  // Sequential typewriter chain — types each line in turn into the same
+  // element, pausing between lines, then calls opts.onDone once the
+  // final line has finished. Used for each Command Centre's scripted
+  // multi-line greeting (Registrar/Finance/Ra'ees/Mudeer), plays once
+  // per browser session per surface (guarded by the caller), and falls
+  // back to showing the final line instantly under reduced motion.
+  function typewriteChain(el, lines, opts) {
+    opts = opts || {};
+    if (!lines || !lines.length) { if (opts.onDone) opts.onDone(); return; }
+    if (PREFERS_REDUCED_MOTION || !el) {
+      if (el) el.textContent = lines[lines.length - 1];
+      if (opts.onDone) opts.onDone();
+      return;
+    }
+    var pause = opts.pause || 900;
+    var i = 0;
+    (function next() {
+      typewrite(el, lines[i], { speed: opts.speed || 28, onDone: function () {
+        i++;
+        if (i < lines.length) setTimeout(next, pause);
+        else if (opts.onDone) opts.onDone();
+      } });
+    })();
+  }
+
+  window.SHRSExecArrival = { play: playExecArrival, animateValue: animateValue, typewrite: typewrite, typewriteChain: typewriteChain };
 })();

@@ -544,6 +544,19 @@
           greeting: 'Registry systems are operational.',
         });
       }
+      // Imperial Luxury Experience Directive — scripted typewriter chain
+      // for the resting header greeting, plays once per browser session.
+      var registrarGreetingEl = document.getElementById('cc-greeting');
+      if(registrarGreetingEl && window.SHRSExecArrival && window.SHRSExecArrival.typewriteChain){
+        var registrarTypeKey = 'shrs_typewriter_registrar';
+        var registrarLines = ['Registry systems verified.', 'Admissions intelligence updated.', 'Student records operational.'];
+        if(!sessionStorage.getItem(registrarTypeKey)){
+          sessionStorage.setItem(registrarTypeKey, '1');
+          window.SHRSExecArrival.typewriteChain(registrarGreetingEl, registrarLines, { pause: 850 });
+        }else{
+          registrarGreetingEl.textContent = registrarLines[registrarLines.length - 1];
+        }
+      }
       loadPendingApprovals();
     }catch(err){
       loadingEl.hidden = true;
