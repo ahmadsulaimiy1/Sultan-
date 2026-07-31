@@ -1,8 +1,13 @@
 // Generates the DOCX edition of "The Constitution of Sultan Hanafi Royal
-// Schools" (Draft v5.0) from docs/shrs-constitution-2026-draft.md — the
+// Schools" (Draft v6.0) from docs/shrs-constitution-2026-draft.md — the
 // markdown file is the source of truth; this script is a line-classifying
 // transcriber (headings, tables, lettered sub-clauses, body paragraphs),
 // not an independent drafting source.
+//
+// v6.0 adds a Part-level structure (## PART ... lines) above Chapters.
+// Parts render as their own divider-style page — larger type, a gold
+// rule above and below, and generous surrounding space — distinct from
+// the Chapter heading style, so the structure itself signals seniority.
 //
 // The Schedule of Standing Committees (Chapter XI) is an 8-column table
 // that cannot render legibly on a portrait page, so it is placed in its
@@ -31,7 +36,7 @@ const SRC = path.join(ROOT, 'docs', 'shrs-constitution-2026-draft.md');
 const CREST = path.join(ROOT, 'assets', 'images', 'brand-mark.png');
 const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Draft-v5.0.docx');
+const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Draft-v6.0.docx');
 
 const GOLD = 'A9832E';
 const NAVY = '1C2340';
@@ -72,11 +77,11 @@ function clausePara(text) {
   });
 }
 
-function heading1(text, first) {
+function heading1(text, pageBreakBefore) {
   return new Paragraph({
     text,
     heading: HeadingLevel.HEADING_1,
-    pageBreakBefore: !first,
+    pageBreakBefore,
     spacing: { after: 240 },
   });
 }
@@ -89,12 +94,49 @@ function heading2(text) {
   });
 }
 
+// Part-level divider: "PART I — FOUNDATIONS" -> a small gold eyebrow
+// ("PART I") over a large rule-bounded title ("FOUNDATIONS"), with wide
+// surrounding space so the page reads as a divider, not a chapter.
+function headingPart(text, pageBreakBefore) {
+  const dashIdx = text.indexOf('—');
+  const eyebrow = dashIdx !== -1 ? text.slice(0, dashIdx).trim() : text;
+  const title = dashIdx !== -1 ? text.slice(dashIdx + 1).trim() : '';
+  return [
+    new Paragraph({
+      pageBreakBefore,
+      spacing: { before: 2600, after: 140 },
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({
+        text: eyebrow, bold: true, size: 24, color: GOLD, font: 'Cambria',
+      })],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 200 },
+      border: {
+        top: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 16 },
+        bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 16 },
+      },
+      children: [new TextRun({
+        text: title || eyebrow, bold: true, size: 48, color: NAVY, font: 'Cambria',
+      })],
+    }),
+    new Paragraph({ text: '', spacing: { after: 2400 } }),
+  ];
+}
+
 function main() {
   const raw = fs.readFileSync(SRC, 'utf8');
   const lines = raw.split('\n');
 
   const children = [];
   let firstHeading = true;
+  // True until the very first paragraph is pushed into `children`. That
+  // paragraph carries pageBreakBefore so it reliably starts a new page
+  // after the Table of Contents — LibreOffice can otherwise render a
+  // spurious blank page when the TOC content fills its page exactly and
+  // a separate break-only paragraph is used instead (see main()).
+  let isFirstBodyItem = true;
   let i = 0;
   let splitIndex = null;
   let landscapeChildren = null;
@@ -106,15 +148,27 @@ function main() {
     if (line.trim() === '---') { i++; continue; }
     if (line.trim() === '') { i++; continue; }
 
-    if (line.startsWith('## ')) {
-      children.push(heading1(line.slice(3).trim(), firstHeading));
+    if (line.startsWith('## PART ')) {
+      const pageBreakBefore = isFirstBodyItem ? true : !firstHeading;
+      children.push(...headingPart(line.slice(3).trim(), pageBreakBefore));
       firstHeading = false;
+      isFirstBodyItem = false;
+      i++;
+      continue;
+    }
+
+    if (line.startsWith('## ')) {
+      const pageBreakBefore = isFirstBodyItem ? true : !firstHeading;
+      children.push(heading1(line.slice(3).trim(), pageBreakBefore));
+      firstHeading = false;
+      isFirstBodyItem = false;
       i++;
       continue;
     }
 
     if (line.startsWith('### ')) {
       children.push(heading2(line.slice(4).trim()));
+      isFirstBodyItem = false;
       i++;
       continue;
     }
@@ -170,18 +224,21 @@ function main() {
         children.push(table);
         children.push(new Paragraph({ text: '', spacing: { after: 160 } }));
       }
+      isFirstBodyItem = false;
       continue;
     }
 
     // sub-clauses (a) (b) (c)
     if (/^\([a-z0-9]+\)/i.test(line.trim())) {
       children.push(clausePara(line.trim()));
+      isFirstBodyItem = false;
       i++;
       continue;
     }
 
     // ordinary paragraph (Article text, intro notes, drafting notes)
-    children.push(bodyPara(line.trim()));
+    children.push(bodyPara(line.trim(), isFirstBodyItem ? { pageBreakBefore: true } : {}));
+    isFirstBodyItem = false;
     i++;
   }
 
@@ -221,7 +278,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 100 },
-      children: [new TextRun({ text: 'Draft v5.0', bold: true, size: 26, color: GOLD })],
+      children: [new TextRun({ text: 'Draft v6.0', bold: true, size: 26, color: GOLD })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -249,29 +306,44 @@ function main() {
   // ---- TOC page ----
   // Page numbers below are hand-verified against a rendered PDF (see
   // header comment). Re-verify after any edit to the source markdown
-  // changes pagination.
+  // changes pagination. `level: 0` entries (Parts, Schedules, Drafting
+  // Notes, and the two front-matter items) render bold/gold/full-width;
+  // `level: 1` entries (Chapters) render indented beneath their Part, so
+  // the Table of Contents itself shows the Part/Chapter hierarchy.
   const TOC_ENTRIES = [
-    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 3],
-    ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 5],
-    ['CHAPTER III — THE BOARD OF GOVERNORS', 8],
-    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 11],
-    ['CHAPTER V — ACADEMIC LEADERSHIP', 12],
-    ['CHAPTER VI — THE ACADEMIC COUNCIL', 13],
-    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 14],
-    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 15],
-    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 17],
-    ['CHAPTER X — STUDENT LEADERSHIP', 18],
-    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 19],
-    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 26],
-    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 27],
-    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 28],
-    ['CHAPTER XV — FINANCIAL GOVERNANCE', 29],
-    ['CHAPTER XVI — SUCCESSION', 30],
-    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 31],
-    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 32],
-    ['CHAPTER XIX — CEREMONIAL ORDER', 33],
-    ['SCHEDULES', 34],
-    ['DRAFTING NOTES — NOT PART OF THE CONSTITUTION', 35],
+    ['CONSTITUTIONAL PROCLAMATION', 3, 0],
+    ['PREAMBLE', 4, 0],
+    ['PART I — FOUNDATIONS', 5, 0],
+    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 6, 1],
+    ['PART II — GOVERNING AND EXECUTIVE AUTHORITY', 8, 0],
+    ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 9, 1],
+    ['CHAPTER III — THE BOARD OF GOVERNORS', 12, 1],
+    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 15, 1],
+    ['PART III — ACADEMIC AND RELIGIOUS AUTHORITY', 16, 0],
+    ['CHAPTER V — ACADEMIC LEADERSHIP', 17, 1],
+    ['CHAPTER VI — THE ACADEMIC COUNCIL', 18, 1],
+    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 19, 1],
+    ['PART IV — INSTITUTIONAL STRUCTURE', 20, 0],
+    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 21, 1],
+    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 23, 1],
+    ['CHAPTER X — STUDENT LEADERSHIP', 24, 1],
+    ['PART V — COMMITTEES, ACCOUNTABILITY, AND SAFEGUARDING', 25, 0],
+    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 26, 1],
+    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 33, 1],
+    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 34, 1],
+    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 35, 1],
+    ['PART VI — FINANCE AND CONTINUITY', 36, 0],
+    ['CHAPTER XV — FINANCIAL GOVERNANCE', 37, 1],
+    ['CHAPTER XVI — SUCCESSION', 38, 1],
+    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 39, 1],
+    ['PART VII — CONSTITUTIONAL SUPREMACY AND GENERAL PROVISIONS', 40, 0],
+    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 41, 1],
+    ['CHAPTER XIX — CEREMONIAL ORDER', 42, 1],
+    ['CHAPTER XX — INSTRUMENTS MADE UNDER THIS CONSTITUTION', 43, 1],
+    ['CHAPTER XXI — INSTITUTIONAL IDENTITY, RECORDS, AND SAFEGUARDS OF OFFICE', 44, 1],
+    ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 45, 1],
+    ['SCHEDULES', 46, 0],
+    ['DRAFTING NOTES — NOT PART OF THE CONSTITUTION', 47, 0],
   ];
   coverChildren.push(
     new Paragraph({
@@ -279,23 +351,36 @@ function main() {
       heading: HeadingLevel.HEADING_1,
       spacing: { after: 300 },
     }),
-    ...TOC_ENTRIES.map(([title, pageNum]) => new Paragraph({
-      spacing: { after: 160 },
+    ...TOC_ENTRIES.map(([title, pageNum, level]) => new Paragraph({
+      spacing: { after: level === 0 ? 200 : 120, before: level === 0 ? 160 : 0 },
+      indent: { left: level === 1 ? 400 : 0 },
       tabStops: [{ type: TabStopType.RIGHT, position: 10440, leader: LeaderType.DOT }],
       children: [
-        new TextRun({ text: title, size: 22, color: NAVY, bold: true }),
-        new TextRun({ text: '\t', size: 22, color: NAVY, bold: true }),
-        new TextRun({ text: String(pageNum), size: 22, color: NAVY, bold: true }),
+        new TextRun({
+          text: title, size: level === 0 ? 22 : 20,
+          color: level === 0 ? GOLD : NAVY, bold: level === 0,
+        }),
+        new TextRun({
+          text: '\t', size: level === 0 ? 22 : 20,
+          color: level === 0 ? GOLD : NAVY, bold: level === 0,
+        }),
+        new TextRun({
+          text: String(pageNum), size: level === 0 ? 22 : 20,
+          color: level === 0 ? GOLD : NAVY, bold: level === 0,
+        }),
       ],
     })),
-    new Paragraph({ children: [new PageBreak()] }),
+    // No trailing break-only paragraph here: the first paragraph of the
+    // body content (below) carries pageBreakBefore instead, so it starts
+    // the next page reliably even when the TOC fills its page exactly —
+    // see the isFirstBodyItem comment in main().
   );
 
   const makeHeader = () => new Header({
     children: [new Paragraph({
       alignment: AlignmentType.CENTER,
       children: [new TextRun({
-        text: 'The Constitution of Sultan Hanafi Royal Schools — Draft v5.0 (Not Yet Effective)',
+        text: 'The Constitution of Sultan Hanafi Royal Schools — Draft v6.0 (Not Yet Effective)',
         size: 15, italics: true, color: '6B6B6B',
       })],
     })],
@@ -350,7 +435,7 @@ function main() {
 
   const doc = new Document({
     creator: 'Sultan Hanafi Royal Schools — Office of the Board of Governors (drafting support)',
-    title: 'The Constitution of Sultan Hanafi Royal Schools — Draft v5.0',
+    title: 'The Constitution of Sultan Hanafi Royal Schools — Draft v6.0',
     description: 'Draft constitutional instrument prepared for adoption by the Board of Governors. Not yet effective.',
     styles: {
       default: {
