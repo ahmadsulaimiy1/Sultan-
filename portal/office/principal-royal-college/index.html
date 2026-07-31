@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/css/portal.css">
 <script src="/js/portal-theme.js"></script>
 </head>
-<body class="portal-body" data-office-slug="principal-royal-college" data-atmosphere="principal">
+<body class="portal-body type-academic" data-office-slug="principal-royal-college" data-atmosphere="principal">
 
 <div class="portal-topbar">
   <a class="portal-brand" href="/">
@@ -26,6 +26,11 @@
 </div>
 
 <main class="portal-main">
+  <div class="portal-loading-skeleton" id="office-skeleton" aria-hidden="true">
+    <div class="pls-hero"></div>
+    <div class="pls-row"><div class="pls-card"></div><div class="pls-card"></div><div class="pls-card"></div></div>
+  </div>
+
   <div class="portal-card" id="office-error" hidden>
     <h1>Couldn't load this office</h1>
     <p class="sub" data-error-message>Please try again.</p>
@@ -228,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-arrival.js" defer></script>
 <script src="/js/portal-office.js" defer></script>
 </body>
 </html>

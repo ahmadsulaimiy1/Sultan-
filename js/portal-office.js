@@ -143,6 +143,7 @@
   async function load(slug) {
     var errorEl = document.getElementById('office-error');
     var shellEl = document.getElementById('office-shell');
+    var skeletonEl = document.getElementById('office-skeleton');
     try {
       var res = await fetch('/api/portal/staff/office/' + encodeURIComponent(slug), { headers: { accept: 'application/json' } });
       if (res.status === 401) { window.location.href = '/portal/staff/login/'; return; }
@@ -150,6 +151,7 @@
       if (!res.ok) throw new Error(data.error || 'Could not load this office.');
       render(data);
       playArrivalSequence(slug, data);
+      if (skeletonEl) skeletonEl.hidden = true;
       if (shellEl) shellEl.hidden = false;
       // Operations Centre, where it exists, is the real answer to "what
       // requires attention right now" for these four offices — it opens
@@ -159,6 +161,7 @@
         if (opsTab) opsTab.click();
       }
     } catch (err) {
+      if (skeletonEl) skeletonEl.hidden = true;
       if (errorEl) {
         errorEl.hidden = false;
         errorEl.querySelector('[data-error-message]').textContent = err.message || 'Could not load this office.';
@@ -199,10 +202,10 @@
     setText('office-holder-line', primary
       ? (primary.isVacant ? primary.title + ' — Vacant, awaiting appointment' : primary.title + ' — ' + (primary.staff.preferredName || primary.staff.fullName))
       : 'No seat recorded for this office yet.');
-    setText('stat-staff-count', String(data.staffCount));
-    setText('stat-appointments', String(data.appointments.length));
-    setText('stat-pending-workflow', String(data.workflow.pending.length));
-    setText('stat-meetings', String(data.meetings.length));
+    setTextAnimated('stat-staff-count', String(data.staffCount));
+    setTextAnimated('stat-appointments', String(data.appointments.length));
+    setTextAnimated('stat-pending-workflow', String(data.workflow.pending.length));
+    setTextAnimated('stat-meetings', String(data.meetings.length));
   }
 
   // Operations Centre — real, institution-scoped daily-operations data
@@ -214,8 +217,10 @@
     var tile = document.createElement('div');
     tile.className = 'exec-stat';
     var l = document.createElement('div'); l.className = 'exec-stat-label'; l.textContent = label;
-    var v = document.createElement('div'); v.className = 'exec-stat-value'; v.textContent = value;
+    var v = document.createElement('div'); v.className = 'exec-stat-value';
     tile.appendChild(l); tile.appendChild(v);
+    if (window.SHRSExecArrival && window.SHRSExecArrival.animateValue) window.SHRSExecArrival.animateValue(v, value);
+    else v.textContent = value;
     return tile;
   }
   function renderOperations(data) {
@@ -664,5 +669,17 @@
   function setText(id, text) {
     var el = document.getElementById(id);
     if (el) el.textContent = text;
+  }
+
+  // Institutional Pulse (Founder Override Directive, Phase 1 Item 3):
+  // every KPI counts up from 0 rather than appearing instantly, using
+  // the same shared animateValue already proven on the Founder
+  // Dashboard (js/portal-arrival.js). Falls back to setText if the
+  // shared module hasn't loaded for some reason.
+  function setTextAnimated(id, text) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (window.SHRSExecArrival && window.SHRSExecArrival.animateValue) window.SHRSExecArrival.animateValue(el, text);
+    else el.textContent = text;
   }
 })();

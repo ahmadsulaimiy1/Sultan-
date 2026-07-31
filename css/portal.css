@@ -1008,6 +1008,37 @@ body.portal-body > *{position:relative;z-index:1;}
   100%{transform:translate(0,0);}
 }
 @media (prefers-reduced-motion:reduce){.exec-welcome::before{animation:none;}}
+/* One-shot gold light sweep (Founder Override Directive, Phase 1 Item
+   3 correction — "gold sweep across executive cards, not constant, not
+   distracting"). A single sheen crosses the hero once, ~1.1s after the
+   arrival overlay clears, then never repeats — distinct from the
+   infinite, barely-perceptible foil drift above. Implemented as an
+   extra background layer (not a new element) so every page already
+   using .exec-welcome gets it with zero markup changes. */
+.exec-welcome{
+  background-image:
+    linear-gradient(100deg, transparent 30%, rgba(233,206,138,0.16) 46%, transparent 62%),
+    radial-gradient(650px 260px at 88% -20%, rgba(233,206,138,0.14), transparent 65%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%),
+    linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
+    linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
+    linear-gradient(90deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px),
+    linear-gradient(180deg, var(--gold-bright) 0, var(--gold-bright) 24px, transparent 24px);
+  background-size:260% 100%, auto, auto, 24px 1.5px, 1.5px 24px, 24px 1.5px, 1.5px 24px;
+  background-position:140% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;
+  background-repeat:repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  animation:exec-gold-sweep 2.2s ease-out 1.1s 1 both;
+}
+@keyframes exec-gold-sweep{
+  0%{background-position:140% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}
+  100%{background-position:-40% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}
+}
+@media (prefers-reduced-motion:reduce){.exec-welcome{animation:none;background-position:-40% 0, 0 0, 0 0, 18px 18px, 18px 18px, right 18px bottom 18px, right 18px bottom 18px;}}
+@media (max-width:640px){.exec-welcome{background-image:
+    linear-gradient(100deg, transparent 30%, rgba(233,206,138,0.16) 46%, transparent 62%),
+    radial-gradient(650px 260px at 88% -20%, rgba(233,206,138,0.14), transparent 65%),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+  background-size:260% 100%, auto, auto;background-repeat:repeat, no-repeat, no-repeat;}}
 /* Institutional watermark: the same crest asset/opacity already used on
    marketing pages (css/brand.css .crest-watermark) — reused directly
    here (rather than sharing the class, which would collide with the
@@ -1122,20 +1153,29 @@ body.portal-body > .exec-arrival{
    data-atmosphere attribute (auth shells, admin centre, etc.) are
    completely unaffected: every rule below is scoped to the attribute.
 
-   Colour reuse is deliberate, not decorative: Principal/Head Teacher/
-   Ra'ees/Mudeer reuse the exact accent already established for their
-   own school on the public site (Royal College=gold, Nursery &
-   Primary=terracotta, Islamic & Arabic Studies=crimson, Qur'an
-   College=forest-green — see css/brand.css's #quran-college etc.
-   scoped rules) rather than inventing a new colour for the same
-   institution. */
+   Superseded note, Command Centres only: the six Command Centre offices
+   (Founder, Registrar, Finance, Principal, Head Teacher, Ra'ees, Mudeer)
+   originally each carried a distinct accent hue matching their public-
+   site school colour (navy/bronze/sapphire/terracotta/crimson/forest-
+   green). The Founder corrected this — "many different colour themes"
+   reads as fragmentation, not "one institution with multiple offices."
+   The block below now draws every Command Centre from the SAME
+   three-colour institutional DNA (Royal Gold / Deep Executive Navy /
+   Premium Dark Charcoal), with --atmos-bright fixed to gold everywhere
+   — one illumination colour, always. Offices differentiate by tier
+   (Executive=gold, Academic layer=navy, Administrative layer=charcoal)
+   plus their own icon, background pattern SHAPE (unchanged), typography
+   class, and personality copy — never a competing hue. The remaining
+   generic office portals further below (academic-affairs, hr, library,
+   etc.) still use the original per-cluster hues; unifying those too is
+   a tracked follow-up, not yet done. */
 body.portal-body[data-atmosphere="founder"]{--atmos:var(--gold);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(198,161,91,0.16);}
-body.portal-body[data-atmosphere="registrar"]{--atmos:var(--oxford-navy);--atmos-bright:#7FA0D2;--atmos-soft:rgba(65,97,140,0.14);}
-body.portal-body[data-atmosphere="finance"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.14);}
-body.portal-body[data-atmosphere="principal"]{--atmos:var(--sapphire);--atmos-bright:var(--sapphire-bright);--atmos-soft:rgba(63,76,140,0.14);}
-body.portal-body[data-atmosphere="head-teacher"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.14);}
-body.portal-body[data-atmosphere="raees"]{--atmos:var(--crimson);--atmos-bright:#C1707D;--atmos-soft:rgba(124,31,46,0.12);}
-body.portal-body[data-atmosphere="mudeer"]{--atmos:var(--forest-green);--atmos-bright:#7CB394;--atmos-soft:rgba(63,107,78,0.14);}
+body.portal-body[data-atmosphere="registrar"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="finance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
+body.portal-body[data-atmosphere="principal"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.14);}
+body.portal-body[data-atmosphere="head-teacher"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.13);}
+body.portal-body[data-atmosphere="raees"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.12);}
+body.portal-body[data-atmosphere="mudeer"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.15);}
 body.portal-body[data-atmosphere="teacher"]{--atmos:var(--emerald);--atmos-bright:#A98657;--atmos-soft:rgba(107,74,46,0.14);}
 body.portal-body[data-atmosphere="parent"]{--atmos:var(--rosewood);--atmos-bright:var(--rosewood-bright);--atmos-soft:rgba(140,74,87,0.14);}
 body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-bright:var(--sapphire-bright);--atmos-soft:rgba(63,76,140,0.14);}
@@ -1185,6 +1225,63 @@ body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-b
   color:var(--atmos-bright,var(--gold-bright));margin:2px 0 4px;
 }
 .cc-greeting{font-size:0.86rem;font-style:italic;color:rgba(248,244,233,0.8);margin-top:2px;}
+
+/* Founder typewriter welcome (Phase 1 Item 3 correction) — a blinking
+   caret while the line types, and a restrained fade-in for the
+   Executive Briefing sentence that follows it. */
+.exec-typewriter-caret::after{content:'';display:inline-block;width:2px;height:0.9em;background:currentColor;margin-inline-start:2px;vertical-align:-0.05em;animation:exec-caret-blink 0.9s steps(1) infinite;}
+@keyframes exec-caret-blink{50%{opacity:0;}}
+@media (prefers-reduced-motion:reduce){.exec-typewriter-caret::after{animation:none;}}
+.exec-welcome-narrative{opacity:0;transition:opacity .7s ease;}
+.exec-welcome-narrative.is-revealed{opacity:1;}
+@media (prefers-reduced-motion:reduce){.exec-welcome-narrative{opacity:1;transition:none;}}
+
+/* ============================================================
+   Executive Typography System (Founder Override Directive, Phase 1
+   Item 4). Four classes applied to <body>, each governing heading
+   scale, letter-spacing, and body-copy rhythm for one institutional
+   tier — never a font swap (the site's three-font system — Cinzel
+   labels, Cormorant Garamond headings, Inter/Cairo body — stays
+   exactly as established), only how spacious and weighted it reads.
+   This is one of the directive's named non-colour differentiators:
+   offices that now share an accent colour (see the Command Centre
+   block above) still read as visibly different tiers of the same
+   institution through type alone. */
+
+/* Executive — Founder/Board/Management. Most spacious, most
+   authoritative: the largest heading scale on the platform and the
+   widest letter-spacing, so the Founder's own hero reads distinctly
+   grander than every office beneath it. */
+body.type-executive .exec-welcome h1{font-size:var(--h1-size,3.05rem);letter-spacing:0.004em;}
+body.type-executive .exec-welcome-eyebrow{letter-spacing:0.16em;font-size:0.84rem;}
+body.type-executive .cc-tagline{font-size:0.9rem;letter-spacing:0.09em;}
+body.type-executive .portal-child-head h2{font-size:1.55rem;letter-spacing:0.008em;}
+body.type-executive .exec-welcome-motto,body.type-executive .exec-welcome-narrative{font-size:1rem;line-height:1.75;}
+
+/* Governance — Board of Trustees, Management Council, Committees,
+   Policies. Formal, deliberate: slightly tighter letter-spacing than
+   Executive (institutional rather than personal authority) and a
+   serif-forward card heading treatment befitting board papers. */
+body.type-governance .exec-welcome h1{font-size:2.5rem;letter-spacing:0.006em;}
+body.type-governance .portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;letter-spacing:0.012em;}
+body.type-governance .portal-hello-sub,body.type-governance .exec-welcome-narrative{line-height:1.75;}
+
+/* Academic — Principal, Ra'ees, Mudeer, Head Teacher. Scholarly and
+   elegant: an italic tagline (the "mental rename") and a Cormorant
+   Garamond card-heading treatment, reading closer to a university
+   faculty page than an operations console. */
+body.type-academic .exec-welcome h1{font-size:2.6rem;}
+body.type-academic .cc-tagline{font-style:italic;letter-spacing:0.03em;}
+body.type-academic .portal-child-head h2{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.42rem;font-weight:700;}
+body.type-academic .exec-welcome-role,body.type-academic .portal-hello-sub{line-height:1.65;}
+
+/* Administrative — Registrar, Finance. Clear and professional: a
+   sans-serif card-heading treatment (Inter, not a display serif) and
+   tighter, denser rhythm suited to a records/ledger office, still with
+   generous breathing room compared to the pre-correction baseline. */
+body.type-administrative .portal-hello{font-size:1.7rem;letter-spacing:0.002em;}
+body.type-administrative .portal-child-head h2{font-family:'Inter','Cairo',sans-serif;font-size:1.18rem;font-weight:700;letter-spacing:0.002em;}
+body.type-administrative .portal-hello-sub{font-size:0.93rem;line-height:1.65;max-width:640px;}
 /* Light-background variant — .cc-tagline/.cc-greeting default to a
    cream/white colour meant for the dark .exec-welcome hero (generic
    office template). Registrar/Finance reuse the same two classes
@@ -1224,8 +1321,14 @@ body.portal-body[data-atmosphere] .exec-welcome-eyebrow{color:var(--atmos-bright
 body.portal-body[data-atmosphere] .exec-welcome::before{background-image:repeating-linear-gradient(45deg, var(--atmos-bright) 0 1px, transparent 1px 32px);}
 body.portal-body[data-atmosphere] .exec-welcome-stat .value{color:var(--atmos-bright);}
 body.portal-body[data-atmosphere] .portal-child-card{transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease;}
-body.portal-body[data-atmosphere] .portal-child-card:hover{border-color:var(--atmos);transform:translateY(-2px);}
-@media (prefers-reduced-motion:reduce){body.portal-body[data-atmosphere] .portal-child-card:hover{transform:none;}}
+body.portal-body[data-atmosphere] .portal-child-card:hover{
+  border-color:var(--atmos);transform:translateY(-3px);
+  box-shadow:
+    0 38px 72px -28px rgba(20,13,4,0.4),
+    0 14px 28px -14px rgba(20,13,4,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+}
+@media (prefers-reduced-motion:reduce){body.portal-body[data-atmosphere] .portal-child-card:hover{transform:none;box-shadow:none;}}
 
 /* The eyebrow icon — one monoline SVG per atmosphere, identical paths
    to the matching card in the header's "Login to Portals" menu (see

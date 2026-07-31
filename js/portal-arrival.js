@@ -36,5 +36,61 @@
     setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 2800);
   }
 
-  window.SHRSExecArrival = { play: playExecArrival };
+  // Animated count-up: parses a leading/trailing non-numeric prefix and
+  // suffix (₦, %, "due", etc.) off the real final value and counts up
+  // to it — the number itself is never invented, only its reveal is
+  // animated. Identical approach to the Founder Dashboard's own
+  // animateValue (js/portal-founder-dashboard.js), shared here so every
+  // Command Centre's KPI tiles reveal the same way. Falls back to
+  // setting the text immediately if the value isn't numeric-shaped or
+  // the user has asked for reduced motion.
+  function animateValue(target, finalText, duration) {
+    var m = /^(\D*)([\d,]+)(\D*)$/.exec(String(finalText));
+    if (!m || PREFERS_REDUCED_MOTION) {
+      target.textContent = finalText;
+      return;
+    }
+    var prefix = m[1], suffix = m[3];
+    var end = parseInt(m[2].replace(/,/g, ''), 10);
+    if (!isFinite(end)) { target.textContent = finalText; return; }
+    var start = null, dur = duration || 900;
+    function step(ts) {
+      if (start === null) start = ts;
+      var progress = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      target.textContent = prefix + Math.round(end * eased).toLocaleString('en-NG') + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Typewriter reveal — used only for the Founder's own welcome line
+  // ("Welcome Back, [Name]"), never elsewhere: a single restrained
+  // executive touch, not a site-wide gimmick. Types at a steady,
+  // unhurried pace and calls opts.onDone when finished (used to chain
+  // the next reveal line). Skipped entirely under reduced motion.
+  function typewrite(el, text, opts) {
+    opts = opts || {};
+    if (PREFERS_REDUCED_MOTION || !el) {
+      if (el) el.textContent = text;
+      if (opts.onDone) opts.onDone();
+      return;
+    }
+    var speed = opts.speed || 32;
+    var i = 0;
+    el.textContent = '';
+    el.classList.add('exec-typewriter-caret');
+    (function tick() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(tick, speed);
+      } else {
+        el.classList.remove('exec-typewriter-caret');
+        if (opts.onDone) opts.onDone();
+      }
+    })();
+  }
+
+  window.SHRSExecArrival = { play: playExecArrival, animateValue: animateValue, typewrite: typewrite };
 })();

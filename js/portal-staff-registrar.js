@@ -294,7 +294,8 @@
     standingWrap.innerHTML = '';
     var attStat = el('div', 'portal-stat');
     attStat.appendChild(el('div', 'label', 'Attendance'));
-    attStat.appendChild(el('div', 'value', data.academicStanding.attendancePct != null ? data.academicStanding.attendancePct + '%' : '—'));
+    var attValueEl = el('div', 'value', '');
+    attStat.appendChild(attValueEl);
     standingWrap.appendChild(attStat);
     var termStat = el('div', 'portal-stat');
     termStat.appendChild(el('div', 'label', 'Latest Term'));
@@ -302,8 +303,18 @@
     standingWrap.appendChild(termStat);
     var avgStat = el('div', 'portal-stat');
     avgStat.appendChild(el('div', 'label', 'Term Average'));
-    avgStat.appendChild(el('div', 'value', data.academicStanding.latestTermAverage != null ? data.academicStanding.latestTermAverage : '—'));
+    var avgValueEl = el('div', 'value', '');
+    avgStat.appendChild(avgValueEl);
     standingWrap.appendChild(avgStat);
+    var attFinal = data.academicStanding.attendancePct != null ? data.academicStanding.attendancePct + '%' : '—';
+    var avgFinal = data.academicStanding.latestTermAverage != null ? String(data.academicStanding.latestTermAverage) : '—';
+    if(window.SHRSExecArrival && window.SHRSExecArrival.animateValue){
+      window.SHRSExecArrival.animateValue(attValueEl, attFinal);
+      window.SHRSExecArrival.animateValue(avgValueEl, avgFinal);
+    }else{
+      attValueEl.textContent = attFinal;
+      avgValueEl.textContent = avgFinal;
+    }
 
     renderResults(data.results);
     renderTimeline(data.lifecycleEvents);

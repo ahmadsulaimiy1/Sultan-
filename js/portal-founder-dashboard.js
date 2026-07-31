@@ -609,11 +609,42 @@
     return { eyebrow: eyebrow, motto: motto };
   }
 
+  // Typewriter reveal (Founder Override Directive, Phase 1 Item 3
+  // correction): "Welcome Back, [Name]" types first, then the honest
+  // time-of-day motto types second, then the real Executive Briefing
+  // sentence fades in. Restrained — one pass, ~1.6s total, never
+  // repeats after the first render, skipped entirely under reduced
+  // motion (falls back to setting all three instantly).
+  function playFounderArrivalText(eyebrowEl, mottoEl, narrativeEl, eyebrowText, mottoText){
+    if(PREFERS_REDUCED_MOTION || !window.SHRSExecArrival){
+      if(eyebrowEl) eyebrowEl.textContent = eyebrowText;
+      if(mottoEl) mottoEl.textContent = mottoText;
+      if(narrativeEl) narrativeEl.classList.add('is-revealed');
+      return;
+    }
+    if(eyebrowEl){
+      window.SHRSExecArrival.typewrite(eyebrowEl, eyebrowText, { speed: 30, onDone: function(){
+        if(mottoEl){
+          window.SHRSExecArrival.typewrite(mottoEl, mottoText, { speed: 26, onDone: function(){
+            if(narrativeEl) narrativeEl.classList.add('is-revealed');
+          }});
+        }else if(narrativeEl){ narrativeEl.classList.add('is-revealed'); }
+      }});
+    }
+  }
+
   function render(data){
     var greeting = greetingLines(data);
     var eyebrowEl = document.querySelector('.exec-welcome-eyebrow');
-    if(eyebrowEl) eyebrowEl.textContent = greeting.eyebrow;
-    if(generatedEl) generatedEl.textContent = greeting.motto;
+    var narrativeElForArrival = document.querySelector('[data-founder-narrative]');
+    if(!eyebrowEl || eyebrowEl.dataset.arrivalPlayed){
+      if(eyebrowEl) eyebrowEl.textContent = greeting.eyebrow;
+      if(generatedEl) generatedEl.textContent = greeting.motto;
+      if(narrativeElForArrival) narrativeElForArrival.classList.add('is-revealed');
+    }else{
+      eyebrowEl.dataset.arrivalPlayed = '1';
+      playFounderArrivalText(eyebrowEl, generatedEl, narrativeElForArrival, greeting.eyebrow, greeting.motto);
+    }
 
     var authStatusEl = document.querySelector('[data-founder-auth-status]');
     if(authStatusEl){

@@ -271,7 +271,10 @@
   function statTile(label, value){
     var tile = el('div', 'portal-stat');
     tile.appendChild(el('div', 'label', label));
-    tile.appendChild(el('div', 'value', value));
+    var valueEl = el('div', 'value', '');
+    tile.appendChild(valueEl);
+    if(window.SHRSExecArrival && window.SHRSExecArrival.animateValue) window.SHRSExecArrival.animateValue(valueEl, value);
+    else valueEl.textContent = value;
     return tile;
   }
 

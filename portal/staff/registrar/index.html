@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/css/portal.css">
 <script src="/js/portal-theme.js"></script>
 </head>
-<body class="portal-body" data-atmosphere="registrar">
+<body class="portal-body type-administrative" data-atmosphere="registrar">
 
 <div class="portal-topbar">
   <a class="portal-brand" href="/">
@@ -284,8 +284,9 @@
       <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.
     </p>
   </div>
-  <div class="portal-card" data-portal-loading>
-    <p class="sub" style="margin-bottom:0;">Loading the Registrar's Office…</p>
+  <div class="portal-loading-skeleton" data-portal-loading aria-hidden="true">
+    <div class="pls-hero"></div>
+    <div class="pls-row"><div class="pls-card"></div><div class="pls-card"></div><div class="pls-card"></div></div>
   </div>
   <div class="portal-card" data-portal-error hidden>
     <h1>Couldn't load the Registrar's Office</h1>
