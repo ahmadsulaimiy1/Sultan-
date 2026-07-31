@@ -1566,9 +1566,29 @@ body.portal-body[data-atmosphere="certificates"]::before{
   --card-ink:var(--ivory); --card-accent:var(--gold); --card-accent-bright:var(--gold-bright);
   position:relative;width:min(360px, 92vw);aspect-ratio:85.6/53.98;margin:0 auto;
   perspective:1400px;cursor:grab;outline:none;
+  animation:id-card-float 6.5s ease-in-out infinite;
 }
-.id-card-3d.is-dragging{cursor:grabbing;}
+/* Floating motion — the card reads as a levitating credential, not a
+   flat page element: a slow, small vertical drift, paused the instant
+   it's actually being held (dragged) so it never fights the user's own
+   tilt. */
+@keyframes id-card-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.id-card-3d.is-dragging{cursor:grabbing;animation-play-state:paused;}
 .id-card-3d:focus-visible{outline:2px solid var(--card-accent-bright);outline-offset:6px;border-radius:calc(var(--btn-radius) - 2px);}
+@media (prefers-reduced-motion:reduce){.id-card-3d{animation:none;}}
+/* Verification glow — a soft, slow-breathing halo in the card's own
+   accent colour behind it, the "this credential is live and verified"
+   cue a security strip gives a physical card. Sits inside the mount
+   container's own padding so it is never clipped by the parent card's
+   overflow:hidden. */
+.id-card-3d::before{
+  content:"";position:absolute;inset:-10px;z-index:-1;pointer-events:none;
+  border-radius:calc(var(--btn-radius) + 6px);
+  background:radial-gradient(ellipse at center, color-mix(in srgb, var(--card-accent-bright) 38%, transparent) 0%, transparent 72%);
+  opacity:0.45;animation:id-card-verify-glow 4.5s ease-in-out infinite;
+}
+@keyframes id-card-verify-glow{0%,100%{opacity:0.32;transform:scale(0.97);}50%{opacity:0.55;transform:scale(1.02);}}
+@media (prefers-reduced-motion:reduce){.id-card-3d::before{animation:none;opacity:0.4;}}
 .id-card-inner{
   position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transform:rotateY(0deg);will-change:transform;
@@ -1580,6 +1600,15 @@ body.portal-body[data-atmosphere="certificates"]::before{
   background:linear-gradient(135deg, var(--card-bg-a) 0%, var(--card-bg-b) 100%);
   color:var(--card-ink);border:1px solid var(--card-accent);
   box-shadow:inset 2px 0 0 rgba(255,255,255,0.10), inset -3px 0 0 rgba(0,0,0,0.28), 0 26px 52px -22px rgba(0,0,0,0.55);
+}
+/* Metallic reflection — a static brushed-metal highlight band beneath
+   the moving gold sheen, so the surface reads as engraved metal rather
+   than flat-printed card stock even at rest, before the sheen animation
+   next passes over it. */
+.id-card-face::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.16) 0%, transparent 26%, transparent 74%, rgba(255,255,255,0.09) 100%);
 }
 .id-card-back{transform:rotateY(180deg);}
 .id-card-face-body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;padding:18px 22px;gap:12px;min-height:0;}
