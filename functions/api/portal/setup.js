@@ -1132,6 +1132,12 @@ const STATEMENTS = [
   // functions/_lib/identity-no.js for the full design rationale.
   `CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1`,
 
+  // Institutional Identity Number Architecture Directive — the same
+  // real-sequence upgrade for student/guardian identity numbers; see
+  // sql/schema.sql and functions/_lib/identity-no.js.
+  `CREATE SEQUENCE IF NOT EXISTS student_identity_seq START WITH 1`,
+  `CREATE SEQUENCE IF NOT EXISTS guardian_identity_seq START WITH 1`,
+
   // Finance Platform (Imperial Digital Campus Directive, Priority 3) —
   // mirrors sql/schema.sql exactly; see that file for the full design
   // rationale on every table below.

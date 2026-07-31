@@ -1,6 +1,6 @@
 // Renders a QR code (SVG) encoding the public verification URL for a
 // given SHRS identity number — e.g. for
-// <img src="/api/identity/qr?id=SHR-STU-2026-000123"> on a digital or
+// <img src="/api/identity/qr?id=SHRS-260731-000154"> on a digital or
 // printed ID card. Mirrors functions/api/certificates/qr.js exactly:
 // doesn't check whether the identity number actually exists, since
 // encoding is just "turn this URL into a QR" — /api/identity/verify is

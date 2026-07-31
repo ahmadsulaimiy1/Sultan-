@@ -621,7 +621,11 @@ CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_appl
 --
 -- students.admission_no (already unique, already required) IS the
 -- Institutional Student Number — no redundant new identifier is
--- introduced here.
+-- introduced here. Under the Institutional Identity Number Architecture
+-- Directive it is system-generated at enrolment (SHRS-<SCHOOL>-<YY>-
+-- <seq>, functions/api/portal/staff/registrar/enrol.js), distinct from
+-- and permanent alongside the student's own identity_no (the lifetime
+-- Digital Identity Number, unaffected by school/class/campus changes).
 CREATE TABLE IF NOT EXISTS student_lifecycle_events (
   id                   SERIAL PRIMARY KEY,
   student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -893,11 +897,12 @@ ALTER TABLE guardians ADD COLUMN IF NOT EXISTS onboarding_celebration_shown_at T
 
 -- Digital Identity System (Imperial Digital Campus Directive, Priority
 -- 2): every student/guardian/staff record gets one public, QR-
--- verifiable identity number — SHR-STU-<year>-<seq>, SHR-PAR-...,
--- SHR-STF-... — generated lazily the first time that person's "My ID
--- Card" view is opened (functions/_lib/identity-no.js), not backfilled
--- in bulk here, so a school with years of existing records doesn't need
--- a migration script before this feature works. Nullable until then.
+-- verifiable identity number, generated lazily the first time that
+-- person's "My ID Card" view is opened (functions/_lib/identity-no.js),
+-- not backfilled in bulk here, so a school with years of existing
+-- records doesn't need a migration script before this feature works.
+-- Nullable until then. Formats below under "Institutional Identity
+-- Number Architecture Directive".
 ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
@@ -911,6 +916,13 @@ ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 -- global (not per-office/unit) so a number, once issued, is never
 -- reused, ever, exactly as the directive requires.
 CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1;
+
+-- Institutional Identity Number Architecture Directive: replaces every
+-- remaining SHR-STU-/SHR-PAR- (COUNT(*)+1) number with a permanent,
+-- prefix-consistent SHRS- one built on a real atomic sequence, same
+-- reasoning as staff_identity_seq above. See functions/_lib/identity-no.js.
+CREATE SEQUENCE IF NOT EXISTS student_identity_seq START WITH 1;
+CREATE SEQUENCE IF NOT EXISTS guardian_identity_seq START WITH 1;
 
 -- ============================================================
 -- Finance Platform (Imperial Digital Campus Directive, Priority 3)

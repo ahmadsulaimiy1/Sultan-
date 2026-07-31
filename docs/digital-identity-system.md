@@ -12,15 +12,18 @@ deferred — the same honest-scoping standard used for Priority 1.
 Every student, parent/guardian, and staff member (including executives
 — an executive is a staff record with the `EXE` role, so this covers
 them automatically) now has a permanent, public, QR-verifiable
-identity number: `SHR-STU-<year>-<seq>` for students,
-`SHR-PAR-<year>-<seq>` for guardians, and for staff
-`SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` (e.g.
-`SHRS-HQ-CEO-130726-000001`) — see "SHRS Master Identity Architecture"
-below for how the staff format works and why it changed from the
-original `SHR-STF-<year>-<seq>`. A security guard, another institution,
-or a parent confirming a teacher's identity can verify a card is
-genuine at `/verify-identity/` — no account required, by design,
-exactly like certificate verification.
+identity number, all under a single `SHRS-` prefix per the
+**Institutional Identity Number Architecture Directive** (see that
+section below for the full, current spec): `SHRS-<YYMMDD>-<seq6>` for a
+student's permanent Student Digital Identity Number, `SHRS-PAR-
+<YYMMDD>-<seq6>` for guardians, and for staff `SHRS-[UNIT]-[OFFICE]-
+[JOINDATE]-[SEQUENCE]` (e.g. `SHRS-HQ-CEO-130726-000001`), or a
+reserved dateless `SHRS-BOT-<seq3>`/`SHRS-CEO-<seq3>` for Board of
+Trustees and CEO seats — see "SHRS Master Identity Architecture" below
+for how the staff format itself works. A security guard, another
+institution, or a parent confirming a teacher's identity can verify a
+card is genuine at `/verify-identity/` — no account required, by
+design, exactly like certificate verification.
 
 ## What already existed (not rebuilt)
 
@@ -118,9 +121,12 @@ authenticated dashboard pages), built on the same navy/gold
 Staff identity numbers moved from `SHR-STF-<year>-<seq>` to
 `SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` — e.g.
 `SHRS-HQ-CEO-130726-000001` — per the Founder & CEO's explicit "SHRS
-Master Identity Architecture Directive." **Students and guardians are
-unchanged** (`SHR-STU-`/`SHR-PAR-<year>-<seq>`); that directive
-addressed staff numbering only.
+Master Identity Architecture Directive." At the time this directive
+shipped, students and guardians were left unchanged
+(`SHR-STU-`/`SHR-PAR-<year>-<seq>`); that gap was closed by the later
+Institutional Identity Number Architecture Directive below, which
+brought every identity number in the system under one consistent
+`SHRS-` prefix.
 
 - **UNIT** — `RC`/`NPS`/`IAS`/`QC` for a staff member whose real office
   or institution places them at one of the four schools, `BOT` for the
@@ -158,9 +164,10 @@ so a record left un-migrated still verifies correctly.
 the ID card — "Institutional Identity Number" for staff, "Executive
 Credential Number" for the Founder & CEO's card specifically (detected
 via the `EXE` role, the same real signal the Permission Engine already
-uses — not a separate "founder" account type). Students/guardians keep
-their existing generic "Identity Number" label; that directive didn't
-address them.
+uses — not a separate "founder" account type), and, per the
+Institutional Identity Number Architecture Directive above, "Student
+Digital Identity Number" / "Guardian Digital Identity Number" for
+students and guardians (`IDNO_LABEL_BY_KIND` in `js/id-card.js`).
 
 **Declined, deliberately:** the directive's "Secondary/Personal
 Verification Signature" — a letter-position numerology sum (e.g.
@@ -173,6 +180,97 @@ actually works (a database lookup against a system-generated,
 never-user-chosen number). Building it as a cosmetic detail with no
 verification claim attached remains available as a future ask if still
 wanted.
+
+## Institutional Identity Number Architecture Directive (full-system SHRS- unification)
+
+Per the Founder & CEO's explicit directive, the site's identity-
+numbering system was redesigned so that every number an external
+auditor, university, ministry, accreditation team, or international
+partner might see — staff, student, guardian, certificate, invoice,
+receipt — reads as institution + division/role + date + a real
+sequence, never as a software-generated placeholder (`STF-0001`-style)
+and never as a name/letter-derived conversion (an idea explicitly
+considered and declined: collision-prone, trivially reproducible, and
+not how real institutions, ministries, or banks build permanent
+identifiers). Implemented in `functions/_lib/identity-no.js` and
+`functions/_lib/finance-no.js`.
+
+**Students now have two distinct, separately-purposed numbers:**
+
+- **`admission_no`** — the *Institutional Student Number*, school- and
+  admission-year-scoped, e.g. `SHRS-RC-26-000154` (Royal College, 2026
+  admission cohort). Generated automatically by `generateAdmissionNo()`
+  when the Registrar enrols a student without supplying one
+  (`functions/api/portal/staff/registrar/enrol.js`) — a staff-supplied
+  value is still honoured untouched, same override precedent as
+  certificate reference numbers. School codes for this number
+  (`RC`/`NP`/`IAS`/`QC`) are defined independently of staff's own
+  `UNIT` codes below (staff spells Nursery & Primary `NPS`, not `NP`)
+  — the two numbering families don't need to match, by design. Scoped
+  per school per admission year via `COUNT(*)+1` (low volume, same
+  convention as certificate/finance numbers, not the real-sequence
+  treatment below).
+- **`identity_no`** — the permanent *Student Digital Identity Number*,
+  e.g. `SHRS-260731-000154` (registered 31 July 2026). Assigned once,
+  on first "My ID Card" view, and never changes again even if the
+  student changes school, class, or campus — unlike `admission_no`
+  above. Built on a real atomic sequence (`student_identity_seq`), not
+  `COUNT(*)+1`, for the same race-condition reasoning as staff numbers.
+
+**Guardians** get a parallel permanent number: `SHRS-PAR-<YYMMDD
+registered>-<seq6>`, e.g. `SHRS-PAR-260731-000042`, on its own real
+sequence (`guardian_identity_seq`).
+
+**Board of Trustees & top executive seats** are a special case: since
+these are permanently reserved seats rather than join-dated staff
+records, they get a *dateless* reserved format on their own small
+`COUNT(*)+1`-scoped sequence — `SHRS-BOT-<seq3>` for the Board,
+`SHRS-CEO-<seq3>` for the CEO office — rather than the dated
+`SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` every other staff member
+gets (see `generateAndStoreStaffIdentityNo()`'s `RESERVED_OFFICE_PREFIX`
+check).
+
+**Certificates** kept their existing type-abbreviated reference number
+shape (auditability: the type is legible in the number itself) with
+only the prefix corrected: `SHR-<TYPE>-<year>-<seq>` →
+`SHRS-<TYPE>-<year>-<seq>` (`functions/api/portal/staff/registrar/
+certificates.js`).
+
+**Finance** (`functions/_lib/finance-no.js`) moved from
+`SHR-INV-<year>-<seq>`/`SHR-RCT-<year>-<seq>` to
+`SHRS-INV-<YYMMDD>-<seq6>`/`SHRS-FIN-<YYMMDD>-<seq6>` — e.g. a receipt
+paid on 31 July 2026 reads `SHRS-FIN-260731-000152`, matching the
+directive's own receipt-number example. The sequence still resets per
+calendar year (unchanged `COUNT(*)+1` scoped by `EXTRACT(YEAR ...)`);
+only the printed date segment gained the full `YYMMDD` an external
+auditor expects, in place of a bare year.
+
+**Date format is deliberately inconsistent by design, not by
+oversight:** every *new* number in this directive uses `YYMMDD`
+(ISO-8601 ordering), while staff's existing `JOINDATE` segment stays
+`DDMMYY` — re-migrating every already-issued staff card for a cosmetic
+digit reorder was judged not worth the churn.
+
+**Verification routing:** because students, guardians, and staff all
+now share the literal `SHRS-` prefix, `functions/api/identity/verify.js`
+can no longer route by prefix alone — it routes by the *shape* of the
+segment right after `SHRS-`: guardian is always `SHRS-PAR-...`; the
+permanent student number is the only one with no letter code there
+(`SHRS-<6 digits>-...`); everything else (a UNIT/OFFICE letter code, or
+a reserved `BOT`/`CEO` code) is staff. Legacy `SHR-STU-`/`SHR-PAR-`
+(the pre-directive, missing-the-"S" prefixes) are still matched first,
+for backward-compatible lookup of already-issued old-format cards.
+
+**Bulk migration:** the existing `regenerate-identity-numbers` admin
+action (`POST /api/portal/admin/staff`) was extended to also sweep
+every student and guardian record into the new format in the same
+pass, using the new `regenerateStudentIdentityNo()`/
+`regenerateGuardianIdentityNo()` functions — so no legacy `SHR-STU-`/
+`SHR-PAR-` number needs to remain live anywhere once an administrator
+runs it. Same trade-off as the original staff migration: this
+knowingly breaks any already-issued QR code/verification link for a
+re-migrated person, which is the Founder & CEO's accepted cost of
+having one consistent format sitewide.
 
 ## Digital Identity System — Imperial Prestige Directive (card rebuild)
 

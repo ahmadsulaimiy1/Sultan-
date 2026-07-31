@@ -17,7 +17,7 @@
 // created once a distinct staff member who genuinely holds `certificates`
 // 'A' approves it, via functions/_lib/approvals.js's decideApproval().
 //
-// referenceNo is auto-generated (SHR-<TYPE>-<YEAR>-<seq>) at APPROVAL
+// referenceNo is auto-generated (SHRS-<TYPE>-<YEAR>-<seq>) at APPROVAL
 // time when left blank, not at request time — generating it earlier
 // could hand out a reference number for a certificate a Principal then
 // rejects. Staff can still supply their own reference (e.g. to match a
@@ -49,7 +49,7 @@ async function generateReferenceNo(sql, certificateType, issuedAt) {
     SELECT COUNT(*)::int AS n FROM certificates
     WHERE certificate_type = ${certificateType} AND EXTRACT(YEAR FROM issued_at) = ${year}`;
   const seq = (countRes.rows[0].n || 0) + 1;
-  return `SHR-${abbr}-${year}-${String(seq).padStart(6, '0')}`;
+  return `SHRS-${abbr}-${year}-${String(seq).padStart(6, '0')}`;
 }
 
 async function requireStaffSession(request, env) {

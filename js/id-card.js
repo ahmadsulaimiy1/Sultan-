@@ -27,15 +27,17 @@
 
   var REDUCED_MOTION = !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-  // Institutional Identity Number labelling (SHRS Master Identity
-  // Architecture Directive) — the Founder & CEO's card calls it an
-  // Executive Credential Number; every other staff card calls it an
-  // Institutional Identity Number. Student/guardian numbers weren't
-  // addressed by that directive, so they keep the existing generic
-  // label rather than being renamed unprompted.
+  // Institutional Identity Number labelling — the Founder & CEO's card
+  // calls it an Executive Credential Number; staff cards call it an
+  // Institutional Identity Number. Student and guardian cards now get
+  // their own explicit labels under the Institutional Identity Number
+  // Architecture Directive (previously fell through to the generic
+  // "Identity Number" fallback below).
   var IDNO_LABEL_BY_KIND = {
     founder: 'Executive Credential Number',
     staff: 'Institutional Identity Number',
+    student: 'Student Digital Identity Number',
+    guardian: 'Guardian Digital Identity Number',
   };
 
   function detailsHtml(details) {

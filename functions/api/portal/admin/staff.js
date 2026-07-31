@@ -60,10 +60,13 @@
 //                             createdByStaffNo? } — governance-register entries (Board of Trustees and
 //                             its committees); status defaults to 'draft'.
 //   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
-//   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff
-//                            record with a real date_joined into the current
-//                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format
-//                            (functions/_lib/identity-no.js). Founder & CEO-approved
+//   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff,
+//                            student, and guardian record into the current SHRS-...
+//                            formats (functions/_lib/identity-no.js): staff into
+//                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] (or the
+//                            reserved dateless SHRS-BOT-.../SHRS-CEO-... form),
+//                            students into SHRS-<YYMMDD>-<seq6>, guardians into
+//                            SHRS-PAR-<YYMMDD>-<seq6>. Founder & CEO-approved
 //                            one-time migration action — knowingly breaks any
 //                            already-issued QR code/verification link for a
 //                            re-migrated person.
@@ -72,7 +75,7 @@ import { readStaffSessionFromRequest, timingSafeEqualString, generateToken } fro
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
 import { hasPermissionFor, effectiveGrants } from '../../../_lib/permissions.js';
-import { regenerateStaffIdentityNo } from '../../../_lib/identity-no.js';
+import { regenerateStaffIdentityNo, regenerateStudentIdentityNo, regenerateGuardianIdentityNo } from '../../../_lib/identity-no.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
@@ -719,17 +722,24 @@ export async function onRequestPost({ request, env }) {
 
     // SHRS Master Identity Architecture Directive, Founder & CEO's
     // explicit rollout choice ("migrate everyone now"): regenerates
-    // identity_no for every staff record with a real date_joined on
-    // file into the current SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]
-    // format, overwriting any existing value (including an
-    // already-current one, so re-running deliberately re-migrates
-    // everyone rather than silently no-op'ing). This knowingly breaks
-    // every already-issued QR code/verification link for anyone whose
-    // number changes — that trade-off was the Founder & CEO's explicit,
-    // informed choice, not a default. A record with no date_joined is
-    // left untouched rather than given a fabricated join date.
+    // identity_no for every staff record into the current
+    // SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format (or the reserved
+    // dateless SHRS-BOT-.../SHRS-CEO-... form for Board/CEO seats),
+    // overwriting any existing value (including an already-current one,
+    // so re-running deliberately re-migrates everyone rather than
+    // silently no-op'ing). This knowingly breaks every already-issued QR
+    // code/verification link for anyone whose number changes — that
+    // trade-off was the Founder & CEO's explicit, informed choice, not a
+    // default. regenerateStaffIdentityNo itself skips (returns null) any
+    // non-reserved record with no date_joined on file, rather than
+    // inventing one — queried against every staff row here (not just
+    // ones with a date_joined) so Board/CEO seats without one still
+    // migrate. Under the Institutional Identity Number Architecture
+    // Directive, this same action now also sweeps every student and
+    // guardian record into their SHRS-/SHRS-PAR- format, so no legacy
+    // SHR-STU-/SHR-PAR- number remains live anywhere.
     if (action === 'regenerate-identity-numbers') {
-      const staffRes = await sql`SELECT id, identity_no FROM staff WHERE date_joined IS NOT NULL`;
+      const staffRes = await sql`SELECT id FROM staff`;
       let migrated = 0;
       const failures = [];
       for (const s of staffRes.rows) {
@@ -741,14 +751,45 @@ export async function onRequestPost({ request, env }) {
         }
       }
       const noDateRes = await sql`SELECT count(*)::int AS n FROM staff WHERE date_joined IS NULL`;
+
+      const studentRes = await sql`SELECT id FROM students`;
+      let migratedStudents = 0;
+      const studentFailures = [];
+      for (const s of studentRes.rows) {
+        try {
+          const newNo = await regenerateStudentIdentityNo(sql, s.id);
+          if (newNo) migratedStudents++;
+        } catch (err) {
+          studentFailures.push({ studentId: s.id, error: err && err.message ? err.message : 'unknown error' });
+        }
+      }
+
+      const guardianRes = await sql`SELECT id FROM guardians`;
+      let migratedGuardians = 0;
+      const guardianFailures = [];
+      for (const g of guardianRes.rows) {
+        try {
+          const newNo = await regenerateGuardianIdentityNo(sql, g.id);
+          if (newNo) migratedGuardians++;
+        } catch (err) {
+          guardianFailures.push({ guardianId: g.id, error: err && err.message ? err.message : 'unknown error' });
+        }
+      }
+
       await logStaffEvent(sql, {
         actorStaffId: actingStaffId, eventType: 'sensitive_action', targetType: 'staff', targetId: null,
-        reason: 'Bulk migration to SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] identity number format',
-        metadata: { migrated, failed: failures.length, skippedNoDateJoined: noDateRes.rows[0].n },
+        reason: 'Bulk migration to SHRS-... identity number format (staff, students, guardians)',
+        metadata: {
+          migrated, failed: failures.length, skippedNoDateJoined: noDateRes.rows[0].n,
+          migratedStudents, failedStudents: studentFailures.length,
+          migratedGuardians, failedGuardians: guardianFailures.length,
+        },
       });
       return json({
         ok: true, migrated, failed: failures.length, failures,
         skippedNoDateJoined: noDateRes.rows[0].n,
+        migratedStudents, failedStudents: studentFailures.length, studentFailures,
+        migratedGuardians, failedGuardians: guardianFailures.length, guardianFailures,
       });
     }
 

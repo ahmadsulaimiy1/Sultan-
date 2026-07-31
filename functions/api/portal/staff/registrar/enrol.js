@@ -13,6 +13,7 @@ import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
+import { generateAdmissionNo } from '../../../../_lib/identity-no.js';
 
 async function resolveClassId(sql, institution, className) {
   const existing = await sql`SELECT id FROM classes WHERE institution = ${institution} AND name = ${className}`;
@@ -41,11 +42,12 @@ export async function onRequestPost({ request, env }) {
 
   const body = await readJsonBody(request);
   const applicationId = body && body.applicationId;
-  const admissionNo = ((body && body.admissionNo) || '').trim();
+  let admissionNo = ((body && body.admissionNo) || '').trim();
+  const admissionYear = (body && Number.isInteger(body.admissionYear)) ? body.admissionYear : new Date().getFullYear();
   const institution = (body && body.institution) || '';
   const className = (body && body.className) || '';
-  if (!Number.isInteger(applicationId) || !admissionNo || !institution || !className) {
-    return json({ error: 'applicationId, admissionNo, institution, and className are all required.' }, 400);
+  if (!Number.isInteger(applicationId) || !institution || !className) {
+    return json({ error: 'applicationId, institution, and className are all required.' }, 400);
   }
 
   try {
@@ -58,6 +60,17 @@ export async function onRequestPost({ request, env }) {
     const application = appRes.rows[0];
     if (!application) {
       return json({ error: 'No admissions application found with that id.' }, 404);
+    }
+
+    // Institutional Identity Number Architecture Directive: the
+    // Registrar can still hand-supply an admissionNo (e.g. to match a
+    // pre-2026 paper register), same override precedent as certificate
+    // reference numbers — but the default path now generates a real
+    // SHRS-<SCHOOL>-<YY>-<seq6> Institutional Student Number
+    // server-side, so admission no longer depends on staff typing a
+    // number correctly.
+    if (!admissionNo) {
+      admissionNo = await generateAdmissionNo(sql, institution, admissionYear);
     }
     const existingStudent = await sql`SELECT id FROM students WHERE admission_no = ${admissionNo}`;
     if (existingStudent.rows.length) {
