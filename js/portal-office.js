@@ -13,6 +13,102 @@
   'use strict';
   document.addEventListener('DOMContentLoaded', init);
 
+  var PREFERS_REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  // Prestige Foundation Phase 1, Item 2 (Founder Override Directive):
+  // "Six Different Institutional Command Centres," not the Founder
+  // dashboard copied six times. Each School Leadership office gets its
+  // own mental rename, role-specific greeting, and real-data intelligence
+  // summary — never a generic "Welcome back." Crest icons reuse the exact
+  // paths already used for each office's own eyebrow icon (see the
+  // office's own HTML), so the arrival moment and the resting page read
+  // as one identity, not two.
+  var PERSONALITY = {
+    'head-teacher': {
+      tagline: 'Basic Education Operations Centre',
+      greeting: 'Basic education operations are active.',
+      icon: '<path d="M4 5c2-1.2 5-1.2 8 0v13c-3-1.2-6-1.2-8 0V5zM20 5c-2-1.2-5-1.2-8 0v13c3-1.2 6-1.2 8 0V5z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>',
+      summary: function (ops) {
+        if (!ops) return null;
+        var parts = [ops.students.total + ' pupils'];
+        if (ops.attendance.averagePercent != null) parts.push(ops.attendance.averagePercent + '% attendance');
+        parts.push(ops.admissionsPipeline.total + ' in admissions pipeline');
+        return parts.join(' · ');
+      },
+    },
+    'principal-royal-college': {
+      tagline: 'Royal College Academic Command Centre',
+      greeting: 'Academic operations are active.',
+      icon: '<path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
+      summary: function (ops) {
+        if (!ops) return null;
+        var parts = [ops.students.total + ' students'];
+        if (ops.attendance.averagePercent != null) parts.push(ops.attendance.averagePercent + '% attendance');
+        return parts.join(' · ');
+      },
+    },
+    raees: {
+      tagline: 'Islamic Academic Leadership Centre',
+      greeting: 'Academic leadership systems are ready.',
+      icon: '<path d="M15 4a8 8 0 100 16 7 7 0 010-16z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
+      summary: function (ops) {
+        if (!ops) return null;
+        return ops.students.total + ' students · ' + ops.staff.total + ' faculty';
+      },
+    },
+    mudeer: {
+      tagline: 'Qur’an Excellence Command Centre',
+      greeting: 'Qur’an excellence systems are operational.',
+      icon: '<path d="M15 4a7 7 0 100 14 6 6 0 010-14z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M19 3.2l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="currentColor" stroke="none"/>',
+      summary: function (ops) {
+        if (!ops) return null;
+        if (ops.hifz) return ops.hifz.enrolledCount + ' Hifz-enrolled · ' + ops.hifz.ijazahsCurrentlyGranted + ' Ijazah(s) granted';
+        return ops.students.total + ' students';
+      },
+    },
+  };
+
+  function renderPersonality(slug, data) {
+    var personality = PERSONALITY[slug];
+    if (!personality) return;
+    var taglineEl = document.getElementById('cc-tagline');
+    var greetingEl = document.getElementById('cc-greeting');
+    if (taglineEl) taglineEl.textContent = personality.tagline;
+    if (greetingEl) greetingEl.textContent = personality.greeting;
+  }
+
+  // Executive Arrival Sequence — restrained, not cinematic: title, then a
+  // role-specific greeting, then a one-line real intelligence summary
+  // (never shown if the office has no operations data yet), then the
+  // dashboard itself reveals via the existing staggered on-load animation.
+  // Total runtime ~2.4s, matching the Founder Command Centre's own
+  // arrival sequence exactly (same CSS keyframes, this office's own
+  // atmosphere colour via --atmos-bright). Plays once per browser session
+  // per office, and is skipped entirely under prefers-reduced-motion.
+  function playArrivalSequence(slug, data) {
+    if (PREFERS_REDUCED_MOTION) return;
+    var personality = PERSONALITY[slug];
+    if (!personality) return;
+    var key = 'shrs_office_arrival_' + slug;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+
+    var summary = personality.summary ? personality.summary(data.operations) : null;
+    var overlay = document.createElement('div');
+    overlay.className = 'exec-arrival';
+    overlay.innerHTML =
+      '<div class="exec-arrival-crest" aria-hidden="true"><svg viewBox="0 0 24 24" width="64" height="64">' + personality.icon + '</svg></div>' +
+      '<div class="exec-arrival-lines">' +
+        '<div class="exec-arrival-line l1">' + esc(data.office.name) + '</div>' +
+        '<div class="exec-arrival-line l2">' + esc(personality.tagline) + '</div>' +
+        '<div class="exec-arrival-line l3">' + esc(personality.greeting) + '</div>' +
+      '</div>' +
+      (summary ? '<div class="exec-arrival-summary">' + esc(summary) + '</div>' : '');
+    document.body.appendChild(overlay);
+    overlay.addEventListener('animationend', function (e) { if (e.target === overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); });
+    setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 2800);
+  }
+
   function init() {
     var body = document.body;
     var slug = body.getAttribute('data-office-slug');
@@ -53,6 +149,7 @@
       var data = await res.json().catch(function () { return {}; });
       if (!res.ok) throw new Error(data.error || 'Could not load this office.');
       render(data);
+      playArrivalSequence(slug, data);
       if (shellEl) shellEl.hidden = false;
       // Operations Centre, where it exists, is the real answer to "what
       // requires attention right now" for these four offices — it opens
@@ -70,6 +167,7 @@
   }
 
   function render(data) {
+    renderPersonality(data.office.slug, data);
     renderHeader(data);
     renderOperations(data);
     renderOverview(data);

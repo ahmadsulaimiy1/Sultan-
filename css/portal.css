@@ -1057,26 +1057,38 @@ body.portal-body > *{position:relative;z-index:1;}
    known, institution name) — never fabricated, always the same fields
    already shown elsewhere on the page. Skipped entirely under reduced-
    motion (the dashboard just appears, per the existing fallback). */
-.exec-arrival{
+/* body.portal-body > *{position:relative;z-index:1;} (near the top of this
+   file) outranks a plain .exec-arrival class selector on specificity, so
+   this rule has to be written against the same "direct child of body"
+   shape to actually win — otherwise the overlay silently renders in
+   normal document flow instead of as a fixed full-screen moment. Real
+   bug, found while testing the Phase 1 Item 2 office arrival sequences;
+   fixes the Founder Command Centre's arrival sequence too, which had the
+   exact same latent defect since it uses this identical class. */
+body.portal-body > .exec-arrival{
   position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 70%,#140d05 100%);
   animation:exec-arrival-fade 2.4s ease both;
 }
 .exec-arrival::before{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(100deg, transparent 30%, rgba(233,206,138,0.16) 48%, rgba(255,255,255,0.28) 50%, rgba(233,206,138,0.16) 52%, transparent 70%);
+  background:linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--atmos-bright, var(--gold-bright)) 55%, transparent) 48%, rgba(255,255,255,0.28) 50%, color-mix(in srgb, var(--atmos-bright, var(--gold-bright)) 55%, transparent) 52%, transparent 70%);
   background-size:260% 100%;background-position:130% 0;
   animation:exec-arrival-sweep 1.3s ease-in-out 0.15s;
 }
-.exec-arrival-crest{width:64px;height:64px;opacity:0;animation:exec-arrival-crest-in .7s ease .1s both;margin-bottom:22px;}
+.exec-arrival-crest{width:64px;height:64px;opacity:0;animation:exec-arrival-crest-in .7s ease .1s both;margin-bottom:22px;color:var(--atmos-bright,var(--gold-bright));}
 .exec-arrival-lines{text-align:center;}
 .exec-arrival-line{
-  font-family:'Cinzel','Amiri',serif;color:var(--gold-bright);opacity:0;
+  font-family:'Cinzel','Amiri',serif;color:var(--atmos-bright,var(--gold-bright));opacity:0;
   animation:exec-arrival-line-in .6s ease both;
 }
-.exec-arrival-line.l1{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(233,206,138,0.75);animation-delay:0.5s;}
+.exec-arrival-line.l1{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:color-mix(in srgb, var(--atmos-bright, var(--gold-bright)) 75%, transparent);animation-delay:0.5s;}
 .exec-arrival-line.l2{font-size:1.7rem;color:#fff;margin:10px 0 6px;animation-delay:0.95s;}
-.exec-arrival-line.l3{font-size:0.86rem;letter-spacing:0.06em;color:var(--gold-bright);animation-delay:1.4s;}
+.exec-arrival-line.l3{font-size:0.86rem;letter-spacing:0.06em;color:var(--atmos-bright,var(--gold-bright));animation-delay:1.4s;}
+.exec-arrival-summary{
+  font-family:'Inter','Cairo',sans-serif;font-size:0.86rem;color:rgba(248,244,233,0.82);
+  max-width:420px;text-align:center;margin-top:14px;opacity:0;animation:exec-arrival-line-in .6s ease both;animation-delay:1.75s;
+}
 @keyframes exec-arrival-fade{0%{opacity:1;}78%{opacity:1;}100%{opacity:0;visibility:hidden;}}
 @keyframes exec-arrival-sweep{from{background-position:130% 0;}to{background-position:-30% 0;}}
 @keyframes exec-arrival-crest-in{from{opacity:0;transform:scale(0.85);}to{opacity:0.92;transform:scale(1);}}
@@ -1161,6 +1173,18 @@ body.portal-body[data-atmosphere="communications"]{--atmos:var(--rosewood);--atm
 body.portal-body[data-atmosphere="foundation"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.13);}
 body.portal-body[data-atmosphere="library"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.12);}
 body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-bright:var(--gold);--atmos-soft:rgba(124,84,48,0.15);}
+
+/* Command Centre "mental rename" tagline + role-specific greeting
+   (Founder Override Directive, Phase 1 Item 2) — a cosmetic branding
+   layer set by js/portal-office.js's PERSONALITY config, never a rename
+   of the real office record itself (the H1 above stays the honest DB
+   name). Empty text nodes collapse to zero height when a page has no
+   personality entry, so every other office is unaffected. */
+.cc-tagline{
+  font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.06em;
+  color:var(--atmos-bright,var(--gold-bright));margin:2px 0 4px;
+}
+.cc-greeting{font-size:0.86rem;font-style:italic;color:rgba(248,244,233,0.8);margin-top:2px;}
 
 /* Topbar, tab, and card-header accents pick up the atmosphere colour
    automatically wherever it's set; every one of these falls back to
