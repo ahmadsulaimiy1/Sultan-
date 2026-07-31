@@ -60,11 +60,19 @@
 //                             createdByStaffNo? } — governance-register entries (Board of Trustees and
 //                             its committees); status defaults to 'draft'.
 //   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
+//   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff
+//                            record with a real date_joined into the current
+//                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format
+//                            (functions/_lib/identity-no.js). Founder & CEO-approved
+//                            one-time migration action — knowingly breaks any
+//                            already-issued QR code/verification link for a
+//                            re-migrated person.
 import { getSql } from '../../../_lib/db.js';
 import { readStaffSessionFromRequest, timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
 import { hasPermissionFor, effectiveGrants } from '../../../_lib/permissions.js';
+import { regenerateStaffIdentityNo } from '../../../_lib/identity-no.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
@@ -709,7 +717,42 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, resolutionId: body.resolutionId });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution.' }, 400);
+    // SHRS Master Identity Architecture Directive, Founder & CEO's
+    // explicit rollout choice ("migrate everyone now"): regenerates
+    // identity_no for every staff record with a real date_joined on
+    // file into the current SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]
+    // format, overwriting any existing value (including an
+    // already-current one, so re-running deliberately re-migrates
+    // everyone rather than silently no-op'ing). This knowingly breaks
+    // every already-issued QR code/verification link for anyone whose
+    // number changes — that trade-off was the Founder & CEO's explicit,
+    // informed choice, not a default. A record with no date_joined is
+    // left untouched rather than given a fabricated join date.
+    if (action === 'regenerate-identity-numbers') {
+      const staffRes = await sql`SELECT id, identity_no FROM staff WHERE date_joined IS NOT NULL`;
+      let migrated = 0;
+      const failures = [];
+      for (const s of staffRes.rows) {
+        try {
+          const newNo = await regenerateStaffIdentityNo(sql, s.id);
+          if (newNo) migrated++;
+        } catch (err) {
+          failures.push({ staffId: s.id, error: err && err.message ? err.message : 'unknown error' });
+        }
+      }
+      const noDateRes = await sql`SELECT count(*)::int AS n FROM staff WHERE date_joined IS NULL`;
+      await logStaffEvent(sql, {
+        actorStaffId: actingStaffId, eventType: 'sensitive_action', targetType: 'staff', targetId: null,
+        reason: 'Bulk migration to SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] identity number format',
+        metadata: { migrated, failed: failures.length, skippedNoDateJoined: noDateRes.rows[0].n },
+      });
+      return json({
+        ok: true, migrated, failed: failures.length, failures,
+        skippedNoDateJoined: noDateRes.rows[0].n,
+      });
+    }
+
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, regenerate-identity-numbers.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

@@ -62,7 +62,13 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
-    if (idNo.startsWith('SHR-STF-')) {
+    // SHR-STF- was the original staff format; SHRS- is the current one
+    // under the SHRS Master Identity Architecture Directive
+    // (SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]) — both still route
+    // here since not every staff record has been migrated (any with no
+    // date_joined on file is left on the old format; see
+    // functions/_lib/identity-no.js).
+    if (idNo.startsWith('SHR-STF-') || idNo.startsWith('SHRS-')) {
       const res = await sql`
         SELECT s.full_name, s.position_title, s.status, s.identity_no,
                i.name AS institution_name

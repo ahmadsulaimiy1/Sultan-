@@ -38,7 +38,7 @@ export async function onRequestGet({ request, env }) {
     const staffRes = await sql`
       SELECT
         s.id, s.staff_no, s.full_name, s.preferred_name, s.position_title, s.status, s.date_joined,
-        o.id AS office_id, o.name AS office_name, o.office_type,
+        o.id AS office_id, o.name AS office_name, o.office_type, o.slug AS office_slug,
         d.id AS dept_id, d.name AS dept_name,
         i.id AS institution_id, i.name AS institution_name,
         r.id AS reports_to_id, r.full_name AS reports_to_name, r.position_title AS reports_to_position
@@ -112,7 +112,7 @@ export async function onRequestGet({ request, env }) {
         positionTitle: staff.position_title,
         status: staff.status,
         dateJoined: staff.date_joined,
-        office: staff.office_id ? { id: staff.office_id, name: staff.office_name, type: staff.office_type } : null,
+        office: staff.office_id ? { id: staff.office_id, name: staff.office_name, type: staff.office_type, slug: staff.office_slug } : null,
         department: staff.dept_id ? { id: staff.dept_id, name: staff.dept_name } : null,
         institution: staff.institution_id ? { id: staff.institution_id, name: staff.institution_name } : null,
         institutions: institutionsRes.rows.map((r) => ({ id: r.id, name: r.name, isPrimary: r.is_primary })),

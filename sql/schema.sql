@@ -902,6 +902,16 @@ ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 
+-- SHRS Master Identity Architecture Directive (Founder & CEO-approved):
+-- staff identity numbers moved from SHR-STF-<year>-<seq> to
+-- SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] — see
+-- functions/_lib/identity-no.js. The SEQUENCE segment is now a real,
+-- atomic PostgreSQL sequence rather than the previous COUNT(*)+1 query,
+-- which had a genuine race condition under two concurrent requests;
+-- global (not per-office/unit) so a number, once issued, is never
+-- reused, ever, exactly as the directive requires.
+CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1;
+
 -- ============================================================
 -- Finance Platform (Imperial Digital Campus Directive, Priority 3)
 -- ============================================================

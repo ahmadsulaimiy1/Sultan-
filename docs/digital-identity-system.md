@@ -12,11 +12,15 @@ deferred — the same honest-scoping standard used for Priority 1.
 Every student, parent/guardian, and staff member (including executives
 — an executive is a staff record with the `EXE` role, so this covers
 them automatically) now has a permanent, public, QR-verifiable
-identity number: `SHR-STU-<year>-<seq>`, `SHR-PAR-<year>-<seq>`,
-`SHR-STF-<year>-<seq>`. A security guard, another institution, or a
-parent confirming a teacher's identity can verify a card is genuine at
-`/verify-identity/` — no account required, by design, exactly like
-certificate verification.
+identity number: `SHR-STU-<year>-<seq>` for students,
+`SHR-PAR-<year>-<seq>` for guardians, and for staff
+`SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` (e.g.
+`SHRS-HQ-CEO-130726-000001`) — see "SHRS Master Identity Architecture"
+below for how the staff format works and why it changed from the
+original `SHR-STF-<year>-<seq>`. A security guard, another institution,
+or a parent confirming a teacher's identity can verify a card is
+genuine at `/verify-identity/` — no account required, by design,
+exactly like certificate verification.
 
 ## What already existed (not rebuilt)
 
@@ -104,7 +108,107 @@ worse than leaving them out:
 ## Design-system note
 
 `/verify-identity/` is a public page (loads `css/brand.css` only) —
-its `.cert-verify-*` styling is reused, not duplicated. The `.id-card`
-component's CSS lives in `css/portal.css` (all three mount points are
+its `.cert-verify-*` styling is reused, not duplicated. The `.id-card-3d`
+component's CSS lives in `css/portal.css` (all mount points are
 authenticated dashboard pages), built on the same navy/gold
 `.exec-welcome` visual language and the Phase 0 design-system tokens.
+
+## SHRS Master Identity Architecture (Founder & CEO-approved, staff only)
+
+Staff identity numbers moved from `SHR-STF-<year>-<seq>` to
+`SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` — e.g.
+`SHRS-HQ-CEO-130726-000001` — per the Founder & CEO's explicit "SHRS
+Master Identity Architecture Directive." **Students and guardians are
+unchanged** (`SHR-STU-`/`SHR-PAR-<year>-<seq>`); that directive
+addressed staff numbering only.
+
+- **UNIT** — `RC`/`NPS`/`IAS`/`QC` for a staff member whose real office
+  or institution places them at one of the four schools, `BOT` for the
+  Board of Trustees and its five standing committees, `MGT` for
+  Management Council, `HQ` for every other school-wide office
+  (Executive, Finance, HR, ICT, etc.).
+- **OFFICE** — a real 3-letter code per office (`functions/_lib/
+  identity-no.js`'s `OFFICE_CODE_BY_SLUG`, covering every office slug
+  this project actually seeds). Teaching staff with a department but no
+  formal office get `EDU`; a Designated Safeguarding Lead with neither
+  gets `DSL`; a staff member with none of the above gets `STF`.
+- **JOINDATE** — the person's real `staff.date_joined`, `DDMMYY`. A
+  record with no `date_joined` on file is left ungenerated (or, for an
+  existing number, left on the old format) rather than given a
+  fabricated date — the same no-fabrication rule as everywhere else in
+  this system.
+- **SEQUENCE** — a real, atomic PostgreSQL sequence (`staff_identity_seq`),
+  not the previous `COUNT(*) + 1` pattern, which had a genuine race
+  condition under concurrent requests. Global, so a number is never
+  reused, ever, exactly as the directive requires.
+
+**Rollout — "migrate everyone now":** presented with the trade-off
+(new records only vs. a one-time bulk migration of every existing
+staff record), the Founder & CEO explicitly chose the bulk migration,
+knowingly accepting that it breaks every already-issued QR
+code/verification link for anyone whose number changes. That migration
+is a single admin action — `regenerate-identity-numbers` on
+`POST /api/portal/admin/staff` — regenerating `identity_no` for every
+staff record with a real `date_joined`; anyone without one is
+unaffected and stays on their existing number. `/api/identity/verify`
+now routes both the `SHR-STF-` and `SHRS-` prefixes to the staff table,
+so a record left un-migrated still verifies correctly.
+
+**Card labelling:** the identity number is now explicitly labelled on
+the ID card — "Institutional Identity Number" for staff, "Executive
+Credential Number" for the Founder & CEO's card specifically (detected
+via the `EXE` role, the same real signal the Permission Engine already
+uses — not a separate "founder" account type). Students/guardians keep
+their existing generic "Identity Number" label; that directive didn't
+address them.
+
+**Declined, deliberately:** the directive's "Secondary/Personal
+Verification Signature" — a letter-position numerology sum (e.g.
+"Zakaria" → 67 → `PVS-067`) described as existing "for verification
+logic" — was not built. A number derived purely from how a name is
+spelled is not unique (many people share letter-sums), is trivially
+reproducible by anyone who knows the formula, and calling it
+verification would misrepresent how this system's real verification
+actually works (a database lookup against a system-generated,
+never-user-chosen number). Building it as a cosmetic detail with no
+verification claim attached remains available as a future ask if still
+wanted.
+
+## Digital Identity System — Imperial Prestige Directive (card rebuild)
+
+The ID card (`js/id-card.js` + `.id-card-3d` in `css/portal.css`) was
+rebuilt as a true 3D object rather than a flat rectangle, per the
+Founder & CEO's "Digital Identity System — Imperial Prestige
+Directive":
+
+- **Real 3D geometry** — `perspective`/`preserve-3d`/`backface-
+  visibility`, exact ISO ID-1 proportions (85.60 × 53.98mm, ratio
+  ≈1.586) on every device, a front face (identity/monogram/QR/Institutional
+  Identity Number) and a back face (larger verification QR, role
+  detail, status, Verify → link).
+- **Motion** — a slow continuous auto-rotation between the two faces
+  (one full turn roughly every 75 seconds), pausable on hover,
+  interruptible by pointer drag-to-rotate or (on touch) a swipe/tilt
+  gesture, snapping gently to whichever face is nearest on release; a
+  double-tap/click or Enter/Space flips it outright; arrow keys rotate
+  in 30° steps. Fully static under `prefers-reduced-motion`. Kept
+  deliberately restrained — one soft diagonal gold lighting sweep, not
+  a particle/glitter loop — per the directive's own closing guidance
+  ("cinematic elegance, not maximum movement").
+- **Ten role-specific colour themes** (`.theme-founder` /
+  `-registrar` / `-finance` / `-principal` / `-headteacher` / `-raees`
+  / `-mudeer` / `-educator` / `-parent` / `-student`), one shared
+  geometry. A staff member's theme is derived from their real office
+  (via its slug) or, absent one, whether they hold a real department —
+  never guessed from their name or title.
+- **Founder & CEO tier** — the highest-prestige theme (near-black +
+  brightest gold), a "Founder & CEO" ribbon, a faint watermark of the
+  site's real brand mark (not a fabricated crest), and a signature line
+  on the back face. Triggered by holding the `EXE` role, not a separate
+  card type.
+- **Deliberately not built**: literal floating particles/gold dust, a
+  simulated glass pedestal/spotlight staging environment. The
+  directive's own closing paragraph explicitly warned against exactly
+  this category of effect ("excessive animation often makes a system
+  feel cheaper, not more luxurious"); the real 3D mechanics above were
+  judged to satisfy the prestige goal without it.

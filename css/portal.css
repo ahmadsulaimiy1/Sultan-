@@ -1271,68 +1271,126 @@ body.portal-body[data-atmosphere="student"]::before{
 .exec-table td{padding:9px 12px;border-bottom:1px solid var(--line);}
 .exec-table tr:nth-child(even) td{background:rgba(198,161,91,0.05);}
 
-/* --- Digital Identity System: My ID Card (SHRS Imperial Digital
-   Campus Directive, Priority 2) --- one shared component rendered by
-   js/id-card.js on the student, guardian, and staff dashboards. Same
-   navy/gold card language as .exec-welcome; monogram instead of a
-   fabricated photo, matching the Faculty Directory's fc-mono
-   convention. */
-.id-card{
-  position:relative;overflow:hidden;isolation:isolate;
-  background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
-  color:var(--ivory);border:1px solid var(--gold);border-radius:calc(var(--btn-radius) - 2px);
-  box-shadow:0 20px 44px -24px rgba(0,0,0,0.5);
+/* --- Digital Identity System: My ID Card (Digital Identity System —
+   Imperial Prestige Directive) --- one shared component rendered by
+   js/id-card.js on the student, guardian, staff, and Founder & CEO
+   dashboards. A true 3D object, not a flat rectangle: front face
+   (identity/QR/monogram) and back face (verification QR, role detail,
+   terms) joined at a real edge, real ISO ID-1 proportions (85.60 x
+   53.98mm, ratio ~1.586) on every device, auto-rotating slowly between
+   its two faces and drag/tilt-interactive — see js/id-card.js for the
+   motion contract. Ten role-specific colour themes (.theme-*, below)
+   share this one geometry rather than each getting a bespoke layout, so
+   "which office" reads instantly without the card ever looking like a
+   different component per role. */
+.id-card-3d{
+  --card-bg-a:var(--navy); --card-bg-b:var(--navy-deep);
+  --card-ink:var(--ivory); --card-accent:var(--gold); --card-accent-bright:var(--gold-bright);
+  position:relative;width:min(360px, 92vw);aspect-ratio:85.6/53.98;margin:0 auto;
+  perspective:1400px;cursor:grab;outline:none;
 }
-.id-card::before{
-  content:"";position:absolute;inset:-20%;z-index:-1;opacity:0.06;pointer-events:none;
-  background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 32px);
-  animation:gold-foil-drift 18s ease-in-out infinite;
+.id-card-3d.is-dragging{cursor:grabbing;}
+.id-card-3d:focus-visible{outline:2px solid var(--card-accent-bright);outline-offset:6px;border-radius:calc(var(--btn-radius) - 2px);}
+.id-card-inner{
+  position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  transform:rotateY(0deg);will-change:transform;
 }
-@media (prefers-reduced-motion:reduce){.id-card::before{animation:none;}}
-/* Role-based accent: same navy card body for every role (institutional
-   consistency), but the top edge + role label pick up a distinct
-   prestige-palette hue per audience, so a guardian glancing at their
-   own vs a child's card (or a staff member comparing to a founder
-   credential) reads the difference at a glance without a different
-   card design per role. */
-.id-card.role-guardian{border-top-color:var(--oxford-navy);}
-.id-card.role-guardian .id-card-role{color:var(--chart-3, var(--oxford-navy));}
-.id-card.role-staff{border-top-color:var(--forest-green);}
-.id-card.role-staff .id-card-role{color:var(--forest-green);}
-.id-card.role-founder{border-top-color:var(--terracotta);}
-.id-card.role-founder .id-card-role{color:var(--terracotta);}
-.id-card-body{display:flex;align-items:center;gap:20px;padding:28px 30px;flex-wrap:wrap;}
+.id-card-3d.is-snapping .id-card-inner{transition:transform .48s cubic-bezier(.2,.8,.3,1);}
+.id-card-face{
+  position:absolute;inset:0;backface-visibility:hidden;overflow:hidden;isolation:isolate;
+  display:flex;flex-direction:column;border-radius:calc(var(--btn-radius) - 2px);
+  background:linear-gradient(135deg, var(--card-bg-a) 0%, var(--card-bg-b) 100%);
+  color:var(--card-ink);border:1px solid var(--card-accent);
+  box-shadow:inset 2px 0 0 rgba(255,255,255,0.10), inset -3px 0 0 rgba(0,0,0,0.28), 0 26px 52px -22px rgba(0,0,0,0.55);
+}
+.id-card-back{transform:rotateY(180deg);}
+.id-card-face-body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;padding:18px 22px;gap:12px;min-height:0;}
+/* Gold lighting sweep — one slow diagonal pass, not a glitter loop; the
+   directive's own closing guidance ("cinematic elegance, not maximum
+   movement") is why this is a single soft band rather than a repeating
+   shimmer. */
+.id-card-sheen{
+  position:absolute;inset:-40% -60%;z-index:0;pointer-events:none;
+  background:linear-gradient(115deg, transparent 40%, color-mix(in srgb, var(--card-accent-bright) 55%, transparent) 50%, transparent 60%);
+  animation:id-card-sweep 9s ease-in-out infinite;
+}
+@keyframes id-card-sweep{0%,20%{transform:translateX(-30%);}55%,100%{transform:translateX(30%);}}
+@media (prefers-reduced-motion:reduce){.id-card-sheen{animation:none;display:none;}}
+.id-card-topline{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.id-card-brand{font-family:'Cinzel','Amiri',serif;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:color-mix(in srgb, var(--card-ink) 75%, transparent);}
+.id-card-founder-ribbon{
+  font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--card-bg-b);background:var(--card-accent-bright);padding:3px 9px;border-radius:999px;font-weight:600;
+}
+.id-card-main{display:flex;align-items:center;gap:16px;flex:1;min-height:0;}
 .id-card-mono{
-  flex:0 0 auto;width:60px;height:60px;border-radius:50%;border:1.5px solid var(--gold);
+  flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:1.5px solid var(--card-accent);
   display:flex;align-items:center;justify-content:center;font-family:'Cinzel','Amiri',serif;
-  font-size:1.2rem;letter-spacing:0.02em;color:var(--gold-bright);background:rgba(233,206,138,0.08);
-  position:relative;
+  font-size:1.05rem;letter-spacing:0.02em;color:var(--card-accent-bright);
+  background:color-mix(in srgb, var(--card-accent-bright) 10%, transparent);position:relative;
 }
 /* Verification seal ring — a second, slightly larger dashed ring behind
    the monogram, the "official seal" cue diplomatic/executive credentials
    use, without needing a fabricated emblem graphic. */
 .id-card-mono::before{
-  content:"";position:absolute;inset:-6px;border-radius:50%;border:1px dashed rgba(233,206,138,0.45);
+  content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed color-mix(in srgb, var(--card-accent-bright) 45%, transparent);
 }
-.id-card-info{flex:1;min-width:180px;}
-.id-card-role{font-size:0.7rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--gold-bright);font-weight:600;}
-.id-card-name{font-family:'Cinzel','Amiri',serif;font-size:1.15rem;color:#fff;margin-top:3px;}
-.id-card-subtitle{font-size:0.82rem;color:rgba(248,244,233,0.75);margin-top:3px;}
-.id-card-no{font-family:'Cinzel','Amiri',serif;font-size:0.84rem;letter-spacing:0.04em;color:var(--gold-bright);margin-top:8px;}
-.id-card-qr{flex:0 0 auto;border-radius:var(--radius-sm);background:var(--portal-card);padding:5px;}
-.id-card-details{
-  display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:1px;
-  border-top:1px solid rgba(233,206,138,0.25);
+.id-card-info{flex:1;min-width:0;}
+.id-card-role{font-size:0.64rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--card-accent-bright);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.id-card-name{font-family:'Cinzel','Amiri',serif;font-size:1.02rem;color:var(--card-ink);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.id-card-subtitle{font-size:0.74rem;color:color-mix(in srgb, var(--card-ink) 75%, transparent);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.id-card-idno-block{display:flex;flex-direction:column;gap:2px;border-top:1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);padding-top:8px;}
+.id-card-idno-label{font-size:0.56rem;letter-spacing:0.07em;text-transform:uppercase;color:color-mix(in srgb, var(--card-ink) 65%, transparent);}
+.id-card-no{font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.03em;color:var(--card-accent-bright);}
+/* Founder-tier extras: a faint crest watermark (the real brand mark,
+   not a fabricated emblem) behind the front face, and a signature line
+   on the back — both scoped to .theme-founder only. */
+.id-card-crest-watermark{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url('/assets/images/brand-mark.png') center 120% / 70% no-repeat;
+  opacity:0.08;filter:grayscale(1) brightness(3);
 }
-.id-card-detail{padding:10px 24px;background:rgba(0,0,0,0.12);}
-.id-card-detail .k{display:block;font-size:0.64rem;letter-spacing:0.05em;text-transform:uppercase;color:rgba(248,244,233,0.55);}
-.id-card-detail .v{display:block;font-size:0.82rem;color:var(--ivory);margin-top:2px;}
-.id-card-footer{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  padding:10px 24px;border-top:1px solid rgba(233,206,138,0.25);font-size:0.72rem;color:rgba(248,244,233,0.7);
+.id-card-signature{
+  margin-top:auto;padding-top:10px;font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;
+  font-size:0.86rem;color:var(--card-accent-bright);border-top:1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
 }
-.id-card-footer a{color:var(--gold-bright);text-decoration:none;}
-.id-card-footer a:hover{text-decoration:underline;}
+.id-card-qr-block{display:flex;align-items:center;gap:12px;}
+.id-card-qr{flex:0 0 auto;border-radius:var(--radius-sm);background:#fff;padding:5px;}
+.id-card-qr-caption{font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;color:color-mix(in srgb, var(--card-ink) 70%, transparent);}
+.id-card-details{display:flex;flex-direction:column;gap:6px;overflow:hidden;}
+.id-card-detail{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:0.78rem;}
+.id-card-detail .k{color:color-mix(in srgb, var(--card-ink) 60%, transparent);white-space:nowrap;}
+.id-card-detail .v{color:var(--card-ink);text-align:end;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.id-card-status-line{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:0.78rem;}
+.id-card-status-line .k{color:color-mix(in srgb, var(--card-ink) 60%, transparent);}
+.id-card-status-line .v{color:var(--card-accent-bright);font-weight:600;}
+.id-card-face-footer{
+  position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:9px 22px;border-top:1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
+  font-size:0.68rem;color:color-mix(in srgb, var(--card-ink) 72%, transparent);
+}
+.id-card-face-footer a{color:var(--card-accent-bright);text-decoration:none;}
+.id-card-face-footer a:hover{text-decoration:underline;}
+
+/* Ten role-specific colour schemes (Digital Identity System — Imperial
+   Prestige Directive §8). Founder & CEO gets the highest-prestige tier
+   (near-black + brightest gold); every other theme pairs a real
+   institutional/office hue already used elsewhere on this site (Royal
+   College's atmosphere gold aside — Principal specifically asked for
+   Royal Blue, so that one hue is new here, scoped to this card only)
+   with gold, matching the directive's exact colour pairs. */
+.id-card-3d.theme-founder{--card-bg-a:#15110B;--card-bg-b:#000000;--card-ink:var(--ivory);--card-accent:var(--gold-bright);--card-accent-bright:#F6E3AC;}
+.id-card-3d.theme-registrar{--card-bg-a:var(--ivory);--card-bg-b:var(--cream);--card-ink:var(--ink);--card-accent:var(--gold);--card-accent-bright:var(--bronze-bright);}
+.id-card-3d.theme-finance{--card-bg-a:#1E4030;--card-bg-b:#12281C;--card-ink:var(--ivory);--card-accent:var(--emerald);--card-accent-bright:#4FAF85;}
+.id-card-3d.theme-principal{--card-bg-a:var(--sapphire);--card-bg-b:#20295A;--card-ink:var(--ivory);--card-accent:var(--gold);--card-accent-bright:var(--sapphire-bright);}
+.id-card-3d.theme-headteacher{--card-bg-a:var(--terracotta);--card-bg-b:#7A4426;--card-ink:var(--ivory);--card-accent:var(--gold-bright);--card-accent-bright:var(--gold-bright);}
+.id-card-3d.theme-raees{--card-bg-a:var(--crimson);--card-bg-b:#450E17;--card-ink:var(--ivory);--card-accent:var(--gold-bright);--card-accent-bright:var(--gold-bright);}
+.id-card-3d.theme-mudeer{--card-bg-a:var(--forest-green);--card-bg-b:#1E3927;--card-ink:var(--ivory);--card-accent:var(--gold-bright);--card-accent-bright:var(--gold-bright);}
+.id-card-3d.theme-educator{--card-bg-a:var(--bronze);--card-bg-b:var(--navy-deep);--card-ink:var(--ivory);--card-accent:var(--bronze-bright);--card-accent-bright:var(--gold-bright);}
+.id-card-3d.theme-parent{--card-bg-a:var(--oxford-navy);--card-bg-b:#22314C;--card-ink:var(--ivory);--card-accent:var(--gold);--card-accent-bright:var(--gold-bright);}
+.id-card-3d.theme-student{--card-bg-a:var(--navy);--card-bg-b:var(--navy-deep);--card-ink:var(--ivory);--card-accent:var(--sapphire-bright);--card-accent-bright:var(--sapphire-bright);}
+.id-card-3d.theme-staff{--card-bg-a:var(--navy);--card-bg-b:var(--navy-deep);--card-ink:var(--ivory);--card-accent:var(--gold);--card-accent-bright:var(--gold-bright);}
 
 /* --- Finance Platform: "My Fees" widget (SHRS Imperial Digital
    Campus Directive, Priority 3) --- rendered by js/finance-widget.js
@@ -1399,10 +1457,9 @@ body.portal-body[data-atmosphere="student"]::before{
   .portal-stats{grid-template-columns:1fr 1fr;}
   .portal-stat{padding:16px 18px;}
   .portal-results{padding:18px 20px;}
-  .id-card-body{padding:20px 18px;gap:14px;}
-  .id-card-details{grid-template-columns:1fr 1fr;}
-  .id-card-detail{padding:10px 16px;}
-  .id-card-footer{padding:10px 16px;}
+  .id-card-3d{width:min(320px, 92vw);}
+  .id-card-face-body{padding:14px 16px;gap:8px;}
+  .id-card-face-footer{padding:8px 16px;}
   .finance-summary{padding:16px 18px;}
   .finance-invoice-row{flex-direction:column;align-items:flex-start;gap:4px;}
   .finance-invoice-amount{margin-inline-start:0;}

@@ -1127,6 +1127,11 @@ const STATEMENTS = [
   `ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE`,
   `ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE`,
 
+  // SHRS Master Identity Architecture Directive — staff identity numbers'
+  // real, atomic, never-reused SEQUENCE segment; see sql/schema.sql and
+  // functions/_lib/identity-no.js for the full design rationale.
+  `CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1`,
+
   // Finance Platform (Imperial Digital Campus Directive, Priority 3) —
   // mirrors sql/schema.sql exactly; see that file for the full design
   // rationale on every table below.

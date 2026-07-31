@@ -136,8 +136,23 @@
 
       var idCardMount = document.querySelector('[data-id-card-mount]');
       if(idCardMount && window.SHRSIdCard){
+        // The Founder & CEO is a real staff record, not a distinct
+        // account type — the only reliable, non-fabricated signal that
+        // this is specifically the Founder & CEO's card is holding the
+        // EXE (CEO / Executive Leadership) role, per role-permission-
+        // matrix.md §3.
+        var isFounder = (data.roles || []).some(function(r){ return r.roleCode === 'EXE'; });
+        var OFFICE_THEME_BY_SLUG = {
+          'registrar': 'registrar', 'finance': 'finance',
+          'principal-royal-college': 'principal', 'head-teacher': 'headteacher',
+          'raees': 'raees', 'mudeer': 'mudeer',
+        };
+        var themeKey = isFounder ? 'founder'
+          : (staff.office && OFFICE_THEME_BY_SLUG[staff.office.slug])
+            || (staff.department ? 'educator' : null);
         window.SHRSIdCard.render(idCardMount, {
-          kind: 'staff',
+          kind: isFounder ? 'founder' : 'staff',
+          themeKey: themeKey,
           fullName: staff.fullName,
           identityNo: staff.identityNo,
           roleLabel: staff.positionTitle || 'Staff',
