@@ -1,5 +1,5 @@
 // Generates the DOCX edition of "The Constitution of Sultan Hanafi Royal
-// Schools" (Draft v4.1) from docs/shrs-constitution-2026-draft.md — the
+// Schools" (Draft v5.0) from docs/shrs-constitution-2026-draft.md — the
 // markdown file is the source of truth; this script is a line-classifying
 // transcriber (headings, tables, lettered sub-clauses, body paragraphs),
 // not an independent drafting source.
@@ -31,7 +31,7 @@ const SRC = path.join(ROOT, 'docs', 'shrs-constitution-2026-draft.md');
 const CREST = path.join(ROOT, 'assets', 'images', 'brand-mark.png');
 const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Draft-v4.1.docx');
+const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Draft-v5.0.docx');
 
 const GOLD = 'A9832E';
 const NAVY = '1C2340';
@@ -160,7 +160,7 @@ function main() {
         splitIndex = children.length;
         landscapeChildren = [
           new Paragraph({
-            text: 'Schedule of Standing Committees (Chapter XI, Article 83)',
+            text: 'Schedule of Board Standing Committees (Chapter XI, Article 97)',
             heading: HeadingLevel.HEADING_2,
             spacing: { after: 200 },
           }),
@@ -221,7 +221,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 100 },
-      children: [new TextRun({ text: 'Draft v4.1', bold: true, size: 26, color: GOLD })],
+      children: [new TextRun({ text: 'Draft v5.0', bold: true, size: 26, color: GOLD })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -251,27 +251,27 @@ function main() {
   // header comment). Re-verify after any edit to the source markdown
   // changes pagination.
   const TOC_ENTRIES = [
-    ['CHAPTER I — PRELIMINARY', 3],
+    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 3],
     ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 5],
-    ['CHAPTER III — THE BOARD OF GOVERNORS', 7],
-    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 10],
-    ['CHAPTER V — ACADEMIC LEADERSHIP', 11],
-    ['CHAPTER VI — THE ACADEMIC COUNCIL', 12],
-    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 13],
-    ['CHAPTER VIII — ADMINISTRATIVE OFFICES', 14],
-    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 15],
-    ['CHAPTER X — STUDENT LEADERSHIP', 16],
-    ['CHAPTER XI — COMMITTEES', 17],
-    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 21],
-    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 22],
-    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 23],
-    ['CHAPTER XV — FINANCIAL GOVERNANCE', 24],
-    ['CHAPTER XVI — SUCCESSION', 25],
-    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 26],
-    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 27],
-    ['CHAPTER XIX — CEREMONIAL ORDER', 28],
-    ['SCHEDULES', 29],
-    ['DRAFTING NOTES — NOT PART OF THE CONSTITUTION', 30],
+    ['CHAPTER III — THE BOARD OF GOVERNORS', 8],
+    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 11],
+    ['CHAPTER V — ACADEMIC LEADERSHIP', 12],
+    ['CHAPTER VI — THE ACADEMIC COUNCIL', 13],
+    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 14],
+    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 15],
+    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 17],
+    ['CHAPTER X — STUDENT LEADERSHIP', 18],
+    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 19],
+    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 26],
+    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 27],
+    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 28],
+    ['CHAPTER XV — FINANCIAL GOVERNANCE', 29],
+    ['CHAPTER XVI — SUCCESSION', 30],
+    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 31],
+    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 32],
+    ['CHAPTER XIX — CEREMONIAL ORDER', 33],
+    ['SCHEDULES', 34],
+    ['DRAFTING NOTES — NOT PART OF THE CONSTITUTION', 35],
   ];
   coverChildren.push(
     new Paragraph({
@@ -295,7 +295,7 @@ function main() {
     children: [new Paragraph({
       alignment: AlignmentType.CENTER,
       children: [new TextRun({
-        text: 'The Constitution of Sultan Hanafi Royal Schools — Draft v4.1 (Not Yet Effective)',
+        text: 'The Constitution of Sultan Hanafi Royal Schools — Draft v5.0 (Not Yet Effective)',
         size: 15, italics: true, color: '6B6B6B',
       })],
     })],
@@ -350,7 +350,7 @@ function main() {
 
   const doc = new Document({
     creator: 'Sultan Hanafi Royal Schools — Office of the Board of Governors (drafting support)',
-    title: 'The Constitution of Sultan Hanafi Royal Schools — Draft v4.1',
+    title: 'The Constitution of Sultan Hanafi Royal Schools — Draft v5.0',
     description: 'Draft constitutional instrument prepared for adoption by the Board of Governors. Not yet effective.',
     styles: {
       default: {
