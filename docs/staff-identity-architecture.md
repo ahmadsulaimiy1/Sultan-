@@ -288,3 +288,21 @@ Identity is this project's stated security and governance foundation,
 so it gets the narrowest possible bootstrap credential rather than
 reusing a token already used for lower-stakes data entry. See
 `docs/staff-identity-platform.md` for setup and curl examples.
+
+## 10. Founder Authority Framework — the Authority Register
+
+`GET /api/portal/admin/authority-register` (same auth model as
+admin/staff.js: staff session with `staff_records` MU, falling back to
+`PORTAL_SYSADMIN_TOKEN`) merges three existing, previously-separate
+tables — `office_appointments`, `staff_roles`, `delegations` — into one
+chronological "who did what, when, why" feed, surfaced in the
+Institutional Administration Centre (`portal/admin/centre/`) via a new
+"Authority Register" button. No new schema, no new write path, and no
+change to who can actually appoint or delegate: `staff.js`'s
+`requireExeToTouchExe` still means only an existing Executive can grant
+or revoke `EXE` itself, and `staff/delegations.js` still means nobody
+can delegate a role they don't hold. This endpoint answers the
+traceability half of "Founder & CEO remains the Supreme Appointing
+Authority... every appointment, removal, and delegation traceable" —
+`EXE` grants/revocations are flagged in their own `executive_authority`
+category so they're never lost in a general role-change list.

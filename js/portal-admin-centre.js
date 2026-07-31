@@ -44,6 +44,8 @@
     if (newStaffBtn) newStaffBtn.addEventListener('click', function () { renderNewStaffForm(); });
     var staffDirBtn = document.getElementById('admin-staff-directory-btn');
     if (staffDirBtn) staffDirBtn.addEventListener('click', function () { renderStaffDirectory(); });
+    var authorityBtn = document.getElementById('admin-authority-register-btn');
+    if (authorityBtn) authorityBtn.addEventListener('click', function () { renderAuthorityRegister(); });
   }
 
   function esc(s) {
@@ -466,6 +468,62 @@
     SYSADMIN: 'System Administrator', DSL: 'Designated Safeguarding Lead',
   };
   var ROLE_CODES = Object.keys(ROLE_LABELS);
+
+  // Founder Authority Framework — a chronological, read-only register
+  // over appointments/staff_roles/delegations (functions/api/portal/
+  // admin/authority-register.js). No new writes happen here; this view
+  // only makes traceable what the existing "+ New Staff", "Grant Role",
+  // and the session-authenticated Delegation System already write.
+  var AUTHORITY_CATEGORY_LABEL = {
+    appointment: 'Appointment', role: 'Role', executive_authority: 'Executive Authority', delegation: 'Delegation',
+  };
+  function fetchAuthorityRegister(params) {
+    var qs = new URLSearchParams(params || {});
+    return fetch('/api/portal/admin/authority-register?' + qs.toString(), {
+      headers: { 'x-sysadmin-token': state.token, accept: 'application/json' },
+    }).then(function (res) { return res.json().then(function (data) { return { ok: res.ok, status: res.status, data: data }; }); });
+  }
+
+  function renderAuthorityRegister() {
+    var el = document.getElementById('admin-right-panel');
+    if (!el) return;
+    el.innerHTML =
+      '<div class="portal-child-card">'
+      + '<div class="portal-child-head"><h2>Authority Register</h2><div class="meta">Every appointment, role grant/revocation, and delegation, merged into one traceable record — "who did what, when, why." Executive (EXE) grants and revocations are marked separately: only an existing Executive may touch that role.</div></div>'
+      + '<div style="padding:0 26px 16px;display:flex;gap:10px;">'
+      + '<input type="text" id="authority-staff-filter" placeholder="Filter by Staff No. (optional)" style="flex:1;padding:10px 12px;border:1px solid var(--line);background:var(--portal-card);font-family:inherit;font-size:0.9rem;color:var(--ink);" />'
+      + '<button type="button" class="btn-outline" id="authority-filter-btn">Filter</button>'
+      + '</div>'
+      + '<div id="authority-register-list" style="padding:0 26px 20px;">Loading…</div>'
+      + '</div>';
+
+    function run() {
+      var staffNo = document.getElementById('authority-staff-filter').value.trim();
+      var listEl = document.getElementById('authority-register-list');
+      listEl.textContent = 'Loading…';
+      fetchAuthorityRegister(staffNo ? { staffNo: staffNo } : {}).then(function (r) {
+        if (!r.ok) { listEl.innerHTML = '<div class="portal-empty">' + esc((r.data && r.data.error) || 'Could not load the Authority Register.') + '</div>'; return; }
+        var events = r.data.events || [];
+        if (!events.length) { listEl.innerHTML = '<div class="portal-empty">No authority events recorded yet.</div>'; return; }
+        listEl.innerHTML = events.map(function (e) {
+          var isExe = e.category === 'executive_authority';
+          return '<div class="admin-office-row" style="cursor:default;align-items:flex-start;flex-direction:column;gap:4px;'
+            + (isExe ? 'border-inline-start:3px solid var(--gold-bright,var(--gold));' : '') + '">'
+            + '<div style="display:flex;gap:8px;align-items:center;">'
+            + '<span class="aor-badge">' + esc(AUTHORITY_CATEGORY_LABEL[e.category] || e.category) + '</span>'
+            + '<span class="aor-badge" style="opacity:.75;">' + esc(e.action) + '</span>'
+            + '<span style="margin-inline-start:auto;font-size:0.76rem;color:var(--ink-soft);">' + esc(fmtDate(e.at)) + '</span>'
+            + '</div>'
+            + '<div style="font-size:0.9rem;">' + esc(e.summary) + '</div>'
+            + (e.reason ? '<div style="font-size:0.8rem;color:var(--ink-soft);font-style:italic;">Reason: ' + esc(e.reason) + '</div>' : '')
+            + '</div>';
+        }).join('');
+      });
+    }
+    document.getElementById('authority-filter-btn').addEventListener('click', run);
+    document.getElementById('authority-staff-filter').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); run(); } });
+    run();
+  }
 
   function renderStaffDirectory(q) {
     var el = document.getElementById('admin-right-panel');
