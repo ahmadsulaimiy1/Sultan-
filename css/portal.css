@@ -321,8 +321,22 @@ body.portal-body > *{position:relative;z-index:1;}
   box-shadow:
     0 32px 64px -30px rgba(20,13,4,0.34),
     0 10px 22px -12px rgba(20,13,4,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.65);
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 0 0 1px rgba(198,161,91,0.16);
   margin-bottom:28px;
+  position:relative;
+}
+/* Luxury Material System (Imperial Luxury Experience Directive) — a
+   faint engraved bevel line set slightly inside the card edge, so the
+   card reads as a cut/inlaid panel rather than a flat rectangle. Pure
+   CSS, no new imagery: an inset outline offset inward via a
+   transparent border + background-clip trick would repaint the whole
+   card, so this uses a thin absolutely-positioned frame instead. */
+.portal-child-card::after{
+  content:"";position:absolute;inset:5px;pointer-events:none;
+  border:1px solid rgba(255,255,255,0.35);
+  border-radius:calc(var(--btn-radius) - 6px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);
 }
 /* cream-shell: a solid navy block repeated atop every single card on a
    dashboard (often 6-10 per page) is exactly the "brown consumes the
@@ -1054,7 +1068,23 @@ body.portal-body > *{position:relative;z-index:1;}
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
 .exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:8px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h1-size,2.8rem);line-height:1.08;margin:0 0 6px;color:#fff;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h1-size,2.8rem);line-height:1.08;margin:0 0 22px;color:#fff;position:relative;padding-bottom:14px;}
+/* Ceremonial letterhead rule (Imperial Luxury Experience Directive):
+   every institutional office title is framed the way a royal decree or
+   an Oxford/Harvard annual report frames its own title — a heavier
+   rule directly beneath the text, a shorter, finer rule beneath that.
+   One CSS treatment, zero new markup, reused by every office. */
+.exec-welcome h1::after{
+  content:'';position:absolute;left:1px;bottom:0;width:96px;height:9px;pointer-events:none;
+  background-image:
+    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%),
+    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%);
+  background-size:100% 2px, 42% 1px;
+  background-position:0 0, 0 7px;
+  background-repeat:no-repeat;
+  opacity:0.92;
+}
+[dir="rtl"] .exec-welcome h1::after{left:auto;right:1px;}
 .exec-welcome-role{font-size:0.92rem;color:rgba(248,244,233,0.78);margin-bottom:6px;}
 .exec-welcome-motto{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:0.98rem;color:var(--gold-bright);margin-bottom:22px;}
 .exec-welcome-stats{display:flex;flex-wrap:wrap;gap:20px 30px;padding-top:20px;border-top:1px solid rgba(233,206,138,0.25);}
@@ -1252,7 +1282,20 @@ body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-b
    authoritative: the largest heading scale on the platform and the
    widest letter-spacing, so the Founder's own hero reads distinctly
    grander than every office beneath it. */
-body.type-executive .exec-welcome h1{font-size:var(--h1-size,3.05rem);letter-spacing:0.004em;}
+body.type-executive .exec-welcome h1{font-size:var(--h1-size,3.05rem);letter-spacing:0.004em;padding-bottom:18px;}
+/* Executive tier alone earns a small gold seal at the centre of its
+   rule — the one visual mark reserved for the apex office, never
+   copied onto any other Command Centre. */
+body.type-executive .exec-welcome h1::after{
+  width:132px;height:11px;
+  background-image:
+    radial-gradient(circle, var(--gold-bright) 0 2.2px, transparent 2.3px),
+    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%),
+    linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%);
+  background-size:6px 6px, 100% 2px, 56% 1px;
+  background-position:center 4px, 0 0, 0 9px;
+  background-repeat:no-repeat;
+}
 body.type-executive .exec-welcome-eyebrow{letter-spacing:0.16em;font-size:0.84rem;}
 body.type-executive .cc-tagline{font-size:0.9rem;letter-spacing:0.09em;}
 body.type-executive .portal-child-head h2{font-size:1.55rem;letter-spacing:0.008em;}
@@ -1279,7 +1322,15 @@ body.type-academic .exec-welcome-role,body.type-academic .portal-hello-sub{line-
    sans-serif card-heading treatment (Inter, not a display serif) and
    tighter, denser rhythm suited to a records/ledger office, still with
    generous breathing room compared to the pre-correction baseline. */
-body.type-administrative .portal-hello{font-size:1.7rem;letter-spacing:0.002em;}
+body.type-administrative .portal-hello{font-size:1.7rem;letter-spacing:0.002em;position:relative;padding-bottom:14px;margin-bottom:20px;}
+body.type-administrative .portal-hello::after{
+  content:'';position:absolute;left:1px;bottom:0;width:80px;height:9px;pointer-events:none;
+  background-image:
+    linear-gradient(90deg, var(--atmos-bright,var(--gold-bright)) 0%, var(--atmos-bright,var(--gold-bright)) 100%),
+    linear-gradient(90deg, var(--atmos-bright,var(--gold-bright)) 0%, var(--atmos-bright,var(--gold-bright)) 100%);
+  background-size:100% 2px, 42% 1px;background-position:0 0, 0 7px;background-repeat:no-repeat;opacity:0.85;
+}
+[dir="rtl"] body.type-administrative .portal-hello::after{left:auto;right:1px;}
 body.type-administrative .portal-child-head h2{font-family:'Inter','Cairo',sans-serif;font-size:1.18rem;font-weight:700;letter-spacing:0.002em;}
 body.type-administrative .portal-hello-sub{font-size:0.93rem;line-height:1.65;max-width:640px;}
 /* Light-background variant — .cc-tagline/.cc-greeting default to a
