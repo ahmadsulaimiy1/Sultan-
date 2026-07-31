@@ -1068,7 +1068,7 @@ body.portal-body > *{position:relative;z-index:1;}
 @media (max-width:640px){.exec-welcome::after{width:170px;height:151px;right:-20px;}
   [dir="rtl"] .exec-welcome::after{left:-20px;}}
 .exec-welcome-eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:8px;}
-.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:var(--h1-size,2.8rem);line-height:1.08;margin:0 0 22px;color:#fff;position:relative;padding-bottom:14px;}
+.exec-welcome h1{font-family:'Cinzel','Amiri',serif;font-size:1.7rem;line-height:1.15;margin:0 0 18px;color:#fff;position:relative;padding-bottom:12px;}
 /* Ceremonial letterhead rule (Imperial Luxury Experience Directive):
    every institutional office title is framed the way a royal decree or
    an Oxford/Harvard annual report frames its own title — a heavier
@@ -1282,7 +1282,7 @@ body.portal-body[data-atmosphere="certificates"]{--atmos:var(--charcoal-deep);--
    authoritative: the largest heading scale on the platform and the
    widest letter-spacing, so the Founder's own hero reads distinctly
    grander than every office beneath it. */
-body.type-executive .exec-welcome h1{font-size:var(--h1-size,3.05rem);letter-spacing:0.004em;padding-bottom:18px;}
+body.type-executive .exec-welcome h1{font-size:1.9rem;letter-spacing:0.006em;padding-bottom:14px;}
 /* Executive tier alone earns a small gold seal at the centre of its
    rule — the one visual mark reserved for the apex office, never
    copied onto any other Command Centre. */
@@ -1305,7 +1305,7 @@ body.type-executive .exec-welcome-motto,body.type-executive .exec-welcome-narrat
    Policies. Formal, deliberate: slightly tighter letter-spacing than
    Executive (institutional rather than personal authority) and a
    serif-forward card heading treatment befitting board papers. */
-body.type-governance .exec-welcome h1{font-size:2.5rem;letter-spacing:0.006em;}
+body.type-governance .exec-welcome h1{font-size:1.78rem;letter-spacing:0.008em;}
 body.type-governance .portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;letter-spacing:0.012em;}
 body.type-governance .portal-hello-sub,body.type-governance .exec-welcome-narrative{line-height:1.75;}
 
@@ -1313,7 +1313,7 @@ body.type-governance .portal-hello-sub,body.type-governance .exec-welcome-narrat
    elegant: an italic tagline (the "mental rename") and a Cormorant
    Garamond card-heading treatment, reading closer to a university
    faculty page than an operations console. */
-body.type-academic .exec-welcome h1{font-size:2.6rem;}
+body.type-academic .exec-welcome h1{font-size:1.8rem;}
 body.type-academic .cc-tagline{font-style:italic;letter-spacing:0.03em;}
 body.type-academic .portal-child-head h2{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.42rem;font-weight:700;}
 body.type-academic .exec-welcome-role,body.type-academic .portal-hello-sub{line-height:1.65;}
@@ -1747,7 +1747,16 @@ body.portal-body[data-atmosphere="certificates"]::before{
   .portal-topbar{padding:12px 14px;}
   .portal-wrap{max-width:100%;}
   .exec-welcome{padding:26px 20px;border-radius:calc(var(--btn-radius) - 4px);}
-  .exec-welcome h1{font-size:1.9rem;}
+  .exec-welcome h1{font-size:1.4rem;}
+  /* The office-type overrides above (body.type-executive/-governance/
+     -academic .exec-welcome h1) are more specific than the mobile rule
+     just above, so without a matching-specificity mobile override here
+     they'd silently win at every width, including mobile — this keeps
+     the restrained mobile scale for every office type, not just the
+     generic/administrative ones. */
+  body.type-executive .exec-welcome h1{font-size:1.5rem;}
+  body.type-governance .exec-welcome h1{font-size:1.42rem;}
+  body.type-academic .exec-welcome h1{font-size:1.44rem;}
   .exec-welcome-stats{gap:16px 20px;}
   .exec-welcome-stat{flex:1 1 40%;min-width:110px;}
   .exec-card, .portal-child-card, .pfd-section, .portal-adhkar-card, .portal-hifz-card{

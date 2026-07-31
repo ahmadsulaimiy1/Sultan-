@@ -426,7 +426,10 @@
   header.nav::before{
     content:"";position:absolute;inset:0;z-index:0;opacity:0.045;pointer-events:none;
     background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 30px);
+    background-position:0 0;animation:imperial-weave-drift 46s linear infinite;
   }
+  @keyframes imperial-weave-drift{0%{background-position:0 0;}100%{background-position:60px 60px;}}
+  @media (prefers-reduced-motion:reduce){header.nav::before{animation:none;}}
   header.nav .wrap,header.nav nav.wrap{position:relative;z-index:1;}
   /* Living Gold Reflection — a single slow pass of light across the
      header's gold underline, like light crossing gold foil. 20s cycle,
@@ -452,6 +455,15 @@
   .navlinks a:hover{color:var(--gold-bright);border-color:transparent;}
   .navlinks a:hover::after{width:100%;}
   .navlinks a.nav-mark::after,.navlinks a.nav-cta::after{display:none;}
+  /* Constant (not hover-only) royal motion on the primary nav — a very
+     slow, low-alpha text-shadow breathe, staggered per link so the row
+     reads as a soft chain of light rather than a synchronised blink. */
+  .navlinks a:not(.nav-mark):not(.nav-cta){animation:imperial-navlink-glow 8s ease-in-out infinite;}
+  .navlinks a:nth-child(2){animation-delay:.6s;} .navlinks a:nth-child(3){animation-delay:1.2s;}
+  .navlinks a:nth-child(4){animation-delay:1.8s;} .navlinks a:nth-child(5){animation-delay:2.4s;}
+  .navlinks a:nth-child(6){animation-delay:3s;} .navlinks a:nth-child(7){animation-delay:3.6s;}
+  @keyframes imperial-navlink-glow{0%,100%{text-shadow:0 0 0 rgba(233,206,138,0);}50%{text-shadow:0 0 6px rgba(233,206,138,0.45);}}
+  @media (prefers-reduced-motion:reduce){.navlinks a{animation:none;}}
   .nav-cta{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);color:var(--navy-deep) !important;font-weight:700 !important;padding:9px 18px !important;border-radius:var(--btn-radius);box-shadow:0 6px 16px -6px rgba(198,161,91,0.55);transition:box-shadow .3s ease,transform .3s ease;}
   .nav-cta:hover{box-shadow:0 12px 26px -6px rgba(233,206,138,0.7);transform:translateY(-2px);}
   .menu-toggle{
@@ -566,7 +578,17 @@
     transition:background .2s ease,border-color .2s ease;cursor:pointer;
   }
   .mnr-item:hover,.mnr-item:active{background:rgba(198,161,91,0.14);border-color:var(--gold-bright);}
-  .mnr-item svg{width:26px;height:26px;color:var(--gold-bright);flex-shrink:0;}
+  /* Living icon — a continuous (not hover-only) soft gold glow breathing
+     on every ribbon icon, staggered per item so light seems to travel
+     along the row rather than all icons pulsing in unison. filter is
+     the only animated property; at this icon size/count it stays cheap. */
+  .mnr-item svg{width:26px;height:26px;color:var(--gold-bright);flex-shrink:0;animation:imperial-icon-glow 7s ease-in-out infinite;}
+  .mnr-item:nth-child(1) svg{animation-delay:0s;} .mnr-item:nth-child(2) svg{animation-delay:.5s;}
+  .mnr-item:nth-child(3) svg{animation-delay:1s;} .mnr-item:nth-child(4) svg{animation-delay:1.5s;}
+  .mnr-item:nth-child(5) svg{animation-delay:2s;} .mnr-item:nth-child(6) svg{animation-delay:2.5s;}
+  .mnr-item:nth-child(7) svg{animation-delay:3s;} .mnr-item:nth-child(8) svg{animation-delay:3.5s;}
+  @keyframes imperial-icon-glow{0%,100%{filter:drop-shadow(0 0 0 rgba(233,206,138,0));}50%{filter:drop-shadow(0 0 4px rgba(233,206,138,0.6));}}
+  @media (prefers-reduced-motion:reduce){.mnr-item svg{animation:none;}}
   .mnr-item span{font-size:0.62rem;font-weight:600;letter-spacing:0.02em;line-height:1.25;}
   .mnr-item.mnr-more{border-style:dashed;background:none;}
   .mobile-quick-row{display:none;}
@@ -578,7 +600,12 @@
   }
   .mqr-item:last-child{border-inline-end:none;}
   .mqr-item:hover{background:rgba(198,161,91,0.1);color:var(--gold-bright);}
-  .mqr-item svg{flex-shrink:0;color:var(--gold-bright);}
+  .mqr-item svg{flex-shrink:0;color:var(--gold-bright);animation:imperial-icon-glow 7s ease-in-out infinite;}
+  .mqr-item:nth-child(1) svg{animation-delay:.25s;} .mqr-item:nth-child(2) svg{animation-delay:.75s;}
+  .mqr-item:nth-child(3) svg{animation-delay:1.25s;} .mqr-item:nth-child(4) svg{animation-delay:1.75s;}
+  .mqr-item:nth-child(5) svg{animation-delay:2.25s;}
+  .mqr-item.mqr-cta svg{animation:none;}
+  @media (prefers-reduced-motion:reduce){.mqr-item svg{animation:none;}}
   .mqr-item.mqr-cta{color:var(--navy-deep);background:linear-gradient(135deg,var(--gold) 0%,var(--gold-bright) 100%);}
   .mqr-item.mqr-cta svg{color:var(--navy-deep);}
   .mqr-item.mqr-cta:hover{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 100%);color:var(--navy-deep);}
@@ -606,6 +633,8 @@
     color:var(--ivory);background:none;border:1px solid transparent;cursor:pointer;transition:color .2s ease, border-color .2s ease;
   }
   .search-toggle:hover{color:var(--gold-bright);border-color:rgba(233,206,138,0.3);}
+  .search-toggle svg{animation:imperial-icon-glow 7s ease-in-out infinite;animation-delay:3.25s;}
+  @media (prefers-reduced-motion:reduce){.search-toggle svg{animation:none;}}
 
   /* Site search overlay — a centered panel over a dimmed backdrop,
      not a full navigation takeover. */
@@ -1833,7 +1862,12 @@
       radial-gradient(1px 1px at 30% 68%, rgba(233,206,138,0.24), transparent 60%),
       radial-gradient(1.2px 1.2px at 55% 42%, rgba(233,206,138,0.26), transparent 60%),
       radial-gradient(1px 1px at 72% 74%, rgba(233,206,138,0.2), transparent 60%),
-      radial-gradient(1.1px 1.1px at 88% 34%, rgba(233,206,138,0.24), transparent 60%);
+      radial-gradient(1.1px 1.1px at 88% 34%, rgba(233,206,138,0.24), transparent 60%),
+      /* Living Ornamentation — a faint lattice standing in for the
+         Islamic geometric motif, sharing this layer's own drift so it
+         reads as slowly moving/softly illuminating rather than static. */
+      repeating-linear-gradient(45deg, rgba(233,206,138,0.05) 0 1px, transparent 1px 34px),
+      repeating-linear-gradient(-45deg, rgba(233,206,138,0.05) 0 1px, transparent 1px 34px);
     animation:imperial-dust-drift 20s ease-in-out infinite;
     will-change:transform;
   }
@@ -1890,7 +1924,17 @@
     width:24px;height:24px;padding:9px;box-sizing:content-box;border-radius:50%;
     background:rgba(198,161,91,0.08);border:1px solid rgba(198,161,91,0.25);
     color:var(--gold-bright);flex-shrink:0;transition:background .2s ease,border-color .2s ease,box-shadow .3s ease,transform .3s ease;
+    animation:imperial-badge-shimmer 9s ease-in-out infinite;
   }
+  /* Continuous (not hover-only) shimmer across the 20-icon dashboard —
+     grouped into 6 stagger buckets matching the grid's column count so
+     the glow reads as a slow diagonal wave crossing the strip, rather
+     than 20 icons pulsing in lockstep or 20 unique per-item delays. */
+  .fd-item:nth-child(6n+1) svg{animation-delay:0s;} .fd-item:nth-child(6n+2) svg{animation-delay:1.2s;}
+  .fd-item:nth-child(6n+3) svg{animation-delay:2.4s;} .fd-item:nth-child(6n+4) svg{animation-delay:3.6s;}
+  .fd-item:nth-child(6n+5) svg{animation-delay:4.8s;} .fd-item:nth-child(6n+6) svg{animation-delay:6s;}
+  @keyframes imperial-badge-shimmer{0%,100%{box-shadow:0 0 0 0 rgba(233,206,138,0);}50%{box-shadow:0 0 8px 0 rgba(233,206,138,0.35);}}
+  @media (prefers-reduced-motion:reduce){.fd-item svg{animation:none;}}
   .fd-item:hover svg{background:rgba(198,161,91,0.2);border-color:var(--gold-bright);box-shadow:0 0 12px 1px rgba(233,206,138,0.4);transform:scale(1.08);}
   .fd-item span{font-size:0.66rem;font-weight:600;letter-spacing:0.01em;line-height:1.25;color:var(--ivory);}
   @media (max-width:900px){.foot-dashboard{grid-template-columns:repeat(4,1fr);}}
