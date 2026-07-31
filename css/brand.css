@@ -414,7 +414,10 @@
   .topbar a{opacity:0.85;} .topbar a:hover{opacity:1;color:#fff;}
   .topbar .contacts{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
   .topbar .contacts a{display:inline-flex;align-items:center;gap:6px;}
-  .ci-icon{flex-shrink:0;opacity:0.75;}
+  .ci-icon{flex-shrink:0;opacity:0.75;animation:imperial-icon-glow 8s ease-in-out infinite;}
+  .topbar .contacts a:nth-child(2) .ci-icon{animation-delay:1.5s;}
+  .topbar .contacts a:nth-child(3) .ci-icon{animation-delay:3s;}
+  @media (prefers-reduced-motion:reduce){.ci-icon{animation:none;}}
   /* Mobile: one clean aligned line (email │ phone │ phone) instead of
      wrapping across 2-3 rows. Icons shrink rather than disappear (they
      stay a real alignment anchor), pipe separators replace the wider
@@ -462,11 +465,51 @@
   }
   @keyframes header-gold-drift{0%{background-position:0% 0;}50%{background-position:-100% 0;}100%{background-position:0% 0;}}
   @media (prefers-reduced-motion:reduce){header.nav::after{animation:none;}}
-  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;}
-  .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-  .brand .crest-shimmer-wrap{display:inline-flex;}
+  nav.wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;position:relative;}
+  /* Imperial Motion Architecture — Layer 2 (Architectural Motion).
+     A shimmering top hairline, completing the "gold frame" the header
+     already carries on its bottom edge (header.nav::after) — the
+     header's own literal top-and-bottom border now both live. */
+  nav.wrap::before{
+    content:"";position:absolute;left:0;right:0;top:-1px;height:1px;pointer-events:none;z-index:1;
+    background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);
+    background-size:220% 100%;opacity:0.7;animation:header-gold-drift 24s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion:reduce){nav.wrap::before{animation:none;}}
+  /* Layer 5 — Royal Energy System: an occasional fast gold "comet"
+     streak crossing the header, mostly dormant then a quick pass —
+     distinct rhythm from the slow ambient sweep so the header reads as
+     having more than one light source, not one effect repeating. */
+  nav.wrap::after{
+    content:"";position:absolute;inset:-40% -20%;pointer-events:none;z-index:0;
+    background:linear-gradient(110deg,transparent 48%,rgba(233,206,138,0.5) 50%,transparent 52%);
+    background-size:300% 100%;background-position:300% 0;
+    animation:imperial-comet 13s cubic-bezier(.2,0,.1,1) infinite;mix-blend-mode:screen;
+  }
+  [dir="rtl"] nav.wrap::after{background:linear-gradient(-110deg,transparent 48%,rgba(233,206,138,0.5) 50%,transparent 52%);}
+  @keyframes imperial-comet{0%,88%{background-position:300% 0;}96%,100%{background-position:-60% 0;}}
+  @media (prefers-reduced-motion:reduce){nav.wrap::after{animation:none;}}
+  .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;}
+  /* Layer 4 — Crest Engine, aura. A soft pulsing gold bloom behind the
+     crest, independent of the crest's own halo ring and foil sweep —
+     the living royal seal reads as a light source, not a flat image. */
+  .brand::before{
+    content:"";position:absolute;left:0;top:50%;width:52px;height:52px;transform:translate(-8px,-50%);
+    border-radius:50%;pointer-events:none;z-index:0;
+    background:radial-gradient(circle, rgba(233,206,138,0.4) 0%, transparent 70%);
+    animation:imperial-aura-pulse 6s ease-in-out infinite;
+  }
+  [dir="rtl"] .brand::before{left:auto;right:0;transform:translate(8px,-50%);animation-name:imperial-aura-pulse-rtl;}
+  @keyframes imperial-aura-pulse{0%,100%{opacity:0.35;transform:translate(-8px,-50%) scale(0.9);}50%{opacity:0.7;transform:translate(-8px,-50%) scale(1.15);}}
+  @keyframes imperial-aura-pulse-rtl{0%,100%{opacity:0.35;transform:translate(8px,-50%) scale(0.9);}50%{opacity:0.7;transform:translate(8px,-50%) scale(1.15);}}
+  @media (prefers-reduced-motion:reduce){.brand::before{animation:none;}}
+  .brand .crest-shimmer-wrap{display:inline-flex;position:relative;z-index:1;}
   .brand .crest-shimmer-wrap::after{animation-duration:10s;}
-  .brand-mark{width:36px;height:36px;flex-shrink:0;animation:crestIn .9s ease .1s both, crestBreathe 9s ease-in-out 1.1s infinite;}
+  .brand-mark{
+    width:36px;height:36px;flex-shrink:0;
+    animation:crestIn .9s ease .1s both, crestBreathe 9s ease-in-out 1.1s infinite, imperial-crest-glint 8s ease-in-out infinite;
+  }
+  @keyframes imperial-crest-glint{0%,100%{filter:drop-shadow(0 0 0 rgba(233,206,138,0));}50%{filter:drop-shadow(0 0 5px rgba(233,206,138,0.7));}}
   .brand-text .line1{
     font-size:1.05rem;font-weight:700;letter-spacing:0.03em;font-family:'Cinzel','Amiri',serif;white-space:nowrap;
     background-image:linear-gradient(100deg,#fff 30%,var(--gold-bright) 45%,#fff 60%);
@@ -594,7 +637,10 @@
      ring... slow rotation... extremely subtle" ask without the cost of
      animating on dozens of icons — scoped to the small, always-visible
      topbar social set (4 icons) rather than every icon sitewide. */
-  .social-icon{position:relative;}
+  .social-icon{position:relative;animation:imperial-icon-glow 8s ease-in-out infinite;}
+  .social-icon:nth-child(2){animation-delay:.7s;} .social-icon:nth-child(3){animation-delay:1.4s;}
+  .social-icon:nth-child(4){animation-delay:2.1s;}
+  @media (prefers-reduced-motion:reduce){.social-icon{animation:none;}}
   .social-icon::before{
     content:"";position:absolute;inset:-4px;border-radius:50%;pointer-events:none;
     background:conic-gradient(from 0deg, transparent 0 72%, rgba(233,206,138,0.45) 86%, transparent 100%);
@@ -1934,11 +1980,23 @@
       radial-gradient(1.1px 1.1px at 42% 20%, rgba(233,206,138,0.24), transparent 60%),
       radial-gradient(1px 1px at 65% 62%, rgba(233,206,138,0.2), transparent 60%),
       radial-gradient(1.1px 1.1px at 95% 60%, rgba(233,206,138,0.22), transparent 60%),
+      /* Layer 1 — Royal Starfield: a handful of brighter, tighter
+         points among the dust motes above, reading as distant
+         ceremonial lights rather than more of the same haze. */
+      radial-gradient(1.6px 1.6px at 6% 45%, rgba(248,244,233,0.55), transparent 55%),
+      radial-gradient(1.4px 1.4px at 35% 78%, rgba(248,244,233,0.5), transparent 55%),
+      radial-gradient(1.6px 1.6px at 63% 12%, rgba(248,244,233,0.5), transparent 55%),
+      radial-gradient(1.4px 1.4px at 90% 88%, rgba(248,244,233,0.45), transparent 55%),
       /* Living Ornamentation — a faint lattice standing in for the
          Islamic geometric motif, sharing this layer's own drift so it
          reads as slowly moving/softly illuminating rather than static. */
       repeating-linear-gradient(45deg, rgba(233,206,138,0.05) 0 1px, transparent 1px 34px),
-      repeating-linear-gradient(-45deg, rgba(233,206,138,0.05) 0 1px, transparent 1px 34px);
+      repeating-linear-gradient(-45deg, rgba(233,206,138,0.05) 0 1px, transparent 1px 34px),
+      /* A second, larger-scale lattice layered behind the first for
+         depth — two geometric grains moving together rather than one
+         flat pattern. */
+      repeating-linear-gradient(45deg, rgba(233,206,138,0.03) 0 1px, transparent 1px 58px),
+      repeating-linear-gradient(-45deg, rgba(233,206,138,0.03) 0 1px, transparent 1px 58px);
     animation:imperial-dust-drift 20s ease-in-out infinite;
     will-change:transform;
   }
@@ -2055,7 +2113,17 @@
     .foot-contact-item{font-size:0.88rem;}
   }
 
-  .foot-quick-actions{display:flex;flex-wrap:wrap;gap:12px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px;}
+  .foot-quick-actions{display:flex;flex-wrap:wrap;gap:12px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:22px;position:relative;}
+  /* A "prestige line" — a slow gold light traveling along the zone's
+     own top divider, echoing the header's framework treatment so the
+     same architectural language appears at both ends of the page. */
+  .foot-quick-actions::before{
+    content:"";position:absolute;left:0;right:0;top:-1px;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--gold-bright) 15%,transparent 30%);
+    background-size:240% 100%;background-position:240% 0;
+    animation:header-gold-drift 17s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion:reduce){.foot-quick-actions::before{animation:none;}}
   .foot-quick-actions a{
     font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
     padding:11px 20px;border:1px solid rgba(233,206,138,0.4);color:var(--gold-bright);
@@ -2088,7 +2156,17 @@
   .foot-map-intro{max-width:620px;margin:0 auto 30px;text-align:center;}
   .foot-map-intro .fm-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:10px;display:block;}
   .foot-map-intro .fm-lede{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.15rem;font-style:italic;color:rgba(248,244,233,0.75);line-height:1.55;}
-  .foot-map-panel{border:1px solid var(--gold);position:relative;}
+  .foot-map-panel{border:1px solid var(--gold);position:relative;overflow:hidden;}
+  /* Layer 3 — Gold Engine: a diagonal specular pass over the panel's
+     own surface, like light crossing brushed metal, independent of
+     the traveling border ring on ::after below. */
+  .foot-map-panel::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+    background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,0.06) 48%,rgba(233,206,138,0.22) 50%,rgba(255,255,255,0.06) 52%,transparent 60%);
+    background-size:300% 300%;background-position:300% 300%;
+    animation:imperial-cta-sweep 11s ease-in-out infinite;mix-blend-mode:screen;
+  }
+  @media (prefers-reduced-motion:reduce){.foot-map-panel::before{animation:none;}}
   /* Traveling gold border light circling the map panel — same masked
      conic-gradient ring technique as the menu button, scaled to the
      panel's own rectangle. */
@@ -2134,7 +2212,16 @@
     background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,transparent);
     opacity:0.7;
   }
-  .foot-seal-brand{display:flex;align-items:center;gap:14px;}
+  .foot-seal-brand{display:flex;align-items:center;gap:14px;position:relative;}
+  .foot-seal-brand::before{
+    content:"";position:absolute;left:0;top:50%;width:60px;height:60px;transform:translate(-10px,-50%);
+    border-radius:50%;pointer-events:none;z-index:0;
+    background:radial-gradient(circle, rgba(233,206,138,0.35) 0%, transparent 70%);
+    animation:imperial-aura-pulse 7s ease-in-out infinite;
+  }
+  [dir="rtl"] .foot-seal-brand::before{left:auto;right:0;transform:translate(10px,-50%);animation-name:imperial-aura-pulse-rtl;}
+  @media (prefers-reduced-motion:reduce){.foot-seal-brand::before{animation:none;}}
+  .foot-seal-brand img{position:relative;z-index:1;animation:imperial-crest-glint 8s ease-in-out infinite 1s;}
   .foot-seal-brand img{width:34px;height:34px;opacity:0.9;}
   .foot-seal-text{display:flex;flex-direction:column;gap:2px;}
   .foot-seal-text .fs-copy{font-size:0.78rem;color:rgba(248,244,233,0.7);}
