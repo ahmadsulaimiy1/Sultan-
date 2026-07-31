@@ -263,6 +263,8 @@
   var debtorsSummaryEl = document.querySelector('[data-debtors-summary]');
   var debtorsListEl = document.querySelector('[data-debtors-list]');
   var debtorsRefreshBtn = document.querySelector('[data-debtors-refresh]');
+  var revenueSummaryEl = document.querySelector('[data-revenue-summary]');
+  var executiveAlertsEl = document.querySelector('[data-executive-alerts]');
 
   var AGEING_LABEL = { not_yet_due: 'Not Yet Due', '0_30': '0–30 Days', '31_60': '31–60 Days', '61_90': '61–90 Days', '90_plus': '90+ Days' };
 
@@ -284,6 +286,24 @@
       Object.keys(AGEING_LABEL).forEach(function(bucket){
         debtorsSummaryEl.appendChild(statTile(AGEING_LABEL[bucket], formatCurrency(data.ageingSummary[bucket] || 0)));
       });
+
+      if(revenueSummaryEl && data.revenue){
+        revenueSummaryEl.innerHTML = '';
+        revenueSummaryEl.appendChild(statTile('Total Invoiced', formatCurrency(data.revenue.totalInvoiced)));
+        revenueSummaryEl.appendChild(statTile('Total Collected', formatCurrency(data.revenue.totalCollected)));
+        revenueSummaryEl.appendChild(statTile('Collection Rate', data.revenue.collectionRatePercent != null ? data.revenue.collectionRatePercent + '%' : 'No invoices yet'));
+        revenueSummaryEl.appendChild(statTile('Outstanding', formatCurrency(data.totalOutstanding)));
+      }
+
+      if(executiveAlertsEl){
+        var severelyOverdue = data.debtors.filter(function(d){ return d.daysOverdue > 90; });
+        executiveAlertsEl.innerHTML = '';
+        if(!severelyOverdue.length){
+          executiveAlertsEl.appendChild(el('p', 'portal-empty', 'No invoices are more than 90 days overdue.'));
+        }else{
+          executiveAlertsEl.appendChild(el('p', 'registrar-hint', severelyOverdue.length + ' invoice(s) are more than 90 days overdue — see the Outstanding Collections list below for names and amounts.'));
+        }
+      }
 
       debtorsListEl.innerHTML = '';
       if(!data.debtors.length){
@@ -322,6 +342,15 @@
       if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
       loadingEl.hidden = true;
       contentEl.hidden = false;
+      if(window.SHRSExecArrival){
+        window.SHRSExecArrival.play({
+          key: 'finance',
+          icon: '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+          title: 'Finance Office',
+          tagline: 'Treasury & Institutional Resources',
+          greeting: 'Treasury status updated.',
+        });
+      }
       loadFeeStructures();
       loadDebtors();
     }catch(err){

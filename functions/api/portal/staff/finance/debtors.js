@@ -35,6 +35,21 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
+    // Revenue Intelligence summary (Phase 1 Item 2, Treasury & Institutional
+    // Resources prestige pass) — the same real invoice/receipt ledger totals
+    // already computed institution-by-institution for the Founder Dashboard
+    // (functions/api/portal/founder/dashboard.js's `finance` block), rolled
+    // up here into one global figure for the Finance Office's own KPI hero.
+    // Never fabricated: only recorded, staff-entered invoices/receipts.
+    const totalsRes = await sql`
+      SELECT SUM(i.total_amount)::float AS total_invoiced, SUM(COALESCE(p.paid, 0))::float AS total_paid
+      FROM invoices i
+      LEFT JOIN (SELECT invoice_id, SUM(amount) AS paid FROM receipts WHERE revoked_at IS NULL GROUP BY invoice_id) p ON p.invoice_id = i.id`;
+    const totals = totalsRes.rows[0] || {};
+    const totalInvoiced = totals.total_invoiced || 0;
+    const totalCollected = totals.total_paid || 0;
+    const collectionRatePercent = totalInvoiced ? Math.round((totalCollected / totalInvoiced) * 1000) / 10 : null;
+
     const rows = (await sql`
       SELECT
         i.id, i.invoice_no, i.term, i.due_date, i.total_amount,
@@ -73,7 +88,10 @@ export async function onRequestGet({ request, env }) {
     const summary = { not_yet_due: 0, '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 0 };
     debtors.forEach((d) => { summary[d.ageingBucket] += d.balance; });
 
-    return json({ debtors, ageingSummary: summary, totalOutstanding: debtors.reduce((s, d) => s + d.balance, 0) });
+    return json({
+      debtors, ageingSummary: summary, totalOutstanding: debtors.reduce((s, d) => s + d.balance, 0),
+      revenue: { totalInvoiced, totalCollected, collectionRatePercent },
+    });
   } catch (err) {
     console.error('debtors report error', err);
     return json({ error: 'Could not load the debtors report: ' + (err && err.message ? err.message : 'unknown error') }, 500);
