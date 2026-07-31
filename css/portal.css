@@ -1293,7 +1293,7 @@ body.type-executive .exec-welcome h1::after{
     linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%),
     linear-gradient(90deg, var(--gold-bright) 0%, var(--gold-bright) 100%);
   background-size:6px 6px, 100% 2px, 56% 1px;
-  background-position:center 4px, 0 0, 0 9px;
+  background-position:center 4px, 0 0, center 9px;
   background-repeat:no-repeat;
 }
 body.type-executive .exec-welcome-eyebrow{letter-spacing:0.16em;font-size:0.84rem;}
