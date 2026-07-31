@@ -1223,26 +1223,26 @@ body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-brig
    Executive reuses "founder" outright — Executive IS the Founder & CEO's
    own office record, not a second identity. */
 body.portal-body[data-atmosphere="board-of-trustees"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
-body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:#C7B688;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="committee-finance"]{--atmos:var(--charcoal-deep);--atmos-bright:#B99B5A;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="committee-governance"]{--atmos:var(--charcoal-deep);--atmos-bright:#D9C48A;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="committee-audit"]{--atmos:var(--charcoal-deep);--atmos-bright:#A8926A;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="committee-academic-excellence"]{--atmos:var(--charcoal-deep);--atmos-bright:#C9A85F;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="committee-development"]{--atmos:var(--charcoal-deep);--atmos-bright:#CDB37A;--atmos-soft:rgba(28,25,20,0.28);}
-body.portal-body[data-atmosphere="academic-affairs"]{--atmos:var(--oxford-navy);--atmos-bright:#8CA8D4;--atmos-soft:rgba(65,97,140,0.13);}
-body.portal-body[data-atmosphere="examinations"]{--atmos:var(--oxford-navy);--atmos-bright:#6D8FBD;--atmos-soft:rgba(65,97,140,0.12);}
-body.portal-body[data-atmosphere="admissions"]{--atmos:var(--oxford-navy);--atmos-bright:#9BB4DC;--atmos-soft:rgba(65,97,140,0.15);}
-body.portal-body[data-atmosphere="digital-services"]{--atmos:var(--sapphire);--atmos-bright:#98A6E0;--atmos-soft:rgba(63,76,140,0.14);}
-body.portal-body[data-atmosphere="digital-learning"]{--atmos:var(--sapphire);--atmos-bright:#7C89C7;--atmos-soft:rgba(63,76,140,0.12);}
-body.portal-body[data-atmosphere="digital-identity"]{--atmos:var(--sapphire);--atmos-bright:#AAB4E8;--atmos-soft:rgba(63,76,140,0.15);}
-body.portal-body[data-atmosphere="knowledge-base"]{--atmos:var(--sapphire);--atmos-bright:#6774B0;--atmos-soft:rgba(63,76,140,0.11);}
-body.portal-body[data-atmosphere="hr"]{--atmos:var(--rosewood);--atmos-bright:#D9A2AA;--atmos-soft:rgba(140,74,87,0.13);}
-body.portal-body[data-atmosphere="alumni"]{--atmos:var(--rosewood);--atmos-bright:var(--rosewood-bright);--atmos-soft:rgba(140,74,87,0.12);}
-body.portal-body[data-atmosphere="student-affairs"]{--atmos:var(--rosewood);--atmos-bright:#E0B4BB;--atmos-soft:rgba(140,74,87,0.15);}
-body.portal-body[data-atmosphere="communications"]{--atmos:var(--rosewood);--atmos-bright:#B97985;--atmos-soft:rgba(140,74,87,0.11);}
-body.portal-body[data-atmosphere="foundation"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.13);}
-body.portal-body[data-atmosphere="library"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.12);}
-body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-bright:var(--gold);--atmos-soft:rgba(124,84,48,0.15);}
+body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-finance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-governance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-audit"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-academic-excellence"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-development"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="academic-affairs"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.13);}
+body.portal-body[data-atmosphere="examinations"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.12);}
+body.portal-body[data-atmosphere="admissions"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.15);}
+body.portal-body[data-atmosphere="digital-services"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.14);}
+body.portal-body[data-atmosphere="digital-learning"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.12);}
+body.portal-body[data-atmosphere="digital-identity"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.15);}
+body.portal-body[data-atmosphere="knowledge-base"]{--atmos:var(--oxford-navy);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(65,97,140,0.11);}
+body.portal-body[data-atmosphere="hr"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.13);}
+body.portal-body[data-atmosphere="alumni"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.12);}
+body.portal-body[data-atmosphere="student-affairs"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.15);}
+body.portal-body[data-atmosphere="communications"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.11);}
+body.portal-body[data-atmosphere="foundation"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.13);}
+body.portal-body[data-atmosphere="library"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.12);}
+body.portal-body[data-atmosphere="certificates"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.15);}
 
 /* Command Centre "mental rename" tagline + role-specific greeting
    (Founder Override Directive, Phase 1 Item 2) — a cosmetic branding
