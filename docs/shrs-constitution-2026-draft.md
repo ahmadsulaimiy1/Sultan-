@@ -107,7 +107,7 @@ No person shall delegate authority not constitutionally held by that person. A d
 
 **Article 28 — Appointment process.**
 (a) The Founder & CEO may nominate Founding Governors, subject to confirmation by simple majority of the Governors then in office.
-(b) The Board, on the recommendation of the Nominations & Remuneration Committee under Chapter XI, shall appoint Appointed Governors by simple majority resolution.
+(b) The Board shall appoint Appointed Governors by simple majority resolution, on the recommendation of an Ad-hoc Nominations Committee convened under Chapter XI where the Board is actively recruiting, or otherwise on the recommendation of any Governor.
 
 **Article 29 — Co-option.** The Board may, by resolution, co-opt a person as a Governor to address a specific gap in the Board's expertise, for a term not exceeding two years, renewable once.
 
@@ -129,7 +129,7 @@ No person shall delegate authority not constitutionally held by that person. A d
 
 **Article 38 — Emergency resolutions.** Where a matter cannot await an ordinary or extraordinary meeting, the Board may resolve by unanimous written consent of all Governors, communicated by durable electronic means and recorded in the Authority Register, save that no constitutional amendment and no matter reserved under Article 40 may be resolved this way.
 
-**Article 39 — Standing committees.** The Board shall establish and maintain the standing committees listed in Chapter XI, Schedule of Board Committees, and may establish further committees by resolution.
+**Article 39 — Standing committees.** The Board shall establish and maintain the seven standing committees listed in Chapter XI. No further standing committee may be established save by constitutional amendment under Chapter XVIII; the Board's power to convene further, temporary bodies is limited to Ad-hoc Committees under Article 83B.
 
 **Article 40 — Powers reserved exclusively to the Board.** The following shall not be delegated to the Founder & CEO, the EMT, or any committee:
 (a) constitutional amendment (Chapter XIX);
@@ -181,9 +181,9 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 **Article 52.** The Principal shall be supported by two permanent constitutional executive offices: the Vice Principal (Academics) and the Vice Principal (Administration), each appointed by the Founder & CEO on the Principal's recommendation.
 
-**Article 53 — Vice Principal (Academics).** The Vice Principal (Academics) shall be constitutionally responsible for: curriculum implementation; teaching and learning; academic quality assurance; internal examinations; academic supervision; academic planning; educator professional development; and academic performance improvement, at Sultan Hanafi Royal College, and shall chair the Academic Committee under Chapter XI.
+**Article 53 — Vice Principal (Academics).** The Vice Principal (Academics) shall be constitutionally responsible for: curriculum implementation; teaching and learning; academic quality assurance; internal examinations; academic supervision; academic planning; educator professional development; and academic performance improvement, at Sultan Hanafi Royal College, and shall attend the Board's Academic Committee under Chapter XI as a non-voting adviser, without chairing it, so that the Board's oversight of academic policy remains a governing, not executive, function.
 
-**Article 54 — Vice Principal (Administration).** The Vice Principal (Administration) shall be constitutionally responsible for: school administration; student discipline; welfare; school operations; facilities; logistics; security; health and safety; and administrative coordination, at Sultan Hanafi Royal College, and shall chair the Student Discipline Committee under Chapter XI.
+**Article 54 — Vice Principal (Administration).** The Vice Principal (Administration) shall be constitutionally responsible for: school administration; student discipline; welfare; school operations; facilities; logistics; security; health and safety; and administrative coordination, at Sultan Hanafi Royal College, and shall decide, in the first instance, every ordinary student discipline matter at that Constituent Institution, subject to the policy and case-review authority of the Board's Disciplinary Committee under Chapter XI.
 
 **Article 55.** There shall be a Head Teacher of Sultan Hanafi Nursery & Primary School, appointed by the Founder & CEO under Article 19, reporting to the Founder & CEO, and holding, for that Constituent Institution, the combined constitutional functions the Vice Principals hold at Royal College, until such time as the Board resolves that the scale of that Constituent Institution warrants separate Vice-Principal-equivalent offices.
 
@@ -202,7 +202,7 @@ No member of the EMT other than the Chair holds authority over another member; m
 **Article 60 — Powers.** The Academic Council shall:
 (a) approve academic regulations and the academic calendar;
 (b) approve curriculum standards and changes to curriculum, on recommendation of the relevant Heads of Department;
-(c) exercise examination oversight, in coordination with the Examinations Board under Chapter XI;
+(c) exercise examination oversight, reporting to the Board's Academic Committee under Chapter XI on assessment standards and results integrity;
 (d) set and monitor academic quality assurance standards, in coordination with the Quality Assurance Office;
 (e) make academic legislation binding on all Constituent Institutions unless a Head of a Constituent Institution records a formal objection referred to the Founder & CEO under Article 15.
 
@@ -271,43 +271,29 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 ## CHAPTER XI — COMMITTEES
 
-**Article 82 — General provisions.** Every committee established under this Constitution shall have: a constitutional mandate, stated in the Schedule to this Chapter; a defined membership; a designated Chair; a quorum; a defined reporting line; defined decision-making powers; and a defined frequency of meetings. No committee shall exercise authority beyond its stated mandate. No committee shall duplicate the mandate of another committee; where an apparent overlap arises, the committee whose mandate this Constitution states more specifically shall prevail, and the matter shall otherwise be referred to the body each committee reports to for resolution.
+**Article 82 — General provisions.** There shall be seven permanent standing committees of the Board, established directly by this Constitution, and an enabling provision for Ad-hoc Committees. Every standing committee shall have: a constitutional mandate, stated in the Schedule to this Chapter; a defined membership; a designated Chair, who shall be a Governor; a quorum; a defined reporting line; defined decision-making powers; and a defined frequency of meetings. No committee shall exercise authority beyond its stated mandate. No committee shall duplicate the mandate of another; where an apparent overlap arises, the committee whose mandate this Constitution states more specifically shall prevail, and the matter shall otherwise be referred to the Board for resolution.
 
-**Article 83.** The following Schedule of Committees forms part of this Constitution.
+**Article 83.** The following Schedule of Standing Committees forms part of this Constitution. No further standing committee shall be created except by constitutional amendment under Chapter XVIII; a matter not falling within one of the seven shall be addressed by an Ad-hoc Committee under Article 83B, not by expanding a standing committee's mandate beyond what this Schedule states.
 
-### Schedule of Board Committees
-
-| Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
-|---|---|---|---|---|---|---|---|
-| Finance Committee | Budget preparation, financial policy, financial performance oversight | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends to Board; no independent spending authority | Quarterly |
-| Governance & Ethics Committee | Constitutional compliance, governor conduct, ethics, conflicts of interest | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends; certifies constitutional amendments under Article 114 | Quarterly |
-| Nominations & Remuneration Committee | Governor and CEO nominations, succession readiness, senior remuneration | Not fewer than 3 Governors, excluding the Founder & CEO on matters of CEO remuneration | Governor appointed by the Board | Majority of members | Board | Recommends; binding only as to process, not outcome | Twice yearly, and on any vacancy |
-| Audit & Risk Committee | Internal controls, external audit oversight, institutional risk register | Not fewer than 3 Governors, none holding an EMT role | Governor appointed by the Board | Majority of members | Board | Recommends; may require EMT written response within 30 days | Quarterly |
-| Academic Excellence Committee | Strategic academic outcomes review, curriculum standards oversight | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends to Board and Academic Council | Twice yearly |
-| Development Committee | Institutional growth strategy, fundraising strategy, capital planning | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends | Twice yearly |
-
-### Schedule of Executive Management Committees
+### Schedule of Standing Committees
 
 | Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
 |---|---|---|---|---|---|---|---|
-| Admissions & Enrolment Committee | Cross-institutional admissions policy and pipeline oversight | Registrar, Admissions Officer, one Head per Constituent Institution | Registrar | Majority of members | EMT | Recommends; approves individual admissions per existing policy | Termly |
-| Student Discipline Committee | Discipline policy and serious-case review, Royal College | Vice Principal (Administration), two educators, Student Affairs | Vice Principal (Administration) | Majority of members | Principal, then EMT | Decides on cases referred; policy recommendations to EMT | As required, not less than termly |
-| Health and Safety Committee | Institution-wide health, safety, and incident reporting | Facilities/operations leads from each Constituent Institution, Student Affairs | Appointed by EMT | Majority of members | EMT | Decides on operational safety matters; recommends policy | Termly |
-| Complaints Committee | Formal written complaints from parents, staff, or the public | Three Governors | Appointed by the Board | All three members | Board | Decides on individual complaints | As required |
-| Safeguarding Committee | See Chapter XII in full | See Chapter XII | Designated Safeguarding Lead | Majority of members | Founder & CEO and Board | See Chapter XII | Monthly, and immediately on any disclosure |
-| Scholarship & Financial Aid Committee | Scholarship and financial-aid policy and awards | Sultan Hanafi Foundation, Bursary, one EMT member | Head of the Sultan Hanafi Foundation | Majority of members | EMT | Decides on individual awards within approved budget | Termly |
-| ICT & Digital Governance Committee | Data protection, acceptable use compliance, digital learning strategy | ICT, Legal & Compliance, Digital Learning & Innovation | Head of ICT | Majority of members | EMT | Recommends | Quarterly |
+| Academic Committee | Academic policy; curriculum; teaching and learning; assessment; academic standards; quality assurance; school improvement | Not fewer than 3 Governors, with the Vice Principal (Academics) and one Head per Constituent Institution attending as non-voting advisers | Governor appointed by the Board | Majority of voting members | Board | Approves academic policy recommended by the Academic Council (Chapter VI); may require the Academic Council to reconsider a matter once, with written reasons | Twice yearly, and before each academic year begins |
+| Finance, Audit & Risk Committee | Budget; financial oversight; internal audit; procurement oversight; risk management; investments; financial accountability | Not fewer than 3 Governors, none holding an EMT role | Governor appointed by the Board | Majority of members | Board | Recommends budget and financial policy to Board; independently reviews internal controls and the institutional risk register; may require EMT written response within 30 days; no independent spending authority | Quarterly |
+| Safeguarding Committee | Child protection; student welfare; staff safeguarding; safety policies (including institution-wide health and safety); compliance; wellbeing | As set out in Chapter XII | Designated Safeguarding Lead, per Article 86 | Per Article 91 | Founder & CEO and Board, per Chapter XII | As set out in Chapter XII, including the power in Article 88(b) | Monthly, and immediately on any disclosure |
+| Disciplinary Committee | Student discipline (serious and appealed cases); staff discipline; governor conduct; ethics; code of conduct; due process; formal complaints from parents, staff, or the public | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Decides serious and appealed disciplinary and complaint matters; recommends conduct/ethics findings on a Governor to the Board for decision under Article 33; owns institution-wide discipline and complaints policy | As required, not less than termly |
+| Media & Advertising Committee | Branding; public relations; media; publications; the website; photography; social media; institutional publicity; corporate identity | Not fewer than 3 Governors, with the Communications and Public Affairs office heads attending as non-voting advisers | Governor appointed by the Board | Majority of voting members | Board | Approves institutional branding and publicity policy; oversees the Communications and Public Affairs offices' public-facing output | Quarterly |
+| Sports Committee | Sports; athletics; physical education; inter-house competitions; external competitions | Not fewer than 3 Governors, with physical-education staff and student representatives attending as non-voting advisers | Governor appointed by the Board | Majority of voting members | Board | Approves sporting programme and competition policy | Termly |
+| Social & Welfare Committee | Student welfare; staff welfare; community service; charity; school social activities | Not fewer than 3 Governors, with Student Affairs staff and student representatives attending as non-voting advisers | Governor appointed by the Board | Majority of voting members | Board | Approves welfare and community-engagement programme policy | Termly |
 
-### Schedule of Academic Committees
+**Article 83A — Matters folded into a standing committee's mandate, stated for clarity.** For the avoidance of doubt: examination standards and results integrity fall within the Academic Committee's mandate ("assessment"; "academic standards"); scholarship and financial-aid policy, and oversight of the Institutional Advancement Office where established under Article 74, fall within the Finance, Audit & Risk Committee's mandate ("investments"; "financial accountability"); the Health and Safety Committee formerly recommended in earlier drafting of this Constitution is consolidated into the Safeguarding Committee's mandate and ceases to be a separate body; the Complaints Committee formerly recommended is consolidated into the Disciplinary Committee's mandate and ceases to be a separate body.
 
-| Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
-|---|---|---|---|---|---|---|---|
-| Academic Committee | Curriculum working matters, academic policy implementation | Heads of Department, educator representatives | Vice Principal (Academics) | Majority of members | Academic Council | Recommends | Termly |
-| Da'wah Committee | Institutional Da'wah and outreach activity | Staff and student representatives, coordinated under the Ra'ees's authority | Appointed under the Ra'ees's authority | Majority of members | Ra'ees, then Academic Council | Decides on programme matters within approved policy | Termly |
-| Sports Committee | Co-curricular sport and physical education activity | Physical education staff, student representatives | Appointed by EMT | Majority of members | Student Affairs | Decides on programme matters | Termly |
-| Academic Research & Innovation Committee | Research direction, pedagogical innovation | Head of Research & Development, Digital Learning & Innovation, Heads of Department | Head, Research & Development | Majority of members | Academic Council | Recommends | Twice yearly |
-| Social & Welfare Committee | Student welfare events and pastoral activity, alongside Student Affairs | Staff and student representatives | Appointed by EMT | Majority of members | Student Affairs | Decides on programme matters | Termly |
-| Examinations Board | Examination standards, results integrity, assessment oversight | Examinations Office, Heads of Department, one representative per Constituent Institution | Head of Examinations | Majority of members | Academic Council | Decides on examination administration; recommends policy | Termly, and before every examination cycle |
+**Article 83B — Ad-hoc Committees.** The Board or the Founder & CEO may establish an Ad-hoc Committee whenever a special assignment, investigation, project, event, or institutional matter requires temporary attention beyond the mandate of a standing committee. An Ad-hoc Committee shall be established by written instrument stating its specific assignment, its membership, and its expiry, and shall be recorded in the Authority Register under Article 13A. Examples include a Constitutional Review Committee, an Accreditation Committee, a Recruitment Committee, a Scholarship Selection Committee, a Building Project Committee, an Anniversary Planning Committee, an Investigation Committee, and a Strategic Planning Committee; this list is not exhaustive. An Ad-hoc Committee automatically dissolves on completion of its stated assignment, or on the expiry stated in its instrument of establishment, whichever is earlier, unless renewed by the authority that established it.
+
+**Article 83C — Da'wah.** Da'wah is not the mandate of any standing committee of the Board. It is constitutionally placed under the Ra'ees's authority (Article 65), who may establish a Da'wah Committee or working group whenever required, reporting to the Ra'ees and not to the Board.
+
+**Article 83D — Academic Research and Innovation.** Academic research and pedagogical innovation are not the mandate of a standing committee. They fall within the Academic Committee's mandate where they concern academic policy, and may otherwise be addressed by an Ad-hoc Committee under Article 83B where a specific research or innovation initiative requires temporary, dedicated attention.
 
 ---
 
@@ -335,7 +321,7 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 **Article 92 — Confidentiality.** Proceedings and records of the Safeguarding Committee are confidential to its members and to the Founder & CEO and Board on report under Article 88(d), save where disclosure is required by law or by the safety of a student.
 
-**Article 93 — Review.** The Board's Academic Excellence Committee and Audit & Risk Committee shall jointly review the Safeguarding Committee's operation not less than once yearly, and shall report to the Board on the Institution's safeguarding compliance.
+**Article 93 — Review.** The Finance, Audit & Risk Committee and the Disciplinary Committee shall jointly review the Safeguarding Committee's operation not less than once yearly, and shall report to the Board on the Institution's safeguarding compliance.
 
 ---
 
@@ -360,25 +346,25 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 ## CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY
 
-**Article 96 — Abuse of authority.** No office holder shall exercise authority for personal benefit or beyond the scope this Constitution or a lawful delegation grants. Any Governor, member of the EMT, or office holder who does so is subject to removal under the applicable provision of Chapters III, IV, or XIII, and to referral to the Governance & Ethics Committee.
+**Article 96 — Abuse of authority.** No office holder shall exercise authority for personal benefit or beyond the scope this Constitution or a lawful delegation grants. Any Governor, member of the EMT, or office holder who does so is subject to removal under the applicable provision of Chapters III, IV, or XIII, and to referral to the Disciplinary Committee.
 
 **Article 97 — Political interference.** The Institution shall not be affiliated with, and no office holder shall use institutional authority to advance, any political party or partisan political cause. Nothing in this Article prevents the Institution's lawful engagement with government or regulatory bodies through the Public Affairs office under Article 73.
 
 **Article 98 — Religious extremism.** No person shall use any office or platform within the Institution to promote sectarian division, extremism, or interpretation of Islamic teaching inconsistent with the Institution's founding character as determined by the Founder & CEO under Article 16 and the Religious Affairs Coordination Council under Article 69. Conduct in breach of this Article is grounds for immediate removal notwithstanding any other provision of this Constitution.
 
-**Article 99 — Financial misconduct.** No office holder shall misappropriate, misapply, or conceal institutional funds. Every financial transaction above a threshold fixed by the Board's Finance Committee shall require dual authorisation. The Audit & Risk Committee shall have unrestricted access to financial records for this purpose.
+**Article 99 — Financial misconduct.** No office holder shall misappropriate, misapply, or conceal institutional funds. Every financial transaction above a threshold fixed by the Finance, Audit & Risk Committee shall require dual authorisation. That Committee shall have unrestricted access to financial records for this purpose.
 
-**Article 100 — Conflicts of interest.** Every Governor, EMT member, and committee member shall declare, in writing, any material personal, financial, or family interest in a matter before the body considering it, and shall withdraw from the discussion and any vote on that matter. A standing register of declared interests shall be maintained by the Governance & Ethics Committee.
+**Article 100 — Conflicts of interest.** Every Governor, EMT member, and committee member shall declare, in writing, any material personal, financial, or family interest in a matter before the body considering it, and shall withdraw from the discussion and any vote on that matter. A standing register of declared interests shall be maintained by the Disciplinary Committee.
 
 ---
 
 ## CHAPTER XV — FINANCIAL GOVERNANCE
 
-**Article 101.** The Institution's financial year, budget process, and external audit arrangements shall be as determined by Board resolution on the recommendation of the Finance Committee, and reviewed not less than once every three years.
+**Article 101.** The Institution's financial year, budget process, and external audit arrangements shall be as determined by Board resolution on the recommendation of the Finance, Audit & Risk Committee, and reviewed not less than once every three years.
 
 **Article 102.** No expenditure outside the approved annual budget above the threshold fixed under Article 14 may be incurred without Board approval under Article 41(a).
 
-**Article 103.** The Institution's external auditor shall be independent of the Institution and of every Governor, and shall report directly to the Audit & Risk Committee, not to the Founder & CEO or the EMT.
+**Article 103.** The Institution's external auditor shall be independent of the Institution and of every Governor, and shall report directly to the Finance, Audit & Risk Committee, not to the Founder & CEO or the EMT.
 
 ---
 
@@ -391,11 +377,11 @@ No member of the EMT other than the Chair holds authority over another member; m
 (b) incapacity certified under Article 22 and confirmed by Board resolution as permanent; or
 (c) the Founder's voluntary full retirement declared in writing to the Board.
 
-**Article 106.** Where no nomination under Article 104 exists at the time an event under Article 105 occurs, the Board, acting through the Nominations & Remuneration Committee, shall appoint an interim Founder & CEO within thirty days and shall conduct a full search for a permanent successor within one year.
+**Article 106.** Where no nomination under Article 104 exists at the time an event under Article 105 occurs, the Board, acting through an Ad-hoc Nominations Committee convened under Chapter XI, shall appoint an interim Founder & CEO within thirty days and shall conduct a full search for a permanent successor within one year.
 
 **Article 107.** From the occurrence of an event under Article 105, the Board's discretion to amend Chapter II under Article 114 no longer requires the original Founder's individual consent, the reversionary condition having occurred.
 
-**Article 108.** Succession to every other constitutional office proceeds under the ordinary appointment provisions of Chapter XIII. The Nominations & Remuneration Committee shall monitor succession readiness for every constitutional office, without itself making the appointment.
+**Article 108.** Succession to every other constitutional office proceeds under the ordinary appointment provisions of Chapter XIII. The Board itself shall monitor succession readiness for every constitutional office at each ordinary meeting, and may convene an Ad-hoc Nominations Committee under Chapter XI where an actual vacancy or search requires dedicated attention, without that Committee itself making the appointment.
 
 ---
 
@@ -403,7 +389,7 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 **Article 109 — Dissolution.** The Institution shall not be dissolved save by a resolution of not fewer than three-quarters of the Governors then in office, with the Founder & CEO's consent while the Founder holds that office, and subject to any applicable law governing the Institution's chosen legal form. On dissolution, any remaining assets shall be applied to an educational or charitable purpose consistent with the Institution's objects, as the Board resolves.
 
-**Article 110 — Merger.** The Institution may merge with, or admit as a further Constituent Institution, another educational institution only by Board resolution under Article 109's voting threshold, and only where the Governance & Ethics Committee certifies the merger consistent with this Constitution's objects and religious character.
+**Article 110 — Merger.** The Institution may merge with, or admit as a further Constituent Institution, another educational institution only by Board resolution under Article 109's voting threshold, and only where the Board, by separate resolution preceding that vote, certifies the merger consistent with this Constitution's objects and religious character.
 
 **Article 111 — Institutional restructuring.** Any restructuring materially affecting the governance architecture in Chapters II–XIV requires Board approval under Article 41 and, where it amounts to constitutional amendment, compliance with Chapter XIX.
 
@@ -422,11 +408,11 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 **Article 115.** The consent requirement in Article 114(c) lapses automatically on the occurrence of an event under Article 105.
 
-**Article 116.** The Governance & Ethics Committee shall certify, before any vote under Article 114, whether a proposed amendment outside Chapter II nonetheless has the effect of altering Chapter II, in which event Article 114(c) applies to it.
+**Article 116.** The Board shall determine, by resolution, before any vote under Article 114, whether a proposed amendment outside Chapter II nonetheless has the effect of altering Chapter II, in which event Article 114(c) applies to it.
 
 **Article 117 — Constitutional review.** This Constitution shall be reviewed by the Board not less than once every five years, whether or not any amendment is proposed, to confirm its continued fitness for the Institution's governance.
 
-**Article 118 — Constitutional interpretation.** Where a question of interpretation of this Constitution arises and is not resolved by its own terms, the Governance & Ethics Committee shall give an advisory opinion to the Board, which shall be binding unless the Board resolves otherwise by the majority in Article 114(b).
+**Article 118 — Constitutional interpretation.** Where a question of interpretation of this Constitution arises and is not resolved by its own terms, the Board shall resolve the question directly by the majority in Article 114(b).
 
 **Article 119 — Constitutional supremacy, restated.** No office, policy, or practice of the Institution, however long-established, shall be read to override this Constitution. Practice inconsistent with this Constitution is void to the extent of the inconsistency from the date this Constitution is adopted.
 
@@ -446,9 +432,9 @@ No member of the EMT other than the Chair holds authority over another member; m
 
 **Schedule A — Constitutional Organogram.** Governing (Board of Governors, and its Committees under Chapter XI, Schedule of Board Committees) → Executive (Founder & CEO, then the EMT under Chapter IV) → three parallel branches: Academic (Academic Council, Chapter VI; Heads of Department, Chapter IX), Administrative (offices under Chapter VIII), and Religious (Mudeer and Ra'ees, Chapter VII) → teaching and operational staff. Student Leadership (Chapter X) reports, for supervision only, to Student Affairs and the relevant Constituent Institution Head, outside this structure.
 
-**Schedule B — Reporting Lines.** As set out in Schedule A, and in the "Reports to" column of each committee entry in Chapter XI's three Schedules.
+**Schedule B — Reporting Lines.** As set out in Schedule A, and in the "Reports to" column of each committee entry in the Schedule of Standing Committees, Chapter XI.
 
-**Schedule C — Committee Reporting Hierarchy.** The three Schedules to Chapter XI, in full.
+**Schedule C — Committee Reporting Hierarchy.** The Schedule of Standing Committees to Chapter XI, in full, together with the Ad-hoc Committee mechanism in Article 83B.
 
 **Schedule D — Appointment Matrix.** Chapter XIII, Article 94, in full.
 
@@ -461,6 +447,8 @@ No member of the EMT other than the Chair holds authority over another member; m
 ## DRAFTING NOTES — NOT PART OF THE CONSTITUTION
 
 *These notes carry no constitutional or legal effect. They exist solely to record, for the Board's benefit, every judgment this drafter made beyond the Founder's own fixed decisions, and to flag one internal cross-reference that needs the Board's attention before adoption.*
+
+0. **The seven-standing-committee structure is the Founder's own final design, adopted in full.** An earlier version of this Constitution set out nineteen committees across three tiers (Board, Executive Management, Academic). The Founder replaced that structure with seven permanent Board standing committees — Academic; Finance, Audit & Risk; Safeguarding; Disciplinary; Media & Advertising; Sports; Social & Welfare — plus an Ad-hoc Committee mechanism (Article 83B), and directed that Da'wah sit under the Ra'ees's own authority rather than as a Board committee, and that Academic Research & Innovation not be a standing body at all. Chapter XI now reflects that design exactly. Consolidating from nineteen bodies to seven required folding several functions into the surviving committees, recorded transparently rather than silently: the former Governance & Ethics Committee's conduct/ethics remit moved into the Disciplinary Committee, and its narrow constitutional-certification functions (Articles 116, 118) moved to the Board acting directly by resolution, since a single procedural certification did not, on reflection, need a dedicated committee once ethics had a clear home elsewhere; the former Nominations & Remuneration Committee's function moved to the Board monitoring succession readiness directly (Article 108) with an Ad-hoc Nominations Committee convened only when an actual search is under way (Articles 28(b), 106); the former Academic Excellence Committee and Development Committee's functions folded into the Academic Committee and the Finance, Audit & Risk Committee respectively; the former Health and Safety Committee and Complaints Committee — both real, already-adopted bodies referenced in earlier drafting — are consolidated into Safeguarding and Disciplinary respectively, recorded explicitly in Article 83A so nothing is silently dropped; and the former Admissions & Enrolment, Scholarship & Financial Aid, ICT & Digital Governance, and Examinations Board committees are now handled either within the Academic Committee's or Finance, Audit & Risk Committee's mandate, or as ordinary EMT-level administrative coordination not requiring standing-committee status at all. Every standing committee is now chaired by a Governor, not an EMT or office-holder member, correcting an inconsistency in the earlier draft (Article 53 previously had the Vice Principal (Academics) chair a Board committee, which blurred the governing/executive separation Part III itself insists on) — Article 53 and 54 have been rewritten accordingly, with the Vice Principals now attending or deciding operationally, never chairing a Board body.
 
 1. **Numbers you should treat as recommended defaults, not fixed facts.** Board size (5–11), Governor term (4 years, renewable once), meeting frequencies, notice periods, and financial thresholds are this drafter's professional recommendations, calibrated to institutions of SHRS's scale, not facts recovered from any prior SHRS record. The Board should adopt, adjust, or replace every number in Chapters III, IV, and XI freely — nothing about the *structure* of this Constitution depends on the specific figures chosen.
 
