@@ -1128,6 +1128,40 @@ body.portal-body[data-atmosphere="teacher"]{--atmos:var(--emerald);--atmos-brigh
 body.portal-body[data-atmosphere="parent"]{--atmos:var(--rosewood);--atmos-bright:var(--rosewood-bright);--atmos-soft:rgba(140,74,87,0.14);}
 body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-bright:var(--sapphire-bright);--atmos-soft:rgba(63,76,140,0.14);}
 
+/* Prestige Foundation Phase 1: extending the atmosphere system from the
+   ten gateway entry points above to every remaining real office portal
+   (Founder Override Directive — "no static portals," "every office").
+   Grouped by real institutional layer rather than each office inventing
+   its own hue — Board of Trustees, Management Council, and the five
+   Board committees genuinely ARE one governance wing (see sql/schema.sql
+   office_kind/parent_office_id), so they share one dark charcoal-gold
+   identity and differ by icon/label, exactly as one real building with
+   several rooms would. Academic-layer and Digital-layer offices reuse
+   Registrar's/Student's already-established hues for the same reason.
+   Executive reuses "founder" outright — Executive IS the Founder & CEO's
+   own office record, not a second identity. */
+body.portal-body[data-atmosphere="board-of-trustees"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
+body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:#C7B688;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-finance"]{--atmos:var(--charcoal-deep);--atmos-bright:#B99B5A;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-governance"]{--atmos:var(--charcoal-deep);--atmos-bright:#D9C48A;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-audit"]{--atmos:var(--charcoal-deep);--atmos-bright:#A8926A;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-academic-excellence"]{--atmos:var(--charcoal-deep);--atmos-bright:#C9A85F;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="committee-development"]{--atmos:var(--charcoal-deep);--atmos-bright:#CDB37A;--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="academic-affairs"]{--atmos:var(--oxford-navy);--atmos-bright:#8CA8D4;--atmos-soft:rgba(65,97,140,0.13);}
+body.portal-body[data-atmosphere="examinations"]{--atmos:var(--oxford-navy);--atmos-bright:#6D8FBD;--atmos-soft:rgba(65,97,140,0.12);}
+body.portal-body[data-atmosphere="admissions"]{--atmos:var(--oxford-navy);--atmos-bright:#9BB4DC;--atmos-soft:rgba(65,97,140,0.15);}
+body.portal-body[data-atmosphere="digital-services"]{--atmos:var(--sapphire);--atmos-bright:#98A6E0;--atmos-soft:rgba(63,76,140,0.14);}
+body.portal-body[data-atmosphere="digital-learning"]{--atmos:var(--sapphire);--atmos-bright:#7C89C7;--atmos-soft:rgba(63,76,140,0.12);}
+body.portal-body[data-atmosphere="digital-identity"]{--atmos:var(--sapphire);--atmos-bright:#AAB4E8;--atmos-soft:rgba(63,76,140,0.15);}
+body.portal-body[data-atmosphere="knowledge-base"]{--atmos:var(--sapphire);--atmos-bright:#6774B0;--atmos-soft:rgba(63,76,140,0.11);}
+body.portal-body[data-atmosphere="hr"]{--atmos:var(--rosewood);--atmos-bright:#D9A2AA;--atmos-soft:rgba(140,74,87,0.13);}
+body.portal-body[data-atmosphere="alumni"]{--atmos:var(--rosewood);--atmos-bright:var(--rosewood-bright);--atmos-soft:rgba(140,74,87,0.12);}
+body.portal-body[data-atmosphere="student-affairs"]{--atmos:var(--rosewood);--atmos-bright:#E0B4BB;--atmos-soft:rgba(140,74,87,0.15);}
+body.portal-body[data-atmosphere="communications"]{--atmos:var(--rosewood);--atmos-bright:#B97985;--atmos-soft:rgba(140,74,87,0.11);}
+body.portal-body[data-atmosphere="foundation"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.13);}
+body.portal-body[data-atmosphere="library"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.12);}
+body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-bright:var(--gold);--atmos-soft:rgba(124,84,48,0.15);}
+
 /* Topbar, tab, and card-header accents pick up the atmosphere colour
    automatically wherever it's set; every one of these falls back to
    the site's default gold/navy when no atmosphere attribute is
@@ -1209,6 +1243,49 @@ body.portal-body[data-atmosphere="parent"]::before{
 }
 body.portal-body[data-atmosphere="student"]::before{
   background-image:repeating-linear-gradient(60deg, var(--atmos) 0 1px, transparent 1px 40px);
+  opacity:0.04;
+}
+/* Prestige Foundation Phase 1 clusters — one pattern per real
+   institutional layer (Governance wing, Academic layer, Digital layer,
+   People/Community layer, Heritage/Records layer), not 22 bespoke
+   motifs: a genuine wing of a real building has one architectural
+   language across its rooms, not a different one per door. */
+body.portal-body[data-atmosphere="board-of-trustees"]::before,
+body.portal-body[data-atmosphere="management-council"]::before,
+body.portal-body[data-atmosphere="committee-finance"]::before,
+body.portal-body[data-atmosphere="committee-governance"]::before,
+body.portal-body[data-atmosphere="committee-audit"]::before,
+body.portal-body[data-atmosphere="committee-academic-excellence"]::before,
+body.portal-body[data-atmosphere="committee-development"]::before{
+  background-image:
+    repeating-linear-gradient(0deg, var(--atmos-bright) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, var(--atmos-bright) 0 1px, transparent 1px 24px);
+  opacity:0.05;
+}
+body.portal-body[data-atmosphere="academic-affairs"]::before,
+body.portal-body[data-atmosphere="examinations"]::before,
+body.portal-body[data-atmosphere="admissions"]::before{
+  background-image:repeating-linear-gradient(180deg, var(--atmos) 0 1px, transparent 1px 22px);
+  opacity:0.05;
+}
+body.portal-body[data-atmosphere="digital-services"]::before,
+body.portal-body[data-atmosphere="digital-learning"]::before,
+body.portal-body[data-atmosphere="digital-identity"]::before,
+body.portal-body[data-atmosphere="knowledge-base"]::before{
+  background-image:radial-gradient(var(--atmos) 1px, transparent 1.2px);
+  background-size:26px 26px;opacity:0.055;
+}
+body.portal-body[data-atmosphere="hr"]::before,
+body.portal-body[data-atmosphere="alumni"]::before,
+body.portal-body[data-atmosphere="student-affairs"]::before,
+body.portal-body[data-atmosphere="communications"]::before{
+  background-image:repeating-radial-gradient(circle at 50% 0%, transparent 0 36px, var(--atmos) 37px, transparent 38px 72px);
+  opacity:0.035;
+}
+body.portal-body[data-atmosphere="foundation"]::before,
+body.portal-body[data-atmosphere="library"]::before,
+body.portal-body[data-atmosphere="certificates"]::before{
+  background-image:repeating-linear-gradient(0deg, var(--atmos) 0 1px, transparent 1px 30px);
   opacity:0.04;
 }
 @media (prefers-reduced-motion:reduce){
