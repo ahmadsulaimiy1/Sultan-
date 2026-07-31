@@ -71,6 +71,45 @@ body.portal-body > *{position:relative;z-index:1;}
   background:var(--gold-bright);padding:3px 9px;border-radius:2px;font-weight:700;
 }
 
+/* Royal Institutional Command Shell — the topbar's calendar quick-link
+   (js/portal-shell.js). Deliberately the ONLY new topbar icon added by
+   the shell script: a real, working Global Search / Notifications /
+   Messages system doesn't exist across every dashboard type yet (unlike
+   Calendar, which is one honest link to the already-built public
+   Academic Calendar) — see js/portal-shell.js's own header comment for
+   why those are consciously deferred rather than shipped as inert icons. */
+.portal-topbar-calendar{
+  display:inline-flex;align-items:center;gap:6px;color:var(--portal-heading);text-decoration:none;
+  font-size:0.78rem;font-family:'Cinzel','Amiri',serif;padding:6px 10px;border:1px solid var(--line);
+  transition:border-color .2s ease,color .2s ease;
+}
+.portal-topbar-calendar:hover{border-color:var(--gold-bright,var(--gold));color:var(--gold-bright,var(--gold));}
+.portal-topbar-calendar svg{width:15px;height:15px;flex:0 0 auto;}
+
+/* Royal Institutional Command Shell — the standing footer bar every
+   portal page now carries (js/portal-shell.js injects it once per
+   page load; CSS-only styling lives here so it matches whichever
+   .portal-body theme/atmosphere is active). Real content only: the
+   three verification flows that actually exist, a computed academic
+   year (August is this institution's real school-year boundary — see
+   the Aug 2026 Graduation Ceremony marking the end of 2025/2026), the
+   real Data Protection & Privacy Policy (IT-02) anchor, and the real
+   admissions contact channels already used sitewide. */
+.portal-shell-footer{
+  margin-top:auto;padding:22px 28px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;
+  font-size:0.76rem;color:var(--ink-soft);background:var(--portal-card);
+}
+.portal-shell-footer-seal{width:22px;height:22px;object-fit:contain;opacity:0.85;flex:0 0 auto;}
+.portal-shell-footer-links{display:flex;flex-wrap:wrap;gap:4px 14px;}
+.portal-shell-footer-links a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;}
+.portal-shell-footer-links a:hover{color:var(--gold-bright,var(--gold));}
+.portal-shell-footer-meta{margin-inline-start:auto;display:flex;flex-wrap:wrap;gap:4px 14px;opacity:0.85;}
+@media (max-width:760px){
+  .portal-shell-footer{padding:18px 16px;}
+  .portal-shell-footer-meta{margin-inline-start:0;}
+}
+
 /* ============================================================
    Premium Auth Shell — split-screen brand pane + form column,
    used by login/register/forgot-password/set-password/verify.
