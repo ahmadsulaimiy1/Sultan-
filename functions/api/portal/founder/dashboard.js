@@ -35,6 +35,7 @@ import { readStaffSessionFromRequest, timingSafeEqualString } from '../../../_li
 import { hasPermissionFor } from '../../../_lib/permissions.js';
 import { json } from '../../../_lib/http.js';
 import { HIFZ_STAGES } from '../../../_lib/hifz.js';
+import { logStaffEvent } from '../../../_lib/audit.js';
 
 const SAMPLE_FILTER = `is_sample_data = false`;
 
@@ -73,6 +74,29 @@ export async function onRequestGet({ request, env }) {
 
   if (!authMethod) {
     return json({ error: 'Not authorised. Sign in with an Executive-role staff account, or supply a valid Founder token.' }, 403);
+  }
+
+  // Strategic Institutional Review (docs/shrs-strategic-institutional-review-2026.md,
+  // Part 3 / Tier A #2): the PORTAL_FOUNDER_TOKEN fallback above is a
+  // deliberate, still-necessary bootstrap path (no real EXE staff
+  // account exists in any reachable environment yet), so it isn't
+  // removed here. What was a real gap is that every token-based view of
+  // executive-level institutional data was completely silent — no
+  // record of who used the shared secret, or when. Every bearer_token
+  // access is now written to the same staff_audit_log a real EXE staff
+  // member's sensitive actions go through, so there is at least an
+  // accountable trail while this fallback remains the only working
+  // access path — closing the "unaudited shortcut" risk without
+  // breaking the one route that still works.
+  if (authMethod === 'bearer_token') {
+    await logStaffEvent(sql, {
+      actorStaffId: null,
+      eventType: 'sensitive_action',
+      targetType: 'founder_dashboard',
+      targetId: null,
+      reason: 'Founder Dashboard viewed via PORTAL_FOUNDER_TOKEN bearer fallback, not a named staff session',
+      metadata: { authMethod: 'bearer_token' },
+    });
   }
 
   try {
