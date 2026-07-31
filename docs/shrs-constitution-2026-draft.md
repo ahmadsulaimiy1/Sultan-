@@ -1,6 +1,6 @@
 # THE CONSTITUTION OF SULTAN HANAFI ROYAL SCHOOLS
 
-**Draft v4.0 — supersedes Draft v3.0 in full.**
+**Draft v4.1 — supersedes Draft v4.0 and Draft v3.0 in full.**
 
 **Status.** This is a draft constitutional instrument, prepared for adoption by the Board of Governors. It is not yet effective. No provision of this draft is currently in force, and nothing in it alters the live administrative system, any published page, or Policy GV-01 in its present, not-yet-effective form. Upon adoption by the Board of Governors under the amendment procedure in Chapter XVIII (Article 114), this draft becomes the substantive content of GV-01 v3.0.
 
