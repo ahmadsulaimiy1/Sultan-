@@ -1,315 +1,473 @@
-# The Constitution of Sultan Hanafi Royal Schools — Draft v3.0
+# THE CONSTITUTION OF SULTAN HANAFI ROYAL SCHOOLS
 
-**Status: DRAFT, prepared for Board consideration. Not yet effective. Nothing in this document is currently in force**, and nothing here changes the live system, any published page, or Policy GV-01 in its current, still-not-effective v2.0 form. This draft is written to become the substantive content of GV-01 v3.0 upon Board adoption — it does not compete with GV-01, it is the fuller version of it that GV-01's own text (§7.1) already anticipated but had not yet drafted.
+**Draft v4.0 — supersedes Draft v3.0 in full.**
 
-**How the Founder's fixed decisions were handled.** The Founder supplied seven governance decisions as constitutional facts, not proposals, and instructed me not to alter them without a compelling reason stated in the open. I have not altered any of the seven. Where I recommend a *refinement* — a coordination mechanism, a role-code split in the Permission Engine, a name for a capacity that didn't yet have one — I have flagged it explicitly as a refinement in service of the fixed decision, never as a substitute for it. Where the fixed decisions resolve an ambiguity I flagged in my earlier report (the Da'wah Committee's relationship to two Islamic-education Heads), I say so and close the loop.
+**Status.** This is a draft constitutional instrument, prepared for adoption by the Board of Governors. It is not yet effective. No provision of this draft is currently in force, and nothing in it alters the live administrative system, any published page, or Policy GV-01 in its present, not-yet-effective form. Upon adoption by the Board of Governors under the amendment procedure in Chapter XVIII (Article 114), this draft becomes the substantive content of GV-01 v3.0.
 
----
+**Naming.** This draft adopts, as fixed and final, the Founder's naming decisions: the supreme governing body is the **Board of Governors** (not "Board of Trustees," "Governing Council," or "Governing Board"); the executive leadership body is the **Executive Management Team ("EMT")** (not "Executive Council," "Senior Leadership Team," or "Executive Committee," and not "Management Council" as in the superseded v3.0 draft). Every reference to either body in this instrument uses these names exclusively.
 
-## PART I — Foundational Principles
-
-**Article 1 — Name.** The institution's full constitutional name is **Sultan Hanafi Royal Schools** ("SHRS" or "the Institution"), comprising four constituent institutions: Sultan Hanafi Royal College, Sultan Hanafi Qur'an College, Sultan Hanafi School of Islamic & Arabic Studies, and Sultan Hanafi Nursery & Primary School.
-
-**Article 2 — Legal Status.** This Constitution does not itself create SHRS's legal corporate form (that determination — company limited by guarantee, trust, or foundation — is a legal-registration matter for the Founder and the Institution's solicitors, outside this document's scope, consistent with GV-01 v2.0 §3's own disclaimer). This Constitution governs SHRS's *internal* governance regardless of which external legal form is ultimately chosen, and should be read alongside, not instead of, that legal registration.
-
-**Article 3 — Vision, Mission, Motto.** [Reserved — to be drawn from SHRS's existing, publicly-stated vision/mission content rather than re-authored here; this Constitution's role is to govern, not to re-write institutional identity copy that already exists and is out of scope for a governance document.]
-
-**Article 4 — Core Values.** Excellence, Integrity, Islamic character, Service, Accountability. [As above — reserved to existing institutional identity statements; a governance Constitution should adopt them by reference, not re-draft them.]
-
-**Article 5 — Institutional Philosophy.** SHRS is governed on the principle that authority is a trust (*amānah*), exercised for the benefit of students and the institution's mission, and constitutionally accountable — never personal, never permanent by default, and always traceable. This principle is the thread running through every Part below, including Part V's treatment of the Founder's own powers.
-
-**Article 6 — Objects of the Institution.** To provide, across four constituent institutions, an integrated education combining internationally recognised academic standards with authentic Islamic scholarship, from Nursery through Qur'anic higher study, under one coherent governance system.
-
-**Article 7 — Interpretation.** In this Constitution: "the Founder & CEO" means the single constitutional office defined in Article 8; "Institution" means SHRS as a whole; "constituent institution" means one of the four named in Article 1; "Office" means a constitutional position of delegated authority; "Board" means the Board of Trustees defined in Part IV.
+**A note on drafting method, kept separate from the Constitution itself.** From this point, the operative text below is written in constitutional drafting style — Articles, not explanatory prose. Every judgment call this drafter made beyond the Founder's fixed decisions is recorded in the **Drafting Notes** at the very end of this document, which are expressly **not** part of the Constitution and carry no legal effect. This separation exists so the constitutional text reads as a legal instrument, while the reasoning behind it remains available to the Board without cluttering the text itself.
 
 ---
 
-## PART II — Institutional Sovereignty
+## CHAPTER I — PRELIMINARY
 
-**Article 8.** This Constitution is the supreme governing instrument of Sultan Hanafi Royal Schools. Every office, council, committee, and role established under it derives its authority *from* it — no office holds authority independent of this Constitution, and no office may act beyond the powers this Constitution, or a lawful delegation made under it, grants.
+**Article 1.** This instrument is the Constitution of Sultan Hanafi Royal Schools ("the Institution" or "SHRS"), comprising four constituent institutions: Sultan Hanafi Royal College, Sultan Hanafi Qur'an College, Sultan Hanafi School of Islamic & Arabic Studies, and Sultan Hanafi Nursery & Primary School (each a "Constituent Institution").
 
-**Article 9.** Where any existing policy (the Staff Handbook, the Parent Handbook, any office-specific framework) conflicts with this Constitution, this Constitution prevails. Existing policies remain in force to the extent they do not conflict, and should be reconciled to this Constitution at their next scheduled review rather than repealed outright — consistent with GV-01 v2.0 §7.2's own "relationship to other documents" principle, which this Article restates and strengthens.
+**Article 2.** This Constitution is the supreme governing instrument of the Institution. Every office, council, committee, and function established under it derives its authority exclusively from it. No person and no office shall exercise authority the Institution has not granted by this Constitution or by a delegation lawfully made under it.
 
-**Article 10.** No natural person holds authority in their own right. Every person exercising authority under this Constitution does so as the holder of a constitutional office, and that authority passes to their successor in office, not to any individual permanently — with the single, explicit exception constitutionally reserved to the Founder & CEO in Part V, which is itself bounded and subject to succession.
+**Article 3.** Nothing in this Constitution determines the Institution's external legal corporate form. This Constitution governs internal governance irrespective of the external legal registration ultimately adopted.
 
----
+**Article 4.** In this Constitution, unless the context otherwise requires:
+(a) "the Board" means the Board of Governors;
+(b) "the Founder & CEO" means the office established by Chapter III;
+(c) "the EMT" means the Executive Management Team established by Chapter V;
+(d) "Governor" means a member of the Board of Governors;
+(e) "Constituent Institution" has the meaning given in Article 1;
+(f) "Office" means a constitutional position established by this Constitution;
+(g) "written" includes any durable electronic record retained in the Institution's Authority Register.
 
-## PART III — Governance Philosophy
+**Article 5.** Where any existing policy, handbook, or framework of the Institution conflicts with this Constitution, this Constitution prevails. Such instruments remain in force to the extent not inconsistent with this Constitution.
 
-SHRS's model is not borrowed wholesale from any one tradition; it is assembled deliberately from four, kept in explicit balance rather than left to default into the wrong one:
+**Article 6.** No natural person holds constitutional authority in their own personal right. Authority attaches to the Office; it passes to a successor in Office on lawful succession, subject only to the reserved powers of the Founder & CEO under Chapter III.
 
-**From Islamic governance:** authority as *amānah* (trust), *shūrā* (consultation) as a constitutional requirement rather than a courtesy (see Part IV's committee-consultation design and Part V's Founder-delegation rules), and — uniquely relevant here — the recognition that religious leadership (Part IV, §4.9–4.10) is not merely an administrative department but a distinct constitutional authority in its own right, coordinate with, not subordinate to, academic and executive authority.
-
-**From Commonwealth university governance (Oxford/Cambridge model):** the separation of *governing* authority (Council/Congregation — here, the Board of Trustees) from *executive* authority (Vice-Chancellor/Registrar — here, the Founder & CEO/Management Council) from *academic* authority (Faculty Boards — here, the Academic Council). Three tracks, not one ladder, is the single most important structural idea in this Constitution, and is why the draft hierarchy previously circulated (one ladder from Board down to Class Captain) was rejected in my earlier report and remains rejected here.
-
-**From corporate governance:** committee-based oversight (Part IX), conflict-of-interest and financial-accountability discipline (Part XI), and — critically — the discipline of *not* creating a body merely because a governance textbook lists it. Every organ recommended in Part IV and every committee in Part IX is justified individually; none is included for completeness.
-
-**From founder-led institution charters** (the pattern used by most founder-established universities, foundations, and schools worldwide, not a single named precedent): a founder's authority is real, substantial, and constitutionally protected during their tenure, but is never unbounded, is always subject to a written scope when delegated, and automatically converts to full Board discretion on the founder's death, incapacity, or voluntary full retirement. Part V is built entirely on this pattern.
-
-**On transparency, accountability, and continuity:** every appointment, delegation, and removal under this Constitution must be traceable (Part V, Article 19; this is not aspirational — it is already built and enforced in SHRS's administrative system, see Article 19's note); every office has a defined tenure and removal procedure (Part X); and Part XII exists specifically so that leadership transition is a designed event, not a crisis.
-
----
-
-## PART IV — Complete Governance Structure
-
-### 4.1 — Patron
-
-**Recommendation: not established at this time.** A ceremonial Patron (a senior public figure lending prestige and, occasionally, advocacy) is common at elite Commonwealth schools once an institution has multi-decade standing. Creating the office now, with no candidate and no defined constitutional weight, would be ornamental rather than functional — exactly the kind of addition Part III's corporate-governance principle warns against. Revisit this when SHRS has an alumni base and public profile that would make the office meaningful rather than aspirational.
-
-### 4.2 — Founder
-
-| | |
-|---|---|
-| **Purpose** | Founding authority and, per the Founder's fixed decision, permanently also the Chief Executive Officer (Article 11 below) |
-| **Powers** | Reserved powers under Part V, Article 15 |
-| **Composition** | One person |
-| **Tenure** | Life, or until voluntary full retirement |
-| **Appointment** | Self-constituted by founding; not appointed by any other office |
-| **Removal** | Not removable by any other office while living and capable, subject only to Article 15's own amendment procedure requiring the Founder's own consent |
-| **Reporting line** | None — see Article 11 |
-| **Voting powers** | Chairs no committee by default but may attend and speak at any Board or committee meeting |
-| **Constitutional limits** | Bound by Article 6's Objects and by Part V's own stated boundaries on delegation and emergency powers |
-
-### 4.3 — Board of Trustees
-
-| | |
-|---|---|
-| **Purpose** | Governing authority: stewardship of mission, appointment/accountability of the CEO, approval of policy and budget. Does not manage operations. |
-| **Powers** | Constitutional amendment (Part XIII), budget approval, CEO accountability, policy ratification |
-| **Composition** | Trustees appointed per Article 20 (Part X); the Founder & CEO sits as a Board member (per existing, real practice — four Board members currently recorded) but does not chair by default, to preserve the separation of governing from executive function |
-| **Tenure** | Per Article 20 |
-| **Appointment/Removal** | Part X |
-| **Reporting line** | None (apex of governing authority) |
-| **Voting powers** | One vote per trustee on Board resolutions |
-| **Constitutional limits** | Must not direct operational management; acts through its six standing committees (Part IX §9.1) and through resolutions to the CEO, never by individual trustees instructing staff |
-
-**Refinement recommended, with reason:** a **Governing Council** as a *separate* body above or beside the Board was suggested as a candidate organ. I recommend against it. SHRS's Board of Trustees already performs the governing-council function; adding a second, differently-named body with overlapping purpose would blur exactly the accountability line Part III's corporate-governance principle exists to protect. One governing body, clearly empowered, is stronger than two governing bodies with unclear seniority.
-
-### 4.4 — Founder & Chief Executive Officer (merged constitutional office)
-
-**Article 11.** The Founder and the Chief Executive Officer are one constitutional office, not two. The holder of this office is, simultaneously and inseparably: the Institution's Chief Executive Officer; the constitutional source of executive authority; the appointing authority for institutional offices except where formally delegated under this Constitution; and the ultimate executive authority, subject to this Constitution and to the Board's legitimate governing functions under Article 9.
-
-This is not a new arrangement — it restates, with constitutional precision, what Policy GV-01 v2.0 already describes in practice (its Executive Management Team is headed by the CEO, who is the Founder). What Part V adds is the *bounding* of this authority: real, substantial, and protected — not unlimited.
-
-### 4.5 — Management Council
-
-Unchanged from my earlier report: the CEO plus the four constituent-institution Heads (Principal, Ra'ees, Mudeer, Head Teacher) plus functional Directors (Registrar, Finance, HR, ICT), a peer body chaired by the CEO, no member outranking another.
-
-### 4.6 — Principal, Royal College, and the Office of the Vice Principals
-
-**Article 12.** The Principal is the Chief Academic and Operational Leader of Sultan Hanafi Royal College and reports to the Founder & CEO. The Principal is supported by two permanent constitutional executive offices:
-
-| Office | Constitutional responsibilities |
-|---|---|
-| **Vice Principal (Academics)** | Curriculum implementation; teaching and learning; academic quality assurance; internal examinations; academic supervision; academic planning; educator professional development; academic performance improvement |
-| **Vice Principal (Administration)** | School administration; student discipline; welfare; school operations; facilities; logistics; security; health and safety; administrative coordination |
-
-**A factual note, not a change:** SHRS's public governance content already names a real person, Mrs. Anofi-Badmus Fatimat Omolola, as "VP Administration, Royal College" — so this office already has a real holder in practice; this Constitution simply gives that existing reality its formal constitutional standing and its constitutional counterpart (VP Academics), which does not yet appear to have a named holder anywhere in the record.
-
-**Technical refinement recommended, with reason:** the Institution's Permission Engine (`functions/_lib/permission-matrix.js`) currently defines a single, undifferentiated `VP` role code scoped to "all institutions," proposed but not yet established. I recommend splitting this into two distinct role codes — `VPA` (Vice Principal, Academics) and `VPD` (Vice Principal, Administration) — with permission grants matching the distinct responsibilities in the table above (VPA gaining curriculum/assessment-record permissions; VPD gaining discipline/facilities/incident-record permissions). This is a small, low-risk technical change that makes the Constitution's academic/administrative separation *enforceable*, not just written down — consistent with this Institution's established practice of having its Permission Engine mirror its actual role structure rather than trail behind it.
-
-*Scope note:* the Principal/VP structure is specific to Royal College, per the Founder's own framing ("the College section"). It is not automatically extended to the other three constituent institutions in this draft — each of which has its own Head with a different, already-distinct title (Ra'ees, Mudeer, Head Teacher) and a different scale of operation. Whether Head Teacher (Nursery & Primary) or the Ra'ees/Mudeer offices warrant their own Vice-Principal-equivalent support structures is a future decision, to be made only when each institution's actual scale justifies it — not by default extension of Royal College's structure.
-
-### 4.7 — Academic Council (new organ, recommended)
-
-**Purpose:** the senior deliberative body for academic direction — distinct from the Academic Affairs *Office* (which is the administrative/coordinating staff function serving this Council, not the decision-making body itself). This mirrors the Oxford model precisely: a Faculty Board deliberates and decides; the Registry administers.
-
-| | |
-|---|---|
-| **Composition** | The four constituent-institution Heads (Principal, Ra'ees, Mudeer, Head Teacher), the Vice Principal (Academics), the Registrar, and the seven Heads of Department (Part VIII) |
-| **Powers** | Recommends curriculum standards, academic calendar, and academic policy to the CEO/Management Council; is the body the Academic Excellence Committee (Board level) consults when reviewing academic outcomes |
-| **Tenure/Appointment** | Ex officio by the offices listed — no separate appointment process; membership changes automatically as office-holders change |
-| **Reporting line** | Advises the CEO and Management Council; not a rung of executive authority |
-
-**Why this is worth adding, stated plainly:** without it, "academic authority" in this Constitution would be a claim with no body to exercise it collectively — each Head would set standards for their own institution in isolation, with no forum for cross-institutional academic coherence. The Academic Council is that forum, and it costs nothing new to staff (no new office, no new salary line) — it is a recurring meeting of office-holders who already exist.
-
-### 4.8 — Quality Assurance: three tiers, not duplicated
-
-To avoid the appearance of three bodies doing the same job: the **Academic Excellence Committee** (Board level, Part IX §9.1) sets strategic expectations and reviews outcomes periodically; the **Quality Assurance Office** (executive-support, already real) is the permanent administrative function that runs standards processes day to day; an optional, lightweight **QA Council** — department heads convened periodically by the QA Office for calibration — may be established by the QA Office itself as a working method, not as a fourth constitutional authority layer. This Constitution names only the first two as constitutional organs; the third is an administrative choice left to the QA Office.
-
-### 4.9 — Office of the Mudeer, Qur'an College
-
-**Article 13.** The Mudeer is the Chief Executive Officer of Sultan Hanafi Qur'an College, with executive authority equal in institutional rank to the Ra'ees, and — constitutionally, in addition to that institutional CEO role — institution-wide religious leadership over: overall leadership of Qur'anic affairs; supervision of Hifz and Ijazah programmes; oversight of Qur'anic memorisation standards; institutional Tajweed standards; coordination of Qur'anic competitions; leadership of major institutional religious activities across all four schools; and religious policy relating to Qur'anic programmes.
-
-**Refinement recommended, with reason (naming, not substance):** the Mudeer constitutionally holds *two distinct capacities* — CEO of one constituent institution, and institution-wide Qur'anic authority spanning all four. I recommend these two capacities be given separate, explicit constitutional labels, exactly as many jurisdictions separate "Chief Justice of Court X" from "Chair of the National Judicial Council" even when one person holds both: **(a)** the Mudeer, in the first capacity, presides as **Chief Executive Officer, Qur'an College**; **(b)** the Mudeer, in the second capacity, presides as **Institutional Custodian of Qur'anic Standards**. This is a naming refinement only — it changes nothing about who holds the authority or what it covers — but it prevents a future, different Mudeer's institution-wide mandate from being read as flowing automatically from Qur'an College's institutional seniority (which would wrongly imply Qur'an College outranks the other three institutions) rather than from this Constitution's own direct grant.
-
-### 4.10 — Office of the Ra'ees, School of Islamic & Arabic Studies
-
-**Article 14.** The Ra'ees is the Chief Executive Officer of the School of Islamic & Arabic Studies, with executive authority equal in institutional rank to the Mudeer, and is constitutionally responsible for: Islamic Studies; Arabic Language; Da'wah; Islamic academic programmes; Islamic curriculum; Islamic scholarship; and Arabic education — and additionally serves as **Lead Imam of the Nursery & Primary School Mosque**, with constitutional authority over that mosque's religious leadership.
-
-**This directly resolves an ambiguity flagged in my earlier report.** I had noted that a school-wide Da'wah Committee, without a stated relationship to either Islamic-education Head, risked becoming a shadow chain of command. It is now resolved: Da'wah is constitutionally the Ra'ees's authority (Article 14), and the Da'wah Committee (Part IX §9.3) is chaired under, and reports to, the Ra'ees's constitutional authority — not free-floating, and not the Mudeer's, whose constitutional remit (Article 13) is specifically Qur'anic, not general Da'wah.
-
-### 4.11 — Relationship Between the Mudeer and the Ra'ees; the Religious Affairs Coordination Council
-
-**Article 15.** Neither the Mudeer nor the Ra'ees is subordinate to the other; their jurisdictions differ and complement one another. On institution-wide Qur'anic activities, Qur'an memorisation, Hifz, Ijazah, institutional Qur'anic standards, and major religious ceremonies involving all schools, the Mudeer exercises constitutional coordinating authority. On Islamic Studies, Arabic Language, Islamic curriculum, Islamic scholarship, Da'wah, and mosque leadership within the Nursery & Primary School, the Ra'ees exercises constitutional authority within those areas.
-
-**Refinement recommended, with reason:** the Founder's directive asks for a consultation mechanism so these complementary jurisdictions never create conflict. I recommend a small, standing **Religious Affairs Coordination Council** — the Mudeer and the Ra'ees as co-conveners (neither chairing over the other; they alternate or co-chair), meeting at minimum before any institution-wide religious ceremony, any change to institutional Qur'anic or Islamic-Studies standards, and at least twice yearly regardless. Its purpose is narrow and specific: to resolve, by consultation (*shūrā*, Part III), any matter that touches both jurisdictions before it reaches the public or the student body as two inconsistent instructions. It has no authority to override either office within that office's own Article 13/14 remit — it exists solely to coordinate at the boundary, and to escalate to the CEO only if consultation fails to resolve a genuine boundary dispute.
-
-### 4.12 — Heads of Department, Educators, Committees, Student Representative Council, School Prefects, Class Captains
-
-These carry forward, structurally unchanged from my earlier report, into this Constitution's Parts VIII (Departments), IX (Committees), and the Student Leadership track (Article 16 below) respectively — restated in constitution-ready form rather than repeated here.
-
-**Article 16 — Student Leadership is representational, not an authority chain.** The Student Representative Council, School Prefects (Head Boy/Head Girl, Senior Prefects, House Prefects), and Class Captains hold specific, named, limited responsibilities delegated by named members of staff, under the supervision of Student Affairs and the relevant institution's Head. They are not part of the institutional chain of executive, academic, or administrative authority defined in this Part, and no student office may direct another student's conduct except within a responsibility explicitly delegated in writing by a staff member.
+**Article 7.** The Institution's vision, mission, motto, core values, and objects are as adopted from time to time by the Board on the recommendation of the Founder & CEO, and are incorporated into this Constitution by reference; this Constitution does not itself restate them.
 
 ---
 
-## PART V — Powers of the Founder
+## CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER
 
-**Article 17 — Reserved Powers (non-delegable).** The Founder & CEO holds, from the Institution's founding and until the Board of Trustees, by resolution and with the Founder's own written consent, provides otherwise: (a) appointment and removal of members of the Management Council and of each constituent institution's Head (Principal, Ra'ees, Mudeer, Head Teacher); (b) ratification of the chairs of Board standing committees; and (c) veto over any resolution materially affecting the Institution's Islamic character or founding mission.
+**Article 8.** There shall be a Founder & Chief Executive Officer ("Founder & CEO"), being one constitutional office, not two. The Founder & CEO shall be:
+(a) the Chief Executive Officer of the Institution;
+(b) the constitutional appointing authority for institutional offices, except where authority is delegated under this Chapter;
+(c) the Chief Executive Leader of the Institution; and
+(d) the Guardian of the Institution's vision and mission.
 
-**Article 18 — Delegated Powers.** All other executive authority is delegable. A delegation is valid only if it (i) names a specific delegate, (ii) states a specific and limited scope, (iii) carries a mandatory expiry, and (iv) is recorded in the Authority Register (Article 19). A delegate may not further delegate authority they do not themselves constitutionally hold (no delegation of what was never granted), and a delegate holds only the scope stated — silence is not authority.
+**Article 9.** The office of Founder & CEO shall be held, from the Institution's founding, by its Founder, and thereafter by a successor determined under Chapter XVII.
 
-**Article 19 — Traceability, and the mechanism already built.** Every appointment, role grant, role revocation, and delegation — including its eventual expiry or early revocation — must be recorded in a single permanent, chronological Authority Register. This is not aspirational: it is already implemented and enforced in the Institution's administrative system (`functions/api/portal/admin/authority-register.js`), which merges appointment, role, and delegation records into one register precisely for this purpose, and the underlying delegation mechanism (`functions/api/portal/staff/delegations.js`) already refuses to create a delegation without an expiry and already refuses to let a person delegate a role they do not hold. This Constitution does not create a new system; it gives the existing one its constitutional mandate.
+**Article 10 — Constitutional powers.** The Founder & CEO derives office directly from this Constitution and not from appointment by the Board. The Founder & CEO shall be, ex officio, a member of the Board.
 
-**Article 20 — Powers Requiring Board Approval.** Constitutional amendment (Part XIII); annual budget; any transaction above a threshold to be fixed by Board resolution and reviewed at least every three years; and any change to the Objects of the Institution (Article 6).
+**Article 11 — Executive powers.** Subject to this Constitution, the Founder & CEO shall direct the executive management of the Institution through the EMT, and shall be accountable to the Board for the Institution's overall performance.
 
-**Article 21 — Emergency Powers.** Where an urgent matter threatening student safety, institutional continuity, or legal compliance cannot await the ordinary Board or committee process, the Founder & CEO may act unilaterally, but must report the action and its reasons to the Board of Trustees within seven days, and the action must be entered in the Authority Register (Article 19) as an emergency action, distinct from an ordinary appointment or delegation, so the Board can distinguish emergency exercises of power from routine ones when it reviews the register.
+**Article 12 — Reserved powers.** The following powers are reserved to the Founder & CEO and shall not be delegated in whole:
+(a) appointment and removal of members of the EMT and of the Head of each Constituent Institution;
+(b) ratification of the chairs of Board standing committees;
+(c) veto over any resolution materially affecting the Institution's Islamic character or founding mission.
+A specific instance of a reserved power may be delegated under Article 13 without surrendering the power itself, which reverts automatically on expiry of that specific delegation.
 
-**Article 22 — Succession Powers.** See Part XII in full. In summary here: the Founder may, at any time, nominate a successor to the merged Founder & CEO office by written instrument lodged with the Board; that nomination takes effect only on the Founder's death, incapacity (as certified per Part XII), or voluntary full retirement; until then it may be revised or revoked by the Founder alone.
+**Article 13 — Delegated powers.** All powers not reserved under Article 12 are delegable. A delegation is valid only where it:
+(a) names a specific delegate;
+(b) states a specific and limited scope;
+(c) carries a mandatory expiry date; and
+(d) is recorded in the Authority Register.
+No person shall delegate authority not constitutionally held by that person. A delegate holds only the scope expressly stated; silence shall not be construed as a grant of authority.
 
-**Article 23 — What can never be delegated.** The reserved powers in Article 17 cannot be delegated in whole; a scoped, expiring delegation of a *specific instance* of an Article 17 power (e.g., authorising a named deputy to sign one particular appointment letter while the Founder travels) is permitted under Article 18's ordinary rules and does not surrender the underlying reserved power itself, which reverts automatically to the Founder when that specific delegation expires.
+**Article 13A — The Authority Register.** There shall be an Authority Register, being a permanent, chronological, append-only record of every appointment, role grant, role revocation, and delegation (including its expiry or early revocation) made under this Constitution. The Authority Register is institution-wide in scope and is not confined to delegations under this Article. No entry in the Authority Register shall be altered or deleted once made; a correction shall be recorded as a new, dated entry referencing the entry it corrects.
+
+**Article 14 — Financial powers.** The Founder & CEO shall have authority over financial matters delegated by Board resolution up to a threshold fixed and reviewed by the Board not less than once every three years. Transactions above that threshold, the annual budget, and any change to the Institution's objects require Board approval under Article 33.
+
+**Article 15 — Academic oversight powers.** The Founder & CEO shall have ultimate oversight of academic policy, exercised through the EMT and the Academic Council, and shall not directly override an academic decision within the Academic Council's constitutional remit except by reference back to the Academic Council with written reasons.
+
+**Article 16 — Religious oversight powers.** The Founder & CEO shall have ultimate oversight of the Institution's religious character, exercised without displacing the constitutional authorities of the Mudeer and the Ra'ees under Chapter VII, and shall be the final authority in any matter those two offices cannot resolve between themselves.
+
+**Article 17 — Ceremonial functions.** The Founder & CEO shall hold first precedence in all institutional ceremonial matters under Chapter XX, and shall be the Institution's principal signatory for instruments above the Board-approval threshold.
+
+**Article 18 — Emergency powers.** Where an urgent matter threatens student safety, institutional continuity, or legal compliance and cannot await the ordinary process of the Board or EMT, the Founder & CEO may act unilaterally. Such action shall be reported to the Board within seven days and entered in the Authority Register as an emergency action, distinct from an ordinary appointment or delegation.
+
+**Article 19 — Appointment powers.** The Founder & CEO shall appoint the members of the EMT, the Head of each Constituent Institution, and, on the recommendation of the relevant Head, the Vice Principals under Chapter VI.
+
+**Article 20 — Removal powers.** The Founder & CEO may remove any office holder appointed under Article 19, subject to the disciplinary process applicable to that office holder's employment and to Chapter XV.
+
+**Article 21 — Acting Founder & CEO.** Where the Founder & CEO is temporarily unable to discharge the functions of the Office by reason of travel, illness, or other temporary cause not amounting to incapacity under Article 22, the Founder & CEO may, by written instrument, appoint an Acting Founder & CEO from among the EMT for a stated period not exceeding ninety days, renewable once. An Acting Founder & CEO shall exercise only the delegated powers stated in the instrument of appointment and none of the reserved powers under Article 12.
+
+**Article 22 — Temporary incapacity.** Where the Founder & CEO is unable, by reason of illness or incapacity, to make the appointment under Article 21, and two independent medical practitioners so certify, the Board shall appoint an Acting Founder & CEO from among the EMT by simple majority resolution, for the duration of the incapacity, subject to review by the Board every ninety days.
+
+**Article 23 — Permanent succession.** Permanent succession to the office of Founder & CEO is governed exclusively by Chapter XVII.
 
 ---
 
-## PART VI — Academic Governance and Terminology
+## CHAPTER III — THE BOARD OF GOVERNORS
 
-**On the terminology question directly asked:** "Command Centre," "Headquarters," and "Operations Centre" are not academically appropriate, for the same reason stated in my earlier report — they are the register of a military command-and-control facility or a corporate operations floor, not an academic institution, however impressively they may have been intended. This applies with equal force to every option in the comparison the Founder listed. Judging each:
+**Article 24.** There shall be a Board of Governors, being the supreme governing body of the Institution. The Board shall govern; it shall not manage the day-to-day operations of the Institution, which are the function of the EMT under Chapter V.
 
-| Candidate | Verdict | Reason |
+**Article 25 — Composition.** The Board shall consist of not fewer than five and not more than eleven Governors, comprising:
+(a) the Founder & CEO, ex officio;
+(b) not fewer than three Governors appointed under Article 28;
+(c) such co-opted Governors as the Board may appoint under Article 29.
+
+**Article 26 — Categories of Governors.**
+(a) **Founding Governors** — Governors who held office at the Institution's founding or who are appointed by the Founder & CEO under Article 28(a).
+(b) **Appointed Governors** — Governors appointed by Board resolution under Article 28(b) for their professional expertise (education, finance, law, or Islamic scholarship).
+(c) **Co-opted Governors** — Governors co-opted under Article 29 to fill a specific expertise gap, serving without vote on matters outside that expertise unless the Board resolves otherwise.
+
+**Article 27 — Qualifications.** A person shall not be appointed a Governor unless that person:
+(a) is of good standing and has not been convicted of an offence involving dishonesty or an offence against a child;
+(b) has no undisclosed material conflict of interest with the Institution; and
+(c) has relevant experience in education, finance, law, governance, or Islamic scholarship.
+
+**Article 28 — Appointment process.**
+(a) The Founder & CEO may nominate Founding Governors, subject to confirmation by simple majority of the Governors then in office.
+(b) The Board, on the recommendation of the Nominations & Remuneration Committee under Chapter XI, shall appoint Appointed Governors by simple majority resolution.
+
+**Article 29 — Co-option.** The Board may, by resolution, co-opt a person as a Governor to address a specific gap in the Board's expertise, for a term not exceeding two years, renewable once.
+
+**Article 30 — Term of office.** A Governor shall hold office for four years from appointment.
+
+**Article 31 — Reappointment.** A Governor may be reappointed for one further term of four years. A Governor shall not serve more than two consecutive terms save by unanimous resolution of the other Governors, recorded with reasons.
+
+**Article 32 — Resignation.** A Governor may resign by written notice to the Chair of the Board (or, if the Governor resigning is the Chair, to the Founder & CEO), taking effect not less than thirty days after receipt unless the Board agrees to an earlier date.
+
+**Article 33 — Removal.** A Governor may be removed before the expiry of that Governor's term only by resolution of not fewer than two-thirds of the other Governors, on grounds of: breach of the qualifications in Article 27; persistent non-attendance (three consecutive ordinary meetings without leave); or conduct incompatible with the Governor's duties. The Governor concerned shall be given written notice of the grounds and an opportunity to respond before any vote.
+
+**Article 34 — Quorum.** The quorum for any meeting of the Board shall be a simple majority of the Governors then in office, provided the Founder & CEO or an Acting Founder & CEO is present, save where Chapter II otherwise provides.
+
+**Article 35 — Voting procedures.** Save as this Constitution otherwise requires, a resolution of the Board is carried by a simple majority of Governors present and voting. A constitutional amendment requires the majority stated in Article 114. Each Governor has one vote; the Chair has no casting vote and, in the event of an equality of votes, the resolution fails.
+
+**Article 36 — Ordinary meetings.** The Board shall meet not fewer than four times in each academic year, on not less than fourteen days' written notice, with an agenda and supporting papers circulated not less than seven days before the meeting.
+
+**Article 37 — Extraordinary meetings.** An extraordinary meeting of the Board shall be convened, on not less than seven days' notice, on the requisition of the Founder & CEO or of not fewer than one-third of the Governors then in office.
+
+**Article 38 — Emergency resolutions.** Where a matter cannot await an ordinary or extraordinary meeting, the Board may resolve by unanimous written consent of all Governors, communicated by durable electronic means and recorded in the Authority Register, save that no constitutional amendment and no matter reserved under Article 40 may be resolved this way.
+
+**Article 39 — Standing committees.** The Board shall establish and maintain the standing committees listed in Chapter XI, Schedule of Board Committees, and may establish further committees by resolution.
+
+**Article 40 — Powers reserved exclusively to the Board.** The following shall not be delegated to the Founder & CEO, the EMT, or any committee:
+(a) constitutional amendment (Chapter XIX);
+(b) approval of the annual budget;
+(c) appointment and removal of the Institution's external auditor;
+(d) approval of any merger, dissolution, or fundamental restructuring under Chapter XVIII;
+(e) removal of the Founder & CEO from the Board under Article 33, where applicable.
+
+**Article 41 — Matters requiring Board approval.** The following require Board approval, on the recommendation of the Founder & CEO or the relevant standing committee, but are not reserved exclusively to the Board and may be brought forward by the EMT:
+(a) any transaction above the threshold fixed under Article 14;
+(b) any change to the Institution's objects;
+(c) appointment of Appointed Governors under Article 28(b);
+(d) adoption or amendment of Institution-wide policy referred by a standing committee.
+
+**Article 42 — Matters delegated to the Founder & CEO.** All executive, academic, administrative, and religious governance not reserved under Article 40 or requiring approval under Article 41 is delegated to the Founder & CEO, to be exercised through the EMT, the Academic Council, and the offices established under Chapters VI and VII.
+
+---
+
+## CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM
+
+**Article 43.** There shall be an Executive Management Team ("EMT"), being the Institution's official executive leadership body, chaired by the Founder & CEO.
+
+**Article 44 — Membership.** The EMT shall consist of:
+(a) the Founder & CEO, as Chair;
+(b) the Head of each Constituent Institution (Principal, Ra'ees, Mudeer, Head Teacher);
+(c) the Registrar;
+(d) the Head of Finance;
+(e) the Head of Human Resources;
+(f) the Head of ICT.
+No member of the EMT other than the Chair holds authority over another member; membership is a peer relationship.
+
+**Article 45 — Meetings.** The EMT shall meet not fewer than once monthly. The Founder & CEO shall convene and chair every meeting, or shall designate an Acting Founder & CEO under Article 21 to do so.
+
+**Article 46 — Decision-making.** The EMT shall ordinarily act by consensus. Where consensus cannot be reached, the Founder & CEO shall decide, having heard all members, and shall record the reasons in the minutes.
+
+**Article 47 — Collective responsibility.** A decision taken by the EMT binds every member in their dealings with staff and the public, notwithstanding any member's private disagreement recorded in the minutes.
+
+**Article 48 — Reporting obligations.** The EMT shall report to the Board, through the Founder & CEO, not less than once each ordinary Board meeting, on institutional performance, risk, and any matter requiring Board approval under Article 41.
+
+**Article 49 — Relationship with the Board.** The EMT is accountable to the Board through the Founder & CEO. No individual Governor may instruct any member of the EMT directly; instruction, where constitutionally proper, passes through Board resolution to the Founder & CEO.
+
+**Article 50 — Relationship with the Founder & CEO.** The Founder & CEO chairs and directs the EMT and may overrule any EMT position other than a matter falling within another office's exclusive constitutional remit under Chapters VI or VII, in which case Article 15 or Article 16 applies.
+
+---
+
+## CHAPTER V — ACADEMIC LEADERSHIP
+
+**Article 51.** There shall be a Principal of Sultan Hanafi Royal College, being the Chief Academic and Operational Leader of that Constituent Institution, appointed by the Founder & CEO under Article 19, and reporting to the Founder & CEO.
+
+**Article 52.** The Principal shall be supported by two permanent constitutional executive offices: the Vice Principal (Academics) and the Vice Principal (Administration), each appointed by the Founder & CEO on the Principal's recommendation.
+
+**Article 53 — Vice Principal (Academics).** The Vice Principal (Academics) shall be constitutionally responsible for: curriculum implementation; teaching and learning; academic quality assurance; internal examinations; academic supervision; academic planning; educator professional development; and academic performance improvement, at Sultan Hanafi Royal College, and shall chair the Academic Committee under Chapter XI.
+
+**Article 54 — Vice Principal (Administration).** The Vice Principal (Administration) shall be constitutionally responsible for: school administration; student discipline; welfare; school operations; facilities; logistics; security; health and safety; and administrative coordination, at Sultan Hanafi Royal College, and shall chair the Student Discipline Committee under Chapter XI.
+
+**Article 55.** There shall be a Head Teacher of Sultan Hanafi Nursery & Primary School, appointed by the Founder & CEO under Article 19, reporting to the Founder & CEO, and holding, for that Constituent Institution, the combined constitutional functions the Vice Principals hold at Royal College, until such time as the Board resolves that the scale of that Constituent Institution warrants separate Vice-Principal-equivalent offices.
+
+**Article 56.** The offices of Mudeer and Ra'ees are established under Chapter VII and are not subordinate to, and do not report through, the Principal or Head Teacher.
+
+**Article 57.** No Head of a Constituent Institution shall exercise authority over another Constituent Institution's internal academic or administrative affairs, save through the Academic Council under Chapter VIII or the EMT under Chapter IV.
+
+---
+
+## CHAPTER VI — THE ACADEMIC COUNCIL
+
+**Article 58.** There shall be an Academic Council, being the Institution's senior deliberative body for academic direction, distinct from the administrative function of the Academic Affairs office.
+
+**Article 59 — Membership.** The Academic Council shall consist of: the Head of each Constituent Institution; the Vice Principal (Academics); the Registrar; and the Head of each academic department established under Chapter IX.
+
+**Article 60 — Powers.** The Academic Council shall:
+(a) approve academic regulations and the academic calendar;
+(b) approve curriculum standards and changes to curriculum, on recommendation of the relevant Heads of Department;
+(c) exercise examination oversight, in coordination with the Examinations Board under Chapter XI;
+(d) set and monitor academic quality assurance standards, in coordination with the Quality Assurance Office;
+(e) make academic legislation binding on all Constituent Institutions unless a Head of a Constituent Institution records a formal objection referred to the Founder & CEO under Article 15.
+
+**Article 61 — Meetings.** The Academic Council shall meet not fewer than once each academic term.
+
+**Article 62.** A resolution of the Academic Council requires a simple majority of members present; the quorum is a majority of members then in office.
+
+---
+
+## CHAPTER VII — RELIGIOUS GOVERNANCE
+
+**Article 63.** There shall be a Mudeer of Sultan Hanafi Qur'an College, being the Chief Executive Officer of that Constituent Institution, appointed by the Founder & CEO under Article 19.
+
+**Article 64.** The Mudeer shall additionally hold institution-wide authority, distinct from the office in Article 63, as **Institutional Custodian of Qur'anic Standards**, comprising: overall leadership of Qur'anic affairs; supervision of Hifz and Ijazah programmes; oversight of Qur'anic memorisation standards; institutional Tajweed standards; coordination of Qur'anic competitions; leadership of major institutional religious activities across all four Constituent Institutions; and religious policy relating to Qur'anic programmes.
+
+**Article 65.** There shall be a Ra'ees of the School of Islamic & Arabic Studies, being the Chief Executive Officer of that Constituent Institution, appointed by the Founder & CEO under Article 19, and constitutionally responsible for: Islamic Studies; Arabic Language; Da'wah; Islamic academic programmes; Islamic curriculum; Islamic scholarship; and Arabic education.
+
+**Article 66.** The Ra'ees shall additionally serve as Lead Imam of the Nursery & Primary School Mosque, with constitutional authority over that mosque's religious leadership.
+
+**Article 67 — Equal rank; no subordination.** The Mudeer and the Ra'ees hold executive authority equal in institutional rank. Neither office is subordinate to the other. Their jurisdictions, as set out in Articles 63–66, are distinct and shall not be read to overlap.
+
+**Article 68 — Jurisdictional boundary.** On matters of institution-wide Qur'anic activities, Qur'an memorisation, Hifz, Ijazah, institutional Qur'anic standards, and major religious ceremonies involving all four Constituent Institutions, the Mudeer shall exercise coordinating authority under Article 64. On matters of Islamic Studies, Arabic Language, Islamic curriculum, Islamic scholarship, Da'wah, and mosque leadership within Sultan Hanafi Nursery & Primary School, the Ra'ees shall exercise authority under Article 65 and 66.
+
+**Article 69 — Religious Affairs Coordination Council.** There shall be a Religious Affairs Coordination Council, co-convened by the Mudeer and the Ra'ees, neither presiding over the other. The Council shall meet:
+(a) before any institution-wide religious ceremony;
+(b) before any change to institutional Qur'anic or Islamic Studies standards; and
+(c) not less than twice in each academic year regardless of (a) or (b).
+
+**Article 70 — Dispute resolution.** Where the Mudeer and the Ra'ees cannot agree on a matter falling at the boundary of their respective jurisdictions under Article 68, either may refer the matter, in writing and stating the point of disagreement, to the Founder & CEO under Article 16, whose decision on the boundary question is final. Neither office may act unilaterally on a matter under active reference pending the Founder & CEO's decision, save where student safety requires immediate action, in which case Article 18 applies.
+
+**Article 71.** Nothing in this Chapter subordinates the Mudeer or the Ra'ees to the Principal, the Head Teacher, or each other. Nothing in this Chapter permits either office to exercise authority outside the jurisdiction defined in Articles 63–66.
+
+---
+
+## CHAPTER VIII — ADMINISTRATIVE OFFICES
+
+**Article 72.** There shall be the following administrative offices, each headed by a Director or Officer appointed by the Founder & CEO on the recommendation of the relevant EMT member, and each reporting to the EMT: the Registry; the Bursary (Finance & Accounts); Human Resources; Information and Communications Technology; Student Affairs; Communications; the Library; Alumni Relations; the Sultan Hanafi Foundation; the Digital Identity Office; the Institutional Knowledge Base; and the Certificate & Transcript Office.
+
+**Article 73.** There shall be the following Executive Support Offices, reporting to the Founder & CEO through the EMT, and not constituting part of the Board's own apparatus: Strategic Planning; Quality Assurance; Legal & Compliance; and Public Affairs.
+
+**Article 74.** There shall be, when the Board resolves that fundraising activity warrants it, an Institutional Advancement Office, reporting through the EMT.
+
+**Article 75.** No administrative or executive-support office shall exercise authority over the academic or religious governance established under Chapters VI, VII, or IX, save as expressly provided.
+
+---
+
+## CHAPTER IX — ACADEMIC DEPARTMENTS
+
+**Article 76.** There shall be seven academic departments: the Languages Department; the Mathematics & ICT Department; the Humanities Department; the Science & Technology Department; the Commerce & Management Department; the Arabic Language Department; and the Islamic Studies Department.
+
+**Article 77.** Each department shall be headed by a Head of Department, appointed by the relevant Constituent Institution's Head on the recommendation of the Vice Principal (Academics) or, outside Royal College, the relevant Head, and shall sit on the Academic Council under Article 59.
+
+**Article 78.** Sultan Hanafi Qur'an College is a separate Constituent Institution, not a department, and is not subsumed within the Islamic Studies Department.
+
+---
+
+## CHAPTER X — STUDENT LEADERSHIP
+
+**Article 79.** There shall be a Student Representative Council, a body of School Prefects (comprising Head Boy, Head Girl, Senior Prefects, and House Prefects), and Class Captains.
+
+**Article 80.** No office established under this Chapter forms part of the Institution's executive, academic, administrative, or religious authority under Chapters II–IX. No student holding an office under this Chapter shall exercise authority over another student except pursuant to a specific responsibility delegated in writing by a member of staff.
+
+**Article 81.** Offices under this Chapter shall be supervised by the Student Affairs office and by the Head of the relevant Constituent Institution, and shall be filled by nomination and confirmation under Chapter XIV.
+
+---
+
+## CHAPTER XI — COMMITTEES
+
+**Article 82 — General provisions.** Every committee established under this Constitution shall have: a constitutional mandate, stated in the Schedule to this Chapter; a defined membership; a designated Chair; a quorum; a defined reporting line; defined decision-making powers; and a defined frequency of meetings. No committee shall exercise authority beyond its stated mandate. No committee shall duplicate the mandate of another committee; where an apparent overlap arises, the committee whose mandate this Constitution states more specifically shall prevail, and the matter shall otherwise be referred to the body each committee reports to for resolution.
+
+**Article 83.** The following Schedule of Committees forms part of this Constitution.
+
+### Schedule of Board Committees
+
+| Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
+|---|---|---|---|---|---|---|---|
+| Finance Committee | Budget preparation, financial policy, financial performance oversight | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends to Board; no independent spending authority | Quarterly |
+| Governance & Ethics Committee | Constitutional compliance, governor conduct, ethics, conflicts of interest | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends; certifies constitutional amendments under Article 114 | Quarterly |
+| Nominations & Remuneration Committee | Governor and CEO nominations, succession readiness, senior remuneration | Not fewer than 3 Governors, excluding the Founder & CEO on matters of CEO remuneration | Governor appointed by the Board | Majority of members | Board | Recommends; binding only as to process, not outcome | Twice yearly, and on any vacancy |
+| Audit & Risk Committee | Internal controls, external audit oversight, institutional risk register | Not fewer than 3 Governors, none holding an EMT role | Governor appointed by the Board | Majority of members | Board | Recommends; may require EMT written response within 30 days | Quarterly |
+| Academic Excellence Committee | Strategic academic outcomes review, curriculum standards oversight | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends to Board and Academic Council | Twice yearly |
+| Development Committee | Institutional growth strategy, fundraising strategy, capital planning | Not fewer than 3 Governors | Governor appointed by the Board | Majority of members | Board | Recommends | Twice yearly |
+
+### Schedule of Executive Management Committees
+
+| Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
+|---|---|---|---|---|---|---|---|
+| Admissions & Enrolment Committee | Cross-institutional admissions policy and pipeline oversight | Registrar, Admissions Officer, one Head per Constituent Institution | Registrar | Majority of members | EMT | Recommends; approves individual admissions per existing policy | Termly |
+| Student Discipline Committee | Discipline policy and serious-case review, Royal College | Vice Principal (Administration), two educators, Student Affairs | Vice Principal (Administration) | Majority of members | Principal, then EMT | Decides on cases referred; policy recommendations to EMT | As required, not less than termly |
+| Health and Safety Committee | Institution-wide health, safety, and incident reporting | Facilities/operations leads from each Constituent Institution, Student Affairs | Appointed by EMT | Majority of members | EMT | Decides on operational safety matters; recommends policy | Termly |
+| Complaints Committee | Formal written complaints from parents, staff, or the public | Three Governors | Appointed by the Board | All three members | Board | Decides on individual complaints | As required |
+| Safeguarding Committee | See Chapter XII in full | See Chapter XII | Designated Safeguarding Lead | Majority of members | Founder & CEO and Board | See Chapter XII | Monthly, and immediately on any disclosure |
+| Scholarship & Financial Aid Committee | Scholarship and financial-aid policy and awards | Sultan Hanafi Foundation, Bursary, one EMT member | Head of the Sultan Hanafi Foundation | Majority of members | EMT | Decides on individual awards within approved budget | Termly |
+| ICT & Digital Governance Committee | Data protection, acceptable use compliance, digital learning strategy | ICT, Legal & Compliance, Digital Learning & Innovation | Head of ICT | Majority of members | EMT | Recommends | Quarterly |
+
+### Schedule of Academic Committees
+
+| Committee | Constitutional Mandate | Membership | Chair | Quorum | Reports to | Decision-making powers | Frequency |
+|---|---|---|---|---|---|---|---|
+| Academic Committee | Curriculum working matters, academic policy implementation | Heads of Department, educator representatives | Vice Principal (Academics) | Majority of members | Academic Council | Recommends | Termly |
+| Da'wah Committee | Institutional Da'wah and outreach activity | Staff and student representatives, coordinated under the Ra'ees's authority | Appointed under the Ra'ees's authority | Majority of members | Ra'ees, then Academic Council | Decides on programme matters within approved policy | Termly |
+| Sports Committee | Co-curricular sport and physical education activity | Physical education staff, student representatives | Appointed by EMT | Majority of members | Student Affairs | Decides on programme matters | Termly |
+| Academic Research & Innovation Committee | Research direction, pedagogical innovation | Head of Research & Development, Digital Learning & Innovation, Heads of Department | Head, Research & Development | Majority of members | Academic Council | Recommends | Twice yearly |
+| Social & Welfare Committee | Student welfare events and pastoral activity, alongside Student Affairs | Staff and student representatives | Appointed by EMT | Majority of members | Student Affairs | Decides on programme matters | Termly |
+| Examinations Board | Examination standards, results integrity, assessment oversight | Examinations Office, Heads of Department, one representative per Constituent Institution | Head of Examinations | Majority of members | Academic Council | Decides on examination administration; recommends policy | Termly, and before every examination cycle |
+
+---
+
+## CHAPTER XII — THE SAFEGUARDING COMMITTEE
+
+**Article 84.** There shall be a Safeguarding Committee, being a permanent standing committee of the Institution, established directly by this Constitution and not subject to dissolution by ordinary resolution of any other body.
+
+**Article 85 — Purpose.** The Safeguarding Committee exists to protect every student, at every Constituent Institution, from harm, and to ensure the Institution's compliance with its child-protection obligations at all times.
+
+**Article 86 — Membership.** The Safeguarding Committee shall consist of: the Designated Safeguarding Lead ("DSL"), who shall chair; a Deputy Designated Safeguarding Lead at each Constituent Institution; the Head of Student Affairs; and, ex officio and without vote, the Head of the Constituent Institution to which any matter under consideration relates.
+
+**Article 87 — Appointment of the Designated Safeguarding Lead.** The DSL shall be appointed by the Founder & CEO, shall hold no other office whose duties would conflict with safeguarding responsibility, and shall report directly to the Founder & CEO on any matter the DSL judges serious enough to require it, notwithstanding any other reporting line in this Constitution.
+
+**Article 88 — Powers.** The Safeguarding Committee shall:
+(a) receive and act on every safeguarding disclosure or concern raised anywhere in the Institution;
+(b) suspend, with immediate effect and without prior reference to any other body, any person from contact with students where the Committee reasonably believes a risk of harm exists, pending investigation;
+(c) require any office, department, or Constituent Institution to produce records relevant to a safeguarding matter, notwithstanding any other confidentiality provision;
+(d) report to the Board, through the Founder & CEO, not less than once each Board meeting, and immediately on any serious incident.
+
+**Article 89 — No power may override the Safeguarding Committee's protective function.** Notwithstanding any other provision of this Constitution, no office — including the Founder & CEO under Chapter II, the Mudeer or the Ra'ees under Chapter VII — may direct the Safeguarding Committee to withhold action on a genuine safeguarding concern, or to restore a person suspended under Article 88(b) pending the completion of investigation.
+
+**Article 90 — Meetings.** The Safeguarding Committee shall meet not less than monthly, and immediately, without prior notice requirement, on any disclosure requiring urgent attention.
+
+**Article 91 — Quorum.** The quorum for the Safeguarding Committee is the DSL and not fewer than two other members.
+
+**Article 92 — Confidentiality.** Proceedings and records of the Safeguarding Committee are confidential to its members and to the Founder & CEO and Board on report under Article 88(d), save where disclosure is required by law or by the safety of a student.
+
+**Article 93 — Review.** The Board's Academic Excellence Committee and Audit & Risk Committee shall jointly review the Safeguarding Committee's operation not less than once yearly, and shall report to the Board on the Institution's safeguarding compliance.
+
+---
+
+## CHAPTER XIII — APPOINTMENTS AND REMOVALS
+
+**Article 94.** Save as this Constitution otherwise provides, appointments and removals proceed as follows:
+
+| Office | Appointing authority | Removal authority |
 |---|---|---|
-| Academic Affairs Headquarters | Reject | "Headquarters" retained |
-| Academic Senate Office | Acceptable, but "Senate" implies a formal legislative body with statutes this Constitution does not (yet) establish — reserve for later if SHRS ever formalises Academic Council into a Senate | |
-| **Office of Academic Excellence** | **Recommended** | Matches the Board's existing "Academic Excellence Committee" naming, is the correct international register, and requires no invented new term |
-| Academic Leadership Centre | Acceptable, closest existing precedent is the Ra'ees's own portal name, already judged correctly registered in my earlier report | |
-| **Office of Teaching and Learning** | **Recommended as the Vice Principal (Academics)'s working name for day-to-day pedagogical support**, a well-established international term (used by Oxford, Cambridge, and most Commonwealth universities for exactly this function) | |
-| Academic Standards Directorate | Acceptable but "Directorate" reads corporate/governmental in a way "Office" does not; use only if a genuinely directorate-scale, multi-office coordinating function is created later | |
-| Centre for Academic Quality | Acceptable, but duplicates the Quality Assurance Office's existing remit under a new name — do not create both | |
-| Academic Operations Office | Reject | "Operations" carries the same register problem as "Operations Centre," just softened |
+| Governors | Founder & CEO (Founding), Board (Appointed) — Article 28 | Board, two-thirds resolution — Article 33 |
+| Founder & CEO successor | The Founder, by written instrument | Chapter XVII |
+| Heads of Constituent Institutions | Founder & CEO — Article 19 | Founder & CEO — Article 20 |
+| Vice Principals | Founder & CEO, on Principal's recommendation | Founder & CEO |
+| Heads of Department | Constituent Institution Head, on Academic Council recommendation | Constituent Institution Head |
+| Educators | Constituent Institution Head, through Human Resources | Per Staff Conduct Policy |
+| Committee Chairs | As stated in the Schedule to Chapter XI | As stated in the Schedule to Chapter XI |
+| Student Representatives, Prefects, Class Captains | Nominated by peers or staff; confirmed by the Constituent Institution Head and Student Affairs | Constituent Institution Head and Student Affairs |
 
-**What elite institutions actually use, stated plainly:** Oxford and Cambridge use "Office," "Registry," "Bursary," and named Faculty/Departmental Boards — never "Centre," "Headquarters," or "Operations" for administrative academic functions; "Centre for [X]" is reserved, in genuine academic usage, for a specific research or teaching specialism (e.g., a real Centre for Islamic Studies would be entirely appropriate), never for a general administrative or leadership function.
-
----
-
-## PART VII — Administrative Governance
-
-Carrying forward my earlier report's judgment, restated here in constitutional form, with the Founder's new candidate list judged explicitly:
-
-**Existing, keep as constitutional offices:** Finance & Accounts (Bursary, see naming note below), Registry, ICT, Human Resources, Student Affairs, Communications, Library, Alumni, the Sultan Hanafi Foundation, Digital Identity Office, Institutional Knowledge Base, Certificate & Transcript Office.
-
-**Already established this year, confirm as constitutional executive-support offices reporting to the CEO/Management Council (not siblings of the Board):** Strategic Planning ("Institutional Planning" in the Founder's list — same function, existing name kept), Quality Assurance, Legal & Compliance ("Legal Affairs" in the Founder's list — same function; recommend keeping "Legal & Compliance" as the fuller, already-adopted name), Public Affairs.
-
-**Recommend creating:** Institutional Advancement Office ("Advancement & Development" in the Founder's list) — confirmed again here, sequenced to when fundraising scale justifies a paid function, not before.
-
-**Recommend NOT creating as separate offices, with reasons restated:** Procurement (fold into Finance/Bursary's existing remit — procurement at SHRS's current transaction scale does not yet need a separate office; revisit if capital projects under Part VII's own Institutional Advancement work grow large enough to need dedicated procurement governance); Internal Audit (the Audit Committee's operational arm, not a parallel office, per my earlier report); International Relations (rejected again, for the same reason: premature at SHRS's current single-country, four-institution scale); Research & Innovation as a *standalone office* — the function is already real via the Digital Learning & Innovation office plus the Head, Research & Development role at Royal College plus the renamed Academic Research & Innovation Committee (Part IX §9.3); creating a fourth body for the same function would fragment ownership rather than strengthen it. Facilities Management — fold into the Vice Principal (Administration)'s remit at Royal College (Article 12) and into each institution's own administrative staff elsewhere; a cross-institutional Facilities office is worth considering only once SHRS operates shared physical infrastructure across sites at a scale that needs central coordination.
-
-**Naming note:** "Finance & Accounts" (Founder's list) and "Finance Office" (the real database name) both describe the same function; my earlier report's recommendation to rename this office's public-facing label to **Bursary** stands, for the reason given there (the historically exact British-independent-school term), but the underlying database/office name need not change.
+**Article 95.** No appointment or removal under this Constitution takes effect until recorded in the Authority Register under Article 13A.
 
 ---
 
-## PART VIII — Academic Departments
+## CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY
 
-Restoring all seven, as recovered and explained in my earlier report, with department heads reporting through the Vice Principal (Academics) at Royal College and through the relevant institution's own Head elsewhere:
+**Article 96 — Abuse of authority.** No office holder shall exercise authority for personal benefit or beyond the scope this Constitution or a lawful delegation grants. Any Governor, member of the EMT, or office holder who does so is subject to removal under the applicable provision of Chapters III, IV, or XIII, and to referral to the Governance & Ethics Committee.
 
-1. **Languages Department** — English, and other languages as offered (French, Hausa, Chinese)
-2. **Mathematics & ICT Department**
-3. **Humanities Department**
-4. **Science & Technology Department**
-5. **Commerce & Management Department** — recovered; Financial Accounting, Commerce, Economics, Bookkeeping, Marketing, Business Studies
-6. **Arabic Language Department**
-7. **Islamic Studies Department** — standardised spelling; kept constitutionally distinct from Qur'an College (a separate institution, not a department)
+**Article 97 — Political interference.** The Institution shall not be affiliated with, and no office holder shall use institutional authority to advance, any political party or partisan political cause. Nothing in this Article prevents the Institution's lawful engagement with government or regulatory bodies through the Public Affairs office under Article 73.
 
-No department is added beyond these seven; the Founder's own supplied list (six named departments) is corrected here only by restoring the one genuinely missing member, not expanded further.
+**Article 98 — Religious extremism.** No person shall use any office or platform within the Institution to promote sectarian division, extremism, or interpretation of Islamic teaching inconsistent with the Institution's founding character as determined by the Founder & CEO under Article 16 and the Religious Affairs Coordination Council under Article 69. Conduct in breach of this Article is grounds for immediate removal notwithstanding any other provision of this Constitution.
+
+**Article 99 — Financial misconduct.** No office holder shall misappropriate, misapply, or conceal institutional funds. Every financial transaction above a threshold fixed by the Board's Finance Committee shall require dual authorisation. The Audit & Risk Committee shall have unrestricted access to financial records for this purpose.
+
+**Article 100 — Conflicts of interest.** Every Governor, EMT member, and committee member shall declare, in writing, any material personal, financial, or family interest in a matter before the body considering it, and shall withdraw from the discussion and any vote on that matter. A standing register of declared interests shall be maintained by the Governance & Ethics Committee.
 
 ---
 
-## PART IX — Standing Committees
+## CHAPTER XV — FINANCIAL GOVERNANCE
 
-### 9.1 — Board Committees (governing)
+**Article 101.** The Institution's financial year, budget process, and external audit arrangements shall be as determined by Board resolution on the recommendation of the Finance Committee, and reviewed not less than once every three years.
 
-Finance · Governance & Ethics · **Nominations & Remuneration (new)** · **Audit & Risk (renamed to absorb risk oversight, avoiding a separate Risk Committee)** · Academic Excellence · Development.
+**Article 102.** No expenditure outside the approved annual budget above the threshold fixed under Article 14 may be incurred without Board approval under Article 41(a).
 
-*Ethics is absorbed into Governance, not split out separately: conduct and ethics oversight is core governance-committee business internationally, and a seventh Board committee for ethics alone would fragment, not strengthen, that oversight.* *Risk is absorbed into Audit for the same reason — most institutions at SHRS's scale run these as one committee, not two.*
-
-### 9.2 — Management Committees (operational, cross-institutional)
-
-Admissions & Enrolment (new) · **Student Discipline (new, chaired by the Vice Principal (Administration) at Royal College, per Article 12's constitutional grant of discipline)** · Health and Safety (formalising the existing, already-adopted body) · Complaints (formalising the existing, already-adopted three-governor body) · **Safeguarding (new — remains the single most urgent gap identified in this and my earlier report)** · **Scholarship & Financial Aid (new, working jointly with the Sultan Hanafi Foundation and Finance)** · **ICT & Digital Governance (new, modest — chaired by the ICT Office, with Legal & Compliance and Digital Learning & Innovation represented, meeting quarterly)**.
-
-*Curriculum Committee, as separately suggested, is recommended as a working group under the Academic Committee (§9.3) rather than a further standing committee — the work is real, but a school this size does not need a separate standing body for it distinct from Academic Committee's own remit.*
-
-### 9.3 — Academic Committees
-
-- **Academic Committee** — chaired by the Vice Principal (Academics) at Royal College; carries curriculum-working-group function
-- **Da'wah Committee** — chaired under the Ra'ees's constitutional Da'wah authority (Article 14); ambiguity from my earlier report now resolved (§4.10 above)
-- **Sports Committee**
-- **Academic Research & Innovation Committee** (renamed from "Research & Transformation," per my earlier report, chaired by the Head, Research & Development)
-- **Social & Welfare Committee**
-- **Examinations Board** (new — the committee wrapper the existing Examinations office has never had)
+**Article 103.** The Institution's external auditor shall be independent of the Institution and of every Governor, and shall report directly to the Audit & Risk Committee, not to the Founder & CEO or the EMT.
 
 ---
 
-## PART X — Appointment Procedures
+## CHAPTER XVI — SUCCESSION
 
-| Office | Appointed by | Process |
-|---|---|---|
-| Board members | Founder & CEO, ratified by existing Board resolution | Per Article 17(a)/(b) |
-| Founder & CEO successor | The Founder alone, by written instrument | Part XII |
-| Constituent-institution Heads (Principal, Ra'ees, Mudeer, Head Teacher) | Founder & CEO | Article 17(a) |
-| Vice Principals | Founder & CEO, on the Principal's recommendation | Ordinary delegated executive appointment (Article 18) |
-| Heads of Department | Relevant institution Head, on the Vice Principal (Academics)'/Academic Council's recommendation | Ordinary delegated appointment |
-| Educators | Relevant institution Head, via HR | Ordinary staff recruitment, per the existing Staff Handbook |
-| Committee Chairs | Board committee chairs: ratified by the Founder & CEO (Article 17(b)); Management/Academic committee chairs: appointed by the CEO or the relevant institution Head as constitutionally specified in Part IX | |
-| Student Representatives / Prefects | Nominated by peers or staff, confirmed by the relevant institution Head and Student Affairs | Not a constitutional-authority appointment — a supervisory/pastoral one (Article 16) |
+**Article 104.** The Founder may, at any time, nominate a successor to the office of Founder & CEO by written instrument lodged with the Board, revisable or revocable by the Founder alone while living and capable of holding office.
 
-Removal at every level follows the same appointing authority in reverse, subject to any applicable disciplinary or due-process policy already governing staff conduct (Staff Conduct Policy) — this Constitution does not create a separate removal procedure that competes with existing HR-governed process for ordinary staff.
+**Article 105.** The nomination under Article 104 takes effect upon:
+(a) the Founder's death;
+(b) incapacity certified under Article 22 and confirmed by Board resolution as permanent; or
+(c) the Founder's voluntary full retirement declared in writing to the Board.
 
----
+**Article 106.** Where no nomination under Article 104 exists at the time an event under Article 105 occurs, the Board, acting through the Nominations & Remuneration Committee, shall appoint an interim Founder & CEO within thirty days and shall conduct a full search for a permanent successor within one year.
 
-## PART XI — Checks and Balances
+**Article 107.** From the occurrence of an event under Article 105, the Board's discretion to amend Chapter II under Article 114 no longer requires the original Founder's individual consent, the reversionary condition having occurred.
 
-Separation of powers is structural, not aspirational, throughout this Constitution: governing (Board), executive (CEO/Management Council), academic (Academic Council), administrative (functional offices), and religious (Mudeer/Ra'ees) authorities are five genuinely distinct tracks (Part III), not one ladder with checkpoints. Financial accountability runs through the Finance/Bursary office, the Board's Finance Committee, and the Board's Audit & Risk Committee, in a three-point structure where no single office both spends and audits its own spending. Conflict of interest and ethics are the Governance & Ethics Committee's explicit mandate (§9.1). Transparency and independent oversight rest on the Authority Register (Article 19) — a record the Founder cannot edit after the fact, by design, since it is an append-only chronological log, not a mutable file. Internal investigations follow the Safeguarding Committee (child-protection matters, routed to the Designated Safeguarding Lead) or the Complaints Committee (all other formal complaints), never an ad hoc process improvised for a single incident.
+**Article 108.** Succession to every other constitutional office proceeds under the ordinary appointment provisions of Chapter XIII. The Nominations & Remuneration Committee shall monitor succession readiness for every constitutional office, without itself making the appointment.
 
 ---
 
-## PART XII — Succession Framework
+## CHAPTER XVII — INSTITUTIONAL CONTINUITY
 
-**Article 24.** The Founder may nominate a successor to the merged Founder & CEO office (Article 11) at any time, by written instrument lodged with the Board of Trustees, revisable or revocable by the Founder alone while living and capable. On the Founder's death, or on incapacity certified by two independent medical practitioners and confirmed by Board resolution, or on the Founder's voluntary full retirement declared in writing, the nomination (if any) takes effect; if no nomination exists, the Board of Trustees, acting through the Nominations & Remuneration Committee (§9.1), appoints an interim CEO within thirty days and conducts a full CEO search within one year. From that point forward, Article 17's reserved powers pass to the successor CEO in the same form, but the Board's own Article 17(second sentence) discretion to amend those powers no longer requires the *original* Founder's consent — it may proceed by ordinary Board resolution under Part XIII, since the reversionary condition (death, incapacity, or retirement) has occurred. This is the structural safeguard against permanent, unamendable founder-lock: the special protection is real while the Founder serves, and lifts automatically, not by anyone's discretionary decision, the moment it no longer applies.
+**Article 109 — Dissolution.** The Institution shall not be dissolved save by a resolution of not fewer than three-quarters of the Governors then in office, with the Founder & CEO's consent while the Founder holds that office, and subject to any applicable law governing the Institution's chosen legal form. On dissolution, any remaining assets shall be applied to an educational or charitable purpose consistent with the Institution's objects, as the Board resolves.
 
-Succession at other office levels (constituent-institution Heads, Vice Principals, the Mudeer, the Ra'ees) follows the ordinary appointment procedure in Part X, with the Nominations & Remuneration Committee monitoring succession *readiness* — not making the appointment itself — for every constitutional office, so that no single departure (planned or sudden) leaves an office vacant without a known process already running.
+**Article 110 — Merger.** The Institution may merge with, or admit as a further Constituent Institution, another educational institution only by Board resolution under Article 109's voting threshold, and only where the Governance & Ethics Committee certifies the merger consistent with this Constitution's objects and religious character.
 
----
+**Article 111 — Institutional restructuring.** Any restructuring materially affecting the governance architecture in Chapters II–XIV requires Board approval under Article 41 and, where it amounts to constitutional amendment, compliance with Chapter XIX.
 
-## PART XIII — Constitutional Amendment
-
-**Article 25.** Any trustee, the Founder & CEO, or any Board standing committee may propose an amendment to this Constitution. An amendment requires: (a) written notice to all trustees at least thirty days before the vote; (b) a two-thirds majority of trustees present and voting; and (c), while the Founder holds office under Article 11, the Founder's own written consent for any amendment touching Part V (the Founder's powers) specifically — ordinary amendments elsewhere in this Constitution do not require the Founder's individual consent beyond their vote as a Board member. This consent requirement lapses automatically per Article 24's reversionary condition. The Board's Governance & Ethics Committee is responsible for verifying that a proposed amendment does not silently alter Part V through a change elsewhere in the document, and must certify this before any Part-V-adjacent amendment is put to a vote.
+**Article 112 — Continuity of office.** No vacancy in any constitutional office, however arising, dissolves the office itself or the authority attached to it; that authority continues to be exercised through the succession or acting-office provisions applicable to it.
 
 ---
 
-## PART XIV — Institutional Ceremonial Order
+## CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION
 
-**Order of precedence (for ceremonial and protocol purposes only — this has no bearing on the authority structure in Part IV):** Founder & CEO; Board of Trustees (as a body, then individually by seniority of appointment); the Mudeer and the Ra'ees (equal precedence, alternating by occasion consistent with their equal institutional rank, Article 15); the Principal, Head Teacher; Vice Principals; Registrar; other Management Council members; Heads of Department; committee chairs; educators; student leadership (Prefects, then Class Captains).
+**Article 113.** Any Governor, the Founder & CEO, or any Board standing committee may propose an amendment to this Constitution.
 
-**Signing authority:** contracts and formal instruments above the Board-approval threshold (Article 20) require the Founder & CEO's signature or that of an expressly, currently-recorded delegate (Article 18/19); day-to-day operational documents are signed by the relevant office holder within their own constitutional remit, with no CEO countersignature required.
+**Article 114.** An amendment requires:
+(a) written notice to all Governors not less than thirty days before the vote;
+(b) a resolution of not fewer than two-thirds of Governors present and voting; and
+(c) while the Founder holds the office of Founder & CEO, the Founder's own written consent to any amendment of Chapter II, in addition to the Founder's vote as a Governor.
 
-**Official titles** are as constitutionally named throughout this document (Founder & CEO; Principal; Vice Principal (Academics); Vice Principal (Administration); Ra'ees; Mudeer; Head Teacher; Registrar) — informal or portal-branding variants (Part VI) must not be used in any signed or ceremonial instrument.
+**Article 115.** The consent requirement in Article 114(c) lapses automatically on the occurrence of an event under Article 105.
 
----
+**Article 116.** The Governance & Ethics Committee shall certify, before any vote under Article 114, whether a proposed amendment outside Chapter II nonetheless has the effect of altering Chapter II, in which event Article 114(c) applies to it.
 
-## PART XV — Schedules
+**Article 117 — Constitutional review.** This Constitution shall be reviewed by the Board not less than once every five years, whether or not any amendment is proposed, to confirm its continued fitness for the Institution's governance.
 
-**Schedule A — Constitutional Organogram:** as rendered in my earlier Architect's Report (`docs/shrs-institutional-governance-architecture-2026.md`, §9.1), updated to show the Royal College Principal/VP structure and the Mudeer/Ra'ees coordinate religious authority explicitly — recommended for redrawing once this draft is adopted, not duplicated here.
+**Article 118 — Constitutional interpretation.** Where a question of interpretation of this Constitution arises and is not resolved by its own terms, the Governance & Ethics Committee shall give an advisory opinion to the Board, which shall be binding unless the Board resolves otherwise by the majority in Article 114(b).
 
-**Schedule B — Reporting Lines:** Governing (Board) → Executive (CEO/Management Council) → [Academic (Academic Council/Heads of Department) and Administrative (functional offices) and Religious (Mudeer/Ra'ees), three further parallel branches] → teaching/operational staff. Student Leadership reports, for supervision only, into Student Affairs and the relevant institution Head, outside this ladder (Article 16).
-
-**Schedule C — Committee Reporting Hierarchy:** as listed in full in Part IX, grouped by Board / Management / Academic tier.
-
-**Schedule D — Appointment Matrix:** as tabulated in full in Part X.
-
-**Schedule E — Authority Matrix:** the permission-scope table already maintained in `docs/role-permission-matrix.md`, to be updated per this Constitution's Article 12 refinement (splitting the `VP` role code into `VPA`/`VPD`) as its next revision.
-
-**Schedule F — Delegation Matrix:** the Authority Register (Article 19) itself serves as the living delegation matrix — this Constitution deliberately does not duplicate it as a static schedule, since a static document would drift out of date the moment it was printed; the register is the authoritative, current record by design.
+**Article 119 — Constitutional supremacy, restated.** No office, policy, or practice of the Institution, however long-established, shall be read to override this Constitution. Practice inconsistent with this Constitution is void to the extent of the inconsistency from the date this Constitution is adopted.
 
 ---
 
-## Closing note on scope
+## CHAPTER XIX — CEREMONIAL ORDER
 
-This draft fulfils the Founder's brief in full, including every one of the seven fixed constitutional decisions, unaltered. Where I recommended a refinement, I named the reason in the open, at the point it appears, rather than burying it in a summary — consistent with the standing instruction not to insert new structure silently. The single most time-sensitive item in this entire document, restated from my earlier report and unchanged by anything here, remains: **stand up the Safeguarding Committee (§9.2) as soon as possible** — everything else in this Constitution can proceed on the Board's own timetable.
+**Article 120 — Order of precedence.** For ceremonial and protocol purposes only, and without affecting the authority structure in Chapters II–XIV, precedence at institutional occasions is: the Founder & CEO; the Board of Governors as a body, then individually by seniority of appointment; the Mudeer and the Ra'ees, of equal precedence, alternating by occasion; the Principal and the Head Teacher; the Vice Principals; the Registrar; other members of the EMT; Heads of Department; committee chairs; educators; student leadership, Prefects preceding Class Captains.
+
+**Article 121 — Signing authority.** Instruments above the threshold fixed under Article 14 shall be signed by the Founder & CEO or by a currently-recorded delegate under Article 13. Instruments within an office's own constitutional remit shall be signed by that office holder without further countersignature.
+
+**Article 122 — Official titles.** The only official titles for use in signed or ceremonial instruments are those established by this Constitution. No informal or promotional variant of a title established here shall be so used.
+
+---
+
+## SCHEDULES
+
+**Schedule A — Constitutional Organogram.** Governing (Board of Governors, and its Committees under Chapter XI, Schedule of Board Committees) → Executive (Founder & CEO, then the EMT under Chapter IV) → three parallel branches: Academic (Academic Council, Chapter VI; Heads of Department, Chapter IX), Administrative (offices under Chapter VIII), and Religious (Mudeer and Ra'ees, Chapter VII) → teaching and operational staff. Student Leadership (Chapter X) reports, for supervision only, to Student Affairs and the relevant Constituent Institution Head, outside this structure.
+
+**Schedule B — Reporting Lines.** As set out in Schedule A, and in the "Reports to" column of each committee entry in Chapter XI's three Schedules.
+
+**Schedule C — Committee Reporting Hierarchy.** The three Schedules to Chapter XI, in full.
+
+**Schedule D — Appointment Matrix.** Chapter XIII, Article 94, in full.
+
+**Schedule E — Authority Matrix.** The role-and-permission schedule maintained as `docs/role-permission-matrix.md`, incorporated by reference and to be updated to reflect the Vice Principal (Academics)/Vice Principal (Administration) distinction in Chapter V upon this Constitution's adoption.
+
+**Schedule F — Delegation Matrix.** The Authority Register maintained under Article 13A is the Institution's living, current delegation matrix, and is incorporated by reference in preference to any static schedule, which would become inaccurate the moment it was fixed in print.
+
+---
+
+## DRAFTING NOTES — NOT PART OF THE CONSTITUTION
+
+*These notes carry no constitutional or legal effect. They exist solely to record, for the Board's benefit, every judgment this drafter made beyond the Founder's own fixed decisions, and to flag one internal cross-reference that needs the Board's attention before adoption.*
+
+1. **Numbers you should treat as recommended defaults, not fixed facts.** Board size (5–11), Governor term (4 years, renewable once), meeting frequencies, notice periods, and financial thresholds are this drafter's professional recommendations, calibrated to institutions of SHRS's scale, not facts recovered from any prior SHRS record. The Board should adopt, adjust, or replace every number in Chapters III, IV, and XI freely — nothing about the *structure* of this Constitution depends on the specific figures chosen.
+
+2. **A cross-referencing defect caught and fixed during drafting, recorded here for transparency.** An earlier internal draft of this Chapter referred to "Article 154" for the Authority Register — a citation to an Article that does not exist in this document's numbering. Rather than leave that seam in a document meant to withstand a legal scholar's reading, it has been fixed directly: **Article 13A** now establishes the Authority Register in its own right (institution-wide in scope, not only a delegation log), inserted immediately after Article 13 using letter-suffix numbering — the standard technique real legislatures use to insert a provision without renumbering everything that follows it. Article 95 and Schedule F now both cite Article 13A correctly. No other cross-reference in this document has been found to have the same defect, but the Board's own legal drafter should verify every Article citation before formal adoption, as a matter of ordinary due diligence for any legal instrument.
+
+3. **What is already real versus newly proposed, restated once more for clarity.** Real, already built and enforced in the Institution's administrative system: the delegation-expiry rule, the no-delegating-what-you-don't-hold rule, and the append-only Authority Register (Article 13; `functions/api/portal/staff/delegations.js`, `functions/api/portal/admin/authority-register.js`). Newly proposed in this draft, not previously existing anywhere in SHRS's record: the Board of Governors' full composition/term/removal machinery (Chapter III), the EMT's collective-responsibility and decision-making rules (Chapter IV, Articles 46–47), the Academic Council (Chapter VI), the Religious Affairs Coordination Council (Article 69), the full Committee Schedule (Chapter XI), and the Safeguarding Committee's standing-committee status (Chapter XII) — all of these are this drafter's professional design, offered for adoption, not restatement of prior SHRS decision.
+
+4. **The single highest-priority action, unchanged across every version of this advice.** Constitute the Safeguarding Committee (Chapter XII) and appoint a Designated Safeguarding Lead under Article 87 before any other provision of this Constitution is implemented. Everything else here can proceed on the Board's own timetable.
+
+5. **Language check against the Founder's own instruction.** Every operative Article above is written in the form "There shall be...", "The [office] shall...", "No person shall...", "Subject to...", or "Notwithstanding..." — the explanatory voice used in the prior v3.0 draft (and in the earlier Architect's Report, `docs/shrs-institutional-governance-architecture-2026.md`, which remains available as background reading but is superseded by this draft as the constitutional instrument itself) has been removed from the operative text and confined entirely to this appendix.
