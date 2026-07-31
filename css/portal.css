@@ -1263,6 +1263,10 @@ body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-brig
    own office record, not a second identity. */
 body.portal-body[data-atmosphere="board-of-trustees"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
 body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="strategic-planning"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="quality-assurance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="legal-compliance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="public-affairs"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-finance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-governance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-audit"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
@@ -1492,6 +1496,10 @@ body.portal-body[data-atmosphere="student"]::before{
    language across its rooms, not a different one per door. */
 body.portal-body[data-atmosphere="board-of-trustees"]::before,
 body.portal-body[data-atmosphere="management-council"]::before,
+body.portal-body[data-atmosphere="strategic-planning"]::before,
+body.portal-body[data-atmosphere="quality-assurance"]::before,
+body.portal-body[data-atmosphere="legal-compliance"]::before,
+body.portal-body[data-atmosphere="public-affairs"]::before,
 body.portal-body[data-atmosphere="committee-finance"]::before,
 body.portal-body[data-atmosphere="committee-governance"]::before,
 body.portal-body[data-atmosphere="committee-audit"]::before,

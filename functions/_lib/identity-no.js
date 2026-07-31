@@ -150,6 +150,10 @@ const OFFICE_CODE_BY_SLUG = {
   'digital-services': 'ICT', // ICT Office's real slug
   'board-of-trustees': 'BOT',
   'management-council': 'MGT',
+  'strategic-planning': 'SPL',
+  'quality-assurance': 'QAS',
+  'legal-compliance': 'LGC',
+  'public-affairs': 'PUB',
   'academic-affairs': 'AAF',
   'examinations': 'EXM',
   'admissions': 'ADM',
