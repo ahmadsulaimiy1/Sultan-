@@ -790,7 +790,17 @@
   .hero-inner .crest-shimmer-wrap{display:inline-block;}
   .hero-inner .crest-shimmer-wrap::after{animation-duration:11s;}
   .hero-inner .eyebrow{justify-content:center;margin-bottom:22px;} .hero-inner .eyebrow::before{display:none;}
-  .hero h1{font-family:'Cinzel','Amiri',serif;font-size:clamp(2rem,4.6vw,3.4rem);color:#fff;letter-spacing:0.01em;animation:riseIn 1s ease both;}
+  .hero h1{font-family:'Cinzel','Amiri',serif;font-size:clamp(2rem,4.6vw,3.4rem);color:#fff;letter-spacing:0.01em;animation:riseIn 1s ease both;position:relative;padding-bottom:26px;}
+  /* Ceremonial letterhead rule — the same royal-decree double-rule
+     treatment used under every Command Centre title in the portal,
+     centred here since the hero itself is centre-set. The single most
+     viewed heading on the site earns the same typographic authority. */
+  .hero h1::after{
+    content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:130px;height:11px;pointer-events:none;
+    background-image:linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%),linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%);
+    background-size:100% 2px,44% 1px;background-position:0 0,center 8px;background-repeat:no-repeat;opacity:0.9;
+  }
+  @media (max-width:600px){.hero h1::after{width:86px;height:8px;}}
   .hero h1 span{display:block;color:var(--gold-bright);font-size:0.5em;letter-spacing:0.28em;margin-top:14px;font-family:'Inter','Cairo',sans-serif;font-weight:600;}
   .hero h1 .hero-subline{opacity:0;transform:translateY(10px);animation:riseIn .8s ease 2.1s forwards;}
   @media (prefers-reduced-motion:reduce){.hero h1 .hero-subline{animation:none;opacity:1;transform:none;}}
@@ -853,9 +863,25 @@
   @media (max-width:860px){.director-grid{grid-template-columns:1fr;gap:30px;}}
   .director-card{background:var(--navy);color:var(--ivory);padding:40px 32px;position:relative;transition:box-shadow .35s ease,transform .35s ease;}
   .director-card:hover{transform:translateY(-3px);box-shadow:0 32px 60px -30px rgba(34,23,9,0.6);}
+  .director-card::after{
+    content:"";position:absolute;inset:6px;pointer-events:none;
+    border:1px solid rgba(233,206,138,0.16);
+  }
+  /* Founder photo — the same real, already-published image and gold
+     ring treatment used on the Governance Headquarters spotlight, so
+     the homepage's first mention of institutional leadership isn't
+     text-only where the governance page's is. */
+  .director-card .dc-photo{width:84px;height:84px;border-radius:50%;overflow:hidden;border:1px solid var(--gold);box-shadow:0 0 0 6px rgba(198,161,91,0.14);margin-bottom:18px;}
+  .director-card .dc-photo img{width:100%;height:100%;object-fit:cover;display:block;}
   .director-card .role{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.16em;color:var(--gold-bright);text-transform:uppercase;}
-  .director-card h3{color:#fff;font-size:1.6rem;margin:10px 0 6px;}
-  .director-card .creds{font-size:0.82rem;color:rgba(248,244,233,0.7);}
+  .director-card h3{color:#fff;font-size:1.6rem;margin:10px 0 6px;position:relative;padding-bottom:14px;}
+  .director-card h3::after{
+    content:"";position:absolute;left:1px;bottom:0;width:80px;height:9px;pointer-events:none;
+    background-image:linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%),linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%);
+    background-size:100% 2px,42% 1px;background-position:0 0,0 7px;background-repeat:no-repeat;opacity:0.85;
+  }
+  [dir="rtl"] .director-card h3::after{left:auto;right:1px;}
+  .director-card .creds{font-size:0.82rem;color:rgba(248,244,233,0.7);margin-top:8px;}
   .director-body p{margin-bottom:16px;font-size:0.97rem;color:#3a3934;}
   .director-body p:first-of-type::first-letter{font-family:'Cinzel','Amiri',serif;font-size:2.6rem;color:var(--gold);float:left;line-height:0.8;margin:6px 8px 0 0;}
 
@@ -916,6 +942,10 @@
   .wird-quran-card p{font-size:0.88rem;color:#6b6a63;line-height:1.55;margin:0;}
   .wird-card .teaser-link{margin-top:16px;}
   .quote-panel{background:var(--navy);color:var(--ivory);padding:44px 38px;position:relative;border-left:3px solid var(--gold);}
+  .quote-panel::after{
+    content:"";position:absolute;top:6px;right:6px;bottom:6px;left:9px;pointer-events:none;
+    border:1px solid rgba(233,206,138,0.16);
+  }
   .quote-panel .mark{font-family:'Cormorant Garamond','Amiri',serif;font-size:4rem;color:var(--gold);line-height:0.4;display:block;margin-bottom:14px;}
   .quote-panel p{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:1.3rem;color:#fff;}
   .quote-panel .who{margin-top:22px;font-family:'Inter','Cairo',sans-serif;font-style:normal;font-size:0.78rem;color:var(--gold-bright);letter-spacing:0.05em;text-transform:uppercase;}
@@ -1245,10 +1275,18 @@
   .institutions-showcase{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
   @media (max-width:900px){.institutions-showcase{grid-template-columns:1fr;}}
   .institution-card{
-    background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;
+    background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;position:relative;
     box-shadow:0 4px 18px -12px rgba(42,32,22,0.25);transition:box-shadow .3s ease,transform .3s ease;
   }
   .institution-card:hover{box-shadow:0 14px 32px -14px rgba(42,32,22,0.32);transform:translateY(-3px);}
+  /* Luxury material — a faint engraved bevel line set inside the card
+     edge, the same treatment used on the Digital Campus portal cards,
+     so the school-card material reads as a cut/inlaid panel rather
+     than a flat printed rectangle. */
+  .institution-card::after{
+    content:"";position:absolute;inset:5px;pointer-events:none;
+    border:1px solid rgba(198,161,91,0.22);
+  }
 
   .ic-visual{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--navy-deep);flex-shrink:0;}
   .ic-carousel .ic-slides{position:relative;width:100%;height:100%;}
