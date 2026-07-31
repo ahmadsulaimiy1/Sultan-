@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/css/portal.css">
 <script src="/js/portal-theme.js"></script>
 </head>
-<body class="portal-body">
+<body class="portal-body" data-atmosphere="registrar">
 
 <div class="portal-topbar">
   <a class="portal-brand" href="/">
@@ -31,8 +31,12 @@
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello">Registrar's Office</div>
+    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><div class="portal-hello">Registrar's Office</div></div>
+    <div class="cc-tagline" id="cc-tagline">Registry Headquarters</div>
+    <div class="cc-greeting" id="cc-greeting">Registry systems are operational.</div>
     <div class="portal-hello-sub">Academic records, enrolment, lifecycle events, and certification — one honest source per student, not a spreadsheet.</div>
+
+    <div class="office-group-head">Admissions Intelligence &amp; Student Registry</div>
 
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Look Up a Student</h2></div>
@@ -68,6 +72,8 @@
       <div class="registrar-form-result" data-enrol-result hidden></div>
     </div>
 
+    <div class="office-group-head">Certificates &amp; Verification</div>
+
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Pending Certificate Approvals</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">Visible to any signed-in staff member, but only a Principal's account can actually approve or reject one — the server checks this on every decision, not just this page. A Registrar cannot approve their own request. This queue doesn't depend on looking up a student first.</p>
@@ -75,7 +81,18 @@
       <div class="registrar-form-result" data-pending-approvals-result hidden></div>
     </div>
 
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Public Verification Tools</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">These are the same public, no-login lookup tools a third party (an employer, another school, a guardian) would use to confirm a record this office issued is genuine — the Registrar's Office is the natural steward of both.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;">
+        <a class="portal-topbar-link" href="/verify-certificate/" target="_blank" rel="noopener">Verify a Certificate →</a>
+        <a class="portal-topbar-link" href="/verify-identity/" target="_blank" rel="noopener">Verify a Student Identity Card →</a>
+      </div>
+    </div>
+
     <div data-registrar-record hidden>
+
+      <div class="office-group-head">Student Registry</div>
 
       <div class="portal-child-card">
         <div class="portal-child-head">
@@ -110,6 +127,8 @@
         <div data-record-hifz style="padding:16px 20px;"></div>
       </div>
 
+      <div class="office-group-head">Transcripts</div>
+
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Academic Standing</h2></div>
         <div class="portal-stats" data-record-standing></div>
@@ -124,6 +143,8 @@
         </div>
         <div class="portal-empty" data-record-results-empty hidden>No results have been recorded yet.</div>
       </div>
+
+      <div class="office-group-head">Records Maintenance</div>
 
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Record Attendance</h2></div>
@@ -175,6 +196,8 @@
         <div class="registrar-form-result" data-assessment-result hidden></div>
       </div>
 
+      <div class="office-group-head">Graduation &amp; Lifecycle</div>
+
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Lifecycle Timeline</h2></div>
         <div class="registrar-timeline" data-record-timeline></div>
@@ -216,6 +239,8 @@
         <div class="registrar-form-result" data-lifecycle-result hidden></div>
       </div>
 
+      <div class="office-group-head">Certificates</div>
+
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Certificates</h2></div>
         <div class="registrar-certificates" data-record-certificates></div>
@@ -253,6 +278,7 @@
 
     </div>
 
+    <div class="office-group-head">Records Integrity</div>
     <p class="portal-notice-on-dark">
       Every lookup, event, and certificate action is checked against your assigned roles under the SHRS Role &amp; Permission Matrix and recorded in the staff audit log. If an action is refused and you believe it shouldn't be, contact the ICT Office at
       <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.
@@ -269,6 +295,7 @@
 </main>
 
 <script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-arrival.js" defer></script>
 <script src="/js/portal-staff-registrar.js" defer></script>
 </body>
 </html>

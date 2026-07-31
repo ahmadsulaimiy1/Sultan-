@@ -524,6 +524,15 @@
       if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
       loadingEl.hidden = true;
       contentEl.hidden = false;
+      if(window.SHRSExecArrival){
+        window.SHRSExecArrival.play({
+          key: 'registrar',
+          icon: '<rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+          title: "Registrar's Office",
+          tagline: 'Registry Headquarters',
+          greeting: 'Registry systems are operational.',
+        });
+      }
       loadPendingApprovals();
     }catch(err){
       loadingEl.hidden = true;

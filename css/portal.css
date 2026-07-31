@@ -1185,6 +1185,29 @@ body.portal-body[data-atmosphere="certificates"]{--atmos:var(--bronze);--atmos-b
   color:var(--atmos-bright,var(--gold-bright));margin:2px 0 4px;
 }
 .cc-greeting{font-size:0.86rem;font-style:italic;color:rgba(248,244,233,0.8);margin-top:2px;}
+/* Light-background variant — .cc-tagline/.cc-greeting default to a
+   cream/white colour meant for the dark .exec-welcome hero (generic
+   office template). Registrar/Finance reuse the same two classes
+   directly on the light .portal-wrap header instead, so a direct-child
+   selector (never matched when the classes sit inside .exec-welcome)
+   swaps in ink-dark colours there without touching the office template. */
+.portal-wrap > .cc-greeting{color:var(--ink-soft);}
+
+/* Section-group headings for the Registrar/Finance prestige passes
+   (Phase 1 Item 2 continuation) — groups existing real cards under the
+   directive's named hierarchy (Admissions Intelligence, Student
+   Registry, Certificates, etc.) without moving or renaming any of the
+   working form markup underneath. Restrained: a label flanked by hairline
+   rules, not a heavy banner — "Rolls-Royce luxury is restraint." */
+.office-group-head{
+  display:flex;align-items:center;gap:10px;margin:36px 0 14px;
+  font-family:'Cinzel','Amiri',serif;font-size:0.76rem;font-weight:600;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--atmos-bright,var(--gold-bright));
+}
+.office-group-head::before{content:'';flex:0 0 22px;height:1px;background:currentColor;opacity:0.55;}
+.office-group-head::after{content:'';flex:1 1 auto;height:1px;background:currentColor;opacity:0.2;}
+.office-group-head:first-of-type{margin-top:4px;}
 
 /* Topbar, tab, and card-header accents pick up the atmosphere colour
    automatically wherever it's set; every one of these falls back to
