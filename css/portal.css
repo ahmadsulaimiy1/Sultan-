@@ -2049,6 +2049,110 @@ body.portal-body[data-atmosphere="certificates"]::before{
   .portal-select-h1{font-size:2rem;}
 }
 
+/* ============================================================
+   Institutional Access Gateway — portal/select/'s ceremonial rebuild
+   (Founder & CEO directive: "not a dropdown menu, a ceremonial
+   gateway"). Five identity-first entrance domains — Parents & Families,
+   Students & Learners, Educators & Staff, Governance & Board,
+   Verification & Records — replacing the old flat 3-card chooser
+   above (kept, unused elsewhere, in case of future reuse).
+   Honesty constraint carried over from the old copy: there are still
+   only THREE real credential sets (guardian/student/staff). Educators
+   & Staff and Governance & Board both route to the same staff sign-in
+   — the cards say so in their own copy rather than implying a fourth
+   or fifth login system that doesn't exist. Verification & Records
+   needs no login at all; its card expands a panel of the three real
+   public verification flows instead of navigating away.
+   ============================================================ */
+.gateway-main{padding:0 0 60px;}
+.gateway-hero{
+  position:relative;overflow:hidden;text-align:center;padding:64px 20px 48px;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 65%,#140d05 100%);
+  margin-bottom:44px;
+}
+.gateway-crest{width:52px;height:52px;object-fit:contain;opacity:0.95;margin-bottom:18px;filter:drop-shadow(0 0 14px rgba(233,206,138,0.35));}
+.gateway-eyebrow{
+  position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold-bright,var(--gold));margin:0 0 10px;
+}
+.gateway-title{
+  position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:2.6rem;color:#F8F4E9;margin:0 0 16px;
+}
+.gateway-typewriter{
+  display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;
+  border-inline-end:2px solid var(--gold-bright,var(--gold));
+  width:0;animation:gateway-typewriter-type 1.7s steps(29,end) 0.25s forwards, exec-caret-blink 0.9s steps(1) infinite 1.95s;
+}
+.gateway-sub{
+  position:relative;z-index:1;max-width:620px;margin:0 auto;color:rgba(248,244,233,0.78);font-size:0.98rem;line-height:1.65;
+}
+@keyframes gateway-typewriter-type{to{width:100%;}}
+@media (prefers-reduced-motion:reduce){
+  .gateway-typewriter{width:100%;animation:none;border-inline-end:none;}
+}
+
+.gateway-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;
+  max-width:1100px;margin:0 auto;padding:0 20px;
+}
+.gateway-card{
+  position:relative;display:flex;flex-direction:column;gap:10px;text-align:start;
+  background:var(--portal-card);border:1px solid var(--line);border-top:4px solid var(--gate-accent,var(--gold));
+  padding:30px 26px;text-decoration:none;cursor:pointer;font:inherit;color:inherit;
+  overflow:hidden;transform-style:preserve-3d;perspective:900px;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+  --gate-rx:0deg;--gate-ry:0deg;
+}
+.gateway-card[data-accent="parent"]{--gate-accent:var(--rosewood-bright,var(--rosewood));}
+.gateway-card[data-accent="student"]{--gate-accent:var(--sapphire-bright,var(--sapphire));}
+.gateway-card[data-accent="staff"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card[data-accent="governance"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card[data-accent="verify"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card:hover,.gateway-card:focus-visible{
+  transform:rotateX(var(--gate-rx)) rotateY(var(--gate-ry)) translateY(-6px);
+  box-shadow:0 20px 38px rgba(20,20,10,0.16);border-top-color:var(--gate-accent,var(--gold-bright));
+}
+.gateway-card::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(100deg,transparent 30%,color-mix(in srgb, var(--gate-accent, var(--gold-bright)) 45%, transparent) 48%,rgba(255,255,255,0.22) 50%,color-mix(in srgb, var(--gate-accent, var(--gold-bright)) 45%, transparent) 52%,transparent 70%);
+  background-size:240% 100%;background-position:240% 0;opacity:0;transition:opacity .25s ease;
+}
+.gateway-card:hover::before,.gateway-card:focus-visible::before{opacity:1;animation:gateway-card-sweep 1.4s ease-in-out;}
+@keyframes gateway-card-sweep{from{background-position:240% 0;}to{background-position:-40% 0;}}
+.gateway-card-icon{position:relative;z-index:1;width:30px;height:30px;color:var(--gate-accent,var(--gold-bright));}
+.gateway-card-icon svg{display:block;width:100%;height:100%;}
+.gateway-card-eyebrow{position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.12em;color:var(--gate-accent,var(--gold-bright));}
+.gateway-card h2{position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:1.4rem;color:var(--portal-heading);margin:0;}
+.gateway-card p{position:relative;z-index:1;font-size:0.88rem;color:var(--ink-soft);line-height:1.55;flex:1;margin:0;}
+.gateway-card-cta{position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;color:var(--gate-accent,var(--gold-bright));font-weight:700;}
+@media (prefers-reduced-motion:reduce){
+  .gateway-card{transition:none;}
+  .gateway-card:hover,.gateway-card:focus-visible{transform:none;}
+  .gateway-card::before{display:none;}
+}
+@media (hover:none){.gateway-card{--gate-rx:0deg;--gate-ry:0deg;}}
+
+.gateway-verify-panel{
+  max-width:1100px;margin:20px auto 0;padding:0 20px;display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+}
+.gateway-verify-panel[hidden]{display:none;}
+.gateway-verify-panel a{
+  display:block;background:var(--portal-card);border:1px solid var(--line);border-inline-start:3px solid var(--gold-bright,var(--gold));
+  padding:16px 18px;text-decoration:none;color:var(--portal-heading);font-family:'Cinzel','Amiri',serif;font-size:0.84rem;
+  transition:border-color .2s ease,transform .2s ease;
+}
+.gateway-verify-panel a:hover{border-color:var(--gold-bright,var(--gold));transform:translateX(3px);}
+[dir="rtl"] .gateway-verify-panel a:hover{transform:translateX(-3px);}
+.gateway-verify-note{grid-column:1/-1;font-size:0.8rem;color:var(--ink-soft);margin:4px 0 0;}
+
+.gateway-footnote{max-width:1100px;margin:36px auto 0;padding:20px 20px 0;border-top:1px solid var(--line);font-size:0.84rem;color:var(--ink-soft);}
+.gateway-footnote a{color:var(--gold-bright,var(--gold));}
+@media (max-width:640px){
+  .gateway-title{font-size:2rem;}
+  .gateway-hero{padding:48px 16px 36px;}
+}
+
 #office-switcher-mount[hidden]{display:none;}
 .office-switcher{position:relative;}
 .office-switcher-toggle{
