@@ -370,3 +370,44 @@ Hifz/Muraja'ah/Ijazah data (`hifz_progress`, `ijazah_register` already
 exist and could be wired in), Communications' real Announcements admin
 API, Principal/Registrar's real Assessment/Results data. These are real
 next steps, not fabrication risks, and are tracked separately.
+
+## Board Papers Centre (Founder Authority Framework directive)
+
+Meetings, documents, and resolutions already existed as real, generic
+per-office registers (see above) before this pass — the one genuinely
+missing piece was **action tracking**: a governance decision recorded in
+a meeting's minutes or a resolution had no traceable owner, due date, or
+status, only prose in `minutes_text`/`summary_text`.
+
+- **`office_action_items`** (`sql/schema.sql` + `functions/api/portal/
+  setup.js`) — generic per-office, like `office_meetings`/
+  `office_resolutions`/`office_documents`, not Board-of-Trustees-only.
+  Columns: `office_id`, optional `meeting_id`/`resolution_id` (so an
+  action item can trace back to the meeting or resolution that created
+  it, or stand alone), `title`, `description`, `owner_staff_id`,
+  `due_date`, `status` (`open`/`in_progress`/`done`/`cancelled`),
+  `created_by_staff_id`, `completed_at`. "Overdue" is computed at query
+  time from `due_date` (`is_overdue` in both read endpoints below) —
+  same convention as delegation expiry — since this project has no cron
+  job.
+- **Read**: `functions/api/portal/staff/office/[slug].js` (the session-
+  gated endpoint every office portal page renders from) now returns
+  `actionItems` alongside `resolutions`; `functions/api/portal/admin/
+  staff.js`'s `view=action-items` serves the same register to the
+  Administration Centre.
+- **Write**: `create-action-item` / `update-action-item` actions on
+  `functions/api/portal/admin/staff.js`, mirroring the existing
+  `create-resolution`/`update-resolution` pattern exactly.
+- **UI**: an "Action Items" tab was added to all 28 generated office
+  portal pages (`portal/office/*/index.html`) and to the Institutional
+  Administration Centre's office-detail view
+  (`js/portal-admin-centre.js`) — both gated the same way Resolutions
+  already is: visible only for governance-type offices (Board of
+  Trustees and its five committees), hidden entirely elsewhere rather
+  than shown as a meaningless empty tab. Overdue items are flagged with
+  a rosewood left-border in both the office portal view
+  (`js/portal-office.js`) and the admin table.
+
+Starts empty, like every other register in this ecosystem — no action
+item is invented; the register only grows through real meetings and
+resolutions once staff actually use it.

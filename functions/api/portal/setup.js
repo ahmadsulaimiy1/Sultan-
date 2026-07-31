@@ -522,6 +522,31 @@ const STATEMENTS = [
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_office_resolutions_office ON office_resolutions(office_id)`,
+
+  // Board Papers Centre (Founder Authority Framework / Institutional
+  // Excellence 2030 directive): the one genuinely missing piece over the
+  // three tables above (meetings, resolutions, documents already
+  // existed) — a real action-tracking register, so a governance
+  // decision has a traceable owner and due date rather than living
+  // only as prose inside minutes_text/summary_text. Generic per-office,
+  // not Board-of-Trustees-only. "Overdue" is computed at query time
+  // from due_date — no cron job exists in this project.
+  `CREATE TABLE IF NOT EXISTS office_action_items (
+    id                  SERIAL PRIMARY KEY,
+    office_id           INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+    meeting_id          INTEGER REFERENCES office_meetings(id) ON DELETE SET NULL,
+    resolution_id       INTEGER REFERENCES office_resolutions(id) ON DELETE SET NULL,
+    title               TEXT NOT NULL,
+    description         TEXT,
+    owner_staff_id      INTEGER REFERENCES staff(id),
+    due_date            DATE,
+    status              TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'done', 'cancelled')),
+    created_by_staff_id INTEGER REFERENCES staff(id),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    completed_at        TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_office_action_items_office ON office_action_items(office_id)`,
+
   `INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
     SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
     FROM (VALUES

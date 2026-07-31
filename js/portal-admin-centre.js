@@ -172,12 +172,14 @@
       + '<button type="button" class="office-tab" data-tab="meetings">Meetings</button>'
       + '<button type="button" class="office-tab" data-tab="documents">Documents</button>'
       + (showResolutions ? '<button type="button" class="office-tab" data-tab="resolutions">Resolutions</button>' : '')
+      + (showResolutions ? '<button type="button" class="office-tab" data-tab="action-items">Action Items</button>' : '')
       + '</nav>'
       + '<div class="office-panel is-active" id="admin-panel-content"></div>'
       + '<div class="office-panel" id="admin-panel-appointments"></div>'
       + '<div class="office-panel" id="admin-panel-meetings"></div>'
       + '<div class="office-panel" id="admin-panel-documents"></div>'
       + (showResolutions ? '<div class="office-panel" id="admin-panel-resolutions"></div>' : '')
+      + (showResolutions ? '<div class="office-panel" id="admin-panel-action-items"></div>' : '')
       + '</div>';
 
     var tabs = el.querySelectorAll('.office-tab');
@@ -214,6 +216,12 @@
     if (tab === 'resolutions') {
       apiGet('resolutions', { officeName: office.name }).then(function (r) {
         renderResolutionsTab(office, r.ok ? r.data.resolutions : []);
+      });
+      return;
+    }
+    if (tab === 'action-items') {
+      apiGet('action-items', { officeName: office.name }).then(function (r) {
+        renderActionItemsTab(office, r.ok ? r.data.actionItems : []);
       });
       return;
     }
@@ -376,6 +384,41 @@
       }).then(function (r) {
         if (r.ok) { statusEl('res-form-status', 'Added.', true); loadTab('resolutions'); }
         else statusEl('res-form-status', r.data.error || 'Could not add.', false);
+      });
+    });
+  }
+
+  // Board Papers Centre — action items: a traceable owner + due date for a
+  // decision made in a meeting or resolution, not just prose in minutes_text.
+  function renderActionItemsTab(office, actionItems) {
+    var el = document.getElementById('admin-panel-action-items');
+    if (!el) return;
+    var rows = (actionItems || []).map(function (a) {
+      return '<tr class="' + (a.isOverdue ? 'is-overdue' : '') + '"><td>' + esc(a.title) + '</td><td>'
+        + (a.owner ? esc(a.owner.fullName) : '—') + '</td><td>' + (a.dueDate ? fmtDate(a.dueDate) : '—') + '</td><td>'
+        + esc(a.isOverdue ? 'overdue' : a.status.replace('_', ' ')) + '</td></tr>';
+    }).join('') || '<tr><td colspan="4">No action items recorded yet.</td></tr>';
+    el.innerHTML =
+      '<div style="padding:20px 26px 0;overflow-x:auto;"><table class="admin-table"><thead><tr><th>Title</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+      + '<form class="admin-form" id="ai-form">'
+      + '<div class="admin-form-grid">'
+      + '<div class="admin-field"><label>Title</label><input name="title" required /></div>'
+      + '<div class="admin-field"><label>Owner Staff No. (optional)</label><input name="ownerStaffNo" /></div>'
+      + '<div class="admin-field"><label>Due Date</label><input type="date" name="dueDate" /></div>'
+      + '<div class="admin-field"><label>Status</label><select name="status"><option value="open">Open</option><option value="in_progress">In Progress</option><option value="done">Done</option><option value="cancelled">Cancelled</option></select></div>'
+      + '<div class="admin-field"><label>Description</label><textarea name="description"></textarea></div>'
+      + '</div>'
+      + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Add Action Item</button><span class="admin-form-status" id="ai-form-status"></span></div>'
+      + '</form>';
+    document.getElementById('ai-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var fd = new FormData(e.target);
+      apiPost('create-action-item', {
+        officeName: office.name, title: fd.get('title'), ownerStaffNo: fd.get('ownerStaffNo') || undefined,
+        dueDate: fd.get('dueDate') || undefined, status: fd.get('status'), description: fd.get('description') || undefined,
+      }).then(function (r) {
+        if (r.ok) { statusEl('ai-form-status', 'Added.', true); loadTab('action-items'); }
+        else statusEl('ai-form-status', r.data.error || 'Could not add.', false);
       });
     });
   }

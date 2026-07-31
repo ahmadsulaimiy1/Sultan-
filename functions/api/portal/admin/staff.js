@@ -286,6 +286,31 @@ export async function onRequestGet({ request, env }) {
       })) });
     }
 
+    if (view === 'action-items') {
+      const officeName = url.searchParams.get('officeName');
+      const officeId = await officeIdByName(sql, officeName);
+      if (!officeId) return json({ error: 'No office found with that name.' }, 404);
+      const res = await sql`
+        SELECT ai.id, ai.title, ai.description, ai.due_date, ai.status, ai.created_at, ai.completed_at,
+               ai.meeting_id, ai.resolution_id,
+               (ai.due_date IS NOT NULL AND ai.due_date < CURRENT_DATE
+                 AND ai.status NOT IN ('done', 'cancelled')) AS is_overdue,
+               owner.staff_no AS owner_staff_no, owner.full_name AS owner_name,
+               creator.full_name AS created_by_name
+        FROM office_action_items ai
+        LEFT JOIN staff owner ON owner.id = ai.owner_staff_id
+        LEFT JOIN staff creator ON creator.id = ai.created_by_staff_id
+        WHERE ai.office_id = ${officeId} ORDER BY
+          (ai.status IN ('open', 'in_progress')) DESC, ai.due_date ASC NULLS LAST, ai.created_at DESC LIMIT 200`;
+      return json({ actionItems: res.rows.map((r) => ({
+        id: r.id, title: r.title, description: r.description, dueDate: r.due_date, status: r.status,
+        createdAt: r.created_at, completedAt: r.completed_at, meetingId: r.meeting_id, resolutionId: r.resolution_id,
+        owner: r.owner_staff_no ? { staffNo: r.owner_staff_no, fullName: r.owner_name } : null,
+        createdByName: r.created_by_name,
+        isOverdue: !!r.is_overdue,
+      })) });
+    }
+
     const officesRes = await sql`
       SELECT o.id, o.name, o.office_type, o.office_kind, o.layer, o.slug, o.description,
              o.strategic_priorities, o.annual_objectives, p.name AS parent_office_name
@@ -720,6 +745,44 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, resolutionId: body.resolutionId });
     }
 
+    if (action === 'create-action-item') {
+      if (!body.officeName || !body.title) {
+        return json({ error: 'officeName and title are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const ownerStaffId = body.ownerStaffNo ? await staffIdByNo(sql, body.ownerStaffNo) : null;
+      const createdByStaffId = actingStaffId ?? (await staffIdByNo(sql, body.createdByStaffNo));
+      const created = await sql`
+        INSERT INTO office_action_items (office_id, meeting_id, resolution_id, title, description, owner_staff_id, due_date, status, created_by_staff_id)
+        VALUES (${officeId}, ${body.meetingId || null}, ${body.resolutionId || null}, ${body.title}, ${body.description || null}, ${ownerStaffId}, ${body.dueDate || null}, ${body.status || 'open'}, ${createdByStaffId})
+        RETURNING id`;
+      return json({ ok: true, actionItemId: created.rows[0].id });
+    }
+
+    if (action === 'update-action-item') {
+      if (!Number.isInteger(body.actionItemId)) {
+        return json({ error: 'A valid numeric actionItemId is required.' }, 400);
+      }
+      const ownerStaffId = body.ownerStaffNo ? await staffIdByNo(sql, body.ownerStaffNo) : null;
+      const newStatus = body.status || null;
+      const updated = await sql`
+        UPDATE office_action_items SET
+          status = COALESCE(${newStatus}, status),
+          description = COALESCE(${body.description || null}, description),
+          due_date = COALESCE(${body.dueDate || null}, due_date),
+          owner_staff_id = COALESCE(${ownerStaffId}, owner_staff_id),
+          completed_at = CASE WHEN ${newStatus} = 'done' THEN now() ELSE completed_at END
+        WHERE id = ${body.actionItemId}
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No action item found with that id.' }, 404);
+      }
+      return json({ ok: true, actionItemId: body.actionItemId });
+    }
+
     // SHRS Master Identity Architecture Directive, Founder & CEO's
     // explicit rollout choice ("migrate everyone now"): regenerates
     // identity_no for every staff record into the current
@@ -793,7 +856,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, regenerate-identity-numbers.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

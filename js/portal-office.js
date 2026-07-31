@@ -204,6 +204,7 @@
     renderNotifications(data);
     renderMeetings(data);
     renderResolutions(data);
+    renderActionItems(data);
     renderArchive(data);
   }
 
@@ -796,6 +797,28 @@
         + '<span class="orr-title">' + esc(r.title) + '</span>'
         + '<span class="orr-status">' + esc(r.status) + '</span>'
         + (r.summaryText ? '<span class="orr-summary">' + esc(r.summaryText) + '</span>' : '') + '</div>';
+    }).join('');
+  }
+
+  // Board Papers Centre — action items. Same governance-only tab-visibility
+  // rule as Resolutions above: this is a governance-register concept, so
+  // it's hidden entirely for non-governance offices rather than shown empty.
+  function renderActionItems(data) {
+    var tabBtn = document.querySelector('.office-tab[data-tab="action-items"]');
+    if (tabBtn) tabBtn.hidden = data.office.officeType !== 'governance';
+    var el = document.getElementById('action-items-list');
+    if (!el) return;
+    if (!data.actionItems || !data.actionItems.length) {
+      el.innerHTML = '<div class="portal-empty">No action items recorded for this office yet.</div>';
+      return;
+    }
+    el.innerHTML = data.actionItems.map(function (a) {
+      return '<div class="office-resolution-row status-' + esc(a.status) + (a.isOverdue ? ' is-overdue' : '') + '">'
+        + '<span class="orr-title">' + esc(a.title) + '</span>'
+        + '<span class="orr-status">' + esc(a.isOverdue ? 'overdue' : a.status.replace('_', ' ')) + '</span>'
+        + (a.owner ? '<span class="orr-summary">Owner: ' + esc(a.owner.fullName) + '</span>' : '<span class="orr-summary">No owner assigned</span>')
+        + (a.dueDate ? '<span class="orr-summary">Due: ' + fmtDate(a.dueDate) + '</span>' : '')
+        + (a.description ? '<span class="orr-summary">' + esc(a.description) + '</span>' : '') + '</div>';
     }).join('');
   }
 

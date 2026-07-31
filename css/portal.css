@@ -1942,6 +1942,9 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .orr-status{font-size:0.66rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:2px 8px;}
 .office-resolution-row.status-adopted .orr-status{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
 .orr-summary{flex-basis:100%;font-size:0.82rem;color:var(--ink);line-height:1.5;}
+.office-resolution-row.status-done .orr-status{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.office-resolution-row.is-overdue{border-left:3px solid var(--rosewood-bright,#a4344a);}
+.office-resolution-row.is-overdue .orr-status{color:var(--rosewood-bright,#a4344a);border-color:var(--rosewood-bright,#a4344a);}
 
 .office-tab[hidden]{display:none;}
 
@@ -1995,6 +1998,7 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .admin-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--gold);padding:8px 10px;}
 .admin-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
 .admin-table tr.is-vacant td{color:var(--ink-soft);font-style:italic;}
+.admin-table tr.is-overdue td:last-child{color:var(--rosewood-bright,#a4344a);font-weight:600;}
 
 .admin-two-col{display:grid;grid-template-columns:340px 1fr;gap:0;align-items:start;}
 @media (max-width:900px){.admin-two-col{grid-template-columns:1fr;}}
