@@ -572,12 +572,141 @@
       });
   }
 
-  // Module 6 — Reports (honest: no per-office report generator exists yet)
+  // Module 6 — Executive Reporting System (Institutional Excellence 2030).
+  // Real, period-bounded reports built from this office's own already-
+  // real transactional/operational data (see functions/api/portal/staff
+  // /reports.js) — never a second, fabricated set of numbers. Offices
+  // with no such data honestly say so, same discipline as everywhere
+  // else in this portal.
+  var REPORT_MONEY_FMT = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 });
+  function fmtMoney(n) { try { return REPORT_MONEY_FMT.format(n); } catch (e) { return '₦' + n; } }
+  function fmtCount(n) { return (n || 0).toLocaleString('en-NG'); }
+
+  function reportStatRow(items) {
+    return '<div class="kpi-grid">' + items.map(function (it) {
+      return '<div class="kpi-tile"><div class="kpi-value">' + esc(it.value) + '</div><div class="kpi-label">' + esc(it.label) + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  function reportSectionHtml(slug, payload) {
+    var d = payload.data;
+    var sections = [];
+    if (slug === 'finance' || d.finance) {
+      var f = d.finance || d;
+      sections.push(
+        '<div class="office-group-head">Finance — ' + esc(payload.period.label) + '</div>' +
+        reportStatRow([
+          { label: 'Invoices Issued', value: fmtCount(f.invoicesIssued.count) },
+          { label: 'Amount Invoiced', value: fmtMoney(f.invoicesIssued.totalAmount) },
+          { label: 'Payments Received', value: fmtCount(f.paymentsReceived.count) },
+          { label: 'Amount Collected', value: fmtMoney(f.paymentsReceived.totalAmount) },
+        ]) +
+        '<p class="portal-hello-sub" style="margin-top:10px;">' + fmtCount(f.outstandingInvoicesAsOfNow) + ' invoice(s) currently unpaid or partially paid, as of report generation.</p>'
+      );
+    }
+    if (slug === 'registrar' || d.registrar) {
+      var r = d.registrar || d;
+      var lifecycleLabels = { enrolment: 'Enrolments', promotion: 'Promotions', transfer: 'Transfers', withdrawal: 'Withdrawals', graduation: 'Graduations', reinstatement: 'Reinstatements' };
+      var lifecycleItems = Object.keys(lifecycleLabels).map(function (k) {
+        return { label: lifecycleLabels[k], value: fmtCount(r.lifecycleEvents[k] || 0) };
+      });
+      sections.push(
+        '<div class="office-group-head">Registrar — ' + esc(payload.period.label) + '</div>' +
+        reportStatRow([{ label: 'Certificates Issued', value: fmtCount(r.certificatesIssued) }].concat(lifecycleItems))
+      );
+    }
+    if (slug === 'admissions' || d.admissions) {
+      var a = d.admissions || d;
+      sections.push(
+        '<div class="office-group-head">Admissions — ' + esc(payload.period.label) + '</div>' +
+        reportStatRow([
+          { label: 'Applications Received', value: fmtCount(a.applicationsReceived) },
+          { label: 'Offered', value: fmtCount(a.decisionsRecorded.offered) },
+          { label: 'Admitted', value: fmtCount(a.decisionsRecorded.admitted) },
+          { label: 'Declined', value: fmtCount(a.decisionsRecorded.declined) },
+        ])
+      );
+    }
+    if (d.asOfNow && d.inPeriod) {
+      var snap = d.asOfNow;
+      var statItems = [
+        { label: 'Students (as of now)', value: fmtCount(snap.students ? snap.students.total : snap.activeStudents) },
+        { label: 'Staff (as of now)', value: fmtCount(snap.staff ? snap.staff.total : snap.activeStaff) },
+      ];
+      if (snap.attendanceAveragePercent != null) statItems.push({ label: 'Avg. Attendance', value: snap.attendanceAveragePercent + '%' });
+      if (snap.hifzEnrolledCount != null) statItems.push({ label: 'Hifz-Enrolled', value: fmtCount(snap.hifzEnrolledCount) });
+      sections.push('<div class="office-group-head">Institution Snapshot — as of report generation</div>' + reportStatRow(statItems));
+      var lifecycleLabels2 = { enrolment: 'Enrolments', promotion: 'Promotions', transfer: 'Transfers', withdrawal: 'Withdrawals', graduation: 'Graduations', reinstatement: 'Reinstatements' };
+      var flowItems = Object.keys(lifecycleLabels2).map(function (k) {
+        return { label: lifecycleLabels2[k], value: fmtCount((d.inPeriod.lifecycleEvents || {})[k] || 0) };
+      });
+      flowItems.push({ label: 'Admissions Applications', value: fmtCount(d.inPeriod.admissionsApplicationsReceived) });
+      sections.push('<div class="office-group-head">Activity — ' + esc(payload.period.label) + '</div>' + reportStatRow(flowItems));
+    }
+    return sections.join('');
+  }
+
   function renderReports(data) {
     var el = document.getElementById('reports-panel-body');
     if (!el) return;
-    el.innerHTML = '<div class="portal-empty">No generated reports for this office yet — report generation has not been built for this office. '
-      + 'Real, working reporting exists today in the Registrar’s Office (student records) and the Founder Dashboard (institution-wide analytics).</div>';
+    var slug = data.office.slug;
+    var state = { period: 'monthly', anchor: null };
+
+    function shiftAnchor(direction) {
+      var base = state.anchor ? new Date(state.anchor + 'T00:00:00Z') : new Date();
+      var y = base.getUTCFullYear(), m = base.getUTCMonth();
+      var next;
+      if (state.period === 'monthly') next = new Date(Date.UTC(y, m + direction, 1));
+      else if (state.period === 'quarterly') next = new Date(Date.UTC(y, m + direction * 3, 1));
+      else next = new Date(Date.UTC(y + direction, m, 1));
+      state.anchor = next.toISOString().slice(0, 10);
+      load();
+    }
+
+    function controlsHtml() {
+      var types = [['monthly', 'Monthly'], ['quarterly', 'Quarterly'], ['annual', 'Annual']];
+      return '<div class="office-tabs" role="tablist" aria-label="Report period" style="margin-bottom:14px;">' +
+        types.map(function (t) {
+          return '<button type="button" class="office-tab' + (state.period === t[0] ? ' is-active' : '') + '" data-report-period="' + t[0] + '">' + t[1] + '</button>';
+        }).join('') +
+        '<button type="button" class="office-tab" data-report-shift="-1" style="margin-left:auto;">&larr; Previous</button>' +
+        '<button type="button" class="office-tab" data-report-shift="1">Next &rarr;</button>' +
+        '</div>';
+    }
+
+    function bindControls() {
+      el.querySelectorAll('[data-report-period]').forEach(function (btn) {
+        btn.addEventListener('click', function () { state.period = btn.getAttribute('data-report-period'); load(); });
+      });
+      el.querySelectorAll('[data-report-shift]').forEach(function (btn) {
+        btn.addEventListener('click', function () { shiftAnchor(Number(btn.getAttribute('data-report-shift'))); });
+      });
+    }
+
+    async function load() {
+      el.innerHTML = controlsHtml() + '<div class="portal-empty">Generating report…</div>';
+      bindControls();
+      try {
+        var qs = 'office=' + encodeURIComponent(slug) + '&period=' + encodeURIComponent(state.period) + (state.anchor ? '&anchor=' + state.anchor : '');
+        var res = await fetch('/api/portal/staff/reports?' + qs, { headers: { accept: 'application/json' } });
+        var payload = await res.json().catch(function () { return {}; });
+        if (!res.ok) throw new Error(payload.error || 'Could not generate this report.');
+        var body = el.querySelector('.office-tabs') ? el : el; // controls already rendered
+        if (!payload.available) {
+          el.innerHTML = controlsHtml() + '<div class="portal-empty">' + esc(payload.reason) + '</div>';
+          bindControls();
+          return;
+        }
+        el.innerHTML = controlsHtml() +
+          '<p class="portal-hello-sub" style="margin-bottom:14px;">Generated ' + fmtDate(payload.generatedAt) + ' &middot; period: ' + esc(payload.period.label) + '</p>' +
+          reportSectionHtml(slug, payload);
+        bindControls();
+      } catch (err) {
+        el.innerHTML = controlsHtml() + '<div class="portal-empty">' + esc((err && err.message) || 'Could not generate this report.') + '</div>';
+        bindControls();
+      }
+    }
+    load();
   }
 
   // Module 7 — Analytics (real where it exists; a labelled KPI-widget

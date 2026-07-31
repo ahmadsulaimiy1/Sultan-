@@ -296,6 +296,19 @@ downloads the exact API payload for portability into other tools. Both
 "export" mechanisms are named for what they actually do rather than
 implying a bespoke PDF generator that doesn't exist.
 
+## Executive Reporting System (Institutional Excellence 2030, Phase 2)
+
+`functions/api/portal/staff/reports.js` + `renderReports()` in
+`js/portal-office.js` — the Reports tab that previously showed a static
+"not yet built" placeholder on every office portal now generates a real,
+period-bounded (Monthly/Quarterly/Annual) report for the offices that
+have real transactional or operational data behind them: Finance,
+Registrar, Admissions, the four School Leadership offices, and the
+Executive/Founder institution-wide roll-up. Every other office still
+gets the honest "no data exists yet" message — now naming which offices
+*do* have one, rather than claiming none exist. See
+`docs/executive-reporting-system.md` for the full design.
+
 ## Executive Portal Access
 
 A "Critical Executive Portal Directive" asked for dedicated login
