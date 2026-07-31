@@ -580,23 +580,47 @@
     var el2 = document.querySelector('[data-founder-timeline]');
     if(!el2) return;
     if(!timeline || !timeline.length){ el2.innerHTML = '<div class="portal-empty">No institutional events on record yet.</div>'; return; }
+    var now = Date.now();
     el2.innerHTML = timeline.map(function(t){
       var when = new Date(t.at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+      var isNew = (now - new Date(t.at).getTime()) < 24 * 60 * 60 * 1000;
       return '<div class="pfd-alert-row">'
-        + '<div><div class="pfd-alert-label">' + t.label + '</div><div class="pfd-alert-detail">' + t.category + '</div></div>'
+        + '<div><div class="pfd-alert-label"><span class="pfd-timeline-dot" aria-hidden="true"></span>' + t.label + (isNew ? '<span class="pfd-timeline-new">New</span>' : '') + '</div><div class="pfd-alert-detail">' + t.category + '</div></div>'
         + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + when + '</div>'
         + '</div>';
     }).join('');
   }
 
+  // Time-of-day greeting — real local clock, real signed-in name where
+  // one exists (data.viewedBy, the same field the auth-status line
+  // already shows). No fixed "Vision 2035 continues"-style line that
+  // would assert an unadopted strategy as fact — see Strategic
+  // Priorities below, which stays honestly "not yet adopted."
+  function greetingLines(data){
+    var hour = new Date().getHours();
+    var band = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+    var eyebrow = band === 'morning' ? 'Good Morning, Founder'
+      : band === 'afternoon' ? 'Good Afternoon, Founder'
+      : 'Good Evening, Founder';
+    var motto = band === 'morning' ? 'May Allah place barakah in today’s decisions.'
+      : band === 'afternoon' ? 'Four institutions. One vision.'
+      : 'The institution remains operational.';
+    if(data.viewedBy) eyebrow = 'Welcome Back, ' + data.viewedBy;
+    return { eyebrow: eyebrow, motto: motto };
+  }
+
   function render(data){
-    generatedEl.textContent = 'Generated ' + new Date(data.generatedAt).toLocaleString();
+    var greeting = greetingLines(data);
+    var eyebrowEl = document.querySelector('.exec-welcome-eyebrow');
+    if(eyebrowEl) eyebrowEl.textContent = greeting.eyebrow;
+    if(generatedEl) generatedEl.textContent = greeting.motto;
 
     var authStatusEl = document.querySelector('[data-founder-auth-status]');
     if(authStatusEl){
-      authStatusEl.textContent = data.authMethod === 'staff_session'
+      var whoText = data.authMethod === 'staff_session'
         ? 'Signed in as ' + (data.viewedBy || 'an Executive-role staff account')
         : 'Viewed via the legacy Founder token — sign in with a real Executive-role staff account once one exists.';
+      authStatusEl.textContent = whoText + ' · Data generated ' + new Date(data.generatedAt).toLocaleString();
     }
 
     var execStatStudentsEl = document.querySelector('[data-exec-stat-students]');
@@ -807,6 +831,93 @@
     errorCardEl.hidden = true;
     contentEl.hidden = false;
     clearBtn.hidden = false;
+
+    playArrivalSequence(data);
+    setupScrollReveal();
+  }
+
+  // Arrival Sequence — plays once per browser session (sessionStorage
+  // flag), the moment real dashboard data first resolves. Three real
+  // fields, nothing invented: the office title (fixed institutional
+  // fact), the signed-in Executive's own name where a real staff
+  // session provided one (data.viewedBy — the same field the auth-
+  // status line shows), and the institution's real name. Skipped
+  // outright under reduced-motion or on repeat visits within the
+  // session — this is a "you have arrived" moment, not a page loader.
+  var ARRIVAL_KEY = 'shrs_founder_arrival_played';
+  function playArrivalSequence(data){
+    if(PREFERS_REDUCED_MOTION) return;
+    if(sessionStorage.getItem(ARRIVAL_KEY)) return;
+    sessionStorage.setItem(ARRIVAL_KEY, '1');
+    var overlay = document.createElement('div');
+    overlay.className = 'exec-arrival';
+    overlay.setAttribute('aria-hidden', 'true');
+    var crest = document.createElement('img');
+    crest.className = 'exec-arrival-crest';
+    crest.src = '/assets/images/brand-mark.png';
+    crest.alt = '';
+    overlay.appendChild(crest);
+    var lines = document.createElement('div');
+    lines.className = 'exec-arrival-lines';
+    var l1 = el('div', 'exec-arrival-line l1', 'Office of the Founder & Chief Executive Officer');
+    var l2 = el('div', 'exec-arrival-line l2', data.viewedBy ? 'Welcome Back, ' + data.viewedBy : 'Welcome to the Command Centre');
+    var l3 = el('div', 'exec-arrival-line l3', 'Sultan Hanafi Royal Schools Command Centre');
+    lines.appendChild(l1); lines.appendChild(l2); lines.appendChild(l3);
+    overlay.appendChild(lines);
+    document.body.appendChild(overlay);
+    overlay.addEventListener('animationend', function(e){
+      if(e.target === overlay) overlay.remove();
+    });
+    setTimeout(function(){ if(overlay.parentNode) overlay.remove(); }, 2800);
+  }
+
+  // Scroll Reveal — .pfd-section cards below the fold stay hidden until
+  // they actually enter the viewport. rootMargin brings the trigger
+  // point in slightly, and anything already on-screen when the
+  // observer attaches (the hero-adjacent sections) reveals almost
+  // immediately rather than waiting for a scroll event.
+  var scrollRevealSetUp = false;
+  function setupScrollReveal(){
+    if(scrollRevealSetUp || PREFERS_REDUCED_MOTION || !('IntersectionObserver' in window)) return;
+    scrollRevealSetUp = true;
+    var sections = document.querySelectorAll('.portal-wrap .pfd-section');
+    if(!sections.length) return;
+    function reveal(target){
+      target.classList.remove('js-scroll-pending');
+      target.classList.add('js-scroll-in');
+    }
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          reveal(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    sections.forEach(function(s){
+      s.classList.add('js-scroll-pending');
+      observer.observe(s);
+    });
+    // Settle-check fallback: a fast/instant jump (End key, flick scroll,
+    // hash navigation) can skip every intermediate frame Intersection
+    // Observer relies on, leaving a section permanently at opacity:0.
+    // On scroll settling, re-check every still-pending section's actual
+    // position directly — this can never leave real content invisible.
+    var settleTimer = null;
+    function checkPendingNow(){
+      document.querySelectorAll('.pfd-section.js-scroll-pending').forEach(function(s){
+        var r = s.getBoundingClientRect();
+        if(r.top < window.innerHeight && r.bottom > 0){
+          reveal(s);
+          observer.unobserve(s);
+        }
+      });
+    }
+    window.addEventListener('scroll', function(){
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(checkPendingNow, 150);
+    }, { passive: true });
+    window.addEventListener('scrollend', checkPendingNow);
   }
 
   async function load(token){

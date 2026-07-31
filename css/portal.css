@@ -483,6 +483,27 @@ body.portal-body > *{position:relative;z-index:1;}
     0 10px 22px -12px rgba(20,13,4,0.22),
     inset 0 1px 0 rgba(255,255,255,0.65);
   padding:32px 34px;margin-bottom:28px;position:relative;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+}
+/* Restrained hover lift — the whole card, not just its contents. */
+.pfd-section:hover{
+  transform:translateY(-3px);border-color:var(--atmos,var(--gold));
+  box-shadow:
+    0 38px 72px -28px rgba(20,13,4,0.4),
+    0 14px 26px -12px rgba(20,13,4,0.26),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+}
+@media (prefers-reduced-motion:reduce){.pfd-section:hover{transform:none;}}
+/* Scroll reveal — sections below the fold stay invisible until they
+   enter the viewport (see the IntersectionObserver in js/portal-
+   founder-dashboard.js), so the page keeps "unfolding" as an Executive
+   scrolls rather than everything having already animated in on load. */
+.pfd-section.js-scroll-pending{opacity:0;transform:translateY(28px);}
+.pfd-section.js-scroll-in{animation:pfd-scroll-reveal .6s cubic-bezier(.2,.7,.3,1) both;}
+@keyframes pfd-scroll-reveal{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion:reduce){
+  .pfd-section.js-scroll-pending{opacity:1;transform:none;}
+  .pfd-section.js-scroll-in{animation:none;}
 }
 .pfd-section::before{
   content:"";position:absolute;top:0;left:0;right:0;height:3px;background-size:220% 100%;
@@ -1029,6 +1050,53 @@ body.portal-body > *{position:relative;z-index:1;}
 @keyframes health-dot-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.55;transform:scale(0.82);}}
 @media (prefers-reduced-motion:reduce){.exec-welcome-health .dot{animation:none;}}
 
+/* Arrival Sequence — a one-time, ~2.4s overlay played the moment a
+   Founder/Executive's real dashboard data resolves (see js/portal-
+   founder-dashboard.js). Crest, then a gold sweep, then three lines of
+   real text (office title, the signed-in Executive's actual name where
+   known, institution name) — never fabricated, always the same fields
+   already shown elsewhere on the page. Skipped entirely under reduced-
+   motion (the dashboard just appears, per the existing fallback). */
+.exec-arrival{
+  position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 70%,#140d05 100%);
+  animation:exec-arrival-fade 2.4s ease both;
+}
+.exec-arrival::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg, transparent 30%, rgba(233,206,138,0.16) 48%, rgba(255,255,255,0.28) 50%, rgba(233,206,138,0.16) 52%, transparent 70%);
+  background-size:260% 100%;background-position:130% 0;
+  animation:exec-arrival-sweep 1.3s ease-in-out 0.15s;
+}
+.exec-arrival-crest{width:64px;height:64px;opacity:0;animation:exec-arrival-crest-in .7s ease .1s both;margin-bottom:22px;}
+.exec-arrival-lines{text-align:center;}
+.exec-arrival-line{
+  font-family:'Cinzel','Amiri',serif;color:var(--gold-bright);opacity:0;
+  animation:exec-arrival-line-in .6s ease both;
+}
+.exec-arrival-line.l1{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(233,206,138,0.75);animation-delay:0.5s;}
+.exec-arrival-line.l2{font-size:1.7rem;color:#fff;margin:10px 0 6px;animation-delay:0.95s;}
+.exec-arrival-line.l3{font-size:0.86rem;letter-spacing:0.06em;color:var(--gold-bright);animation-delay:1.4s;}
+@keyframes exec-arrival-fade{0%{opacity:1;}78%{opacity:1;}100%{opacity:0;visibility:hidden;}}
+@keyframes exec-arrival-sweep{from{background-position:130% 0;}to{background-position:-30% 0;}}
+@keyframes exec-arrival-crest-in{from{opacity:0;transform:scale(0.85);}to{opacity:0.92;transform:scale(1);}}
+@keyframes exec-arrival-line-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion:reduce){.exec-arrival{display:none;}}
+
+/* Executive Timeline — "the institution is alive." A soft pulse dot per
+   row and a NEW tag on anything from the last 24 hours (computed
+   client-side against each event's own real timestamp — never a fixed
+   fabricated badge). */
+.pfd-timeline-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;margin-inline-end:9px;flex:0 0 auto;
+  background:var(--atmos-bright,var(--gold-bright));animation:health-dot-pulse 2.4s ease-in-out infinite;
+}
+.pfd-timeline-new{
+  display:inline-block;margin-inline-start:8px;font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;
+  font-weight:700;color:var(--navy-deep);background:var(--gold-bright);padding:1px 7px;border-radius:99px;vertical-align:middle;
+}
+@media (prefers-reduced-motion:reduce){.pfd-timeline-dot{animation:none;}}
+
 /* ============================================================
    Portal Gateway Atmosphere System (Founder Override Directive,
    Priority 2). Ten real portal entry points — the same ten named in
@@ -1172,7 +1240,13 @@ body.portal-body[data-atmosphere="student"]::before{
    IntersectionObserver needed for a dashboard whose cards all load at
    once via fetch) with a per-position delay so cards settle into place
    in sequence rather than all popping in together. */
-.portal-wrap > *{animation:dash-card-in 0.5s cubic-bezier(.2,.7,.3,1) both;}
+/* :not(.pfd-section) — top-level Founder Command Centre cards get their
+   own dedicated scroll-triggered reveal system instead (see .pfd-
+   section.js-scroll-pending/.js-scroll-in below and the
+   IntersectionObserver in js/portal-founder-dashboard.js); running both
+   animation systems on the same element would have the immediate
+   on-load one silently win the cascade and defeat scroll-reveal. */
+.portal-wrap > *:not(.pfd-section){animation:dash-card-in 0.5s cubic-bezier(.2,.7,.3,1) both;}
 .portal-wrap > *:nth-child(1){animation-delay:0s;}
 .portal-wrap > *:nth-child(2){animation-delay:0.06s;}
 .portal-wrap > *:nth-child(3){animation-delay:0.12s;}
