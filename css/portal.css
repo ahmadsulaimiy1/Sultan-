@@ -1132,7 +1132,7 @@ body.portal-body > .exec-arrival{
 body.portal-body[data-atmosphere="founder"]{--atmos:var(--gold);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(198,161,91,0.16);}
 body.portal-body[data-atmosphere="registrar"]{--atmos:var(--oxford-navy);--atmos-bright:#7FA0D2;--atmos-soft:rgba(65,97,140,0.14);}
 body.portal-body[data-atmosphere="finance"]{--atmos:var(--bronze);--atmos-bright:var(--bronze-bright);--atmos-soft:rgba(124,84,48,0.14);}
-body.portal-body[data-atmosphere="principal"]{--atmos:var(--gold);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(198,161,91,0.16);}
+body.portal-body[data-atmosphere="principal"]{--atmos:var(--sapphire);--atmos-bright:var(--sapphire-bright);--atmos-soft:rgba(63,76,140,0.14);}
 body.portal-body[data-atmosphere="head-teacher"]{--atmos:var(--terracotta);--atmos-bright:#E0A47C;--atmos-soft:rgba(201,120,75,0.14);}
 body.portal-body[data-atmosphere="raees"]{--atmos:var(--crimson);--atmos-bright:#C1707D;--atmos-soft:rgba(124,31,46,0.12);}
 body.portal-body[data-atmosphere="mudeer"]{--atmos:var(--forest-green);--atmos-bright:#7CB394;--atmos-soft:rgba(63,107,78,0.14);}
