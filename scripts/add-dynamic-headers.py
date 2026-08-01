@@ -56,9 +56,13 @@ SIDE = 44  # left/right text inset, matching the body's own gutters
 # off render pass — was never repainted for its BOTTOM margin either,
 # since that pass still reserves the same margin, just with nothing
 # painted into it. These three colours match --ivory/--doc-dark/--charcoal
-# in css/brand.css and css/constitution-print.css exactly.
+# in css/brand.css and css/constitution-print.css exactly — BG_DARK MUST
+# be kept in sync with --doc-dark in constitution-print.css by hand; the
+# Royal Identity Palette directive replaced that token from a near-black
+# navy to a genuine deep espresso/cocoa brown, and this value has to move
+# with it or the masking introduces exactly the seam it exists to prevent.
 BG_IVORY = HexColor("#F7EEDF")
-BG_DARK = HexColor("#14161F")
+BG_DARK = HexColor("#1D1108")
 BG_CHARCOAL = HexColor("#2A2621")
 BG_COLORS = {"ivory": BG_IVORY, "dark": BG_DARK, "charcoal": BG_CHARCOAL}
 

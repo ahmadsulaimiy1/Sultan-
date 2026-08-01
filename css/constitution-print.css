@@ -25,18 +25,27 @@
 }
 
 .const-body {
-  /* The sitewide --navy-deep/--charcoal-deep tokens (brand.css) are warm
-     browns, not navy, by deliberate site-wide brand decision — correct
-     for the marketing site, but the specific complaint about this
-     document was that its full-bleed ceremonial pages read as "heavy
-     and dated brown blocks." Rather than alter the sitewide palette
-     (which the rest of the Institution's site has been built around
-     across many prior sessions), this document defines its own cooler,
-     deeper tone — used only for its own full-bleed dark pages — leaving
+  /* An earlier round replaced the sitewide --navy-deep/--charcoal-deep
+     brown tones with a cooler near-black navy (#14161F) for this
+     document's own full-bleed pages, specifically to move away from
+     brown after a complaint that those pages read as "heavy and dated
+     brown blocks." The Royal Identity Palette directive supersedes that:
+     it requires every colour in this publication, without exception, to
+     be a tonal variation of the established coffee-brown/gold/cream
+     family — a near-black navy is exactly the kind of "unrelated colour
+     family" it rules out, regardless of how the earlier complaint was
+     addressed. --doc-dark is now a genuine deep espresso/cocoa brown,
+     one shade darker and richer than the sitewide --navy-deep (#221709)
+     for this document's own more dramatic full-bleed treatment, but
+     strictly within the same warm-brown family, not a departure from
+     it; --doc-dark-deep is a near-black cocoa for the same reason.
      --navy/--gold/--ivory (used throughout for headings, rules, and body
-     text on light pages) untouched. */
-  --doc-dark: #14161F;
-  --doc-dark-deep: #0F1018;
+     text on light pages) are unchanged — they were already confirmed
+     Royal Identity Palette tones before this round (see brand.css's own
+     comment: "the confirmed palette. --ivory now renders Premium
+     Cream."). */
+  --doc-dark: #1D1108;
+  --doc-dark-deep: #140C05;
   margin: 0;
   background: var(--doc-dark-deep);
   color: var(--ink);
@@ -82,7 +91,7 @@
 .cover-crest { width: 100px; height: auto; margin-bottom: 22px; }
 .cover-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 12pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ivory); margin-bottom: 4px; }
 .cover-sub-line { font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10.5pt; color: rgba(247,238,223,0.72); margin-bottom: 34px; }
-.cover-title { font-family: 'Cinzel', 'Amiri', serif; font-size: 42pt; line-height: 1.08; color: #fff; margin: 0 0 10px; letter-spacing: 0.01em; }
+.cover-title { font-family: 'Cinzel', 'Amiri', serif; font-size: 42pt; line-height: 1.08; color: var(--milk); margin: 0 0 10px; letter-spacing: 0.01em; }
 .cover-title-sub { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 16pt; color: rgba(247,238,223,0.88); margin: 0 0 30px; }
 .cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 22px; }
 .cover-version { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.16em; color: var(--gold-bright); margin-bottom: 0; }
@@ -117,7 +126,7 @@
 .back-cover-rule.small { width: 70px; margin: 34px auto; }
 .back-cover-name {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 17pt; letter-spacing: 0.13em; text-transform: uppercase;
-  color: #fff; margin-bottom: 10px;
+  color: var(--milk); margin-bottom: 10px;
 }
 .back-cover-schools {
   font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 11pt; line-height: 1.55;
@@ -164,7 +173,7 @@
 /* ---- Proclamation / Preamble ceremonial page ---- */
 .page.ceremony { display: flex; flex-direction: column; justify-content: center; }
 .ceremony-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 9pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-bright); margin: 0 0 14px; text-align: center; }
-.ceremony h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 21pt; color: #fff; text-align: center; margin: 0 0 26px; }
+.ceremony h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 21pt; color: var(--milk); text-align: center; margin: 0 0 26px; }
 .ceremony p { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 13.5pt; line-height: 1.7; color: rgba(247,238,223,0.9); text-align: center; margin: 0 0 16px; }
 .ceremony p.drop-cap::first-letter {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 40pt; line-height: 0.7; font-weight: 600;
@@ -192,7 +201,7 @@
 .page.part-divider { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .part-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.16em; color: var(--gold-bright); margin-bottom: 18px; }
 .part-title {
-  font-family: 'Cinzel', 'Amiri', serif; font-size: 32pt; line-height: 1.15; color: #fff;
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 32pt; line-height: 1.15; color: var(--milk);
   max-width: 5.4in; border-top: 1.5px solid var(--gold-bright); border-bottom: 1.5px solid var(--gold-bright);
   padding: 22px 0; margin: 0;
 }
@@ -256,7 +265,7 @@ table.const-table thead {
 }
 table.const-table tbody tr { break-inside: avoid; }
 table.const-table th {
-  background: var(--navy); color: #fff; font-family: 'Cinzel', 'Amiri', serif; font-weight: 600;
+  background: var(--navy); color: var(--milk); font-family: 'Cinzel', 'Amiri', serif; font-weight: 600;
   font-size: 7pt; letter-spacing: 0.02em; text-transform: uppercase; text-align: left; padding: 6px 7px;
   border: 0.5pt solid var(--navy);
 }
@@ -284,5 +293,5 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
      genuinely empty leftover space — most visibly the tail end of the
      final page, where it would otherwise print as an ugly dark void
      behind nothing. Neutral in print; dark stays for the screen view. */
-  .const-body { background: #fff; }
+  .const-body { background: var(--parchment); }
 }
