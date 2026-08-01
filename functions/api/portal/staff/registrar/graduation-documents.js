@@ -25,18 +25,18 @@ import { generateDocumentReferenceNo, getOrCreateVerificationId } from '../../..
 import { computeDocumentHash } from '../../../../_lib/document-hash.js';
 import { resolveSignatories, SignatoryVacancyError } from '../../../../_lib/document-signatories.js';
 import { renderDocumentShell } from '../../../../_lib/document-template-shell.js';
+import { resolveSeal } from '../../../../_lib/document-seals.js';
 
 const DOCUMENT_TYPE_LABEL = {
   alumni_registration: { en: 'Alumni Registration Certificate', ar: 'شهادة تسجيل الخريجين' },
 };
 
-// Real, client-supplied seal assets (spec §12) — never fabricated.
-// Keyed by issuing office, not document class: a Registrar's Office
-// document carries the Registrar's own seal; documents requiring the
-// Executive/Board's institutional authority (once built) use the
-// general institutional seal instead.
-const DOCUMENT_SEAL = {
-  alumni_registration: '/assets/images/seals/registrar-office-seal.jpg',
+// The primary signatory role each document type's seal is keyed off —
+// resolveSeal() (functions/_lib/document-seals.js) maps that role (and,
+// for PRIN, the document's own institution) to a real seal asset, or
+// returns null if none exists yet for that office.
+const DOCUMENT_PRIMARY_SIGNATORY_ROLE = {
+  alumni_registration: 'REG',
 };
 
 async function requireStaffSession(request, env) {
@@ -125,7 +125,10 @@ export async function onRequestGet({ request, env }) {
       issuedAtDisplay: new Date(row.issued_at).toISOString().slice(0, 10),
       signatories: Array.isArray(row.signatories) ? row.signatories : [],
       documentKind: row.document_kind,
-      sealImage: DOCUMENT_SEAL[row.document_type] || null,
+      sealImage: resolveSeal({
+        role: DOCUMENT_PRIMARY_SIGNATORY_ROLE[row.document_type] || null,
+        institutionName: row.institution_name,
+      }),
     });
 
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
