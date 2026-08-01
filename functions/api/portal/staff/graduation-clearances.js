@@ -28,12 +28,19 @@
 //        functions/_lib/graduation-workflow.js's decideStage() — this
 //        file owns session/session-shape only, never the workflow's
 //        own rules.
+// POST { action: 'bulk_decide', graduationRecordIds: [...], stageCode,
+//        bulkAction, note } — Conditional Approval directive item 9.
+//        Delegates to bulkDecideStage(), which still runs every record
+//        through decideStage() individually so each keeps its own
+//        audit entry.
 import { getSql } from '../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { hasPermissionFor } from '../../../_lib/permissions.js';
+import { requestAuditContext } from '../../../_lib/audit.js';
 import {
-  STAGE_DEFINITIONS, STAGE_BY_CODE, getClearances, canDecideStage, decideStage, financeSignal,
+  STAGE_DEFINITIONS, STAGE_BY_CODE, getClearances, canDecideStage, decideStage, bulkDecideStage,
+  financeSignal, disciplinarySignal, librarySignal, ictSignal, recipientsForStage,
 } from '../../../_lib/graduation-workflow.js';
 
 async function requireStaffSession(request, env) {
@@ -121,14 +128,29 @@ export async function onRequestGet({ request, env }) {
         return json({ error: 'Your role does not have authority to view this graduation record.' }, 403);
       }
       const rows = await getClearances(sql, recordId);
-      const stages = await Promise.all(rows.map(async (r) => ({
-        code: r.stage_code, label: STAGE_BY_CODE[r.stage_code]?.label || r.stage_code,
-        sequencePosition: r.sequence_position, isBlocking: r.is_blocking, status: r.status,
-        decidedByStaffId: r.decided_by_staff_id, decisionNote: r.decision_note, decidedAt: r.decided_at,
-        canDecideNow: (r.status === 'pending' || r.status === 'correction_requested') && await canDecideStage(sql, staffId, r.stage_code, record.institution_id ?? null),
-      })));
-      const finance = await financeSignal(sql, record.student_id);
-      return json({ ok: true, record, stages, financeSignal: finance });
+      const stages = await Promise.all(rows.map(async (r) => {
+        const stageDef = STAGE_BY_CODE[r.stage_code];
+        const recipients = stageDef && stageDef.authType !== 'auto'
+          ? await recipientsForStage(sql, stageDef, record.institution_id ?? null)
+          : null;
+        return {
+          code: r.stage_code, label: stageDef?.label || r.stage_code,
+          sequencePosition: r.sequence_position, isBlocking: r.is_blocking, status: r.status,
+          decidedByStaffId: r.decided_by_staff_id, decisionNote: r.decision_note, decidedAt: r.decided_at,
+          canDecideNow: (r.status === 'pending' || r.status === 'correction_requested') && await canDecideStage(sql, staffId, r.stage_code, record.institution_id ?? null),
+          hasAppointee: recipients === null ? true : recipients.length > 0,
+        };
+      }));
+      const [finance, disciplinary, library, ict] = await Promise.all([
+        financeSignal(sql, record.student_id),
+        disciplinarySignal(sql, record.student_id),
+        librarySignal(sql, record.student_id),
+        ictSignal(sql, record.student_id),
+      ]);
+      return json({
+        ok: true, record, stages,
+        financeSignal: finance, disciplinarySignal: disciplinary, librarySignal: library, ictSignal: ict,
+      });
     }
 
     // "My queue" — the current actionable stage per record, filtered to
@@ -170,20 +192,45 @@ export async function onRequestPost({ request, env }) {
   if (!sql) return json({ error: 'Portal is not configured yet — no database is linked.' }, 500);
 
   const body = await readJsonBody(request);
+  const action = body && body.action;
+  const auditContext = requestAuditContext(request);
+
+  if (action === 'bulk_decide') {
+    const graduationRecordIds = Array.isArray(body.graduationRecordIds)
+      ? body.graduationRecordIds.map(Number).filter(Number.isInteger) : [];
+    const stageCode = body.stageCode;
+    const bulkAction = body.bulkAction;
+    if (!graduationRecordIds.length || !stageCode) {
+      return json({ error: 'graduationRecordIds (non-empty) and stageCode are required.' }, 400);
+    }
+    if (!['clear', 'request_correction', 'return_to_stage'].includes(bulkAction)) {
+      return json({ error: 'Unknown bulkAction. Expected one of: clear, request_correction, return_to_stage.' }, 400);
+    }
+    try {
+      const results = await bulkDecideStage(sql, env, {
+        graduationRecordIds, stageCode, decidingStaffId: staffId,
+        action: bulkAction, note: body.note || null, auditContext,
+      });
+      return json({ ok: true, results });
+    } catch (err) {
+      console.error('graduation-clearances bulk POST error', err);
+      return json({ error: 'Could not complete that bulk action: ' + (err && err.message ? err.message : 'unknown error') }, 500);
+    }
+  }
+
   const graduationRecordId = Number(body && body.graduationRecordId);
   const stageCode = body && body.stageCode;
-  const action = body && body.action;
   if (!Number.isInteger(graduationRecordId) || (!stageCode && action !== 'escalate_to_founder')) {
     return json({ error: 'graduationRecordId and stageCode are required.' }, 400);
   }
   if (!['clear', 'request_correction', 'return_to_stage', 'escalate_to_founder'].includes(action)) {
-    return json({ error: 'Unknown action. Expected one of: clear, request_correction, return_to_stage, escalate_to_founder.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: clear, request_correction, return_to_stage, escalate_to_founder, bulk_decide.' }, 400);
   }
 
   try {
     const result = await decideStage(sql, env, {
       graduationRecordId, stageCode: stageCode || 'founder', decidingStaffId: staffId,
-      action, note: body.note || null, targetStageCode: body.targetStageCode || null,
+      action, note: body.note || null, targetStageCode: body.targetStageCode || null, auditContext,
     });
     if (result.error) return json({ error: result.error }, 403);
     return json(result);

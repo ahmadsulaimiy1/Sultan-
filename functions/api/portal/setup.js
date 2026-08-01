@@ -1111,6 +1111,98 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at)`,
 
+  // Stage 2 Conditional Approval directive — see sql/schema.sql's
+  // comments on these tables for the full reasoning.
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS ip_address TEXT`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS user_agent TEXT`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS previous_value JSONB`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS new_value JSONB`,
+  `CREATE TABLE IF NOT EXISTS graduation_approval_rules (
+    id                       SERIAL PRIMARY KEY,
+    target_stage_code        TEXT NOT NULL,
+    trigger_type              TEXT NOT NULL CHECK (trigger_type IN (
+                                 'constitution', 'governance_charter', 'board_resolution',
+                                 'executive_directive', 'manual_escalation'
+                               )),
+    reference_text             TEXT,
+    applies_globally            BOOLEAN NOT NULL DEFAULT true,
+    is_active                    BOOLEAN NOT NULL DEFAULT true,
+    created_by_staff_id           INTEGER REFERENCES staff(id),
+    created_at                     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    deactivated_by_staff_id         INTEGER REFERENCES staff(id),
+    deactivated_at                   TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_approval_rules_stage ON graduation_approval_rules (target_stage_code, is_active)`,
+  `CREATE TABLE IF NOT EXISTS disciplinary_cases (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    case_type             TEXT NOT NULL CHECK (case_type IN (
+                             'warning', 'suspension', 'commendation', 'behavioural_report', 'investigation', 'other'
+                           )),
+    severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious')),
+    description           TEXT NOT NULL,
+    status                TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'under_investigation', 'resolved', 'dismissed')),
+    final_disposition     TEXT,
+    reported_by_staff_id  INTEGER REFERENCES staff(id),
+    reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_by_staff_id  INTEGER REFERENCES staff(id),
+    resolved_at           TIMESTAMPTZ,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_disciplinary_cases_student ON disciplinary_cases (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS library_loans (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    item_title            TEXT NOT NULL,
+    item_ref              TEXT,
+    borrowed_at           DATE NOT NULL,
+    due_at                DATE,
+    returned_at           DATE,
+    status                TEXT NOT NULL DEFAULT 'on_loan' CHECK (status IN ('on_loan', 'returned', 'overdue', 'lost')),
+    fine_amount           NUMERIC(10,2) NOT NULL DEFAULT 0,
+    fine_paid             BOOLEAN NOT NULL DEFAULT false,
+    recorded_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_library_loans_student ON library_loans (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS issued_devices (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    asset_type            TEXT NOT NULL CHECK (asset_type IN ('device', 'id_card', 'access_credential', 'other')),
+    description           TEXT NOT NULL,
+    serial_or_ref         TEXT,
+    issued_at             DATE NOT NULL,
+    returned_at           DATE,
+    status                TEXT NOT NULL DEFAULT 'issued' CHECK (status IN ('issued', 'returned', 'lost', 'deactivated')),
+    recorded_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_issued_devices_student ON issued_devices (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS staff_signatures (
+    id              SERIAL PRIMARY KEY,
+    staff_id        INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    signature_type  TEXT NOT NULL DEFAULT 'typed' CHECK (signature_type IN ('typed', 'uploaded_image')),
+    typed_name      TEXT,
+    image_data      TEXT,
+    title_line      TEXT,
+    is_active       BOOLEAN NOT NULL DEFAULT true,
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (staff_id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS graduation_batches (
+    id                    SERIAL PRIMARY KEY,
+    batch_no              TEXT NOT NULL UNIQUE,
+    graduation_session    TEXT NOT NULL,
+    description           TEXT,
+    created_by_staff_id   INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS batch_id INTEGER REFERENCES graduation_batches(id)`,
+
   `CREATE TABLE IF NOT EXISTS certificates (
     id                   SERIAL PRIMARY KEY,
     student_id           INTEGER REFERENCES students(id) ON DELETE SET NULL,

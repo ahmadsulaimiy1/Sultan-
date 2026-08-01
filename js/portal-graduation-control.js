@@ -18,6 +18,7 @@
   var detailNameEl = document.querySelector('[data-gcc-detail-name]');
   var detailCloseBtn = document.querySelector('[data-gcc-detail-close]');
   var financeSignalEl = document.querySelector('[data-gcc-finance-signal]');
+  var signalsEl = document.querySelector('[data-gcc-signals]');
   var timelineEl = document.querySelector('[data-gcc-timeline]');
   var detailResultEl = document.querySelector('[data-gcc-detail-result]');
   var stageTemplate = document.getElementById('gcc-timeline-stage-template');
@@ -200,6 +201,7 @@
       financeSignalEl.hidden = true;
     }
 
+    renderSignals(data);
     timelineEl.innerHTML = '';
     data.stages.forEach(function(stage){
       var node = stageTemplate.content.firstElementChild.cloneNode(true);
@@ -212,6 +214,7 @@
 
       var metaBits = [];
       if(!stage.isBlocking) metaBits.push('Non-blocking');
+      if((stage.status === 'pending' || stage.status === 'correction_requested') && stage.hasAppointee === false) metaBits.push('Vacant — awaiting appointment');
       if(stage.decidedAt) metaBits.push((stage.status === 'cleared' ? 'Cleared' : 'Decided') + ' ' + formatDate(stage.decidedAt));
       if(stage.decisionNote) metaBits.push('"' + stage.decisionNote + '"');
       node.querySelector('.gcc-stage-meta').textContent = metaBits.join(' · ');
@@ -276,6 +279,25 @@
         timelineEl.appendChild(escalateWrap);
       }
     }
+  }
+
+  function renderSignals(data){
+    signalsEl.innerHTML = '';
+    var blocks = [];
+    if(data.disciplinarySignal && data.disciplinarySignal.length){
+      blocks.push(el('div', 'gcc-signal-chip is-warn', 'Disciplinary: ' + data.disciplinarySignal.length + ' open case' + (data.disciplinarySignal.length === 1 ? '' : 's') + ' — ' + data.disciplinarySignal.map(function(c){ return c.case_type; }).join(', ')));
+    }
+    if(data.librarySignal && data.librarySignal.length){
+      blocks.push(el('div', 'gcc-signal-chip is-warn', 'Library: ' + data.librarySignal.length + ' outstanding loan/fine — ' + data.librarySignal.map(function(l){ return l.item_title; }).join(', ')));
+    }
+    if(data.ictSignal){
+      var ict = data.ictSignal;
+      var ictBits = [];
+      if(ict.outstandingAssets && ict.outstandingAssets.length) ictBits.push(ict.outstandingAssets.length + ' issued asset(s) not yet returned');
+      if(!ict.hasIdentityCard) ictBits.push('no institutional identity number on file');
+      if(ictBits.length) blocks.push(el('div', 'gcc-signal-chip is-warn', 'ICT: ' + ictBits.join('; ')));
+    }
+    blocks.forEach(function(b){ signalsEl.appendChild(b); });
   }
 
   function showDetailResult(ok, message){

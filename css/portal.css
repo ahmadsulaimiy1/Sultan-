@@ -819,6 +819,8 @@ body.portal-body > *{position:relative;z-index:1;}
 .gcc-empty-row td{text-align:center;color:var(--ink-soft);font-style:italic;padding:20px;}
 .gcc-finance-signal{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.06);border:1px solid var(--crimson);font-size:0.82rem;color:var(--ink);}
 .gcc-finance-signal strong{color:var(--crimson);}
+.gcc-signal-chip{padding:10px 14px;font-size:0.78rem;color:var(--ink);background:rgba(198,161,91,0.08);border:1px solid var(--gold);border-radius:3px;}
+.gcc-signal-chip.is-warn{background:rgba(124,31,46,0.06);border-color:var(--crimson);color:var(--crimson);}
 .gcc-timeline{display:flex;flex-direction:column;}
 .gcc-stage-row{display:flex;gap:14px;position:relative;padding-bottom:20px;}
 .gcc-stage-row:last-child{padding-bottom:0;}

@@ -26,8 +26,6 @@ import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { initializeClearanceChain } from '../../../../_lib/graduation-workflow.js';
 
-const AWARD_FIELDS = ['academic_awards', 'conduct_awards', 'quran_awards', 'leadership_awards', 'sports_awards', 'other_honours'];
-
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
   let session;
@@ -162,8 +160,10 @@ export async function onRequestPost({ request, env }) {
       });
 
       if (action === 'mark_verified') {
-        const requiresFounderReview = AWARD_FIELDS.some((col) => (record[col] || '').trim().length > 0);
-        await initializeClearanceChain(sql, { graduationRecordId: recordId, verifiedByStaffId: staffId, requiresFounderReview });
+        // Whether the Founder stage is required is resolved entirely
+        // from the Graduation Approval Matrix inside
+        // initializeClearanceChain() — never a heuristic computed here.
+        await initializeClearanceChain(sql, { graduationRecordId: recordId, verifiedByStaffId: staffId });
       }
 
       return json({ ok: true, recordId: updated.rows[0].id, status: updated.rows[0].status });

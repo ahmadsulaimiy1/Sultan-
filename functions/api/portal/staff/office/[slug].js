@@ -24,6 +24,32 @@ import { json } from '../../../../_lib/http.js';
 import { listPendingApprovals } from '../../../../_lib/approvals.js';
 import { isQuranCollegeInstitution, HIFZ_STAGES } from '../../../../_lib/hifz.js';
 import { effectiveGrants, checkGrants } from '../../../../_lib/permissions.js';
+import { queueForStageCodes } from '../../../../_lib/graduation-workflow.js';
+
+// Dashboard Integration (Conditional Approval directive item 6): which
+// Graduation Approval Workflow stage(s), if any, this office's own
+// portal should surface inline. Only offices/roles that are a real
+// decision point in functions/_lib/graduation-workflow.js's
+// STAGE_DEFINITIONS are listed — an office with no stage mapped here
+// simply gets no graduation queue section, honestly, rather than an
+// empty one implying it should have one. The Vice Principal (Academic
+// /Administration) and Founder & CEO stages have no dedicated office
+// portal yet (VPAC/VPAD are roles with no office; the Founder's own
+// office IS 'executive', included below) — those two continue to
+// surface only via the central Graduation Control Centre until an
+// office exists for them.
+const OFFICE_GRADUATION_STAGES = {
+  'academic-affairs': ['academic'],
+  examinations: ['examinations'],
+  finance: ['finance'],
+  library: ['library'],
+  'digital-services': ['ict'],
+  'head-teacher': ['principal'],
+  'principal-royal-college': ['principal'],
+  raees: ['principal'],
+  mudeer: ['principal'],
+  executive: ['founder'],
+};
 
 // Operational Framework cards — the Leadership Dashboards retrofit. Seven
 // Institutional Capability Frameworks now exist with real schema and
@@ -295,6 +321,11 @@ export async function onRequestGet({ request, env, params }) {
         }))
       : [];
 
+    const graduationStageCodes = OFFICE_GRADUATION_STAGES[office.slug] || [];
+    const graduationQueue = graduationStageCodes.length
+      ? await queueForStageCodes(sql, session.staffId, graduationStageCodes)
+      : [];
+
     let operations = null;
     const institutionName = SCHOOL_LEADERSHIP_INSTITUTION[office.slug];
     if (institutionName) {
@@ -366,7 +397,6 @@ export async function onRequestGet({ request, env, params }) {
         'principal-royal-college': [
           { label: 'Student Rankings', reason: 'Too few real term_results entries school-wide to compute a meaningful ranking — see the Founder Command Centre\'s Academic Health note.' },
           { label: 'Academic Intervention Cases', reason: 'No intervention/support-plan tracking exists yet.' },
-          { label: 'Graduation Readiness', reason: 'No graduation-requirements checklist system exists yet.' },
         ],
         raees: [
           { label: 'Teacher Deployment Intelligence', reason: 'No timetable/deployment data model exists yet.' },
@@ -457,6 +487,7 @@ export async function onRequestGet({ request, env, params }) {
         owner: r.owner_staff_no ? { staffNo: r.owner_staff_no, fullName: r.owner_name } : null,
       })),
       workflow: { areaCode: areaCode || null, pending: pendingApprovals },
+      graduationQueue,
       operations,
     });
   } catch (err) {

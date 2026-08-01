@@ -222,7 +222,7 @@
       : 'No seat recorded for this office yet.');
     setTextAnimated('stat-staff-count', String(data.staffCount));
     setTextAnimated('stat-appointments', String(data.appointments.length));
-    setTextAnimated('stat-pending-workflow', String(data.workflow.pending.length));
+    setTextAnimated('stat-pending-workflow', String(data.workflow.pending.length + (data.graduationQueue ? data.graduationQueue.length : 0)));
     setTextAnimated('stat-meetings', String(data.meetings.length));
   }
 
@@ -737,19 +737,31 @@
   function renderWorkflow(data) {
     var el = document.getElementById('workflow-list');
     if (!el) return;
-    if (!data.workflow.areaCode) {
-      el.innerHTML = '<div class="portal-empty">No approval workflow is configured for this office yet. The generic Approval Workflow engine already exists site-wide (see the Registrar’s certificate queue) and can be wired to this office once a real approval process is defined.</div>';
-      return;
+
+    var sections = [];
+
+    if (data.workflow.areaCode) {
+      sections.push(data.workflow.pending.length
+        ? data.workflow.pending.map(function (p) {
+            return '<div class="office-workflow-row"><span class="owr-type">' + esc(p.targetType) + '</span>'
+              + '<span class="owr-by">Requested by ' + esc(p.requestedByName || 'a staff member') + '</span>'
+              + '<span class="owr-date">' + fmtDate(p.requestedAt) + '</span></div>';
+          }).join('')
+        : '<div class="portal-empty">No items awaiting approval right now.</div>');
+    } else {
+      sections.push('<div class="portal-empty">No approval workflow is configured for this office yet. The generic Approval Workflow engine already exists site-wide (see the Registrar’s certificate queue) and can be wired to this office once a real approval process is defined.</div>');
     }
-    if (!data.workflow.pending.length) {
-      el.innerHTML = '<div class="portal-empty">No items awaiting approval right now.</div>';
-      return;
+
+    if (data.graduationQueue && data.graduationQueue.length) {
+      sections.push('<div class="office-group-head" style="margin-top:18px;">Graduation Clearance — awaiting this office</div>');
+      sections.push(data.graduationQueue.map(function (item) {
+        return '<div class="office-workflow-row"><span class="owr-type">' + esc(item.fullName) + '</span>'
+          + '<span class="owr-by">' + esc(item.stageLabel) + ' &middot; Adm. No. ' + esc(item.admissionNo || '—') + ' &middot; Session ' + esc(item.graduationSession || '') + '</span>'
+          + '<span class="owr-date"><a href="/portal/staff/graduation-control/?recordId=' + encodeURIComponent(item.recordId) + '">Open in Graduation Control Centre &rarr;</a></span></div>';
+      }).join(''));
     }
-    el.innerHTML = data.workflow.pending.map(function (p) {
-      return '<div class="office-workflow-row"><span class="owr-type">' + esc(p.targetType) + '</span>'
-        + '<span class="owr-by">Requested by ' + esc(p.requestedByName || 'a staff member') + '</span>'
-        + '<span class="owr-date">' + fmtDate(p.requestedAt) + '</span></div>';
-    }).join('');
+
+    el.innerHTML = sections.join('');
   }
 
   // Module 9 — Notifications (honest: no per-office staff notification feed yet)

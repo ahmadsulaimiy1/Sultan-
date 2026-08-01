@@ -807,6 +807,156 @@ CREATE TABLE IF NOT EXISTS staff_notifications (
 );
 CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at);
 
+-- Stage 2 Conditional Approval directive (institutional refinements
+-- required before Stage 3): audit trail hardening, so an approval
+-- decision's context is reconstructable, not just its outcome.
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS user_agent TEXT;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS previous_value JSONB;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS new_value JSONB;
+
+-- Graduation Approval Matrix — replaces the Stage 2 award-based Founder
+-- trigger (correctly flagged as an unsourced interpretation) with an
+-- admin-configurable rule table. A rule with trigger_type IN
+-- ('constitution','governance_charter','board_resolution',
+-- 'executive_directive') and applies_globally = true means "the
+-- Founder stage is required for every graduating student, because of
+-- the cited authority" — administrators add/deactivate these rows
+-- through functions/api/portal/admin/approval-matrix.js, no code
+-- change required. 'manual_escalation' rows are NOT written here — a
+-- per-student escalation is recorded directly on that graduation_record
+-- (requires_founder_review/founder_review_reason, already built in
+-- Stage 2) precisely because it is a one-off decision about one
+-- student, not an institution-wide standing rule. target_stage_code is
+-- deliberately not constrained to 'founder' only, so a future
+-- amendment (e.g. "Board Resolution requires VP Academic review too")
+-- needs a new row here, not new code.
+CREATE TABLE IF NOT EXISTS graduation_approval_rules (
+  id                      SERIAL PRIMARY KEY,
+  target_stage_code       TEXT NOT NULL,
+  trigger_type            TEXT NOT NULL CHECK (trigger_type IN (
+                             'constitution', 'governance_charter', 'board_resolution',
+                             'executive_directive', 'manual_escalation'
+                           )),
+  reference_text          TEXT, -- e.g. "Governance Charter Art. 27D" — free text citation, never a hardcoded lookup
+  applies_globally        BOOLEAN NOT NULL DEFAULT true,
+  is_active                BOOLEAN NOT NULL DEFAULT true,
+  created_by_staff_id      INTEGER REFERENCES staff(id),
+  created_at               TIMESTAMPTZ NOT NULL DEFAULT now(),
+  deactivated_by_staff_id  INTEGER REFERENCES staff(id),
+  deactivated_at           TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_approval_rules_stage ON graduation_approval_rules (target_stage_code, is_active);
+
+-- Disciplinary Register — real case data behind Disciplinary Clearance,
+-- so that stage can surface an actual signal (like Finance's invoice
+-- check) instead of being a blind checkbox. 'commendation' rows never
+-- block clearance; only an open/under_investigation warning,
+-- suspension, or investigation does — see functions/_lib/
+-- graduation-workflow.js's disciplinarySignal().
+CREATE TABLE IF NOT EXISTS disciplinary_cases (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  case_type             TEXT NOT NULL CHECK (case_type IN (
+                           'warning', 'suspension', 'commendation', 'behavioural_report', 'investigation', 'other'
+                         )),
+  severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious')),
+  description           TEXT NOT NULL,
+  status                TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'under_investigation', 'resolved', 'dismissed')),
+  final_disposition     TEXT,
+  reported_by_staff_id  INTEGER REFERENCES staff(id),
+  reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_by_staff_id  INTEGER REFERENCES staff(id),
+  resolved_at           TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_disciplinary_cases_student ON disciplinary_cases (student_id, status);
+
+-- Library Loan Register — prepared ahead of a real library catalogue
+-- system exactly as directed ("do not wait until the Library module
+-- exists"). Item identity is free text (item_title/item_ref) since no
+-- catalogue exists to look an item up against yet; that is a genuinely
+-- separate future system, not a blocker for tracking loans/fines today.
+CREATE TABLE IF NOT EXISTS library_loans (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  item_title            TEXT NOT NULL,
+  item_ref              TEXT,
+  borrowed_at           DATE NOT NULL,
+  due_at                DATE,
+  returned_at           DATE,
+  status                TEXT NOT NULL DEFAULT 'on_loan' CHECK (status IN ('on_loan', 'returned', 'overdue', 'lost')),
+  fine_amount           NUMERIC(10,2) NOT NULL DEFAULT 0,
+  fine_paid             BOOLEAN NOT NULL DEFAULT false,
+  recorded_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_library_loans_student ON library_loans (student_id, status);
+
+-- ICT-issued physical assets and access items — institutional email
+-- account status and portal account status are NOT duplicated here;
+-- those are already real, live facts on `staff`/`guardians`/`students`
+-- and the auth system, and the ICT Clearance signal reads them
+-- directly rather than re-recording a second copy that could drift out
+-- of sync. This table covers what genuinely has no home yet: physical
+-- devices, ID cards, and other issued access items.
+CREATE TABLE IF NOT EXISTS issued_devices (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  asset_type            TEXT NOT NULL CHECK (asset_type IN ('device', 'id_card', 'access_credential', 'other')),
+  description           TEXT NOT NULL,
+  serial_or_ref         TEXT,
+  issued_at             DATE NOT NULL,
+  returned_at           DATE,
+  status                TEXT NOT NULL DEFAULT 'issued' CHECK (status IN ('issued', 'returned', 'lost', 'deactivated')),
+  recorded_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_issued_devices_student ON issued_devices (student_id, status);
+
+-- Staff Signatures — the architecture Stage 3's document generation
+-- will draw from, built now and independently managed per staff member
+-- exactly as directed ("do not hardcode signature images"). No file-
+-- storage backend exists in this project (confirmed in the Stage 1
+-- audit), so 'uploaded_image' stores a small base64 data URI directly
+-- rather than promising an upload pipeline that doesn't exist;
+-- 'typed' — a name rendered in a script/cursive font at document-
+-- generation time — is the default, always-available option that
+-- needs no image at all. One row per staff member (UPSERT on staff_id).
+CREATE TABLE IF NOT EXISTS staff_signatures (
+  id              SERIAL PRIMARY KEY,
+  staff_id        INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  signature_type  TEXT NOT NULL DEFAULT 'typed' CHECK (signature_type IN ('typed', 'uploaded_image')),
+  typed_name      TEXT,
+  image_data      TEXT,
+  title_line      TEXT,
+  is_active       BOOLEAN NOT NULL DEFAULT true,
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (staff_id)
+);
+
+-- Graduation Batches — the numbering architecture bulk operations need.
+-- Bulk clearance (a real, working action today — see
+-- functions/_lib/graduation-workflow.js's bulkDecideStage()) does not
+-- require a batch; batch_id exists so Stage 3's eventual bulk document
+-- generation/printing can group records under one issued batch number
+-- without a schema change then. Bulk printing/verification themselves
+-- are honestly Stage 3 features — there is nothing to print or verify
+-- yet — so only the numbering scaffold is built now.
+CREATE TABLE IF NOT EXISTS graduation_batches (
+  id                    SERIAL PRIMARY KEY,
+  batch_no              TEXT NOT NULL UNIQUE,
+  graduation_session    TEXT NOT NULL,
+  description           TEXT,
+  created_by_staff_id   INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS batch_id INTEGER REFERENCES graduation_batches(id);
+
 -- approved_by_staff_id: real second-party sign-off, filled only when a
 -- staff_approvals row is actually decided by a distinct PRIN-holding
 -- staff member (functions/_lib/approvals.js) — replaces the old
