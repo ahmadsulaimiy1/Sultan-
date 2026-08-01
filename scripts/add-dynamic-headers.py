@@ -40,6 +40,59 @@ TOP_MARGIN = 0.62 * 72
 BOTTOM_MARGIN = 0.55 * 72
 SIDE = 44  # left/right text inset, matching the body's own gutters
 
+# Chromium's print pipeline fills the reserved header/footer margin band
+# pure white for EVERY page of a render (see HEADER_TEMPLATE/FOOTER_TEMPLATE
+# in render-constitution-pdf.js) — there is no per-page mechanism to vary
+# it. Every page in this document has one of exactly three real
+# backgrounds (css/constitution-print.css), and the margin band on every
+# page must be repainted to match ITS OWN page's background, not a single
+# guessed shade — a real, pixel-measured defect found this round: 52 of 65
+# pages showed a stark white band against their true background (ivory
+# body pages, deep-navy ceremony pages, and charcoal Preamble/Certificate
+# pages alike), because the previous version of this script only repainted
+# "non-dark" pages, and did so in plain white rather than the true ivory,
+# while every dark and charcoal page kept Chromium's raw white margin
+# fully exposed, and the cover — despite its own dedicated header/footer-
+# off render pass — was never repainted for its BOTTOM margin either,
+# since that pass still reserves the same margin, just with nothing
+# painted into it. These three colours match --ivory/--doc-dark/--charcoal
+# in css/brand.css and css/constitution-print.css exactly.
+BG_IVORY = HexColor("#F7EEDF")
+BG_DARK = HexColor("#14161F")
+BG_CHARCOAL = HexColor("#2A2621")
+BG_COLORS = {"ivory": BG_IVORY, "dark": BG_DARK, "charcoal": BG_CHARCOAL}
+
+# The mask rectangles below deliberately do NOT use TOP_MARGIN/BOTTOM_MARGIN
+# directly. Those figures are what render-constitution-pdf.js *asks*
+# Chromium to reserve, but Chromium's own headerTemplate/footerTemplate
+# rendering does not place that template flush against the true page edge —
+# it inserts its own small, fixed internal offset. Measured directly off
+# the rendered PDF with pdfplumber (identical, to the point, on every page
+# checked — a cover, several body pages, the back cover): the header
+# template's actual white rectangle sits at 15.00–60.00pt from the page's
+# top edge, not 0–44.64pt, and the footer template's sits at 737.25–777pt
+# from the top edge, not 752.4–792pt. A mask sized to the NOMINAL margin
+# left roughly 15pt of true Chromium white exposed just past each mask's
+# edge on every single page — a real, confirmed defect (the second, more
+# subtle layer of the same white-band bug), not a hypothetical rounding
+# concern.
+#
+# A SECOND, separate gap was found the same way on the fixed-height
+# `.page` templates (cover, half-title, title, copyright, ceremony, Part-
+# divider, Certificate, back cover): those divs render starting at the
+# page's own physical top edge (y=0), not offset by marginTop as this
+# script originally assumed, and are exactly 9.83in (707.76pt) tall — so
+# they end 84.24pt above the true bottom edge, not the ~39.6pt this script
+# expected. The 24pt gap between where that div's own background stops
+# (707.76pt) and where the old, smaller bottom mask started left a strip
+# of the raw, unpainted white PDF canvas showing on every one of those
+# page types — confirmed by a full-column pixel scan of the rendered back
+# cover, not assumed from the arithmetic alone. MASK_BOTTOM_H below covers
+# from the true bottom edge up past that 707.76pt line, closing both gaps
+# in one mask rather than trying to track two different boundaries.
+MASK_TOP_H = 64
+MASK_BOTTOM_H = 88
+
 ROMAN_RE = r"[IVXLCDM]+"
 PART_RE = re.compile(rf"^\s*PART\s+({ROMAN_RE})\s*$")
 CHAPTER_RE = re.compile(rf"^CHAPTER\s+({ROMAN_RE})\s+—\s+(.+)$")
@@ -76,18 +129,25 @@ def get_pages_text():
 
 
 def classify_and_map(pages):
-    """Returns (results, dark_pages, back_cover_page).
+    """Returns (results, page_bg, back_cover_page).
 
     results: one entry per page (1-indexed via list index), either None
     (no header text — a ceremony page, or preliminary matter) or a dict
     with header/footer text.
 
-    dark_pages: the SUBSET of None-result pages that are genuinely
-    full-bleed dark ceremony pages (Proclamation, Preamble, Part dividers,
-    Certificate/Execution, back cover) — as opposed to light-background
-    preliminary pages (Table of Contents, front matter) that also get no
-    header text but are NOT dark, and so must NOT be treated the same way
-    when masking the margin band (see draw_page).
+    page_bg: one entry per page, the exact background colour key
+    ('ivory' | 'dark' | 'charcoal') that page actually renders with in
+    css/constitution-print.css — used to repaint the reserved header/
+    footer margin band in the SAME colour as the page underneath it,
+    never a single guessed shade for every non-light page. Proclamation/
+    Part-dividers/back-cover render on .page.dark (--doc-dark, #14161F);
+    Preamble/Certificate-of-Adoption render on .page.charcoal (--charcoal,
+    #2A2621) — a DIFFERENT dark tone from .dark, so they must not be
+    lumped into one "dark" bucket; every other page (front matter, Table
+    of Contents, Chapter body, Schedules) renders on plain --ivory
+    (#F7EEDF). Defaults to 'ivory' and is only overridden at the specific
+    points below where a page is positively identified as one of the two
+    darker templates.
 
     back_cover_page: the index of the back cover page (or None), so
     draw_page can suppress the footer there entirely — the directive is
@@ -95,7 +155,8 @@ def classify_and_map(pages):
     running-page furniture, only the page's own closing design."""
     n = len(pages)
     results = [None] * n
-    dark_pages = set()
+    page_bg = ["ivory"] * n
+    page_bg[0] = "dark"  # cover — .page.dark.cover, handled specially in main()
     back_cover_page = None
 
     cur_part = None
@@ -144,14 +205,23 @@ def classify_and_map(pages):
                 # by dumping dark_pages and checking it against the known
                 # page structure), not a hypothetical one.
                 results[i] = None
-                dark_pages.add(i)
+                page_bg[i] = "dark"
                 continue
             results[i] = None
             continue
 
-        if "CONSTITUTIONALPROCLAMATION" in first_line_compacted or "CERTIFICATEOFADOPTIONANDEXECUTION" in first_line_compacted:
+        if "CONSTITUTIONALPROCLAMATION" in first_line_compacted:
             results[i] = None
-            dark_pages.add(i)
+            page_bg[i] = "dark"
+            continue
+        if "CERTIFICATEOFADOPTIONANDEXECUTION" in first_line_compacted:
+            # .page.charcoal.ceremony.execution-page — a different, lighter
+            # dark tone than the Proclamation/Part-divider/back-cover
+            # .page.dark treatment (see the docstring above). Masking this
+            # page with --doc-dark instead of --charcoal would trade one
+            # visible seam for another, just a subtler one.
+            results[i] = None
+            page_bg[i] = "charcoal"
             continue
 
         # Back cover: always the last physical page of the rendered PDF.
@@ -162,7 +232,7 @@ def classify_and_map(pages):
         # rely on, which is also more robust against future copy changes.
         if i == n - 1:
             results[i] = None
-            dark_pages.add(i)
+            page_bg[i] = "dark"
             back_cover_page = i
             continue
 
@@ -178,8 +248,10 @@ def classify_and_map(pages):
         # heading is always the page's first substantial line; matching
         # that directly is robust to how long the page's body text runs.
         if stripped_lines and compact(stripped_lines[0]) == "PREAMBLE":
+            # .page.charcoal.ceremony — see the docstring above for why
+            # this is deliberately NOT the same colour as Proclamation.
             results[i] = None
-            dark_pages.add(i)
+            page_bg[i] = "charcoal"
             continue
 
         # Part-divider page: short ceremony page whose content is just the
@@ -210,7 +282,7 @@ def classify_and_map(pages):
             ]
             cur_part = f"Part {part_compact_match.group(1)} — {' '.join(title_words[:3])}".rstrip(" —")
             results[i] = None
-            dark_pages.add(i)
+            page_bg[i] = "dark"
             continue
 
         # The real Schedules heading renders as title case ("Schedules"),
@@ -260,7 +332,7 @@ def classify_and_map(pages):
         left = f"{cur_part} · {cur_chapter}" if cur_part else cur_chapter
         results[i] = {"left": left, "right": art_range or ""}
 
-    return results, dark_pages, back_cover_page
+    return results, page_bg, back_cover_page
 
 
 def truncate(c, text, font, size, max_width):
@@ -272,25 +344,30 @@ def truncate(c, text, font, size, max_width):
     return text + ell
 
 
-def draw_page(c, info, page_num, total_pages, is_dark, is_back_cover):
+def draw_page(c, info, page_num, total_pages, bg, is_back_cover, is_cover=False):
     c.setLineWidth(0.6)
 
-    if not is_dark:
-        # Mask the reserved margin band with an opaque white rectangle
-        # before drawing anything else. This is a deliberate belt-and-
-        # braces fix, not cosmetic: Chromium's print pagination was found,
-        # on inspection, to occasionally let a widow line of body text
-        # render inside the margin band that should have been reserved
-        # (e.g. the last line of a paragraph carried over from the
-        # previous page landing above where the header starts) — a real,
-        # confirmed collision between body text and the running header,
-        # not a hypothetical one. Painting over the margin band, which is
-        # supposed to be blank on every light-background page, removes any
-        # such stray content regardless of why Chromium placed it there.
-        # Dark ceremony pages are full-bleed and must NOT be masked white.
-        c.setFillColor(HexColor("#ffffff"))
-        c.rect(0, PAGE_H - TOP_MARGIN, PAGE_W, TOP_MARGIN, stroke=0, fill=1)
-        c.rect(0, 0, PAGE_W, BOTTOM_MARGIN, stroke=0, fill=1)
+    # Repaint the reserved margin band — on EVERY page, not only "light"
+    # ones — with the exact colour that page's own body renders with.
+    # This used to be skipped entirely for dark/charcoal pages (leaving
+    # Chromium's raw white margin fully exposed) and used plain white
+    # instead of true ivory even on the pages it did cover; both were
+    # real, pixel-measured defects (52 of 65 pages), not a hypothetical
+    # risk. A stray widow line of body text landing in this band — the
+    # original reason this masking existed — is just as possible on a
+    # dark ceremony page as a light one, so painting it everywhere is
+    # also the correct fix for that original concern, not only the
+    # colour-matching one.
+    c.setFillColor(BG_COLORS[bg])
+    c.rect(0, PAGE_H - MASK_TOP_H, PAGE_W, MASK_TOP_H, stroke=0, fill=1)
+    c.rect(0, 0, PAGE_W, MASK_BOTTOM_H, stroke=0, fill=1)
+
+    if is_cover:
+        # The cover carries no running header, footer, or page number of
+        # any kind — only its own full-bleed design — so once the margin
+        # band is repainted to match its background, there is nothing
+        # further to draw here.
+        return
 
     if info is not None:
         # ---- Header ----
@@ -375,7 +452,7 @@ def draw_page(c, info, page_num, total_pages, is_dark, is_back_cover):
 
 def main():
     pages_text = get_pages_text()
-    mapping, dark_pages, back_cover_page = classify_and_map(pages_text)
+    mapping, page_bg, back_cover_page = classify_and_map(pages_text)
 
     reader = PdfReader(str(PDF))
     n = len(reader.pages)
@@ -385,16 +462,22 @@ def main():
     overlay_path = PDF.with_suffix(".overlay.pdf")
     c = canvas.Canvas(str(overlay_path), pagesize=(PAGE_W, PAGE_H))
     for i in range(n):
-        if i == 0:
-            c.showPage()  # cover: fully blank overlay page, never masked (full bleed)
-            continue
+        # The cover (i==0) now goes through draw_page too, rather than
+        # being skipped outright — it still gets NO header/footer text
+        # (is_cover=True returns immediately after painting), but it DOES
+        # need its own margin band repainted dark, matching its .page.dark
+        # background. Previously skipping it entirely left Chromium's raw
+        # white margin exposed at the very bottom of the cover — visible,
+        # confirmed on inspection, and exactly the kind of "poor front
+        # cover" defect this round's directive named.
         draw_page(
             c,
             mapping[i] if i < len(mapping) else None,
             i + 1,
             n,
-            is_dark=(i in dark_pages),
+            bg=page_bg[i] if i < len(page_bg) else "ivory",
             is_back_cover=(i == back_cover_page),
+            is_cover=(i == 0),
         )
         c.showPage()
     c.save()

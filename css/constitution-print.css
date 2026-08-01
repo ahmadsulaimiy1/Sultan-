@@ -12,7 +12,16 @@
 
 @page {
   size: letter;
-  margin: 0;
+  /* Must match the physical margin render-constitution-pdf.js reserves
+     for the header/footer overlay (0.62in top, 0.55in bottom). This was
+     previously 0, which told Blink's own print-pagination engine the
+     full 11in page was available content height — a real, confirmed
+     defect: article body text was found landing as close as 4.6pt from
+     the true page edge (inside the zone reserved for the running
+     footer), because the flowing .chapter content's page breaks were
+     computed against the full page, not the printable area actually
+     available once the header/footer band is reserved. */
+  margin: 0.62in 0 0.55in 0;
 }
 
 .const-body {
@@ -46,14 +55,21 @@
 .const-toolbar button:hover { background: var(--gold-bright); }
 
 /* ---- Curated fixed-height pages (cover, proclamation, Part dividers).
-   Height is 10.2in, not the full 11in Letter page: the PDF renderer
-   (scripts/render-constitution-pdf.js) reserves 0.4in top + 0.4in
+   Height is 9.83in, not the full 11in Letter page: the PDF renderer
+   (scripts/render-constitution-pdf.js) reserves 0.62in top + 0.55in
    bottom for the running header/footer via Playwright's own margin
-   option, so that is the true printable content height per page. ---- */
+   option (11in - 1.17in = 9.83in), so that is the true printable
+   content height per page. This value MUST track that margin config —
+   it was previously locked to a stale 10.2in figure left over from an
+   earlier, smaller margin reservation (0.4in/0.4in = 0.8in total,
+   printable 10.2in); when the margin grew to 0.62in/0.55in for header
+   breathing room, this height was never updated, leaving every
+   fixed-height page 0.37in taller than the print engine's own usable
+   page area — a real, confirmed defect (see the Editorial Record). ---- */
 .page {
-  width: 8.5in; height: 10.2in; min-height: 10.2in; margin: 20px auto; position: relative; overflow: hidden; isolation: isolate;
+  width: 8.5in; height: 9.83in; min-height: 9.83in; margin: 20px auto; position: relative; overflow: hidden; isolation: isolate;
   background: var(--ivory); box-shadow: 0 30px 70px -20px rgba(0,0,0,0.6);
-  padding: 0.85in 0.95in; box-sizing: border-box; page-break-before: always; page-break-after: always;
+  padding: 0.75in 0.95in; box-sizing: border-box; page-break-before: always; page-break-after: always;
 }
 .page.dark { background: var(--doc-dark); color: var(--ivory); }
 .page.charcoal { background: var(--charcoal); color: var(--ivory); }
@@ -261,7 +277,7 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
 @media print {
   .const-toolbar { display: none; }
   .page, .chapter, .toc-page, .schedules-page { box-shadow: none; margin: 0; width: auto; }
-  .page { height: 10.2in; min-height: 10.2in; max-height: 10.2in; }
+  .page { height: 9.83in; min-height: 9.83in; max-height: 9.83in; }
   /* The dark body background below is a nice-to-have "matte surround"
      for on-screen preview only. Every .page/.chapter/etc paints its own
      background over its own box, so this never shows through except in
