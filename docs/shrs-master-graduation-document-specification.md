@@ -599,4 +599,19 @@ Per this specification's own phased build plan (§20), the client authorized wor
 - **Graduation Register — done.** `functions/api/portal/staff/registrar/graduation-register.js` (staff-only, `GET ?session=<graduationSession>`, `graduation_documents` `V` permission), rendering the full locked roster for one ceremony/session via the shared shell's `tabular` body variant with a single Registrar signature. Per §1.1's footnote ("no per-document numbering"), this document carries no reference number, seal, QR, or barcode at all — rather than render a security band against a number that doesn't exist, `functions/_lib/document-template-shell.js`'s `renderDocumentShell()` was changed to render the seal block and security band **only when `referenceNo` is supplied**, a generically reusable switch, not a Graduation-Register-specific special case. Wired into the Registrar staff UI (`portal/staff/registrar/index.html` + `js/portal-staff-registrar.js`) as a session-input "Open Register" / "Download PDF" control. Both `?format=pdf` variants reuse the already-built `functions/_lib/pdf-render.js` path.
 - **Graduate Search — resolved as staff-only, documented as a deliberate decision, not an omission.** See the new §5.5.
 
-**Class C is now fully complete** (all four §1.3 document types: Alumni Registration Certificate, Digital Graduate Profile, Lifetime Verification Record, Graduation Register). Per the Executive Directive's own mandated build order (point 1: "Complete Class C fully... before touching Class A"; point 5: Class B only after Class C and the verification platform), the next phase is a checklist pass confirming the verification platform's remaining named components (§20a point 2: Secure Verification Portal, QR/Barcode Verification, Graduate Search, Verification API, Lifetime Verification History, Public Verification Page, Privacy controls) are genuinely satisfied by what already exists before Class B (Testimonial, Character Certificate, Graduation Clearance Certificate) begins.
+**Class C is now fully complete** (all four §1.3 document types: Alumni Registration Certificate, Digital Graduate Profile, Lifetime Verification Record, Graduation Register).
+
+**§20a point 2 — Verification platform checklist, closed out.** Per the Executive Directive's own mandated build order (point 1: "Complete Class C fully... before touching Class A"; point 5: Class B only after Class C and the verification platform), each named platform component was checked against what genuinely exists rather than assumed complete:
+
+| Directive component | Status | Where |
+|---|---|---|
+| Secure Verification Portal | Done | `/verify-graduation-document/` (§20.4) |
+| QR Verification | Done | `functions/_lib/qrcode.js` + `functions/api/graduation-documents/qr.js` |
+| Barcode Verification | Done | `functions/_lib/barcode128.js` + `functions/api/graduation-documents/barcode.js` |
+| Graduate Search | Done, scoped deliberately | Staff-only, §5.5 |
+| Verification API (future-ready) | Done, Tier 1; Tier 2 deliberately deferred | §5.2 — Tier 2 institutional API named as its own Phase 2 decision, not built speculatively |
+| Lifetime Verification History | Done — was table-only, now has a staff surface | `functions/api/portal/staff/registrar/verification-history.js` (new this round) + a Registrar UI panel (`portal/staff/registrar/index.html`, `js/portal-staff-registrar.js`) — a reference-number lookup showing every recorded check's timestamp and outcome, never the ip_hash. Closing this gap mattered: §3.7's tamper-detection purpose for `verification_log` only works if a real person can actually see the history, and until this round nothing did. |
+| Public Verification Page | Done | Same as Secure Verification Portal above |
+| Privacy controls | Done | §5.3 |
+
+With every platform component now genuinely satisfied (not just assumed), Class B (Testimonial, Character Certificate, Graduation Clearance Certificate) is next per the Directive's point 5.

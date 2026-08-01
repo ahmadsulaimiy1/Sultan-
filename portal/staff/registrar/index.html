@@ -122,6 +122,17 @@
       <div class="registrar-form-result" data-register-result hidden></div>
     </div>
 
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Lifetime Verification History</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Every time a document's reference number has been checked at the public verification page, since the document was issued — the anomaly-review purpose this exists for is repeated or suspicious checks against one document.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
+        <input type="text" data-verification-history-ref placeholder="Reference number, e.g. SHRS-AR-..." class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:260px;" />
+        <button type="button" class="registrar-btn" data-verification-history-lookup>View History</button>
+      </div>
+      <div class="registrar-approvals-list" data-verification-history-list></div>
+      <div class="registrar-form-result" data-verification-history-result hidden></div>
+    </div>
+
     <div data-registrar-record hidden>
 
       <div class="office-group-head">Student Registry</div>

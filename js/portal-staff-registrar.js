@@ -358,6 +358,42 @@
   if(registerGenerateBtn){ registerGenerateBtn.addEventListener('click', function(){ openGraduationRegister('html'); }); }
   if(registerGeneratePdfBtn){ registerGeneratePdfBtn.addEventListener('click', function(){ openGraduationRegister('pdf'); }); }
 
+  var verificationHistoryRefEl = document.querySelector('[data-verification-history-ref]');
+  var verificationHistoryLookupBtn = document.querySelector('[data-verification-history-lookup]');
+  var verificationHistoryListEl = document.querySelector('[data-verification-history-list]');
+  var verificationHistoryResultEl = document.querySelector('[data-verification-history-result]');
+
+  async function lookupVerificationHistory(){
+    if(!verificationHistoryResultEl) return;
+    verificationHistoryResultEl.hidden = true;
+    verificationHistoryListEl.innerHTML = '';
+    var ref = (verificationHistoryRefEl.value || '').trim();
+    if(!ref){
+      showResult(verificationHistoryResultEl, false, 'Enter a document reference number first.');
+      return;
+    }
+    verificationHistoryLookupBtn.disabled = true;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/verification-history?ref=' + encodeURIComponent(ref));
+      var data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Could not load that verification history.'); }
+      if(!data.checks.length){
+        verificationHistoryListEl.innerHTML = '<p class="registrar-approvals-empty">No checks recorded yet for ' + data.referenceNo + ' (' + data.status + ').</p>';
+      } else {
+        var rows = data.checks.map(function(c){
+          return '<div class="registrar-approval-card"><div class="registrar-approval-meta">' + new Date(c.verifiedAt).toLocaleString() + ' — outcome: ' + c.outcome + '</div></div>';
+        }).join('');
+        verificationHistoryListEl.innerHTML = '<p class="registrar-approvals-empty">' + data.checkCount + ' check(s) recorded for ' + data.referenceNo + ' (' + data.status + ').</p>' + rows;
+      }
+    }catch(err){
+      showResult(verificationHistoryResultEl, false, (err && err.message) || 'Could not load that verification history.');
+    }finally{
+      verificationHistoryLookupBtn.disabled = false;
+    }
+  }
+
+  if(verificationHistoryLookupBtn){ verificationHistoryLookupBtn.addEventListener('click', lookupVerificationHistory); }
+
   function renderTimeline(events){
     var wrap = document.querySelector('[data-record-timeline]');
     wrap.innerHTML = '';
