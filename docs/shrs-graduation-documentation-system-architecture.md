@@ -107,3 +107,96 @@ Building the entire ecosystem — intake form, staff dashboard, PDF generation f
 5. **File upload infrastructure** (photo/document upload) — a genuinely separate piece of infrastructure (storage backend decision, upload endpoint, virus/size validation) that the intake form can be built to accept gracefully without, and add once it exists, rather than blocking Stage 1 on it.
 
 Stage 1 begins immediately below.
+
+---
+
+## 8. Stage 2 — the Graduation Approval Workflow
+
+Per the Executive Directive of 1 August 2026 ("proceed to Stage 2, but elevate the system to flagship institutional standards"), Stage 2 replaces the placeholder Registry+Principal lock pair with the full multi-office chain the directive specified, plus a per-viewer dashboard, a real audit trail, and a first honest notification layer. This section records exactly what was built, what was reused, what is a documented interpretation rather than a fact, and what remains genuinely out of scope — the same audit discipline every prior stage in this programme has followed.
+
+### 8.1 What was checked before building
+
+Before writing any code, the codebase's real office/role/notification infrastructure was audited (not assumed):
+
+- **Real offices exist today** for Academic Affairs (`academic-affairs`), Examinations (`examinations`), Finance (`finance`), Library (`library`), and ICT (`digital-services`) — each a genuine row in `offices`, each reachable via the existing generic Office Portal.
+- **No office or role exists for "Vice Principal (Academic)", "Vice Principal (Administration)", or a dedicated "Disciplinary" body.** Only a single generic `VP` role exists (`proposed`, no current appointee), and disciplinary matters already live under the real `behaviour` permission area (owner: VP Administration in its own documentation, decided in practice by `VP` or `PRIN`).
+- **No staff member is currently appointed** to Academic Affairs, Examinations, Library, or ICT in the seed data — these offices are real but vacant, the same "established, not yet appointed" situation this codebase already has a documented precedent for (the Designated Safeguarding Lead role).
+- **`functions/_lib/approvals.js` is a single-step, two-party primitive** (one requester, one approver) with no concept of an ordered, multi-stage chain — it could not honestly be reused to build an 11-stage sequence without a new sequencing layer on top of it.
+- **No staff notification feed existed anywhere.** The `notifications` table is guardian-only; the Office Portal's own "Notifications" tab said so in its own rendered text before this stage. Building one was genuinely new work, not a wiring exercise.
+- **`functions/_lib/email.js` is a real, correctly-wired Resend integration that currently no-ops** (`{ sent: false, reason: 'not_configured' }`) because no `RESEND_API_KEY`/`EMAIL_FROM_ADDRESS` exists in this sandbox. Stage 2 extends its use but does not change this fact.
+- **No SMS or WhatsApp Business API sending capability exists anywhere in the codebase** — confirmed by a full-repository search. The only WhatsApp-related code is the existing `wa.me` escalation-link widget, which sends nothing server-side.
+
+### 8.2 The chain, as actually built
+
+`functions/_lib/graduation-workflow.js`'s `STAGE_DEFINITIONS` is the single source of truth for the 11-stage sequence and who may decide each stage:
+
+| # | Stage | Who decides | Mechanism | Blocking? |
+|---|---|---|---|---|
+| 1 | Registry | Registrar | Auto-cleared the moment `mark_verified` fires (Stage 1) | Yes |
+| 2 | Academic Department | Anyone currently appointed to the Academic Affairs office | Office membership (`staffCanActOnOffice`) | Yes |
+| 3 | Examinations & Records | Anyone currently appointed to the Examinations office | Office membership | Yes |
+| 4 | Finance & Accounts | Finance Officer (`FIN`) | Permission Engine (`finance` area) — surfaces real outstanding invoices as a signal, does not block automatically | Yes |
+| 5 | Disciplinary Clearance | `VP` or the student's own Principal | Permission Engine (`behaviour` area, already real) | Yes |
+| 6 | Library Clearance | Anyone appointed to the Library office | Office membership | **No — future-ready.** No library catalogue system exists (confirmed in the Library office's own record); the stage exists and is decidable but never blocks completion. |
+| 7 | ICT Clearance | Anyone appointed to the ICT office | Office membership | Yes |
+| 8 | Principal | The student's own Principal/Head Teacher/Ra'ees/Mudeer | Permission Engine (`graduation_records` area — the same grant that used to run the old lock pair) | Yes |
+| 9 | Vice Principal (Academic) | Holder of the new `VPAC` role | Permission Engine (new `graduation_clearances` area) — **no one holds this role today** | Yes |
+| 10 | Vice Principal (Administration) | Holder of the new `VPAD` role | Permission Engine — **no one holds this role today** | Yes |
+| 11 | Founder & CEO | `EXE` | Permission Engine — **only present when the record is flagged `requires_founder_review`** | Conditional |
+
+Every stage is strictly sequential — a stage cannot be decided until every earlier *blocking* stage is `cleared` or `not_applicable`. This is a literal reading of the Directive's own top-to-bottom diagram and its "no shortcut should bypass mandatory approvals" instruction. The moment the last blocking stage clears, `graduation_records.status` flips to `locked` automatically — there is no separate manual "lock" step to forget or skip.
+
+**Two new role codes were added** (`VPAC`, `VPAD`, both `proposed`, in `functions/api/portal/setup.js`'s roles seed) so the Directive's named authorities are real, checkable entries in the Permission Engine rather than hardcoded strings — consistent with this codebase's own rule that no permission decision is ever a bare `if (role === 'X')`. **No fabricated appointee was invented for either role** — until the school appoints someone via the existing Institutional Administration Centre, those two stages honestly show "no staff currently holds this authority," the same empty state this codebase already uses everywhere else a role is real but vacant.
+
+### 8.3 Smart Approval Engine — what "smart" honestly means here
+
+- **Approve / reject / return / correction**, not just approve/reject: `decideStage()` supports `clear`, `request_correction` (bounces the record back to the *guardian*, reusing Stage 1's own `correction_note` field so the guardian sees one consistent UI regardless of which office raised it), and `return_to_stage` (bounces the record back to a *specific earlier office*, resetting every stage from there forward to `pending`, with a mandatory reason). A `escalate_to_founder` action lets Registry or the Principal add the Founder stage to a record that wasn't originally flagged for it.
+- **A real, not decorative, Finance signal**: the Finance stage queries the live `invoices` table for any unpaid/partial balance and shows it to the Finance Officer before they decide — a genuine automated check, not a rubber stamp. No equivalent automated check exists for Disciplinary Clearance because no behaviour-incident table exists in this codebase yet (confirmed by schema search) — that stage is an honest manual sign-off, not a fabricated "smart" feature.
+- **"Digital signatures"**: implemented as an **Institutional Sign-Off Record**, not a cryptographic e-signature — the deciding staff member's identity, the exact decision, a mandatory or optional note, and a server-generated timestamp, captured automatically from their session and written to both `graduation_clearances` and the immutable `staff_audit_log`. This is named plainly rather than oversold as a PKI-grade signature scheme, which this project has no infrastructure for.
+- **Immutable audit trail**: `staff_audit_log` (`functions/_lib/audit.js`) has exactly one write path — `INSERT`, never `UPDATE`/`DELETE` — confirmed by a full-repository grep before this stage was built. Every clear/reject/return/correction/escalation call it, so the full historical narrative of a record — even after a `return_to_stage` resets its *current* status — is always reconstructable from the audit log, filtered by `target_type = 'graduation_clearance'`.
+
+### 8.4 Dashboards
+
+- **Graduation Control Centre** (`/portal/staff/graduation-control/`) — the named dashboard the Directive asked for: a live "My Pending Actions" queue (self-filtering per viewer's real authority, whether that's Registry, Finance, or eventually a VP), a searchable/filterable full roster with progress bars, and a click-through Graduation Status Tracker (the ✓/⏳ timeline the Directive described) with inline decision controls. This is the single generic surface every office/role uses — adding a future institution or stage is a `STAGE_DEFINITIONS` entry, not a new page.
+- **Per-office dashboards, deliberately not rebuilt from scratch**: rather than build seven new bespoke pages (Academic Affairs Dashboard, Finance Dashboard, ICT Dashboard, etc.) that would today show real data for zero appointed staff, the Graduation Control Centre's "My Pending Actions" queue is the honest per-office view — it already shows a Finance Officer only Finance items, an Examinations appointee only Examinations items, and so on, because the same generic endpoint filters by the signed-in staff member's real authority. Wiring this same queue into the *existing* generic Office Portal's Workflow Centre tab (already present on every office page) is a natural, low-risk follow-on, deliberately deferred rather than rushed, and noted here as the one incomplete item from item 2 of the Directive.
+- The **Registrar's Office UI** was updated to drop the superseded two-step lock panel and link out to the Control Centre instead, so there is exactly one place a record's institutional clearance status lives — never two dashboards disagreeing with each other.
+
+### 8.5 Notifications — built new, honestly scoped
+
+- `staff_notifications` (new table) + `functions/_lib/notifications.js` give staff a real, first-class in-portal notification when a clearance becomes actionable for them — this did not exist before Stage 2 at all.
+- Guardians are notified (via the existing guardian `notifications` table) on a correction request or on final lock, plus a best-effort email via the existing `sendEmail()` helper — which will genuinely send once the school configures `RESEND_API_KEY`, and safely no-ops until then.
+- **SMS and WhatsApp are recorded as valid notification channels in the schema (`staff_notifications.channel` accepts `'sms'`/`'whatsapp'`) but nothing is sent through either today.** This is the honest meaning of "SMS-ready architecture" here: adding a real provider (e.g. Twilio) later requires no changes to any calling code, but no claim is made that a message goes anywhere today.
+
+### 8.6 Security
+
+- **Role-based permissions**: every stage decision is gated through the same Permission Engine (`hasPermissionFor`) or office-membership check (`staffCanActOnOffice`) every other privileged action in this codebase uses — never a bespoke check.
+- **Approval history**: preserved in full in `staff_audit_log`, append-only by construction (no code path updates or deletes it).
+- **Document locking**: automatic and irreversible through the normal chain — a locked record can only reopen via the explicit, logged `escalate_to_founder` path, never a silent update.
+- **Complete action history / "every click traceable"**: every `clear`/`request_correction`/`return_to_stage`/`escalate_to_founder` call logs actor, target, reason, and a structured metadata payload.
+- **Anti-tampering**: honestly scoped to what exists — database-level `UPDATE`/`DELETE` grants on `staff_audit_log` are not currently revoked at the Postgres role level (no code path uses them, but nothing enforces that at the database layer either); flagged here as a real hardening item for a future pass, not claimed as done.
+
+### 8.7 Scalability
+
+Every stage definition references an office **slug** or a **role code**, never a hardcoded institution or a specific person. Adding Sultan Hanafi's fifth institution, a new campus, or a new clearance stage in the future means adding one entry to `STAGE_DEFINITIONS` and (if needed) one office/role — no redesign of the chain engine, the Control Centre, or the notification layer.
+
+### 8.8 Known gaps, stated plainly (per item 9 of the Directive)
+
+1. **VPAC and VPAD have no appointee.** The two stages are real and will work the moment someone is appointed via the existing Institutional Administration Centre; until then they show an honest "vacant" state rather than a fabricated approval.
+2. **The Founder-required rule is a documented interpretation, not a constitutional citation.** No specific Governance Charter article was found mandating Founder sign-off on an ordinary graduation. This project set the trigger to "any named award, or an explicit staff escalation" as a defensible default — the client should confirm or override this rule.
+3. **No automated Disciplinary Clearance signal** — no behaviour-incident table exists yet in this codebase (confirmed by schema search), so this stage is manual sign-off only, unlike Finance's real invoice check.
+4. **A `return_to_stage` or `request_correction` does not automatically invalidate stages that already cleared before it that lie outside the reset range** — e.g. if Finance returns a record to Academic, everything from Academic through Finance resets, but stages that already cleared *before* Academic (i.e. Registry) are not re-checked. This is a stated simplification, not an oversight.
+5. **No terminal "ineligible/withdrawn" outcome exists.** The chain assumes every record eventually clears or is corrected — a permanent "this student will not graduate this cycle" state was out of scope for this pass and would need its own `graduation_records.status` value and policy owner.
+6. **The generic per-office Workflow Centre tab (Academic Affairs/Examinations/Finance/Library/ICT office pages) does not yet surface this chain** — the Graduation Control Centre is the one working surface today; wiring the same data into those pages is a deferred, low-risk follow-on (see §8.4).
+7. **Database-level anti-tampering** (revoking `UPDATE`/`DELETE` grants on the audit table at the Postgres role level) is not done — see §8.6.
+
+None of the above blocks the chain from working correctly and honestly end-to-end for every stage that has a real, appointed decision-maker today (Registry, Finance, Disciplinary via VP/Principal, Principal, and Founder-when-flagged) — they are the specific, named limits of what exists, not silent gaps.
+
+### 8.9 Verification performed
+
+- `node --check` on every new/modified JavaScript file (all pass).
+- HTML tag-balance checks on every new/modified page.
+- `node scripts/build.js` — the public site build is unaffected (portal pages are hand-authored, outside the manifest pipeline).
+- A Playwright, route-mocked pass covering: the Graduation Control Centre's queue, roster, search/filter, and 11-stage timeline rendering (including the non-blocking Library row and the conditional Founder row); a `clear` action round-trip confirming the correct payload reaches the endpoint and the UI re-renders without error; the Registrar's Office page confirming the superseded lock panel is gone and the new "Track institutional clearance" link is present.
+- No live database exists in this sandbox, so the SQL itself (sequencing, auto-lock, correction reopening) has been read-reviewed line by line against the schema but not exercised against a real Postgres instance — the same honest limitation Stage 1 and every prior phase of this engagement has disclosed.
+
+Stage 2 is complete for the items above. Per the Executive Directive's own instruction, Stage 3 (Document Generation & Verification System) does not begin until this section's gaps are reviewed and the client confirms readiness to proceed.

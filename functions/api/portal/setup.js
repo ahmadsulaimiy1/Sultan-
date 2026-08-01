@@ -397,6 +397,8 @@ const STATEMENTS = [
     ('EXE', 'CEO / Executive Leadership', 'established', 'All institutions', 'GV-01; Founder/CEO Zakariya Olanrewaju Anofi'),
     ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
     ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
+    ('VPAC', 'Vice Principal — Academic', 'proposed', 'All institutions — academic-standing sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
+    ('VPAD', 'Vice Principal — Administration', 'proposed', 'All institutions — administrative sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
     ('REG', 'Registrar', 'established', 'All institutions (academic records are institution-wide)', 'AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope'),
     ('AREG', 'Assistant Registrar', 'proposed', 'Delegated subset of Registrar''s scope', 'Not yet documented'),
     ('ADM', 'Admissions Officer', 'proposed', 'All institutions, pre-enrolment only', 'PA-05 describes the process; no standing officer role documented yet'),
@@ -1072,6 +1074,42 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_graduation_records_status ON graduation_records (status, graduation_session)`,
   `CREATE INDEX IF NOT EXISTS idx_graduation_records_guardian ON graduation_records (submitted_by_guardian_id)`,
+
+  // Graduation Approval Workflow, Stage 2 — see sql/schema.sql's comment
+  // on these tables for the full reasoning.
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS requires_founder_review BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS founder_review_reason TEXT`,
+  `CREATE TABLE IF NOT EXISTS graduation_clearances (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    stage_code            TEXT NOT NULL,
+    sequence_position     INTEGER NOT NULL,
+    is_blocking           BOOLEAN NOT NULL DEFAULT true,
+    status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN (
+                             'pending', 'cleared', 'not_applicable', 'correction_requested'
+                           )),
+    decided_by_staff_id   INTEGER REFERENCES staff(id),
+    decision_note         TEXT,
+    decided_at            TIMESTAMPTZ,
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (graduation_record_id, stage_code)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_clearances_record ON graduation_clearances (graduation_record_id, sequence_position)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_clearances_stage_status ON graduation_clearances (stage_code, status)`,
+  `CREATE TABLE IF NOT EXISTS staff_notifications (
+    id            SERIAL PRIMARY KEY,
+    staff_id      INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    category      TEXT NOT NULL,
+    title         TEXT NOT NULL,
+    message       TEXT NOT NULL,
+    target_type   TEXT,
+    target_id     INTEGER,
+    action_url    TEXT,
+    channel       TEXT NOT NULL DEFAULT 'portal' CHECK (channel IN ('portal', 'email', 'sms', 'whatsapp')),
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    read_at       TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at)`,
 
   `CREATE TABLE IF NOT EXISTS certificates (
     id                   SERIAL PRIMARY KEY,

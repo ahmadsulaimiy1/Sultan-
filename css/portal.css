@@ -804,6 +804,42 @@ body.portal-body > *{position:relative;z-index:1;}
 .graduation-form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
 .graduation-form-result{grid-column:1 / -1;}
 
+/* --- Graduation Control Centre --- */
+.gcc-roster-table{width:100%;border-collapse:collapse;font-size:0.86rem;}
+.gcc-roster-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+.gcc-roster-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.gcc-roster-table tbody tr{cursor:pointer;transition:background .15s ease;}
+.gcc-roster-table tbody tr:hover{background:rgba(198,161,91,0.08);}
+.gcc-roster-name{font-weight:600;color:var(--portal-heading);}
+.gcc-roster-sub{font-size:0.72rem;color:var(--ink-soft);}
+.gcc-status-pill{display:inline-block;font-size:0.62rem;letter-spacing:0.05em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);color:var(--portal-heading);border-radius:3px;white-space:nowrap;}
+.gcc-status-pill.is-locked{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-progress-track{width:80px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-inline-end:6px;}
+.gcc-progress-fill{height:100%;background:var(--gold);}
+.gcc-empty-row td{text-align:center;color:var(--ink-soft);font-style:italic;padding:20px;}
+.gcc-finance-signal{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.06);border:1px solid var(--crimson);font-size:0.82rem;color:var(--ink);}
+.gcc-finance-signal strong{color:var(--crimson);}
+.gcc-timeline{display:flex;flex-direction:column;}
+.gcc-stage-row{display:flex;gap:14px;position:relative;padding-bottom:20px;}
+.gcc-stage-row:last-child{padding-bottom:0;}
+.gcc-stage-row::before{content:"";position:absolute;left:7px;top:20px;bottom:0;width:1px;background:var(--line);}
+.gcc-stage-row:last-child::before{display:none;}
+.gcc-stage-marker{flex-shrink:0;width:16px;padding-top:3px;}
+.gcc-stage-dot{display:block;width:16px;height:16px;border-radius:50%;border:2px solid var(--line);background:var(--portal-card);}
+.gcc-stage-row.is-cleared .gcc-stage-dot{background:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-stage-row.is-not_applicable .gcc-stage-dot{background:var(--line);border-color:var(--line);}
+.gcc-stage-row.is-current .gcc-stage-dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px rgba(198,161,91,0.2);}
+.gcc-stage-row.is-correction_requested .gcc-stage-dot{background:var(--crimson);border-color:var(--crimson);}
+.gcc-stage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.gcc-stage-label{font-family:'Cinzel','Amiri',serif;font-size:0.9rem;font-weight:600;color:var(--portal-heading);}
+.gcc-stage-status-badge{font-size:0.62rem;letter-spacing:0.05em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);color:var(--ink-soft);border-radius:3px;}
+.gcc-stage-row.is-cleared .gcc-stage-status-badge{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-stage-row.is-correction_requested .gcc-stage-status-badge{color:var(--crimson);border-color:var(--crimson);}
+.gcc-stage-meta{font-size:0.78rem;color:var(--ink-soft);margin-top:3px;line-height:1.5;}
+.gcc-stage-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center;}
+.gcc-stage-actions input[type="text"]{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;}
+.gcc-stage-actions select{padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;background:var(--portal-card);}
+
 /* Transcript sections on the student/guardian dashboards — new for the
    Certificate & Transcript Verification System (SHRS Imperial Digital
    Campus Directive, Priority 1). Built on the same exec-card/design-

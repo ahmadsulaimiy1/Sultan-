@@ -2,20 +2,31 @@
 // documentation-system-architecture.md, Stage 1: "a basic staff review
 // list"). Mirrors certificates.js's exact shape: session guard,
 // Permission Engine checks per action, logStaffEvent after every
-// mutation, and — for the one irreversible step (locking a record,
-// after which the guardian can no longer edit it and document
-// generation is free to build on it) — the same joint-sign-off pattern
-// as certificate issuance: Registry requests, a distinct Principal
-// approves, via functions/_lib/approvals.js's createApprovalRequest/
-// decideApproval. Nothing here issues a certificate/transcript itself —
-// that is Stage 3 (document generation); this stage only gets the
-// underlying data to a locked, trustworthy state.
+// mutation. Registry's own review here is the DATA-QUALITY gate —
+// mark_verified is Registry confirming the guardian-submitted
+// information is complete and correctly spelled, nothing more.
+//
+// Stage 2 superseded this file's old request_lock/list_pending_locks/
+// approve_lock/reject_lock actions (a standalone Registry-requests,
+// Principal-approves pair) with the full multi-office Graduation
+// Approval Workflow in functions/_lib/graduation-workflow.js — a
+// two-step REG+PRIN lock could never honestly satisfy the Executive
+// Directive's "no shortcut should bypass mandatory approvals" once
+// Academic/Examinations/Finance/Disciplinary/Library/ICT/VP/Founder
+// stages existed too, so it was removed rather than left running in
+// parallel as a bypass. mark_verified now calls
+// initializeClearanceChain() to start that real chain; locking itself
+// happens automatically once every blocking stage clears (see that
+// file) — see functions/api/portal/staff/graduation-clearances.js for
+// every stage decision from here on, including the Principal's.
 import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
-import { createApprovalRequest, listPendingApprovals, decideApproval } from '../../../../_lib/approvals.js';
+import { initializeClearanceChain } from '../../../../_lib/graduation-workflow.js';
+
+const AWARD_FIELDS = ['academic_awards', 'conduct_awards', 'quran_awards', 'leadership_awards', 'sports_awards', 'other_honours'];
 
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
@@ -150,88 +161,16 @@ export async function onRequestPost({ request, env }) {
         reason: correctionNote, metadata: { action, newStatus },
       });
 
+      if (action === 'mark_verified') {
+        const requiresFounderReview = AWARD_FIELDS.some((col) => (record[col] || '').trim().length > 0);
+        await initializeClearanceChain(sql, { graduationRecordId: recordId, verifiedByStaffId: staffId, requiresFounderReview });
+      }
+
       return json({ ok: true, recordId: updated.rows[0].id, status: updated.rows[0].status });
     }
 
-    if (action === 'request_lock') {
-      const recordId = Number(body && body.recordId);
-      if (!Number.isInteger(recordId)) return json({ error: 'A valid numeric recordId is required.' }, 400);
-
-      const record = await loadRecord(sql, recordId);
-      if (!record) return json({ error: 'No graduation record found with that id.' }, 404);
-      if (record.status !== 'verified') {
-        return json({ error: 'Only a "verified" graduation record can be submitted for locking.' }, 409);
-      }
-
-      const grant = await hasPermissionFor(sql, staffId, 'graduation_records', 'E', record.institution_id ?? null);
-      if (!grant.granted) {
-        return json({ error: 'Your role does not have authority to request locking for this graduation record.' }, 403);
-      }
-
-      const approvalRequest = await createApprovalRequest(sql, {
-        areaCode: 'graduation_records', targetType: 'graduation_record_lock',
-        payload: { recordId, studentId: record.student_id, fullName: record.full_name },
-        requestedByStaffId: staffId, approverRoleCode: 'PRIN', institutionId: record.institution_id ?? null,
-      });
-
-      await logStaffEvent(sql, {
-        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_record_lock_request', targetId: approvalRequest.id,
-        reason: body.reason || null, metadata: { recordId },
-      });
-
-      return json({
-        ok: true, approvalId: approvalRequest.id, status: 'pending_approval',
-        message: 'Submitted — a Principal must approve this before the graduation record is locked.',
-      });
-    }
-
-    if (action === 'list_pending_locks') {
-      const grant = await hasPermissionFor(sql, staffId, 'graduation_records', 'A', null);
-      if (!grant.granted) {
-        return json({ error: 'Your role does not have authority to decide graduation record locking.' }, 403);
-      }
-      const staffRes = await sql`SELECT institution_id FROM staff WHERE id = ${staffId}`;
-      const pending = await listPendingApprovals(sql, {
-        areaCode: 'graduation_records', institutionId: staffRes.rows[0] ? staffRes.rows[0].institution_id : null,
-      });
-      return json({
-        ok: true,
-        pending: pending.map((p) => ({
-          id: p.id, requestedByName: p.requested_by_name, requestedAt: p.requested_at, ...p.payload,
-        })),
-      });
-    }
-
-    if (action === 'approve_lock' || action === 'reject_lock') {
-      if (!Number.isInteger(body.approvalId)) {
-        return json({ error: 'A valid numeric approvalId is required.' }, 400);
-      }
-      const result = await decideApproval(sql, {
-        approvalId: body.approvalId, decidingStaffId: staffId, decision: action === 'approve_lock' ? 'approve' : 'reject',
-        note: body.note || null, areaCode: 'graduation_records', permissionCode: 'A',
-        performOnApprove: async ({ payload, decidingStaffId: approverId }) => {
-          await sql`
-            UPDATE graduation_records SET
-              status = 'locked', locked_by_staff_id = ${approverId}, locked_at = now(), updated_at = now()
-            WHERE id = ${payload.recordId}`;
-          return String(payload.recordId);
-        },
-      });
-      if (result.error) return json({ error: result.error }, 403);
-
-      await logStaffEvent(sql, {
-        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_record_lock_request', targetId: body.approvalId,
-        reason: body.note || null, metadata: { decision: result.status },
-      });
-
-      if (result.status === 'approved') {
-        return json({ ok: true, status: 'approved', recordId: Number(result.resultRef) });
-      }
-      return json({ ok: true, status: 'rejected' });
-    }
-
     return json({
-      error: 'Unknown action. Expected one of: mark_under_review, request_correction, mark_verified, request_lock, list_pending_locks, approve_lock, reject_lock.',
+      error: 'Unknown action. Expected one of: mark_under_review, request_correction, mark_verified. Use /api/portal/staff/graduation-clearances for every stage after verification.',
     }, 400);
   } catch (err) {
     console.error('registrar graduation error', err);

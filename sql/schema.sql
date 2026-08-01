@@ -729,6 +729,84 @@ CREATE TABLE IF NOT EXISTS graduation_records (
 CREATE INDEX IF NOT EXISTS idx_graduation_records_status ON graduation_records (status, graduation_session);
 CREATE INDEX IF NOT EXISTS idx_graduation_records_guardian ON graduation_records (submitted_by_guardian_id);
 
+-- Stage 2 (Graduation Approval Workflow, docs/shrs-graduation-
+-- documentation-system-architecture.md §Stage 2): true when this
+-- graduate's record carries a real award (any *_awards/other_honours
+-- field is non-empty) or a Registry/Principal staff member has
+-- explicitly escalated it — the two honest, defensible triggers this
+-- project uses for "Founder review, where constitutionally required."
+-- No specific Governance Charter article mandates Founder sign-off on
+-- an ordinary graduation; this is a documented interpretation flagged
+-- for the client to confirm or override, not a claimed citation.
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS requires_founder_review BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS founder_review_reason TEXT;
+
+-- Graduation Approval Workflow — the multi-office institutional
+-- clearance chain, layered ON TOP of graduation_records' own simple
+-- draft/submitted/under_review/verified/locked lifecycle (Stage 1),
+-- not replacing it. Stage 1's 'verified' status is the data-quality
+-- gate Registry clears before this chain is even created — see
+-- functions/_lib/graduation-workflow.js's STAGE_DEFINITIONS for the
+-- authoritative ordered stage list and who may decide each one.
+--
+-- One row per graduation_record per stage, created all at once (all
+-- 'pending' except the auto-cleared 'registry' stage) the moment
+-- Registry marks a record 'verified' — this project's decision-owner
+-- functions/_lib/approvals.js is a single-step two-party primitive
+-- with no sequencing concept; this table is the sequencing/state-
+-- machine layer this workflow genuinely needs and that primitive does
+-- not provide. This table reflects LIVE/CURRENT status only — the
+-- full historical narrative of every decision (who, when, what note,
+-- whether it was a clear/reject/return/correction) lives immutably in
+-- staff_audit_log, filtered by target_type='graduation_clearance'.
+CREATE TABLE IF NOT EXISTS graduation_clearances (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  stage_code            TEXT NOT NULL, -- e.g. 'registry','academic','finance' — see STAGE_DEFINITIONS
+  sequence_position     INTEGER NOT NULL,
+  is_blocking           BOOLEAN NOT NULL DEFAULT true, -- false for 'library' (future-ready, no catalogue system exists yet)
+  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN (
+                           'pending', 'cleared', 'not_applicable', 'correction_requested'
+                         )),
+  decided_by_staff_id   INTEGER REFERENCES staff(id),
+  decision_note         TEXT,
+  decided_at            TIMESTAMPTZ,
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (graduation_record_id, stage_code)
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_clearances_record ON graduation_clearances (graduation_record_id, sequence_position);
+CREATE INDEX IF NOT EXISTS idx_graduation_clearances_stage_status ON graduation_clearances (stage_code, status);
+
+-- Staff Notifications — genuinely new (confirmed by audit: the
+-- existing `notifications` table is guardian-only, and no staff
+-- notification feed or helper existed anywhere in this codebase before
+-- this workflow). Deliberately mirrors `notifications`' own minimalism
+-- rather than inventing a heavier system. `channel` records which
+-- delivery channel this notification represents: 'portal' is the only
+-- channel that genuinely delivers today; 'email' additionally attempts
+-- functions/_lib/email.js's sendEmail() (a real Resend integration
+-- that no-ops without RESEND_API_KEY/EMAIL_FROM_ADDRESS configured —
+-- see that file); 'sms' and 'whatsapp' are accepted values with NO
+-- sending provider wired up anywhere in this project — recording the
+-- intent now means adding a real provider later requires no changes to
+-- any calling code, but no message is delivered via those two channels
+-- today. This is stated plainly so "SMS-ready architecture" is never
+-- overclaimed as "sends SMS."
+CREATE TABLE IF NOT EXISTS staff_notifications (
+  id            SERIAL PRIMARY KEY,
+  staff_id      INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  category      TEXT NOT NULL, -- e.g. 'graduation_clearance'
+  title         TEXT NOT NULL,
+  message       TEXT NOT NULL,
+  target_type   TEXT,
+  target_id     INTEGER,
+  action_url    TEXT,
+  channel       TEXT NOT NULL DEFAULT 'portal' CHECK (channel IN ('portal', 'email', 'sms', 'whatsapp')),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  read_at       TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at);
+
 -- approved_by_staff_id: real second-party sign-off, filled only when a
 -- staff_approvals row is actually decided by a distinct PRIN-holding
 -- staff member (functions/_lib/approvals.js) — replaces the old

@@ -209,6 +209,17 @@ export async function onRequestPost({ request, env }) {
       row = insertRes.rows[0];
     }
 
+    // Resubmitting after a correction request reopens whichever stage of
+    // the Graduation Approval Workflow (functions/_lib/graduation-
+    // workflow.js) raised it — that office sees the record as
+    // actionable again, without the guardian needing to know the chain
+    // exists at all.
+    if (action === 'submit') {
+      await sql`
+        UPDATE graduation_clearances SET status = 'pending', decision_note = NULL, decided_by_staff_id = NULL, decided_at = NULL, updated_at = now()
+        WHERE graduation_record_id = ${row.id} AND status = 'correction_requested'`;
+    }
+
     return json({ ok: true, recordId: row.id, status: row.status, submittedAt: row.submitted_at });
   } catch (err) {
     console.error('graduation-records save error', err);

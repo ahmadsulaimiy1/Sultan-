@@ -38,6 +38,7 @@ export const SYSTEM_AREAS = {
   certificates:           { name: 'Certificates', ownerOffice: 'Registrar', governingPolicy: 'AC-05 (Missing)' },
   transcripts:            { name: 'Transcripts', ownerOffice: 'Registrar', governingPolicy: null },
   graduation_records:     { name: 'Graduation Records', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md' },
+  graduation_clearances:  { name: 'Graduation Approval Workflow', ownerOffice: 'Multi-office chain — see STAGE_DEFINITIONS', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md §Stage 2' },
   communications:         { name: 'Communications', ownerOffice: 'Varies by content and audience', governingPolicy: null },
   policies:               { name: 'Policies', ownerOffice: 'Policy-owning office per policy-code-index.md', governingPolicy: null },
   website_content:        { name: 'Website Content', ownerOffice: 'ICT / Communications function', governingPolicy: null },
@@ -131,8 +132,30 @@ export const MATRIX = {
     { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
   ],
   graduation_records: [
-    { role: 'REG', permissions: ['V', 'C', 'E'], scope: 'review, request corrections, mark under_review/verified' },
-    { role: 'PRIN', permissions: ['V', 'A'], scope: 'own institution; locking a record is Approve, jointly with REG, same pattern as certificates' },
+    { role: 'REG', permissions: ['V', 'C', 'E'], scope: 'review, request corrections, mark under_review/verified — starts the graduation_clearances chain (Stage 2)' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: "own institution; A is now decided as the 'principal' stage of the graduation_clearances chain, not a standalone REG+PRIN lock" },
+  ],
+  // Graduation Approval Workflow (Stage 2) — the multi-office clearance
+  // chain in functions/_lib/graduation-workflow.js. Most stages
+  // (academic, examinations, library, ict) are decided via real OFFICE
+  // membership (functions/_lib/office-access.js's staffCanActOnOffice),
+  // not a role-coded grant here — there is no dedicated role for
+  // "Academic Affairs Officer" etc. today, and inventing one with no
+  // real appointee would be less honest than reusing the office-holder
+  // mechanism this codebase already built for exactly this situation.
+  // finance/behaviour stages reuse THOSE areas' existing grants
+  // (finance:E, behaviour:A) rather than duplicating them here. This
+  // area covers only the stages/visibility that don't fit elsewhere:
+  // full-chain visibility, and the two genuinely new authorities the
+  // Executive Directive named (VP Academic, VP Administration — both
+  // 'proposed' roles, no appointment holder yet) plus the conditional
+  // Founder stage.
+  graduation_clearances: [
+    { role: 'REG', permissions: ['V'], scope: 'full chain visibility (Graduation Control Centre)' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: "own institution; A = the 'principal' stage" },
+    { role: 'VPAC', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_academic' stage — role has no appointment holder yet" },
+    { role: 'VPAD', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_administration' stage — role has no appointment holder yet" },
+    { role: 'EXE', permissions: ['V', 'A'], scope: "all institutions; A = the 'founder' stage, only present on records flagged requires_founder_review" },
   ],
   // E and Ar were added to REG/PRIN/EXE below during the Announcements
   // admin migration (identity-migration-plan.md, Migration Phase D item

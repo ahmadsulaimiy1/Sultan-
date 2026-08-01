@@ -30,8 +30,6 @@
   var graduationRefreshBtn = document.querySelector('[data-graduation-refresh]');
   var graduationRecordsListEl = document.querySelector('[data-graduation-records-list]');
   var graduationRecordsResultEl = document.querySelector('[data-graduation-records-result]');
-  var pendingGraduationLocksListEl = document.querySelector('[data-pending-graduation-locks-list]');
-  var pendingGraduationLocksResultEl = document.querySelector('[data-pending-graduation-locks-result]');
 
   var attendanceForm = document.querySelector('[data-attendance-form]');
   var attendanceResultEl = document.querySelector('[data-attendance-result]');
@@ -257,12 +255,12 @@
         verifyBtn.addEventListener('click', function(){ graduationAction(item.id, 'mark_verified'); });
         actions.appendChild(verifyBtn);
       } else if(item.status === 'verified'){
-        var lockBtn = el('button', 'registrar-approval-approve', 'Submit for Locking');
-        lockBtn.type = 'button';
-        lockBtn.addEventListener('click', function(){ requestGraduationLock(item.id); });
-        actions.appendChild(lockBtn);
+        var trackLink = document.createElement('a');
+        trackLink.href = '/portal/staff/graduation-control/?recordId=' + item.id;
+        trackLink.className = 'text-link'; trackLink.textContent = 'Track institutional clearance →';
+        actions.appendChild(trackLink);
       } else if(item.status === 'locked'){
-        actions.appendChild(el('span', 'registrar-approval-meta', 'Locked — no further edits possible from this office.'));
+        actions.appendChild(el('span', 'registrar-approval-meta', 'Locked — every institutional clearance is complete.'));
       }
       if(actions.childNodes.length) card.appendChild(actions);
       graduationRecordsListEl.appendChild(card);
@@ -282,87 +280,6 @@
       loadGraduationRecords();
     }catch(err){
       showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not complete that action.');
-    }
-  }
-
-  async function requestGraduationLock(recordId){
-    graduationRecordsResultEl.hidden = true;
-    try{
-      var res = await fetch('/api/portal/staff/registrar/graduation', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'request_lock', recordId: recordId }),
-      });
-      var data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Could not submit that record for locking.');
-      showResult(graduationRecordsResultEl, true, data.message || 'Submitted — awaiting Principal approval.');
-      loadGraduationRecords();
-      loadPendingGraduationLocks();
-    }catch(err){
-      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not submit that record for locking.');
-    }
-  }
-
-  async function loadPendingGraduationLocks(){
-    try{
-      var res = await fetch('/api/portal/staff/registrar/graduation', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'list_pending_locks' }),
-      });
-      var data = await res.json();
-      if(!res.ok){
-        pendingGraduationLocksListEl.innerHTML = '';
-        pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot decide graduation record locking.'));
-        return;
-      }
-      renderPendingGraduationLocks(data.pending || []);
-    }catch(err){
-      pendingGraduationLocksListEl.innerHTML = '';
-      pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending locks.'));
-    }
-  }
-
-  function renderPendingGraduationLocks(items){
-    pendingGraduationLocksListEl.innerHTML = '';
-    if(!items.length){
-      pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', 'No graduation records awaiting a locking decision.'));
-      return;
-    }
-    items.forEach(function(item){
-      var card = el('div', 'registrar-approval-card');
-      var head = el('div', 'registrar-approval-head');
-      head.appendChild(el('span', null, item.fullName));
-      card.appendChild(head);
-      card.appendChild(el('div', 'registrar-approval-meta', 'Requested by ' + (item.requestedByName || 'a staff member') + ' on ' + formatDate(item.requestedAt)));
-      var actions = el('div', 'registrar-approval-actions');
-      var noteInput = document.createElement('input');
-      noteInput.type = 'text'; noteInput.placeholder = 'Note (optional for approve, recommended for reject)';
-      actions.appendChild(noteInput);
-      var approveBtn = el('button', 'registrar-approval-approve', 'Approve');
-      approveBtn.type = 'button';
-      approveBtn.addEventListener('click', function(){ decideGraduationLock(item.id, 'approve_lock', noteInput.value.trim()); });
-      var rejectBtn = el('button', 'registrar-approval-reject', 'Reject');
-      rejectBtn.type = 'button';
-      rejectBtn.addEventListener('click', function(){ decideGraduationLock(item.id, 'reject_lock', noteInput.value.trim()); });
-      actions.appendChild(approveBtn);
-      actions.appendChild(rejectBtn);
-      card.appendChild(actions);
-      pendingGraduationLocksListEl.appendChild(card);
-    });
-  }
-
-  async function decideGraduationLock(approvalId, action, note){
-    pendingGraduationLocksResultEl.hidden = true;
-    try{
-      var res = await fetch('/api/portal/staff/registrar/graduation', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: action, approvalId: approvalId, note: note || null }),
-      });
-      var data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Could not record that decision.');
-      showResult(pendingGraduationLocksResultEl, true, data.status === 'approved' ? 'Approved — the graduation record is now locked.' : 'Rejected — the record remains at its prior status.');
-      loadPendingGraduationLocks();
-      loadGraduationRecords();
-    }catch(err){
-      showResult(pendingGraduationLocksResultEl, false, (err && err.message) || 'Could not record that decision.');
     }
   }
 
@@ -748,7 +665,6 @@
       }
       loadPendingApprovals();
       loadGraduationRecords();
-      loadPendingGraduationLocks();
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Registrar\'s Office.';

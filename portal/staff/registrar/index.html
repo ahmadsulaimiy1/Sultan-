@@ -95,7 +95,7 @@
 
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Graduation Information Submissions</h2></div>
-      <p class="registrar-field-note" style="padding:0 20px;">Guardians submit these from their own dashboard — nothing here is typed in by staff. Review a submission, request a correction if something looks wrong, then mark it verified once the details and results are confirmed. Verified records can be submitted for locking below; locking is the point after which document generation (Stage 3) can trust the data.</p>
+      <p class="registrar-field-note" style="padding:0 20px;">Guardians submit these from their own dashboard — nothing here is typed in by staff. Review a submission, request a correction if something looks wrong, then mark it verified once the details and results are confirmed. Marking a record verified starts the full institutional Graduation Approval Workflow — Academic, Examinations, Finance, Disciplinary, Library, ICT, Principal, both Vice Principals, and the Founder where required — tracked on the <a class="text-link" href="/portal/staff/graduation-control/">Graduation Control Centre →</a>, not here. A record locks itself automatically once every stage clears.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;">
         <select data-graduation-status-filter class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
           <option value="">All statuses</option>
@@ -105,16 +105,10 @@
           <option value="locked">Locked</option>
         </select>
         <button type="button" class="registrar-btn" data-graduation-refresh>Refresh</button>
+        <a class="portal-topbar-link" href="/portal/staff/graduation-control/">Open Graduation Control Centre →</a>
       </div>
       <div class="registrar-approvals-list" data-graduation-records-list></div>
       <div class="registrar-form-result" data-graduation-records-result hidden></div>
-    </div>
-
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Pending Graduation Record Locks</h2></div>
-      <p class="registrar-field-note" style="padding:0 20px;">Same joint-sign-off pattern as certificate approvals — a Registrar requests, a distinct Principal decides. The server checks this on every decision, not just this page.</p>
-      <div class="registrar-approvals-list" data-pending-graduation-locks-list></div>
-      <div class="registrar-form-result" data-pending-graduation-locks-result hidden></div>
     </div>
 
     <div data-registrar-record hidden>
