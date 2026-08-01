@@ -59,9 +59,15 @@
 .cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 22px; }
 .cover-version { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.1em; color: var(--gold-bright); margin-bottom: 26px; }
 .cover-status {
+  /* A neutral gold treatment, not an alarm-red one: the status is stated
+     plainly because presenting a not-yet-adopted instrument as though it
+     were already binding would mislead any reader, including the Board
+     itself, about its legal effect — but a factual notice reads as
+     dignified and intentional, not as a warning label, when it is set in
+     the same gold the rest of the cover uses rather than a caution colour. */
   border: 1px solid rgba(233,206,138,0.5); border-radius: 2px; padding: 10px 22px; max-width: 5.6in;
   font-family: 'Cinzel', 'Amiri', serif; font-size: 8.5pt; letter-spacing: 0.08em; text-transform: uppercase;
-  color: #f2b8bd; margin-bottom: 24px;
+  color: var(--gold-bright); margin-bottom: 24px;
 }
 .cover-note { font-family: 'Inter', sans-serif; font-size: 9pt; line-height: 1.6; color: rgba(247,238,223,0.72); max-width: 5.3in; }
 .cover-footer-line { position: absolute; left: 0.5in; right: 0.5in; bottom: 0.5in; }
@@ -69,6 +75,33 @@
 .cover-footer-text {
   display: flex; justify-content: space-between; font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt;
   letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,238,223,0.55);
+}
+
+/* ---- Back cover: quiet executive closing page, not blank ---- */
+.back-cover {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 0.6in;
+}
+.back-cover-crest { width: 64px; height: auto; margin-bottom: 26px; opacity: 0.92; }
+.back-cover-rule { width: 90px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 20px; }
+.back-cover-rule.small { width: 60px; margin: 26px auto; }
+.back-cover-name {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 15pt; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #fff; margin-bottom: 8px;
+}
+.back-cover-schools {
+  font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10pt;
+  color: rgba(247,238,223,0.68); max-width: 4.6in;
+}
+.back-cover-meta { font-family: 'Inter', sans-serif; font-size: 8.5pt; color: rgba(247,238,223,0.8); line-height: 2; }
+.back-cover-meta span {
+  display: inline-block; min-width: 1.15in; text-align: right; margin-right: 10px;
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.back-cover-note {
+  font-family: 'Inter', sans-serif; font-size: 8pt; line-height: 1.7; color: rgba(247,238,223,0.6);
+  max-width: 4.2in;
 }
 
 /* ---- Front-matter meta panel (Draft/Status/Naming notes) ---- */
@@ -91,6 +124,19 @@
 .ceremony .now-therefore {
   font-style: italic; font-size: 14.5pt; color: var(--gold-bright); border-top: 1px solid rgba(233,206,138,0.4);
   border-bottom: 1px solid rgba(233,206,138,0.4); padding: 18px 0; margin-top: 10px;
+}
+
+/* ---- Execution page signature table: a light-on-dark variant of
+   .const-table, since the ceremony page is charcoal and the body-page
+   table styling (dark ink, ivory borders) would be unreadable here. ---- */
+.execution-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-family: 'Cormorant Garamond', 'Amiri', serif; }
+.execution-table th {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--gold-bright); text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(233,206,138,0.45);
+}
+.execution-table td {
+  padding: 22px 10px 8px; border-bottom: 1px solid rgba(247,238,223,0.25); color: rgba(247,238,223,0.92);
+  font-size: 11pt; text-align: left; min-width: 120px;
 }
 
 /* ---- Part divider ---- */

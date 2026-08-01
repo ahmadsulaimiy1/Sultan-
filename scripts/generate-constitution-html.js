@@ -105,12 +105,14 @@ function main() {
   let mode = 'chapters'; // 'chapters' | 'schedules' | 'notes'
   let proclamation = [];
   let preamble = [];
-  let curCeremony = null; // 'proclamation' | 'preamble' | null
+  let execution = [];
+  let curCeremony = null; // 'proclamation' | 'preamble' | 'execution' | null
 
   for (const b of blocks) {
     if (b.type === 'h1') {
       if (b.text === 'CONSTITUTIONAL PROCLAMATION') { curCeremony = 'proclamation'; continue; }
       if (b.text === 'PREAMBLE') { curCeremony = 'preamble'; continue; }
+      if (b.text === 'CERTIFICATE OF ADOPTION AND EXECUTION') { curCeremony = 'execution'; continue; }
       if (b.text === 'SCHEDULES') { mode = 'schedules'; curCeremony = null; continue; }
       if (b.text.startsWith('DRAFTING NOTES')) { mode = 'notes'; curCeremony = null; continue; }
       curCeremony = null;
@@ -125,6 +127,7 @@ function main() {
     }
     if (curCeremony === 'proclamation') { proclamation.push(b); continue; }
     if (curCeremony === 'preamble') { preamble.push(b); continue; }
+    if (curCeremony === 'execution') { execution.push(b); continue; }
     if (mode === 'schedules') { schedules.push(b); continue; }
     if (mode === 'notes') { draftingNotes.push(b); continue; }
     if (curChapter) curChapter.blocks.push(b);
@@ -202,6 +205,32 @@ function main() {
         ${KHATAM_SVG}
         <div class="ceremony-eyebrow">Preamble</div>
         ${preambleHtml}
+      </div>`;
+  }
+
+  function renderExecution() {
+    // Ceremony pages are dark/charcoal; .article-body and .const-table are
+    // styled for the light body pages and would render near-invisible here
+    // (dark ink text, ivory-toned borders) — a real legibility bug caught
+    // before shipping, not a stylistic choice. Plain, unclassed <p> tags
+    // pick up .ceremony p's light-on-dark styling instead, and the table
+    // gets its own .execution-table rule in css/constitution-print.css.
+    let bodyHtml = '';
+    for (const b of execution) {
+      if (b.type === 'table') {
+        const thead = '<thead><tr>' + b.header.map((h) => `<th>${inline(h)}</th>`).join('') + '</tr></thead>';
+        const tbody = '<tbody>' + b.rows.map((r) => '<tr>' + r.map((c) => `<td>${inline(c)}</td>`).join('') + '</tr>').join('') + '</tbody>';
+        bodyHtml += `<table class="execution-table">${thead}${tbody}</table>`;
+        continue;
+      }
+      if (b.type === 'p') { bodyHtml += `<p>${inline(b.text)}</p>`; continue; }
+      if (b.type === 'clause') { bodyHtml += `<p>${inline(b.text)}</p>`; }
+    }
+    return `
+      <div class="page charcoal ceremony execution-page" id="execution">
+        ${KHATAM_SVG}
+        <div class="ceremony-eyebrow">Certificate of Adoption and Execution</div>
+        ${bodyHtml}
       </div>`;
   }
 
@@ -298,9 +327,27 @@ ${renderProclamationPreamble()}
 
 ${partsHtml}
 
+${renderExecution()}
+
 ${renderSchedules()}
 
 ${renderDraftingNotes()}
+
+<div class="page dark back-cover" id="back-cover">
+  ${KHATAM_SVG}
+  <img class="back-cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
+  <div class="back-cover-rule"></div>
+  <div class="back-cover-name">Sultan Hanafi Royal Schools</div>
+  <div class="back-cover-schools">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+  <div class="back-cover-rule small"></div>
+  <div class="back-cover-meta">
+    <div><span>Instrument</span>The Governance Charter of Sultan Hanafi Royal Schools</div>
+    <div><span>Edition</span>Flagship Edition, Draft v7.0</div>
+    <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
+  </div>
+  <div class="back-cover-rule small"></div>
+  <p class="back-cover-note">This edition is prepared for the consideration and adoption of the Board of Governors under Chapter XVIII of this Charter. It is not yet effective, and confers no rights or obligations until so adopted.</p>
+</div>
 
 </body>
 </html>
