@@ -65,3 +65,5 @@ No further amendment was made to the Charter's own Article text — that work is
 ## 9. Freeze status
 
 Subject to the one accepted cosmetic limitation in Section 6, the Governance Charter's flagship publication (`docs/exports/SHRS-Governance-Charter-Flagship-Edition.pdf`, `.html`, `.docx`) is internally audited against all nine points the user's directive specified, and is frozen as the governance reference document for the purpose of Phase 1B. It remains, as stated throughout this engagement, a Board submission draft — not yet legally effective until the Board adopts it under Chapter XVIII.
+
+**Locked.** Confirmed by the client and closed as Phase 1A's deliverable. No further drafting or publication changes are made to the Governance Charter under this phase; any future change to its text is a constitutional amendment under Chapter XVIII, not a Phase 1A audit finding. Phase 1B (the Constitution of Sultan Hanafi Royal Schools) proceeds from this locked baseline.
