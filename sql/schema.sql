@@ -1022,6 +1022,18 @@ CREATE TABLE IF NOT EXISTS graduation_documents (
   signatories           JSONB,
   content_hash          TEXT NOT NULL,
   storage_key           TEXT,
+  -- Class B content that cannot be recomputed live at view time (added
+  -- for Testimonial/Character Certificate/Graduation Clearance
+  -- Certificate — spec §16.4-§16.6): a Testimonial's staff-authored
+  -- prose exists nowhere else; a Character Certificate's "with/without
+  -- disciplinary action recorded" line and a Clearance Certificate's
+  -- stage timeline must both read exactly as they stood at issuance,
+  -- never drift if a later disciplinary case or clearance row changes
+  -- (§8's archival immutability principle — the same reasoning
+  -- transcript_snapshots below already exists for). Shaped per
+  -- document_type; null for every document type that needs nothing
+  -- beyond what graduation_records/graduation_clearances already hold.
+  content_data          JSONB,
   revoked_at            TIMESTAMPTZ,
   revoked_by_staff_id   INTEGER REFERENCES staff(id),
   revocation_note       TEXT,

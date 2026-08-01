@@ -265,6 +265,29 @@
         issueBtn.type = 'button';
         issueBtn.addEventListener('click', function(){ issueAlumniRegistration(item.id, issueBtn); });
         actions.appendChild(issueBtn);
+
+        var clearanceBtn = el('button', 'registrar-approval-approve', 'Issue Graduation Clearance Certificate');
+        clearanceBtn.type = 'button';
+        clearanceBtn.addEventListener('click', function(){ issueClearanceCertificate(item.id, clearanceBtn); });
+        actions.appendChild(clearanceBtn);
+
+        var charBtn = el('button', 'registrar-approval-approve', 'Request Character Certificate');
+        charBtn.type = 'button';
+        charBtn.addEventListener('click', function(){ requestCharacterCertificate(item.id, charBtn); });
+        actions.appendChild(charBtn);
+
+        var testimonialInput = document.createElement('textarea');
+        testimonialInput.rows = 3; testimonialInput.placeholder = 'Testimonial text (required)';
+        testimonialInput.style.width = '100%'; testimonialInput.style.marginTop = '8px';
+        actions.appendChild(testimonialInput);
+        var testimonialBtn = el('button', 'registrar-approval-approve', 'Request Testimonial');
+        testimonialBtn.type = 'button';
+        testimonialBtn.addEventListener('click', function(){
+          var text = testimonialInput.value.trim();
+          if(!text){ showResult(graduationRecordsResultEl, false, 'Write the testimonial text first — it is never auto-generated.'); return; }
+          requestTestimonial(item.id, text, testimonialBtn);
+        });
+        actions.appendChild(testimonialBtn);
       }
       if(actions.childNodes.length) card.appendChild(actions);
       graduationRecordsListEl.appendChild(card);
@@ -336,6 +359,168 @@
       if(triggerBtn){ triggerBtn.disabled = false; }
     }
   }
+
+  function renderIssuedDocumentResult(data, msgText){
+    var msg = document.createElement('span');
+    msg.textContent = msgText;
+    var viewLink = document.createElement('a');
+    viewLink.href = data.viewUrl; viewLink.target = '_blank'; viewLink.rel = 'noopener';
+    viewLink.className = 'text-link'; viewLink.textContent = 'View / print →';
+    var pdfLink = document.createElement('a');
+    pdfLink.href = data.viewUrl + '&format=pdf'; pdfLink.target = '_blank'; pdfLink.rel = 'noopener';
+    pdfLink.className = 'text-link'; pdfLink.style.marginLeft = '12px';
+    pdfLink.textContent = 'Download PDF →';
+    graduationRecordsResultEl.innerHTML = '';
+    graduationRecordsResultEl.className = 'registrar-form-result is-ok';
+    graduationRecordsResultEl.appendChild(msg);
+    graduationRecordsResultEl.appendChild(viewLink);
+    graduationRecordsResultEl.appendChild(pdfLink);
+    if(data.profileUrl){
+      var profileLink = document.createElement('a');
+      profileLink.href = data.profileUrl; profileLink.target = '_blank'; profileLink.rel = 'noopener';
+      profileLink.className = 'text-link'; profileLink.style.marginLeft = '12px';
+      profileLink.textContent = 'View Graduate Profile →';
+      graduationRecordsResultEl.appendChild(profileLink);
+    }
+    graduationRecordsResultEl.hidden = false;
+  }
+
+  async function issueClearanceCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_clearance_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        showResult(graduationRecordsResultEl, false, data.error + (data.referenceNo ? ' Reference: ' + data.referenceNo : ''));
+        return;
+      }
+      renderIssuedDocumentResult(data, 'Issued — reference ' + data.referenceNo + '. ');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  async function requestCharacterCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request_character_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not request that document.');
+      showResult(graduationRecordsResultEl, true, data.message || 'Submitted for Principal approval.');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not request that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  async function requestTestimonial(recordId, testimonialText, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request_testimonial', recordId: recordId, testimonialText: testimonialText }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not request that document.');
+      showResult(graduationRecordsResultEl, true, data.message || 'Submitted for Principal approval.');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not request that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  var classBApprovalsListEl = document.querySelector('[data-class-b-approvals-list]');
+  var classBApprovalsResultEl = document.querySelector('[data-class-b-approvals-result]');
+
+  async function loadClassBApprovals(){
+    if(!classBApprovalsListEl) return;
+    classBApprovalsListEl.innerHTML = '';
+    classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Loading…'));
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'list_pending_class_b' }),
+      });
+      var data = await res.json();
+      classBApprovalsListEl.innerHTML = '';
+      if(!res.ok){
+        classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot decide these requests.'));
+        return;
+      }
+      var pending = data.pending || [];
+      if(!pending.length){
+        classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'No Testimonial or Character Certificate requests awaiting approval.'));
+        return;
+      }
+      var typeLabel = { testimonial: 'Official Testimonial', character_certificate: 'Character Certificate' };
+      pending.forEach(function(item){
+        var card = el('div', 'registrar-approval-card');
+        var head = el('div', 'registrar-approval-head');
+        head.appendChild(el('span', null, typeLabel[item.targetType] || item.targetType));
+        card.appendChild(head);
+        card.appendChild(el('div', 'registrar-approval-meta', 'Requested by ' + (item.requestedByName || 'a staff member') + ' on ' + formatDate(item.requestedAt)));
+        if(item.testimonialText){
+          var textPreview = document.createElement('p');
+          textPreview.className = 'registrar-field-note';
+          textPreview.style.whiteSpace = 'pre-wrap';
+          textPreview.textContent = item.testimonialText;
+          card.appendChild(textPreview);
+        }
+        var actions = el('div', 'registrar-approval-actions');
+        var approveBtn = el('button', 'registrar-approval-approve', 'Approve');
+        approveBtn.type = 'button';
+        approveBtn.addEventListener('click', function(){ decideClassB(item.id, 'approve_class_b', approveBtn); });
+        actions.appendChild(approveBtn);
+        var rejectBtn = el('button', 'registrar-approval-reject', 'Reject');
+        rejectBtn.type = 'button';
+        rejectBtn.addEventListener('click', function(){ decideClassB(item.id, 'reject_class_b', rejectBtn); });
+        actions.appendChild(rejectBtn);
+        card.appendChild(actions);
+        classBApprovalsListEl.appendChild(card);
+      });
+    }catch(err){
+      classBApprovalsListEl.innerHTML = '';
+      classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending requests.'));
+    }
+  }
+
+  async function decideClassB(approvalId, action, triggerBtn){
+    if(classBApprovalsResultEl){ classBApprovalsResultEl.hidden = true; }
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, approvalId: approvalId }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not complete that decision.');
+      if(classBApprovalsResultEl){
+        showResult(classBApprovalsResultEl, true, data.status === 'approved' ? ('Approved — reference ' + data.referenceNo + '.') : 'Rejected.');
+      }
+      loadClassBApprovals();
+    }catch(err){
+      if(classBApprovalsResultEl){ showResult(classBApprovalsResultEl, false, (err && err.message) || 'Could not complete that decision.'); }
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  if(classBApprovalsListEl){ loadClassBApprovals(); }
+  var classBApprovalsRefreshBtn = document.querySelector('[data-class-b-approvals-refresh]');
+  if(classBApprovalsRefreshBtn){ classBApprovalsRefreshBtn.addEventListener('click', loadClassBApprovals); }
 
   var registerSessionEl = document.querySelector('[data-register-session]');
   var registerGenerateBtn = document.querySelector('[data-register-generate]');

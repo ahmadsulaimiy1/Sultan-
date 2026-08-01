@@ -1608,6 +1608,20 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions(guardian_id)`,
   `ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false`,
+
+  // Class B document types (Testimonial, Character Certificate,
+  // Graduation Clearance Certificate — docs/shrs-master-graduation-
+  // document-specification.md §16.4-§16.6) each carry content that
+  // cannot be recomputed live: a Testimonial's free-text prose is
+  // staff-authored and exists nowhere else; a Character Certificate's
+  // "with/without disciplinary action recorded" line and a Clearance
+  // Certificate's stage-by-stage timeline must both read exactly as
+  // they stood at issuance, never drift if a later disciplinary case
+  // or clearance row changes (§8's archival immutability principle —
+  // the same reasoning transcript_snapshots already exists for). Kept
+  // as one JSONB column, shaped per document_type, rather than three
+  // narrow columns only ever populated for one type each.
+  `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS content_data JSONB`,
 ];
 
 async function handle({ request, env }) {

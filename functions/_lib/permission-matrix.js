@@ -163,11 +163,16 @@ export const MATRIX = {
   // specification.md §3, §20 Phase 5). Class C (Alumni Registration,
   // Digital Graduate Profile) is Registrar-issued with no separate
   // approval step, consistent with the spec's own "lowest stakes first"
-  // build ordering; Class A/B document types, once built, may extend
-  // this with an approval requirement the same way certificates: does.
+  // build ordering. Class B's Testimonial/Character Certificate (§16.4,
+  // §16.5) extend this with 'A' for PRIN, own institution only — the
+  // same joint-authority pattern certificates: already uses, and the
+  // natural fit here since §13.2 already names the student's own
+  // Principal/Head Teacher/Ra'ees/Mudeer as the sole required signatory
+  // for both document types: the office that approves is the office
+  // that signs.
   graduation_documents: [
     { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
-    { role: 'PRIN', permissions: ['V'], scope: 'own institution' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: 'own institution' },
     { role: 'EXE', permissions: ['V'], scope: 'all institutions' },
   ],
   // E and Ar were added to REG/PRIN/EXE below during the Announcements
