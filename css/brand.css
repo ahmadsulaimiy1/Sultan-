@@ -1783,6 +1783,12 @@
   .cert-verify-field .v{font-weight:600;color:var(--ink);text-align:right;}
   .cert-verify-note{padding:16px 0;font-size:0.85rem;color:rgba(248,244,233,0.7);font-style:italic;}
 
+  /* Digital Graduate Profile (/graduate-profile/) — the issued-documents
+     list beneath the graduate's core fields. */
+  .gp-doc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-md);margin-top:var(--space-sm);max-width:760px;}
+  .gp-doc-card{background:linear-gradient(165deg,#fff 0%,var(--ivory) 100%);border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-md);}
+  .gp-doc-title{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.1rem;font-weight:600;color:var(--ink);margin:6px 0 4px;}
+
   /* SHRS Marketplace (/marketplace/) — catalog cards, no cart/checkout.
      Every "Order" action is a WhatsApp deep-link (js/marketplace.js). */
   .mkt-notice{

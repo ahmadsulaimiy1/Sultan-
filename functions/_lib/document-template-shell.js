@@ -137,6 +137,14 @@ function renderFooter({ lang, referenceNo, pageLabel }) {
   </footer>`;
 }
 
+// referenceNo is the switch between an individually-verifiable
+// document (seal + security band rendered) and an institutional
+// publication with no per-document numbering (spec §1.1 footnote —
+// the Graduation Register specifically: "no per-row security band,
+// since it is an institutional publication, not an individually-
+// verifiable credential"). Omit referenceNo for that case; both the
+// seal and the QR/barcode/hash band are skipped entirely rather than
+// rendered against a number that doesn't exist.
 export function renderDocumentShell({
   documentTitle, documentTypeLabel, lang = 'en', dir = 'ltr',
   institutionName, recipientName, bodyHtml, referenceNo, verificationId,
@@ -281,8 +289,8 @@ export function renderDocumentShell({
       ${bodyHtml}
     </section>
     ${renderSignatureBlock(signatories, lang)}
-    ${renderSealBlock(sealImage, lang)}
-    ${renderSecurityBand({ referenceNo, verificationId, displayHash, issuedAtDisplay, lang })}
+    ${referenceNo ? renderSealBlock(sealImage, lang) : ''}
+    ${referenceNo ? renderSecurityBand({ referenceNo, verificationId, displayHash, issuedAtDisplay, lang }) : ''}
     ${renderFooter({ lang, referenceNo, pageLabel })}
   </article>
 </body>

@@ -322,6 +322,13 @@
       graduationRecordsResultEl.appendChild(msg);
       graduationRecordsResultEl.appendChild(viewLink);
       graduationRecordsResultEl.appendChild(pdfLink);
+      if(data.profileUrl){
+        var profileLink = document.createElement('a');
+        profileLink.href = data.profileUrl; profileLink.target = '_blank'; profileLink.rel = 'noopener';
+        profileLink.className = 'text-link'; profileLink.style.marginLeft = '12px';
+        profileLink.textContent = 'View Graduate Profile →';
+        graduationRecordsResultEl.appendChild(profileLink);
+      }
       graduationRecordsResultEl.hidden = false;
     }catch(err){
       showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
@@ -329,6 +336,27 @@
       if(triggerBtn){ triggerBtn.disabled = false; }
     }
   }
+
+  var registerSessionEl = document.querySelector('[data-register-session]');
+  var registerGenerateBtn = document.querySelector('[data-register-generate]');
+  var registerGeneratePdfBtn = document.querySelector('[data-register-generate-pdf]');
+  var registerResultEl = document.querySelector('[data-register-result]');
+
+  function openGraduationRegister(format){
+    if(!registerResultEl) return;
+    registerResultEl.hidden = true;
+    var session = (registerSessionEl.value || '').trim();
+    if(!session){
+      showResult(registerResultEl, false, 'Enter a graduation session first (e.g. 2025/2026).');
+      return;
+    }
+    var url = '/api/portal/staff/registrar/graduation-register?session=' + encodeURIComponent(session);
+    if(format === 'pdf'){ url += '&format=pdf'; }
+    window.open(url, '_blank', 'noopener');
+  }
+
+  if(registerGenerateBtn){ registerGenerateBtn.addEventListener('click', function(){ openGraduationRegister('html'); }); }
+  if(registerGeneratePdfBtn){ registerGeneratePdfBtn.addEventListener('click', function(){ openGraduationRegister('pdf'); }); }
 
   function renderTimeline(events){
     var wrap = document.querySelector('[data-record-timeline]');

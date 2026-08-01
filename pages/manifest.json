@@ -450,6 +450,24 @@
     "altHref": "/verify-graduation-document/"
   },
   {
+    "slug": "graduate-profile",
+    "output": "graduate-profile/index.html",
+    "title": "Graduate Profile — Sultan Hanafi Royal Schools",
+    "description": "A graduate's permanent, public-safe digital profile — every graduation document issued to them by Sultan Hanafi Royal Schools, each independently verifiable.",
+    "contentFile": "pages/graduate-profile.html",
+    "altHref": "/ar/graduate-profile/"
+  },
+  {
+    "slug": "graduate-profile-ar",
+    "output": "ar/graduate-profile/index.html",
+    "title": "ملف الخريج — مدارس السلطان حنفي الملكية",
+    "description": "سجل دائم وعلني آمن للخريج — كل وثيقة تخرج أصدرتها مدارس السلطان حنفي الملكية باسمه، وكل واحدة منها قابلة للتحقق بشكل مستقل.",
+    "contentFile": "pages/graduate-profile.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/graduate-profile/"
+  },
+  {
     "slug": "verify-receipt",
     "output": "verify-receipt/index.html",
     "title": "Verify a Receipt — Sultan Hanafi Royal Schools",

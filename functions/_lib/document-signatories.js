@@ -46,6 +46,9 @@ export const DOCUMENT_SIGNATORIES = {
   alumni_registration: [
     { role: 'REG', institutionScoped: false, label: 'Registrar' },
   ],
+  graduation_register: [
+    { role: 'REG', institutionScoped: false, label: 'Registrar' },
+  ],
 };
 
 export class SignatoryVacancyError extends Error {

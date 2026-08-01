@@ -225,6 +225,7 @@ export async function onRequestPost({ request, env }) {
         ok: true, documentId: inserted.rows[0].id, referenceNo, verificationId,
         verifyUrl: `/verify-graduation-document/?ref=${encodeURIComponent(referenceNo)}`,
         viewUrl: `/api/portal/staff/registrar/graduation-documents?ref=${encodeURIComponent(referenceNo)}`,
+        profileUrl: `/graduate-profile/?id=${encodeURIComponent(verificationId)}`,
       });
     }
 
