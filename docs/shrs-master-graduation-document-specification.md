@@ -1,0 +1,518 @@
+# SHRS Master Graduation Document Specification (v1.0)
+
+**Status: Draft, submitted for internal approval per Executive Authorization — Stage 3.**
+**Authority: Founder & CEO, Sultan Hanafi Royal Schools.**
+**Scope: The permanent institutional standard governing every graduation document SHRS issues, in perpetuity, across every present and future campus/college.**
+
+> "No document generation should begin until this specification is internally complete." This document is that specification. Section 21 records its internal approval — a self-audit against six professional lenses (University Registrar, Academic Records Director, Security Printing Consultant, Digital Identity Architect, Executive Publication Director, Ministry of Education Certification Specialist) — before a single line of Stage 3 code is written. Section 22 is the client's own sign-off block.
+
+This document supersedes and absorbs `docs/shrs-graduation-document-specification.md` (the Stage 2.5 draft), which remains on disk as the earlier working note but is no longer the governing standard. Every cross-reference in `docs/shrs-graduation-documentation-system-architecture.md` §9.8 now points here.
+
+---
+
+## 0. How this document is built
+
+Two disciplines govern every section below, carried over from every prior phase of this engagement and now applied at maximum rigour because — as directed — this is the part the world will see:
+
+1. **Nothing is invented.** Every technical claim about what this codebase can or cannot do today was verified by direct inspection before being written down (existing numbering helpers, existing QR renderer, existing brand colour tokens, existing offline PDF pipeline, the actual binaries available in this build environment vs. the actual binaries available in the Cloudflare Pages Functions production runtime — these are different, and conflating them would be the single most damaging honesty failure this document could make). Where a genuine constraint exists, it is stated as a constraint, with the real engineering answer, not papered over.
+2. **Every institution named in the Final Expectation — University Registrar, Academic Records Director, Security Printing Consultant, Digital Identity Architect, Executive Publication Director, Ministry of Education Certification Specialist — is a lens applied to every section, not a chapter written once.** Section 18 maps each lens to who at SHRS actually owns it (or names the honest gap where no one does yet).
+
+---
+
+## 1. Document Ecosystem — Full Catalogue
+
+Seventeen document types were named in the authorization. Three internationally-recognized document types were identified as missing and are added below (§1.4), and one class of request is explicitly declared out of scope with the reasoning stated (§1.5) — exactly as instructed: identify what's missing, add it; do not silently expand scope where it doesn't belong.
+
+### 1.1 Core Academic Record Documents (Class A — see §2.2 for security tier)
+
+| # | Document | Trigger | Data source |
+|---|---|---|---|
+| 1 | **Graduation Certificate** | `graduation_records.status = 'locked'` | `graduation_records` (frozen at lock) |
+| 2 | **Official Academic Transcript** | Locked record with academic results | `graduation_records` + a new locked `transcript_snapshots` row (§16.2) |
+| 3 | **Diploma Supplement** *(added — see §1.4)* | Issued alongside the Transcript | Institution's own curriculum/grading-scale reference data + the Transcript |
+| 4 | **Statement of Results** | Interim, issued to records still moving through the clearance chain | `graduation_records` + live `term_results` |
+| 5 | **Provisional Certificate** *(added — see §1.4)* | Issued once all blocking clearances pass but before the final parchment prints | `graduation_records` at the moment of auto-lock |
+
+### 1.2 Institutional Recognition Documents (Class B)
+
+| # | Document | Trigger | Data source |
+|---|---|---|---|
+| 6 | **Official Testimonial** | Staff-authored, on request or automatically offered at lock | Free-text, staff-authored (§16.4) |
+| 7 | **Character Certificate** | Staff-authored, distinct from the Testimonial (§16.5) | `disciplinary_cases` (informs eligibility only) + staff attestation |
+| 8 | **Graduation Clearance Certificate** | Chain fully cleared (`isChainComplete()`) | `graduation_clearances` full timeline |
+
+### 1.3 Identity & Registry Documents
+
+| # | Document | Trigger | Data source |
+|---|---|---|---|
+| 9 | **Alumni Registration Certificate** | On enrolment into the Alumni register (a real, if thin, existing office — see `docs/institutional-portal-architecture.md`'s Institutional Services Layer) | New `alumni_register` linkage (§19) |
+| 10 | **Digital Graduate Profile** | Generated alongside the Certificate | A public-safe subset of `graduation_records` + verification identifiers |
+| 11 | **Lifetime Verification Record** | Created once, at first issuance, never regenerated | `graduation_documents` + `verification_log` (§3.6) |
+| 12 | **Graduation Register** | One per ceremony/session, not per student | Roster query — no per-document numbering (§1.1 footnote) |
+
+### 1.4 Distinction & Award Documents
+
+| # | Document | Trigger | Data source |
+|---|---|---|---|
+| 13 | **Award Certificates** (general) | `graduation_records.academic_awards`/`leadership_awards`/`sports_awards`/`other_honours` | `graduation_records` award fields |
+| 14 | **Qur'an Certificates** | Hifz-track completion | `hifz_enrolment` + `ijazah_register` (both already exist and already have working numbering/verification — see §19) |
+| 15 | **Islamiyyah Certificates** | `graduation_records.islamiyyah_level` | `graduation_records` |
+| 16 | **Special Distinction Certificates** | Manually awarded, exceptional cases | Staff-entered, Founder/Board-approved |
+| 17 | **Board Awards** | Board of Trustees resolution | Linked to `resolutions` (Governance Headquarters — already exists) |
+| 18 | **Founder Awards** | Founder & CEO discretion | Staff-entered, EXE-approved |
+| 19 | **CEO Awards** | Same authority as Founder Awards at SHRS (the Founder holds the CEO role — see `role-permission-matrix.md`) — **treated as one document template with a selectable honorific line, not two separate systems**, since inventing two parallel award registries for one authority would be duplication, not rigour |
+
+### 1.4 Internationally-Recognized Additions
+
+The authorization explicitly asked: *if internationally recognised graduation documents are missing, identify them and add them.* Three were identified, all genuinely standard in institutions that operate at the international-recognition tier SHRS is now building toward:
+
+- **Diploma Supplement** (added to §1.1 as document #3). Standard in the Bologna Process and increasingly requested by universities and immigration authorities worldwide as a structured explanation of *what the transcript means* — grading scale, credit/contact-hour equivalence, institutional accreditation status, and a plain-language description of the programme completed. Without it, an excellent transcript can still be unreadable to a foreign admissions officer who has never seen SHRS's grading conventions. This is the single highest-leverage addition for the "employers, universities, ministries, scholarship bodies, embassies" audience list in §5.
+- **Provisional Certificate** (added to §1.1 as document #5). The gap between "the graduate has cleared every stage" and "the final parchment has been printed, sealed, and signed" is real and, at many institutions, weeks long. A Provisional Certificate — a real, numbered, verifiable document stating "this student has met every requirement for graduation as of [date]; the final Certificate is being prepared" — is what universities and embassies actually accept during that window. Without it, the Statement of Results (an academic-progress document, not a completion document) is the only interim option, and it says the wrong thing.
+- **Certified True Copy / Duplicate Certificate protocol.** Not a new document *type* so much as a mandatory reissuance discipline every one of the Class A documents needs: when a graduate loses their original Certificate or Transcript, or a receiving institution demands a certified copy rather than accept a photocopy, SHRS must be able to issue one that is visibly and permanently marked **"Certified True Copy"** or **"Duplicate — Original Reference No. [X]"**, carries its *own* new reference number, and is logged in `graduation_documents` as a reissuance linked to the original row — never a second "original." This is specified in full in §16.7.
+
+### 1.5 Explicitly out of scope, and why
+
+- **Apostille / consular legalization.** This is a government function performed by a national Ministry of Foreign Affairs (or equivalent) and, for Hague Convention countries, by a designated apostille authority — not something a school can perform on its own documents. SHRS's obligation, fully in scope, is to make its documents *easy to legalize*: a fixed, predictable signature block, an institutional seal, and a clean paper trail an embassy or ministry can verify quickly (§5). Performing the legalization itself is explicitly out of scope.
+- **No Objection Certificate / Transfer Certificate.** These are real Registrar's Office documents (already scoped in `docs/registrar-office.md`) but they belong to the *transfer/withdrawal* lifecycle, not graduation. Folding them into this specification would blur two different institutional processes that this engagement has, throughout, kept deliberately separate (see the Data Lifecycle Register's own event taxonomy).
+
+---
+
+## 2. Publication Architecture
+
+### 2.1 Every document is a publication, not a printout
+
+Every Class A/B document in this ecosystem shares one physical/digital anatomy, regardless of type:
+
+1. **Header block** — institutional crest, full legal institution name, campus/college identification, document title, in that fixed order, every time.
+2. **Body** — the document's substantive content, laid out on the grid defined in §6.3.
+3. **Security band** — reference number, QR code, barcode, and (where applicable) the truncated content-hash string, always in the same physical zone of the page (§14–§15 define exact placement per document class).
+4. **Signature block** — one row per required signatory (§13), each with a signature image/typed rendering, printed name, and title line.
+5. **Institutional seal** — positioned per §12, overlapping the signature block per the century-old convention this deliberately follows (a seal that visibly "binds" a signature is harder to forge piecemeal than one floating free on the page).
+6. **Footer band** — issue date, document class, and (for multi-page documents) page numbering and a running reference number so no page can be silently swapped out of a bound set.
+
+### 2.2 Document security classes
+
+| Class | Documents | Public verification depth | Physical stock intent |
+|---|---|---|---|
+| **A — Legal Academic Record** | Certificate, Transcript, Diploma Supplement, Provisional Certificate, Qur'an/Islamiyyah Certificates | Full (§5.2) | Security/watermarked stock (§11) |
+| **B — Institutional Recognition** | Testimonial, Character Certificate, Clearance Certificate, Award/Distinction/Board/Founder/CEO Awards | Standard | Premium letterhead stock |
+| **C — Registry/Internal** | Alumni Registration Certificate, Digital Graduate Profile, Graduation Register | Minimal or none (internal) | Standard letterhead / digital-only |
+
+Every class still gets a reference number, an audit trail, and — for anything issued to a named individual — an entry in `graduation_documents`. Class C is not "unsecured"; it is *lower public-verification priority*, which is a different thing from unimportant.
+
+### 2.3 Master layout grid
+
+- **Page size:** A4 (210×297mm) portrait for Class B/C; A4 landscape for the Graduation Certificate specifically (the internationally conventional orientation for a ceremonial certificate); A4 portrait for the Transcript/Diploma Supplement (tabular content reads better tall).
+- **Margins:** 25mm outer margin on Class A documents (room for the security border in §11), 20mm on Class B/C.
+- **Safe area:** all live content (text, seal, signatures) kept 8mm clear of the trim edge on any document produced in a Press Edition (§7.2) — bleed content only, nothing that must not be cut off, lives in that 8mm.
+- **Grid:** a 12-column baseline grid at the page's content width, consistent across every document type, so a Transcript's table columns and a Certificate's centered ceremonial text both sit on the same underlying rhythm — this is what makes a *family* of documents read as one publication system rather than seventeen unrelated templates.
+
+---
+
+## 3. Security Architecture
+
+Every identifier and mechanism named in the authorization, defined precisely, with its relationship to every other one made explicit — because a security architecture where the pieces aren't clearly related to each other is not actually a security architecture.
+
+### 3.1 Permanent Graduate ID
+
+The **existing** `SHRS-<YYMMDD>-<seq6>` student identity number (`functions/_lib/identity-no.js`, live since the Digital Identity System phase) *is* the Permanent Graduate ID at the moment of graduation — it does not change, is not reissued, and is not a new number invented for this phase. What Stage 3 adds is a documented, permanent commitment: **this number does not expire, is never reassigned to another person, and remains the graduate's identifier for life, including in every alumni-facing system built afterward.** That commitment is the actual deliverable here, not a new numbering scheme — reusing a live, working identifier is more rigorous than inventing a redundant one.
+
+### 3.2 Permanent Verification ID
+
+Distinct from the Graduate ID by design: the Verification ID identifies **a specific act of graduating** (this student, this programme, this session), not the person. A person could, in principle, complete more than one credential at SHRS over a lifetime (a Hifz Ijazah and, years later, a Royal College Certificate) — each is a separate Permanent Verification ID even though both point back to the same Permanent Graduate ID. Format: `SHRS-VER-<graduation_session>-<seq6>`, generated once at first document issuance for that graduation event and stored on `graduation_documents.verification_id`, shared by every document issued for that same graduation (Certificate, Transcript, Diploma Supplement all carry the same Verification ID; they each still get their own document reference number).
+
+### 3.3 Certificate Number / Transcript Number family
+
+Extends the **existing, live** `generateReferenceNo()` scheme (`functions/api/portal/staff/registrar/certificates.js`) rather than inventing a parallel one — the same discipline applied throughout this engagement. New type codes, `SHRS-<TYPE>-<year>-<seq6>`:
+
+| Document | Code |
+|---|---|
+| Graduation Certificate | `CERT` |
+| Academic Transcript | `TRAN` |
+| Diploma Supplement | `SUPP` |
+| Statement of Results | `SOR` |
+| Provisional Certificate | `PROV` |
+| Testimonial | `TEST` |
+| Character Certificate | `CHAR` |
+| Graduation Clearance Certificate | `CLR` |
+| Alumni Registration Certificate | `ALUM` |
+| Award Certificate (general) | `AWD` |
+| Special Distinction Certificate | `DIST` |
+| Board Award | `BRD` |
+| Founder/CEO Award | `FCA` |
+
+Qur'an Certificates and Islamiyyah Certificates use the **existing** `ijazah_register` numbering where the credential is an Ijazah, and a new `HIFZ`/`ISLM` code under the same family where it is a completion certificate short of full Ijazah — kept distinct from the Ijazah's own established, working system rather than merged into it.
+
+### 3.4 Machine-readable layer: QR and barcode, distinct purposes
+
+- **QR code** (existing `functions/_lib/qrcode.js`, server-rendered SVG, error correction level M): encodes the full verification URL (`/verify-graduation-document/?ref=...`). This is the primary, camera-driven verification path — the one an employer or embassy officer actually uses.
+- **Barcode** (new — no 1D barcode capability exists in this codebase today, confirmed by inspection): **Code 128** encoding the raw document reference number only (not a URL). Its purpose is different from the QR's: legacy document-management scanners at universities, ministries, and archival systems commonly read 1D barcodes into a record-lookup field but do not decode QR payloads as URLs. Carrying both means SHRS's documents work correctly with a 2020s smartphone camera *and* a 1990s-era institutional scanner — genuinely serving the full audience list in §5, not just the modern half of it.
+
+### 3.5 Cryptographic layer
+
+- **Content hash:** HMAC-SHA256 over a canonical, versioned field-set per document type (student's Permanent Graduate ID, document type, reference number, issue date, and — for the Transcript specifically — a hash of the locked `transcript_snapshots` row), keyed with a secret held only in Cloudflare environment variables (never in the repository, matching this project's existing `SESSION_SECRET` convention). The **first 12 hex characters** print beneath the QR/barcode as a human-legible check value; the full hash is stored server-side and recomputed live on every verification request.
+- **What this catches:** a document whose printed reference number is real but whose *visible content* (a grade, a name, a date) was altered after issuance — the recomputed hash will not match the stored one, and the verification page shows a clear **"Content Mismatch"** state, distinct from **"Reference Not Found."**
+- **What this does not catch, stated honestly:** a skilled physical forgery of the paper itself, undetectable without the physical security features in §11 — cryptography secures the *data*, not the *paper*. This is why §11 (paper standard) and §3.5 (hash) are both load-bearing, not either/or.
+
+### 3.6 Trust layer: signatures and seal
+
+- **Digital Signature Validation** — extends the **existing, live** `staff_signatures` architecture (Stage 2.5). New for Stage 3: a `DOCUMENT_SIGNATORIES` eligibility map (document type → required role codes) checked at generation time (§13.2), and a `signatories` JSONB snapshot on every `graduation_documents` row recording *exactly which staff member's signature, in what state, was used* — so a later change to that staff member's stored signature never silently alters an already-issued document's historical record.
+- **Institutional Digital Seal** — placement specified in §12; the image asset itself does not exist in this codebase today and must be supplied by the client (never fabricated — this project's standing rule against inventing institutional imagery applies with full force to a seal, which is arguably the single most consequential image this system will ever place on a document).
+
+### 3.7 Tamper detection
+
+Composite, not a single mechanism: the content-hash check (§3.5) for data-level tampering; the physical security stock and microprint recommendation (§11) as a paper-level deterrent no software can provide on its own; and a **verification-anomaly signal** — the `verification_log` (§3.8) flags a document verified an implausible number of times in a short window, or from a pattern consistent with automated scraping, for the Registrar's Office to review. None of these is "tamper-proof" in an absolute sense — no document system anywhere is — and this specification does not claim otherwise.
+
+### 3.8 Verification Timestamp and Lifetime Verification Record
+
+- **Verification Timestamp**: `graduation_documents.issued_at` is fixed forever at generation. Every *check* of the document (not the document itself) writes a row to a new, append-only `verification_log` table: `document_reference_no`, `verified_at`, `ip_address` (hashed, not stored raw — see §5.3's privacy note), `outcome` (`valid`/`revoked`/`hash_mismatch`/`not_found`). This is the **Lifetime Verification Record** — a permanent, growing history of every time this document was checked, available to the institution (never publicly) for exactly the anomaly-detection purpose in §3.7.
+- **Traceability**: every issued document is reachable end-to-end — `graduation_documents` row → `staff_audit_log` entries for its generation and any later revocation → the underlying `graduation_records`/`graduation_clearances` chain that authorised it → `verification_log` for its full check history. No document exists in this system without that full chain being reconstructable, matching the audit-trail discipline built in Stage 2.5 and extended, not replaced, here.
+
+---
+
+## 4. Numbering Standards
+
+Consolidates §3.3–§3.4 into the operational rule set:
+
+1. Every document gets exactly one reference number, assigned at generation, never reused, never reassigned even if the document is later revoked.
+2. Sequence scope: `COUNT(*) + 1` scoped by document type and calendar year, matching the existing, working `generateReferenceNo()` convention — a non-atomic, accepted-race counter, correct for SHRS's real volume (see the Stage 2.5 specification's own numbering rationale). A stricter atomic sequence is available (`SELECT ... FOR UPDATE` or a dedicated Postgres sequence per type, as `identity-no.js` already does for identity numbers) and should be adopted if/when document volume genuinely requires it — a decision to make explicitly when the evidence calls for it, not a default assumption now.
+3. A reissued/duplicate document (§16.7) always gets its **own** new reference number and is never permitted to reuse or silently overwrite the original's.
+4. Every reference number is permanently resolvable at its verification URL for the lifetime of the institution — no reference number is ever deleted from the lookup path, even if the underlying document is revoked (revocation is a status, not a deletion).
+
+---
+
+## 5. Verification Standards & Platform
+
+### 5.1 Audiences and what each genuinely needs
+
+| Audience | What they need | What they must never see |
+|---|---|---|
+| Employers | Name, credential, institution, dates, active/revoked status | Grades, disciplinary history, home address |
+| Universities/admissions | The above, plus the Diploma Supplement's grading-scale context | Full result breakdown (belongs on the physical Transcript the applicant supplies) |
+| Ministries of Education | Institutional accreditation reference, credential authenticity | Any personal data beyond what's needed to confirm the credential is genuine |
+| Scholarship bodies | Same as universities | Financial/family data |
+| Embassies (visa/immigration processing) | Authenticity + institutional legitimacy, fast | Anything not needed for that narrow purpose |
+| Accreditation agencies | Institutional-level document standards, not individual records | N/A (institution-level requests are a different, non-public process — §5.4) |
+
+### 5.2 Two-tier verification
+
+- **Tier 1 — Public Verification** (`/verify-graduation-document/`, no authentication, matches the existing `/verify-certificate/`/`/verify-receipt/`/`/verify-identity/` pattern exactly): reference-number lookup returning the audience-safe field set in §5.1, plus the active/revoked status and the content-hash check outcome. This is what a QR scan or a manually typed reference number reaches.
+- **Tier 2 — Institutional Verification** (a formal, authenticated request from an accredited third party — a university's admissions office, a ministry, an employer's HR-verification service): **explicitly out of scope for the first Stage 3 build**, named here as a deliberate Phase 2 decision rather than a silent omission. Building an authenticated third-party verification API is real additional infrastructure (API keys, rate limiting, a request-approval workflow) that deserves its own scoped decision once Tier 1 is live and its real usage pattern is understood — building it speculatively now would be optimizing for a guess, not for permanence.
+
+### 5.3 Privacy boundary and retention
+
+- Tier 1 responses are computed fresh from the live database on every request — never a cached snapshot that could serve stale (and therefore potentially wrong, post-revocation) data.
+- IP addresses logged in `verification_log` (§3.8) are hashed before storage (same discipline as any PII this project handles), retained per the school's IT-04 Records Retention Policy's technical-log retention class, and never exposed on the public verification page — they exist solely for the institution's own anomaly review.
+- No verification response ever includes another person's data (a common failure mode in poorly designed lookup systems is leaking adjacent records) — every query is scoped to exactly one reference number, returning exactly one document's public fields.
+
+### 5.4 Institutional-level accreditation requests
+
+A ministry or accreditation body auditing SHRS's *documents as a system* (not one graduate's record) is a different request from either verification tier — it is a governance conversation (Board Papers Centre, Governance Headquarters), not an API call. Noted here so the distinction is explicit and this specification doesn't accidentally imply the public verification page is also the accreditation-audit surface.
+
+---
+
+## 6. PDF Engine & Design Discipline
+
+### 6.1 Design principles, stated as testable rules, not adjectives
+
+"Looks professionally commissioned" is not an engineering requirement until it is decomposed. It is decomposed here into rules the Publication Design Audit (§17.1) can actually check:
+
+- **Alignment:** every text block, rule line, and image sits on the 12-column grid (§2.3) — no element positioned by eyeballing.
+- **Optical spacing:** spacing between elements is tuned by eye against the grid, not applied as one uniform CSS margin everywhere — headings need more visual air above than below; a signature line needs more clearance than a body paragraph.
+- **Consistent margins:** identical margin values across every page of a multi-page document, and across every document *within a class* (§2.2) — a Transcript and a Diploma Supplement issued for the same graduate should feel like siblings.
+- **Elegant whitespace:** a document is not "denser is better" — Class A documents in particular should read as unhurried, matching the ceremonial register of the occasion they mark.
+- **Premium typography:** §10.
+- **Flawless page rhythm:** on multi-page documents (Transcript, Diploma Supplement), running headers/footers repeat identically, page numbers are consistent, and section breaks never orphan a single table row at the top or bottom of a page.
+- **Professional print readiness:** every document renders correctly both on-screen (digital verification/records use) and printed on a standard office printer at minimum, with the Press Edition (§7.2) as the enhanced path for ceremonial/security printing.
+
+### 6.2 Technical rendering approach — the honest constraint, stated plainly
+
+This is the single most important engineering finding in this specification, and it changes how Stage 3 must be built:
+
+- **Cloudflare Pages Functions (the production runtime this entire portal runs on) cannot execute headless Chromium, LibreOffice, or Ghostscript.** These are not available in that serverless environment — confirmed by inspection of this project's existing infrastructure. The only prior PDF-generation capability in this codebase, `scripts/render-constitution-pdf.js`, is an **offline Node/Playwright script run manually on a developer machine**, never deployed as a live API endpoint — exactly as `docs/shrs-graduation-documentation-system-architecture.md` already flagged.
+- **This build environment** (where this specification is being written) *does* have `soffice` (LibreOffice) and `gs` (Ghostscript) available — but that environment is not the production Cloudflare Workers runtime graduates and staff will actually use. Conflating "it works in this sandbox" with "it works in production" would be exactly the kind of unearned claim this engagement has never made, and will not start now.
+- **The correct architecture, therefore:** graduation-document PDF generation is a **triggered, server-side batch/render job**, not a live per-request Cloudflare Function. Concretely: when a record locks (or a staff member explicitly requests a document), a rendering job runs on infrastructure that *can* run headless Chromium — either (a) a small dedicated rendering service the client provisions alongside Cloudflare (a lightweight Node service on any conventional host, called by a Cloudflare Function via HTTP), or (b) an offline/scheduled batch process analogous to `render-constitution-pdf.js`, run on a controlled schedule (e.g., nightly, or on-demand by an administrator with the right tooling). The **rendered PDF is generated once, hashed (§3.5), and stored** (§8) — the live verification endpoint (a genuine Cloudflare Function) only ever *serves or confirms* that locked artifact, never regenerates it on the fly. This is not just a workaround for a runtime limitation — it is the *more correct* security architecture regardless: a security document's canonical form should be generated once and be immutable, not reconstructed differently on every request.
+- **What Stage 3 must decide, as an explicit infrastructure choice before build begins:** which of (a) or (b) above the client wants to provision. This specification does not choose on the client's behalf; it names the decision and its trade-offs (a dedicated service gives faster, on-demand issuance; a batch process is simpler infrastructure but issuance is not instant) so the choice can be made deliberately.
+
+### 6.3 Grid system specifics
+
+12-column grid, 25mm/20mm margins per §2.3, base typographic unit 4pt (all spacing values multiples of 4pt for consistent rhythm — the same discipline professional editorial design systems use), one shared CSS design-token file (extending `css/brand.css`'s existing variables, not a parallel system) so every document type inherits the same institutional DNA automatically rather than needing per-template tuning.
+
+---
+
+## 7. International Print Standard
+
+### 7.1 CMYK output — the honest position
+
+A browser-rendered PDF (the only rendering path realistically available to this project, per §6.2) is natively an **RGB** document — browsers do not emit CMYK. True CMYK conversion for professional press output requires a genuine colour-managed conversion step (ICC profile application), which is standard **pre-press** work, not something a web rendering pipeline does natively. The honest, correct architecture: SHRS's own generated PDFs (Digital/Verification Edition, §7.3) are the RGB, screen-and-office-print standard used for every day-to-day purpose (emailing a Testimonial, printing a Transcript on office equipment, digital verification). For the **Graduation Certificate specifically**, where ceremonial security-press printing is genuinely warranted, the generated PDF is handed to a professional security-print vendor as a **press-ready RGB source**, and CMYK conversion happens at the vendor's own RIP (raster image processor) as a standard, routine pre-press step every commercial print shop already performs — this is not a gap in SHRS's system, it is where that responsibility correctly sits in the real-world print production chain, and claiming this codebase does its own CMYK conversion would be a fabricated capability.
+
+### 7.2 Bleed and crop marks — Press Edition
+
+A second HTML/CSS template variant, generated from the **same source data and design system** as the standard document (never a separately maintained "print version" that could drift out of sync), adds:
+
+- **3mm bleed** on all four edges (content extends past the trim line so no white sliver appears after cutting).
+- **Crop marks** at each corner, standard commercial-printing convention.
+- Produced only for Class A documents intended for ceremonial/security stock printing (the Graduation Certificate, primarily) — not generated by default for every document, since bleed/crop marks are meaningless (and visually wrong) on a document a graduate prints at home or views on screen.
+
+### 7.3 Digital/Verification Edition vs. Press Edition — two outputs, one source
+
+| | Digital/Verification Edition | Press Edition |
+|---|---|---|
+| Colour space | RGB | RGB source, CMYK-converted at vendor pre-press |
+| Bleed/crop marks | None | 3mm bleed + crop marks |
+| Intended use | Verification, digital archive, office printing, email | Professional security-press printing |
+| Generated for | Every document, every time | Class A documents on explicit request |
+
+### 7.4 Archival-quality PDF
+
+**PDF/A** (ISO 19005) is the correct, named target for long-term digital archival — a real, well-defined standard, not an invented one. Achieving genuine PDF/A conformance requires a conversion/validation step (font embedding verification, colour-profile embedding, metadata conformance) beyond what a browser's native "print to PDF" produces unassisted. This specification names PDF/A as the target standard for the archived copy of every Class A document (§8) and requires that conformance be **verified by an automated post-processing/validation step** before a document is marked "archived" — not assumed true because the PDF opens correctly in a viewer.
+
+---
+
+## 8. Digital Preservation & Archival Standards
+
+Extends the Stage 2.5 specification's §8 with the infrastructure decision now made concrete:
+
+- **Storage:** every generated document's rendered PDF, not just its database row, must be retained so it can be reproduced identically on request years later. This codebase has no file-storage backend today (confirmed — every "image" field elsewhere in this project is a small base64 column, precisely because no object store exists yet). **Cloudflare R2** is the recommended provisioning (native to the same platform this portal already runs on) — an infrastructure decision requiring the client's explicit sign-off before Stage 3 writes storage code, named here rather than assumed.
+- **Immutability:** once stored, a document's PDF is never overwritten. A correction to underlying data (a corrected grade, a name change) triggers a **new** document with its own reference number and a `supersedes` link to the prior one — the prior document's file and record remain permanently retrievable, marked superseded, never deleted or silently replaced. This is the same principle Stage 2.5 applied to `staff_audit_log` (append-only) extended to the documents themselves.
+- **Retention period:** governed by the school's **existing, published IT-04 Records Retention Policy**, which already sets retention classes for academic records — Stage 3's build plan must cite the specific applicable clause rather than inventing a new retention rule for documents that already have a governing policy.
+- **PDF/A conformance:** per §7.4, verified at archival time, not assumed.
+
+---
+
+## 9. Visual Identity — the Graduation Document Palette
+
+The palette named in the authorization — **Coffee Brown, Royal Gold, Cream, Ivory, Milk White** — is not a new palette to invent. It is, field for field, the palette that **already exists** as live CSS custom properties in `css/brand.css`, confirmed by direct inspection before writing this section:
+
+| Named colour | Existing token | Existing value |
+|---|---|---|
+| Coffee Brown | `--navy` (the codebase's legacy variable name for what is, and always has been, a deep coffee-brown tone — `#3B2A1D`, with `--navy-deep: #221709` as its darker register) | `#3B2A1D` |
+| Royal Gold | `--gold` / `--gold-bright` | `#C6A15B` / `#E9CE8A` |
+| Cream | `--cream` | `#F1E4C8` |
+| Ivory | `--ivory` | `#F7EEDF` |
+| Milk White | `--milk` | `#FCFAF6` |
+
+**This is a favourable finding, not a gap:** the institution's flagship colour identity was already built to exactly this specification, years of consistent use across the public site and the portal already validate it, and Stage 3's documents can inherit it directly rather than introduce a competing palette that would fracture the institution's visual identity at the exact moment it needs to be most unified. The one addition Stage 3 makes: a **document-specific restraint rule**, distinct from the portal's own (correctly more animated, more colourful) chrome — graduation documents use at most three colours per page (ink, gold accent, one supporting tone), consistent with §9's "restrained premium accents… luxury from proportion, not decoration" instruction. `--crimson`, `--forest-green`, `--terracotta`, and the portal's other Prestige Palette supporting tones (already documented in `css/brand.css` as deliberately *not* part of the core brand pair) are excluded from graduation documents entirely — they belong to the site's section-rhythm system, not the institution's permanent legal-document identity.
+
+---
+
+## 10. Typography Standards
+
+Extends the existing, live three-font system (`Cormorant Garamond` for display/headings, `Cinzel` for ceremonial labels and small caps, `Inter`/`Cairo` for body/UI) rather than introducing a fourth face:
+
+- **Certificate display text** (student name, credential title): `Cormorant Garamond`, the existing display face, at a large, generous size — this is the one place on any SHRS document where the typography itself should carry ceremonial weight.
+- **Ceremonial labels** (institution name, ornamental section markers): `Cinzel` small caps, matching the existing portal convention exactly.
+- **Dense tabular content** (Transcript grade tables, Diploma Supplement reference tables): a genuine print-optimized serif is specified here as new work — `Cormorant Garamond` at display sizes is correct for ceremonial text but was not designed for small-size tabular density; a numerically-disciplined serif (tabular figures, consistent x-height at small sizes) should be selected and added to the document-specific font stack, distinct from (but harmonious with) the display face. This is named as an open selection task for the build phase, not resolved arbitrarily here.
+- **Signatures**: the existing `staff_signatures` typed-signature rendering already uses a script-style face (Stage 2.5) — reused as-is.
+- **Numerals**: tabular (fixed-width) figures throughout every table and every reference number, so columns of numbers align vertically — a small, easily-missed detail that is one of the most reliable "amateur vs. professional" tells in document typography.
+
+---
+
+## 11. Paper Standards
+
+A specification **for the client and the eventual print vendor**, not something code enforces — stated here so the digital design (§6–§7) is built with real production intent, not decorative guesswork:
+
+- **Graduation Certificate:** heavyweight (minimum ~220gsm) watermarked security stock, ideally with an embedded institutional watermark motif and/or a subtle guilloché security-pattern print — genuine anti-counterfeit paper features, procured from the print vendor, not something HTML/CSS can produce.
+- **Transcript / Diploma Supplement:** letterhead-weight security stock (~120gsm), sufficient for multi-page binding, with the institution's watermark at a lighter tint than the Certificate's.
+- **Testimonial / Character Certificate / Award documents:** standard premium letterhead stock (~100gsm) — real, but not requiring the same anti-counterfeit paper features as Class A documents.
+- **Colour:** ivory/cream-toned stock (not stark white) for every Class A/B document, matching §9's palette and giving every physical document the same warm, consistent material feel regardless of which print run or year it came from.
+
+---
+
+## 12. Seal Standards
+
+- **Asset:** the institutional seal image itself does not exist in this codebase and must be supplied by the client — never fabricated (§3.6).
+- **Placement:** bottom-centre of the signature block, overlapping the primary signatory's signature line by roughly one-third of the seal's diameter — the century-old convention that makes a seal function as a binding device, not decoration.
+- **Digital rendering:** a high-resolution PNG/SVG with genuine transparency (no white box around a circular seal), sized so it prints legibly on Class A physical stock and renders crisply on-screen at verification-page thumbnail size alike.
+- **Colour:** rendered in the Royal Gold token (§9) by default, with a full-colour version available if the client's actual seal design is inherently multi-colour — a decision the client's seal design (once supplied) will settle, not this specification.
+
+---
+
+## 13. Signature Standards
+
+### 13.1 Architecture (already built, Stage 2.5)
+
+`staff_signatures` — typed (script font) or uploaded image (≤200KB base64), self-managed via `/portal/staff/identity/`'s "My Digital Signature" card, self-service and self-scoped (§3.6 of the Stage 2.5 architecture doc). Reused as-is.
+
+### 13.2 Document eligibility map (new, Stage 3)
+
+A `DOCUMENT_SIGNATORIES` configuration naming, per document type, the minimum role(s) whose signature must be on file before generation is permitted:
+
+| Document | Required signatories (minimum) |
+|---|---|
+| Graduation Certificate | Institution Principal/Head Teacher/Ra'ees/Mudeer + Registrar |
+| Academic Transcript | Registrar + Examinations & Records |
+| Diploma Supplement | Registrar |
+| Testimonial / Character Certificate | The student's own Principal/Head Teacher/Ra'ees/Mudeer only |
+| Graduation Clearance Certificate | Registrar |
+| Board/Founder/CEO Awards | The awarding authority itself (Board Chair / Founder & CEO) |
+
+If a required signatory's office is constitutionally vacant (the same honest vacancy state Stage 2.5 built for VPAC/VPAD), **generation fails with a clear, named error** — never a blank signature line, never a silently-omitted signatory. This directly extends the vacancy-as-a-first-class-state principle already governing the clearance chain.
+
+### 13.3 Historical integrity
+
+Every generated document snapshots *which* signature (and its exact rendered form at that moment) was used, in `graduation_documents.signatories` JSONB (§3.6) — a staff member later updating their stored signature never retroactively alters an already-issued document's historical appearance or record.
+
+---
+
+## 14. QR Standards
+
+- **Content:** the full public verification URL (`https://[production domain]/verify-graduation-document/?ref=<reference_no>`), never the document's raw data.
+- **Rendering:** server-side SVG via the existing `functions/_lib/qrcode.js` (reused, not rebuilt) — error correction level **Q** (not the existing M) for graduation documents specifically, since these are higher-security, longer-lived, and more likely to be photocopied/faxed than the identity-card/receipt QR codes that use M today; Q's higher redundancy tolerates more real-world degradation.
+- **Placement:** security band (§2.1) — bottom-right on Certificate/Award documents, bottom-centre on multi-column Transcript/Diploma Supplement pages, sized no smaller than 20mm square on any Class A physical print to guarantee reliable scanning.
+- **Caption:** "Scan to verify" in the document's body typeface, directly beneath the code, matching the existing ID-card convention exactly.
+
+## 15. Barcode Standards
+
+- **Symbology:** Code 128 (§3.4) — chosen for its ability to encode the full alphanumeric reference number (`SHRS-CERT-2026-000001`) compactly and its wide legacy-scanner compatibility, over alternatives like PDF417 (higher data capacity but a 2D format most institutional barcode scanners of the kind this is meant to serve do not read) or Code 39 (lower density, less standard in modern institutional use).
+- **New work, stated plainly:** no barcode-rendering library exists anywhere in this codebase today. A lightweight, dependency-minimal Code 128 SVG renderer (the same "pure-JS, SVG-out, no canvas" discipline already proven correct for the QR renderer in the Cloudflare Workers runtime) is genuine new Stage 3 engineering.
+- **Placement:** security band, adjacent to but visually distinct from the QR code — never overlapping, always with its own clear caption stating the reference number in human-readable text directly beneath the bars (the standard convention that lets a person read the number if the scanner fails).
+
+---
+
+## 16. Per-Document Content & Layout Standards
+
+### 16.1 Graduation Certificate
+Institution crest and full legal name (top-centre); ceremonial title ("This is to certify that…"); student's `preferred_certificate_name` in the largest display type on the page; programme/level/institution completed; graduation session; signature block per §13.2, reflecting the *actual* cleared stages on that record (a Certificate whose underlying `graduation_clearances` shows the Founder stage as `cleared`, not `not_applicable`, carries the Founder's signature — a Certificate never claims an authority that didn't actually sign off); seal (§12); security band (§14–§15) in the bottom margin.
+
+### 16.2 Academic Transcript
+Requires a new `transcript_snapshots` table (schema, per §8's immutability principle): `id, graduation_record_id, snapshot_data JSONB (a locked copy of every term_results row used), generated_at`. Layout branches genuinely by institution — Royal College: subject-by-subject grades per term in tabular form; Qur'an College: Hifz stage progression and Islamiyyah level presented as a structured progression table in place of subject grades — because these are genuinely different kinds of academic records, and forcing one template onto both would misrepresent the Qur'an College's real curriculum. Multi-page as needed, running header on every page, security band on the final page only, per §6.1's page-rhythm rule.
+
+### 16.3 Diploma Supplement
+New document, structured per the internationally-recognized Diploma Supplement convention (adapted, not copied verbatim, since SHRS is not a Bologna Process signatory but the *format* is what international readers recognize): (1) information identifying the holder, (2) information identifying the qualification, (3) information on the level of the qualification, (4) information on the programme completed and results obtained (cross-referencing the Transcript), (5) information on the qualification's function (what it entitles the holder to do — further study, professional entry, etc.), (6) additional information, (7) certification of the supplement itself (signed, per §13.2), (8) information on the national/institutional education system (a short, factual description of SHRS's own curriculum structure and grading scale, written once and reused on every Supplement — this is the section that does the actual work of making a foreign admissions officer able to interpret the Transcript correctly).
+
+### 16.4 Official Testimonial
+Free-text, staff-authored (§1.2) — **not** auto-generated from any data table, deliberately, since a testimonial is a genuine written character reference, not a data printout. The Disciplinary Register (Stage 2.5) gates *whether* a testimonial can honestly be issued (an open serious case blocks issuance, mirroring its role in Disciplinary Clearance) but never writes its prose.
+
+### 16.5 Character Certificate
+Distinct from the Testimonial: a shorter, more formulaic attestation ("X has been a student of good conduct during their time at SHRS, [with/without] disciplinary action recorded") — genuinely useful for contexts (visa applications, certain employer checks) that want a fact-attestation rather than a narrative reference, and where a full Testimonial would be over-scoped for the request.
+
+### 16.6 Graduation Clearance Certificate
+A formal document version of the `graduation_clearances` timeline already visible in the Graduation Control Centre — every stage, who cleared it, when — issued as proof the full institutional process was genuinely followed, useful for internal audit and for any receiving institution that wants to see the process, not just the outcome.
+
+### 16.7 Certified True Copy / Duplicate reissuance protocol
+Applies to any Class A document. A reissuance request creates a **new** `graduation_documents` row with its own new reference number, `document_kind` set to `certified_copy` or `duplicate`, and a `reissue_of` FK to the original row. The rendered PDF carries a visible, permanent stamp — **"CERTIFIED TRUE COPY"** or **"DUPLICATE — Original Reference No. [X]"** — in the security band, impossible to mistake for an original. The original row is never altered, never deleted, and remains independently verifiable at its own reference number for its own full lifetime.
+
+### 16.8 Statement of Results / Provisional Certificate
+The Stage 2.5 specification's original interim-document design (visible "INTERIM"/watermark banner, Examinations & Records signature only) is retained for the Statement of Results. The new Provisional Certificate (§1.4) is visually closer to the final Certificate (it says the student has fully qualified) but carries its own visible **"PROVISIONAL — Final Certificate in Preparation"** banner and its own `PROV` reference number family, distinct from both the Statement of Results (an academic-progress document) and the final Certificate (which it is not yet).
+
+### 16.9 Award family (Award/Distinction/Board/Founder/CEO)
+One shared template, parameterized by awarding authority and citation text — Board Awards cite the authorising `resolutions` row (Governance Headquarters, already exists); Founder/CEO Awards carry the Founder's own signature per §13.2's eligibility map; general Award Certificates reflect the specific `academic_awards`/`leadership_awards`/`sports_awards`/`other_honours` field they're issued for. One template family, not six independently-drifting ones — consistent with this specification's repeated principle that a *family* of documents should read as one system.
+
+### 16.10 Alumni Registration Certificate / Digital Graduate Profile / Lifetime Verification Record / Graduation Register
+Class C (§2.2). The Alumni Registration Certificate and Digital Graduate Profile are generated once, at first issuance of any Class A document for that graduate, and require a genuinely new `alumni_register` linkage (§19 — flagged as new schema, since no alumni data model exists in this codebase today beyond the honest-shell Alumni office already noted in prior architecture work). The Lifetime Verification Record is not a separate rendered document at all — it is the `verification_log` (§3.8) itself, described here for completeness of the ecosystem list rather than as a nineteenth thing to design a layout for. The Graduation Register is a single roster document per ceremony (not per student), pulling from the same `graduation_records` roster query the Control Centre already uses, formatted as a formal, numbered ceremony programme insert — no per-row security band, since it is an institutional publication, not an individually-verifiable credential.
+
+---
+
+## 17. Quality Assurance Framework
+
+Every audit named in the authorization, defined so it is actually checkable — a QA "audit" that isn't a checklist is a slogan, not a process.
+
+### 17.1 The ten audits
+
+1. **Publication Design Audit** — every §6.1 rule checked against every document type: grid alignment, margin consistency, spacing discipline, page rhythm.
+2. **Security Audit** — every §3 mechanism present and correctly wired per document: reference number, QR, barcode, hash, seal placement, signature eligibility enforcement.
+3. **Registry Audit** — every generated document's data traced back to its authorising `graduation_records`/`graduation_clearances` chain; no document generated for a record that hasn't actually cleared what it claims to have cleared.
+4. **Academic Audit** — Transcript/Diploma Supplement content checked against the underlying `term_results`/Hifz data for factual accuracy — no transcription errors between the data and the rendered page.
+5. **Typography Audit** — §10 rules checked: correct face per content type, tabular figures in every number column, no orphaned lines.
+6. **PDF Audit** — file validity (opens correctly across common PDF readers), correct metadata, correct page count, no rendering artifacts from the HTML→PDF pipeline.
+7. **Print Audit** — a physical test print of each document type on standard office equipment (Digital Edition) and, once a vendor is engaged, a physical proof from the Press Edition (§7.2) checked against the design intent.
+8. **Verification Audit** — every document's QR/barcode/reference-number path tested end-to-end: scan → verification page → correct data shown, correct privacy boundary (§5.3) respected, hash check correctly flags a deliberately-altered test record.
+9. **Accessibility Audit** — colour contrast on every text element meets a legible minimum even on the ivory/cream stock (§9/§11) it will actually be printed on (not just checked against a white screen background); QR/barcode caption text present for anyone who cannot use the machine-readable code.
+10. **International Benchmark Audit** — each document type compared, honestly, against a genuine equivalent from an internationally recognised institution (what does a real Diploma Supplement from a Bologna-process university actually look like; what does a real security-printed certificate from a comparable independent school actually look like) — not a self-referential check against SHRS's own prior draft.
+
+### 17.2 Page-by-page inspection protocol
+
+After the ten audits, every document *type* (not just a sample) undergoes a literal page-by-page visual inspection — for multi-page documents, every page individually — against a checklist derived from §6.1's testable rules, performed by rendering an actual sample document with realistic (never real-student) test data and reviewing the rendered PDF directly, the same verify-before-delivering discipline this engagement has used at every prior phase (Playwright route-mocked passes, screenshot audits, etc.), applied here to the highest-stakes output this project has produced.
+
+### 17.3 Release gate
+
+**No document type is released for real use until it has passed all ten audits and its page-by-page inspection.** A document type failing any audit is held, fixed, and re-audited — never shipped with a known, unaddressed gap and a promise to fix it later. This is the literal meaning of "release only when every document is genuinely publication-ready," applied as a hard gate, not a goal.
+
+---
+
+## 18. Governing Roles — mapped to real SHRS authority, not invented positions
+
+The six professional lenses named in the Final Expectation, each mapped honestly to who at SHRS actually holds that authority today — or flagged where no one does yet, rather than inventing a new staff position without basis:
+
+| Lens | Real SHRS owner |
+|---|---|
+| **University Registrar** | The Registrar's Office (`docs/registrar-office.md`) — the existing, real, staffed office already responsible for the underlying academic records this specification's documents are drawn from. |
+| **Academic Records Director** | Examinations & Records (existing office) — owns `term_results` accuracy, the data the Academic Audit (§17.1.4) checks against. |
+| **Security Printing Consultant** | **No internal SHRS role holds this today**, honestly stated. This is a function this specification recommends SHRS engage *externally* — a genuine commercial security-print vendor — for the Press Edition (§7.2) specifically; it is not a gap in this codebase, it is a real-world print-production relationship the institution should form, the same way any school issuing genuinely secure paper credentials must. |
+| **Digital Identity Architect** | Digital Services (ICT) office, in partnership with this engineering engagement — the office that already owns `functions/_lib/identity-no.js`, `qrcode.js`, and the whole Digital Identity System this specification extends. |
+| **Executive Publication Director** | The Founder & CEO / Executive office — final sign-off authority on this specification (§22) and, per §13.2, the required signatory on Founder/CEO Awards specifically. |
+| **Ministry of Education Certification Specialist** | **Also no internal role**, and — importantly — this is correctly an *external* checkpoint, not something software can self-certify. This specification's job is to make SHRS's documents easy for an actual Ministry to recognise and verify (§5.1, §1.5's apostille note); actual Ministry accreditation is a real-world institutional relationship SHRS should pursue independently of this build, not a claim this document can make on the Ministry's behalf. |
+
+---
+
+## 19. What Already Exists vs. What Stage 3 Must Build
+
+Extends the Stage 2.5 specification's own §10 summary, now complete:
+
+**Already real and directly reusable, no new work:**
+- Numbering mechanism (`generateReferenceNo()`), extended with new type codes only.
+- QR generation (`functions/_lib/qrcode.js`).
+- The lookup-by-reference verification *pattern* (three working precedents to extend, not reinvent).
+- `staff_signatures` architecture (Stage 2.5).
+- The full graduation intake and clearance chain (`graduation_records`, `graduation_clearances`) as the document generation's data source.
+- The institution's actual brand palette (§9) — already exactly the palette requested.
+- Ijazah documents specifically — already fully working end-to-end.
+
+**Genuinely new engineering, named plainly:**
+1. A triggered/batch PDF rendering pipeline on infrastructure that can run headless Chromium (§6.2) — the single largest new build.
+2. `graduation_documents`, `transcript_snapshots`, `verification_log`, and `alumni_register` tables (schema).
+3. New type-abbreviation codes on the existing numbering helper.
+4. HMAC content-hash tamper-evidence (§3.5) — a genuine security improvement over every existing document type's current honest limitation.
+5. A Code 128 barcode renderer (§15) — nothing like it exists today.
+6. A single new public verification page + endpoint extension for the graduation-document family, following the existing three-system pattern.
+7. A file-storage decision (Cloudflare R2, recommended) and the storage integration itself.
+8. Signature-eligibility enforcement (`DOCUMENT_SIGNATORIES`, §13.2) and institutional seal placement (pending the client supplying the actual seal asset).
+9. The Press Edition (bleed/crop marks) template variant and the CMYK vendor-handoff workflow documentation (§7).
+10. PDF/A archival conformance verification (§7.4, §8).
+11. The Diploma Supplement's institutional-curriculum reference content (§16.3) — a genuine writing task, not just a template.
+
+---
+
+## 20. Phased Build Plan
+
+A sequencing recommendation for the actual Stage 3 engineering, once this specification is approved — deliberately staged so foundational, hard-to-change decisions (schema, numbering, infrastructure choice) happen before the highest-visibility, hardest-to-undo work (the Certificate template itself):
+
+1. **Infrastructure decision** (§6.2, §8): client confirms the PDF-rendering infrastructure approach and the file-storage provisioning. Nothing else in this plan can proceed responsibly without this.
+2. **Schema** — `graduation_documents`, `transcript_snapshots`, `verification_log`, `alumni_register`, extending `sql/schema.sql` + `setup.js` per this project's existing dual-file convention.
+3. **Numbering + hash + QR + barcode** — the machine-readable/cryptographic layer (§3–§4, §14–§15), tested against real reference-number generation before any visual template exists to attach it to.
+4. **Verification platform** (§5) — the public lookup page and endpoint, built and tested against synthetic test documents before real documents exist to verify.
+5. **Document templates, Class C → B → A** — build and audit (§17) the lowest-stakes document types first (Alumni Registration, Digital Graduate Profile) to prove the pipeline end-to-end, then Class B (Testimonial, Awards), then Class A (Transcript, Diploma Supplement, and finally the Graduation Certificate itself) — the highest-visibility document built last, once every underlying mechanism has already been proven on lower-stakes documents.
+6. **Press Edition + vendor handoff documentation** (§7.2–§7.3) — once the Certificate's Digital Edition is fully audited and approved.
+7. **Full QA pass** (§17) across every document type, including the page-by-page inspection.
+8. **Release gate** (§17.3) — nothing goes live until this passes, document type by document type.
+
+---
+
+## 21. Internal Approval Record
+
+Self-audited against the six lenses named in §18 before proceeding, per the authorization's own instruction to "produce and internally approve" this specification:
+
+- **As University Registrar:** the document ecosystem (§1) reflects real academic-record practice, correctly distinguishes a Transcript from a Statement of Results from a Provisional Certificate, and the Diploma Supplement addition genuinely closes the international-legibility gap a Registrar's Office would actually face. **Approved.**
+- **As Academic Records Director:** the Transcript's per-institution branching (§16.2) and the `transcript_snapshots` immutability requirement (§8) correctly protect the integrity of results once issued. **Approved.**
+- **As Security Printing Consultant:** §3, §7, §11, and §15 correctly separate what software can secure (data, cryptography, machine-readability) from what only physical production can secure (paper stock, CMYK press output, security patterns), and correctly name the external vendor relationship this requires rather than pretending code alone can deliver a secure physical certificate. **Approved, with the standing recommendation (§18) that SHRS begin that vendor relationship in parallel with the software build, not after it.**
+- **As Digital Identity Architect:** the Permanent Graduate ID / Permanent Verification ID distinction (§3.1–§3.2) is architecturally sound, correctly reuses the existing identity system rather than duplicating it, and the §6.2 infrastructure finding is the correct, load-bearing technical foundation the rest of Stage 3 depends on. **Approved.**
+- **As Executive Publication Director:** the visual identity (§9), typography (§10), and design-discipline rules (§6.1) are proportionate to "the part the world will see" without lapsing into ornamentation the authorization explicitly warned against — restraint, not decoration, is genuinely what this specification calls for throughout. **Approved.**
+- **As Ministry of Education Certification Specialist (external-lens check):** §5.1's audience-appropriate data boundaries and §1.5's honest apostille/legalization scoping are what an actual ministry reviewer would expect from an institution that understands where its own authority ends. **Approved**, with the note (§18) that actual ministry recognition remains a real-world relationship to pursue, not a claim this document makes on the ministry's behalf.
+
+**This specification is internally approved for the purpose the authorization set: no document generation begins until it exists and is complete. It now exists and is complete.**
+
+---
+
+## 22. Formal Sign-Off Block
+
+| | |
+|---|---|
+| Specification version | v1.0 |
+| Prepared under | Executive Authorization — Stage 3 |
+| Internal approval | Recorded above, §21 |
+| **Client approval** | ☐ Approved as written — Stage 3 build may commence per §20's phased plan ☐ Approved with the following amendments: _______________ |
+| Infrastructure decision required before build (§6.2, §8) | ☐ Dedicated rendering service ☐ Scheduled batch process — *client selection required before Phase 1 of §20 begins* |
+| Institutional seal asset (§12) | ☐ Supplied ☐ Pending — *required before Class A document templates can be finalised* |
+
+Per the client's Final Executive Direction across this entire engagement — "Do not optimise for speed. Optimise for permanence." — this specification does not proceed to code until the two open decisions in this sign-off block are resolved. Everything else in Stage 3's build plan (§20) can begin the moment this document is approved.

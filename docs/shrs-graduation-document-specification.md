@@ -1,4 +1,6 @@
-# SHRS Graduation Document Specification
+# SHRS Graduation Document Specification (superseded)
+
+> **Superseded.** Following the client's Executive Authorization — Stage 3, this draft has been absorbed and substantially expanded into `docs/shrs-master-graduation-document-specification.md`, the governing standard as of that authorization. This file remains on disk as the original Stage 2.5 working note; do not treat it as current. All cross-references now point to the master specification.
 
 **Status:** Draft for client review. Per the Stage 2 Conditional Approval directive's item 10 and the Final Executive Direction that followed it, **no Stage 3 code (document generation, PDF rendering, new verification endpoints) is written until this specification is reviewed and the client confirms readiness to proceed.** This document defines *what* every graduation document must be, not how it is coded — that is Stage 3's own build plan, to be written after this specification is approved.
 
