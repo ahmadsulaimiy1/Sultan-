@@ -30,6 +30,15 @@ const DOCUMENT_TYPE_LABEL = {
   alumni_registration: { en: 'Alumni Registration Certificate', ar: 'شهادة تسجيل الخريجين' },
 };
 
+// Real, client-supplied seal assets (spec §12) — never fabricated.
+// Keyed by issuing office, not document class: a Registrar's Office
+// document carries the Registrar's own seal; documents requiring the
+// Executive/Board's institutional authority (once built) use the
+// general institutional seal instead.
+const DOCUMENT_SEAL = {
+  alumni_registration: '/assets/images/seals/registrar-office-seal.jpg',
+};
+
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
   let session;
@@ -116,6 +125,7 @@ export async function onRequestGet({ request, env }) {
       issuedAtDisplay: new Date(row.issued_at).toISOString().slice(0, 10),
       signatories: Array.isArray(row.signatories) ? row.signatories : [],
       documentKind: row.document_kind,
+      sealImage: DOCUMENT_SEAL[row.document_type] || null,
     });
 
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
