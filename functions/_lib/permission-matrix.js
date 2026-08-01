@@ -39,6 +39,7 @@ export const SYSTEM_AREAS = {
   transcripts:            { name: 'Transcripts', ownerOffice: 'Registrar', governingPolicy: null },
   graduation_records:     { name: 'Graduation Records', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md' },
   graduation_clearances:  { name: 'Graduation Approval Workflow', ownerOffice: 'Multi-office chain — see STAGE_DEFINITIONS', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md §Stage 2' },
+  graduation_documents:   { name: 'Graduation Document Issuance', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-master-graduation-document-specification.md' },
   communications:         { name: 'Communications', ownerOffice: 'Varies by content and audience', governingPolicy: null },
   policies:               { name: 'Policies', ownerOffice: 'Policy-owning office per policy-code-index.md', governingPolicy: null },
   website_content:        { name: 'Website Content', ownerOffice: 'ICT / Communications function', governingPolicy: null },
@@ -156,6 +157,18 @@ export const MATRIX = {
     { role: 'VPAC', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_academic' stage — role has no appointment holder yet" },
     { role: 'VPAD', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_administration' stage — role has no appointment holder yet" },
     { role: 'EXE', permissions: ['V', 'A'], scope: "all institutions; A = the 'founder' stage, only present on records flagged requires_founder_review" },
+  ],
+  // Graduation Document Issuance (Stage 3) — issuing a real
+  // graduation_documents row (docs/shrs-master-graduation-document-
+  // specification.md §3, §20 Phase 5). Class C (Alumni Registration,
+  // Digital Graduate Profile) is Registrar-issued with no separate
+  // approval step, consistent with the spec's own "lowest stakes first"
+  // build ordering; Class A/B document types, once built, may extend
+  // this with an approval requirement the same way certificates: does.
+  graduation_documents: [
+    { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
+    { role: 'PRIN', permissions: ['V'], scope: 'own institution' },
+    { role: 'EXE', permissions: ['V'], scope: 'all institutions' },
   ],
   // E and Ar were added to REG/PRIN/EXE below during the Announcements
   // admin migration (identity-migration-plan.md, Migration Phase D item

@@ -261,6 +261,10 @@
         actions.appendChild(trackLink);
       } else if(item.status === 'locked'){
         actions.appendChild(el('span', 'registrar-approval-meta', 'Locked — every institutional clearance is complete.'));
+        var issueBtn = el('button', 'registrar-approval-approve', 'Issue Alumni Registration Certificate');
+        issueBtn.type = 'button';
+        issueBtn.addEventListener('click', function(){ issueAlumniRegistration(item.id, issueBtn); });
+        actions.appendChild(issueBtn);
       }
       if(actions.childNodes.length) card.appendChild(actions);
       graduationRecordsListEl.appendChild(card);
@@ -285,6 +289,40 @@
 
   graduationRefreshBtn.addEventListener('click', loadGraduationRecords);
   graduationStatusFilterEl.addEventListener('change', loadGraduationRecords);
+
+  async function issueAlumniRegistration(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_alumni_registration', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        if(data.referenceNo){
+          showResult(graduationRecordsResultEl, false, data.error + ' Reference: ' + data.referenceNo);
+        } else {
+          throw new Error(data.error || 'Could not issue that document.');
+        }
+        return;
+      }
+      var msg = document.createElement('span');
+      msg.textContent = 'Issued — reference ' + data.referenceNo + '. ';
+      var viewLink = document.createElement('a');
+      viewLink.href = data.viewUrl; viewLink.target = '_blank'; viewLink.rel = 'noopener';
+      viewLink.className = 'text-link'; viewLink.textContent = 'View / print →';
+      graduationRecordsResultEl.innerHTML = '';
+      graduationRecordsResultEl.className = 'registrar-form-result is-ok';
+      graduationRecordsResultEl.appendChild(msg);
+      graduationRecordsResultEl.appendChild(viewLink);
+      graduationRecordsResultEl.hidden = false;
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
 
   function renderTimeline(events){
     var wrap = document.querySelector('[data-record-timeline]');
