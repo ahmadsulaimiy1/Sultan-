@@ -140,6 +140,15 @@ function main() {
   let i = 0;
   let splitIndex = null;
   let landscapeChildren = null;
+  // True for every line before the first '## ' heading — the front-matter
+  // paragraphs there (currently just "Submission.") are already rendered
+  // by hand on the copyright page above; without this flag they also fell
+  // through to the generic body-paragraph branch below and were printed a
+  // second time, as a stray paragraph ahead of the Constitutional
+  // Proclamation, which is exactly the kind of "not part of the operative
+  // text but not obviously excluded" clutter this round's directive
+  // objected to.
+  let inMeta = true;
 
   while (i < lines.length) {
     const line = lines[i];
@@ -147,6 +156,8 @@ function main() {
     if (line.startsWith('# ')) { i++; continue; } // main title, handled on cover page
     if (line.trim() === '---') { i++; continue; }
     if (line.trim() === '') { i++; continue; }
+    if (inMeta && !line.startsWith('## ')) { i++; continue; }
+    inMeta = false;
 
     if (line.startsWith('## PART ')) {
       const pageBreakBefore = isFirstBodyItem ? true : !firstHeading;
@@ -242,8 +253,23 @@ function main() {
     i++;
   }
 
-  // ---- Cover page ----
+  // ---- Half-title, title page, copyright/imprint page ----
+  // Matches the flagship HTML/PDF edition's front-matter sequence (see
+  // that edition's generator and the Editorial Record for why): a plain
+  // half-title, a fuller title page, then a copyright page carrying the
+  // Submission statement in ordinary imprint-page prose rather than a
+  // boxed alarm-coloured banner on the cover itself — the cover no
+  // longer carries any draft-status marking of its own.
   const coverChildren = [];
+  coverChildren.push(
+    new Paragraph({ text: '', spacing: { before: 2600 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 300 },
+      children: [new TextRun({ text: 'THE GOVERNANCE CHARTER', size: 26, color: NAVY, font: 'Cambria', characterSpacing: 40 })],
+    }),
+    new Paragraph({ children: [new PageBreak()] }),
+  );
   try {
     const crestBuf = fs.readFileSync(CREST);
     coverChildren.push(new Paragraph({
@@ -278,27 +304,41 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 100 },
-      children: [new TextRun({ text: 'Draft v7.0', bold: true, size: 26, color: GOLD })],
+      children: [new TextRun({ text: 'Seventh Edition', bold: true, size: 24, color: GOLD, font: 'Cambria' })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      spacing: { after: 700 },
-      border: {
-        top: { style: BorderStyle.SINGLE, size: 6, color: GOLD },
-        bottom: { style: BorderStyle.SINGLE, size: 6, color: GOLD },
-      },
-      children: [new TextRun({
-        text: '  STATUS: DRAFT — NOT YET EFFECTIVE — PREPARED FOR ADOPTION BY THE BOARD OF GOVERNORS  ',
-        bold: true, size: 20, color: 'B00020',
-      })],
+      spacing: { before: 300 },
+      children: [new TextRun({ text: 'Ikorodu · Lagos State · Nigeria', size: 18, color: CHARCOAL })],
+    }),
+    new Paragraph({ children: [new PageBreak()] }),
+  );
+  coverChildren.push(
+    new Paragraph({ text: '', spacing: { before: 3200 } }),
+    new Paragraph({
+      spacing: { after: 160 },
+      children: [new TextRun({ text: '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.', size: 17, color: CHARCOAL })],
     }),
     new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 1200 },
-      children: [new TextRun({
-        text: 'No provision of this draft is currently in force. It does not alter the live administrative system, any published page, or Policy GV-01 in its present form. Upon adoption by the Board of Governors under Chapter XVIII, this draft becomes the substantive content of GV-01 v3.0.',
-        italics: true, size: 18, color: CHARCOAL,
-      })],
+      spacing: { after: 260 },
+      children: [new TextRun({ text: 'Seventh Edition. Previously issued, through six prior editions, as the Constitution of Sultan Hanafi Royal Schools.', size: 17, color: CHARCOAL })],
+    }),
+    new Paragraph({
+      spacing: { after: 260 },
+      children: [
+        new TextRun({ text: 'Submission. ', bold: true, size: 17, color: CHARCOAL }),
+        new TextRun({
+          text: 'This Charter is submitted, under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools, to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Pending that adoption, no provision of this Charter is in force, and nothing in it alters the Institution’s existing administrative system or Policy GV-01 in its current form.',
+          size: 17, color: CHARCOAL,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 60 },
+      children: [new TextRun({ text: 'Sultan Hanafi Royal Schools · Royal College · Qur’an College · School of Islamic & Arabic Studies · Nursery & Primary School', size: 16, color: CHARCOAL })],
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: 'Founded December 2017 · Ikorodu, Lagos State, Nigeria', size: 16, color: CHARCOAL })],
     }),
   );
   coverChildren.push(new Paragraph({ children: [new PageBreak()] }));
@@ -344,7 +384,6 @@ function main() {
     ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 55, 1],
     ['CERTIFICATE OF ADOPTION AND EXECUTION', 56, 0],
     ['SCHEDULES', 57, 0],
-    ['DRAFTING NOTES — NOT PART OF THE CHARTER', 59, 0],
   ];
   coverChildren.push(
     new Paragraph({
@@ -377,11 +416,16 @@ function main() {
     // see the isFirstBodyItem comment in main().
   );
 
+  // Decluttered to match the flagship edition's own running header fix
+  // (see the Editorial Record): repeating "Draft v7.0 (Not Yet
+  // Effective)" on every page added no protective value over stating it
+  // once, clearly, on the copyright page and in the Certificate of
+  // Adoption — it only crowded the header line.
   const makeHeader = () => new Header({
     children: [new Paragraph({
       alignment: AlignmentType.CENTER,
       children: [new TextRun({
-        text: 'The Governance Charter of Sultan Hanafi Royal Schools — Draft v7.0 (Not Yet Effective)',
+        text: 'The Governance Charter of Sultan Hanafi Royal Schools',
         size: 15, italics: true, color: '6B6B6B',
       })],
     })],

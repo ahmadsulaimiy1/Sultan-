@@ -16,20 +16,32 @@
 }
 
 .const-body {
+  /* The sitewide --navy-deep/--charcoal-deep tokens (brand.css) are warm
+     browns, not navy, by deliberate site-wide brand decision — correct
+     for the marketing site, but the specific complaint about this
+     document was that its full-bleed ceremonial pages read as "heavy
+     and dated brown blocks." Rather than alter the sitewide palette
+     (which the rest of the Institution's site has been built around
+     across many prior sessions), this document defines its own cooler,
+     deeper tone — used only for its own full-bleed dark pages — leaving
+     --navy/--gold/--ivory (used throughout for headings, rules, and body
+     text on light pages) untouched. */
+  --doc-dark: #14161F;
+  --doc-dark-deep: #0F1018;
   margin: 0;
-  background: var(--charcoal-deep, #1C1914);
+  background: var(--doc-dark-deep);
   color: var(--ink);
   font-family: 'Inter', 'Cairo', sans-serif;
 }
 
 .const-toolbar {
   position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; background: var(--navy-deep); color: var(--gold-bright);
+  padding: 12px 24px; background: var(--doc-dark); color: var(--gold-bright);
   font-family: 'Cinzel', 'Amiri', serif; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .const-toolbar button {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
-  background: var(--gold); color: var(--navy-deep); border: none; padding: 8px 16px; cursor: pointer;
+  background: var(--gold); color: var(--doc-dark); border: none; padding: 8px 16px; cursor: pointer;
 }
 .const-toolbar button:hover { background: var(--gold-bright); }
 
@@ -43,7 +55,7 @@
   background: var(--ivory); box-shadow: 0 30px 70px -20px rgba(0,0,0,0.6);
   padding: 0.85in 0.95in; box-sizing: border-box; page-break-before: always; page-break-after: always;
 }
-.page.dark { background: var(--navy-deep); color: var(--ivory); }
+.page.dark { background: var(--doc-dark); color: var(--ivory); }
 .page.charcoal { background: var(--charcoal); color: var(--ivory); }
 
 .corner-ornament { position: absolute; top: 0.5in; right: 0.5in; width: 46px; height: 46px; opacity: 0.18; pointer-events: none; z-index: 0; }
@@ -72,40 +84,66 @@
   letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,238,223,0.55);
 }
 
-/* ---- Back cover: quiet executive closing page, not blank ---- */
-.back-cover {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 0.6in;
-}
-.back-cover-crest { width: 64px; height: auto; margin-bottom: 26px; opacity: 0.92; }
-.back-cover-rule { width: 90px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 20px; }
-.back-cover-rule.small { width: 60px; margin: 26px auto; }
+/* ---- Back cover: a genuinely composed closing page, not a centred
+   block floating in mostly-empty space (a real, confirmed defect in the
+   prior version — the content group occupied roughly the middle third
+   of the page, leaving large unbalanced dark gaps above and below). A
+   double inset frame now uses the full page the way the front cover's
+   own corner ornament and crest treatment already does, and the content
+   block itself is set larger so it reads as deliberately composed
+   rather than under-filled. ---- */
+.back-cover { display: flex; align-items: center; justify-content: center; padding: 0.55in; position: relative; }
+.back-cover::before { content: ''; position: absolute; inset: 0.42in; border: 1px solid rgba(233,206,138,0.32); }
+.back-cover::after { content: ''; position: absolute; inset: 0.54in; border: 1px solid rgba(233,206,138,0.15); }
+.back-cover-inner { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 5in; }
+.back-cover-crest { width: 92px; height: auto; margin-bottom: 34px; opacity: 0.95; }
+.back-cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 28px; }
+.back-cover-rule.small { width: 70px; margin: 34px auto; }
 .back-cover-name {
-  font-family: 'Cinzel', 'Amiri', serif; font-size: 15pt; letter-spacing: 0.12em; text-transform: uppercase;
-  color: #fff; margin-bottom: 8px;
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 17pt; letter-spacing: 0.13em; text-transform: uppercase;
+  color: #fff; margin-bottom: 10px;
 }
 .back-cover-schools {
-  font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10pt;
-  color: rgba(247,238,223,0.68); max-width: 4.6in;
+  font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 11pt; line-height: 1.55;
+  color: rgba(247,238,223,0.7); max-width: 4.8in;
 }
-.back-cover-meta { font-family: 'Inter', sans-serif; font-size: 8.5pt; color: rgba(247,238,223,0.8); line-height: 2; }
+.back-cover-meta { font-family: 'Inter', sans-serif; font-size: 9pt; color: rgba(247,238,223,0.82); line-height: 2.3; }
 .back-cover-meta span {
-  display: inline-block; min-width: 1.15in; text-align: right; margin-right: 10px;
-  font-family: 'Cinzel', 'Amiri', serif; font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase;
+  display: inline-block; min-width: 1.2in; text-align: right; margin-right: 12px;
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.09em; text-transform: uppercase;
   color: var(--gold-bright);
 }
-.back-cover-note {
-  font-family: 'Inter', sans-serif; font-size: 8pt; line-height: 1.7; color: rgba(247,238,223,0.6);
-  max-width: 4.2in;
-}
+.back-cover-motto svg { width: 30px; height: 30px; opacity: 0.55; }
 
-/* ---- Front-matter meta panel (Draft/Status/Naming notes) ---- */
-.meta-panel {
-  background: var(--parchment); border-inline-start: 3px solid var(--gold); padding: 16px 20px; margin: 0 0 16px;
+/* ---- Half-title, title page, copyright/imprint page: the premium
+   front-matter sequence a flagship publication carries ahead of its
+   Table of Contents (see Drafting Note 19 in the companion Editorial
+   Record for why these were added and what they replace). ---- */
+.page.half-title, .page.title-page {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-.meta-panel .meta-label { font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin: 0 0 4px; }
-.meta-panel p { font-size: 9pt; line-height: 1.55; color: var(--ink); margin: 0 0 8px; text-align: left; }
-.meta-panel p:last-child { margin-bottom: 0; }
+.half-title-mark, .title-page-crest { margin-bottom: 26px; }
+.mark-ornament { width: 40px; height: 40px; }
+.half-title-text {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 15pt; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--navy);
+}
+.title-page-crest { width: 96px; height: auto; }
+.title-page-eyebrow {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 11pt; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 22px;
+}
+.title-page-h1 { font-family: 'Cinzel', 'Amiri', serif; font-size: 34pt; color: var(--navy); margin: 0 0 10px; letter-spacing: 0.01em; }
+.title-page-sub { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 15pt; color: var(--charcoal); margin-bottom: 32px; }
+.title-page-rule { width: 110px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 22px; }
+.title-page-edition { font-family: 'Cinzel', 'Amiri', serif; font-size: 11pt; font-weight: 700; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 8px; }
+.title-page-place { font-family: 'Inter', sans-serif; font-size: 9pt; letter-spacing: 0.05em; color: var(--charcoal); opacity: 0.72; }
+
+.page.copyright-page { display: flex; align-items: flex-end; }
+.copyright-block { width: 100%; padding-bottom: 0.35in; }
+.copyright-line { font-family: 'Inter', sans-serif; font-size: 8.5pt; line-height: 1.75; color: var(--charcoal); opacity: 0.85; margin: 0 0 8px; }
+.copyright-submission p { font-family: 'Inter', sans-serif; font-size: 8.5pt; line-height: 1.75; color: var(--charcoal); margin: 0; }
+.copyright-rule { width: 100%; height: 1px; background: rgba(43,43,43,0.1); margin: 16px 0; }
 
 /* ---- Proclamation / Preamble ceremonial page ---- */
 .page.ceremony { display: flex; flex-direction: column; justify-content: center; }
@@ -216,24 +254,13 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
 .schedule-entry { margin: 0 0 14px; }
 .schedule-entry .sched-label { font-family: 'Cinzel', 'Amiri', serif; font-size: 9.5pt; color: var(--bronze); margin: 0 0 4px; }
 
-/* ---- Drafting Notes — visually distinct "not part of the Constitution" register ---- */
-.drafting-notes-page { padding: 1in 0.95in 0.7in; background: var(--cream); page-break-before: always; }
-.drafting-notes-banner {
-  display: inline-block; font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.12em;
-  text-transform: uppercase; color: #fff; background: var(--crimson); padding: 5px 14px; margin-bottom: 14px;
-}
-.drafting-notes-page h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 17pt; color: var(--navy); margin: 0 0 6px; }
-.drafting-notes-page h2::after { content: ''; display: block; width: 54px; height: 2px; margin: 10px 0 18px; background: var(--bronze); }
-.drafting-note { font-size: 9pt; line-height: 1.6; color: var(--ink); margin: 0 0 12px; text-align: justify; }
-.drafting-note-divider { font-size: 9pt; font-style: italic; color: var(--bronze); margin: 18px 0 16px; padding: 10px 0; border-top: 1px dashed rgba(124,84,48,0.4); border-bottom: 1px dashed rgba(124,84,48,0.4); }
-
 @media screen and (max-width: 1000px) {
-  .page, .chapter, .toc-page, .schedules-page, .drafting-notes-page { width: 100%; min-height: auto; padding: 8vw; }
+  .page, .chapter, .toc-page, .schedules-page { width: 100%; min-height: auto; padding: 8vw; }
 }
 
 @media print {
   .const-toolbar { display: none; }
-  .page, .chapter, .toc-page, .schedules-page, .drafting-notes-page { box-shadow: none; margin: 0; width: auto; }
+  .page, .chapter, .toc-page, .schedules-page { box-shadow: none; margin: 0; width: auto; }
   .page { height: 10.2in; min-height: 10.2in; max-height: 10.2in; }
   /* The dark body background below is a nice-to-have "matte surround"
      for on-screen preview only. Every .page/.chapter/etc paints its own

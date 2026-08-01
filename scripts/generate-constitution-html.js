@@ -25,6 +25,10 @@ if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Flagship-v7.0.html');
 
 const KHATAM_SVG = '<svg class="corner-ornament" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>';
+// Same eight-point geometric mark as KHATAM_SVG, unpositioned (no
+// .corner-ornament class) so it can be centred and sized per use on the
+// half-title and back cover, rather than pinned to a page corner.
+const KHATAM_MARK_SVG = (stroke) => `<svg class="mark-ornament" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="${stroke}" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="${stroke}" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>`;
 
 function esc(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -101,8 +105,7 @@ function main() {
   let curPart = null;
   let curChapter = null;
   const schedules = [];
-  const draftingNotes = [];
-  let mode = 'chapters'; // 'chapters' | 'schedules' | 'notes'
+  let mode = 'chapters'; // 'chapters' | 'schedules'
   let proclamation = [];
   let preamble = [];
   let execution = [];
@@ -114,7 +117,6 @@ function main() {
       if (b.text === 'PREAMBLE') { curCeremony = 'preamble'; continue; }
       if (b.text === 'CERTIFICATE OF ADOPTION AND EXECUTION') { curCeremony = 'execution'; continue; }
       if (b.text === 'SCHEDULES') { mode = 'schedules'; curCeremony = null; continue; }
-      if (b.text.startsWith('DRAFTING NOTES')) { mode = 'notes'; curCeremony = null; continue; }
       curCeremony = null;
       curChapter = { title: b.text, id: 'ch-' + slugify(b.text), blocks: [] };
       if (curPart) curPart.chapters.push(curChapter);
@@ -129,7 +131,6 @@ function main() {
     if (curCeremony === 'preamble') { preamble.push(b); continue; }
     if (curCeremony === 'execution') { execution.push(b); continue; }
     if (mode === 'schedules') { schedules.push(b); continue; }
-    if (mode === 'notes') { draftingNotes.push(b); continue; }
     if (curChapter) curChapter.blocks.push(b);
   }
 
@@ -253,30 +254,6 @@ function main() {
     return html;
   }
 
-  function renderDraftingNotes() {
-    let html = `<div class="drafting-notes-page" id="drafting-notes">
-      <div class="drafting-notes-banner">Not part of the Charter</div>
-      <h2>Drafting Notes</h2>`;
-    for (const b of draftingNotes) {
-      if (b.type === 'p') {
-        if (/^Notes? \d/.test(b.text) || b.text.includes('remain accurate for the Articles')) {
-          html += `<p class="drafting-note-divider">${inline(b.text)}</p>`;
-        } else {
-          html += `<p class="drafting-note">${inline(b.text)}</p>`;
-        }
-      }
-      if (b.type === 'clause') html += `<p class="drafting-note" style="margin-left:0.3in;">${inline(b.text)}</p>`;
-    }
-    html += '</div>';
-    return html;
-  }
-
-  const metaHtml = metaParagraphs.filter(Boolean).map((t) => {
-    const m = /^\*\*([^*]+)\.\*\*\s*(.*)$/.exec(t);
-    if (m) return `<div class="meta-panel"><div class="meta-label">${inline(m[1])}</div><p>${inline(m[2])}</p></div>`;
-    return `<div class="meta-panel"><p>${inline(t)}</p></div>`;
-  }).join('\n');
-
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -313,13 +290,34 @@ function main() {
   </div>
 </div>
 
-${tocHtml}
-
-<div class="chapter" id="about-this-edition" style="page-break-before:always;">
-  <div class="chapter-eyebrow">Front Matter</div>
-  <h2>About This Edition</h2>
-  ${metaHtml}
+<div class="page half-title" id="half-title">
+  <div class="half-title-mark">${KHATAM_MARK_SVG('var(--gold)')}</div>
+  <div class="half-title-text">The Governance Charter</div>
 </div>
+
+<div class="page title-page" id="title-page">
+  <img class="title-page-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
+  <div class="title-page-eyebrow">Sultan Hanafi Royal Schools</div>
+  <h1 class="title-page-h1">The Governance Charter</h1>
+  <div class="title-page-sub">of Sultan Hanafi Royal Schools</div>
+  <div class="title-page-rule"></div>
+  <div class="title-page-edition">Seventh Edition</div>
+  <div class="title-page-place">Ikorodu &middot; Lagos State &middot; Nigeria</div>
+</div>
+
+<div class="page copyright-page" id="copyright">
+  <div class="copyright-block">
+    <p class="copyright-line">&copy; Sultan Hanafi Royal Schools. All rights reserved within the Institution.</p>
+    <p class="copyright-line">Seventh Edition. Previously issued, through six prior editions, as the Constitution of Sultan Hanafi Royal Schools.</p>
+    <div class="copyright-rule"></div>
+    <div class="copyright-submission">${metaParagraphs.map((t) => `<p>${inline(t)}</p>`).join('')}</div>
+    <div class="copyright-rule"></div>
+    <p class="copyright-line">Sultan Hanafi Royal Schools &middot; Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</p>
+    <p class="copyright-line">Founded December 2017 &middot; Ikorodu, Lagos State, Nigeria</p>
+  </div>
+</div>
+
+${tocHtml}
 
 ${renderProclamationPreamble()}
 
@@ -329,22 +327,22 @@ ${renderExecution()}
 
 ${renderSchedules()}
 
-${renderDraftingNotes()}
-
 <div class="page dark back-cover" id="back-cover">
   ${KHATAM_SVG}
-  <img class="back-cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
-  <div class="back-cover-rule"></div>
-  <div class="back-cover-name">Sultan Hanafi Royal Schools</div>
-  <div class="back-cover-schools">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
-  <div class="back-cover-rule small"></div>
-  <div class="back-cover-meta">
-    <div><span>Instrument</span>The Governance Charter of Sultan Hanafi Royal Schools</div>
-    <div><span>Edition</span>Flagship Edition, Draft v7.0</div>
-    <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
+  <div class="back-cover-inner">
+    <img class="back-cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
+    <div class="back-cover-rule"></div>
+    <div class="back-cover-name">Sultan Hanafi Royal Schools</div>
+    <div class="back-cover-schools">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+    <div class="back-cover-rule small"></div>
+    <div class="back-cover-meta">
+      <div><span>Instrument</span>The Governance Charter of Sultan Hanafi Royal Schools</div>
+      <div><span>Edition</span>Seventh Edition</div>
+      <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
+    </div>
+    <div class="back-cover-rule small"></div>
+    <div class="back-cover-motto">${KHATAM_MARK_SVG('var(--gold-bright)')}</div>
   </div>
-  <div class="back-cover-rule small"></div>
-  <p class="back-cover-note">This edition is prepared for the consideration and adoption of the Board of Governors under Chapter XVIII of this Charter. It is not yet effective, and confers no rights or obligations until so adopted.</p>
 </div>
 
 </body>

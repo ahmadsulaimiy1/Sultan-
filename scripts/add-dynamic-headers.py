@@ -102,13 +102,13 @@ def classify_and_map(pages):
     cur_chapter = None
     cur_schedule = None
     past_chapters = False  # true once we've entered the Schedules section
-    in_drafting_notes = False  # true once we've entered the Drafting Notes section
-    # True from the cover through the Table of Contents and "About This
-    # Edition" front matter — pages whose plain-text listing of every Part
-    # and Chapter title (and the word "Schedules") would otherwise be
-    # misread as the real headings, corrupting the running state before
-    # the Charter's actual text even begins. Cleared on reaching the
-    # Constitutional Proclamation, the first real page.
+    # True from the cover through the Table of Contents and front-matter
+    # pages (half-title, title page, copyright page) — pages whose plain-
+    # text listing of every Part and Chapter title (and the word
+    # "Schedules") would otherwise be misread as the real headings,
+    # corrupting the running state before the Charter's actual text even
+    # begins. Cleared on reaching the Constitutional Proclamation, the
+    # first real page.
     in_preliminaries = True
 
     for i, text in enumerate(pages):
@@ -154,17 +154,13 @@ def classify_and_map(pages):
             dark_pages.add(i)
             continue
 
-        # Back cover: a ceremonial closing page that comes right after the
-        # Drafting Notes section, so without this check it would inherit
-        # in_drafting_notes (latched true for everything from that section
-        # onward, since nothing else follows it) and be mislabelled
-        # "Drafting Notes" instead of left clean like the front cover. Not
-        # scoped to the page head like the checks above: this exact
-        # sentence appears nowhere else in the document (verified by
-        # search), so whole-page containment carries no false-positive
-        # risk here, and the marker text itself sits well below the top
-        # of the back cover page.
-        if "CONFERSNORIGHTSOROBLIGATIONSUNTILSOADOPTED" in compacted:
+        # Back cover: always the last physical page of the rendered PDF.
+        # Earlier versions matched this page by a unique sentence in its
+        # own closing note, but that note has since been removed from the
+        # back cover's design (see the Editorial Record) — the page's
+        # position, not its wording, is now the only thing this needs to
+        # rely on, which is also more robust against future copy changes.
+        if i == n - 1:
             results[i] = None
             dark_pages.add(i)
             back_cover_page = i
@@ -225,20 +221,6 @@ def classify_and_map(pages):
         # the in_preliminaries gate above, so a case-insensitive match here
         # is safe.
         is_schedules_heading = any(l.strip().upper() == "SCHEDULES" for l in stripped_lines)
-        # The Drafting Notes section opener renders as a letter-spaced
-        # "NOT PART OF THE CHARTER" banner above a title-case "Drafting
-        # Notes" h2 — not the literal "DRAFTING NOTES" heading text from
-        # the source markdown. Matched once, on compacted text, and then
-        # latched for every following page (there is nothing after this
-        # section), since only the opener page repeats either string —
-        # continuation pages would otherwise fall through to the stale
-        # "Schedules" state from whatever page preceded them.
-        if "NOTPARTOFTHECHARTER" in compacted:
-            in_drafting_notes = True
-
-        if in_drafting_notes:
-            results[i] = {"left": "Drafting Notes", "right": "Not Part of the Charter"}
-            continue
 
         if is_schedules_heading:
             past_chapters = True
