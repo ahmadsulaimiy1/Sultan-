@@ -19,9 +19,45 @@
   var detailCloseBtn = document.querySelector('[data-gcc-detail-close]');
   var financeSignalEl = document.querySelector('[data-gcc-finance-signal]');
   var signalsEl = document.querySelector('[data-gcc-signals]');
+  var registerFormsEl = document.querySelector('[data-gcc-register-forms]');
   var timelineEl = document.querySelector('[data-gcc-timeline]');
   var detailResultEl = document.querySelector('[data-gcc-detail-result]');
   var stageTemplate = document.getElementById('gcc-timeline-stage-template');
+
+  var bulkBarEl = document.querySelector('[data-gcc-bulk-bar]');
+  var bulkCountEl = document.querySelector('[data-gcc-bulk-count]');
+  var bulkStageEl = document.querySelector('[data-gcc-bulk-stage]');
+  var bulkActionEl = document.querySelector('[data-gcc-bulk-action]');
+  var bulkNoteEl = document.querySelector('[data-gcc-bulk-note]');
+  var bulkApplyBtn = document.querySelector('[data-gcc-bulk-apply]');
+  var bulkStatusEl = document.querySelector('[data-gcc-bulk-status]');
+  var selectAllEl = document.querySelector('[data-gcc-select-all]');
+
+  // Mirrors functions/_lib/graduation-workflow.js's STAGE_DEFINITIONS —
+  // a small, stable list duplicated here only for the bulk-action stage
+  // picker's option labels; the server is the sole source of truth for
+  // which stage a bulk decision is actually validated against.
+  var BULK_STAGE_OPTIONS = [
+    { code: 'academic', label: 'Academic Department' },
+    { code: 'examinations', label: 'Examinations & Records' },
+    { code: 'finance', label: 'Finance & Accounts' },
+    { code: 'disciplinary', label: 'Disciplinary Clearance' },
+    { code: 'library', label: 'Library Clearance' },
+    { code: 'ict', label: 'ICT Clearance' },
+    { code: 'principal', label: 'Principal' },
+    { code: 'vp_academic', label: 'Vice Principal (Academic)' },
+    { code: 'vp_administration', label: 'Vice Principal (Administration)' },
+    { code: 'founder', label: 'Founder & CEO' },
+  ];
+  bulkStageEl.innerHTML = BULK_STAGE_OPTIONS.map(function(s){ return '<option value="' + s.code + '">' + s.label + '</option>'; }).join('');
+
+  var selectedRecordIds = {};
+
+  function updateBulkBar(){
+    var ids = Object.keys(selectedRecordIds).filter(function(id){ return selectedRecordIds[id]; });
+    bulkBarEl.style.display = ids.length ? 'flex' : 'none';
+    bulkCountEl.textContent = ids.length + ' selected';
+  }
 
   var rosterCache = [];
 
@@ -105,7 +141,7 @@
     var tr = document.createElement('tr');
     tr.className = 'gcc-empty-row';
     var td = document.createElement('td');
-    td.colSpan = 6; td.textContent = message;
+    td.colSpan = 7; td.textContent = message;
     tr.appendChild(td);
     return tr;
   }
@@ -126,6 +162,15 @@
     filtered.forEach(function(r){
       var tr = document.createElement('tr');
       tr.addEventListener('click', function(){ openDetail(r.id); });
+
+      var selectTd = document.createElement('td');
+      var checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = !!selectedRecordIds[r.id];
+      checkbox.addEventListener('click', function(evt){ evt.stopPropagation(); });
+      checkbox.addEventListener('change', function(){ selectedRecordIds[r.id] = checkbox.checked; updateBulkBar(); });
+      selectTd.appendChild(checkbox);
+      tr.appendChild(selectTd);
 
       var nameTd = document.createElement('td');
       nameTd.appendChild(el('div', 'gcc-roster-name', r.preferredCertificateName || r.fullName));
@@ -202,6 +247,7 @@
     }
 
     renderSignals(data);
+    renderRegisterForms(record.student_id, function(){ openDetail(record.id); });
     timelineEl.innerHTML = '';
     data.stages.forEach(function(stage){
       var node = stageTemplate.content.firstElementChild.cloneNode(true);
@@ -300,6 +346,96 @@
     blocks.forEach(function(b){ signalsEl.appendChild(b); });
   }
 
+  // Register data-entry (Conditional Approval directive items 3-5): a
+  // staff member reviewing this record's Disciplinary/Library/ICT
+  // signal can also feed the underlying register directly, from the
+  // same screen — 403s honestly if their office/role doesn't hold the
+  // corresponding authority (Behaviour, Library, or ICT office).
+  var REGISTER_FORMS = [
+    { key: 'disciplinary', label: 'Record a disciplinary case', endpoint: '/api/portal/staff/disciplinary-cases',
+      fields: [
+        { name: 'caseType', label: 'Case type', type: 'select', options: ['warning', 'suspension', 'commendation', 'behavioural_report', 'investigation', 'other'] },
+        { name: 'severity', label: 'Severity (optional)', type: 'select', options: ['', 'minor', 'moderate', 'serious'] },
+        { name: 'description', label: 'Description', type: 'text' },
+      ], action: 'report', bodyKey: 'studentId' },
+    { key: 'library', label: 'Record a library loan', endpoint: '/api/portal/staff/library-loans',
+      fields: [
+        { name: 'itemTitle', label: 'Item title', type: 'text' },
+        { name: 'itemRef', label: 'Item reference (optional)', type: 'text' },
+        { name: 'borrowedAt', label: 'Borrowed on', type: 'date' },
+        { name: 'dueAt', label: 'Due back (optional)', type: 'date' },
+      ], action: 'record_loan', bodyKey: 'studentId' },
+    { key: 'ict', label: 'Issue an ICT asset', endpoint: '/api/portal/staff/issued-devices',
+      fields: [
+        { name: 'assetType', label: 'Asset type', type: 'select', options: ['device', 'id_card', 'access_credential', 'other'] },
+        { name: 'description', label: 'Description', type: 'text' },
+        { name: 'serialOrRef', label: 'Serial/reference (optional)', type: 'text' },
+        { name: 'issuedAt', label: 'Issued on', type: 'date' },
+      ], action: 'issue', bodyKey: 'studentId' },
+  ];
+
+  function renderRegisterForms(studentId, onSaved){
+    registerFormsEl.innerHTML = '';
+    REGISTER_FORMS.forEach(function(cfg){
+      var wrap = el('div', 'gcc-register-form-wrap');
+      var toggleBtn = el('button', 'registrar-btn', '+ ' + cfg.label);
+      toggleBtn.type = 'button';
+      var formEl = document.createElement('div');
+      formEl.hidden = true;
+      formEl.style.padding = '10px 0 4px';
+      var inputs = {};
+      cfg.fields.forEach(function(f){
+        var fieldWrap = el('div', 'registrar-field');
+        var label = el('label', null, f.label);
+        formEl.appendChild(label);
+        var input;
+        if(f.type === 'select'){
+          input = document.createElement('select');
+          f.options.forEach(function(opt){
+            var optEl = document.createElement('option');
+            optEl.value = opt; optEl.textContent = opt ? opt.replace(/_/g, ' ') : '—';
+            input.appendChild(optEl);
+          });
+        } else {
+          input = document.createElement('input');
+          input.type = f.type;
+        }
+        formEl.appendChild(input);
+        inputs[f.name] = input;
+      });
+      var statusEl = el('span', 'registrar-field-note');
+      var saveBtn = el('button', 'registrar-btn is-primary', 'Save');
+      saveBtn.type = 'button';
+      saveBtn.addEventListener('click', async function(){
+        var payload = { action: cfg.action };
+        payload[cfg.bodyKey] = studentId;
+        cfg.fields.forEach(function(f){ payload[f.name] = inputs[f.name].value.trim() || null; });
+        statusEl.textContent = 'Saving…';
+        saveBtn.disabled = true;
+        try{
+          var res = await fetch(cfg.endpoint, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+          });
+          var data = await res.json();
+          if(!res.ok) throw new Error(data.error || 'Could not save that record.');
+          statusEl.textContent = 'Saved.';
+          cfg.fields.forEach(function(f){ inputs[f.name].value = ''; });
+          if(onSaved) onSaved();
+        }catch(err){
+          statusEl.textContent = (err && err.message) || 'Could not save that record.';
+        }finally{
+          saveBtn.disabled = false;
+        }
+      });
+      formEl.appendChild(saveBtn);
+      formEl.appendChild(statusEl);
+      toggleBtn.addEventListener('click', function(){ formEl.hidden = !formEl.hidden; });
+      wrap.appendChild(toggleBtn);
+      wrap.appendChild(formEl);
+      registerFormsEl.appendChild(wrap);
+    });
+  }
+
   function showDetailResult(ok, message){
     detailResultEl.hidden = false;
     detailResultEl.textContent = message;
@@ -337,6 +473,49 @@
   searchEl.addEventListener('input', renderRoster);
   statusFilterEl.addEventListener('change', renderRoster);
   refreshBtn.addEventListener('click', function(){ loadRoster(); loadQueue(); });
+
+  selectAllEl.addEventListener('change', function(){
+    rosterCache.forEach(function(r){ selectedRecordIds[r.id] = selectAllEl.checked; });
+    renderRoster();
+    updateBulkBar();
+  });
+
+  bulkApplyBtn.addEventListener('click', async function(){
+    var ids = Object.keys(selectedRecordIds).filter(function(id){ return selectedRecordIds[id]; }).map(Number);
+    if(!ids.length) return;
+    var bulkAction = bulkActionEl.value;
+    var note = bulkNoteEl.value.trim();
+    if(bulkAction === 'request_correction' && !note){
+      bulkStatusEl.textContent = 'A correction note is required.';
+      return;
+    }
+    bulkStatusEl.textContent = 'Applying to ' + ids.length + ' record(s)…';
+    bulkApplyBtn.disabled = true;
+    try{
+      var res = await fetch('/api/portal/staff/graduation-clearances', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'bulk_decide', graduationRecordIds: ids, stageCode: bulkStageEl.value,
+          bulkAction: bulkAction, note: note || null,
+        }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not complete the bulk action.');
+      var succeeded = (data.results || []).filter(function(r){ return r.ok; }).length;
+      var failed = (data.results || []).length - succeeded;
+      bulkStatusEl.textContent = succeeded + ' updated' + (failed ? ', ' + failed + ' failed (check individual records)' : '') + '.';
+      selectedRecordIds = {};
+      selectAllEl.checked = false;
+      bulkNoteEl.value = '';
+      updateBulkBar();
+      loadRoster();
+      loadQueue();
+    }catch(err){
+      bulkStatusEl.textContent = (err && err.message) || 'Could not complete the bulk action.';
+    }finally{
+      bulkApplyBtn.disabled = false;
+    }
+  });
   logoutBtn.addEventListener('click', async function(){
     try{ await fetch('/api/portal/staff/logout', { method: 'POST' }); }catch(err){}
     window.location.href = '/portal/staff/login/';

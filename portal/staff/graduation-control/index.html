@@ -22,6 +22,7 @@
   <div style="display:flex;align-items:center;gap:14px;">
     <span class="portal-pilot-badge">Graduation Control Centre</span>
     <a class="portal-topbar-link" href="/portal/staff/registrar/">Registrar's Office</a>
+    <a class="portal-topbar-link" href="/portal/staff/approval-matrix/">Approval Matrix</a>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
@@ -64,10 +65,21 @@
           </select>
           <button type="button" class="registrar-btn" data-gcc-refresh>Refresh</button>
         </div>
+        <div class="gcc-bulk-bar" data-gcc-bulk-bar style="display:none;flex-wrap:wrap;gap:10px;align-items:center;padding:0 20px 14px;">
+          <span data-gcc-bulk-count style="font-size:0.82rem;color:var(--ink-soft);"></span>
+          <select data-gcc-bulk-stage></select>
+          <select data-gcc-bulk-action>
+            <option value="clear">Clear</option>
+            <option value="request_correction">Request Correction</option>
+          </select>
+          <input type="text" data-gcc-bulk-note placeholder="Note (required for correction)" style="flex:1;min-width:180px;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 10px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
+          <button type="button" class="registrar-btn is-primary" data-gcc-bulk-apply>Apply to Selected</button>
+          <span class="registrar-field-note" data-gcc-bulk-status></span>
+        </div>
         <div class="gcc-roster-wrap" style="padding:0 20px 20px;overflow-x:auto;">
           <table class="gcc-roster-table" data-gcc-roster>
             <thead>
-              <tr><th>Graduate</th><th>Institution</th><th>Status</th><th>Current Stage</th><th>Progress</th><th></th></tr>
+              <tr><th><input type="checkbox" data-gcc-select-all></th><th>Graduate</th><th>Institution</th><th>Status</th><th>Current Stage</th><th>Progress</th><th></th></tr>
             </thead>
             <tbody></tbody>
           </table>
@@ -82,6 +94,7 @@
         </div>
         <div class="gcc-finance-signal" data-gcc-finance-signal hidden></div>
         <div class="gcc-signals" data-gcc-signals style="padding:0 20px;display:grid;gap:8px;"></div>
+        <div class="gcc-register-forms" data-gcc-register-forms style="padding:8px 20px 0;display:grid;gap:10px;"></div>
         <div class="gcc-timeline" data-gcc-timeline style="padding:6px 20px 20px;"></div>
         <div class="registrar-form-result" data-gcc-detail-result hidden style="margin:0 20px 20px;"></div>
       </div>

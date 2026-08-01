@@ -730,6 +730,9 @@ body.portal-body > *{position:relative;z-index:1;}
 .identity-field{background:var(--ivory);padding:16px 20px;border:1px solid var(--line);}
 .identity-field .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .identity-field .value{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--portal-heading);margin-top:4px;}
+.signature-preview{margin-top:12px;padding:16px 20px;border:1px dashed var(--gold);background:var(--ivory);min-height:60px;display:flex;align-items:center;font-size:0.82rem;color:var(--ink-soft);}
+.signature-preview img{max-height:70px;max-width:100%;}
+.signature-script{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:2rem;color:var(--portal-heading);}
 .identity-roles-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
 .identity-role-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);background:var(--ivory);}
 .identity-role-name{font-family:'Cinzel','Amiri',serif;font-size:1rem;font-weight:600;color:var(--portal-heading);}

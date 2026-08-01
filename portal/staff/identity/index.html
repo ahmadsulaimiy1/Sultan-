@@ -74,6 +74,34 @@
     </div>
 
     <div class="portal-child-card">
+      <div class="portal-child-head"><h2>My Digital Signature</h2></div>
+      <p class="sub" style="margin:0 20px 12px;">Used as your Institutional Sign-Off Record wherever a document you sign is generated. Choose a typed signature in a script font, or upload a small image of your handwritten signature.</p>
+      <div style="padding:0 20px 20px;" data-signature-panel>
+        <div class="registrar-field" style="max-width:420px;">
+          <label><input type="radio" name="sig-type" value="typed" data-sig-type-radio checked> Typed signature</label>
+          <label style="margin-inline-start:18px;"><input type="radio" name="sig-type" value="uploaded_image" data-sig-type-radio> Uploaded image</label>
+        </div>
+        <div class="registrar-field" data-sig-typed-fields>
+          <label for="sig-typed-name">Full name (rendered in script)</label>
+          <input type="text" id="sig-typed-name" data-sig-typed-name placeholder="e.g. Ahmad B. Ibrohim">
+        </div>
+        <div class="registrar-field" data-sig-image-fields hidden>
+          <label for="sig-image-input">Upload signature image (PNG/JPG, small file)</label>
+          <input type="file" id="sig-image-input" accept="image/*" data-sig-image-input>
+        </div>
+        <div class="registrar-field">
+          <label for="sig-title-line">Title line (optional — appears beneath your signature)</label>
+          <input type="text" id="sig-title-line" data-sig-title-line placeholder="e.g. Registrar, Sultan Hanafi Royal Schools">
+        </div>
+        <div class="signature-preview" data-sig-preview hidden></div>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:10px;">
+          <button type="button" class="registrar-btn is-primary" data-sig-save>Save Signature</button>
+          <span class="registrar-field-note" data-sig-status></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-child-card">
       <div class="portal-child-head"><h2>Roles &amp; Access</h2></div>
       <div data-identity-roles class="identity-roles-list"></div>
     </div>
