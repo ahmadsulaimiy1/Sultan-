@@ -26,6 +26,7 @@ import { computeDocumentHash } from '../../../../_lib/document-hash.js';
 import { resolveSignatories, SignatoryVacancyError } from '../../../../_lib/document-signatories.js';
 import { renderDocumentShell } from '../../../../_lib/document-template-shell.js';
 import { resolveSeal } from '../../../../_lib/document-seals.js';
+import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
 
 const DOCUMENT_TYPE_LABEL = {
   alumni_registration: { en: 'Alumni Registration Certificate', ar: 'شهادة تسجيل الخريجين' },
@@ -130,6 +131,23 @@ export async function onRequestGet({ request, env }) {
         institutionName: row.institution_name,
       }),
     });
+
+    if (url.searchParams.get('format') === 'pdf') {
+      try {
+        const pdf = await renderHtmlToPdf(env, html);
+        return new Response(pdf, {
+          headers: {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${row.reference_no}.pdf"`,
+          },
+        });
+      } catch (pdfErr) {
+        if (pdfErr instanceof PdfRenderUnavailableError) {
+          return json({ error: pdfErr.message, htmlViewUrl: `/api/portal/staff/registrar/graduation-documents?ref=${encodeURIComponent(ref)}` }, 503);
+        }
+        throw pdfErr;
+      }
+    }
 
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
   } catch (err) {

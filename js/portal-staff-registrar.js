@@ -312,10 +312,16 @@
       var viewLink = document.createElement('a');
       viewLink.href = data.viewUrl; viewLink.target = '_blank'; viewLink.rel = 'noopener';
       viewLink.className = 'text-link'; viewLink.textContent = 'View / print →';
+      var pdfLink = document.createElement('a');
+      pdfLink.href = data.viewUrl + '&format=pdf'; pdfLink.target = '_blank'; pdfLink.rel = 'noopener';
+      pdfLink.className = 'text-link'; pdfLink.style.marginLeft = '12px';
+      pdfLink.textContent = 'Download PDF →';
+      pdfLink.title = 'Requires Browser Rendering to be enabled on the Cloudflare account — falls back to an error if not yet configured.';
       graduationRecordsResultEl.innerHTML = '';
       graduationRecordsResultEl.className = 'registrar-form-result is-ok';
       graduationRecordsResultEl.appendChild(msg);
       graduationRecordsResultEl.appendChild(viewLink);
+      graduationRecordsResultEl.appendChild(pdfLink);
       graduationRecordsResultEl.hidden = false;
     }catch(err){
       showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');

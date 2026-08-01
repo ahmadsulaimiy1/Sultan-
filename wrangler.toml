@@ -2,3 +2,15 @@ name = "shroyalschools-web"
 pages_build_output_dir = "."
 compatibility_date = "2026-07-27"
 compatibility_flags = ["nodejs_compat"]
+
+# PDF Architecture Decision (Executive Directive — Stage 3 Execution
+# Order, point 3; see functions/_lib/pdf-render.js for full reasoning).
+# Requires a Cloudflare account with Browser Rendering enabled — this
+# binding declaration alone does not enable the feature on its own; it
+# names the binding the account's Browser Rendering service attaches
+# to once enabled via the Cloudflare dashboard. Until then, env.BROWSER
+# is simply absent at runtime and functions/_lib/pdf-render.js's
+# renderHtmlToPdf() throws a clear, caught PdfRenderUnavailableError —
+# it does not crash the calling endpoint.
+[browser]
+binding = "BROWSER"
