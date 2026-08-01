@@ -36,7 +36,7 @@ const SRC = path.join(ROOT, 'docs', 'shrs-constitution-2026-draft.md');
 const CREST = path.join(ROOT, 'assets', 'images', 'brand-mark.png');
 const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Draft-v6.0.docx');
+const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Draft-v7.0.docx');
 
 const GOLD = 'A9832E';
 const NAVY = '1C2340';
@@ -268,7 +268,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 200 },
-      children: [new TextRun({ text: 'THE CONSTITUTION', bold: true, size: 56, color: NAVY, font: 'Cambria' })],
+      children: [new TextRun({ text: 'THE GOVERNANCE CHARTER', bold: true, size: 56, color: NAVY, font: 'Cambria' })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -278,7 +278,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 100 },
-      children: [new TextRun({ text: 'Draft v6.0', bold: true, size: 26, color: GOLD })],
+      children: [new TextRun({ text: 'Draft v7.0', bold: true, size: 26, color: GOLD })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -311,39 +311,39 @@ function main() {
   // `level: 1` entries (Chapters) render indented beneath their Part, so
   // the Table of Contents itself shows the Part/Chapter hierarchy.
   const TOC_ENTRIES = [
-    ['CONSTITUTIONAL PROCLAMATION', 3, 0],
-    ['PREAMBLE', 4, 0],
-    ['PART I — FOUNDATIONS', 5, 0],
-    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 6, 1],
-    ['PART II — GOVERNING AND EXECUTIVE AUTHORITY', 8, 0],
-    ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 9, 1],
-    ['CHAPTER III — THE BOARD OF GOVERNORS', 12, 1],
-    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 15, 1],
-    ['PART III — ACADEMIC AND RELIGIOUS AUTHORITY', 16, 0],
-    ['CHAPTER V — ACADEMIC LEADERSHIP', 17, 1],
-    ['CHAPTER VI — THE ACADEMIC COUNCIL', 18, 1],
-    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 19, 1],
-    ['PART IV — INSTITUTIONAL STRUCTURE', 20, 0],
-    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 21, 1],
-    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 23, 1],
-    ['CHAPTER X — STUDENT LEADERSHIP', 24, 1],
-    ['PART V — COMMITTEES, ACCOUNTABILITY, AND SAFEGUARDING', 25, 0],
-    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 26, 1],
-    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 33, 1],
-    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 34, 1],
-    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 35, 1],
-    ['PART VI — FINANCE AND CONTINUITY', 36, 0],
-    ['CHAPTER XV — FINANCIAL GOVERNANCE', 37, 1],
-    ['CHAPTER XVI — SUCCESSION', 38, 1],
-    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 39, 1],
-    ['PART VII — CONSTITUTIONAL SUPREMACY AND GENERAL PROVISIONS', 40, 0],
-    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 41, 1],
-    ['CHAPTER XIX — CEREMONIAL ORDER', 42, 1],
-    ['CHAPTER XX — INSTRUMENTS MADE UNDER THIS CONSTITUTION', 43, 1],
-    ['CHAPTER XXI — INSTITUTIONAL IDENTITY, RECORDS, AND SAFEGUARDS OF OFFICE', 44, 1],
-    ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 45, 1],
-    ['SCHEDULES', 46, 0],
-    ['DRAFTING NOTES — NOT PART OF THE CONSTITUTION', 47, 0],
+    ['CONSTITUTIONAL PROCLAMATION', 4, 0],
+    ['PREAMBLE', 5, 0],
+    ['PART I — FOUNDATIONS', 6, 0],
+    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 7, 1],
+    ['PART II — GOVERNING AND EXECUTIVE AUTHORITY', 11, 0],
+    ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 12, 1],
+    ['CHAPTER III — THE BOARD OF GOVERNORS', 17, 1],
+    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 22, 1],
+    ['PART III — ACADEMIC AND RELIGIOUS AUTHORITY', 23, 0],
+    ['CHAPTER V — ACADEMIC LEADERSHIP', 24, 1],
+    ['CHAPTER VI — THE ACADEMIC COUNCIL', 25, 1],
+    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 26, 1],
+    ['PART IV — INSTITUTIONAL STRUCTURE', 29, 0],
+    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 30, 1],
+    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 32, 1],
+    ['CHAPTER X — STUDENT LEADERSHIP', 33, 1],
+    ['PART V — COMMITTEES, ACCOUNTABILITY, AND SAFEGUARDING', 34, 0],
+    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 35, 1],
+    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 42, 1],
+    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 43, 1],
+    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 44, 1],
+    ['PART VI — FINANCE AND CONTINUITY', 45, 0],
+    ['CHAPTER XV — FINANCIAL GOVERNANCE', 46, 1],
+    ['CHAPTER XVI — SUCCESSION', 47, 1],
+    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 48, 1],
+    ['PART VII — CONSTITUTIONAL SUPREMACY AND GENERAL PROVISIONS', 49, 0],
+    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 50, 1],
+    ['CHAPTER XIX — CEREMONIAL ORDER', 51, 1],
+    ['CHAPTER XX — INSTRUMENTS MADE UNDER THIS CHARTER', 52, 1],
+    ['CHAPTER XXI — INSTITUTIONAL IDENTITY, RECORDS, AND SAFEGUARDS OF OFFICE', 53, 1],
+    ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 54, 1],
+    ['SCHEDULES', 55, 0],
+    ['DRAFTING NOTES — NOT PART OF THE CHARTER', 57, 0],
   ];
   coverChildren.push(
     new Paragraph({
@@ -380,7 +380,7 @@ function main() {
     children: [new Paragraph({
       alignment: AlignmentType.CENTER,
       children: [new TextRun({
-        text: 'The Constitution of Sultan Hanafi Royal Schools — Draft v6.0 (Not Yet Effective)',
+        text: 'The Governance Charter of Sultan Hanafi Royal Schools — Draft v7.0 (Not Yet Effective)',
         size: 15, italics: true, color: '6B6B6B',
       })],
     })],
@@ -435,7 +435,7 @@ function main() {
 
   const doc = new Document({
     creator: 'Sultan Hanafi Royal Schools — Office of the Board of Governors (drafting support)',
-    title: 'The Constitution of Sultan Hanafi Royal Schools — Draft v6.0',
+    title: 'The Governance Charter of Sultan Hanafi Royal Schools — Draft v7.0',
     description: 'Draft constitutional instrument prepared for adoption by the Board of Governors. Not yet effective.',
     styles: {
       default: {

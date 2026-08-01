@@ -8,13 +8,13 @@ const path = require('path');
 const { chromium } = require('playwright-core');
 
 const ROOT = path.join(__dirname, '..');
-const SRC = path.join(ROOT, 'docs', 'exports', 'SHRS-Constitution-Flagship-v6.0.html');
-const OUT = path.join(ROOT, 'docs', 'exports', 'SHRS-Constitution-Flagship-v6.0.pdf');
+const SRC = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-v7.0.html');
+const OUT = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-v7.0.pdf');
 // Intermediate, header/footer-free render of the same document, used only to
 // supply page 1 (the cover) to the merge step below — see the note at the
 // bottom of this file for why the cover cannot simply have headerFooter
 // turned off on its own.
-const OUT_NOHEADER = path.join(ROOT, 'docs', 'exports', '.SHRS-Constitution-Flagship-v6.0.noheader.pdf');
+const OUT_NOHEADER = path.join(ROOT, 'docs', 'exports', '.SHRS-Governance-Charter-Flagship-v7.0.noheader.pdf');
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 // The reserved margin strip Chromium allocates for header/footer has no
@@ -28,7 +28,7 @@ const HEADER_TEMPLATE = `
     -webkit-print-color-adjust:exact; print-color-adjust:exact;
     font-family:'Cinzel',Georgia,serif; font-size:6.5px; letter-spacing:0.06em;
     text-transform:uppercase; color:#8a7550; text-align:center; padding-top:8px;">
-    The Constitution of Sultan Hanafi Royal Schools — Draft v6.0 (Not Yet Effective)
+    The Governance Charter of Sultan Hanafi Royal Schools — Draft v7.0 (Not Yet Effective)
   </div>`;
 const FOOTER_TEMPLATE = `
   <div style="width:100%; height:0.4in; margin:0; background:#ffffff; box-sizing:border-box;

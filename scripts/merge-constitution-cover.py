@@ -14,8 +14,8 @@ from pypdf import PdfReader, PdfWriter
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 EXPORTS = os.path.join(ROOT, "docs", "exports")
-FULL = os.path.join(EXPORTS, "SHRS-Constitution-Flagship-v6.0.pdf")
-NOHEADER = os.path.join(EXPORTS, ".SHRS-Constitution-Flagship-v6.0.noheader.pdf")
+FULL = os.path.join(EXPORTS, "SHRS-Governance-Charter-Flagship-v7.0.pdf")
+NOHEADER = os.path.join(EXPORTS, ".SHRS-Governance-Charter-Flagship-v7.0.noheader.pdf")
 
 full = PdfReader(FULL)
 noheader = PdfReader(NOHEADER)

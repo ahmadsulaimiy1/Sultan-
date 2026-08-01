@@ -146,7 +146,20 @@
 .const-table-title { font-family: 'Cinzel', 'Amiri', serif; font-size: 10.5pt; color: var(--navy); margin: 18px 0 8px; }
 table.const-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
 table.const-table.wide { font-size: 6.6pt; }
-table.const-table thead { display: table-header-group; }
+table.const-table thead {
+  display: table-header-group;
+  /* Chromium's print pagination auto-repeats a table-header-group on
+     every page fragment, but does not by itself stop it from breaking
+     alone at the very bottom of a page with zero body rows following —
+     a real, confirmed defect (see docs/exports for the before/after: the
+     Board Standing Committees header rendered orphaned at the foot of
+     one page, its data starting fresh on the next). break-after: avoid
+     tells the engine the header and at least its first row must move
+     together, so the header never appears without its own data. */
+  break-after: avoid;
+  break-inside: avoid;
+}
+table.const-table tbody tr { break-inside: avoid; }
 table.const-table th {
   background: var(--navy); color: #fff; font-family: 'Cinzel', 'Amiri', serif; font-weight: 600;
   font-size: 7pt; letter-spacing: 0.02em; text-transform: uppercase; text-align: left; padding: 6px 7px;

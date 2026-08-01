@@ -22,7 +22,7 @@ const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'docs', 'shrs-constitution-2026-draft.md');
 const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-const OUT = path.join(OUT_DIR, 'SHRS-Constitution-Flagship-v6.0.html');
+const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Flagship-v7.0.html');
 
 const KHATAM_SVG = '<svg class="corner-ornament" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>';
 
@@ -178,7 +178,7 @@ function main() {
         </div>`).join('\n')}
       <div class="toc-part">
         <div class="toc-part-title"><a href="#schedules">Schedules</a></div>
-        <div class="toc-part-title" style="margin-top:10px;"><a href="#drafting-notes">Drafting Notes — Not Part of the Constitution</a></div>
+        <div class="toc-part-title" style="margin-top:10px;"><a href="#drafting-notes">Drafting Notes — Not Part of the Charter</a></div>
       </div>
       <p class="toc-hint">This is a born-digital edition: every entry above is a live link. Page numbers are shown in the running footer rather than here, since a linked table of contents stays accurate through re-pagination without manual re-verification.</p>
     </div>`;
@@ -226,7 +226,7 @@ function main() {
 
   function renderDraftingNotes() {
     let html = `<div class="drafting-notes-page" id="drafting-notes">
-      <div class="drafting-notes-banner">Not part of the Constitution</div>
+      <div class="drafting-notes-banner">Not part of the Charter</div>
       <h2>Drafting Notes</h2>`;
     for (const b of draftingNotes) {
       if (b.type === 'p') {
@@ -254,7 +254,7 @@ function main() {
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>The Constitution of Sultan Hanafi Royal Schools — Flagship Edition, Draft v6.0</title>
+<title>The Governance Charter of Sultan Hanafi Royal Schools — Flagship Edition, Draft v7.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/brand.css">
 <link rel="stylesheet" href="../../css/constitution-print.css">
@@ -262,7 +262,7 @@ function main() {
 <body class="const-body">
 
 <div class="const-toolbar">
-  <span>The Constitution of Sultan Hanafi Royal Schools — Flagship Edition, Draft v6.0</span>
+  <span>The Governance Charter of Sultan Hanafi Royal Schools — Flagship Edition, Draft v7.0</span>
   <button onclick="window.print()">Print / Export to PDF</button>
 </div>
 
@@ -271,10 +271,10 @@ function main() {
   <img class="cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
   <div class="cover-eyebrow">Sultan Hanafi Royal Schools</div>
   <div class="cover-sub-line">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
-  <h1 class="cover-title">The Constitution</h1>
+  <h1 class="cover-title">The Governance Charter</h1>
   <div class="cover-title-sub">of Sultan Hanafi Royal Schools</div>
   <div class="cover-rule"></div>
-  <div class="cover-version">Draft v6.0</div>
+  <div class="cover-version">Draft v7.0</div>
   <div class="cover-status">Status: Draft — Not Yet Effective — Prepared for Adoption by the Board of Governors</div>
   <p class="cover-note">No provision of this draft is currently in force. It does not alter the live administrative system, any published page, or Policy GV-01 in its present form. Upon adoption by the Board of Governors under Chapter XVIII, this draft becomes the substantive content of GV-01 v3.0.</p>
   <div class="cover-footer-line">
