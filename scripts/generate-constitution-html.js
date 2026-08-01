@@ -316,7 +316,121 @@ function main() {
   </div>
 </div>
 
+<div class="page imprint-page" id="imprint">
+  <div class="fm-eyebrow">Publisher's Imprint</div>
+  <h2 class="fm-h2">Imprint</h2>
+  <div class="fm-rule"></div>
+  <table class="imprint-table">
+    <tbody>
+      <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
+      <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Chief Executive Officer</td></tr>
+      <tr><th>Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
+      <tr><th>Website</th><td>shroyalschools.ng</td></tr>
+      <tr><th>Email</th><td>info@shroyalschools.ng</td></tr>
+      <tr><th>Telephone</th><td>+234 (0) 807 374 7650 &middot; +234 (0) 807 058 6860</td></tr>
+      <tr><th>Copyright</th><td>&copy; Sultan Hanafi Royal Schools. All rights reserved within the Institution.</td></tr>
+      <tr><th>Classification</th><td>Internal Governance Instrument &mdash; Board Submission Draft. Not yet adopted; carries no legal effect until the Board resolves under Chapter XVIII (see Certification, above).</td></tr>
+      <tr><th>Archival Statement</th><td>Prepared for permanent retention in the Institution's governance archive. On adoption, the executed edition supersedes this draft as the archival copy of record.</td></tr>
+      <tr><th>Printing Specification</th><td>Set for US Letter (8.5in &times; 11in) digital archival distribution and print-on-demand reproduction; not yet issued in a bound print run.</td></tr>
+      <tr><th>Rights Statement</th><td>Prepared for the internal use of the Board of Governors, the Founder &amp; CEO, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page document-control-page" id="document-control">
+  <div class="fm-eyebrow">Document Control</div>
+  <h2 class="fm-h2">Publication Data</h2>
+  <div class="fm-rule"></div>
+  <table class="imprint-table">
+    <tbody>
+      <tr><th>Governance Charter ID</th><td>SHRS-GC-2026-001</td></tr>
+      <tr><th>Publication ID</th><td>SHRS-PUB-GC-2026-001</td></tr>
+      <tr><th>Book ID</th><td>SHRS-BK-GC-2026-001</td></tr>
+      <tr><th>Document Number</th><td>GV-01 (Policy Coding Standard)</td></tr>
+      <tr><th>Institutional Reference No.</th><td>SHRS/GC/VII/2026</td></tr>
+      <tr><th>Edition</th><td>Seventh Edition</td></tr>
+      <tr><th>Publication Year</th><td>2026</td></tr>
+      <tr><th>Last Editorial Amendment</th><td>1 August 2026</td></tr>
+      <tr><th>Scheduled Board Adoption</th><td>18 October 2026 (anticipated; not yet occurred &mdash; see Classification, Imprint page)</td></tr>
+      <tr><th>ISBN</th><td>Reserved &mdash; to be assigned on formal print publication, should the Board direct one</td></tr>
+      <tr><th>Citation Format</th><td>Sultan Hanafi Royal Schools, <em>The Governance Charter of Sultan Hanafi Royal Schools</em> (Edition VII, 2026) art [X]</td></tr>
+    </tbody>
+  </table>
+  <div class="fm-subhead">Revision History</div>
+  <table class="const-table revision-table">
+    <thead><tr><th>Edition</th><th>Title</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>I&ndash;VI</td><td>Constitution of Sultan Hanafi Royal Schools</td><td>Superseded predecessor drafts</td></tr>
+      <tr><td>VII</td><td>The Governance Charter of Sultan Hanafi Royal Schools</td><td>Current &mdash; Board submission draft</td></tr>
+    </tbody>
+  </table>
+  <p class="fm-footnote">A full account of the reasoning behind each edition's changes is kept in the companion Editorial Record (not part of this instrument), rather than restated here as a bare list of dates.</p>
+</div>
+
+<div class="page institutional-info-page" id="institutional-info">
+  <div class="fm-eyebrow">Institutional Information</div>
+  <h2 class="fm-h2">Official Contact &amp; Verification</h2>
+  <div class="fm-rule"></div>
+  <table class="imprint-table">
+    <tbody>
+      <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
+      <tr><th>Official Website</th><td>https://shroyalschools.ng</td></tr>
+      <tr><th>Official Email</th><td>info@shroyalschools.ng</td></tr>
+      <tr><th>Official Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
+      <tr><th>Official Telephone</th><td>+234 (0) 807 374 7650 &middot; +234 (0) 807 058 6860</td></tr>
+    </tbody>
+  </table>
+  <div class="qr-row">
+    <div class="qr-card">
+      <img src="../../assets/images/qr/qr-website.png" alt="QR code linking to the official Sultan Hanafi Royal Schools website" />
+      <div class="qr-label">Official Website</div>
+    </div>
+    <div class="qr-card">
+      <img src="../../assets/images/qr/qr-email.png" alt="QR code opening a message to the official Sultan Hanafi Royal Schools email address" />
+      <div class="qr-label">Official Email</div>
+    </div>
+    <div class="qr-card">
+      <img src="../../assets/images/qr/qr-contact.png" alt="QR code linking to the Sultan Hanafi Royal Schools contact page" />
+      <div class="qr-label">Contact Page</div>
+    </div>
+    <div class="qr-card qr-reserved">
+      <div class="qr-reserved-mark">${KHATAM_MARK_SVG('var(--gold)')}</div>
+      <div class="qr-label">Governance Portal<br /><span>Reserved for future issue</span></div>
+    </div>
+  </div>
+  <p class="fm-footnote">A public, authenticated Governance Portal is not yet live; the fourth code above is reserved for a future edition once that capability launches, rather than printed against a page that does not yet exist. The three codes above resolve to the Institution's current official website, email, and contact page.</p>
+</div>
+
 ${tocHtml}
+
+<div class="page reference-page" id="reference">
+  <div class="fm-eyebrow">Reader's Reference</div>
+  <h2 class="fm-h2">Sources of Authority &amp; Abbreviations</h2>
+  <div class="fm-rule"></div>
+  <div class="fm-subhead">Sources of Authority (Article 9B)</div>
+  <ol class="authority-list">
+    <li>The Holy Qur'an</li>
+    <li>The authentic Sunnah of the Prophet Muhammad (peace be upon him)</li>
+    <li>This Charter</li>
+    <li>A future Constitution of Sultan Hanafi Royal Schools, once adopted (Article 178)</li>
+    <li>The applicable laws of the Federal Republic of Nigeria</li>
+    <li>Applicable international legal obligations, to the extent consistent with the above</li>
+  </ol>
+  <div class="fm-subhead">Abbreviations</div>
+  <table class="const-table abbrev-table">
+    <thead><tr><th>Abbreviation</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>SHRS</td><td>Sultan Hanafi Royal Schools ("the Institution")</td></tr>
+      <tr><td>CEO</td><td>Chief Executive Officer</td></tr>
+      <tr><td>EMT</td><td>Executive Management Team</td></tr>
+      <tr><td>ICT</td><td>Information &amp; Communications Technology</td></tr>
+      <tr><td>HR</td><td>Human Resources</td></tr>
+      <tr><td>Art.</td><td>Article, of this Charter</td></tr>
+      <tr><td>Ch.</td><td>Chapter, of this Charter</td></tr>
+    </tbody>
+  </table>
+  <p class="fm-footnote">This page is a reader's locator, not a source of constitutional authority in its own right: it restates nothing that Article 4 (Definitions) and Article 9B (Sources of Authority) do not already state as this Charter's own operative text, and confers no meaning beyond what those Articles establish.</p>
+</div>
 
 ${renderProclamationPreamble()}
 
@@ -339,6 +453,9 @@ ${renderSchedules()}
       <div><span>Edition</span>Seventh Edition</div>
       <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
     </div>
+    <div class="back-cover-rule small"></div>
+    <img class="back-cover-qr" src="../../assets/images/qr/qr-website.png" alt="QR code linking to the official Sultan Hanafi Royal Schools website" />
+    <div class="back-cover-qr-label">shroyalschools.ng</div>
     <div class="back-cover-rule small"></div>
     <div class="back-cover-motto">${KHATAM_MARK_SVG('var(--gold-bright)')}</div>
   </div>

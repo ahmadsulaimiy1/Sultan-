@@ -139,6 +139,11 @@
   color: var(--gold-bright);
 }
 .back-cover-motto svg { width: 30px; height: 30px; opacity: 0.55; }
+.back-cover-qr { width: 0.78in; height: 0.78in; border: 1px solid rgba(233,206,138,0.4); padding: 4px; background: var(--parchment); }
+.back-cover-qr-label {
+  font-family: 'Inter', sans-serif; font-size: 7.5pt; letter-spacing: 0.06em; text-transform: uppercase;
+  color: rgba(247,238,223,0.62); margin-top: 8px;
+}
 
 /* ---- Half-title, title page, copyright/imprint page: the premium
    front-matter sequence a flagship publication carries ahead of its
@@ -169,6 +174,55 @@
 .copyright-line { font-family: 'Inter', sans-serif; font-size: 8.5pt; line-height: 1.75; color: var(--charcoal); opacity: 0.85; margin: 0 0 8px; }
 .copyright-submission p { font-family: 'Inter', sans-serif; font-size: 8.5pt; line-height: 1.75; color: var(--charcoal); margin: 0; }
 .copyright-rule { width: 100%; height: 1px; background: rgba(43,43,43,0.1); margin: 16px 0; }
+
+/* ---- Imprint / Document Control / Institutional Information / Reader's
+   Reference: a family of light front-matter pages added to bring the
+   publication apparatus (publisher's imprint, document control metadata,
+   official contact + QR verification, sources-of-authority locator) up
+   to the standard of a professionally published constitutional
+   instrument, per the Executive Publication Enhancement Directive. Share
+   one visual system so they read as one deliberate sequence rather than
+   four unrelated inserts. ---- */
+.page.imprint-page, .page.document-control-page, .page.institutional-info-page, .page.reference-page {
+  padding: 1in 0.95in 0.7in; background: var(--ivory); display: block;
+}
+.fm-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 8.5pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin: 0 0 6px; }
+.fm-h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 21pt; color: var(--navy); margin: 0 0 6px; }
+.fm-rule { width: 60px; height: 2px; margin: 12px 0 22px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%); }
+.fm-subhead {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 11pt; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--bronze); text-transform: uppercase; margin: 26px 0 10px;
+}
+.fm-footnote { font-family: 'Inter', sans-serif; font-size: 8pt; font-style: italic; color: var(--ink-soft); margin-top: 20px; line-height: 1.6; }
+
+.imprint-table { width: 100%; border-collapse: collapse; }
+.imprint-table th {
+  font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--bronze); text-align: left; vertical-align: top; padding: 9px 14px 9px 0; width: 2.1in;
+  border-bottom: 1px solid rgba(198,161,91,0.25); white-space: nowrap;
+}
+.imprint-table td {
+  font-family: 'Inter', sans-serif; font-size: 9pt; line-height: 1.55; color: var(--ink);
+  text-align: left; padding: 9px 0; border-bottom: 1px solid rgba(198,161,91,0.25);
+}
+
+.revision-table, .abbrev-table { margin-top: 4px; }
+
+.authority-list {
+  font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 12pt; line-height: 1.9; color: var(--ink);
+  margin: 0 0 10px; padding-left: 0.3in;
+}
+.authority-list li { margin-bottom: 3px; }
+
+/* ---- QR verification row (Institutional Information page) ---- */
+.qr-row { display: flex; gap: 0.28in; margin-top: 22px; justify-content: space-between; }
+.qr-card { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.qr-card img { width: 1.05in; height: 1.05in; border: 1px solid rgba(198,161,91,0.35); padding: 6px; background: var(--parchment); }
+.qr-label { font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy); margin-top: 8px; line-height: 1.5; }
+.qr-label span { display: block; font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; text-transform: none; letter-spacing: 0; font-size: 8pt; color: var(--ink-soft); margin-top: 2px; }
+.qr-reserved { justify-content: flex-start; }
+.qr-reserved-mark { width: 1.05in; height: 1.05in; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(198,161,91,0.5); }
+.qr-reserved-mark svg { width: 34px; height: 34px; opacity: 0.5; }
 
 /* ---- Proclamation / Preamble ceremonial page ---- */
 .page.ceremony { display: flex; flex-direction: column; justify-content: center; }
