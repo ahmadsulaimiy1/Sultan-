@@ -341,6 +341,33 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
   .const-toolbar { display: none; }
   .page, .chapter, .toc-page, .schedules-page { box-shadow: none; margin: 0; width: auto; }
   .page { height: 9.83in; min-height: 9.83in; max-height: 9.83in; }
+  /* .toc-page and .schedules-page are deliberately auto-height (see their
+     own rules above: "flowing light page" / re-paginates without manual
+     re-verification), unlike .page's fixed 9.83in. In print, whichever
+     fragment of either box ends short of a full physical page leaves a
+     visible two-tone split against .const-body's parchment beneath it —
+     a real, confirmed, but purely cosmetic defect, most visible on the
+     Table of Contents' final fragment.
+
+     Two fixes were tried and both made things worse, not better, so
+     neither is applied — recorded here so the next attempt doesn't
+     repeat them. (1) min-height: 9.83in did nothing — Chromium's print
+     pagination fragments a box that precedes a forced page-break-before
+     element at that box's own natural content height, ignoring
+     min-height entirely (confirmed with a debug !important background
+     colour that painted only the content area). (2) height: 9.83in
+     (matching .page's own working rule) does force the box's first
+     fragment to fill the page, but because .toc-page's real content
+     genuinely spans more than one physical page, a hard height without
+     page-break-inside handling made Chromium paint the overflow directly
+     on top of the following page's own content instead of continuing
+     pagination normally — a real, confirmed, and far worse defect
+     (garbled, literally overlapping text between the Table of Contents'
+     second page and the Sources of Authority & Abbreviations page),
+     caught by a page-by-page print audit before this edition was
+     finalised and reverted immediately. Left as a known cosmetic
+     limitation rather than risk reintroducing that overlap; see the
+     Governance Charter Freeze Declaration for the disposition. */
   /* The dark body background below is a nice-to-have "matte surround"
      for on-screen preview only. Every .page/.chapter/etc paints its own
      background over its own box, so this never shows through except in

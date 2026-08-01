@@ -325,8 +325,8 @@ function main() {
       <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
       <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Chief Executive Officer</td></tr>
       <tr><th>Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
-      <tr><th>Website</th><td>shroyalschools.ng</td></tr>
-      <tr><th>Email</th><td>info@shroyalschools.ng</td></tr>
+      <tr><th>Website</th><td>shroyalschools.com</td></tr>
+      <tr><th>Email</th><td>info@shroyalschools.com</td></tr>
       <tr><th>Telephone</th><td>+234 (0) 807 374 7650 &middot; +234 (0) 807 058 6860</td></tr>
       <tr><th>Copyright</th><td>&copy; Sultan Hanafi Royal Schools. All rights reserved within the Institution.</td></tr>
       <tr><th>Classification</th><td>Internal Governance Instrument &mdash; Board Submission Draft. Not yet adopted; carries no legal effect until the Board resolves under Chapter XVIII (see Certification, above).</td></tr>
@@ -374,8 +374,8 @@ function main() {
   <table class="imprint-table">
     <tbody>
       <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
-      <tr><th>Official Website</th><td>https://shroyalschools.ng</td></tr>
-      <tr><th>Official Email</th><td>info@shroyalschools.ng</td></tr>
+      <tr><th>Official Website</th><td>https://shroyalschools.com</td></tr>
+      <tr><th>Official Email</th><td>info@shroyalschools.com</td></tr>
       <tr><th>Official Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
       <tr><th>Official Telephone</th><td>+234 (0) 807 374 7650 &middot; +234 (0) 807 058 6860</td></tr>
     </tbody>
@@ -455,7 +455,7 @@ ${renderSchedules()}
     </div>
     <div class="back-cover-rule small"></div>
     <img class="back-cover-qr" src="../../assets/images/qr/qr-website.png" alt="QR code linking to the official Sultan Hanafi Royal Schools website" />
-    <div class="back-cover-qr-label">shroyalschools.ng</div>
+    <div class="back-cover-qr-label">shroyalschools.com</div>
     <div class="back-cover-rule small"></div>
     <div class="back-cover-motto">${KHATAM_MARK_SVG('var(--gold-bright)')}</div>
   </div>
