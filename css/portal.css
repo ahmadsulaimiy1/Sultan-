@@ -787,6 +787,23 @@ body.portal-body > *{position:relative;z-index:1;}
 .registrar-cert-issued-text{flex:1;min-width:200px;line-height:1.6;}
 .registrar-cert-qr{border-radius:var(--radius-sm);background:var(--portal-card);padding:4px;border:1px solid var(--line);flex-shrink:0;}
 
+/* --- Graduation Information Form (guardian-facing) --- */
+.graduation-child-card{margin-bottom:22px;}
+.graduation-status-row{padding:0 20px 10px;}
+.graduation-status-badge{display:inline-block;font-size:0.66rem;letter-spacing:0.05em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);color:var(--portal-heading);border-radius:3px;}
+.graduation-status-badge.is-locked{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.graduation-status-badge.is-verified{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.graduation-status-badge.is-under_review{color:var(--gold);border-color:var(--gold);}
+.graduation-correction-banner{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.86rem;line-height:1.5;}
+.graduation-readonly-note{margin:0 20px 20px;padding:12px 14px;background:rgba(198,161,91,0.1);border:1px solid var(--gold);color:var(--portal-heading);font-size:0.86rem;line-height:1.5;}
+.graduation-section-head{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--portal-heading);border-bottom:1px solid var(--line);padding-bottom:6px;margin:18px 0 4px;}
+.graduation-form .registrar-field-wide:first-child.graduation-section-head{margin-top:4px;}
+.graduation-confirm-row{margin-top:10px;}
+.graduation-confirm-label{display:flex;align-items:flex-start;gap:10px;font-size:0.85rem;line-height:1.5;color:var(--ink);font-weight:400;cursor:pointer;}
+.graduation-confirm-label input[type="checkbox"]{margin-top:3px;flex-shrink:0;width:16px;height:16px;}
+.graduation-form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.graduation-form-result{grid-column:1 / -1;}
+
 /* Transcript sections on the student/guardian dashboards — new for the
    Certificate & Transcript Verification System (SHRS Imperial Digital
    Campus Directive, Priority 1). Built on the same exec-card/design-

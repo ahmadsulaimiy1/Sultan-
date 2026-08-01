@@ -657,6 +657,78 @@ CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifec
 -- unauthenticated lookup by reference_no) is explicitly deferred, same
 -- as IQ-02 §7.5's still-deferred Ijazah verification endpoint — this
 -- table's reference_no is ready for that whenever it's built.
+-- Graduation Documentation System (docs/shrs-graduation-documentation-
+-- system-architecture.md), Stage 1 — the guardian/student-facing intake
+-- record that everything else in that programme (transcripts,
+-- certificates, the alumni record) depends on having real, validated
+-- data for, rather than hardcoded student information. One row per
+-- student per graduation session. status is the same shape as
+-- admissions_applications' own lifecycle, extended by one step for the
+-- Registry-lock the architecture doc's workflow describes:
+--   draft -> submitted -> under_review -> verified -> locked
+-- 'locked' is intentionally a hard stop reachable only through the
+-- staff_approvals joint-sign-off mechanism (Stage 2), not a plain UPDATE
+-- — once locked, a record is the frozen source for certificate/
+-- transcript generation and must not silently change underneath an
+-- already-issued document.
+CREATE TABLE IF NOT EXISTS graduation_records (
+  id                        SERIAL PRIMARY KEY,
+  student_id                INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  graduation_session        TEXT NOT NULL, -- e.g. '2025/2026'
+  submitted_by_guardian_id  INTEGER REFERENCES guardians(id),
+  submitted_by_student_id   INTEGER REFERENCES students(id),
+  -- Certificate/document identity
+  full_legal_name           TEXT,
+  preferred_certificate_name TEXT,
+  gender                    TEXT,
+  date_of_birth             DATE,
+  nationality               TEXT,
+  state_of_origin           TEXT,
+  lga_of_origin              TEXT,
+  residential_address       TEXT,
+  contact_email              TEXT,
+  contact_phone              TEXT,
+  -- Islamic information (where applicable — nullable for BASIC/JSS/SSS-
+  -- only graduates with no Islamiyyah enrolment)
+  arabic_name                TEXT,
+  quran_memorisation_level   TEXT,
+  ijazah_status               TEXT,
+  islamiyyah_level            TEXT,
+  arabic_proficiency          TEXT,
+  preferred_islamic_title      TEXT, -- e.g. Hafidh, Hafidhah, Ustadh — self-declared, confirmed at review, not assumed
+  -- Awards (free text lists; not a fixed taxonomy — matches this
+  -- project's own established "certificate_type is free text, no
+  -- published fixed taxonomy" precedent on the certificates table)
+  academic_awards             TEXT,
+  conduct_awards               TEXT,
+  quran_awards                 TEXT,
+  leadership_awards            TEXT,
+  sports_awards                 TEXT,
+  other_honours                  TEXT,
+  -- Alumni / future contact (feeds the alumni table once the record locks)
+  alumni_whatsapp                 TEXT,
+  alumni_linkedin                  TEXT,
+  alumni_occupation                 TEXT,
+  alumni_university_applying_to      TEXT,
+  alumni_career_interests             TEXT,
+  -- Confirmation
+  name_spelling_confirmed              BOOLEAN NOT NULL DEFAULT false,
+  -- Lifecycle
+  status                      TEXT NOT NULL DEFAULT 'draft' CHECK (status IN (
+                                 'draft', 'submitted', 'under_review', 'verified', 'locked'
+                               )),
+  correction_note              TEXT, -- set by Registry when sending a record back to the guardian for correction
+  reviewed_by_staff_id          INTEGER REFERENCES staff(id),
+  locked_by_staff_id             INTEGER REFERENCES staff(id),
+  locked_at                       TIMESTAMPTZ,
+  submitted_at                     TIMESTAMPTZ,
+  created_at                        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at                         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_id, graduation_session)
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_records_status ON graduation_records (status, graduation_session);
+CREATE INDEX IF NOT EXISTS idx_graduation_records_guardian ON graduation_records (submitted_by_guardian_id);
+
 -- approved_by_staff_id: real second-party sign-off, filled only when a
 -- staff_approvals row is actually decided by a distinct PRIN-holding
 -- staff member (functions/_lib/approvals.js) — replaces the old

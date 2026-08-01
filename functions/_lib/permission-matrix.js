@@ -37,6 +37,7 @@ export const SYSTEM_AREAS = {
   finance:                { name: 'Finance', ownerOffice: 'Finance Officer (proposed)', governingPolicy: 'FN-01; FN-03/04/05 (Missing)' },
   certificates:           { name: 'Certificates', ownerOffice: 'Registrar', governingPolicy: 'AC-05 (Missing)' },
   transcripts:            { name: 'Transcripts', ownerOffice: 'Registrar', governingPolicy: null },
+  graduation_records:     { name: 'Graduation Records', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md' },
   communications:         { name: 'Communications', ownerOffice: 'Varies by content and audience', governingPolicy: null },
   policies:               { name: 'Policies', ownerOffice: 'Policy-owning office per policy-code-index.md', governingPolicy: null },
   website_content:        { name: 'Website Content', ownerOffice: 'ICT / Communications function', governingPolicy: null },
@@ -128,6 +129,10 @@ export const MATRIX = {
   ],
   transcripts: [
     { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
+  ],
+  graduation_records: [
+    { role: 'REG', permissions: ['V', 'C', 'E'], scope: 'review, request corrections, mark under_review/verified' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: 'own institution; locking a record is Approve, jointly with REG, same pattern as certificates' },
   ],
   // E and Ar were added to REG/PRIN/EXE below during the Announcements
   // admin migration (identity-migration-plan.md, Migration Phase D item

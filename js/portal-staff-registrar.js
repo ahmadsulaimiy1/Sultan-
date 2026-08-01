@@ -26,6 +26,13 @@
   var pendingApprovalsListEl = document.querySelector('[data-pending-approvals-list]');
   var pendingApprovalsResultEl = document.querySelector('[data-pending-approvals-result]');
 
+  var graduationStatusFilterEl = document.querySelector('[data-graduation-status-filter]');
+  var graduationRefreshBtn = document.querySelector('[data-graduation-refresh]');
+  var graduationRecordsListEl = document.querySelector('[data-graduation-records-list]');
+  var graduationRecordsResultEl = document.querySelector('[data-graduation-records-result]');
+  var pendingGraduationLocksListEl = document.querySelector('[data-pending-graduation-locks-list]');
+  var pendingGraduationLocksResultEl = document.querySelector('[data-pending-graduation-locks-result]');
+
   var attendanceForm = document.querySelector('[data-attendance-form]');
   var attendanceResultEl = document.querySelector('[data-attendance-result]');
 
@@ -179,6 +186,188 @@
     };
     return labels[type] || type;
   }
+
+  var GRADUATION_STATUS_LABEL = {
+    draft: 'Draft (not yet submitted)', submitted: 'Submitted', under_review: 'Under review',
+    verified: 'Verified', locked: 'Locked',
+  };
+
+  async function loadGraduationRecords(){
+    graduationRecordsListEl.innerHTML = '';
+    graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Loading…'));
+    try{
+      var status = graduationStatusFilterEl.value;
+      var url = '/api/portal/staff/registrar/graduation' + (status ? '?status=' + encodeURIComponent(status) : '');
+      var res = await fetch(url);
+      var data = await res.json();
+      if(!res.ok){
+        graduationRecordsListEl.innerHTML = '';
+        graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot view graduation records.'));
+        return;
+      }
+      renderGraduationRecords(data.records || []);
+    }catch(err){
+      graduationRecordsListEl.innerHTML = '';
+      graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load graduation records.'));
+    }
+  }
+
+  function renderGraduationRecords(items){
+    graduationRecordsListEl.innerHTML = '';
+    if(!items.length){
+      graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'No graduation records match that filter.'));
+      return;
+    }
+    items.forEach(function(item){
+      var card = el('div', 'registrar-approval-card');
+      var head = el('div', 'registrar-approval-head');
+      head.appendChild(el('span', null, (item.preferredCertificateName || item.fullName) + ' — ' + (item.institutionName || 'Institution not set')));
+      head.appendChild(el('span', null, GRADUATION_STATUS_LABEL[item.status] || item.status));
+      card.appendChild(head);
+      var metaBits = [
+        'Admission No. ' + (item.admissionNo || '—'),
+        'Session ' + item.graduationSession,
+        item.submittedAt ? 'Submitted ' + formatDate(item.submittedAt) : 'Not yet submitted',
+      ];
+      if(!item.nameSpellingConfirmed) metaBits.push('Name spelling not yet confirmed by guardian');
+      if(item.correctionNote) metaBits.push('Open correction note: "' + item.correctionNote + '"');
+      card.appendChild(el('div', 'registrar-approval-meta', metaBits.join(' · ')));
+
+      var actions = el('div', 'registrar-approval-actions');
+      if(item.status === 'submitted' || item.status === 'under_review'){
+        var reviewBtn = el('button', 'registrar-approval-approve', 'Mark Under Review');
+        reviewBtn.type = 'button';
+        reviewBtn.addEventListener('click', function(){ graduationAction(item.id, 'mark_under_review'); });
+        actions.appendChild(reviewBtn);
+
+        var noteInput = document.createElement('input');
+        noteInput.type = 'text'; noteInput.placeholder = 'Correction needed (required to request)';
+        actions.appendChild(noteInput);
+        var correctionBtn = el('button', 'registrar-approval-reject', 'Request Correction');
+        correctionBtn.type = 'button';
+        correctionBtn.addEventListener('click', function(){
+          var note = noteInput.value.trim();
+          if(!note){ showResult(graduationRecordsResultEl, false, 'Enter what needs correcting first.'); return; }
+          graduationAction(item.id, 'request_correction', { correctionNote: note });
+        });
+        actions.appendChild(correctionBtn);
+
+        var verifyBtn = el('button', 'registrar-approval-approve', 'Mark Verified');
+        verifyBtn.type = 'button';
+        verifyBtn.addEventListener('click', function(){ graduationAction(item.id, 'mark_verified'); });
+        actions.appendChild(verifyBtn);
+      } else if(item.status === 'verified'){
+        var lockBtn = el('button', 'registrar-approval-approve', 'Submit for Locking');
+        lockBtn.type = 'button';
+        lockBtn.addEventListener('click', function(){ requestGraduationLock(item.id); });
+        actions.appendChild(lockBtn);
+      } else if(item.status === 'locked'){
+        actions.appendChild(el('span', 'registrar-approval-meta', 'Locked — no further edits possible from this office.'));
+      }
+      if(actions.childNodes.length) card.appendChild(actions);
+      graduationRecordsListEl.appendChild(card);
+    });
+  }
+
+  async function graduationAction(recordId, action, extra){
+    graduationRecordsResultEl.hidden = true;
+    try{
+      var payload = Object.assign({ action: action, recordId: recordId }, extra || {});
+      var res = await fetch('/api/portal/staff/registrar/graduation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not complete that action.');
+      showResult(graduationRecordsResultEl, true, 'Updated — status is now "' + (GRADUATION_STATUS_LABEL[data.status] || data.status) + '".');
+      loadGraduationRecords();
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not complete that action.');
+    }
+  }
+
+  async function requestGraduationLock(recordId){
+    graduationRecordsResultEl.hidden = true;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request_lock', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not submit that record for locking.');
+      showResult(graduationRecordsResultEl, true, data.message || 'Submitted — awaiting Principal approval.');
+      loadGraduationRecords();
+      loadPendingGraduationLocks();
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not submit that record for locking.');
+    }
+  }
+
+  async function loadPendingGraduationLocks(){
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'list_pending_locks' }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        pendingGraduationLocksListEl.innerHTML = '';
+        pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot decide graduation record locking.'));
+        return;
+      }
+      renderPendingGraduationLocks(data.pending || []);
+    }catch(err){
+      pendingGraduationLocksListEl.innerHTML = '';
+      pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending locks.'));
+    }
+  }
+
+  function renderPendingGraduationLocks(items){
+    pendingGraduationLocksListEl.innerHTML = '';
+    if(!items.length){
+      pendingGraduationLocksListEl.appendChild(el('p', 'registrar-approvals-empty', 'No graduation records awaiting a locking decision.'));
+      return;
+    }
+    items.forEach(function(item){
+      var card = el('div', 'registrar-approval-card');
+      var head = el('div', 'registrar-approval-head');
+      head.appendChild(el('span', null, item.fullName));
+      card.appendChild(head);
+      card.appendChild(el('div', 'registrar-approval-meta', 'Requested by ' + (item.requestedByName || 'a staff member') + ' on ' + formatDate(item.requestedAt)));
+      var actions = el('div', 'registrar-approval-actions');
+      var noteInput = document.createElement('input');
+      noteInput.type = 'text'; noteInput.placeholder = 'Note (optional for approve, recommended for reject)';
+      actions.appendChild(noteInput);
+      var approveBtn = el('button', 'registrar-approval-approve', 'Approve');
+      approveBtn.type = 'button';
+      approveBtn.addEventListener('click', function(){ decideGraduationLock(item.id, 'approve_lock', noteInput.value.trim()); });
+      var rejectBtn = el('button', 'registrar-approval-reject', 'Reject');
+      rejectBtn.type = 'button';
+      rejectBtn.addEventListener('click', function(){ decideGraduationLock(item.id, 'reject_lock', noteInput.value.trim()); });
+      actions.appendChild(approveBtn);
+      actions.appendChild(rejectBtn);
+      card.appendChild(actions);
+      pendingGraduationLocksListEl.appendChild(card);
+    });
+  }
+
+  async function decideGraduationLock(approvalId, action, note){
+    pendingGraduationLocksResultEl.hidden = true;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, approvalId: approvalId, note: note || null }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not record that decision.');
+      showResult(pendingGraduationLocksResultEl, true, data.status === 'approved' ? 'Approved — the graduation record is now locked.' : 'Rejected — the record remains at its prior status.');
+      loadPendingGraduationLocks();
+      loadGraduationRecords();
+    }catch(err){
+      showResult(pendingGraduationLocksResultEl, false, (err && err.message) || 'Could not record that decision.');
+    }
+  }
+
+  graduationRefreshBtn.addEventListener('click', loadGraduationRecords);
+  graduationStatusFilterEl.addEventListener('change', loadGraduationRecords);
 
   function renderTimeline(events){
     var wrap = document.querySelector('[data-record-timeline]');
@@ -558,6 +747,8 @@
         }
       }
       loadPendingApprovals();
+      loadGraduationRecords();
+      loadPendingGraduationLocks();
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Registrar\'s Office.';
