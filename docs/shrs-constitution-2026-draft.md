@@ -349,6 +349,13 @@ No member of the EMT other than the Chair holds authority over another member; m
 (b) before any change to institutional Qur'anic or Islamic Studies standards; and
 (c) not less than twice in each academic year regardless of (a) or (b).
 
+**Article 78A — Shariah Advisory Council.** There shall be a Shariah Advisory Council, being an Institutional Council under Chapter XI, distinct from the Religious Affairs Coordination Council under Article 78, which is an internal Mudeer/Ra'ees coordination body rather than an independent advisory one.
+(a) **Membership.** The Council shall consist of not fewer than three Islamic scholars, none of whom is an employee, Governor, or office holder of the Institution, appointed by the Board on the joint recommendation of the Mudeer and the Ra'ees, for renewable terms of three years, with a Chair elected by the Council from among its own members.
+(b) **Mandate.** The Council shall review, and issue written advice to the Board, the EMT, and the relevant committee on, the Shariah compliance of: the Institution's curriculum content and religious programmes; the Institution's financial arrangements, including any entitlement fixed under Article 27D and the Institution's investment and revenue practices generally; and institutional practice generally, on referral by the Founder & CEO, the Mudeer, or the Ra'ees.
+(c) **Annual opinion.** The Council shall issue a written opinion on the Institution's Shariah compliance not less than once yearly, addressed to the Board, which the Board shall consider at its next ordinary meeting; the EMT shall provide a written response to any adverse finding in that opinion within thirty days.
+(d) **Advisory character.** The Council's advice and opinions do not bind the Board, the Founder & CEO, the EMT, or any other constitutional office, and do not displace the Mudeer's or the Ra'ees's own constitutional authority under Articles 72–75; this Article creates an advisory body, not a decision-making one, consistently with Article 2's reservation of governing authority to the offices this Charter establishes for that purpose.
+(e) **Meetings.** The Council shall meet not less than twice yearly, and additionally whenever the Board, the Founder & CEO, the Mudeer, or the Ra'ees refers a specific matter to it under paragraph (b).
+
 **Article 79 — Dispute resolution.** Where the Mudeer and the Ra'ees cannot agree on a matter falling at the boundary of their respective jurisdictions under Article 77, either may refer the matter, in writing and stating the point of disagreement, to the Founder & CEO under Article 19, whose decision on the boundary question is final. Neither office may act unilaterally on a matter under active reference pending the Founder & CEO's decision, save where student safety requires immediate action, in which case Article 21 applies.
 
 **Article 80.** Nothing in this Chapter subordinates the Mudeer or the Ra'ees to the Principal, the Head Teacher, or each other. Nothing in this Chapter permits either office to exercise authority outside the jurisdiction defined in Articles 72–75.
@@ -501,7 +508,7 @@ No committee, council, or working body shall exercise authority beyond its tier'
 
 ### Institutional Councils
 
-**Article 104.** The following are Institutional Councils, being cross-cutting bodies serving all four Constituent Institutions: the Religious Affairs Coordination Council (Article 78); and the Institutional Advancement Council (Article 84). No further Institutional Council shall be created save by constitutional amendment, this tier being reserved for bodies whose remit genuinely spans the whole Institution.
+**Article 104.** The following are Institutional Councils, being cross-cutting bodies serving all four Constituent Institutions: the Religious Affairs Coordination Council (Article 78); the Shariah Advisory Council (Article 78A); and the Institutional Advancement Council (Article 84). No further Institutional Council shall be created save by constitutional amendment, this tier being reserved for bodies whose remit genuinely spans the whole Institution.
 
 ### Temporary Bodies
 
