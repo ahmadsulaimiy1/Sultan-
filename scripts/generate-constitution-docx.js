@@ -36,7 +36,7 @@ const SRC = path.join(ROOT, 'docs', 'shrs-constitution-2026-draft.md');
 const CREST = path.join(ROOT, 'assets', 'images', 'brand-mark.png');
 const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Draft-v7.0.docx');
+const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter.docx');
 
 const GOLD = 'A9832E';
 const NAVY = '1C2340';
@@ -326,9 +326,9 @@ function main() {
     new Paragraph({
       spacing: { after: 260 },
       children: [
-        new TextRun({ text: 'Submission. ', bold: true, size: 17, color: CHARCOAL }),
+        new TextRun({ text: 'Certification. ', bold: true, size: 17, color: CHARCOAL }),
         new TextRun({
-          text: 'This Charter is submitted, under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools, to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Pending that adoption, no provision of this Charter is in force, and nothing in it alters the Institution’s existing administrative system or Policy GV-01 in its current form.',
+          text: 'This Governance Charter has been prepared under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.',
           size: 17, color: CHARCOAL,
         }),
       ],
@@ -480,8 +480,8 @@ function main() {
 
   const doc = new Document({
     creator: 'Sultan Hanafi Royal Schools — Office of the Board of Governors (drafting support)',
-    title: 'The Governance Charter of Sultan Hanafi Royal Schools — Draft v7.0',
-    description: 'Draft constitutional instrument prepared for adoption by the Board of Governors. Not yet effective.',
+    title: 'The Governance Charter of Sultan Hanafi Royal Schools — Seventh Edition',
+    description: 'Constitutional instrument prepared under the authority of the Founder & Chief Executive Officer, submitted to the Board of Governors for consideration and adoption.',
     styles: {
       default: {
         document: { run: { font: 'Cambria', size: 22, color: CHARCOAL } },

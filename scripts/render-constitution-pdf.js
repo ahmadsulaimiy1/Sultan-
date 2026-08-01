@@ -8,13 +8,13 @@ const path = require('path');
 const { chromium } = require('playwright-core');
 
 const ROOT = path.join(__dirname, '..');
-const SRC = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-v7.0.html');
-const OUT = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-v7.0.pdf');
+const SRC = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-Edition.html');
+const OUT = path.join(ROOT, 'docs', 'exports', 'SHRS-Governance-Charter-Flagship-Edition.pdf');
 // Intermediate, header/footer-free render of the same document, used only to
 // supply page 1 (the cover) to the merge step below — see the note at the
 // bottom of this file for why the cover cannot simply have headerFooter
 // turned off on its own.
-const OUT_NOHEADER = path.join(ROOT, 'docs', 'exports', '.SHRS-Governance-Charter-Flagship-v7.0.noheader.pdf');
+const OUT_NOHEADER = path.join(ROOT, 'docs', 'exports', '.SHRS-Governance-Charter-Flagship-Edition.noheader.pdf');
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 // The reserved margin strip Chromium allocates for header/footer has no

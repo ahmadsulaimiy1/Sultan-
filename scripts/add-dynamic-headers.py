@@ -31,7 +31,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor, Color
 
 ROOT = Path(__file__).resolve().parent.parent
-PDF = ROOT / "docs" / "exports" / "SHRS-Governance-Charter-Flagship-v7.0.pdf"
+PDF = ROOT / "docs" / "exports" / "SHRS-Governance-Charter-Flagship-Edition.pdf"
 
 GOLD = HexColor("#8a7550")
 GOLD_LIGHT = HexColor("#b79b5e")
@@ -344,7 +344,7 @@ def draw_page(c, info, page_num, total_pages, is_dark, is_back_cover):
         c.line(SIDE, BOTTOM_MARGIN - 14, PAGE_W - SIDE, BOTTOM_MARGIN - 14)
 
         left_text = "SULTAN HANAFI ROYAL SCHOOLS  ·  GOVERNANCE CHARTER"
-        center_text = "CONFIDENTIAL DRAFT — NOT YET EFFECTIVE"
+        center_text = "CONFIDENTIAL — FOR BOARD CONSIDERATION"
         right_text = f"Page {page_num} of {total_pages}"
 
         c.setFont("Helvetica", 6.1)

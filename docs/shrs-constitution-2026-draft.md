@@ -1,12 +1,12 @@
 # THE GOVERNANCE CHARTER OF SULTAN HANAFI ROYAL SCHOOLS
 
-**Submission.** This Charter is submitted, under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools, to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Pending that adoption, no provision of this Charter is in force, and nothing in it alters the Institution's existing administrative system or Policy GV-01 in its current form.
+**Certification.** This Governance Charter has been prepared under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.
 
 ---
 
 ## CONSTITUTIONAL PROCLAMATION
 
-This Charter is ordained by the Board of Governors of Sultan Hanafi Royal Schools, upon its adoption under Chapter XVIII, as the supreme governing law of the Institution, binding on every office, council, committee, and person acting under its authority, and superseding every prior constitution, charter, or governing instrument of the Institution to the extent of any inconsistency. Until adopted, this text is a draft prepared for that purpose and carries no legal effect, as the Submission note above states.
+This Charter is ordained by the Board of Governors of Sultan Hanafi Royal Schools, upon its adoption under Chapter XVIII, as the supreme governing law of the Institution, binding on every office, council, committee, and person acting under its authority, and superseding every prior constitution, charter, or governing instrument of the Institution to the extent of any inconsistency. Until adopted, this text carries no legal effect, as the Certification note above states.
 
 ---
 
@@ -527,7 +527,7 @@ No committee, council, or working body shall exercise authority beyond its tier'
 
 **Article 114 — Academic Research and Innovation.** Academic research and pedagogical innovation are not the mandate of a standing committee. They fall within the Academic Standards & Curriculum Committee's mandate where they concern academic policy, and may otherwise be addressed by a Working Group or Task Force under Articles 106 or 107 where a specific research or innovation initiative requires temporary, dedicated attention.
 
-**Article 115 — Matters folded into an existing body's mandate, stated for clarity.** For the avoidance of doubt: examination standards and results integrity fall within the Academic Standards & Curriculum Committee's mandate and the Examinations Board's technical function; scholarship and financial-aid policy, and oversight of the Institutional Advancement Council, fall within the Finance, Audit & Risk Committee's mandate; procurement at strategic level falls within the Finance, Audit & Risk Committee's mandate, and at operational level within the Health, Safety & Facilities Committee's mandate, per Article 138; the Health and Safety Committee and the Complaints Committee at points recommended in earlier drafting of this Charter do not survive as separate bodies — health and safety is consolidated into the Safeguarding Committee's mandate at institutional level and the Health, Safety & Facilities Committee's mandate at operational level, and complaints are consolidated into the Disciplinary & Ethics Committee's mandate at final-appeal level and the Disciplinary Panel/Appeal Panel structure at first instance and ordinary appeal.
+**Article 115 — Matters folded into an existing body's mandate, stated for clarity.** For the avoidance of doubt: examination standards and results integrity fall within the Academic Standards & Curriculum Committee's mandate and the Examinations Board's technical function; scholarship and financial-aid policy, and oversight of the Institutional Advancement Council, fall within the Finance, Audit & Risk Committee's mandate; procurement at strategic level falls within the Finance, Audit & Risk Committee's mandate, and at operational level within the Health, Safety & Facilities Committee's mandate, per Article 138; a Health and Safety Committee and a Complaints Committee are not constituted as separate bodies — health and safety is consolidated into the Safeguarding Committee's mandate at institutional level and the Health, Safety & Facilities Committee's mandate at operational level, and complaints are consolidated into the Disciplinary & Ethics Committee's mandate at final-appeal level and the Disciplinary Panel/Appeal Panel structure at first instance and ordinary appeal.
 
 ---
 
@@ -739,7 +739,7 @@ None of the events under this Article affects the Founder's status under Article
 
 ## CERTIFICATE OF ADOPTION AND EXECUTION
 
-**Certification.** This Governance Charter of Sultan Hanafi Royal Schools, comprising the Constitutional Proclamation, the Preamble, and Articles 1 to 178A, is hereby certified as the definitive text prepared for the Board of Governors' consideration and adoption under Chapter XVIII.
+**Certified text.** This Governance Charter of Sultan Hanafi Royal Schools, comprising the Constitutional Proclamation, the Preamble, and Articles 1 to 178A, is hereby certified as the definitive text prepared for the Board of Governors' consideration and adoption under Chapter XVIII.
 
 **Adoption clause.** Upon the affixing of signatures below by the Board of Governors, recording a resolution passed in accordance with Article 151, this Governance Charter takes effect as the supreme governing instrument of the Institution from the date so recorded, and the transitional and saving provisions of Chapter XXII apply from that date.
 
@@ -753,7 +753,7 @@ None of the events under this Article affects the Founder's status under Article
 
 **Institutional Seal.** [Space reserved for the Institutional Seal under Article 169]
 
-**Effective date.** This Governance Charter is not yet effective. As the Submission note at the head of this document states, it becomes effective only on the date of adoption recorded above.
+**Effective date.** This Governance Charter takes effect on the date of adoption recorded above.
 
 **Constitutional review.** This Governance Charter shall be reviewed not less than once every five years under Article 158, and may be amended at any time in accordance with Chapter XVIII.
 
