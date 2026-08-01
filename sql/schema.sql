@@ -977,6 +977,111 @@ CREATE TABLE IF NOT EXISTS certificates (
   created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Stage 3 — Graduation Document Ecosystem, per
+-- docs/shrs-master-graduation-document-specification.md. Deliberately a
+-- NEW table family, not an extension of `certificates` above: a
+-- Graduation Certificate/Transcript/Diploma Supplement etc. is gated by
+-- the graduation_clearances chain (functions/_lib/graduation-workflow.js),
+-- not the generic two-party staff_approvals workflow certificates.js
+-- uses, and mixing the two lifecycles would blur two already-working,
+-- independently audited systems (spec §19).
+--
+-- document_type is one of the master spec's §3.3 numbering codes (CERT,
+-- TRAN, SUPP, SOR, PROV, TEST, CHAR, CLR, ALUM, AWD, DIST, BRD, FCA,
+-- HIFZ, ISLM) — enforced in application code by
+-- functions/_lib/graduation-document-no.js, not a DB CHECK, so a new
+-- document type never requires a migration.
+--
+-- verification_id (spec §3.2) is the Permanent Verification ID shared by
+-- every document issued for the SAME graduation event (a Certificate and
+-- its Transcript share one verification_id even though each has its own
+-- reference_no) — generated once, at first issuance, and copied onto
+-- every sibling document.
+--
+-- reissue_of (spec §16.7) links a Certified True Copy/Duplicate back to
+-- its original row; the original is never altered or deleted.
+--
+-- storage_key is nullable and unused until the client selects a
+-- PDF-storage provisioning (spec §8, §22) — the column exists now so
+-- that decision doesn't require a later migration either.
+--
+-- content_hash is the full HMAC-SHA256 hex digest (spec §3.5); the
+-- 12-character display hash printed on the document itself is derived
+-- from this at render time, not stored separately.
+CREATE TABLE IF NOT EXISTS graduation_documents (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  document_type         TEXT NOT NULL,
+  document_kind         TEXT NOT NULL DEFAULT 'original' CHECK (document_kind IN ('original', 'certified_copy', 'duplicate')),
+  reference_no          TEXT NOT NULL UNIQUE,
+  verification_id       TEXT NOT NULL,
+  batch_id              INTEGER REFERENCES graduation_batches(id),
+  reissue_of            INTEGER REFERENCES graduation_documents(id),
+  issued_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  issued_by_staff_id    INTEGER REFERENCES staff(id),
+  signatories           JSONB,
+  content_hash          TEXT NOT NULL,
+  storage_key           TEXT,
+  revoked_at            TIMESTAMPTZ,
+  revoked_by_staff_id   INTEGER REFERENCES staff(id),
+  revocation_note       TEXT,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_record ON graduation_documents(graduation_record_id);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id);
+
+-- Locked, immutable copy of the exact term_results rows a Transcript (or
+-- Diploma Supplement) was generated from (spec §16.2, §8) — a later
+-- correction to term_results must never silently alter an already-issued
+-- Transcript's historical content. One row per generation event, not per
+-- graduation_record, since a reissued/duplicate Transcript intentionally
+-- reuses the ORIGINAL snapshot rather than re-querying live (possibly
+-- since-changed) results.
+CREATE TABLE IF NOT EXISTS transcript_snapshots (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  snapshot_data         JSONB NOT NULL,
+  generated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapshots(graduation_record_id);
+
+-- Lifetime Verification Record (spec §3.8) — append-only, one row per
+-- public verification check (not per document). IP addresses are hashed
+-- before storage, never kept raw, and never exposed on the public
+-- verification page (spec §5.3) — this table exists solely for the
+-- institution's own anomaly review (an implausible spike in checks on
+-- one reference number, a scraping pattern), the same purpose
+-- staff_audit_log serves for staff actions.
+CREATE TABLE IF NOT EXISTS verification_log (
+  id                      BIGSERIAL PRIMARY KEY,
+  document_reference_no   TEXT NOT NULL,
+  verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ip_hash                 TEXT,
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+);
+CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no);
+
+-- Alumni Register (spec §1.3, §16.10) — the data model the honest-shell
+-- Alumni office (see docs/institutional-portal-architecture.md's
+-- Institutional Services Layer) never had. One row per graduate per
+-- graduation event, created at first Class A document issuance.
+-- permanent_graduate_id snapshots students.identity_no at registration
+-- time (spec §3.1's "does not change" commitment) rather than joining
+-- live on every read.
+CREATE TABLE IF NOT EXISTS alumni_register (
+  id                      SERIAL PRIMARY KEY,
+  student_id              INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  graduation_record_id    INTEGER REFERENCES graduation_records(id),
+  permanent_graduate_id   TEXT,
+  registered_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  status                  TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+  created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (graduation_record_id)
+);
+
 -- Generic Approval Workflow (docs/approval-workflow-architecture.md) — a
 -- real second-party sign-off, not a free-text field an endpoint trusts
 -- blindly. An action the Matrix documents as requiring joint sign-off

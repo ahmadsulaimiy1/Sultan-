@@ -1218,6 +1218,63 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id)`,
 
+  // Stage 3 — Graduation Document Ecosystem, per
+  // docs/shrs-master-graduation-document-specification.md. See
+  // sql/schema.sql's comment on this table for the full reasoning
+  // (deliberately a new table family, not an extension of `certificates`).
+  `CREATE TABLE IF NOT EXISTS graduation_documents (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    document_type         TEXT NOT NULL,
+    document_kind         TEXT NOT NULL DEFAULT 'original' CHECK (document_kind IN ('original', 'certified_copy', 'duplicate')),
+    reference_no          TEXT NOT NULL UNIQUE,
+    verification_id       TEXT NOT NULL,
+    batch_id              INTEGER REFERENCES graduation_batches(id),
+    reissue_of            INTEGER REFERENCES graduation_documents(id),
+    issued_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    issued_by_staff_id    INTEGER REFERENCES staff(id),
+    signatories           JSONB,
+    content_hash          TEXT NOT NULL,
+    storage_key           TEXT,
+    revoked_at            TIMESTAMPTZ,
+    revoked_by_staff_id   INTEGER REFERENCES staff(id),
+    revocation_note       TEXT,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_record ON graduation_documents(graduation_record_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id)`,
+
+  `CREATE TABLE IF NOT EXISTS transcript_snapshots (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    snapshot_data         JSONB NOT NULL,
+    generated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapshots(graduation_record_id)`,
+
+  `CREATE TABLE IF NOT EXISTS verification_log (
+    id                      BIGSERIAL PRIMARY KEY,
+    document_reference_no   TEXT NOT NULL,
+    verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    ip_hash                 TEXT,
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no)`,
+
+  `CREATE TABLE IF NOT EXISTS alumni_register (
+    id                      SERIAL PRIMARY KEY,
+    student_id              INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    graduation_record_id    INTEGER REFERENCES graduation_records(id),
+    permanent_graduate_id   TEXT,
+    registered_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    status                  TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (graduation_record_id)
+  )`,
+
   // Generic Approval Workflow (docs/approval-workflow-architecture.md) —
   // see sql/schema.sql's comment on this table for the full reasoning.
   `CREATE TABLE IF NOT EXISTS staff_approvals (

@@ -432,6 +432,24 @@
     "altHref": "/verify-certificate/"
   },
   {
+    "slug": "verify-graduation-document",
+    "output": "verify-graduation-document/index.html",
+    "title": "Verify a Graduation Document — Sultan Hanafi Royal Schools",
+    "description": "Confirm that a Graduation Certificate, Transcript, Diploma Supplement, or other graduation document issued by Sultan Hanafi Royal Schools is genuine, using its printed reference number.",
+    "contentFile": "pages/verify-graduation-document.html",
+    "altHref": "/ar/verify-graduation-document/"
+  },
+  {
+    "slug": "verify-graduation-document-ar",
+    "output": "ar/verify-graduation-document/index.html",
+    "title": "تحقق من وثيقة تخرج — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة شهادة تخرج أو كشف درجات أو أي وثيقة تخرج أخرى صادرة عن مدارس السلطان حنفي الملكية باستخدام رقمها المرجعي المطبوع.",
+    "contentFile": "pages/verify-graduation-document.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify-graduation-document/"
+  },
+  {
     "slug": "verify-receipt",
     "output": "verify-receipt/index.html",
     "title": "Verify a Receipt — Sultan Hanafi Royal Schools",

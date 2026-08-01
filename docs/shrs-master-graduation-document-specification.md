@@ -516,3 +516,21 @@ Self-audited against the six lenses named in §18 before proceeding, per the aut
 | Institutional seal asset (§12) | ☐ Supplied ☐ Pending — *required before Class A document templates can be finalised* |
 
 Per the client's Final Executive Direction across this entire engagement — "Do not optimise for speed. Optimise for permanence." — this specification does not proceed to code until the two open decisions in this sign-off block are resolved. Everything else in Stage 3's build plan (§20) can begin the moment this document is approved.
+
+---
+
+## 23. Build Progress (updated as Stage 3 engineering proceeds)
+
+Per this specification's own phased build plan (§20), the client authorized work to begin on the decision-independent phases (§20.2–§20.4) while the two §22 open decisions remain outstanding — actual document *generation* (§20.5 onward) still requires them and has not started.
+
+**§20.2 Schema — done.** `graduation_documents`, `transcript_snapshots`, `verification_log`, `alumni_register` added to both `sql/schema.sql` and `functions/api/portal/setup.js`, per this project's dual-file convention. `graduation_documents.storage_key` exists now, nullable, so the eventual storage decision needs no further migration.
+
+**§20.3 Numbering + hash + QR + barcode — done.**
+- `functions/_lib/graduation-document-no.js` extends the existing, live `generateReferenceNo()` pattern with the §3.3 type codes, scoped to `graduation_documents`, plus `getOrCreateVerificationId()` for the shared Permanent Verification ID (§3.2).
+- `functions/_lib/document-hash.js` implements the §3.5 HMAC-SHA256 content hash using Node's `crypto` module via this project's existing `nodejs_compat` runtime flag (matching `functions/_lib/otp.js`'s own convention, not the Web Crypto API) — fails loudly if `DOCUMENT_HASH_SECRET` is unset, and hashes verifier IPs (never storing them raw) for the Lifetime Verification Record.
+- `functions/_lib/qrcode.js` extended with a selectable `errorCorrectionLevel`, defaulting to the existing `M` for every current caller, with graduation documents opting into `Q` per §14 — the existing QR renderer is reused, not duplicated.
+- `functions/_lib/barcode128.js` is genuinely new: no barcode-rendering capability existed anywhere in this codebase before this file, and no barcode npm package is installed. Rather than vendor a large new dependency of uncertain Cloudflare Workers compatibility, this reproduces the standard ISO/IEC 15417 Code 128 bar-pattern table — fetched directly from the MIT-licensed JsBarcode project's source (not typed from memory, specifically because a transcription error here would produce a barcode that looks right but doesn't scan) — and was verified two ways before being trusted: (1) its checksum algorithm was cross-checked against the standard Code 128 checksum formula by hand, and (2) an early version of the rendering logic mis-decoded the bar-pattern table (treating per-module bits as run-length widths) and was caught and corrected via a self-test before being shipped, not after.
+
+**§20.4 Verification platform — done.** `/verify-graduation-document/` (EN + AR, `pages/verify-graduation-document.html`/`.ar.html`, wired into `pages/manifest.json` and `scripts/build.js` exactly like the three existing verify pages) + `functions/api/graduation-documents/verify.js` (Tier 1 public verification per §5.2, logging every check to `verification_log`, returning only the audience-safe field set from §5.1) + `qr.js` + `barcode.js`. No document exists yet to verify — this phase was built and is ready the moment §20.5 issues its first document.
+
+**§20.1 Infrastructure decision — still outstanding.** No PDF rendering, no document templates, and no issuance endpoint exist yet; §20.5 onward remains gated on the client's choice between a dedicated rendering service and a scheduled batch process (§6.2, §22), and on the institutional seal asset (§12, §22) for the Class A templates specifically.
