@@ -303,9 +303,7 @@ function main() {
   <h1 class="cover-title">The Governance Charter</h1>
   <div class="cover-title-sub">of Sultan Hanafi Royal Schools</div>
   <div class="cover-rule"></div>
-  <div class="cover-version">Draft v7.0</div>
-  <div class="cover-status">Status: Draft — Not Yet Effective — Prepared for Adoption by the Board of Governors</div>
-  <p class="cover-note">No provision of this draft is currently in force. It does not alter the live administrative system, any published page, or Policy GV-01 in its present form. Upon adoption by the Board of Governors under Chapter XVIII, this draft becomes the substantive content of GV-01 v3.0.</p>
+  <div class="cover-version">Edition VII</div>
   <div class="cover-footer-line">
     <div class="cover-footer-rule"></div>
     <div class="cover-footer-text">

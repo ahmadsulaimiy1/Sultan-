@@ -76,11 +76,27 @@ def get_pages_text():
 
 
 def classify_and_map(pages):
-    """Returns a list, one entry per page (1-indexed via list index),
-    of either None (skip — ceremony/preliminary page) or a dict with
-    header/footer text."""
+    """Returns (results, dark_pages, back_cover_page).
+
+    results: one entry per page (1-indexed via list index), either None
+    (no header text — a ceremony page, or preliminary matter) or a dict
+    with header/footer text.
+
+    dark_pages: the SUBSET of None-result pages that are genuinely
+    full-bleed dark ceremony pages (Proclamation, Preamble, Part dividers,
+    Certificate/Execution, back cover) — as opposed to light-background
+    preliminary pages (Table of Contents, front matter) that also get no
+    header text but are NOT dark, and so must NOT be treated the same way
+    when masking the margin band (see draw_page).
+
+    back_cover_page: the index of the back cover page (or None), so
+    draw_page can suppress the footer there entirely — the directive is
+    explicit that the back cover carries no page number and no other
+    running-page furniture, only the page's own closing design."""
     n = len(pages)
     results = [None] * n
+    dark_pages = set()
+    back_cover_page = None
 
     cur_part = None
     cur_chapter = None
@@ -102,31 +118,72 @@ def classify_and_map(pages):
         lines = [l.rstrip() for l in text.split("\n")]
         stripped_lines = [l.strip() for l in lines if l.strip()]
         compacted = compact(text)
+        # Anchored to the page's literal FIRST line, where a real ceremony
+        # HEADING always sits — not `compacted` (the whole page) and not
+        # even "the first few lines," both of which are fragile: a page
+        # that merely *mentions* "the Constitutional Proclamation" or "the
+        # Preamble" in ordinary prose will contain the phrase too, and
+        # that prose doesn't have to be the very first thing on the page.
+        # Both looser versions produced real, confirmed false positives
+        # here — first a whole Drafting Notes page (whole-page substring),
+        # then a DIFFERENT Drafting Notes page whose first paragraph
+        # happens to *describe* the Proclamation and Preamble by name
+        # (four-line window) — each one silently misclassified as a dark
+        # ceremony page and either skipped or white-masked incorrectly.
+        # Only the exact first line is reliable.
+        first_line_compacted = compact(stripped_lines[0]) if stripped_lines else ""
 
         if in_preliminaries:
-            if "CONSTITUTIONALPROCLAMATION" in compacted:
+            if "CONSTITUTIONALPROCLAMATION" in first_line_compacted:
                 in_preliminaries = False
+                # This page IS the Constitutional Proclamation itself — a
+                # full-bleed dark ceremony page, not preliminary matter.
+                # Missing this meant the Proclamation page fell through to
+                # the "light preliminary" bucket and got white-masked over
+                # its own dark background: a real, confirmed defect (found
+                # by dumping dark_pages and checking it against the known
+                # page structure), not a hypothetical one.
+                results[i] = None
+                dark_pages.add(i)
+                continue
             results[i] = None
             continue
 
-        if "CONSTITUTIONALPROCLAMATION" in compacted or "CERTIFICATEOFADOPTIONANDEXECUTION" in compacted:
+        if "CONSTITUTIONALPROCLAMATION" in first_line_compacted or "CERTIFICATEOFADOPTIONANDEXECUTION" in first_line_compacted:
             results[i] = None
+            dark_pages.add(i)
             continue
 
         # Back cover: a ceremonial closing page that comes right after the
         # Drafting Notes section, so without this check it would inherit
         # in_drafting_notes (latched true for everything from that section
         # onward, since nothing else follows it) and be mislabelled
-        # "Drafting Notes" instead of left clean like the front cover.
+        # "Drafting Notes" instead of left clean like the front cover. Not
+        # scoped to the page head like the checks above: this exact
+        # sentence appears nowhere else in the document (verified by
+        # search), so whole-page containment carries no false-positive
+        # risk here, and the marker text itself sits well below the top
+        # of the back cover page.
         if "CONFERSNORIGHTSOROBLIGATIONSUNTILSOADOPTED" in compacted:
             results[i] = None
+            dark_pages.add(i)
+            back_cover_page = i
             continue
 
         has_article = bool(ARTICLE_RE.search(text))
         has_chapter_heading = any(CHAPTER_RE.match(l) for l in stripped_lines)
 
-        if "PREAMBLE" in compacted and not has_article and len(stripped_lines) < 15:
+        # Anchored to the page's actual first line, not a line-count
+        # threshold: the Preamble page turned out to run to 17 lines once
+        # Drafting Note-driven repagination shifted things, which silently
+        # missed this page under a "< 15 lines" guess and let it fall
+        # through to the plain "no chapter yet" bucket — un-masked, on a
+        # dark background it was never designed to sit on unmasked. The
+        # heading is always the page's first substantial line; matching
+        # that directly is robust to how long the page's body text runs.
+        if stripped_lines and compact(stripped_lines[0]) == "PREAMBLE":
             results[i] = None
+            dark_pages.add(i)
             continue
 
         # Part-divider page: short ceremony page whose content is just the
@@ -157,6 +214,7 @@ def classify_and_map(pages):
             ]
             cur_part = f"Part {part_compact_match.group(1)} — {' '.join(title_words[:3])}".rstrip(" —")
             results[i] = None
+            dark_pages.add(i)
             continue
 
         # The real Schedules heading renders as title case ("Schedules"),
@@ -220,7 +278,7 @@ def classify_and_map(pages):
         left = f"{cur_part} · {cur_chapter}" if cur_part else cur_chapter
         results[i] = {"left": left, "right": art_range or ""}
 
-    return results
+    return results, dark_pages, back_cover_page
 
 
 def truncate(c, text, font, size, max_width):
@@ -232,13 +290,41 @@ def truncate(c, text, font, size, max_width):
     return text + ell
 
 
-def draw_page(c, info, page_num, total_pages):
+def draw_page(c, info, page_num, total_pages, is_dark, is_back_cover):
     c.setLineWidth(0.6)
+
+    if not is_dark:
+        # Mask the reserved margin band with an opaque white rectangle
+        # before drawing anything else. This is a deliberate belt-and-
+        # braces fix, not cosmetic: Chromium's print pagination was found,
+        # on inspection, to occasionally let a widow line of body text
+        # render inside the margin band that should have been reserved
+        # (e.g. the last line of a paragraph carried over from the
+        # previous page landing above where the header starts) — a real,
+        # confirmed collision between body text and the running header,
+        # not a hypothetical one. Painting over the margin band, which is
+        # supposed to be blank on every light-background page, removes any
+        # such stray content regardless of why Chromium placed it there.
+        # Dark ceremony pages are full-bleed and must NOT be masked white.
+        c.setFillColor(HexColor("#ffffff"))
+        c.rect(0, PAGE_H - TOP_MARGIN, PAGE_W, TOP_MARGIN, stroke=0, fill=1)
+        c.rect(0, 0, PAGE_W, BOTTOM_MARGIN, stroke=0, fill=1)
 
     if info is not None:
         # ---- Header ----
-        wordmark = "SULTAN HANAFI ROYAL SCHOOLS · GOVERNANCE CHARTER (DRAFT v7.0 — NOT YET EFFECTIVE)"
-        c.setFont("Helvetica", 6.2)
+        # A single quiet wordmark line, plus the Part/Chapter/Article line
+        # below — the earlier version also carried a parenthetical
+        # "(DRAFT v7.0 — NOT YET EFFECTIVE)" on this same line, repeated on
+        # every one of ~140 body pages in 6.2pt type. That crowded the one
+        # header line the directive asks be kept clean, and repeating a
+        # legal-status clause at illegible size on every page adds no real
+        # protection over stating it clearly in the places a reader
+        # actually looks (front cover, status notice, Certificate of
+        # Adoption). The status disclosure itself has NOT been removed —
+        # it now lives once, prominently, in those pages, and once more,
+        # concisely, in the footer below — see Drafting Note 18.
+        wordmark = "SULTAN HANAFI ROYAL SCHOOLS  ·  GOVERNANCE CHARTER"
+        c.setFont("Helvetica", 6.4)
         c.setFillColor(GOLD_LIGHT)
         c.drawCentredString(PAGE_W / 2, PAGE_H - 16, wordmark)
 
@@ -255,18 +341,59 @@ def draw_page(c, info, page_num, total_pages):
             c.setFont("Helvetica", 7.2)
             c.drawRightString(PAGE_W - SIDE, PAGE_H - 36, info["right"])
 
-    # ---- Footer (drawn on every non-cover page, incl. ceremony pages,
-    # since "Page N of M" wayfinding still applies there) ----
-    c.setStrokeColor(GOLD)
-    c.line(SIDE, BOTTOM_MARGIN - 14, PAGE_W - SIDE, BOTTOM_MARGIN - 14)
-    c.setFont("Helvetica", 7)
-    c.setFillColor(GOLD)
-    c.drawCentredString(PAGE_W / 2, BOTTOM_MARGIN - 26, f"Page {page_num} of {total_pages}")
+    # ---- Footer ----
+    # The back cover is a premium closing page in its own right (crest,
+    # institution name, schools, edition meta, closing note — see
+    # generate-constitution-html.js's #back-cover block) and takes no page
+    # number and no running-page furniture of any kind, per the directive's
+    # explicit "NO page number on the Back Cover."
+    if is_back_cover:
+        return
+
+    if info is not None:
+        # Body/Schedules/Drafting-Notes pages carry the fuller three-zone
+        # footer: institution + document identity on the left, the
+        # concise status marker centred (the one place on these pages the
+        # not-yet-effective status is restated — see the header comment
+        # above), and page wayfinding on the right. Widths are measured,
+        # not assumed, so the three zones cannot collide at any content
+        # length.
+        c.setStrokeColor(GOLD)
+        c.line(SIDE, BOTTOM_MARGIN - 14, PAGE_W - SIDE, BOTTOM_MARGIN - 14)
+
+        left_text = "SULTAN HANAFI ROYAL SCHOOLS  ·  GOVERNANCE CHARTER"
+        center_text = "CONFIDENTIAL DRAFT — NOT YET EFFECTIVE"
+        right_text = f"Page {page_num} of {total_pages}"
+
+        c.setFont("Helvetica", 6.1)
+        c.setFillColor(GOLD_LIGHT)
+        left_max = PAGE_W * 0.36 - SIDE
+        c.drawString(SIDE, BOTTOM_MARGIN - 26, truncate(c, left_text, "Helvetica", 6.1, left_max))
+
+        c.setFont("Helvetica-Bold", 6.1)
+        c.setFillColor(GOLD)
+        c.drawCentredString(PAGE_W / 2, BOTTOM_MARGIN - 26, center_text)
+
+        c.setFont("Helvetica", 7)
+        c.setFillColor(GOLD)
+        c.drawRightString(PAGE_W - SIDE, BOTTOM_MARGIN - 26, right_text)
+    else:
+        # Ceremony/divider pages and light preliminary matter keep the
+        # quieter single-element footer — deliberately, so the dramatic,
+        # mostly-empty ceremony pages (Proclamation, Preamble, Part
+        # dividers, Certificate) aren't cluttered with running institutional
+        # text that belongs on working content pages, not full-bleed set
+        # pieces.
+        c.setStrokeColor(GOLD)
+        c.line(SIDE, BOTTOM_MARGIN - 14, PAGE_W - SIDE, BOTTOM_MARGIN - 14)
+        c.setFont("Helvetica", 7)
+        c.setFillColor(GOLD)
+        c.drawCentredString(PAGE_W / 2, BOTTOM_MARGIN - 26, f"Page {page_num} of {total_pages}")
 
 
 def main():
     pages_text = get_pages_text()
-    mapping = classify_and_map(pages_text)
+    mapping, dark_pages, back_cover_page = classify_and_map(pages_text)
 
     reader = PdfReader(str(PDF))
     n = len(reader.pages)
@@ -277,9 +404,16 @@ def main():
     c = canvas.Canvas(str(overlay_path), pagesize=(PAGE_W, PAGE_H))
     for i in range(n):
         if i == 0:
-            c.showPage()  # cover: fully blank overlay page
+            c.showPage()  # cover: fully blank overlay page, never masked (full bleed)
             continue
-        draw_page(c, mapping[i] if i < len(mapping) else None, i + 1, n)
+        draw_page(
+            c,
+            mapping[i] if i < len(mapping) else None,
+            i + 1,
+            n,
+            is_dark=(i in dark_pages),
+            is_back_cover=(i == back_cover_page),
+        )
         c.showPage()
     c.save()
 

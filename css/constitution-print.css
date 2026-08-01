@@ -57,19 +57,14 @@
 .cover-title { font-family: 'Cinzel', 'Amiri', serif; font-size: 42pt; line-height: 1.08; color: #fff; margin: 0 0 10px; letter-spacing: 0.01em; }
 .cover-title-sub { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 16pt; color: rgba(247,238,223,0.88); margin: 0 0 30px; }
 .cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 22px; }
-.cover-version { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.1em; color: var(--gold-bright); margin-bottom: 26px; }
-.cover-status {
-  /* A neutral gold treatment, not an alarm-red one: the status is stated
-     plainly because presenting a not-yet-adopted instrument as though it
-     were already binding would mislead any reader, including the Board
-     itself, about its legal effect — but a factual notice reads as
-     dignified and intentional, not as a warning label, when it is set in
-     the same gold the rest of the cover uses rather than a caution colour. */
-  border: 1px solid rgba(233,206,138,0.5); border-radius: 2px; padding: 10px 22px; max-width: 5.6in;
-  font-family: 'Cinzel', 'Amiri', serif; font-size: 8.5pt; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--gold-bright); margin-bottom: 24px;
-}
-.cover-note { font-family: 'Inter', sans-serif; font-size: 9pt; line-height: 1.6; color: rgba(247,238,223,0.72); max-width: 5.3in; }
+.cover-version { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.16em; color: var(--gold-bright); margin-bottom: 0; }
+/* The cover carries no draft-status marking of its own — see Drafting
+   Note 18. The full "Status." disclosure (not yet effective, prepared
+   for Board adoption) is stated in full, prominently, on the very next
+   page (About This Edition), and again in the running footer of every
+   content page and on the Certificate/back cover, so nothing about the
+   instrument's present legal status is hidden — it simply isn't printed
+   across the title page itself, which reads instead as a title page. */
 .cover-footer-line { position: absolute; left: 0.5in; right: 0.5in; bottom: 0.5in; }
 .cover-footer-rule { height: 1px; background: linear-gradient(90deg, transparent, rgba(233,206,138,0.5), transparent); margin-bottom: 10px; }
 .cover-footer-text {
