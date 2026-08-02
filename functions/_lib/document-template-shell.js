@@ -1,20 +1,29 @@
-// Shared Document Publication Shell — Design System v3.
+// Shared Document Publication Shell — Design System v4.
 //
-// v3 is a ground-up rebuild of the v2/v2.1 shell, per the Final
-// Executive Design Directive ("Stage 3 — Complete Redesign of the
-// Certification System"). The directive rejected v2 outright as
-// reading like a low-cost online-course certificate rather than a
-// government/university-grade credential. This file is not an
-// iteration on v2 — every visual layer below (palette, typography,
-// border, watermark, seal presentation, security band) was rebuilt
-// from the benchmark discipline this project has used since v1: real
-// engineering techniques computed from first principles, never traced
-// or copied from any reference document's proprietary artwork.
+// v4 implements the "Royal Heritage / Islamic Classical" hybrid
+// concept the client selected from the ten-direction deck presented
+// under the Final Executive Creative Direction (Phase 4 of that
+// process — see docs/shrs-certificate-design-bible.md for the
+// governing policy and docs/shrs-certificate-design-system-v4.md for
+// the concrete decisions this file implements). It keeps v3's full
+// heraldic apparatus (crest masthead, khatam corner rosette, embossed/
+// foil seal ring with microtext) — the Royal Heritage half — and
+// replaces v3's crosshatch micro-lattice border with a computed girih
+// star-and-strap band in a distinct teal accent — the Islamic
+// Classical half — so the two systems (heraldic gold, manuscript
+// teal) read as deliberately paired, not as one undifferentiated
+// gold everywhere. Per the design system doc's own scope note, this
+// round rebuilds the shared shell and is verified specifically
+// against the Graduation Certificate, the named flagship document;
+// every other document type inherits v4 automatically and gets its
+// own dedicated visual QA pass in a later round, the same v2→v2.1→v3
+// pattern this project has already followed.
 //
-// What genuinely changed vs. what the directive asked for but is
-// honestly out of a *shell* redesign's scope, stated plainly (the
-// same "no field is improvised, no claim is overstated" discipline
-// this project has held to throughout):
+// What genuinely changed vs. what the original design directive asked
+// for but is honestly out of a *shell* redesign's scope, stated
+// plainly (the same "no field is improvised, no claim is overstated"
+// discipline this project has held to throughout — unchanged from v3,
+// restated here because it still governs this file):
 //   - Palette, typography system, bespoke border, multi-layer
 //     watermark, microtext, embossed/foil seal presentation — all
 //     real, all implemented below.
@@ -170,24 +179,39 @@ function khatamOrnamentSvg() {
   </svg>`;
 }
 
-// A single tile of a fine engraved micro-lattice texture, encoded as
-// an inline SVG data URI and repeated via plain CSS background-repeat
-// on four separate edge strips (see .doc-frame-edge below) — this is
-// the literal "micro pattern / fine lines / engraving" border the
-// design directive asked for. A crosshatch lattice with a centre dot,
-// not a directional wave, was chosen deliberately: it is symmetric
-// under 90° rotation, so the same tile reads correctly tiled along a
-// horizontal edge AND a vertical edge without needing two separate
-// oriented tiles (an earlier CSS border-image 9-slice approach was
-// tried and rejected here after verifying visually that a tile the
-// same size as its own slice value degenerates — that failure was
-// caught by exactly the render-then-inspect discipline this project
-// uses before shipping any visual change, not shipped un-checked).
-function microLatticeTileDataUri(colorHex) {
-  const s = 16;
+// A single tile of a computed girih-family star-and-strap motif,
+// encoded as an inline SVG data URI and repeated via plain CSS
+// background-repeat on four separate edge strips (see .doc-frame-edge
+// below) — the Islamic Classical half of the v4 hybrid (design system
+// doc §3), replacing v3's crosshatch lattice with a genuine 8-point
+// star construction (the same computed-trigonometry discipline as
+// khatamOrnamentSvg() above, at a smaller repeating scale) bordered by
+// its own tile edge, evoking the strap-line joins of a real girih
+// tessellation without hand-tracing one. Tiled via plain CSS
+// background-repeat rather than border-image 9-slice — that technique
+// was tried for v3's border band, found to silently degenerate at
+// small tile sizes, and replaced after the render-then-inspect
+// discipline this project uses before shipping any visual change
+// caught the failure; the same proven, simpler technique is reused
+// here rather than re-attempting the one already known to be fragile.
+function girihTileDataUri(colorHex) {
+  const s = 20;
+  const cx = s / 2;
+  const cy = s / 2;
+  const outerR = 8;
+  const innerR = 3.4;
+  const points = 8;
+  let d = '';
+  for (let i = 0; i < points * 2; i += 1) {
+    const r = i % 2 === 0 ? outerR : innerR;
+    const theta = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2 + Math.PI / 8;
+    const x = cx + r * Math.cos(theta);
+    const y = cy + r * Math.sin(theta);
+    d += `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)} `;
+  }
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${s}' height='${s}' viewBox='0 0 ${s} ${s}'>`
-    + `<path d='M0,0 L${s},${s} M0,${s} L${s},0' fill='none' stroke='${colorHex}' stroke-width='0.8' opacity='0.55'/>`
-    + `<circle cx='${s / 2}' cy='${s / 2}' r='1.1' fill='${colorHex}' opacity='0.6'/>`
+    + `<path d='${d}Z' fill='none' stroke='${colorHex}' stroke-width='0.7' opacity='0.6'/>`
+    + `<rect x='0.5' y='0.5' width='${s - 1}' height='${s - 1}' fill='none' stroke='${colorHex}' stroke-width='0.4' opacity='0.3'/>`
     + `</svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
@@ -302,7 +326,7 @@ export function renderDocumentShell({
     ? `<div class="doc-kind-stamp">${escapeHtml(stamp[lang] || stamp.en)}</div>`
     : '';
   const bodyVariantClass = bodyVariant === 'tabular' ? 'doc-body--tabular' : 'doc-body--narrative';
-  const frameTileUri = microLatticeTileDataUri('#9C7A35');
+  const frameTileUri = girihTileDataUri('#0F5C57');
 
   return `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
@@ -314,15 +338,21 @@ export function renderDocumentShell({
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Design System v3 palette — Royal Coffee Brown / Deep Royal Gold /
-       Champagne Gold / Ivory / Cream / Warm White / Milk White / Dark
-       Espresso / Muted Sand, with navy used only as a sparing accent.
-       --gold is kept as the variable NAME (not the value) because
-       caller-authored table markup in graduation-documents.js and
-       graduation-register.js references var(--gold) directly. */
-    --espresso:#241708; --coffee:#4B3420; --gold:#9C7A35; --gold-soft:#C9A356;
+    /* Design System v4 palette — the Royal Heritage / Islamic Classical
+       hybrid (docs/shrs-certificate-design-system-v4.md §1). Gold stays
+       reserved for the heraldic apparatus (crest, seal, corner
+       ornament, signatures); teal is the new manuscript-framing accent
+       (the girih border band, the security band); oxblood is spent
+       ONLY on exceptional-state stamps (duplicate/certified-copy/
+       provisional), never elsewhere, per the Design Bible's §6 reserved-
+       alert-colour rule. --gold is kept as the variable NAME (not the
+       value) because caller-authored table markup in
+       graduation-documents.js and graduation-register.js references
+       var(--gold) directly. */
+    --espresso:#221A10; --coffee:#4B3420; --gold:#9C7A35; --gold-soft:#C9A356;
     --champagne:#E4D0A0; --ivory:#FBF4E4; --cream:#F2E6CC; --warm-white:#FCF8F0;
-    --milk:#FFFEFB; --sand:#C7B48D; --navy-accent:#232B35; --crimson:#7C1F2E;
+    --milk:#FFFEFB; --ground:#F3EEDD; --teal:#0F5C57; --teal-wash:rgba(15,92,87,0.08);
+    --sand:#C9BFA0; --navy-accent:#232B35; --oxblood:#6E1F2B;
     --font-display:'Cormorant Garamond','Amiri',serif;
     --font-hero:'Playfair Display','Amiri',serif;
     --font-label:'Cinzel','Amiri',serif;
@@ -345,7 +375,7 @@ export function renderDocumentShell({
     position:relative;width:1000px;max-width:100%;
     margin:calc(var(--doc-unit)*5) auto;
     padding:calc(var(--doc-unit)*8) calc(var(--doc-unit)*9) calc(var(--doc-unit)*7);
-    background:var(--milk);border:1px solid var(--gold);
+    background:var(--ground);border:1px solid var(--gold);
     box-shadow:
       0 0 0 5px var(--milk),
       0 0 0 6px var(--champagne),
@@ -354,12 +384,15 @@ export function renderDocumentShell({
   .doc-page::before{
     content:"";position:absolute;inset:calc(var(--doc-unit)*2.75);border:1px solid var(--gold);opacity:0.5;pointer-events:none;
   }
-  /* v3 — bespoke micro-engraved border band: four thin edge strips,
-     each tiling a computed crosshatch-lattice texture
-     (microLatticeTileDataUri()) via plain CSS background-repeat. This
-     is the "micro pattern / fine lines / engraving" border system
-     named in the design directive, layered just inside the page edge
-     and just outside the corner ornaments. */
+  /* v4 — the Islamic Classical half of the hybrid: four thin edge
+     strips, each tiling a computed girih star-and-strap texture
+     (girihTileDataUri()) in the teal accent via plain CSS
+     background-repeat, replacing v3's gold crosshatch lattice. This is
+     the "micro pattern / fine lines / engraving" border system named
+     in the design directive, layered just inside the page edge and
+     just outside the (still gold) corner ornaments — the two-colour
+     separation is itself a hierarchy device (design system v4 §3):
+     gold is the heraldic apparatus, teal is the manuscript framing. */
   .doc-frame-band{position:absolute;inset:calc(var(--doc-unit)*0.75);pointer-events:none;}
   .doc-frame-edge{
     position:absolute;background-image:url("${frameTileUri}");
@@ -399,9 +432,13 @@ export function renderDocumentShell({
   }
   .doc-watermark img{width:480px;}
   .doc-kind-stamp{
+    /* oxblood is reserved for exceptional-state stamps ONLY — Design
+       Bible §6's reserved-alert-colour rule, so colour alone flags an
+       exceptional document without competing with the teal/gold system
+       used everywhere else. */
     position:absolute;top:calc(var(--doc-unit)*4.5);${dir === 'rtl' ? 'left' : 'right'}:calc(var(--doc-unit)*5);
-    font-family:var(--font-label);font-size:0.72rem;letter-spacing:0.14em;color:var(--crimson);
-    border:1px solid var(--crimson);padding:calc(var(--doc-unit)*0.5) calc(var(--doc-unit)*1.5);
+    font-family:var(--font-label);font-size:0.72rem;letter-spacing:0.14em;color:var(--oxblood);
+    border:1px solid var(--oxblood);padding:calc(var(--doc-unit)*0.5) calc(var(--doc-unit)*1.5);
     transform:rotate(${dir === 'rtl' ? '8deg' : '-8deg'});
   }
   .doc-header{position:relative;text-align:center;margin-bottom:calc(var(--doc-unit)*3.5);}
@@ -474,15 +511,21 @@ export function renderDocumentShell({
     text-transform:uppercase;padding:0 calc(var(--doc-unit)*1.5);
   }
   .doc-security-band{
+    /* v4 — restyled to the teal half of the hybrid (design system v4
+       §4): the verification zone is manuscript-framing territory, not
+       heraldic territory, so its rule and wash move off gold. The
+       mechanism underneath (hash/QR/barcode/reference fields) and its
+       position as the quietest register on the page (Design Bible §4)
+       are both unchanged from v3. */
     position:relative;margin-top:calc(var(--doc-unit)*5.5);padding:calc(var(--doc-unit)*2.5) calc(var(--doc-unit)*2);
-    background:linear-gradient(180deg,transparent,var(--cream) 35%,var(--cream) 65%,transparent);
-    border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);
+    background:linear-gradient(180deg,transparent,var(--teal-wash) 35%,var(--teal-wash) 65%,transparent);
+    border-top:1px solid var(--teal);border-bottom:1px solid var(--teal);
     display:flex;align-items:center;justify-content:space-between;gap:calc(var(--doc-unit)*3);flex-wrap:wrap;
   }
   .doc-security-codes{display:flex;align-items:center;gap:calc(var(--doc-unit)*2.25);}
   .doc-qr figcaption{font-size:0.6rem;text-align:center;color:#7a7263;margin-top:calc(var(--doc-unit)*0.25);font-family:var(--font-body);}
   .doc-security-fields{display:grid;grid-template-columns:repeat(2,auto);gap:calc(var(--doc-unit)*0.5) calc(var(--doc-unit)*3);font-size:0.78rem;}
-  .doc-security-fields .k{font-family:var(--font-label);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);display:block;}
+  .doc-security-fields .k{font-family:var(--font-label);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);display:block;}
   .doc-security-fields .v{color:var(--espresso);font-family:var(--font-body);}
   .doc-security-fields .doc-hash{font-family:monospace;letter-spacing:0.04em;}
   .doc-footer{position:relative;text-align:center;margin-top:calc(var(--doc-unit)*3);font-size:0.62rem;color:#8a8577;}
