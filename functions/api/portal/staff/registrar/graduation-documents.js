@@ -23,7 +23,7 @@ import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { generateDocumentReferenceNo, getOrCreateVerificationId } from '../../../../_lib/graduation-document-no.js';
 import { computeDocumentHash } from '../../../../_lib/document-hash.js';
-import { resolveSignatories, SignatoryVacancyError } from '../../../../_lib/document-signatories.js';
+import { resolveSignatories, resolveCertificateSignatories, SignatoryVacancyError } from '../../../../_lib/document-signatories.js';
 import { renderDocumentShell } from '../../../../_lib/document-template-shell.js';
 import { resolveSeal, requireRealSeal, SealPendingError } from '../../../../_lib/document-seals.js';
 import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
@@ -35,6 +35,7 @@ const DOCUMENT_TYPE_LABEL = {
   testimonial: { en: 'Official Testimonial', ar: 'شهادة توصية رسمية' },
   character_certificate: { en: 'Character Certificate', ar: 'شهادة حسن سيرة وسلوك' },
   clearance_certificate: { en: 'Graduation Clearance Certificate', ar: 'شهادة إتمام إجراءات التخرج' },
+  certificate: { en: 'Graduation Certificate', ar: 'شهادة التخرج' },
 };
 
 // The primary signatory role each document type's seal is keyed off —
@@ -46,6 +47,7 @@ const DOCUMENT_PRIMARY_SIGNATORY_ROLE = {
   testimonial: 'PRIN',
   character_certificate: 'PRIN',
   clearance_certificate: 'REG',
+  certificate: 'PRIN',
 };
 
 function escapeHtml(s) {
@@ -67,7 +69,7 @@ async function requireStaffSession(request, env) {
 
 async function loadRecord(sql, recordId) {
   const res = await sql`
-    SELECT gr.*, s.full_name, s.admission_no, s.identity_no, c.institution AS institution_name, ci.id AS institution_id
+    SELECT gr.*, s.full_name, s.admission_no, s.identity_no, c.institution AS institution_name, c.name AS class_name, ci.id AS institution_id
     FROM graduation_records gr
     JOIN students s ON s.id = gr.student_id
     LEFT JOIN classes c ON c.id = s.class_id
@@ -166,6 +168,30 @@ function clearanceCertificateBody(record, lang, clearanceRows) {
     </table>`;
 }
 
+// The flagship Class A document (spec §16.1). Deliberately generic
+// about programme/level ("has satisfactorily completed the prescribed
+// course of study") rather than inventing a specific curriculum-name
+// field this project's schema doesn't have — class_name is included
+// parenthetically only when the join actually resolves one, never
+// fabricated. Signature block is resolved dynamically per record by
+// resolveCertificateSignatories() in the issuing action below, not
+// fixed here.
+function certificateBody(record, lang) {
+  const name = record.preferred_certificate_name || record.full_legal_name || record.full_name;
+  const programme = record.class_name ? ` (${record.class_name})` : '';
+  if (lang === 'ar') {
+    return `<span class="doc-eyebrow">مدارس السلطان حنفي الملكية تشهد بأن</span>
+      <span class="doc-recipient">${name}</span>
+      <p>قد أتم/أتمت بنجاح البرنامج الدراسي المقرر لدى ${record.institution_name || 'المؤسسة'}${programme}
+      عقب التخرج في دورة ${record.graduation_session}، وتُمنح هذه الشهادة تقديرًا لهذا الإنجاز.</p>`;
+  }
+  return `<span class="doc-eyebrow">Sultan Hanafi Royal Schools certifies that</span>
+    <span class="doc-recipient">${name}</span>
+    <p>has satisfactorily completed the prescribed course of study at
+    ${record.institution_name || 'the institution'}${programme} in the ${record.graduation_session} session,
+    and is awarded this Certificate in recognition of that achievement.</p>`;
+}
+
 export async function onRequestGet({ request, env }) {
   const { staffId, error } = await requireStaffSession(request, env);
   if (error) return error;
@@ -179,7 +205,7 @@ export async function onRequestGet({ request, env }) {
   try {
     const docRes = await sql`
       SELECT gd.*, gr.graduation_session, gr.preferred_certificate_name, gr.full_legal_name,
-             s.full_name, s.identity_no, c.institution AS institution_name, ci.id AS institution_id
+             s.full_name, s.identity_no, c.institution AS institution_name, c.name AS class_name, ci.id AS institution_id
       FROM graduation_documents gd
       JOIN graduation_records gr ON gr.id = gd.graduation_record_id
       JOIN students s ON s.id = gr.student_id
@@ -201,7 +227,7 @@ export async function onRequestGet({ request, env }) {
     const record = {
       preferred_certificate_name: row.preferred_certificate_name, full_legal_name: row.full_legal_name,
       full_name: row.full_name, identity_no: row.identity_no, institution_name: row.institution_name,
-      graduation_session: row.graduation_session,
+      class_name: row.class_name, graduation_session: row.graduation_session,
     };
     let bodyHtml = '';
     let bodyVariant = 'narrative';
@@ -215,6 +241,8 @@ export async function onRequestGet({ request, env }) {
     } else if (row.document_type === 'clearance_certificate') {
       bodyHtml = clearanceCertificateBody(record, lang, contentData.clearanceRows || []);
       bodyVariant = 'tabular';
+    } else if (row.document_type === 'certificate') {
+      bodyHtml = certificateBody(record, lang);
     }
 
     const html = renderDocumentShell({
@@ -318,6 +346,79 @@ export async function onRequestPost({ request, env }) {
       await logStaffEvent(sql, {
         actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_document', targetId: inserted.rows[0].id,
         reason: null, metadata: { documentType: 'alumni_registration', referenceNo, recordId },
+      });
+
+      return json({
+        ok: true, documentId: inserted.rows[0].id, referenceNo, verificationId,
+        verifyUrl: `/verify-graduation-document/?ref=${encodeURIComponent(referenceNo)}`,
+        viewUrl: `/api/portal/staff/registrar/graduation-documents?ref=${encodeURIComponent(referenceNo)}`,
+        profileUrl: `/graduate-profile/?id=${encodeURIComponent(verificationId)}`,
+      });
+    }
+
+    // Graduation Certificate (spec §16.1) — Class A, the flagship
+    // document. Single-step Registrar issuance like Alumni
+    // Registration: unlike Class B, no NEW approval is solicited here —
+    // the Principal's authority was already exercised as the 'principal'
+    // stage of the graduation_clearances chain the record had to pass
+    // to reach 'locked' in the first place. What IS new is that the
+    // signature block is resolved dynamically per record
+    // (resolveCertificateSignatories) so a Certificate only ever
+    // carries the Vice Principal (Academic/Administration)/Founder
+    // signatures a record's own clearance chain actually exercised —
+    // never claims sign-off authority that never happened for THIS
+    // graduate, per §16.1's own words.
+    if (action === 'issue_certificate') {
+      const recordId = Number(body && body.recordId);
+      if (!Number.isInteger(recordId)) return json({ error: 'A valid numeric recordId is required.' }, 400);
+
+      const record = await loadRecord(sql, recordId);
+      if (!record) return json({ error: 'No graduation record found with that id.' }, 404);
+      if (record.status !== 'locked') {
+        return json({ error: 'This graduation record is not yet locked — a Graduation Certificate can only be issued once every required clearance stage has cleared.' }, 409);
+      }
+
+      const grant = await hasPermissionFor(sql, staffId, 'graduation_documents', 'C', record.institution_id ?? null);
+      if (!grant.granted) {
+        return json({ error: 'Your role does not have authority to issue graduation documents.' }, 403);
+      }
+
+      const existing = await sql`
+        SELECT reference_no FROM graduation_documents
+        WHERE graduation_record_id = ${recordId} AND document_type = 'certificate' AND revoked_at IS NULL`;
+      if (existing.rows[0]) {
+        return json({ error: 'A Graduation Certificate has already been issued for this record.', referenceNo: existing.rows[0].reference_no }, 409);
+      }
+
+      requireRealSeal({ role: 'PRIN', institutionName: record.institution_name, documentType: DOCUMENT_TYPE_LABEL.certificate.en });
+
+      const clearanceRows = await getClearances(sql, recordId);
+      let signatories;
+      try {
+        signatories = await resolveCertificateSignatories(sql, record.institution_id ?? null, clearanceRows);
+      } catch (sigErr) {
+        if (sigErr instanceof SignatoryVacancyError) return json({ error: sigErr.message }, 409);
+        throw sigErr;
+      }
+
+      const issuedAt = new Date().toISOString();
+      const referenceNo = await generateDocumentReferenceNo(sql, 'certificate', issuedAt);
+      const verificationId = await getOrCreateVerificationId(sql, recordId, record.graduation_session);
+      const hashFields = { graduationRecordId: recordId, documentType: 'certificate', referenceNo, issuedAt };
+      const { fullHash } = computeDocumentHash(env, hashFields);
+
+      const inserted = await sql`
+        INSERT INTO graduation_documents
+          (graduation_record_id, document_type, document_kind, reference_no, verification_id,
+           issued_at, issued_by_staff_id, signatories, content_hash)
+        VALUES
+          (${recordId}, 'certificate', 'original', ${referenceNo}, ${verificationId},
+           ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash})
+        RETURNING id`;
+
+      await logStaffEvent(sql, {
+        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_document', targetId: inserted.rows[0].id,
+        reason: null, metadata: { documentType: 'certificate', referenceNo, recordId },
       });
 
       return json({
@@ -581,7 +682,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     return json({
-      error: 'Unknown action. Expected one of: issue_alumni_registration, request_testimonial, request_character_certificate, '
+      error: 'Unknown action. Expected one of: issue_alumni_registration, issue_certificate, request_testimonial, request_character_certificate, '
         + 'list_pending_class_b, approve_class_b, reject_class_b, issue_clearance_certificate.',
     }, 400);
   } catch (err) {

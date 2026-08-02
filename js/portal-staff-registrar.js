@@ -266,6 +266,11 @@
         issueBtn.addEventListener('click', function(){ issueAlumniRegistration(item.id, issueBtn); });
         actions.appendChild(issueBtn);
 
+        var certBtn = el('button', 'registrar-approval-approve', 'Issue Graduation Certificate');
+        certBtn.type = 'button';
+        certBtn.addEventListener('click', function(){ issueCertificate(item.id, certBtn); });
+        actions.appendChild(certBtn);
+
         var clearanceBtn = el('button', 'registrar-approval-approve', 'Issue Graduation Clearance Certificate');
         clearanceBtn.type = 'button';
         clearanceBtn.addEventListener('click', function(){ issueClearanceCertificate(item.id, clearanceBtn); });
@@ -383,6 +388,27 @@
       graduationRecordsResultEl.appendChild(profileLink);
     }
     graduationRecordsResultEl.hidden = false;
+  }
+
+  async function issueCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        showResult(graduationRecordsResultEl, false, data.error + (data.referenceNo ? ' Reference: ' + data.referenceNo : ''));
+        return;
+      }
+      renderIssuedDocumentResult(data, 'Issued — reference ' + data.referenceNo + '. ');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
   }
 
   async function issueClearanceCertificate(recordId, triggerBtn){

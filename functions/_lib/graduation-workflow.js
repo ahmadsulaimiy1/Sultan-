@@ -118,7 +118,12 @@ export const STAGE_DEFINITIONS = [
 
 export const STAGE_BY_CODE = Object.fromEntries(STAGE_DEFINITIONS.map((s) => [s.code, s]));
 
-async function resolveOfficeId(sql, slug) {
+// Exported so functions/_lib/document-signatories.js can resolve an
+// office-authorised signatory (e.g. Examinations & Records, which has
+// no `roles` table entry of its own — it is authorised the same
+// office-appointment way 'academic'/'library'/'ict' are in
+// STAGE_DEFINITIONS above) without duplicating this lookup.
+export async function resolveOfficeId(sql, slug) {
   const res = await sql`SELECT id FROM offices WHERE slug = ${slug}`;
   return res.rows[0] ? res.rows[0].id : null;
 }
