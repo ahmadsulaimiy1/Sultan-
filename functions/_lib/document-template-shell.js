@@ -592,3 +592,298 @@ export function renderDocumentShell({
 </body>
 </html>`;
 }
+
+// ---------------------------------------------------------------------
+// JSS Register — "gilt state-credential" shell (new document family).
+//
+// The client supplied a reference mockup (a "Professional Certificate
+// of Completion" + matching transcript pages) and, after a documented
+// analysis-and-approval exchange, directed that it become the locked
+// master template for JSS-tier documents specifically — a second,
+// deliberately distinct register from Design System v4 above, not a
+// replacement of it. v4 draws on a collegiate/manuscript vocabulary
+// (continuous engraved guilloché+girih, restrained corners); this
+// register draws on a "state-issued credential" vocabulary (punctuated
+// gilt-frame ornament, a dual real seal, a top-right verification
+// cluster, a simulated hologram strip) — the analysis that justified
+// keeping both registers, rather than replacing v4, is recorded in the
+// conversation and summarised in docs/shrs-master-graduation-document-
+// specification.md's build log.
+//
+// What was decided, and why, before a line of this was written:
+//   - The reference's second "Registered, Ministry of Education, Lagos
+//     State" seal was NOT reproduced — SHRS has no real, verifiable
+//     registration number to print truthfully, and this project never
+//     fabricates an institutional claim. Instead, the dual-seal
+//     convention is honoured with SHRS's own two REAL seals already on
+//     file (document-seals.js): the CEREMONIAL gold medallion and the
+//     REG (Registrar) ink stamp — a genuine dual-seal pair, not an
+//     invented one.
+//   - The hologram strip is a screen/PDF simulation (a computed
+//     iridescent gradient + a tiled SVG wordmark), exactly like this
+//     project's existing UV-layer honesty note (design bible §10): it
+//     reads as a security feature on screen; it only becomes one
+//     physically if a print vendor applies real holographic foil.
+//   - No third "state" crest was added — SHRS has no real, extracted
+//     Lagos State coat-of-arms asset in this codebase (only the real
+//     Nigeria coat of arms and the real SHRS crest, both already used
+//     in v4's masthead), and inventing or sourcing one was out of
+//     scope for this round. The masthead below still carries both real
+//     crests; a third can be added later if the client supplies one.
+//   - A short, human-typeable "Verification Code" (distinct from the
+//     existing long reference number and permanent verification ID) is
+//     new to this register and genuinely useful, but is passed in as
+//     data by the caller — generating one for real is a small backend
+//     addition (not yet built) tracked as future work, the same
+//     "named, not faked" discipline as every other pending item in
+//     this file.
+
+// A carved corner-bracket flourish — an L-shaped double arc with small
+// curled terminals and dots, computed via SVG path/arc commands, not
+// traced from the reference's own corner artwork. This is the
+// "punctuated ornament" register's corner mark, deliberately different
+// from khatamOrnamentSvg()'s star-rosette (v4's continuous-engraving
+// register) — see the file header above for why both registers exist.
+function corneFlourishSvg(size = 96) {
+  const s = size;
+  return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6,${s - 6} Q6,6 ${s - 6},6" fill="none" stroke="currentColor" stroke-width="3.2"/>
+    <path d="M6,${s - 6} Q6,${s * 0.4} ${s * 0.4},6" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+    <path d="M6,${s - 18} q-11,0 -11,13" fill="none" stroke="currentColor" stroke-width="2.2"/>
+    <path d="M${s - 18},6 q0,-11 13,-11" fill="none" stroke="currentColor" stroke-width="2.2"/>
+    <circle cx="6" cy="${s - 6}" r="4.2" fill="currentColor"/>
+    <circle cx="${s - 6}" cy="6" r="4.2" fill="currentColor"/>
+  </svg>`;
+}
+
+// A single tile of the simulated hologram strip: the institution's own
+// initials, rotated and set small, tiled vertically via the same
+// proven background-repeat technique as girihTileDataUri() above (not
+// a new, riskier method). The iridescent sheen itself is pure CSS
+// (repeating-linear-gradient), layered on top in the caller's markup —
+// this function only supplies the repeating wordmark layer.
+function hologramTileDataUri(colorHex) {
+  const w = 40;
+  const h = 64;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>`
+    + `<text x='${w / 2}' y='${h / 2}' font-family='Georgia,serif' font-size='10' font-weight='700' `
+    + `fill='${colorHex}' opacity='0.5' text-anchor='middle' dominant-baseline='middle' `
+    + `transform='rotate(-90 ${w / 2} ${h / 2})'>SHRS</text>`
+    + `</svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+function renderJssSealBlock({ ceremonialSealImage, registrarSealImage, lang }) {
+  const cell = (img, label) => (img
+    ? `<div class="jss-seal-cell"><img src="${escapeHtml(img)}" alt="${escapeHtml(label)}" /></div>`
+    : `<div class="jss-seal-cell jss-seal-reserved"><span>${escapeHtml(lang === 'ar' ? 'محجوز' : 'Reserved')}</span></div>`);
+  return `<div class="jss-seal-pair">
+    ${cell(ceremonialSealImage, lang === 'ar' ? 'الختم الاحتفالي' : 'Ceremonial Seal')}
+    ${cell(registrarSealImage, lang === 'ar' ? 'ختم المسجل' : 'Registrar Seal')}
+  </div>`;
+}
+
+function renderJssVerificationCluster({ certificateNo, verificationCode, lang, dir }) {
+  const t = lang === 'ar'
+    ? { certNo: 'رقم الشهادة', code: 'رمز التحقق', verify: 'للتحقق قم بالمسح:' }
+    : { certNo: 'Certificate No.', code: 'Verification Code', verify: 'Verify at:' };
+  return `<div class="jss-verify-cluster">
+    <div class="jss-verify-fields">
+      <div><span class="k">${t.certNo}</span><span class="v">${escapeHtml(certificateNo)}</span></div>
+      <div><span class="k">${t.code}</span><span class="v jss-code">${escapeHtml(verificationCode)}</span></div>
+    </div>
+    <figure class="jss-qr">
+      <img src="/api/graduation-documents/qr?ref=${encodeURIComponent(certificateNo)}" alt="QR" width="76" height="76" />
+      <figcaption>${escapeHtml(t.verify)}<br/>shroyalschools.ng/verify</figcaption>
+    </figure>
+  </div>`;
+}
+
+// The JSS Certificate — landscape, framed-for-display register. See
+// the file-header comment above for the full account of what this
+// deliberately does and does not reproduce from the client's reference
+// mockup. Sample/placeholder data only in every caller until this
+// register gets its own signatory-map + issuance-endpoint wiring
+// (tracked as future work, per the header comment above) — the same
+// "visual template first, backend wiring named separately" sequencing
+// this project has used for every prior document-type round.
+export function renderJssCertificateShell({
+  documentTypeLabel, lang = 'en', dir = 'ltr', recipientName, bodyHtml,
+  certificateNo, verificationCode, issuedAtDisplay, signatories = [],
+  ceremonialSealImage = null, registrarSealImage = null,
+}) {
+  const holoTileUri = hologramTileDataUri('#8A6A34');
+  const leadingEdge = dir === 'rtl' ? 'right' : 'left';
+  const trailingEdge = dir === 'rtl' ? 'left' : 'right';
+
+  return `<!DOCTYPE html>
+<html lang="${lang}" dir="${dir}">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${escapeHtml(documentTypeLabel)} — ${escapeHtml(recipientName)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* JSS register palette — a tighter, two-colour gilt-and-ink system
+       (design decision #3 from the approval exchange): gold + espresso
+       ink as the primary pair, oxblood reserved for emphasis values
+       only (the DISTINCTION-style headline result), no teal — this
+       register does not inherit v4's manuscript accent. */
+    --jss-ink:#241708; --jss-gold:#8A6A34; --jss-gold-bright:#C9A356;
+    --jss-ivory:#FAF4E6; --jss-oxblood:#7C1F2E; --jss-sand:#D8CBA8;
+    --font-display:'Cormorant Garamond','Amiri',serif;
+    --font-hero:'Playfair Display','Amiri',serif;
+    --font-label:'Cinzel','Amiri',serif;
+    --font-body:'Inter','Cairo',sans-serif;
+    --doc-unit:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font-body);color:var(--jss-ink);
+    background:radial-gradient(ellipse at 50% 18%, #3E2B18 0%, #1C1208 60%, #110B05 100%);
+  }
+  .jss-page{
+    position:relative;width:1200px;max-width:100%;margin:calc(var(--doc-unit)*5) auto;
+    padding:calc(var(--doc-unit)*7) calc(var(--doc-unit)*8);
+    background:var(--jss-ivory);
+    border:6px solid var(--jss-gold);
+    box-shadow:
+      inset 0 0 0 2px var(--jss-gold-bright),
+      inset 0 0 0 10px var(--jss-ivory),
+      inset 0 0 0 12px var(--jss-gold),
+      0 0 0 5px var(--jss-ivory),
+      0 24px 70px rgba(17,11,5,0.55);
+  }
+  /* punctuated corner ornament — the "gilt frame" register's own
+     corner mark (corneFlourishSvg()), replacing v4's khatam rosette
+     for this document family. */
+  .jss-corner{position:absolute;width:76px;height:76px;color:var(--jss-gold);opacity:0.85;pointer-events:none;}
+  .jss-corner svg{width:100%;height:100%;}
+  .jss-corner--tl{top:calc(var(--doc-unit)*2);${leadingEdge}:calc(var(--doc-unit)*2);}
+  .jss-corner--tr{top:calc(var(--doc-unit)*2);${trailingEdge}:calc(var(--doc-unit)*2);transform:scaleX(-1);}
+  .jss-corner--bl{bottom:calc(var(--doc-unit)*2);${leadingEdge}:calc(var(--doc-unit)*2);transform:scaleY(-1);}
+  .jss-corner--br{bottom:calc(var(--doc-unit)*2);${trailingEdge}:calc(var(--doc-unit)*2);transform:scale(-1,-1);}
+  /* the simulated hologram/foil security strip — a computed iridescent
+     sheen (pure CSS) layered over a tiled SHRS wordmark
+     (hologramTileDataUri()). Screen/PDF simulation only; see the file
+     header comment for the honesty boundary. */
+  .jss-holo-strip{
+    position:absolute;top:10px;bottom:10px;${leadingEdge}:10px;width:34px;
+    background:
+      repeating-linear-gradient(125deg, rgba(255,255,255,0) 0px, rgba(120,190,255,0.30) 6px, rgba(255,120,220,0.26) 12px, rgba(255,225,120,0.26) 18px, rgba(130,255,190,0.26) 24px, rgba(255,255,255,0) 30px),
+      url("${holoTileUri}") repeat, var(--jss-ivory);
+    border:1px solid var(--jss-gold-bright);
+    background-blend-mode:overlay, normal, normal;
+  }
+  .jss-watermark{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    opacity:0.045;pointer-events:none;overflow:hidden;
+  }
+  .jss-watermark img{width:460px;}
+  .jss-body-wrap{position:relative;${leadingEdge}:56px;padding-${leadingEdge}:calc(var(--doc-unit)*4);}
+  .jss-masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(var(--doc-unit)*3);flex-wrap:wrap;}
+  .jss-crests{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*4);flex:1;min-width:280px;}
+  .jss-crests img{height:64px;width:auto;object-fit:contain;}
+  .jss-crest-cell{text-align:center;font-family:var(--font-label);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--jss-ink);}
+  .jss-verify-cluster{
+    display:flex;align-items:center;gap:calc(var(--doc-unit)*1.5);
+    border:1px solid var(--jss-gold);border-radius:2px;padding:calc(var(--doc-unit)*1) calc(var(--doc-unit)*1.5);
+    background:rgba(138,106,52,0.06);
+  }
+  .jss-verify-fields{display:flex;flex-direction:column;gap:2px;font-size:0.66rem;}
+  .jss-verify-fields .k{font-family:var(--font-label);letter-spacing:0.06em;text-transform:uppercase;color:var(--jss-gold);display:block;font-size:0.56rem;}
+  .jss-verify-fields .v{font-family:var(--font-body);color:var(--jss-ink);}
+  .jss-verify-fields .jss-code{font-family:monospace;letter-spacing:0.03em;}
+  .jss-qr{margin:0;text-align:center;}
+  .jss-qr figcaption{font-size:0.5rem;color:#6b6357;margin-top:2px;line-height:1.3;}
+  .jss-title-band{text-align:center;margin-top:calc(var(--doc-unit)*2);}
+  .jss-institution{font-family:var(--font-label);font-size:0.92rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--jss-ink);}
+  .jss-doctype{
+    font-family:var(--font-hero);font-weight:700;font-size:2rem;color:var(--jss-gold);
+    margin-top:calc(var(--doc-unit)*0.75);letter-spacing:0.01em;
+  }
+  .jss-doctype-sub{font-family:var(--font-label);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--jss-ink);opacity:0.75;margin-top:2px;}
+  .jss-rule{height:1px;background:linear-gradient(90deg,transparent,var(--jss-gold),transparent);margin:calc(var(--doc-unit)*2) auto;width:60%;}
+  .jss-body{position:relative;text-align:center;font-family:var(--font-display);}
+  .jss-body .jss-eyebrow{font-family:var(--font-label);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--jss-ink);opacity:0.75;}
+  .jss-body .jss-recipient{
+    display:block;font-family:var(--font-hero);font-weight:700;font-size:2.6rem;color:var(--jss-ink);
+    margin:calc(var(--doc-unit)*1.75) 0;
+  }
+  .jss-body .jss-headline{font-size:1.05rem;line-height:1.7;color:var(--jss-ink);}
+  .jss-body .jss-award{
+    display:block;font-family:var(--font-label);font-weight:600;font-size:1.15rem;letter-spacing:0.04em;
+    color:var(--jss-gold);margin:calc(var(--doc-unit)*1.5) 0 calc(var(--doc-unit)*0.5);text-transform:uppercase;
+  }
+  .jss-body .jss-award .jss-result{color:var(--jss-oxblood);}
+  .jss-signatures{display:flex;justify-content:center;gap:calc(var(--doc-unit)*8);margin-top:calc(var(--doc-unit)*5);flex-wrap:wrap;}
+  .jss-sig-cell{width:210px;text-align:center;}
+  .jss-sig-mark{height:calc(var(--doc-unit)*6);display:flex;align-items:flex-end;justify-content:center;}
+  .jss-sig-typed{font-family:'Cormorant Garamond',cursive;font-style:italic;font-size:1.4rem;color:var(--jss-ink);}
+  .jss-sig-rule{height:1px;background:var(--jss-gold);margin-top:calc(var(--doc-unit)*0.75);}
+  .jss-sig-name{font-family:var(--font-label);font-size:0.6rem;color:var(--jss-ink);margin-top:calc(var(--doc-unit)*1);}
+  .jss-sig-title{font-size:0.68rem;color:#6b6357;margin-top:2px;}
+  .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*3);margin:0 calc(var(--doc-unit)*2);}
+  .jss-seal-cell{width:88px;height:88px;display:flex;align-items:center;justify-content:center;}
+  .jss-seal-cell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(36,23,8,0.3));}
+  .jss-seal-reserved{border:1px dashed var(--jss-gold);border-radius:50%;}
+  .jss-seal-reserved span{font-family:var(--font-label);font-size:0.5rem;color:var(--jss-gold);text-transform:uppercase;}
+  .jss-footer{text-align:center;margin-top:calc(var(--doc-unit)*3.5);font-size:0.62rem;color:#7a7263;}
+  .jss-footer-legal{max-width:620px;margin:0 auto;line-height:1.5;}
+  .jss-issued{margin-top:calc(var(--doc-unit)*1);font-family:monospace;color:#a39d8c;}
+  @media print{
+    html,body{background:#fff;}
+    .jss-page{box-shadow:none;margin:0;width:auto;}
+    @page{size:A4 landscape;margin:0;}
+  }
+</style>
+</head>
+<body>
+  <article class="jss-page">
+    <div class="jss-corner jss-corner--tl">${corneFlourishSvg()}</div>
+    <div class="jss-corner jss-corner--tr">${corneFlourishSvg()}</div>
+    <div class="jss-corner jss-corner--bl">${corneFlourishSvg()}</div>
+    <div class="jss-corner jss-corner--br">${corneFlourishSvg()}</div>
+    <div class="jss-holo-strip"></div>
+    <div class="jss-watermark"><img src="/assets/images/crest-watermark.png" alt="" /></div>
+    <div class="jss-body-wrap">
+      <header class="jss-masthead">
+        <div class="jss-crests">
+          <div class="jss-crest-cell"><img src="/assets/images/crests/nigeria-coat-of-arms.png" alt="" /><div>${lang === 'ar' ? 'جمهورية نيجيريا' : 'Federal Republic of Nigeria'}</div></div>
+          <div class="jss-crest-cell"><img src="/assets/images/crests/shrs-institutional-crest.png" alt="" /><div>${lang === 'ar' ? 'مدارس السلطان حنفي الملكية' : 'Sultan Hanafi Royal Schools'}</div></div>
+        </div>
+        ${renderJssVerificationCluster({ certificateNo, verificationCode, lang, dir })}
+      </header>
+      <div class="jss-title-band">
+        <div class="jss-institution">${lang === 'ar' ? 'مدارس السلطان حنفي الملكية' : 'Sultan Hanafi Royal Schools'}</div>
+        <div class="jss-doctype">${escapeHtml(documentTypeLabel)}</div>
+        <div class="jss-doctype-sub">${lang === 'ar' ? 'الشهادة الإعدادية' : 'Junior Secondary School Certificate'}</div>
+        <div class="jss-rule"></div>
+      </div>
+      <section class="jss-body">
+        ${bodyHtml}
+      </section>
+      ${signatories && signatories.length ? `<div class="jss-signatures">${signatories.map((s) => `
+        <div class="jss-sig-cell">
+          <div class="jss-sig-mark">${s.signatureType === 'uploaded_image' && s.imageData
+    ? `<img class="jss-sig-image" src="${escapeHtml(s.imageData)}" style="max-height:46px;max-width:190px;" alt="${escapeHtml(s.staffName)}" />`
+    : `<span class="jss-sig-typed">${escapeHtml(s.typedName || s.staffName)}</span>`}</div>
+          <div class="jss-sig-rule"></div>
+          <div class="jss-sig-name">${escapeHtml(s.staffName)}</div>
+          <div class="jss-sig-title">${escapeHtml(s.titleLine || s.label)}</div>
+        </div>`).join('')}</div>` : ''}
+      ${renderJssSealBlock({ ceremonialSealImage, registrarSealImage, lang })}
+      <footer class="jss-footer">
+        <div class="jss-footer-legal">${lang === 'ar'
+    ? 'وثيقة رسمية صادرة عن مدارس السلطان حنفي الملكية — تحقق دائمًا عبر منصة التحقق الرسمية.'
+    : 'An official document issued by Sultan Hanafi Royal Schools — always verify through the official verification platform.'}</div>
+        <div class="jss-issued">${escapeHtml(certificateNo)} · ${escapeHtml(issuedAtDisplay)}</div>
+      </footer>
+    </div>
+  </article>
+</body>
+</html>`;
+}
