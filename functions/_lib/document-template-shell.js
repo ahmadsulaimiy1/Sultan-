@@ -39,6 +39,19 @@
 // spec §12) — sealImage is only ever rendered if a real asset is
 // supplied by the caller; absent that, a clearly-labelled reserved
 // position is shown instead of an invented mark.
+//
+// Masthead assets (Design System v2.1) — assets/images/crests/
+// nigeria-coat-of-arms.png and shrs-institutional-crest.png are real,
+// not fabricated: cropped directly from the client's own currently-
+// issued Certificate of Good Conduct/Moral, following this project's
+// standing rule for real seal/crest assets (§12). The Nigeria coat of
+// arms is the country's public national emblem; the SHRS crest is the
+// institution's own mark (the same design already used, in flat
+// gold-line form, as the site-wide crest-full.png — this is a fuller-
+// fidelity rendition of the identical real crest, not a different
+// asset). No name, ID number, DOB, or photo belonging to the real
+// students whose real documents these crests were cropped from was
+// stored or reproduced anywhere in this codebase.
 
 function escapeHtml(s) {
   return String(s == null ? '' : s)
@@ -75,6 +88,26 @@ function guillocheSvg() {
     paths.push(`<path d="${d}Z" fill="none" stroke="currentColor" stroke-width="0.6"/>`);
   }
   return `<svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">${paths.join('')}</svg>`;
+}
+
+// A small original geometric corner flourish — a single 8-point star
+// outline, the same restrained "compute it, don't trace it" discipline
+// as guillocheSvg() above. Not a reproduction of any specific reference
+// document's diamond-chain border, which reads as a licensed stock
+// pattern rather than the institution's own asset — this is an
+// original mark in the same visual family (Islamic geometric star).
+function cornerOrnamentSvg() {
+  const cx = 30, cy = 30, points = 8;
+  const outerR = 24, innerR = 11;
+  let d = '';
+  for (let i = 0; i < points * 2; i += 1) {
+    const r = i % 2 === 0 ? outerR : innerR;
+    const theta = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + r * Math.cos(theta);
+    const y = cy + r * Math.sin(theta);
+    d += `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)} `;
+  }
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="${d}Z" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>`;
 }
 
 function renderSignatureBlock(signatories, lang) {
@@ -189,6 +222,14 @@ export function renderDocumentShell({
   .doc-page::before{
     content:"";position:absolute;inset:calc(var(--doc-unit)*1.75);border:1px solid var(--gold);opacity:0.55;pointer-events:none;
   }
+  /* Design System v2.1 — restrained corner ornaments (an original
+     8-point star mark, not a traced reference-document border). */
+  .doc-corner{position:absolute;width:30px;height:30px;color:var(--gold);opacity:0.5;pointer-events:none;}
+  .doc-corner svg{width:100%;height:100%;}
+  .doc-corner--tl{top:calc(var(--doc-unit)*1.25);${dir === 'rtl' ? 'right' : 'left'}:calc(var(--doc-unit)*1.25);}
+  .doc-corner--tr{top:calc(var(--doc-unit)*1.25);${dir === 'rtl' ? 'left' : 'right'}:calc(var(--doc-unit)*1.25);}
+  .doc-corner--bl{bottom:calc(var(--doc-unit)*1.25);${dir === 'rtl' ? 'right' : 'left'}:calc(var(--doc-unit)*1.25);}
+  .doc-corner--br{bottom:calc(var(--doc-unit)*1.25);${dir === 'rtl' ? 'left' : 'right'}:calc(var(--doc-unit)*1.25);}
   /* Design System v2 — security background: a low-opacity, mathematically
      generated guilloché-style line field (benchmark report §4), distinct
      from the crest watermark and layered beneath it. */
@@ -208,6 +249,15 @@ export function renderDocumentShell({
     transform:rotate(${dir === 'rtl' ? '8deg' : '-8deg'});
   }
   .doc-header{position:relative;text-align:center;margin-bottom:calc(var(--doc-unit)*3.5);}
+  .doc-header .doc-crests{
+    display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*3);margin-bottom:calc(var(--doc-unit)*1.5);
+  }
+  .doc-header .doc-crests img{height:60px;width:auto;object-fit:contain;}
+  .doc-header .doc-nation{
+    /* Design System v2.1 — national masthead tier, above institution name */
+    font-family:var(--font-label);font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;color:#8a8577;
+    margin-bottom:calc(var(--doc-unit)*0.5);
+  }
   .doc-header .doc-institution{
     /* Design System v2 typography scale — institution name tier */
     font-family:var(--font-label);font-size:0.85rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--navy);
@@ -276,12 +326,20 @@ export function renderDocumentShell({
 </head>
 <body>
   <article class="doc-page">
+    <div class="doc-corner doc-corner--tl">${cornerOrnamentSvg()}</div>
+    <div class="doc-corner doc-corner--tr">${cornerOrnamentSvg()}</div>
+    <div class="doc-corner doc-corner--bl">${cornerOrnamentSvg()}</div>
+    <div class="doc-corner doc-corner--br">${cornerOrnamentSvg()}</div>
     <div class="doc-security-bg">${guillocheSvg()}</div>
     <div class="doc-watermark"><img src="/assets/images/crest-watermark.png" alt="" /></div>
     ${stampHtml}
     <header class="doc-header">
-      <img src="/assets/images/crest-full.png" alt="" style="width:64px;height:64px;object-fit:contain;margin-bottom:calc(var(--doc-unit)*1.25);" />
-      <div class="doc-institution">Sultan Hanafi Royal Schools</div>
+      <div class="doc-crests">
+        <img src="/assets/images/crests/nigeria-coat-of-arms.png" alt="" />
+        <img src="/assets/images/crests/shrs-institutional-crest.png" alt="" />
+      </div>
+      <div class="doc-nation">${lang === 'ar' ? 'جمهورية نيجيريا الإتحادية' : 'Federal Republic of Nigeria'}</div>
+      <div class="doc-institution">${lang === 'ar' ? 'مدارس السلطان حنفي الملكية' : 'Sultan Hanafi Royal Schools'}</div>
       <div class="doc-doctype">${escapeHtml(documentTypeLabel)}</div>
       <div class="doc-rule"></div>
     </header>
