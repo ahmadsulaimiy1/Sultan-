@@ -656,30 +656,101 @@ function corneFlourishSvg(size = 96) {
   </svg>`;
 }
 
-// A single tile of the simulated hologram strip: the institution's own
-// initials, rotated and set small, tiled vertically via the same
-// proven background-repeat technique as girihTileDataUri() above (not
-// a new, riskier method). The iridescent sheen itself is pure CSS
-// (repeating-linear-gradient), layered on top in the caller's markup —
-// this function only supplies the repeating wordmark layer.
-function hologramTileDataUri(colorHex) {
-  const w = 40;
-  const h = 64;
+// A continuous engraved scroll/vine tile for the full perimeter frame
+// band — a denser, richer companion to v4's girihTileDataUri(), used
+// here so the border reads as continuously ornamented the whole way
+// round (not just decorated at the four corners, which the first pass
+// of this register got wrong per the client's correction: "the border
+// system has been simplified and lost its premium engraved
+// appearance"). Two interleaved wave traces plus small bud/leaf marks
+// at each crest, computed from trigonometry exactly like every other
+// ornament in this file — never traced from the reference's own
+// border artwork.
+function engravedScrollTileDataUri(colorHex) {
+  const w = 44;
+  const h = 22;
+  let d1 = '';
+  let d2 = '';
+  const buds = [];
+  for (let i = 0; i <= w; i += 1) {
+    const y1 = 11 + 6 * Math.sin((i / w) * Math.PI * 2);
+    const y2 = 11 - 3.5 * Math.sin((i / w) * Math.PI * 2);
+    d1 += `${i === 0 ? 'M' : 'L'}${i},${y1.toFixed(1)} `;
+    d2 += `${i === 0 ? 'M' : 'L'}${i},${y2.toFixed(1)} `;
+    if (i === Math.round(w * 0.25) || i === Math.round(w * 0.75)) {
+      buds.push(`<circle cx="${i}" cy="${y1.toFixed(1)}" r="2.1" fill="${colorHex}" opacity="0.9"/>`);
+    }
+  }
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>`
-    + `<text x='${w / 2}' y='${h / 2}' font-family='Georgia,serif' font-size='10' font-weight='700' `
-    + `fill='${colorHex}' opacity='0.5' text-anchor='middle' dominant-baseline='middle' `
-    + `transform='rotate(-90 ${w / 2} ${h / 2})'>SHRS</text>`
+    + `<path d='${d1}' fill='none' stroke='${colorHex}' stroke-width='1.4' opacity='0.85'/>`
+    + `<path d='${d2}' fill='none' stroke='${colorHex}' stroke-width='0.9' opacity='0.45'/>`
+    + buds.join('')
     + `</svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
-function renderJssSealBlock({ ceremonialSealImage, registrarSealImage, lang }) {
-  const cell = (img, label) => (img
+// A single tile of the simulated hologram strip: the institution's
+// initials plus a small computed 8-point star glyph (reusing the same
+// star-polygon construction as the corner ornaments, at a tiny scale),
+// alternating top-to-bottom and tiled vertically via the same proven
+// background-repeat technique as girihTileDataUri() above (not a new,
+// riskier method). Denser than the first pass of this register, per
+// the client's correction that the strip needed to read as rich/busy
+// rather than a thin quiet line. The iridescent sheen itself is pure
+// CSS (repeating-linear-gradient), layered on top in the caller's
+// markup — this function only supplies the repeating glyph+wordmark
+// layer.
+function hologramTileDataUri(colorHex) {
+  const w = 40;
+  const h = 56;
+  const cx = w / 2;
+  const starCy = 12;
+  const outerR = 6;
+  const innerR = 2.6;
+  let starD = '';
+  for (let i = 0; i < 16; i += 1) {
+    const r = i % 2 === 0 ? outerR : innerR;
+    const theta = (i / 16) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + r * Math.cos(theta);
+    const y = starCy + r * Math.sin(theta);
+    starD += `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)} `;
+  }
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>`
+    + `<path d='${starD}Z' fill='none' stroke='${colorHex}' stroke-width='1' opacity='0.65'/>`
+    + `<text x='${cx}' y='${h - 8}' font-family='Georgia,serif' font-size='11' font-weight='700' `
+    + `fill='${colorHex}' opacity='0.6' text-anchor='middle' dominant-baseline='middle' `
+    + `transform='rotate(-90 ${cx} ${h - 8})'>SHRS</text>`
+    + `</svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
+// Signature + seal now render as ONE unified band (signatory — seal
+// cluster — signatory), matching the reference's actual composition,
+// where the client correctly flagged the first pass's separate
+// stacked rows as reading "disconnected." Seals are enlarged for the
+// same reason. Still only ever SHRS's own two real seal assets (see
+// the file-header comment) — never a third, invented one.
+function renderJssSignatureSealBand({ signatories = [], ceremonialSealImage, registrarSealImage, lang }) {
+  const sig = (s) => `<div class="jss-sig-cell">
+      <div class="jss-sig-mark">${s.signatureType === 'uploaded_image' && s.imageData
+    ? `<img class="jss-sig-image" src="${escapeHtml(s.imageData)}" style="max-height:48px;max-width:190px;" alt="${escapeHtml(s.staffName)}" />`
+    : `<span class="jss-sig-typed">${escapeHtml(s.typedName || s.staffName)}</span>`}</div>
+      <div class="jss-sig-rule"></div>
+      <div class="jss-sig-name">${escapeHtml(s.staffName)}</div>
+      <div class="jss-sig-title">${escapeHtml(s.titleLine || s.label)}</div>
+    </div>`;
+  const sealCell = (img, label) => (img
     ? `<div class="jss-seal-cell"><img src="${escapeHtml(img)}" alt="${escapeHtml(label)}" /></div>`
     : `<div class="jss-seal-cell jss-seal-reserved"><span>${escapeHtml(lang === 'ar' ? 'محجوز' : 'Reserved')}</span></div>`);
-  return `<div class="jss-seal-pair">
-    ${cell(ceremonialSealImage, lang === 'ar' ? 'الختم الاحتفالي' : 'Ceremonial Seal')}
-    ${cell(registrarSealImage, lang === 'ar' ? 'ختم المسجل' : 'Registrar Seal')}
+  const left = signatories[0] ? sig(signatories[0]) : '<div class="jss-sig-cell"></div>';
+  const right = signatories[1] ? sig(signatories[1]) : '<div class="jss-sig-cell"></div>';
+  return `<div class="jss-sig-seal-band">
+    ${left}
+    <div class="jss-seal-pair">
+      ${sealCell(ceremonialSealImage, lang === 'ar' ? 'الختم الاحتفالي' : 'Ceremonial Seal')}
+      ${sealCell(registrarSealImage, lang === 'ar' ? 'ختم المسجل' : 'Registrar Seal')}
+    </div>
+    ${right}
   </div>`;
 }
 
@@ -708,11 +779,12 @@ function renderJssVerificationCluster({ certificateNo, verificationCode, lang, d
 // "visual template first, backend wiring named separately" sequencing
 // this project has used for every prior document-type round.
 export function renderJssCertificateShell({
-  documentTypeLabel, lang = 'en', dir = 'ltr', recipientName, bodyHtml,
-  certificateNo, verificationCode, issuedAtDisplay, signatories = [],
+  documentTypeLabel, lang = 'en', dir = 'ltr', recipientName, idNumber, bodyHtml,
+  certificateNo, verificationCode, issuedAtDisplay, issuedLocation, signatories = [],
   ceremonialSealImage = null, registrarSealImage = null,
 }) {
-  const holoTileUri = hologramTileDataUri('#8A6A34');
+  const holoTileUri = hologramTileDataUri('#B8912E');
+  const frameTileUri = engravedScrollTileDataUri('#B8912E');
   const leadingEdge = dir === 'rtl' ? 'right' : 'left';
   const trailingEdge = dir === 'rtl' ? 'left' : 'right';
 
@@ -730,9 +802,12 @@ export function renderJssCertificateShell({
        (design decision #3 from the approval exchange): gold + espresso
        ink as the primary pair, oxblood reserved for emphasis values
        only (the DISTINCTION-style headline result), no teal — this
-       register does not inherit v4's manuscript accent. */
-    --jss-ink:#241708; --jss-gold:#8A6A34; --jss-gold-bright:#C9A356;
-    --jss-ivory:#FAF4E6; --jss-oxblood:#7C1F2E; --jss-sand:#D8CBA8;
+       register does not inherit v4's manuscript accent. Brightened
+       from the first pass's #8A6A34 to a more saturated antique gold
+       (#B8912E) per the client's correction that the register had
+       drifted toward a "generic training certificate" look. */
+    --jss-ink:#221A0E; --jss-gold:#B8912E; --jss-gold-deep:#8A6A22; --jss-gold-bright:#E4C878;
+    --jss-ivory:#FAF3E2; --jss-oxblood:#7C1F2E; --jss-sand:#D8CBA8;
     --font-display:'Cormorant Garamond','Amiri',serif;
     --font-hero:'Playfair Display','Amiri',serif;
     --font-label:'Cinzel','Amiri',serif;
@@ -746,94 +821,118 @@ export function renderJssCertificateShell({
     background:radial-gradient(ellipse at 50% 18%, #3E2B18 0%, #1C1208 60%, #110B05 100%);
   }
   .jss-page{
-    position:relative;width:1200px;max-width:100%;margin:calc(var(--doc-unit)*5) auto;
-    padding:calc(var(--doc-unit)*7) calc(var(--doc-unit)*8);
+    position:relative;width:1300px;max-width:100%;margin:calc(var(--doc-unit)*4) auto;
+    padding:52px 60px 40px;
     background:var(--jss-ivory);
-    border:6px solid var(--jss-gold);
+    border:3px solid var(--jss-gold-deep);
     box-shadow:
-      inset 0 0 0 2px var(--jss-gold-bright),
-      inset 0 0 0 10px var(--jss-ivory),
-      inset 0 0 0 12px var(--jss-gold),
+      inset 0 0 0 3px var(--jss-gold-bright),
+      inset 0 0 0 44px var(--jss-ivory),
+      inset 0 0 0 47px var(--jss-gold),
+      inset 0 0 0 49px var(--jss-gold-bright),
+      inset 0 0 0 58px var(--jss-ivory),
+      inset 0 0 0 59px var(--jss-gold-deep),
       0 0 0 5px var(--jss-ivory),
       0 24px 70px rgba(17,11,5,0.55);
   }
-  /* punctuated corner ornament — the "gilt frame" register's own
-     corner mark (corneFlourishSvg()), replacing v4's khatam rosette
-     for this document family. */
-  .jss-corner{position:absolute;width:76px;height:76px;color:var(--jss-gold);opacity:0.85;pointer-events:none;}
+  /* Continuous engraved frame band (engravedScrollTileDataUri()) — the
+     fix for the client's core correction: the border must be
+     ornamented the whole way round, not just decorated at the
+     corners. Four edge strips, same proven background-repeat
+     technique already validated elsewhere in this file. */
+  .jss-frame-band{position:absolute;inset:14px;pointer-events:none;}
+  .jss-frame-edge{position:absolute;background-image:url("${frameTileUri}");background-repeat:repeat;opacity:0.9;}
+  .jss-frame-edge--top{top:0;left:0;right:0;height:22px;background-size:44px 22px;}
+  .jss-frame-edge--bottom{bottom:0;left:0;right:0;height:22px;background-size:44px 22px;transform:scaleY(-1);}
+  .jss-frame-edge--left{top:0;bottom:0;left:0;width:22px;background-size:22px 44px;}
+  .jss-frame-edge--right{top:0;bottom:0;right:0;width:22px;background-size:22px 44px;transform:scaleX(-1);}
+  /* punctuated corner ornament — layered ON TOP of the continuous
+     frame band for extra density exactly where the reference has it,
+     not as a substitute for the band. */
+  .jss-corner{position:absolute;width:74px;height:74px;color:var(--jss-gold-deep);opacity:0.95;pointer-events:none;z-index:2;}
   .jss-corner svg{width:100%;height:100%;}
-  .jss-corner--tl{top:calc(var(--doc-unit)*2);${leadingEdge}:calc(var(--doc-unit)*2);}
-  .jss-corner--tr{top:calc(var(--doc-unit)*2);${trailingEdge}:calc(var(--doc-unit)*2);transform:scaleX(-1);}
-  .jss-corner--bl{bottom:calc(var(--doc-unit)*2);${leadingEdge}:calc(var(--doc-unit)*2);transform:scaleY(-1);}
-  .jss-corner--br{bottom:calc(var(--doc-unit)*2);${trailingEdge}:calc(var(--doc-unit)*2);transform:scale(-1,-1);}
+  .jss-corner--tl{top:8px;${leadingEdge}:8px;}
+  .jss-corner--tr{top:8px;${trailingEdge}:8px;transform:scaleX(-1);}
+  .jss-corner--bl{bottom:8px;${leadingEdge}:8px;transform:scaleY(-1);}
+  .jss-corner--br{bottom:8px;${trailingEdge}:8px;transform:scale(-1,-1);}
   /* the simulated hologram/foil security strip — a computed iridescent
-     sheen (pure CSS) layered over a tiled SHRS wordmark
+     sheen (pure CSS) layered over a tiled SHRS wordmark+star
      (hologramTileDataUri()). Screen/PDF simulation only; see the file
-     header comment for the honesty boundary. */
+     header comment for the honesty boundary. Widened and deepened per
+     the client's correction that the first pass read as too thin. */
   .jss-holo-strip{
-    position:absolute;top:10px;bottom:10px;${leadingEdge}:10px;width:34px;
+    position:absolute;top:66px;bottom:66px;${leadingEdge}:66px;width:40px;z-index:1;
     background:
-      repeating-linear-gradient(125deg, rgba(255,255,255,0) 0px, rgba(120,190,255,0.30) 6px, rgba(255,120,220,0.26) 12px, rgba(255,225,120,0.26) 18px, rgba(130,255,190,0.26) 24px, rgba(255,255,255,0) 30px),
+      repeating-linear-gradient(125deg, rgba(255,255,255,0) 0px, rgba(120,190,255,0.34) 6px, rgba(255,120,220,0.30) 12px, rgba(255,225,120,0.30) 18px, rgba(130,255,190,0.30) 24px, rgba(255,255,255,0) 30px),
       url("${holoTileUri}") repeat, var(--jss-ivory);
     border:1px solid var(--jss-gold-bright);
     background-blend-mode:overlay, normal, normal;
   }
   .jss-watermark{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    opacity:0.045;pointer-events:none;overflow:hidden;
+    opacity:0.05;pointer-events:none;overflow:hidden;
   }
-  .jss-watermark img{width:460px;}
-  .jss-body-wrap{position:relative;${leadingEdge}:56px;padding-${leadingEdge}:calc(var(--doc-unit)*4);}
+  .jss-watermark img{width:520px;}
+  .jss-body-wrap{position:relative;margin-${leadingEdge}:64px;padding-${leadingEdge}:calc(var(--doc-unit)*4.5);padding-${trailingEdge}:calc(var(--doc-unit)*5);}
   .jss-masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(var(--doc-unit)*3);flex-wrap:wrap;}
-  .jss-crests{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*4);flex:1;min-width:280px;}
-  .jss-crests img{height:64px;width:auto;object-fit:contain;}
-  .jss-crest-cell{text-align:center;font-family:var(--font-label);font-size:0.56rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--jss-ink);}
+  .jss-crests{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*5);flex:1;min-width:300px;}
+  .jss-crests img{height:70px;width:auto;object-fit:contain;}
+  .jss-crest-cell{text-align:center;font-family:var(--font-label);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--jss-ink);}
   .jss-verify-cluster{
     display:flex;align-items:center;gap:calc(var(--doc-unit)*1.5);
-    border:1px solid var(--jss-gold);border-radius:2px;padding:calc(var(--doc-unit)*1) calc(var(--doc-unit)*1.5);
-    background:rgba(138,106,52,0.06);
+    border:1.5px solid var(--jss-gold-deep);border-radius:2px;padding:calc(var(--doc-unit)*1) calc(var(--doc-unit)*1.5);
+    background:rgba(184,145,46,0.08);
   }
-  .jss-verify-fields{display:flex;flex-direction:column;gap:2px;font-size:0.66rem;}
-  .jss-verify-fields .k{font-family:var(--font-label);letter-spacing:0.06em;text-transform:uppercase;color:var(--jss-gold);display:block;font-size:0.56rem;}
-  .jss-verify-fields .v{font-family:var(--font-body);color:var(--jss-ink);}
+  .jss-verify-fields{display:flex;flex-direction:column;gap:3px;font-size:0.7rem;}
+  .jss-verify-fields .k{font-family:var(--font-label);letter-spacing:0.06em;text-transform:uppercase;color:var(--jss-gold-deep);display:block;font-size:0.58rem;}
+  .jss-verify-fields .v{font-family:var(--font-body);color:var(--jss-ink);font-weight:600;}
   .jss-verify-fields .jss-code{font-family:monospace;letter-spacing:0.03em;}
   .jss-qr{margin:0;text-align:center;}
-  .jss-qr figcaption{font-size:0.5rem;color:#6b6357;margin-top:2px;line-height:1.3;}
-  .jss-title-band{text-align:center;margin-top:calc(var(--doc-unit)*2);}
-  .jss-institution{font-family:var(--font-label);font-size:0.92rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--jss-ink);}
+  .jss-qr figcaption{font-size:0.52rem;color:#6b6357;margin-top:2px;line-height:1.3;}
+  .jss-title-band{text-align:center;margin-top:calc(var(--doc-unit)*1.5);}
+  .jss-institution{font-family:var(--font-label);font-weight:600;font-size:1.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--jss-ink);}
   .jss-doctype{
-    font-family:var(--font-hero);font-weight:700;font-size:2rem;color:var(--jss-gold);
-    margin-top:calc(var(--doc-unit)*0.75);letter-spacing:0.01em;
+    font-family:var(--font-hero);font-weight:700;font-size:2.15rem;color:var(--jss-gold-deep);
+    margin-top:calc(var(--doc-unit)*0.5);letter-spacing:0.01em;
   }
-  .jss-doctype-sub{font-family:var(--font-label);font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--jss-ink);opacity:0.75;margin-top:2px;}
-  .jss-rule{height:1px;background:linear-gradient(90deg,transparent,var(--jss-gold),transparent);margin:calc(var(--doc-unit)*2) auto;width:60%;}
+  .jss-doctype-sub{font-family:var(--font-label);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--jss-ink);opacity:0.8;margin-top:2px;}
+  .jss-rule{height:2px;background:linear-gradient(90deg,transparent,var(--jss-gold-deep) 15%,var(--jss-gold-bright) 50%,var(--jss-gold-deep) 85%,transparent);margin:calc(var(--doc-unit)*1.5) auto;width:72%;}
   .jss-body{position:relative;text-align:center;font-family:var(--font-display);}
-  .jss-body .jss-eyebrow{font-family:var(--font-label);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--jss-ink);opacity:0.75;}
+  .jss-body .jss-eyebrow{font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--jss-ink);opacity:0.85;}
   .jss-body .jss-recipient{
-    display:block;font-family:var(--font-hero);font-weight:700;font-size:2.6rem;color:var(--jss-ink);
-    margin:calc(var(--doc-unit)*1.75) 0;
+    display:block;font-family:var(--font-hero);font-weight:700;font-size:4.1rem;color:var(--jss-ink);
+    margin:calc(var(--doc-unit)*1) 0;letter-spacing:0.01em;line-height:1.05;
   }
-  .jss-body .jss-headline{font-size:1.05rem;line-height:1.7;color:var(--jss-ink);}
+  .jss-body .jss-recipient-rule{height:1.5px;width:52%;margin:0 auto calc(var(--doc-unit)*1.5);background:linear-gradient(90deg,transparent,var(--jss-gold-deep),transparent);}
+  .jss-body .jss-id-line{font-family:var(--font-label);font-size:0.78rem;letter-spacing:0.05em;color:var(--jss-ink);opacity:0.85;margin-bottom:calc(var(--doc-unit)*1.5);}
+  .jss-body .jss-id-line b{color:var(--jss-gold-deep);}
+  .jss-body .jss-headline{font-size:1.12rem;line-height:1.75;color:var(--jss-ink);max-width:920px;margin:0 auto;}
   .jss-body .jss-award{
-    display:block;font-family:var(--font-label);font-weight:600;font-size:1.15rem;letter-spacing:0.04em;
-    color:var(--jss-gold);margin:calc(var(--doc-unit)*1.5) 0 calc(var(--doc-unit)*0.5);text-transform:uppercase;
+    display:block;font-family:var(--font-label);font-weight:600;font-size:1.3rem;letter-spacing:0.05em;
+    color:var(--jss-gold-deep);margin:calc(var(--doc-unit)*2) 0 calc(var(--doc-unit)*0.5);text-transform:uppercase;
   }
   .jss-body .jss-award .jss-result{color:var(--jss-oxblood);}
-  .jss-signatures{display:flex;justify-content:center;gap:calc(var(--doc-unit)*8);margin-top:calc(var(--doc-unit)*5);flex-wrap:wrap;}
-  .jss-sig-cell{width:210px;text-align:center;}
-  .jss-sig-mark{height:calc(var(--doc-unit)*6);display:flex;align-items:flex-end;justify-content:center;}
-  .jss-sig-typed{font-family:'Cormorant Garamond',cursive;font-style:italic;font-size:1.4rem;color:var(--jss-ink);}
-  .jss-sig-rule{height:1px;background:var(--jss-gold);margin-top:calc(var(--doc-unit)*0.75);}
-  .jss-sig-name{font-family:var(--font-label);font-size:0.6rem;color:var(--jss-ink);margin-top:calc(var(--doc-unit)*1);}
-  .jss-sig-title{font-size:0.68rem;color:#6b6357;margin-top:2px;}
-  .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*3);margin:0 calc(var(--doc-unit)*2);}
-  .jss-seal-cell{width:88px;height:88px;display:flex;align-items:center;justify-content:center;}
-  .jss-seal-cell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(36,23,8,0.3));}
-  .jss-seal-reserved{border:1px dashed var(--jss-gold);border-radius:50%;}
-  .jss-seal-reserved span{font-family:var(--font-label);font-size:0.5rem;color:var(--jss-gold);text-transform:uppercase;}
-  .jss-footer{text-align:center;margin-top:calc(var(--doc-unit)*3.5);font-size:0.62rem;color:#7a7263;}
-  .jss-footer-legal{max-width:620px;margin:0 auto;line-height:1.5;}
-  .jss-issued{margin-top:calc(var(--doc-unit)*1);font-family:monospace;color:#a39d8c;}
+  .jss-body .jss-testimony{font-size:0.86rem;line-height:1.6;color:var(--jss-ink);opacity:0.85;max-width:760px;margin:calc(var(--doc-unit)*2) auto 0;}
+  .jss-sig-seal-band{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--doc-unit)*3);margin-top:calc(var(--doc-unit)*4);}
+  .jss-sig-cell{width:240px;text-align:center;}
+  .jss-sig-mark{height:calc(var(--doc-unit)*6.5);display:flex;align-items:flex-end;justify-content:center;}
+  .jss-sig-typed{font-family:'Cormorant Garamond',cursive;font-style:italic;font-size:1.55rem;color:var(--jss-ink);}
+  .jss-sig-rule{height:1.5px;background:var(--jss-gold-deep);margin-top:calc(var(--doc-unit)*0.75);}
+  .jss-sig-name{font-family:var(--font-label);font-size:0.68rem;color:var(--jss-ink);margin-top:calc(var(--doc-unit)*1);}
+  .jss-sig-title{font-size:0.74rem;color:#6b6357;margin-top:2px;}
+  .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*2.5);}
+  .jss-seal-cell{width:118px;height:118px;display:flex;align-items:center;justify-content:center;}
+  .jss-seal-cell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(34,26,14,0.32));}
+  .jss-seal-reserved{border:1.5px dashed var(--jss-gold-deep);border-radius:50%;}
+  .jss-seal-reserved span{font-family:var(--font-label);font-size:0.52rem;color:var(--jss-gold-deep);text-transform:uppercase;}
+  .jss-footer{
+    display:flex;align-items:center;justify-content:space-between;gap:calc(var(--doc-unit)*3);flex-wrap:wrap;
+    margin-top:calc(var(--doc-unit)*4);padding-top:calc(var(--doc-unit)*2);border-top:1.5px solid var(--jss-gold-deep);
+    font-size:0.68rem;color:#5c5648;
+  }
+  .jss-footer-issued{text-align:${leadingEdge};}
+  .jss-footer-issued b{color:var(--jss-ink);font-family:monospace;}
+  .jss-footer-legal{max-width:460px;flex:none;text-align:${trailingEdge};line-height:1.5;}
   @media print{
     html,body{background:#fff;}
     .jss-page{box-shadow:none;margin:0;width:auto;}
@@ -843,6 +942,12 @@ export function renderJssCertificateShell({
 </head>
 <body>
   <article class="jss-page">
+    <div class="jss-frame-band">
+      <div class="jss-frame-edge jss-frame-edge--top"></div>
+      <div class="jss-frame-edge jss-frame-edge--bottom"></div>
+      <div class="jss-frame-edge jss-frame-edge--left"></div>
+      <div class="jss-frame-edge jss-frame-edge--right"></div>
+    </div>
     <div class="jss-corner jss-corner--tl">${corneFlourishSvg()}</div>
     <div class="jss-corner jss-corner--tr">${corneFlourishSvg()}</div>
     <div class="jss-corner jss-corner--bl">${corneFlourishSvg()}</div>
@@ -866,21 +971,12 @@ export function renderJssCertificateShell({
       <section class="jss-body">
         ${bodyHtml}
       </section>
-      ${signatories && signatories.length ? `<div class="jss-signatures">${signatories.map((s) => `
-        <div class="jss-sig-cell">
-          <div class="jss-sig-mark">${s.signatureType === 'uploaded_image' && s.imageData
-    ? `<img class="jss-sig-image" src="${escapeHtml(s.imageData)}" style="max-height:46px;max-width:190px;" alt="${escapeHtml(s.staffName)}" />`
-    : `<span class="jss-sig-typed">${escapeHtml(s.typedName || s.staffName)}</span>`}</div>
-          <div class="jss-sig-rule"></div>
-          <div class="jss-sig-name">${escapeHtml(s.staffName)}</div>
-          <div class="jss-sig-title">${escapeHtml(s.titleLine || s.label)}</div>
-        </div>`).join('')}</div>` : ''}
-      ${renderJssSealBlock({ ceremonialSealImage, registrarSealImage, lang })}
+      ${renderJssSignatureSealBand({ signatories, ceremonialSealImage, registrarSealImage, lang })}
       <footer class="jss-footer">
+        <div class="jss-footer-issued">${lang === 'ar' ? 'صدرت بتاريخ' : 'Issued'} <b>${escapeHtml(issuedAtDisplay)}</b>${issuedLocation ? ` · ${escapeHtml(issuedLocation)}` : ''} · <b>${escapeHtml(certificateNo)}</b></div>
         <div class="jss-footer-legal">${lang === 'ar'
-    ? 'وثيقة رسمية صادرة عن مدارس السلطان حنفي الملكية — تحقق دائمًا عبر منصة التحقق الرسمية.'
-    : 'An official document issued by Sultan Hanafi Royal Schools — always verify through the official verification platform.'}</div>
-        <div class="jss-issued">${escapeHtml(certificateNo)} · ${escapeHtml(issuedAtDisplay)}</div>
+    ? 'وثيقة رسمية صادرة عن مدارس السلطان حنفي الملكية — تحقق دائمًا عبر منصة التحقق الرسمية، لا تعتمد على نسخة غير مؤكدة.'
+    : 'An official document issued by Sultan Hanafi Royal Schools — always verify through the official verification platform; do not rely on an unconfirmed copy.'}</div>
       </footer>
     </div>
   </article>
