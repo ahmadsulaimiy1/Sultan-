@@ -753,9 +753,15 @@ function engravedScrollTileDataUri(colorHex) {
 // layer.
 function hologramTileDataUri(colorHex) {
   const w = 40;
-  const h = 56;
+  // h was 56, too short for a rotated 11px "SHRS" wordmark (~30px of
+  // rendered width becomes vertical extent once rotated -90deg) — the
+  // glyph overflowed the tile bounds and got cut by the next repeat,
+  // rendering as "HRS" with the leading S clipped away. Widened to 76
+  // so the full word clears the tile with margin on both sides; the
+  // star glyph keeps its own original size/position.
+  const h = 76;
   const cx = w / 2;
-  const starCy = 12;
+  const starCy = 14;
   const outerR = 6;
   const innerR = 2.6;
   let starD = '';
@@ -768,9 +774,9 @@ function hologramTileDataUri(colorHex) {
   }
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>`
     + `<path d='${starD}Z' fill='none' stroke='${colorHex}' stroke-width='1' opacity='0.65'/>`
-    + `<text x='${cx}' y='${h - 8}' font-family='Georgia,serif' font-size='11' font-weight='700' `
+    + `<text x='${cx}' y='${h - 12}' font-family='Georgia,serif' font-size='11' font-weight='700' `
     + `fill='${colorHex}' opacity='0.6' text-anchor='middle' dominant-baseline='middle' `
-    + `transform='rotate(-90 ${cx} ${h - 8})'>SHRS</text>`
+    + `transform='rotate(-90 ${cx} ${h - 12})'>SHRS</text>`
     + `</svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
@@ -943,7 +949,12 @@ export function renderJssCertificateShell({
       repeating-linear-gradient(125deg, rgba(255,255,255,0) 0px, rgba(120,190,255,0.34) 6px, rgba(255,120,220,0.30) 12px, rgba(255,225,120,0.30) 18px, rgba(130,255,190,0.30) 24px, rgba(255,255,255,0) 30px),
       url("${holoTileUri}") repeat, var(--jss-ivory);
     border:1px solid var(--jss-gold-bright);
-    background-blend-mode:overlay, normal, normal;
+    /* was 'overlay': against this near-white ivory backdrop, overlay's
+       high-luminance branch behaves like 'screen', which washes the
+       pastel gradient stops toward white until they're essentially
+       invisible. 'multiply' actually imprints the gradient's colour
+       onto the light backdrop, producing the intended visible sheen. */
+    background-blend-mode:multiply, normal, normal;
   }
   /* Category B (invisible security improvement, per the client's own
      A/B/C classification): a full-field engraved guilloché texture —
@@ -985,7 +996,6 @@ export function renderJssCertificateShell({
     font-family:var(--font-hero);font-weight:700;font-size:2.15rem;color:var(--jss-gold-deep);
     margin-top:calc(var(--doc-unit)*0.5);letter-spacing:0.01em;
   }
-  .jss-doctype-sub{font-family:var(--font-label);font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--jss-ink);opacity:0.8;margin-top:2px;}
   .jss-rule{height:2px;background:linear-gradient(90deg,transparent,var(--jss-gold-deep) 15%,var(--jss-gold-bright) 50%,var(--jss-gold-deep) 85%,transparent);margin:calc(var(--doc-unit)*1.5) auto;width:72%;}
   .jss-body{position:relative;text-align:center;font-family:var(--font-display);}
   .jss-body .jss-eyebrow{font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--jss-ink);opacity:0.85;}
@@ -1013,12 +1023,25 @@ export function renderJssCertificateShell({
   .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*2.5);}
   .jss-seal-cell{width:118px;height:118px;display:flex;align-items:center;justify-content:center;position:relative;}
   .jss-seal-cell img{
-    width:100%;height:100%;object-fit:contain;
-    /* Category C, approved (dimensional rendering): a layered
+    width:100%;height:100%;object-fit:cover;
+    /* The two real seal source photographs each sit on their own plain
+       card background (white behind the ceremonial seal, grey behind
+       the registrar ink stamp) rather than a transparent field — at
+       object-fit:contain that background rendered as a visible square
+       card floating on the page, exactly the "flat pasted image" look
+       the drop-shadow below was meant to avoid. A circular clip crops
+       to the seal's own circular device (both source images are
+       circular medallions/stamps well inside their frame), so only the
+       real seal artwork shows, no source-photo background — the seal
+       artwork itself is unchanged, only how much of its source photo
+       is displayed. object-fit switched to cover so the crop fills the
+       circle without letterboxing.
+       Category C, approved (dimensional rendering): a layered
        drop-shadow — a soft ambient cast shadow plus a tighter contact
        shadow — so the seal reads as a raised/embossed medallion resting
        on the page rather than a flat pasted image. Same 118x118px box,
        same image, no resize. */
+    clip-path:circle(47% at 50% 50%);
     filter:drop-shadow(0 4px 6px rgba(34,26,14,0.38)) drop-shadow(0 1px 2px rgba(34,26,14,0.22));
   }
   /* A contained foil/glass sheen highlight, inset within the seal's own
@@ -1076,7 +1099,6 @@ export function renderJssCertificateShell({
       <div class="jss-title-band">
         <div class="jss-institution">${lang === 'ar' ? 'مدارس السلطان حنفي الملكية' : 'Sultan Hanafi Royal Schools'}</div>
         <div class="jss-doctype">${escapeHtml(documentTypeLabel)}</div>
-        <div class="jss-doctype-sub">${lang === 'ar' ? 'الشهادة الإعدادية' : 'Junior Secondary School Certificate'}</div>
         <div class="jss-rule"></div>
       </div>
       <section class="jss-body">
