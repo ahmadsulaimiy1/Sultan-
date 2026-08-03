@@ -638,21 +638,53 @@ export function renderDocumentShell({
 //     "named, not faked" discipline as every other pending item in
 //     this file.
 
+// Lightens (positive percent) or darkens (negative percent) a #rrggbb
+// hex colour by mixing toward white/black — used only to derive the
+// highlight/shadow tones dimensional-rendering needs (Category C,
+// client-approved: "add realistic engraving, embossing, foil depth,
+// highlights, and shadows... do not alter composition"). Never changes
+// geometry, only the colour of duplicate/offset strokes already added
+// deliberately alongside the original ones, so every element keeps its
+// exact existing position and size.
+function shadeHex(hex, percent) {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const clamp = (v) => Math.max(0, Math.min(255, v));
+  const r = clamp((num >> 16) + Math.round(255 * percent));
+  const g = clamp(((num >> 8) & 0xff) + Math.round(255 * percent));
+  const b = clamp((num & 0xff) + Math.round(255 * percent));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
 // A carved corner-bracket flourish — an L-shaped double arc with small
 // curled terminals and dots, computed via SVG path/arc commands, not
 // traced from the reference's own corner artwork. This is the
 // "punctuated ornament" register's corner mark, deliberately different
 // from khatamOrnamentSvg()'s star-rosette (v4's continuous-engraving
 // register) — see the file header above for why both registers exist.
-function corneFlourishSvg(size = 96) {
+//
+// Dimensional-rendering pass (Category C, approved): the dominant arc
+// and the two "rivet" dots are now each traced three times — a darker
+// shadow copy offset down-right, the original base stroke, and a
+// lighter highlight copy offset up-left — the same highlight/shadow
+// logic a real carved or cast ornament reflects under raking light.
+// The base geometry (position, size, viewBox) is untouched, so the
+// ornament occupies exactly the same 74x74px corner box as before;
+// only the rendering gained depth.
+function corneFlourishSvg(size = 96, colorHex = '#8A6A22') {
   const s = size;
+  const highlight = shadeHex(colorHex, 0.4);
+  const shadow = shadeHex(colorHex, -0.35);
   return `<svg viewBox="0 0 ${s} ${s}" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6,${s - 6} Q6,6 ${s - 6},6" fill="none" stroke="currentColor" stroke-width="3.2"/>
-    <path d="M6,${s - 6} Q6,${s * 0.4} ${s * 0.4},6" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
-    <path d="M6,${s - 18} q-11,0 -11,13" fill="none" stroke="currentColor" stroke-width="2.2"/>
-    <path d="M${s - 18},6 q0,-11 13,-11" fill="none" stroke="currentColor" stroke-width="2.2"/>
-    <circle cx="6" cy="${s - 6}" r="4.2" fill="currentColor"/>
-    <circle cx="${s - 6}" cy="6" r="4.2" fill="currentColor"/>
+    <path d="M6.6,${s - 5.4} Q6.6,6.6 ${s - 5.4},6.6" fill="none" stroke="${shadow}" stroke-width="3.2" opacity="0.55"/>
+    <path d="M5.4,${s - 6.6} Q5.4,5.4 ${s - 6.6},5.4" fill="none" stroke="${highlight}" stroke-width="1.6" opacity="0.6"/>
+    <path d="M6,${s - 6} Q6,6 ${s - 6},6" fill="none" stroke="${colorHex}" stroke-width="3.2"/>
+    <path d="M6,${s - 6} Q6,${s * 0.4} ${s * 0.4},6" fill="none" stroke="${colorHex}" stroke-width="1.2" opacity="0.6"/>
+    <path d="M6,${s - 18} q-11,0 -11,13" fill="none" stroke="${colorHex}" stroke-width="2.2"/>
+    <path d="M${s - 18},6 q0,-11 13,-11" fill="none" stroke="${colorHex}" stroke-width="2.2"/>
+    <circle cx="6" cy="${s - 6}" r="4.2" fill="${colorHex}"/>
+    <circle cx="${s - 6}" cy="6" r="4.2" fill="${colorHex}"/>
+    <circle cx="5.3" cy="${s - 6.7}" r="1.3" fill="${highlight}" opacity="0.75"/>
+    <circle cx="${s - 6.7}" cy="5.3" r="1.3" fill="${highlight}" opacity="0.75"/>
   </svg>`;
 }
 
@@ -666,22 +698,41 @@ function corneFlourishSvg(size = 96) {
 // at each crest, computed from trigonometry exactly like every other
 // ornament in this file — never traced from the reference's own
 // border artwork.
+//
+// Dimensional-rendering pass (Category C, approved): the dominant wave
+// (d1) is now flanked by a shadow trace (offset +0.4/+0.4, darker) and
+// a highlight trace (offset -0.4/-0.4, lighter), the same intaglio
+// bevel logic as corneFlourishSvg() above — so the frame band reads as
+// an engraved groove under raking light rather than a flat printed
+// line. The tile's own width/height (44x22) and the wave's own
+// geometry are unchanged, so background-size/position on every
+// .jss-frame-edge is pixel-identical to before; only the tile's
+// rendered depth changed.
 function engravedScrollTileDataUri(colorHex) {
   const w = 44;
   const h = 22;
+  const highlight = shadeHex(colorHex, 0.45);
+  const shadow = shadeHex(colorHex, -0.4);
   let d1 = '';
+  let d1Hi = '';
+  let d1Sh = '';
   let d2 = '';
   const buds = [];
   for (let i = 0; i <= w; i += 1) {
     const y1 = 11 + 6 * Math.sin((i / w) * Math.PI * 2);
     const y2 = 11 - 3.5 * Math.sin((i / w) * Math.PI * 2);
     d1 += `${i === 0 ? 'M' : 'L'}${i},${y1.toFixed(1)} `;
+    d1Hi += `${i === 0 ? 'M' : 'L'}${(i - 0.4).toFixed(1)},${(y1 - 0.4).toFixed(1)} `;
+    d1Sh += `${i === 0 ? 'M' : 'L'}${(i + 0.4).toFixed(1)},${(y1 + 0.4).toFixed(1)} `;
     d2 += `${i === 0 ? 'M' : 'L'}${i},${y2.toFixed(1)} `;
     if (i === Math.round(w * 0.25) || i === Math.round(w * 0.75)) {
       buds.push(`<circle cx="${i}" cy="${y1.toFixed(1)}" r="2.1" fill="${colorHex}" opacity="0.9"/>`);
+      buds.push(`<circle cx="${(i - 0.5).toFixed(1)}" cy="${(y1 - 0.5).toFixed(1)}" r="0.8" fill="${highlight}" opacity="0.7"/>`);
     }
   }
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>`
+    + `<path d='${d1Sh}' fill='none' stroke='${shadow}' stroke-width='1.4' opacity='0.5'/>`
+    + `<path d='${d1Hi}' fill='none' stroke='${highlight}' stroke-width='0.9' opacity='0.55'/>`
     + `<path d='${d1}' fill='none' stroke='${colorHex}' stroke-width='1.4' opacity='0.85'/>`
     + `<path d='${d2}' fill='none' stroke='${colorHex}' stroke-width='0.9' opacity='0.45'/>`
     + buds.join('')
@@ -805,7 +856,7 @@ export function renderJssCertificateShell({
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${escapeHtml(documentTypeLabel)} — ${escapeHtml(recipientName)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
     /* JSS register palette — a tighter, two-colour gilt-and-ink system
@@ -818,10 +869,19 @@ export function renderJssCertificateShell({
        drifted toward a "generic training certificate" look. */
     --jss-ink:#221A0E; --jss-gold:#B8912E; --jss-gold-deep:#8A6A22; --jss-gold-bright:#E4C878;
     --jss-ivory:#FAF3E2; --jss-oxblood:#7C1F2E; --jss-sand:#D8CBA8;
+    /* Typographic unification (Category C, approved): the prior
+       four-family mix (Cormorant Garamond / Playfair Display / Cinzel /
+       Inter) collapses into one disciplined English serif — Cormorant
+       Garamond, varied by size/weight/italic only, the same "one family
+       carved at different scales" discipline the design report cites at
+       Yale and Harvard — plus one disciplined Arabic serif, Amiri.
+       Cinzel/Playfair/Inter/Cairo are no longer loaded at all for this
+       register (see the trimmed Google Fonts link above), not just
+       unreferenced — an honest removal, not a silent leftover. */
     --font-display:'Cormorant Garamond','Amiri',serif;
-    --font-hero:'Playfair Display','Amiri',serif;
-    --font-label:'Cinzel','Amiri',serif;
-    --font-body:'Inter','Cairo',sans-serif;
+    --font-hero:'Cormorant Garamond','Amiri',serif;
+    --font-label:'Cormorant Garamond','Amiri',serif;
+    --font-body:'Cormorant Garamond','Amiri',serif;
     --doc-unit:8px;
   }
   *{box-sizing:border-box;}
@@ -850,7 +910,14 @@ export function renderJssCertificateShell({
      ornamented the whole way round, not just decorated at the
      corners. Four edge strips, same proven background-repeat
      technique already validated elsewhere in this file. */
-  .jss-frame-band{position:absolute;inset:14px;pointer-events:none;}
+  .jss-frame-band{
+    position:absolute;inset:14px;pointer-events:none;
+    /* Category C, approved (dimensional rendering): a faint inset
+       highlight/shadow pair along the whole band reinforces the
+       carved-channel read the tile itself now provides — no size or
+       position change, box-shadow never affects layout. */
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(34,26,14,0.22);
+  }
   .jss-frame-edge{position:absolute;background-image:url("${frameTileUri}");background-repeat:repeat;opacity:0.9;}
   .jss-frame-edge--top{top:0;left:0;right:0;height:22px;background-size:44px 22px;}
   .jss-frame-edge--bottom{bottom:0;left:0;right:0;height:22px;background-size:44px 22px;transform:scaleY(-1);}
@@ -899,7 +966,7 @@ export function renderJssCertificateShell({
   .jss-body-wrap{position:relative;margin-${leadingEdge}:64px;padding-${leadingEdge}:calc(var(--doc-unit)*4.5);padding-${trailingEdge}:calc(var(--doc-unit)*5);}
   .jss-masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(var(--doc-unit)*3);flex-wrap:wrap;}
   .jss-crests{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*5);flex:1;min-width:300px;}
-  .jss-crests img{height:70px;width:auto;object-fit:contain;}
+  .jss-crests img{height:70px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(34,26,14,0.28));}
   .jss-crest-cell{text-align:center;font-family:var(--font-label);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--jss-ink);}
   .jss-verify-cluster{
     display:flex;align-items:center;gap:calc(var(--doc-unit)*1.5);
@@ -908,8 +975,8 @@ export function renderJssCertificateShell({
   }
   .jss-verify-fields{display:flex;flex-direction:column;gap:3px;font-size:0.7rem;}
   .jss-verify-fields .k{font-family:var(--font-label);letter-spacing:0.06em;text-transform:uppercase;color:var(--jss-gold-deep);display:block;font-size:0.58rem;}
-  .jss-verify-fields .v{font-family:var(--font-body);color:var(--jss-ink);font-weight:600;}
-  .jss-verify-fields .jss-code{font-family:monospace;letter-spacing:0.03em;}
+  .jss-verify-fields .v{font-family:var(--font-body);color:var(--jss-ink);font-weight:600;font-variant-numeric:lining-nums tabular-nums;}
+  .jss-verify-fields .jss-code{letter-spacing:0.03em;}
   .jss-qr{margin:0;text-align:center;}
   .jss-qr figcaption{font-size:0.52rem;color:#6b6357;margin-top:2px;line-height:1.3;}
   .jss-title-band{text-align:center;margin-top:calc(var(--doc-unit)*1.5);}
@@ -928,7 +995,7 @@ export function renderJssCertificateShell({
   }
   .jss-body .jss-recipient-rule{height:1.5px;width:52%;margin:0 auto calc(var(--doc-unit)*1.5);background:linear-gradient(90deg,transparent,var(--jss-gold-deep),transparent);}
   .jss-body .jss-id-line{font-family:var(--font-label);font-size:0.78rem;letter-spacing:0.05em;color:var(--jss-ink);opacity:0.85;margin-bottom:calc(var(--doc-unit)*1.5);}
-  .jss-body .jss-id-line b{color:var(--jss-gold-deep);}
+  .jss-body .jss-id-line b{color:var(--jss-gold-deep);font-variant-numeric:lining-nums tabular-nums;}
   .jss-body .jss-headline{font-size:1.12rem;line-height:1.75;color:var(--jss-ink);max-width:920px;margin:0 auto;}
   .jss-body .jss-award{
     display:block;font-family:var(--font-label);font-weight:600;font-size:1.3rem;letter-spacing:0.05em;
@@ -945,7 +1012,25 @@ export function renderJssCertificateShell({
   .jss-sig-title{font-size:0.74rem;color:#6b6357;margin-top:2px;}
   .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*2.5);}
   .jss-seal-cell{width:118px;height:118px;display:flex;align-items:center;justify-content:center;position:relative;}
-  .jss-seal-cell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(34,26,14,0.32));}
+  .jss-seal-cell img{
+    width:100%;height:100%;object-fit:contain;
+    /* Category C, approved (dimensional rendering): a layered
+       drop-shadow — a soft ambient cast shadow plus a tighter contact
+       shadow — so the seal reads as a raised/embossed medallion resting
+       on the page rather than a flat pasted image. Same 118x118px box,
+       same image, no resize. */
+    filter:drop-shadow(0 4px 6px rgba(34,26,14,0.38)) drop-shadow(0 1px 2px rgba(34,26,14,0.22));
+  }
+  /* A contained foil/glass sheen highlight, inset within the seal's own
+     footprint (never spilling past its edge) — the "foil depth"
+     requirement, layered above the seal image and its microtext ring
+     via mix-blend-mode so it reads as a lighting effect, not a flat
+     white overlay. */
+  .jss-seal-cell::after{
+    content:'';position:absolute;inset:6px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 46%);
+    mix-blend-mode:overlay;
+  }
   .jss-seal-ring{position:absolute;inset:0;color:var(--jss-gold-deep);opacity:0.3;pointer-events:none;}
   .jss-seal-ring svg{width:100%;height:100%;}
   .jss-seal-reserved{border:1.5px dashed var(--jss-gold-deep);border-radius:50%;}
@@ -956,7 +1041,7 @@ export function renderJssCertificateShell({
     font-size:0.68rem;color:#5c5648;
   }
   .jss-footer-issued{text-align:${leadingEdge};}
-  .jss-footer-issued b{color:var(--jss-ink);font-family:monospace;}
+  .jss-footer-issued b{color:var(--jss-ink);font-variant-numeric:lining-nums tabular-nums;}
   .jss-footer-legal{max-width:460px;flex:none;text-align:${trailingEdge};line-height:1.5;}
   @media print{
     html,body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
