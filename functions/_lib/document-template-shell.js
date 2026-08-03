@@ -739,9 +739,19 @@ function renderJssSignatureSealBand({ signatories = [], ceremonialSealImage, reg
       <div class="jss-sig-name">${escapeHtml(s.staffName)}</div>
       <div class="jss-sig-title">${escapeHtml(s.titleLine || s.label)}</div>
     </div>`;
+  // Category B (invisible security improvement, per the client's own
+  // A/B/C classification): a microtext ring behind each real seal,
+  // reusing the same technique already built for Design System v4's
+  // own seal presentation. Drawn at inset:0 inside the *existing*
+  // 118x118px .jss-seal-cell box — no new pixels are added around the
+  // seal, so its visible footprint is unchanged; the ring is a faint
+  // (low-opacity) engraved layer under/at the seal's own rim, legible
+  // only under close inspection, exactly how microprint is meant to
+  // function on a real credential, not a decorative addition.
+  const sealRing = (label) => `<div class="jss-seal-ring">${microtextRingSvg(label, 118)}</div>`;
   const sealCell = (img, label) => (img
-    ? `<div class="jss-seal-cell"><img src="${escapeHtml(img)}" alt="${escapeHtml(label)}" /></div>`
-    : `<div class="jss-seal-cell jss-seal-reserved"><span>${escapeHtml(lang === 'ar' ? 'محجوز' : 'Reserved')}</span></div>`);
+    ? `<div class="jss-seal-cell">${sealRing(label)}<img src="${escapeHtml(img)}" alt="${escapeHtml(label)}" /></div>`
+    : `<div class="jss-seal-cell jss-seal-reserved">${sealRing(label)}<span>${escapeHtml(lang === 'ar' ? 'محجوز' : 'Reserved')}</span></div>`);
   const left = signatories[0] ? sig(signatories[0]) : '<div class="jss-sig-cell"></div>';
   const right = signatories[1] ? sig(signatories[1]) : '<div class="jss-sig-cell"></div>';
   return `<div class="jss-sig-seal-band">
@@ -868,6 +878,19 @@ export function renderJssCertificateShell({
     border:1px solid var(--jss-gold-bright);
     background-blend-mode:overlay, normal, normal;
   }
+  /* Category B (invisible security improvement, per the client's own
+     A/B/C classification): a full-field engraved guilloché texture —
+     the security-document-analysis doc's #1 finding was that the prior
+     passes only textured the border band, leaving the reading field a
+     flat empty substrate, unlike a real security document where the
+     engraved field runs edge to edge. This does not touch the visible
+     identity (layout, colour, typography, borders) the client froze —
+     it only adds depth beneath what is already there, at the same low
+     opacity discipline already used for v4's own guilloché layer. */
+  .jss-security-bg{
+    position:absolute;inset:0;opacity:0.05;color:var(--jss-gold-deep);pointer-events:none;overflow:hidden;
+  }
+  .jss-security-bg svg{width:100%;height:100%;}
   .jss-watermark{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     opacity:0.05;pointer-events:none;overflow:hidden;
@@ -921,8 +944,10 @@ export function renderJssCertificateShell({
   .jss-sig-name{font-family:var(--font-label);font-size:0.68rem;color:var(--jss-ink);margin-top:calc(var(--doc-unit)*1);}
   .jss-sig-title{font-size:0.74rem;color:#6b6357;margin-top:2px;}
   .jss-seal-pair{display:flex;align-items:center;justify-content:center;gap:calc(var(--doc-unit)*2.5);}
-  .jss-seal-cell{width:118px;height:118px;display:flex;align-items:center;justify-content:center;}
+  .jss-seal-cell{width:118px;height:118px;display:flex;align-items:center;justify-content:center;position:relative;}
   .jss-seal-cell img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(34,26,14,0.32));}
+  .jss-seal-ring{position:absolute;inset:0;color:var(--jss-gold-deep);opacity:0.3;pointer-events:none;}
+  .jss-seal-ring svg{width:100%;height:100%;}
   .jss-seal-reserved{border:1.5px dashed var(--jss-gold-deep);border-radius:50%;}
   .jss-seal-reserved span{font-family:var(--font-label);font-size:0.52rem;color:var(--jss-gold-deep);text-transform:uppercase;}
   .jss-footer{
@@ -934,8 +959,8 @@ export function renderJssCertificateShell({
   .jss-footer-issued b{color:var(--jss-ink);font-family:monospace;}
   .jss-footer-legal{max-width:460px;flex:none;text-align:${trailingEdge};line-height:1.5;}
   @media print{
-    html,body{background:#fff;}
-    .jss-page{box-shadow:none;margin:0;width:auto;}
+    html,body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .jss-page{box-shadow:none;margin:0;width:auto;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     @page{size:A4 landscape;margin:0;}
   }
 </style>
@@ -952,6 +977,7 @@ export function renderJssCertificateShell({
     <div class="jss-corner jss-corner--tr">${corneFlourishSvg()}</div>
     <div class="jss-corner jss-corner--bl">${corneFlourishSvg()}</div>
     <div class="jss-corner jss-corner--br">${corneFlourishSvg()}</div>
+    <div class="jss-security-bg">${guillocheSvg()}</div>
     <div class="jss-holo-strip"></div>
     <div class="jss-watermark"><img src="/assets/images/crest-watermark.png" alt="" /></div>
     <div class="jss-body-wrap">

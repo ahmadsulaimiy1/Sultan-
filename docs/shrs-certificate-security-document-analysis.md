@@ -1,6 +1,6 @@
 # JSS Certificate — Security Document Construction Analysis
 
-**Status: analysis only, per the client's Executive Rejection Notice. No code has been touched. Nothing here is implemented until approved.**
+**Status: analysis, plus the pre-authorized Category A/B implementation described in §6 below (per the client's Executive Direction — Freeze the Design Before Any Rebuild). Every Category C item remains untouched and gated on explicit, item-by-item approval — see §6's table.**
 
 ## Why the last two rounds failed, honestly
 
@@ -64,4 +64,24 @@ Explicitly, so the next pass doesn't relitigate settled ground:
 7. **A subtle paper-grain/vignette layer** across the field for physical materiality.
 8. **Soften the hologram strip to a duotone metallic sheen** rather than a full rainbow, and **reconsider the verification code as a sequential ledger number** rather than a randomized key — both offered as recommendations, not unilateral changes, since they touch content/numbering conventions this project already has real infrastructure for.
 
-Nothing above has been implemented. Awaiting approval before any file is touched.
+## 6. A/B/C classification (per the client's Executive Direction — Freeze the Design Before Any Rebuild)
+
+The client subsequently froze the reference certificate as the approved "Institutional Master Certificate" and required every future change, including the eight items in §5 above, to be classified before anything is touched:
+
+| # | §5 item | Category | Status |
+|---|---|---|---|
+| 1 | Full-field engraved substrate | **B** — invisible security improvement | **Done** — `.jss-security-bg` (guilloché, opacity 0.05), see Master Spec build-log |
+| 2 | Collapse to one disciplined type family | **C** — visible design modification | Not implemented; awaiting approval |
+| 3 | Dimensional rendering of frame/ornaments/seal | **C** — visible design modification | Not implemented; awaiting approval |
+| 4 | Numerals in the document's own type system (remove monospace) | **C** — visible design modification | Not implemented; awaiting approval |
+| 5 | Palette reduced to two colours + one reserved alert colour | **C** — visible design modification | Not implemented; awaiting approval |
+| 6 | Large-scale anchor seal position | **C** — visible design modification | Not implemented; awaiting approval |
+| 7 | Paper-grain/vignette layer | **C** — visible design modification | Not implemented; awaiting approval |
+| 8a | Soften hologram gradient to duotone metallic sheen | **C** — visible design modification (retracted from "recommendation" — this proposed changing the reference itself) | Not implemented; awaiting approval |
+| 8b | Verification code format: hex-key → sequential ledger number | **C** — visible design modification (retracted from "recommendation" — this proposed changing the reference itself) | Not implemented; awaiting approval |
+
+Two additional Category B items not in the original §5 list were identified and implemented in the same round, since "microtext" and "print precision" are named directly in the client's own Category A/B examples:
+- **Microtext ring on both real seals** (Category B) — done, inside the seal's existing 118×118px footprint, no visible size change.
+- **Print-colour-adjust fix for print-to-PDF fidelity** (Category A) — done, `@media print` only, no on-screen visual change.
+
+Item 1 (the analysis's single most important finding) and both newly-identified Category B/A items are implemented. Every Category C item — including the two that were originally, mistakenly, offered as recommendations to change the reference itself — remains untouched and gated on explicit, item-by-item client approval.
