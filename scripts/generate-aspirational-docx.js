@@ -217,7 +217,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('A Vision for Your Child'));
   B.push(h1('Who They Are Called to Become'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 170)] }));
-  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
+  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
   B.push(body('This edition follows that journey in the words of the people living it — students memorising Qur’an one Juz’ at a time, parents watching character take shape at home, and teachers naming the leadership traits they see forming.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }

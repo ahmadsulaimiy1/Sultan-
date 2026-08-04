@@ -258,7 +258,7 @@ sections[0].children.push(pageBreak());
   B.push(lede('Board of Governors → Board-Level Committees → Management Team → Management-Level Committees → Heads of Departments → Educators → Student Representatives → School Prefects → Class Captains → Student Clubs — one architecture, visible at every level.'));
   B.push(pillar('A', 'Board of Governors', "The institution's highest governing authority — a Chairman, a Secretary, and three Other Members."));
   B.push(pillar('B', 'Board-Level Committees', 'The Educational Technical Committee, the Finance Committee, and one further committee to be determined.'));
-  B.push(pillar('C', 'Management Team', "Sultan Zakariya Olanrewaju Hanafi, PhD, as Head of Schools/Administrator, together with the five schools' Heads. Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices."));
+  B.push(pillar('C', 'Management Team', "Zakariya Olanrewaju Anofi, as Head of Schools/Administrator, together with the five schools' Heads. Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices."));
   B.push(pillar('D', 'Management-Level Committees', "The Da'wah Committee, the Academic Committee, and the Sports Committee, operating under Management Team authority."));
   B.push(pillar('E', 'Heads of Departments', 'Reporting to the appropriate school Head.'));
   B.push(pillar('F', 'Educators', 'Faculty delivering the curriculum and the Hifz Journey directly.'));

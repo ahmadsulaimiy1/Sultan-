@@ -225,7 +225,7 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 180)] }));
   B.push(body("When people hear “digital campus,” they often picture dashboards and demos. I think about something more basic: can a parent in Ikorodu check their child's attendance from a shared phone on a slow connection? Can a Qur'an College student see exactly how many Juz' they have verified, tonight, without waiting for a report card?"));
   B.push(body('That is the standard we are building to — real infrastructure, real data protection, real accountability — before a single feature is announced as finished. We would rather ship two systems that genuinely work than ten that only look finished in a screenshot.'));
-  B.push(glass('"A school’s digital systems should earn a family’s trust the same way its teachers do — slowly, honestly, and by actually showing up." — Sultan Zakariya Olanrewaju Hanafi, PhD, Founder & Head of Schools/Administrator', null, { italic: true }));
+  B.push(glass('"A school’s digital systems should earn a family’s trust the same way its teachers do — slowly, honestly, and by actually showing up." — Zakariya Olanrewaju Anofi, Founder & Head of Schools/Administrator', null, { italic: true }));
   B.push(statQuad([['01', 'Digital Assistant Live'], ['02', 'Guardian Portal Live'], ['03', 'Student Portal Live'], ['Neon', 'Cloud Database']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }

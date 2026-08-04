@@ -302,12 +302,12 @@ B.push(pageBreak());
 // ============ DIRECTOR'S MESSAGE ============
 B.push(eyebrow('In His Own Words'), h1('A School Built on Sacrifice'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
-B.push(caption('Sultan Zakariya Olanrewaju Hanafi, PhD — Founder & Head of Schools/Administrator. BSc Oxford Brookes · MSc Heriot-Watt · Fellow, ACCA UK · Fellow, ICAN.'));
+B.push(caption('Zakariya Olanrewaju Anofi — Founder & Head of Schools/Administrator. BSc Oxford Brookes · MSc Heriot-Watt · Fellow, ACCA UK · Fellow, ICAN.'));
 B.push(lede('Education has been the great liberator of our family. This school is my most deliberate act of gratitude.'));
 B.push(body('It is my profound honour to welcome you to Sultan Hanafi Royal Schools — conceived not as a commercial venture, but as a sacred promise to the memory of my father, Anofi Aliu Akano, who worked at the Nigeria Ports Authority with diligence and love, and understood that education was the one gift no circumstance could take away.'));
 B.push(body('My father passed away while my brother and I were completing our National Youth Service. From that grief came clarity: the most meaningful tribute was a living institution bearing his name.'));
 B.push(body('This institution is open to all — all faiths, all backgrounds, all genders — because excellence does not discriminate. We ask only that every family who joins us commits to the pursuit of the extraordinary.'));
-B.push(quoteBox('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Sultan Zakariya Olanrewaju Hanafi, PhD'));
+B.push(quoteBox('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi'));
 B.push(pageBreak());
 
 B.push(eyebrow('A Vision for Nigeria'), h1('Building the Leaders of Tomorrow'));
@@ -485,7 +485,7 @@ B.push(eyebrow('The People Behind the Vision'), h1('Leadership of Distinction'))
 B.push(quoteBox('Every member of the Sultan Hanafi teaching faculty is recruited against the highest professional standards — PhDs, MEds, PGDEs, specialist certifications, and TRCN registration.', 'A Faculty of Excellence'));
 B.push(h2('Management Team'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
-rosterRow('Sultan Zakariya Olanrewaju Hanafi, PhD', 'Founder & Head of Schools/Administrator', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
+rosterRow('Zakariya Olanrewaju Anofi', 'Founder & Head of Schools/Administrator', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
 rosterRow('Dr Adegoke Musa Olatunji', 'Principal, Sultan Hanafi Secular College', 'PhD · MEd · BSc.Edu · NCE · MTRCN (Teachers Registration Council of Nigeria)').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
 rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Islamic & Arabic Studies').forEach(p => B.push(p));
@@ -505,7 +505,7 @@ B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption('Level B — Board-Level Committees'));
 B.push(diagramRow(['Educational Technical Committee', 'Finance Committee', 'Committee TBD'], PARCHMENT, NAVY));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
-B.push(diagramRow(['Level C — Management Team (Executive Authority)\nHead of Schools/Administrator — Sultan Zakariya Olanrewaju Hanafi, PhD'], GOLD, NAVY_DEEP));
+B.push(diagramRow(['Level C — Management Team (Executive Authority)\nHead of Schools/Administrator — Zakariya Olanrewaju Anofi'], GOLD, NAVY_DEEP));
 B.push(caption('Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices.'));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption("Level C, continued — the five schools' Heads, each reporting to the Head of Schools/Administrator"));
@@ -557,7 +557,7 @@ B.push(body("The Governor's commissioning address touched on themes that resonat
 [
   'Formal commissioning address by Engr. Seyi Makinde, Executive Governor of Oyo State',
   "Qur'anic recitation by students of Sultan Hanafi Qur'an College",
-  'Institutional vision presentation by Sultan Zakariya Olanrewaju Hanafi, PhD',
+  'Institutional vision presentation by Zakariya Olanrewaju Anofi',
   'Community testimonials from the CDA Chairman, parents, alumni, and local stakeholders',
   'Official dedication of the institution to the memory of Anofi Aliu Akano',
 ].forEach(t => B.push(new Paragraph({ spacing: { after: 80 }, children: [new TextRun({ text: '•  ', font: BODY_FONT, size: 19, color: GOLD }), new TextRun({ text: t, font: BODY_FONT, size: 19 })] })));
@@ -595,8 +595,8 @@ B.push(pageBreak());
 
 // ============ THE FOUNDATION ============
 B.push(eyebrow('Beyond the School Gates'), h1('The Sultan Zakariya Hanafi Foundation'));
-B.push(quoteBox("We believe that a school's responsibility does not end at its gates. Our community is our classroom, and our obligation extends to every member of it.", 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & Head of Schools/Administrator'));
-B.push(body('The Sultan Zakariya Hanafi Foundation is a non-profit, non-political organisation co-founded by Sultan Zakariya Olanrewaju Hanafi, PhD and Mallam Lukman Ayinla Anofi.'));
+B.push(quoteBox("We believe that a school's responsibility does not end at its gates. Our community is our classroom, and our obligation extends to every member of it.", 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator'));
+B.push(body('The Sultan Zakariya Hanafi Foundation is a non-profit, non-political organisation co-founded by Zakariya Olanrewaju Anofi and Mallam Lukman Ayinla Anofi.'));
 [['Educational Scholarships', 'Merit- and need-based bursaries for students of exceptional potential.'],
  ['Literacy Promotion', 'Free adult literacy classes and community reading programmes.'],
  ['Mosque Construction', 'Support for mosque construction and maintenance in underserved communities.'],
