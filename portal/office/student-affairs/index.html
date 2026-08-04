@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
 <script src="/js/portal-theme.js"></script>
+<script src="/js/portal-shell.js"></script>
 </head>
 <body class="portal-body" data-office-slug="student-affairs" data-atmosphere="student-affairs">
 
@@ -67,6 +68,7 @@
       <button type="button" class="office-tab" data-tab="notifications">Notifications</button>
       <button type="button" class="office-tab" data-tab="meetings">Meetings</button>
       <button type="button" class="office-tab" data-tab="resolutions" hidden>Resolutions</button>
+      <button type="button" class="office-tab" data-tab="action-items" hidden>Action Items</button>
       <button type="button" class="office-tab" data-tab="archive">Archive</button>
     </nav>
 
@@ -204,6 +206,13 @@
       <div class="portal-child-card">
         <div class="portal-child-head"><h2>Resolutions</h2><div class="meta">The Board's governance register for this office.</div></div>
         <div style="padding:20px 26px;" id="resolutions-list"></div>
+      </div>
+    </div>
+
+    <div class="office-panel" id="panel-action-items">
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Action Items</h2><div class="meta">Board Papers Centre — traceable owners and due dates for decisions made in meetings and resolutions.</div></div>
+        <div style="padding:20px 26px;" id="action-items-list"></div>
       </div>
     </div>
 

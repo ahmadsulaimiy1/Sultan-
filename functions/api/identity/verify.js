@@ -25,8 +25,26 @@ export async function onRequestGet({ request, env }) {
   const idNo = (url.searchParams.get('id') || '').trim();
   if (!idNo) return json({ error: 'Provide an SHRS identity number.' }, 400);
 
+  // Institutional Identity Number Architecture Directive: student and
+  // guardian numbers now share the SHRS- prefix with staff (previously
+  // SHR-STU-/SHR-PAR- vs staff's SHRS-), so a plain prefix.startsWith
+  // check can no longer tell the three apart — every legitimate SHRS-...
+  // number would match a naive `startsWith('SHRS-')` staff check. Routed
+  // by the SHAPE of the segment right after "SHRS-" instead:
+  //   guardian — always SHRS-PAR-...
+  //   student  — the permanent Student Digital Identity Number has NO
+  //              letter code there, only 6 digits: SHRS-<YYMMDD>-<seq6>
+  //   staff    — everything else (a UNIT/OFFICE letter code, or a
+  //              reserved BOT/CEO code, always follows SHRS- for staff)
+  // Legacy SHR-STU-/SHR-PAR- (pre-redirect, missing the "S") are kept
+  // for backward-compatible lookup of already-issued old-format cards.
+  const isLegacyStudent = idNo.startsWith('SHR-STU-');
+  const isLegacyGuardian = idNo.startsWith('SHR-PAR-');
+  const isGuardian = isLegacyGuardian || idNo.startsWith('SHRS-PAR-');
+  const isStudent = isLegacyStudent || /^SHRS-\d{6}-\d+$/.test(idNo);
+
   try {
-    if (idNo.startsWith('SHR-STU-')) {
+    if (isStudent) {
       const res = await sql`
         SELECT s.full_name, s.status, s.identity_no,
                c.institution, c.name AS class_name
@@ -48,7 +66,7 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
-    if (idNo.startsWith('SHR-PAR-')) {
+    if (isGuardian) {
       const res = await sql`SELECT full_name, identity_no, email_verified_at FROM guardians WHERE identity_no = ${idNo}`;
       const row = res.rows[0];
       if (!row) return json({ ok: true, found: false });
@@ -64,8 +82,9 @@ export async function onRequestGet({ request, env }) {
 
     // SHR-STF- was the original staff format; SHRS- is the current one
     // under the SHRS Master Identity Architecture Directive
-    // (SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]) — both still route
-    // here since not every staff record has been migrated (any with no
+    // (SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE], or a reserved
+    // SHRS-BOT-.../SHRS-CEO-... seat number) — both still route here
+    // since not every staff record has been migrated (any with no
     // date_joined on file is left on the old format; see
     // functions/_lib/identity-no.js).
     if (idNo.startsWith('SHR-STF-') || idNo.startsWith('SHRS-')) {

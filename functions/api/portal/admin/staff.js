@@ -60,10 +60,13 @@
 //                             createdByStaffNo? } — governance-register entries (Board of Trustees and
 //                             its committees); status defaults to 'draft'.
 //   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
-//   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff
-//                            record with a real date_joined into the current
-//                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format
-//                            (functions/_lib/identity-no.js). Founder & CEO-approved
+//   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff,
+//                            student, and guardian record into the current SHRS-...
+//                            formats (functions/_lib/identity-no.js): staff into
+//                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] (or the
+//                            reserved dateless SHRS-BOT-.../SHRS-CEO-... form),
+//                            students into SHRS-<YYMMDD>-<seq6>, guardians into
+//                            SHRS-PAR-<YYMMDD>-<seq6>. Founder & CEO-approved
 //                            one-time migration action — knowingly breaks any
 //                            already-issued QR code/verification link for a
 //                            re-migrated person.
@@ -72,7 +75,7 @@ import { readStaffSessionFromRequest, timingSafeEqualString, generateToken } fro
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
 import { hasPermissionFor, effectiveGrants } from '../../../_lib/permissions.js';
-import { regenerateStaffIdentityNo } from '../../../_lib/identity-no.js';
+import { regenerateStaffIdentityNo, regenerateStudentIdentityNo, regenerateGuardianIdentityNo } from '../../../_lib/identity-no.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
@@ -280,6 +283,31 @@ export async function onRequestGet({ request, env }) {
       return json({ documents: res.rows.map((r) => ({
         id: r.id, title: r.title, fileUrl: r.file_url, externalUrl: r.external_url,
         description: r.description, createdAt: r.created_at,
+      })) });
+    }
+
+    if (view === 'action-items') {
+      const officeName = url.searchParams.get('officeName');
+      const officeId = await officeIdByName(sql, officeName);
+      if (!officeId) return json({ error: 'No office found with that name.' }, 404);
+      const res = await sql`
+        SELECT ai.id, ai.title, ai.description, ai.due_date, ai.status, ai.created_at, ai.completed_at,
+               ai.meeting_id, ai.resolution_id,
+               (ai.due_date IS NOT NULL AND ai.due_date < CURRENT_DATE
+                 AND ai.status NOT IN ('done', 'cancelled')) AS is_overdue,
+               owner.staff_no AS owner_staff_no, owner.full_name AS owner_name,
+               creator.full_name AS created_by_name
+        FROM office_action_items ai
+        LEFT JOIN staff owner ON owner.id = ai.owner_staff_id
+        LEFT JOIN staff creator ON creator.id = ai.created_by_staff_id
+        WHERE ai.office_id = ${officeId} ORDER BY
+          (ai.status IN ('open', 'in_progress')) DESC, ai.due_date ASC NULLS LAST, ai.created_at DESC LIMIT 200`;
+      return json({ actionItems: res.rows.map((r) => ({
+        id: r.id, title: r.title, description: r.description, dueDate: r.due_date, status: r.status,
+        createdAt: r.created_at, completedAt: r.completed_at, meetingId: r.meeting_id, resolutionId: r.resolution_id,
+        owner: r.owner_staff_no ? { staffNo: r.owner_staff_no, fullName: r.owner_name } : null,
+        createdByName: r.created_by_name,
+        isOverdue: !!r.is_overdue,
       })) });
     }
 
@@ -717,19 +745,64 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, resolutionId: body.resolutionId });
     }
 
+    if (action === 'create-action-item') {
+      if (!body.officeName || !body.title) {
+        return json({ error: 'officeName and title are required.' }, 400);
+      }
+      const officeId = await officeIdByName(sql, body.officeName);
+      if (!officeId) {
+        return json({ error: 'No office found with that name.' }, 404);
+      }
+      const ownerStaffId = body.ownerStaffNo ? await staffIdByNo(sql, body.ownerStaffNo) : null;
+      const createdByStaffId = actingStaffId ?? (await staffIdByNo(sql, body.createdByStaffNo));
+      const created = await sql`
+        INSERT INTO office_action_items (office_id, meeting_id, resolution_id, title, description, owner_staff_id, due_date, status, created_by_staff_id)
+        VALUES (${officeId}, ${body.meetingId || null}, ${body.resolutionId || null}, ${body.title}, ${body.description || null}, ${ownerStaffId}, ${body.dueDate || null}, ${body.status || 'open'}, ${createdByStaffId})
+        RETURNING id`;
+      return json({ ok: true, actionItemId: created.rows[0].id });
+    }
+
+    if (action === 'update-action-item') {
+      if (!Number.isInteger(body.actionItemId)) {
+        return json({ error: 'A valid numeric actionItemId is required.' }, 400);
+      }
+      const ownerStaffId = body.ownerStaffNo ? await staffIdByNo(sql, body.ownerStaffNo) : null;
+      const newStatus = body.status || null;
+      const updated = await sql`
+        UPDATE office_action_items SET
+          status = COALESCE(${newStatus}, status),
+          description = COALESCE(${body.description || null}, description),
+          due_date = COALESCE(${body.dueDate || null}, due_date),
+          owner_staff_id = COALESCE(${ownerStaffId}, owner_staff_id),
+          completed_at = CASE WHEN ${newStatus} = 'done' THEN now() ELSE completed_at END
+        WHERE id = ${body.actionItemId}
+        RETURNING id`;
+      if (!updated.rows.length) {
+        return json({ error: 'No action item found with that id.' }, 404);
+      }
+      return json({ ok: true, actionItemId: body.actionItemId });
+    }
+
     // SHRS Master Identity Architecture Directive, Founder & CEO's
     // explicit rollout choice ("migrate everyone now"): regenerates
-    // identity_no for every staff record with a real date_joined on
-    // file into the current SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]
-    // format, overwriting any existing value (including an
-    // already-current one, so re-running deliberately re-migrates
-    // everyone rather than silently no-op'ing). This knowingly breaks
-    // every already-issued QR code/verification link for anyone whose
-    // number changes — that trade-off was the Founder & CEO's explicit,
-    // informed choice, not a default. A record with no date_joined is
-    // left untouched rather than given a fabricated join date.
+    // identity_no for every staff record into the current
+    // SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format (or the reserved
+    // dateless SHRS-BOT-.../SHRS-CEO-... form for Board/CEO seats),
+    // overwriting any existing value (including an already-current one,
+    // so re-running deliberately re-migrates everyone rather than
+    // silently no-op'ing). This knowingly breaks every already-issued QR
+    // code/verification link for anyone whose number changes — that
+    // trade-off was the Founder & CEO's explicit, informed choice, not a
+    // default. regenerateStaffIdentityNo itself skips (returns null) any
+    // non-reserved record with no date_joined on file, rather than
+    // inventing one — queried against every staff row here (not just
+    // ones with a date_joined) so Board/CEO seats without one still
+    // migrate. Under the Institutional Identity Number Architecture
+    // Directive, this same action now also sweeps every student and
+    // guardian record into their SHRS-/SHRS-PAR- format, so no legacy
+    // SHR-STU-/SHR-PAR- number remains live anywhere.
     if (action === 'regenerate-identity-numbers') {
-      const staffRes = await sql`SELECT id, identity_no FROM staff WHERE date_joined IS NOT NULL`;
+      const staffRes = await sql`SELECT id FROM staff`;
       let migrated = 0;
       const failures = [];
       for (const s of staffRes.rows) {
@@ -741,18 +814,49 @@ export async function onRequestPost({ request, env }) {
         }
       }
       const noDateRes = await sql`SELECT count(*)::int AS n FROM staff WHERE date_joined IS NULL`;
+
+      const studentRes = await sql`SELECT id FROM students`;
+      let migratedStudents = 0;
+      const studentFailures = [];
+      for (const s of studentRes.rows) {
+        try {
+          const newNo = await regenerateStudentIdentityNo(sql, s.id);
+          if (newNo) migratedStudents++;
+        } catch (err) {
+          studentFailures.push({ studentId: s.id, error: err && err.message ? err.message : 'unknown error' });
+        }
+      }
+
+      const guardianRes = await sql`SELECT id FROM guardians`;
+      let migratedGuardians = 0;
+      const guardianFailures = [];
+      for (const g of guardianRes.rows) {
+        try {
+          const newNo = await regenerateGuardianIdentityNo(sql, g.id);
+          if (newNo) migratedGuardians++;
+        } catch (err) {
+          guardianFailures.push({ guardianId: g.id, error: err && err.message ? err.message : 'unknown error' });
+        }
+      }
+
       await logStaffEvent(sql, {
         actorStaffId: actingStaffId, eventType: 'sensitive_action', targetType: 'staff', targetId: null,
-        reason: 'Bulk migration to SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] identity number format',
-        metadata: { migrated, failed: failures.length, skippedNoDateJoined: noDateRes.rows[0].n },
+        reason: 'Bulk migration to SHRS-... identity number format (staff, students, guardians)',
+        metadata: {
+          migrated, failed: failures.length, skippedNoDateJoined: noDateRes.rows[0].n,
+          migratedStudents, failedStudents: studentFailures.length,
+          migratedGuardians, failedGuardians: guardianFailures.length,
+        },
       });
       return json({
         ok: true, migrated, failed: failures.length, failures,
         skippedNoDateJoined: noDateRes.rows[0].n,
+        migratedStudents, failedStudents: studentFailures.length, studentFailures,
+        migratedGuardians, failedGuardians: guardianFailures.length, guardianFailures,
       });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, regenerate-identity-numbers.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

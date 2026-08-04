@@ -397,6 +397,8 @@ const STATEMENTS = [
     ('EXE', 'CEO / Executive Leadership', 'established', 'All institutions', 'GV-01; Founder/CEO Zakariya Olanrewaju Anofi'),
     ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
     ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
+    ('VPAC', 'Vice Principal — Academic', 'proposed', 'All institutions — academic-standing sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
+    ('VPAD', 'Vice Principal — Administration', 'proposed', 'All institutions — administrative sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
     ('REG', 'Registrar', 'established', 'All institutions (academic records are institution-wide)', 'AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope'),
     ('AREG', 'Assistant Registrar', 'proposed', 'Delegated subset of Registrar''s scope', 'Not yet documented'),
     ('ADM', 'Admissions Officer', 'proposed', 'All institutions, pre-enrolment only', 'PA-05 describes the process; no standing officer role documented yet'),
@@ -472,6 +474,10 @@ const STATEMENTS = [
     ('ICT Office', 'support', 'operational', 'digital-services', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).'),
     ('Executive', 'executive', 'governance', 'executive', 'The Founder & Chief Executive Officer''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
     ('Management Council', 'executive', 'governance', 'management-council', 'The senior leadership team drawn from each institution and the central offices, convened for cross-institutional coordination. Composition not yet formally published.'),
+    ('Strategic Planning', 'governance', 'governance', 'strategic-planning', 'One of the six Governance Headquarters environments — long-range institutional planning and the Strategic Plan''s custodian office. Composition not yet formally published.'),
+    ('Quality Assurance', 'governance', 'governance', 'quality-assurance', 'One of the six Governance Headquarters environments — academic and operational standards oversight across all four institutions. Composition not yet formally published.'),
+    ('Legal & Compliance', 'governance', 'governance', 'legal-compliance', 'One of the six Governance Headquarters environments — regulatory, contractual, and policy-compliance oversight. Composition not yet formally published.'),
+    ('Public Affairs', 'governance', 'governance', 'public-affairs', 'One of the six Governance Headquarters environments — external relations, government liaison, and public-record stewardship, distinct from the Communications office''s day-to-day press/brand function. Composition not yet formally published.'),
     ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
     ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
     ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
@@ -522,6 +528,31 @@ const STATEMENTS = [
     created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_office_resolutions_office ON office_resolutions(office_id)`,
+
+  // Board Papers Centre (Founder Authority Framework / Institutional
+  // Excellence 2030 directive): the one genuinely missing piece over the
+  // three tables above (meetings, resolutions, documents already
+  // existed) — a real action-tracking register, so a governance
+  // decision has a traceable owner and due date rather than living
+  // only as prose inside minutes_text/summary_text. Generic per-office,
+  // not Board-of-Trustees-only. "Overdue" is computed at query time
+  // from due_date — no cron job exists in this project.
+  `CREATE TABLE IF NOT EXISTS office_action_items (
+    id                  SERIAL PRIMARY KEY,
+    office_id           INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+    meeting_id          INTEGER REFERENCES office_meetings(id) ON DELETE SET NULL,
+    resolution_id       INTEGER REFERENCES office_resolutions(id) ON DELETE SET NULL,
+    title               TEXT NOT NULL,
+    description         TEXT,
+    owner_staff_id      INTEGER REFERENCES staff(id),
+    due_date            DATE,
+    status              TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'done', 'cancelled')),
+    created_by_staff_id INTEGER REFERENCES staff(id),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    completed_at        TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_office_action_items_office ON office_action_items(office_id)`,
+
   `INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
     SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
     FROM (VALUES
@@ -993,6 +1024,185 @@ const STATEMENTS = [
     created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifecycle_events (student_id, effective_date DESC)`,
+  // Graduation Documentation System — see sql/schema.sql's comment on
+  // this table for the full reasoning.
+  `CREATE TABLE IF NOT EXISTS graduation_records (
+    id                          SERIAL PRIMARY KEY,
+    student_id                  INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    graduation_session          TEXT NOT NULL,
+    submitted_by_guardian_id    INTEGER REFERENCES guardians(id),
+    submitted_by_student_id     INTEGER REFERENCES students(id),
+    full_legal_name             TEXT,
+    preferred_certificate_name  TEXT,
+    gender                      TEXT,
+    date_of_birth                DATE,
+    nationality                  TEXT,
+    state_of_origin              TEXT,
+    lga_of_origin                 TEXT,
+    residential_address           TEXT,
+    contact_email                  TEXT,
+    contact_phone                   TEXT,
+    arabic_name                      TEXT,
+    quran_memorisation_level          TEXT,
+    ijazah_status                      TEXT,
+    islamiyyah_level                    TEXT,
+    arabic_proficiency                   TEXT,
+    preferred_islamic_title                TEXT,
+    academic_awards                          TEXT,
+    conduct_awards                             TEXT,
+    quran_awards                                TEXT,
+    leadership_awards                            TEXT,
+    sports_awards                                 TEXT,
+    other_honours                                  TEXT,
+    alumni_whatsapp                                 TEXT,
+    alumni_linkedin                                  TEXT,
+    alumni_occupation                                 TEXT,
+    alumni_university_applying_to                      TEXT,
+    alumni_career_interests                             TEXT,
+    name_spelling_confirmed                              BOOLEAN NOT NULL DEFAULT false,
+    status                       TEXT NOT NULL DEFAULT 'draft' CHECK (status IN (
+                                    'draft', 'submitted', 'under_review', 'verified', 'locked'
+                                  )),
+    correction_note              TEXT,
+    reviewed_by_staff_id          INTEGER REFERENCES staff(id),
+    locked_by_staff_id             INTEGER REFERENCES staff(id),
+    locked_at                       TIMESTAMPTZ,
+    submitted_at                     TIMESTAMPTZ,
+    created_at                        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at                         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (student_id, graduation_session)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_records_status ON graduation_records (status, graduation_session)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_records_guardian ON graduation_records (submitted_by_guardian_id)`,
+
+  // Graduation Approval Workflow, Stage 2 — see sql/schema.sql's comment
+  // on these tables for the full reasoning.
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS requires_founder_review BOOLEAN NOT NULL DEFAULT false`,
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS founder_review_reason TEXT`,
+  `CREATE TABLE IF NOT EXISTS graduation_clearances (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    stage_code            TEXT NOT NULL,
+    sequence_position     INTEGER NOT NULL,
+    is_blocking           BOOLEAN NOT NULL DEFAULT true,
+    status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN (
+                             'pending', 'cleared', 'not_applicable', 'correction_requested'
+                           )),
+    decided_by_staff_id   INTEGER REFERENCES staff(id),
+    decision_note         TEXT,
+    decided_at            TIMESTAMPTZ,
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (graduation_record_id, stage_code)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_clearances_record ON graduation_clearances (graduation_record_id, sequence_position)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_clearances_stage_status ON graduation_clearances (stage_code, status)`,
+  `CREATE TABLE IF NOT EXISTS staff_notifications (
+    id            SERIAL PRIMARY KEY,
+    staff_id      INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    category      TEXT NOT NULL,
+    title         TEXT NOT NULL,
+    message       TEXT NOT NULL,
+    target_type   TEXT,
+    target_id     INTEGER,
+    action_url    TEXT,
+    channel       TEXT NOT NULL DEFAULT 'portal' CHECK (channel IN ('portal', 'email', 'sms', 'whatsapp')),
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    read_at       TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at)`,
+
+  // Stage 2 Conditional Approval directive — see sql/schema.sql's
+  // comments on these tables for the full reasoning.
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS ip_address TEXT`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS user_agent TEXT`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS previous_value JSONB`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS new_value JSONB`,
+  `CREATE TABLE IF NOT EXISTS graduation_approval_rules (
+    id                       SERIAL PRIMARY KEY,
+    target_stage_code        TEXT NOT NULL,
+    trigger_type              TEXT NOT NULL CHECK (trigger_type IN (
+                                 'constitution', 'governance_charter', 'board_resolution',
+                                 'executive_directive', 'manual_escalation'
+                               )),
+    reference_text             TEXT,
+    applies_globally            BOOLEAN NOT NULL DEFAULT true,
+    is_active                    BOOLEAN NOT NULL DEFAULT true,
+    created_by_staff_id           INTEGER REFERENCES staff(id),
+    created_at                     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    deactivated_by_staff_id         INTEGER REFERENCES staff(id),
+    deactivated_at                   TIMESTAMPTZ
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_approval_rules_stage ON graduation_approval_rules (target_stage_code, is_active)`,
+  `CREATE TABLE IF NOT EXISTS disciplinary_cases (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    case_type             TEXT NOT NULL CHECK (case_type IN (
+                             'warning', 'suspension', 'commendation', 'behavioural_report', 'investigation', 'other'
+                           )),
+    severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious')),
+    description           TEXT NOT NULL,
+    status                TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'under_investigation', 'resolved', 'dismissed')),
+    final_disposition     TEXT,
+    reported_by_staff_id  INTEGER REFERENCES staff(id),
+    reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    resolved_by_staff_id  INTEGER REFERENCES staff(id),
+    resolved_at           TIMESTAMPTZ,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_disciplinary_cases_student ON disciplinary_cases (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS library_loans (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    item_title            TEXT NOT NULL,
+    item_ref              TEXT,
+    borrowed_at           DATE NOT NULL,
+    due_at                DATE,
+    returned_at           DATE,
+    status                TEXT NOT NULL DEFAULT 'on_loan' CHECK (status IN ('on_loan', 'returned', 'overdue', 'lost')),
+    fine_amount           NUMERIC(10,2) NOT NULL DEFAULT 0,
+    fine_paid             BOOLEAN NOT NULL DEFAULT false,
+    recorded_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_library_loans_student ON library_loans (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS issued_devices (
+    id                    SERIAL PRIMARY KEY,
+    student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    asset_type            TEXT NOT NULL CHECK (asset_type IN ('device', 'id_card', 'access_credential', 'other')),
+    description           TEXT NOT NULL,
+    serial_or_ref         TEXT,
+    issued_at             DATE NOT NULL,
+    returned_at           DATE,
+    status                TEXT NOT NULL DEFAULT 'issued' CHECK (status IN ('issued', 'returned', 'lost', 'deactivated')),
+    recorded_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_issued_devices_student ON issued_devices (student_id, status)`,
+  `CREATE TABLE IF NOT EXISTS staff_signatures (
+    id              SERIAL PRIMARY KEY,
+    staff_id        INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+    signature_type  TEXT NOT NULL DEFAULT 'typed' CHECK (signature_type IN ('typed', 'uploaded_image')),
+    typed_name      TEXT,
+    image_data      TEXT,
+    title_line      TEXT,
+    is_active       BOOLEAN NOT NULL DEFAULT true,
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (staff_id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS graduation_batches (
+    id                    SERIAL PRIMARY KEY,
+    batch_no              TEXT NOT NULL UNIQUE,
+    graduation_session    TEXT NOT NULL,
+    description           TEXT,
+    created_by_staff_id   INTEGER REFERENCES staff(id),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS batch_id INTEGER REFERENCES graduation_batches(id)`,
+
   `CREATE TABLE IF NOT EXISTS certificates (
     id                   SERIAL PRIMARY KEY,
     student_id           INTEGER REFERENCES students(id) ON DELETE SET NULL,
@@ -1007,6 +1217,63 @@ const STATEMENTS = [
     created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_certificates_student ON certificates (student_id)`,
+
+  // Stage 3 — Graduation Document Ecosystem, per
+  // docs/shrs-master-graduation-document-specification.md. See
+  // sql/schema.sql's comment on this table for the full reasoning
+  // (deliberately a new table family, not an extension of `certificates`).
+  `CREATE TABLE IF NOT EXISTS graduation_documents (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    document_type         TEXT NOT NULL,
+    document_kind         TEXT NOT NULL DEFAULT 'original' CHECK (document_kind IN ('original', 'certified_copy', 'duplicate')),
+    reference_no          TEXT NOT NULL UNIQUE,
+    verification_id       TEXT NOT NULL,
+    batch_id              INTEGER REFERENCES graduation_batches(id),
+    reissue_of            INTEGER REFERENCES graduation_documents(id),
+    issued_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    issued_by_staff_id    INTEGER REFERENCES staff(id),
+    signatories           JSONB,
+    content_hash          TEXT NOT NULL,
+    storage_key           TEXT,
+    revoked_at            TIMESTAMPTZ,
+    revoked_by_staff_id   INTEGER REFERENCES staff(id),
+    revocation_note       TEXT,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_record ON graduation_documents(graduation_record_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type)`,
+  `CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id)`,
+
+  `CREATE TABLE IF NOT EXISTS transcript_snapshots (
+    id                    SERIAL PRIMARY KEY,
+    graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+    snapshot_data         JSONB NOT NULL,
+    generated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapshots(graduation_record_id)`,
+
+  `CREATE TABLE IF NOT EXISTS verification_log (
+    id                      BIGSERIAL PRIMARY KEY,
+    document_reference_no   TEXT NOT NULL,
+    verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+    ip_hash                 TEXT,
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no)`,
+
+  `CREATE TABLE IF NOT EXISTS alumni_register (
+    id                      SERIAL PRIMARY KEY,
+    student_id              INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    graduation_record_id    INTEGER REFERENCES graduation_records(id),
+    permanent_graduate_id   TEXT,
+    registered_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    status                  TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (graduation_record_id)
+  )`,
 
   // Generic Approval Workflow (docs/approval-workflow-architecture.md) —
   // see sql/schema.sql's comment on this table for the full reasoning.
@@ -1131,6 +1398,12 @@ const STATEMENTS = [
   // real, atomic, never-reused SEQUENCE segment; see sql/schema.sql and
   // functions/_lib/identity-no.js for the full design rationale.
   `CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1`,
+
+  // Institutional Identity Number Architecture Directive — the same
+  // real-sequence upgrade for student/guardian identity numbers; see
+  // sql/schema.sql and functions/_lib/identity-no.js.
+  `CREATE SEQUENCE IF NOT EXISTS student_identity_seq START WITH 1`,
+  `CREATE SEQUENCE IF NOT EXISTS guardian_identity_seq START WITH 1`,
 
   // Finance Platform (Imperial Digital Campus Directive, Priority 3) —
   // mirrors sql/schema.sql exactly; see that file for the full design
@@ -1335,6 +1608,20 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions(guardian_id)`,
   `ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false`,
+
+  // Class B document types (Testimonial, Character Certificate,
+  // Graduation Clearance Certificate — docs/shrs-master-graduation-
+  // document-specification.md §16.4-§16.6) each carry content that
+  // cannot be recomputed live: a Testimonial's free-text prose is
+  // staff-authored and exists nowhere else; a Character Certificate's
+  // "with/without disciplinary action recorded" line and a Clearance
+  // Certificate's stage-by-stage timeline must both read exactly as
+  // they stood at issuance, never drift if a later disciplinary case
+  // or clearance row changes (§8's archival immutability principle —
+  // the same reasoning transcript_snapshots already exists for). Kept
+  // as one JSONB column, shaped per document_type, rather than three
+  // narrow columns only ever populated for one type each.
+  `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS content_data JSONB`,
 ];
 
 async function handle({ request, env }) {

@@ -15,13 +15,41 @@
 // this office's committee sub-offices (if any) and its resolutions
 // register — both start empty/vacant like everything else here; see
 // docs/institutional-portal-architecture.md's "Level 3 Institutional
-// Framework" section.
+// Framework" section. Also returns the Board Papers Centre's action-item
+// register (office_action_items), with isOverdue computed here at query
+// time rather than by a cron job, which this project doesn't have.
 import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json } from '../../../../_lib/http.js';
 import { listPendingApprovals } from '../../../../_lib/approvals.js';
 import { isQuranCollegeInstitution, HIFZ_STAGES } from '../../../../_lib/hifz.js';
 import { effectiveGrants, checkGrants } from '../../../../_lib/permissions.js';
+import { queueForStageCodes } from '../../../../_lib/graduation-workflow.js';
+
+// Dashboard Integration (Conditional Approval directive item 6): which
+// Graduation Approval Workflow stage(s), if any, this office's own
+// portal should surface inline. Only offices/roles that are a real
+// decision point in functions/_lib/graduation-workflow.js's
+// STAGE_DEFINITIONS are listed — an office with no stage mapped here
+// simply gets no graduation queue section, honestly, rather than an
+// empty one implying it should have one. The Vice Principal (Academic
+// /Administration) and Founder & CEO stages have no dedicated office
+// portal yet (VPAC/VPAD are roles with no office; the Founder's own
+// office IS 'executive', included below) — those two continue to
+// surface only via the central Graduation Control Centre until an
+// office exists for them.
+const OFFICE_GRADUATION_STAGES = {
+  'academic-affairs': ['academic'],
+  examinations: ['examinations'],
+  finance: ['finance'],
+  library: ['library'],
+  'digital-services': ['ict'],
+  'head-teacher': ['principal'],
+  'principal-royal-college': ['principal'],
+  raees: ['principal'],
+  mudeer: ['principal'],
+  executive: ['founder'],
+};
 
 // Operational Framework cards — the Leadership Dashboards retrofit. Seven
 // Institutional Capability Frameworks now exist with real schema and
@@ -249,7 +277,7 @@ export async function onRequestGet({ request, env, params }) {
       return json({ error: 'No office found with that slug.' }, 404);
     }
 
-    const [appointmentsRes, staffCountRes, meetingsRes, documentsRes, committeesRes, resolutionsRes] = await Promise.all([
+    const [appointmentsRes, staffCountRes, meetingsRes, documentsRes, committeesRes, resolutionsRes, actionItemsRes] = await Promise.all([
       sql`
         SELECT oa.id, oa.appointment_title, oa.is_acting, oa.is_primary, oa.started_at, oa.notes,
                s.id AS staff_id, s.staff_no, s.full_name, s.preferred_name, s.position_title,
@@ -275,6 +303,15 @@ export async function onRequestGet({ request, env, params }) {
         SELECT id, resolution_number, title, status, summary_text, resolved_at, created_at
         FROM office_resolutions WHERE office_id = ${office.id}
         ORDER BY created_at DESC LIMIT 50`,
+      sql`
+        SELECT ai.id, ai.title, ai.description, ai.due_date, ai.status, ai.created_at, ai.completed_at,
+               (ai.due_date IS NOT NULL AND ai.due_date < CURRENT_DATE
+                 AND ai.status NOT IN ('done', 'cancelled')) AS is_overdue,
+               owner.staff_no AS owner_staff_no, owner.full_name AS owner_name
+        FROM office_action_items ai
+        LEFT JOIN staff owner ON owner.id = ai.owner_staff_id
+        WHERE ai.office_id = ${office.id}
+        ORDER BY (ai.status IN ('open', 'in_progress')) DESC, ai.due_date ASC NULLS LAST, ai.created_at DESC LIMIT 100`,
     ]);
 
     const areaCode = OFFICE_AREA_CODE[office.slug];
@@ -282,6 +319,11 @@ export async function onRequestGet({ request, env, params }) {
       ? (await listPendingApprovals(sql, { areaCode })).map((r) => ({
           id: r.id, targetType: r.target_type, requestedByName: r.requested_by_name, requestedAt: r.requested_at,
         }))
+      : [];
+
+    const graduationStageCodes = OFFICE_GRADUATION_STAGES[office.slug] || [];
+    const graduationQueue = graduationStageCodes.length
+      ? await queueForStageCodes(sql, session.staffId, graduationStageCodes)
       : [];
 
     let operations = null;
@@ -355,7 +397,6 @@ export async function onRequestGet({ request, env, params }) {
         'principal-royal-college': [
           { label: 'Student Rankings', reason: 'Too few real term_results entries school-wide to compute a meaningful ranking — see the Founder Command Centre\'s Academic Health note.' },
           { label: 'Academic Intervention Cases', reason: 'No intervention/support-plan tracking exists yet.' },
-          { label: 'Graduation Readiness', reason: 'No graduation-requirements checklist system exists yet.' },
         ],
         raees: [
           { label: 'Teacher Deployment Intelligence', reason: 'No timetable/deployment data model exists yet.' },
@@ -440,7 +481,13 @@ export async function onRequestGet({ request, env, params }) {
         id: r.id, resolutionNumber: r.resolution_number, title: r.title, status: r.status,
         summaryText: r.summary_text, resolvedAt: r.resolved_at, createdAt: r.created_at,
       })),
+      actionItems: actionItemsRes.rows.map((r) => ({
+        id: r.id, title: r.title, description: r.description, dueDate: r.due_date, status: r.status,
+        createdAt: r.created_at, completedAt: r.completed_at, isOverdue: !!r.is_overdue,
+        owner: r.owner_staff_no ? { staffNo: r.owner_staff_no, fullName: r.owner_name } : null,
+      })),
       workflow: { areaCode: areaCode || null, pending: pendingApprovals },
+      graduationQueue,
       operations,
     });
   } catch (err) {

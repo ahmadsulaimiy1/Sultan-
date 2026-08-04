@@ -15,7 +15,10 @@ import svgRenderer from 'qrcode/lib/renderer/svg-tag.js';
 // default and a reasonable middle ground for something printed on a
 // certificate — high enough to survive a low-quality photocopy scan,
 // without forcing an unnecessarily large/dense code for short URLs.
-export function qrSvg(text, { width = 220, margin = 2 } = {}) {
-  const qrData = qrCore.create(text, { errorCorrectionLevel: 'M' });
+// Callers issuing higher-security documents (e.g. the Stage 3
+// Graduation Document ecosystem — see functions/api/graduation-
+// documents/qr.js) can request 'Q' (~25% recovery) instead.
+export function qrSvg(text, { width = 220, margin = 2, errorCorrectionLevel = 'M' } = {}) {
+  const qrData = qrCore.create(text, { errorCorrectionLevel });
   return svgRenderer.render(qrData, { width, margin });
 }

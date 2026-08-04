@@ -621,7 +621,11 @@ CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_appl
 --
 -- students.admission_no (already unique, already required) IS the
 -- Institutional Student Number — no redundant new identifier is
--- introduced here.
+-- introduced here. Under the Institutional Identity Number Architecture
+-- Directive it is system-generated at enrolment (SHRS-<SCHOOL>-<YY>-
+-- <seq>, functions/api/portal/staff/registrar/enrol.js), distinct from
+-- and permanent alongside the student's own identity_no (the lifetime
+-- Digital Identity Number, unaffected by school/class/campus changes).
 CREATE TABLE IF NOT EXISTS student_lifecycle_events (
   id                   SERIAL PRIMARY KEY,
   student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -653,6 +657,306 @@ CREATE INDEX IF NOT EXISTS idx_student_lifecycle_events_student ON student_lifec
 -- unauthenticated lookup by reference_no) is explicitly deferred, same
 -- as IQ-02 §7.5's still-deferred Ijazah verification endpoint — this
 -- table's reference_no is ready for that whenever it's built.
+-- Graduation Documentation System (docs/shrs-graduation-documentation-
+-- system-architecture.md), Stage 1 — the guardian/student-facing intake
+-- record that everything else in that programme (transcripts,
+-- certificates, the alumni record) depends on having real, validated
+-- data for, rather than hardcoded student information. One row per
+-- student per graduation session. status is the same shape as
+-- admissions_applications' own lifecycle, extended by one step for the
+-- Registry-lock the architecture doc's workflow describes:
+--   draft -> submitted -> under_review -> verified -> locked
+-- 'locked' is intentionally a hard stop reachable only through the
+-- staff_approvals joint-sign-off mechanism (Stage 2), not a plain UPDATE
+-- — once locked, a record is the frozen source for certificate/
+-- transcript generation and must not silently change underneath an
+-- already-issued document.
+CREATE TABLE IF NOT EXISTS graduation_records (
+  id                        SERIAL PRIMARY KEY,
+  student_id                INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  graduation_session        TEXT NOT NULL, -- e.g. '2025/2026'
+  submitted_by_guardian_id  INTEGER REFERENCES guardians(id),
+  submitted_by_student_id   INTEGER REFERENCES students(id),
+  -- Certificate/document identity
+  full_legal_name           TEXT,
+  preferred_certificate_name TEXT,
+  gender                    TEXT,
+  date_of_birth             DATE,
+  nationality               TEXT,
+  state_of_origin           TEXT,
+  lga_of_origin              TEXT,
+  residential_address       TEXT,
+  contact_email              TEXT,
+  contact_phone              TEXT,
+  -- Islamic information (where applicable — nullable for BASIC/JSS/SSS-
+  -- only graduates with no Islamiyyah enrolment)
+  arabic_name                TEXT,
+  quran_memorisation_level   TEXT,
+  ijazah_status               TEXT,
+  islamiyyah_level            TEXT,
+  arabic_proficiency          TEXT,
+  preferred_islamic_title      TEXT, -- e.g. Hafidh, Hafidhah, Ustadh — self-declared, confirmed at review, not assumed
+  -- Awards (free text lists; not a fixed taxonomy — matches this
+  -- project's own established "certificate_type is free text, no
+  -- published fixed taxonomy" precedent on the certificates table)
+  academic_awards             TEXT,
+  conduct_awards               TEXT,
+  quran_awards                 TEXT,
+  leadership_awards            TEXT,
+  sports_awards                 TEXT,
+  other_honours                  TEXT,
+  -- Alumni / future contact (feeds the alumni table once the record locks)
+  alumni_whatsapp                 TEXT,
+  alumni_linkedin                  TEXT,
+  alumni_occupation                 TEXT,
+  alumni_university_applying_to      TEXT,
+  alumni_career_interests             TEXT,
+  -- Confirmation
+  name_spelling_confirmed              BOOLEAN NOT NULL DEFAULT false,
+  -- Lifecycle
+  status                      TEXT NOT NULL DEFAULT 'draft' CHECK (status IN (
+                                 'draft', 'submitted', 'under_review', 'verified', 'locked'
+                               )),
+  correction_note              TEXT, -- set by Registry when sending a record back to the guardian for correction
+  reviewed_by_staff_id          INTEGER REFERENCES staff(id),
+  locked_by_staff_id             INTEGER REFERENCES staff(id),
+  locked_at                       TIMESTAMPTZ,
+  submitted_at                     TIMESTAMPTZ,
+  created_at                        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at                         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_id, graduation_session)
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_records_status ON graduation_records (status, graduation_session);
+CREATE INDEX IF NOT EXISTS idx_graduation_records_guardian ON graduation_records (submitted_by_guardian_id);
+
+-- Stage 2 (Graduation Approval Workflow, docs/shrs-graduation-
+-- documentation-system-architecture.md §Stage 2): true when this
+-- graduate's record carries a real award (any *_awards/other_honours
+-- field is non-empty) or a Registry/Principal staff member has
+-- explicitly escalated it — the two honest, defensible triggers this
+-- project uses for "Founder review, where constitutionally required."
+-- No specific Governance Charter article mandates Founder sign-off on
+-- an ordinary graduation; this is a documented interpretation flagged
+-- for the client to confirm or override, not a claimed citation.
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS requires_founder_review BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS founder_review_reason TEXT;
+
+-- Graduation Approval Workflow — the multi-office institutional
+-- clearance chain, layered ON TOP of graduation_records' own simple
+-- draft/submitted/under_review/verified/locked lifecycle (Stage 1),
+-- not replacing it. Stage 1's 'verified' status is the data-quality
+-- gate Registry clears before this chain is even created — see
+-- functions/_lib/graduation-workflow.js's STAGE_DEFINITIONS for the
+-- authoritative ordered stage list and who may decide each one.
+--
+-- One row per graduation_record per stage, created all at once (all
+-- 'pending' except the auto-cleared 'registry' stage) the moment
+-- Registry marks a record 'verified' — this project's decision-owner
+-- functions/_lib/approvals.js is a single-step two-party primitive
+-- with no sequencing concept; this table is the sequencing/state-
+-- machine layer this workflow genuinely needs and that primitive does
+-- not provide. This table reflects LIVE/CURRENT status only — the
+-- full historical narrative of every decision (who, when, what note,
+-- whether it was a clear/reject/return/correction) lives immutably in
+-- staff_audit_log, filtered by target_type='graduation_clearance'.
+CREATE TABLE IF NOT EXISTS graduation_clearances (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  stage_code            TEXT NOT NULL, -- e.g. 'registry','academic','finance' — see STAGE_DEFINITIONS
+  sequence_position     INTEGER NOT NULL,
+  is_blocking           BOOLEAN NOT NULL DEFAULT true, -- false for 'library' (future-ready, no catalogue system exists yet)
+  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN (
+                           'pending', 'cleared', 'not_applicable', 'correction_requested'
+                         )),
+  decided_by_staff_id   INTEGER REFERENCES staff(id),
+  decision_note         TEXT,
+  decided_at            TIMESTAMPTZ,
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (graduation_record_id, stage_code)
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_clearances_record ON graduation_clearances (graduation_record_id, sequence_position);
+CREATE INDEX IF NOT EXISTS idx_graduation_clearances_stage_status ON graduation_clearances (stage_code, status);
+
+-- Staff Notifications — genuinely new (confirmed by audit: the
+-- existing `notifications` table is guardian-only, and no staff
+-- notification feed or helper existed anywhere in this codebase before
+-- this workflow). Deliberately mirrors `notifications`' own minimalism
+-- rather than inventing a heavier system. `channel` records which
+-- delivery channel this notification represents: 'portal' is the only
+-- channel that genuinely delivers today; 'email' additionally attempts
+-- functions/_lib/email.js's sendEmail() (a real Resend integration
+-- that no-ops without RESEND_API_KEY/EMAIL_FROM_ADDRESS configured —
+-- see that file); 'sms' and 'whatsapp' are accepted values with NO
+-- sending provider wired up anywhere in this project — recording the
+-- intent now means adding a real provider later requires no changes to
+-- any calling code, but no message is delivered via those two channels
+-- today. This is stated plainly so "SMS-ready architecture" is never
+-- overclaimed as "sends SMS."
+CREATE TABLE IF NOT EXISTS staff_notifications (
+  id            SERIAL PRIMARY KEY,
+  staff_id      INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  category      TEXT NOT NULL, -- e.g. 'graduation_clearance'
+  title         TEXT NOT NULL,
+  message       TEXT NOT NULL,
+  target_type   TEXT,
+  target_id     INTEGER,
+  action_url    TEXT,
+  channel       TEXT NOT NULL DEFAULT 'portal' CHECK (channel IN ('portal', 'email', 'sms', 'whatsapp')),
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  read_at       TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_staff_notifications_staff ON staff_notifications (staff_id, read_at);
+
+-- Stage 2 Conditional Approval directive (institutional refinements
+-- required before Stage 3): audit trail hardening, so an approval
+-- decision's context is reconstructable, not just its outcome.
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS user_agent TEXT;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS previous_value JSONB;
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS new_value JSONB;
+
+-- Graduation Approval Matrix — replaces the Stage 2 award-based Founder
+-- trigger (correctly flagged as an unsourced interpretation) with an
+-- admin-configurable rule table. A rule with trigger_type IN
+-- ('constitution','governance_charter','board_resolution',
+-- 'executive_directive') and applies_globally = true means "the
+-- Founder stage is required for every graduating student, because of
+-- the cited authority" — administrators add/deactivate these rows
+-- through functions/api/portal/admin/approval-matrix.js, no code
+-- change required. 'manual_escalation' rows are NOT written here — a
+-- per-student escalation is recorded directly on that graduation_record
+-- (requires_founder_review/founder_review_reason, already built in
+-- Stage 2) precisely because it is a one-off decision about one
+-- student, not an institution-wide standing rule. target_stage_code is
+-- deliberately not constrained to 'founder' only, so a future
+-- amendment (e.g. "Board Resolution requires VP Academic review too")
+-- needs a new row here, not new code.
+CREATE TABLE IF NOT EXISTS graduation_approval_rules (
+  id                      SERIAL PRIMARY KEY,
+  target_stage_code       TEXT NOT NULL,
+  trigger_type            TEXT NOT NULL CHECK (trigger_type IN (
+                             'constitution', 'governance_charter', 'board_resolution',
+                             'executive_directive', 'manual_escalation'
+                           )),
+  reference_text          TEXT, -- e.g. "Governance Charter Art. 27D" — free text citation, never a hardcoded lookup
+  applies_globally        BOOLEAN NOT NULL DEFAULT true,
+  is_active                BOOLEAN NOT NULL DEFAULT true,
+  created_by_staff_id      INTEGER REFERENCES staff(id),
+  created_at               TIMESTAMPTZ NOT NULL DEFAULT now(),
+  deactivated_by_staff_id  INTEGER REFERENCES staff(id),
+  deactivated_at           TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_approval_rules_stage ON graduation_approval_rules (target_stage_code, is_active);
+
+-- Disciplinary Register — real case data behind Disciplinary Clearance,
+-- so that stage can surface an actual signal (like Finance's invoice
+-- check) instead of being a blind checkbox. 'commendation' rows never
+-- block clearance; only an open/under_investigation warning,
+-- suspension, or investigation does — see functions/_lib/
+-- graduation-workflow.js's disciplinarySignal().
+CREATE TABLE IF NOT EXISTS disciplinary_cases (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  case_type             TEXT NOT NULL CHECK (case_type IN (
+                           'warning', 'suspension', 'commendation', 'behavioural_report', 'investigation', 'other'
+                         )),
+  severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious')),
+  description           TEXT NOT NULL,
+  status                TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'under_investigation', 'resolved', 'dismissed')),
+  final_disposition     TEXT,
+  reported_by_staff_id  INTEGER REFERENCES staff(id),
+  reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_by_staff_id  INTEGER REFERENCES staff(id),
+  resolved_at           TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_disciplinary_cases_student ON disciplinary_cases (student_id, status);
+
+-- Library Loan Register — prepared ahead of a real library catalogue
+-- system exactly as directed ("do not wait until the Library module
+-- exists"). Item identity is free text (item_title/item_ref) since no
+-- catalogue exists to look an item up against yet; that is a genuinely
+-- separate future system, not a blocker for tracking loans/fines today.
+CREATE TABLE IF NOT EXISTS library_loans (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  item_title            TEXT NOT NULL,
+  item_ref              TEXT,
+  borrowed_at           DATE NOT NULL,
+  due_at                DATE,
+  returned_at           DATE,
+  status                TEXT NOT NULL DEFAULT 'on_loan' CHECK (status IN ('on_loan', 'returned', 'overdue', 'lost')),
+  fine_amount           NUMERIC(10,2) NOT NULL DEFAULT 0,
+  fine_paid             BOOLEAN NOT NULL DEFAULT false,
+  recorded_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_library_loans_student ON library_loans (student_id, status);
+
+-- ICT-issued physical assets and access items — institutional email
+-- account status and portal account status are NOT duplicated here;
+-- those are already real, live facts on `staff`/`guardians`/`students`
+-- and the auth system, and the ICT Clearance signal reads them
+-- directly rather than re-recording a second copy that could drift out
+-- of sync. This table covers what genuinely has no home yet: physical
+-- devices, ID cards, and other issued access items.
+CREATE TABLE IF NOT EXISTS issued_devices (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  asset_type            TEXT NOT NULL CHECK (asset_type IN ('device', 'id_card', 'access_credential', 'other')),
+  description           TEXT NOT NULL,
+  serial_or_ref         TEXT,
+  issued_at             DATE NOT NULL,
+  returned_at           DATE,
+  status                TEXT NOT NULL DEFAULT 'issued' CHECK (status IN ('issued', 'returned', 'lost', 'deactivated')),
+  recorded_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_issued_devices_student ON issued_devices (student_id, status);
+
+-- Staff Signatures — the architecture Stage 3's document generation
+-- will draw from, built now and independently managed per staff member
+-- exactly as directed ("do not hardcode signature images"). No file-
+-- storage backend exists in this project (confirmed in the Stage 1
+-- audit), so 'uploaded_image' stores a small base64 data URI directly
+-- rather than promising an upload pipeline that doesn't exist;
+-- 'typed' — a name rendered in a script/cursive font at document-
+-- generation time — is the default, always-available option that
+-- needs no image at all. One row per staff member (UPSERT on staff_id).
+CREATE TABLE IF NOT EXISTS staff_signatures (
+  id              SERIAL PRIMARY KEY,
+  staff_id        INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  signature_type  TEXT NOT NULL DEFAULT 'typed' CHECK (signature_type IN ('typed', 'uploaded_image')),
+  typed_name      TEXT,
+  image_data      TEXT,
+  title_line      TEXT,
+  is_active       BOOLEAN NOT NULL DEFAULT true,
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (staff_id)
+);
+
+-- Graduation Batches — the numbering architecture bulk operations need.
+-- Bulk clearance (a real, working action today — see
+-- functions/_lib/graduation-workflow.js's bulkDecideStage()) does not
+-- require a batch; batch_id exists so Stage 3's eventual bulk document
+-- generation/printing can group records under one issued batch number
+-- without a schema change then. Bulk printing/verification themselves
+-- are honestly Stage 3 features — there is nothing to print or verify
+-- yet — so only the numbering scaffold is built now.
+CREATE TABLE IF NOT EXISTS graduation_batches (
+  id                    SERIAL PRIMARY KEY,
+  batch_no              TEXT NOT NULL UNIQUE,
+  graduation_session    TEXT NOT NULL,
+  description           TEXT,
+  created_by_staff_id   INTEGER REFERENCES staff(id),
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+ALTER TABLE graduation_records ADD COLUMN IF NOT EXISTS batch_id INTEGER REFERENCES graduation_batches(id);
+
 -- approved_by_staff_id: real second-party sign-off, filled only when a
 -- staff_approvals row is actually decided by a distinct PRIN-holding
 -- staff member (functions/_lib/approvals.js) — replaces the old
@@ -671,6 +975,123 @@ CREATE TABLE IF NOT EXISTS certificates (
   revoked_at           TIMESTAMPTZ,
   revocation_note      TEXT,
   created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Stage 3 — Graduation Document Ecosystem, per
+-- docs/shrs-master-graduation-document-specification.md. Deliberately a
+-- NEW table family, not an extension of `certificates` above: a
+-- Graduation Certificate/Transcript/Diploma Supplement etc. is gated by
+-- the graduation_clearances chain (functions/_lib/graduation-workflow.js),
+-- not the generic two-party staff_approvals workflow certificates.js
+-- uses, and mixing the two lifecycles would blur two already-working,
+-- independently audited systems (spec §19).
+--
+-- document_type is one of the master spec's §3.3 numbering codes (CERT,
+-- TRAN, SUPP, SOR, PROV, TEST, CHAR, CLR, ALUM, AWD, DIST, BRD, FCA,
+-- HIFZ, ISLM) — enforced in application code by
+-- functions/_lib/graduation-document-no.js, not a DB CHECK, so a new
+-- document type never requires a migration.
+--
+-- verification_id (spec §3.2) is the Permanent Verification ID shared by
+-- every document issued for the SAME graduation event (a Certificate and
+-- its Transcript share one verification_id even though each has its own
+-- reference_no) — generated once, at first issuance, and copied onto
+-- every sibling document.
+--
+-- reissue_of (spec §16.7) links a Certified True Copy/Duplicate back to
+-- its original row; the original is never altered or deleted.
+--
+-- storage_key is nullable and unused until the client selects a
+-- PDF-storage provisioning (spec §8, §22) — the column exists now so
+-- that decision doesn't require a later migration either.
+--
+-- content_hash is the full HMAC-SHA256 hex digest (spec §3.5); the
+-- 12-character display hash printed on the document itself is derived
+-- from this at render time, not stored separately.
+CREATE TABLE IF NOT EXISTS graduation_documents (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  document_type         TEXT NOT NULL,
+  document_kind         TEXT NOT NULL DEFAULT 'original' CHECK (document_kind IN ('original', 'certified_copy', 'duplicate')),
+  reference_no          TEXT NOT NULL UNIQUE,
+  verification_id       TEXT NOT NULL,
+  batch_id              INTEGER REFERENCES graduation_batches(id),
+  reissue_of            INTEGER REFERENCES graduation_documents(id),
+  issued_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  issued_by_staff_id    INTEGER REFERENCES staff(id),
+  signatories           JSONB,
+  content_hash          TEXT NOT NULL,
+  storage_key           TEXT,
+  -- Class B content that cannot be recomputed live at view time (added
+  -- for Testimonial/Character Certificate/Graduation Clearance
+  -- Certificate — spec §16.4-§16.6): a Testimonial's staff-authored
+  -- prose exists nowhere else; a Character Certificate's "with/without
+  -- disciplinary action recorded" line and a Clearance Certificate's
+  -- stage timeline must both read exactly as they stood at issuance,
+  -- never drift if a later disciplinary case or clearance row changes
+  -- (§8's archival immutability principle — the same reasoning
+  -- transcript_snapshots below already exists for). Shaped per
+  -- document_type; null for every document type that needs nothing
+  -- beyond what graduation_records/graduation_clearances already hold.
+  content_data          JSONB,
+  revoked_at            TIMESTAMPTZ,
+  revoked_by_staff_id   INTEGER REFERENCES staff(id),
+  revocation_note       TEXT,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_record ON graduation_documents(graduation_record_id);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type);
+CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id);
+
+-- Locked, immutable copy of the exact term_results rows a Transcript (or
+-- Diploma Supplement) was generated from (spec §16.2, §8) — a later
+-- correction to term_results must never silently alter an already-issued
+-- Transcript's historical content. One row per generation event, not per
+-- graduation_record, since a reissued/duplicate Transcript intentionally
+-- reuses the ORIGINAL snapshot rather than re-querying live (possibly
+-- since-changed) results.
+CREATE TABLE IF NOT EXISTS transcript_snapshots (
+  id                    SERIAL PRIMARY KEY,
+  graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
+  snapshot_data         JSONB NOT NULL,
+  generated_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapshots(graduation_record_id);
+
+-- Lifetime Verification Record (spec §3.8) — append-only, one row per
+-- public verification check (not per document). IP addresses are hashed
+-- before storage, never kept raw, and never exposed on the public
+-- verification page (spec §5.3) — this table exists solely for the
+-- institution's own anomaly review (an implausible spike in checks on
+-- one reference number, a scraping pattern), the same purpose
+-- staff_audit_log serves for staff actions.
+CREATE TABLE IF NOT EXISTS verification_log (
+  id                      BIGSERIAL PRIMARY KEY,
+  document_reference_no   TEXT NOT NULL,
+  verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  ip_hash                 TEXT,
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+);
+CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no);
+
+-- Alumni Register (spec §1.3, §16.10) — the data model the honest-shell
+-- Alumni office (see docs/institutional-portal-architecture.md's
+-- Institutional Services Layer) never had. One row per graduate per
+-- graduation event, created at first Class A document issuance.
+-- permanent_graduate_id snapshots students.identity_no at registration
+-- time (spec §3.1's "does not change" commitment) rather than joining
+-- live on every read.
+CREATE TABLE IF NOT EXISTS alumni_register (
+  id                      SERIAL PRIMARY KEY,
+  student_id              INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  graduation_record_id    INTEGER REFERENCES graduation_records(id),
+  permanent_graduate_id   TEXT,
+  registered_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  status                  TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+  created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (graduation_record_id)
 );
 
 -- Generic Approval Workflow (docs/approval-workflow-architecture.md) — a
@@ -893,11 +1314,12 @@ ALTER TABLE guardians ADD COLUMN IF NOT EXISTS onboarding_celebration_shown_at T
 
 -- Digital Identity System (Imperial Digital Campus Directive, Priority
 -- 2): every student/guardian/staff record gets one public, QR-
--- verifiable identity number — SHR-STU-<year>-<seq>, SHR-PAR-...,
--- SHR-STF-... — generated lazily the first time that person's "My ID
--- Card" view is opened (functions/_lib/identity-no.js), not backfilled
--- in bulk here, so a school with years of existing records doesn't need
--- a migration script before this feature works. Nullable until then.
+-- verifiable identity number, generated lazily the first time that
+-- person's "My ID Card" view is opened (functions/_lib/identity-no.js),
+-- not backfilled in bulk here, so a school with years of existing
+-- records doesn't need a migration script before this feature works.
+-- Nullable until then. Formats below under "Institutional Identity
+-- Number Architecture Directive".
 ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
@@ -911,6 +1333,13 @@ ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 -- global (not per-office/unit) so a number, once issued, is never
 -- reused, ever, exactly as the directive requires.
 CREATE SEQUENCE IF NOT EXISTS staff_identity_seq START WITH 1;
+
+-- Institutional Identity Number Architecture Directive: replaces every
+-- remaining SHR-STU-/SHR-PAR- (COUNT(*)+1) number with a permanent,
+-- prefix-consistent SHRS- one built on a real atomic sequence, same
+-- reasoning as staff_identity_seq above. See functions/_lib/identity-no.js.
+CREATE SEQUENCE IF NOT EXISTS student_identity_seq START WITH 1;
+CREATE SEQUENCE IF NOT EXISTS guardian_identity_seq START WITH 1;
 
 -- ============================================================
 -- Finance Platform (Imperial Digital Campus Directive, Priority 3)
@@ -1180,6 +1609,10 @@ INSERT INTO offices (name, office_type, layer, slug, description) VALUES
   ('ICT Office', 'support', 'operational', 'digital-services', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).'),
   ('Executive', 'executive', 'governance', 'executive', 'The Founder & Chief Executive Officer''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
   ('Management Council', 'executive', 'governance', 'management-council', 'The senior leadership team drawn from each institution and the central offices, convened for cross-institutional coordination. Composition not yet formally published.'),
+  ('Strategic Planning', 'governance', 'governance', 'strategic-planning', 'One of the six Governance Headquarters environments — long-range institutional planning and the Strategic Plan''s custodian office. Composition not yet formally published.'),
+  ('Quality Assurance', 'governance', 'governance', 'quality-assurance', 'One of the six Governance Headquarters environments — academic and operational standards oversight across all four institutions. Composition not yet formally published.'),
+  ('Legal & Compliance', 'governance', 'governance', 'legal-compliance', 'One of the six Governance Headquarters environments — regulatory, contractual, and policy-compliance oversight. Composition not yet formally published.'),
+  ('Public Affairs', 'governance', 'governance', 'public-affairs', 'One of the six Governance Headquarters environments — external relations, government liaison, and public-record stewardship, distinct from the Communications office''s day-to-day press/brand function. Composition not yet formally published.'),
   ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
   ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
   ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
@@ -1245,6 +1678,32 @@ CREATE TABLE IF NOT EXISTS office_resolutions (
   created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_office_resolutions_office ON office_resolutions(office_id);
+
+-- Board Papers Centre (Founder Authority Framework / Institutional
+-- Excellence 2030 directive): the one genuinely missing piece over the
+-- three tables above (meetings, resolutions, documents already existed)
+-- — a real action-tracking register, so a governance decision has a
+-- traceable owner and due date rather than living only as prose inside
+-- minutes_text/summary_text. Generic per-office (like the three tables
+-- above), not Board-of-Trustees-only, so any office can adopt it later.
+-- "Overdue" is computed at query time from due_date, same convention as
+-- delegation expiry (functions/_lib/permissions.js) — no cron job exists
+-- in this project.
+CREATE TABLE IF NOT EXISTS office_action_items (
+  id                  SERIAL PRIMARY KEY,
+  office_id           INTEGER NOT NULL REFERENCES offices(id) ON DELETE CASCADE,
+  meeting_id          INTEGER REFERENCES office_meetings(id) ON DELETE SET NULL,
+  resolution_id       INTEGER REFERENCES office_resolutions(id) ON DELETE SET NULL,
+  title               TEXT NOT NULL,
+  description         TEXT,
+  owner_staff_id      INTEGER REFERENCES staff(id),
+  due_date            DATE,
+  status              TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'done', 'cancelled')),
+  created_by_staff_id INTEGER REFERENCES staff(id),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  completed_at        TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_office_action_items_office ON office_action_items(office_id);
 
 -- Five standing committees of the Board of Trustees, named in the
 -- directive. Real office rows, parented under Board of Trustees.

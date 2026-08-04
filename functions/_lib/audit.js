@@ -12,9 +12,36 @@
 // when, and `reason` is required wherever an action can meaningfully
 // have one (role grants, delegations) so "why" isn't left to guesswork
 // after the fact.
-export async function logStaffEvent(sql, { actorStaffId, eventType, targetType, targetId, reason, metadata }) {
+//
+// ipAddress/userAgent/previousValue/newValue (all optional, all default
+// null) were added for the Graduation Approval Workflow's audit-trail
+// hardening directive — "IP address, device/browser, previous value,
+// new value" — so an approval decision's full context, not just its
+// outcome, is reconstructable. Every existing caller that doesn't pass
+// them keeps working unchanged; only callers that genuinely have this
+// context (a request object, a before/after state) need to supply it.
+export async function logStaffEvent(sql, {
+  actorStaffId, eventType, targetType, targetId, reason, metadata,
+  ipAddress, userAgent, previousValue, newValue,
+}) {
   if (!sql) return;
   await sql`
-    INSERT INTO staff_audit_log (actor_staff_id, event_type, target_type, target_id, reason, metadata)
-    VALUES (${actorStaffId ?? null}, ${eventType}, ${targetType ?? null}, ${targetId ?? null}, ${reason ?? null}, ${metadata ? JSON.stringify(metadata) : null})`;
+    INSERT INTO staff_audit_log (actor_staff_id, event_type, target_type, target_id, reason, metadata, ip_address, user_agent, previous_value, new_value)
+    VALUES (
+      ${actorStaffId ?? null}, ${eventType}, ${targetType ?? null}, ${targetId ?? null}, ${reason ?? null}, ${metadata ? JSON.stringify(metadata) : null},
+      ${ipAddress ?? null}, ${userAgent ?? null}, ${previousValue ? JSON.stringify(previousValue) : null}, ${newValue ? JSON.stringify(newValue) : null}
+    )`;
+}
+
+// Extracts the two audit-hardening fields a Cloudflare Pages Function
+// can genuinely read from a Request — CF-Connecting-IP (set by
+// Cloudflare's edge, not spoofable by the client the way X-Forwarded-For
+// can be) and the User-Agent header. Returns nulls, never throws, if a
+// header is absent (e.g. this environment's local dev server).
+export function requestAuditContext(request) {
+  if (!request || !request.headers) return { ipAddress: null, userAgent: null };
+  return {
+    ipAddress: request.headers.get('cf-connecting-ip') || null,
+    userAgent: request.headers.get('user-agent') || null,
+  };
 }

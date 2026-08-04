@@ -37,6 +37,9 @@ export const SYSTEM_AREAS = {
   finance:                { name: 'Finance', ownerOffice: 'Finance Officer (proposed)', governingPolicy: 'FN-01; FN-03/04/05 (Missing)' },
   certificates:           { name: 'Certificates', ownerOffice: 'Registrar', governingPolicy: 'AC-05 (Missing)' },
   transcripts:            { name: 'Transcripts', ownerOffice: 'Registrar', governingPolicy: null },
+  graduation_records:     { name: 'Graduation Records', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md' },
+  graduation_clearances:  { name: 'Graduation Approval Workflow', ownerOffice: 'Multi-office chain — see STAGE_DEFINITIONS', governingPolicy: 'docs/shrs-graduation-documentation-system-architecture.md §Stage 2' },
+  graduation_documents:   { name: 'Graduation Document Issuance', ownerOffice: 'Registrar', governingPolicy: 'docs/shrs-master-graduation-document-specification.md' },
   communications:         { name: 'Communications', ownerOffice: 'Varies by content and audience', governingPolicy: null },
   policies:               { name: 'Policies', ownerOffice: 'Policy-owning office per policy-code-index.md', governingPolicy: null },
   website_content:        { name: 'Website Content', ownerOffice: 'ICT / Communications function', governingPolicy: null },
@@ -128,6 +131,49 @@ export const MATRIX = {
   ],
   transcripts: [
     { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
+  ],
+  graduation_records: [
+    { role: 'REG', permissions: ['V', 'C', 'E'], scope: 'review, request corrections, mark under_review/verified — starts the graduation_clearances chain (Stage 2)' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: "own institution; A is now decided as the 'principal' stage of the graduation_clearances chain, not a standalone REG+PRIN lock" },
+  ],
+  // Graduation Approval Workflow (Stage 2) — the multi-office clearance
+  // chain in functions/_lib/graduation-workflow.js. Most stages
+  // (academic, examinations, library, ict) are decided via real OFFICE
+  // membership (functions/_lib/office-access.js's staffCanActOnOffice),
+  // not a role-coded grant here — there is no dedicated role for
+  // "Academic Affairs Officer" etc. today, and inventing one with no
+  // real appointee would be less honest than reusing the office-holder
+  // mechanism this codebase already built for exactly this situation.
+  // finance/behaviour stages reuse THOSE areas' existing grants
+  // (finance:E, behaviour:A) rather than duplicating them here. This
+  // area covers only the stages/visibility that don't fit elsewhere:
+  // full-chain visibility, and the two genuinely new authorities the
+  // Executive Directive named (VP Academic, VP Administration — both
+  // 'proposed' roles, no appointment holder yet) plus the conditional
+  // Founder stage.
+  graduation_clearances: [
+    { role: 'REG', permissions: ['V'], scope: 'full chain visibility (Graduation Control Centre)' },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: "own institution; A = the 'principal' stage" },
+    { role: 'VPAC', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_academic' stage — role has no appointment holder yet" },
+    { role: 'VPAD', permissions: ['V', 'A'], scope: "all institutions; A = the 'vp_administration' stage — role has no appointment holder yet" },
+    { role: 'EXE', permissions: ['V', 'A'], scope: "all institutions; A = the 'founder' stage, only present on records flagged requires_founder_review" },
+  ],
+  // Graduation Document Issuance (Stage 3) — issuing a real
+  // graduation_documents row (docs/shrs-master-graduation-document-
+  // specification.md §3, §20 Phase 5). Class C (Alumni Registration,
+  // Digital Graduate Profile) is Registrar-issued with no separate
+  // approval step, consistent with the spec's own "lowest stakes first"
+  // build ordering. Class B's Testimonial/Character Certificate (§16.4,
+  // §16.5) extend this with 'A' for PRIN, own institution only — the
+  // same joint-authority pattern certificates: already uses, and the
+  // natural fit here since §13.2 already names the student's own
+  // Principal/Head Teacher/Ra'ees/Mudeer as the sole required signatory
+  // for both document types: the office that approves is the office
+  // that signs.
+  graduation_documents: [
+    { role: 'REG', permissions: ['V', 'C', 'X'], scope: null },
+    { role: 'PRIN', permissions: ['V', 'A'], scope: 'own institution' },
+    { role: 'EXE', permissions: ['V'], scope: 'all institutions' },
   ],
   // E and Ar were added to REG/PRIN/EXE below during the Announcements
   // admin migration (identity-migration-plan.md, Migration Phase D item

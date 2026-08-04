@@ -6,3 +6,8 @@ node_modules/
 # Regenerable binary exports — source of truth is prospectus/index.html
 # (PDF) and scripts/generate-prospectus-docx.js (DOCX), not these files.
 prospectus/exports/
+
+# Regenerable binary exports — source of truth is
+# docs/shrs-constitution-2026-draft.md and
+# scripts/generate-constitution-docx.js, not these files.
+docs/exports/

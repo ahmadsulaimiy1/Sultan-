@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Graduation Control Centre — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+<script src="/js/portal-shell.js"></script>
+</head>
+<body class="portal-body type-administrative" data-atmosphere="registrar">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Graduation Control Centre</span>
+    <a class="portal-topbar-link" href="/portal/staff/registrar/">Registrar's Office</a>
+    <a class="portal-topbar-link" href="/portal/staff/approval-matrix/">Approval Matrix</a>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="portal-hello">Graduation Control Centre</div></div>
+    <div class="cc-tagline">8 August 2026 Ceremony — Institutional Approval Workflow</div>
+    <div class="cc-greeting" id="gcc-summary">Loading the graduating roster…</div>
+    <div class="portal-hello-sub">Every graduate's live clearance status, in one place — Registry through the Founder, no stage skipped. A record locks itself automatically the moment its last required clearance is granted.</div>
+
+    <div data-portal-loading class="portal-child-card" style="text-align:center;padding:32px;">
+      <p class="sub" style="margin:0;">Loading…</p>
+    </div>
+    <div data-portal-error class="portal-child-card" hidden>
+      <h2 style="padding:0 0 8px;" data-portal-error-message>Could not load the Graduation Control Centre.</h2>
+    </div>
+
+    <div data-gcc-body hidden>
+
+      <div class="office-group-head">My Pending Actions</div>
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>Awaiting Your Decision</h2></div>
+        <p class="registrar-field-note" style="padding:0 20px;">Only clearance stages your account currently has real authority over appear here — the server checks this on every action, not just this list.</p>
+        <div class="registrar-approvals-list" data-gcc-queue></div>
+      </div>
+
+      <div class="office-group-head">Graduating Roster — 2025/2026</div>
+      <div class="portal-child-card">
+        <div class="portal-child-head"><h2>All Graduation Records</h2></div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;">
+          <input type="text" data-gcc-search placeholder="Search by name or admission no." style="flex:1;min-width:220px;font-family:'Inter','Cairo',sans-serif;font-size:0.88rem;padding:9px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);" />
+          <select data-gcc-status-filter style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
+            <option value="">All statuses</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under review</option>
+            <option value="verified">In institutional clearance</option>
+            <option value="locked">Locked</option>
+          </select>
+          <button type="button" class="registrar-btn" data-gcc-refresh>Refresh</button>
+        </div>
+        <div class="gcc-bulk-bar" data-gcc-bulk-bar style="display:none;flex-wrap:wrap;gap:10px;align-items:center;padding:0 20px 14px;">
+          <span data-gcc-bulk-count style="font-size:0.82rem;color:var(--ink-soft);"></span>
+          <select data-gcc-bulk-stage></select>
+          <select data-gcc-bulk-action>
+            <option value="clear">Clear</option>
+            <option value="request_correction">Request Correction</option>
+          </select>
+          <input type="text" data-gcc-bulk-note placeholder="Note (required for correction)" style="flex:1;min-width:180px;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 10px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
+          <button type="button" class="registrar-btn is-primary" data-gcc-bulk-apply>Apply to Selected</button>
+          <span class="registrar-field-note" data-gcc-bulk-status></span>
+        </div>
+        <div class="gcc-roster-wrap" style="padding:0 20px 20px;overflow-x:auto;">
+          <table class="gcc-roster-table" data-gcc-roster>
+            <thead>
+              <tr><th><input type="checkbox" data-gcc-select-all></th><th>Graduate</th><th>Institution</th><th>Status</th><th>Current Stage</th><th>Progress</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="office-group-head" data-gcc-detail-head hidden>Graduation Status Tracker</div>
+      <div class="portal-child-card" data-gcc-detail hidden>
+        <div class="portal-child-head">
+          <h2 data-gcc-detail-name></h2>
+          <button type="button" class="registrar-btn" data-gcc-detail-close>Close</button>
+        </div>
+        <div class="gcc-finance-signal" data-gcc-finance-signal hidden></div>
+        <div class="gcc-signals" data-gcc-signals style="padding:0 20px;display:grid;gap:8px;"></div>
+        <div class="gcc-register-forms" data-gcc-register-forms style="padding:8px 20px 0;display:grid;gap:10px;"></div>
+        <div class="gcc-timeline" data-gcc-timeline style="padding:6px 20px 20px;"></div>
+        <div class="registrar-form-result" data-gcc-detail-result hidden style="margin:0 20px 20px;"></div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<template id="gcc-timeline-stage-template">
+  <div class="gcc-stage-row">
+    <div class="gcc-stage-marker"><span class="gcc-stage-dot"></span></div>
+    <div class="gcc-stage-body">
+      <div class="gcc-stage-head">
+        <span class="gcc-stage-label"></span>
+        <span class="gcc-stage-status-badge"></span>
+      </div>
+      <div class="gcc-stage-meta"></div>
+      <div class="gcc-stage-actions"></div>
+    </div>
+  </div>
+</template>
+
+<script src="/js/portal-graduation-control.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Graduation Information Form — Sultan Hanafi Royal Schools</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+<script src="/js/portal-shell.js"></script>
+</head>
+<body class="portal-body" data-atmosphere="registrar">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <span class="portal-pilot-badge">Graduation Ceremony — 8 August 2026</span>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" style="max-width:820px;">
+
+    <div data-portal-loading class="portal-card" style="text-align:center;">
+      <p class="sub" style="margin:0;">Loading your children's graduation records…</p>
+    </div>
+
+    <div data-portal-error class="portal-card" hidden>
+      <h1>Could Not Load This Page</h1>
+      <p class="sub" data-portal-error-message>Something went wrong.</p>
+      <a class="portal-back-link" href="/portal/dashboard/">← Back to your dashboard</a>
+    </div>
+
+    <div data-portal-content hidden>
+      <div class="portal-card">
+        <h1>Graduation Information Form</h1>
+        <p class="sub">
+          Complete this form for each child graduating on 8 August 2026. Every name printed on a certificate,
+          transcript, or testimonial is taken directly from what you confirm here — please check spelling
+          carefully, especially Arabic names and titles, before ticking the confirmation box and submitting.
+          You can save a draft and come back to finish it later; once the Registry marks a record
+          "under review" or "verified," further changes go through the Registry rather than this form.
+        </p>
+      </div>
+
+      <div data-graduation-children></div>
+
+      <p class="portal-notice" style="max-width:820px;">
+        Passport photograph and document upload (birth certificate, previous school testimonials, identification)
+        are not yet available from this form — no file upload system exists on the portal yet. Once it does,
+        you'll be able to attach these directly here; until then, the Registry will contact you separately about
+        submitting them.
+      </p>
+      <a class="portal-back-link" href="/portal/dashboard/">← Back to your dashboard</a>
+    </div>
+
+  </div>
+</main>
+
+<template id="graduation-child-template">
+  <div class="portal-child-card graduation-child-card">
+    <div class="portal-child-head">
+      <h2 data-gc-name></h2>
+      <span class="registrar-approval-meta" data-gc-meta></span>
+    </div>
+    <div class="graduation-status-row">
+      <span class="graduation-status-badge" data-gc-status-badge></span>
+    </div>
+    <div class="graduation-correction-banner" data-gc-correction hidden></div>
+    <div class="graduation-readonly-note" data-gc-readonly-note hidden></div>
+
+    <form class="registrar-form-grid graduation-form" data-gc-form>
+      <div class="registrar-field-wide graduation-section-head">Personal Information</div>
+      <div class="portal-field"><label>Full Legal Name</label><input type="text" name="fullLegalName" required /></div>
+      <div class="portal-field"><label>Preferred Name on Certificate (if different)</label><input type="text" name="preferredCertificateName" /></div>
+      <div class="portal-field"><label>Gender</label>
+        <select name="gender"><option value="">Select…</option><option value="Male">Male</option><option value="Female">Female</option></select>
+      </div>
+      <div class="portal-field"><label>Date of Birth</label><input type="date" name="dateOfBirth" /></div>
+      <div class="portal-field"><label>Nationality</label><input type="text" name="nationality" /></div>
+      <div class="portal-field"><label>State of Origin</label><input type="text" name="stateOfOrigin" /></div>
+      <div class="portal-field"><label>LGA of Origin</label><input type="text" name="lgaOfOrigin" /></div>
+      <div class="portal-field registrar-field-wide"><label>Residential Address</label><input type="text" name="residentialAddress" /></div>
+      <div class="portal-field"><label>Contact Email</label><input type="email" name="contactEmail" /></div>
+      <div class="portal-field"><label>Contact Phone</label><input type="tel" name="contactPhone" /></div>
+
+      <div class="registrar-field-wide graduation-section-head">Islamic Information</div>
+      <div class="portal-field"><label>Arabic Name</label><input type="text" name="arabicName" dir="auto" /></div>
+      <div class="portal-field"><label>Preferred Islamic Title</label><input type="text" name="preferredIslamicTitle" placeholder="e.g. Hafiz, Ustadh" /></div>
+      <div class="portal-field"><label>Qur'an Memorisation Level</label><input type="text" name="quranMemorisationLevel" placeholder="e.g. 30 Juz, 5 Juz" /></div>
+      <div class="portal-field"><label>Ijazah Status</label><input type="text" name="ijazahStatus" placeholder="e.g. Awarded, In progress, Not applicable" /></div>
+      <div class="portal-field"><label>Islamiyyah Level</label><input type="text" name="islamiyyahLevel" /></div>
+      <div class="portal-field"><label>Arabic Proficiency</label><input type="text" name="arabicProficiency" /></div>
+
+      <div class="registrar-field-wide graduation-section-head">Awards &amp; Honours (optional)</div>
+      <div class="portal-field"><label>Academic Awards</label><input type="text" name="academicAwards" /></div>
+      <div class="portal-field"><label>Conduct Awards</label><input type="text" name="conductAwards" /></div>
+      <div class="portal-field"><label>Qur'an Awards</label><input type="text" name="quranAwards" /></div>
+      <div class="portal-field"><label>Leadership Awards</label><input type="text" name="leadershipAwards" /></div>
+      <div class="portal-field"><label>Sports Awards</label><input type="text" name="sportsAwards" /></div>
+      <div class="portal-field registrar-field-wide"><label>Other Honours</label><input type="text" name="otherHonours" /></div>
+
+      <div class="registrar-field-wide graduation-section-head">Alumni &amp; Future Contact (optional)</div>
+      <div class="portal-field"><label>WhatsApp</label><input type="tel" name="alumniWhatsapp" /></div>
+      <div class="portal-field"><label>LinkedIn</label><input type="text" name="alumniLinkedin" /></div>
+      <div class="portal-field"><label>Intended Occupation / Field</label><input type="text" name="alumniOccupation" /></div>
+      <div class="portal-field"><label>University Applying To</label><input type="text" name="alumniUniversityApplyingTo" /></div>
+      <div class="portal-field registrar-field-wide"><label>Career Interests</label><input type="text" name="alumniCareerInterests" /></div>
+
+      <div class="registrar-field-wide graduation-confirm-row">
+        <label class="graduation-confirm-label">
+          <input type="checkbox" name="nameSpellingConfirmed" />
+          I confirm the full legal name and preferred certificate name above are spelled exactly as they should appear on official documents.
+        </label>
+      </div>
+
+      <div class="registrar-field-wide graduation-form-actions">
+        <button type="button" class="registrar-btn" data-gc-save>Save Draft</button>
+        <button type="submit" class="portal-submit registrar-form-submit" data-gc-submit>Submit to Registry</button>
+      </div>
+      <div class="registrar-form-result graduation-form-result" data-gc-result hidden></div>
+    </form>
+  </div>
+</template>
+
+<script src="/js/portal-graduation.js" defer></script>
+</body>
+</html>

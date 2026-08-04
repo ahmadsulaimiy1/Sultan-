@@ -71,6 +71,45 @@ body.portal-body > *{position:relative;z-index:1;}
   background:var(--gold-bright);padding:3px 9px;border-radius:2px;font-weight:700;
 }
 
+/* Royal Institutional Command Shell — the topbar's calendar quick-link
+   (js/portal-shell.js). Deliberately the ONLY new topbar icon added by
+   the shell script: a real, working Global Search / Notifications /
+   Messages system doesn't exist across every dashboard type yet (unlike
+   Calendar, which is one honest link to the already-built public
+   Academic Calendar) — see js/portal-shell.js's own header comment for
+   why those are consciously deferred rather than shipped as inert icons. */
+.portal-topbar-calendar{
+  display:inline-flex;align-items:center;gap:6px;color:var(--portal-heading);text-decoration:none;
+  font-size:0.78rem;font-family:'Cinzel','Amiri',serif;padding:6px 10px;border:1px solid var(--line);
+  transition:border-color .2s ease,color .2s ease;
+}
+.portal-topbar-calendar:hover{border-color:var(--gold-bright,var(--gold));color:var(--gold-bright,var(--gold));}
+.portal-topbar-calendar svg{width:15px;height:15px;flex:0 0 auto;}
+
+/* Royal Institutional Command Shell — the standing footer bar every
+   portal page now carries (js/portal-shell.js injects it once per
+   page load; CSS-only styling lives here so it matches whichever
+   .portal-body theme/atmosphere is active). Real content only: the
+   three verification flows that actually exist, a computed academic
+   year (August is this institution's real school-year boundary — see
+   the Aug 2026 Graduation Ceremony marking the end of 2025/2026), the
+   real Data Protection & Privacy Policy (IT-02) anchor, and the real
+   admissions contact channels already used sitewide. */
+.portal-shell-footer{
+  margin-top:auto;padding:22px 28px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;
+  font-size:0.76rem;color:var(--ink-soft);background:var(--portal-card);
+}
+.portal-shell-footer-seal{width:22px;height:22px;object-fit:contain;opacity:0.85;flex:0 0 auto;}
+.portal-shell-footer-links{display:flex;flex-wrap:wrap;gap:4px 14px;}
+.portal-shell-footer-links a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;}
+.portal-shell-footer-links a:hover{color:var(--gold-bright,var(--gold));}
+.portal-shell-footer-meta{margin-inline-start:auto;display:flex;flex-wrap:wrap;gap:4px 14px;opacity:0.85;}
+@media (max-width:760px){
+  .portal-shell-footer{padding:18px 16px;}
+  .portal-shell-footer-meta{margin-inline-start:0;}
+}
+
 /* ============================================================
    Premium Auth Shell — split-screen brand pane + form column,
    used by login/register/forgot-password/set-password/verify.
@@ -224,20 +263,10 @@ body.portal-body > *{position:relative;z-index:1;}
   color:var(--gold-bright);border:1px solid var(--navy);border-radius:var(--btn-radius);cursor:pointer;
   box-shadow:0 14px 30px -14px rgba(34,23,9,0.55);
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
-  animation:portalSubmitBreathe 5s ease-in-out infinite;
 }
-/* Soft glow breathing — the primary action on the page, so it earns
-   the one ambient-glow treatment this form uses. Slow (5s) and
-   low-amplitude; the hover/active states below still take over
-   normally on interaction. */
-@keyframes portalSubmitBreathe{
-  0%,100%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 0 0 rgba(233,206,138,0);}
-  50%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 18px 1px rgba(233,206,138,0.28);}
-}
-.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);animation-play-state:paused;}
+.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);}
 .portal-submit:active{transform:translateY(0);}
-.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;animation:none;}
-@media (prefers-reduced-motion:reduce){.portal-submit{animation:none;}}
+.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
 .portal-error{
   background:rgba(124,31,46,0.08);border:1px solid var(--crimson);border-radius:6px;color:var(--crimson);
   font-size:0.82rem;padding:10px 13px;margin-bottom:16px;display:none;
@@ -691,6 +720,9 @@ body.portal-body > *{position:relative;z-index:1;}
 .identity-field{background:var(--ivory);padding:16px 20px;border:1px solid var(--line);}
 .identity-field .label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .identity-field .value{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--portal-heading);margin-top:4px;}
+.signature-preview{margin-top:12px;padding:16px 20px;border:1px dashed var(--gold);background:var(--ivory);min-height:60px;display:flex;align-items:center;font-size:0.82rem;color:var(--ink-soft);}
+.signature-preview img{max-height:70px;max-width:100%;}
+.signature-script{font-family:'Cormorant Garamond','Amiri',serif;font-style:italic;font-size:2rem;color:var(--portal-heading);}
 .identity-roles-list{padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
 .identity-role-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);background:var(--ivory);}
 .identity-role-name{font-family:'Cinzel','Amiri',serif;font-size:1rem;font-weight:600;color:var(--portal-heading);}
@@ -747,6 +779,61 @@ body.portal-body > *{position:relative;z-index:1;}
 .registrar-cert-issued{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .registrar-cert-issued-text{flex:1;min-width:200px;line-height:1.6;}
 .registrar-cert-qr{border-radius:var(--radius-sm);background:var(--portal-card);padding:4px;border:1px solid var(--line);flex-shrink:0;}
+
+/* --- Graduation Information Form (guardian-facing) --- */
+.graduation-child-card{margin-bottom:22px;}
+.graduation-status-row{padding:0 20px 10px;}
+.graduation-status-badge{display:inline-block;font-size:0.66rem;letter-spacing:0.05em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold);color:var(--portal-heading);border-radius:3px;}
+.graduation-status-badge.is-locked{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.graduation-status-badge.is-verified{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.graduation-status-badge.is-under_review{color:var(--gold);border-color:var(--gold);}
+.graduation-correction-banner{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.86rem;line-height:1.5;}
+.graduation-readonly-note{margin:0 20px 20px;padding:12px 14px;background:rgba(198,161,91,0.1);border:1px solid var(--gold);color:var(--portal-heading);font-size:0.86rem;line-height:1.5;}
+.graduation-section-head{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--portal-heading);border-bottom:1px solid var(--line);padding-bottom:6px;margin:18px 0 4px;}
+.graduation-form .registrar-field-wide:first-child.graduation-section-head{margin-top:4px;}
+.graduation-confirm-row{margin-top:10px;}
+.graduation-confirm-label{display:flex;align-items:flex-start;gap:10px;font-size:0.85rem;line-height:1.5;color:var(--ink);font-weight:400;cursor:pointer;}
+.graduation-confirm-label input[type="checkbox"]{margin-top:3px;flex-shrink:0;width:16px;height:16px;}
+.graduation-form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.graduation-form-result{grid-column:1 / -1;}
+
+/* --- Graduation Control Centre --- */
+.gcc-roster-table{width:100%;border-collapse:collapse;font-size:0.86rem;}
+.gcc-roster-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+.gcc-roster-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.gcc-roster-table tbody tr{cursor:pointer;transition:background .15s ease;}
+.gcc-roster-table tbody tr:hover{background:rgba(198,161,91,0.08);}
+.gcc-roster-name{font-weight:600;color:var(--portal-heading);}
+.gcc-roster-sub{font-size:0.72rem;color:var(--ink-soft);}
+.gcc-status-pill{display:inline-block;font-size:0.62rem;letter-spacing:0.05em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold);color:var(--portal-heading);border-radius:3px;white-space:nowrap;}
+.gcc-status-pill.is-locked{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-progress-track{width:80px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-inline-end:6px;}
+.gcc-progress-fill{height:100%;background:var(--gold);}
+.gcc-empty-row td{text-align:center;color:var(--ink-soft);font-style:italic;padding:20px;}
+.gcc-finance-signal{margin:0 20px 16px;padding:12px 14px;background:rgba(124,31,46,0.06);border:1px solid var(--crimson);font-size:0.82rem;color:var(--ink);}
+.gcc-finance-signal strong{color:var(--crimson);}
+.gcc-signal-chip{padding:10px 14px;font-size:0.78rem;color:var(--ink);background:rgba(198,161,91,0.08);border:1px solid var(--gold);border-radius:3px;}
+.gcc-signal-chip.is-warn{background:rgba(124,31,46,0.06);border-color:var(--crimson);color:var(--crimson);}
+.gcc-timeline{display:flex;flex-direction:column;}
+.gcc-stage-row{display:flex;gap:14px;position:relative;padding-bottom:20px;}
+.gcc-stage-row:last-child{padding-bottom:0;}
+.gcc-stage-row::before{content:"";position:absolute;left:7px;top:20px;bottom:0;width:1px;background:var(--line);}
+.gcc-stage-row:last-child::before{display:none;}
+.gcc-stage-marker{flex-shrink:0;width:16px;padding-top:3px;}
+.gcc-stage-dot{display:block;width:16px;height:16px;border-radius:50%;border:2px solid var(--line);background:var(--portal-card);}
+.gcc-stage-row.is-cleared .gcc-stage-dot{background:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-stage-row.is-not_applicable .gcc-stage-dot{background:var(--line);border-color:var(--line);}
+.gcc-stage-row.is-current .gcc-stage-dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px rgba(198,161,91,0.2);}
+.gcc-stage-row.is-correction_requested .gcc-stage-dot{background:var(--crimson);border-color:var(--crimson);}
+.gcc-stage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.gcc-stage-label{font-family:'Cinzel','Amiri',serif;font-size:0.9rem;font-weight:600;color:var(--portal-heading);}
+.gcc-stage-status-badge{font-size:0.62rem;letter-spacing:0.05em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);color:var(--ink-soft);border-radius:3px;}
+.gcc-stage-row.is-cleared .gcc-stage-status-badge{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.gcc-stage-row.is-correction_requested .gcc-stage-status-badge{color:var(--crimson);border-color:var(--crimson);}
+.gcc-stage-meta{font-size:0.78rem;color:var(--ink-soft);margin-top:3px;line-height:1.5;}
+.gcc-stage-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center;}
+.gcc-stage-actions input[type="text"]{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;}
+.gcc-stage-actions select{padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;background:var(--portal-card);}
 
 /* Transcript sections on the student/guardian dashboards — new for the
    Certificate & Transcript Verification System (SHRS Imperial Digital
@@ -1224,6 +1311,10 @@ body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-brig
    own office record, not a second identity. */
 body.portal-body[data-atmosphere="board-of-trustees"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
 body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="strategic-planning"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="quality-assurance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="legal-compliance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
+body.portal-body[data-atmosphere="public-affairs"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-finance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-governance"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="committee-audit"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
@@ -1453,6 +1544,10 @@ body.portal-body[data-atmosphere="student"]::before{
    language across its rooms, not a different one per door. */
 body.portal-body[data-atmosphere="board-of-trustees"]::before,
 body.portal-body[data-atmosphere="management-council"]::before,
+body.portal-body[data-atmosphere="strategic-planning"]::before,
+body.portal-body[data-atmosphere="quality-assurance"]::before,
+body.portal-body[data-atmosphere="legal-compliance"]::before,
+body.portal-body[data-atmosphere="public-affairs"]::before,
 body.portal-body[data-atmosphere="committee-finance"]::before,
 body.portal-body[data-atmosphere="committee-governance"]::before,
 body.portal-body[data-atmosphere="committee-audit"]::before,
@@ -1585,10 +1680,8 @@ body.portal-body[data-atmosphere="certificates"]::before{
   content:"";position:absolute;inset:-10px;z-index:-1;pointer-events:none;
   border-radius:calc(var(--btn-radius) + 6px);
   background:radial-gradient(ellipse at center, color-mix(in srgb, var(--card-accent-bright) 38%, transparent) 0%, transparent 72%);
-  opacity:0.45;animation:id-card-verify-glow 4.5s ease-in-out infinite;
+  opacity:0.35;
 }
-@keyframes id-card-verify-glow{0%,100%{opacity:0.32;transform:scale(0.97);}50%{opacity:0.55;transform:scale(1.02);}}
-@media (prefers-reduced-motion:reduce){.id-card-3d::before{animation:none;opacity:0.4;}}
 .id-card-inner{
   position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transform:rotateY(0deg);will-change:transform;
@@ -1903,6 +1996,9 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .orr-status{font-size:0.66rem;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:2px 8px;}
 .office-resolution-row.status-adopted .orr-status{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
 .orr-summary{flex-basis:100%;font-size:0.82rem;color:var(--ink);line-height:1.5;}
+.office-resolution-row.status-done .orr-status{color:var(--forest-green,#2f6b46);border-color:var(--forest-green,#2f6b46);}
+.office-resolution-row.is-overdue{border-left:3px solid var(--rosewood-bright,#a4344a);}
+.office-resolution-row.is-overdue .orr-status{color:var(--rosewood-bright,#a4344a);border-color:var(--rosewood-bright,#a4344a);}
 
 .office-tab[hidden]{display:none;}
 
@@ -1956,6 +2052,7 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .admin-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid var(--gold);padding:8px 10px;}
 .admin-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;}
 .admin-table tr.is-vacant td{color:var(--ink-soft);font-style:italic;}
+.admin-table tr.is-overdue td:last-child{color:var(--rosewood-bright,#a4344a);font-weight:600;}
 
 .admin-two-col{display:grid;grid-template-columns:340px 1fr;gap:0;align-items:start;}
 @media (max-width:900px){.admin-two-col{grid-template-columns:1fr;}}
@@ -2047,6 +2144,110 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .portal-select-footnote a{color:var(--gold-bright,var(--gold));}
 @media (max-width:640px){
   .portal-select-h1{font-size:2rem;}
+}
+
+/* ============================================================
+   Institutional Access Gateway — portal/select/'s ceremonial rebuild
+   (Founder & CEO directive: "not a dropdown menu, a ceremonial
+   gateway"). Five identity-first entrance domains — Parents & Families,
+   Students & Learners, Educators & Staff, Governance & Board,
+   Verification & Records — replacing the old flat 3-card chooser
+   above (kept, unused elsewhere, in case of future reuse).
+   Honesty constraint carried over from the old copy: there are still
+   only THREE real credential sets (guardian/student/staff). Educators
+   & Staff and Governance & Board both route to the same staff sign-in
+   — the cards say so in their own copy rather than implying a fourth
+   or fifth login system that doesn't exist. Verification & Records
+   needs no login at all; its card expands a panel of the three real
+   public verification flows instead of navigating away.
+   ============================================================ */
+.gateway-main{padding:0 0 60px;}
+.gateway-hero{
+  position:relative;overflow:hidden;text-align:center;padding:64px 20px 48px;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 65%,#140d05 100%);
+  margin-bottom:44px;
+}
+.gateway-crest{width:52px;height:52px;object-fit:contain;opacity:0.95;margin-bottom:18px;filter:drop-shadow(0 0 14px rgba(233,206,138,0.35));}
+.gateway-eyebrow{
+  position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold-bright,var(--gold));margin:0 0 10px;
+}
+.gateway-title{
+  position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:2.6rem;color:#F8F4E9;margin:0 0 16px;
+}
+.gateway-typewriter{
+  display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;
+  border-inline-end:2px solid var(--gold-bright,var(--gold));
+  width:0;animation:gateway-typewriter-type 1.7s steps(29,end) 0.25s forwards, exec-caret-blink 0.9s steps(1) infinite 1.95s;
+}
+.gateway-sub{
+  position:relative;z-index:1;max-width:620px;margin:0 auto;color:rgba(248,244,233,0.78);font-size:0.98rem;line-height:1.65;
+}
+@keyframes gateway-typewriter-type{to{width:100%;}}
+@media (prefers-reduced-motion:reduce){
+  .gateway-typewriter{width:100%;animation:none;border-inline-end:none;}
+}
+
+.gateway-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;
+  max-width:1100px;margin:0 auto;padding:0 20px;
+}
+.gateway-card{
+  position:relative;display:flex;flex-direction:column;gap:10px;text-align:start;
+  background:var(--portal-card);border:1px solid var(--line);border-top:4px solid var(--gate-accent,var(--gold));
+  padding:30px 26px;text-decoration:none;cursor:pointer;font:inherit;color:inherit;
+  overflow:hidden;transform-style:preserve-3d;perspective:900px;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+  --gate-rx:0deg;--gate-ry:0deg;
+}
+.gateway-card[data-accent="parent"]{--gate-accent:var(--rosewood-bright,var(--rosewood));}
+.gateway-card[data-accent="student"]{--gate-accent:var(--sapphire-bright,var(--sapphire));}
+.gateway-card[data-accent="staff"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card[data-accent="governance"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card[data-accent="verify"]{--gate-accent:var(--gold-bright,var(--gold));}
+.gateway-card:hover,.gateway-card:focus-visible{
+  transform:rotateX(var(--gate-rx)) rotateY(var(--gate-ry)) translateY(-6px);
+  box-shadow:0 20px 38px rgba(20,20,10,0.16);border-top-color:var(--gate-accent,var(--gold-bright));
+}
+.gateway-card::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(100deg,transparent 30%,color-mix(in srgb, var(--gate-accent, var(--gold-bright)) 45%, transparent) 48%,rgba(255,255,255,0.22) 50%,color-mix(in srgb, var(--gate-accent, var(--gold-bright)) 45%, transparent) 52%,transparent 70%);
+  background-size:240% 100%;background-position:240% 0;opacity:0;transition:opacity .25s ease;
+}
+.gateway-card:hover::before,.gateway-card:focus-visible::before{opacity:1;animation:gateway-card-sweep 1.4s ease-in-out;}
+@keyframes gateway-card-sweep{from{background-position:240% 0;}to{background-position:-40% 0;}}
+.gateway-card-icon{position:relative;z-index:1;width:30px;height:30px;color:var(--gate-accent,var(--gold-bright));}
+.gateway-card-icon svg{display:block;width:100%;height:100%;}
+.gateway-card-eyebrow{position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.12em;color:var(--gate-accent,var(--gold-bright));}
+.gateway-card h2{position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:1.4rem;color:var(--portal-heading);margin:0;}
+.gateway-card p{position:relative;z-index:1;font-size:0.88rem;color:var(--ink-soft);line-height:1.55;flex:1;margin:0;}
+.gateway-card-cta{position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.04em;color:var(--gate-accent,var(--gold-bright));font-weight:700;}
+@media (prefers-reduced-motion:reduce){
+  .gateway-card{transition:none;}
+  .gateway-card:hover,.gateway-card:focus-visible{transform:none;}
+  .gateway-card::before{display:none;}
+}
+@media (hover:none){.gateway-card{--gate-rx:0deg;--gate-ry:0deg;}}
+
+.gateway-verify-panel{
+  max-width:1100px;margin:20px auto 0;padding:0 20px;display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+}
+.gateway-verify-panel[hidden]{display:none;}
+.gateway-verify-panel a{
+  display:block;background:var(--portal-card);border:1px solid var(--line);border-inline-start:3px solid var(--gold-bright,var(--gold));
+  padding:16px 18px;text-decoration:none;color:var(--portal-heading);font-family:'Cinzel','Amiri',serif;font-size:0.84rem;
+  transition:border-color .2s ease,transform .2s ease;
+}
+.gateway-verify-panel a:hover{border-color:var(--gold-bright,var(--gold));transform:translateX(3px);}
+[dir="rtl"] .gateway-verify-panel a:hover{transform:translateX(-3px);}
+.gateway-verify-note{grid-column:1/-1;font-size:0.8rem;color:var(--ink-soft);margin:4px 0 0;}
+
+.gateway-footnote{max-width:1100px;margin:36px auto 0;padding:20px 20px 0;border-top:1px solid var(--line);font-size:0.84rem;color:var(--ink-soft);}
+.gateway-footnote a{color:var(--gold-bright,var(--gold));}
+@media (max-width:640px){
+  .gateway-title{font-size:2rem;}
+  .gateway-hero{padding:48px 16px 36px;}
 }
 
 #office-switcher-mount[hidden]{display:none;}

@@ -123,7 +123,7 @@
     "slug": "admission",
     "output": "admission/index.html",
     "title": "Admission — Sultan Hanafi Royal Schools",
-    "description": "A twelve-stage admission process, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
+    "description": "A guided, seven-step digital admission journey, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
     "contentFile": "pages/admission.html",
     "altHref": "/ar/admission/"
   },
@@ -339,7 +339,7 @@
     "slug": "admission-ar",
     "output": "ar/admission/index.html",
     "title": "القبول — مدارس سلطان حنفي الملكية",
-    "description": "عملية قبول من اثنتي عشرة مرحلة، والمستندات المطلوبة، وكيفية تسجيل ابنك في مدارس سلطان حنفي الملكية.",
+    "description": "رحلة قبول رقمية موجّهة من سبع خطوات، والمستندات المطلوبة، وكيفية تسجيل ابنك في مدارس سلطان حنفي الملكية.",
     "contentFile": "pages/admission.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -432,6 +432,42 @@
     "altHref": "/verify-certificate/"
   },
   {
+    "slug": "verify-graduation-document",
+    "output": "verify-graduation-document/index.html",
+    "title": "Verify a Graduation Document — Sultan Hanafi Royal Schools",
+    "description": "Confirm that a Graduation Certificate, Transcript, Diploma Supplement, or other graduation document issued by Sultan Hanafi Royal Schools is genuine, using its printed reference number.",
+    "contentFile": "pages/verify-graduation-document.html",
+    "altHref": "/ar/verify-graduation-document/"
+  },
+  {
+    "slug": "verify-graduation-document-ar",
+    "output": "ar/verify-graduation-document/index.html",
+    "title": "تحقق من وثيقة تخرج — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة شهادة تخرج أو كشف درجات أو أي وثيقة تخرج أخرى صادرة عن مدارس السلطان حنفي الملكية باستخدام رقمها المرجعي المطبوع.",
+    "contentFile": "pages/verify-graduation-document.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify-graduation-document/"
+  },
+  {
+    "slug": "graduate-profile",
+    "output": "graduate-profile/index.html",
+    "title": "Graduate Profile — Sultan Hanafi Royal Schools",
+    "description": "A graduate's permanent, public-safe digital profile — every graduation document issued to them by Sultan Hanafi Royal Schools, each independently verifiable.",
+    "contentFile": "pages/graduate-profile.html",
+    "altHref": "/ar/graduate-profile/"
+  },
+  {
+    "slug": "graduate-profile-ar",
+    "output": "ar/graduate-profile/index.html",
+    "title": "ملف الخريج — مدارس السلطان حنفي الملكية",
+    "description": "سجل دائم وعلني آمن للخريج — كل وثيقة تخرج أصدرتها مدارس السلطان حنفي الملكية باسمه، وكل واحدة منها قابلة للتحقق بشكل مستقل.",
+    "contentFile": "pages/graduate-profile.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/graduate-profile/"
+  },
+  {
     "slug": "verify-receipt",
     "output": "verify-receipt/index.html",
     "title": "Verify a Receipt — Sultan Hanafi Royal Schools",
@@ -466,6 +502,42 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/verify-identity/"
+  },
+  {
+    "slug": "verify",
+    "output": "verify/index.html",
+    "title": "Public Verification Portal — Sultan Hanafi Royal Schools",
+    "description": "Confirm a certificate, graduation document, identity card, or fee receipt issued by Sultan Hanafi Royal Schools is genuine — no account required.",
+    "contentFile": "pages/verify.html",
+    "altHref": "/ar/verify/"
+  },
+  {
+    "slug": "verify-ar",
+    "output": "ar/verify/index.html",
+    "title": "بوابة التحقق العامة — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة شهادة أو وثيقة تخرج أو بطاقة هوية أو إيصال رسوم صادر عن مدارس السلطان حنفي الملكية — دون الحاجة لحساب.",
+    "contentFile": "pages/verify.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify/"
+  },
+  {
+    "slug": "alumni-portal",
+    "output": "alumni-portal/index.html",
+    "title": "Alumni Portal — Sultan Hanafi Royal Schools",
+    "description": "The self-service Alumni Portal for Sultan Hanafi Royal Schools graduates — verified credential access, giving, events, and the alumni directory.",
+    "contentFile": "pages/alumni-portal.html",
+    "altHref": "/ar/alumni-portal/"
+  },
+  {
+    "slug": "alumni-portal-ar",
+    "output": "ar/alumni-portal/index.html",
+    "title": "بوابة الخريجين — مدارس السلطان حنفي الملكية",
+    "description": "بوابة الخريجين الذاتية الخدمة لخريجي مدارس السلطان حنفي الملكية — الوصول إلى الشهادات الموثقة، والتبرع، والفعاليات، ودليل الخريجين.",
+    "contentFile": "pages/alumni-portal.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/alumni-portal/"
   },
   {
     "slug": "press",

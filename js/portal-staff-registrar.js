@@ -26,6 +26,11 @@
   var pendingApprovalsListEl = document.querySelector('[data-pending-approvals-list]');
   var pendingApprovalsResultEl = document.querySelector('[data-pending-approvals-result]');
 
+  var graduationStatusFilterEl = document.querySelector('[data-graduation-status-filter]');
+  var graduationRefreshBtn = document.querySelector('[data-graduation-refresh]');
+  var graduationRecordsListEl = document.querySelector('[data-graduation-records-list]');
+  var graduationRecordsResultEl = document.querySelector('[data-graduation-records-result]');
+
   var attendanceForm = document.querySelector('[data-attendance-form]');
   var attendanceResultEl = document.querySelector('[data-attendance-result]');
 
@@ -179,6 +184,426 @@
     };
     return labels[type] || type;
   }
+
+  var GRADUATION_STATUS_LABEL = {
+    draft: 'Draft (not yet submitted)', submitted: 'Submitted', under_review: 'Under review',
+    verified: 'Verified', locked: 'Locked',
+  };
+
+  async function loadGraduationRecords(){
+    graduationRecordsListEl.innerHTML = '';
+    graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Loading…'));
+    try{
+      var status = graduationStatusFilterEl.value;
+      var url = '/api/portal/staff/registrar/graduation' + (status ? '?status=' + encodeURIComponent(status) : '');
+      var res = await fetch(url);
+      var data = await res.json();
+      if(!res.ok){
+        graduationRecordsListEl.innerHTML = '';
+        graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot view graduation records.'));
+        return;
+      }
+      renderGraduationRecords(data.records || []);
+    }catch(err){
+      graduationRecordsListEl.innerHTML = '';
+      graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load graduation records.'));
+    }
+  }
+
+  function renderGraduationRecords(items){
+    graduationRecordsListEl.innerHTML = '';
+    if(!items.length){
+      graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'No graduation records match that filter.'));
+      return;
+    }
+    items.forEach(function(item){
+      var card = el('div', 'registrar-approval-card');
+      var head = el('div', 'registrar-approval-head');
+      head.appendChild(el('span', null, (item.preferredCertificateName || item.fullName) + ' — ' + (item.institutionName || 'Institution not set')));
+      head.appendChild(el('span', null, GRADUATION_STATUS_LABEL[item.status] || item.status));
+      card.appendChild(head);
+      var metaBits = [
+        'Admission No. ' + (item.admissionNo || '—'),
+        'Session ' + item.graduationSession,
+        item.submittedAt ? 'Submitted ' + formatDate(item.submittedAt) : 'Not yet submitted',
+      ];
+      if(!item.nameSpellingConfirmed) metaBits.push('Name spelling not yet confirmed by guardian');
+      if(item.correctionNote) metaBits.push('Open correction note: "' + item.correctionNote + '"');
+      card.appendChild(el('div', 'registrar-approval-meta', metaBits.join(' · ')));
+
+      var actions = el('div', 'registrar-approval-actions');
+      if(item.status === 'submitted' || item.status === 'under_review'){
+        var reviewBtn = el('button', 'registrar-approval-approve', 'Mark Under Review');
+        reviewBtn.type = 'button';
+        reviewBtn.addEventListener('click', function(){ graduationAction(item.id, 'mark_under_review'); });
+        actions.appendChild(reviewBtn);
+
+        var noteInput = document.createElement('input');
+        noteInput.type = 'text'; noteInput.placeholder = 'Correction needed (required to request)';
+        actions.appendChild(noteInput);
+        var correctionBtn = el('button', 'registrar-approval-reject', 'Request Correction');
+        correctionBtn.type = 'button';
+        correctionBtn.addEventListener('click', function(){
+          var note = noteInput.value.trim();
+          if(!note){ showResult(graduationRecordsResultEl, false, 'Enter what needs correcting first.'); return; }
+          graduationAction(item.id, 'request_correction', { correctionNote: note });
+        });
+        actions.appendChild(correctionBtn);
+
+        var verifyBtn = el('button', 'registrar-approval-approve', 'Mark Verified');
+        verifyBtn.type = 'button';
+        verifyBtn.addEventListener('click', function(){ graduationAction(item.id, 'mark_verified'); });
+        actions.appendChild(verifyBtn);
+      } else if(item.status === 'verified'){
+        var trackLink = document.createElement('a');
+        trackLink.href = '/portal/staff/graduation-control/?recordId=' + item.id;
+        trackLink.className = 'text-link'; trackLink.textContent = 'Track institutional clearance →';
+        actions.appendChild(trackLink);
+      } else if(item.status === 'locked'){
+        actions.appendChild(el('span', 'registrar-approval-meta', 'Locked — every institutional clearance is complete.'));
+        var issueBtn = el('button', 'registrar-approval-approve', 'Issue Alumni Registration Certificate');
+        issueBtn.type = 'button';
+        issueBtn.addEventListener('click', function(){ issueAlumniRegistration(item.id, issueBtn); });
+        actions.appendChild(issueBtn);
+
+        var certBtn = el('button', 'registrar-approval-approve', 'Issue Graduation Certificate');
+        certBtn.type = 'button';
+        certBtn.addEventListener('click', function(){ issueCertificate(item.id, certBtn); });
+        actions.appendChild(certBtn);
+
+        var clearanceBtn = el('button', 'registrar-approval-approve', 'Issue Graduation Clearance Certificate');
+        clearanceBtn.type = 'button';
+        clearanceBtn.addEventListener('click', function(){ issueClearanceCertificate(item.id, clearanceBtn); });
+        actions.appendChild(clearanceBtn);
+
+        var charBtn = el('button', 'registrar-approval-approve', 'Request Character Certificate');
+        charBtn.type = 'button';
+        charBtn.addEventListener('click', function(){ requestCharacterCertificate(item.id, charBtn); });
+        actions.appendChild(charBtn);
+
+        var testimonialInput = document.createElement('textarea');
+        testimonialInput.rows = 3; testimonialInput.placeholder = 'Testimonial text (required)';
+        testimonialInput.style.width = '100%'; testimonialInput.style.marginTop = '8px';
+        actions.appendChild(testimonialInput);
+        var testimonialBtn = el('button', 'registrar-approval-approve', 'Request Testimonial');
+        testimonialBtn.type = 'button';
+        testimonialBtn.addEventListener('click', function(){
+          var text = testimonialInput.value.trim();
+          if(!text){ showResult(graduationRecordsResultEl, false, 'Write the testimonial text first — it is never auto-generated.'); return; }
+          requestTestimonial(item.id, text, testimonialBtn);
+        });
+        actions.appendChild(testimonialBtn);
+      }
+      if(actions.childNodes.length) card.appendChild(actions);
+      graduationRecordsListEl.appendChild(card);
+    });
+  }
+
+  async function graduationAction(recordId, action, extra){
+    graduationRecordsResultEl.hidden = true;
+    try{
+      var payload = Object.assign({ action: action, recordId: recordId }, extra || {});
+      var res = await fetch('/api/portal/staff/registrar/graduation', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not complete that action.');
+      showResult(graduationRecordsResultEl, true, 'Updated — status is now "' + (GRADUATION_STATUS_LABEL[data.status] || data.status) + '".');
+      loadGraduationRecords();
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not complete that action.');
+    }
+  }
+
+  graduationRefreshBtn.addEventListener('click', loadGraduationRecords);
+  graduationStatusFilterEl.addEventListener('change', loadGraduationRecords);
+
+  async function issueAlumniRegistration(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_alumni_registration', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        if(data.referenceNo){
+          showResult(graduationRecordsResultEl, false, data.error + ' Reference: ' + data.referenceNo);
+        } else {
+          throw new Error(data.error || 'Could not issue that document.');
+        }
+        return;
+      }
+      var msg = document.createElement('span');
+      msg.textContent = 'Issued — reference ' + data.referenceNo + '. ';
+      var viewLink = document.createElement('a');
+      viewLink.href = data.viewUrl; viewLink.target = '_blank'; viewLink.rel = 'noopener';
+      viewLink.className = 'text-link'; viewLink.textContent = 'View / print →';
+      var pdfLink = document.createElement('a');
+      pdfLink.href = data.viewUrl + '&format=pdf'; pdfLink.target = '_blank'; pdfLink.rel = 'noopener';
+      pdfLink.className = 'text-link'; pdfLink.style.marginLeft = '12px';
+      pdfLink.textContent = 'Download PDF →';
+      pdfLink.title = 'Requires Browser Rendering to be enabled on the Cloudflare account — falls back to an error if not yet configured.';
+      graduationRecordsResultEl.innerHTML = '';
+      graduationRecordsResultEl.className = 'registrar-form-result is-ok';
+      graduationRecordsResultEl.appendChild(msg);
+      graduationRecordsResultEl.appendChild(viewLink);
+      graduationRecordsResultEl.appendChild(pdfLink);
+      if(data.profileUrl){
+        var profileLink = document.createElement('a');
+        profileLink.href = data.profileUrl; profileLink.target = '_blank'; profileLink.rel = 'noopener';
+        profileLink.className = 'text-link'; profileLink.style.marginLeft = '12px';
+        profileLink.textContent = 'View Graduate Profile →';
+        graduationRecordsResultEl.appendChild(profileLink);
+      }
+      graduationRecordsResultEl.hidden = false;
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  function renderIssuedDocumentResult(data, msgText){
+    var msg = document.createElement('span');
+    msg.textContent = msgText;
+    var viewLink = document.createElement('a');
+    viewLink.href = data.viewUrl; viewLink.target = '_blank'; viewLink.rel = 'noopener';
+    viewLink.className = 'text-link'; viewLink.textContent = 'View / print →';
+    var pdfLink = document.createElement('a');
+    pdfLink.href = data.viewUrl + '&format=pdf'; pdfLink.target = '_blank'; pdfLink.rel = 'noopener';
+    pdfLink.className = 'text-link'; pdfLink.style.marginLeft = '12px';
+    pdfLink.textContent = 'Download PDF →';
+    graduationRecordsResultEl.innerHTML = '';
+    graduationRecordsResultEl.className = 'registrar-form-result is-ok';
+    graduationRecordsResultEl.appendChild(msg);
+    graduationRecordsResultEl.appendChild(viewLink);
+    graduationRecordsResultEl.appendChild(pdfLink);
+    if(data.profileUrl){
+      var profileLink = document.createElement('a');
+      profileLink.href = data.profileUrl; profileLink.target = '_blank'; profileLink.rel = 'noopener';
+      profileLink.className = 'text-link'; profileLink.style.marginLeft = '12px';
+      profileLink.textContent = 'View Graduate Profile →';
+      graduationRecordsResultEl.appendChild(profileLink);
+    }
+    graduationRecordsResultEl.hidden = false;
+  }
+
+  async function issueCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        showResult(graduationRecordsResultEl, false, data.error + (data.referenceNo ? ' Reference: ' + data.referenceNo : ''));
+        return;
+      }
+      renderIssuedDocumentResult(data, 'Issued — reference ' + data.referenceNo + '. ');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  async function issueClearanceCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'issue_clearance_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok){
+        showResult(graduationRecordsResultEl, false, data.error + (data.referenceNo ? ' Reference: ' + data.referenceNo : ''));
+        return;
+      }
+      renderIssuedDocumentResult(data, 'Issued — reference ' + data.referenceNo + '. ');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not issue that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  async function requestCharacterCertificate(recordId, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request_character_certificate', recordId: recordId }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not request that document.');
+      showResult(graduationRecordsResultEl, true, data.message || 'Submitted for Principal approval.');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not request that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  async function requestTestimonial(recordId, testimonialText, triggerBtn){
+    graduationRecordsResultEl.hidden = true;
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'request_testimonial', recordId: recordId, testimonialText: testimonialText }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not request that document.');
+      showResult(graduationRecordsResultEl, true, data.message || 'Submitted for Principal approval.');
+    }catch(err){
+      showResult(graduationRecordsResultEl, false, (err && err.message) || 'Could not request that document.');
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  var classBApprovalsListEl = document.querySelector('[data-class-b-approvals-list]');
+  var classBApprovalsResultEl = document.querySelector('[data-class-b-approvals-result]');
+
+  async function loadClassBApprovals(){
+    if(!classBApprovalsListEl) return;
+    classBApprovalsListEl.innerHTML = '';
+    classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Loading…'));
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'list_pending_class_b' }),
+      });
+      var data = await res.json();
+      classBApprovalsListEl.innerHTML = '';
+      if(!res.ok){
+        classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', data.error || 'Your account cannot decide these requests.'));
+        return;
+      }
+      var pending = data.pending || [];
+      if(!pending.length){
+        classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'No Testimonial or Character Certificate requests awaiting approval.'));
+        return;
+      }
+      var typeLabel = { testimonial: 'Official Testimonial', character_certificate: 'Character Certificate' };
+      pending.forEach(function(item){
+        var card = el('div', 'registrar-approval-card');
+        var head = el('div', 'registrar-approval-head');
+        head.appendChild(el('span', null, typeLabel[item.targetType] || item.targetType));
+        card.appendChild(head);
+        card.appendChild(el('div', 'registrar-approval-meta', 'Requested by ' + (item.requestedByName || 'a staff member') + ' on ' + formatDate(item.requestedAt)));
+        if(item.testimonialText){
+          var textPreview = document.createElement('p');
+          textPreview.className = 'registrar-field-note';
+          textPreview.style.whiteSpace = 'pre-wrap';
+          textPreview.textContent = item.testimonialText;
+          card.appendChild(textPreview);
+        }
+        var actions = el('div', 'registrar-approval-actions');
+        var approveBtn = el('button', 'registrar-approval-approve', 'Approve');
+        approveBtn.type = 'button';
+        approveBtn.addEventListener('click', function(){ decideClassB(item.id, 'approve_class_b', approveBtn); });
+        actions.appendChild(approveBtn);
+        var rejectBtn = el('button', 'registrar-approval-reject', 'Reject');
+        rejectBtn.type = 'button';
+        rejectBtn.addEventListener('click', function(){ decideClassB(item.id, 'reject_class_b', rejectBtn); });
+        actions.appendChild(rejectBtn);
+        card.appendChild(actions);
+        classBApprovalsListEl.appendChild(card);
+      });
+    }catch(err){
+      classBApprovalsListEl.innerHTML = '';
+      classBApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending requests.'));
+    }
+  }
+
+  async function decideClassB(approvalId, action, triggerBtn){
+    if(classBApprovalsResultEl){ classBApprovalsResultEl.hidden = true; }
+    if(triggerBtn){ triggerBtn.disabled = true; }
+    try{
+      var res = await fetch('/api/portal/staff/registrar/graduation-documents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, approvalId: approvalId }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not complete that decision.');
+      if(classBApprovalsResultEl){
+        showResult(classBApprovalsResultEl, true, data.status === 'approved' ? ('Approved — reference ' + data.referenceNo + '.') : 'Rejected.');
+      }
+      loadClassBApprovals();
+    }catch(err){
+      if(classBApprovalsResultEl){ showResult(classBApprovalsResultEl, false, (err && err.message) || 'Could not complete that decision.'); }
+    }finally{
+      if(triggerBtn){ triggerBtn.disabled = false; }
+    }
+  }
+
+  if(classBApprovalsListEl){ loadClassBApprovals(); }
+  var classBApprovalsRefreshBtn = document.querySelector('[data-class-b-approvals-refresh]');
+  if(classBApprovalsRefreshBtn){ classBApprovalsRefreshBtn.addEventListener('click', loadClassBApprovals); }
+
+  var registerSessionEl = document.querySelector('[data-register-session]');
+  var registerGenerateBtn = document.querySelector('[data-register-generate]');
+  var registerGeneratePdfBtn = document.querySelector('[data-register-generate-pdf]');
+  var registerResultEl = document.querySelector('[data-register-result]');
+
+  function openGraduationRegister(format){
+    if(!registerResultEl) return;
+    registerResultEl.hidden = true;
+    var session = (registerSessionEl.value || '').trim();
+    if(!session){
+      showResult(registerResultEl, false, 'Enter a graduation session first (e.g. 2025/2026).');
+      return;
+    }
+    var url = '/api/portal/staff/registrar/graduation-register?session=' + encodeURIComponent(session);
+    if(format === 'pdf'){ url += '&format=pdf'; }
+    window.open(url, '_blank', 'noopener');
+  }
+
+  if(registerGenerateBtn){ registerGenerateBtn.addEventListener('click', function(){ openGraduationRegister('html'); }); }
+  if(registerGeneratePdfBtn){ registerGeneratePdfBtn.addEventListener('click', function(){ openGraduationRegister('pdf'); }); }
+
+  var verificationHistoryRefEl = document.querySelector('[data-verification-history-ref]');
+  var verificationHistoryLookupBtn = document.querySelector('[data-verification-history-lookup]');
+  var verificationHistoryListEl = document.querySelector('[data-verification-history-list]');
+  var verificationHistoryResultEl = document.querySelector('[data-verification-history-result]');
+
+  async function lookupVerificationHistory(){
+    if(!verificationHistoryResultEl) return;
+    verificationHistoryResultEl.hidden = true;
+    verificationHistoryListEl.innerHTML = '';
+    var ref = (verificationHistoryRefEl.value || '').trim();
+    if(!ref){
+      showResult(verificationHistoryResultEl, false, 'Enter a document reference number first.');
+      return;
+    }
+    verificationHistoryLookupBtn.disabled = true;
+    try{
+      var res = await fetch('/api/portal/staff/registrar/verification-history?ref=' + encodeURIComponent(ref));
+      var data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Could not load that verification history.'); }
+      if(!data.checks.length){
+        verificationHistoryListEl.innerHTML = '<p class="registrar-approvals-empty">No checks recorded yet for ' + data.referenceNo + ' (' + data.status + ').</p>';
+      } else {
+        var rows = data.checks.map(function(c){
+          return '<div class="registrar-approval-card"><div class="registrar-approval-meta">' + new Date(c.verifiedAt).toLocaleString() + ' — outcome: ' + c.outcome + '</div></div>';
+        }).join('');
+        verificationHistoryListEl.innerHTML = '<p class="registrar-approvals-empty">' + data.checkCount + ' check(s) recorded for ' + data.referenceNo + ' (' + data.status + ').</p>' + rows;
+      }
+    }catch(err){
+      showResult(verificationHistoryResultEl, false, (err && err.message) || 'Could not load that verification history.');
+    }finally{
+      verificationHistoryLookupBtn.disabled = false;
+    }
+  }
+
+  if(verificationHistoryLookupBtn){ verificationHistoryLookupBtn.addEventListener('click', lookupVerificationHistory); }
 
   function renderTimeline(events){
     var wrap = document.querySelector('[data-record-timeline]');
@@ -558,6 +983,7 @@
         }
       }
       loadPendingApprovals();
+      loadGraduationRecords();
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Registrar\'s Office.';

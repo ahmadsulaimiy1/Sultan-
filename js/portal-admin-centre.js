@@ -44,6 +44,8 @@
     if (newStaffBtn) newStaffBtn.addEventListener('click', function () { renderNewStaffForm(); });
     var staffDirBtn = document.getElementById('admin-staff-directory-btn');
     if (staffDirBtn) staffDirBtn.addEventListener('click', function () { renderStaffDirectory(); });
+    var authorityBtn = document.getElementById('admin-authority-register-btn');
+    if (authorityBtn) authorityBtn.addEventListener('click', function () { renderAuthorityRegister(); });
   }
 
   function esc(s) {
@@ -170,12 +172,14 @@
       + '<button type="button" class="office-tab" data-tab="meetings">Meetings</button>'
       + '<button type="button" class="office-tab" data-tab="documents">Documents</button>'
       + (showResolutions ? '<button type="button" class="office-tab" data-tab="resolutions">Resolutions</button>' : '')
+      + (showResolutions ? '<button type="button" class="office-tab" data-tab="action-items">Action Items</button>' : '')
       + '</nav>'
       + '<div class="office-panel is-active" id="admin-panel-content"></div>'
       + '<div class="office-panel" id="admin-panel-appointments"></div>'
       + '<div class="office-panel" id="admin-panel-meetings"></div>'
       + '<div class="office-panel" id="admin-panel-documents"></div>'
       + (showResolutions ? '<div class="office-panel" id="admin-panel-resolutions"></div>' : '')
+      + (showResolutions ? '<div class="office-panel" id="admin-panel-action-items"></div>' : '')
       + '</div>';
 
     var tabs = el.querySelectorAll('.office-tab');
@@ -212,6 +216,12 @@
     if (tab === 'resolutions') {
       apiGet('resolutions', { officeName: office.name }).then(function (r) {
         renderResolutionsTab(office, r.ok ? r.data.resolutions : []);
+      });
+      return;
+    }
+    if (tab === 'action-items') {
+      apiGet('action-items', { officeName: office.name }).then(function (r) {
+        renderActionItemsTab(office, r.ok ? r.data.actionItems : []);
       });
       return;
     }
@@ -378,6 +388,41 @@
     });
   }
 
+  // Board Papers Centre — action items: a traceable owner + due date for a
+  // decision made in a meeting or resolution, not just prose in minutes_text.
+  function renderActionItemsTab(office, actionItems) {
+    var el = document.getElementById('admin-panel-action-items');
+    if (!el) return;
+    var rows = (actionItems || []).map(function (a) {
+      return '<tr class="' + (a.isOverdue ? 'is-overdue' : '') + '"><td>' + esc(a.title) + '</td><td>'
+        + (a.owner ? esc(a.owner.fullName) : '—') + '</td><td>' + (a.dueDate ? fmtDate(a.dueDate) : '—') + '</td><td>'
+        + esc(a.isOverdue ? 'overdue' : a.status.replace('_', ' ')) + '</td></tr>';
+    }).join('') || '<tr><td colspan="4">No action items recorded yet.</td></tr>';
+    el.innerHTML =
+      '<div style="padding:20px 26px 0;overflow-x:auto;"><table class="admin-table"><thead><tr><th>Title</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+      + '<form class="admin-form" id="ai-form">'
+      + '<div class="admin-form-grid">'
+      + '<div class="admin-field"><label>Title</label><input name="title" required /></div>'
+      + '<div class="admin-field"><label>Owner Staff No. (optional)</label><input name="ownerStaffNo" /></div>'
+      + '<div class="admin-field"><label>Due Date</label><input type="date" name="dueDate" /></div>'
+      + '<div class="admin-field"><label>Status</label><select name="status"><option value="open">Open</option><option value="in_progress">In Progress</option><option value="done">Done</option><option value="cancelled">Cancelled</option></select></div>'
+      + '<div class="admin-field"><label>Description</label><textarea name="description"></textarea></div>'
+      + '</div>'
+      + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Add Action Item</button><span class="admin-form-status" id="ai-form-status"></span></div>'
+      + '</form>';
+    document.getElementById('ai-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var fd = new FormData(e.target);
+      apiPost('create-action-item', {
+        officeName: office.name, title: fd.get('title'), ownerStaffNo: fd.get('ownerStaffNo') || undefined,
+        dueDate: fd.get('dueDate') || undefined, status: fd.get('status'), description: fd.get('description') || undefined,
+      }).then(function (r) {
+        if (r.ok) { statusEl('ai-form-status', 'Added.', true); loadTab('action-items'); }
+        else statusEl('ai-form-status', r.data.error || 'Could not add.', false);
+      });
+    });
+  }
+
   // ---- New Office / New Staff (not office-scoped) ----
   var OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
   function renderNewOfficeForm() {
@@ -466,6 +511,62 @@
     SYSADMIN: 'System Administrator', DSL: 'Designated Safeguarding Lead',
   };
   var ROLE_CODES = Object.keys(ROLE_LABELS);
+
+  // Founder Authority Framework — a chronological, read-only register
+  // over appointments/staff_roles/delegations (functions/api/portal/
+  // admin/authority-register.js). No new writes happen here; this view
+  // only makes traceable what the existing "+ New Staff", "Grant Role",
+  // and the session-authenticated Delegation System already write.
+  var AUTHORITY_CATEGORY_LABEL = {
+    appointment: 'Appointment', role: 'Role', executive_authority: 'Executive Authority', delegation: 'Delegation',
+  };
+  function fetchAuthorityRegister(params) {
+    var qs = new URLSearchParams(params || {});
+    return fetch('/api/portal/admin/authority-register?' + qs.toString(), {
+      headers: { 'x-sysadmin-token': state.token, accept: 'application/json' },
+    }).then(function (res) { return res.json().then(function (data) { return { ok: res.ok, status: res.status, data: data }; }); });
+  }
+
+  function renderAuthorityRegister() {
+    var el = document.getElementById('admin-right-panel');
+    if (!el) return;
+    el.innerHTML =
+      '<div class="portal-child-card">'
+      + '<div class="portal-child-head"><h2>Authority Register</h2><div class="meta">Every appointment, role grant/revocation, and delegation, merged into one traceable record — "who did what, when, why." Executive (EXE) grants and revocations are marked separately: only an existing Executive may touch that role.</div></div>'
+      + '<div style="padding:0 26px 16px;display:flex;gap:10px;">'
+      + '<input type="text" id="authority-staff-filter" placeholder="Filter by Staff No. (optional)" style="flex:1;padding:10px 12px;border:1px solid var(--line);background:var(--portal-card);font-family:inherit;font-size:0.9rem;color:var(--ink);" />'
+      + '<button type="button" class="btn-outline" id="authority-filter-btn">Filter</button>'
+      + '</div>'
+      + '<div id="authority-register-list" style="padding:0 26px 20px;">Loading…</div>'
+      + '</div>';
+
+    function run() {
+      var staffNo = document.getElementById('authority-staff-filter').value.trim();
+      var listEl = document.getElementById('authority-register-list');
+      listEl.textContent = 'Loading…';
+      fetchAuthorityRegister(staffNo ? { staffNo: staffNo } : {}).then(function (r) {
+        if (!r.ok) { listEl.innerHTML = '<div class="portal-empty">' + esc((r.data && r.data.error) || 'Could not load the Authority Register.') + '</div>'; return; }
+        var events = r.data.events || [];
+        if (!events.length) { listEl.innerHTML = '<div class="portal-empty">No authority events recorded yet.</div>'; return; }
+        listEl.innerHTML = events.map(function (e) {
+          var isExe = e.category === 'executive_authority';
+          return '<div class="admin-office-row" style="cursor:default;align-items:flex-start;flex-direction:column;gap:4px;'
+            + (isExe ? 'border-inline-start:3px solid var(--gold-bright,var(--gold));' : '') + '">'
+            + '<div style="display:flex;gap:8px;align-items:center;">'
+            + '<span class="aor-badge">' + esc(AUTHORITY_CATEGORY_LABEL[e.category] || e.category) + '</span>'
+            + '<span class="aor-badge" style="opacity:.75;">' + esc(e.action) + '</span>'
+            + '<span style="margin-inline-start:auto;font-size:0.76rem;color:var(--ink-soft);">' + esc(fmtDate(e.at)) + '</span>'
+            + '</div>'
+            + '<div style="font-size:0.9rem;">' + esc(e.summary) + '</div>'
+            + (e.reason ? '<div style="font-size:0.8rem;color:var(--ink-soft);font-style:italic;">Reason: ' + esc(e.reason) + '</div>' : '')
+            + '</div>';
+        }).join('');
+      });
+    }
+    document.getElementById('authority-filter-btn').addEventListener('click', run);
+    document.getElementById('authority-staff-filter').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); run(); } });
+    run();
+  }
 
   function renderStaffDirectory(q) {
     var el = document.getElementById('admin-right-panel');

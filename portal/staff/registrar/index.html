@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
 <script src="/js/portal-theme.js"></script>
+<script src="/js/portal-shell.js"></script>
 </head>
 <body class="portal-body type-administrative" data-atmosphere="registrar">
 
@@ -88,6 +89,58 @@
         <a class="portal-topbar-link" href="/verify-certificate/" target="_blank" rel="noopener">Verify a Certificate →</a>
         <a class="portal-topbar-link" href="/verify-identity/" target="_blank" rel="noopener">Verify a Student Identity Card →</a>
       </div>
+    </div>
+
+    <div class="office-group-head">Graduation Records — 8 August 2026 Ceremony</div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Graduation Information Submissions</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Guardians submit these from their own dashboard — nothing here is typed in by staff. Review a submission, request a correction if something looks wrong, then mark it verified once the details and results are confirmed. Marking a record verified starts the full institutional Graduation Approval Workflow — Academic, Examinations, Finance, Disciplinary, Library, ICT, Principal, both Vice Principals, and the Founder where required — tracked on the <a class="text-link" href="/portal/staff/graduation-control/">Graduation Control Centre →</a>, not here. A record locks itself automatically once every stage clears.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;">
+        <select data-graduation-status-filter class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
+          <option value="">All statuses</option>
+          <option value="submitted">Submitted</option>
+          <option value="under_review">Under review</option>
+          <option value="verified">Verified</option>
+          <option value="locked">Locked</option>
+        </select>
+        <button type="button" class="registrar-btn" data-graduation-refresh>Refresh</button>
+        <a class="portal-topbar-link" href="/portal/staff/graduation-control/">Open Graduation Control Centre →</a>
+      </div>
+      <div class="registrar-approvals-list" data-graduation-records-list></div>
+      <div class="registrar-form-result" data-graduation-records-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Graduation Register</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">The full ceremony roster for one graduation session — every locked record, in one institutional publication. This is not an individually-verifiable credential: it carries no reference number, seal, or verification code of its own (each graduate's own documents carry those separately).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
+        <input type="text" data-register-session placeholder="e.g. 2025/2026" class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);" />
+        <button type="button" class="registrar-btn" data-register-generate>Open Register</button>
+        <button type="button" class="registrar-btn" data-register-generate-pdf>Download PDF</button>
+      </div>
+      <div class="registrar-form-result" data-register-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Pending Testimonial &amp; Character Certificate Approvals</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">A Testimonial or Character Certificate can only be requested from a locked graduation record (see the record's own action row above) and only becomes a real, issued document once the student's own Principal/Head Teacher/Ra'ees/Mudeer approves it here — a Registrar cannot approve their own request.</p>
+      <div style="padding:0 20px 14px;">
+        <button type="button" class="registrar-btn" data-class-b-approvals-refresh>Refresh</button>
+      </div>
+      <div class="registrar-approvals-list" data-class-b-approvals-list></div>
+      <div class="registrar-form-result" data-class-b-approvals-result hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Lifetime Verification History</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Every time a document's reference number has been checked at the public verification page, since the document was issued — the anomaly-review purpose this exists for is repeated or suspicious checks against one document.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
+        <input type="text" data-verification-history-ref placeholder="Reference number, e.g. SHRS-AR-..." class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:260px;" />
+        <button type="button" class="registrar-btn" data-verification-history-lookup>View History</button>
+      </div>
+      <div class="registrar-approvals-list" data-verification-history-list></div>
+      <div class="registrar-form-result" data-verification-history-result hidden></div>
     </div>
 
     <div data-registrar-record hidden>

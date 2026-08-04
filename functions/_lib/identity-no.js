@@ -1,11 +1,20 @@
-// Digital Identity System — student/guardian numbers (Imperial Digital
-// Campus Directive, Priority 2): SHR-STU-<year>-<seq>, SHR-PAR-<year>-<seq>.
-// Staff numbers (below) were rebuilt under the Founder & CEO-approved
-// "SHRS Master Identity Architecture Directive" — see
-// docs/digital-identity-system.md. Same lazy-generate-and-persist pattern
-// as certificate reference numbers (functions/api/portal/staff/registrar/
-// certificates.js) — generated the first time that person's "My ID Card"
-// view is requested, then stored so it never changes again.
+// Institutional Identity Number Architecture Directive (Founder & CEO-
+// approved correction of the original Digital Identity System pattern):
+// every SHR- (missing the "S" for "Schools") number in this file has
+// been replaced with an SHRS- one, and every COUNT(*)+1 sequence with a
+// real, atomic PostgreSQL sequence — the same upgrade staff numbers
+// already had under the "SHRS Master Identity Architecture Directive"
+// below. See docs/digital-identity-system.md for the full rationale:
+// letter/name-derived numbering (e.g. converting a person's initials
+// into digits) was considered and explicitly declined — collision-
+// prone, trivially reproducible, and not how real institutions,
+// ministries, or banks build permanent identifiers. Every number here
+// is institution code + division/role code + date + a real sequence.
+//
+// Same lazy-generate-and-persist pattern as certificate reference
+// numbers (functions/api/portal/staff/registrar/certificates.js) —
+// generated the first time that person's "My ID Card" view is
+// requested, then stored so it never changes again.
 //
 // Neon's serverless `sql` tagged-template driver has no `.unsafe()`/
 // raw-identifier escape hatch (checked: not present in
@@ -13,28 +22,94 @@
 // one shared query the way a normal value can — this is separate
 // functions per table instead of one parameterised helper, not a
 // stylistic choice.
+
+// A student's identity_no is their permanent Student Digital Identity
+// Number: SHRS-<YYMMDD registered>-<seq6>, e.g. SHRS-260731-000154.
+// Assigned once and never changed again — unlike admission_no (below),
+// it does not vary if the student changes school, class, or campus.
 export async function ensureStudentIdentityNo(sql, studentId) {
-  const existing = await sql`SELECT identity_no FROM students WHERE id = ${studentId}`;
+  const existing = await sql`SELECT identity_no, created_at FROM students WHERE id = ${studentId}`;
   const row = existing.rows[0];
   if (!row) return null;
   if (row.identity_no) return row.identity_no;
-  const year = new Date().getFullYear();
-  const countRes = await sql`SELECT id FROM students WHERE identity_no LIKE ${'SHR-STU-' + year + '-%'}`;
-  const identityNo = `SHR-STU-${year}-${String(countRes.rows.length + 1).padStart(6, '0')}`;
+  const dateStamp = formatYYMMDD(row.created_at) || formatYYMMDD(new Date());
+  const seqRes = await sql`SELECT nextval('student_identity_seq') AS seq`;
+  const seq = String(seqRes.rows[0].seq).padStart(6, '0');
+  const identityNo = `SHRS-${dateStamp}-${seq}`;
   await sql`UPDATE students SET identity_no = ${identityNo} WHERE id = ${studentId}`;
   return identityNo;
 }
 
+// A guardian's identity_no: SHRS-PAR-<YYMMDD registered>-<seq6>.
 export async function ensureGuardianIdentityNo(sql, guardianId) {
-  const existing = await sql`SELECT identity_no FROM guardians WHERE id = ${guardianId}`;
+  const existing = await sql`SELECT identity_no, created_at FROM guardians WHERE id = ${guardianId}`;
   const row = existing.rows[0];
   if (!row) return null;
   if (row.identity_no) return row.identity_no;
-  const year = new Date().getFullYear();
-  const countRes = await sql`SELECT id FROM guardians WHERE identity_no LIKE ${'SHR-PAR-' + year + '-%'}`;
-  const identityNo = `SHR-PAR-${year}-${String(countRes.rows.length + 1).padStart(6, '0')}`;
+  const dateStamp = formatYYMMDD(row.created_at) || formatYYMMDD(new Date());
+  const seqRes = await sql`SELECT nextval('guardian_identity_seq') AS seq`;
+  const seq = String(seqRes.rows[0].seq).padStart(6, '0');
+  const identityNo = `SHRS-PAR-${dateStamp}-${seq}`;
   await sql`UPDATE guardians SET identity_no = ${identityNo} WHERE id = ${guardianId}`;
   return identityNo;
+}
+
+// Force-regenerates into the current format, same "knowingly breaks
+// already-issued QR codes/links" trade-off as regenerateStaffIdentityNo
+// below — used only by the bulk admin migration action.
+export async function regenerateStudentIdentityNo(sql, studentId) {
+  await sql`UPDATE students SET identity_no = NULL WHERE id = ${studentId}`;
+  return ensureStudentIdentityNo(sql, studentId);
+}
+export async function regenerateGuardianIdentityNo(sql, guardianId) {
+  await sql`UPDATE guardians SET identity_no = NULL WHERE id = ${guardianId}`;
+  return ensureGuardianIdentityNo(sql, guardianId);
+}
+
+// students.admission_no — the Institutional Student Number, distinct
+// from identity_no above: school-scoped and admission-year-scoped
+// rather than permanent, e.g. SHRS-RC-26-000154 (Royal College, 2026
+// admission cohort). SCHOOL is the same four-institution split used
+// sitewide, coded to match this specific number's own directive rather
+// than reusing the staff UNIT codes (which spell Nursery & Primary as
+// "NPS", not "NP") — the two numbering families are independent by
+// design. Sequence is scoped per school per admission year, matching
+// the existing COUNT(*)+1 convention already used for certificate and
+// finance numbers (see functions/_lib/finance-no.js) — admission volume
+// is far too low for the race condition that justified a real sequence
+// for staff/student/guardian numbers.
+const SCHOOL_CODE_BY_INSTITUTION_NAME = {
+  'Royal College': 'RC',
+  'Nursery & Primary': 'NP',
+  'Islamic & Arabic Studies': 'IAS',
+  "Qur'an College": 'QC',
+};
+
+export async function generateAdmissionNo(sql, institutionName, admissionYear) {
+  const school = SCHOOL_CODE_BY_INSTITUTION_NAME[institutionName] || 'GEN';
+  const yy = String(admissionYear).slice(-2);
+  const prefix = `SHRS-${school}-${yy}-`;
+  const countRes = await sql`SELECT count(*)::int AS n FROM students WHERE admission_no LIKE ${prefix + '%'}`;
+  const seq = (countRes.rows[0].n || 0) + 1;
+  return `${prefix}${String(seq).padStart(6, '0')}`;
+}
+
+// Calendar-digit date formatter shared by every identity number in this
+// file — YYMMDD, no timezone math, so "31 July 2026" always becomes
+// 260731 regardless of the server's local offset (same reasoning as
+// formatJoinDate below, just a different digit order: YYMMDD reads as
+// the internationally recognised ISO-8601 ordering an external auditor
+// or ministry official would expect, vs. staff numbers' existing DDMMYY
+// which predates this directive and is left unchanged to avoid
+// re-migrating every already-issued staff card for a cosmetic reorder).
+function formatYYMMDD(date) {
+  if (!date) return null;
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return null;
+  const yy = String(d.getUTCFullYear()).slice(-2);
+  const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(d.getUTCDate()).padStart(2, '0');
+  return yy + mm + dd;
 }
 
 // --- Staff: SHRS Master Identity Architecture ------------------------
@@ -75,6 +150,10 @@ const OFFICE_CODE_BY_SLUG = {
   'digital-services': 'ICT', // ICT Office's real slug
   'board-of-trustees': 'BOT',
   'management-council': 'MGT',
+  'strategic-planning': 'SPL',
+  'quality-assurance': 'QAS',
+  'legal-compliance': 'LGC',
+  'public-affairs': 'PUB',
   'academic-affairs': 'AAF',
   'examinations': 'EXM',
   'admissions': 'ADM',
@@ -148,11 +227,33 @@ async function loadStaffIdentityRow(sql, staffId) {
   return res.rows[0] || null;
 }
 
+// Board of Trustees & top executive reserved identity numbers ("BOARD &
+// EXECUTIVE IDs" in the directive): SHRS-BOT-001 / SHRS-CEO-001 — no date
+// segment, because these are permanently reserved seats, not join-dated
+// staff records. Scoped to their own tiny 3-digit COUNT(*)+1 sequence
+// (matching admission_no's low-volume convention above) rather than the
+// shared staff_identity_seq, so the Board and the CEO office each get
+// their own gapless 001, 002, ... run instead of borrowing numbers out of
+// the general staff sequence.
+const RESERVED_OFFICE_PREFIX = { BOT: 'SHRS-BOT-', CEO: 'SHRS-CEO-' };
+
+async function generateReservedStaffIdentityNo(sql, prefix) {
+  const countRes = await sql`SELECT count(*)::int AS n FROM staff WHERE identity_no LIKE ${prefix + '%'}`;
+  const seq = (countRes.rows[0].n || 0) + 1;
+  return `${prefix}${String(seq).padStart(3, '0')}`;
+}
+
 async function generateAndStoreStaffIdentityNo(sql, staffId, row) {
-  const joinDate = formatJoinDate(row.date_joined);
-  if (!joinDate) return null;
   const unit = unitCodeFor(row);
   const office = await officeCodeFor(sql, staffId, row);
+  const reservedPrefix = RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office];
+  if (reservedPrefix) {
+    const identityNo = await generateReservedStaffIdentityNo(sql, reservedPrefix);
+    await sql`UPDATE staff SET identity_no = ${identityNo} WHERE id = ${staffId}`;
+    return identityNo;
+  }
+  const joinDate = formatJoinDate(row.date_joined);
+  if (!joinDate) return null;
   const seqRes = await sql`SELECT nextval('staff_identity_seq') AS seq`;
   const seq = String(seqRes.rows[0].seq).padStart(6, '0');
   const identityNo = `SHRS-${unit}-${office}-${joinDate}-${seq}`;
@@ -183,6 +284,10 @@ export async function ensureStaffIdentityNo(sql, staffId) {
 // no date_joined on file.
 export async function regenerateStaffIdentityNo(sql, staffId) {
   const row = await loadStaffIdentityRow(sql, staffId);
-  if (!row || !row.date_joined) return null;
+  if (!row) return null;
+  const unit = unitCodeFor(row);
+  const office = await officeCodeFor(sql, staffId, row);
+  const isReserved = Boolean(RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office]);
+  if (!isReserved && !row.date_joined) return null;
   return generateAndStoreStaffIdentityNo(sql, staffId, row);
 }
