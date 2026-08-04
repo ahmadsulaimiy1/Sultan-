@@ -289,7 +289,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 600 },
-      children: [new TextRun({ text: 'Royal College · Qur’an College · School of Islamic & Arabic Studies · Nursery & Primary School', italics: true, size: 20, color: CHARCOAL })],
+      children: [new TextRun({ text: 'Secular College · Islamiyyah College · Qur’an College · Basic School · Online & Distance Learning School', italics: true, size: 20, color: CHARCOAL })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -335,10 +335,10 @@ function main() {
     }),
     new Paragraph({
       spacing: { after: 60 },
-      children: [new TextRun({ text: 'Sultan Hanafi Royal Schools · Royal College · Qur’an College · School of Islamic & Arabic Studies · Nursery & Primary School', size: 16, color: CHARCOAL })],
+      children: [new TextRun({ text: 'Sultan Hanafi Royal Schools · Secular College · Islamiyyah College · Qur’an College · Basic School · Online & Distance Learning School', size: 16, color: CHARCOAL })],
     }),
     new Paragraph({
-      children: [new TextRun({ text: 'Founded December 2017 · Ikorodu, Lagos State, Nigeria', size: 16, color: CHARCOAL })],
+      children: [new TextRun({ text: 'Founded July 2016 · Ikorodu, Lagos State, Nigeria', size: 16, color: CHARCOAL })],
     }),
   );
   coverChildren.push(new Paragraph({ children: [new PageBreak()] }));

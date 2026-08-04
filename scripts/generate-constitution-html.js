@@ -275,7 +275,7 @@ function main() {
   ${KHATAM_SVG}
   <img class="cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
   <div class="cover-eyebrow">Sultan Hanafi Royal Schools</div>
-  <div class="cover-sub-line">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+  <div class="cover-sub-line">Secular College &middot; Islamiyyah College &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</div>
   <h1 class="cover-title">The Governance Charter</h1>
   <div class="cover-title-sub">of Sultan Hanafi Royal Schools</div>
   <div class="cover-rule"></div>
@@ -284,7 +284,7 @@ function main() {
     <div class="cover-footer-rule"></div>
     <div class="cover-footer-text">
       <span>Flagship Edition</span>
-      <span>Est. December 2017 &middot; Ikorodu, Lagos State, Nigeria</span>
+      <span>Est. July 2016 &middot; Ikorodu, Lagos State, Nigeria</span>
     </div>
   </div>
 </div>
@@ -311,8 +311,8 @@ function main() {
     <div class="copyright-rule"></div>
     <div class="copyright-submission">${metaParagraphs.map((t) => `<p>${inline(t)}</p>`).join('')}</div>
     <div class="copyright-rule"></div>
-    <p class="copyright-line">Sultan Hanafi Royal Schools &middot; Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</p>
-    <p class="copyright-line">Founded December 2017 &middot; Ikorodu, Lagos State, Nigeria</p>
+    <p class="copyright-line">Sultan Hanafi Royal Schools &middot; Secular College &middot; Islamiyyah College &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</p>
+    <p class="copyright-line">Founded July 2016 &middot; Ikorodu, Lagos State, Nigeria</p>
   </div>
 </div>
 
@@ -446,12 +446,12 @@ ${renderSchedules()}
     <img class="back-cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
     <div class="back-cover-rule"></div>
     <div class="back-cover-name">Sultan Hanafi Royal Schools</div>
-    <div class="back-cover-schools">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+    <div class="back-cover-schools">Secular College &middot; Islamiyyah College &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</div>
     <div class="back-cover-rule small"></div>
     <div class="back-cover-meta">
       <div><span>Instrument</span>The Governance Charter of Sultan Hanafi Royal Schools</div>
       <div><span>Edition</span>Seventh Edition</div>
-      <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
+      <div><span>Founded</span>July 2016 &middot; Ikorodu, Lagos State, Nigeria</div>
     </div>
     <div class="back-cover-rule small"></div>
     <img class="back-cover-qr" src="../../assets/images/qr/qr-website.png" alt="QR code linking to the official Sultan Hanafi Royal Schools website" />
