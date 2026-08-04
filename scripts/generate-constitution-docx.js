@@ -328,7 +328,7 @@ function main() {
       children: [
         new TextRun({ text: 'Certification. ', bold: true, size: 17, color: CHARCOAL }),
         new TextRun({
-          text: 'This Governance Charter has been prepared under the authority of the Founder & Chief Executive Officer of Sultan Hanafi Royal Schools and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.',
+          text: 'This Governance Charter has been prepared under the authority of the Founder & Head of Schools / Administrator of Sultan Hanafi Royal Schools and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.',
           size: 17, color: CHARCOAL,
         }),
       ],
@@ -481,7 +481,7 @@ function main() {
   const doc = new Document({
     creator: 'Sultan Hanafi Royal Schools — Office of the Board of Governors (drafting support)',
     title: 'The Governance Charter of Sultan Hanafi Royal Schools — Seventh Edition',
-    description: 'Constitutional instrument prepared under the authority of the Founder & Chief Executive Officer, submitted to the Board of Governors for consideration and adoption.',
+    description: 'Constitutional instrument prepared under the authority of the Founder & Head of Schools / Administrator, submitted to the Board of Governors for consideration and adoption.',
     styles: {
       default: {
         document: { run: { font: 'Cambria', size: 22, color: CHARCOAL } },

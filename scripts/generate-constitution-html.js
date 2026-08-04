@@ -323,7 +323,7 @@ function main() {
   <table class="imprint-table">
     <tbody>
       <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
-      <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Chief Executive Officer</td></tr>
+      <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Head of Schools / Administrator</td></tr>
       <tr><th>Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
       <tr><th>Website</th><td>shroyalschools.com</td></tr>
       <tr><th>Email</th><td>info@shroyalschools.com</td></tr>
@@ -332,7 +332,7 @@ function main() {
       <tr><th>Classification</th><td>Internal Governance Instrument &mdash; Board Submission Draft. Not yet adopted; carries no legal effect until the Board resolves under Chapter XVIII (see Certification, above).</td></tr>
       <tr><th>Archival Statement</th><td>Prepared for permanent retention in the Institution's governance archive. On adoption, the executed edition supersedes this draft as the archival copy of record.</td></tr>
       <tr><th>Printing Specification</th><td>Set for US Letter (8.5in &times; 11in) digital archival distribution and print-on-demand reproduction; not yet issued in a bound print run.</td></tr>
-      <tr><th>Rights Statement</th><td>Prepared for the internal use of the Board of Governors, the Founder &amp; CEO, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation.</td></tr>
+      <tr><th>Rights Statement</th><td>Prepared for the internal use of the Board of Governors, the Founder &amp; Head of Schools / Administrator, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation.</td></tr>
     </tbody>
   </table>
 </div>
@@ -421,8 +421,8 @@ ${tocHtml}
     <thead><tr><th>Abbreviation</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td>SHRS</td><td>Sultan Hanafi Royal Schools ("the Institution")</td></tr>
-      <tr><td>CEO</td><td>Chief Executive Officer</td></tr>
-      <tr><td>EMT</td><td>Executive Management Team</td></tr>
+      <tr><td>HSA</td><td>Head of Schools / Administrator</td></tr>
+      <tr><td>MT</td><td>Management Team</td></tr>
       <tr><td>ICT</td><td>Information &amp; Communications Technology</td></tr>
       <tr><td>HR</td><td>Human Resources</td></tr>
       <tr><td>Art.</td><td>Article, of this Charter</td></tr>
