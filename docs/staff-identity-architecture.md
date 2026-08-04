@@ -61,8 +61,8 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 — never fabricated:
 
 - **`institutions`** — formalises the four institution names already
-  used as free text in `classes.institution` (Nursery & Primary, Royal
-  College, Islamic & Arabic Studies, Qur'an College) into a real
+  used as free text in `classes.institution` (Basic School, Secular
+  College, Islamiyyah College, Qur'an College) into a real
   reference table, so offices/staff/roles can scope against an id.
   `classes.institution` itself is left unchanged (a live table with real
   student data — retrofitting it to a foreign key is real future work,
@@ -74,12 +74,12 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 - **`offices`** — self-referencing (`parent_office_id`) so real
   reporting structure is representable. Seeded conservatively with only
   offices `digital-institution-blueprint.md` already names as real:
-  Board of Trustees, Registrar's Office, Finance Office, ICT Office.
+  Board of Governors, Registrar's Office, Finance Office, ICT Office.
   Deliberately does NOT seed a "Student Affairs Office," "Boarding
   Office," or "Library" row — the Blueprint itself says those are
   ungoverned/don't formally exist yet, and creating directory rows for
   them would overstate their institutional reality.
-- **`departments`** — subunits within an institution/office. Royal
+- **`departments`** — subunits within an institution/office. Secular
   College's public page mentions "seven academic departments" but does
   not name them anywhere in this codebase's governance canon, so this
   table starts **empty** rather than inventing seven plausible-sounding
@@ -91,7 +91,7 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 One table, `staff`, holding exactly the organisational-directory fields
 from §0: `staff_no` (Staff ID), `full_name`, `preferred_name`,
 `office_id`, `department_id`, `position_title` (free-text display label,
-e.g. "Principal, Royal College" — cosmetic, not the RBAC role itself),
+e.g. "Principal, Secular College" — cosmetic, not the RBAC role itself),
 `reports_to_staff_id` (self-referencing), `institution_id` (primary
 institution), `date_joined`, `status` (`active`/`suspended`/`archived`
 — the same three-state vocabulary already used for students, Archive-
@@ -102,7 +102,7 @@ change.
 
 **Deliberately NOT auto-seeded with real people.** Unlike the sample
 guardian/student seed (explicitly fake, flagged `is_sample_data = true`,
-safe to create on every idempotent setup run), the real EMT roster (CEO,
+safe to create on every idempotent setup run), the real Management Team roster (Head of Schools / Administrator,
 four Principals/Head Teacher, Registrar, ICT Head, Head R&D — all
 already named publicly on `/about/governance/`) is **not** inserted
 automatically by `POST /api/portal/setup`. Populating real people into a
@@ -302,7 +302,7 @@ change to who can actually appoint or delegate: `staff.js`'s
 `requireExeToTouchExe` still means only an existing Executive can grant
 or revoke `EXE` itself, and `staff/delegations.js` still means nobody
 can delegate a role they don't hold. This endpoint answers the
-traceability half of "Founder & CEO remains the Supreme Appointing
+traceability half of "Founder & Head of Schools / Administrator remains the Supreme Appointing
 Authority... every appointment, removal, and delegation traceable" —
 `EXE` grants/revocations are flagged in their own `executive_authority`
 category so they're never lost in a general role-change list.

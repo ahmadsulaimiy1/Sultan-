@@ -38,7 +38,7 @@ Real institutions of the calibre SHRS is aiming for — Oxford, the Commonwealth
 
 ### 2.1 Governing Authority — sets policy, does not manage
 
-**Board of Trustees** (apex, constitutional). Meets periodically. Its job is stewardship of the mission, appointment of the Chief Executive, approval of policy and budget, and — the thing schools most often get wrong — **staying out of day-to-day management.** It governs through six standing committees (§4.1), never by individual trustees issuing instructions to staff.
+**Board of Governors** (apex, constitutional). Meets periodically. Its job is stewardship of the mission, appointment of the Head of Schools / Administrator, approval of policy and budget, and — the thing schools most often get wrong — **staying out of day-to-day management.** It governs through its Board-Level Committees (§4.1), never by individual Governors issuing instructions to staff. *(Note: per the Board's governance restructuring amendment of 2026-08-04, the Board-Level Committees actually adopted are the Educational Technical Committee, the Finance Committee, and one further committee not yet named — narrower than the six committees this report's §4.1 recommends below; see `docs/policies/constitution-governance-charter.md`.)*
 
 *Why it exists separately from everything else:* a governing body that also manages operations cannot hold its own executive accountable. This is the single most-litigated failure mode in independent-school governance worldwide.
 
@@ -46,7 +46,7 @@ Real institutions of the calibre SHRS is aiming for — Oxford, the Commonwealth
 
 **Founder & Chief Executive Officer** — the sole executive office accountable to the Board. Everything below this line derives its authority from the CEO, directly or by further delegation (§7).
 
-**Management Council** — the CEO plus the four institution heads (Principal, Ra'ees, Mudeer, Head Teacher) plus the functional directors (Registrar, Bursar/Finance, HR, ICT). A peer body: no member outranks another; the CEO chairs. This is already real (`Management Council` office, `sql/schema.sql`) and correctly modelled — keep it exactly as built.
+**Management Council** — the Head of Schools / Administrator plus the institution heads (Principal, Ra'ees, Mudeer, Head Teacher, and, once appointed, the Head of the fifth institution recognised by the 2026-08-04 amendment) plus the functional directors (Registrar, Bursar/Finance, HR, ICT). A peer body: no member outranks another; the Head of Schools / Administrator chairs. This is already real (`Management Council` office, `sql/schema.sql`) and correctly modelled — keep it exactly as built.
 
 **Executive Support Offices** — Strategic Planning, Quality Assurance, Legal & Compliance, Public Affairs. These already exist as real offices. My one structural (not cosmetic) recommendation: **reclassify them.** They are currently seeded with `layer = 'governance'`, siblings of the Board of Trustees. They are not. They support the *executive's* decision-making, not the Board's own apparatus. Reclassify to executive-support offices reporting to the CEO/Management Council. This matters beyond naming: as currently modelled, an org chart reader would conclude these four offices sit above the Management Council, which is false and would confuse any auditor reading the structure.
 
@@ -88,7 +88,7 @@ Quality Assurance Office, Strategic Planning Office, Legal & Compliance Office, 
 - **Community Engagement** — fold into Public Affairs' mandate (see the Communications/Public Affairs boundary note below), not a new office.
 
 **Recommend explicitly rejecting, for now:**
-- **International Relations** — SHRS is a single-country, four-institution operation. An International Relations office at this stage is premature institutional empire-building; even schools with genuine international licensing arrangements typically run those through a contracts/legal function, not a standing diplomatic-style office. Revisit only if SHRS pursues an international curriculum accreditation (Cambridge, IB) or a satellite campus abroad — a real, specific trigger, not a general aspiration.
+- **International Relations** — SHRS is a single-country, five-institution operation. An International Relations office at this stage is premature institutional empire-building; even schools with genuine international licensing arrangements typically run those through a contracts/legal function, not a standing diplomatic-style office. Revisit only if SHRS pursues an international curriculum accreditation (Cambridge, IB) or a satellite campus abroad — a real, specific trigger, not a general aspiration.
 
 **A boundary that needs writing down, not a new office:** Communications already exists (day-to-day brand, press, parent-facing messaging, operational layer) and now sits alongside the newer Public Affairs (government/regulator liaison, formal external representation, executive-support layer). Without an explicit charter distinguishing the two, they will duplicate effort or compete for the same relationships. Write the boundary into each office's mandate rather than merging them — the functions are genuinely different in register even if they look similar from outside.
 
@@ -189,13 +189,13 @@ Everything above should read as an academic institution, never a corporation, a 
 
 ```mermaid
 graph TD
-  BOT["Board of Trustees<br/>(Governing Authority)"]
-  BOT --> BC["Six Board Committees:<br/>Finance · Governance & Nominations · Audit ·<br/>Academic Excellence · Development"]
-  BOT --> CEO["Founder & Chief Executive Officer<br/>(Executive Authority)"]
-  CEO --> MC["Management Council<br/>(CEO + 4 Institution Heads + Functional Directors — peers)"]
+  BOG["Board of Governors<br/>(Governing Authority)"]
+  BOG --> BC["Board-Level Committees:<br/>Educational Technical Committee · Finance Committee ·<br/>one further committee (not yet named)"]
+  BOG --> HSA["Head of Schools / Administrator<br/>(Executive Authority)"]
+  HSA --> MC["Management Council<br/>(Head of Schools / Administrator + 5 Institution Heads + Functional Directors — peers)"]
   MC --> ESO["Executive Support Offices:<br/>Strategic Planning · Quality Assurance ·<br/>Legal &amp; Compliance · Public Affairs"]
   MC --> ADM["Administrative Authority:<br/>The Registry · Bursary · HR · ICT ·<br/>Student Affairs · Communications · Library ·<br/>Alumni · Foundation · Digital Identity ·<br/>Knowledge Base · Certificates &amp; Transcripts"]
-  MC --> HEADS["4 Institution Heads:<br/>Principal (Royal College) · Ra'ees (Islamic &amp; Arabic Studies) ·<br/>Mudeer (Qur'an College) · Head Teacher (Nursery &amp; Primary)"]
+  MC --> HEADS["5 Institution Heads:<br/>Principal (Secular College) · Ra'ees (Islamiyyah College) ·<br/>Mudeer (Qur'an College) · Head Teacher (Basic School) ·<br/>Head, Online &amp; Distance Learning School (vacant)"]
   HEADS --> AA["Academic Affairs Office + Examinations Office<br/>(Academic Authority)"]
   AA --> HOD["7 Heads of Department:<br/>Languages · Mathematics &amp; ICT · Humanities ·<br/>Science &amp; Technology · Commerce &amp; Management ·<br/>Arabic Language · Islamic Studies"]
   HOD --> TCH["Subject Teachers"]
@@ -210,10 +210,10 @@ graph TD
 Board of Trustees (apex) → six standing committees: Finance, Governance & Nominations *(recommend splitting Nominations & Remuneration out as its own committee, §4.1)*, Audit, Academic Excellence, Development. Meets periodically; sets policy and budget; appoints and holds the CEO accountable; does not manage operations.
 
 ### 9.3 Executive Structure
-Founder & Chief Executive Officer (sole executive, Board-accountable) → Management Council (CEO + 4 institution Heads + functional Directors, all peers) → Executive Support Offices (Strategic Planning, Quality Assurance, Legal & Compliance, Public Affairs — reclassified from governance-layer to executive-support, §2.2/§6).
+Head of Schools / Administrator (sole executive, Board-accountable) → Management Council (Head of Schools / Administrator + 5 institution Heads + functional Directors, all peers) → Executive Support Offices (Strategic Planning, Quality Assurance, Legal & Compliance, Public Affairs — reclassified from governance-layer to executive-support, §2.2/§6).
 
 ### 9.4 Academic Structure
-Academic Affairs Office + Examinations Office + 4 institution Heads → 7 Heads of Department (§3.4, Commerce & Management restored) → subject teachers, supported by the academic committees in §4.3.
+Academic Affairs Office + Examinations Office + 5 institution Heads → 7 Heads of Department (§3.4, Commerce & Management restored) → subject teachers, supported by the academic committees in §4.3.
 
 ### 9.5 Administrative Structure
 The Registry, Bursary/Finance, Human Resources, ICT/Digital Services, Student Affairs (incl. a Guidance & Counselling unit), Communications, Library, Alumni, the Sultan Hanafi Foundation, Digital Identity Office, Institutional Knowledge Base, Certificate & Transcript Office — plus, when fundraising scale justifies it, a new Institutional Advancement Office (§3).

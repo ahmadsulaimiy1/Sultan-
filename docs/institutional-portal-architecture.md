@@ -63,9 +63,9 @@ and contact details — zero redesign, exactly as specified.
 
 | Layer | Offices created | Real appointments |
 |---|---|---|
-| Governance | Board of Trustees, Executive, Management Council | None seeded — see below |
+| Governance | Board of Governors, Executive, Management Council | None seeded — see below |
 | Academic | Academic Affairs, Registrar's Office, Examinations, Admissions | None seeded |
-| School Leadership | Head Teacher, Principal (Royal College), Ra'ees, Mudeer | None seeded |
+| School Leadership | Head Teacher, Principal (Secular College), Ra'ees, Mudeer | None seeded |
 | Operational | Finance, HR, Student Affairs, Communications, Digital Services, Digital Learning | None seeded |
 | Institutional Services | Library, Alumni, Foundation, Certificate/Transcript, Digital Identity, Knowledge Base | None seeded |
 
@@ -82,21 +82,21 @@ auto-seed real staff members (see the comment directly above the
 `functions/api/portal/setup.js`): staff records are an explicit,
 admin-mediated action, the same way guardian and student records are
 never auto-created. Six real, publicly-named office-holders already
-exist as text on `pages/about-governance.html` (Founder & CEO Zakariya
+exist as text on `pages/about-governance.html` (Head of Schools / Administrator Zakariya
 Olanrewaju Anofi; Registrar Mrs. Anofi-Abdulkareem Mariam Tope; Head
-Teacher Mrs. Kareemat Abdurazaq; three Principals — Royal College,
-Qur'an College, Islamic & Arabic Studies) but have **no `staff` row in
+Teacher Mrs. Kareemat Abdurazaq; three Principals — Secular College,
+Qur'an College, Islamiyyah College) but have **no `staff` row in
 the database** — that page is marketing copy, not a system of record.
 Wiring them in is one real admin action per person:
 
 ```
 POST /api/portal/admin/staff  (header: x-sysadmin-token)
 { "action": "create-staff", "staffNo": "STF-0001", "fullName": "Zakariya Olanrewaju Anofi",
-  "officeName": "Executive", "positionTitle": "Founder & Chief Executive Officer" }
+  "officeName": "Executive", "positionTitle": "Founder & Head of Schools / Administrator" }
 
 POST /api/portal/admin/staff
 { "action": "create-appointment", "officeName": "Executive", "staffNo": "STF-0001",
-  "appointmentTitle": "Founder & Chief Executive Officer" }
+  "appointmentTitle": "Founder & Head of Schools / Administrator" }
 ```
 
 Repeated per office for each of the six known real holders — deliberately
@@ -105,9 +105,9 @@ left as a runbook, not auto-executed, since only whoever holds
 document has no way to verify the exact spelling/title the school wants
 on the record versus what the marketing page happens to say.
 
-## Level 3 Institutional Framework (Founder & CEO clarification)
+## Level 3 Institutional Framework (Head of Schools / Administrator clarification)
 
-A follow-up "Founder & CEO Executive Clarification" resolved the
+A follow-up "Head of Schools / Administrator Executive Clarification" resolved the
 tension the rest of this document originally flagged. It drew an
 explicit three-way distinction:
 
@@ -121,17 +121,17 @@ Four real, structural additions, all following the same discipline as
 everything above (a real row, a real vacant/labelled state, never an
 invented name or number):
 
-- **Committees.** Five standing Board of Trustees committees (Finance,
+- **Committees.** Five standing Board of Governors committees (Finance,
   Governance, Audit, Academic Excellence, Development) exist as real
   office rows (`office_kind = 'committee'`, parented to Board of
-  Trustees), each with a real Chair + two Member seats — every seat
+  Governors), each with a real Chair + two Member seats — every seat
   "Pending Appointment," exactly like every other vacant seat in this
   system. They appear as their own portal pages and are listed on the
-  Board of Trustees' Overview tab.
+  Board of Governors' Overview tab.
 - **Management Council seats.** Ten named cross-institutional roles
-  (Founder & CEO, Registrar, Finance Director, HR Director,
+  (Head of Schools / Administrator, Registrar, Finance Director, HR Director,
   Communications Director, Student Affairs Director, Principal
-  (Royal College), Head Teacher, Ra'ees, Mudeer) exist as vacant
+  (Secular College), Head Teacher, Ra'ees, Mudeer) exist as vacant
   `office_appointments` rows under Management Council. Several titles
   already have a real, publicly-named holder elsewhere on the site —
   this table does not assume that is the same seat until an admin
@@ -148,7 +148,7 @@ invented name or number):
   into looking like bespoke, adopted institutional research.
 - **Resolutions.** A real `office_resolutions` register, starting
   empty. The Resolutions tab only appears for governance-type offices
-  (Board of Trustees and its five committees) — it's hidden entirely
+  (Board of Governors and its committees) — it's hidden entirely
   elsewhere rather than shown as a meaningless empty tab for, say, the
   Library.
 - **Analytics KPI shells.** Every non-executive office's Analytics tab
@@ -157,7 +157,7 @@ invented name or number):
   reads "No data available," explicitly labelled as placeholder slots,
   not real figures, in the text underneath.
 
-What did **not** change: no Board of Trustees Chairman/Vice
+What did **not** change: no Board of Governors Chairman/Vice
 Chairman/Secretary is named, no committee member is named, no
 Management Council seat is filled, and no KPI number is invented. The
 Level 3 distinction is specifically that the *structure* is complete
@@ -166,8 +166,8 @@ real (or as honestly vacant) as it was before this pass.
 
 ## Ra'ees / Mudeer — resolved
 
-The Founder & CEO has officially adopted **Ra'ees** as the Head of
-Institution title for the Sultan Hanafi School of Islamic & Arabic Studies,
+The Head of Schools / Administrator has officially adopted **Ra'ees** as the Head of
+Institution title for the Sultan Hanafi Islamiyyah College,
 and **Mudeer** as the Head of Institution title for Sultan Hanafi Qur'an
 College, replacing "Principal" for both. This was a real naming decision
 within the owner's authority, not a fabrication — so the two former
@@ -214,15 +214,15 @@ public pages already say.
   the only ones with a real `SYSTEM_AREA` behind them today. Every other
   office honestly says no workflow is configured yet, rather than
   inventing one.
-- **Board of Trustees, Management Council composition** — not
-  individually published anywhere on the live site (per GV-01, 4 trustees
-  exist but aren't named). Both offices are correctly all-vacant.
+- **Board of Governors, Management Council composition** — not
+  individually published anywhere on the live site (per GV-01, a Chairman,
+  Secretary, and three Other Members exist but aren't all named). Both offices are correctly all-vacant.
 
 ## Institutional Administration Centre
 
 `portal/admin/centre/` (JS: `js/portal-admin-centre.js`) — a real UI
-over `functions/api/portal/admin/staff.js`, built for the Founder &
-CEO's explicit ask: "The Founder should not need API calls for
+over `functions/api/portal/admin/staff.js`, built for the Head of
+Schools / Administrator's explicit ask: "The Founder should not need API calls for
 ordinary administration." Covers Office Management (create + browse,
 grouped by layer), Appointments (create/end, vacant-or-filled table),
 Governance Content (Strategic Priorities/Annual Objectives — real text
@@ -278,10 +278,10 @@ This required one real data decision, stated plainly: `parent_office_id`
 existed in the schema from the start ("so the directory can express
 real reporting structure") but was unset for almost every office. A
 new migration sets it **only** for the reporting line already public
-on `pages/about-governance.html` — Board of Trustees → Executive → the
+on `pages/about-governance.html` — Board of Governors → Executive → the
 four school-leadership offices (Principal RC, Ra'ees, Mudeer, Head
 Teacher) → Management Council also under Executive, since its own seat
-list names Founder & CEO first. Every other office (all
+list names Head of Schools / Administrator first. Every other office (all
 academic/operational/institutional_services offices, ~17 of 28) has no
 formally published reporting line anywhere on the site, so none was
 invented — they render in an explicit "Other Institutional Offices —
@@ -317,9 +317,9 @@ chooser, an Executive Portal office picker, and an office switcher
 allowing an account to hold several offices without signing out again.
 
 **Most of this already existed** before this pass — worth stating
-plainly rather than rebuilding: all ten named offices (Founder & CEO,
+plainly rather than rebuilding: all ten named offices (Head of Schools / Administrator,
 Registrar, Finance Officer, Principal, Head Teacher, Ra'ees, Mudeer, HR
-Director, Communications Director, Board of Trustees) are already real,
+Director, Communications Director, Board of Governors) are already real,
 session-gated portal pages (the office portal ecosystem above), and
 multi-role support already existed end-to-end — `staff_roles` is
 genuinely many-to-many (its own schema comment: "'Principal + Arabic

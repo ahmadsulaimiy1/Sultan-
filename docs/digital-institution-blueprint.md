@@ -15,10 +15,10 @@ don't silently ignore the request either.*
 ## Two corrections before the map
 
 **There is one Board, not two.** GV-01 (Constitution & Governance
-Charter) establishes a single **Board of Trustees** as "the institution's
-ultimate governing body." There is no separate "Board of Governors" —
-`about-governance.html` and GV-01 both describe one board above an
-Executive Management Team. This blueprint uses "Board of Trustees"
+Charter) establishes a single **Board of Governors** as "the institution's
+ultimate governing body." There is no separate second board —
+`about-governance.html` and GV-01 both describe one board above a
+Management Team. This blueprint uses "Board of Governors"
 throughout and does not introduce a second board.
 
 **"Academic Council," "Senate," "Quality Assurance," and "Examinations
@@ -26,7 +26,7 @@ Office" do not exist yet.** No governance document names any of these.
 What exists today: the **Registrar** (a real, named, active role —
 academic records, promotion/probation thresholds, exam-misconduct
 escalation, admissions verification, transfers, withdrawals), the
-**Executive Management Team** (CEO + Principals/Head Teacher per
+**Management Team** (Head of Schools / Administrator + Principals/Head Teacher per
 institution + VP Administration + ICT Head + Head of R&D), and a policy
 code **AC-03 Examination Policy** that the index itself lists as
 **Missing**. Where this blueprint uses "Examinations" below, it means
@@ -37,7 +37,7 @@ one would misdescribe the institution's actual structure.
 
 ## Part 1 — The Institution Map
 
-Nine governance/administrative offices, four academic institutions, and
+Nine governance/administrative offices, five academic institutions, and
 three digital surfaces. For each: real actor, current digital state,
 core workflows, core records, approval chain, and the permission
 boundary a digital system for it would need to enforce.
@@ -46,27 +46,27 @@ boundary a digital system for it would need to enforce.
 
 | Office | Real actor(s) | Digital state today | Core workflows | Core records | Approval chain | Permission boundary needed |
 |---|---|---|---|---|---|---|
-| **Board of Trustees** | Board (composition undocumented — GV-02 Board Charter is Missing) | None | Approve Tier-1 policy, appoint/hold CEO accountable, receive annual DSL/ICT reports | Board resolutions (`governance-resolution-register.md`, file-based) | Board is the terminal approval authority | Board-only read access to institution-wide aggregates; no operational write access |
-| **CEO** (Founder/CEO — Zakariya Olanrewaju Anofi) | One person | None — the "Founder Dashboard" the directive asks for doesn't exist | Approve Tier 2–4 documents, cross-institution oversight | — | Reports to Board | Read-only aggregate across all four institutions; not a data-entry role |
-| **Executive Management Team** | CEO + 4 Principals/Head Teachers + VP Administration + Registrar + ICT Head + Head R&D | None as a body; individual members interact with the site only as visitors today | Cross-institution coordination | — | Reports to CEO | N/A — a meeting body, not a data system, unless the Board later wants a shared EMT dashboard |
+| **Board of Governors** | Board (composition undocumented — GV-02 Board Charter is Missing) | None | Approve Tier-1 policy, appoint/hold the Head of Schools / Administrator accountable, receive annual DSL/ICT reports | Board resolutions (`governance-resolution-register.md`, file-based) | Board is the terminal approval authority | Board-only read access to institution-wide aggregates; no operational write access |
+| **Head of Schools / Administrator** (Founder — Zakariya Olanrewaju Anofi) | One person | None — the "Founder Dashboard" the directive asks for doesn't exist | Approve Tier 2–4 documents, cross-institution oversight | — | Reports to Board | Read-only aggregate across all five institutions; not a data-entry role |
+| **Management Team** | Head of Schools / Administrator + 4 Principals/Head Teachers + VP Administration + Registrar + ICT Head + Head R&D | None as a body; individual members interact with the site only as visitors today | Cross-institution coordination | — | Reports to Head of Schools / Administrator | N/A — a meeting body, not a data system, unless the Board later wants a shared Management Team dashboard |
 
 ### Registrar's Office
 
 | | |
 |---|---|
-| **Real actor** | Registrar, Royal College (Mrs. Anofi-Abdulkareem Mariam Tope) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
+| **Real actor** | Registrar, Secular College (Mrs. Anofi-Abdulkareem Mariam Tope) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
 | **Digital state today** | Partial, API-only: `admin/students.js` covers enrolment (create/update student + guardian + class), `admin/create-student-login.js` issues Student Portal credentials. Nothing else. |
 | **Workflows the office actually owns (per AC-02/PA-05)** | Admissions document verification, waiting-list administration, enrolment, promotion/probation threshold-setting (jointly with Principals), transfer review (incl. disciplinary/safeguarding history via DSL), withdrawal processing, exam-misconduct escalation, academic-appeal handling, full academic-record retention |
 | **Workflows with NO digital trace at all** | Promotion decisions, graduation, certificate issuance, transcript generation, third-party credential verification, transfer-in/out record, withdrawal record (only a status flag exists: `students.status`) |
 | **Core records needed, not yet modelled** | `promotion_decisions`, `graduations`, `certificates`, `transfers`, `withdrawals` — none exist. `students.status` (active/graduated/withdrawn/suspended) is the only trace, and it's a flag, not a workflow with a date, reason, or approving officer. |
 | **Approval chain** | Registrar decides; Principal co-signs promotion/probation; Board Charter (GV-02) would define anything above that — not yet documented |
-| **Permission boundary needed** | Full read/write on academic records across all four institutions; no fee/finance access; no HR access |
+| **Permission boundary needed** | Full read/write on academic records across all five institutions; no fee/finance access; no HR access |
 
 ### Academic Office (per institution)
 
 | | |
 |---|---|
-| **Real actor** | Principal / Head Teacher per institution (named for Nursery & Primary: Mrs. Kareemat Abdurazaq; others not named in current docs) |
+| **Real actor** | Principal / Head Teacher per institution (named for Basic School: Mrs. Kareemat Abdurazaq; others not named in current docs) |
 | **Digital state today** | None. All `term_results`/`attendance_summary` entry happens via the Registrar-equivalent admin token, not per-teacher, per-subject |
 | **Core workflows missing** | Timetable, subject/curriculum assignment (AC-08 Curriculum Framework is itself only Partial), lesson planning, per-teacher grade entry, report-card generation |
 | **Permission boundary needed** | Principal: read/write within their own institution only. This is the first office where "which institution does this person belong to" becomes a real access-control question — today every admin action is one undifferentiated bearer token |
@@ -95,14 +95,16 @@ boundary a digital system for it would need to enforce.
 | **ICT Office** | This project itself (site, portals, AI assistant) — but no formal ICT service-desk/asset system | IT-06 Technology Governance Framework exists as an evaluation document; IT-07 Incident Response and IT-08 Cybersecurity Framework are Missing |
 | **Library** | Not mentioned anywhere in governance canon | Genuinely ungoverned — not even a policy gap has been named yet. Do not build this before someone decides it should exist. |
 
-### The four academic institutions (confirmed real names/slugs)
+### The academic institutions (confirmed real names/slugs)
+
+*Four of the Institution's five Constituent Institutions have a documented digital footprint below (page and digital state), reflecting what was actually built as of this blueprint. The fifth, Sultan Hanafi Online & Distance Learning School, recognised by the Board's governance restructuring amendment of 2026-08-04, has no page or digital state to report yet — stated plainly here rather than a fabricated row.*
 
 | Institution | Real name | Page | Digital state |
 |---|---|---|---|
-| Nursery & Primary | "Nursery & Primary School," ages 2–10 | `academics/nursery-primary/` | Marketing only; can enrol students today (generic `institution`/`className` text) but no age/division-specific dashboard content |
-| Royal College | Junior **and** senior secondary combined | `academics/royal-college/` | Same — generic enrolment only |
+| Basic School | "Nursery & Primary School," ages 2–10 | `academics/nursery-primary/` | Marketing only; can enrol students today (generic `institution`/`className` text) but no age/division-specific dashboard content |
+| Secular College | Junior **and** senior secondary combined | `academics/royal-college/` | Same — generic enrolment only |
 | Qur'an College | 24–36 month day & boarding Hifz programme | `academics/quran-college/` | **Fully digitized**: dual-enrolment-aware, per-Juz' progress, 5-stage journey, Ijazah register — the one institution with a real module (Phase 2 of this engagement) |
-| School of Islamic & Arabic Studies | Full name is "School of Islamic & Arabic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
+| Islamiyyah College | Full name is "School of Islamic & Arabic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
 
 ### Digital surfaces (built vs. not)
 
@@ -165,8 +167,8 @@ pre-enrolment pipeline don't exist yet).
 
 | Rank | Module | Value | Complexity | Dependencies | Risk | Est. effort |
 |---|---|---|---|---|---|---|
-| 1 | **Founder/Executive Dashboard** (read-only aggregate: total/active students, per-institution breakdown, attendance trend, Hifz completion, fee due/paid totals) | High — directly answers "CEO shouldn't log into five systems"; zero new blast radius | Low — pure aggregate SQL over existing tables, one bearer-token-gated page (same pattern as `admin/*`) | None | Low — read-only, no write path, nothing to break | Small (1–2 sessions) |
-| 2 | **Staff Identity & Role System** (a third real login — Teacher/Registrar/Finance/Principal roles, parallel session cookie like the student one) | High — foundational; nothing else on this list works as a real login system without it | Medium-High — new auth surface (proven pattern, third time), but now needs actual role-based permission boundaries, not just "one role sees one thing" | None technically; needs the Board/CEO to decide who actually gets accounts first (a real institutional decision, like GV-02's missing Board Charter) | Medium — a third auth surface is a bigger attack surface; must not repeat the guardian/student pattern sloppily | Medium |
+| 1 | **Founder/Executive Dashboard** (read-only aggregate: total/active students, per-institution breakdown, attendance trend, Hifz completion, fee due/paid totals) | High — directly answers "the Head of Schools / Administrator shouldn't log into five systems"; zero new blast radius | Low — pure aggregate SQL over existing tables, one bearer-token-gated page (same pattern as `admin/*`) | None | Low — read-only, no write path, nothing to break | Small (1–2 sessions) |
+| 2 | **Staff Identity & Role System** (a third real login — Teacher/Registrar/Finance/Principal roles, parallel session cookie like the student one) | High — foundational; nothing else on this list works as a real login system without it | Medium-High — new auth surface (proven pattern, third time), but now needs actual role-based permission boundaries, not just "one role sees one thing" | None technically; needs the Board/Head of Schools / Administrator to decide who actually gets accounts first (a real institutional decision, like GV-02's missing Board Charter) | Medium — a third auth surface is a bigger attack surface; must not repeat the guardian/student pattern sloppily | Medium |
 | 3 | **Registrar System** (promotion/graduation/transfer/withdrawal records, certificate issuance, transcript generation, verification) | High — the best-documented office in existing governance (AC-02, PA-05 already specify its responsibilities in detail); directly closes the "no digital trace of promotion/graduation" gap named above | Medium — mostly new tables + workflow states on top of what exists; certificate/verification adds PDF generation + a public verification endpoint (same shape as the deferred IQ-02 §7.5 Ijazah verification) | Benefits from #2 (real Registrar login) but a first pass could ship API-only, matching this project's own established "protected API first, UI later" convention | Low-Medium — mostly additive data, real institutional records so correctness matters | Medium |
 | 4 | **Teacher Portal** (class-scoped attendance entry, grading, feedback, Hifz/Muraja'ah supervision for Qur'an College staff) | High — the SHRS-specific differentiator (Hifz/Muraja'ah supervision) makes this more than a generic teacher tool | Medium-High — needs #2, plus a real subject/timetable model that doesn't exist yet | #2 (Staff Identity); partially blocks #5 | Medium — first system where a non-office-staff person enters grades that affect real records | Medium-Large |
 | 5 | **Examinations & Assessment workflow** (assessment → grading → moderation → report card → promotion decision) | High long-term, but currently blocked on a real policy decision | Medium-High | #2, #4, and a drafted AC-03 Examination Policy (currently Missing — this is a policy gap, not a code gap) | Medium — grading affects real student outcomes; should not be built ahead of the policy that governs it | Large |

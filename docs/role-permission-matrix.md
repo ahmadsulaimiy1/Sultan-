@@ -124,7 +124,7 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | **QC-OFF** | Qur'an College Officer | Proposed | Qur'an College institution-wide | Institution-level oversight above individual Muhaffiz assignments |
 | **SA** | Student Affairs Officer | Proposed | All institutions | SD-05/06/07 (Attendance/Welfare/Behaviour policies) are Missing/Partial — this role and its governing policy should arrive together |
 | **BRD** | Boarding Officer (covers House Parent) | Proposed | Boarding students only | SD-04 Boarding Regulations is published; no digital officer role yet |
-| **ICT** | ICT Administrator | Proposed | All institutions, system-level | IT-06 names an "ICT Head" as an Executive Management Team member — this role is that person's operational tier |
+| **ICT** | ICT Administrator | Proposed | All institutions, system-level | IT-06 names an "ICT Head" as a Management Team member — this role is that person's operational tier |
 | **SYSADMIN** | System Administrator | Proposed — one account, tightly held | Everything, technical only | The single highest-privilege technical role; see §4.20 |
 | **DSL** | Designated Safeguarding Lead | Established (role defined, not yet appointed) | All institutions, safeguarding-relevant fields only | SW-02 |
 | *(for context)* GUARDIAN | Guardian | Established, built | Own linked children only | Live — Parent Portal |

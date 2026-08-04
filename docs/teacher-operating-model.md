@@ -6,7 +6,7 @@ and assessment entry both require a Teacher-tier identity that doesn't
 exist — makes a Teacher Operating Model a real prerequisite for a
 Teacher Portal; and (2) an explicit correction that followed: this
 model must NOT be scoped primarily around Qur'an College, Arabic &
-Islamic Studies, Hifz, or Ijazah. SHRS is a four-institution ecosystem.
+Islamic Studies, Hifz, or Ijazah. SHRS is a five-institution ecosystem.
 Mainstream academic teaching — Mathematics, English, the Sciences, the
 Social Sciences, Technology — is not a secondary concern with Qur'an
 College attached; it is the majority of the institution by pathway
@@ -28,15 +28,19 @@ technically exist.
 
 ## 1. Institutional scope
 
-Four real institutions exist in this project today (`setup.js`'s
-`institutions` seed) — this model covers all four, not one:
+Four of SHRS's five real institutions exist in this project's schema
+today (`setup.js`'s `institutions` seed) — this model covers all four,
+not one. (The fifth, Sultan Hanafi Online & Distance Learning School,
+recognised by the Board's governance restructuring amendment of
+2026-08-04, has no `institutions` seed row or class model yet — stated
+plainly here rather than fabricated.)
 
 | Institution | Pathway(s) within it |
 |---|---|
-| **Nursery & Primary** | Early Years (Creche, Nursery, Kindergarten/Preschool), Primary 1–6 |
-| **Royal College** | Junior Secondary (JSS1–JSS3), Senior Secondary (SS1–SS3) — the institution's mainstream academic programme |
+| **Basic School** | Early Years (Creche, Nursery, Kindergarten/Preschool), Primary 1–6 |
+| **Secular College** | Junior Secondary (JSS1–JSS3), Senior Secondary (SS1–SS3) — the institution's mainstream academic programme |
 | **Qur'an College** | The published 5-stage Hifz Journey, Ijazah pathway |
-| **Islamic & Arabic Studies** | Arabic language and Islamic Studies programmes |
+| **Islamiyyah College** | Arabic language and Islamic Studies programmes |
 
 A fifth line — **future continuing education / adult programmes** — is
 named in the directive as a category to anticipate. No institution,
@@ -48,18 +52,18 @@ revisiting when it eventually does.
 
 This is the primary structure — the one most students, most staff, and
 (once built) most Teacher Portal users will sit inside. It applies
-across Nursery & Primary and Royal College identically; the same
+across Basic School and Secular College identically; the same
 hierarchy, not a separate one, governs both.
 
 | Proposed role | Reports to | Core responsibility |
 |---|---|---|
-| **Class Teacher** | Head of Subject or Department Head (Nursery & Primary: directly to Principal, given smaller staff counts there) | Attendance, pastoral oversight, day-to-day communication with guardians for one assigned class. This is the role Migration Phase A's finding names directly — attendance Create belongs here. |
-| **Subject Teacher** | Head of Subject | Lesson delivery, continuous assessment, and exam-score entry for one or more subjects across one or more classes. Migration Phase B's finding names this role directly — assessment Create belongs here. Real subjects already implied by Royal College's academic programme: English, Mathematics, Physics, Chemistry, Biology, Economics, Government, Geography, ICT, Literature — this list is illustrative of what a real secondary curriculum requires, not a closed or invented set. |
+| **Class Teacher** | Head of Subject or Department Head (Basic School: directly to Principal, given smaller staff counts there) | Attendance, pastoral oversight, day-to-day communication with guardians for one assigned class. This is the role Migration Phase A's finding names directly — attendance Create belongs here. |
+| **Subject Teacher** | Head of Subject | Lesson delivery, continuous assessment, and exam-score entry for one or more subjects across one or more classes. Migration Phase B's finding names this role directly — assessment Create belongs here. Real subjects already implied by Secular College's academic programme: English, Mathematics, Physics, Chemistry, Biology, Economics, Government, Geography, ICT, Literature — this list is illustrative of what a real secondary curriculum requires, not a closed or invented set. |
 | **Head of Subject** | Department Head | Curriculum oversight and moderation for one subject across all classes that teach it (e.g. all Mathematics teachers, JSS1 through SS3) — a quality-assurance layer between individual Subject Teachers and departmental leadership. |
 | **Department Head** | Vice Principal, Academics | Leadership and staff supervision for a cluster of related subjects (e.g. a Sciences department covering Physics/Chemistry/Biology; a Humanities department covering Government/Geography/Economics; a Languages department; a Technology/ICT department). Department boundaries are a curriculum decision for the Board/Principal to make, not asserted here. |
 | **Vice Principal, Academics** | Principal | Academic performance and quality assurance across the whole institution — the proposed split of the single existing `VP` code's academic half. |
 | **Vice Principal, Administration** | Principal | Operations, discipline, and non-academic administration — the proposed split of `VP`'s other half. |
-| **Principal** | CEO (EXE) | Institutional approval and governance execution for their own institution — unchanged from the existing, already-adopted `PRIN` role. |
+| **Principal** | Head of Schools / Administrator (EXE) | Institutional approval and governance execution for their own institution — unchanged from the existing, already-adopted `PRIN` role. |
 
 **Why split the single `VP` code**: the existing seed comment already
 describes `VP` as "mirrors Principal minus final approval authority" —

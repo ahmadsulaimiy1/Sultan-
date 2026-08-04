@@ -35,10 +35,10 @@ review cycle, since resolution items are meant to close, not sit).
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Real tuition fee figures per institution/class level | CEO | OPEN | **Critical** | Board of Trustees |
-| Refund terms | CEO | BLOCKED (depends on fee figures above) | High | Board of Trustees |
-| Scholarship criteria | CEO | BLOCKED (same reason) | Medium | Board of Trustees |
-| International-student fee/visa arrangements | CEO | OPEN — not yet scoped at all | Medium | Board of Trustees |
+| Real tuition fee figures per institution/class level | Head of Schools / Administrator | OPEN | **Critical** | Board of Governors |
+| Refund terms | Head of Schools / Administrator | BLOCKED (depends on fee figures above) | High | Board of Governors |
+| Scholarship criteria | Head of Schools / Administrator | BLOCKED (same reason) | Medium | Board of Governors |
+| International-student fee/visa arrangements | Head of Schools / Administrator | OPEN — not yet scoped at all | Medium | Board of Governors |
 
 **Why this is Critical:** it blocks the Tuition & Fees Policy, Refund
 Policy, and Scholarship Governance Framework simultaneously (Financial
@@ -51,8 +51,8 @@ the single highest-leverage action on this entire register.
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Numeric promotion threshold (cumulative term score cutoff) | Registrar + Principals/Head Teacher | OPEN | High | Board of Trustees (Academic Regulations §7.1) |
-| Academic-integrity consequence scale (specific to exam/coursework dishonesty, beyond general Student Code of Conduct discipline) | Principal, Royal College | OPEN — depends on the still-unwritten Academic Integrity Policy | High | Board of Trustees |
+| Numeric promotion threshold (cumulative term score cutoff) | Registrar + Principals/Head Teacher | OPEN | High | Board of Governors (Academic Regulations §7.1) |
+| Academic-integrity consequence scale (specific to exam/coursework dishonesty, beyond general Student Code of Conduct discipline) | Principal, Secular College | OPEN — depends on the still-unwritten Academic Integrity Policy | High | Board of Governors |
 | Per-Juz' Hifz assessment pass standard | Principal, Qur'an College + Qur'an College teaching staff | OPEN | High | Principal, Qur'an College (per Constitution §6.3, academic authority) |
 | Muraja'ah revision-cycle length | Qur'an College teaching staff | OPEN | Medium | Principal, Qur'an College |
 | Nigerian curriculum-accreditation mapping (WAEC/NECO equivalency or Lagos State basic-education standard) | Registrar | OPEN — not yet scoped | Medium | External accreditation body + Board |
@@ -66,8 +66,8 @@ at a size where inconsistent per-campus practice becomes likely.
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Mr. Oladele Abdulwasiu Adebayo signed as "Principal" on the live policies page vs. "Head, Research & Development" on the governance roster | Board of Trustees | OPEN — first flagged in the Information Architecture Blueprint, still unresolved | Medium | Board of Trustees (confirm real title, update whichever source is wrong) |
-| "Vice-Principal Academics" named in the live Assessment Policy's final-interpretation clause, but this title exists nowhere in the governance roster | Board of Trustees | OPEN — surfaced during the Phase B consistency audit | Medium | Board of Trustees |
+| Mr. Oladele Abdulwasiu Adebayo signed as "Principal" on the live policies page vs. "Head, Research & Development" on the governance roster | Board of Governors | OPEN — first flagged in the Information Architecture Blueprint, still unresolved | Medium | Board of Governors (confirm real title, update whichever source is wrong) |
+| "Vice-Principal Academics" named in the live Assessment Policy's final-interpretation clause, but this title exists nowhere in the governance roster | Board of Governors | OPEN — surfaced during the Phase B consistency audit | Medium | Board of Governors |
 
 **Why this isn't just cosmetic:** the Academic Regulations' appeal
 pathway (§11) had to route around the "Vice-Principal Academics" gap
@@ -80,16 +80,16 @@ document to route around it individually.
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Every proposed period in the Records Retention Policy (Parent Portal accounts, academic records, disciplinary records, staff records, fee records) | Registrar / ICT Head | OPEN — proposed, not confirmed | Medium | Board of Trustees |
-| Safeguarding-log retention period specifically | Designated Safeguarding Lead (once appointed) | **BLOCKED** — needs a child-protection professional's confirmation, not just Board judgement, given how much weight this one category carries | High | Board of Trustees, informed by external professional review |
+| Every proposed period in the Records Retention Policy (Parent Portal accounts, academic records, disciplinary records, staff records, fee records) | Registrar / ICT Head | OPEN — proposed, not confirmed | Medium | Board of Governors |
+| Safeguarding-log retention period specifically | Designated Safeguarding Lead (once appointed) | **BLOCKED** — needs a child-protection professional's confirmation, not just Board judgement, given how much weight this one category carries | High | Board of Governors, informed by external professional review |
 
 ## 5. Safeguarding appointments pending
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Appoint the Designated Safeguarding Lead | Board of Trustees | OPEN — the role is fully defined (DSL Framework, Phase D); nobody holds it | **Critical** | Board of Trustees |
+| Appoint the Designated Safeguarding Lead | Board of Governors | OPEN — the role is fully defined (DSL Framework, Phase D); nobody holds it | **Critical** | Board of Governors |
 | Appoint Deputy DSLs per institution | DSL (once appointed), in consultation with each Principal/Head Teacher | BLOCKED — depends on the DSL appointment above | High | DSL + Principals/Head Teacher |
-| Identify accredited safeguarding-lead training provider (Nigerian/Lagos State-appropriate) | Board of Trustees | OPEN — not yet scoped at all | High | Board of Trustees |
+| Identify accredited safeguarding-lead training provider (Nigerian/Lagos State-appropriate) | Board of Governors | OPEN — not yet scoped at all | High | Board of Governors |
 | Confirm real external referral agency contacts (Lagos State Ministry of Youth and Social Development, NAPTIP, Nigeria Police Force Child Protection Network) | DSL (once appointed) | BLOCKED — depends on the DSL appointment; contacts should live in a maintained appendix, not the public policy | **Critical** | DSL, reviewed by Board |
 
 **Why this is the single most consequential category:** every
@@ -102,12 +102,12 @@ procedures they describe. The documents are ready; the person is not.
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Child's Rights Act 2003 / Lagos State Child's Rights Law 2007 applicability to SHRS's specific safeguarding procedures | Board of Trustees | OPEN | High | External legal counsel |
+| Child's Rights Act 2003 / Lagos State Child's Rights Law 2007 applicability to SHRS's specific safeguarding procedures | Board of Governors | OPEN | High | External legal counsel |
 | Nigeria Data Protection Act 2023 compliance confirmation (retention, data-subject rights, breach-notification timelines) | ICT Head / Board | OPEN | High | External legal counsel |
-| SHRS's actual legal corporate form (company limited by guarantee, trust, or other) — the Constitution & Governance Charter assumes but doesn't confirm this | Board of Trustees | OPEN | Medium | External legal/corporate counsel |
+| SHRS's actual legal corporate form (company limited by guarantee, trust, or other) — the Constitution & Governance Charter assumes but doesn't confirm this | Board of Governors | OPEN | Medium | External legal/corporate counsel |
 | Site-specific fire-safety/emergency risk assessment (Emergency Response Plan is structural best practice, not a verified site assessment) | Institutional lead (Emergency Response Plan owner, still to be confirmed) | OPEN | High | Lagos State Fire Service or equivalent professional assessor |
 | Named Ijazah-granting scholar(s) and their documented chain of transmission (*sanad*) | Principal, Qur'an College | OPEN | High | Qur'an College's own scholarly leadership |
-| Nigerian labour-law confirmation for the Staff Conduct Policy's disciplinary/termination procedure | Board of Trustees | OPEN | Medium | External legal counsel |
+| Nigerian labour-law confirmation for the Staff Conduct Policy's disciplinary/termination procedure | Board of Governors | OPEN | Medium | External legal counsel |
 
 ## 7. Image and media consent
 
@@ -118,7 +118,7 @@ structure below.)*
 
 | Item | Owner | Status | Priority | Approval pathway |
 |---|---|---|---|---|
-| Adopt the proposed image/media consent structure (separate internal vs. public-facing consent, recorded per child) | Board of Trustees | OPEN — proposed in IT-02 §7.10, not yet adopted | High | Board of Trustees |
+| Adopt the proposed image/media consent structure (separate internal vs. public-facing consent, recorded per child) | Board of Governors | OPEN — proposed in IT-02 §7.10, not yet adopted | High | Board of Governors |
 | Retroactively confirm (or decline) consent for two specific photographs still held (a stairwell photo pairing a student's face with their full name, and a classroom photo) | Registrar, in consultation with guardians | OPEN — a third photo (the SPELL Africa competition medal photo) was separately authorised for publication directly by the Director and is no longer part of this item | Medium | Registrar → guardians directly |
 | Build the actual admission-stage consent form/record (paper or Parent Portal field) once the structure above is adopted | Registrar / ICT Head | BLOCKED — depends on Board adoption above | Medium | Registrar / ICT Head |
 | Obtain professional photography for the two held photographs' subject matter (a group of enrolled students; a working classroom) so the school isn't limited to a single unusable candidate photo for these use cases | Registrar / ICT Head | OPEN — new, surfaced because the two specific files held above cannot be technically processed by this project's tooling at all, independent of the consent question | Low | Registrar / ICT Head |

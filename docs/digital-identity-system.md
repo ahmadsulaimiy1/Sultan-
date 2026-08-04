@@ -19,7 +19,7 @@ student's permanent Student Digital Identity Number, `SHRS-PAR-
 <YYMMDD>-<seq6>` for guardians, and for staff `SHRS-[UNIT]-[OFFICE]-
 [JOINDATE]-[SEQUENCE]` (e.g. `SHRS-HQ-CEO-130726-000001`), or a
 reserved dateless `SHRS-BOT-<seq3>`/`SHRS-CEO-<seq3>` for Board of
-Trustees and CEO seats — see "SHRS Master Identity Architecture" below
+Governors and Head of Schools / Administrator seats — see "SHRS Master Identity Architecture" below
 for how the staff format itself works. A security guard, another
 institution, or a parent confirming a teacher's identity can verify a
 card is genuine at `/verify-identity/` — no account required, by
@@ -116,11 +116,11 @@ component's CSS lives in `css/portal.css` (all mount points are
 authenticated dashboard pages), built on the same navy/gold
 `.exec-welcome` visual language and the Phase 0 design-system tokens.
 
-## SHRS Master Identity Architecture (Founder & CEO-approved, staff only)
+## SHRS Master Identity Architecture (Head of Schools / Administrator-approved, staff only)
 
 Staff identity numbers moved from `SHR-STF-<year>-<seq>` to
 `SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` — e.g.
-`SHRS-HQ-CEO-130726-000001` — per the Founder & CEO's explicit "SHRS
+`SHRS-HQ-CEO-130726-000001` — per the Head of Schools / Administrator's explicit "SHRS
 Master Identity Architecture Directive." At the time this directive
 shipped, students and guardians were left unchanged
 (`SHR-STU-`/`SHR-PAR-<year>-<seq>`); that gap was closed by the later
@@ -130,7 +130,7 @@ brought every identity number in the system under one consistent
 
 - **UNIT** — `RC`/`NPS`/`IAS`/`QC` for a staff member whose real office
   or institution places them at one of the four schools, `BOT` for the
-  Board of Trustees and its five standing committees, `MGT` for
+  Board of Governors and its standing committees, `MGT` for
   Management Council, `HQ` for every other school-wide office
   (Executive, Finance, HR, ICT, etc.).
 - **OFFICE** — a real 3-letter code per office (`functions/_lib/
@@ -150,7 +150,7 @@ brought every identity number in the system under one consistent
 
 **Rollout — "migrate everyone now":** presented with the trade-off
 (new records only vs. a one-time bulk migration of every existing
-staff record), the Founder & CEO explicitly chose the bulk migration,
+staff record), the Head of Schools / Administrator explicitly chose the bulk migration,
 knowingly accepting that it breaks every already-issued QR
 code/verification link for anyone whose number changes. That migration
 is a single admin action — `regenerate-identity-numbers` on
@@ -162,7 +162,7 @@ so a record left un-migrated still verifies correctly.
 
 **Card labelling:** the identity number is now explicitly labelled on
 the ID card — "Institutional Identity Number" for staff, "Executive
-Credential Number" for the Founder & CEO's card specifically (detected
+Credential Number" for the Head of Schools / Administrator's card specifically (detected
 via the `EXE` role, the same real signal the Permission Engine already
 uses — not a separate "founder" account type), and, per the
 Institutional Identity Number Architecture Directive above, "Student
@@ -183,7 +183,7 @@ wanted.
 
 ## Institutional Identity Number Architecture Directive (full-system SHRS- unification)
 
-Per the Founder & CEO's explicit directive, the site's identity-
+Per the Head of Schools / Administrator's explicit directive, the site's identity-
 numbering system was redesigned so that every number an external
 auditor, university, ministry, accreditation team, or international
 partner might see — staff, student, guardian, certificate, invoice,
@@ -221,11 +221,11 @@ identifiers). Implemented in `functions/_lib/identity-no.js` and
 registered>-<seq6>`, e.g. `SHRS-PAR-260731-000042`, on its own real
 sequence (`guardian_identity_seq`).
 
-**Board of Trustees & top executive seats** are a special case: since
+**Board of Governors & top executive seats** are a special case: since
 these are permanently reserved seats rather than join-dated staff
 records, they get a *dateless* reserved format on their own small
 `COUNT(*)+1`-scoped sequence — `SHRS-BOT-<seq3>` for the Board,
-`SHRS-CEO-<seq3>` for the CEO office — rather than the dated
+`SHRS-CEO-<seq3>` for the Head of Schools / Administrator office — rather than the dated
 `SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE]` every other staff member
 gets (see `generateAndStoreStaffIdentityNo()`'s `RESERVED_OFFICE_PREFIX`
 check).
@@ -269,14 +269,14 @@ pass, using the new `regenerateStudentIdentityNo()`/
 `SHR-PAR-` number needs to remain live anywhere once an administrator
 runs it. Same trade-off as the original staff migration: this
 knowingly breaks any already-issued QR code/verification link for a
-re-migrated person, which is the Founder & CEO's accepted cost of
+re-migrated person, which is the Head of Schools / Administrator's accepted cost of
 having one consistent format sitewide.
 
 ## Digital Identity System — Imperial Prestige Directive (card rebuild)
 
 The ID card (`js/id-card.js` + `.id-card-3d` in `css/portal.css`) was
 rebuilt as a true 3D object rather than a flat rectangle, per the
-Founder & CEO's "Digital Identity System — Imperial Prestige
+Head of Schools / Administrator's "Digital Identity System — Imperial Prestige
 Directive":
 
 - **Real 3D geometry** — `perspective`/`preserve-3d`/`backface-
@@ -299,8 +299,8 @@ Directive":
   geometry. A staff member's theme is derived from their real office
   (via its slug) or, absent one, whether they hold a real department —
   never guessed from their name or title.
-- **Founder & CEO tier** — the highest-prestige theme (near-black +
-  brightest gold), a "Founder & CEO" ribbon, a faint watermark of the
+- **Head of Schools / Administrator tier** — the highest-prestige theme (near-black +
+  brightest gold), a "Head of Schools / Administrator" ribbon, a faint watermark of the
   site's real brand mark (not a fabricated crest), and a signature line
   on the back face. Triggered by holding the `EXE` role, not a separate
   card type.

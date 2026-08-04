@@ -30,7 +30,7 @@ does not check this grant at all. It authenticates with a single shared
 secret (`PORTAL_FOUNDER_TOKEN`) compared via `timingSafeEqualString` —
 **bypassing the staff session system and the Permission Engine
 entirely.** Whoever holds that one string can view the dashboard;
-nothing distinguishes the CEO from anyone else who was handed the
+nothing distinguishes the Head of Schools / Administrator from anyone else who was handed the
 token, and nothing is logged about *which* holder used it on a given
 request.
 
@@ -49,7 +49,7 @@ executive identity needs:
 | Directive's requested identity | Maps to | Status |
 |---|---|---|
 | Founder Identity | `staff` row with `staff_roles.role_code = 'EXE'`, `institution_id = NULL` (all institutions) | Role exists (`EXE`, established, real named individual per GV-01). No real `staff` row exists for this person yet. |
-| CEO Identity | Same as Founder — GV-01 does not separate these into two roles (see `docs/role-permission-matrix.md` §0's explicit correction on this point). | Not a separate identity to design. |
+| Head of Schools / Administrator Identity | Same as Founder — GV-01 does not separate these into two roles (see `docs/role-permission-matrix.md` §0's explicit correction on this point). | Not a separate identity to design. |
 | Principal Identity | `staff` row with `staff_roles.role_code = 'PRIN'`, `institution_id` = that Principal's institution | Role exists (established, per-institution). No real `staff` rows exist yet. |
 | Vice Principal Identity | `staff_roles.role_code = 'VP'` | Role exists but is **proposed**, not established — `docs/role-permission-matrix.md` marks it "Not yet documented." A real VP identity should wait for the Board to formally adopt the role, same discipline already applied to every other proposed role in this project. |
 | Registrar Identity | `staff_roles.role_code = 'REG'` | Role exists (established, real named individual per AC-02/PA-05). No real `staff` row exists yet — the Registrar's Office has only ever been exercised with test staff accounts in this engagement. |

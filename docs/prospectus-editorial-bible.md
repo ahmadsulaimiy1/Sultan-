@@ -23,7 +23,7 @@ statistic, name, colour, typeface, and story in this document is
 drawn from what SHRS has actually published**, not invented to sound
 more impressive. Where the directive assumes something exists that
 doesn't yet (a "Vision 2035" target, a Chairman distinct from the
-CEO, a finalised page count), that is named as an open decision, the
+Head of Schools / Administrator, a finalised page count), that is named as an open decision, the
 same way every other governance document in this project has treated
 a real gap — not silently invented and not silently dropped.
 
@@ -34,9 +34,9 @@ a real gap — not silently invented and not silently dropped.
 ### What SHRS represents
 A hybrid Islamic-and-secular institution — the founder's own words for
 it, used consistently across the live site — built on the premise that
-faith and academic rigour are not in tension. Four institutions under
-one foundation (Nursery & Primary, Royal College, Islamic & Arabic
-Studies, Qur'an College) serve different ages and pathways but share
+faith and academic rigour are not in tension. Five institutions under
+one foundation (Basic School, Secular College, Islamiyyah
+College, Qur'an College, and Online & Distance Learning School) serve different ages and pathways but share
 one mission, one set of values, and one crest. SHRS represents a school
 built from a specific act of filial honour — named for the founder's
 late father, Anofi Aliu Akano — grown from one community (Imowonla,
@@ -50,7 +50,7 @@ secular academic rigour as secondary. Not an exclusive institution —
 the founder's own welcome message states the schools are "open to
 Muslims and non-Muslims, males and females." Not a school that
 claims a heritage it doesn't have: SHRS is young (registered December
-2017, Royal College established 2021) and its prestige case rests on
+2017, Secular College established 2021) and its prestige case rests on
 what it has actually built in that time — a real Digital Campus, a
 published governance architecture, a specific five-stage Hifz
 methodology — not on manufactured antiquity.
@@ -128,7 +128,7 @@ Governor Babatunde Fashola's administration and was carried through
 with the encouragement of the founder's mentor, Governor Seyi Makinde,
 and his brother Lukman Olajide Anofi. Rooted in Imowonla, Ikorodu.
 
-**Present** — Four institutions, one crest, one governance architecture
+**Present** — Five institutions, one crest, one governance architecture
 spanning 20+ published policies, a real Digital Campus (Parent Portal,
 Student Portal, Staff Identity Platform, Registrar's Office, Hifz &
 Ijazah tracking) — genuinely unusual depth for a school of this age,
@@ -159,7 +159,7 @@ trace back to it.
 
 ### The reader's journey through the story
 The prospectus should read as one continuous narrative arc — Heritage
-→ Doctrine (Mission/Vision/Values) → the Four Institutions → the
+→ Doctrine (Mission/Vision/Values) → the Five Institutions → the
 Digital Campus (SHRS's genuine point of difference) → Governance &
 Safeguarding (trust) → Admissions (action) — mirroring the "Chapter"
 structure the live site's `about.html` already uses (`Chapter II —
@@ -190,10 +190,10 @@ directive named, sequenced per Part II's narrative arc)
 4. **Mission, Vision & Values** — the Doctrine chapter, including the
    CLEVER standard
 5. **Educational Philosophy / Why Choose SHRS**
-6. **The Four Institutions** — one feature spread each:
-   Nursery & Primary, Royal College, Islamic & Arabic Studies,
-   Qur'an College — presented as **four equally-weighted pillars**,
-   not Royal College as primary with three supplements
+6. **The Five Institutions** — one feature spread each:
+   Basic School, Secular College, Islamiyyah College,
+   Qur'an College, and Online & Distance Learning School — presented as **equally-weighted pillars**,
+   not Secular College as primary with supplements
 7. **Student Life** — pastoral care, community, the values in practice
 8. **Facilities**
 9. **Technology & Digital Campus** — SHRS's genuine differentiator;
@@ -209,10 +209,10 @@ directive named, sequenced per Part II's narrative arc)
 15. **Contact Information**
 
 **Open point, named not resolved**: the directive asks for both a
-"Chairman's Message" and a "CEO's Message" as distinct sections. No
+"Chairman's Message" and a "Head of Schools / Administrator's Message" as distinct sections. No
 Chairman distinct from the founder is publicly named anywhere in this
-project — governance documentation records a four-member Board of
-Trustees whose composition is "not individually published." Two
+project — governance documentation records a five-member Board of
+Governors whose composition is "not individually published." Two
 options exist: (a) treat the founder's existing, real Director's
 Message as the sole leadership voice, or (b) SHRS supplies a named
 Board Chairman and a distinct message. This Bible does not invent a
@@ -226,7 +226,7 @@ before spread planning.
   Admissions → Contact. The four-institution spread should let a
   parent self-select their child's pathway within one page-turn.
 - **Student-facing journey** *(where the prospectus addresses an older
-  applicant directly, e.g. Royal College senior secondary or Qur'an
+  applicant directly, e.g. Secular College senior secondary or Qur'an
   College)*: Student Life → the relevant institution → Achievements →
   Admissions.
 - **International/diaspora visitor journey**: Heritage (credibility of
@@ -465,11 +465,11 @@ single powerful portrait or campus image — mirroring the site's
 existing `.director-card`/`.director-body` split-layout convention
 directly, translated to print.
 
-### Feature spread system (the Four Institutions)
+### Feature spread system (the Five Institutions)
 Each institution gets a structurally identical template — one full
 spread, one anchor image, one short narrative paragraph, one "at a
 glance" data panel (ages, format, established date, distinguishing
-feature) — enforcing Part III's "four equally-weighted pillars"
+feature) — enforcing Part III's "equally-weighted pillars"
 requirement through layout discipline, not just editorial intent: if
 the template is identical, no institution can visually read as more or
 less important than another.
@@ -630,14 +630,14 @@ at least as strictly, not more loosely because it's "marketing.")
 exact page numbers or a final photography shot-list — that belongs to
 Deliverable #2 (Prospectus Master Architecture), once Part III's
 section hierarchy is confirmed and (per Part III's open point) the
-Chairman/CEO message question is resolved.**
+Chairman/Head of Schools / Administrator message question is resolved.**
 
 ### Principles for Deliverable #2 to apply
 - **One dominant image per editorial spread** (Part VIII), not a
   gallery grid — this bounds total photography need to roughly one
   hero image per spread plus supporting inset images at timeline/
   milestone points.
-- **Equal image allocation across the Four Institutions** spreads,
+- **Equal image allocation across the Five Institutions** spreads,
   enforcing Part III's equal-weighting requirement visually as well as
   editorially.
 - **Diagram allocation**: minimum one per Academic Progression,
@@ -656,7 +656,7 @@ Chairman/CEO message question is resolved.**
   design can be held to.
 
 ### What Deliverable #2 needs from SHRS leadership before it can proceed
-1. Resolution of the Chairman/CEO message question (Part III).
+1. Resolution of the Chairman/Head of Schools / Administrator message question (Part III).
 2. Confirmation of any real, current statistics (enrolment figures,
    pass rates, staff counts, facility specifications) — this Bible
    deliberately does not invent placeholder numbers for a prestige
@@ -716,7 +716,7 @@ the supreme publishing authority for the Flagship Prospectus and any
 future SHRS institutional publication built from it. **Two real
 decisions are needed from SHRS leadership before Deliverable #2
 (Prospectus Master Architecture) can responsibly proceed** — the
-Chairman/CEO message question (Part III) and confirmation of real
+Chairman/Head of Schools / Administrator message question (Part III) and confirmation of real
 current statistics (Part XI) — both named as open points rather than
 resolved by invention, consistent with every governance document this
 project has produced. Everything else in this Bible is ready to build
