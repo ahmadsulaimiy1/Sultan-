@@ -230,14 +230,14 @@ sections[0].children.push(pageBreak());
     ['Email', 'info@shroyalschools.com'],
     ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
     ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
-    ['Classification', 'Public institutional publication'],
-    ["Archival Statement", "Retained in the Institution's publications archive"],
-    ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-    ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
     ['Document Title', 'Sultan Hanafi Royal Schools — The Student Experience Edition'],
     ['Document ID', 'SHRS-PUB-STUEXP-2026-001'],
     ['Edition', 'Edition I'],
-    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
     ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
   ]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -278,7 +278,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('A Letter to Parents'));
   B.push(h1('Why We Built This'));
   B.push(polaroid('leadership/founder-ceo.jpg', 160, 'Sultan Zakariya, Founder'));
-  B.push(body('Since 2017, Sultan Hanafi Royal Schools has taken children from the Imowonla community and given them access to the kind of education that was previously available only to the most privileged families in Nigeria. That sentence is easy to write. Living it, one child at a time, is the actual work.'));
+  B.push(body('Since 2016, Sultan Hanafi Royal Schools has taken children from the Imowonla community and given them access to the kind of education that was previously available only to the most privileged families in Nigeria. That sentence is easy to write. Living it, one child at a time, is the actual work.'));
   B.push(body('Every parent who entrusts us with a child is trusting us with something larger than a curriculum — a formation of character, faith, and confidence that will outlast every exam they ever sit.'));
   B.push(pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });

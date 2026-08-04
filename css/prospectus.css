@@ -75,7 +75,7 @@
   font-family:'Cinzel','Amiri',serif; font-size:24pt; line-height:1.15; color:var(--navy); margin:0 0 6px;
 }
 .spread h2::after{
-  content:''; display:block; width:60px; height:2px; margin:12px 0 16px;
+  content:''; display:block; width:60px; height:2px; margin:18px 0 16px;
   background:linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
 }
 .spread.dark h2::after, .spread.charcoal h2::after{background:linear-gradient(90deg, var(--gold-bright) 0%, var(--gold) 100%);}
@@ -506,9 +506,9 @@
    matches the reference Director's Message / Leadership portrait
    pages exactly, at A4. */
 .bio-layout{display:grid; grid-template-columns:62mm 1fr; margin:-16mm -12mm; min-height:297mm;}
-.bio-rail{background:var(--navy-deep); color:var(--ivory); padding:16mm 8mm 12mm; display:flex; flex-direction:column; box-sizing:border-box;}
+.bio-rail{background:var(--navy-deep); color:var(--ivory); padding:16mm 8mm 20mm; display:flex; flex-direction:column; box-sizing:border-box;}
 .bio-rail .bio-photo{width:100%; aspect-ratio:3/4; object-fit:cover; margin-bottom:auto;}
-.bio-rail .icon-panel{margin-bottom:auto; padding:16px 10px; height:auto; width:100%; aspect-ratio:3/4; box-sizing:border-box;}
+.bio-rail .icon-panel{margin-bottom:16px; padding:16px 10px; height:auto; width:100%; aspect-ratio:3/4; box-sizing:border-box;}
 .bio-rail .icon-panel .icon-badge{width:96px; height:96px;}
 .bio-rail .icon-panel .icon-badge span{font-size:24pt !important;}
 .bio-rail .bio-name{font-family:'Cinzel','Amiri',serif; font-size:15pt; line-height:1.2; color:#fff; margin-top:16px;}

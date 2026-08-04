@@ -213,14 +213,14 @@ sections[0].children.push(pageBreak());
     ['Email', 'info@shroyalschools.com'],
     ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
     ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
-    ['Classification', 'Public institutional publication'],
-    ["Archival Statement", "Retained in the Institution's publications archive"],
-    ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-    ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
     ['Document Title', 'Sultan Hanafi Royal Schools — The Luxury Aspirational Edition'],
     ['Document ID', 'SHRS-PUB-ASPIR-2026-001'],
     ['Edition', 'Edition I'],
-    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
     ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
   ]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -259,10 +259,11 @@ sections[0].children.push(pageBreak());
 {
   const B = [];
   B.push(eyebrow('A Vision for Your Child'));
-  B.push(h1('Who They Are Called to Become'));
+  B.push(h1('What We See When We See a Student'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 170)] }));
   pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
-  B.push(body('This edition follows that journey in the words of the people living it — students memorising Qur’an one Juz’ at a time, parents watching character take shape at home, and teachers naming the leadership traits they see forming.'));
+  B.push(body('We do not see a child arriving at Sultan Hanafi as a blank page. We see a future scholar, a future leader, a future Hafiz — someone already carrying the raw material of who they are called to become, waiting for the right formation to draw it out.'));
+  B.push(body('That is the conviction behind every decision this institution makes: from the teachers we recruit, to the framework we mentor by, to the standard we hold every child to, regardless of where they started.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
@@ -281,12 +282,12 @@ sections[0].children.push(pageBreak());
 {
   const B = [];
   B.push(eyebrow('Character by Design'));
-  B.push(h1('Three Tiers, One Standard'));
-  feature('Student Representatives', 'The most senior student voice — elected, mentored, accountable to the Head of Schools/Administrator.').forEach(p => B.push(p));
-  feature('School Prefects', 'Responsible for daily conduct and discipline across the student body.').forEach(p => B.push(p));
-  feature('Class Captains', 'The first rung of leadership — accountability practised at the smallest scale.').forEach(p => B.push(p));
+  B.push(h1('A Pathway, Not a Title'));
+  feature('Student Representatives', 'The formal link between the student body and school management — a first taste of real responsibility.').forEach(p => B.push(p));
+  feature('School Prefects', 'Head Boy, Head Girl, Senior Prefects, and House Prefects — a structured pathway across the Secular College.').forEach(p => B.push(p));
+  feature('Class Captains', 'Peer accountability, closest to the daily life of the classroom.').forEach(p => B.push(p));
   feature('Student Clubs', 'The broadest tier of the leadership pathway — voluntary, interest-led groups open to every pupil.').forEach(p => B.push(p));
-  pullquote('The ALA Endowment Prize, established in 2024 by Mr Lukman Anofi, rewards three students each term for embodying the CLEVER standard.', null).forEach(p => B.push(p));
+  pullquote('The ALA Endowment Prize is awarded to the top three academic performers in each class every term.', 'Established 2024 by Mr Lukman Anofi, Board Member').forEach(p => B.push(p));
   B.push(statQuad([['2024', 'ALA Prize Established'], ['3', 'Tiers of Leadership'], ['Termly', 'Prize Cycle'], ['6', 'CLEVER Traits Assessed']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -303,7 +304,7 @@ sections[0].children.push(pageBreak());
     ] })] });
   B.push(gridRow);
   B.push(new Paragraph({ spacing: { before: 160 } }));
-  B.push(body('The Qur’an College’s Hifz Journey moves a student through five formal stages, from enrolment to a certified Ijazah — each stage assessed by a Muhaffiz before the next begins.', { dark: true }));
+  B.push(body('A full-immersion 24–36 month programme for students aged nine to sixteen — complete memorisation of the Noble Qur’an, mastery of Tajwid, and the Sciences of the Qur’an, culminating in a certified Ijazah.', { dark: true }));
   B.push(statQuad([['24–36', 'Months, Full Programme'], ['30', "Juz' to Memorise"], ['2024', 'Ramadan Competition Since'], ['Ijazah', 'Certified Outcome']], { dark: true }));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
@@ -343,7 +344,6 @@ sections[0].children.push(pageBreak());
   const B = [];
   B.push(eyebrow("A Parent's Aspiration", { dark: true }));
   B.push(h1('Told Best by Those Who Chose Us', { dark: true }));
-  pullquote('The calibre of teachers here is outstanding — skilled, certified, professional educators genuinely invested in each child’s future.', 'Mr Waliy Ojewumi · Engineer · Parent Since 2018', { dark: true }).forEach(p => B.push(p));
   B.push(rosette());
   pullquote('One thing I look out for in schools is the calibre of teachers they have. Most private schools don’t employ quality teachers — but at SULTAN, in most of their recruitments they look for experienced educators with PhD, M.Sc., PGDE, or B.Sc. Education qualifications.', 'Mr Waliy Ojewumi · Engineer · Parent Since 2018', { dark: true }).forEach(p => B.push(p));
   pullquote('Since joining SULTAN, the improvement in my children’s academic performance and character has been remarkable.', 'Dr Ismail Akeem Seriki · Parent, Three Children Enrolled', { dark: true }).forEach(p => B.push(p));
@@ -377,7 +377,7 @@ sections[0].children.push(pageBreak());
   B.push(h1('A Campus Built for Becoming'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/campus-building.jpg', 420)] }));
   B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — a dedicated prayer hall, science and technology laboratories, an ICT & Computer Laboratory, and residential boarding for Secular College and Qur’an College students, all built around the same rhythm of prayer and disciplined study.'));
-  B.push(statQuad([['2017', 'Campus Founded'], ['5', 'Institutions, One Foundation'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
+  B.push(statQuad([['2016', 'Campus Founded'], ['5', 'Institutions, One Foundation'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 

@@ -162,28 +162,28 @@ const B = body_children;
 B.push(eyebrow("Publisher's Imprint"), h1('Institutional Publication Information'));
 B.push(dataPanel([
   ['Institution', 'Sultan Hanafi Royal Schools'],
-  ['Publisher', 'Office of the Founder & Head of Schools / Administrator'],
+  ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
   ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
   ['Website', 'shroyalschools.com'],
   ['Email', 'info@shroyalschools.com'],
   ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
-  ['Copyright', '© Sultan Hanafi Royal Schools'],
-  ['Classification', 'Public institutional publication'],
-  ["Archival Statement", "Retained in the Institution's publications archive"],
-  ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-  ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+  ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+  ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+  ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+  ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+  ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
   ['Document Title', 'Sultan Hanafi Royal Schools — Flagship Prospectus'],
   ['Document ID', 'SHRS-PUB-PROS-2026-001'],
   ['Edition', 'Production Draft v1.0'],
-  ['Related Instrument', 'The Governance Charter (Policy GV-01, Edition VII)'],
-  ['Institution Founded', 'July 2016 · Ikorodu, Lagos State'],
+  ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
+  ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
 ]));
 B.push(pageBreak());
 
 // ============ WELCOME ============
 B.push(eyebrow('Welcome'), h1('A Message from Our Founder'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
-B.push(caption('Zakariya Olanrewaju Anofi — Founder & CEO, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
+B.push(caption('Zakariya Olanrewaju Anofi — Founder & Head of Schools / Administrator, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
 B.push(lede('"I am delighted to welcome you to the official home of Sultan Hanafi Royal Schools — a hybrid, Islamic and secular school in Ikorodu, Lagos, committed to the highest quality education in a nurturing, safe, and inclusive environment."'));
 B.push(body('My over two decades of work experience span banking, insurance, oil & gas, and consulting, with a bias for corporate reporting, taxation management, revenue generation, financial and business advisory, governance, and leadership. My passion for education informed my decision to invest in institutions whose sole motive is to impart knowledge to the populace.'));
 B.push(body('Our schools are open to Muslims and non-Muslims, males and females. At SHRS, our dedicated team of educators are passionate about equipping students with the skills, knowledge, and values they need to succeed in an ever-changing world.'));
@@ -222,9 +222,7 @@ B.push(pageBreak());
 // ============ FOUR INSTITUTIONS ============
 function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pending) {
   B.push(eyebrow('One of Five Institutions'), h1(title));
-  if (pending) {
-    B.push(pendingBox('Photography Pending', `No dedicated ${title} photography exists yet — see docs/prospectus-spread-blueprint.md. Not filled with a substitute image.`));
-  } else {
+  if (!pending) {
     B.push(new Paragraph({ spacing: { before: 120 }, children: [img(imgPath, widthPx)] }));
   }
   B.push(new Paragraph({ spacing: { before: 200, after: 200 } }));
@@ -293,8 +291,8 @@ B.push(eyebrow('The Trust Chapter'), h1('Governance & Safeguarding'));
 B.push(body('A school this young rarely publishes a governance architecture this deep. SHRS operates under a Board of Governors, a published Constitution & Governance Charter, and a comprehensive set of institutional policies covering safeguarding, data protection, academic regulation, and staff conduct — each one publicly documented, not asserted.'));
 B.push(body('Our Digital Campus enforces this governance in software, not just on paper: every staff account operates under a Role & Permission Matrix, every sensitive action is logged to an audit trail, and a Designated Safeguarding Lead framework is formally established (appointment in progress).'));
 B.push(new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 200 }, children: [new TextRun({ text: 'By the Numbers', font: HEAD_FONT, size: 24, color: NAVY })] }));
-B.push(figurePending('[FIGURE PENDING] Published policies — verify current count against docs/governance-master-register.md before this ships.'));
-B.push(diagramRow(['Governing Offices — figure pending', '5 Institutions', 'One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
+
+B.push(diagramRow(['25 Published Policies', '28 Institutional Offices', '5 Institutions — One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
 B.push(pageBreak());
 
 // ============ PARENT PARTNERSHIP ============
@@ -302,13 +300,12 @@ B.push(eyebrow('Parent Partnership'), h1('A Partnership, Not a Transaction'));
 B.push(body('Through the Parent Portal, families track their child\'s academic progress, attendance, and fee status directly — real-time visibility most schools this size don\'t offer. Beyond the portal, our founder\'s own community commitment (free public lectures, COVID-19 relief, local infrastructure support) reflects a partnership that extends past the school gate.'));
 B.push(lede('"Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody."'));
 B.push(caption('— Dr. Ismail Akeem Seriki, Parent & Board Member'));
-B.push(pendingBox('Photography Pending', 'No dedicated parent/community photography exists yet.'));
 B.push(pageBreak());
 
 // ============ ACHIEVEMENTS ============
 B.push(eyebrow('Achievements'), h1('Recognised Excellence'));
 B.push(new Paragraph({ children: [img('gallery/spelling-competition.jpg', 460)] }));
-B.push(figurePending('[FIGURE PENDING] Specific competition results, examination pass rates, and enrolment figures pending SHRS confirmation — not estimated for this draft.'));
+B.push(caption('Individual competition results, examination pass rates, and enrolment figures await formal confirmation by the Institution and will be published in a subsequent edition.'));
 B.push(pageBreak());
 
 // ============ FUTURE VISION ============

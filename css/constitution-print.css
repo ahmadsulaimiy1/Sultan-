@@ -13,7 +13,8 @@
 @page {
   size: letter;
   /* Must match the physical margin render-constitution-pdf.js reserves
-     for the header/footer overlay (0.62in top, 0.55in bottom). This was
+     for the header/footer overlay (0.89in top, 1.23in bottom — sized to
+     add-dynamic-headers.py's MASK_TOP_H/MASK_BOTTOM_H bands). This was
      previously 0, which told Blink's own print-pagination engine the
      full 11in page was available content height — a real, confirmed
      defect: article body text was found landing as close as 4.6pt from
@@ -21,7 +22,7 @@
      footer), because the flowing .chapter content's page breaks were
      computed against the full page, not the printable area actually
      available once the header/footer band is reserved. */
-  margin: 0.62in 0 0.55in 0;
+  margin: 0.89in 0 1.23in 0;
 }
 
 .const-body {
@@ -84,6 +85,7 @@
 .page.charcoal { background: var(--charcoal); color: var(--ivory); }
 
 .corner-ornament { position: absolute; top: 0.5in; right: 0.5in; width: 46px; height: 46px; opacity: 0.18; pointer-events: none; z-index: 0; }
+.corner-ornament.corner-bl { top: auto; right: auto; bottom: 1.35in; left: 0.5in; }
 .page.dark .corner-ornament, .page.charcoal .corner-ornament { opacity: 0.24; }
 
 /* ---- Cover ---- */
@@ -229,6 +231,7 @@
 .ceremony-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 9pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-bright); margin: 0 0 14px; text-align: center; }
 .ceremony h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 21pt; color: var(--milk); text-align: center; margin: 0 0 26px; }
 .ceremony p { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 13.5pt; line-height: 1.7; color: rgba(247,238,223,0.9); text-align: center; margin: 0 0 16px; }
+.ceremony p.drop-cap { text-align: left; max-width: 4.6in; margin-left: auto; margin-right: auto; }
 .ceremony p.drop-cap::first-letter {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 40pt; line-height: 0.7; font-weight: 600;
   color: var(--gold-bright); float: left; margin: 6px 8px 0 0;
@@ -250,6 +253,16 @@
   padding: 22px 10px 8px; border-bottom: 1px solid rgba(247,238,223,0.25); color: rgba(247,238,223,0.92);
   font-size: 11pt; text-align: left; min-width: 120px;
 }
+
+
+/* The Certificate of Adoption's full content (8 paragraphs + a 6-row
+   signature table) must fit the 8.88in fixed page in one piece; at the
+   default ceremony rhythm it fragments, which paints ivory masks over a
+   charcoal page. Scoped tightening, this page only. */
+.execution-page p { font-size: 11pt; line-height: 1.5; margin: 0 0 9px; }
+.execution-page .execution-table { margin: 12px 0; }
+.execution-page .execution-table td { padding: 13px 10px 6px; font-size: 10pt; }
+.execution-page .execution-table th { padding: 6px 10px; }
 
 /* ---- Part divider ---- */
 .page.part-divider { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -273,9 +286,9 @@
   color: var(--bronze); margin: 0 0 8px; text-transform: uppercase;
 }
 .toc-part-title a { color: inherit; text-decoration: none; }
-.toc-chapter { display: block; padding: 3px 0 3px 20px; font-size: 9.5pt; }
-.toc-chapter a { color: var(--navy); text-decoration: none; }
-.toc-chapter a:hover { color: var(--gold); }
+.toc-chapter { display: block; padding: 3px 0 3px 20px; font-size: 9.5pt; color: var(--navy); text-decoration: none; }
+a.toc-chapter, .toc-chapter a { color: var(--navy); text-decoration: none; }
+a.toc-chapter:hover, .toc-chapter a:hover { color: var(--gold); }
 .toc-hint { font-family: 'Inter', sans-serif; font-size: 8pt; font-style: italic; color: var(--ink-soft); margin-top: 26px; }
 
 /* ---- Flowing Chapter body ---- */
@@ -340,7 +353,10 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
 @media print {
   .const-toolbar { display: none; }
   .page, .chapter, .toc-page, .schedules-page { box-shadow: none; margin: 0; width: auto; }
-  .page { height: 9.83in; min-height: 9.83in; max-height: 9.83in; }
+  /* 8.88in = 11in letter minus the 0.89in/1.23in @page margins — the
+     fixed page box must fit the printable content box exactly or Blink
+     fragments every ceremony page onto a spill page. */
+  .page { height: 8.88in; min-height: 8.88in; max-height: 8.88in; }
   /* .toc-page and .schedules-page are deliberately auto-height (see their
      own rules above: "flowing light page" / re-paginates without manual
      re-verification), unlike .page's fixed 9.83in. In print, whichever
@@ -374,5 +390,10 @@ table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
      genuinely empty leftover space — most visibly the tail end of the
      final page, where it would otherwise print as an ugly dark void
      behind nothing. Neutral in print; dark stays for the screen view. */
-  .const-body { background: var(--parchment); }
+  /* Ivory, not parchment: every light page paints --ivory over its own
+     box, so an ivory surround makes the auto-height pages' short final
+     fragments (TOC, Schedules, Execution) visually seamless instead of
+     the two-tone parchment split recorded above. Dark pages are fixed
+     height and unaffected. */
+  .const-body { background: var(--ivory); }
 }

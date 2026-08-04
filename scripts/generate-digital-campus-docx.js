@@ -216,14 +216,14 @@ sections[0].children.push(pageBreak());
     ['Email', 'info@shroyalschools.com'],
     ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
     ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
-    ['Classification', 'Public institutional publication'],
-    ["Archival Statement", "Retained in the Institution's publications archive"],
-    ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-    ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
     ['Document Title', 'Sultan Hanafi Royal Schools — The Future Digital Campus Edition'],
     ['Document ID', 'SHRS-PUB-DIGCAM-2026-001'],
     ['Edition', 'Edition I'],
-    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
     ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
   ]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -414,7 +414,7 @@ sections[0].children.push(pageBreak());
   B.push(gridRow);
   B.push(new Paragraph({ spacing: { before: 160 } }));
   B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — the physical campus every digital system in this edition ultimately serves.'));
-  B.push(statQuad([['2017', 'Campus Founded'], ['Cloudflare', 'Hosting Platform'], ['Neon', 'Postgres Database'], ['2', 'Site Languages']]));
+  B.push(statQuad([['2016', 'Campus Founded'], ['Cloudflare', 'Hosting Platform'], ['Neon', 'Postgres Database'], ['2', 'Site Languages']]));
   B.push(body('Built deliberately offline-tolerant in mind — a low-bandwidth, patchy-connection reality for many Ikorodu families is treated as a design constraint, not an edge case.', { italics: true, size: 18, color: INK_SOFT }));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }

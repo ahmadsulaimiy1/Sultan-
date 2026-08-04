@@ -55,6 +55,7 @@ fs.writeFileSync(PUPPETEER_CONFIG, JSON.stringify({
 }));
 
 function parseInline(text, overrides = {}) {
+  text = text.replace(/ {2,}/g, ' ');
   const tokens = text.split(/(\*\*.+?\*\*|`.+?`|\*[^*]+?\*)/g).filter((t) => t.length > 0);
   return tokens.map((tok) => {
     if (tok.startsWith('**') && tok.endsWith('**')) {
@@ -106,14 +107,30 @@ function numberedPara(text, num) {
 
 function makeTable(rows) {
   const colCount = rows[0].length;
-  const colWidth = Math.floor(9360 / colCount);
+  // Weight columns by mean cell length (min 12% each) so prose-heavy
+  // columns get room and short code/date columns stop forcing
+  // character-level word breaks in their neighbours.
+  const weights = Array.from({ length: colCount }, (_, ci) => {
+    const lens = rows.map((r) => (r[ci] || '').length);
+    const mean = lens.reduce((a, b) => a + b, 0) / lens.length;
+    const max = Math.max(...lens);
+    // Blend mean with the longest cell so a single long status/dependency
+    // entry still buys its column room even among many short rows.
+    return Math.max(mean * 0.6 + max * 0.4, 6);
+  });
+  const wsum = weights.reduce((a, b) => a + b, 0);
+  const minW = Math.floor(9360 * 0.12);
+  let widths = weights.map((w) => Math.max(minW, Math.floor(9360 * w / wsum)));
+  const overshoot = widths.reduce((a, b) => a + b, 0) - 9360;
+  widths[widths.indexOf(Math.max(...widths))] -= overshoot;
   return new Table({
     width: { size: 9360, type: WidthType.DXA },
-    columnWidths: Array(colCount).fill(colWidth),
+    columnWidths: widths,
     rows: rows.map((cells, ri) => new TableRow({
       cantSplit: true,
-      children: cells.map((cell) => new TableCell({
-        width: { size: colWidth, type: WidthType.DXA },
+      tableHeader: ri === 0,
+      children: cells.map((cell, ci) => new TableCell({
+        width: { size: widths[ci], type: WidthType.DXA },
         shading: ri === 0 ? { type: ShadingType.CLEAR, fill: NAVY } : undefined,
         verticalAlign: VerticalAlign.CENTER,
         margins: { top: 80, bottom: 80, left: 120, right: 120 },
@@ -185,6 +202,21 @@ function imprintTable(rows) {
   });
 }
 
+// Brand-matched mermaid theme: ivory nodes, gold borders, espresso text —
+// the stock lavender/yellow defaults were the single strongest template
+// smell in the rendered governance DOCX suite.
+const MERMAID_THEME = path.join(DIAGRAM_DIR, 'shrs-mermaid-theme.json');
+fs.writeFileSync(MERMAID_THEME, JSON.stringify({
+  theme: 'base',
+  themeVariables: {
+    primaryColor: '#F7EEDF', primaryTextColor: '#2A2016', primaryBorderColor: '#C6A15B',
+    lineColor: '#3B2A1D', secondaryColor: '#EAE0C0', tertiaryColor: '#FFFFFF',
+    clusterBkg: '#EAE0C0', clusterBorder: '#C6A15B',
+    fontFamily: 'Cambria, Georgia, serif', fontSize: '18px',
+    edgeLabelBackground: '#F7EEDF',
+  },
+}));
+
 let diagramCounter = 0;
 function renderMermaidToPng(mermaidSrc) {
   diagramCounter += 1;
@@ -194,7 +226,7 @@ function renderMermaidToPng(mermaidSrc) {
   fs.writeFileSync(mmdPath, mermaidSrc);
   try {
     execSync(
-      `mmdc -i "${mmdPath}" -o "${pngPath}" -p "${PUPPETEER_CONFIG}" -b white -w 1400 --scale 2`,
+      `mmdc -i "${mmdPath}" -o "${pngPath}" -p "${PUPPETEER_CONFIG}" -b "#F7EEDF" -w 1400 --scale 2 -c "${MERMAID_THEME}"`,
       { stdio: 'pipe' },
     );
     return pngPath;
@@ -263,16 +295,23 @@ function parseMarkdown(md) {
       i += 1;
       continue;
     }
+    const isContinuation = (l) => l.trim() !== '' && !/^#{1,3}\s/.test(l)
+      && !l.startsWith('|') && !l.startsWith('```')
+      && !/^\s*[-*]\s/.test(l) && !/^\s*\d+\.\s/.test(l) && l.trim() !== '---';
     if (/^\s*[-*]\s/.test(line)) {
       const level = /^\s\s/.test(line) ? 1 : 0;
-      blocks.push({ type: 'bullet', text: line.replace(/^\s*[-*]\s/, '').trim(), level });
+      const buf = [line.replace(/^\s*[-*]\s/, '').trim()];
       i += 1;
+      while (i < lines.length && isContinuation(lines[i])) { buf.push(lines[i].trim()); i += 1; }
+      blocks.push({ type: 'bullet', text: buf.join(' '), level });
       continue;
     }
     if (/^\s*\d+\.\s/.test(line)) {
       const num = line.match(/^\s*(\d+)\./)[1];
-      blocks.push({ type: 'numbered', text: line.replace(/^\s*\d+\.\s/, '').trim(), num });
+      const buf = [line.replace(/^\s*\d+\.\s/, '').trim()];
       i += 1;
+      while (i < lines.length && isContinuation(lines[i])) { buf.push(lines[i].trim()); i += 1; }
+      blocks.push({ type: 'numbered', text: buf.join(' '), num });
       continue;
     }
     if (line.trim() === '' || line.trim() === '---' || /^\*\(/.test(line.trim())) {
@@ -298,9 +337,17 @@ async function main() {
   const blocks = parseMarkdown(md);
   const children = [];
 
-  // Title page
+  // Title page — crest, no running header/footer (titlePage section flag)
+  try {
+    const crestBuf = fs.readFileSync(path.join(ROOT, 'assets', 'images', 'brand-mark.png'));
+    children.push(new Paragraph({
+      spacing: { before: 1600, after: 240 },
+      alignment: AlignmentType.CENTER,
+      children: [new ImageRun({ data: crestBuf, transformation: { width: 86, height: 90 }, type: 'png' })],
+    }));
+  } catch { children.push(new Paragraph({ spacing: { before: 1600 }, children: [] })); }
   children.push(new Paragraph({
-    spacing: { before: 2400, after: 100 },
+    spacing: { after: 100 },
     alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: 'SULTAN HANAFI ROYAL SCHOOLS', bold: true, size: 22, color: GOLD, font: 'Cambria' })],
   }));
@@ -357,7 +404,7 @@ async function main() {
     ['Document ID', DOC_ID],
     ['Version', VERSION],
     ['Status', STATUS],
-    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
     ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
   ]));
   children.push(new Paragraph({ pageBreakBefore: true, children: [] }));
@@ -386,10 +433,12 @@ async function main() {
     title: TITLE,
     description: `${TITLE} — governance publication programme, 2026-08-04 amendment edition.`,
     styles: {
-      default: { document: { run: { font: 'Cambria', size: 22, color: CHARCOAL } } },
-      heading1: { run: { font: 'Cambria', size: 32, bold: true, color: NAVY }, paragraph: { spacing: { before: 360, after: 200 } } },
-      heading2: { run: { font: 'Cambria', size: 26, bold: true, color: NAVY }, paragraph: { spacing: { before: 240, after: 140 } } },
-      heading3: { run: { font: 'Cambria', size: 23, bold: true, color: GOLD }, paragraph: { spacing: { before: 180, after: 100 } } },
+      default: {
+        document: { run: { font: 'Cambria', size: 22, color: CHARCOAL } },
+        heading1: { run: { font: 'Cambria', size: 32, bold: true, color: NAVY }, paragraph: { spacing: { before: 360, after: 200 } } },
+        heading2: { run: { font: 'Cambria', size: 26, bold: true, color: NAVY }, paragraph: { spacing: { before: 240, after: 140 } } },
+        heading3: { run: { font: 'Cambria', size: 23, bold: true, color: GOLD }, paragraph: { spacing: { before: 180, after: 100 } } },
+      },
     },
     sections: [{
       properties: {
@@ -397,8 +446,10 @@ async function main() {
           size: { width: 12240, height: 15840 },
           margin: { top: 1440, bottom: 1440, left: 1350, right: 1350 },
         },
+        titlePage: true,
       },
       headers: {
+        first: new Header({ children: [new Paragraph({ children: [] })] }),
         default: new Header({
           children: [new Paragraph({
             alignment: AlignmentType.RIGHT,
@@ -407,14 +458,15 @@ async function main() {
         }),
       },
       footers: {
+        first: new Footer({ children: [new Paragraph({ children: [] })] }),
         default: new Footer({
           children: [new Paragraph({
             alignment: AlignmentType.CENTER,
             children: [
-              new TextRun({ text: 'Sultan Hanafi Royal Schools — Page ', size: 16, color: CHARCOAL }),
-              new TextRun({ children: [PageNumber.CURRENT], size: 16, color: CHARCOAL }),
-              new TextRun({ text: ' of ', size: 16, color: CHARCOAL }),
-              new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, color: CHARCOAL }),
+              new TextRun({ text: 'Sultan Hanafi Royal Schools — Page ', size: 16, color: CHARCOAL, font: 'Cambria' }),
+              new TextRun({ children: [PageNumber.CURRENT], size: 16, color: CHARCOAL, font: 'Cambria' }),
+              new TextRun({ text: ' of ', size: 16, color: CHARCOAL, font: 'Cambria' }),
+              new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, color: CHARCOAL, font: 'Cambria' }),
             ],
           })],
         }),

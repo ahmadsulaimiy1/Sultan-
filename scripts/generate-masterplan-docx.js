@@ -219,14 +219,14 @@ sections[0].children.push(pageBreak());
     ['Email', 'info@shroyalschools.com'],
     ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
     ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
-    ['Classification', 'Public institutional publication'],
-    ["Archival Statement", "Retained in the Institution's publications archive"],
-    ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-    ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
     ['Document Title', 'Sultan Hanafi Royal Schools — The Institutional Masterplan Edition'],
     ['Document ID', 'SHRS-PUB-MASTPLAN-2026-001'],
     ['Edition', 'Edition I'],
-    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
     ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
   ]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -301,9 +301,9 @@ sections[0].children.push(pageBreak());
   B.push(h1('A Chain of Accountability'));
   B.push(lede('Board of Governors → Board-Level Committees → Management Team → Management-Level Committees → Heads of Departments → Educators → Student Representatives → School Prefects → Class Captains → Student Clubs — one architecture, visible at every level.'));
   B.push(pillar('A', 'Board of Governors', "The institution's highest governing authority — a Chairman, a Secretary, and three Other Members."));
-  B.push(pillar('B', 'Board-Level Committees', 'The Educational Technical Committee, the Finance Committee, and one further committee to be determined.'));
+  B.push(pillar('B', 'Board-Level Committees', 'The Educational Technical, Finance, Safeguarding, Governance & Nominations, and Disciplinary & Ethics Committees, with one further Board-Level Committee reserved for future naming.'));
   B.push(pillar('C', 'Management Team', "Zakariya Olanrewaju Anofi, as Head of Schools/Administrator, together with the five schools' Heads. Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices."));
-  B.push(pillar('D', 'Management-Level Committees', "The Da'wah Committee, the Academic Committee, and the Sports Committee, operating under Management Team authority."));
+  B.push(pillar('D', 'Management-Level Committees', "Seven standing committees — Da'wah, Academic, Sports, Communications & Public Affairs, Student Life, Admissions & Enrolment, and Health, Safety & Facilities — operating under Management Team authority."));
   B.push(pillar('E', 'Heads of Departments', 'Reporting to the appropriate school Head.'));
   B.push(pillar('F', 'Educators', 'Faculty delivering the curriculum and the Hifz Journey directly.'));
   B.push(pillar('G–J', 'Student Leadership', 'Student Representatives, School Prefects, Class Captains, and Student Clubs.'));

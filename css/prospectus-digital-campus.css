@@ -9,7 +9,7 @@
 
 :root{
   --dc-white:#FFFFFF; --dc-off:#F4F5F7; --dc-charcoal:#14171C; --dc-charcoal-deep:#0A0C10;
-  --dc-charcoal-soft:#1E222A; --dc-gold:#E3A81E; --dc-gold-bright:#FFCE54; --dc-gold-dim:#B4830F;
+  --dc-charcoal-soft:#1E222A; --dc-gold:#C6A15B; --dc-gold-bright:#E9CE8A; --dc-gold-dim:#A9832E;
   --dc-ink:#14171C; --dc-ink-soft:rgba(20,23,28,0.62); --dc-line:rgba(20,23,28,0.12);
   --dc-glass-fill:rgba(255,255,255,0.06); --dc-glass-line:rgba(255,255,255,0.14);
   --dc-glass-fill-light:rgba(20,23,28,0.04); --dc-glass-line-light:rgba(20,23,28,0.10);

@@ -299,14 +299,14 @@ B.push(dataPanel([
   ['Email', 'info@shroyalschools.com'],
   ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
   ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
-  ['Classification', 'Public institutional publication'],
-  ["Archival Statement", "Retained in the Institution's publications archive"],
-  ['Printing Specification', 'A4 digital distribution & print-on-demand'],
-  ['Rights Statement', 'Share unaltered; no modification or commercial redistribution'],
+  ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+  ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+  ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+  ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
   ['Document Title', 'Sultan Hanafi Royal Schools — The Flagship Institutional Publication'],
   ['Document ID', 'SHRS-PUB-DEFIN-2026-001'],
   ['Edition', 'Brand Book & Educational Review 2026'],
-  ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+  ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
   ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
 ]));
 B.push(pageBreak());
@@ -337,7 +337,7 @@ B.push(body('When I imagine what Sultan Hanafi Royal Schools must become in the 
 B.push(body('Nigeria needs institutions that refuse mediocrity. SULTAN prepares students for leadership, for scholarship, for faith, for global citizenship.'));
 B.push(new Paragraph({ children: [img('gallery/campus-building.jpg', 460)] }));
 B.push(caption('The Sultan Hanafi Royal Schools campus · Ikorodu, Lagos.'));
-B.push(body('Since 2017, Sultan Hanafi Royal Schools has taken children from the Imowonla community and given them access to the kind of education that was previously available only to the most privileged families in Nigeria.'));
+B.push(body('Since 2016, Sultan Hanafi Royal Schools has taken children from the Imowonla community and given them access to the kind of education that was previously available only to the most privileged families in Nigeria.'));
 B.push(body('Today, that dream is becoming a national story. The commissioning of the institution by the Executive Governor of Oyo State, the achievement of Ministry Registration with Lagos State, and the sitting of our inaugural BECE cohort are proof of concept.'));
 B.push(pageBreak());
 
@@ -348,7 +348,7 @@ B.push(new Paragraph({ children: [img('gallery/campus-gate.jpg', 460)] }));
 B.push(caption('15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu.'));
 B.push(quoteBox('Sultan Hanafi Royal Schools stands as a blueprint for how education can be a vehicle for transformative social change within marginalised communities.', 'Punch Newspaper · November 2025'));
 B.push(h2('A Living Timeline'));
-[['2017', 'Sultan Hanafi Royal Schools officially registered — a hybrid institution combining secular education with authentic Islamic learning, serving the Imowonla community in Ikorodu, Lagos State.'],
+[['2016', 'Sultan Hanafi Royal Schools officially registered — a hybrid institution combining secular education with authentic Islamic learning, serving the Imowonla community in Ikorodu, Lagos State.'],
  ['2021', 'Sultan Hanafi Secular College established. Junior and Senior Secondary programmes (JSS 1–3 and SSS 1–3) launched for students from age ten.'],
  ['2022', "Islamiyyah College and the Qur'an College formalised, delivering Saudi Arabian curriculum programmes with internationally recognised Ijazah certification."],
  ['2024', 'Inaugural Annual Ramadan Qur\'an Competition held at the Secular College Auditorium. The ALA Endowment Prize established by Mr Lukman Anofi.'],
@@ -400,7 +400,7 @@ B.push(dataPanel([
   ['School 05 — Online & Distance Learning School', 'Newly established 2026, headship vacant, no students or curriculum yet'],
 ]));
 B.push(new Paragraph({ spacing: { before: 200 } }));
-B.push(statQuad([['5', 'Schools'], ['2017', 'Founded'], ['7', 'Departments'], ['6', 'Year Groups']]));
+B.push(statQuad([['5', 'Schools'], ['2016', 'Founded'], ['7', 'Departments'], ['6', 'Year Groups']]));
 B.push(pageBreak());
 
 // ============ BASIC SCHOOL ============
@@ -525,7 +525,8 @@ B.push(lede("Sultan Hanafi Royal Schools operates under a complete governance ar
 B.push(diagramRow(['Level A — Board of Governors\nChairman · Secretary · Three Other Members'], GOLD, NAVY_DEEP));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption('Level B — Board-Level Committees'));
-B.push(diagramRow(['Educational Technical Committee', 'Finance Committee', 'Committee TBD'], PARCHMENT, NAVY));
+B.push(diagramRow(['Educational Technical Committee', 'Finance Committee', 'Safeguarding Committee'], PARCHMENT, NAVY));
+B.push(diagramRow(['Governance & Nominations Committee', 'Disciplinary & Ethics Committee', 'One Further Committee — Reserved'], PARCHMENT, NAVY));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(diagramRow(['Level C — Management Team (Executive Authority)\nHead of Schools/Administrator — Zakariya Olanrewaju Anofi'], GOLD, NAVY_DEEP));
 B.push(caption('Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices.'));
@@ -545,7 +546,7 @@ B.push(pageBreak());
 B.push(eyebrow('Governance Architecture II'), h1('Operational Governance'));
 B.push(lede("Beneath the Management Team, Management-Level Committees, departments, and educators carry the institution's academic and administrative operations forward day to day."));
 govTier('D', "Management-Level Committees", 'Standing committees operating under Management Team authority, between the Management Team and the Heads of Departments.',
-  ["Da'wah Committee", 'Academic Committee', 'Sports Committee']).forEach(p => B.push(p));
+  ["Da'wah Committee", 'Academic Committee', 'Sports Committee', 'Communications & Public Affairs Committee', 'Student Life Committee', 'Admissions & Enrolment Committee', 'Health, Safety & Facilities Committee']).forEach(p => B.push(p));
 govTier('E', 'Heads of Departments', 'Reporting to the appropriate Principal or Head Teacher.',
   ['Mathematics & ICT', 'Science & Technology', 'Humanities', 'Other Languages', 'Arabic Language', 'Islamic Studies']).forEach(p => B.push(p));
 B.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: 'Finance & Accounts · Human Resources · ICT · Registry · Administration', font: BODY_FONT, size: 19, italics: true, color: INK_SOFT })] }));
@@ -669,7 +670,7 @@ B.push(h2('Ten Reasons to Choose SULTAN'));
   'A community of extraordinary families united by genuine ambition.',
 ].forEach((t, i) => B.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: `${String(i + 1).padStart(2, '0')}  `, font: HEAD_FONT, size: 20, color: GOLD, bold: true }), new TextRun({ text: t, font: BODY_FONT, size: 19 })] })));
 B.push(new Paragraph({ spacing: { before: 160 } }));
-B.push(statQuad([['2017', 'Founded'], ['5', 'Schools'], ['7', 'Departments'], ['∞', 'Ambition']]));
+B.push(statQuad([['2016', 'Founded'], ['5', 'Schools'], ['7', 'Departments'], ['∞', 'Ambition']]));
 
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400 }, children: [img('crest-full.png', 90)] }));
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 160 }, children: [new TextRun({ text: '"Education is not the filling of a pail, but the lighting of a fire." At Sultan Hanafi Royal Schools, we light that fire — every single day.', font: 'Constantia', italics: true, size: 22, color: NAVY })] }));

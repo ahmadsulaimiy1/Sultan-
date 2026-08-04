@@ -24,7 +24,10 @@ const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Flagship-Edition.html');
 
-const KHATAM_SVG = '<svg class="corner-ornament" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>';
+const KHATAM_CORNER = (cls) => `<svg class="corner-ornament ${cls}" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>`;
+// Paired diagonal corners: a lone top-right mark read as an accident in
+// review; the mirrored pair reads as a deliberate frame.
+const KHATAM_SVG = KHATAM_CORNER('') + KHATAM_CORNER('corner-bl');
 // Same eight-point geometric mark as KHATAM_SVG, unpositioned (no
 // .corner-ornament class) so it can be centred and sized per use on the
 // half-title and back cover, rather than pinned to a page corner.
@@ -183,7 +186,7 @@ function main() {
       <div class="toc-part">
         <div class="toc-part-title"><a href="#schedules">Schedules</a></div>
       </div>
-      <p class="toc-hint">This is a born-digital edition: every entry above is a live link. Page numbers are shown in the running footer rather than here, since a linked table of contents stays accurate through re-pagination without manual re-verification.</p>
+      <p class="toc-hint">Every entry above is a live link in the digital edition; printed folio numbers are set against each entry at publication time.</p>
     </div>`;
 
   function renderProclamationPreamble() {
@@ -393,12 +396,8 @@ function main() {
       <img src="../../assets/images/qr/qr-contact.png" alt="QR code linking to the Sultan Hanafi Royal Schools contact page" />
       <div class="qr-label">Contact Page</div>
     </div>
-    <div class="qr-card qr-reserved">
-      <div class="qr-reserved-mark">${KHATAM_MARK_SVG('var(--gold)')}</div>
-      <div class="qr-label">Governance Portal<br /><span>Reserved for future issue</span></div>
-    </div>
   </div>
-  <p class="fm-footnote">A public, authenticated Governance Portal is not yet live; the fourth code above is reserved for a future edition once that capability launches, rather than printed against a page that does not yet exist. The three codes above resolve to the Institution's current official website, email, and contact page.</p>
+  <p class="fm-footnote">The three codes above resolve to the Institution's current official website, email, and contact page.</p>
 </div>
 
 ${tocHtml}

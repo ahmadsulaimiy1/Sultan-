@@ -311,7 +311,7 @@ constitutional amendment (save for the one further committee the
 | Safeguarding Committee | Child protection; student welfare; staff safeguarding compliance (Chapter XII of the Charter, in full) | Designated Safeguarding Lead (once appointed) | Per Chapter XII | Per Article 123 | Monthly, and immediately on any disclosure |
 | **One further Board-Level Committee** | **Not yet named — to be fixed by Board resolution under Article 97** | To be fixed | To be fixed | To be fixed | To be fixed |
 
-The five Board-appointed committees report to the full Board; the
+The four Board-appointed committees report to the full Board; the
 Safeguarding Committee, chaired by the Designated Safeguarding Lead
 rather than a Governor, reports to both the Head of Schools /
 Administrator and the Board (Article 120(d), Article 97 Schedule). This

@@ -8,8 +8,8 @@ footerTemplate applies to an entire render, with no per-page hook and no
 access to page content).
 
 Run after render-constitution-pdf.js + merge-constitution-cover.py, which
-leave a reserved white margin (0.62in top / 0.55in bottom) with no text on
-it. This script reads the rendered page text with pdftotext, works out
+leave a reserved white margin (0.89in top / 1.23in bottom — sized to this
+script's own MASK_TOP_H/MASK_BOTTOM_H bands) with no text on it. This script reads the rendered page text with pdftotext, works out
 what belongs in the margin of each page, draws it with reportlab into a
 same-size transparent overlay, and merges that overlay onto the real PDF
 with pypdf.
@@ -26,6 +26,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pdfplumber
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor, Color
@@ -36,8 +37,8 @@ PDF = ROOT / "docs" / "exports" / "SHRS-Governance-Charter-Flagship-Edition.pdf"
 GOLD = HexColor("#8a7550")
 GOLD_LIGHT = HexColor("#b79b5e")
 PAGE_W, PAGE_H = 612, 792
-TOP_MARGIN = 0.62 * 72
-BOTTOM_MARGIN = 0.55 * 72
+TOP_MARGIN = 0.89 * 72
+BOTTOM_MARGIN = 0.55 * 72  # footer text anchor (kept where the furniture has always sat, inside the 88pt band)
 SIDE = 44  # left/right text inset, matching the body's own gutters
 
 # Chromium's print pipeline fills the reserved header/footer margin band
@@ -339,6 +340,139 @@ def classify_and_map(pages):
     return results, page_bg, back_cover_page
 
 
+NAVY = HexColor("#3B2A1D")
+
+# TOC right text edge matches .toc-page's own 0.95in side padding, so the
+# back-filled folio numbers align with the entries' own measure rather
+# than the running footer's wider SIDE inset.
+TOC_RIGHT = PAGE_W - 0.95 * 72
+TOC_NUM_FONT = ("Times-Roman", 9)
+
+
+def collect_toc_targets(pages, mapping_pages_text):
+    """First physical page (1-indexed) for every TOC-listed destination.
+
+    Keyed by compacted heading text so the letter-spaced TOC entries can be
+    matched against the body's own headings regardless of pdftotext's
+    spacing rendering. Covers Parts, Chapters, the ceremonies the TOC
+    lists, and the Schedules opening page."""
+    targets = {}
+
+    def put(key, page_no):
+        key = compact(key)
+        if key and key not in targets:
+            targets[key] = page_no
+
+    in_prelim = True
+    for i, text in enumerate(pages):
+        if i == 0:
+            continue
+        stripped = [l.strip() for l in text.split("\n") if l.strip()]
+        if not stripped:
+            continue
+        first = compact(stripped[0])
+        if in_prelim:
+            if "CONSTITUTIONALPROCLAMATION" in first:
+                in_prelim = False
+                put("CONSTITUTIONAL PROCLAMATION", i + 1)
+            continue
+        if "CONSTITUTIONALPROCLAMATION" in first:
+            put("CONSTITUTIONAL PROCLAMATION", i + 1)
+        if first == "PREAMBLE":
+            put("PREAMBLE", i + 1)
+        if "CERTIFICATEOFADOPTIONANDEXECUTION" in first:
+            put("CERTIFICATE OF ADOPTION AND EXECUTION", i + 1)
+        if "CERTIFICATEOFAMENDMENT" in first:
+            put("CERTIFICATE OF AMENDMENT", i + 1)
+        # Part-divider pages: the letter-spaced "PART <roman>" line plus
+        # title words; key on "PART<roman>" alone so the TOC's own
+        # "PART I — FOUNDATIONS" style entry can be matched by prefix.
+        for l in stripped:
+            m = re.match(rf"^PART({ROMAN_RE})$", compact(l))
+            if m:
+                put("PART" + m.group(1), i + 1)
+                break
+        for l in stripped:
+            m = CHAPTER_RE.match(l)
+            if m:
+                put("CHAPTER" + m.group(1), i + 1)
+        if any(l.upper() == "SCHEDULES" for l in stripped):
+            put("SCHEDULES", i + 1)
+        for l in stripped:
+            if compact(l).startswith("DRAFTINGNOTES") or compact(l).startswith("EDITORIALRECORD"):
+                put(compact(l)[:20], i + 1)
+    return targets
+
+
+def collect_toc_annotations(targets):
+    """Locate every TOC entry line on the rendered TOC pages and pair it
+    with its destination's physical page number.
+
+    Returns {page_index: [(x_text_end, y_baseline, page_no_str), ...]} in
+    reportlab coordinates (origin bottom-left), ready to draw."""
+    annos = {}
+    with pdfplumber.open(str(PDF)) as pdf:
+        for pi, page in enumerate(pdf.pages):
+            words = page.extract_words()
+            if not words:
+                continue
+            # group words into visual lines by top coordinate
+            lines = {}
+            for w in words:
+                key = round(w["top"] / 3)
+                lines.setdefault(key, []).append(w)
+            ordered = [sorted(ws, key=lambda w: w["x0"]) for _, ws in sorted(lines.items())]
+            line_texts = ["".join(w["text"] for w in ws) for ws in ordered]
+            joined = [compact(t) for t in line_texts]
+            # A TOC page lists several CHAPTER entries as plain lines
+            chapter_lines = sum(1 for t in joined if t.startswith("CHAPTER"))
+            if chapter_lines < 2 or "TABLEOFCONTENTS" not in compact(page.extract_text() or "")[:400]:
+                # second TOC page has no heading; accept pages with many
+                # chapter lines even without the heading, but only in the
+                # front matter (before page 12) to avoid body false hits
+                if not (chapter_lines >= 2 and pi < 12):
+                    continue
+            page_annos = []
+            for ws, tcompact in zip(ordered, joined):
+                target_page = None
+                best_len = 0
+                for key, pno in targets.items():
+                    # a key matches only when the entry continues with the
+                    # title delimiter (or ends exactly), so PARTI can never
+                    # claim PARTII's entry; longest match wins.
+                    if tcompact == key or tcompact.startswith(key + "—") or tcompact.startswith(key + "-"):
+                        if len(key) > best_len:
+                            best_len = len(key); target_page = pno
+                    elif len(tcompact) > 8 and key.startswith(tcompact) and len(key) > best_len:
+                        best_len = len(key); target_page = pno
+                if target_page is None:
+                    continue
+                last = ws[-1]
+                x_end = last["x1"]
+                y = PAGE_H - last["bottom"] + 1.5  # baseline-ish, reportlab coords
+                page_annos.append((x_end, y, str(target_page)))
+            if page_annos:
+                annos[pi] = page_annos
+    return annos
+
+
+def draw_toc_folios(c, page_annos):
+    font, size = TOC_NUM_FONT
+    for x_end, y, num in page_annos:
+        c.setFont(font, size)
+        c.setFillColor(NAVY)
+        c.drawRightString(TOC_RIGHT, y, num)
+        num_w = c.stringWidth(num, font, size)
+        lead_start = x_end + 6
+        lead_end = TOC_RIGHT - num_w - 6
+        if lead_end > lead_start + 12:
+            c.setStrokeColor(GOLD_LIGHT)
+            c.setLineWidth(0.5)
+            c.setDash(0.8, 2.6)
+            c.line(lead_start, y + 1.2, lead_end, y + 1.2)
+            c.setDash()
+
+
 def truncate(c, text, font, size, max_width):
     if c.stringWidth(text, font, size) <= max_width:
         return text
@@ -424,7 +558,10 @@ def draw_page(c, info, page_num, total_pages, bg, is_back_cover, is_cover=False)
         c.setStrokeColor(GOLD)
         c.line(SIDE, BOTTOM_MARGIN - 14, PAGE_W - SIDE, BOTTOM_MARGIN - 14)
 
-        left_text = "SULTAN HANAFI ROYAL SCHOOLS  ·  GOVERNANCE CHARTER"
+        # Institution name alone: the document identity already runs in the
+        # header wordmark, and the fuller string ellipsised ("GOVERNANCE
+        # CHA…") inside the measured left zone on every body page.
+        left_text = "SULTAN HANAFI ROYAL SCHOOLS"
         center_text = "CONFIDENTIAL — FOR BOARD CONSIDERATION"
         right_text = f"Page {page_num} of {total_pages}"
 
@@ -457,6 +594,8 @@ def draw_page(c, info, page_num, total_pages, bg, is_back_cover, is_cover=False)
 def main():
     pages_text = get_pages_text()
     mapping, page_bg, back_cover_page = classify_and_map(pages_text)
+    toc_targets = collect_toc_targets(pages_text, pages_text)
+    toc_annos = collect_toc_annotations(toc_targets)
 
     reader = PdfReader(str(PDF))
     n = len(reader.pages)
@@ -483,6 +622,8 @@ def main():
             is_back_cover=(i == back_cover_page),
             is_cover=(i == 0),
         )
+        if i in toc_annos:
+            draw_toc_folios(c, toc_annos[i])
         c.showPage()
     c.save()
 

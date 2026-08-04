@@ -328,7 +328,17 @@ function main() {
       children: [
         new TextRun({ text: 'Certification. ', bold: true, size: 17, color: CHARCOAL }),
         new TextRun({
-          text: 'This Governance Charter has been prepared under the authority of the Founder & Head of Schools / Administrator of Sultan Hanafi Royal Schools and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.',
+          text: "This Governance Charter has been prepared under the authority of the Founder, in the Founder's constitutional capacities as Chairman of the Board of Governors and Head of Schools / Administrator, of Sultan Hanafi Royal Schools, and is submitted to the Board of Governors for its consideration and adoption pursuant to Article 151 (Chapter XVIII). Upon adoption by resolution of the Board of Governors, it shall become the governing instrument of Sultan Hanafi Royal Schools and the substantive content of Policy GV-01.",
+          size: 17, color: CHARCOAL,
+        }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 260 },
+      children: [
+        new TextRun({ text: 'Amendment notice [2026-08-04]. ', bold: true, size: 17, color: CHARCOAL }),
+        new TextRun({
+          text: 'This text reflects the Board-approved governance restructuring amendment of 2026-08-04, which abolished the office of "Chief Executive Officer," established the office of Head of Schools / Administrator in its place, confirmed the Founder as holding both that office and the office of Chairman of the Board of Governors, restated the Board of Governors\' composition, replaced the Executive Management Team with the Management Team, renamed three Constituent Institutions, and recognised a fifth Constituent Institution, the Sultan Hanafi Online & Distance Learning School. See the Certificate of Adoption and Execution at the end of this Charter for the formal amendment record.',
           size: 17, color: CHARCOAL,
         }),
       ],
@@ -343,6 +353,57 @@ function main() {
   );
   coverChildren.push(new Paragraph({ children: [new PageBreak()] }));
 
+  // ---- Imprint + Publication Data pages (parity with the flagship
+  //      HTML/PDF edition's front matter — same fields, same wording) ----
+  const imprintRow = ([label, value]) => new TableRow({ children: [
+    new TableCell({ width: { size: 2800, type: WidthType.DXA }, margins: { top: 100, bottom: 100, left: 120, right: 80 },
+      children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: 'Cambria', size: 15, color: GOLD, bold: true })] })] }),
+    new TableCell({ width: { size: 7200, type: WidthType.DXA }, margins: { top: 100, bottom: 100, left: 80, right: 120 },
+      children: [new Paragraph({ children: [new TextRun({ text: value, font: 'Cambria', size: 18, color: CHARCOAL })] })] }),
+  ] });
+  const imprintTable = (rows) => new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE }, columnWidths: [2800, 7200],
+    borders: { top: { style: BorderStyle.SINGLE, size: 12, color: GOLD }, bottom: { style: BorderStyle.SINGLE, size: 4, color: GOLD },
+      left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'D9C89A' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(imprintRow),
+  });
+  coverChildren.push(
+    new Paragraph({ spacing: { before: 400, after: 60 }, children: [new TextRun({ text: "PUBLISHER'S IMPRINT", font: 'Cambria', size: 16, color: GOLD, bold: true, characterSpacing: 30 })] }),
+    new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: 'Imprint', font: 'Cambria', size: 34, color: NAVY, bold: true })] }),
+    imprintTable([
+      ['Institution', 'Sultan Hanafi Royal Schools'],
+      ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+      ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+      ['Website', 'shroyalschools.com'],
+      ['Email', 'info@shroyalschools.com'],
+      ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+      ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+      ['Classification', 'Internal Governance Instrument — Board Submission Draft. Not yet adopted; carries no legal effect until the Board resolves under Chapter XVIII (see Certification, above).'],
+      ['Archival Statement', "Prepared for permanent retention in the Institution's governance archive. On adoption, the executed edition supersedes this draft as the archival copy of record."],
+      ['Printing Specification', 'Set for US Letter (8.5in × 11in) digital archival distribution and print-on-demand reproduction; not yet issued in a bound print run.'],
+      ['Rights Statement', "Prepared for the internal use of the Board of Governors, the Founder & Head of Schools / Administrator, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation."],
+    ]),
+    new Paragraph({ children: [new PageBreak()] }),
+    new Paragraph({ spacing: { before: 400, after: 60 }, children: [new TextRun({ text: 'DOCUMENT CONTROL', font: 'Cambria', size: 16, color: GOLD, bold: true, characterSpacing: 30 })] }),
+    new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: 'Publication Data', font: 'Cambria', size: 34, color: NAVY, bold: true })] }),
+    imprintTable([
+      ['Governance Charter ID', 'SHRS-GC-2026-001'],
+      ['Publication ID', 'SHRS-PUB-GC-2026-001'],
+      ['Book ID', 'SHRS-BK-GC-2026-001'],
+      ['Document Number', 'GV-01 (Policy Coding Standard)'],
+      ['Institutional Reference No.', 'SHRS/GC/VII/2026'],
+      ['Edition', 'Seventh Edition'],
+      ['Publication Year', '2026'],
+      ['Last Editorial Amendment', '1 August 2026'],
+      ['Scheduled Board Adoption', '18 October 2026 (anticipated; not yet occurred — see Classification, Imprint page)'],
+      ['ISBN', 'Reserved — to be assigned on formal print publication, should the Board direct one'],
+      ['Citation Format', 'Sultan Hanafi Royal Schools, The Governance Charter of Sultan Hanafi Royal Schools (Edition VII, 2026) art [X]'],
+    ]),
+    new Paragraph({ spacing: { before: 200 }, children: [new TextRun({ text: "A full account of the reasoning behind each edition's changes is kept in the companion Editorial Record (not part of this instrument), rather than restated here as a bare list of dates.", font: 'Cambria', size: 16, italics: true, color: CHARCOAL })] }),
+  );
+  coverChildren.push(new Paragraph({ children: [new PageBreak()] }));
+
   // ---- TOC page ----
   // Page numbers below are hand-verified against a rendered PDF (see
   // header comment). Re-verify after any edit to the source markdown
@@ -351,39 +412,40 @@ function main() {
   // `level: 1` entries (Chapters) render indented beneath their Part, so
   // the Table of Contents itself shows the Part/Chapter hierarchy.
   const TOC_ENTRIES = [
-    ['CONSTITUTIONAL PROCLAMATION', 5, 0],
-    ['PREAMBLE', 6, 0],
-    ['PART I — FOUNDATIONS', 7, 0],
-    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 8, 1],
-    ['PART II — GOVERNING AND EXECUTIVE AUTHORITY', 12, 0],
-    ['CHAPTER II — THE FOUNDER & CHIEF EXECUTIVE OFFICER', 13, 1],
-    ['CHAPTER III — THE BOARD OF GOVERNORS', 18, 1],
-    ['CHAPTER IV — THE EXECUTIVE MANAGEMENT TEAM', 23, 1],
-    ['PART III — ACADEMIC AND RELIGIOUS AUTHORITY', 24, 0],
-    ['CHAPTER V — ACADEMIC LEADERSHIP', 25, 1],
-    ['CHAPTER VI — THE ACADEMIC COUNCIL', 26, 1],
-    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 27, 1],
-    ['PART IV — INSTITUTIONAL STRUCTURE', 30, 0],
-    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 31, 1],
-    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 33, 1],
-    ['CHAPTER X — STUDENT LEADERSHIP', 34, 1],
-    ['PART V — COMMITTEES, ACCOUNTABILITY, AND SAFEGUARDING', 35, 0],
-    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 36, 1],
-    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 43, 1],
-    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 44, 1],
-    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 45, 1],
-    ['PART VI — FINANCE AND CONTINUITY', 46, 0],
-    ['CHAPTER XV — FINANCIAL GOVERNANCE', 47, 1],
-    ['CHAPTER XVI — SUCCESSION', 48, 1],
-    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 49, 1],
-    ['PART VII — CONSTITUTIONAL SUPREMACY AND GENERAL PROVISIONS', 50, 0],
-    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 51, 1],
-    ['CHAPTER XIX — CEREMONIAL ORDER', 52, 1],
-    ['CHAPTER XX — INSTRUMENTS MADE UNDER THIS CHARTER', 53, 1],
-    ['CHAPTER XXI — INSTITUTIONAL IDENTITY, RECORDS, AND SAFEGUARDS OF OFFICE', 54, 1],
-    ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 55, 1],
-    ['CERTIFICATE OF ADOPTION AND EXECUTION', 56, 0],
-    ['SCHEDULES', 57, 0],
+    ['CONSTITUTIONAL PROCLAMATION', 8, 0],
+    ['PREAMBLE', 9, 0],
+    ['PART I — FOUNDATIONS', 10, 0],
+    ['CHAPTER I — FOUNDATIONAL PRINCIPLES', 11, 1],
+    ['PART II — GOVERNING AND EXECUTIVE AUTHORITY', 15, 0],
+    ['CHAPTER II — THE FOUNDER, THE CHAIRMAN, AND THE HEAD OF SCHOOLS / ADMINISTRATOR', 16, 1],
+    ['CHAPTER III — THE BOARD OF GOVERNORS', 22, 1],
+    ['CHAPTER IV — THE MANAGEMENT TEAM', 28, 1],
+    ['PART III — ACADEMIC AND RELIGIOUS AUTHORITY', 30, 0],
+    ['CHAPTER V — ACADEMIC LEADERSHIP', 31, 1],
+    ['CHAPTER VI — THE ACADEMIC COUNCIL', 32, 1],
+    ['CHAPTER VII — RELIGIOUS GOVERNANCE', 33, 1],
+    ['PART IV — INSTITUTIONAL STRUCTURE', 37, 0],
+    ['CHAPTER VIII — ADMINISTRATIVE AND INSTITUTIONAL OFFICES', 38, 1],
+    ['CHAPTER IX — ACADEMIC DEPARTMENTS', 40, 1],
+    ['CHAPTER X — STUDENT LEADERSHIP', 41, 1],
+    ['PART V — COMMITTEES, ACCOUNTABILITY, AND SAFEGUARDING', 42, 0],
+    ['CHAPTER XI — COMMITTEES, COUNCILS, AND WORKING BODIES', 43, 1],
+    ['CHAPTER XII — THE SAFEGUARDING COMMITTEE', 50, 1],
+    ['CHAPTER XIII — APPOINTMENTS AND REMOVALS', 52, 1],
+    ['CHAPTER XIV — INSTITUTIONAL INDEPENDENCE AND INTEGRITY', 53, 1],
+    ['PART VI — FINANCE AND CONTINUITY', 54, 0],
+    ['CHAPTER XV — FINANCIAL GOVERNANCE', 55, 1],
+    ['CHAPTER XVI — SUCCESSION', 56, 1],
+    ['CHAPTER XVII — INSTITUTIONAL CONTINUITY', 57, 1],
+    ['PART VII — CONSTITUTIONAL SUPREMACY AND GENERAL PROVISIONS', 58, 0],
+    ['CHAPTER XVIII — CONSTITUTIONAL AMENDMENT, REVIEW, AND INTERPRETATION', 59, 1],
+    ['CHAPTER XIX — CEREMONIAL ORDER', 60, 1],
+    ['CHAPTER XX — INSTRUMENTS MADE UNDER THIS CHARTER', 61, 1],
+    ['CHAPTER XXI — INSTITUTIONAL IDENTITY, RECORDS, AND SAFEGUARDS OF OFFICE', 62, 1],
+    ['CHAPTER XXII — TRANSITIONAL AND SAVING PROVISIONS', 63, 1],
+    ['CERTIFICATE OF ADOPTION AND EXECUTION', 64, 0],
+    ['CERTIFICATE OF AMENDMENT — GOVERNANCE RESTRUCTURING, 2026-08-04', 65, 0],
+    ['SCHEDULES', 67, 0],
   ];
   coverChildren.push(
     new Paragraph({
