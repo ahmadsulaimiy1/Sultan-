@@ -504,6 +504,42 @@
     "altHref": "/verify-identity/"
   },
   {
+    "slug": "verify",
+    "output": "verify/index.html",
+    "title": "Public Verification Portal — Sultan Hanafi Royal Schools",
+    "description": "Confirm a certificate, graduation document, identity card, or fee receipt issued by Sultan Hanafi Royal Schools is genuine — no account required.",
+    "contentFile": "pages/verify.html",
+    "altHref": "/ar/verify/"
+  },
+  {
+    "slug": "verify-ar",
+    "output": "ar/verify/index.html",
+    "title": "بوابة التحقق العامة — مدارس السلطان حنفي الملكية",
+    "description": "تأكد من أصالة شهادة أو وثيقة تخرج أو بطاقة هوية أو إيصال رسوم صادر عن مدارس السلطان حنفي الملكية — دون الحاجة لحساب.",
+    "contentFile": "pages/verify.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/verify/"
+  },
+  {
+    "slug": "alumni-portal",
+    "output": "alumni-portal/index.html",
+    "title": "Alumni Portal — Sultan Hanafi Royal Schools",
+    "description": "The self-service Alumni Portal for Sultan Hanafi Royal Schools graduates — verified credential access, giving, events, and the alumni directory.",
+    "contentFile": "pages/alumni-portal.html",
+    "altHref": "/ar/alumni-portal/"
+  },
+  {
+    "slug": "alumni-portal-ar",
+    "output": "ar/alumni-portal/index.html",
+    "title": "بوابة الخريجين — مدارس السلطان حنفي الملكية",
+    "description": "بوابة الخريجين الذاتية الخدمة لخريجي مدارس السلطان حنفي الملكية — الوصول إلى الشهادات الموثقة، والتبرع، والفعاليات، ودليل الخريجين.",
+    "contentFile": "pages/alumni-portal.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/alumni-portal/"
+  },
+  {
     "slug": "press",
     "output": "press/index.html",
     "title": "Press & News Room — Sultan Hanafi Royal Schools",
