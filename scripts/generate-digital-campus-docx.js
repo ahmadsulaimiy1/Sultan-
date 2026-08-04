@@ -152,6 +152,24 @@ function roadmapItem(year, title, desc) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .dc-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4E6EA' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: BODY_FONT, size: 14, bold: true, color: GOLD, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 20, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -185,7 +203,29 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. VISION STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Future Digital Campus Edition'],
+    ['Document ID', 'SHRS-PUB-DIGCAM-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. VISION STATEMENT ============
 {
   const B = [];
   B.push(new Paragraph({ spacing: { before: 2400 } }));
@@ -197,18 +237,18 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('A Guide to This Edition'));
   B.push(lede('This is the Future Digital Campus Edition — the same institution, retold through what is actually built, running, and used by real families today, and what is deliberately still ahead.'));
   const toc = [
-    ["A Word from the Founder", '04'], ['The Digital Campus Today', '05'], ['The Guardian Portal', '06'],
-    ['The Student Portal', '07'], ['The Digital Academic Assistant', '08'], ['Hifz & Ijazah Digital Register', '09'],
-    ['The ICT & Computer Laboratory', '10'], ['Personalisation & the Adhkār Centre', '11'],
-    ['Data-Driven Leadership', '12'], ['The Road to 2035', '13'], ['Campus & Connectivity', '14'],
-    ['Join the Digital Campus', '15'],
+    ["A Word from the Founder", '05'], ['The Digital Campus Today', '06'], ['The Guardian Portal', '07'],
+    ['The Student Portal', '08'], ['The Digital Academic Assistant', '09'], ['Hifz & Ijazah Digital Register', '10'],
+    ['The ICT & Computer Laboratory', '11'], ['Personalisation & the Adhkār Centre', '12'],
+    ['Data-Driven Leadership', '13'], ['The Road to 2035', '14'], ['Campus & Connectivity', '15'],
+    ['Join the Digital Campus', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ spacing: { after: 100 },
     children: [new TextRun({ text: t, font: BODY_FONT, size: 20, color: INK }), new TextRun({ text: '\t' + p, font: HEAD_FONT, size: 20, color: GOLD, bold: true })] })));
@@ -217,7 +257,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. FOUNDER'S MESSAGE ============
+// ============ 05. FOUNDER'S MESSAGE ============
 {
   const B = [];
   B.push(eyebrow("A Word from the Founder"));
@@ -230,7 +270,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. THE DIGITAL CAMPUS TODAY ============
+// ============ 06. THE DIGITAL CAMPUS TODAY ============
 {
   const B = [];
   B.push(eyebrow('Overview'));
@@ -244,7 +284,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. GUARDIAN PORTAL ============
+// ============ 07. GUARDIAN PORTAL ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -259,7 +299,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. STUDENT PORTAL ============
+// ============ 08. STUDENT PORTAL ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -272,7 +312,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 08. DIGITAL ACADEMIC ASSISTANT ============
+// ============ 09. DIGITAL ACADEMIC ASSISTANT ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -285,7 +325,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. HIFZ & IJAZAH DIGITAL REGISTER ============
+// ============ 10. HIFZ & IJAZAH DIGITAL REGISTER ============
 {
   const B = [];
   B.push(eyebrow("Live System · Qur'an College"));
@@ -300,7 +340,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. ICT & COMPUTER LABORATORY ============
+// ============ 11. ICT & COMPUTER LABORATORY ============
 {
   const B = [];
   B.push(eyebrow('Our Infrastructure'));
@@ -312,7 +352,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 11. PERSONALISATION & ADHKAR CENTRE ============
+// ============ 12. PERSONALISATION & ADHKAR CENTRE ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -328,7 +368,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. DATA-DRIVEN LEADERSHIP ============
+// ============ 13. DATA-DRIVEN LEADERSHIP ============
 {
   const B = [];
   B.push(eyebrow('Behind the Scenes'));
@@ -342,7 +382,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. THE ROAD TO 2035 ============
+// ============ 14. THE ROAD TO 2035 ============
 {
   const B = [];
   B.push(eyebrow('Named, Not Built'));
@@ -357,7 +397,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 14. CAMPUS & CONNECTIVITY ============
+// ============ 15. CAMPUS & CONNECTIVITY ============
 {
   const B = [];
   B.push(eyebrow('Our Campus'));
@@ -375,7 +415,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. JOIN THE DIGITAL CAMPUS ============
+// ============ 16. JOIN THE DIGITAL CAMPUS ============
 {
   const B = [];
   B.push(eyebrow('Join the Digital Campus'));
@@ -397,7 +437,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
