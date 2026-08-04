@@ -196,8 +196,8 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 160)] }));
   B.push(body('Most prospectuses show you a school. This one is written to show you an institution — the governance behind it, the systems that run it, and the record it has already produced.'));
   B.push(body('My own background — two decades across banking, insurance, oil & gas, and consulting, an MSc from Edinburgh Business School, Heriot-Watt, a BSc from Oxford Brookes, and fellowships with the ACCA UK and ICAN — shapes how I have built this school.'));
-  B.push(panel('Sultan Hanafi Royal Schools is young — registered December 2017, with the Secular College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
-  B.push(statQuad([['2017', 'Founded'], ['2021', 'Secular College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
+  B.push(panel('Sultan Hanafi Royal Schools is young — founded in July 2016, with the Secular College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
+  B.push(statQuad([['2016', 'Founded'], ['2021', 'Secular College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
@@ -208,7 +208,7 @@ sections[0].children.push(pageBreak());
   B.push(h1('A Structural Account'));
   B.push(lede('Each chapter documents one dimension of the institution — real, dated, and drawn from what has actually been built and recorded.'));
   const toc = [
-    ['Institutional Overview', '04'], ['Our Journey, 2017–2026', '05'], ['Governance Architecture', '06'],
+    ['Institutional Overview', '04'], ['Our Journey, 2016–2026', '05'], ['Governance Architecture', '06'],
     ['The Policy Framework', '07'], ['Digital Campus Infrastructure', '08'], ['Built to Scale', '09'],
     ['Community & Impact', '10'], ['International Register', '11'], ['Our Vision', '12'],
     ['The Road Ahead', '13'], ['Academic Milestones', '14'], ['Partner With Us', '15'],
@@ -227,7 +227,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('At a Glance'));
   B.push(h1('Institutional Overview'));
   B.push(lede('Sultan Hanafi Royal Schools in structural summary — five institutions, one governance architecture, one crest.'));
-  B.push(statQuad([['2017', 'Founded'], ['5', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Secular College Departments']]));
+  B.push(statQuad([['2016', 'Founded'], ['5', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Secular College Departments']]));
   B.push(body("Basic School, Secular College, the Qur'an College, Islamiyyah College, and the newly established Online & Distance Learning School operate under one foundation, one crest, and one governance architecture. The fifth institution, recognised under the 2026 governance amendment, does not yet have students, a curriculum, or an appointed head."));
   B.push(pillar('1', 'Founded on Filial Honour', "Named for the founder's late father, Anofi Aliu Akano — grown from the Imowonla community outward."));
   B.push(pillar('2', 'Hybrid by Design', 'Islamic and secular education held as equally rigorous, not one subordinate to the other.'));
@@ -238,9 +238,9 @@ sections[0].children.push(pageBreak());
 // ============ 05. OUR JOURNEY ============
 {
   const B = [];
-  B.push(eyebrow('Our Journey, 2017–2026'));
+  B.push(eyebrow('Our Journey, 2016–2026'));
   B.push(h1('A Timeline of What Was Actually Built'));
-  timelineItem('2017', 'Foundation', 'Sultan Hanafi Royal Schools registered, rooted in the Imowonla community, Ikorodu, Lagos State.').forEach(p => B.push(p));
+  timelineItem('2016', 'Foundation', 'Sultan Hanafi Royal Schools founded, rooted in the Imowonla community, Ikorodu, Lagos State.').forEach(p => B.push(p));
   timelineItem('2021', 'Secular College Established', 'Junior and Senior Secondary programmes launched for students from age ten.').forEach(p => B.push(p));
   timelineItem('2022', "Qur'an College & Islamic Studies Formalised", 'Formally established, with Saudi Arabian curriculum resources and Ijazah certification.').forEach(p => B.push(p));
   timelineItem('2024', 'Ramadan Competition & ALA Prize', 'Inaugural Ramadan Qur’an Competition; the ALA Endowment Prize established by Mr Lukman Anofi.').forEach(p => B.push(p));
@@ -389,7 +389,7 @@ sections[0].children.push(pageBreak());
   B.push(pillar('R', 'Regulators', 'Our full governance register and Ministry registration record are available on request.'));
   B.push(pillar('D', 'Donors & Partners', 'The Sultan Zakariya Hanafi Foundation extends this institution’s mission into the wider community.'));
   B.push(pillar('S', 'Prospective Students & Alumni', 'Every Hifz & Ijazah record is permanent and verifiable years after graduation.'));
-  B.push(panel('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650', 'Speak With Us'));
+  B.push(panel('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650', 'Speak With Us'));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Institutional Masterplan Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -407,8 +407,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 30, bold: true, color: 'FFFFFF' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE INSTITUTIONAL MASTERPLAN EDITION', font: BODY_FONT, size: 14, color: BURGUNDY_BRIGHT, bold: true, characterSpacing: 15 })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: BURGUNDY_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: BURGUNDY_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'INSTITUTIONAL MASTERPLAN EDITION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: 'D9D5C8', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],

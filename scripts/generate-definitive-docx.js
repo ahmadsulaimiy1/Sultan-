@@ -280,7 +280,7 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 }, children: [new TextRun({ text: 'The Flagship Institutional Publication', font: HEAD_FONT, size: 52, bold: true, color: NAVY })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: 'Brand Book & Educational Review 2026', font: 'Constantia', italics: true, size: 28, color: INK_SOFT })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'ACADEMIC EXCELLENCE · ISLAMIC SCHOLARSHIP · GLOBAL LEADERSHIP', font: HEAD_FONT, size: 15, color: INK_SOFT, characterSpacing: 20 })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 700 }, children: [new TextRun({ text: 'Est. December 2017 · Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 700 }, children: [new TextRun({ text: 'Est. July 2016 · Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 800 }, children: [new TextRun({ text: '2026 · Word Edition', font: BODY_FONT, size: 16, color: INK_SOFT })] }),
     ]),
     pageBreak(),
@@ -617,7 +617,7 @@ B.push(eyebrow('Begin the Journey'), h1('Joining Sultan Hanafi Royal Schools'));
 B.push(supportRow([
   ['Documents Required', 'Birth certificate · Passport photographs (2) · School report · Completed admission form'],
   ['Campus Tour', 'Visit our campus and experience the Sultan Hanafi difference first-hand.'],
-  ['Foundation Scholarships', 'Educational support for students of exceptional merit or financial need — contact info@shroyalschools.ng'],
+  ['Foundation Scholarships', 'Educational support for students of exceptional merit or financial need — contact info@shroyalschools.com'],
 ]));
 B.push(new Paragraph({ spacing: { before: 200 }, children: [img('gallery/campus-hero.jpg', 460)] }));
 B.push(caption('Sultan Hanafi Royal Schools · Imowonla, Ikorodu, Lagos State'));
@@ -628,8 +628,8 @@ B.push(eyebrow('Connect With Us'), h1('We Are Here for Your Family'));
 B.push(body('Whether you are ready to enrol, wishing to arrange a campus tour, seeking further information, or simply wanting to understand the Sultan Hanafi difference — we would love to hear from you.'));
 B.push(dataPanel([
   ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu'],
-  ['Email', 'info@shroyalschools.ng'],
-  ['Website', 'shroyalschools.ng'],
+  ['Email', 'info@shroyalschools.com'],
+  ['Website', 'shroyalschools.com'],
   ['Telephone', '+234 807 374 7650 · +234 807 058 6860'],
   ['Instagram', '@shroyal_schools'],
 ]));
@@ -670,8 +670,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'Excellence · Character · Faith · Leadership', font: BODY_FONT, size: 18, color: INK_SOFT })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: 'A Sultan Hanafi education is a standard, held for every child, for as long as it takes.', font: 'Constantia', italics: true, size: 22, color: NAVY })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 18 })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18 })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'FLAGSHIP INSTITUTIONAL PUBLICATION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: INK_SOFT, characterSpacing: 15 })] }),
     ]),
   ],

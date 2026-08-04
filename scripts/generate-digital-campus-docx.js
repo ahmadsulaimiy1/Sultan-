@@ -387,8 +387,8 @@ sections[0].children.push(pageBreak());
     ['3. Staff Review', 'Reviewed by the admissions office through the Permission Engine.'],
     ['4. Enrolment', 'Once accepted, your child’s real academic record begins.'],
   ].forEach(([t, d]) => { B.push(new Paragraph({ spacing: { before: 120, after: 20 }, children: [new TextRun({ text: t, font: HEAD_FONT, size: 22, bold: true, color: CHARCOAL })] })); B.push(body(d)); });
-  B.push(glass('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650 · shroyalschools.ng', 'Speak With Admissions'));
-  B.push(body('Prefer to ask first? The Digital Academic Assistant is available on every page of shroyalschools.ng, in English or Arabic, and can hand you directly to the right school office on WhatsApp.'));
+  B.push(glass('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650 · shroyalschools.com', 'Speak With Admissions'));
+  B.push(body('Prefer to ask first? The Digital Academic Assistant is available on every page of shroyalschools.com, in English or Arabic, and can hand you directly to the right school office on WhatsApp.'));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Future Digital Campus Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -406,8 +406,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 30, bold: true, color: 'FFFFFF' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE FUTURE DIGITAL CAMPUS EDITION', font: BODY_FONT, size: 14, color: GOLD_BRIGHT, bold: true, characterSpacing: 20 })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'FUTURE DIGITAL CAMPUS EDITION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: 'D9D2C0', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],

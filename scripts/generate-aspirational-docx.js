@@ -384,7 +384,7 @@ sections[0].children.push(pageBreak());
   feature('4. Enrolment', 'A formal Admission Letter and Class Acceptance Ticket are issued.', { dark: true }).forEach(p => B.push(p));
   B.push(rosette());
   B.push(body('Documents Required: Birth certificate · Passport photographs (2) · School report · Completed admission form', { dark: true }));
-  pullquote('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650', null, { dark: true }).forEach(p => B.push(p));
+  pullquote('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650', null, { dark: true }).forEach(p => B.push(p));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Luxury Aspirational Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -403,8 +403,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE LUXURY ASPIRATIONAL EDITION', font: LABEL_FONT, size: 14, color: GOLD_BRIGHT, bold: true, characterSpacing: 15 })] }),
       rosette(),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 700 }, children: [new TextRun({ text: 'LUXURY ASPIRATIONAL EDITION 2026 · NIGERIA', font: LABEL_FONT, size: 13, color: 'D9C79A', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],
