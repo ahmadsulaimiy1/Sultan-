@@ -201,7 +201,7 @@ sections[0].children.push(pageBreak());
   const toc = [
     ['A Vision for Your Child', '04'], ['The Making of a Leader', '05'], ['Character by Design', '06'],
     ["The Scholar's Journey", '07'], ["The Scholar's Journey, Continued", '08'], ['Portraits of Distinction', '09'],
-    ["A Parent's Aspiration", '10'], ['The Four Pathways', '11'], ['A Campus Built for Becoming', '12'],
+    ["A Parent's Aspiration", '10'], ['The Five Pathways', '11'], ['A Campus Built for Becoming', '12'],
     ['Where Character Meets Craft', '13'], ['Beyond Graduation', '14'], ['Begin Their Story', '15'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
@@ -217,7 +217,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('A Vision for Your Child'));
   B.push(h1('Who They Are Called to Become'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 170)] }));
-  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & Chief Executive Officer').forEach(p => B.push(p));
+  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
   B.push(body('This edition follows that journey in the words of the people living it — students memorising Qur’an one Juz’ at a time, parents watching character take shape at home, and teachers naming the leadership traits they see forming.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -238,9 +238,10 @@ sections[0].children.push(pageBreak());
   const B = [];
   B.push(eyebrow('Character by Design'));
   B.push(h1('Three Tiers, One Standard'));
-  feature('Student Representatives', 'The most senior student voice — elected, mentored, accountable to the Founder & CEO.').forEach(p => B.push(p));
+  feature('Student Representatives', 'The most senior student voice — elected, mentored, accountable to the Head of Schools/Administrator.').forEach(p => B.push(p));
   feature('School Prefects', 'Responsible for daily conduct and discipline across the student body.').forEach(p => B.push(p));
   feature('Class Captains', 'The first rung of leadership — accountability practised at the smallest scale.').forEach(p => B.push(p));
+  feature('Student Clubs', 'The broadest tier of the leadership pathway — voluntary, interest-led groups open to every pupil.').forEach(p => B.push(p));
   pullquote('The ALA Endowment Prize, established in 2024 by Mr Lukman Anofi, rewards three students each term for embodying the CLEVER standard.', null).forEach(p => B.push(p));
   B.push(statQuad([['2024', 'ALA Prize Established'], ['3', 'Tiers of Leadership'], ['Termly', 'Prize Cycle'], ['6', 'CLEVER Traits Assessed']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -280,7 +281,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Portraits of Distinction'));
   B.push(h1('Success, Documented'));
   B.push(statQuad([['2026', 'Ministry Registered'], ['1st', 'BECE Cohort Sat'], ['2025', 'Governor Commission'], ['7', 'Academic Departments']]));
-  B.push(body('By 2026, the Royal College had achieved Ministry Registration with the Lagos State Ministry of Education and seen its first cohort sit the Basic Education Certificate Examination — a milestone every student in that cohort now carries with them.'));
+  B.push(body('By 2026, the Secular College had achieved Ministry Registration with the Lagos State Ministry of Education and seen its first cohort sit the Basic Education Certificate Examination — a milestone every student in that cohort now carries with them.'));
   pullquote('Sultan Hanafi Royal Schools stands as a blueprint for how education can be a vehicle for transformative social change within marginalised communities.', 'Punch Newspaper · November 2025').forEach(p => B.push(p));
   B.push(rosette());
   B.push(body('In 2025, Sultan Hanafi Royal Schools was commissioned by Engr. Seyi Makinde, Executive Governor of Oyo State — a distinguished endorsement of an institution rooted equally in Qur’anic scholarship and secular excellence.'));
@@ -305,15 +306,16 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 11. THE FOUR PATHWAYS ============
+// ============ 11. THE FIVE PATHWAYS ============
 {
   const B = [];
-  B.push(eyebrow('The Four Pathways'));
-  B.push(h1('One Vision, Four Ways to Reach It'));
-  feature('Nursery & Primary', 'From age two, the foundation of faith and academic discipline, laid before a child ever sits a formal exam.').forEach(p => B.push(p));
-  feature('Royal College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.').forEach(p => B.push(p));
+  B.push(eyebrow('The Five Pathways'));
+  B.push(h1('One Vision, Five Ways to Reach It'));
+  feature('Basic School', 'From age two, the foundation of faith and academic discipline, laid before a child ever sits a formal exam.').forEach(p => B.push(p));
+  feature('Secular College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.').forEach(p => B.push(p));
   feature("Qur'an College", 'A parallel track for full Hifz immersion, open to students aged nine to sixteen.').forEach(p => B.push(p));
-  feature('Islamic & Arabic Studies', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
+  feature('Islamiyyah College', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
+  feature('Online & Distance Learning School', 'Newly established in 2026 — a fifth institution just taking shape, with headship not yet appointed and no students or curriculum yet.').forEach(p => B.push(p));
   pullquote('Open to Muslims and non-Muslims, males and females — a welcome stated plainly, not a marketing gesture.', null).forEach(p => B.push(p));
   const gridRow = new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
     rows: [new TableRow({ children: [
@@ -330,8 +332,8 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Our Campus'));
   B.push(h1('A Campus Built for Becoming'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/campus-building.jpg', 420)] }));
-  B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — a dedicated prayer hall, science and technology laboratories, an ICT & Computer Laboratory, and residential boarding for Royal College and Qur’an College students, all built around the same rhythm of prayer and disciplined study.'));
-  B.push(statQuad([['2017', 'Campus Founded'], ['4', 'Schools, One Campus'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
+  B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — a dedicated prayer hall, science and technology laboratories, an ICT & Computer Laboratory, and residential boarding for Secular College and Qur’an College students, all built around the same rhythm of prayer and disciplined study.'));
+  B.push(statQuad([['2017', 'Campus Founded'], ['5', 'Institutions, One Foundation'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
@@ -358,7 +360,7 @@ sections[0].children.push(pageBreak());
   const B = [];
   B.push(eyebrow('Beyond Graduation'));
   B.push(h1('A Formation That Outlasts the Classroom'));
-  B.push(body('A Sultan Hanafi Ijazah is a certified, permanently recorded credential — verifiable years after graduation, wherever a student’s path leads next. BECE, WAEC, and NECO examinations mark the culmination of the Royal College years; for Qur’an College students, the Ijazah marks a different but equally permanent achievement.'));
+  B.push(body('A Sultan Hanafi Ijazah is a certified, permanently recorded credential — verifiable years after graduation, wherever a student’s path leads next. BECE, WAEC, and NECO examinations mark the culmination of the Secular College years; for Qur’an College students, the Ijazah marks a different but equally permanent achievement.'));
   B.push(rosette());
   B.push(body('What a student carries out of Sultan Hanafi is not only a certificate. It is a character formed under a standard — the one this entire edition has attempted to make visible.'));
   B.push(statQuad([['BECE', 'Secular Milestone'], ['WAEC', 'Secular Milestone'], ['NECO', 'Secular Milestone'], ['Ijazah', 'Spiritual Milestone']]));

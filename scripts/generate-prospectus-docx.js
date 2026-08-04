@@ -199,7 +199,7 @@ B.push(pageBreak());
 
 // ============ FOUR INSTITUTIONS ============
 function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pending) {
-  B.push(eyebrow('One of Four Equally-Weighted Institutions'), h1(title));
+  B.push(eyebrow('One of Five Institutions'), h1(title));
   if (pending) {
     B.push(pendingBox('Photography Pending', `No dedicated ${title} photography exists yet — see docs/prospectus-spread-blueprint.md. Not filled with a substitute image.`));
   } else {
@@ -211,21 +211,21 @@ function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pendin
   B.push(pageBreak());
 }
 
-institutionSpread('Nursery & Primary', null, null,
+institutionSpread('Basic School', null, null,
   [['Ages', '2–10'], ['Format', 'Day'], ['Pathway', 'Primary 1–6']],
-  "Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Royal College's secondary pathway.",
+  "Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Secular College's secondary pathway.",
   true);
 
-institutionSpread('Royal College', 'gallery/chemistry-laboratory.jpg', 460,
+institutionSpread('Secular College', 'gallery/chemistry-laboratory.jpg', 460,
   [['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']],
   "SHRS's mainstream secondary academic programme — Junior and Senior Secondary education delivered with the same rigour named in our Mission, in dedicated science and general-academic facilities.");
 
-institutionSpread('Islamic & Arabic Studies', null, null,
+institutionSpread('Islamiyyah College', null, null,
   [['Ages', 'All ages'], ['Format', 'Weekday & weekend']],
   'Dedicated Arabic language and Islamic Studies programmes, open across all ages — deepening the Islamic-knowledge half of our Mission alongside the secular academic pathways.',
   true);
 
-B.push(eyebrow("One of Four Equally-Weighted Institutions"), h1("Qur'an College"));
+B.push(eyebrow("One of Five Institutions"), h1("Qur'an College"));
 B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 460)] }));
 B.push(new Paragraph({ spacing: { before: 200, after: 200 } }));
 B.push(body("A dedicated Hifz (Qur'an memorisation) pathway with day and boarding options, guided by a structured, published five-stage Hifz Journey — the one part of our offering with a genuinely distinct, specialised methodology."));
@@ -268,11 +268,11 @@ B.push(pageBreak());
 
 // ============ GOVERNANCE ============
 B.push(eyebrow('The Trust Chapter'), h1('Governance & Safeguarding'));
-B.push(body('A school this young rarely publishes a governance architecture this deep. SHRS operates under a Board of Trustees, a published Constitution & Governance Charter, and a comprehensive set of institutional policies covering safeguarding, data protection, academic regulation, and staff conduct — each one publicly documented, not asserted.'));
+B.push(body('A school this young rarely publishes a governance architecture this deep. SHRS operates under a Board of Governors, a published Constitution & Governance Charter, and a comprehensive set of institutional policies covering safeguarding, data protection, academic regulation, and staff conduct — each one publicly documented, not asserted.'));
 B.push(body('Our Digital Campus enforces this governance in software, not just on paper: every staff account operates under a Role & Permission Matrix, every sensitive action is logged to an audit trail, and a Designated Safeguarding Lead framework is formally established (appointment in progress).'));
 B.push(new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 200 }, children: [new TextRun({ text: 'By the Numbers', font: HEAD_FONT, size: 24, color: NAVY })] }));
 B.push(figurePending('[FIGURE PENDING] Published policies — verify current count against docs/governance-master-register.md before this ships.'));
-B.push(diagramRow(['4 Governing Offices', '4 Institutions', 'One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
+B.push(diagramRow(['Governing Offices — figure pending', '5 Institutions', 'One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
 B.push(pageBreak());
 
 // ============ PARENT PARTNERSHIP ============
@@ -292,7 +292,7 @@ B.push(pageBreak());
 // ============ FUTURE VISION ============
 B.push(eyebrow('Looking Ahead'), h1('Our Vision Forward'));
 B.push(lede('"To be recognised as a leading institution excelling in knowledge dissemination and character building — creating a positive impact wherever our presence is felt."'));
-B.push(body('We build toward this Vision with real evidence, not a fixed roadmap: a Digital Campus already live, a governance architecture already published, and four institutions already serving one community with one shared standard.'));
+B.push(body('We build toward this Vision with real evidence, not a fixed roadmap: a Digital Campus already live, a governance architecture already published, and five institutions — four already serving one community with one shared standard, and a newly established Sultan Hanafi Online & Distance Learning School taking shape as the fifth.'));
 B.push(pageBreak());
 
 // ============ CONTACT ============
