@@ -45,9 +45,9 @@ table, and a tier-by-tier legend.
 Every name, office, and vacancy shown below comes from Policy GV-01
 v3.0, the live public Governance page, or the Governance Resolution
 Register's Category 8 — nothing here is invented. Where a seat is
-vacant (the Board Secretary; the Head of the Online & Distance
+vacant (the Secretary to the Board; the Head of the Online & Distance
 Learning School) or a body's membership has not yet been published
-(the Board's third committee; the Management-Level Committees'
+(the sixth, reserved Board-Level Committee; the Management-Level Committees'
 membership), this Manual marks it as such rather than filling the gap
 with a plausible-sounding name.
 
@@ -74,6 +74,9 @@ flowchart TD
   subgraph B["B. Board-Level Committees"]
     B_ETC["Educational Technical Committee"]
     B_FC["Finance Committee"]
+    B_GN["Governance & Nominations Committee"]
+    B_DE["Disciplinary & Ethics Committee"]
+    B_SG["Safeguarding Committee"]
     B_TBD["Further Committee<br/>(Not Yet Named)"]
   end
 
@@ -90,7 +93,10 @@ flowchart TD
     D_DW["Da'wah Committee"]
     D_AC["Academic Committee"]
     D_SP["Sports Committee"]
-    D_Other["Others as Management Establishes"]
+    D_CPA["Communications & Public Affairs Committee"]
+    D_SL["Student Life Committee"]
+    D_AE["Admissions & Enrolment Committee"]
+    D_HSF["Health, Safety & Facilities Committee"]
   end
 
   E["E. Heads of Departments<br/>(8 seated across the institutions)"]
@@ -137,11 +143,17 @@ flowchart TD
   subgraph B["B. Board-Level Committees"]
     ETC["Educational Technical Committee<br/>(oversight of academic standards)"]
     FC["Finance Committee<br/>(oversight of financial governance)"]
+    GN["Governance & Nominations Committee<br/>(continued in being, not abolished)"]
+    DE["Disciplinary & Ethics Committee<br/>(continued in being, not abolished)"]
+    SG["Safeguarding Committee<br/>(Chapter XII, chaired by the DSL)"]
     TBD["Further Committee<br/>Not Yet Named"]
   end
 
   A --> ETC
   A --> FC
+  A --> GN
+  A --> DE
+  A --> SG
   A --> TBD
 ```
 
@@ -149,11 +161,16 @@ The Board of Governors is five seats: a Chairman, a Secretary, and
 three Other Members. The Secretary seat is a genuine governance gap,
 not an oversight in this diagram — the Governance Resolution Register
 tracks it as an open item under Category 8, created by the amendment
-itself rather than inherited from before it. The Board has stood up
-two of its permitted Board-Level Committees to date (Educational
-Technical Committee, Finance Committee); membership and terms of
-reference for both, and the identity of the third committee, remain
-unpublished as of this Manual's version.
+itself rather than inherited from before it. The Charter's Schedule of
+Board Standing Committees (Article 97) fixes a minimum of five: the
+Board has stood up five of its named Board-Level Committees to date
+(Educational Technical Committee and Finance Committee, named directly
+by the 2026-08-04 amendment; the Governance & Nominations Committee and
+the Disciplinary & Ethics Committee, continued in being from before the
+amendment; and the Safeguarding Committee, established under Chapter
+XII). Membership and terms of reference for the Educational Technical
+and Finance Committees, and the identity of the sixth, reserved
+committee, remain unpublished as of this Manual's version.
 
 ## 4. Zoomed View (b) — Management Team, the Five Institutions, and Management-Level Committees
 
@@ -173,8 +190,10 @@ flowchart TD
     DW["Da'wah Committee"]
     AC["Academic Committee"]
     SP["Sports Committee"]
-    HSC["Health &amp; Safety Committee"]
-    CC["Complaints Committee"]
+    CPA["Communications &amp; Public Affairs Committee"]
+    SL["Student Life Committee"]
+    AE["Admissions &amp; Enrolment Committee"]
+    HSF["Health, Safety &amp; Facilities Committee"]
   end
 
   HoS --- P1
@@ -194,10 +213,15 @@ chain running through the Head to each Principal. The fifth
 institution's headship is vacant by design, not omission: the Online
 & Distance Learning School was newly recognised by the 2026-08-04
 amendment and does not yet have students, a curriculum, or an
-appointed Head. Management maintains standing operational committees
-— Da'wah, Academic, Sports, Health & Safety, and Complaints are the
-named ones on the public record — with authority to establish further
-committees as required.
+appointed Head. The Governance Charter fixes a minimum of seven
+Management-Level standing committees — Da'wah, Academic, Sports,
+Communications & Public Affairs, Student Life, Admissions & Enrolment,
+and Health, Safety & Facilities. The Charter does not constitute a
+separate Health and Safety Committee or Complaints Committee (Article
+115): health and safety matters route through the Health, Safety &
+Facilities Committee and, at institutional level, the Safeguarding
+Committee; formal written complaints route through the Disciplinary &
+Ethics Committee.
 
 ## 5. Zoomed View (c) — Single-Institution Internal Structure (Repeatable Pattern)
 
@@ -212,7 +236,7 @@ for.
 ```mermaid
 flowchart TD
   Head["Principal / Head Teacher<br/>(the institution's Management Team seat)"]
-  HOD["E. Heads of Departments<br/>e.g. Registrar, VP Administration, ICT Head, subject HODs"]
+  HOD["E. Heads of Departments<br/>e.g. Registrar, ICT Head, subject HODs"]
   ED["F. Educators<br/>Teaching staff"]
   SR["G. Student Representatives"]
   PF["H. School Prefects<br/>Prefectorial Council"]
@@ -244,13 +268,13 @@ appointments will fill, not a claim that they are filled today.
 
 | From (tier) | Reports / accountable to | Relationship | Notes |
 |---|---|---|---|
-| A. Board of Governors | Constitution & Governance Charter itself (self-governing at the apex) | — | Amends its own Charter only by Board resolution (GV-01 §7.3) |
+| A. Board of Governors | Constitution & Governance Charter itself (self-governing at the apex) | — | Amends its own Charter only per Article 151 (30 days' notice, two-thirds of Governors present and voting, and — for Chapter II amendments — the Founder's written consent) and, for Article 8, the four-fifths threshold of Article 157 |
 | B. Board-Level Committees | A. Board of Governors | Solid — delegated standing authority | Exercise Board-level oversight on the Board's behalf; do not report through Management |
 | C. Management Team | A. Board of Governors | Solid — appointed and held accountable | Board appoints and holds accountable the Head of Schools / Administrator; the rest of the Management Team sits under that same accountability collectively |
 | D. Management-Level Committees | C. Management Team | Solid — delegated standing authority | Exercise standing operational functions on the Management Team's behalf |
 | E. Heads of Departments | C. Management Team | Solid — direct reporting | Per GV-01 §6; day-to-day direction typically flows through the relevant Principal/Head Teacher as that institution's Management Team seat |
 | F. Educators | E. Heads of Departments (and, within an institution, the Principal/Head Teacher) | Solid — direct reporting | "Through the academic structure," per GV-01 §6 |
-| G. Student Representatives | F. Educators / institutional staff | Dotted — supervisory, not command | Recognised representative body, not a staff subordinate role |
+| G. Student Representatives | Student Affairs and the Head of the relevant Constituent Institution | Dotted — supervisory, not command | Recognised representative body, not a staff subordinate role; supervised through Student Affairs and the institution's Management Team seat (Article 93), not through Educators generally |
 | H. School Prefects | G. Student Representatives (structurally) / institutional staff (supervisory) | Solid (internal structure) / Dotted (staff oversight) | School Prefectorial Council |
 | I. Class Captains | H. School Prefects (structurally) / institutional staff (supervisory) | Solid (internal structure) / Dotted (staff oversight) | Elected or appointed per class, per institutional regulations |
 | J. Student Clubs | Institutional staff (supervision) | Dotted — supervisory, not command | Recognised clubs and societies under institutional supervision |
@@ -261,9 +285,9 @@ appointments will fill, not a claim that they are filled today.
 | Tier | Name | Current Population Status | Governing Document(s) |
 |---|---|---|---|
 | A | Board of Governors | Partially vacant — 4 of 5 seats filled; Secretary vacant | GV-01 §4, §6; Governance Resolution Register Cat. 8 |
-| B | Board-Level Committees | Structural only — 2 of 3 committees named, membership/terms of reference not yet published | GV-01 §4, §6 |
+| B | Board-Level Committees | Structural only — 5 of 6 committees named (Educational Technical, Finance, Governance & Nominations, Disciplinary & Ethics, Safeguarding); one reserved slot not yet named; membership/terms of reference for the Educational Technical and Finance Committees not yet published | GV-01 §4, §6; Charter Article 97 Schedule |
 | C | Management Team | Partially vacant — 5 of 6 seats filled; Head, Online & Distance Learning School vacant | GV-01 §4, §5, §6 |
-| D | Management-Level Committees | Structural only — committees named (Da'wah, Academic, Sports, Health & Safety, Complaints), membership not published; open-ended ("others as Management establishes") | GV-01 §4, §6 |
+| D | Management-Level Committees | Structural only — seven committees named (Da'wah, Academic, Sports, Communications & Public Affairs, Student Life, Admissions & Enrolment, Health, Safety & Facilities), membership not published; open-ended above the constitutional minimum ("others as Management establishes") | GV-01 §4, §6; Charter Article 100/101 |
 | E | Heads of Departments | Fully staffed — 8 named HODs published | GV-01 §6; Academic Regulations; departmental job descriptions |
 | F | Educators | Structural only — no individual roster published in governing documents reviewed | GV-01 §6; Academic Regulations |
 | G | Student Representatives | Structural only — recognised body, no named office-holders published | GV-01 §4, §6; Student Code of Conduct |
