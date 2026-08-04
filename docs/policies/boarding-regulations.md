@@ -18,7 +18,7 @@ emergency procedures, and end-of-term departure procedures.*
 | Policy Title | Boarding Regulations |
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Principal, Qur'an College (Shaykh Ahmad Ibrahim) — boarding is primarily associated with Qur'an College's Hifz programme, though this should be confirmed against which institutions actually board students today |
+| Policy Owner | Principal, Qur'an College (Imam Ahmad Sulaimiy) — boarding is primarily associated with Qur'an College's Hifz programme, though this should be confirmed against which institutions actually board students today |
 | Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |

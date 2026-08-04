@@ -232,7 +232,7 @@ Article 50). Its membership, restated by the 2026-08-04 amendment
 | Seat | Real current holder |
 |---|---|
 | Head of Schools / Administrator (Chair) | Zakariya Olanrewaju Anofi |
-| Principal, Sultan Hanafi Qur'an College | Shaykh Ahmad Ibrahim |
+| Principal, Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
 | Principal, Sultan Hanafi Secular College | Dr. Adegoke Musa Olatunji |
 | Principal, Sultan Hanafi Islamiyyah College | Shaykh Abubakr Solah |
 | Head Teacher, Sultan Hanafi Basic School | Mrs. Kareemat Abdurazaq |

@@ -97,7 +97,7 @@ structure. New real, working additions:
   outweighed the value of showing it, so only the translation and a
   checkable citation (Surah:Ayah / collection) are shown, in both
   language editions. **This set should be reviewed by the school's own
-  Islamic scholars (Shaykh Ahmad Ibrahim, Shaykh Abubakr Solah) before
+  Islamic scholars (Imam Ahmad Sulaimiy, Shaykh Abubakr Solah) before
   being treated as final** — flagged, not blocking, since every item
   chosen is deliberately uncontroversial and independently verifiable.
 - **Download My Data** — real self-service JSON export

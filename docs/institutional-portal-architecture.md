@@ -182,7 +182,7 @@ in the HR directory — adopting a title is not the same action as filing an
 appointment record, and the appointment record still needs an explicit
 admin action (`create-appointment`) naming the actual office-holder before
 either seat shows as filled. Shaykh Abubakr Solah (Ra'ees) and Shaykh
-Ahmad Ibrahim (Mudeer) are already named on the public governance and
+Ahmad Sulaimiy (Mudeer) are already named on the public governance and
 faculty pages; the runbook below should be run for both once their staff
 records exist, to bring the HR-backed office portal in line with what the
 public pages already say.

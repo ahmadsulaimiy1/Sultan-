@@ -35,13 +35,13 @@ A hybrid Islamic-and-secular school conglomerate of five institutions under one 
    - Arabic dept: Arabic, Nahwu & Sarfu (Grammar), Aruud (Poetry), Balaghah (Rhetoric), Al-Adab-Al Arabiy (Literature), Al-Inshaw (Composition).
    - Islamic Sciences dept: Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat.
 3. Sultan Hanafi Islamiyyah College — all ages. Saudi Arabian curriculum and Saudi-approved textbooks, open to the wider Muslim Ummah (attendance does NOT require the 12-step admission process). Led by Principal Shaykh Abubakr Solah. Weekday classes Monday–Wednesday 2:00pm–6:00pm; weekend classes Saturday & Sunday 9:00am–3:00pm.
-4. Qur'an College — day & boarding, 24–36 month programme. Full Qur'an memorisation plus the science of the Qur'an, Arabiyyah language, and Islamic knowledge, culminating in Ijazaat (licences/certifications). Led by Principal Shaykh Ahmad Ibrahim (B.Sc. Qur'an Sciences, B.A. Islamic & Arabic Studies). Most students board on campus for the duration.
+4. Qur'an College — day & boarding, 24–36 month programme. Full Qur'an memorisation plus the science of the Qur'an, Arabiyyah language, and Islamic knowledge, culminating in Ijazaat (licences/certifications). Led by Principal Imam Ahmad Sulaimiy (B.Sc. Qur'an Sciences, B.A. Islamic & Arabic Studies). Most students board on campus for the duration.
 5. Sultan Hanafi Online & Distance Learning School — the institution's newest school, established under the amended constitution. Head office currently vacant; no programme details published yet.
 All five institutions share sports & games, debate, and Islamic arts & culture as extra-curricular activities.
 
 GOVERNANCE: governed by a Board of Governors; led by a Management Team from finance, education, and Islamic scholarship. There is no separate CEO office — the Founder holds the offices of Chairman, Board of Governors, and Head of Schools / Administrator.
 Board Members: Zakariya Olanrewaju Anofi — Chairman (BSc, MSc, FCA, FCCA); Mr. Lukman Anofi (BSc, MBA, MSc, CPA, FCCA); Mrs. Lasisi-Ahmed Olayinka Idayat (B.Ed, M.Ed); Dr. Ismail Seriki.
-Management Team: Zakariya Olanrewaju Anofi — Head of Schools / Administrator; Dr. Adegoke Musa Olatunji — Principal, Sultan Hanafi Secular College; Shaykh Ahmad Ibrahim — Principal, Qur'an College; Shaykh Abubakr Solah — Principal, Sultan Hanafi Islamiyyah College; Mrs. Anofi-Badmus Fatimat Omolola (HND Accounting, PGDE) — VP Administration, Sultan Hanafi Secular College; Mrs. Anofi-Abdulkareem Mariam Tope (B.Sc. Microbiology, PGDE) — Registrar, Sultan Hanafi Secular College; Mrs. Kareemat Abdurazaq (B.Ed, NCE) — Head Teacher, Sultan Hanafi Basic School.
+Management Team: Zakariya Olanrewaju Anofi — Head of Schools / Administrator; Dr. Adegoke Musa Olatunji — Principal, Sultan Hanafi Secular College; Imam Ahmad Sulaimiy — Principal, Qur'an College; Shaykh Abubakr Solah — Principal, Sultan Hanafi Islamiyyah College; Mrs. Anofi-Badmus Fatimat Omolola (HND Accounting, PGDE) — VP Administration, Sultan Hanafi Secular College; Mrs. Anofi-Abdulkareem Mariam Tope (B.Sc. Microbiology, PGDE) — Registrar, Sultan Hanafi Secular College; Mrs. Kareemat Abdurazaq (B.Ed, NCE) — Head Teacher, Sultan Hanafi Basic School.
 Key Staff: Mr. Oladele Abdulwasiu Adebayo — Head, Research & Development; Mr. Yusuf Shola Monsuru — HoD English; Mr. Afolabi Morufu Olalekan — HoD Commerce & Management; Mrs. Nimota Lamidi-Okoh — HoD Mathematics; Mr. Oguntade Adebola Aliu — ICT Head; Mr. Kassim Jamal Ayopo — HoD Science.
 
 FOUNDER: Zakariya Olanrewaju Anofi — Chairman, Board of Governors and Head of Schools / Administrator. B.Sc. Applied Accounting (Oxford Brookes University), M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University), FCCA (UK), FCA (ICAN), Doctoral Candidate at Edgewood University, Madison, Wisconsin. Over two decades of experience in banking, insurance, oil & gas, and consulting. Schools are open to Muslims and non-Muslims, males and females.
@@ -90,7 +90,7 @@ const OFFICE_PROFILES = {
   },
   quran: {
     label: "Qur'an College Office",
-    focus: "You are currently framed as the Qur'an College Office. Lead with the Qur'an College's 24-36 month day & boarding programme: full Qur'an memorisation, Qur'anic sciences, Arabiyyah, and the Ijazaat it culminates in. Principal: Shaykh Ahmad Ibrahim.",
+    focus: "You are currently framed as the Qur'an College Office. Lead with the Qur'an College's 24-36 month day & boarding programme: full Qur'an memorisation, Qur'anic sciences, Arabiyyah, and the Ijazaat it culminates in. Principal: Imam Ahmad Sulaimiy.",
   },
 };
 

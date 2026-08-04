@@ -82,7 +82,7 @@ flowchart TD
 
   subgraph C["C. Management Team"]
     C_HoS["Head of Schools / Administrator<br/>Zakariya Olanrewaju Anofi"]
-    C_P1["Principal, Qur'an College<br/>Shaykh Ahmad Ibrahim"]
+    C_P1["Principal, Qur'an College<br/>Imam Ahmad Sulaimiy"]
     C_P2["Principal, Secular College<br/>Dr. Adegoke Musa Olatunji"]
     C_P3["Principal, Islamiyyah College<br/>Shaykh Abubakr Solah"]
     C_HT["Head Teacher, Basic School<br/>Mrs. Kareemat Abdurazaq"]
@@ -179,7 +179,7 @@ flowchart TD
   HoS["C. Head of Schools / Administrator<br/>Zakariya Olanrewaju Anofi<br/>M.Sc. Financial Management, B.Sc. Applied Accounting, FCA, FCCA"]
 
   subgraph Institutions["The Five Institutions"]
-    P1["Principal<br/>Sultan Hanafi Qur'an College<br/>Shaykh Ahmad Ibrahim"]
+    P1["Principal<br/>Sultan Hanafi Qur'an College<br/>Imam Ahmad Sulaimiy"]
     P2["Principal<br/>Sultan Hanafi Secular College<br/>Dr. Adegoke Musa Olatunji"]
     P3["Principal<br/>Sultan Hanafi Islamiyyah College<br/>Shaykh Abubakr Solah"]
     P4["Head Teacher<br/>Sultan Hanafi Basic School<br/>Mrs. Kareemat Abdurazaq"]
