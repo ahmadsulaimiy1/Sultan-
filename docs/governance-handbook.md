@@ -105,9 +105,9 @@ population status.
 | Tier | Body | Composition (constitutional) | Current status |
 |---|---|---|---|
 | A | Board of Governors | Chairman; Secretary; 3 Other Members (5 core seats; up to 11 total with co-opted Governors) | Partially populated — Chairman and 3 Other Members filled; Secretary seat vacant |
-| B | Board-Level Committees | Educational Technical Committee; Finance Committee; one further committee (not yet named) | Partially populated — two named and operating; one seat reserved, not yet named |
-| C | Management Team | Head of Schools / Administrator; Principal, Qur'an College; Principal, Secular College; Principal, Islamiyyah College; Head Teacher, Basic School; Head, Online & Distance Learning School | Partially populated — five of six seats filled; Online & Distance Learning headship vacant |
-| D | Management-Level Committees | Da'wah, Academic, Sports Committees, and others Management establishes | Structurally established; membership/chairs largely ex officio per office held |
+| B | Board-Level Committees | Educational Technical Committee; Finance Committee; Governance & Nominations Committee; Disciplinary & Ethics Committee; Safeguarding Committee; one further committee (not yet named) | Partially populated — five named and operating; one seat reserved, not yet named (see §7 for the complete Charter Schedule) |
+| C | Management Team | Head of Schools / Administrator; Principal, Sultan Hanafi Qur'an College; Principal, Sultan Hanafi Secular College; Principal, Sultan Hanafi Islamiyyah College; Head Teacher, Sultan Hanafi Basic School; Head, Sultan Hanafi Online & Distance Learning School | Partially populated — five of six seats filled; Online & Distance Learning headship vacant |
+| D | Management-Level Committees | Da'wah, Academic, Sports, Communications & Public Affairs, Student Life, Admissions & Enrolment, and Health, Safety & Facilities Committees | Structurally established; membership/chairs largely ex officio per office held |
 | E | Heads of Departments | Functional and academic department heads reporting to the Management Team | Populated — 8 named HODs on the current roster |
 | F | Educators | Teaching staff reporting through the academic structure | Populated (institution-wide teaching staff); no individual roster held in this Handbook |
 | G | Student Representatives | The recognised student representative body | Structural only — no named office holders recorded in this Handbook |
@@ -325,13 +325,17 @@ Certificate & Transcript Office, Examinations Office, Admissions Office,
 Facilities & Estates, and the Executive Support Offices — Strategic
 Planning, Quality Assurance, Legal & Compliance, Public Affairs).
 
+Mrs. Anofi-Badmus Fatimat Omolola (Vice Principal (Administration), Sultan
+Hanafi Secular College) holds a permanent Chapter V constitutional
+executive office (Article 60/62) and sits outside this tier, not within
+it — she does not appear in the roster below.
+
 **Real current roster** (per `pages/about-governance.html`):
 
 | Name | Role | Credentials |
 |---|---|---|
-| Mrs. Anofi-Badmus Fatimat Omolola | VP Administration, Secular College | HND Accounting, PGDE |
 | Mrs. Anofi-Abdulkareem Mariam Tope | Registrar, Secular College | B.Sc. Microbiology, PGDE |
-| Mr. Oladele Abdulwasiu Adebayo | Head, Research & Development | B.A/M.A History, PGDE, TRCN |
+| Mr. Oladele Abdulwasiu Adebayo | Head, Research & Development *(office pending Board recognition)* | B.A/M.A History, PGDE, TRCN |
 | Mr. Yusuf Shola Monsuru | HoD English | HND, Diploma Phonology & Public Speaking, TEFL |
 | Mr. Afolabi Morufu Olalekan | HoD Commerce & Management | B.Sc.(Ed) Accounting Edu., NCE |
 | Mrs. Nimota Lamidi-Okoh | HoD Mathematics | PGDE, B.Sc., TRCN |
