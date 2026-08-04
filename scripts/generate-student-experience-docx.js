@@ -166,6 +166,24 @@ function statQuad(cells, opts = {}) {
   });
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .se-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: TERRACOTTA }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'D9CDB8' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: BODY_FONT, size: 14, bold: true, color: TERRACOTTA, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 20, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -199,7 +217,29 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. EDITOR'S NOTE ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Student Experience Edition'],
+    ['Document ID', 'SHRS-PUB-STUEXP-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. EDITOR'S NOTE ============
 {
   const B = [];
   B.push(new Paragraph({ spacing: { before: 2200 } }));
@@ -209,17 +249,17 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('Inside This Story'));
   B.push(lede('A guide to the chapters ahead — each one a real part of the Sultan Hanafi student experience.', { size: 22 }));
   const toc = [
-    ['A Letter to Parents', '04'], ['A Day in the Life', '05'], ['The Weekly Rhythm', '06'],
-    ['The Hifz Journey', '07'], ['The Hifz Journey, Stage by Stage', '08'], ['Leadership & Character', '09'],
-    ['Clubs, Games & Competitions', '10'], ['Academic Success Stories', '11'], ['Voices of Our Parents', '12'],
-    ['Boarding Life', '13'], ['Milestones We Remember', '14'], ['One Family, Five Schools / Join Their Story', '15'],
+    ['A Letter to Parents', '05'], ['A Day in the Life', '06'], ['The Weekly Rhythm', '07'],
+    ['The Hifz Journey', '08'], ['The Hifz Journey, Stage by Stage', '09'], ['Leadership & Character', '10'],
+    ['Clubs, Games & Competitions', '11'], ['Academic Success Stories', '12'], ['Voices of Our Parents', '13'],
+    ['Boarding Life', '14'], ['Milestones We Remember', '15'], ['One Family, Five Schools / Join Their Story', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ spacing: { after: 100 },
     children: [new TextRun({ text: t, font: BODY_FONT, size: 20, color: INK }), new TextRun({ text: '\t' + p, font: HEAD_FONT, size: 20, color: TERRACOTTA, bold: true })] })));
@@ -228,7 +268,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. A LETTER TO PARENTS ============
+// ============ 05. A LETTER TO PARENTS ============
 {
   const B = [];
   B.push(eyebrow('A Letter to Parents'));
@@ -240,7 +280,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. A DAY IN THE LIFE ============
+// ============ 06. A DAY IN THE LIFE ============
 {
   const B = [];
   B.push(eyebrow('A Day in the Life'));
@@ -254,7 +294,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. THE WEEKLY RHYTHM ============
+// ============ 07. THE WEEKLY RHYTHM ============
 {
   const B = [];
   B.push(eyebrow('The Weekly Rhythm'));
@@ -267,7 +307,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. THE HIFZ JOURNEY ============
+// ============ 08. THE HIFZ JOURNEY ============
 {
   const B = [];
   B.push(eyebrow('The Hifz Journey'));
@@ -279,7 +319,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 08. FIVE-STAGE HIFZ JOURNEY ============
+// ============ 09. FIVE-STAGE HIFZ JOURNEY ============
 {
   const B = [];
   B.push(eyebrow('The Hifz Journey, Stage by Stage'));
@@ -292,7 +332,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. LEADERSHIP & CHARACTER ============
+// ============ 10. LEADERSHIP & CHARACTER ============
 {
   const B = [];
   B.push(eyebrow('Leadership & Character'));
@@ -305,7 +345,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. CLUBS, GAMES & COMPETITIONS ============
+// ============ 11. CLUBS, GAMES & COMPETITIONS ============
 {
   const B = [];
   B.push(eyebrow('Clubs, Games & Competitions'));
@@ -323,7 +363,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 11. ACADEMIC SUCCESS STORIES ============
+// ============ 12. ACADEMIC SUCCESS STORIES ============
 {
   const B = [];
   B.push(eyebrow('Academic Success Stories'));
@@ -334,7 +374,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. VOICES OF OUR PARENTS ============
+// ============ 13. VOICES OF OUR PARENTS ============
 {
   const B = [];
   B.push(eyebrow('Voices of Our Parents'));
@@ -345,7 +385,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. BOARDING LIFE ============
+// ============ 14. BOARDING LIFE ============
 {
   const B = [];
   B.push(eyebrow('Boarding Life'));
@@ -356,7 +396,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 14. MILESTONES WE REMEMBER ============
+// ============ 15. MILESTONES WE REMEMBER ============
 {
   const B = [];
   B.push(eyebrow('Milestones We Remember'));
@@ -367,7 +407,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. ONE FAMILY, FIVE SCHOOLS / JOIN THEIR STORY ============
+// ============ 16. ONE FAMILY, FIVE SCHOOLS / JOIN THEIR STORY ============
 {
   const B = [];
   B.push(eyebrow('One Family, Five Schools'));
@@ -392,7 +432,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [

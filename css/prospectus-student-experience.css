@@ -123,6 +123,25 @@ h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; 
 .se-spread.dark .se-stats .se-stat-num{color:var(--se-amber);}
 .se-spread.dark .se-stats .se-stat-label{color:rgba(250,243,232,0.6);}
 
+/* ---- Institutional Publication Information (imprint) page — a
+   key/value ownership table matching the Governance Charter's own
+   .imprint-table (constitution-print.css) in structure, restyled to
+   this edition's own tokens (Source Sans Pro throughout) so every
+   flagship publication's ownership page reads as one family while
+   keeping this edition's own visual voice. ---- */
+.se-imprint-table{width:100%; border-collapse:collapse; margin-top:8px;}
+.se-imprint-table th{
+  font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--se-terracotta); text-align:left; vertical-align:top; padding:9px 14px 9px 0; width:2.1in;
+  border-bottom:1px solid var(--se-line); white-space:nowrap;
+}
+.se-imprint-table td{
+  font-family:'Source Sans Pro',sans-serif; font-size:9.5pt; line-height:1.6; color:var(--se-ink);
+  text-align:left; padding:9px 0; border-bottom:1px solid var(--se-line);
+}
+.se-spread.dark .se-imprint-table th{color:var(--se-amber);}
+.se-spread.dark .se-imprint-table td{color:rgba(250,243,232,0.85); border-bottom-color:rgba(250,243,232,0.18);}
+
 @media print{
   .se-toolbar{display:none;}
   body.pros-body{background:#fff;}
