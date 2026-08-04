@@ -289,6 +289,24 @@ sections.push({
 
 const B = [];
 
+// ============ INSTITUTIONAL PUBLICATION INFORMATION ============
+B.push(eyebrow("Publisher's Imprint"), h1('Institutional Publication Information'));
+B.push(dataPanel([
+  ['Institution', 'Sultan Hanafi Royal Schools'],
+  ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+  ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+  ['Website', 'shroyalschools.com'],
+  ['Email', 'info@shroyalschools.com'],
+  ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+  ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+  ['Document Title', 'Sultan Hanafi Royal Schools — The Flagship Institutional Publication'],
+  ['Document ID', 'SHRS-PUB-DEFIN-2026-001'],
+  ['Edition', 'Brand Book & Educational Review 2026'],
+  ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+  ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+]));
+B.push(pageBreak());
+
 // ============ DEDICATION ============
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1600, after: 200 }, children: [new TextRun({ text: 'A DEDICATION', font: HEAD_FONT, size: 16, color: GOLD, bold: true, characterSpacing: 40 })] }));
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 }, children: [new TextRun({ text: 'This institution bears the name of', font: 'Constantia', italics: true, size: 26, color: '2A2016' })] }));
@@ -488,7 +506,7 @@ B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 100)] }));
 rosterRow('Zakariya Olanrewaju Anofi', 'Founder & Head of Schools/Administrator', 'MSc Edinburgh Business School, Heriot-Watt · BSc Applied Accounting, Oxford Brookes · Fellow, ACCA UK · Fellow, ICAN').forEach(p => B.push(p));
 rosterRow('Dr Adegoke Musa Olatunji', 'Principal, Sultan Hanafi Secular College', 'PhD · MEd · BSc.Edu · NCE · MTRCN (Teachers Registration Council of Nigeria)').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)] }));
-rosterRow('Imam Ahmad Sulaimiy', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Islamic & Arabic Studies').forEach(p => B.push(p));
+rosterRow('Shaykh Ahmad Ibrahim', "Principal, Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Islamic & Arabic Studies').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
 rosterRow('Shaykh Abubakr Solah', 'Principal, Islamiyyah College', 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
 rosterRow('Mrs. Kareemat Abdurazaq', 'Head Teacher, Basic School', 'BEd · NCE').forEach(p => B.push(p));
@@ -509,7 +527,7 @@ B.push(diagramRow(['Level C — Management Team (Executive Authority)\nHead of S
 B.push(caption('Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices.'));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption("Level C, continued — the five schools' Heads, each reporting to the Head of Schools/Administrator"));
-B.push(diagramRow(['Head Teacher, Basic School\nMrs. Kareemat Abdurazaq', 'Principal, Secular College\nAdegoke Musa Olatunji', 'Principal, Islamiyyah College\nShaykh Abubakr Solah', "Principal, Qur'an College\nImam Ahmad Sulaimiy", 'Head, Online & Distance Learning\nVacant (newly established)'], PARCHMENT, NAVY));
+B.push(diagramRow(['Head Teacher, Basic School\nMrs. Kareemat Abdurazaq', 'Principal, Secular College\nAdegoke Musa Olatunji', 'Principal, Islamiyyah College\nShaykh Abubakr Solah', "Principal, Qur'an College\nShaykh Ahmad Ibrahim", 'Head, Online & Distance Learning\nVacant (newly established)'], PARCHMENT, NAVY));
 B.push(caption('The Management Team comprises the Head of Schools/Administrator and the five schools\' Heads. VP Administration (Secular College) and other departmental heads sit at Level E, Heads of Departments.'));
 B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Lagos State Ministry of Education Registered 2026"));
 B.push(supportRow([
