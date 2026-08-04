@@ -124,6 +124,25 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 .lx-frame{position:absolute; inset:9mm; z-index:2; pointer-events:none; border:1pt solid var(--lx-gold);}
 .lx-frame::before{content:''; position:absolute; inset:3mm; border:0.5pt solid rgba(198,161,91,0.4);}
 
+/* ---- Institutional Publication Information (imprint) page — a
+   key/value ownership table matching the Governance Charter's own
+   .imprint-table (constitution-print.css) in structure, restyled to
+   this edition's own tokens (Jost labels, Cormorant Garamond values)
+   so every flagship publication's ownership page reads as one
+   family while keeping this edition's own visual voice. ---- */
+.lx-imprint-table{width:100%; border-collapse:collapse; margin-top:8px;}
+.lx-imprint-table th{
+  font-family:'Jost',sans-serif; font-size:7.5pt; font-weight:500; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--lx-bronze); text-align:left; vertical-align:top; padding:9px 14px 9px 0; width:2.1in;
+  border-bottom:1px solid var(--lx-line); white-space:nowrap;
+}
+.lx-imprint-table td{
+  font-family:'Cormorant Garamond',serif; font-size:11.5pt; line-height:1.55; color:var(--lx-ink);
+  text-align:left; padding:9px 0; border-bottom:1px solid var(--lx-line);
+}
+.lx-spread.dark .lx-imprint-table th{color:var(--lx-gold-bright);}
+.lx-spread.dark .lx-imprint-table td{color:rgba(247,238,223,0.85); border-bottom-color:rgba(247,238,223,0.18);}
+
 @media print{
   .lx-toolbar{display:none;}
   body.pros-body{background:#fff;}

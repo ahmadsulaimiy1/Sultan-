@@ -148,6 +148,24 @@ function feature(title, desc, opts = {}) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .lx-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4D5B0' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: LABEL_FONT, size: 14, color: BRONZE, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 21, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -182,7 +200,29 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. OPENING STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Luxury Aspirational Edition'],
+    ['Document ID', 'SHRS-PUB-ASPIR-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. OPENING STATEMENT ============
 {
   const B = [];
   B.push(eyebrow('To Every Parent Who Believes', { dark: true }));
@@ -193,16 +233,16 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1400, bottom: 1400, left: 1400, right: 1400 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('The Journey, Chapter by Chapter'));
   const toc = [
-    ['A Vision for Your Child', '04'], ['The Making of a Leader', '05'], ['Character by Design', '06'],
-    ["The Scholar's Journey", '07'], ["The Scholar's Journey, Continued", '08'], ['Portraits of Distinction', '09'],
-    ["A Parent's Aspiration", '10'], ['The Five Pathways', '11'], ['A Campus Built for Becoming', '12'],
-    ['Where Character Meets Craft', '13'], ['Beyond Graduation', '14'], ['Begin Their Story', '15'],
+    ['A Vision for Your Child', '05'], ['The Making of a Leader', '06'], ['Character by Design', '07'],
+    ["The Scholar's Journey", '08'], ["The Scholar's Journey, Continued", '09'], ['Portraits of Distinction', '10'],
+    ["A Parent's Aspiration", '11'], ['The Five Pathways', '12'], ['A Campus Built for Becoming', '13'],
+    ['Where Character Meets Craft', '14'], ['Beyond Graduation', '15'], ['Begin Their Story', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
     children: [new TextRun({ text: t + '   ', font: BODY_FONT, size: 21, color: INK }), new TextRun({ text: p, font: HEAD_FONT, size: 21, color: BRONZE, bold: true })] })));
@@ -211,7 +251,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. A VISION FOR YOUR CHILD ============
+// ============ 05. A VISION FOR YOUR CHILD ============
 {
   const B = [];
   B.push(eyebrow('A Vision for Your Child'));
@@ -222,7 +262,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. THE MAKING OF A LEADER ============
+// ============ 06. THE MAKING OF A LEADER ============
 {
   const B = [];
   B.push(eyebrow('The Making of a Leader'));
@@ -233,7 +273,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. CHARACTER BY DESIGN ============
+// ============ 07. CHARACTER BY DESIGN ============
 {
   const B = [];
   B.push(eyebrow('Character by Design'));
@@ -247,7 +287,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. THE SCHOLAR'S JOURNEY ============
+// ============ 08. THE SCHOLAR'S JOURNEY ============
 {
   const B = [];
   B.push(eyebrow("The Scholar's Journey", { dark: true }));
@@ -264,7 +304,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 08. THE SCHOLAR'S JOURNEY, CONTINUED ============
+// ============ 09. THE SCHOLAR'S JOURNEY, CONTINUED ============
 {
   const B = [];
   B.push(eyebrow("The Scholar's Journey, Continued"));
@@ -275,7 +315,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. PORTRAITS OF DISTINCTION ============
+// ============ 10. PORTRAITS OF DISTINCTION ============
 {
   const B = [];
   B.push(eyebrow('Portraits of Distinction'));
@@ -294,7 +334,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. A PARENT'S ASPIRATION ============
+// ============ 11. A PARENT'S ASPIRATION ============
 {
   const B = [];
   B.push(eyebrow("A Parent's Aspiration", { dark: true }));
@@ -306,7 +346,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 11. THE FIVE PATHWAYS ============
+// ============ 12. THE FIVE PATHWAYS ============
 {
   const B = [];
   B.push(eyebrow('The Five Pathways'));
@@ -326,7 +366,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. A CAMPUS BUILT FOR BECOMING ============
+// ============ 13. A CAMPUS BUILT FOR BECOMING ============
 {
   const B = [];
   B.push(eyebrow('Our Campus'));
@@ -337,7 +377,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. WHERE CHARACTER MEETS CRAFT ============
+// ============ 14. WHERE CHARACTER MEETS CRAFT ============
 {
   const B = [];
   B.push(eyebrow('Where Character Meets Craft', { dark: true }));
@@ -355,7 +395,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 14. BEYOND GRADUATION ============
+// ============ 15. BEYOND GRADUATION ============
 {
   const B = [];
   B.push(eyebrow('Beyond Graduation'));
@@ -373,7 +413,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. BEGIN THEIR STORY ============
+// ============ 16. BEGIN THEIR STORY ============
 {
   const B = [];
   B.push(eyebrow('Begin Their Story', { dark: true }));
@@ -393,7 +433,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
