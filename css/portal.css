@@ -263,20 +263,10 @@ body.portal-body > *{position:relative;z-index:1;}
   color:var(--gold-bright);border:1px solid var(--navy);border-radius:var(--btn-radius);cursor:pointer;
   box-shadow:0 14px 30px -14px rgba(34,23,9,0.55);
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
-  animation:portalSubmitBreathe 5s ease-in-out infinite;
 }
-/* Soft glow breathing — the primary action on the page, so it earns
-   the one ambient-glow treatment this form uses. Slow (5s) and
-   low-amplitude; the hover/active states below still take over
-   normally on interaction. */
-@keyframes portalSubmitBreathe{
-  0%,100%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 0 0 rgba(233,206,138,0);}
-  50%{box-shadow:0 14px 30px -14px rgba(34,23,9,0.55),0 0 18px 1px rgba(233,206,138,0.28);}
-}
-.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);animation-play-state:paused;}
+.portal-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(34,23,9,0.65);}
 .portal-submit:active{transform:translateY(0);}
-.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;animation:none;}
-@media (prefers-reduced-motion:reduce){.portal-submit{animation:none;}}
+.portal-submit:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
 .portal-error{
   background:rgba(124,31,46,0.08);border:1px solid var(--crimson);border-radius:6px;color:var(--crimson);
   font-size:0.82rem;padding:10px 13px;margin-bottom:16px;display:none;
@@ -1690,10 +1680,8 @@ body.portal-body[data-atmosphere="certificates"]::before{
   content:"";position:absolute;inset:-10px;z-index:-1;pointer-events:none;
   border-radius:calc(var(--btn-radius) + 6px);
   background:radial-gradient(ellipse at center, color-mix(in srgb, var(--card-accent-bright) 38%, transparent) 0%, transparent 72%);
-  opacity:0.45;animation:id-card-verify-glow 4.5s ease-in-out infinite;
+  opacity:0.35;
 }
-@keyframes id-card-verify-glow{0%,100%{opacity:0.32;transform:scale(0.97);}50%{opacity:0.55;transform:scale(1.02);}}
-@media (prefers-reduced-motion:reduce){.id-card-3d::before{animation:none;opacity:0.4;}}
 .id-card-inner{
   position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transform:rotateY(0deg);will-change:transform;
