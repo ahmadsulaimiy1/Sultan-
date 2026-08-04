@@ -158,6 +158,24 @@ sections.push({
 const body_children = [];
 const B = body_children;
 
+// ============ INSTITUTIONAL PUBLICATION INFORMATION ============
+B.push(eyebrow("Publisher's Imprint"), h1('Institutional Publication Information'));
+B.push(dataPanel([
+  ['Institution', 'Sultan Hanafi Royal Schools'],
+  ['Publisher', 'Office of the Founder & Head of Schools / Administrator'],
+  ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+  ['Website', 'shroyalschools.com'],
+  ['Email', 'info@shroyalschools.com'],
+  ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+  ['Copyright', '© Sultan Hanafi Royal Schools'],
+  ['Document Title', 'Sultan Hanafi Royal Schools — Flagship Prospectus'],
+  ['Document ID', 'SHRS-PUB-PROS-2026-001'],
+  ['Edition', 'Production Draft v1.0'],
+  ['Related Instrument', 'The Governance Charter (Policy GV-01, Edition VII)'],
+  ['Institution Founded', 'July 2016 · Ikorodu, Lagos State'],
+]));
+B.push(pageBreak());
+
 // ============ WELCOME ============
 B.push(eyebrow('Welcome'), h1('A Message from Our Founder'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
