@@ -11,3 +11,6 @@ prospectus/exports/
 # docs/shrs-constitution-2026-draft.md and
 # scripts/generate-constitution-docx.js, not these files.
 docs/exports/
+
+# Machine-specific Puppeteer config written by mermaid-rendering scripts
+.puppeteer-config.json

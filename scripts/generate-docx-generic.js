@@ -26,9 +26,9 @@ const sizeOf = (() => {
   try { return require('image-size'); } catch { return null; }
 })();
 
-const [, , SRC_ARG, OUT_NAME, TITLE_ARG] = process.argv;
+const [, , SRC_ARG, OUT_NAME, TITLE_ARG, VERSION_ARG, STATUS_ARG, DOC_ID_ARG] = process.argv;
 if (!SRC_ARG || !OUT_NAME) {
-  console.error('Usage: node scripts/generate-docx-generic.js <source.md> <Output Name> [Title]');
+  console.error('Usage: node scripts/generate-docx-generic.js <source.md> <Output Name> [Title] [Version] [Status] [DocumentID]');
   process.exit(1);
 }
 const ROOT = path.join(__dirname, '..');
@@ -39,6 +39,9 @@ if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 if (!fs.existsSync(DIAGRAM_DIR)) fs.mkdirSync(DIAGRAM_DIR, { recursive: true });
 const OUT = path.join(OUT_DIR, `${OUT_NAME}.docx`);
 const TITLE = TITLE_ARG || OUT_NAME;
+const VERSION = VERSION_ARG || '1.0';
+const STATUS = STATUS_ARG || 'Internal Governance Publication — Board Submission Draft; not yet Board-adopted';
+const DOC_ID = DOC_ID_ARG || `SHRS-PUB-${OUT_NAME.toUpperCase()}-2026`;
 
 const GOLD = 'A9832E';
 const NAVY = '1C2340';
@@ -129,6 +132,55 @@ function makeTable(rows) {
       right: { style: BorderStyle.SINGLE, size: 4, color: 'C9B074' },
       insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E5DAC0' },
       insideVertical: { style: BorderStyle.SINGLE, size: 2, color: 'E5DAC0' },
+    },
+  });
+}
+
+// Restrained colophon-style key/value table for the Institutional Publication
+// Information page — label column in small-caps gold, value column in ordinary
+// body text, hairline bottom rule only (no cell shading, no grid), mirroring
+// the .imprint-table treatment used on the Governance Charter's own imprint page.
+function imprintTable(rows) {
+  const labelWidth = 2600;
+  const valueWidth = 6760;
+  const hairline = { style: BorderStyle.SINGLE, size: 3, color: 'C9B074' };
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  return new Table({
+    width: { size: 9360, type: WidthType.DXA },
+    columnWidths: [labelWidth, valueWidth],
+    rows: rows.map(([label, value]) => new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: labelWidth, type: WidthType.DXA },
+          verticalAlign: VerticalAlign.TOP,
+          margins: { top: 140, bottom: 140, left: 0, right: 200 },
+          borders: { top: noBorder, left: noBorder, right: noBorder, bottom: hairline },
+          children: [new Paragraph({
+            children: [new TextRun({ text: label, bold: true, smallCaps: true, size: 15, color: GOLD, font: 'Cambria' })],
+            spacing: { after: 0 },
+          })],
+        }),
+        new TableCell({
+          width: { size: valueWidth, type: WidthType.DXA },
+          verticalAlign: VerticalAlign.TOP,
+          margins: { top: 140, bottom: 140, left: 0, right: 0 },
+          borders: { top: noBorder, left: noBorder, right: noBorder, bottom: hairline },
+          children: [new Paragraph({
+            children: parseInline(value, { size: 18, color: CHARCOAL }),
+            spacing: { after: 0 },
+            alignment: AlignmentType.LEFT,
+          })],
+        }),
+      ],
+    })),
+    borders: {
+      top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+      bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+      left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+      right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+      insideHorizontal: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+      insideVertical: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
     },
   });
 }
@@ -271,10 +323,40 @@ async function main() {
       italics: true, size: 22, color: CHARCOAL,
     })],
   }));
+  // Institutional Publication Information page — the visually designed
+  // ownership/imprint page every flagship publication carries, matching the
+  // Governance Charter's own imprint page in content and restraint.
   children.push(new Paragraph({
     pageBreakBefore: true,
-    children: [],
+    spacing: { after: 40 },
+    children: [new TextRun({ text: "PUBLISHER'S IMPRINT", bold: true, smallCaps: true, size: 16, color: GOLD, font: 'Cambria' })],
   }));
+  children.push(new Paragraph({
+    spacing: { after: 60 },
+    children: [new TextRun({ text: 'Institutional Publication Information', bold: true, size: 30, color: NAVY, font: 'Cambria' })],
+  }));
+  children.push(new Paragraph({
+    spacing: { after: 260 },
+    border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 1 } },
+    children: [new TextRun({ text: '', size: 2 })],
+    indent: { right: 8500 },
+  }));
+  children.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', "Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator"],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Document Title', TITLE],
+    ['Document ID', DOC_ID],
+    ['Version', VERSION],
+    ['Status', STATUS],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  children.push(new Paragraph({ pageBreakBefore: true, children: [] }));
 
   for (const block of blocks) {
     switch (block.type) {
