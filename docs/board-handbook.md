@@ -106,7 +106,7 @@ Article 39. No Secretary should be named anywhere — this Handbook,
 Board papers, or public material — until the Board actually designates
 one and that is recorded in the Authority Register (Article 16).
 
-### 3.3 Vice Chairman
+### 3.3 Vice Chair
 
 The Board additionally elects a Vice Chairperson under Article 39A.
 Because the Chairman is also the Head of Schools / Administrator (see
@@ -311,9 +311,13 @@ constitutional amendment (save for the one further committee the
 | Safeguarding Committee | Child protection; student welfare; staff safeguarding compliance (Chapter XII of the Charter, in full) | Designated Safeguarding Lead (once appointed) | Per Chapter XII | Per Article 123 | Monthly, and immediately on any disclosure |
 | **One further Board-Level Committee** | **Not yet named — to be fixed by Board resolution under Article 97** | To be fixed | To be fixed | To be fixed | To be fixed |
 
-All six report to the full Board. This Handbook does not create,
-rename, or reassign any of these committees; it reproduces the
-Charter's own Schedule for a Board member's quick reference.
+The five Board-appointed committees report to the full Board; the
+Safeguarding Committee, chaired by the Designated Safeguarding Lead
+rather than a Governor, reports to both the Head of Schools /
+Administrator and the Board (Article 120(d), Article 97 Schedule). This
+Handbook does not create, rename, or reassign any of these committees;
+it reproduces the Charter's own Schedule for a Board member's quick
+reference.
 
 ### 6.3 The one further Board-Level Committee
 
@@ -497,7 +501,8 @@ once at each ordinary Board meeting, on institutional performance,
 risk, and any matter requiring Board approval (Article 55). This
 Handbook does not restate the Management Team's own internal operation
 in fuller detail — that belongs to the Statute of the Management Team
-once drafted, not to a Board-focused document.
+(`docs/statutes/statute-executive-management-team.md`), not to a
+Board-focused document.
 
 ---
 
