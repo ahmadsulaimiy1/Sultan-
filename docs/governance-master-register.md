@@ -57,47 +57,47 @@ document scope, which remains a gap to track going forward.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Constitution & Governance Charter (GV-01) | **DRAFTED v2.0** (Phase C, retrofitted Phase F Tier 3) | 1 | Board of Governors | Board of Governors | Biennial | None — foundational |
+| Constitution & Governance Charter (GV-01) | **DRAFTED v3.0** (Phase C, retrofitted Phase F Tier 3; restated per the 2026-08-04 governance restructuring amendment) | 1 | Board of Governors | Board of Governors | Biennial | None — foundational |
 | Board Charter (composition, terms, meeting cadence) | MISSING | 2 | Board of Governors | Board of Governors | Biennial | Governance Charter |
 | Committee Charters | PARTIAL | 2 | Board of Governors | Board of Governors | Biennial | Governance Charter |
 | Delegation of Authority Policy | MISSING | 2 | Head of Schools / Administrator | Board of Governors | Biennial | Governance Charter |
 | Conflict of Interest Policy | MISSING | 2 | Board of Governors | Board of Governors | Annual | None |
 | Whistleblowing Policy | MISSING | 3 | Risk & Compliance (to be formed) | Head of Schools / Administrator | Annual | Complaint Policy (exists) |
-| Risk Management Framework | MISSING | 3 | COO-equivalent / Head of Schools / Administrator | Head of Schools / Administrator | Annual | None |
+| Risk Management Framework | MISSING | 3 | Head of Schools / Administrator | Head of Schools / Administrator | Annual | None |
 
 ## 2. Academic Affairs
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
 | Academic Regulations | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see AC-02) | 1 | Registrar, Secular College | Board of Governors | Annual | Assessment Policy (exists) |
-| Assessment Policy | **EXISTS** (Policy I) | 1 | VP Administration | Board of Governors | Annual | — |
+| Assessment Policy | **EXISTS** (Policy I) | 1 | Vice Principal (Administration) | Board of Governors | Annual | — |
 | Examination Policy | MISSING | 2 | Registrar | Head of Schools / Administrator | Annual | Academic Regulations (drafted) |
 | Academic Integrity Policy | MISSING | 1 | Principal, Secular College | Board of Governors | Annual | Academic Regulations (drafted) |
 | Certification Policy | MISSING | 2 | Registrar | Head of Schools / Administrator | Biennial | Academic Regulations (drafted) |
 | Promotion Policy | PARTIAL — structure set in Academic Regulations §7.1, numeric threshold still unset | 1 | Principal, Secular College | Board of Governors | Annual | Academic Regulations (drafted) |
 | Graduation Policy | PARTIAL — structure set in Academic Regulations §7.4 | 2 | Registrar | Head of Schools / Administrator | Annual | Promotion Policy |
-| Curriculum Framework | PARTIAL | 2 | Head, Research & Development | Head of Schools / Administrator | Biennial | None |
+| Curriculum Framework | PARTIAL | 2 | Head, Research & Development *(office pending Board recognition)* | Head of Schools / Administrator | Biennial | None |
 
 ## 3. Student Affairs
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Student Handbook | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see SD-03) | 1 | VP Administration | Board of Governors | Annual | Code of Conduct (drafted), Academic Regulations (drafted) |
-| Student Code of Conduct | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see SD-02) | 1 | VP Administration | Board of Governors | Annual | Anti-Bullying Policy (exists) |
+| Student Handbook | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see SD-03) | 1 | Vice Principal (Administration) | Board of Governors | Annual | Code of Conduct (drafted), Academic Regulations (drafted) |
+| Student Code of Conduct | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see SD-02) | 1 | Vice Principal (Administration) | Board of Governors | Annual | Anti-Bullying Policy (exists) |
 | Attendance Policy | MISSING | 2 | Registrar | Head of Schools / Administrator | Annual | Parent Portal (exists) |
-| Welfare Policy | MISSING | 2 | Guidance Counsellor / VP Administration | Head of Schools / Administrator | Annual | Safeguarding Policy (drafted) |
-| Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | VP Administration | Board of Governors | Annual | — |
-| Behaviour Policy | PARTIAL | 2 | VP Administration | Head of Schools / Administrator | Annual | Code of Conduct (drafted) |
+| Welfare Policy | MISSING | 2 | Guidance Counsellor / Vice Principal (Administration) | Head of Schools / Administrator | Annual | Safeguarding Policy (drafted) |
+| Anti-Bullying & Disciplinary Policy | **EXISTS** (Policy II) | 1 | Vice Principal (Administration) | Board of Governors | Annual | — |
+| Behaviour Policy | PARTIAL | 2 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Code of Conduct (drafted) |
 | Boarding Regulations | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see SD-04) | 1 | Principal, Qur'an College | Board of Governors | Annual | Safeguarding Policy (drafted), Medical Policy |
 
 ## 4. Parent Affairs
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Parent Handbook | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see PA-02) | 1 | VP Administration | Board of Governors | Annual | Fees Policy (blocked), Academic Regulations (drafted), Complaint Policy (exists) |
-| Parent Code of Conduct | MISSING | 2 | VP Administration | Head of Schools / Administrator | Annual | Communication Policy |
-| Communication Policy | MISSING | 3 | VP Administration | Head of Schools / Administrator | Annual | Parent Portal (exists) |
-| Complaint Policy | **EXISTS** (Policy IX) | 1 | Principal | Board of Governors | Annual | — |
+| Parent Handbook | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see PA-02) | 1 | Vice Principal (Administration) | Board of Governors | Annual | Fees Policy (blocked), Academic Regulations (drafted), Complaint Policy (exists) |
+| Parent Code of Conduct | MISSING | 2 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Communication Policy |
+| Communication Policy | MISSING | 3 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Parent Portal (exists) |
+| Complaint Policy | **EXISTS** (Policy IX) | 1 | Head of Schools / Administrator | Board of Governors | Annual | — |
 | **Admissions Policy (PA-05)** *(new row — drafted since Phase B but never tracked on this register until the Academic Regulations Tier 1 retrofit surfaced the gap)* | **DRAFTED v2.1** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit; image-consent cross-reference added Phase G) | 1 | Head of Schools / Administrator | Board of Governors | Annual | Data Protection & Privacy Policy (drafted), Academic Regulations (drafted) |
 
 ## 5. Safeguarding
@@ -107,21 +107,21 @@ document scope, which remains a gap to track going forward.
 | Child Protection Policy | **DRAFTED v2.0** (Phase A, combined with Safeguarding Policy below; retrofitted to the full 13-section architecture and substantially deepened in the Phase F Tier 1 retrofit — see SW-01) | **1 — highest-priority document in the whole register** | Designated Safeguarding Lead (role fully defined, Phase D — appointment still pending) | Board of Governors | Annual | None |
 | Safeguarding Policy | **DRAFTED — combined into the Child Protection & Safeguarding Policy** (the Board's own call, per this register's original note that combining was a live option) | 1 | Designated Safeguarding Lead | Board of Governors | Annual | Child Protection Policy |
 | **Designated Safeguarding Lead Framework (SW-02)** *(resolves the Scalability Stress Test's per-campus gap)* | **DRAFTED v2.0** (Phase D, retrofitted Phase F Tier 3) | 1 | Board of Governors (appointment) / Head of Schools / Administrator (document maintenance) | Board of Governors | Annual | Child Protection Policy (drafted) |
-| Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | VP Administration | Board of Governors | Annual | Safeguarding Policy (drafted) |
-| Visitor Management Policy | **RESOLVED — the redeveloped Visitors Policy (SW-08, Phase E) now covers the safeguarding-vetting scope this row named; no separate document needed** | 2 | Head of Security / VP Administration | Head of Schools / Administrator | Annual | Safeguarding Policy (drafted) |
-| Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7.10 and the AI Usage Policy (IT-05), not yet a standalone document | 1 | CTO-equivalent (ICT Head) / Designated Safeguarding Lead | Board of Governors | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
+| Staff Conduct Policy | **DRAFTED** (Phase D — closes the Staff Handbook's dependency gap) | 1 | Vice Principal (Administration) | Board of Governors | Annual | Safeguarding Policy (drafted) |
+| Visitor Management Policy | **RESOLVED — the redeveloped Visitors Policy (SW-08, Phase E) now covers the safeguarding-vetting scope this row named; no separate document needed** | 2 | Head of Facilities & Estates / Vice Principal (Administration) | Head of Schools / Administrator | Annual | Safeguarding Policy (drafted) |
+| Digital Safeguarding Policy | PARTIAL — addressed within Child Protection & Safeguarding Policy §7.10 and the AI Usage Policy (IT-05), not yet a standalone document | 1 | ICT Head / Designated Safeguarding Lead | Board of Governors | Annual | Data Protection Policy (drafted), Parent Portal (exists) |
 
 ## 6. Human Resources
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Staff Handbook | **DRAFTED** (Phase C) | 2 | VP Administration | Head of Schools / Administrator | Annual | Staff Conduct Policy (drafted, Phase D), Dress Code (exists) |
-| Recruitment Policy | MISSING — evaluated, not urgent (HR Governance Framework) | 3 | VP Administration | Head of Schools / Administrator | Biennial | Safeguarding Policy (drafted) |
-| Performance Management Policy | MISSING — evaluated, not urgent | 3 | VP Administration | Head of Schools / Administrator | Annual | None |
-| Leave Policy | MISSING — evaluated, not urgent | 3 | VP Administration | Head of Schools / Administrator | Annual | None |
-| Professional Development Policy | MISSING — evaluated, lowest priority | 4 | Head, Research & Development | Head of Schools / Administrator | Biennial | None |
-| **Grievance Policy** *(new — surfaced by the Phase C HR Governance Framework, not in the original register)* | MISSING — **recommended next HR document now that Staff Conduct Policy is drafted** | 2 | VP Administration | Head of Schools / Administrator | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
-| **Staff Discipline Policy** *(new — same source)* | MISSING — recommended next, alongside Grievance Policy | 2 | VP Administration | Head of Schools / Administrator | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
+| Staff Handbook | **DRAFTED** (Phase C) | 2 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Staff Conduct Policy (drafted, Phase D), Dress Code (exists) |
+| Recruitment Policy | MISSING — evaluated, not urgent (HR Governance Framework) | 3 | Vice Principal (Administration) | Head of Schools / Administrator | Biennial | Safeguarding Policy (drafted) |
+| Performance Management Policy | MISSING — evaluated, not urgent | 3 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | None |
+| Leave Policy | MISSING — evaluated, not urgent | 3 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | None |
+| Professional Development Policy | MISSING — evaluated, lowest priority | 4 | Head, Research & Development *(office pending Board recognition)* | Head of Schools / Administrator | Biennial | None |
+| **Grievance Policy** *(new — surfaced by the Phase C HR Governance Framework, not in the original register)* | MISSING — **recommended next HR document now that Staff Conduct Policy is drafted** | 2 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
+| **Staff Discipline Policy** *(new — same source)* | MISSING — recommended next, alongside Grievance Policy | 2 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | Staff Handbook (drafted), Staff Conduct Policy (drafted) |
 
 ## 7. Finance & Administration
 
@@ -129,7 +129,7 @@ document scope, which remains a gap to track going forward.
 |---|---|---|---|---|---|---|
 | Tuition & Fees Policy | MISSING — **blocked on real fee figures, not on drafting effort** (Financial Governance Framework, Phase C) | 1 | Head of Schools / Administrator | Board of Governors | Annual | None |
 | Refund Policy | MISSING — blocked, depends on Tuition & Fees Policy | 2 | Head of Schools / Administrator | Board of Governors | Annual | Tuition & Fees Policy |
-| Procurement Policy | MISSING — evaluated, not urgent | 3 | COO-equivalent | Head of Schools / Administrator | Annual | Financial Controls Policy (drafted) |
+| Procurement Policy | MISSING — evaluated, not urgent | 3 | Head of Schools / Administrator | Head of Schools / Administrator | Annual | Financial Controls Policy (drafted) |
 | Financial Controls Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see FN-01) | 2 | Head of Schools / Administrator / Board | Board of Governors | Annual | None |
 | **Scholarship Governance Framework** *(new — surfaced by the Phase C Financial Governance Framework)* | MISSING — blocked, same reason as Tuition & Fees Policy | 3 | Head of Schools / Administrator | Board of Governors | Annual | Tuition & Fees Policy |
 
@@ -137,15 +137,15 @@ document scope, which remains a gap to track going forward.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Data Protection Policy (IT-02) | **DRAFTED v2.1** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit; image/media consent procedure added Phase G — see IT-02) | **1** | CTO-equivalent (ICT Head) | Board of Governors | Annual | Parent Portal (exists), NDPA 2023 |
-| Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | CTO-equivalent (ICT Head) | Board of Governors | Annual | Data Protection Policy |
-| Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Data Protection Policy (drafted) |
-| Acceptable Use Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IT-03) | 2 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Student/Staff Handbooks (both drafted) |
-| AI Usage Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-05) | 2 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
-| Records Retention Policy | **DRAFTED v2.1** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit; §7.6 Archival vs. Deletion + per-category Archive/Destruction Authority table added post-Registrar's-Office phase — see IT-04) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / CTO-equivalent | Head of Schools / Administrator | Annual | Data Protection Policy (drafted), `docs/data-ownership-register.md`, `docs/data-lifecycle-register.md` |
-| Cybersecurity Framework | MISSING — evaluated, not urgent (Technology Governance Framework) | 3 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Information Security Policy (drafted) |
-| **Incident Response Policy** *(new — surfaced by the Phase C Technology Governance Framework as the most concrete unmet technology gap)* | MISSING — **recommended next technology document** | 2 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Information Security Policy (drafted) |
-| **Digital Learning Policy** *(new — evaluated, not yet applicable)* | MISSING — no LMS/digital classroom system exists yet to govern | 4 | CTO-equivalent (ICT Head) | Head of Schools / Administrator | Annual | Would depend on a future Student Portal/LMS |
+| Data Protection Policy (IT-02) | **DRAFTED v2.1** (Phase A, combined with Privacy Policy below; retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit; image/media consent procedure added Phase G — see IT-02) | **1** | ICT Head | Board of Governors | Annual | Parent Portal (exists), NDPA 2023 |
+| Privacy Policy | **DRAFTED — combined into the Data Protection & Privacy Policy** | 1 | ICT Head | Board of Governors | Annual | Data Protection Policy |
+| Information Security Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-01) | 2 | ICT Head | Head of Schools / Administrator | Annual | Data Protection Policy (drafted) |
+| Acceptable Use Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IT-03) | 2 | ICT Head | Head of Schools / Administrator | Annual | Student/Staff Handbooks (both drafted) |
+| AI Usage Policy | **DRAFTED v2.0** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see IT-05) | 2 | ICT Head | Head of Schools / Administrator | Annual | Data Protection Policy (drafted), `docs/digital-assistant.md` |
+| Records Retention Policy | **DRAFTED v2.1** (Phase C, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit; §7.6 Archival vs. Deletion + per-category Archive/Destruction Authority table added post-Registrar's-Office phase — see IT-04) — the one document that actually sets proposed retention periods rather than deferring them | 2 | Registrar / ICT Head | Head of Schools / Administrator | Annual | Data Protection Policy (drafted), `docs/data-ownership-register.md`, `docs/data-lifecycle-register.md` |
+| Cybersecurity Framework | MISSING — evaluated, not urgent (Technology Governance Framework) | 3 | ICT Head | Head of Schools / Administrator | Annual | Information Security Policy (drafted) |
+| **Incident Response Policy** *(new — surfaced by the Phase C Technology Governance Framework as the most concrete unmet technology gap)* | MISSING — **recommended next technology document** | 2 | ICT Head | Head of Schools / Administrator | Annual | Information Security Policy (drafted) |
+| **Digital Learning Policy** *(new — evaluated, not yet applicable)* | MISSING — no LMS/digital classroom system exists yet to govern | 4 | ICT Head | Head of Schools / Administrator | Annual | Would depend on a future Student Portal/LMS |
 
 ## 9. Health, Safety & Welfare
 
@@ -156,7 +156,7 @@ document scope, which remains a gap to track going forward.
 | Medical Policy | PARTIAL | 1 | Registrar / school nurse | Board of Governors | Annual | First Aid Policy (drafted, SW-06) |
 | Emergency Response Plan | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see SW-09) | 1 | Institutional lead (to be confirmed) | Board of Governors | Annual | Health & Safety Policy (drafted, SW-07) |
 | Crisis Management Plan | MISSING | 2 | Head of Schools / Administrator / Principal | Head of Schools / Administrator | Annual | Emergency Response Plan (drafted) |
-| Transportation Policy | MISSING | 3 | VP Administration | Head of Schools / Administrator | Annual | None |
+| Transportation Policy | MISSING | 3 | Vice Principal (Administration) | Head of Schools / Administrator | Annual | None |
 
 ## 10. Islamic & Qur'an Education
 
@@ -314,7 +314,7 @@ name and section number).
   evaluated and integrated — see `docs/visual-asset-integration-plan.md`
   for the full per-image placement record. Six of eleven supplied
   images were published (a Facilities-page gallery, plus a Founder/Head of Schools / Administrator
-  portrait on the Governance page once the Director confirmed the
+  portrait on the Governance page once the Founder confirmed the
   subject's identity); five were held — two for photographic quality,
   three because they show identifiable students and **no image/media
   consent process existed anywhere in this governance library to check
