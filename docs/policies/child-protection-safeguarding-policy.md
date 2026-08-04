@@ -18,13 +18,13 @@ sharing, and a dedicated training-requirements section.*
 | Policy Title | Child Protection & Safeguarding Policy |
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Designated Safeguarding Lead — **the role is fully defined (Designated Safeguarding Lead Framework, SW-02) but nobody has been appointed to it yet; appointment is a Board decision that framework cannot make on its own.** Until appointed, responsibility sits with the CEO and the Principal of each institution acting jointly. |
-| Approval Authority | Board of Trustees |
+| Policy Owner | Designated Safeguarding Lead — **the role is fully defined (Designated Safeguarding Lead Framework, SW-02) but nobody has been appointed to it yet; appointment is a Board decision that framework cannot make on its own.** Until appointed, responsibility sits with the Head of Schools / Administrator and the Principal of each institution acting jointly. |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, and immediately after any serious incident or safeguarding referral |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
 > **Before this governs a real decision:** this document must be
-> reviewed by the Board of Trustees, and by a lawyer or child-protection
+> reviewed by the Board of Governors, and by a lawyer or child-protection
 > professional familiar with Lagos State practice, before adoption. It
 > references the Child's Rights Act 2003 and the Lagos State Child's
 > Rights Law 2007 by name because both are real, publicly known
@@ -39,7 +39,7 @@ sharing, and a dedicated training-requirements section.*
 
 To protect every child at Sultan Hanafi Royal Schools — from the
 2-year-olds in Nursery through boarding students at Qur'an College and
-Royal College — from abuse, neglect, exploitation, and harm, whether
+Secular College — from abuse, neglect, exploitation, and harm, whether
 the risk originates inside the school, at home, online, from a peer,
 or through radicalisation, and to give every adult connected to SHRS
 (staff, boarding wardens, visitors, contractors, and the Parent
@@ -48,9 +48,9 @@ delay, on any concern.
 
 ## 3. Scope
 
-Applies to all students across all four institutions (Nursery &
-Primary, Royal College, Qur'an College, School of Arabic & Islamic
-Studies), whether day or boarding; to all staff, board members, and
+Applies to all students across all five institutions (Basic School,
+Secular College, Qur'an College, Islamiyyah College, Online & Distance
+Learning School), whether day or boarding; to all staff, board members, and
 volunteers; to all visitors and contractors on any SHRS site; and to
 all digital touchpoints where a child's information or communication
 passes through an SHRS system, including the Parent Portal and the
@@ -133,8 +133,8 @@ accountable escalation path.
 
 | Role | Responsibility |
 |---|---|
-| Board of Trustees | Ultimate oversight; appoints/confirms the DSL (per SW-02); receives an annual aggregate safeguarding report. |
-| CEO | Ensures the DSL role is resourced and independent enough to act without institutional pressure. |
+| Board of Governors | Ultimate oversight; appoints/confirms the DSL (per SW-02); receives an annual aggregate safeguarding report. |
+| Head of Schools / Administrator | Ensures the DSL role is resourced and independent enough to act without institutional pressure. |
 | Designated Safeguarding Lead *(to be appointed — see SW-02)* | Receives all reports; decides on internal action and external referral; keeps the incident log; liaises with external agencies; see SW-02 for the full role definition. |
 | Deputy DSL per institution *(SW-02 §7.3)* | First point of contact within their institution; escalates to the DSL. |
 | All staff | Report any concern the same day, using the procedure in Section 7 — never investigate personally. |
@@ -193,7 +193,7 @@ not a pre-set hierarchy of concern types.
   advice).
 
 ### 7.6 Allegations against a staff member
-- Handled by the CEO in consultation with the DSL and, where the
+- Handled by the Head of Schools / Administrator in consultation with the DSL and, where the
   allegation is serious, external advice — never by the accused staff
   member's direct line manager alone if that creates a conflict.
 - The staff member may be suspended as a neutral protective measure
@@ -293,7 +293,7 @@ not a pre-set hierarchy of concern types.
 ### 7.15 Whistleblowing
 - A staff member with a concern about how a colleague — including a
   senior colleague or the DSL — has handled or failed to handle a
-  safeguarding matter may raise it directly with the CEO or the Board,
+  safeguarding matter may raise it directly with the Head of Schools / Administrator or the Board,
   bypassing the normal management chain where necessary.
 - A dedicated Whistleblowing Policy (Governance Master Register,
   Governance, Tier 3, not yet drafted) will formalise this further;
@@ -315,7 +315,7 @@ not a pre-set hierarchy of concern types.
 The DSL (once appointed) reviews the safeguarding log monthly for
 patterns across institutions and reports an aggregate summary to the
 Board annually, per the Constitution & Governance Charter (GV-01) §6.
-Until a DSL is appointed, the CEO and each institution's Principal/Head
+Until a DSL is appointed, the Head of Schools / Administrator and each institution's Principal/Head
 Teacher jointly perform this review.
 
 ## 9. Records and Documentation
@@ -348,7 +348,7 @@ rather than one asserting it unilaterally.
 ## 12. Appeals and Complaints
 
 A staff member subject to disciplinary action arising from a
-safeguarding investigation may appeal to the Board of Trustees, through
+safeguarding investigation may appeal to the Board of Governors, through
 a process that does not require re-exposing the child to further
 involvement. Details of this appeal process should be finalised
 alongside a future Staff Discipline Policy (Governance Master Register,

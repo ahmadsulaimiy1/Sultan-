@@ -18,7 +18,7 @@ into single bullet points.*
 | Version | 1.0 (redeveloped from the live Policy VII) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Management staff (per the live policy's own conclusion clause) — recommend the Board name a single accountable individual (e.g. VP Administration or a future Health & Safety Officer) at adoption, since "management staff" alone doesn't answer who is accountable if something goes wrong |
-| Approval Authority | Board of Trustees (Tier 1 — direct child-safety exposure) |
+| Approval Authority | Board of Governors (Tier 1 — direct child-safety exposure) |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption. **Note:** the live policy's "Next review: July 2025" has already elapsed as of this redevelopment — named here as a real, existing gap, consistent with the same finding in the redeveloped First Aid Policy (SW-06). |
 
@@ -41,7 +41,7 @@ single-paragraph objectives statement didn't include.
 ## 3. Scope
 
 All SHRS sites, all students, staff, contractors, and visitors, across
-all four institutions, day and boarding.
+all five institutions, day and boarding.
 
 ## 4. Definitions
 

@@ -100,7 +100,7 @@ export const STAGE_DEFINITIONS = [
   },
   {
     code: 'principal', label: 'Principal', sequence: 8, isBlocking: true, authType: 'area', areaCode: 'graduation_records', permissionCode: 'A', institutionScoped: true, roleCodeHint: 'PRIN',
-    description: "The student's own Principal/Head Teacher/Ra'ees/Mudeer final academic-leadership sign-off.",
+    description: "The student's own Principal/Head Teacher final academic-leadership sign-off.",
   },
   {
     code: 'vp_academic', label: 'Vice Principal (Academic)', sequence: 9, isBlocking: true, authType: 'area', areaCode: 'graduation_clearances', permissionCode: 'A', roleCodeHint: 'VPAC',
@@ -111,8 +111,8 @@ export const STAGE_DEFINITIONS = [
     description: 'Vice Principal (Administration) sign-off. Constitutionally vacant until an appointment exists — the stage pauses here, not skips, and activates automatically the moment someone is appointed via the Institutional Administration Centre.',
   },
   {
-    code: 'founder', label: 'Founder & CEO', sequence: 11, isBlocking: true, authType: 'area', areaCode: 'graduation_clearances', permissionCode: 'A', roleCodeHint: 'EXE', conditional: true,
-    description: 'Founder & CEO review — required only when the Graduation Approval Matrix (an admin-configurable rule table, never hardcoded) names the Constitution, Governance Charter, a Board Resolution, or an Executive Directive as requiring it, or a staff member manually escalates this specific record.',
+    code: 'founder', label: 'Founder & Head of Schools', sequence: 11, isBlocking: true, authType: 'area', areaCode: 'graduation_clearances', permissionCode: 'A', roleCodeHint: 'EXE', conditional: true,
+    description: 'Founder & Head of Schools review — required only when the Graduation Approval Matrix (an admin-configurable rule table, never hardcoded) names the Constitution, Governance Charter, a Board Resolution, or an Executive Directive as requiring it, or a staff member manually escalates this specific record.',
   },
 ];
 

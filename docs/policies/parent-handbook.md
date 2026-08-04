@@ -17,7 +17,7 @@ documents were retrofitted around it.*
 | Version | 2.0 (retrofitted from v1.0, Phase B) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | VP Administration (Mrs. Anofi-Badmus Fatimat Omolola) |
-| Approval Authority | Board of Trustees |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -74,11 +74,11 @@ worse outcome for a family than a clearly labelled link.
 ## 7. Procedures
 
 ### 7.1 Welcome from Leadership
-*SHRS does not have a single overall Principal — it has a CEO and a
+*SHRS does not have a single overall Principal — it has a Head of Schools / Administrator and a
 Principal (or Head Teacher) per institution. This Handbook's welcome
 reflects that structure rather than inventing a single figurehead:* a
-welcome message from the CEO (Zakariya Olanrewaju Anofi) on behalf of
-the Board and Executive Management Team, plus a short welcome from the
+welcome message from the Head of Schools / Administrator (Zakariya Olanrewaju Anofi) on behalf of
+the Board and Management Team, plus a short welcome from the
 Principal or Head Teacher of the specific institution the family's
 child is enrolled in. **The actual text of these welcome messages needs
 to come from those individuals** — this Handbook provides the slot and
@@ -88,7 +88,7 @@ structure, not placeholder prose standing in for their voice.
 Draws directly on the real, published mission and educational model
 (the dual Saudi/Islamic curriculum for Qur'an College and the School of
 Islamic & Arabic Studies, and the Nigerian National Curriculum infused
-with entrepreneurial and life skills for Royal College and Nursery &
+with entrepreneurial and life skills for Secular College and Nursery &
 Primary). This Handbook does not restate the full curriculum
 description; it points a parent to `/academics/` for the
 institution-specific detail.

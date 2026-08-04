@@ -1,5 +1,6 @@
-// Institutional Identity Number Architecture Directive (Founder & CEO-
-// approved correction of the original Digital Identity System pattern):
+// Institutional Identity Number Architecture Directive (Founder, Head of
+// Schools & Chairman-approved correction of the original Digital Identity
+// System pattern):
 // every SHR- (missing the "S" for "Schools") number in this file has
 // been replaced with an SHRS- one, and every COUNT(*)+1 sequence with a
 // real, atomic PostgreSQL sequence — the same upgrade staff numbers
@@ -121,7 +122,7 @@ function formatYYMMDD(date) {
 //          institution places them in, or a school-wide body:
 //            RC=Royal College, NPS=Nursery & Primary,
 //            IAS=Islamic & Arabic Studies, QC=Qur'an College,
-//            BOT=Board of Trustees (incl. its standing committees),
+//            BOT=Board of Governors (incl. its standing committees),
 //            MGT=Management Council, HQ=every other school-wide office
 //          (Executive, Finance, HR, ICT, etc.)
 // OFFICE — a 3-letter code for the staff member's real office (see
@@ -138,6 +139,13 @@ function formatYYMMDD(date) {
 //          (staff_identity_seq — sql/schema.sql), not the previous
 //          COUNT(*)+1 pattern, which had a genuine race condition under
 //          concurrent requests.
+// NOTE: the 'CEO' and 'BOT' values below are stable 3-letter identity-
+// number codes, not display labels — already-issued numbers like
+// SHRS-CEO-000001/SHRS-BOT-000001 depend on them and they are
+// deliberately NOT renamed. The office they represent is now titled
+// "Head of Schools / Administrator" (slug 'executive') and "Board of
+// Governors" (slug 'board-of-trustees') respectively wherever a human
+// sees the name.
 const OFFICE_CODE_BY_SLUG = {
   'executive': 'CEO',
   'registrar': 'REG',
@@ -227,7 +235,7 @@ async function loadStaffIdentityRow(sql, staffId) {
   return res.rows[0] || null;
 }
 
-// Board of Trustees & top executive reserved identity numbers ("BOARD &
+// Board of Governors & top executive reserved identity numbers ("BOARD &
 // EXECUTIVE IDs" in the directive): SHRS-BOT-001 / SHRS-CEO-001 — no date
 // segment, because these are permanently reserved seats, not join-dated
 // staff records. Scoped to their own tiny 3-digit COUNT(*)+1 sequence
@@ -277,8 +285,9 @@ export async function ensureStaffIdentityNo(sql, staffId) {
 // format, overwriting whatever is already stored (including an existing
 // SHRS-format one). Used only by the explicit, admin-triggered bulk
 // migration action (functions/api/portal/admin/staff.js, action
-// "regenerate-identity-numbers") — the Founder & CEO's chosen rollout
-// ("migrate everyone now"), which knowingly breaks every already-issued
+// "regenerate-identity-numbers") — the Founder, Head of Schools &
+// Administrator's chosen rollout ("migrate everyone now"), which
+// knowingly breaks every already-issued
 // QR code/verification link for a re-migrated person. Never called from
 // an ordinary read path. Returns null (no change made) for a record with
 // no date_joined on file.

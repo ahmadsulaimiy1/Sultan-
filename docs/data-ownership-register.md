@@ -9,6 +9,12 @@ retention periods below are drawn from `docs/policies/records-retention-policy.m
 applies here too: **every period is proposed, pending Board
 confirmation**, not yet a binding institutional decision.*
 
+*Amendment note (2026-08-04): "Board of Trustees" updated to "Board of
+Governors" and "CEO" updated to "Head of Schools / Administrator"
+throughout, per the Board's governance restructuring amendment of
+2026-08-04 (GV-01 v3.0), which abolished the office of Chief Executive
+Officer.*
+
 | Record type | Owner office | Responsible officer | Retention authority | Approval authority | Export authority | Deletion authority |
 |---|---|---|---|---|---|---|
 | **Student record** | Registrar | Registrar (Mrs. Anofi-Abdulkareem Mariam Tope) | Enrolment + 7 years after graduation/withdrawal (IT-04 §7.1) | Registrar + Principal (status changes) | Registrar | **None** — archived via `status`, never deleted, except a data-protection deletion request (below) |
@@ -29,9 +35,9 @@ confirmation**, not yet a binding institutional decision.*
 | **Certificate** | Registrar | Registrar | **Open question**, same reasoning as Report Cards — arguably permanent, like Ijazah, since a certificate is a credential someone may need to prove decades later | Principal + Registrar | Registrar; student/guardian for their own | None recommended |
 | **Transcript** | Registrar | Registrar | Same open question as Certificates | Registrar | Registrar; student/guardian for their own (partially built via Personalisation Centre data export) | None recommended |
 | **Communication record** *(in-portal notifications, WhatsApp escalation logs)* | Varies by sender | Sender's office | **Ungoverned** — not named in IT-04 at all. Recommend a short default (1–2 years) as a placeholder pending Board decision, not asserted here as settled. | N/A | Registrar (for records concerning a specific student) | After a Board-set window |
-| **Policy document** | Policy-owning office per `policy-code-index.md` | Varies per code (e.g. Registrar owns AC-02) | Permanent — version-controlled in git, superseded versions kept in history, not deleted | Board of Trustees (Tier 1), CEO (Tier 2–4) | Public, for Public-classified documents (already true — they're on the live site) | Never — git history is the retention mechanism |
-| **Website content** | ICT / Communications function | Whoever holds repository access today | Permanent — version-controlled | CEO / EMT | Public (it's a public website) | Content can be removed from the live site; git history retains it |
-| **Governance document** *(Board resolutions, registers, audits)* | Board of Trustees | Board Secretary role (not yet named) | Permanent — version-controlled | Board of Trustees | Internal by default (see `policy-code-index.md`'s classification principle) | Never |
+| **Policy document** | Policy-owning office per `policy-code-index.md` | Varies per code (e.g. Registrar owns AC-02) | Permanent — version-controlled in git, superseded versions kept in history, not deleted | Board of Governors (Tier 1), Head of Schools / Administrator (Tier 2–4) | Public, for Public-classified documents (already true — they're on the live site) | Never — git history is the retention mechanism |
+| **Website content** | ICT / Communications function | Whoever holds repository access today | Permanent — version-controlled | Head of Schools / Administrator / Management Team | Public (it's a public website) | Content can be removed from the live site; git history retains it |
+| **Governance document** *(Board resolutions, registers, audits)* | Board of Governors | Board Secretary role (not yet named) | Permanent — version-controlled | Board of Governors | Internal by default (see `policy-code-index.md`'s classification principle) | Never |
 
 ## What this register deliberately leaves open
 

@@ -23,12 +23,12 @@ operates under).
 
 To be the one document a staff member reads to understand what SHRS
 expects of them professionally, safeguarding-wise, and administratively
-— across all four institutions — without needing to separately locate
+— across all five institutions — without needing to separately locate
 nine live policies and the growing set of governance documents.
 
 ## 2. Scope
 
-All staff across all four institutions, including boarding wardens and
+All staff across all five institutions, including boarding wardens and
 any staff member with regular student contact.
 
 ## 3. Definitions
@@ -130,7 +130,7 @@ performance-related dismissal) remain evaluated, not drafted, in the
 HR Governance Framework — recommended as the next two HR documents now
 that the Staff Conduct Policy itself is done. Until they exist, a
 non-conduct staff grievance is raised with VP Administration, escalating
-to the CEO if unresolved, under the general authority structure in the
+to the Head of Schools / Administrator if unresolved, under the general authority structure in the
 Constitution & Governance Charter (GV-01) §6.
 
 ## 13. Monitoring & compliance

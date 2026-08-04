@@ -63,7 +63,8 @@ export async function sendEmail(env, { to, subject, html, text }) {
 }
 
 // Institutional email design language — an official communication from
-// the Office of the Founder & Chief Executive Officer, not a SaaS
+// the Office of the Founder, Head of Schools & Chairman of the Board of
+// Governors, not a SaaS
 // authentication notice. Colours match the real brand tokens already
 // used across the platform (css/brand.css: --gold #C6A15B, --gold-
 // bright #E9CE8A, --ivory #F7EEDF, --ink #2A2016), paired with a
@@ -137,7 +138,7 @@ function emailShell({ eyebrow, heading, introHtml, codeChamber, actionButton, bo
       <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(233,206,138,0.8);">${escapeHtml(eyebrow || 'Secure Institutional Access')}</div>
     </td></tr>
     <tr><td style="padding:36px 40px 8px;">
-      <div style="font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:${GOLD};margin-bottom:10px;">Office of the Founder &amp; Chief Executive Officer</div>
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:${GOLD};margin-bottom:10px;">Office of the Founder, Head of Schools &amp; Chairman of the Board of Governors</div>
       <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:600;color:${NAVY};margin:0 0 18px;line-height:1.3;">${escapeHtml(heading)}</h1>
       ${introHtml ? `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.7;color:${INK};margin-bottom:22px;">${introHtml}</div>` : ''}
     </td></tr>

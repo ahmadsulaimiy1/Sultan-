@@ -7,9 +7,10 @@
 // is the same data, merged into one chronological Authority Register
 // instead of three separate tables nobody could see end-to-end.
 //
-// "Founder & CEO remains the Supreme Appointing Authority... every
-// appointment traceable, every removal traceable, every delegation
-// traceable" (Founder Authority Framework directive): this endpoint is
+// "The Founder (Head of Schools / Administrator) remains the Supreme
+// Appointing Authority... every appointment traceable, every removal
+// traceable, every delegation traceable" (Founder Authority Framework
+// directive): this endpoint is
 // that traceability layer. It does not change who CAN appoint or
 // delegate — functions/api/portal/admin/staff.js's requireExeToTouchExe
 // already enforces that only an existing EXE can grant or revoke EXE

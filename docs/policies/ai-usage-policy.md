@@ -18,7 +18,7 @@ Data Protection Impact Assessment requirement.*
 | Version | 2.0 (retrofitted from v1.0, Phase C) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | ICT Head (Mr. Oguntade Adebola Aliu), the same proposed owner as the Data Protection & Privacy Policy |
-| Approval Authority | CEO |
+| Approval Authority | Head of Schools / Administrator |
 | Review Cycle | Annual, or immediately on any material change to what an SHRS AI system is allowed to do |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 

@@ -15,8 +15,8 @@ const LAYERS = [
 ];
 
 const OFFICES = [
-  { slug: 'board-of-trustees', name: 'Board of Trustees', layer: 'governance' },
-  { slug: 'executive', name: 'Executive', layer: 'governance' },
+  { slug: 'board-of-trustees', name: 'Board of Governors', layer: 'governance' },
+  { slug: 'executive', name: 'Head of Schools / Administrator', layer: 'governance' },
   { slug: 'management-council', name: 'Management Council', layer: 'governance' },
   { slug: 'strategic-planning', name: 'Strategic Planning', layer: 'governance' },
   { slug: 'quality-assurance', name: 'Quality Assurance', layer: 'governance' },
@@ -33,10 +33,10 @@ const OFFICES = [
   { slug: 'examinations', name: 'Examinations', layer: 'academic' },
   { slug: 'admissions', name: 'Admissions', layer: 'academic', deepLink: { href: '/portal/staff/admissions/', label: 'Open Admissions Review Centre' } },
 
-  { slug: 'head-teacher', name: 'Head Teacher — Nursery & Primary', layer: 'school_leadership' },
-  { slug: 'principal-royal-college', name: 'Principal — Royal College', layer: 'school_leadership' },
-  { slug: 'raees', name: "Office of the Ra'ees — School of Islamic & Arabic Studies", layer: 'school_leadership' },
-  { slug: 'mudeer', name: "Office of the Mudeer — Qur'an College", layer: 'school_leadership' },
+  { slug: 'head-teacher', name: 'Head Teacher — Sultan Hanafi Basic School', layer: 'school_leadership' },
+  { slug: 'principal-royal-college', name: 'Principal — Sultan Hanafi Secular College', layer: 'school_leadership' },
+  { slug: 'raees', name: 'Office of the Principal — Sultan Hanafi Islamiyyah College', layer: 'school_leadership' },
+  { slug: 'mudeer', name: "Office of the Principal — Sultan Hanafi Qur'an College", layer: 'school_leadership' },
 
   { slug: 'finance', name: 'Finance Office', layer: 'operational', deepLink: { href: '/portal/staff/finance/', label: 'Open Finance Operations' } },
   { slug: 'hr', name: 'Human Resources', layer: 'operational' },

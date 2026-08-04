@@ -1,7 +1,7 @@
 // Institutional Administration Centre — the premium UI over
 // functions/api/portal/admin/staff.js (Office/Appointment/Meeting/
-// Document/Committee/Governance management) requested by the Founder
-// & CEO directive so "The Founder should not need API calls for
+// Document/Committee/Governance management) requested by the Founder,
+// Head of Schools & Administrator directive so "The Founder should not need API calls for
 // ordinary administration." Deliberately kept on the same bootstrap
 // sysadmin-token model as the API it wraps — see that file's header
 // comment for why. The token is entered once per browser tab

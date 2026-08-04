@@ -18,7 +18,7 @@ guardian-communication procedures.*
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | VP Administration (Mrs. Anofi-Badmus Fatimat Omolola) |
-| Approval Authority | Board of Trustees |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -44,7 +44,7 @@ v1.0, there was no single document a family could be pointed to for
 
 ## 3. Scope
 
-All students, across all four institutions, on any SHRS site, during
+All students, across all five institutions, on any SHRS site, during
 any SHRS-organised off-site activity, and online where conduct affects
 another SHRS student or the school's reputation.
 
@@ -208,7 +208,7 @@ Policy also use.
 
 VP Administration reviews the disciplinary log termly for patterns
 (repeated matters involving the same student, or a pattern suggesting
-an unaddressed underlying issue), and reports a summary to the CEO
+an unaddressed underlying issue), and reports a summary to the Head of Schools / Administrator
 annually.
 
 ## 9. Records and Documentation
@@ -235,7 +235,7 @@ category) is additive to this Code, not a replacement for it.
 ## 12. Appeals and Complaints
 
 A guardian may appeal a suspension or more serious consequence to the
-Principal's immediate superior — in practice, the CEO or the Board's
+Principal's immediate superior — in practice, the Head of Schools / Administrator or the Board's
 designated committee — within a fixed window (recommend 5 school days,
 to be confirmed) of being notified. The appeal is decided by someone
 who was not part of the original decision.

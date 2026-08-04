@@ -6,7 +6,7 @@ policy/framework documents drafted in `docs/policies/` across Phases
 A–F — per the Governance & Policy Redevelopment Directive, Phase E, and
 the Website Publication Requirement, Phase F.*
 
-**Owner:** Board of Trustees (the standard itself); each policy's own
+**Owner:** Board of Governors (the standard itself); each policy's own
 Owner maintains its individual code assignment.
 **Review cycle:** Annual, alongside the Governance Master Register.
 

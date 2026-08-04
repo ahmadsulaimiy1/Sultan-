@@ -15,7 +15,7 @@ representing SHRS online, and account provisioning/deprovisioning.*
 | Version | 2.0 (retrofitted from v1.0, Phase C) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | ICT Head (Mr. Oguntade Adebola Aliu) |
-| Approval Authority | CEO |
+| Approval Authority | Head of Schools / Administrator |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 

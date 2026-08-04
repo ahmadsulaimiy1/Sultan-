@@ -2,7 +2,7 @@
 // Specification §13.2. Names, per document type, the minimum role(s)
 // whose signature must be on file before generation is permitted.
 // institutionScoped roles (e.g. PRIN, the shared role code covering
-// Principal/Head Teacher/Ra'ees/Mudeer across all four schools, per
+// Principal/Head Teacher across all schools, per
 // docs/role-permission-matrix.md) resolve within the document's own
 // institution; others (REG, BRD, EXE) are single, institution-wide
 // offices and resolve globally. A requirement may instead name
@@ -22,7 +22,7 @@ import { resolveOfficeId } from './graduation-workflow.js';
 
 export const DOCUMENT_SIGNATORIES = {
   certificate: [
-    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher / Ra'ees / Mudeer" },
+    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher" },
     { role: 'REG', institutionScoped: false, label: 'Registrar' },
   ],
   // §13.2 names "Registrar + Examinations & Records" — Examinations is
@@ -40,7 +40,7 @@ export const DOCUMENT_SIGNATORIES = {
   // real Certificate, distinguished by its own PROV reference family
   // and visible banner rather than by a lesser signature block.
   provisional_certificate: [
-    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher / Ra'ees / Mudeer" },
+    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher" },
     { role: 'REG', institutionScoped: false, label: 'Registrar' },
   ],
   // §16.8: "Examinations & Records signature only" — an interim,
@@ -50,10 +50,10 @@ export const DOCUMENT_SIGNATORIES = {
     { officeSlug: 'examinations', label: 'Examinations & Records' },
   ],
   testimonial: [
-    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher / Ra'ees / Mudeer" },
+    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher" },
   ],
   character_certificate: [
-    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher / Ra'ees / Mudeer" },
+    { role: 'PRIN', institutionScoped: true, label: "Institution Principal / Head Teacher" },
   ],
   clearance_certificate: [
     { role: 'REG', institutionScoped: false, label: 'Registrar' },
@@ -62,7 +62,7 @@ export const DOCUMENT_SIGNATORIES = {
     { role: 'BRD', institutionScoped: false, label: 'Board Chair' },
   ],
   founder_ceo_award: [
-    { role: 'EXE', institutionScoped: false, label: 'Founder & CEO' },
+    { role: 'EXE', institutionScoped: false, label: 'Founder & Head of Schools' },
   ],
   alumni_registration: [
     { role: 'REG', institutionScoped: false, label: 'Registrar' },
@@ -142,7 +142,7 @@ export async function resolveSignatories(sql, documentType, institutionId) {
 // The Graduation Certificate's signature block is not static (spec
 // §16.1): it always carries PRIN + REG (the base 'certificate' map
 // entry), PLUS the Vice Principal (Academic), Vice Principal
-// (Administration), and Founder & CEO ONLY where that specific
+// (Administration), and Founder & Head of Schools ONLY where that specific
 // graduation record's own graduation_clearances shows the stage as
 // genuinely 'cleared' — never 'not_applicable' or still pending. A
 // Certificate must never claim an authority that didn't actually sign
@@ -153,7 +153,7 @@ export async function resolveSignatories(sql, documentType, institutionId) {
 const CERTIFICATE_CONDITIONAL_STAGES = [
   { stageCode: 'vp_academic', role: 'VPAC', institutionScoped: false, label: 'Vice Principal (Academic)' },
   { stageCode: 'vp_administration', role: 'VPAD', institutionScoped: false, label: 'Vice Principal (Administration)' },
-  { stageCode: 'founder', role: 'EXE', institutionScoped: false, label: 'Founder & CEO' },
+  { stageCode: 'founder', role: 'EXE', institutionScoped: false, label: 'Founder & Head of Schools' },
 ];
 
 export async function resolveCertificateSignatories(sql, institutionId, clearanceRows) {

@@ -37,7 +37,7 @@
       },
     },
     'principal-royal-college': {
-      tagline: 'Royal College Academic Command Centre',
+      tagline: 'Sultan Hanafi Secular College Academic Command Centre',
       greeting: 'Academic operations are active.',
       icon: '<path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
       summary: function (ops) {
@@ -376,7 +376,7 @@
   }
 
   // Committees — only rendered (and the block only shown) for offices
-  // that actually have committee sub-offices, e.g. Board of Trustees.
+  // that actually have committee sub-offices, e.g. Board of Governors.
   function renderCommittees(data) {
     var section = document.getElementById('committees-section');
     var el = document.getElementById('committees-list');
@@ -438,7 +438,7 @@
   function genericPriorities(officeName) {
     return [
       'Maintain accurate, up-to-date records for ' + officeName + '’s activities and communicate them clearly to staff and stakeholders.',
-      'Align ' + officeName + '’s work with the wider institutional strategy set by the Executive and Board of Trustees.',
+      'Align ' + officeName + '’s work with the wider institutional strategy set by the Head of Schools / Administrator and Board of Governors.',
       'Identify and close the highest-priority gaps in ' + officeName + '’s current operations.',
     ];
   }
@@ -459,7 +459,7 @@
       return;
     }
     el.innerHTML = '<span class="template-framework-badge">Template &mdash; Pending Adoption</span>'
-      + '<p class="template-framework-note">This is a generic institutional planning scaffold, generated for structural completeness. It has not been reviewed or adopted by this office or the Board of Trustees. Real, adopted content will replace it once set through the administration panel.</p>'
+      + '<p class="template-framework-note">This is a generic institutional planning scaffold, generated for structural completeness. It has not been reviewed or adopted by this office or the Board of Governors. Real, adopted content will replace it once set through the administration panel.</p>'
       + '<ul class="priority-list">' + generatedList.map(function (line) {
         return '<li class="priority-item">' + esc(line) + '</li>';
       }).join('') + '</ul>';
@@ -711,9 +711,9 @@
   }
 
   // Module 7 — Analytics (real where it exists; a labelled KPI-widget
-  // shell — not invented numbers — everywhere else, per the Founder &
-  // CEO's Level 3 framework directive: the visual framework should
-  // exist even before real figures do).
+  // shell — not invented numbers — everywhere else, per the Founder,
+  // Head of Schools & Administrator's Level 3 framework directive: the
+  // visual framework should exist even before real figures do).
   var KPI_SHELL_LABELS = ['Active Items', 'This Month', 'Pending Review', 'Completion Rate'];
   function kpiGraphShell() {
     return '<div class="kpi-graph-shell" aria-hidden="true"><span style="height:22%"></span><span style="height:38%"></span>'
@@ -791,7 +791,7 @@
   }
 
   // Resolutions — a governance-register concept, so the tab itself is
-  // only shown for governance-layer offices (Board of Trustees and its
+  // only shown for governance-layer offices (Board of Governors and its
   // committees); everywhere else it's hidden entirely rather than
   // shown as a meaningless empty tab.
   function renderResolutions(data) {

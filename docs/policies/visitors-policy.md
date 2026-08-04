@@ -20,7 +20,7 @@ procedure.*
 | Version | 1.0 (redeveloped from the live Policy VIII) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Head of Security / VP Administration (Mrs. Anofi-Badmus Fatimat Omolola) |
-| Approval Authority | CEO, per the Constitution & Governance Charter (GV-01) §6 (Tier 2 document) |
+| Approval Authority | Head of Schools / Administrator, per the Constitution & Governance Charter (GV-01) §6 (Tier 2 document) |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -49,7 +49,7 @@ this process correctly on their first day, unsupervised.
 Every person entering any SHRS site who is not an enrolled student or
 an employed staff member — including parents, contractors, vendors,
 government officials, prospective-family visitors, and emergency
-responders — across all four institutions, day and boarding.
+responders — across all five institutions, day and boarding.
 
 ## 4. Definitions
 
@@ -295,7 +295,7 @@ immediately after any security incident involving a visitor (Sections
 level of a full policy change (e.g. updating the delivery-point
 location) may be made by VP Administration without a full Board review;
 a substantive change (e.g. altering the boarding-access provisions)
-requires CEO approval per the Approval Authority in Section 1.
+requires Head of Schools / Administrator approval per the Approval Authority in Section 1.
 
 ## Version control
 

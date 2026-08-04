@@ -32,32 +32,32 @@ export const SEAL_REGISTRY = {
     path: '/assets/images/seals/registrar-office-seal.jpg',
   },
   'PRIN:Islamic & Arabic Studies': {
-    label: "Office of the Ra'ees, School of Islamic and Arabic Studies",
+    label: "Office of the Principal, Sultan Hanafi Islamiyyah College",
     status: 'real',
     path: '/assets/images/seals/raees-islamic-arabic-studies-seal.jpg',
   },
   "PRIN:Qur'an College": {
-    label: 'Office of the Mudeer, Qur\'an College',
+    label: 'Office of the Principal, Sultan Hanafi Qur\'an College',
     status: 'real',
     path: '/assets/images/seals/mudeer-quran-college-seal.jpg',
   },
   'PRIN:Royal College': {
-    label: 'Office of the Principal, Royal College',
+    label: 'Office of the Principal, Sultan Hanafi Secular College',
     status: 'placeholder',
     path: null,
   },
   'PRIN:Nursery & Primary': {
-    label: 'Office of the Head Teacher, Nursery & Primary',
+    label: 'Office of the Head Teacher, Sultan Hanafi Basic School',
     status: 'placeholder',
     path: null,
   },
   EXE: {
-    label: 'Founder & CEO',
+    label: 'Founder, Head of Schools & Chairman',
     status: 'placeholder',
     path: null,
   },
   BRD: {
-    label: 'Board of Trustees',
+    label: 'Board of Governors',
     status: 'placeholder',
     path: null,
   },

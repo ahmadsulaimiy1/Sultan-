@@ -15,8 +15,8 @@ transfer students' academic standing.*
 | Policy Title | Academic Regulations |
 | Version | 2.0 (retrofitted from v1.0, Phase B) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Registrar, Royal College (Mrs. Anofi-Abdulkareem Mariam Tope), in consultation with each institution's Principal/Head Teacher |
-| Approval Authority | Board of Trustees |
+| Policy Owner | Registrar, Secular College (Mrs. Anofi-Abdulkareem Mariam Tope), in consultation with each institution's Principal/Head Teacher |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -41,8 +41,8 @@ underneath.
 
 ## 3. Scope
 
-All students across all four institutions, in both the Nigerian
-National Curriculum programme (Royal College, Nursery & Primary) and
+All students across all five institutions, in both the Nigerian
+National Curriculum programme (Secular College, Basic School) and
 the Saudi-curriculum Islamic/Qur'anic programme (Qur'an College, School
 of Islamic & Arabic Studies) — Section 7.3 addresses where these two
 programmes' progression logic must differ.
@@ -72,8 +72,8 @@ marks) + Examination (60 marks) = 100 marks per term; forms
 classwork, assignments, quizzes, project, test, exams — POP/CBT
 format); grading scale A+ (80–100) through F (below 40). This document
 adds governance around that framework; it does not restate the scale
-table itself — see AC-01 directly. Qur'an College and School of Arabic
-& Islamic Studies are explicitly exempted from the CA/Examination
+table itself — see AC-01 directly. Qur'an College and Islamiyyah
+College are explicitly exempted from the CA/Examination
 promotion mechanics (Section 7.3) — a named exception, not an
 oversight, since their primary progression measure is memorisation and
 Tajweed standard instead.
@@ -110,7 +110,7 @@ Tajweed standard instead.
 - Reviewed at a fixed point (recommend end of the following term) to
   decide: return to good standing, extend probation, or non-promotion.
 
-### 7.3 Qur'an College / School of Islamic & Arabic Studies distinction
+### 7.3 Qur'an College / Islamiyyah College distinction
 These institutions' primary progression measure is memorisation and
 Tajweed standard, not the CA/Examination framework above — governed by
 the Hifz Regulations (IQ-01) and the Tajweed Assessment Policy
@@ -120,7 +120,7 @@ explicitly does not force the secular progression model onto the
 Islamic/Qur'anic programmes.
 
 ### 7.4 Graduation & certification requirements
-- **Royal College / Nursery & Primary:** graduation criteria follow
+- **Secular College / Basic School:** graduation criteria follow
   the promotion framework above, culminating in a final report card and
   certificate — the exact certificate requirements (a Graduation
   Policy and Certification Policy, Governance Master Register, Academic
@@ -180,7 +180,7 @@ actual evidence, not just the guardian's or student's account of it.
 
 The Registrar reviews promotion and probation decisions annually across
 all institutions for consistency, reporting any pattern of divergent
-practice between institutions to the CEO.
+practice between institutions to the Head of Schools / Administrator.
 
 ## 9. Records and Documentation
 
@@ -200,7 +200,7 @@ Admissions Policy (PA-05), Records Retention Policy (IT-04).
 
 ## 11. Exceptions
 
-Qur'an College and School of Islamic & Arabic Studies are explicitly
+Qur'an College and Islamiyyah College are explicitly
 exempted from the CA/Examination promotion mechanics (Section 7.3) —
 this is a named exception, not an oversight.
 

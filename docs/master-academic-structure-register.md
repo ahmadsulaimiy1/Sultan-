@@ -1,6 +1,6 @@
 # SHRS Master Academic Structure Register v1.2
 
-**Revision note (v1.0 → v1.1):** integrates real Royal College JSS/SSS
+**Revision note (v1.0 → v1.1):** integrates real Secular College JSS/SSS
 subject-teacher data and real Qur'an College & Islamic Studies faculty
 data supplied directly by the school; corrects v1.0's incorrect claim
 that no academic level ladder existed (it does — `docs/teacher-operating-model.md`
@@ -10,11 +10,11 @@ v1.0 about what's adopted vs. proposed has changed — only what's now
 documented as real has grown.
 
 **Revision note (v1.1 → v1.2):** corrects §4d's own stated rule against
-merging Qur'an College and School of Islamic & Arabic Studies faculty
+merging Qur'an College and Sultan Hanafi Islamiyyah College faculty
 into one list — v1.1 had in fact merged them under one combined table
 heading, despite the surrounding text insisting on the distinction. The
 six faculty members are now split into the correct two tables per an
-explicit institutional correction. **Separately, a new Royal College
+explicit institutional correction. **Separately, a new Secular College
 JSS/SSS faculty roster was supplied this same session that conflicts
 with §4a/4b's existing "real, supplied" data** — different names against
 several subjects, several names appearing in neither list. Per this
@@ -39,7 +39,20 @@ programmes/levels → classes → subjects) and how it maps onto the
 
 ---
 
-## 1. The Four Institutions
+## 1. The Institutions
+
+**Amendment note (2026-08-04):** the Board's governance restructuring
+amendment renamed three institutions — Royal College → Secular
+College, School of Islamic & Arabic Studies → Islamiyyah College,
+Nursery & Primary → Basic School — and recognised a fifth institution,
+Sultan Hanafi Online & Distance Learning School. The `institutions`
+table's stored values (first column below) are **technical/code facts,
+not yet migrated** to the new names as at this register's last update;
+they are left as-is here because changing them in this register would
+misrepresent what the running database actually contains — a real data
+migration (updating `institutions.name` and any code that keys off the
+old strings) is separate, tracked work, not a documentation edit. The
+"Public-facing name" column reflects the new, adopted names.
 
 SHRS is one school **group**, not one school — this is the single most
 important structural fact for every future portal/dashboard to respect.
@@ -47,26 +60,27 @@ Real rows in the `institutions` table today:
 
 | Institution (as stored) | Public-facing name | Age/level focus (from the public site) |
 |---|---|---|
-| `Nursery & Primary` | Sultan Hanafi Nursery & Primary School | Earliest years through primary; "Nigerian curriculum... infused with entrepreneurial skills, financial intelligence, leadership, and technology" (`academics/nursery-primary/`). |
-| `Royal College` | Sultan Hanafi Royal College | Secondary — the site's boarding copy references ages 9–16 for boarding, implying JSS/SSS-band secondary schooling (Nigerian Junior/Senior Secondary System), matching the `JSS 1` class name already seeded in code. |
-| `Islamic & Arabic Studies` | School of Islamic & Arabic Studies | "All ages · Weekday & weekend" per the site's own mega-menu copy — the only institution explicitly serving both day-school and part-time/weekend students. |
+| `Nursery & Primary` *(rename to Sultan Hanafi Basic School pending in code)* | Sultan Hanafi Basic School | Earliest years through primary; "Nigerian curriculum... infused with entrepreneurial skills, financial intelligence, leadership, and technology" (`academics/nursery-primary/`). |
+| `Royal College` *(rename to Sultan Hanafi Secular College pending in code)* | Sultan Hanafi Secular College | Secondary — the site's boarding copy references ages 9–16 for boarding, implying JSS/SSS-band secondary schooling (Nigerian Junior/Senior Secondary System), matching the `JSS 1` class name already seeded in code. |
+| `Islamic & Arabic Studies` *(rename to Sultan Hanafi Islamiyyah College pending in code)* | Sultan Hanafi Islamiyyah College | "All ages · Weekday & weekend" per the site's own mega-menu copy — the only institution explicitly serving both day-school and part-time/weekend students. |
 | `Qur'an College` | Sultan Hanafi Qur'an College | The 5-Stage Hifz Journey (§3 below) — its own distinct progression model, not grade-banded like the other three. |
+| *(not yet seeded in code)* | Sultan Hanafi Online & Distance Learning School | **Gap — genuinely new institution, established 2026-08-04.** No programme, curriculum, class, subject, faculty, or `institutions` row exists for it yet; nothing in this register should be read to invent one. |
 
 **Correction (this register's own earlier v1.0 text was wrong here):**
-a complete level ladder for Nursery & Primary and Royal College is
+a complete level ladder for Basic School and Secular College is
 already documented — in `docs/teacher-operating-model.md` §1, not
 repeated in full here to avoid two documents drifting apart:
 
 | Institution | Level ladder |
 |---|---|
-| Nursery & Primary | Early Years (Creche, Nursery, Kindergarten/Preschool) → Primary 1–6 |
-| Royal College | Junior Secondary (JSS1–JSS3) → Senior Secondary (SS1–SS3) |
+| Basic School | Early Years (Creche, Nursery, Kindergarten/Preschool) → Primary 1–6 |
+| Secular College | Junior Secondary (JSS1–JSS3) → Senior Secondary (SS1–SS3) |
 | Qur'an College | The 5-Stage Hifz Journey (§3 below) **is** its ladder — not a grade-band sequence, a progression-stage sequence. |
-| School of Islamic & Arabic Studies | No level ladder documented yet — see the remaining gap below. |
+| Sultan Hanafi Islamiyyah College | No level ladder documented yet — see the remaining gap below. |
 
 **Remaining gap:** the Iʿdādiyyah level naming convention used in one
 seeded test class (`Iʿdādiyyah 1`) has never been expanded into a full
-ladder for the School of Islamic & Arabic Studies, and no document
+ladder for the Sultan Hanafi Islamiyyah College, and no document
 states how many Iʿdādiyyah/Thānawiyyah (or equivalent) levels that
 institution actually runs. This register does not invent one.
 
@@ -76,7 +90,7 @@ A student is not confined to one institution. `student_classes`
 (schema, dual-enrolment support added earlier this engagement) already
 allows a student to hold a primary enrolment in one institution and a
 secondary enrolment in another — the concrete, already-tested example
-is a Qur'an College student also enrolled in Islamic & Arabic Studies.
+is a Qur'an College student also enrolled in Islamiyyah College.
 The four institutions are therefore **programmes a family can combine**,
 not mutually exclusive tracks. Every future intake form, dashboard, or
 report must model "enrolled in N institutions," never assume exactly
@@ -84,7 +98,7 @@ one.
 
 `guardian_educational_interests` (Phase 1A) already reflects this at
 the *pre-admission* interest-signalling stage — a prospective guardian
-can express interest in Nursery & Primary, Royal College, Islamic &
+can express interest in Basic School, Secular College, Islamic &
 Arabic Studies, and/or Qur'an College simultaneously, plus
 Online/Weekend/Summer Programmes as separate interest signals (not real
 institutions — see `functions/_lib/educational-interests.js`'s own
@@ -117,14 +131,14 @@ College's JSS and SSS levels are now known, supplied directly by the
 school as part of the Academic Workforce Register (§4a below) — this
 register states them as real because they arrived as an assignment
 against real named teachers, not as an invented curriculum list.
-Nursery & Primary's and the School of Islamic & Arabic Studies'
+Basic School's and the Sultan Hanafi Islamiyyah College'
 subjects remain a **gap** — no equivalent teacher-to-subject list has
 been supplied for either yet. `term_results.subject` is still a
 free-text column (`sql/schema.sql`) with no `subjects` reference table;
 turning JSS/SSS's now-real list into an actual table row set is a
 schema task for the next data-entry phase, not done in this document.
 
-### 4a. Royal College — Junior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
+### 4a. Secular College — Junior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
 
 | Subject | Teacher |
 |---|---|
@@ -141,7 +155,7 @@ schema task for the next data-entry phase, not done in this document.
 | Cultural & Creative Arts | Miss Ogunyinka Hassanah |
 | History | Mr Oladele Abdulwasiu |
 
-### 4b. Royal College — Senior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
+### 4b. Secular College — Senior Secondary School subjects (real, supplied — ⚠ UNRECONCILED, see below)
 
 | Subject | Teacher |
 |---|---|
@@ -172,9 +186,9 @@ is exactly the kind of ambiguity real HR data entry (§4a of
 `docs/institutional-data-architecture.md`) needs to resolve with the
 school directly — this register does not guess.
 
-### 4a-bis. Royal College — second roster supplied this session (⚠ UNRECONCILED against §4a/4b above)
+### 4a-bis. Secular College — second roster supplied this session (⚠ UNRECONCILED against §4a/4b above)
 
-A different Royal College JSS/SSS teacher-subject list arrived in the
+A different Secular College JSS/SSS teacher-subject list arrived in the
 same message that corrected §4d's institution split below. It is
 recorded here in full, exactly as supplied, rather than merged into
 §4a/4b or treated as a silent replacement:
@@ -215,14 +229,14 @@ one direct answer from the school: is this a correction/update
 superseding §4a/4b (e.g. a new term's assignments), a different cohort
 or shift, or were the two simply drafted independently and need
 reconciling by hand? Until answered, no public-facing faculty content
-for Royal College should be published from either list alone.
+for Secular College should be published from either list alone.
 
-### 4c. School of Islamic & Arabic Studies and Qur'an College subjects (real, by faculty specialisation)
+### 4c. Sultan Hanafi Islamiyyah College and Qur'an College subjects (real, by faculty specialisation)
 
 No formal subject-list table was supplied for these two institutions,
 but real faculty specialisations (§4d/§4e below) name the actual programme
 components in practice: **Arabic Language, Arabic Grammar, Islamic
-Studies, Qur'anic Studies** (School of Islamic & Arabic Studies); **Hifz
+Studies, Qur'anic Studies** (Sultan Hanafi Islamiyyah College); **Hifz
 (Qur'an Memorisation), Tajweed, Qira'aat Studies, Ijazah Preparation,
 Advanced Qur'anic Sciences** (Qur'an College). The Board's own requested
 divisional structure (§5 below) adds **Fiqh, Aqeedah, Hadith, Seerah,
@@ -238,7 +252,7 @@ teaches.
 | Ustadh Muhammad Fodio | Diploma in Qira'at Sciences; Specialist in the Ten Qira'at | Ḥifẓ al-Qur'an, Tajwīd, Qira'at Sciences, Qur'anic Studies, Ijazah Preparation |
 | Ustadh Muhammad Awwal Ishola | B.A. Leadership and Counselling | Ḥifẓ al-Qur'an, Student Counselling, Leadership Development, Character Building, Qur'an College Student Affairs |
 
-### 4e. School of Islamic & Arabic Studies Faculty (real, supplied — corrected split, see revision note)
+### 4e. Sultan Hanafi Islamiyyah College Faculty (real, supplied — corrected split, see revision note)
 
 | Faculty member | Qualification | Teaching areas |
 |---|---|---|
@@ -254,7 +268,7 @@ plausible-sounding credential. "Mas'oud Abdul-Fattah" corrects v1.1's
 recorded as a correction, not a second unreconciled name, since no
 conflicting qualification/specialisation data came with it.
 
-**Still a gap:** Nursery & Primary's faculty and subject list has not
+**Still a gap:** Basic School's faculty and subject list has not
 been supplied. The Administrative Workforce Register
 (`docs/workforce-data-collection-request.md` §3) also remains open.
 
@@ -270,7 +284,7 @@ public site names 'seven academic departments' but does not name them
 individually anywhere"*) is no longer the state of documentation — it
 is now the state of **adoption**: named, proposed, awaiting a decision.
 
-### 5a. Royal College — proposed academic departments
+### 5a. Secular College — proposed academic departments
 
 Reconciled against `docs/teacher-operating-model.md` §2's own earlier
 department sketch (Sciences/Humanities/Languages/Technology) so the two
@@ -308,14 +322,14 @@ table is still empty in the running system either way — but which one
 decision this register cannot make unilaterally, and is now the same
 open question as the roster itself.
 
-### 5b. School of Islamic & Arabic Studies and Qur'an College — proposed divisional structure
+### 5b. Sultan Hanafi Islamiyyah College and Qur'an College — proposed divisional structure
 
 Per the directive: these are **two distinct academic entities**, never
 collapsed into one generic "Islamic Studies" label, consistently
 throughout this register, the prospectus, and all governance
 documentation.
 
-- **School of Islamic & Arabic Studies** — proposed component areas: Arabic Language, Islamic Studies, Fiqh, Aqeedah, Hadith, Seerah, Islamic Leadership.
+- **Sultan Hanafi Islamiyyah College** — proposed component areas: Arabic Language, Islamic Studies, Fiqh, Aqeedah, Hadith, Seerah, Islamic Leadership.
 - **Qur'an College** — proposed component programmes: Hifz Programme, Tajweed Programme, Qira'aat Programme, Ijazah Programme, Muraja'ah Programme, Qur'anic Sciences.
 
 This maps onto `docs/teacher-operating-model.md` §3's already-proposed
@@ -335,8 +349,8 @@ governance-sourced, not invented:
 
 | Office | Type | Scope |
 |---|---|---|
-| Board of Trustees | Governance | Ultimate governing body (GV-01) — 4 members, composition not individually published. |
-| Registrar's Office | Academic | Admissions verification, enrolment, results, transcripts, certificates — all four institutions (AC-02, PA-05). |
+| Board of Governors | Governance | Ultimate governing body (GV-01) — 5 core seats (Chairman, Secretary, three Other Members) per the 2026-08-04 amendment; individual composition beyond the Chairman not fully published. |
+| Registrar's Office | Academic | Admissions verification, enrolment, results, transcripts, certificates — across the Institution's schools (AC-02, PA-05). |
 | Finance Office | Support | Fee records, all institutions (FN-01) — no full write workflow yet, pending FN-03/04/05. |
 | ICT Office | Support | System accounts, access logs, Acceptable Use / AI Usage policy ownership (IT-03, IT-05). |
 
@@ -354,8 +368,9 @@ project recommends building system support for ahead of formal Board
 appointment). The full list, rationale, and permission grants per role
 live in `docs/role-permission-matrix.md` — this register only points to
 it to avoid two documents disagreeing with each other over time.
-Established roles today: **EXE** (CEO/Executive Leadership — named
-individual: Zakariya Olanrewaju Anofi, per GV-01), **PRIN** (Principal/
+Established roles today: **EXE** (Head of Schools / Administrator /
+Executive Leadership — named individual: Zakariya Olanrewaju Anofi,
+also Chairman of the Board of Governors, per GV-01), **PRIN** (Principal/
 Head Teacher, per-institution), **REG** (Registrar — named individual:
 Mrs. Anofi-Abdulkareem Mariam Tope, per AC-02/PA-05), **DSL**
 (Designated Safeguarding Lead, per SW-02 — role defined, not yet
@@ -363,10 +378,10 @@ appointed).
 
 ## 8. Committees
 
-**Gap.** Beyond the Board of Trustees itself, no standing committee is
+**Gap.** Beyond the Board of Governors itself, no standing committee is
 named anywhere in `docs/`. `docs/governance-master-register.md` records
 "Committee Charters" as only **PARTIAL** (2 of an unstated total),
-owned by the Board of Trustees, reviewed biennially — confirming this is
+owned by the Board of Governors, reviewed biennially — confirming this is
 a known, tracked gap at the governance level already, not something
 newly discovered here.
 
@@ -380,7 +395,7 @@ requires this to be set explicitly per person, and no real staff have
 been onboarded through it yet (see Phase 5 of the Master Deployment
 Directive: Staff Identity System is Developed/Merged, not populated
 with real institutional data). The intended shape, once populated:
-Board of Trustees → CEO (EXE) → Principals (PRIN, per institution) →
+Board of Governors → Head of Schools / Administrator (EXE) → Principals (PRIN, per institution) →
 Registrar (REG, cross-institution) / Vice Principals (VP, proposed) →
 Teachers/Muhaffiz/Arabic Instructors (TCH/MUH/ARB) reporting to their
 institution's Principal or the Qur'an College Officer (QC-OFF,

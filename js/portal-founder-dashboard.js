@@ -436,7 +436,7 @@
   // labelled as not-yet-adopted (same honest pattern as office
   // Strategic Priorities/Annual Objectives templates).
   var STRATEGIC_ITEMS = [
-    ['Vision 2035', 'The Board of Trustees has not yet formally adopted a Vision 2035 statement.'],
+    ['Vision 2035', 'The Board of Governors has not yet formally adopted a Vision 2035 statement.'],
     ['Strategic Goals', 'No institution-wide strategic goals have been adopted yet.'],
     ['Key Milestones', 'No milestones have been set against an adopted strategy yet.'],
     ['Institutional Projects', 'No formally tracked institutional projects exist yet.'],
@@ -890,7 +890,7 @@
     overlay.appendChild(crest);
     var lines = document.createElement('div');
     lines.className = 'exec-arrival-lines';
-    var l1 = el('div', 'exec-arrival-line l1', 'Office of the Founder & Chief Executive Officer');
+    var l1 = el('div', 'exec-arrival-line l1', 'Office of the Founder, Head of Schools & Chairman');
     var l2 = el('div', 'exec-arrival-line l2', data.viewedBy ? 'Welcome Back, ' + data.viewedBy : 'Welcome to the Command Centre');
     var l3 = el('div', 'exec-arrival-line l3', 'Sultan Hanafi Royal Schools Command Centre');
     lines.appendChild(l1); lines.appendChild(l2); lines.appendChild(l3);

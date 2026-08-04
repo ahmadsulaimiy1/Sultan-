@@ -9,8 +9,12 @@ far. Nothing here is new content — it is every open item already named
 somewhere else, collected in one place so none of them quietly get
 forgotten inside a 200-line policy document.*
 
-**Owner:** CEO, on the Board's behalf — this register itself is
-reviewed by the Board.
+**Owner:** Head of Schools / Administrator, on the Board's behalf — this
+register itself is reviewed by the Board. *(Updated 2026-08-04: this
+row previously read "CEO," before the Board's governance restructuring
+amendment of that date abolished the office of Chief Executive Officer
+and established the office of Head of Schools / Administrator in its
+place — see Category 8 below.)*
 **Review cycle:** Quarterly (more frequent than the annual policy
 review cycle, since resolution items are meant to close, not sit).
 
@@ -119,6 +123,27 @@ structure below.)*
 | Build the actual admission-stage consent form/record (paper or Parent Portal field) once the structure above is adopted | Registrar / ICT Head | BLOCKED — depends on Board adoption above | Medium | Registrar / ICT Head |
 | Obtain professional photography for the two held photographs' subject matter (a group of enrolled students; a working classroom) so the school isn't limited to a single unusable candidate photo for these use cases | Registrar / ICT Head | OPEN — new, surfaced because the two specific files held above cannot be technically processed by this project's tooling at all, independent of the consent question | Low | Registrar / ICT Head |
 
+## 8. Governance restructuring amendment (2026-08-04)
+
+*(New category. Records the Board's adoption of the governance
+restructuring amendment approved 2026-08-04 — see Policy GV-01 v3.0,
+`docs/shrs-constitution-2026-draft.md`'s Certificate of Amendment, and
+`docs/shrs-constitution-of-shrs-2026-draft.md` Articles 3.1, 3.2, and
+10.1, all updated the same date.)*
+
+| Item | Owner | Status | Priority | Approval pathway |
+|---|---|---|---|---|
+| Adopt the Board of Governors' restated composition: Chairman, Secretary, and three (3) Other Members, replacing the prior Board of Trustees composition | Board of Governors | **RESOLVED — 2026-08-04** | Critical | Board of Governors |
+| Abolish the office of Chief Executive Officer and establish the office of Head of Schools / Administrator; confirm the Founder (Zakariya Olanrewaju Anofi) as holding that office together with the office of Chairman of the Board of Governors | Board of Governors | **RESOLVED — 2026-08-04** | Critical | Board of Governors |
+| Replace the Executive Management Team with the Management Team (Head of Schools / Administrator and the five institutions' Heads); re-tier the Registrar, VP Administration, Head of Finance, Human Resources, and ICT Head as Heads of Department reporting to the Management Team | Board of Governors | **RESOLVED — 2026-08-04** | High | Board of Governors |
+| Establish Board-Level Committees (Educational Technical Committee, Finance Committee) and Management-Level Committees (Da'wah Committee, Academic Committee, Sports Committee) | Board of Governors | **RESOLVED — 2026-08-04**, save for one further Board-Level Committee not yet named | High | Board of Governors |
+| Rename Sultan Hanafi Royal College → Sultan Hanafi Secular College; Sultan Hanafi School of Islamic & Arabic Studies → Sultan Hanafi Islamiyyah College (Head's title Ra'ees → Principal); Sultan Hanafi Nursery & Primary School → Sultan Hanafi Basic School; and confirm Sultan Hanafi Qur'an College's Head's title Mudeer → Principal | Board of Governors | **RESOLVED — 2026-08-04** | Medium | Board of Governors |
+| Establish Sultan Hanafi Online & Distance Learning School as the Institution's fifth Constituent Institution | Board of Governors | **RESOLVED — 2026-08-04** (institution established; no Head, students, or curriculum yet) | Medium | Board of Governors |
+| **New vacancy — designate a Secretary to the Board** (Governance Charter Article 32A, a new core Board seat created by this amendment) | Board of Governors | **OPEN** | High | Board of Governors |
+| **New vacancy — appoint a Head, Sultan Hanafi Online & Distance Learning School** | Board of Governors, on recommendation of the Head of Schools / Administrator | **OPEN** | Medium | Board of Governors |
+| **New — name the Board's one further Board-Level Committee** (Governance Charter Articles 44 and 97) | Board of Governors | **OPEN** | Medium | Board of Governors |
+| Propagate this amendment's terminology into the remaining governance and technical documentation not updated on 2026-08-04 (e.g. `institutions` table data migration for the renamed schools, per `docs/master-academic-structure-register.md` §1) | Head of Schools / Administrator / ICT Head | **OPEN** | Medium | Head of Schools / Administrator |
+
 ## Summary
 
 | Category | Items | Critical | Blocked on external party |
@@ -130,7 +155,8 @@ structure below.)*
 | Safeguarding appointments | 4 | 2 | 2 (depend on DSL appointment first) |
 | Legal & regulatory verification | 6 | 0 | 6 (all need external counsel/professionals) |
 | Image and media consent | 3 | 0 | 0 (school's own decision) |
-| **Total** | **26** | **3** | **10** |
+| Governance restructuring amendment (2026-08-04) | 9 | 0 | 0 (school's own decision; 6 of 9 items RESOLVED on adoption) |
+| **Total** | **35** | **3** | **10** |
 
 **The three Critical items are, in order of true dependency:** appoint
 a Designated Safeguarding Lead → confirm real external referral agency
@@ -153,3 +179,4 @@ doing.
 | 0.1 | Draft | Initial register, Phase D | Collects every open item already named across the 23 policy documents drafted in Phases A–D; not yet reviewed or adopted |
 | 0.2 | Draft | Phase G — added Category 7 (Image and media consent), surfaced by the first real photography batch supplied for the website; total tracked items 23 → 26 | Not yet reviewed or adopted |
 | 0.3 | Draft | Director directly authorised publication of the SPELL Africa competition photo, resolving it out of the second Category 7 item; added a new item for professional photography of the two remaining held subjects (a student group photo, a classroom photo), since those specific files cannot be technically processed by this project's tooling regardless of consent status | Not yet reviewed or adopted |
+| 0.4 | 2026-08-04 | Added Category 8, recording the Board's adoption of the governance restructuring amendment (Board of Governors composition; abolition of the office of Chief Executive Officer and establishment of the office of Head of Schools / Administrator; the Management Team; new Board-Level and Management-Level Committees; three institution renames; a fifth institution established); updated this register's own Owner line; total tracked items 26 → 35 | Board-adopted per the 2026-08-04 resolution recorded in Category 8; the register itself remains under quarterly review |

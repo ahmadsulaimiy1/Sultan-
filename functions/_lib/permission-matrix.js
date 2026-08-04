@@ -43,14 +43,14 @@ export const SYSTEM_AREAS = {
   communications:         { name: 'Communications', ownerOffice: 'Varies by content and audience', governingPolicy: null },
   policies:               { name: 'Policies', ownerOffice: 'Policy-owning office per policy-code-index.md', governingPolicy: null },
   website_content:        { name: 'Website Content', ownerOffice: 'ICT / Communications function', governingPolicy: null },
-  governance_documents:   { name: 'Governance Documents', ownerOffice: 'Board of Trustees', governingPolicy: null },
+  governance_documents:   { name: 'Governance Documents', ownerOffice: 'Board of Governors', governingPolicy: null },
   analytics:              { name: 'Analytics', ownerOffice: 'Varies', governingPolicy: null },
   system_settings:        { name: 'System Settings', ownerOffice: 'ICT / System Administrator', governingPolicy: null },
   safeguarding:           { name: 'Safeguarding Intelligence', ownerOffice: 'Designated Safeguarding Lead', governingPolicy: 'SW-01, SW-02' },
   behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
   teacher_performance:    { name: 'Teacher Performance', ownerOffice: 'Principal, jointly with Academic Affairs', governingPolicy: 'Pending — HR Governance Framework (Staff Handbook §7)' },
   exam_readiness:         { name: 'Examination Readiness (WAEC/NECO)', ownerOffice: 'Registrar, jointly with Academic Affairs', governingPolicy: null },
-  arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'School of Islamic & Arabic Studies', governingPolicy: null },
+  arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'Sultan Hanafi Islamiyyah College', governingPolicy: null },
   tajweed_compliance:     { name: 'Tajweed Compliance', ownerOffice: "Qur'an College", governingPolicy: 'IQ-01, IQ-03' },
   boarding_intelligence:  { name: 'Boarding Intelligence', ownerOffice: 'Boarding Officer / Wardens', governingPolicy: 'SD-04' },
 };
@@ -167,7 +167,7 @@ export const MATRIX = {
   // §16.5) extend this with 'A' for PRIN, own institution only — the
   // same joint-authority pattern certificates: already uses, and the
   // natural fit here since §13.2 already names the student's own
-  // Principal/Head Teacher/Ra'ees/Mudeer as the sole required signatory
+  // Principal/Head Teacher as the sole required signatory
   // for both document types: the office that approves is the office
   // that signs.
   graduation_documents: [
@@ -201,7 +201,7 @@ export const MATRIX = {
     // Same reality as Policies — git-based, not an in-system permission.
   ],
   governance_documents: [
-    // Board of Trustees owns this; git-based, not an in-system permission.
+    // Board of Governors owns this; git-based, not an in-system permission.
   ],
   analytics: [
     { role: 'EXE', permissions: ['V'], scope: 'all institutions, aggregate (Founder Dashboard, live)' },

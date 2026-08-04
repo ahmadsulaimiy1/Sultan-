@@ -20,7 +20,7 @@ error.*
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board and Qur'an College scholarly review |
 | Policy Owner | Principal, Qur'an College (Shaykh Ahmad Ibrahim) |
-| Approval Authority | Board of Trustees, informed by Qur'an College's own scholarly leadership |
+| Approval Authority | Board of Governors, informed by Qur'an College's own scholarly leadership |
 | Review Cycle | Biennial, or immediately if an Ijazah-granting scholar's status changes |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
