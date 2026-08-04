@@ -155,6 +155,24 @@ function timelineItem(year, title, desc) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .im-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: NAVY }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4E1D8' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: BODY_FONT, size: 14, bold: true, color: BURGUNDY, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 20, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -188,7 +206,29 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. FOUNDER'S STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Institutional Masterplan Edition'],
+    ['Document ID', 'SHRS-PUB-MASTPLAN-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. FOUNDER'S STATEMENT ============
 {
   const B = [];
   B.push(eyebrow("A Statement From the Founder"));
@@ -201,27 +241,27 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('A Structural Account'));
   B.push(lede('Each chapter documents one dimension of the institution — real, dated, and drawn from what has actually been built and recorded.'));
   const toc = [
-    ['Institutional Overview', '04'], ['Our Journey, 2016–2026', '05'], ['Governance Architecture', '06'],
-    ['The Policy Framework', '07'], ['Digital Campus Infrastructure', '08'], ['Built to Scale', '09'],
-    ['Community & Impact', '10'], ['International Register', '11'], ['Our Vision', '12'],
-    ['The Road Ahead', '13'], ['Academic Milestones', '14'], ['Partner With Us', '15'],
+    ['Institutional Overview', '05'], ['Our Journey, 2016–2026', '06'], ['Governance Architecture', '07'],
+    ['The Policy Framework', '08'], ['Digital Campus Infrastructure', '09'], ['Built to Scale', '10'],
+    ['Community & Impact', '11'], ['International Register', '12'], ['Our Vision', '13'],
+    ['The Road Ahead', '14'], ['Academic Milestones', '15'], ['Partner With Us', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ spacing: { after: 100 },
     children: [new TextRun({ text: t, font: BODY_FONT, size: 20, color: INK }), new TextRun({ text: '\t' + p, font: HEAD_FONT, size: 20, color: BURGUNDY, bold: true })] })));
   B.push(new Paragraph({ spacing: { before: 160 } }));
   B.push(panel("Every figure, date, and claim in this edition is drawn from SHRS's own governance register, technical documentation, and published record. Where a plan is real but not yet executed, it is named as such — this edition does not invent a dated strategic target, a second campus, or a formal partnership that does not exist.", 'A Note on Method'));
-  B.push(statQuad([['12', 'Chapters'], ['16', 'Pages'], ['4', 'Audiences Addressed'], ['0', 'Fabricated Claims']]));
+  B.push(statQuad([['12', 'Chapters'], ['17', 'Pages'], ['4', 'Audiences Addressed'], ['0', 'Fabricated Claims']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. INSTITUTIONAL OVERVIEW ============
+// ============ 05. INSTITUTIONAL OVERVIEW ============
 {
   const B = [];
   B.push(eyebrow('At a Glance'));
@@ -235,7 +275,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. OUR JOURNEY ============
+// ============ 06. OUR JOURNEY ============
 {
   const B = [];
   B.push(eyebrow('Our Journey, 2016–2026'));
@@ -250,7 +290,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. GOVERNANCE ARCHITECTURE ============
+// ============ 07. GOVERNANCE ARCHITECTURE ============
 {
   const B = [];
   B.push(eyebrow('Governance Architecture'));
@@ -266,7 +306,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. THE POLICY FRAMEWORK ============
+// ============ 08. THE POLICY FRAMEWORK ============
 {
   const B = [];
   B.push(eyebrow('The Policy Framework'));
@@ -284,7 +324,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 08. DIGITAL CAMPUS INFRASTRUCTURE ============
+// ============ 09. DIGITAL CAMPUS INFRASTRUCTURE ============
 {
   const B = [];
   B.push(eyebrow('Digital Campus Infrastructure'));
@@ -299,7 +339,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. BUILT TO SCALE ============
+// ============ 10. BUILT TO SCALE ============
 {
   const B = [];
   B.push(eyebrow('Built to Scale'));
@@ -312,7 +352,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. COMMUNITY & IMPACT ============
+// ============ 11. COMMUNITY & IMPACT ============
 {
   const B = [];
   B.push(eyebrow('Community & Impact'));
@@ -323,7 +363,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 11. INTERNATIONAL REGISTER ============
+// ============ 12. INTERNATIONAL REGISTER ============
 {
   const B = [];
   B.push(eyebrow('International Register'));
@@ -340,7 +380,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. OUR VISION ============
+// ============ 13. OUR VISION ============
 {
   const B = [];
   B.push(eyebrow('Our Vision'));
@@ -352,7 +392,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. THE ROAD AHEAD ============
+// ============ 14. THE ROAD AHEAD ============
 {
   const B = [];
   B.push(eyebrow('Named, Not Invented'));
@@ -366,7 +406,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 14. ACADEMIC MILESTONES ============
+// ============ 15. ACADEMIC MILESTONES ============
 {
   const B = [];
   B.push(eyebrow('Academic Milestones'));
@@ -379,7 +419,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. PARTNER WITH US ============
+// ============ 16. PARTNER WITH US ============
 {
   const B = [];
   B.push(eyebrow('Partner With Us'));
@@ -398,7 +438,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
