@@ -142,7 +142,7 @@ export async function onRequestGet({ request, env }) {
       const cert = res.rows[0];
       if (!cert) return json({ error: 'No certificate found with that serial number.' }, 404);
       const vUrl = verifyUrlFor(env, cert.serial_no);
-      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'Q' }), verifyUrl: vUrl });
+      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'H' }), verifyUrl: vUrl });
       filename = `${cert.serial_no}.pdf`;
     } else {
       const batchRes = await sql`SELECT * FROM stage_certificate_batches WHERE batch_no = ${batchNo}`;
@@ -157,7 +157,7 @@ export async function onRequestGet({ request, env }) {
         `${batch.batch_no} — ${certsRes.rows.length} certificates`,
         certsRes.rows.map((cert) => {
           const vUrl = verifyUrlFor(env, cert.serial_no);
-          return { cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'Q' }), verifyUrl: vUrl };
+          return { cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'H' }), verifyUrl: vUrl };
         })
       );
       filename = `${batch.batch_no}.pdf`;

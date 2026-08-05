@@ -683,6 +683,11 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
 function sheetHtmlConstructed({ cert, qrSvgMarkup, verifyUrl }) {
   const ar = arForms(cert.student_sex);
+  // Same programme lookup as the official sheet. This fallback had the stage
+  // hardcoded to Ibtidāʾiyyah and spelled الإبتدائية with a hamza it does not
+  // take, so if the artwork path ever failed it would have printed both the
+  // wrong award and a misspelling.
+  const stage = STAGE[String(cert.programme_code || 'IBT').toUpperCase()] || STAGE.IBT;
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const gregEn = formatGregorianEn(cert.issued_at);
   const gregAr = formatGregorianAr(cert.issued_at);
@@ -750,14 +755,14 @@ function sheetHtmlConstructed({ cert, qrSvgMarkup, verifyUrl }) {
     <!-- ═══ TITLE BAND — EN left · AR right (Bible §4.1) ═══ -->
     <div class="titles">
       <div class="title-en">
-        <div class="t-en-1">Certificate of Ibtidā&rsquo;iyyah</div>
-        <div class="t-en-2">Foundational Stage Completion</div>
+        <div class="t-en-1">Certificate of ${stage.term}</div>
+        <div class="t-en-2">${stage.gloss}</div>
       </div>
       <div class="title-divider">
         <div class="td-diamond"></div><div class="td-line"></div><div class="td-diamond"></div>
       </div>
       <div class="title-ar">
-        <div class="t-ar-1">شهادة إتمام المرحلة الإبتدائية</div>
+        <div class="t-ar-1">شهادة إتمام ${stage.ar}</div>
         <div class="t-ar-2"><span dir="rtl">العام الدراسي ${academicYear}</span> · Academic Year ${academicYear}</div>
       </div>
     </div>
