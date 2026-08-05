@@ -343,91 +343,90 @@ function sheetHtml(args) {
 function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const ar = arForms(cert.student_sex);
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
-  const gregEn = formatGregorianEn(cert.issued_at);
-  const gregAr = formatGregorianAr(cert.issued_at);
-  const hijriEn = cert.issued_at_hijri || '';
-  const hijriAr = cert.issued_at_hijri_ar || '';
+  const verifyCode = displayHash.replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
+  const year = new Date(String(cert.issued_at).slice(0, 10)).getUTCFullYear();
+  const docId = `DID-${year}-${escapeHtml(cert.programme_code || 'IBT')}-${String(cert.id || 0).padStart(7, '0')}`;
+  const issuedDDMM = (() => {
+    const d = String(cert.issued_at).slice(0, 10).split('-');
+    return `${d[2]} / ${d[1]} / ${d[0]}`;
+  })();
   const nameEn = escapeHtml(cert.student_full_name);
   const nameAr = escapeHtml(cert.student_full_name_ar || '');
-  const placeEn = escapeHtml(cert.place_en || 'Ikorodu, Lagos State, Nigeria');
-  const placeAr = escapeHtml(cert.place_ar || 'مدينة إكورودو، ولاية لاغوس، نيجيريا');
   const serial = escapeHtml(cert.serial_no);
   const studentId = escapeHtml(cert.student_identity_no || '—');
-  const academicYear = escapeHtml(cert.academic_year);
-  const stageAr = escapeHtml(cert.programme_label_ar || 'المرحلة الابتدائية');
-  const nameMicro = escapeHtml(`· ${cert.serial_no} `.repeat(14));
+  const session = escapeHtml(String(cert.academic_year || '').replace('/', ' – '));
+  const hijriAr = escapeHtml(cert.issued_at_hijri_ar || cert.issued_at_hijri || '');
+  const arCompleted = String(cert.student_sex || '').toLowerCase() === 'female' ? 'أتمت' : 'أتم';
+
+  const enRow = (label, value) => `<div class="f-row en"><span class="f-label">${label}</span><span class="f-lead"></span><span class="f-value">${value}</span></div>`;
+  const arRow = (label, value) => `<div class="f-row ar"><span class="f-value">${value}</span><span class="f-lead"></span><span class="f-label">${label}</span></div>`;
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
 
-  <div class="o-head o-head-left">
-    <img class="o-arms" src="/assets/images/crests/nigeria-coat-of-arms.png" alt="Federal Republic of Nigeria" />
-    <div class="o-state-en">Federal Republic of Nigeria</div>
-    <div class="o-school-en">School of Islamic &amp; Arabic Studies</div>
+  <div class="o2-intro-en">This is to certify that</div>
+  <div class="o2-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
+
+  <div class="o2-name-en foil-text">${nameEn}</div>
+  <div class="o2-name-ar foil-text">${nameAr}</div>
+
+  <div class="o2-para-en">has successfully completed the requirements of the
+    Ibtidā&rsquo;iyyah (Primary) stage in accordance with the approved curriculum
+    and academic standards of the School.</div>
+  <div class="o2-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الإبتدائية وفقًا
+    للمناهج المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
+
+  <div class="o2-fields-en">
+    ${enRow('Programme / Level', 'Ibtidā&rsquo;iyyah (Primary)')}
+    ${enRow('Academic Session', session)}
+    ${enRow('Certificate Number', serial)}
+    ${enRow('Student ID', studentId)}
   </div>
-  <div class="o-head o-head-right">
-    <div class="o-state-ar">جمهورية نيجيريا الاتحادية</div>
-    <div class="o-inst-ar">مدارس السلطان حنفي الملكية</div>
-    <div class="o-school-ar">قسم الدراسات الإسلامية والعربية</div>
+  <div class="o2-fields-ar">
+    ${arRow('البرنامج / المستوى', 'المرحلة الإبتدائية')}
+    ${arRow('السنة الدراسية', session)}
+    ${arRow('رقم الشهادة', serial)}
+    ${arRow('الرقم التعريفي للطالب', studentId)}
   </div>
 
-  <div class="o-titles">
-    <div class="o-title-en">
-      <div class="o-t-en-1">Certificate of Ibtidā&rsquo;iyyah</div>
-      <div class="o-t-en-2">Foundational Stage Completion</div>
-    </div>
-    <div class="o-title-div"><span></span></div>
-    <div class="o-title-ar">
-      <div class="o-t-ar-1">شهادة إتمام المرحلة الإبتدائية</div>
-      <div class="o-t-ar-2"><span dir="rtl">العام الدراسي ${academicYear}</span> · Academic Year ${academicYear}</div>
-    </div>
+  <div class="o2-dates-en">
+    ${enRow('Date of Issue', issuedDDMM)}
+    ${enRow('Place of Issue', escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria'))}
+  </div>
+  <div class="o2-dates-ar">
+    ${arRow('تاريخ الإصدار', issuedDDMM)}
+    ${arRow('مكان الإصدار', escapeHtml(cert.place_ar || 'لاغوس، نيجيريا'))}
   </div>
 
-  <div class="o-conferral">
-    <span class="o-conf-en">This certificate is proudly conferred upon</span>
-    <span class="o-conf-sep">✦</span>
-    <span class="o-conf-ar">تُمنح هذه الشهادة بكل فخرٍ واعتزاز إلى ${ar.student}</span>
+  <div class="o2-hijri">
+    <div class="o2-hijri-k">التاريخ الهجري</div>
+    <div class="o2-hijri-v">${hijriAr}</div>
   </div>
 
-  <div class="o-name">
-    <div class="o-name-en foil-text">${nameEn}</div>
-    <div class="o-name-ar foil-text">${nameAr}</div>
-    <div class="o-name-micro">${nameMicro}</div>
+  <div class="o2-sig o2-sig-1">
+    <div class="o2-sig-line"></div>
+    <div class="o2-sig-en">Registrar</div>
+    <div class="o2-sig-seal">(Official Seal) · المسجّلة</div>
+  </div>
+  <div class="o2-sig o2-sig-2">
+    <div class="o2-sig-line"></div>
+    <div class="o2-sig-en">Principal / Head of School</div>
+    <div class="o2-sig-seal">(Official Seal) · رئيس المدرسة</div>
+  </div>
+  <div class="o2-sig o2-sig-3">
+    <div class="o2-sig-line"></div>
+    <div class="o2-sig-en">Chairman, Board of Governors</div>
+    <div class="o2-sig-seal">(Official Seal) · رئيس مجلس الإدارة</div>
   </div>
 
-  <div class="o-citation">
-    <div class="o-cite en">
-      In recognition of the successful completion of the prescribed programme of the
-      <strong>Ibtidā&rsquo;iyyah — Foundational Stage</strong> in the Islamic and Arabic
-      disciplines, pursuant to the School&rsquo;s approved curriculum, at ${placeEn}.
-      <span class="o-dates">Given this <strong>${gregEn}</strong>${hijriEn ? `, corresponding to <strong>${escapeHtml(hijriEn)}</strong>` : ''}.</span>
-    </div>
-    <div class="o-cite ar">
-      وذلك ${ar.completion} متطلبات البرنامج المقرر <strong>${stageAr}</strong>
-      في علوم الدراسات الإسلامية والعربية وفق المناهج المعتمدة لدى المدرسة، في ${placeAr}.
-      <span class="o-dates">حُرِّرت هذه الشهادة في <strong>${gregAr}</strong>${hijriAr ? ` الموافق <strong>${escapeHtml(hijriAr)}</strong>` : ''}.</span>
-    </div>
-  </div>
+  <div class="o2-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+  <div class="o2-verify"><span class="vt">Verification</span>
+    Certificate No. <b>${serial}</b><span class="sep">·</span>
+    Document ID <b>${docId}</b><span class="sep">·</span>
+    Code <b>${verifyCode}</b><span class="sep">·</span>
+    Verify online <b>shroyalschools.com/verify-certificate</b></div>
 
-  <div class="o-void">أي تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية &nbsp;·&nbsp; <em>Any alteration or modification renders this certificate void</em></div>
-
-  <div class="o-sig o-sig-left">
-    <div class="o-sig-line"></div>
-    <div class="o-sig-en">Registrar</div>
-    <div class="o-sig-ar">المسجّلة</div>
-  </div>
-  <div class="o-sig o-sig-right">
-    <div class="o-sig-line"></div>
-    <div class="o-sig-en">Head of the School</div>
-    <div class="o-sig-ar">رئيس المدرسة</div>
-  </div>
-
-  <!-- live verification into the paper's own zones -->
-  <div class="o-qr">${themedQr(qrSvgMarkup, '#1B2740', '#F4F6F7')}</div>
-  <div class="o-serial-patch"></div>
-  <div class="o-serial">${serial}</div>
-  <div class="o-student-id">STUDENT ID&nbsp; ${studentId}</div>
-  <div class="o-hash">HMAC-SHA-256 &nbsp;${displayHash}</div>
+  <div class="o2-void">Issued without alteration or erasure — any tampering voids this certificate · أي تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية</div>
 </div>`;
 }
 
@@ -618,79 +617,65 @@ function docShell(title, sheetsHtml) {
   .frame{position:absolute;inset:0;width:100%;height:100%;}
   .official-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;}
 
-  /* ═══ OFFICIAL-PAPER COMPOSITION (client artwork, used as provided;
-     content set into the paper's own zones — all positions in mm on
-     the 297×209.5 sheet, measured from the source) ═══ */
+  /* ═══ OFFICIAL-PAPER COMPOSITION v2 — the client's LOCKED
+     production master (Final Flagship Execution Directive): the
+     artwork renders untouched; only the approved data fields compose
+     into its zones, per the annotated layout master. Positions in mm
+     on the 297×209.5 sheet. ═══ */
   .sheet--official{background:#FFFFFF;}
-  .o-head{position:absolute;top:34mm;width:72mm;}
-  .o-head-left{left:42mm;text-align:left;}
-  .o-head-right{right:42mm;text-align:right;}
-  .o-arms{height:10mm;width:auto;object-fit:contain;margin-bottom:1.6mm;
-    filter:contrast(1.15) saturate(1.2) drop-shadow(0 0.4mm 0.5mm rgba(20,30,55,.3));}
-  .o-state-en{font-family:var(--en-display);font-size:9.6pt;font-weight:700;letter-spacing:2.6px;text-transform:uppercase;color:#1F2A44;white-space:nowrap;}
-  .o-school-en{font-family:var(--en-display);font-size:7pt;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8C6516;margin-top:1.3mm;}
-  .o-state-ar{font-family:var(--ar-display);font-size:10pt;font-weight:700;line-height:1.6;color:#1F2A44;white-space:nowrap;}
-  .o-inst-ar{font-family:var(--ar-display);font-size:10pt;font-weight:600;line-height:1.7;color:#3C4863;margin-top:1mm;white-space:nowrap;}
-  .o-school-ar{font-family:var(--ar-text);font-size:9pt;font-weight:700;color:#8C6516;margin-top:.5mm;}
+  .o2-intro-en{position:absolute;top:96mm;left:42mm;width:100mm;text-align:center;
+    font-family:var(--en-text);font-style:italic;font-size:9.8pt;color:#4B3420;}
+  .o2-intro-ar{position:absolute;top:95.6mm;right:42mm;width:100mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:10.4pt;font-weight:700;color:#4B3420;}
 
-  .o-titles{position:absolute;top:60mm;left:42mm;right:42mm;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;column-gap:6mm;}
-  .o-title-en{text-align:right;}
-  .o-t-en-1{font-family:var(--en-display);font-size:13.2pt;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#1B2740;white-space:nowrap;}
-  .o-t-en-2{font-family:var(--en-text);font-style:italic;font-size:10pt;font-weight:600;letter-spacing:1px;color:#3C4863;margin-top:.8mm;}
-  .o-title-div{height:12mm;display:flex;align-items:center;}
-  .o-title-div span{display:block;width:.3mm;height:100%;background:linear-gradient(180deg,transparent,#B8860B,transparent);}
-  .o-title-ar{text-align:left;direction:rtl;}
-  .o-t-ar-1{font-family:var(--ar-display);font-size:12.8pt;font-weight:700;line-height:1.6;color:#1B2740;white-space:nowrap;}
-  .o-t-ar-2{font-family:var(--en-text);font-style:italic;font-size:8.6pt;color:#3C4863;margin-top:.4mm;direction:ltr;text-align:left;}
-  .o-t-ar-2 span{font-family:var(--ar-text);font-style:normal;}
+  .o2-name-en{position:absolute;top:102.5mm;left:38mm;width:106mm;text-align:center;
+    font-family:var(--en-display);font-size:16.5pt;font-weight:700;letter-spacing:1.8px;line-height:1.15;}
+  .o2-name-ar{position:absolute;top:102mm;right:38mm;width:106mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:15.5pt;font-weight:700;line-height:1.3;
+    -webkit-text-stroke:0.38px rgba(92,67,31,.55);}
 
-  .o-conferral{position:absolute;top:82mm;left:0;right:0;display:flex;justify-content:center;gap:5mm;align-items:baseline;}
-  .o-conf-en{font-family:var(--en-text);font-style:italic;font-size:10pt;color:#3C4863;}
-  .o-conf-sep{color:#B8860B;font-size:6.5pt;}
-  .o-conf-ar{font-family:var(--ar-text);font-size:11pt;color:#3C4863;direction:rtl;}
+  .o2-para-en{position:absolute;top:113.5mm;left:42mm;width:99mm;
+    font-family:var(--en-text);font-size:9.4pt;line-height:1.5;color:#3A2A18;text-align:center;}
+  .o2-para-ar{position:absolute;top:113.5mm;right:42mm;width:99mm;direction:rtl;
+    font-family:var(--ar-text);font-size:10pt;line-height:1.65;color:#3A2A18;text-align:center;}
 
-  .o-name{position:absolute;top:89mm;left:0;right:0;text-align:center;}
-  .o-name-en{font-family:var(--en-display);font-size:25pt;font-weight:700;letter-spacing:2.6px;line-height:1.1;}
-  .o-name-ar{font-family:var(--ar-text);font-size:18.5pt;font-weight:700;margin-top:1mm;direction:rtl;}
-  .o-name-micro{margin:1.8mm auto 0;max-width:128mm;white-space:nowrap;overflow:hidden;
-    font-family:var(--utility);font-size:2.9pt;letter-spacing:.35px;color:#8C6516;opacity:.65;
-    border-top:0.15mm solid rgba(140,101,22,.4);padding-top:.5mm;}
+  .f-row{display:flex;align-items:baseline;gap:1.6mm;margin-bottom:2mm;}
+  .f-label{font-family:var(--en-text);font-size:8.2pt;font-weight:600;color:#4B3420;white-space:nowrap;}
+  .f-row.ar .f-label{font-family:var(--ar-text);font-size:8.8pt;font-weight:700;}
+  .f-lead{flex:1;border-bottom:0.3mm dotted #B08A2E;transform:translateY(-0.7mm);}
+  .f-value{font-family:var(--utility);font-size:7.4pt;font-weight:600;letter-spacing:.2px;color:#221A10;white-space:nowrap;}
+  .f-row.ar{direction:rtl;}
+  .f-row.ar .f-value{direction:ltr;}
 
-  .o-citation{position:absolute;top:117mm;left:40mm;right:40mm;display:grid;grid-template-columns:1fr 1fr;column-gap:8mm;}
-  .o-cite{line-height:1.6;color:#33405C;}
-  .o-cite.en{font-family:var(--en-text);font-size:10.4pt;text-align:left;}
-  .o-cite.ar{font-family:var(--ar-text);font-size:11.2pt;line-height:1.78;text-align:right;direction:rtl;}
-  .o-cite strong{color:#1B2740;}
-  .o-dates{display:block;margin-top:1.2mm;font-size:.93em;}
+  .o2-fields-en{position:absolute;top:130mm;left:42mm;width:99mm;}
+  .o2-fields-ar{position:absolute;top:130mm;right:42mm;width:99mm;}
+  .o2-dates-en{position:absolute;top:154mm;left:42mm;width:80mm;}
+  .o2-dates-ar{position:absolute;top:154mm;right:42mm;width:80mm;}
 
-  .o-void{position:absolute;top:149mm;left:0;right:0;text-align:center;
-    font-family:var(--ar-text);font-size:6.6pt;color:#5A2830;}
-  .o-void em{font-family:var(--en-text);}
+  .o2-hijri{position:absolute;top:153mm;left:128mm;width:41mm;text-align:center;
+    border:0.35mm solid #B08A2E;background:rgba(253,248,238,.92);padding:1.3mm 2mm;}
+  .o2-hijri-k{font-family:var(--ar-text);font-size:7.6pt;font-weight:700;color:#4B3420;}
+  .o2-hijri-v{font-family:var(--ar-text);font-size:8.6pt;font-weight:700;color:#221A10;margin-top:.5mm;direction:rtl;}
 
-  .o-sig{position:absolute;top:154mm;width:62mm;text-align:center;}
-  .o-sig-left{left:46mm;}
-  .o-sig-right{right:46mm;}
-  .o-sig-line{width:50mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#1B2740 15%,#1B2740 85%,transparent);}
-  .o-sig-en{font-family:var(--en-display);font-size:7.6pt;font-weight:600;letter-spacing:1.9px;text-transform:uppercase;color:#1B2740;margin-top:1.4mm;}
-  .o-sig-ar{font-family:var(--ar-text);font-size:10.4pt;font-weight:700;color:#3C4863;margin-top:.2mm;}
+  .o2-sig{position:absolute;top:169.8mm;width:40mm;text-align:center;}
+  .o2-sig-1{left:41mm;}
+  .o2-sig-2{left:84mm;}
+  .o2-sig-3{left:167mm;width:36mm;}
+  .o2-sig-line{width:34mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#4B3420 15%,#4B3420 85%,transparent);}
+  .o2-sig-en{font-family:var(--en-display);font-size:6.6pt;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:#221A10;margin-top:1.2mm;line-height:1.3;}
+  .o2-sig-seal{font-family:var(--en-text);font-style:italic;font-size:5.6pt;color:#6E5013;margin-top:.5mm;}
 
-  /* live data set into the paper's own bottom apparatus */
-  .o-qr{position:absolute;left:88.7mm;top:172.9mm;width:12mm;height:12mm;background:#F4F6F7;padding:.5mm;}
-  .o-qr svg{width:100%;height:100%;display:block;}
-  .o-serial-patch{position:absolute;left:190.5mm;top:179.9mm;width:24.5mm;height:6.6mm;
-    background:linear-gradient(180deg,#EDEFF2,#E7EAEE);border-radius:.6mm;}
-  .o-serial{position:absolute;left:150mm;top:180.9mm;width:63.6mm;text-align:right;
-    font-family:var(--utility);font-size:6pt;font-weight:700;letter-spacing:.3px;color:#9E2B33;}
-  .o-student-id{position:absolute;left:150mm;top:184.9mm;width:63.6mm;text-align:right;
-    font-family:var(--utility);font-size:4.4pt;font-weight:600;letter-spacing:.5px;color:#3C4863;}
-  .o-hash{position:absolute;left:63.5mm;top:183.2mm;width:24mm;text-align:left;
-    font-family:var(--utility);font-size:3.6pt;font-weight:600;letter-spacing:.3px;color:#3C4863;}
-  .grain{position:absolute;inset:0;background-image:url("${PARCHMENT}");background-size:95mm;mix-blend-mode:multiply;pointer-events:none;}
-  .watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
-  .watermark img{width:112mm;opacity:.045;filter:sepia(.65) saturate(.7);}
+  .o2-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
+    display:flex;align-items:center;justify-content:center;}
+  .o2-qr svg{width:20.8mm;height:20.8mm;display:block;}
+  .o2-verify{position:absolute;left:44mm;top:185.6mm;width:154mm;
+    font-family:var(--utility);font-size:4.6pt;color:#221A10;line-height:1.5;}
+  .o2-verify .vt{font-family:var(--en-display);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6E5013;margin-right:1.4mm;}
+  .o2-verify b{font-weight:600;}
+  .o2-verify .sep{color:#B08A2E;padding:0 1mm;}
 
-  /* Bible §4.1/§4.2 — wide content inset, generous air */
-  .inner{position:absolute;inset:17.5mm 19mm 16mm;display:flex;flex-direction:column;}
+  .o2-void{position:absolute;left:44mm;top:190.6mm;width:154mm;
+    font-family:var(--en-text);font-style:italic;font-size:4.7pt;color:#7A1F2B;line-height:1.4;}
 
   /* ═══ Masthead ═══ */
   .masthead{display:grid;grid-template-columns:88mm 1fr 96mm;align-items:start;column-gap:3mm;}
