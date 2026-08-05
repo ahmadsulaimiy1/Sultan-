@@ -325,7 +325,7 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
 // school-name lines directly beneath the centre logo are removed —
 // "Keep only the official logo." The untouched original remains at
 // official-background.jpg.
-const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-clean.jpg';
+const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-hdr.jpg';
 
 // Measured geometry of the official paper (1080×708 source, fractions
 // of the sheet) — the artwork's own designated functional zones:
@@ -524,6 +524,21 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
 
   <div class="o5-basmala">&#xFDFD;</div>
+
+  <div class="hdr hdr-l">
+    <div class="h-ar">جمهورية نيجيريا الاتحادية</div>
+    <div class="h-en">Federal Republic of Nigeria</div>
+    <div class="h-ar h-ar-2">مدارس السلطان حنفي الملكية</div>
+    <div class="h-en h-en-2">Sultan Hanafi Royal Schools</div>
+    <div class="h-ar h-ar-3">قسم الدراسات الإسلامية والعربية</div>
+    <div class="h-en h-en-3">School of Islamic &amp; Arabic Studies</div>
+  </div>
+  <div class="hdr hdr-r">
+    <div class="h-ar">حكومة ولاية لاغوس</div>
+    <div class="h-en">Lagos State Government</div>
+    <div class="h-ar h-ar-2">وزارة التعليم الأساسي والثانوي</div>
+    <div class="h-en h-en-3">Ministry of Basic and Secondary Education</div>
+  </div>
 
   <div class="o5-intro-en">This is to certify that</div>
   <div class="o5-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
@@ -828,6 +843,30 @@ function docShell(title, sheetsHtml) {
     -webkit-text-stroke:.26px rgba(50,35,6,.5);
     text-shadow:0 .26mm .28mm rgba(56,38,8,.26), 0 -0.09mm 0 rgba(255,252,242,.38);
   }
+  /* ── Institutional header, re-set as live type ────────────────────
+     These eight lines were originally baked into the background raster
+     at ~92 DPI, which is why no typographic instruction could sharpen
+     them. They are now cleared from the artwork (crests, logo, border
+     and all security printing untouched) and set as vector type at the
+     measured original positions, so they render crisp at any output
+     resolution. National lines carry more authority than institutional
+     ones, per the standing creative direction. */
+  .hdr{position:absolute;text-align:center;}
+  .hdr-l{left:54.7mm;width:46.2mm;top:35.3mm;}
+  .hdr-r{left:194.5mm;width:49mm;top:35.9mm;}
+  .h-ar{font-family:var(--ar-text);font-weight:700;direction:rtl;color:#2F2A3E;
+    font-size:8.6pt;line-height:1.28;white-space:nowrap;}
+  .h-en{font-family:var(--en-display);font-weight:700;text-transform:uppercase;
+    color:#2A3145;font-size:5.5pt;letter-spacing:.62px;line-height:1.3;
+    white-space:nowrap;margin-top:.25mm;}
+  .h-ar-2{margin-top:1.5mm;font-size:9.4pt;}
+  .h-en-2{font-size:5.9pt;letter-spacing:.72px;}
+  .h-ar-3{margin-top:1.5mm;font-size:8.2pt;color:#3A3247;}
+  .h-en-3{font-size:5.1pt;letter-spacing:.42px;color:#39405A;}
+  .hdr-r .h-ar{font-size:9pt;}
+  .hdr-r .h-ar-2{font-size:8.8pt;margin-top:1.85mm;}
+  .hdr-r .h-en-3{margin-top:1.05mm;font-size:4.6pt;letter-spacing:.28px;}
+
   /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
      charcoal, no effects — a dignified spiritual header in the quiet
      band beneath the official logo. */
