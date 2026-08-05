@@ -407,6 +407,12 @@ const C128 = ('212222 222122 222221 121223 121322 131222 122213 122312 132212 22
   + '114131 311141 411131 211412 211214 211232').split(' ');
 const C128_STOP = '2331112';
 function code128cWidths(digits) {
+  // Subset C encodes digit PAIRS. Given an odd or non-numeric payload it
+  // used to absorb the stray character as pair value 0 and return a valid
+  // checksum over a corrupted number — a barcode that scans cleanly and
+  // says the wrong thing is worse than one that fails.
+  if (!/^[0-9]+$/.test(digits)) throw new Error(`Code128-C: non-numeric payload "${digits}"`);
+  if (digits.length % 2) throw new Error(`Code128-C: odd-length payload "${digits}"`);
   const vals = [105];
   for (let i = 0; i < digits.length; i += 2) vals.push(parseInt(digits.slice(i, i + 2), 10));
   let ck = vals[0];
@@ -517,22 +523,29 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
 // Note the Arabic: ابتدائية carries hamzat waṣl, so the definite form is
 // written الابتدائية, bare. The artwork's الإبتدائية was an orthographic
 // error and is corrected here.
+// Transliteration is written as base letter + U+0304 COMBINING MACRON, and
+// the hamza/ʿayn as U+2019/U+2018, because a cmap probe of all fourteen
+// self-hosted binaries found U+0100, U+0101, U+02BE and U+02BF in NONE of
+// them, while U+0304 is in twelve and U+2018/U+2019 in twelve. Spelled the
+// obvious way, two characters of the award name silently fell out of Cinzel
+// into whatever serif the print host happened to have.
 const STAGE = {
-  IBT: { term: 'Ibtidāʾiyyah', gloss: 'Primary Stage Completion',
+  IBT: { term: 'Ibtida\u0304\u2019iyyah', gloss: 'Primary Stage Completion',
     ar: 'المرحلة الابتدائية',
-    bodyEn: 'Ibtidāʾiyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
-  IDD: { term: 'Iʿdādiyyah', gloss: 'Preparatory Stage Completion',
+    bodyEn: 'Ibtida\u0304\u2019iyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
+  IDD: { term: 'I\u2018da\u0304diyyah', gloss: 'Preparatory Stage Completion',
     ar: 'المرحلة الإعدادية',
-    bodyEn: 'Iʿdādiyyah (Preparatory)', bodyAr: 'المرحلة الإعدادية' },
-  THN: { term: 'Thānawiyyah', gloss: 'Secondary Stage Completion',
+    bodyEn: 'I\u2018da\u0304diyyah (Preparatory)', bodyAr: 'المرحلة الإعدادية' },
+  THN: { term: 'Tha\u0304nawiyyah', gloss: 'Secondary Stage Completion',
     ar: 'المرحلة الثانوية',
-    bodyEn: 'Thānawiyyah (Secondary)', bodyAr: 'المرحلة الثانوية' },
+    bodyEn: 'Tha\u0304nawiyyah (Secondary)', bodyAr: 'المرحلة الثانوية' },
 };
 
 function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const verifyCode = displayHash.replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
   const year = new Date(String(cert.issued_at).slice(0, 10)).getUTCFullYear();
+  if (!Number.isFinite(year)) throw new Error(`Certificate ${cert.serial_no} has an unusable issued_at: ${cert.issued_at}`);
   const docId = `DID-${year}-${escapeHtml(cert.programme_code || 'IBT')}-${String(cert.id || 0).padStart(7, '0')}`;
   const nameEn = escapeHtml(cert.student_full_name);
   const nameAr = escapeHtml(cert.student_full_name_ar || '');
@@ -573,10 +586,19 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const microSerial = `${serial} · `.repeat(6);
   // Archival reference: registry path + a real Code 128 barcode of the
   // numeric archive number (year + record id).
-  const archiveRef = `ARCH/${escapeHtml(cert.programme_code || 'IBT')}/${year}/${String(cert.id || 0).padStart(7, '0')}`;
-  const archiveDigits = `${year}${String(cert.id || 0).padStart(8, '0')}`;
+  // The eye read ARCH/IBT/2026/0000001 (id padded to 7) while the scanner
+  // read 202600000001 (padded to 8) — one record, two identifiers. Both now
+  // derive from the same 6-digit run, giving an even-length numeric payload.
+  // A missing registry entry must stop the press, not guess. PROGRAMMES is
+  // advertised as a one-line addition, so a fourth code would otherwise mint
+  // a correct serial and print the wrong award over it.
+  const progCode = String(cert.programme_code || '').toUpperCase();
+  const stage = STAGE[progCode];
+  if (!stage) throw new Error(`stage-certificate-template: no title wording for programme code "${progCode}"`);
+  const archSeq = String(cert.id || 0).padStart(6, '0');
+  const archiveRef = `ARCH/${escapeHtml(progCode)}/${year}/${archSeq}`;
+  const archiveDigits = `${year}${archSeq}`;
   const archiveBarcode = code128cSvg(archiveDigits);
-  const stage = STAGE[String(cert.programme_code || 'IBT').toUpperCase()] || STAGE.IBT;
   const titleFrame = titleFrameSvg(202, 13.8);
 
   return `<div class="sheet sheet--official">
@@ -787,7 +809,7 @@ function sheetHtmlConstructed({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="citation">
       <div class="cite en">
         In recognition of the successful completion of the prescribed programme of the
-        <strong>Ibtidā&rsquo;iyyah — Foundational Stage</strong> in the Islamic and Arabic
+        <strong>${stage.bodyEn} Stage</strong> in the Islamic and Arabic
         disciplines, pursuant to the School&rsquo;s approved curriculum, at ${placeEn}.
         <span class="datesline">Given this <strong>${gregEn}</strong>${hijriEn ? `, corresponding to <strong>${escapeHtml(hijriEn)}</strong>` : ''}.</span>
       </div>
