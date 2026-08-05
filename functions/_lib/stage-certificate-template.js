@@ -510,7 +510,7 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
     <rect x="0.32" y="0.32" width="${w - 0.64}" height="${h - 0.64}" rx="0.7" fill="none" stroke="#8A6A24" stroke-width="0.2"/>
     <rect x="1.05" y="1.05" width="${w - 2.1}" height="${h - 2.1}" rx="0.45" fill="none" stroke="#A98A3C" stroke-width="0.09"/>
     ${cornerMark(c, c)}${cornerMark(w - c, c)}${cornerMark(c, h - c)}${cornerMark(w - c, h - c)}
-    <text x="${w / 2}" y="${h - 1.15}" text-anchor="middle" font-family="sans-serif" font-size="0.92"
+    <text x="${w / 2}" y="${h - 1.62}" text-anchor="middle" font-family="sans-serif" font-size="0.92"
       letter-spacing="0.14" fill="#8A6A24" opacity="0.3">SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL RECORD</text>
   </svg>`;
   return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
@@ -582,7 +582,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   };
   const nameEnPt = fitPt(cert.student_full_name, 0.2497, 19.5, 11);
   const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 21.5, 13);
-  const plqV = plaqueGroundSvg(58, 23.6, 'rosette');
+  const plqV = plaqueGroundSvg(62, 25.2, 'rosette');
   const microSerial = `${serial} · `.repeat(6);
   // Archival reference: registry path + a real Code 128 barcode of the
   // numeric archive number (year + record id).
@@ -1050,8 +1050,16 @@ function docShell(title, sheetsHtml) {
   /* Official embossed brass seal (client-supplied artwork, used as
      provided) — set over the printed seal position; the artwork's
      printed ribbons emerge naturally beneath it. */
-  .o5-seal{position:absolute;left:135.2mm;top:172.2mm;width:26mm;height:auto;
-    filter:drop-shadow(0 .35mm .55mm rgba(56,38,8,.32));}
+  /* The Founder's embossed brass seal is now the only seal on the sheet.
+     The printed one it used to sit on measured 121-181mm against this
+     overlay's 26mm, so the artwork showed around all four sides; it is
+     cleared from the plate by scripts/certificate-artwork.py and the
+     overlay enlarged to a proper 34mm. Two stacked shadows read as contact
+     rather than as a filter: a tight dark one where the metal meets the
+     paper, and a wider soft one for the lift of the emboss. */
+  .o5-seal{position:absolute;left:131.5mm;top:170.5mm;width:34mm;height:auto;
+    filter:drop-shadow(0 .18mm .22mm rgba(48,32,8,.42))
+           drop-shadow(0 .75mm 1.15mm rgba(56,38,8,.22));}
 
   /* Credential plaques: engraved vector grounds (plaqueGroundSvg) —
      ivory field, micro-guilloché, hairline rules, corner ornaments,
@@ -1112,9 +1120,20 @@ function docShell(title, sheetsHtml) {
      certificate's bottom-right verification zone — Document ID, code,
      verify address and void clause beside the QR, which sits framed
      inside the plate rather than floating on the paper. */
-  .o5-vplate{position:absolute;left:173.5mm;top:173.4mm;width:58mm;height:23.6mm;
+  /* Sized from the paper, not by eye: the band between the seal and the
+     right-hand border ornament is clear from 173.5mm to 245mm across and
+     from 173.4mm to 200mm down (measured on the master at 8% ink
+     density). At 58 x 23.6mm the Document ID line overflowed its column
+     by 2.1mm and was hard-clipped by the QR, and the URL and archive
+     rows sat flush against both edges. 62 x 25.2mm still leaves ~9.5mm
+     of clear paper to the ornament and ~1.4mm to the ribbon corner. */
+  /* Top raised from 173.4mm: at the old position the plate's bottom-right
+     corner crossed the navy ribbon, whose leading edge runs 199.5mm at
+     x=230 to 197.9mm at x=235, and the 0.9-opacity plaque ground let the
+     ribbon tint show through it. */
+  .o5-vplate{position:absolute;left:173.5mm;top:171.2mm;width:62mm;height:25.2mm;
     background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
-    padding:1.8mm 1.8mm 2.2mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
+    padding:2mm 2mm 3.1mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
     box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
   .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35mm;}
   .vp-head{display:flex;justify-content:space-between;align-items:center;gap:1mm;margin-bottom:.3mm;}
@@ -1129,7 +1148,11 @@ function docShell(title, sheetsHtml) {
   .vp-id{font-family:var(--en-display);font-weight:700;font-size:4.6pt;
     letter-spacing:.25px;font-kerning:none;font-variant-ligatures:none;}
   .vp-url{font-weight:700;font-size:5.1pt;color:#4B3420;letter-spacing:.2px;}
-  .vp-barcode{height:2.7mm;margin:.2mm 0;}
+  /* Bottom margin measured, not guessed: the void clause's Arabic carries
+     tanwīn above the Latin cap height, and by pixel diff its ink reached
+     192.76mm against the barcode's 192.95mm — a 0.19mm overlap into the
+     bars. 0.9mm below the barcode clears it. */
+  .vp-barcode{height:2.7mm;margin:.2mm 0 .9mm;}
   .vp-barcode svg{width:30mm;height:2.7mm;display:block;}
   /* Genuine microprint rail: the live serial repeated at microtext
      size — a real security-print device, not decoration. */

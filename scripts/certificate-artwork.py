@@ -56,6 +56,13 @@ BOXES = [
     #    x894-945, and the centre rosette at y283-296. All of it is rebuilt
     #    as live type so the title can follow the programme.
     (132, 278, 952, 370),
+
+    # ── The printed gold seal and its ribbons. The Founder's own embossed
+    #    brass seal is composited over this position, but the printed one
+    #    measures 121-181mm wide against the overlay's 26mm, so it showed
+    #    around all four sides — the "underlying artwork revealed through
+    #    the seal". One seal on the sheet, not one on top of another.
+    (437, 630, 662, 776),
 ]
 
 # Ink is saturated gold or dark brown. The guilloche ground, the watermark

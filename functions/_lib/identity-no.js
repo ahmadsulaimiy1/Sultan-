@@ -24,27 +24,77 @@
 // functions per table instead of one parameterised helper, not a
 // stylistic choice.
 
+// ── Permanent Student Identity Number, v3 (Founder directive) ──────────
 // A student's identity_no is their permanent Student Digital Identity
-// Number: SHRS-STU-<YYYY registered>-NG-<seq6>, e.g.
-// SHRS-STU-2026-NG-000154 (Certificate Generation Directive,
-// 2026-08-05 — the client-approved international format: role code
-// STU, four-digit registration year, ISO 3166 country code NG, and
-// the same atomic never-reused sequence as before). Assigned once and
-// never changed again — unlike admission_no (below), it does not vary
-// if the student changes school, class, or campus; already-assigned
-// numbers in the earlier SHRS-<YYMMDD>-<seq6> shape are left exactly
-// as issued (permanence beats format uniformity — regeneration
-// remains an explicit, admin-only bulk action).
+// Number: assigned once, never changed again — unlike admission_no
+// (below), it does not vary if the student changes school, class, or
+// campus.
+//
+// The two earlier shapes, SHRS-<YYMMDD>-<seq6> and then
+// SHRS-STU-<YYYY>-NG-<seq6>, are both retired for NEW issuance: each
+// published a date and an unpadded position in the intake queue, so
+// anyone holding two cards could read cohort size and join order off
+// them. Numbers already issued in those shapes stay exactly as issued
+// and remain resolvable (permanence beats format uniformity —
+// regeneration remains an explicit, admin-only bulk action).
+//
+// The new number is 15 digits, nothing else.
+//
+//   [2] institution   71, fixed — distinguishes SHRS from the staff series
+//   [12] record body  a keyed permutation of the identity sequence
+//   [1] check digit   Luhn
+//
+// The body is `seq * MULT mod 10^12`. MULT is coprime to 10^12, so the map
+// is a BIJECTION: distinct sequence values cannot collide, and the number
+// is fully deterministic and reversible by the institution — the registrar
+// can recover the record from the ID, which a hash would not allow. It is
+// also non-adjacent: consecutive intakes land ~617 billion apart, so two
+// cards reveal nothing about order or volume.
+//
+// Surname encoding was considered and declined, per the Founder's own
+// recommendation: mixing a name into the body destroys the bijection and
+// reintroduces the collision risk it was meant to remove, without adding
+// uniqueness the sequence does not already guarantee.
+const STUDENT_ID_INSTITUTION = '71';
+const STUDENT_ID_MULT = 617_283_945_671n;   // coprime to 10^12
+const STUDENT_ID_MOD = 1_000_000_000_000n;  // 12-digit body
+
+function luhnCheckDigit(digits) {
+  let sum = 0;
+  let dbl = true;                     // rightmost body digit is doubled
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let d = digits.charCodeAt(i) - 48;
+    if (dbl) { d *= 2; if (d > 9) d -= 9; }
+    sum += d;
+    dbl = !dbl;
+  }
+  return String((10 - (sum % 10)) % 10);
+}
+
+export function formatStudentIdentityNo(seq) {
+  const body = String((BigInt(seq) * STUDENT_ID_MULT) % STUDENT_ID_MOD).padStart(12, '0');
+  const stem = STUDENT_ID_INSTITUTION + body;
+  return stem + luhnCheckDigit(stem);
+}
+
+// Validate a number without a database round trip — used by the public
+// verification endpoint to reject typos before querying.
+export function isValidStudentIdentityNo(value) {
+  const v = String(value || '');
+  if (!/^\d{15}$/.test(v)) return false;
+  return luhnCheckDigit(v.slice(0, 14)) === v[14];
+}
+
 export async function ensureStudentIdentityNo(sql, studentId) {
   const existing = await sql`SELECT identity_no, created_at FROM students WHERE id = ${studentId}`;
   const row = existing.rows[0];
   if (!row) return null;
+  // Numbers already issued are never rewritten — a permanent identifier
+  // that changes is not permanent. Existing SHRS-STU-… cards stay valid and
+  // resolvable; only new students receive the 15-digit form.
   if (row.identity_no) return row.identity_no;
-  const regDate = row.created_at ? new Date(row.created_at) : new Date();
-  const year = Number.isNaN(regDate.getTime()) ? new Date().getUTCFullYear() : regDate.getUTCFullYear();
   const seqRes = await sql`SELECT nextval('student_identity_seq') AS seq`;
-  const seq = String(seqRes.rows[0].seq).padStart(6, '0');
-  const identityNo = `SHRS-STU-${year}-NG-${seq}`;
+  const identityNo = formatStudentIdentityNo(seqRes.rows[0].seq);
   await sql`UPDATE students SET identity_no = ${identityNo} WHERE id = ${studentId}`;
   return identityNo;
 }
