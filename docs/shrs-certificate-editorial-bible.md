@@ -1,7 +1,10 @@
 # SHRS Certificate Editorial Bible
 
 **Sultan Hanafi Royal Schools — Flagship Academic Credentials**
-**Version 1.0 — 5 August 2026. Governing authority for all certificate design.**
+**Version 1.1 — 5 August 2026. Governing authority for all certificate design.**
+*(v1.1: Arabic display face set to Kufam per the Founder's Final
+Creative Direction; national-line authority rule added; print-review
+requirement added.)*
 
 Drafted as the consolidated judgement of a multidisciplinary standards
 board: academic-credential designers, royal-charter and warrant
@@ -91,14 +94,18 @@ of engraved credentials; decorative display faces are the canonical
 grammar of certificate makers.
 
 3.2 **Arabic.**
-- Display and text: **Amiri** (Bulaq-revival Naskh) — titles in bold at
-  display sizes with generous leading (≥1.6). Names in Amiri bold.
-- Small labels: **Reem Kufi** (geometric Kufic) sparingly.
-- **Ruqʿah-style faces are prohibited for titles** — ruqʿah is
-  handwriting register, not monumental register.
-*Why:* classical Naskh at scale is how prestigious Arabic academic and
-state documents set their titles; the ultimate ceiling is commissioned
-Thuluth calligraphy (see 3.4).
+- Major titles and national/institutional display lines: **Kufam**
+  (contemporary Kufic display) — the Founder's Final Creative Direction,
+  2026-08-05. Kufic is the oldest monumental register of Arabic script;
+  a disciplined Kufic display face carries architectural authority.
+- Text, citations, and names: **Amiri** (Bulaq-revival Naskh) with
+  generous leading (≥1.6).
+- Small labels: **Reem Kufi** sparingly.
+- **Ruqʿah-style faces remain prohibited** — handwriting register, not
+  monumental register.
+*Why:* Kufic display + Naskh text pairs the two classical registers of
+Arabic exactly as inscriptional capitals + garalde text pair the Latin
+ones; the ultimate ceiling is commissioned Thuluth calligraphy (3.4).
 
 3.3 **Hierarchy of sizes (single page, A4 landscape):** exactly one
 element may exceed 20pt — the student's name. Titles 14–20pt.
@@ -117,6 +124,12 @@ sized to fit. *Why:* a broken institutional name reads as a layout
 accident and diminishes the marque.
 
 ## 4. Layout, Grid, Whitespace
+
+4.0 **National-line authority.** The state lines — "Federal Republic of
+Nigeria" / «جمهورية نيجيريا الاتحادية» — carry greater typographic
+authority than the institutional lines beneath them (Final Creative
+Direction). *Why:* the credential is issued under national jurisdiction;
+sovereignty outranks the institution on its own paper.
 
 4.1 **Grid:** A4 landscape (297 × 209.5 mm); content field inset
 ≥ 16 mm from the innermost rule; internal 12-column grid; a single
@@ -278,7 +291,9 @@ nothing on the face is computed at render time except layout.
    hash displayed matches record.
 8. Magnification test at 400%: guilloché, microtext, emboss hold up.
 9. Print test: A4-landscape PDF, one page, no clipping, background
-   prints.
+   prints — REVIEWED AT 100% PHYSICAL SCALE: rasterise at 300 DPI and
+   inspect both at arm's length (whole sheet) and close-up (name zone,
+   plaque, footline). A monitor view alone never signs off a release.
 10. Both sexes' Arabic grammatical forms verified on real renders.
 
 ---

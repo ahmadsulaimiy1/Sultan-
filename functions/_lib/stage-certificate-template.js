@@ -309,6 +309,19 @@ function themedQr(qrSvgMarkup) {
     .replace(/#000000/gi, '#3B2A14');
 }
 
+// ── OFFICIAL BACKGROUND SLOT (Final Creative Direction, 2026-08-05) ──
+// The client's own premium certificate background/border is to be used
+// EXACTLY as provided — not redesigned, not re-bordered. As of this
+// build the file has not yet arrived in the repository. When it does:
+//   1. save it as  assets/images/certificates/official-background.png
+//      (or .jpg) at A4-landscape proportions, and
+//   2. set OFFICIAL_BACKGROUND to its public path below.
+// The template then renders the supplied artwork full-bleed and
+// suppresses its own constructed frame, band, and parchment layers —
+// only the content, name foil, and security apparatus are composed on
+// top, inside the safe area.
+const OFFICIAL_BACKGROUND = null;
+
 function sheetHtml({ cert, qrSvgMarkup, verifyUrl }) {
   const ar = arForms(cert.student_sex);
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
@@ -328,9 +341,11 @@ function sheetHtml({ cert, qrSvgMarkup, verifyUrl }) {
   const nameMicro = escapeHtml(`· ${cert.serial_no} `.repeat(14));
 
   return `<div class="sheet">
-  ${frameSvg(cert.serial_no)}
+  ${OFFICIAL_BACKGROUND
+    ? `<img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />`
+    : `${frameSvg(cert.serial_no)}
   <div class="grain"></div>
-  <div class="watermark"><img src="/assets/images/crest-watermark.png" alt="" /></div>
+  <div class="watermark"><img src="/assets/images/crest-watermark.png" alt="" /></div>`}
 
   <div class="inner">
 
@@ -463,7 +478,7 @@ function docShell(title, sheetsHtml) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${escapeHtml(title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Amiri:ital,wght@0,400;0,700;1,400&family=Kufam:wght@400;600;700&family=Reem+Kufi:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --espresso:#221A10; --coffee:#3A2A18; --umber:#4B3420;
@@ -473,6 +488,7 @@ function docShell(title, sheetsHtml) {
     --crimson:#7A1F2B; --navy:#1F2A44;
     --en-display:'Cinzel',serif;
     --en-text:'Cormorant Garamond',serif;
+    --ar-display:'Kufam','Amiri',sans-serif; /* client final direction: Kufic display for major Arabic titles */
     --ar-text:'Amiri',serif;
     --ar-label:'Reem Kufi',sans-serif;
     --utility:'Inter',sans-serif;
@@ -491,6 +507,7 @@ function docShell(title, sheetsHtml) {
   @media screen{ .sheet{margin:24px auto;box-shadow:0 30px 80px rgba(24,17,8,.5);} }
 
   .frame{position:absolute;inset:0;width:100%;height:100%;}
+  .official-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;}
   .grain{position:absolute;inset:0;background-image:url("${PARCHMENT}");background-size:95mm;mix-blend-mode:multiply;pointer-events:none;}
   .watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
   .watermark img{width:112mm;opacity:.045;filter:sepia(.65) saturate(.7);}
@@ -505,10 +522,12 @@ function docShell(title, sheetsHtml) {
   .crest-row{display:flex;gap:5mm;align-items:center;height:18mm;margin-bottom:2mm;}
   .crest-img{height:16.5mm;width:auto;object-fit:contain;
     filter:contrast(1.18) saturate(1.25) drop-shadow(0 0.5mm 0.6mm rgba(58,42,24,.32));}
-  /* §3.1/§3.5 — engraved flat ink, single-line institutional name */
-  .state-en{font-family:var(--en-display);font-size:7.6pt;font-weight:600;letter-spacing:2.6px;text-transform:uppercase;color:var(--umber);}
-  .inst-en{font-family:var(--en-display);font-size:12.6pt;font-weight:700;letter-spacing:1.1px;color:var(--espresso);margin-top:1.2mm;white-space:nowrap;}
-  .school-en{font-family:var(--en-display);font-size:7.3pt;font-weight:600;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold-deep);margin-top:1.4mm;}
+  /* §3.1/§3.5 — engraved flat ink, single-line institutional name.
+     Final Creative Direction 2026-08-05: the NATIONAL line carries
+     greater typographic authority than the institutional lines. */
+  .state-en{font-family:var(--en-display);font-size:10.2pt;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--espresso);white-space:nowrap;}
+  .inst-en{font-family:var(--en-display);font-size:11pt;font-weight:700;letter-spacing:1px;color:var(--umber);margin-top:1.4mm;white-space:nowrap;}
+  .school-en{font-family:var(--en-display);font-size:7.3pt;font-weight:600;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold-deep);margin-top:1.3mm;}
 
   .honor-row{display:flex;justify-content:flex-end;align-items:flex-start;gap:3.5mm;height:21.5mm;margin-bottom:1.8mm;}
   .medallion{width:21mm;filter:drop-shadow(0 0.8mm 1.1mm rgba(34,26,16,.35));}
@@ -529,9 +548,10 @@ function docShell(title, sheetsHtml) {
       repeating-linear-gradient(115deg, rgba(255,255,255,.34) 0 0.6mm, rgba(255,255,255,0) 0.6mm 1.6mm),
       linear-gradient(100deg,#8C6516 0%,#D9B44A 18%,#EDEDEA 38%,#FFFDF5 50%,#C9CCCF 62%,#D4AF37 82%,#6E5013 100%);}
 
-  /* §3.2 — Amiri Naskh, single line, flat ink */
-  .state-ar{font-family:var(--ar-label);font-size:8.2pt;color:var(--umber);}
-  .inst-ar{font-family:var(--ar-text);font-size:14.5pt;font-weight:700;line-height:1.5;color:var(--espresso);margin-top:.4mm;white-space:nowrap;}
+  /* Final Creative Direction: national line dominant; Kufic display
+     (Kufam) for the major Arabic lines, Amiri retained for text. */
+  .state-ar{font-family:var(--ar-display);font-size:10.5pt;font-weight:700;line-height:1.6;color:var(--espresso);white-space:nowrap;}
+  .inst-ar{font-family:var(--ar-display);font-size:11pt;font-weight:600;line-height:1.7;color:var(--umber);margin-top:1mm;white-space:nowrap;}
   .school-ar{font-family:var(--ar-text);font-size:9.4pt;font-weight:700;color:var(--gold-deep);margin-top:.6mm;}
 
   /* ═══ Title band ═══ */
@@ -543,7 +563,7 @@ function docShell(title, sheetsHtml) {
   .td-line{width:0.25mm;flex:1;background:linear-gradient(180deg,transparent,#8C6516,transparent);}
   .td-diamond{width:1.9mm;height:1.9mm;background:var(--crimson);transform:rotate(45deg);}
   .title-ar{text-align:left;direction:rtl;}
-  .t-ar-1{font-family:var(--ar-text);font-size:17.5pt;font-weight:700;line-height:1.5;color:var(--espresso);}
+  .t-ar-1{font-family:var(--ar-display);font-size:14.5pt;font-weight:700;line-height:1.65;color:var(--espresso);}
   .t-ar-2{font-family:var(--en-text);font-style:italic;font-size:9pt;color:var(--umber);margin-top:.6mm;direction:ltr;text-align:left;}
   .t-ar-2 span{font-family:var(--ar-text);font-style:normal;}
 
