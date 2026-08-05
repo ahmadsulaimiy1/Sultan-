@@ -352,10 +352,46 @@ function sheetHtml(args) {
 // the base. Pure vector, generated per plaque size, so the engraving
 // stays crisp at any print resolution — no digital gradients.
 // ─────────────────────────────────────────────────────────────────────
-// One continuous credential bar (Final Institutional Design Review):
-// a single machined nameplate divided into engraved compartments.
-// Near-transparent ground so the certificate paper shows through —
-// the bar reads as engineered into the sheet, not laid on top.
+// Code 128 (subset C) linear barcode for the authentication station's
+// archival reference — real, standards-compliant encoding of real data
+// (validated against the python-barcode reference encoder), never a
+// decorative fake. Input must be an even-length digit string.
+const C128 = ('212222 222122 222221 121223 121322 131222 122213 122312 132212 221213 '
+  + '221312 231212 112232 122132 122231 113222 123122 123221 223211 221132 '
+  + '221231 213212 223112 312131 311222 321122 321221 312212 322112 322211 '
+  + '212123 212321 232121 111323 131123 131321 112313 132113 132311 211313 '
+  + '231113 231311 112133 112331 132131 113123 113321 133121 313121 211331 '
+  + '231131 213113 213311 213131 311123 311321 331121 312113 312311 332111 '
+  + '314111 221411 431111 111224 111422 121124 121421 141122 141221 112214 '
+  + '112412 122114 122411 142112 142211 241211 221114 413111 241112 134111 '
+  + '111242 121142 121241 114212 124112 124211 411212 421112 421211 212141 '
+  + '214121 412121 111143 111341 131141 114113 114311 411113 411311 113141 '
+  + '114131 311141 411131 211412 211214 211232').split(' ');
+const C128_STOP = '2331112';
+function code128cWidths(digits) {
+  const vals = [105];
+  for (let i = 0; i < digits.length; i += 2) vals.push(parseInt(digits.slice(i, i + 2), 10));
+  let ck = vals[0];
+  for (let i = 1; i < vals.length; i++) ck += vals[i] * i;
+  vals.push(ck % 103);
+  return vals.map((v) => C128[v]).join('') + C128_STOP;
+}
+function code128cSvg(digits) {
+  const widths = code128cWidths(digits);
+  let total = 0;
+  for (const ch of widths) total += +ch;
+  let x = 0, bar = true, rects = '';
+  for (const ch of widths) {
+    const w = +ch;
+    if (bar) rects += `<rect x="${x}" y="0" width="${w}" height="10" fill="#221A10"/>`;
+    x += w;
+    bar = !bar;
+  }
+  return `<svg viewBox="0 0 ${total} 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+}
+
+// (retired) enclosed credential-bar ground — superseded by the open
+// letterpress ledger band of the o8 system.
 function barGroundSvg(w, h, dividers) {
   const rows = 4;
   let weave = '';
@@ -460,11 +496,13 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="p-label"><span class="p-l-en">${en}</span><span class="p-l-ar" dir="rtl">${arb}</span></div>
     <div class="p-value${small}">${val}</div>
   </div>`;
-  // Credential bar: 4 compartments (serial / student id / date / place),
-  // divider x-positions in bar-local mm must match the CSS grid below.
-  const barBg = barGroundSvg(202, 12.6, [59, 103.5, 155]);
   const plqV = plaqueGroundSvg(58, 23.6, 'rosette');
   const microSerial = `${serial} · `.repeat(6);
+  // Archival reference: registry path + a real Code 128 barcode of the
+  // numeric archive number (year + record id).
+  const archiveRef = `ARCH/${escapeHtml(cert.programme_code || 'IBT')}/${year}/${String(cert.id || 0).padStart(7, '0')}`;
+  const archiveDigits = `${year}${String(cert.id || 0).padStart(8, '0')}`;
+  const archiveBarcode = code128cSvg(archiveDigits);
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
@@ -486,22 +524,32 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
     المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
-  <div class="o7-bar" style="background-image:${barBg}">
-    <div class="bar-cell">${pField('Certificate Number', 'رقم الشهادة', `<span class="v-serial">${serial}</span>`)}</div>
-    <div class="bar-cell">${pField('Student ID', 'الرقم التعريفي للطالب', studentId)}</div>
-    <div class="bar-cell">${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`, ' p-value-sm')}</div>
-    <div class="bar-cell">${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`, ' p-value-sm')}</div>
+  <div class="o8-band">
+    <div class="band-in">
+      <div class="bg"><div class="bg-l"><span class="p-l-en">Certificate Number</span><span class="p-l-ar" dir="rtl">رقم الشهادة</span></div>
+        <div class="bg-v v-serial">${serial}</div></div>
+      <i class="band-di"></i>
+      <div class="bg"><div class="bg-l"><span class="p-l-en">Student ID</span><span class="p-l-ar" dir="rtl">الرقم التعريفي للطالب</span></div>
+        <div class="bg-v">${studentId}</div></div>
+      <i class="band-di"></i>
+      <div class="bg"><div class="bg-l"><span class="p-l-en">Date of Issue</span><span class="p-l-ar" dir="rtl">تاريخ الإصدار</span></div>
+        <div class="bg-v bg-v-sm">${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span></div></div>
+      <i class="band-di"></i>
+      <div class="bg"><div class="bg-l"><span class="p-l-en">Place of Issue</span><span class="p-l-ar" dir="rtl">مكان الإصدار</span></div>
+        <div class="bg-v bg-v-sm">${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span></div></div>
+    </div>
+    <div class="band-micro">SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC RECORD · GUILLOCHE · MICROTEXT · QR VERIFICATION · CRYPTOGRAPHIC SERIAL</div>
   </div>
 
   <div class="o5-vplate" style="background-image:${plqV}">
     <div class="vp-text">
-      <div class="p-label"><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
-      <div class="vp-row">Document ID <b>${docId}</b></div>
-      <div class="vp-row">Code <b>${verifyCode}</b></div>
+      <div class="vp-head"><span class="vp-mark">SHRS</span><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
+      <div class="vp-row">${docId} <span class="p-dot">·</span> ${verifyCode}</div>
       <div class="vp-row vp-url">shroyalschools.com/verify-certificate</div>
+      <div class="vp-row">Archive ${archiveRef}</div>
       <div class="vp-micro">${escapeHtml(microSerial)}</div>
-      <div class="vp-void">Void if altered or erased</div>
-      <div class="vp-void-ar">لاغيةٌ عند أي كشطٍ أو تعديل</div>
+      <div class="vp-barcode">${archiveBarcode}</div>
+      <div class="vp-void">Void if altered or erased <span class="p-dot">·</span> <span dir="rtl">لاغيةٌ عند أي كشطٍ أو تعديل</span></div>
     </div>
     <div class="vp-qrcol">
       <div class="vp-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
@@ -764,11 +812,11 @@ function docShell(title, sheetsHtml) {
     letter-spacing:.5px;color:#4B3420;}
   .o5-intro-ar{position:absolute;top:95.8mm;right:38mm;width:106mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-size:10.5pt;color:#4B3420;}
-  .o5-name-en{position:absolute;top:102.8mm;left:34mm;width:114mm;text-align:center;
-    font-family:var(--en-display);font-weight:700;font-size:17.5pt;letter-spacing:1.8px;
+  .o5-name-en{position:absolute;top:102.4mm;left:34mm;width:114mm;text-align:center;
+    font-family:var(--en-display);font-weight:700;font-size:18.5pt;letter-spacing:2.4px;
     white-space:nowrap;line-height:1.15;}
-  .o5-name-ar{position:absolute;top:101.4mm;right:34mm;width:114mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-weight:700;font-size:20pt;white-space:nowrap;line-height:1.3;}
+  .o5-name-ar{position:absolute;top:100.8mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-weight:700;font-size:21pt;white-space:nowrap;line-height:1.3;}
   .o5-name-rule{position:absolute;top:113.8mm;left:72mm;right:72mm;display:flex;align-items:center;gap:2.4mm;}
   .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 25%,#B08A2E 75%,transparent);}
   .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
@@ -781,28 +829,37 @@ function docShell(title, sheetsHtml) {
      ivory field, micro-guilloché, hairline rules, corner ornaments,
      SHRS microtext. Printed into the paper: no drop shadows, only a
      whisper of blind-emboss relief. */
-  /* One continuous credential bar — a single machined nameplate in
-     four engraved compartments. Ground is barGroundSvg: continuous
-     micro-guilloché, hairline double frame, diamond-finial separators,
-     corner flourishes, and a full-width microtext base line. */
-  .o7-bar{position:absolute;left:47.5mm;top:138mm;width:202mm;height:12.6mm;
-    background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
-    display:grid;grid-template-columns:59mm 44.5mm 51.5mm 47mm;
-    box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
-  .bar-cell{display:flex;flex-direction:column;justify-content:center;gap:.45mm;
-    padding:1.5mm 2.9mm 2.1mm;box-sizing:border-box;overflow:hidden;}
-  .p-field{display:flex;flex-direction:column;gap:.15mm;}
-  .p-label{display:flex;justify-content:space-between;align-items:baseline;}
+  /* Open letterpress ledger band — the credential line is set BETWEEN
+     engraved rules, not inside a box: double hairline rules above and
+     below, no side borders, no fill, diamond separators. Metadata is
+     typography pressed into the paper, never a form. */
+  .o8-band{position:absolute;left:46mm;width:205mm;top:138.2mm;}
+  .band-in{position:relative;display:flex;align-items:stretch;justify-content:space-between;
+    gap:2mm;padding:1.6mm 2mm 1.7mm;
+    border-top:.2mm solid #8A6A24;border-bottom:.2mm solid #8A6A24;}
+  .band-in::before{content:'';position:absolute;left:0;right:0;top:.5mm;
+    border-top:.08mm solid rgba(169,138,60,.85);}
+  .band-in::after{content:'';position:absolute;left:0;right:0;bottom:.5mm;
+    border-bottom:.08mm solid rgba(169,138,60,.85);}
+  .bg{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.6mm;min-width:0;}
+  .bg-l{display:flex;gap:1.6mm;align-items:baseline;}
   .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4pt;letter-spacing:.9px;
     text-transform:uppercase;color:#6E5013;}
   .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5pt;color:#6E5013;}
-  .p-value{font-family:var(--utility);font-weight:600;font-size:6pt;color:#221A10;
-    text-align:center;white-space:nowrap;line-height:1.3;}
-  .p-value-sm{font-size:5.4pt;}
-  .p-value .p-dot{color:#B08A2E;padding:0 .45mm;}
+  /* Values in the engraved serif — never a UI face on the document. */
+  .bg-v{font-family:var(--en-text);font-weight:700;font-size:7.2pt;color:#221A10;
+    letter-spacing:.4px;text-align:center;white-space:nowrap;line-height:1.25;}
+  .bg-v-sm{font-size:6.6pt;letter-spacing:.2px;}
+  .bg-v span[dir="rtl"]{font-family:var(--ar-text);font-size:105%;}
+  .bg-v .p-dot,.vp-row .p-dot,.vp-void .p-dot{color:#B08A2E;padding:0 .45mm;}
+  .band-di{align-self:center;width:1.6mm;height:1.6mm;flex:0 0 auto;
+    background:linear-gradient(135deg,#C9A64F,#8A6A24);transform:rotate(45deg);opacity:.85;}
+  .band-micro{text-align:center;font-family:var(--utility);font-size:2.3pt;
+    letter-spacing:.35px;color:rgba(138,106,36,.75);margin-top:.6mm;white-space:nowrap;overflow:hidden;}
   /* Engraved crimson serial — banknote convention for the controlling
      number, within the palette's reserved crimson. */
-  .v-serial{color:#7A1F2B;letter-spacing:.3px;}
+  .v-serial{color:#7A1F2B;letter-spacing:.55px;}
 
   /* Verification plate: an engraved institutional module built into the
      certificate's bottom-right verification zone — Document ID, code,
@@ -812,22 +869,26 @@ function docShell(title, sheetsHtml) {
     background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
     padding:1.8mm 1.8mm 2.2mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
     box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
-  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3mm;}
-  .vp-text .p-label{margin-bottom:.25mm;}
-  .vp-text .p-l-en{font-size:4.3pt;}
-  .vp-text .p-l-ar{font-size:5.4pt;}
-  .vp-row{font-family:var(--utility);font-weight:400;font-size:4.7pt;color:#221A10;
-    white-space:nowrap;line-height:1.35;}
-  .vp-row b{font-weight:600;}
-  .vp-url{font-weight:600;font-size:4.6pt;color:#4B3420;letter-spacing:.15px;}
+  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35mm;}
+  .vp-head{display:flex;justify-content:space-between;align-items:center;gap:1mm;margin-bottom:.3mm;}
+  .vp-head .p-l-en{font-size:4.3pt;}
+  .vp-head .p-l-ar{font-size:5.4pt;}
+  .vp-mark{flex:0 0 auto;width:4.2mm;height:4.2mm;border:.13mm solid #8A6A24;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--en-display);font-weight:700;font-size:2.4pt;letter-spacing:.3px;color:#6E5013;
+    box-shadow:inset 0 0 0 .3mm rgba(169,138,60,.25);}
+  .vp-row{font-family:var(--en-text);font-weight:600;font-size:5.4pt;color:#221A10;
+    white-space:nowrap;line-height:1.3;letter-spacing:.2px;}
+  .vp-url{font-weight:700;font-size:5.1pt;color:#4B3420;letter-spacing:.2px;}
+  .vp-barcode{height:2.7mm;margin:.2mm 0;}
+  .vp-barcode svg{width:30mm;height:2.7mm;display:block;}
   /* Genuine microprint rail: the live serial repeated at microtext
      size — a real security-print device, not decoration. */
   .vp-micro{font-family:var(--utility);font-size:2.5pt;letter-spacing:.25px;
     color:rgba(138,106,36,.8);white-space:nowrap;overflow:hidden;line-height:1.5;}
-  .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.5pt;color:#7A1F2B;
-    white-space:nowrap;line-height:1.3;}
-  .vp-void-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5pt;
-    color:#7A1F2B;white-space:nowrap;line-height:1.2;}
+  .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.4pt;color:#7A1F2B;
+    white-space:nowrap;line-height:1.25;}
+  .vp-void span[dir="rtl"]{font-family:var(--ar-text);font-style:normal;font-size:4.9pt;}
   .vp-qrcol{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.55mm;}
   .vp-qr{width:17.2mm;height:17.2mm;background:#FFFFFF;
     border:.15mm solid #9A7A2C;box-sizing:border-box;padding:.6mm;
