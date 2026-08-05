@@ -1729,6 +1729,54 @@ const STATEMENTS = [
   // as one JSONB column, shaped per document_type, rather than three
   // narrow columns only ever populated for one type each.
   `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS content_data JSONB`,
+
+  // Academic Stage Certificate System (Certificate Generation
+  // Directive, 2026-08-05) — mirrors sql/schema.sql exactly; see that
+  // file for the identifier-architecture rationale (SHRS-STU-YYYY-NG-
+  // seq6 permanent Student IDs; SHRS-CERT-PROG-YYYY-seq6-SUFFIX5
+  // serials with an HMAC-derived anti-forgery suffix).
+  `CREATE SEQUENCE IF NOT EXISTS stage_certificate_serial_seq START WITH 1`,
+  `CREATE TABLE IF NOT EXISTS stage_certificate_batches (
+    id                   SERIAL PRIMARY KEY,
+    batch_no             TEXT NOT NULL UNIQUE,
+    programme_code       TEXT NOT NULL,
+    academic_year        TEXT NOT NULL,
+    issued_at            DATE NOT NULL,
+    description          TEXT,
+    created_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS stage_certificates (
+    id                    SERIAL PRIMARY KEY,
+    serial_no             TEXT NOT NULL UNIQUE,
+    batch_id              INTEGER REFERENCES stage_certificate_batches(id),
+    student_id            INTEGER REFERENCES students(id) ON DELETE SET NULL,
+    student_identity_no   TEXT,
+    student_full_name     TEXT NOT NULL,
+    student_full_name_ar  TEXT,
+    student_sex           TEXT,
+    programme_code        TEXT NOT NULL,
+    programme_label_en    TEXT NOT NULL,
+    programme_label_ar    TEXT,
+    institution_name      TEXT NOT NULL,
+    academic_year         TEXT NOT NULL,
+    grade_en              TEXT,
+    grade_ar              TEXT,
+    place_en              TEXT,
+    place_ar              TEXT,
+    issued_at             DATE NOT NULL,
+    issued_at_hijri       TEXT,
+    issued_at_hijri_ar    TEXT,
+    content_hash          TEXT NOT NULL,
+    issued_by_staff_id    INTEGER REFERENCES staff(id),
+    revoked_at            TIMESTAMPTZ,
+    revocation_note       TEXT,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id)`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT`,
 ];
 
 async function handle({ request, env }) {

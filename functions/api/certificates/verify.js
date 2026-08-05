@@ -19,6 +19,22 @@
 // revoked no matter how convincing the physical copy looks.
 import { getSql } from '../../_lib/db.js';
 import { json } from '../../_lib/http.js';
+import { parseStageCertificateSerial, verifyStageCertificateIntegrity, isoDateOnly } from '../../_lib/certificate-serial.js';
+import { hashIpAddress } from '../../_lib/document-hash.js';
+
+// Best-effort verification audit (same verification_log the graduation-
+// document verifier writes) — a failed log write must never break a
+// legitimate verification.
+async function logVerification(sql, request, refNo, outcome) {
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || null;
+    await sql`
+      INSERT INTO verification_log (document_reference_no, ip_hash, outcome)
+      VALUES (${refNo}, ${hashIpAddress(ip)}, ${outcome})`;
+  } catch (logErr) {
+    console.error('verification_log write failed', logErr);
+  }
+}
 
 export async function onRequestGet({ request, env }) {
   const sql = getSql(env);
@@ -29,6 +45,60 @@ export async function onRequestGet({ request, env }) {
   if (!ref) return json({ error: 'Provide a certificate or Ijazah reference number.' }, 400);
 
   try {
+    // Academic Stage Certificates (Certificate Generation Directive,
+    // 2026-08-05) — the long-serial family
+    // (SHRS-CERT-<PROG>-<YYYY>-<seq6>-<SUFFIX5>). Checked first because
+    // the serial shape is unambiguous, and verified DEEPER than the
+    // register families below: beyond row lookup, the HMAC-SHA256
+    // content hash is recomputed over the stored fields and the
+    // serial's printed anti-forgery suffix is re-derived from it, so a
+    // tampered record or fabricated serial surfaces as an integrity
+    // failure instead of quietly verifying.
+    const parsedSerial = parseStageCertificateSerial(ref);
+    if (parsedSerial) {
+      const res = await sql`
+        SELECT sc.*, b.batch_no FROM stage_certificates sc
+        LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+        WHERE sc.serial_no = ${parsedSerial.serialBase + '-' + parsedSerial.suffix}`;
+      const row = res.rows[0];
+      if (!row) {
+        await logVerification(sql, request, ref, 'not_found');
+        return json({ ok: true, found: false });
+      }
+      let integrity = { hashValid: false, suffixValid: false };
+      try {
+        integrity = verifyStageCertificateIntegrity(env, row);
+      } catch (hashErr) {
+        console.error('stage certificate integrity check unavailable', hashErr);
+      }
+      const intact = integrity.hashValid && integrity.suffixValid;
+      const outcome = !intact ? 'hash_mismatch' : row.revoked_at ? 'revoked' : 'valid';
+      await logVerification(sql, request, ref, outcome);
+      return json({
+        ok: true,
+        found: true,
+        kind: 'stage_certificate',
+        serialNo: row.serial_no,
+        referenceNo: row.serial_no,
+        recipientName: row.student_full_name,
+        recipientNameAr: row.student_full_name_ar,
+        studentIdentityNo: row.student_identity_no,
+        credentialType: `Certificate of Completion — ${row.programme_label_en}`,
+        credentialTypeAr: row.programme_label_ar ? `شهادة إتمام ${row.programme_label_ar}` : null,
+        programmeCode: row.programme_code,
+        institutionName: row.institution_name,
+        academicYear: row.academic_year,
+        grade: row.grade_en,
+        gradeAr: row.grade_ar,
+        issuedAt: isoDateOnly(row.issued_at),
+        issuedAtHijri: row.issued_at_hijri,
+        batchNo: row.batch_no,
+        integrity: intact ? 'intact' : 'integrity_check_failed',
+        status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
+        revokedAt: row.revoked_at,
+        revocationNote: row.revoked_at ? row.revocation_note : null,
+      });
+    }
     const cert = await sql`
       SELECT certificate_type, student_full_name, reference_no, issued_at, revoked_at, revocation_note
       FROM certificates WHERE reference_no = ${ref}`;

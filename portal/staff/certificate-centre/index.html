@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Certificate Generation Centre — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css">
+<link rel="stylesheet" href="/css/portal.css">
+<script src="/js/portal-theme.js"></script>
+<script src="/js/portal-shell.js"></script>
+</head>
+<body class="portal-body type-administrative" data-atmosphere="registrar">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Certificate Generation Centre</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/staff/registrar/">Registrar's Office</a>
+    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
+    <a class="portal-topbar-link" href="/portal/staff/offices/">All Offices</a>
+    <button type="button" class="portal-logout" data-portal-logout>Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.4-3 8-7 9-4-1-7-4.6-7-9V7l7-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12l1.8 1.8 3.4-3.8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="portal-hello">Certificate Generation Centre</div></div>
+    <div class="cc-tagline" id="cc-tagline">Credential Issuance Authority</div>
+    <div class="cc-greeting" id="cc-greeting">Every certificate issued here carries a permanent Student ID, a unique anti-forgery serial, and live QR verification.</div>
+    <div class="portal-hello-sub">Upload a cohort roster once — the system matches or creates each student record, assigns permanent Student IDs (SHRS-STU-…), issues uniquely serialled certificates (SHRS-CERT-…), and produces print-ready bilingual documents, individually or as one batch.</div>
+
+    <div class="office-group-head">1 — Batch Setup</div>
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Programme &amp; Issuance Details</h2></div>
+      <form data-cert-setup-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Programme (Stage)</label>
+          <select data-cert-programme>
+            <option value="IBT" selected>Ibtidā’iyyah — Primary Stage (IBT)</option>
+            <option value="IDD">I’dādiyyah — Preparatory Stage (IDD)</option>
+            <option value="THN">Thanawiyyah — Secondary Stage (THN)</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Academic Year</label>
+          <input type="text" data-cert-academic-year placeholder="2025/2026" required />
+        </div>
+        <div class="portal-field">
+          <label>Issue Date (Gregorian — Hijri is computed automatically)</label>
+          <input type="date" data-cert-issued-at required />
+        </div>
+        <div class="portal-field">
+          <label>Batch Description (optional)</label>
+          <input type="text" data-cert-description placeholder="e.g. 8 August 2026 Graduation Ceremony cohort" />
+        </div>
+        <div class="portal-field">
+          <label>Place (English)</label>
+          <input type="text" data-cert-place-en value="Ikorodu, Lagos State, Nigeria" />
+        </div>
+        <div class="portal-field">
+          <label>Place (Arabic)</label>
+          <input type="text" data-cert-place-ar dir="rtl" value="مدينة إكورودو، ولاية لاغوس، نيجيريا" />
+        </div>
+      </form>
+    </div>
+
+    <div class="office-group-head">2 — Student Roster</div>
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Upload or Paste the Cohort</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">One student per line. Columns (comma, semicolon, or tab separated): <strong>English Name, Arabic Name, Sex (male/female), Grade (English), Grade (Arabic), Admission No (optional)</strong>. A header row is detected automatically. Students already on the register are matched (by admission number, or exact name); new names get a full student record, a generated admission number, and a permanent Student ID. Nothing is issued until you review the preview and press Generate.</p>
+      <div style="padding:0 20px 8px;">
+        <input type="file" data-cert-roster-file accept=".csv,.tsv,.txt" style="font-family:'Inter',sans-serif;font-size:0.85rem;color:var(--ink);" />
+      </div>
+      <div style="padding:0 20px 14px;">
+        <textarea data-cert-roster-text rows="8" spellcheck="false" placeholder="Abdul Samod Ayomide Jimoh, عبد الصمد أيوميدي جيمو, male, Excellent, ممتاز
+Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
+          style="width:100%;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;line-height:1.7;padding:12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);resize:vertical;"></textarea>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
+        <button type="button" class="registrar-btn" data-cert-preview-btn>Preview &amp; Validate Roster</button>
+        <span class="registrar-field-note" data-cert-roster-count></span>
+      </div>
+      <div class="registrar-approvals-list" data-cert-preview-list></div>
+      <div style="display:none;padding:0 20px 20px;" data-cert-generate-row>
+        <button type="button" class="portal-submit registrar-form-submit" data-cert-generate-btn>Generate Certificates for This Cohort</button>
+      </div>
+      <div class="registrar-form-result" data-cert-generate-result hidden></div>
+      <div class="registrar-approvals-list" data-cert-results-list></div>
+    </div>
+
+    <div class="office-group-head">3 — Issued Batches</div>
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Batch Register</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Each batch prints as one multi-page document — one certificate per A4 landscape page — for a single print run of the whole cohort. Individual certificates open from the Certificate Register below.</p>
+      <div style="padding:0 20px 14px;">
+        <button type="button" class="registrar-btn" data-cert-batches-refresh>Refresh Batches</button>
+      </div>
+      <div class="registrar-approvals-list" data-cert-batches-list></div>
+    </div>
+
+    <div class="office-group-head">4 — Certificate Register &amp; Revocation</div>
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Certificate Register</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Search by serial number, student name, or Student ID. Every certificate can be re-opened, re-printed, publicly verified, or revoked (with a mandatory note) — revocation shows instantly at the public verification page; the serial is never reused.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
+        <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:280px;" />
+        <button type="button" class="registrar-btn" data-cert-register-lookup>Search Register</button>
+      </div>
+      <div class="registrar-approvals-list" data-cert-register-list></div>
+      <div class="registrar-form-result" data-cert-register-result hidden></div>
+    </div>
+
+    <div class="office-group-head">Records Integrity</div>
+    <p class="portal-notice-on-dark">
+      Issuing a batch is a permission-checked, audit-logged act of the Registrar's certificate authority under the SHRS Role &amp; Permission Matrix. Serial numbers come from an atomic, never-reused sequence; each carries a cryptographic anti-forgery suffix; and every public verification of every serial is recorded in the verification log. If an action is refused and you believe it shouldn't be, contact the ICT Office at
+      <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.
+    </p>
+  </div>
+  <div class="portal-loading-skeleton" data-portal-loading aria-hidden="true">
+    <div class="pls-hero"></div>
+    <div class="pls-row"><div class="pls-card"></div><div class="pls-card"></div><div class="pls-card"></div></div>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load the Certificate Generation Centre</h1>
+    <p class="sub" data-portal-error-message>Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/portal-arrival.js" defer></script>
+<script src="/js/portal-staff-certificate-centre.js" defer></script>
+</body>
+</html>

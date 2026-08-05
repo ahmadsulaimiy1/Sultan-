@@ -1888,3 +1888,85 @@ CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions
 
 ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false;
 CREATE INDEX IF NOT EXISTS idx_thread_messages_thread ON thread_messages(thread_id);
+
+-- ============================================================
+-- Academic Stage Certificate System (Certificate Generation
+-- Directive, 2026-08-05) — the cohort-scale issuance engine behind
+-- the Ibtida'iyyah (primary-stage) certificate and its successors
+-- (I'dadiyyah, Thanawiyyah, diplomas).
+-- ============================================================
+-- Deliberately a THIRD family, sibling to `certificates` (the thin
+-- typed register) and `graduation_documents` (the clearance-chain-
+-- gated Class A-C ecosystem): a stage-completion certificate is
+-- issued for an entire cohort in one batch from a roster the
+-- Registrar uploads, has a bilingual (AR/EN) rendered document of
+-- its own, and is NOT gated on graduation_clearances — mixing it
+-- into either existing lifecycle would blur three different,
+-- independently audited issuance models.
+--
+-- Identifier architecture (client-approved formats, 2026-08-05):
+--   Student ID (permanent):  SHRS-STU-<YYYY>-NG-<seq6>
+--     — students.identity_no, assigned once, never changed; the
+--       <YYYY> is the registration year, NG the ISO country code.
+--   Certificate serial (unique per document):
+--     SHRS-CERT-<PROG>-<YYYY>-<seq6>-<SUFFIX5>
+--     — <PROG> is the programme code (IBT = Ibtida'iyyah, ...),
+--       <seq6> a real atomic PostgreSQL sequence (never reused,
+--       global across years so no two certificates ever collide),
+--       and <SUFFIX5> five characters derived from the certificate's
+--       own HMAC-SHA256 content hash (functions/_lib/document-hash.js)
+--       — a forged serial cannot produce a matching suffix without
+--       the DOCUMENT_HASH_SECRET, and the public verifier recomputes
+--       it on every lookup.
+-- Every certificate row is a SNAPSHOT (names, grade, programme,
+-- dates as issued) — later edits to the student record can never
+-- silently rewrite an already-issued certificate; corrections are
+-- revoke + reissue, preserving the full audit trail.
+CREATE SEQUENCE IF NOT EXISTS stage_certificate_serial_seq START WITH 1;
+
+CREATE TABLE IF NOT EXISTS stage_certificate_batches (
+  id                   SERIAL PRIMARY KEY,
+  batch_no             TEXT NOT NULL UNIQUE,      -- SHRS-CB-<YYYY>-<seq4>
+  programme_code       TEXT NOT NULL,             -- IBT | IDD | THN | HFZ | ...
+  academic_year        TEXT NOT NULL,             -- e.g. '2025/2026'
+  issued_at            DATE NOT NULL,
+  description          TEXT,
+  created_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS stage_certificates (
+  id                    SERIAL PRIMARY KEY,
+  serial_no             TEXT NOT NULL UNIQUE,
+  batch_id              INTEGER REFERENCES stage_certificate_batches(id),
+  student_id            INTEGER REFERENCES students(id) ON DELETE SET NULL,
+  student_identity_no   TEXT,                     -- permanent Student ID, snapshotted at issuance
+  student_full_name     TEXT NOT NULL,
+  student_full_name_ar  TEXT,
+  student_sex           TEXT,                     -- 'male' | 'female' — drives Arabic grammatical forms
+  programme_code        TEXT NOT NULL,
+  programme_label_en    TEXT NOT NULL,
+  programme_label_ar    TEXT,
+  institution_name      TEXT NOT NULL,
+  academic_year         TEXT NOT NULL,
+  grade_en              TEXT,
+  grade_ar              TEXT,
+  place_en              TEXT,
+  place_ar              TEXT,
+  issued_at             DATE NOT NULL,
+  issued_at_hijri       TEXT,                     -- rendered Hijri date (English), snapshotted (never recomputed)
+  issued_at_hijri_ar    TEXT,                     -- rendered Hijri date (Arabic), snapshotted alongside
+  content_hash          TEXT NOT NULL,            -- full HMAC-SHA256 hex; serial suffix + display hash derive from this
+  issued_by_staff_id    INTEGER REFERENCES staff(id),
+  revoked_at            TIMESTAMPTZ,
+  revocation_note       TEXT,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id);
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id);
+
+-- Bilingual identity fields the certificate roster captures — stored on
+-- the student record too (not only the certificate snapshot) so future
+-- documents for the same student reuse the same verified Arabic name.
+ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT;

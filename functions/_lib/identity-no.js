@@ -25,18 +25,26 @@
 // stylistic choice.
 
 // A student's identity_no is their permanent Student Digital Identity
-// Number: SHRS-<YYMMDD registered>-<seq6>, e.g. SHRS-260731-000154.
-// Assigned once and never changed again — unlike admission_no (below),
-// it does not vary if the student changes school, class, or campus.
+// Number: SHRS-STU-<YYYY registered>-NG-<seq6>, e.g.
+// SHRS-STU-2026-NG-000154 (Certificate Generation Directive,
+// 2026-08-05 — the client-approved international format: role code
+// STU, four-digit registration year, ISO 3166 country code NG, and
+// the same atomic never-reused sequence as before). Assigned once and
+// never changed again — unlike admission_no (below), it does not vary
+// if the student changes school, class, or campus; already-assigned
+// numbers in the earlier SHRS-<YYMMDD>-<seq6> shape are left exactly
+// as issued (permanence beats format uniformity — regeneration
+// remains an explicit, admin-only bulk action).
 export async function ensureStudentIdentityNo(sql, studentId) {
   const existing = await sql`SELECT identity_no, created_at FROM students WHERE id = ${studentId}`;
   const row = existing.rows[0];
   if (!row) return null;
   if (row.identity_no) return row.identity_no;
-  const dateStamp = formatYYMMDD(row.created_at) || formatYYMMDD(new Date());
+  const regDate = row.created_at ? new Date(row.created_at) : new Date();
+  const year = Number.isNaN(regDate.getTime()) ? new Date().getUTCFullYear() : regDate.getUTCFullYear();
   const seqRes = await sql`SELECT nextval('student_identity_seq') AS seq`;
   const seq = String(seqRes.rows[0].seq).padStart(6, '0');
-  const identityNo = `SHRS-${dateStamp}-${seq}`;
+  const identityNo = `SHRS-STU-${year}-NG-${seq}`;
   await sql`UPDATE students SET identity_no = ${identityNo} WHERE id = ${studentId}`;
   return identityNo;
 }
