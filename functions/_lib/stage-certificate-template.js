@@ -341,92 +341,77 @@ function sheetHtml(args) {
 }
 
 function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
-  const ar = arForms(cert.student_sex);
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const verifyCode = displayHash.replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
   const year = new Date(String(cert.issued_at).slice(0, 10)).getUTCFullYear();
   const docId = `DID-${year}-${escapeHtml(cert.programme_code || 'IBT')}-${String(cert.id || 0).padStart(7, '0')}`;
-  const issuedDDMM = (() => {
-    const d = String(cert.issued_at).slice(0, 10).split('-');
-    return `${d[2]} / ${d[1]} / ${d[0]}`;
-  })();
   const nameEn = escapeHtml(cert.student_full_name);
   const nameAr = escapeHtml(cert.student_full_name_ar || '');
   const serial = escapeHtml(cert.serial_no);
   const studentId = escapeHtml(cert.student_identity_no || '—');
   const session = escapeHtml(String(cert.academic_year || '').replace('/', ' – '));
-  const hijriAr = escapeHtml(cert.issued_at_hijri_ar || cert.issued_at_hijri || '');
+  const gregEn = formatGregorianEn(cert.issued_at);
+  const hijriAr = escapeHtml(cert.issued_at_hijri_ar || '');
   const arCompleted = String(cert.student_sex || '').toLowerCase() === 'female' ? 'أتمت' : 'أتم';
 
-  const enRow = (label, value) => `<div class="f-row en"><span class="f-label">${label}</span><span class="f-lead"></span><span class="f-value">${value}</span></div>`;
-  const arRow = (label, value) => `<div class="f-row ar"><span class="f-value">${value}</span><span class="f-lead"></span><span class="f-label">${label}</span></div>`;
+  // One bilingual data grid — every fact stated ONCE, labelled in both
+  // languages (editorial recomposition: identifiers are language-
+  // neutral, so mirrored per-language tables would duplicate content).
+  const gRow = (en, val, arb) => `<div class="g-row">
+    <span class="g-en">${en}</span><span class="g-lead"></span>
+    <span class="g-val">${val}</span>
+    <span class="g-lead"></span><span class="g-ar">${arb}</span></div>`;
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
 
-  <div class="o2-intro-en">This is to certify that</div>
-  <div class="o2-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
+  <div class="o3-intro-en">This is to certify that</div>
+  <div class="o3-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
 
-  <div class="o2-name-en foil-text">${nameEn}</div>
-  <div class="o2-name-ar foil-text">${nameAr}</div>
+  <div class="o3-name-en foil-text">${nameEn}</div>
+  <div class="o3-name-ar foil-text">${nameAr}</div>
+  <div class="o3-name-rule"><span></span><i></i><span></span></div>
 
-  <div class="o2-para-en">has successfully completed the requirements of the
-    Ibtidā&rsquo;iyyah (Primary) stage in accordance with the approved curriculum
-    and academic standards of the School.</div>
-  <div class="o2-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الإبتدائية وفقًا
-    للمناهج المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
+  <div class="o3-para-en">has successfully completed the requirements of the
+    Ibtidā&rsquo;iyyah (Primary) stage, in accordance with the approved curriculum
+    and the academic standards of the School.</div>
+  <div class="o3-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الابتدائية،
+    وفقًا للمناهج المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
-  <div class="o2-fields-en">
-    ${enRow('Programme / Level', 'Ibtidā&rsquo;iyyah (Primary)')}
-    ${enRow('Academic Session', session)}
-    ${enRow('Certificate Number', serial)}
-    ${enRow('Student ID', studentId)}
-  </div>
-  <div class="o2-fields-ar">
-    ${arRow('البرنامج / المستوى', 'المرحلة الإبتدائية')}
-    ${arRow('السنة الدراسية', session)}
-    ${arRow('رقم الشهادة', serial)}
-    ${arRow('الرقم التعريفي للطالب', studentId)}
+  <div class="o3-grid">
+    ${gRow('Programme / Level', 'Ibtidā&rsquo;iyyah (Primary) <span class="g-dot">·</span> <span class="g-bi" dir="rtl">المرحلة الابتدائية</span>', 'البرنامج / المستوى')}
+    ${gRow('Academic Session', session, 'السنة الدراسية')}
+    ${gRow('Certificate Number', serial, 'رقم الشهادة')}
+    ${gRow('Student ID', studentId, 'الرقم التعريفي للطالب')}
+    ${gRow('Date of Issue', `${gregEn} <span class="g-dot">·</span> <span class="g-bi" dir="rtl">${hijriAr}</span>`, 'تاريخ الإصدار')}
+    ${gRow('Place of Issue', `${escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria')} <span class="g-dot">·</span> <span class="g-bi" dir="rtl">${escapeHtml(cert.place_ar || 'إكورودو، لاغوس، نيجيريا')}</span>`, 'مكان الإصدار')}
   </div>
 
-  <div class="o2-dates-en">
-    ${enRow('Date of Issue', issuedDDMM)}
-    ${enRow('Place of Issue', escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria'))}
+  <div class="o3-sig o3-sig-1">
+    <div class="o3-sig-line"></div>
+    <div class="o3-sig-en">Registrar</div>
+    <div class="o3-sig-ar">المسجّل</div>
+    <div class="o3-sig-seal">Official Seal</div>
   </div>
-  <div class="o2-dates-ar">
-    ${arRow('تاريخ الإصدار', issuedDDMM)}
-    ${arRow('مكان الإصدار', escapeHtml(cert.place_ar || 'لاغوس، نيجيريا'))}
+  <div class="o3-sig o3-sig-2">
+    <div class="o3-sig-line"></div>
+    <div class="o3-sig-en">Principal · Head of School</div>
+    <div class="o3-sig-ar">رئيس المدرسة</div>
+    <div class="o3-sig-seal">Official Seal</div>
   </div>
-
-  <div class="o2-hijri">
-    <div class="o2-hijri-k">التاريخ الهجري</div>
-    <div class="o2-hijri-v">${hijriAr}</div>
-  </div>
-
-  <div class="o2-sig o2-sig-1">
-    <div class="o2-sig-line"></div>
-    <div class="o2-sig-en">Registrar</div>
-    <div class="o2-sig-seal">(Official Seal) · المسجّلة</div>
-  </div>
-  <div class="o2-sig o2-sig-2">
-    <div class="o2-sig-line"></div>
-    <div class="o2-sig-en">Principal / Head of School</div>
-    <div class="o2-sig-seal">(Official Seal) · رئيس المدرسة</div>
-  </div>
-  <div class="o2-sig o2-sig-3">
-    <div class="o2-sig-line"></div>
-    <div class="o2-sig-en">Chairman, Board of Governors</div>
-    <div class="o2-sig-seal">(Official Seal) · رئيس مجلس الإدارة</div>
+  <div class="o3-sig o3-sig-3">
+    <div class="o3-sig-line"></div>
+    <div class="o3-sig-en">Chairman, Board of Governors</div>
+    <div class="o3-sig-ar">رئيس مجلس الإدارة</div>
+    <div class="o3-sig-seal">Official Seal</div>
   </div>
 
-  <div class="o2-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
-  <div class="o2-verify"><span class="vt">Verification</span>
-    Certificate No. <b>${serial}</b><span class="sep">·</span>
-    Document ID <b>${docId}</b><span class="sep">·</span>
-    Code <b>${verifyCode}</b><span class="sep">·</span>
-    Verify online <b>shroyalschools.com/verify-certificate</b></div>
-
-  <div class="o2-void">Issued without alteration or erasure — any tampering voids this certificate · أي تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية</div>
+  <div class="o3-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+  <div class="o3-verify">
+    <div class="o3-v-line"><span class="vt">Verification</span> Document ID <b>${docId}</b><span class="sep">·</span> Code <b>${verifyCode}</b></div>
+    <div class="o3-v-line"><b>shroyalschools.com/verify-certificate</b><span class="sep">·</span> Issued without alteration or erasure</div>
+    <div class="o3-v-ar">أي كشطٍ أو تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية</div>
+  </div>
 </div>`;
 }
 
@@ -547,7 +532,7 @@ function sheetHtmlConstructed({ cert, qrSvgMarkup, verifyUrl }) {
       <div class="sig">
         <div class="sig-line"></div>
         <div class="sig-en">Registrar</div>
-        <div class="sig-ar">المسجّلة</div>
+        <div class="sig-ar">المسجّل</div>
       </div>
       <div class="seal-wrap">${embossedSeal()}</div>
       <div class="sig">
@@ -617,65 +602,75 @@ function docShell(title, sheetsHtml) {
   .frame{position:absolute;inset:0;width:100%;height:100%;}
   .official-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;}
 
-  /* ═══ OFFICIAL-PAPER COMPOSITION v2 — the client's LOCKED
-     production master (Final Flagship Execution Directive): the
-     artwork renders untouched; only the approved data fields compose
-     into its zones, per the annotated layout master. Positions in mm
-     on the 297×209.5 sheet. ═══ */
+  /* ═══ OFFICIAL-PAPER EDITORIAL COMPOSITION v3 ═══
+     The locked artwork carries the identity; this layer is EDITORIAL
+     only (Final Execution Directive): recomposed hierarchy —
+     institution (printed) → certificate (printed) → STUDENT (foil
+     pair, one centrepiece) → single bilingual data grid (no duplicated
+     facts) → execution → administrative verification. Arabic flows
+     right-aligned with full ligatures; nothing compressed, clipped, or
+     stated twice. Positions in mm on the 297×209.5 sheet. */
   .sheet--official{background:#FFFFFF;}
-  .o2-intro-en{position:absolute;top:96mm;left:42mm;width:100mm;text-align:center;
-    font-family:var(--en-text);font-style:italic;font-size:9.8pt;color:#4B3420;}
-  .o2-intro-ar{position:absolute;top:95.6mm;right:42mm;width:100mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-size:10.4pt;font-weight:700;color:#4B3420;}
 
-  .o2-name-en{position:absolute;top:102.5mm;left:38mm;width:106mm;text-align:center;
-    font-family:var(--en-display);font-size:16.5pt;font-weight:700;letter-spacing:1.8px;line-height:1.15;}
-  .o2-name-ar{position:absolute;top:102mm;right:38mm;width:106mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-size:15.5pt;font-weight:700;line-height:1.3;
+  .o3-intro-en{position:absolute;top:96.2mm;left:40mm;width:104mm;text-align:center;
+    font-family:var(--en-text);font-style:italic;font-size:10pt;letter-spacing:.4px;color:#4B3420;}
+  .o3-intro-ar{position:absolute;top:95.6mm;right:40mm;width:104mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:10.6pt;font-weight:700;color:#4B3420;}
+
+  /* The bilingual name pair — one centrepiece, shared baseline row,
+     equal optical mass, joined by a single gold rule beneath. */
+  .o3-name-en{position:absolute;top:102.6mm;left:36mm;width:110mm;text-align:center;
+    font-family:var(--en-display);font-size:16pt;font-weight:700;letter-spacing:1.6px;line-height:1.2;}
+  .o3-name-ar{position:absolute;top:102.2mm;right:36mm;width:110mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:16pt;font-weight:700;line-height:1.35;
     -webkit-text-stroke:0.38px rgba(92,67,31,.55);}
+  .o3-name-rule{position:absolute;top:112.6mm;left:74mm;right:74mm;display:flex;align-items:center;gap:2.4mm;}
+  .o3-name-rule span{flex:1;height:.28mm;background:linear-gradient(90deg,transparent,#B08A2E 25%,#B08A2E 75%,transparent);}
+  .o3-name-rule i{width:1.9mm;height:1.9mm;background:#B08A2E;transform:rotate(45deg);}
 
-  .o2-para-en{position:absolute;top:113.5mm;left:42mm;width:99mm;
-    font-family:var(--en-text);font-size:9.4pt;line-height:1.5;color:#3A2A18;text-align:center;}
-  .o2-para-ar{position:absolute;top:113.5mm;right:42mm;width:99mm;direction:rtl;
-    font-family:var(--ar-text);font-size:10pt;line-height:1.65;color:#3A2A18;text-align:center;}
+  /* Body text: English ragged-right from the left margin, Arabic fully
+     right-aligned — mirrored systems of equal authority. */
+  .o3-para-en{position:absolute;top:116.6mm;left:42mm;width:97mm;
+    font-family:var(--en-text);font-size:9.6pt;line-height:1.55;color:#3A2A18;text-align:left;}
+  .o3-para-ar{position:absolute;top:116.2mm;right:42mm;width:97mm;direction:rtl;
+    font-family:var(--ar-text);font-size:10.4pt;line-height:1.7;color:#3A2A18;text-align:right;}
 
-  .f-row{display:flex;align-items:baseline;gap:1.6mm;margin-bottom:2mm;}
-  .f-label{font-family:var(--en-text);font-size:8.2pt;font-weight:600;color:#4B3420;white-space:nowrap;}
-  .f-row.ar .f-label{font-family:var(--ar-text);font-size:8.8pt;font-weight:700;}
-  .f-lead{flex:1;border-bottom:0.3mm dotted #B08A2E;transform:translateY(-0.7mm);}
-  .f-value{font-family:var(--utility);font-size:7.4pt;font-weight:600;letter-spacing:.2px;color:#221A10;white-space:nowrap;}
-  .f-row.ar{direction:rtl;}
-  .f-row.ar .f-value{direction:ltr;}
+  /* One bilingual data grid — EN label · leader · shared value ·
+     leader · AR label. Six facts, each stated once. */
+  .o3-grid{position:absolute;top:132.5mm;left:44mm;right:44mm;}
+  .g-row{display:grid;grid-template-columns:36mm 1fr auto 1fr 36mm;align-items:baseline;column-gap:2mm;margin-bottom:2.5mm;}
+  .g-en{font-family:var(--en-text);font-size:8.4pt;font-weight:600;letter-spacing:.3px;color:#4B3420;white-space:nowrap;}
+  .g-ar{font-family:var(--ar-text);font-size:9.2pt;font-weight:700;color:#4B3420;white-space:nowrap;text-align:right;direction:rtl;}
+  .g-lead{border-bottom:0.3mm dotted #B08A2E;transform:translateY(-0.8mm);min-width:6mm;}
+  .g-val{font-family:var(--utility);font-size:7.5pt;font-weight:600;letter-spacing:.2px;color:#221A10;white-space:nowrap;text-align:center;}
+  .g-val .g-bi{font-family:var(--ar-text);font-size:8.6pt;font-weight:700;}
+  .g-val .g-dot{color:#B08A2E;padding:0 .3mm;}
 
-  .o2-fields-en{position:absolute;top:130mm;left:42mm;width:99mm;}
-  .o2-fields-ar{position:absolute;top:130mm;right:42mm;width:99mm;}
-  .o2-dates-en{position:absolute;top:154mm;left:42mm;width:80mm;}
-  .o2-dates-ar{position:absolute;top:154mm;right:42mm;width:80mm;}
+  /* Execution — three offices, bilingual titles of equal rank. */
+  .o3-sig{position:absolute;top:169.4mm;width:40mm;text-align:center;}
+  .o3-sig-1{left:42mm;}
+  .o3-sig-2{left:84mm;}
+  .o3-sig-3{left:167mm;width:36mm;}
+  .o3-sig-line{width:33mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#4B3420 15%,#4B3420 85%,transparent);}
+  .o3-sig-en{font-family:var(--en-display);font-size:6.5pt;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#221A10;margin-top:1.2mm;line-height:1.35;}
+  .o3-sig-ar{font-family:var(--ar-text);font-size:8.4pt;font-weight:700;color:#3A2A18;margin-top:.3mm;direction:rtl;}
+  .o3-sig-seal{font-family:var(--en-text);font-style:italic;font-size:4.9pt;letter-spacing:.5px;color:#6E5013;margin-top:.4mm;}
 
-  .o2-hijri{position:absolute;top:153mm;left:128mm;width:41mm;text-align:center;
-    border:0.35mm solid #B08A2E;background:rgba(253,248,238,.92);padding:1.3mm 2mm;}
-  .o2-hijri-k{font-family:var(--ar-text);font-size:7.6pt;font-weight:700;color:#4B3420;}
-  .o2-hijri-v{font-family:var(--ar-text);font-size:8.6pt;font-weight:700;color:#221A10;margin-top:.5mm;direction:rtl;}
-
-  .o2-sig{position:absolute;top:169.8mm;width:40mm;text-align:center;}
-  .o2-sig-1{left:41mm;}
-  .o2-sig-2{left:84mm;}
-  .o2-sig-3{left:167mm;width:36mm;}
-  .o2-sig-line{width:34mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#4B3420 15%,#4B3420 85%,transparent);}
-  .o2-sig-en{font-family:var(--en-display);font-size:6.6pt;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:#221A10;margin-top:1.2mm;line-height:1.3;}
-  .o2-sig-seal{font-family:var(--en-text);font-style:italic;font-size:5.6pt;color:#6E5013;margin-top:.5mm;}
-
-  .o2-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
+  .o3-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
     display:flex;align-items:center;justify-content:center;}
-  .o2-qr svg{width:20.8mm;height:20.8mm;display:block;}
-  .o2-verify{position:absolute;left:44mm;top:185.6mm;width:154mm;
-    font-family:var(--utility);font-size:4.6pt;color:#221A10;line-height:1.5;}
-  .o2-verify .vt{font-family:var(--en-display);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#6E5013;margin-right:1.4mm;}
-  .o2-verify b{font-weight:600;}
-  .o2-verify .sep{color:#B08A2E;padding:0 1mm;}
+  .o3-qr svg{width:20.8mm;height:20.8mm;display:block;}
 
-  .o2-void{position:absolute;left:44mm;top:190.6mm;width:154mm;
-    font-family:var(--en-text);font-style:italic;font-size:4.7pt;color:#7A1F2B;line-height:1.4;}
+  /* Administrative verification block — quiet, two lines, clear of the
+     printed ornaments. The certificate number and student ID already
+     appear in the grid; only administrative extras live here. */
+  /* Verification block: capped at 76mm so it never reaches the printed
+     gold seal (seal spans ~125.6–171mm of the locked artwork). */
+  .o3-verify{position:absolute;left:44mm;top:185.6mm;width:76mm;}
+  .o3-v-line{font-family:var(--utility);font-size:4.9pt;color:#221A10;line-height:1.5;white-space:nowrap;}
+  .o3-v-line .vt{font-family:var(--en-display);font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#6E5013;margin-right:1.6mm;}
+  .o3-v-line b{font-weight:600;}
+  .o3-v-line .sep{color:#B08A2E;padding:0 1.1mm;}
+  .o3-v-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5.6pt;color:#7A1F2B;margin-top:.5mm;line-height:1.35;}
 
   /* ═══ Masthead ═══ */
   .masthead{display:grid;grid-template-columns:88mm 1fr 96mm;align-items:start;column-gap:3mm;}
