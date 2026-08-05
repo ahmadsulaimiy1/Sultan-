@@ -71,12 +71,22 @@ verifiable documents across their academic life:
 
 ## 4. The rendered document
 
-`functions/_lib/stage-certificate-template.js` — a faithful institutional
-rebuild of the client's Canva design (the Canva export CDN is blocked from
-this build environment, so the layout was reconstructed from the design's
-extracted content and the SHRS Design System v4 apparatus; same palette,
-fonts, and crest assets as the graduation-document shell so both families
-read as one institution):
+`functions/_lib/stage-certificate-template.js` — the ROYAL FLAGSHIP
+EDITION (v2, Design Authority Directive 2026-08-05): an engraved-document
+composition in the strict brand palette (coffee brown / royal gold /
+ivory, limited crimson, minimal navy, no green). All ornament is
+constructed geometry, not stock decoration: parametric epitrochoid
+guilloché (border bands, centre prestige field, seal and medallion
+rings), arabesque strapwork border with khatam corner medallions, a
+serial-carrying microtext ring, parchment grain and foil grain via SVG
+turbulence, a milled-edge gold award medallion with crimson/navy
+ribbons, an engraved certificate-ID plaque, a blind-embossed official
+seal, a gold/silver holographic foil strip, and gold-foil student-name
+lettering (metallic gradient + engraved stroke + emboss shadows).
+Typography: Cinzel / Cinzel Decorative / Cormorant Garamond (EN),
+Aref Ruqaa / Amiri / Reem Kufi (AR). Layout per the client's header
+architecture — crests + English titles upper-left, medallion + ID
+plaque + Arabic titles upper-right, side-by-side bilingual titles:
 
 - ONE A4 landscape page, both languages (Arabic right-anchored, English left).
 - Masthead: Nigeria coat of arms + SHRS crest, Federal Republic line,
