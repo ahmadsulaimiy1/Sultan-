@@ -279,6 +279,40 @@ function embossedSeal() {
 </svg>`;
 }
 
+// Engraved title cartouche. Drawn in millimetre units so every stroke is a
+// real press width and the whole frame stays vector at any output size.
+// The device is deliberately spare: a doubled hairline above and below,
+// each interrupted at centre by a lozenge, each turning a short bracket
+// tick at its ends. The lozenge is the same mark already used on the
+// credential band and the name rule, so the page speaks one ornamental
+// language instead of three.
+function titleFrameSvg(w, h) {
+  const c = w / 2;
+  const GAP = 5.6;          // centre interruption, where the lozenge sits
+  const IN = 0.85;          // companion hairline offset
+  const TICK = 3.1;         // bracket turn at each end
+  const GOLD = '#8A6A24';
+  const FAINT = 'rgba(169,138,60,.82)';
+  const lozenge = (x, y, r) =>
+    `<path d="M${x} ${(y - r).toFixed(2)} L${(x + r).toFixed(2)} ${y} L${x} ${(y + r).toFixed(2)} L${(x - r).toFixed(2)} ${y} Z"
+       fill="${GOLD}"/>`;
+  const rule = (y, dir) => `
+    <path d="M0.11 ${y} H${(c - GAP / 2).toFixed(2)} M${(c + GAP / 2).toFixed(2)} ${y} H${(w - 0.11).toFixed(2)}"
+      stroke="${GOLD}" stroke-width="0.22" fill="none"/>
+    <path d="M0.11 ${y} v${dir * TICK} M${(w - 0.11).toFixed(2)} ${y} v${dir * TICK}"
+      stroke="${GOLD}" stroke-width="0.22" fill="none"/>
+    <path d="M${(2.4).toFixed(2)} ${(y + dir * IN).toFixed(2)} H${(c - GAP / 2 - 1.2).toFixed(2)}
+             M${(c + GAP / 2 + 1.2).toFixed(2)} ${(y + dir * IN).toFixed(2)} H${(w - 2.4).toFixed(2)}"
+      stroke="${FAINT}" stroke-width="0.07" fill="none"/>
+    ${lozenge(c, y, 0.85)}
+    ${lozenge(2.4, y, 0.5)}${lozenge(w - 2.4, y, 0.5)}`;
+  return `<svg class="o9-frame" viewBox="0 0 ${w} ${h}" width="${w}mm" height="${h}mm"
+    xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="geometricPrecision">
+    ${rule(0.11, 1)}
+    ${rule(h - 0.11, -1)}
+  </svg>`;
+}
+
 function flourish(flip) {
   return `<svg viewBox="0 0 120 12" xmlns="http://www.w3.org/2000/svg" class="flourish${flip ? ' flip' : ''}" aria-hidden="true">
     <g fill="none" stroke="url(#fg${flip ? 'B' : 'A'})" stroke-width="0.9">
@@ -325,7 +359,11 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
 // school-name lines directly beneath the centre logo are removed —
 // "Keep only the official logo." The untouched original remains at
 // official-background.jpg.
-const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-hdr.jpg';
+// official-background-master.jpg is derived from the untouched original by
+// scripts/certificate-artwork.py, which lifts every line of baked-in text out
+// of the raster so it can be re-set as live vector type. Re-run that script
+// if a press-resolution original ever replaces the source.
+const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-master.jpg';
 
 // Measured geometry of the official paper (1080×708 source, fractions
 // of the sheet) — the artwork's own designated functional zones:
@@ -472,6 +510,22 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
   return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
 }
 
+// The award named on the certificate, per programme. This used to be baked
+// into the background raster, which meant every sheet — I'dādiyyah and
+// Thanawiyyah included — printed the word "IBTIDA'I'YYAH". The title is now
+// live type driven by the certificate's own programme code.
+// Note the Arabic: ابتدائية carries hamzat waṣl, so the definite form is
+// written الابتدائية, bare. The artwork's الإبتدائية was an orthographic
+// error and is corrected here.
+const STAGE = {
+  IBT: { en: 'Ibtidāʾiyyah · Primary Stage', ar: 'المرحلة الابتدائية',
+    bodyEn: 'Ibtidāʾiyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
+  IDD: { en: 'Iʿdādiyyah · Preparatory Stage', ar: 'المرحلة الإعدادية',
+    bodyEn: 'Iʿdādiyyah (Preparatory)', bodyAr: 'المرحلة الإعدادية' },
+  THN: { en: 'Thānawiyyah · Secondary Stage', ar: 'المرحلة الثانوية',
+    bodyEn: 'Thānawiyyah (Secondary)', bodyAr: 'المرحلة الثانوية' },
+};
+
 function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const verifyCode = displayHash.replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
@@ -511,7 +565,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     return Math.max(minPt, Math.min(maxPt, +(FIT_MM / (n * mmPerCharPt)).toFixed(2)));
   };
   const nameEnPt = fitPt(cert.student_full_name, 0.2497, 19.5, 11);
-  const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 24, 13);
+  const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 21.5, 13);
   const plqV = plaqueGroundSvg(58, 23.6, 'rosette');
   const microSerial = `${serial} · `.repeat(6);
   // Archival reference: registry path + a real Code 128 barcode of the
@@ -519,6 +573,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const archiveRef = `ARCH/${escapeHtml(cert.programme_code || 'IBT')}/${year}/${String(cert.id || 0).padStart(7, '0')}`;
   const archiveDigits = `${year}${String(cert.id || 0).padStart(8, '0')}`;
   const archiveBarcode = code128cSvg(archiveDigits);
+  const stage = STAGE[String(cert.programme_code || 'IBT').toUpperCase()] || STAGE.IBT;
+  const titleFrame = titleFrameSvg(202, 13.8);
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
@@ -540,6 +596,18 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="h-en h-en-3">Ministry of Basic and Secondary Education</div>
   </div>
 
+  <div class="o9-title">
+    ${titleFrame}
+    <div class="o9-half o9-en">
+      <div class="o9-l1">Certificate of Completion</div>
+      <div class="o9-l2">${stage.en}</div>
+    </div>
+    <div class="o9-half o9-ar">
+      <div class="o9-l1">شهادة إتمام الدراسة</div>
+      <div class="o9-l2">${stage.ar}</div>
+    </div>
+  </div>
+
   <div class="o5-intro-en">This is to certify that</div>
   <div class="o5-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
 
@@ -550,10 +618,10 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <img class="o5-seal" src="/assets/images/certificates/official-seal.png" alt="" />
 
   <div class="o5-para-en">has successfully completed the requirements of the
-    Ibtidā&rsquo;iyyah (Primary) stage in the ${session} academic session,
+    ${stage.bodyEn} stage in the ${session} academic session,
     in accordance with the approved curriculum and the academic standards
     of the School.</div>
-  <div class="o5-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الابتدائية
+  <div class="o5-para-ar">قد ${arCompleted} بنجاحٍ متطلبات ${stage.bodyAr}
     في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
     المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
@@ -837,11 +905,17 @@ function docShell(title, sheetsHtml) {
        the name carries genuine ink weight against cream paper, with
        the bright band confined to 46–54%. A heavy edge stroke was
        tried and rejected: it read as outlined text, not stamped foil. */
-    background:linear-gradient(102deg,#43300A 0%,#5E4712 13%,#7C5F1D 27%,#9E7C29 40%,
-      #C9AC5E 47%,#DCC68C 50%,#C9AC5E 53%,#9E7C29 60%,#7C5F1D 73%,#5E4712 87%,#43300A 100%);
+    /* Final direction: "the name should stand out because of its
+       craftsmanship and placement, not simply because it is brighter."
+       So the whole ramp is pulled ~15% darker and the specular band
+       narrowed from #DCC68C to #C4A758 — the name gains ink weight against
+       the cream while losing glare. Struck foil on cotton is a dark metal
+       with one bright edge, not a yellow letter. */
+    background:linear-gradient(102deg,#3A2906 0%,#4E3A0D 12%,#654D15 26%,#82661F 39%,
+      #A98A34 46%,#C4A758 50%,#A98A34 54%,#82661F 61%,#654D15 74%,#4E3A0D 88%,#3A2906 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-stroke:.26px rgba(50,35,6,.5);
-    text-shadow:0 .26mm .28mm rgba(56,38,8,.26), 0 -0.09mm 0 rgba(255,252,242,.38);
+    -webkit-text-stroke:.26px rgba(42,29,4,.6);
+    text-shadow:0 .26mm .28mm rgba(48,32,6,.34), 0 -0.09mm 0 rgba(255,252,242,.42);
   }
   /* ── Institutional header, re-set as live type ────────────────────
      These eight lines were originally baked into the background raster
@@ -872,17 +946,59 @@ function docShell(title, sheetsHtml) {
      band beneath the official logo. */
   .o5-basmala{position:absolute;top:54.2mm;left:5mm;right:0;text-align:center;
     font-family:var(--ar-text);font-weight:400;font-size:16pt;color:#262014;line-height:1;}
-  .o5-intro-en{position:absolute;top:93.8mm;left:38mm;width:106mm;text-align:center;
+  /* ── Title cartouche, re-set as live type ─────────────────────────
+     Both titles, the two rules and the corner scrolls were baked into the
+     artwork at ~92 DPI, and the English half was hardcoded to Ibtidāʾiyyah
+     — every I'dādiyyah and Thanawiyyah sheet would have printed a false
+     award. The zone is now cleared from the raster and rebuilt as vector.
+
+     The crowding the Founder identified had a specific cause: the cartouche
+     was drawn for two lines and three were being set inside it, because
+     "This is to certify that" sat below the bottom rule's y-position but
+     above the rule itself. The intro now clears the frame entirely.
+
+     Both scripts carry the same structure — document type on the dominant
+     line, stage on the subordinate — so the two halves balance as equals
+     rather than one half carrying an extra line the other lacks. */
+  .o9-title{position:absolute;left:47.5mm;top:79.6mm;width:202mm;height:13.8mm;}
+  .o9-frame{position:absolute;inset:0;display:block;}
+  .o9-half{position:absolute;top:0;height:100%;width:94mm;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.15mm;}
+  .o9-en{left:0;}
+  .o9-ar{right:0;direction:rtl;gap:.9mm;}
+  /* 12.6pt on 2.0px sets the English line at 84.4mm inside a 94mm half.
+     At the 13.4pt/2.9px first tried it measured 95.0mm and broke out past
+     the left rule — the frame is the constraint, not the type. */
+  .o9-l1{font-family:var(--en-display);font-weight:700;font-size:12.6pt;
+    letter-spacing:2px;text-transform:uppercase;color:#241B10;line-height:1;
+    white-space:nowrap;
+    /* Engraved, not embossed: a hairline of paper-white above the stroke
+       and a soft umber shade below is what an intaglio bite looks like. */
+    text-shadow:0 -0.055mm 0 rgba(255,252,243,.62), 0 .085mm .1mm rgba(58,40,12,.24);}
+  .o9-l2{font-family:var(--en-display);font-weight:400;font-size:7.1pt;
+    letter-spacing:2.1px;text-transform:uppercase;color:#6E5013;line-height:1;
+    white-space:nowrap;}
+  /* Naskh carries its diacritics and descenders well outside the line box,
+     so at line-height 1 the two Arabic lines overlapped by 2.3mm and the
+     upper one broke above the top rule. The measured ink box is what has
+     to be centred, not the line box — hence explicit leading here and the
+     optical nudge below rather than relying on flex centring. */
+  .o9-ar .o9-l1{font-family:var(--ar-text);font-size:14.9pt;letter-spacing:0;
+    line-height:1;color:#241B10;}
+  .o9-ar .o9-l2{font-family:var(--ar-text);font-weight:700;font-size:9pt;
+    letter-spacing:0;line-height:1;color:#6E5013;}
+
+  .o5-intro-en{position:absolute;top:96.4mm;left:38mm;width:106mm;text-align:center;
     font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10pt;
     letter-spacing:.5px;color:#4B3420;}
-  .o5-intro-ar{position:absolute;top:93.1mm;right:38mm;width:106mm;text-align:center;direction:rtl;
+  .o5-intro-ar{position:absolute;top:94.2mm;right:38mm;width:106mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;color:#4B3420;}
   /* Generous air above and below the name pair — the visual heart of
      the certificate must never be crowded by intro or body text. */
   .o5-name-en{position:absolute;top:104.4mm;left:34mm;width:114mm;text-align:center;
     font-family:var(--en-display);font-weight:700;letter-spacing:2.4px;
     white-space:nowrap;line-height:1.15;}
-  .o5-name-ar{position:absolute;top:102.2mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+  .o5-name-ar{position:absolute;top:103.6mm;right:34mm;width:114mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-weight:700;white-space:nowrap;line-height:1.08;}
   .o5-name-rule{position:absolute;top:117.4mm;left:70mm;right:70mm;display:flex;align-items:center;gap:2.2mm;}
   .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 22%,#B08A2E 78%,transparent);}
@@ -999,12 +1115,27 @@ function docShell(title, sheetsHtml) {
 
   /* Signature court: three columns anchoring the page; the centre
      column signs directly above the printed gold seal. */
+  /* Station centres are 75 / 148.5 / 222mm — symmetric about the sheet
+     centre at 73.5mm intervals. The right station previously sat at 216mm,
+     6mm inboard of its mirror, which is what made the row read as slightly
+     off-balance even though nothing collided. */
   .o5-sig{position:absolute;top:151.6mm;width:52mm;text-align:center;}
   .o5-sig-1{left:49mm;}
   .o5-sig-2{left:122.5mm;}
-  .o5-sig-3{left:188mm;width:56mm;}
-  .o5-sig-line{width:45mm;height:.34mm;margin:8mm auto 0;
-    background:linear-gradient(90deg,transparent,#3A2A18 10%,#3A2A18 90%,transparent);}
+  .o5-sig-3{left:194mm;width:56mm;}
+  /* The signing rule is a guide, not a form field. It was a 0.34mm near-black
+     bar — the "generic underline" the Founder rejected. It is now a 0.1mm
+     gold hairline that fades to nothing over the outer quarter at each end
+     and is closed by a lozenge terminal, so it reads as engraving and all
+     but disappears once a signature is written across it. */
+  .o5-sig-line{position:relative;width:45mm;height:.1mm;margin:8mm auto 0;
+    background:linear-gradient(90deg,transparent,rgba(138,106,36,.62) 25%,
+      rgba(138,106,36,.62) 75%,transparent);}
+  .o5-sig-line::before,.o5-sig-line::after{content:'';position:absolute;top:50%;
+    width:.9mm;height:.9mm;margin-top:-0.45mm;transform:rotate(45deg);
+    border:.08mm solid rgba(138,106,36,.72);}
+  .o5-sig-line::before{left:-1.6mm;}
+  .o5-sig-line::after{right:-1.6mm;}
   .o5-sig-en{font-family:var(--en-display);font-weight:700;font-size:6.3pt;letter-spacing:.8px;
     text-transform:uppercase;color:#221A10;margin-top:1.3mm;line-height:1.4;white-space:nowrap;}
   .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.8pt;color:#3A2A18;
