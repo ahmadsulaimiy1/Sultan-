@@ -352,6 +352,47 @@ function sheetHtml(args) {
 // the base. Pure vector, generated per plaque size, so the engraving
 // stays crisp at any print resolution — no digital gradients.
 // ─────────────────────────────────────────────────────────────────────
+// One continuous credential bar (Final Institutional Design Review):
+// a single machined nameplate divided into engraved compartments.
+// Near-transparent ground so the certificate paper shows through —
+// the bar reads as engineered into the sheet, not laid on top.
+function barGroundSvg(w, h, dividers) {
+  const rows = 4;
+  let weave = '';
+  for (let r = 0; r < rows; r++) {
+    const y0 = 1.7 + (r + 0.5) * ((h - 3.4) / rows);
+    for (const ph of [0, Math.PI]) {
+      const steps = Math.round(w / 0.7);
+      const pts = [];
+      for (let i = 0; i <= steps; i++) {
+        const x = 1.7 + (i / steps) * (w - 3.4);
+        const y = y0 + 0.72 * Math.sin((i / steps) * Math.PI * 2 * (w / 7.5) + ph);
+        pts.push((i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2));
+      }
+      weave += `<path d="${pts.join('')}" fill="none" stroke="#B08A2E" stroke-width="0.05" opacity="0.13"/>`;
+    }
+  }
+  const sep = dividers.map((x) => `
+    <line x1="${x}" y1="2.1" x2="${x}" y2="${h - 2.1}" stroke="#9A7A2C" stroke-width="0.09" opacity="0.8"/>
+    <rect x="${x - 0.5}" y="1.15" width="1" height="1" transform="rotate(45 ${x} 1.65)" fill="none" stroke="#8A6A24" stroke-width="0.09"/>
+    <rect x="${x - 0.5}" y="${h - 2.15}" width="1" height="1" transform="rotate(45 ${x} ${h - 1.65})" fill="none" stroke="#8A6A24" stroke-width="0.09"/>`).join('');
+  const flourish = (cx, cy, sx, sy) => `
+    <path d="M ${cx} ${cy + sy * 1.6} Q ${cx} ${cy} ${cx + sx * 1.6} ${cy}" fill="none" stroke="#8A6A24" stroke-width="0.12"/>
+    <path d="M ${cx + sx * 0.4} ${cy + sy * 2.3} Q ${cx + sx * 0.4} ${cy + sy * 0.4} ${cx + sx * 2.3} ${cy + sy * 0.4}" fill="none" stroke="#A98A3C" stroke-width="0.08"/>
+    <circle cx="${cx + sx * 0.4}" cy="${cy + sy * 0.4}" r="0.22" fill="#8A6A24"/>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">
+    <rect width="${w}" height="${h}" rx="0.8" fill="#FBF4E4" opacity="0.55"/>
+    ${weave}
+    <rect x="0.3" y="0.3" width="${w - 0.6}" height="${h - 0.6}" rx="0.65" fill="none" stroke="#8A6A24" stroke-width="0.18" opacity="0.9"/>
+    <rect x="0.95" y="0.95" width="${w - 1.9}" height="${h - 1.9}" rx="0.4" fill="none" stroke="#A98A3C" stroke-width="0.08" opacity="0.85"/>
+    ${sep}
+    ${flourish(1.7, 1.7, 1, 1)}${flourish(w - 1.7, 1.7, -1, 1)}${flourish(1.7, h - 1.7, 1, -1)}${flourish(w - 1.7, h - 1.7, -1, -1)}
+    <text x="${w / 2}" y="${h - 0.72}" text-anchor="middle" font-family="sans-serif" font-size="0.8"
+      letter-spacing="0.16" fill="#8A6A24" opacity="0.32">SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC RECORD · GUILLOCHE · MICROTEXT · QR VERIFICATION · CRYPTOGRAPHIC SERIAL</text>
+  </svg>`;
+  return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
+}
+
 function plaqueGroundSvg(w, h, corner = 'rosette') {
   const rows = Math.max(3, Math.round(h / 2.8));
   let weave = '';
@@ -419,10 +460,11 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="p-label"><span class="p-l-en">${en}</span><span class="p-l-ar" dir="rtl">${arb}</span></div>
     <div class="p-value${small}">${val}</div>
   </div>`;
-  const plq1 = plaqueGroundSvg(64.5, 15, 'rosette');
-  const plq2 = plaqueGroundSvg(64.5, 15, 'diamond');
-  const plq3 = plaqueGroundSvg(69, 15, 'rosette');
-  const plqV = plaqueGroundSvg(60, 24.4, 'rosette');
+  // Credential bar: 4 compartments (serial / student id / date / place),
+  // divider x-positions in bar-local mm must match the CSS grid below.
+  const barBg = barGroundSvg(202, 12.6, [59, 103.5, 155]);
+  const plqV = plaqueGroundSvg(58, 23.6, 'rosette');
+  const microSerial = `${serial} · `.repeat(6);
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
@@ -444,15 +486,11 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
     المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
-  <div class="o5-plq o5-plq-1" style="background-image:${plq1}">
-    ${pField('Certificate Number', 'رقم الشهادة', serial)}
-  </div>
-  <div class="o5-plq o5-plq-2" style="background-image:${plq2}">
-    ${pField('Student ID', 'الرقم التعريفي للطالب', studentId)}
-  </div>
-  <div class="o5-plq o5-plq-3" style="background-image:${plq3}">
-    ${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`, ' p-value-sm')}
-    ${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`, ' p-value-sm')}
+  <div class="o7-bar" style="background-image:${barBg}">
+    <div class="bar-cell">${pField('Certificate Number', 'رقم الشهادة', `<span class="v-serial">${serial}</span>`)}</div>
+    <div class="bar-cell">${pField('Student ID', 'الرقم التعريفي للطالب', studentId)}</div>
+    <div class="bar-cell">${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`, ' p-value-sm')}</div>
+    <div class="bar-cell">${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`, ' p-value-sm')}</div>
   </div>
 
   <div class="o5-vplate" style="background-image:${plqV}">
@@ -461,10 +499,14 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
       <div class="vp-row">Document ID <b>${docId}</b></div>
       <div class="vp-row">Code <b>${verifyCode}</b></div>
       <div class="vp-row vp-url">shroyalschools.com/verify-certificate</div>
+      <div class="vp-micro">${escapeHtml(microSerial)}</div>
       <div class="vp-void">Void if altered or erased</div>
       <div class="vp-void-ar">لاغيةٌ عند أي كشطٍ أو تعديل</div>
     </div>
-    <div class="vp-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+    <div class="vp-qrcol">
+      <div class="vp-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+      <div class="vp-scan">Scan to Verify</div>
+    </div>
   </div>
 
   <div class="o5-sig o5-sig-1">
@@ -739,47 +781,60 @@ function docShell(title, sheetsHtml) {
      ivory field, micro-guilloché, hairline rules, corner ornaments,
      SHRS microtext. Printed into the paper: no drop shadows, only a
      whisper of blind-emboss relief. */
-  .o5-plq{position:absolute;top:136.4mm;height:15mm;background-size:100% 100%;
-    background-repeat:no-repeat;box-sizing:border-box;padding:2mm 4mm 2.6mm;
-    display:flex;flex-direction:column;justify-content:center;gap:.55mm;overflow:hidden;
-    box-shadow:inset 0 .12mm 0 rgba(255,255,255,.45), inset 0 -0.12mm 0 rgba(110,80,19,.12);}
-  .o5-plq-1{left:44mm;width:64.5mm;}
-  .o5-plq-2{left:114mm;width:64.5mm;}
-  .o5-plq-3{left:184mm;width:69mm;padding:1.5mm 3.5mm 2.2mm;gap:.4mm;}
-  .o5-plq-3 .p-l-en{font-size:4.1pt;}
-  .o5-plq-3 .p-l-ar{font-size:5.2pt;}
-  .p-field{display:flex;flex-direction:column;gap:.1mm;}
+  /* One continuous credential bar — a single machined nameplate in
+     four engraved compartments. Ground is barGroundSvg: continuous
+     micro-guilloché, hairline double frame, diamond-finial separators,
+     corner flourishes, and a full-width microtext base line. */
+  .o7-bar{position:absolute;left:47.5mm;top:138mm;width:202mm;height:12.6mm;
+    background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
+    display:grid;grid-template-columns:59mm 44.5mm 51.5mm 47mm;
+    box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
+  .bar-cell{display:flex;flex-direction:column;justify-content:center;gap:.45mm;
+    padding:1.5mm 2.9mm 2.1mm;box-sizing:border-box;overflow:hidden;}
+  .p-field{display:flex;flex-direction:column;gap:.15mm;}
   .p-label{display:flex;justify-content:space-between;align-items:baseline;}
-  .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4.4pt;letter-spacing:1px;
+  .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4pt;letter-spacing:.9px;
     text-transform:uppercase;color:#6E5013;}
-  .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5.6pt;color:#6E5013;}
-  .p-value{font-family:var(--utility);font-weight:600;font-size:6.6pt;color:#221A10;
-    text-align:center;white-space:nowrap;line-height:1.35;}
-  .p-value-sm{font-size:5.9pt;}
-  .p-value .p-dot{color:#B08A2E;padding:0 .5mm;}
+  .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5pt;color:#6E5013;}
+  .p-value{font-family:var(--utility);font-weight:600;font-size:6pt;color:#221A10;
+    text-align:center;white-space:nowrap;line-height:1.3;}
+  .p-value-sm{font-size:5.4pt;}
+  .p-value .p-dot{color:#B08A2E;padding:0 .45mm;}
+  /* Engraved crimson serial — banknote convention for the controlling
+     number, within the palette's reserved crimson. */
+  .v-serial{color:#7A1F2B;letter-spacing:.3px;}
 
   /* Verification plate: an engraved institutional module built into the
      certificate's bottom-right verification zone — Document ID, code,
      verify address and void clause beside the QR, which sits framed
      inside the plate rather than floating on the paper. */
-  .o5-vplate{position:absolute;left:171.5mm;top:173mm;width:60mm;height:24.4mm;
+  .o5-vplate{position:absolute;left:173.5mm;top:173.4mm;width:58mm;height:23.6mm;
     background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
-    padding:2mm 1.9mm 2.4mm 3mm;display:flex;align-items:center;gap:1.7mm;
-    box-shadow:inset 0 .12mm 0 rgba(255,255,255,.45), inset 0 -0.12mm 0 rgba(110,80,19,.12);}
-  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.32mm;}
-  .vp-text .p-label{margin-bottom:.3mm;}
-  .vp-row{font-family:var(--utility);font-weight:400;font-size:4.8pt;color:#221A10;
+    padding:1.8mm 1.8mm 2.2mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
+    box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
+  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.3mm;}
+  .vp-text .p-label{margin-bottom:.25mm;}
+  .vp-text .p-l-en{font-size:4.3pt;}
+  .vp-text .p-l-ar{font-size:5.4pt;}
+  .vp-row{font-family:var(--utility);font-weight:400;font-size:4.7pt;color:#221A10;
     white-space:nowrap;line-height:1.35;}
   .vp-row b{font-weight:600;}
-  .vp-url{font-weight:600;font-size:4.7pt;color:#4B3420;letter-spacing:.15px;}
-  .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.6pt;color:#7A1F2B;
+  .vp-url{font-weight:600;font-size:4.6pt;color:#4B3420;letter-spacing:.15px;}
+  /* Genuine microprint rail: the live serial repeated at microtext
+     size — a real security-print device, not decoration. */
+  .vp-micro{font-family:var(--utility);font-size:2.5pt;letter-spacing:.25px;
+    color:rgba(138,106,36,.8);white-space:nowrap;overflow:hidden;line-height:1.5;}
+  .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.5pt;color:#7A1F2B;
     white-space:nowrap;line-height:1.3;}
-  .vp-void-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5.2pt;
-    color:#7A1F2B;white-space:nowrap;line-height:1.25;}
-  .vp-qr{flex:0 0 auto;width:19.4mm;height:19.4mm;background:#FFFFFF;
-    border:.16mm solid #9A7A2C;box-sizing:border-box;padding:.7mm;
+  .vp-void-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5pt;
+    color:#7A1F2B;white-space:nowrap;line-height:1.2;}
+  .vp-qrcol{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.55mm;}
+  .vp-qr{width:17.2mm;height:17.2mm;background:#FFFFFF;
+    border:.15mm solid #9A7A2C;box-sizing:border-box;padding:.6mm;
     display:flex;align-items:center;justify-content:center;}
-  .vp-qr svg{width:17.6mm;height:17.6mm;display:block;}
+  .vp-qr svg{width:15.8mm;height:15.8mm;display:block;}
+  .vp-scan{font-family:var(--en-display);font-weight:700;font-size:3.4pt;
+    letter-spacing:1px;text-transform:uppercase;color:#6E5013;}
 
   /* Signature court: three columns anchoring the page; the centre
      column signs directly above the printed gold seal. */
