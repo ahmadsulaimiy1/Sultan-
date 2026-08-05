@@ -320,7 +320,12 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
 // suppresses its own constructed frame, band, and parchment layers —
 // only the content, name foil, and security apparatus are composed on
 // top, inside the safe area.
-const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background.jpg';
+// official-background-clean.jpg = the client's locked artwork with ONE
+// authorised change (Founder release-gate directive): the duplicated
+// school-name lines directly beneath the centre logo are removed —
+// "Keep only the official logo." The untouched original remains at
+// official-background.jpg.
+const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-clean.jpg';
 
 // Measured geometry of the official paper (1080×708 source, fractions
 // of the sheet) — the artwork's own designated functional zones:
@@ -353,65 +358,67 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const gregEn = formatGregorianEn(cert.issued_at);
   const hijriAr = escapeHtml(cert.issued_at_hijri_ar || '');
   const arCompleted = String(cert.student_sex || '').toLowerCase() === 'female' ? 'أتمت' : 'أتم';
+  // Display-only Arabic-Indic digits for the Hijri line (the snapshotted
+  // DB value is unchanged; this is typography, not data).
+  const hijriArDisplay = hijriAr.replace(/[0-9]/g, (d) => '٠١٢٣٤٥٦٧٨٩'[+d]);
+  const placeEn = escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria');
+  const placeAr = escapeHtml(cert.place_ar || 'إكورودو، لاغوس، نيجيريا');
 
-  // One bilingual data grid — every fact stated ONCE, labelled in both
-  // languages (editorial recomposition: identifiers are language-
-  // neutral, so mirrored per-language tables would duplicate content).
-  const gRow = (en, val, arb) => `<div class="g-row">
-    <span class="g-en">${en}</span><span class="g-lead"></span>
-    <span class="g-val">${val}</span>
-    <span class="g-lead"></span><span class="g-ar">${arb}</span></div>`;
+  // Credential panel field: bilingual micro-label row, then the value.
+  const pField = (en, arb, val) => `<div class="p-field">
+    <div class="p-label"><span class="p-l-en">${en}</span><span class="p-l-ar" dir="rtl">${arb}</span></div>
+    <div class="p-value">${val}</div>
+  </div>`;
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
 
-  <div class="o3-intro-en">This is to certify that</div>
-  <div class="o3-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
+  <div class="o5-intro-en">This is to certify that</div>
+  <div class="o5-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
 
-  <div class="o3-name-en foil-text">${nameEn}</div>
-  <div class="o3-name-ar foil-text">${nameAr}</div>
-  <div class="o3-name-rule"><span></span><i></i><span></span></div>
+  <div class="o5-name-en">${nameEn}</div>
+  <div class="o5-name-ar">${nameAr}</div>
+  <div class="o5-name-rule"><span></span><i></i><span></span></div>
 
-  <div class="o3-para-en">has successfully completed the requirements of the
-    Ibtidā&rsquo;iyyah (Primary) stage, in accordance with the approved curriculum
-    and the academic standards of the School.</div>
-  <div class="o3-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الابتدائية،
-    وفقًا للمناهج المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
+  <div class="o5-para-en">has successfully completed the requirements of the
+    Ibtidā&rsquo;iyyah (Primary) stage in the ${session} academic session,
+    in accordance with the approved curriculum and the academic standards
+    of the School.</div>
+  <div class="o5-para-ar">قد ${arCompleted} بنجاحٍ متطلبات المرحلة الابتدائية
+    في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
+    المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
-  <div class="o3-grid">
-    ${gRow('Programme / Level', 'Ibtidā&rsquo;iyyah (Primary) <span class="g-dot">·</span> <span class="g-bi" dir="rtl">المرحلة الابتدائية</span>', 'البرنامج / المستوى')}
-    ${gRow('Academic Session', session, 'السنة الدراسية')}
-    ${gRow('Certificate Number', serial, 'رقم الشهادة')}
-    ${gRow('Student ID', studentId, 'الرقم التعريفي للطالب')}
-    ${gRow('Date of Issue', `${gregEn} <span class="g-dot">·</span> <span class="g-bi" dir="rtl">${hijriAr}</span>`, 'تاريخ الإصدار')}
-    ${gRow('Place of Issue', `${escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria')} <span class="g-dot">·</span> <span class="g-bi" dir="rtl">${escapeHtml(cert.place_ar || 'إكورودو، لاغوس، نيجيريا')}</span>`, 'مكان الإصدار')}
+  <div class="o5-panel o5-panel-1"><div class="o5-panel-in">
+    ${pField('Certificate Number', 'رقم الشهادة', serial)}
+    ${pField('Student ID', 'الرقم التعريفي للطالب', studentId)}
+  </div></div>
+  <div class="o5-panel o5-panel-2"><div class="o5-panel-in">
+    ${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`)}
+    ${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`)}
+  </div></div>
+  <div class="o5-panel o5-panel-3"><div class="o5-panel-in">
+    ${pField('Verification', 'التحقق من الشهادة', `${docId} <span class="p-dot">·</span> ${verifyCode}`)}
+    <div class="p-value p-url">shroyalschools.com/verify-certificate</div>
+    <div class="p-void">Void if altered or erased <span class="p-dot">·</span> <span dir="rtl">لاغيةٌ عند أي كشطٍ أو تعديل</span></div>
+  </div></div>
+
+  <div class="o5-sig o5-sig-1">
+    <div class="o5-sig-line"></div>
+    <div class="o5-sig-en">Registrar</div>
+    <div class="o5-sig-ar">المسجّل</div>
+  </div>
+  <div class="o5-sig o5-sig-2">
+    <div class="o5-sig-line"></div>
+    <div class="o5-sig-en">Principal &middot; Head of School</div>
+    <div class="o5-sig-ar">رئيس المدرسة</div>
+  </div>
+  <div class="o5-sig o5-sig-3">
+    <div class="o5-sig-line"></div>
+    <div class="o5-sig-en">Chairman, Board of Governors</div>
+    <div class="o5-sig-ar">رئيس مجلس الإدارة</div>
   </div>
 
-  <div class="o3-sig o3-sig-1">
-    <div class="o3-sig-line"></div>
-    <div class="o3-sig-en">Registrar</div>
-    <div class="o3-sig-ar">المسجّل</div>
-    <div class="o3-sig-seal">Official Seal</div>
-  </div>
-  <div class="o3-sig o3-sig-2">
-    <div class="o3-sig-line"></div>
-    <div class="o3-sig-en">Principal · Head of School</div>
-    <div class="o3-sig-ar">رئيس المدرسة</div>
-    <div class="o3-sig-seal">Official Seal</div>
-  </div>
-  <div class="o3-sig o3-sig-3">
-    <div class="o3-sig-line"></div>
-    <div class="o3-sig-en">Chairman, Board of Governors</div>
-    <div class="o3-sig-ar">رئيس مجلس الإدارة</div>
-    <div class="o3-sig-seal">Official Seal</div>
-  </div>
-
-  <div class="o3-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
-  <div class="o3-verify">
-    <div class="o3-v-line"><span class="vt">Verification</span> Document ID <b>${docId}</b><span class="sep">·</span> Code <b>${verifyCode}</b></div>
-    <div class="o3-v-line"><b>shroyalschools.com/verify-certificate</b><span class="sep">·</span> Issued without alteration or erasure</div>
-    <div class="o3-v-ar">أي كشطٍ أو تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية</div>
-  </div>
+  <div class="o5-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
 </div>`;
 }
 
@@ -570,8 +577,27 @@ function docShell(title, sheetsHtml) {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${escapeHtml(title)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Amiri:ital,wght@0,400;0,700;1,400&family=Kufam:wght@400;600;700&family=Reem+Kufi:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Self-hosted fonts (assets/fonts/): the certificate's typography must
+   not depend on a third-party CDN — a blocked fonts request silently
+   degrades every Arabic glyph to a system fallback, which is exactly
+   the failure the release-gate review caught. Same files serve the
+   browser preview, the BROWSER-binding PDF, and local print review. */
+@font-face{font-family:'Amiri';font-style:normal;font-weight:400;font-display:block;src:url('/assets/fonts/amiri-arabic-400-normal.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC;}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:700;font-display:block;src:url('/assets/fonts/amiri-arabic-700-normal.woff2') format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC;}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:400;font-display:block;src:url('/assets/fonts/amiri-latin-400-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Amiri';font-style:normal;font-weight:700;font-display:block;src:url('/assets/fonts/amiri-latin-700-normal.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:400;font-display:block;src:url('/assets/fonts/cinzel-latin-400-normal.woff2') format('woff2');}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:block;src:url('/assets/fonts/cinzel-latin-700-normal.woff2') format('woff2');}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:800;font-display:block;src:url('/assets/fonts/cinzel-latin-800-normal.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:500;font-display:block;src:url('/assets/fonts/cormorant-garamond-latin-500-normal.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:500;font-display:block;src:url('/assets/fonts/cormorant-garamond-latin-500-italic.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:block;src:url('/assets/fonts/cormorant-garamond-latin-600-normal.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:600;font-display:block;src:url('/assets/fonts/cormorant-garamond-latin-600-italic.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:700;font-display:block;src:url('/assets/fonts/cormorant-garamond-latin-700-normal.woff2') format('woff2');}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:block;src:url('/assets/fonts/inter-latin-400-normal.woff2') format('woff2');}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:block;src:url('/assets/fonts/inter-latin-600-normal.woff2') format('woff2');}
+</style>
 <style>
   :root{
     --espresso:#221A10; --coffee:#3A2A18; --umber:#4B3420;
@@ -581,7 +607,7 @@ function docShell(title, sheetsHtml) {
     --crimson:#7A1F2B; --navy:#1F2A44;
     --en-display:'Cinzel',serif;
     --en-text:'Cormorant Garamond',serif;
-    --ar-display:'Kufam','Amiri',sans-serif; /* client final direction: Kufic display for major Arabic titles */
+    --ar-display:'Amiri',serif; /* self-hosted; major AR titles are printed in the locked artwork */
     --ar-text:'Amiri',serif;
     --ar-label:'Reem Kufi',sans-serif;
     --utility:'Inter',sans-serif;
@@ -612,65 +638,72 @@ function docShell(title, sheetsHtml) {
      stated twice. Positions in mm on the 297×209.5 sheet. */
   .sheet--official{background:#FFFFFF;}
 
-  .o3-intro-en{position:absolute;top:96.2mm;left:40mm;width:104mm;text-align:center;
-    font-family:var(--en-text);font-style:italic;font-size:10pt;letter-spacing:.4px;color:#4B3420;}
-  .o3-intro-ar{position:absolute;top:95.6mm;right:40mm;width:104mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-size:10.6pt;font-weight:700;color:#4B3420;}
+  /* ============ o5 FLAGSHIP MASTER (official artwork) ============ */
+  /* Gold-foil name treatment: engraved gradient fill, hairline bronze
+     edge, top-light bevel and under-shade for emboss depth. */
+  .o5-name-en,.o5-name-ar{
+    background:linear-gradient(100deg,#6E4C0E 0%,#A97B1C 16%,#E4BE52 36%,#F9EBB4 50%,#E4BE52 64%,#A97B1C 84%,#6E4C0E 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:.3px rgba(84,58,10,.55);
+    text-shadow:0 .22mm .18mm rgba(56,38,8,.30), 0 -0.14mm 0 rgba(255,251,235,.5);
+  }
+  .o5-intro-en{position:absolute;top:96.4mm;left:38mm;width:106mm;text-align:center;
+    font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10.5pt;
+    letter-spacing:.5px;color:#4B3420;}
+  .o5-intro-ar{position:absolute;top:95.8mm;right:38mm;width:106mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:10.5pt;color:#4B3420;}
+  .o5-name-en{position:absolute;top:102.8mm;left:34mm;width:114mm;text-align:center;
+    font-family:var(--en-display);font-weight:700;font-size:17.5pt;letter-spacing:1.8px;
+    white-space:nowrap;line-height:1.15;}
+  .o5-name-ar{position:absolute;top:101.4mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-weight:700;font-size:20pt;white-space:nowrap;line-height:1.3;}
+  .o5-name-rule{position:absolute;top:113.8mm;left:72mm;right:72mm;display:flex;align-items:center;gap:2.4mm;}
+  .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 25%,#B08A2E 75%,transparent);}
+  .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
+  .o5-para-en{position:absolute;top:118mm;left:42mm;width:98mm;
+    font-family:var(--en-text);font-weight:500;font-size:10pt;line-height:1.5;color:#332514;text-align:left;}
+  .o5-para-ar{position:absolute;top:117.6mm;right:42mm;width:98mm;direction:rtl;
+    font-family:var(--ar-text);font-size:10pt;line-height:1.55;color:#332514;text-align:right;}
 
-  /* The bilingual name pair — one centrepiece, shared baseline row,
-     equal optical mass, joined by a single gold rule beneath. */
-  .o3-name-en{position:absolute;top:102.6mm;left:36mm;width:110mm;text-align:center;
-    font-family:var(--en-display);font-size:16pt;font-weight:700;letter-spacing:1.6px;line-height:1.2;}
-  .o3-name-ar{position:absolute;top:102.2mm;right:36mm;width:110mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-size:16pt;font-weight:700;line-height:1.35;
-    -webkit-text-stroke:0.38px rgba(92,67,31,.55);}
-  .o3-name-rule{position:absolute;top:112.6mm;left:74mm;right:74mm;display:flex;align-items:center;gap:2.4mm;}
-  .o3-name-rule span{flex:1;height:.28mm;background:linear-gradient(90deg,transparent,#B08A2E 25%,#B08A2E 75%,transparent);}
-  .o3-name-rule i{width:1.9mm;height:1.9mm;background:#B08A2E;transform:rotate(45deg);}
+  /* Credential information bar: three engraved gold-framed panels. */
+  .o5-panel{position:absolute;top:135.8mm;height:17.6mm;border-radius:1.1mm;padding:.5mm;
+    background:linear-gradient(135deg,#C9A64F 0%,#8A6A24 28%,#E6C878 50%,#8A6A24 72%,#C9A64F 100%);
+    box-shadow:0 .35mm .9mm rgba(56,38,8,.22);}
+  .o5-panel-1{left:44mm;width:64.5mm;}
+  .o5-panel-2{left:112.5mm;width:70mm;}
+  .o5-panel-3{left:186.5mm;width:66.5mm;}
+  .o5-panel-in{height:100%;border-radius:.7mm;background:rgba(253,249,238,.94);
+    box-shadow:inset 0 0 0 .14mm rgba(122,90,30,.55), inset 0 0 2.2mm rgba(176,138,46,.14);
+    padding:1.2mm 2.4mm;display:flex;flex-direction:column;justify-content:center;gap:.55mm;overflow:hidden;}
+  .p-field{display:flex;flex-direction:column;gap:.1mm;}
+  .p-label{display:flex;justify-content:space-between;align-items:baseline;}
+  .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4.4pt;letter-spacing:.9px;
+    text-transform:uppercase;color:#6E5013;}
+  .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5.6pt;color:#6E5013;}
+  .p-value{font-family:var(--utility);font-weight:600;font-size:6.4pt;color:#221A10;
+    text-align:center;white-space:nowrap;line-height:1.3;}
+  .p-value .p-dot,.p-void .p-dot{color:#B08A2E;padding:0 .5mm;}
+  .p-url{font-size:5.8pt;letter-spacing:.2px;color:#4B3420;}
+  .p-void{font-family:var(--en-text);font-style:italic;font-size:5.2pt;color:#7A1F2B;
+    text-align:center;white-space:nowrap;line-height:1.3;}
+  .p-void span[dir="rtl"]{font-family:var(--ar-text);font-style:normal;font-size:5.6pt;}
 
-  /* Body text: English ragged-right from the left margin, Arabic fully
-     right-aligned — mirrored systems of equal authority. */
-  .o3-para-en{position:absolute;top:116.6mm;left:42mm;width:97mm;
-    font-family:var(--en-text);font-size:9.6pt;line-height:1.55;color:#3A2A18;text-align:left;}
-  .o3-para-ar{position:absolute;top:116.2mm;right:42mm;width:97mm;direction:rtl;
-    font-family:var(--ar-text);font-size:10.4pt;line-height:1.7;color:#3A2A18;text-align:right;}
+  /* Signature court: three columns anchoring the page; the centre
+     column signs directly above the printed gold seal. */
+  .o5-sig{position:absolute;top:152.4mm;width:52mm;text-align:center;}
+  .o5-sig-1{left:49mm;}
+  .o5-sig-2{left:122.5mm;}
+  .o5-sig-3{left:188mm;width:56mm;}
+  .o5-sig-line{width:45mm;height:.34mm;margin:8mm auto 0;
+    background:linear-gradient(90deg,transparent,#3A2A18 10%,#3A2A18 90%,transparent);}
+  .o5-sig-en{font-family:var(--en-display);font-weight:700;font-size:6.3pt;letter-spacing:.8px;
+    text-transform:uppercase;color:#221A10;margin-top:1.3mm;line-height:1.4;white-space:nowrap;}
+  .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.8pt;color:#3A2A18;
+    margin-top:.2mm;direction:rtl;line-height:1.15;}
+  .o5-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
+    display:flex;align-items:center;justify-content:center;border-radius:.6mm;}
+  .o5-qr svg{width:20.8mm;height:20.8mm;display:block;}
 
-  /* One bilingual data grid — EN label · leader · shared value ·
-     leader · AR label. Six facts, each stated once. */
-  .o3-grid{position:absolute;top:132.5mm;left:44mm;right:44mm;}
-  .g-row{display:grid;grid-template-columns:36mm 1fr auto 1fr 36mm;align-items:baseline;column-gap:2mm;margin-bottom:2.5mm;}
-  .g-en{font-family:var(--en-text);font-size:8.4pt;font-weight:600;letter-spacing:.3px;color:#4B3420;white-space:nowrap;}
-  .g-ar{font-family:var(--ar-text);font-size:9.2pt;font-weight:700;color:#4B3420;white-space:nowrap;text-align:right;direction:rtl;}
-  .g-lead{border-bottom:0.3mm dotted #B08A2E;transform:translateY(-0.8mm);min-width:6mm;}
-  .g-val{font-family:var(--utility);font-size:7.5pt;font-weight:600;letter-spacing:.2px;color:#221A10;white-space:nowrap;text-align:center;}
-  .g-val .g-bi{font-family:var(--ar-text);font-size:8.6pt;font-weight:700;}
-  .g-val .g-dot{color:#B08A2E;padding:0 .3mm;}
-
-  /* Execution — three offices, bilingual titles of equal rank. */
-  .o3-sig{position:absolute;top:169.4mm;width:40mm;text-align:center;}
-  .o3-sig-1{left:42mm;}
-  .o3-sig-2{left:84mm;}
-  .o3-sig-3{left:167mm;width:36mm;}
-  .o3-sig-line{width:33mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#4B3420 15%,#4B3420 85%,transparent);}
-  .o3-sig-en{font-family:var(--en-display);font-size:6.5pt;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#221A10;margin-top:1.2mm;line-height:1.35;}
-  .o3-sig-ar{font-family:var(--ar-text);font-size:8.4pt;font-weight:700;color:#3A2A18;margin-top:.3mm;direction:rtl;}
-  .o3-sig-seal{font-family:var(--en-text);font-style:italic;font-size:4.9pt;letter-spacing:.5px;color:#6E5013;margin-top:.4mm;}
-
-  .o3-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
-    display:flex;align-items:center;justify-content:center;}
-  .o3-qr svg{width:20.8mm;height:20.8mm;display:block;}
-
-  /* Administrative verification block — quiet, two lines, clear of the
-     printed ornaments. The certificate number and student ID already
-     appear in the grid; only administrative extras live here. */
-  /* Verification block: capped at 76mm so it never reaches the printed
-     gold seal (seal spans ~125.6–171mm of the locked artwork). */
-  .o3-verify{position:absolute;left:44mm;top:185.6mm;width:76mm;}
-  .o3-v-line{font-family:var(--utility);font-size:4.9pt;color:#221A10;line-height:1.5;white-space:nowrap;}
-  .o3-v-line .vt{font-family:var(--en-display);font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#6E5013;margin-right:1.6mm;}
-  .o3-v-line b{font-weight:600;}
-  .o3-v-line .sep{color:#B08A2E;padding:0 1.1mm;}
-  .o3-v-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5.6pt;color:#7A1F2B;margin-top:.5mm;line-height:1.35;}
 
   /* ═══ Masthead ═══ */
   .masthead{display:grid;grid-template-columns:88mm 1fr 96mm;align-items:start;column-gap:3mm;}
