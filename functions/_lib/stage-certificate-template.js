@@ -303,10 +303,10 @@ export function renderStageCertificateBatch(title, items) {
   return docShell(title, items.map(sheetHtml).join('\n'));
 }
 
-function themedQr(qrSvgMarkup) {
+function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
   return String(qrSvgMarkup || '')
-    .replace(/#ffffff/gi, '#FDF6E3')
-    .replace(/#000000/gi, '#3B2A14');
+    .replace(/#ffffff/gi, light)
+    .replace(/#000000/gi, dark);
 }
 
 // ── OFFICIAL BACKGROUND SLOT (Final Creative Direction, 2026-08-05) ──
@@ -320,9 +320,118 @@ function themedQr(qrSvgMarkup) {
 // suppresses its own constructed frame, band, and parchment layers —
 // only the content, name foil, and security apparatus are composed on
 // top, inside the safe area.
-const OFFICIAL_BACKGROUND = null;
+const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background.jpg';
 
-function sheetHtml({ cert, qrSvgMarkup, verifyUrl }) {
+// Measured geometry of the official paper (1080×708 source, fractions
+// of the sheet) — the artwork's own designated functional zones:
+//   logo lockup      x 0.40–0.60, y 0.00–0.23  (keep clear)
+//   QR square        x 0.300–0.335, y 0.829–0.882 (real QR overlays it)
+//   "SERIAL NO."     label ~x 0.66, y 0.845 (kept as printed)
+//   placeholder serial "SHRS-0000001" x 0.650–0.716, y 0.862–0.887
+//     (patched and replaced with the live serial)
+//   gold seal        x 0.437–0.556, y 0.777–0.949 (kept untouched)
+// The source is 1.525:1 vs A4-landscape 1.414:1 — rendered full-bleed
+// (object-fit:fill, ≈8% vertical stretch; every element preserved,
+// nothing cropped). A native-A4 or higher-resolution master from the
+// client slots in with zero code change.
+
+function sheetHtml(args) {
+  if (OFFICIAL_BACKGROUND) return sheetHtmlOfficial(args);
+  return sheetHtmlConstructed(args);
+}
+
+function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
+  const ar = arForms(cert.student_sex);
+  const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
+  const gregEn = formatGregorianEn(cert.issued_at);
+  const gregAr = formatGregorianAr(cert.issued_at);
+  const hijriEn = cert.issued_at_hijri || '';
+  const hijriAr = cert.issued_at_hijri_ar || '';
+  const nameEn = escapeHtml(cert.student_full_name);
+  const nameAr = escapeHtml(cert.student_full_name_ar || '');
+  const placeEn = escapeHtml(cert.place_en || 'Ikorodu, Lagos State, Nigeria');
+  const placeAr = escapeHtml(cert.place_ar || 'مدينة إكورودو، ولاية لاغوس، نيجيريا');
+  const serial = escapeHtml(cert.serial_no);
+  const studentId = escapeHtml(cert.student_identity_no || '—');
+  const academicYear = escapeHtml(cert.academic_year);
+  const stageAr = escapeHtml(cert.programme_label_ar || 'المرحلة الابتدائية');
+  const nameMicro = escapeHtml(`· ${cert.serial_no} `.repeat(14));
+
+  return `<div class="sheet sheet--official">
+  <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
+
+  <div class="o-head o-head-left">
+    <img class="o-arms" src="/assets/images/crests/nigeria-coat-of-arms.png" alt="Federal Republic of Nigeria" />
+    <div class="o-state-en">Federal Republic of Nigeria</div>
+    <div class="o-school-en">School of Islamic &amp; Arabic Studies</div>
+  </div>
+  <div class="o-head o-head-right">
+    <div class="o-state-ar">جمهورية نيجيريا الاتحادية</div>
+    <div class="o-inst-ar">مدارس السلطان حنفي الملكية</div>
+    <div class="o-school-ar">قسم الدراسات الإسلامية والعربية</div>
+  </div>
+
+  <div class="o-titles">
+    <div class="o-title-en">
+      <div class="o-t-en-1">Certificate of Ibtidā&rsquo;iyyah</div>
+      <div class="o-t-en-2">Foundational Stage Completion</div>
+    </div>
+    <div class="o-title-div"><span></span></div>
+    <div class="o-title-ar">
+      <div class="o-t-ar-1">شهادة إتمام المرحلة الإبتدائية</div>
+      <div class="o-t-ar-2"><span dir="rtl">العام الدراسي ${academicYear}</span> · Academic Year ${academicYear}</div>
+    </div>
+  </div>
+
+  <div class="o-conferral">
+    <span class="o-conf-en">This certificate is proudly conferred upon</span>
+    <span class="o-conf-sep">✦</span>
+    <span class="o-conf-ar">تُمنح هذه الشهادة بكل فخرٍ واعتزاز إلى ${ar.student}</span>
+  </div>
+
+  <div class="o-name">
+    <div class="o-name-en foil-text">${nameEn}</div>
+    <div class="o-name-ar foil-text">${nameAr}</div>
+    <div class="o-name-micro">${nameMicro}</div>
+  </div>
+
+  <div class="o-citation">
+    <div class="o-cite en">
+      In recognition of the successful completion of the prescribed programme of the
+      <strong>Ibtidā&rsquo;iyyah — Foundational Stage</strong> in the Islamic and Arabic
+      disciplines, pursuant to the School&rsquo;s approved curriculum, at ${placeEn}.
+      <span class="o-dates">Given this <strong>${gregEn}</strong>${hijriEn ? `, corresponding to <strong>${escapeHtml(hijriEn)}</strong>` : ''}.</span>
+    </div>
+    <div class="o-cite ar">
+      وذلك ${ar.completion} متطلبات البرنامج المقرر <strong>${stageAr}</strong>
+      في علوم الدراسات الإسلامية والعربية وفق المناهج المعتمدة لدى المدرسة، في ${placeAr}.
+      <span class="o-dates">حُرِّرت هذه الشهادة في <strong>${gregAr}</strong>${hijriAr ? ` الموافق <strong>${escapeHtml(hijriAr)}</strong>` : ''}.</span>
+    </div>
+  </div>
+
+  <div class="o-void">أي تعديلٍ أو تغييرٍ يجعل هذه الشهادة لاغية &nbsp;·&nbsp; <em>Any alteration or modification renders this certificate void</em></div>
+
+  <div class="o-sig o-sig-left">
+    <div class="o-sig-line"></div>
+    <div class="o-sig-en">Registrar</div>
+    <div class="o-sig-ar">المسجّلة</div>
+  </div>
+  <div class="o-sig o-sig-right">
+    <div class="o-sig-line"></div>
+    <div class="o-sig-en">Head of the School</div>
+    <div class="o-sig-ar">رئيس المدرسة</div>
+  </div>
+
+  <!-- live verification into the paper's own zones -->
+  <div class="o-qr">${themedQr(qrSvgMarkup, '#1B2740', '#F4F6F7')}</div>
+  <div class="o-serial-patch"></div>
+  <div class="o-serial">${serial}</div>
+  <div class="o-student-id">STUDENT ID&nbsp; ${studentId}</div>
+  <div class="o-hash">HMAC-SHA-256 &nbsp;${displayHash}</div>
+</div>`;
+}
+
+function sheetHtmlConstructed({ cert, qrSvgMarkup, verifyUrl }) {
   const ar = arForms(cert.student_sex);
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const gregEn = formatGregorianEn(cert.issued_at);
@@ -508,6 +617,74 @@ function docShell(title, sheetsHtml) {
 
   .frame{position:absolute;inset:0;width:100%;height:100%;}
   .official-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;}
+
+  /* ═══ OFFICIAL-PAPER COMPOSITION (client artwork, used as provided;
+     content set into the paper's own zones — all positions in mm on
+     the 297×209.5 sheet, measured from the source) ═══ */
+  .sheet--official{background:#FFFFFF;}
+  .o-head{position:absolute;top:34mm;width:72mm;}
+  .o-head-left{left:42mm;text-align:left;}
+  .o-head-right{right:42mm;text-align:right;}
+  .o-arms{height:10mm;width:auto;object-fit:contain;margin-bottom:1.6mm;
+    filter:contrast(1.15) saturate(1.2) drop-shadow(0 0.4mm 0.5mm rgba(20,30,55,.3));}
+  .o-state-en{font-family:var(--en-display);font-size:9.6pt;font-weight:700;letter-spacing:2.6px;text-transform:uppercase;color:#1F2A44;white-space:nowrap;}
+  .o-school-en{font-family:var(--en-display);font-size:7pt;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8C6516;margin-top:1.3mm;}
+  .o-state-ar{font-family:var(--ar-display);font-size:10pt;font-weight:700;line-height:1.6;color:#1F2A44;white-space:nowrap;}
+  .o-inst-ar{font-family:var(--ar-display);font-size:10pt;font-weight:600;line-height:1.7;color:#3C4863;margin-top:1mm;white-space:nowrap;}
+  .o-school-ar{font-family:var(--ar-text);font-size:9pt;font-weight:700;color:#8C6516;margin-top:.5mm;}
+
+  .o-titles{position:absolute;top:60mm;left:42mm;right:42mm;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;column-gap:6mm;}
+  .o-title-en{text-align:right;}
+  .o-t-en-1{font-family:var(--en-display);font-size:13.2pt;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#1B2740;white-space:nowrap;}
+  .o-t-en-2{font-family:var(--en-text);font-style:italic;font-size:10pt;font-weight:600;letter-spacing:1px;color:#3C4863;margin-top:.8mm;}
+  .o-title-div{height:12mm;display:flex;align-items:center;}
+  .o-title-div span{display:block;width:.3mm;height:100%;background:linear-gradient(180deg,transparent,#B8860B,transparent);}
+  .o-title-ar{text-align:left;direction:rtl;}
+  .o-t-ar-1{font-family:var(--ar-display);font-size:12.8pt;font-weight:700;line-height:1.6;color:#1B2740;white-space:nowrap;}
+  .o-t-ar-2{font-family:var(--en-text);font-style:italic;font-size:8.6pt;color:#3C4863;margin-top:.4mm;direction:ltr;text-align:left;}
+  .o-t-ar-2 span{font-family:var(--ar-text);font-style:normal;}
+
+  .o-conferral{position:absolute;top:82mm;left:0;right:0;display:flex;justify-content:center;gap:5mm;align-items:baseline;}
+  .o-conf-en{font-family:var(--en-text);font-style:italic;font-size:10pt;color:#3C4863;}
+  .o-conf-sep{color:#B8860B;font-size:6.5pt;}
+  .o-conf-ar{font-family:var(--ar-text);font-size:11pt;color:#3C4863;direction:rtl;}
+
+  .o-name{position:absolute;top:89mm;left:0;right:0;text-align:center;}
+  .o-name-en{font-family:var(--en-display);font-size:25pt;font-weight:700;letter-spacing:2.6px;line-height:1.1;}
+  .o-name-ar{font-family:var(--ar-text);font-size:18.5pt;font-weight:700;margin-top:1mm;direction:rtl;}
+  .o-name-micro{margin:1.8mm auto 0;max-width:128mm;white-space:nowrap;overflow:hidden;
+    font-family:var(--utility);font-size:2.9pt;letter-spacing:.35px;color:#8C6516;opacity:.65;
+    border-top:0.15mm solid rgba(140,101,22,.4);padding-top:.5mm;}
+
+  .o-citation{position:absolute;top:117mm;left:40mm;right:40mm;display:grid;grid-template-columns:1fr 1fr;column-gap:8mm;}
+  .o-cite{line-height:1.6;color:#33405C;}
+  .o-cite.en{font-family:var(--en-text);font-size:10.4pt;text-align:left;}
+  .o-cite.ar{font-family:var(--ar-text);font-size:11.2pt;line-height:1.78;text-align:right;direction:rtl;}
+  .o-cite strong{color:#1B2740;}
+  .o-dates{display:block;margin-top:1.2mm;font-size:.93em;}
+
+  .o-void{position:absolute;top:149mm;left:0;right:0;text-align:center;
+    font-family:var(--ar-text);font-size:6.6pt;color:#5A2830;}
+  .o-void em{font-family:var(--en-text);}
+
+  .o-sig{position:absolute;top:154mm;width:62mm;text-align:center;}
+  .o-sig-left{left:46mm;}
+  .o-sig-right{right:46mm;}
+  .o-sig-line{width:50mm;height:0.25mm;margin:0 auto;background:linear-gradient(90deg,transparent,#1B2740 15%,#1B2740 85%,transparent);}
+  .o-sig-en{font-family:var(--en-display);font-size:7.6pt;font-weight:600;letter-spacing:1.9px;text-transform:uppercase;color:#1B2740;margin-top:1.4mm;}
+  .o-sig-ar{font-family:var(--ar-text);font-size:10.4pt;font-weight:700;color:#3C4863;margin-top:.2mm;}
+
+  /* live data set into the paper's own bottom apparatus */
+  .o-qr{position:absolute;left:88.7mm;top:172.9mm;width:12mm;height:12mm;background:#F4F6F7;padding:.5mm;}
+  .o-qr svg{width:100%;height:100%;display:block;}
+  .o-serial-patch{position:absolute;left:190.5mm;top:179.9mm;width:24.5mm;height:6.6mm;
+    background:linear-gradient(180deg,#EDEFF2,#E7EAEE);border-radius:.6mm;}
+  .o-serial{position:absolute;left:150mm;top:180.9mm;width:63.6mm;text-align:right;
+    font-family:var(--utility);font-size:6pt;font-weight:700;letter-spacing:.3px;color:#9E2B33;}
+  .o-student-id{position:absolute;left:150mm;top:184.9mm;width:63.6mm;text-align:right;
+    font-family:var(--utility);font-size:4.4pt;font-weight:600;letter-spacing:.5px;color:#3C4863;}
+  .o-hash{position:absolute;left:63.5mm;top:183.2mm;width:24mm;text-align:left;
+    font-family:var(--utility);font-size:3.6pt;font-weight:600;letter-spacing:.3px;color:#3C4863;}
   .grain{position:absolute;inset:0;background-image:url("${PARCHMENT}");background-size:95mm;mix-blend-mode:multiply;pointer-events:none;}
   .watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
   .watermark img{width:112mm;opacity:.045;filter:sepia(.65) saturate(.7);}
