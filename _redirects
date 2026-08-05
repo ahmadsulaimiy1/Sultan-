@@ -1,0 +1,12 @@
+# Short verification path for the certificate QR code.
+#
+# The QR encodes the full URL, and at the size the code prints — 17.2mm,
+# fixed by the certificate's approved layout — every character costs scan
+# margin. The long form pushed the symbol to a 53x53 grid, which is 3.83
+# pixels per module at 300 DPI: below the density a phone camera needs, and
+# measured, one certificate in seven would not decode even from a clean
+# render. /v/ drops the payload from 86 characters to 60 and the symbol to
+# 45x45, which is 4.51 px per module at the same printed size.
+#
+# Permanent, because it is printed on documents that cannot be reissued.
+/v/*   /verify-certificate/?ref=:splat   301

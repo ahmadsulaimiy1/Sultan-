@@ -20,7 +20,8 @@
       "verifyCode": "FB28-7085-AE77",
       "documentId": "DID-2026-IBT-0000035",
       "archiveRef": "ARCH/IBT/2026/000035",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000035-FB287"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000035-FB287",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000035-FB287"
     },
     {
       "certId": 36,
@@ -33,7 +34,8 @@
       "verifyCode": "4EB4-82E6-FA55",
       "documentId": "DID-2026-IBT-0000036",
       "archiveRef": "ARCH/IBT/2026/000036",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000036-4EB48"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000036-4EB48",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000036-4EB48"
     },
     {
       "certId": 37,
@@ -46,7 +48,8 @@
       "verifyCode": "4227-E03F-6E8A",
       "documentId": "DID-2026-IBT-0000037",
       "archiveRef": "ARCH/IBT/2026/000037",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000037-4227E"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000037-4227E",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000037-4227E"
     },
     {
       "certId": 38,
@@ -59,7 +62,8 @@
       "verifyCode": "77E9-D36C-B407",
       "documentId": "DID-2026-IBT-0000038",
       "archiveRef": "ARCH/IBT/2026/000038",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000038-77E9D"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000038-77E9D",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000038-77E9D"
     },
     {
       "certId": 39,
@@ -72,7 +76,8 @@
       "verifyCode": "7EB0-7277-159B",
       "documentId": "DID-2026-IBT-0000039",
       "archiveRef": "ARCH/IBT/2026/000039",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000039-7EB07"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000039-7EB07",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000039-7EB07"
     },
     {
       "certId": 40,
@@ -85,7 +90,8 @@
       "verifyCode": "D143-2A7A-FD79",
       "documentId": "DID-2026-IBT-0000040",
       "archiveRef": "ARCH/IBT/2026/000040",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000040-D1432"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000040-D1432",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000040-D1432"
     },
     {
       "certId": 41,
@@ -98,7 +104,8 @@
       "verifyCode": "74B8-6FCA-D52A",
       "documentId": "DID-2026-IBT-0000041",
       "archiveRef": "ARCH/IBT/2026/000041",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000041-74B86"
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000041-74B86",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000041-74B86"
     }
   ]
 }

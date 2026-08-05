@@ -161,6 +161,9 @@ for (const [i, student] of CLASS_ROLL.entries()) {
     documentId: `DID-${ISSUED_AT.slice(0, 4)}-${PROGRAMME}-${String(certId).padStart(7, '0')}`,
     archiveRef: `ARCH/${PROGRAMME}/${ISSUED_AT.slice(0, 4)}/${String(certId).padStart(6, '0')}`,
     verifyUrl: `${ORIGIN}/verify-certificate/?ref=${gen.serialNo}`,
+    // What the QR actually carries — see qrUrlFor in the registrar
+    // endpoint for why it is shorter than the human-facing URL.
+    qrUrl: `${ORIGIN.replace('://www.', '://')}/v/${gen.serialNo}`,
   });
 }
 
@@ -169,7 +172,7 @@ for (const [i, student] of CLASS_ROLL.entries()) {
 // it makes two students' records indistinguishable. Nothing is written
 // until every field that must be unique demonstrably is.
 const UNIQUE_FIELDS = ['identityNo', 'serialNo', 'contentHash', 'verifyCode',
-                       'documentId', 'archiveRef', 'verifyUrl'];
+                       'documentId', 'archiveRef', 'verifyUrl', 'qrUrl'];
 const problems = [];
 for (const f of UNIQUE_FIELDS) {
   const seen = new Map();
@@ -213,7 +216,7 @@ const toRow = (r) => ({
 
 const items = issued.map((r) => ({
   cert: toRow(r),
-  qrSvgMarkup: qrSvg(r.verifyUrl, { errorCorrectionLevel: 'H', width: 400, margin: 2 }),
+  qrSvgMarkup: qrSvg(r.qrUrl, { errorCorrectionLevel: 'H', width: 400, margin: 2 }),
   verifyUrl: r.verifyUrl,
 }));
 

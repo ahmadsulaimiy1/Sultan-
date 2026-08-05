@@ -50,6 +50,17 @@ function verifyUrlFor(env, serialNo) {
   return `${siteOrigin(env)}/verify-certificate/?ref=${encodeURIComponent(serialNo)}`;
 }
 
+// The QR carries a shorter form of the same destination. At the size the
+// code prints — 17.2mm, fixed by the certificate's approved layout — every
+// character costs scan margin: the long URL needs a 53x53 symbol, which is
+// 3.83 pixels per module at 300 DPI, and one certificate in seven failed to
+// decode from a clean render at that density. /v/ takes the payload from 86
+// characters to 60 and the symbol to 45x45, or 4.51 px per module, without
+// touching the printed layout. _redirects maps /v/* onto the verify page.
+function qrUrlFor(env, serialNo) {
+  return `${siteOrigin(env).replace('://www.', '://')}/v/${encodeURIComponent(serialNo)}`;
+}
+
 function normaliseSex(value) {
   const v = String(value || '').trim().toLowerCase();
   if (['female', 'f', 'أنثى', 'انثى'].includes(v)) return 'female';
@@ -142,7 +153,7 @@ export async function onRequestGet({ request, env }) {
       const cert = res.rows[0];
       if (!cert) return json({ error: 'No certificate found with that serial number.' }, 404);
       const vUrl = verifyUrlFor(env, cert.serial_no);
-      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'H' }), verifyUrl: vUrl });
+      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvg(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H' }), verifyUrl: vUrl });
       filename = `${cert.serial_no}.pdf`;
     } else {
       const batchRes = await sql`SELECT * FROM stage_certificate_batches WHERE batch_no = ${batchNo}`;
@@ -157,7 +168,7 @@ export async function onRequestGet({ request, env }) {
         `${batch.batch_no} — ${certsRes.rows.length} certificates`,
         certsRes.rows.map((cert) => {
           const vUrl = verifyUrlFor(env, cert.serial_no);
-          return { cert, qrSvgMarkup: qrSvg(vUrl, { errorCorrectionLevel: 'H' }), verifyUrl: vUrl };
+          return { cert, qrSvgMarkup: qrSvg(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H' }), verifyUrl: vUrl };
         })
       );
       filename = `${batch.batch_no}.pdf`;
