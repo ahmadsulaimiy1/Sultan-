@@ -591,6 +591,37 @@ def draw_page(c, info, page_num, total_pages, bg, is_back_cover, is_cover=False)
         c.drawCentredString(PAGE_W / 2, BOTTOM_MARGIN - 26, f"Page {page_num} of {total_pages}")
 
 
+
+
+def verify_no_band_intrusion():
+    """Hard preflight gate: fail the pipeline if any laid-out content sits
+    inside the repainted header/footer bands.
+
+    The overlay's own furniture lives at fixed offsets (header text within
+    ~8-38pt of the top edge; footer text within ~30pt of the bottom edge),
+    so anything else found inside a band is body content that the masks
+    would paint over — the exact regression that once cost this document
+    up to three lines per page. Coordinates, not fonts, are used to tell
+    furniture from content, so the check holds even when webfonts fall
+    back to system faces."""
+    violations = []
+    with pdfplumber.open(str(PDF)) as pdf:
+        for i, page in enumerate(pdf.pages):
+            h = page.height
+            for w in page.extract_words():
+                if 38 < w["top"] and w["bottom"] < MASK_TOP_H - 1:
+                    violations.append((i + 1, "top", w["text"], round(w["top"], 1)))
+                elif (h - MASK_BOTTOM_H + 1) < w["top"] and w["bottom"] < h - 30:
+                    violations.append((i + 1, "bottom", w["text"], round(w["bottom"], 1)))
+    if violations:
+        print("PRE-FLIGHT FAILURE: content inside header/footer bands:", file=sys.stderr)
+        for v in violations[:20]:
+            print("  page %d (%s band): %r at %spt" % v, file=sys.stderr)
+        print("  (%d total). The @page margins in css/constitution-print.css" % len(violations), file=sys.stderr)
+        print("  must equal MASK_TOP_H/MASK_BOTTOM_H. Refusing to ship.", file=sys.stderr)
+        sys.exit(1)
+    print("Pre-flight band check passed: no content under any header/footer band.")
+
 def main():
     pages_text = get_pages_text()
     mapping, page_bg, back_cover_page = classify_and_map(pages_text)
@@ -640,6 +671,7 @@ def main():
     skipped = sum(1 for i, m in enumerate(mapping) if m is None and i > 0)
     dynamic = sum(1 for i, m in enumerate(mapping) if m is not None)
     print(f"Wrote dynamic running headers/footers: {dynamic} body pages enriched, {skipped} ceremony pages left clean, {n} total.")
+    verify_no_band_intrusion()
 
 
 if __name__ == "__main__":
