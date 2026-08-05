@@ -677,6 +677,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="band-micro">SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC RECORD · GUILLOCHE · MICROTEXT · QR VERIFICATION · CRYPTOGRAPHIC SERIAL</div>
   </div>
 
+  <img class="o5-holo" src="/assets/images/certificates/security-emblem-shrs.png" alt="" />
+
   <div class="o5-vplate" style="background-image:${plqV}">
     <div class="vp-text">
       <div class="vp-head"><span class="vp-mark">SHRS</span><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
@@ -696,14 +698,14 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <div class="o5-sig o5-sig-1">
     <img class="o5-sig-ink" src="/assets/images/certificates/signature-principal.png" alt="" />
     <div class="o5-sig-line"></div>
-    <div class="o5-sig-name">Shaykh Abubakar Solah</div>
+    <div class="o5-sig-name" dir="rtl">الشيخ أبو بكر صلاح</div>
     <div class="o5-sig-en">Principal &amp; Head of School</div>
     <div class="o5-sig-ar">رئيس المدرسة</div>
   </div>
   <div class="o5-sig o5-sig-2">
     <img class="o5-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="o5-sig-line"></div>
-    <div class="o5-sig-name">Dr. Zakaria Olanrewaju Anofi</div>
+    <div class="o5-sig-name" dir="rtl">د. زكريا أولانريوجو حنفي</div>
     <div class="o5-sig-en">Chairman, Board of Governors</div>
     <div class="o5-sig-ar">رئيس مجلس الإدارة</div>
   </div>
@@ -1138,7 +1140,7 @@ function docShell(title, sheetsHtml) {
      corner crossed the navy ribbon, whose leading edge runs 199.5mm at
      x=230 to 197.9mm at x=235, and the 0.9-opacity plaque ground let the
      ribbon tint show through it. */
-  .o5-vplate{position:absolute;left:173.5mm;top:171.8mm;width:62mm;height:25.2mm;
+  .o5-vplate{position:absolute;left:169mm;top:171.8mm;width:62mm;height:25.2mm;
     background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
     padding:2mm 2mm 3.1mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
     box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
@@ -1210,6 +1212,20 @@ function docShell(title, sheetsHtml) {
     mix-blend-mode:multiply;opacity:.88;
     filter:drop-shadow(0 .12mm .18mm rgba(60,68,80,.28));}
 
+  /* The SHRS security patch, in the lower-right corner as directed.
+     I reported that the corner had no clear paper and the Founder
+     reaffirmed the placement, so the room is made rather than the request
+     refused: the verification plate moves 4.5mm left (still 3.5mm clear of
+     the seal), which opens a 12mm channel between the plate's new right
+     edge at 231mm and the border's inner edge, measured at 245.3mm. The
+     patch takes 10mm of it with 1mm of register either side.
+     Multiply-blended, because a hot-stamped foil patch lets the guilloche
+     beneath it read at most viewing angles, and given the same contact
+     shadow as the seal so the two devices sit on the paper alike. */
+  .o5-holo{position:absolute;left:233mm;top:178mm;width:10mm;height:auto;
+    mix-blend-mode:multiply;opacity:.82;
+    filter:drop-shadow(0 .1mm .16mm rgba(52,58,70,.26));}
+
   /* Academic session inside Arabic text (Founder correction).
      The span used to carry dir="ltr", which locked the whole range into
      Latin order: on the sheet it read 2025 - 2026 left to right, so a
@@ -1234,7 +1250,7 @@ function docShell(title, sheetsHtml) {
      1.61:1) and matching their widths would make one tower over the other.
      Multiply-blended so the rule and the paper grain read through the
      stroke, as ink on paper does. */
-  .o5-sig-ink{position:absolute;left:50%;bottom:calc(100% - 9.5mm);
+  .o5-sig-ink{position:absolute;left:50%;bottom:calc(100% - 8.4mm);
     transform:translateX(-50%);height:8.6mm;width:auto;
     mix-blend-mode:multiply;opacity:.94;}
   /* The signing rule is a guide, not a form field. It was a 0.34mm near-black
@@ -1258,13 +1274,20 @@ function docShell(title, sheetsHtml) {
      name, English office, Arabic office. The name is the largest text in
      the block but is deliberately set below the student name's weight —
      a signatory must never compete with the graduate. */
-  .o5-sig-name{font-family:var(--en-display);font-weight:700;font-size:6.9pt;
-    letter-spacing:.45px;color:#241B10;margin-top:1.9mm;line-height:1.25;white-space:nowrap;
+  /* The printed name is Arabic (Founder directive: the signature block
+     must match the rest of the bilingual sheet). That means the Arabic
+     display face, not Cinzel, and an Arabic optical size — Amiri's
+     x-height sits far below a Latin cap, so 6.9pt Cinzel and 6.9pt Amiri
+     are nowhere near the same apparent size. 9.6pt matches the weight the
+     Latin name carried. letter-spacing is removed outright: spacing out
+     Arabic breaks the joins between letters. */
+  .o5-sig-name{font-family:var(--ar-display);font-weight:700;font-size:9.2pt;
+    direction:rtl;color:#241B10;margin-top:.9mm;line-height:1.1;white-space:nowrap;
     text-shadow:0 -0.04mm 0 rgba(255,252,243,.5);}
   .o5-sig-en{font-family:var(--en-display);font-weight:400;font-size:5.4pt;letter-spacing:.85px;
-    text-transform:uppercase;color:#6E5013;margin-top:.75mm;line-height:1.3;white-space:nowrap;}
+    text-transform:uppercase;color:#6E5013;margin-top:.55mm;line-height:1.3;white-space:nowrap;}
   .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.2pt;color:#3A2A18;
-    margin-top:.35mm;direction:rtl;line-height:1.15;}
+    margin-top:.1mm;direction:rtl;line-height:1.15;}
 
 
   /* ═══ Masthead ═══ */

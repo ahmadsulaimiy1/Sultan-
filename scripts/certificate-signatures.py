@@ -117,35 +117,68 @@ def lift(path, gain, floor, inset):
     return rgba
 
 
-def restore_emblem(path):
-    """Restore the SHRS security shield: it was photographed off the sheet,
-    so it carries the paper's cast and the camera's softness. Neutralise the
-    cast, recover local contrast, and sharpen the edge — no redrawing."""
-    im = cv2.imread(path).astype(np.float32)
-    # Grey-world white balance against the paper corners, which are known
-    # to be unprinted.
+def restore_emblem(path, out_mm=8.6):
+    """Restore the SHRS security patch photograph.
+
+    My first attempt ran CLAHE and a two-radius unsharp over it and produced
+    ringing and colour fringing — it invented edges instead of recovering
+    them. The mistake was treating a 299px file as if it were low resolution.
+    At the size this patch actually prints it is not: 299 pixels across 8.6mm
+    is 883 DPI, nearly three times what the press needs. There is nothing to
+    reconstruct, only to correct. So this is a repro correction and nothing
+    more — white balance off the unprinted paper, a gentle contrast stretch
+    between measured black and white points, edge-preserving noise reduction
+    to take out the JPEG mosquito noise without softening the shield outline,
+    and one restrained unsharp pass.
+    """
+    im = cv2.imread(path)
+    if im is None:
+        sys.exit(f'cannot read {path}')
+
+    # White balance against the four corners, which are unprinted paper.
     h, w = im.shape[:2]
-    corners = np.concatenate([im[:h // 8, :w // 8].reshape(-1, 3),
-                              im[:h // 8, -w // 8:].reshape(-1, 3),
-                              im[-h // 8:, :w // 8].reshape(-1, 3),
-                              im[-h // 8:, -w // 8:].reshape(-1, 3)])
+    f = im.astype(np.float32)
+    corners = np.concatenate([f[:h // 7, :w // 7].reshape(-1, 3),
+                              f[:h // 7, -w // 7:].reshape(-1, 3),
+                              f[-h // 7:, :w // 7].reshape(-1, 3),
+                              f[-h // 7:, -w // 7:].reshape(-1, 3)])
     ref = corners.mean(axis=0)
-    im = np.clip(im * (ref.mean() / np.maximum(ref, 1e-3)), 0, 255)
+    f = np.clip(f * (ref.mean() / np.maximum(ref, 1e-3)), 0, 255)
 
-    lab = cv2.cvtColor(im.astype(np.uint8), cv2.COLOR_BGR2LAB)
-    L, A, B = cv2.split(lab)
-    L = cv2.createCLAHE(clipLimit=2.4, tileGridSize=(8, 8)).apply(L)
-    im = cv2.cvtColor(cv2.merge([L, A, B]), cv2.COLOR_LAB2BGR).astype(np.float32)
+    # Contrast between measured points rather than a fixed curve: the patch
+    # was shot in shadow, so its real black and white sit well inside the
+    # range and a global S-curve would clip one end.
+    lo, hi = np.percentile(f, 1.0), np.percentile(f, 99.5)
+    f = np.clip((f - lo) * (255.0 / max(hi - lo, 1e-3)), 0, 255)
 
-    # Unsharp at two radii: the fine one recovers the shield's engraved
-    # detail, the wide one restores the modelling the camera flattened.
-    for r, amt in ((1.1, 0.55), (3.0, 0.30)):
-        im = im + amt * (im - cv2.GaussianBlur(im, (0, 0), r))
-    im = np.clip(im, 0, 255)
+    # Bilateral, not Gaussian: JPEG mosquito noise sits right against the
+    # shield's edge, and a blur that removes one removes the other.
+    f = cv2.bilateralFilter(f.astype(np.uint8), 5, 42, 42).astype(np.float32)
 
-    up = cv2.resize(im, None, fx=3, fy=3, interpolation=cv2.INTER_LANCZOS4)
-    rgba = cv2.cvtColor(up.astype(np.uint8), cv2.COLOR_BGR2BGRA)
-    return rgba
+    # One restrained unsharp. More than this is where the fringing started.
+    f = np.clip(f + 0.45 * (f - cv2.GaussianBlur(f, (0, 0), 1.2)), 0, 255)
+
+    # Match the patch's paper to the certificate's paper. The photograph was
+    # taken in shadow: its unprinted ground measures BGR 236/205/184 against
+    # the certificate's 206/220/228 where the patch is placed, so dropped in
+    # as shot it reads as a dark sticker rather than as part of the sheet —
+    # and the multiply blend it is composited with makes that worse. Scaling
+    # each channel by the ratio brings the two grounds together and carries
+    # the shield's own colour along with it.
+    ground = f.reshape(-1, 3)
+    lum = ground.mean(axis=1)
+    src = ground[lum >= np.percentile(lum, 90)].mean(axis=0)
+    f = np.clip(f * (np.array([206.4, 220.3, 228.3]) / np.maximum(src, 1e-3)), 0, 255)
+
+    # Crop to the patch itself. The photograph includes the paper around it
+    # and part of the gold ornament to its right, and a foil patch has a
+    # hard die-cut edge, so this is a hard crop rather than a feather.
+    # Bounds measured off the source: sub-130 coverage steps from 0.00 to
+    # 0.48 between columns 68 and 84 and falls away past 242, and from 0.00
+    # to 0.38 between rows 42 and 54, ending by row 234. The ornament gives
+    # itself away by warmth (r-b), which only climbs past column 252.
+    f = f[47:233, 73:243]
+    return cv2.cvtColor(f.astype(np.uint8), cv2.COLOR_BGR2BGRA)
 
 
 def main():
@@ -165,7 +198,8 @@ def main():
 
     em = restore_emblem(os.path.join(SRC, 'emblem.jpg'))
     cv2.imwrite(os.path.join(OUT, 'security-emblem-shrs.png'), em)
-    print(f'security-emblem-shrs.png: {em.shape[1]}x{em.shape[0]}px')
+    print(f'security-emblem-shrs.png: {em.shape[1]}x{em.shape[0]}px '
+          f'= {em.shape[1] / 8.6 * 25.4:.0f} DPI at its 8.6mm placement')
 
 
 if __name__ == '__main__':

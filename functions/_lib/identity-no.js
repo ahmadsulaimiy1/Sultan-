@@ -44,19 +44,35 @@
 //   [12] record body  a keyed permutation of the identity sequence
 //   [1] check digit   Luhn
 //
-// The body is `seq * MULT mod 10^12`. MULT is coprime to 10^12, so the map
-// is a BIJECTION: distinct sequence values cannot collide, and the number
-// is fully deterministic and reversible by the institution — the registrar
-// can recover the record from the ID, which a hash would not allow. It is
-// also non-adjacent: consecutive intakes land ~617 billion apart, so two
-// cards reveal nothing about order or volume.
+// The body is `(seq * MULT + OFFSET) mod 10^12`. MULT is coprime to 10^12
+// and adding a constant is itself a bijection, so the map as a whole is a
+// BIJECTION: distinct sequence values cannot collide, and the number is
+// fully deterministic and reversible by the institution — the registrar can
+// recover the record from the ID, which a hash would not allow. It is also
+// non-adjacent: consecutive intakes land 324 billion apart, so two cards
+// reveal nothing about order or volume.
+//
+// The OFFSET is not decoration, and the first multiplier was replaced
+// because of what it did without one. A pure `seq * MULT` does not wrap
+// until seq exceeds 10^12/MULT, so for the first thousand-odd students the
+// body is simply a small multiple of the multiplier and inherits its digit
+// structure wholesale. The retired multiplier, 617283945671, sits within a
+// whisker of 5e13/81 — and 1/81 = 0.012345679… — so its small multiples
+// reproduced that expansion: sequence 18 gave 711111110220782 and sequence
+// 20 gave 713456789134204. Across the first hundred students, 47% of the
+// numbers carried a visible run. Adding a large offset removes the
+// small-multiple regime entirely; measured over the first 600 students the
+// rate is 1.33%, against the 1.86% that genuinely random 12-digit numbers
+// hit by chance. scripts/test-student-identity-no.mjs asserts this, because
+// nothing about collisions or check digits could ever have caught it.
 //
 // Surname encoding was considered and declined, per the Founder's own
 // recommendation: mixing a name into the body destroys the bijection and
 // reintroduces the collision risk it was meant to remove, without adding
 // uniqueness the sequence does not already guarantee.
 const STUDENT_ID_INSTITUTION = '71';
-const STUDENT_ID_MULT = 617_283_945_671n;   // coprime to 10^12
+const STUDENT_ID_MULT = 324_453_718_779n;   // coprime to 10^12
+const STUDENT_ID_OFFSET = 118_468_187_279n;
 const STUDENT_ID_MOD = 1_000_000_000_000n;  // 12-digit body
 
 function luhnCheckDigit(digits) {
@@ -72,7 +88,7 @@ function luhnCheckDigit(digits) {
 }
 
 export function formatStudentIdentityNo(seq) {
-  const body = String((BigInt(seq) * STUDENT_ID_MULT) % STUDENT_ID_MOD).padStart(12, '0');
+  const body = String((BigInt(seq) * STUDENT_ID_MULT + STUDENT_ID_OFFSET) % STUDENT_ID_MOD).padStart(12, '0');
   const stem = STUDENT_ID_INSTITUTION + body;
   return stem + luhnCheckDigit(stem);
 }
