@@ -473,6 +473,17 @@ function barGroundSvg(w, h, dividers) {
   return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
 }
 
+// NOTE (Founder-supplied SHRS security emblem, image 3).
+// The device in that photograph is already on this sheet. It was shot off
+// the printed artwork, and a chroma-variance scan finds the same iridescent
+// band still there: 4.21 a*-variance where it sits against 0.73 on plain
+// paper — six times the local hue spread, which is what an optically-
+// variable ink reads as and warm paper does not. Compositing a second copy
+// over it would duplicate an existing security feature rather than add one,
+// and would sit one hologram on top of another. The restored artwork is
+// kept at assets/images/certificates/security-emblem-shrs.png for the
+// Founder's own use; it is deliberately not placed on the certificate.
+
 function plaqueGroundSvg(w, h, corner = 'rosette') {
   const rows = Math.max(3, Math.round(h / 2.8));
   let weave = '';
@@ -646,7 +657,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     in accordance with the approved curriculum and the academic standards
     of the School.</div>
   <div class="o5-para-ar">قد ${arCompleted} بنجاحٍ متطلبات ${stage.bodyAr}
-    في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
+    في العام الدراسي <span class="ar-range">${session}</span>، وفقًا للمناهج
     المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
   <div class="o8-band">
@@ -683,18 +694,14 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   </div>
 
   <div class="o5-sig o5-sig-1">
-    <div class="o5-sig-line"></div>
-    <div class="o5-sig-name">Mrs. Mariam Tope AbdulKareem</div>
-    <div class="o5-sig-en">Registrar</div>
-    <div class="o5-sig-ar">المسجّلة</div>
-  </div>
-  <div class="o5-sig o5-sig-2">
+    <img class="o5-sig-ink" src="/assets/images/certificates/signature-principal.png" alt="" />
     <div class="o5-sig-line"></div>
     <div class="o5-sig-name">Shaykh Abubakar Solah</div>
     <div class="o5-sig-en">Principal &amp; Head of School</div>
     <div class="o5-sig-ar">رئيس المدرسة</div>
   </div>
-  <div class="o5-sig o5-sig-3">
+  <div class="o5-sig o5-sig-2">
+    <img class="o5-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="o5-sig-line"></div>
     <div class="o5-sig-name">Dr. Zakaria Olanrewaju Anofi</div>
     <div class="o5-sig-en">Chairman, Board of Governors</div>
@@ -1057,7 +1064,7 @@ function docShell(title, sheetsHtml) {
      overlay enlarged to a proper 34mm. Two stacked shadows read as contact
      rather than as a filter: a tight dark one where the metal meets the
      paper, and a wider soft one for the lift of the emboss. */
-  .o5-seal{position:absolute;left:131.5mm;top:170.5mm;width:34mm;height:auto;
+  .o5-seal{position:absolute;left:131.5mm;top:171.6mm;width:34mm;height:auto;
     filter:drop-shadow(0 .18mm .22mm rgba(48,32,8,.42))
            drop-shadow(0 .75mm 1.15mm rgba(56,38,8,.22));}
 
@@ -1131,7 +1138,7 @@ function docShell(title, sheetsHtml) {
      corner crossed the navy ribbon, whose leading edge runs 199.5mm at
      x=230 to 197.9mm at x=235, and the 0.9-opacity plaque ground let the
      ribbon tint show through it. */
-  .o5-vplate{position:absolute;left:173.5mm;top:171.2mm;width:62mm;height:25.2mm;
+  .o5-vplate{position:absolute;left:173.5mm;top:171.8mm;width:62mm;height:25.2mm;
     background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
     padding:2mm 2mm 3.1mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
     box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
@@ -1176,20 +1183,70 @@ function docShell(title, sheetsHtml) {
 
   /* Signature court: three columns anchoring the page; the centre
      column signs directly above the printed gold seal. */
-  /* Station centres are 75 / 148.5 / 222mm — symmetric about the sheet
-     centre at 73.5mm intervals. The right station previously sat at 216mm,
-     6mm inboard of its mirror, which is what made the row read as slightly
-     off-balance even though nothing collided. */
+  /* Two signatories, not three (Founder directive: the Registrar's block is
+     withdrawn — the Registrar's Office still issues the certificate, and
+     still signs the register, but does not sign the face).
+     The court is rebuilt around that rather than having a station deleted
+     out of it: two stations at 88.5 and 208.5mm, whose centres (117 and
+     180mm) sit 31.5mm either side of the sheet's optical centre at 148.5mm,
+     with the seal filling the space between them. Three evenly-spaced
+     stations with the middle one removed would have left a 73.5mm hole and
+     pushed the outer two into the margins. */
+  /* SHRS optically-variable patch. Position measured, not chosen by eye.
+     The Founder asked for the lower-right corner; there is no paper left
+     there. Ink density in that corner runs 0.42-0.43 with the navy ribbon
+     at 0.15-0.26 (border ornament and ribbon), and the only quiet ground is
+     a 9mm ribbon between the verification plate and the border — too narrow
+     for a credible patch. The lower LEFT, vacated by the withdrawn
+     Registrar station, measures 0.022: the quietest ground on the lower
+     half of the sheet. Placing the patch there mirrors the verification
+     plate across the centred seal, so the two authentication devices
+     bracket it instead of both crowding one corner, and it fills the space
+     the third signature left rather than leaving a hole.
+     Multiply blend so the guilloche shows through it the way a real hot-
+     stamped foil patch lets the underlying print read at most angles. */
+  .o5-holo{position:absolute;left:78mm;top:174.5mm;width:15mm;height:15mm;
+    background-size:100% 100%;background-repeat:no-repeat;
+    mix-blend-mode:multiply;opacity:.88;
+    filter:drop-shadow(0 .12mm .18mm rgba(60,68,80,.28));}
+
+  /* Academic session inside Arabic text (Founder correction).
+     The span used to carry dir="ltr", which locked the whole range into
+     Latin order: on the sheet it read 2025 - 2026 left to right, so a
+     reader coming from the right met 2026 first and the session appeared
+     to run backwards. Removing the isolate hands the range to the Unicode
+     bidi algorithm, which keeps each numeral internally left-to-right
+     while ordering the pair right-to-left with the sentence. Measured in
+     the browser: with the isolate the RTL reader meets 2026 first, without
+     it 2025 first. The source data stays chronological (2025 - 2026); only
+     the rendering changes. isolate keeps the range from disturbing the
+     Arabic around it. */
+  .ar-range{unicode-bidi:isolate;}
+
   .o5-sig{position:absolute;top:150.9mm;width:57mm;text-align:center;}
-  .o5-sig-1{left:46.5mm;}
-  .o5-sig-2{left:120mm;}
-  .o5-sig-3{left:193.5mm;}
+  .o5-sig-1{left:79.5mm;}
+  .o5-sig-2{left:160.5mm;}
+  /* The real signatures, photographed by the Founder and lifted to ink-only
+     artwork by scripts/certificate-signatures.py. They sit in the signing
+     space and rest on the rule the way a written signature does, rather
+     than floating above it as a pasted-on graphic. Sized by HEIGHT, not
+     width: the two marks have very different proportions (3.10:1 and
+     1.61:1) and matching their widths would make one tower over the other.
+     Multiply-blended so the rule and the paper grain read through the
+     stroke, as ink on paper does. */
+  .o5-sig-ink{position:absolute;left:50%;bottom:calc(100% - 9.5mm);
+    transform:translateX(-50%);height:8.6mm;width:auto;
+    mix-blend-mode:multiply;opacity:.94;}
   /* The signing rule is a guide, not a form field. It was a 0.34mm near-black
      bar — the "generic underline" the Founder rejected. It is now a 0.1mm
      gold hairline that fades to nothing over the outer quarter at each end
      and is closed by a lozenge terminal, so it reads as engraving and all
      but disappears once a signature is written across it. */
-  .o5-sig-line{position:relative;width:45mm;height:.1mm;margin:6.6mm auto 0;
+  /* 38mm, not 45: the rule is now signed across, and a real signature
+     should fill most of the space it is written in. The principal's mark is
+     26.7mm at the height these are set to, which reads as 70% of a 38mm
+     rule and as a thin 59% of a 45mm one. */
+  .o5-sig-line{position:relative;width:38mm;height:.1mm;margin:8.9mm auto 0;
     background:linear-gradient(90deg,transparent,rgba(138,106,36,.62) 25%,
       rgba(138,106,36,.62) 75%,transparent);}
   .o5-sig-line::before,.o5-sig-line::after{content:'';position:absolute;top:50%;
@@ -1202,7 +1259,7 @@ function docShell(title, sheetsHtml) {
      the block but is deliberately set below the student name's weight —
      a signatory must never compete with the graduate. */
   .o5-sig-name{font-family:var(--en-display);font-weight:700;font-size:6.9pt;
-    letter-spacing:.45px;color:#241B10;margin-top:1.5mm;line-height:1.25;white-space:nowrap;
+    letter-spacing:.45px;color:#241B10;margin-top:1.9mm;line-height:1.25;white-space:nowrap;
     text-shadow:0 -0.04mm 0 rgba(255,252,243,.5);}
   .o5-sig-en{font-family:var(--en-display);font-weight:400;font-size:5.4pt;letter-spacing:.85px;
     text-transform:uppercase;color:#6E5013;margin-top:.75mm;line-height:1.3;white-space:nowrap;}

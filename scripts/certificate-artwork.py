@@ -70,6 +70,17 @@ BOXES = [
 # measured, the arch watermark under the cartouche registers 2 pixels.
 INK = lambda S, V: ((S > 55) | (V < 178))
 
+# A second, more sensitive threshold used ONLY inside the boxes. The rules
+# and lettering being removed are not uniformly inked: their faintest
+# stretches sit around V=200 with barely any saturation, under the threshold
+# above, so the mask skipped them and the release tone pass then lifted them
+# back into view as short gold stubs floating in the paper. Inside a box
+# everything is being replaced anyway, so the cost of the wider net is only
+# what it takes from the guilloche and watermark there — measured at 2 pixels
+# under the title cartouche. Outside the boxes nothing changes, which is what
+# protects the crests, the rosette and the security artwork.
+INK_FAINT = lambda S, V: ((S > 34) | (V < 203))
+
 # Measured quietest patch of plain paper, used to transplant grain back into
 # the inpainted areas so they do not read as airbrushed.
 DONOR = (148, 404, 276, 468)
@@ -83,13 +94,20 @@ def main():
     hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
     _, S, V = cv2.split(hsv)
     ink = INK(S, V).astype(np.uint8) * 255
+    faint = INK_FAINT(S, V).astype(np.uint8) * 255
 
     mask = np.zeros((h, w), np.uint8)
     for x0, y0, x1, y1 in BOXES:
         box = np.zeros_like(mask)
         box[y0:y1, x0:x1] = 255
-        mask |= cv2.bitwise_and(box, ink)
-    mask = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=2)
+        mask |= cv2.bitwise_and(box, faint)
+    # Three iterations, not two. Inpainting leaves a faint tonal seam along
+    # the edge of what it filled — invisible on the raw derivation, but the
+    # release tone pass below raises local contrast and brought the seams of
+    # the two title hairlines and the seal ribbons back as ghost lines at 16
+    # to 26 levels of contrast. Widening the mask so the fill starts outside
+    # the seam removes the cause rather than masking the symptom.
+    mask = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=3)
     print(f'cleared {int((mask > 0).sum())} px across {len(BOXES)} boxes')
 
     out = cv2.inpaint(im, mask, 6, cv2.INPAINT_TELEA).astype(np.float32)
@@ -113,6 +131,22 @@ def main():
         for c in range(3):
             out[:, :, c] += sub * delta[c] * 0.55
 
+    # Flatten the fill's low frequencies. Widening the mask reduced the
+    # inpainting seam but did not remove it: TELEA reconstructs a long thin
+    # deletion by propagating inward from both edges, and the fill converges
+    # a few levels darker than the paper around it. That is invisible on the
+    # raw derivation and clearly visible once the release tone pass raises
+    # local contrast — the two title hairlines came back as ghost lines at
+    # up to 26 levels. Blurring the fill, re-inpainting THAT, and swapping it
+    # back in removes every structure inside the mask coarser than the grain,
+    # while leaving the grain itself (added below) and everything outside the
+    # mask untouched.
+    lf = cv2.GaussianBlur(out, (0, 0), 9)
+    wide = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=4)
+    lf_flat = cv2.inpaint(np.clip(lf, 0, 255).astype(np.uint8), wide,
+                          14, cv2.INPAINT_TELEA).astype(np.float32)
+    out = out - lf + lf_flat
+
     # Transplant real paper grain, mirror-tiled so no seam repeats visibly.
     dx0, dy0, dx1, dy1 = DONOR
     donor = im[dy0:dy1, dx0:dx1].astype(np.float32)
@@ -124,9 +158,36 @@ def main():
     for c in range(3):
         out[:, :, c] += band * tile[:, :, c] * 0.55
 
-    cv2.imwrite(DST, np.clip(out, 0, 255).astype(np.uint8),
-                [cv2.IMWRITE_JPEG_QUALITY, 96])
+    out = np.clip(out, 0, 255).astype(np.uint8)
+
+    # ── Release tone pass (Founder direction: "reduce the overall beige haze
+    # very slightly and increase the local contrast around the typography and
+    # security features, rather than increasing global saturation").
+    #
+    # Done in Lab so the paper's warmth is adjusted independently of its
+    # brightness, and with CLAHE rather than a global curve so the lift lands
+    # on the guilloche, the microtext and the engraved linework — where local
+    # contrast is low — and not on the flat paper, where raising contrast
+    # would only amplify grain.
+    lab = cv2.cvtColor(out, cv2.COLOR_BGR2LAB)
+    L, A, B = cv2.split(lab)
+    L = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(12, 12)).apply(L)
+    # The haze is a +b (yellow) bias across the whole sheet. Pulling b back
+    # 8% toward neutral takes the beige down without touching the gold, whose
+    # b is far higher and survives the same proportional cut.
+    B = np.clip(128 + (B.astype(np.float32) - 128) * 0.92, 0, 255).astype(np.uint8)
+    toned = cv2.cvtColor(cv2.merge([L, A, B]), cv2.COLOR_LAB2BGR)
+
+    # Blend rather than replace: at full strength CLAHE starts to read as a
+    # processed photograph. 55% keeps the paper looking printed.
+    out = cv2.addWeighted(toned, 0.55, out, 0.45, 0)
+
+    cv2.imwrite(DST, out, [cv2.IMWRITE_JPEG_QUALITY, 96])
     print('wrote', DST)
+    src_lab = cv2.cvtColor(im, cv2.COLOR_BGR2LAB)
+    print(f'  paper b* {src_lab[:, :, 2].mean():.1f} -> '
+          f'{cv2.cvtColor(out, cv2.COLOR_BGR2LAB)[:, :, 2].mean():.1f} '
+          f'(lower = less beige)')
 
     # Prove the lift: no ink may survive inside the cleared bands, and the
     # protected artwork must be untouched.
