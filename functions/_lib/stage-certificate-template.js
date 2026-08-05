@@ -514,7 +514,9 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <div class="o5-name-en">${nameEn}</div>
   <div class="o5-name-ar">${nameAr}</div>
-  <div class="o5-name-rule"><span></span><i></i><span></span></div>
+  <div class="o5-name-rule"><b></b><span></span><i></i><span></span><b></b></div>
+
+  <img class="o5-seal" src="/assets/images/certificates/official-seal.png" alt="" />
 
   <div class="o5-para-en">has successfully completed the requirements of the
     Ibtidā&rsquo;iyyah (Primary) stage in the ${session} academic session,
@@ -795,35 +797,45 @@ function docShell(title, sheetsHtml) {
   /* Gold-foil name treatment: engraved gradient fill, hairline bronze
      edge, top-light bevel and under-shade for emboss depth. */
   .o5-name-en,.o5-name-ar{
-    /* Engraved gilt, not digital shine: narrow value range, hairline
-       bronze edge, restrained top-light bevel. */
-    background:linear-gradient(100deg,#6E4C0E 0%,#A0761B 22%,#CFA93E 42%,#E3C878 50%,#CFA93E 58%,#A0761B 78%,#6E4C0E 100%);
+    /* Hot-foil stamping, letterpress register: deep champagne gold
+       (never bright yellow), fine engraved edge, and the soft shade a
+       blind emboss casts — no glow, no plastic reflection. */
+    background:linear-gradient(105deg,#5E4410 0%,#8A6A24 20%,#B6953B 38%,#D9C387 50%,#B6953B 62%,#8A6A24 80%,#5E4410 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-stroke:.3px rgba(84,58,10,.55);
-    text-shadow:0 .18mm .14mm rgba(56,38,8,.26), 0 -0.12mm 0 rgba(255,251,235,.4);
+    -webkit-text-stroke:.34px rgba(66,46,8,.62);
+    text-shadow:0 .26mm .32mm rgba(56,38,8,.20), 0 -0.1mm 0 rgba(255,252,242,.42);
   }
   /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
      charcoal, no effects — a dignified spiritual header in the quiet
      band beneath the official logo. */
   .o5-basmala{position:absolute;top:54.2mm;left:5mm;right:0;text-align:center;
     font-family:var(--ar-text);font-weight:400;font-size:16pt;color:#262014;line-height:1;}
-  .o5-intro-en{position:absolute;top:96.4mm;left:38mm;width:106mm;text-align:center;
-    font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10.5pt;
+  .o5-intro-en{position:absolute;top:95.6mm;left:38mm;width:106mm;text-align:center;
+    font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10pt;
     letter-spacing:.5px;color:#4B3420;}
-  .o5-intro-ar{position:absolute;top:95.8mm;right:38mm;width:106mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-size:10.5pt;color:#4B3420;}
-  .o5-name-en{position:absolute;top:102.4mm;left:34mm;width:114mm;text-align:center;
+  .o5-intro-ar{position:absolute;top:95mm;right:38mm;width:106mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-size:10pt;color:#4B3420;}
+  /* Generous air above and below the name pair — the visual heart of
+     the certificate must never be crowded by intro or body text. */
+  .o5-name-en{position:absolute;top:104mm;left:34mm;width:114mm;text-align:center;
     font-family:var(--en-display);font-weight:700;font-size:18.5pt;letter-spacing:2.4px;
     white-space:nowrap;line-height:1.15;}
-  .o5-name-ar{position:absolute;top:100.8mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+  .o5-name-ar{position:absolute;top:102.4mm;right:34mm;width:114mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-weight:700;font-size:21pt;white-space:nowrap;line-height:1.3;}
-  .o5-name-rule{position:absolute;top:113.8mm;left:72mm;right:72mm;display:flex;align-items:center;gap:2.4mm;}
-  .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 25%,#B08A2E 75%,transparent);}
+  .o5-name-rule{position:absolute;top:115.6mm;left:70mm;right:70mm;display:flex;align-items:center;gap:2.2mm;}
+  .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 22%,#B08A2E 78%,transparent);}
   .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
-  .o5-para-en{position:absolute;top:118mm;left:42mm;width:98mm;
+  .o5-name-rule b{width:1.15mm;height:1.15mm;border:.14mm solid #A98A3C;transform:rotate(45deg);
+    background:none;flex:0 0 auto;}
+  .o5-para-en{position:absolute;top:119.6mm;left:42mm;width:98mm;
     font-family:var(--en-text);font-weight:500;font-size:10pt;line-height:1.5;color:#332514;text-align:left;}
-  .o5-para-ar{position:absolute;top:117.6mm;right:42mm;width:98mm;direction:rtl;
+  .o5-para-ar{position:absolute;top:119.2mm;right:42mm;width:98mm;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;line-height:1.55;color:#332514;text-align:right;}
+  /* Official embossed brass seal (client-supplied artwork, used as
+     provided) — set over the printed seal position; the artwork's
+     printed ribbons emerge naturally beneath it. */
+  .o5-seal{position:absolute;left:133.2mm;top:169mm;width:30mm;height:auto;
+    filter:drop-shadow(0 .35mm .55mm rgba(56,38,8,.32));}
 
   /* Credential plaques: engraved vector grounds (plaqueGroundSvg) —
      ivory field, micro-guilloché, hairline rules, corner ornaments,
@@ -899,7 +911,7 @@ function docShell(title, sheetsHtml) {
 
   /* Signature court: three columns anchoring the page; the centre
      column signs directly above the printed gold seal. */
-  .o5-sig{position:absolute;top:152.4mm;width:52mm;text-align:center;}
+  .o5-sig{position:absolute;top:151.6mm;width:52mm;text-align:center;}
   .o5-sig-1{left:49mm;}
   .o5-sig-2{left:122.5mm;}
   .o5-sig-3{left:188mm;width:56mm;}
