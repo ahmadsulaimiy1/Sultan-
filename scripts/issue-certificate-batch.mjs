@@ -50,15 +50,69 @@ const FIRST_CERTIFICATE_SEQ = 35;
 // they are never regenerated.
 const FIRST_IDENTITY_SEQ = 35;
 
+// ── The approved graduation register ────────────────────────────────────
+// These Arabic spellings are the institution's own, supplied by the
+// Founder, and they are NOT transliterations to be improved. An earlier
+// pass here set "reinterpreted" forms — عليو for علي, أوكوه for أكو,
+// أديغوكي for أدغكي and four more — on the reasoning that they represented
+// the English pronunciation more fully. That reasoning does not apply: a
+// student's name is whatever their institution records, not whatever a
+// transliteration scheme would suggest. The approved list is authoritative.
+//
+// APPROVED_AR below is a second, independent copy of the same strings, and
+// the script refuses to run if the two disagree by so much as one code
+// point. It exists precisely because the failure mode here is silent and
+// well-intentioned — someone, including a future me, "fixing" a name.
 const CLASS_ROLL = [
-  { en: 'Naheemah Ismail Seriki',      ar: 'نعيمة إسماعيل سريكي',        sex: 'female' },
-  { en: 'Ashraf Korede Ojewumi',       ar: 'أشرف كوريدي أوجيومي',        sex: 'male' },
-  { en: 'Al-Ameen Okoh',               ar: 'الأمين أوكوه',               sex: 'male' },
-  { en: 'Al-Ameen Abidemi Jokomba',    ar: 'الأمين أبيديمي جوكومبا',     sex: 'male' },
-  { en: 'Aisha Lawal',                 ar: 'عائشة لوال',                 sex: 'female' },
-  { en: 'Imran Iremide Adegoke',       ar: 'عمران إيريميدي أديغوكي',     sex: 'male' },
-  { en: 'Daud Aliu',                   ar: 'داود عليو',                  sex: 'male' },
+  { en: 'Naheemah Ismail Seriki',   ar: 'نعيمة إسماعيل سركي',    sex: 'female' },
+  { en: 'Ashraf Korede Ojewumi',    ar: 'أشرف كوردي أوجومي',     sex: 'male' },
+  { en: 'Al-Ameen Okoh',            ar: 'الأمين أكو',             sex: 'male' },
+  { en: 'Al-Ameen Abidemi Jokomba', ar: 'الأمين أبديمي جوكمبا',  sex: 'male' },
+  { en: 'Aisha Lawal',              ar: 'عائشة لوال',             sex: 'female' },
+  { en: 'Imran Iremide Adegoke',    ar: 'عمران إريمدي أدغكي',    sex: 'male' },
+  { en: 'Daud Aliu',                ar: 'داود علي',               sex: 'male' },
 ];
+
+// Transcribed separately from the Founder's directive. Do not derive one
+// from the other — the whole point is that they are two independent copies.
+const APPROVED_AR = {
+  'Naheemah Ismail Seriki':   'نعيمة إسماعيل سركي',
+  'Ashraf Korede Ojewumi':    'أشرف كوردي أوجومي',
+  'Al-Ameen Okoh':            'الأمين أكو',
+  'Al-Ameen Abidemi Jokomba': 'الأمين أبديمي جوكمبا',
+  'Aisha Lawal':              'عائشة لوال',
+  'Imran Iremide Adegoke':    'عمران إريمدي أدغكي',
+  'Daud Aliu':                'داود علي',
+};
+
+// Code point by code point, before anything is generated or written. A
+// visual comparison is not enough: أ and ا, ي and ى, ة and ه are separate
+// characters that can look near-identical at body size, and a difference in
+// Unicode normalisation form would not show up on screen at all.
+const nameFaults = [];
+for (const student of CLASS_ROLL) {
+  const approved = APPROVED_AR[student.en];
+  if (approved === undefined) {
+    nameFaults.push(`${student.en}: not on the approved register`);
+    continue;
+  }
+  const a = [...student.ar.normalize('NFC')];
+  const b = [...approved.normalize('NFC')];
+  if (a.length !== b.length || a.some((c, i) => c !== b[i])) {
+    const at = a.findIndex((c, i) => c !== b[i]);
+    nameFaults.push(`${student.en}: Arabic differs from the approved spelling`
+      + ` at position ${at < 0 ? Math.min(a.length, b.length) : at}`
+      + ` — set "${student.ar}", approved "${approved}"`);
+  }
+}
+if (Object.keys(APPROVED_AR).length !== CLASS_ROLL.length) {
+  nameFaults.push('the roll and the approved register are different lengths');
+}
+if (nameFaults.length) {
+  console.error('BATCH REJECTED — name mismatch:\n  ' + nameFaults.join('\n  '));
+  process.exit(1);
+}
+console.log(`names: all ${CLASS_ROLL.length} Arabic spellings match the approved register exactly`);
 
 // ── Sequence stub ───────────────────────────────────────────────────────
 // The only thing the live database contributes to certificate issuance is
