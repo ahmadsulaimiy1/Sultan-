@@ -496,6 +496,22 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="p-label"><span class="p-l-en">${en}</span><span class="p-l-ar" dir="rtl">${arb}</span></div>
     <div class="p-value${small}">${val}</div>
   </div>`;
+  // ── Name typesetting (measured, not guessed) ──────────────────────
+  // The name pair is the visual heart, so it is fitted per certificate
+  // rather than set at one fixed size: a long name must never overflow
+  // its 114mm half or collide with the opposite script. Coefficients
+  // are derived from rendered measurement of this exact type at this
+  // exact tracking (EN ≈ 0.2497mm per char per pt; AR ≈ 0.1357), and
+  // the Arabic is fitted to ~88% of the English extent because Naskh
+  // sets denser than tracked Latin capitals — matching *extent* rather
+  // than point size is what makes the two read as equals.
+  const FIT_MM = 106;
+  const fitPt = (text, mmPerCharPt, maxPt, minPt) => {
+    const n = Math.max(1, String(text || '').trim().length);
+    return Math.max(minPt, Math.min(maxPt, +(FIT_MM / (n * mmPerCharPt)).toFixed(2)));
+  };
+  const nameEnPt = fitPt(cert.student_full_name, 0.2497, 19.5, 11);
+  const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 24, 13);
   const plqV = plaqueGroundSvg(58, 23.6, 'rosette');
   const microSerial = `${serial} · `.repeat(6);
   // Archival reference: registry path + a real Code 128 barcode of the
@@ -512,8 +528,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <div class="o5-intro-en">This is to certify that</div>
   <div class="o5-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
 
-  <div class="o5-name-en">${nameEn}</div>
-  <div class="o5-name-ar">${nameAr}</div>
+  <div class="o5-name-en" style="font-size:${nameEnPt}pt">${nameEn}</div>
+  <div class="o5-name-ar" style="font-size:${nameArPt}pt">${nameAr}</div>
   <div class="o5-name-rule"><b></b><span></span><i></i><span></span><b></b></div>
 
   <img class="o5-seal" src="/assets/images/certificates/official-seal.png" alt="" />
@@ -529,10 +545,10 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <div class="o8-band">
     <div class="band-in">
       <div class="bg"><div class="bg-l"><span class="p-l-en">Certificate Number</span><span class="p-l-ar" dir="rtl">رقم الشهادة</span></div>
-        <div class="bg-v v-serial">${serial}</div></div>
+        <div class="bg-v bg-v-id v-serial">${serial}</div></div>
       <i class="band-di"></i>
       <div class="bg"><div class="bg-l"><span class="p-l-en">Student ID</span><span class="p-l-ar" dir="rtl">الرقم التعريفي للطالب</span></div>
-        <div class="bg-v">${studentId}</div></div>
+        <div class="bg-v bg-v-id">${studentId}</div></div>
       <i class="band-di"></i>
       <div class="bg"><div class="bg-l"><span class="p-l-en">Date of Issue</span><span class="p-l-ar" dir="rtl">تاريخ الإصدار</span></div>
         <div class="bg-v bg-v-sm">${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span></div></div>
@@ -546,9 +562,9 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <div class="o5-vplate" style="background-image:${plqV}">
     <div class="vp-text">
       <div class="vp-head"><span class="vp-mark">SHRS</span><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
-      <div class="vp-row">${docId} <span class="p-dot">·</span> ${verifyCode}</div>
+      <div class="vp-row vp-id">${docId} <span class="p-dot">·</span> ${verifyCode}</div>
       <div class="vp-row vp-url">shroyalschools.com/verify-certificate</div>
-      <div class="vp-row">Archive ${archiveRef}</div>
+      <div class="vp-row vp-id">Archive ${archiveRef}</div>
       <div class="vp-micro">${escapeHtml(microSerial)}</div>
       <div class="vp-barcode">${archiveBarcode}</div>
       <div class="vp-void">Void if altered or erased <span class="p-dot">·</span> <span dir="rtl">لاغيةٌ عند أي كشطٍ أو تعديل</span></div>
@@ -800,36 +816,43 @@ function docShell(title, sheetsHtml) {
     /* Hot-foil stamping, letterpress register: deep champagne gold
        (never bright yellow), fine engraved edge, and the soft shade a
        blind emboss casts — no glow, no plastic reflection. */
-    background:linear-gradient(105deg,#5E4410 0%,#8A6A24 20%,#B6953B 38%,#D9C387 50%,#B6953B 62%,#8A6A24 80%,#5E4410 100%);
+    /* Real hot-foil is mostly medium-dark metal with ONE narrow
+       specular streak — not a pale body inside a dark outline. The
+       stops keep ~70% of every letter in the deep 0x6B–0x8E range so
+       the name carries genuine ink weight against cream paper, with
+       the bright band confined to 46–54%. A heavy edge stroke was
+       tried and rejected: it read as outlined text, not stamped foil. */
+    background:linear-gradient(102deg,#43300A 0%,#5E4712 13%,#7C5F1D 27%,#9E7C29 40%,
+      #C9AC5E 47%,#DCC68C 50%,#C9AC5E 53%,#9E7C29 60%,#7C5F1D 73%,#5E4712 87%,#43300A 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-stroke:.34px rgba(66,46,8,.62);
-    text-shadow:0 .26mm .32mm rgba(56,38,8,.20), 0 -0.1mm 0 rgba(255,252,242,.42);
+    -webkit-text-stroke:.26px rgba(50,35,6,.5);
+    text-shadow:0 .26mm .28mm rgba(56,38,8,.26), 0 -0.09mm 0 rgba(255,252,242,.38);
   }
   /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
      charcoal, no effects — a dignified spiritual header in the quiet
      band beneath the official logo. */
   .o5-basmala{position:absolute;top:54.2mm;left:5mm;right:0;text-align:center;
     font-family:var(--ar-text);font-weight:400;font-size:16pt;color:#262014;line-height:1;}
-  .o5-intro-en{position:absolute;top:95.6mm;left:38mm;width:106mm;text-align:center;
+  .o5-intro-en{position:absolute;top:93.8mm;left:38mm;width:106mm;text-align:center;
     font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10pt;
     letter-spacing:.5px;color:#4B3420;}
-  .o5-intro-ar{position:absolute;top:95mm;right:38mm;width:106mm;text-align:center;direction:rtl;
+  .o5-intro-ar{position:absolute;top:93.1mm;right:38mm;width:106mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;color:#4B3420;}
   /* Generous air above and below the name pair — the visual heart of
      the certificate must never be crowded by intro or body text. */
-  .o5-name-en{position:absolute;top:104mm;left:34mm;width:114mm;text-align:center;
-    font-family:var(--en-display);font-weight:700;font-size:18.5pt;letter-spacing:2.4px;
+  .o5-name-en{position:absolute;top:104.4mm;left:34mm;width:114mm;text-align:center;
+    font-family:var(--en-display);font-weight:700;letter-spacing:2.4px;
     white-space:nowrap;line-height:1.15;}
-  .o5-name-ar{position:absolute;top:102.4mm;right:34mm;width:114mm;text-align:center;direction:rtl;
-    font-family:var(--ar-text);font-weight:700;font-size:21pt;white-space:nowrap;line-height:1.3;}
-  .o5-name-rule{position:absolute;top:115.6mm;left:70mm;right:70mm;display:flex;align-items:center;gap:2.2mm;}
+  .o5-name-ar{position:absolute;top:102.2mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+    font-family:var(--ar-text);font-weight:700;white-space:nowrap;line-height:1.08;}
+  .o5-name-rule{position:absolute;top:117.4mm;left:70mm;right:70mm;display:flex;align-items:center;gap:2.2mm;}
   .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 22%,#B08A2E 78%,transparent);}
   .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
   .o5-name-rule b{width:1.15mm;height:1.15mm;border:.14mm solid #A98A3C;transform:rotate(45deg);
     background:none;flex:0 0 auto;}
-  .o5-para-en{position:absolute;top:119.6mm;left:42mm;width:98mm;
+  .o5-para-en{position:absolute;top:121.4mm;left:42mm;width:98mm;
     font-family:var(--en-text);font-weight:500;font-size:10pt;line-height:1.5;color:#332514;text-align:left;}
-  .o5-para-ar{position:absolute;top:119.2mm;right:42mm;width:98mm;direction:rtl;
+  .o5-para-ar{position:absolute;top:121mm;right:42mm;width:98mm;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;line-height:1.55;color:#332514;text-align:right;}
   /* Official embossed brass seal (client-supplied artwork, used as
      provided) — set over the printed seal position; the artwork's
@@ -859,16 +882,35 @@ function docShell(title, sheetsHtml) {
   .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4pt;letter-spacing:.9px;
     text-transform:uppercase;color:#6E5013;}
   .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5pt;color:#6E5013;}
-  /* Values in the engraved serif — never a UI face on the document. */
+  /* Values in the engraved serif — never a UI face on the document.
+     FIGURE STYLE IS SPLIT BY ROLE, the way a type foundry sets a
+     credential: alphanumeric identifiers take LINING + TABULAR figures
+     so the digits stand at cap height beside the capitals (oldstyle
+     figures there collapse to x-height and 000001 reads as oooooi —
+     genuinely ambiguous when a verifier transcribes it), while dates
+     set in prose keep the elegant oldstyle default. */
   .bg-v{font-family:var(--en-text);font-weight:700;font-size:7.2pt;color:#221A10;
     letter-spacing:.4px;text-align:center;white-space:nowrap;line-height:1.25;}
+  /* Identifiers are set in the inscriptional face, not the text face.
+     Measured from the font binaries: Cormorant's hyphen is 102 units
+     tall on a 269 width centred at y=205 — a thick calligraphic stroke
+     sitting at x-height, which reads as a slash inside an all-caps
+     serial. Cinzel's is 67 on 316 centred at y=291: a flat bar at
+     cap-centre. Cinzel is an all-capitals face, so its figures are
+     cap-height lining by design. Kerning is disabled because the
+     auto-kern pairs (notably R-T) collapsed to 1px against a 10-13px
+     tracking norm, producing a visible stumble mid-serial. */
+  .bg-v-id{font-family:var(--en-display);font-weight:700;font-size:6.1pt;
+    letter-spacing:.35px;font-kerning:none;font-variant-ligatures:none;}
   .bg-v-sm{font-size:6.6pt;letter-spacing:.2px;}
   .bg-v span[dir="rtl"]{font-family:var(--ar-text);font-size:105%;}
   .bg-v .p-dot,.vp-row .p-dot,.vp-void .p-dot{color:#B08A2E;padding:0 .45mm;}
   .band-di{align-self:center;width:1.6mm;height:1.6mm;flex:0 0 auto;
     background:linear-gradient(135deg,#C9A64F,#8A6A24);transform:rotate(45deg);opacity:.85;}
   .band-micro{text-align:center;font-family:var(--utility);font-size:2.3pt;
-    letter-spacing:.35px;color:rgba(138,106,36,.75);margin-top:.6mm;white-space:nowrap;overflow:hidden;}
+    letter-spacing:.35px;color:rgba(138,106,36,.75);margin-top:.6mm;white-space:nowrap;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);}
   /* Engraved crimson serial — banknote convention for the controlling
      number, within the palette's reserved crimson. */
   .v-serial{color:#7A1F2B;letter-spacing:.55px;}
@@ -891,13 +933,20 @@ function docShell(title, sheetsHtml) {
     box-shadow:inset 0 0 0 .3mm rgba(169,138,60,.25);}
   .vp-row{font-family:var(--en-text);font-weight:600;font-size:5.4pt;color:#221A10;
     white-space:nowrap;line-height:1.3;letter-spacing:.2px;}
+  .vp-id{font-family:var(--en-display);font-weight:700;font-size:4.6pt;
+    letter-spacing:.25px;font-kerning:none;font-variant-ligatures:none;}
   .vp-url{font-weight:700;font-size:5.1pt;color:#4B3420;letter-spacing:.2px;}
   .vp-barcode{height:2.7mm;margin:.2mm 0;}
   .vp-barcode svg{width:30mm;height:2.7mm;display:block;}
   /* Genuine microprint rail: the live serial repeated at microtext
      size — a real security-print device, not decoration. */
+  /* The repeat was hard-clipping mid-letterform at the right edge,
+     leaving a sliced half-glyph. Masked so the rail fades out instead
+     of being guillotined. */
   .vp-micro{font-family:var(--utility);font-size:2.5pt;letter-spacing:.25px;
-    color:rgba(138,106,36,.8);white-space:nowrap;overflow:hidden;line-height:1.5;}
+    color:rgba(138,106,36,.8);white-space:nowrap;overflow:hidden;line-height:1.5;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 88%,transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 88%,transparent 100%);}
   .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.4pt;color:#7A1F2B;
     white-space:nowrap;line-height:1.25;}
   .vp-void span[dir="rtl"]{font-family:var(--ar-text);font-style:normal;font-size:4.9pt;}
