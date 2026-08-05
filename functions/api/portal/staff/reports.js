@@ -24,9 +24,9 @@ import { json } from '../../../_lib/http.js';
 import { isQuranCollegeInstitution } from '../../../_lib/hifz.js';
 
 const SCHOOL_LEADERSHIP_INSTITUTION = {
-  'head-teacher': 'Nursery & Primary',
+  'head-teacher': 'Nursery and Primary',
   'principal-royal-college': 'Royal College',
-  raees: 'Islamic & Arabic Studies',
+  raees: 'Islamic and Arabic Studies',
   mudeer: "Qur'an College",
 };
 

@@ -39,8 +39,8 @@ written.
 - **No LMS, no MFA, no CSRF protection, no backup plan, no monitoring,
   no disaster-recovery plan, no named incident-response owner.** All
   confirmed Absent or Initial in the Maturity Report.
-- **Two of the four institutions (Nursery & Primary, and parts of the
-  School of Islamic & Arabic Studies) have no documented faculty or
+- **Two of the four institutions (Nursery and Primary, and parts of the
+  School of Islamic and Arabic Studies) have no documented faculty or
   subject list yet** — the next data-gathering step, not a system
   defect.
 

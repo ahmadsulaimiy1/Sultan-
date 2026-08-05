@@ -69,13 +69,13 @@ document — no account required, by design.
 - **Academic transcript polish**: the student dashboard's results table
   now computes a real term average (arithmetic mean of recorded
   `total_score` values for that term) — never a separately-fabricated
-  figure — and explicitly states that Islamic & Arabic Studies has no
+  figure — and explicitly states that Islamic and Arabic Studies has no
   transcript yet (see below).
 
 ## What's honestly still missing
 
-- **Islamic & Arabic Studies transcript**: does not exist. The School
-  of Islamic & Arabic Studies has no assessment data model at all yet
+- **Islamic and Arabic Studies transcript**: does not exist. The School
+  of Islamic and Arabic Studies has no assessment data model at all yet
   (confirmed absent, not just unwired) — this needs its own schema and
   assessment-entry workflow before any transcript can be real. The
   student dashboard says this plainly rather than omitting the third

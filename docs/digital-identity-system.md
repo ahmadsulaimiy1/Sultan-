@@ -205,7 +205,7 @@ identifiers). Implemented in `functions/_lib/identity-no.js` and
   value is still honoured untouched, same override precedent as
   certificate reference numbers. School codes for this number
   (`RC`/`NP`/`IAS`/`QC`) are defined independently of staff's own
-  `UNIT` codes below (staff spells Nursery & Primary `NPS`, not `NP`)
+  `UNIT` codes below (staff spells Nursery and Primary `NPS`, not `NP`)
   — the two numbering families don't need to match, by design. Scoped
   per school per admission year via `COUNT(*)+1` (low volume, same
   convention as certificate/finance numbers, not the real-sequence

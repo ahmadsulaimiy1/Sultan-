@@ -22,7 +22,7 @@
 //
 // `institutions.name` values match the DB exactly (see
 // functions/api/portal/setup.js's INSERT INTO institutions):
-// 'Nursery & Primary', 'Royal College', 'Islamic & Arabic Studies',
+// 'Nursery and Primary', 'Royal College', 'Islamic and Arabic Studies',
 // 'Qur'an College'.
 
 export const SEAL_REGISTRY = {
@@ -31,8 +31,8 @@ export const SEAL_REGISTRY = {
     status: 'real',
     path: '/assets/images/seals/registrar-office-seal.jpg',
   },
-  'PRIN:Islamic & Arabic Studies': {
-    label: "Office of the Principal, Sultan Hanafi Islamiyyah College",
+  'PRIN:Islamic and Arabic Studies': {
+    label: "Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies",
     status: 'real',
     path: '/assets/images/seals/raees-islamic-arabic-studies-seal.jpg',
   },
@@ -42,12 +42,12 @@ export const SEAL_REGISTRY = {
     path: '/assets/images/seals/mudeer-quran-college-seal.jpg',
   },
   'PRIN:Royal College': {
-    label: 'Office of the Principal, Sultan Hanafi Secular College',
+    label: 'Office of the Principal, Sultan Hanafi Royal College',
     status: 'placeholder',
     path: null,
   },
-  'PRIN:Nursery & Primary': {
-    label: 'Office of the Head Teacher, Sultan Hanafi Basic School',
+  'PRIN:Nursery and Primary': {
+    label: 'Office of the Head Teacher, Sultan Hanafi Nursery and Primary School',
     status: 'placeholder',
     path: null,
   },

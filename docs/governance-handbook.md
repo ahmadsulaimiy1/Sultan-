@@ -62,8 +62,8 @@ Board of Governors and its Board-Level Committees; the Management Team
 and its Management-Level Committees; Heads of Departments; Educators;
 and the four tiers of student governance (Student Representatives,
 School Prefects, Class Captains, Student Clubs). It applies across all
-five Constituent Institutions — Sultan Hanafi Secular College, Sultan
-Hanafi Qur'an College, Sultan Hanafi Islamiyyah College, Sultan Hanafi
+five Constituent Institutions — Sultan Hanafi Royal College, Sultan
+Hanafi Qur'an College, Sultan Hanafi School of Islamic and Arabic Studies, Sultan Hanafi
 Basic School, and Sultan Hanafi Online & Distance Learning School — on
 the same footing the Governance Charter applies to each: one governance
 system, not five separately governed schools.
@@ -106,7 +106,7 @@ population status.
 |---|---|---|---|
 | A | Board of Governors | Chairman; Secretary; 3 Other Members (5 core seats; up to 11 total with co-opted Governors) | Partially populated — Chairman and 3 Other Members filled; Secretary seat vacant |
 | B | Board-Level Committees | Educational Technical Committee; Finance Committee; Governance & Nominations Committee; Disciplinary & Ethics Committee; Safeguarding Committee; one further committee (not yet named) | Partially populated — five named and operating; one seat reserved, not yet named (see §7 for the complete Charter Schedule) |
-| C | Management Team | Head of Schools / Administrator; Principal, Sultan Hanafi Qur'an College; Principal, Sultan Hanafi Secular College; Principal, Sultan Hanafi Islamiyyah College; Head Teacher, Sultan Hanafi Basic School; Head, Sultan Hanafi Online & Distance Learning School | Partially populated — five of six seats filled; Online & Distance Learning headship vacant |
+| C | Management Team | Head of Schools / Administrator; Principal (Mudeer), Sultan Hanafi Qur'an College; Principal, Sultan Hanafi Royal College; Principal (Ra'ees), Sultan Hanafi School of Islamic and Arabic Studies; Head Teacher, Sultan Hanafi Nursery and Primary School; Head, Sultan Hanafi Online & Distance Learning School | Partially populated — five of six seats filled; Online & Distance Learning headship vacant |
 | D | Management-Level Committees | Da'wah, Academic, Sports, Communications & Public Affairs, Student Life, Admissions & Enrolment, and Health, Safety & Facilities Committees | Structurally established; membership/chairs largely ex officio per office held |
 | E | Heads of Departments | Functional and academic department heads reporting to the Management Team | Populated — 8 named HODs on the current roster |
 | F | Educators | Teaching staff reporting through the academic structure | Populated (institution-wide teaching staff); no individual roster held in this Handbook |
@@ -232,10 +232,10 @@ Article 50). Its membership, restated by the 2026-08-04 amendment
 | Seat | Real current holder |
 |---|---|
 | Head of Schools / Administrator (Chair) | Zakariya Olanrewaju Anofi |
-| Principal, Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
-| Principal, Sultan Hanafi Secular College | Dr. Adegoke Musa Olatunji |
-| Principal, Sultan Hanafi Islamiyyah College | Shaykh Abubakr Solah |
-| Head Teacher, Sultan Hanafi Basic School | Mrs. Kareemat Abdurazaq |
+| Principal (Mudeer), Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
+| Principal, Sultan Hanafi Royal College | Dr. Adegoke Musa Olatunji |
+| Principal (Ra'ees), Sultan Hanafi School of Islamic and Arabic Studies | Shaykh Abubakr Solah |
+| Head Teacher, Sultan Hanafi Nursery and Primary School | Mrs. Kareemat Abdurazaq |
 | Head, Sultan Hanafi Online & Distance Learning School | Vacant |
 
 The sixth seat is vacant because Sultan Hanafi Online & Distance
@@ -285,7 +285,7 @@ own resolution without amendment:
 
 | Committee | Mandate (summary) | Chair |
 |---|---|---|
-| Da'wah Committee | Da'wah planning, outreach programmes, institutional Da'wah activities | Principal, Islamiyyah College, or delegate |
+| Da'wah Committee | Da'wah planning, outreach programmes, institutional Da'wah activities | Principal (Ra'ees), School of Islamic and Arabic Studies, or delegate |
 | Academic Committee | Day-to-day academic policy, curriculum implementation, internal examinations administration | Vice Principal (Academics) |
 | Sports Committee | Sports, athletics, physical education, inter-house and external sporting competitions | Head of Student Affairs, or a designated Sports Coordinator |
 | Communications & Public Affairs Committee | Branding, public relations, media, publications, the website, social media | Head of Communications |
@@ -326,7 +326,7 @@ Facilities & Estates, and the Executive Support Offices — Strategic
 Planning, Quality Assurance, Legal & Compliance, Public Affairs).
 
 Mrs. Anofi-Badmus Fatimat Omolola (Vice Principal (Administration), Sultan
-Hanafi Secular College) holds a permanent Chapter V constitutional
+Hanafi Royal College) holds a permanent Chapter V constitutional
 executive office (Article 60/62) and sits outside this tier, not within
 it — she does not appear in the roster below.
 
@@ -334,7 +334,7 @@ it — she does not appear in the roster below.
 
 | Name | Role | Credentials |
 |---|---|---|
-| Mrs. Anofi-Abdulkareem Mariam Tope | Registrar, Secular College | B.Sc. Microbiology, PGDE |
+| Mrs. Anofi-Abdulkareem Mariam Tope | Registrar, Royal College | B.Sc. Microbiology, PGDE |
 | Mr. Oladele Abdulwasiu Adebayo | Head, Research & Development *(office pending Board recognition)* | B.A/M.A History, PGDE, TRCN |
 | Mr. Yusuf Shola Monsuru | HoD English | HND, Diploma Phonology & Public Speaking, TEFL |
 | Mr. Afolabi Morufu Olalekan | HoD Commerce & Management | B.Sc.(Ed) Accounting Edu., NCE |
@@ -378,8 +378,8 @@ Article 4(l), defining "Educator" as any person employed in a teaching
 capacity, including an HOD acting in that capacity). This includes
 Muhaffiz/Muhaffizah (the real term for Hifz-supervising staff, per the
 Role & Permission Matrix's own correction of the generic "Hifz
-Instructor" language) and Islamic & Arabic Studies Instructors at
-Islamiyyah College.
+Instructor" language) and Islamic and Arabic Studies Instructors at
+School of Islamic and Arabic Studies.
 
 **Current status.** This is a populated, institution-wide teaching
 workforce; this Handbook does not hold, and does not attempt to record,

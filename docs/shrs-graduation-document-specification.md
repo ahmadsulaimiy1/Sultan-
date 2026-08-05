@@ -101,7 +101,7 @@ Extends the existing `functions/api/certificates/verify.js` pattern rather than 
 - **Number:** `SHRS-TRAN-<year>-<seq6>`
 - **QR + content hash:** bottom of final page, same as above.
 - **Signatures:** Registrar (records custodian) + Examinations & Records officer, minimum.
-- **Layout:** tabular, term-by-term or subject-by-subject depending on institution (Secular College: subject grades by term; Qur'an College: Hifz stage progression + Islamiyyah level in place of subject grades — the transcript format is not one-size-fits-all across the five institutions, matching how `graduation_records` itself already branches by institution-specific fields). Multi-page if needed, each page numbered and referenced, with the QR/hash only on the final page but every page carrying the reference number in a running header.
+- **Layout:** tabular, term-by-term or subject-by-subject depending on institution (Royal College: subject grades by term; Qur'an College: Hifz stage progression + Islamiyyah level in place of subject grades — the transcript format is not one-size-fits-all across the five institutions, matching how `graduation_records` itself already branches by institution-specific fields). Multi-page if needed, each page numbered and referenced, with the QR/hash only on the final page but every page carrying the reference number in a running header.
 
 ### 6.3 Testimonial / Character Reference
 - **Number:** `SHRS-TEST-<year>-<seq6>`

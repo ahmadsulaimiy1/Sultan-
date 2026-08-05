@@ -240,8 +240,8 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 160)] }));
   B.push(body('Most prospectuses show you a school. This one is written to show you an institution — the governance behind it, the systems that run it, and the record it has already produced.'));
   B.push(body('My own background — two decades across banking, insurance, oil & gas, and consulting, an MSc from Edinburgh Business School, Heriot-Watt, a BSc from Oxford Brookes, and fellowships with the ACCA UK and ICAN — shapes how I have built this school.'));
-  B.push(panel('Sultan Hanafi Royal Schools is young — founded in July 2016, with the Secular College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
-  B.push(statQuad([['2016', 'Founded'], ['2021', 'Secular College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
+  B.push(panel('Sultan Hanafi Royal Schools is young — founded in July 2016, with the Royal College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
+  B.push(statQuad([['2016', 'Founded'], ['2021', 'Royal College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
@@ -271,8 +271,8 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('At a Glance'));
   B.push(h1('Institutional Overview'));
   B.push(lede('Sultan Hanafi Royal Schools in structural summary — five institutions, one governance architecture, one crest.'));
-  B.push(statQuad([['2016', 'Founded'], ['5', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Secular College Departments']]));
-  B.push(body("Basic School, Secular College, the Qur'an College, Islamiyyah College, and the newly established Online & Distance Learning School operate under one foundation, one crest, and one governance architecture. The fifth institution, recognised under the 2026 governance amendment, does not yet have students, a curriculum, or an appointed head."));
+  B.push(statQuad([['2016', 'Founded'], ['5', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Royal College Departments']]));
+  B.push(body("Basic School, Royal College, the Qur'an College, School of Islamic and Arabic Studies, and the newly established Online & Distance Learning School operate under one foundation, one crest, and one governance architecture. The fifth institution, recognised under the 2026 governance amendment, does not yet have students, a curriculum, or an appointed head."));
   B.push(pillar('1', 'Founded on Filial Honour', "Named for the founder's late father, Anofi Aliu Akano — grown from the Imowonla community outward."));
   B.push(pillar('2', 'Hybrid by Design', 'Islamic and secular education held as equally rigorous, not one subordinate to the other.'));
   B.push(pillar('3', 'Open to All', 'Open to Muslims and non-Muslims, males and females — a stated welcome, not a marketing gesture.'));
@@ -285,11 +285,11 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Our Journey, 2016–2026'));
   B.push(h1('A Timeline of What Was Actually Built'));
   timelineItem('2016', 'Foundation', 'Sultan Hanafi Royal Schools founded, rooted in the Imowonla community, Ikorodu, Lagos State.').forEach(p => B.push(p));
-  timelineItem('2021', 'Secular College Established', 'Junior and Senior Secondary programmes launched for students from age ten.').forEach(p => B.push(p));
+  timelineItem('2021', 'Royal College Established', 'Junior and Senior Secondary programmes launched for students from age ten.').forEach(p => B.push(p));
   timelineItem('2022', "Qur'an College & Islamic Studies Formalised", 'Formally established, with Saudi Arabian curriculum resources and Ijazah certification.').forEach(p => B.push(p));
   timelineItem('2024', 'Ramadan Competition & ALA Prize', 'Inaugural Ramadan Qur’an Competition; the ALA Endowment Prize established by Mr Lukman Anofi.').forEach(p => B.push(p));
   timelineItem('2025', 'Governor Commission', 'Commissioned by Engr. Seyi Makinde, Executive Governor of Oyo State.').forEach(p => B.push(p));
-  timelineItem('2026', 'Ministry Registration & Digital Campus', 'Secular College achieved Ministry Registration and sat its first BECE cohort; Guardian and Student Portals went live.').forEach(p => B.push(p));
+  timelineItem('2026', 'Ministry Registration & Digital Campus', 'Royal College achieved Ministry Registration and sat its first BECE cohort; Guardian and Student Portals went live.').forEach(p => B.push(p));
   timelineItem('2026', 'Governance Constitutional Amendment', 'The Board of Governors formally replaced the Board of Trustees; the Online & Distance Learning School was recognised as the institution’s fifth school.').forEach(p => B.push(p));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -416,9 +416,9 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Academic Milestones'));
   B.push(h1('Results the Institution Can Point To'));
   B.push(statQuad([['2026', 'Ministry Registered'], ['1st', 'BECE Cohort Sat'], ['2025', 'Governor Commission'], ['2024', 'ALA Prize Established']]));
-  B.push(body('By 2026, the Secular College had achieved Ministry Registration with the Lagos State Ministry of Education and seen its first cohort sit the Basic Education Certificate Examination.'));
+  B.push(body('By 2026, the Royal College had achieved Ministry Registration with the Lagos State Ministry of Education and seen its first cohort sit the Basic Education Certificate Examination.'));
   B.push(panel('"Sultan Hanafi Royal Schools stands as a blueprint for how education can be a vehicle for transformative social change within marginalised communities." — Punch Newspaper, November 2025', 'Press Recognition'));
-  B.push(pillar('7', 'Secular College Departments', 'Languages, Mathematics & ICT, Humanities, Science & Technology, Commerce & Management, Arabic, and Islamic Sciences.'));
+  B.push(pillar('7', 'Royal College Departments', 'Languages, Mathematics & ICT, Humanities, Science & Technology, Commerce & Management, Arabic, and Islamic Sciences.'));
   B.push(pillar('Q', "Qur'an College Ijazah Outcomes", 'A 24–36 month full-immersion Hifz programme, culminating in a certified, permanently recorded Ijazah.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }

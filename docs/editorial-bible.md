@@ -66,10 +66,10 @@ conventions.
 | R | Reliability | Trust and accountability toward parents, the board, and the community |
 
 ### Educational Philosophy
-A **hybrid curriculum by design, not compromise**: the Secular College and
+A **hybrid curriculum by design, not compromise**: the Royal College and
 Basic School run the Nigerian National Curriculum enriched with
 entrepreneurship, financial intelligence, leadership, and technology
-electives; Islamiyyah College and Qur'an College run the Saudi
+electives; School of Islamic and Arabic Studies and Qur'an College run the Saudi
 Arabian curriculum with Saudi-approved texts. Both tracks report to one
 board, one Head of Schools / Administrator, and one disciplinary and pastoral framework — the
 institution's real point of differentiation versus either a purely
@@ -104,7 +104,7 @@ Five institutions under one board, one standard:
 Early-years foundation blending secular and Islamic instruction. Led by
 Head Teacher Mrs. Kareemat Abdurazaq.
 
-### II. Secular College — Ages 10+, established 2021
+### II. Royal College — Ages 10+, established 2021
 Junior + senior secondary, seven academic departments:
 
 | Department | Subjects |
@@ -117,7 +117,7 @@ Junior + senior secondary, seven academic departments:
 | Arabic | Arabic, Nahwu & Sarfu, Aruud, Balaghah, Al-Adab-Al Arabiy, Al-Inshaw |
 | Islamic Sciences | Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat |
 
-### III. Islamiyyah College — All ages
+### III. School of Islamic and Arabic Studies — All ages
 Weekday (Mon–Wed, 2–6pm) and weekend (Sat–Sun, 9am–3pm) tracks for the
 wider Muslim Ummah, not limited to enrolled day/boarding students.
 
@@ -136,10 +136,10 @@ currently vacant — stated plainly here rather than inventing content
 for it.
 
 ### Progression Pathway
-Basic School → Secular College (secular + Islamic tracks run in
+Basic School → Royal College (secular + Islamic tracks run in
 parallel, not sequentially) → optional Qur'an College boarding track for
 memorisation-focused students aged 9–16 → Ijazaat on completion. The
-Islamiyyah College runs alongside all of the above as a
+School of Islamic and Arabic Studies runs alongside all of the above as a
 community-facing, non-exclusive offering.
 
 ### What Doesn't Exist Yet (do not fabricate)
@@ -303,7 +303,7 @@ assumption:
    translated copy — particularly the transliteration of personal names
    (e.g. "Zakariya Olanrewaju Anofi" → زكريا أولانريواجو أنوفي, and the
    ~17 names in the governance ledger) and the Islamic terminology on
-   the Secular College and Policies pages — per the translator's note
+   the Royal College and Policies pages — per the translator's note
    still shown on `/ar/`.
 3. **What's actually missing** — term dates, fee schedule, scholarship
    criteria — needs to come from SULTAN before those sections can be

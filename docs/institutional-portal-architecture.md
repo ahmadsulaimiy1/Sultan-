@@ -65,7 +65,7 @@ and contact details — zero redesign, exactly as specified.
 |---|---|---|
 | Governance | Board of Governors, Executive, Management Council | None seeded — see below |
 | Academic | Academic Affairs, Registrar's Office, Examinations, Admissions | None seeded |
-| School Leadership | Head Teacher, Principal (Secular College), Ra'ees, Mudeer | None seeded |
+| School Leadership | Head Teacher, Principal (Royal College), Ra'ees, Mudeer | None seeded |
 | Operational | Finance, HR, Student Affairs, Communications, Digital Services, Digital Learning | None seeded |
 | Institutional Services | Library, Alumni, Foundation, Certificate/Transcript, Digital Identity, Knowledge Base | None seeded |
 
@@ -84,8 +84,8 @@ admin-mediated action, the same way guardian and student records are
 never auto-created. Six real, publicly-named office-holders already
 exist as text on `pages/about-governance.html` (Head of Schools / Administrator Zakariya
 Olanrewaju Anofi; Registrar Mrs. Anofi-Abdulkareem Mariam Tope; Head
-Teacher Mrs. Kareemat Abdurazaq; three Principals — Secular College,
-Qur'an College, Islamiyyah College) but have **no `staff` row in
+Teacher Mrs. Kareemat Abdurazaq; three Principals — Royal College,
+Qur'an College, School of Islamic and Arabic Studies) but have **no `staff` row in
 the database** — that page is marketing copy, not a system of record.
 Wiring them in is one real admin action per person:
 
@@ -131,7 +131,7 @@ invented name or number):
 - **Management Council seats.** Ten named cross-institutional roles
   (Head of Schools / Administrator, Registrar, Finance Director, HR Director,
   Communications Director, Student Affairs Director, Principal
-  (Secular College), Head Teacher, Ra'ees, Mudeer) exist as vacant
+  (Royal College), Head Teacher, Ra'ees, Mudeer) exist as vacant
   `office_appointments` rows under Management Council. Several titles
   already have a real, publicly-named holder elsewhere on the site —
   this table does not assume that is the same seat until an admin
@@ -167,7 +167,7 @@ real (or as honestly vacant) as it was before this pass.
 ## Ra'ees / Mudeer — resolved
 
 The Head of Schools / Administrator has officially adopted **Ra'ees** as the Head of
-Institution title for the Sultan Hanafi Islamiyyah College,
+Institution title for the Sultan Hanafi School of Islamic and Arabic Studies,
 and **Mudeer** as the Head of Institution title for Sultan Hanafi Qur'an
 College, replacing "Principal" for both. This was a real naming decision
 within the owner's authority, not a fabrication — so the two former

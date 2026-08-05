@@ -99,7 +99,7 @@ export async function onRequestPost({ request, env }) {
     // student_classes is the authoritative multi-enrolment record — the
     // primary class above is mirrored here (is_primary = true), plus any
     // additionalPrograms (e.g. a Royal College student also enrolled in
-    // Qur'an College and/or Islamic & Arabic Studies at the same time).
+    // Qur'an College and/or Islamic and Arabic Studies at the same time).
     // Purely additive: re-calling this endpoint never removes an
     // existing enrolment, only adds/updates ones named in this request.
     if (classId) {

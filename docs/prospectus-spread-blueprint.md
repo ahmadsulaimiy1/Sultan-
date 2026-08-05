@@ -20,7 +20,7 @@ is a specification document, not a copywriting pass.*
 
 **Finding surfaced by this inventory pass, named rather than
 papered over**: two of the Four Institutions have **no dedicated real
-photography** anywhere in this project — Nursery & Primary and Arabic
+photography** anywhere in this project — Nursery and Primary and Arabic
 & Islamic Studies. Both institutions' own live-site academic pages use
 only the generic brand-mark, never a real campus photo. Bible Part VI
 is explicit that this project does not fill such a gap with stock or
@@ -92,7 +92,7 @@ this Blueprint can resolve on its own.
   teaching methods" commitment; what distinguishes SHRS from a
   secular-only or religious-only alternative (Bible Part I)
 
-## 6. Nursery & Primary (2pp)
+## 6. Nursery and Primary (2pp)
 
 - **Image**: `NEW PHOTOGRAPHY NEEDED` — no existing real photography
   for this institution anywhere in the project (see inventory note
@@ -112,7 +112,7 @@ this Blueprint can resolve on its own.
 - **At-a-glance panel**: Ages 10+ · Day · Est. 2021 (real descriptor)
 - **Copy target**: 150–200 words
 
-## 8. Islamic & Arabic Studies (2pp)
+## 8. Islamic and Arabic Studies (2pp)
 
 - **Image**: `NEW PHOTOGRAPHY NEEDED` — same finding as Nursery &
   Primary; the institution's own live page uses only the generic

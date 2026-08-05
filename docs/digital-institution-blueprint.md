@@ -54,7 +54,7 @@ boundary a digital system for it would need to enforce.
 
 | | |
 |---|---|
-| **Real actor** | Registrar, Secular College (Mrs. Anofi-Abdulkareem Mariam Tope) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
+| **Real actor** | Registrar, Royal College (Mrs. Anofi-Abdulkareem Mariam Tope) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
 | **Digital state today** | Partial, API-only: `admin/students.js` covers enrolment (create/update student + guardian + class), `admin/create-student-login.js` issues Student Portal credentials. Nothing else. |
 | **Workflows the office actually owns (per AC-02/PA-05)** | Admissions document verification, waiting-list administration, enrolment, promotion/probation threshold-setting (jointly with Principals), transfer review (incl. disciplinary/safeguarding history via DSL), withdrawal processing, exam-misconduct escalation, academic-appeal handling, full academic-record retention |
 | **Workflows with NO digital trace at all** | Promotion decisions, graduation, certificate issuance, transcript generation, third-party credential verification, transfer-in/out record, withdrawal record (only a status flag exists: `students.status`) |
@@ -101,10 +101,10 @@ boundary a digital system for it would need to enforce.
 
 | Institution | Real name | Page | Digital state |
 |---|---|---|---|
-| Basic School | "Nursery & Primary School," ages 2–10 | `academics/nursery-primary/` | Marketing only; can enrol students today (generic `institution`/`className` text) but no age/division-specific dashboard content |
-| Secular College | Junior **and** senior secondary combined | `academics/royal-college/` | Same — generic enrolment only |
+| Basic School | "Nursery and Primary School," ages 2–10 | `academics/nursery-primary/` | Marketing only; can enrol students today (generic `institution`/`className` text) but no age/division-specific dashboard content |
+| Royal College | Junior **and** senior secondary combined | `academics/royal-college/` | Same — generic enrolment only |
 | Qur'an College | 24–36 month day & boarding Hifz programme | `academics/quran-college/` | **Fully digitized**: dual-enrolment-aware, per-Juz' progress, 5-stage journey, Ijazah register — the one institution with a real module (Phase 2 of this engagement) |
-| Islamiyyah College | Full name is "School of Islamic & Arabic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
+| School of Islamic and Arabic Studies | Full name is "School of Islamic and Arabic Studies," weekday/weekend, open to the wider Muslim Ummah | `academics/arabic-islamic-studies/` | Generic enrolment only — no distinct curriculum/level model despite being a named division with its own real structure |
 
 ### Digital surfaces (built vs. not)
 

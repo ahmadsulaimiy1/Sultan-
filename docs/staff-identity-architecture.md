@@ -62,7 +62,7 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 
 - **`institutions`** — formalises the four institution names already
   used as free text in `classes.institution` (Basic School, Secular
-  College, Islamiyyah College, Qur'an College) into a real
+  College, School of Islamic and Arabic Studies, Qur'an College) into a real
   reference table, so offices/staff/roles can scope against an id.
   `classes.institution` itself is left unchanged (a live table with real
   student data — retrofitting it to a foreign key is real future work,
@@ -91,7 +91,7 @@ public in `constitution-governance-charter.md` and `about-governance.html`
 One table, `staff`, holding exactly the organisational-directory fields
 from §0: `staff_no` (Staff ID), `full_name`, `preferred_name`,
 `office_id`, `department_id`, `position_title` (free-text display label,
-e.g. "Principal, Secular College" — cosmetic, not the RBAC role itself),
+e.g. "Principal, Royal College" — cosmetic, not the RBAC role itself),
 `reports_to_staff_id` (self-referencing), `institution_id` (primary
 institution), `date_joined`, `status` (`active`/`suspended`/`archived`
 — the same three-state vocabulary already used for students, Archive-

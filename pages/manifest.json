@@ -3,7 +3,7 @@
     "slug": "home",
     "output": "index.html",
     "title": "Sultan Hanafi Royal Schools — A Flagship of Royal Islamic & Secular Education",
-    "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising the Basic School, Secular College, Islamiyyah College, Qur'an College, and the Online & Distance Learning School.",
+    "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School.",
     "contentFile": "pages/home.html",
     "altHref": "/ar/"
   },
@@ -27,7 +27,7 @@
     "slug": "academics",
     "output": "academics/index.html",
     "title": "Academics — Sultan Hanafi Royal Schools",
-    "description": "Five institutions under one Board of Governors: the Basic School, Secular College, Islamiyyah College, Qur'an College, and the Online & Distance Learning School. Compare them and find the right fit.",
+    "description": "Five institutions under one Board of Governors: the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School. Compare them and find the right fit.",
     "contentFile": "pages/academics.html",
     "altHref": "/ar/academics/"
   },
@@ -42,7 +42,7 @@
   {
     "slug": "academics-royal-college",
     "output": "academics/royal-college/index.html",
-    "title": "Secular College — Sultan Hanafi Royal Schools",
+    "title": "Royal College — Sultan Hanafi Royal Schools",
     "description": "Junior and senior secondary education across seven academic departments, integrating the Nigerian National Curriculum with Arabic and Islamic Sciences.",
     "contentFile": "pages/academics-royal-college.html",
     "altHref": "/ar/academics/royal-college/"
@@ -50,7 +50,7 @@
   {
     "slug": "academics-arabic-islamic-studies",
     "output": "academics/arabic-islamic-studies/index.html",
-    "title": "Islamiyyah College — Sultan Hanafi Royal Schools",
+    "title": "School of Islamic and Arabic Studies — Sultan Hanafi Royal Schools",
     "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
     "contentFile": "pages/academics-arabic-islamic-studies.html",
     "altHref": "/ar/academics/arabic-islamic-studies/"

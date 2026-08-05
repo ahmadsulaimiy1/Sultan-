@@ -293,7 +293,7 @@ sections[0].children.push(pageBreak());
   B.push(body("Morning begins the same way for every child on campus, whichever of the five schools they belong to — with the day's first prayer, before the first lesson of any kind. From there, the paths diverge."));
   B.push(chapter(1, 'The Nursery Child', 'Play-based learning woven with numeracy, literacy, and Islamic values.'));
   B.push(chapter(2, 'The Basic School Pupil', 'National curriculum lessons enriched with entrepreneurship and digital fluency.'));
-  B.push(chapter(3, 'The Secular College Student', 'A full academic timetable across seven departments.'));
+  B.push(chapter(3, 'The Royal College Student', 'A full academic timetable across seven departments.'));
   B.push(chapter(4, "The Qur'an College Student", "Hours of memorisation and Tajwid practice with a Muhaffiz."));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -303,9 +303,9 @@ sections[0].children.push(pageBreak());
   const B = [];
   B.push(eyebrow('The Weekly Rhythm'));
   B.push(h1('A Week Has Its Own Shape Too'));
-  B.push(lede('Beyond the daily timetable, the week carries its own rhythm — anchored by Jumu’ah and the weekend Islamic & Arabic Studies programme.', { size: 22 }));
+  B.push(lede('Beyond the daily timetable, the week carries its own rhythm — anchored by Jumu’ah and the weekend Islamic and Arabic Studies programme.', { size: 22 }));
   B.push(chapter(1, "Friday, Jumu'ah", "The week's spiritual centre — congregational prayer that reorders everything around it."));
-  B.push(chapter(2, 'Weekend Islamic & Arabic Studies', "A dedicated weekend programme at Islamiyyah College, open beyond the Qur'an College's weekday track."));
+  B.push(chapter(2, 'Weekend Islamic and Arabic Studies', "A dedicated weekend programme at School of Islamic and Arabic Studies, open beyond the Qur'an College's weekday track."));
   B.push(chapter(3, 'The Ramadan Season', 'The busiest stretch of the calendar, culminating in the annual Qur’an Competition.'));
   B.push(pullquote('And say: My Lord, increase me in knowledge.', 'Surah Taha · 20:114'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
@@ -373,7 +373,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Academic Success Stories'));
   B.push(h1('Milestones That Belong to Every Student'));
   B.push(statQuad([['2026', 'Ministry Registered'], ['1st', 'BECE Cohort Sat'], ['2025', 'Governor Commission'], ['7', 'Academic Departments']]));
-  B.push(body('By 2026, the Secular College had achieved Ministry Registration and seen its first cohort sit the Basic Education Certificate Examination.'));
+  B.push(body('By 2026, the Royal College had achieved Ministry Registration and seen its first cohort sit the Basic Education Certificate Examination.'));
   B.push(pullquote('Sultan Hanafi Royal Schools stands as a blueprint for how education can be a vehicle for transformative social change within marginalised communities.', 'Punch Newspaper · November 2025'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -395,7 +395,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('Boarding Life'));
   B.push(h1('A Second Home'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/boarding-dining.jpg', 460)] }));
-  B.push(body("For Secular College and Qur'an College students who board, campus life extends well past the final lesson bell. Shared meals, structured evening study, and the five daily prayers give boarding students a rhythm of their own."));
+  B.push(body("For Royal College and Qur'an College students who board, campus life extends well past the final lesson bell. Shared meals, structured evening study, and the five daily prayers give boarding students a rhythm of their own."));
   B.push(statQuad([['2', 'Boarding Schools'], ['5', 'Daily Prayers'], ['Shared', 'Meals & Study'], ['1', 'Community']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
@@ -418,9 +418,9 @@ sections[0].children.push(pageBreak());
   B.push(h1("Every Child's Whole Story"));
   [
     ['Basic School', 'From age two, the foundation of faith and academic discipline is laid.'],
-    ['Secular College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.'],
+    ['Royal College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.'],
     ["Qur'an College", 'A parallel track for full Hifz immersion, open to students aged nine to sixteen.'],
-    ['Islamiyyah College', 'Weekday and weekend programmes running alongside every other stage.'],
+    ['School of Islamic and Arabic Studies', 'Weekday and weekend programmes running alongside every other stage.'],
     ['Online & Distance Learning School', 'Newly established in 2026 — headship not yet appointed, with no students or curriculum yet.'],
   ].forEach(([t, d]) => { B.push(new Paragraph({ spacing: { before: 140, after: 20 }, children: [new TextRun({ text: t, font: HEAD_FONT, size: 22, bold: true, color: FOREST })] })); B.push(body(d)); });
   B.push(eyebrow('Join Their Story'));

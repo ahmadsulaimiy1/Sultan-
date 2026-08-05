@@ -44,7 +44,7 @@ here means the system will not create the record without it, today.
 | `TCH` role grant | **Mandatory to use the Teacher Portal** | The Permission Engine denies access without it. |
 | Institutional email | Recommended | Not enforced by any constraint today — no `email` column exists on `staff` at all; this is a real schema gap, not just a data gap (see the Identity Migration Register's note on Teacher Identity Phase 2 requiring this). |
 | Department assignment | Recommended, blocked on Board adoption | `staff.department_id` exists, but the `departments` table is empty until the Board adopts a framework (see the Master Academic Structure Register §5). |
-| Subject specialisation, teaching load, assigned classes | Recommended | Structurally supported via `teacher_class_assignments`; genuinely real for the Secular College JSS/SSS and Qur'an College/Islamic Studies faculty now named in the Master Academic Structure Register §4 — **not yet entered as real `staff`/`teacher_class_assignments` rows.** |
+| Subject specialisation, teaching load, assigned classes | Recommended | Structurally supported via `teacher_class_assignments`; genuinely real for the Royal College JSS/SSS and Qur'an College/Islamic Studies faculty now named in the Master Academic Structure Register §4 — **not yet entered as real `staff`/`teacher_class_assignments` rows.** |
 | Academic qualifications, employment status | Recommended | No dedicated column exists for qualifications today (`position_title` is the closest fit) — real data now exists (§4d of the Register) for six Qur'an College/Islamic Studies faculty and could be entered as free text now, or wait for a dedicated field. |
 
 ## Staff (all offices)

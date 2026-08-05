@@ -233,14 +233,14 @@ function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pendin
 
 institutionSpread('Basic School', null, null,
   [['Ages', '2–10'], ['Format', 'Day'], ['Pathway', 'Primary 1–6']],
-  "Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Secular College's secondary pathway.",
+  "Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Royal College's secondary pathway.",
   true);
 
-institutionSpread('Secular College', 'gallery/chemistry-laboratory.jpg', 460,
+institutionSpread('Royal College', 'gallery/chemistry-laboratory.jpg', 460,
   [['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']],
   "SHRS's mainstream secondary academic programme — Junior and Senior Secondary education delivered with the same rigour named in our Mission, in dedicated science and general-academic facilities.");
 
-institutionSpread('Islamiyyah College', null, null,
+institutionSpread('School of Islamic and Arabic Studies', null, null,
   [['Ages', 'All ages'], ['Format', 'Weekday & weekend']],
   'Dedicated Arabic language and Islamic Studies programmes, open across all ages — deepening the Islamic-knowledge half of our Mission alongside the secular academic pathways.',
   true);

@@ -72,7 +72,7 @@ export async function regenerateGuardianIdentityNo(sql, guardianId) {
 // rather than permanent, e.g. SHRS-RC-26-000154 (Royal College, 2026
 // admission cohort). SCHOOL is the same four-institution split used
 // sitewide, coded to match this specific number's own directive rather
-// than reusing the staff UNIT codes (which spell Nursery & Primary as
+// than reusing the staff UNIT codes (which spell Nursery and Primary as
 // "NPS", not "NP") — the two numbering families are independent by
 // design. Sequence is scoped per school per admission year, matching
 // the existing COUNT(*)+1 convention already used for certificate and
@@ -81,8 +81,8 @@ export async function regenerateGuardianIdentityNo(sql, guardianId) {
 // for staff/student/guardian numbers.
 const SCHOOL_CODE_BY_INSTITUTION_NAME = {
   'Royal College': 'RC',
-  'Nursery & Primary': 'NP',
-  'Islamic & Arabic Studies': 'IAS',
+  'Nursery and Primary': 'NP',
+  'Islamic and Arabic Studies': 'IAS',
   "Qur'an College": 'QC',
 };
 
@@ -120,8 +120,8 @@ function formatYYMMDD(date) {
 //
 // UNIT   — which of the four schools this staff member's real office/
 //          institution places them in, or a school-wide body:
-//            RC=Royal College, NPS=Nursery & Primary,
-//            IAS=Islamic & Arabic Studies, QC=Qur'an College,
+//            RC=Royal College, NPS=Nursery and Primary,
+//            IAS=Islamic and Arabic Studies, QC=Qur'an College,
 //            BOT=Board of Governors (incl. its standing committees),
 //            MGT=Management Council, HQ=every other school-wide office
 //          (Executive, Finance, HR, ICT, etc.)
@@ -178,8 +178,8 @@ const OFFICE_CODE_BY_SLUG = {
 
 const UNIT_BY_INSTITUTION_NAME = {
   'Royal College': 'RC',
-  'Nursery & Primary': 'NPS',
-  'Islamic & Arabic Studies': 'IAS',
+  'Nursery and Primary': 'NPS',
+  'Islamic and Arabic Studies': 'IAS',
   "Qur'an College": 'QC',
 };
 

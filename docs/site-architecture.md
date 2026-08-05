@@ -29,8 +29,8 @@ not leaving one site for another.
 /about/governance                  Chapter IV cont.: Board, Management Team, Key Staff (full ledger)
 /academics                         Chapter V: hub — the institutions, side by side (five recognised; four have a dedicated sub-page below)
 /academics/nursery-primary         Basic School (ages 2–10)
-/academics/royal-college           Secular College — 7 departments, curriculum tables
-/academics/arabic-islamic-studies  Islamiyyah College
+/academics/royal-college           Royal College — 7 departments, curriculum tables
+/academics/arabic-islamic-studies  School of Islamic and Arabic Studies
 /academics/quran-college           Qur'an College — Ijazaat pathway
 /boarding                          Chapter VI: Boarding Facility
 /admission                         Chapter VII: 12-step process, documents, [fees/calendar placeholder]
@@ -53,7 +53,7 @@ individually-linkable benefit without the fragmentation cost.
 **On `/academics`:** built as a hub page, not a redirect — a proper
 side-by-side comparison of the institutions (age range, curriculum
 source, credential/outcome) before the visitor picks a track. This is
-the site's real conversion fork: a parent choosing Secular College vs.
+the site's real conversion fork: a parent choosing Royal College vs.
 Qur'an College vs. the weekend Islamiyyah program is the single
 most consequential decision the site needs to support. A fifth
 institution, Sultan Hanafi Online & Distance Learning School, was
@@ -86,8 +86,8 @@ already built, expanded to link every top-level page plus the four
 academic sub-pages and the policies index.
 
 **Breadcrumbs:** a folio-style breadcrumb replaces a generic
-`Home > Academics > Secular College` chevron trail — e.g.
-`Chapter V · Academics — Secular College` at the top of each academic
+`Home > Academics > Royal College` chevron trail — e.g.
+`Chapter V · Academics — Royal College` at the top of each academic
 sub-page, consistent with the folio device already in use.
 
 ---
@@ -135,7 +135,7 @@ College or Basic School → Admission → Contact/WhatsApp.
 Admission.
 
 **Community member seeking weekend Islamic studies (non-enrolling):**
-Home → Academics hub → Islamiyyah College → Contact
+Home → Academics hub → School of Islamic and Arabic Studies → Contact
 (this audience does not go through Admission's 12-step process, which is
 built for the day/boarding schools — the site should say so explicitly
 on that page rather than funnelling everyone through one form).

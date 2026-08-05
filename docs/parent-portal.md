@@ -108,7 +108,7 @@ link expires after 7 days — if it does, use `admin/reset-password.js`
 below to generate a fresh one.
 
 A student can also belong to more than one class at once (e.g. Royal
-College *and* Qur'an College *and* Islamic & Arabic Studies) — see
+College *and* Qur'an College *and* Islamic and Arabic Studies) — see
 `student-portal.md`'s `additionalPrograms` field for that.
 
 Calling this endpoint again with the same `admissionNo` updates that

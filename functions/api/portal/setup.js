@@ -390,7 +390,7 @@ const STATEMENTS = [
   // the same "admin enters real data on purpose" convention already
   // used for guardians/students, never auto-created by this endpoint.
   `INSERT INTO institutions (name) VALUES
-    ('Nursery & Primary'), ('Royal College'), ('Islamic & Arabic Studies'), ('Qur''an College')
+    ('Nursery and Primary'), ('Royal College'), ('Islamic and Arabic Studies'), ('Qur''an College')
     ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
@@ -405,7 +405,7 @@ const STATEMENTS = [
     ('FIN', 'Finance Officer', 'proposed', 'All institutions', 'FN-01 establishes the principle; no officer role documented'),
     ('TCH', 'Teacher', 'proposed', 'Own assigned classes/subjects only', 'Institution-agnostic'),
     ('MUH', 'Muhaffiz / Muhaffizah', 'proposed', 'Own assigned Hifz students only', 'IQ-01, IQ-02'),
-    ('ARB', 'Islamic & Arabic Studies Instructor', 'proposed', 'Own assigned classes, Sultan Hanafi Islamiyyah College', 'Mirrors TCH scope for that division'),
+    ('ARB', 'Islamic and Arabic Studies Instructor', 'proposed', 'Own assigned classes, Sultan Hanafi School of Islamic and Arabic Studies', 'Mirrors TCH scope for that division'),
     ('QC-OFF', 'Qur''an College Officer', 'proposed', 'Qur''an College institution-wide', 'Institution-level oversight above individual Muhaffiz assignments'),
     ('SA', 'Student Affairs Officer', 'proposed', 'All institutions', 'SD-05/06/07 Missing/Partial — role and governing policy should arrive together'),
     ('BRD', 'Boarding Officer', 'proposed', 'Boarding students only', 'SD-04 published; no digital officer role yet'),
@@ -486,15 +486,15 @@ const STATEMENTS = [
   `UPDATE offices SET name = 'Head of Schools / Administrator',
       description = 'The Founder, Head of Schools & Administrator''s office — institutional oversight, strategic direction, and final executive decision-making across all institutions.'
     WHERE slug = 'executive' AND name <> 'Head of Schools / Administrator'`,
-  `UPDATE offices SET name = 'Head Teacher — Sultan Hanafi Basic School',
-      description = 'Leadership of Sultan Hanafi Basic School — day-to-day academic and pastoral operations.'
-    WHERE slug = 'head-teacher' AND name <> 'Head Teacher — Sultan Hanafi Basic School'`,
-  `UPDATE offices SET name = 'Principal — Sultan Hanafi Secular College',
-      description = 'Leadership of Sultan Hanafi Secular College — secondary academic operations, staff supervision, and student discipline.'
-    WHERE slug = 'principal-royal-college' AND name <> 'Principal — Sultan Hanafi Secular College'`,
-  `UPDATE offices SET name = 'Office of the Principal, Sultan Hanafi Islamiyyah College',
-      description = 'Head of Institution, Sultan Hanafi Islamiyyah College — Principal is the official title. Arabic language and Islamic studies programme oversight.'
-    WHERE slug = 'raees' AND name <> 'Office of the Principal, Sultan Hanafi Islamiyyah College'`,
+  `UPDATE offices SET name = 'Head Teacher — Sultan Hanafi Nursery and Primary School',
+      description = 'Leadership of Sultan Hanafi Nursery and Primary School — day-to-day academic and pastoral operations.'
+    WHERE slug = 'head-teacher' AND name <> 'Head Teacher — Sultan Hanafi Nursery and Primary School'`,
+  `UPDATE offices SET name = 'Principal — Sultan Hanafi Royal College',
+      description = 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'
+    WHERE slug = 'principal-royal-college' AND name <> 'Principal — Sultan Hanafi Royal College'`,
+  `UPDATE offices SET name = 'Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies',
+      description = 'Head of Institution, Sultan Hanafi School of Islamic and Arabic Studies — Principal is the official title. Arabic language and Islamic studies programme oversight.'
+    WHERE slug = 'raees' AND name <> 'Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies'`,
   `UPDATE offices SET name = 'Office of the Principal, Sultan Hanafi Qur''an College',
       description = 'Head of Institution, Sultan Hanafi Qur''an College — Principal is the official title. Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'
     WHERE slug = 'mudeer' AND name <> 'Office of the Principal, Sultan Hanafi Qur''an College'`,
@@ -505,13 +505,13 @@ const STATEMENTS = [
   `UPDATE office_appointments SET appointment_title = 'Founder & Head of Schools'
     WHERE appointment_title = 'Founder & CEO'
       AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
-  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Secular College'
+  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Royal College'
     WHERE appointment_title = 'Principal, Royal College'
       AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
-  `UPDATE office_appointments SET appointment_title = 'Head Teacher, Sultan Hanafi Basic School'
-    WHERE appointment_title = 'Head Teacher, Nursery & Primary'
+  `UPDATE office_appointments SET appointment_title = 'Head Teacher, Sultan Hanafi Nursery and Primary School'
+    WHERE appointment_title = 'Head Teacher, Nursery and Primary'
       AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
-  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Islamiyyah College'
+  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi School of Islamic and Arabic Studies'
     WHERE appointment_title = 'Ra''ees'
       AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
   `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Qur''an College'
@@ -532,9 +532,9 @@ const STATEMENTS = [
     ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
     ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
     ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
-    ('Head Teacher — Sultan Hanafi Basic School', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Basic School — day-to-day academic and pastoral operations.'),
-    ('Principal — Sultan Hanafi Secular College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Secular College — secondary academic operations, staff supervision, and student discipline.'),
-    ('Office of the Principal, Sultan Hanafi Islamiyyah College', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi Islamiyyah College — Principal is the official title. Arabic language and Islamic studies programme oversight.'),
+    ('Head Teacher — Sultan Hanafi Nursery and Primary School', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Nursery and Primary School — day-to-day academic and pastoral operations.'),
+    ('Principal — Sultan Hanafi Royal College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'),
+    ('Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi School of Islamic and Arabic Studies — Principal is the official title. Arabic language and Islamic studies programme oversight.'),
     ('Office of the Principal, Sultan Hanafi Qur''an College', 'academic', 'school_leadership', 'mudeer', 'Head of Institution, Sultan Hanafi Qur''an College — Principal is the official title. Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
     ('Office of the Principal, Sultan Hanafi Online & Distance Learning School', 'academic', 'school_leadership', 'online-distance-learning', 'Head of Institution, Sultan Hanafi Online & Distance Learning School — the institution''s fifth school, established under the amended constitution. Head office currently vacant.'),
     ('Human Resources', 'support', 'operational', 'hr', 'Recruitment, staff records, leave, and performance administration. Explicitly out of scope for the current Staff Identity system (an organisational directory, not a personnel/payroll file) — this office exists as a directory entry pending that system''s build.'),
@@ -695,8 +695,8 @@ const STATEMENTS = [
       ('management-council', 'Founder & Head of Schools'), ('management-council', 'Registrar'),
       ('management-council', 'Finance Director'), ('management-council', 'HR Director'),
       ('management-council', 'Communications Director'), ('management-council', 'Student Affairs Director'),
-      ('management-council', 'Principal, Sultan Hanafi Secular College'), ('management-council', 'Head Teacher, Sultan Hanafi Basic School'),
-      ('management-council', 'Principal, Sultan Hanafi Islamiyyah College'), ('management-council', 'Principal, Sultan Hanafi Qur''an College')
+      ('management-council', 'Principal, Sultan Hanafi Royal College'), ('management-council', 'Head Teacher, Sultan Hanafi Nursery and Primary School'),
+      ('management-council', 'Principal, Sultan Hanafi School of Islamic and Arabic Studies'), ('management-council', 'Principal, Sultan Hanafi Qur''an College')
     ) AS seat(office_slug, title) ON seat.office_slug = o.slug
     WHERE NOT EXISTS (
       SELECT 1 FROM office_appointments oa
@@ -1815,10 +1815,10 @@ async function handle({ request, env }) {
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${qStudentId})`;
 
         // Dual enrolment demo: this same student is also enrolled in
-        // Islamic & Arabic Studies, alongside their primary Qur'an
+        // Islamic and Arabic Studies, alongside their primary Qur'an
         // College programme — exactly the "belongs to more than one
         // programme at once" case the Student Portal needs to support.
-        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic & Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
+        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic and Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${arCls.rows[0].id}, false)`;
 
         const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
@@ -1885,7 +1885,7 @@ async function handle({ request, env }) {
       const sampleProducts = [
         ['textbooks', 'Nigerian Primary Mathematics — Basic 4', 'Core mathematics textbook aligned with the Nigerian primary curriculum.', 3500],
         ['exercise_books', 'A5 Exercise Book (Pack of 5)', '40-leaf ruled exercise books, school-standard size.', 1500],
-        ['uniforms', 'Sultan Hanafi Secular College Uniform Set (Junior)', 'Shirt, trousers/pinafore, and tie in the school colours.', 15000],
+        ['uniforms', 'Sultan Hanafi Royal College Uniform Set (Junior)', 'Shirt, trousers/pinafore, and tie in the school colours.', 15000],
         ['bags', 'SHRS Backpack (Standard)', 'Durable school backpack with the SHRS crest.', 8000],
         ['stationery', 'Geometry Set', 'Ruler, compass, protractor, and set squares in a case.', 1200],
         ['quran_materials', "Tajweed Mushaf — Pocket Size", 'Uthmani-script Mushaf with colour-coded tajweed rules.', 4500],

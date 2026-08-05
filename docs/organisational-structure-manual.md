@@ -82,9 +82,9 @@ flowchart TD
 
   subgraph C["C. Management Team"]
     C_HoS["Head of Schools / Administrator<br/>Zakariya Olanrewaju Anofi"]
-    C_P1["Principal, Qur'an College<br/>Imam Ahmad Sulaimiy"]
-    C_P2["Principal, Secular College<br/>Dr. Adegoke Musa Olatunji"]
-    C_P3["Principal, Islamiyyah College<br/>Shaykh Abubakr Solah"]
+    C_P1["Principal (Mudeer), Qur'an College<br/>Imam Ahmad Sulaimiy"]
+    C_P2["Principal, Royal College<br/>Dr. Adegoke Musa Olatunji"]
+    C_P3["Principal (Ra'ees), School of Islamic and Arabic Studies<br/>Shaykh Abubakr Solah"]
     C_HT["Head Teacher, Basic School<br/>Mrs. Kareemat Abdurazaq"]
     C_P5["Head, Online &amp; Distance Learning School<br/>(Vacant)"]
   end
@@ -180,9 +180,9 @@ flowchart TD
 
   subgraph Institutions["The Five Institutions"]
     P1["Principal<br/>Sultan Hanafi Qur'an College<br/>Imam Ahmad Sulaimiy"]
-    P2["Principal<br/>Sultan Hanafi Secular College<br/>Dr. Adegoke Musa Olatunji"]
-    P3["Principal<br/>Sultan Hanafi Islamiyyah College<br/>Shaykh Abubakr Solah"]
-    P4["Head Teacher<br/>Sultan Hanafi Basic School<br/>Mrs. Kareemat Abdurazaq"]
+    P2["Principal<br/>Sultan Hanafi Royal College<br/>Dr. Adegoke Musa Olatunji"]
+    P3["Principal<br/>Sultan Hanafi School of Islamic and Arabic Studies<br/>Shaykh Abubakr Solah"]
+    P4["Head Teacher<br/>Sultan Hanafi Nursery and Primary School<br/>Mrs. Kareemat Abdurazaq"]
     P5["Head<br/>Sultan Hanafi Online &amp; Distance Learning School<br/>Vacant — no students or curriculum yet"]
   end
 

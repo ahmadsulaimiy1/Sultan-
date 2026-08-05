@@ -37,7 +37,7 @@
       },
     },
     'principal-royal-college': {
-      tagline: 'Sultan Hanafi Secular College Academic Command Centre',
+      tagline: 'Sultan Hanafi Royal College Academic Command Centre',
       greeting: 'Academic operations are active.',
       icon: '<path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>',
       summary: function (ops) {

@@ -112,7 +112,7 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | Code | Role | Status | Scope | Real person / source |
 |---|---|---|---|---|
 | **EXE** | Head of Schools / Administrator / Executive Leadership *(role code unchanged; label updated per the 2026-08-04 amendment — no office of CEO exists)* | Established | All institutions | GV-01; Zakariya Olanrewaju Anofi, Founder, Chairman of the Board of Governors & Head of Schools / Administrator |
-| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Basic School (Mrs. Kareemat Abdurazaq) |
+| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Kareemat Abdurazaq) |
 | **VP** | Vice Principal | Proposed | Own institution, mirrors Principal minus final approval authority | Not yet documented — recommended where an institution's size warrants it |
 | **REG** | Registrar | Established | All institutions (academic records are institution-wide) | AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope |
 | **AREG** | Assistant Registrar | Proposed | Delegated subset of Registrar's scope | Not yet documented — recommended once Registrar workload requires it |
@@ -120,7 +120,7 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | **FIN** | Finance Officer (covers Accounts Officer / Bursar) | Proposed | All institutions | FN-01 establishes the *principle* of financial control; no officer role documented. Consolidated into one code — split only if the school later separates the duties |
 | **TCH** | Teacher (covers Subject Teacher / Class Teacher) | Proposed | Own assigned classes/subjects only | Institution-agnostic; the role that unlocks a real Teacher Portal |
 | **MUH** | Muhaffiz / Muhaffizah | Proposed | Own assigned Hifz students only | IQ-01, IQ-02's real term for this role |
-| **ARB** | Islamic & Arabic Studies Instructor | Proposed | Own assigned classes, Sultan Hanafi Islamiyyah College | Mirrors TCH scope for that division |
+| **ARB** | Islamic and Arabic Studies Instructor | Proposed | Own assigned classes, Sultan Hanafi School of Islamic and Arabic Studies | Mirrors TCH scope for that division |
 | **QC-OFF** | Qur'an College Officer | Proposed | Qur'an College institution-wide | Institution-level oversight above individual Muhaffiz assignments |
 | **SA** | Student Affairs Officer | Proposed | All institutions | SD-05/06/07 (Attendance/Welfare/Behaviour policies) are Missing/Partial — this role and its governing policy should arrive together |
 | **BRD** | Boarding Officer (covers House Parent) | Proposed | Boarding students only | SD-04 Boarding Regulations is published; no digital officer role yet |

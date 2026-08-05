@@ -54,7 +54,7 @@ export async function onRequestGet({ request, env }) {
         sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
         // A student may belong to more than one class at once (e.g. a
         // Royal College student also enrolled in Qur'an College and/or
-        // Islamic & Arabic Studies) — see sql/schema.sql's student_classes.
+        // Islamic and Arabic Studies) — see sql/schema.sql's student_classes.
         sql`
           SELECT c.institution, c.name AS class_name, sc.is_primary
           FROM student_classes sc JOIN classes c ON c.id = sc.class_id

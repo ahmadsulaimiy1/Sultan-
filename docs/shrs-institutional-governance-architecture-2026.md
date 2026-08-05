@@ -101,9 +101,9 @@ Restore all seven, with names corrected for consistency (the project used at lea
 4. Science & Technology Department
 5. **Commerce & Management Department** (recovered — Financial Accounting, Commerce, Economics, Bookkeeping, Marketing, Business Studies)
 6. Arabic Language Department
-7. Islamic Studies Department (standardise on "Islamic Studies," not "Islamic Sciences" — both appear in the record; "Studies" is the more common international register and matches the School of Islamic & Arabic Studies' own name)
+7. Islamic Studies Department (standardise on "Islamic Studies," not "Islamic Sciences" — both appear in the record; "Studies" is the more common international register and matches the School of Islamic and Arabic Studies' own name)
 
-One further correction the record itself already makes correctly and should not be undone: **Qur'an College is not a subset of "Islamic Studies."** It is a separate institution with its own head (the Mudeer) and its own distinct curriculum register (Hifz, Tajweed, Qira'aat, Ijazah, Muraja'ah). Keep it institutionally separate from the Islamic Studies *department*, which sits inside the School of Islamic & Arabic Studies and Royal College's own curriculum.
+One further correction the record itself already makes correctly and should not be undone: **Qur'an College is not a subset of "Islamic Studies."** It is a separate institution with its own head (the Mudeer) and its own distinct curriculum register (Hifz, Tajweed, Qira'aat, Ijazah, Muraja'ah). Keep it institutionally separate from the Islamic Studies *department*, which sits inside the School of Islamic and Arabic Studies and Royal College's own curriculum.
 
 ---
 
@@ -124,7 +124,7 @@ Two committees are **already named and adopted** on the public governance page a
 Your five committees are real, current fact about the school, and I am not overriding them. Here is my judgment on each, and on how they interact with the fictional six-name list the project's own marketing copy separately invented (Academic, Disciplinary, Welfare, Examination, Events, Safeguarding).
 
 - **Academic Committee** — keep as named. Standard, correctly registered, no issue.
-- **Da'wah Committee** — keep the name and the function; it is authentically core to SHRS's identity, more so than at a generic school, and does not read as over-fitting. One structural note: SHRS has *two* distinct Islamic-education institutions (Qur'an College and the School of Islamic & Arabic Studies), each with its own Head. A single cross-institutional Da'wah Committee needs an explicit charter clause stating how it relates to those two Principals' authority, or it risks becoming a shadow chain of command that neither Head formally controls.
+- **Da'wah Committee** — keep the name and the function; it is authentically core to SHRS's identity, more so than at a generic school, and does not read as over-fitting. One structural note: SHRS has *two* distinct Islamic-education institutions (Qur'an College and the School of Islamic and Arabic Studies), each with its own Head. A single cross-institutional Da'wah Committee needs an explicit charter clause stating how it relates to those two Principals' authority, or it risks becoming a shadow chain of command that neither Head formally controls.
 - **Sports Committee** — keep as named. Correctly registered, standard co-curricular committee.
 - **Research & Transformation Committee** — **rename to Academic Research & Innovation Committee.** Two reasons. First, "Transformation" is exactly the consulting/corporate register your own brief asks me to strike, even applied to a committee rather than an office title — the same discipline should apply. Second, there is already a real named individual role, "Head, Research & Development," at Royal College; running a parallel "Transformation Committee" without stating that this Head chairs it risks an authority collision over who actually leads research direction. The renamed committee should be chaired by that same Head of Research & Development, and "Innovation" naturally connects it to the existing Digital Learning & Innovation office.
 - **Social & Welfare Committee** — keep, close enough to the "Welfare Committee" already present in the aspirational marketing list to be recognised as the same body, not a new one. Write an explicit boundary against the Student Affairs *office*: the Committee is the volunteer/rotating staff-and-student body organising events and pastoral activity; Student Affairs is the permanent professional administrative function behind it.
@@ -195,7 +195,7 @@ graph TD
   HSA --> MC["Management Council<br/>(Head of Schools / Administrator + 5 Institution Heads + Functional Directors — peers)"]
   MC --> ESO["Executive Support Offices:<br/>Strategic Planning · Quality Assurance ·<br/>Legal &amp; Compliance · Public Affairs"]
   MC --> ADM["Administrative Authority:<br/>The Registry · Bursary · HR · ICT ·<br/>Student Affairs · Communications · Library ·<br/>Alumni · Foundation · Digital Identity ·<br/>Knowledge Base · Certificates &amp; Transcripts"]
-  MC --> HEADS["5 Institution Heads:<br/>Principal (Secular College) · Ra'ees (Islamiyyah College) ·<br/>Mudeer (Qur'an College) · Head Teacher (Basic School) ·<br/>Head, Online &amp; Distance Learning School (vacant)"]
+  MC --> HEADS["5 Institution Heads:<br/>Principal (Royal College) · Ra'ees (School of Islamic and Arabic Studies) ·<br/>Mudeer (Qur'an College) · Head Teacher (Basic School) ·<br/>Head, Online &amp; Distance Learning School (vacant)"]
   HEADS --> AA["Academic Affairs Office + Examinations Office<br/>(Academic Authority)"]
   AA --> HOD["7 Heads of Department:<br/>Languages · Mathematics &amp; ICT · Humanities ·<br/>Science &amp; Technology · Commerce &amp; Management ·<br/>Arabic Language · Islamic Studies"]
   HOD --> TCH["Subject Teachers"]

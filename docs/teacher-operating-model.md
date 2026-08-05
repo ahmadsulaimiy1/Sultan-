@@ -38,9 +38,9 @@ plainly here rather than fabricated.)
 | Institution | Pathway(s) within it |
 |---|---|
 | **Basic School** | Early Years (Creche, Nursery, Kindergarten/Preschool), Primary 1–6 |
-| **Secular College** | Junior Secondary (JSS1–JSS3), Senior Secondary (SS1–SS3) — the institution's mainstream academic programme |
+| **Royal College** | Junior Secondary (JSS1–JSS3), Senior Secondary (SS1–SS3) — the institution's mainstream academic programme |
 | **Qur'an College** | The published 5-stage Hifz Journey, Ijazah pathway |
-| **Islamiyyah College** | Arabic language and Islamic Studies programmes |
+| **School of Islamic and Arabic Studies** | Arabic language and Islamic Studies programmes |
 
 A fifth line — **future continuing education / adult programmes** — is
 named in the directive as a category to anticipate. No institution,
@@ -52,13 +52,13 @@ revisiting when it eventually does.
 
 This is the primary structure — the one most students, most staff, and
 (once built) most Teacher Portal users will sit inside. It applies
-across Basic School and Secular College identically; the same
+across Basic School and Royal College identically; the same
 hierarchy, not a separate one, governs both.
 
 | Proposed role | Reports to | Core responsibility |
 |---|---|---|
 | **Class Teacher** | Head of Subject or Department Head (Basic School: directly to Principal, given smaller staff counts there) | Attendance, pastoral oversight, day-to-day communication with guardians for one assigned class. This is the role Migration Phase A's finding names directly — attendance Create belongs here. |
-| **Subject Teacher** | Head of Subject | Lesson delivery, continuous assessment, and exam-score entry for one or more subjects across one or more classes. Migration Phase B's finding names this role directly — assessment Create belongs here. Real subjects already implied by Secular College's academic programme: English, Mathematics, Physics, Chemistry, Biology, Economics, Government, Geography, ICT, Literature — this list is illustrative of what a real secondary curriculum requires, not a closed or invented set. |
+| **Subject Teacher** | Head of Subject | Lesson delivery, continuous assessment, and exam-score entry for one or more subjects across one or more classes. Migration Phase B's finding names this role directly — assessment Create belongs here. Real subjects already implied by Royal College's academic programme: English, Mathematics, Physics, Chemistry, Biology, Economics, Government, Geography, ICT, Literature — this list is illustrative of what a real secondary curriculum requires, not a closed or invented set. |
 | **Head of Subject** | Department Head | Curriculum oversight and moderation for one subject across all classes that teach it (e.g. all Mathematics teachers, JSS1 through SS3) — a quality-assurance layer between individual Subject Teachers and departmental leadership. |
 | **Department Head** | Vice Principal, Academics | Leadership and staff supervision for a cluster of related subjects (e.g. a Sciences department covering Physics/Chemistry/Biology; a Humanities department covering Government/Geography/Economics; a Languages department; a Technology/ICT department). Department boundaries are a curriculum decision for the Board/Principal to make, not asserted here. |
 | **Vice Principal, Academics** | Principal | Academic performance and quality assurance across the whole institution — the proposed split of the single existing `VP` code's academic half. |
@@ -80,7 +80,7 @@ these two distinct hires.
 
 These sit **alongside** the mainstream hierarchy above, not beneath or
 above it — a deliberate correction from any framing that would make
-Qur'an College or Islamic & Arabic Studies subordinate pillars. A
+Qur'an College or Islamic and Arabic Studies subordinate pillars. A
 Muhaffiz's institutional standing relative to a Subject Teacher is
 lateral, not junior.
 
@@ -89,8 +89,8 @@ lateral, not junior.
 | **Muhaffiz / Muhaffizah** | Qur'an College | Qur'an Supervisor | Direct Hifz instruction and per-Juz' progress recording for assigned students — maps to the already-adopted `MUH` role; no change proposed here beyond adding the supervisory tier below it. |
 | **Qur'an Supervisor** | Principal, Qur'an College | New — sits between individual Muhaffiz/Muhaffizah staff and the existing `QC-OFF` (Qur'an College Officer) institution-wide role, mirroring Head of Subject's position in the mainstream hierarchy. |
 | **Ijazah Coordinator** | Qur'an College | Qur'an College Officer | A credentialing-specific role, distinct from day-to-day Hifz supervision — coordinates the Ijazah grant/verification process specifically (IQ-02), rather than folding it into `QC-OFF`'s broader institution-wide oversight as it is today. |
-| **Arabic Language Instructor** | Islamic & Arabic Studies | Head of Subject (Islamic & Arabic Studies) | Arabic language instruction — the proposed split of the existing single `ARB` code's language half. |
-| **Islamic Studies Instructor** | Islamic & Arabic Studies | Head of Subject (Islamic & Arabic Studies) | Islamic Studies instruction — the proposed split of `ARB`'s other half, mirroring the mainstream Subject Teacher tier for this institution specifically. |
+| **Arabic Language Instructor** | Islamic and Arabic Studies | Head of Subject (Islamic and Arabic Studies) | Arabic language instruction — the proposed split of the existing single `ARB` code's language half. |
+| **Islamic Studies Instructor** | Islamic and Arabic Studies | Head of Subject (Islamic and Arabic Studies) | Islamic Studies instruction — the proposed split of `ARB`'s other half, mirroring the mainstream Subject Teacher tier for this institution specifically. |
 
 ## 4. Proposed permission mapping to existing system areas
 

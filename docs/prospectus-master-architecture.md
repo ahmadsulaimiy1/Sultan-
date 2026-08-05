@@ -61,8 +61,8 @@ system" references the Part VIII template it uses.
 | 4 | Mission, Vision & Values (incl. CLEVER) | Doctrine | Editorial, with Infographic treatment for CLEVER's six-part structure | 2 |
 | 5 | Educational Philosophy / Why Choose SHRS | Philosophy | Editorial | 2 |
 | 6 | Basic School | Institution 1 of 4 | Feature spread (identical template, per Part III equal-weighting rule) | 2 |
-| 7 | Secular College | Institution 2 of 4 | Feature spread (identical template) | 2 |
-| 8 | Islamiyyah College | Institution 3 of 4 | Feature spread (identical template) | 2 |
+| 7 | Royal College | Institution 2 of 4 | Feature spread (identical template) | 2 |
+| 8 | School of Islamic and Arabic Studies | Institution 3 of 4 | Feature spread (identical template) | 2 |
 | 9 | Qur'an College | Institution 4 of 4 | Feature spread (identical template) + Hifz Journey diagram | 3 *(one extra page — see note below)* |
 | 10 | Student Life | Student Life | Editorial | 2 |
 | 11 | Facilities | Facilities | Editorial, image-forward | 2 |
@@ -107,14 +107,14 @@ left for a future revision of this Architecture once SHRS supplies
 them.*
 
 Per Bible Part III's explicit requirement ("equally-weighted
-pillars, not Secular College as primary with supplements"): spreads
+pillars, not Royal College as primary with supplements"): spreads
 6–9 use an **identical two-page template** —
 
 - Page 1: full-bleed anchor photograph, institution name (Cinzel
   display), one "at a glance" data panel (ages, format, established
   date — all real, already-published facts per the header nav
-  descriptors: Basic School "Ages 2–10 · Day"; Secular College "Ages
-  10+ · Day · Est. 2021"; Islamiyyah College "All ages · Weekday
+  descriptors: Basic School "Ages 2–10 · Day"; Royal College "Ages
+  10+ · Day · Est. 2021"; School of Islamic and Arabic Studies "All ages · Weekday
   & weekend"; Qur'an College "Day & Boarding")
 - Page 2: narrative paragraph, one supporting image, one distinguishing
   feature callout

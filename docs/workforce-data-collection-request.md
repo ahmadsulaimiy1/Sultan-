@@ -8,11 +8,11 @@ disguised as reality, no simulated institutional facts.* Once this is
 returned filled in, it becomes the input to the Human Capital Register
 (§4) and to real `staff` data entry (`docs/institutional-data-architecture.md`).
 
-**Status note:** Secular College's JSS/SSS roster (collected separately
+**Status note:** Royal College's JSS/SSS roster (collected separately
 from this intake, before this note was added) now has **two
 conflicting versions on file** — see `master-academic-structure-register.md`
 §4a-bis for the full comparison. That conflict needs the school's
-direct answer before any Secular College names are published publicly;
+direct answer before any Royal College names are published publicly;
 it is not something this document's own intake structure can resolve.
 
 ## 1. Basic School Faculty
@@ -23,14 +23,14 @@ For every real teacher, please supply:
 |---|---|---|---|---|
 | *(awaiting real data)* | | | | |
 
-## 2. Islamiyyah College Faculty — **supplied, integrated**
+## 2. School of Islamic and Arabic Studies Faculty — **supplied, integrated**
 
 **Distinct from Qur'an College** — the two lists arrived merged once
 already (`master-academic-structure-register.md` v1.1's §4d error) and
 have now been correctly split. Full detail, qualifications, and
 teaching areas: `docs/master-academic-structure-register.md` §4d
 (Qur'an College — Ustadh Muhammad Fodio, Ustadh Muhammad Awwal Ishola)
-and §4e (Islamiyyah College — Ustadh Abdul-Hameed
+and §4e (School of Islamic and Arabic Studies — Ustadh Abdul-Hameed
 Abdurrahman, Ustadh Sherifudeen Olaifa, Ustadh Mas'oud Abdul-Fattah,
 Engr. Ustadhah Fatimah A.). Ustadh Sherifudeen Olaifa's qualification
 remains unsupplied, recorded as such, not filled in.
@@ -45,8 +45,8 @@ remains unsupplied, recorded as such, not filled in.
 | Finance Officer | *(awaiting real data — role currently `proposed`)* |
 | ICT Officer | *(awaiting real data — role currently `proposed`)* |
 | HR Officer | *(awaiting real data — no HR role/office exists in the system at all yet)* |
-| Principal, Secular College | *(awaiting real data)* |
-| Principal, Islamiyyah College | *(awaiting real data)* |
+| Principal, Royal College | *(awaiting real data)* |
+| Principal, School of Islamic and Arabic Studies | *(awaiting real data)* |
 | Head Teacher, Basic School | *(awaiting real data)* |
 
 ## 4. What happens once this is returned filled in

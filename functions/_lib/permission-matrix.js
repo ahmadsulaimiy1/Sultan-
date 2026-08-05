@@ -50,7 +50,7 @@ export const SYSTEM_AREAS = {
   behaviour:              { name: 'Behaviour Management', ownerOffice: 'VP Administration', governingPolicy: 'SD-02' },
   teacher_performance:    { name: 'Teacher Performance', ownerOffice: 'Principal, jointly with Academic Affairs', governingPolicy: 'Pending — HR Governance Framework (Staff Handbook §7)' },
   exam_readiness:         { name: 'Examination Readiness (WAEC/NECO)', ownerOffice: 'Registrar, jointly with Academic Affairs', governingPolicy: null },
-  arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'Sultan Hanafi Islamiyyah College', governingPolicy: null },
+  arabic_fluency:         { name: 'Arabic Fluency', ownerOffice: 'Sultan Hanafi School of Islamic and Arabic Studies', governingPolicy: null },
   tajweed_compliance:     { name: 'Tajweed Compliance', ownerOffice: "Qur'an College", governingPolicy: 'IQ-01, IQ-03' },
   boarding_intelligence:  { name: 'Boarding Intelligence', ownerOffice: 'Boarding Officer / Wardens', governingPolicy: 'SD-04' },
 };

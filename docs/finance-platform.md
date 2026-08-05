@@ -29,8 +29,8 @@ Dashboard.
   "Fees" section) exactly as before. The new `invoices`/`receipts`
   ledger is additive, not a replacement — see "Design note" below for
   why both now exist side by side.
-- `institutions` (four real rows: Nursery & Primary, Royal College,
-  Islamic & Arabic Studies, Qur'an College) and `academic_terms` — fee
+- `institutions` (four real rows: Nursery and Primary, Royal College,
+  Islamic and Arabic Studies, Qur'an College) and `academic_terms` — fee
   structures and invoices key off these exactly as every other
   institution-aware table in this codebase does.
 - The certificate verification pattern (`functions/api/certificates/
@@ -51,7 +51,7 @@ Dashboard.
   tuition, feeding & accommodation, first aid, educational resources,
   development fee, uniform items (school uniform/sportwear/hostel
   wear/Friday wear), textbooks, and the female-only hijab item, with
-  exact amounts. Nursery & Primary and every other class/institution
+  exact amounts. Nursery and Primary and every other class/institution
   combination have **no fee structures seeded** — nothing was invented
   for classes the school hasn't supplied a schedule for yet.
 - **Fee Structure Management**

@@ -352,7 +352,7 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/ict-computer-laboratory.jpg', 460)] }));
   B.push(body('Digital literacy is not confined to a single subject at Sultan Hanafi — it runs through the ICT & Computer Laboratory, a dedicated facility where students build the foundational technology skills the digital systems described in this edition assume every family and student can use.'));
   B.push(statQuad([['1', 'Dedicated Lab'], ['2', 'Core Strands'], ['All', 'Year Groups'], ['7', 'SC Departments']]));
-  B.push(body('Digital Literacy and Programming form the two core strands taught in the laboratory, sitting within the Secular College’s Mathematics & ICT department — one of seven academic departments spanning JSS 1–3 and SSS 1–3.'));
+  B.push(body('Digital Literacy and Programming form the two core strands taught in the laboratory, sitting within the Royal College’s Mathematics & ICT department — one of seven academic departments spanning JSS 1–3 and SSS 1–3.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 

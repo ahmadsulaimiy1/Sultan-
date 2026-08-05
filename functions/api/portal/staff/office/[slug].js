@@ -227,9 +227,9 @@ const OFFICE_FRAMEWORKS = {
 // Intelligence, Predictive warnings), it is listed in `notYetTracked`
 // with the real reason — never a fabricated number standing in for it.
 const SCHOOL_LEADERSHIP_INSTITUTION = {
-  'head-teacher': 'Nursery & Primary',
+  'head-teacher': 'Nursery and Primary',
   'principal-royal-college': 'Royal College',
-  raees: 'Islamic & Arabic Studies',
+  raees: 'Islamic and Arabic Studies',
   mudeer: "Qur'an College",
 };
 

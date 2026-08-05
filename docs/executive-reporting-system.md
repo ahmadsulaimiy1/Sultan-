@@ -28,7 +28,7 @@ re-renders in place.
 | Finance | Invoices issued (count + amount), payments received (count + amount) in the period; invoices currently unpaid/partial as of report generation | `invoices.created_at`, `receipts.paid_at` |
 | Registrar | Certificates issued in the period; lifecycle events (enrolment/promotion/transfer/withdrawal/graduation/reinstatement) in the period | `certificates.issued_at`, `student_lifecycle_events.effective_date` |
 | Admissions | Applications received in the period; decisions recorded (offered/admitted/declined) in the period | `admissions_applications.submitted_at`/`updated_at` |
-| Head Teacher, Principal (Secular College), Ra'ees, Mudeer | As-of-now snapshot (students/staff/attendance/Hifz, same shape as the existing Operations Centre) + real in-period activity (lifecycle events and admissions flow for that specific institution) | Same institution-scoped queries as `functions/api/portal/staff/office/[slug].js`'s Operations Centre |
+| Head Teacher, Principal (Royal College), Ra'ees, Mudeer | As-of-now snapshot (students/staff/attendance/Hifz, same shape as the existing Operations Centre) + real in-period activity (lifecycle events and admissions flow for that specific institution) | Same institution-scoped queries as `functions/api/portal/staff/office/[slug].js`'s Operations Centre |
 | Executive (Founder) | Institution-wide roll-up of Finance + Registrar + Admissions, plus current active student/staff totals | Same computations as above, unfiltered by institution |
 
 Every other office (Board of Governors, Management Council, the five

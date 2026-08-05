@@ -167,7 +167,7 @@ Recorded honestly rather than silently absorbed:
    design decision reserved for the client.
 3. **Basic School "Est. 2017"** is retained pending client confirmation — an
    individual school may legitimately have been established after the
-   Institution's July 2016 founding (as Secular College's "Est. 2021" shows),
+   Institution's July 2016 founding (as Royal College's "Est. 2021" shows),
    but the date should be confirmed rather than assumed.
 4. **Foundation naming split** ("Sultan Zakariya Hanafi Foundation" vs the
    Charter's shorter "Sultan Hanafi Foundation") needs a client ruling before

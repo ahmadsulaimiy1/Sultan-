@@ -35,7 +35,7 @@ a real gap — not silently invented and not silently dropped.
 A hybrid Islamic-and-secular institution — the founder's own words for
 it, used consistently across the live site — built on the premise that
 faith and academic rigour are not in tension. Five institutions under
-one foundation (Basic School, Secular College, Islamiyyah
+one foundation (Basic School, Royal College, Islamiyyah
 College, Qur'an College, and Online & Distance Learning School) serve different ages and pathways but share
 one mission, one set of values, and one crest. SHRS represents a school
 built from a specific act of filial honour — named for the founder's
@@ -50,7 +50,7 @@ secular academic rigour as secondary. Not an exclusive institution —
 the founder's own welcome message states the schools are "open to
 Muslims and non-Muslims, males and females." Not a school that
 claims a heritage it doesn't have: SHRS is young (registered December
-2017, Secular College established 2021) and its prestige case rests on
+2017, Royal College established 2021) and its prestige case rests on
 what it has actually built in that time — a real Digital Campus, a
 published governance architecture, a specific five-stage Hifz
 methodology — not on manufactured antiquity.
@@ -191,9 +191,9 @@ directive named, sequenced per Part II's narrative arc)
    CLEVER standard
 5. **Educational Philosophy / Why Choose SHRS**
 6. **The Five Institutions** — one feature spread each:
-   Basic School, Secular College, Islamiyyah College,
+   Basic School, Royal College, School of Islamic and Arabic Studies,
    Qur'an College, and Online & Distance Learning School — presented as **equally-weighted pillars**,
-   not Secular College as primary with supplements
+   not Royal College as primary with supplements
 7. **Student Life** — pastoral care, community, the values in practice
 8. **Facilities**
 9. **Technology & Digital Campus** — SHRS's genuine differentiator;
@@ -226,7 +226,7 @@ before spread planning.
   Admissions → Contact. The four-institution spread should let a
   parent self-select their child's pathway within one page-turn.
 - **Student-facing journey** *(where the prospectus addresses an older
-  applicant directly, e.g. Secular College senior secondary or Qur'an
+  applicant directly, e.g. Royal College senior secondary or Qur'an
   College)*: Student Life → the relevant institution → Achievements →
   Admissions.
 - **International/diaspora visitor journey**: Heritage (credibility of

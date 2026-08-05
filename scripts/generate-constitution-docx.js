@@ -289,7 +289,7 @@ function main() {
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { after: 600 },
-      children: [new TextRun({ text: 'Secular College · Islamiyyah College · Qur’an College · Basic School · Online & Distance Learning School', italics: true, size: 20, color: CHARCOAL })],
+      children: [new TextRun({ text: 'Royal College · School of Islamic and Arabic Studies · Qur’an College · Basic School · Online & Distance Learning School', italics: true, size: 20, color: CHARCOAL })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -345,7 +345,7 @@ function main() {
     }),
     new Paragraph({
       spacing: { after: 60 },
-      children: [new TextRun({ text: 'Sultan Hanafi Royal Schools · Secular College · Islamiyyah College · Qur’an College · Basic School · Online & Distance Learning School', size: 16, color: CHARCOAL })],
+      children: [new TextRun({ text: 'Sultan Hanafi Royal Schools · Royal College · School of Islamic and Arabic Studies · Qur’an College · Basic School · Online & Distance Learning School', size: 16, color: CHARCOAL })],
     }),
     new Paragraph({
       children: [new TextRun({ text: 'Founded July 2016 · Ikorodu, Lagos State, Nigeria', size: 16, color: CHARCOAL })],

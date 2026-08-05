@@ -20,9 +20,14 @@ and what's still open.
 amendment):** every "Board of Trustees" reference in this register is
 updated to "Board of Governors," and every "CEO" reference to "Head of
 Schools / Administrator," per the Board's governance restructuring
-amendment of 2026-08-04 (see GV-01 v3.0). Institution names are updated
-throughout: Royal College → Secular College, School of Islamic & Arabic
-Studies → Islamiyyah College, Nursery & Primary → Basic School. A fifth
+amendment of 2026-08-04 (see GV-01 v3.0). Institution names were updated
+throughout by that amendment (Royal College → Secular College, School of
+Islamic and Arabic Studies → Islamiyyah College, Nursery and Primary →
+Basic School); the Official Institutional Nomenclature Directive of
+2026-08-05 has since superseded those renames, restoring the formal names
+Sultan Hanafi Royal College, Sultan Hanafi School of Islamic and Arabic
+Studies, and Sultan Hanafi Nursery and Primary School, which this
+register now uses. A fifth
 institution, Sultan Hanafi Online & Distance Learning School, now
 exists alongside the four named in this register's older rows; this
 register has not been re-audited row-by-row for the fifth institution's
@@ -69,12 +74,12 @@ document scope, which remains a gap to track going forward.
 
 | Document | Status | Tier | Owner | Approval Authority | Review cycle | Dependencies |
 |---|---|---|---|---|---|---|
-| Academic Regulations | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see AC-02) | 1 | Registrar, Secular College | Board of Governors | Annual | Assessment Policy (exists) |
+| Academic Regulations | **DRAFTED v2.0** (Phase B, retrofitted to the full 13-section architecture in the Phase F Tier 1 retrofit — see AC-02) | 1 | Registrar, Royal College | Board of Governors | Annual | Assessment Policy (exists) |
 | Assessment Policy | **EXISTS** (Policy I) | 1 | Vice Principal (Administration) | Board of Governors | Annual | — |
 | Examination Policy | MISSING | 2 | Registrar | Head of Schools / Administrator | Annual | Academic Regulations (drafted) |
-| Academic Integrity Policy | MISSING | 1 | Principal, Secular College | Board of Governors | Annual | Academic Regulations (drafted) |
+| Academic Integrity Policy | MISSING | 1 | Principal, Royal College | Board of Governors | Annual | Academic Regulations (drafted) |
 | Certification Policy | MISSING | 2 | Registrar | Head of Schools / Administrator | Biennial | Academic Regulations (drafted) |
-| Promotion Policy | PARTIAL — structure set in Academic Regulations §7.1, numeric threshold still unset | 1 | Principal, Secular College | Board of Governors | Annual | Academic Regulations (drafted) |
+| Promotion Policy | PARTIAL — structure set in Academic Regulations §7.1, numeric threshold still unset | 1 | Principal, Royal College | Board of Governors | Annual | Academic Regulations (drafted) |
 | Graduation Policy | PARTIAL — structure set in Academic Regulations §7.4 | 2 | Registrar | Head of Schools / Administrator | Annual | Promotion Policy |
 | Curriculum Framework | PARTIAL | 2 | Head, Research & Development *(office pending Board recognition)* | Head of Schools / Administrator | Biennial | None |
 
@@ -167,7 +172,7 @@ document scope, which remains a gap to track going forward.
 | Tajweed Assessment Policy | MISSING — the one Hifz-related document still fully outstanding, referenced as a dependency by both Hifz Regulations and the Ijazah Governance Framework | 2 | Principal, Qur'an College | Head of Schools / Administrator | Annual | Hifz Regulations (drafted) |
 | Ijazah Governance Framework | **DRAFTED v2.0** (Phase A, retrofitted to the full 13-section architecture in the Phase F Tier 2 retrofit — see IQ-02) | **1 — the credential's credibility depends on this existing** | Principal, Qur'an College | Board of Governors | Biennial | Hifz Regulations (drafted), Tajweed Assessment Policy (still missing) |
 | Qur'an Competition Regulations | MISSING | 4 | Principal, Qur'an College | Head of Schools / Administrator | As needed | Only relevant once competitions are actually run |
-| Islamic Conduct Framework | PARTIAL | 2 | Principal, Islamiyyah College | Head of Schools / Administrator | Annual | Student Code of Conduct (drafted) |
+| Islamic Conduct Framework | PARTIAL | 2 | Principal, School of Islamic and Arabic Studies | Head of Schools / Administrator | Annual | Student Code of Conduct (drafted) |
 
 ---
 
