@@ -345,6 +345,56 @@ function sheetHtml(args) {
   return sheetHtmlConstructed(args);
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Engraved credential-plaque ground (Final Refinement directive):
+// ivory archival field, woven micro-guilloché at whisper opacity,
+// double hairline gold rules, corner ornaments, SHRS microtext along
+// the base. Pure vector, generated per plaque size, so the engraving
+// stays crisp at any print resolution — no digital gradients.
+// ─────────────────────────────────────────────────────────────────────
+function plaqueGroundSvg(w, h, corner = 'rosette') {
+  const rows = Math.max(3, Math.round(h / 2.8));
+  let weave = '';
+  for (let r = 0; r < rows; r++) {
+    const y0 = 2.1 + (r + 0.5) * ((h - 4.2) / rows);
+    for (const ph of [0, Math.PI]) {
+      const steps = Math.round(w / 0.7);
+      const pts = [];
+      for (let i = 0; i <= steps; i++) {
+        const x = 2.1 + (i / steps) * (w - 4.2);
+        const y = y0 + 0.85 * Math.sin((i / steps) * Math.PI * 2 * (w / 7.5) + ph);
+        pts.push((i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2));
+      }
+      weave += `<path d="${pts.join('')}" fill="none" stroke="#B08A2E" stroke-width="0.055" opacity="0.15"/>`;
+    }
+  }
+  const cornerMark = (cx, cy) => {
+    if (corner === 'diamond') {
+      return `<rect x="${(cx - 0.62).toFixed(2)}" y="${(cy - 0.62).toFixed(2)}" width="1.24" height="1.24"
+        transform="rotate(45 ${cx} ${cy})" fill="none" stroke="#8A6A24" stroke-width="0.11"/>
+        <circle cx="${cx}" cy="${cy}" r="0.22" fill="#8A6A24" opacity="0.8"/>`;
+    }
+    let petals = '';
+    for (let i = 0; i < 8; i++) {
+      const a = (i * Math.PI) / 4;
+      petals += `<circle cx="${(cx + 0.92 * Math.cos(a)).toFixed(2)}" cy="${(cy + 0.92 * Math.sin(a)).toFixed(2)}"
+        r="0.3" fill="none" stroke="#8A6A24" stroke-width="0.085"/>`;
+    }
+    return petals + `<circle cx="${cx}" cy="${cy}" r="0.26" fill="#8A6A24" opacity="0.8"/>`;
+  };
+  const c = 2.15;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">
+    <rect width="${w}" height="${h}" rx="0.9" fill="#FCF6E8" opacity="0.9"/>
+    ${weave}
+    <rect x="0.32" y="0.32" width="${w - 0.64}" height="${h - 0.64}" rx="0.7" fill="none" stroke="#8A6A24" stroke-width="0.2"/>
+    <rect x="1.05" y="1.05" width="${w - 2.1}" height="${h - 2.1}" rx="0.45" fill="none" stroke="#A98A3C" stroke-width="0.09"/>
+    ${cornerMark(c, c)}${cornerMark(w - c, c)}${cornerMark(c, h - c)}${cornerMark(w - c, h - c)}
+    <text x="${w / 2}" y="${h - 1.15}" text-anchor="middle" font-family="sans-serif" font-size="0.92"
+      letter-spacing="0.14" fill="#8A6A24" opacity="0.3">SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL RECORD</text>
+  </svg>`;
+  return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
+}
+
 function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const displayHash = String(cert.content_hash || '').slice(0, 12).toUpperCase();
   const verifyCode = displayHash.replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
@@ -364,14 +414,20 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const placeEn = escapeHtml(cert.place_en || 'Ikorodu, Lagos, Nigeria');
   const placeAr = escapeHtml(cert.place_ar || 'إكورودو، لاغوس، نيجيريا');
 
-  // Credential panel field: bilingual micro-label row, then the value.
-  const pField = (en, arb, val) => `<div class="p-field">
+  // Credential plaque field: bilingual micro-label row, then the value.
+  const pField = (en, arb, val, small = '') => `<div class="p-field">
     <div class="p-label"><span class="p-l-en">${en}</span><span class="p-l-ar" dir="rtl">${arb}</span></div>
-    <div class="p-value">${val}</div>
+    <div class="p-value${small}">${val}</div>
   </div>`;
+  const plq1 = plaqueGroundSvg(64.5, 15, 'rosette');
+  const plq2 = plaqueGroundSvg(64.5, 15, 'diamond');
+  const plq3 = plaqueGroundSvg(69, 15, 'rosette');
+  const plqV = plaqueGroundSvg(60, 24.4, 'rosette');
 
   return `<div class="sheet sheet--official">
   <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
+
+  <div class="o5-basmala">&#xFDFD;</div>
 
   <div class="o5-intro-en">This is to certify that</div>
   <div class="o5-intro-ar">تشهد إدارة مدارس السلطان حنفي الملكية بأن</div>
@@ -388,19 +444,28 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     في العام الدراسي <span dir="ltr">${session}</span>، وفقًا للمناهج
     المعتمدة والمعايير الأكاديمية المعمول بها في المدرسة.</div>
 
-  <div class="o5-panel o5-panel-1"><div class="o5-panel-in">
+  <div class="o5-plq o5-plq-1" style="background-image:${plq1}">
     ${pField('Certificate Number', 'رقم الشهادة', serial)}
+  </div>
+  <div class="o5-plq o5-plq-2" style="background-image:${plq2}">
     ${pField('Student ID', 'الرقم التعريفي للطالب', studentId)}
-  </div></div>
-  <div class="o5-panel o5-panel-2"><div class="o5-panel-in">
-    ${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`)}
-    ${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`)}
-  </div></div>
-  <div class="o5-panel o5-panel-3"><div class="o5-panel-in">
-    ${pField('Verification', 'التحقق من الشهادة', `${docId} <span class="p-dot">·</span> ${verifyCode}`)}
-    <div class="p-value p-url">shroyalschools.com/verify-certificate</div>
-    <div class="p-void">Void if altered or erased <span class="p-dot">·</span> <span dir="rtl">لاغيةٌ عند أي كشطٍ أو تعديل</span></div>
-  </div></div>
+  </div>
+  <div class="o5-plq o5-plq-3" style="background-image:${plq3}">
+    ${pField('Date of Issue', 'تاريخ الإصدار', `${gregEn} <span class="p-dot">·</span> <span dir="rtl">${hijriArDisplay}</span>`, ' p-value-sm')}
+    ${pField('Place of Issue', 'مكان الإصدار', `${placeEn} <span class="p-dot">·</span> <span dir="rtl">${placeAr}</span>`, ' p-value-sm')}
+  </div>
+
+  <div class="o5-vplate" style="background-image:${plqV}">
+    <div class="vp-text">
+      <div class="p-label"><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
+      <div class="vp-row">Document ID <b>${docId}</b></div>
+      <div class="vp-row">Code <b>${verifyCode}</b></div>
+      <div class="vp-row vp-url">shroyalschools.com/verify-certificate</div>
+      <div class="vp-void">Void if altered or erased</div>
+      <div class="vp-void-ar">لاغيةٌ عند أي كشطٍ أو تعديل</div>
+    </div>
+    <div class="vp-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+  </div>
 
   <div class="o5-sig o5-sig-1">
     <div class="o5-sig-line"></div>
@@ -417,8 +482,6 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     <div class="o5-sig-en">Chairman, Board of Governors</div>
     <div class="o5-sig-ar">رئيس مجلس الإدارة</div>
   </div>
-
-  <div class="o5-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
 </div>`;
 }
 
@@ -642,11 +705,18 @@ function docShell(title, sheetsHtml) {
   /* Gold-foil name treatment: engraved gradient fill, hairline bronze
      edge, top-light bevel and under-shade for emboss depth. */
   .o5-name-en,.o5-name-ar{
-    background:linear-gradient(100deg,#6E4C0E 0%,#A97B1C 16%,#E4BE52 36%,#F9EBB4 50%,#E4BE52 64%,#A97B1C 84%,#6E4C0E 100%);
+    /* Engraved gilt, not digital shine: narrow value range, hairline
+       bronze edge, restrained top-light bevel. */
+    background:linear-gradient(100deg,#6E4C0E 0%,#A0761B 22%,#CFA93E 42%,#E3C878 50%,#CFA93E 58%,#A0761B 78%,#6E4C0E 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     -webkit-text-stroke:.3px rgba(84,58,10,.55);
-    text-shadow:0 .22mm .18mm rgba(56,38,8,.30), 0 -0.14mm 0 rgba(255,251,235,.5);
+    text-shadow:0 .18mm .14mm rgba(56,38,8,.26), 0 -0.12mm 0 rgba(255,251,235,.4);
   }
+  /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
+     charcoal, no effects — a dignified spiritual header in the quiet
+     band beneath the official logo. */
+  .o5-basmala{position:absolute;top:54.2mm;left:5mm;right:0;text-align:center;
+    font-family:var(--ar-text);font-weight:400;font-size:16pt;color:#262014;line-height:1;}
   .o5-intro-en{position:absolute;top:96.4mm;left:38mm;width:106mm;text-align:center;
     font-family:var(--en-text);font-style:italic;font-weight:500;font-size:10.5pt;
     letter-spacing:.5px;color:#4B3420;}
@@ -665,28 +735,51 @@ function docShell(title, sheetsHtml) {
   .o5-para-ar{position:absolute;top:117.6mm;right:42mm;width:98mm;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;line-height:1.55;color:#332514;text-align:right;}
 
-  /* Credential information bar: three engraved gold-framed panels. */
-  .o5-panel{position:absolute;top:135.8mm;height:17.6mm;border-radius:1.1mm;padding:.5mm;
-    background:linear-gradient(135deg,#C9A64F 0%,#8A6A24 28%,#E6C878 50%,#8A6A24 72%,#C9A64F 100%);
-    box-shadow:0 .35mm .9mm rgba(56,38,8,.22);}
-  .o5-panel-1{left:44mm;width:64.5mm;}
-  .o5-panel-2{left:112.5mm;width:70mm;}
-  .o5-panel-3{left:186.5mm;width:66.5mm;}
-  .o5-panel-in{height:100%;border-radius:.7mm;background:rgba(253,249,238,.94);
-    box-shadow:inset 0 0 0 .14mm rgba(122,90,30,.55), inset 0 0 2.2mm rgba(176,138,46,.14);
-    padding:1.2mm 2.4mm;display:flex;flex-direction:column;justify-content:center;gap:.55mm;overflow:hidden;}
+  /* Credential plaques: engraved vector grounds (plaqueGroundSvg) —
+     ivory field, micro-guilloché, hairline rules, corner ornaments,
+     SHRS microtext. Printed into the paper: no drop shadows, only a
+     whisper of blind-emboss relief. */
+  .o5-plq{position:absolute;top:136.4mm;height:15mm;background-size:100% 100%;
+    background-repeat:no-repeat;box-sizing:border-box;padding:2mm 4mm 2.6mm;
+    display:flex;flex-direction:column;justify-content:center;gap:.55mm;overflow:hidden;
+    box-shadow:inset 0 .12mm 0 rgba(255,255,255,.45), inset 0 -0.12mm 0 rgba(110,80,19,.12);}
+  .o5-plq-1{left:44mm;width:64.5mm;}
+  .o5-plq-2{left:114mm;width:64.5mm;}
+  .o5-plq-3{left:184mm;width:69mm;padding:1.5mm 3.5mm 2.2mm;gap:.4mm;}
+  .o5-plq-3 .p-l-en{font-size:4.1pt;}
+  .o5-plq-3 .p-l-ar{font-size:5.2pt;}
   .p-field{display:flex;flex-direction:column;gap:.1mm;}
   .p-label{display:flex;justify-content:space-between;align-items:baseline;}
-  .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4.4pt;letter-spacing:.9px;
+  .p-l-en{font-family:var(--en-display);font-weight:700;font-size:4.4pt;letter-spacing:1px;
     text-transform:uppercase;color:#6E5013;}
   .p-l-ar{font-family:var(--ar-text);font-weight:700;font-size:5.6pt;color:#6E5013;}
-  .p-value{font-family:var(--utility);font-weight:600;font-size:6.4pt;color:#221A10;
-    text-align:center;white-space:nowrap;line-height:1.3;}
-  .p-value .p-dot,.p-void .p-dot{color:#B08A2E;padding:0 .5mm;}
-  .p-url{font-size:5.8pt;letter-spacing:.2px;color:#4B3420;}
-  .p-void{font-family:var(--en-text);font-style:italic;font-size:5.2pt;color:#7A1F2B;
-    text-align:center;white-space:nowrap;line-height:1.3;}
-  .p-void span[dir="rtl"]{font-family:var(--ar-text);font-style:normal;font-size:5.6pt;}
+  .p-value{font-family:var(--utility);font-weight:600;font-size:6.6pt;color:#221A10;
+    text-align:center;white-space:nowrap;line-height:1.35;}
+  .p-value-sm{font-size:5.9pt;}
+  .p-value .p-dot{color:#B08A2E;padding:0 .5mm;}
+
+  /* Verification plate: an engraved institutional module built into the
+     certificate's bottom-right verification zone — Document ID, code,
+     verify address and void clause beside the QR, which sits framed
+     inside the plate rather than floating on the paper. */
+  .o5-vplate{position:absolute;left:171.5mm;top:173mm;width:60mm;height:24.4mm;
+    background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
+    padding:2mm 1.9mm 2.4mm 3mm;display:flex;align-items:center;gap:1.7mm;
+    box-shadow:inset 0 .12mm 0 rgba(255,255,255,.45), inset 0 -0.12mm 0 rgba(110,80,19,.12);}
+  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.32mm;}
+  .vp-text .p-label{margin-bottom:.3mm;}
+  .vp-row{font-family:var(--utility);font-weight:400;font-size:4.8pt;color:#221A10;
+    white-space:nowrap;line-height:1.35;}
+  .vp-row b{font-weight:600;}
+  .vp-url{font-weight:600;font-size:4.7pt;color:#4B3420;letter-spacing:.15px;}
+  .vp-void{font-family:var(--en-text);font-style:italic;font-size:4.6pt;color:#7A1F2B;
+    white-space:nowrap;line-height:1.3;}
+  .vp-void-ar{font-family:var(--ar-text);direction:rtl;text-align:right;font-size:5.2pt;
+    color:#7A1F2B;white-space:nowrap;line-height:1.25;}
+  .vp-qr{flex:0 0 auto;width:19.4mm;height:19.4mm;background:#FFFFFF;
+    border:.16mm solid #9A7A2C;box-sizing:border-box;padding:.7mm;
+    display:flex;align-items:center;justify-content:center;}
+  .vp-qr svg{width:17.6mm;height:17.6mm;display:block;}
 
   /* Signature court: three columns anchoring the page; the centre
      column signs directly above the printed gold seal. */
@@ -700,9 +793,6 @@ function docShell(title, sheetsHtml) {
     text-transform:uppercase;color:#221A10;margin-top:1.3mm;line-height:1.4;white-space:nowrap;}
   .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.8pt;color:#3A2A18;
     margin-top:.2mm;direction:rtl;line-height:1.15;}
-  .o5-qr{position:absolute;left:204.3mm;top:174.4mm;width:26mm;height:22.6mm;background:#FFFFFF;
-    display:flex;align-items:center;justify-content:center;border-radius:.6mm;}
-  .o5-qr svg{width:20.8mm;height:20.8mm;display:block;}
 
 
   /* ═══ Masthead ═══ */
