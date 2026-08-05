@@ -62,7 +62,6 @@
       rows += field(t.studentId, data.studentIdentityNo);
       rows += field(t.institution, data.institutionName);
       rows += field(t.academicYear, data.academicYear);
-      rows += field(t.grade, (lang === 'ar' && data.gradeAr) ? data.gradeAr : data.grade);
     }
     rows += field(t.issued, data.issuedAt);
     if (data.kind === 'stage_certificate' && data.issuedAtHijri) rows += field(t.hijri, data.issuedAtHijri);

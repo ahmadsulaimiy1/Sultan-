@@ -72,7 +72,8 @@ verifiable documents across their academic life:
 ## 4. The rendered document
 
 `functions/_lib/stage-certificate-template.js` — the ROYAL FLAGSHIP
-EDITION (v2, Design Authority Directive 2026-08-05): an engraved-document
+EDITION (v3), governed by `docs/shrs-certificate-editorial-bible.md`
+(the standards document every design decision must cite): an engraved-document
 composition in the strict brand palette (coffee brown / royal gold /
 ivory, limited crimson, minimal navy, no green). All ornament is
 constructed geometry, not stock decoration: parametric epitrochoid
@@ -94,9 +95,12 @@ plaque + Arabic titles upper-right, side-by-side bilingual titles:
 - Recipient block with الطالب/الطالبة (sex-driven Arabic grammar: لإتمامه/لإتمامها,
   وحصوله/وحصولها), name in both scripts.
 - Identity strip: permanent Student ID + certificate serial as bordered chips.
-- Bilingual citation with grade (تقدير) and place; dual date line — Gregorian
-  and Hijri (Umm al-Qura via ICU, computed once at issuance and snapshotted;
-  8 August 2026 = 25 Ṣafar 1448).
+- Bilingual completion citation and place; dual date line — Gregorian and
+  Hijri (Umm al-Qura via ICU, computed once at issuance and snapshotted;
+  8 August 2026 = 25 Ṣafar 1448). NO performance grade appears on the
+  certificate or in its public verification (Editorial Bible §1.5 —
+  client-mandated): grades stay stored for the future Transcript /
+  Statement of Results.
 - Registrar (المسجّلة) + Head of the School (رئيس المدرسة) signature lines.
 - QR verification block with the printed verify URL.
 - Void-if-altered clause in both languages + HMAC display hash strip.

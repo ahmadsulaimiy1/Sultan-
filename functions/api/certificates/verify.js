@@ -88,8 +88,10 @@ export async function onRequestGet({ request, env }) {
         programmeCode: row.programme_code,
         institutionName: row.institution_name,
         academicYear: row.academic_year,
-        grade: row.grade_en,
-        gradeAr: row.grade_ar,
+        // No grade fields: Editorial Bible §1.5 — the certificate (and
+        // therefore its public attestation) certifies completion only;
+        // performance data belongs to the Transcript / Statement of
+        // Results. grade_en/grade_ar stay stored for those documents.
         issuedAt: isoDateOnly(row.issued_at),
         issuedAtHijri: row.issued_at_hijri,
         batchNo: row.batch_no,
