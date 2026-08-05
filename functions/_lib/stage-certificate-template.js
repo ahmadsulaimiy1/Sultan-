@@ -518,11 +518,14 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
 // written الابتدائية, bare. The artwork's الإبتدائية was an orthographic
 // error and is corrected here.
 const STAGE = {
-  IBT: { en: 'Ibtidāʾiyyah · Primary Stage', ar: 'المرحلة الابتدائية',
+  IBT: { term: 'Ibtidāʾiyyah', gloss: 'Primary Stage Completion',
+    ar: 'المرحلة الابتدائية',
     bodyEn: 'Ibtidāʾiyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
-  IDD: { en: 'Iʿdādiyyah · Preparatory Stage', ar: 'المرحلة الإعدادية',
+  IDD: { term: 'Iʿdādiyyah', gloss: 'Preparatory Stage Completion',
+    ar: 'المرحلة الإعدادية',
     bodyEn: 'Iʿdādiyyah (Preparatory)', bodyAr: 'المرحلة الإعدادية' },
-  THN: { en: 'Thānawiyyah · Secondary Stage', ar: 'المرحلة الثانوية',
+  THN: { term: 'Thānawiyyah', gloss: 'Secondary Stage Completion',
+    ar: 'المرحلة الثانوية',
     bodyEn: 'Thānawiyyah (Secondary)', bodyAr: 'المرحلة الثانوية' },
 };
 
@@ -599,12 +602,11 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   <div class="o9-title">
     ${titleFrame}
     <div class="o9-half o9-en">
-      <div class="o9-l1">Certificate of Completion</div>
-      <div class="o9-l2">${stage.en}</div>
+      <div class="o9-l1">Certificate of ${stage.term}</div>
+      <div class="o9-l2">${stage.gloss}</div>
     </div>
     <div class="o9-half o9-ar">
-      <div class="o9-l1">شهادة إتمام الدراسة</div>
-      <div class="o9-l2">${stage.ar}</div>
+      <div class="o9-l1">شهادة إتمام ${stage.ar}</div>
     </div>
   </div>
 
@@ -660,16 +662,19 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <div class="o5-sig o5-sig-1">
     <div class="o5-sig-line"></div>
+    <div class="o5-sig-name">Mrs. Mariam Tope AbdulKareem</div>
     <div class="o5-sig-en">Registrar</div>
-    <div class="o5-sig-ar">المسجّل</div>
+    <div class="o5-sig-ar">المسجّلة</div>
   </div>
   <div class="o5-sig o5-sig-2">
     <div class="o5-sig-line"></div>
-    <div class="o5-sig-en">Principal &middot; Head of School</div>
+    <div class="o5-sig-name">Shaykh Abubakar Solah</div>
+    <div class="o5-sig-en">Principal &amp; Head of School</div>
     <div class="o5-sig-ar">رئيس المدرسة</div>
   </div>
   <div class="o5-sig o5-sig-3">
     <div class="o5-sig-line"></div>
+    <div class="o5-sig-name">Dr. Zakaria Olanrewaju Anofi</div>
     <div class="o5-sig-en">Chairman, Board of Governors</div>
     <div class="o5-sig-ar">رئيس مجلس الإدارة</div>
   </div>
@@ -926,8 +931,14 @@ function docShell(title, sheetsHtml) {
      resolution. National lines carry more authority than institutional
      ones, per the standing creative direction. */
   .hdr{position:absolute;text-align:center;}
-  .hdr-l{left:54.7mm;width:46.2mm;top:35.3mm;}
-  .hdr-r{left:194.5mm;width:49mm;top:35.9mm;}
+    /* Blocks are centred on each crest's measured optical axis, not on a
+     bounding box. The Lagos shield's ink sits at 214.4mm (every row from
+     y66 to y130 agrees within 0.4mm once the wax rosette at x863-963 is
+     excluded from the measurement); the block had been at 219.0mm, 4.6mm
+     to its right. The Nigerian arms sit at 77.3mm against a block at
+     77.8mm. */
+  .hdr-l{left:54.2mm;width:46.2mm;top:35.3mm;}
+  .hdr-r{left:189.9mm;width:49mm;top:35.9mm;}
   .h-ar{font-family:var(--ar-text);font-weight:700;direction:rtl;color:#2F2A3E;
     font-size:8.6pt;line-height:1.28;white-space:nowrap;}
   .h-en{font-family:var(--en-display);font-weight:700;text-transform:uppercase;
@@ -983,7 +994,7 @@ function docShell(title, sheetsHtml) {
      upper one broke above the top rule. The measured ink box is what has
      to be centred, not the line box — hence explicit leading here and the
      optical nudge below rather than relying on flex centring. */
-  .o9-ar .o9-l1{font-family:var(--ar-text);font-size:14.9pt;letter-spacing:0;
+  .o9-ar .o9-l1{font-family:var(--ar-text);font-size:16.2pt;letter-spacing:0;
     line-height:1;color:#241B10;}
   .o9-ar .o9-l2{font-family:var(--ar-text);font-weight:700;font-size:9pt;
     letter-spacing:0;line-height:1;color:#6E5013;}
@@ -1012,7 +1023,7 @@ function docShell(title, sheetsHtml) {
   /* Official embossed brass seal (client-supplied artwork, used as
      provided) — set over the printed seal position; the artwork's
      printed ribbons emerge naturally beneath it. */
-  .o5-seal{position:absolute;left:133.2mm;top:169mm;width:30mm;height:auto;
+  .o5-seal{position:absolute;left:135.2mm;top:172.2mm;width:26mm;height:auto;
     filter:drop-shadow(0 .35mm .55mm rgba(56,38,8,.32));}
 
   /* Credential plaques: engraved vector grounds (plaqueGroundSvg) —
@@ -1119,16 +1130,16 @@ function docShell(title, sheetsHtml) {
      centre at 73.5mm intervals. The right station previously sat at 216mm,
      6mm inboard of its mirror, which is what made the row read as slightly
      off-balance even though nothing collided. */
-  .o5-sig{position:absolute;top:151.6mm;width:52mm;text-align:center;}
-  .o5-sig-1{left:49mm;}
-  .o5-sig-2{left:122.5mm;}
-  .o5-sig-3{left:194mm;width:56mm;}
+  .o5-sig{position:absolute;top:150.9mm;width:57mm;text-align:center;}
+  .o5-sig-1{left:46.5mm;}
+  .o5-sig-2{left:120mm;}
+  .o5-sig-3{left:193.5mm;}
   /* The signing rule is a guide, not a form field. It was a 0.34mm near-black
      bar — the "generic underline" the Founder rejected. It is now a 0.1mm
      gold hairline that fades to nothing over the outer quarter at each end
      and is closed by a lozenge terminal, so it reads as engraving and all
      but disappears once a signature is written across it. */
-  .o5-sig-line{position:relative;width:45mm;height:.1mm;margin:8mm auto 0;
+  .o5-sig-line{position:relative;width:45mm;height:.1mm;margin:6.6mm auto 0;
     background:linear-gradient(90deg,transparent,rgba(138,106,36,.62) 25%,
       rgba(138,106,36,.62) 75%,transparent);}
   .o5-sig-line::before,.o5-sig-line::after{content:'';position:absolute;top:50%;
@@ -1136,10 +1147,17 @@ function docShell(title, sheetsHtml) {
     border:.08mm solid rgba(138,106,36,.72);}
   .o5-sig-line::before{left:-1.6mm;}
   .o5-sig-line::after{right:-1.6mm;}
-  .o5-sig-en{font-family:var(--en-display);font-weight:700;font-size:6.3pt;letter-spacing:.8px;
-    text-transform:uppercase;color:#221A10;margin-top:1.3mm;line-height:1.4;white-space:nowrap;}
-  .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.8pt;color:#3A2A18;
-    margin-top:.2mm;direction:rtl;line-height:1.15;}
+  /* Four levels per station, diploma convention: signing space, printed
+     name, English office, Arabic office. The name is the largest text in
+     the block but is deliberately set below the student name's weight —
+     a signatory must never compete with the graduate. */
+  .o5-sig-name{font-family:var(--en-display);font-weight:700;font-size:6.9pt;
+    letter-spacing:.45px;color:#241B10;margin-top:1.5mm;line-height:1.25;white-space:nowrap;
+    text-shadow:0 -0.04mm 0 rgba(255,252,243,.5);}
+  .o5-sig-en{font-family:var(--en-display);font-weight:400;font-size:5.4pt;letter-spacing:.85px;
+    text-transform:uppercase;color:#6E5013;margin-top:.75mm;line-height:1.3;white-space:nowrap;}
+  .o5-sig-ar{font-family:var(--ar-text);font-weight:700;font-size:8.2pt;color:#3A2A18;
+    margin-top:.35mm;direction:rtl;line-height:1.15;}
 
 
   /* ═══ Masthead ═══ */
