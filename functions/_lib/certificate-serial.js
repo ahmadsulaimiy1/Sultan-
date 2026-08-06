@@ -23,6 +23,7 @@
 // row or a fabricated serial both surface as integrity failures rather
 // than silently verifying.
 import { computeDocumentHash, verifyDocumentHash } from './document-hash.js';
+import { isValidStudentIdentityNo } from './identity-no.js';
 
 // Programme registry — codes follow the institution's real academic
 // stages. Labels are the exact bilingual wording the certificate
@@ -77,10 +78,14 @@ export async function generateStageCertificateSerial(sql, env, { programmeCode, 
   const seqRes = await sql`SELECT nextval('stage_certificate_serial_seq') AS seq`;
   const seq = String(seqRes.rows[0].seq).padStart(6, '0');
   const serialBase = `SHRS-CERT-${programmeCode}-${year}-${seq}`;
-  const { fullHash } = computeDocumentHash(env, certificateHashFields({
+  const { fullHash, keyVersion } = computeDocumentHash(env, certificateHashFields({
     serialBase, studentIdentityNo, studentFullName, programmeCode, academicYear, gradeEn, issuedAt,
   }));
-  return { serialNo: `${serialBase}-${suffixFromHash(fullHash)}`, fullHash };
+  // keyVersion travels with the hash and MUST be stored on the row. Without it
+  // the certificate cannot be verified after the next rotation, and the serial
+  // suffix printed on the paper is derived from this same hash — so a row that
+  // loses its key version loses the ability to prove its own engraved number.
+  return { serialNo: `${serialBase}-${suffixFromHash(fullHash)}`, fullHash, keyVersion };
 }
 
 // ── The PRINTED number vs the STORED serial ─────────────────────────────
@@ -131,34 +136,188 @@ export function parseStageCertificateDisplayNo(ref) {
   return m ? { programmeCode: m[1], seq: m[2], suffix: m[3] || null } : null;
 }
 
-// Resolves ANY form a person might type — the full stored serial, or the
-// printed number with or without its check tail — to the single
-// stage_certificates row it names. Returns { row } | { ambiguous: true } |
-// null. Never guesses: two matches is a data-integrity fault, not a UX
-// problem to paper over.
-export async function resolveStageCertificateRef(sql, ref) {
-  const full = parseStageCertificateSerial(ref);
-  if (full) {
+// ── Every number the sheet actually prints ──────────────────────────────
+// One certificate carries SEVEN identifiers for one database row, and the
+// holder cannot be expected to know which of them the verification service
+// accepts — they type whichever one is nearest the QR code, or whatever a
+// scanner put on the clipboard. Only the first two used to resolve, so the
+// other five answered "no certificate found" about a genuine document in
+// the person's hand: the worst answer a verification service can give,
+// because it reads as an accusation of forgery.
+//
+//   SHRS-CERT-IDD-2026-000042-A775E   stored serial        serial
+//   SHRS-CERT-IDD-000042[-A775E]      engraved number      printed_no
+//   717455243759974                   Student ID           student_id
+//   A775-E194-8527 / A775E1948527     verification code    verify_code
+//   2026000042                        Code 128-C payload   archive_barcode
+//   ARCH/IDD/2026/000042              archive path         archive_ref
+//   DID-2026-IDD-0000042              document id          document_id
+//
+// The shapes are mutually exclusive by form, so nothing here ever has to
+// guess which identifier the holder meant — the length and punctuation
+// decide it. scripts/test-verify-identifiers.mjs asserts that separation
+// against the real issued values rather than trusting the reading.
+//
+// TWO deliberate refusals:
+//  - A 15-digit run that fails its Luhn check is rejected here rather than
+//    queried. A mistyped Student ID must not become a database lookup that
+//    happens to hit a different student's certificate.
+//  - The retired 12-digit barcode payload (year + id padded to 8, e.g.
+//    202600000042) is NOT accepted: it is indistinguishable from a
+//    12-character verification code that happens to be all digits, and
+//    resolving it would mean guessing between two identifier families. No
+//    sheet was ever printed with it — the payload was corrected to the
+//    6-digit archive run before the first issuance (see the archival
+//    reference block in stage-certificate-template.js) — so accepting it
+//    would buy nothing and cost the shape separation above.
+export function parseStageCertificateIdentifier(ref) {
+  const raw = String(ref || '').trim().toUpperCase();
+
+  const serial = parseStageCertificateSerial(raw);
+  if (serial) return { kind: 'serial', ...serial };
+  const printed = parseStageCertificateDisplayNo(raw);
+  if (printed) return { kind: 'printed_no', ...printed };
+
+  const arch = raw.match(/^ARCH\/([A-Z0-9]{2,4})\/(\d{4})\/(\d{6})$/);
+  if (arch) return { kind: 'archive_ref', programmeCode: arch[1], year: Number(arch[2]), id: Number(arch[3]) };
+
+  const did = raw.match(/^DID-(\d{4})-([A-Z0-9]{2,4})-(\d{7})$/);
+  if (did) return { kind: 'document_id', year: Number(did[1]), programmeCode: did[2], id: Number(did[3]) };
+
+  if (/^\d{15}$/.test(raw)) {
+    return isValidStudentIdentityNo(raw) ? { kind: 'student_id', identityNo: raw } : null;
+  }
+
+  const barcode = raw.match(/^(\d{4})(\d{6})$/);
+  if (barcode) return { kind: 'archive_barcode', year: Number(barcode[1]), id: Number(barcode[2]) };
+
+  // The printed verification code is grouped in fours for legibility; the
+  // groups are typography, so both forms have to resolve.
+  const code = raw.replace(/[\s-]/g, '');
+  if (/^[0-9A-F]{12}$/.test(code)) return { kind: 'verify_code', hashPrefix: code.toLowerCase() };
+
+  return null;
+}
+
+// Runs the lookup for one parsed identifier. Split out from
+// resolveStageCertificateIdentifier so the policy below (what a given
+// number of matches MEANS) reads as one uninterrupted decision.
+//
+// Neon's tagged-template driver has no raw-identifier escape hatch, so
+// each shape gets its own literal query rather than one query with an
+// assembled WHERE clause — the same constraint identity-no.js documents.
+async function selectByIdentifier(sql, id) {
+  if (id.kind === 'serial') {
     const res = await sql`
       SELECT sc.*, b.batch_no FROM stage_certificates sc
       LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-      WHERE sc.serial_no = ${full.serialBase + '-' + full.suffix}`;
-    return res.rows[0] ? { row: res.rows[0] } : null;
+      WHERE sc.serial_no = ${id.serialBase + '-' + id.suffix}`;
+    return res.rows;
   }
-  const short = parseStageCertificateDisplayNo(ref);
-  if (!short) return null;
-  // Underscores are single-character LIKE wildcards and the pattern is
-  // anchored on both sides, so it cannot match a longer sequence that
-  // merely ends in these six digits. When the verifier supplied the check
-  // tail it is pinned here too — a wrong tail finds nothing, which is the
-  // anti-forgery property doing its job at lookup time.
-  const pattern = `SHRS-CERT-${short.programmeCode}-____-${short.seq}-${short.suffix || '_____'}`;
-  const res = await sql`
-    SELECT sc.*, b.batch_no FROM stage_certificates sc
-    LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-    WHERE sc.serial_no LIKE ${pattern}`;
-  if (res.rows.length > 1) return { ambiguous: true };
-  return res.rows[0] ? { row: res.rows[0] } : null;
+  if (id.kind === 'printed_no') {
+    // Underscores are single-character LIKE wildcards and the pattern is
+    // anchored on both sides, so it cannot match a longer sequence that
+    // merely ends in these six digits. When the verifier supplied the check
+    // tail it is pinned here too — a wrong tail finds nothing, which is the
+    // anti-forgery property doing its job at lookup time.
+    const pattern = `SHRS-CERT-${id.programmeCode}-____-${id.seq}-${id.suffix || '_____'}`;
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE sc.serial_no LIKE ${pattern}`;
+    return res.rows;
+  }
+  if (id.kind === 'student_id') {
+    // Newest first: the disambiguation list a holder reads should open with
+    // the certificate they most likely just received.
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE sc.student_identity_no = ${id.identityNo}
+      ORDER BY sc.issued_at DESC, sc.id DESC`;
+    return res.rows;
+  }
+  if (id.kind === 'verify_code') {
+    // The printed code IS the first 12 hex of content_hash, so this is a
+    // prefix match — expressed as left(lower(...)) rather than LIKE so the
+    // expression index in sql/schema.sql can serve it, and so a stored hash
+    // in either case still matches what the plate prints in upper case.
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE left(lower(sc.content_hash), 12) = ${id.hashPrefix}`;
+    return res.rows;
+  }
+  if (id.kind === 'archive_barcode') {
+    // Year is a CONSTRAINT, not decoration: sc.id alone would resolve, so
+    // pinning the year is what makes a misread scan fail closed instead of
+    // returning a different year's certificate that shares the record id.
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE sc.id = ${id.id} AND EXTRACT(YEAR FROM sc.issued_at)::int = ${id.year}`;
+    return res.rows;
+  }
+  if (id.kind === 'archive_ref' || id.kind === 'document_id') {
+    // Same row as the barcode, with the programme code pinned too — these
+    // two are read by eye, and a transcription that lands on the wrong
+    // stage must find nothing rather than attest the wrong award.
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE sc.id = ${id.id} AND EXTRACT(YEAR FROM sc.issued_at)::int = ${id.year}
+        AND upper(sc.programme_code) = ${id.programmeCode}`;
+    return res.rows;
+  }
+  throw new Error(`certificate-serial: no lookup for identifier kind "${id.kind}"`);
+}
+
+// Resolves ANY identifier printed on the sheet to the stage_certificates
+// row(s) it names. Returns null when `ref` is not one of the shapes at all
+// (the caller then has other document families to try), otherwise
+// { kind, personScoped, rows, outcome } where outcome is:
+//
+//   'resolved'   exactly one row — attest it
+//   'not_found'  well-formed, nothing matched
+//   'multiple'   LEGITIMATELY several — see below
+//   'ambiguous'  several where there must be one: a data-integrity fault
+//
+// The default is to fail closed. Six of the seven identifiers name ONE
+// document, so two matches means the global serial sequence has been
+// re-scoped, a hash prefix has collided, or a record has been duplicated —
+// none of which may be papered over by picking a row.
+//
+// The Student ID is the one exception, and it is not an oversight: it
+// names a PERSON, not a document, and a student who completes
+// Ibtida'iyyah and then I'dadiyyah legitimately holds two certificates
+// under one ID. Returning "ambiguous" there would call a correct academic
+// record a fault; silently returning one of them would attest a document
+// the holder is not looking at. So it returns the whole set and the caller
+// asks which one — with the single exception that if the rows disagree on
+// WHO the student is, that is a real fault again and falls back to
+// 'ambiguous'.
+export async function resolveStageCertificateIdentifier(sql, ref) {
+  const id = parseStageCertificateIdentifier(ref);
+  if (!id) return null;
+  const personScoped = id.kind === 'student_id';
+  const rows = await selectByIdentifier(sql, id);
+  const base = { kind: id.kind, personScoped, rows };
+  if (rows.length === 0) return { ...base, outcome: 'not_found' };
+  if (rows.length === 1) return { ...base, outcome: 'resolved' };
+  if (!personScoped) return { ...base, outcome: 'ambiguous' };
+  const names = new Set(rows.map((r) => String(r.student_full_name || '')));
+  return { ...base, outcome: names.size === 1 ? 'multiple' : 'ambiguous' };
+}
+
+// The original two-shape resolver, kept as the narrow contract callers
+// outside the public verifier already depend on: full stored serial or
+// printed number only, { row } | { ambiguous: true } | null.
+export async function resolveStageCertificateRef(sql, ref) {
+  const id = parseStageCertificateIdentifier(ref);
+  if (!id || (id.kind !== 'serial' && id.kind !== 'printed_no')) return null;
+  const resolved = await resolveStageCertificateIdentifier(sql, ref);
+  if (resolved.outcome === 'ambiguous') return { ambiguous: true };
+  return resolved.rows[0] ? { row: resolved.rows[0] } : null;
 }
 
 // Splits a printed serial back into base + suffix. Returns null for
@@ -178,7 +337,7 @@ export function parseStageCertificateSerial(serialNo) {
 // the record has been altered since issuance.
 export function verifyStageCertificateIntegrity(env, row) {
   const parsed = parseStageCertificateSerial(row.serial_no);
-  if (!parsed) return { hashValid: false, suffixValid: false };
+  if (!parsed) return { hashValid: false, suffixValid: false, reason: 'unparseable_serial' };
   const fields = certificateHashFields({
     serialBase: parsed.serialBase,
     studentIdentityNo: row.student_identity_no,
@@ -188,9 +347,15 @@ export function verifyStageCertificateIntegrity(env, row) {
     gradeEn: row.grade_en,
     issuedAt: isoDateOnly(row.issued_at),
   });
-  const hashValid = verifyDocumentHash(env, fields, row.content_hash);
+  // The row records which key signed it. Verifying under the CURRENT key would
+  // fail every certificate issued before a rotation — the system publicly
+  // branding genuine documents as tampered, which is the failure mode key
+  // versioning exists to prevent. Rows written before versioning default to 1.
+  const check = verifyDocumentHash(env, fields, row.content_hash, row.hash_key_version || 1);
   const suffixValid = suffixFromHash(String(row.content_hash || '')) === parsed.suffix;
-  return { hashValid, suffixValid };
+  // 'key_unavailable' is an operator's missing environment variable, not
+  // evidence of tampering, and the caller has to be able to tell them apart.
+  return { hashValid: check.ok, suffixValid, reason: check.reason, detail: check.detail };
 }
 
 // Batch numbers: SHRS-CB-<YYYY>-<seq4>. Batch creation is a rare,

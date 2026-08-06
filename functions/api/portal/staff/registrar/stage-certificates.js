@@ -358,7 +358,7 @@ export async function onRequestPost({ request, env }) {
             continue;
           }
 
-          const { serialNo, fullHash } = await generateStageCertificateSerial(sql, env, {
+          const { serialNo, fullHash, keyVersion } = await generateStageCertificateSerial(sql, env, {
             programmeCode, issuedAt,
             studentIdentityNo: identityNo,
             studentFullName: student.full_name,
@@ -371,12 +371,12 @@ export async function onRequestPost({ request, env }) {
               (serial_no, batch_id, student_id, student_identity_no, student_full_name, student_full_name_ar,
                student_sex, programme_code, programme_label_en, programme_label_ar, institution_name,
                academic_year, grade_en, grade_ar, place_en, place_ar,
-               issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, issued_by_staff_id)
+               issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version, issued_by_staff_id)
             VALUES
               (${serialNo}, ${batchId}, ${student.id}, ${identityNo}, ${student.full_name}, ${student.full_name_ar || row.fullNameAr || null},
                ${student.sex || row.sex}, ${programmeCode}, ${programme.labelEn}, ${programme.labelAr}, ${INSTITUTION_DISPLAY_NAME},
                ${academicYear}, ${row.gradeEn || null}, ${row.gradeAr || null}, ${placeEn}, ${placeAr},
-               ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${staffId})`;
+               ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${keyVersion}, ${staffId})`;
 
           issued += 1;
           results.push({

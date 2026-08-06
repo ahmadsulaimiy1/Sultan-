@@ -9,6 +9,10 @@
       valid: 'Genuine — active credential', revoked: 'This credential has been revoked',
       notfound: 'No certificate or Ijazah found with that reference number',
       integrityFailed: 'Integrity check failed — this record does not match its cryptographic signature. Contact the Registrar.',
+      indexBadge: 'This is a Student ID, not a certificate number',
+      indexNote: 'It identifies a student who holds the credentials below. Verify a single credential by its own certificate number.',
+      unknownState: 'This record is in a state this page does not recognise — contact the Registrar’s Office',
+      heldCredentials: 'Credentials held', ofRecord: 'Student',
       recipient: 'Recipient', credential: 'Credential', scope: 'Scope', examiners: 'Examining Scholars',
       issued: 'Issued', reference: 'Reference No.', revokedNote: 'Revocation note', checking: 'Checking…',
       studentId: 'Student ID', institution: 'Institution', academicYear: 'Academic Year',
@@ -20,6 +24,10 @@
       valid: 'أصلية — بيانات اعتماد سارية', revoked: 'تم إلغاء هذه الشهادة/الإجازة',
       notfound: 'لم يُعثر على شهادة أو إجازة بهذا الرقم المرجعي',
       integrityFailed: 'فشل فحص السلامة — لا يطابق هذا السجل توقيعه التشفيري. يرجى التواصل مع مكتب المسجّل.',
+      indexBadge: 'هذا رقم أكاديمي للطالب، وليس رقم شهادة',
+      indexNote: 'يشير إلى طالب يحمل الشهادات المدرجة أدناه. للتحقق من شهادة بعينها، استخدم رقم الشهادة الخاص بها.',
+      unknownState: 'هذا السجل في حالة لا تعرفها هذه الصفحة — يرجى التواصل مع مكتب المسجّل',
+      heldCredentials: 'الشهادات المسجَّلة', ofRecord: 'الطالب',
       recipient: 'الاسم', credential: 'الشهادة', scope: 'النطاق', examiners: 'العلماء الممتحنون',
       issued: 'تاريخ الإصدار', reference: 'الرقم المرجعي', revokedNote: 'ملاحظة الإلغاء', checking: 'جارٍ التحقق…',
       studentId: 'الرقم الأكاديمي الدائم', institution: 'المؤسسة', academicYear: 'العام الدراسي',
@@ -43,10 +51,45 @@
         '</div>';
       return;
     }
+    // A Student ID identifies a PERSON, not a document, so it can match several
+    // certificates. The endpoint answers that with kind
+    // 'student_certificate_index' and lists them; it is not a verdict on any
+    // one credential and must never be badged as though it were.
+    if (data.kind === 'student_certificate_index') {
+      var recipientIdx = data.recipientName;
+      if (lang === 'ar' && data.recipientNameAr) recipientIdx = data.recipientNameAr;
+      else if (data.recipientNameAr) recipientIdx = data.recipientName + ' — ' + data.recipientNameAr;
+      var held = (data.matches || []).map(function (m) {
+        var type = (lang === 'ar' && m.credentialTypeAr) ? m.credentialTypeAr : m.credentialType;
+        // Each row carries its OWN status. One revoked credential among several
+        // must not be hidden behind the sibling that is still active.
+        var mark = m.status === 'active' ? '' : ' — ' + (m.status === 'revoked' ? t.revoked : t.unknownState);
+        return field(m.certificateNo, type + ' · ' + m.academicYear + mark);
+      }).join('');
+      resultEl.innerHTML =
+        '<div class="cert-verify-result is-index">' +
+        '<span class="cert-verify-badge index">' + t.indexBadge + '</span>' +
+        '<p class="cert-verify-note">' + t.indexNote + '</p>' +
+        '<div class="cert-verify-fields">' +
+        field(t.ofRecord, recipientIdx) + field(t.studentId, data.studentIdentityNo) +
+        '</div>' +
+        '<div class="cert-verify-fields"><div class="cert-verify-field"><span class="k">' +
+        t.heldCredentials + '</span></div>' + held + '</div>' +
+        '</div>';
+      return;
+    }
     var isRevoked = data.status === 'revoked';
     var integrityFailed = data.status === 'integrity_check_failed';
-    var badgeClass = integrityFailed || isRevoked ? 'revoked' : 'ok';
-    var badgeText = integrityFailed ? t.integrityFailed : isRevoked ? t.revoked : t.valid;
+    // WHITELIST, never a blacklist. This read `integrityFailed || isRevoked ?
+    // 'revoked' : 'ok'`, which meant any status the page had not been taught
+    // about rendered as the green "Genuine — active credential" badge. Adding
+    // one status to the endpoint was therefore enough to make an unverified
+    // record look verified on a public page. Only 'active' earns the green.
+    var isValid = data.status === 'active';
+    var badgeClass = isValid ? 'ok' : (integrityFailed || isRevoked) ? 'revoked' : 'unknown';
+    var badgeText = isValid ? t.valid
+      : integrityFailed ? t.integrityFailed
+        : isRevoked ? t.revoked : t.unknownState;
     var rows = '';
     rows += field(t.reference, data.referenceNo);
     var recipient = data.recipientName;
