@@ -101,6 +101,85 @@ default**: the brief was a faithful rebuild, so the default output is the
 client's plate and nothing else. The gate asserts this
 ("default output adds nothing to the client plate").
 
+### The institutional header
+
+Restored on the Founder's mandatory layout correction of 2026-08-06, and
+corrected again the same day: three emblems across the head of the sheet —
+Federal Republic of Nigeria at the left, the SHRS crest centred, Lagos State /
+Ministry of Basic and Secondary Education at the right.
+
+The **full institutional identity sits beneath the Nigerian arms**, six lines
+deep, on the Founder's explicit instruction:
+
+    جمهورية نيجيريا الاتحادية        FEDERAL REPUBLIC OF NIGERIA
+    مدارس السلطان حنفي الملكية       SULTAN HANAFI ROYAL SCHOOLS
+    قسم الدراسات الإسلامية والعربية   SCHOOL OF ISLAMIC & ARABIC STUDIES
+
+The four school lines were briefly placed under the centre crest instead; the
+Founder corrected that. The crest now stands alone on the page's axis and
+carries no text of its own. Arabic is Amiri, English is Cinzel — the same
+faces, weights and case as the Lagos block opposite, inherited rather than
+re-specified so the two blocks cannot drift apart.
+
+The left block runs deeper than the Lagos block (63.00 mm against 53.06 mm)
+because it carries six lines to the right's three. Both start from the same
+emblem baseline and both are centred on their own emblem; the difference is
+the content, not the alignment.
+
+It is scoped to `.sheet[data-stage="IDD"]`; the earlier two-emblem `.hdr-l` /
+`.hdr-r` header is untouched and still serves every other stage.
+
+The directive asked for precise centring, symmetric placement, a shared
+baseline and equal optical spacing, so those were **measured on the rendered
+sheet**, not eyeballed:
+
+| requirement | measured |
+| --- | --- |
+| SHRS crest centred on the page | 148.50 mm against a 148.50 mm centre — **0.00 mm off** |
+| equal optical spacing | 82.00 mm / 82.00 mm |
+| shared emblem baseline | Nigeria 41.60 / SHRS 41.60 — **0.00 mm spread** |
+| clears the basmala | the left block's ink stops 24.23 mm short of the basmala's glyph horizontally — they never meet |
+
+The baseline started **2.01 mm out**, because badge boxes of different heights
+cannot align across a row: each emblem sat at the bottom of its own box, and
+the boxes had different bottoms. The fix is one shared box for all three with
+`align-items:flex-end`, and emblems sized by the `img`'s own `max-height` —
+so the artwork's aspect ratio is never touched. Nothing is stretched, and
+nothing is upscaled.
+
+Resolution is asserted, not assumed: `verify-certificate-batch.mjs` reads each
+emblem's intrinsic size **out of the PNG header** and divides by its rendered
+height — 743 DPI for the Nigeria arms, 711 DPI for the SHRS crest, both above
+the 600 DPI the directive prefers. (That gate used to carry transcribed pixel
+counts, which would have kept reporting the old numbers after a file swap.)
+
+### A CSS comment that deleted the header
+
+Worth recording because nothing failed. A note added *below* a comment's
+closing `*/` left a stray delimiter in the stylesheet. CSS does not throw on
+that and does not warn: the parser discards until it resynchronises, which
+here silently removed the badge rules. The emblem baseline went 1.8 mm out and
+the reserved Lagos slot collapsed — and the batch gate still reported every
+check passing, because it was reading the emitted HTML, where the text was all
+present.
+
+Two checks now cover it, catching different failures:
+
+* **comment delimiters balance** — catches the stray `*/`;
+* **the header's load-bearing declarations appear in the stylesheet with its
+  comments stripped** — catches a rule commented out or deleted.
+
+Neither replaces the other: comment stripping and a real CSS parser resolve an
+odd `*/` differently, so the second check passes on the exact defect the first
+one catches. Both were run against a deliberately reintroduced copy of the bug
+before being trusted.
+
+**The Lagos State slot is reserved and empty.** No Lagos emblem exists anywhere
+in this repository. The old plate carries one at roughly 60 px, which over a
+15 mm emblem is about 100 DPI — upscaling a state emblem to fill the gap is
+exactly the invented detail the directive forbids, so the column holds its
+approved bilingual wording and waits for real artwork.
+
 ---
 
 

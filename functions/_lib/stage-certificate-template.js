@@ -1259,20 +1259,53 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <div class="o5-basmala">&#xFDFD;</div>
 
-  <div class="hdr hdr-l">
+  ${plateFor(progCode) ? `<!-- Institutional header, three emblems (Founder directive, mandatory).
+       Nigeria left, SHRS crest centred on the page, Lagos right. The three
+       share one baseline at y 41.6mm and sit at x 66.5 / 148.5 / 230.5 — equal
+       82mm optical spacing, symmetric about the sheet centre. Each text block
+       is centred on its own emblem.
+       LAGOS EMBLEM: the repository has no Lagos State artwork. The old plate
+       carried one at about 60px, which over a 15mm emblem is 102 DPI — it
+       would print visibly soft beside two crisp ones, and upscaling a STATE
+       EMBLEM is exactly the invented detail the directive forbids. The slot is
+       reserved and the approved wording stands; drop the file in as
+       lagos-state-arms.png and it appears with no other change. -->
+  <div class="ihdr">
+    <div class="ihdr-col ihdr-ng">
+      <div class="ihdr-badge"><img src="/assets/images/crests/nigeria-coat-of-arms.png"
+        alt="Federal Republic of Nigeria" /></div>
+      <div class="h-ar">جمهورية نيجيريا الاتحادية</div>
+      <div class="h-en">Federal Republic of Nigeria</div>
+      <div class="h-ar h-ar-2">مدارس السلطان حنفي الملكية</div>
+      <div class="h-en h-en-2">Sultan Hanafi Royal Schools</div>
+      <div class="h-ar h-ar-3">قسم الدراسات الإسلامية والعربية</div>
+      <div class="h-en h-en-3">School of Islamic &amp; Arabic Studies</div>
+    </div>
+    <div class="ihdr-col ihdr-shrs">
+      <div class="ihdr-badge ihdr-badge--lead"><img
+        src="/assets/images/crests/shrs-institutional-crest.png"
+        alt="Sultan Hanafi Royal Schools" /></div>
+    </div>
+    <div class="ihdr-col ihdr-lg">
+      <div class="ihdr-badge"></div>
+      <div class="h-ar">حكومة ولاية لاغوس</div>
+      <div class="h-ar h-ar-3">وزارة التعليم الأساسي والثانوي</div>
+      <div class="h-en h-en-3">Ministry of Basic and Secondary Education</div>
+    </div>
+  </div>` : `<div class="hdr hdr-l">
     <div class="h-ar">جمهورية نيجيريا الاتحادية</div>
     <div class="h-en">Federal Republic of Nigeria</div>
     <div class="h-ar h-ar-2">مدارس السلطان حنفي الملكية</div>
     <div class="h-en h-en-2">Sultan Hanafi Royal Schools</div>
     <div class="h-ar h-ar-3">قسم الدراسات الإسلامية والعربية</div>
     <div class="h-en h-en-3">School of Islamic &amp; Arabic Studies</div>
-  </div>
-  <div class="hdr hdr-r">
+  </div>`}
+  ${plateFor(progCode) ? '' : `<div class="hdr hdr-r">
     <div class="h-ar">حكومة ولاية لاغوس</div>
     <div class="h-en">Lagos State Government</div>
     <div class="h-ar h-ar-2">وزارة التعليم الأساسي والثانوي</div>
     <div class="h-en h-en-3">Ministry of Basic and Secondary Education</div>
-  </div>
+  </div>`}
 
   <div class="o9-title">
     ${titleFrame}
@@ -1649,6 +1682,47 @@ function docShell(title, sheetsHtml) {
   .hdr-r .h-ar{font-size:9pt;}
   .hdr-r .h-ar-2{font-size:8.8pt;margin-top:1.85mm;}
   .hdr-r .h-en-3{margin-top:1.05mm;font-size:4.6pt;letter-spacing:.28px;}
+
+  /* ── Institutional header, three emblems ──────────────────────────────
+     Emblem BOTTOMS share one baseline at 42.5mm — flex-end, not a fixed
+     top, because the crest is deliberately taller than the two state arms
+     and aligning tops would leave it floating. Columns are 56mm wide,
+     centred on 66.5 / 148.5 / 230.5: exactly 82mm apart and symmetric
+     about the sheet centre, so the crest is centred on the page and the
+     other two are mirror-placed about it. */
+  .ihdr{position:absolute;top:24.6mm;left:0;width:297mm;height:29mm;
+    display:flex;justify-content:center;align-items:flex-start;}
+  .ihdr-col{width:56mm;text-align:center;}
+  .ihdr-ng{margin-right:26mm;}
+  .ihdr-lg{margin-left:26mm;}
+  /* One badge box height for all three, images aligned to its FOOT. Giving the
+     centre badge a taller box instead put the emblem bottoms 2.01mm apart —
+     aligning inside boxes of different heights does not align across them. The
+     crest is still the larger emblem; it now grows upward from the shared
+     baseline rather than pushing its own floor down.
+
+     The emblems were briefly cut to 12.8/14.6mm, when the four institutional
+     lines sat in the CENTRE column and were being squeezed between the plate's
+     top ornament above and the basmala below. They now sit under the Nigerian
+     arms, and the left column's x-range (38.5-94.5mm) does not meet the
+     basmala's ink (119-184mm) at all — so that floor no longer applies and the
+     emblems are back at full size.
+
+     They are placed at their own aspect and never stretched: the source files
+     are 492x439 and 520x476, so at 15mm and 17mm they land at 743 and 711 DPI.
+     No upscaling, no sharpening. */
+  .ihdr-badge{height:17mm;display:flex;align-items:flex-end;justify-content:center;
+    margin-bottom:1.3mm;}
+  .ihdr-badge img{max-height:15mm;max-width:24mm;width:auto;object-fit:contain;}
+  .ihdr-badge--lead img{max-height:17mm;max-width:27mm;}
+  .ihdr .h-ar{font-size:7.6pt;line-height:1.35;}
+  .ihdr .h-en{font-size:5.2pt;letter-spacing:.5px;margin-top:.5mm;}
+  .ihdr .h-ar-2{margin-top:0;font-size:8.4pt;}
+  .ihdr .h-en-2{font-size:5.6pt;letter-spacing:.62px;margin-top:.5mm;}
+  /* The departmental pair runs a shade tighter than the institutional pair
+     above it — it is a qualifier, not a second name. */
+  .ihdr .h-ar-3{margin-top:.9mm;font-size:6.6pt;}
+  .ihdr .h-en-3{margin-top:.4mm;font-size:4.6pt;letter-spacing:.3px;}
 
   /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
      charcoal, no effects — a dignified spiritual header in the quiet

@@ -347,6 +347,40 @@ ok('the stage plate is laid over its solved paper tone',
 ok('every sheet carries QR markup from the real encoder',
   sheets.every((s) => /viewBox="0 0 4[0-9] 4[0-9]"/.test(s.html) && s.html.includes('vp-qr')));
 
+console.log(`\n── Stylesheet integrity ────────────────────────────────────`);
+// A malformed CSS comment does not throw and does not warn — the parser simply
+// discards everything until it next resynchronises, so a stray `*/` silently
+// deletes the rules that follow it. That happened here: a note added below a
+// comment's closing `*/` killed the header's badge rules, the emblems lost
+// their shared baseline and a reserved slot collapsed, and every other check
+// in this gate still passed. Comment delimiters are therefore counted.
+for (const s of sheets.slice(0, 1)) {
+  const css = (s.html.match(/<style>([\s\S]*?)<\/style>/g) || []).join('\n');
+  const opens = (css.match(/\/\*/g) || []).length;
+  const closes = (css.match(/\*\//g) || []).length;
+  ok(`stylesheet comments balance (${opens} open / ${closes} close)`, opens === closes,
+    opens === closes ? '' : 'an unbalanced delimiter silently discards the rules after it');
+}
+// Each of these declarations is load-bearing for a Founder requirement. They
+// are looked for in the stylesheet WITH ITS COMMENTS STRIPPED, so a rule that
+// has been commented out reads as absent — searching the raw HTML would find
+// the text and pass while the rule did nothing. This does NOT also catch the
+// unbalanced-delimiter case: comment stripping and a real CSS parser resolve
+// an odd `*/` differently. That case is the balance check above; these two
+// checks cover different failures and neither replaces the other.
+const REQUIRED_CSS = [
+  ['.ihdr-badge{height:', 'the shared emblem baseline box'],
+  ['align-items:flex-end', 'emblems aligned to the baseline, not to their own tops'],
+  ['.ihdr-badge img{max-height:', 'emblems sized without stretching'],
+];
+if (PROG === 'IDD') {
+  const live = sheets.map((s) => (s.html.match(/<style>([\s\S]*?)<\/style>/g) || [])
+    .join('\n').replace(/\/\*[\s\S]*?\*\//g, ''));
+  for (const [needle, what] of REQUIRED_CSS) {
+    ok(`header CSS reaches the parser: ${what}`, live.every((c) => c.includes(needle)));
+  }
+}
+
 console.log(`\n── Bidirectional text ──────────────────────────────────────`);
 // The session range must NOT be forced LTR: that reverses its reading order
 // for an Arabic reader. See the ar-range rule in the template.
@@ -358,24 +392,60 @@ ok('every Arabic block declares its direction',
   sheets.every((s) => /o5-name-ar/.test(s.html) && /direction:rtl/.test(s.html)));
 
 console.log(`\n── Asset resolution ────────────────────────────────────────`);
+// Pixel dimensions are READ FROM THE FILE, never transcribed. An earlier
+// version listed them as literals, which meant swapping in a smaller emblem
+// left the gate reporting the old file's DPI — a check that cannot notice
+// the thing it exists to notice.
+//
+// `axis` names the dimension the layout actually constrains, because that is
+// the one that sets the effective resolution: the header emblems are sized by
+// max-height with width:auto, so their height over their rendered height is
+// the real number and their width is free.
 const ASSETS = [
-  [PLATE_FILE, 1080, 297, 'locked artwork'],
-  ['official-seal.png', 1034, 34, 'embossed seal'],
-  ['signature-principal.png', 2336, 30, 'principal signature'],
-  ['signature-chairman.png', 391, 16, 'chairman signature'],
-  ['security-emblem-shrs.png', 170, 10, 'security patch'],
+  ['assets/images/certificates/' + PLATE_FILE, 'w', 297, 'locked artwork'],
+  ['assets/images/certificates/official-seal.png', 'w', 34, 'embossed seal'],
+  ['assets/images/certificates/signature-principal.png', 'w', 30, 'principal signature'],
+  ['assets/images/certificates/signature-chairman.png', 'w', 16, 'chairman signature'],
+  ['assets/images/certificates/security-emblem-shrs.png', 'w', 10, 'security patch'],
+  // Institutional header, restored 2026-08-06 on the Founder's mandatory
+  // layout correction. Rendered 15mm and 17mm tall respectively;
+  // the directive requires them crisp at 300-600 DPI and forbids upscaling,
+  // so this is the check that keeps a low-resolution replacement out.
+  ['assets/images/crests/nigeria-coat-of-arms.png', 'h', 15, 'Nigeria coat of arms'],
+  ['assets/images/crests/shrs-institutional-crest.png', 'h', 17, 'SHRS institutional crest'],
 ];
+
+// PNG and JPEG intrinsic size, straight out of the file's own header — no
+// image library, so this gate stays dependency-free like the rest of it.
+function intrinsicSize(path) {
+  const b = readFileSync(path);
+  if (b.readUInt32BE(0) === 0x89504e47) return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+  for (let i = 2; i < b.length - 9;) {           // JPEG: walk the marker chain
+    if (b[i] !== 0xff) { i++; continue; }
+    const m = b[i + 1];
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+      return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7) };
+    }
+    i += 2 + b.readUInt16BE(i + 2);
+  }
+  throw new Error(`cannot read intrinsic size of ${path}`);
+}
+
 // The locked artwork is a known, reported hard limit, not a regression:
 // the Founder's supplied file is 1080px across a 297mm sheet. It is listed
 // separately so it cannot quietly fail this gate every run and train
 // everyone to ignore a red line.
-for (const [file, px, mm, label] of ASSETS.filter((a) => a[0] !== PLATE_FILE)) {
+const PLATE_PATH = 'assets/images/certificates/' + PLATE_FILE;
+for (const [file, axis, mm, label] of ASSETS.filter((a) => a[0] !== PLATE_PATH)) {
+  if (!existsSync(file)) { ok(`${label}: file present`, false, `missing ${file}`); continue; }
+  const px = intrinsicSize(file)[axis];
   const dpi = px / mm * 25.4;
   ok(`${label}: ${px}px over ${mm}mm = ${Math.round(dpi)} DPI`, dpi >= 300,
     dpi < 300 ? 'below the 300 DPI print floor' : '');
 }
-const artDpi = 1080 / 297 * 25.4;
-console.log(`  NOTE  locked artwork: 1080px over 297mm = ${Math.round(artDpi)} DPI —`);
+const artPx = intrinsicSize(PLATE_PATH).w;
+const artDpi = artPx / 297 * 25.4;
+console.log(`  NOTE  locked artwork: ${artPx}px over 297mm = ${Math.round(artDpi)} DPI —`);
 console.log(`        below the 300 DPI floor. This is the supplied source file's own`);
 console.log(`        resolution, not something this pipeline degraded, and it cannot be`);
 console.log(`        raised without the original layered artwork. Reported, not asserted.`);
