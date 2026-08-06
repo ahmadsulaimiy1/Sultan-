@@ -100,7 +100,7 @@ function esc(s) {
 // integer petal count is the difference between ornament and scribble, and it
 // costs nothing in security: the moire that defeats a copier comes from the
 // line PITCH, which the concentric bands below still supply.
-function rosette(cx, cy, R, petals, amp, steps = 640) {
+function rosette(cx, cy, R, petals, amp, steps = 380) {
   const r = R / petals;
   const k = petals - 1;
   const pts = [];
@@ -125,9 +125,16 @@ function medallion(cx, cy, scale, stroke, opacity, colour = GOLD_DEEP) {
 // Interleaved sine strands. Structural strokes stay at or above 0.10mm and
 // screen strokes at or above 0.07mm — the floor the press specification sets
 // for this paper.
+// SAMPLING DENSITY IS A FILE-SIZE DECISION, and on this sheet it is a large
+// one: the guilloche net alone is seven systems of five strands, regenerated
+// per certificate and inlined thirteen times into one press file. At 2.6
+// points per millimetre the 13-page PDF came out at 103MB. 1.5 puts a point
+// every 0.67mm on a curve whose shortest cycle is 37mm — 55 points per cycle,
+// smooth past what 600 DPI can resolve — and takes the file to a size a
+// printer will accept by email.
 function lathe(x, y, len, h, strands, stroke, opacity, vertical = false) {
   const out = [];
-  const steps = Math.max(80, Math.round(len * 2.6));
+  const steps = Math.max(64, Math.round(len * 1.5));
   for (let s = 0; s < strands; s++) {
     const phase = (s / strands) * Math.PI * 2;
     const pts = [];
@@ -225,19 +232,49 @@ function cornerFan(cx, cy, sx, sy) {
 // ─────────────────────────────────────────────────────────────────────────────
 // THE ENGINE-TURNED BORDER
 //
-// One repeating lathe cell, declared once as an SVG <pattern> and painted into
-// four band rects. A pattern rather than 170 copies of a group: the sheet is
-// regenerated per certificate and lands in a 13-page press PDF, so the cost of
-// every ornament is paid thirteen times.
+// AN SVG <pattern> FILL IS RASTERISED INTO THE PDF, whatever it contains.
+// Measured by disabling one layer at a time and re-exporting a single page:
+// with the four pattern-filled band rects the page came to 8.56MB, and with
+// their fill set to `none` it came to 1.32MB — the border alone was 85% of the
+// file. Simplifying the tile's contents from a 96-point rosette to four arcs
+// changed the figure by nothing at all, because the cost is the raster, not the
+// geometry. A 13-page press file at 102MB is not one a printer wants by email.
+//
+// So the band is emitted as REAL VECTOR: the cell repeated along each side with
+// its own offsets, concatenated into one path per stroke weight. Three paths
+// per side instead of a rasterised tile, and the engraving stays engraving all
+// the way into the press file.
 // ─────────────────────────────────────────────────────────────────────────────
-function ropeCell() {
-  const C = 5.4;                       // cell, in mm
-  const out = [];
-  // Interlocking arcs — the "rope" — plus a struck rosette in each cell.
-  out.push(`<path d="M 0 ${C / 2} Q ${C / 4} 0 ${C / 2} ${C / 2} T ${C} ${C / 2}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>`);
-  out.push(`<path d="M 0 ${C / 2} Q ${C / 4} ${C} ${C / 2} ${C / 2} T ${C} ${C / 2}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>`);
-  out.push(`<path d="${rosette(C / 2, C / 2, 1.55, 7, 0.38, 96)}" fill="none" stroke="${GOLD}" stroke-width="0.085" opacity="0.6"/>`);
-  return { C, body: out.join('') };
+const ROPE_CELL = 6.2;
+
+function ropeBand(x, y, len, vertical, clipId) {
+  const C = ROPE_CELL;
+  const h = C / 2;
+  const q = C / 4;
+  const r = 1.15;                      // quatrefoil lobe radius
+  const n = Math.ceil(len / C);
+  // (u, v) are along-the-band and across-the-band; mapping them to (x, y) is
+  // the only thing that differs between a horizontal run and a vertical one.
+  const P = (u, v) => (vertical
+    ? `${(x + v).toFixed(2)} ${(y + u).toFixed(2)}`
+    : `${(x + u).toFixed(2)} ${(y + v).toFixed(2)}`);
+  const rope = [];
+  const foil = [];
+  const dots = [];
+  for (let i = 0; i < n; i++) {
+    const o = i * C;
+    rope.push(`M ${P(o, h)} Q ${P(o + q, 0)} ${P(o + h, h)} T ${P(o + C, h)}`);
+    rope.push(`M ${P(o, h)} Q ${P(o + q, C)} ${P(o + h, h)} T ${P(o + C, h)}`);
+    foil.push(`M ${P(o + h, h - r * 2)} A ${r} ${r} 0 0 1 ${P(o + h + r, h - r)}`
+      + ` A ${r} ${r} 0 0 1 ${P(o + h, h)} A ${r} ${r} 0 0 1 ${P(o + h - r, h - r)}`
+      + ` A ${r} ${r} 0 0 1 ${P(o + h, h - r * 2)} Z`);
+    dots.push(`M ${P(o + h, h - r)} m -0.32 0 a 0.32 0.32 0 1 0 0.64 0 a 0.32 0.32 0 1 0 -0.64 0`);
+  }
+  return `<g clip-path="url(#${clipId})">
+    <path d="${rope.join(' ')}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>
+    <path d="${foil.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.085" opacity="0.62"/>
+    <path d="${dots.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.075" opacity="0.5"/>
+  </g>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -293,7 +330,6 @@ function voidPantograph(uid) {
 function groundSvg(serial, uid) {
   const s = esc(serial);
   const R = RC_RULES;
-  const cell = ropeCell();
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
   const vReps = Math.ceil(166 / (vText.length * 1.38)) + 1;
   const hText = `SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `;
@@ -333,9 +369,10 @@ function groundSvg(serial, uid) {
       <stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
     </linearGradient>
     <mask id="rcIrisMask${uid}"><rect x="0" y="52" width="${W}" height="28" fill="url(#rcIrisFade${uid})"/></mask>
-    <pattern id="rcRope${uid}" width="${cell.C}" height="${cell.C}" patternUnits="userSpaceOnUse">${cell.body}</pattern>
-    <pattern id="rcRopeV${uid}" width="${cell.C}" height="${cell.C}" patternUnits="userSpaceOnUse"
-      patternTransform="rotate(90)">${cell.body}</pattern>
+    <clipPath id="rcBandT${uid}"><rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${band}"/></clipPath>
+    <clipPath id="rcBandB${uid}"><rect x="${R.frame}" y="${H - R.field}" width="${W - 2 * R.frame}" height="${band}"/></clipPath>
+    <clipPath id="rcBandL${uid}"><rect x="${R.frame}" y="${R.field}" width="${band}" height="${H - 2 * R.field}"/></clipPath>
+    <clipPath id="rcBandR${uid}"><rect x="${W - R.field}" y="${R.field}" width="${band}" height="${H - 2 * R.field}"/></clipPath>
     <pattern id="rcFine${uid}" width="0.34" height="0.34" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
       <rect width="0.34" height="0.1" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
     <pattern id="rcCoarse${uid}" width="0.9" height="0.9" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
@@ -385,10 +422,10 @@ function groundSvg(serial, uid) {
        rule and a scalloped inner line. -->
   <rect x="${R.trim}" y="${R.trim}" width="${W - 2 * R.trim}" height="${H - 2 * R.trim}"
     fill="none" stroke="url(#rcFoil)" stroke-width="0.8"/>
-  <rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${band}" fill="url(#rcRope${uid})"/>
-  <rect x="${R.frame}" y="${H - R.field}" width="${W - 2 * R.frame}" height="${band}" fill="url(#rcRope${uid})"/>
-  <rect x="${R.frame}" y="${R.field}" width="${band}" height="${H - 2 * R.field}" fill="url(#rcRopeV${uid})"/>
-  <rect x="${W - R.field}" y="${R.field}" width="${band}" height="${H - 2 * R.field}" fill="url(#rcRopeV${uid})"/>
+  ${ropeBand(R.frame, R.frame, W - 2 * R.frame, false, `rcBandT${uid}`)}
+  ${ropeBand(R.frame, H - R.field, W - 2 * R.frame, false, `rcBandB${uid}`)}
+  ${ropeBand(R.frame, R.field, H - 2 * R.field, true, `rcBandL${uid}`)}
+  ${ropeBand(W - R.field, R.field, H - 2 * R.field, true, `rcBandR${uid}`)}
   <rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${H - 2 * R.frame}"
     fill="none" stroke="url(#rcFoil)" stroke-width="1.1"/>
   <rect x="${R.field}" y="${R.field}" width="${W - 2 * R.field}" height="${H - 2 * R.field}"
