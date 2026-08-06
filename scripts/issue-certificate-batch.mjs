@@ -33,6 +33,10 @@ import { qrSvg } from '../functions/_lib/qrcode.js';
 const PROGRAMME = 'IBT';
 const ACADEMIC_YEAR = '2025/2026';
 const ISSUED_AT = '2026-08-08';
+// institution_name is NOT NULL in stage_certificates. The renderer never
+// reads it (the institution is set in the locked artwork), so it was
+// missing here until the register SQL was checked against the schema.
+const INSTITUTION_NAME = 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies';
 const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const PLACE_AR = 'إكورودو، لاغوس، نيجيريا';
 const ORIGIN = 'https://www.shroyalschools.com';
@@ -272,8 +276,29 @@ const sqlOut = [
   ...issued.map((r) => `UPDATE students SET identity_no = ${q(r.identityNo)} WHERE full_name = ${q(r.studentEn)} AND identity_no IS NULL;`),
   `SELECT setval('student_identity_seq', ${FIRST_IDENTITY_SEQ + issued.length - 1}, true);`,
   '',
-  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, academic_year, place_en, place_ar, issued_at, content_hash, status) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(ACADEMIC_YEAR)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(r.contentHash)}, 'issued');`),
-  `SELECT setval('stage_certificate_seq', ${FIRST_CERTIFICATE_SEQ + issued.length - 1}, true);`,
+  // Column list checked against sql/schema.sql, not written from memory.
+  // The previous version named a `status` column that stage_certificates
+  // has never had (it records revoked_at / revocation_note) and omitted
+  // programme_label_en and institution_name, both NOT NULL — so this file
+  // could not actually be imported. A register that cannot be imported is
+  // not a register.
+  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)});`),
+  '',
+  '-- The sequence name is stage_certificate_serial_seq (sql/schema.sql).',
+  '-- An earlier version of this file said stage_certificate_seq, which does',
+  '-- not exist. That is not a cosmetic slip: if the sequence is not advanced',
+  '-- past these certificates, the Registrar re-issues 000035 to a different',
+  '-- student in a later year — and because the number PRINTED on the',
+  '-- certificate is now SHRS-CERT-IBT-000035 with no year, those two',
+  '-- documents would carry the identical printed number.',
+  `SELECT setval('stage_certificate_serial_seq', ${FIRST_CERTIFICATE_SEQ + issued.length - 1}, true);`,
+  '',
+  '-- Make the PRINTED number unique in the database, not merely unique by',
+  '-- convention. serial_no already has a UNIQUE constraint, but two rows',
+  '-- differing only in year and hash suffix satisfy it while collapsing to',
+  '-- the same engraved number. This index is what actually forbids that.',
+  "CREATE UNIQUE INDEX IF NOT EXISTS stage_certificates_printed_no_uniq",
+  "  ON stage_certificates ((split_part(serial_no, '-', 3) || '-' || split_part(serial_no, '-', 5)));",
   '',
 ].join('\n');
 writeFileSync(join(dir, 'graduation-register.sql'), sqlOut);

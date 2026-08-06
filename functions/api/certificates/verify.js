@@ -19,7 +19,10 @@
 // revoked no matter how convincing the physical copy looks.
 import { getSql } from '../../_lib/db.js';
 import { json } from '../../_lib/http.js';
-import { parseStageCertificateSerial, verifyStageCertificateIntegrity, isoDateOnly } from '../../_lib/certificate-serial.js';
+import {
+  parseStageCertificateSerial, parseStageCertificateDisplayNo, resolveStageCertificateRef,
+  displayStageCertificateNo, verifyStageCertificateIntegrity, isoDateOnly,
+} from '../../_lib/certificate-serial.js';
 import { hashIpAddress } from '../../_lib/document-hash.js';
 
 // Best-effort verification audit (same verification_log the graduation-
@@ -54,13 +57,24 @@ export async function onRequestGet({ request, env }) {
     // serial's printed anti-forgery suffix is re-derived from it, so a
     // tampered record or fabricated serial surfaces as an integrity
     // failure instead of quietly verifying.
-    const parsedSerial = parseStageCertificateSerial(ref);
-    if (parsedSerial) {
-      const res = await sql`
-        SELECT sc.*, b.batch_no FROM stage_certificates sc
-        LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-        WHERE sc.serial_no = ${parsedSerial.serialBase + '-' + parsedSerial.suffix}`;
-      const row = res.rows[0];
+    // Accepts BOTH the stored serial and the short number now engraved on
+    // the certificate face (SHRS-CERT-IBT-000035). The short form omits
+    // the year and the printed suffix, so the resolver has to find the row
+    // first; the integrity check below is unchanged either way, because it
+    // recomputes from the STORED serial, not from what was typed. A person
+    // reading the sheet therefore verifies exactly as strongly as before —
+    // what they lose is only the ability to eyeball the suffix themselves.
+    const resolved = (parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref))
+      ? await resolveStageCertificateRef(sql, ref)
+      : null;
+    if (resolved && resolved.ambiguous) {
+      // Two rows for one printed number means the global serial sequence
+      // has been re-scoped or duplicated. Never pick one.
+      await logVerification(sql, request, ref, 'ambiguous');
+      return json({ error: 'That number matches more than one record. Contact the Registrar’s Office.' }, 409);
+    }
+    if (resolved || parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref)) {
+      const row = resolved && resolved.row;
       if (!row) {
         await logVerification(sql, request, ref, 'not_found');
         return json({ ok: true, found: false });
@@ -80,6 +94,9 @@ export async function onRequestGet({ request, env }) {
         kind: 'stage_certificate',
         serialNo: row.serial_no,
         referenceNo: row.serial_no,
+        // The number as ENGRAVED on the sheet, so a verifier comparing the
+        // result against the document in their hand sees the same string.
+        certificateNo: displayStageCertificateNo(row.serial_no),
         recipientName: row.student_full_name,
         recipientNameAr: row.student_full_name_ar,
         studentIdentityNo: row.student_identity_no,

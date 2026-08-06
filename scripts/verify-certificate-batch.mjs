@@ -11,7 +11,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
-import { parseStageCertificateSerial } from '../functions/_lib/certificate-serial.js';
+import { parseStageCertificateSerial, displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
 
 const DIR = process.argv[2] || 'dist/certificates/2026-08-08-IBT-000035';
 
@@ -123,6 +123,62 @@ for (const [seq, en, ar] of DIRECTIVE) {
 }
 ok('all 7 English and 7 Arabic names match the directive code point for code point',
   nameFaults.length === 0, nameFaults.join('\n          '));
+
+console.log(`\n── The engraved certificate number ─────────────────────────`);
+// The number PRINTED on the face is the short, timeless form. These checks
+// exist because the visible number and the stored serial are now different
+// strings, and nothing else in the pipeline would notice them drifting.
+const printedFaults = [];
+for (const e of reg.entries) {
+  const s = sheets.find((x) => x.file.startsWith(String(e.certId).padStart(6, '0')));
+  if (!s) continue;
+  const printed = displayStageCertificateNo(e.serialNo);
+  if (!printed) { printedFaults.push(`${e.certId}: serial will not reduce to a printed number`); continue; }
+  if (!s.html.includes(printed)) printedFaults.push(`${e.certId}: "${printed}" is not on the sheet`);
+  if (/(19|20)\d{2}/.test(printed)) printedFaults.push(`${e.certId}: printed number exposes a year — "${printed}"`);
+  if (!s.html.includes('o5-cnplate')) printedFaults.push(`${e.certId}: no security cartouche`);
+  // The covert layers must still carry the FULL serial, or dropping the
+  // year and suffix from the face would drop them from the document.
+  if (!s.html.includes(e.serialNo)) printedFaults.push(`${e.certId}: full serial absent from the microtext`);
+}
+ok('every sheet engraves its short number, exposes no year, and keeps the full serial covertly',
+  printedFaults.length === 0, printedFaults.join('\n          '));
+const printedNos = reg.entries.map((e) => displayStageCertificateNo(e.serialNo));
+ok('printed numbers are unique across the batch', new Set(printedNos).size === printedNos.length);
+
+console.log(`\n── The register SQL must actually import ───────────────────`);
+// Both of these caught real defects: an INSERT naming a `status` column
+// stage_certificates has never had, and a setval on a sequence that does
+// not exist. A register file that errors on import is not a register.
+const schema = readFileSync('sql/schema.sql', 'utf8');
+const regSql = readFileSync(join(DIR, 'graduation-register.sql'), 'utf8');
+const tableCols = (name) => {
+  const m = schema.match(new RegExp(`CREATE TABLE IF NOT EXISTS ${name} \\(([\\s\\S]*?)\\n\\);`));
+  return m ? m[1].split('\n').map((l) => (l.trim().match(/^([a-z_]+)\s/) || [])[1]).filter(Boolean) : [];
+};
+const scCols = tableCols('stage_certificates');
+const insertCols = [...regSql.matchAll(/INSERT INTO stage_certificates \(([^)]*)\)/g)]
+  .flatMap((m) => m[1].split(',').map((c) => c.trim()));
+const unknownCols = [...new Set(insertCols)].filter((c) => !scCols.includes(c));
+ok('every column the register INSERTs exists in stage_certificates',
+  scCols.length > 0 && unknownCols.length === 0,
+  scCols.length === 0 ? 'could not parse the schema' : unknownCols.length ? `unknown: ${unknownCols.join(', ')}` : '');
+const notNull = (schema.match(/CREATE TABLE IF NOT EXISTS stage_certificates \(([\s\S]*?)\n\);/) || ['', ''])[1]
+  .split('\n').filter((l) => /NOT NULL/.test(l) && !/DEFAULT|SERIAL/.test(l))
+  .map((l) => l.trim().split(/\s/)[0]);
+const missingNotNull = notNull.filter((c) => !insertCols.includes(c));
+ok('the register supplies every NOT NULL column', missingNotNull.length === 0,
+  missingNotNull.length ? `missing: ${missingNotNull.join(', ')}` : '');
+const seqsUsed = [...regSql.matchAll(/setval\('([a-z_]+)'/g)].map((m) => m[1]);
+const seqsDefined = [...schema.matchAll(/CREATE SEQUENCE IF NOT EXISTS ([a-z_]+)/g)].map((m) => m[1]);
+const badSeq = seqsUsed.filter((s) => !seqsDefined.includes(s));
+ok('every sequence the register advances actually exists',
+  seqsUsed.length > 0 && badSeq.length === 0,
+  badSeq.length ? `unknown: ${badSeq.join(', ')}` : seqsUsed.length ? '' : 'the register advances no sequence at all');
+ok('the register constrains the PRINTED number, not just the stored serial',
+  /CREATE UNIQUE INDEX[\s\S]*split_part\(serial_no/.test(regSql),
+  /CREATE UNIQUE INDEX[\s\S]*split_part\(serial_no/.test(regSql) ? ''
+    : 'no unique index on the derived printed number — two years could print the same one');
 
 console.log(`\n── Content and placeholders ────────────────────────────────`);
 const PLACEHOLDER = /\b(lorem|ipsum|TODO|FIXME|XXX|PLACEHOLDER|SAMPLE|DEMO|TEST STUDENT|John Doe|Jane Doe|Student Name|xxxx|000000)\b/i;

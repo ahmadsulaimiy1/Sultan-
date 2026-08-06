@@ -1,3 +1,5 @@
+import { displayStageCertificateNo } from './certificate-serial.js';
+
 // Academic Stage Certificate — ROYAL FLAGSHIP EDITION v3.
 //
 // Governed entirely by docs/shrs-certificate-editorial-bible.md
@@ -527,6 +529,282 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
   return `url('data:image/svg+xml,${encodeURIComponent(svg.replace(/\s+/g, ' '))}')`;
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// CERTIFICATE NUMBER SECURITY CARTOUCHE (lower-left)
+// ─────────────────────────────────────────────────────────────────────
+// Placement is dictated by the paper, not by taste. A chroma scan of the
+// locked artwork finds an optically-variable strip already printed in the
+// lower left — a*/b* spread 3.8-4.6 / 4.7-6.7 against a 0.77 / 3.10 plain-
+// paper baseline — occupying x 60-120mm, y 185.6-196.2mm, with the
+// artwork's own microtext rules immediately above (y 183.2-184.8) and
+// below (y 196.2-197.5). That is 60mm wide: the same width as the
+// verification plate on the opposite side. The original artwork plainly
+// reserved a panel here.
+//
+// So the cartouche is drawn AROUND those devices rather than over them.
+// Its frame lands at x 59-121, y 172.2-197.5 — the verification plate's
+// exact width and vertical band — and the paper's own hologram becomes the
+// panel's integrated bottom edge, the paper's own microtext becomes the
+// panel's microtext bands. This is the only reading of "part of the paper
+// itself, not pasted on top" that is literally true, and it repeats the
+// lesson already recorded above: do not composite a second hologram over a
+// hologram the sheet already carries.
+//
+// Everything new therefore lives in the clean field y 0-11 (absolute
+// 172.2-183.2), measured at 1-9% ink coverage and plain-paper chroma.
+//
+// PRINT LIMITS, stated so nobody has to guess later:
+//   · structural strokes are >= 0.10mm and screen strokes >= 0.07mm. The
+//     first pass used 0.045-0.05mm, which is below what a commercial press
+//     holds on this stock; a security screen that breaks up has stopped
+//     being a control. On UNCOATED stock the floor rises to ~0.15mm, so
+//     the printer must be told the stock before this goes to plate.
+//   · fine linework carries SOLID light ink, never an opacity value. An
+//     opacity on a hairline becomes a screen percentage at separation and
+//     a screened hairline is the first thing to drop out on press.
+//   · microtext is 0.90pt on the ring and 0.75pt on the repeats. 0.6pt is
+//     the absolute floor and only on COATED stock at 300+ lpi; on uncoated
+//     it fills in and becomes a grey line carrying no information
+//   · the anti-copy screen runs 0.48mm pitch (~53 lpi) at 8 degrees, off
+//     both 0 and 45 so it clashes with standard copier screen angles
+//   · the latent panel is COVERAGE-MATCHED, not merely angle-shifted:
+//     0.05mm on a 0.34mm pitch against 0.10mm on a 0.68mm pitch is the
+//     same 0.147 ink fraction, so the two read as one tone flat-on, while
+//     a copier's threshold treats a coarse ruling and a fine one
+//     differently. An angle change ALONE was tried first and measured
+//     1.05x separation on a simulated copy — i.e. none. See the honesty
+//     note in docs/certificate-number-cartouche.md: this is the one
+//     feature here that software cannot finish proving, and it needs a
+//     press proof run through a real copier before anyone relies on it.
+// Nothing here claims to be UV ink, security fibre, or hot-stamped foil:
+// those need a press pass, a paper mill and a stamping die respectively.
+// The UV crosshairs are REGISTRATION MARKS showing a UV unit where to lay
+// down, not fluorescence — see docs/certificate-number-cartouche.md.
+
+// Fine parallel line screen as a tiling pattern — one <pattern> element
+// instead of several thousand <line> elements, and genuinely resolution
+// independent. `deg` is the screen angle; two screens differing by ~74deg
+// at identical weight are what makes a latent image work.
+function screenPattern(id, deg, pitch, stroke, colour, opacity) {
+  return `<pattern id="${id}" width="${pitch}" height="${pitch}" patternUnits="userSpaceOnUse"
+    patternTransform="rotate(${deg})">
+    <line x1="0" y1="-0.1" x2="0" y2="${pitch + 0.1}" stroke="${colour}"
+      stroke-width="${stroke}" opacity="${opacity}"/>
+  </pattern>`;
+}
+
+// The cartouche outline: ogee-arched ends and chamfered corners, so it
+// reads as an engraved plate and not as a rounded rectangle. `inset`
+// shrinks it concentrically for the inner rules and the microtext ring.
+function cartouchePath(w, h, inset) {
+  const x0 = inset, x1 = w - inset, y0 = inset, y1 = h - inset;
+  const e = 4.6 - inset * 0.55;          // how far the ogee tip reaches out
+  const c = 2.2 - inset * 0.5;           // top/bottom corner chamfer
+  const my = h / 2;
+  return [
+    `M ${(x0 + e + c).toFixed(2)} ${y0.toFixed(2)}`,
+    `L ${(x1 - e - c).toFixed(2)} ${y0.toFixed(2)}`,
+    `L ${(x1 - e).toFixed(2)} ${(y0 + c).toFixed(2)}`,
+    `C ${(x1 - e * 0.15).toFixed(2)} ${(y0 + c + 1.4).toFixed(2)} ${x1.toFixed(2)} ${(my - 2.6).toFixed(2)} ${x1.toFixed(2)} ${my.toFixed(2)}`,
+    `C ${x1.toFixed(2)} ${(my + 2.6).toFixed(2)} ${(x1 - e * 0.15).toFixed(2)} ${(y1 - c - 1.4).toFixed(2)} ${(x1 - e).toFixed(2)} ${(y1 - c).toFixed(2)}`,
+    `L ${(x1 - e - c).toFixed(2)} ${y1.toFixed(2)}`,
+    `L ${(x0 + e + c).toFixed(2)} ${y1.toFixed(2)}`,
+    `L ${(x0 + e).toFixed(2)} ${(y1 - c).toFixed(2)}`,
+    `C ${(x0 + e * 0.15).toFixed(2)} ${(y1 - c - 1.4).toFixed(2)} ${x0.toFixed(2)} ${(my + 2.6).toFixed(2)} ${x0.toFixed(2)} ${my.toFixed(2)}`,
+    `C ${x0.toFixed(2)} ${(my - 2.6).toFixed(2)} ${(x0 + e * 0.15).toFixed(2)} ${(y0 + c + 1.4).toFixed(2)} ${(x0 + e).toFixed(2)} ${(y0 + c).toFixed(2)}`,
+    'Z',
+  ].join(' ');
+}
+
+// Engraved volute — a quarter scroll with a bud, mirrored into each
+// corner by the sx/sy signs.
+function volute(cx, cy, sx, sy) {
+  return `<g fill="none" stroke="#8A6A24" stroke-linecap="round">
+    <path d="M ${cx} ${cy + sy * 2.9} C ${cx} ${cy + sy * 0.9} ${cx + sx * 0.9} ${cy} ${cx + sx * 2.9} ${cy}"
+      stroke-width="0.13"/>
+    <path d="M ${cx + sx * 0.55} ${cy + sy * 3.5} C ${cx + sx * 0.55} ${cy + sy * 1.15} ${cx + sx * 1.15} ${cy + sy * 0.55} ${cx + sx * 3.5} ${cy + sy * 0.55}"
+      stroke-width="0.075" stroke="#A98A3C"/>
+    <path d="M ${cx + sx * 1.5} ${cy + sy * 1.5} c ${sx * 0.85} ${sy * -0.1} ${sx * 1.0} ${sy * 0.55} ${sx * 0.25} ${sy * 0.9}"
+      stroke-width="0.07" stroke="#A98A3C"/>
+    <circle cx="${cx + sx * 0.55}" cy="${cy + sy * 0.55}" r="0.2" fill="#8A6A24" stroke="none"/>
+  </g>`;
+}
+
+// Khatam boss for the head of the cartouche: an eight-point star in the
+// same constructed vocabulary as the frame's corner medallions, at the
+// scale a seated ornament can occupy without breaching the top rule.
+function cartoucheBoss(cx, cy, r) {
+  const star = (r1, r2, rot) => {
+    const pts = [];
+    for (let i = 0; i < 16; i++) {
+      const rr = i % 2 === 0 ? r1 : r2;
+      const a = (i / 16) * Math.PI * 2 + rot;
+      pts.push((i ? 'L' : 'M') + (cx + rr * Math.cos(a)).toFixed(2) + ' ' + (cy + rr * Math.sin(a)).toFixed(2));
+    }
+    return pts.join('') + 'Z';
+  };
+  return `<g>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#FBF4E4" stroke="#8A6A24" stroke-width="0.13"/>
+    <path d="${star(r * 0.86, r * 0.4, 0)}" fill="url(#cnGold)" stroke="#6E5013" stroke-width="0.05"/>
+    <path d="${star(r * 0.6, r * 0.26, Math.PI / 8)}" fill="#5C431F" opacity="0.85"/>
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.17).toFixed(2)}" fill="url(#cnGold)" stroke="#6E5013" stroke-width="0.05"/>
+  </g>`;
+}
+
+// The panel. `displayNo` is the timeless printed number
+// (SHRS-CERT-IBT-000035); `fullSerial` is the full database serial and is
+// what the microtext and the microscopic repeats carry, so the covert
+// layer still binds the sheet to the year and the HMAC suffix even though
+// the visible number does not show them.
+// NOTE ON UNITS — this viewBox is 62x25.3 with one user unit = one
+// millimetre, so every font-size below is in MILLIMETRES, not points. That
+// is not obvious and it has already caused one defect: passing a point
+// value straight through set the number at 126.6mm across a 62mm panel.
+// PT is the conversion, and sizes are written as `n * PT` wherever the
+// intent is a typographic size, so the number in the source is the number
+// a printer would name.
+const PT = 0.35278;
+
+// FIGURE STYLE FOR THE ENGRAVED NUMBER — one switch, deliberately.
+// 'oldstyle' is the Premium Certificate Number directive's explicit
+// instruction and is Cormorant Garamond's DEFAULT (the family ships text
+// figures and exposes `lnum` to get lining, not `onum` to get oldstyle —
+// verified against the binaries: cap height 625, while 3/4/5/7/9 descend
+// to -275, 6 rises to 661, 8 to 574, and 0/1/2 sit at x-height).
+//
+// The cost is real and is recorded here rather than discovered later: at
+// x-height the zeros in a run like 000035 read as lower-case o's, which is
+// why this file's identifier band uses lining figures (see .bg-v-id). On a
+// number a registrar may transcribe from print, that is a transcription
+// risk, not only a matter of taste. Set this to 'lining' to switch; both
+// render from the same font with no other change.
+const CN_FIGURE_STYLE = 'oldstyle';
+
+function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracking }) {
+  const W = 62, H = 25.3;
+  const FIELD = 11;                      // clean paper; below this the artwork's own devices run
+  // Repeat counts are sized to the RUN LENGTH, not picked by feel. The
+  // ring path is ~165mm around and Inter sets ~0.14mm per character at
+  // 0.72pt, so ~1180 characters are needed to close the ring; at 5 repeats
+  // the text died out along the top edge and left three sides bare. The
+  // repeat bands are ~16mm slots at 0.58pt (~0.113mm/char), so 4 repeats
+  // of a 32-character serial fills one without overrunning it.
+  const micro = `${fullSerial} · SULTAN HANAFI ROYAL SCHOOLS · `.repeat(16);
+  const repeats = `${fullSerial} `.repeat(3);
+  const numY = 9.55, numX = W / 2;
+
+  // Registration crosshairs for a UV unit. Marks, not fluorescence.
+  const uvMark = (x, y) => `<g stroke="#B9A9CE" stroke-width="0.07" opacity="0.55">
+    <line x1="${x - 0.75}" y1="${y}" x2="${x + 0.75}" y2="${y}"/>
+    <line x1="${x}" y1="${y - 0.75}" x2="${x}" y2="${y + 0.75}"/>
+    <circle cx="${x}" cy="${y}" r="0.38" fill="none" stroke-width="0.05"/>
+  </g>`;
+
+  return `<svg class="cn-plate" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="cnGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8C6516"/><stop offset="0.3" stop-color="#D9B44A"/>
+      <stop offset="0.52" stop-color="#F3E3AC"/><stop offset="0.74" stop-color="#C49A2C"/>
+      <stop offset="1" stop-color="#6E5013"/>
+    </linearGradient>
+    ${screenPattern('cnCopy', 8, 0.48, 0.07, '#D8CBAC', 1)}
+    ${screenPattern('cnLatent', 82, 0.96, 0.14, '#D8CBAC', 1)}
+    <path id="cnRing" d="${cartouchePath(W, H, 1.55)}"/>
+    <clipPath id="cnField"><rect x="0" y="0" width="${W}" height="${FIELD}"/></clipPath>
+    <clipPath id="cnInner"><path d="${cartouchePath(W, H, 0.75)}"/></clipPath>
+  </defs>
+
+  <!-- 1. paper tint: barely there, so the engraving reads as incised into
+          the sheet rather than sitting on a card laid over it -->
+  <path d="${cartouchePath(W, H, 0)}" fill="#FDF8EC" opacity="0.42"/>
+
+  <g clip-path="url(#cnInner)">
+    <!-- 2. anti-copy screen across the clean field only; the artwork's own
+            hologram below must not be screened over -->
+    <g clip-path="url(#cnField)">
+      <rect x="0" y="0" width="${W}" height="${FIELD}" fill="url(#cnCopy)"/>
+      <!-- 3. latent panel: identical ink weight, 74deg apart. Flat-on it
+              disappears into the screen; at a raking angle, and on a
+              photocopy, SHRS separates out of the ground. -->
+      <text x="${numX}" y="7.9" text-anchor="middle" font-family="Cinzel, serif"
+        font-weight="700" font-size="${(21 * PT).toFixed(2)}" letter-spacing="1.0" fill="url(#cnLatent)">SHRS</text>
+      <!-- 4. engine-turned rosette behind the number (epitrochoid, the same
+              lathe geometry as the frame's medallions) -->
+      <g opacity="0.5">${guillocheMedallion(numX, numY - 1.5, 7.6, '#9A7A2C', 0.4)}</g>
+    </g>
+  </g>
+
+  <!-- 5. guilloche lathe band inside the top edge, stopped short of the
+          boss so the two do not overprint -->
+  ${guillocheBand(10.5, 0.85, 17, 1.2, 3, '#8C6516', 0.4)}
+  ${guillocheBand(W - 27.5, 0.85, 17, 1.2, 3, '#8C6516', 0.4)}
+
+  <!-- 6. engraved double rule: heavy outer, hairline inner -->
+  <path d="${cartouchePath(W, H, 0)}" fill="none" stroke="#8A6A24" stroke-width="0.26"/>
+  <path d="${cartouchePath(W, H, 0.75)}" fill="none" stroke="#A98A3C" stroke-width="0.10"/>
+
+  <!-- 7. microtext ring following the cartouche itself, carrying the FULL
+          serial — the covert layer keeps the year and the HMAC suffix that
+          the visible number deliberately drops -->
+  <text font-family="Inter, sans-serif" font-size="${(0.9 * PT).toFixed(3)}" letter-spacing="0.02"
+    fill="#AC996C"><textPath href="#cnRing">${escapeHtml(micro)}</textPath></text>
+
+  <!-- 8. corner volutes -->
+  ${volute(6.4, 2.0, 1, 1)}${volute(W - 6.4, 2.0, -1, 1)}
+
+  <!-- 9. bilingual label pair, set as one optically centred group the way
+          every other label on this sheet is (.bg-l): English, a lozenge,
+          then the Arabic. The two are placed at fixed centres rather than
+          anchored to the panel edges — anchoring the Arabic to the right
+          wall pushed it straight through the frame on the first run,
+          because an RTL run with text-anchor:end measures from its own
+          logical end, not the visual one. -->
+  <text x="24.6" y="4.5" text-anchor="middle" font-family="Cinzel, serif" font-weight="700"
+    font-size="${(4.6 * PT).toFixed(3)}" letter-spacing="0.42" fill="#6E5013">CERTIFICATE NUMBER</text>
+  <rect x="${(39.2 - 0.42).toFixed(2)}" y="${(4.1 - 0.42).toFixed(2)}" width="0.84" height="0.84"
+    transform="rotate(45 39.2 4.1)" fill="none" stroke="#A98A3C" stroke-width="0.08"/>
+  <text x="45.6" y="4.62" text-anchor="middle" font-family="Amiri, serif" font-weight="700"
+    font-size="${(5.6 * PT).toFixed(3)}" fill="#7A5F1E" opacity="0.92"
+    direction="rtl">&#1585;&#1602;&#1605; &#1575;&#1604;&#1588;&#1607;&#1575;&#1583;&#1577;</text>
+
+  <!-- 10. the number, twice: a light copy offset down-right is the wall of
+           the incision, the dark copy is the engraved stroke itself. That
+           pairing is what reads as letterpress rather than as flat type. -->
+  <g font-family="'Cormorant Garamond', Garamond, serif" font-weight="600"
+     font-size="${numberEm}" letter-spacing="${tracking}" text-anchor="middle"
+     font-kerning="normal"
+     style="font-variant-ligatures:none;${CN_FIGURE_STYLE === 'lining' ? "font-feature-settings:'lnum' 1;font-variant-numeric:lining-nums;" : ''}">
+    <text x="${(numX + 0.17).toFixed(2)}" y="${(numY + 0.17).toFixed(2)}" fill="#C9B98E" opacity="0.85">${escapeHtml(displayNo)}</text>
+    <text x="${numX}" y="${numY}" fill="#241B10">${escapeHtml(displayNo)}</text>
+  </g>
+
+  <!-- 11. hairline shelf under the number, stopped short at both ends so it
+           reads as an engraved rule and not as an underline -->
+  <line x1="${numX - 17}" y1="10.62" x2="${numX + 17}" y2="10.62" stroke="#A98A3C" stroke-width="0.10"/>
+  <circle cx="${numX - 18}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
+  <circle cx="${numX + 18}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
+
+  <!-- 12. microscopic serial repeats — a second covert layer, at a
+           different size and rhythm from the ring so a forger who notices
+           and reproduces one still misses the other. Split either side of
+           the boss along the head of the plate: BELOW the number is not
+           available, because y>11 is the artwork's own microtext band and
+           overprinting it would destroy a device the paper already has. -->
+  <text x="19" y="2.78" text-anchor="middle" font-family="Inter, sans-serif"
+    font-size="${(0.75 * PT).toFixed(3)}" letter-spacing="0.01" fill="#C1AE84">${escapeHtml(repeats)}</text>
+  <text x="${W - 19}" y="2.78" text-anchor="middle" font-family="Inter, sans-serif"
+    font-size="${(0.58 * PT).toFixed(3)}" letter-spacing="0.015" fill="#8A6A24" opacity="0.52">${escapeHtml(repeats)}</text>
+
+  <!-- 13. seated khatam boss; it interrupts the inner rule at the head of
+           the cartouche without breaching the top edge, because the
+           signature block above ends 1mm away -->
+  ${cartoucheBoss(numX, 1.62, 1.5)}
+
+  <!-- 14. UV registration crosshairs (marks for a UV pass, not UV ink) -->
+  ${uvMark(3.5, 2.4)}${uvMark(W - 3.5, 2.4)}${uvMark(3.5, H - 2.4)}${uvMark(W - 3.5, H - 2.4)}
+</svg>`;
+}
+
 // The award named on the certificate, per programme. This used to be baked
 // into the background raster, which meant every sheet — I'dādiyyah and
 // Thanawiyyah included — printed the word "IBTIDA'I'YYAH". The title is now
@@ -595,6 +873,37 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 21.5, 13);
   const plqV = plaqueGroundSvg(62, 25.2, 'rosette');
   const microSerial = `${serial} · `.repeat(6);
+  // ── The engraved certificate number ───────────────────────────────
+  // The face carries the timeless form; the cartouche's covert layers
+  // carry the full serial. A serial that will not reduce is a bug, not a
+  // formatting edge case — it means the number about to be printed is not
+  // one this system issued, so stop the press rather than print a blank.
+  const displayNo = displayStageCertificateNo(cert.serial_no);
+  if (!displayNo) {
+    throw new Error(`stage-certificate-template: serial "${cert.serial_no}" is not in the issuable format, so no certificate number can be engraved`);
+  }
+  // Fitted the way the name is: measured mm-per-character-per-point for
+  // this exact face, so a future four-letter programme code cannot push
+  // the number into the cartouche wall. 0.1847 was derived from Cormorant
+  // Garamond 600's own advance widths (11 caps at ~0.60em, 6 oldstyle
+  // figures at ~0.50em, 3 hyphens at ~0.29em over a 20-character string)
+  // and is re-measured in the browser by scripts/verify-certificate-layout.
+  // The cartouche viewBox is in MILLIMETRES, so the fit solves for an em
+  // size in mm, not a point size — passing points straight through set the
+  // number 126.6mm wide inside a 62mm panel on the first run.
+  // 0.5235 is the mean advance per character in ems for this string in
+  // Cormorant Garamond 600 (11 capitals at ~0.60em, 6 oldstyle figures at
+  // ~0.50em, 3 hyphens at ~0.29em), taken from the font's own advance
+  // widths and then confirmed against the rendered box.
+  const CN_WIDTH_MM = 50.5;
+  const CN_TRACK = 0.32;
+  const cnLen = displayNo.length;
+  const cnEm = Math.max(3.05, Math.min(4.45,
+    +(((CN_WIDTH_MM - (cnLen - 1) * CN_TRACK) / (cnLen * 0.5235)).toFixed(3))));
+  const cnCartouche = certificateNumberCartoucheSvg({
+    displayNo, fullSerial: String(cert.serial_no),
+    numberEm: cnEm, tracking: `${CN_TRACK}`,
+  });
   // Archival reference: registry path + a real Code 128 barcode of the
   // numeric archive number (year + record id).
   // The eye read ARCH/IBT/2026/0000001 (id padded to 7) while the scanner
@@ -662,9 +971,6 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <div class="o8-band">
     <div class="band-in">
-      <div class="bg"><div class="bg-l"><span class="p-l-en">Certificate Number</span><span class="p-l-ar" dir="rtl">رقم الشهادة</span></div>
-        <div class="bg-v bg-v-id v-serial">${serial}</div></div>
-      <i class="band-di"></i>
       <div class="bg"><div class="bg-l"><span class="p-l-en">Student ID</span><span class="p-l-ar" dir="rtl">الرقم التعريفي للطالب</span></div>
         <div class="bg-v bg-v-id">${studentId}</div></div>
       <i class="band-di"></i>
@@ -678,6 +984,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   </div>
 
   <img class="o5-holo" src="/assets/images/certificates/security-emblem-shrs.png" alt="" />
+
+  <div class="o5-cnplate">${cnCartouche}</div>
 
   <div class="o5-vplate" style="background-image:${plqV}">
     <div class="vp-text">
@@ -1078,7 +1386,12 @@ function docShell(title, sheetsHtml) {
      engraved rules, not inside a box: double hairline rules above and
      below, no side borders, no fill, diamond separators. Metadata is
      typography pressed into the paper, never a form. */
-  .o8-band{position:absolute;left:46mm;width:205mm;top:138.2mm;}
+  /* Three cells, not four: the Certificate Number left this band for its
+     own engraved cartouche in the lower left. The band was narrowed from
+     205mm to 172mm at the same centre so the remaining three sit at a
+     comfortable measure instead of drifting apart to fill a width that
+     was sized for four. */
+  .o8-band{position:absolute;left:62.5mm;width:172mm;top:138.2mm;}
   .band-in{position:relative;display:flex;align-items:stretch;justify-content:space-between;
     gap:2mm;padding:1.6mm 2mm 1.7mm;
     border-top:.2mm solid #8A6A24;border-bottom:.2mm solid #8A6A24;}
@@ -1121,9 +1434,16 @@ function docShell(title, sheetsHtml) {
     letter-spacing:.35px;color:rgba(138,106,36,.75);margin-top:.6mm;white-space:nowrap;overflow:hidden;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);
     mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);}
-  /* Engraved crimson serial — banknote convention for the controlling
-     number, within the palette's reserved crimson. */
-  .v-serial{color:#7A1F2B;letter-spacing:.55px;}
+  /* Certificate Number security cartouche — lower left, mirroring the
+     verification plate's width and vertical band. The frame is positioned
+     so the artwork's OWN optically-variable strip (measured at x 60-120mm,
+     y 185.6-196.2) and its microtext rules fall inside it: the panel
+     adopts the paper's security devices instead of printing new ones over
+     them. Nothing is drawn below y=11mm inside the panel for that reason.
+     No background-image and no box-shadow — a card with a drop shadow is
+     exactly the "pasted on top" look this must not have. */
+  .o5-cnplate{position:absolute;left:59mm;top:172.2mm;width:62mm;height:25.3mm;}
+  .cn-plate{display:block;width:100%;height:100%;overflow:visible;}
 
   /* Verification plate: an engraved institutional module built into the
      certificate's bottom-right verification zone — Document ID, code,

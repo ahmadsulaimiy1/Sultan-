@@ -17,7 +17,7 @@ for(const f of files){
     const kx=297/sheet.width, ky=210/sheet.height;
     const sels=['.o5-intro-en','.o5-intro-ar','.o5-name-en','.o5-name-ar','.o5-name-rule',
       '.o5-para-en','.o5-para-ar','.o8-band','.o5-sig-1','.o5-sig-2','.o5-seal','.o5-vplate',
-      '.o5-basmala','.o5-holo','.o9-title'];
+      '.o5-basmala','.o5-holo','.o9-title','.o5-cnplate'];
     const boxes=[];
     for(const s of sels){const el=document.querySelector(s); if(!el) continue;
       let rc; if(el.children.length===0&&el.textContent.trim()){const g=document.createRange();g.selectNodeContents(el);rc=g.getBoundingClientRect();}else rc=el.getBoundingClientRect();

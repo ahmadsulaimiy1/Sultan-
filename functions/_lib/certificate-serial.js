@@ -83,6 +83,68 @@ export async function generateStageCertificateSerial(sql, env, { programmeCode, 
   return { serialNo: `${serialBase}-${suffixFromHash(fullHash)}`, fullHash };
 }
 
+// ── The PRINTED number vs the STORED serial ─────────────────────────────
+// Premium Certificate Number Security Panel directive (2026-08-05): the
+// number engraved on the certificate face drops the issue year and the
+// anti-forgery suffix, so the printed document reads as timeless:
+//
+//     stored   SHRS-CERT-IBT-2026-000035-FB287
+//     printed  SHRS-CERT-IBT-000035
+//
+// Shortening is safe ONLY because <seq6> is one global sequence
+// (stage_certificate_serial_seq — see the header note and sql/schema.sql):
+// sequence 000035 is issued exactly once, ever, across every year and
+// every programme. So SHRS-CERT-IBT-000035 identifies one certificate and
+// no other. If that sequence is ever re-scoped per year or per programme,
+// this function becomes ambiguous and MUST be revisited — resolveStage-
+// CertificateRef below fails closed on a multiple match rather than
+// guessing, so the failure would be loud.
+//
+// What is given up: a reader can no longer check the HMAC suffix by eye.
+// What is NOT given up: the suffix and the full hash are still recomputed
+// server-side from the stored row on every verification, and the full
+// serial is still carried by the QR payload and by the panel's microtext,
+// so tamper detection is unchanged.
+export function displayStageCertificateNo(serialNo) {
+  const parsed = parseStageCertificateSerial(serialNo);
+  if (!parsed) return null;
+  const m = parsed.serialBase.match(/^SHRS-CERT-([A-Z0-9]{2,4})-\d{4}-(\d{6})$/);
+  return m ? `SHRS-CERT-${m[1]}-${m[2]}` : null;
+}
+
+// Accepts the printed short form typed back in by a verifier.
+export function parseStageCertificateDisplayNo(ref) {
+  const m = String(ref || '').trim().toUpperCase()
+    .match(/^SHRS-CERT-([A-Z0-9]{2,4})-(\d{6})$/);
+  return m ? { programmeCode: m[1], seq: m[2] } : null;
+}
+
+// Resolves ANY form a person might type — the full stored serial or the
+// short printed number — to the single stage_certificates row it names.
+// Returns { row } | { ambiguous: true } | null. Never guesses: two matches
+// is a data-integrity fault, not a UX problem to paper over.
+export async function resolveStageCertificateRef(sql, ref) {
+  const full = parseStageCertificateSerial(ref);
+  if (full) {
+    const res = await sql`
+      SELECT sc.*, b.batch_no FROM stage_certificates sc
+      LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+      WHERE sc.serial_no = ${full.serialBase + '-' + full.suffix}`;
+    return res.rows[0] ? { row: res.rows[0] } : null;
+  }
+  const short = parseStageCertificateDisplayNo(ref);
+  if (!short) return null;
+  // Anchored on both sides so the pattern cannot match a longer sequence
+  // that merely ends in these six digits.
+  const pattern = `SHRS-CERT-${short.programmeCode}-____-${short.seq}-_____`;
+  const res = await sql`
+    SELECT sc.*, b.batch_no FROM stage_certificates sc
+    LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+    WHERE sc.serial_no LIKE ${pattern}`;
+  if (res.rows.length > 1) return { ambiguous: true };
+  return res.rows[0] ? { row: res.rows[0] } : null;
+}
+
 // Splits a printed serial back into base + suffix. Returns null for
 // anything that doesn't even match the format (cheap pre-filter before
 // touching the database).
