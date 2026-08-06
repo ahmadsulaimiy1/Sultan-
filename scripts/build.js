@@ -7,6 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.join(__dirname, '..');
 const PARTIALS = path.join(ROOT, 'partials');
@@ -35,6 +36,110 @@ function fillTokens(template, tokens) {
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+
+// --- Cache-busting -------------------------------------------------------
+// The CSS/JS filenames are stable (/css/brand.css, /js/site.js, …), which is
+// friendly to edit but means a browser or CDN (this site sits behind
+// Cloudflare) can keep serving an OLD copy from the same URL long after a
+// deploy — the classic "I published but it still looks the same" problem.
+// The fix is a content fingerprint: every local CSS/JS URL gets a ?v=<hash>
+// derived from that file's bytes. The URL only changes when the file
+// changes, so an unchanged file still caches hard (fast), while a changed
+// one becomes a brand-new URL that no cache can answer stale.
+const _assetVersionCache = new Map();
+function assetVersion(rootRelUrl) {
+  if (_assetVersionCache.has(rootRelUrl)) return _assetVersionCache.get(rootRelUrl);
+  let v = '';
+  try {
+    const abs = path.join(ROOT, rootRelUrl.replace(/^\//, ''));
+    v = crypto.createHash('md5').update(fs.readFileSync(abs)).digest('hex').slice(0, 10);
+  } catch (e) {
+    // Referenced file not present (optional/locale-specific script) — leave
+    // the URL untouched rather than fail the build.
+    v = '';
+  }
+  _assetVersionCache.set(rootRelUrl, v);
+  return v;
+}
+
+// Rewrites src="/js/x.js" and href="/css/x.css" to carry their content hash.
+// It strips any existing ?v=… first and re-adds the current one, so it is
+// idempotent AND self-correcting: running it again on already-versioned HTML
+// re-hashes to the same value if the file is unchanged, or updates the stamp
+// if the file changed. That lets us run it over every page on every build.
+function versionAssets(html) {
+  return html.replace(
+    /(\s(?:src|href)=")(\/(?:css|js)\/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?(")/g,
+    (match, pre, url, post) => {
+      const v = assetVersion(url);
+      return v ? `${pre}${url}?v=${v}${post}` : `${pre}${url}${post}`;
+    }
+  );
+}
+
+// Applies versionAssets to every .html file in the site — not just the pages
+// this script generates, but also the hand-authored ones (portal, prospectus,
+// verification screens) that are served as-is. Without this, those pages would
+// keep pointing at unversioned /css & /js URLs and could be served stale by a
+// browser or CDN after a deploy.
+function versionAllHtml() {
+  const SKIP = new Set(['node_modules', '.git', '.wrangler', 'dist', 'build']);
+  let count = 0;
+  function walk(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith('.') && entry.name !== '.') continue;
+      if (SKIP.has(entry.name)) continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
+        const before = fs.readFileSync(full, 'utf8');
+        const after = versionAssets(before);
+        if (after !== before) {
+          fs.writeFileSync(full, after);
+          count += 1;
+        }
+      }
+    }
+  }
+  walk(ROOT);
+  console.log(`cache-busting: fingerprinted asset URLs across ${count} html file(s)`);
+}
+
+// The service worker caches assets by URL and only drops old caches when its
+// CACHE_VERSION string changes. Tie that string to a fingerprint of every
+// css/js file so a content change automatically retires the old cache on the
+// next visit — no manual version bump, no stale installed-PWA copies.
+function updateServiceWorkerVersion() {
+  const swPath = path.join(ROOT, 'sw.js');
+  let sw;
+  try {
+    sw = fs.readFileSync(swPath, 'utf8');
+  } catch (e) {
+    return; // no service worker in this checkout — nothing to do
+  }
+  const hash = crypto.createHash('md5');
+  ['css', 'js'].forEach((sub) => {
+    const dir = path.join(ROOT, sub);
+    let files = [];
+    try {
+      files = fs.readdirSync(dir).filter((f) => /\.(css|js)$/.test(f)).sort();
+    } catch (e) { /* directory absent — skip */ }
+    files.forEach((f) => {
+      hash.update(f);
+      hash.update(fs.readFileSync(path.join(dir, f)));
+    });
+  });
+  const version = 'shrs-pwa-' + hash.digest('hex').slice(0, 10);
+  const updated = sw.replace(/shrs-pwa-[A-Za-z0-9]+/g, version);
+  if (updated !== sw) {
+    fs.writeFileSync(swPath, updated);
+    console.log(`service worker cache version -> ${version}`);
+  } else {
+    console.log(`service worker cache version unchanged (${version})`);
+  }
+}
+// -------------------------------------------------------------------------
 
 // Real, server-rendered content for the Adhkar Centre's Morning and
 // Evening lists — the two primary daily categories — so the words
@@ -224,6 +329,8 @@ function main() {
   const manifest = JSON.parse(read('pages/manifest.json'));
   manifest.forEach(buildPage);
   buildSearchIndex(manifest);
+  versionAllHtml();
+  updateServiceWorkerVersion();
 }
 
 main();

@@ -1,0 +1,27 @@
+# Cloudflare Pages response headers.
+# (Vercel uses the "headers" block in vercel.json instead — this file is the
+#  equivalent for the Cloudflare Pages side of the same repo.)
+#
+# Rules are applied top-to-bottom and later matches override earlier ones for
+# the same header, so the broad HTML rule comes first and the specific asset
+# rules below it win for their paths.
+
+# HTML pages: always revalidate, never serve a stale page after a deploy.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Fingerprinted assets (they carry a ?v=<hash> that changes with content),
+# so they are safe to cache hard and forever.
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The service worker and manifest must always be checked against the network
+# so a new deploy can take over an installed PWA.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/manifest.webmanifest
+  Cache-Control: no-cache
