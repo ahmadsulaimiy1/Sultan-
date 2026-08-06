@@ -52,7 +52,7 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=19ae5e3288">
+<link rel="stylesheet" href="/css/prestige.css?v=46fe88a513">
 <link rel="alternate" hreflang="ar" href="/ar/admission/" />
 </head>
 <body>
@@ -431,7 +431,7 @@
       <p class="pr-lead">Each step happens inside the Parent Portal, and each is recorded — never an informal, phone-only decision. Tap any stage for detail; if you're signed in with an application on file, your live status appears automatically.</p>
     </div>
 
-    <div class="pr-stats pr-reveal" style="margin-top:32px;">
+    <div class="pr-stats pr-sheen pr-reveal" style="margin-top:32px;">
       <div class="pr-stat"><div class="pr-stat-n" data-count-to="7">0</div><div class="pr-stat-l">Digital Steps</div><div class="pr-stat-s">account to enrolment</div></div>
       <div class="pr-stat"><div class="pr-stat-n" data-count-to="3">0</div><div class="pr-stat-l">Documents</div><div class="pr-stat-s">to open a file</div></div>
       <div class="pr-stat"><div class="pr-stat-n" data-count-to="100" data-suffix="%">0</div><div class="pr-stat-l">Portal-Tracked</div><div class="pr-stat-s">every outcome recorded</div></div>
@@ -538,9 +538,9 @@
       <p style="color:#5a4a38;margin-top:12px;line-height:1.75;font-size:1.02rem;">Every application outcome is recorded transparently in your Parent Portal account — never a phone-only or informal decision. Once your application moves past initial review, you'll see one of a small number of real outcomes.</p>
     </div>
     <div class="pr-outcomes pr-stagger">
-      <div class="pr-outcome is-yes"><h4>Offered</h4><p>A place is available in the qualifying class. An offer is followed by fee payment and an admission letter carrying a unique number.</p></div>
-      <div class="pr-outcome is-wait"><h4>Waitlisted</h4><p>A place may become available. You remain in consideration and are notified in the portal if one opens.</p></div>
-      <div class="pr-outcome is-no"><h4>Declined</h4><p>Where a class is at capacity, the file is closed for this cycle — clearly, and in writing, rather than left unanswered.</p></div>
+      <div class="pr-outcome is-yes pr-tilt"><h4>Offered</h4><p>A place is available in the qualifying class. An offer is followed by fee payment and an admission letter carrying a unique number.</p></div>
+      <div class="pr-outcome is-wait pr-tilt"><h4>Waitlisted</h4><p>A place may become available. You remain in consideration and are notified in the portal if one opens.</p></div>
+      <div class="pr-outcome is-no pr-tilt"><h4>Declined</h4><p>Where a class is at capacity, the file is closed for this cycle — clearly, and in writing, rather than left unanswered.</p></div>
     </div>
 
     <div class="pr-reveal" style="max-width:720px;margin-top:44px;" id="enrolment-process">
@@ -548,6 +548,18 @@
       <h2 class="pr-h2">The Enrolment Process</h2>
       <p style="color:#5a4a38;margin-top:12px;line-height:1.75;font-size:1.02rem;">Once you accept an offer and pay tuition and other fees, the Registrar's Office — the same office that manages promotions, transfers, withdrawals, and graduations throughout your child's time at Sultan Hanafi — confirms enrolment and class placement, issues a class acceptance ticket, and classes begin upon its presentation.</p>
       <a class="pr-btn is-ink" style="margin-top:18px;" href="/digital-campus/">See how the Registrar's Office works today <span class="a">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Pledge line (typewriter) -->
+<section class="pr-section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="pr-pledge pr-reveal">
+      <div class="pr-pledge-rule" aria-hidden="true"></div>
+      <blockquote><span class="pr-type" data-pr-type>Every outcome is written down, and every family is told.</span></blockquote>
+      <cite>How admission works here</cite>
+      <div class="pr-pledge-rule is-btm" aria-hidden="true"></div>
     </div>
   </div>
 </section>
@@ -595,7 +607,7 @@
 <!-- Closing CTA -->
 <section class="pr-section">
   <div class="wrap">
-    <div class="pr-cta pr-reveal">
+    <div class="pr-cta pr-lightborder is-xl pr-reveal">
       <h2>Ready When You Are</h2>
       <p>Create your Parent Portal account and start an application in minutes — or reach the admissions office directly and let us guide you through it.</p>
       <div class="pr-cta-row">
@@ -1206,7 +1218,7 @@
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/prestige.js?v=d0301e6e5e" defer></script>
+<script src="/js/prestige.js?v=5c0a1ad2df" defer></script>
 
 </body>
 </html>

@@ -80,15 +80,90 @@
     });
   }
 
+  /* ---- typewriter ----
+     The full sentence is already in the HTML, so it is present for search
+     engines and for anyone without JavaScript. On reveal we hide the real
+     text from sight (keeping it for screen readers) and type a visual copy
+     beside it, so assistive technology never has to listen to a string
+     assembling itself one character at a time. */
+  function typewriter(el) {
+    if (el.dataset.prDone) return;
+    el.dataset.prDone = '1';
+    var full = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    if (!full) return;
+
+    el.textContent = '';
+    var sr = document.createElement('span');
+    sr.className = 'pr-sr';
+    sr.textContent = full;
+    var vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    var caret = document.createElement('span');
+    caret.className = 'pr-type-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    el.appendChild(sr); el.appendChild(vis); el.appendChild(caret);
+
+    if (reduce) { vis.textContent = full; el.classList.add('is-done'); return; }
+
+    var i = 0;
+    (function step() {
+      vis.textContent = full.slice(0, i);
+      if (i >= full.length) { el.classList.add('is-done'); return; }
+      var ch = full.charAt(i);
+      i += 1;
+      // Hand-set rhythm: a compositor rests longer after punctuation than
+      // between letters. Without this it reads as a machine, not a pen.
+      var delay =
+        ch === ',' || ch === ';' ? 240 :
+        ch === '.' || ch === '—' || ch === ':' ? 340 :
+        ch === ' ' ? 64 : 30 + Math.random() * 28;
+      setTimeout(step, delay);
+    })();
+  }
+
+  /* ---- pointer-tracked 3D tilt ----
+     Skipped entirely on touch devices (no hover to track) and under reduced
+     motion. Writes CSS custom properties and lets the compositor do the work. */
+  function initTilt() {
+    if (reduce) return;
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+    document.querySelectorAll('.pr-tilt').forEach(function (card) {
+      var raf = null, nx = 0, ny = 0;
+      function apply() {
+        raf = null;
+        var max = parseFloat(card.getAttribute('data-tilt-max') || '5');
+        card.style.setProperty('--ry', ((nx - 0.5) * max * 2).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', (-(ny - 0.5) * max * 2).toFixed(2) + 'deg');
+        card.style.setProperty('--mx', (nx * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (ny * 100).toFixed(1) + '%');
+      }
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        nx = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1);
+        ny = Math.min(Math.max((e.clientY - r.top) / r.height, 0), 1);
+        card.classList.add('is-tilting');
+        if (raf === null) raf = requestAnimationFrame(apply);
+      }, { passive: true });
+      card.addEventListener('pointerleave', function () {
+        card.classList.remove('is-tilting');
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
+
   function fire(el) {
     el.classList.add('pr-in');
     el.querySelectorAll && el.querySelectorAll('[data-count-to]').forEach(animateCounter);
     if (el.hasAttribute && el.hasAttribute('data-count-to')) animateCounter(el);
     animateBars(el); animateAgeBars(el); animateDonuts(el); animateLines(el);
+    el.querySelectorAll && el.querySelectorAll('[data-pr-type]').forEach(typewriter);
+    if (el.hasAttribute && el.hasAttribute('data-pr-type')) typewriter(el);
   }
 
   function init() {
-    var targets = document.querySelectorAll('.pr-reveal, .pr-stagger, [data-count-to]');
+    initTilt();
+    var targets = document.querySelectorAll('.pr-reveal, .pr-stagger, [data-count-to], [data-pr-type], .pr-sheen');
     if (!('IntersectionObserver' in window)) { targets.forEach(fire); return; }
     var io = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (e) {
