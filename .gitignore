@@ -24,3 +24,4 @@ dist/certificates/
 # scripts/verify-certificate-ground.mjs --render (31MB at 600 DPI); the
 # module and its gate are the committed source, not the rasters.
 build/certificate-ground/
+build/certificate-plate/

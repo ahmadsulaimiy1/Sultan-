@@ -1,5 +1,109 @@
 # The Certificate Ground — Vector Rebuild
 
+> **Read §0 first.** Two modules exist and they do different jobs.
+> `certificate-plate.js` is the **faithful** rebuild of the client's supplied
+> I'dadiyyah plate and is the one to use. `certificate-ground.js` (§1–§6 below)
+> is a *different* plate drawn from scratch, kept only as an alternative that
+> was never approved.
+
+---
+
+## 0. The faithful plate — `functions/_lib/certificate-plate.js`
+
+**Source:** the I'dadiyyah background supplied 2026-08-06, installed as
+`assets/images/certificates/official-background-idd.jpg`.
+**Gate:** `scripts/verify-certificate-plate.mjs` — 19 checks, `--render` for proofs.
+**Generator:** `scripts/build-certificate-marks.py`.
+
+### What was wrong with the upload, and was fixed
+
+The file carried a **10 px black letterbox band along its top edge**. Left in,
+it prints as a black bar across the head of every certificate. It is cropped;
+the remaining content is 1080 × 762, aspect 1.4173 against A4 landscape's
+1.4143 — a 0.2 % difference, placed without distortion worth measuring.
+
+### The split
+
+| | |
+|---|---|
+| **Preserved, pixel-exact** | Every mark: the four corner ribbon swags, the laurel badge, the red wax medallion, the gold wax seal, both holographic strips, the holographic roundel, the lock cartouche, the engraved gold frame and its mandala corners, the central mandala watermark, the vertical microtext columns, the shield emblem, the QR block. |
+| **Rebuilt, resolution-free** | The paper the marks sit on — flat vector, exact at any DPI. |
+
+### Why this is a reconstruction and not a key tuned by eye
+
+Source-over compositing is `out = PAPER*(1-a) + C*a`. The marks layer's colour
+channel is **solved** from that equation rather than sampled:
+
+    C = (S - PAPER*(1-a)) / a
+
+Alpha comes from an ink key, but the key alone is not enough — where alpha is
+small and the mark strong, the solved `C` lands outside 0–255, clips, and the
+mark comes back wrong. That constraint has a closed form, so alpha is floored at
+the value that keeps `C` in gamut:
+
+    C >= 0    =>  a >= 1 - S/PAPER
+    C <= 255  =>  a >= (S - PAPER) / (255 - PAPER)
+
+With that floor **nothing is ever clipped** and the only residual is 8-bit
+rounding.
+
+| Measure | Result |
+|---|---|
+| Out-of-gamut pixels | **0.0000 %** |
+| Mean absolute difference vs the supplied artwork | **0.052 / 255** |
+| 99.9th percentile | **0.4 / 255** |
+| Worst single pixel | **0.47 / 255** |
+| Pixels off by more than 12 levels | **0.0000 %** |
+
+Sub-half-a-level everywhere. The composition is the client's, unchanged.
+
+### Three defects this work found
+
+1. **A key that only looked for *dark* marks.** Every specular highlight on the
+   gold and the holographic strips is *brighter* than the paper; reproducing one
+   needs a colour above 255, which clips, and the highlight comes back dull.
+   Fixed by keying on brighter-than-paper as well.
+2. **Solving against the wrong bytes.** The first solve ran against the
+   in-memory buffer, not the saved JPEG the gate reads back, so the JPEG's own
+   quantisation showed up as a 1.56/255 residual that had nothing to do with the
+   plate. Solve against the saved master, and against the **rounded 8-bit
+   alpha** that will actually be stored — the colour solve divides by alpha, so
+   a higher-precision alpha than the file carries bakes in the error of a
+   divisor that never existed.
+3. **A gate that passed on a blank sheet.** The first render used a scheme-less
+   filesystem `href`; under `setContent` that fires *no request at all*, so the
+   "no failed requests" check passed on a plate with no artwork on it. This is
+   the same class of defect already recorded in
+   `docs/certificate-number-cartouche.md` §8. Absence of a failure is not
+   evidence of presence. Fixed with a data URI **and** a positive ink-coverage
+   assertion — a blank plate is one flat colour and reads ~0 luminance spread.
+   (An `naturalWidth` check was tried first and false-negatived: SVGImageElement
+   has no such property.)
+
+### What is still 92 DPI, and what would fix it
+
+The marks layer. The supplied file is 92.4 DPI over the sheet, which puts every
+ornamental stroke at about three pixels wide. Redrawing a three-pixel curve as
+vector does not recover the original curve — it invents a plausible one. **A
+true 600 DPI vector reconstruction of this artwork cannot be derived from this
+file**, not for want of effort but because the information is not in it.
+
+The fix is one input: a higher-resolution export of the same artwork. If the
+plate came from a generator or a stock vendor, a larger version almost certainly
+exists, and dropping it in needs only a re-run of
+`scripts/build-certificate-marks.py` — no code change.
+
+### Additions are opt-in
+
+`microtextRails` adds per-document microtext carrying the live serial, so a
+copied sheet carries the wrong serial in its own border. It is **off by
+default**: the brief was a faithful rebuild, so the default output is the
+client's plate and nothing else. The gate asserts this
+("default output adds nothing to the client plate").
+
+---
+
+
 **Directive:** I'dadiyyah Certificate Background & Border (Release Master)
 **Implements:** `functions/_lib/certificate-ground.js`
 **Gate:** `scripts/verify-certificate-ground.mjs` — 13 checks, `--render` for proofs
