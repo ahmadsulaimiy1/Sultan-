@@ -162,8 +162,31 @@
     });
   }
 
+
+  /* ---- raking light ----
+     Real gilt has no fixed highlight; the bright band moves with the viewer.
+     We publish the pointer's position on the document element and let every
+     gold surface read it, so the sheen travels as the reader does. One rAF
+     per move, two custom properties, no per-element work. */
+  function initRake() {
+    if (reduce || !hasHover) return;
+    var raf = null, gx = 50, gy = 50;
+    function apply() {
+      raf = null;
+      var r = document.documentElement;
+      r.style.setProperty('--gx', gx.toFixed(1));
+      r.style.setProperty('--gy', gy.toFixed(1));
+    }
+    window.addEventListener('pointermove', function (e) {
+      gx = (e.clientX / (window.innerWidth || 1)) * 100;
+      gy = (e.clientY / (window.innerHeight || 1)) * 100;
+      if (raf === null) raf = requestAnimationFrame(apply);
+    }, { passive: true });
+  }
+
   function init() {
     initReveal();
+    initRake();
     initFloat();
     initScroll();
     initSpotlight();

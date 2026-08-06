@@ -1823,3 +1823,321 @@
 
 /* the device's pearl ring has to follow the handset's radius, not the layer's */
 .dc-device.pr-milklight::before{border-radius:38px;}
+
+/* ===================================================================
+   ALWAYS-ON GILDING
+   -------------------------------------------------------------------
+   Every box now carries its light permanently, not only on hover. The
+   thing that keeps twenty rings from reading as a fairground is that no
+   two are in phase: each box is given a different start delay and a
+   different orbit period by position, so the effect is a room of gilt
+   catching light at slightly different moments rather than a bank of
+   indicators blinking together. At rest the ring is faint; the pointer
+   brings it up to full and speeds it.
+   =================================================================== */
+.dc-sys::after,.pr-committee::after,.school-block::after,.pr-person::after,
+.pr-org-node::after,.stat-tile::after,.pr-doc::after,.pr-outcome::after,
+.pr-card::before,.gateway-card::after,.portal-card::after,.pc-card::after{
+  opacity:.42;
+  animation:pr-orbit var(--pr-orbit,22s) linear infinite;
+}
+.dc-sys:hover::after,.pr-committee:hover::after,.school-block:hover::after,
+.pr-person:hover::after,.pr-org-node:hover::after,.stat-tile:hover::after,
+.pr-doc:hover::after,.pr-outcome:hover::after,
+.gateway-card:hover::after,.portal-card:hover::after,.pc-card:hover::after{
+  opacity:1;animation-duration:3.4s;
+}
+/* de-phase by position — the whole point of the effect */
+.pr-stagger > *:nth-child(6n+1),.pr-grid > *:nth-child(6n+1),.dc-systems > *:nth-child(6n+1),
+.pr-people > *:nth-child(6n+1),.pr-committees > *:nth-child(6n+1){--pr-orbit:19s;animation-delay:0s}
+.pr-stagger > *:nth-child(6n+2),.pr-grid > *:nth-child(6n+2),.dc-systems > *:nth-child(6n+2),
+.pr-people > *:nth-child(6n+2),.pr-committees > *:nth-child(6n+2){--pr-orbit:24s}
+.pr-stagger > *:nth-child(6n+3),.pr-grid > *:nth-child(6n+3),.dc-systems > *:nth-child(6n+3),
+.pr-people > *:nth-child(6n+3),.pr-committees > *:nth-child(6n+3){--pr-orbit:21s}
+.pr-stagger > *:nth-child(6n+4),.pr-grid > *:nth-child(6n+4),.dc-systems > *:nth-child(6n+4),
+.pr-people > *:nth-child(6n+4),.pr-committees > *:nth-child(6n+4){--pr-orbit:27s}
+.pr-stagger > *:nth-child(6n+5),.pr-grid > *:nth-child(6n+5),.dc-systems > *:nth-child(6n+5),
+.pr-people > *:nth-child(6n+5),.pr-committees > *:nth-child(6n+5){--pr-orbit:23s}
+.pr-stagger > *:nth-child(6n+6),.pr-grid > *:nth-child(6n+6),.dc-systems > *:nth-child(6n+6),
+.pr-people > *:nth-child(6n+6),.pr-committees > *:nth-child(6n+6){--pr-orbit:29s}
+.dc-sys::after,.pr-committee::after,.pr-person::after,.pr-doc::after,.pr-outcome::after{
+  animation-delay:calc(var(--pr-orbit,22s) * -0.37);}
+.school-block::after{animation-delay:-6s;}
+.stat-tile::after{animation-delay:-11s;}
+
+/* .pr-card carried a static gold rule on ::before; it becomes the ring */
+.pr-card::before{
+  content:"";position:absolute;inset:0;height:auto;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--pr-angle),
+    rgba(198,161,91,0) 0deg, rgba(198,161,91,0) 288deg,
+    rgba(233,206,138,.9) 324deg, #FFF6DF 340deg,
+    rgba(233,206,138,.9) 353deg, rgba(198,161,91,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;transform:none;z-index:4;pointer-events:none;
+  filter:drop-shadow(0 0 5px rgba(233,206,138,.6));}
+.pr-card:hover::before{transform:none;opacity:1;animation-duration:3.4s;}
+
+/* ===================================================================
+   RAKING LIGHT
+   -------------------------------------------------------------------
+   Real gilt does not have a fixed highlight — the bright band moves as
+   the viewer does. js/motion.js writes the pointer's position to the
+   document as --gx/--gy, and every gold surface reads it, so the sheen
+   on headings, rules and figures shifts as the reader moves across the
+   page. It is the difference between gold-coloured and gilded.
+   =================================================================== */
+.pr-h2,.pr-hero-title,.pr-stat-n,.pr-letter,.idc-inst,.pr-arrival h2{
+  background-image:linear-gradient(
+    calc(100deg + (var(--gx,50) - 50) * 0.6deg),
+    var(--pr-gold-deep) 0%, var(--pr-gold-deep) 34%,
+    #FFF6DF calc(42% + (var(--gx,50) - 50) * 0.22%),
+    var(--pr-gold) 58%, var(--pr-gold-deep) 100%);
+}
+/* headings keep their ink colour; only the gold ones take the rake */
+.pr-h2,.pr-hero-title,.pr-arrival h2{background-image:none;}
+.pr-stat-n,.pr-letter{
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.pr-pledge-rule,.pr-arrival-rule,.pr-divider{
+  background-image:linear-gradient(
+    calc(90deg + (var(--gx,50) - 50) * 0.5deg),
+    transparent, var(--pr-gold-bright) calc(50% + (var(--gx,50) - 50) * 0.3%), transparent);}
+
+@media (prefers-reduced-motion:reduce){
+  .dc-sys::after,.pr-committee::after,.school-block::after,.pr-person::after,
+  .pr-org-node::after,.stat-tile::after,.pr-doc::after,.pr-outcome::after,
+  .pr-card::before,.gateway-card::after,.portal-card::after,.pc-card::after{
+    animation:none!important;opacity:.5;
+    background:linear-gradient(140deg,rgba(233,206,138,.8),rgba(198,161,91,.2));}
+}
+
+/* ===================================================================
+   THE PORTAL GATEWAYS
+   -------------------------------------------------------------------
+   The portal screens are hand-authored outside the page build, which is
+   why they never received any of this. They are the first thing a
+   parent sees after deciding to trust the school, and they were the
+   plainest surface on the site. Raised here, with no change to a single
+   form, field name or script.
+   =================================================================== */
+.portal-body{
+  background:
+    radial-gradient(1200px 620px at 78% -12%, rgba(233,206,138,.13), transparent 62%),
+    radial-gradient(900px 500px at 8% 108%, rgba(198,161,91,.09), transparent 60%),
+    linear-gradient(168deg,#2C1E12 0%,#241708 46%,#1A1006 100%);
+  color:#F3E8D4;min-height:100vh;position:relative;
+}
+/* an eight-point field, held very faint, so the ground is never flat */
+.portal-body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(233,206,138,.13) 1px, transparent 0);
+  background-size:26px 26px;
+  -webkit-mask:radial-gradient(1100px 700px at 50% 30%,#000,transparent 78%);
+  mask:radial-gradient(1100px 700px at 50% 30%,#000,transparent 78%);
+}
+.portal-body > *{position:relative;z-index:1;}
+
+.portal-topbar{
+  background:rgba(20,12,4,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(233,206,138,.2);}
+.portal-brand{font-family:'Cinzel',serif;color:#FFF3D8;letter-spacing:.03em;}
+
+/* the gateway cards — the thing a visitor actually chooses from */
+.gateway-title{font-family:'Cinzel',serif;color:#fff;
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.12;}
+.gateway-sub{color:rgba(243,232,212,.8);}
+.gateway-card{
+  position:relative;isolation:isolate;overflow:hidden;
+  border-radius:var(--pr-r-lg);padding:30px 26px;
+  background:linear-gradient(168deg,rgba(255,255,255,.07),rgba(255,255,255,.028));
+  border:1px solid rgba(233,206,138,.24);
+  box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),inset 0 1px 0 rgba(233,206,138,.18);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease),border-color .5s;
+  text-decoration:none;color:inherit;display:block;}
+.gateway-card:hover{transform:translateY(-7px);border-color:rgba(233,206,138,.45);
+  box-shadow:0 4px 8px rgba(0,0,0,.35),0 34px 66px -28px rgba(0,0,0,.9),
+             0 0 40px -10px rgba(233,206,138,.45),inset 0 1px 0 rgba(233,206,138,.3);}
+.gateway-card-icon{
+  width:56px;height:56px;border-radius:var(--pr-r-md);display:grid;place-items:center;
+  background:linear-gradient(140deg,rgba(233,206,138,.22),rgba(198,161,91,.06));
+  border:1px solid rgba(233,206,138,.34);color:var(--pr-gold-bright);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.3);margin-bottom:16px;
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
+.gateway-card:hover .gateway-card-icon{transform:translateY(-3px) scale(1.07) rotate(-4deg);
+  box-shadow:0 12px 26px -14px rgba(233,206,138,.8);}
+.gateway-card-icon svg{width:27px;height:27px;}
+.gateway-card-eyebrow{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(233,206,138,.8);}
+.gateway-card h2,.gateway-card h3{font-family:'Cinzel',serif;color:#fff;
+  font-size:1.12rem;margin:7px 0 8px;}
+.gateway-card p{color:rgba(243,232,212,.74);font-size:.92rem;line-height:1.6;}
+.gateway-card-cta{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  color:var(--pr-gold-bright);font-weight:600;font-size:.86rem;}
+.gateway-card:hover .gateway-card-cta{gap:12px;}
+
+/* the sign-in card itself */
+.portal-card{
+  position:relative;isolation:isolate;
+  border-radius:var(--pr-r-xl);padding:clamp(28px,4vw,42px);
+  background:linear-gradient(168deg,#FFFDF9,#F6EFE1);
+  border:1px solid rgba(198,161,91,.3);
+  box-shadow:0 3px 6px rgba(0,0,0,.22),0 32px 70px -30px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.9);}
+.portal-card h1{font-family:'Cinzel',serif;color:var(--pr-coffee);letter-spacing:.01em;}
+.portal-field label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#8a7a60;}
+.portal-field input,.portal-card input[type="text"],.portal-card input[type="email"],
+.portal-card input[type="password"],.portal-card input[type="tel"]{
+  border-radius:var(--pr-r-pill);padding:14px 18px;
+  border:1px solid rgba(198,161,91,.36);background:#fff;
+  box-shadow:inset 0 2px 5px rgba(42,28,16,.07);
+  transition:border-color .3s,box-shadow .3s;}
+.portal-field input:focus,.portal-card input:focus{outline:none;border-color:var(--pr-gold);
+  box-shadow:inset 0 2px 5px rgba(42,28,16,.05),0 0 0 4px rgba(198,161,91,.2);}
+.portal-card button[type="submit"],.portal-card .btn-gold{
+  width:100%;border-radius:var(--pr-r-pill);padding:15px 26px;border:0;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.84rem;letter-spacing:.13em;text-transform:uppercase;
+  background:linear-gradient(120deg,var(--pr-gold),var(--pr-gold-bright));color:#2a1c10;
+  box-shadow:0 12px 26px -14px rgba(198,161,91,.9),inset 0 1px 0 rgba(255,255,255,.6);
+  transition:transform .35s var(--pr-ease),box-shadow .35s var(--pr-ease);}
+.portal-card button[type="submit"]:hover{transform:translateY(-2px);
+  box-shadow:0 18px 34px -14px rgba(198,161,91,1),inset 0 1px 0 rgba(255,255,255,.7);}
+
+/* the panel beside the form */
+.portal-aside-eyebrow{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(233,206,138,.85);}
+.portal-aside-title{font-family:'Cinzel',serif;color:#fff;font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.15;}
+.portal-aside-copy{color:rgba(243,232,212,.78);line-height:1.7;}
+.portal-aside-points li{color:rgba(243,232,212,.8);}
+.portal-aside-points li::marker{color:var(--pr-gold-bright);}
+.portal-back-link{color:rgba(233,206,138,.85);transition:color .3s,transform .3s;}
+.portal-back-link:hover{color:var(--pr-gold-bright);transform:translateX(-3px);}
+.portal-notice,.portal-error{border-radius:var(--pr-r-sm);}
+
+/* ===================================================================
+   THE ADHKĀR CENTRE
+   -------------------------------------------------------------------
+   The most-used devotional surface on the site, and the one a family
+   may open every morning and evening. It should feel like a bound
+   companion rather than a settings screen. Raised without touching the
+   counter logic, the Wird tracking or the session dashboard.
+   =================================================================== */
+.adhkar-page{position:relative;}
+.adhkar-intro{font-family:'Cormorant Garamond',serif;font-size:clamp(1.06rem,2.2vw,1.28rem);
+  line-height:1.7;color:#5a4a38;}
+
+/* category rail */
+.adk-cat-nav{gap:9px;}
+.adk-cat-btn{
+  border-radius:var(--pr-r-pill);padding:10px 18px;
+  border:1px solid rgba(198,161,91,.3);
+  background:linear-gradient(168deg,rgba(255,255,255,.9),rgba(240,231,214,.72));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 6px 14px -12px rgba(42,28,16,.5);
+  font-weight:600;letter-spacing:.02em;
+  transition:transform .35s var(--pr-ease),box-shadow .35s,background .35s,color .35s;}
+.adk-cat-btn:hover{transform:translateY(-2px);
+  box-shadow:0 10px 20px -12px rgba(42,28,16,.55),0 0 16px -6px rgba(198,161,91,.8);}
+.adk-cat-btn[aria-pressed="true"],.adk-cat-btn.is-active{
+  background:linear-gradient(120deg,var(--pr-gold),var(--pr-gold-bright));color:#2a1c10;
+  border-color:rgba(198,161,91,.6);
+  box-shadow:0 10px 22px -12px rgba(198,161,91,.95),inset 0 1px 0 rgba(255,255,255,.6);}
+
+/* search */
+.adk-search input,.adk-search{border-radius:var(--pr-r-pill);}
+.adk-search input{padding:14px 20px;border:1px solid rgba(198,161,91,.36);background:#FFFDF9;
+  box-shadow:inset 0 2px 5px rgba(42,28,16,.07);transition:border-color .3s,box-shadow .3s;}
+.adk-search input:focus{outline:none;border-color:var(--pr-gold);
+  box-shadow:inset 0 2px 5px rgba(42,28,16,.05),0 0 0 4px rgba(198,161,91,.18);}
+
+/* each remembrance: a leaf of a bound book */
+.adk-item,.adk-static-item{
+  position:relative;isolation:isolate;overflow:hidden;
+  border-radius:var(--pr-r-md);padding:24px 26px;
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 56%,#F7F0E2);
+  border:1px solid rgba(198,161,91,.22);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:transform .45s var(--pr-ease),box-shadow .45s var(--pr-ease);}
+.adk-item:hover,.adk-static-item:hover{transform:translateY(-4px);box-shadow:var(--pr-shadow);}
+.adk-item::after,.adk-static-item::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--pr-angle),
+    rgba(198,161,91,0) 0deg,rgba(198,161,91,0) 290deg,
+    rgba(233,206,138,.85) 326deg,#FFF6DF 341deg,
+    rgba(233,206,138,.85) 354deg,rgba(198,161,91,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;opacity:.4;pointer-events:none;z-index:4;
+  animation:pr-orbit 25s linear infinite;animation-delay:-9s;
+  filter:drop-shadow(0 0 5px rgba(233,206,138,.65));}
+.adk-item:hover::after,.adk-static-item:hover::after{opacity:1;animation-duration:3.4s;}
+.adk-num{
+  background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));
+  color:#2a1c10;border-radius:var(--pr-r-pill);font-family:'Cinzel',serif;font-weight:700;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 10px -6px rgba(156,122,60,.9);}
+.adk-repeat{border-radius:var(--pr-r-pill);
+  background:linear-gradient(168deg,rgba(198,161,91,.18),rgba(198,161,91,.07));
+  border:1px solid rgba(198,161,91,.34);color:var(--pr-gold-deep);
+  font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:5px 12px;}
+.adk-static-arabic,.adk-ctr-arabic,.adk-arabic-preview{
+  font-family:'Amiri',serif;line-height:2.05;color:var(--pr-coffee);}
+.adk-fav-btn{border-radius:50%;transition:transform .3s var(--pr-ease),color .3s;}
+.adk-fav-btn:hover{transform:scale(1.18);color:var(--pr-gold-deep);}
+
+/* panels: progress, wird, priority, achievements */
+.adk-progress-panel,.adk-wird-panel,.adk-priority-panel,.adk-session-dash,.adk-counter-card{
+  border-radius:var(--pr-r-lg);
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 55%,#F7F0E2);
+  border:1px solid rgba(198,161,91,.24);
+  box-shadow:var(--pr-shadow),var(--pr-bevel);}
+.adk-progress-head,.adk-wird-head,.adk-priority-head,.adk-section-head{
+  font-family:'Cinzel',serif;color:var(--pr-coffee);letter-spacing:.02em;}
+.adk-progress-stat,.adk-sd-stat,.adk-priority-card,.adk-wird-card,.adk-achv-badge{
+  border-radius:var(--pr-r-md);
+  background:linear-gradient(168deg,#fff,var(--pr-milk));
+  border:1px solid rgba(198,161,91,.2);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:transform .4s var(--pr-ease),box-shadow .4s var(--pr-ease);}
+.adk-progress-stat:hover,.adk-sd-stat:hover,.adk-priority-card:hover,
+.adk-wird-card:hover,.adk-achv-badge:hover{transform:translateY(-3px);box-shadow:var(--pr-shadow);}
+.adk-progress-stat--streak{
+  background:linear-gradient(160deg,#3B2A1D,#241708);color:#F7EEDF;
+  border-color:rgba(233,206,138,.3);box-shadow:var(--pr-shadow),var(--pr-bevel-dark);}
+
+/* the tasbih counter — the piece a person actually holds */
+.adk-counter-modal{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  background:rgba(20,12,4,.62);}
+.adk-ctr-dial-wrap{filter:drop-shadow(0 18px 40px rgba(42,28,16,.35));}
+.adk-ctr-dial{
+  border-radius:50%;
+  background:radial-gradient(circle at 34% 28%,#FFFDF9,#F1E4C8 62%,#E2D2B2);
+  border:1px solid rgba(198,161,91,.5);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.9),inset 0 -8px 20px rgba(156,122,60,.18),
+             0 20px 44px -20px rgba(42,28,16,.6),0 0 34px -12px rgba(198,161,91,.7);
+  transition:transform .18s var(--pr-ease),box-shadow .35s;}
+.adk-ctr-dial:active{transform:scale(.965);
+  box-shadow:inset 0 2px 8px rgba(156,122,60,.35),0 10px 24px -16px rgba(42,28,16,.6);}
+.adk-ctr-dial-inner{font-family:'Cinzel',serif;
+  background:linear-gradient(120deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.adk-ctr-icon-btn,.adk-ctr-nav-btn,.adk-ctr-reset,.adk-quick-btn{
+  border-radius:var(--pr-r-pill);border:1px solid rgba(198,161,91,.34);
+  background:linear-gradient(168deg,#FFFDF9,#F1E7D7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 6px 14px -10px rgba(42,28,16,.5);
+  transition:transform .3s var(--pr-ease),box-shadow .3s;}
+.adk-ctr-icon-btn:hover,.adk-ctr-nav-btn:hover,.adk-ctr-reset:hover,.adk-quick-btn:hover{
+  transform:translateY(-2px);box-shadow:0 10px 20px -10px rgba(42,28,16,.55),0 0 16px -6px rgba(198,161,91,.85);}
+.adk-ctr-complete-badge{
+  background:linear-gradient(120deg,#3f7d55,#5aa473);color:#fff;border-radius:var(--pr-r-pill);
+  box-shadow:0 8px 18px -10px rgba(63,125,85,.9);}
+.adk-sd-ring circle{transition:stroke-dashoffset 1.4s var(--pr-ease);}
+.adk-theme-swatch{border-radius:var(--pr-r-sm);box-shadow:var(--pr-shadow-soft);
+  transition:transform .3s var(--pr-ease);}
+.adk-theme-swatch:hover{transform:translateY(-3px) scale(1.05);}
+.adk-static-jump-btn{border-radius:var(--pr-r-pill);}
+
+@media (prefers-reduced-motion:reduce){
+  .adk-item::after,.adk-static-item::after{animation:none;opacity:.5;
+    background:linear-gradient(140deg,rgba(233,206,138,.8),rgba(198,161,91,.2));}
+  .adk-cat-btn,.adk-item,.adk-static-item,.adk-progress-stat,.adk-sd-stat,
+  .adk-priority-card,.adk-wird-card,.adk-achv-badge,.adk-ctr-dial,
+  .adk-ctr-icon-btn,.adk-theme-swatch{transition:none!important;transform:none!important;}
+}
