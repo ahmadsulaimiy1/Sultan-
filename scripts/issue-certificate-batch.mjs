@@ -29,8 +29,17 @@ import {
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 
-// ── Batch definition ────────────────────────────────────────────────────
-const PROGRAMME = 'IBT';
+// ── Batch selection ─────────────────────────────────────────────────────
+//     node scripts/issue-certificate-batch.mjs [IBT|IDD]
+//
+// Every batch the school has issued stays defined in this file, because the
+// certificate sequence is GLOBAL — one number is issued once, ever, across
+// every stage and every year — so a later batch cannot be numbered without
+// knowing where the previous one ended. Keeping them together is also what
+// makes each one reproducible on demand rather than only at the moment it
+// was first run.
+const BATCH_KEY = (process.argv[2] || 'IBT').toUpperCase();
+
 const ACADEMIC_YEAR = '2025/2026';
 const ISSUED_AT = '2026-08-08';
 // institution_name is NOT NULL in stage_certificates. The renderer never
@@ -41,129 +50,201 @@ const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const PLACE_AR = 'إكورودو، لاغوس، نيجيريا';
 const ORIGIN = 'https://www.shroyalschools.com';
 
-// The Founder's instruction: this is not the first graduating class, so
-// certificate numbering resumes at 000035. The thirty-four before it are
-// already issued and their numbers are not reused.
-const FIRST_CERTIFICATE_SEQ = 35;
+// ── The graduation registers ────────────────────────────────────────────
+// THE ENGLISH NAMES ARE THE FOUNDER'S AND ARE AUTHORITATIVE in every batch.
+//
+// THE ARABIC IS NOT SUPPLIED. The directives give English only, so the Arabic
+// here is this pipeline's rendering — but most of it is not a guess. Wherever
+// the Founder has already approved a spelling, that string is carried across
+// verbatim rather than re-derived, because the last time this file derived
+// Arabic it "improved" seven approved spellings (عليو for علي, أوكوه for أكو,
+// أديغوكي for أدغكي). A student's name is whatever their institution records,
+// not what a transliteration scheme suggests.
+//
+// `approvedAr` is a second, independent transcription of `roll`, and the
+// script refuses to run if the two disagree by one code point. أ and ا, ي and
+// ى, ة and ه are separate characters that look near-identical at body size.
+//
+// `withdrawnEn`/`withdrawnAr` are the names that must NOT appear in THIS
+// batch's output. They are per-batch because a name withdrawn from one stage
+// can be current in another — which is exactly what happened here.
+const BATCHES = {
+  // Third and authoritative Ibtida'iyyah roll (Founder, 2026-08-06), which
+  // superseded an original seven and an interim six.
+  IBT: {
+    programme: 'IBT',
+    firstCertificateSeq: 35,
+    firstIdentitySeq: 35,
+    roll: [
+      { en: 'Hameedah Adebimpe Ojewumi', ar: 'حميدة أدبيمبي أوجومي',  sex: 'female' },
+      { en: 'Aisha Anofi',               ar: 'عائشة حنفي',            sex: 'female' },
+      { en: 'Abdulbasit Adedokun',       ar: 'عبد الباسط أددوكن',     sex: 'male' },
+      { en: 'Naheemah Ismail',           ar: 'نعيمة إسماعيل',         sex: 'female' },
+      { en: 'Ashrof Akorede',            ar: 'أشرف أكوردي',           sex: 'male' },
+      { en: 'Imran Adegoke',             ar: 'عمران أدغكي',           sex: 'male' },
+      { en: 'Abdulateef Adedokun',       ar: 'عبد اللطيف أددوكن',     sex: 'male' },
+    ],
+    approvedAr: {
+      'Hameedah Adebimpe Ojewumi': 'حميدة أدبيمبي أوجومي',
+      'Aisha Anofi':               'عائشة حنفي',
+      'Abdulbasit Adedokun':       'عبد الباسط أددوكن',
+      'Naheemah Ismail':           'نعيمة إسماعيل',
+      'Ashrof Akorede':            'أشرف أكوردي',
+      'Imran Adegoke':             'عمران أدغكي',
+      'Abdulateef Adedokun':       'عبد اللطيف أددوكن',
+    },
+    // The original seven, plus the interim six — who are NOT withdrawn
+    // students at all: they are the I'dadiyyah roll below. They were on the
+    // wrong stage, which is why they may not appear on an Ibtida'iyyah sheet.
+    withdrawnEn: [
+      'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+      'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+      'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
+      'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
+      'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
+      'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
+    ],
+    withdrawnAr: [
+      'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
+      'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
+      'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
+      'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
+      // كوردي and أكو are deliberately absent — both are substrings of أكوردي
+      // (Akorede), a current student. The assertion below proved that.
+      'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
+      'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
+      'أولاديميجي', 'عبد الله',
+    ],
+    arabicNames: {
+      status: 'MOSTLY APPROVED — TWO STRINGS AWAIT FOUNDER CONFIRMATION',
+      approvedAndCarriedAcross: {
+        Naheemah: 'نعيمة', Ismail: 'إسماعيل', Ojewumi: 'أوجومي', Aisha: 'عائشة',
+        Imran: 'عمران', Adegoke: 'أدغكي', Ashrof: 'أشرف',
+        Akorede: 'أكوردي — on the approved كوردي (Korede)',
+        Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
+      },
+      standardArabicNoChoiceToMake: {
+        Hameedah: 'حميدة', Abdulbasit: 'عبد الباسط', Abdulateef: 'عبد اللطيف',
+      },
+      awaitingConfirmation: {
+        Adebimpe: 'أدبيمبي — Yoruba, no institutional precedent',
+        Adedokun: 'أددوكن — Yoruba, no institutional precedent. Borne by two '
+          + 'students, so a correction applies to both.',
+      },
+    },
+  },
 
-// The permanent student numbers are drawn from the same position in the
-// register. The generator scatters them — consecutive sequence values land
-// 324 billion apart — so taking a contiguous run here produces student IDs
-// with no visible order, which is the point. On import these values seed
-// students.identity_no directly and student_identity_seq is set past them;
-// they are never regenerated.
-const FIRST_IDENTITY_SEQ = 35;
-
-// ── The graduation register ─────────────────────────────────────────────
-// FINAL CORRECTION (Founder, 2026-08-06): this is the third and
-// authoritative Ibtida'iyyah roll. It supersedes every previous version —
-// both the original roll of seven and the interim roll of six. Nothing from
-// either survives in the production files; the residue gates below and in
-// scripts/verify-certificate-batch.mjs fail the batch if anything does.
-//
-// THE ENGLISH NAMES ARE THE FOUNDER'S AND ARE AUTHORITATIVE, including
-// "Ashrof" — the Founder's earlier roll spelled the same given name
-// "Ashraf", and the current spelling is the one that prints.
-//
-// THE ARABIC NAMES ARE NOT SUPPLIED. The notice gives English only, so the
-// Arabic below is this pipeline's rendering. Most of it is not a guess:
-// this roll re-uses names the Founder HAS already approved in Arabic on the
-// original register, so those strings are carried across verbatim rather
-// than re-derived. That matters, because the last time this file derived
-// Arabic it "improved" seven approved spellings — عليو for علي, أوكوه for
-// أكو, أديغوكي for أدغكي — on the reasoning that they represented the
-// English pronunciation more fully. A student's name is whatever their
-// institution records, not what a transliteration scheme suggests.
-//
-//   APPROVED BY THE FOUNDER, carried across unchanged:
-//     Naheemah → نعيمة      Ismail  → إسماعيل    Ojewumi → أوجومي
-//     Aisha    → عائشة      Imran   → عمران      Adegoke → أدغكي
-//     Ashraf   → أشرف       Korede  → كوردي  (giving Akorede → أكوردي)
-//   THE INSTITUTION'S OWN, from the school name مدارس السلطان حنفي الملكية
-//   and the Chairman's signature block د. زكريا أولانريوجو حنفي:
-//     Anofi    → حنفي
-//   STANDARD ARABIC, no transliteration choice to make:
-//     Hameedah → حميدة   Abdulbasit → عبد الباسط   Abdulateef → عبد اللطيف
-//
-// That leaves exactly TWO strings with no institutional precedent, both
-// Yoruba, both rendered on the pattern of the approved أدغكي (Adegoke) and
-// أبديمي (Abidemi):
-//     Adebimpe → أدبيمبي        Adedokun → أددوكن
-// Those two are what the Founder needs to confirm or correct. The register
-// JSON and Markdown say so in their own arabicNames block, so a registrar
-// reading the register — not this file — learns it before printing.
-//
-// APPROVED_AR below is a second, independent transcription, and the script
-// refuses to run if the two disagree by so much as one code point. A visual
-// comparison is not enough: أ and ا, ي and ى, ة and ه are separate
-// characters that look near-identical at body size.
-const CLASS_ROLL = [
-  { en: 'Hameedah Adebimpe Ojewumi', ar: 'حميدة أدبيمبي أوجومي',  sex: 'female' },
-  { en: 'Aisha Anofi',               ar: 'عائشة حنفي',            sex: 'female' },
-  { en: 'Abdulbasit Adedokun',       ar: 'عبد الباسط أددوكن',     sex: 'male' },
-  { en: 'Naheemah Ismail',           ar: 'نعيمة إسماعيل',         sex: 'female' },
-  { en: 'Ashrof Akorede',            ar: 'أشرف أكوردي',           sex: 'male' },
-  { en: 'Imran Adegoke',             ar: 'عمران أدغكي',           sex: 'male' },
-  { en: 'Abdulateef Adedokun',       ar: 'عبد اللطيف أددوكن',     sex: 'male' },
-];
-
-// Transcribed separately. Do not derive one from the other — the whole
-// point is that they are two independent copies.
-const APPROVED_AR = {
-  'Hameedah Adebimpe Ojewumi': 'حميدة أدبيمبي أوجومي',
-  'Aisha Anofi':               'عائشة حنفي',
-  'Abdulbasit Adedokun':       'عبد الباسط أددوكن',
-  'Naheemah Ismail':           'نعيمة إسماعيل',
-  'Ashrof Akorede':            'أشرف أكوردي',
-  'Imran Adegoke':             'عمران أدغكي',
-  'Abdulateef Adedokun':       'عبد اللطيف أددوكن',
+  // I'dadiyyah — Intermediate Stage (Founder production directive,
+  // 2026-08-06). Numbering CONTINUES from the Ibtida'iyyah batch: that batch
+  // ran 000035-000041, so this one starts at 000042. The certificate sequence
+  // is global — one number is issued once, ever, across every stage — so this
+  // is not a convention but the only correct value.
+  IDD: {
+    programme: 'IDD',
+    firstCertificateSeq: 42,
+    firstIdentitySeq: 42,
+    roll: [
+      { en: 'Muhammad Ismail Seriki',    ar: 'محمد إسماعيل سركي',        sex: 'male' },
+      { en: 'Baqi Olamiposi Anofi',      ar: 'باقي أولاميبوسي حنفي',     sex: 'male' },
+      { en: 'Faridah Ayomide Aliu',      ar: 'فريدة أيومدي علي',         sex: 'female' },
+      { en: 'Thoirah Makinde',           ar: 'طاهرة مكيندي',             sex: 'female' },
+      { en: 'Abdulbasit Amobi Jabarr',   ar: 'عبد الباسط أموبي جبار',    sex: 'male' },
+      { en: 'Abdullah Oladimeji Anofi',  ar: 'عبد الله أولاديميجي حنفي', sex: 'male' },
+    ],
+    approvedAr: {
+      'Muhammad Ismail Seriki':   'محمد إسماعيل سركي',
+      'Baqi Olamiposi Anofi':     'باقي أولاميبوسي حنفي',
+      'Faridah Ayomide Aliu':     'فريدة أيومدي علي',
+      'Thoirah Makinde':          'طاهرة مكيندي',
+      'Abdulbasit Amobi Jabarr':  'عبد الباسط أموبي جبار',
+      'Abdullah Oladimeji Anofi': 'عبد الله أولاديميجي حنفي',
+    },
+    // The Ibtida'iyyah roll and the original withdrawn seven. An Ibtida'iyyah
+    // student appearing on an I'dadiyyah sheet is the same class of error as
+    // a withdrawn one: the wrong award over the right name.
+    withdrawnEn: [
+      'Hameedah Adebimpe Ojewumi', 'Aisha Anofi', 'Abdulbasit Adedokun',
+      'Naheemah Ismail', 'Ashrof Akorede', 'Imran Adegoke', 'Abdulateef Adedokun',
+      'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+      'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+      'Hameedah', 'Adebimpe', 'Ojewumi', 'Aisha', 'Adedokun', 'Naheemah',
+      'Ashrof', 'Akorede', 'Imran', 'Adegoke', 'Abdulateef',
+      'Okoh', 'Jokomba', 'Lawal', 'Iremide', 'Korede', 'Abidemi', 'Al-Ameen',
+    ],
+    withdrawnAr: [
+      'حميدة أدبيمبي أوجومي', 'عائشة حنفي', 'عبد الباسط أددوكن',
+      'نعيمة إسماعيل', 'أشرف أكوردي', 'عمران أدغكي', 'عبد اللطيف أددوكن',
+      'حميدة', 'أدبيمبي', 'أوجومي', 'عائشة', 'أددوكن', 'نعيمة', 'أشرف',
+      'أكوردي', 'عمران', 'أدغكي', 'عبد اللطيف',
+      'أكو', 'كوردي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'أبديمي',
+    ],
+    arabicNames: {
+      status: 'PROPOSED — AWAITING FOUNDER CONFIRMATION',
+      approvedAndCarriedAcross: {
+        Ismail: 'إسماعيل', Seriki: 'سركي', Aliu: 'علي — the approved form, NOT عليو',
+        Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
+      },
+      standardArabicNoChoiceToMake: {
+        Muhammad: 'محمد', Baqi: 'باقي', Faridah: 'فريدة',
+        Abdulbasit: 'عبد الباسط', Abdullah: 'عبد الله', Jabarr: 'جبار',
+      },
+      awaitingConfirmation: {
+        Olamiposi: 'أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), '
+          + 'the Chairman’s own middle name',
+        Oladimeji: 'أولاديميجي — Yoruba, same pattern',
+        // The -mide ending has an approved SHRS form, but its source is a
+        // withdrawn student's name. Cited by pattern, never named: this
+        // register is a production file, and no withdrawn student may appear
+        // in one. The residue gate caught this exact leak on the first run.
+        Ayomide: 'أيومدي — the -mide ending follows an approved SHRS precedent',
+        Amobi: 'أموبي — Igbo, no institutional precedent',
+        Makinde: 'مكيندي — Yoruba, no institutional precedent',
+        Thoirah: 'طاهرة — Nigerian orthography also admits ثويرة',
+      },
+    },
+  },
 };
 
-// Both withdrawn rolls, kept ONLY so the gates can prove they are gone.
-// Never read for issuance.
-//
-// These are name FRAGMENTS unique to the withdrawn rolls, not whole names.
-// Getting that wrong in either direction is easy and silent: this roll
-// shares Naheemah, Ismail, Ojewumi, Aisha, Imran, Adegoke, Ashraf/Ashrof
-// and Anofi with rolls that were withdrawn, so guarding on those would fail
-// every valid batch — while guarding on too little lets a withdrawn student
-// through. The assertion below is what makes the list trustworthy: it
-// refuses to run if any guard string appears in a CURRENT name.
-// Every withdrawn name IN FULL, both scripts — full names are always safe to
-// guard on, because no current student is a withdrawn student.
-const WITHDRAWN_ROLL = [
-  // original roll of seven
-  'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
-  'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
-  // interim roll of six
-  'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
-  'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
-  // Fragments, which catch a withdrawn name that has been partially edited
-  // rather than removed. Only fragments the assertion below proves cannot
-  // occur in a current name: NOT "Korede" or "Okoh", because "Akorede"
-  // contains the first and case-folding makes the second unsafe to reason
-  // about by eye.
-  'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
-  'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
-];
-const WITHDRAWN_AR = [
-  'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
-  'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
-  'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
-  'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
-  // Fragments proven non-colliding by the assertion below. أكو and كوردي are
-  // deliberately ABSENT: both are substrings of أكوردي (Akorede), a current
-  // student, so guarding on them would fail every valid batch. The full
-  // names above cover those two withdrawn students.
-  'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
-  'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
-  'أولاديميجي', 'عبد الله',
-];
+const BATCH = BATCHES[BATCH_KEY];
+if (!BATCH) {
+  console.error(`unknown batch "${BATCH_KEY}" — expected one of ${Object.keys(BATCHES).join(', ')}`);
+  process.exit(1);
+}
+const PROGRAMME = BATCH.programme;
+const FIRST_CERTIFICATE_SEQ = BATCH.firstCertificateSeq;
+// The permanent student numbers are drawn from the same position in the
+// register. The generator scatters them — consecutive sequence values land
+// 324 billion apart — so a contiguous run here produces student IDs with no
+// visible order, which is the point. On import these seed students.identity_no
+// directly and student_identity_seq is set past them; never regenerated.
+const FIRST_IDENTITY_SEQ = BATCH.firstIdentitySeq;
+const CLASS_ROLL = BATCH.roll;
+const APPROVED_AR = BATCH.approvedAr;
+const WITHDRAWN_ROLL = BATCH.withdrawnEn;
+const WITHDRAWN_AR = BATCH.withdrawnAr;
+
+// No two batches may claim the same certificate number. Checked here rather
+// than trusted, because the sequence is global and a copy-paste that left
+// firstCertificateSeq unchanged would mint a second 000035 in a different
+// stage — two real certificates with the same engraved number.
+const spans = Object.values(BATCHES).map((b) => ({
+  key: b.programme, lo: b.firstCertificateSeq, hi: b.firstCertificateSeq + b.roll.length - 1,
+}));
+for (const a of spans) {
+  for (const b of spans) {
+    if (a === b) continue;
+    if (a.lo <= b.hi && b.lo <= a.hi) {
+      console.error(`BATCH REJECTED — certificate numbers overlap: ${a.key} `
+        + `${a.lo}-${a.hi} and ${b.key} ${b.lo}-${b.hi}`);
+      process.exit(1);
+    }
+  }
+}
 
 // A guard that matches a CURRENT student is a gate that can never pass; a
 // missing guard is a gate that can never fail. This assertion is not
-// ceremony — it caught أكو and كوردي inside أكوردي on the first run of this
-// roll, which would have rejected every correct batch. English is compared
+// ceremony — it caught أكو and كوردي inside أكوردي on the Ibtida'iyyah roll,
+// which would have rejected every correct batch. English is compared
 // case-insensitively, because "Akorede" contains "korede".
 const guardFaults = [];
 for (const g of [...WITHDRAWN_ROLL, ...WITHDRAWN_AR]) {
@@ -181,35 +262,6 @@ if (guardFaults.length) {
     + guardFaults.join('\n  '));
   process.exit(1);
 }
-
-// Code point by code point, before anything is generated or written. A
-// visual comparison is not enough: أ and ا, ي and ى, ة and ه are separate
-// characters that can look near-identical at body size, and a difference in
-// Unicode normalisation form would not show up on screen at all.
-const nameFaults = [];
-for (const student of CLASS_ROLL) {
-  const approved = APPROVED_AR[student.en];
-  if (approved === undefined) {
-    nameFaults.push(`${student.en}: not on the approved register`);
-    continue;
-  }
-  const a = [...student.ar.normalize('NFC')];
-  const b = [...approved.normalize('NFC')];
-  if (a.length !== b.length || a.some((c, i) => c !== b[i])) {
-    const at = a.findIndex((c, i) => c !== b[i]);
-    nameFaults.push(`${student.en}: Arabic differs from the approved spelling`
-      + ` at position ${at < 0 ? Math.min(a.length, b.length) : at}`
-      + ` — set "${student.ar}", approved "${approved}"`);
-  }
-}
-if (Object.keys(APPROVED_AR).length !== CLASS_ROLL.length) {
-  nameFaults.push('the roll and the approved register are different lengths');
-}
-if (nameFaults.length) {
-  console.error('BATCH REJECTED — name mismatch:\n  ' + nameFaults.join('\n  '));
-  process.exit(1);
-}
-console.log(`names: all ${CLASS_ROLL.length} Arabic spellings match the approved register exactly`);
 
 // ── Sequence stub ───────────────────────────────────────────────────────
 // The only thing the live database contributes to certificate issuance is
@@ -338,26 +390,11 @@ writeFileSync(join(dir, 'graduation-register.json'), JSON.stringify({
   // Carried in the register rather than left as a code comment, because
   // this is the one fact a registrar must know before the batch is printed.
   arabicNames: {
-    status: 'MOSTLY APPROVED — TWO STRINGS AWAIT FOUNDER CONFIRMATION',
-    reason: 'The final correction notice of 2026-08-06 supplied English names '
-      + 'only. English is authoritative. Most of the Arabic is not a new '
-      + 'rendering: these names were already approved in Arabic by the Founder '
-      + 'on an earlier register and are carried across unchanged.',
-    approvedAndCarriedAcross: {
-      Naheemah: 'نعيمة', Ismail: 'إسماعيل', Ojewumi: 'أوجومي', Aisha: 'عائشة',
-      Imran: 'عمران', Adegoke: 'أدغكي', Ashrof: 'أشرف',
-      Akorede: 'أكوردي — on the approved كوردي (Korede)',
-      Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
-    },
-    standardArabicNoChoiceToMake: {
-      Hameedah: 'حميدة', Abdulbasit: 'عبد الباسط', Abdulateef: 'عبد اللطيف',
-    },
-    awaitingConfirmation: {
-      Adebimpe: 'أدبيمبي — Yoruba, no institutional precedent; rendered on the '
-        + 'pattern of the approved أدغكي',
-      Adedokun: 'أددوكن — Yoruba, no institutional precedent; rendered on the '
-        + 'same pattern. Borne by two students, so a correction applies to both.',
-    },
+    reason: 'The Founder\u2019s directive supplied English names only. English is '
+      + 'authoritative. Where a spelling had already been approved on an earlier '
+      + 'register it is carried across unchanged rather than re-derived; the rest '
+      + 'is this pipeline\u2019s proposal and is listed under awaitingConfirmation.',
+    ...BATCH.arabicNames,
   },
   entries: issued,
 }, null, 2) + '\n');
@@ -371,18 +408,27 @@ const md = [
   'Grades are recorded in the student record and bound into the content hash;',
   'they appear neither on the certificate nor on public verification.',
   '',
-  '> **Arabic names: two strings await the Founder\'s confirmation.**',
-  '> The final correction notice supplied English names only, and the English is',
-  '> authoritative. Most of the Arabic is not a new rendering: نعيمة (Naheemah),',
-  '> إسماعيل (Ismail), أوجومي (Ojewumi), عائشة (Aisha), عمران (Imran), أدغكي',
-  '> (Adegoke), أشرف (Ashrof) and أكوردي (on the approved كوردي) were all approved',
-  '> by the Founder on an earlier register and are carried across unchanged, and',
-  '> حنفي (Anofi) is the school\'s own name. حميدة, عبد الباسط and عبد اللطيف are',
-  '> standard Arabic with no transliteration choice to make.',
+  // Generated from the batch's own arabicNames block rather than written by
+  // hand, so the register can never disagree with the issuer about which
+  // spellings are the Founder's and which are this pipeline's proposal.
+  `> **Arabic names — ${BATCH.arabicNames.status}**`,
+  '> The directive supplied English names only, and the English is authoritative.',
+  ...(Object.keys(BATCH.arabicNames.approvedAndCarriedAcross || {}).length ? [
+    '>',
+    '> *Already approved by the Founder and carried across unchanged:* '
+      + Object.entries(BATCH.arabicNames.approvedAndCarriedAcross)
+        .map(([k, v]) => `${v.split(' — ')[0]} (${k})`).join(', ') + '.',
+  ] : []),
+  ...(Object.keys(BATCH.arabicNames.standardArabicNoChoiceToMake || {}).length ? [
+    '>',
+    '> *Standard Arabic, no transliteration choice to make:* '
+      + Object.entries(BATCH.arabicNames.standardArabicNoChoiceToMake)
+        .map(([k, v]) => `${v} (${k})`).join(', ') + '.',
+  ] : []),
   '>',
-  '> Two Yoruba strings have no institutional precedent and need confirming',
-  '> before print: **أدبيمبي** (Adebimpe) and **أددوكن** (Adedokun — borne by two',
-  '> students, so a correction applies to both).',
+  '> **Awaiting the Founder\'s confirmation before print:**',
+  ...Object.entries(BATCH.arabicNames.awaitingConfirmation)
+    .map(([k, v]) => `> · **${v.split(' — ')[0]}** (${k})${v.includes(' — ') ? ' — ' + v.split(' — ').slice(1).join(' — ') : ''}`),
   '',
   '| # | Student | الاسم | Student ID | Certificate Number | Document ID | Archive |',
   '|---|---------|-------|------------|--------------------|-------------|---------|',

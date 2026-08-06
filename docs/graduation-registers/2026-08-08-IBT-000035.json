@@ -9,8 +9,8 @@
   "firstCertificateSeq": 35,
   "count": 7,
   "arabicNames": {
+    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived; the rest is this pipeline’s proposal and is listed under awaitingConfirmation.",
     "status": "MOSTLY APPROVED — TWO STRINGS AWAIT FOUNDER CONFIRMATION",
-    "reason": "The final correction notice of 2026-08-06 supplied English names only. English is authoritative. Most of the Arabic is not a new rendering: these names were already approved in Arabic by the Founder on an earlier register and are carried across unchanged.",
     "approvedAndCarriedAcross": {
       "Naheemah": "نعيمة",
       "Ismail": "إسماعيل",
@@ -28,8 +28,8 @@
       "Abdulateef": "عبد اللطيف"
     },
     "awaitingConfirmation": {
-      "Adebimpe": "أدبيمبي — Yoruba, no institutional precedent; rendered on the pattern of the approved أدغكي",
-      "Adedokun": "أددوكن — Yoruba, no institutional precedent; rendered on the same pattern. Borne by two students, so a correction applies to both."
+      "Adebimpe": "أدبيمبي — Yoruba, no institutional precedent",
+      "Adedokun": "أددوكن — Yoruba, no institutional precedent. Borne by two students, so a correction applies to both."
     }
   },
   "entries": [

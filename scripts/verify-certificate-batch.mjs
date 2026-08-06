@@ -15,60 +15,100 @@ import { parseStageCertificateSerial, displayStageCertificateNo } from '../funct
 
 const DIR = process.argv[2] || 'dist/certificates/2026-08-08-IBT-000035';
 
-// Transcribed independently from the Founder's FINAL CORRECTION NOTICE of
-// 2026-08-06 — the third and authoritative roll, superseding both the
-// original seven and the interim six. Not imported from the issuer;
-// importing it would mean the issuer verifies itself, which proves nothing.
+// Transcribed independently from the Founder's directives. NOT imported from
+// the issuer — importing it would mean the issuer verifies itself, which
+// proves nothing. Which directive applies is chosen by the batch directory's
+// own programme code, so pointing this gate at the wrong batch cannot pass.
 //
-// The English is the Founder's and is authoritative, "Ashrof" included.
-// The Arabic is mostly carried across from spellings the Founder approved on
-// the original register (نعيمة، إسماعيل، أوجومي، عائشة، عمران، أدغكي، أشرف،
-// كوردي) plus the school's own حنفي; only أدبيمبي and أددوكن are new. It is
-// reproduced here so the two files can be checked against each other code
-// point by code point — a check that catches a typo, not an unconfirmed
-// spelling.
-const DIRECTIVE = [
-  ['000035', 'Hameedah Adebimpe Ojewumi', 'حميدة أدبيمبي أوجومي'],
-  ['000036', 'Aisha Anofi', 'عائشة حنفي'],
-  ['000037', 'Abdulbasit Adedokun', 'عبد الباسط أددوكن'],
-  ['000038', 'Naheemah Ismail', 'نعيمة إسماعيل'],
-  ['000039', 'Ashrof Akorede', 'أشرف أكوردي'],
-  ['000040', 'Imran Adegoke', 'عمران أدغكي'],
-  ['000041', 'Abdulateef Adedokun', 'عبد اللطيف أددوكن'],
-];
+// The English is the Founder's and is authoritative ("Ashrof" included). The
+// Arabic is mostly carried across from spellings the Founder approved on an
+// earlier register; it is reproduced here so the two files can be checked
+// against each other code point by code point — a check that catches a typo,
+// not an unconfirmed spelling.
+const DIRECTIVES = {
+  // Final Ibtida'iyyah roll, 2026-08-06.
+  IBT: {
+    firstSeq: 35,
+    roll: [
+      ['000035', 'Hameedah Adebimpe Ojewumi', 'حميدة أدبيمبي أوجومي'],
+      ['000036', 'Aisha Anofi', 'عائشة حنفي'],
+      ['000037', 'Abdulbasit Adedokun', 'عبد الباسط أددوكن'],
+      ['000038', 'Naheemah Ismail', 'نعيمة إسماعيل'],
+      ['000039', 'Ashrof Akorede', 'أشرف أكوردي'],
+      ['000040', 'Imran Adegoke', 'عمران أدغكي'],
+      ['000041', 'Abdulateef Adedokun', 'عبد اللطيف أددوكن'],
+    ],
+    // The original withdrawn seven, and the I'dadiyyah roll — real students,
+    // but of another stage, and the wrong award over the right name is the
+    // same defect as a withdrawn student.
+    forbidden: [
+      'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+      'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+      'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
+      'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
+      'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
+      'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
+      'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
+      'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
+      'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
+      'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
+      'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
+      'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
+      'أولاديميجي', 'عبد الله',
+    ],
+  },
+  // I'dadiyyah — Intermediate Stage, 2026-08-06. Numbering continues from the
+  // Ibtida'iyyah batch, which ended at 000041.
+  IDD: {
+    firstSeq: 42,
+    roll: [
+      ['000042', 'Muhammad Ismail Seriki', 'محمد إسماعيل سركي'],
+      ['000043', 'Baqi Olamiposi Anofi', 'باقي أولاميبوسي حنفي'],
+      ['000044', 'Faridah Ayomide Aliu', 'فريدة أيومدي علي'],
+      ['000045', 'Thoirah Makinde', 'طاهرة مكيندي'],
+      ['000046', 'Abdulbasit Amobi Jabarr', 'عبد الباسط أموبي جبار'],
+      ['000047', 'Abdullah Oladimeji Anofi', 'عبد الله أولاديميجي حنفي'],
+    ],
+    forbidden: [
+      'Hameedah Adebimpe Ojewumi', 'Aisha Anofi', 'Abdulbasit Adedokun',
+      'Naheemah Ismail', 'Ashrof Akorede', 'Imran Adegoke', 'Abdulateef Adedokun',
+      'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+      'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+      'Hameedah', 'Adebimpe', 'Ojewumi', 'Aisha', 'Adedokun', 'Naheemah',
+      'Ashrof', 'Akorede', 'Imran', 'Adegoke', 'Abdulateef',
+      'Okoh', 'Jokomba', 'Lawal', 'Iremide', 'Korede', 'Abidemi', 'Al-Ameen',
+      'حميدة أدبيمبي أوجومي', 'عائشة حنفي', 'عبد الباسط أددوكن',
+      'نعيمة إسماعيل', 'أشرف أكوردي', 'عمران أدغكي', 'عبد اللطيف أددوكن',
+      'حميدة', 'أدبيمبي', 'أوجومي', 'عائشة', 'أددوكن', 'نعيمة', 'أشرف',
+      'أكوردي', 'عمران', 'أدغكي', 'عبد اللطيف',
+      'أكو', 'كوردي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'أبديمي',
+    ],
+  },
+};
 
-// Both withdrawn rolls. Present ONLY so this file can prove they are gone.
-// These are fragments unique to the withdrawn rolls: this roll shares
-// Naheemah, Ismail, Ojewumi, Aisha, Imran, Adegoke, Ashraf/Ashrof and Anofi
-// with rolls that were withdrawn, so those may not be guarded on. The
-// assertion below refuses to run if any guard matches a current name — a
-// guard that matches is a gate that can never pass.
-const WITHDRAWN = [
-  // Full names of both withdrawn rolls — always safe to guard on.
-  'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
-  'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
-  'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
-  'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
-  'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
-  'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
-  'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
-  'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
-  // Fragments, to catch a withdrawn name partially edited rather than removed.
-  // "Korede"/"Okoh"/كوردي/أكو are deliberately ABSENT: أكوردي (Akorede) is a
-  // current student and contains both, so guarding on them would fail every
-  // valid batch. The assertion below is what proves the rest are safe.
-  'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
-  'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
-  'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
-  'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
-  'أولاديميجي', 'عبد الله',
-];
+// The batch directory names its own programme: 2026-08-08-IDD-000042.
+const PROG = (DIR.match(/-([A-Z]{3})-\d{6}\/?$/) || [])[1];
+const SPEC = DIRECTIVES[PROG];
+if (!SPEC) {
+  console.error(`VERIFIER REJECTED — cannot tell which directive governs "${DIR}". `
+    + `Expected a directory ending -<PROG>-<seq6> with PROG in `
+    + `${Object.keys(DIRECTIVES).join(', ')}.`);
+  process.exit(1);
+}
+const DIRECTIVE = SPEC.roll;
+const WITHDRAWN = SPEC.forbidden;
+const FIRST_SEQ = SPEC.firstSeq;
+
+// A guard that matches a CURRENT student is a gate that can never pass; a
+// missing guard is a gate that can never fail. This assertion earned itself
+// on the Ibtida'iyyah roll, catching أكو and كوردي inside أكوردي (Akorede).
+// English is compared case-insensitively for the same reason.
 const guardFaults = WITHDRAWN.flatMap((g) => DIRECTIVE.flatMap(([seq, en, ar]) =>
   (en.toLowerCase().includes(g.toLowerCase())
     || ar.normalize('NFC').includes(g.normalize('NFC')))
     ? [`guard "${g}" matches current student ${seq} ${en}`] : []));
 if (guardFaults.length) {
-  console.error('VERIFIER REJECTED — withdrawn-roll guard collides with the current roll:\n  '
+  console.error('VERIFIER REJECTED — forbidden-name guard collides with the current roll:\n  '
     + guardFaults.join('\n  '));
   process.exit(1);
 }
@@ -106,9 +146,10 @@ ok('all serials parse under the production grammar',
   serials.every((s) => parseStageCertificateSerial(s) !== null),
   serials.filter((s) => !parseStageCertificateSerial(s)).join(', '));
 const seqs = reg.entries.map((e) => e.certId);
-ok('numbering starts at exactly 000035', seqs[0] === 35, `starts at ${String(seqs[0]).padStart(6, '0')}`);
+ok(`numbering starts at exactly ${String(FIRST_SEQ).padStart(6, '0')}`,
+  seqs[0] === FIRST_SEQ, `starts at ${String(seqs[0]).padStart(6, '0')}`);
 ok('numbering is sequential with no gaps',
-  seqs.every((n, i) => n === 35 + i), seqs.join(', '));
+  seqs.every((n, i) => n === FIRST_SEQ + i), seqs.join(', '));
 ok('every serial embeds its own sequence',
   reg.entries.every((e) => e.serialNo.includes(`-${String(e.certId).padStart(6, '0')}-`)));
 
@@ -188,8 +229,8 @@ for (const f of readdirSync(DIR)) {
 ok('no withdrawn name, Arabic fragment or certificate number survives anywhere in the batch',
   residue.length === 0, residue.slice(0, 12).join('\n          '));
 ok('no sheet is numbered past the end of the corrected roll',
-  !files.some((f) => +f.slice(0, 6) > 35 + DIRECTIVE.length - 1),
-  files.filter((f) => +f.slice(0, 6) > 35 + DIRECTIVE.length - 1).join(', '));
+  !files.some((f) => +f.slice(0, 6) > FIRST_SEQ + DIRECTIVE.length - 1),
+  files.filter((f) => +f.slice(0, 6) > FIRST_SEQ + DIRECTIVE.length - 1).join(', '));
 
 console.log(`\n── The engraved certificate number ─────────────────────────`);
 // The number PRINTED on the face is the short, timeless form. These checks

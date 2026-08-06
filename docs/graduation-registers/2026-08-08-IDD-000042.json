@@ -1,0 +1,123 @@
+{
+  "programme": "IDD",
+  "programmeLabelEn": "I’dādiyyah — Intermediate Stage",
+  "programmeLabelAr": "المرحلة الإعدادية",
+  "academicYear": "2025/2026",
+  "issuedAt": "2026-08-08",
+  "issuedAtHijri": "25 Ṣafar 1448 A.H.",
+  "place": "Ikorodu, Lagos, Nigeria",
+  "firstCertificateSeq": 42,
+  "count": 6,
+  "arabicNames": {
+    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived; the rest is this pipeline’s proposal and is listed under awaitingConfirmation.",
+    "status": "PROPOSED — AWAITING FOUNDER CONFIRMATION",
+    "approvedAndCarriedAcross": {
+      "Ismail": "إسماعيل",
+      "Seriki": "سركي",
+      "Aliu": "علي — the approved form, NOT عليو",
+      "Anofi": "حنفي — the school’s own name and the Chairman’s signature block"
+    },
+    "standardArabicNoChoiceToMake": {
+      "Muhammad": "محمد",
+      "Baqi": "باقي",
+      "Faridah": "فريدة",
+      "Abdulbasit": "عبد الباسط",
+      "Abdullah": "عبد الله",
+      "Jabarr": "جبار"
+    },
+    "awaitingConfirmation": {
+      "Olamiposi": "أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), the Chairman’s own middle name",
+      "Oladimeji": "أولاديميجي — Yoruba, same pattern",
+      "Ayomide": "أيومدي — the -mide ending follows an approved SHRS precedent",
+      "Amobi": "أموبي — Igbo, no institutional precedent",
+      "Makinde": "مكيندي — Yoruba, no institutional precedent",
+      "Thoirah": "طاهرة — Nigerian orthography also admits ثويرة"
+    }
+  },
+  "entries": [
+    {
+      "certId": 42,
+      "studentEn": "Muhammad Ismail Seriki",
+      "studentAr": "محمد إسماعيل سركي",
+      "sex": "male",
+      "identityNo": "717455243759974",
+      "serialNo": "SHRS-CERT-IDD-2026-000042-A775E",
+      "contentHash": "a775e194852776ac1d95f62ecca406f0b5e8987aa9ab1cd037c2e50ca82bf730",
+      "verifyCode": "A775-E194-8527",
+      "documentId": "DID-2026-IDD-0000042",
+      "archiveRef": "ARCH/IDD/2026/000042",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000042-A775E",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000042-A775E"
+    },
+    {
+      "certId": 43,
+      "studentEn": "Baqi Olamiposi Anofi",
+      "studentAr": "باقي أولاميبوسي حنفي",
+      "sex": "male",
+      "identityNo": "710699780947768",
+      "serialNo": "SHRS-CERT-IDD-2026-000043-B1092",
+      "contentHash": "b1092ff1f67c5ec88a9859e8c8b80c973a966feb0b53655a8668fb6542b0459b",
+      "verifyCode": "B109-2FF1-F67C",
+      "documentId": "DID-2026-IDD-0000043",
+      "archiveRef": "ARCH/IDD/2026/000043",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000043-B1092",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000043-B1092"
+    },
+    {
+      "certId": 44,
+      "studentEn": "Faridah Ayomide Aliu",
+      "studentAr": "فريدة أيومدي علي",
+      "sex": "female",
+      "identityNo": "713944318135552",
+      "serialNo": "SHRS-CERT-IDD-2026-000044-11615",
+      "contentHash": "1161559472986cbbbcfe0c1b0d07ac13f09213f509da7868fa5469b08d1d4a24",
+      "verifyCode": "1161-5594-7298",
+      "documentId": "DID-2026-IDD-0000044",
+      "archiveRef": "ARCH/IDD/2026/000044",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000044-11615",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000044-11615"
+    },
+    {
+      "certId": 45,
+      "studentEn": "Thoirah Makinde",
+      "studentAr": "طاهرة مكيندي",
+      "sex": "female",
+      "identityNo": "717188855323348",
+      "serialNo": "SHRS-CERT-IDD-2026-000045-09B22",
+      "contentHash": "09b229b8d564a3ca3529c24ddfe45f6d2bb242f6531ce763befc9fabd89c4d03",
+      "verifyCode": "09B2-29B8-D564",
+      "documentId": "DID-2026-IDD-0000045",
+      "archiveRef": "ARCH/IDD/2026/000045",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000045-09B22",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000045-09B22"
+    },
+    {
+      "certId": 46,
+      "studentEn": "Abdulbasit Amobi Jabarr",
+      "studentAr": "عبد الباسط أموبي جبار",
+      "sex": "male",
+      "identityNo": "710433392511139",
+      "serialNo": "SHRS-CERT-IDD-2026-000046-20726",
+      "contentHash": "207267b8b000e94be8f8ecf7f8aa5afc65f35635fb78ca1b323d506b58a3b4fe",
+      "verifyCode": "2072-67B8-B000",
+      "documentId": "DID-2026-IDD-0000046",
+      "archiveRef": "ARCH/IDD/2026/000046",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000046-20726",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000046-20726"
+    },
+    {
+      "certId": 47,
+      "studentEn": "Abdullah Oladimeji Anofi",
+      "studentAr": "عبد الله أولاديميجي حنفي",
+      "sex": "male",
+      "identityNo": "713677929698929",
+      "serialNo": "SHRS-CERT-IDD-2026-000047-6AFD4",
+      "contentHash": "6afd4c25aeceed5075c433a31e38105ee81cd3f042402086a6e10ce7208dbe10",
+      "verifyCode": "6AFD-4C25-AECE",
+      "documentId": "DID-2026-IDD-0000047",
+      "archiveRef": "ARCH/IDD/2026/000047",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000047-6AFD4",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000047-6AFD4"
+    }
+  ]
+}

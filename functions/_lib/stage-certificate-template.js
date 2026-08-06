@@ -621,17 +621,28 @@ function securityFibres(w, h, seed, count = 26) {
 // telling a UV unit where to lay down; they are not fluorescent ink and do
 // not glow. Drawn in a cool tint so a proofer can see them and a printer
 // can move them to their own separation.
+// Solid light ink, pre-composited. These crosshairs used to be #B9A9CE
+// strokes of 0.07-0.08mm inside a <g opacity="0.62"> — hairlines AT the
+// press floor, then screened to 62%. That breaks the same rule §5 states:
+// fine linework carries solid light ink, never an opacity, because an
+// opacity on a hairline becomes a halftone percentage at separation and a
+// screened hairline is the first thing to drop off press. A registration
+// mark that drops out cannot register anything.
+// #B9A9CE at 62% over the panel's cream ground composites to this value, so
+// the appearance is unchanged and only the separation behaviour differs.
+const UV_INK = '#D2C8DE';
+
 function uvMotif(cx, cy, r = 1.15) {
   let petals = '';
   for (let i = 0; i < 6; i++) {
     const a = (i * Math.PI) / 3;
     petals += `<circle cx="${(cx + r * 0.62 * Math.cos(a)).toFixed(2)}" cy="${(cy + r * 0.62 * Math.sin(a)).toFixed(2)}"`
-      + ` r="${(r * 0.3).toFixed(2)}" fill="none" stroke="#B9A9CE" stroke-width="0.07"/>`;
+      + ` r="${(r * 0.3).toFixed(2)}" fill="none" stroke="${UV_INK}" stroke-width="0.07"/>`;
   }
-  return `<g opacity="0.62">${petals}
-    <line x1="${cx - r}" y1="${cy}" x2="${cx + r}" y2="${cy}" stroke="#B9A9CE" stroke-width="0.08"/>
-    <line x1="${cx}" y1="${cy - r}" x2="${cx}" y2="${cy + r}" stroke="#B9A9CE" stroke-width="0.08"/>
-    <circle cx="${cx}" cy="${cy}" r="${(r * 0.2).toFixed(2)}" fill="#B9A9CE"/></g>`;
+  return `<g>${petals}
+    <line x1="${cx - r}" y1="${cy}" x2="${cx + r}" y2="${cy}" stroke="${UV_INK}" stroke-width="0.08"/>
+    <line x1="${cx}" y1="${cy - r}" x2="${cx}" y2="${cy + r}" stroke="${UV_INK}" stroke-width="0.08"/>
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.2).toFixed(2)}" fill="${UV_INK}"/></g>`;
 }
 
 // Iridescent wash — the restrained optical-variability cue. Kept to a
@@ -754,8 +765,11 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
   // ring path is ~165mm around and Inter sets ~0.14mm per character at
   // 0.72pt, so ~1180 characters are needed to close the ring; at 5 repeats
   // the text died out along the top edge and left three sides bare. The
-  // repeat bands are ~16mm slots at 0.58pt (~0.113mm/char), so 4 repeats
-  // of a 32-character serial fills one without overrunning it.
+  // repeat bands are ~16mm slots at 0.75pt (~0.146mm/char), so 3 repeats
+  // of a 32-character serial fills one without overrunning it. (This said
+  // 0.58pt/4 repeats, written when BOTH bands were 0.58pt. The left band was
+  // later raised to the 0.75pt press floor and the right one was missed —
+  // the stale comment is how that survived review.)
   const micro = `${fullSerial} · SULTAN HANAFI ROYAL SCHOOLS · `.repeat(16);
   const repeats = `${fullSerial} `.repeat(3);
   const numY = 9.55, numX = W / 2;
@@ -878,8 +892,19 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
            overprinting it would destroy a device the paper already has. -->
   <text x="19" y="2.78" text-anchor="middle" font-family="Inter, sans-serif"
     font-size="${(0.75 * PT).toFixed(3)}" letter-spacing="0.01" fill="#C1AE84">${escapeHtml(repeats)}</text>
+  <!-- The mirror of the band above, and it must be identical to it. It was
+       0.58pt at fill #8A6A24 with opacity 0.52 — two separate breaches of
+       this file's own press limits (§5): below the 0.75pt floor for repeats,
+       and a screened tint where fine linework must carry SOLID light ink.
+       #8A6A24 at 52% over the cream field composites to ≈#C0AD83, which is
+       within a shade of the left band's solid #C1AE84 — so the two looked
+       the same on screen and separated completely differently. At 0.58pt an
+       Inter stem is ~0.017mm against a 0.085mm halftone cell at 300 lpi, so
+       the glyphs would have been rebuilt from whichever dot centres fell
+       inside them: a dotted grey rail, not letterforms, carrying none of the
+       serial it exists to carry. -->
   <text x="${W - 19}" y="2.78" text-anchor="middle" font-family="Inter, sans-serif"
-    font-size="${(0.58 * PT).toFixed(3)}" letter-spacing="0.015" fill="#8A6A24" opacity="0.52">${escapeHtml(repeats)}</text>
+    font-size="${(0.75 * PT).toFixed(3)}" letter-spacing="0.01" fill="#C1AE84">${escapeHtml(repeats)}</text>
 
   <!-- 13. seated khatam boss; it interrupts the inner rule at the head of
            the cartouche without breaching the top edge, because the
@@ -990,9 +1015,9 @@ const STAGE = {
   IBT: { term: 'Ibtida\u0304\u2019iyyah', gloss: 'Primary Stage Completion',
     ar: 'المرحلة الابتدائية',
     bodyEn: 'Ibtida\u0304\u2019iyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
-  IDD: { term: 'I\u2018da\u0304diyyah', gloss: 'Preparatory Stage Completion',
+  IDD: { term: 'I\u2018da\u0304diyyah', gloss: 'Intermediate Stage Completion',
     ar: 'المرحلة الإعدادية',
-    bodyEn: 'I\u2018da\u0304diyyah (Preparatory)', bodyAr: 'المرحلة الإعدادية' },
+    bodyEn: 'I\u2018da\u0304diyyah (Intermediate)', bodyAr: 'المرحلة الإعدادية' },
   THN: { term: 'Tha\u0304nawiyyah', gloss: 'Secondary Stage Completion',
     ar: 'المرحلة الثانوية',
     bodyEn: 'Tha\u0304nawiyyah (Secondary)', bodyAr: 'المرحلة الثانوية' },
@@ -1135,9 +1160,23 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <img class="o5-seal" src="/assets/images/certificates/official-seal.png" alt="" />
 
-  <div class="o5-para-en">has successfully completed the requirements of the
+  <!-- Set to THREE lines for every stage, deliberately. There are 16.8mm
+       between this paragraph's top (121.4mm) and the particulars band
+       (138.2mm) — enough for three 10pt/1.5 lines with 1.4mm to spare, and
+       not four.
+       The longer wording this replaced ("...the requirements of the...") set
+       in three lines for Ibtidā'iyyah but FOUR for I'dādiyyah, whose stage
+       name is two characters longer, and the fourth line ran straight
+       through the band's gold rule on all six sheets. Ibtidā'iyyah had only
+       escaped because ITS fourth line was the single short word "School.",
+       which happened to end left of the band's left edge at 62.5mm — the
+       layout was passing by luck, not by design.
+       Measured, not guessed: at this measure Ibtidā'iyyah, I'dādiyyah and
+       Thānawiyyah all now set in three lines, ink bottom 136.8mm. Re-measure
+       before lengthening this sentence or adding a fourth stage. -->
+  <div class="o5-para-en">has successfully completed the
     ${stage.bodyEn} stage in the ${session} academic session,
-    in accordance with the approved curriculum and the academic standards
+    in accordance with the approved curriculum and academic standards
     of the School.</div>
   <div class="o5-para-ar">قد ${arCompleted} بنجاحٍ متطلبات ${stage.bodyAr}
     في العام الدراسي <span class="ar-range">${session}</span>، وفقًا للمناهج

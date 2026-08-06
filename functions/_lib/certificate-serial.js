@@ -36,9 +36,9 @@ export const PROGRAMMES = {
     stageAr: 'المرحلة الإبتدائية',
   },
   IDD: {
-    labelEn: 'I’dādiyyah — Preparatory Stage',
+    labelEn: 'I’dādiyyah — Intermediate Stage',
     labelAr: 'المرحلة الإعدادية',
-    stageEn: 'the preparatory educational stage',
+    stageEn: 'the intermediate educational stage',
     stageAr: 'المرحلة الإعدادية',
   },
   THN: {
