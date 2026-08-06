@@ -30,8 +30,44 @@ import {
   formatHijri, isoDateOnly,
 } from '../../../../_lib/certificate-serial.js';
 import { renderStageCertificate, renderStageCertificateBatch } from '../../../../_lib/stage-certificate-template.js';
+import {
+  RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
+} from '../../../../_lib/royal-college-certificate.js';
 import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
 import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
+
+// ── Which master renders which programme ────────────────────────────────────
+// The v1.0 stage template throws on a programme code it has no award wording
+// for, which is correct — printing the wrong award over a correct serial is the
+// failure that guard exists for. Royal College awards are rendered by their own
+// master (functions/_lib/royal-college-certificate.js, v1.1); everything else
+// keeps the frozen v1.0 path, byte for byte.
+//
+// Note what this does NOT do: it does not let the Registrar's Office ISSUE a
+// Royal College batch. Issuance here is scoped to one institution throughout
+// (issuingInstitutionId, hasIssueAuthority, INSTITUTION_INTERNAL_NAME below),
+// and widening that is a larger change to a live route than reprinting needs.
+// Royal College batches are issued by scripts/issue-royal-college-batch.mjs,
+// exactly as the Ibtida'iyyah and I'dadiyyah batches were. This is the reprint
+// path: a JSS row that reaches it renders correctly instead of throwing.
+function renderCertificateFor(cert, args) {
+  return RC_PROGRAMMES[String(cert.programme_code || '').toUpperCase()]
+    ? renderRoyalCollegeCertificate(args)
+    : renderStageCertificate(args);
+}
+function renderCertificateBatch(title, items) {
+  const royal = items.filter((it) => RC_PROGRAMMES[String(it.cert.programme_code || '').toUpperCase()]);
+  if (royal.length && royal.length !== items.length) {
+    // A batch is one programme by construction. A mixed one means the batch
+    // table and the certificate rows disagree, and printing half of it under
+    // each master would hide that rather than surface it.
+    throw new Error('This batch mixes Royal College and Islamic-stage certificates; '
+      + 'they are rendered by different masters and cannot share one print file.');
+  }
+  return royal.length
+    ? renderRoyalCollegeCertificateBatch(title, items)
+    : renderStageCertificateBatch(title, items);
+}
 
 // The issuing school for the Ibtida'iyyah certificate family. The
 // institutions table's internal name vs. the certificate's formal
@@ -153,7 +189,7 @@ export async function onRequestGet({ request, env }) {
       const cert = res.rows[0];
       if (!cert) return json({ error: 'No certificate found with that serial number.' }, 404);
       const vUrl = verifyUrlFor(env, cert.serial_no);
-      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvgForPrint(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H', margin: 4 }), verifyUrl: vUrl });
+      html = renderCertificateFor(cert, { cert, qrSvgMarkup: qrSvgForPrint(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H', margin: 4 }), verifyUrl: vUrl });
       filename = `${cert.serial_no}.pdf`;
     } else {
       const batchRes = await sql`SELECT * FROM stage_certificate_batches WHERE batch_no = ${batchNo}`;
@@ -164,7 +200,7 @@ export async function onRequestGet({ request, env }) {
         WHERE batch_id = ${batch.id} AND revoked_at IS NULL
         ORDER BY serial_no`;
       if (!certsRes.rows.length) return json({ error: 'That batch has no active certificates.' }, 404);
-      html = renderStageCertificateBatch(
+      html = renderCertificateBatch(
         `${batch.batch_no} — ${certsRes.rows.length} certificates`,
         certsRes.rows.map((cert) => {
           const vUrl = verifyUrlFor(env, cert.serial_no);

@@ -25,6 +25,21 @@ import {
 } from '../../_lib/certificate-serial.js';
 import { hashIpAddress } from '../../_lib/document-hash.js';
 
+// The public attestation must use the award's OWN name. The Islamic-stage
+// certificates are Certificates of Completion; the Royal College Junior
+// Secondary award is a Certificate of Graduation, and a verifier comparing this
+// page against the document in their hand must read the same words on both.
+// Programme codes not listed here keep the original wording, so adding a stage
+// to the v1.0 registry does not silently change what this page says.
+const CREDENTIAL_TYPE_EN = {
+  JSS: (labelEn) => `Certificate of Graduation — ${labelEn}`,
+};
+function credentialTypeEn(row) {
+  const f = CREDENTIAL_TYPE_EN[String(row.programme_code || '').toUpperCase()];
+  return f ? f(row.programme_label_en) : `Certificate of Completion — ${row.programme_label_en}`;
+}
+
+
 // Best-effort verification audit (same verification_log the graduation-
 // document verifier writes) — a failed log write must never break a
 // legitimate verification.
@@ -123,7 +138,7 @@ export async function onRequestGet({ request, env }) {
             serialNo: r.serial_no,
             certificateNo: displayStageCertificateNo(r.serial_no),
             programmeCode: r.programme_code,
-            credentialType: `Certificate of Completion — ${r.programme_label_en}`,
+            credentialType: credentialTypeEn(r),
             credentialTypeAr: r.programme_label_ar ? `شهادة إتمام ${r.programme_label_ar}` : null,
             academicYear: r.academic_year,
             issuedAt: isoDateOnly(r.issued_at),
@@ -148,7 +163,7 @@ export async function onRequestGet({ request, env }) {
         recipientName: row.student_full_name,
         recipientNameAr: row.student_full_name_ar,
         studentIdentityNo: row.student_identity_no,
-        credentialType: `Certificate of Completion — ${row.programme_label_en}`,
+        credentialType: credentialTypeEn(row),
         credentialTypeAr: row.programme_label_ar ? `شهادة إتمام ${row.programme_label_ar}` : null,
         programmeCode: row.programme_code,
         institutionName: row.institution_name,

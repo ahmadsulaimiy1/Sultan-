@@ -1,0 +1,476 @@
+/**
+ * Issue the Sultan Hanafi Royal College Junior Secondary graduation batch and
+ * its register.
+ *
+ *     DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 \
+ *       node scripts/issue-royal-college-batch.mjs
+ *
+ * This is not a mock-up generator. It drives the same identifier engine the
+ * Registrar's Office runs in production — generateStageCertificateSerial for
+ * the serial and content hash, formatStudentIdentityNo for the permanent
+ * Student ID, qrSvgForPrint for the verification payload — against an in-memory
+ * sequence rather than Neon. Every identifier it prints is therefore the
+ * identifier the live system would have produced for the same inputs, which is
+ * what makes the register importable rather than something to reconcile later.
+ *
+ * Writes  dist/certificates/<batch>/  — one HTML sheet per student, the
+ *                                       combined print file, the register in
+ *                                       JSON and Markdown, and the SQL to seed
+ *                                       the Registrar's tables.
+ *
+ * IT REFUSES TO RUN WITHOUT THE SIGNING KEY, and that is deliberate. The key
+ * lives in the Cloudflare environment and in the Board's credential store, not
+ * in this repository (docs/certificate-key-deployment.md). A batch minted under
+ * a convenience default is how six real certificates once came to be signed by
+ * a development literal — nobody chose it, the run simply succeeded.
+ */
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { generateStageCertificateSerial } from '../functions/_lib/certificate-serial.js';
+import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
+import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
+import {
+  RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
+} from '../functions/_lib/royal-college-certificate.js';
+
+// ── Batch constants ─────────────────────────────────────────────────────────
+const PROGRAMME = 'JSS';
+const ACADEMIC_YEAR = '2025/2026';
+const ISSUED_AT = '2026-08-08';
+const INSTITUTION_NAME = 'Sultan Hanafi Royal Schools — Sultan Hanafi Royal College';
+const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
+const ORIGIN = 'https://www.shroyalschools.com';
+
+// The certificate sequence is GLOBAL — one number is issued once, ever, across
+// every stage and every year. Ibtida'iyyah ran 000035–000041 and I'dadiyyah ran
+// 000042–000047, so this batch starts at 000048. That is not a convention; it
+// is the only correct value, and the span check below proves no other batch
+// claims these numbers.
+const FIRST_CERTIFICATE_SEQ = 48;
+const PRIOR_SPANS = [
+  { key: 'IBT', lo: 35, hi: 41 },
+  { key: 'IDD', lo: 42, hi: 47 },
+];
+
+// ── The grade ───────────────────────────────────────────────────────────────
+// Never printed — the certificate attests completion, not performance
+// (editorial bible §2) — but NOT optional data: certificateHashFields binds
+// gradeEn into the content hash and the public verifier recomputes it from
+// stage_certificates.grade_en on every lookup. One constant feeds both the hash
+// and the register INSERT, because the two must be the same string or the
+// certificate reports 'integrity check failed' with nothing wrong with it.
+const GRADE_EN = 'Excellent';
+// No Arabic wording is approved for this school's awards and nothing hashes it.
+// NULL is the honest value; any Arabic string here would be this pipeline's
+// invention sitting in a production record.
+const GRADE_AR = null;
+
+// ── The roll ────────────────────────────────────────────────────────────────
+// THE FOUNDER'S LIST, VERBATIM AND AUTHORITATIVE (2026-08-06), in his order.
+// No name is expanded, abbreviated, reordered or "corrected" here: a student's
+// name is whatever their institution records.
+//
+// `carryOverFrom` names a graduation register this student already appears in.
+// The Student ID is PERMANENT and there is one per person — a student who holds
+// an Ibtida'iyyah or I'dadiyyah certificate must carry the same number onto
+// this one, or the institution ends up with two irreconcilable records of one
+// child. The number is not re-derived here; it is read out of that register at
+// run time and cross-checked against the generator, so a typo in either fails
+// the run rather than reaching a printed sheet.
+//
+// `matchedAs` records HOW the match was made, because two of the five are short
+// forms rather than exact strings and that is a judgement the Founder — not
+// this script — is entitled to overturn. Both are printed on the register as
+// outstanding.
+const ROLL = [
+  { en: 'Hameedah Adebimpe Ojewumi', sex: 'female',
+    carryOverFrom: { register: 'IBT', name: 'Hameedah Adebimpe Ojewumi' }, matchedAs: 'exact' },
+  { en: 'Muhammad Ismail Seriki', sex: 'male',
+    carryOverFrom: { register: 'IDD', name: 'Muhammad Ismail Seriki' }, matchedAs: 'exact' },
+  { en: 'Fatimah Desire Ibrahim', sex: 'female' },
+  { en: 'Aisha Anofi', sex: 'female',
+    carryOverFrom: { register: 'IBT', name: 'Aisha Anofi' }, matchedAs: 'exact' },
+  { en: 'Baqi Anofi', sex: 'male',
+    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'short-form' },
+  { en: "Sa'ad Sanusi", sex: 'male' },
+  { en: 'Fawaz Owolabi', sex: 'male' },
+  { en: 'Radiah Apatira', sex: 'female' },
+  { en: 'Faridah Aliu', sex: 'female',
+    carryOverFrom: { register: 'IDD', name: 'Faridah Ayomide Aliu' }, matchedAs: 'short-form' },
+  { en: 'Anisa Opeyemi Jokomba', sex: 'female' },
+  { en: 'Ameerah Durodola', sex: 'female' },
+  { en: 'Abdulrahman Abdullah', sex: 'male' },
+  { en: 'Ameerah Abdulhafeez', sex: 'female' },
+];
+
+// Students who hold an SHRS certificate but are NOT on this roll. A name from
+// another stage appearing on a Royal College sheet is the same class of error
+// as a withdrawn one: the wrong award over the right name. Checked against the
+// rendered HTML, not against the roll, so a template that hard-codes a name
+// cannot slip past.
+const NOT_ON_THIS_ROLL = [
+  'Abdulbasit Adedokun', 'Naheemah Ismail', 'Ashrof Akorede', 'Imran Adegoke',
+  'Abdulateef Adedokun', 'Thoirah Makinde', 'Abdulbasit Amobi Jabarr',
+  'Abdullah Oladimeji Anofi',
+  // Sub-names, chosen so none is a substring of a name that legitimately
+  // appears on the sheet. 'Adegoke' is deliberately ABSENT even though Imran
+  // Adegoke is a real Ibtida'iyyah student: it is also the surname of Royal
+  // College's own Principal, Dr. Adegoke Musa Olatunji, whose name is set into
+  // every signature block on this batch. The gate caught that on its first run,
+  // which is the point of running it against the rendered HTML — the full name
+  // above still catches the student.
+  'Adedokun', 'Naheemah', 'Ashrof', 'Akorede', 'Abdulateef',
+  'Thoirah', 'Makinde', 'Amobi', 'Jabarr', 'Oladimeji',
+];
+
+// The registers this batch's carry-overs are read from.
+const REGISTERS = {
+  IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
+  IDD: 'docs/graduation-registers/2026-08-08-IDD-000042.json',
+};
+
+// New students get sequence numbers that continue the student register. IBT
+// used 35–41 and IDD used 42–47, so the next free value is 48. The generator
+// scatters them — consecutive sequence values land 324 billion apart — so a
+// contiguous run here produces Student IDs with no visible order, which is the
+// point.
+const FIRST_NEW_IDENTITY_SEQ = 48;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRE-FLIGHT
+// ─────────────────────────────────────────────────────────────────────────────
+const fail = (msg) => { console.error(`BATCH REJECTED — ${msg}`); process.exit(1); };
+
+if (!process.env.DOCUMENT_HASH_SECRET) {
+  fail('DOCUMENT_HASH_SECRET is not set.\n'
+    + '  This script mints production certificates. The key that signs them must\n'
+    + '  be supplied deliberately, never defaulted — the five characters engraved\n'
+    + '  on the certificate face derive from it. See docs/certificate-key-deployment.md.');
+}
+// DOCUMENT_HASH_KEY_VERSION travels with the secret. Omitting it silently
+// defaults to version 1, which is RETIRED, so signing refuses outright rather
+// than minting a batch stamped with the wrong key version.
+const env = {
+  DOCUMENT_HASH_SECRET: process.env.DOCUMENT_HASH_SECRET,
+  DOCUMENT_HASH_KEY_VERSION: process.env.DOCUMENT_HASH_KEY_VERSION,
+};
+
+const lastSeq = FIRST_CERTIFICATE_SEQ + ROLL.length - 1;
+for (const s of PRIOR_SPANS) {
+  if (FIRST_CERTIFICATE_SEQ <= s.hi && lastSeq >= s.lo) {
+    fail(`certificate numbers ${FIRST_CERTIFICATE_SEQ}–${lastSeq} overlap the ${s.key} `
+      + `batch's ${s.lo}–${s.hi}. The sequence is global; two certificates may never `
+      + 'carry the same engraved number.');
+  }
+}
+
+if (!RC_PROGRAMMES[PROGRAMME]) fail(`no award wording for programme "${PROGRAMME}"`);
+
+// ── Resolve the carried-over Student IDs from the real registers ────────────
+const registerCache = new Map();
+function identityFromRegister(key, name) {
+  if (!registerCache.has(key)) {
+    registerCache.set(key, JSON.parse(readFileSync(join(process.cwd(), REGISTERS[key]), 'utf8')));
+  }
+  const reg = registerCache.get(key);
+  const hits = reg.entries.filter((e) => e.studentEn === name);
+  if (hits.length !== 1) {
+    fail(`carry-over lookup for "${name}" in ${REGISTERS[key]} matched ${hits.length} entries — `
+      + 'a Student ID may only be carried across when exactly one record names it.');
+  }
+  return hits[0].identityNo;
+}
+
+let nextNewIdentitySeq = FIRST_NEW_IDENTITY_SEQ;
+const roll = ROLL.map((student) => {
+  if (student.carryOverFrom) {
+    const identityNo = identityFromRegister(student.carryOverFrom.register, student.carryOverFrom.name);
+    return { ...student, identityNo, identitySource: `carried from ${student.carryOverFrom.register}` };
+  }
+  const seq = nextNewIdentitySeq++;
+  return { ...student, identityNo: formatStudentIdentityNo(seq), identitySource: `newly issued (seq ${seq})` };
+});
+
+for (const s of roll) {
+  if (!isValidStudentIdentityNo(s.identityNo)) {
+    fail(`invalid Student ID for ${s.en}: ${s.identityNo}`);
+  }
+}
+
+// A carried-over number must never collide with a newly issued one, and no two
+// students on this roll may share a number. Checked before anything is signed.
+{
+  const seen = new Map();
+  for (const s of roll) {
+    if (seen.has(s.identityNo)) {
+      fail(`${s.en} and ${seen.get(s.identityNo)} would share Student ID ${s.identityNo}`);
+    }
+    seen.set(s.identityNo, s.en);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ISSUE
+// ─────────────────────────────────────────────────────────────────────────────
+function sequenceStub(first) {
+  let n = first - 1;
+  return async (strings) => {
+    const q = strings.join(' ');
+    if (q.includes('nextval')) return { rows: [{ seq: ++n }] };
+    throw new Error(`issue-royal-college-batch: unexpected query ${q}`);
+  };
+}
+const sql = sequenceStub(FIRST_CERTIFICATE_SEQ);
+
+const issued = [];
+for (const [i, student] of roll.entries()) {
+  const gen = await generateStageCertificateSerial(sql, env, {
+    programmeCode: PROGRAMME,
+    issuedAt: ISSUED_AT,
+    studentIdentityNo: student.identityNo,
+    studentFullName: student.en,
+    academicYear: ACADEMIC_YEAR,
+    gradeEn: GRADE_EN,
+  });
+  const certId = FIRST_CERTIFICATE_SEQ + i;
+  issued.push({
+    certId,
+    hashKeyVersion: gen.keyVersion,
+    studentEn: student.en,
+    sex: student.sex,
+    identityNo: student.identityNo,
+    identitySource: student.identitySource,
+    matchedAs: student.matchedAs || null,
+    gradeEn: GRADE_EN,
+    gradeAr: GRADE_AR,
+    serialNo: gen.serialNo,
+    contentHash: gen.fullHash,
+    verifyCode: gen.fullHash.slice(0, 12).toUpperCase().replace(/(.{4})(?=.)/g, '$1-'),
+    documentId: `DID-${ISSUED_AT.slice(0, 4)}-${PROGRAMME}-${String(certId).padStart(7, '0')}`,
+    archiveRef: `ARCH/${PROGRAMME}/${ISSUED_AT.slice(0, 4)}/${String(certId).padStart(6, '0')}`,
+    printedNo: `SHRS-CERT-${PROGRAMME}-${String(certId).padStart(6, '0')}`,
+    verifyUrl: `${ORIGIN}/verify-certificate/?ref=${gen.serialNo}`,
+    // What the QR actually carries. /v/ is a permanent 301 to the verification
+    // page (see _redirects) and exists to shorten the payload: the long form
+    // pushed the symbol to a 53x53 grid, which is below the module density a
+    // phone camera needs at the printed size.
+    qrUrl: `${ORIGIN.replace('://www.', '://')}/v/${gen.serialNo}`,
+  });
+}
+
+// ── Uniqueness gate ─────────────────────────────────────────────────────────
+// A duplicated identifier in a graduation register is not a cosmetic fault; it
+// makes two students' records indistinguishable. Nothing is written until every
+// field that must be unique demonstrably is.
+{
+  const problems = [];
+  for (const f of ['identityNo', 'serialNo', 'contentHash', 'verifyCode', 'documentId',
+    'archiveRef', 'printedNo', 'verifyUrl', 'qrUrl']) {
+    const seen = new Map();
+    for (const r of issued) {
+      if (seen.has(r[f])) problems.push(`${f} duplicated between ${seen.get(r[f])} and ${r.studentEn}: ${r[f]}`);
+      seen.set(r[f], r.studentEn);
+    }
+  }
+  for (const r of issued) {
+    if (!/^\d{15}$/.test(r.identityNo)) problems.push(`${r.studentEn}: Student ID is not 15 digits`);
+    if (/^(19|20)\d{2}/.test(r.serialNo.split('-').pop())) problems.push(`${r.studentEn}: serial tail looks like a year`);
+  }
+  if (problems.length) fail(`\n  ${problems.join('\n  ')}`);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────────────────────────────────────
+const stamp = `${ISSUED_AT}-${PROGRAMME}-${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}`;
+const dir = join(process.cwd(), 'dist/certificates', stamp);
+mkdirSync(dir, { recursive: true });
+
+const toRow = (r) => ({
+  id: r.certId,
+  serial_no: r.serialNo,
+  student_identity_no: r.identityNo,
+  student_full_name: r.studentEn,
+  student_sex: r.sex,
+  programme_code: PROGRAMME,
+  programme_label_en: RC_PROGRAMMES[PROGRAMME].labelEn,
+  institution_name: INSTITUTION_NAME,
+  academic_year: ACADEMIC_YEAR,
+  place_en: PLACE_EN,
+  issued_at: ISSUED_AT,
+  content_hash: r.contentHash,
+});
+
+// The QR is rendered at the printed module density, not at a convenient one.
+// 17.6mm at 300 DPI is 208 device pixels; error correction H so the symbol
+// still reads with the seal's drop shadow falling across a corner.
+const items = issued.map((r) => ({
+  cert: toRow(r),
+  qrSvgMarkup: qrSvgForPrint(r.qrUrl, { width: 208, margin: 2, errorCorrectionLevel: 'H' }),
+}));
+
+for (const [i, it] of items.entries()) {
+  const r = issued[i];
+  writeFileSync(join(dir, `${String(r.certId).padStart(6, '0')}-${slug(r.studentEn)}.html`),
+    renderRoyalCollegeCertificate(it));
+}
+const combined = renderRoyalCollegeCertificateBatch(
+  `SHRS ${RC_PROGRAMMES[PROGRAMME].school} — ${RC_PROGRAMMES[PROGRAMME].labelEn} — ${stamp}`, items);
+writeFileSync(join(dir, `SHRS-${PROGRAMME}-${ISSUED_AT.slice(0, 4)}-`
+  + `${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}-${String(lastSeq).padStart(6, '0')}-print.html`), combined);
+
+// ── Residue gate ────────────────────────────────────────────────────────────
+// Run against the RENDERED HTML rather than the roll, because the failure this
+// guards against is a name reaching the sheet from somewhere other than the
+// roll — a template literal, a stale fixture, a copied signature block.
+{
+  const found = NOT_ON_THIS_ROLL.filter((n) => combined.includes(n));
+  if (found.length) fail(`the print file names students who are not on this roll: ${found.join(', ')}`);
+  for (const r of issued) {
+    if (!combined.includes(r.studentEn)) fail(`${r.studentEn} does not appear in the print file`);
+    if (!combined.includes(r.serialNo)) fail(`${r.serialNo} does not appear in the print file`);
+    if (!combined.includes(r.identityNo)) fail(`Student ID ${r.identityNo} does not appear in the print file`);
+    if (!combined.includes(r.printedNo)) fail(`printed number ${r.printedNo} does not appear in the print file`);
+  }
+}
+
+function slug(s) {
+  return String(s).toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE REGISTER
+// ─────────────────────────────────────────────────────────────────────────────
+const pendingConfirmation = issued.filter((r) => r.matchedAs === 'short-form');
+
+const register = {
+  programme: PROGRAMME,
+  programmeLabelEn: RC_PROGRAMMES[PROGRAMME].labelEn,
+  school: RC_PROGRAMMES[PROGRAMME].school,
+  award: RC_PROGRAMMES[PROGRAMME].award,
+  institutionName: INSTITUTION_NAME,
+  academicYear: ACADEMIC_YEAR,
+  issuedAt: ISSUED_AT,
+  place: PLACE_EN,
+  language: 'English only — Founder directive, 2026-08-06',
+  firstCertificateSeq: FIRST_CERTIFICATE_SEQ,
+  count: issued.length,
+  identityCarryOver: {
+    rule: 'The Student ID is permanent and there is one per person. A student '
+      + 'already holding an SHRS certificate carries the same number onto this one.',
+    resolved: issued.filter((r) => r.identitySource.startsWith('carried'))
+      .map((r) => ({ student: r.studentEn, identityNo: r.identityNo, source: r.identitySource, matchedAs: r.matchedAs })),
+    awaitingFounderConfirmation: pendingConfirmation.map((r) => ({
+      student: r.studentEn,
+      identityNo: r.identityNo,
+      matchedTo: ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name,
+      question: 'This roll gives a short form of a name already on the '
+        + 'I’dādiyyah register. Treated as the same student, so the '
+        + 'Student ID is carried across rather than a second permanent number '
+        + 'minted for one child. If they are different people, this certificate '
+        + 'must be reissued with a new Student ID before it is printed.',
+    })),
+  },
+  entries: issued,
+};
+
+writeFileSync(join(dir, `register-${stamp}.json`), `${JSON.stringify(register, null, 2)}\n`);
+
+const md = [
+  `# SHRS Graduation Register — ${RC_PROGRAMMES[PROGRAMME].school}`,
+  '',
+  `**${RC_PROGRAMMES[PROGRAMME].labelEn}** · ${RC_PROGRAMMES[PROGRAMME].award}`,
+  '',
+  `| | |`,
+  `|---|---|`,
+  `| Academic session | ${ACADEMIC_YEAR} |`,
+  `| Date of award | ${ISSUED_AT} |`,
+  `| Place of issue | ${PLACE_EN} |`,
+  `| Certificates | ${issued.length} (${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}–${String(lastSeq).padStart(6, '0')}) |`,
+  `| Signing key version | ${issued[0].hashKeyVersion} |`,
+  `| Language | English only (Founder directive, 2026-08-06) |`,
+  '',
+  '## Roll',
+  '',
+  '| # | Student | Student ID | Printed number | Full serial | Verification code |',
+  '|---|---|---|---|---|---|',
+  ...issued.map((r, i) => `| ${i + 1} | ${r.studentEn} | ${r.identityNo} | ${r.printedNo} `
+    + `| ${r.serialNo} | ${r.verifyCode} |`),
+  '',
+  '## Permanent Student IDs',
+  '',
+  'The Student ID is permanent and there is one per person. Five students on this',
+  'roll already hold one from an earlier SHRS award; their existing number is',
+  'carried onto this certificate rather than a second one being minted.',
+  '',
+  '| Student | Student ID | Source |',
+  '|---|---|---|',
+  ...issued.map((r) => `| ${r.studentEn} | ${r.identityNo} | ${r.identitySource}`
+    + `${r.matchedAs ? ` (${r.matchedAs} match)` : ''} |`),
+  '',
+  ...(pendingConfirmation.length ? [
+    '### Awaiting the Founder’s confirmation',
+    '',
+    'Two carry-overs were matched on a short form of a name rather than on an',
+    'exact string. They are treated as the same student, because minting a second',
+    'permanent number for one child is the more damaging of the two errors — but',
+    'that is the Founder’s call, not this pipeline’s, and it is recorded here',
+    'rather than assumed silently.',
+    '',
+    '| This roll | Existing register | Student ID carried |',
+    '|---|---|---|',
+    ...pendingConfirmation.map((r) => `| ${r.studentEn} | `
+      + `${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name} | ${r.identityNo} |`),
+    '',
+  ] : []),
+  '## Verification',
+  '',
+  '| Student | Document ID | Archive reference | QR payload |',
+  '|---|---|---|---|',
+  ...issued.map((r) => `| ${r.studentEn} | ${r.documentId} | ${r.archiveRef} | ${r.qrUrl} |`),
+  '',
+].join('\n');
+writeFileSync(join(dir, `register-${stamp}.md`), `${md}\n`);
+
+const q = (s) => `'${String(s).replace(/'/g, "''")}'`;
+const qOrNull = (s) => (s === null || s === undefined ? 'NULL' : q(s));
+const sqlOut = [
+  `-- SHRS graduation register — ${RC_PROGRAMMES[PROGRAMME].school}`,
+  `-- ${RC_PROGRAMMES[PROGRAMME].labelEn} · ${ISSUED_AT} · certificates `
+    + `${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}–${String(lastSeq).padStart(6, '0')}`,
+  '--',
+  '-- grade_en is written even though it is never printed: the content hash is',
+  '-- taken over it, and the public verifier recomputes it from this column. A',
+  '-- row imported without it verifies as tampered.',
+  '',
+  ...issued.map((r) => 'INSERT INTO stage_certificates (id, serial_no, student_identity_no, '
+    + 'student_full_name, student_sex, programme_code, programme_label_en, institution_name, '
+    + 'academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES ('
+    + `${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.sex)}, `
+    + `${q(PROGRAMME)}, ${q(RC_PROGRAMMES[PROGRAMME].labelEn)}, ${q(INSTITUTION_NAME)}, `
+    + `${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, `
+    + `${q(ISSUED_AT)}, ${q(r.contentHash)}, ${r.hashKeyVersion});`),
+  '',
+  '-- Move the sequences past what this batch consumed, so the next issuance',
+  '-- cannot mint a number that is already engraved on a printed document.',
+  `SELECT setval('stage_certificate_serial_seq', ${lastSeq}, true);`,
+  `SELECT setval('student_identity_seq', ${nextNewIdentitySeq - 1}, true);`,
+  '',
+].join('\n');
+writeFileSync(join(dir, `register-${stamp}.sql`), sqlOut);
+
+console.log(`\nSultan Hanafi Royal College — Junior Secondary graduation batch`);
+console.log(`  ${issued.length} certificates, ${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}–${String(lastSeq).padStart(6, '0')}`);
+console.log(`  signing key version ${issued[0].hashKeyVersion}`);
+console.log(`  written to ${dir}\n`);
+for (const r of issued) {
+  console.log(`  ${r.printedNo}  ${r.identityNo}  ${r.studentEn}`);
+}
+if (pendingConfirmation.length) {
+  console.log('\n  AWAITING THE FOUNDER’S CONFIRMATION — Student ID carry-over on a short-form name:');
+  for (const r of pendingConfirmation) {
+    console.log(`    ${r.studentEn}  →  ${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name}  (${r.identityNo})`);
+  }
+}
+console.log('');
