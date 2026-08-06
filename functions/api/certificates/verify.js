@@ -20,7 +20,7 @@
 import { getSql } from '../../_lib/db.js';
 import { json } from '../../_lib/http.js';
 import {
-  parseStageCertificateSerial, parseStageCertificateDisplayNo, resolveStageCertificateRef,
+  parseStageCertificateIdentifier, resolveStageCertificateIdentifier,
   displayStageCertificateNo, verifyStageCertificateIntegrity, isoDateOnly,
 } from '../../_lib/certificate-serial.js';
 import { hashIpAddress } from '../../_lib/document-hash.js';
@@ -39,6 +39,26 @@ async function logVerification(sql, request, refNo, outcome) {
   }
 }
 
+// One place decides what a stage certificate's state IS, so the single
+// attestation below and the disambiguation list cannot come to different
+// conclusions about the same row. A hash check that throws (missing
+// DOCUMENT_HASH_SECRET on a deployment) is reported as an integrity
+// failure, never as "intact" by default.
+function stageCertificateState(env, row) {
+  let integrity = { hashValid: false, suffixValid: false };
+  try {
+    integrity = verifyStageCertificateIntegrity(env, row);
+  } catch (hashErr) {
+    console.error('stage certificate integrity check unavailable', hashErr);
+  }
+  const intact = integrity.hashValid && integrity.suffixValid;
+  return {
+    intact,
+    status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
+    outcome: !intact ? 'hash_mismatch' : row.revoked_at ? 'revoked' : 'valid',
+  };
+}
+
 export async function onRequestGet({ request, env }) {
   const sql = getSql(env);
   if (!sql) return json({ error: 'Verification is not available right now — no database is linked.' }, 500);
@@ -49,45 +69,73 @@ export async function onRequestGet({ request, env }) {
 
   try {
     // Academic Stage Certificates (Certificate Generation Directive,
-    // 2026-08-05) — the long-serial family
-    // (SHRS-CERT-<PROG>-<YYYY>-<seq6>-<SUFFIX5>). Checked first because
-    // the serial shape is unambiguous, and verified DEEPER than the
-    // register families below: beyond row lookup, the HMAC-SHA256
-    // content hash is recomputed over the stored fields and the
-    // serial's printed anti-forgery suffix is re-derived from it, so a
-    // tampered record or fabricated serial surfaces as an integrity
-    // failure instead of quietly verifying.
-    // Accepts BOTH the stored serial and the short number now engraved on
-    // the certificate face (SHRS-CERT-IBT-000035). The short form omits
-    // the year and the printed suffix, so the resolver has to find the row
-    // first; the integrity check below is unchanged either way, because it
-    // recomputes from the STORED serial, not from what was typed. A person
-    // reading the sheet therefore verifies exactly as strongly as before —
-    // what they lose is only the ability to eyeball the suffix themselves.
-    const resolved = (parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref))
-      ? await resolveStageCertificateRef(sql, ref)
-      : null;
-    if (resolved && resolved.ambiguous) {
-      // Two rows for one printed number means the global serial sequence
-      // has been re-scoped or duplicated. Never pick one.
+    // 2026-08-05). Tried first because every shape in this family is
+    // recognisable by form alone, and verified DEEPER than the register
+    // families below: beyond row lookup, the HMAC-SHA256 content hash is
+    // recomputed over the stored fields and the serial's printed
+    // anti-forgery suffix is re-derived from it, so a tampered record or a
+    // fabricated serial surfaces as an integrity failure instead of
+    // quietly verifying.
+    //
+    // EVERY identifier the sheet prints is accepted — stored serial,
+    // engraved number (with or without its check tail), Student ID,
+    // verification code, Code 128-C payload, archive path, document id —
+    // because a holder types whichever number is nearest the QR code, and
+    // being told "no certificate found" about a genuine document reads as
+    // an accusation of forgery. See parseStageCertificateIdentifier for
+    // the shapes and for why each one fails closed. What the verifier
+    // typed only chooses the row: the integrity check is identical either
+    // way, because it recomputes from the STORED serial.
+    const identifier = parseStageCertificateIdentifier(ref);
+    const resolved = identifier ? await resolveStageCertificateIdentifier(sql, ref) : null;
+    if (resolved && resolved.outcome === 'ambiguous') {
+      // Two rows where the identifier names one document means the global
+      // serial sequence has been re-scoped, a content hash has collided, or
+      // a record has been duplicated. Never pick one.
       await logVerification(sql, request, ref, 'ambiguous');
       return json({ error: 'That number matches more than one record. Contact the Registrar’s Office.' }, 409);
     }
-    if (resolved || parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref)) {
-      const row = resolved && resolved.row;
-      if (!row) {
-        await logVerification(sql, request, ref, 'not_found');
-        return json({ ok: true, found: false });
-      }
-      let integrity = { hashValid: false, suffixValid: false };
-      try {
-        integrity = verifyStageCertificateIntegrity(env, row);
-      } catch (hashErr) {
-        console.error('stage certificate integrity check unavailable', hashErr);
-      }
-      const intact = integrity.hashValid && integrity.suffixValid;
-      const outcome = !intact ? 'hash_mismatch' : row.revoked_at ? 'revoked' : 'valid';
-      await logVerification(sql, request, ref, outcome);
+    if (resolved && resolved.outcome === 'multiple') {
+      // A Student ID names a PERSON. A student who completed Ibtida'iyyah
+      // and then I'dadiyyah holds two certificates under one ID, so this is
+      // a correct academic record, not a fault — but it is still not an
+      // attestation, because no single document has been identified. The
+      // holder is handed the certificate numbers off their own documents
+      // and asked which one they mean; nothing here is picked for them.
+      // NOTE for the public page (js/certificate-verify.js, not this file):
+      // kind 'student_certificate_index' needs its own branch — an older
+      // renderer that only knows the single-document shape will badge this
+      // as a verified credential, which it is not.
+      await logVerification(sql, request, ref, 'multiple');
+      const rows = resolved.rows;
+      return json({
+        ok: true,
+        found: true,
+        kind: 'student_certificate_index',
+        status: 'multiple_matches',
+        studentIdentityNo: rows[0].student_identity_no,
+        recipientName: rows[0].student_full_name,
+        recipientNameAr: rows[0].student_full_name_ar,
+        matchCount: rows.length,
+        matches: rows.map((r) => {
+          const state = stageCertificateState(env, r);
+          return {
+            serialNo: r.serial_no,
+            certificateNo: displayStageCertificateNo(r.serial_no),
+            programmeCode: r.programme_code,
+            credentialType: `Certificate of Completion — ${r.programme_label_en}`,
+            credentialTypeAr: r.programme_label_ar ? `شهادة إتمام ${r.programme_label_ar}` : null,
+            academicYear: r.academic_year,
+            issuedAt: isoDateOnly(r.issued_at),
+            status: state.status,
+          };
+        }),
+      });
+    }
+    if (resolved && resolved.outcome === 'resolved') {
+      const row = resolved.rows[0];
+      const state = stageCertificateState(env, row);
+      await logVerification(sql, request, ref, state.outcome);
       return json({
         ok: true,
         found: true,
@@ -112,17 +160,22 @@ export async function onRequestGet({ request, env }) {
         issuedAt: isoDateOnly(row.issued_at),
         issuedAtHijri: row.issued_at_hijri,
         batchNo: row.batch_no,
-        integrity: intact ? 'intact' : 'integrity_check_failed',
-        status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
+        integrity: state.intact ? 'intact' : 'integrity_check_failed',
+        status: state.status,
         revokedAt: row.revoked_at,
         revocationNote: row.revoked_at ? row.revocation_note : null,
       });
     }
+    // A well-formed stage identifier that matched nothing still falls
+    // through: the older certificate and Ijazah families use free-form
+    // staff-assigned reference numbers, and short-circuiting here would
+    // hide a genuine match in one of them behind a shape coincidence.
     const cert = await sql`
       SELECT certificate_type, student_full_name, reference_no, issued_at, revoked_at, revocation_note
       FROM certificates WHERE reference_no = ${ref}`;
     if (cert.rows.length) {
       const row = cert.rows[0];
+      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid');
       return json({
         ok: true,
         found: true,
@@ -142,6 +195,7 @@ export async function onRequestGet({ request, env }) {
       FROM ijazah_register WHERE reference_no = ${ref}`;
     if (ijazah.rows.length) {
       const row = ijazah.rows[0];
+      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid');
       return json({
         ok: true,
         found: true,
@@ -158,6 +212,15 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
+    // Audit trail for a failed public lookup — but only for a reference
+    // whose SHAPE this institution issued. That distinction is the whole
+    // point: a well-formed number that resolves to nothing is the signal
+    // §3.7 tamper detection exists for (a forged sheet being checked, or a
+    // record that has gone missing), and until now it left no trace at all.
+    // Logging arbitrary strings instead would let an unauthenticated
+    // endpoint fill verification_log with rows on demand, drowning exactly
+    // the signal the table is for.
+    if (identifier) await logVerification(sql, request, ref, 'not_found');
     return json({ ok: true, found: false });
   } catch (err) {
     console.error('certificate verify error', err);

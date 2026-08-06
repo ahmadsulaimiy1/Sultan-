@@ -1361,13 +1361,25 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapshots(graduation_record_id)`,
 
+  // 'ambiguous' and 'multiple' — see sql/schema.sql for what each means.
+  // 'ambiguous' has been written by the certificate verifier since that
+  // branch existed while the CHECK still rejected it, so the one outcome
+  // most worth auditing was silently dropped by the best-effort insert.
+  // The DROP/ADD pair re-states the constraint on databases created before
+  // these values existed, where CREATE TABLE IF NOT EXISTS does nothing.
   `CREATE TABLE IF NOT EXISTS verification_log (
     id                      BIGSERIAL PRIMARY KEY,
     document_reference_no   TEXT NOT NULL,
     verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     ip_hash                 TEXT,
-    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
   )`,
+  `ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check`,
+  `DO $$ BEGIN
+    ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
+      CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
+  EXCEPTION WHEN duplicate_object THEN NULL;
+  END $$`,
   `CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no)`,
 
   `CREATE TABLE IF NOT EXISTS alumni_register (
@@ -1775,6 +1787,13 @@ const STATEMENTS = [
   )`,
   `CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id)`,
   `CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id)`,
+  // Public-verifier lookup paths — the printed Student ID and the printed
+  // verification code (the first 12 hex of content_hash). The expression
+  // index must be written exactly as certificate-serial.js writes the
+  // predicate, or the planner cannot use it; sql/schema.sql carries the
+  // full reasoning, including why the other identifier shapes need none.
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_identity_no ON stage_certificates(student_identity_no)`,
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certificates (left(lower(content_hash), 12))`,
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT`,
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT`,
 ];

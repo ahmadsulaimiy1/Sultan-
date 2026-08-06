@@ -50,6 +50,29 @@ const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const PLACE_AR = 'إكورودو، لاغوس، نيجيريا';
 const ORIGIN = 'https://www.shroyalschools.com';
 
+// ── The grade ───────────────────────────────────────────────────────────
+// Never printed (Editorial Bible §1.5 — the certificate attests completion,
+// not performance) but NOT optional data: certificateHashFields binds gradeEn
+// into the content hash, and verifyStageCertificateIntegrity recomputes it
+// from stage_certificates.grade_en on every public lookup. One constant feeds
+// both the hash and the register INSERT because the two must be the same
+// string or the certificate cannot verify.
+//
+// It is a constant here rather than an inline literal because the register
+// SQL omitted grade_en entirely while the hash was taken over 'Excellent'.
+// Importing that file would have loaded six rows whose grade_en is NULL,
+// against which the verifier recomputes the '' hash
+// (String(gradeEn || '') — certificate-serial.js:63) and gets
+// 9bf2573b… instead of a775e194… : all six certificates would have told the
+// public 'integrity check failed', with nothing wrong with the documents.
+const GRADE_EN = 'Excellent';
+// No Arabic grade wording has been approved by the Founder, and nothing hashes
+// it. NULL is the honest value — the column is nullable and the Registrar's own
+// endpoint writes NULL for a blank gradeAr (registrar/stage-certificates.js:378)
+// — whereas any Arabic string put here would be this pipeline's invention
+// sitting in a production record.
+const GRADE_AR = null;
+
 // ── The graduation registers ────────────────────────────────────────────
 // THE ENGLISH NAMES ARE THE FOUNDER'S AND ARE AUTHORITATIVE in every batch.
 //
@@ -352,7 +375,25 @@ function sequenceStub(start) {
   };
 }
 
-const env = { DOCUMENT_HASH_SECRET: process.env.DOCUMENT_HASH_SECRET || 'batch-issuance-development-secret' };
+// ── The signing key: fail closed ────────────────────────────────────────
+// This line used to read `process.env.DOCUMENT_HASH_SECRET ||
+// 'batch-issuance-development-secret'`, and that fallback is how six real
+// certificates — now engraved, printed and in students' hands — came to be
+// hashed under a development key. Nobody chose it and nobody was warned: the
+// run simply succeeded. document-hash.js:26 already refuses an unset secret;
+// the fallback was the single line that talked it out of refusing.
+//
+// Whether to re-mint those six under a real key is the Founder's decision, not
+// this script's, so their hashes are reproduced exactly as issued by running
+// with DOCUMENT_HASH_SECRET explicitly set to that same literal. What must
+// never recur is a batch minted that way by DEFAULT, so the key is now an act.
+if (!process.env.DOCUMENT_HASH_SECRET) {
+  throw new Error('DOCUMENT_HASH_SECRET is not set — refusing to issue. This '
+    + 'script mints production certificates; the key that signs them must be '
+    + 'supplied deliberately, never defaulted. To reproduce the 2026-08-08 '
+    + 'batches byte for byte, set it to the key they were issued under.');
+}
+const env = { DOCUMENT_HASH_SECRET: process.env.DOCUMENT_HASH_SECRET };
 const sql = sequenceStub(FIRST_CERTIFICATE_SEQ);
 
 // ── Issue ───────────────────────────────────────────────────────────────
@@ -370,7 +411,7 @@ for (const [i, student] of CLASS_ROLL.entries()) {
     academicYear: ACADEMIC_YEAR,
     // The grade never appears on the certificate or on public verification;
     // it is hashed so the document is bound to the real record.
-    gradeEn: 'Excellent',
+    gradeEn: GRADE_EN,
   });
   const certId = FIRST_CERTIFICATE_SEQ + i;
   issued.push({
@@ -379,6 +420,10 @@ for (const [i, student] of CLASS_ROLL.entries()) {
     studentAr: student.ar,
     sex: student.sex,
     identityNo,
+    // Recorded on the entry, not read back from the constant at write time, so
+    // the register states the grade THIS certificate's hash was taken over.
+    gradeEn: GRADE_EN,
+    gradeAr: GRADE_AR,
     serialNo: gen.serialNo,
     contentHash: gen.fullHash,
     verifyCode: gen.fullHash.slice(0, 12).toUpperCase().replace(/(.{4})(?=.)/g, '$1-'),
@@ -536,6 +581,10 @@ const md = [
 writeFileSync(join(dir, 'graduation-register.md'), md);
 
 const q = (v) => `'${String(v).replace(/'/g, "''")}'`;
+// A column with no approved value is NULL, never the empty string: '' and NULL
+// are different facts ("blank" vs "not recorded"), and only one of them is what
+// the Registrar's own endpoint writes for an unsupplied field.
+const qOrNull = (v) => (v === null || v === undefined ? 'NULL' : q(v));
 const sqlOut = [
   '-- SHRS graduation register import.',
   '-- Student numbers are permanent and already printed, so they are seeded',
@@ -550,7 +599,16 @@ const sqlOut = [
   // programme_label_en and institution_name, both NOT NULL — so this file
   // could not actually be imported. A register that cannot be imported is
   // not a register.
-  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)});`),
+  //
+  // grade_en is here for a harder reason than schema completeness: it is one
+  // of the seven fields the content hash is taken over (certificateHashFields
+  // — certificate-serial.js:56-66), and verifyStageCertificateIntegrity reads
+  // it back off THIS ROW on every public lookup. The column list omitted it,
+  // so importing this file would have left grade_en NULL, the verifier would
+  // have recomputed the hash over '' instead of 'Excellent', and every one of
+  // these certificates would have publicly reported 'integrity check failed'
+  // — six correct documents called forgeries by their own registry.
+  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)});`),
   '',
   '-- The sequence name is stage_certificate_serial_seq (sql/schema.sql).',
   '-- An earlier version of this file said stage_certificate_seq, which does',
@@ -560,6 +618,28 @@ const sqlOut = [
   '-- certificate is now SHRS-CERT-IBT-000035 with no year, those two',
   '-- documents would carry the identical printed number.',
   `SELECT setval('stage_certificate_serial_seq', ${FIRST_CERTIFICATE_SEQ + issued.length - 1}, true);`,
+  '',
+  '-- stage_certificates.id has a sequence of its own (id SERIAL PRIMARY KEY —',
+  '-- sql/schema.sql), and an INSERT that supplies id explicitly, as every row',
+  '-- above does, does NOT advance it. Advancing the serial sequence alone is',
+  '-- therefore not enough, and the failure is silent rather than loud: every',
+  '-- id below this batch is still free, so the next certificate issued through',
+  '-- the Registrar UI inserts cleanly and gets id 1.',
+  '--',
+  '-- That decouples two numbers the certificate prints side by side. The',
+  '-- archive reference and the Code 128 payload both derive from cert.id',
+  '-- (stage-certificate-template.js:1240-1242 — ARCH/<PROG>/<year>/<id6> and',
+  '-- <year><id6>), while the engraved certificate number derives from the',
+  '-- serial sequence. A certificate numbered 000048 would carry archive',
+  '-- reference ARCH/IDD/2026/000001 and scan as 2026000001 — a document whose',
+  '-- barcode and whose number name two different records.',
+  '--',
+  '-- pg_get_serial_sequence resolves the sequence from the column rather than',
+  '-- assuming its name, and MAX(id) makes the statement independent of the',
+  '-- order the registers are imported in: importing IBT after IDD must not',
+  '-- wind the sequence back to this batch\'s own last id.',
+  `SELECT setval(pg_get_serial_sequence('stage_certificates', 'id'),`,
+  `              GREATEST((SELECT MAX(id) FROM stage_certificates), ${FIRST_CERTIFICATE_SEQ + issued.length - 1}), true);`,
   '',
   '-- Make the PRINTED number unique in the database, not merely unique by',
   '-- convention. serial_no already has a UNIQUE constraint, but two rows',

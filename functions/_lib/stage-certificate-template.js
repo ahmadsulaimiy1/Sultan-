@@ -135,8 +135,22 @@ function cornerMedallion(cx, cy) {
 // arabesque strapwork → crimson pinstripe → WIDE ivory margin → fine
 // double rule; guilloché wave bands on all four sides (§6.1); serial
 // microtext perimeter ring (§6.2); khatam corner medallions.
+// A4 landscape is 297 x 210mm. This frame was drawn on 209.5 for a long time —
+// the Editorial Bible §4.1 records "A4 landscape (297 × 209.5 mm)", which is
+// simply wrong about A4 — and the half-millimetre showed up on paper: rendered
+// onto a real A4 page (Chromium's is 209.89mm tall) every sheet carried a
+// 0.34mm strip of bare paper across the full 297mm foot, measured off the press
+// PDF at 300 DPI. It abutted near-black at the left and crimson at the right,
+// so it printed as a pale hairline along the bottom of a premium document.
+//
+// The half-millimetre was also splitting the sheet into two coordinate systems:
+// certificate-ground.js and certificate-plate.js have always drawn on h=210, so
+// the paper, guilloche and microtext layers were being squashed 0.24% to fit a
+// 209.5mm box while this frame alone was not. Moving to a true 210 removes the
+// strip AND the squash, and leaves every absolutely-positioned element — all
+// of which are placed in mm from the top — exactly where it was.
 function frameSvg(serial) {
-  const W = 297, H = 209.5;
+  const W = 297, H = 210;
   const micro = `SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC CREDENTIAL · ${serial} · `.repeat(6);
   const m = 10.4;
   const microPath = `M ${m + 2} ${m} H ${W - m} V ${H - m} H ${m} V ${m + 1} Z`;
@@ -1606,7 +1620,7 @@ function docShell(title, sheetsHtml) {
   body{font-family:var(--en-text);color:var(--espresso);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 
   .sheet{
-    position:relative;width:297mm;height:209.5mm;margin:0 auto;overflow:hidden;
+    position:relative;width:297mm;height:210mm;margin:0 auto;overflow:hidden;
     background:radial-gradient(ellipse 130% 100% at 50% 38%, #FDF7E6 0%, #F9F0DA 55%, #F1E5C8 100%);
     page-break-after:always;
   }
@@ -1628,7 +1642,7 @@ function docShell(title, sheetsHtml) {
      pair, one centrepiece) → single bilingual data grid (no duplicated
      facts) → execution → administrative verification. Arabic flows
      right-aligned with full ligatures; nothing compressed, clipped, or
-     stated twice. Positions in mm on the 297×209.5 sheet. */
+     stated twice. Positions in mm on the 297×210 sheet. */
   .sheet--official{background:#FFFFFF;}
 
   /* ============ o5 FLAGSHIP MASTER (official artwork) ============ */

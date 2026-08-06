@@ -1066,13 +1066,31 @@ CREATE INDEX IF NOT EXISTS idx_transcript_snapshots_record ON transcript_snapsho
 -- institution's own anomaly review (an implausible spike in checks on
 -- one reference number, a scraping pattern), the same purpose
 -- staff_audit_log serves for staff actions.
+-- outcome vocabulary: the four original values plus the two the
+-- certificate verifier reaches when a lookup does not resolve to exactly
+-- one document.
+--   'ambiguous' — a number that names ONE document matched several rows;
+--                 the verifier refuses to guess and returns 409. This has
+--                 been written since that branch existed, but the CHECK
+--                 did not list it, so every such row was rejected and
+--                 swallowed by the best-effort try/catch around the
+--                 insert: the one outcome most worth auditing was the one
+--                 outcome that could not be recorded.
+--   'multiple'  — a Student ID legitimately matched several certificates
+--                 (one student, two stages). Not a fault, and not an
+--                 attestation either; the verifier answers with the list.
+-- The ALTER re-states the constraint on databases created before these
+-- values existed, where CREATE TABLE IF NOT EXISTS is a no-op.
 CREATE TABLE IF NOT EXISTS verification_log (
   id                      BIGSERIAL PRIMARY KEY,
   document_reference_no   TEXT NOT NULL,
   verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
   ip_hash                 TEXT,
-  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found'))
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
 );
+ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check;
+ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
+  CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
 CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no);
 
 -- Alumni Register (spec §1.3, §16.10) — the data model the honest-shell
@@ -1964,6 +1982,21 @@ CREATE TABLE IF NOT EXISTS stage_certificates (
 );
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id);
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id);
+-- Lookup paths for the public verifier. Every identifier the certificate
+-- prints has to reach its row (functions/_lib/certificate-serial.js,
+-- parseStageCertificateIdentifier); these are the two that would otherwise
+-- be sequential scans on an unauthenticated endpoint:
+--   student_identity_no — the printed 15-digit Student ID.
+--   left(lower(content_hash), 12) — the printed verification code IS that
+--     prefix, so the index expression must be written exactly as the query
+--     writes it or the planner cannot use it. lower() is not decoration:
+--     the plate prints the code in upper case and the column stores lower.
+-- The remaining shapes need no index of their own: the serial and the
+-- archive/barcode/document-id family resolve through serial_no's UNIQUE
+-- index and the primary key respectively, and the engraved short number
+-- is a LIKE against a low-cardinality table.
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_identity_no ON stage_certificates(student_identity_no);
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certificates (left(lower(content_hash), 12));
 
 -- Bilingual identity fields the certificate roster captures — stored on
 -- the student record too (not only the certificate snapshot) so future
