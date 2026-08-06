@@ -244,6 +244,10 @@ function buildPage(page) {
   // only on pages that opt in with prestige:true in the manifest, so it
   // never weighs on or restyles pages that don't use it.
   const isPrestige = page.prestige === true;
+  // The rotating credential ships only where a credential is the subject.
+  const isIdCard = page.idcard === true;
+  const idcardHead = isIdCard ? '<link rel="stylesheet" href="/css/idcard.css">\n' : '';
+  const idcardScripts = isIdCard ? '<script src="/js/idcard.js" defer></script>\n' : '';
   const prestigeHead = isPrestige
     ? '<link rel="stylesheet" href="/css/prestige.css">\n<link rel="stylesheet" href="/css/motion.css">\n'
     : '';
@@ -254,7 +258,7 @@ function buildPage(page) {
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
 <head>
-${head}${elevateHead}${prestigeHead}${altTag}</head>
+${head}${elevateHead}${prestigeHead}${idcardHead}${altTag}</head>
 <body>
 
 ${topbar}
@@ -289,7 +293,8 @@ ${personalisation}
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
-${elevateScripts}${prestigeScripts}
+<script src="/js/bismillah.js" defer></script>
+${elevateScripts}${prestigeScripts}${idcardScripts}
 </body>
 </html>
 `;

@@ -1,0 +1,178 @@
+/* ===================================================================
+   SHRS Digital Credential — the rotating identity card
+   -------------------------------------------------------------------
+   A physically-modelled ID-1 card (the 85.6 × 54 mm proportion of every
+   bank and identity card in the world) rendered in CSS 3D. It turns
+   slowly on its own axis, can be caught and spun by hand, and carries
+   the devices a real credential carries: a gilt chip, a holographic
+   foil that shifts with the angle, guilloche security engraving,
+   microtext, and a machine-readable strip.
+
+   It is decorative — the verification result beneath it is the truth.
+   The card exists so that a page about credentials looks like one.
+   =================================================================== */
+
+.idc-stage{
+  perspective:1600px;perspective-origin:50% 42%;
+  display:grid;place-items:center;
+  padding:clamp(30px,6vw,70px) 0 clamp(24px,4vw,44px);
+  position:relative;
+}
+/* the pedestal glow the card floats above */
+.idc-stage::after{
+  content:"";position:absolute;left:50%;bottom:clamp(10px,3vw,30px);translate:-50% 0;
+  width:min(78%,520px);height:34px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(198,161,91,.34),transparent 70%);
+  filter:blur(9px);
+}
+
+.idc{
+  position:relative;width:min(92vw,470px);aspect-ratio:1.586;
+  transform-style:preserve-3d;cursor:grab;touch-action:pan-y;
+  transform:rotateX(var(--idc-rx,8deg)) rotateY(var(--idc-ry,0deg));
+  animation:idc-spin 26s linear infinite;
+  will-change:transform;
+}
+.idc.is-held{animation-play-state:paused;cursor:grabbing;}
+.idc.is-manual{animation:none;}
+@keyframes idc-spin{
+  from{transform:rotateX(8deg) rotateY(0deg);}
+  to{transform:rotateX(8deg) rotateY(360deg);}
+}
+
+.idc-face{
+  position:absolute;inset:0;border-radius:20px;overflow:hidden;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  box-shadow:
+    0 2px 4px rgba(20,12,4,.22),
+    0 22px 44px -18px rgba(20,12,4,.62),
+    0 60px 90px -50px rgba(20,12,4,.7),
+    inset 0 1px 0 rgba(255,255,255,.28);
+}
+.idc-back{transform:rotateY(180deg);}
+
+/* --- the substrate: deep coffee with a lit corner --- */
+.idc-face::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(120% 90% at 12% 8%, #5C4222 0%, #3A2712 42%, #241708 76%, #1A1006 100%);
+}
+/* --- guilloche engraving --- */
+.idc-guilloche{position:absolute;inset:0;z-index:1;opacity:.5;pointer-events:none;}
+.idc-guilloche path{fill:none;stroke:rgba(233,206,138,.34);stroke-width:.4;}
+
+/* --- holographic foil that shifts with the card's angle --- */
+.idc-foil{
+  position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+  background:linear-gradient(
+    var(--idc-foil,105deg),
+    transparent 0%, rgba(255,214,170,.12) 18%, rgba(190,235,255,.30) 32%,
+    rgba(255,255,255,.55) 40%, rgba(198,255,214,.28) 48%,
+    rgba(233,206,138,.22) 60%, transparent 78%);
+}
+
+/* --- content layer --- */
+.idc-body{position:absolute;inset:0;z-index:3;
+  padding:clamp(15px,3.4vw,24px);display:flex;flex-direction:column;color:#F7EEDF;}
+.idc-head{display:flex;align-items:center;gap:11px;}
+.idc-head img{width:38px;height:38px;object-fit:contain;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.6));}
+.idc-inst{font-family:'Cinzel',serif;font-size:clamp(.68rem,1.7vw,.84rem);
+  line-height:1.2;color:#FFF3D8;letter-spacing:.04em;}
+.idc-inst small{display:block;font-family:'Inter',sans-serif;font-weight:500;
+  font-size:.58em;letter-spacing:.2em;text-transform:uppercase;color:rgba(233,206,138,.85);margin-top:3px;}
+
+.idc-mid{display:flex;gap:clamp(11px,2.4vw,17px);margin-top:auto;align-items:flex-end;}
+/* portrait well */
+.idc-por{width:clamp(52px,13vw,74px);aspect-ratio:.8;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(160deg,rgba(233,206,138,.20),rgba(198,161,91,.06));
+  border:1px solid rgba(233,206,138,.44);display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24);overflow:hidden;}
+.idc-por svg{width:56%;height:56%;color:rgba(233,206,138,.62);}
+.idc-fields{flex:1;min-width:0;}
+.idc-row{margin-bottom:6px;}
+.idc-row:last-child{margin-bottom:0;}
+.idc-k{display:block;font-family:'Inter',sans-serif;font-size:clamp(.44rem,1.1vw,.54rem);
+  letter-spacing:.22em;text-transform:uppercase;color:rgba(233,206,138,.72);}
+.idc-v{display:block;font-family:'Cinzel',serif;font-size:clamp(.72rem,1.9vw,.96rem);
+  color:#fff;letter-spacing:.02em;line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.idc-v.is-mono{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;letter-spacing:.06em;}
+
+/* gilt contact chip */
+.idc-chip{position:absolute;right:clamp(15px,3.4vw,24px);top:clamp(52px,11vw,74px);
+  width:clamp(30px,7vw,42px);aspect-ratio:1.32;border-radius:5px;
+  background:linear-gradient(150deg,#F3DFAE,#C6A15B 45%,#8E6C31 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 2px 5px rgba(0,0,0,.45);}
+.idc-chip::before,.idc-chip::after{content:"";position:absolute;background:rgba(90,66,26,.55);}
+.idc-chip::before{left:0;right:0;top:50%;height:1px;}
+.idc-chip::after{top:0;bottom:0;left:34%;width:1px;box-shadow:14px 0 0 -0.5px rgba(90,66,26,.55);}
+
+/* machine-readable strip */
+.idc-mrz{margin-top:11px;padding-top:9px;border-top:1px solid rgba(233,206,138,.26);
+  font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;
+  font-size:clamp(.42rem,1.05vw,.55rem);letter-spacing:.14em;color:rgba(233,206,138,.62);
+  white-space:nowrap;overflow:hidden;}
+
+/* --- back face --- */
+.idc-stripe{position:absolute;left:0;right:0;top:13%;height:19%;z-index:3;
+  background:linear-gradient(180deg,#140C04,#241708 40%,#140C04);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);}
+.idc-back-body{position:absolute;inset:0;z-index:4;padding:clamp(15px,3.4vw,24px);
+  display:flex;flex-direction:column;justify-content:flex-end;color:#F7EEDF;}
+.idc-qr{position:absolute;right:clamp(15px,3.4vw,24px);top:38%;
+  width:clamp(46px,11vw,64px);aspect-ratio:1;border-radius:7px;padding:5px;
+  background:#FFF9EC;box-shadow:0 3px 10px rgba(0,0,0,.5);}
+.idc-qr svg{width:100%;height:100%;}
+.idc-micro{font-size:clamp(.38rem,.95vw,.48rem);letter-spacing:.06em;line-height:1.5;
+  color:rgba(233,206,138,.5);max-width:62%;}
+.idc-sig{margin-top:9px;padding-top:8px;border-top:1px solid rgba(233,206,138,.22);max-width:62%;}
+.idc-sig .idc-k{margin-bottom:3px;}
+.idc-sig span.line{display:block;height:15px;
+  background:linear-gradient(90deg,rgba(233,206,138,.5),transparent 72%);
+  -webkit-mask:linear-gradient(90deg,#000 62%,transparent);mask:linear-gradient(90deg,#000 62%,transparent);}
+
+/* --- the scan: an identity motif, a laser passing over the card --- */
+.idc-scan{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden;border-radius:20px;}
+.idc-scan::before{
+  content:"";position:absolute;left:-10%;right:-10%;height:16%;top:-20%;
+  background:linear-gradient(180deg,transparent,rgba(160,240,255,.42) 42%,rgba(255,255,255,.75) 50%,rgba(160,240,255,.42) 58%,transparent);
+  box-shadow:0 0 26px rgba(150,230,255,.6);
+  animation:idc-scan 4.6s cubic-bezier(.5,0,.5,1) infinite;
+}
+@keyframes idc-scan{
+  0%{top:-20%;opacity:0}
+  8%{opacity:1}
+  62%{top:104%;opacity:1}
+  70%,100%{top:104%;opacity:0}
+}
+
+/* --- controls --- */
+.idc-controls{display:flex;gap:10px;justify-content:center;align-items:center;
+  margin-top:22px;flex-wrap:wrap;}
+.idc-hint{font-size:.78rem;color:#8a7a60;letter-spacing:.02em;}
+.idc-flip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  padding:9px 18px;border-radius:999px;font-size:.84rem;font-weight:600;
+  color:var(--pr-gold-deep,#9C7A3C);background:linear-gradient(168deg,#FFFDF9,#F3EADA);
+  border:1px solid rgba(198,161,91,.4);
+  box-shadow:0 6px 16px -10px rgba(42,28,16,.5),inset 0 1px 0 rgba(255,255,255,.85);
+  transition:transform .35s cubic-bezier(.16,.8,.24,1),box-shadow .35s;}
+.idc-flip:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(42,28,16,.6),0 0 18px -6px rgba(198,161,91,.7);}
+.idc-flip svg{width:15px;height:15px;}
+
+/* --- when a real record comes back, the card takes its data --- */
+.idc.is-live .idc-face::before{
+  background:radial-gradient(120% 90% at 12% 8%, #2E5C3A 0%, #1E3F28 42%, #142A1B 76%, #0E1D13 100%);
+}
+.idc.is-revoked .idc-face::before{
+  background:radial-gradient(120% 90% at 12% 8%, #6A2A28 0%, #481D1C 42%, #2E1211 76%, #1E0C0B 100%);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .idc{animation:none;transform:rotateX(4deg) rotateY(-14deg);}
+  .idc-scan::before{animation:none;opacity:0;}
+  .idc-flip{transition:none;}
+}
+@media (max-width:520px){
+  .idc-stage{perspective:1100px;}
+}

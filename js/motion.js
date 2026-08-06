@@ -204,40 +204,96 @@
     return ctx;
   }
 
-  // Two quick partials a fifth apart with a fast decay: bright enough to
-  // register as a confirmation, short enough never to become a nuisance.
-  function tick(kind) {
+  /* A small palette rather than one sound. Each voice is a short additive
+     figure — a couple of partials with a fast exponential decay — chosen so
+     the ear can tell an action apart from a confirmation apart from a
+     refusal, without any of them becoming a novelty. Frequencies sit in a
+     just-intoned relationship so two firing close together never beat. */
+  var VOICES = {
+    // a light contact: cards, chips, tiles
+    soft:    { partials: [[880, .026], [1320, .016]], type: 'triangle', spread: .012, decay: .15 },
+    // a deliberate press: primary buttons and links
+    firm:    { partials: [[1180, .032], [1760, .022]], type: 'triangle', spread: .014, decay: .18 },
+    // something opening: an accordion, a stage, a detail panel
+    open:    { partials: [[740, .026], [988, .022], [1318, .014]], type: 'sine', spread: .028, decay: .20 },
+    // the same thing closing — the figure inverted
+    close:   { partials: [[1318, .022], [988, .018], [740, .014]], type: 'sine', spread: .026, decay: .17 },
+    // navigation away from the page
+    nav:     { partials: [[660, .026], [990, .020], [1320, .013]], type: 'triangle', spread: .034, decay: .22 },
+    // a verified result: a rising major triad, the only voice allowed to sing
+    success: { partials: [[784, .030], [988, .026], [1175, .022], [1568, .016]], type: 'sine', spread: .075, decay: .38 },
+    // a refusal: low, flat, brief. Never harsh.
+    deny:    { partials: [[196, .030], [233, .022]], type: 'sine', spread: .055, decay: .30 },
+    // the toggle acknowledging itself
+    toggle:  { partials: [[1046, .028], [1568, .018]], type: 'triangle', spread: .016, decay: .16 }
+  };
+
+  function play(name) {
     if (!enabled) return;
+    var v = VOICES[name] || VOICES.soft;
     var c = ensureCtx();
     if (!c) return;
     if (c.state === 'suspended') c.resume();
     var t = c.currentTime;
-    var spec = kind === 'soft' ? [[880, 0.030], [1320, 0.022]] : [[1180, 0.034], [1760, 0.026]];
-    spec.forEach(function (pair, i) {
+    v.partials.forEach(function (pair, i) {
       var o = c.createOscillator(), g = c.createGain();
-      o.type = 'triangle';
+      o.type = v.type;
       o.frequency.setValueAtTime(pair[0], t);
-      var peak = pair[1] * (kind === 'soft' ? 0.7 : 1);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(peak, t + 0.006 + i * 0.004);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16 + i * 0.03);
+      var at = t + i * v.spread;
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(Math.max(0.0002, pair[1]), at + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + v.decay);
       o.connect(g); g.connect(c.destination);
-      o.start(t + i * 0.012);
-      o.stop(t + 0.22 + i * 0.03);
+      o.start(at);
+      o.stop(at + v.decay + 0.05);
     });
   }
+  function tick(kind) { play(kind === 'firm' ? 'firm' : 'soft'); }
 
-  var LOUD = '.pr-btn, .btn, .ic-cta, .adm-enquiry-btn';
-  var SOFT = '.pr-chip, .pr-committee, .flow-stage, .faq-question, .pr-card, .pr-person, .pr-org-node, .ic-dot, .el-voices-btn';
+  var FIRM = '.pr-btn, .btn, .btn-gold, .ic-cta, .adm-enquiry-btn, .idc-flip';
+  var SOFT = '.pr-chip, .pr-committee, .pr-card, .pr-person, .pr-org-node, .ic-dot, .el-voices-btn, .pr-outcome, .pr-doc';
+  var TOGGLES = '.faq-question, .flow-stage, [aria-expanded]';
 
   document.addEventListener('click', function (e) {
     if (!enabled) return;
     var t = e.target;
     if (!t || !t.closest) return;
     if (t.closest('[data-sound-toggle]')) return;
-    if (t.closest(LOUD)) tick('firm');
-    else if (t.closest(SOFT)) tick('soft');
+
+    // a control that opens and closes gets two different voices, so the ear
+    // learns the state as quickly as the eye
+    var tog = t.closest(TOGGLES);
+    if (tog) {
+      var wasOpen = tog.getAttribute('aria-expanded') === 'true' || tog.classList.contains('is-open');
+      play(wasOpen ? 'close' : 'open');
+      return;
+    }
+    // a link that leaves the page announces the departure
+    var link = t.closest('a[href]');
+    if (link) {
+      var href = link.getAttribute('href') || '';
+      var leaves = href && href.charAt(0) !== '#' && !link.hasAttribute('download');
+      if (leaves && t.closest(FIRM)) { play('firm'); return; }
+      if (leaves) { play('nav'); return; }
+    }
+    if (t.closest(FIRM)) play('firm');
+    else if (t.closest(SOFT)) play('soft');
   }, { passive: true });
+
+  // A verification result announces itself: sung if the record is good,
+  // low and brief if it is not. Read from what the verifier printed, never
+  // decided here.
+  document.querySelectorAll('[data-identity-verify-result],[data-certificate-verify-result],[data-receipt-verify-result],[data-graduation-document-verify-result]').forEach(function (box) {
+    new MutationObserver(function () {
+      var txt = (box.textContent || '').toLowerCase();
+      if (!txt.trim()) return;
+      if (box.dataset.soundDone === txt) return;
+      box.dataset.soundDone = txt;
+      if (/checking|verifying/.test(txt)) return;
+      if (/\bactive\b|genuine|valid|verified/.test(txt)) play('success');
+      else if (/not found|revok|invalid|error|expired|tamper/.test(txt)) play('deny');
+    }).observe(box, { childList: true, subtree: true });
+  });
 
   /* the toggle */
   function mountToggle() {
@@ -259,7 +315,7 @@
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) {}
       paint();
-      if (enabled) tick('firm');
+      if (enabled) play('toggle');
     });
     paint();
     document.body.appendChild(b);
