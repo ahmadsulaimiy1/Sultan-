@@ -1656,3 +1656,170 @@
   .dc-sys{transition:none!important;}
   .dc-sys::before{transform:scaleX(1);}
 }
+
+/* ===================================================================
+   TRAVELLING LIGHT ON HOVER
+   -------------------------------------------------------------------
+   A permanent orbiting ring on every box would be a casino. A ring that
+   lights and runs the moment the pointer arrives is the opposite: the
+   page is still at rest, and the light follows attention. Applied only
+   to components whose ::after is free — the cards that already own that
+   pseudo-element for a cursor highlight keep it.
+   =================================================================== */
+.dc-sys,.pr-committee,.school-block,.pr-person,.pr-org-node,.stat-tile,.pr-doc,.pr-outcome{
+  isolation:isolate;
+}
+.dc-sys::after,.pr-committee::after,.school-block::after,.pr-person::after,
+.pr-org-node::after,.stat-tile::after,.pr-doc::after,.pr-outcome::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--pr-angle),
+    rgba(198,161,91,0) 0deg, rgba(198,161,91,0) 286deg,
+    rgba(233,206,138,.85) 322deg, #FFF6DF 338deg,
+    rgba(233,206,138,.85) 352deg, rgba(198,161,91,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;pointer-events:none;z-index:4;
+  transition:opacity .45s var(--pr-ease);
+  filter:drop-shadow(0 0 5px rgba(233,206,138,.7));
+}
+.dc-sys:hover::after,.pr-committee:hover::after,.school-block:hover::after,
+.pr-person:hover::after,.pr-org-node:hover::after,.stat-tile:hover::after,
+.pr-doc:hover::after,.pr-outcome:hover::after{
+  opacity:1;animation:pr-orbit 3.2s linear infinite;
+}
+/* .stat-tile already used ::after for its gold wash — restore it as ::before */
+.stat-tile::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(150px 80px at 50% 0%,rgba(233,206,138,.20),transparent 70%);}
+.stat-tile > *{position:relative;z-index:1;}
+
+@media (prefers-reduced-motion:reduce){
+  .dc-sys:hover::after,.pr-committee:hover::after,.school-block:hover::after,
+  .pr-person:hover::after,.pr-org-node:hover::after,.stat-tile:hover::after,
+  .pr-doc:hover::after,.pr-outcome:hover::after{
+    animation:none;background:linear-gradient(140deg,rgba(233,206,138,.8),rgba(198,161,91,.2));}
+}
+
+/* ===================================================================
+   THE PERSONALISATION CENTRE
+   -------------------------------------------------------------------
+   The drawer is a real, dense control panel — language, calendar,
+   theme, density, reminders, data export — and it was the last surface
+   still wearing the old flat treatment while sitting on top of every
+   page on the site. Raised to the same standard, without touching a
+   single control's behaviour.
+   =================================================================== */
+.pc-overlay{background:rgba(20,12,4,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+.pc-drawer{
+  width:min(470px,100vw);
+  background:
+    radial-gradient(600px 300px at 100% 0%, rgba(233,206,138,.10), transparent 60%),
+    linear-gradient(168deg,#FFFDF9 0%,#F8F1E4 58%,#F1E7D5 100%);
+  box-shadow:-30px 0 90px -30px rgba(20,12,4,.7),-1px 0 0 0 rgba(198,161,91,.4);
+  border-inline-start:0;
+}
+/* a light running the drawer's leading edge, so it reads as gilt */
+.pc-drawer::before{
+  content:"";position:absolute;top:0;bottom:0;inset-inline-start:0;width:2px;z-index:5;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--pr-gold-bright) 18%,#FFF6DF 50%,var(--pr-gold-bright) 82%,transparent);
+  opacity:.85;
+}
+.pc-head{
+  background:linear-gradient(160deg,#3B2A1D,#241708);color:#F7EEDF;
+  padding:26px 24px 22px;position:relative;overflow:hidden;
+  box-shadow:0 10px 30px -22px rgba(20,12,4,.9);
+}
+.pc-head::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(circle at 1px 1px,rgba(233,206,138,.18) 1px,transparent 0);
+  background-size:22px 22px;
+  -webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent);}
+.pc-title{font-family:'Cinzel',serif;color:#fff;letter-spacing:.02em;position:relative;z-index:1;}
+.pc-sub{color:rgba(233,206,138,.85);letter-spacing:.16em;text-transform:uppercase;font-size:.64rem;position:relative;z-index:1;}
+.pc-close{
+  border-radius:50%;width:38px;height:38px;display:grid;place-items:center;
+  background:rgba(255,255,255,.07);border:1px solid rgba(233,206,138,.3);color:#F7EEDF;
+  transition:transform .35s var(--pr-ease),background .3s,box-shadow .3s;position:relative;z-index:2;}
+.pc-close:hover{transform:rotate(90deg);background:rgba(233,206,138,.2);
+  box-shadow:0 0 18px -4px rgba(233,206,138,.8);}
+
+/* tabs become a gilded rail */
+.pc-tabs{gap:6px;padding:14px 16px 0;background:transparent;}
+.pc-tab{
+  border-radius:var(--pr-r-pill);padding:9px 15px;border:1px solid transparent;
+  font-size:.78rem;font-weight:600;color:#7a6a52;background:transparent;
+  transition:transform .3s var(--pr-ease),background .3s,box-shadow .3s,color .3s;}
+.pc-tab:hover{color:var(--pr-coffee);background:rgba(198,161,91,.12);transform:translateY(-1px);}
+.pc-tab.is-active{
+  color:#2a1c10;border-color:rgba(198,161,91,.45);
+  background:linear-gradient(120deg,var(--pr-gold),var(--pr-gold-bright));
+  box-shadow:0 8px 18px -10px rgba(198,161,91,.9),inset 0 1px 0 rgba(255,255,255,.6);}
+
+/* every card in the drawer gets the surface language */
+.pc-card{
+  border-radius:var(--pr-r-md);
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk));
+  border:1px solid rgba(198,161,91,.24);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:transform .4s var(--pr-ease),box-shadow .4s var(--pr-ease);}
+.pc-card:hover{transform:translateY(-2px);box-shadow:var(--pr-shadow);}
+.pc-card-head{font-family:'Cinzel',serif;color:var(--pr-coffee);}
+
+/* switches: a struck toggle rather than a grey pill */
+.pc-switch{
+  border-radius:999px;border:1px solid rgba(198,161,91,.4);
+  background:linear-gradient(180deg,rgba(198,161,91,.14),rgba(198,161,91,.06));
+  box-shadow:inset 0 2px 4px rgba(42,28,16,.14);
+  transition:background .35s var(--pr-ease),box-shadow .35s;}
+.pc-switch.is-on{
+  background:linear-gradient(120deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  border-color:rgba(198,161,91,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 16px -4px rgba(198,161,91,.9);}
+.pc-switch-knob{
+  background:linear-gradient(160deg,#fff,#F0E6D4);
+  box-shadow:0 2px 6px rgba(42,28,16,.4),inset 0 1px 0 #fff;
+  transition:transform .35s var(--pr-ease);}
+
+/* segmented controls */
+.pc-segmented-wrap{border-radius:var(--pr-r-pill);padding:4px;
+  background:rgba(198,161,91,.10);border:1px solid rgba(198,161,91,.26);
+  box-shadow:inset 0 2px 4px rgba(42,28,16,.08);}
+.pc-segmented{border-radius:var(--pr-r-pill);border:0;background:transparent;
+  transition:background .3s,color .3s,box-shadow .3s,transform .3s var(--pr-ease);}
+.pc-segmented:hover{transform:translateY(-1px);}
+.pc-segmented[aria-checked="true"],.pc-segmented.is-active{
+  background:linear-gradient(120deg,var(--pr-gold),var(--pr-gold-bright));color:#2a1c10;
+  box-shadow:0 6px 14px -8px rgba(198,161,91,.9),inset 0 1px 0 rgba(255,255,255,.6);}
+
+/* language rows, office rows, adhkar widget */
+.pc-lang-row,.pc-office-row,.pc-toggle-row,.pc-option{
+  border-radius:var(--pr-r-sm);transition:background .3s,transform .3s var(--pr-ease);}
+.pc-lang-row:hover,.pc-office-row:hover,.pc-option:hover{
+  background:rgba(198,161,91,.10);transform:translateX(3px);}
+.pc-lang-badge{border-radius:var(--pr-r-pill);letter-spacing:.1em;}
+.pc-lang-badge.is-current{
+  background:linear-gradient(120deg,var(--pr-gold),var(--pr-gold-bright));color:#2a1c10;border:0;}
+.pc-adhkar-progress{border-radius:999px;overflow:hidden;background:rgba(198,161,91,.16);
+  box-shadow:inset 0 1px 3px rgba(42,28,16,.14);}
+.pc-adhkar-progress-bar{
+  background:linear-gradient(90deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  box-shadow:0 0 10px -2px rgba(198,161,91,.9);}
+.pc-hcal-cell{border-radius:8px;transition:background .25s,transform .25s var(--pr-ease);}
+.pc-hcal-cell:hover{transform:translateY(-1px);background:rgba(198,161,91,.14);}
+.pc-hcal-cell.is-today{
+  background:linear-gradient(140deg,var(--pr-gold),var(--pr-gold-bright));color:#2a1c10;
+  box-shadow:0 4px 12px -6px rgba(198,161,91,.9);}
+
+/* the trigger that opens it */
+.pc-trigger{
+  border-radius:var(--pr-r-pill);
+  transition:transform .35s var(--pr-ease),box-shadow .35s var(--pr-ease);}
+.pc-trigger:hover{transform:translateY(-2px);
+  box-shadow:0 10px 22px -12px rgba(42,28,16,.5),0 0 18px -6px rgba(198,161,91,.8);}
+
+@media (prefers-reduced-motion:reduce){
+  .pc-close:hover,.pc-tab,.pc-card,.pc-segmented,.pc-lang-row,.pc-office-row,
+  .pc-option,.pc-hcal-cell,.pc-trigger{transition:none!important;transform:none!important;}
+}
+
+/* the device's pearl ring has to follow the handset's radius, not the layer's */
+.dc-device.pr-milklight::before{border-radius:38px;}
