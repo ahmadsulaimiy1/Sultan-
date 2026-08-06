@@ -1833,17 +1833,33 @@ function docShell(title, sheetsHtml) {
     font-family:var(--en-text);font-weight:500;font-size:10pt;line-height:1.5;color:#332514;text-align:left;}
   .o5-para-ar{position:absolute;top:121mm;right:42mm;width:98mm;direction:rtl;
     font-family:var(--ar-text);font-size:10pt;line-height:1.55;color:#332514;text-align:right;}
-  /* Official embossed brass seal (client-supplied artwork, used as
-     provided) — set over the printed seal position; the artwork's
-     printed ribbons emerge naturally beneath it. */
-  /* The Founder's embossed brass seal is now the only seal on the sheet.
-     The printed one it used to sit on measured 121-181mm against this
-     overlay's 26mm, so the artwork showed around all four sides; it is
-     cleared from the plate by scripts/certificate-artwork.py and the
-     overlay enlarged to a proper 34mm. Two stacked shadows read as contact
-     rather than as a filter: a tight dark one where the metal meets the
-     paper, and a wider soft one for the lift of the emboss. */
-  .o5-seal{position:absolute;left:131.5mm;top:171.6mm;width:34mm;height:auto;
+  /* Official embossed brass seal (client-supplied artwork, used as provided).
+     It is the ONLY seal on the sheet: the I'dadiyyah plate carried its own
+     blank gold rosette and ribbon mount, and the two never registered — the
+     overlay sat 7.91mm lower and was 8.70mm wider, so 4.59mm of the printed
+     disc crowned above it and the printed ribbons emerged below. That reads as
+     one seal printed twice out of register. The mount is cleared from the plate
+     by scripts/remove-plate-seal-mount.py and the marks layer re-solved.
+
+     SIZE AND POSITION ARE THE COMPOSITION, not a preference. The seal shares a
+     band with the certificate-number plaque (y 172.2-197.5) and the
+     verification plaque (y 171.8-197.1), and the clear corridor between the
+     signature blocks' feet (y 170.8) and the plate's bottom ornament band
+     (y 199.0) is 28.2mm. At 26mm it sits centred in that corridor with 1.3mm
+     of air above and below, level with both plaques — three devices on one
+     line. The earlier 34mm could not fit the corridor at any height: it either
+     rose into the signatures or bit into the border band.
+
+     x stays on 148.50mm, the page's own axis, which is also where the SHRS
+     crest sits in the header. Its gaps to the two plaques are unequal (14.5mm
+     left, 7.5mm right) because THE PLAQUES are not symmetric about the page
+     centre; moving the seal to split that gap would take the sheet's principal
+     device off the axis to disguise someone else's asymmetry.
+
+     Two stacked shadows read as contact rather than as a filter: a tight dark
+     one where the metal meets the paper, and a wider soft one for the lift of
+     the emboss. */
+  .o5-seal{position:absolute;left:135.5mm;top:172.14mm;width:26mm;height:auto;
     filter:drop-shadow(0 .18mm .22mm rgba(48,32,8,.42))
            drop-shadow(0 .75mm 1.15mm rgba(56,38,8,.22));}
 
