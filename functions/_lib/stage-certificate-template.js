@@ -1264,12 +1264,14 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
        share one baseline at y 41.6mm and sit at x 66.5 / 148.5 / 230.5 — equal
        82mm optical spacing, symmetric about the sheet centre. Each text block
        is centred on its own emblem.
-       LAGOS EMBLEM: the repository has no Lagos State artwork. The old plate
-       carried one at about 60px, which over a 15mm emblem is 102 DPI — it
-       would print visibly soft beside two crisp ones, and upscaling a STATE
-       EMBLEM is exactly the invented detail the directive forbids. The slot is
-       reserved and the approved wording stands; drop the file in as
-       lagos-state-arms.png and it appears with no other change. -->
+       LAGOS EMBLEM: the Coat of Arms supplied by the Founder, 2026-08-06. It
+       is 223x239px after its white background box was keyed out, which over a
+       15mm emblem is 405 DPI — above the 300 DPI press floor, but below the
+       Nigerian arms' 743. It is placed at its own size and aspect anyway,
+       because matching the Nigerian emblem's presence was the instruction and
+       upscaling a STATE EMBLEM to match its sharpness is the invented detail
+       the directive forbids. A larger original is the only real fix, and needs
+       no code change: scripts/build-lagos-arms.py re-runs over it. -->
   <div class="ihdr">
     <div class="ihdr-col ihdr-ng">
       <div class="ihdr-badge"><img src="/assets/images/crests/nigeria-coat-of-arms.png"
@@ -1287,7 +1289,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
         alt="Sultan Hanafi Royal Schools" /></div>
     </div>
     <div class="ihdr-col ihdr-lg">
-      <div class="ihdr-badge"></div>
+      <div class="ihdr-badge"><img src="/assets/images/crests/lagos-state-arms.png"
+        alt="Lagos State" /></div>
       <div class="h-ar">حكومة ولاية لاغوس</div>
       <div class="h-ar h-ar-3">وزارة التعليم الأساسي والثانوي</div>
       <div class="h-en h-en-3">Ministry of Basic and Secondary Education</div>

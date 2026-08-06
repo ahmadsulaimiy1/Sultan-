@@ -20,11 +20,18 @@ const DIR = process.argv[2] || 'dist/certificates/2026-08-08-IBT-000035';
 // proves nothing. Which directive applies is chosen by the batch directory's
 // own programme code, so pointing this gate at the wrong batch cannot pass.
 //
-// The English is the Founder's and is authoritative ("Ashrof" included). The
-// Arabic is mostly carried across from spellings the Founder approved on an
-// earlier register; it is reproduced here so the two files can be checked
-// against each other code point by code point — a check that catches a typo,
-// not an unconfirmed spelling.
+// The English is the Founder's and is authoritative ("Ashrof" included).
+//
+// The IDD Arabic was CONFIRMED APPROVED by the Founder on 2026-08-06, in
+// response to a standing flag that six components — أولاميبوسي، أولاديميجي،
+// أموبي، مكيندي، طاهرة، أيومدي — had been carried across from an earlier
+// register without a recorded approval. They are now approved spellings, not
+// inferred ones, and this file holds them so the two can be checked against
+// each other code point by code point.
+//
+// The rule that produced that flag stands: Arabic names are never generated,
+// transliterated or guessed here. A name with no approval on record stays off
+// the certificate until the Founder supplies it.
 const DIRECTIVES = {
   // Final Ibtida'iyyah roll, 2026-08-06.
   IBT: {
@@ -413,6 +420,11 @@ const ASSETS = [
   // so this is the check that keeps a low-resolution replacement out.
   ['assets/images/crests/nigeria-coat-of-arms.png', 'h', 15, 'Nigeria coat of arms'],
   ['assets/images/crests/shrs-institutional-crest.png', 'h', 17, 'SHRS institutional crest'],
+  // Lagos State Coat of Arms, supplied by the Founder 2026-08-06 and keyed by
+  // scripts/build-lagos-arms.py. 405 DPI over its 15mm height: above the press
+  // floor this gate enforces, and below the other two emblems. Recorded here
+  // so that gap is a number in the log on every run rather than a memory.
+  ['assets/images/crests/lagos-state-arms.png', 'h', 15, 'Lagos State arms'],
 ];
 
 // PNG and JPEG intrinsic size, straight out of the file's own header — no
