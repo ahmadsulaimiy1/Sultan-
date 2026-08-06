@@ -29,7 +29,8 @@
     "title": "Academics — Sultan Hanafi Royal Schools",
     "description": "Five institutions under one Board of Governors: the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School. Compare them and find the right fit.",
     "contentFile": "pages/academics.html",
-    "altHref": "/ar/academics/"
+    "altHref": "/ar/academics/",
+    "prestige": true
   },
   {
     "slug": "academics-nursery-primary",

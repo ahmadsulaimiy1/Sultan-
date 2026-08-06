@@ -239,10 +239,22 @@ function buildPage(page) {
     ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n'
     : '';
 
+  // The "prestige" flagship layer (luxury interior-page design system +
+  // scroll-reveal, animated counters and self-drawing SVG charts) loads
+  // only on pages that opt in with prestige:true in the manifest, so it
+  // never weighs on or restyles pages that don't use it.
+  const isPrestige = page.prestige === true;
+  const prestigeHead = isPrestige
+    ? '<link rel="stylesheet" href="/css/prestige.css">\n'
+    : '';
+  const prestigeScripts = isPrestige
+    ? '<script src="/js/prestige.js" defer></script>\n'
+    : '';
+
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
 <head>
-${head}${elevateHead}${altTag}</head>
+${head}${elevateHead}${prestigeHead}${altTag}</head>
 <body>
 
 ${topbar}
@@ -277,7 +289,7 @@ ${personalisation}
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
-${elevateScripts}
+${elevateScripts}${prestigeScripts}
 </body>
 </html>
 `;
