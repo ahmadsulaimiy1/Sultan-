@@ -26,11 +26,11 @@ not leaving one site for another.
 ```
 /                                  Home — flagship digest
 /about                             Chapter I–IV: Director, Story, Seal, Mission/Vision/Values
-/about/governance                  Chapter IV cont.: Board, Executive Team, Key Staff (full ledger)
-/academics                         Chapter V: hub — the four institutions, side by side
-/academics/nursery-primary         Nursery & Primary School (ages 2–10)
+/about/governance                  Chapter IV cont.: Board, Management Team, Key Staff (full ledger)
+/academics                         Chapter V: hub — the institutions, side by side (five recognised; four have a dedicated sub-page below)
+/academics/nursery-primary         Basic School (ages 2–10)
 /academics/royal-college           Royal College — 7 departments, curriculum tables
-/academics/arabic-islamic-studies  School of Islamic & Arabic Studies
+/academics/arabic-islamic-studies  School of Islamic and Arabic Studies
 /academics/quran-college           Qur'an College — Ijazaat pathway
 /boarding                          Chapter VI: Boarding Facility
 /admission                         Chapter VII: 12-step process, documents, [fees/calendar placeholder]
@@ -51,11 +51,15 @@ consistent list than as isolated pages. Deep-link anchors give the
 individually-linkable benefit without the fragmentation cost.
 
 **On `/academics`:** built as a hub page, not a redirect — a proper
-side-by-side comparison of the four institutions (age range, curriculum
+side-by-side comparison of the institutions (age range, curriculum
 source, credential/outcome) before the visitor picks a track. This is
 the site's real conversion fork: a parent choosing Royal College vs.
-Qur'an College vs. the weekend Islamic & Arabic program is the single
-most consequential decision the site needs to support.
+Qur'an College vs. the weekend Islamiyyah program is the single
+most consequential decision the site needs to support. A fifth
+institution, Sultan Hanafi Online & Distance Learning School, was
+recognised by the Board's governance restructuring amendment of
+2026-08-04; it has no dedicated sub-page in this site map yet, stated
+plainly here rather than inventing one.
 
 ---
 
@@ -70,9 +74,9 @@ SULTAN HANAFI Royal Schools     Our Story ▾   Academics ▾   Boarding   Admis
 ```
 
 - **Our Story ▾** → About (Director + Heritage + Seal + Mission/Vision/Values), Governance
-- **Academics ▾** → hub, then the four schools as sub-items — this is
+- **Academics ▾** → hub, then the four built schools as sub-items — this is
   the one place a mega-menu earns its keep, since a parent needs to
-  compare four distinct institutions before committing to a sub-page
+  compare the institutions before committing to a sub-page
 - Everything else stays a flat top-level link — the brief warns against
   generic template navigation, and a flat, short nav for a school this
   size reads as more confident than deep nesting for its own sake
@@ -99,11 +103,11 @@ link out to the dedicated page. Structure:
 2. Director's Message (unchanged — this is the trust anchor, stays in full)
 3. Seal quadrants (unchanged — short, high-impact, stays in full)
 4. Mission/Vision/CLEVER (unchanged — short, stays in full)
-5. **Academics teaser** — the four institutions as a condensed ledger
+5. **Academics teaser** — the institutions as a condensed ledger
    (name, age range, one-line description) linking to `/academics` and
    each sub-page, replacing the full curriculum tables that currently
    live inline
-6. **Governance teaser** — board chair + CEO only, linking to
+6. **Governance teaser** — board chair + Head of Schools / Administrator only, linking to
    `/about/governance` for the full ledger
 7. Pull-quote (parent/board member — unchanged)
 8. **Admission CTA band** — condensed version of the 12-step process
@@ -123,15 +127,15 @@ pages where it belongs.
 
 ## Per-Audience Journeys
 
-**Prospective parent (local/Lagos):** Home → Academics hub → Royal
-College or Nursery & Primary → Admission → Contact/WhatsApp.
+**Prospective parent (local/Lagos):** Home → Academics hub → Secular
+College or Basic School → Admission → Contact/WhatsApp.
 
 **Parent seeking Qur'an memorisation for a child:** Home → Academics hub
 → Qur'an College → Boarding (eligibility/fees once published) →
 Admission.
 
 **Community member seeking weekend Islamic studies (non-enrolling):**
-Home → Academics hub → School of Islamic & Arabic Studies → Contact
+Home → Academics hub → School of Islamic and Arabic Studies → Contact
 (this audience does not go through Admission's 12-step process, which is
 built for the day/boarding schools — the site should say so explicitly
 on that page rather than funnelling everyone through one form).

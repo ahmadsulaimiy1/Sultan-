@@ -22,10 +22,10 @@ as `parent-portal.md`, `student-portal.md`, and `announcements-system.md`.
    This creates the Staff Identity tables and seeds real, already-public
    reference data only: the four institutions, the one real campus, the
    16 roles from `role-permission-matrix.md` §3, and four real offices
-   (Board of Trustees, Registrar's Office, Finance Office, ICT Office).
+   (Board of Governors, Registrar's Office, Finance Office, ICT Office).
    **No `staff` rows are auto-created** — see below.
 
-## Onboarding the real Executive Management Team
+## Onboarding the real Management Team
 
 These curl calls use names already public on `/about/governance/` —
 nothing here is invented. Run once per person, in this order (Principals
@@ -38,7 +38,7 @@ curl -X POST https://<your-domain>/api/portal/admin/staff \
   -H "x-sysadmin-token: <token>" -H "content-type: application/json" \
   -d '{
     "action": "create-staff", "staffNo": "SHR-STF-0001",
-    "fullName": "Zakariya Olanrewaju Anofi", "positionTitle": "CEO",
+    "fullName": "Zakariya Olanrewaju Anofi", "positionTitle": "Head of Schools / Administrator",
     "dateJoined": "2017-12-01"
   }'
 
@@ -59,10 +59,10 @@ curl -X POST https://<your-domain>/api/portal/admin/staff \
   }'
 ```
 
-Repeat the pattern for the remaining named EMT members (Shaykh Ahmad
+Repeat the pattern for the remaining named Management Team members (Shaykh Ahmad
 Ibrahim — Principal, Qur'an College; Shaykh Abubakr Solah — Principal,
-School of Islamic & Arabic Studies; Mrs. Kareemat Abdurazaq — Head
-Teacher, Nursery & Primary; Mr. Oguntade Adebola Aliu — ICT Head, office
+School of Islamic and Arabic Studies; Mrs. Kareemat Abdurazaq — Head
+Teacher, Basic School; Mr. Oguntade Adebola Aliu — ICT Head, office
 `ICT Office`; Mr. Oladele Abdulwasiu Adebayo — Head, Research &
 Development).
 

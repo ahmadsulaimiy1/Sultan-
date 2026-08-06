@@ -6,7 +6,12 @@
 // exists: encoding is just "turn this URL into a QR," identical to how
 // a browser doesn't validate a URL before rendering its favicon — the
 // verify endpoint is what confirms genuineness, not this one.
-import { qrSvg } from '../../_lib/qrcode.js';
+//
+// Uses the print-grade renderer even though this is served to a screen.
+// These SVGs get printed — a parent prints the receipt, a student prints the
+// ID card — and the old renderer's stroked paths came out of the print
+// pipeline as unreadable hairlines. See qrSvgForPrint's own note.
+import { qrSvgForPrint } from '../../_lib/qrcode.js';
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -15,7 +20,7 @@ export async function onRequestGet({ request, env }) {
 
   const origin = env.SITE_ORIGIN || url.origin;
   const verifyUrl = `${origin}/verify-certificate/?ref=${encodeURIComponent(ref)}`;
-  const svg = qrSvg(verifyUrl, { width: 240, margin: 2 });
+  const svg = qrSvgForPrint(verifyUrl, { width: 240, errorCorrectionLevel: 'Q' });
 
   return new Response(svg, {
     headers: {

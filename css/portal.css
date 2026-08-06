@@ -1271,7 +1271,8 @@ body.portal-body > .exec-arrival{
    completely unaffected: every rule below is scoped to the attribute.
 
    Superseded note, Command Centres only: the six Command Centre offices
-   (Founder, Registrar, Finance, Principal, Head Teacher, Ra'ees, Mudeer)
+   (Founder, Registrar, Finance, Principal, Head Teacher, and the
+   Islamiyyah/Qur'an College Principals)
    originally each carried a distinct accent hue matching their public-
    site school colour (navy/bronze/sapphire/terracotta/crimson/forest-
    green). The Founder corrected this — "many different colour themes"
@@ -1301,14 +1302,14 @@ body.portal-body[data-atmosphere="student"]{--atmos:var(--sapphire);--atmos-brig
    ten gateway entry points above to every remaining real office portal
    (Founder Override Directive — "no static portals," "every office").
    Grouped by real institutional layer rather than each office inventing
-   its own hue — Board of Trustees, Management Council, and the five
+   its own hue — Board of Governors, Management Council, and the five
    Board committees genuinely ARE one governance wing (see sql/schema.sql
    office_kind/parent_office_id), so they share one dark charcoal-gold
    identity and differ by icon/label, exactly as one real building with
    several rooms would. Academic-layer and Digital-layer offices reuse
    Registrar's/Student's already-established hues for the same reason.
-   Executive reuses "founder" outright — Executive IS the Founder & CEO's
-   own office record, not a second identity. */
+   Executive reuses "founder" outright — Executive IS the Founder, Head of
+   Schools & Chairman's own office record, not a second identity. */
 body.portal-body[data-atmosphere="board-of-trustees"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.3);}
 body.portal-body[data-atmosphere="management-council"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
 body.portal-body[data-atmosphere="strategic-planning"]{--atmos:var(--charcoal-deep);--atmos-bright:var(--gold-bright);--atmos-soft:rgba(28,25,20,0.28);}
@@ -1392,7 +1393,7 @@ body.type-executive .cc-tagline{font-size:0.9rem;letter-spacing:0.09em;}
 body.type-executive .portal-child-head h2{font-size:1.55rem;letter-spacing:0.008em;}
 body.type-executive .exec-welcome-motto,body.type-executive .exec-welcome-narrative{font-size:1rem;line-height:1.75;}
 
-/* Governance — Board of Trustees, Management Council, Committees,
+/* Governance — Board of Governors, Management Council, Committees,
    Policies. Formal, deliberate: slightly tighter letter-spacing than
    Executive (institutional rather than personal authority) and a
    serif-forward card heading treatment befitting board papers. */
@@ -1400,8 +1401,9 @@ body.type-governance .exec-welcome h1{font-size:1.78rem;letter-spacing:0.008em;}
 body.type-governance .portal-child-head h2{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;letter-spacing:0.012em;}
 body.type-governance .portal-hello-sub,body.type-governance .exec-welcome-narrative{line-height:1.75;}
 
-/* Academic — Principal, Ra'ees, Mudeer, Head Teacher. Scholarly and
-   elegant: an italic tagline (the "mental rename") and a Cormorant
+/* Academic — Principal, Head Teacher, and the Islamiyyah/Qur'an College
+   Principals. Scholarly and elegant: an italic tagline (the "mental
+   rename") and a Cormorant
    Garamond card-heading treatment, reading closer to a university
    faculty page than an operations console. */
 body.type-academic .exec-welcome h1{font-size:1.8rem;}
@@ -1646,8 +1648,8 @@ body.portal-body[data-atmosphere="certificates"]::before{
 
 /* --- Digital Identity System: My ID Card (Digital Identity System —
    Imperial Prestige Directive) --- one shared component rendered by
-   js/id-card.js on the student, guardian, staff, and Founder & CEO
-   dashboards. A true 3D object, not a flat rectangle: front face
+   js/id-card.js on the student, guardian, staff, and Founder & Head of
+   Schools dashboards. A true 3D object, not a flat rectangle: front face
    (identity/QR/monogram) and back face (verification QR, role detail,
    terms) joined at a real edge, real ISO ID-1 proportions (85.60 x
    53.98mm, ratio ~1.586) on every device, auto-rotating slowly between
@@ -1774,10 +1776,10 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .id-card-face-footer a:hover{text-decoration:underline;}
 
 /* Ten role-specific colour schemes (Digital Identity System — Imperial
-   Prestige Directive §8). Founder & CEO gets the highest-prestige tier
-   (near-black + brightest gold); every other theme pairs a real
-   institutional/office hue already used elsewhere on this site (Royal
-   College's atmosphere gold aside — Principal specifically asked for
+   Prestige Directive §8). Founder & Head of Schools gets the highest-
+   prestige tier (near-black + brightest gold); every other theme pairs a
+   real institutional/office hue already used elsewhere on this site
+   (Sultan Hanafi Secular College's atmosphere gold aside — Principal specifically asked for
    Royal Blue, so that one hue is new here, scoped to this card only)
    with gold, matching the directive's exact colour pairs. */
 .id-card-3d.theme-founder{--card-bg-a:#15110B;--card-bg-b:#000000;--card-ink:var(--ivory);--card-accent:var(--gold-bright);--card-accent-bright:#F6E3AC;}
@@ -1889,7 +1891,7 @@ body.portal-body[data-atmosphere="certificates"]::before{
 
 /* ============================================================
    Institutional Portal Ecosystem — the generic office-portal shell
-   every office (Board of Trustees, Registrar, Finance, HR, ...) renders
+   every office (Board of Governors, Registrar, Finance, HR, ...) renders
    from. Reuses .exec-welcome / .portal-child-card / .portal-stats
    rather than a parallel design language, so an office portal reads as
    the same system as the Founder Dashboard and Registrar's Office, not
@@ -2148,8 +2150,8 @@ body.portal-body[data-atmosphere="certificates"]::before{
 
 /* ============================================================
    Institutional Access Gateway — portal/select/'s ceremonial rebuild
-   (Founder & CEO directive: "not a dropdown menu, a ceremonial
-   gateway"). Five identity-first entrance domains — Parents & Families,
+   (Founder, Head of Schools & Chairman directive: "not a dropdown menu,
+   a ceremonial gateway"). Five identity-first entrance domains — Parents & Families,
    Students & Learners, Educators & Staff, Governance & Board,
    Verification & Records — replacing the old flat 3-card chooser
    above (kept, unused elsewhere, in case of future reuse).

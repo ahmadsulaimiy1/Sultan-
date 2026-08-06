@@ -32,16 +32,19 @@ export async function onRequestGet({ request, env }) {
   // number would match a naive `startsWith('SHRS-')` staff check. Routed
   // by the SHAPE of the segment right after "SHRS-" instead:
   //   guardian — always SHRS-PAR-...
-  //   student  — the permanent Student Digital Identity Number has NO
-  //              letter code there, only 6 digits: SHRS-<YYMMDD>-<seq6>
+  //   student  — SHRS-STU-<YYYY>-NG-<seq6> (Certificate Generation
+  //              Directive, 2026-08-05 — the current permanent format),
+  //              or the earlier digits-only shape SHRS-<YYMMDD>-<seq6>
+  //              (already-issued numbers are never rewritten)
   //   staff    — everything else (a UNIT/OFFICE letter code, or a
-  //              reserved BOT/CEO code, always follows SHRS- for staff)
+  //              reserved BOT/CEO code, always follows SHRS- for staff;
+  //              STU is reserved for students and never a staff unit)
   // Legacy SHR-STU-/SHR-PAR- (pre-redirect, missing the "S") are kept
   // for backward-compatible lookup of already-issued old-format cards.
   const isLegacyStudent = idNo.startsWith('SHR-STU-');
   const isLegacyGuardian = idNo.startsWith('SHR-PAR-');
   const isGuardian = isLegacyGuardian || idNo.startsWith('SHRS-PAR-');
-  const isStudent = isLegacyStudent || /^SHRS-\d{6}-\d+$/.test(idNo);
+  const isStudent = isLegacyStudent || idNo.startsWith('SHRS-STU-') || /^SHRS-\d{6}-\d+$/.test(idNo);
 
   try {
     if (isStudent) {

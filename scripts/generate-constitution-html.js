@@ -24,7 +24,10 @@ const OUT_DIR = path.join(ROOT, 'docs', 'exports');
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 const OUT = path.join(OUT_DIR, 'SHRS-Governance-Charter-Flagship-Edition.html');
 
-const KHATAM_SVG = '<svg class="corner-ornament" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>';
+const KHATAM_CORNER = (cls) => `<svg class="corner-ornament ${cls}" viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5"/><rect x="20" y="20" width="60" height="60" fill="none" stroke="var(--gold-bright)" stroke-width="1.5" transform="rotate(45 50 50)"/></svg>`;
+// Paired diagonal corners: a lone top-right mark read as an accident in
+// review; the mirrored pair reads as a deliberate frame.
+const KHATAM_SVG = KHATAM_CORNER('') + KHATAM_CORNER('corner-bl');
 // Same eight-point geometric mark as KHATAM_SVG, unpositioned (no
 // .corner-ornament class) so it can be centred and sized per use on the
 // half-title and back cover, rather than pinned to a page corner.
@@ -183,7 +186,7 @@ function main() {
       <div class="toc-part">
         <div class="toc-part-title"><a href="#schedules">Schedules</a></div>
       </div>
-      <p class="toc-hint">This is a born-digital edition: every entry above is a live link. Page numbers are shown in the running footer rather than here, since a linked table of contents stays accurate through re-pagination without manual re-verification.</p>
+      <p class="toc-hint">Every entry above is a live link in the digital edition; printed folio numbers are set against each entry at publication time.</p>
     </div>`;
 
   function renderProclamationPreamble() {
@@ -275,7 +278,7 @@ function main() {
   ${KHATAM_SVG}
   <img class="cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
   <div class="cover-eyebrow">Sultan Hanafi Royal Schools</div>
-  <div class="cover-sub-line">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+  <div class="cover-sub-line">Royal College &middot; School of Islamic and Arabic Studies &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</div>
   <h1 class="cover-title">The Governance Charter</h1>
   <div class="cover-title-sub">of Sultan Hanafi Royal Schools</div>
   <div class="cover-rule"></div>
@@ -284,7 +287,7 @@ function main() {
     <div class="cover-footer-rule"></div>
     <div class="cover-footer-text">
       <span>Flagship Edition</span>
-      <span>Est. December 2017 &middot; Ikorodu, Lagos State, Nigeria</span>
+      <span>Est. July 2016 &middot; Ikorodu, Lagos State, Nigeria</span>
     </div>
   </div>
 </div>
@@ -311,8 +314,8 @@ function main() {
     <div class="copyright-rule"></div>
     <div class="copyright-submission">${metaParagraphs.map((t) => `<p>${inline(t)}</p>`).join('')}</div>
     <div class="copyright-rule"></div>
-    <p class="copyright-line">Sultan Hanafi Royal Schools &middot; Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</p>
-    <p class="copyright-line">Founded December 2017 &middot; Ikorodu, Lagos State, Nigeria</p>
+    <p class="copyright-line">Sultan Hanafi Royal Schools &middot; Royal College &middot; School of Islamic and Arabic Studies &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</p>
+    <p class="copyright-line">Founded July 2016 &middot; Ikorodu, Lagos State, Nigeria</p>
   </div>
 </div>
 
@@ -323,7 +326,7 @@ function main() {
   <table class="imprint-table">
     <tbody>
       <tr><th>Institution</th><td>Sultan Hanafi Royal Schools</td></tr>
-      <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Chief Executive Officer</td></tr>
+      <tr><th>Publisher</th><td>Sultan Hanafi Royal Schools, acting through the Office of the Founder &amp; Head of Schools / Administrator</td></tr>
       <tr><th>Address</th><td>15, Imowonla Road, AP Bus Stop, Off Gberigbe&ndash;Agura Road, Ikorodu, Lagos State, Nigeria</td></tr>
       <tr><th>Website</th><td>shroyalschools.com</td></tr>
       <tr><th>Email</th><td>info@shroyalschools.com</td></tr>
@@ -332,7 +335,7 @@ function main() {
       <tr><th>Classification</th><td>Internal Governance Instrument &mdash; Board Submission Draft. Not yet adopted; carries no legal effect until the Board resolves under Chapter XVIII (see Certification, above).</td></tr>
       <tr><th>Archival Statement</th><td>Prepared for permanent retention in the Institution's governance archive. On adoption, the executed edition supersedes this draft as the archival copy of record.</td></tr>
       <tr><th>Printing Specification</th><td>Set for US Letter (8.5in &times; 11in) digital archival distribution and print-on-demand reproduction; not yet issued in a bound print run.</td></tr>
-      <tr><th>Rights Statement</th><td>Prepared for the internal use of the Board of Governors, the Founder &amp; CEO, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation.</td></tr>
+      <tr><th>Rights Statement</th><td>Prepared for the internal use of the Board of Governors, the Founder &amp; Head of Schools / Administrator, and the Institution's governance offices. Not for external commercial distribution without the Board's written authorisation.</td></tr>
     </tbody>
   </table>
 </div>
@@ -393,12 +396,8 @@ function main() {
       <img src="../../assets/images/qr/qr-contact.png" alt="QR code linking to the Sultan Hanafi Royal Schools contact page" />
       <div class="qr-label">Contact Page</div>
     </div>
-    <div class="qr-card qr-reserved">
-      <div class="qr-reserved-mark">${KHATAM_MARK_SVG('var(--gold)')}</div>
-      <div class="qr-label">Governance Portal<br /><span>Reserved for future issue</span></div>
-    </div>
   </div>
-  <p class="fm-footnote">A public, authenticated Governance Portal is not yet live; the fourth code above is reserved for a future edition once that capability launches, rather than printed against a page that does not yet exist. The three codes above resolve to the Institution's current official website, email, and contact page.</p>
+  <p class="fm-footnote">The three codes above resolve to the Institution's current official website, email, and contact page.</p>
 </div>
 
 ${tocHtml}
@@ -421,8 +420,8 @@ ${tocHtml}
     <thead><tr><th>Abbreviation</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td>SHRS</td><td>Sultan Hanafi Royal Schools ("the Institution")</td></tr>
-      <tr><td>CEO</td><td>Chief Executive Officer</td></tr>
-      <tr><td>EMT</td><td>Executive Management Team</td></tr>
+      <tr><td>HSA</td><td>Head of Schools / Administrator</td></tr>
+      <tr><td>MT</td><td>Management Team</td></tr>
       <tr><td>ICT</td><td>Information &amp; Communications Technology</td></tr>
       <tr><td>HR</td><td>Human Resources</td></tr>
       <tr><td>Art.</td><td>Article, of this Charter</td></tr>
@@ -446,12 +445,12 @@ ${renderSchedules()}
     <img class="back-cover-crest" src="../../assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
     <div class="back-cover-rule"></div>
     <div class="back-cover-name">Sultan Hanafi Royal Schools</div>
-    <div class="back-cover-schools">Royal College &middot; Qur'an College &middot; School of Islamic &amp; Arabic Studies &middot; Nursery &amp; Primary School</div>
+    <div class="back-cover-schools">Royal College &middot; School of Islamic and Arabic Studies &middot; Qur'an College &middot; Basic School &middot; Online &amp; Distance Learning School</div>
     <div class="back-cover-rule small"></div>
     <div class="back-cover-meta">
       <div><span>Instrument</span>The Governance Charter of Sultan Hanafi Royal Schools</div>
       <div><span>Edition</span>Seventh Edition</div>
-      <div><span>Founded</span>December 2017 &middot; Ikorodu, Lagos State, Nigeria</div>
+      <div><span>Founded</span>July 2016 &middot; Ikorodu, Lagos State, Nigeria</div>
     </div>
     <div class="back-cover-rule small"></div>
     <img class="back-cover-qr" src="../../assets/images/qr/qr-website.png" alt="QR code linking to the official Sultan Hanafi Royal Schools website" />

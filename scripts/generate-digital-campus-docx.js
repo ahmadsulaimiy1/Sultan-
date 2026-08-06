@@ -152,6 +152,24 @@ function roadmapItem(year, title, desc) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .dc-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4E6EA' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: BODY_FONT, size: 14, bold: true, color: GOLD, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 20, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -185,7 +203,33 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. VISION STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Future Digital Campus Edition'],
+    ['Document ID', 'SHRS-PUB-DIGCAM-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. VISION STATEMENT ============
 {
   const B = [];
   B.push(new Paragraph({ spacing: { before: 2400 } }));
@@ -197,18 +241,18 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('A Guide to This Edition'));
   B.push(lede('This is the Future Digital Campus Edition — the same institution, retold through what is actually built, running, and used by real families today, and what is deliberately still ahead.'));
   const toc = [
-    ["A Word from the Founder", '04'], ['The Digital Campus Today', '05'], ['The Guardian Portal', '06'],
-    ['The Student Portal', '07'], ['The Digital Academic Assistant', '08'], ['Hifz & Ijazah Digital Register', '09'],
-    ['The ICT & Computer Laboratory', '10'], ['Personalisation & the Adhkār Centre', '11'],
-    ['Data-Driven Leadership', '12'], ['The Road to 2035', '13'], ['Campus & Connectivity', '14'],
-    ['Join the Digital Campus', '15'],
+    ["A Word from the Founder", '05'], ['The Digital Campus Today', '06'], ['The Guardian Portal', '07'],
+    ['The Student Portal', '08'], ['The Digital Academic Assistant', '09'], ['Hifz & Ijazah Digital Register', '10'],
+    ['The ICT & Computer Laboratory', '11'], ['Personalisation & the Adhkār Centre', '12'],
+    ['Data-Driven Leadership', '13'], ['The Road to 2035', '14'], ['Campus & Connectivity', '15'],
+    ['Join the Digital Campus', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ spacing: { after: 100 },
     children: [new TextRun({ text: t, font: BODY_FONT, size: 20, color: INK }), new TextRun({ text: '\t' + p, font: HEAD_FONT, size: 20, color: GOLD, bold: true })] })));
@@ -217,7 +261,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. FOUNDER'S MESSAGE ============
+// ============ 05. FOUNDER'S MESSAGE ============
 {
   const B = [];
   B.push(eyebrow("A Word from the Founder"));
@@ -225,12 +269,12 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 180)] }));
   B.push(body("When people hear “digital campus,” they often picture dashboards and demos. I think about something more basic: can a parent in Ikorodu check their child's attendance from a shared phone on a slow connection? Can a Qur'an College student see exactly how many Juz' they have verified, tonight, without waiting for a report card?"));
   B.push(body('That is the standard we are building to — real infrastructure, real data protection, real accountability — before a single feature is announced as finished. We would rather ship two systems that genuinely work than ten that only look finished in a screenshot.'));
-  B.push(glass('"A school’s digital systems should earn a family’s trust the same way its teachers do — slowly, honestly, and by actually showing up." — Sultan Zakariya Olanrewaju Hanafi, PhD, Founder & CEO', null, { italic: true }));
+  B.push(glass('"A school’s digital systems should earn a family’s trust the same way its teachers do — slowly, honestly, and by actually showing up." — Zakariya Olanrewaju Anofi, Founder & Head of Schools/Administrator', null, { italic: true }));
   B.push(statQuad([['01', 'Digital Assistant Live'], ['02', 'Guardian Portal Live'], ['03', 'Student Portal Live'], ['Neon', 'Cloud Database']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. THE DIGITAL CAMPUS TODAY ============
+// ============ 06. THE DIGITAL CAMPUS TODAY ============
 {
   const B = [];
   B.push(eyebrow('Overview'));
@@ -244,7 +288,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. GUARDIAN PORTAL ============
+// ============ 07. GUARDIAN PORTAL ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -259,7 +303,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. STUDENT PORTAL ============
+// ============ 08. STUDENT PORTAL ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -272,7 +316,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 08. DIGITAL ACADEMIC ASSISTANT ============
+// ============ 09. DIGITAL ACADEMIC ASSISTANT ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -285,7 +329,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. HIFZ & IJAZAH DIGITAL REGISTER ============
+// ============ 10. HIFZ & IJAZAH DIGITAL REGISTER ============
 {
   const B = [];
   B.push(eyebrow("Live System · Qur'an College"));
@@ -300,19 +344,19 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. ICT & COMPUTER LABORATORY ============
+// ============ 11. ICT & COMPUTER LABORATORY ============
 {
   const B = [];
   B.push(eyebrow('Our Infrastructure'));
   B.push(h1('The ICT & Computer Laboratory'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/ict-computer-laboratory.jpg', 460)] }));
   B.push(body('Digital literacy is not confined to a single subject at Sultan Hanafi — it runs through the ICT & Computer Laboratory, a dedicated facility where students build the foundational technology skills the digital systems described in this edition assume every family and student can use.'));
-  B.push(statQuad([['1', 'Dedicated Lab'], ['2', 'Core Strands'], ['All', 'Year Groups'], ['7', 'RC Departments']]));
+  B.push(statQuad([['1', 'Dedicated Lab'], ['2', 'Core Strands'], ['All', 'Year Groups'], ['7', 'SC Departments']]));
   B.push(body('Digital Literacy and Programming form the two core strands taught in the laboratory, sitting within the Royal College’s Mathematics & ICT department — one of seven academic departments spanning JSS 1–3 and SSS 1–3.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 11. PERSONALISATION & ADHKAR CENTRE ============
+// ============ 12. PERSONALISATION & ADHKAR CENTRE ============
 {
   const B = [];
   B.push(eyebrow('Live System'));
@@ -328,7 +372,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. DATA-DRIVEN LEADERSHIP ============
+// ============ 13. DATA-DRIVEN LEADERSHIP ============
 {
   const B = [];
   B.push(eyebrow('Behind the Scenes'));
@@ -342,7 +386,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. THE ROAD TO 2035 ============
+// ============ 14. THE ROAD TO 2035 ============
 {
   const B = [];
   B.push(eyebrow('Named, Not Built'));
@@ -357,7 +401,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 14. CAMPUS & CONNECTIVITY ============
+// ============ 15. CAMPUS & CONNECTIVITY ============
 {
   const B = [];
   B.push(eyebrow('Our Campus'));
@@ -370,12 +414,12 @@ sections[0].children.push(pageBreak());
   B.push(gridRow);
   B.push(new Paragraph({ spacing: { before: 160 } }));
   B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — the physical campus every digital system in this edition ultimately serves.'));
-  B.push(statQuad([['2017', 'Campus Founded'], ['Cloudflare', 'Hosting Platform'], ['Neon', 'Postgres Database'], ['2', 'Site Languages']]));
+  B.push(statQuad([['2016', 'Campus Founded'], ['Cloudflare', 'Hosting Platform'], ['Neon', 'Postgres Database'], ['2', 'Site Languages']]));
   B.push(body('Built deliberately offline-tolerant in mind — a low-bandwidth, patchy-connection reality for many Ikorodu families is treated as a design constraint, not an edge case.', { italics: true, size: 18, color: INK_SOFT }));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. JOIN THE DIGITAL CAMPUS ============
+// ============ 16. JOIN THE DIGITAL CAMPUS ============
 {
   const B = [];
   B.push(eyebrow('Join the Digital Campus'));
@@ -387,8 +431,8 @@ sections[0].children.push(pageBreak());
     ['3. Staff Review', 'Reviewed by the admissions office through the Permission Engine.'],
     ['4. Enrolment', 'Once accepted, your child’s real academic record begins.'],
   ].forEach(([t, d]) => { B.push(new Paragraph({ spacing: { before: 120, after: 20 }, children: [new TextRun({ text: t, font: HEAD_FONT, size: 22, bold: true, color: CHARCOAL })] })); B.push(body(d)); });
-  B.push(glass('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650 · shroyalschools.ng', 'Speak With Admissions'));
-  B.push(body('Prefer to ask first? The Digital Academic Assistant is available on every page of shroyalschools.ng, in English or Arabic, and can hand you directly to the right school office on WhatsApp.'));
+  B.push(glass('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650 · shroyalschools.com', 'Speak With Admissions'));
+  B.push(body('Prefer to ask first? The Digital Academic Assistant is available on every page of shroyalschools.com, in English or Arabic, and can hand you directly to the right school office on WhatsApp.'));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Future Digital Campus Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -397,7 +441,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
@@ -406,8 +450,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 30, bold: true, color: 'FFFFFF' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE FUTURE DIGITAL CAMPUS EDITION', font: BODY_FONT, size: 14, color: GOLD_BRIGHT, bold: true, characterSpacing: 20 })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'FUTURE DIGITAL CAMPUS EDITION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: 'D9D2C0', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],

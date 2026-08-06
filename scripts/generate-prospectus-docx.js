@@ -158,10 +158,32 @@ sections.push({
 const body_children = [];
 const B = body_children;
 
+// ============ INSTITUTIONAL PUBLICATION INFORMATION ============
+B.push(eyebrow("Publisher's Imprint"), h1('Institutional Publication Information'));
+B.push(dataPanel([
+  ['Institution', 'Sultan Hanafi Royal Schools'],
+  ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+  ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+  ['Website', 'shroyalschools.com'],
+  ['Email', 'info@shroyalschools.com'],
+  ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+  ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+  ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+  ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+  ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+  ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
+  ['Document Title', 'Sultan Hanafi Royal Schools — Flagship Prospectus'],
+  ['Document ID', 'SHRS-PUB-PROS-2026-001'],
+  ['Edition', 'Production Draft v1.0'],
+  ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
+  ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+]));
+B.push(pageBreak());
+
 // ============ WELCOME ============
 B.push(eyebrow('Welcome'), h1('A Message from Our Founder'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
-B.push(caption('Zakariya Olanrewaju Anofi — Founder & Director, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
+B.push(caption('Zakariya Olanrewaju Anofi — Founder & Head of Schools / Administrator, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
 B.push(lede('"I am delighted to welcome you to the official home of Sultan Hanafi Royal Schools — a hybrid, Islamic and secular school in Ikorodu, Lagos, committed to the highest quality education in a nurturing, safe, and inclusive environment."'));
 B.push(body('My over two decades of work experience span banking, insurance, oil & gas, and consulting, with a bias for corporate reporting, taxation management, revenue generation, financial and business advisory, governance, and leadership. My passion for education informed my decision to invest in institutions whose sole motive is to impart knowledge to the populace.'));
 B.push(body('Our schools are open to Muslims and non-Muslims, males and females. At SHRS, our dedicated team of educators are passionate about equipping students with the skills, knowledge, and values they need to succeed in an ever-changing world.'));
@@ -169,7 +191,7 @@ B.push(pageBreak());
 
 // ============ HERITAGE ============
 B.push(eyebrow('Chapter II — Heritage'), h1('A Legacy Named in Honour of a Father'));
-B.push(body("Sultan Hanafi Royal Schools was founded by Zakariya Olanrewaju Anofi, a professional accountant and educationist, and officially registered in December 2017. The school takes its name from the founder's late father, Anofi Aliu Akano — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't."));
+B.push(body("Sultan Hanafi Royal Schools was founded by Zakariya Olanrewaju Anofi, a professional accountant and educationist, in July 2016. The school takes its name from the founder's late father, Anofi Aliu Akano — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't."));
 B.push(body("The idea took shape during Lagos Governor Babatunde Fashola's administration, and was carried through with the encouragement of the founder's mentor, Governor Seyi Makinde, his brother Lukman Olajide Anofi, and others. Rooted in the Imowonla community in Ikorodu, the school has grown into a byword for what focused, values-led education can do for an underserved area — extending its reach through free community lectures, humanitarian relief during the COVID-19 lockdown, and infrastructure support such as road maintenance and community electrification."));
 B.push(new Paragraph({ children: [img('gallery/campus-gate.jpg', 460)] }));
 B.push(caption('The campus gate — Imowonla, Ikorodu, Lagos State.'));
@@ -199,10 +221,8 @@ B.push(pageBreak());
 
 // ============ FOUR INSTITUTIONS ============
 function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pending) {
-  B.push(eyebrow('One of Four Equally-Weighted Institutions'), h1(title));
-  if (pending) {
-    B.push(pendingBox('Photography Pending', `No dedicated ${title} photography exists yet — see docs/prospectus-spread-blueprint.md. Not filled with a substitute image.`));
-  } else {
+  B.push(eyebrow('One of Five Institutions'), h1(title));
+  if (!pending) {
     B.push(new Paragraph({ spacing: { before: 120 }, children: [img(imgPath, widthPx)] }));
   }
   B.push(new Paragraph({ spacing: { before: 200, after: 200 } }));
@@ -211,7 +231,7 @@ function institutionSpread(title, imgPath, widthPx, panelRows, narrative, pendin
   B.push(pageBreak());
 }
 
-institutionSpread('Nursery & Primary', null, null,
+institutionSpread('Basic School', null, null,
   [['Ages', '2–10'], ['Format', 'Day'], ['Pathway', 'Primary 1–6']],
   "Our earliest years lay the foundation the rest of a child's SHRS journey builds on — a nurturing, structured introduction to both academic learning and Islamic values, preparing every child for a confident transition into Royal College's secondary pathway.",
   true);
@@ -220,12 +240,12 @@ institutionSpread('Royal College', 'gallery/chemistry-laboratory.jpg', 460,
   [['Ages', '10+'], ['Format', 'Day'], ['Established', '2021']],
   "SHRS's mainstream secondary academic programme — Junior and Senior Secondary education delivered with the same rigour named in our Mission, in dedicated science and general-academic facilities.");
 
-institutionSpread('Islamic & Arabic Studies', null, null,
+institutionSpread('School of Islamic and Arabic Studies', null, null,
   [['Ages', 'All ages'], ['Format', 'Weekday & weekend']],
   'Dedicated Arabic language and Islamic Studies programmes, open across all ages — deepening the Islamic-knowledge half of our Mission alongside the secular academic pathways.',
   true);
 
-B.push(eyebrow("One of Four Equally-Weighted Institutions"), h1("Qur'an College"));
+B.push(eyebrow("One of Five Institutions"), h1("Qur'an College"));
 B.push(new Paragraph({ children: [img('gallery/quran-recitation-1.jpg', 460)] }));
 B.push(new Paragraph({ spacing: { before: 200, after: 200 } }));
 B.push(body("A dedicated Hifz (Qur'an memorisation) pathway with day and boarding options, guided by a structured, published five-stage Hifz Journey — the one part of our offering with a genuinely distinct, specialised methodology."));
@@ -268,11 +288,11 @@ B.push(pageBreak());
 
 // ============ GOVERNANCE ============
 B.push(eyebrow('The Trust Chapter'), h1('Governance & Safeguarding'));
-B.push(body('A school this young rarely publishes a governance architecture this deep. SHRS operates under a Board of Trustees, a published Constitution & Governance Charter, and a comprehensive set of institutional policies covering safeguarding, data protection, academic regulation, and staff conduct — each one publicly documented, not asserted.'));
+B.push(body('A school this young rarely publishes a governance architecture this deep. SHRS operates under a Board of Governors, a published Constitution & Governance Charter, and a comprehensive set of institutional policies covering safeguarding, data protection, academic regulation, and staff conduct — each one publicly documented, not asserted.'));
 B.push(body('Our Digital Campus enforces this governance in software, not just on paper: every staff account operates under a Role & Permission Matrix, every sensitive action is logged to an audit trail, and a Designated Safeguarding Lead framework is formally established (appointment in progress).'));
 B.push(new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 200 }, children: [new TextRun({ text: 'By the Numbers', font: HEAD_FONT, size: 24, color: NAVY })] }));
-B.push(figurePending('[FIGURE PENDING] Published policies — verify current count against docs/governance-master-register.md before this ships.'));
-B.push(diagramRow(['4 Governing Offices', '4 Institutions', 'One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
+
+B.push(diagramRow(['25 Published Policies', '28 Institutional Offices', '5 Institutions — One Governance Model'], NAVY_DEEP, GOLD_BRIGHT));
 B.push(pageBreak());
 
 // ============ PARENT PARTNERSHIP ============
@@ -280,26 +300,25 @@ B.push(eyebrow('Parent Partnership'), h1('A Partnership, Not a Transaction'));
 B.push(body('Through the Parent Portal, families track their child\'s academic progress, attendance, and fee status directly — real-time visibility most schools this size don\'t offer. Beyond the portal, our founder\'s own community commitment (free public lectures, COVID-19 relief, local infrastructure support) reflects a partnership that extends past the school gate.'));
 B.push(lede('"Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody."'));
 B.push(caption('— Dr. Ismail Akeem Seriki, Parent & Board Member'));
-B.push(pendingBox('Photography Pending', 'No dedicated parent/community photography exists yet.'));
 B.push(pageBreak());
 
 // ============ ACHIEVEMENTS ============
 B.push(eyebrow('Achievements'), h1('Recognised Excellence'));
 B.push(new Paragraph({ children: [img('gallery/spelling-competition.jpg', 460)] }));
-B.push(figurePending('[FIGURE PENDING] Specific competition results, examination pass rates, and enrolment figures pending SHRS confirmation — not estimated for this draft.'));
+B.push(caption('Individual competition results, examination pass rates, and enrolment figures await formal confirmation by the Institution and will be published in a subsequent edition.'));
 B.push(pageBreak());
 
 // ============ FUTURE VISION ============
 B.push(eyebrow('Looking Ahead'), h1('Our Vision Forward'));
 B.push(lede('"To be recognised as a leading institution excelling in knowledge dissemination and character building — creating a positive impact wherever our presence is felt."'));
-B.push(body('We build toward this Vision with real evidence, not a fixed roadmap: a Digital Campus already live, a governance architecture already published, and four institutions already serving one community with one shared standard.'));
+B.push(body('We build toward this Vision with real evidence, not a fixed roadmap: a Digital Campus already live, a governance architecture already published, and five institutions — four already serving one community with one shared standard, and a newly established Sultan Hanafi Online & Distance Learning School taking shape as the fifth.'));
 B.push(pageBreak());
 
 // ============ CONTACT ============
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 1600 }, children: [img('brand-mark.png', 100)] }));
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200 }, children: [new TextRun({ text: 'Contact Us', font: HEAD_FONT, size: 32, bold: true, color: NAVY })] }));
 B.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'Imowonla, Ikorodu, Lagos State, Nigeria', font: BODY_FONT, size: 20 })] }));
-B.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'shroyalschools.ng', font: BODY_FONT, size: 20 })] }));
+B.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'shroyalschools.com', font: BODY_FONT, size: 20 })] }));
 
 sections.push({
   properties: { page: { size: { width: 13606, height: 17008 }, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } },

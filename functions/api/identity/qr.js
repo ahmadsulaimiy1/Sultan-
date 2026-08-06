@@ -5,7 +5,7 @@
 // doesn't check whether the identity number actually exists, since
 // encoding is just "turn this URL into a QR" — /api/identity/verify is
 // what confirms genuineness.
-import { qrSvg } from '../../_lib/qrcode.js';
+import { qrSvgForPrint } from '../../_lib/qrcode.js';
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -14,7 +14,7 @@ export async function onRequestGet({ request, env }) {
 
   const origin = env.SITE_ORIGIN || url.origin;
   const verifyUrl = `${origin}/verify-identity/?id=${encodeURIComponent(idNo)}`;
-  const svg = qrSvg(verifyUrl, { width: 240, margin: 2 });
+  const svg = qrSvgForPrint(verifyUrl, { width: 240, errorCorrectionLevel: 'Q' });
 
   return new Response(svg, {
     headers: {

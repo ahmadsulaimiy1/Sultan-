@@ -330,9 +330,9 @@ export async function onRequestGet({ request, env }) {
     // stored institution name to the "Sultan Hanafi"-prefixed public
     // name (Phase 0b naming convention) without touching stored data.
     const SCHOOL_DISPLAY = {
-      'Nursery & Primary': 'Sultan Hanafi Nursery & Primary School',
+      'Nursery and Primary': 'Sultan Hanafi Nursery and Primary School',
       'Royal College': 'Sultan Hanafi Royal College',
-      'Islamic & Arabic Studies': 'Sultan Hanafi School of Islamic & Arabic Studies',
+      'Islamic and Arabic Studies': 'Sultan Hanafi School of Islamic and Arabic Studies',
       "Qur'an College": "Sultan Hanafi Qur'an College",
     };
     const studentsByInst = new Map(byInstitutionRes.rows.map((r) => [r.institution, r.n]));

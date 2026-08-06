@@ -67,16 +67,16 @@ conventions.
 
 ### Educational Philosophy
 A **hybrid curriculum by design, not compromise**: the Royal College and
-Nursery & Primary School run the Nigerian National Curriculum enriched with
+Basic School run the Nigerian National Curriculum enriched with
 entrepreneurship, financial intelligence, leadership, and technology
-electives; the Islamic & Arabic School and Qur'an College run the Saudi
+electives; School of Islamic and Arabic Studies and Qur'an College run the Saudi
 Arabian curriculum with Saudi-approved texts. Both tracks report to one
-board, one CEO, and one disciplinary and pastoral framework — the
+board, one Head of Schools / Administrator, and one disciplinary and pastoral framework — the
 institution's real point of differentiation versus either a purely
 secular or purely Islamiyyah school in the same market.
 
 ### Governance Model
-A board of trustees plus an executive management team spanning finance,
+A Board of Governors plus a Management Team spanning finance,
 education, and Islamic scholarship (full roster: `index.html` §Governance).
 Every policy on the site — Assessment, Anti-Bullying, Career, Dress Code,
 Equal Opportunity, First Aid, Health & Safety, Visitors, Complaints — is
@@ -98,9 +98,9 @@ history" copy.
 
 ## Part II — Programme Architecture
 
-Four institutions under one board, one standard:
+Five institutions under one board, one standard:
 
-### I. Nursery & Primary School — Ages 2–10
+### I. Basic School — Ages 2–10
 Early-years foundation blending secular and Islamic instruction. Led by
 Head Teacher Mrs. Kareemat Abdurazaq.
 
@@ -117,7 +117,7 @@ Junior + senior secondary, seven academic departments:
 | Arabic | Arabic, Nahwu & Sarfu, Aruud, Balaghah, Al-Adab-Al Arabiy, Al-Inshaw |
 | Islamic Sciences | Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat |
 
-### III. School of Islamic & Arabic Studies — All ages
+### III. School of Islamic and Arabic Studies — All ages
 Weekday (Mon–Wed, 2–6pm) and weekend (Sat–Sun, 9am–3pm) tracks for the
 wider Muslim Ummah, not limited to enrolled day/boarding students.
 
@@ -128,11 +128,18 @@ the closest the school has to a formal credentialing pathway, and worth
 foregrounding wherever the brief calls for "certificates, diplomas,
 progression pathways."
 
+### V. Sultan Hanafi Online & Distance Learning School
+Recognised as a fifth Constituent Institution by the Board's governance
+restructuring amendment of 2026-08-04. Newly established, not yet
+operating a programme or holding a curriculum, and its headship is
+currently vacant — stated plainly here rather than inventing content
+for it.
+
 ### Progression Pathway
-Nursery & Primary → Royal College (secular + Islamic tracks run in
+Basic School → Royal College (secular + Islamic tracks run in
 parallel, not sequentially) → optional Qur'an College boarding track for
 memorisation-focused students aged 9–16 → Ijazaat on completion. The
-School of Islamic & Arabic Studies runs alongside all of the above as a
+School of Islamic and Arabic Studies runs alongside all of the above as a
 community-facing, non-exclusive offering.
 
 ### What Doesn't Exist Yet (do not fabricate)
@@ -253,8 +260,8 @@ Single-page flagship (`index.html`), eleven chaptered sections, in order:
 4. Seal quadrants (Crescent & Star / Open Book / Three Stars / Tree)
 5. Welcome / pull-quote from a parent & board member
 6. Mission, Vision & Values (CLEVER)
-7. Governance & Leadership (board, executive team, key staff — full ledger)
-8. Academics (four institutions + curriculum note + open placeholder)
+7. Governance & Leadership (board, Management Team, key staff — full ledger)
+8. Academics (five institutions + curriculum note + open placeholder)
 9. Boarding Facility
 10. Admission (12-step process + required documents + open placeholder)
 11. Facilities (12-item dot-leader index)

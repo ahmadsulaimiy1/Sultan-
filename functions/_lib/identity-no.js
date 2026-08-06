@@ -1,5 +1,6 @@
-// Institutional Identity Number Architecture Directive (Founder & CEO-
-// approved correction of the original Digital Identity System pattern):
+// Institutional Identity Number Architecture Directive (Founder, Head of
+// Schools & Chairman-approved correction of the original Digital Identity
+// System pattern):
 // every SHR- (missing the "S" for "Schools") number in this file has
 // been replaced with an SHRS- one, and every COUNT(*)+1 sequence with a
 // real, atomic PostgreSQL sequence — the same upgrade staff numbers
@@ -23,19 +24,93 @@
 // functions per table instead of one parameterised helper, not a
 // stylistic choice.
 
+// ── Permanent Student Identity Number, v3 (Founder directive) ──────────
 // A student's identity_no is their permanent Student Digital Identity
-// Number: SHRS-<YYMMDD registered>-<seq6>, e.g. SHRS-260731-000154.
-// Assigned once and never changed again — unlike admission_no (below),
-// it does not vary if the student changes school, class, or campus.
+// Number: assigned once, never changed again — unlike admission_no
+// (below), it does not vary if the student changes school, class, or
+// campus.
+//
+// The two earlier shapes, SHRS-<YYMMDD>-<seq6> and then
+// SHRS-STU-<YYYY>-NG-<seq6>, are both retired for NEW issuance: each
+// published a date and an unpadded position in the intake queue, so
+// anyone holding two cards could read cohort size and join order off
+// them. Numbers already issued in those shapes stay exactly as issued
+// and remain resolvable (permanence beats format uniformity —
+// regeneration remains an explicit, admin-only bulk action).
+//
+// The new number is 15 digits, nothing else.
+//
+//   [2] institution   71, fixed — distinguishes SHRS from the staff series
+//   [12] record body  a keyed permutation of the identity sequence
+//   [1] check digit   Luhn
+//
+// The body is `(seq * MULT + OFFSET) mod 10^12`. MULT is coprime to 10^12
+// and adding a constant is itself a bijection, so the map as a whole is a
+// BIJECTION: distinct sequence values cannot collide, and the number is
+// fully deterministic and reversible by the institution — the registrar can
+// recover the record from the ID, which a hash would not allow. It is also
+// non-adjacent: consecutive intakes land 324 billion apart, so two cards
+// reveal nothing about order or volume.
+//
+// The OFFSET is not decoration, and the first multiplier was replaced
+// because of what it did without one. A pure `seq * MULT` does not wrap
+// until seq exceeds 10^12/MULT, so for the first thousand-odd students the
+// body is simply a small multiple of the multiplier and inherits its digit
+// structure wholesale. The retired multiplier, 617283945671, sits within a
+// whisker of 5e13/81 — and 1/81 = 0.012345679… — so its small multiples
+// reproduced that expansion: sequence 18 gave 711111110220782 and sequence
+// 20 gave 713456789134204. Across the first hundred students, 47% of the
+// numbers carried a visible run. Adding a large offset removes the
+// small-multiple regime entirely; measured over the first 600 students the
+// rate is 1.33%, against the 1.86% that genuinely random 12-digit numbers
+// hit by chance. scripts/test-student-identity-no.mjs asserts this, because
+// nothing about collisions or check digits could ever have caught it.
+//
+// Surname encoding was considered and declined, per the Founder's own
+// recommendation: mixing a name into the body destroys the bijection and
+// reintroduces the collision risk it was meant to remove, without adding
+// uniqueness the sequence does not already guarantee.
+const STUDENT_ID_INSTITUTION = '71';
+const STUDENT_ID_MULT = 324_453_718_779n;   // coprime to 10^12
+const STUDENT_ID_OFFSET = 118_468_187_279n;
+const STUDENT_ID_MOD = 1_000_000_000_000n;  // 12-digit body
+
+function luhnCheckDigit(digits) {
+  let sum = 0;
+  let dbl = true;                     // rightmost body digit is doubled
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let d = digits.charCodeAt(i) - 48;
+    if (dbl) { d *= 2; if (d > 9) d -= 9; }
+    sum += d;
+    dbl = !dbl;
+  }
+  return String((10 - (sum % 10)) % 10);
+}
+
+export function formatStudentIdentityNo(seq) {
+  const body = String((BigInt(seq) * STUDENT_ID_MULT + STUDENT_ID_OFFSET) % STUDENT_ID_MOD).padStart(12, '0');
+  const stem = STUDENT_ID_INSTITUTION + body;
+  return stem + luhnCheckDigit(stem);
+}
+
+// Validate a number without a database round trip — used by the public
+// verification endpoint to reject typos before querying.
+export function isValidStudentIdentityNo(value) {
+  const v = String(value || '');
+  if (!/^\d{15}$/.test(v)) return false;
+  return luhnCheckDigit(v.slice(0, 14)) === v[14];
+}
+
 export async function ensureStudentIdentityNo(sql, studentId) {
   const existing = await sql`SELECT identity_no, created_at FROM students WHERE id = ${studentId}`;
   const row = existing.rows[0];
   if (!row) return null;
+  // Numbers already issued are never rewritten — a permanent identifier
+  // that changes is not permanent. Existing SHRS-STU-… cards stay valid and
+  // resolvable; only new students receive the 15-digit form.
   if (row.identity_no) return row.identity_no;
-  const dateStamp = formatYYMMDD(row.created_at) || formatYYMMDD(new Date());
   const seqRes = await sql`SELECT nextval('student_identity_seq') AS seq`;
-  const seq = String(seqRes.rows[0].seq).padStart(6, '0');
-  const identityNo = `SHRS-${dateStamp}-${seq}`;
+  const identityNo = formatStudentIdentityNo(seqRes.rows[0].seq);
   await sql`UPDATE students SET identity_no = ${identityNo} WHERE id = ${studentId}`;
   return identityNo;
 }
@@ -71,7 +146,7 @@ export async function regenerateGuardianIdentityNo(sql, guardianId) {
 // rather than permanent, e.g. SHRS-RC-26-000154 (Royal College, 2026
 // admission cohort). SCHOOL is the same four-institution split used
 // sitewide, coded to match this specific number's own directive rather
-// than reusing the staff UNIT codes (which spell Nursery & Primary as
+// than reusing the staff UNIT codes (which spell Nursery and Primary as
 // "NPS", not "NP") — the two numbering families are independent by
 // design. Sequence is scoped per school per admission year, matching
 // the existing COUNT(*)+1 convention already used for certificate and
@@ -80,8 +155,8 @@ export async function regenerateGuardianIdentityNo(sql, guardianId) {
 // for staff/student/guardian numbers.
 const SCHOOL_CODE_BY_INSTITUTION_NAME = {
   'Royal College': 'RC',
-  'Nursery & Primary': 'NP',
-  'Islamic & Arabic Studies': 'IAS',
+  'Nursery and Primary': 'NP',
+  'Islamic and Arabic Studies': 'IAS',
   "Qur'an College": 'QC',
 };
 
@@ -119,9 +194,9 @@ function formatYYMMDD(date) {
 //
 // UNIT   — which of the four schools this staff member's real office/
 //          institution places them in, or a school-wide body:
-//            RC=Royal College, NPS=Nursery & Primary,
-//            IAS=Islamic & Arabic Studies, QC=Qur'an College,
-//            BOT=Board of Trustees (incl. its standing committees),
+//            RC=Royal College, NPS=Nursery and Primary,
+//            IAS=Islamic and Arabic Studies, QC=Qur'an College,
+//            BOT=Board of Governors (incl. its standing committees),
 //            MGT=Management Council, HQ=every other school-wide office
 //          (Executive, Finance, HR, ICT, etc.)
 // OFFICE — a 3-letter code for the staff member's real office (see
@@ -138,6 +213,13 @@ function formatYYMMDD(date) {
 //          (staff_identity_seq — sql/schema.sql), not the previous
 //          COUNT(*)+1 pattern, which had a genuine race condition under
 //          concurrent requests.
+// NOTE: the 'CEO' and 'BOT' values below are stable 3-letter identity-
+// number codes, not display labels — already-issued numbers like
+// SHRS-CEO-000001/SHRS-BOT-000001 depend on them and they are
+// deliberately NOT renamed. The office they represent is now titled
+// "Head of Schools / Administrator" (slug 'executive') and "Board of
+// Governors" (slug 'board-of-trustees') respectively wherever a human
+// sees the name.
 const OFFICE_CODE_BY_SLUG = {
   'executive': 'CEO',
   'registrar': 'REG',
@@ -170,8 +252,8 @@ const OFFICE_CODE_BY_SLUG = {
 
 const UNIT_BY_INSTITUTION_NAME = {
   'Royal College': 'RC',
-  'Nursery & Primary': 'NPS',
-  'Islamic & Arabic Studies': 'IAS',
+  'Nursery and Primary': 'NPS',
+  'Islamic and Arabic Studies': 'IAS',
   "Qur'an College": 'QC',
 };
 
@@ -227,7 +309,7 @@ async function loadStaffIdentityRow(sql, staffId) {
   return res.rows[0] || null;
 }
 
-// Board of Trustees & top executive reserved identity numbers ("BOARD &
+// Board of Governors & top executive reserved identity numbers ("BOARD &
 // EXECUTIVE IDs" in the directive): SHRS-BOT-001 / SHRS-CEO-001 — no date
 // segment, because these are permanently reserved seats, not join-dated
 // staff records. Scoped to their own tiny 3-digit COUNT(*)+1 sequence
@@ -277,8 +359,9 @@ export async function ensureStaffIdentityNo(sql, staffId) {
 // format, overwriting whatever is already stored (including an existing
 // SHRS-format one). Used only by the explicit, admin-triggered bulk
 // migration action (functions/api/portal/admin/staff.js, action
-// "regenerate-identity-numbers") — the Founder & CEO's chosen rollout
-// ("migrate everyone now"), which knowingly breaks every already-issued
+// "regenerate-identity-numbers") — the Founder, Head of Schools &
+// Administrator's chosen rollout ("migrate everyone now"), which
+// knowingly breaks every already-issued
 // QR code/verification link for a re-migrated person. Never called from
 // an ordinary read path. Returns null (no change made) for a record with
 // no date_joined on file.

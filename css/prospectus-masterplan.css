@@ -12,7 +12,7 @@
 
 :root{
   --im-navy:#1B3A5C; --im-navy-deep:#122740; --im-steel:#4A5568;
-  --im-burgundy:#7A2331; --im-burgundy-bright:#9E3A48;
+  --im-burgundy:#8A6B36; --im-burgundy-bright:#C6A15B;
   --im-paper:#F5F3EE; --im-paper-dim:#EDE9DF; --im-white:#FFFFFF;
   --im-ink:#1E2429; --im-ink-soft:rgba(30,36,41,0.62);
   --im-line:rgba(30,36,41,0.14);
@@ -139,6 +139,25 @@ h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5
 .im-spread.dark .im-stats .im-stat-cell{background:#1E3350;}
 .im-spread.dark .im-stats .im-stat-num{color:var(--im-burgundy-bright);}
 .im-spread.dark .im-stats .im-stat-label{color:rgba(245,243,238,0.55);}
+
+/* ---- Institutional Publication Information (imprint) page — a
+   key/value ownership table matching the Governance Charter's own
+   .imprint-table (constitution-print.css) in structure, restyled to
+   this edition's own tokens (IBM Plex Sans throughout) so every
+   flagship publication's ownership page reads as one family while
+   keeping this edition's own visual voice. ---- */
+.im-imprint-table{width:100%; border-collapse:collapse; margin-top:8px;}
+.im-imprint-table th{
+  font-family:'IBM Plex Sans',sans-serif; font-size:7.5pt; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--im-burgundy); text-align:left; vertical-align:top; padding:9px 14px 9px 0; width:2.1in;
+  border-bottom:1px solid var(--im-line); white-space:nowrap;
+}
+.im-imprint-table td{
+  font-family:'IBM Plex Sans',sans-serif; font-size:9.5pt; line-height:1.6; color:var(--im-ink);
+  text-align:left; padding:9px 0; border-bottom:1px solid var(--im-line);
+}
+.im-spread.dark .im-imprint-table th{color:var(--im-burgundy-bright); border-bottom-color:rgba(245,243,238,0.16);}
+.im-spread.dark .im-imprint-table td{color:rgba(245,243,238,0.85); border-bottom-color:rgba(245,243,238,0.16);}
 
 @media print{
   .im-toolbar{display:none;}

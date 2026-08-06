@@ -390,11 +390,11 @@ const STATEMENTS = [
   // the same "admin enters real data on purpose" convention already
   // used for guardians/students, never auto-created by this endpoint.
   `INSERT INTO institutions (name) VALUES
-    ('Nursery & Primary'), ('Royal College'), ('Islamic & Arabic Studies'), ('Qur''an College')
+    ('Nursery and Primary'), ('Royal College'), ('Islamic and Arabic Studies'), ('Qur''an College')
     ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
-    ('EXE', 'CEO / Executive Leadership', 'established', 'All institutions', 'GV-01; Founder/CEO Zakariya Olanrewaju Anofi'),
+    ('EXE', 'Head of Schools / Administrator', 'established', 'All institutions', 'GV-01; Founder, Head of Schools & Chairman of the Board of Governors — Zakariya Olanrewaju Anofi'),
     ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
     ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
     ('VPAC', 'Vice Principal — Academic', 'proposed', 'All institutions — academic-standing sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
@@ -405,7 +405,7 @@ const STATEMENTS = [
     ('FIN', 'Finance Officer', 'proposed', 'All institutions', 'FN-01 establishes the principle; no officer role documented'),
     ('TCH', 'Teacher', 'proposed', 'Own assigned classes/subjects only', 'Institution-agnostic'),
     ('MUH', 'Muhaffiz / Muhaffizah', 'proposed', 'Own assigned Hifz students only', 'IQ-01, IQ-02'),
-    ('ARB', 'Islamic & Arabic Studies Instructor', 'proposed', 'Own assigned classes, School of Islamic & Arabic Studies', 'Mirrors TCH scope for that division'),
+    ('ARB', 'Islamic and Arabic Studies Instructor', 'proposed', 'Own assigned classes, Sultan Hanafi School of Islamic and Arabic Studies', 'Mirrors TCH scope for that division'),
     ('QC-OFF', 'Qur''an College Officer', 'proposed', 'Qur''an College institution-wide', 'Institution-level oversight above individual Muhaffiz assignments'),
     ('SA', 'Student Affairs Officer', 'proposed', 'All institutions', 'SD-05/06/07 Missing/Partial — role and governing policy should arrive together'),
     ('BRD', 'Boarding Officer', 'proposed', 'Boarding students only', 'SD-04 published; no digital officer role yet'),
@@ -467,12 +467,63 @@ const STATEMENTS = [
     created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_office_documents_office ON office_documents(office_id)`,
+
+  // Governance Amendment 2026 — Board of Trustees renamed Board of
+  // Governors, the CEO office abolished in favour of Head of Schools /
+  // Administrator, and the four school-principal offices retitled. These
+  // are corrective UPDATEs keyed by the stable `slug` column, run BEFORE
+  // the `offices` INSERT below so that an already-seeded row (still
+  // carrying its old `name`) gets its display name fixed first — the
+  // INSERT's `ON CONFLICT (name)` only matches on the CURRENT name, and
+  // without this pre-correction a renamed tuple would attempt a fresh
+  // INSERT that collides with the old row's slug on the unique
+  // `idx_offices_slug` index instead of updating it. Slugs, role codes,
+  // and identity-number prefixes (e.g. `board-of-trustees`, `executive`,
+  // `raees`, `mudeer`, `EXE`, `BOT`, `CEO`) are NOT touched here — only
+  // the human-readable `name`/`description` columns change.
+  `UPDATE offices SET name = 'Board of Governors'
+    WHERE slug = 'board-of-trustees' AND name <> 'Board of Governors'`,
+  `UPDATE offices SET name = 'Head of Schools / Administrator',
+      description = 'The Founder, Head of Schools & Administrator''s office — institutional oversight, strategic direction, and final executive decision-making across all institutions.'
+    WHERE slug = 'executive' AND name <> 'Head of Schools / Administrator'`,
+  `UPDATE offices SET name = 'Head Teacher — Sultan Hanafi Nursery and Primary School',
+      description = 'Leadership of Sultan Hanafi Nursery and Primary School — day-to-day academic and pastoral operations.'
+    WHERE slug = 'head-teacher' AND name <> 'Head Teacher — Sultan Hanafi Nursery and Primary School'`,
+  `UPDATE offices SET name = 'Principal — Sultan Hanafi Royal College',
+      description = 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'
+    WHERE slug = 'principal-royal-college' AND name <> 'Principal — Sultan Hanafi Royal College'`,
+  `UPDATE offices SET name = 'Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies',
+      description = 'Head of Institution, Sultan Hanafi School of Islamic and Arabic Studies — Principal is the official title. Arabic language and Islamic studies programme oversight.'
+    WHERE slug = 'raees' AND name <> 'Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies'`,
+  `UPDATE offices SET name = 'Office of the Principal, Sultan Hanafi Qur''an College',
+      description = 'Head of Institution, Sultan Hanafi Qur''an College — Principal is the official title. Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'
+    WHERE slug = 'mudeer' AND name <> 'Office of the Principal, Sultan Hanafi Qur''an College'`,
+  // Renamed appointment-title seats under Management Council (vacant,
+  // no staff assigned) — corrected the same way so re-running this seed
+  // doesn't leave a duplicate vacant seat under the old title sitting
+  // beside a new one.
+  `UPDATE office_appointments SET appointment_title = 'Founder & Head of Schools'
+    WHERE appointment_title = 'Founder & CEO'
+      AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
+  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Royal College'
+    WHERE appointment_title = 'Principal, Royal College'
+      AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
+  `UPDATE office_appointments SET appointment_title = 'Head Teacher, Sultan Hanafi Nursery and Primary School'
+    WHERE appointment_title = 'Head Teacher, Nursery and Primary'
+      AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
+  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi School of Islamic and Arabic Studies'
+    WHERE appointment_title = 'Ra''ees'
+      AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
+  `UPDATE office_appointments SET appointment_title = 'Principal, Sultan Hanafi Qur''an College'
+    WHERE appointment_title = 'Mudeer'
+      AND office_id = (SELECT id FROM offices WHERE slug = 'management-council')`,
+
   `INSERT INTO offices (name, office_type, layer, slug, description) VALUES
-    ('Board of Trustees', 'governance', 'governance', 'board-of-trustees', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
+    ('Board of Governors', 'governance', 'governance', 'board-of-trustees', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
     ('Registrar''s Office', 'academic', 'academic', 'registrar', 'Owns admissions verification, enrolment, results, transcripts, and certificates across all four institutions (AC-02, PA-05).'),
     ('Finance Office', 'support', 'operational', 'finance', 'Owns fee records across all institutions (FN-01) — no write workflow built yet pending FN-03/04/05.'),
     ('ICT Office', 'support', 'operational', 'digital-services', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).'),
-    ('Executive', 'executive', 'governance', 'executive', 'The Founder & Chief Executive Officer''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
+    ('Head of Schools / Administrator', 'executive', 'governance', 'executive', 'The Founder, Head of Schools & Administrator''s office — institutional oversight, strategic direction, and final executive decision-making across all institutions.'),
     ('Management Council', 'executive', 'governance', 'management-council', 'The senior leadership team drawn from each institution and the central offices, convened for cross-institutional coordination. Composition not yet formally published.'),
     ('Strategic Planning', 'governance', 'governance', 'strategic-planning', 'One of the six Governance Headquarters environments — long-range institutional planning and the Strategic Plan''s custodian office. Composition not yet formally published.'),
     ('Quality Assurance', 'governance', 'governance', 'quality-assurance', 'One of the six Governance Headquarters environments — academic and operational standards oversight across all four institutions. Composition not yet formally published.'),
@@ -481,10 +532,11 @@ const STATEMENTS = [
     ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
     ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
     ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
-    ('Head Teacher — Nursery & Primary', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Nursery & Primary School — day-to-day academic and pastoral operations.'),
-    ('Principal — Royal College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'),
-    ('Office of the Ra''ees', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi School of Islamic & Arabic Studies — Ra''ees is the official title, officially adopted by the Founder & CEO in place of "Principal". Arabic language and Islamic studies programme oversight.'),
-    ('Office of the Mudeer', 'academic', 'school_leadership', 'mudeer', 'Head of Institution, Sultan Hanafi Qur''an College — Mudeer is the official title, officially adopted by the Founder & CEO in place of "Principal". Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
+    ('Head Teacher — Sultan Hanafi Nursery and Primary School', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Nursery and Primary School — day-to-day academic and pastoral operations.'),
+    ('Principal — Sultan Hanafi Royal College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'),
+    ('Office of the Principal, Sultan Hanafi School of Islamic and Arabic Studies', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi School of Islamic and Arabic Studies — Principal is the official title. Arabic language and Islamic studies programme oversight.'),
+    ('Office of the Principal, Sultan Hanafi Qur''an College', 'academic', 'school_leadership', 'mudeer', 'Head of Institution, Sultan Hanafi Qur''an College — Principal is the official title. Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
+    ('Office of the Principal, Sultan Hanafi Online & Distance Learning School', 'academic', 'school_leadership', 'online-distance-learning', 'Head of Institution, Sultan Hanafi Online & Distance Learning School — the institution''s fifth school, established under the amended constitution. Head office currently vacant.'),
     ('Human Resources', 'support', 'operational', 'hr', 'Recruitment, staff records, leave, and performance administration. Explicitly out of scope for the current Staff Identity system (an organisational directory, not a personnel/payroll file) — this office exists as a directory entry pending that system''s build.'),
     ('Student Affairs', 'support', 'operational', 'student-affairs', 'Student welfare, leadership development, clubs, and pastoral-care coordination across all institutions.'),
     ('Communications', 'support', 'operational', 'communications', 'Institutional news, publications, press relations, and brand oversight — currently a shared function across the Registrar, Principal, and Executive offices pending a dedicated appointment.'),
@@ -535,7 +587,7 @@ const STATEMENTS = [
   // existed) — a real action-tracking register, so a governance
   // decision has a traceable owner and due date rather than living
   // only as prose inside minutes_text/summary_text. Generic per-office,
-  // not Board-of-Trustees-only. "Overdue" is computed at query time
+  // not Board-of-Governors-only. "Overdue" is computed at query time
   // from due_date — no cron job exists in this project.
   `CREATE TABLE IF NOT EXISTS office_action_items (
     id                  SERIAL PRIMARY KEY,
@@ -556,11 +608,11 @@ const STATEMENTS = [
   `INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
     SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
     FROM (VALUES
-      ('Finance Committee', 'committee-finance', 'Standing committee of the Board of Trustees for budget oversight, financial controls, and audit-readiness review.'),
-      ('Governance Committee', 'committee-governance', 'Standing committee of the Board of Trustees for constitution, policy, and board-conduct oversight.'),
-      ('Audit Committee', 'committee-audit', 'Standing committee of the Board of Trustees for internal controls, risk, and independent review of institutional accounts.'),
-      ('Academic Excellence Committee', 'committee-academic-excellence', 'Standing committee of the Board of Trustees for curriculum standards, academic outcomes, and teaching-quality oversight.'),
-      ('Development Committee', 'committee-development', 'Standing committee of the Board of Trustees for institutional growth, fundraising strategy, and capital planning.')
+      ('Finance Committee', 'committee-finance', 'Standing committee of the Board of Governors for budget oversight, financial controls, and audit-readiness review.'),
+      ('Governance Committee', 'committee-governance', 'Standing committee of the Board of Governors for constitution, policy, and board-conduct oversight.'),
+      ('Audit Committee', 'committee-audit', 'Standing committee of the Board of Governors for internal controls, risk, and independent review of institutional accounts.'),
+      ('Academic Excellence Committee', 'committee-academic-excellence', 'Standing committee of the Board of Governors for curriculum standards, academic outcomes, and teaching-quality oversight.'),
+      ('Development Committee', 'committee-development', 'Standing committee of the Board of Governors for institutional growth, fundraising strategy, and capital planning.')
     ) AS v(name, slug, description)
     CROSS JOIN (SELECT id FROM offices WHERE slug = 'board-of-trustees') AS b(id)
     ON CONFLICT (name) DO UPDATE SET
@@ -581,15 +633,70 @@ const STATEMENTS = [
       SELECT 1 FROM office_appointments oa
       WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
     )`,
+
+  // Governance Amendment 2026 — new Board-level standing committee
+  // (Educational Technical Committee), seeded the same way as the five
+  // pre-existing Board committees above. ("Finance Committee" is already
+  // seeded above as a Board committee — not duplicated here.)
+  `INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
+    SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
+    FROM (VALUES
+      ('Educational Technical Committee', 'committee-educational-technical', 'Standing committee of the Board of Governors for technical and pedagogical standards guiding curriculum technology and assessment infrastructure across all institutions.')
+    ) AS v(name, slug, description)
+    CROSS JOIN (SELECT id FROM offices WHERE slug = 'board-of-trustees') AS b(id)
+    ON CONFLICT (name) DO UPDATE SET
+      office_kind      = EXCLUDED.office_kind,
+      parent_office_id = EXCLUDED.parent_office_id,
+      description      = EXCLUDED.description`,
+  `INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
+    SELECT o.id, seat.title, seat.is_primary, 'Pending Appointment'
+    FROM offices o
+    JOIN (VALUES
+      ('committee-educational-technical', 'Chair', true), ('committee-educational-technical', 'Member', false), ('committee-educational-technical', 'Member', false)
+    ) AS seat(office_slug, title, is_primary) ON seat.office_slug = o.slug
+    WHERE NOT EXISTS (
+      SELECT 1 FROM office_appointments oa
+      WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
+    )`,
+
+  // Governance Amendment 2026 — new Management-level standing committees
+  // (Da'wah, Academic, Sports), seeded as children of Management Council
+  // the same way the Board committees above are seeded as children of
+  // the Board of Governors.
+  `INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
+    SELECT v.name, 'executive', 'committee', 'governance', v.slug, m.id, v.description
+    FROM (VALUES
+      ('Da''wah Committee', 'committee-dawah', 'Standing committee of the Management Team for outreach, Islamic-education programming, and community engagement across all institutions.'),
+      ('Academic Committee', 'committee-academic', 'Standing committee of the Management Team for cross-institutional academic coordination, curriculum delivery, and teaching standards.'),
+      ('Sports Committee', 'committee-sports', 'Standing committee of the Management Team for sports programming, inter-house competitions, and physical-education coordination across all institutions.')
+    ) AS v(name, slug, description)
+    CROSS JOIN (SELECT id FROM offices WHERE slug = 'management-council') AS m(id)
+    ON CONFLICT (name) DO UPDATE SET
+      office_kind      = EXCLUDED.office_kind,
+      parent_office_id = EXCLUDED.parent_office_id,
+      description      = EXCLUDED.description`,
+  `INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
+    SELECT o.id, seat.title, seat.is_primary, 'Pending Appointment'
+    FROM offices o
+    JOIN (VALUES
+      ('committee-dawah', 'Chair', true), ('committee-dawah', 'Member', false), ('committee-dawah', 'Member', false),
+      ('committee-academic', 'Chair', true), ('committee-academic', 'Member', false), ('committee-academic', 'Member', false),
+      ('committee-sports', 'Chair', true), ('committee-sports', 'Member', false), ('committee-sports', 'Member', false)
+    ) AS seat(office_slug, title, is_primary) ON seat.office_slug = o.slug
+    WHERE NOT EXISTS (
+      SELECT 1 FROM office_appointments oa
+      WHERE oa.office_id = o.id AND oa.appointment_title = seat.title AND oa.ended_at IS NULL
+    )`,
+
   `INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
     SELECT o.id, seat.title, false, 'Pending Appointment'
     FROM offices o
     JOIN (VALUES
-      ('management-council', 'Founder & CEO'), ('management-council', 'Registrar'),
+      ('management-council', 'Founder & Head of Schools'), ('management-council', 'Registrar'),
       ('management-council', 'Finance Director'), ('management-council', 'HR Director'),
       ('management-council', 'Communications Director'), ('management-council', 'Student Affairs Director'),
-      ('management-council', 'Principal, Royal College'), ('management-council', 'Head Teacher, Nursery & Primary'),
-      ('management-council', 'Ra''ees'), ('management-council', 'Mudeer')
+      ('management-council', 'Principal, Sultan Hanafi Royal College'), ('management-council', 'Head Teacher, Sultan Hanafi Nursery and Primary School'),
+      ('management-council', 'Principal, Sultan Hanafi School of Islamic and Arabic Studies'), ('management-council', 'Principal, Sultan Hanafi Qur''an College')
     ) AS seat(office_slug, title) ON seat.office_slug = o.slug
     WHERE NOT EXISTS (
       SELECT 1 FROM office_appointments oa
@@ -1564,7 +1671,7 @@ const STATEMENTS = [
   `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
     WHERE slug = 'management-council'`,
   `UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
-    WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher')`,
+    WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher', 'online-distance-learning')`,
 
   // Institutional Messaging — see sql/schema.sql for the full
   // commentary. Real threaded correspondence between a guardian and a
@@ -1622,6 +1729,54 @@ const STATEMENTS = [
   // as one JSONB column, shaped per document_type, rather than three
   // narrow columns only ever populated for one type each.
   `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS content_data JSONB`,
+
+  // Academic Stage Certificate System (Certificate Generation
+  // Directive, 2026-08-05) — mirrors sql/schema.sql exactly; see that
+  // file for the identifier-architecture rationale (SHRS-STU-YYYY-NG-
+  // seq6 permanent Student IDs; SHRS-CERT-PROG-YYYY-seq6-SUFFIX5
+  // serials with an HMAC-derived anti-forgery suffix).
+  `CREATE SEQUENCE IF NOT EXISTS stage_certificate_serial_seq START WITH 1`,
+  `CREATE TABLE IF NOT EXISTS stage_certificate_batches (
+    id                   SERIAL PRIMARY KEY,
+    batch_no             TEXT NOT NULL UNIQUE,
+    programme_code       TEXT NOT NULL,
+    academic_year        TEXT NOT NULL,
+    issued_at            DATE NOT NULL,
+    description          TEXT,
+    created_by_staff_id  INTEGER REFERENCES staff(id),
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS stage_certificates (
+    id                    SERIAL PRIMARY KEY,
+    serial_no             TEXT NOT NULL UNIQUE,
+    batch_id              INTEGER REFERENCES stage_certificate_batches(id),
+    student_id            INTEGER REFERENCES students(id) ON DELETE SET NULL,
+    student_identity_no   TEXT,
+    student_full_name     TEXT NOT NULL,
+    student_full_name_ar  TEXT,
+    student_sex           TEXT,
+    programme_code        TEXT NOT NULL,
+    programme_label_en    TEXT NOT NULL,
+    programme_label_ar    TEXT,
+    institution_name      TEXT NOT NULL,
+    academic_year         TEXT NOT NULL,
+    grade_en              TEXT,
+    grade_ar              TEXT,
+    place_en              TEXT,
+    place_ar              TEXT,
+    issued_at             DATE NOT NULL,
+    issued_at_hijri       TEXT,
+    issued_at_hijri_ar    TEXT,
+    content_hash          TEXT NOT NULL,
+    issued_by_staff_id    INTEGER REFERENCES staff(id),
+    revoked_at            TIMESTAMPTZ,
+    revocation_note       TEXT,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id)`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT`,
+  `ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT`,
 ];
 
 async function handle({ request, env }) {
@@ -1708,10 +1863,10 @@ async function handle({ request, env }) {
         await sql`INSERT INTO guardian_student (guardian_id, student_id) VALUES (${guardianId}, ${qStudentId})`;
 
         // Dual enrolment demo: this same student is also enrolled in
-        // Islamic & Arabic Studies, alongside their primary Qur'an
+        // Islamic and Arabic Studies, alongside their primary Qur'an
         // College programme — exactly the "belongs to more than one
         // programme at once" case the Student Portal needs to support.
-        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic & Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
+        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic and Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${arCls.rows[0].id}, false)`;
 
         const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
@@ -1778,7 +1933,7 @@ async function handle({ request, env }) {
       const sampleProducts = [
         ['textbooks', 'Nigerian Primary Mathematics — Basic 4', 'Core mathematics textbook aligned with the Nigerian primary curriculum.', 3500],
         ['exercise_books', 'A5 Exercise Book (Pack of 5)', '40-leaf ruled exercise books, school-standard size.', 1500],
-        ['uniforms', 'Royal College Uniform Set (Junior)', 'Shirt, trousers/pinafore, and tie in the school colours.', 15000],
+        ['uniforms', 'Sultan Hanafi Royal College Uniform Set (Junior)', 'Shirt, trousers/pinafore, and tie in the school colours.', 15000],
         ['bags', 'SHRS Backpack (Standard)', 'Durable school backpack with the SHRS crest.', 8000],
         ['stationery', 'Geometry Set', 'Ruler, compass, protractor, and set squares in a case.', 1200],
         ['quran_materials', "Tajweed Mushaf — Pocket Size", 'Uthmani-script Mushaf with colour-coded tajweed rules.', 4500],

@@ -24,9 +24,9 @@ const DEFAULT_MODEL = 'claude-sonnet-5';
 // so and point to a real contact channel rather than invent an answer.
 const SITE_FACTS = `
 SCHOOL: Sultan Hanafi Royal Schools, Ikorodu, Lagos State, Nigeria.
-A hybrid Islamic-and-secular school conglomerate of four institutions under one board and one "CLEVER" standard:
-1. Nursery & Primary School — ages 2-10, day. Nigerian curriculum blended with Islamic teachings. Head Teacher: Mrs. Kareemat Abdurazaq (B.Ed, NCE).
-2. Royal College — ages 10+, day, established 2021. Nigerian National Curriculum across seven departments (Languages; Mathematics & ICT; Humanities; Science & Technology; Commerce & Management; Arabic; Islamic Sciences), plus entrepreneurial skills, financial intelligence, leadership, technology, personal development, career planning. Led by Principal Dr. Adegoke Musa Olatunji (PhD, M.Ed Health Edu., B.Sc. Ed. Human Kinetics, NCE, MTRCN).
+A hybrid Islamic-and-secular school conglomerate of five institutions under one Board of Governors and one "CLEVER" standard:
+1. Sultan Hanafi Nursery and Primary School — ages 2-10, day. Nigerian curriculum blended with Islamic teachings. Head Teacher: Mrs. Kareemat Abdurazaq (B.Ed, NCE).
+2. Sultan Hanafi Royal College — ages 10+, day, established 2021. Nigerian National Curriculum across seven departments (Languages; Mathematics & ICT; Humanities; Science & Technology; Commerce & Management; Arabic; Islamic Sciences), plus entrepreneurial skills, financial intelligence, leadership, technology, personal development, career planning. Led by Principal Dr. Adegoke Musa Olatunji (PhD, M.Ed Health Edu., B.Sc. Ed. Human Kinetics, NCE, MTRCN).
    - Languages dept: English, Yoruba, French (future), Hausa (future), Chinese (future).
    - Mathematics & ICT: Mathematics, Further Mathematics, Computer Studies, Data Processing, Programming/Coding.
    - Humanities: Geography, History, Government, Civic Education, Art, Literature in English, Social Studies.
@@ -34,16 +34,17 @@ A hybrid Islamic-and-secular school conglomerate of four institutions under one 
    - Commerce & Management: Financial Accounting, Commerce, Economics, Bookkeeping, Marketing, Business Studies.
    - Arabic dept: Arabic, Nahwu & Sarfu (Grammar), Aruud (Poetry), Balaghah (Rhetoric), Al-Adab-Al Arabiy (Literature), Al-Inshaw (Composition).
    - Islamic Sciences dept: Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat.
-3. School of Islamic & Arabic Studies — all ages. Saudi Arabian curriculum and Saudi-approved textbooks, open to the wider Muslim Ummah (attendance does NOT require the 12-step admission process). Led by Principal Shaykh Abubakr Solah. Weekday classes Monday–Wednesday 2:00pm–6:00pm; weekend classes Saturday & Sunday 9:00am–3:00pm.
-4. Qur'an College — day & boarding, 24–36 month programme. Full Qur'an memorisation plus the science of the Qur'an, Arabiyyah language, and Islamic knowledge, culminating in Ijazaat (licences/certifications). Led by Principal Shaykh Ahmad Ibrahim (B.Sc. Qur'an Sciences, B.A. Islamic & Arabic Studies). Most students board on campus for the duration.
-All four institutions share sports & games, debate, and Islamic arts & culture as extra-curricular activities.
+3. Sultan Hanafi School of Islamic and Arabic Studies — all ages. Saudi Arabian curriculum and Saudi-approved textbooks, open to the wider Muslim Ummah (attendance does NOT require the 12-step admission process). Led by Principal Shaykh Abubakr Solah. Weekday classes Monday–Wednesday 2:00pm–6:00pm; weekend classes Saturday & Sunday 9:00am–3:00pm.
+4. Qur'an College — day & boarding, 24–36 month programme. Full Qur'an memorisation plus the science of the Qur'an, Arabiyyah language, and Islamic knowledge, culminating in Ijazaat (licences/certifications). Led by Principal Imam Ahmad Sulaimiy (B.Sc. Qur'an Sciences, B.A. Islamic and Arabic Studies). Most students board on campus for the duration.
+5. Sultan Hanafi Online & Distance Learning School — the institution's newest school, established under the amended constitution. Head office currently vacant; no programme details published yet.
+All five institutions share sports & games, debate, and Islamic arts & culture as extra-curricular activities.
 
-GOVERNANCE: governed by a board of trustees; led by an executive management team from finance, education, and Islamic scholarship.
-Board Members: Zakariya Olanrewaju Anofi (BSc, MSc, FCA, FCCA); Mr. Lukman Anofi (BSc, MBA, MSc, CPA, FCCA); Mrs. Lasisi-Ahmed Olayinka Idayat (B.Ed, M.Ed); Dr. Ismail Seriki.
-Executive Management: Zakariya Olanrewaju Anofi — Chief Executive Officer; Dr. Adegoke Musa Olatunji — Principal, Royal College; Shaykh Ahmad Ibrahim — Principal, Qur'an College; Shaykh Abubakr Solah — Principal, School of Islamic & Arabic Studies; Mrs. Anofi-Badmus Fatimat Omolola (HND Accounting, PGDE) — VP Administration, Royal College; Mrs. Anofi-Abdulkareem Mariam Tope (B.Sc. Microbiology, PGDE) — Registrar, Royal College; Mrs. Kareemat Abdurazaq (B.Ed, NCE) — Head Teacher, Nursery & Primary.
+GOVERNANCE: governed by a Board of Governors; led by a Management Team from finance, education, and Islamic scholarship. There is no separate CEO office — the Founder holds the offices of Chairman, Board of Governors, and Head of Schools / Administrator.
+Board Members: Zakariya Olanrewaju Anofi — Chairman (BSc, MSc, FCA, FCCA); Mr. Lukman Anofi (BSc, MBA, MSc, CPA, FCCA); Mrs. Lasisi-Ahmed Olayinka Idayat (B.Ed, M.Ed); Dr. Ismail Seriki.
+Management Team: Zakariya Olanrewaju Anofi — Head of Schools / Administrator; Dr. Adegoke Musa Olatunji — Principal, Sultan Hanafi Royal College; Imam Ahmad Sulaimiy — Principal, Qur'an College; Shaykh Abubakr Solah — Principal, Sultan Hanafi School of Islamic and Arabic Studies; Mrs. Anofi-Badmus Fatimat Omolola (HND Accounting, PGDE) — VP Administration, Sultan Hanafi Royal College; Mrs. Anofi-Abdulkareem Mariam Tope (B.Sc. Microbiology, PGDE) — Registrar, Sultan Hanafi Royal College; Mrs. Kareemat Abdurazaq (B.Ed, NCE) — Head Teacher, Sultan Hanafi Nursery and Primary School.
 Key Staff: Mr. Oladele Abdulwasiu Adebayo — Head, Research & Development; Mr. Yusuf Shola Monsuru — HoD English; Mr. Afolabi Morufu Olalekan — HoD Commerce & Management; Mrs. Nimota Lamidi-Okoh — HoD Mathematics; Mr. Oguntade Adebola Aliu — ICT Head; Mr. Kassim Jamal Ayopo — HoD Science.
 
-DIRECTOR: Zakariya Olanrewaju Anofi — B.Sc. Applied Accounting (Oxford Brookes University), M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University), FCCA (UK), FCA (ICAN), Doctoral Candidate at Edgewood University, Madison, Wisconsin. Over two decades of experience in banking, insurance, oil & gas, and consulting. Schools are open to Muslims and non-Muslims, males and females.
+FOUNDER: Zakariya Olanrewaju Anofi — Chairman, Board of Governors and Head of Schools / Administrator. B.Sc. Applied Accounting (Oxford Brookes University), M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University), FCCA (UK), FCA (ICAN), Doctoral Candidate at Edgewood University, Madison, Wisconsin. Over two decades of experience in banking, insurance, oil & gas, and consulting. Schools are open to Muslims and non-Muslims, males and females.
 
 BOARDING: home-like boarding for College & Qur'an-memorisation students ages 9-16. Full Boarding (Mon-Sun) and Half Boarding (Mon-Fri); other arrangements by family schedule/budget. Includes after-class Islamic lectures and post-Salah admonitions.
 
@@ -55,7 +56,7 @@ FACILITIES: College Hall, School Library, Biology Laboratory, ICT Room, Chemistr
 
 SULTAN ZAKARIYA HANAFI FOUNDATION: a non-profit, non-political organisation (Incorporated Trustees of Sultan Zakariya Hanafi Foundation), founded by Sultan Zakariya Olanrewaju Anofi and Mallam Lukman Ayinla Anofi. Work: literacy promotion, Islamic awareness, masjid construction support, educational support, medical support, economic empowerment for micro/small businesses. Open to aid from individuals, organisations, aid agencies, NGOs. Contact: +234 705 072 3864, Zakbinanifa@yahoo.com.
 
-ASSESSMENT POLICY: prepared by VP Administration, reviewed by Principal, approved by CEO, annual review. Forms: Diagnostic, Formative, Summative. Techniques: oral questions, classwork, assignments, quizzes, projects, tests (POP/CBT), exams (POP/CBT). Report cards issued end of every term; CA score 40 marks + Examination score 60 marks = Total 100.
+ASSESSMENT POLICY: prepared by VP Administration, reviewed by Principal, approved by the Head of Schools / Administrator, annual review. Forms: Diagnostic, Formative, Summative. Techniques: oral questions, classwork, assignments, quizzes, projects, tests (POP/CBT), exams (POP/CBT). Report cards issued end of every term; CA score 40 marks + Examination score 60 marks = Total 100.
 
 CONTACT: 15, Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road, Ikorodu, Lagos State.
 General enquiries: info@shroyalschools.com. Principal's Office: principal@shrschools.ng.
@@ -85,11 +86,11 @@ const OFFICE_PROFILES = {
   },
   academic: {
     label: 'Academic Office',
-    focus: 'You are currently framed as the Academic Office. Lead with curriculum structure (departments within Royal College, the Nursery & Primary approach, assessment policy — CA 40 + Exam 60 = 100), and general academic/tutoring help.',
+    focus: 'You are currently framed as the Academic Office. Lead with curriculum structure (departments within Sultan Hanafi Royal College, the Sultan Hanafi Nursery and Primary School approach, assessment policy — CA 40 + Exam 60 = 100), and general academic/tutoring help.',
   },
   quran: {
     label: "Qur'an College Office",
-    focus: "You are currently framed as the Qur'an College Office. Lead with the Qur'an College's 24-36 month day & boarding programme: full Qur'an memorisation, Qur'anic sciences, Arabiyyah, and the Ijazaat it culminates in. Principal: Shaykh Ahmad Ibrahim.",
+    focus: "You are currently framed as the Qur'an College Office. Lead with the Qur'an College's 24-36 month day & boarding programme: full Qur'an memorisation, Qur'anic sciences, Arabiyyah, and the Ijazaat it culminates in. Principal: Imam Ahmad Sulaimiy.",
   },
 };
 

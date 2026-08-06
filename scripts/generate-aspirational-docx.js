@@ -148,6 +148,24 @@ function feature(title, desc, opts = {}) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .lx-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4D5B0' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: LABEL_FONT, size: 14, color: BRONZE, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 21, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -182,7 +200,33 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. OPENING STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Luxury Aspirational Edition'],
+    ['Document ID', 'SHRS-PUB-ASPIR-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. OPENING STATEMENT ============
 {
   const B = [];
   B.push(eyebrow('To Every Parent Who Believes', { dark: true }));
@@ -193,16 +237,16 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 1400, bottom: 1400, left: 1400, right: 1400 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('The Journey, Chapter by Chapter'));
   const toc = [
-    ['A Vision for Your Child', '04'], ['The Making of a Leader', '05'], ['Character by Design', '06'],
-    ["The Scholar's Journey", '07'], ["The Scholar's Journey, Continued", '08'], ['Portraits of Distinction', '09'],
-    ["A Parent's Aspiration", '10'], ['The Four Pathways', '11'], ['A Campus Built for Becoming', '12'],
-    ['Where Character Meets Craft', '13'], ['Beyond Graduation', '14'], ['Begin Their Story', '15'],
+    ['A Vision for Your Child', '05'], ['The Making of a Leader', '06'], ['Character by Design', '07'],
+    ["The Scholar's Journey", '08'], ["The Scholar's Journey, Continued", '09'], ['Portraits of Distinction', '10'],
+    ["A Parent's Aspiration", '11'], ['The Five Pathways', '12'], ['A Campus Built for Becoming', '13'],
+    ['Where Character Meets Craft', '14'], ['Beyond Graduation', '15'], ['Begin Their Story', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
     children: [new TextRun({ text: t + '   ', font: BODY_FONT, size: 21, color: INK }), new TextRun({ text: p, font: HEAD_FONT, size: 21, color: BRONZE, bold: true })] })));
@@ -211,18 +255,19 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. A VISION FOR YOUR CHILD ============
+// ============ 05. A VISION FOR YOUR CHILD ============
 {
   const B = [];
   B.push(eyebrow('A Vision for Your Child'));
-  B.push(h1('Who They Are Called to Become'));
+  B.push(h1('What We See When We See a Student'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 170)] }));
-  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Sultan Zakariya Olanrewaju Hanafi, PhD · Founder & Chief Executive Officer').forEach(p => B.push(p));
-  B.push(body('This edition follows that journey in the words of the people living it — students memorising Qur’an one Juz’ at a time, parents watching character take shape at home, and teachers naming the leadership traits they see forming.'));
+  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
+  B.push(body('We do not see a child arriving at Sultan Hanafi as a blank page. We see a future scholar, a future leader, a future Hafiz — someone already carrying the raw material of who they are called to become, waiting for the right formation to draw it out.'));
+  B.push(body('That is the conviction behind every decision this institution makes: from the teachers we recruit, to the framework we mentor by, to the standard we hold every child to, regardless of where they started.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. THE MAKING OF A LEADER ============
+// ============ 06. THE MAKING OF A LEADER ============
 {
   const B = [];
   B.push(eyebrow('The Making of a Leader'));
@@ -233,20 +278,21 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. CHARACTER BY DESIGN ============
+// ============ 07. CHARACTER BY DESIGN ============
 {
   const B = [];
   B.push(eyebrow('Character by Design'));
-  B.push(h1('Three Tiers, One Standard'));
-  feature('Student Representatives', 'The most senior student voice — elected, mentored, accountable to the Founder & CEO.').forEach(p => B.push(p));
-  feature('School Prefects', 'Responsible for daily conduct and discipline across the student body.').forEach(p => B.push(p));
-  feature('Class Captains', 'The first rung of leadership — accountability practised at the smallest scale.').forEach(p => B.push(p));
-  pullquote('The ALA Endowment Prize, established in 2024 by Mr Lukman Anofi, rewards three students each term for embodying the CLEVER standard.', null).forEach(p => B.push(p));
+  B.push(h1('A Pathway, Not a Title'));
+  feature('Student Representatives', 'The formal link between the student body and school management — a first taste of real responsibility.').forEach(p => B.push(p));
+  feature('School Prefects', 'Head Boy, Head Girl, Senior Prefects, and House Prefects — a structured pathway across the Royal College.').forEach(p => B.push(p));
+  feature('Class Captains', 'Peer accountability, closest to the daily life of the classroom.').forEach(p => B.push(p));
+  feature('Student Clubs', 'The broadest tier of the leadership pathway — voluntary, interest-led groups open to every pupil.').forEach(p => B.push(p));
+  pullquote('The ALA Endowment Prize is awarded to the top three academic performers in each class every term.', 'Established 2024 by Mr Lukman Anofi, Board Member').forEach(p => B.push(p));
   B.push(statQuad([['2024', 'ALA Prize Established'], ['3', 'Tiers of Leadership'], ['Termly', 'Prize Cycle'], ['6', 'CLEVER Traits Assessed']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. THE SCHOLAR'S JOURNEY ============
+// ============ 08. THE SCHOLAR'S JOURNEY ============
 {
   const B = [];
   B.push(eyebrow("The Scholar's Journey", { dark: true }));
@@ -258,12 +304,12 @@ sections[0].children.push(pageBreak());
     ] })] });
   B.push(gridRow);
   B.push(new Paragraph({ spacing: { before: 160 } }));
-  B.push(body('The Qur’an College’s Hifz Journey moves a student through five formal stages, from enrolment to a certified Ijazah — each stage assessed by a Muhaffiz before the next begins.', { dark: true }));
+  B.push(body('A full-immersion 24–36 month programme for students aged nine to sixteen — complete memorisation of the Noble Qur’an, mastery of Tajwid, and the Sciences of the Qur’an, culminating in a certified Ijazah.', { dark: true }));
   B.push(statQuad([['24–36', 'Months, Full Programme'], ['30', "Juz' to Memorise"], ['2024', 'Ramadan Competition Since'], ['Ijazah', 'Certified Outcome']], { dark: true }));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 08. THE SCHOLAR'S JOURNEY, CONTINUED ============
+// ============ 09. THE SCHOLAR'S JOURNEY, CONTINUED ============
 {
   const B = [];
   B.push(eyebrow("The Scholar's Journey, Continued"));
@@ -274,7 +320,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. PORTRAITS OF DISTINCTION ============
+// ============ 10. PORTRAITS OF DISTINCTION ============
 {
   const B = [];
   B.push(eyebrow('Portraits of Distinction'));
@@ -293,27 +339,27 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. A PARENT'S ASPIRATION ============
+// ============ 11. A PARENT'S ASPIRATION ============
 {
   const B = [];
   B.push(eyebrow("A Parent's Aspiration", { dark: true }));
   B.push(h1('Told Best by Those Who Chose Us', { dark: true }));
-  pullquote('The calibre of teachers here is outstanding — skilled, certified, professional educators genuinely invested in each child’s future.', 'Mr Waliy Ojewumi · Engineer · Parent Since 2018', { dark: true }).forEach(p => B.push(p));
   B.push(rosette());
   pullquote('One thing I look out for in schools is the calibre of teachers they have. Most private schools don’t employ quality teachers — but at SULTAN, in most of their recruitments they look for experienced educators with PhD, M.Sc., PGDE, or B.Sc. Education qualifications.', 'Mr Waliy Ojewumi · Engineer · Parent Since 2018', { dark: true }).forEach(p => B.push(p));
   pullquote('Since joining SULTAN, the improvement in my children’s academic performance and character has been remarkable.', 'Dr Ismail Akeem Seriki · Parent, Three Children Enrolled', { dark: true }).forEach(p => B.push(p));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 11. THE FOUR PATHWAYS ============
+// ============ 12. THE FIVE PATHWAYS ============
 {
   const B = [];
-  B.push(eyebrow('The Four Pathways'));
-  B.push(h1('One Vision, Four Ways to Reach It'));
-  feature('Nursery & Primary', 'From age two, the foundation of faith and academic discipline, laid before a child ever sits a formal exam.').forEach(p => B.push(p));
+  B.push(eyebrow('The Five Pathways'));
+  B.push(h1('One Vision, Five Ways to Reach It'));
+  feature('Basic School', 'From age two, the foundation of faith and academic discipline, laid before a child ever sits a formal exam.').forEach(p => B.push(p));
   feature('Royal College', 'Seven academic departments, JSS 1–3 and SSS 1–3, for students aged ten and above.').forEach(p => B.push(p));
   feature("Qur'an College", 'A parallel track for full Hifz immersion, open to students aged nine to sixteen.').forEach(p => B.push(p));
-  feature('Islamic & Arabic Studies', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
+  feature('School of Islamic and Arabic Studies', 'Weekday and weekend programmes running alongside every other stage of the journey.').forEach(p => B.push(p));
+  feature('Online & Distance Learning School', 'Newly established in 2026 — a fifth institution just taking shape, with headship not yet appointed and no students or curriculum yet.').forEach(p => B.push(p));
   pullquote('Open to Muslims and non-Muslims, males and females — a welcome stated plainly, not a marketing gesture.', null).forEach(p => B.push(p));
   const gridRow = new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
     rows: [new TableRow({ children: [
@@ -324,18 +370,18 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. A CAMPUS BUILT FOR BECOMING ============
+// ============ 13. A CAMPUS BUILT FOR BECOMING ============
 {
   const B = [];
   B.push(eyebrow('Our Campus'));
   B.push(h1('A Campus Built for Becoming'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('gallery/campus-building.jpg', 420)] }));
   B.push(body('Fifteen, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State — a dedicated prayer hall, science and technology laboratories, an ICT & Computer Laboratory, and residential boarding for Royal College and Qur’an College students, all built around the same rhythm of prayer and disciplined study.'));
-  B.push(statQuad([['2017', 'Campus Founded'], ['4', 'Schools, One Campus'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
+  B.push(statQuad([['2016', 'Campus Founded'], ['5', 'Institutions, One Foundation'], ['1', 'Prayer Hall'], ['Yes', 'Boarding Available']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. WHERE CHARACTER MEETS CRAFT ============
+// ============ 14. WHERE CHARACTER MEETS CRAFT ============
 {
   const B = [];
   B.push(eyebrow('Where Character Meets Craft', { dark: true }));
@@ -353,7 +399,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } }, children: B });
 }
 
-// ============ 14. BEYOND GRADUATION ============
+// ============ 15. BEYOND GRADUATION ============
 {
   const B = [];
   B.push(eyebrow('Beyond Graduation'));
@@ -371,7 +417,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. BEGIN THEIR STORY ============
+// ============ 16. BEGIN THEIR STORY ============
 {
   const B = [];
   B.push(eyebrow('Begin Their Story', { dark: true }));
@@ -382,7 +428,7 @@ sections[0].children.push(pageBreak());
   feature('4. Enrolment', 'A formal Admission Letter and Class Acceptance Ticket are issued.', { dark: true }).forEach(p => B.push(p));
   B.push(rosette());
   B.push(body('Documents Required: Birth certificate · Passport photographs (2) · School report · Completed admission form', { dark: true }));
-  pullquote('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650', null, { dark: true }).forEach(p => B.push(p));
+  pullquote('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650', null, { dark: true }).forEach(p => B.push(p));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } }, background: { color: COFFEE_DEEP } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Luxury Aspirational Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -391,7 +437,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
@@ -401,8 +447,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE LUXURY ASPIRATIONAL EDITION', font: LABEL_FONT, size: 14, color: GOLD_BRIGHT, bold: true, characterSpacing: 15 })] }),
       rosette(),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: GOLD_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 700 }, children: [new TextRun({ text: 'LUXURY ASPIRATIONAL EDITION 2026 · NIGERIA', font: LABEL_FONT, size: 13, color: 'D9C79A', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],

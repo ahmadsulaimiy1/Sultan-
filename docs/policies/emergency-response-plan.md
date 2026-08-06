@@ -17,7 +17,7 @@ excursion emergency provision.*
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Institutional lead *(to be confirmed — SHRS has three Principals and a Head Teacher and no single overall Principal; the Board should decide who holds this role, or confirm a rotating/joint arrangement)* |
-| Approval Authority | Board of Trustees |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, plus after every drill and every real incident |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 

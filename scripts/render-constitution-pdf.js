@@ -34,13 +34,16 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 // that reads the rendered page text to know what belongs on each page and
 // draws it into this reserved white margin. These templates exist only to
 // reserve that margin space (with a correct white background) at print
-// time; the taller 0.62in/0.55in margins (vs. the previous 0.4in) give the
-// two-line dynamic header room to breathe without crowding the trim.
+// time; the 0.89in/1.23in margins match add-dynamic-headers.py's mask
+// bands (MASK_TOP_H=64pt / MASK_BOTTOM_H=88pt) exactly, so Chromium can
+// never lay flowing body text into the band the masks later repaint — the
+// earlier 0.62in/0.55in margins were smaller than the masks and cost up to
+// three lines of laid-out text per page, painted over invisibly.
 const HEADER_TEMPLATE = `
-  <div style="width:100%; height:0.62in; margin:0; background:#ffffff; box-sizing:border-box;
+  <div style="width:100%; height:0.89in; margin:0; background:#ffffff; box-sizing:border-box;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;"></div>`;
 const FOOTER_TEMPLATE = `
-  <div style="width:100%; height:0.55in; margin:0; background:#ffffff; box-sizing:border-box;
+  <div style="width:100%; height:1.23in; margin:0; background:#ffffff; box-sizing:border-box;
     -webkit-print-color-adjust:exact; print-color-adjust:exact;"></div>`;
 
 // Chromium's print pipeline applies one headerTemplate/footerTemplate to
@@ -75,7 +78,7 @@ async function render(outPath, withHeaderFooter) {
     // content differs. displayHeaderFooter stays true even for the "off"
     // render so an empty template renders as blank space rather than
     // Chromium collapsing the margin and reflowing the page.
-    margin: { top: '0.62in', bottom: '0.55in', left: '0in', right: '0in' },
+    margin: { top: '0.89in', bottom: '1.23in', left: '0in', right: '0in' },
   });
   await browser.close();
 }

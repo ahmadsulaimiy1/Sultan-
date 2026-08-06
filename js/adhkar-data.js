@@ -7,7 +7,7 @@
 // across Islamic scholarship) rather than any single third-party site.
 // Every entry carries a reference so it can be verified independently.
 // This is not a substitute for review by the school's own Qur'an College
-// / Islamic & Arabic Studies scholars, which SHRS has on staff.
+// / Islamic and Arabic Studies scholars, which SHRS has on staff.
 //
 // Deliberately NOT built as separate "Ruqyah" / "Protection from Jinn"
 // branded categories: the mainstream Qur'anic and hadith texts actually

@@ -57,7 +57,7 @@
 //                            the portal fall back to the generic labelled template scaffold instead —
 //                            see docs/institutional-portal-architecture.md.
 //   create-resolution     — { officeName, title, resolutionNumber?, status?, summaryText?, resolvedAt?,
-//                             createdByStaffNo? } — governance-register entries (Board of Trustees and
+//                             createdByStaffNo? } — governance-register entries (Board of Governors and
 //                             its committees); status defaults to 'draft'.
 //   update-resolution     — { resolutionId, status?, summaryText?, resolvedAt? }
 //   regenerate-identity-numbers — {} — bulk-regenerates identity_no for every staff,
@@ -66,7 +66,8 @@
 //                            SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] (or the
 //                            reserved dateless SHRS-BOT-.../SHRS-CEO-... form),
 //                            students into SHRS-<YYMMDD>-<seq6>, guardians into
-//                            SHRS-PAR-<YYMMDD>-<seq6>. Founder & CEO-approved
+//                            SHRS-PAR-<YYMMDD>-<seq6>. Founder, Head of Schools &
+//                            Administrator-approved
 //                            one-time migration action — knowingly breaks any
 //                            already-issued QR code/verification link for a
 //                            re-migrated person.
@@ -783,8 +784,9 @@ export async function onRequestPost({ request, env }) {
       return json({ ok: true, actionItemId: body.actionItemId });
     }
 
-    // SHRS Master Identity Architecture Directive, Founder & CEO's
-    // explicit rollout choice ("migrate everyone now"): regenerates
+    // SHRS Master Identity Architecture Directive, the Founder, Head of
+    // Schools & Administrator's explicit rollout choice ("migrate everyone
+    // now"): regenerates
     // identity_no for every staff record into the current
     // SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] format (or the reserved
     // dateless SHRS-BOT-.../SHRS-CEO-... form for Board/CEO seats),
@@ -792,7 +794,8 @@ export async function onRequestPost({ request, env }) {
     // so re-running deliberately re-migrates everyone rather than
     // silently no-op'ing). This knowingly breaks every already-issued QR
     // code/verification link for anyone whose number changes — that
-    // trade-off was the Founder & CEO's explicit, informed choice, not a
+    // trade-off was the Founder, Head of Schools & Administrator's
+    // explicit, informed choice, not a
     // default. regenerateStaffIdentityNo itself skips (returns null) any
     // non-reserved record with no date_joined on file, rather than
     // inventing one — queried against every staff row here (not just

@@ -153,8 +153,8 @@ and worth prioritising on its own merits.
 
 ### Stage 8 — Educational Interests
 **Fully buildable now**, and maps directly onto real, already-published
-programmes: Nursery & Primary, Royal College, Qur'an College, School of
-Islamic & Arabic Studies. "Online Learning," "Weekend Programmes," and
+programmes: Nursery and Primary, Royal College, Qur'an College, School of
+Islamic and Arabic Studies. "Online Learning," "Weekend Programmes," and
 "Summer Programmes" should only appear as options once they're real,
 named offerings — offering them as selectable "interests" when no such
 programme currently exists risks collecting real parent demand for

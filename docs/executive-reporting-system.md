@@ -31,7 +31,7 @@ re-renders in place.
 | Head Teacher, Principal (Royal College), Ra'ees, Mudeer | As-of-now snapshot (students/staff/attendance/Hifz, same shape as the existing Operations Centre) + real in-period activity (lifecycle events and admissions flow for that specific institution) | Same institution-scoped queries as `functions/api/portal/staff/office/[slug].js`'s Operations Centre |
 | Executive (Founder) | Institution-wide roll-up of Finance + Registrar + Admissions, plus current active student/staff totals | Same computations as above, unfiltered by institution |
 
-Every other office (Board of Trustees, Management Council, the five
+Every other office (Board of Governors, Management Council, the five
 Board committees, Academic Affairs, Examinations, Digital Services/
 Learning/Identity, Knowledge Base, HR, Alumni, Student Affairs,
 Communications, Foundation, Library, Certificates) has neither a

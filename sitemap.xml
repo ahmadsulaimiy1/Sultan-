@@ -42,6 +42,11 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/quran-college/" />
   </url>
   <url>
+    <loc>https://shroyalschools.com/academics/online-distance-learning/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
+  </url>
+  <url>
     <loc>https://shroyalschools.com/boarding/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/boarding/" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/boarding/" />
@@ -110,6 +115,11 @@
     <loc>https://shroyalschools.com/ar/academics/quran-college/</loc>
     <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/quran-college/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/quran-college/" />
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/ar/academics/online-distance-learning/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
   </url>
   <url>
     <loc>https://shroyalschools.com/ar/boarding/</loc>

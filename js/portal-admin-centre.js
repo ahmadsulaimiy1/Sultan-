@@ -1,7 +1,7 @@
 // Institutional Administration Centre — the premium UI over
 // functions/api/portal/admin/staff.js (Office/Appointment/Meeting/
-// Document/Committee/Governance management) requested by the Founder
-// & CEO directive so "The Founder should not need API calls for
+// Document/Committee/Governance management) requested by the Founder,
+// Head of Schools & Administrator directive so "The Founder should not need API calls for
 // ordinary administration." Deliberately kept on the same bootstrap
 // sysadmin-token model as the API it wraps — see that file's header
 // comment for why. The token is entered once per browser tab
@@ -506,7 +506,7 @@
     EXE: 'Executive (EXE)', PRIN: 'Principal / Head Teacher', VP: 'Vice Principal',
     REG: 'Registrar', AREG: 'Assistant Registrar', ADM: 'Admissions Officer',
     FIN: 'Finance Officer', TCH: 'Teacher', MUH: 'Muhaffiz/Muhaffizah',
-    ARB: 'Islamic & Arabic Studies Instructor', 'QC-OFF': "Qur'an College Officer",
+    ARB: 'Islamic and Arabic Studies Instructor', 'QC-OFF': "Qur'an College Officer",
     SA: 'Student Affairs Officer', BRD: 'Boarding Officer', ICT: 'ICT Administrator',
     SYSADMIN: 'System Administrator', DSL: 'Designated Safeguarding Lead',
   };
@@ -633,7 +633,7 @@
         + '<div class="admin-field"><label>Reason</label><input name="reason" placeholder="Why is this being granted?" /></div>'
         + '</div>'
         + '<datalist id="admin-institution-names">'
-        + ['Nursery & Primary School', 'Royal College', 'Islamic & Arabic Studies', "Qur'an College"].map(function (n) { return '<option value="' + esc(n) + '">'; }).join('')
+        + ['Nursery and Primary School', 'Royal College', 'Islamic and Arabic Studies', "Qur'an College"].map(function (n) { return '<option value="' + esc(n) + '">'; }).join('')
         + '</datalist>'
         + '<datalist id="admin-office-names">' + state.offices.map(function (o) { return '<option value="' + esc(o.name) + '">'; }).join('') + '</datalist>'
         + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Grant Role</button><span class="admin-form-status" id="staff-detail-grant-status"></span></div>'

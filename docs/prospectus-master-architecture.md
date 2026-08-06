@@ -3,7 +3,7 @@
 *Deliverable #2 of 5, built directly against `docs/prospectus-editorial-bible.md`
 ("the Bible") — every page allocation, spread count, and structural
 decision below traces to a specific Part of the Bible, not a fresh
-invention. Two points the Bible left open (Part III's Chairman/CEO
+invention. Two points the Bible left open (Part III's Chairman/Head of Schools / Administrator
 question, Part XI's real-statistics requirement) are resolved here as
 **working assumptions**, stated plainly as assumptions rather than
 confirmed facts, so this Architecture can proceed without inventing
@@ -40,7 +40,7 @@ depends on them being permanent.*
 
 **44 pages / 22 spreads**, landing inside the Bible's Part III range
 (32–64 pages) at the upper-middle of the range — enough to give the
-Four Institutions (Bible Part III) genuinely equal individual spreads
+Institutions (Bible Part III) genuinely equal individual spreads
 and the Digital Campus/Governance chapters the "real editorial weight"
 Part III requires, without inflating to a size that dilutes the
 restraint principle in Part IX. Final trim size and binding (a
@@ -60,9 +60,9 @@ system" references the Part VIII template it uses.
 | 3 | About SHRS — Heritage | Editorial | Editorial + Timeline (Past→Present→Future) | 2 |
 | 4 | Mission, Vision & Values (incl. CLEVER) | Doctrine | Editorial, with Infographic treatment for CLEVER's six-part structure | 2 |
 | 5 | Educational Philosophy / Why Choose SHRS | Philosophy | Editorial | 2 |
-| 6 | Nursery & Primary | Institution 1 of 4 | Feature spread (identical template, per Part III equal-weighting rule) | 2 |
+| 6 | Basic School | Institution 1 of 4 | Feature spread (identical template, per Part III equal-weighting rule) | 2 |
 | 7 | Royal College | Institution 2 of 4 | Feature spread (identical template) | 2 |
-| 8 | Islamic & Arabic Studies | Institution 3 of 4 | Feature spread (identical template) | 2 |
+| 8 | School of Islamic and Arabic Studies | Institution 3 of 4 | Feature spread (identical template) | 2 |
 | 9 | Qur'an College | Institution 4 of 4 | Feature spread (identical template) + Hifz Journey diagram | 3 *(one extra page — see note below)* |
 | 10 | Student Life | Student Life | Editorial | 2 |
 | 11 | Facilities | Facilities | Editorial, image-forward | 2 |
@@ -95,17 +95,26 @@ instruction that Governance needs disproportionate design investment
 distinct from its narrative page, not folded into it, so the diagram
 has room to breathe per Part IX's restraint principle.
 
-## The Four Institutions: enforcing equal weighting structurally
+## The Institutions: enforcing equal weighting structurally
 
-Per Bible Part III's explicit requirement ("four equally-weighted
-pillars, not Royal College as primary with three supplements"): spreads
+*This spread plan (spreads 6–9) covers the four Constituent Institutions
+with real, already-published header-nav facts to build a data panel
+from. The fifth, Sultan Hanafi Online & Distance Learning School,
+recognised by the Board's governance restructuring amendment of
+2026-08-04, has no established programme facts yet to populate an
+equivalent spread — stated plainly here rather than fabricated, and
+left for a future revision of this Architecture once SHRS supplies
+them.*
+
+Per Bible Part III's explicit requirement ("equally-weighted
+pillars, not Royal College as primary with supplements"): spreads
 6–9 use an **identical two-page template** —
 
 - Page 1: full-bleed anchor photograph, institution name (Cinzel
   display), one "at a glance" data panel (ages, format, established
   date — all real, already-published facts per the header nav
-  descriptors: Nursery & Primary "Ages 2–10 · Day"; Royal College "Ages
-  10+ · Day · Est. 2021"; Islamic & Arabic Studies "All ages · Weekday
+  descriptors: Basic School "Ages 2–10 · Day"; Royal College "Ages
+  10+ · Day · Est. 2021"; School of Islamic and Arabic Studies "All ages · Weekday
   & weekend"; Qur'an College "Day & Boarding")
 - Page 2: narrative paragraph, one supporting image, one distinguishing
   feature callout

@@ -88,8 +88,8 @@ icon direction (see §9 for the icon system itself).
   Book" quadrant.
 
 ### Academics
-- **Column — Our Institutions**: Nursery & Primary · Royal College ·
-  School of Islamic & Arabic Studies · Qur'an College — each with a
+- **Column — Our Institutions**: Nursery and Primary · Royal College ·
+  School of Islamic and Arabic Studies · Qur'an College — each with a
   one-line descriptor pulled verbatim from existing content (age range +
   curriculum source), not new copy.
 - **Column — Academic Framework**: Curriculum Overview (LIVE, the
@@ -101,7 +101,7 @@ icon direction (see §9 for the icon system itself).
   page.
 - **Icon**: four small glyphs, one per institution (crescent for Arabic
   & Islamic Studies, a graduation-cap-adjacent mark for Royal College,
-  a seedling for Nursery & Primary, an open Qur'an mark for Qur'an
+  a seedling for Nursery and Primary, an open Qur'an mark for Qur'an
   College) — distinct enough to scan quickly, consistent enough to read
   as one family.
 

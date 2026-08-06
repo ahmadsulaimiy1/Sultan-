@@ -97,7 +97,7 @@
     scrollWrap.appendChild(table);
     resultsEl.appendChild(scrollWrap);
 
-    var islamicNote = el('p', 'transcript-unavailable', 'Islamic & Arabic Studies transcript: not yet tracked separately in the Digital Campus — the School of Islamic & Arabic Studies does not yet have its own assessment records here (see the Registrar for paper records in the meantime).');
+    var islamicNote = el('p', 'transcript-unavailable', 'Islamic and Arabic Studies transcript: not yet tracked separately in the Digital Campus — the School of Islamic and Arabic Studies does not yet have its own assessment records here (see the Registrar for paper records in the meantime).');
     resultsEl.appendChild(islamicNote);
   }
 

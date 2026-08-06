@@ -3,7 +3,7 @@
     "slug": "home",
     "output": "index.html",
     "title": "Sultan Hanafi Royal Schools — A Flagship of Royal Islamic & Secular Education",
-    "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising Nursery & Primary, Royal College, School of Arabic & Islamic Studies, and Qur'an College.",
+    "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School.",
     "contentFile": "pages/home.html",
     "altHref": "/ar/"
   },
@@ -19,7 +19,7 @@
     "slug": "about-governance",
     "output": "about/governance/index.html",
     "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
-    "description": "The board of trustees, executive management team, and key staff members governing Sultan Hanafi Royal Schools.",
+    "description": "The Board of Governors, Management Team, and key staff members governing Sultan Hanafi Royal Schools.",
     "contentFile": "pages/about-governance.html",
     "altHref": "/ar/about/governance/"
   },
@@ -27,14 +27,14 @@
     "slug": "academics",
     "output": "academics/index.html",
     "title": "Academics — Sultan Hanafi Royal Schools",
-    "description": "Four institutions under one board: Nursery & Primary School, Royal College, the School of Arabic & Islamic Studies, and Qur'an College. Compare them and find the right fit.",
+    "description": "Five institutions under one Board of Governors: the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School. Compare them and find the right fit.",
     "contentFile": "pages/academics.html",
     "altHref": "/ar/academics/"
   },
   {
     "slug": "academics-nursery-primary",
     "output": "academics/nursery-primary/index.html",
-    "title": "Nursery & Primary School — Sultan Hanafi Royal Schools",
+    "title": "Basic School — Sultan Hanafi Royal Schools",
     "description": "Ages 2 to 10 — holistic early-years education blending secular and Islamic teachings, led by Head Teacher Mrs. Kareemat Abdurazaq.",
     "contentFile": "pages/academics-nursery-primary.html",
     "altHref": "/ar/academics/nursery-primary/"
@@ -50,7 +50,7 @@
   {
     "slug": "academics-arabic-islamic-studies",
     "output": "academics/arabic-islamic-studies/index.html",
-    "title": "School of Arabic & Islamic Studies — Sultan Hanafi Royal Schools",
+    "title": "School of Islamic and Arabic Studies — Sultan Hanafi Royal Schools",
     "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
     "contentFile": "pages/academics-arabic-islamic-studies.html",
     "altHref": "/ar/academics/arabic-islamic-studies/"
@@ -64,10 +64,18 @@
     "altHref": "/ar/academics/quran-college/"
   },
   {
+    "slug": "academics-online-distance-learning",
+    "output": "academics/online-distance-learning/index.html",
+    "title": "Online & Distance Learning School — Sultan Hanafi Royal Schools",
+    "description": "Our fifth school, newly constituted under the Head of Schools / Administrator's office as part of the governance restructuring. Programme details to follow.",
+    "contentFile": "pages/academics-online-distance-learning.html",
+    "altHref": "/ar/academics/online-distance-learning/"
+  },
+  {
     "slug": "curriculum-architecture",
     "output": "curriculum/index.html",
     "title": "The Curriculum Architecture — Sultan Hanafi Royal Schools",
-    "description": "How our two adopted curricula, one CLEVER standard, and seven-stage learning pathway fit together across all four institutions — academic progression, character formation, leadership development, entrepreneurship, financial literacy, and Islamic formation.",
+    "description": "How our two adopted curricula, one CLEVER standard, and seven-stage learning pathway fit together across all five institutions — academic progression, character formation, leadership development, entrepreneurship, financial literacy, and Islamic formation.",
     "contentFile": "pages/curriculum-architecture.html",
     "altHref": "/ar/curriculum/"
   },
@@ -75,7 +83,7 @@
     "slug": "faculty",
     "output": "faculty/index.html",
     "title": "Faculty Directory — Sultan Hanafi Royal Schools",
-    "description": "The named educators leading and teaching across our four institutions, organised by school.",
+    "description": "The named educators leading and teaching across our five institutions, organised by school.",
     "contentFile": "pages/faculty.html",
     "altHref": "/ar/faculty/"
   },
@@ -83,7 +91,7 @@
     "slug": "digital-campus",
     "output": "digital-campus/index.html",
     "title": "The Digital Campus — Sultan Hanafi Royal Schools",
-    "description": "Parent Portal, Student Portal, Staff Identity, Founder Dashboard, and more — one shared set of digital systems serving all four institutions.",
+    "description": "Parent Portal, Student Portal, Staff Identity, Founder Dashboard, and more — one shared set of digital systems serving all five institutions.",
     "contentFile": "pages/digital-campus.html",
     "altHref": "/ar/digital-campus/"
   },
@@ -91,7 +99,7 @@
     "slug": "strategic-plan",
     "output": "strategic-plan/index.html",
     "title": "Our Direction — Sultan Hanafi Royal Schools",
-    "description": "Where Sultan Hanafi Royal Schools stands today, and what the Board and Executive Management Team are developing next.",
+    "description": "Where Sultan Hanafi Royal Schools stands today, and what the Board of Governors and Management Team are developing next.",
     "contentFile": "pages/strategic-plan.html",
     "altHref": "/ar/strategic-plan/"
   },
@@ -171,7 +179,7 @@
     "slug": "home-ar",
     "output": "ar/index.html",
     "title": "مدارس سلطان حنفي الملكية — منارة للتعليم الملكي الإسلامي والعصري",
-    "description": "مدارس سلطان حنفي الملكية — مؤسسة تعليمية إسلامية وعصرية في إكورودو، لاغوس، تضم الحضانة والابتدائية، الكلية الملكية، مدرسة اللغة العربية والدراسات الإسلامية، وكلية القرآن الكريم.",
+    "description": "مدارس سلطان حنفي الملكية — مؤسسة تعليمية إسلامية وعصرية في إكورودو، لاغوس، تضم المدرسة الأساسية، الكلية العلمانية، الكلية الإسلامية، كلية القرآن الكريم، ومدرسة التعليم عن بُعد.",
     "contentFile": "pages/home.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -191,7 +199,7 @@
     "slug": "about-governance-ar",
     "output": "ar/about/governance/index.html",
     "title": "الحوكمة والقيادة — مدارس سلطان حنفي الملكية",
-    "description": "مجلس الأمناء والفريق التنفيذي وكبار الموظفين القائمين على إدارة مدارس سلطان حنفي الملكية.",
+    "description": "مجلس الحوكمة وفريق الإدارة وكبار الموظفين القائمين على إدارة مدارس سلطان حنفي الملكية.",
     "contentFile": "pages/about-governance.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -201,7 +209,7 @@
     "slug": "academics-ar",
     "output": "ar/academics/index.html",
     "title": "الأكاديميات — مدارس سلطان حنفي الملكية",
-    "description": "أربع مؤسسات تحت مجلس إدارة واحد: الحضانة والابتدائية، الكلية الملكية، مدرسة اللغة العربية والدراسات الإسلامية، وكلية القرآن الكريم.",
+    "description": "خمس مؤسسات تحت مجلس حوكمة واحد: المدرسة الأساسية، الكلية العلمانية، الكلية الإسلامية، كلية القرآن الكريم، ومدرسة التعليم عن بُعد.",
     "contentFile": "pages/academics.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -210,7 +218,7 @@
   {
     "slug": "academics-nursery-primary-ar",
     "output": "ar/academics/nursery-primary/index.html",
-    "title": "الحضانة والابتدائية — مدارس سلطان حنفي الملكية",
+    "title": "المدرسة الأساسية — مدارس سلطان حنفي الملكية",
     "description": "من سن 2 إلى 10 سنوات — تعليم شامل للسنوات الأولى يجمع بين المناهج العصرية والتعاليم الإسلامية.",
     "contentFile": "pages/academics-nursery-primary.ar.html",
     "lang": "ar",
@@ -220,7 +228,7 @@
   {
     "slug": "academics-royal-college-ar",
     "output": "ar/academics/royal-college/index.html",
-    "title": "الكلية الملكية — مدارس سلطان حنفي الملكية",
+    "title": "الكلية العلمانية — مدارس سلطان حنفي الملكية",
     "description": "تعليم متوسط وثانوي عبر سبعة أقسام أكاديمية، يدمج المنهج الوطني النيجيري بالعلوم العربية والإسلامية.",
     "contentFile": "pages/academics-royal-college.ar.html",
     "lang": "ar",
@@ -230,7 +238,7 @@
   {
     "slug": "academics-arabic-islamic-studies-ar",
     "output": "ar/academics/arabic-islamic-studies/index.html",
-    "title": "مدرسة اللغة العربية والدراسات الإسلامية — مدارس سلطان حنفي الملكية",
+    "title": "الكلية الإسلامية — مدارس سلطان حنفي الملكية",
     "description": "دراسات إسلامية وتعليم للغة العربية أيام الأسبوع ونهايته، وحفظ للقرآن والحديث، مفتوح لعموم الأمة الإسلامية.",
     "contentFile": "pages/academics-arabic-islamic-studies.ar.html",
     "lang": "ar",
@@ -248,10 +256,20 @@
     "altHref": "/academics/quran-college/"
   },
   {
+    "slug": "academics-online-distance-learning-ar",
+    "output": "ar/academics/online-distance-learning/index.html",
+    "title": "مدرسة التعليم عن بُعد — مدارس سلطان حنفي الملكية",
+    "description": "مدرستنا الخامسة، أُنشئت حديثاً تحت مكتب رئيس المدارس / المدير الإداري ضمن إعادة الهيكلة الحوكمية. تفاصيل البرنامج قادمة.",
+    "contentFile": "pages/academics-online-distance-learning.ar.html",
+    "lang": "ar",
+    "dir": "rtl",
+    "altHref": "/academics/online-distance-learning/"
+  },
+  {
     "slug": "curriculum-architecture-ar",
     "output": "ar/curriculum/index.html",
     "title": "بنية المنهج الدراسي — مدارس سلطان حنفي الملكية",
-    "description": "كيف يترابط منهجانا المعتمدان ومعيار CLEVER الواحد ومسار التعلّم ذو السبع مراحل عبر مؤسساتنا الأربع — التقدّم الأكاديمي، وتنمية الشخصية، وتنمية القيادة، وريادة الأعمال، والثقافة المالية، والتكوين الإسلامي.",
+    "description": "كيف يترابط منهجانا المعتمدان ومعيار CLEVER الواحد ومسار التعلّم ذو السبع مراحل عبر مؤسساتنا الخمس — التقدّم الأكاديمي، وتنمية الشخصية، وتنمية القيادة، وريادة الأعمال، والثقافة المالية، والتكوين الإسلامي.",
     "contentFile": "pages/curriculum-architecture.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -261,7 +279,7 @@
     "slug": "faculty-ar",
     "output": "ar/faculty/index.html",
     "title": "دليل أعضاء هيئة التدريس — مدارس سلطان حنفي الملكية",
-    "description": "أعضاء هيئة التدريس المُسمّون الذين يقودون ويُدرّسون في مؤسساتنا الأربع، مرتّبون حسب المدرسة.",
+    "description": "أعضاء هيئة التدريس المُسمّون الذين يقودون ويُدرّسون في مؤسساتنا الخمس، مرتّبون حسب المدرسة.",
     "contentFile": "pages/faculty.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -289,7 +307,7 @@
     "slug": "digital-campus-ar",
     "output": "ar/digital-campus/index.html",
     "title": "الحرم الرقمي — مدارس سلطان حنفي الملكية",
-    "description": "بوابة أولياء الأمور، بوابة الطلاب، هوية الموظفين، لوحة المؤسس، وأنظمة أخرى — مجموعة واحدة من الأنظمة الرقمية تخدم مؤسساتنا الأربع.",
+    "description": "بوابة أولياء الأمور، بوابة الطلاب، هوية الموظفين، لوحة المؤسس، وأنظمة أخرى — مجموعة واحدة من الأنظمة الرقمية تخدم مؤسساتنا الخمس.",
     "contentFile": "pages/digital-campus.ar.html",
     "lang": "ar",
     "dir": "rtl",
@@ -299,7 +317,7 @@
     "slug": "strategic-plan-ar",
     "output": "ar/strategic-plan/index.html",
     "title": "توجّهنا — مدارس سلطان حنفي الملكية",
-    "description": "أين تقف مدارس سلطان حنفي الملكية اليوم، وما الذي يطوّره مجلس الأمناء والإدارة التنفيذية لاحقاً.",
+    "description": "أين تقف مدارس سلطان حنفي الملكية اليوم، وما الذي يطوّره مجلس الحوكمة وفريق الإدارة لاحقاً.",
     "contentFile": "pages/strategic-plan.ar.html",
     "lang": "ar",
     "dir": "rtl",

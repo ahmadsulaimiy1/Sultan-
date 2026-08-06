@@ -155,6 +155,24 @@ function timelineItem(year, title, desc) {
   ];
 }
 
+// Imprint table — a two-column key/value ownership table, the DOCX
+// equivalent of .im-imprint-table / the Governance Charter's own
+// .imprint-table, used only on the Institutional Publication
+// Information page.
+function imprintTable(rows) {
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    columnWidths: [3200, 6800],
+    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: NAVY }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE }, insideHorizontal: { style: BorderStyle.SINGLE, size: 2, color: 'E4E1D8' }, insideVertical: { style: BorderStyle.NONE } },
+    rows: rows.map(([label, value]) => new TableRow({ children: [
+      new TableCell({ width: { size: 3200, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 60, right: 80 },
+        children: [new Paragraph({ children: [new TextRun({ text: label.toUpperCase(), font: BODY_FONT, size: 14, bold: true, color: BURGUNDY, characterSpacing: 10 })] })] }),
+      new TableCell({ width: { size: 6800, type: WidthType.DXA }, margins: { top: 140, bottom: 140, left: 80, right: 60 },
+        children: [new Paragraph({ children: [new TextRun({ text: value, font: BODY_FONT, size: 20, color: INK })] })] }),
+    ] })),
+  });
+}
+
 function coverFrame(children, opts = {}) {
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -188,7 +206,33 @@ sections.push({
 });
 sections[0].children.push(pageBreak());
 
-// ============ 02. FOUNDER'S STATEMENT ============
+// ============ 02. INSTITUTIONAL PUBLICATION INFORMATION ============
+{
+  const B = [];
+  B.push(eyebrow("Publisher's Imprint"));
+  B.push(h1('Institutional Publication Information'));
+  B.push(imprintTable([
+    ['Institution', 'Sultan Hanafi Royal Schools'],
+    ['Publisher', 'Sultan Hanafi Royal Schools, acting through the Office of the Founder & Head of Schools / Administrator'],
+    ['Address', '15, Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road, Ikorodu, Lagos State, Nigeria'],
+    ['Website', 'shroyalschools.com'],
+    ['Email', 'info@shroyalschools.com'],
+    ['Telephone', '+234 (0) 807 374 7650 · +234 (0) 807 058 6860'],
+    ['Copyright', '© Sultan Hanafi Royal Schools. All rights reserved within the Institution.'],
+    ['Classification', 'Public institutional publication of Sultan Hanafi Royal Schools.'],
+    ["Archival Statement", "Retained in the Institution's publications archive; superseded editions remain on record."],
+    ['Printing Specification', 'Set for A4 (210mm × 297mm) digital distribution and print-on-demand reproduction.'],
+    ["Rights Statement", "May be shared unaltered for admissions and public-information purposes; not for modification or commercial redistribution without the Institution's written authorisation."],
+    ['Document Title', 'Sultan Hanafi Royal Schools — The Institutional Masterplan Edition'],
+    ['Document ID', 'SHRS-PUB-MASTPLAN-2026-001'],
+    ['Edition', 'Edition I'],
+    ['Related Instrument', 'The Governance Charter of Sultan Hanafi Royal Schools (Policy GV-01 v3.0, Edition VII)'],
+    ['Institution Founded', 'July 2016 · Ikorodu, Lagos State, Nigeria'],
+  ]));
+  sections.push({ properties: { page: { size: PAGE, margin: { top: 1200, bottom: 900, left: 1200, right: 1200 } } }, children: B });
+}
+
+// ============ 03. FOUNDER'S STATEMENT ============
 {
   const B = [];
   B.push(eyebrow("A Statement From the Founder"));
@@ -196,74 +240,77 @@ sections[0].children.push(pageBreak());
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 160)] }));
   B.push(body('Most prospectuses show you a school. This one is written to show you an institution — the governance behind it, the systems that run it, and the record it has already produced.'));
   B.push(body('My own background — two decades across banking, insurance, oil & gas, and consulting, an MSc from Edinburgh Business School, Heriot-Watt, a BSc from Oxford Brookes, and fellowships with the ACCA UK and ICAN — shapes how I have built this school.'));
-  B.push(panel('Sultan Hanafi Royal Schools is young — registered December 2017, with the Royal College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
-  B.push(statQuad([['2017', 'Founded'], ['2021', 'Royal College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
+  B.push(panel('Sultan Hanafi Royal Schools is young — founded in July 2016, with the Royal College established in 2021. Our case for trust rests on what we have actually built in that time, documented plainly in the pages that follow.', "Founder's Note"));
+  B.push(statQuad([['2016', 'Founded'], ['2021', 'Royal College Established'], ['23', 'Governance Documents'], ['2026', 'Ministry Registered']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 03. CONTENTS ============
+// ============ 04. CONTENTS ============
 {
   const B = [];
   B.push(eyebrow('Contents'));
   B.push(h1('A Structural Account'));
   B.push(lede('Each chapter documents one dimension of the institution — real, dated, and drawn from what has actually been built and recorded.'));
   const toc = [
-    ['Institutional Overview', '04'], ['Our Journey, 2017–2026', '05'], ['Governance Architecture', '06'],
-    ['The Policy Framework', '07'], ['Digital Campus Infrastructure', '08'], ['Built to Scale', '09'],
-    ['Community & Impact', '10'], ['International Register', '11'], ['Our Vision', '12'],
-    ['The Road Ahead', '13'], ['Academic Milestones', '14'], ['Partner With Us', '15'],
+    ['Institutional Overview', '05'], ['Our Journey, 2016–2026', '06'], ['Governance Architecture', '07'],
+    ['The Policy Framework', '08'], ['Digital Campus Infrastructure', '09'], ['Built to Scale', '10'],
+    ['Community & Impact', '11'], ['International Register', '12'], ['Our Vision', '13'],
+    ['The Road Ahead', '14'], ['Academic Milestones', '15'], ['Partner With Us', '16'],
   ];
   toc.forEach(([t, p]) => B.push(new Paragraph({ spacing: { after: 100 },
     children: [new TextRun({ text: t, font: BODY_FONT, size: 20, color: INK }), new TextRun({ text: '\t' + p, font: HEAD_FONT, size: 20, color: BURGUNDY, bold: true })] })));
   B.push(new Paragraph({ spacing: { before: 160 } }));
   B.push(panel("Every figure, date, and claim in this edition is drawn from SHRS's own governance register, technical documentation, and published record. Where a plan is real but not yet executed, it is named as such — this edition does not invent a dated strategic target, a second campus, or a formal partnership that does not exist.", 'A Note on Method'));
-  B.push(statQuad([['12', 'Chapters'], ['16', 'Pages'], ['4', 'Audiences Addressed'], ['0', 'Fabricated Claims']]));
+  B.push(statQuad([['12', 'Chapters'], ['17', 'Pages'], ['4', 'Audiences Addressed'], ['0', 'Fabricated Claims']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 04. INSTITUTIONAL OVERVIEW ============
+// ============ 05. INSTITUTIONAL OVERVIEW ============
 {
   const B = [];
   B.push(eyebrow('At a Glance'));
   B.push(h1('Institutional Overview'));
-  B.push(lede('Sultan Hanafi Royal Schools in structural summary — four institutions, one governance architecture, one crest.'));
-  B.push(statQuad([['2017', 'Founded'], ['4', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Royal College Departments']]));
-  B.push(body("Nursery & Primary, the Royal College, the Qur'an College, and the School of Islamic & Arabic Studies operate under one foundation, one crest, and one governance architecture."));
+  B.push(lede('Sultan Hanafi Royal Schools in structural summary — five institutions, one governance architecture, one crest.'));
+  B.push(statQuad([['2016', 'Founded'], ['5', 'Schools, One Foundation'], ['23', 'Governance Documents'], ['7', 'Royal College Departments']]));
+  B.push(body("Basic School, Royal College, the Qur'an College, School of Islamic and Arabic Studies, and the newly established Online & Distance Learning School operate under one foundation, one crest, and one governance architecture. The fifth institution, recognised under the 2026 governance amendment, does not yet have students, a curriculum, or an appointed head."));
   B.push(pillar('1', 'Founded on Filial Honour', "Named for the founder's late father, Anofi Aliu Akano — grown from the Imowonla community outward."));
   B.push(pillar('2', 'Hybrid by Design', 'Islamic and secular education held as equally rigorous, not one subordinate to the other.'));
   B.push(pillar('3', 'Open to All', 'Open to Muslims and non-Muslims, males and females — a stated welcome, not a marketing gesture.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 05. OUR JOURNEY ============
+// ============ 06. OUR JOURNEY ============
 {
   const B = [];
-  B.push(eyebrow('Our Journey, 2017–2026'));
+  B.push(eyebrow('Our Journey, 2016–2026'));
   B.push(h1('A Timeline of What Was Actually Built'));
-  timelineItem('2017', 'Foundation', 'Sultan Hanafi Royal Schools registered, rooted in the Imowonla community, Ikorodu, Lagos State.').forEach(p => B.push(p));
+  timelineItem('2016', 'Foundation', 'Sultan Hanafi Royal Schools founded, rooted in the Imowonla community, Ikorodu, Lagos State.').forEach(p => B.push(p));
   timelineItem('2021', 'Royal College Established', 'Junior and Senior Secondary programmes launched for students from age ten.').forEach(p => B.push(p));
   timelineItem('2022', "Qur'an College & Islamic Studies Formalised", 'Formally established, with Saudi Arabian curriculum resources and Ijazah certification.').forEach(p => B.push(p));
   timelineItem('2024', 'Ramadan Competition & ALA Prize', 'Inaugural Ramadan Qur’an Competition; the ALA Endowment Prize established by Mr Lukman Anofi.').forEach(p => B.push(p));
   timelineItem('2025', 'Governor Commission', 'Commissioned by Engr. Seyi Makinde, Executive Governor of Oyo State.').forEach(p => B.push(p));
   timelineItem('2026', 'Ministry Registration & Digital Campus', 'Royal College achieved Ministry Registration and sat its first BECE cohort; Guardian and Student Portals went live.').forEach(p => B.push(p));
+  timelineItem('2026', 'Governance Constitutional Amendment', 'The Board of Governors formally replaced the Board of Trustees; the Online & Distance Learning School was recognised as the institution’s fifth school.').forEach(p => B.push(p));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 06. GOVERNANCE ARCHITECTURE ============
+// ============ 07. GOVERNANCE ARCHITECTURE ============
 {
   const B = [];
   B.push(eyebrow('Governance Architecture'));
   B.push(h1('A Chain of Accountability'));
-  B.push(lede('Board → Founder & CEO → Management Team → Heads of Department → Educators → Committees → Student Representatives → Prefects → Class Captains — one architecture, visible at every level.'));
-  B.push(pillar('1', 'Board of Trustees', "The institution's highest governing authority."));
-  B.push(pillar('2', 'Founder & Chief Executive Officer', 'Sultan Zakariya Olanrewaju Hanafi, PhD — executive leadership across all four schools.'));
-  B.push(pillar('3', 'Management Team & Heads of Department', 'Principals and Head Teachers reporting to the Founder & CEO.'));
-  B.push(pillar('4', 'Educators & Governance Committees', 'Faculty delivering the curriculum and the Hifz Journey.'));
-  B.push(pillar('5', 'Student Leadership', 'Student Representatives, School Prefects, and Class Captains.'));
+  B.push(lede('Board of Governors → Board-Level Committees → Management Team → Management-Level Committees → Heads of Departments → Educators → Student Representatives → School Prefects → Class Captains → Student Clubs — one architecture, visible at every level.'));
+  B.push(pillar('A', 'Board of Governors', "The institution's highest governing authority — a Chairman, a Secretary, and three Other Members."));
+  B.push(pillar('B', 'Board-Level Committees', 'The Educational Technical, Finance, Safeguarding, Governance & Nominations, and Disciplinary & Ethics Committees, with one further Board-Level Committee reserved for future naming.'));
+  B.push(pillar('C', 'Management Team', "Zakariya Olanrewaju Anofi, as Head of Schools/Administrator, together with the five schools' Heads. Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices."));
+  B.push(pillar('D', 'Management-Level Committees', "Seven standing committees — Da'wah, Academic, Sports, Communications & Public Affairs, Student Life, Admissions & Enrolment, and Health, Safety & Facilities — operating under Management Team authority."));
+  B.push(pillar('E', 'Heads of Departments', 'Reporting to the appropriate school Head.'));
+  B.push(pillar('F', 'Educators', 'Faculty delivering the curriculum and the Hifz Journey directly.'));
+  B.push(pillar('G–J', 'Student Leadership', 'Student Representatives, School Prefects, Class Captains, and Student Clubs.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 07. THE POLICY FRAMEWORK ============
+// ============ 08. THE POLICY FRAMEWORK ============
 {
   const B = [];
   B.push(eyebrow('The Policy Framework'));
@@ -281,7 +328,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 08. DIGITAL CAMPUS INFRASTRUCTURE ============
+// ============ 09. DIGITAL CAMPUS INFRASTRUCTURE ============
 {
   const B = [];
   B.push(eyebrow('Digital Campus Infrastructure'));
@@ -296,20 +343,20 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 09. BUILT TO SCALE ============
+// ============ 10. BUILT TO SCALE ============
 {
   const B = [];
   B.push(eyebrow('Built to Scale'));
   B.push(h1('Architecture Designed for Growth'));
   B.push(lede('A structural fact about how the institution’s systems are built — not an announcement of a second campus.'));
   B.push(body('Every role in the Digital Campus’s Permission Engine is expressed as role + institution, never a flat global grant. Nothing in this structure is Sultan Hanafi–specific by design.'));
-  B.push(panel('Adding a second campus, a fifth institution, or a future tier of education means adding new institution and class records to the same architecture — it does not mean redesigning who can see what.', 'What This Means'));
+  B.push(panel('The same architecture already absorbed the institution’s newly recognised fifth school — the Online & Distance Learning School — without redesigning who can see what: adding it meant adding new institution and class records to the existing model, nothing more. A second campus or a future sixth institution would be added the same way.', 'What This Means'));
   B.push(panel('This is a description of technical and governance readiness, not an announcement. Sultan Hanafi Royal Schools has not announced a second physical campus. When a real expansion decision is made, it will be documented here — not before.', 'What This Is Not'));
   B.push(statQuad([['Role +', 'Institution Model'], ['1', 'INSERT to Add a Campus'], ['0', 'Redesign Required'], ['0', 'Campuses Announced']]));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 10. COMMUNITY & IMPACT ============
+// ============ 11. COMMUNITY & IMPACT ============
 {
   const B = [];
   B.push(eyebrow('Community & Impact'));
@@ -320,7 +367,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 11. INTERNATIONAL REGISTER ============
+// ============ 12. INTERNATIONAL REGISTER ============
 {
   const B = [];
   B.push(eyebrow('International Register'));
@@ -337,7 +384,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 12. OUR VISION ============
+// ============ 13. OUR VISION ============
 {
   const B = [];
   B.push(eyebrow('Our Vision'));
@@ -349,7 +396,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 13. THE ROAD AHEAD ============
+// ============ 14. THE ROAD AHEAD ============
 {
   const B = [];
   B.push(eyebrow('Named, Not Invented'));
@@ -363,7 +410,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 14. ACADEMIC MILESTONES ============
+// ============ 15. ACADEMIC MILESTONES ============
 {
   const B = [];
   B.push(eyebrow('Academic Milestones'));
@@ -376,7 +423,7 @@ sections[0].children.push(pageBreak());
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 
-// ============ 15. PARTNER WITH US ============
+// ============ 16. PARTNER WITH US ============
 {
   const B = [];
   B.push(eyebrow('Partner With Us'));
@@ -386,7 +433,7 @@ sections[0].children.push(pageBreak());
   B.push(pillar('R', 'Regulators', 'Our full governance register and Ministry registration record are available on request.'));
   B.push(pillar('D', 'Donors & Partners', 'The Sultan Zakariya Hanafi Foundation extends this institution’s mission into the wider community.'));
   B.push(pillar('S', 'Prospective Students & Alumni', 'Every Hifz & Ijazah record is permanent and verifiable years after graduation.'));
-  B.push(panel('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.ng · +234 807 374 7650', 'Speak With Us'));
+  B.push(panel('15, Imowonla Road, Off Gberigbe–Agura Road, Ikorodu, Lagos State · info@shroyalschools.com · +234 807 374 7650', 'Speak With Us'));
   sections.push({
     properties: { page: { size: PAGE, margin: { top: 1000, bottom: 1000, left: 1200, right: 1200 } } },
     headers: { default: new Header({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools — The Institutional Masterplan Edition', font: BODY_FONT, size: 14, color: INK_SOFT })] })] }) },
@@ -395,7 +442,7 @@ sections[0].children.push(pageBreak());
   });
 }
 
-// ============ 16. BACK COVER ============
+// ============ 17. BACK COVER ============
 sections.push({
   properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 900, right: 900 } } },
   children: [
@@ -404,8 +451,8 @@ sections.push({
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 }, children: [new TextRun({ text: 'Sultan Hanafi Royal Schools', font: HEAD_FONT, size: 30, bold: true, color: 'FFFFFF' })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: 'THE INSTITUTIONAL MASTERPLAN EDITION', font: BODY_FONT, size: 14, color: BURGUNDY_BRIGHT, bold: true, characterSpacing: 15 })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: '15, Imowonla Road, Ikorodu, Lagos State', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.ng · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
-      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.ng · @shroyal_schools', font: BODY_FONT, size: 18, color: BURGUNDY_BRIGHT, bold: true })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'info@shroyalschools.com · +234 807 374 7650', font: BODY_FONT, size: 18, color: 'FFFFFF' })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60 }, children: [new TextRun({ text: 'shroyalschools.com · @shroyal_schools', font: BODY_FONT, size: 18, color: BURGUNDY_BRIGHT, bold: true })] }),
       new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 800 }, children: [new TextRun({ text: 'INSTITUTIONAL MASTERPLAN EDITION 2026 · NIGERIA', font: HEAD_FONT, size: 13, color: 'D9D5C8', characterSpacing: 15 })] }),
     ], { dark: true }),
   ],

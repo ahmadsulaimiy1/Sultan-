@@ -18,9 +18,13 @@ This matrix follows the same discipline as
 documented, and say plainly where the requesting brief names something
 that doesn't exist yet. Three corrections:
 
-- **No "Proprietor" separate from CEO.** GV-01 names one top executive
-  role, the **CEO** (the combined "Founder/CEO" title is used for the
-  named individual in `visual-asset-integration-plan.md`). This matrix
+- **No "Proprietor" separate from the Head of Schools / Administrator.**
+  GV-01 names one top executive role, the **Head of Schools /
+  Administrator** — per the Board's governance restructuring amendment
+  of 2026-08-04, there is no office of "Chief Executive Officer"; the
+  Founder holds the office of Head of Schools / Administrator together
+  with the office of Chairman of the Board of Governors, and exercises
+  the Founder's authority solely through those two offices. This matrix
   doesn't invent a second executive title.
 - **"Hifz Instructor" is not the school's term.** IQ-01/IQ-02 already
   establish **Muhaffiz/Muhaffizah** as the role that supervises Hifz
@@ -107,8 +111,8 @@ also what makes the model multi-campus-ready without redesign — see §5.
 
 | Code | Role | Status | Scope | Real person / source |
 |---|---|---|---|---|
-| **EXE** | CEO / Executive Leadership | Established | All institutions | GV-01; Founder/CEO Zakariya Olanrewaju Anofi |
-| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Nursery & Primary (Mrs. Kareemat Abdurazaq) |
+| **EXE** | Head of Schools / Administrator / Executive Leadership *(role code unchanged; label updated per the 2026-08-04 amendment — no office of CEO exists)* | Established | All institutions | GV-01; Zakariya Olanrewaju Anofi, Founder, Chairman of the Board of Governors & Head of Schools / Administrator |
+| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Kareemat Abdurazaq) |
 | **VP** | Vice Principal | Proposed | Own institution, mirrors Principal minus final approval authority | Not yet documented — recommended where an institution's size warrants it |
 | **REG** | Registrar | Established | All institutions (academic records are institution-wide) | AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope |
 | **AREG** | Assistant Registrar | Proposed | Delegated subset of Registrar's scope | Not yet documented — recommended once Registrar workload requires it |
@@ -116,11 +120,11 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | **FIN** | Finance Officer (covers Accounts Officer / Bursar) | Proposed | All institutions | FN-01 establishes the *principle* of financial control; no officer role documented. Consolidated into one code — split only if the school later separates the duties |
 | **TCH** | Teacher (covers Subject Teacher / Class Teacher) | Proposed | Own assigned classes/subjects only | Institution-agnostic; the role that unlocks a real Teacher Portal |
 | **MUH** | Muhaffiz / Muhaffizah | Proposed | Own assigned Hifz students only | IQ-01, IQ-02's real term for this role |
-| **ARB** | Islamic & Arabic Studies Instructor | Proposed | Own assigned classes, School of Islamic & Arabic Studies | Mirrors TCH scope for that division |
+| **ARB** | Islamic and Arabic Studies Instructor | Proposed | Own assigned classes, Sultan Hanafi School of Islamic and Arabic Studies | Mirrors TCH scope for that division |
 | **QC-OFF** | Qur'an College Officer | Proposed | Qur'an College institution-wide | Institution-level oversight above individual Muhaffiz assignments |
 | **SA** | Student Affairs Officer | Proposed | All institutions | SD-05/06/07 (Attendance/Welfare/Behaviour policies) are Missing/Partial — this role and its governing policy should arrive together |
 | **BRD** | Boarding Officer (covers House Parent) | Proposed | Boarding students only | SD-04 Boarding Regulations is published; no digital officer role yet |
-| **ICT** | ICT Administrator | Proposed | All institutions, system-level | IT-06 names an "ICT Head" as an Executive Management Team member — this role is that person's operational tier |
+| **ICT** | ICT Administrator | Proposed | All institutions, system-level | IT-06 names an "ICT Head" as a Management Team member — this role is that person's operational tier |
 | **SYSADMIN** | System Administrator | Proposed — one account, tightly held | Everything, technical only | The single highest-privilege technical role; see §4.20 |
 | **DSL** | Designated Safeguarding Lead | Established (role defined, not yet appointed) | All institutions, safeguarding-relevant fields only | SW-02 |
 | *(for context)* GUARDIAN | Guardian | Established, built | Own linked children only | Live — Parent Portal |
@@ -359,7 +363,7 @@ mapping to the schema, tracked as future work, not done as part of this
 migration.
 
 ### 4.16 Policies
-*Owner: policy-owning office per `policy-code-index.md` (e.g. Registrar owns AC-02). Approval: Board of Trustees for Tier 1.*
+*Owner: policy-owning office per `policy-code-index.md` (e.g. Registrar owns AC-02). Approval: Board of Governors for Tier 1.*
 
 No in-system publish permission exists — this is git-based (a document
 is drafted, Board-approved, then physically added to the site by
@@ -372,7 +376,7 @@ Same reality as Policies — no CMS, no in-system Publish permission
 exists. Not a gap to fix in Phase 2.
 
 ### 4.18 Governance Documents
-*Owner: Board of Trustees.* Same git-based reality.
+*Owner: Board of Governors.* Same git-based reality.
 
 ### 4.19 Analytics
 

@@ -33,7 +33,7 @@ generate real ones.
 
 A student can belong to more than one class at once — e.g. a Royal
 College SS2 student who is also enrolled in Qur'an College and/or
-Islamic & Arabic Studies. `student_classes` is the authoritative
+Islamic and Arabic Studies. `student_classes` is the authoritative
 enrolment record (each student's primary class from `admin/students.js`
 is mirrored there with `is_primary = true`); both the guardian and
 student dashboards render every enrolment as a chip, and the Hifz panel
@@ -53,7 +53,7 @@ curl -X POST https://<your-domain>/api/portal/admin/students \
       "institution": "Royal College", "className": "SS2",
       "additionalPrograms": [
         { "institution": "Qur'\''an College", "className": "Hifz Year 3" },
-        { "institution": "Islamic & Arabic Studies", "className": "Thanawiyyah 1" }
+        { "institution": "Islamic and Arabic Studies", "className": "Thanawiyyah 1" }
       ]
     }
   }'
@@ -88,7 +88,7 @@ only need the two new pieces below.
    `student_classes`) and, if `PORTAL_DEMO_PASSWORD` is set, also
    creates a second Sample Institutional Record child — `SHR-2026-902`
    ("Fatima Sani Bello"), a Qur'an College student (dual-enrolled in
-   Islamic & Arabic Studies too, to demonstrate multi-programme support)
+   Islamic and Arabic Studies too, to demonstrate multi-programme support)
    with sample Hifz progress and a working Student Portal login —
    alongside the existing `SHR-2026-901` sample child, both linked to
    the same sample guardian and both flagged `is_sample_data = true` so

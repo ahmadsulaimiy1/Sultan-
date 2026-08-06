@@ -19,8 +19,8 @@ error.*
 | Policy Title | Ijazah Governance Framework |
 | Version | 2.0 (retrofitted from v1.0, Phase A) |
 | Effective Date | Not yet effective — pending Board and Qur'an College scholarly review |
-| Policy Owner | Principal, Qur'an College (Shaykh Ahmad Ibrahim) |
-| Approval Authority | Board of Trustees, informed by Qur'an College's own scholarly leadership |
+| Policy Owner | Principal, Qur'an College (Imam Ahmad Sulaimiy) |
+| Approval Authority | Board of Governors, informed by Qur'an College's own scholarly leadership |
 | Review Cycle | Biennial, or immediately if an Ijazah-granting scholar's status changes |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -31,7 +31,7 @@ error.*
 > institutional governance layer around that tradition for SHRS — it
 > does not itself establish religious authority to grant an Ijazah,
 > which properly rests with the qualified Islamic scholars on staff
-> (e.g. Shaykh Ahmad Ibrahim, Shaykh Abubakr Solah), not with an
+> (e.g. Imam Ahmad Sulaimiy, Shaykh Abubakr Solah), not with an
 > administrative document. This framework should be reviewed and
 > approved by SHRS's own Qur'an College scholarly leadership before
 > adoption, not imposed on them from outside their expertise.

@@ -12,7 +12,7 @@ A full investigation of the live portal codebase found real, working infrastruct
 - **Generic approval workflow** (`functions/_lib/approvals.js`, `staff_approvals` table) — real second-party sign-off (a Registrar requests, a Principal approves; the same person cannot do both), already wired to certificate issuance. This is the joint-sign-off machinery the directive's "Graduation Approval" workflow step needs — it exists.
 - **Reference-number scheme** — `SHRS-<TYPE>-<YEAR>-<sequence>`, auto-generated at approval time. Already the permanent verification ID the directive asks for.
 - **Public verification** — `GET /api/certificates/verify?ref=...` (no-auth lookup, genuine/revoked/not-found states) and `GET /api/certificates/qr?ref=...` (real SVG QR code via `functions/_lib/qrcode.js`, encoding a link to `/verify-certificate/?ref=...`), plus the live public page at `/verify-certificate/`. This is a working, honest verification system today — an employer, university, or embassy can already verify a certificate by reference number or QR code. It has no rate limiting yet (a real, scoped hardening item, not a redesign).
-- **Student/guardian data model** — `students`, `guardians`, `guardian_student`, `student_classes` (dual/multi-enrolment — already handles a student in both Royal College JSS3 and the School of Islamic & Arabic Studies, exactly the real case in this cohort), `term_results`, `student_lifecycle_events` (with `event_type = 'graduation'` already defined, though not yet gated by anything).
+- **Student/guardian data model** — `students`, `guardians`, `guardian_student`, `student_classes` (dual/multi-enrolment — already handles a student in both Royal College JSS3 and School of Islamic and Arabic Studies, exactly the real case in this cohort), `term_results`, `student_lifecycle_events` (with `event_type = 'graduation'` already defined, though not yet gated by anything).
 - **Ijazah register** (`ijazah_register` table) — a sibling credential register for Qur'an memorisation certification, already live with its own verification.
 - **Permission Engine** (`functions/_lib/permission-matrix.js` + `permissions.js`) — role-scoped, auditable authority checks. A `transcripts` area is already defined in the matrix (Registrar: View/Create/Delete) but has zero endpoints — an orphaned area waiting to be wired up, not a gap to fill from scratch.
 
@@ -27,9 +27,9 @@ A full investigation of the live portal codebase found real, working infrastruct
 
 ## 3. Document taxonomy — what's actually issued, per level
 
-Checked against the real cohort (36 named students across four groups, several dual-enrolled between Royal College and the School of Islamic & Arabic Studies, per the existing `student_classes` model):
+Checked against the real cohort (36 named students across four groups, several dual-enrolled between Royal College and School of Islamic and Arabic Studies, per the existing `student_classes` model):
 
-| Document | Nursery & Primary (BASIC) | Royal College JSS3 | Royal College SSS3 | School of Islamic & Arabic Studies (ISLAMIYYAH) |
+| Document | Basic School (BASIC) | Royal College JSS3 | Royal College SSS3 | School of Islamic and Arabic Studies (ISLAMIYYAH) |
 |---|---|---|---|---|
 | Certificate of Completion / Graduation Certificate | ✓ (Completion) | ✓ (Completion) | ✓ (full Graduation) | ✓ (Islamiyyah Completion) |
 | Statement of Results | ✓ | ✓ | ✓ | ✓ (where assessed) |
@@ -142,7 +142,7 @@ Before writing any code, the codebase's real office/role/notification infrastruc
 | 8 | Principal | The student's own Principal/Head Teacher/Ra'ees/Mudeer | Permission Engine (`graduation_records` area — the same grant that used to run the old lock pair) | Yes |
 | 9 | Vice Principal (Academic) | Holder of the new `VPAC` role | Permission Engine (new `graduation_clearances` area) — **no one holds this role today** | Yes |
 | 10 | Vice Principal (Administration) | Holder of the new `VPAD` role | Permission Engine — **no one holds this role today** | Yes |
-| 11 | Founder & CEO | `EXE` | Permission Engine — **only present when the record is flagged `requires_founder_review`** | Conditional |
+| 11 | Head of Schools / Administrator | `EXE` | Permission Engine — **only present when the record is flagged `requires_founder_review`** | Conditional |
 
 Every stage is strictly sequential — a stage cannot be decided until every earlier *blocking* stage is `cleared` or `not_applicable`. This is a literal reading of the Directive's own top-to-bottom diagram and its "no shortcut should bypass mandatory approvals" instruction. The moment the last blocking stage clears, `graduation_records.status` flips to `locked` automatically — there is no separate manual "lock" step to forget or skip.
 

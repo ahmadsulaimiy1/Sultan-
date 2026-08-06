@@ -17,8 +17,8 @@ a progress-recognition practice.*
 | Policy Title | Hifz Regulations |
 | Version | 2.0 (retrofitted from v1.0, Phase B) |
 | Effective Date | Not yet effective — pending Board and Qur'an College scholarly review |
-| Policy Owner | Principal, Qur'an College (Shaykh Ahmad Ibrahim) |
-| Approval Authority | Board of Trustees, informed by Qur'an College's own scholarly and teaching staff |
+| Policy Owner | Principal, Qur'an College (Imam Ahmad Sulaimiy) |
+| Approval Authority | Board of Governors, informed by Qur'an College's own scholarly and teaching staff |
 | Review Cycle | Annual, reviewed jointly with the Ijazah Governance Framework |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 

@@ -6,7 +6,7 @@ as a sprint backlog — sequencing, risk, and cost trade-offs matter more
 here than implementation detail.*
 
 **Planning assumptions used throughout:** ~5,000 students, ~500 active
-parent accounts, multiple programmes (the existing four institutions),
+parent accounts, multiple programmes (the existing five institutions),
 multiple physical campuses, English/Arabic operation, and a blended
 online + in-person delivery model. (Worth flagging: 500 parent accounts
 for 5,000 students is a low ratio — typically closer to 1 guardian
@@ -139,8 +139,8 @@ qualitatively different claim about the system:
 - Parent mobile app (native or a robust installable PWA) with real push
   notifications.
 - Advanced reporting: cohort trend analysis, an at-risk-student flag
-  (attendance + results correlation), board-level dashboards for the CEO
-  and Directors.
+  (attendance + results correlation), board-level dashboards for the
+  Head of Schools / Administrator and Directors.
 - Full EN/AR parity across every surface, including generated documents
   and notifications, not just the UI chrome.
 - Integration for external result bodies (WAEC/NECO import) and any

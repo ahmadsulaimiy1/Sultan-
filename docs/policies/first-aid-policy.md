@@ -17,7 +17,7 @@ adds operational depth around those facts, it does not change them.*
 | Version | 1.0 (redeveloped from the live Policy VI) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | Registrar / school nurse (per the Governance Master Register's Medical Policy owner assignment, §9) |
-| Approval Authority | Board of Trustees (Tier 1 — direct child-safety exposure) |
+| Approval Authority | Board of Governors (Tier 1 — direct child-safety exposure) |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption. **Note:** the live policy's "Next review: July 2025" has already elapsed as of this redevelopment — a real, existing overdue-review gap, named here rather than silently carried forward. |
 

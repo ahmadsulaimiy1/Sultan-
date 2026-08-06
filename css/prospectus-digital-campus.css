@@ -9,7 +9,7 @@
 
 :root{
   --dc-white:#FFFFFF; --dc-off:#F4F5F7; --dc-charcoal:#14171C; --dc-charcoal-deep:#0A0C10;
-  --dc-charcoal-soft:#1E222A; --dc-gold:#E3A81E; --dc-gold-bright:#FFCE54; --dc-gold-dim:#B4830F;
+  --dc-charcoal-soft:#1E222A; --dc-gold:#C6A15B; --dc-gold-bright:#E9CE8A; --dc-gold-dim:#A9832E;
   --dc-ink:#14171C; --dc-ink-soft:rgba(20,23,28,0.62); --dc-line:rgba(20,23,28,0.12);
   --dc-glass-fill:rgba(255,255,255,0.06); --dc-glass-line:rgba(255,255,255,0.14);
   --dc-glass-fill-light:rgba(20,23,28,0.04); --dc-glass-line-light:rgba(20,23,28,0.10);
@@ -136,6 +136,25 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 .dc-spread.dark .dc-roadmap-title{color:#fff;}
 .dc-roadmap-desc{font-family:'Inter',sans-serif; font-size:9.5pt; color:var(--dc-ink-soft); line-height:1.6;}
 .dc-spread.dark .dc-roadmap-desc{color:rgba(255,255,255,0.65);}
+
+/* ---- Institutional Publication Information (imprint) page — a
+   key/value ownership table matching the Governance Charter's own
+   .imprint-table (constitution-print.css) in structure, restyled to
+   this edition's own tokens (Space Grotesk labels, Inter values) so
+   every flagship publication's ownership page reads as one family
+   while keeping this edition's own visual voice. ---- */
+.dc-imprint-table{width:100%; border-collapse:collapse; margin-top:8px;}
+.dc-imprint-table th{
+  font-family:'Space Grotesk',sans-serif; font-size:7.5pt; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--dc-gold-dim); text-align:left; vertical-align:top; padding:9px 14px 9px 0; width:2.1in;
+  border-bottom:1px solid var(--dc-line); white-space:nowrap;
+}
+.dc-imprint-table td{
+  font-family:'Inter',sans-serif; font-size:9pt; line-height:1.6; color:var(--dc-ink);
+  text-align:left; padding:9px 0; border-bottom:1px solid var(--dc-line);
+}
+.dc-spread.dark .dc-imprint-table th{color:var(--dc-gold-bright);}
+.dc-spread.dark .dc-imprint-table td{color:rgba(255,255,255,0.82); border-bottom-color:rgba(255,255,255,0.14);}
 
 @media print{
   .dc-toolbar{display:none;}

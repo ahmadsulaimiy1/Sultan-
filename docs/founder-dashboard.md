@@ -18,7 +18,7 @@ day-to-day login system — see `digital-institution-blueprint.md`'s Phase
 ## Setup
 
 1. **Add one new environment variable**: `PORTAL_FOUNDER_TOKEN` — any
-   long random string, held only by the CEO/Board. Deliberately separate
+   long random string, held only by the Head of Schools / Administrator/Board. Deliberately separate
    from `PORTAL_ADMIN_TOKEN` (day-to-day data entry) and
    `PORTAL_QURAN_TOKEN` (Hifz data entry) — this token sees
    institution-wide aggregates, a narrower and more sensitive trust

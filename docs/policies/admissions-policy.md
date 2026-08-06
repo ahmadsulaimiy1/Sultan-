@@ -20,8 +20,8 @@ documentation stage.*
 | Policy Title | Admissions Policy |
 | Version | 2.1 (retrofitted from v1.0, Phase B; image-consent cross-reference added Phase G) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | CEO (Zakariya Olanrewaju Anofi), in consultation with each institution's Principal/Head Teacher for institution-specific eligibility |
-| Approval Authority | Board of Trustees |
+| Policy Owner | Head of Schools / Administrator (Zakariya Olanrewaju Anofi), in consultation with each institution's Principal/Head Teacher for institution-specific eligibility |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -44,7 +44,7 @@ family exactly what steps to expect.
 
 ## 3. Scope
 
-All prospective students across all four institutions.
+All prospective students across all five institutions.
 
 ## 4. Definitions
 
@@ -79,7 +79,7 @@ previous school — this policy does not add undisclosed requirements.
 
 | Role | Responsibility |
 |---|---|
-| CEO | Owns this policy; decides admission appeals (Section 12). |
+| Head of Schools / Administrator | Owns this policy; decides admission appeals (Section 12). |
 | Registrar | Verifies documentation authenticity; maintains admission records (Section 9); administers the waiting list (Section 7.10). |
 | Principal / Head Teacher (per institution) | Designates entrance-assessment staff (Section 7.4); confirms institution-specific eligibility. |
 | Designated Safeguarding Lead *(SW-02, once appointed)* | Consulted on the safer-admission vetting procedure (Section 7.9) for a transfer student with a disclosed disciplinary or safeguarding history. |
@@ -87,12 +87,12 @@ previous school — this policy does not add undisclosed requirements.
 ## 7. Procedures
 
 ### 7.1 Eligibility
-- **Nursery & Primary:** age-based eligibility per the live academics
+- **Basic School:** age-based eligibility per the live academics
   page (from age 2) — the exact minimum age cutoff per class level
   should be confirmed and stated explicitly here once provided by the
   school (not invented).
-- **Royal College, Qur'an College, School of Arabic & Islamic
-  Studies:** eligibility follows successful completion of the entrance
+- **Secular College, Qur'an College, Islamiyyah College:** eligibility
+  follows successful completion of the entrance
   assessment (Stage 5) and, for transfer students, an academic-standing
   check against their previous school's report (part of the required
   documentation already collected at Stage 3).
@@ -186,7 +186,7 @@ explicitly.
 
 ## 8. Monitoring and Compliance
 
-CEO reviews admission-decision consistency annually against the Equal
+Head of Schools / Administrator reviews admission-decision consistency annually against the Equal
 Opportunity Policy (SW-04) to confirm no institution's practice has
 drifted from stated criteria.
 
@@ -214,7 +214,7 @@ None defined.
 ## 12. Appeals and Complaints
 
 A guardian disputing a non-admission decision may request a review by
-the CEO, who was not part of the entrance-assessment decision itself —
+the Head of Schools / Administrator, who was not part of the entrance-assessment decision itself —
 following the same independent-reviewer, defined-response-window
 convention used throughout this document ecosystem (see
 `phase-b-dependency-review.md` §3), rather than a newly invented

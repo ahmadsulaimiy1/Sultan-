@@ -22,7 +22,7 @@ consent process existed to check them against.*
 | Version | 2.1 (retrofitted from v1.0, Phase A; image-consent procedure added Phase G) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | CTO-equivalent (currently the closest real role is the ICT Head, Mr. Oguntade Adebola Aliu — this policy's ownership should be confirmed by the Board, since data protection ownership is usually a named accountable individual, not just a department) |
-| Approval Authority | Board of Trustees |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, or immediately on any data breach or change to the Parent Portal's data handling |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -126,7 +126,7 @@ drift silently from what the system really does)*:
 
 | Role | Responsibility |
 |---|---|
-| Board of Trustees | Approves this policy and any material change to what data the Portal collects. |
+| Board of Governors | Approves this policy and any material change to what data the Portal collects. |
 | Data Protection Owner *(role to be confirmed — proposed: ICT Head)* | Maintains this policy, is the first point of contact for a data-subject request or a suspected breach. |
 | ICT Head | Implements technical controls (already includes: scrypt password hashing, timing-safe token comparison, login lockout — see `docs/parent-portal-audit.md`); maintains the third-party processor list (Section 7.6). |
 | Admin-portal staff (Registrar, class teachers with admin access) | Only enter data that is accurate and necessary; do not share admin tokens. |

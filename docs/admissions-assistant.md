@@ -99,14 +99,14 @@ Greeting
 ### Branch: Explore Programmes
 ```
 "What age group is this for?"
-  → Under 10          → recommend Nursery & Primary School
+  → Under 10          → recommend Nursery and Primary School
   → 10 to 17           → recommend Royal College (+ mention Qur'an
                           College if they want Qur'an memorisation
                           alongside)
-  → 18 or older        → recommend School of Islamic & Arabic Studies
+  → 18 or older        → recommend School of Islamic and Arabic Studies
                           (the only real programme in the current
                           catalogue open to adults; Royal College and
-                          Nursery & Primary are age-bounded, and Qur'an
+                          Nursery and Primary are age-bounded, and Qur'an
                           College's boarding track is stated as ages
                           9–16 — the assistant must not recommend an
                           age-inappropriate programme just to have an
@@ -126,7 +126,7 @@ Greeting
 "Day or boarding?"
   → Day only
   → Open to boarding
-  → Not applicable (e.g. Islamic & Arabic Studies weekday/weekend track)
+  → Not applicable (e.g. Islamic and Arabic Studies weekday/weekend track)
 
 → Present the matched programme: one paragraph pulled from the real
   page content (not invented), a link to that programme's actual page

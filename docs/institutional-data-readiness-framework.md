@@ -59,7 +59,7 @@ enforced.
 
 Per `docs/executive-identity-design.md`: today, **no Mandatory fields
 exist at all**, because no Executive-specific record exists — a
-Founder/CEO/Principal/Registrar is, or should be, a `staff` row like
+Founder/Head of Schools/Principal/Registrar is, or should be, a `staff` row like
 any other, with `staff_roles.role_code` in (`EXE`, `PRIN`, `REG`).
 Once the Identity Migration Register's #1 is executed, the Mandatory
 set becomes identical to Staff above, plus the specific role grant.

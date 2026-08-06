@@ -21,7 +21,7 @@ input is missing, that is stated plainly rather than filled in.
 ## Part 1 — What Shipped This Session
 
 1. **Naming corrections (sitewide, EN+AR).** Reversed "Arabic & Islamic
-   Studies" back to "Islamic & Arabic Studies" (client wrote it this way
+   Studies" back to "Islamic and Arabic Studies" (client wrote it this way
    unprompted in two consecutive directives — confirmed with the client
    before executing), and added the "Sultan Hanafi" prefix to each
    school's primary display title (academics page H2s, Faculty Directory
@@ -57,7 +57,7 @@ input is missing, that is stated plainly rather than filled in.
    curriculum, learning model, strengths, tiered CTAs). Royal College and
    Qur'an College carry a real hand-built carousel (auto-rotate, pause on
    hover/focus/touch, swipe, dot navigation) over their 2 existing real
-   photos each. Nursery & Primary and Islamic & Arabic Studies have zero
+   photos each. Nursery and Primary and Islamic and Arabic Studies have zero
    dedicated photography today, so their visual slot is a scoped-accent
    identity panel (mini foundations diagram / mini weekday timetable)
    rather than fabricated stock imagery — the same precedent already set
@@ -100,7 +100,7 @@ the school; nothing to build until then.*
 
 **C2. Two of four schools still have zero real photography.**
 The Executive Refinement directive's literal "3–7 image carousel per
-school" ask cannot be honestly filled for Nursery & Primary and Islamic &
+school" ask cannot be honestly filled for Nursery and Primary and Islamic &
 Arabic Studies today. This session shipped an honest interim (scoped-
 accent identity panels), but it is a content gap, not a finished feature
 — the carousel component is generic enough to accept real photos the
@@ -121,7 +121,7 @@ already satisfies the directive's literal ask — named staff, roles,
 qualifications, initials/monograms, no fabricated photos — for the three
 schools with named subject teachers on record. Royal College's directory
 entry is still principal-only; the site has no subject-teacher roster for
-it the way Qur'an College and Islamic & Arabic Studies do. *Needs the
+it the way Qur'an College and Islamic and Arabic Studies do. *Needs the
 Royal College subject-teacher list from the school.*
 **H3. The homepage's dark-section rhythm now has two dark bands in a
 row** (the new Digital Campus teaser, then Governance) where the rest of

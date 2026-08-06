@@ -5,7 +5,8 @@
 // 2: "the trigger must never be hardcoded... administrators should be
 // able to modify the Approval Matrix without changing code").
 //
-// Gated to System Administrator or the Founder & CEO — the two
+// Gated to System Administrator or the Founder (Head of Schools /
+// Administrator) — the two
 // authorities who can genuinely stand behind a rule that says "the
 // Founder must review every graduate, because of [Constitution /
 // Governance Charter / Board Resolution / Executive Directive]": a
@@ -37,7 +38,8 @@ async function requireStaffSession(request, env) {
 // than an area+permission grant — system_settings:E is ALSO held by
 // ICT ("operational settings only" per the Matrix), which must not
 // carry authority over a constitutional-level rule set like this one.
-// Only the System Administrator and the Founder & CEO may touch it.
+// Only the System Administrator and the Founder (Head of Schools /
+// Administrator) may touch it.
 async function requireMatrixAuthority(sql, staffId) {
   const grants = await effectiveGrants(sql, staffId);
   return grants.some((g) => g.roleCode === 'SYSADMIN' || g.roleCode === 'EXE');

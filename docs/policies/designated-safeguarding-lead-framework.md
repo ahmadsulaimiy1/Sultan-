@@ -22,8 +22,8 @@ Governance Charter's (GV-01) new succession principle.*
 | Policy Title | Designated Safeguarding Lead Framework |
 | Version | 2.0 (retrofitted from v0.1, Phase D) |
 | Effective Date | Not yet effective — pending Board adoption and first appointment |
-| Policy Owner | CEO (maintains this framework document); the appointment decision itself belongs to the Board of Trustees |
-| Approval Authority | Board of Trustees |
+| Policy Owner | Head of Schools / Administrator (maintains this framework document); the appointment decision itself belongs to the Board of Governors |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, or immediately upon appointment of the first DSL, upon any DSL transition, or upon any campus-expansion decision |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -52,7 +52,7 @@ enough.
 ## 3. Scope
 
 The DSL role, Deputy DSL roles per institution (and, at scale, per
-campus), and their reporting lines to the Board and CEO.
+campus), and their reporting lines to the Board and Head of Schools / Administrator.
 
 ## 4. Definitions
 
@@ -72,14 +72,14 @@ operationalises the DSL role those definitions already named.
 The DSL role sits at Executive Management level, not delegated to a
 single institution's staff — because a safeguarding concern doesn't
 respect institutional boundaries (a Qur'an College boarding concern may
-have implications the DSL needs to weigh against, say, a Royal College
+have implications the DSL needs to weigh against, say, a Secular College
 sibling's circumstances). Every institution has a named Deputy DSL
 today; every **campus** will need one once SHRS operates more than one
 site per institution — the two are not the same unit, and this
 framework treats them accordingly rather than assuming institution-
 level coverage automatically scales. The DSL's independence from
 day-to-day management pressure (Child Protection & Safeguarding Policy
-§6, CEO's responsibility to "resource and empower" the role) is a
+§6, Head of Schools / Administrator's responsibility to "resource and empower" the role) is a
 structural requirement, not an aspiration. A DSL appointment is never
 informal — it is a named Board decision, documented, with a clear
 start date and successor plan, consistent with the Constitution &
@@ -89,8 +89,8 @@ Governance Charter's (GV-01) succession principle (§7.6).
 
 | Role | Responsibility |
 |---|---|
-| Board of Trustees | Identifies and formally appoints the DSL (Section 7.5); receives the DSL's annual aggregate report (Constitution & Governance Charter, GV-01, §6); tracks the current vacancy as a governance gap (GV-01 §7.5) until filled. |
-| CEO | Resources and protects the DSL's independence; maintains this framework document; sits alongside the reporting chain (Section 7.1) rather than inside it. |
+| Board of Governors | Identifies and formally appoints the DSL (Section 7.5); receives the DSL's annual aggregate report (Constitution & Governance Charter, GV-01, §6); tracks the current vacancy as a governance gap (GV-01 §7.5) until filled. |
+| Head of Schools / Administrator | Resources and protects the DSL's independence; maintains this framework document; sits alongside the reporting chain (Section 7.1) rather than inside it. |
 | Designated Safeguarding Lead *(role vacant — Section 7.7 names interim coverage)* | First and final point of contact for every safeguarding disclosure across SHRS; decides internal handling versus external referral; maintains the single cross-institution safeguarding log; oversees any allegation against staff; reports to the Board annually. |
 | Deputy DSL (per institution today, per campus at scale) | First point of contact within their institution for a concern, escalating to the DSL the same day; maintains institution-level awareness without needing the DSL's full cross-institution picture. |
 
@@ -98,7 +98,7 @@ Governance Charter's (GV-01) succession principle (§7.6).
 
 ### 7.1 Reporting lines
 ```
-Board of Trustees
+Board of Governors
       |
    (appoints, holds accountable, receives annual aggregate report)
       |
@@ -106,16 +106,16 @@ Designated Safeguarding Lead (Executive Management level)
       |
    (delegates institution-level first response to)
       |
-Deputy DSL — Royal College   Deputy DSL — Qur'an College
-Deputy DSL — School of Islamic & Arabic Studies
-Deputy DSL — Nursery & Primary
+Deputy DSL — Secular College   Deputy DSL — Qur'an College
+Deputy DSL — Islamiyyah College
+Deputy DSL — Basic School
       |
    (all staff report a concern to their institution's Deputy DSL,
     or directly to the DSL, whichever is faster)
 ```
-The CEO sits alongside this chain, not inside it, for one specific
+The Head of Schools / Administrator sits alongside this chain, not inside it, for one specific
 reason: the DSL's independence means the DSL does not report
-safeguarding case decisions to the CEO for approval — only in aggregate
+safeguarding case decisions to the Head of Schools / Administrator for approval — only in aggregate
 to the Board.
 
 ### 7.2 DSL day-to-day responsibilities
@@ -125,15 +125,15 @@ Policy §7.2–7.5); decides on internal handling versus external
 statutory referral for every case (§7.4–7.5); maintains the
 confidential safeguarding log across all institutions (§7.3) — a single
 log, not four institution-siloed ones; handles or directly oversees any
-allegation against a staff member (§7.6), in consultation with the CEO;
+allegation against a staff member (§7.6), in consultation with the Head of Schools / Administrator;
 reviews the Child Protection & Safeguarding Policy, Boarding
 Regulations, and this framework annually, proposing amendments where
 practice has revealed a gap.
 
 ### 7.3 Deputy DSL day-to-day responsibilities
 One Deputy DSL per institution — proposed: the Principal of Royal
-College, Qur'an College, and School of Islamic & Arabic Studies, and
-the Head Teacher of Nursery & Primary (matching the Child Protection &
+College, Qur'an College, and Islamiyyah College, and
+the Head Teacher of Basic School (matching the Child Protection &
 Safeguarding Policy §6's existing proposal, not a new assignment).
 First point of contact within their institution for a concern,
 escalating to the DSL the same day (§7.2); maintains institution-level
@@ -181,13 +181,13 @@ operates several physical campuses.
 ### 7.6 Handover and succession
 When a DSL leaves the role, they hand over the live safeguarding log,
 any open case's current status, and Deputy DSL relationships to their
-successor directly — not through the CEO or Board as an intermediary,
+successor directly — not through the Head of Schools / Administrator or Board as an intermediary,
 since the log's content is safeguarding-confidential (Section 9). Until
 a successor is confirmed and the handover complete, the Constitution &
 Governance Charter's (GV-01) succession principle (§7.6) applies: the
-CEO holds the DSL's authority directly rather than leaving it
+Head of Schools / Administrator holds the DSL's authority directly rather than leaving it
 unexercised, and this reverts to Section 7.7's interim-coverage
-arrangement for open-case decisions specifically, given the CEO does
+arrangement for open-case decisions specifically, given the Head of Schools / Administrator does
 not sit inside the DSL's independent reporting chain (Section 7.1).
 **This is a new provision, not previously stated in v0.1** — added
 because v0.1 defined the DSL role fully but never stated what happens
@@ -196,7 +196,7 @@ operationally the day a serving DSL leaves it.
 ### 7.7 Interim coverage before first appointment
 **As of this draft, no DSL has been appointed.** Until the Board
 completes Section 7.5's appointment process, a safeguarding concern
-reported anywhere across SHRS is handled jointly by the CEO and the
+reported anywhere across SHRS is handled jointly by the Head of Schools / Administrator and the
 relevant institution's Principal/Head Teacher — consistent with what
 the Child Protection & Safeguarding Policy (SW-01) §8 already states as
 the interim monitoring arrangement. This interim arrangement does not
@@ -223,11 +223,11 @@ vacancy go unmentioned.
 ## 9. Records and Documentation
 
 The confidential safeguarding log (Section 7.2) is maintained by the
-DSL (or, during interim coverage, jointly by the CEO and Principal/Head
+DSL (or, during interim coverage, jointly by the Head of Schools / Administrator and Principal/Head
 Teacher handling a given concern) and retained per the Records
 Retention Policy's (IT-04) safeguarding-record category. DSL and Deputy
 DSL appointment records (name, start date, scope, training completion)
-are maintained by the CEO and retained alongside the Constitution &
+are maintained by the Head of Schools / Administrator and retained alongside the Constitution &
 Governance Charter's (GV-01) succession records (§9) — **this is a
 proposed record-keeping practice, not a confirmation of current
 practice**, since no appointment has yet occurred to generate one.

@@ -15,7 +15,7 @@ conflicting versions on file** — see `master-academic-structure-register.md`
 direct answer before any Royal College names are published publicly;
 it is not something this document's own intake structure can resolve.
 
-## 1. Nursery & Primary School Faculty
+## 1. Basic School Faculty
 
 For every real teacher, please supply:
 
@@ -23,14 +23,14 @@ For every real teacher, please supply:
 |---|---|---|---|---|
 | *(awaiting real data)* | | | | |
 
-## 2. School of Islamic & Arabic Studies Faculty — **supplied, integrated**
+## 2. School of Islamic and Arabic Studies Faculty — **supplied, integrated**
 
 **Distinct from Qur'an College** — the two lists arrived merged once
 already (`master-academic-structure-register.md` v1.1's §4d error) and
 have now been correctly split. Full detail, qualifications, and
 teaching areas: `docs/master-academic-structure-register.md` §4d
 (Qur'an College — Ustadh Muhammad Fodio, Ustadh Muhammad Awwal Ishola)
-and §4e (School of Islamic & Arabic Studies — Ustadh Abdul-Hameed
+and §4e (School of Islamic and Arabic Studies — Ustadh Abdul-Hameed
 Abdurrahman, Ustadh Sherifudeen Olaifa, Ustadh Mas'oud Abdul-Fattah,
 Engr. Ustadhah Fatimah A.). Ustadh Sherifudeen Olaifa's qualification
 remains unsupplied, recorded as such, not filled in.
@@ -39,15 +39,15 @@ remains unsupplied, recorded as such, not filled in.
 
 | Position | Full Name |
 |---|---|
-| Administrator / CEO | *(GV-01 already names this individual — confirm whether to carry that name into this register, or whether a real `staff` account should be created separately)* |
+| Head of Schools / Administrator | *(GV-01 already names this individual — confirm whether to carry that name into this register, or whether a real `staff` account should be created separately)* |
 | VP Administration | *(awaiting real data — role currently `proposed`, not adopted, per `docs/teacher-operating-model.md`)* |
-| Registrar | *(AC-02/PA-05 already name this individual — same confirmation question as CEO above)* |
+| Registrar | *(AC-02/PA-05 already name this individual — same confirmation question as the Head of Schools / Administrator above)* |
 | Finance Officer | *(awaiting real data — role currently `proposed`)* |
 | ICT Officer | *(awaiting real data — role currently `proposed`)* |
 | HR Officer | *(awaiting real data — no HR role/office exists in the system at all yet)* |
 | Principal, Royal College | *(awaiting real data)* |
-| Principal, School of Islamic & Arabic Studies | *(awaiting real data)* |
-| Head Teacher, Nursery & Primary | *(awaiting real data)* |
+| Principal, School of Islamic and Arabic Studies | *(awaiting real data)* |
+| Head Teacher, Basic School | *(awaiting real data)* |
 
 ## 4. What happens once this is returned filled in
 

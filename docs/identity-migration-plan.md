@@ -204,7 +204,7 @@ Both endpoints now check the new assignment table directly when
 `grant.via.roleCode === 'TCH'`.
 
 **What this phase deliberately did not touch**, named rather than
-silently dropped: `MUH` (Muhaffiz) and `ARB` (Islamic & Arabic Studies
+silently dropped: `MUH` (Muhaffiz) and `ARB` (Islamic and Arabic Studies
 Instructor) remain `'proposed'` roles with no issued account and no
 onboarding path — `teacher_class_assignments` is schema-ready for them
 (nothing about it is TCH-specific), but provisioning either role and

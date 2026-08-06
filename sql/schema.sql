@@ -1324,7 +1324,8 @@ ALTER TABLE students ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE guardians ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 ALTER TABLE staff ADD COLUMN IF NOT EXISTS identity_no TEXT UNIQUE;
 
--- SHRS Master Identity Architecture Directive (Founder & CEO-approved):
+-- SHRS Master Identity Architecture Directive (Founder, Head of Schools &
+-- Chairman-approved):
 -- staff identity numbers moved from SHR-STF-<year>-<seq> to
 -- SHRS-[UNIT]-[OFFICE]-[JOINDATE]-[SEQUENCE] — see
 -- functions/_lib/identity-no.js. The SEQUENCE segment is now a real,
@@ -1597,17 +1598,17 @@ CREATE TABLE IF NOT EXISTS office_documents (
 CREATE INDEX IF NOT EXISTS idx_office_documents_office ON office_documents(office_id);
 
 -- Backfill slug/layer on the four offices already seeded by an earlier
--- phase (Board of Trustees, Registrar's Office, Finance Office, ICT
+-- phase (Board of Governors, Registrar's Office, Finance Office, ICT
 -- Office), then seed every additional office named in the Institutional
 -- Portal Ecosystem directive. ON CONFLICT (name) DO UPDATE so re-running
 -- this file against an already-seeded database fills in the new columns
 -- rather than skipping the row entirely.
 INSERT INTO offices (name, office_type, layer, slug, description) VALUES
-  ('Board of Trustees', 'governance', 'governance', 'board-of-trustees', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
+  ('Board of Governors', 'governance', 'governance', 'board-of-trustees', 'The institution''s ultimate governing body (GV-01) — 4 members, composition not individually published.'),
   ('Registrar''s Office', 'academic', 'academic', 'registrar', 'Owns admissions verification, enrolment, results, transcripts, and certificates across all four institutions (AC-02, PA-05).'),
   ('Finance Office', 'support', 'operational', 'finance', 'Owns fee records across all institutions (FN-01) — no write workflow built yet pending FN-03/04/05.'),
   ('ICT Office', 'support', 'operational', 'digital-services', 'Owns system accounts, access logs, and the Acceptable Use / AI Usage policies (IT-03, IT-05).'),
-  ('Executive', 'executive', 'governance', 'executive', 'The Founder & Chief Executive Officer''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
+  ('Head of Schools / Administrator', 'executive', 'governance', 'executive', 'The Founder, Head of Schools & Administrator''s office — institutional oversight, strategic direction, and final executive decision-making across all four institutions.'),
   ('Management Council', 'executive', 'governance', 'management-council', 'The senior leadership team drawn from each institution and the central offices, convened for cross-institutional coordination. Composition not yet formally published.'),
   ('Strategic Planning', 'governance', 'governance', 'strategic-planning', 'One of the six Governance Headquarters environments — long-range institutional planning and the Strategic Plan''s custodian office. Composition not yet formally published.'),
   ('Quality Assurance', 'governance', 'governance', 'quality-assurance', 'One of the six Governance Headquarters environments — academic and operational standards oversight across all four institutions. Composition not yet formally published.'),
@@ -1616,10 +1617,11 @@ INSERT INTO offices (name, office_type, layer, slug, description) VALUES
   ('Academic Affairs', 'academic', 'academic', 'academic-affairs', 'Oversight of curriculum standards, academic policy, and teaching quality across all four institutions.'),
   ('Examinations', 'academic', 'academic', 'examinations', 'Examination administration, results processing, and assessment-integrity oversight. Governing policy (AC-03) not yet published.'),
   ('Admissions', 'academic', 'academic', 'admissions', 'Application intake, entrance assessment, and offer administration — operated in practice through the Registrar''s Office pending a dedicated Admissions Officer appointment.'),
-  ('Head Teacher — Nursery & Primary', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Nursery & Primary School — day-to-day academic and pastoral operations.'),
-  ('Principal — Royal College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Royal College — secondary academic operations, staff supervision, and student discipline.'),
-  ('Office of the Ra''ees', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi School of Islamic & Arabic Studies — Ra''ees is the official title, officially adopted by the Founder & CEO in place of "Principal". Arabic language and Islamic studies programme oversight.'),
-  ('Office of the Mudeer', 'academic', 'school_leadership', 'mudeer', 'Head of Institution, Sultan Hanafi Qur''an College — Mudeer is the official title, officially adopted by the Founder & CEO in place of "Principal". Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
+  ('Head Teacher — Sultan Hanafi Basic School', 'academic', 'school_leadership', 'head-teacher', 'Leadership of Sultan Hanafi Basic School — day-to-day academic and pastoral operations.'),
+  ('Principal — Sultan Hanafi Secular College', 'academic', 'school_leadership', 'principal-royal-college', 'Leadership of Sultan Hanafi Secular College — secondary academic operations, staff supervision, and student discipline.'),
+  ('Office of the Principal, Sultan Hanafi Islamiyyah College', 'academic', 'school_leadership', 'raees', 'Head of Institution, Sultan Hanafi Islamiyyah College — Principal is the official title. Arabic language and Islamic studies programme oversight.'),
+  ('Office of the Principal, Sultan Hanafi Qur''an College', 'academic', 'school_leadership', 'mudeer', 'Head of Institution, Sultan Hanafi Qur''an College — Principal is the official title. Tahfīẓ, Murāja''ah, and Ijāzah programme oversight.'),
+  ('Office of the Principal, Sultan Hanafi Online & Distance Learning School', 'academic', 'school_leadership', 'online-distance-learning', 'Head of Institution, Sultan Hanafi Online & Distance Learning School — the institution''s fifth school, established under the amended constitution. Head office currently vacant.'),
   ('Human Resources', 'support', 'operational', 'hr', 'Recruitment, staff records, leave, and performance administration. Explicitly out of scope for the current Staff Identity system (an organisational directory, not a personnel/payroll file) — this office exists as a directory entry pending that system''s build.'),
   ('Student Affairs', 'support', 'operational', 'student-affairs', 'Student welfare, leadership development, clubs, and pastoral-care coordination across all institutions.'),
   ('Communications', 'support', 'operational', 'communications', 'Institutional news, publications, press relations, and brand oversight — currently a shared function across the Registrar, Principal, and Executive offices pending a dedicated appointment.'),
@@ -1637,9 +1639,9 @@ ON CONFLICT (name) DO UPDATE SET
   description = EXCLUDED.description;
 
 -- ============================================================
--- Level 3 Institutional Framework (Founder & CEO directive: "complete
--- framework with clearly designated template content" — not fabricated
--- fact, not a blank page). Adds:
+-- Level 3 Institutional Framework (Founder, Head of Schools & Chairman
+-- directive: "complete framework with clearly designated template
+-- content" — not fabricated fact, not a blank page). Adds:
 --   1. office_kind, distinguishing a Board committee from a regular
 --      office without overloading office_type (same reasoning as the
 --      earlier layer/office_type split above).
@@ -1685,7 +1687,7 @@ CREATE INDEX IF NOT EXISTS idx_office_resolutions_office ON office_resolutions(o
 -- — a real action-tracking register, so a governance decision has a
 -- traceable owner and due date rather than living only as prose inside
 -- minutes_text/summary_text. Generic per-office (like the three tables
--- above), not Board-of-Trustees-only, so any office can adopt it later.
+-- above), not Board-of-Governors-only, so any office can adopt it later.
 -- "Overdue" is computed at query time from due_date, same convention as
 -- delegation expiry (functions/_lib/permissions.js) — no cron job exists
 -- in this project.
@@ -1705,18 +1707,47 @@ CREATE TABLE IF NOT EXISTS office_action_items (
 );
 CREATE INDEX IF NOT EXISTS idx_office_action_items_office ON office_action_items(office_id);
 
--- Five standing committees of the Board of Trustees, named in the
--- directive. Real office rows, parented under Board of Trustees.
+-- Five standing committees of the Board of Governors, named in the
+-- directive. Real office rows, parented under Board of Governors.
 INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
 SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
 FROM (VALUES
-  ('Finance Committee', 'committee-finance', 'Standing committee of the Board of Trustees for budget oversight, financial controls, and audit-readiness review.'),
-  ('Governance Committee', 'committee-governance', 'Standing committee of the Board of Trustees for constitution, policy, and board-conduct oversight.'),
-  ('Audit Committee', 'committee-audit', 'Standing committee of the Board of Trustees for internal controls, risk, and independent review of institutional accounts.'),
-  ('Academic Excellence Committee', 'committee-academic-excellence', 'Standing committee of the Board of Trustees for curriculum standards, academic outcomes, and teaching-quality oversight.'),
-  ('Development Committee', 'committee-development', 'Standing committee of the Board of Trustees for institutional growth, fundraising strategy, and capital planning.')
+  ('Finance Committee', 'committee-finance', 'Standing committee of the Board of Governors for budget oversight, financial controls, and audit-readiness review.'),
+  ('Governance Committee', 'committee-governance', 'Standing committee of the Board of Governors for constitution, policy, and board-conduct oversight.'),
+  ('Audit Committee', 'committee-audit', 'Standing committee of the Board of Governors for internal controls, risk, and independent review of institutional accounts.'),
+  ('Academic Excellence Committee', 'committee-academic-excellence', 'Standing committee of the Board of Governors for curriculum standards, academic outcomes, and teaching-quality oversight.'),
+  ('Development Committee', 'committee-development', 'Standing committee of the Board of Governors for institutional growth, fundraising strategy, and capital planning.')
 ) AS v(name, slug, description)
 CROSS JOIN (SELECT id FROM offices WHERE slug = 'board-of-trustees') AS b(id)
+ON CONFLICT (name) DO UPDATE SET
+  office_kind      = EXCLUDED.office_kind,
+  parent_office_id = EXCLUDED.parent_office_id,
+  description      = EXCLUDED.description;
+
+-- Governance Amendment 2026 — sixth Board-level standing committee.
+-- ("Finance Committee" is already seeded above — not duplicated here.)
+INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
+SELECT v.name, 'governance', 'committee', 'governance', v.slug, b.id, v.description
+FROM (VALUES
+  ('Educational Technical Committee', 'committee-educational-technical', 'Standing committee of the Board of Governors for technical and pedagogical standards guiding curriculum technology and assessment infrastructure across all institutions.')
+) AS v(name, slug, description)
+CROSS JOIN (SELECT id FROM offices WHERE slug = 'board-of-trustees') AS b(id)
+ON CONFLICT (name) DO UPDATE SET
+  office_kind      = EXCLUDED.office_kind,
+  parent_office_id = EXCLUDED.parent_office_id,
+  description      = EXCLUDED.description;
+
+-- Governance Amendment 2026 — Management-level standing committees
+-- (Da'wah, Academic, Sports), parented under Management Council the
+-- same way the Board committees above are parented under the Board.
+INSERT INTO offices (name, office_type, office_kind, layer, slug, parent_office_id, description)
+SELECT v.name, 'executive', 'committee', 'governance', v.slug, m.id, v.description
+FROM (VALUES
+  ('Da''wah Committee', 'committee-dawah', 'Standing committee of the Management Team for outreach, Islamic-education programming, and community engagement across all institutions.'),
+  ('Academic Committee', 'committee-academic', 'Standing committee of the Management Team for cross-institutional academic coordination, curriculum delivery, and teaching standards.'),
+  ('Sports Committee', 'committee-sports', 'Standing committee of the Management Team for sports programming, inter-house competitions, and physical-education coordination across all institutions.')
+) AS v(name, slug, description)
+CROSS JOIN (SELECT id FROM offices WHERE slug = 'management-council') AS m(id)
 ON CONFLICT (name) DO UPDATE SET
   office_kind      = EXCLUDED.office_kind,
   parent_office_id = EXCLUDED.parent_office_id,
@@ -1734,7 +1765,11 @@ JOIN (VALUES
   ('committee-governance', 'Chair', true), ('committee-governance', 'Member', false), ('committee-governance', 'Member', false),
   ('committee-audit', 'Chair', true), ('committee-audit', 'Member', false), ('committee-audit', 'Member', false),
   ('committee-academic-excellence', 'Chair', true), ('committee-academic-excellence', 'Member', false), ('committee-academic-excellence', 'Member', false),
-  ('committee-development', 'Chair', true), ('committee-development', 'Member', false), ('committee-development', 'Member', false)
+  ('committee-development', 'Chair', true), ('committee-development', 'Member', false), ('committee-development', 'Member', false),
+  ('committee-educational-technical', 'Chair', true), ('committee-educational-technical', 'Member', false), ('committee-educational-technical', 'Member', false),
+  ('committee-dawah', 'Chair', true), ('committee-dawah', 'Member', false), ('committee-dawah', 'Member', false),
+  ('committee-academic', 'Chair', true), ('committee-academic', 'Member', false), ('committee-academic', 'Member', false),
+  ('committee-sports', 'Chair', true), ('committee-sports', 'Member', false), ('committee-sports', 'Member', false)
 ) AS seat(office_slug, title, is_primary) ON seat.office_slug = o.slug
 WHERE NOT EXISTS (
   SELECT 1 FROM office_appointments oa
@@ -1744,17 +1779,18 @@ WHERE NOT EXISTS (
 -- Management Council's ten named cross-institutional seats, as listed
 -- in the directive. Vacant until an admin explicitly links a real
 -- staff record — several of these titles already have a real,
--- publicly-named holder elsewhere (e.g. Founder & CEO, Registrar);
--- this table does not assume that is the same seat until linked.
+-- publicly-named holder elsewhere (e.g. Founder & Head of Schools,
+-- Registrar); this table does not assume that is the same seat until
+-- linked.
 INSERT INTO office_appointments (office_id, appointment_title, is_primary, notes)
 SELECT o.id, seat.title, false, 'Pending Appointment'
 FROM offices o
 JOIN (VALUES
-  ('management-council', 'Founder & CEO'), ('management-council', 'Registrar'),
+  ('management-council', 'Founder & Head of Schools'), ('management-council', 'Registrar'),
   ('management-council', 'Finance Director'), ('management-council', 'HR Director'),
   ('management-council', 'Communications Director'), ('management-council', 'Student Affairs Director'),
-  ('management-council', 'Principal, Royal College'), ('management-council', 'Head Teacher, Nursery & Primary'),
-  ('management-council', 'Ra''ees'), ('management-council', 'Mudeer')
+  ('management-council', 'Principal, Sultan Hanafi Secular College'), ('management-council', 'Head Teacher, Sultan Hanafi Basic School'),
+  ('management-council', 'Principal, Sultan Hanafi Islamiyyah College'), ('management-council', 'Principal, Sultan Hanafi Qur''an College')
 ) AS seat(office_slug, title) ON seat.office_slug = o.slug
 WHERE NOT EXISTS (
   SELECT 1 FROM office_appointments oa
@@ -1763,7 +1799,7 @@ WHERE NOT EXISTS (
 
 -- Organisational Chart Engine — encodes the reporting lines already
 -- published on the public Governance page (pages/about-governance.html:
--- Board of Trustees -> Chief Executive Officer -> the four school
+-- Board of Governors -> Head of Schools / Administrator -> the school
 -- heads) into parent_office_id, which the schema always intended for
 -- exactly this ("so the directory can express real reporting
 -- structure"). Only lines that are already public are set here.
@@ -1777,7 +1813,7 @@ UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'boar
 UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
   WHERE slug = 'management-council';
 UPDATE offices SET parent_office_id = (SELECT id FROM offices WHERE slug = 'executive')
-  WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher');
+  WHERE slug IN ('principal-royal-college', 'raees', 'mudeer', 'head-teacher', 'online-distance-learning');
 
 -- ============================================================
 -- Institutional Messaging — a real, threaded correspondence channel
@@ -1852,3 +1888,85 @@ CREATE INDEX IF NOT EXISTS idx_push_subscriptions_guardian ON push_subscriptions
 
 ALTER TABLE guardian_notification_preferences ADD COLUMN IF NOT EXISTS channel_push BOOLEAN NOT NULL DEFAULT false;
 CREATE INDEX IF NOT EXISTS idx_thread_messages_thread ON thread_messages(thread_id);
+
+-- ============================================================
+-- Academic Stage Certificate System (Certificate Generation
+-- Directive, 2026-08-05) — the cohort-scale issuance engine behind
+-- the Ibtida'iyyah (primary-stage) certificate and its successors
+-- (I'dadiyyah, Thanawiyyah, diplomas).
+-- ============================================================
+-- Deliberately a THIRD family, sibling to `certificates` (the thin
+-- typed register) and `graduation_documents` (the clearance-chain-
+-- gated Class A-C ecosystem): a stage-completion certificate is
+-- issued for an entire cohort in one batch from a roster the
+-- Registrar uploads, has a bilingual (AR/EN) rendered document of
+-- its own, and is NOT gated on graduation_clearances — mixing it
+-- into either existing lifecycle would blur three different,
+-- independently audited issuance models.
+--
+-- Identifier architecture (client-approved formats, 2026-08-05):
+--   Student ID (permanent):  SHRS-STU-<YYYY>-NG-<seq6>
+--     — students.identity_no, assigned once, never changed; the
+--       <YYYY> is the registration year, NG the ISO country code.
+--   Certificate serial (unique per document):
+--     SHRS-CERT-<PROG>-<YYYY>-<seq6>-<SUFFIX5>
+--     — <PROG> is the programme code (IBT = Ibtida'iyyah, ...),
+--       <seq6> a real atomic PostgreSQL sequence (never reused,
+--       global across years so no two certificates ever collide),
+--       and <SUFFIX5> five characters derived from the certificate's
+--       own HMAC-SHA256 content hash (functions/_lib/document-hash.js)
+--       — a forged serial cannot produce a matching suffix without
+--       the DOCUMENT_HASH_SECRET, and the public verifier recomputes
+--       it on every lookup.
+-- Every certificate row is a SNAPSHOT (names, grade, programme,
+-- dates as issued) — later edits to the student record can never
+-- silently rewrite an already-issued certificate; corrections are
+-- revoke + reissue, preserving the full audit trail.
+CREATE SEQUENCE IF NOT EXISTS stage_certificate_serial_seq START WITH 1;
+
+CREATE TABLE IF NOT EXISTS stage_certificate_batches (
+  id                   SERIAL PRIMARY KEY,
+  batch_no             TEXT NOT NULL UNIQUE,      -- SHRS-CB-<YYYY>-<seq4>
+  programme_code       TEXT NOT NULL,             -- IBT | IDD | THN | HFZ | ...
+  academic_year        TEXT NOT NULL,             -- e.g. '2025/2026'
+  issued_at            DATE NOT NULL,
+  description          TEXT,
+  created_by_staff_id  INTEGER REFERENCES staff(id),
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS stage_certificates (
+  id                    SERIAL PRIMARY KEY,
+  serial_no             TEXT NOT NULL UNIQUE,
+  batch_id              INTEGER REFERENCES stage_certificate_batches(id),
+  student_id            INTEGER REFERENCES students(id) ON DELETE SET NULL,
+  student_identity_no   TEXT,                     -- permanent Student ID, snapshotted at issuance
+  student_full_name     TEXT NOT NULL,
+  student_full_name_ar  TEXT,
+  student_sex           TEXT,                     -- 'male' | 'female' — drives Arabic grammatical forms
+  programme_code        TEXT NOT NULL,
+  programme_label_en    TEXT NOT NULL,
+  programme_label_ar    TEXT,
+  institution_name      TEXT NOT NULL,
+  academic_year         TEXT NOT NULL,
+  grade_en              TEXT,
+  grade_ar              TEXT,
+  place_en              TEXT,
+  place_ar              TEXT,
+  issued_at             DATE NOT NULL,
+  issued_at_hijri       TEXT,                     -- rendered Hijri date (English), snapshotted (never recomputed)
+  issued_at_hijri_ar    TEXT,                     -- rendered Hijri date (Arabic), snapshotted alongside
+  content_hash          TEXT NOT NULL,            -- full HMAC-SHA256 hex; serial suffix + display hash derive from this
+  issued_by_staff_id    INTEGER REFERENCES staff(id),
+  revoked_at            TIMESTAMPTZ,
+  revocation_note       TEXT,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id);
+CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(batch_id);
+
+-- Bilingual identity fields the certificate roster captures — stored on
+-- the student record too (not only the certificate snapshot) so future
+-- documents for the same student reuse the same verified Arabic name.
+ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT;
+ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT;

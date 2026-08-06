@@ -24,14 +24,14 @@ Use **Staging** to test freely without touching real data. Use **Production** on
 | Student | `/portal/student/login/` | Admission No. + password | None — issued, not self-registered | Registrar/admin issues login via Admin API | **Live, proven** |
 | Teacher | `/portal/staff/teacher/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `TCH` role grant | Administration Centre "New Staff + Login" | **Live, proven** |
 | Staff (generic identity/org chart) | `/portal/staff/offices/`, `/portal/staff/org-chart/` (via `/portal/staff/login/`) | Staff No. + password, MFA | Any staff role | Administration Centre | **Live** |
-| **Founder & CEO** | `/portal/founder/` | Token gate (fastest) **or** staff session with `EXE` role | `EXE` role, or `PORTAL_FOUNDER_TOKEN` | Token: read from Cloudflare env var. Session: Administration Centre grant | Token path **live, proven**; no personal `EXE` account created yet |
+| **Head of Schools / Administrator** | `/portal/founder/` | Token gate (fastest) **or** staff session with `EXE` role | `EXE` role, or `PORTAL_FOUNDER_TOKEN` | Token: read from Cloudflare env var. Session: Administration Centre grant | Token path **live, proven**; no personal `EXE` account created yet |
 | **Registrar** | `/portal/staff/registrar/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `REG` role grant | Administration Centre | Code complete; **not yet exercised live** (no seeded account) |
 | **Finance Officer** | `/portal/staff/finance/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `FIN` role grant | Administration Centre | Code complete; **not yet exercised live** |
 | Principal (Royal College) | `/portal/office/principal-royal-college/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `PRIN` role + office appointment | Administration Centre | Live (governance-layer content; no deep ops tool yet) |
 | Head Teacher | `/portal/office/head-teacher/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `PRIN` role + office appointment | Administration Centre | Live (same as above) |
 | Ra'ees | `/portal/office/raees/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `PRIN` role + office appointment | Administration Centre | Live (same as above) |
 | Mudeer | `/portal/office/mudeer/` (via `/portal/staff/login/`) | Staff No. + password, MFA | `PRIN` role + office appointment | Administration Centre | Live (same as above) |
-| Board of Trustees | `/portal/office/board-of-trustees/` (via `/portal/staff/login/`) | Staff No. + password, MFA | Board office appointment | Administration Centre | Live (governance structure; no Board Papers Centre yet) |
+| Board of Governors | `/portal/office/board-of-trustees/` (via `/portal/staff/login/`) | Staff No. + password, MFA | Board office appointment | Administration Centre | Live (governance structure; no Board Papers Centre yet) |
 | Administration Centre (ICT/sysadmin) | `/portal/admin/centre/` | `PORTAL_SYSADMIN_TOKEN` | — | Read from Cloudflare env var | **Live** — this is where every account below gets created |
 | One-time DB Setup | `/portal/admin/setup/` | `PORTAL_SETUP_TOKEN` | — | Read from Cloudflare env var | Live — already run on both environments; safe to re-run, won't duplicate data |
 
@@ -51,7 +51,7 @@ Open **Cloudflare dashboard → Pages → `shroyalschools-web` → Settings → 
 
 If any of these are missing, add one (any strong random string) before continuing — the platform refuses to run the corresponding action without it, by design (fails closed, not open).
 
-### Step 1 — Founder & CEO: enter right now with the token (30 seconds)
+### Step 1 — Head of Schools / Administrator: enter right now with the token (30 seconds)
 
 1. Go to `https://shroyalschools-web.pages.dev/portal/founder/` (staging, has real demo data) or `https://shroyalschools.com/portal/founder/` (production, real but currently empty).
 2. Paste `PORTAL_FOUNDER_TOKEN` into the "Dashboard token" field.
@@ -94,7 +94,7 @@ The token above is a shared "break glass" credential, not a personal login. To s
 3. What's real today, honestly: your appointment record, your Overview/Description, your Committees (where applicable), Meetings, Documents, and now your office's **Messages inbox** (real parent correspondence). Strategic Priorities/Annual Objectives render as a clearly-labelled TEMPLATE until you set real content via the Administration Centre.
 4. What's not built yet, honestly, and is the current top priority (task #442): a genuine daily-operations dashboard — your own students/staff/attendance/academic-performance rollup, the way the Founder Command Centre now has for the whole institution. Today these four offices work at the governance/reporting layer, not yet the daily-operations layer.
 
-### Step 6 — Board of Trustees
+### Step 6 — Board of Governors
 
 1. Administration Centre → new staff, role/appointment to `board-of-trustees` (or one of its five committees).
 2. Sign in → `/portal/office/board-of-trustees/`. Real committees, real (mostly vacant "Pending Appointment") seats, a real (currently empty) Resolutions register, Messages inbox.

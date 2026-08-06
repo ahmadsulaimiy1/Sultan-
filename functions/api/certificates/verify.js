@@ -19,6 +19,25 @@
 // revoked no matter how convincing the physical copy looks.
 import { getSql } from '../../_lib/db.js';
 import { json } from '../../_lib/http.js';
+import {
+  parseStageCertificateSerial, parseStageCertificateDisplayNo, resolveStageCertificateRef,
+  displayStageCertificateNo, verifyStageCertificateIntegrity, isoDateOnly,
+} from '../../_lib/certificate-serial.js';
+import { hashIpAddress } from '../../_lib/document-hash.js';
+
+// Best-effort verification audit (same verification_log the graduation-
+// document verifier writes) — a failed log write must never break a
+// legitimate verification.
+async function logVerification(sql, request, refNo, outcome) {
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || null;
+    await sql`
+      INSERT INTO verification_log (document_reference_no, ip_hash, outcome)
+      VALUES (${refNo}, ${hashIpAddress(ip)}, ${outcome})`;
+  } catch (logErr) {
+    console.error('verification_log write failed', logErr);
+  }
+}
 
 export async function onRequestGet({ request, env }) {
   const sql = getSql(env);
@@ -29,6 +48,76 @@ export async function onRequestGet({ request, env }) {
   if (!ref) return json({ error: 'Provide a certificate or Ijazah reference number.' }, 400);
 
   try {
+    // Academic Stage Certificates (Certificate Generation Directive,
+    // 2026-08-05) — the long-serial family
+    // (SHRS-CERT-<PROG>-<YYYY>-<seq6>-<SUFFIX5>). Checked first because
+    // the serial shape is unambiguous, and verified DEEPER than the
+    // register families below: beyond row lookup, the HMAC-SHA256
+    // content hash is recomputed over the stored fields and the
+    // serial's printed anti-forgery suffix is re-derived from it, so a
+    // tampered record or fabricated serial surfaces as an integrity
+    // failure instead of quietly verifying.
+    // Accepts BOTH the stored serial and the short number now engraved on
+    // the certificate face (SHRS-CERT-IBT-000035). The short form omits
+    // the year and the printed suffix, so the resolver has to find the row
+    // first; the integrity check below is unchanged either way, because it
+    // recomputes from the STORED serial, not from what was typed. A person
+    // reading the sheet therefore verifies exactly as strongly as before —
+    // what they lose is only the ability to eyeball the suffix themselves.
+    const resolved = (parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref))
+      ? await resolveStageCertificateRef(sql, ref)
+      : null;
+    if (resolved && resolved.ambiguous) {
+      // Two rows for one printed number means the global serial sequence
+      // has been re-scoped or duplicated. Never pick one.
+      await logVerification(sql, request, ref, 'ambiguous');
+      return json({ error: 'That number matches more than one record. Contact the Registrar’s Office.' }, 409);
+    }
+    if (resolved || parseStageCertificateSerial(ref) || parseStageCertificateDisplayNo(ref)) {
+      const row = resolved && resolved.row;
+      if (!row) {
+        await logVerification(sql, request, ref, 'not_found');
+        return json({ ok: true, found: false });
+      }
+      let integrity = { hashValid: false, suffixValid: false };
+      try {
+        integrity = verifyStageCertificateIntegrity(env, row);
+      } catch (hashErr) {
+        console.error('stage certificate integrity check unavailable', hashErr);
+      }
+      const intact = integrity.hashValid && integrity.suffixValid;
+      const outcome = !intact ? 'hash_mismatch' : row.revoked_at ? 'revoked' : 'valid';
+      await logVerification(sql, request, ref, outcome);
+      return json({
+        ok: true,
+        found: true,
+        kind: 'stage_certificate',
+        serialNo: row.serial_no,
+        referenceNo: row.serial_no,
+        // The number as ENGRAVED on the sheet, so a verifier comparing the
+        // result against the document in their hand sees the same string.
+        certificateNo: displayStageCertificateNo(row.serial_no),
+        recipientName: row.student_full_name,
+        recipientNameAr: row.student_full_name_ar,
+        studentIdentityNo: row.student_identity_no,
+        credentialType: `Certificate of Completion — ${row.programme_label_en}`,
+        credentialTypeAr: row.programme_label_ar ? `شهادة إتمام ${row.programme_label_ar}` : null,
+        programmeCode: row.programme_code,
+        institutionName: row.institution_name,
+        academicYear: row.academic_year,
+        // No grade fields: Editorial Bible §1.5 — the certificate (and
+        // therefore its public attestation) certifies completion only;
+        // performance data belongs to the Transcript / Statement of
+        // Results. grade_en/grade_ar stay stored for those documents.
+        issuedAt: isoDateOnly(row.issued_at),
+        issuedAtHijri: row.issued_at_hijri,
+        batchNo: row.batch_no,
+        integrity: intact ? 'intact' : 'integrity_check_failed',
+        status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
+        revokedAt: row.revoked_at,
+        revocationNote: row.revoked_at ? row.revocation_note : null,
+      });
+    }
     const cert = await sql`
       SELECT certificate_type, student_full_name, reference_no, issued_at, revoked_at, revocation_note
       FROM certificates WHERE reference_no = ${ref}`;

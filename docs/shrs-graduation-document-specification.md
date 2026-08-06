@@ -10,7 +10,7 @@ This specification is written against what this codebase actually has today (con
 
 ## 1. Document taxonomy — what is actually issued
 
-Six document types, matching `docs/shrs-graduation-documentation-system-architecture.md` §3 and the real academic structure this system already models (four institutions, Hifz stages, Islamiyyah levels):
+Six document types, matching `docs/shrs-graduation-documentation-system-architecture.md` §3 and the real academic structure this system already models (five institutions, Hifz stages, Islamiyyah levels):
 
 | # | Document | Who receives it | Data source |
 |---|---|---|---|
@@ -94,14 +94,14 @@ Extends the existing `functions/api/certificates/verify.js` pattern rather than 
 ### 6.1 Certificate of Graduation
 - **Number:** `SHRS-CERT-<year>-<seq6>`
 - **QR:** bottom-centre or bottom-right, linking to `/verify-graduation-document/?ref=SHRS-CERT-...`
-- **Signatures:** Principal (or Head Teacher/Ra'ees/Mudeer as institution-appropriate) + Registrar, minimum. Vice Principal (Academic) and Founder & CEO signatures appear only when the underlying `graduation_clearances` record shows those stages as `cleared` (not `not_applicable`) — the certificate's signature block is a direct, honest reflection of who actually cleared the record, not a fixed template.
+- **Signatures:** Principal (or Head Teacher/Ra'ees/Mudeer as institution-appropriate) + Registrar, minimum. Vice Principal (Academic) and Founder & Head of Schools / Administrator signatures appear only when the underlying `graduation_clearances` record shows those stages as `cleared` (not `not_applicable`) — the certificate's signature block is a direct, honest reflection of who actually cleared the record, not a fixed template.
 - **Layout:** portrait or landscape A4, institution crest top-centre, full ceremonial title, student's `preferred_certificate_name`, programme/level completed, graduation session, seal position bottom-centre between signature lines, reference number + QR in the bottom margin, security border.
 
 ### 6.2 Academic Transcript
 - **Number:** `SHRS-TRAN-<year>-<seq6>`
 - **QR + content hash:** bottom of final page, same as above.
 - **Signatures:** Registrar (records custodian) + Examinations & Records officer, minimum.
-- **Layout:** tabular, term-by-term or subject-by-subject depending on institution (Royal College: subject grades by term; Qur'an College: Hifz stage progression + Islamiyyah level in place of subject grades — the transcript format is not one-size-fits-all across the four institutions, matching how `graduation_records` itself already branches by institution-specific fields). Multi-page if needed, each page numbered and referenced, with the QR/hash only on the final page but every page carrying the reference number in a running header.
+- **Layout:** tabular, term-by-term or subject-by-subject depending on institution (Royal College: subject grades by term; Qur'an College: Hifz stage progression + Islamiyyah level in place of subject grades — the transcript format is not one-size-fits-all across the five institutions, matching how `graduation_records` itself already branches by institution-specific fields). Multi-page if needed, each page numbered and referenced, with the QR/hash only on the final page but every page carrying the reference number in a running header.
 
 ### 6.3 Testimonial / Character Reference
 - **Number:** `SHRS-TEST-<year>-<seq6>`

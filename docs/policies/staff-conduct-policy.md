@@ -33,7 +33,7 @@ filled.
 
 ## 2. Scope
 
-All staff across all four institutions, including boarding wardens,
+All staff across all five institutions, including boarding wardens,
 contract and part-time staff, and volunteers with regular student
 contact.
 
@@ -91,7 +91,7 @@ redefining them.
   media on SHRS's behalf follow the Communication Policy (Governance
   Master Register, Tier 3, not yet drafted) once it exists; until then,
   formal communications are routed through VP Administration or the
-  CEO, not made independently.
+  Head of Schools / Administrator, not made independently.
 
 ## 6. Responsibilities
 
@@ -114,10 +114,10 @@ redefining them.
 3. For a non-safeguarding conduct breach: VP Administration
    investigates, the staff member is given an opportunity to respond,
    and an outcome (informal guidance, formal warning, or referral to
-   the CEO for more serious action) is decided and recorded.
+   the Head of Schools / Administrator for more serious action) is decided and recorded.
 4. A serious breach may result in suspension pending investigation (a
    neutral protective measure, not a finding of guilt) or termination,
-   decided by the CEO in consultation with VP Administration.
+   decided by the Head of Schools / Administrator in consultation with VP Administration.
 
 ## 8. Compliance
 
@@ -128,7 +128,7 @@ made here.
 
 ## 9. Appeals
 
-A staff member may appeal a conduct-breach finding to the CEO, who was
+A staff member may appeal a conduct-breach finding to the Head of Schools / Administrator, who was
 not part of the original investigation — the same independent-reviewer
 convention used throughout this document ecosystem
 (`phase-b-dependency-review.md` §3), pending the more detailed Staff

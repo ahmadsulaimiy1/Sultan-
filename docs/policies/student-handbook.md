@@ -16,7 +16,7 @@ extra-curricular/off-site activity expectations.*
 | Version | 2.0 (retrofitted from v1.0, Phase B) |
 | Effective Date | Not yet effective — pending Board adoption |
 | Policy Owner | VP Administration (Mrs. Anofi-Badmus Fatimat Omolola), the same owner as the Student Code of Conduct, so the two stay in step |
-| Approval Authority | Board of Trustees |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, in step with the Student Code of Conduct |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -38,7 +38,7 @@ policy committee.
 
 ## 3. Scope
 
-All enrolled students, all four institutions, day and boarding.
+All enrolled students, all five institutions, day and boarding.
 
 ## 4. Definitions
 

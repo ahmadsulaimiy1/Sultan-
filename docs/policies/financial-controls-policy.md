@@ -17,8 +17,8 @@ Interest Policy.*
 | Policy Title | Financial Controls Policy |
 | Version | 2.0 (retrofitted from v1.0, Phase C) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | CEO (Zakariya Olanrewaju Anofi) / Board |
-| Approval Authority | Board of Trustees |
+| Policy Owner | Head of Schools / Administrator (Zakariya Olanrewaju Anofi) / Board |
+| Approval Authority | Board of Governors |
 | Review Cycle | Annual, alongside the annual budget approval |
 | Next Review Date | Not yet set — to be fixed upon adoption |
 
@@ -52,7 +52,7 @@ institutions.
 ## 5. Policy Statement
 
 Financial decisions are made by people with real financial competence
-— SHRS already has this structurally: the CEO (FCA, FCCA) and at least
+— SHRS already has this structurally: the Head of Schools / Administrator (FCA, FCCA) and at least
 one other Board member (FCCA, CPA) hold professional accounting
 qualifications per the real governance roster, a genuine institutional
 strength this policy builds on rather than assumes. No single person
@@ -63,8 +63,8 @@ records are auditable — any transaction can be traced to an approval.
 
 | Role | Responsibility |
 |---|---|
-| Board of Trustees | Approves the annual budget; approves any transaction above the highest threshold (to be set). |
-| CEO | Day-to-day financial authority within Board-approved budget and thresholds. |
+| Board of Governors | Approves the annual budget; approves any transaction above the highest threshold (to be set). |
+| Head of Schools / Administrator | Day-to-day financial authority within Board-approved budget and thresholds. |
 | VP Administration | Administrative processing of approved transactions; maintains financial records (Section 9). |
 
 ## 7. Procedures
@@ -72,9 +72,9 @@ records are auditable — any transaction can be traced to an approval.
 ### 7.1 Approval thresholds (proposed, pending Board confirmation)
 | Transaction size | Approval required |
 |---|---|
-| Routine operational spend | CEO |
-| Above a set threshold (amount to be confirmed by the Board) | Board of Trustees |
-| Any new recurring financial commitment (e.g. a new paid service — this project has already flagged several: a transactional email service, SMS/WhatsApp Business API, real-time rate limiting infrastructure) | CEO, with Board notification |
+| Routine operational spend | Head of Schools / Administrator |
+| Above a set threshold (amount to be confirmed by the Board) | Board of Governors |
+| Any new recurring financial commitment (e.g. a new paid service — this project has already flagged several: a transactional email service, SMS/WhatsApp Business API, real-time rate limiting infrastructure) | Head of Schools / Administrator, with Board notification |
 
 ### 7.2 Segregation of duties
 The person approving a transaction is not the same person recording it
@@ -120,7 +120,7 @@ independent, potentially conflicting period.
 
 ## 8. Monitoring and Compliance
 
-The CEO reviews transaction records against the approval thresholds
+The Head of Schools / Administrator reviews transaction records against the approval thresholds
 (Section 7.1) quarterly, reporting any threshold breach to the Board.
 
 ## 9. Records and Documentation
@@ -132,7 +132,7 @@ Administration, retained per the Records Retention Policy (IT-04)
 
 ## 10. Related Policies
 
-Constitution & Governance Charter (GV-01, for the Board/CEO authority
+Constitution & Governance Charter (GV-01, for the Board/Head of Schools / Administrator authority
 split this policy applies), Financial Governance Framework (FN-02,
 which evaluates the remaining named financial policies this document
 doesn't cover), Records Retention Policy (IT-04).
@@ -144,13 +144,13 @@ None defined.
 ## 12. Appeals and Complaints
 
 Not generally applicable; a disputed financial decision is escalated
-from CEO to Board.
+from Head of Schools / Administrator to Board.
 
 ## 13. Review and Amendment
 
 Annual, alongside the annual budget approval. No specific Nigerian
 financial/tax regulation is cited here because none has been verified
-as the exact regime SHRS operates under — a matter for the CEO's and
+as the exact regime SHRS operates under — a matter for the Head of Schools / Administrator's and
 Board's own financial/legal advisors, not this drafting pass.
 
 ## Version control

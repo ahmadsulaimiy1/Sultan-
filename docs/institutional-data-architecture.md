@@ -25,15 +25,15 @@ point.
 | Admissions | `admissions_applications` | Yes, for the honest subset already built | Document upload is Not Started (needs R2 — see the Infrastructure Blueprint); everything else (submit/review/status) is real and working. |
 | Fees | `fee_status` | Partially | This is a due/paid **snapshot**, explicitly documented as "not a real ledger with receipts or instalments" (see `docs/founder-dashboard.md`'s fees note, FN-03 in the policy index). Real fee amounts can be entered today; a real ledger/invoicing system is separate, larger work, already named as deferred. |
 | Hifz Programme | `hifz_progress`, `hifz_enrolment`, `ijazah_register` | Yes | Fully real, structurally complete — see §3 of the Master Academic Structure Register. No gap for entering real Hifz data once real Qur'an College students exist. |
-| Islamic & Arabic Studies programme | `classes` (institution = `Islamic & Arabic Studies`), `student_classes` | Yes, generically | No programme-specific data model beyond generic class enrolment — same class-ladder gap as Royal College/Nursery & Primary. |
+| Islamic and Arabic Studies programme | `classes` (institution = `Islamic and Arabic Studies`), `student_classes` | Yes, generically | No programme-specific data model beyond generic class enrolment — same class-ladder gap as Royal College/Nursery and Primary. |
 | Royal College programme | `classes`, `term_results`, `attendance_summary` | Yes, generically | Same class-ladder/subject gap. |
-| Nursery & Primary programme | `classes` | Yes, generically | Same. |
+| Nursery and Primary programme | `classes` | Yes, generically | Same. |
 
 ## 2. The real-data collection process (replacing Sample Institutional Records)
 
 This is a sequencing recommendation, not code:
 
-1. **Institutions and campuses** — already seeded, real, no action needed (`Nursery & Primary`, `Royal College`, `Islamic & Arabic Studies`, `Qur'an College`; `Main Campus — Ikorodu`).
+1. **Institutions and campuses** — already seeded, real, no action needed (`Nursery and Primary`, `Royal College`, `Islamic and Arabic Studies`, `Qur'an College`; `Main Campus — Ikorodu`).
 2. **Class ladder** (blocks classes, subjects, and therefore most reporting) — the school (Registrar/Principals) supplies the complete level structure per institution. Only once this exists should real `classes` rows be entered beyond ad-hoc examples.
 3. **Real staff onboarding** — via `admin/staff.js`, starting with whoever will operate the Registrar's Office and each institution's Principal, since most other real data entry (students, results, attendance) flows through staff-held Permission Engine grants, not the bearer-token admin endpoints (`docs/staff-identity-architecture.md`'s own intended sequencing).
 4. **Real student enrolment** — via `admin/students.js` (guardian + student created together) or the Admissions flow (`admissions_applications` → Registrar's `enrol.js`, converting an admitted application into a real student record without a second guardian account — already built).
