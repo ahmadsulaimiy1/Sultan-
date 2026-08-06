@@ -269,6 +269,40 @@
 .pr-impact-item h4{font-family:'Cinzel',serif;font-size:1rem;color:var(--pr-coffee);margin:0 0 6px;}
 .pr-impact-item p{font-size:.9rem;color:#6a5a45;line-height:1.55;margin:0;}
 
+/* ---------- Vertical timeline ------------------------------------ */
+.pr-timeline{position:relative;margin-top:26px;}
+.pr-timeline::before{content:"";position:absolute;left:15px;top:6px;bottom:18px;width:2px;
+  background:linear-gradient(180deg,var(--pr-gold),rgba(198,161,91,.2));}
+.pr-tl-item{position:relative;padding:0 0 24px 52px;}
+.pr-tl-item:last-child{padding-bottom:0;}
+.pr-tl-dot{position:absolute;left:4px;top:1px;width:24px;height:24px;border-radius:50%;
+  display:grid;place-items:center;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:#2a1c10;
+  background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));
+  box-shadow:0 0 0 5px var(--pr-ivory);z-index:1;}
+.pr-section.is-royal .pr-tl-dot{box-shadow:0 0 0 5px #241708;}
+.pr-tl-item h4{font-family:'Cinzel',serif;font-size:1.02rem;color:var(--pr-coffee);margin:0 0 3px;}
+.pr-section.is-royal .pr-tl-item h4{color:#fff;}
+.pr-tl-item p{color:#6a5a45;font-size:.92rem;line-height:1.55;margin:0;}
+.pr-section.is-royal .pr-tl-item p{color:rgba(244,234,212,.78);}
+
+/* ---------- Outcome chips ---------------------------------------- */
+.pr-outcomes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:22px;}
+.pr-outcome{border:1px solid var(--pr-line);border-radius:8px;padding:20px 22px;background:var(--pr-milk);border-top:3px solid var(--pr-gold);}
+.pr-outcome.is-yes{border-top-color:#3f7d55;}
+.pr-outcome.is-wait{border-top-color:#c08a2e;}
+.pr-outcome.is-no{border-top-color:#9a4b4b;}
+.pr-outcome h4{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--pr-coffee);margin:0 0 6px;}
+.pr-outcome p{font-size:.9rem;color:#6a5a45;line-height:1.55;margin:0;}
+
+/* ---------- Documents cards -------------------------------------- */
+.pr-docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:22px;}
+.pr-doc{display:flex;gap:14px;align-items:center;background:var(--pr-milk);border:1px solid var(--pr-line);
+  border-radius:8px;padding:18px 20px;}
+.pr-doc .pr-ico{margin:0;width:44px;height:44px;flex-shrink:0;}
+.pr-doc .pr-ico svg{width:22px;height:22px;}
+.pr-doc b{display:block;color:var(--pr-coffee);font-size:.96rem;}
+.pr-doc span{font-size:.82rem;color:#8a7a60;}
+
 /* ---------- Closing CTA band ------------------------------------- */
 .pr-cta{text-align:center;border-radius:10px;padding:clamp(40px,7vw,72px) 26px;position:relative;overflow:hidden;
   background:radial-gradient(900px 400px at 50% -30%,#4a3418,#2a1c10 70%);color:#f4ead4;box-shadow:var(--pr-shadow);}

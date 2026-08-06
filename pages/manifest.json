@@ -135,7 +135,8 @@
     "title": "Admission — Sultan Hanafi Royal Schools",
     "description": "A guided, seven-step digital admission journey, the documents required, and how to enrol your ward at Sultan Hanafi Royal Schools.",
     "contentFile": "pages/admission.html",
-    "altHref": "/ar/admission/"
+    "altHref": "/ar/admission/",
+    "prestige": true
   },
   {
     "slug": "facilities",
