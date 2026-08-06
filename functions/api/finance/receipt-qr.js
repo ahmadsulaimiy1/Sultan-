@@ -1,7 +1,7 @@
 // Renders a QR code (SVG) encoding the public verification URL for a
 // given receipt number — mirrors functions/api/certificates/qr.js and
 // functions/api/identity/qr.js exactly.
-import { qrSvg } from '../../_lib/qrcode.js';
+import { qrSvgForPrint } from '../../_lib/qrcode.js';
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
 
   const origin = env.SITE_ORIGIN || url.origin;
   const verifyUrl = `${origin}/verify-receipt/?ref=${encodeURIComponent(ref)}`;
-  const svg = qrSvg(verifyUrl, { width: 240, margin: 2 });
+  const svg = qrSvgForPrint(verifyUrl, { width: 240, errorCorrectionLevel: 'Q' });
 
   return new Response(svg, {
     headers: {

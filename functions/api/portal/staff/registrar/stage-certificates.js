@@ -31,7 +31,7 @@ import {
 } from '../../../../_lib/certificate-serial.js';
 import { renderStageCertificate, renderStageCertificateBatch } from '../../../../_lib/stage-certificate-template.js';
 import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
-import { qrSvg } from '../../../../_lib/qrcode.js';
+import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
 
 // The issuing school for the Ibtida'iyyah certificate family. The
 // institutions table's internal name vs. the certificate's formal
@@ -153,7 +153,7 @@ export async function onRequestGet({ request, env }) {
       const cert = res.rows[0];
       if (!cert) return json({ error: 'No certificate found with that serial number.' }, 404);
       const vUrl = verifyUrlFor(env, cert.serial_no);
-      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvg(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H' }), verifyUrl: vUrl });
+      html = renderStageCertificate({ cert, qrSvgMarkup: qrSvgForPrint(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H', margin: 4 }), verifyUrl: vUrl });
       filename = `${cert.serial_no}.pdf`;
     } else {
       const batchRes = await sql`SELECT * FROM stage_certificate_batches WHERE batch_no = ${batchNo}`;
@@ -168,7 +168,7 @@ export async function onRequestGet({ request, env }) {
         `${batch.batch_no} — ${certsRes.rows.length} certificates`,
         certsRes.rows.map((cert) => {
           const vUrl = verifyUrlFor(env, cert.serial_no);
-          return { cert, qrSvgMarkup: qrSvg(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H' }), verifyUrl: vUrl };
+          return { cert, qrSvgMarkup: qrSvgForPrint(qrUrlFor(env, cert.serial_no), { errorCorrectionLevel: 'H', margin: 4 }), verifyUrl: vUrl };
         })
       );
       filename = `${batch.batch_no}.pdf`;

@@ -201,7 +201,13 @@ ok('the register constrains the PRINTED number, not just the stored serial',
 
 console.log(`\n── Content and placeholders ────────────────────────────────`);
 const PLACEHOLDER = /\b(lorem|ipsum|TODO|FIXME|XXX|PLACEHOLDER|SAMPLE|DEMO|TEST STUDENT|John Doe|Jane Doe|Student Name|xxxx|000000)\b/i;
-const withPlaceholder = sheets.filter((s) => PLACEHOLDER.test(s.html.replace(/<style[\s\S]*?<\/style>/g, '')));
+// Hex colours are stripped before the test. `000000` is a placeholder
+// SERIAL; `#000000` is the pure black the QR and barcode must print in so
+// they separate as a single K plate. Without this the check failed the
+// whole batch the moment the codes were corrected — a false positive that
+// would have been "fixed" by making the codes unprintable again.
+const withPlaceholder = sheets.filter((s) => PLACEHOLDER.test(
+  s.html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/#[0-9a-fA-F]{3,8}\b/g, '')));
 ok('no placeholder text on any sheet', withPlaceholder.length === 0,
   withPlaceholder.map((s) => s.file).join(', '));
 

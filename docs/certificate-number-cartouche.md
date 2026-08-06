@@ -1,12 +1,21 @@
-# The Certificate Number Security Cartouche
+# The Certificate Number Security Cartouche and Verification Station
 
-**Directive:** Premium Certificate Number Security Panel, 2026-08-06
-**Implements:** `certificateNumberCartoucheSvg()` in `functions/_lib/stage-certificate-template.js`
-**Gate:** `scripts/verify-certificate-batch.mjs` (§ *The engraved certificate number*)
+**Directives:** Premium Certificate Number Security Panel · Zero-Compromise
+Production Master, 2026-08-06
+**Implements:** `certificateNumberCartoucheSvg()` and `verificationGroundSvg()` in
+`functions/_lib/stage-certificate-template.js`; `qrSvgForPrint()` in
+`functions/_lib/qrcode.js`
+**Gates:** `scripts/verify-certificate-batch.mjs` · `verify-certificate-layout.mjs` ·
+`verify-certificate-codes.py`
 
 This document exists so nobody has to guess later which of these features is a
 real control and which is a picture of one. The ledger in §4 is written to be
 handed to a printer.
+
+The two authentication devices bracket the printed seal: the engraved number
+cartouche at lower left (§1–§5), the verification station at lower right (§7).
+Neither is decorative framing around a value — both are constructed as security
+print, and §4 says exactly how far that claim goes.
 
 ---
 
@@ -202,3 +211,110 @@ decoration, which is exactly what the directive said nothing should be.
    advance model that sizes the number is now composition-aware, because a
    per-character mean calibrated on the 20-character form silently mis-sized
    the 26-character one.
+
+---
+
+## 7. The verification station (lower right)
+
+The directive asked for the verification block to stop being a QR next to some
+text and become "one integrated authentication station." It is now a single
+engraved ground — `verificationGroundSvg()` — with the payload elements sitting
+*in* it rather than on it: canted-corner double frame, microtext ring carrying
+the live serial, anti-copy line screen, deterministic security fibres, an
+iridescent wash, two guilloché medallions, corner volutes, UV registration
+motifs, and a deboss pairing, all drawn in the same vocabulary as the number
+cartouche so the two read as a matched pair either side of the seal.
+
+What it carries, all of it live per student: the QR, the Code 128 archive
+barcode, the Document ID, the verification code, the archive reference, a
+microprint rail of the repeated serial, the public verification URL, and the
+bilingual void clause.
+
+### The QR
+
+Rebuilt against ISO/IEC 18004 after the defect in §8.1:
+
+- **Filled rectangles, no strokes.** Horizontally adjacent modules merge into one
+  rect, so module edges are continuous rather than butt-jointed, and there is no
+  renderer-dependent stroke width to be resolved differently on screen and on
+  press.
+- **Quiet zone 4 modules** (§6.3.8). The previous call site used 2.
+- **Pure `#000000`.** The symbol separates as 100 % K on a single plate. The warm
+  near-black it used before builds from four plates, and any misregistration
+  softens every module edge.
+- **Error correction H** (~30 % recovery), 49 modules across 16.7 mm — a
+  **0.341 mm module pitch**, 4.0 px at 300 DPI.
+
+### The barcode
+
+Code 128-C over the archive number, pure black, bar height raised from 2.7 mm to
+**5.4 mm** (~15 % of symbol length, the acquisition floor for a hand scanner) by
+reclaiming ~3 mm from the text column. Side quiet zones are 3.4 mm — the full
+10× narrow-module width the symbology requires, which is why the barcode's width
+and not the QR's size is what constrains this panel's layout.
+
+### What was measured, not assumed
+
+`scripts/verify-certificate-codes.py` rasterises the **real print PDF** at 150,
+200, 300 and 600 DPI and decodes it with ZXing, an independent decoder. All 7 QR
+codes and all 7 barcodes decode at all four resolutions, each to its own register
+entry. The QR additionally decodes at 120 DPI; the barcode does not, which is why
+150 is the stated floor rather than a rounder number.
+
+The gate reads the **whole page**, not a crop. See §8.3.
+
+---
+
+## 8. Defects this work found and fixed (production-critical)
+
+### 8.1 The QR in the print PDF was unreadable — by anything, at any resolution
+
+The most serious defect in this document's history, and every earlier check
+passed it.
+
+The `qrcode` package's SVG renderer draws the symbol as **stroked paths with no
+`stroke-width`**, relying on the consumer's default. A browser resolves that to
+1 user unit and the code looks perfect on screen — but through Chromium's print
+pipeline the modules came out as hairlines. Measured on the production PDF:
+**12.1 % dark coverage at 300 DPI falling to 5.7 % at 1200 DPI**, against the
+52 % the matrix actually contains. Coverage that *drops* as resolution rises is
+the signature of a hairline. Neither ZXing nor OpenCV could read it at any
+resolution.
+
+Nothing caught it because the screen render decoded fine. The lesson is now
+structural: **the gate decodes the PDF, not the DOM.**
+
+### 8.2 The barcode read only at 600 DPI
+
+2.7 mm bars. A code that needs an archival scanner is not a code anyone can use.
+Fixed by the height increase above; it now reads from 150 DPI.
+
+### 8.3 The code gate reported seven false failures
+
+The first version of `verify-certificate-codes.py` cropped to hand-measured
+millimetre boxes and reported **all seven QR codes unreadable at 150 DPI**. They
+were not. The same symbol decoded at the same resolution from a slightly tighter
+crop and from a slightly wider one — what failed was the crop framing.
+
+Hand-drawn regions are also an invitation to widen the window until the page
+passes, which is the opposite of a gate. It now decodes the whole page: a scanner
+is handed the sheet, not a region of it, and finding the symbols amid the
+guilloché, microtext and security ground is the harder test.
+
+A second bug in the same file: ZXing spells its format names `QR Code`/`Code 128`
+in some builds and `QRCode`/`Code128` in others. Comparing verbatim silently
+failed every page. The name is now normalised.
+
+### 8.4 Proving the gate can still fail
+
+A green gate is worth nothing until it has been shown to go red. Three controls
+were run against a single rebuilt page:
+
+| Control | Result |
+|---|---|
+| Page 1 carrying **page 2's** verification URL — a real, scannable code pointing at the wrong student | **Fails** at all four resolutions. This is the catastrophic failure mode for a batch, and the gate catches it. |
+| Modules redrawn as **hairlines**, reproducing §8.1 | **Fails** at all four resolutions. |
+| SVG quiet zone dropped to **zero** | **Still decodes.** Reported honestly: it is not a defect in this composition, because the white QR field supplies the quiet zone whatever the SVG's own margin is. The gate does not cover this and is not claimed to. |
+
+An earlier, weaker control — the original hairline renderer on a blank white page
+— *decoded*, and so proved nothing. It was discarded rather than reported.

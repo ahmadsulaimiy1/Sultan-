@@ -27,7 +27,7 @@ import {
   renderStageCertificate, renderStageCertificateBatch,
 } from '../functions/_lib/stage-certificate-template.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
-import { qrSvg } from '../functions/_lib/qrcode.js';
+import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 
 // ── Batch definition ────────────────────────────────────────────────────
 const PROGRAMME = 'IBT';
@@ -220,7 +220,7 @@ const toRow = (r) => ({
 
 const items = issued.map((r) => ({
   cert: toRow(r),
-  qrSvgMarkup: qrSvg(r.qrUrl, { errorCorrectionLevel: 'H', width: 400, margin: 2 }),
+  qrSvgMarkup: qrSvgForPrint(r.qrUrl, { errorCorrectionLevel: 'H', margin: 4 }),
   verifyUrl: r.verifyUrl,
 }));
 

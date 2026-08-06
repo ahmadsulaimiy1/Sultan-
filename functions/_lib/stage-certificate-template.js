@@ -429,7 +429,7 @@ function code128cSvg(digits) {
   let x = 0, bar = true, rects = '';
   for (const ch of widths) {
     const w = +ch;
-    if (bar) rects += `<rect x="${x}" y="0" width="${w}" height="10" fill="#221A10"/>`;
+    if (bar) rects += `<rect x="${x}" y="0" width="${w}" height="10" fill="#000000"/>`;
     x += w;
     bar = !bar;
   }
@@ -581,6 +581,73 @@ function plaqueGroundSvg(w, h, corner = 'rosette') {
 // The UV crosshairs are REGISTRATION MARKS showing a UV unit where to lay
 // down, not fluorescence — see docs/certificate-number-cartouche.md.
 
+// ── Shared security vocabulary ──────────────────────────────────────
+// Both engraved stations — the certificate-number cartouche (lower left)
+// and the verification module (lower right) — are built from these, so
+// they read as one authentication system rather than two separate boxes.
+
+// PRINTED fibre simulation. Real security fibres are embedded in the
+// sheet at the paper mill and cannot be printed; these are the printed
+// analogue that certificate printers use — short, randomly-angled hairs
+// in restrained optical tints, laid UNDER the engraving so they read as
+// part of the substrate. Labelled honestly in
+// docs/certificate-number-cartouche.md as printed, not embedded.
+//
+// The scatter is deterministic — seeded from the serial — so a reprint of
+// the same certificate is identical to the original, which matters: a
+// document whose "random" security layer changes between prints cannot be
+// compared against an archive copy.
+function securityFibres(w, h, seed, count = 26) {
+  // Small deterministic LCG. Math.random() would make every reprint differ.
+  let s = 0;
+  for (let i = 0; i < String(seed).length; i++) s = (s * 31 + String(seed).charCodeAt(i)) >>> 0;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const tints = ['#C9A8C4', '#A8BFD4', '#C6C29B', '#D3B4A6', '#A9C9BC'];
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const x = rnd() * w, y = rnd() * h;
+    const a = rnd() * Math.PI, len = 0.9 + rnd() * 1.8;
+    const dx = Math.cos(a) * len, dy = Math.sin(a) * len;
+    const c = tints[Math.floor(rnd() * tints.length)];
+    // A gentle curve, not a straight tick — a fibre lying on paper bends.
+    const mx = x + dx / 2 - dy * 0.16, my = y + dy / 2 + dx * 0.16;
+    out += `<path d="M${x.toFixed(2)} ${y.toFixed(2)} Q${mx.toFixed(2)} ${my.toFixed(2)} ${(x + dx).toFixed(2)} ${(y + dy).toFixed(2)}"`
+      + ` fill="none" stroke="${c}" stroke-width="0.11" stroke-linecap="round" opacity="0.5"/>`;
+  }
+  return out;
+}
+
+// UV registration motif — a crosshair in a lobed rosette. These are MARKS
+// telling a UV unit where to lay down; they are not fluorescent ink and do
+// not glow. Drawn in a cool tint so a proofer can see them and a printer
+// can move them to their own separation.
+function uvMotif(cx, cy, r = 1.15) {
+  let petals = '';
+  for (let i = 0; i < 6; i++) {
+    const a = (i * Math.PI) / 3;
+    petals += `<circle cx="${(cx + r * 0.62 * Math.cos(a)).toFixed(2)}" cy="${(cy + r * 0.62 * Math.sin(a)).toFixed(2)}"`
+      + ` r="${(r * 0.3).toFixed(2)}" fill="none" stroke="#B9A9CE" stroke-width="0.07"/>`;
+  }
+  return `<g opacity="0.62">${petals}
+    <line x1="${cx - r}" y1="${cy}" x2="${cx + r}" y2="${cy}" stroke="#B9A9CE" stroke-width="0.08"/>
+    <line x1="${cx}" y1="${cy - r}" x2="${cx}" y2="${cy + r}" stroke="#B9A9CE" stroke-width="0.08"/>
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.2).toFixed(2)}" fill="#B9A9CE"/></g>`;
+}
+
+// Iridescent wash — the restrained optical-variability cue. Kept to a
+// 6-8% alpha sweep so it reads as a sheen on the paper rather than as
+// colour; the directive asks for sophistication without a colourful
+// certificate.
+function iridescentWash(id, deg = 18) {
+  return `<linearGradient id="${id}" gradientTransform="rotate(${deg})">
+    <stop offset="0" stop-color="#C9A8C4" stop-opacity="0.10"/>
+    <stop offset="0.28" stop-color="#A8BFD4" stop-opacity="0.07"/>
+    <stop offset="0.55" stop-color="#C6C29B" stop-opacity="0.05"/>
+    <stop offset="0.78" stop-color="#D3B4A6" stop-opacity="0.07"/>
+    <stop offset="1" stop-color="#A9C9BC" stop-opacity="0.10"/>
+  </linearGradient>`;
+}
+
 // Fine parallel line screen as a tiling pattern — one <pattern> element
 // instead of several thousand <line> elements, and genuinely resolution
 // independent. `deg` is the screen angle; two screens differing by ~74deg
@@ -693,13 +760,6 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
   const repeats = `${fullSerial} `.repeat(3);
   const numY = 9.55, numX = W / 2;
 
-  // Registration crosshairs for a UV unit. Marks, not fluorescence.
-  const uvMark = (x, y) => `<g stroke="#B9A9CE" stroke-width="0.07" opacity="0.55">
-    <line x1="${x - 0.75}" y1="${y}" x2="${x + 0.75}" y2="${y}"/>
-    <line x1="${x}" y1="${y - 0.75}" x2="${x}" y2="${y + 0.75}"/>
-    <circle cx="${x}" cy="${y}" r="0.38" fill="none" stroke-width="0.05"/>
-  </g>`;
-
   return `<svg class="cn-plate" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="cnGold" x1="0" y1="0" x2="1" y2="1">
@@ -707,6 +767,16 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
       <stop offset="0.52" stop-color="#F3E3AC"/><stop offset="0.74" stop-color="#C49A2C"/>
       <stop offset="1" stop-color="#6E5013"/>
     </linearGradient>
+    ${iridescentWash('cnIris', 14)}
+    <linearGradient id="cnDebossT" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6E5013" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#6E5013" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="cnDebossB" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#FFFDF6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFDF6" stop-opacity="0"/>
+    </linearGradient>
+
     ${screenPattern('cnCopy', 8, 0.48, 0.07, '#D8CBAC', 1)}
     ${screenPattern('cnLatent', 82, 0.96, 0.14, '#D8CBAC', 1)}
     <path id="cnRing" d="${cartouchePath(W, H, 1.55)}"/>
@@ -722,6 +792,11 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
     <!-- 2. anti-copy screen across the clean field only; the artwork's own
             hologram below must not be screened over -->
     <g clip-path="url(#cnField)">
+      <!-- printed fibre simulation and the iridescent wash sit UNDER the
+           engraving, so they read as the substrate rather than as marks
+           laid on top of it -->
+      ${securityFibres(W, FIELD, fullSerial, 22)}
+      <rect x="0" y="0" width="${W}" height="${FIELD}" fill="url(#cnIris)"/>
       <rect x="0" y="0" width="${W}" height="${FIELD}" fill="url(#cnCopy)"/>
       <!-- 3. latent panel: identical ink weight, 74deg apart. Flat-on it
               disappears into the screen; at a raking angle, and on a
@@ -731,7 +806,18 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
       <!-- 4. engine-turned rosette behind the number (epitrochoid, the same
               lathe geometry as the frame's medallions) -->
       <g opacity="0.5">${guillocheMedallion(numX, numY - 1.5, 7.6, '#9A7A2C', 0.4)}</g>
+      <g opacity="0.34">${guillocheMedallion(numX, numY - 1.5, 4.3, '#8C6516', 0.5)}</g>
+      <g opacity="0.26">${guillocheMedallion(numX - 20, numY - 1.6, 3.1, '#9A7A2C', 0.45)}</g>
+      <g opacity="0.26">${guillocheMedallion(numX + 20, numY - 1.6, 3.1, '#9A7A2C', 0.45)}</g>
     </g>
+  </g>
+
+  <!-- 4b. impression depth: a dark lip under the top wall and a pale lip
+           above the bottom one. This is what an impressed panel does to
+           light; a box-shadow would make it read as a card lying on top. -->
+  <g clip-path="url(#cnInner)">
+    <rect x="0" y="0" width="${W}" height="2.2" fill="url(#cnDebossT)"/>
+    <rect x="0" y="${H - 1.8}" width="${W}" height="1.8" fill="url(#cnDebossB)"/>
   </g>
 
   <!-- 5. guilloche lathe band inside the top edge, stopped short of the
@@ -801,7 +887,67 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
   ${cartoucheBoss(numX, 1.62, 1.5)}
 
   <!-- 14. UV registration crosshairs (marks for a UV pass, not UV ink) -->
-  ${uvMark(3.5, 2.4)}${uvMark(W - 3.5, 2.4)}${uvMark(3.5, H - 2.4)}${uvMark(W - 3.5, H - 2.4)}
+  ${uvMotif(4.2, 2.5)}${uvMotif(W - 4.2, 2.5)}
+</svg>`;
+}
+
+// ── VERIFICATION MODULE GROUND (lower right) ────────────────────────
+// The directive asks the verification station to become the certificate's
+// security hub rather than a labelled box. It is therefore built from the
+// same primitives as the number cartouche — same screen pitch, same
+// microtext size, same volutes, same fibre scatter, same UV motifs — and
+// drawn as an INLINE svg rather than a CSS background so its microtext is
+// real vector text a loupe can resolve, not a rasterised data URI.
+//
+// It is a rectangle with canted corners rather than the cartouche's ogee
+// ends: the two stations are siblings, not twins. The number panel is the
+// ceremonial one and carries the shaped outline; this one is the
+// instrument panel and stays square, which is also what lets it hold a
+// QR, a barcode and four data rows without wasting width on curves.
+function verificationGroundSvg(w, h, serial) {
+  const micro = `${serial} · SULTAN HANAFI ROYAL SCHOOLS · VERIFIED RECORD · `.repeat(14);
+  const c = 2.1;
+  const frame = (inset) => {
+    const x0 = inset, y0 = inset, x1 = w - inset, y1 = h - inset, k = c - inset * 0.5;
+    return `M ${x0 + k} ${y0} L ${x1 - k} ${y0} L ${x1} ${y0 + k} L ${x1} ${y1 - k}`
+      + ` L ${x1 - k} ${y1} L ${x0 + k} ${y1} L ${x0} ${y1 - k} L ${x0} ${y0 + k} Z`;
+  };
+  return `<svg class="vp-ground" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    ${iridescentWash('vpIris', 200)}
+    <linearGradient id="vpDebossT" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6E5013" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#6E5013" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="vpDebossB" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#FFFDF6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFDF6" stop-opacity="0"/>
+    </linearGradient>
+
+    ${screenPattern('vpCopy', 8, 0.48, 0.07, '#D8CBAC', 1)}
+    <path id="vpRing" d="${frame(1.5)}"/>
+    <clipPath id="vpInner"><path d="${frame(0.7)}"/></clipPath>
+  </defs>
+
+  <path d="${frame(0)}" fill="#FDF8EC" opacity="0.5"/>
+  <g clip-path="url(#vpInner)">
+    ${securityFibres(w, h, serial, 24)}
+    <rect width="${w}" height="${h}" fill="url(#vpIris)"/>
+    <rect width="${w}" height="${h}" fill="url(#vpCopy)"/>
+    <g opacity="0.30">${guillocheMedallion(w * 0.30, h * 0.5, 9.5, '#9A7A2C', 0.45)}</g>
+    <g opacity="0.24">${guillocheMedallion(w * 0.78, h * 0.5, 7.2, '#8C6516', 0.5)}</g>
+  </g>
+
+  <g clip-path="url(#vpInner)">
+    <rect x="0" y="0" width="${w}" height="2.2" fill="url(#vpDebossT)"/>
+    <rect x="0" y="${h - 1.8}" width="${w}" height="1.8" fill="url(#vpDebossB)"/>
+  </g>
+  <path d="${frame(0)}" fill="none" stroke="#8A6A24" stroke-width="0.26"/>
+  <path d="${frame(0.7)}" fill="none" stroke="#A98A3C" stroke-width="0.10"/>
+  <text font-family="Inter, sans-serif" font-size="${(0.9 * PT).toFixed(3)}" letter-spacing="0.02"
+    fill="#AC996C"><textPath href="#vpRing">${escapeHtml(micro)}</textPath></text>
+  ${volute(5.6, 2.4, 1, 1)}${volute(5.6, h - 2.4, 1, -1)}
+  ${uvMotif(3.2, h / 2)}${uvMotif(w - 1.9, h / 2, 0.95)}
 </svg>`;
 }
 
@@ -871,7 +1017,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   };
   const nameEnPt = fitPt(cert.student_full_name, 0.2497, 19.5, 11);
   const nameArPt = fitPt(cert.student_full_name_ar, 0.1357 / 0.72, 21.5, 13);
-  const plqV = plaqueGroundSvg(62, 25.2, 'rosette');
+  const vpGround = verificationGroundSvg(62, 25.3, String(cert.serial_no));
   const microSerial = `${serial} · `.repeat(6);
   // ── The engraved certificate number ───────────────────────────────
   // The face carries the timeless form; the cartouche's covert layers
@@ -993,7 +1139,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
 
   <div class="o5-cnplate">${cnCartouche}</div>
 
-  <div class="o5-vplate" style="background-image:${plqV}">
+  <div class="o5-vplate">
+    ${vpGround}
     <div class="vp-text">
       <div class="vp-head"><span class="vp-mark">SHRS</span><span class="p-l-en">Verification</span><span class="p-l-ar" dir="rtl">التحقق من الشهادة</span></div>
       <div class="vp-row vp-id">${docId} <span class="p-dot">·</span> ${verifyCode}</div>
@@ -1004,7 +1151,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
       <div class="vp-void">Void if altered or erased <span class="p-dot">·</span> <span dir="rtl">لاغيةٌ عند أي كشطٍ أو تعديل</span></div>
     </div>
     <div class="vp-qrcol">
-      <div class="vp-qr">${themedQr(qrSvgMarkup, '#221A10', '#FFFFFF')}</div>
+      <div class="vp-qr">${qrSvgMarkup}</div>
       <div class="vp-scan">Scan to Verify</div>
     </div>
   </div>
@@ -1466,15 +1613,23 @@ function docShell(title, sheetsHtml) {
      corner crossed the navy ribbon, whose leading edge runs 199.5mm at
      x=230 to 197.9mm at x=235, and the 0.9-opacity plaque ground let the
      ribbon tint show through it. */
-  .o5-vplate{position:absolute;left:169mm;top:171.8mm;width:62mm;height:25.2mm;
-    background-size:100% 100%;background-repeat:no-repeat;box-sizing:border-box;
-    padding:2mm 2mm 3.1mm 2.8mm;display:flex;align-items:center;gap:1.6mm;
-    box-shadow:inset 0 .1mm 0 rgba(255,255,255,.4), inset 0 -0.1mm 0 rgba(110,80,19,.1);}
-  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35mm;}
+  /* Bottom padding cut from 3.1mm to 1.5mm and the row gaps tightened, to
+     buy the Code 128 the bar height it needs. At 2.7mm the barcode decoded
+     only at 600 DPI — ZXing could not read it at 200 or 300, which is where
+     a phone or an office scanner actually works. Scanners need bar length
+     to acquire a scan line; the rule of thumb is 15% of symbol length, so
+     30mm of symbol wants ~4.5mm of bar. */
+  .o5-vplate{position:absolute;left:169mm;top:171.8mm;width:62mm;height:25.3mm;
+    box-sizing:border-box;padding:1.7mm 2mm 1.5mm 2.8mm;
+    display:flex;align-items:center;gap:1.4mm;}
+  .vp-ground{position:absolute;inset:0;width:100%;height:100%;display:block;
+    pointer-events:none;}
+  .o5-vplate > *:not(.vp-ground){position:relative;}
+  .vp-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:.18mm;}
   .vp-head{display:flex;justify-content:space-between;align-items:center;gap:1mm;margin-bottom:.3mm;}
   .vp-head .p-l-en{font-size:4.3pt;}
   .vp-head .p-l-ar{font-size:5.4pt;}
-  .vp-mark{flex:0 0 auto;width:4.2mm;height:4.2mm;border:.13mm solid #8A6A24;border-radius:50%;
+  .vp-mark{flex:0 0 auto;width:3.5mm;height:3.5mm;border:.13mm solid #8A6A24;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
     font-family:var(--en-display);font-weight:700;font-size:2.4pt;letter-spacing:.3px;color:#6E5013;
     box-shadow:inset 0 0 0 .3mm rgba(169,138,60,.25);}
@@ -1487,8 +1642,10 @@ function docShell(title, sheetsHtml) {
      tanwīn above the Latin cap height, and by pixel diff its ink reached
      192.76mm against the barcode's 192.95mm — a 0.19mm overlap into the
      bars. 0.9mm below the barcode clears it. */
-  .vp-barcode{height:2.7mm;margin:.2mm 0 .9mm;}
-  .vp-barcode svg{width:30mm;height:2.7mm;display:block;}
+  .vp-barcode{height:5.4mm;margin:.25mm 0 .7mm;background:#FFFDF4;
+    border-top:.09mm solid rgba(138,106,36,.55);border-bottom:.09mm solid rgba(138,106,36,.55);
+    padding:.25mm 3.4mm;box-sizing:content-box;width:31mm;}
+  .vp-barcode svg{width:31mm;height:5.4mm;display:block;}
   /* Genuine microprint rail: the live serial repeated at microtext
      size — a real security-print device, not decoration. */
   /* The repeat was hard-clipping mid-letterform at the right edge,
@@ -1502,10 +1659,22 @@ function docShell(title, sheetsHtml) {
     white-space:nowrap;line-height:1.25;}
   .vp-void span[dir="rtl"]{font-family:var(--ar-text);font-style:normal;font-size:4.9pt;}
   .vp-qrcol{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.55mm;}
+  /* The symbol carries its own ISO/IEC 18004 four-module quiet zone, so the
+     plate adds only a hairline of padding and the code takes the rest of the
+     room. 49 modules across 16.7mm is a 0.341mm module pitch — 4.0 pixels at
+     300 DPI, comfortably above the ~0.25mm floor for phone capture. Do not
+     shrink this without re-running the decode gate. */
+  /* The white field is not decoration — Code contrast requires it, and the
+     symbol's own four-module quiet zone lives inside the SVG. The engraved
+     rule and corner brackets are what stop it reading as a sticker. */
   .vp-qr{width:17.2mm;height:17.2mm;background:#FFFFFF;
-    border:.15mm solid #9A7A2C;box-sizing:border-box;padding:.6mm;
-    display:flex;align-items:center;justify-content:center;}
-  .vp-qr svg{width:15.8mm;height:15.8mm;display:block;}
+    border:.18mm solid #8A6A24;box-sizing:border-box;padding:.1mm;
+    display:flex;align-items:center;justify-content:center;position:relative;}
+  .vp-qr::before,.vp-qr::after{content:'';position:absolute;width:2.4mm;height:2.4mm;
+    border:.18mm solid #A98A3C;}
+  .vp-qr::before{left:-.9mm;top:-.9mm;border-right:0;border-bottom:0;}
+  .vp-qr::after{right:-.9mm;bottom:-.9mm;border-left:0;border-top:0;}
+  .vp-qr svg{width:16.7mm;height:16.7mm;display:block;}
   .vp-scan{font-family:var(--en-display);font-weight:700;font-size:3.4pt;
     letter-spacing:1px;text-transform:uppercase;color:#6E5013;}
 
