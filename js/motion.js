@@ -314,6 +314,8 @@
     b.addEventListener('click', function () {
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) {}
+      // the spoken introduction listens for this and fades itself out
+      if (!enabled) window.dispatchEvent(new Event('shrs:sound-off'));
       paint();
       if (enabled) play('toggle');
     });

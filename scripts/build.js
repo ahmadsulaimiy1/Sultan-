@@ -293,7 +293,7 @@ ${personalisation}
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
-<script src="/js/bismillah.js" defer></script>
+<script src="/js/intro.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}
 </body>
 </html>
