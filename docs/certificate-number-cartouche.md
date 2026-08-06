@@ -44,33 +44,53 @@ sheet — `scripts/verify-certificate-layout.mjs`, 7/7 clean.
 ## 2. The printed number
 
     stored    SHRS-CERT-IBT-2026-000035-FB287
-    printed   SHRS-CERT-IBT-000035
+    printed   SHRS-CERT-IBT-000035-FB287
 
-Shortening is safe **only** because `<seq6>` is one global sequence
-(`stage_certificate_serial_seq`, `sql/schema.sql:1925`) — sequence 000035 is
-issued once, ever, across every year and every programme.
+**Exactly one segment is removed — the issue year.** Everything else the
+institutional numbering system carries is retained.
 
-That was a convention, not a constraint. It is now a constraint: the register SQL
-creates a unique index on the derived printed number, so two certificates can no
-longer differ only in year and hash suffix while printing the same number.
+### Why the tail is never dropped
+
+`FB287` is the first five hex characters of this certificate's own
+HMAC-SHA256 over its canonical fields, keyed by `DOCUMENT_HASH_SECRET`. It is
+what makes the **printed** number self-authenticating:
+
+- a forger can invent a plausible sequence, but cannot compute a matching
+  tail without the secret;
+- a verifier holding the paper can compare the tail against the verification
+  plate's printed code — whose first five characters *are* this tail —
+  **without a database at all**;
+- at lookup, a supplied tail is pinned into the query, so a wrong tail
+  returns nothing rather than resolving to the real record.
+
+An earlier revision printed `SHRS-CERT-IBT-000035`, dropping the tail along
+with the year because the directive's worked example happened to omit it.
+That mistook the example for the specification and removed the number's only
+self-checking property — a downgrade in the security function of the number,
+and the one thing the directive said to keep. The gate now refuses a batch
+whose printed number has no valid tail, or whose tail is not derived from
+that certificate's content hash. Both failures were exercised against
+deliberately mutated batches before this was committed.
+
+### Why dropping the YEAR is safe
+
+`<seq6>` is one global sequence (`stage_certificate_serial_seq`,
+`sql/schema.sql:1925`) — sequence 000035 is issued once, ever, across every
+year and every programme.
+
+That was a convention, not a constraint. It is now a constraint: the register
+SQL creates a unique index on the derived printed number, so two certificates
+can no longer differ only in year while printing the same number.
 
 ```sql
 CREATE UNIQUE INDEX IF NOT EXISTS stage_certificates_printed_no_uniq
   ON stage_certificates ((split_part(serial_no,'-',3) || '-' || split_part(serial_no,'-',5)));
 ```
 
-**What is given up:** a reader can no longer check the HMAC suffix by eye.
-**What is not:** the suffix and the full hash are still recomputed server-side
-from the stored row on every verification, the full serial is still the QR
-payload, the panel's microtext still carries it, and the verification plate still
-prints the 12-hex verify code whose first five characters *are* the suffix. The
-integrity check never depended on what a person typed.
-
-Verification accepts both forms — `resolveStageCertificateRef()` in
+Verification accepts the full stored serial, the printed number with its
+tail, or the printed number without it — `resolveStageCertificateRef()` in
 `functions/_lib/certificate-serial.js`. Two matches returns *ambiguous* and
 refuses to guess.
-
----
 
 ## 3. Typography
 
@@ -88,11 +108,17 @@ letterpress rather than as flat type.
 
 ### A recorded reservation
 
-At x-height, the zeros in `000035` read as lower-case o's: the printed number
-resolves visually as **SHRS-CERT-IBT-oooo35**. This is the same finding already
+At x-height, the zeros in `000035` read as lower-case o's: the number resolves
+visually as **SHRS-CERT-IBT-oooo35-FB287**. This is the same finding already
 recorded against `.bg-v-id` in the template, where lining figures were chosen for
-identifiers for exactly this reason. On a number a registrar may transcribe from
-print, this is a transcription risk, not only a matter of taste.
+identifiers for exactly this reason.
+
+Restoring the check tail sharpens the objection rather than softening it. The
+tail is not a label — it is a credential a verifier compares **character by
+character** against the plate's `FB28-7085-AE77`. In oldstyle, `FB287` sets an
+x-height 2, an ascending 8 and a descending 7, so the one segment on the
+document that most needs to be unambiguous is the one the figure style unsettles
+most.
 
 Implemented as directed. `CN_FIGURE_STYLE` switches it to `'lining'` in one line,
 same font, no other change.
@@ -171,3 +197,8 @@ decoration, which is exactly what the directive said nothing should be.
 3. **Hairlines and microtext below the press floor** — see §5.
 4. **The Arabic label overflowed the frame**, because an RTL run with
    `text-anchor:end` measures from its own logical end, not the visual one.
+5. **The printed number lost its anti-forgery tail** — see §2. Caught by the
+   Founder, not by me. The gate that would have caught it now exists, and the
+   advance model that sizes the number is now composition-aware, because a
+   per-character mean calibrated on the 20-character form silently mis-sized
+   the 26-character one.

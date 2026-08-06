@@ -135,13 +135,32 @@ for (const e of reg.entries) {
   const printed = displayStageCertificateNo(e.serialNo);
   if (!printed) { printedFaults.push(`${e.certId}: serial will not reduce to a printed number`); continue; }
   if (!s.html.includes(printed)) printedFaults.push(`${e.certId}: "${printed}" is not on the sheet`);
-  if (/(19|20)\d{2}/.test(printed)) printedFaults.push(`${e.certId}: printed number exposes a year — "${printed}"`);
+  // Grammar, not a substring search: the printed number must be exactly
+  // prefix + programme + sequence + check tail. A bare /(19|20)\d{2}/ would
+  // one day false-positive on a sequence such as 002026, and would miss a
+  // year reintroduced in any other position.
+  if (!/^SHRS-CERT-[A-Z0-9]{2,4}-\d{6}-[0-9A-F]{5}$/.test(printed)) {
+    printedFaults.push(`${e.certId}: printed number is not in the issuable printed grammar — "${printed}"`);
+  }
+  const issueYear = String(e.issuedAt || '').slice(0, 4);
+  if (issueYear && printed.split('-').includes(issueYear)) {
+    printedFaults.push(`${e.certId}: printed number exposes the issue year — "${printed}"`);
+  }
+  // The anti-forgery tail is the number's only self-checking property. It
+  // was dropped once; the gate now refuses a batch without it.
+  const tail = printed.split('-').pop();
+  if (!/^[0-9A-F]{5}$/.test(tail) || !e.serialNo.endsWith(`-${tail}`)) {
+    printedFaults.push(`${e.certId}: printed number carries no valid anti-forgery tail`);
+  }
+  if (!e.contentHash.slice(0, 5).toUpperCase().startsWith(tail)) {
+    printedFaults.push(`${e.certId}: printed tail "${tail}" is not derived from this certificate's content hash`);
+  }
   if (!s.html.includes('o5-cnplate')) printedFaults.push(`${e.certId}: no security cartouche`);
   // The covert layers must still carry the FULL serial, or dropping the
   // year and suffix from the face would drop them from the document.
   if (!s.html.includes(e.serialNo)) printedFaults.push(`${e.certId}: full serial absent from the microtext`);
 }
-ok('every sheet engraves its short number, exposes no year, and keeps the full serial covertly',
+ok('every sheet engraves the printed number with its anti-forgery tail, no year, full serial covert',
   printedFaults.length === 0, printedFaults.join('\n          '));
 const printedNos = reg.entries.map((e) => displayStageCertificateNo(e.serialNo));
 ok('printed numbers are unique across the batch', new Set(printedNos).size === printedNos.length);

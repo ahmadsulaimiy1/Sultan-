@@ -780,9 +780,9 @@ function certificateNumberCartoucheSvg({ displayNo, fullSerial, numberEm, tracki
 
   <!-- 11. hairline shelf under the number, stopped short at both ends so it
            reads as an engraved rule and not as an underline -->
-  <line x1="${numX - 17}" y1="10.62" x2="${numX + 17}" y2="10.62" stroke="#A98A3C" stroke-width="0.10"/>
-  <circle cx="${numX - 18}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
-  <circle cx="${numX + 18}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
+  <line x1="${numX - 23}" y1="10.62" x2="${numX + 23}" y2="10.62" stroke="#A98A3C" stroke-width="0.10"/>
+  <circle cx="${numX - 24.4}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
+  <circle cx="${numX + 24.4}" cy="10.62" r="0.24" fill="none" stroke="#8A6A24" stroke-width="0.08"/>
 
   <!-- 12. microscopic serial repeats — a second covert layer, at a
            different size and rhythm from the ring so a forger who notices
@@ -891,15 +891,21 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   // The cartouche viewBox is in MILLIMETRES, so the fit solves for an em
   // size in mm, not a point size — passing points straight through set the
   // number 126.6mm wide inside a 62mm panel on the first run.
-  // 0.5235 is the mean advance per character in ems for this string in
-  // Cormorant Garamond 600 (11 capitals at ~0.60em, 6 oldstyle figures at
-  // ~0.50em, 3 hyphens at ~0.29em), taken from the font's own advance
-  // widths and then confirmed against the rendered box.
-  const CN_WIDTH_MM = 50.5;
-  const CN_TRACK = 0.32;
+  //
+  // The advance is summed from the string's OWN composition rather than a
+  // flat per-character mean, because the printed number is not homogeneous:
+  // it mixes capitals, oldstyle figures and hyphens in a ratio that changes
+  // with the format. A mean calibrated on the 20-character form silently
+  // mis-sized the 26-character one. Per-class values are Cormorant Garamond
+  // 600's own advances, scaled by 0.961 — the measured ratio of rendered
+  // extent to predicted on this exact face at this exact tracking.
+  const CN_ADVANCE = (s) => [...s].reduce((a, c) =>
+    a + (c === '-' ? 0.279 : /\d/.test(c) ? 0.481 : 0.577), 0);
+  const CN_WIDTH_MM = 53;
+  const CN_TRACK = 0.20;
   const cnLen = displayNo.length;
-  const cnEm = Math.max(3.05, Math.min(4.45,
-    +(((CN_WIDTH_MM - (cnLen - 1) * CN_TRACK) / (cnLen * 0.5235)).toFixed(3))));
+  const cnEm = Math.max(2.6, Math.min(4.45,
+    +(((CN_WIDTH_MM - (cnLen - 1) * CN_TRACK) / CN_ADVANCE(displayNo)).toFixed(3))));
   const cnCartouche = certificateNumberCartoucheSvg({
     displayNo, fullSerial: String(cert.serial_no),
     numberEm: cnEm, tracking: `${CN_TRACK}`,

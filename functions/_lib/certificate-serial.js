@@ -84,45 +84,58 @@ export async function generateStageCertificateSerial(sql, env, { programmeCode, 
 }
 
 // ── The PRINTED number vs the STORED serial ─────────────────────────────
-// Premium Certificate Number Security Panel directive (2026-08-05): the
-// number engraved on the certificate face drops the issue year and the
-// anti-forgery suffix, so the printed document reads as timeless:
+// Premium Certificate Number Security Panel directive (2026-08-06):
 //
 //     stored   SHRS-CERT-IBT-2026-000035-FB287
-//     printed  SHRS-CERT-IBT-000035
+//     printed  SHRS-CERT-IBT-000035-FB287
 //
-// Shortening is safe ONLY because <seq6> is one global sequence
-// (stage_certificate_serial_seq — see the header note and sql/schema.sql):
-// sequence 000035 is issued exactly once, ever, across every year and
-// every programme. So SHRS-CERT-IBT-000035 identifies one certificate and
-// no other. If that sequence is ever re-scoped per year or per programme,
-// this function becomes ambiguous and MUST be revisited — resolveStage-
-// CertificateRef below fails closed on a multiple match rather than
-// guessing, so the failure would be loud.
+// EXACTLY ONE segment is removed — the issue year — because the directive
+// asks the printed document to read as timeless. Everything else the
+// institutional numbering system carries is retained.
 //
-// What is given up: a reader can no longer check the HMAC suffix by eye.
-// What is NOT given up: the suffix and the full hash are still recomputed
-// server-side from the stored row on every verification, and the full
-// serial is still carried by the QR payload and by the panel's microtext,
-// so tamper detection is unchanged.
+// The five-character tail is NOT cosmetic and is never dropped. It is the
+// first five hex characters of this certificate's own HMAC-SHA256 over its
+// canonical fields, keyed by DOCUMENT_HASH_SECRET (see suffixFromHash and
+// the header note above). It is what makes the PRINTED number
+// self-authenticating: a forger can invent a plausible sequence, but
+// cannot compute a matching suffix without the secret, and a verifier
+// holding the paper can compare the tail against the verification plate's
+// printed code — whose first five characters ARE this suffix — without a
+// database at all.
+//
+// An earlier revision printed SHRS-CERT-IBT-000035, dropping the suffix
+// along with the year because the directive's worked example happened to
+// omit it. That mistook the example for the specification and removed the
+// number's only self-checking property. It is recorded here so nobody
+// "simplifies" the format back.
+//
+// Dropping the YEAR is safe because <seq6> is one global sequence
+// (stage_certificate_serial_seq — sql/schema.sql): sequence 000035 is
+// issued exactly once, ever, across every year and every programme. If
+// that sequence is ever re-scoped, resolveStageCertificateRef below fails
+// closed on a multiple match rather than guessing, so the failure is loud.
 export function displayStageCertificateNo(serialNo) {
   const parsed = parseStageCertificateSerial(serialNo);
   if (!parsed) return null;
   const m = parsed.serialBase.match(/^SHRS-CERT-([A-Z0-9]{2,4})-\d{4}-(\d{6})$/);
-  return m ? `SHRS-CERT-${m[1]}-${m[2]}` : null;
+  return m ? `SHRS-CERT-${m[1]}-${m[2]}-${parsed.suffix}` : null;
 }
 
-// Accepts the printed short form typed back in by a verifier.
+// Accepts the printed number typed back in by a verifier. The suffix is
+// optional on INPUT — someone reading a worn or partly obscured document
+// should still reach the record — but resolveStageCertificateRef treats a
+// supplied suffix as a constraint that must match, never as a hint.
 export function parseStageCertificateDisplayNo(ref) {
   const m = String(ref || '').trim().toUpperCase()
-    .match(/^SHRS-CERT-([A-Z0-9]{2,4})-(\d{6})$/);
-  return m ? { programmeCode: m[1], seq: m[2] } : null;
+    .match(/^SHRS-CERT-([A-Z0-9]{2,4})-(\d{6})(?:-([0-9A-F]{5}))?$/);
+  return m ? { programmeCode: m[1], seq: m[2], suffix: m[3] || null } : null;
 }
 
-// Resolves ANY form a person might type — the full stored serial or the
-// short printed number — to the single stage_certificates row it names.
-// Returns { row } | { ambiguous: true } | null. Never guesses: two matches
-// is a data-integrity fault, not a UX problem to paper over.
+// Resolves ANY form a person might type — the full stored serial, or the
+// printed number with or without its check tail — to the single
+// stage_certificates row it names. Returns { row } | { ambiguous: true } |
+// null. Never guesses: two matches is a data-integrity fault, not a UX
+// problem to paper over.
 export async function resolveStageCertificateRef(sql, ref) {
   const full = parseStageCertificateSerial(ref);
   if (full) {
@@ -134,9 +147,12 @@ export async function resolveStageCertificateRef(sql, ref) {
   }
   const short = parseStageCertificateDisplayNo(ref);
   if (!short) return null;
-  // Anchored on both sides so the pattern cannot match a longer sequence
-  // that merely ends in these six digits.
-  const pattern = `SHRS-CERT-${short.programmeCode}-____-${short.seq}-_____`;
+  // Underscores are single-character LIKE wildcards and the pattern is
+  // anchored on both sides, so it cannot match a longer sequence that
+  // merely ends in these six digits. When the verifier supplied the check
+  // tail it is pinned here too — a wrong tail finds nothing, which is the
+  // anti-forgery property doing its job at lookup time.
+  const pattern = `SHRS-CERT-${short.programmeCode}-____-${short.seq}-${short.suffix || '_____'}`;
   const res = await sql`
     SELECT sc.*, b.batch_no FROM stage_certificates sc
     LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
