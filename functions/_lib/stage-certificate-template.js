@@ -397,16 +397,83 @@ function plateFor(progCode) {
 // two rails carry the LIVE serial, so a sheet copied from another student's
 // certificate contradicts itself in its own border.
 //
-// Placement is measured, not chosen: y 68mm and y 117mm are the only two
-// full-width channels that carry 0.00% plate ink across x 40-257mm AND are
-// clear of every content box (name ends 112.5, paragraph starts 121.3;
-// basmala ends 60, title starts 79.8).
+// Placement is measured, not chosen: y 68mm and y 115mm carry 0.00% plate ink
+// across x 40-257mm and clear every content box — name ends 112.5, name rule
+// starts 117.7, basmala ends 60, title starts 79.8.
+//
+// The lower rail was first put at y 117, which cleared the name rule by 0.10mm.
+// That is inside a commercial press's registration tolerance, so on a real run
+// the two could touch. It is now at 115: 1.9mm clear above, 2.1mm below. A
+// collision audit that only checks the elements you remembered to list will
+// miss this class of defect — the audit now sweeps every element in the sheet.
 //
 // The ids are namespaced per sheet. batch-print.html puts all six certificates
 // in ONE document, so a fixed id would make every sheet's textPath resolve to
 // the first sheet's path — six certificates all printing student one's serial
 // in their microtext, which is exactly the failure this feature exists to
 // prevent.
+// The paper the plate's marks sit on (Founder directive, 2026-08-06: "it should
+// resemble premium certificate stock rather than digitally coloured paper").
+//
+// This is the one part of §1 and §4 that is genuinely available. The plate's
+// ORNAMENT — its gold, guilloche, holographic strips — is 92 DPI raster and
+// cannot be sharpened without inventing detail. But the paper beneath it is not
+// raster at all: the ink key lifted the artwork's paper out, leaving a flat
+// colour rect. Flat is precisely what "digitally coloured" looks like. So the
+// texture goes in here, as true vector, at any resolution.
+//
+// Everything is deterministic from the serial, so a reprint of the same
+// certificate is the same sheet, and two students never share a fibre map.
+// Solid light ink throughout, never an opacity: on strokes this fine an opacity
+// becomes a screen percentage at separation and drops out first on press.
+function stagePaperTextureSvg(paper, seed, uid) {
+  let s = 0;
+  for (const c of String(seed)) s = (s * 31 + c.charCodeAt(0)) >>> 0;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+
+  // Cotton fibres, in the tints a real security substrate carries. Kept to a
+  // handful of levels off the paper so they read as substrate, not as specks.
+  const tints = ['#E7DCCB', '#E3DACD', '#EADDC8', '#E1DBD0', '#EBDCCE'];
+  let fibres = '';
+  for (let i = 0; i < 320; i++) {
+    const x = rnd() * 297, y = rnd() * 210;
+    const a = rnd() * Math.PI * 2, len = 1.1 + rnd() * 2.9;
+    const bow = (rnd() - 0.5) * 1.2;
+    const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+    const mx = (x + x2) / 2 - Math.sin(a) * bow, my = (y + y2) / 2 + Math.cos(a) * bow;
+    fibres += `<path d="M${x.toFixed(2)} ${y.toFixed(2)} Q${mx.toFixed(2)} ${my.toFixed(2)} `
+      + `${x2.toFixed(2)} ${y2.toFixed(2)}" fill="none" stroke="${tints[i % tints.length]}" `
+      + `stroke-width="0.09"/>`;
+  }
+  const g = `pt-${uid}`;
+  return `<svg class="o5-plate-paper" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true">
+    <defs>
+      <radialGradient id="${g}-tone" cx="0.5" cy="0.47" r="0.80">
+        <stop offset="0" stop-color="#F7F1E6"/><stop offset="0.58" stop-color="${paper}"/>
+        <stop offset="1" stop-color="#EFE5D2"/>
+      </radialGradient>
+      <!-- Cotton laid texture: two fine rulings crossing off both 0 and 45
+           degrees, so they beat against a copier's screen angles instead of
+           aligning with them. 0.07mm is the press floor for a screen stroke. -->
+      <pattern id="${g}-laid" width="0.62" height="0.62" patternUnits="userSpaceOnUse"
+        patternTransform="rotate(11)">
+        <line x1="0" y1="0" x2="0" y2="0.62" stroke="#EDE4D4" stroke-width="0.07"/>
+        <line x1="0" y1="0" x2="0.62" y2="0" stroke="#F0E8D9" stroke-width="0.07"/>
+      </pattern>
+      <!-- Anti-copy tint at a third angle (§4). -->
+      <pattern id="${g}-anti" width="0.44" height="0.44" patternUnits="userSpaceOnUse"
+        patternTransform="rotate(69)">
+        <line x1="0" y1="0" x2="0" y2="0.44" stroke="#EEE5D5" stroke-width="0.07"/>
+      </pattern>
+    </defs>
+    <rect width="297" height="210" fill="url(#${g}-tone)"/>
+    <rect width="297" height="210" fill="url(#${g}-laid)"/>
+    <rect width="297" height="210" fill="url(#${g}-anti)"/>
+    <g>${fibres}</g>
+  </svg>`;
+}
+
 function stagePlateMicrotextSvg(serial, uid) {
   const micro = `SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC RECORD · ${serial} · `;
   const body = escapeHtml(micro.repeat(4));
@@ -415,7 +482,7 @@ function stagePlateMicrotextSvg(serial, uid) {
   // screen percentage at separation and is the first thing to drop on press.
   return `<svg class="o5-plate-micro" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
-    <defs><path id="${a}" d="M40 68 H257"/><path id="${b}" d="M40 117 H257"/></defs>
+    <defs><path id="${a}" d="M40 68 H257"/><path id="${b}" d="M40 115 H257"/></defs>
     <text font-family="Inter, sans-serif" font-size="0.318" letter-spacing="0.02" fill="#A6905E"
       ><textPath href="#${a}" xlink:href="#${a}">${body}</textPath></text>
     <text font-family="Inter, sans-serif" font-size="0.282" letter-spacing="0.03" fill="#B09A68"
@@ -1176,7 +1243,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const archiveBarcode = code128cSvg(archiveDigits);
   const titleFrame = titleFrameSvg(202, 13.8);
 
-  return `<div class="sheet sheet--official">
+  return `<div class="sheet sheet--official" data-stage="${escapeHtml(progCode)}">
   ${(() => {
     const plate = plateFor(progCode);
     // The stage plate is a marks layer with a transparent ground, so the paper
@@ -1184,6 +1251,7 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     // sheet prints on white and every mark sits at the wrong density.
     return plate
       ? `<div class="official-paper" style="background:${plate.paper}"></div>
+  ${stagePaperTextureSvg(plate.paper, cert.serial_no, archSeq)}
   <img class="official-bg" src="${plate.src}" alt="" />
   ${stagePlateMicrotextSvg(cert.serial_no, archSeq)}`
       : `<img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />`;
@@ -1515,6 +1583,7 @@ function docShell(title, sheetsHtml) {
      92 DPI artwork that CAN be made resolution-free. */
   .official-paper{position:absolute;inset:0;}
   .o5-plate-micro{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .o5-plate-paper{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 
   /* ═══ OFFICIAL-PAPER EDITORIAL COMPOSITION v3 ═══
      The locked artwork carries the identity; this layer is EDITORIAL
@@ -1635,16 +1704,35 @@ function docShell(title, sheetsHtml) {
     font-family:var(--ar-text);font-size:10pt;color:#4B3420;}
   /* Generous air above and below the name pair — the visual heart of
      the certificate must never be crowded by intro or body text. */
-  .o5-name-en{position:absolute;top:104.4mm;left:34mm;width:114mm;text-align:center;
-    font-family:var(--en-display);font-weight:700;letter-spacing:2.4px;
+  /* The student name is the visual centre (Founder directive, 2026-08-06).
+     Tracking 2.4 -> 3.1px: at display size the tighter setting read as a
+     word, not as a name cut into the sheet. Both blocks moved down 0.7mm,
+     which is optical centring rather than taste — the gap above measured
+     3.5mm against 5.2mm below, so the name sat visibly high in its own
+     field. It is now 4.2 / 4.5, and the 0.8mm offset between the Latin and
+     Arabic blocks is preserved because their baselines differ. */
+  .o5-name-en{position:absolute;top:105.1mm;left:34mm;width:114mm;text-align:center;
+    font-family:var(--en-display);font-weight:700;letter-spacing:3.1px;
     white-space:nowrap;line-height:1.15;}
-  .o5-name-ar{position:absolute;top:103.6mm;right:34mm;width:114mm;text-align:center;direction:rtl;
+  .o5-name-ar{position:absolute;top:104.3mm;right:34mm;width:114mm;text-align:center;direction:rtl;
     font-family:var(--ar-text);font-weight:700;white-space:nowrap;line-height:1.08;}
   .o5-name-rule{position:absolute;top:117.4mm;left:70mm;right:70mm;display:flex;align-items:center;gap:2.2mm;}
   .o5-name-rule span{flex:1;height:.3mm;background:linear-gradient(90deg,transparent,#B08A2E 22%,#B08A2E 78%,transparent);}
   .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
   .o5-name-rule b{width:1.15mm;height:1.15mm;border:.14mm solid #A98A3C;transform:rotate(45deg);
     background:none;flex:0 0 auto;}
+  /* STAGE IDENTIFIER (Founder suggestion, 2026-08-06): keep one border
+     architecture across the stages and distinguish them by ONE ornament, so
+     the institution reads as a single family and the stage is still legible
+     at a glance. Ibtida'iyyah keeps the lozenge; I'dadiyyah takes an eight-
+     point khatam — the plate's own motif language, not a new vocabulary.
+     One element, no layout change, nothing else differs. */
+  .sheet[data-stage="IDD"] .o5-name-rule i{
+    width:2.5mm;height:2.5mm;transform:none;
+    background:linear-gradient(150deg,#E4C377,#B08A2E 46%,#8A6A24);
+    clip-path:polygon(50% 0%,58.04% 30.6%,85.36% 14.64%,69.4% 41.96%,100% 50%,
+      69.4% 58.04%,85.36% 85.36%,58.04% 69.4%,50% 100%,41.96% 69.4%,
+      14.64% 85.36%,30.6% 58.04%,0% 50%,30.6% 41.96%,14.64% 14.64%,41.96% 30.6%);}
   .o5-para-en{position:absolute;top:121.4mm;left:42mm;width:98mm;
     font-family:var(--en-text);font-weight:500;font-size:10pt;line-height:1.5;color:#332514;text-align:left;}
   .o5-para-ar{position:absolute;top:121mm;right:42mm;width:98mm;direction:rtl;
