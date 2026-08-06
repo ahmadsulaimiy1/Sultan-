@@ -152,18 +152,133 @@
     });
   }
 
+  /* ---- SVG paint servers ----
+     The chart and ring styles reference url(#pr-gold-grad) / url(#pr-area-grad).
+     Those gradients have to exist somewhere in the document or the stroke
+     silently resolves to none, so we inject them once rather than asking every
+     page to remember to paste a <defs> block. */
+  function ensureDefs() {
+    if (document.getElementById('pr-defs')) return;
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('id', 'pr-defs');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+    svg.innerHTML =
+      '<defs>' +
+      '<linearGradient id="pr-gold-grad" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0%" stop-color="#9C7A3C"/><stop offset="48%" stop-color="#E9CE8A"/>' +
+      '<stop offset="100%" stop-color="#C6A15B"/></linearGradient>' +
+      '<linearGradient id="pr-area-grad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#C6A15B" stop-opacity="0.34"/>' +
+      '<stop offset="100%" stop-color="#C6A15B" stop-opacity="0"/></linearGradient>' +
+      '</defs>';
+    document.body.appendChild(svg);
+  }
+
+  /* ---- odometer ----
+     Each digit rides its own reel through 0-9 and lands on its value, with a
+     left-to-right stagger so the figure resolves like a mechanical counter. */
+  function odometer(el) {
+    if (el.dataset.prDone) return;
+    el.dataset.prDone = '1';
+    var num = parseInt(el.getAttribute('data-count-to'), 10);
+    if (isNaN(num)) return;
+    var plain = el.hasAttribute('data-plain');
+    var str = plain ? String(num) : Number(num).toLocaleString('en-US');
+    var prefix = el.getAttribute('data-prefix') || '';
+    var suffix = el.getAttribute('data-suffix') || '';
+
+    el.textContent = '';
+    var sr = document.createElement('span');
+    sr.className = 'pr-sr';
+    sr.textContent = prefix + str + suffix;
+    el.appendChild(sr);
+
+    var wrap = document.createElement('span');
+    wrap.setAttribute('aria-hidden', 'true');
+    if (prefix) wrap.appendChild(document.createTextNode(prefix));
+    var col = 0;
+    str.split('').forEach(function (ch) {
+      if (ch < '0' || ch > '9') { wrap.appendChild(document.createTextNode(ch)); return; }
+      var cell = document.createElement('span');
+      cell.className = 'pr-od';
+      var reel = document.createElement('span');
+      reel.className = 'pr-od-reel';
+      for (var i = 0; i <= 9; i++) {
+        var d = document.createElement('i');
+        d.textContent = String(i);
+        reel.appendChild(d);
+      }
+      var landing = document.createElement('i');
+      landing.textContent = ch;
+      reel.appendChild(landing);
+      reel.style.transitionDelay = (col * 0.09).toFixed(2) + 's';
+      cell.appendChild(reel);
+      wrap.appendChild(cell);
+      col += 1;
+    });
+    if (suffix) wrap.appendChild(document.createTextNode(suffix));
+    el.appendChild(wrap);
+
+    var reels = wrap.querySelectorAll('.pr-od-reel');
+    if (reduce) {
+      reels.forEach(function (r) { r.style.transition = 'none'; r.style.transform = 'translateY(-10em)'; });
+      return;
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        reels.forEach(function (r) { r.style.transform = 'translateY(-10em)'; });
+      });
+    });
+  }
+
+  function animateRings(scope) {
+    scope.querySelectorAll('.pr-stat-ring .arc').forEach(function (c) {
+      if (c.dataset.prDone) return; c.dataset.prDone = '1';
+      var r = parseFloat(c.getAttribute('r'));
+      var circ = 2 * Math.PI * r;
+      var v = Math.max(0, Math.min(100, parseFloat(c.getAttribute('data-value')) || 0));
+      c.style.strokeDasharray = circ;
+      c.style.strokeDashoffset = circ;
+      var target = circ * (1 - v / 100);
+      if (reduce) { c.style.strokeDashoffset = target; return; }
+      requestAnimationFrame(function () { c.style.strokeDashoffset = target; });
+    });
+  }
+
+  function animateStatBars(scope) {
+    scope.querySelectorAll('.pr-stat-bar[data-w]').forEach(function (b) {
+      if (b.dataset.prDone) return; b.dataset.prDone = '1';
+      var w = Math.max(0, Math.min(100, parseFloat(b.getAttribute('data-w')) || 0));
+      if (reduce) { b.style.width = w + '%'; return; }
+      requestAnimationFrame(function () { b.style.width = w + '%'; });
+    });
+  }
+
+  // A figure animates as an odometer when it opts in, and counts smoothly
+  // otherwise — so a page can mix the two deliberately.
+  function animateFigure(el) {
+    if (el.getAttribute('data-anim') === 'roll') odometer(el);
+    else animateCounter(el);
+  }
+
   function fire(el) {
     el.classList.add('pr-in');
-    el.querySelectorAll && el.querySelectorAll('[data-count-to]').forEach(animateCounter);
-    if (el.hasAttribute && el.hasAttribute('data-count-to')) animateCounter(el);
+    el.querySelectorAll && el.querySelectorAll('[data-count-to]').forEach(animateFigure);
+    if (el.hasAttribute && el.hasAttribute('data-count-to')) animateFigure(el);
     animateBars(el); animateAgeBars(el); animateDonuts(el); animateLines(el);
+    animateRings(el); animateStatBars(el);
     el.querySelectorAll && el.querySelectorAll('[data-pr-type]').forEach(typewriter);
     if (el.hasAttribute && el.hasAttribute('data-pr-type')) typewriter(el);
   }
 
   function init() {
+    ensureDefs();
     initTilt();
-    var targets = document.querySelectorAll('.pr-reveal, .pr-stagger, [data-count-to], [data-pr-type], .pr-sheen');
+    var targets = document.querySelectorAll(
+      '.pr-reveal, .pr-stagger, [data-count-to], [data-pr-type], .pr-sheen, .pr-photo, .pr-stat'
+    );
     if (!('IntersectionObserver' in window)) { targets.forEach(fire); return; }
     var io = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (e) {

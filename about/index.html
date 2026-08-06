@@ -52,7 +52,7 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=46fe88a513">
+<link rel="stylesheet" href="/css/prestige.css?v=cd9c8c5c0f">
 <link rel="alternate" hreflang="ar" href="/ar/about/" />
 </head>
 <body>
@@ -430,7 +430,7 @@
       <h2 class="pr-h2">The Conviction Behind the School</h2>
     </div>
     <div class="pr-founder pr-reveal">
-      <aside class="pr-founder-card pr-glow">
+      <aside class="pr-founder-card pr-diamond">
         <img class="crest" src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest">
         <span class="role">Founder &amp; Director</span>
         <h3>Zakariya Olanrewaju Anofi</h3>
@@ -482,11 +482,12 @@
     <!-- Scholarly ties -->
     <div class="pr-reveal" style="margin-top:44px;">
       <div class="pr-grid cols-2" style="align-items:center;">
-        <div class="light-photo-pair" style="margin:0;">
-          <div class="lpp-grid">
-            <div class="lpp-frame"><img src="/assets/images/gallery/scholarly-visit-1.jpg" alt="A Sultan Hanafi Royal Schools delegation meeting Islamic scholars during a visit abroad" loading="lazy" width="1600" height="721" /></div>
-            <div class="lpp-frame"><img src="/assets/images/gallery/scholarly-visit-2.jpg" alt="A second gathering from the same scholarly visit abroad" loading="lazy" width="1600" height="1600" /></div>
+        <div>
+          <div class="pr-photo-grid">
+            <figure class="pr-photo" style="margin:0;"><img src="/assets/images/gallery/scholarly-visit-1.jpg" alt="A Sultan Hanafi Royal Schools delegation meeting Islamic scholars during a visit abroad" loading="lazy" width="1600" height="721" /></figure>
+            <figure class="pr-photo" style="margin:0;"><img src="/assets/images/gallery/scholarly-visit-2.jpg" alt="A second gathering from the same scholarly visit abroad" loading="lazy" width="1600" height="1600" /></figure>
           </div>
+          <p class="pr-photo-cap">Delegations abroad, photographed on visit.</p>
         </div>
         <div>
           <p class="pr-eyebrow">Scholarly Ties Abroad</p>
@@ -501,32 +502,45 @@
 
 <!-- The crest -->
 <section class="pr-section is-royal">
-  <div class="wrap pr-center">
-    <div class="pr-reveal pr-center">
-      <img class="pr-crest-img" src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest, a quartered shield">
+  <div class="wrap">
+    <div class="pr-reveal pr-center" style="max-width:760px;margin-inline:auto;">
+      <img class="pr-crest-img" src="/assets/images/crest-full.png" alt="The Sultan Hanafi Royal Schools crest: a quartered shield bearing a crescent and star, an open book, three stars and a tree, within laurels" width="150" height="150">
       <p class="pr-eyebrow is-centered">Our Crest</p>
       <h2 class="pr-h2">Every Quadrant Tells Part of the Story</h2>
+      <p class="pr-lead" style="text-align:center;">A shield is a promise made in shorthand. Ours is quartered, and each quarter names something the school has agreed to be held to.</p>
     </div>
-    <div class="pr-grid cols-2 pr-stagger" style="margin-top:34px;max-width:900px;width:100%;">
-      <article class="pr-card pr-tilt" style="background:rgba(255,255,255,.04);border-color:rgba(233,206,138,.24);">
-        <div class="pr-ico"><span class="pr-letter" style="font-size:1.3rem;">☾</span></div>
-        <h3 style="color:#fff;">Crescent &amp; Star</h3>
-        <p style="color:rgba(244,234,212,.8);">Faith as the compass of everything taught here.</p>
+
+    <div class="pr-grid cols-2 pr-stagger" style="margin-top:40px;">
+      <article class="pr-card pr-tilt pr-quad" style="background:rgba(255,255,255,.045);border-color:rgba(233,206,138,.24);">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/crescent-star.png" alt="The crescent and star from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3 style="color:#fff;">Crescent &amp; Star</h3>
+          <p style="color:rgba(244,234,212,.82);">Faith, set at the head of the shield — because everything taught beneath it answers to that first. Islam here is not a subject on the timetable; it is the ground the timetable stands on.</p>
+        </div>
       </article>
-      <article class="pr-card pr-tilt" style="background:rgba(255,255,255,.04);border-color:rgba(233,206,138,.24);">
-        <div class="pr-ico"><span class="pr-letter" style="font-size:1.3rem;">❖</span></div>
-        <h3 style="color:#fff;">The Open Book</h3>
-        <p style="color:rgba(244,234,212,.8);">Knowledge held open, never closed to those who seek it.</p>
+
+      <article class="pr-card pr-tilt pr-quad" style="background:rgba(255,255,255,.045);border-color:rgba(233,206,138,.24);">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/open-book.png" alt="The open book from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3 style="color:#fff;">The Open Book</h3>
+          <p style="color:rgba(244,234,212,.82);">Knowledge, held open. A closed book guards; an open one gives. The device is a standing undertaking that what is known here is taught here — to Muslims and non-Muslims, to sons and daughters, without reservation.</p>
+        </div>
       </article>
-      <article class="pr-card pr-tilt" style="background:rgba(255,255,255,.04);border-color:rgba(233,206,138,.24);">
-        <div class="pr-ico"><span class="pr-letter" style="font-size:1.3rem;">✦</span></div>
-        <h3 style="color:#fff;">Three Stars</h3>
-        <p style="color:rgba(244,234,212,.8);">Discipline, character, and excellence in constant orbit.</p>
+
+      <article class="pr-card pr-tilt pr-quad" style="background:rgba(255,255,255,.045);border-color:rgba(233,206,138,.24);">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/three-stars.png" alt="The three stars from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3 style="color:#fff;">Three Stars</h3>
+          <p style="color:rgba(244,234,212,.82);">Discipline, character and excellence — three, because not one of them survives alone. A disciplined child without character is merely obedient, and character without excellence asks too little of a life.</p>
+        </div>
       </article>
-      <article class="pr-card pr-tilt" style="background:rgba(255,255,255,.04);border-color:rgba(233,206,138,.24);">
-        <div class="pr-ico"><span class="pr-letter" style="font-size:1.3rem;">❦</span></div>
-        <h3 style="color:#fff;">The Tree</h3>
-        <p style="color:rgba(244,234,212,.8);">Growth measured in decades, not terms.</p>
+
+      <article class="pr-card pr-tilt pr-quad" style="background:rgba(255,255,255,.045);border-color:rgba(233,206,138,.24);">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/tree.png" alt="The tree from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3 style="color:#fff;">The Tree</h3>
+          <p style="color:rgba(244,234,212,.82);">Growth measured in decades. The tree is the one device on this shield that cannot be hurried — and the school was built the same way: rooted in Imowonla, grown season by season, and intended to outlast the people who planted it.</p>
+        </div>
       </article>
     </div>
   </div>
@@ -568,10 +582,22 @@
     </div>
 
     <div class="pr-stats pr-sheen pr-reveal" style="margin-top:44px;">
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2016" data-plain>0</div><div class="pr-stat-l">Founded</div><div class="pr-stat-s">Ikorodu, Lagos State</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="5">0</div><div class="pr-stat-l">Institutions</div><div class="pr-stat-s">One Board of Governors</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="6">0</div><div class="pr-stat-l">CLEVER Values</div><div class="pr-stat-s">One standard, held</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2">0</div><div class="pr-stat-l">National Curricula</div><div class="pr-stat-s">Nigerian &amp; Saudi</div></div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2016" data-plain data-anim="roll">0</div>
+        <div class="pr-stat-l">Founded</div>
+        <div class="pr-stat-s">Ikorodu, Lagos State</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="5">0</div></div>
+        <div class="pr-stat-l">Institutions</div>
+        <div class="pr-stat-s">One Board of Governors</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="6">0</div><div class="pr-stat-bar" data-w="100"></div>
+        <div class="pr-stat-l">CLEVER Values</div>
+        <div class="pr-stat-s">One standard, held</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2" data-anim="roll">0</div>
+        <div class="pr-stat-l">National Curricula</div>
+        <div class="pr-stat-s">Nigerian &amp; Saudi</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1215,7 +1241,7 @@
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/prestige.js?v=5c0a1ad2df" defer></script>
+<script src="/js/prestige.js?v=f2b2cb7adb" defer></script>
 
 </body>
 </html>

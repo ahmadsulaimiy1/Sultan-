@@ -52,7 +52,7 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=46fe88a513">
+<link rel="stylesheet" href="/css/prestige.css?v=cd9c8c5c0f">
 <link rel="alternate" hreflang="ar" href="/ar/admission/" />
 </head>
 <body>
@@ -432,10 +432,22 @@
     </div>
 
     <div class="pr-stats pr-sheen pr-reveal" style="margin-top:32px;">
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="7">0</div><div class="pr-stat-l">Digital Steps</div><div class="pr-stat-s">account to enrolment</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="3">0</div><div class="pr-stat-l">Documents</div><div class="pr-stat-s">to open a file</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="100" data-suffix="%">0</div><div class="pr-stat-l">Portal-Tracked</div><div class="pr-stat-s">every outcome recorded</div></div>
-      <div class="pr-stat"><div class="pr-stat-n" data-count-to="5">0</div><div class="pr-stat-l">Institutions</div><div class="pr-stat-s">one admissions office</div></div>
+      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="7">0</div></div>
+        <div class="pr-stat-l">Digital Steps</div>
+        <div class="pr-stat-s">account to enrolment</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="3">0</div><div class="pr-stat-bar" data-w="100"></div>
+        <div class="pr-stat-l">Documents</div>
+        <div class="pr-stat-s">to open a file</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="100" data-suffix="%">0</div></div>
+        <div class="pr-stat-l">Portal-Tracked</div>
+        <div class="pr-stat-s">every outcome recorded</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="5" data-anim="roll">0</div>
+        <div class="pr-stat-l">Institutions</div>
+        <div class="pr-stat-s">one admissions office</div>
+      </div>
     </div>
 
     <div class="adm-progress-banner" data-adm-progress-banner></div>
@@ -1218,7 +1230,7 @@
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/prestige.js?v=5c0a1ad2df" defer></script>
+<script src="/js/prestige.js?v=f2b2cb7adb" defer></script>
 
 </body>
 </html>

@@ -186,6 +186,108 @@
 .pr-divider{width:120px;height:22px;margin:26px auto;opacity:.9}
 .pr-center{text-align:center;display:flex;flex-direction:column;align-items:center;}
 
+/* ---------- Diamond + gold traveling light ------------------------ */
+/* A deliberately VISIBLE version of the light border: a warm gold arc runs
+   the perimeter one way while a small white "diamond" spark counter-rotates
+   faster, so the two cross and the border reads as a jewel catching light
+   rather than a tube of neon. Reserved for the single most important panel
+   on a page. */
+@property --pr-angle2{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.pr-diamond{position:relative;isolation:isolate;
+  box-shadow:var(--pr-shadow),0 0 0 1px rgba(198,161,91,.34),0 0 44px -10px rgba(233,206,138,.55);}
+.pr-diamond > *{position:relative;z-index:3;}
+.pr-diamond::before,.pr-diamond::after{
+  content:"";position:absolute;inset:-2px;border-radius:inherit;padding:2px;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;pointer-events:none;
+}
+/* the gold arc */
+.pr-diamond::before{
+  background:conic-gradient(from var(--pr-angle),
+    rgba(198,161,91,.20) 0deg,
+    rgba(198,161,91,.20) 232deg,
+    rgba(198,161,91,.62) 276deg,
+    #E9CE8A 308deg,
+    #FFF6DF 320deg,
+    #E9CE8A 332deg,
+    rgba(198,161,91,.62) 352deg,
+    rgba(198,161,91,.20) 360deg);
+  animation:pr-orbit 5.6s linear infinite;z-index:1;
+  filter:drop-shadow(0 0 5px rgba(233,206,138,.55));
+}
+/* the diamond spark, counter-rotating and faster, with a prismatic edge */
+.pr-diamond::after{
+  background:conic-gradient(from var(--pr-angle2),
+    transparent 0deg,
+    transparent 340deg,
+    rgba(190,235,255,.75) 348deg,
+    #FFFFFF 353deg,
+    rgba(255,240,205,.95) 357deg,
+    transparent 360deg);
+  animation:pr-orbit2 3.4s linear infinite;z-index:2;
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.95)) drop-shadow(0 0 12px rgba(233,206,138,.8));
+}
+@keyframes pr-orbit2{to{--pr-angle2:-360deg;}}
+@supports not (background:conic-gradient(from 0deg,red,blue)){
+  .pr-diamond::before{background:linear-gradient(140deg,#E9CE8A,rgba(198,161,91,.3));animation:none;}
+  .pr-diamond::after{display:none;}
+}
+
+/* ---------- Photographic frames ----------------------------------- */
+/* Rounded, raised, and revealed with a horizontal wipe rather than a fade —
+   the image appears to be drawn across the frame. A gold bar travels ahead of
+   the wipe so the reveal has an edge of light leading it. */
+.pr-photo{position:relative;border-radius:var(--pr-r-lg);overflow:hidden;
+  box-shadow:var(--pr-shadow),var(--pr-bevel);
+  clip-path:inset(0 100% 0 0 round var(--pr-r-lg));
+  transition:clip-path 1.15s var(--pr-ease),transform .6s var(--pr-ease),box-shadow .6s var(--pr-ease);
+  transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;background:var(--pr-cream);}
+.pr-photo.pr-in{clip-path:inset(0 0 0 0 round var(--pr-r-lg));}
+.pr-photo img{display:block;width:100%;height:auto;
+  transform:scale(1.05);transition:transform 1.4s var(--pr-ease),filter .7s;
+  filter:saturate(.96) contrast(1.02);}
+.pr-photo:hover{box-shadow:var(--pr-shadow-lift),var(--pr-glow);}
+.pr-photo:hover img{transform:scale(1.11);filter:saturate(1.04) contrast(1.05);}
+/* leading edge of light on the wipe */
+.pr-photo::before{content:"";position:absolute;top:-10%;bottom:-10%;width:16%;left:-20%;z-index:2;
+  background:linear-gradient(100deg,transparent,rgba(255,246,223,.85),transparent);
+  opacity:0;pointer-events:none;}
+.pr-photo.pr-in::before{animation:pr-photo-sweep 1.35s var(--pr-ease) 1;}
+@keyframes pr-photo-sweep{0%{opacity:0;transform:translateX(0)}12%{opacity:1}100%{opacity:0;transform:translateX(760%)}}
+/* inner gold hairline so the rounded corner reads as a mount, not a crop */
+.pr-photo::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:3;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(233,206,138,.5),inset 0 0 34px -14px rgba(42,28,16,.55);}
+.pr-photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
+.pr-photo-cap{margin-top:14px;font-size:.82rem;color:#8a7a60;line-height:1.5;}
+
+/* ---------- Statistic animation variants -------------------------- */
+/* Odometer: each digit rides a reel that spins through 0-9 and lands on its
+   value, staggered left to right. */
+.pr-od{display:inline-block;height:1em;overflow:hidden;vertical-align:top;line-height:1;}
+.pr-od-reel{display:block;transition:transform 1.5s var(--pr-ease);}
+.pr-od-reel i{display:block;height:1em;line-height:1;font-style:normal;}
+/* Ring: an arc draws around the figure as it counts. */
+.pr-stat-ring{position:relative;display:inline-grid;place-items:center;
+  width:106px;height:106px;margin:0 auto;}
+.pr-stat-ring .pr-stat-n{font-size:clamp(1.5rem,3.4vw,2.05rem);}
+.pr-stat-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
+.pr-stat-ring circle{fill:none;stroke-width:3;}
+.pr-stat-ring .trk{stroke:rgba(198,161,91,.18);}
+.pr-stat-ring .arc{stroke:url(#pr-gold-grad);stroke-linecap:round;
+  transition:stroke-dashoffset 1.7s var(--pr-ease);}
+/* Underline bar that grows beneath a figure. */
+.pr-stat-bar{height:3px;width:0;margin:12px auto 0;border-radius:var(--pr-r-pill);
+  background:linear-gradient(90deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  transition:width 1.5s var(--pr-ease);box-shadow:0 0 10px -2px rgba(198,161,91,.7);}
+.pr-stat{position:relative;overflow:hidden;}
+/* a slow gold wash that lifts each cell as it populates */
+.pr-stat::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(160px 90px at 50% 0%,rgba(233,206,138,.22),transparent 70%);
+  opacity:0;transition:opacity 1.1s var(--pr-ease);}
+.pr-in .pr-stat::after,.pr-stat.pr-in::after{opacity:1;}
+
 /* ---------- Pledge line (typewriter) ------------------------------ */
 /* One defining sentence per page, set large and centred between two gold
    rules, that writes itself out when it scrolls into view. Used sparingly —
@@ -419,6 +521,22 @@
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 
 /* ---------- Crest quadrants -------------------------------------- */
+/* The four devices are cropped from the school's own crest artwork rather than
+   substituted with generic symbols — they are the institution's heraldry and
+   nothing else may stand in for them. */
+.pr-quad{display:flex;gap:22px;align-items:flex-start;text-align:left;}
+.pr-quad-ico{width:92px;height:92px;flex-shrink:0;border-radius:var(--pr-r-md);
+  display:grid;place-items:center;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 34% 26%,rgba(233,206,138,.22),rgba(198,161,91,.07) 58%,transparent 78%);
+  border:1px solid rgba(233,206,138,.32);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.26),0 10px 26px -16px rgba(0,0,0,.7);}
+.pr-quad-ico img{width:62px;height:62px;object-fit:contain;
+  filter:drop-shadow(0 5px 12px rgba(0,0,0,.5));
+  transition:transform .6s var(--pr-ease);}
+.pr-quad:hover .pr-quad-ico img{transform:scale(1.09) rotate(-2deg);}
+.pr-quad-body h3{font-family:'Cinzel',serif;font-size:1.12rem;margin:2px 0 8px;}
+@media (max-width:520px){.pr-quad{flex-direction:column;gap:16px;}}
+
 .pr-crest-img{width:150px;height:150px;object-fit:contain;margin:0 auto 8px;display:block;
   filter:drop-shadow(0 10px 26px rgba(0,0,0,.45));}
 
@@ -491,4 +609,9 @@
   .pr-tilt,.pr-tilt.is-tilting{transform:none!important;transition:none!important;}
   .pr-tilt::after{display:none;}
   .pr-type-caret{animation:none;opacity:0;}
+  .pr-diamond::before{animation:none;background:linear-gradient(140deg,#E9CE8A,rgba(198,161,91,.3));}
+  .pr-diamond::after{display:none;}
+  .pr-photo{clip-path:none!important;transform:none!important;transition:none!important;}
+  .pr-photo::before{display:none;}
+  .pr-od-reel,.pr-stat-ring .arc,.pr-stat-bar{transition:none!important;}
 }
