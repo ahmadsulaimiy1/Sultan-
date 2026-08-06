@@ -55,12 +55,10 @@ const PAPER = '#F6EFE1';
 const PAPER_DEEP = '#EDE2CC';
 const GOLD = '#A8863F';
 const GOLD_DEEP = '#7A5C21';
-const GOLD_LIGHT = '#CBAA63';
-const NAVY = '#1B2333';       // the corner cartouche ground
 const INK = '#2B2417';        // body text
 const INK_SOFT = '#5A4E37';
 const MICRO_INK = '#8B7440';
-const HOLO = '#CFC6DE';
+const SERIAL_INK = '#A2452C';   // the dual serial — a contrasting ink, by design
 
 // The sheet. True A4 landscape — 297 x 210mm, filling the page edge to edge
 // under @page{size:A4 landscape;margin:0}. The v1.0 master draws 297 x 209.5
@@ -147,53 +145,6 @@ function lathe(x, y, len, h, strands, stroke, opacity, vertical = false) {
   return out.join('');
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// THE CORNER CARTOUCHE
-// The supplied artwork's four corners are dark blocks carrying a gold
-// arabesque. Rebuilt as an eight-point star (khatam) lattice — the geometry the
-// rest of the institution's ornament already uses — rather than traced from
-// three-pixel strokes that carry no recoverable detail.
-// ─────────────────────────────────────────────────────────────────────────────
-// 22mm, measured off the supplied artwork (its navy blocks run px 25–105 of
-// 1080 over 297mm). The first cut used 32mm, and at that size the bottom
-// cartouches ran under the QR module and the verification plate — the whole
-// authentication band has to clear them, which is what fixes the size.
-const CORNER = 22;
-const CORNER_PITCH = 7.3;
-
-function cornerCartouche(x, y, sx, sy, uid) {
-  const S = CORNER;
-  const g = [];
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 3; c++) {
-      const cx = 3.7 + c * CORNER_PITCH;
-      const cy = 3.7 + r * CORNER_PITCH;
-      const R = 2.9;
-      const pts = [];
-      for (let i = 0; i < 16; i++) {
-        const a = (i / 16) * Math.PI * 2 - Math.PI / 2;
-        const rad = i % 2 === 0 ? R : R * 0.415;
-        pts.push(`${(cx + rad * Math.cos(a)).toFixed(2)},${(cy + rad * Math.sin(a)).toFixed(2)}`);
-      }
-      g.push(`<path d="M${pts.join('L')}Z" fill="none" stroke="${GOLD_LIGHT}" stroke-width="0.16" opacity="0.7"/>`);
-      g.push(`<circle cx="${cx}" cy="${cy}" r="1.1" fill="none" stroke="${GOLD}" stroke-width="0.13" opacity="0.58"/>`);
-    }
-  }
-  for (let i = -2; i <= 4; i++) {
-    const a = (i * CORNER_PITCH - 4).toFixed(2);
-    const b = (i * CORNER_PITCH + S + 4).toFixed(2);
-    g.push(`<path d="M ${a} -4 L ${b} ${S + 4}" fill="none" stroke="${GOLD}" stroke-width="0.11" opacity="0.3"/>`);
-    g.push(`<path d="M ${a} ${S + 4} L ${b} -4" fill="none" stroke="${GOLD}" stroke-width="0.11" opacity="0.3"/>`);
-  }
-  return `<g transform="translate(${x} ${y}) scale(${sx} ${sy})" clip-path="url(#rcCorner${uid})">
-    <rect x="0" y="0" width="${S}" height="${S}" fill="${NAVY}"/>
-    <rect x="0" y="0" width="${S}" height="${S}" fill="url(#rcCornerSheen${uid})"/>
-    ${g.join('')}
-    <path d="M 0.9 ${S} L 0.9 0.9 L ${S} 0.9" fill="none" stroke="${GOLD_LIGHT}" stroke-width="0.5" opacity="0.9"/>
-    <path d="M 2.2 ${S} L 2.2 2.2 L ${S} 2.2" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.16" opacity="0.8"/>
-  </g>`;
-}
-
 // Deterministic pseudo-random security fibres, seeded from the serial with a
 // plain LCG: the point is reproducibility, not cryptographic quality. The same
 // certificate regenerates identically, so a reissue that differs is a reissue
@@ -231,45 +182,164 @@ function uvMotif(cx, cy, r = 3.2) {
     + `<circle cx="${cx}" cy="${cy}" r="${(r * 0.3).toFixed(2)}" fill="none" stroke="#D2C8DE" stroke-width="0.14" opacity="0.5"/></g>`;
 }
 
+
 // ─────────────────────────────────────────────────────────────────────────────
-// THE GROUND — paper, watermark, guilloche field, frame, microtext rails.
-// One SVG covering the whole sheet, regenerated per certificate because the
-// microtext rails carry that certificate's own serial: the security layer is
-// different on every sheet, which the supplied artwork's fixed microtext is not.
+// THE CORNER FANS
+//
+// v1.1 put a 22mm navy block carrying a star lattice in each corner. The
+// Founder's verdict on it was "not recommended … something just being patched",
+// and he is right: a filled rectangle dropped over a corner is applique, not
+// engraving. It also fought the sheet — four dark masses on a warm ground pull
+// the eye to the edges, which is the opposite of what a certificate wants.
+//
+// Replaced by the treatment a security engraver actually uses: a quarter
+// rosette FAN, struck from the corner of the field, its rays and arcs cut on
+// the same lathe as the rest of the sheet. It belongs to the paper instead of
+// sitting on top of it, and it is generated geometry rather than a decal.
+// ─────────────────────────────────────────────────────────────────────────────
+const FAN_R = 14;
+
+function cornerFan(cx, cy, sx, sy) {
+  const R = FAN_R;
+  const rays = [];
+  // 19 rays across the quadrant, alternating weight — the alternation is what
+  // gives an engraved fan its shimmer, and it is also what a photocopier's
+  // threshold destroys first.
+  for (let i = 0; i <= 18; i++) {
+    const a = (i / 18) * (Math.PI / 2);
+    const r0 = 3.2;
+    const r1 = i % 2 ? R * 0.78 : R;
+    rays.push(`<path d="M ${(r0 * Math.cos(a)).toFixed(2)} ${(r0 * Math.sin(a)).toFixed(2)} `
+      + `L ${(r1 * Math.cos(a)).toFixed(2)} ${(r1 * Math.sin(a)).toFixed(2)}" `
+      + `stroke="${GOLD_DEEP}" stroke-width="${i % 2 ? 0.09 : 0.13}" opacity="${i % 2 ? 0.5 : 0.72}"/>`);
+  }
+  const arcs = [3.2, 6.1, 9.0, 11.6, 14].map((r, i) =>
+    `<path d="M ${r} 0 A ${r} ${r} 0 0 1 0 ${r}" fill="none" stroke="${GOLD_DEEP}" `
+    + `stroke-width="${i === 0 || i === 4 ? 0.16 : 0.085}" opacity="${i === 0 || i === 4 ? 0.8 : 0.45}"/>`);
+  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})" fill="none">
+    ${rays.join('')}${arcs.join('')}
+    <path d="M ${R} 0 A ${R} ${R} 0 0 1 0 ${R}" fill="none" stroke="url(#rcFoil)" stroke-width="0.45"/>
+  </g>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE ENGINE-TURNED BORDER
+//
+// One repeating lathe cell, declared once as an SVG <pattern> and painted into
+// four band rects. A pattern rather than 170 copies of a group: the sheet is
+// regenerated per certificate and lands in a 13-page press PDF, so the cost of
+// every ornament is paid thirteen times.
+// ─────────────────────────────────────────────────────────────────────────────
+function ropeCell() {
+  const C = 5.4;                       // cell, in mm
+  const out = [];
+  // Interlocking arcs — the "rope" — plus a struck rosette in each cell.
+  out.push(`<path d="M 0 ${C / 2} Q ${C / 4} 0 ${C / 2} ${C / 2} T ${C} ${C / 2}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>`);
+  out.push(`<path d="M 0 ${C / 2} Q ${C / 4} ${C} ${C / 2} ${C / 2} T ${C} ${C / 2}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>`);
+  out.push(`<path d="${rosette(C / 2, C / 2, 1.55, 7, 0.38, 96)}" fill="none" stroke="${GOLD}" stroke-width="0.085" opacity="0.6"/>`);
+  return { C, body: out.join('') };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE SECURITY THREAD
+//
+// A windowed thread, as a banknote carries it: a continuous metallic line that
+// surfaces through a run of windows, with the document's own serial repeating
+// along it in microtext. Two of them, symmetric about the sheet centre, in
+// place of v1.1's flat holographic strips — a strip is a rectangle of tint, a
+// thread is a structure.
+// ─────────────────────────────────────────────────────────────────────────────
+function securityThread(x, y0, y1, serial, uid, side) {
+  // Windows: short, frequent and low-contrast. The first cut used 2.7 x 5.4mm
+  // at 9.4mm centres, which read on the proof as a column of pale capsules
+  // rather than as a thread surfacing through paper.
+  const windows = [];
+  const step = 6.2;
+  for (let y = y0 + 2.4; y < y1 - 2.4; y += step) {
+    windows.push(`<rect x="${(x - 0.95).toFixed(2)}" y="${y.toFixed(2)}" width="1.9" height="3.4" rx="0.35"
+      fill="url(#rcThread${uid})" stroke="${GOLD_DEEP}" stroke-width="0.08" opacity="0.72"/>`);
+  }
+  const micro = `${serial} · SHRS ROYAL COLLEGE · `.repeat(5);
+  return `<g>
+    <path d="M ${x} ${y0} V ${y1}" stroke="${GOLD_DEEP}" stroke-width="0.5" opacity="0.26"/>
+    <path d="M ${x} ${y0} V ${y1}" stroke="url(#rcThread${uid})" stroke-width="0.34" opacity="0.72"/>
+    ${windows.join('')}
+    <path id="rcThreadT${uid}${side}" d="M ${x + 2.6} ${y1} L ${x + 2.6} ${y0}" fill="none"/>
+    <text font-family="Inter, sans-serif" font-size="${(0.85 * PT).toFixed(3)}"
+      letter-spacing="${(0.26 * PT).toFixed(3)}" fill="${MICRO_INK}">
+      <textPath href="#rcThreadT${uid}${side}" startOffset="0">${esc(micro)}</textPath></text>
+  </g>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE VOID PANTOGRAPH
+//
+// Two screens at the same angle but different frequencies. On the sheet they
+// integrate to one flat tint; a copier's sampling grid beats against the fine
+// one and drops it, so the coarse one surfaces and the word appears. Drawn
+// here at press values — it is a real feature of the plate, not a mock-up.
+// ─────────────────────────────────────────────────────────────────────────────
+function voidPantograph(uid) {
+  return `<g opacity="0.5">
+    <rect x="${RC_RULES.field}" y="88" width="${W - 2 * RC_RULES.field}" height="34" fill="url(#rcFine${uid})"/>
+    <text x="148.5" y="112" font-family="Cinzel, serif" font-size="17" font-weight="800"
+      letter-spacing="7" text-anchor="middle" fill="url(#rcCoarse${uid})" opacity="0.55">VOID</text>
+  </g>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE GROUND
 // ─────────────────────────────────────────────────────────────────────────────
 function groundSvg(serial, uid) {
   const s = esc(serial);
   const R = RC_RULES;
+  const cell = ropeCell();
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
   const vReps = Math.ceil(166 / (vText.length * 1.38)) + 1;
   const hText = `SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `;
   const hReps = Math.ceil(285 / (hText.length * 1.42)) + 1;
   const microFs = (0.9 * PT).toFixed(3);
   const microTrack = (0.34 * PT).toFixed(3);
+  const band = R.field - R.frame;   // the border band's width
 
   return `<svg class="rc-ground" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
-    <clipPath id="rcCorner${uid}"><rect x="0" y="0" width="${CORNER}" height="${CORNER}"/></clipPath>
-    <linearGradient id="rcCornerSheen${uid}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2C3750"/><stop offset="0.55" stop-color="#161D2A"/>
-      <stop offset="1" stop-color="#26314A"/>
-    </linearGradient>
-    <linearGradient id="rcFoil${uid}" x1="0" y1="0" x2="1" y2="0.35">
+    <linearGradient id="rcFoil" x1="0" y1="0" x2="1" y2="0.35">
       <stop offset="0" stop-color="#8A6A2A"/><stop offset="0.18" stop-color="#E4C982"/>
       <stop offset="0.34" stop-color="#9A7A32"/><stop offset="0.52" stop-color="#F0DCA6"/>
       <stop offset="0.7" stop-color="#96762F"/><stop offset="0.86" stop-color="#DEC27B"/>
       <stop offset="1" stop-color="#7E6027"/>
     </linearGradient>
-    <linearGradient id="rcHolo${uid}" x1="0" y1="0" x2="0.25" y2="1">
-      <stop offset="0" stop-color="#D8CFE6"/><stop offset="0.2" stop-color="#CFE2DC"/>
-      <stop offset="0.4" stop-color="#EADCC9"/><stop offset="0.6" stop-color="#D3CBE4"/>
-      <stop offset="0.8" stop-color="#CBE0DE"/><stop offset="1" stop-color="#E4D6C6"/>
+    <linearGradient id="rcThread${uid}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B9A7C8"/><stop offset="0.3" stop-color="#E8DCC0"/>
+      <stop offset="0.6" stop-color="#A9C3BC"/><stop offset="1" stop-color="#D9C9A8"/>
+    </linearGradient>
+    <!-- The iris: a split-duct roll, gold into terracotta into gold. A copier
+         reproduces the hues but not the continuity of the transition. -->
+    <linearGradient id="rcIris${uid}" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#B8933F" stop-opacity="0"/>
+      <stop offset="0.22" stop-color="#B8933F" stop-opacity="0.20"/>
+      <stop offset="0.5" stop-color="#A65437" stop-opacity="0.17"/>
+      <stop offset="0.78" stop-color="#B8933F" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#B8933F" stop-opacity="0"/>
     </linearGradient>
     <radialGradient id="rcVignette${uid}" cx="0.5" cy="0.44" r="0.8">
-      <stop offset="0" stop-color="#FFFCF4" stop-opacity="0.9"/>
-      <stop offset="0.6" stop-color="${PAPER}" stop-opacity="0"/>
-      <stop offset="1" stop-color="#D9CBAE" stop-opacity="0.42"/>
+      <stop offset="0" stop-color="#FFFCF4" stop-opacity="0.92"/>
+      <stop offset="0.58" stop-color="${PAPER}" stop-opacity="0"/>
+      <stop offset="1" stop-color="#D8C9AC" stop-opacity="0.46"/>
     </radialGradient>
+    <linearGradient id="rcIrisFade${uid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/>
+      <stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="rcIrisMask${uid}"><rect x="0" y="52" width="${W}" height="28" fill="url(#rcIrisFade${uid})"/></mask>
+    <pattern id="rcRope${uid}" width="${cell.C}" height="${cell.C}" patternUnits="userSpaceOnUse">${cell.body}</pattern>
+    <pattern id="rcRopeV${uid}" width="${cell.C}" height="${cell.C}" patternUnits="userSpaceOnUse"
+      patternTransform="rotate(90)">${cell.body}</pattern>
+    <pattern id="rcFine${uid}" width="0.34" height="0.34" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
+      <rect width="0.34" height="0.1" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
+    <pattern id="rcCoarse${uid}" width="0.9" height="0.9" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
+      <rect width="0.9" height="0.3" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
     <path id="rcRailT${uid}" d="M 6 ${R.microRailTop} H 291"/>
     <path id="rcRailB${uid}" d="M 6 ${R.microRailBottom} H 291"/>
     <path id="rcRailL${uid}" d="M ${R.vRail} 188 L ${R.vRail} 22"/>
@@ -280,55 +350,61 @@ function groundSvg(serial, uid) {
   <rect x="0" y="0" width="${W}" height="${H}" fill="${PAPER}"/>
   <rect x="0" y="0" width="${W}" height="${H}" fill="url(#rcVignette${uid})"/>
 
-  <!-- Guilloche field. The whole open area carries lathe work, not just the
-       border: a scan-and-reprint loses the fine strands first. -->
-  <g opacity="0.28">
-    ${lathe(20, 62, 257, 5.4, 4, 0.075, 0.5)}
-    ${lathe(20, 100, 257, 6.2, 4, 0.075, 0.44)}
-    ${lathe(20, 138, 257, 5.4, 4, 0.075, 0.5)}
+  <!-- ── THE GUILLOCHE NET ────────────────────────────────────────────────────
+       Three wave systems at different frequencies and phases, crossing the
+       whole field. No area of this sheet is bare paper: bare paper is where a
+       forger's inkjet has nothing to match. -->
+  <g opacity="0.26">
+    ${lathe(19, 52, 259, 7.2, 5, 0.075, 0.55)}
+    ${lathe(19, 78, 259, 9.0, 5, 0.075, 0.5)}
+    ${lathe(19, 104, 259, 10.4, 5, 0.075, 0.44)}
+    ${lathe(19, 130, 259, 9.0, 5, 0.075, 0.5)}
+    ${lathe(19, 156, 259, 7.2, 5, 0.075, 0.55)}
+  </g>
+  <g opacity="0.2">
+    ${lathe(19, 66, 259, 5.6, 3, 0.07, 0.6)}
+    ${lathe(19, 143, 259, 5.6, 3, 0.07, 0.6)}
   </g>
 
-  <!-- Central medallion watermark, over the citation. -->
-  <g opacity="0.15">${medallion(148.5, 98, 4.2, 0.085, 1)}</g>
-  <g opacity="0.1">${medallion(148.5, 98, 2.5, 0.08, 1)}</g>
+  <!-- Intaglio medallions: one large behind the citation, two flanking. -->
+  <g opacity="0.15">${medallion(148.5, 96, 4.4, 0.085, 1)}</g>
+  <g opacity="0.1">${medallion(148.5, 96, 2.7, 0.08, 1)}</g>
+  <g opacity="0.12">${medallion(58, 104, 1.55, 0.08, 1)}</g>
+  <g opacity="0.12">${medallion(239, 104, 1.55, 0.08, 1)}</g>
 
-  <!-- Frame: trim rule, engraved gold frame, two hairlines. -->
+  <!-- The iris band, behind the title. Masked vertically as well as
+       horizontally: a split-duct roll has no edge, and the first cut's hard
+       top and bottom lines read as a pasted rectangle. -->
+  <rect x="${R.field}" y="52" width="${W - 2 * R.field}" height="28"
+    fill="url(#rcIris${uid})" mask="url(#rcIrisMask${uid})"/>
+
+  ${voidPantograph(uid)}
+
+  <!-- ── THE BORDER ───────────────────────────────────────────────────────────
+       Trim rule, then an engine-turned band on all four sides, then the field
+       rule and a scalloped inner line. -->
   <rect x="${R.trim}" y="${R.trim}" width="${W - 2 * R.trim}" height="${H - 2 * R.trim}"
-    fill="none" stroke="url(#rcFoil${uid})" stroke-width="0.8"/>
+    fill="none" stroke="url(#rcFoil)" stroke-width="0.8"/>
+  <rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${band}" fill="url(#rcRope${uid})"/>
+  <rect x="${R.frame}" y="${H - R.field}" width="${W - 2 * R.frame}" height="${band}" fill="url(#rcRope${uid})"/>
+  <rect x="${R.frame}" y="${R.field}" width="${band}" height="${H - 2 * R.field}" fill="url(#rcRopeV${uid})"/>
+  <rect x="${W - R.field}" y="${R.field}" width="${band}" height="${H - 2 * R.field}" fill="url(#rcRopeV${uid})"/>
   <rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${H - 2 * R.frame}"
-    fill="none" stroke="url(#rcFoil${uid})" stroke-width="1.5"/>
-  <rect x="${R.frameInner}" y="${R.frameInner}" width="${W - 2 * R.frameInner}" height="${H - 2 * R.frameInner}"
-    fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.8"/>
+    fill="none" stroke="url(#rcFoil)" stroke-width="1.1"/>
   <rect x="${R.field}" y="${R.field}" width="${W - 2 * R.field}" height="${H - 2 * R.field}"
-    fill="none" stroke="${GOLD}" stroke-width="0.1" opacity="0.5"/>
+    fill="none" stroke="url(#rcFoil)" stroke-width="0.85"/>
+  <rect x="${R.field + 1.4}" y="${R.field + 1.4}" width="${W - 2 * R.field - 2.8}"
+    height="${H - 2 * R.field - 2.8}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.11" opacity="0.6"/>
 
-  <!-- Guilloche inside the frame band, all four sides. -->
-  <g opacity="0.4">
-    ${lathe(R.field, R.frameInner + 1.2, W - 2 * R.field, 2.2, 3, 0.07, 1)}
-    ${lathe(R.field, H - R.frameInner - 1.2, W - 2 * R.field, 2.2, 3, 0.07, 1)}
-    ${lathe(R.frameInner + 1.2, R.field, H - 2 * R.field, 2.2, 3, 0.07, 1, true)}
-    ${lathe(W - R.frameInner - 1.2, R.field, H - 2 * R.field, 2.2, 3, 0.07, 1, true)}
-  </g>
+  <!-- Corner fans — see the note above the generator. -->
+  ${cornerFan(R.field, R.field, 1, 1)}
+  ${cornerFan(W - R.field, R.field, -1, 1)}
+  ${cornerFan(R.field, H - R.field, 1, -1)}
+  ${cornerFan(W - R.field, H - R.field, -1, -1)}
 
-  <!-- Corner cartouches, drawn over the frame the way the supplied artwork
-       has them: the gold rules emerge from the dark blocks. -->
-  ${cornerCartouche(R.trim, R.trim, 1, 1, uid)}
-  ${cornerCartouche(W - R.trim, R.trim, -1, 1, uid)}
-  ${cornerCartouche(R.trim, H - R.trim, 1, -1, uid)}
-  ${cornerCartouche(W - R.trim, H - R.trim, -1, -1, uid)}
-
-  <!-- Holographic strips, left and right, as the supplied artwork carries them.
-       Printed as a screen tint with a lathe overlay so the sheet still reads
-       correctly in flat CMYK wherever the foil is not applied. -->
-  ${[20.2, W - 26.2].map((x) => `
-  <g>
-    <rect x="${x}" y="60" width="6" height="86" rx="1.2" fill="url(#rcHolo${uid})" opacity="0.8"/>
-    <rect x="${x}" y="60" width="6" height="86" rx="1.2" fill="none" stroke="${GOLD}" stroke-width="0.14" opacity="0.68"/>
-    ${lathe(x + 3, 63, 80, 3.4, 3, 0.07, 0.5, true)}
-    ${medallion(x + 3, 80, 0.3, 0.07, 0.45, HOLO)}
-    ${medallion(x + 3, 103, 0.3, 0.07, 0.45, HOLO)}
-    ${medallion(x + 3, 126, 0.3, 0.07, 0.45, HOLO)}
-  </g>`).join('')}
+  <!-- Security threads, symmetric about the sheet centre. -->
+  ${securityThread(24.5, 44, 156, serial, uid, 'L')}
+  ${securityThread(W - 24.5, 44, 156, serial, uid, 'R')}
 
   <!-- Microtext rails. Solid light ink, never an opacity: an opacity on type
        this small becomes a screen percentage at separation and is the first
@@ -343,7 +419,8 @@ function groundSvg(serial, uid) {
 
   ${fibres(serial)}
 
-  ${[[70, 98], [227, 98], [95, 62], [202, 62]].map(([cx, cy]) => uvMotif(cx, cy)).join('')}
+  ${[[46, 84], [251, 84], [46, 140], [251, 140], [148.5, 40], [148.5, 152]]
+    .map(([cx, cy]) => uvMotif(cx, cy)).join('')}
 </svg>`;
 }
 
@@ -473,8 +550,14 @@ export function code128cSvg(digits, { unit = 0.38, height = 6.5 } = {}) {
     if (i % 2 === 0) bars.push(`<rect x="${x.toFixed(3)}" y="0" width="${w.toFixed(3)}" height="${height}" fill="#1A1408"/>`);
     x += w;
   });
-  return `<svg viewBox="0 0 ${x.toFixed(2)} ${height}" xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid meet">${bars.join('')}</svg>`;
+  // THE SYMBOL DECLARES ITS OWN PHYSICAL SIZE. Without width/height in
+  // millimetres the SVG is elastic, and whatever box the layout gives it
+  // rescales the X-dimension — which is how the archive barcode ended up at an
+  // effective 0.214mm and, after that was fixed by widening the slot, how the
+  // holder barcode ended up at 0.236mm and failed at 150 DPI in exactly the
+  // same way. A slot cannot get this wrong if the symbol is not elastic.
+  return `<svg viewBox="0 0 ${x.toFixed(2)} ${height}" width="${x.toFixed(2)}mm" height="${height}mm"
+    xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="crispEdges">${bars.join('')}</svg>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -626,6 +709,13 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   if (!/^\d{15}$/.test(studentId)) {
     throw new Error(`royal-college-certificate: ${serial} carries "${studentId}" where a 15-digit Student ID belongs`);
   }
+  // A second Code 128-C, carrying the permanent Student ID. The archive
+  // barcode identifies the DOCUMENT; this one identifies the HOLDER, and a
+  // sheet whose two codes disagree with the register is a sheet assembled from
+  // parts of two certificates. Code 128-C needs an even-length payload and the
+  // Student ID is 15 digits, so it is left-padded — the pad is stripped by the
+  // reader, and the register records the unpadded number.
+  const idBarcode = code128cSvg(`0${studentId}`, { unit: 0.38, height: 5.5 });
   const session = String(cert.academic_year || '').replace('/', ' – ');
   if (!session) throw new Error(`royal-college-certificate: ${serial} has no academic session`);
   const issued = formatDateEn(cert.issued_at);
@@ -694,12 +784,15 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   </div>
 
   <!-- ── SIGNATURES ──────────────────────────────────────────────────────────
-       The Chairman's specimen signature is on file and is reproduced. The
-       Principal of Royal College has no specimen on file, so his block carries
-       a ruled line for wet ink rather than another officer's signature set
-       over his name. Editorial bible, §7. -->
+       Both specimens are now on file. The Principal's arrived on 2026-08-06 as
+       a 120 x 86 px photograph of a signature written light-on-dark; it is
+       traced to vector by scripts/trace-signature.py, so its edges are crisp at
+       any resolution and it carries no background of its own. Tracing does not
+       add information — the stroke shape is as faithful as that photograph and
+       no more — and a higher-resolution capture would be worth re-running the
+       one command for. -->
   <div class="rc-sig rc-sig-l">
-    <div class="rc-sig-ink rc-sig-blank"></div>
+    <img class="rc-sig-ink" src="/assets/images/certificates/signature-royal-college-principal.svg" alt="" />
     <div class="rc-sig-line"></div>
     <div class="rc-sig-name">Dr. Adegoke Musa Olatunji</div>
     <div class="rc-sig-role">Principal, Sultan Hanafi Royal College</div>
@@ -723,6 +816,19 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <div class="rc-qr-foot">Scan QR Code</div>
   </div>
 
+  <!-- ── DUAL SERIAL ─────────────────────────────────────────────────────────
+       A banknote carries its serial twice, in a contrasting ink, at opposite
+       corners: two chances to read it, and a disagreement between the two is
+       the first thing an examiner looks for. Terracotta rather than gold, so it
+       reads as a serial and not as ornament.
+       It sits IN THE ENGINE-TURNED BAND, not in the field. The first cut put it
+       at the top-left of the field, where it ran straight under the Nigerian
+       coat of arms — the band is where a banknote carries its serial anyway,
+       and it is the one strip of this sheet with nothing else competing for
+       it. -->
+  <div class="rc-serial rc-serial-tr">${esc(serial)}</div>
+  <div class="rc-serial rc-serial-bl">${esc(serial)}</div>
+
   <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid)}</div>
 
   <div class="rc-sealwrap">${sealSvg(uid)}</div>
@@ -737,9 +843,10 @@ function sheetHtml({ cert, qrSvgMarkup }) {
       <div class="rc-pf"><span>Student Identity No.</span><b>${esc(studentId)}</b></div>
     </div>
     <div class="rc-plate-bar">${barcode}</div>
-    <div class="rc-plate-url">shroyalschools.com/verify-certificate</div>
+    <div class="rc-plate-bar2">${idBarcode}</div>
     <div class="rc-plate-micro">${esc(microSerial)}</div>
-    <div class="rc-plate-void">Void if altered, erased or reproduced</div>
+    <div class="rc-plate-void">shroyalschools.com/verify-certificate
+      <span class="rc-plate-dot">·</span> Void if altered, erased or reproduced</div>
   </div>
 </section>`;
 }
@@ -829,18 +936,18 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   font-family:'Inter',sans-serif;font-size:6pt;font-weight:400;letter-spacing:0.16em;
   color:${INK_SOFT};text-transform:uppercase}
 .rc-sid b{font-weight:600;color:${INK};letter-spacing:0.12em}
-.rc-body{position:absolute;left:58mm;right:58mm;top:105mm;margin:0;text-align:center;
+.rc-body{position:absolute;left:58mm;right:58mm;top:103mm;margin:0;text-align:center;
   font-family:'Cormorant Garamond',serif;font-weight:500;font-size:11.4pt;line-height:1.6;
   letter-spacing:0.012em;color:${INK}}
 
-.rc-award{position:absolute;left:62mm;right:62mm;top:126mm;height:10mm;
+.rc-award{position:absolute;left:62mm;right:62mm;top:123.5mm;height:10mm;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.9mm}
 .rc-award-k{font-family:'Inter',sans-serif;font-size:5.6pt;font-weight:400;
   letter-spacing:0.34em;color:${GOLD_DEEP};text-transform:uppercase}
 .rc-award-v{font-family:'Cinzel',serif;font-size:11pt;font-weight:700;
   letter-spacing:0.07em;color:${INK};text-transform:uppercase;white-space:nowrap}
 
-.rc-ledger{position:absolute;left:48mm;right:48mm;top:137mm;height:8.5mm;
+.rc-ledger{position:absolute;left:48mm;right:48mm;top:135mm;height:8.5mm;
   display:flex;align-items:stretch;justify-content:space-between}
 .rc-lg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:0.8mm;border-left:0.2mm solid rgba(168,134,63,0.4)}
@@ -851,12 +958,11 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   letter-spacing:0.02em;color:${INK}}
 
 /* ── SIGNATURES ───────────────────────────────────────────────────────── */
-.rc-sig{position:absolute;top:146mm;width:60mm;text-align:center}
+.rc-sig{position:absolute;top:144.5mm;width:60mm;text-align:center}
 .rc-sig-l{left:30mm}
 .rc-sig-r{right:30mm}
-.rc-sig-ink{display:block;height:9mm;width:auto;max-width:50mm;margin:0 auto -0.6mm;
+.rc-sig-ink{display:block;height:10mm;width:auto;max-width:52mm;margin:0 auto -1.4mm;
   object-fit:contain;mix-blend-mode:multiply}
-.rc-sig-blank{height:9mm;margin-bottom:-0.6mm}
 .rc-sig-line{height:0.3mm;background:linear-gradient(90deg,rgba(122,92,33,0),${GOLD_DEEP} 18%,${GOLD_DEEP} 82%,rgba(122,92,33,0))}
 .rc-sig-name{margin-top:1.3mm;font-family:'Cormorant Garamond',serif;font-size:9.4pt;
   font-weight:600;letter-spacing:0.02em;color:${INK}}
@@ -895,17 +1001,24 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   letter-spacing:0.15em;color:${MICRO_INK};text-transform:uppercase}
 .rc-pf b{font-family:'Cormorant Garamond',serif;font-size:8.6pt;font-weight:600;
   letter-spacing:0.03em;color:${INK};font-variant-numeric:lining-nums tabular-nums}
-.rc-plate-bar{position:absolute;left:3.4mm;top:18.4mm;width:35mm;height:6.5mm}
-.rc-plate-bar svg{display:block;width:100%;height:100%}
-.rc-plate-url{position:absolute;right:3.4mm;top:19.6mm;
-  font-family:'Inter',sans-serif;font-size:4.4pt;font-weight:400;letter-spacing:0.06em;
-  color:${MICRO_INK}}
-.rc-plate-micro{position:absolute;left:3.4mm;right:3.4mm;bottom:3.1mm;overflow:hidden;
+.rc-plate-bar{position:absolute;left:3.2mm;top:18.4mm}
+.rc-plate-bar2{position:absolute;left:39.4mm;top:19.1mm}
+.rc-plate-bar svg,.rc-plate-bar2 svg{display:block}
+.rc-plate-micro{position:absolute;left:3.4mm;right:3.4mm;bottom:3.4mm;overflow:hidden;
   white-space:nowrap;font-family:'Inter',sans-serif;font-size:0.9pt;font-weight:400;
   letter-spacing:0.34pt;color:${MICRO_INK}}
-.rc-plate-void{position:absolute;left:0;right:0;bottom:0.9mm;text-align:center;
-  font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.12em;
+.rc-serial{position:absolute;font-family:'Inter',sans-serif;font-size:6.6pt;font-weight:600;
+  letter-spacing:0.1em;color:${SERIAL_INK};white-space:nowrap;
+  padding:0.5mm 1.6mm;border-radius:0.7mm;
+  background:linear-gradient(90deg,rgba(246,239,225,0),rgba(250,245,234,0.94) 12%,
+    rgba(250,245,234,0.94) 88%,rgba(246,239,225,0))}
+.rc-serial-tr{right:19mm;top:11.4mm}
+.rc-serial-bl{left:19mm;bottom:11.4mm}
+
+.rc-plate-void{position:absolute;left:0;right:0;bottom:1mm;text-align:center;
+  font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.1em;
   color:${MICRO_INK};text-transform:uppercase}
+.rc-plate-dot{color:${GOLD};padding:0 0.2em}
 </style>
 </head><body>
 ${sheetsHtml}

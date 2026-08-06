@@ -1,7 +1,7 @@
 # SHRS Royal College Certificate — Editorial Bible
 
 **Sultan Hanafi Royal College — Junior Secondary Graduation Certificate**
-**Certificate System v1.1 · programme code `JSS` · English only**
+**Certificate System v1.2 · programme code `JSS` · English only**
 
 This is the internal standard for the Royal College graduation certificate. It
 is the companion to `docs/shrs-certificate-editorial-bible.md`, which governs
@@ -124,19 +124,24 @@ Every element below is on the sheet. Where a decision had a cost, it is stated.
 
 | Element | Where | Note |
 |---|---|---|
-| **Guilloche field** | Three lathe bands across the open field, plus bands inside all four frame rules | Structural strokes ≥ 0.10mm, screen strokes ≥ 0.07mm — the floor for this paper |
-| **Engine-turned medallion watermark** | Centred behind the citation | Four concentric rosettes at 13/11/9/7 petals |
-| **Corner cartouches** | Four 22mm blocks, navy ground, khatam star lattice in gold | Rebuilt as vector; the supplied artwork's version is 92 DPI |
+| **Guilloche net** | Seven wave systems crossing the whole field | No area of this sheet is bare paper — bare paper is where a forger's inkjet has nothing to match. Structural strokes ≥ 0.10mm, screen strokes ≥ 0.07mm. |
+| **Engine-turned border** | A repeating lathe cell — interlocking arcs plus a struck 7-petal rosette — painted into a 7mm band on all four sides | Declared once as an SVG `<pattern>`, not 170 copies of a group: the sheet is regenerated per certificate and lands in a 13-page press file. |
+| **Corner fans** | Four quarter-rosette fans struck from the corners of the field | **These replace v1.1's four navy corner blocks.** A filled rectangle dropped over a corner is applique, not engraving, and four dark masses on a warm ground pull the eye to the edges. The fan's rays alternate weight, which is what gives an engraved fan its shimmer and what a copier's threshold destroys first. |
+| **Security threads** | Two windowed threads, symmetric about the sheet centre | A continuous metallic line surfacing through a run of windows, with the certificate's own serial repeating along it in microtext. **These replace v1.1's holographic strips** — a strip is a rectangle of tint, a thread is a structure. |
+| **Iris (split-duct) band** | Behind the title, gold → terracotta → gold | Masked vertically as well as horizontally: a split-duct roll has no edge, and a hard-edged one reads as a pasted rectangle. |
+| **Void pantograph** | Across the mid-field | Two screens at the same angle and different frequencies. On the sheet they integrate to one flat tint; a copier's sampling grid beats against the fine one and drops it, so the coarse one surfaces and the word appears. |
+| **Intaglio medallion watermark** | One large behind the citation, two flanking | Four concentric rosettes at 13/11/9/7 petals |
+| **Dual serial** | In the engine-turned band — top-right and bottom-left | A banknote carries its serial twice, in a contrasting ink, at opposite corners: two chances to read it, and a disagreement between the two is the first thing an examiner looks for. Terracotta, so it reads as a serial and not as ornament. |
 | **Microtext rails** | Top, bottom, left, right — 0.90pt | Each rail carries **this certificate's own serial**, so the security layer differs on every sheet. The supplied artwork's microtext is identical on every copy. |
-| **Holographic strips** | Left and right, 6 × 86mm | Printed as a screen tint with a lathe overlay, so the sheet still reads correctly in flat CMYK wherever foil is not applied |
 | **Security fibres** | 36, scattered across the field | Deterministic from the serial — the same certificate regenerates identically, so a reissue that differs is a reissue that can be spotted |
-| **UV-reactive motifs** | Four eight-point stars | Drawn pale lilac on the proof so the press can see where they go; the ink swaps at plate-making to a 365nm fluorescent |
+| **UV-reactive motifs** | Six eight-point stars, arranged | Drawn pale lilac on the proof so the press can see where they go; the ink swaps at plate-making to a 365nm fluorescent |
 | **Latent-image screen** | Under the certificate number | 38° screen that photocopies as a solid block |
 | **Serial microtext** | Along the foot of the number cartouche, 0.78pt | Carries the FULL serial — year and anti-forgery tail — which the printed number drops |
 | **Institutional seal** | Centred in the authentication band, 38mm | Vector, with the Royal College's own ring text. The v1.0 raster seal names the School of Islamic & Arabic Studies and is **not** reused here. |
 | **QR code** | 17.6mm, error correction H | Payload `https://shroyalschools.com/v/<serial>` — the `/v/` redirect exists to keep the symbol at 45×45 modules; the long form pushes it to 53×53, below the density a phone camera needs at this size |
-| **Code 128-C barcode** | In the verification plate | Payload = archive number, year + 6-digit run |
-| **Void warning** | Foot of the verification plate | |
+| **Code 128-C, archive** | Verification plate, left | Payload = archive number, year + 6-digit run. Identifies the **document**. |
+| **Code 128-C, holder** | Verification plate, centre | Payload = the permanent Student ID, left-padded to an even length. Identifies the **holder**. A sheet whose two codes disagree with the register is a sheet assembled from parts of two certificates. |
+| **Void warning + verification URL** | Foot of the verification plate | |
 
 **Exactly one QR per sheet.** Finding the right symbol is not enough — an extra
 one is its own defect. A reader who scans a dead code on a credential that
@@ -144,19 +149,23 @@ promises verification has every reason to doubt the document.
 
 ## 7. Signatures
 
-Two blocks:
+Two blocks, both now carrying a real specimen:
 
 - **Dr. Adegoke Musa Olatunji**, Principal, Sultan Hanafi Royal College —
-  **ruled line, no ink.** No specimen signature for the Royal College Principal
-  is on file. The block is set for wet ink at the ceremony. Putting another
-  officer's signature over his name is not an option, and neither is a
-  generated one.
-- **Dr. Zakariyyah Olanrewaju Anofi**, Chairman, Board of Governors — his real
-  specimen signature, already on file
-  (`assets/images/certificates/signature-chairman.png`).
+  `assets/images/certificates/signature-royal-college-principal.svg`. Supplied
+  2026-08-06 as a 120 × 86 px photograph of a signature written light-on-dark;
+  traced to vector by `scripts/trace-signature.py`, which discards the dark
+  ground entirely and reduces the ink to fresh black Béziers.
+- **Dr. Zakariyyah Olanrewaju Anofi**, Chairman, Board of Governors —
+  `assets/images/certificates/signature-chairman.png`, already on file.
 
-**Open item for the institution:** record Dr. Adegoke's specimen signature under
-My Digital Signature so future Royal College certificates can carry it.
+**Honest limit on the Principal's specimen.** Tracing does not add information.
+It makes the edges crisp at any resolution, which is real and worth having, but
+the stroke shape can only be as faithful as its source, and a 120 × 86 px
+photograph is a very small source. The tracing pipeline is one command
+(`python3 scripts/trace-signature.py <photo> <out.svg>`), so re-running it on a
+higher-resolution capture — a scan at 600 DPI of the signature on white paper —
+would measurably improve the printed result. Worth doing before the press run.
 
 ## 8. What may change, and what may not
 

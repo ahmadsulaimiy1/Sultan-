@@ -249,6 +249,13 @@ for (const [i, student] of roll.entries()) {
     verifyCode: gen.fullHash.slice(0, 12).toUpperCase().replace(/(.{4})(?=.)/g, '$1-'),
     documentId: `DID-${ISSUED_AT.slice(0, 4)}-${PROGRAMME}-${String(certId).padStart(7, '0')}`,
     archiveRef: `ARCH/${PROGRAMME}/${ISSUED_AT.slice(0, 4)}/${String(certId).padStart(6, '0')}`,
+    // The sheet carries TWO Code 128 symbols. The archive barcode identifies
+    // the document (year + run, derived from archiveRef by the code gate); this
+    // one identifies the holder. Recorded here because a gate that decodes the
+    // page needs to know what the second symbol is supposed to say — Code 128-C
+    // needs an even-length payload and the Student ID is 15 digits, so it is
+    // left-padded, and the pad is part of what comes off the scanner.
+    holderBarcode: `0${student.identityNo}`,
     printedNo: `SHRS-CERT-${PROGRAMME}-${String(certId).padStart(6, '0')}`,
     verifyUrl: `${ORIGIN}/verify-certificate/?ref=${gen.serialNo}`,
     // What the QR actually carries. /v/ is a permanent 301 to the verification

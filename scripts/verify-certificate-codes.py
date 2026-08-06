@@ -72,7 +72,11 @@ with tempfile.TemporaryDirectory() as td:
         rasters[dpi] = sorted(Path(td).glob(f'p{dpi}-*.png'))
 
     for i, e in enumerate(entries):
-        qr_ok, bc_ok, qr_count = [], [], []
+        qr_ok, bc_ok, qr_count, hb_ok = [], [], [], []
+        # A second Code 128 carrying the holder's Student ID, on registers that
+        # declare one (Royal College, v1.2 onward). Checked only where declared,
+        # so the single-barcode Ibtida'iyyah and I'dadiyyah sheets are unaffected.
+        want_hb = e.get('holderBarcode')
         # The archive number is the barcode payload: year + 6-digit run.
         want_bc = f'{e["archiveRef"].split("/")[2]}{e["archiveRef"].split("/")[3]}'
         for dpi in DPIS:
@@ -89,6 +93,8 @@ with tempfile.TemporaryDirectory() as td:
             # promises verification has every reason to doubt the document.
             # That block was removed under authorisation; this keeps it removed.
             qr_count.append(sum(1 for f, _ in found if f == 'qrcode'))
+            if want_hb:
+                hb_ok.append(('code128', want_hb) in found)
         extra = [d for d, n in zip(DPIS, qr_count) if n != 1]
         if extra:
             failures.append(f'{e["serialNo"]}: expected exactly one QR, found '
@@ -103,6 +109,9 @@ with tempfile.TemporaryDirectory() as td:
         if not all(bc_ok):
             failures.append(f'{e["serialNo"]}: barcode unreadable at '
                             + ', '.join(str(d) for d, ok in zip(DPIS, bc_ok) if not ok) + ' DPI')
+        if want_hb and not all(hb_ok):
+            failures.append(f'{e["serialNo"]}: holder barcode ({want_hb}) unreadable at '
+                            + ', '.join(str(d) for d, ok in zip(DPIS, hb_ok) if not ok) + ' DPI')
 
 print()
 if failures:
@@ -110,6 +119,7 @@ if failures:
     for f in failures:
         print('  ' + f)
     sys.exit(1)
-print(f'all {len(entries)} QR codes and {len(entries)} barcodes decode from the full '
+n_hb = sum(1 for e in entries if e.get('holderBarcode'))
+print(f'all {len(entries)} QR codes and {len(entries) + n_hb} barcodes decode from the full '
       f'page at every tested resolution ({", ".join(str(d) for d in DPIS)} DPI),')
 print('each to its own register entry')
