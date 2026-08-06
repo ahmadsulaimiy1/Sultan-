@@ -9,8 +9,8 @@
   "firstCertificateSeq": 42,
   "count": 6,
   "arabicNames": {
-    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived; the rest is this pipeline’s proposal and is listed under awaitingConfirmation.",
-    "status": "PROPOSED — AWAITING FOUNDER CONFIRMATION",
+    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived. Anything this pipeline could only propose was put to the Founder before print: once ruled on it moves to confirmedByFounder with the date of his approval, and anything still outstanding stays under awaitingConfirmation. A name is never generated, transliterated or guessed here.",
+    "status": "APPROVED BY THE FOUNDER — 2026-08-06",
     "approvedAndCarriedAcross": {
       "Ismail": "إسماعيل",
       "Seriki": "سركي",
@@ -25,14 +25,18 @@
       "Abdullah": "عبد الله",
       "Jabarr": "جبار"
     },
-    "awaitingConfirmation": {
-      "Olamiposi": "أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), the Chairman’s own middle name",
-      "Oladimeji": "أولاديميجي — Yoruba, same pattern",
-      "Ayomide": "أيومدي — the -mide ending follows an approved SHRS precedent",
-      "Amobi": "أموبي — Igbo, no institutional precedent",
-      "Makinde": "مكيندي — Yoruba, no institutional precedent",
-      "Thoirah": "طاهرة — Nigerian orthography also admits ثويرة"
-    }
+    "confirmedByFounder": {
+      "date": "2026-08-06",
+      "names": {
+        "Olamiposi": "أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), the Chairman’s own middle name",
+        "Oladimeji": "أولاديميجي — Yoruba, same pattern",
+        "Ayomide": "أيومدي — the -mide ending follows an approved SHRS precedent",
+        "Amobi": "أموبي — Igbo, no institutional precedent",
+        "Makinde": "مكيندي — Yoruba, no institutional precedent",
+        "Thoirah": "طاهرة — Nigerian orthography also admits ثويرة"
+      }
+    },
+    "awaitingConfirmation": {}
   },
   "entries": [
     {

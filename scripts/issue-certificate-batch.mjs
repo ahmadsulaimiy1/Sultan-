@@ -65,6 +65,14 @@ const ORIGIN = 'https://www.shroyalschools.com';
 // script refuses to run if the two disagree by one code point. أ and ا, ي and
 // ى, ة and ه are separate characters that look near-identical at body size.
 //
+// Anything this pipeline can only propose is printed on the register as
+// outstanding and put to the Founder before the batch goes to press. When he
+// rules on it, the string does not change — only the record of its standing
+// does, moving to `confirmedByFounder` with the date of his approval. That is
+// the whole approval loop: propose in the open, print the caveat, wait, record.
+// The I'dadiyyah roll's six Yoruba/Igbo spellings went through it and were
+// approved on 2026-08-06.
+//
 // `withdrawnEn`/`withdrawnAr` are the names that must NOT appear in THIS
 // batch's output. They are per-batch because a name withdrawn from one stage
 // can be current in another — which is exactly what happened here.
@@ -179,7 +187,7 @@ const BATCHES = {
       'أكو', 'كوردي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'أبديمي',
     ],
     arabicNames: {
-      status: 'PROPOSED — AWAITING FOUNDER CONFIRMATION',
+      status: 'APPROVED BY THE FOUNDER — 2026-08-06',
       approvedAndCarriedAcross: {
         Ismail: 'إسماعيل', Seriki: 'سركي', Aliu: 'علي — the approved form, NOT عليو',
         Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
@@ -188,19 +196,33 @@ const BATCHES = {
         Muhammad: 'محمد', Baqi: 'باقي', Faridah: 'فريدة',
         Abdulbasit: 'عبد الباسط', Abdullah: 'عبد الله', Jabarr: 'جبار',
       },
-      awaitingConfirmation: {
-        Olamiposi: 'أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), '
-          + 'the Chairman’s own middle name',
-        Oladimeji: 'أولاديميجي — Yoruba, same pattern',
-        // The -mide ending has an approved SHRS form, but its source is a
-        // withdrawn student's name. Cited by pattern, never named: this
-        // register is a production file, and no withdrawn student may appear
-        // in one. The residue gate caught this exact leak on the first run.
-        Ayomide: 'أيومدي — the -mide ending follows an approved SHRS precedent',
-        Amobi: 'أموبي — Igbo, no institutional precedent',
-        Makinde: 'مكيندي — Yoruba, no institutional precedent',
-        Thoirah: 'طاهرة — Nigerian orthography also admits ثويرة',
+      // These six were raised as PROPOSED on the first run of this register and
+      // were held out of print until the Founder ruled on them. He confirmed
+      // all six on 2026-08-06: "I confirm those six Arabic spellings are
+      // approved." The strings are unchanged from what was put to him — the
+      // approval is recorded here, it does not re-derive anything.
+      //
+      // The rule that produced the original flag stands and is not softened by
+      // this approval: Arabic names are never generated, transliterated or
+      // guessed by this pipeline. A name with no approval on record stays off
+      // the register.
+      confirmedByFounder: {
+        date: '2026-08-06',
+        names: {
+          Olamiposi: 'أولاميبوسي — Yoruba, on the approved أولانريوجو (Olanrewaju), '
+            + 'the Chairman’s own middle name',
+          Oladimeji: 'أولاديميجي — Yoruba, same pattern',
+          // The -mide ending has an approved SHRS form, but its source is a
+          // withdrawn student's name. Cited by pattern, never named: this
+          // register is a production file, and no withdrawn student may appear
+          // in one. The residue gate caught this exact leak on the first run.
+          Ayomide: 'أيومدي — the -mide ending follows an approved SHRS precedent',
+          Amobi: 'أموبي — Igbo, no institutional precedent',
+          Makinde: 'مكيندي — Yoruba, no institutional precedent',
+          Thoirah: 'طاهرة — Nigerian orthography also admits ثويرة',
+        },
       },
+      awaitingConfirmation: {},
     },
   },
 };
@@ -260,6 +282,59 @@ for (const g of [...WITHDRAWN_ROLL, ...WITHDRAWN_AR]) {
 if (guardFaults.length) {
   console.error('BATCH REJECTED — withdrawn-roll guard collides with the current roll:\n  '
     + guardFaults.join('\n  '));
+  process.exit(1);
+}
+
+// ── Every name must have its provenance on record ───────────────────────
+// The never-generate rule is only worth as much as the record that proves it
+// was kept, and that record is hand-maintained prose sitting next to a roll
+// that changes. It had already drifted once: the six I'dadiyyah spellings were
+// confirmed by the Founder on 2026-08-06 and the register went on printing them
+// as "AWAITING FOUNDER CONFIRMATION", because approving a name and updating the
+// block that describes it are two separate acts and only one of them happened.
+//
+// So it is asserted instead. Every name part on every roll must be accounted
+// for in exactly one of the four provenance buckets — approved earlier, standard
+// Arabic, confirmed by the Founder, or still outstanding. Exactly one: a name
+// listed as both confirmed and awaiting is a contradiction about whether it may
+// be printed, and that is the question the whole block exists to answer.
+//
+// This runs over EVERY batch, not just the one being issued, because the drift
+// is silent in whichever batch is not currently rendering.
+const provenanceFaults = [];
+for (const b of Object.values(BATCHES)) {
+  const buckets = {
+    approvedAndCarriedAcross: b.arabicNames.approvedAndCarriedAcross || {},
+    standardArabicNoChoiceToMake: b.arabicNames.standardArabicNoChoiceToMake || {},
+    confirmedByFounder: b.arabicNames.confirmedByFounder?.names || {},
+    awaitingConfirmation: b.arabicNames.awaitingConfirmation || {},
+  };
+  const homes = new Map();
+  for (const [bucket, names] of Object.entries(buckets)) {
+    for (const k of Object.keys(names)) {
+      if (homes.has(k)) {
+        provenanceFaults.push(`${b.programme}: "${k}" is in both ${homes.get(k)} `
+          + `and ${bucket} — its approval state is ambiguous`);
+      } else homes.set(k, bucket);
+    }
+  }
+  for (const s of b.roll) {
+    for (const part of s.en.split(/\s+/).filter(Boolean)) {
+      if (!homes.has(part)) {
+        provenanceFaults.push(`${b.programme}: "${part}" (${s.en}) has no Arabic `
+          + 'provenance on record — it must be approved, standard, confirmed or '
+          + 'declared outstanding before it can be issued');
+      }
+    }
+  }
+  if (b.arabicNames.confirmedByFounder
+      && !/^\d{4}-\d{2}-\d{2}$/.test(b.arabicNames.confirmedByFounder.date || '')) {
+    provenanceFaults.push(`${b.programme}: confirmedByFounder carries no approval date`);
+  }
+}
+if (provenanceFaults.length) {
+  console.error('BATCH REJECTED — Arabic name provenance is incomplete:\n  '
+    + provenanceFaults.join('\n  '));
   process.exit(1);
 }
 
@@ -392,8 +467,11 @@ writeFileSync(join(dir, 'graduation-register.json'), JSON.stringify({
   arabicNames: {
     reason: 'The Founder\u2019s directive supplied English names only. English is '
       + 'authoritative. Where a spelling had already been approved on an earlier '
-      + 'register it is carried across unchanged rather than re-derived; the rest '
-      + 'is this pipeline\u2019s proposal and is listed under awaitingConfirmation.',
+      + 'register it is carried across unchanged rather than re-derived. Anything '
+      + 'this pipeline could only propose was put to the Founder before print: '
+      + 'once ruled on it moves to confirmedByFounder with the date of his '
+      + 'approval, and anything still outstanding stays under awaitingConfirmation. '
+      + 'A name is never generated, transliterated or guessed here.',
     ...BATCH.arabicNames,
   },
   entries: issued,
@@ -425,10 +503,24 @@ const md = [
       + Object.entries(BATCH.arabicNames.standardArabicNoChoiceToMake)
         .map(([k, v]) => `${v} (${k})`).join(', ') + '.',
   ] : []),
-  '>',
-  '> **Awaiting the Founder\'s confirmation before print:**',
-  ...Object.entries(BATCH.arabicNames.awaitingConfirmation)
-    .map(([k, v]) => `> · **${v.split(' — ')[0]}** (${k})${v.includes(' — ') ? ' — ' + v.split(' — ').slice(1).join(' — ') : ''}`),
+  // A spelling put to the Founder and ruled on, and a spelling still waiting on
+  // him, are different facts about a name and a registrar must be able to tell
+  // them apart. Both lists render from the batch's own block, and each header
+  // is omitted when its list is empty — so a batch with nothing outstanding
+  // does not print an empty "awaiting" heading that reads as an open item.
+  ...(Object.keys(BATCH.arabicNames.confirmedByFounder?.names || {}).length ? [
+    '>',
+    `> *Raised as proposed on the first run and **confirmed by the Founder on `
+      + `${BATCH.arabicNames.confirmedByFounder.date}**, unchanged from what was put to him:*`,
+    ...Object.entries(BATCH.arabicNames.confirmedByFounder.names)
+      .map(([k, v]) => `> · **${v.split(' — ')[0]}** (${k})${v.includes(' — ') ? ' — ' + v.split(' — ').slice(1).join(' — ') : ''}`),
+  ] : []),
+  ...(Object.keys(BATCH.arabicNames.awaitingConfirmation || {}).length ? [
+    '>',
+    '> **Awaiting the Founder\'s confirmation before print:**',
+    ...Object.entries(BATCH.arabicNames.awaitingConfirmation)
+      .map(([k, v]) => `> · **${v.split(' — ')[0]}** (${k})${v.includes(' — ') ? ' — ' + v.split(' — ').slice(1).join(' — ') : ''}`),
+  ] : []),
   '',
   '| # | Student | الاسم | Student ID | Certificate Number | Document ID | Archive |',
   '|---|---------|-------|------------|--------------------|-------------|---------|',
