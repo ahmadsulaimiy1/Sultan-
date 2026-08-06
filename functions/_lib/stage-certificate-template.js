@@ -936,6 +936,17 @@ function verificationGroundSvg(w, h, serial) {
     <rect width="${w}" height="${h}" fill="url(#vpCopy)"/>
     <g opacity="0.30">${guillocheMedallion(w * 0.30, h * 0.5, 9.5, '#9A7A2C', 0.45)}</g>
     <g opacity="0.24">${guillocheMedallion(w * 0.78, h * 0.5, 7.2, '#8C6516', 0.5)}</g>
+    <!-- Scanning bay. The locked artwork carries a dark geometric ornament
+         directly under this column — measured, not guessed: hiding this whole
+         ground layer makes it MORE prominent, so it is the artwork's, not
+         ours. The QR itself is unaffected (its field is opaque white) but
+         "Scan to Verify" was gold type over that ornament and barely read.
+         A single soft field lifts the column clear without flattening the
+         rest of the plate, which is what keeps the panel sitting in the paper
+         rather than on it. Not decoration: the scan instruction is the one
+         line on this plate a stranger has to be able to read. -->
+    <rect x="${(w - 20.4).toFixed(2)}" y="1.15" width="18.6" height="${(h - 2.3).toFixed(2)}"
+      rx="0.8" fill="#FBF6E9" opacity="0.82"/>
   </g>
 
   <g clip-path="url(#vpInner)">
@@ -946,7 +957,18 @@ function verificationGroundSvg(w, h, serial) {
   <path d="${frame(0.7)}" fill="none" stroke="#A98A3C" stroke-width="0.10"/>
   <text font-family="Inter, sans-serif" font-size="${(0.9 * PT).toFixed(3)}" letter-spacing="0.02"
     fill="#AC996C"><textPath href="#vpRing">${escapeHtml(micro)}</textPath></text>
-  ${volute(5.6, 2.4, 1, 1)}${volute(5.6, h - 2.4, 1, -1)}
+  <!-- ONE volute, in the only clear ground this plate has: the gap between the
+       SHRS roundel and the VERIFICATION heading.
+       There were two. The second sat at y = h - 2.4 and drew its curl straight
+       through "Void if altered or erased" — an ornament across the clause that
+       makes the document voidable. Moving it to the header's right end simply
+       moved the collision onto التحقق من الشهادة, which is the answer: unlike
+       the number cartouche, this plate has no empty field to put a second
+       flourish in. Every square millimetre carries an identifier, a code or a
+       clause. So it is removed rather than relocated — the plate is already
+       bracketed by the canted engraved frame, the microtext ring, two guilloche
+       medallions and the UV motifs, and nothing here may sit on top of text. -->
+  ${volute(5.6, 2.4, 1, 1)}
   ${uvMotif(3.2, h / 2)}${uvMotif(w - 1.9, h / 2, 0.95)}
 </svg>`;
 }

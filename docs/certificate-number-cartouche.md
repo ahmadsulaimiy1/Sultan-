@@ -318,3 +318,39 @@ were run against a single rebuilt page:
 
 An earlier, weaker control — the original hairline renderer on a blank white page
 — *decoded*, and so proved nothing. It was discarded rather than reported.
+
+### 8.5 Two defects only a press-resolution look could find
+
+Both were invisible to every automated gate, because both are *ornament over
+text* — the collision checker measures DOM boxes, and these ornaments live
+inside an SVG ground where they have no boxes of their own.
+
+**The volute crossed the void clause.** A corner flourish at `y = h - 2.4`
+drew its curl straight through *"Void if altered or erased"* — decoration
+across the clause that makes the document voidable. Moving it to the header's
+right end only moved the collision onto التحقق من الشهادة, which is the real
+finding: unlike the number cartouche, this plate has no empty field. Every
+square millimetre carries an identifier, a code or a clause. The second volute
+is therefore **removed, not relocated.**
+
+**"Scan to Verify" sat on an artwork ornament.** The locked artwork carries a
+dark geometric device directly beneath the QR column. This was established, not
+assumed: hiding this template's own ground layer makes the device *more*
+prominent, so it is the paper's and not ours. The QR was unaffected — its field
+is opaque white — but the scan instruction was gold type over dark ornament and
+barely read. A single soft scanning bay now lifts that column clear, without
+raising the opacity of the whole plate and flattening the panel onto the page.
+
+### 8.6 The render harness produced a passing PDF of the wrong document
+
+Worth recording because it nearly shipped. The sheet references its assets by
+absolute path, so rendering the print master from a `file://` URL resolves them
+against the filesystem root: the locked artwork, the seal, both signatures, the
+holographic strips and all four webfonts silently vanish, and the number falls
+back to a default serif with lining figures. **That PDF passed the code gate**
+— the QR and barcode are drawn by this template, so they were still correct —
+and it would have passed a careless eye at thumbnail size.
+
+The renderer now serves the repo over HTTP and **fails on any request that 404s
+or errors**, rather than quietly producing a document with its artwork missing.
+A gate that only checks what it was pointed at will confirm a blank page.
