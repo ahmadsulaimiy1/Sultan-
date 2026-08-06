@@ -1697,6 +1697,14 @@
   .cert-verify-badge.ok{background:rgba(63,107,78,0.14);color:var(--forest-green);}
   .cert-verify-badge.revoked{background:rgba(124,31,46,0.12);color:var(--crimson);}
   .cert-verify-badge.notfound{background:rgba(124,31,46,0.1);color:var(--crimson);}
+  /* A Student ID matched several credentials — informational, not a verdict.
+     Deliberately NOT green: it must not read as "this document is genuine". */
+  .cert-verify-badge.index{background:rgba(28,44,74,0.10);color:var(--navy);}
+  /* Any status this page has not been taught. The badge logic is a whitelist,
+     so an unrecognised state lands here rather than silently rendering as
+     verified — which is what it did before. */
+  .cert-verify-badge.unknown{background:rgba(201,120,75,0.14);color:var(--terracotta);}
+  .cert-verify-note{font-size:var(--caption-size);color:var(--ink-soft);margin:0 0 var(--space-sm);max-width:52ch;}
   .cert-verify-field{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--small-size);}
   .cert-verify-field:last-child{border-bottom:none;}
   .cert-verify-field .k{color:var(--ink-soft);}

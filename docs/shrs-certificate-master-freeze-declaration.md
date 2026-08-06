@@ -47,7 +47,7 @@ Thirty-one files. The block below is authoritative and machine-read; the notes a
 
 <!-- MANIFEST:BEGIN -->
 ```text
-ed3261ce61e066d467527a4259cbaa5c032d145a39d39313206c035e2cd933f0  functions/_lib/stage-certificate-template.js
+ed37114bd8fd6b11ead7844e98a71a844f9fb0af96626dfec062c9eeb3331a91  functions/_lib/stage-certificate-template.js
 35592573151e051858bb90e0081e6b753ade5db658d6fc07f0e60b3f7900811e  functions/_lib/certificate-serial.js
 28aeab43bc80c6944420ea5604d1daed65136b2563424cb3a0d82e09c564266d  functions/_lib/certificate-ground.js
 be561a9a81c6f9e0c71494b34763fee8934f007294514b21e8939672385bdefa  functions/_lib/certificate-plate.js
@@ -94,6 +94,20 @@ Two artwork files — `official-background-master.jpg` and `crest-watermark.png`
 These hashes were taken from the **working tree**, not from a clean commit. At the time of the freeze pass, `HEAD` was `54cb3bf30002ca9fbde08fa88d7c0775998ed877` ("Record the Founder's approval of the six Arabic spellings") and one file in the frozen set — `functions/_lib/certificate-serial.js` — carried uncommitted acceptance-audit work (+179/−24).
 
 So: **this manifest is a working baseline, not the signed v1.0 baseline.** When the acceptance work lands and v1.0 is tagged, re-run the hashes and amend §2 in the same commit that tags the release. Publishing a baseline that was never a commit and calling it "Locked" would be the wrong kind of tidy.
+
+#### Amendments to this baseline
+
+Every movement of a hash in §2 is recorded here with its reason. The gate has
+no `--update` flag precisely so that this list cannot be skipped: re-baselining
+is an editorial act with a justification, not a command you run.
+
+| Date | File | From → To | Why |
+|---|---|---|---|
+| 2026-08-06 | `functions/_lib/stage-certificate-template.js` | `ed3261ce…d933f0` → `ed37114b…331a91` | **A4 correction, authorised by the Founder in the Final Acceptance Review.** The sheet was 209.5mm tall against a 209.89mm A4 page, leaving a 0.34mm strip of bare paper across the full 297mm foot — measured off the press PDF at 300 DPI, abutting near-black at the left and crimson at the right. `frameSvg`'s `H` and `.sheet{height}` move to a true 210. This also ends a split coordinate system: `certificate-ground.js` and `certificate-plate.js` have always drawn on `h=210`, so those layers were being squashed 0.24% into a 209.5mm box while the frame alone was not. Every element is positioned in mm from the top, so nothing moves. |
+
+The Editorial Bible §4.1 records "A4 landscape (297 × 209.5 mm)". That line is
+wrong about A4 and is where the half-millimetre originated; it should be
+corrected to 297 × 210 mm when the Bible is next revised.
 
 ## 3. What is deliberately excluded, and why
 
@@ -162,7 +176,7 @@ The right fix is not a bigger manifest. It is a single exported constant that th
 
 **Deliberate, and worth stating so it is not later mistaken for an oversight.**
 
-Marking the sheet "v1.0" would require adding an element to the artwork — a line of type, a mark in a corner, a change to the plate. That is an artwork change. Freezing the master and altering the master in the same act is incoherent, and it would mean the six certificates already in the graduates' hands do not carry the mark that the freeze declares. The version would then identify everything except the thing it was supposed to identify.
+Marking the sheet "v1.0" would require adding an element to the artwork — a line of type, a mark in a corner, a change to the plate. That is an artwork change, and freezing the master and altering the master in the same act is incoherent. The version would then identify everything except the thing it was supposed to identify.
 
 There is also nothing to gain. The sheet already carries per-document identity in five independent forms — the serial `SHRS-CERT-IDD-2026-000042-A775E`, the printed verification code `A775-E194-8527`, the document id `DID-2026-IDD-0000042`, the archive reference `ARCH/IDD/2026/000042`, and the Code 128-C barcode payload `2026000042` — plus the live serial in the microtext rails. Which master rendered a given sheet is answerable from the issuance record, which is where that question belongs.
 
