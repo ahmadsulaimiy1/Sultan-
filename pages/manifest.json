@@ -5,7 +5,8 @@
     "title": "Sultan Hanafi Royal Schools — A Flagship of Royal Islamic & Secular Education",
     "description": "Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution in Ikorodu, Lagos, comprising the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School.",
     "contentFile": "pages/home.html",
-    "altHref": "/ar/"
+    "altHref": "/ar/",
+    "prestige": true
   },
   {
     "slug": "about",
@@ -40,7 +41,8 @@
     "title": "Basic School — Sultan Hanafi Royal Schools",
     "description": "Ages 2 to 10 — holistic early-years education blending secular and Islamic teachings, led by Head Teacher Mrs. Kareemat Abdurazaq.",
     "contentFile": "pages/academics-nursery-primary.html",
-    "altHref": "/ar/academics/nursery-primary/"
+    "altHref": "/ar/academics/nursery-primary/",
+    "prestige": true
   },
   {
     "slug": "academics-royal-college",
@@ -48,7 +50,8 @@
     "title": "Royal College — Sultan Hanafi Royal Schools",
     "description": "Junior and senior secondary education across seven academic departments, integrating the Nigerian National Curriculum with Arabic and Islamic Sciences.",
     "contentFile": "pages/academics-royal-college.html",
-    "altHref": "/ar/academics/royal-college/"
+    "altHref": "/ar/academics/royal-college/",
+    "prestige": true
   },
   {
     "slug": "academics-arabic-islamic-studies",
@@ -56,7 +59,8 @@
     "title": "School of Islamic and Arabic Studies — Sultan Hanafi Royal Schools",
     "description": "Weekday and weekend Islamic studies, Arabic proficiency, and Qur'an & Hadith memorisation, open to the wider Muslim Ummah.",
     "contentFile": "pages/academics-arabic-islamic-studies.html",
-    "altHref": "/ar/academics/arabic-islamic-studies/"
+    "altHref": "/ar/academics/arabic-islamic-studies/",
+    "prestige": true
   },
   {
     "slug": "academics-quran-college",
@@ -64,7 +68,8 @@
     "title": "Qur'an College — Sultan Hanafi Royal Schools",
     "description": "A 24-to-36 month day & boarding programme in full Qur'an memorisation, Qur'anic sciences, and Arabiyyah, culminating in Ijazaat.",
     "contentFile": "pages/academics-quran-college.html",
-    "altHref": "/ar/academics/quran-college/"
+    "altHref": "/ar/academics/quran-college/",
+    "prestige": true
   },
   {
     "slug": "academics-online-distance-learning",
@@ -72,7 +77,8 @@
     "title": "Online & Distance Learning School — Sultan Hanafi Royal Schools",
     "description": "Our fifth school, newly constituted under the Head of Schools / Administrator's office as part of the governance restructuring. Programme details to follow.",
     "contentFile": "pages/academics-online-distance-learning.html",
-    "altHref": "/ar/academics/online-distance-learning/"
+    "altHref": "/ar/academics/online-distance-learning/",
+    "prestige": true
   },
   {
     "slug": "curriculum-architecture",
@@ -80,7 +86,8 @@
     "title": "The Curriculum Architecture — Sultan Hanafi Royal Schools",
     "description": "How our two adopted curricula, one CLEVER standard, and seven-stage learning pathway fit together across all five institutions — academic progression, character formation, leadership development, entrepreneurship, financial literacy, and Islamic formation.",
     "contentFile": "pages/curriculum-architecture.html",
-    "altHref": "/ar/curriculum/"
+    "altHref": "/ar/curriculum/",
+    "prestige": true
   },
   {
     "slug": "faculty",
@@ -88,7 +95,8 @@
     "title": "Faculty Directory — Sultan Hanafi Royal Schools",
     "description": "The named educators leading and teaching across our five institutions, organised by school.",
     "contentFile": "pages/faculty.html",
-    "altHref": "/ar/faculty/"
+    "altHref": "/ar/faculty/",
+    "prestige": true
   },
   {
     "slug": "digital-campus",
@@ -96,7 +104,8 @@
     "title": "The Digital Campus — Sultan Hanafi Royal Schools",
     "description": "Parent Portal, Student Portal, Staff Identity, Founder Dashboard, and more — one shared set of digital systems serving all five institutions.",
     "contentFile": "pages/digital-campus.html",
-    "altHref": "/ar/digital-campus/"
+    "altHref": "/ar/digital-campus/",
+    "prestige": true
   },
   {
     "slug": "strategic-plan",
@@ -104,7 +113,8 @@
     "title": "Our Direction — Sultan Hanafi Royal Schools",
     "description": "Where Sultan Hanafi Royal Schools stands today, and what the Board of Governors and Management Team are developing next.",
     "contentFile": "pages/strategic-plan.html",
-    "altHref": "/ar/strategic-plan/"
+    "altHref": "/ar/strategic-plan/",
+    "prestige": true
   },
   {
     "slug": "adhkar",
@@ -112,7 +122,8 @@
     "title": "Morning & Evening Adhkār — Sultan Hanafi Royal Schools",
     "description": "The Morning & Evening Adhkār Centre — Qur'an and authenticated Hadith remembrances with Arabic text, translation, transliteration, and references.",
     "contentFile": "pages/adhkar.html",
-    "altHref": "/ar/adhkar/"
+    "altHref": "/ar/adhkar/",
+    "prestige": true
   },
   {
     "slug": "boarding",
@@ -120,7 +131,8 @@
     "title": "Boarding Facility — Sultan Hanafi Royal Schools",
     "description": "Full and half boarding for College & Qur'an memorisation students aged 9–16, in a home-like, supportive environment.",
     "contentFile": "pages/boarding.html",
-    "altHref": "/ar/boarding/"
+    "altHref": "/ar/boarding/",
+    "prestige": true
   },
   {
     "slug": "student-life",
@@ -146,7 +158,8 @@
     "title": "Facilities — Sultan Hanafi Royal Schools",
     "description": "A tour of the campus estate: laboratories, library, ICT room, workshops, sick bay, and recreation grounds.",
     "contentFile": "pages/facilities.html",
-    "altHref": "/ar/facilities/"
+    "altHref": "/ar/facilities/",
+    "prestige": true
   },
   {
     "slug": "foundation",
@@ -154,7 +167,8 @@
     "title": "Sultan Zakariya Hanafi Foundation — Sultan Hanafi Royal Schools",
     "description": "The school's non-profit arm: literacy promotion, mosque construction, educational and medical support, and economic empowerment.",
     "contentFile": "pages/foundation.html",
-    "altHref": "/ar/foundation/"
+    "altHref": "/ar/foundation/",
+    "prestige": true
   },
   {
     "slug": "policies",
@@ -162,7 +176,8 @@
     "title": "School Policies — Sultan Hanafi Royal Schools",
     "description": "Assessment, Anti-Bullying, Career, Dress Code, Equal Opportunity, First Aid, Health & Safety, Visitors, and Complaint policies, each prepared, reviewed, and approved by named office-holders.",
     "contentFile": "pages/policies.html",
-    "altHref": "/ar/policies/"
+    "altHref": "/ar/policies/",
+    "prestige": true
   },
   {
     "slug": "contact",
@@ -170,7 +185,8 @@
     "title": "Contact — Sultan Hanafi Royal Schools",
     "description": "Address, phone, email, and social channels for Sultan Hanafi Royal Schools in Ikorodu, Lagos State.",
     "contentFile": "pages/contact.html",
-    "altHref": "/ar/contact/"
+    "altHref": "/ar/contact/",
+    "prestige": true
   },
   {
     "slug": "announcements",
@@ -178,7 +194,8 @@
     "title": "Announcements — Sultan Hanafi Royal Schools",
     "description": "Admissions notices, ceremonies, academic notices, and institutional communications from Sultan Hanafi Royal Schools, filterable by category.",
     "contentFile": "pages/announcements.html",
-    "altHref": "/ar/announcements/"
+    "altHref": "/ar/announcements/",
+    "prestige": true
   },
   {
     "slug": "home-ar",
@@ -188,7 +205,8 @@
     "contentFile": "pages/home.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/"
+    "altHref": "/",
+    "prestige": true
   },
   {
     "slug": "about-ar",
@@ -198,7 +216,8 @@
     "contentFile": "pages/about.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/about/"
+    "altHref": "/about/",
+    "prestige": true
   },
   {
     "slug": "about-governance-ar",
@@ -208,7 +227,8 @@
     "contentFile": "pages/about-governance.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/about/governance/"
+    "altHref": "/about/governance/",
+    "prestige": true
   },
   {
     "slug": "academics-ar",
@@ -218,7 +238,8 @@
     "contentFile": "pages/academics.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/"
+    "altHref": "/academics/",
+    "prestige": true
   },
   {
     "slug": "academics-nursery-primary-ar",
@@ -228,7 +249,8 @@
     "contentFile": "pages/academics-nursery-primary.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/nursery-primary/"
+    "altHref": "/academics/nursery-primary/",
+    "prestige": true
   },
   {
     "slug": "academics-royal-college-ar",
@@ -238,7 +260,8 @@
     "contentFile": "pages/academics-royal-college.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/royal-college/"
+    "altHref": "/academics/royal-college/",
+    "prestige": true
   },
   {
     "slug": "academics-arabic-islamic-studies-ar",
@@ -248,7 +271,8 @@
     "contentFile": "pages/academics-arabic-islamic-studies.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/arabic-islamic-studies/"
+    "altHref": "/academics/arabic-islamic-studies/",
+    "prestige": true
   },
   {
     "slug": "academics-quran-college-ar",
@@ -258,7 +282,8 @@
     "contentFile": "pages/academics-quran-college.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/quran-college/"
+    "altHref": "/academics/quran-college/",
+    "prestige": true
   },
   {
     "slug": "academics-online-distance-learning-ar",
@@ -268,7 +293,8 @@
     "contentFile": "pages/academics-online-distance-learning.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academics/online-distance-learning/"
+    "altHref": "/academics/online-distance-learning/",
+    "prestige": true
   },
   {
     "slug": "curriculum-architecture-ar",
@@ -278,7 +304,8 @@
     "contentFile": "pages/curriculum-architecture.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/curriculum/"
+    "altHref": "/curriculum/",
+    "prestige": true
   },
   {
     "slug": "faculty-ar",
@@ -288,7 +315,8 @@
     "contentFile": "pages/faculty.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/faculty/"
+    "altHref": "/faculty/",
+    "prestige": true
   },
   {
     "slug": "academic-calendar",
@@ -296,7 +324,8 @@
     "title": "Academic Calendar — Sultan Hanafi Royal Schools",
     "description": "Third Term 2025/2026 key dates: First Continuous Assessment, examinations, rehearsal, and Graduation & End-of-Year Programme.",
     "contentFile": "pages/academic-calendar.html",
-    "altHref": "/ar/academic-calendar/"
+    "altHref": "/ar/academic-calendar/",
+    "prestige": true
   },
   {
     "slug": "academic-calendar-ar",
@@ -306,7 +335,8 @@
     "contentFile": "pages/academic-calendar.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/academic-calendar/"
+    "altHref": "/academic-calendar/",
+    "prestige": true
   },
   {
     "slug": "digital-campus-ar",
@@ -316,7 +346,8 @@
     "contentFile": "pages/digital-campus.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/digital-campus/"
+    "altHref": "/digital-campus/",
+    "prestige": true
   },
   {
     "slug": "strategic-plan-ar",
@@ -326,7 +357,8 @@
     "contentFile": "pages/strategic-plan.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/strategic-plan/"
+    "altHref": "/strategic-plan/",
+    "prestige": true
   },
   {
     "slug": "adhkar-ar",
@@ -336,7 +368,8 @@
     "contentFile": "pages/adhkar.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/adhkar/"
+    "altHref": "/adhkar/",
+    "prestige": true
   },
   {
     "slug": "boarding-ar",
@@ -346,7 +379,8 @@
     "contentFile": "pages/boarding.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/boarding/"
+    "altHref": "/boarding/",
+    "prestige": true
   },
   {
     "slug": "student-life-ar",
@@ -356,7 +390,8 @@
     "contentFile": "pages/student-life.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/student-life/"
+    "altHref": "/student-life/",
+    "prestige": true
   },
   {
     "slug": "admission-ar",
@@ -366,7 +401,8 @@
     "contentFile": "pages/admission.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/admission/"
+    "altHref": "/admission/",
+    "prestige": true
   },
   {
     "slug": "facilities-ar",
@@ -376,7 +412,8 @@
     "contentFile": "pages/facilities.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/facilities/"
+    "altHref": "/facilities/",
+    "prestige": true
   },
   {
     "slug": "foundation-ar",
@@ -386,7 +423,8 @@
     "contentFile": "pages/foundation.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/foundation/"
+    "altHref": "/foundation/",
+    "prestige": true
   },
   {
     "slug": "policies-ar",
@@ -396,7 +434,8 @@
     "contentFile": "pages/policies.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/policies/"
+    "altHref": "/policies/",
+    "prestige": true
   },
   {
     "slug": "contact-ar",
@@ -406,7 +445,8 @@
     "contentFile": "pages/contact.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/contact/"
+    "altHref": "/contact/",
+    "prestige": true
   },
   {
     "slug": "announcements-ar",
@@ -416,7 +456,8 @@
     "contentFile": "pages/announcements.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/announcements/"
+    "altHref": "/announcements/",
+    "prestige": true
   },
   {
     "slug": "marketplace",
@@ -424,7 +465,8 @@
     "title": "The Marketplace — Sultan Hanafi Royal Schools",
     "description": "Textbooks, uniforms, stationery, Qur'an and Arabic learning materials, and SHRS's own publications.",
     "contentFile": "pages/marketplace.html",
-    "altHref": "/ar/marketplace/"
+    "altHref": "/ar/marketplace/",
+    "prestige": true
   },
   {
     "slug": "marketplace-ar",
@@ -434,7 +476,8 @@
     "contentFile": "pages/marketplace.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/marketplace/"
+    "altHref": "/marketplace/",
+    "prestige": true
   },
   {
     "slug": "verify-certificate",
@@ -442,7 +485,9 @@
     "title": "Verify a Certificate — Sultan Hanafi Royal Schools",
     "description": "Confirm that a certificate or Ijazah issued by Sultan Hanafi Royal Schools is genuine, using its printed reference number.",
     "contentFile": "pages/verify-certificate.html",
-    "altHref": "/ar/verify-certificate/"
+    "altHref": "/ar/verify-certificate/",
+    "prestige": true,
+    "idcard": true
   },
   {
     "slug": "verify-certificate-ar",
@@ -452,7 +497,8 @@
     "contentFile": "pages/verify-certificate.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/verify-certificate/"
+    "altHref": "/verify-certificate/",
+    "prestige": true
   },
   {
     "slug": "verify-graduation-document",
@@ -460,7 +506,9 @@
     "title": "Verify a Graduation Document — Sultan Hanafi Royal Schools",
     "description": "Confirm that a Graduation Certificate, Transcript, Diploma Supplement, or other graduation document issued by Sultan Hanafi Royal Schools is genuine, using its printed reference number.",
     "contentFile": "pages/verify-graduation-document.html",
-    "altHref": "/ar/verify-graduation-document/"
+    "altHref": "/ar/verify-graduation-document/",
+    "prestige": true,
+    "idcard": true
   },
   {
     "slug": "verify-graduation-document-ar",
@@ -470,7 +518,8 @@
     "contentFile": "pages/verify-graduation-document.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/verify-graduation-document/"
+    "altHref": "/verify-graduation-document/",
+    "prestige": true
   },
   {
     "slug": "graduate-profile",
@@ -478,7 +527,9 @@
     "title": "Graduate Profile — Sultan Hanafi Royal Schools",
     "description": "A graduate's permanent, public-safe digital profile — every graduation document issued to them by Sultan Hanafi Royal Schools, each independently verifiable.",
     "contentFile": "pages/graduate-profile.html",
-    "altHref": "/ar/graduate-profile/"
+    "altHref": "/ar/graduate-profile/",
+    "prestige": true,
+    "idcard": true
   },
   {
     "slug": "graduate-profile-ar",
@@ -488,7 +539,8 @@
     "contentFile": "pages/graduate-profile.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/graduate-profile/"
+    "altHref": "/graduate-profile/",
+    "prestige": true
   },
   {
     "slug": "verify-receipt",
@@ -496,7 +548,9 @@
     "title": "Verify a Receipt — Sultan Hanafi Royal Schools",
     "description": "Confirm that a fee receipt issued by Sultan Hanafi Royal Schools is genuine, using its printed receipt number.",
     "contentFile": "pages/verify-receipt.html",
-    "altHref": "/ar/verify-receipt/"
+    "altHref": "/ar/verify-receipt/",
+    "prestige": true,
+    "idcard": true
   },
   {
     "slug": "verify-receipt-ar",
@@ -506,7 +560,8 @@
     "contentFile": "pages/verify-receipt.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/verify-receipt/"
+    "altHref": "/verify-receipt/",
+    "prestige": true
   },
   {
     "slug": "verify-identity",
@@ -526,7 +581,8 @@
     "contentFile": "pages/verify-identity.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/verify-identity/"
+    "altHref": "/verify-identity/",
+    "prestige": true
   },
   {
     "slug": "verify",
@@ -534,7 +590,8 @@
     "title": "Public Verification Portal — Sultan Hanafi Royal Schools",
     "description": "Confirm a certificate, graduation document, identity card, or fee receipt issued by Sultan Hanafi Royal Schools is genuine — no account required.",
     "contentFile": "pages/verify.html",
-    "altHref": "/ar/verify/"
+    "altHref": "/ar/verify/",
+    "prestige": true
   },
   {
     "slug": "verify-ar",
@@ -544,7 +601,8 @@
     "contentFile": "pages/verify.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/verify/"
+    "altHref": "/verify/",
+    "prestige": true
   },
   {
     "slug": "alumni-portal",
@@ -552,7 +610,8 @@
     "title": "Alumni Portal — Sultan Hanafi Royal Schools",
     "description": "The self-service Alumni Portal for Sultan Hanafi Royal Schools graduates — verified credential access, giving, events, and the alumni directory.",
     "contentFile": "pages/alumni-portal.html",
-    "altHref": "/ar/alumni-portal/"
+    "altHref": "/ar/alumni-portal/",
+    "prestige": true
   },
   {
     "slug": "alumni-portal-ar",
@@ -562,7 +621,8 @@
     "contentFile": "pages/alumni-portal.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/alumni-portal/"
+    "altHref": "/alumni-portal/",
+    "prestige": true
   },
   {
     "slug": "press",
@@ -570,7 +630,8 @@
     "title": "Press & News Room — Sultan Hanafi Royal Schools",
     "description": "Official news, notices, and a media kit for journalists and partners.",
     "contentFile": "pages/press.html",
-    "altHref": "/ar/press/"
+    "altHref": "/ar/press/",
+    "prestige": true
   },
   {
     "slug": "press-ar",
@@ -580,7 +641,8 @@
     "contentFile": "pages/press.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/press/"
+    "altHref": "/press/",
+    "prestige": true
   },
   {
     "slug": "gallery",
@@ -588,7 +650,8 @@
     "title": "The Campus Gallery — Sultan Hanafi Royal Schools",
     "description": "Real photographs from across Sultan Hanafi Royal Schools campus, academics, and Islamic life.",
     "contentFile": "pages/gallery.html",
-    "altHref": "/ar/gallery/"
+    "altHref": "/ar/gallery/",
+    "prestige": true
   },
   {
     "slug": "gallery-ar",
@@ -598,7 +661,8 @@
     "contentFile": "pages/gallery.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/gallery/"
+    "altHref": "/gallery/",
+    "prestige": true
   },
   {
     "slug": "online-courses",
@@ -606,7 +670,8 @@
     "title": "Online Learning Courses — Sultan Hanafi Royal Schools",
     "description": "What digital learning already exists at SHRS today, and what is genuinely being planned.",
     "contentFile": "pages/online-courses.html",
-    "altHref": "/ar/online-courses/"
+    "altHref": "/ar/online-courses/",
+    "prestige": true
   },
   {
     "slug": "online-courses-ar",
@@ -616,7 +681,8 @@
     "contentFile": "pages/online-courses.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/online-courses/"
+    "altHref": "/online-courses/",
+    "prestige": true
   },
   {
     "slug": "quran-centre",
@@ -624,7 +690,8 @@
     "title": "Digital Qur'an Centre — Sultan Hanafi Royal Schools",
     "description": "What's real today toward a daily Qur'an companion, and the legally-clean path for the full Madinah-style reader.",
     "contentFile": "pages/quran-centre.html",
-    "altHref": "/ar/quran-centre/"
+    "altHref": "/ar/quran-centre/",
+    "prestige": true
   },
   {
     "slug": "quran-centre-ar",
@@ -634,6 +701,7 @@
     "contentFile": "pages/quran-centre.ar.html",
     "lang": "ar",
     "dir": "rtl",
-    "altHref": "/quran-centre/"
+    "altHref": "/quran-centre/",
+    "prestige": true
   }
 ]
