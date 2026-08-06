@@ -1549,3 +1549,110 @@
   .gallery-item .gi-frame,.lpp-frame,.cert-verify-form button,.btn-gold{
     transition:none!important;transform:none!important;}
 }
+
+/* ===================================================================
+   THE DIGITAL CAMPUS
+   -------------------------------------------------------------------
+   The page describing the school's own software should be the most
+   technical-feeling page on the site without becoming a startup landing
+   page. Three purpose-built pieces: a network diagram with data moving
+   along its links, a device in which the portal is actually shown, and
+   system cards that carry a live status rather than a paragraph.
+   =================================================================== */
+
+/* ---- the network: one platform, five institutions ---- */
+.dc-net{position:relative;width:100%;max-width:940px;margin:0 auto;}
+.dc-net svg{width:100%;height:auto;overflow:visible;}
+.dc-net .link{fill:none;stroke:rgba(233,206,138,.34);stroke-width:1.4;
+  stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);
+  transition:stroke-dashoffset 1.5s var(--pr-ease);}
+.dc-net.pr-in .link{stroke-dashoffset:0;}
+.dc-net.pr-in .link:nth-of-type(2){transition-delay:.12s}
+.dc-net.pr-in .link:nth-of-type(3){transition-delay:.24s}
+.dc-net.pr-in .link:nth-of-type(4){transition-delay:.36s}
+.dc-net.pr-in .link:nth-of-type(5){transition-delay:.48s}
+/* data travelling the links — CSS offset-path so reduced motion can stop it */
+.dc-net .pulse{fill:#FFF3D6;opacity:0;
+  filter:drop-shadow(0 0 6px rgba(233,206,138,.95));
+  offset-rotate:0deg;animation:dc-pulse 3.4s linear infinite;}
+.dc-net.pr-in .pulse{opacity:1;}
+@keyframes dc-pulse{from{offset-distance:0%}to{offset-distance:100%}}
+.dc-net .node{fill:rgba(255,255,255,.05);stroke:rgba(233,206,138,.5);stroke-width:1.2;}
+.dc-net .hub{fill:url(#dc-hub);stroke:rgba(233,206,138,.75);stroke-width:1.6;
+  filter:drop-shadow(0 0 22px rgba(233,206,138,.4));}
+.dc-net .ring{fill:none;stroke:rgba(233,206,138,.28);stroke-width:1;
+  transform-origin:450px 260px;animation:dc-spin 34s linear infinite;}
+@keyframes dc-spin{to{transform:rotate(360deg)}}
+.dc-net text{font-family:'Inter',sans-serif;fill:#EFE3CB;font-size:13px;text-anchor:middle;}
+.dc-net text.sub{fill:rgba(233,206,138,.72);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;}
+.dc-net text.hubname{font-family:'Cinzel',serif;fill:#fff;font-size:16px;}
+
+/* ---- device: the portal, shown rather than described ---- */
+.dc-device{position:relative;width:min(300px,74vw);margin:0 auto;
+  aspect-ratio:9/18.5;border-radius:38px;padding:11px;
+  background:linear-gradient(160deg,#4A3520,#241708 55%,#160D04);
+  box-shadow:var(--pr-shadow-lift),inset 0 1px 0 rgba(233,206,138,.3),0 0 0 1px rgba(198,161,91,.4);
+  transform:perspective(1200px) rotateX(var(--rx,6deg)) rotateY(var(--ry,-10deg));
+  transform-style:preserve-3d;transition:transform .6s var(--pr-ease);}
+.dc-device:hover{transform:perspective(1200px) rotateX(2deg) rotateY(-2deg);}
+.dc-device::before{content:"";position:absolute;top:11px;left:50%;translate:-50% 0;
+  width:34%;height:20px;border-radius:0 0 14px 14px;background:#160D04;z-index:3;}
+.dc-screen{position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;
+  background:linear-gradient(180deg,#FFFDF9,#F3EADA);display:flex;flex-direction:column;}
+.dc-screen-top{padding:30px 16px 12px;background:linear-gradient(160deg,#3B2A1D,#241708);color:#F7EEDF;}
+.dc-screen-top .t{font-family:'Cinzel',serif;font-size:.82rem;}
+.dc-screen-top .s{font-size:.6rem;color:rgba(233,206,138,.8);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;}
+.dc-rows{padding:12px;display:flex;flex-direction:column;gap:9px;overflow:hidden;}
+.dc-row{background:#fff;border:1px solid rgba(198,161,91,.24);border-radius:10px;padding:9px 11px;
+  box-shadow:0 4px 10px -8px rgba(42,28,16,.5);}
+.dc-row .k{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:#8a7a60;}
+.dc-row .v{font-family:'Cinzel',serif;font-size:.82rem;color:var(--pr-coffee);margin-top:2px;}
+.dc-row .bar{height:5px;border-radius:99px;background:rgba(198,161,91,.18);margin-top:6px;overflow:hidden;}
+.dc-row .bar i{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  transition:width 1.6s var(--pr-ease);}
+.pr-in .dc-row .bar i{width:var(--w,60%);}
+.dc-screen-glare{position:absolute;inset:0;pointer-events:none;z-index:2;border-radius:28px;
+  background:linear-gradient(120deg,transparent 38%,rgba(255,255,255,.34) 47%,transparent 56%);}
+
+/* ---- system cards with a live indicator ---- */
+.dc-systems{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;}
+.dc-sys{position:relative;padding:28px 26px;border-radius:var(--pr-r-lg);overflow:hidden;
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 55%,#F7F0E2);
+  border:1px solid rgba(198,161,91,.24);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
+.dc-sys:hover{transform:translateY(-6px);box-shadow:var(--pr-shadow-lift),var(--pr-glow);}
+.dc-sys::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pr-gold-deep),var(--pr-gold-bright),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .6s var(--pr-ease);}
+.dc-sys:hover::before{transform:scaleX(1);}
+.dc-sys-head{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+.dc-sys-ico{width:50px;height:50px;flex-shrink:0;border-radius:var(--pr-r-md);display:grid;place-items:center;
+  background:linear-gradient(140deg,rgba(198,161,91,.18),rgba(233,206,138,.05));
+  border:1px solid rgba(198,161,91,.34);color:var(--pr-gold-deep);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+.dc-sys-ico svg{width:24px;height:24px;}
+.dc-sys h3{font-family:'Cinzel',serif;font-size:1.06rem;color:var(--pr-coffee);margin:0;line-height:1.25;}
+.dc-live{display:inline-flex;align-items:center;gap:7px;margin-top:5px;
+  font-size:.63rem;letter-spacing:.16em;text-transform:uppercase;color:#3f7d55;font-weight:600;}
+.dc-live i{width:7px;height:7px;border-radius:50%;background:#3f7d55;position:relative;}
+.dc-live i::after{content:"";position:absolute;inset:0;border-radius:50%;background:#3f7d55;
+  animation:dc-ping 2.4s cubic-bezier(0,0,.2,1) infinite;}
+@keyframes dc-ping{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(3);opacity:0}}
+.dc-sys p{color:#5a4a38;font-size:.95rem;line-height:1.62;margin:0;}
+.dc-sys .who{display:inline-block;margin-bottom:10px;padding:5px 13px;border-radius:var(--pr-r-pill);
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  background:linear-gradient(168deg,rgba(198,161,91,.16),rgba(198,161,91,.06));
+  border:1px solid rgba(198,161,91,.32);color:var(--pr-gold-deep);}
+
+@media (prefers-reduced-motion:reduce){
+  .dc-net .pulse{animation:none;opacity:0;}
+  .dc-net .ring{animation:none;}
+  .dc-net .link{stroke-dashoffset:0!important;transition:none!important;}
+  .dc-device,.dc-device:hover{transform:none;transition:none;}
+  .dc-row .bar i,.pr-in .dc-row .bar i{transition:none;width:var(--w,60%);}
+  .dc-live i::after{animation:none;}
+  .dc-sys{transition:none!important;}
+  .dc-sys::before{transform:scaleX(1);}
+}
