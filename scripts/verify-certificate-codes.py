@@ -72,7 +72,7 @@ with tempfile.TemporaryDirectory() as td:
         rasters[dpi] = sorted(Path(td).glob(f'p{dpi}-*.png'))
 
     for i, e in enumerate(entries):
-        qr_ok, bc_ok = [], []
+        qr_ok, bc_ok, qr_count = [], [], []
         # The archive number is the barcode payload: year + 6-digit run.
         want_bc = f'{e["archiveRef"].split("/")[2]}{e["archiveRef"].split("/")[3]}'
         for dpi in DPIS:
@@ -82,9 +82,21 @@ with tempfile.TemporaryDirectory() as td:
             found = symbols(Image.open(rasters[dpi][i]))
             qr_ok.append(('qrcode', e['qrUrl']) in found)
             bc_ok.append(('code128', want_bc) in found)
+            # EXACTLY ONE QR PER SHEET (Founder directive, 2026-08-06).
+            # Finding the right symbol is not enough: an EXTRA one is its own
+            # defect. The supplied plate carried a decorative QR that decoded to
+            # nothing, and a reader who scans a dead code on a credential that
+            # promises verification has every reason to doubt the document.
+            # That block was removed under authorisation; this keeps it removed.
+            qr_count.append(sum(1 for f, _ in found if f == 'qrcode'))
+        extra = [d for d, n in zip(DPIS, qr_count) if n != 1]
+        if extra:
+            failures.append(f'{e["serialNo"]}: expected exactly one QR, found '
+                            + ', '.join(f'{n} at {d} DPI' for d, n in zip(DPIS, qr_count) if n != 1))
         q = f'{sum(qr_ok)}/{len(DPIS)} DPI'
         b = f'{sum(bc_ok)}/{len(DPIS)} DPI'
-        print(f'{i + 1:>5} {e["studentEn"]:<26} {q:>22} {b:>22}')
+        print(f'{i + 1:>5} {e["studentEn"]:<26} {q:>22} {b:>22}'
+              f'{"":>6}{"1 QR only" if not extra else "EXTRA QR"}')
         if not all(qr_ok):
             failures.append(f'{e["serialNo"]}: QR unreadable at '
                             + ', '.join(str(d) for d, ok in zip(DPIS, qr_ok) if not ok) + ' DPI')

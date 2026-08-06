@@ -390,6 +390,39 @@ function plateFor(progCode) {
   return STAGE_PLATE[String(progCode || '').toUpperCase()] || null;
 }
 
+// Per-document microtext for a stage plate (Founder directive, 2026-08-06:
+// "activate the live serial-number microtext").
+//
+// The plate's own microtext is decorative and identical on every sheet. These
+// two rails carry the LIVE serial, so a sheet copied from another student's
+// certificate contradicts itself in its own border.
+//
+// Placement is measured, not chosen: y 68mm and y 117mm are the only two
+// full-width channels that carry 0.00% plate ink across x 40-257mm AND are
+// clear of every content box (name ends 112.5, paragraph starts 121.3;
+// basmala ends 60, title starts 79.8).
+//
+// The ids are namespaced per sheet. batch-print.html puts all six certificates
+// in ONE document, so a fixed id would make every sheet's textPath resolve to
+// the first sheet's path — six certificates all printing student one's serial
+// in their microtext, which is exactly the failure this feature exists to
+// prevent.
+function stagePlateMicrotextSvg(serial, uid) {
+  const micro = `SULTAN HANAFI ROYAL SCHOOLS · OFFICIAL ACADEMIC RECORD · ${serial} · `;
+  const body = escapeHtml(micro.repeat(4));
+  const a = `pm-a-${uid}`, b = `pm-b-${uid}`;
+  // Solid light ink, never an opacity: an opacity on type this small becomes a
+  // screen percentage at separation and is the first thing to drop on press.
+  return `<svg class="o5-plate-micro" viewBox="0 0 297 210" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+    <defs><path id="${a}" d="M40 68 H257"/><path id="${b}" d="M40 117 H257"/></defs>
+    <text font-family="Inter, sans-serif" font-size="0.318" letter-spacing="0.02" fill="#A6905E"
+      ><textPath href="#${a}" xlink:href="#${a}">${body}</textPath></text>
+    <text font-family="Inter, sans-serif" font-size="0.282" letter-spacing="0.03" fill="#B09A68"
+      ><textPath href="#${b}" xlink:href="#${b}">${body}</textPath></text>
+  </svg>`;
+}
+
 // Measured geometry of the official paper (1080×708 source, fractions
 // of the sheet) — the artwork's own designated functional zones:
 //   logo lockup      x 0.40–0.60, y 0.00–0.23  (keep clear)
@@ -1151,7 +1184,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
     // sheet prints on white and every mark sits at the wrong density.
     return plate
       ? `<div class="official-paper" style="background:${plate.paper}"></div>
-  <img class="official-bg" src="${plate.src}" alt="" />`
+  <img class="official-bg" src="${plate.src}" alt="" />
+  ${stagePlateMicrotextSvg(cert.serial_no, archSeq)}`
       : `<img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />`;
   })()}
 
@@ -1480,6 +1514,7 @@ function docShell(title, sheetsHtml) {
      resolution — the sheet's largest area is the one thing about the supplied
      92 DPI artwork that CAN be made resolution-free. */
   .official-paper{position:absolute;inset:0;}
+  .o5-plate-micro{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 
   /* ═══ OFFICIAL-PAPER EDITORIAL COMPOSITION v3 ═══
      The locked artwork carries the identity; this layer is EDITORIAL
