@@ -52,7 +52,8 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=078c478fe5">
+<link rel="stylesheet" href="/css/prestige.css?v=bd5af160ca">
+<link rel="stylesheet" href="/css/motion.css?v=cb695db621">
 <link rel="alternate" hreflang="ar" href="/ar/admission/" />
 </head>
 <body>
@@ -403,21 +404,22 @@
   </div>
 </div>
 
+<div class="mo-rail" aria-hidden="true"></div>
 <!-- ===================== ADMISSION · FLAGSHIP ===================== -->
 
 <!-- Immersive hero -->
 <section class="pr-hero">
-  <div class="pr-hero-media">
+  <div class="pr-hero-media mo-par-img">
     <img src="/assets/images/gallery/campus-gate.jpg" alt="The gate of the Sultan Hanafi Royal Schools campus in Ikorodu, Lagos" width="1600" height="900" fetchpriority="high">
   </div>
   <div class="pr-hero-frame" aria-hidden="true"><i></i></div>
   <div class="pr-hero-inner">
-    <p class="pr-eyebrow">Admission</p>
-    <h1 class="pr-hero-title">Your Child's Journey<br>Begins Here.</h1>
-    <p class="pr-hero-sub">A guided, seven-step digital admission journey — from creating your account to your child's enrolment — running on our own Parent Portal and Registrar's Office today. Transparent at every stage, and tracked inside your own account.</p>
+    <p class="pr-eyebrow">Admission · The Registrar's Office</p>
+    <h1 class="pr-hero-title mo-words">Your Child's Journey<br>Begins Here.</h1>
+    <p class="pr-hero-sub">Seven steps, from opening an account to the morning your child is expected in class. The journey runs on our own Parent Portal and is administered by the Registrar's Office. Every stage is written into your account, where you can read it back.</p>
     <div class="pr-hero-cues">
-      <a href="/portal/register/" class="pr-btn is-gold">Register / Login <span class="a">→</span></a>
-      <a href="/portal/apply/" class="pr-btn is-ghost">Start an Application</a>
+      <a href="/portal/register/" class="pr-btn is-gold mo-mag" data-mag="7">Register / Login <span class="a">→</span></a>
+      <a href="/portal/apply/" class="pr-btn is-ghost mo-mag" data-mag="7">Start an Application</a>
     </div>
   </div>
 </section>
@@ -428,21 +430,21 @@
     <div class="pr-reveal" style="max-width:720px;">
       <p class="pr-eyebrow">The Digital Journey</p>
       <h2 class="pr-h2">Seven Steps, Start to Finish</h2>
-      <p class="pr-lead">Each step happens inside the Parent Portal, and each is recorded — never an informal, phone-only decision. Tap any stage for detail; if you're signed in with an application on file, your live status appears automatically.</p>
+      <p class="pr-lead">Each step happens inside the Parent Portal, and each one is recorded. Every outcome, whether offered, waitlisted or declined, is written into your account. No decision in this process is settled informally over the telephone. Tap any stage below for detail; if you are signed in with an application on file, your live status appears automatically.</p>
     </div>
 
     <div class="pr-stats pr-sheen pr-reveal" style="margin-top:32px;">
       <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="7">0</div></div>
         <div class="pr-stat-l">Digital Steps</div>
-        <div class="pr-stat-s">account to enrolment</div>
+        <div class="pr-stat-s">from opening an account to a first day</div>
       </div>
       <div class="pr-stat"><div class="pr-stat-n" data-count-to="3">0</div><div class="pr-stat-bar" data-w="100"></div>
         <div class="pr-stat-l">Documents</div>
         <div class="pr-stat-s">to open a file</div>
       </div>
-      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="100" data-suffix="%">0</div></div>
-        <div class="pr-stat-l">Portal-Tracked</div>
-        <div class="pr-stat-s">every outcome recorded</div>
+      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="12">0</div></div>
+        <div class="pr-stat-l">Operational Stages</div>
+        <div class="pr-stat-s">published in full, below</div>
       </div>
       <div class="pr-stat"><div class="pr-stat-n" data-count-to="5" data-anim="roll">0</div>
         <div class="pr-stat-l">Institutions</div>
@@ -453,25 +455,25 @@
     <div class="adm-progress-banner" data-adm-progress-banner></div>
 
     <div class="flow-diagram stagger reveal" data-adm-flow style="margin-top:26px;">
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="1" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">01</span><h4>Register Account</h4><p>Create your free Parent Portal account.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Registration takes a working email address and a password — no fee, no paperwork. You'll verify your email with a one-time code or link before you can submit an application.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="1" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">01</span><h4>Register</h4><p>Open a free Parent Portal account.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Registration takes a working email address and a password. There is no fee and no paperwork at this stage, and you are committing to nothing by opening an account.</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="2" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">02</span><h4>Complete Profile</h4><p>Add your details and your child's information.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Your guardian profile and your prospective child's details live in one place in the Parent Portal, ready to carry forward into the application itself.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="2" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">02</span><h4>Verify</h4><p>Confirm that email with a one-time code or link.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">The portal will not accept an application from an unverified address. The rule is enforced by the system itself, so an application cannot go astray to an address nobody reads.</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="3" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">03</span><h4>Admission Application</h4><p>Submit the online admissions application.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Name your prospective child, the institution and class you're applying for, and any notes for the admissions office — submitted directly from your account.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="3" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">03</span><h4>Complete Profile</h4><p>Your details and your child's, entered once.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Your guardian profile and your child's information live in one place in the Parent Portal, and carry forward into every application you make from that account.</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="4" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">04</span><h4>Verification</h4><p>Confirm your email with a one-time code or link.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">A verified email is required before an application can be submitted at all — this is enforced by the portal itself, not just a recommendation.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="4" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">04</span><h4>Apply</h4><p>Name the institution and the class, and submit.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">Name your child, the institution and the class you are applying for, and anything the admissions office should know. The application is submitted directly from your account. If you are unsure which institution fits your child's age, see <a class="text-link" href="#entry-points">Entry Points, by Age</a> below.</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="5" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">05</span><h4>Review</h4><p>Our admissions office reviews your application.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">See the full <a class="text-link" href="#assessment-process">Assessment Process</a> below for what review involves at the Basic School, Royal College, and Qur'an College.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="5" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">05</span><h4>Assessment</h4><p>A written examination, an age-appropriate test, and an interview.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">See the full <a class="text-link" href="#assessment-process">Assessment Process</a> below for what this involves at the Basic School, Royal College, and Qur'an College.</div></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="6" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">06</span><h4>Offer</h4><p>Receive your admission decision in the portal.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">See the full <a class="text-link" href="#offer-process">Admission Offer Process</a> below for what each possible outcome means.</div></div>
+      <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="6" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">06</span><h4>Decision</h4><p>Offered, waitlisted or declined, recorded in your account.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">See the full <a class="text-link" href="#offer-process">Admission Offer Process</a> below for what each possible outcome means.</div></div>
       <div class="flow-arrow">→</div>
       <div class="flow-stage pr-tilt" data-tilt-max="5" data-stage="7" tabindex="0" role="button" aria-expanded="false"><span class="fs-num">07</span><h4>Enrolment</h4><p>The Registrar's Office confirms enrolment and class placement.</p><span class="flow-stage-toggle">Details ▾</span><div class="flow-stage-detail">See the full <a class="text-link" href="#enrolment-process">Enrolment Process</a> below for fee payment, your admission letter, and the start of classes.</div></div>
     </div>
     <p class="adm-flow-hint">Tap or click any stage above for more detail. <span data-adm-signin-hint>Signed in with an application on file? Your live status is shown automatically.</span></p>
 
-    <div class="hero-ctas" style="margin-top:24px;">
-      <a href="/portal/register/" class="btn btn-gold">Register / Login <span class="arrow">→</span></a>
-      <a href="/portal/apply/" class="btn btn-outline">Start Admission Application</a>
+    <div class="pr-cta-row" style="margin-top:24px;">
+      <a href="/portal/register/" class="pr-btn is-gold mo-mag" data-mag="7">Register / Login <span class="a">→</span></a>
+      <a href="/portal/apply/" class="pr-btn is-ink mo-mag" data-mag="5">Start Admission Application</a>
     </div>
 
     <div class="adm-enquiry-cta" style="margin-top:36px;">
@@ -495,32 +497,32 @@
 </section>
 
 <!-- The full operational process — animated vertical timeline -->
-<section class="pr-section is-royal">
+<section class="pr-section is-royal mo-spot">
   <div class="wrap">
     <div class="pr-reveal" style="max-width:720px;">
       <p class="pr-eyebrow is-centered" style="justify-content:flex-start;">Behind the Scenes</p>
-      <h2 class="pr-h2">The Full Operational Process, Stage by Stage</h2>
-      <p class="pr-lead">The digital journey above runs inside the Parent Portal. These twelve stages are the fuller operational detail behind it — entrance assessment, fee payment, and the physical file each learner opens.</p>
+      <h2 class="pr-h2">The Same Process, From the Registrar's Side</h2>
+      <p class="pr-lead">The seven steps above are what a family does. The twelve below are what the school does: the same process, seen from the Registrar's side of the desk. It is one process counted twice, and we publish both counts, because an admissions process a parent cannot see the inside of is not a transparent one.</p>
     </div>
     <div class="pr-timeline pr-stagger" style="max-width:760px;">
-      <div class="pr-tl-item"><span class="pr-tl-dot">01</span><h4>Enquiries</h4><p>Potential parents or guardians approach the school authority.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">02</span><h4>Administrative Office</h4><p>Relevant personnel attend to enquiries and provide guidance.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">03</span><h4>Admission Form</h4><p>Pay for and submit the form with the required documents.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">04</span><h4>Contact Details</h4><p>Provide contact information for further communication.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">05</span><h4>Entrance Exam</h4><p>The student sits the entrance examination, test, and interview.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">06</span><h4>Result Notification</h4><p>Parent or guardian is notified of the result for further processing.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">07</span><h4>Admission Offer</h4><p>Offered into the qualifying class based on performance.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">08</span><h4>Fee Payment</h4><p>Tuition and other fees are paid on receipt of the admission notice.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">09</span><h4>Admission Letter</h4><p>Issued with a unique number used throughout the learner's stay.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">10</span><h4>Class Acceptance Ticket</h4><p>Received to access the relevant class.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">11</span><h4>Start of Classes</h4><p>Classes begin upon presentation of the access ticket.</p></div>
-      <div class="pr-tl-item"><span class="pr-tl-dot">12</span><h4>Settling In</h4><p>The learner enjoys our modern educational infrastructure.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">01</span><h4>You Ask</h4><p>A call, a message, or a morning on campus. Nothing is committed and nothing is charged.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">02</span><h4>The Admissions Office Answers</h4><p>Your enquiry reaches the admissions office, and a member of staff takes you through what applies to your child's age and the institution you are asking about.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">03</span><h4>The Form and the File</h4><p>You pay for and submit the admission form with three documents: your child's birth certificate, two recent passport photographs, and a report sheet or testimonial from any previous school. That is the file opened.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">04</span><h4>How We Reach You</h4><p>A phone number and an email address we will actually use, for the assessment date, the result, and everything that follows it.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">05</span><h4>The Assessment</h4><p>A written entrance examination, an academic test pitched to your child's age and the class applied for, and a short interview with you and your child together. For the youngest applicants it is a gentle morning of play and observation.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">06</span><h4>The Result, Explained</h4><p>We tell you the outcome and what it means. It is written into your portal account, and we will sit down and go through it with you if you would like that.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">07</span><h4>The Offer</h4><p>A place in the class your child has qualified for, on the evidence of the assessment.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">08</span><h4>Fees Settled</h4><p>Tuition and other fees are paid once the offer is in your hands, and not before.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">09</span><h4>Your Admission Letter</h4><p>Issued with a unique number your child keeps for the whole of their time here. It is the number every later record is filed under.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">10</span><h4>The Class Acceptance Ticket</h4><p>The Registrar's Office confirms the class placement and issues the ticket that admits your child to it.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">11</span><h4>The First Day</h4><p>Classes begin on presentation of the ticket, and your child is expected by name.</p></div>
+      <div class="pr-tl-item"><span class="pr-tl-dot">12</span><h4>Settling In</h4><p>The handover does not end at the gate. A safety incident, an illness beyond minor first aid, or a substantive disciplinary matter reaches you the same day it happens.</p></div>
     </div>
   </div>
 </section>
 
 <!-- Documents required -->
-<section class="pr-section is-ivory">
+<section class="pr-section is-ivory" id="what-opens-a-file">
   <div class="wrap">
     <div class="pr-reveal" style="max-width:720px;">
       <p class="pr-eyebrow">Before You Apply</p>
@@ -528,10 +530,59 @@
       <p class="pr-lead">Three documents are all it takes to open your child's admissions file.</p>
     </div>
     <div class="pr-docs pr-stagger">
-      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><b>Birth Certificate</b><span>Proof of the child's age</span></div></div>
-      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18a5.5 5.5 0 0111 0"/></svg></div><div><b>Passport Photographs</b><span>Two recent copies</span></div></div>
-      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b>Report or Testimonial</b><span>From any previous school</span></div></div>
+      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico mo-ico-mount mo-float"><svg class="mo-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><b>Birth Certificate</b><span>Proof of the child's age</span></div></div>
+      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico mo-ico-mount mo-float"><svg class="mo-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18a5.5 5.5 0 0111 0"/></svg></div><div><b>Passport Photographs</b><span>Two recent copies</span></div></div>
+      <div class="pr-doc pr-tilt" data-tilt-max="6"><div class="pr-ico mo-ico-mount mo-float"><svg class="mo-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b>Report or Testimonial</b><span>From any previous school</span></div></div>
     </div>
+  </div>
+</section>
+
+<!-- Entry points by age -->
+<section class="pr-section" id="entry-points">
+  <div class="wrap">
+    <div class="pr-reveal" style="max-width:760px;">
+      <p class="pr-eyebrow">Where Your Child Starts</p>
+      <h2 class="pr-h2">Entry Points, by Age</h2>
+      <p class="pr-lead">Children join us at every age, and not only at the beginning. The table below tells you which of our five institutions your child would apply to. The assessment decides the class.</p>
+    </div>
+    <div class="pr-compare-scroll pr-reveal" style="margin-top:28px;">
+      <table class="pr-compare">
+        <thead><tr><th scope="col">If your child is</th><th scope="col">They apply to</th><th scope="col">Entering</th><th scope="col">Assessed by</th></tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">Ages 2 to 10</th>
+            <td>Nursery &amp; Primary School (the Basic School)</td>
+            <td>The nursery years, then the primary classes</td>
+            <td>For the youngest applicants, a gentle morning of play and observation, with you present. For older children, a test pitched to their age and a short interview.</td>
+          </tr>
+          <tr>
+            <th scope="row">Ages 10 to 18</th>
+            <td>Royal College</td>
+            <td>JSS 1 to SSS 3, on the Nigerian National Curriculum, to the BECE and then WAEC and NECO</td>
+            <td>A written entrance examination, an academic test pitched to the class applied for, and a short interview with you and your child.</td>
+          </tr>
+          <tr>
+            <th scope="row">Ages 9 to 16, for a boarding place</th>
+            <td>Qur'an College</td>
+            <td>The 24 to 36 month Hifz programme, meaning memorisation of the whole Qur'an, by day or as a boarder, leading to an Ijazah: the classical licence to teach and transmit what has been memorised</td>
+            <td>A written entrance examination, an age-appropriate academic test, and a short interview with you and your child.</td>
+          </tr>
+          <tr>
+            <th scope="row">Any age, adults included</th>
+            <td>School of Islamic and Arabic Studies</td>
+            <td>Weekday and weekend classes on the Saudi Arabian curriculum, open to the wider Muslim Ummah</td>
+            <td>No entrance assessment. There is no standard admission process here, and your child does not need to be enrolled with us.</td>
+          </tr>
+          <tr>
+            <th scope="row">Not yet announced</th>
+            <td>Online &amp; Distance Learning School</td>
+            <td>Newly constituted under the Head of Schools. Its programme details are not yet published.</td>
+            <td>Ask the admissions office to tell you the day they are.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="pr-body" style="max-width:760px;">Boarding at Qur'an College is offered to children aged 9 to 16. The College also takes day students, and the admissions office will tell you which applies to your child. Where an age sits on the boundary between two institutions, the entrance assessment settles the placement, and a child is offered the class they have qualified for rather than the class their birthday suggests.</p>
   </div>
 </section>
 
@@ -541,13 +592,13 @@
     <div class="pr-reveal" style="max-width:720px;" id="assessment-process">
       <p class="pr-eyebrow">Stage 5 · In Detail</p>
       <h2 class="pr-h2">The Assessment Process</h2>
-      <p style="color:#5a4a38;margin-top:12px;line-height:1.75;font-size:1.02rem;">For the Basic School, Royal College, and Qur'an College, entrance assessment combines a written entrance examination, an academic test appropriate to the applicant's age and desired class, and a short interview with the child and parent or guardian. Results are shared for the next step, and admission is offered into the qualifying class based on performance. The School of Islamic and Arabic Studies has no standard admission process and is open to the wider Muslim Ummah.</p>
+      <p class="pr-body">For the Basic School, Royal College, and Qur'an College, entrance assessment combines a written entrance examination, an academic test appropriate to the applicant's age and desired class, and a short interview with the child and parent or guardian. For the youngest applicants, in the nursery years, this is a gentle morning of play and observation rather than a written paper. Results are shared for the next step, and admission is offered into the qualifying class based on performance. The School of Islamic and Arabic Studies has no standard admission process and is open to the wider Muslim Ummah.</p>
     </div>
 
     <div class="pr-reveal" style="max-width:720px;margin-top:44px;" id="offer-process">
       <p class="pr-eyebrow">Stage 6 · In Detail</p>
       <h2 class="pr-h2">Every Outcome, Recorded</h2>
-      <p style="color:#5a4a38;margin-top:12px;line-height:1.75;font-size:1.02rem;">Every application outcome is recorded transparently in your Parent Portal account — never a phone-only or informal decision. Once your application moves past initial review, you'll see one of a small number of real outcomes.</p>
+      <p class="pr-body">Every application outcome is recorded in your Parent Portal account, in writing, where you can go back and read it. Once your application moves past initial review, you will see one of a small number of real outcomes.</p>
     </div>
     <div class="pr-outcomes pr-stagger">
       <div class="pr-outcome is-yes pr-tilt"><h4>Offered</h4><p>A place is available in the qualifying class. An offer is followed by fee payment and an admission letter carrying a unique number.</p></div>
@@ -558,8 +609,8 @@
     <div class="pr-reveal" style="max-width:720px;margin-top:44px;" id="enrolment-process">
       <p class="pr-eyebrow">Stage 7 · In Detail</p>
       <h2 class="pr-h2">The Enrolment Process</h2>
-      <p style="color:#5a4a38;margin-top:12px;line-height:1.75;font-size:1.02rem;">Once you accept an offer and pay tuition and other fees, the Registrar's Office — the same office that manages promotions, transfers, withdrawals, and graduations throughout your child's time at Sultan Hanafi — confirms enrolment and class placement, issues a class acceptance ticket, and classes begin upon its presentation.</p>
-      <a class="pr-btn is-ink" style="margin-top:18px;" href="/digital-campus/">See how the Registrar's Office works today <span class="a">→</span></a>
+      <p class="pr-body">Once you accept an offer and pay tuition and other fees, the Registrar's Office confirms enrolment and class placement, issues a class acceptance ticket, and classes begin upon its presentation. That is the same office that will handle promotions, transfers, withdrawals and graduation for the whole of your child's time at Sultan Hanafi.</p>
+      <a class="pr-btn is-ink mo-mag" data-mag="5" style="margin-top:18px;" href="/digital-campus/">See how the Registrar's Office works today <span class="a">→</span></a>
     </div>
   </div>
 </section>
@@ -589,20 +640,28 @@
         <div class="faq-answer">No. The Basic School, Royal College, and Qur'an College follow the seven-step digital process above. The School of Islamic and Arabic Studies has no standard admission process and is open to the wider Muslim Ummah — see its own <a class="text-link" href="/academics/arabic-islamic-studies/">chapter</a> for how to get involved. The Online &amp; Distance Learning School is newly established and its admission process will be published once confirmed.</div>
       </div>
       <div class="faq-item">
+        <button type="button" class="faq-question" aria-expanded="false">Which school would my child apply to, and which class?<span class="faq-caret">▾</span></button>
+        <div class="faq-answer">The age bands are set out in <a class="text-link" href="#entry-points">Entry Points, by Age</a> above: ages 2 to 10 to the Nursery &amp; Primary School, 10 to 18 to Royal College for JSS 1 to SSS 3, and 9 to 16 for a boarding place at Qur'an College. The School of Islamic and Arabic Studies takes all ages, adults included. The class itself is settled by the entrance assessment rather than by age alone, so a child is offered the class they have qualified for.</div>
+      </div>
+      <div class="faq-item">
+        <button type="button" class="faq-question" aria-expanded="false">My child is very young. Is there really an examination?<span class="faq-caret">▾</span></button>
+        <div class="faq-answer">No. For the youngest applicants the assessment is a gentle morning of play and observation, with you present. The written entrance examination applies to older children applying to the Basic School, Royal College, and Qur'an College.</div>
+      </div>
+      <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">How do I check my application's current status?<span class="faq-caret">▾</span></button>
         <div class="faq-answer">Sign in to the Parent Portal. If you have an application on file, your live status is shown automatically at the top of this page, and in full inside your portal dashboard.</div>
       </div>
       <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">What documents do I need to apply?<span class="faq-caret">▾</span></button>
-        <div class="faq-answer">A birth certificate, two passport photographs, and a report sheet or testimonial certificate from any previous school — see <a class="text-link" href="#admission">What Opens a File</a> above.</div>
+        <div class="faq-answer">A birth certificate, two passport photographs, and a report sheet or testimonial certificate from any previous school. See <a class="text-link" href="#what-opens-a-file">What Opens a File</a> above.</div>
       </div>
       <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">Is there an entrance exam?<span class="faq-caret">▾</span></button>
-        <div class="faq-answer">Yes, for the Basic School, Royal College, and Qur'an College — a written examination, an age-appropriate academic test, and an interview with the child and parent/guardian.</div>
+        <div class="faq-answer">Yes, for the Basic School, Royal College, and Qur'an College: a written examination, an age-appropriate academic test, and an interview with the child and parent or guardian. For the youngest applicants it is a morning of play and observation instead.</div>
       </div>
       <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">What happens after I submit my application?<span class="faq-caret">▾</span></button>
-        <div class="faq-answer">Our admissions office reviews it, and the outcome — offered, waitlisted, or declined — is recorded in your Parent Portal account, never decided informally.</div>
+        <div class="faq-answer">Our admissions office reviews it, and the outcome, whether offered, waitlisted or declined, is recorded in writing in your Parent Portal account.</div>
       </div>
       <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">How do I enrol once offered a place?<span class="faq-caret">▾</span></button>
@@ -610,7 +669,7 @@
       </div>
       <div class="faq-item">
         <button type="button" class="faq-question" aria-expanded="false">What are the tuition fees and is financial support available?<span class="faq-caret">▾</span></button>
-        <div class="faq-answer">Our current fee schedule and any scholarship or financial-support arrangements are confirmed directly with the admissions office — please <a class="text-link" href="/contact/">contact us</a> for the latest figures rather than relying on an out-of-date number.</div>
+        <div class="faq-answer">We do not publish a fee schedule on this site. A figure left online goes stale, and a family plans around it. Fees differ by institution and by class, and the admissions office will give you the current ones for the class you are applying to, together with anything available by way of scholarship or financial support. Call, send a WhatsApp message, or <a class="text-link" href="/contact/">email the office</a>, and ask for the figures in writing.</div>
       </div>
     </div>
   </div>
@@ -620,12 +679,12 @@
 <section class="pr-section">
   <div class="wrap">
     <div class="pr-cta pr-lightborder is-xl pr-reveal">
-      <h2>Ready When You Are</h2>
-      <p>Create your Parent Portal account and start an application in minutes — or reach the admissions office directly and let us guide you through it.</p>
+      <h2>The File Opens When You Do</h2>
+      <p>Create your Parent Portal account and start an application, or reach the admissions office directly and let us take you through it. Either way, the first move is yours.</p>
       <div class="pr-cta-row">
-        <a href="/portal/register/" class="pr-btn is-gold">Register / Login <span class="a">→</span></a>
-        <a href="/portal/apply/" class="pr-btn is-ghost">Start an Application</a>
-        <a href="/contact/" class="pr-btn is-ghost">Contact Admissions</a>
+        <a href="/portal/register/" class="pr-btn is-gold mo-mag" data-mag="7">Register / Login <span class="a">→</span></a>
+        <a href="/portal/apply/" class="pr-btn is-ghost mo-mag" data-mag="7">Start an Application</a>
+        <a href="/contact/" class="pr-btn is-ghost mo-mag" data-mag="7">Contact Admissions</a>
       </div>
     </div>
   </div>
@@ -1231,6 +1290,7 @@
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=911693acd3" defer></script>
 
 </body>
 </html>

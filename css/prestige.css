@@ -1155,3 +1155,74 @@
 @media (prefers-reduced-motion:reduce){
   .pr-diamond.pr-in::before,.pr-diamond.pr-in::after{animation:none!important;}
 }
+
+/* ---------- Organisational chart --------------------------------- */
+/* Tiers of nodes joined by rules that draw themselves downward as the
+   chart is revealed, so authority reads as flowing rather than as a
+   static diagram. Pure CSS — no path maths, and it reflows on mobile. */
+.pr-org{display:flex;flex-direction:column;align-items:center;gap:0;}
+.pr-org-tier{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;width:100%;}
+.pr-org-link{width:2px;height:34px;margin:0 auto;flex-shrink:0;
+  background:linear-gradient(180deg,var(--pr-gold),rgba(198,161,91,.25));
+  transform:scaleY(0);transform-origin:top;
+  transition:transform .7s var(--pr-ease);}
+.pr-org.pr-in .pr-org-link{transform:scaleY(1);}
+.pr-org.pr-in .pr-org-link:nth-of-type(2){transition-delay:.25s}
+.pr-org.pr-in .pr-org-link:nth-of-type(3){transition-delay:.5s}
+.pr-org-node{position:relative;min-width:200px;max-width:290px;flex:1 1 200px;
+  padding:18px 20px;border-radius:var(--pr-r-md);text-align:center;
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 55%,#F7F0E2);
+  border:1px solid rgba(198,161,91,.26);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:transform .45s var(--pr-ease),box-shadow .45s var(--pr-ease);}
+.pr-org-node:hover{transform:translateY(-4px);box-shadow:var(--pr-shadow),var(--pr-glow);}
+.pr-org-node .role{display:block;font-family:'Cinzel',serif;font-size:.95rem;color:var(--pr-coffee);line-height:1.3;}
+.pr-org-node .who{display:block;margin-top:7px;font-size:.82rem;color:var(--pr-gold-deep);font-weight:600;}
+.pr-org-node.is-apex{background:linear-gradient(160deg,#3b2a1d,#241708);border-color:rgba(233,206,138,.34);}
+.pr-org-node.is-apex .role{color:#fff;}
+.pr-org-node.is-apex .who{color:var(--pr-gold-bright);}
+
+/* ---------- Ledger cards (people) -------------------------------- */
+.pr-people{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px;}
+.pr-person{position:relative;padding:22px 24px;border-radius:var(--pr-r-md);
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk));
+  border:1px solid rgba(198,161,91,.22);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  border-left:3px solid var(--pr-gold);
+  transition:transform .45s var(--pr-ease),box-shadow .45s var(--pr-ease);}
+.pr-person:hover{transform:translateY(-4px);box-shadow:var(--pr-shadow),var(--pr-glow);}
+.pr-person .nm{font-family:'Cinzel',serif;font-size:1.02rem;color:var(--pr-coffee);display:block;}
+.pr-person .rl{display:block;margin-top:6px;font-size:.86rem;color:var(--pr-gold-deep);font-weight:600;line-height:1.4;}
+.pr-person .cr{display:block;margin-top:8px;font-size:.76rem;color:#8a7a60;line-height:1.5;}
+.pr-person.is-vacant{border-left-color:rgba(198,161,91,.3);opacity:.82;}
+.pr-person.is-vacant .nm{color:#8a7a60;font-style:italic;}
+
+/* ---------- Committee chips -------------------------------------- */
+.pr-chips{display:flex;flex-wrap:wrap;gap:11px;margin-top:20px;}
+.pr-chip{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;
+  border-radius:var(--pr-r-pill);font-size:.88rem;color:var(--pr-coffee-2);
+  background:linear-gradient(168deg,rgba(255,255,255,.9),rgba(240,231,214,.7));
+  border:1px solid rgba(198,161,91,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 6px 16px -12px rgba(42,28,16,.4);
+  transition:transform .35s var(--pr-ease),box-shadow .35s var(--pr-ease);}
+.pr-chip:hover{transform:translateY(-3px);box-shadow:var(--pr-shadow-soft),var(--pr-glow);}
+.pr-chip::before{content:"";width:7px;height:7px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));}
+.pr-section.is-royal .pr-chip{background:rgba(255,255,255,.05);border-color:rgba(233,206,138,.28);color:#f0e6d2;}
+.pr-chip.is-reserved{border-style:dashed;color:#8a7a60;}
+
+/* ---------- Founder plaque (governance) -------------------------- */
+.pr-plaque{display:flex;gap:26px;align-items:center;flex-wrap:wrap;
+  padding:28px 30px;border-radius:var(--pr-r-lg);
+  background:linear-gradient(160deg,#3b2a1d,#241708);color:#f4ead4;}
+.pr-plaque img{width:118px;height:118px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  border:2px solid rgba(233,206,138,.5);box-shadow:0 12px 30px -14px rgba(0,0,0,.8);}
+.pr-plaque .lbl{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pr-gold-bright);}
+.pr-plaque .nm{display:block;font-family:'Cinzel',serif;font-size:1.5rem;color:#fff;margin:6px 0;}
+.pr-plaque .cr{display:block;font-size:.8rem;color:rgba(244,234,212,.7);line-height:1.6;}
+.pr-plaque .rl{display:block;margin-top:8px;font-size:.9rem;color:var(--pr-gold-bright);font-weight:600;}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-org-link{transform:none!important;transition:none!important;}
+  .pr-org-node,.pr-person,.pr-chip{transition:none!important;}
+}

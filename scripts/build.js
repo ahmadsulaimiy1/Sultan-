@@ -245,10 +245,10 @@ function buildPage(page) {
   // never weighs on or restyles pages that don't use it.
   const isPrestige = page.prestige === true;
   const prestigeHead = isPrestige
-    ? '<link rel="stylesheet" href="/css/prestige.css">\n'
+    ? '<link rel="stylesheet" href="/css/prestige.css">\n<link rel="stylesheet" href="/css/motion.css">\n'
     : '';
   const prestigeScripts = isPrestige
-    ? '<script src="/js/prestige.js" defer></script>\n'
+    ? '<script src="/js/prestige.js" defer></script>\n<script src="/js/motion.js" defer></script>\n'
     : '';
 
   const html = `<!DOCTYPE html>

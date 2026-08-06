@@ -22,7 +22,8 @@
     "title": "Governance & Leadership — Sultan Hanafi Royal Schools",
     "description": "The Board of Governors, Management Team, and key staff members governing Sultan Hanafi Royal Schools.",
     "contentFile": "pages/about-governance.html",
-    "altHref": "/ar/about/governance/"
+    "altHref": "/ar/about/governance/",
+    "prestige": true
   },
   {
     "slug": "academics",
@@ -127,7 +128,8 @@
     "title": "The Student Life Hub — Sultan Hanafi Royal Schools",
     "description": "Clubs, competitions, leadership development, sport, spiritual life, and pastoral care — everything outside the timetable, in one place.",
     "contentFile": "pages/student-life.html",
-    "altHref": "/ar/student-life/"
+    "altHref": "/ar/student-life/",
+    "prestige": true
   },
   {
     "slug": "admission",
