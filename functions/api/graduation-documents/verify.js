@@ -57,7 +57,15 @@ export async function onRequestGet({ request, env }) {
     };
     let hashOk = true;
     try {
-      hashOk = verifyDocumentHash(env, hashFields, row.content_hash);
+      // Verify under the key that SIGNED this document, not the current one —
+      // otherwise a secret rotation reports every previously issued document as
+      // tampered. Rows predating key versioning default to version 1.
+      const check = verifyDocumentHash(env, hashFields, row.content_hash, row.hash_key_version || 1);
+      // A missing retired key is a deployment gap, not tampering. Treating the
+      // two alike would publicly accuse genuine documents over an unset
+      // environment variable, so only a real 'mismatch' counts as a failure.
+      hashOk = check.ok || check.reason === 'key_unavailable';
+      if (check.reason === 'key_unavailable') console.error('graduation-document verify:', check.detail);
     } catch (err) {
       console.error('graduation-document verify hash-check error', err);
       hashOk = true; // fail open on a config error, never fail closed and falsely accuse a genuine document

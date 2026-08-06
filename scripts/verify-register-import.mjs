@@ -28,6 +28,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 
 import { verifyStageCertificateIntegrity, parseStageCertificateSerial, certificateHashFields, isoDateOnly } from '../functions/_lib/certificate-serial.js';
+import { createHmac } from 'node:crypto';
 import { computeDocumentHash } from '../functions/_lib/document-hash.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 
@@ -54,7 +55,16 @@ if (!SECRET) {
     + '  the register under test was issued under.');
   process.exit(1);
 }
+// The whole key set, not just the current secret. This gate verifies rows from
+// EVERY era — a register signed under a retired key must still be checkable —
+// so it needs the version marker and every DOCUMENT_HASH_SECRET_V<n> the
+// operator has configured. Passing only the current secret silently reported
+// pre-rotation registers as hash mismatches, which reads as tampering.
 const env = { DOCUMENT_HASH_SECRET: SECRET };
+env.DOCUMENT_HASH_KEY_VERSION = process.env.DOCUMENT_HASH_KEY_VERSION;
+for (const [k, v] of Object.entries(process.env)) {
+  if (/^DOCUMENT_HASH_SECRET_V\d+$/.test(k)) env[k] = v;
+}
 const fingerprint = createHash('sha256').update(SECRET).digest('hex').slice(0, 16);
 const isDevSecret = SECRET === DEVELOPMENT_SECRET;
 
@@ -191,6 +201,22 @@ if (isDevSecret) {
   console.log('  Not the known development literal.');
 }
 
+// Recompute a row's digest under the key version recorded ON THE ROW. This
+// cannot go through computeDocumentHash: that is the SIGNING path and refuses
+// retired versions outright, which is correct for issuance and useless for a
+// diagnostic about an already-issued row.
+function recomputeUnderRowKey(env, row, fields) {
+  const v = Number(row.hash_key_version) || 1;
+  const key = v === Number(env.DOCUMENT_HASH_KEY_VERSION || 1)
+    ? env.DOCUMENT_HASH_SECRET
+    : env[`DOCUMENT_HASH_SECRET_V${v}`];
+  if (!key) return `(no key configured for version ${v})`;
+  const sortedKeys = Object.keys(fields).sort();
+  const ordered = {};
+  for (const k of sortedKeys) ordered[k] = fields[k];
+  return createHmac('sha256', key).update(JSON.stringify(ordered)).digest('hex');
+}
+
 for (const file of TARGETS) {
   console.log(`\n── ${file} ─────────────────────────────────`);
   if (!existsSync(file)) { ok('file present', false, `missing ${file}`); continue; }
@@ -204,13 +230,22 @@ for (const file of TARGETS) {
   for (const row of rows) {
     const parsed = parseStageCertificateSerial(row.serial_no);
     if (!parsed) { hashFaults.push(`${row.serial_no}: serial does not parse`); continue; }
-    const { hashValid, suffixValid } = verifyStageCertificateIntegrity(env, row);
-    if (!hashValid) {
+    const { hashValid, suffixValid, reason, detail } = verifyStageCertificateIntegrity(env, row);
+    if (!hashValid && reason === 'key_unavailable') {
+      // Not a tamper signal — the retired key for this row's era simply is not
+      // configured here. Say so plainly instead of reporting a mismatch, which
+      // would send the reader looking for a corrupted register that is fine.
+      hashFaults.push(`${row.serial_no}: ${detail}`);
+    } else if (!hashValid) {
       // Print what the file's values actually hash to. A bare "mismatch" sends
       // the reader hunting; the recomputed digest next to the stored one names
       // the fault immediately — and the field set is echoed so a missing column
       // shows as the empty string it became.
-      const got = computeDocumentHash(env, certificateHashFields({
+      //
+      // Recomputed under THIS ROW's key, not the current signing key: a row
+      // signed by a retired version can never be re-signed (signing refuses),
+      // so the diagnostic has to verify, not sign.
+      const got = recomputeUnderRowKey(env, row, certificateHashFields({
         serialBase: parsed.serialBase,
         studentIdentityNo: row.student_identity_no,
         studentFullName: row.student_full_name,
@@ -218,7 +253,7 @@ for (const file of TARGETS) {
         academicYear: row.academic_year,
         gradeEn: row.grade_en,
         issuedAt: isoDateOnly(row.issued_at),
-      })).fullHash;
+      }));
       hashFaults.push(`${row.serial_no} (${row.student_full_name}): row hashes to ${got}, `
         + `stored ${row.content_hash}` + (row.grade_en === undefined
           ? ' — grade_en is not in the INSERT column list' : ''));

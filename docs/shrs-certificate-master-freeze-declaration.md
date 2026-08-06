@@ -48,11 +48,11 @@ Thirty-one files. The block below is authoritative and machine-read; the notes a
 <!-- MANIFEST:BEGIN -->
 ```text
 ed37114bd8fd6b11ead7844e98a71a844f9fb0af96626dfec062c9eeb3331a91  functions/_lib/stage-certificate-template.js
-35592573151e051858bb90e0081e6b753ade5db658d6fc07f0e60b3f7900811e  functions/_lib/certificate-serial.js
+3717f739187b71e51a5c58f047968a8c16ea0e1ec6fd0d3144b00d2e5fa7f436  functions/_lib/certificate-serial.js
 28aeab43bc80c6944420ea5604d1daed65136b2563424cb3a0d82e09c564266d  functions/_lib/certificate-ground.js
 be561a9a81c6f9e0c71494b34763fee8934f007294514b21e8939672385bdefa  functions/_lib/certificate-plate.js
 0accae1da5b493cc2247b5b7ba6f3aaab6838fc3f3e96528057ee3a4eb3681f5  functions/_lib/identity-no.js
-dcedac3983e0f6bfe0b3b8451e498448de3336077767b1fc423c54f426c4a58f  functions/_lib/document-hash.js
+511186442a0401b192452d10f37d846ef2710c4adea5ba78ac24dc8bb9c333ed  functions/_lib/document-hash.js
 915b002431849838a0bbb9f072e622c0d398f7b38034193e1dba913a10444a60  functions/_lib/qrcode.js
 3fb974774b583fbf047a49ca0055e012872e3ccd2574bf8cf6fefa8b542e38ad  assets/images/certificates/official-background-idd-marks.png
 d8101284288f4966ef1ae4ebfce6aaef34da4d9d9199e1a448a12c66717925a7  assets/images/certificates/official-background-master.jpg
@@ -104,6 +104,8 @@ is an editorial act with a justification, not a command you run.
 | Date | File | From → To | Why |
 |---|---|---|---|
 | 2026-08-06 | `functions/_lib/stage-certificate-template.js` | `ed3261ce…d933f0` → `ed37114b…331a91` | **A4 correction, authorised by the Founder in the Final Acceptance Review.** The sheet was 209.5mm tall against a 209.89mm A4 page, leaving a 0.34mm strip of bare paper across the full 297mm foot — measured off the press PDF at 300 DPI, abutting near-black at the left and crimson at the right. `frameSvg`'s `H` and `.sheet{height}` move to a true 210. This also ends a split coordinate system: `certificate-ground.js` and `certificate-plate.js` have always drawn on `h=210`, so those layers were being squashed 0.24% into a 209.5mm box while the frame alone was not. Every element is positioned in mm from the top, so nothing moves. |
+
+| 2026-08-06 | `functions/_lib/document-hash.js`, `functions/_lib/certificate-serial.js` | signing → key-versioned signing | **Key versioning, mandated by the Founder's Final Production Release Directive.** A certificate is permanent, so rotating `DOCUMENT_HASH_SECRET` with no version recorded would make every previously issued certificate report `integrity_check_failed` — the system publicly branding genuine documents as forgeries. Each row now records `hash_key_version` and verifies under the key that signed it. Version 1 (the committed development literal) is RETIRED: it may verify forever, and signing with it now throws. |
 
 The Editorial Bible §4.1 records "A4 landscape (297 × 209.5 mm)". That line is
 wrong about A4 and is where the half-millimetre originated; it should be

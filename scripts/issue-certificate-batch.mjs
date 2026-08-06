@@ -104,6 +104,14 @@ const BATCHES = {
   // superseded an original seven and an interim six.
   IBT: {
     programme: 'IBT',
+    // SEALED. These seven were issued on 2026-08-08 under key version 1 — the
+    // development literal, now retired. They cannot be re-minted, because the
+    // hash IS the printed serial suffix: a new key would change the number
+    // engraved on documents that have already been issued. They keep verifying
+    // under DOCUMENT_HASH_SECRET_V1, which is exactly what key versioning is
+    // for. Their register INSERT omits hash_key_version and the column's
+    // DEFAULT 1 is the correct value for them.
+    sealedAtKeyVersion: 1,
     firstCertificateSeq: 35,
     firstIdentitySeq: 35,
     roll: [
@@ -255,6 +263,21 @@ if (!BATCH) {
   console.error(`unknown batch "${BATCH_KEY}" — expected one of ${Object.keys(BATCHES).join(', ')}`);
   process.exit(1);
 }
+// A sealed batch has already been issued. Re-running the issuer for it would
+// mint different serial suffixes under the current key and silently invalidate
+// every printed copy, so refuse before anything is written. This is not a
+// warning: there is no correct way to proceed.
+if (BATCH.sealedAtKeyVersion) {
+  console.error(`BATCH REJECTED — ${BATCH_KEY} is SEALED at hash key version `
+    + `${BATCH.sealedAtKeyVersion} and has already been issued.\n`
+    + '  Its content hashes, and therefore the serial suffixes printed on the\n'
+    + '  certificates themselves, derive from that key. Re-minting would change\n'
+    + '  the number engraved on documents already in circulation.\n'
+    + '  It verifies under DOCUMENT_HASH_SECRET_V'
+    + `${BATCH.sealedAtKeyVersion}; it is never re-issued.`);
+  process.exit(1);
+}
+
 const PROGRAMME = BATCH.programme;
 const FIRST_CERTIFICATE_SEQ = BATCH.firstCertificateSeq;
 // The permanent student numbers are drawn from the same position in the
@@ -393,7 +416,14 @@ if (!process.env.DOCUMENT_HASH_SECRET) {
     + 'supplied deliberately, never defaulted. To reproduce the 2026-08-08 '
     + 'batches byte for byte, set it to the key they were issued under.');
 }
-const env = { DOCUMENT_HASH_SECRET: process.env.DOCUMENT_HASH_SECRET };
+// DOCUMENT_HASH_KEY_VERSION travels with the secret. Omitting it silently
+// defaults to version 1 — which is RETIRED, so signing refuses outright rather
+// than minting a batch stamped with the wrong key version. Passing it through
+// explicitly is what lets the register record which key signed each row.
+const env = {
+  DOCUMENT_HASH_SECRET: process.env.DOCUMENT_HASH_SECRET,
+  DOCUMENT_HASH_KEY_VERSION: process.env.DOCUMENT_HASH_KEY_VERSION,
+};
 const sql = sequenceStub(FIRST_CERTIFICATE_SEQ);
 
 // ── Issue ───────────────────────────────────────────────────────────────
@@ -416,6 +446,9 @@ for (const [i, student] of CLASS_ROLL.entries()) {
   const certId = FIRST_CERTIFICATE_SEQ + i;
   issued.push({
     certId,
+    // Which signing key produced contentHash. Stored on the row so this
+    // certificate still verifies after the key rotates — see document-hash.js.
+    hashKeyVersion: gen.keyVersion,
     studentEn: student.en,
     studentAr: student.ar,
     sex: student.sex,
@@ -608,7 +641,7 @@ const sqlOut = [
   // have recomputed the hash over '' instead of 'Excellent', and every one of
   // these certificates would have publicly reported 'integrity check failed'
   // — six correct documents called forgeries by their own registry.
-  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)});`),
+  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)}, ${r.hashKeyVersion});`),
   '',
   '-- The sequence name is stage_certificate_serial_seq (sql/schema.sql).',
   '-- An earlier version of this file said stage_certificate_seq, which does',

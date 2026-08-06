@@ -78,10 +78,14 @@ export async function generateStageCertificateSerial(sql, env, { programmeCode, 
   const seqRes = await sql`SELECT nextval('stage_certificate_serial_seq') AS seq`;
   const seq = String(seqRes.rows[0].seq).padStart(6, '0');
   const serialBase = `SHRS-CERT-${programmeCode}-${year}-${seq}`;
-  const { fullHash } = computeDocumentHash(env, certificateHashFields({
+  const { fullHash, keyVersion } = computeDocumentHash(env, certificateHashFields({
     serialBase, studentIdentityNo, studentFullName, programmeCode, academicYear, gradeEn, issuedAt,
   }));
-  return { serialNo: `${serialBase}-${suffixFromHash(fullHash)}`, fullHash };
+  // keyVersion travels with the hash and MUST be stored on the row. Without it
+  // the certificate cannot be verified after the next rotation, and the serial
+  // suffix printed on the paper is derived from this same hash — so a row that
+  // loses its key version loses the ability to prove its own engraved number.
+  return { serialNo: `${serialBase}-${suffixFromHash(fullHash)}`, fullHash, keyVersion };
 }
 
 // ── The PRINTED number vs the STORED serial ─────────────────────────────
@@ -333,7 +337,7 @@ export function parseStageCertificateSerial(serialNo) {
 // the record has been altered since issuance.
 export function verifyStageCertificateIntegrity(env, row) {
   const parsed = parseStageCertificateSerial(row.serial_no);
-  if (!parsed) return { hashValid: false, suffixValid: false };
+  if (!parsed) return { hashValid: false, suffixValid: false, reason: 'unparseable_serial' };
   const fields = certificateHashFields({
     serialBase: parsed.serialBase,
     studentIdentityNo: row.student_identity_no,
@@ -343,9 +347,15 @@ export function verifyStageCertificateIntegrity(env, row) {
     gradeEn: row.grade_en,
     issuedAt: isoDateOnly(row.issued_at),
   });
-  const hashValid = verifyDocumentHash(env, fields, row.content_hash);
+  // The row records which key signed it. Verifying under the CURRENT key would
+  // fail every certificate issued before a rotation — the system publicly
+  // branding genuine documents as tampered, which is the failure mode key
+  // versioning exists to prevent. Rows written before versioning default to 1.
+  const check = verifyDocumentHash(env, fields, row.content_hash, row.hash_key_version || 1);
   const suffixValid = suffixFromHash(String(row.content_hash || '')) === parsed.suffix;
-  return { hashValid, suffixValid };
+  // 'key_unavailable' is an operator's missing environment variable, not
+  // evidence of tampering, and the caller has to be able to tell them apart.
+  return { hashValid: check.ok, suffixValid, reason: check.reason, detail: check.detail };
 }
 
 // Batch numbers: SHRS-CB-<YYYY>-<seq4>. Batch creation is a rare,

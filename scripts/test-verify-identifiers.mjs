@@ -161,8 +161,16 @@ const IDD = certificates.filter((c) => c.row.programme_code === 'IDD');
 console.log(`Certificate identifier resolution — ${certificates.length} issued certificates `
   + `(${IDD.length} I’dādiyyah, ${certificates.length - IDD.length} Ibtidā’iyyah)\n`);
 
+// Derived from the register, never hardcoded. The serial's 5-character tail is
+// the head of the content hash, so it MOVES whenever the signing key rotates —
+// a literal here turns a correct key rotation into a red test and tells you
+// nothing about whether resolution works.
+const IDD_REGISTER = JSON.parse(
+  readFileSync('docs/graduation-registers/2026-08-08-IDD-000042.json', 'utf8'));
 check('the six I’dādiyyah certificates are the ones under audit',
-  IDD.length === 6 && IDD[0].row.serial_no === 'SHRS-CERT-IDD-2026-000042-A775E',
+  IDD.length === 6
+    && IDD.map((c) => c.row.serial_no).join(',')
+       === IDD_REGISTER.entries.map((e) => e.serialNo).join(','),
   IDD.map((c) => c.row.serial_no).join(', '));
 
 // ── Every printed identifier, for every certificate ─────────────────────
@@ -340,11 +348,18 @@ check('a printed number matching two rows fails closed rather than guessing',
 
 // Same rule for the verification code: a 12-hex collision is a 48-bit
 // event, so if it is ever seen it is tampering or duplication, not luck.
+// The twin is built FROM the first certificate's real hash, so the collision is
+// genuine under whatever key signed it rather than pinned to one era's digest.
+const victim = IDD[0].row;
+const victimPrefix = victim.content_hash.slice(0, 16);
+const victimCode = victim.content_hash.slice(0, 12).toUpperCase()
+  .replace(/(.{4})(.{4})(.{4})/, '$1-$2-$3');
 const hashTwinSql = fixtureSql([...rows,
-  { id: 9102, serial_no: 'SHRS-CERT-IDD-2027-009102-A775E', student_identity_no: '999999999999998',
+  { id: 9102, serial_no: `SHRS-CERT-IDD-2027-009102-${victim.serial_no.slice(-5)}`,
+    student_identity_no: '999999999999998',
     student_full_name: 'Other Student', programme_code: 'IDD',
-    content_hash: 'a775e194852776ac' + '0'.repeat(48), issued_at: '2027-08-08', revoked_at: null }]);
-const hashTwin = await resolveStageCertificateIdentifier(hashTwinSql, 'A775-E194-8527');
+    content_hash: victimPrefix + '0'.repeat(48), issued_at: '2027-08-08', revoked_at: null }]);
+const hashTwin = await resolveStageCertificateIdentifier(hashTwinSql, victimCode);
 check('a colliding verification code fails closed rather than guessing',
   hashTwin && hashTwin.outcome === 'ambiguous' && !hashTwin.personScoped,
   outcomeOf(hashTwin));

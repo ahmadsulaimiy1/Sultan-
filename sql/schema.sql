@@ -1021,6 +1021,10 @@ CREATE TABLE IF NOT EXISTS graduation_documents (
   issued_by_staff_id    INTEGER REFERENCES staff(id),
   signatories           JSONB,
   content_hash          TEXT NOT NULL,
+  -- See stage_certificates.hash_key_version. These documents share
+  -- DOCUMENT_HASH_SECRET, so a rotation reaches them too and they need the
+  -- same protection.
+  hash_key_version      INTEGER NOT NULL DEFAULT 1,
   storage_key           TEXT,
   -- Class B content that cannot be recomputed live at view time (added
   -- for Testimonial/Character Certificate/Graduation Clearance
@@ -1975,6 +1979,12 @@ CREATE TABLE IF NOT EXISTS stage_certificates (
   issued_at_hijri       TEXT,                     -- rendered Hijri date (English), snapshotted (never recomputed)
   issued_at_hijri_ar    TEXT,                     -- rendered Hijri date (Arabic), snapshotted alongside
   content_hash          TEXT NOT NULL,            -- full HMAC-SHA256 hex; serial suffix + display hash derive from this
+  -- Which signing key produced content_hash. A certificate is permanent, so
+  -- the key that signed it must stay identifiable: verifying an old row under
+  -- a newly rotated secret would report every genuine pre-rotation certificate
+  -- as tampered. Version 1 is the development literal that signed the
+  -- 2026-08-08 Ibtida'iyyah batch and is RETIRED — it may verify, never sign.
+  hash_key_version      INTEGER NOT NULL DEFAULT 1,
   issued_by_staff_id    INTEGER REFERENCES staff(id),
   revoked_at            TIMESTAMPTZ,
   revocation_note       TEXT,

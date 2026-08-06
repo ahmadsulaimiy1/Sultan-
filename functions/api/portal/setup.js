@@ -1342,6 +1342,7 @@ const STATEMENTS = [
     issued_by_staff_id    INTEGER REFERENCES staff(id),
     signatories           JSONB,
     content_hash          TEXT NOT NULL,
+    hash_key_version      INTEGER NOT NULL DEFAULT 1,
     storage_key           TEXT,
     revoked_at            TIMESTAMPTZ,
     revoked_by_staff_id   INTEGER REFERENCES staff(id),
@@ -1780,6 +1781,7 @@ const STATEMENTS = [
     issued_at_hijri       TEXT,
     issued_at_hijri_ar    TEXT,
     content_hash          TEXT NOT NULL,
+    hash_key_version      INTEGER NOT NULL DEFAULT 1,
     issued_by_staff_id    INTEGER REFERENCES staff(id),
     revoked_at            TIMESTAMPTZ,
     revocation_note       TEXT,
@@ -1796,6 +1798,14 @@ const STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certificates (left(lower(content_hash), 12))`,
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT`,
   `ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT`,
+  // Key versioning. DEFAULT 1 is the correct backfill for every row that
+  // already exists: they were all signed before rotation was possible, under
+  // what is now version 1. Adding the column without a default — or with a
+  // default of the CURRENT version — would silently claim those rows were
+  // signed by a key that never touched them, and they would then fail
+  // verification for a reason no one could trace.
+  `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
+  `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
 ];
 
 async function handle({ request, env }) {
