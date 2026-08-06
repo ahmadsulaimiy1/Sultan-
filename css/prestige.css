@@ -1226,3 +1226,171 @@
   .pr-org-link{transform:none!important;transition:none!important;}
   .pr-org-node,.pr-person,.pr-chip{transition:none!important;}
 }
+
+/* ===================================================================
+   THE ARRIVAL BAND — the closing statement of a page
+   -------------------------------------------------------------------
+   Replaces the flat charcoal box that used to sit above the footer. A
+   dark panel alone reads as an unfinished placeholder; what makes a
+   closing statement feel like arrival is depth behind it, an ornament
+   that belongs to the institution, and light that moves.
+
+   Five layers, back to front: a photographic ground held far back, an
+   Islamic eight-point geometry drawn in gold, a warm radial bloom, the
+   crest, and the type. A travelling light runs the frame.
+   =================================================================== */
+.pr-arrival{position:relative;isolation:isolate;overflow:hidden;
+  border-radius:var(--pr-r-xl);
+  padding:clamp(52px,8vw,96px) clamp(24px,5vw,72px);
+  text-align:center;color:#F6EEDC;
+  background:
+    radial-gradient(1100px 520px at 50% -18%, #5A4020 0%, #34220F 44%, #241708 76%, #1B1006 100%);
+  box-shadow:var(--pr-shadow),var(--pr-bevel-dark);}
+
+/* photographic ground, held far back so it reads as atmosphere not content */
+.pr-arrival-media{position:absolute;inset:0;z-index:-3;}
+.pr-arrival-media img{width:100%;height:100%;object-fit:cover;
+  opacity:.20;filter:saturate(.7) contrast(1.05);
+  transform:scale(1.06) translate3d(0,calc(var(--p,0) * 16px),0);}
+.pr-arrival::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(780px 340px at 50% 8%, rgba(233,206,138,.20), transparent 66%),
+    linear-gradient(180deg, rgba(20,12,4,.30), rgba(20,12,4,.72));}
+
+/* the geometry: an eight-point star grid, drawn once on reveal */
+.pr-arrival-geo{position:absolute;inset:-6%;z-index:-1;pointer-events:none;opacity:.30;}
+.pr-arrival-geo path,.pr-arrival-geo line,.pr-arrival-geo circle{
+  fill:none;stroke:rgba(233,206,138,.55);stroke-width:.6;
+  stroke-dasharray:var(--len,900);stroke-dashoffset:var(--len,900);
+  transition:stroke-dashoffset 2.6s var(--pr-ease) .2s;}
+.pr-arrival.pr-in .pr-arrival-geo path,
+.pr-arrival.pr-in .pr-arrival-geo line,
+.pr-arrival.pr-in .pr-arrival-geo circle{stroke-dashoffset:0;}
+
+/* corner brackets, all four, following the radius */
+.pr-arrival-frame{position:absolute;inset:clamp(12px,1.8vw,22px);z-index:0;pointer-events:none;
+  border:1px solid rgba(233,206,138,.20);border-radius:var(--pr-r-lg);}
+.pr-arrival-frame::before,.pr-arrival-frame::after,
+.pr-arrival-frame > i::before,.pr-arrival-frame > i::after{
+  content:"";position:absolute;width:38px;height:38px;
+  border:2px solid var(--pr-gold-bright);border-radius:var(--pr-r-lg);
+  filter:drop-shadow(0 0 10px rgba(233,206,138,.6));}
+.pr-arrival-frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0;
+  border-top-right-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.pr-arrival-frame::after{bottom:-1px;right:-1px;border-left:0;border-top:0;
+  border-bottom-left-radius:0;border-top-right-radius:0;border-top-left-radius:0;}
+.pr-arrival-frame > i{position:absolute;inset:0;display:block;}
+.pr-arrival-frame > i::before{top:-1px;right:-1px;border-left:0;border-bottom:0;
+  border-top-left-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.pr-arrival-frame > i::after{bottom:-1px;left:-1px;border-right:0;border-top:0;
+  border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;}
+
+/* crest, lit */
+.pr-arrival-crest{width:96px;height:96px;object-fit:contain;margin:0 auto 20px;display:block;
+  filter:drop-shadow(0 10px 26px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(233,206,138,.34));
+  animation:pr-crest-breathe 7s ease-in-out infinite;}
+@keyframes pr-crest-breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.02)}}
+
+.pr-arrival .pr-eyebrow{color:var(--pr-gold-bright);justify-content:center;}
+.pr-arrival h2{font-family:'Cinzel',serif;font-weight:600;letter-spacing:.012em;
+  font-size:clamp(1.8rem,4.6vw,3.1rem);line-height:1.12;margin:.55rem 0 0;color:#fff;
+  text-shadow:0 2px 30px rgba(0,0,0,.45);position:relative;z-index:2;}
+.pr-arrival .lead{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.1rem,2.3vw,1.42rem);line-height:1.62;color:rgba(246,238,220,.86);
+  max-width:56ch;margin:18px auto 0;position:relative;z-index:2;}
+.pr-arrival-rule{width:96px;height:1px;margin:26px auto 0;position:relative;z-index:2;
+  background:linear-gradient(90deg,transparent,var(--pr-gold-bright),transparent);}
+.pr-arrival-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  margin-top:28px;position:relative;z-index:2;}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-arrival-crest{animation:none;}
+  .pr-arrival-media img{transform:scale(1.04);}
+  .pr-arrival-geo path,.pr-arrival-geo line,.pr-arrival-geo circle{
+    stroke-dashoffset:0!important;transition:none!important;}
+}
+
+/* ---------- Milk / pearl travelling light ------------------------ */
+/* A cooler, softer third light for panels that should read as pearl
+   rather than gilt. Same mechanism, different temperature. */
+.pr-milklight{position:relative;isolation:isolate;}
+.pr-milklight::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--pr-angle),
+    rgba(255,252,244,.10) 0deg,
+    rgba(255,252,244,.10) 268deg,
+    rgba(255,250,238,.55) 306deg,
+    #FFFFFF 330deg,
+    rgba(233,240,255,.85) 342deg,
+    rgba(255,252,244,.45) 356deg,
+    rgba(255,252,244,.10) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;pointer-events:none;z-index:2;
+  animation:pr-orbit 16s linear infinite;animation-play-state:paused;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.55));}
+.pr-milklight.pr-in::before{animation-play-state:running;}
+@media (prefers-reduced-motion:reduce){
+  .pr-milklight::before{animation:none;background:linear-gradient(140deg,rgba(255,255,255,.7),rgba(255,252,244,.2));}
+}
+
+/* ---------- People cards with portraits -------------------------- */
+.pr-person.has-photo{display:flex;gap:18px;align-items:flex-start;}
+.pr-person .por{width:74px;height:74px;flex-shrink:0;border-radius:50%;object-fit:cover;
+  border:2px solid rgba(198,161,91,.55);
+  box-shadow:0 10px 24px -12px rgba(42,28,16,.7),0 0 0 4px rgba(233,206,138,.10);
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
+.pr-person:hover .por{transform:scale(1.06);box-shadow:0 14px 30px -12px rgba(42,28,16,.8),0 0 0 6px rgba(233,206,138,.20);}
+.pr-person .por-fallback{width:74px;height:74px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;
+  font-family:'Cinzel',serif;font-size:1.4rem;color:var(--pr-gold-deep);
+  background:radial-gradient(circle at 34% 28%,rgba(233,206,138,.30),rgba(198,161,91,.10) 62%,transparent);
+  border:1px solid rgba(198,161,91,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
+
+/* ---------- Committee cards -------------------------------------- */
+.pr-committees{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:16px;margin-top:26px;}
+.pr-committee{position:relative;padding:24px 22px;border-radius:var(--pr-r-md);text-align:center;
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 55%,#F7F0E2);
+  border:1px solid rgba(198,161,91,.24);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);overflow:hidden;
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
+.pr-committee::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--pr-gold-bright),transparent);
+  transform:scaleX(0);transition:transform .55s var(--pr-ease);}
+.pr-committee:hover{transform:translateY(-6px);box-shadow:var(--pr-shadow-lift),var(--pr-glow);}
+.pr-committee:hover::before{transform:scaleX(1);}
+.pr-committee .ic{width:58px;height:58px;margin:0 auto 14px;border-radius:var(--pr-r-md);
+  display:grid;place-items:center;color:var(--pr-gold-deep);
+  background:linear-gradient(140deg,rgba(198,161,91,.18),rgba(233,206,138,.06));
+  border:1px solid rgba(198,161,91,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+.pr-committee .ic svg{width:27px;height:27px;}
+.pr-committee h4{font-family:'Cinzel',serif;font-size:.99rem;color:var(--pr-coffee);margin:0 0 6px;line-height:1.3;}
+.pr-committee p{font-size:.82rem;color:#7a6a52;line-height:1.5;margin:0;}
+.pr-committee.is-reserved{border-style:dashed;background:rgba(255,255,255,.5);}
+.pr-committee.is-reserved h4{color:#8a7a60;}
+.pr-section.is-royal .pr-committee{background:rgba(255,255,255,.05);border-color:rgba(233,206,138,.26);}
+.pr-section.is-royal .pr-committee h4{color:#fff;}
+.pr-section.is-royal .pr-committee p{color:rgba(244,234,212,.76);}
+
+/* ---------- Brightened photography ------------------------------- */
+/* Some of the campus photography is underexposed. Lifted here rather than
+   re-encoding the files, so the originals stay untouched. */
+.pr-photo.is-bright img,.is-bright .pr-photo img{
+  filter:brightness(1.12) saturate(1.10) contrast(1.05);}
+.pr-photo.is-bright:hover img,.is-bright .pr-photo:hover img{
+  filter:brightness(1.16) saturate(1.16) contrast(1.07);}
+
+/* ---------- Wide photo mosaic ------------------------------------ */
+.pr-mosaic{display:grid;gap:16px;grid-template-columns:repeat(4,1fr);}
+.pr-mosaic .pr-photo{margin:0;}
+.pr-mosaic .span2{grid-column:span 2;}
+.pr-mosaic .span2r{grid-row:span 2;}
+.pr-mosaic figcaption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:14px 16px;
+  font-size:.8rem;color:#fff;letter-spacing:.02em;
+  background:linear-gradient(180deg,transparent,rgba(20,12,4,.82));}
+@media (max-width:900px){.pr-mosaic{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.pr-mosaic{grid-template-columns:1fr;}.pr-mosaic .span2{grid-column:span 1;}}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-committee,.pr-person .por{transition:none!important;transform:none!important;}
+  .pr-committee::before{transform:scaleX(1);}
+}

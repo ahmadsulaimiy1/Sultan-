@@ -174,3 +174,98 @@
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
 })();
+
+/* ===================================================================
+   SHRS Interaction Sound
+   -------------------------------------------------------------------
+   A short, soft confirmation tone on deliberate interactions — the
+   banking-app "tick". Synthesised with WebAudio rather than shipping an
+   audio file, so it costs nothing to download and can be tuned here.
+
+   Rules it obeys: nothing is created until the visitor's first gesture
+   (browsers require this, and it means a page never makes noise at a
+   visitor unprompted); it fires only on genuine controls, never on
+   scroll or hover; it is quiet by design; and a persistent toggle sits
+   in the corner so it can be silenced for good on that device.
+   =================================================================== */
+(function () {
+  'use strict';
+  var KEY = 'shrsSound';
+  var enabled = (function () {
+    try { return localStorage.getItem(KEY) !== 'off'; } catch (e) { return true; }
+  })();
+  var ctx = null;
+
+  function ensureCtx() {
+    if (ctx) return ctx;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    try { ctx = new AC(); } catch (e) { ctx = null; }
+    return ctx;
+  }
+
+  // Two quick partials a fifth apart with a fast decay: bright enough to
+  // register as a confirmation, short enough never to become a nuisance.
+  function tick(kind) {
+    if (!enabled) return;
+    var c = ensureCtx();
+    if (!c) return;
+    if (c.state === 'suspended') c.resume();
+    var t = c.currentTime;
+    var spec = kind === 'soft' ? [[880, 0.030], [1320, 0.022]] : [[1180, 0.034], [1760, 0.026]];
+    spec.forEach(function (pair, i) {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(pair[0], t);
+      var peak = pair[1] * (kind === 'soft' ? 0.7 : 1);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t + 0.006 + i * 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16 + i * 0.03);
+      o.connect(g); g.connect(c.destination);
+      o.start(t + i * 0.012);
+      o.stop(t + 0.22 + i * 0.03);
+    });
+  }
+
+  var LOUD = '.pr-btn, .btn, .ic-cta, .adm-enquiry-btn';
+  var SOFT = '.pr-chip, .pr-committee, .flow-stage, .faq-question, .pr-card, .pr-person, .pr-org-node, .ic-dot, .el-voices-btn';
+
+  document.addEventListener('click', function (e) {
+    if (!enabled) return;
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('[data-sound-toggle]')) return;
+    if (t.closest(LOUD)) tick('firm');
+    else if (t.closest(SOFT)) tick('soft');
+  }, { passive: true });
+
+  /* the toggle */
+  function mountToggle() {
+    if (document.querySelector('[data-sound-toggle]')) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pr-sound-toggle';
+    b.setAttribute('data-sound-toggle', '');
+    function paint() {
+      b.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+      b.setAttribute('aria-label', enabled ? 'Interface sound on. Turn off.' : 'Interface sound off. Turn on.');
+      b.title = enabled ? 'Interface sound on' : 'Interface sound off';
+      b.innerHTML = enabled
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+      b.classList.toggle('is-off', !enabled);
+    }
+    b.addEventListener('click', function () {
+      enabled = !enabled;
+      try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) {}
+      paint();
+      if (enabled) tick('firm');
+    });
+    paint();
+    document.body.appendChild(b);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountToggle);
+  } else { mountToggle(); }
+})();

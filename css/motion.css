@@ -161,3 +161,19 @@
   .pr-card:hover .mo-ico-mount,.mo-lift:hover .mo-ico-mount{transform:none;}
   .mo-ico-mount::before{display:none;}
 }
+
+/* ---------- Interface sound toggle -------------------------------- */
+.pr-sound-toggle{position:fixed;right:16px;bottom:16px;z-index:55;
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  color:var(--pr-gold-deep,#9C7A3C);
+  background:linear-gradient(168deg,#FFFDF9,#F3EADA);
+  border:1px solid rgba(198,161,91,.42);
+  box-shadow:0 8px 22px -12px rgba(42,28,16,.55),inset 0 1px 0 rgba(255,255,255,.85);
+  transition:transform .35s var(--mo-ease),box-shadow .35s var(--mo-ease),opacity .35s;
+  opacity:.62;}
+.pr-sound-toggle:hover,.pr-sound-toggle:focus-visible{opacity:1;transform:translateY(-2px) scale(1.05);
+  box-shadow:0 12px 28px -12px rgba(42,28,16,.65),0 0 20px -6px rgba(198,161,91,.7),inset 0 1px 0 rgba(255,255,255,.9);}
+.pr-sound-toggle svg{width:19px;height:19px;}
+.pr-sound-toggle.is-off{color:#9a9086;opacity:.42;}
+@media (max-width:620px){.pr-sound-toggle{width:38px;height:38px;right:12px;bottom:78px;}}
+@media print{.pr-sound-toggle{display:none;}}
