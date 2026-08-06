@@ -224,10 +224,25 @@ function buildPage(page) {
     ? `<link rel="alternate" hreflang="${page.altLang || (lang === 'ar' ? 'en' : 'ar')}" href="${page.altHref}" />\n`
     : '';
 
+  // The homepage "elevation" layer — figures/counters band, testimonial
+  // swiper, admissions-journey band, 3D card tilt and motion — is homepage
+  // ONLY by design: css/elevate.css deliberately restyles shared elements
+  // (institution cards, header, footer), so loading it elsewhere would alter
+  // every page. elevate.js/elevate-motion.js no-op when their markup is
+  // absent, but we still gate all three on the home page to keep other pages
+  // untouched, exactly as the source package intended.
+  const isHome = page.slug === 'home';
+  const elevateHead = isHome
+    ? '<link rel="stylesheet" href="/css/elevate.css">\n'
+    : '';
+  const elevateScripts = isHome
+    ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n'
+    : '';
+
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
 <head>
-${head}${altTag}</head>
+${head}${elevateHead}${altTag}</head>
 <body>
 
 ${topbar}
@@ -262,7 +277,7 @@ ${personalisation}
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
-
+${elevateScripts}
 </body>
 </html>
 `;

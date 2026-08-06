@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Application for Admission — Sultan Hanafi Royal Schools</title>
+<meta name="description" content="Apply for admission to Sultan Hanafi Royal Schools, Ikorodu, Lagos. Seven short steps, saved as you go, with document upload." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<meta name="theme-color" content="#3B2A1D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600&family=Inter:wght@400;500;600&family=Amiri:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
+<link rel="stylesheet" href="/css/apply.css?v=394fe4a862">
+</head>
+<body>
+
+<!-- Deliberately quiet chrome: an application page should hold attention,
+     not offer twenty ways to leave it. The crest returns to the site. -->
+<header class="ap-topbar">
+  <div class="ap-topbar-in">
+    <a class="ap-brand" href="/">
+      <img src="/assets/images/brand-mark.png" width="120" height="126" alt="Sultan Hanafi Royal Schools">
+      <span><b>Sultan Hanafi</b><span>Royal Schools</span></span>
+    </a>
+    <a class="ap-back-link" href="/admission/">&#8592; <span>Admissions overview</span></a>
+  </div>
+</header>
+
+<main class="ap-shell">
+  <div class="ap-wrap">
+
+    <div class="ap-head">
+      <p class="eyebrow">Admission &middot; Stage II</p>
+      <h1>Application for Admission</h1>
+      <p>Seven short steps. Everything you enter is kept on this device as you go, so you may stop at any point and return to finish later. Most families complete it in about twenty minutes.</p>
+      <p class="ap-save" id="ap-save-note">Your progress saves automatically</p>
+    </div>
+
+    <ol class="ap-rail" id="ap-rail" aria-label="Application progress">
+      <li class="is-current"><button type="button"><span>1</span></button><em>Programme</em></li>
+      <li><button type="button" disabled><span>2</span></button><em>Student</em></li>
+      <li><button type="button" disabled><span>3</span></button><em>Family</em></li>
+      <li><button type="button" disabled><span>4</span></button><em>Schooling</em></li>
+      <li><button type="button" disabled><span>5</span></button><em>Documents</em></li>
+      <li><button type="button" disabled><span>6</span></button><em>Further</em></li>
+      <li><button type="button" disabled><span>7</span></button><em>Review</em></li>
+    </ol>
+
+    <div class="ap-card">
+      <form id="ap-form" novalidate>
+
+        <!-- ============================ 1. PROGRAMME =========================== -->
+        <section class="ap-step is-active" aria-labelledby="s1">
+          <h2 class="ap-step-h" id="s1">Which school is your child applying to?</h2>
+          <p class="ap-step-s">If you are not certain, choose the one closest to your child's age — the Registrar will guide you at assessment, and no application is ever refused for choosing the wrong door.</p>
+
+          <div class="ap-choice" data-required-group="institution" role="radiogroup" aria-label="Institution">
+            <label><input type="radio" name="institution" value="Nursery &amp; Primary School" required>
+              <b>Nursery &amp; Primary School</b><small>Ages 2–10 &middot; Day</small></label>
+            <label><input type="radio" name="institution" value="Royal College">
+              <b>Royal College</b><small>Ages 10+ &middot; Day &middot; Seven departments</small></label>
+            <label><input type="radio" name="institution" value="School of Islamic &amp; Arabic Studies">
+              <b>Islamic &amp; Arabic Studies</b><small>All ages &middot; Weekday &amp; weekend</small></label>
+            <label><input type="radio" name="institution" value="Qur'an College">
+              <b>Qur'an College</b><small>Hifz to Ijazah &middot; Day or boarding</small></label>
+            <p class="err full" style="display:none;color:#7C1F2E;font-size:.8rem">Please choose an institution.</p>
+          </div>
+
+          <div class="ap-grid" style="margin-top:26px">
+            <div class="ap-f">
+              <label for="entry_class">Class or level applied for <span class="req">*</span></label>
+              <select id="entry_class" name="entry_class" required>
+                <option value="">Select a class</option>
+                <optgroup label="Nursery &amp; Primary">
+                  <option>Creche</option><option>Nursery 1</option><option>Nursery 2</option>
+                  <option>Reception</option><option>Primary 1</option><option>Primary 2</option>
+                  <option>Primary 3</option><option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+                </optgroup>
+                <optgroup label="Royal College">
+                  <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+                  <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+                </optgroup>
+                <optgroup label="Islamic &amp; Arabic Studies">
+                  <option>Beginner (Arabic)</option><option>Intermediate (Arabic)</option>
+                  <option>Advanced (Arabic)</option><option>Adult programme</option>
+                </optgroup>
+                <optgroup label="Qur'an College">
+                  <option>Hifz — beginning</option><option>Hifz — continuing</option><option>Ijazah pathway</option>
+                </optgroup>
+              </select>
+              <span class="err">Please choose the class you are applying for.</span>
+            </div>
+
+            <div class="ap-f">
+              <label for="entry_term">Intended start <span class="req">*</span></label>
+              <select id="entry_term" name="entry_term" required>
+                <option value="">Select a term</option>
+                <option>First term (September)</option>
+                <option>Second term (January)</option>
+                <option>Third term (April)</option>
+                <option>As soon as a place is available</option>
+              </select>
+              <span class="err">Please tell us when you would like your child to start.</span>
+            </div>
+
+            <div class="ap-f full">
+              <label>Attendance <span class="req">*</span></label>
+              <div class="ap-choice" data-required-group="attendance" role="radiogroup" aria-label="Attendance">
+                <label><input type="radio" name="attendance" value="Day" required>
+                  <b>Day</b><small>Arrives in the morning, home in the evening</small></label>
+                <label><input type="radio" name="attendance" value="Boarding">
+                  <b>Boarding</b><small>Full or half boarding, ages 9–16</small></label>
+                <p class="err full" style="display:none;color:#7C1F2E;font-size:.8rem">Please choose day or boarding.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================ 2. STUDENT ============================ -->
+        <section class="ap-step" aria-labelledby="s2">
+          <h2 class="ap-step-h" id="s2">About your child</h2>
+          <p class="ap-step-s">Please give the names exactly as they appear on the birth certificate. If your child is known by a different name at home, tell us — we will use it.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="student_name">Full name <span class="req">*</span></label>
+              <input id="student_name" name="student_name" type="text" required autocomplete="off" placeholder="Surname, first name, other names">
+              <span class="err">Please enter your child's full name.</span></div>
+
+            <div class="ap-f"><label for="student_preferred">Known as <span class="opt">optional</span></label>
+              <input id="student_preferred" name="student_preferred" type="text" placeholder="The name they answer to"></div>
+
+            <div class="ap-f"><label for="student_dob">Date of birth <span class="req">*</span></label>
+              <input id="student_dob" name="student_dob" type="date" required>
+              <span class="err">Please enter a date of birth.</span></div>
+
+            <div class="ap-f"><label for="student_gender">Gender <span class="req">*</span></label>
+              <select id="student_gender" name="student_gender" required>
+                <option value="">Select</option><option>Male</option><option>Female</option>
+              </select><span class="err">Please select.</span></div>
+
+            <div class="ap-f"><label for="student_nationality">Nationality <span class="req">*</span></label>
+              <select id="student_nationality" name="student_nationality" data-countries="default-ng" required></select>
+              <span class="err">Please select a nationality.</span></div>
+
+            <div class="ap-f"><label for="student_birth_country">Country of birth <span class="req">*</span></label>
+              <select id="student_birth_country" name="student_birth_country" data-countries="default-ng" required></select>
+              <span class="err">Please select a country.</span></div>
+
+            <div class="ap-f"><label for="student_language">First language <span class="req">*</span></label>
+              <input id="student_language" name="student_language" type="text" required placeholder="English, Yoruba, Arabic…">
+              <span class="err">Please tell us your child's first language.</span></div>
+
+            <div class="ap-f"><label for="student_other_lang">Other languages spoken <span class="opt">optional</span></label>
+              <input id="student_other_lang" name="student_other_lang" type="text" placeholder="Separate with commas"></div>
+
+            <div class="ap-f full"><label for="student_quran">Qur'an memorised so far <span class="opt">optional</span></label>
+              <input id="student_quran" name="student_quran" type="text" placeholder="For example: Juz 30, or five juz">
+              <span class="hint">Only relevant if you are applying to Qur'an College or the School of Islamic &amp; Arabic Studies. There is no expectation either way.</span></div>
+          </div>
+        </section>
+
+        <!-- ============================ 3. FAMILY ============================= -->
+        <section class="ap-step" aria-labelledby="s3">
+          <h2 class="ap-step-h" id="s3">Parents, guardians and where you live</h2>
+          <p class="ap-step-s">The first contact below becomes the parent account holder and receives every notice about this application.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="g1_name">Parent or guardian — full name <span class="req">*</span></label>
+              <input id="g1_name" name="g1_name" type="text" required><span class="err">Required.</span></div>
+
+            <div class="ap-f"><label for="g1_relationship">Relationship to child <span class="req">*</span></label>
+              <select id="g1_relationship" name="g1_relationship" required>
+                <option value="">Select</option><option>Mother</option><option>Father</option>
+                <option>Grandparent</option><option>Legal guardian</option><option>Other relative</option>
+              </select><span class="err">Required.</span></div>
+
+            <div class="ap-f"><label for="g1_email">Email address <span class="req">*</span></label>
+              <input id="g1_email" name="g1_email" type="email" required autocomplete="email" placeholder="you@example.com">
+              <span class="err">Please enter a valid email address — the portal account is created from it.</span></div>
+
+            <div class="ap-f"><label for="g1_phone">Telephone <span class="req">*</span></label>
+              <div class="ap-phone">
+                <select name="g1_dial" data-dial aria-label="Country dialling code"></select>
+                <input id="g1_phone" name="g1_phone" type="tel" required placeholder="803 000 0000">
+              </div><span class="err">Please enter a telephone number.</span></div>
+
+            <div class="ap-f"><label for="g1_occupation">Occupation <span class="opt">optional</span></label>
+              <input id="g1_occupation" name="g1_occupation" type="text"></div>
+
+            <div class="ap-f"><label for="g1_employer">Employer <span class="opt">optional</span></label>
+              <input id="g1_employer" name="g1_employer" type="text"></div>
+
+            <div class="ap-f full">
+              <label class="ap-check" style="border-style:dashed">
+                <input type="checkbox" id="ap-g2-toggle" name="has_g2" value="yes">
+                <span>Add a second parent or guardian to this application</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="ap-grid" id="ap-g2" hidden style="margin-top:20px">
+            <div class="ap-f"><label for="g2_name">Second guardian — full name</label>
+              <input id="g2_name" name="g2_name" type="text"></div>
+            <div class="ap-f"><label for="g2_relationship">Relationship to child</label>
+              <select id="g2_relationship" name="g2_relationship">
+                <option value="">Select</option><option>Mother</option><option>Father</option>
+                <option>Grandparent</option><option>Legal guardian</option><option>Other relative</option>
+              </select></div>
+            <div class="ap-f"><label for="g2_email">Email address</label>
+              <input id="g2_email" name="g2_email" type="email"></div>
+            <div class="ap-f"><label for="g2_phone">Telephone</label>
+              <div class="ap-phone">
+                <select name="g2_dial" data-dial aria-label="Country dialling code"></select>
+                <input id="g2_phone" name="g2_phone" type="tel">
+              </div></div>
+          </div>
+
+          <h3 style="font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#7A5A28;margin:34px 0 18px">Home address</h3>
+          <div class="ap-grid">
+            <div class="ap-f full"><label for="addr_line1">Street address <span class="req">*</span></label>
+              <input id="addr_line1" name="addr_line1" type="text" required autocomplete="address-line1">
+              <span class="err">Required.</span></div>
+            <div class="ap-f full"><label for="addr_line2">Address line 2 <span class="opt">optional</span></label>
+              <input id="addr_line2" name="addr_line2" type="text" autocomplete="address-line2"></div>
+            <div class="ap-f"><label for="addr_country">Country <span class="req">*</span></label>
+              <select id="addr_country" name="addr_country" data-countries="default-ng" required></select>
+              <span class="err">Required.</span></div>
+            <div class="ap-cascade" data-cascade="addr_country" data-prefix="addr" style="display:contents"></div>
+
+            <div class="ap-f"><label for="addr_city">City or town <span class="req">*</span></label>
+              <input id="addr_city" name="addr_city" type="text" required autocomplete="address-level2">
+              <span class="err">Required.</span></div>
+            <div class="ap-f"><label for="addr_post">Postal code <span class="opt">optional</span></label>
+              <input id="addr_post" name="addr_post" type="text" autocomplete="postal-code"></div>
+          </div>
+
+          <h3 style="font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#7A5A28;margin:34px 0 18px">Emergency contact</h3>
+          <div class="ap-grid">
+            <div class="ap-f"><label for="emg_name">Full name <span class="req">*</span></label>
+              <input id="emg_name" name="emg_name" type="text" required><span class="err">Required.</span></div>
+            <div class="ap-f"><label for="emg_rel">Relationship <span class="req">*</span></label>
+              <input id="emg_rel" name="emg_rel" type="text" required placeholder="Aunt, family friend…"><span class="err">Required.</span></div>
+            <div class="ap-f full"><label for="emg_phone">Telephone <span class="req">*</span></label>
+              <div class="ap-phone">
+                <select name="emg_dial" data-dial aria-label="Country dialling code"></select>
+                <input id="emg_phone" name="emg_phone" type="tel" required>
+              </div><span class="err">Required.</span></div>
+          </div>
+        </section>
+
+        <!-- ============================ 4. SCHOOLING ========================== -->
+        <section class="ap-step" aria-labelledby="s4">
+          <h2 class="ap-step-h" id="s4">Schooling so far</h2>
+          <p class="ap-step-s">If your child has not yet attended school, write “None” in the first field and move on. Nothing here counts against an application — it tells the Registrar where to begin.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="prev_school">Present or most recent school <span class="req">*</span></label>
+              <input id="prev_school" name="prev_school" type="text" required><span class="err">Required — write “None” if this is their first school.</span></div>
+            <div class="ap-f"><label for="prev_country">Country of that school <span class="req">*</span></label>
+              <select id="prev_country" name="prev_country" data-countries="default-ng" required></select>
+              <span class="err">Required.</span></div>
+            <div class="ap-f"><label for="prev_class">Last class completed <span class="opt">optional</span></label>
+              <input id="prev_class" name="prev_class" type="text" placeholder="Primary 3, JSS 2…"></div>
+            <div class="ap-f"><label for="prev_language">Language of instruction <span class="opt">optional</span></label>
+              <input id="prev_language" name="prev_language" type="text" placeholder="English, Arabic…"></div>
+            <div class="ap-f full"><label for="prev_reason">Reason for leaving <span class="opt">optional</span></label>
+              <input id="prev_reason" name="prev_reason" type="text" placeholder="Relocation, completion of stage, seeking Islamic education…"></div>
+            <div class="ap-f full"><label for="needs">Learning support or additional needs <span class="opt">optional</span></label>
+              <textarea id="needs" name="needs" placeholder="Anything that helps a teacher understand how your child learns best."></textarea>
+              <span class="hint">Declaring a need never disadvantages an application. It lets us prepare properly before the first day.</span></div>
+            <div class="ap-f full"><label for="medical">Medical conditions, allergies or medication <span class="opt">optional</span></label>
+              <textarea id="medical" name="medical" placeholder="Asthma, food allergies, regular medication, anything the sick bay should know."></textarea></div>
+          </div>
+
+          <div class="ap-note" role="note">
+            <h3>Fees and support &mdash; and why we ask</h3>
+            <p>Sultan Hanafi Royal Schools holds back a number of bursary places every year, and the Sultan Zakariya Hanafi Foundation supports families who need help with fees. The two questions below let the Bursar consider your family for that support <em>without you having to ask for it</em>.</p>
+            <p><strong>These answers are not part of the admission decision.</strong> No child is ever admitted, refused, or placed differently because of what a family earns. The answers are read by the Bursar's office alone, are never shown to teaching staff, and are never used to compare one family with another. Both questions may be left blank, and there is a &ldquo;prefer not to say&rdquo; option on each.</p>
+          </div>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="prev_tuition">Fees you paid at the last school <span class="opt">optional</span></label>
+              <select id="prev_tuition" name="prev_tuition">
+                <option value="">Select</option>
+                <option>No school fees were paid</option>
+                <option>Under &#8358;50,000 a term</option>
+                <option>&#8358;50,000 &ndash; &#8358;100,000 a term</option>
+                <option>&#8358;100,000 &ndash; &#8358;200,000 a term</option>
+                <option>&#8358;200,000 &ndash; &#8358;400,000 a term</option>
+                <option>&#8358;400,000 &ndash; &#8358;800,000 a term</option>
+                <option>Above &#8358;800,000 a term</option>
+                <option>Fees were paid in another currency</option>
+                <option>Prefer not to say</option>
+              </select>
+              <span class="hint">It helps the Bursar pitch a payment plan you can actually keep to.</span></div>
+
+            <div class="ap-f"><label for="income_band">Approximate household income a year <span class="opt">optional</span></label>
+              <select id="income_band" name="income_band">
+                <option value="">Select</option>
+                <option>Under &#8358;1,000,000</option>
+                <option>&#8358;1,000,000 &ndash; &#8358;2,500,000</option>
+                <option>&#8358;2,500,000 &ndash; &#8358;5,000,000</option>
+                <option>&#8358;5,000,000 &ndash; &#8358;10,000,000</option>
+                <option>&#8358;10,000,000 &ndash; &#8358;20,000,000</option>
+                <option>Above &#8358;20,000,000</option>
+                <option>Income is irregular or seasonal</option>
+                <option>Prefer not to say</option>
+              </select>
+              <span class="hint">A band, never an exact figure. We do not ask for payslips at this stage.</span></div>
+
+            <div class="ap-f full"><label for="bursary">Would you like to be considered for a bursary or Foundation support? <span class="opt">optional</span></label>
+              <select id="bursary" name="bursary">
+                <option value="">Select</option>
+                <option>Yes, please consider us</option>
+                <option>No, thank you</option>
+                <option>I would like to discuss it first</option>
+              </select>
+              <span class="hint">Choosing &ldquo;yes&rdquo; opens a private conversation with the Bursar. It changes nothing about your child's application.</span></div>
+
+            <div class="ap-f full"><label for="fees_notes">Anything about fees we should understand <span class="opt">optional</span></label>
+              <textarea id="fees_notes" name="fees_notes" placeholder="A change in circumstances, several children at once, a sponsor paying on your behalf — whatever matters."></textarea></div>
+          </div>
+        </section>
+
+        <!-- ============================ 5. DOCUMENTS ========================== -->
+        <section class="ap-step" aria-labelledby="s5">
+          <h2 class="ap-step-h" id="s5">Documents</h2>
+          <p class="ap-step-s">A clear photograph taken on your phone is perfectly acceptable — it does not need to be a scan. JPG, PNG, HEIC or PDF, up to 8&nbsp;MB each. You may drag a file straight onto any row.</p>
+
+          <div class="ap-docs">
+            <div class="ap-doc" data-key="doc_birth" data-required>
+              <span class="ap-doc-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4"/></svg></span>
+              <div><b>Birth certificate</b><small>Or a sworn declaration of age</small>
+                <span class="ap-doc-file"></span><span class="err" style="display:none;color:#7C1F2E;font-size:.78rem">This document is required.</span>
+                <button type="button" class="ap-doc-clear">Remove</button></div>
+              <img class="ap-doc-thumb" alt=""><button type="button" class="ap-doc-btn">Choose file</button>
+              <input type="file" accept="image/*,application/pdf">
+            </div>
+
+            <div class="ap-doc" data-key="doc_photo" data-required>
+              <span class="ap-doc-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="11" r="3.4"/><path d="M4 8h3l1.6-2h6.8L17 8h3v11H4z"/></svg></span>
+              <div><b>Passport photograph</b><small>Recent, plain background, face clearly visible</small>
+                <span class="ap-doc-file"></span><span class="err" style="display:none;color:#7C1F2E;font-size:.78rem">This document is required.</span>
+                <button type="button" class="ap-doc-clear">Remove</button></div>
+              <img class="ap-doc-thumb" alt=""><button type="button" class="ap-doc-btn">Choose file</button>
+              <input type="file" accept="image/*">
+            </div>
+
+            <div class="ap-doc" data-key="doc_report" data-required>
+              <span class="ap-doc-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
+              <div><b>Last report sheet or testimonial</b><small>From the present or most recent school. If this is your child's first school, upload any letter confirming that.</small>
+                <span class="ap-doc-file"></span><span class="err" style="display:none;color:#7C1F2E;font-size:.78rem">This document is required.</span>
+                <button type="button" class="ap-doc-clear">Remove</button></div>
+              <img class="ap-doc-thumb" alt=""><button type="button" class="ap-doc-btn">Choose file</button>
+              <input type="file" accept="image/*,application/pdf">
+            </div>
+
+            <div class="ap-doc" data-key="doc_immunisation">
+              <span class="ap-doc-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 4v6M9 7h6M6 12h12v8H6z"/></svg></span>
+              <div><b>Immunisation record</b><small>Optional now — required before the first day</small>
+                <span class="ap-doc-file"></span><span class="err" style="display:none"></span>
+                <button type="button" class="ap-doc-clear">Remove</button></div>
+              <img class="ap-doc-thumb" alt=""><button type="button" class="ap-doc-btn">Choose file</button>
+              <input type="file" accept="image/*,application/pdf">
+            </div>
+
+            <div class="ap-doc" data-key="doc_guardian_id">
+              <span class="ap-doc-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M14 10h4M14 14h4"/></svg></span>
+              <div><b>Parent or guardian identification</b><small>Optional — national ID, driver's licence or passport</small>
+                <span class="ap-doc-file"></span><span class="err" style="display:none"></span>
+                <button type="button" class="ap-doc-clear">Remove</button></div>
+              <img class="ap-doc-thumb" alt=""><button type="button" class="ap-doc-btn">Choose file</button>
+              <input type="file" accept="image/*,application/pdf">
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================ 6. FURTHER =========================== -->
+        <section class="ap-step" aria-labelledby="s6">
+          <h2 class="ap-step-h" id="s6">A little more</h2>
+          <p class="ap-step-s">None of this is required, but it helps us receive your family well.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="heard">How did you hear of us? <span class="opt">optional</span></label>
+              <select id="heard" name="heard">
+                <option value="">Select</option>
+                <option>A family already at the school</option><option>A friend or relative</option>
+                <option>Our mosque or community</option><option>Passing the campus</option>
+                <option>Facebook or Instagram</option><option>A web search</option>
+                <option>An event or competition</option><option>Other</option>
+              </select></div>
+            <div class="ap-f"><label for="sibling">Sibling already at SHRS <span class="opt">optional</span></label>
+              <input id="sibling" name="sibling" type="text" placeholder="Their name and class"></div>
+            <div class="ap-f"><label for="contact_pref">Preferred way to reach you <span class="opt">optional</span></label>
+              <select id="contact_pref" name="contact_pref">
+                <option value="">Select</option><option>WhatsApp</option><option>Telephone call</option>
+                <option>Email</option><option>SMS</option>
+              </select></div>
+            <div class="ap-f"><label for="visit">Would you like to visit before assessment? <span class="opt">optional</span></label>
+              <select id="visit" name="visit">
+                <option value="">Select</option><option>Yes, please arrange a visit</option>
+                <option>No, I have already visited</option><option>Not necessary</option>
+              </select></div>
+            <div class="ap-f full"><label for="notes">Anything else you would like us to know <span class="opt">optional</span></label>
+              <textarea id="notes" name="notes" placeholder="Tell us about your child in your own words, if you would like to."></textarea></div>
+          </div>
+        </section>
+
+        <!-- ============================ 7. REVIEW ============================ -->
+        <section class="ap-step" aria-labelledby="s7">
+          <h2 class="ap-step-h" id="s7">Read it once more</h2>
+          <p class="ap-step-s">Check the details below. You can go back to any step to change something — nothing is sent until you press submit.</p>
+
+          <div class="ap-review" id="ap-review"></div>
+
+          <div style="margin-top:26px">
+            <label class="ap-check"><input type="checkbox" name="declare_true" value="yes" required>
+              <span>I confirm that the information given in this application is true and complete to the best of my knowledge. <span class="req" style="color:#7C1F2E">*</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="declare_docs" value="yes" required>
+              <span>I understand that original documents must be presented at the campus before enrolment is completed. <span class="req" style="color:#7C1F2E">*</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="declare_contact" value="yes" required>
+              <span>I agree that Sultan Hanafi Royal Schools may contact me about this application by email, telephone or WhatsApp. <span class="req" style="color:#7C1F2E">*</span></span></label>
+          </div>
+
+          <div id="ap-submit-error" hidden style="margin-top:22px;padding:18px 20px;border-radius:16px;background:#FDF1F1;border:1px solid rgba(124,31,46,.3);color:#7C1F2E;font-size:.9rem;line-height:1.65">
+            We could not send the application just now. Please check your connection and try again — your answers are still saved on this device. If it keeps failing, WhatsApp us on
+            <a href="https://wa.me/2348073747650" style="color:#7C1F2E">+234 807 374 7650</a> and we will take the application by hand.
+          </div>
+        </section>
+
+        <div class="ap-nav">
+          <button type="button" class="ap-btn ap-btn-quiet" id="ap-back" hidden><span aria-hidden="true">&#8592;</span> Back</button>
+          <span style="flex:1"></span>
+          <button type="button" class="ap-btn ap-btn-primary" id="ap-next">Continue <span aria-hidden="true">&#8594;</span></button>
+          <button type="submit" class="ap-btn ap-btn-primary" id="ap-submit" hidden>Submit application</button>
+        </div>
+      </form>
+
+      <div class="ap-done" id="ap-done" hidden>
+        <div class="ap-done-crest">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <h2>Your application has been received</h2>
+        <p>Thank you. The Registrar's office has your child's application and will be in touch within two working days to arrange the entrance assessment.</p>
+        <p>Keep the reference below — quote it in any message to us.</p>
+        <p class="ap-ref" id="ap-ref">—</p>
+        <p style="margin-top:28px"><a class="ap-btn ap-btn-quiet" href="/">Return to the school</a></p>
+      </div>
+    </div>
+
+    <p class="ap-help">
+      Difficulty with any part of this form? Telephone <a href="tel:+2348073747650">+234&nbsp;807&nbsp;374&nbsp;7650</a>
+      or <a href="https://wa.me/2348073747650">message us on WhatsApp</a>, and the Registrar's office will complete it with you.
+    </p>
+  </div>
+</main>
+
+<footer class="ap-foot">
+  <div class="ap-foot-thread" aria-hidden="true"></div>
+  <div class="ap-foot-in">
+    <div class="ap-foot-brand" data-rise="1">
+      <img src="/assets/images/brand-mark.png" width="120" height="126" alt="">
+      <p class="ap-foot-name">Sultan Hanafi Royal Schools</p>
+      <p class="ap-foot-motto">Forming Scholars, Leaders and Guardians of Excellence.</p>
+      <p class="ap-foot-addr">15 Imowonla Road, AP Bus Stop,<br>Off Gberigbe Agura Road, Ikorodu, Lagos State</p>
+    </div>
+    <div class="ap-foot-col" data-rise="2">
+      <h4>Admissions</h4>
+      <ul>
+        <li><a href="/admission/">Every stage in detail</a></li>
+        <li><a href="/admission/#documents">Documents required</a></li>
+        <li><a href="/contact/">Book a campus visit</a></li>
+        <li><a href="/portal/select/">Parent portal</a></li>
+      </ul>
+    </div>
+    <div class="ap-foot-col" data-rise="3">
+      <h4>The school</h4>
+      <ul>
+        <li><a href="/academics/nursery-primary/">Nursery &amp; Primary</a></li>
+        <li><a href="/academics/royal-college/">Royal College</a></li>
+        <li><a href="/academics/arabic-islamic-studies/">Islamic &amp; Arabic Studies</a></li>
+        <li><a href="/academics/quran-college/">Qur'an College</a></li>
+      </ul>
+    </div>
+    <div class="ap-foot-col" data-rise="4">
+      <h4>Reach us</h4>
+      <ul>
+        <li><a href="tel:+2348073747650">+234 807 374 7650</a></li>
+        <li><a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></li>
+        <li><a href="https://wa.me/2348073747650">WhatsApp the Registrar</a></li>
+        <li><a href="/policies/">Policies &amp; privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ap-foot-base">
+    <p>&copy; Sultan Hanafi Royal Schools &middot; Registered December 2017, Ikorodu, Lagos State</p>
+    <p class="ap-foot-secure">Your answers are stored on this device until you submit them.</p>
+  </div>
+</footer>
+
+<script src="/js/geo-data.js?v=75919f0256"></script>
+<script src="/js/apply.js?v=b470c57cf7" defer></script>
+</body>
+</html>
