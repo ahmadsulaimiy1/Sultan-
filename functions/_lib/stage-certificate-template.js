@@ -1715,14 +1715,33 @@ function docShell(title, sheetsHtml) {
     margin-bottom:1.3mm;}
   .ihdr-badge img{max-height:15mm;max-width:24mm;width:auto;object-fit:contain;}
   .ihdr-badge--lead img{max-height:17mm;max-width:27mm;}
+  /* LEADING, set by measurement. The Nigerian column carries six lines to the
+     Lagos column's three, which reads as weight on the left of the page. The
+     brief was to close that by tightening this block rather than padding the
+     Lagos side with text nobody approved.
+
+     Reducing line-height turned out to be the WRONG lever, and measuring said
+     so: shrinking an Arabic line's box does not move its descenders, it only
+     lets the English line beneath rise into them. Every candidate that cut the
+     leading drove the Arabic-to-English ink gap NEGATIVE — actual overlap.
+     Worse, the setting first shipped was already at 0.18mm there, which fills
+     in on press.
+
+     So the block is tightened where it has room (the Arabic-to-Arabic joins)
+     and OPENED where it did not (the two Arabic-descender-to-English-capital
+     pairs), and the departmental pair drops a little in size — weight, not just
+     height, is what reads as left-heavy. Net: minimum ink separation 0.18mm ->
+     0.71mm and depth 19.01mm -> 18.74mm. Safer and shorter, not one or other.
+
+     Per-line ink extents are measured, never inferred from the box: an Arabic
+     line's dots sit clear of its body, so scanning the column for ink bands
+     counts 7 bands for 6 lines. Each line is rendered alone instead. */
   .ihdr .h-ar{font-size:7.6pt;line-height:1.35;}
-  .ihdr .h-en{font-size:5.2pt;letter-spacing:.5px;margin-top:.5mm;}
+  .ihdr .h-en{font-size:5.2pt;letter-spacing:.5px;margin-top:0;}
   .ihdr .h-ar-2{margin-top:0;font-size:8.4pt;}
-  .ihdr .h-en-2{font-size:5.6pt;letter-spacing:.62px;margin-top:.5mm;}
-  /* The departmental pair runs a shade tighter than the institutional pair
-     above it — it is a qualifier, not a second name. */
-  .ihdr .h-ar-3{margin-top:.9mm;font-size:6.6pt;}
-  .ihdr .h-en-3{margin-top:.4mm;font-size:4.6pt;letter-spacing:.3px;}
+  .ihdr .h-en-2{font-size:5.6pt;letter-spacing:.62px;margin-top:1.05mm;}
+  .ihdr .h-ar-3{margin-top:.2mm;font-size:6.2pt;}
+  .ihdr .h-en-3{margin-top:.88mm;font-size:4.4pt;letter-spacing:.3px;}
 
   /* Basmala: Amiri's classical single-glyph calligraphic form (U+FDFD),
      charcoal, no effects — a dignified spiritual header in the quiet
