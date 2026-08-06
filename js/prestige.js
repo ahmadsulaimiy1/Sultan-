@@ -264,6 +264,12 @@
   }
 
   function fire(el) {
+    // Exact stagger index. The CSS ladder only reaches :nth-child(12); setting
+    // --i here keeps a list of any length stepping evenly instead of flattening.
+    if (el.classList.contains('pr-stagger')) {
+      var kids = el.children, k;
+      for (k = 0; k < kids.length; k++) kids[k].style.setProperty('--i', k);
+    }
     el.classList.add('pr-in');
     el.querySelectorAll && el.querySelectorAll('[data-count-to]').forEach(animateFigure);
     if (el.hasAttribute && el.hasAttribute('data-count-to')) animateFigure(el);
@@ -277,7 +283,8 @@
     ensureDefs();
     initTilt();
     var targets = document.querySelectorAll(
-      '.pr-reveal, .pr-stagger, [data-count-to], [data-pr-type], .pr-sheen, .pr-photo, .pr-stat'
+      '.pr-reveal, .pr-stagger, [data-count-to], [data-pr-type], .pr-sheen, .pr-photo, .pr-stat, ' +
+      '.pr-lightborder, .pr-diamond, .pr-timeline, .pr-path'
     );
     if (!('IntersectionObserver' in window)) { targets.forEach(fire); return; }
     var io = new IntersectionObserver(function (entries, obs) {

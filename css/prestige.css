@@ -93,7 +93,7 @@
 @property --pr-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
 .pr-lightborder{position:relative;border-radius:var(--pr-r-lg);isolation:isolate;}
 .pr-lightborder.is-xl{border-radius:var(--pr-r-xl);}
-.pr-lightborder > *{border-radius:inherit;}
+/* superseded by .pr-lightborder > .pr-surface in v3.10 */
 .pr-lightborder::before{
   content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
   background:
@@ -614,4 +614,544 @@
   .pr-photo{clip-path:none!important;transform:none!important;transition:none!important;}
   .pr-photo::before{display:none;}
   .pr-od-reel,.pr-stat-ring .arc,.pr-stat-bar{transition:none!important;}
+}
+
+
+/* ===================================================================
+   PRESTIGE v3 — corrections from a four-lens critique
+   -------------------------------------------------------------------
+   Applied in dependency order: colour ladder, typography, the two raw
+   brand.css components, sharp caps, hero, royal band, stat plates,
+   buttons, 3D, traveling light, motion. Later rules intentionally
+   override the v1/v2 declarations above at equal specificity.
+   =================================================================== */
+
+/* --- v3.1 Fix the dead colour ladder. `--pr-ivory:#F7EEDF` (prestige.css:18) is byte-identical to brand.css `--ivory`/`- --- */
+:root{
+  --pr-ground:#F2E7D5;   /* plain band — the settled tone */
+  --pr-band:#FBF6EC;     /* lifted band — near-white parchment */
+  --pr-band-2:#EDE0CA;   /* lifted band, foot */
+}
+/* prestige.css only ships on prestige:true pages (build.js:246), so an
+   unscoped body rule is already correctly scoped. Guard it so the
+   Personalisation Centre reading modes (brand.css:77-82) still win. */
+:root:not([data-pc-theme]) body{background:var(--pr-ground);}
+
+.pr-section{position:relative;background:var(--pr-ground);}
+.pr-section.is-ivory{
+  background:
+    radial-gradient(1300px 560px at 82% -14%, rgba(233,206,138,.20), transparent 62%),
+    radial-gradient(900px 420px at 6% 108%, rgba(198,161,91,.09), transparent 60%),
+    linear-gradient(180deg,var(--pr-band) 0%,var(--pr-band-2) 100%);
+}
+/* the join between two light bands is currently invisible — draw it */
+.pr-section + .pr-section:not(.is-royal)::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.30) 18%,rgba(198,161,91,.30) 82%,transparent);
+}
+/* a section that only exists to carry a pledge must not draw a second seam */
+.pr-section[style*="padding-top:0"]::after{display:none;}
+
+/* --- v3.2 Give the typography a scale, retire eleven repeated inline paragraph styles, and add air. `.pr-h2` (prestige.c --- */
+:root{
+  --pr-t-h2:clamp(1.9rem,4.2vw,3.1rem);
+  --pr-t-lead:clamp(1.14rem,1.9vw,1.4rem);
+  --pr-t-body:1.04rem;
+  --pr-lh-body:1.78;
+}
+.pr-h2{
+  font-size:var(--pr-t-h2);
+  letter-spacing:.012em;   /* Cinzel caps need air — this is the whole fix */
+  line-height:1.14;
+  text-wrap:balance;
+}
+/* every Cinzel run on these pages is currently untracked; none should be */
+.pr-card h3,.pr-outcome h4,.pr-impact-item h4,.pr-tl-item h4,
+.pr-feature h3,.pr-chart-card h3,.pr-founder-card h3,.pr-h3{letter-spacing:.02em;}
+
+.pr-lead{font-size:var(--pr-t-lead);line-height:1.62;max-width:46ch;}
+.pr-hero-sub{max-width:44ch;}
+
+/* one class replaces ten inline styles */
+.pr-body{
+  color:#5A4A38;font-size:var(--pr-t-body);line-height:var(--pr-lh-body);
+  max-width:62ch;margin:1.05rem 0 0;
+}
+.pr-body + .pr-body{margin-top:.9rem;}
+.pr-body b,.pr-body strong{color:var(--pr-coffee-2);font-weight:600;}
+.pr-body.src{font-size:.78rem;color:#8A8880;margin-top:16px;}
+.pr-section.is-royal .pr-body{color:rgba(244,234,212,.82);}
+
+/* promotes the inline <h3 style="font-family:'Cinzel',serif;…"> at about.html:88 */
+.pr-h3{font-family:'Cinzel',serif;color:var(--pr-coffee);font-size:1.3rem;margin:8px 0 10px;}
+
+/* air */
+.pr-section{padding:clamp(76px,11vh,140px) 0;}
+.pr-section .wrap,.pr-wrap{width:min(1200px,90%);}
+
+/* --- v3.3 Elevate `.institution-card` (5 on /academics/) and `.flow-stage` (7 on /admission/) — the two largest un-eleva --- */
+/* ---------- Institution cards, prestige-grade ---------- */
+.institutions-showcase{gap:30px;}
+.institution-card{
+  border-radius:var(--pr-r-lg);
+  border:1px solid rgba(198,161,91,.20);
+  background:linear-gradient(168deg,#FFFDF9 0%,var(--pr-milk) 52%,#F7F0E2 100%);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  overflow:hidden;isolation:isolate;
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);
+}
+.institution-card:hover{box-shadow:var(--pr-shadow-lift),var(--pr-bevel),var(--pr-glow);}
+/* kill the square inset picture-frame; replace with an inlaid ring that follows the curve */
+.institution-card::after{
+  inset:0;border:0;border-radius:inherit;z-index:4;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(198,161,91,.12);
+}
+.institution-card .ic-visual{aspect-ratio:16/10;}
+.institution-card .ic-visual::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent 46%,rgba(34,23,9,.30) 78%,rgba(34,23,9,.62));
+}
+.institution-card .ic-visual img{transition:transform 1.1s var(--pr-ease);}
+.institution-card:hover .ic-visual img{transform:scale(1.05);}
+.institution-card .ic-tag{
+  display:inline-block;width:fit-content;align-self:flex-start;
+  padding:7px 15px;border-radius:var(--pr-r-pill);
+  background:linear-gradient(168deg,rgba(198,161,91,.16),rgba(198,161,91,.07));
+  border:1px solid rgba(198,161,91,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+}
+.institution-card .ic-meta{
+  border-radius:var(--pr-r-sm);border-inline-start:0;position:relative;overflow:hidden;
+  background:linear-gradient(168deg,rgba(255,255,255,.92),rgba(240,231,214,.72));
+  border:1px solid rgba(198,161,91,.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 10px 22px -18px rgba(34,23,9,.35);
+  padding:16px 18px;
+}
+.institution-card .ic-meta::before{
+  content:"";position:absolute;inset-inline-start:0;top:14%;bottom:14%;width:3px;border-radius:3px;
+  background:linear-gradient(180deg,var(--pr-gold-bright),var(--pr-gold) 55%,rgba(198,161,91,0));
+}
+.institution-card .ic-cta{border-radius:var(--pr-r-pill);padding:11px 20px;}
+.institution-card .ic-strengths li::before{border-radius:50%;}
+
+/* ---------- Admission flow stages: same disease, same cure ---------- */
+.flow-diagram{gap:10px;}
+.flow-stage{
+  position:relative;
+  border-radius:var(--pr-r-md);
+  background:linear-gradient(168deg,#FFFDF9,#F6EFE1);
+  border:1px solid rgba(198,161,91,.20);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  padding:26px 20px;
+  transition:transform .4s var(--pr-ease),box-shadow .4s var(--pr-ease),background .3s ease;
+}
+.flow-stage:hover,.flow-stage:focus-visible{
+  transform:translateY(-4px);
+  box-shadow:var(--pr-shadow),var(--pr-bevel);
+}
+/* the square 3px top caps become inset rounded rules that respect the curve */
+.flow-stage.is-complete,.flow-stage.is-terminal{border-top-width:1px;}
+.flow-stage.is-complete::before,.flow-stage.is-terminal::before{
+  content:"";position:absolute;top:0;left:24px;right:24px;height:3px;border-radius:0 0 3px 3px;
+}
+.flow-stage.is-complete::before{background:linear-gradient(90deg,transparent,var(--pr-gold),transparent);}
+.flow-stage.is-terminal::before{background:linear-gradient(90deg,transparent,#A8564A,transparent);}
+.flow-arrow{opacity:.5;}
+
+.adm-enquiry-cta{
+  border-radius:var(--pr-r-lg);border-top:0;
+  background:linear-gradient(165deg,#3E2C1E 0%,#2C1E12 48%,#211508 100%);
+  box-shadow:var(--pr-shadow),var(--pr-bevel-dark);
+}
+.adm-enquiry-btn{border-radius:var(--pr-r-pill);padding:11px 20px;}
+.adm-progress-banner{border-radius:var(--pr-r-sm);border-inline-start-width:4px;}
+.faq-item{
+  border-bottom:0;border-radius:var(--pr-r-sm);margin-bottom:10px;padding:0 18px;
+  background:rgba(255,255,255,.5);border:1px solid rgba(198,161,91,.16);
+  transition:background .35s ease,box-shadow .35s ease;
+}
+.faq-item.is-open{background:#FFFDF9;box-shadow:var(--pr-shadow-soft);}
+.light-photo-pair .lpp-frame{border-radius:var(--pr-r-md);box-shadow:var(--pr-shadow-soft);border-color:rgba(198,161,91,.22);}
+
+@media (prefers-reduced-motion:reduce){
+  .institution-card,.flow-stage{transition:none!important;transform:none!important;}
+  .institution-card:hover .ic-visual img{transform:none;}
+}
+
+/* --- v3.4 Remove the straight caps butting rounded boxes — the residual 'sharp edge' after the hero. Three components pu --- */
+/* quote: the 4px bar becomes an inlaid rounded rail set inside the panel */
+.pr-quote{
+  border:1px solid var(--pr-line);border-left:1px solid var(--pr-line);
+  border-radius:var(--pr-r-md);padding:44px 40px 36px 48px;overflow:hidden;
+}
+.pr-quote::before{
+  content:"";position:absolute;inset-inline-start:14px;top:18%;bottom:18%;
+  width:4px;border-radius:4px;
+  background:linear-gradient(180deg,#FFF3D6,var(--pr-gold-bright) 22%,var(--pr-gold) 62%,rgba(198,161,91,0));
+  box-shadow:0 0 18px -4px rgba(233,206,138,.65);
+}
+/* the quote mark becomes a watermark behind the text, not an inline glyph */
+.pr-quote .mk{
+  position:absolute;top:-14px;inset-inline-end:22px;
+  font-family:'Cinzel',serif;font-size:9rem;line-height:1;
+  color:var(--pr-gold);opacity:.10;pointer-events:none;user-select:none;
+}
+.pr-quote p{position:relative;margin:0 0 18px;}
+
+/* outcomes: the top cap becomes an inset rounded rule that respects the curve */
+.pr-outcome{border-top:1px solid var(--pr-line);position:relative;padding-top:26px;}
+.pr-outcome.is-yes,.pr-outcome.is-wait,.pr-outcome.is-no{border-top-color:var(--pr-line);}
+.pr-outcome::before{
+  content:"";position:absolute;top:0;left:26px;right:26px;height:3px;border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,transparent,var(--pr-gold),transparent);
+}
+.pr-outcome.is-yes::before{background:linear-gradient(90deg,transparent,#3F7D55,transparent);}
+.pr-outcome.is-wait::before{background:linear-gradient(90deg,transparent,#C08A2E,transparent);}
+.pr-outcome.is-no::before{background:linear-gradient(90deg,transparent,#9A4B4B,transparent);}
+
+/* card sweep gets inset ends so it reads as a drawn rule, not a bleed */
+.pr-card::before{left:24px;right:24px;height:2px;border-radius:0 0 2px 2px;}
+
+/* Deliberately STAY crisp — editorial furniture, not objects. Rounding any of
+   these destroys the soft/sharp contrast that makes the soft things read as
+   expensive: .pr-compare th/td cell edges, .pr-path-line, .pr-timeline::before,
+   the .pr-eyebrow rules, .pr-age-axis .ticks border-top, .pr-pledge-rule. */
+
+/* --- v3.5 Round and light the hero frame — the sharpest object on all three pages and the owner's literal complaint. `.p --- */
+.pr-hero-frame{
+  inset:clamp(14px,2vw,26px);
+  border:1px solid rgba(233,206,138,.28);
+  border-radius:var(--pr-r-xl);
+  box-shadow:inset 0 0 90px -30px rgba(0,0,0,.55), 0 0 40px -20px rgba(233,206,138,.30);
+}
+/* four corner brackets that follow the curve, not two that fight it.
+   Requires one empty <i> inside the frame div for the other two corners:
+   <div class="pr-hero-frame" aria-hidden="true"><i></i></div> */
+.pr-hero-frame::before,.pr-hero-frame::after,
+.pr-hero-frame > i::before,.pr-hero-frame > i::after{
+  content:"";position:absolute;width:44px;height:44px;
+  border:2px solid var(--pr-gold-bright);border-radius:var(--pr-r-xl);
+  filter:drop-shadow(0 0 12px rgba(233,206,138,.55));
+}
+.pr-hero-frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0;
+  border-top-right-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.pr-hero-frame::after{bottom:-1px;right:-1px;border-left:0;border-top:0;
+  border-bottom-left-radius:0;border-top-right-radius:0;border-top-left-radius:0;}
+.pr-hero-frame > i{position:absolute;inset:0;display:block;}
+.pr-hero-frame > i::before{top:-1px;right:-1px;border-left:0;border-bottom:0;
+  border-top-left-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.pr-hero-frame > i::after{bottom:-1px;left:-1px;border-right:0;border-top:0;
+  border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;}
+
+/* vignette + soft hand-off into the band below, replacing the hard cut */
+.pr-hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 30%, transparent 40%, rgba(12,7,2,.50) 100%),
+    linear-gradient(180deg,transparent 74%, rgba(242,231,213,.10) 94%, var(--pr-ground) 100%);
+}
+/* Cinzel counters mush at 4.6rem over a photo with only one soft halo —
+   add a tight contact shadow beneath the existing ambient one */
+.pr-hero-title{
+  letter-spacing:.005em;text-wrap:balance;
+  text-shadow:0 1px 2px rgba(0,0,0,.45), 0 2px 30px rgba(0,0,0,.42), 0 0 90px rgba(0,0,0,.32);
+}
+
+/* the Ken Burns currently runs `forwards` (prestige.css:210) and freezes dead
+   at scale(1.02) after 22s — a visitor scrolling back up finds a still image */
+.pr-hero-media img{animation:pr-kenburns 26s ease-in-out infinite alternate;}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-hero-media img{animation:none!important;transform:scale(1.02);}
+}
+
+/* --- v3.6 Light the royal band and close its edges. `.pr-section.is-royal` (prestige.css:249-256) is a single off-centre --- */
+.pr-section.is-royal{
+  position:relative;color:#f4ead4;overflow:hidden;isolation:isolate;
+  background:
+    radial-gradient(120% 92% at 50% -28%, rgba(233,206,138,.16), transparent 58%),
+    radial-gradient(70% 55% at 6% 104%, rgba(124,31,46,.12), transparent 62%),
+    linear-gradient(168deg,#3E2C1C 0%, #2A1C10 46%, #1B1107 100%);
+  box-shadow:inset 0 -1px 0 rgba(198,161,91,.26), inset 0 60px 90px -80px rgba(0,0,0,.9);
+}
+/* texture retreats to a whisper */
+.pr-section.is-royal::before{
+  opacity:.24;background-size:34px 34px;
+  background-image:radial-gradient(circle at 1px 1px,rgba(233,206,138,.14) 1px,transparent 0);
+  mask-image:radial-gradient(120% 80% at 50% 0%, #000 20%, transparent 78%);
+}
+/* the top edge closes with a lit hairline instead of a raw colour cut.
+   is-royal has no ::after today, so this is free — and the light-band seam
+   rule in entry 1 already excludes .is-royal, so they never collide. */
+.pr-section.is-royal::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(233,206,138,.22) 14%,rgba(255,248,228,.70) 50%,rgba(233,206,138,.22) 86%,transparent);
+}
+.pr-section.is-royal .wrap{position:relative;z-index:2;}
+/* gold on dark is under-saturated at these values */
+.pr-section.is-royal .pr-eyebrow{color:#F0DCAE;}
+.pr-section.is-royal .pr-h2{text-shadow:0 2px 30px rgba(0,0,0,.35);}
+
+/* the four crest quadrants (about.html:106,111,116,121) carry an inline
+   style="background:rgba(255,255,255,.04);border-color:rgba(233,206,138,.24)"
+   which flattens .pr-card to a 4%-white wash, plus per-element colour styles.
+   Delete all of them and let these rules own the dark surface. */
+.pr-section.is-royal .pr-card{
+  background:linear-gradient(168deg,rgba(78,56,38,.60) 0%,rgba(45,31,19,.70) 55%,rgba(34,23,9,.78) 100%);
+  border-color:rgba(233,206,138,.22);
+  box-shadow:0 10px 24px -14px rgba(0,0,0,.55), var(--pr-bevel-dark);
+}
+.pr-section.is-royal .pr-card:hover{
+  box-shadow:0 26px 52px -24px rgba(0,0,0,.70), var(--pr-bevel-dark), var(--pr-glow);
+}
+.pr-section.is-royal .pr-card h3{color:#fff;}
+.pr-section.is-royal .pr-card p{color:rgba(244,234,212,.8);}
+
+/* --- v3.7 Make the stat band read as engraved plates rather than a dashboard, and let the gold focal points emit light. --- */
+.pr-stat{
+  background:linear-gradient(168deg,#FFFDF9 0%,#FAF3E7 58%,#F4EBDA 100%);
+  padding:clamp(30px,3.4vw,44px) clamp(16px,2vw,26px);
+  position:relative;transition:background .5s var(--pr-ease);
+}
+.pr-stat:hover{background:linear-gradient(168deg,#FFFFFF 0%,#FDF8EF 58%,#F8F1E2 100%);}
+/* a lit crown on each cell so the grid reads as separate struck plates */
+.pr-stat::before{
+  content:"";position:absolute;left:22%;right:22%;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(233,206,138,.75),transparent);
+}
+.pr-stat-n{
+  font-size:clamp(2.3rem,5.4vw,3.6rem);
+  font-variant-numeric:tabular-nums;  /* stops the counter jittering mid-count */
+  letter-spacing:.005em;
+  background:linear-gradient(168deg,#FFF3D2 0%,var(--pr-gold-bright) 32%,var(--pr-gold) 70%,#9A7638 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  /* box-shadow cannot reach background-clip text — drop-shadow follows the glyph */
+  filter:drop-shadow(0 2px 14px rgba(233,206,138,.34));
+}
+.pr-stat-l{
+  font-family:'Cinzel',serif;font-weight:600;font-size:.72rem;
+  letter-spacing:.17em;text-transform:uppercase;
+  color:var(--pr-coffee-2);margin-top:16px;
+}
+.pr-stat-s{font-size:.78rem;line-height:1.6;color:#8A7A60;margin-top:7px;max-width:24ch;margin-inline:auto;}
+
+.pr-section.is-royal .pr-stats{
+  background:rgba(198,161,91,.22);border-color:rgba(198,161,91,.26);
+  box-shadow:0 40px 80px -46px rgba(0,0,0,.72), var(--pr-bevel-dark);
+}
+.pr-section.is-royal .pr-stat{background:linear-gradient(168deg,rgba(70,50,32,.55),rgba(30,19,8,.72));}
+.pr-section.is-royal .pr-stat:hover{background:linear-gradient(168deg,rgba(90,66,42,.62),rgba(38,25,11,.75));}
+
+/* the gold focal points should emit light, not merely cast a tinted shadow */
+.pr-path-dot{
+  box-shadow:0 0 0 6px rgba(198,161,91,.12),
+             0 0 20px -2px rgba(233,206,138,.50),
+             inset 0 1px 0 rgba(255,247,225,.6);
+}
+.pr-tl-dot{box-shadow:0 0 0 5px var(--pr-ivory), 0 0 18px -6px rgba(233,206,138,.45);}
+.pr-section.is-royal .pr-tl-dot{box-shadow:0 0 0 5px #241708, 0 0 18px -6px rgba(233,206,138,.45);}
+.pr-bar-fill{box-shadow:0 -2px 22px -6px rgba(233,206,138,.45);}
+.pr-bar-fill::after{
+  content:"";position:absolute;inset-inline:0;top:0;height:38%;
+  border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,248,228,.5),transparent);
+}
+
+/* --- v3.8 Give `.pr-btn` the brand's voice and `.is-ink` a surface. `.pr-btn` (prestige.css:231) is Inter 600 at `.92rem --- */
+.pr-btn{
+  display:inline-flex;align-items:center;gap:.55em;
+  font-family:'Cinzel','Amiri',serif;font-weight:600;
+  font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:17px 34px;border-radius:var(--pr-r-pill);
+  text-decoration:none;position:relative;overflow:hidden;isolation:isolate;
+  transition:transform .35s var(--pr-ease),box-shadow .35s var(--pr-ease),
+             gap .35s var(--pr-ease),background .35s var(--pr-ease);
+}
+.pr-btn:hover{gap:.95em;}
+
+.pr-btn.is-gold{
+  background:linear-gradient(168deg,#E4C88A 0%,var(--pr-gold) 58%,#A9833F 100%);
+  color:#241809;
+  box-shadow:0 16px 30px -14px rgba(140,100,40,.62),
+             inset 0 1px 0 rgba(255,247,225,.62),
+             0 0 18px -6px rgba(233,206,138,.45);
+}
+/* a specular sweep across the face on hover — the 'polished' cue */
+.pr-btn.is-gold::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(105deg,transparent 34%,rgba(255,252,240,.55) 50%,transparent 66%);
+  transform:translateX(-120%);transition:transform .85s var(--pr-ease);
+}
+.pr-btn.is-gold:hover{
+  transform:translateY(-3px);
+  box-shadow:0 22px 40px -14px rgba(140,100,40,.70),
+             inset 0 1px 0 rgba(255,247,225,.80),
+             var(--pr-glow-strong);
+}
+.pr-btn.is-gold:hover::after{transform:translateX(120%);}
+
+.pr-btn.is-ghost{
+  border:1px solid rgba(233,206,138,.5);color:var(--pr-gold-bright);
+  background:rgba(233,206,138,.05);
+  box-shadow:inset 0 1px 0 rgba(255,247,225,.16);
+}
+.pr-btn.is-ghost:hover{
+  background:rgba(233,206,138,.14);border-color:var(--pr-gold-bright);
+  transform:translateY(-3px);box-shadow:var(--pr-glow),inset 0 1px 0 rgba(255,247,225,.28);
+}
+
+/* .is-ink gets an actual surface instead of floating on the band */
+.pr-btn.is-ink{
+  border:1px solid rgba(198,161,91,.34);color:var(--pr-coffee-2);
+  background:linear-gradient(168deg,#FFFDF9,var(--pr-milk) 52%,#F8F1E4);
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+}
+.pr-btn.is-ink:hover{
+  transform:translateY(-3px);border-color:rgba(198,161,91,.6);
+  background:#FFFDF9;box-shadow:var(--pr-shadow),inset 0 1px 0 #fff;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-btn,.pr-btn:hover{transform:none!important;gap:.55em!important;}
+  .pr-btn.is-gold::after{display:none;}
+}
+
+/* admission.html:55-58 — replace the stray brand buttons so one row speaks one
+   language. Destinations and labels unchanged:
+   <div class="pr-cta-row" style="justify-content:flex-start;margin-top:24px;">
+     <a href="/portal/register/" class="pr-btn is-gold">Register / Login <span class="a">-></span></a>
+     <a href="/portal/apply/" class="pr-btn is-ink">Start Admission Application</a>
+   </div> */
+
+/* --- v3.9 Extend the 3D to the surfaces that lack it, and fix a real performance defect in the tilt. `.pr-tiltwill-chan --- */
+/* will-change is a promise, not a hint — do not hold 12 layers open at rest */
+.pr-tilt{
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0);
+  transform-style:preserve-3d;
+  transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);
+}
+.pr-tilt.is-tilting{transition:transform .08s linear,box-shadow .5s var(--pr-ease);will-change:transform;}
+
+/* below 760px a 4deg rotation on a full-width card is noise, and the pointer
+   maths never fires anyway — do not pay for the stacking context */
+@media (max-width:760px){
+  .pr-tilt{transform:none!important;}
+  .pr-tilt::after{display:none;}
+}
+
+.pr-feature,.pr-founder-card,.pr-doc,.pr-chart-card,
+.institution-card,.flow-stage{position:relative;}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-tilt,.pr-tilt.is-tilting{transform:none!important;transition:none!important;will-change:auto!important;}
+  .pr-tilt::after{display:none;}
+}
+
+/* Markup — add class="pr-tilt" plus these exact data-tilt-max values, which
+   js/prestige.js:134 already reads. Angles fall as the box grows: a 250px tile
+   at 9deg is a toy, an 1100px chart card at 5deg is seasick.
+     .pr-feature        data-tilt-max="4"    academics.html:428,437,446
+     .pr-founder-card   data-tilt-max="3"    about.html:28
+     .pr-doc            data-tilt-max="6"    admission.html:114,115,116
+     .pr-chart-card     data-tilt-max="1.5"  academics.html:177
+     .institution-card  data-tilt-max="3.5"  academics.html:211,240,272,300,332
+     .flow-stage        data-tilt-max="5"    admission.html:39,41,43,45,47,49,51
+   Leave .pr-card at its default 5 — it is already correct. */
+
+/* --- v3.10 Repair the traveling light — it is currently INVISIBLE and running at twice the right speed. Real bug: `.pr-ct --- */
+/* 1. speed becomes a per-element token, and the default halves in pace */
+.pr-lightborder{--pr-orbit:14s;}
+.pr-lightborder::before{animation:pr-orbit var(--pr-orbit) linear infinite;animation-play-state:paused;}
+/* 2. the light only runs once revealed — no off-screen compositing, and the
+      first pass is seen rather than missed. `.pr-in` is already applied by the
+      existing IntersectionObserver, so this needs no JS change. */
+.pr-lightborder.pr-in::before{animation-play-state:running;}
+
+/* 3. THE BUG: the CTA clips its own bloom. It has no overflowing children and
+      backgrounds already clip to the radius, so the declaration buys nothing. */
+.pr-cta.pr-lightborder{overflow:visible;--pr-orbit:18s;}
+
+/* 4. a second, slower instance high on the page so the effect is actually seen.
+      The founder plaque is sticky and dark — ideal. Replaces its static
+      `.pr-glow` at about.html:28. */
+.pr-founder-card.pr-lightborder{--pr-orbit:13s;}
+
+/* 5. `.pr-lightborder > *{border-radius:inherit}` (line 96) blindly stamps a
+      30px radius on every direct child — harmless only because .pr-cta's
+      children have no background. Scope it to an explicit surface layer. */
+.pr-lightborder > .pr-surface{border-radius:inherit;}
+
+/* NOT on .pr-card, .pr-outcome or any repeated grid item. The rule is: at most
+   ONE travelling light per viewport height, never on a grid item. Six orbiting
+   rings side by side is a casino, not a school. */
+
+@media (prefers-reduced-motion:reduce){
+  .pr-lightborder::before,.pr-lightborder.pr-in::before{
+    animation:none!important;
+    background:linear-gradient(140deg,rgba(233,206,138,.9),rgba(198,161,91,.25));
+  }
+}
+
+/* --- v3.11 Fix the stagger that collapses, reserve space for the typewriter, and let the drawn lines draw. `.pr-stagger.p --- */
+/* stagger that scales past 8 — replace lines 60-67 wholesale */
+.pr-stagger.pr-in > *{transition-delay:calc(var(--i,0) * .07s);}
+/* nth-child ladder to 12 remains the no-JS path */
+.pr-stagger.pr-in > *:nth-child(1){--i:0}   .pr-stagger.pr-in > *:nth-child(2){--i:1}
+.pr-stagger.pr-in > *:nth-child(3){--i:2}   .pr-stagger.pr-in > *:nth-child(4){--i:3}
+.pr-stagger.pr-in > *:nth-child(5){--i:4}   .pr-stagger.pr-in > *:nth-child(6){--i:5}
+.pr-stagger.pr-in > *:nth-child(7){--i:6}   .pr-stagger.pr-in > *:nth-child(8){--i:7}
+.pr-stagger.pr-in > *:nth-child(9){--i:8}   .pr-stagger.pr-in > *:nth-child(10){--i:9}
+.pr-stagger.pr-in > *:nth-child(11){--i:10} .pr-stagger.pr-in > *:nth-child(12){--i:11}
+.pr-stagger.pr-in > *:nth-child(n+13){--i:12}
+
+/* typewriter must not reflow the page as it types */
+.pr-type{display:inline-block;min-height:1em;}
+.pr-pledge blockquote{min-height:calc(1.42em * 3);display:flex;align-items:center;justify-content:center;}
+@media (max-width:620px){.pr-pledge blockquote{min-height:calc(1.42em * 4);}}
+
+/* the timeline thread draws itself instead of appearing whole */
+.pr-timeline::before{transform:scaleY(0);transform-origin:top;
+  transition:transform 1.4s var(--pr-ease) .15s;}
+.pr-timeline.pr-in::before{transform:scaleY(1);}
+/* the pathway dashes draw left to right */
+.pr-path-line{transform:scaleX(0);transform-origin:left;
+  transition:transform 1.3s var(--pr-ease) .2s;}
+.pr-path.pr-in .pr-path-line{transform:scaleX(1);}
+/* the CTA arrives in three beats rather than one lump */
+.pr-cta h2,.pr-cta p,.pr-cta-row{
+  opacity:0;transform:translateY(14px);
+  transition:opacity .8s var(--pr-ease),transform .8s var(--pr-ease);
+}
+.pr-cta.pr-in h2{opacity:1;transform:none;transition-delay:.10s;}
+.pr-cta.pr-in p{opacity:1;transform:none;transition-delay:.22s;}
+.pr-cta.pr-in .pr-cta-row{opacity:1;transform:none;transition-delay:.34s;}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-timeline::before,.pr-path-line{transform:none!important;transition:none!important;}
+  .pr-cta h2,.pr-cta p,.pr-cta-row{opacity:1!important;transform:none!important;transition:none!important;}
+  .pr-pledge blockquote{min-height:0;display:block;}
+}
+
+/* js/prestige.js — inside fire(), before the existing animate* calls, so --i is
+   exact rather than capped:
+     if (el.classList.contains('pr-stagger')) {
+       Array.prototype.forEach.call(el.children, function (c, i) {
+         c.style.setProperty('--i', i);
+       });
+     }
+   And in typewriter(), reserve the box before emptying it — insert immediately
+   before `el.textContent = '';` at line 95:
+     var h = el.getBoundingClientRect().height;
+     if (h) el.style.minHeight = h + 'px'; */
+
+
+/* --- v3.12 The diamond light: gated, and paced to read as jewellery --- */
+/* The founder's plaque keeps the diamond treatment the owner asked for, but it
+   must not composite a masked conic gradient while off-screen, and at 5.6s it
+   read as a spinner. Slowed, and started only once the panel is in view. */
+.pr-diamond::before{animation-duration:12s;animation-play-state:paused;}
+.pr-diamond::after{animation-duration:7s;animation-play-state:paused;}
+.pr-diamond.pr-in::before,.pr-diamond.pr-in::after{animation-play-state:running;}
+@media (prefers-reduced-motion:reduce){
+  .pr-diamond.pr-in::before,.pr-diamond.pr-in::after{animation:none!important;}
 }
