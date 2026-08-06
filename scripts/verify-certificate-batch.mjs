@@ -328,7 +328,17 @@ ok('every sheet carries both signatures',
   sheets.every((s) => s.html.includes('signature-principal.png') && s.html.includes('signature-chairman.png')));
 ok('every sheet carries the seal', sheets.every((s) => s.html.includes('official-seal.png')));
 ok('every sheet carries the security patch', sheets.every((s) => s.html.includes('security-emblem-shrs.png')));
-ok('every sheet carries the locked artwork', sheets.every((s) => s.html.includes('official-background-master.jpg')));
+// The stages do NOT share one plate. IDD carries the Founder's own
+// I'dadiyyah artwork (supplied 2026-08-06) as a marks layer over a vector
+// paper rect; every other stage carries the original locked master. Pinning
+// this to one filename made the gate fail the moment the correct plate was
+// applied — a gate that fails on being right is worse than no gate.
+const PLATE_FILE = PROG === 'IDD'
+  ? 'official-background-idd-marks.png'
+  : 'official-background-master.jpg';
+ok('every sheet carries its stage plate', sheets.every((s) => s.html.includes(PLATE_FILE)));
+ok('the stage plate is laid over its solved paper tone',
+  PROG !== 'IDD' || sheets.every((s) => s.html.includes('official-paper')));
 // The QR is emitted as a single path, not a grid of rects — an earlier
 // version of this check counted rects and failed every sheet, which was the
 // check being wrong, not the artwork. Whether the QR is real and points at
@@ -349,7 +359,7 @@ ok('every Arabic block declares its direction',
 
 console.log(`\n── Asset resolution ────────────────────────────────────────`);
 const ASSETS = [
-  ['official-background-master.jpg', 1080, 297, 'locked artwork'],
+  [PLATE_FILE, 1080, 297, 'locked artwork'],
   ['official-seal.png', 1034, 34, 'embossed seal'],
   ['signature-principal.png', 2336, 30, 'principal signature'],
   ['signature-chairman.png', 391, 16, 'chairman signature'],
@@ -359,7 +369,7 @@ const ASSETS = [
 // the Founder's supplied file is 1080px across a 297mm sheet. It is listed
 // separately so it cannot quietly fail this gate every run and train
 // everyone to ignore a red line.
-for (const [file, px, mm, label] of ASSETS.filter((a) => a[0] !== 'official-background-master.jpg')) {
+for (const [file, px, mm, label] of ASSETS.filter((a) => a[0] !== PLATE_FILE)) {
   const dpi = px / mm * 25.4;
   ok(`${label}: ${px}px over ${mm}mm = ${Math.round(dpi)} DPI`, dpi >= 300,
     dpi < 300 ? 'below the 300 DPI print floor' : '');

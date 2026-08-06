@@ -367,6 +367,29 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
 // if a press-resolution original ever replaces the source.
 const OFFICIAL_BACKGROUND = '/assets/images/certificates/official-background-master.jpg';
 
+// ── PER-STAGE PLATES ────────────────────────────────────────────────
+// The stages do NOT share one background. The Founder supplied a distinct
+// I'dadiyyah plate on 2026-08-06 — a different composition entirely, with
+// corner ribbon swags, vertical holographic strips, a central mandala
+// watermark, a gold wax seal at the foot and a baked QR block. Rendering it
+// under the Ibtida'iyyah layout, or the reverse, prints the wrong document.
+//
+// The I'dadiyyah entry is the marks layer, not a flat JPEG: the paper beneath
+// it is the vector PAPER colour below, so the sheet's largest area carries no
+// resolution at all. The two compose to the supplied artwork within 0.05 of
+// 255 — see functions/_lib/certificate-plate.js and
+// docs/certificate-ground-vector.md §0.
+const STAGE_PLATE = {
+  IDD: {
+    src: '/assets/images/certificates/official-background-idd-marks.png',
+    paper: '#F4ECDF',
+  },
+};
+
+function plateFor(progCode) {
+  return STAGE_PLATE[String(progCode || '').toUpperCase()] || null;
+}
+
 // Measured geometry of the official paper (1080×708 source, fractions
 // of the sheet) — the artwork's own designated functional zones:
 //   logo lockup      x 0.40–0.60, y 0.00–0.23  (keep clear)
@@ -1121,7 +1144,16 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   const titleFrame = titleFrameSvg(202, 13.8);
 
   return `<div class="sheet sheet--official">
-  <img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />
+  ${(() => {
+    const plate = plateFor(progCode);
+    // The stage plate is a marks layer with a transparent ground, so the paper
+    // it was solved against has to be laid under it — without that rect the
+    // sheet prints on white and every mark sits at the wrong density.
+    return plate
+      ? `<div class="official-paper" style="background:${plate.paper}"></div>
+  <img class="official-bg" src="${plate.src}" alt="" />`
+      : `<img class="official-bg" src="${OFFICIAL_BACKGROUND}" alt="" />`;
+  })()}
 
   <div class="o5-basmala">&#xFDFD;</div>
 
@@ -1444,6 +1476,10 @@ function docShell(title, sheetsHtml) {
 
   .frame{position:absolute;inset:0;width:100%;height:100%;}
   .official-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;}
+  /* Vector paper under a stage plate's marks layer. Flat colour, so it has no
+     resolution — the sheet's largest area is the one thing about the supplied
+     92 DPI artwork that CAN be made resolution-free. */
+  .official-paper{position:absolute;inset:0;}
 
   /* ═══ OFFICIAL-PAPER EDITORIAL COMPOSITION v3 ═══
      The locked artwork carries the identity; this layer is EDITORIAL
