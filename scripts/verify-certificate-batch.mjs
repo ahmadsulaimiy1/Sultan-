@@ -15,18 +15,63 @@ import { parseStageCertificateSerial, displayStageCertificateNo } from '../funct
 
 const DIR = process.argv[2] || 'dist/certificates/2026-08-08-IBT-000035';
 
-// Transcribed independently from the Founder's FINAL NAME ACCURACY
-// DIRECTIVE. Not imported from the issuer — importing it would mean the
-// issuer verifies itself, which proves nothing.
+// Transcribed independently from the Founder's FINAL CORRECTION NOTICE of
+// 2026-08-06 — the third and authoritative roll, superseding both the
+// original seven and the interim six. Not imported from the issuer;
+// importing it would mean the issuer verifies itself, which proves nothing.
+//
+// The English is the Founder's and is authoritative, "Ashrof" included.
+// The Arabic is mostly carried across from spellings the Founder approved on
+// the original register (نعيمة، إسماعيل، أوجومي، عائشة، عمران، أدغكي، أشرف،
+// كوردي) plus the school's own حنفي; only أدبيمبي and أددوكن are new. It is
+// reproduced here so the two files can be checked against each other code
+// point by code point — a check that catches a typo, not an unconfirmed
+// spelling.
 const DIRECTIVE = [
-  ['000035', 'Naheemah Ismail Seriki', 'نعيمة إسماعيل سركي'],
-  ['000036', 'Ashraf Korede Ojewumi', 'أشرف كوردي أوجومي'],
-  ['000037', 'Al-Ameen Okoh', 'الأمين أكو'],
-  ['000038', 'Al-Ameen Abidemi Jokomba', 'الأمين أبديمي جوكمبا'],
-  ['000039', 'Aisha Lawal', 'عائشة لوال'],
-  ['000040', 'Imran Iremide Adegoke', 'عمران إريمدي أدغكي'],
-  ['000041', 'Daud Aliu', 'داود علي'],
+  ['000035', 'Hameedah Adebimpe Ojewumi', 'حميدة أدبيمبي أوجومي'],
+  ['000036', 'Aisha Anofi', 'عائشة حنفي'],
+  ['000037', 'Abdulbasit Adedokun', 'عبد الباسط أددوكن'],
+  ['000038', 'Naheemah Ismail', 'نعيمة إسماعيل'],
+  ['000039', 'Ashrof Akorede', 'أشرف أكوردي'],
+  ['000040', 'Imran Adegoke', 'عمران أدغكي'],
+  ['000041', 'Abdulateef Adedokun', 'عبد اللطيف أددوكن'],
 ];
+
+// Both withdrawn rolls. Present ONLY so this file can prove they are gone.
+// These are fragments unique to the withdrawn rolls: this roll shares
+// Naheemah, Ismail, Ojewumi, Aisha, Imran, Adegoke, Ashraf/Ashrof and Anofi
+// with rolls that were withdrawn, so those may not be guarded on. The
+// assertion below refuses to run if any guard matches a current name — a
+// guard that matches is a gate that can never pass.
+const WITHDRAWN = [
+  // Full names of both withdrawn rolls — always safe to guard on.
+  'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+  'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+  'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
+  'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
+  'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
+  'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
+  'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
+  'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
+  // Fragments, to catch a withdrawn name partially edited rather than removed.
+  // "Korede"/"Okoh"/كوردي/أكو are deliberately ABSENT: أكوردي (Akorede) is a
+  // current student and contains both, so guarding on them would fail every
+  // valid batch. The assertion below is what proves the rest are safe.
+  'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
+  'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
+  'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
+  'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
+  'أولاديميجي', 'عبد الله',
+];
+const guardFaults = WITHDRAWN.flatMap((g) => DIRECTIVE.flatMap(([seq, en, ar]) =>
+  (en.toLowerCase().includes(g.toLowerCase())
+    || ar.normalize('NFC').includes(g.normalize('NFC')))
+    ? [`guard "${g}" matches current student ${seq} ${en}`] : []));
+if (guardFaults.length) {
+  console.error('VERIFIER REJECTED — withdrawn-roll guard collides with the current roll:\n  '
+    + guardFaults.join('\n  '));
+  process.exit(1);
+}
 
 let fails = 0, checks = 0;
 const ok = (name, pass, detail = '') => {
@@ -44,7 +89,8 @@ const text = (html, cls) => {
 
 console.log(`\nSHRS certificate batch verification — ${DIR}\n`);
 console.log(`── Batch integrity ─────────────────────────────────────────`);
-ok(`seven sheets present`, sheets.length === 7, `found ${sheets.length}`);
+ok(`${DIRECTIVE.length} sheets present — one per student on the corrected roll`,
+  sheets.length === DIRECTIVE.length, `found ${sheets.length}`);
 ok('combined print file present', existsSync(join(DIR, 'batch-print.html')));
 for (const f of ['graduation-register.json', 'graduation-register.md', 'graduation-register.sql']) {
   ok(`${f} present`, existsSync(join(DIR, f)));
@@ -121,8 +167,29 @@ for (const [seq, en, ar] of DIRECTIVE) {
   const e = reg.entries.find((x) => String(x.certId).padStart(6, '0') === seq);
   if (e && e.studentAr.normalize('NFC') !== ar.normalize('NFC')) nameFaults.push(`${seq}: register Arabic differs from directive`);
 }
-ok('all 7 English and 7 Arabic names match the directive code point for code point',
+ok(`all ${DIRECTIVE.length} English and ${DIRECTIVE.length} Arabic names match the directive code point for code point`,
   nameFaults.length === 0, nameFaults.join('\n          '));
+
+console.log(`\n── The withdrawn roll ──────────────────────────────────────`);
+// "No information from the earlier list should remain in the final
+// production files." Regenerating into a directory does not delete what it
+// no longer produces: the withdrawn roll had SEVEN students to this one's
+// six, so sheet 000041 survives on disk from the previous run unless
+// something removes it — and a surviving sheet still prints, still scans
+// and still resolves, to a student who is not on the roll.
+// Every file in the directory is read, not just the sheets.
+const residue = [];
+for (const f of readdirSync(DIR)) {
+  const body = readFileSync(join(DIR, f), 'utf8');
+  for (const w of WITHDRAWN) {
+    if (body.includes(w)) residue.push(`${f}: "${w}"`);
+  }
+}
+ok('no withdrawn name, Arabic fragment or certificate number survives anywhere in the batch',
+  residue.length === 0, residue.slice(0, 12).join('\n          '));
+ok('no sheet is numbered past the end of the corrected roll',
+  !files.some((f) => +f.slice(0, 6) > 35 + DIRECTIVE.length - 1),
+  files.filter((f) => +f.slice(0, 6) > 35 + DIRECTIVE.length - 1).join(', '));
 
 console.log(`\n── The engraved certificate number ─────────────────────────`);
 // The number PRINTED on the face is the short, timeless form. These checks

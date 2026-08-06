@@ -17,7 +17,7 @@
  *                                       JSON and Markdown, and the SQL to
  *                                       seed the Registrar's tables.
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
@@ -54,40 +54,133 @@ const FIRST_CERTIFICATE_SEQ = 35;
 // they are never regenerated.
 const FIRST_IDENTITY_SEQ = 35;
 
-// ── The approved graduation register ────────────────────────────────────
-// These Arabic spellings are the institution's own, supplied by the
-// Founder, and they are NOT transliterations to be improved. An earlier
-// pass here set "reinterpreted" forms — عليو for علي, أوكوه for أكو,
-// أديغوكي for أدغكي and four more — on the reasoning that they represented
-// the English pronunciation more fully. That reasoning does not apply: a
-// student's name is whatever their institution records, not whatever a
-// transliteration scheme would suggest. The approved list is authoritative.
+// ── The graduation register ─────────────────────────────────────────────
+// FINAL CORRECTION (Founder, 2026-08-06): this is the third and
+// authoritative Ibtida'iyyah roll. It supersedes every previous version —
+// both the original roll of seven and the interim roll of six. Nothing from
+// either survives in the production files; the residue gates below and in
+// scripts/verify-certificate-batch.mjs fail the batch if anything does.
 //
-// APPROVED_AR below is a second, independent copy of the same strings, and
-// the script refuses to run if the two disagree by so much as one code
-// point. It exists precisely because the failure mode here is silent and
-// well-intentioned — someone, including a future me, "fixing" a name.
+// THE ENGLISH NAMES ARE THE FOUNDER'S AND ARE AUTHORITATIVE, including
+// "Ashrof" — the Founder's earlier roll spelled the same given name
+// "Ashraf", and the current spelling is the one that prints.
+//
+// THE ARABIC NAMES ARE NOT SUPPLIED. The notice gives English only, so the
+// Arabic below is this pipeline's rendering. Most of it is not a guess:
+// this roll re-uses names the Founder HAS already approved in Arabic on the
+// original register, so those strings are carried across verbatim rather
+// than re-derived. That matters, because the last time this file derived
+// Arabic it "improved" seven approved spellings — عليو for علي, أوكوه for
+// أكو, أديغوكي for أدغكي — on the reasoning that they represented the
+// English pronunciation more fully. A student's name is whatever their
+// institution records, not what a transliteration scheme suggests.
+//
+//   APPROVED BY THE FOUNDER, carried across unchanged:
+//     Naheemah → نعيمة      Ismail  → إسماعيل    Ojewumi → أوجومي
+//     Aisha    → عائشة      Imran   → عمران      Adegoke → أدغكي
+//     Ashraf   → أشرف       Korede  → كوردي  (giving Akorede → أكوردي)
+//   THE INSTITUTION'S OWN, from the school name مدارس السلطان حنفي الملكية
+//   and the Chairman's signature block د. زكريا أولانريوجو حنفي:
+//     Anofi    → حنفي
+//   STANDARD ARABIC, no transliteration choice to make:
+//     Hameedah → حميدة   Abdulbasit → عبد الباسط   Abdulateef → عبد اللطيف
+//
+// That leaves exactly TWO strings with no institutional precedent, both
+// Yoruba, both rendered on the pattern of the approved أدغكي (Adegoke) and
+// أبديمي (Abidemi):
+//     Adebimpe → أدبيمبي        Adedokun → أددوكن
+// Those two are what the Founder needs to confirm or correct. The register
+// JSON and Markdown say so in their own arabicNames block, so a registrar
+// reading the register — not this file — learns it before printing.
+//
+// APPROVED_AR below is a second, independent transcription, and the script
+// refuses to run if the two disagree by so much as one code point. A visual
+// comparison is not enough: أ and ا, ي and ى, ة and ه are separate
+// characters that look near-identical at body size.
 const CLASS_ROLL = [
-  { en: 'Naheemah Ismail Seriki',   ar: 'نعيمة إسماعيل سركي',    sex: 'female' },
-  { en: 'Ashraf Korede Ojewumi',    ar: 'أشرف كوردي أوجومي',     sex: 'male' },
-  { en: 'Al-Ameen Okoh',            ar: 'الأمين أكو',             sex: 'male' },
-  { en: 'Al-Ameen Abidemi Jokomba', ar: 'الأمين أبديمي جوكمبا',  sex: 'male' },
-  { en: 'Aisha Lawal',              ar: 'عائشة لوال',             sex: 'female' },
-  { en: 'Imran Iremide Adegoke',    ar: 'عمران إريمدي أدغكي',    sex: 'male' },
-  { en: 'Daud Aliu',                ar: 'داود علي',               sex: 'male' },
+  { en: 'Hameedah Adebimpe Ojewumi', ar: 'حميدة أدبيمبي أوجومي',  sex: 'female' },
+  { en: 'Aisha Anofi',               ar: 'عائشة حنفي',            sex: 'female' },
+  { en: 'Abdulbasit Adedokun',       ar: 'عبد الباسط أددوكن',     sex: 'male' },
+  { en: 'Naheemah Ismail',           ar: 'نعيمة إسماعيل',         sex: 'female' },
+  { en: 'Ashrof Akorede',            ar: 'أشرف أكوردي',           sex: 'male' },
+  { en: 'Imran Adegoke',             ar: 'عمران أدغكي',           sex: 'male' },
+  { en: 'Abdulateef Adedokun',       ar: 'عبد اللطيف أددوكن',     sex: 'male' },
 ];
 
-// Transcribed separately from the Founder's directive. Do not derive one
-// from the other — the whole point is that they are two independent copies.
+// Transcribed separately. Do not derive one from the other — the whole
+// point is that they are two independent copies.
 const APPROVED_AR = {
-  'Naheemah Ismail Seriki':   'نعيمة إسماعيل سركي',
-  'Ashraf Korede Ojewumi':    'أشرف كوردي أوجومي',
-  'Al-Ameen Okoh':            'الأمين أكو',
-  'Al-Ameen Abidemi Jokomba': 'الأمين أبديمي جوكمبا',
-  'Aisha Lawal':              'عائشة لوال',
-  'Imran Iremide Adegoke':    'عمران إريمدي أدغكي',
-  'Daud Aliu':                'داود علي',
+  'Hameedah Adebimpe Ojewumi': 'حميدة أدبيمبي أوجومي',
+  'Aisha Anofi':               'عائشة حنفي',
+  'Abdulbasit Adedokun':       'عبد الباسط أددوكن',
+  'Naheemah Ismail':           'نعيمة إسماعيل',
+  'Ashrof Akorede':            'أشرف أكوردي',
+  'Imran Adegoke':             'عمران أدغكي',
+  'Abdulateef Adedokun':       'عبد اللطيف أددوكن',
 };
+
+// Both withdrawn rolls, kept ONLY so the gates can prove they are gone.
+// Never read for issuance.
+//
+// These are name FRAGMENTS unique to the withdrawn rolls, not whole names.
+// Getting that wrong in either direction is easy and silent: this roll
+// shares Naheemah, Ismail, Ojewumi, Aisha, Imran, Adegoke, Ashraf/Ashrof
+// and Anofi with rolls that were withdrawn, so guarding on those would fail
+// every valid batch — while guarding on too little lets a withdrawn student
+// through. The assertion below is what makes the list trustworthy: it
+// refuses to run if any guard string appears in a CURRENT name.
+// Every withdrawn name IN FULL, both scripts — full names are always safe to
+// guard on, because no current student is a withdrawn student.
+const WITHDRAWN_ROLL = [
+  // original roll of seven
+  'Naheemah Ismail Seriki', 'Ashraf Korede Ojewumi', 'Al-Ameen Okoh',
+  'Al-Ameen Abidemi Jokomba', 'Aisha Lawal', 'Imran Iremide Adegoke', 'Daud Aliu',
+  // interim roll of six
+  'Muhammad Ismail Seriki', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
+  'Thoirah Makinde', 'Abdulbasit Amobi Jabarr', 'Abdullah Oladimeji Anofi',
+  // Fragments, which catch a withdrawn name that has been partially edited
+  // rather than removed. Only fragments the assertion below proves cannot
+  // occur in a current name: NOT "Korede" or "Okoh", because "Akorede"
+  // contains the first and case-folding makes the second unsafe to reason
+  // about by eye.
+  'Seriki', 'Jokomba', 'Lawal', 'Iremide', 'Aliu', 'Abidemi',
+  'Olamiposi', 'Ayomide', 'Oladimeji', 'Amobi', 'Jabarr', 'Makinde',
+];
+const WITHDRAWN_AR = [
+  'نعيمة إسماعيل سركي', 'أشرف كوردي أوجومي', 'الأمين أكو',
+  'الأمين أبديمي جوكمبا', 'عائشة لوال', 'عمران إريمدي أدغكي', 'داود علي',
+  'محمد إسماعيل سركي', 'باقي أولاميبوسي حنفي', 'فريدة أيومدي علي',
+  'طاهرة مكيندي', 'عبد الباسط أموبي جبار', 'عبد الله أولاديميجي حنفي',
+  // Fragments proven non-colliding by the assertion below. أكو and كوردي are
+  // deliberately ABSENT: both are substrings of أكوردي (Akorede), a current
+  // student, so guarding on them would fail every valid batch. The full
+  // names above cover those two withdrawn students.
+  'سركي', 'جوكمبا', 'لوال', 'إريمدي', 'داود', 'الأمين', 'محمد', 'باقي',
+  'أولاميبوسي', 'فريدة', 'أيومدي', 'طاهرة', 'مكيندي', 'أموبي', 'جبار',
+  'أولاديميجي', 'عبد الله',
+];
+
+// A guard that matches a CURRENT student is a gate that can never pass; a
+// missing guard is a gate that can never fail. This assertion is not
+// ceremony — it caught أكو and كوردي inside أكوردي on the first run of this
+// roll, which would have rejected every correct batch. English is compared
+// case-insensitively, because "Akorede" contains "korede".
+const guardFaults = [];
+for (const g of [...WITHDRAWN_ROLL, ...WITHDRAWN_AR]) {
+  for (const s of CLASS_ROLL) {
+    if (s.en.toLowerCase().includes(g.toLowerCase())) {
+      guardFaults.push(`guard "${g}" matches current student ${s.en}`);
+    }
+    if (s.ar.normalize('NFC').includes(g.normalize('NFC'))) {
+      guardFaults.push(`guard "${g}" matches current Arabic name ${s.ar} (${s.en})`);
+    }
+  }
+}
+if (guardFaults.length) {
+  console.error('BATCH REJECTED — withdrawn-roll guard collides with the current roll:\n  '
+    + guardFaults.join('\n  '));
+  process.exit(1);
+}
 
 // Code point by code point, before anything is generated or written. A
 // visual comparison is not enough: أ and ا, ي and ى, ة and ه are separate
@@ -242,6 +335,30 @@ writeFileSync(join(dir, 'graduation-register.json'), JSON.stringify({
   place: PLACE_EN,
   firstCertificateSeq: FIRST_CERTIFICATE_SEQ,
   count: issued.length,
+  // Carried in the register rather than left as a code comment, because
+  // this is the one fact a registrar must know before the batch is printed.
+  arabicNames: {
+    status: 'MOSTLY APPROVED — TWO STRINGS AWAIT FOUNDER CONFIRMATION',
+    reason: 'The final correction notice of 2026-08-06 supplied English names '
+      + 'only. English is authoritative. Most of the Arabic is not a new '
+      + 'rendering: these names were already approved in Arabic by the Founder '
+      + 'on an earlier register and are carried across unchanged.',
+    approvedAndCarriedAcross: {
+      Naheemah: 'نعيمة', Ismail: 'إسماعيل', Ojewumi: 'أوجومي', Aisha: 'عائشة',
+      Imran: 'عمران', Adegoke: 'أدغكي', Ashrof: 'أشرف',
+      Akorede: 'أكوردي — on the approved كوردي (Korede)',
+      Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
+    },
+    standardArabicNoChoiceToMake: {
+      Hameedah: 'حميدة', Abdulbasit: 'عبد الباسط', Abdulateef: 'عبد اللطيف',
+    },
+    awaitingConfirmation: {
+      Adebimpe: 'أدبيمبي — Yoruba, no institutional precedent; rendered on the '
+        + 'pattern of the approved أدغكي',
+      Adedokun: 'أددوكن — Yoruba, no institutional precedent; rendered on the '
+        + 'same pattern. Borne by two students, so a correction applies to both.',
+    },
+  },
   entries: issued,
 }, null, 2) + '\n');
 
@@ -253,6 +370,19 @@ const md = [
   `${issued.length} certificates, numbered from ${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}.`,
   'Grades are recorded in the student record and bound into the content hash;',
   'they appear neither on the certificate nor on public verification.',
+  '',
+  '> **Arabic names: two strings await the Founder\'s confirmation.**',
+  '> The final correction notice supplied English names only, and the English is',
+  '> authoritative. Most of the Arabic is not a new rendering: نعيمة (Naheemah),',
+  '> إسماعيل (Ismail), أوجومي (Ojewumi), عائشة (Aisha), عمران (Imran), أدغكي',
+  '> (Adegoke), أشرف (Ashrof) and أكوردي (on the approved كوردي) were all approved',
+  '> by the Founder on an earlier register and are carried across unchanged, and',
+  '> حنفي (Anofi) is the school\'s own name. حميدة, عبد الباسط and عبد اللطيف are',
+  '> standard Arabic with no transliteration choice to make.',
+  '>',
+  '> Two Yoruba strings have no institutional precedent and need confirming',
+  '> before print: **أدبيمبي** (Adebimpe) and **أددوكن** (Adedokun — borne by two',
+  '> students, so a correction applies to both).',
   '',
   '| # | Student | الاسم | Student ID | Certificate Number | Document ID | Archive |',
   '|---|---------|-------|------------|--------------------|-------------|---------|',
@@ -308,3 +438,38 @@ for (const r of issued) {
   console.log(`  ${String(r.certId).padStart(6, '0')}  ${r.identityNo}  ${r.serialNo}  ${r.studentEn}`);
 }
 console.log('uniqueness: all', UNIQUE_FIELDS.length, 'identifier fields distinct across the batch');
+
+// ── Residue gate ────────────────────────────────────────────────────────
+// "No information from the earlier list should remain in the final
+// production files." A stale sheet left in the output directory from the
+// withdrawn roll would still print, still scan and still resolve, and the
+// old roll had SEVEN students to this one's six — so certificate 000041
+// exists on disk from the previous run and belongs to nobody now. Reading
+// every file that was just written is the only way to know it is gone;
+// regenerating on top of a directory does not delete what it no longer
+// produces.
+const residue = [];
+for (const f of readdirSync(dir)) {
+  const body = readFileSync(join(dir, f), 'utf8');
+  for (const name of WITHDRAWN_ROLL) {
+    if (body.includes(name)) residue.push(`${f}: withdrawn student "${name}"`);
+  }
+  for (const frag of WITHDRAWN_AR) {
+    if (body.includes(frag)) residue.push(`${f}: withdrawn Arabic name fragment "${frag}"`);
+  }
+}
+// Anything numbered beyond this batch is a leftover sheet, by definition.
+for (const f of readdirSync(dir)) {
+  const m = f.match(/^(\d{6})-\d{15}\.html$/);
+  if (m && +m[1] > FIRST_CERTIFICATE_SEQ + issued.length - 1) {
+    residue.push(`${f}: sheet numbered past the end of this batch`);
+  }
+}
+if (residue.length) {
+  console.error('BATCH REJECTED — withdrawn roll still present in the output:\n  '
+    + residue.join('\n  ')
+    + `\n\nDelete dist/certificates/${stamp} and re-run. Regenerating over a stale`
+    + '\ndirectory leaves sheets that still print, still scan and belong to nobody.');
+  process.exit(1);
+}
+console.log(`residue: no trace of the withdrawn roll in any of the ${readdirSync(dir).length} output files`);

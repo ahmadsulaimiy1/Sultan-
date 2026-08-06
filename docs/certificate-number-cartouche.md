@@ -52,15 +52,15 @@ sheet — `scripts/verify-certificate-layout.mjs`, 7/7 clean.
 
 ## 2. The printed number
 
-    stored    SHRS-CERT-IBT-2026-000035-FB287
-    printed   SHRS-CERT-IBT-000035-FB287
+    stored    SHRS-CERT-IBT-2026-000035-368DC
+    printed   SHRS-CERT-IBT-000035-368DC
 
 **Exactly one segment is removed — the issue year.** Everything else the
 institutional numbering system carries is retained.
 
 ### Why the tail is never dropped
 
-`FB287` is the first five hex characters of this certificate's own
+`368DC` is the first five hex characters of this certificate's own
 HMAC-SHA256 over its canonical fields, keyed by `DOCUMENT_HASH_SECRET`. It is
 what makes the **printed** number self-authenticating:
 
@@ -118,13 +118,13 @@ letterpress rather than as flat type.
 ### A recorded reservation
 
 At x-height, the zeros in `000035` read as lower-case o's: the number resolves
-visually as **SHRS-CERT-IBT-oooo35-FB287**. This is the same finding already
+visually as **SHRS-CERT-IBT-oooo35-368DC**. This is the same finding already
 recorded against `.bg-v-id` in the template, where lining figures were chosen for
 identifiers for exactly this reason.
 
 Restoring the check tail sharpens the objection rather than softening it. The
 tail is not a label — it is a credential a verifier compares **character by
-character** against the plate's `FB28-7085-AE77`. In oldstyle, `FB287` sets an
+character** against the plate's `368D-CFC6-B85D`. In oldstyle, `368DC` sets an
 x-height 2, an ascending 8 and a descending 7, so the one segment on the
 document that most needs to be unambiguous is the one the figure style unsettles
 most.

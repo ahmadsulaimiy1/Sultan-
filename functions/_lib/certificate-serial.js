@@ -86,8 +86,8 @@ export async function generateStageCertificateSerial(sql, env, { programmeCode, 
 // ── The PRINTED number vs the STORED serial ─────────────────────────────
 // Premium Certificate Number Security Panel directive (2026-08-06):
 //
-//     stored   SHRS-CERT-IBT-2026-000035-FB287
-//     printed  SHRS-CERT-IBT-000035-FB287
+//     stored   SHRS-CERT-IBT-2026-000035-368DC
+//     printed  SHRS-CERT-IBT-000035-368DC
 //
 // EXACTLY ONE segment is removed — the issue year — because the directive
 // asks the printed document to read as timeless. Everything else the

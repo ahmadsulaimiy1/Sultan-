@@ -2,6 +2,12 @@
 
 **Prepared for:** The Founder, Sultan Hanafi Royal Schools
 **Batch:** `2026-08-08-IBT-000035` · seven certificates · serials 000035–000041
+**Roll:** the Founder's FINAL CORRECTION NOTICE of 2026-08-06 — the third and
+authoritative roll, superseding both the original seven and the interim six.
+Every identifier below was regenerated; none is carried over. Most Arabic
+spellings are carried across from names the Founder already approved; only
+أدبيمبي (Adebimpe) and أددوكن (Adedokun) are new and await confirmation —
+see the register's `arabicNames` block.
 **Verified at commit:** see `git log` for the commit that carries this file
 **Standard applied:** evidence, not assurance. Every claim below names the check
 that produced it and the way that check can fail. Anything I could not verify is
@@ -35,13 +41,13 @@ environment, and §7.1 explains exactly why.
 
 | Serial | Certificate Number | Student ID | Student |
 |---|---|---|---|
-| 000035 | `SHRS-CERT-IBT-2026-000035-FB287` | `714743483445443` | Naheemah Ismail Seriki · نعيمة إسماعيل سركي |
-| 000036 | `SHRS-CERT-IBT-2026-000036-4EB48` | `717988020633236` | Ashraf Korede Ojewumi · أشرف كوردي أوجومي |
-| 000037 | `SHRS-CERT-IBT-2026-000037-4227E` | `711232557821021` | Al-Ameen Okoh · الأمين أكو |
-| 000038 | `SHRS-CERT-IBT-2026-000038-77E9D` | `714477095008816` | Al-Ameen Abidemi Jokomba · الأمين أبديمي جوكمبا |
-| 000039 | `SHRS-CERT-IBT-2026-000039-7EB07` | `717721632196601` | Aisha Lawal · عائشة لوال |
-| 000040 | `SHRS-CERT-IBT-2026-000040-D1432` | `710966169384396` | Imran Iremide Adegoke · عمران إريمدي أدغكي |
-| 000041 | `SHRS-CERT-IBT-2026-000041-74B86` | `714210706572189` | Daud Aliu · داود علي |
+| 000035 | `SHRS-CERT-IBT-2026-000035-368DC` | `714743483445443` | Hameedah Adebimpe Ojewumi · حميدة أدبيمبي أوجومي |
+| 000036 | `SHRS-CERT-IBT-2026-000036-B9E10` | `717988020633236` | Aisha Anofi · عائشة حنفي |
+| 000037 | `SHRS-CERT-IBT-2026-000037-22C49` | `711232557821021` | Abdulbasit Adedokun · عبد الباسط أددوكن |
+| 000038 | `SHRS-CERT-IBT-2026-000038-2944F` | `714477095008816` | Naheemah Ismail · نعيمة إسماعيل |
+| 000039 | `SHRS-CERT-IBT-2026-000039-518A8` | `717721632196601` | Ashrof Akorede · أشرف أكوردي |
+| 000040 | `SHRS-CERT-IBT-2026-000040-60DAF` | `710966169384396` | Imran Adegoke · عمران أدغكي |
+| 000041 | `SHRS-CERT-IBT-2026-000041-6F66F` | `714210706572189` | Abdulateef Adedokun · عبد اللطيف أددوكن |
 
 Numbering starts at exactly 000035 and runs to 000041 with no gaps — checked,
 not assumed, by asserting `seqs[0] === 35` and `seqs[i] === 35 + i`.
@@ -71,7 +77,7 @@ the PDF.
 You were right that the file you were looking at showed `داود عليو`. The cause
 was mine: I sent the corrected PDF under **the same filename** as the earlier
 one, so your reader almost certainly kept the first. The corrected file is
-delivered alongside this report as **`SHRS-IBT-000035-000041-rev-B.pdf`** — a
+delivered alongside this report as **`SHRS-IBT-000035-000041-FINAL.pdf`** — a
 distinct name, so there is nothing to collide with.
 
 Verified in the delivered PDF three ways:
@@ -108,7 +114,7 @@ deterministic from the enrolment sequence. Verified over 200,000 values:
 - **no year at any fixed position** — incidental year-like runs occur, as they do
   in any numeric identifier, and carry no information
 
-**Certificate Number** — `SHRS-CERT-IBT-2026-000035-FB287`. Structurally
+**Certificate Number** — `SHRS-CERT-IBT-2026-000035-368DC`. Structurally
 distinct from the Student ID (alphanumeric, hyphenated, prefixed). Every serial
 parses under the production grammar and embeds its own sequence.
 
@@ -145,7 +151,7 @@ with the `dir="ltr"` isolate the reader met 2026 first; without it, 2025. The
 isolate is removed. The gate now asserts no `dir="ltr"` survives inside the
 Arabic paragraph, so it cannot come back silently.
 
-**QR codes** — all seven decode with a real decoder (OpenCV) to their own
+**QR codes** — all seven decode with a real decoder (ZXing) to their own
 register entry's verification URL. Not "a QR is present" — decoded, and the
 payload compared to the register.
 
@@ -183,7 +189,7 @@ This would have shipped as certificates that look correct and do not work.
 
 **6.2 — Patterned Student IDs.** The first multiplier chosen produced numbers
 like `711111110220782` and `713456789134204` — 47% of the first hundred carried
-a visible digit run, including four of these seven students. Nothing was
+a visible digit run, including several of these seven students. Nothing was
 mathematically wrong, which is why no collision or check-digit test could see
 it; the multiplier simply sat near 5×10¹³/81, and 1/81 = 0.012345679…, so its
 small multiples inherited that expansion. Fixed with a different affine map, and
