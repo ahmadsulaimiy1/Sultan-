@@ -226,6 +226,49 @@
 .pr-feature p{font-size:.9rem;line-height:1.5;color:rgba(255,255,255,.85);margin:0 0 12px;}
 .pr-feature a{color:#fff;font-weight:600;font-size:.88rem;text-decoration:none;border-bottom:1px solid var(--pr-gold-bright);padding-bottom:2px;}
 
+/* ---------- Founder / message block ------------------------------ */
+.pr-founder{display:grid;grid-template-columns:minmax(240px,320px) 1fr;gap:36px;align-items:start;}
+@media (max-width:760px){.pr-founder{grid-template-columns:1fr;}}
+.pr-founder-card{background:linear-gradient(160deg,#3b2a1d,#241708);color:#f4ead4;border-radius:10px;
+  padding:32px 26px;text-align:center;box-shadow:var(--pr-shadow);position:sticky;top:90px;}
+.pr-founder-card .crest{width:96px;height:96px;object-fit:contain;margin:0 auto 14px;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.4));}
+.pr-founder-card .role{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pr-gold-bright);}
+.pr-founder-card h3{font-family:'Cinzel',serif;font-size:1.3rem;margin:8px 0 12px;color:#fff;}
+.pr-creds{font-size:.78rem;line-height:1.6;color:rgba(244,234,212,.72);border-top:1px solid rgba(233,206,138,.24);padding-top:12px;}
+.pr-founder-body p{color:#5a4a38;font-size:1.04rem;line-height:1.8;margin:0 0 16px;}
+.pr-founder-body p:first-child::first-letter{float:left;font-family:'Cinzel',serif;font-size:3.4rem;
+  line-height:.8;padding:6px 12px 0 0;color:var(--pr-gold-deep);}
+
+/* ---------- Pull quote ------------------------------------------- */
+.pr-quote{position:relative;background:var(--pr-milk);border:1px solid var(--pr-line);border-left:4px solid var(--pr-gold);
+  border-radius:6px;padding:32px 34px;box-shadow:var(--pr-shadow-soft);}
+.pr-quote .mk{font-family:'Cinzel',serif;font-size:3rem;line-height:0;color:var(--pr-gold);opacity:.5;}
+.pr-quote p{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,2.6vw,1.6rem);line-height:1.5;
+  color:var(--pr-coffee);margin:10px 0 14px;font-style:italic;}
+.pr-quote .who{font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;color:var(--pr-gold-deep);}
+
+/* ---------- Checklist -------------------------------------------- */
+.pr-checklist{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:12px;}
+.pr-checklist li{display:flex;gap:12px;align-items:flex-start;color:#4a3f30;font-size:1rem;line-height:1.55;}
+.pr-checklist li svg{flex-shrink:0;width:22px;height:22px;color:var(--pr-gold-deep);margin-top:1px;}
+
+/* ---------- Letter value cards ----------------------------------- */
+.pr-letter{font-family:'Cinzel',serif;font-weight:700;font-size:1.7rem;
+  background:linear-gradient(120deg,var(--pr-gold-deep),var(--pr-gold-bright));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ---------- Crest quadrants -------------------------------------- */
+.pr-crest-img{width:150px;height:150px;object-fit:contain;margin:0 auto 8px;display:block;
+  filter:drop-shadow(0 10px 26px rgba(0,0,0,.45));}
+
+/* ---------- Impact band ------------------------------------------ */
+.pr-impact{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:30px;}
+.pr-impact-item{padding:22px;border:1px solid var(--pr-line);border-radius:8px;background:var(--pr-milk);}
+.pr-impact-item .pr-ico{margin-bottom:12px;}
+.pr-impact-item h4{font-family:'Cinzel',serif;font-size:1rem;color:var(--pr-coffee);margin:0 0 6px;}
+.pr-impact-item p{font-size:.9rem;color:#6a5a45;line-height:1.55;margin:0;}
+
 /* ---------- Closing CTA band ------------------------------------- */
 .pr-cta{text-align:center;border-radius:10px;padding:clamp(40px,7vw,72px) 26px;position:relative;overflow:hidden;
   background:radial-gradient(900px 400px at 50% -30%,#4a3418,#2a1c10 70%);color:#f4ead4;box-shadow:var(--pr-shadow);}
