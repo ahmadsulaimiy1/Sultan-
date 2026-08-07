@@ -26,16 +26,16 @@
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
-<link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
+<link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
-<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
+<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
 <script>
 (function(){
   try{
     var raw = localStorage.getItem('shrsPersonalisation');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
-    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-theme', p.theme || 'light');
     html.setAttribute('data-pc-livery', p.livery || 'royal');
     html.setAttribute('data-pc-ornament', p.ornament || 'full');
     html.setAttribute('data-pc-corners', p.corners || 'soft');
@@ -82,9 +82,12 @@
 })();
 </script>
 <meta name="robots" content="noindex,follow" />
-<link rel="stylesheet" href="/css/i18n.css?v=ae36d1ac89">
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<link rel="stylesheet" href="/css/masthead.css?v=65fb7c3171">
+<link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/online-distance-learning/" />
@@ -144,12 +147,25 @@
 </div>
 
 <header class="nav">
+  <div class="mh-progress" aria-hidden="true"><span class="mh-progress-fill"></span></div>
   <div class="imperial-motion" aria-hidden="true"></div>
+  <div class="mh-dust" aria-hidden="true"></div>
   <nav class="wrap">
     <a href="/" class="brand">
       <span class="crest-shimmer-wrap"><img class="brand-mark" src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" /></span>
       <span class="brand-text"><span class="line1">SULTAN HANAFI</span><br/><span class="line2">Écoles Royales</span></span>
     </a>
+    <span class="mh-standing"><span class="mh-standing-t">Fondée en juillet 2016</span><span class="mh-standing-d">&middot;</span><span class="mh-standing-t">Ikorodu, État de Lagos</span></span>
+    <span class="rlx" data-clock hidden>
+      <button type="button" class="rlx-btn" data-clock-btn aria-expanded="false"
+        data-label-base="L’heure à Ikorodu" aria-label="L’heure à Ikorodu"></button>
+      <div class="rlx-pop" data-clock-pop hidden role="dialog" aria-label="L’heure à Ikorodu">
+        <p class="rlx-digits" data-clock-digits>&mdash;&mdash;:&mdash;&mdash;</p>
+        <p class="rlx-date" data-clock-date>&nbsp;</p>
+        <span class="rlx-zone">Ikorodu · Heure d’Afrique de l’Ouest</span>
+      </div>
+    </span>
+    <button class="listen-toggle" data-listen-toggle hidden aria-label="Écouter cette page" title="Écouter cette page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Rechercher sur le site" title="Recherche">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -498,6 +514,7 @@
         <a href="/admission/" class="nav-mark">Commencer l'admission</a>
       </div>
     </div>
+    <span class="mh-glint" aria-hidden="true"></span>
   </nav>
   <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
     <a href="/about/" class="mnr-item">
@@ -534,9 +551,9 @@
     </button>
   </div>
   <div class="mobile-quick-row">
-    <a href="/portal/select/" class="mqr-item mqr-cta">
+    <a href="/portal/select/" class="mqr-item mqr-cta"><span class="mqr-sheen" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Login to Portal
+      Accès au portail
     </a>
     <a href="/admission/" class="mqr-item">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -544,11 +561,11 @@
     </a>
     <a href="/adhkar/" class="mqr-item">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 3.5c-3.5 2.5-5 5.5-5 8.5a5 5 0 0010 0c0-1-.3-2-1-3 .1 1.3-.4 2-1 2.4.4-2-.5-4.5-3-7.9z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-      Adhkār Centre
+      Centre des adhkār
     </a>
     <button type="button" class="mqr-item" data-pc-trigger data-pc-open-tab="islamic">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Prayer Times
+      Heures de prière
     </button>
     <a href="/contact/" class="mqr-item">
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
@@ -620,6 +637,38 @@
       <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
     </div>
   </div>
+  <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="Ouverts" data-s-closed="Fermés"
+      data-s-closes="Ferment dans {t}" data-s-opens="Ouvrent dans {t}"
+      data-s-openson="Ouvrent {d} à {t}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">L’école, en ce moment</p>
+        <p class="now-place">Ikorodu, État de Lagos · Heure d’Afrique de l’Ouest</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">Heure locale</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">Les bureaux</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">Horaires du jour</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">Tous les horaires →</a></span>
+        </div>
+      </div>
+      <p class="now-foot">Calculé en direct depuis l’horloge de votre appareil, d’après les horaires que les bureaux tiennent réellement. Rien n’est téléchargé et rien n’est envoyé.</p>
+    </section>
+  </div>
+
   <div class="wrap">
     <p class="foot-dash-eyebrow">L'établissement en bref</p>
     <div class="foot-dashboard">
@@ -981,8 +1030,8 @@
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Theme</span></div>
           <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="Theme">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal</button>
-            <button type="button" data-value="light" role="radio">Clear</button>
+            <button type="button" data-value="royal" role="radio">Royal</button>
+            <button type="button" data-value="light" role="radio" aria-checked="true" class="is-active">Clear</button>
             <button type="button" data-value="dark" role="radio">Midnight</button>
           </div>
         </div>
@@ -1120,6 +1169,13 @@
           <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
             <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
             <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Read This Page Aloud</span><p class="pc-option-desc">Puts a listen control in the masthead. It reads the page's own headings and paragraphs using the voice already installed on your device — nothing is fetched and nothing is sent anywhere — and lights each passage as it is spoken.</p></div>
+          <div class="pc-segmented" data-pc-set="readAloud" role="radiogroup" aria-label="Read this page aloud">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
           </div>
         </div>
 
@@ -1444,10 +1500,10 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=e1bf725623" defer></script>
+<script src="/js/personalisation.js?v=1292aa3abe" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
-<script src="/js/regalia.js?v=e4113ff864" defer></script>
+<script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1464,9 +1520,14 @@
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
-<script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
+<script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=d736fc8544" defer></script>
+<script src="/js/listen.js?v=235af538fc" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/mega.js?v=23b6a172e2" defer></script>
+<script src="/js/edge.js?v=c41588b3a5" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 

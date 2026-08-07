@@ -268,7 +268,12 @@ header.nav::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height
   pointer-events:none;
   background:linear-gradient(90deg,transparent,rgba(var(--lv-gbs,233,206,138),.42) 22%,
              rgba(var(--lv-gbs,233,206,138),.42) 78%,transparent);}
-header.nav{position:relative;}
+/* Deliberately no position declaration. This rule once read
+   header.nav{position:relative;} — added to give the lit edge above a
+   containing block, without noticing the masthead was already
+   position:sticky, which is itself a containing block. It silently
+   overrode the sticky, and the navigation stopped following the reader
+   on every page of the site. */
 
 /* Display type at this size does not need to be spread to fill the
    frame; it needs to be set. Tighter tracking, a heavier optical

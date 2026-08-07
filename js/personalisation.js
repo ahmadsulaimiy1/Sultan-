@@ -4,7 +4,7 @@
 
   var DEFAULTS = {
     textSize: 'medium',
-    theme: 'royal',
+    theme: 'light',   // the Clear edition is the house default
     livery: 'royal',
     ornament: 'full',
     corners: 'soft',
@@ -35,6 +35,7 @@
     focusRing: 'standard',
     interfaceSound: 'on',
     spokenIntro: 'on',
+    readAloud: 'on',
     imagery: 'full',
     dateFormat: 'both',
     timeFormat: '24h',
@@ -135,6 +136,7 @@
     // than two that can disagree. js/motion.js listens for this event.
     html.setAttribute('data-pc-sound', prefs.interfaceSound);
     html.setAttribute('data-pc-intro', prefs.spokenIntro);
+    html.setAttribute('data-pc-read-aloud', prefs.readAloud);
     try {
       window.localStorage.setItem('shrsSound', prefs.interfaceSound === 'off' ? 'off' : 'on');
       window.dispatchEvent(new Event(prefs.interfaceSound === 'off' ? 'shrs:sound-off' : 'shrs:sound-on'));

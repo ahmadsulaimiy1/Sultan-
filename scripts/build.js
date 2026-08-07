@@ -445,6 +445,14 @@ function buildPage(page, manifest) {
   const prestigeHead = isPrestige
     ? '<link rel="stylesheet" href="/css/prestige.css">\n<link rel="stylesheet" href="/css/motion.css">\n'
     : '';
+  // The masthead and colophon layer is the last stylesheet on every
+  // page, deliberately. It restyles furniture that brand.css, elevate.css
+  // and prestige.css all have their own rules for at the same specificity,
+  // so the only thing that decides the winner is source order.
+  const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
+  const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n'
+    + '<link rel="stylesheet" href="/css/clock.css">\n';
+
   const prestigeScripts = isPrestige
     ? '<script src="/js/prestige.js" defer></script>\n<script src="/js/motion.js" defer></script>\n'
     : '';
@@ -490,7 +498,7 @@ function buildPage(page, manifest) {
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
 ${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
-${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag}${headScripts}</head>
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${listenHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
@@ -532,6 +540,11 @@ ${personalisation}
 <script src="/js/site-chrome.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
+<script src="/js/listen.js" defer></script>
+<script src="/js/footer-live.js" defer></script>
+<script src="/js/mega.js" defer></script>
+<script src="/js/edge.js" defer></script>
+<script src="/js/clock.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
 </body>
 </html>

@@ -61,6 +61,38 @@ const painted = await page.evaluate(() =>
 check(painted.length === 4 && painted.every((o) => o.painted),
   `all four options are actually painted on screen, not merely in the DOM (${painted.map((o) => o.label + (o.painted ? '' : ' NOT-PAINTED')).join(', ')})`);
 
+/* Contrast check.
+ *
+ * Also from a live defect: the Clear edition darkens every topbar link
+ * (html[data-pc-theme="light"] .topbar a) at a specificity that outranked the
+ * dropdown's own colour, so dark ink landed on the dark panel at 1.97:1 and
+ * the four languages read as smudges. Paint alone would not have caught it —
+ * the pixels were there, they just could not be read. */
+const contrast = await page.evaluate(() => {
+  const toRgb = (s) => (s.match(/[\d.]+/g) || ['0', '0', '0']).slice(0, 3).map(Number);
+  const lum = (c) => {
+    const [r, g, b] = c.map((v) => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const menu = document.querySelector('.lang-switch-menu');
+  const bg = toRgb(getComputedStyle(menu).backgroundColor);
+  return [...document.querySelectorAll('[data-locale-option]')].map((a) => {
+    const fg = toRgb(getComputedStyle(a).color);
+    const l1 = lum(fg);
+    const l2 = lum(bg);
+    return {
+      label: a.textContent.trim(),
+      ratio: +((Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)).toFixed(2),
+    };
+  });
+});
+const worst = Math.min(...contrast.map((c) => c.ratio));
+check(worst >= 4.5,
+  `every language reads at WCAG AA or better against the panel (worst ${worst}:1)`);
+
 await page.locator('[data-locale-option="yo"]').click();
 await page.waitForURL('**/yo/academics/', { timeout: 5000 }).catch(() => {});
 // waitForURL resolves as soon as the URL changes, which can be before the new

@@ -261,3 +261,45 @@ body.portal-body > .portal-topbar {
   position: relative;
   z-index: 60;
 }
+
+
+/* --- Switcher panel in the Clear (light) edition --------------------------
+ * The Clear edition darkens every topbar link for its pale bar:
+ *   html[data-pc-theme="light"] .topbar a { color: var(--pearl-ink-2) }
+ * at specificity (0,3,2), which outranks `.lang-switch-menu a` at (0,1,1).
+ * The dropdown inherited that dark ink while keeping its dark panel, giving
+ * 1.97:1 — well under the 4.5:1 WCAG AA needs for body text, and the reason
+ * the four languages read as barely-there smudges.
+ *
+ * Rather than fight the theme for a light-on-dark panel, the panel follows
+ * the theme: pale paper and dark ink in the Clear edition, matching the bar
+ * it hangs from. Selectors are pinned to (0,4,2) so they win outright rather
+ * than by load order, which a future stylesheet reshuffle could silently
+ * reverse. */
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu {
+  background: var(--pearl, #fbf7ef);
+  border-color: var(--line, rgba(198, 161, 91, 0.38));
+  box-shadow: 0 18px 44px rgba(51, 40, 28, 0.18);
+}
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a {
+  color: var(--pearl-ink, #33281c);
+}
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a:hover,
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a:focus-visible {
+  background: var(--pearl-2, #f4ede0);
+  color: var(--pearl-ink, #33281c);
+}
+/* The current language still reads as chosen, but in an ink dark enough to
+   pass on pale paper — the gold used on the dark panel would not. */
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a[aria-current="true"] {
+  color: var(--pearl-ink, #33281c);
+  font-weight: 700;
+}
+
+/* The dark editions keep the dark panel, but pin the ink with the same
+   specificity so no future theme rule can dim it the way the Clear edition
+   did. */
+html[data-pc-theme="royal"] .lang-switch[data-lang-switch] .lang-switch-menu a,
+html[data-pc-theme="dark"] .lang-switch[data-lang-switch] .lang-switch-menu a {
+  color: var(--ivory, #f7eedf);
+}

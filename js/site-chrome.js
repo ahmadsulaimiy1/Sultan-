@@ -20,6 +20,7 @@
     var header = document.querySelector('header.nav');
     var root = document.documentElement;
     var top = mountBackToTop();
+    var fill = document.querySelector('.mh-progress-fill');
     var ticking = false;
     var lastY = -1;
 
@@ -31,6 +32,15 @@
 
       if (header) header.classList.toggle('is-condensed', y > CONDENSE_AT);
       if (top) top.classList.toggle('is-shown', y > TOP_AT);
+
+      // The reading rule across the top of the masthead. Scaled rather
+      // than resized, so it runs on the compositor and never asks the
+      // page to lay itself out again in the middle of a scroll.
+      if (fill) {
+        var travel = (root.scrollHeight || 0) - window.innerHeight;
+        var read = travel > 40 ? Math.min(1, Math.max(0, y / travel)) : 0;
+        fill.style.setProperty('--mh-read', read.toFixed(4));
+      }
     }
 
     function onScroll() {
