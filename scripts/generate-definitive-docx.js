@@ -513,7 +513,7 @@ B.push(new Paragraph({ children: [img('leadership/imam-ahmad-sulaimiy.jpg', 100)
 rosterRow('Imam Ahmad Sulaimiy', "Principal (Mudeer), Sultan Hanafi Qur'an College", 'BSc Qur\'anic Sciences · BA Islamic and Arabic Studies').forEach(p => B.push(p));
 B.push(new Paragraph({ children: [img('leadership/shaykh-abubakr-solah.jpg', 100)] }));
 rosterRow('Shaykh Abubakr Solah', "Principal (Ra'ees), School of Islamic and Arabic Studies", 'BA Arabic Language · Diploma in Islamic Studies').forEach(p => B.push(p));
-rosterRow('Mrs. Kareemat Abdurazaq', 'Head Teacher, Basic School', 'BEd · NCE').forEach(p => B.push(p));
+rosterRow('Mrs. Mariam Tope AbdulKareem', 'Head Teacher, Basic School', 'BEd · NCE').forEach(p => B.push(p));
 rosterRow('Vacant', 'Head, Sultan Hanafi Online & Distance Learning School', 'Newly established 2026 — headship not yet appointed; no students or curriculum yet.').forEach(p => B.push(p));
 B.push(h2('Heads of Departments'));
 rosterRow('Mrs. Anofi-Badmus Fatimat Omolola', 'VP Administration, Royal College', 'HND Accounting · PGDE').forEach(p => B.push(p));
@@ -532,7 +532,7 @@ B.push(diagramRow(['Level C — Management Team (Executive Authority)\nHead of S
 B.push(caption('Held jointly with the Chairman of the Board of Governors — no executive authority exists outside these two offices.'));
 B.push(new Paragraph({ spacing: { before: 80, after: 80 } }));
 B.push(caption("Level C, continued — the five schools' Heads, each reporting to the Head of Schools/Administrator"));
-B.push(diagramRow(['Head Teacher, Basic School\nMrs. Kareemat Abdurazaq', 'Principal, Royal College\nAdegoke Musa Olatunji', "Principal (Ra'ees), School of Islamic and Arabic Studies\nShaykh Abubakr Solah", "Principal (Mudeer), Qur'an College\nImam Ahmad Sulaimiy", 'Head, Online & Distance Learning\nVacant (newly established)'], PARCHMENT, NAVY));
+B.push(diagramRow(['Head Teacher, Basic School\nMrs. Mariam Tope AbdulKareem', 'Principal, Royal College\nAdegoke Musa Olatunji', "Principal (Ra'ees), School of Islamic and Arabic Studies\nShaykh Abubakr Solah", "Principal (Mudeer), Qur'an College\nImam Ahmad Sulaimiy", 'Head, Online & Distance Learning\nVacant (newly established)'], PARCHMENT, NAVY));
 B.push(caption('The Management Team comprises the Head of Schools/Administrator and the five schools\' Heads. VP Administration (Royal College) and other departmental heads sit at Level E, Heads of Departments.'));
 B.push(caption("Founding Organisation: Sultan Zakariya Hanafi Foundation (Non-Profit) — Lagos State Ministry of Education Registered 2026"));
 B.push(supportRow([

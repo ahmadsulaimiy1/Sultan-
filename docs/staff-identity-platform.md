@@ -61,7 +61,7 @@ curl -X POST https://<your-domain>/api/portal/admin/staff \
 
 Repeat the pattern for the remaining named Management Team members (Shaykh Ahmad
 Ibrahim — Principal, Qur'an College; Shaykh Abubakr Solah — Principal,
-School of Islamic and Arabic Studies; Mrs. Kareemat Abdurazaq — Head
+School of Islamic and Arabic Studies; Mrs. Mariam Tope AbdulKareem — Head
 Teacher, Basic School; Mr. Oguntade Adebola Aliu — ICT Head, office
 `ICT Office`; Mr. Oladele Abdulwasiu Adebayo — Head, Research &
 Development).

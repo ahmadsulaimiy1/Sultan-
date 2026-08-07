@@ -84,7 +84,7 @@ admin-mediated action, the same way guardian and student records are
 never auto-created. Six real, publicly-named office-holders already
 exist as text on `pages/about-governance.html` (Head of Schools / Administrator Zakaria
 Olanrewaju Anofi; Registrar Mrs. Anofi-Abdulkareem Mariam Tope; Head
-Teacher Mrs. Kareemat Abdurazaq; three Principals — Royal College,
+Teacher Mrs. Mariam Tope AbdulKareem; three Principals — Royal College,
 Qur'an College, School of Islamic and Arabic Studies) but have **no `staff` row in
 the database** — that page is marketing copy, not a system of record.
 Wiring them in is one real admin action per person:
