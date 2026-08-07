@@ -184,7 +184,7 @@ const to12 = (t) => {
 // and already published on the school's own site. Nothing is stock, nothing is
 // a placeholder, and the captions name what is actually in the frame.
 const G = '/assets/images/gallery';
-const L = '/assets/images/leadership';
+// No leadership portraits: see the ruling above the officers' block.
 
 // ── ORNAMENT ────────────────────────────────────────────────────────────────
 // A real engine-turned band, not a clip-art flourish: interfering sine strands
@@ -223,8 +223,12 @@ const crest = (h, cls = '') => `<img class="crest ${cls}" style="height:${h}mm"
 const rule = (cls = '') => `<div class="rule ${cls}"><span></span><i></i><span></span></div>`;
 const star = (cls = '') => `<div class="star ${cls}"><b></b></div>`;
 
-const shot = (src, cap, cls = '') => `<figure class="shot ${cls}">
-  <img src="${G}/${src}" alt="" /><figcaption>${esc(cap)}</figcaption></figure>`;
+const plate = (src, cap, h, cls = '') => `<figure class="plate ${cls}" style="--h:${h}mm">
+  <span class="fr"><img src="${G}/${src}" alt="" /></span>
+  <figcaption>${esc(cap)}</figcaption></figure>`;
+
+const plateRow = (items, h) => `<div class="prow">${items
+  .map(([src, cap]) => plate(src, cap, h)).join('')}</div>`;
 
 const ph = (kicker, title) => `<header class="ph">
   <div class="ph-k">${esc(kicker)}</div>
@@ -236,11 +240,10 @@ const HONORIFIC = /^(dr|mr|mrs|ms|imam|shaykh|sheikh|alfa|ustadh|ustādh|prof)\.
 const initials = (name) => name.split(/\s+/).filter((w) => !HONORIFIC.test(w))
   .slice(0, 2).map((w) => w[0]).join('');
 
-const OFFICER_FACE = {
-  'Imam Ahmad Sulaimiy': 'imam-ahmad-sulaimiy.jpg',
-  'Shaykh Abubakr Solah': 'shaykh-abubakr-solah.jpg',
-  'Dr. Zakariya Olanrewaju Anofi': 'founder-ceo.jpg',
-};
+// NO PORTRAIT OF ANY OFFICER APPEARS IN THIS PROGRAMME. The Founder's ruling
+// of 8 August 2026: the leadership photographs come out entirely, and framed
+// pictures of the school go in against them. An office is named, ruled and
+// set in type here; the campus is what is shown.
 
 const rollBlock = (a) => `<div class="rl">
   <div class="rl-h">
@@ -256,9 +259,9 @@ const byCode = Object.fromEntries(AWARDS.map((a) => [a.code, a]));
 // ── SHEET 1 · THE OUTSIDE ───────────────────────────────────────────────────
 const panelWelcome = `<section class="panel p-w">
   <figure class="hero">
-    <img src="${G}/commissioning-day-1.jpg" alt="" />
-    <figcaption><b>The Founder with a pupil of the Nursery and Primary School</b>
-      <span>Commissioning Day · Imowonla Road</span></figcaption>
+    <img src="${G}/campus-hero.jpg" alt="" />
+    <figcaption><b>Sultan Hanafi Royal Schools</b>
+      <span>15 Imowonla Road · Ikorodu · Lagos State</span></figcaption>
   </figure>
   <div class="pad">
     ${ph('Sultan Hanafi Royal Schools', 'A Word of Welcome')}
@@ -290,10 +293,8 @@ const panelBack = `<section class="panel p-b">
     <div class="bk-tag">${esc(TAGLINE)}</div>
     ${sh('Presiding and Officiating')}
     <div class="offs">${OFFICERS.map(([n, ar, r]) => `<div class="off">
-      ${OFFICER_FACE[n] ? `<img src="${L}/${OFFICER_FACE[n]}" alt="" />`
-        : `<span class="off-mark">${esc(initials(n))}</span>`}
-      <div>${ar ? `<i dir="rtl" lang="ar">${esc(ar)}</i>` : ''}
-        <b>${esc(n)}</b><span>${esc(r)}</span></div>
+      ${ar ? `<i dir="rtl" lang="ar">${esc(ar)}</i>` : ''}
+      <b>${esc(n)}</b><span>${esc(r)}</span>
     </div>`).join('')}</div>
     ${sh('The Four Schools')}
     <div class="schools">
@@ -304,6 +305,8 @@ const panelBack = `<section class="panel p-b">
       <div><b>Qur’an College</b>
         <span dir="rtl" lang="ar">كلية السلطان حنفي للقرآن</span></div>
     </div>
+    ${plateRow([['campus-gate.jpg', 'The Campus Gate'],
+      ['college-hall.jpg', 'The School Studio']], 21)}
     <div class="verify"><b>Every certificate is verifiable.</b>
       <span>Each carries a certificate number, a verification code and a QR code
       registered with the Office of the Registrar — scan the code, or enter the
@@ -347,8 +350,8 @@ const panelCover = `<section class="panel p-c">
 
 // ── SHEET 2 · THE INSIDE ────────────────────────────────────────────────────
 const panelOrder = `<section class="panel p-o">
-  ${shot('islamic-prayer-hall.jpg', 'The Prayer Hall', 'shot-top')}
   <div class="pad">
+    ${plate('recitation-assembly-1.jpg', 'Recitation Assembly', 30, 'plate-top')}
     ${ph('The Order of the Day', 'Order of Proceedings')}
     <ol class="ord">
       ${ORDER.map(([a, b, t, s]) => `<li>
@@ -371,9 +374,11 @@ const panelRollA = `<section class="panel p-r">
     <p class="lead">Each graduand named here has completed the requirements of
     their programme and is admitted to the award beneath their school. One who
     has completed two programmes is named under each.</p>
+    ${plateRow([['islamic-prayer-hall.jpg', 'The Prayer Hall'],
+      ['basic-school-classroom.jpg', 'A Primary Classroom']], 18)}
     ${['QUR', 'IBT', 'IDD', 'PRY'].map((c) => rollBlock(byCode[c])).join('')}
+    ${plate('quran-recitation-1.jpg', 'Qur’an Recitation', 20)}
   </div>
-  ${shot('quran-recitation-1.jpg', 'Qur’an Recitation', 'shot-foot')}
 </section>`;
 
 const panelRollB = `<section class="panel p-r">
@@ -382,24 +387,19 @@ const panelRollB = `<section class="panel p-r">
     ${['JSS', 'SS'].map((c) => rollBlock(byCode[c])).join('')}
     ${sh('The Chief Host')}
     <div class="host">
-      <img src="${L}/founder-ceo.jpg" alt="" />
-      <div>
-        <i dir="rtl" lang="ar">${esc(CHIEF_HOST[1])}</i>
-        <b>${esc(CHIEF_HOST[0])}</b>
-        <span>${esc(CHIEF_HOST[2])}</span>
-      </div>
+      <i dir="rtl" lang="ar">${esc(CHIEF_HOST[1])}</i>
+      <b>${esc(CHIEF_HOST[0])}</b>
+      <span>${esc(CHIEF_HOST[2])}</span>
     </div>
     ${sh('The Lecture')}
     <div class="lect">
       <em>“${esc(LECTURE.title)}”</em>
       <b>${esc(LECTURE.by)}</b>
     </div>
-    <div class="band">
-      ${shot('chemistry-laboratory.jpg', 'Chemistry Laboratory')}
-      ${shot('games-recreation.jpg', 'Games and Recreation')}
-    </div>
+    ${plateRow([['chemistry-laboratory.jpg', 'Chemistry Laboratory'],
+      ['games-recreation.jpg', 'Games and Recreation']], 21)}
+    ${plate('ict-computer-laboratory.jpg', 'ICT Laboratory', 26)}
   </div>
-  ${shot('ict-computer-laboratory.jpg', 'ICT Laboratory', 'shot-foot')}
 </section>`;
 
 // A trifold is two printed sides of three panels each. The panels are placed in
@@ -489,22 +489,29 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   text-transform:uppercase;color:var(--gold-d);margin:3.2mm 0 1.6mm;
   padding-bottom:.9mm;border-bottom:.22mm solid rgba(168,134,63,.55)}
 
-/* A photograph framed the way the certificates frame a plate: a gold hairline
-   and a caption reversed out of the foot. */
-.shot{position:relative;overflow:hidden;
-  box-shadow:0 .4mm 1.1mm rgba(36,26,11,.26),inset 0 0 0 .22mm rgba(168,134,63,.75)}
-.shot img{display:block;width:100%;height:100%;object-fit:cover;
-  filter:sepia(.3) saturate(.9) contrast(1.05) brightness(1.02)}
-.shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:2.4mm 1.6mm .9mm;
-  font-family:'Inter',sans-serif;font-size:4.6pt;letter-spacing:.16em;
-  text-transform:uppercase;color:#F6EDD8;text-align:center;
-  background:linear-gradient(180deg,rgba(20,13,3,0),rgba(20,13,3,.86))}
-.shot-top{height:27mm;box-shadow:none;
-  box-shadow:0 .5mm 1.4mm rgba(36,26,11,.3)}
-.shot-foot{position:absolute;left:0;right:0;bottom:0;height:32mm;box-shadow:none}
-.shot-wide{height:24mm;margin:3mm 0}
-.band{display:grid;grid-template-columns:1fr 1fr;gap:1.4mm;margin-top:3mm}
-.band .shot{height:22mm}
+/* A hung picture, not a pasted rectangle. A cream mount carries a gold
+   hairline; a dark keyline sits inside the aperture; the caption rides its own
+   rail beneath, between two fading rules. Every photograph in this programme
+   is framed this way, at one of three heights. */
+.plate{margin:0 0 2.6mm;padding:1.3mm 1.3mm 1mm;
+  background:linear-gradient(158deg,#FEFCF7 0%,#F7F0E0 52%,#F1E7D2 100%);
+  box-shadow:0 .7mm 1.8mm rgba(36,26,11,.22),0 .15mm .4mm rgba(36,26,11,.16),
+    inset 0 0 0 .22mm rgba(168,134,63,.9),inset 0 0 0 .55mm rgba(255,253,247,.9)}
+.plate .fr{position:relative;display:block;height:var(--h);overflow:hidden;
+  box-shadow:inset 0 0 0 .3mm rgba(27,20,8,.55),0 .2mm .5mm rgba(36,26,11,.18)}
+.plate img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:sepia(.3) saturate(.9) contrast(1.06) brightness(1.02)}
+.plate figcaption{display:flex;align-items:center;gap:1.8mm;margin-top:1.4mm;
+  font-family:'Inter',sans-serif;font-size:4.5pt;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold-d);white-space:nowrap}
+.plate figcaption::before,.plate figcaption::after{content:'';flex:1;height:.15mm;
+  background:linear-gradient(90deg,rgba(168,134,63,0),rgba(168,134,63,.75))}
+.plate figcaption::after{background:linear-gradient(270deg,rgba(168,134,63,0),rgba(168,134,63,.75))}
+.plate-top{margin-top:0}
+/* Two plates side by side share the rail below them. */
+.prow{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
+.prow .plate{margin-bottom:2.4mm}
+.prow figcaption{font-size:4.1pt;letter-spacing:.14em;gap:1.2mm}
 
 /* ── COVER PANEL ─────────────────────────────────────────────────────────── */
 .p-c{background:var(--dk);color:#F5EAD2;display:flex;flex-direction:column;
@@ -610,22 +617,21 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .bk-lathe{height:4mm;margin:3mm 0 2mm}
 .bk-tag{font-style:italic;font-size:9.4pt;color:var(--gold-d)}
 .p-b .sh{text-align:center}
-.offs{display:flex;flex-direction:column;gap:2mm}
-.off{display:flex;align-items:center;gap:2.6mm;text-align:left}
-.off img,.off .off-mark{flex:0 0 auto;width:11mm;height:11mm;border-radius:50%;
-  object-fit:cover;object-position:50% 20%;
-  box-shadow:0 .3mm .9mm rgba(36,26,11,.28),0 0 0 .3mm var(--gold),
-    0 0 0 .65mm rgba(251,247,238,1)}
-.off img{filter:sepia(.26) saturate(.94) contrast(1.05)}
-.off .off-mark{display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 34% 26%,#FBF5E7,#E3D2AC);
-  font-family:'Cinzel',serif;font-size:7pt;font-weight:700;color:var(--gold-d)}
-.off i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:7.6pt;
-  direction:rtl;text-align:left;color:var(--gold-d);line-height:1.2}
-.off b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
-.off span{display:block;font-family:'Inter',sans-serif;font-size:4.3pt;
-  letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-top:.5mm;
-  line-height:1.3}
+/* The offices are set in type. No portrait of an officer appears anywhere in
+   this programme — the Founder's ruling. A gold lozenge marks each entry and a
+   hairline separates them. */
+.offs{display:flex;flex-direction:column;gap:0}
+.off{position:relative;padding:1.9mm 0 1.9mm 4.6mm;text-align:left;
+  border-bottom:.1mm solid rgba(168,134,63,.3)}
+.off:last-child{border-bottom:0}
+.off::before{content:'';position:absolute;left:.6mm;top:3.1mm;width:1.5mm;height:1.5mm;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));transform:rotate(45deg)}
+.off i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8pt;
+  direction:rtl;text-align:left;color:var(--gold-d);line-height:1.24}
+.off b{display:block;font-size:8.6pt;font-weight:600;line-height:1.18;margin-top:.2mm}
+.off span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.6mm;
+  line-height:1.32}
 .schools{display:flex;flex-direction:column;gap:1.6mm;text-align:center}
 .schools b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
 .schools span{display:block;font-family:'Inter',sans-serif;font-size:4.3pt;
@@ -643,7 +649,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
 /* ── ORDER PANEL ─────────────────────────────────────────────────────────── */
 .ord{list-style:none;margin-top:.4mm}
-.ord li{display:flex;align-items:baseline;gap:2.2mm;padding:1.04mm 0;
+.ord li{display:flex;align-items:baseline;gap:2.2mm;padding:.94mm 0;
   border-bottom:.1mm solid rgba(168,134,63,.32)}
 .ord li:nth-child(odd){background:linear-gradient(90deg,rgba(168,134,63,.06),
   rgba(168,134,63,.012) 62%,transparent)}
@@ -661,17 +667,17 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   text-transform:uppercase;color:var(--soft)}
 .coord b{font-size:8.2pt;font-weight:600}
 .guests{list-style:none}
-.guests li{padding:.72mm 0;border-bottom:.1mm solid rgba(168,134,63,.28)}
+.guests li{padding:.62mm 0;border-bottom:.1mm solid rgba(168,134,63,.28)}
 .guests li:last-child{border-bottom:0}
 .guests b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
 .guests span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.3mm}
 
 /* ── GRADUAND PANELS ─────────────────────────────────────────────────────── */
-.p-r .pad{padding-bottom:36mm}
+.p-r .pad{padding-bottom:8mm}
 .lead{font-size:7.2pt;line-height:1.36;color:var(--soft);font-style:italic;
   text-align:center;margin:.4mm 1mm 3mm}
-.rl{margin-bottom:3mm}
+.rl{margin-bottom:2.5mm}
 .rl-h{border-bottom:.26mm solid var(--gold);padding-bottom:.9mm;margin-bottom:1.1mm}
 .rl-h i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:7.6pt;
   direction:rtl;text-align:left;color:var(--gold);line-height:1.2}
@@ -680,16 +686,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rl-h span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.5mm}
 .rl-n{margin-left:3.4mm}
-.rl-n li{font-size:8.2pt;line-height:1.3}
+.rl-n li{font-size:8.2pt;line-height:1.26}
 .rl-n li::marker{color:var(--gold);font-size:5.8pt}
-.host{display:flex;align-items:center;gap:3mm}
-.host img{flex:0 0 auto;width:15mm;height:15mm;border-radius:50%;object-fit:cover;
-  object-position:50% 20%;filter:sepia(.26) saturate(.94) contrast(1.05);
-  box-shadow:0 .3mm .9mm rgba(36,26,11,.28),0 0 0 .3mm var(--gold),
-    0 0 0 .65mm rgba(251,247,238,1)}
-.host i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8pt;
+.host{position:relative;padding-left:4.6mm}
+.host::before{content:'';position:absolute;left:.6mm;top:2.2mm;width:1.5mm;height:1.5mm;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));transform:rotate(45deg)}
+.host i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8.4pt;
   direction:rtl;text-align:left;color:var(--gold-d)}
-.host b{display:block;font-size:8.8pt;font-weight:600;line-height:1.18;margin-top:.3mm}
+.host b{display:block;font-size:9.2pt;font-weight:600;line-height:1.18;margin-top:.3mm}
 .host span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:.6mm}
 .lect em{display:block;font-size:8.4pt;font-style:italic;line-height:1.26;
@@ -711,7 +715,6 @@ writeFileSync(join(OUT, 'SHRS-Graduation-Programme-2026.html'), html);
 export {
   AWARDS, ORDER, OFFICERS, TOTAL, PEOPLE, COORDINATORS, VENUE, WEB, MAIL, TEL,
   CHIEF_HOST, LECTURE, GUESTS, FIGURES, WELCOME, CEO_WORD, TAGLINE, OPENS, CLOSES, to12,
-  OFFICER_FACE,
 };
 
 console.log(`\nGraduation Ceremony Programme — trifold, 2 sheets of 3 panels`);

@@ -79,22 +79,29 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   text-transform:uppercase;color:var(--gold-d);margin:3.2mm 0 1.6mm;
   padding-bottom:.9mm;border-bottom:.22mm solid rgba(168,134,63,.55)}
 
-/* A photograph framed the way the certificates frame a plate: a gold hairline
-   and a caption reversed out of the foot. */
-.shot{position:relative;overflow:hidden;
-  box-shadow:0 .4mm 1.1mm rgba(36,26,11,.26),inset 0 0 0 .22mm rgba(168,134,63,.75)}
-.shot img{display:block;width:100%;height:100%;object-fit:cover;
-  filter:sepia(.3) saturate(.9) contrast(1.05) brightness(1.02)}
-.shot figcaption{position:absolute;left:0;right:0;bottom:0;padding:2.4mm 1.6mm .9mm;
-  font-family:'Inter',sans-serif;font-size:4.6pt;letter-spacing:.16em;
-  text-transform:uppercase;color:#F6EDD8;text-align:center;
-  background:linear-gradient(180deg,rgba(20,13,3,0),rgba(20,13,3,.86))}
-.shot-top{height:27mm;box-shadow:none;
-  box-shadow:0 .5mm 1.4mm rgba(36,26,11,.3)}
-.shot-foot{position:absolute;left:0;right:0;bottom:0;height:32mm;box-shadow:none}
-.shot-wide{height:24mm;margin:3mm 0}
-.band{display:grid;grid-template-columns:1fr 1fr;gap:1.4mm;margin-top:3mm}
-.band .shot{height:22mm}
+/* A hung picture, not a pasted rectangle. A cream mount carries a gold
+   hairline; a dark keyline sits inside the aperture; the caption rides its own
+   rail beneath, between two fading rules. Every photograph in this programme
+   is framed this way, at one of three heights. */
+.plate{margin:0 0 2.6mm;padding:1.3mm 1.3mm 1mm;
+  background:linear-gradient(158deg,#FEFCF7 0%,#F7F0E0 52%,#F1E7D2 100%);
+  box-shadow:0 .7mm 1.8mm rgba(36,26,11,.22),0 .15mm .4mm rgba(36,26,11,.16),
+    inset 0 0 0 .22mm rgba(168,134,63,.9),inset 0 0 0 .55mm rgba(255,253,247,.9)}
+.plate .fr{position:relative;display:block;height:var(--h);overflow:hidden;
+  box-shadow:inset 0 0 0 .3mm rgba(27,20,8,.55),0 .2mm .5mm rgba(36,26,11,.18)}
+.plate img{display:block;width:100%;height:100%;object-fit:cover;
+  filter:sepia(.3) saturate(.9) contrast(1.06) brightness(1.02)}
+.plate figcaption{display:flex;align-items:center;gap:1.8mm;margin-top:1.4mm;
+  font-family:'Inter',sans-serif;font-size:4.5pt;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold-d);white-space:nowrap}
+.plate figcaption::before,.plate figcaption::after{content:'';flex:1;height:.15mm;
+  background:linear-gradient(90deg,rgba(168,134,63,0),rgba(168,134,63,.75))}
+.plate figcaption::after{background:linear-gradient(270deg,rgba(168,134,63,0),rgba(168,134,63,.75))}
+.plate-top{margin-top:0}
+/* Two plates side by side share the rail below them. */
+.prow{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
+.prow .plate{margin-bottom:2.4mm}
+.prow figcaption{font-size:4.1pt;letter-spacing:.14em;gap:1.2mm}
 
 /* ── COVER PANEL ─────────────────────────────────────────────────────────── */
 .p-c{background:var(--dk);color:#F5EAD2;display:flex;flex-direction:column;
@@ -200,22 +207,21 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .bk-lathe{height:4mm;margin:3mm 0 2mm}
 .bk-tag{font-style:italic;font-size:9.4pt;color:var(--gold-d)}
 .p-b .sh{text-align:center}
-.offs{display:flex;flex-direction:column;gap:2mm}
-.off{display:flex;align-items:center;gap:2.6mm;text-align:left}
-.off img,.off .off-mark{flex:0 0 auto;width:11mm;height:11mm;border-radius:50%;
-  object-fit:cover;object-position:50% 20%;
-  box-shadow:0 .3mm .9mm rgba(36,26,11,.28),0 0 0 .3mm var(--gold),
-    0 0 0 .65mm rgba(251,247,238,1)}
-.off img{filter:sepia(.26) saturate(.94) contrast(1.05)}
-.off .off-mark{display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 34% 26%,#FBF5E7,#E3D2AC);
-  font-family:'Cinzel',serif;font-size:7pt;font-weight:700;color:var(--gold-d)}
-.off i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:7.6pt;
-  direction:rtl;text-align:left;color:var(--gold-d);line-height:1.2}
-.off b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
-.off span{display:block;font-family:'Inter',sans-serif;font-size:4.3pt;
-  letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-top:.5mm;
-  line-height:1.3}
+/* The offices are set in type. No portrait of an officer appears anywhere in
+   this programme — the Founder's ruling. A gold lozenge marks each entry and a
+   hairline separates them. */
+.offs{display:flex;flex-direction:column;gap:0}
+.off{position:relative;padding:1.9mm 0 1.9mm 4.6mm;text-align:left;
+  border-bottom:.1mm solid rgba(168,134,63,.3)}
+.off:last-child{border-bottom:0}
+.off::before{content:'';position:absolute;left:.6mm;top:3.1mm;width:1.5mm;height:1.5mm;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));transform:rotate(45deg)}
+.off i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8pt;
+  direction:rtl;text-align:left;color:var(--gold-d);line-height:1.24}
+.off b{display:block;font-size:8.6pt;font-weight:600;line-height:1.18;margin-top:.2mm}
+.off span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.6mm;
+  line-height:1.32}
 .schools{display:flex;flex-direction:column;gap:1.6mm;text-align:center}
 .schools b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
 .schools span{display:block;font-family:'Inter',sans-serif;font-size:4.3pt;
@@ -233,7 +239,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
 /* ── ORDER PANEL ─────────────────────────────────────────────────────────── */
 .ord{list-style:none;margin-top:.4mm}
-.ord li{display:flex;align-items:baseline;gap:2.2mm;padding:1.04mm 0;
+.ord li{display:flex;align-items:baseline;gap:2.2mm;padding:.94mm 0;
   border-bottom:.1mm solid rgba(168,134,63,.32)}
 .ord li:nth-child(odd){background:linear-gradient(90deg,rgba(168,134,63,.06),
   rgba(168,134,63,.012) 62%,transparent)}
@@ -251,17 +257,17 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   text-transform:uppercase;color:var(--soft)}
 .coord b{font-size:8.2pt;font-weight:600}
 .guests{list-style:none}
-.guests li{padding:.72mm 0;border-bottom:.1mm solid rgba(168,134,63,.28)}
+.guests li{padding:.62mm 0;border-bottom:.1mm solid rgba(168,134,63,.28)}
 .guests li:last-child{border-bottom:0}
 .guests b{display:block;font-size:8pt;font-weight:600;line-height:1.18}
 .guests span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.3mm}
 
 /* ── GRADUAND PANELS ─────────────────────────────────────────────────────── */
-.p-r .pad{padding-bottom:36mm}
+.p-r .pad{padding-bottom:8mm}
 .lead{font-size:7.2pt;line-height:1.36;color:var(--soft);font-style:italic;
   text-align:center;margin:.4mm 1mm 3mm}
-.rl{margin-bottom:3mm}
+.rl{margin-bottom:2.5mm}
 .rl-h{border-bottom:.26mm solid var(--gold);padding-bottom:.9mm;margin-bottom:1.1mm}
 .rl-h i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:7.6pt;
   direction:rtl;text-align:left;color:var(--gold);line-height:1.2}
@@ -270,16 +276,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rl-h span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.5mm}
 .rl-n{margin-left:3.4mm}
-.rl-n li{font-size:8.2pt;line-height:1.3}
+.rl-n li{font-size:8.2pt;line-height:1.26}
 .rl-n li::marker{color:var(--gold);font-size:5.8pt}
-.host{display:flex;align-items:center;gap:3mm}
-.host img{flex:0 0 auto;width:15mm;height:15mm;border-radius:50%;object-fit:cover;
-  object-position:50% 20%;filter:sepia(.26) saturate(.94) contrast(1.05);
-  box-shadow:0 .3mm .9mm rgba(36,26,11,.28),0 0 0 .3mm var(--gold),
-    0 0 0 .65mm rgba(251,247,238,1)}
-.host i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8pt;
+.host{position:relative;padding-left:4.6mm}
+.host::before{content:'';position:absolute;left:.6mm;top:2.2mm;width:1.5mm;height:1.5mm;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));transform:rotate(45deg)}
+.host i{display:block;font-family:'Amiri',serif;font-style:normal;font-size:8.4pt;
   direction:rtl;text-align:left;color:var(--gold-d)}
-.host b{display:block;font-size:8.8pt;font-weight:600;line-height:1.18;margin-top:.3mm}
+.host b{display:block;font-size:9.2pt;font-weight:600;line-height:1.18;margin-top:.3mm}
 .host span{display:block;font-family:'Inter',sans-serif;font-size:4.4pt;
   letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-top:.6mm}
 .lect em{display:block;font-size:8.4pt;font-style:italic;line-height:1.26;
@@ -288,9 +292,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 </style></head><body>
 <section class="sheet"><section class="panel p-w">
   <figure class="hero">
-    <img src="/assets/images/gallery/commissioning-day-1.jpg" alt="" />
-    <figcaption><b>The Founder with a pupil of the Nursery and Primary School</b>
-      <span>Commissioning Day · Imowonla Road</span></figcaption>
+    <img src="/assets/images/gallery/campus-hero.jpg" alt="" />
+    <figcaption><b>Sultan Hanafi Royal Schools</b>
+      <span>15 Imowonla Road · Ikorodu · Lagos State</span></figcaption>
   </figure>
   <div class="pad">
     <header class="ph">
@@ -340,25 +344,20 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <div class="bk-tag">Celebrating Achievement, Inspiring Futures</div>
     <h4 class="sh">Presiding and Officiating</h4>
     <div class="offs"><div class="off">
-      <img src="/assets/images/leadership/founder-ceo.jpg" alt="" />
-      <div><i dir="rtl" lang="ar">د. زكريا أولانريوجو حنفي</i>
-        <b>Dr. Zakariya Olanrewaju Anofi</b><span>Chairman, Board of Governors</span></div>
+      <i dir="rtl" lang="ar">د. زكريا أولانريوجو حنفي</i>
+      <b>Dr. Zakariya Olanrewaju Anofi</b><span>Chairman, Board of Governors</span>
     </div><div class="off">
-      <img src="/assets/images/leadership/imam-ahmad-sulaimiy.jpg" alt="" />
-      <div><i dir="rtl" lang="ar">الإمام أحمد السليمي</i>
-        <b>Imam Ahmad Sulaimiy</b><span>Principal (Mudeer), Sultan Hanafi Qur’an College</span></div>
+      <i dir="rtl" lang="ar">الإمام أحمد السليمي</i>
+      <b>Imam Ahmad Sulaimiy</b><span>Principal (Mudeer), Sultan Hanafi Qur’an College</span>
     </div><div class="off">
-      <span class="off-mark">AM</span>
-      <div>
-        <b>Dr. Adegoke Musa Olatunji</b><span>Principal, Sultan Hanafi Royal College</span></div>
+      
+      <b>Dr. Adegoke Musa Olatunji</b><span>Principal, Sultan Hanafi Royal College</span>
     </div><div class="off">
-      <img src="/assets/images/leadership/shaykh-abubakr-solah.jpg" alt="" />
-      <div><i dir="rtl" lang="ar">الشيخ أبو بكر صلاح</i>
-        <b>Shaykh Abubakr Solah</b><span>Principal (Ra’ees), School of Islamic and Arabic Studies</span></div>
+      <i dir="rtl" lang="ar">الشيخ أبو بكر صلاح</i>
+      <b>Shaykh Abubakr Solah</b><span>Principal (Ra’ees), School of Islamic and Arabic Studies</span>
     </div><div class="off">
-      <span class="off-mark">MT</span>
-      <div>
-        <b>Mrs. Mariam Tope AbdulKareem</b><span>Head Teacher, Nursery and Primary School</span></div>
+      
+      <b>Mrs. Mariam Tope AbdulKareem</b><span>Head Teacher, Nursery and Primary School</span>
     </div></div>
     <h4 class="sh">The Four Schools</h4>
     <div class="schools">
@@ -369,6 +368,11 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
       <div><b>Qur’an College</b>
         <span dir="rtl" lang="ar">كلية السلطان حنفي للقرآن</span></div>
     </div>
+    <div class="prow"><figure class="plate " style="--h:21mm">
+  <span class="fr"><img src="/assets/images/gallery/campus-gate.jpg" alt="" /></span>
+  <figcaption>The Campus Gate</figcaption></figure><figure class="plate " style="--h:21mm">
+  <span class="fr"><img src="/assets/images/gallery/college-hall.jpg" alt="" /></span>
+  <figcaption>The School Studio</figcaption></figure></div>
     <div class="verify"><b>Every certificate is verifiable.</b>
       <span>Each carries a certificate number, a verification code and a QR code
       registered with the Office of the Registrar — scan the code, or enter the
@@ -439,9 +443,10 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   <i class="mk bl"></i><i class="mk br"></i>
   <i class="fold f1"></i><i class="fold f2"></i></section>
 <section class="sheet"><section class="panel p-o">
-  <figure class="shot shot-top">
-  <img src="/assets/images/gallery/islamic-prayer-hall.jpg" alt="" /><figcaption>The Prayer Hall</figcaption></figure>
   <div class="pad">
+    <figure class="plate plate-top" style="--h:30mm">
+  <span class="fr"><img src="/assets/images/gallery/recitation-assembly-1.jpg" alt="" /></span>
+  <figcaption>Recitation Assembly</figcaption></figure>
     <header class="ph">
   <div class="ph-k">The Order of the Day</div>
   <h3 class="ph-t">Order of Proceedings</h3></header><div class="rule "><span></span><i></i><span></span></div>
@@ -506,6 +511,11 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     <p class="lead">Each graduand named here has completed the requirements of
     their programme and is admitted to the award beneath their school. One who
     has completed two programmes is named under each.</p>
+    <div class="prow"><figure class="plate " style="--h:18mm">
+  <span class="fr"><img src="/assets/images/gallery/islamic-prayer-hall.jpg" alt="" /></span>
+  <figcaption>The Prayer Hall</figcaption></figure><figure class="plate " style="--h:18mm">
+  <span class="fr"><img src="/assets/images/gallery/basic-school-classroom.jpg" alt="" /></span>
+  <figcaption>A Primary Classroom</figcaption></figure></div>
     <div class="rl">
   <div class="rl-h">
     <i dir="rtl" lang="ar">حفظ القرآن الكريم</i>
@@ -535,9 +545,10 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   </div>
   <ol class="rl-n"><li>Naheemah Ismai Seriki</li><li>Ashraf Korede Ojewumi</li><li>Al-ameen Okoh</li><li>Al-ameen Abidemi Jokomba</li><li>Aisha Lawal</li><li>Imran Iremide Adegoke</li><li>Daud Aliu</li></ol>
 </div>
+    <figure class="plate " style="--h:20mm">
+  <span class="fr"><img src="/assets/images/gallery/quran-recitation-1.jpg" alt="" /></span>
+  <figcaption>Qur’an Recitation</figcaption></figure>
   </div>
-  <figure class="shot shot-foot">
-  <img src="/assets/images/gallery/quran-recitation-1.jpg" alt="" /><figcaption>Qur’an Recitation</figcaption></figure>
 </section><section class="panel p-r">
   <div class="pad">
     <header class="ph">
@@ -560,27 +571,24 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 </div>
     <h4 class="sh">The Chief Host</h4>
     <div class="host">
-      <img src="/assets/images/leadership/founder-ceo.jpg" alt="" />
-      <div>
-        <i dir="rtl" lang="ar">د. زكريا أولانريوجو حنفي</i>
-        <b>Dr. Zakariya Olanrewaju Anofi</b>
-        <span>Chief Executive Director</span>
-      </div>
+      <i dir="rtl" lang="ar">د. زكريا أولانريوجو حنفي</i>
+      <b>Dr. Zakariya Olanrewaju Anofi</b>
+      <span>Chief Executive Director</span>
     </div>
     <h4 class="sh">The Lecture</h4>
     <div class="lect">
       <em>“Building the Future Ummah Through Holistic Education”</em>
       <b>Dr. Misbahudeen Dosumu</b>
     </div>
-    <div class="band">
-      <figure class="shot ">
-  <img src="/assets/images/gallery/chemistry-laboratory.jpg" alt="" /><figcaption>Chemistry Laboratory</figcaption></figure>
-      <figure class="shot ">
-  <img src="/assets/images/gallery/games-recreation.jpg" alt="" /><figcaption>Games and Recreation</figcaption></figure>
-    </div>
+    <div class="prow"><figure class="plate " style="--h:21mm">
+  <span class="fr"><img src="/assets/images/gallery/chemistry-laboratory.jpg" alt="" /></span>
+  <figcaption>Chemistry Laboratory</figcaption></figure><figure class="plate " style="--h:21mm">
+  <span class="fr"><img src="/assets/images/gallery/games-recreation.jpg" alt="" /></span>
+  <figcaption>Games and Recreation</figcaption></figure></div>
+    <figure class="plate " style="--h:26mm">
+  <span class="fr"><img src="/assets/images/gallery/ict-computer-laboratory.jpg" alt="" /></span>
+  <figcaption>ICT Laboratory</figcaption></figure>
   </div>
-  <figure class="shot shot-foot">
-  <img src="/assets/images/gallery/ict-computer-laboratory.jpg" alt="" /><figcaption>ICT Laboratory</figcaption></figure>
 </section><i class="mk tl"></i><i class="mk tr"></i>
   <i class="mk bl"></i><i class="mk br"></i>
   <i class="fold f1"></i><i class="fold f2"></i></section>

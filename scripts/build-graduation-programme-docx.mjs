@@ -23,7 +23,6 @@ import {
 import {
   AWARDS, ORDER, OFFICERS, TOTAL, PEOPLE, COORDINATORS, VENUE, WEB, MAIL, TEL,
   CHIEF_HOST, LECTURE, GUESTS, FIGURES, WELCOME, CEO_WORD, TAGLINE, OPENS, CLOSES, to12,
-  OFFICER_FACE,
 } from './build-graduation-programme.mjs';
 
 // ── Typefaces ───────────────────────────────────────────────────────────────
@@ -168,8 +167,8 @@ const roll = (a) => [
 
 // ── PANEL · THE WELCOME ─────────────────────────────────────────────────────
 const panelWelcome = [
-  ...plate('commissioning-day-1.jpg', COL, 48,
-    'The Founder with a pupil · Commissioning Day'),
+  ...plate('campus-hero.jpg', COL, 41,
+    'Sultan Hanafi Royal Schools · Imowonla Road'),
   ...head('Sultan Hanafi Royal Schools', 'A Word of Welcome'),
   p({
     alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 },
@@ -251,27 +250,25 @@ const panelBack = [
   rule({ before: 120, after: 80 }),
   line(TAGLINE, { size: 18, italics: true, color: GOLD, after: 60 }),
   sh('Presiding and Officiating'),
-  ...OFFICERS.map(([n, ar, r]) => grid([MM(13), CW - MM(13)], [new TableRow({
-    children: [
-      cell([p({
-        children: OFFICER_FACE[n] ? [img('leadership', OFFICER_FACE[n], 11, 11)]
-          : [new TextRun({ text: initials(n), font: SERIF, size: 20, bold: true, color: GOLD })],
-      })], MM(13), { pad: 40, padX: 0 }),
-      cell([
-        // Arabic above, English below — never the other way round.
-        ...(ar ? [p({
-          children: [new TextRun({ text: ar, font: ARABIC, size: 15, color: GOLD, rightToLeft: true })],
-        })] : []),
-        p({ children: [new TextRun({ text: n, font: SERIF, size: 16, bold: true })] }),
-        p({
-          spacing: { before: 20 },
-          children: [new TextRun({
-            text: r, font: SANS, size: 8, color: SOFT, allCaps: true, characterSpacing: 10,
-          })],
-        }),
-      ], CW - MM(13), { pad: 40, padX: 0 }),
-    ],
-  })])),
+  ...OFFICERS.flatMap(([n, ar, r]) => [
+    // Arabic above, English below — never the other way round.
+    ...(ar ? [p({
+      spacing: { before: 90 },
+      children: [new TextRun({ text: ar, font: ARABIC, size: 15, color: GOLD, rightToLeft: true })],
+    })] : []),
+    p({
+      spacing: { before: ar ? 0 : 90 },
+      children: [new TextRun({ text: n, font: SERIF, size: 16, bold: true })],
+    }),
+    p({
+      spacing: { before: 14, after: 26 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: 'DDD2B7', space: 2 } },
+      children: [new TextRun({
+        text: r, font: SANS, size: 8, color: SOFT, allCaps: true, characterSpacing: 10,
+      })],
+    }),
+  ]),
+  ...plate('campus-gate.jpg', COL, 15, 'The Campus Gate'),
   sh('The Four Schools'),
   ...[
     ['Nursery and Primary School', 'Ages 2 to 10', ''],
@@ -279,14 +276,14 @@ const panelBack = [
     ['School of Islamic and Arabic Studies', '', 'قسم الدراسات الإسلامية والعربية'],
     ['Qur’an College', '', 'كلية السلطان حنفي للقرآن'],
   ].flatMap(([n, sub, ar]) => [
-    line(n, { size: 16, bold: true, before: 60 }),
+    line(n, { size: 16, bold: true, before: 40 }),
     ...(sub ? [line(sub, { size: 8, font: SANS, color: SOFT, caps: true, track: 30 })] : []),
     ...(ar ? [arabic(ar, { size: 14 })] : []),
   ]),
-  rule({ before: 160, after: 80 }),
-  line('Every certificate is verifiable.', { size: 14, bold: true, color: GOLD, after: 50 }),
+  rule({ before: 110, after: 60 }),
+  line('Every certificate is verifiable.', { size: 14, bold: true, color: GOLD, after: 40 }),
   p({
-    alignment: AlignmentType.CENTER, spacing: { after: 120 },
+    alignment: AlignmentType.CENTER, spacing: { after: 80 },
     children: [new TextRun({
       text: 'Each carries a certificate number, a verification code and a QR code '
         + 'registered with the Office of the Registrar — scan the code, or enter '
@@ -301,7 +298,7 @@ const panelBack = [
 
 // ── PANEL · THE COVER ───────────────────────────────────────────────────────
 const panelCover = [
-  ...plate('campus-building.jpg', COL, 56, 'The campus at Imowonla Road'),
+  ...plate('campus-building.jpg', COL, 50, 'The campus at Imowonla Road'),
   p({
     alignment: AlignmentType.CENTER, spacing: { before: 100, after: 70 },
     children: [img('crests', 'shrs-institutional-crest.png', 21 * (520 / 476), 21)],
@@ -328,7 +325,7 @@ const panelCover = [
 // ── PANEL · THE ORDER ───────────────────────────────────────────────────────
 const TIME_W = MM(22);
 const panelOrder = [
-  ...plate('islamic-prayer-hall.jpg', COL, 34, 'The Prayer Hall'),
+  ...plate('islamic-prayer-hall.jpg', COL, 28, 'The Prayer Hall'),
   ...head('The Order of the Day', 'Order of Proceedings'),
   grid([TIME_W, CW - TIME_W], ORDER.map(([a, b, t, s], i) => {
     const ar = s && /[؀-ۿ]/.test(s);
@@ -386,6 +383,7 @@ const panelRollA = [
       font: SERIF, size: 14, color: SOFT, italics: true,
     })],
   }),
+  ...plate('biology-laboratory.jpg', COL, 24, 'Biology Laboratory'),
   ...['QUR', 'IBT', 'IDD', 'PRY'].flatMap((c) => roll(byCode[c])),
 ];
 
@@ -393,30 +391,21 @@ const panelRollB = [
   ...head('Class of 2026', 'The Graduands · continued'),
   ...['JSS', 'SS'].flatMap((c) => roll(byCode[c])),
   sh('The Chief Host'),
-  grid([MM(17), CW - MM(17)], [new TableRow({
-    children: [
-      cell([p({ children: [img('leadership', 'founder-ceo.jpg', 15, 15)] })],
-        MM(17), { pad: 40, padX: 0 }),
-      cell([
-        p({ children: [new TextRun({ text: CHIEF_HOST[1], font: ARABIC, size: 16, color: GOLD, rightToLeft: true })] }),
-        p({ children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 18, bold: true })] }),
-        p({
-          spacing: { before: 20 },
-          children: [new TextRun({
-            text: CHIEF_HOST[2], font: SANS, size: 9, color: SOFT,
-            allCaps: true, characterSpacing: 30,
-          })],
-        }),
-      ], CW - MM(17), { pad: 40, padX: 0 }),
-    ],
-  })]),
+  p({ children: [new TextRun({ text: CHIEF_HOST[1], font: ARABIC, size: 16, color: GOLD, rightToLeft: true })] }),
+  p({ children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 18, bold: true })] }),
+  p({
+    spacing: { before: 20 },
+    children: [new TextRun({
+      text: CHIEF_HOST[2], font: SANS, size: 9, color: SOFT, allCaps: true, characterSpacing: 30,
+    })],
+  }),
   sh('The Lecture'),
   p({ children: [new TextRun({ text: `“${LECTURE.title}”`, font: SERIF, size: 16, italics: true, color: GOLD })] }),
   p({
     spacing: { before: 50, after: 160 },
     children: [new TextRun({ text: LECTURE.by, font: SERIF, size: 17, bold: true })],
   }),
-  ...plate('quran-recitation-1.jpg', COL, 30, 'Qur’an Recitation'),
+  ...plate('quran-recitation-1.jpg', COL, 24, 'Qur’an Recitation'),
 ];
 
 // ── The document ────────────────────────────────────────────────────────────
