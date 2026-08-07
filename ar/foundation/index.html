@@ -24,7 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
-<link rel="stylesheet" href="/css/personalisation.css?v=67b7b7d952">
+<link rel="stylesheet" href="/css/personalisation.css?v=e5c0cbff1a">
 <link rel="stylesheet" href="/css/announcements.css?v=2249f618eb">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
 <link rel="stylesheet" href="/css/menu.css?v=a0a993c7f3">
@@ -1124,6 +1124,15 @@
           </div>
         </div>
 
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الكلمة المسجّلة</span><p class="pc-option-desc">كلمة ترحيب المدرسة المسجّلة، تُسمع مرّة واحدة عند أول زيارة ولا تُعاد في الجلسة نفسها. ولها مفتاحها الخاص، فإسكات واجهة الموقع لا يُسكِت الصوت معها.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="الكلمة المسجّلة">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">تعمل</button>
+            <button type="button" data-value="off" role="radio">متوقّفة</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>استماع الكلمة</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
+        </div>
+
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">الصور</span></div>
           <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
@@ -1449,7 +1458,7 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=81ba1d3e6c" defer></script>
+<script src="/js/personalisation.js?v=e1bf725623" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/regalia.js?v=e4113ff864" defer></script>
@@ -1471,7 +1480,7 @@
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/intro.js?v=e3d32ffda3" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 

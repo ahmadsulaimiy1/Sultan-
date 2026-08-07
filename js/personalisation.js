@@ -34,6 +34,7 @@
     links: 'hover',
     focusRing: 'standard',
     interfaceSound: 'on',
+    spokenIntro: 'on',
     imagery: 'full',
     dateFormat: 'both',
     timeFormat: '24h',
@@ -133,9 +134,14 @@
     // sound toggle writes, so the two controls are one setting rather
     // than two that can disagree. js/motion.js listens for this event.
     html.setAttribute('data-pc-sound', prefs.interfaceSound);
+    html.setAttribute('data-pc-intro', prefs.spokenIntro);
     try {
       window.localStorage.setItem('shrsSound', prefs.interfaceSound === 'off' ? 'off' : 'on');
       window.dispatchEvent(new Event(prefs.interfaceSound === 'off' ? 'shrs:sound-off' : 'shrs:sound-on'));
+      // The spoken introduction carries its own switch, so silencing the
+      // interface no longer silences the school's voice by side effect.
+      window.localStorage.setItem('shrsIntroVoice', prefs.spokenIntro === 'off' ? 'off' : 'on');
+      if(prefs.spokenIntro === 'off') window.dispatchEvent(new Event('shrs:intro-off'));
     } catch (e) { /* storage unavailable — the attribute still applies */ }
     ensureDyslexiaFont();
   }
@@ -247,6 +253,40 @@
   });
 
   applyFloatingVisibility();
+
+  // --- The spoken introduction: play it on request ---
+  // Browsers will not produce sound without a gesture, and a press is a
+  // gesture, so this always works where the automatic playing may not.
+  (function(){
+    var btn = root.querySelector('[data-pc-intro-play]');
+    var state = root.querySelector('[data-pc-intro-state]');
+    if(!btn) return;
+    var AR = STRIP_LANG === 'ar';
+    function say(msg){ if(state) state.textContent = msg || ''; }
+    function label(playing){
+      btn.textContent = playing
+        ? (AR ? 'إيقاف' : 'Stop')
+        : (AR ? 'استماع الكلمة' : 'Play the introduction');
+    }
+    btn.addEventListener('click', function(){
+      var intro = window.SHRS_INTRO;
+      if(!intro){ say(AR ? 'التسجيل غير متاح على هذه الصفحة.' : 'The recording is not available on this page.'); return; }
+      if(intro.speaking()){ intro.stop(); label(false); say(''); return; }
+      if(prefs.spokenIntro === 'off'){
+        prefs.spokenIntro = 'on';
+        savePrefs(prefs); applyAccessibility(); syncControls();
+      }
+      say(AR ? 'جارٍ التشغيل…' : 'Playing…');
+      label(true);
+      Promise.resolve(intro.play()).then(function(ok){
+        if(!ok){ label(false); say(AR ? 'تعذّر التشغيل.' : 'It would not play.'); return; }
+        var poll = window.setInterval(function(){
+          if(intro.speaking()) return;
+          window.clearInterval(poll); label(false); say('');
+        }, 400);
+      });
+    });
+  })();
 
   // --- Reconciler: keep this module's copy of the preferences true ---
   // Other modules write to the same store (the livery invitation, the
