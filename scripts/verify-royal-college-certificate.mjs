@@ -61,7 +61,12 @@ for (const f of ['identityNo', 'serialNo', 'contentHash', 'verifyCode', 'documen
   'archiveRef', 'printedNo', 'qrUrl']) seen[f] = new Set();
 
 for (const e of reg.entries) {
-  const m = String(e.serialNo).match(/^SHRS-CERT-(JSS)-(\d{4})-(\d{6})-([0-9A-F]{5})$/);
+  // The programme code is read off the register, not hardcoded. A gate that
+  // only knows one stage passes the stage it was written for and rejects every
+  // other one as malformed — which is what it did to the first Senior
+  // Secondary batch.
+  const m = String(e.serialNo).match(
+    new RegExp(`^SHRS-CERT-(${reg.programme})-(\\d{4})-(\\d{6})-([0-9A-F]{5})$`));
   if (!m) { fails.push(`${e.studentEn}: serial "${e.serialNo}" is not in the issuable format`); idOk = false; continue; }
   const [, code, year, seq, suffix] = m;
   const id7 = String(e.certId).padStart(7, '0');
@@ -157,7 +162,7 @@ for (const r of ruled) console.log(`       · ${r.student} → ${r.matchedTo} ($
 console.log('\n— wording —');
 const MUST_APPEAR = [
   'Sultan Hanafi Royal Schools', 'Sultan Hanafi Royal College',
-  'Certificate of Graduation', 'Junior Secondary School Graduation Certificate',
+  'Certificate of Graduation', reg.award,
   'Federal Republic of Nigeria', 'Dr. Adegoke Musa Olatunji',
   'Dr. Zakariyyah Olanrewaju Anofi', 'Student Identity Number',
 ];
@@ -198,7 +203,13 @@ const OFF_ROLL = [
   'Abdulateef Adedokun', 'Thoirah Makinde', 'Abdulbasit Amobi Jabarr',
   'Abdullah Oladimeji Anofi', 'Baqi Olamiposi Anofi', 'Faridah Ayomide Aliu',
 ];
-const found = OFF_ROLL.filter((n) => printHtml.includes(n));
+// A name is off-roll only if this batch did not issue it. Two Senior Secondary
+// graduates — Thoirah Makinde and Abdulbasit Amobi Jabarr — also hold Arabic
+// certificates, which is ordinary dual enrolment at this institution; the list
+// below is the union of everyone this pipeline has ever issued, so it must be
+// filtered against the roll in hand before it means anything.
+const onThisRoll = new Set(reg.entries.map((e) => e.studentEn));
+const found = OFF_ROLL.filter((n) => !onThisRoll.has(n) && printHtml.includes(n));
 check('no student outside this roll is named on any sheet', found.length === 0, found.join(', '));
 let onRoll = true;
 for (const e of reg.entries) {

@@ -185,15 +185,46 @@ function assertIdentityIsFreeAcrossRegisters(issuedRows) {
       }
     }
   } catch { /* no dist yet — the published registers are the whole world */ }
+  // EVERY holder of a number is kept, not just the last one seen. Overwriting
+  // meant that if two registers already disagreed about who owns an ID, the
+  // gate reported only whichever file happened to be read last.
   for (const [code, path] of sources) {
     let reg; try { reg = JSON.parse(readFileSync(path, 'utf8')); } catch { continue; }
-    for (const e of reg.entries) taken.set(e.identityNo, `${e.studentEn} (${code})`);
+    for (const e of reg.entries) {
+      if (!taken.has(e.identityNo)) taken.set(e.identityNo, []);
+      taken.get(e.identityNo).push({ name: e.studentEn, code });
+    }
   }
   const clashes = [];
   for (const r of issuedRows) {
-    const holder = taken.get(r.identityNo);
-    if (holder && holder.split(' (')[0] !== r.studentEn) {
-      clashes.push(`${r.studentEn} was given ${r.identityNo}, which already belongs to ${holder}`);
+    for (const holder of taken.get(r.identityNo) || []) {
+      // The same person under the same written name — including this batch's
+      // own earlier run, re-read out of dist/ on a re-issue.
+      if (holder.name === r.studentEn) continue;
+      // A DECLARED carry-over. One person can appear on two rolls under two
+      // written forms of one name (a short form on one register, the full form
+      // on another), and carrying the Student ID across is the whole reason
+      // carryOverFrom exists — reusing the number there is correct, not a
+      // collision. The exemption is deliberately narrow: it applies only to the
+      // exact register and name the roll declares, and only where the Founder
+      // has ruled that the two names are one student. An undeclared reuse, or a
+      // declared one nobody has ruled on, still fails the batch. This is what
+      // separates a lawful carry-over from the fault this gate was built for —
+      // the Senior Secondary run that minted fresh IDs from an overlapping
+      // sequence and handed two children numbers already engraved on two other
+      // children's certificates. That had no declaration and no ruling, and it
+      // still stops the batch dead.
+      const declared = r.carryOverFrom
+        && holder.code === r.carryOverFrom.register
+        && holder.name === r.carryOverFrom.name;
+      if (declared && r.founderRuling) continue;
+      if (declared) {
+        clashes.push(`${r.studentEn} would take ${r.identityNo} from ${holder.name} (${holder.code}) `
+          + 'on an undeclared name match — the Founder has not ruled that these are one student');
+        continue;
+      }
+      clashes.push(`${r.studentEn} was given ${r.identityNo}, `
+        + `which already belongs to ${holder.name} (${holder.code})`);
     }
   }
   if (clashes.length) {

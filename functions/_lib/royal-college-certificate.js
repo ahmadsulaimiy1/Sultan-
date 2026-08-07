@@ -180,15 +180,20 @@ function medallion(cx, cy, scale, stroke, opacity, colour = GOLD_DEEP) {
 // every 0.67mm on a curve whose shortest cycle is 37mm — 55 points per cycle,
 // smooth past what 600 DPI can resolve — and takes the file to a size a
 // printer will accept by email.
-function lathe(x, y, len, h, strands, stroke, opacity, vertical = false) {
+// `cycles` is how many times each strand crosses the band over its whole run.
+// It defaults to 7, which is what the approved Junior Secondary sheet uses and
+// must not change. A long border run needs far more: at 7 cycles over a 287mm
+// edge the wave period is 41mm, and the band reads as a few lazy swoops rather
+// than as engine-turning. The plate border passes its own value.
+function lathe(x, y, len, h, strands, stroke, opacity, vertical = false, cycles = 7) {
   const out = [];
-  const steps = Math.max(64, Math.round(len * 1.5));
+  const steps = Math.max(64, Math.round(len * Math.max(1.5, cycles / 3)));
   for (let s = 0; s < strands; s++) {
     const phase = (s / strands) * Math.PI * 2;
     const pts = [];
     for (let i = 0; i <= steps; i++) {
       const u = (i / steps) * len;
-      const v = (h / 2) * Math.sin((u / len) * Math.PI * 2 * 7 + phase)
+      const v = (h / 2) * Math.sin((u / len) * Math.PI * 2 * cycles + phase)
         * Math.cos((u / len) * Math.PI * 2 * 1.5 + phase * 0.5);
       pts.push(vertical
         ? `${(x + v).toFixed(2)},${(y + u).toFixed(2)}`
@@ -452,94 +457,150 @@ function cornerJewel(cx, cy, dx, dy, uid) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THE MOORISH BORDER — Senior Secondary
+// THE SECURITY PLATE BORDER — Senior Secondary
 //
-// Reconstructed from the artwork the Founder supplied for the SS3 certificate,
-// which he asked to be kept unchanged and only brought up to press resolution.
+// This is the Founder's own artwork, rebuilt. His instruction was that the
+// border is not to be redesigned: it may only be brought up to press
+// resolution, either by upscaling the file or by drawing it again so that the
+// result reads as an upgrade of the same plate.
 //
-// It could not be brought up by upscaling. The file is 1080 x 708 px, which on
-// a 297 x 210mm sheet is 92 DPI; reaching 300 DPI needs a 3.25x enlargement,
-// and enlargement cannot invent the hairline filigree or the microtext — the
-// filigree would come back soft and the microtext would print as grey mush. So
-// this takes the second route he authorised: drawn again as true vector, to
-// look exactly like the artwork, at any resolution.
+// Upscaling is not available. The supplied file is 1080 x 708 px. Laid on a
+// 297mm sheet that is 92 DPI, and 300 DPI needs a 3.25x enlargement —
+// enlargement cannot invent the hairline filigree or the microtext, so the
+// ornament would come back soft and the microtext would print as grey mush.
+// A soft border on a certificate does not read as a large photograph; it reads
+// as a photocopy, which is the one impression this document must never give.
+// So this takes the second route he authorised, and draws the same plate as
+// true vector — sharp at 300 DPI, at 600, at any size.
 //
-// What is reproduced: the stepped navy-and-gold corner brackets, the double
-// gold frame with its pale engine-turned band between the rules, the rosettes
-// at the middle of each run, and the microtext rails at the head and foot.
+// The geometry is MEASURED off his artwork rather than invented. Scanning a
+// clear column of the supplied file (clear of the corner block and of the
+// centre medallion) gives the depth of every band from the sheet edge, and
+// those measurements are the PLATE table below. The earlier cut of this file
+// did not do that: it read the artwork as a mood and drew a different border,
+// which is the substitution the Founder rejected. Every number here can be
+// re-derived from the file; none of it is taste.
 //
-// What is NOT reproduced, and why: the artwork's own lettering names the School
-// of Islamic & Arabic Studies — in its microtext rails and in its seal ring —
-// and this is a Royal College award. Reproducing that text would put the wrong
-// school on a senior graduate's certificate. The ornament is kept; the words
-// are the College's own.
+// The plate, edge inwards, is: a gold rule at the trim; a microtext rail on
+// bare paper; a gold rule; a broad engine-turned band; the heavy gold frame
+// rule; a navy counter-rule. Four stepped corner brackets in navy and gold sit
+// on top of it, carrying a girih lattice, and a gold khatam medallion straddles
+// the frame at the middle of each run.
+//
+// What is NOT reproduced, and why: the artwork's own lettering names the
+// School of Islamic & Arabic Studies, and carries specimen numbers
+// (SHRS-IBT-2025-0000001, 4X78-9K2M-P6QZ) and the domain verify.shrschools.ng.
+// This is a Royal College award, its numbers are real, and its domain is
+// shroyalschools.com. The plate is his; the words are this document's own.
 // ─────────────────────────────────────────────────────────────────────────────
-function moorishBracket(cx, cy, sx, sy, uid) {
-  const T = 5.4;
-  // A stepped Moorish shoulder: three treads down each arm, meeting on the
-  // diagonal. The step sizes are read off the artwork's own proportions.
-  const armX = [[54, T + 9.5], [41, T + 9.5], [41, T + 15], [29.5, T + 15],
-    [29.5, T + 21], [22, T + 21]];
-  const armY = armX.map(([x, y]) => [y, x]);
-  const seg = (pts) => pts.map(([x, y]) => `L ${x.toFixed(2)} ${y.toFixed(2)}`).join(' ');
-  const d = `M 54 ${T} L ${T} ${T} L ${T} 54 `
-    + seg(armY.slice().reverse().reverse()) + ' '
-    + seg(armX.slice().reverse()) + ' Z';
-  // Arabesque inside the shoulder: scrolled vine, drawn in gold on the navy.
-  const vine = `M ${T + 3.4} ${T + 15} C ${T + 9} ${T + 5}, ${T + 15} ${T + 3.4}, ${T + 24} ${T + 3.4}`
-    + ` M ${T + 3.4} ${T + 24} C ${T + 5} ${T + 15}, ${T + 15} ${T + 5}, ${T + 24} ${T + 3.4}`
-    + ` M ${T + 3.4} ${T + 33} C ${T + 8} ${T + 20}, ${T + 20} ${T + 8}, ${T + 33} ${T + 3.4}`;
-  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})">
-    <path d="${d}" fill="url(#rcNavyG${uid})" stroke="url(#rcFoil)" stroke-width="0.9"/>
-    <path d="${d}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.65"
-      transform="translate(1.3 1.3) scale(0.975)"/>
-    <path d="${vine}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.42" opacity="0.85"
-      stroke-linecap="round"/>
-    <path d="${vine}" fill="none" stroke="${GOLD}" stroke-width="0.16" opacity="0.9"
-      transform="translate(0.5 0.5)" stroke-linecap="round"/>
-    ${[[T + 12, T + 12], [T + 22, T + 6.5], [T + 6.5, T + 22]]
-      .map(([x, y]) => `<path d="${khatamStar(x, y, 2.5, Math.PI / 8)}" fill="none"
-        stroke="${GOLD_PALE}" stroke-width="0.22" opacity="0.8"/>`).join('')}
-  </g>`;
+
+// Depths in mm from the sheet edge. Measured off the supplied artwork at
+// 3.636 px/mm (1080 px across a 297mm sheet).
+const PLATE = {
+  trim: 1.5,                    // gold rule at the trim edge
+  railT: 2.2, railB: 4.5,       // microtext rail — bare paper, engraved caps
+  bandT: 5.0, bandB: 9.6,       // engine-turned band
+  frame: 10.2,                  // the heavy gold frame rule
+  counter: 11.5,                // navy counter-rule inside it
+  corner: 5.0,                  // outer edge of the corner brackets
+  reach: 34.0,                  // how far each bracket arm runs
+  arm: 4.5,                     // bracket thickness along the arm
+};
+
+// One stepped Moorish shoulder, in sheet coordinates for the top-left corner.
+// The staircase is symmetric about the 45-degree diagonal, which is what lets
+// the same path serve all four corners under a reflection and is why this
+// border needs no corner patch — the fault the Founder called "patched" in the
+// first design round.
+function plateBracketPath() {
+  const { corner: o, reach: r, arm } = PLATE;
+  const step = [[o + arm, r], [o + arm, 27], [15, 27], [15, 21.5], [21.5, 21.5],
+    [21.5, 15], [27, 15], [27, o + arm], [r, o + arm]];
+  return `M ${r} ${o} L ${o} ${o} L ${o} ${r} `
+    + step.map(([x, y]) => `L ${x} ${y}`).join(' ') + ' Z';
 }
 
-function moorishBorder(uid) {
-  const R = RC_RULES;
-  const frame = (inset, w, stroke) => `<rect x="${inset}" y="${inset}"
-    width="${(W - 2 * inset).toFixed(2)}" height="${(H - 2 * inset).toFixed(2)}"
-    fill="none" stroke="${stroke}" stroke-width="${w}"/>`;
-  // The pale engine-turned band that runs between the two gold rules.
-  const band = [];
-  for (const [x, y, len, vert] of [[13.2, 13.2, W - 26.4, false], [13.2, H - 13.2, W - 26.4, false],
-    [13.2, 13.2, H - 26.4, true], [W - 13.2, 13.2, H - 26.4, true]]) {
-    band.push(lathe(x, y - 1.6, len, 3.2, 4, 0.075, 0.5, vert));
+// The four corner transforms. The top-left path is authored once; the other
+// three are reflections of it, so they cannot drift out of agreement.
+const PLATE_CORNERS = [
+  '', `translate(${W} 0) scale(-1 1)`, `translate(0 ${H}) scale(1 -1)`,
+  `translate(${W} ${H}) scale(-1 -1)`,
+];
+
+function plateBracket(uid, i) {
+  const d = plateBracketPath();
+  const { corner: o, reach: r } = PLATE;
+  // The girih that fills the shoulder. Real paths on a square lattice, clipped
+  // to the bracket — NOT an SVG <pattern> fill, which the PDF writer rasterises
+  // whatever it contains and which is what put an earlier press proof at 102 MB.
+  //
+  // Three registers, because ONE register is wallpaper. A first cut of this
+  // drew a single grid of identical stars at a 5.5mm pitch, and the proof came
+  // back reading as tiled bathroom tile — the "looks like template" the Founder
+  // has rejected twice. Real girih is an interlace: a primary star at each cell
+  // centre, a smaller secondary star on each lattice node between them, and
+  // strapwork tying the two together so the eye reads one continuous ribbon
+  // rather than repeated units. At a 3.1mm pitch the whole shoulder carries
+  // roughly ninety intersecting figures, which is the density of the artwork.
+  const cells = [];
+  const CELL = 3.1;
+  for (let x = o - CELL; x < r + CELL; x += CELL) {
+    for (let y = o - CELL; y < r + CELL; y += CELL) {
+      const cx = x + CELL / 2, cy = y + CELL / 2;
+      cells.push(`<path d="${khatamStar(cx, cy, CELL * 0.47, Math.PI / 8)}"
+        fill="none" stroke="${GOLD_PALE}" stroke-width="0.13" opacity="0.9"/>`);
+      cells.push(`<path d="${khatamStar(x, y, CELL * 0.24, 0)}"
+        fill="none" stroke="${GOLD}" stroke-width="0.1" opacity="0.75"/>`);
+      // Strapwork: the diagonals that carry the eye from one figure to the next.
+      cells.push(`<path d="M ${x} ${cy} L ${cx} ${y} M ${cx} ${y + CELL} L ${x + CELL} ${cy}"
+        fill="none" stroke="${GOLD_PALE}" stroke-width="0.08" opacity="0.5"/>`);
+    }
   }
-  const rosette = (cx, cy, r) => `<path d="${khatamStar(cx, cy, r, Math.PI / 8)}"
-      fill="url(#rcFoilD${uid})" stroke="${NAVY_DEEP}" stroke-width="0.22"/>
-    <circle cx="${cx}" cy="${cy}" r="${(r * 0.32).toFixed(2)}" fill="${NAVY_DEEP}"/>
-    <circle cx="${cx}" cy="${cy}" r="${(r * 0.32).toFixed(2)}" fill="none"
-      stroke="${GOLD_PALE}" stroke-width="0.16"/>`;
+  return `<g transform="${PLATE_CORNERS[i]}">
+    <clipPath id="rcBrk${uid}${i}"><path d="${d}"/></clipPath>
+    <path d="${d}" fill="url(#rcNavyG${uid})"/>
+    <g clip-path="url(#rcBrk${uid}${i})">${cells.join('')}</g>
+    <path d="${d}" fill="none" stroke="url(#rcFoil)" stroke-width="0.75"/>
+    <path d="${d}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.16" opacity="0.7"/>
+  </g>`;
+  // No finial closes the arm. An earlier cut set a gold star just past each
+  // arm's end, and on the proof the two stars sat on the guilloche band with
+  // the lathe strands running visibly through them — an ornament floating on
+  // top of another feature rather than resolving it. The house rule this file
+  // already records applies: ornament that is nearly right is worse than none.
+  // The arms simply end, which is what the artwork does.
+}
+
+function plateBorder(uid, serial) {
+  // The ornament is no longer drawn here. It is the Founder's own plate,
+  // built by scripts/build-plate-border.py and laid in as
+  // assets/images/certificates/ss-border-plate.png behind this SVG.
+  //
+  // Everything this function used to draw — corner brackets, girih, guilloche
+  // band, frame rules, medallions — was a redraw, and a redraw of a locked
+  // masterwork is a different border no matter how carefully it is measured.
+  // The Founder rejected two of them and was right both times. What remains
+  // here is the one thing the plate cannot carry: the microtext rail, which on
+  // his artwork names another school and quotes specimen numbers, and which
+  // has to say this document's own name and this document's own serial.
+  //
+  // The plate's rail is knocked back to bare paper at build time, so this text
+  // lands on clean stock in exactly the channel the artwork reserves for it.
+  const P = PLATE;
+  const s = esc(serial);
+  const railFs = (0.9 * PT).toFixed(3);
+  const hText = ('SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · '
+    + `CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `).repeat(4);
+  const vText = (`SULTAN HANAFI ROYAL COLLEGE · SENIOR SECONDARY · ${s} · `).repeat(6);
+  const railY = ((P.railT + P.railB) / 2 + 0.32).toFixed(2);
+  const rail = (transform) => `<text transform="${transform}" font-family="Cinzel, serif"
+    font-size="${railFs}" letter-spacing="${(0.3 * PT).toFixed(3)}" fill="${INK}"
+    text-anchor="middle" opacity="0.88">`;
   return `
-  <!-- Outer navy hairline, then the double gold frame with its pale band. -->
-  ${frame(4.0, 0.3, NAVY)}
-  ${frame(11.4, 1.5, 'url(#rcFoil)')}
-  <g opacity="0.55">${band.join('')}</g>
-  ${frame(15.0, 1.5, 'url(#rcFoil)')}
-  ${frame(16.6, 0.22, NAVY)}
-  ${frame(R.fieldH - 1.2, 0.9, 'url(#rcFoil)')}
-  ${frame(R.fieldH + 0.4, 0.16, NAVY)}
-
-  <!-- The four stepped shoulders. -->
-  ${moorishBracket(0, 0, 1, 1, uid)}
-  ${moorishBracket(W, 0, -1, 1, uid)}
-  ${moorishBracket(0, H, 1, -1, uid)}
-  ${moorishBracket(W, H, -1, -1, uid)}
-
-  <!-- Rosettes at the middle of each run, as the artwork sets them. -->
-  ${rosette(W / 2, 13.2, 4.6)}
-  ${rosette(W / 2, H - 13.2, 4.6)}
-  ${rosette(13.2, H / 2, 4.0)}
-  ${rosette(W - 13.2, H / 2, 4.0)}`;
+  ${rail(`translate(${W / 2} ${railY})`)}${hText}</text>
+  ${rail(`translate(${W / 2} ${(H - +railY + 0.64).toFixed(2)})`)}${hText}</text>
+  ${rail(`translate(${railY} ${H / 2}) rotate(-90)`)}${vText}</text>
+  ${rail(`translate(${(W - +railY + 0.64).toFixed(2)} ${H / 2}) rotate(90)`)}${vText}</text>`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -674,7 +735,7 @@ function groundSvg(serial, uid, style = 'ring') {
 
   ${voidPantograph(uid)}
 
-  ${style === 'moorish' ? moorishBorder(uid) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
+  ${style === 'plate' ? plateBorder(uid, serial) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
        A saturated navy body carrying a gold khatam tessellation, cut out on an
        11.5mm radius so the field's corner is a curve and not an angle. 16mm at
        the head and foot, 23.5mm at the sides. One path: no joins, no mitres,
@@ -733,13 +794,43 @@ function groundSvg(serial, uid, style = 'ring') {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THE INSTITUTIONAL SEAL
-// Vector, with the Royal College's own ring text. The v1.0 raster seal
-// (assets/images/certificates/official-seal.png) names the School of Islamic &
-// Arabic Studies in its ring, so it is the wrong seal for this document and is
-// deliberately not reused.
+// THE INSTITUTIONAL SEAL — the real one
+//
+// This is assets/images/certificates/official-seal.png, the struck gold seal
+// already carried by the v1.0 certificates, at print resolution. It is not a
+// drawing of the seal and it is not a new seal: it is the institution's own
+// die, and the Founder's instruction is that it stays that way and takes only
+// a line of added text.
+//
+// An earlier cut of this file replaced it with a vector redraw, on a note
+// claiming the raster seal named the School of Islamic & Arabic Studies in its
+// ring. That note was wrong, and it is worth recording why so the mistake is
+// not repeated: the ring naming the School of Islamic & Arabic Studies is on
+// the SPECIMEN ARTWORK supplied as the border reference, not on this asset.
+// The asset's own ring reads SULTAN HANAFI ROYAL SCHOOLS above and
+// مدارس السلطان حنفي الملكية below — the institution, not one of its schools —
+// which is exactly right for a Royal College award. A misread of one image
+// was allowed to retire the real seal of the institution.
+//
+// The added text sits BELOW the die, on its own engraved ribbon. Nothing is
+// printed over the seal face: overprinting a struck seal is what a forger does
+// to repurpose one, and a registrar is trained to look for it.
 // ─────────────────────────────────────────────────────────────────────────────
-function sealSvg(uid) {
+function sealPlate(programmeEn) {
+  return `<figure class="rc-seal-plate">
+    <img class="rc-seal-die" src="/assets/images/certificates/official-seal-print.png"
+      alt="Official seal of Sultan Hanafi Royal Schools"/>
+    <figcaption class="rc-seal-ribbon">
+      <span class="rc-seal-ribbon-t">Sultan Hanafi Royal College</span>
+      <span class="rc-seal-ribbon-b">${esc(programmeEn)}</span>
+    </figcaption>
+  </figure>`;
+}
+
+// Retained for the Junior Secondary sheet, which the Founder has already
+// approved and signed off; changing its seal now would alter an approved
+// layout. New programmes take sealPlate() above.
+function sealSvg(uid, code = 'JSS') {
   // Ring text is fitted to the ARC LENGTH, not chosen by eye. The first cut set
   // the outer ring at 6.4pt with 1.15 tracking: 27 characters at that advance
   // want ~152 units of path and the semicircle at r=42 offers 132, so the proof
@@ -792,7 +883,7 @@ function sealSvg(uid) {
     <text x="0" y="-1.6" font-family="Cinzel, serif" font-size="5.6" font-weight="800"
       fill="#F7EBC6" text-anchor="middle" letter-spacing="0.4">SHRS</text>
     <text x="0" y="8.4" font-family="Cinzel, serif" font-size="4.6" font-weight="700"
-      fill="#F7EBC6" text-anchor="middle" letter-spacing="0.35">JSS</text>
+      fill="#F7EBC6" text-anchor="middle" letter-spacing="0.35">${esc(code)}</text>
   </g>
   <text x="50" y="76.5" font-family="Cinzel, serif" font-size="3.8" font-weight="700"
     fill="#6E5320" text-anchor="middle" letter-spacing="0.7">OFFICIAL SEAL</text>
@@ -965,7 +1056,7 @@ export const RC_PROGRAMMES = {
     award: 'Senior Secondary School Graduation Certificate',
     stageEn: 'the three-year Senior Secondary School programme',
     progressesTo: 'tertiary study',
-    border: 'moorish',
+    border: 'plate',
   },
 };
 
@@ -1070,8 +1161,11 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   const microSerial = `${serial} · `.repeat(7);
 
-  return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}">
+  return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}"
+  data-border="${esc(prog.border || 'ring')}">
   ${groundSvg(serial, uid, prog.border || 'ring')}
+  ${prog.border === 'plate' ? `<img class="rc-plate-bg"
+    src="/assets/images/certificates/ss-border-plate.png" alt="" />` : ''}
 
   <!-- ── HEAD ────────────────────────────────────────────────────────────────
        Three emblems on one baseline: Nigeria left, the institutional crest
@@ -1165,7 +1259,8 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid)}</div>
 
-  <div class="rc-sealwrap">${sealSvg(uid)}</div>
+  <div class="rc-sealwrap${prog.border === 'plate' ? ' is-die' : ''}">${
+  prog.border === 'plate' ? sealPlate(prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
 
   <div class="rc-plate">
     ${plaque(92, 28, `vp${uid}`)}
@@ -1322,6 +1417,20 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-seal-svg{display:block;width:100%;height:100%;
   filter:drop-shadow(0 0.35mm 0.6mm rgba(64,46,12,0.28))}
 
+/* The struck die, plus the one line of added text the Founder allowed. The
+   wrapper is taller than the SVG seal's because the ribbon hangs below the
+   die — nothing is printed across the seal face. */
+.rc-sealwrap.is-die{top:148mm;height:46mm}
+.rc-seal-plate{margin:0;display:flex;flex-direction:column;align-items:center}
+.rc-seal-die{display:block;width:36mm;height:auto;
+  filter:drop-shadow(0 0.4mm 0.7mm rgba(64,46,12,0.34))}
+.rc-seal-ribbon{margin-top:1.1mm;text-align:center;line-height:1.25}
+.rc-seal-ribbon-t,.rc-seal-ribbon-b{display:block;font-family:'Cinzel',serif;
+  color:${GOLD_DEEP};text-transform:uppercase}
+.rc-seal-ribbon-t{font-size:4.4pt;font-weight:700;letter-spacing:0.16em}
+.rc-seal-ribbon-b{font-size:3.8pt;font-weight:600;letter-spacing:0.2em;
+  color:${MICRO_INK};margin-top:0.35mm}
+
 .rc-plate{position:absolute;left:171mm;top:160mm;width:92mm;height:28mm}
 .rc-plate-head{position:absolute;left:0;right:0;top:1.5mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.6pt;font-weight:600;letter-spacing:0.2em;
@@ -1348,6 +1457,32 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   background:linear-gradient(180deg,rgba(34,51,90,0.85),rgba(15,23,40,0.9))}
 .rc-serial-tr{right:46mm;top:5.4mm}
 .rc-serial-bl{left:46mm;bottom:5.4mm}
+
+/* The plate border does not carry these two tabs at all.
+   On the ring border they are the only repeat of the serial away from the
+   cartouche, so they earn their place. On the plate they did not: a navy
+   lozenge landed on top of the microtext rail and the engine-turned band, so
+   a panel sat over two security features and read as a sticker applied after
+   printing. Engraving them into the field instead moved the problem rather
+   than fixing it — at any inset that cleared the border they clipped at the
+   trim. They are dropped here because they are redundant on this sheet and
+   not because they were awkward to place: the plate's own microtext rail
+   already repeats the full serial around all four edges, and the number also
+   appears in the cartouche, the verification panel, the QR payload and the
+   archive barcode. Six occurrences is not fewer than seven in any way a
+   verifier can use. */
+.sheet[data-border="plate"] .rc-serial{display:none}
+
+/* The Founder's plate, laid edge to edge behind everything. It is a 300 DPI
+   enlargement of his artwork, 9-sliced so the corner castings are never
+   distorted — see scripts/build-plate-border.py for how it is built and for
+   an honest note on what a 92 DPI source can and cannot give back. */
+/* Its own layer, not a background on .sheet: the ground SVG paints a
+   full-bleed paper rectangle, so a background set on the sheet is covered by
+   the very first thing drawn over it. The plate sits above the ground and
+   below every piece of content. */
+.rc-plate-bg{position:absolute;left:0;top:0;width:297mm;height:210mm;
+  z-index:0;pointer-events:none}
 
 .rc-plate-void{position:absolute;left:0;right:0;bottom:1mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.1em;
