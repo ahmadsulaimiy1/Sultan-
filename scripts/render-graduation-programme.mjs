@@ -18,7 +18,7 @@ import { chromium } from 'playwright-core';
 const ROOT = process.cwd();
 const DIR = 'dist/graduation-programme';
 const NAME = 'SHRS-Graduation-Programme-2026';
-const PAGES = 4;
+const PAGES = 2;   // two printed sides of a trifold
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.png': 'image/png',
@@ -46,7 +46,8 @@ const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH
     || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
-const page = await browser.newPage({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 2 });
+// 303 x 216mm at 96 CSS px/in
+const page = await browser.newPage({ viewport: { width: 1145, height: 816 }, deviceScaleFactor: 2 });
 await page.goto(`${base}/${DIR}/${NAME}.html`, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 
@@ -61,7 +62,7 @@ console.log(`  ${NAME}.pdf  ${(pdf.length / 1024).toFixed(0)} KB`);
 // needs the whole page in hand first.
 for (let i = 0; i < PAGES; i += 1) {
   const png = await page.screenshot({
-    fullPage: true, clip: { x: 0, y: i * 1123, width: 794, height: 1123 },
+    fullPage: true, clip: { x: 0, y: i * 816, width: 1145, height: 816 },
   });
   writeFileSync(join(DIR, `page-${i + 1}.png`), png);
 }

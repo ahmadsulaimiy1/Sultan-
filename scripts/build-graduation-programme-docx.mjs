@@ -1,29 +1,29 @@
 #!/usr/bin/env node
 /**
- * The Word edition of the Graduation Ceremony Programme.
+ * The Word edition of the Graduation Ceremony Programme — the same trifold.
  *
  *     node scripts/build-graduation-programme-docx.mjs
  *
- * The PDF is the design-true artefact — set in the school's own typefaces on a
- * woven ground, with the engine-turned bands and the dark ceremonial cover —
- * and it is what goes to the printer. This is the editable edition: the same
- * four leaves, the same rolls, the same running order, set in typefaces that
- * are on every machine that opens a .docx, so the office can change a time or
- * add a name on the morning without a build step.
+ * Two landscape sheets, each set in three columns with a column break between
+ * panels: fold twice and it reads in the same order as the press file. The PDF
+ * is the design-true artefact — it bleeds to the trim and carries the dark
+ * ceremonial cover, the engine-turned bands and the school's own typefaces.
+ * This is the editable one, set in faces that are on every machine that opens
+ * a .docx, so the office can change a time or add a name on the morning
+ * without a build step.
  *
- * The names, the running order, the guests and the officers are IMPORTED from
- * the builder that makes the PDF. There is no second list to fall out of step
- * with the first. Change a name there and both editions change.
+ * Names, running order, guests and officers are IMPORTED from the builder that
+ * makes the PDF. There is no second list to fall out of step with the first.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import {
-  AlignmentType, BorderStyle, Document, ImageRun, PageBorderDisplay,
-  PageBorderOffsetFrom, Packer, Paragraph, ShadingType, Table,
-  TableCell, TableRow, TextRun, WidthType,
+  AlignmentType, BorderStyle, ColumnBreak, Document, ImageRun, Packer,
+  Paragraph, ShadingType, Table, TableCell, TableRow, TextRun, WidthType,
 } from 'docx';
 import {
   AWARDS, ORDER, OFFICERS, TOTAL, PEOPLE, COORDINATORS, VENUE, WEB, MAIL, TEL,
   CHIEF_HOST, LECTURE, GUESTS, FIGURES, WELCOME, CEO_WORD, TAGLINE, OPENS, CLOSES, to12,
+  OFFICER_FACE,
 } from './build-graduation-programme.mjs';
 
 // ── Typefaces ───────────────────────────────────────────────────────────────
@@ -37,73 +37,76 @@ const SANS = 'Calibri';
 const ARABIC = 'Times New Roman';
 
 const INK = '2B2417', SOFT = '5A4E37', GOLD = '7A5C21', GOLD_L = 'A8863F';
-const DARK = '241A0B', CREAM = 'F3E7CC', TINT = 'F6F1E5';
+const DARK = '241A0B', CREAM = 'F3E7CC', TINT = 'F7F2E6';
 
-const MM = (mm) => Math.round(mm * 56.6929);   // millimetres → DXA (1440/25.4)
+const MM = (mm) => Math.round(mm * 56.6929);   // millimetres → DXA
 const PX = (mm) => Math.round(mm * 96 / 25.4); // millimetres → CSS px, for images
 
-const crestPng = readFileSync('assets/images/crests/shrs-institutional-crest.png');
-const CREST_RATIO = 520 / 476;
+// A4 landscape, three panels. No bleed: an office printer cannot bleed, and a
+// panel drawn to a false trim would be cropped wrong on the fold.
+const SHEET_W = 297, SHEET_H = 210;
+const MARGIN = { top: MM(9), bottom: MM(8), left: MM(8), right: MM(8) };
+const GUTTER = 8;                                  // mm between columns
+const COL = (SHEET_W - 16 - GUTTER * 2) / 3;       // 88.3mm
 
-const crest = (hMm, after = 120) => new Paragraph({
-  alignment: AlignmentType.CENTER,
-  spacing: { after },
-  children: [new ImageRun({
-    data: crestPng, type: 'png',
-    transformation: { height: PX(hMm), width: Math.round(PX(hMm) * CREST_RATIO) },
-  })],
-});
-
-const photo = (file, wMm, hMm) => new ImageRun({
-  data: readFileSync(`assets/images/gallery/${file}`), type: 'jpg',
+const img = (dir, file, wMm, hMm) => new ImageRun({
+  data: readFileSync(`assets/images/${dir}/${file}`),
+  type: file.endsWith('.png') ? 'png' : 'jpg',
   transformation: { width: PX(wMm), height: PX(hMm) },
 });
 
-// ── Type fixtures ───────────────────────────────────────────────────────────
 const p = (opts) => new Paragraph(opts);
 
 const line = (text, o = {}) => p({
   alignment: o.align ?? AlignmentType.CENTER,
   spacing: { before: o.before ?? 0, after: o.after ?? 0 },
   children: [new TextRun({
-    text, font: o.font ?? SERIF, size: o.size ?? 22, color: o.color ?? INK,
+    text, font: o.font ?? SERIF, size: o.size ?? 16, color: o.color ?? INK,
     bold: o.bold, italics: o.italics, allCaps: o.caps, characterSpacing: o.track,
   })],
 });
 
 const arabic = (text, o = {}) => p({
   alignment: o.align ?? AlignmentType.CENTER,
-  bidirectional: true,
   spacing: { before: o.before ?? 0, after: o.after ?? 0 },
   children: [new TextRun({
-    text, font: ARABIC, size: o.size ?? 24, color: o.color ?? GOLD,
+    text, font: ARABIC, size: o.size ?? 20, color: o.color ?? GOLD,
     rightToLeft: true, bold: o.bold,
   })],
 });
 
-// A rule, not a row of hyphens: a hairline paragraph border in gold.
 const rule = (o = {}) => p({
-  alignment: AlignmentType.CENTER,
-  spacing: { before: o.before ?? 160, after: o.after ?? 160 },
-  border: { bottom: { style: BorderStyle.SINGLE, size: o.heavy ? 8 : 4, color: GOLD_L, space: 4 } },
+  spacing: { before: o.before ?? 100, after: o.after ?? 100 },
+  border: { bottom: { style: BorderStyle.SINGLE, size: o.heavy ? 8 : 4, color: GOLD_L, space: 3 } },
   children: [new TextRun({ text: '', size: 2 })],
 });
 
-const lozenge = (o = {}) => p({
-  alignment: AlignmentType.CENTER,
-  spacing: { before: o.before ?? 60, after: o.after ?? 60 },
-  children: [new TextRun({ text: '◆', font: SERIF, size: 14, color: GOLD_L, characterSpacing: 120 })],
-});
+// A panel heading: the kicker, the title, a rule under both.
+const head = (kicker, title) => [
+  line(kicker, { size: 10, font: SANS, color: SOFT, caps: true, track: 60, after: 40 }),
+  line(title, { size: 22, bold: true, color: GOLD, caps: true, track: 20 }),
+  rule({ before: 60, after: 120 }),
+];
 
-// A section heading: small caps in gold over a hairline.
+// A section heading: gold small caps over a hairline.
 const sh = (text, o = {}) => p({
-  spacing: { before: o.before ?? 200, after: o.after ?? 100 },
+  spacing: { before: o.before ?? 180, after: o.after ?? 80 },
   border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: GOLD_L, space: 3 } },
   children: [new TextRun({
-    text, font: SANS, size: 15, color: GOLD, allCaps: true,
-    bold: true, characterSpacing: 60,
+    text, font: SANS, size: 11, color: GOLD, allCaps: true, bold: true, characterSpacing: 50,
   })],
 });
+
+// A photograph with its caption in gold small caps beneath.
+const plate = (file, wMm, hMm, cap) => [
+  p({ alignment: AlignmentType.CENTER, children: [img('gallery', file, wMm, hMm)] }),
+  p({
+    alignment: AlignmentType.CENTER, spacing: { before: 20, after: 120 },
+    children: [new TextRun({
+      text: cap, font: SANS, size: 9, color: GOLD, allCaps: true, characterSpacing: 30,
+    })],
+  }),
+];
 
 const NO_BORDER = {
   top: { style: BorderStyle.NONE, size: 0, color: 'auto' },
@@ -116,7 +119,7 @@ const NO_BORDER = {
 
 const cell = (children, width, o = {}) => new TableCell({
   width: { size: width, type: WidthType.DXA },
-  margins: { top: o.pad ?? 40, bottom: o.pad ?? 40, left: o.padX ?? 60, right: o.padX ?? 60 },
+  margins: { top: o.pad ?? 30, bottom: o.pad ?? 30, left: o.padX ?? 0, right: o.padX ?? 40 },
   shading: o.fill ? { type: ShadingType.CLEAR, fill: o.fill, color: 'auto' } : undefined,
   children,
 });
@@ -126,389 +129,316 @@ const grid = (widths, rows) => new Table({
   columnWidths: widths, borders: NO_BORDER, rows,
 });
 
-const TEXT_W = MM(210 - 16 - 16);
-const HALF = Math.round(TEXT_W / 2);
+const CW = MM(COL);
+const brk = () => p({ children: [new ColumnBreak()] });
 
-// ── LEAF I · THE COVER ──────────────────────────────────────────────────────
-const cover = [
-  crest(30, 140),
-  arabic('مدارس السلطان حنفي الملكية', { size: 28, after: 120 }),
-  line('Sultan Hanafi Royal Schools',
-    { size: 40, bold: true, track: 40, after: 100 }),
-  line('Established MMXVII  ·  Ikorodu  ·  Lagos State  ·  Nigeria',
-    { size: 16, font: SANS, color: SOFT, caps: true, track: 40 }),
-  rule({ before: 420, after: 60, heavy: true }),
-  lozenge({ before: 40, after: 360 }),
-  line('The First Combined',
-    { size: 21, italics: true, color: SOFT, after: 220 }),
-  line('Graduation', { size: 70, bold: true, track: 30 }),
-  line('Ceremony', { size: 70, bold: true, track: 30, after: 200 }),
-  line('Class of 2026', { size: 24, color: GOLD, caps: true, track: 200, after: 60 }),
-  rule({ before: 420, after: 400, heavy: true }),
-  line('Saturday, 8 August 2026', { size: 27, bold: true, after: 80 }),
-  arabic('٢٥ صفر ١٤٤٨هـ', { size: 24, after: 80 }),
-  line(`${to12(OPENS)} – ${to12(CLOSES)}  ·  School Grounds, Ikorodu`,
-    { size: 16, font: SANS, color: SOFT, caps: true, track: 40, after: 520 }),
-  line(TAGLINE, { size: 22, italics: true, color: GOLD, after: 100 }),
-  line(`${TOTAL} awards  ·  ${PEOPLE} graduands  ·  four schools`,
-    { size: 14, font: SANS, color: SOFT, caps: true, track: 50, after: 100 }),
-  line(VENUE, { size: 14, font: SANS, color: SOFT, after: 700 }),
-  arabic('القرآن يعلو ولا يعلى', { size: 26, color: GOLD }),
-];
+const HONORIFIC = /^(dr|mr|mrs|ms|imam|shaykh|sheikh|alfa|ustadh|ustādh|prof)\.?$/i;
+const initials = (name) => name.split(/\s+/).filter((w) => !HONORIFIC.test(w))
+  .slice(0, 2).map((w) => w[0]).join('');
 
-// ── The running head the inner leaves share ─────────────────────────────────
-const head = (kicker, title, o = {}) => [
-  crest(o.crest ?? 10, 80),
-  line(kicker, { size: 14, font: SANS, color: GOLD, caps: true, track: 90, after: 60 }),
-  line(title, { size: o.size ?? 38, bold: true, track: 20 }),
-  rule({ before: 110, after: o.after ?? 180 }),
-];
+const byCode = Object.fromEntries(AWARDS.map((a) => [a.code, a]));
 
-// ── LEAF II · THE WELCOME ───────────────────────────────────────────────────
-const PLATE_W = Math.round(TEXT_W / 3) - 40;
-const welcome = [
-  ...head('Sultan Hanafi Royal Schools', 'A Word of Welcome', { after: 140 }),
-  grid([PLATE_W + 40, PLATE_W + 40, PLATE_W + 40], [new TableRow({
-    children: [
-      ['commissioning-day-1.jpg', 51, 34],
-      ['campus-building.jpg', 51, 34],
-      ['recitation-assembly-1.jpg', 51, 34],
-    ].map(([f, w, h]) => cell([p({
-      alignment: AlignmentType.CENTER, children: [photo(f, w, h)],
-    })], PLATE_W + 40, { pad: 0, padX: 20 })),
-  })]),
+// A roll: the stage in Arabic above, the award below, then the names.
+const roll = (a) => [
+  ...(a.ar ? [p({
+    spacing: { before: 140, after: 0 }, keepNext: true,
+    border: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD_L, space: 5 } },
+    children: [new TextRun({ text: a.ar, font: ARABIC, size: 16, color: GOLD_L, rightToLeft: true })],
+  })] : []),
   p({
-    alignment: AlignmentType.RIGHT, spacing: { before: 70, after: 180 },
-    children: [new TextRun({
-      text: 'The campus at Imowonla Road, and the assemblies that fill it',
-      font: SANS, size: 12, color: SOFT, allCaps: true, characterSpacing: 30,
-    })],
+    spacing: { before: a.ar ? 0 : 140, after: 0 }, keepNext: true,
+    border: a.ar ? undefined
+      : { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD_L, space: 5 } },
+    children: [new TextRun({ text: a.title, font: SERIF, size: 17, bold: true, color: GOLD })],
   }),
   p({
-    alignment: AlignmentType.JUSTIFIED, spacing: { after: 140 },
+    spacing: { after: 60 }, keepNext: true,
+    children: [new TextRun({
+      text: a.school, font: SANS, size: 9, color: SOFT, allCaps: true, characterSpacing: 20,
+    })],
+  }),
+  ...a.names.map((n, i) => p({
+    spacing: { before: 8, after: 8 }, indent: { left: 170, hanging: 130 },
     children: [
-      new TextRun({ text: 'O', font: SERIF, size: 30, bold: true, color: GOLD }),
-      new TextRun({ text: WELCOME[0], font: SERIF, size: 20, color: INK }),
+      new TextRun({ text: `${i + 1}.  `, font: SANS, size: 11, color: GOLD_L }),
+      new TextRun({ text: n, font: SERIF, size: 17, color: INK }),
     ],
-  }),
-  p({
-    spacing: { before: 60, after: 140 }, indent: { left: 260 },
-    border: { left: { style: BorderStyle.SINGLE, size: 12, color: GOLD, space: 8 } },
-    children: [new TextRun({
-      text: LECTURE.title, font: SERIF, size: 24, italics: true, color: GOLD,
-    })],
-  }),
+  })),
+];
+
+// ── PANEL · THE WELCOME ─────────────────────────────────────────────────────
+const panelWelcome = [
+  ...plate('commissioning-day-1.jpg', COL, 48,
+    'The Founder with a pupil · Commissioning Day'),
+  ...head('Sultan Hanafi Royal Schools', 'A Word of Welcome'),
   p({
     alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 },
-    children: [new TextRun({ text: WELCOME[1], font: SERIF, size: 20, color: INK })],
+    children: [
+      new TextRun({ text: 'O', font: SERIF, size: 26, bold: true, color: GOLD }),
+      new TextRun({ text: WELCOME[0], font: SERIF, size: 16, color: INK }),
+    ],
   }),
   p({
-    alignment: AlignmentType.RIGHT, spacing: { after: 200 },
+    spacing: { before: 60, after: 100 }, indent: { left: 200 },
+    border: { left: { style: BorderStyle.SINGLE, size: 12, color: GOLD, space: 6 } },
+    children: [new TextRun({ text: LECTURE.title, font: SERIF, size: 18, italics: true, color: GOLD })],
+  }),
+  p({
+    alignment: AlignmentType.JUSTIFIED, spacing: { after: 70 },
+    children: [new TextRun({ text: WELCOME[1], font: SERIF, size: 16, color: INK })],
+  }),
+  p({
+    alignment: AlignmentType.RIGHT, spacing: { after: 140 },
     children: [new TextRun({
-      text: 'The Board of Trustees', font: SANS, size: 13, color: SOFT,
-      allCaps: true, characterSpacing: 60,
+      text: 'The Board of Trustees', font: SANS, size: 10, color: SOFT,
+      allCaps: true, characterSpacing: 50,
     })],
   }),
-  // The founding figures, ruled above and below.
-  rule({ before: 0, after: 90 }),
-  grid(FIGURES.map(() => Math.round(TEXT_W / FIGURES.length)), [new TableRow({
-    children: FIGURES.map(([n, l]) => cell([
+  rule({ before: 0, after: 70 }),
+  grid([Math.round(CW / 2), Math.round(CW / 2)], [0, 2].map((k) => new TableRow({
+    children: [FIGURES[k], FIGURES[k + 1]].map(([n, l]) => cell([
       p({
         alignment: AlignmentType.CENTER,
-        children: [new TextRun({ text: n, font: SERIF, size: 30, bold: true, color: GOLD })],
+        children: [new TextRun({ text: n, font: SERIF, size: 22, bold: true, color: GOLD })],
       }),
       p({
-        alignment: AlignmentType.CENTER, spacing: { before: 40 },
+        alignment: AlignmentType.CENTER, spacing: { before: 20 },
         children: [new TextRun({
-          text: l, font: SANS, size: 11, color: SOFT, allCaps: true, characterSpacing: 30,
+          text: l, font: SANS, size: 9, color: SOFT, allCaps: true, characterSpacing: 20,
         })],
       }),
-    ], Math.round(TEXT_W / FIGURES.length), { pad: 20 })),
-  })]),
-  rule({ before: 90, after: 60 }),
-  // The chief host and the lecture on the left, the guests on the right.
-  grid([HALF, HALF], [new TableRow({
-    children: [
-      cell([
-        sh('The Chief Host', { before: 100 }),
-        p({
-          alignment: AlignmentType.LEFT,
-          children: [new TextRun({
-            text: CHIEF_HOST[1], font: ARABIC, size: 22, color: GOLD, rightToLeft: true,
-          })],
-        }),
-        p({ children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 25, bold: true })] }),
-        p({
-          spacing: { before: 40 },
-          children: [new TextRun({
-            text: CHIEF_HOST[2], font: SANS, size: 12, color: SOFT,
-            allCaps: true, characterSpacing: 40,
-          })],
-        }),
-        sh('The Lecture'),
-        p({
-          children: [new TextRun({
-            text: `“${LECTURE.title}”`, font: SERIF, size: 22, italics: true, color: GOLD,
-          })],
-        }),
-        p({
-          spacing: { before: 60 },
-          children: [new TextRun({ text: LECTURE.by, font: SERIF, size: 23, bold: true })],
-        }),
-      ], HALF, { pad: 0, padX: 0 }),
-      cell([
-        sh('Distinguished Guests', { before: 100 }),
-        ...GUESTS.flatMap(([n, r]) => [
-          p({
-            spacing: { before: 60, after: r ? 0 : 60 },
-            children: [new TextRun({ text: n, font: SERIF, size: 21, bold: true })],
-          }),
-          ...(r ? [p({
-            spacing: { after: 60 },
-            border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: 'D8CBAE', space: 2 } },
-            children: [new TextRun({
-              text: r, font: SANS, size: 11, color: SOFT, allCaps: true, characterSpacing: 20,
-            })],
-          })] : []),
-        ]),
-      ], HALF, { pad: 0, padX: 0, }),
-    ],
-  })]),
-  // The Chief Executive Director's word, reversed out on a dark panel.
-  grid([TEXT_W], [new TableRow({
+    ], Math.round(CW / 2), { pad: 20, padX: 20 })),
+  }))),
+  rule({ before: 70, after: 140 }),
+  grid([CW], [new TableRow({
     children: [cell([
       p({
-        spacing: { after: 90 },
+        spacing: { after: 70 },
         children: [new TextRun({
-          text: 'A Word from the Chief Executive Director', font: SANS, size: 13,
-          color: 'D8BC7C', bold: true, allCaps: true, characterSpacing: 60,
+          text: 'A Word from the Chief Executive Director', font: SANS, size: 10,
+          color: 'D8BC7C', bold: true, allCaps: true, characterSpacing: 50,
         })],
       }),
       ...CEO_WORD.map((t) => p({
-        alignment: AlignmentType.JUSTIFIED, spacing: { after: 80 },
-        children: [new TextRun({ text: t, font: SERIF, size: 19, color: CREAM })],
+        alignment: AlignmentType.JUSTIFIED, spacing: { after: 60 },
+        children: [new TextRun({ text: t, font: SERIF, size: 15, color: CREAM })],
       })),
       p({
-        alignment: AlignmentType.RIGHT, spacing: { before: 60 },
-        children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 22, bold: true, color: 'FBF3E1' })],
+        alignment: AlignmentType.RIGHT, spacing: { before: 50 },
+        children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 17, bold: true, color: 'FBF3E1' })],
       }),
       p({
         alignment: AlignmentType.RIGHT,
         children: [new TextRun({
-          text: CHIEF_HOST[2], font: SANS, size: 11, color: 'D8BC7C',
+          text: CHIEF_HOST[2], font: SANS, size: 9, color: 'D8BC7C',
           allCaps: true, characterSpacing: 40,
         })],
       }),
-    ], TEXT_W, { fill: DARK, pad: 140, padX: 180 })],
+    ], CW, { fill: DARK, pad: 120, padX: 140 })],
   })]),
 ];
 
-// ── LEAF III · THE ORDER OF PROCEEDINGS ─────────────────────────────────────
-const TIME_W = Math.round(TEXT_W * 0.24);
-const ITEM_W = TEXT_W - TIME_W;
+// ── PANEL · THE BACK ────────────────────────────────────────────────────────
+const panelBack = [
+  p({
+    alignment: AlignmentType.CENTER, spacing: { before: 200, after: 80 },
+    children: [img('crests', 'shrs-institutional-crest.png', 20 * (520 / 476), 20)],
+  }),
+  arabic('مدارس السلطان حنفي الملكية', { size: 20, after: 60 }),
+  line('Sultan Hanafi Royal Schools', { size: 21, bold: true, color: GOLD, caps: true, track: 40 }),
+  line('Established MMXVII · Ikorodu · Lagos State',
+    { size: 9, font: SANS, color: SOFT, caps: true, track: 40, before: 60 }),
+  rule({ before: 120, after: 80 }),
+  line(TAGLINE, { size: 18, italics: true, color: GOLD, after: 60 }),
+  sh('Presiding and Officiating'),
+  ...OFFICERS.map(([n, ar, r]) => grid([MM(13), CW - MM(13)], [new TableRow({
+    children: [
+      cell([p({
+        children: OFFICER_FACE[n] ? [img('leadership', OFFICER_FACE[n], 11, 11)]
+          : [new TextRun({ text: initials(n), font: SERIF, size: 20, bold: true, color: GOLD })],
+      })], MM(13), { pad: 40, padX: 0 }),
+      cell([
+        // Arabic above, English below — never the other way round.
+        ...(ar ? [p({
+          children: [new TextRun({ text: ar, font: ARABIC, size: 15, color: GOLD, rightToLeft: true })],
+        })] : []),
+        p({ children: [new TextRun({ text: n, font: SERIF, size: 16, bold: true })] }),
+        p({
+          spacing: { before: 20 },
+          children: [new TextRun({
+            text: r, font: SANS, size: 8, color: SOFT, allCaps: true, characterSpacing: 10,
+          })],
+        }),
+      ], CW - MM(13), { pad: 40, padX: 0 }),
+    ],
+  })])),
+  sh('The Four Schools'),
+  ...[
+    ['Nursery and Primary School', 'Ages 2 to 10', ''],
+    ['Royal College', 'Junior and Senior Secondary', ''],
+    ['School of Islamic and Arabic Studies', '', 'قسم الدراسات الإسلامية والعربية'],
+    ['Qur’an College', '', 'كلية السلطان حنفي للقرآن'],
+  ].flatMap(([n, sub, ar]) => [
+    line(n, { size: 16, bold: true, before: 60 }),
+    ...(sub ? [line(sub, { size: 8, font: SANS, color: SOFT, caps: true, track: 30 })] : []),
+    ...(ar ? [arabic(ar, { size: 14 })] : []),
+  ]),
+  rule({ before: 160, after: 80 }),
+  line('Every certificate is verifiable.', { size: 14, bold: true, color: GOLD, after: 50 }),
+  p({
+    alignment: AlignmentType.CENTER, spacing: { after: 120 },
+    children: [new TextRun({
+      text: 'Each carries a certificate number, a verification code and a QR code '
+        + 'registered with the Office of the Registrar — scan the code, or enter '
+        + `the number at ${WEB}/verify-certificate.`,
+      font: SERIF, size: 14, color: SOFT, italics: true,
+    })],
+  }),
+  line(VENUE, { size: 9, font: SANS, color: SOFT, track: 10, after: 40 }),
+  line(`${WEB} · ${MAIL} · ${TEL}`, { size: 9, font: SANS, color: SOFT, track: 10, after: 120 }),
+  arabic('القرآن يعلو ولا يعلى', { size: 19, color: GOLD }),
+];
 
-const orderLeaf = [
-  ...head('The Order of the Day', 'Order of Proceedings', { after: 110 }),
-  grid([TIME_W, ITEM_W], ORDER.map(([a, b, t, s], i) => {
+// ── PANEL · THE COVER ───────────────────────────────────────────────────────
+const panelCover = [
+  ...plate('campus-building.jpg', COL, 56, 'The campus at Imowonla Road'),
+  p({
+    alignment: AlignmentType.CENTER, spacing: { before: 100, after: 70 },
+    children: [img('crests', 'shrs-institutional-crest.png', 21 * (520 / 476), 21)],
+  }),
+  arabic('مدارس السلطان حنفي الملكية', { size: 19, after: 60 }),
+  line('Sultan Hanafi Royal Schools', { size: 20, bold: true, color: GOLD, caps: true, track: 40 }),
+  line('Established MMXVII · Ikorodu · Lagos',
+    { size: 9, font: SANS, color: SOFT, caps: true, track: 40, before: 50 }),
+  rule({ before: 150, after: 150, heavy: true }),
+  line('The First Combined', { size: 17, italics: true, color: SOFT, after: 90 }),
+  line('Graduation', { size: 40, bold: true, caps: true, track: 20 }),
+  line('Ceremony', { size: 40, bold: true, caps: true, track: 20, after: 120 }),
+  line('Class of 2026', { size: 15, color: GOLD, caps: true, track: 160, after: 60 }),
+  rule({ before: 150, after: 150, heavy: true }),
+  line('Saturday, 8 August 2026', { size: 20, bold: true, after: 60 }),
+  arabic('٢٥ صفر ١٤٤٨هـ', { size: 18, after: 60 }),
+  line(`${to12(OPENS)} – ${to12(CLOSES)} · School Grounds`,
+    { size: 9, font: SANS, color: SOFT, caps: true, track: 30, after: 180 }),
+  line(TAGLINE, { size: 17, italics: true, color: GOLD, after: 70 }),
+  line(`${TOTAL} awards · ${PEOPLE} graduands · four schools`,
+    { size: 9, font: SANS, color: SOFT, caps: true, track: 40 }),
+];
+
+// ── PANEL · THE ORDER ───────────────────────────────────────────────────────
+const TIME_W = MM(22);
+const panelOrder = [
+  ...plate('islamic-prayer-hall.jpg', COL, 34, 'The Prayer Hall'),
+  ...head('The Order of the Day', 'Order of Proceedings'),
+  grid([TIME_W, CW - TIME_W], ORDER.map(([a, b, t, s], i) => {
     const ar = s && /[؀-ۿ]/.test(s);
     return new TableRow({
       children: [
         cell([p({
-          spacing: { before: 16, after: 16 },
+          spacing: { before: 22, after: 22 },
           children: [new TextRun({
-            text: `${a} – ${b}`, font: SANS, size: 16, color: GOLD,
-            bold: true, characterSpacing: 10,
+            text: `${a}–${b}`, font: SANS, size: 10, color: GOLD, bold: true,
           })],
-        })], TIME_W, { fill: i % 2 ? undefined : TINT }),
+        })], TIME_W, { fill: i % 2 ? undefined : TINT, padX: 40 }),
         cell([
-          // English left, Arabic right, one baseline — the pairing rule the
-          // certificate suite is built on, applied to the running order.
           p({
-            spacing: { before: 12, after: s && !ar ? 0 : 12 },
-            tabStops: [{ type: 'right', position: ITEM_W - 180 }],
-            children: [
-              new TextRun({ text: t, font: SERIF, size: 23, color: INK }),
-              ...(ar ? [
-                new TextRun({ text: '\t', font: SERIF, size: 23 }),
-                new TextRun({ text: s, font: ARABIC, size: 21, color: GOLD, rightToLeft: true }),
-              ] : []),
-            ],
+            spacing: { before: 18, after: s ? 0 : 18 },
+            children: [new TextRun({ text: t, font: SERIF, size: 16, color: INK })],
           }),
-          ...(s && !ar ? [p({
-            spacing: { after: 12 },
-            children: [new TextRun({ text: s, font: SANS, size: 14, color: SOFT, italics: true })],
+          ...(s ? [p({
+            spacing: { after: 18 },
+            children: ar
+              ? [new TextRun({ text: s, font: ARABIC, size: 15, color: GOLD, rightToLeft: true })]
+              : [new TextRun({ text: s, font: SANS, size: 10, color: SOFT, italics: true })],
           })] : []),
-        ], ITEM_W, { fill: i % 2 ? undefined : TINT }),
+        ], CW - TIME_W, { fill: i % 2 ? undefined : TINT, padX: 40 }),
       ],
     });
   })),
   line('Programme Coordinators',
-    { size: 12, font: SANS, color: GOLD, caps: true, track: 90, before: 160, after: 50 }),
-  line(COORDINATORS, { size: 22, after: 60 }),
-  rule({ before: 110, after: 60 }),
-  line('Presiding and Officiating',
-    { size: 14, font: SANS, color: GOLD, caps: true, track: 90, bold: true, after: 110 }),
-  grid([HALF, HALF], (() => {
-    const rows = [];
-    for (let i = 0; i < OFFICERS.length; i += 2) {
-      rows.push(new TableRow({
-        children: [OFFICERS[i], OFFICERS[i + 1]].map((o) => cell(o ? [
-          // Arabic above, English below — never the other way round.
-          ...(o[1] ? [p({
-            children: [new TextRun({ text: o[1], font: ARABIC, size: 21, color: GOLD, rightToLeft: true })],
-          })] : []),
-          p({ children: [new TextRun({ text: o[0], font: SERIF, size: 23, bold: true })] }),
-          p({
-            spacing: { before: 26, after: 90 },
-            children: [new TextRun({
-              text: o[2], font: SANS, size: 11, color: SOFT, allCaps: true, characterSpacing: 20,
-            })],
-          }),
-        ] : [p({ children: [] })], HALF, { pad: 0 })),
-      }));
-    }
-    return rows;
-  })()),
-  // The four schools close the book.
-  rule({ before: 120, after: 70 }),
-  grid([HALF / 2, HALF / 2, HALF / 2, HALF / 2], [new TableRow({
-    children: [
-      ['Sultan Hanafi Nursery and Primary School', 'Ages 2 to 10', ''],
-      ['Sultan Hanafi Royal College', 'Junior and Senior Secondary', ''],
-      ['Sultan Hanafi School of Islamic and Arabic Studies', '', 'قسم الدراسات الإسلامية والعربية'],
-      ['Sultan Hanafi Qur’an College', '', 'كلية السلطان حنفي للقرآن'],
-    ].map(([n, sub, ar]) => cell([
-      p({
-        alignment: AlignmentType.CENTER,
-        children: [new TextRun({ text: n, font: SERIF, size: 17, bold: true })],
-      }),
-      ...(sub ? [p({
-        alignment: AlignmentType.CENTER, spacing: { before: 40 },
-        children: [new TextRun({
-          text: sub, font: SANS, size: 10, color: SOFT, allCaps: true, characterSpacing: 30,
-        })],
-      })] : []),
-      ...(ar ? [p({
-        alignment: AlignmentType.CENTER, spacing: { before: 40 }, bidirectional: true,
-        children: [new TextRun({ text: ar, font: ARABIC, size: 17, color: GOLD, rightToLeft: true })],
-      })] : []),
-    ], HALF / 2, { pad: 10 })),
-  })]),
-  rule({ before: 70, after: 100 }),
-  line('Every certificate conferred today is verifiable.',
-    { size: 20, bold: true, color: GOLD, after: 80 }),
-  p({
-    alignment: AlignmentType.CENTER, spacing: { after: 110 },
-    children: [new TextRun({
-      text: 'Each carries a certificate number, a verification code and a QR code '
-        + 'registered with the Office of the Registrar — scan the code on any '
-        + `certificate, or enter its number at ${WEB}/verify-certificate.`,
-      font: SERIF, size: 17, color: SOFT, italics: true,
-    })],
-  }),
-  line(VENUE, { size: 13, font: SANS, color: SOFT, track: 20, after: 50 }),
-  line(`${WEB}  ·  ${MAIL}  ·  ${TEL}`,
-    { size: 13, font: SANS, color: SOFT, track: 20, after: 90 }),
-  arabic('القرآن يعلو ولا يعلى', { size: 23, color: GOLD }),
-];
-
-// ── LEAF IV · THE GRADUANDS ─────────────────────────────────────────────────
-const twoUp = (names) => {
-  const half = Math.ceil(names.length / 2);
-  const rows = [];
-  for (let i = 0; i < half; i += 1) {
-    rows.push(new TableRow({
-      children: [names[i], names[i + half]].map((n, k) => cell([p({
-        spacing: { before: 8, after: 8 },
-        children: n ? [
-          new TextRun({ text: `${k === 0 ? i + 1 : i + half + 1}.  `, font: SANS, size: 13, color: GOLD_L }),
-          new TextRun({ text: n, font: SERIF, size: 20, color: INK }),
-        ] : [],
-      })], HALF, { pad: 0 })),
-    }));
-  }
-  return grid([HALF, HALF], rows);
-};
-
-const rollLeaf = [
-  ...head('Class of 2026', 'The Graduands', { crest: 9, size: 34, after: 120 }),
-  p({
-    alignment: AlignmentType.CENTER, spacing: { after: 110 },
-    children: [new TextRun({
-      text: 'The Board of Governors, the Principals and the Head Teacher present '
-        + 'the following graduands, each of whom has completed the requirements of '
-        + 'their programme and is admitted to the award named beneath their school. '
-        + 'A graduand who has completed two programmes is named under each.',
-      font: SERIF, size: 18, color: SOFT, italics: true,
-    })],
-  }),
-  ...AWARDS.flatMap((a) => [
-    ...(a.ar ? [p({
-      spacing: { before: 110, after: 0 }, keepNext: true,
-      border: { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD_L, space: 6 } },
-      children: [new TextRun({ text: a.ar, font: ARABIC, size: 20, color: GOLD_L, rightToLeft: true })],
-    })] : []),
+    { size: 9, font: SANS, color: GOLD, caps: true, track: 70, before: 140, after: 40 }),
+  line(COORDINATORS, { size: 16, after: 60 }),
+  sh('Distinguished Guests'),
+  ...GUESTS.flatMap(([n, r]) => [
     p({
-      spacing: { before: a.ar ? 0 : 110, after: 0 }, keepNext: true,
-      border: a.ar ? undefined
-        : { top: { style: BorderStyle.SINGLE, size: 4, color: GOLD_L, space: 6 } },
-      children: [new TextRun({ text: a.title, font: SERIF, size: 23, bold: true, color: GOLD })],
+      spacing: { before: 50, after: r ? 0 : 50 },
+      children: [new TextRun({ text: n, font: SERIF, size: 16, bold: true })],
     }),
-    p({
-      spacing: { after: 0 }, keepNext: true,
+    ...(r ? [p({
+      spacing: { after: 50 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: 'DDD2B7', space: 2 } },
       children: [new TextRun({
-        text: a.school, font: SANS, size: 13, color: SOFT, allCaps: true, characterSpacing: 30,
+        text: r, font: SANS, size: 8, color: SOFT, allCaps: true, characterSpacing: 10,
       })],
-    }),
-    p({
-      spacing: { after: 60 }, keepNext: true,
-      children: [new TextRun({ text: a.note, font: SERIF, size: 16, color: SOFT, italics: true })],
-    }),
-    twoUp(a.names),
+    })] : []),
   ]),
 ];
 
-// ── The document ────────────────────────────────────────────────────────────
-// Four sections, not four page breaks. A trailing page-break paragraph belongs
-// to the page it sits on, so a leaf that fills to its last line pushes the
-// break onto a fresh sheet and leaves a blank one behind. A section boundary
-// cannot do that, and it lets each leaf carry its own margins.
-const leaf = (children, margin) => ({
-  properties: {
-    page: {
-      size: { width: MM(210), height: MM(297) },
-      margin,
-      // A gold double frame on every leaf, held clear of the paper edge so no
-      // printer trims into it.
-      borders: {
-        pageBorders: {
-          display: PageBorderDisplay.ALL_PAGES,
-          offsetFrom: PageBorderOffsetFrom.PAGE,
-        },
-        pageBorderTop: { style: BorderStyle.DOUBLE, size: 6, color: GOLD_L, space: 20 },
-        pageBorderBottom: { style: BorderStyle.DOUBLE, size: 6, color: GOLD_L, space: 20 },
-        pageBorderLeft: { style: BorderStyle.DOUBLE, size: 6, color: GOLD_L, space: 20 },
-        pageBorderRight: { style: BorderStyle.DOUBLE, size: 6, color: GOLD_L, space: 20 },
-      },
-    },
-  },
-  children,
-});
+// ── PANELS · THE GRADUANDS ──────────────────────────────────────────────────
+const panelRollA = [
+  ...head('Class of 2026', 'The Graduands'),
+  p({
+    alignment: AlignmentType.CENTER, spacing: { after: 90 },
+    children: [new TextRun({
+      text: 'Each graduand named here has completed the requirements of their '
+        + 'programme and is admitted to the award beneath their school. One who '
+        + 'has completed two programmes is named under each.',
+      font: SERIF, size: 14, color: SOFT, italics: true,
+    })],
+  }),
+  ...['QUR', 'IBT', 'IDD', 'PRY'].flatMap((c) => roll(byCode[c])),
+];
 
-const MARGIN = { top: MM(19), bottom: MM(15), left: MM(16), right: MM(16) };
-const TIGHT = { top: MM(14), bottom: MM(12), left: MM(15), right: MM(15) };
+const panelRollB = [
+  ...head('Class of 2026', 'The Graduands · continued'),
+  ...['JSS', 'SS'].flatMap((c) => roll(byCode[c])),
+  sh('The Chief Host'),
+  grid([MM(17), CW - MM(17)], [new TableRow({
+    children: [
+      cell([p({ children: [img('leadership', 'founder-ceo.jpg', 15, 15)] })],
+        MM(17), { pad: 40, padX: 0 }),
+      cell([
+        p({ children: [new TextRun({ text: CHIEF_HOST[1], font: ARABIC, size: 16, color: GOLD, rightToLeft: true })] }),
+        p({ children: [new TextRun({ text: CHIEF_HOST[0], font: SERIF, size: 18, bold: true })] }),
+        p({
+          spacing: { before: 20 },
+          children: [new TextRun({
+            text: CHIEF_HOST[2], font: SANS, size: 9, color: SOFT,
+            allCaps: true, characterSpacing: 30,
+          })],
+        }),
+      ], CW - MM(17), { pad: 40, padX: 0 }),
+    ],
+  })]),
+  sh('The Lecture'),
+  p({ children: [new TextRun({ text: `“${LECTURE.title}”`, font: SERIF, size: 16, italics: true, color: GOLD })] }),
+  p({
+    spacing: { before: 50, after: 160 },
+    children: [new TextRun({ text: LECTURE.by, font: SERIF, size: 17, bold: true })],
+  }),
+  ...plate('quran-recitation-1.jpg', COL, 30, 'Qur’an Recitation'),
+];
+
+// ── The document ────────────────────────────────────────────────────────────
+// One section per printed side, three columns each, a column break between
+// panels. Fold twice and the sequence comes out cover → welcome → inside.
+const sheet = (panels) => ({
+  properties: {
+    page: { size: { width: MM(SHEET_W), height: MM(SHEET_H) }, margin: MARGIN },
+    column: { count: 3, space: MM(GUTTER), equalWidth: true },
+  },
+  children: [panels[0], brk(), panels[1], brk(), panels[2]].flat(),
+});
 
 const doc = new Document({
   creator: 'Sultan Hanafi Royal Schools',
-  title: 'SHRS Graduation Ceremony 2026 — Programme',
-  description: `Order of proceedings and the roll of graduands, 8 August 2026. `
+  title: 'SHRS Graduation Ceremony 2026 — Trifold Programme',
+  description: 'Order of proceedings and the roll of graduands, 8 August 2026. '
     + `${TOTAL} awards conferred upon ${PEOPLE} graduands.`,
-  styles: { default: { document: { run: { font: SERIF, size: 22, color: INK } } } },
+  styles: { default: { document: { run: { font: SERIF, size: 16, color: INK } } } },
   sections: [
-    leaf(cover, MARGIN),
-    leaf(welcome, TIGHT),
-    leaf(orderLeaf, MARGIN),
-    leaf(rollLeaf, TIGHT),
+    sheet([panelWelcome, panelBack, panelCover]),
+    sheet([panelOrder, panelRollA, panelRollB]),
   ],
 });
 
@@ -516,4 +446,5 @@ const out = 'dist/graduation-programme/SHRS-Graduation-Programme-2026.docx';
 const buf = await Packer.toBuffer(doc);
 writeFileSync(out, buf);
 console.log(`\n  ${out}  ${(buf.length / 1024).toFixed(0)} KB`);
-console.log(`  4 leaves · ${TOTAL} awards · ${PEOPLE} graduands · ${GUESTS.length} distinguished guests\n`);
+console.log(`  trifold · 2 sheets of 3 columns · ${COL.toFixed(1)}mm panels`);
+console.log(`  ${TOTAL} awards · ${PEOPLE} graduands · ${GUESTS.length} distinguished guests\n`);
