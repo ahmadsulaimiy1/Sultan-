@@ -830,3 +830,118 @@ html[data-pc-motion="reduced"][data-pc-theme="light"] .foot-seal::after{animatio
    The lesson is in the file rather than only in the history: when a
    measurement and a screenshot disagree, the screenshot is the site.
    =================================================================== */
+
+/* ===================================================================
+   14. THE RIBBON, OPENED
+   -------------------------------------------------------------------
+   The panel that drops beneath the plates. It is the same index the
+   drawer carries, cloned, so there is one source for the navigation;
+   what this adds is that the masthead can be read without opening
+   anything, which is the difference between a toolbar and an index.
+   =================================================================== */
+.mh-mega{
+  position:relative;z-index:8;overflow:hidden;
+  max-height:0;opacity:0;
+  transition:max-height .42s cubic-bezier(.16,.8,.24,1),opacity .3s ease;}
+.mh-mega.is-open{max-height:min(62vh,540px);opacity:1;}
+html[data-pc-motion="reduced"] .mh-mega{transition:none;}
+@media (prefers-reduced-motion:reduce){.mh-mega{transition:none;}}
+
+.mh-mega-inner{
+  padding-inline:max(24px,calc((100% - 1180px) / 2));
+  padding-block:26px 28px;
+  border-bottom:1px solid rgba(var(--lv-g,198,161,91),.34);
+  background:
+    radial-gradient(760px 200px at 50% -30%,rgba(var(--lv-gb,233,206,138),.14),transparent 70%),
+    linear-gradient(180deg,rgba(var(--lv-gb,233,206,138),.07),rgba(var(--lv-g,198,161,91),.02));
+  max-height:inherit;overflow-y:auto;}
+html[data-pc-theme="royal"] .mh-mega-inner,
+html[data-pc-theme="dark"] .mh-mega-inner{
+  background:
+    radial-gradient(760px 200px at 50% -30%,rgba(233,206,138,.13),transparent 70%),
+    linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.44));}
+
+/* The cloned index, laid out as columns rather than as the drawer's
+   single stack — the masthead has width the drawer never had. */
+.mh-mega-body{
+  display:grid;gap:20px 40px;align-items:start;
+  grid-template-columns:minmax(200px,.8fr) 2.4fr;}
+@media (max-width:1040px){.mh-mega-body{grid-template-columns:1fr;}}
+.mh-mega-body .nav-mega-intro{grid-column:1;grid-row:1;}
+/* The drawer keeps its children in one stack, which is right in a
+   540px panel and wrong across 1180px. Here they run as columns. */
+.mh-mega-body .nav-mega-col{
+  grid-column:2;grid-row:1 / span 2;
+  display:grid;gap:2px 22px;align-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));}
+@media (max-width:1040px){
+  .mh-mega-body .nav-mega-col{grid-column:1;grid-row:auto;}
+}
+.mh-mega-body .nav-mega-intro h4{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.98rem;margin:0 0 8px;
+  color:var(--navy);}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-intro h4,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-intro h4{color:rgb(var(--lv-gb,233,206,138));}
+.mh-mega-body .nav-mega-intro p{font-size:.84rem;line-height:1.6;color:var(--ink-soft);margin:0;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-intro p,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-intro p{
+  color:rgba(var(--lv-p3,247,238,223),.78);}
+
+.mh-mega-body .nav-mega-item{
+  display:block;padding:9px 12px;border-radius:10px;text-decoration:none;
+  border:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,transform .3s ease;}
+.mh-mega-body .nav-mega-item:hover,
+.mh-mega-body .nav-mega-item:focus-visible{
+  background:rgba(var(--lv-gb,233,206,138),.16);
+  border-color:rgba(var(--lv-g,198,161,91),.4);
+  transform:translateX(3px);}
+[dir="rtl"] .mh-mega-body .nav-mega-item:hover{transform:translateX(-3px);}
+.mh-mega-body .nav-mega-item .t{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.86rem;
+  color:var(--navy);}
+.mh-mega-body .nav-mega-item .d{
+  display:block;font-size:.76rem;color:var(--ink-soft);margin-top:2px;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-item .t,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-item .t{color:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-item .d,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-item .d{color:rgba(var(--lv-p3,247,238,223),.7);}
+
+.mh-mega-body .nav-mega-featured{
+  grid-column:1;grid-row:2;padding-top:16px;margin-top:4px;
+  border-top:1px solid rgba(var(--lv-g,198,161,91),.34);}
+.mh-mega-body .nav-mega-featured-label{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgb(var(--lv-gt3,99,72,27));margin-bottom:7px;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-featured-label,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-featured-label{
+  color:rgb(var(--lv-gb,233,206,138));}
+/* brand.css sets this link to #fff !important, which is right inside the
+   drawer's dark panel and invisible in the masthead's pale one. The clone
+   is a different room, so it takes the room's own ink — and it must be
+   !important to answer an !important. */
+.mh-mega-body .nav-mega-featured-link{
+  display:inline-block;font-family:var(--font-label,'Cinzel',serif);font-size:.9rem;
+  color:var(--navy)!important;text-decoration:none;
+  border-bottom:1px solid rgba(var(--lv-g,198,161,91),.45);
+  transition:border-color .3s ease;}
+.mh-mega-body .nav-mega-featured-link:hover{border-color:rgb(var(--lv-g,198,161,91));}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-featured-link,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-featured-link{
+  color:rgb(var(--lv-gb,233,206,138))!important;}
+
+/* The plate keeps a lit edge while its own panel is open, so the two
+   read as one object and not as a panel that arrived from nowhere. */
+.mnr-item.is-open{
+  border-color:rgb(var(--lv-g,198,161,91));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 0 0 1px rgba(var(--lv-g,198,161,91),.3);}
+.mnr-item.is-open::after{transform:translateX(-50%) scaleX(1);}
+html[data-pc-theme="royal"] .mnr-item.is-open,
+html[data-pc-theme="dark"] .mnr-item.is-open{
+  border-color:rgba(255,246,223,.9);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.4),
+             0 0 22px -6px rgba(233,206,138,.55);}
+
+@media (max-width:860px){.mh-mega{display:none;}}

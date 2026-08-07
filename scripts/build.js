@@ -541,6 +541,7 @@ ${personalisation}
 <script src="/js/intro.js" defer></script>
 <script src="/js/listen.js" defer></script>
 <script src="/js/footer-live.js" defer></script>
+<script src="/js/mega.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
 </body>
 </html>
