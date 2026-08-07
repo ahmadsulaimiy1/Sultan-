@@ -945,3 +945,98 @@ html[data-pc-theme="dark"] .mnr-item.is-open{
              0 0 22px -6px rgba(233,206,138,.55);}
 
 @media (max-width:860px){.mh-mega{display:none;}}
+
+/* ===================================================================
+   15. THE ROYAL BROWN, RETURNED TO THE MASTHEAD
+   -------------------------------------------------------------------
+   The Clear edition took the whole masthead to paper, and paper alone
+   has no depth: seven pale bands stacked on one another with gold
+   hairlines between them. The house colour is a coffee brown and it
+   belongs at the front of the school's own page — not as the ground it
+   used to be, but as the one dark band the pale ones are set against.
+
+   So the quick row becomes espresso with gold set into it, the plate
+   labels take coffee ink rather than near-black, the medallions take
+   warm bronze, and every hairline goes from yellow gold to the gold
+   that has brown in it. Cream above, coffee through the middle, cream
+   below — which is the way the school's own crest is coloured.
+
+   Clear edition only. Royal has its black and gold; Midnight has its
+   own dark.
+   =================================================================== */
+
+/* ---- The one dark band --------------------------------------------- */
+html[data-pc-theme="light"] .mobile-quick-row{
+  background:linear-gradient(180deg,#3B2A1D 0%,#2A1D12 100%);
+  border-top:1px solid rgba(198,161,91,.45);
+  border-bottom:1px solid rgba(198,161,91,.5);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.16),
+             inset 0 -8px 18px -14px rgba(0,0,0,.9);}
+html[data-pc-theme="light"] .mqr-item{color:#EBD3A0;}
+html[data-pc-theme="light"] .mqr-item svg{color:#E9CE8A;}
+html[data-pc-theme="light"] .mqr-item:hover{
+  color:#FFF6DF;
+  background:linear-gradient(180deg,rgba(233,206,138,.16),rgba(198,161,91,.06));}
+html[data-pc-theme="light"] .mqr-item + .mqr-item::before{
+  background:linear-gradient(180deg,transparent,
+    rgba(233,206,138,.38) 22%,rgba(233,206,138,.38) 78%,transparent);}
+html[data-pc-theme="light"] .mqr-item::after{
+  background:linear-gradient(90deg,transparent,#FFF6DF,transparent);}
+/* The gold cell keeps its fill; against espresso it now reads as the
+   one lit key on a dark keyboard rather than as a stripe on paper. */
+html[data-pc-theme="light"] .mqr-item.mqr-cta{
+  color:#1A1006;box-shadow:0 0 26px -8px rgba(233,206,138,.75);}
+html[data-pc-theme="light"] .mqr-item.mqr-cta svg{color:#1A1006;}
+
+/* ---- Coffee in the ink and the ornament ---------------------------- */
+html[data-pc-theme="light"] .mnr-item span{color:#3B2A1D;}
+html[data-pc-theme="light"] .mnr-item svg{
+  color:#7C5E28;
+  border-color:rgba(140,104,52,.62);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);}
+html[data-pc-theme="light"] .mnr-item{
+  border-color:rgba(140,104,52,.5);}
+html[data-pc-theme="light"] .mnr-item:hover,
+html[data-pc-theme="light"] .mnr-item:focus-visible{
+  border-color:#8C6834;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 14px 26px -18px rgba(59,42,29,.55),
+             0 0 0 1px rgba(140,104,52,.28);}
+html[data-pc-theme="light"] .mnr-item::after{
+  background:linear-gradient(90deg,transparent,#8C6834,transparent);}
+
+/* ---- The hairlines take the brown-gold ----------------------------- */
+html[data-pc-theme="light"] header.nav{
+  border-bottom-color:rgba(140,104,52,.55);}
+html[data-pc-theme="light"] .mobile-nav-ribbon{
+  border-top-color:rgba(140,104,52,.34);
+  border-bottom-color:rgba(140,104,52,.42);}
+html[data-pc-theme="light"] .mobile-nav-ribbon::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(140,104,52,.22) 12%,rgba(124,94,40,.85) 50%,
+    rgba(140,104,52,.22) 88%,transparent);}
+html[data-pc-theme="light"] header.nav nav.wrap::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(140,104,52,.5) 16%,rgba(124,94,40,.9) 50%,
+    rgba(140,104,52,.5) 84%,transparent);}
+html[data-pc-theme="light"] .mh-standing{color:#6B5222;}
+html[data-pc-theme="light"] .mh-standing::before{
+  background:linear-gradient(90deg,transparent,rgba(124,94,40,.75));}
+html[data-pc-theme="light"] .mh-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(124,94,40,.75));}
+
+/* ---- The wordmark and the crest sit in coffee ---------------------- */
+html[data-pc-theme="light"] .brand-text .line1{color:#3B2A1D;}
+html[data-pc-theme="light"] .brand-text .line2{color:#7C5E28;}
+html[data-pc-theme="light"] .brand::before{
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 206deg,
+    rgba(140,104,52,.30) 246deg,
+    rgba(233,206,138,.55) 264deg,
+    rgba(140,104,52,.30) 282deg,
+    transparent 322deg 360deg);}
+
+/* ---- A ruled band of coffee under the breadcrumb ------------------- */
+html[data-pc-theme="light"] .breadcrumbs{
+  border-bottom:1px solid rgba(140,104,52,.28);}
