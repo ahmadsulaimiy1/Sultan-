@@ -22,8 +22,8 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=4bbe0c42dd">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
+<link rel="stylesheet" href="/css/brand.css?v=7f4080a8cc">
+<link rel="stylesheet" href="/css/personalisation.css?v=632a7c4fde">
 <link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
 <script>
 (function(){
@@ -37,6 +37,17 @@
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -52,7 +63,7 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=83b262bb40">
+<link rel="stylesheet" href="/css/prestige.css?v=141bb3d127">
 <link rel="stylesheet" href="/css/motion.css?v=c10021e96a">
 <link rel="alternate" hreflang="en" href="/adhkar/" />
 </head>
@@ -180,7 +191,7 @@
               <span class="nav-mega-text"><span class="t">أذكار الصباح والمساء</span><span class="d">وِرد يومي، مع المصادر</span></span>
             </a>
             <a class="nav-mega-item" href="/ar/quran-centre/">
-              <span class="nav-mega-text"><span class="t">مركز القرآن الرقمي</span><span class="d">اقرأ الفاتحة والسور ٩٣–١١٤</span></span>
+              <span class="nav-mega-text"><span class="t">مركز القرآن الرقمي</span><span class="d">الأذكار وسجلّ الحفظ والورد اليومي</span></span>
             </a>
             <a class="nav-mega-item" href="/ar/faculty/">
               <span class="nav-mega-text"><span class="t">دليل أعضاء هيئة التدريس</span><span class="d">تعرّف على معلمينا</span></span>
@@ -320,67 +331,133 @@
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">الدخول إلى البوابة <span class="arrow">←</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="فتح القائمة الفرعية" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-portal">
-          <div class="nav-mega-intro">
-            <h4>بوابة الحرم الرقمي لمدارس السلطان حنفي الملكية</h4>
-            <p>ثماني أبواب، وحرم رقمي واحد. يوضّح كل مدخل أدناه لمن هو وما الذي يقف خلفه، ويأخذك مباشرة إلى تلك البوابة.</p>
-          </div>
-          <p class="pg-group-label">الوصول المؤسسي وهيئة العاملين</p>
-          <div class="portal-gateway-grid pg-grid-4">
-            <a class="portal-gateway-card" href="/portal/founder/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">٠١ · البوابة التنفيذية</span>
-              <span class="pgc-desc">للمؤسّس ورئيس مجلس الإدارة ورئيس المدارس، ولمجلس الأمناء والمجلس الإداري. تحليلات على مستوى المؤسسة، ووثائق الحوكمة، ونظرة قيادية على كل المدارس في آنٍ واحد.</span>
-              <span class="pgc-enter">ادخل ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/staff/offices/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
-              <span class="pgc-name">٠٢ · البوابة الإدارية</span>
-              <span class="pgc-desc">دخول واحد لكل مكتب تشغيلي في المؤسسة — التسجيل، والمالية، والموارد البشرية، والخدمات المؤسسية. ثم يعرض مبدّل المكاتب ما يملكه حسابك بالضبط.</span>
-              <span class="pgc-enter">ادخل ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/staff/teacher/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">٠٣ · بوابة الهيئة الأكاديمية</span>
-              <span class="pgc-desc">لمديري المدارس والمعلمين في الكلية الملكية، ومدرسة الدراسات الإسلامية والعربية، وكلية القرآن، ومدرسة الحضانة والابتدائية — الحصص والسجلات والنتائج والقيادة الأكاديمية.</span>
-              <span class="pgc-enter">ادخل ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/student/login/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">٠٤ · بوابة الطالب</span>
-              <span class="pgc-desc">لمن يدرس في المدارس. رحلتك في الحفظ، وتسجيل الصفوف، والنتائج، وبطاقة الهوية الرقمية، في مكان واحد.</span>
-              <span class="pgc-enter">ادخل ←</span>
-            </a>
-          </div>
-          <p class="pg-group-label">الأسر والمتقدمون والجمهور</p>
-          <div class="portal-gateway-grid pg-grid-4">
-            <a class="portal-gateway-card" href="/portal/login/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">٠٥ · بوابة ولي الأمر</span>
-              <span class="pgc-desc">لمن يربّي طالبًا في المدارس. حالة القبول، والرسوم والإيصالات، وتقدّم الحفظ، والإعلانات، والسجل الأكاديمي لابنك أو ابنتك.</span>
-              <span class="pgc-enter">ادخل ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/apply/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">٠٦ · بوابة المتقدّم</span>
-              <span class="pgc-desc">ابدأ التقديم من هنا. يسبقه إنشاء حساب مجاني لولي الأمر؛ والتقديم هو المرحلة الثالثة من رحلة القبول نفسها، لا نظام منفصل.</span>
-              <span class="pgc-enter">قدّم ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/alumni-portal/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">٠٧ · بوابة الخريجين</span>
-              <span class="pgc-desc">حسابات الخريجين الذاتية مُخطَّط لها ولم تُبنَ بعد. توضّح هذه الصفحة بصراحة ما هو قائم اليوم، وكيف تتحقق من شهادتك أو تتواصل مع علاقات الخريجين في هذه الأثناء.</span>
-              <span class="pgc-enter">اطّلع على الحالة ←</span>
-            </a>
-            <a class="portal-gateway-card" href="/verify/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">٠٨ · بوابة التحقق العامة</span>
-              <span class="pgc-desc">لا تتطلب حسابًا. تأكّد من أن شهادة أو وثيقة تخرّج أو بطاقة هوية أو إيصال رسوم صادر فعلًا عن المدارس — علنيًّا وفوريًّا، ومتاح لأي جهة عمل أو مؤسسة.</span>
-              <span class="pgc-enter">تحقّق ←</span>
-            </a>
-          </div>
-          <div class="nav-mega-intro">
-            <a class="nmi-cta" href="/portal/select/">افتح البوابة كاملة ←</a>
-            <a class="nmi-secondary" href="/portal/register/">جديد هنا؟ أنشئ حساب ولي أمر ←</a>
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>أيّ هؤلاء أنت؟</h4>
+              <p>اختر الوصف الذي ينطبق عليك، وتظهر إلى جانبه البوابة التي يفتحها.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="اختر الفئة التي تنتمي إليها">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">أنا وليّ أمر</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">أنا طالبٌ في المدرسة</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">أتقدّم لطلب مقعد</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">أُدرّس في المدرسة</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">أعمل في أحد مكاتب المدرسة</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">أنا عضوٌ في مجلس الأمناء أو المجلس الإداري</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">أنا من خرّيجي المدرسة</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">أتحقّق من وثيقة</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&larr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة وليّ الأمر</h4>
+              <p class="pgx-pane-d">الجانب الأسريّ من المؤسسة، وهو الحساب الذي تحتاجه أغلب البيوت. كلّ خطوةٍ تخصّ الأسرة — قبولٌ ورسمٌ وتقريرٌ وسجلّ حفظ — تنتمي إلى هذا الحساب الواحد لا إلى أربعة حسابات منفصلة.</p>
+              <ul class="pgx-pane-points"><li>حالة القبول، من الاستفسار إلى العرض</li><li>الرسوم وسجلّ السداد والإيصالات القابلة للتحقق</li><li>السجل الأكاديمي لابنك وتقدّمه في الحفظ</li><li>الإعلانات الموجَّهة إلى أسرتك</li></ul>
+              <p class="pgx-pane-need">إنشاؤه مجانيّ، وهو مفتوح لكلّ وليّ أمر.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">ادخل بوابة وليّ الأمر &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة الطالب</h4>
+              <p class="pgx-pane-d">سجلّك بين يديك. مفتوحة لطلاب الكلية الملكية، ومدرسة الدراسات الإسلامية والعربية، وكلية القرآن.</p>
+              <ul class="pgx-pane-points"><li>رحلتك في الحفظ، مُسجَّلةً جزءاً جزءاً</li><li>تسجيل الصفوف والجدول والنتائج</li><li>بطاقة هويتك الرقمية، يتحقّق منها كلّ من يسأل</li></ul>
+              <p class="pgx-pane-need">تتطلّب بيانات الطالب الصادرة لك عند القيد.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">ادخل بوابة الطالب &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة المتقدّم</h4>
+              <p class="pgx-pane-d">من هنا يبدأ القبول. التقديم ليس نظاماً منفصلاً، بل هو المرحلة الثالثة من رحلة القبول نفسها؛ ولذلك يسبقه حسابٌ مجانيّ لوليّ الأمر، ويبقى كلّ ما تُرسله بعد ذلك مرتبطاً به.</p>
+              <ul class="pgx-pane-points"><li>المرحلة الأولى — أنشئ حساب وليّ الأمر</li><li>المرحلة الثانية — حدّد المدرسة والصف</li><li>المرحلة الثالثة — أكمل الطلب وأرسله</li></ul>
+              <p class="pgx-pane-need">ابدأ من هنا إن كان لديك حساب، وإلا فأنشئ واحداً أولاً بلا رسوم.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">ابدأ طلب القبول &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة الهيئة الأكاديمية</h4>
+              <p class="pgx-pane-d">الجانب التعليمي من الحرم الرقمي، لمديري المدارس وأعضاء هيئة التدريس في كلّ مدارس المجموعة — الكلية الملكية، ومدرسة الدراسات الإسلامية والعربية، وكلية القرآن، ومدرسة الحضانة والابتدائية.</p>
+              <ul class="pgx-pane-points"><li>حصصك وسجلاتك وجدولك</li><li>إدخال النتائج وإصدارها</li><li>أدوات القيادة الأكاديمية لمن يتولّاها</li></ul>
+              <p class="pgx-pane-need">تتطلّب بيانات تدريس صادرة عن إدارة مدرستك.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">ادخل بوابة الهيئة الأكاديمية &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">البوابة الإدارية</h4>
+              <p class="pgx-pane-d">دخولٌ واحد لكلّ مكتبٍ تشغيليّ في المؤسسة. لا حاجة أن تعرف مسبقاً أيّ نظامٍ تفتح: تدخل مرّةً واحدة، ثم يعرض مبدّل المكاتب ما يملكه حسابك بالضبط.</p>
+              <ul class="pgx-pane-points"><li>التسجيل — القيد والسجلات والإفادات والوثائق</li><li>المالية — الرسوم والإيصالات وحسابات المؤسسة</li><li>الموارد البشرية وسائر الخدمات المؤسسية</li></ul>
+              <p class="pgx-pane-need">تتطلّب بيانات موظّف. والصلاحيات مرتبطة بالحساب لا بالباب.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">ادخل البوابة الإدارية &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">البوابة التنفيذية</h4>
+              <p class="pgx-pane-d">مركز القيادة على مستوى المؤسسة، وهو مخصَّصٌ للمناصب المسؤولة عن مدارس السلطان حنفي الملكية كلّها لا عن مدرسةٍ بعينها منها.</p>
+              <ul class="pgx-pane-points"><li>تحليلات موحَّدة لكلّ المدارس في آنٍ واحد</li><li>وثائق الحوكمة وسجلات المجالس واللجان</li><li>الإشراف المؤسسي على القبول والمالية والمستوى الأكاديمي</li></ul>
+              <p class="pgx-pane-need">تتطلّب بيانات تنفيذية صادرة عن مركز الإدارة المؤسسية.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">ادخل البوابة التنفيذية &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة الخرّيجين</h4>
+              <p class="pgx-pane-d">بوابة الخرّيجين الذاتية منصوصٌ عليها ضمن الحرم الرقمي وتدخل الخدمة عند اكتمالها. وإلى أن يكون ذلك، تبقى كلّ وثيقةٍ أصدرتها هذه المدرسة قابلةً للتحقق علناً، ويمكن الوصول إلى علاقات الخرّيجين مباشرةً.</p>
+              <ul class="pgx-pane-points"><li>ما ستحمله خدمة الخرّيجين عند دخولها الخدمة</li><li>كيف تتحقّق من وثيقتك اليوم، علناً وفوراً</li><li>كيف تصل إلى علاقات الخرّيجين مباشرةً</li></ul>
+              <p class="pgx-pane-need">لا تتطلّب حساباً.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">اطّلع على بوابة الخرّيجين &larr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">بوابتك</p>
+              <h4 class="pgx-pane-t">بوابة التحقق العامة</h4>
+              <p class="pgx-pane-d">الباب المفتوح عن قصد. يستطيع صاحب عملٍ أو جامعةٌ أو هيئة امتحاناتٍ أن يتأكّد من صحّة وثيقةٍ صادرة عن المدارس دون أن يملك حساباً هنا — وهو الترتيب الوحيد الذي تصير به الوثيقة ذات قيمةٍ لحاملها.</p>
+              <ul class="pgx-pane-points"><li>الشهادات والإفادات والإجازات</li><li>وثائق التخرّج</li><li>بطاقات هوية الطلاب وأولياء الأمور والعاملين</li><li>إيصالات الرسوم</li></ul>
+              <p class="pgx-pane-need">علنيّ وفوريّ ومجاني. يكفيك الرقم المرجعي أو رمز الاستجابة السريعة.</p>
+              <a class="pgx-pane-cta" href="/verify/">تحقّق من وثيقة &larr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">اطّلع على البوابات الثماني &larr;</a>
+              <a class="nmi-secondary" href="/portal/register/">جديد هنا؟ أنشئ حساب وليّ أمر &larr;</a>
+            </div>
           </div>
         </div>
       </div>
@@ -466,7 +543,7 @@
     <span class="page-hero-icon mo-float" aria-hidden="true"><svg class="mo-draw" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
     <p class="eyebrow">الحياة الروحية الإسلامية</p>
     <h2 style="margin-top:10px;">أذكار الصباح والمساء</h2>
-    <p class="adhkar-intro">وِردٌ يومي من الذكر مصدره القرآن الكريم والسنة الصحيحة، جرى توسيعه هنا ليصبح رفيقاً روحياً كاملاً — أذكار الصلاة، والحماية، والاستغفار، والسفر، والنوم والاستيقاظ، والصلاة على النبي ﷺ — مع عدّاد ذكي يتوقف عند العدد المطلوب لكل ذكر، وتلاوة عربية يمكنك متابعتها، وجلسة تتكيّف مع الوقت المتاح لديك.</p>
+    <p class="adhkar-intro pr-dropcap">وِردٌ يومي من الذكر مصدره القرآن الكريم والسنة الصحيحة، جرى توسيعه هنا ليصبح رفيقاً روحياً كاملاً — أذكار الصلاة، والحماية، والاستغفار، والسفر، والنوم والاستيقاظ، والصلاة على النبي ﷺ — مع عدّاد ذكي يتوقف عند العدد المطلوب لكل ذكر، وتلاوة عربية يمكنك متابعتها، وجلسة تتكيّف مع الوقت المتاح لديك.</p>
     <div class="adhkar-note"><strong>ملاحظة حول المصادر:</strong> هذه الأذكار مأخوذة من التراث الموثّق المعروف بـ"حصن المسلم" — آيات من القرآن الكريم وأدعية ثابتة في السنة الصحيحة، وليست منقولة عن موقع واحد بعينه. وقد ذُكر مصدر كل ذكر ليتسنى التحقق منه في مظانّه الأصلية. وهذا لا يُغني عن توجيه علماء كلية القرآن الكريم ومدرسة الدراسات الإسلامية والعربية بالمدرسة.</div>
 
     <div class="adk-static-fallback" data-adk-static>
@@ -1029,6 +1106,98 @@
             <button type="button" data-value="reduced" role="radio">حركة مخفّضة</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">خطّ المتن</span></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">مذيّل</button>
+            <button type="button" data-value="sans" role="radio">غير مذيّل</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">تباعد الأسطر</span></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">ضيّق</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">عادي</button>
+            <button type="button" data-value="generous" role="radio">واسع</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">تباعد الحروف</span></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">عادي</button>
+            <button type="button" data-value="open" role="radio">مفتوح</button>
+            <button type="button" data-value="wide" role="radio">عريض</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">محاذاة النص</span></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">مضبوط الطرفين</button>
+            <button type="button" data-value="ragged" role="radio">غير مضبوط</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الحرف الاستهلالي</span></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">إظهار</button>
+            <button type="button" data-value="off" role="radio">إخفاء</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">حجم الخط العربي</span></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">قياسي</button>
+            <button type="button" data-value="large" role="radio">كبير</button>
+            <button type="button" data-value="xlarge" role="radio">كبير جداً</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">التباين</span></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">قياسي</button>
+            <button type="button" data-value="high" role="radio">عالٍ</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الروابط</span></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">عند المرور</button>
+            <button type="button" data-value="always" role="radio">مسطّر دائماً</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">حلقة التركيز</span></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">قياسي</button>
+            <button type="button" data-value="strong" role="radio">قوي</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">صوت الواجهة</span></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">تشغيل</button>
+            <button type="button" data-value="off" role="radio">إيقاف</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الصور</span></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">كامل</button>
+            <button type="button" data-value="lean" role="radio">مخفّف</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1234,7 +1403,7 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=20f42159c5" defer></script>
+<script src="/js/personalisation.js?v=597067adc5" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1243,8 +1412,6 @@
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
-<script src="/js/quran-data.js?v=4fced7d871" defer></script>
-<script src="/js/quran-reader.js?v=d401f4f4ce" defer></script>
 <script src="/js/certificate-verify.js?v=e901a84ce6" defer></script>
 <script src="/js/identity-verify.js?v=0b364c22e9" defer></script>
 <script src="/js/receipt-verify.js?v=daae2f1f8f" defer></script>
@@ -1252,10 +1419,11 @@
 <script src="/js/graduate-profile.js?v=f212c6e2a4" defer></script>
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
+<script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=e3d32ffda3" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
-<script src="/js/motion.js?v=b2210ce6d9" defer></script>
+<script src="/js/motion.js?v=d059271bf7" defer></script>
 
 </body>
 </html>

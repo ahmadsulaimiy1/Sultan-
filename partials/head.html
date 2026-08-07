@@ -19,8 +19,8 @@
 <meta name="twitter:image" content="{{OG_IMAGE}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=4bbe0c42dd">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
+<link rel="stylesheet" href="/css/brand.css?v=7f4080a8cc">
+<link rel="stylesheet" href="/css/personalisation.css?v=632a7c4fde">
 <link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
 <script>
 (function(){
@@ -34,6 +34,17 @@
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){

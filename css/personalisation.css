@@ -282,3 +282,132 @@ body.pc-lock{overflow:hidden;}
   .pc-head{padding:18px;}
   .pc-body{padding:18px 18px 32px;}
 }
+
+/* ===================================================================
+   THE READER'S OWN SETTINGS
+   -------------------------------------------------------------------
+   Eleven further preferences, each of which changes the page rather
+   than merely being remembered. Every one is written to <html> before
+   first paint by the script in partials/head.html, so a returning
+   reader never sees the default flash past on the way to their own.
+   =================================================================== */
+
+/* --- Body typeface -------------------------------------------------
+   The institution is set in a serif. A humanist sans is offered for
+   readers who find it easier on a screen, and is scaled up very
+   slightly because it runs smaller at the same nominal size. */
+html[data-pc-face="sans"] body,
+html[data-pc-face="sans"] p,
+html[data-pc-face="sans"] li,
+html[data-pc-face="sans"] .pr-body,
+html[data-pc-face="sans"] .pr-lead{
+  font-family:'Inter','Cairo',system-ui,sans-serif;
+  font-size:1.008em;
+}
+
+/* --- Leading ------------------------------------------------------- */
+html[data-pc-leading="tight"]    p,html[data-pc-leading="tight"]    li{line-height:1.48;}
+html[data-pc-leading="generous"] p,html[data-pc-leading="generous"] li{line-height:2.02;}
+html[data-pc-leading="generous"] .pr-lead{line-height:1.95;}
+
+/* --- Tracking ------------------------------------------------------
+   Open and wide tracking are the recommendation for readers with
+   dyslexia; word-spacing rises with letter-spacing so words do not
+   dissolve into one another. */
+html[data-pc-tracking="open"] p,html[data-pc-tracking="open"] li,
+html[data-pc-tracking="open"] .pr-body{letter-spacing:.018em;word-spacing:.06em;}
+html[data-pc-tracking="wide"] p,html[data-pc-tracking="wide"] li,
+html[data-pc-tracking="wide"] .pr-body{letter-spacing:.042em;word-spacing:.13em;}
+
+/* --- Alignment ----------------------------------------------------- */
+html[data-pc-align="ragged"] .pr-justify,
+html[data-pc-align="ragged"] .pr-body,
+html[data-pc-align="ragged"] .pr-section p.pr-body,
+html[data-pc-align="ragged"] .policy-body .section-block > p,
+html[data-pc-align="ragged"] .school-block > p,
+html[data-pc-align="ragged"] .chapter-band p,
+html[data-pc-align="ragged"] .chapter-band-alt p,
+html[data-pc-align="ragged"] .pr-prose p{
+  text-align:start;hyphens:none;-webkit-hyphens:none;}
+
+/* --- Drop capitals -------------------------------------------------- */
+html[data-pc-versal="off"] .pr-dropcap::first-letter{
+  float:none;font-size:inherit;line-height:inherit;font-family:inherit;
+  padding:0;margin:0;color:inherit;text-shadow:none;}
+
+/* --- Arabic script size --------------------------------------------
+   Arabic carries meaning in marks set above and below the line, and at
+   the same nominal size it reads smaller than Latin. This scales the
+   Arabic alone, wherever it appears — the adhkār, the Qur'ānic text,
+   the Arabic edition of the site — without touching the Latin around
+   it. */
+html[data-pc-arabic="large"]  [lang="ar"],
+html[data-pc-arabic="large"]  .adk-static-arabic,
+html[data-pc-arabic="large"]  .pc-verse-arabic,
+html[data-pc-arabic="large"]  [dir="rtl"] p{font-size:1.14em;line-height:2.05;}
+html[data-pc-arabic="xlarge"] [lang="ar"],
+html[data-pc-arabic="xlarge"] .adk-static-arabic,
+html[data-pc-arabic="xlarge"] .pc-verse-arabic,
+html[data-pc-arabic="xlarge"] [dir="rtl"] p{font-size:1.30em;line-height:2.2;}
+
+/* --- Contrast -------------------------------------------------------
+   Not a separate theme: the same palette held at its strongest legible
+   ratio. Body text goes to near-black on cream and near-white on the
+   royal bands, hairlines double in weight, and the soft greys that
+   carry captions and labels are pulled up to readable strength. */
+html[data-pc-contrast="high"] body{color:#1A140C;}
+html[data-pc-contrast="high"] p,
+html[data-pc-contrast="high"] li,
+html[data-pc-contrast="high"] .pr-body,
+html[data-pc-contrast="high"] .pr-lead{color:#221A10;}
+html[data-pc-contrast="high"] .cap,
+html[data-pc-contrast="high"] .pc-option-desc,
+html[data-pc-contrast="high"] .plib-cat,
+html[data-pc-contrast="high"] .gw-need,
+html[data-pc-contrast="high"] .pgx-pane-need{color:#4a3c28;}
+html[data-pc-contrast="high"] .pr-section.is-royal p,
+html[data-pc-contrast="high"] .chapter-band p,
+html[data-pc-contrast="high"] .chapter-band-alt p,
+html[data-pc-contrast="high"] .portal-body p,
+html[data-pc-contrast="high"] footer p,
+html[data-pc-contrast="high"] .gateway-card p{color:#FFF9EE;}
+html[data-pc-contrast="high"] .gw-points li,
+html[data-pc-contrast="high"] .pgx-pane-points li{color:rgba(255,249,238,.92);}
+html[data-pc-contrast="high"] .pr-card,
+html[data-pc-contrast="high"] .school-block,
+html[data-pc-contrast="high"] .gateway-card,
+html[data-pc-contrast="high"] .plib,
+html[data-pc-contrast="high"] .institution-card{border-width:2px;}
+
+/* --- Link underlines ------------------------------------------------ */
+html[data-pc-links="always"] .pr-body a,
+html[data-pc-links="always"] p a,
+html[data-pc-links="always"] li a,
+html[data-pc-links="always"] .text-link{
+  text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:from-font;}
+
+/* --- Focus ring ------------------------------------------------------ */
+html[data-pc-focus="strong"] :focus-visible{
+  outline:3px solid var(--gold-bright,#E9CE8A);outline-offset:3px;
+  border-radius:3px;
+  box-shadow:0 0 0 6px rgba(198,161,91,.28);}
+
+/* --- Imagery ---------------------------------------------------------
+   Lean holds back the decorative layers — the weave, the drifting dust,
+   the raking sheen, the parallax — and leaves the photographs and the
+   words. It is the setting for a metered connection, and it is also the
+   quietest the site knows how to be. */
+html[data-pc-imagery="lean"] .imperial-motion,
+html[data-pc-imagery="lean"] .foot-motion,
+html[data-pc-imagery="lean"] .mo-spot::before,
+html[data-pc-imagery="lean"] .pr-sheen::after,
+html[data-pc-imagery="lean"] header.nav::before,
+html[data-pc-imagery="lean"] .portal-body::before{display:none!important;}
+html[data-pc-imagery="lean"] .mo-par,
+html[data-pc-imagery="lean"] .mo-par-img img{transform:none!important;}
+
+/* --- Interface sound -------------------------------------------------
+   The floating toggle and this control are one preference. When sound
+   is off the floating toggle still shows its state, so the reader can
+   see at a glance which way the setting stands. */
+html[data-pc-sound="off"] .pr-sound-toggle{opacity:.42;color:#9a9086;}

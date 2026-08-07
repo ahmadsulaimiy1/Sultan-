@@ -304,8 +304,6 @@ ${personalisation}
 <script src="/js/whatsapp-float.js" defer></script>
 <script src="/js/institution-carousel.js" defer></script>
 <script src="/js/marketplace.js" defer></script>
-<script src="/js/quran-data.js" defer></script>
-<script src="/js/quran-reader.js" defer></script>
 <script src="/js/certificate-verify.js" defer></script>
 <script src="/js/identity-verify.js" defer></script>
 <script src="/js/receipt-verify.js" defer></script>
@@ -313,6 +311,7 @@ ${personalisation}
 <script src="/js/graduate-profile.js" defer></script>
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
+<script src="/js/policies.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}

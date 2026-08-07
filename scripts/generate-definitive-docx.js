@@ -393,7 +393,7 @@ B.push(pageBreak());
 // ============ FIVE SCHOOLS ============
 B.push(eyebrow('An Integrated Institution'), h1('Five Schools. One Vision.'));
 B.push(dataPanel([
-  ['School 01 — Basic School', 'Ages 2–10, day format, Est. 2017'],
+  ['School 01 — Basic School', 'Ages 2–10, day format, Est. 2016'],
   ['School 02 — Royal College', 'Ages 10+, JSS 1–3 & SSS 1–3, Est. 2021'],
   ['School 03 — School of Islamic and Arabic Studies', 'Saudi Arabian Curriculum, weekday & weekend'],
   ["School 04 — Qur'an College", 'Hifz Programme, 24–36 months, day & boarding, Ijazah'],

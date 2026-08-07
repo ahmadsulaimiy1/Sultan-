@@ -144,6 +144,98 @@
             <button type="button" data-value="reduced" role="radio">Reduced Motion</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Body Typeface</span><p class="pc-option-desc">The face running text is set in. The serif is the institution&rsquo;s own; the humanist sans is set slightly wider and suits screens read at a distance.</p></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">Serif</button>
+            <button type="button" data-value="sans" role="radio">Sans</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Leading</span><p class="pc-option-desc">The space between lines. Generous leading helps a long passage; tight leading fits more on the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">Tight</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="generous" role="radio">Generous</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Tracking</span><p class="pc-option-desc">The space between letters. Open tracking is recommended for readers with dyslexia.</p></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="open" role="radio">Open</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Alignment</span><p class="pc-option-desc">Running prose is justified to both margins, as a printed page is. Ragged-right removes the word-spacing that justification requires.</p></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">Justified</button>
+            <button type="button" data-value="ragged" role="radio">Ragged Right</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Drop Capitals</span><p class="pc-option-desc">The three-line versal that opens a chapter. Some screen magnifiers reflow awkwardly around it.</p></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Show</button>
+            <button type="button" data-value="off" role="radio">Hide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Arabic Script Size</span><p class="pc-option-desc">Arabic carries its meaning in marks that sit above and below the line, and is set larger than Latin at the same nominal size.</p></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="large" role="radio">Large</button>
+            <button type="button" data-value="xlarge" role="radio">Very Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Contrast</span><p class="pc-option-desc">Raises every text colour, border and rule to the strongest ratio the palette allows.</p></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high" role="radio">High</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Links</span><p class="pc-option-desc">Underlining every link in running text, rather than only on hover.</p></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">On Hover</button>
+            <button type="button" data-value="always" role="radio">Always Underlined</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Focus Ring</span><p class="pc-option-desc">The outline that marks where the keyboard is. A strong ring is recommended for anyone navigating without a mouse.</p></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="strong" role="radio">Strong</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Interface Sound</span><p class="pc-option-desc">The soft mechanical response on buttons, panels and confirmations. Silent by preference, and silent by default on any device that asks for reduced motion.</p></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Imagery</span><p class="pc-option-desc">Lean loads photographs only when they reach the screen and holds decorative layers back — for a slower connection or a metered one.</p></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">

@@ -931,45 +931,129 @@
   .nav-mega-panel.is-compact .nmi-secondary,.nav-mega-panel.is-portal .nmi-secondary{margin-top:2px;font-size:0.78rem;color:var(--ivory);opacity:0.75;}
   .nav-mega-panel.is-compact .nmi-secondary:hover,.nav-mega-panel.is-portal .nmi-secondary:hover{opacity:1;color:var(--gold-bright);}
 
-  /* The Login to Portal panel is now a full eight-door directory rather
-     than a single paragraph, so it can outgrow a short viewport on a
-     laptop. Cap it and let it scroll inside itself — a menu that runs
-     off the bottom of the screen is a menu with items nobody can reach.
-     It is width-capped for the same reason: each door now carries a real
-     explanation, and `1fr` columns take their minimum from the longest
-     unbreakable run of that text, so an uncapped four-across grid grew
-     the panel past the width of the screen. Two columns of comfortable
-     measure instead — a description is meant to be read, not squeezed. */
+  /* ---- Login to Portal: the category chooser -----------------------
+     A visitor does not think "I need the Administrative Portal". They
+     think "I am a parent". So the menu asks the only question they can
+     answer about themselves, and answers the other one for them: pick
+     the description that fits, and the gateway it opens — with its
+     explanation, what stands behind it, and what is needed to sign in —
+     is set out immediately beside it.
+
+     Built on radio inputs rather than script, so it works before (and
+     without) JavaScript, is reachable by keyboard with the arrow keys
+     as a radio group is, and announces itself correctly to a screen
+     reader. Every rule below is scoped inside .pgx. */
   .nav-mega-panel.is-portal{
-    width:min(1020px,94vw);min-width:0;max-width:94vw;
+    width:min(940px,94vw);min-width:0;max-width:94vw;padding:0;
     max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain;}
-  .nav-mega-panel.is-portal .portal-gateway-grid,
-  .nav-mega-panel.is-portal .portal-gateway-grid.pg-grid-4{
-    grid-template-columns:repeat(2,minmax(0,1fr));}
-  .nav-mega-panel.is-portal .portal-gateway-card{
-    border-inline-end:1px solid rgba(198,161,91,0.16);
-    border-bottom:1px solid rgba(198,161,91,0.16);}
-  .nav-mega-panel.is-portal .portal-gateway-card:nth-child(2n){border-inline-end:none;}
-  .nav-mega-panel.is-portal .portal-gateway-card:nth-last-child(-n+2){border-bottom:none;}
-  /* In the mobile drawer the panel is only as wide as the drawer, and a
-     two-column split leaves ~140px per door — a column too narrow to
-     read a sentence in. One door per row there. */
+  .pgx{display:flex;flex-direction:column;}
+  .pgx-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+  .pgx-head{padding:22px 26px 16px;border-bottom:1px solid rgba(198,161,91,0.18);}
+  .pgx-head h4{font-family:'Cinzel','Amiri',serif;color:#fff;font-size:1.02rem;font-weight:600;margin:0;}
+  .pgx-head p{font-size:0.78rem;line-height:1.55;color:rgba(248,244,233,0.6);margin:6px 0 0;}
+  .pgx-body{display:grid;grid-template-columns:300px 1fr;align-items:stretch;}
+  .pgx-nav{border-inline-end:1px solid rgba(198,161,91,0.18);padding:10px 0;}
+
+  /* a category — the thing a visitor recognises themselves in */
+  .nav-drop-panel .pgx-cat{
+    display:flex;align-items:center;gap:12px;cursor:pointer;
+    padding:12px 20px;white-space:normal;
+    border-inline-start:2px solid transparent;
+    transition:background .25s ease,border-color .25s ease,padding-inline-start .25s ease;}
+  .pgx-cat-ico{display:flex;width:19px;height:19px;flex:0 0 auto;color:rgba(233,206,138,0.6);transition:color .25s ease;}
+  .pgx-cat-ico svg{width:100%;height:100%;}
+  .pgx-cat-t{font-size:0.83rem;line-height:1.4;color:rgba(248,244,233,0.82);transition:color .25s ease;}
+  .pgx-cat-arrow{margin-inline-start:auto;color:var(--gold-bright);opacity:0;transform:translateX(-4px);transition:opacity .25s ease,transform .25s ease;}
+  [dir="rtl"] .pgx-cat-arrow{transform:translateX(4px);}
+  .nav-drop-panel .pgx-cat:hover{background:rgba(198,161,91,0.06);padding-inline-start:24px;}
+  .pgx-cat:hover .pgx-cat-ico,.pgx-cat:hover .pgx-cat-t{color:var(--gold-bright);}
+
+  /* the chosen category, and the pane it reveals */
+  .pgx-pane{display:none;padding:24px 28px 26px;}
+  .pgx-pane-eyebrow{font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(233,206,138,0.7);margin:0;}
+  .pgx-pane-t{font-family:'Cinzel','Amiri',serif;font-size:1.14rem;color:#fff;margin:8px 0 10px;}
+  .pgx-pane-d{font-size:0.83rem;line-height:1.65;color:rgba(248,244,233,0.7);margin:0;}
+  .pgx-pane-points{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid rgba(198,161,91,0.16);}
+  .pgx-pane-points li{position:relative;padding:8px 0 8px 18px;font-size:0.79rem;line-height:1.5;
+    color:rgba(248,244,233,0.62);border-bottom:1px solid rgba(198,161,91,0.09);}
+  [dir="rtl"] .pgx-pane-points li{padding:8px 18px 8px 0;}
+  .pgx-pane-points li:last-child{border-bottom:none;}
+  .pgx-pane-points li::before{content:"";position:absolute;inset-inline-start:1px;top:15px;width:5px;height:5px;border-radius:50%;
+    background:linear-gradient(140deg,var(--gold-bright),var(--gold));box-shadow:0 0 7px -1px rgba(233,206,138,0.9);}
+  .pgx-pane-need{margin:14px 0 0;font-size:0.75rem;line-height:1.55;font-style:italic;color:rgba(248,244,233,0.45);}
+  .nav-drop-panel a.pgx-pane-cta{
+    display:inline-block;margin-top:18px;padding:11px 20px;white-space:normal;
+    font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.11em;text-transform:uppercase;
+    color:#2a1c10;background:linear-gradient(120deg,var(--gold),var(--gold-bright));
+    border-radius:var(--btn-radius);
+    box-shadow:0 12px 24px -14px rgba(198,161,91,0.9),inset 0 1px 0 rgba(255,255,255,0.5);
+    transition:transform .3s ease,box-shadow .3s ease;}
+  .nav-drop-panel a.pgx-pane-cta:hover{transform:translateY(-2px);background:linear-gradient(120deg,var(--gold),var(--gold-bright));
+    box-shadow:0 18px 32px -14px rgba(198,161,91,1),inset 0 1px 0 rgba(255,255,255,0.6);}
+
+  .pgx-foot{display:flex;flex-wrap:wrap;align-items:center;gap:18px;
+    padding:16px 26px 20px;border-top:1px solid rgba(198,161,91,0.18);}
+
+  /* The eight pairings. One rule per category, generated by hand rather
+     than by a loop because CSS has none — the nth-of-type index of the
+     radio and the nth-child index of the pane are the same number. */
+  #pgx-parent:checked    ~ .pgx-body .pgx-panes .pgx-pane:nth-child(1),
+  #pgx-student:checked   ~ .pgx-body .pgx-panes .pgx-pane:nth-child(2),
+  #pgx-applicant:checked ~ .pgx-body .pgx-panes .pgx-pane:nth-child(3),
+  #pgx-teacher:checked   ~ .pgx-body .pgx-panes .pgx-pane:nth-child(4),
+  #pgx-office:checked    ~ .pgx-body .pgx-panes .pgx-pane:nth-child(5),
+  #pgx-executive:checked ~ .pgx-body .pgx-panes .pgx-pane:nth-child(6),
+  #pgx-alumni:checked    ~ .pgx-body .pgx-panes .pgx-pane:nth-child(7),
+  #pgx-verify:checked    ~ .pgx-body .pgx-panes .pgx-pane:nth-child(8){
+    display:block;animation:pgx-enter .38s cubic-bezier(.16,.8,.24,1) both;}
+  @keyframes pgx-enter{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .pgx-pane{animation:none!important;}
+  }
+
+  #pgx-parent:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-parent"],
+  #pgx-student:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-student"],
+  #pgx-applicant:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-applicant"],
+  #pgx-teacher:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-teacher"],
+  #pgx-office:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-office"],
+  #pgx-executive:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-executive"],
+  #pgx-alumni:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-alumni"],
+  #pgx-verify:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-verify"]{
+    background:rgba(198,161,91,0.1);border-inline-start-color:var(--gold-bright);padding-inline-start:24px;}
+  #pgx-parent:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-parent"] .pgx-cat-arrow,
+  #pgx-student:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-student"] .pgx-cat-arrow,
+  #pgx-applicant:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-applicant"] .pgx-cat-arrow,
+  #pgx-teacher:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-teacher"] .pgx-cat-arrow,
+  #pgx-office:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-office"] .pgx-cat-arrow,
+  #pgx-executive:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-executive"] .pgx-cat-arrow,
+  #pgx-alumni:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-alumni"] .pgx-cat-arrow,
+  #pgx-verify:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-verify"] .pgx-cat-arrow{
+    opacity:1;transform:none;}
+  /* the chosen category's icon and label take the gold as well */
+  #pgx-parent:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-parent"] .pgx-cat-t,
+  #pgx-student:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-student"] .pgx-cat-t,
+  #pgx-applicant:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-applicant"] .pgx-cat-t,
+  #pgx-teacher:checked   ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-teacher"] .pgx-cat-t,
+  #pgx-office:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-office"] .pgx-cat-t,
+  #pgx-executive:checked ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-executive"] .pgx-cat-t,
+  #pgx-alumni:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-alumni"] .pgx-cat-t,
+  #pgx-verify:checked    ~ .pgx-body .pgx-nav .pgx-cat[for="pgx-verify"] .pgx-cat-t{
+    color:var(--gold-bright);}
+
+  /* keyboard focus must be visible even though the radio itself is not */
+  .pgx-radio:focus-visible ~ .pgx-body .pgx-nav .pgx-cat[for],
+  .pgx-cat:focus-within{outline:2px solid var(--gold-bright);outline-offset:-2px;}
+
+  /* In the mobile drawer the panel is the width of the drawer, so the
+     chooser stacks: the categories first, the chosen gateway beneath. */
   @media (max-width:900px){
     .nav-mega-panel.is-portal{width:auto;max-width:none;max-height:none;overflow-y:visible;}
-    .nav-mega-panel.is-portal .portal-gateway-grid,
-    .nav-mega-panel.is-portal .portal-gateway-grid.pg-grid-4{grid-template-columns:1fr;}
-    .nav-mega-panel.is-portal .portal-gateway-card{border-inline-end:none;text-align:start;align-items:flex-start;}
-    .nav-mega-panel.is-portal .portal-gateway-card:not(:last-child){
-      border-bottom:1px solid rgba(198,161,91,0.16);}
-    .nav-mega-panel.is-portal .portal-gateway-card:last-child{border-bottom:none;}
+    .pgx-body{grid-template-columns:1fr;}
+    .pgx-nav{border-inline-end:none;border-bottom:1px solid rgba(198,161,91,0.18);}
+    .pgx-pane{padding:20px 20px 22px;}
+    .pgx-head{padding:18px 20px 14px;}
+    .pgx-foot{padding:14px 20px 18px;}
   }
-  /* `.nav-drop-panel a` is set to white-space:nowrap, which is right for
-     a one-line menu link and wrong for a gateway card carrying a full
-     sentence of explanation — the descriptions ran straight out of their
-     column and over the neighbouring one. These cards opt back out. */
-  .nav-drop-panel a.portal-gateway-card{white-space:normal;padding:18px 20px;}
-  .nav-drop-panel a.portal-gateway-card .pgc-desc{white-space:normal;overflow-wrap:break-word;}
-  .nav-mega-panel.is-portal .pgc-desc{line-height:1.55;}
   /* The closing row of the panel — "Open the full Gateway" plus the
      account link — sits above a hairline so it reads as the panel's
      footer rather than a ninth door. */
@@ -1930,8 +2014,34 @@
      content and the footer's information architecture, on a distinct
      charcoal ground with corner ornaments so it reads as its own
      institutional moment rather than an abrupt drop into the footer. */
-  .foot-arrival{position:relative;background:var(--charcoal);border-bottom:1px solid var(--line);padding:88px 24px 78px;overflow:hidden;text-align:center;}
-  .foot-arrival::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(198,161,91,0.12),transparent 55%);pointer-events:none;}
+  /* The closing statement band. It was a flat slab of --charcoal, which is
+     a cold grey, dropped between a warm cream page above and a warm brown
+     footer below — a single tone that belonged to neither, and the one
+     shape on the page that read as unfinished. It is now the same royal
+     brown as the rest of the institution's chrome, lit from above and
+     from the sides so that it reads as a threshold into the footer
+     rather than a block sitting on top of it: a hairline of gold at its
+     upper edge, a soft fall of light down the centre, and the warm ground
+     deepening as it meets the footer proper. */
+  .foot-arrival{
+    position:relative;overflow:hidden;text-align:center;
+    padding:92px 24px 82px;
+    border-top:1px solid rgba(198,161,91,0.34);
+    border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(760px 260px at 50% 0%, rgba(233,206,138,0.13), transparent 66%),
+      radial-gradient(420px 300px at 6% 108%, rgba(198,161,91,0.09), transparent 62%),
+      radial-gradient(420px 300px at 94% 108%, rgba(198,161,91,0.09), transparent 62%),
+      linear-gradient(180deg, #3B2A1D 0%, #2A1D11 58%, var(--navy-deep) 100%);
+  }
+  /* A single pass of gold along the top edge, so the seam between the page
+     and the closing band is a line of light rather than a hard change of
+     colour. */
+  .foot-arrival::before{
+    content:"";position:absolute;left:0;right:0;top:-1px;height:2px;pointer-events:none;z-index:2;
+    background:linear-gradient(90deg,transparent,var(--gold) 22%,var(--gold-bright) 50%,var(--gold) 78%,transparent);
+    opacity:0.9;
+  }
   /* Footer's own imperial motion layer — same sweep+dust technique as
      the header's .imperial-motion, tuned slower/dimmer to suit a
      closing-ceremony moment rather than an active nav bar. Sits above

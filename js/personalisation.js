@@ -9,6 +9,17 @@
     readingMode: 'standard',
     textDensity: 'comfortable',
     motion: 'standard',
+    bodyFace: 'serif',
+    leading: 'normal',
+    tracking: 'normal',
+    alignment: 'justified',
+    versal: 'on',
+    arabicScale: 'standard',
+    contrast: 'standard',
+    links: 'hover',
+    focusRing: 'standard',
+    interfaceSound: 'on',
+    imagery: 'full',
     dateFormat: 'both',
     timeFormat: '24h',
     aiCommunicationStyle: 'professional',
@@ -69,6 +80,24 @@
     html.setAttribute('data-pc-accent', prefs.accent);
     html.setAttribute('data-pc-reading', prefs.readingMode);
     html.setAttribute('data-pc-text-density', prefs.textDensity);
+    html.setAttribute('data-pc-face', prefs.bodyFace);
+    html.setAttribute('data-pc-leading', prefs.leading);
+    html.setAttribute('data-pc-tracking', prefs.tracking);
+    html.setAttribute('data-pc-align', prefs.alignment);
+    html.setAttribute('data-pc-versal', prefs.versal);
+    html.setAttribute('data-pc-arabic', prefs.arabicScale);
+    html.setAttribute('data-pc-contrast', prefs.contrast);
+    html.setAttribute('data-pc-links', prefs.links);
+    html.setAttribute('data-pc-focus', prefs.focusRing);
+    html.setAttribute('data-pc-imagery', prefs.imagery);
+    // The interface-sound preference is the same preference the floating
+    // sound toggle writes, so the two controls are one setting rather
+    // than two that can disagree. js/motion.js listens for this event.
+    html.setAttribute('data-pc-sound', prefs.interfaceSound);
+    try {
+      window.localStorage.setItem('shrsSound', prefs.interfaceSound === 'off' ? 'off' : 'on');
+      window.dispatchEvent(new Event(prefs.interfaceSound === 'off' ? 'shrs:sound-off' : 'shrs:sound-on'));
+    } catch (e) { /* storage unavailable — the attribute still applies */ }
     ensureDyslexiaFont();
   }
 

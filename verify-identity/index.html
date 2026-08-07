@@ -22,8 +22,8 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=4bbe0c42dd">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
+<link rel="stylesheet" href="/css/brand.css?v=7f4080a8cc">
+<link rel="stylesheet" href="/css/personalisation.css?v=632a7c4fde">
 <link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
 <script>
 (function(){
@@ -37,6 +37,17 @@
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -52,7 +63,7 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/prestige.css?v=83b262bb40">
+<link rel="stylesheet" href="/css/prestige.css?v=141bb3d127">
 <link rel="stylesheet" href="/css/motion.css?v=c10021e96a">
 <link rel="stylesheet" href="/css/idcard.css?v=f7fc150c78">
 <link rel="alternate" hreflang="ar" href="/ar/verify-identity/" />
@@ -181,7 +192,7 @@
               <span class="nav-mega-text"><span class="t">Morning &amp; Evening Adhkār</span><span class="d">Daily remembrance, with sources</span></span>
             </a>
             <a class="nav-mega-item" href="/quran-centre/">
-              <span class="nav-mega-text"><span class="t">Digital Qur'an Centre</span><span class="d">Read Al-Fātiḥah &amp; Surahs 93–114</span></span>
+              <span class="nav-mega-text"><span class="t">The Digital Qur'ān Centre</span><span class="d">Adhkār, the Ḥifẓ record, and the daily wird</span></span>
             </a>
             <a class="nav-mega-item" href="/faculty/">
               <span class="nav-mega-text"><span class="t">Faculty Directory</span><span class="d">Meet our educators</span></span>
@@ -321,67 +332,133 @@
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-portal">
-          <div class="nav-mega-intro">
-            <h4>SHRS Digital Campus Gateway</h4>
-            <p>Eight doors, one Digital Campus. Each entry below explains who it is for and what stands behind it, and takes you straight to that gateway.</p>
-          </div>
-          <p class="pg-group-label">Institutional &amp; Staff Access</p>
-          <div class="portal-gateway-grid pg-grid-4">
-            <a class="portal-gateway-card" href="/portal/founder/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">01 · Executive Portal</span>
-              <span class="pgc-desc">For the Founder, the Chairman &amp; Head of Schools, the Board of Governors and the Management Council. Institution-wide analytics, governance papers and the command view of every school at once.</span>
-              <span class="pgc-enter">Enter →</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/staff/offices/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
-              <span class="pgc-name">02 · Administrative Portal</span>
-              <span class="pgc-desc">One sign-in for every operational office the institution runs — Registrar, Finance, Human Resources and institutional services. An Office Switcher then shows exactly which offices your account holds.</span>
-              <span class="pgc-enter">Enter →</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/staff/teacher/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">03 · Academic Staff Portal</span>
-              <span class="pgc-desc">For principals and teachers across the Royal College, the School of Islamic and Arabic Studies, the Qur'an College and the Nursery and Primary School — classes, registers, results and academic leadership.</span>
-              <span class="pgc-enter">Enter →</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/student/login/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">04 · Student Portal</span>
-              <span class="pgc-desc">For those learning at SHRS. Your own Ḥifẓ journey, class enrolment, results and Digital ID card, in one place.</span>
-              <span class="pgc-enter">Enter →</span>
-            </a>
-          </div>
-          <p class="pg-group-label">Families, Applicants &amp; the Public</p>
-          <div class="portal-gateway-grid pg-grid-4">
-            <a class="portal-gateway-card" href="/portal/login/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">05 · Parent / Guardian Portal</span>
-              <span class="pgc-desc">For those raising an SHRS learner. Admission status, fees and receipts, Ḥifẓ progress, announcements and your child's academic record.</span>
-              <span class="pgc-enter">Enter →</span>
-            </a>
-            <a class="portal-gateway-card" href="/portal/apply/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">06 · Applicant Portal</span>
-              <span class="pgc-desc">Begin an admission here. A free Parent/Guardian account comes first; Apply is Stage 3 of the same admissions journey, not a separate system.</span>
-              <span class="pgc-enter">Apply →</span>
-            </a>
-            <a class="portal-gateway-card" href="/alumni-portal/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
-              <span class="pgc-name">07 · Alumni Portal</span>
-              <span class="pgc-desc">Self-service alumni accounts are planned, not yet built. This page states plainly what exists today, and how to verify a credential or reach Alumni Relations in the meantime.</span>
-              <span class="pgc-enter">View status →</span>
-            </a>
-            <a class="portal-gateway-card" href="/verify/">
-              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span class="pgc-name">08 · Public Verification</span>
-              <span class="pgc-desc">No account required. Confirm that a certificate, graduation document, identity card or fee receipt was genuinely issued by SHRS — public, instant, and open to any employer or institution.</span>
-              <span class="pgc-enter">Verify →</span>
-            </a>
-          </div>
-          <div class="nav-mega-intro">
-            <a class="nmi-cta" href="/portal/select/">Open the full Gateway →</a>
-            <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account →</a>
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>Which of these are you?</h4>
+              <p>Choose the description that fits you, and the gateway it opens is set out beside it.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="Choose the category you belong to">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a parent or guardian</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a student here</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am applying for a place</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I teach at the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">I work in an office of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I sit on the Board or the Management Council</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a graduate of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am verifying a document</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
+              <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
+              <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Student Portal</h4>
+              <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
+              <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
+              <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
+              <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
+              <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
+              <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
+              <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
+              <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
+              <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
+              <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
+              <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
+              <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
+              <p class="pgx-pane-need">No account is required.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
+              <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
+              <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
+              <a class="pgx-pane-cta" href="/verify/">Verify a Document &rarr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">See all eight gateways &rarr;</a>
+              <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account &rarr;</a>
+            </div>
           </div>
         </div>
       </div>
@@ -937,6 +1014,98 @@
             <button type="button" data-value="reduced" role="radio">Reduced Motion</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Body Typeface</span><p class="pc-option-desc">The face running text is set in. The serif is the institution&rsquo;s own; the humanist sans is set slightly wider and suits screens read at a distance.</p></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">Serif</button>
+            <button type="button" data-value="sans" role="radio">Sans</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Leading</span><p class="pc-option-desc">The space between lines. Generous leading helps a long passage; tight leading fits more on the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">Tight</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="generous" role="radio">Generous</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Tracking</span><p class="pc-option-desc">The space between letters. Open tracking is recommended for readers with dyslexia.</p></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="open" role="radio">Open</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Alignment</span><p class="pc-option-desc">Running prose is justified to both margins, as a printed page is. Ragged-right removes the word-spacing that justification requires.</p></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">Justified</button>
+            <button type="button" data-value="ragged" role="radio">Ragged Right</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Drop Capitals</span><p class="pc-option-desc">The three-line versal that opens a chapter. Some screen magnifiers reflow awkwardly around it.</p></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Show</button>
+            <button type="button" data-value="off" role="radio">Hide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Arabic Script Size</span><p class="pc-option-desc">Arabic carries its meaning in marks that sit above and below the line, and is set larger than Latin at the same nominal size.</p></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="large" role="radio">Large</button>
+            <button type="button" data-value="xlarge" role="radio">Very Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Contrast</span><p class="pc-option-desc">Raises every text colour, border and rule to the strongest ratio the palette allows.</p></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high" role="radio">High</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Links</span><p class="pc-option-desc">Underlining every link in running text, rather than only on hover.</p></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">On Hover</button>
+            <button type="button" data-value="always" role="radio">Always Underlined</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Focus Ring</span><p class="pc-option-desc">The outline that marks where the keyboard is. A strong ring is recommended for anyone navigating without a mouse.</p></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="strong" role="radio">Strong</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Interface Sound</span><p class="pc-option-desc">The soft mechanical response on buttons, panels and confirmations. Silent by preference, and silent by default on any device that asks for reduced motion.</p></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Imagery</span><p class="pc-option-desc">Lean loads photographs only when they reach the screen and holds decorative layers back — for a slower connection or a metered one.</p></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1143,7 +1312,7 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=20f42159c5" defer></script>
+<script src="/js/personalisation.js?v=597067adc5" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1152,8 +1321,6 @@
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
-<script src="/js/quran-data.js?v=4fced7d871" defer></script>
-<script src="/js/quran-reader.js?v=d401f4f4ce" defer></script>
 <script src="/js/certificate-verify.js?v=e901a84ce6" defer></script>
 <script src="/js/identity-verify.js?v=0b364c22e9" defer></script>
 <script src="/js/receipt-verify.js?v=daae2f1f8f" defer></script>
@@ -1161,10 +1328,11 @@
 <script src="/js/graduate-profile.js?v=f212c6e2a4" defer></script>
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
+<script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=e3d32ffda3" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
-<script src="/js/motion.js?v=b2210ce6d9" defer></script>
+<script src="/js/motion.js?v=d059271bf7" defer></script>
 <script src="/js/idcard.js?v=0e6bd7f1e1" defer></script>
 
 </body>

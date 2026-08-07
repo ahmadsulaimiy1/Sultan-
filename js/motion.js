@@ -337,11 +337,28 @@
     b.addEventListener('click', function () {
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) {}
+      // The Personalisation Centre carries the same preference under its
+      // own key. Writing both keeps one setting in two places from
+      // disagreeing with itself, whichever control the reader used.
+      try {
+        var raw = localStorage.getItem('shrsPersonalisation');
+        var prefs = raw ? JSON.parse(raw) : {};
+        prefs.interfaceSound = enabled ? 'on' : 'off';
+        localStorage.setItem('shrsPersonalisation', JSON.stringify(prefs));
+        document.documentElement.setAttribute('data-pc-sound', prefs.interfaceSound);
+      } catch (e) { /* storage unavailable — the toggle still works for this visit */ }
       // the spoken introduction listens for this and fades itself out
-      if (!enabled) window.dispatchEvent(new Event('shrs:sound-off'));
+      window.dispatchEvent(new Event(enabled ? 'shrs:sound-on' : 'shrs:sound-off'));
       paint();
       if (enabled) play('toggle');
     });
+
+    // The Personalisation Centre can change this preference too; when it
+    // does, the floating toggle must show the new state rather than the
+    // one it was born with.
+    window.addEventListener('shrs:sound-off', function () { if (enabled) { enabled = false; paint(); } });
+    window.addEventListener('shrs:sound-on', function () { if (!enabled) { enabled = true; paint(); } });
+
     paint();
     document.body.appendChild(b);
   }
