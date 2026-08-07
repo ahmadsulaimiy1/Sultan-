@@ -29,6 +29,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
 
 const batchDir = resolve(process.argv[2] || 'dist/certificates/2026-08-08-JSS-000048');
 if (!existsSync(batchDir)) {
@@ -160,10 +161,18 @@ for (const r of ruled) console.log(`       · ${r.student} → ${r.matchedTo} ($
 
 // ── 3. Wording ──────────────────────────────────────────────────────────────
 console.log('\n— wording —');
+// The issuing school and the signing officer come from the PROGRAMME, not from
+// a constant. They were hardcoded to the Royal College and its Principal, so
+// the Primary batch failed this gate twice for being correct: a Nursery and
+// Primary award is signed by its own Head Teacher and must not carry the Royal
+// College's name. A gate that only passes one school is not a gate — it is the
+// first school's layout written down twice.
+const PROG = RC_PROGRAMMES[reg.programme];
+if (!PROG) fail(`no programme registry entry for "${reg.programme}"`);
 const MUST_APPEAR = [
-  'Sultan Hanafi Royal Schools', 'Sultan Hanafi Royal College',
+  'Sultan Hanafi Royal Schools', PROG.school,
   'Certificate of Graduation', reg.award,
-  'Federal Republic of Nigeria', 'Dr. Adegoke Musa Olatunji',
+  'Federal Republic of Nigeria', PROG.signatory.name,
   'Dr. Zakariyyah Olanrewaju Anofi', 'Student Identity Number',
 ];
 for (const s of MUST_APPEAR) check(`the sheet says "${s}"`, printHtml.includes(s));

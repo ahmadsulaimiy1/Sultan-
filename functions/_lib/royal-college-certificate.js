@@ -653,8 +653,9 @@ function plateBorder(uid, serial) {
 // work, not an effect laid over the top. On press these are metallic and
 // pearlescent inks; on screen they read as light moving across the sheet.
 // ─────────────────────────────────────────────────────────────────────────────
-function openSecurityField(uid, serial) {
+function openSecurityField(uid, serial, prog = {}) {
   const s = esc(serial);
+  const ACC = prog.accent || GOLD_DEEP;
   const out = [];
 
   // ── The guilloche net, full bleed ──────────────────────────────────────────
@@ -669,7 +670,7 @@ function openSecurityField(uid, serial) {
         fill="none" stroke="${GOLD_DEEP}" stroke-width="0.055"/>`);
     }
   }
-  out.push(`<g opacity="0.2">${net.join('')}</g>`);
+  out.push(`<g opacity="${prog.accent ? 0.28 : 0.2}">${net.join('')}</g>`);
 
   // ── Iris rails ─────────────────────────────────────────────────────────────
   // Head and foot, gold running to navy through a warm middle. Split-fountain
@@ -678,6 +679,8 @@ function openSecurityField(uid, serial) {
   out.push(`<g opacity="0.5">
     <rect x="0" y="7.5" width="${W}" height="3.4" fill="url(#rcIrisRail${uid})"/>
     <rect x="0" y="${H - 10.9}" width="${W}" height="3.4" fill="url(#rcIrisRail${uid})"/>
+    ${prog.accent ? `<rect x="0" y="7.5" width="${W}" height="3.4" fill="${ACC}" opacity="0.42"/>
+    <rect x="0" y="${H - 10.9}" width="${W}" height="3.4" fill="${ACC}" opacity="0.42"/>` : ''}
   </g>
   <g opacity="0.42">
     ${lathe(0, 9.2, W, 3.0, 14, 0.05, 1, false, 58)}
@@ -738,13 +741,54 @@ function openSecurityField(uid, serial) {
     [148.5, 32], [148.5, 178], [64, 150], [233, 150]]
     .map(([x, y]) => uvMotif(x, y, 3.0)).join('')}</g>`);
 
+  // ── The ceremonial register ────────────────────────────────────────────────
+  // Everything above is a security feature that happens to be beautiful. This
+  // is the one layer that is there for ceremony, and it is still generated
+  // rather than drawn: corner fans and a wreath, both built from the same
+  // rosette engine as the guilloche, at a scale the eye reads as ornament.
+  //
+  // Generated, not freehand, for a reason this file has learned twice. Two
+  // earlier certificates carried hand-drawn ornament — a palm spray, then a
+  // bezier vine — and both read as crude at print size and had to come out.
+  // A figure from a parametric curve is either right or obviously wrong; a
+  // freehand one is usually nearly right, and nearly right is worse than none.
+  const fans = [];
+  for (const [cx, cy, sx, sy] of [[0, 0, 1, 1], [W, 0, -1, 1], [0, H, 1, -1], [W, H, -1, -1]]) {
+    const arcs = [];
+    for (let r = 15; r <= 41; r += 3.25) {
+      arcs.push(`<path d="M ${r} 0 A ${r} ${r} 0 0 1 0 ${r}" fill="none"
+        stroke="${ACC}" stroke-width="${(0.16 - (r - 15) * 0.0022).toFixed(3)}"/>`);
+    }
+    // The ribs that turn a set of arcs into a fan.
+    for (let i = 1; i < 9; i++) {
+      const a = (i / 9) * (Math.PI / 2);
+      arcs.push(`<path d="M ${(15 * Math.cos(a)).toFixed(2)} ${(15 * Math.sin(a)).toFixed(2)}
+        L ${(41 * Math.cos(a)).toFixed(2)} ${(41 * Math.sin(a)).toFixed(2)}"
+        stroke="${ACC}" stroke-width="0.08"/>`);
+    }
+    arcs.push(`<path d="${rosette(26, 26, 6.4, 9, 1.05)}" fill="none"
+      stroke="${ACC}" stroke-width="0.13"/>`);
+    fans.push(`<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})">${arcs.join('')}</g>`);
+  }
+  out.push(`<g opacity="${prog.accent ? 0.55 : 0.3}">${fans.join('')}</g>`);
+
+  // The wreath behind the recipient's name — twenty-four rosettes on a ring,
+  // which is a laurel at reading distance and a guilloche under a loupe.
+  const wreath = [];
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    wreath.push(`<path d="${rosette(148.5 + 46 * Math.cos(a), 96 + 21 * Math.sin(a), 4.2, 7, 0.8)}"
+      fill="none" stroke="${ACC}" stroke-width="0.075"/>`);
+  }
+  out.push(`<g opacity="${prog.accent ? 0.4 : 0.22}">${wreath.join('')}</g>`);
+
   return out.join('\n  ');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE GROUND
 // ─────────────────────────────────────────────────────────────────────────────
-function groundSvg(serial, uid, style = 'ring') {
+function groundSvg(serial, uid, style = 'ring', groundProg = {}) {
   const s = esc(serial);
   const R = RC_RULES;
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
@@ -881,7 +925,7 @@ function groundSvg(serial, uid, style = 'ring') {
 
   ${voidPantograph(uid)}
 
-  ${style === 'open' ? openSecurityField(uid, serial)
+  ${style === 'open' ? openSecurityField(uid, serial, groundProg)
     : style === 'plate' ? plateBorder(uid, serial) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
        A saturated navy body carrying a gold khatam tessellation, cut out on an
        11.5mm radius so the field's corner is a curve and not an angle. 16mm at
@@ -963,13 +1007,19 @@ function groundSvg(serial, uid, style = 'ring') {
 // printed over the seal face: overprinting a struck seal is what a forger does
 // to repurpose one, and a registrar is trained to look for it.
 // ─────────────────────────────────────────────────────────────────────────────
-function sealPlate(programmeEn) {
+// The ribbon names the ISSUING SCHOOL. It was hardcoded to the Royal College,
+// which is correct for JSS and SS and wrong for Primary — and a seal captioned
+// with a school that did not issue the award is the kind of internal
+// contradiction a registrar reads as a forged document. The school now comes
+// from the programme, like every other institutional string on the sheet.
+function sealPlate(school, programmeEn) {
   return `<figure class="rc-seal-plate">
     <img class="rc-seal-die" src="/assets/images/certificates/official-seal-print.png"
       alt="Official seal of Sultan Hanafi Royal Schools"/>
     <figcaption class="rc-seal-ribbon">
-      <span class="rc-seal-ribbon-t">Sultan Hanafi Royal College</span>
-      <span class="rc-seal-ribbon-b">${esc(programmeEn)}</span>
+      <span class="rc-seal-ribbon-t">${esc(school)}</span>
+      ${school.toLowerCase().includes(String(programmeEn).toLowerCase()) ? ''
+        : `<span class="rc-seal-ribbon-b">${esc(programmeEn)}</span>`}
     </figcaption>
   </figure>`;
 }
@@ -1189,6 +1239,11 @@ export const RC_PROGRAMMES = {
     stageEn: 'the three-year Junior Secondary School programme',
     progressesTo: 'the Senior Secondary School',
     border: 'ring',
+    signatory: {
+      name: 'Dr. Adegoke Musa Olatunji',
+      role: 'Principal, Sultan Hanafi Royal College',
+      ink: '/assets/images/certificates/signature-royal-college-principal.svg',
+    },
   },
   SS: {
     code: 'SS',
@@ -1204,6 +1259,52 @@ export const RC_PROGRAMMES = {
     stageEn: 'the three-year Senior Secondary School programme',
     progressesTo: 'tertiary study',
     border: 'open',
+    signatory: {
+      name: 'Dr. Adegoke Musa Olatunji',
+      role: 'Principal, Sultan Hanafi Royal College',
+      ink: '/assets/images/certificates/signature-royal-college-principal.svg',
+    },
+  },
+  PRY: {
+    code: 'PRY',
+    // The site names this school "Sultan Hanafi Nursery and Primary School" —
+    // "and", not an ampersand — and that is the name used here.
+    labelEn: 'Primary School',
+    school: 'Sultan Hanafi Nursery and Primary School',
+    title: 'Certificate of Graduation',
+    // NOT "First School Leaving Certificate" and NOT "Primary School Leaving
+    // Certificate". Both are national awards made by a state examination
+    // board on its own examination, and a school certificate borrowing either
+    // name would claim an authority this institution does not hold. The same
+    // rule already governs JSS (not "Basic Education Certificate") and SS (not
+    // "WASSCE"), and it governs this sheet.
+    award: 'Primary School Graduation Certificate',
+    // No year count. The published prospectus for this school states its range
+    // as "Ages 2 to 10" and nowhere states a number of primary years, so
+    // "the six-year Primary School programme" would be invented — and an
+    // invented number on a permanent record is exactly the error the Founder
+    // said must never appear. Add the range the moment it is confirmed.
+    stageEn: 'the Primary School programme',
+    progressesTo: 'the Junior Secondary School',
+    border: 'open',
+    // Warm metal. The Royal College sheets run gold on navy; this school's own
+    // identity on the site is terracotta (css/brand.css --terracotta #C9784B),
+    // so the Primary sheet runs gold warmed toward copper. It reads as its own
+    // award at a glance, which is the point: a parent holding this and an
+    // Ibtida'iyyah certificate must never wonder which school issued which.
+    accent: '#C9784B',
+    // Mrs. Kareemat Abdurazaq has no signature on file, so this sheet carries
+    // her ruled line, printed name and office and NO ink image. The only other
+    // signature assets in the repository belong to other people — the Royal
+    // College Principal and the Islamic school's Principal — and putting one
+    // person's signature over another person's name is forgery, not a
+    // placeholder. The line is left for her wet signature until her own
+    // signature is recorded.
+    signatory: {
+      name: 'Mrs. Kareemat Abdurazaq',
+      role: 'Head Teacher, Nursery and Primary School',
+      ink: null,
+    },
   },
 };
 
@@ -1310,7 +1411,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}"
   data-border="${esc(prog.border || 'ring')}">
-  ${groundSvg(serial, uid, prog.border || 'ring')}
+  ${groundSvg(serial, uid, prog.border || 'ring', prog)}
 
 
   <!-- ── HEAD ────────────────────────────────────────────────────────────────
@@ -1366,10 +1467,12 @@ function sheetHtml({ cert, qrSvgMarkup }) {
        no more — and a higher-resolution capture would be worth re-running the
        one command for. -->
   <div class="rc-sig rc-sig-l">
-    <img class="rc-sig-ink" src="/assets/images/certificates/signature-royal-college-principal.svg" alt="" />
+    ${prog.signatory.ink
+      ? `<img class="rc-sig-ink" src="${esc(prog.signatory.ink)}" alt="" />`
+      : '<div class="rc-sig-ink rc-sig-ink-blank"></div>'}
     <div class="rc-sig-line"></div>
-    <div class="rc-sig-name">Dr. Adegoke Musa Olatunji</div>
-    <div class="rc-sig-role">Principal, Sultan Hanafi Royal College</div>
+    <div class="rc-sig-name">${esc(prog.signatory.name)}</div>
+    <div class="rc-sig-role">${esc(prog.signatory.role)}</div>
   </div>
   <div class="rc-sig rc-sig-r">
     <img class="rc-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
@@ -1406,7 +1509,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid)}</div>
 
   <div class="rc-sealwrap${prog.border === 'open' ? ' is-die' : ''}">${
-  prog.border === 'open' ? sealPlate(prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
+  prog.border === 'open' ? sealPlate(prog.school, prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
 
   <div class="rc-plate">
     ${plaque(92, 28, `vp${uid}`)}
@@ -1560,6 +1663,15 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-cn{display:block;width:100%;height:100%}
 
 .rc-sealwrap{position:absolute;left:129.5mm;top:152mm;width:38mm;height:38mm}
+/* Both signature blocks sit on ONE baseline whether or not a signature image
+   exists. The Head Teacher has no signature on file, so her block had no ink
+   image, collapsed upward, and printed several millimetres above the
+   Chairman's — two signatories at two different heights, which reads as a
+   pasted-in signature rather than a co-signed document. The ink slot keeps its
+   height when empty. */
+.rc-sig-ink-blank{height:10mm;width:52mm;margin:0 auto -1.4mm}
+.rc-sig-role{text-wrap:balance}
+
 .rc-seal-svg{display:block;width:100%;height:100%;
   filter:drop-shadow(0 0.35mm 0.6mm rgba(64,46,12,0.28))}
 

@@ -42,7 +42,12 @@ const BATCH = (process.env.SHRS_BATCH || 'JSS').toUpperCase();
 const PROGRAMME = BATCH;
 const ACADEMIC_YEAR = '2025/2026';
 const ISSUED_AT = '2026-08-08';
-const INSTITUTION_NAME = 'Sultan Hanafi Royal Schools — Sultan Hanafi Royal College';
+// The issuing school, per programme. This was hardcoded to the Royal College,
+// which is right for JSS and SS and wrong for Primary — and it is not only a
+// banner: this string is written into the register, into the DB import SQL and
+// into stage_certificates.institution_name, so a wrong value here puts the
+// wrong school on the Registrar's permanent record of a child's award.
+const INSTITUTION_NAME = `Sultan Hanafi Royal Schools — ${RC_PROGRAMMES[PROGRAMME].school}`;
 const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const ORIGIN = 'https://www.shroyalschools.com';
 
@@ -51,7 +56,7 @@ const ORIGIN = 'https://www.shroyalschools.com';
 // 000042–000047, so this batch starts at 000048. That is not a convention; it
 // is the only correct value, and the span check below proves no other batch
 // claims these numbers.
-const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61 }[BATCH];
+const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61, PRY: 65 }[BATCH];
 if (!FIRST_CERTIFICATE_SEQ) {
   console.error(`No batch definition for "${BATCH}".`);
   process.exit(2);
@@ -140,6 +145,38 @@ ROLLS.SS = [
   { en: 'Mazeed Hassan-Murtala', sex: 'male' },
 ];
 
+// ── The secular Primary roll ────────────────────────────────────────────────
+// These seven are the Nursery and Primary School's own graduates. They are NOT
+// the Ibtida'iyyah seven, and the distinction cost some care to establish:
+//
+// Two register files under dist/certificates/ carry exactly these seven names
+// against Student IDs — 2026-08-08-IBT-000014 and 2026-08-08-IBT-000035 — and
+// a third, docs/graduation-registers/2026-08-08-IBT-000035.json, carries seven
+// DIFFERENT names against the same IDs as the second. Taking any of them at
+// face value would have put an existing child's permanent number on a
+// different child's certificate.
+//
+// The published register wins, and the evidence is unambiguous. Only the docs/
+// file is committed to the repository; both dist/ files are untracked build
+// output, and both predate it. The commit that wrote the docs/ register says
+// what happened in its own subject line: "Ibtida'iyyah roll: regenerate on the
+// final authoritative list of seven". The Ibtida'iyyah roll was corrected, and
+// the dist/ folders are stale renders from before that correction.
+//
+// So these seven hold no Student ID in any published register, and each is
+// issued a new one here. If the Registrar's records show otherwise for any of
+// them, the number must be carried over instead and this roll amended — say
+// so and it is a one-line change per student.
+ROLLS.PRY = [
+  { en: 'Naheemah Ismai Seriki', sex: 'female' },
+  { en: 'Ashraf Korede Ojewumi', sex: 'male' },
+  { en: 'Al-ameen Okoh', sex: 'male' },
+  { en: 'Al-ameen Abidemi Jokomba', sex: 'male' },
+  { en: 'Aisha Lawal', sex: 'female' },
+  { en: 'Imran Iremide Adegoke', sex: 'male' },
+  { en: 'Daud Aliu', sex: 'male' },
+];
+
 const ROLL = ROLLS[BATCH];
 
 // Students who hold an SHRS certificate but are NOT on this roll. A name from
@@ -178,13 +215,31 @@ function assertIdentityIsFreeAcrossRegisters(issuedRows) {
   // was first made, so a gate reading docs/ alone could not have seen the
   // collision it was built to prevent.
   const sources = Object.entries(REGISTERS);
+  // A PUBLISHED register outranks a build artefact for the same batch. This is
+  // not a preference — it is the difference between two answers to "who owns
+  // this number", and getting it wrong prints one child's permanent ID on
+  // another child's certificate. dist/certificates/2026-08-08-IBT-000035 and
+  // docs/graduation-registers/2026-08-08-IBT-000035.json disagree about all
+  // seven of their entries; the docs one is committed and was written by the
+  // commit that regenerated the roll on the final authoritative list, and the
+  // dist one is an untracked render from before that. Committed wins.
+  const publishedBatches = new Set(Object.values(REGISTERS)
+    .map((f) => (f.match(/(\d{4}-\d{2}-\d{2}-[A-Z]+-\d{6})/) || [])[1]).filter(Boolean));
+  const shadowed = [];
   try {
     for (const d of readdirSync('dist/certificates')) {
+      if (publishedBatches.has(d)) { shadowed.push(d); continue; }
       for (const f of readdirSync(join('dist/certificates', d))) {
-        if (/^register-.*\.json$/.test(f)) sources.push([d, join('dist/certificates', d, f)]);
+        if (/^(register-.*|graduation-register)\.json$/.test(f)) {
+          sources.push([d, join('dist/certificates', d, f)]);
+        }
       }
     }
   } catch { /* no dist yet — the published registers are the whole world */ }
+  if (shadowed.length) {
+    console.log(`  ignoring ${shadowed.length} build register(s) shadowed by a published one: `
+      + shadowed.join(', '));
+  }
   // EVERY holder of a number is kept, not just the last one seen. Overwriting
   // meant that if two registers already disagreed about who owns an ID, the
   // gate reported only whichever file happened to be read last.
@@ -256,7 +311,7 @@ const REGISTERS = {
 // on two JSS certificates, which is the single worst thing this pipeline can
 // produce: one permanent number, two different children. The cross-batch gate
 // below now refuses it outright rather than trusting this constant.
-const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56 }[BATCH];
+const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56, PRY: 58 }[BATCH];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRE-FLIGHT
@@ -660,7 +715,7 @@ const sqlOut = [
 ].join('\n');
 writeFileSync(join(dir, `register-${stamp}.sql`), sqlOut);
 
-console.log(`\nSultan Hanafi Royal College — ${RC_PROGRAMMES[PROGRAMME].labelEn} graduation batch`);
+console.log(`\n${RC_PROGRAMMES[PROGRAMME].school} — ${RC_PROGRAMMES[PROGRAMME].labelEn} graduation batch`);
 console.log(`  ${issued.length} certificates, ${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}–${String(lastSeq).padStart(6, '0')}`);
 console.log(`  signing key version ${issued[0].hashKeyVersion}`);
 console.log(`  written to ${dir}\n`);
