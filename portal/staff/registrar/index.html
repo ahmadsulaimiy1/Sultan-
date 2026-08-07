@@ -7,11 +7,15 @@
 <title>Registrar's Office — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body type-administrative" data-atmosphere="registrar">
@@ -25,9 +29,10 @@
     <span class="portal-pilot-badge">Registrar's Office</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/office/registrar/">Office Governance View</a>
-    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
+    <a class="portal-topbar-link" href="/portal/staff/identity/" data-i18n="portal.myIdentity">My Identity</a>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <a class="portal-topbar-link" href="/portal/staff/documents/" data-i18n="staff-documents">Staff Documents</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
@@ -96,7 +101,7 @@
       <div class="portal-child-head"><h2>Public Verification Tools</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">These are the same public, no-login lookup tools a third party (an employer, another school, a guardian) would use to confirm a record this office issued is genuine — the Registrar's Office is the natural steward of both.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;">
-        <a class="portal-topbar-link" href="/verify-certificate/" target="_blank" rel="noopener">Verify a Certificate →</a>
+        <a class="portal-topbar-link" href="/verify-certificate/" target="_blank" rel="noopener" data-i18n="footer.verifyCertificate">Verify a Certificate →</a>
         <a class="portal-topbar-link" href="/verify-identity/" target="_blank" rel="noopener">Verify a Student Identity Card →</a>
       </div>
     </div>
@@ -114,7 +119,7 @@
           <option value="verified">Verified</option>
           <option value="locked">Locked</option>
         </select>
-        <button type="button" class="registrar-btn" data-graduation-refresh>Refresh</button>
+        <button type="button" class="registrar-btn" data-graduation-refresh data-i18n="portal.refresh">Refresh</button>
         <a class="portal-topbar-link" href="/portal/staff/graduation-control/">Open Graduation Control Centre →</a>
       </div>
       <div class="registrar-approvals-list" data-graduation-records-list></div>
@@ -136,7 +141,7 @@
       <div class="portal-child-head"><h2>Pending Testimonial &amp; Character Certificate Approvals</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">A Testimonial or Character Certificate can only be requested from a locked graduation record (see the record's own action row above) and only becomes a real, issued document once the student's own Principal/Head Teacher approves it here — a Registrar cannot approve their own request.</p>
       <div style="padding:0 20px 14px;">
-        <button type="button" class="registrar-btn" data-class-b-approvals-refresh>Refresh</button>
+        <button type="button" class="registrar-btn" data-class-b-approvals-refresh data-i18n="portal.refresh">Refresh</button>
       </div>
       <div class="registrar-approvals-list" data-class-b-approvals-list></div>
       <div class="registrar-form-result" data-class-b-approvals-result hidden></div>
@@ -353,8 +358,8 @@
   </div>
   <div class="portal-card" data-portal-error hidden>
     <h1>Couldn't load the Registrar's Office</h1>
-    <p class="sub" data-portal-error-message>Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
 

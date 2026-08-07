@@ -7,11 +7,15 @@
 <title>Graduation Approval Matrix — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body type-administrative" data-atmosphere="executive">
@@ -25,6 +29,7 @@
     <span class="portal-pilot-badge">Graduation Approval Matrix</span>
     <a class="portal-topbar-link" href="/portal/staff/graduation-control/">Graduation Control Centre</a>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
@@ -76,12 +81,12 @@
     <p class="portal-notice-on-dark">Gated to System Administrator and Founder &amp; Head of Schools / Administrator authority only — a technical administrator maintaining the system, or the Founder themself, are the two who can genuinely stand behind an institution-wide rule of this weight.</p>
   </div>
   <div data-portal-loading class="portal-child-card" style="text-align:center;padding:32px;">
-    <p class="sub" style="margin:0;">Loading…</p>
+    <p class="sub" style="margin:0;" data-i18n="state.loading">Loading…</p>
   </div>
   <div data-portal-error class="portal-child-card" hidden>
     <h1>Couldn't load the Approval Matrix</h1>
-    <p class="sub" data-portal-error-message>Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-locale="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,12 +23,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
-<link rel="stylesheet" href="/css/personalisation.css?v=e5c0cbff1a">
-<link rel="stylesheet" href="/css/announcements.css?v=2249f618eb">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
-<link rel="stylesheet" href="/css/menu.css?v=a0a993c7f3">
-<link rel="stylesheet" href="/css/regalia.css?v=82d84e23ae">
+<link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
 <script>
 (function(){
   try{
@@ -81,11 +81,14 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="stylesheet" href="/css/elevate.css?v=b04962e166">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<link rel="stylesheet" href="/css/masthead.css?v=1e848a0745">
-<link rel="alternate" hreflang="ar" href="/ar/" />
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/elevate.css?v=efa08f979d">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<link rel="stylesheet" href="/css/masthead.css?v=a734b0153d">
+<link rel="alternate" hreflang="en" href="https://shroyalschools.com/" />
+<link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/" />
+<link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/" />
 </head>
 <body>
 
@@ -110,7 +113,18 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.3 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
       </a>
       <span class="topbar-divider" aria-hidden="true"></span>
-      <a href="/ar/" class="lang-switch" lang="ar" dir="rtl">العربية</a>
+      <!-- Language switcher mount. js/i18n.js fills this with one entry per
+           registered locale, each written in its own language and script, so
+           adding a fifth language needs no change to this file. The
+           <noscript> fallback is a real link to this page in another
+           language (/ar/), so the site is never trapped in one
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
+      <span class="lang-switch-mount" data-locale-switcher></span>
+      <noscript><a href="/ar/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">Personalise</span>
@@ -1310,7 +1324,7 @@
     <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
     <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
     <div class="foot-statement wrap">
-      <p>&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>
+      <p>“Forming Scholars, Leaders and Guardians of Excellence.”</p>
       <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
     </div>
   </div>
@@ -2131,6 +2145,9 @@
 </div>
 
 
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/adhkar-data.js?v=ef5213731a" defer></script>
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
