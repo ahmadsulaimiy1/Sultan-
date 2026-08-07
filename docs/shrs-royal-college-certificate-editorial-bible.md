@@ -256,3 +256,27 @@ signature, all of which are the institution's own supplied assets.
 Trim size is **true A4 landscape, 297 × 210mm**, filling the page edge to edge.
 The v1.0 master draws 297 × 209.5 and leaves a 0.34mm strip of body colour at
 the foot of its PDF page; this one does not.
+
+---
+
+## §0. DESIGN LOCK — Founder's directive, 2026-08-07
+
+The certificate design as issued is **LOCKED**.
+
+Every future pass may **upgrade** it. No future pass may **degrade or simplify**
+it. Specifically locked:
+
+- the bilingual pair system — English left, Arabic right, one baseline, equal
+  optical weight, driven by the single `biPair()` component;
+- Arabic above English wherever a pair must stack, never the reverse;
+- the Founder's own sheet artwork, used whole and untweaked;
+- the security furniture — microtext at the 0.90pt press floor, the engine-turned
+  lathe rule, the plate's microtext rail, two Code 128 symbols, the real QR in
+  the artwork's own slot, and the check tail struck into the head seal;
+- the struck seal positions, and the emblem row.
+
+**Content stays flexible.** Names, awards, dates, programmes, wording and the
+roll may change freely — those are data. The design is not data.
+
+A future editorial bible may be written to raise this standard. Until it is,
+this is the standard, and "simpler" is not a defence.
