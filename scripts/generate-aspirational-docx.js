@@ -261,7 +261,7 @@ sections[0].children.push(pageBreak());
   B.push(eyebrow('A Vision for Your Child'));
   B.push(h1('What We See When We See a Student'));
   B.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 160 }, children: [img('leadership/founder-ceo.jpg', 170)] }));
-  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
+  pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakaria Olanrewaju Anofi · Founder & Head of Schools/Administrator').forEach(p => B.push(p));
   B.push(body('We do not see a child arriving at Sultan Hanafi as a blank page. We see a future scholar, a future leader, a future Hafiz — someone already carrying the raw material of who they are called to become, waiting for the right formation to draw it out.'));
   B.push(body('That is the conviction behind every decision this institution makes: from the teachers we recruit, to the framework we mentor by, to the standard we hold every child to, regardless of where they started.'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });

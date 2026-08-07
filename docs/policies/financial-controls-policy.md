@@ -17,7 +17,7 @@ Interest Policy.*
 | Policy Title | Financial Controls Policy |
 | Version | 2.0 (retrofitted from v1.0, Phase C) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Head of Schools / Administrator (Zakariya Olanrewaju Anofi) / Board |
+| Policy Owner | Head of Schools / Administrator (Zakaria Olanrewaju Anofi) / Board |
 | Approval Authority | Board of Governors |
 | Review Cycle | Annual, alongside the annual budget approval |
 | Next Review Date | Not yet set — to be fixed upon adoption |

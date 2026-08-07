@@ -1293,17 +1293,17 @@ export const RC_PROGRAMMES = {
     // award at a glance, which is the point: a parent holding this and an
     // Ibtida'iyyah certificate must never wonder which school issued which.
     accent: '#C9784B',
-    // Mrs. Kareemat Abdurazaq has no signature on file, so this sheet carries
-    // her ruled line, printed name and office and NO ink image. The only other
-    // signature assets in the repository belong to other people — the Royal
-    // College Principal and the Islamic school's Principal — and putting one
-    // person's signature over another person's name is forgery, not a
-    // placeholder. The line is left for her wet signature until her own
-    // signature is recorded.
+    // Her own signature, supplied by the Founder and knocked out to transparent
+    // ink by scripts/ (paper removed, stroke weight preserved) so it sits on
+    // the guilloche as ink rather than as a white card pasted over the field.
+    // Until it arrived this block carried a ruled line and nothing else: the
+    // only other signature assets in the repository belong to other people,
+    // and one person's signature over another person's name is forgery, not a
+    // placeholder.
     signatory: {
       name: 'Mrs. Kareemat Abdurazaq',
       role: 'Head Teacher, Nursery and Primary School',
-      ink: null,
+      ink: '/assets/images/certificates/signature-head-teacher.png',
     },
   },
 };
@@ -1477,7 +1477,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   <div class="rc-sig rc-sig-r">
     <img class="rc-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="rc-sig-line"></div>
-    <div class="rc-sig-name">Dr. Zakariyyah Olanrewaju Anofi</div>
+    <div class="rc-sig-name">Dr. Zakaria Olanrewaju Anofi</div>
     <div class="rc-sig-role">Chairman, Board of Governors</div>
   </div>
 

@@ -369,7 +369,7 @@ appointment). The full list, rationale, and permission grants per role
 live in `docs/role-permission-matrix.md` — this register only points to
 it to avoid two documents disagreeing with each other over time.
 Established roles today: **EXE** (Head of Schools / Administrator /
-Executive Leadership — named individual: Zakariya Olanrewaju Anofi,
+Executive Leadership — named individual: Zakaria Olanrewaju Anofi,
 also Chairman of the Board of Governors, per GV-01), **PRIN** (Principal/
 Head Teacher, per-institution), **REG** (Registrar — named individual:
 Mrs. Anofi-Abdulkareem Mariam Tope, per AC-02/PA-05), **DSL**

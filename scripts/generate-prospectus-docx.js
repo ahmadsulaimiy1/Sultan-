@@ -183,7 +183,7 @@ B.push(pageBreak());
 // ============ WELCOME ============
 B.push(eyebrow('Welcome'), h1('A Message from Our Founder'));
 B.push(new Paragraph({ children: [img('leadership/founder-ceo.jpg', 180)] }));
-B.push(caption('Zakariya Olanrewaju Anofi — Founder & Head of Schools / Administrator, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
+B.push(caption('Zakaria Olanrewaju Anofi — Founder & Head of Schools / Administrator, Sultan Hanafi Royal Schools. B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN).'));
 B.push(lede('"I am delighted to welcome you to the official home of Sultan Hanafi Royal Schools — a hybrid, Islamic and secular school in Ikorodu, Lagos, committed to the highest quality education in a nurturing, safe, and inclusive environment."'));
 B.push(body('My over two decades of work experience span banking, insurance, oil & gas, and consulting, with a bias for corporate reporting, taxation management, revenue generation, financial and business advisory, governance, and leadership. My passion for education informed my decision to invest in institutions whose sole motive is to impart knowledge to the populace.'));
 B.push(body('Our schools are open to Muslims and non-Muslims, males and females. At SHRS, our dedicated team of educators are passionate about equipping students with the skills, knowledge, and values they need to succeed in an ever-changing world.'));
@@ -191,7 +191,7 @@ B.push(pageBreak());
 
 // ============ HERITAGE ============
 B.push(eyebrow('Chapter II — Heritage'), h1('A Legacy Named in Honour of a Father'));
-B.push(body("Sultan Hanafi Royal Schools was founded by Zakariya Olanrewaju Anofi, a professional accountant and educationist, in July 2016. The school takes its name from the founder's late father, Anofi Aliu Akano — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't."));
+B.push(body("Sultan Hanafi Royal Schools was founded by Zakaria Olanrewaju Anofi, a professional accountant and educationist, in July 2016. The school takes its name from the founder's late father, Anofi Aliu Akano — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't."));
 B.push(body("The idea took shape during Lagos Governor Babatunde Fashola's administration, and was carried through with the encouragement of the founder's mentor, Governor Seyi Makinde, his brother Lukman Olajide Anofi, and others. Rooted in the Imowonla community in Ikorodu, the school has grown into a byword for what focused, values-led education can do for an underserved area — extending its reach through free community lectures, humanitarian relief during the COVID-19 lockdown, and infrastructure support such as road maintenance and community electrification."));
 B.push(new Paragraph({ children: [img('gallery/campus-gate.jpg', 460)] }));
 B.push(caption('The campus gate — Imowonla, Ikorodu, Lagos State.'));

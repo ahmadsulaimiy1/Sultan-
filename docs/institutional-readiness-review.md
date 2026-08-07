@@ -32,7 +32,7 @@ they can be onboarded via `admin/staff.js` today.
   predating this phase. The REG role already carries real grants across
   more system areas (§4.1, 4.2, 4.6, 4.7, 4.11, 4.13, 4.14 of the
   Matrix) than any other role.
-- **Executive Leadership (CEO)** — Zakariya Olanrewaju Anofi can be
+- **Executive Leadership (CEO)** — Zakaria Olanrewaju Anofi can be
   onboarded with the EXE role today; the Founder Dashboard already
   consumes exactly the aggregate-only scope EXE is granted.
 - **ICT Office** — Mr. Oguntade Adebola Aliu (named ICT Head) can be

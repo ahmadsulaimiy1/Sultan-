@@ -11,7 +11,7 @@ sync with it.*
 | Title used in policies | Real name | Notes |
 |---|---|---|
 | Board of Trustees | — | Ultimate governance authority; approves all Tier 1 documents. |
-| CEO | Zakariya Olanrewaju Anofi | Executive authority; appeal-escalation point above any single Principal. |
+| CEO | Zakaria Olanrewaju Anofi | Executive authority; appeal-escalation point above any single Principal. |
 | Principal, Royal College | Dr. Adegoke Musa Olatunji | |
 | Principal, Qur'an College | Shaykh Ahmad Ibrahim | Owns Boarding Regulations, Ijazah Governance Framework, Hifz Regulations. |
 | Principal, School of Islamic & Arabic Studies | Shaykh Abubakr Solah | |

@@ -194,7 +194,7 @@ The good news first: this governance ecosystem is genuinely
 **role-based, not person-based**, and that was a deliberate design
 choice held consistently across all four phases. Every document names
 a role (CEO, VP Administration, Principal, Registrar) as the
-accountable owner, not "Zakariya" or "Fatimah" as individuals — a new
+accountable owner, not "Zakaria" or "Fatimah" as individuals — a new
 CEO could read the Constitution & Governance Charter and know exactly
 what authority they hold, without needing the previous CEO to explain
 it. That is a real, structural continuity strength, and it is the

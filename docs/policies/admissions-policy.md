@@ -20,7 +20,7 @@ documentation stage.*
 | Policy Title | Admissions Policy |
 | Version | 2.1 (retrofitted from v1.0, Phase B; image-consent cross-reference added Phase G) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Head of Schools / Administrator (Zakariya Olanrewaju Anofi), in consultation with each institution's Principal/Head Teacher for institution-specific eligibility |
+| Policy Owner | Head of Schools / Administrator (Zakaria Olanrewaju Anofi), in consultation with each institution's Principal/Head Teacher for institution-specific eligibility |
 | Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |

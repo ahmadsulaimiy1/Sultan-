@@ -173,7 +173,7 @@ const MUST_APPEAR = [
   'Sultan Hanafi Royal Schools', PROG.school,
   'Certificate of Graduation', reg.award,
   'Federal Republic of Nigeria', PROG.signatory.name,
-  'Dr. Zakariyyah Olanrewaju Anofi', 'Student Identity Number',
+  'Dr. Zakaria Olanrewaju Anofi', 'Student Identity Number',
 ];
 for (const s of MUST_APPEAR) check(`the sheet says "${s}"`, printHtml.includes(s));
 

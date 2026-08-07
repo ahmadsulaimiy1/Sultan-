@@ -4,7 +4,7 @@
 financial policy already drafted in full and evaluates the remaining
 named ones — most of which are genuinely blocked on real data SHRS
 hasn't provided, not on drafting effort.
-**Owner:** Head of Schools / Administrator (Zakariya Olanrewaju Anofi) / Board.
+**Owner:** Head of Schools / Administrator (Zakaria Olanrewaju Anofi) / Board.
 **Review cycle:** Annual.
 **Depends on:** Financial Controls Policy (Phase C, already drafted in
 full); Admissions Policy (Phase B, which already names the same fee
