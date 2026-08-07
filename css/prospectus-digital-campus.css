@@ -84,7 +84,10 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 
 /* ---- Glass panel — the signature glassmorphism callout/status card ---- */
 .dc-glass{
-  background:var(--dc-glass-fill-light); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  /* Opaque, not frosted. The backdrop blur softened both the panel and
+     the type inside it, and it does not survive print; a solid tinted
+     fill reads sharp on screen and on paper. */
+  background:var(--dc-glass-fill-light);
   border:1px solid var(--dc-glass-line-light); border-radius:10px; padding:18px 20px; position:relative; margin:14px 0;
 }
 .dc-spread.dark .dc-glass{background:var(--dc-glass-fill); border-color:var(--dc-glass-line);}

@@ -59,12 +59,19 @@
    -------------------------------------------------------------------------- */
 
 /* Cards opt into 3D. js/elevate.js writes --rx/--ry/--mx/--my per pointer. */
+/* No 3D context and no will-change at rest. Holding preserve-3d +
+   will-change open permanently promotes every card to its own GPU layer,
+   and a layer's text is rasterised into a texture rather than painted
+   against the screen's subpixel grid — cards that were standing perfectly
+   still still read soft. The 3D is created the moment the pointer lands
+   and dropped again when it leaves, which is the only time it is seen. */
 .el-3d{
-  transform-style:preserve-3d;
-  will-change:transform;
   transition:transform .5s var(--el-ease-out), box-shadow .5s var(--el-ease-out);
 }
-.el-3d.is-tilting{ transition:transform .12s linear, box-shadow .5s var(--el-ease-out); }
+.el-3d.is-tilting{
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:transform .12s linear, box-shadow .5s var(--el-ease-out); }
 
 /* Specular highlight that follows the cursor. Added by the same script. */
 .el-sheen{ position:relative; }

@@ -255,11 +255,32 @@ function buildPage(page) {
     ? '<script src="/js/prestige.js" defer></script>\n<script src="/js/motion.js" defer></script>\n'
     : '';
 
+  // --- Per-page extras -----------------------------------------------
+  // Added so that pages which are NOT part of the public marketing site
+  // — the Digital Campus Gateway is the first — can still be assembled
+  // from the same partials and therefore carry the same real header and
+  // real footer as every other page, instead of being hand-authored with
+  // a stub top bar. Each field is optional; a page that sets none of them
+  // builds exactly as before.
+  //   noindex     — keep the page out of search engines
+  //   bodyClass   — a class on <body> (the gateway needs .portal-body)
+  //   extraCss    — stylesheets appended after the standard head
+  //   headScripts — render-blocking scripts (theme flash prevention)
+  //   extraScripts— deferred scripts appended after the standard set
+  const robotsTag = page.noindex ? '<meta name="robots" content="noindex" />\n' : '';
+  const bodyAttr = page.bodyClass ? ` class="${page.bodyClass}"` : '';
+  const extraCss = (page.extraCss || [])
+    .map((href) => `<link rel="stylesheet" href="${href}">\n`).join('');
+  const headScripts = (page.headScripts || [])
+    .map((src) => `<script src="${src}"></script>\n`).join('');
+  const extraScripts = (page.extraScripts || [])
+    .map((src) => `<script src="${src}" defer></script>\n`).join('');
+
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
 <head>
-${head}${elevateHead}${prestigeHead}${idcardHead}${altTag}</head>
-<body>
+${head}${robotsTag}${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag}${headScripts}</head>
+<body${bodyAttr}>
 
 ${topbar}
 ${header}
@@ -294,7 +315,7 @@ ${personalisation}
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
-${elevateScripts}${prestigeScripts}${idcardScripts}
+${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
 </body>
 </html>
 `;

@@ -926,10 +926,55 @@
   .nav-drop--contact .nav-mega-panel,.nav-drop--verify .nav-mega-panel,.nav-drop--portal .nav-mega-panel{left:auto;right:0;}
   [dir="rtl"] .nav-drop--contact .nav-mega-panel,[dir="rtl"] .nav-drop--verify .nav-mega-panel,[dir="rtl"] .nav-drop--portal .nav-mega-panel{right:auto;left:0;}
   .nav-mega-panel.is-compact .nav-mega-intro{border-inline-end:none;width:auto;}
-  .nav-mega-panel.is-compact .nmi-cta{margin-top:4px;align-self:flex-start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);padding:9px 16px;transition:border-color .25s ease,background .25s ease;}
-  .nav-mega-panel.is-compact .nmi-cta:hover{border-color:var(--gold-bright);background:rgba(198,161,91,0.1);}
-  .nav-mega-panel.is-compact .nmi-secondary{margin-top:2px;font-size:0.78rem;color:var(--ivory);opacity:0.75;}
-  .nav-mega-panel.is-compact .nmi-secondary:hover{opacity:1;color:var(--gold-bright);}
+  .nav-mega-panel.is-compact .nmi-cta,.nav-mega-panel.is-portal .nmi-cta{margin-top:4px;align-self:flex-start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);border:1px solid rgba(233,206,138,0.4);padding:9px 16px;transition:border-color .25s ease,background .25s ease;}
+  .nav-mega-panel.is-compact .nmi-cta:hover,.nav-mega-panel.is-portal .nmi-cta:hover{border-color:var(--gold-bright);background:rgba(198,161,91,0.1);}
+  .nav-mega-panel.is-compact .nmi-secondary,.nav-mega-panel.is-portal .nmi-secondary{margin-top:2px;font-size:0.78rem;color:var(--ivory);opacity:0.75;}
+  .nav-mega-panel.is-compact .nmi-secondary:hover,.nav-mega-panel.is-portal .nmi-secondary:hover{opacity:1;color:var(--gold-bright);}
+
+  /* The Login to Portal panel is now a full eight-door directory rather
+     than a single paragraph, so it can outgrow a short viewport on a
+     laptop. Cap it and let it scroll inside itself — a menu that runs
+     off the bottom of the screen is a menu with items nobody can reach.
+     It is width-capped for the same reason: each door now carries a real
+     explanation, and `1fr` columns take their minimum from the longest
+     unbreakable run of that text, so an uncapped four-across grid grew
+     the panel past the width of the screen. Two columns of comfortable
+     measure instead — a description is meant to be read, not squeezed. */
+  .nav-mega-panel.is-portal{
+    width:min(1020px,94vw);min-width:0;max-width:94vw;
+    max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain;}
+  .nav-mega-panel.is-portal .portal-gateway-grid,
+  .nav-mega-panel.is-portal .portal-gateway-grid.pg-grid-4{
+    grid-template-columns:repeat(2,minmax(0,1fr));}
+  .nav-mega-panel.is-portal .portal-gateway-card{
+    border-inline-end:1px solid rgba(198,161,91,0.16);
+    border-bottom:1px solid rgba(198,161,91,0.16);}
+  .nav-mega-panel.is-portal .portal-gateway-card:nth-child(2n){border-inline-end:none;}
+  .nav-mega-panel.is-portal .portal-gateway-card:nth-last-child(-n+2){border-bottom:none;}
+  /* In the mobile drawer the panel is only as wide as the drawer, and a
+     two-column split leaves ~140px per door — a column too narrow to
+     read a sentence in. One door per row there. */
+  @media (max-width:900px){
+    .nav-mega-panel.is-portal{width:auto;max-width:none;max-height:none;overflow-y:visible;}
+    .nav-mega-panel.is-portal .portal-gateway-grid,
+    .nav-mega-panel.is-portal .portal-gateway-grid.pg-grid-4{grid-template-columns:1fr;}
+    .nav-mega-panel.is-portal .portal-gateway-card{border-inline-end:none;text-align:start;align-items:flex-start;}
+    .nav-mega-panel.is-portal .portal-gateway-card:not(:last-child){
+      border-bottom:1px solid rgba(198,161,91,0.16);}
+    .nav-mega-panel.is-portal .portal-gateway-card:last-child{border-bottom:none;}
+  }
+  /* `.nav-drop-panel a` is set to white-space:nowrap, which is right for
+     a one-line menu link and wrong for a gateway card carrying a full
+     sentence of explanation — the descriptions ran straight out of their
+     column and over the neighbouring one. These cards opt back out. */
+  .nav-drop-panel a.portal-gateway-card{white-space:normal;padding:18px 20px;}
+  .nav-drop-panel a.portal-gateway-card .pgc-desc{white-space:normal;overflow-wrap:break-word;}
+  .nav-mega-panel.is-portal .pgc-desc{line-height:1.55;}
+  /* The closing row of the panel — "Open the full Gateway" plus the
+     account link — sits above a hairline so it reads as the panel's
+     footer rather than a ninth door. */
+  .nav-mega-panel.is-portal > .nav-mega-intro:last-child{
+    border-top:1px solid rgba(198,161,91,0.16);padding-top:14px;gap:16px;flex-wrap:wrap;}
 
   /* Active-page indicator — set client-side by js/site.js */
   .navlinks > a.is-active{color:var(--gold-bright);}

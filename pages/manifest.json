@@ -703,5 +703,21 @@
     "dir": "rtl",
     "altHref": "/quran-centre/",
     "prestige": true
+  },
+  {
+    "slug": "portal-gateway",
+    "output": "portal/select/index.html",
+    "title": "SHRS Digital Campus Gateway — Sultan Hanafi Royal Schools",
+    "description": "Eight doors, one Digital Campus. Executive, Administrative, Academic Staff, Student, Parent/Guardian, Applicant, Alumni and Public Verification — each explained, each leading to the real system behind it.",
+    "contentFile": "pages/portal-gateway.html",
+    "noindex": true,
+    "bodyClass": "portal-body",
+    "extraCss": [
+      "/css/portal.css"
+    ],
+    "extraScripts": [
+      "/js/portal-gateway.js"
+    ],
+    "prestige": true
   }
 ]

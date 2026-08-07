@@ -75,7 +75,17 @@
 
 /* ---------- Scroll parallax --------------------------------------- */
 /* js/motion.js writes --p (-1..1) as the element crosses the viewport. */
-.mo-par{transform:translate3d(0,calc(var(--p,0) * var(--par-depth,26px)),0);will-change:transform;}
+/* Snapped to whole pixels. A raw calc() lands text on fractional
+   device pixels, and fractionally-positioned type is genuinely blurry —
+   the parallax was quietly softening every paragraph it moved. round()
+   costs nothing and the movement is still perfectly smooth at this
+   depth. The unrounded rule stays first as the fallback for engines
+   without round(), and will-change is left off so the browser keeps
+   re-rasterising crisply instead of reusing one stale texture. */
+.mo-par{transform:translate3d(0,calc(var(--p,0) * var(--par-depth,26px)),0);}
+@supports (top:round(1.5px,1px)){
+  .mo-par{transform:translate3d(0,round(calc(var(--p,0) * var(--par-depth,26px)),1px),0);}
+}
 .mo-par-img{overflow:hidden;}
 .mo-par-img img{transform:translate3d(0,calc(var(--p,0) * 34px),0) scale(1.14);will-change:transform;}
 
@@ -92,8 +102,8 @@
 .mo-spot > *{position:relative;z-index:1;}
 
 /* ---------- Magnetic buttons -------------------------------------- */
-.mo-mag{transition:transform .45s var(--mo-ease);will-change:transform;}
-.mo-mag.is-pulled{transition:transform .12s linear;}
+.mo-mag{transition:transform .45s var(--mo-ease);}
+.mo-mag.is-pulled{transition:transform .12s linear;will-change:transform;}
 
 /* ---------- 3D flip card ------------------------------------------ */
 .mo-flip{perspective:1200px;}
@@ -162,8 +172,13 @@
   .mo-ico-mount::before{display:none;}
 }
 
-/* ---------- Interface sound toggle -------------------------------- */
-.pr-sound-toggle{position:fixed;right:16px;bottom:16px;z-index:55;
+/* ---------- Interface sound toggle --------------------------------
+   Third slot on the trailing rail. The bottom-right corner already
+   holds the assistant launcher (26px) and the WhatsApp button (96px);
+   this button was placed at 16px and 78px, so on a phone it sat
+   directly on top of the WhatsApp button. It takes the next rung up
+   instead, and uses logical insets so the Arabic site mirrors it. */
+.pr-sound-toggle{position:fixed;inset-inline-end:26px;bottom:166px;z-index:55;
   width:42px;height:42px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
   color:var(--pr-gold-deep,#9C7A3C);
   background:linear-gradient(168deg,#FFFDF9,#F3EADA);
@@ -175,5 +190,5 @@
   box-shadow:0 12px 28px -12px rgba(42,28,16,.65),0 0 20px -6px rgba(198,161,91,.7),inset 0 1px 0 rgba(255,255,255,.9);}
 .pr-sound-toggle svg{width:19px;height:19px;}
 .pr-sound-toggle.is-off{color:#9a9086;opacity:.42;}
-@media (max-width:620px){.pr-sound-toggle{width:38px;height:38px;right:12px;bottom:78px;}}
+@media (max-width:620px){.pr-sound-toggle{width:38px;height:38px;inset-inline-end:16px;bottom:148px;}}
 @media print{.pr-sound-toggle{display:none;}}

@@ -138,24 +138,31 @@
 
 /* ---------- 3D tilt ----------------------------------------------- */
 /* Pointer-tracked parallax. js/prestige.js writes --rx/--ry/--mx/--my. */
+/* No transform and no will-change at rest — see the v4.2 CLARITY note
+   further down this file. A card that is standing still must be a plain,
+   unlayered box, or its text is rasterised into a GPU texture and reads
+   soft even though nothing is moving. */
 .pr-tilt{
-  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0);
-  transform-style:preserve-3d;
+  transform-style:flat;
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);
-  will-change:transform;
 }
-.pr-tilt.is-tilting{transition:transform .08s linear,box-shadow .5s var(--pr-ease);}
+.pr-tilt.is-tilting{
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;
+  transition:transform .08s linear,box-shadow .5s var(--pr-ease);}
 /* A highlight that follows the cursor across the surface. Deliberately on
    ::after — .pr-card and .pr-cta already own their ::before for the gold
-   rule and the dot field, and a collision would silently kill one of them. */
+   rule and the dot field, and a collision would silently kill one of them.
+   A tight specular pass, not a fog: the old 50%-white 420px wash sat over
+   half the card and read as haze rather than light on a polished surface. */
 .pr-tilt::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
-  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.5),transparent 42%);
+  background:radial-gradient(230px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.20),transparent 58%);
   opacity:0;transition:opacity .45s;
 }
 .pr-tilt.is-tilting::after{opacity:1;}
 .pr-section.is-royal .pr-tilt::after{
-  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(233,206,138,.16),transparent 46%);
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(233,206,138,.14),transparent 60%);
 }
 /* Tilted cards need their own content above the highlight wash. */
 .pr-tilt > *{position:relative;z-index:2;}
@@ -1025,12 +1032,22 @@
 
 /* --- v3.9 Extend the 3D to the surfaces that lack it, and fix a real performance defect in the tilt. `.pr-tiltwill-chan --- */
 /* will-change is a promise, not a hint — do not hold 12 layers open at rest */
+/* --- v4.2 CLARITY. The tilt now exists ONLY while the pointer is on the
+   card. Previously every .pr-tilt carried a perspective()+translateZ()
+   transform at all times, which promotes the box to its own GPU layer and
+   makes the browser rasterise its text once into a texture instead of
+   painting it with the screen's subpixel grid. The card sat still and
+   still looked soft. Untransformed at rest = genuinely sharp type; the
+   3D returns the instant the pointer arrives, which is the only moment
+   it was ever meant to be seen. */
 .pr-tilt{
-  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0);
-  transform-style:preserve-3d;
+  transform-style:flat;
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);
 }
-.pr-tilt.is-tilting{transition:transform .08s linear,box-shadow .5s var(--pr-ease);will-change:transform;}
+.pr-tilt.is-tilting{
+  transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;
+  transition:transform .08s linear,box-shadow .5s var(--pr-ease);will-change:transform;}
 
 /* below 760px a 4deg rotation on a full-width card is noise, and the pointer
    maths never fires anyway — do not pay for the stacking context */
@@ -1709,7 +1726,12 @@
    page on the site. Raised to the same standard, without touching a
    single control's behaviour.
    =================================================================== */
-.pc-overlay{background:rgba(20,12,4,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+/* No backdrop blur anywhere on this site. Frosted glass reads soft and
+   cheap at this scale, and because backdrop-filter forces the element
+   onto its own composited layer it also costs the text inside its crisp
+   subpixel rendering. Depth here comes from opaque layered gradients, a
+   hairline and a shadow — never from smearing what sits behind. */
+.pc-overlay{background:rgba(20,12,4,.74);}
 .pc-drawer{
   width:min(470px,100vw);
   background:
@@ -1939,21 +1961,28 @@
 .portal-body > *{position:relative;z-index:1;}
 
 .portal-topbar{
-  background:rgba(20,12,4,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(233,206,138,.2);}
+  background:linear-gradient(180deg,#1E1408 0%,#180F06 100%);
+  border-bottom:1px solid rgba(233,206,138,.24);
+  box-shadow:0 1px 0 0 rgba(233,206,138,.08),0 14px 30px -26px rgba(0,0,0,.9);}
 .portal-brand{font-family:'Cinzel',serif;color:#FFF3D8;letter-spacing:.03em;}
 
 /* the gateway cards — the thing a visitor actually chooses from */
 .gateway-title{font-family:'Cinzel',serif;color:#fff;
   font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.12;}
 .gateway-sub{color:rgba(243,232,212,.8);}
+/* Opaque lacquer, not frosted glass. The card used to be a translucent
+   sheet with a 6px backdrop blur, so every one of them showed a smeared
+   copy of the page behind it — the single biggest reason the gateway
+   read hazy rather than sharp. It is now a solid, self-lit surface: its
+   own gradient, its own hairline, its own bevel. Nothing shows through. */
 .gateway-card{
   position:relative;isolation:isolate;overflow:hidden;
   border-radius:var(--pr-r-lg);padding:30px 26px;
-  background:linear-gradient(168deg,rgba(255,255,255,.07),rgba(255,255,255,.028));
-  border:1px solid rgba(233,206,138,.24);
-  box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),inset 0 1px 0 rgba(233,206,138,.18);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  background:
+    radial-gradient(520px 220px at 12% -20%, rgba(233,206,138,.13), transparent 62%),
+    linear-gradient(168deg,#332312 0%,#2A1B0D 52%,#20140A 100%);
+  border:1px solid rgba(233,206,138,.28);
+  box-shadow:0 2px 4px rgba(0,0,0,.3),0 22px 46px -26px rgba(0,0,0,.8),inset 0 1px 0 rgba(233,206,138,.22);
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease),border-color .5s;
   text-decoration:none;color:inherit;display:block;}
 .gateway-card:hover{transform:translateY(-7px);border-color:rgba(233,206,138,.45);
@@ -2103,8 +2132,7 @@
   border-color:rgba(233,206,138,.3);box-shadow:var(--pr-shadow),var(--pr-bevel-dark);}
 
 /* the tasbih counter — the piece a person actually holds */
-.adk-counter-modal{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  background:rgba(20,12,4,.62);}
+.adk-counter-modal{background:rgba(20,12,4,.78);}
 .adk-ctr-dial-wrap{filter:drop-shadow(0 18px 40px rgba(42,28,16,.35));}
 .adk-ctr-dial{
   border-radius:50%;
@@ -2141,3 +2169,183 @@
   .adk-priority-card,.adk-wird-card,.adk-achv-badge,.adk-ctr-dial,
   .adk-ctr-icon-btn,.adk-theme-swatch{transition:none!important;transform:none!important;}
 }
+
+/* ===================================================================
+   THE CLARITY PASS  (v4.2)
+   -------------------------------------------------------------------
+   A single, deliberate rule for this site: nothing on it is frosted.
+   Every panel, card, drawer and bar is an opaque, self-lit surface.
+   Depth is built from a layered gradient, a hairline, a bevel and a
+   shadow — the four things that survive at any zoom level and print
+   correctly — and never from blurring whatever happens to be behind.
+
+   Frosted glass photographs badly, renders differently on every GPU,
+   forces the panel onto its own composited layer (which costs the type
+   inside it the screen's subpixel grid), and at any real density it
+   simply reads as a smudge. It was making the boxes look soft rather
+   than expensive. This block is the belt-and-braces guarantee that it
+   cannot creep back in through a stylesheet loaded after this one.
+   =================================================================== */
+.pr-card,.pr-feature,.pr-doc,.pr-chart-card,.pr-founder-card,.pr-person,
+.pr-org-node,.pr-committee,.pr-outcome,.pr-plaque,.stat-tile,
+.gateway-card,.portal-card,.portal-topbar,.pc-card,.pc-drawer,.pc-overlay,
+.adk-counter-modal,.institution-card,.flow-stage,.dc-net,.dc-device,.dc-sys{
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+
+/* Light type on a dark ground: subpixel antialiasing over-inks the stems
+   and reads as a halo, which is the other half of "it looks blurry".
+   Greyscale antialiasing is the correct choice for these surfaces only —
+   it is deliberately NOT applied to the cream pages, where subpixel
+   rendering is what keeps small text sharp. */
+.portal-body,.gateway-card,.pr-section.is-royal,.pr-arrival,
+.adk-progress-stat--streak,.portal-topbar{
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+
+/* ===================================================================
+   THE GATEWAY, AS A PAGE OF THE SITE
+   -------------------------------------------------------------------
+   /portal/select/ used to be hand-authored outside the page build, and
+   so it carried a stub top bar and no footer at all — a visitor arrived
+   at the most consequential screen on the site and lost the navigation
+   that had brought them there. It is now assembled from the same
+   partials as every other page and therefore wears the real header and
+   the real footer, while keeping the dark .portal-body ground that
+   marks it as the threshold of the Digital Campus rather than more
+   marketing. These rules cover only what that change introduced.
+   =================================================================== */
+
+/* The header, ribbon and footer are opaque, dark and self-lit already,
+   so they sit on the portal ground without adjustment — but the body's
+   fixed dot field must not be allowed to wash over them. */
+.portal-body > header.nav,.portal-body > footer,.portal-body > .topbar{z-index:2;}
+
+/* Each door now carries its full explanation, so the card is a column
+   with the call to action pinned to the bottom edge — otherwise a card
+   with four bullet points and one with three would end at different
+   heights and the row would read as ragged rather than ruled. */
+.gateway-card{display:flex;flex-direction:column;height:100%;}
+.gateway-card > p{flex:0 0 auto;}
+.gateway-card .gateway-card-cta{margin-top:auto;padding-top:16px;}
+
+/* "What stands behind this door" — the list a visitor reads to decide
+   whether this is theirs, set as a ruled register rather than bullets. */
+.gw-points{list-style:none;margin:16px 0 0;padding:0;
+  border-top:1px solid rgba(233,206,138,.16);}
+.gw-points li{
+  position:relative;padding:9px 0 9px 20px;font-size:.85rem;line-height:1.5;
+  color:rgba(243,232,212,.7);border-bottom:1px solid rgba(233,206,138,.09);}
+.gw-points li:last-child{border-bottom:0;}
+[dir="rtl"] .gw-points li{padding:9px 20px 9px 0;}
+.gw-points li::before{
+  content:"";position:absolute;inset-inline-start:2px;top:16px;
+  width:6px;height:6px;border-radius:50%;
+  background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold));
+  box-shadow:0 0 8px -1px rgba(233,206,138,.9);}
+
+/* What you actually need in order to get through the door. Held quieter
+   than the description on purpose: it is a footnote, not a warning. */
+.gw-need{margin-top:14px;font-size:.79rem;line-height:1.55;
+  color:rgba(243,232,212,.52);font-style:italic;}
+
+/* The two group headings that divide staff access from public access. */
+.gw-group-head{
+  max-width:1180px;margin:52px auto 18px;padding:0 22px;
+  font-family:'Cinzel',serif;font-size:.74rem;letter-spacing:.24em;
+  text-transform:uppercase;color:rgba(233,206,138,.78);
+  display:flex;align-items:center;gap:16px;}
+.gw-group-head::after{content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(233,206,138,.42),transparent);}
+[dir="rtl"] .gw-group-head::after{
+  background:linear-gradient(270deg,rgba(233,206,138,.42),transparent);}
+
+/* A single gold rule closing the hero, so the eye is handed down to the
+   first row of doors rather than left hanging in the dark. */
+.gateway-hero-rule{
+  width:min(260px,50%);height:1px;margin:26px auto 0;
+  background:linear-gradient(90deg,transparent,var(--pr-gold-bright),transparent);}
+
+@media (max-width:760px){
+  .gw-group-head{margin:38px auto 14px;letter-spacing:.18em;}
+}
+
+/* -------------------------------------------------------------------
+   Four defects the gateway carried, fixed here rather than left in
+   place. Each was load-bearing, not cosmetic.
+   ------------------------------------------------------------------- */
+
+/* 1. THE GROUND WAS NEVER DARK. The dark portal ground above is written
+      as `.portal-body`, but css/portal.css sets its cream ground as
+      `body.portal-body` — one ID-less class more specific — so the dark
+      gradient never applied and every gateway card, all of which are
+      designed for a dark ground, sat on cream. Matching the specificity
+      is the whole fix. */
+body.portal-body{
+  background:
+    radial-gradient(1200px 620px at 78% -12%, rgba(233,206,138,.13), transparent 62%),
+    radial-gradient(900px 500px at 8% 108%, rgba(198,161,91,.09), transparent 60%),
+    linear-gradient(168deg,#2C1E12 0%,#241708 46%,#1A1006 100%);
+  color:#F3E8D4;
+}
+
+/* 2. THE CARD TEXT INHERITED THE PAGE'S DARK INK. `.gateway-card` was
+      set to `color:inherit`, which on a cream-themed body resolved to
+      near-black — dark ink on a dark card. Stated explicitly now, so it
+      cannot be changed out from under the card by a theme token. */
+.gateway-card{color:#F3E8D4;}
+.gateway-card h2,.gateway-card h3{color:#FFFDF7;}
+.gateway-card > p{color:rgba(243,232,212,.76);}
+
+/* 3. THE TITLE BLINKED ITSELF OUT OF EXISTENCE. The hero title carried
+      `exec-caret-blink`, whose one keyframe is `50%{opacity:0}`. That
+      rule was written for a 2px ::after caret; applied to the heading
+      itself it made the entire title vanish for half of every 0.9s, for
+      as long as the page stayed open. The caret is the thing that should
+      blink, so it blinks — by its own border colour, and only its own. */
+.gateway-typewriter{
+  animation:gateway-typewriter-type 1.7s steps(29,end) .25s forwards,
+            pr-caret-blink .9s steps(1) infinite 1.95s;}
+@keyframes pr-caret-blink{50%{border-inline-end-color:transparent;}}
+@media (prefers-reduced-motion:reduce){
+  .gateway-typewriter{width:100%;animation:none;border-inline-end:none;}
+}
+
+/* 4. FOUR COLUMNS OF 250px. Each door now carries its explanation and
+      its list of what stands behind it, and none of that is legible in a
+      250px column. Two generous columns on a desktop, one on a phone. */
+.gateway-grid{
+  grid-template-columns:1fr;
+  gap:26px;max-width:1180px;padding:0 22px;align-items:stretch;}
+/* Two columns, not three. Each group holds exactly four doors, so a
+   two-by-two block closes cleanly; a three-across row leaves the fourth
+   door stranded on a line of its own with half the page beside it. */
+@media (min-width:900px){
+  .gateway-grid{grid-template-columns:1fr 1fr;}
+}
+@media (min-width:1500px){
+  .gateway-grid{max-width:1300px;gap:30px;}
+}
+
+/* The crest is a block-level image under the site's own img reset, so
+   text-align could never centre it. */
+.gateway-crest{display:block;margin-inline:auto;}
+
+/* -------------------------------------------------------------------
+   Floating chrome must stay floating on the portal ground.
+   css/portal.css raises every direct child of .portal-body with
+   `body.portal-body > *{position:relative}` so the fixed dot field can
+   sit behind them. That was written when the portal pages had no site
+   chrome at all; now that the Gateway carries the real header and
+   footer it also carries the assistant launcher, the WhatsApp button,
+   the sound toggle, the search overlay and the install banner — all of
+   which are position:fixed by design, and all of which that blanket
+   rule dropped into the document flow, where they piled up as roughly
+   two hundred pixels of dead space below the footer. Restored here, at
+   equal specificity, without weakening the rule for anything else.
+   ------------------------------------------------------------------- */
+body.portal-body > .assistant-root,
+body.portal-body > .whatsapp-float,
+body.portal-body > .search-overlay,
+body.portal-body > .pwa-install-banner,
+body.portal-body > .pr-sound-toggle{position:fixed;}
