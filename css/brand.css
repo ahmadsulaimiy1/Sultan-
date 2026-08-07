@@ -1,7 +1,7 @@
   :root{
     --navy:#3B2A1D; --navy-deep:#221709; --emerald:#6B4A2E;
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
-    --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.62); --line:rgba(198,161,91,0.38);
+    --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.74); --line:rgba(198,161,91,0.38);
     --oxford-navy:#41618C; --forest-green:#3F6B4E; --terracotta:#C9784B;
     /* Prestige palette — supporting tones deployed for section rhythm
        (see docs/design-rhythm.md): the site's own brand colours are only
@@ -1125,7 +1125,17 @@
     .hero-ctas .btn{padding:8px 18px;font-size:0.64rem;justify-content:center;}
   }
   .btn{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s ease,background .3s ease,letter-spacing .3s ease,border-color .3s ease;position:relative;font-family:'Cinzel','Amiri',serif;border-radius:var(--btn-radius);}
-  .btn-gold{overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);background-size:180% 180%;background-position:0% 0%;color:#fff;border:1px solid var(--accent);box-shadow:0 10px 26px -12px var(--accent-shadow);}
+  /* position:relative is load-bearing, not decoration. The ::after
+     shimmer below is absolutely positioned at left:-60%; without a
+     positioned button to anchor to, it resolves against the nearest
+     positioned ancestor — or the page — and lands well outside the
+     viewport, where overflow:hidden on the button cannot reach it.
+     On the five Arabic verification pages that put the pseudo-element
+     371px past the left edge of an RTL document, so the page opened
+     already scrolled sideways with no way to scroll back. Most
+     .btn-gold buttons also carry .btn, which sets position:relative
+     and hid the fault; these did not. */
+  .btn-gold{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,var(--emerald) 45%,var(--accent) 100%);background-size:180% 180%;background-position:0% 0%;color:#fff;border:1px solid var(--accent);box-shadow:0 10px 26px -12px var(--accent-shadow);}
   .btn-gold:hover{background-position:100% 100%;box-shadow:0 16px 38px -10px var(--accent-shadow);transform:translateY(-3px);color:#fff;}
   .btn-gold::after{
     content:"";position:absolute;top:0;left:-60%;width:35%;height:100%;

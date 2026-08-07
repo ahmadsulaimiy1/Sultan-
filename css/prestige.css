@@ -267,7 +267,7 @@
 .pr-photo::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:3;pointer-events:none;
   box-shadow:inset 0 0 0 1px rgba(233,206,138,.5),inset 0 0 34px -14px rgba(42,28,16,.55);}
 .pr-photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
-.pr-photo-cap{margin-top:14px;font-size:.82rem;color:#8a7a60;line-height:1.5;}
+.pr-photo-cap{margin-top:14px;font-size:.82rem;color:#726449;line-height:1.5;}
 
 /* ---------- Statistic animation variants -------------------------- */
 /* Odometer: each digit rides a reel that spins through 0-9 and lands on its
@@ -384,7 +384,7 @@
 .pr-stat-l{font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;
   letter-spacing:.04em;color:var(--pr-coffee-2);margin-top:10px;}
 .pr-section.is-royal .pr-stat-l{color:#e8dcc2;}
-.pr-stat-s{font-size:.76rem;color:#8a7a60;margin-top:5px;}
+.pr-stat-s{font-size:.76rem;color:#726449;margin-top:5px;}
 .pr-section.is-royal .pr-stat-s{color:rgba(232,220,194,.6);}
 
 /* ---------- Pillar cards (icons) --------------------------------- */
@@ -425,7 +425,7 @@
   border:1px solid var(--pr-line);border-radius:var(--pr-r-lg);
   padding:30px 28px;box-shadow:var(--pr-shadow),var(--pr-bevel);}
 .pr-chart-card h3{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--pr-coffee);margin:0 0 4px;}
-.pr-chart-card .cap{font-size:.82rem;color:#8a7a60;margin:0 0 18px;}
+.pr-chart-card .cap{font-size:.82rem;color:#726449;margin:0 0 18px;}
 .pr-bars{display:flex;align-items:flex-end;gap:14px;height:210px;padding-top:10px;}
 .pr-bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;}
 .pr-bar-fill{width:100%;max-width:56px;border-radius:var(--pr-r-sm) var(--pr-r-sm) 4px 4px;height:0;
@@ -457,7 +457,7 @@
 .pr-agechart{margin-top:10px;}
 .pr-age-row{display:grid;grid-template-columns:200px 1fr;align-items:center;gap:14px;margin:14px 0;}
 .pr-age-label{font-weight:600;color:var(--pr-coffee-2);font-size:.9rem;text-align:right;line-height:1.25;}
-.pr-age-label small{display:block;font-weight:400;color:#8a7a60;font-size:.74rem;}
+.pr-age-label small{display:block;font-weight:400;color:#726449;font-size:.74rem;}
 .pr-age-track{position:relative;height:36px;background:rgba(198,161,91,.10);border-radius:var(--pr-r-pill);
   overflow:hidden;box-shadow:inset 0 1px 3px rgba(42,28,16,.10);}
 .pr-age-fill{position:absolute;top:0;bottom:0;width:0;border-radius:var(--pr-r-pill);
@@ -467,7 +467,7 @@
   color:#2a1c10;font-size:.78rem;font-weight:600;white-space:nowrap;}
 .pr-age-fill.is-open{background:linear-gradient(120deg,#4f6f7c,#7ea1ad);color:#fff;}
 .pr-age-axis{display:grid;grid-template-columns:200px 1fr;gap:14px;margin-top:8px;}
-.pr-age-axis .ticks{display:flex;justify-content:space-between;font-size:.72rem;color:#8a7a60;
+.pr-age-axis .ticks{display:flex;justify-content:space-between;font-size:.72rem;color:#726449;
   border-top:1px solid var(--pr-line);padding-top:6px;}
 @media (max-width:620px){
   .pr-age-row,.pr-age-axis{grid-template-columns:1fr;}
@@ -484,7 +484,7 @@
   font-family:'Cinzel',serif;font-weight:600;font-size:.86rem;position:sticky;top:0;}
 .pr-compare tbody th{font-weight:600;color:var(--pr-coffee-2);background:rgba(198,161,91,.06);white-space:nowrap;}
 .pr-compare tbody tr:hover td{background:rgba(198,161,91,.05);}
-.pr-compare td b{color:var(--pr-gold-deep);}
+.pr-compare td b{color:var(--pr-gold-text,#7C5E28);}
 
 /* ---------- Feature tiles (upgraded school-blocks) --------------- */
 .pr-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:34px;}
@@ -493,8 +493,21 @@
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
 .pr-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .8s;}
 .pr-feature:hover img{transform:scale(1.06);}
+/* The tile is a photograph with its words laid over it, so the scrim
+   is the only thing that makes them readable. The old ramp was 5% dark
+   at the top and did not reach half opacity until 55% of the way down —
+   but the body begins around a quarter of the way down, and over the
+   sunlit photographs actually used here the headings measured 1.01:1.
+   Dark from the top, and a shadow under the type as well. */
 .pr-feature::after{content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(20,12,4,.05),rgba(20,12,4,.55) 55%,rgba(18,11,4,.9));}
+  background:linear-gradient(180deg,rgba(20,12,4,.18) 0%,rgba(20,12,4,.34) 42%,rgba(16,10,3,.62) 100%);}
+/* The words get their own plate rather than relying on a wash over the
+   whole photograph. A wash heavy enough to carry type over a bright,
+   busy picture ruins the picture; a plate under the type alone leaves
+   the top of the frame open and still guarantees the reading. */
+.pr-feature .pr-feature-body{width:100%;padding:56px 24px 24px;
+  text-shadow:0 1px 10px rgba(10,6,1,.8);
+  background:linear-gradient(180deg,transparent 0%,rgba(12,7,2,.66) 26%,rgba(9,5,1,.94) 100%);}
 .pr-feature-body{padding:24px;}
 .pr-feature .tag{display:inline-block;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
   color:var(--pr-gold-bright);font-weight:600;}
@@ -596,7 +609,7 @@
 .pr-doc .pr-ico{margin:0;width:44px;height:44px;flex-shrink:0;}
 .pr-doc .pr-ico svg{width:22px;height:22px;}
 .pr-doc b{display:block;color:var(--pr-coffee);font-size:.96rem;}
-.pr-doc span{font-size:.82rem;color:#8a7a60;}
+.pr-doc span{font-size:.82rem;color:#726449;}
 
 /* ---------- Closing CTA band ------------------------------------- */
 /* The dot field lives in the element's own background rather than a ::before,
@@ -947,7 +960,7 @@
   letter-spacing:.17em;text-transform:uppercase;
   color:var(--pr-coffee-2);margin-top:16px;
 }
-.pr-stat-s{font-size:.78rem;line-height:1.6;color:#8A7A60;margin-top:7px;max-width:24ch;margin-inline:auto;}
+.pr-stat-s{font-size:.78rem;line-height:1.6;color:#726449;margin-top:7px;max-width:24ch;margin-inline:auto;}
 
 .pr-section.is-royal .pr-stats{
   background:rgba(198,161,91,.22);border-color:rgba(198,161,91,.26);
@@ -1217,9 +1230,13 @@
 .pr-person:hover{transform:translateY(-4px);box-shadow:var(--pr-shadow),var(--pr-glow);}
 .pr-person .nm{font-family:'Cinzel',serif;font-size:1.02rem;color:var(--pr-coffee);display:block;}
 .pr-person .rl{display:block;margin-top:6px;font-size:.86rem;color:var(--pr-gold-deep);font-weight:600;line-height:1.4;}
-.pr-person .cr{display:block;margin-top:8px;font-size:.76rem;color:#8a7a60;line-height:1.5;}
-.pr-person.is-vacant{border-left-color:rgba(198,161,91,.3);opacity:.82;}
-.pr-person.is-vacant .nm{color:#8a7a60;font-style:italic;}
+.pr-person .cr{display:block;margin-top:8px;font-size:.76rem;color:#726449;line-height:1.5;}
+/* A vacant seat is set apart by italic and a quieter tone, not by
+   fading it toward the paper. At .82 opacity over the old muted gold
+   the name measured 3.65:1; the seat is still legible business of the
+   Board and has to be readable as such. */
+.pr-person.is-vacant{border-left-color:rgba(198,161,91,.3);}
+.pr-person.is-vacant .nm{color:#726449;font-style:italic;}
 
 /* ---------- Committee chips -------------------------------------- */
 .pr-chips{display:flex;flex-wrap:wrap;gap:11px;margin-top:20px;}
@@ -1233,7 +1250,7 @@
 .pr-chip::before{content:"";width:7px;height:7px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));}
 .pr-section.is-royal .pr-chip{background:rgba(255,255,255,.05);border-color:rgba(233,206,138,.28);color:#f0e6d2;}
-.pr-chip.is-reserved{border-style:dashed;color:#8a7a60;}
+.pr-chip.is-reserved{border-style:dashed;color:#726449;}
 
 /* ---------- Founder plaque (governance) -------------------------- */
 .pr-plaque{display:flex;gap:26px;align-items:center;flex-wrap:wrap;
@@ -1366,7 +1383,7 @@
   transition:transform .5s var(--pr-ease),box-shadow .5s var(--pr-ease);}
 .pr-person:hover .por{transform:scale(1.06);box-shadow:0 14px 30px -12px rgba(42,28,16,.8),0 0 0 6px rgba(233,206,138,.20);}
 .pr-person .por-fallback{width:74px;height:74px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;
-  font-family:'Cinzel',serif;font-size:1.4rem;color:var(--pr-gold-deep);
+  font-family:'Cinzel',serif;font-size:1.4rem;color:var(--pr-gold-text,#7C5E28);
   background:radial-gradient(circle at 34% 28%,rgba(233,206,138,.30),rgba(198,161,91,.10) 62%,transparent);
   border:1px solid rgba(198,161,91,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
 
@@ -1390,7 +1407,7 @@
 .pr-committee h4{font-family:'Cinzel',serif;font-size:.99rem;color:var(--pr-coffee);margin:0 0 6px;line-height:1.3;}
 .pr-committee p{font-size:.82rem;color:#7a6a52;line-height:1.5;margin:0;}
 .pr-committee.is-reserved{border-style:dashed;background:rgba(255,255,255,.5);}
-.pr-committee.is-reserved h4{color:#8a7a60;}
+.pr-committee.is-reserved h4{color:#726449;}
 .pr-section.is-royal .pr-committee{background:rgba(255,255,255,.05);border-color:rgba(233,206,138,.26);}
 .pr-section.is-royal .pr-committee h4{color:#fff;}
 .pr-section.is-royal .pr-committee p{color:rgba(244,234,212,.76);}
@@ -1408,9 +1425,16 @@
 .pr-mosaic .pr-photo{margin:0;}
 .pr-mosaic .span2{grid-column:span 2;}
 .pr-mosaic .span2r{grid-row:span 2;}
-.pr-mosaic figcaption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:14px 16px;
+/* The scrim carries the caption, so it has to be dark enough at the
+   caption's own height and not merely at the very bottom of the frame.
+   The old two-stop ramp was about 40% opaque where the words actually
+   sit; over a sunlit photograph that is not a background, it is a haze.
+   Three stops: fully clear above the caption, already dark where the
+   text begins, solid beneath it. A text-shadow underwrites the rest. */
+.pr-mosaic figcaption{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:22px 16px 14px;
   font-size:.8rem;color:#fff;letter-spacing:.02em;
-  background:linear-gradient(180deg,transparent,rgba(20,12,4,.82));}
+  text-shadow:0 1px 3px rgba(12,7,2,.85);
+  background:linear-gradient(180deg,transparent 0%,rgba(20,12,4,.62) 34%,rgba(20,12,4,.88) 100%);}
 @media (max-width:900px){.pr-mosaic{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:520px){.pr-mosaic{grid-template-columns:1fr;}.pr-mosaic .span2{grid-column:span 1;}}
 
@@ -1470,7 +1494,13 @@
   background:linear-gradient(168deg,rgba(198,161,91,.16),rgba(198,161,91,.06));
   border:1px solid rgba(198,161,91,.34);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
-  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pr-gold-deep);}
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  /* The pill carries its own pale ground wherever it sits, so the ink
+     is the same on the cream and on the charcoal band, and it is the
+     darker reading gold: the ornament gold measured 3.5:1 here. The
+     .school-block span.tag half of this selector outranks the ivory
+     rule further down the sheet, so the colour has to be right here. */
+  color:#5F4518;}
 
 /* ---- .stat-band / .stat-tile: engraved plates ---- */
 .stat-band{
@@ -1629,7 +1659,7 @@
 .dc-rows{padding:12px;display:flex;flex-direction:column;gap:9px;overflow:hidden;}
 .dc-row{background:#fff;border:1px solid rgba(198,161,91,.24);border-radius:10px;padding:9px 11px;
   box-shadow:0 4px 10px -8px rgba(42,28,16,.5);}
-.dc-row .k{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:#8a7a60;}
+.dc-row .k{font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:#726449;}
 .dc-row .v{font-family:'Cinzel',serif;font-size:.82rem;color:var(--pr-coffee);margin-top:2px;}
 .dc-row .bar{height:5px;border-radius:99px;background:rgba(198,161,91,.18);margin-top:6px;overflow:hidden;}
 .dc-row .bar i{display:block;height:100%;width:0;border-radius:99px;
@@ -2021,7 +2051,7 @@
   border:1px solid rgba(198,161,91,.3);
   box-shadow:0 3px 6px rgba(0,0,0,.22),0 32px 70px -30px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.9);}
 .portal-card h1{font-family:'Cinzel',serif;color:var(--pr-coffee);letter-spacing:.01em;}
-.portal-field label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#8a7a60;}
+.portal-field label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#726449;}
 .portal-field input,.portal-card input[type="text"],.portal-card input[type="email"],
 .portal-card input[type="password"],.portal-card input[type="tel"]{
   border-radius:var(--pr-r-pill);padding:14px 18px;
@@ -2519,7 +2549,7 @@ body.portal-body > .pwa-install-banner,
 .plib-code{font-family:'Cinzel','Amiri',serif;font-size:.76rem;letter-spacing:.08em;
   color:var(--pr-gold-deep,#9C7A3C);font-variant-numeric:tabular-nums;}
 .plib-title{font-size:.94rem;color:#33281c;}
-.plib-cat{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#8a7a60;white-space:nowrap;}
+.plib-cat{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#726449;white-space:nowrap;}
 .plib-go{color:var(--pr-gold-deep,#9C7A3C);opacity:0;transform:translateX(-4px);
   transition:opacity .28s,transform .28s;}
 [dir="rtl"] .plib-go{transform:translateX(4px);}
@@ -3193,10 +3223,10 @@ cite,.pr-quote cite,.pr-founder-card cite,figure cite{color:#3B2A1D!important;}
   color:var(--pr-gold-bright,#E9CE8A)!important;margin:0;}
 
 /* The feature card was drawn dark and is now a cream plate. */
-.pr-feature .pr-feature-body h3{color:var(--pr-coffee,#3B2A1D);}
-.pr-feature .pr-feature-body p{color:#54432c;}
-.pr-feature .pr-feature-body > span:last-child{color:#6E5220;font-weight:600;}
-.pr-feature .pr-feature-body .tag{color:#5F4518;}
+.pr-feature .pr-feature-body h3{color:#FFFFFF;}
+.pr-feature .pr-feature-body p{color:rgba(255,255,255,.9);}
+.pr-feature .pr-feature-body > span:last-child{color:var(--pr-gold-bright,#E9CE8A);font-weight:600;}
+.pr-feature .pr-feature-body .tag{color:var(--pr-gold-bright,#E9CE8A);}
 .pr-section.is-royal .pr-feature .pr-feature-body h3{color:#FFF8EA;}
 .pr-section.is-royal .pr-feature .pr-feature-body p{color:rgba(244,234,212,.84);}
 .pr-section.is-royal .pr-feature .pr-feature-body > span:last-child{color:var(--pr-gold-bright,#E9CE8A);}
@@ -3543,7 +3573,7 @@ html[data-pc-theme="light"] .gw-quick-note{color:#6b5a40;}
 .hx-mark:hover::after{transform:scaleX(1);}
 .hx-mark-n{position:absolute;top:20px;inset-inline-end:24px;
   font-family:'Cinzel','Amiri',serif;font-size:1.5rem;line-height:1;
-  color:rgba(198,161,91,.34);letter-spacing:.02em;pointer-events:none;}
+  color:rgba(156,122,60,.7);letter-spacing:.02em;pointer-events:none;}
 .hx-mark-i{display:grid;place-items:center;width:52px;height:52px;
   border-radius:14px;color:var(--pr-gold-deep,#9C7A3C);
   background:linear-gradient(160deg,rgba(233,206,138,.3),rgba(198,161,91,.1));
@@ -3555,10 +3585,10 @@ html[data-pc-theme="light"] .gw-quick-note{color:#6b5a40;}
   text-align:justify;text-justify:inter-word;hyphens:auto;}
 .hx-mark-link{display:inline-flex;align-items:center;gap:7px;margin-top:16px;
   font-family:'Cinzel','Amiri',serif;font-size:.74rem;letter-spacing:.12em;
-  text-transform:uppercase;text-decoration:none;color:var(--pr-gold-deep,#9C7A3C);
+  text-transform:uppercase;text-decoration:none;color:var(--pr-gold-text,#7C5E28);
   border-bottom:1px solid rgba(198,161,91,.4);padding-bottom:3px;
   transition:color .3s,border-color .3s,gap .3s;}
-.hx-mark-link:hover{color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold-deep,#9C7A3C);gap:11px;}
+.hx-mark-link:hover{color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold-text,#7C5E28);gap:11px;}
 @media (max-width:520px){
   .hx-mark{padding:26px 20px 22px;}
   .hx-mark-n{font-size:1.2rem;top:16px;inset-inline-end:18px;}
@@ -3580,17 +3610,17 @@ html[data-pc-theme="light"] .gw-quick-note{color:#6b5a40;}
   padding-bottom:9px;border-bottom:1px solid rgba(198,161,91,.3);}
 .hx-axis-t{grid-column:var(--c);position:relative;
   font-family:'Cinzel','Amiri',serif;font-size:.74rem;letter-spacing:.06em;
-  color:var(--pr-gold-deep,#9C7A3C);}
+  color:var(--pr-gold-text,#7C5E28);}
 .hx-axis-t::after{content:"";position:absolute;inset-block-end:-10px;inset-inline-start:0;
   width:1px;height:6px;background:rgba(198,161,91,.5);}
 .hx-axis-lab{margin:8px 0 20px;font-size:.72rem;letter-spacing:.14em;
-  text-transform:uppercase;color:rgba(122,98,62,.62);}
+  text-transform:uppercase;color:var(--pr-gold-text,#7C5E28);}
 .hx-track + .hx-track{margin-top:16px;padding-top:16px;
   border-top:1px dotted rgba(198,161,91,.3);}
 .hx-track-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:9px;}
 .hx-track-k{font-family:'Cinzel','Amiri',serif;font-size:.98rem;color:var(--pr-coffee,#3B2A1D);}
 .hx-track-v{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--pr-gold-deep,#9C7A3C);}
+  color:var(--pr-gold-text,#7C5E28);}
 .hx-bar-rail{display:grid;grid-template-columns:repeat(17,1fr);
   background:repeating-linear-gradient(90deg,rgba(198,161,91,.14) 0 1px,transparent 1px calc(100% / 17));
   border-radius:9px;}
@@ -3682,3 +3712,227 @@ html[data-pc-theme="light"] .hx-marks::before{opacity:.6;}
   .hx-mark,.hx-mark::after,.hx-bar,.hx-mark-link,.hx-q summary::after{transition:none!important;}
   .hx-mark:hover,.hx-bar:hover{transform:none!important;}
 }
+
+
+/* ===================================================================
+   THE CHARCOAL BAND — TEXT LAID DIRECTLY ON IT (v4.10)
+   -------------------------------------------------------------------
+   .chapter-band-alt is a charcoal ground, and its eyebrow was already
+   given the bright gold that belongs on a dark ground. Its headings and
+   its lede paragraphs never were: they kept the coffee ink meant for
+   cream, and measured 1.06:1 and 1.10:1 against the band — invisible,
+   not merely faint. The cards that sit inside the band carry their own
+   pale grounds and are correct as they stand, so this reaches only the
+   text laid straight onto the charcoal.
+   =================================================================== */
+.chapter-band-alt > .wrap > h1.page-title,
+.chapter-band-alt > .wrap > h2,
+.chapter-band-alt > .wrap > h3,
+.chapter-band-alt > .wrap > h4{color:var(--pr-milk,#F7EEDF)!important;}
+.chapter-band-alt > .wrap > p{color:rgba(248,244,233,.82)!important;}
+.chapter-band-alt > .wrap > p .text-link,
+.chapter-band-alt > .wrap > p a{color:var(--pr-gold-bright,#E9CE8A);}
+/* The letterhead rule under the heading takes the brighter gold too,
+   for the same reason the eyebrow does. */
+.chapter-band-alt > .wrap > h2::after,
+.chapter-band-alt > .wrap > h1.page-title::after{
+  background-image:linear-gradient(90deg,var(--pr-gold-bright,#E9CE8A) 0 100%),
+                   linear-gradient(90deg,var(--pr-gold-bright,#E9CE8A) 0 100%);}
+
+
+/* ---- The reading gold ----------------------------------------------
+   --pr-gold-deep is an ornament colour: it is correct in a rule, a
+   frame or a hairline, and it measures 3.2:1 to 3.8:1 as small text on
+   the cream and ivory grounds — under the 4.5:1 a body reader needs.
+   Small gold *type* on a light ground takes this darker cut instead.
+   Same hue, same family, four steps down in value. */
+:root{--pr-gold-text:#7C5E28;}
+
+/* ===================================================================
+   THE PAGE TITLE (v4.9)
+   -------------------------------------------------------------------
+   Fifty-four of the seventy-one published pages carried no <h1> at all:
+   every one of them opened with an <h2>, so a search engine and a
+   screen reader alike met a page with no title heading on it. The
+   heading is now an <h1> in the markup, which is what it always was in
+   meaning.
+
+   Nothing may change on screen. Rather than rewrite every h2 selector
+   in the design system by hand and miss one, every rule anywhere in it
+   that styles an h2 is mirrored below onto h1.page-title — same
+   declarations, and each one kept inside whatever @media or @supports
+   context it was written in, so a mobile size stays a mobile size.
+   =================================================================== */
+h1.page-title{font-family:var(--font-display);font-weight:600;color:var(--navy);line-height:1.15;}
+section h1.page-title{font-size:var(--h2-size);position:relative;padding-bottom:16px;}
+section h1.page-title::after{content:"";position:absolute;left:1px;bottom:0;width:84px;height:9px;pointer-events:none;
+    background-image:linear-gradient(90deg,var(--gold) 0%,var(--gold) 100%),linear-gradient(90deg,var(--gold) 0%,var(--gold) 100%);
+    background-size:100% 2px,42% 1px;background-position:0 0,0 7px;background-repeat:no-repeat;opacity:0.85;}
+[dir="rtl"] section h1.page-title::after{left:auto;right:1px;}
+#todays-wird h1.page-title::after{left:50%;transform:translateX(-50%);}
+[dir="rtl"] #todays-wird h1.page-title::after{right:50%;transform:translateX(50%);left:auto;}
+.governance h1.page-title::after,.facilities h1.page-title::after,.contact h1.page-title::after,.digital-campus-teaser h1.page-title::after,.seal-inner h1.page-title::after{background-image:linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%),linear-gradient(90deg,var(--gold-bright) 0%,var(--gold-bright) 100%);}
+.intro h1.page-title{font-size:2.2rem;margin:14px 0 22px;}
+.adk-section-head h1.page-title{font-size:1.35rem;margin:0;flex:1;}
+.governance h1.page-title{color:#fff;}
+.digital-campus-teaser h1.page-title{color:#fff;}
+.facilities h1.page-title{color:#fff;}
+.contact h1.page-title{color:#fff;}
+.seal-inner h1.page-title{color:#fff;font-family:'Cinzel','Amiri',serif;font-size:1.7rem;margin-bottom:44px;}
+.pr-cta h1.page-title{font-family:'Cinzel',serif;font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 12px;color:#fff;position:relative;z-index:2;}
+.pr-cta h1.page-title{opacity:0;transform:translateY(14px);
+  transition:opacity .8s var(--pr-ease),transform .8s var(--pr-ease);}
+.pr-cta.pr-in h1.page-title{opacity:1;transform:none;transition-delay:.10s;}
+.pr-arrival h1.page-title{font-family:'Cinzel',serif;font-weight:600;letter-spacing:.012em;
+  font-size:clamp(1.8rem,4.6vw,3.1rem);line-height:1.12;margin:.55rem 0 0;color:#fff;
+  text-shadow:0 2px 30px rgba(0,0,0,.45);position:relative;z-index:2;}
+.pr-arrival h1.page-title{background-image:linear-gradient(
+    calc(100deg + (var(--gx,50) - 50) * 0.6deg),
+    var(--pr-gold-deep) 0%, var(--pr-gold-deep) 34%,
+    #FFF6DF calc(42% + (var(--gx,50) - 50) * 0.22%),
+    var(--pr-gold) 58%, var(--pr-gold-deep) 100%);}
+.pr-arrival h1.page-title{background-image:none;}
+.gateway-card h1.page-title{font-family:'Cinzel',serif;color:#fff;
+  font-size:1.12rem;margin:7px 0 8px;}
+.gateway-card h1.page-title{color:#FFFDF7;}
+.adk-static-section h1.page-title{color:var(--pr-gold-bright,#E9CE8A)!important;}
+.adhkar-page > .wrap > h1.page-title,.adk-static-section > h1.page-title{color:#FFF8EA!important;}
+.adk-section-head h1.page-title,.adk-priority-head h1.page-title,.adk-progress-head h1.page-title,.adk-wird-head h1.page-title{color:var(--pr-gold-bright,#E9CE8A)!important;margin:0;}
+.adhkar-page > .wrap > h1.page-title{color:var(--pr-coffee,#3B2A1D)!important;}
+html[data-pc-theme="light"] .pr-section.is-royal h1.page-title,html[data-pc-theme="light"] .chapter-band-alt h1.page-title,html[data-pc-theme="light"] .academics > .wrap h1.page-title,html[data-pc-theme="light"] .policies > .wrap h1.page-title,html[data-pc-theme="light"] section.contact h1.page-title,html[data-pc-theme="light"] .digital-campus-teaser h1.page-title,html[data-pc-theme="light"] .governance h1.page-title,html[data-pc-theme="light"] .adhkar-teaser h1.page-title{color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .gateway-card h1.page-title{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .pr-arrival h1.page-title{color:var(--pearl-ink)!important;}
+.chapter-band-alt > .wrap > h1.page-title{color:var(--pr-milk,#F7EEDF)!important;}
+.chapter-band-alt > .wrap > h1.page-title::after{background-image:linear-gradient(90deg,var(--pr-gold-bright,#E9CE8A) 0 100%),
+                   linear-gradient(90deg,var(--pr-gold-bright,#E9CE8A) 0 100%);}
+#at-a-glance h1.page-title::after{left:50% !important; right:auto !important; transform:translateX(-50%) !important;}
+.spread h1.page-title{font-family:'Cinzel','Amiri',serif; font-size:24pt; line-height:1.15; color:var(--navy); margin:0 0 6px;}
+.spread h1.page-title::after{content:''; display:block; width:60px; height:2px; margin:18px 0 16px;
+  background:linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);}
+.spread.dark h1.page-title::after,.spread.charcoal h1.page-title::after{background:linear-gradient(90deg, var(--gold-bright) 0%, var(--gold) 100%);}
+.feature-hero .feature-title-bar h1.page-title.feature-title{font-family:'Cinzel','Amiri',serif; color:#fff; font-size:26pt; margin:0;}
+.spread.charcoal h1.page-title{color:#fff;}
+.bio-content h1.page-title{font-size:27pt;}
+.ap-done h1.page-title{font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,1.2rem + 1.4vw,2.3rem); color:var(--navy); margin:0 0 14px;}
+.portal-child-head h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);font-weight:600;margin:0 0 4px;color:var(--portal-heading);}
+.portal-adhkar-head h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--portal-heading);}
+.portal-hifz-head h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--portal-heading);}
+.pfd-section h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0 0 14px;color:var(--portal-heading);}
+.wizard-celebration-card h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--portal-heading);margin:0 0 8px;}
+.exec-card-head h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);margin:0;color:var(--portal-heading);}
+body.type-executive .portal-child-head h1.page-title{font-size:1.55rem;letter-spacing:0.008em;}
+body.type-governance .portal-child-head h1.page-title{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;letter-spacing:0.012em;}
+body.type-academic .portal-child-head h1.page-title{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.42rem;font-weight:700;}
+body.type-administrative .portal-child-head h1.page-title{font-family:'Inter','Cairo',sans-serif;font-size:1.18rem;font-weight:700;letter-spacing:0.002em;}
+.portal-select-card.is-featured h1.page-title{color:#F8F4E9;}
+.portal-select-card h1.page-title{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.5rem;color:var(--portal-heading);margin:0;}
+.gateway-card h1.page-title{position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:1.4rem;color:var(--portal-heading);margin:0;}
+@media (max-width:640px){
+.portal-child-head h1.page-title{font-size:1.1rem;}
+.exec-card-head h1.page-title{font-size:1.1rem;}
+}
+@media (prefers-reduced-motion:reduce){
+.pr-cta h1.page-title{opacity:1!important;transform:none!important;transition:none!important;}
+}
+
+/* ===================================================================
+   THE ENGRAVED PLATE, ON THE CREAM (v4.11)
+   -------------------------------------------------------------------
+   .stat-tile was written for a dark band and took pale ivory for its
+   label and bright gold for its figure. The tile itself is now a milk
+   plate on most of the pages that carry it, and that pairing measured
+   1.03:1 for the label — a caption that is not there at all. The tile
+   keeps its pale text only where the plate is genuinely dark, which is
+   the two places the design system already marks as royal grounds.
+   =================================================================== */
+.stat-tile .num{color:var(--pr-gold-text,#7C5E28);}
+.stat-tile .label{color:var(--pr-coffee,#3B2A1D);opacity:.86;}
+.governance .stat-tile .num,.is-royal .stat-tile .num,
+.chapter-band-alt .stat-tile .num,.portal-body .stat-tile .num{
+  color:var(--pr-gold-bright,#E9CE8A);}
+.governance .stat-tile .label,.is-royal .stat-tile .label,
+.chapter-band-alt .stat-tile .label,.portal-body .stat-tile .label{
+  color:rgba(248,244,233,.78);opacity:1;}
+html[data-pc-theme="light"] .stat-tile .num{color:#8A6A2F;}
+html[data-pc-theme="light"] .stat-tile .label{color:var(--pearl-ink,#33281C);}
+
+/* ===================================================================
+   THE EYEBROW AND THE LINK, MEASURED (v4.12)
+   -------------------------------------------------------------------
+   Two selectors in the dark-ground list name bands that are not dark.
+   Measured on every page that carries them, section.academics renders
+   milk (#FCFAF6) and section.policies renders ivory (#F7EEDF) — there
+   is no page anywhere on the site where either is a dark band. Both
+   were nonetheless painting their eyebrow in the bright gold reserved
+   for near-black grounds: 1.18:1 on the twenty academic pages and
+   2.14:1 on the Governance Library. An eyebrow is small capitals at
+   .66rem; at that size it was simply not there.
+
+   An earlier pass tried to tell the two cases apart by whether the
+   band opened with a crest icon. The icon turns out to have nothing to
+   do with the ground, so the guess is withdrawn and the ink is set
+   from what the band actually is.
+   =================================================================== */
+.academics > .wrap .eyebrow,
+.academics > .wrap:has(> .page-hero-icon) .eyebrow,
+.policies > .wrap .eyebrow,
+.policies > .wrap:has(> .page-hero-icon) .eyebrow{color:#6E5220;}
+html[data-pc-theme="light"] .academics > .wrap .eyebrow,
+html[data-pc-theme="light"] .policies > .wrap .eyebrow{color:#8A6A2F;}
+
+/* Cards keep their own pale ground wherever they are set down, so a
+   link inside one takes the ink for a pale ground even when the card
+   is sitting on the charcoal band. Measured 1.28:1 before this. */
+.chapter-band .school-block .text-link,.chapter-band-alt .school-block .text-link,
+.chapter-band .fac-profile .text-link,.chapter-band-alt .fac-profile .text-link,
+.chapter-band .pr-card .text-link,.chapter-band-alt .pr-card .text-link,
+.chapter-band .gal-item .text-link,.chapter-band-alt .gal-item .text-link{color:#6E5220;}
+
+/* ===================================================================
+   SMALL GOLD TYPE, ON PAPER (v4.13)
+   -------------------------------------------------------------------
+   The remaining sub-4.5:1 readings across the site were all the same
+   thing: --pr-gold-deep used as small type on a pale ground, where it
+   measures 3.2:1 to 3.9:1. It stays exactly as it is in rules, frames,
+   borders and hairlines — as an ornament it is right. Where it is a
+   word a reader must read, it takes --pr-gold-text.
+   =================================================================== */
+.pr-quote .who,
+.pr-org-node .who,
+.pr-photo-cap,
+.pr-compare tbody th{color:var(--pr-gold-text,#7C5E28);}
+.pr-section.is-royal .pr-quote .who,.chapter-band .pr-quote .who,
+.chapter-band-alt .pr-quote .who,.pr-section.is-royal .pr-org-node .who,
+.portal-body .pr-quote .who{color:var(--pr-gold-bright,#E9CE8A);}
+.pr-org-node.is-apex .who{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* ---- The same correction, in the last three places it hides -------
+   The organisation chart's nodes are pale plates that happen to stand
+   on a royal band, so a rule keyed to the band was giving them the
+   bright gold meant for the band itself: 1.44:1 on the node. A card
+   takes the ink for its own ground, never for the ground beneath it. */
+.pr-section.is-royal .pr-org-node .who,
+.chapter-band .pr-org-node .who,.chapter-band-alt .pr-org-node .who{
+  color:var(--pr-gold-text,#7C5E28);}
+.pr-section.is-royal .pr-org-node.is-apex .who,
+.pr-org-node.is-apex .who{color:var(--pr-gold-bright,#E9CE8A);}
+/* A reserved committee and an unfilled chip are set apart by the dashed
+   rule around them; they do not also need to be faded out of reading. */
+.pr-committee.is-reserved h4{color:#726449;}
+.pr-chip.is-reserved{color:#726449;}
+/* A person's role line is type, not ornament. */
+.pr-person .rl{color:var(--pr-gold-text,#7C5E28);}
+.pr-section.is-royal .pr-person .rl,.portal-body .pr-person .rl{
+  color:var(--pr-gold-bright,#E9CE8A);}
+.pr-section.is-royal .pr-person.has-photo .rl{color:var(--pr-gold-text,#7C5E28);}
+
+
+/* ---- The quiet tone, raised ---------------------------------------
+   #8A7A60 was the design system's muted secondary — used for a
+   credential line, an axis tick, a caption, a reserved seat. On the
+   pale grounds it lives on it measured 3.5:1 to 4.0:1, just under the
+   4.5:1 a reader needs at those sizes, and every one of those is text
+   somebody has to read rather than ornament. #726449 is the same
+   colour four steps darker: still recessive beside the coffee ink,
+   now legible. Applied at source above; this note records why.
+   ------------------------------------------------------------------- */

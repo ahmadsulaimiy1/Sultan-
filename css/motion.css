@@ -140,7 +140,13 @@
 .mo-marquee-track{display:flex;gap:56px;width:max-content;animation:mo-marq 34s linear infinite;}
 .mo-marquee:hover .mo-marquee-track{animation-play-state:paused;}
 .mo-marquee-item{display:inline-flex;align-items:center;gap:12px;white-space:nowrap;
-  font-family:'Cinzel',serif;font-size:1.02rem;color:var(--pr-gold-deep);letter-spacing:.06em;}
+  font-family:'Cinzel',serif;font-size:1.02rem;letter-spacing:.06em;
+  /* Reading gold, not ornament gold — the marquee runs across a cream
+     band, where --pr-gold-deep measured 3.2:1. */
+  color:var(--pr-gold-text,#7C5E28);}
+.pr-section.is-royal .mo-marquee-item,.chapter-band .mo-marquee-item,
+.chapter-band-alt .mo-marquee-item,.portal-body .mo-marquee-item{
+  color:var(--pr-gold-bright,#E9CE8A);}
 .mo-marquee-item::before{content:"";width:6px;height:6px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));}
 @keyframes mo-marq{to{transform:translateX(-50%);}}
