@@ -2550,10 +2550,10 @@ body.portal-body > .pwa-install-banner,
 .plib-row:hover{background:rgba(198,161,91,.08);padding-inline-start:34px;}
 .plib-row[hidden]{display:none;}
 .plib-code{font-family:'Cinzel','Amiri',serif;font-size:.76rem;letter-spacing:.08em;
-  color:var(--pr-gold-deep,#9C7A3C);font-variant-numeric:tabular-nums;}
+  color:var(--pr-gold-text,#7C5E28);font-variant-numeric:tabular-nums;}
 .plib-title{font-size:.94rem;color:#33281c;}
 .plib-cat{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#726449;white-space:nowrap;}
-.plib-go{color:var(--pr-gold-deep,#9C7A3C);opacity:0;transform:translateX(-4px);
+.plib-go{color:var(--pr-gold-text,#7C5E28);opacity:0;transform:translateX(-4px);
   transition:opacity .28s,transform .28s;}
 [dir="rtl"] .plib-go{transform:translateX(4px);}
 .plib-row:hover .plib-go{opacity:1;transform:none;}
@@ -3020,8 +3020,12 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
 .pr-section.is-ivory .btn-outline,
 .wrap > .cl-foot .btn-outline,
 .plib .btn-outline,
-section:not(.is-royal):not(.hero):not(.contact):not(.academics):not(.policies) .btn-outline{
-  color:var(--pr-gold-deep,#9C7A3C);
+/* .academics and .policies were excluded here on the assumption that
+   they were dark bands. Measured, both are pale on every page that
+   carries them, and the Governance Library's own print button was
+   therefore left at 1.31:1. */
+section:not(.is-royal):not(.hero):not(.contact) .btn-outline{
+  color:var(--pr-gold-text,#7C5E28);
   border-color:rgba(198,161,91,.55);
   background:linear-gradient(168deg,#FFFDF9,#F5ECDC);}
 .pr-section.is-ivory .btn-outline:hover,.wrap > .cl-foot .btn-outline:hover,
@@ -3056,7 +3060,7 @@ section:not(.is-royal):not(.hero):not(.contact):not(.academics):not(.policies) .
 .at-ref{color:var(--pr-gold-deep,#9C7A3C);}
 .ic-mt-day{color:#5d4c34;}
 .pr-quote cite,.pr-founder-card cite,cite{color:#5d4c34;}
-.plib .stat-num,.policy-head .stat-num{color:var(--pr-gold-deep,#9C7A3C);}
+.plib .stat-num,.policy-head .stat-num{color:var(--pr-gold-text,#7C5E28);}
 .sign-row .lab{color:#6b5a40;}
 /* the mosaic caption eyebrow, over a photograph */
 .cl-cap-k{color:#F5E4B8;text-shadow:0 1px 8px rgba(0,0,0,.8);}
@@ -3261,9 +3265,14 @@ b,strong{color:#3B2A1D;}
 .pr-section.is-royal b,.pr-section.is-royal strong,.chapter-band b,.chapter-band strong,
 .chapter-band-alt b,.chapter-band-alt strong,.portal-body b,.portal-body strong,
 footer b,footer strong,.pr-hero b,.pr-hero strong,.gateway-card b{color:inherit;}
-.el-voice .who,.el-voices .who,.quote-panel .who,.el-figures .who{opacity:1;color:#3B2A1D!important;}
-.pr-section.is-royal .el-voice .who,.pr-section.is-royal .quote-panel .who,
-.el-voices-track .el-voice .who{color:inherit!important;opacity:.9;}
+/* The attribution line follows its plate, not the band around it.
+   .quote-panel and .el-voice are both dark plates wherever they stand,
+   so the line is pale on both; the earlier reading — coffee, forced —
+   put it at 1.0:1 against its own plate on the Arabic pages, where the
+   plainer markup is still in use. .el-figures is not a plate and keeps
+   the coffee. */
+.el-figures .who{opacity:1;color:#3B2A1D!important;}
+.el-voice .who,.el-voices .who,.quote-panel .who{opacity:1;color:rgba(247,238,223,.94)!important;}
 
 /* ===================================================================
    THE CLEAR EDITION  (v4.7)
@@ -3977,3 +3986,31 @@ html[data-pc-theme="light"] section .portal-gateway-grid .pgc-desc{color:var(--p
 
 /* An empty shelf still has to be readable. */
 .mkt-empty{color:#6b6559;}
+
+/* ---- The curriculum panel is emerald --------------------------------
+   .curriculum is a deep emerald plate with ivory text. A .text-link
+   inside it kept the crimson meant for the cream: 1.26:1, a link the
+   reader cannot see is a link that is not there. */
+.curriculum .text-link,.curriculum a{color:var(--pr-gold-bright,#E9CE8A);}
+.curriculum .text-link:hover,.curriculum a:hover{color:#FFF6DF;}
+html[data-pc-theme="light"] .curriculum .text-link{color:#FFF0C9;}
+
+/* ---- The plain quote panel ------------------------------------------
+   Most pages now carry the testimonial as .el-voice inside the .el-voices
+   carousel; a few still use the older bare .quote-panel. The panel is a
+   dark plate in both cases, but the attribution line was inked for a pale
+   one and measured 1.0:1 — the same colour as the plate beneath it. */
+.quote-panel .who,.el-voice .who{color:rgba(247,238,223,.92);}
+.pr-section.is-ivory .quote-panel .who{color:rgba(247,238,223,.92);}
+html[data-pc-theme="light"] .quote-panel .who{color:#F3E6C8;}
+
+/* ---- The Mission / Vision label -------------------------------------
+   The lead label took the ornament gold on the cream: 1.93:1. Its twin
+   in the aside takes the crimson, which measures 9:1 and is untouched. */
+.mv-lead .mv-label{color:var(--pr-gold-text,#7C5E28);}
+
+/* The plate has to declare its own ink, because the attribution line
+   inherits: an earlier pass set .el-voice .who to color:inherit so the
+   line would follow whichever band it was on, and on the bare panel
+   that resolved to the page's coffee — the same colour as the plate. */
+.quote-panel{color:var(--pr-milk,#F7EEDF);}

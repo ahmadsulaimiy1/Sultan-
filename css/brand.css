@@ -3,6 +3,11 @@
     --gold:#C6A15B; --gold-bright:#E9CE8A; --ivory:#F7EEDF;
     --crimson:#7C1F2E; --ink:#2A2016; --ink-soft:rgba(42,32,22,0.74); --line:rgba(198,161,91,0.38);
     --oxford-navy:#41618C; --forest-green:#3F6B4E; --terracotta:#C9784B;
+    /* The Nursery and Primary School's accent is the only one of the
+       four school colours that fails as type: #C9784B measures 3.00:1
+       on the ivory. It stays exactly as it is in rules, borders and
+       ornament; where it is a word to be read it takes this cut. */
+    --terracotta-text:#964E24;
     /* Prestige palette — supporting tones deployed for section rhythm
        (see docs/design-rhythm.md): the site's own brand colours are only
        coffee-brown (--navy) and royal gold (--gold); these extend the
@@ -189,7 +194,7 @@
   .mono-letter:not(:last-child)::after{content:"";position:absolute;top:20%;bottom:20%;right:0;width:1px;background:var(--line);}
   .mono-letter .mg{font-family:'Cinzel','Amiri',serif;font-size:2.1rem;color:var(--gold);display:block;line-height:1;}
   .mono-letter .mw{font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy);margin-top:10px;display:block;}
-  .mono-letter .md{font-size:0.76rem;color:#6b6a63;margin-top:6px;display:block;font-style:italic;font-family:'Cormorant Garamond','Amiri',serif;}
+  .mono-letter .md{font-size:0.76rem;color:#5c5b54;margin-top:6px;display:block;font-style:italic;font-family:'Cormorant Garamond','Amiri',serif;}
   @media (max-width:760px){.monogram-rail{flex-wrap:wrap;} .mono-letter{flex:1 1 33%;border-bottom:1px solid var(--line);} .mono-letter::after{display:none;}}
   /* Facility index — dot-leader list, replaces box grid */
   .fac-index{display:flex;flex-direction:column;}
@@ -1243,7 +1248,7 @@
     padding:24px 22px;text-align:center;min-height:100px;width:100%;box-shadow:0 24px 48px -30px rgba(34,23,9,0.24);
     display:flex;align-items:center;justify-content:center;margin-bottom:16px;
   }
-  .wird-quran-card p{font-size:0.88rem;color:#6b6a63;line-height:1.55;margin:0;}
+  .wird-quran-card p{font-size:0.88rem;color:#5c5b54;line-height:1.55;margin:0;}
   .wird-card .teaser-link{margin-top:16px;}
   .quote-panel{background:var(--navy);color:var(--ivory);padding:44px 38px;position:relative;border-left:3px solid var(--gold);}
   .quote-panel::after{
@@ -1842,7 +1847,7 @@
   /* Any status this page has not been taught. The badge logic is a whitelist,
      so an unrecognised state lands here rather than silently rendering as
      verified — which is what it did before. */
-  .cert-verify-badge.unknown{background:rgba(201,120,75,0.14);color:var(--terracotta);}
+  .cert-verify-badge.unknown{background:rgba(201,120,75,0.14);color:var(--terracotta-text,#964E24);}
   .cert-verify-note{font-size:var(--caption-size);color:var(--ink-soft);margin:0 0 var(--space-sm);max-width:52ch;}
   .cert-verify-field{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--small-size);}
   .cert-verify-field:last-child{border-bottom:none;}
@@ -1888,7 +1893,7 @@
     padding:2px 9px;order:-1;margin-bottom:2px;
   }
   .mkt-card-body h4{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.1rem;color:var(--navy-deep);margin:0;}
-  .mkt-card-body p{font-size:0.82rem;color:#6b6a63;line-height:1.5;margin:0;flex:1;}
+  .mkt-card-body p{font-size:0.82rem;color:#5c5b54;line-height:1.5;margin:0;flex:1;}
   .mkt-card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;}
   .mkt-price{font-family:'Cinzel','Amiri',serif;font-size:0.85rem;color:var(--gold);}
   .mkt-order-btn{
@@ -2268,7 +2273,7 @@
   @media (prefers-reduced-motion:reduce){.foot-map-panel::after{animation:none;}}
   .fm-label{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(198,161,91,0.08);border-bottom:1px solid var(--line);}
   .fm-label .fm-campus-name{font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);}
-  .fm-label .fm-campus-tag{font-size:0.68rem;color:rgba(248,244,233,0.5);}
+  .fm-label .fm-campus-tag{font-size:0.68rem;color:rgba(248,244,233,0.74);}
   .fm-frame{position:relative;aspect-ratio:21/8;min-height:260px;}
   .fm-frame iframe{width:100%;height:100%;display:block;border:0;filter:saturate(0.75) contrast(1.05);}
   .fm-overlay{position:absolute;top:16px;left:16px;background:rgba(34,23,9,0.9);border:1px solid var(--gold);padding:12px 18px;pointer-events:none;}
@@ -2417,12 +2422,12 @@
      school its own scoped page personality (matching the pattern
      already established for the other two schools) without inventing
      any new facts — only presentational, scoped strictly to this page. */
-  #nursery-primary .school-block{border-color:var(--terracotta);}
-  #nursery-primary .school-block::before,#nursery-primary .school-block::after{border-color:var(--terracotta);opacity:0.75;}
-  #nursery-primary .school-block .tag{color:var(--terracotta);}
-  #nursery-primary .page-hero-icon{color:var(--terracotta);}
+  #nursery-primary .school-block{border-color:var(--terracotta-text,#964E24);}
+  #nursery-primary .school-block::before,#nursery-primary .school-block::after{border-color:var(--terracotta-text,#964E24);opacity:0.75;}
+  #nursery-primary .school-block .tag{color:var(--terracotta-text,#964E24);}
+  #nursery-primary .page-hero-icon{color:var(--terracotta-text,#964E24);}
   #nursery-primary .image-slot{border-color:rgba(201,120,75,0.4);}
-  #nursery-primary .image-slot svg{color:var(--terracotta);}
+  #nursery-primary .image-slot svg{color:var(--terracotta-text,#964E24);}
 
   /* Arabic & Islamic Studies — a Crimson accent, in the spirit of
      "rubrication" (the historic use of red ink for headings/emphasis in
@@ -2446,20 +2451,20 @@
     border:1px solid var(--line);border-top:3px solid var(--terracotta);padding:30px 26px;
     transition:box-shadow .3s ease,transform .3s ease,border-color .3s ease;
   }
-  .foundation-card:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(34,23,9,0.28);border-color:var(--terracotta);}
+  .foundation-card:hover{transform:translateY(-3px);box-shadow:0 22px 44px -26px rgba(34,23,9,0.28);border-color:var(--terracotta-text,#964E24);}
   .foundation-card .fd-icon{
     display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;
-    background:rgba(201,120,75,0.08);border:1px solid rgba(201,120,75,0.3);color:var(--terracotta);margin-bottom:16px;
+    background:rgba(201,120,75,0.08);border:1px solid rgba(201,120,75,0.3);color:var(--terracotta-text,#964E24);margin-bottom:16px;
   }
   .foundation-card .fd-icon svg{width:24px;height:24px;}
   .foundation-card h4{font-family:'Cinzel','Amiri',serif;font-size:0.92rem;letter-spacing:0.03em;color:var(--navy);margin-bottom:8px;}
-  .foundation-card p{font-size:0.86rem;color:#6b6a63;line-height:1.55;}
+  .foundation-card p{font-size:0.86rem;color:#5c5b54;line-height:1.55;}
   /* The "+" connector reads as a proper badge straddling the seam
      between the two cards — not an orphaned mark floating in
      whitespace — via a circular ::before sitting behind the glyph. */
   .fd-connector{
     display:flex;align-items:center;justify-content:center;flex:0 0 46px;
-    font-family:'Cinzel','Amiri',serif;font-size:1.2rem;font-weight:600;color:var(--terracotta);
+    font-family:'Cinzel','Amiri',serif;font-size:1.2rem;font-weight:600;color:var(--terracotta-text,#964E24);
     position:relative;z-index:1;
   }
   .fd-connector::before{
@@ -2478,12 +2483,12 @@
   .timetable-strip{display:flex;gap:6px;margin-top:28px;flex-wrap:wrap;}
   .tt-day{flex:1;min-width:74px;text-align:center;border:1px solid var(--line);padding:14px 6px;}
   .tt-day .tt-name{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:#63615a;display:block;}
-  .tt-day .tt-time{font-size:0.7rem;color:#6b6a63;display:block;margin-top:6px;line-height:1.35;}
+  .tt-day .tt-time{font-size:0.7rem;color:#5c5b54;display:block;margin-top:6px;line-height:1.35;}
   .tt-day.is-weekday{border-color:var(--crimson);background:rgba(124,31,46,0.05);}
   .tt-day.is-weekday .tt-name{color:var(--crimson);}
   .tt-day.is-weekend{border-color:var(--crimson);background:rgba(124,31,46,0.09);}
   .tt-day.is-weekend .tt-name{color:var(--crimson);}
-  .timetable-legend{display:flex;gap:20px;margin-top:12px;font-size:0.78rem;color:#6b6a63;flex-wrap:wrap;}
+  .timetable-legend{display:flex;gap:20px;margin-top:12px;font-size:0.78rem;color:#5c5b54;flex-wrap:wrap;}
   .timetable-legend span{display:inline-flex;align-items:center;gap:6px;}
   .timetable-legend .tl-dot{width:9px;height:9px;border-radius:2px;background:rgba(124,31,46,0.09);border:1px solid var(--crimson);display:inline-block;}
 
@@ -2513,7 +2518,7 @@
   .flow-stage:hover,.flow-stage:focus-visible{background:#faf7f0;outline:none;}
   .flow-stage .fs-num{font-family:'Cinzel','Amiri',serif;font-size:0.64rem;color:var(--pr-gold-text,#7C5E28);letter-spacing:0.12em;text-transform:uppercase;}
   .flow-stage h4{font-size:1rem;margin:9px 0 6px;}
-  .flow-stage p{font-size:0.78rem;color:#6b6a63;line-height:1.4;}
+  .flow-stage p{font-size:0.78rem;color:#5c5b54;line-height:1.4;}
   .flow-stage-toggle{display:inline-block;margin-top:8px;font-size:0.66rem;color:var(--pr-gold-text,#7C5E28);letter-spacing:0.02em;}
   .flow-stage-detail{display:none;text-align:start;font-size:0.78rem;color:#55534d;line-height:1.55;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
   .flow-stage.is-expanded .flow-stage-detail{display:block;}
@@ -2556,7 +2561,7 @@
   .exam-table tr:nth-child(even) td{background:rgba(198,161,91,0.05);}
   .exam-table td.exam-day{font-family:'Cinzel','Amiri',serif;color:var(--navy);font-weight:600;}
   .exam-table td.exam-empty{color:#9c9a90;font-style:italic;}
-  .calendar-source-note{font-size:0.78rem;color:#6b6a63;margin-top:14px;line-height:1.6;}
+  .calendar-source-note{font-size:0.78rem;color:#5c5b54;margin-top:14px;line-height:1.6;}
 
   /* Org chart — real hierarchy only (Board → CEO → Principals/VPs → Departments) */
   .org-chart{margin-top:40px;display:flex;flex-direction:column;align-items:center;}
@@ -2600,7 +2605,7 @@
   /* Foundation — a small real, countable stat (not a fabricated figure) */
   .found-stat{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border:1px solid var(--line);}
   .found-stat .fst-num{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--crimson);}
-  .found-stat .fst-label{font-size:0.78rem;color:#6b6a63;text-transform:uppercase;letter-spacing:0.05em;}
+  .found-stat .fst-label{font-size:0.78rem;color:#5c5b54;text-transform:uppercase;letter-spacing:0.05em;}
 
   /* ============================================================
      RIGHT-TO-LEFT (Arabic) — structural mirrors only. Font-family

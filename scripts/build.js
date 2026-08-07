@@ -296,7 +296,13 @@ function buildPage(page, manifest) {
   // every page. elevate.js/elevate-motion.js no-op when their markup is
   // absent, but we still gate all three on the home page to keep other pages
   // untouched, exactly as the source package intended.
-  const isHome = page.slug === 'home';
+  // Both homepages, not only the English one. The Arabic page carries the
+  // same bands — the figures rail, the testimonial swiper, the admissions
+  // journey, the Wird cards — and without this layer they rendered in an
+  // older, plainer state: the Wird labels lost their dark pill and sat as
+  // bright gold on parchment at 1.17:1, and the two languages drifted
+  // visibly apart. The gate is on the homepage, not on the language.
+  const isHome = page.slug === 'home' || page.slug === 'home-ar';
   const elevateHead = isHome
     ? '<link rel="stylesheet" href="/css/elevate.css">\n'
     : '';

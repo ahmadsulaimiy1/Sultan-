@@ -424,7 +424,7 @@
       <div class="wird-card">
         <span class="wird-label">قراءة القرآن</span>
         <div class="wird-quran-card">
-          <p>متتبّع قراءة يومي كامل قيد الإعداد — اطّلع على ما هو موجود بالفعل في مركز القرآن.</p>
+          <p>واصِل قراءة اليوم، وتتبّع تقدّمك، في مركز القرآن.</p>
         </div>
         <a class="text-link teaser-link" href="/ar/quran-centre/">زيارة مركز القرآن ←</a>
       </div>
@@ -434,10 +434,23 @@
 
 <section class="intro reveal">
   <div class="wrap" style="max-width:720px;">
-    <div class="quote-panel">
-      <span class="mark">&ldquo;</span>
-      <p>لقد أكّد معظم أولياء الأمور أن القيم والأخلاق التي تغرسها المدرسة في أبنائنا تستحق أكثر من المال الذي ندفعه. أوصي بهذه المدرسة لأي شخص.</p>
-      <div class="who">د. إسماعيل أكيم سيريكي · ولي أمر وعضو مجلس إدارة</div>
+    <!-- The same component the English page uses. The Arabic page had
+         kept an older, plainer panel, and the two had drifted apart in
+         markup and in colour. -->
+    <div class="el-voices" data-el-swiper aria-roledescription="carousel" aria-label="ما تقوله الأسر">
+      <div class="el-voices-track" data-el-track>
+
+        <div class="el-voice quote-panel is-active" role="group" aria-roledescription="slide" aria-label="1 من 1">
+          <span class="mark">&rdquo;</span>
+          <p>لقد أكّد معظم أولياء الأمور أن القيم والأخلاق التي تغرسها المدرسة في أبنائنا تستحق أكثر من المال الذي ندفعه. أوصي بهذه المدرسة لأي شخص.</p>
+          <div class="who">د. إسماعيل أكيم سيريكي &middot; ولي أمر وعضو مجلس الحوكمة</div>
+        </div>
+
+      </div>
+
+      <button class="el-voices-btn is-prev" type="button" aria-label="الشهادة السابقة" hidden>&#8594;</button>
+      <button class="el-voices-btn is-next" type="button" aria-label="الشهادة التالية" hidden>&#8592;</button>
+      <div class="el-voices-dots" role="tablist" aria-label="اختر شهادة" hidden></div>
     </div>
   </div>
 </section>

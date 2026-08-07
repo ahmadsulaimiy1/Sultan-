@@ -605,7 +605,7 @@ body.portal-body > *{position:relative;z-index:1;}
 .pfd-alert-label{font-weight:600;color:var(--ink);font-size:0.92rem;}
 .pfd-alert-detail{font-size:0.8rem;color:var(--ink-soft);margin-top:2px;}
 .pfd-alert-count{font-family:'Cinzel','Amiri',serif;font-size:1.3rem;color:var(--ink-soft);}
-.pfd-alert-row.has-attention .pfd-alert-count{color:var(--terracotta);}
+.pfd-alert-row.has-attention .pfd-alert-count{color:var(--terracotta-text,#964E24);}
 .pfd-alert-row.is-quiet .pfd-alert-count{color:var(--line);}
 /* List-row entrance stagger — the same restrained fade+rise as the
    page-level card stagger, but per-row, so the Executive Alerts
@@ -958,7 +958,7 @@ body.portal-body > *{position:relative;z-index:1;}
   border:2px solid var(--line);color:var(--ink);
 }
 .wizard-pct-badge.band-poor{border-color:var(--crimson);color:var(--crimson);}
-.wizard-pct-badge.band-basic{border-color:var(--terracotta);color:var(--terracotta);}
+.wizard-pct-badge.band-basic{border-color:var(--terracotta-text,#964E24);color:var(--terracotta-text,#964E24);}
 .wizard-pct-badge.band-good{border-color:var(--gold);color:var(--portal-heading);}
 .wizard-pct-badge.band-excellent{border-color:var(--forest-green);color:var(--forest-green);}
 .wizard-pct-label{font-family:'Cinzel','Amiri',serif;font-size:0.85rem;letter-spacing:0.03em;color:var(--portal-heading);margin:0 0 12px;}
@@ -1080,7 +1080,7 @@ body.portal-body > *{position:relative;z-index:1;}
    flat gold repeated four times. */
 .exec-stat:nth-child(2) .exec-stat-icon{background:rgba(63,107,78,0.1);border-color:rgba(63,107,78,0.3);color:var(--forest-green);}
 .exec-stat:nth-child(3) .exec-stat-icon{background:rgba(65,97,140,0.12);border-color:rgba(65,97,140,0.32);color:var(--oxford-navy);}
-.exec-stat:nth-child(4) .exec-stat-icon{background:rgba(201,120,75,0.1);border-color:rgba(201,120,75,0.3);color:var(--terracotta);}
+.exec-stat:nth-child(4) .exec-stat-icon{background:rgba(201,120,75,0.1);border-color:rgba(201,120,75,0.3);color:var(--terracotta-text,#964E24);}
 .exec-stat-label{font-size:0.74rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
 .exec-stat-value{font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--portal-heading);margin-top:4px;}
 
@@ -1934,7 +1934,7 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .opc-name{font-family:'Cinzel','Amiri',serif;font-size:1rem;color:var(--portal-heading);}
 .opc-acting{font-size:0.72rem;font-weight:500;color:var(--ink-soft);text-transform:none;}
 .opc-title{font-size:0.82rem;color:var(--ink-soft);margin-top:2px;}
-.opc-vacant-label{font-size:0.78rem;font-weight:600;color:var(--terracotta);margin-top:2px;}
+.opc-vacant-label{font-size:0.78rem;font-weight:600;color:var(--terracotta-text,#964E24);margin-top:2px;}
 .opc-bio{font-size:0.82rem;color:var(--ink);margin-top:8px;line-height:1.55;}
 .opc-contact{font-size:0.76rem;color:var(--ink-soft);margin-top:6px;}
 .opc-notes{font-size:0.76rem;color:var(--ink-soft);margin-top:4px;font-style:italic;}
@@ -2085,7 +2085,7 @@ body.portal-body[data-atmosphere="certificates"]::before{
 .orgchart-card.is-vacant{border-top-color:var(--ink-soft);background:var(--milk,#FCFAF6);}
 .oc-name{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;color:var(--portal-heading);line-height:1.3;}
 .oc-holder{font-size:0.74rem;color:var(--ink-soft);margin-top:4px;}
-.oc-holder.is-vacant{font-style:italic;color:var(--terracotta);}
+.oc-holder.is-vacant{font-style:italic;color:var(--terracotta-text,#964E24);}
 .oc-meta{font-size:0.66rem;color:var(--ink-soft);margin-top:6px;letter-spacing:0.03em;text-transform:uppercase;}
 .orgchart-card.orgchart-node-toggle{cursor:pointer;}
 .orgchart-card.orgchart-node-toggle:hover{border-color:var(--gold);}
