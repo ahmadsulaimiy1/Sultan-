@@ -305,3 +305,22 @@ html[data-pc-theme="light"] .mh-standing{color:rgb(var(--lv-gt2,138,106,47));}
    A slightly brighter gold clears it without changing its character. */
 html[data-pc-theme="dark"] .ann-ribbon-tag{color:#F4E2B4!important;}
 html[data-pc-theme="dark"] .ann-ribbon-tag svg{color:#F4E2B4!important;}
+
+/* -------------------------------------------------------------------
+   9. THE LANGUAGE SWITCH IN THE CLEAR EDITION
+   The switcher takes the gold-bright of the dark topbar. On the Clear
+   edition's cream topbar that measured 1.31:1 — the current language
+   was, in practice, not there. It takes the same ink as everything
+   else in that bar, and its border the same rule.
+   ------------------------------------------------------------------- */
+html[data-pc-theme="light"] .lang-switch > summary{
+  color:rgb(var(--lv-ink2,87,71,47));
+  border-color:rgba(var(--lv-g,198,161,91),.45);}
+html[data-pc-theme="light"] .lang-switch > summary:hover,
+html[data-pc-theme="light"] .lang-switch > summary:focus-visible{
+  color:rgb(var(--lv-gt,124,84,48));
+  border-color:rgba(var(--lv-g,198,161,91),.85);
+  background:rgba(var(--lv-g,198,161,91),.10);}
+html[data-pc-theme="light"] .lang-switch > summary:focus-visible{
+  outline-color:rgb(var(--lv-gt,124,84,48));}
+html[data-pc-theme="light"] .lang-switch-globe{opacity:.72;}
