@@ -230,7 +230,14 @@ for (const [s, why] of MUST_NOT_APPEAR) {
   const parts = [
     PROG.mottoAr,
     ...Object.values(PROG.ar || {}),
-    ...Object.values(PROG.variants || {}).flatMap((v) => [v.titleAr, v.labelAr, v.awardAr, v.stageAr, v.progressesToAr]),
+    ...Object.values(PROG.variants || {}).flatMap((v) => [
+      v.titleAr, v.labelAr, v.awardAr, v.stageAr, v.progressesToArM, v.progressesToArF]),
+    // The signatory's Arabic name, where the College has supplied one, and the
+    // Hijri date the ISSUER snapshotted — taken from the register rather than
+    // recomputed here, so the gate cannot approve a date the register does not
+    // carry.
+    PROG.signatory?.nameAr,
+    reg.issuedAtHijriAr,
     ...reg.entries.map((e) => e.nameAr),
     // The two agreement forms of the verb, and the connective wording the
     // frozen master uses around the stage clause.

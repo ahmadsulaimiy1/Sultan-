@@ -27,7 +27,7 @@
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { generateStageCertificateSerial, displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
+import { generateStageCertificateSerial, displayStageCertificateNo, formatHijri } from '../functions/_lib/certificate-serial.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 import {
@@ -542,6 +542,11 @@ const toRow = (r) => ({
   student_identity_no: r.identityNo,
   student_full_name: r.studentEn,
   student_name_ar: r.nameAr,
+  // Snapshotted at issue, not recomputed at render: the sheet and the register
+  // must name the same Hijri day, and a render host with an older ICU build
+  // would otherwise quietly print a different one (or none).
+  issued_at_hijri: formatHijri(ISSUED_AT, 'en'),
+  issued_at_hijri_ar: formatHijri(ISSUED_AT, 'ar'),
   student_sex: r.sex,
   award_variant: r.awardVariant,
   programme_code: PROGRAMME,
@@ -608,6 +613,8 @@ const register = {
   institutionName: INSTITUTION_NAME,
   academicYear: ACADEMIC_YEAR,
   issuedAt: ISSUED_AT,
+  issuedAtHijri: formatHijri(ISSUED_AT, 'en'),
+  issuedAtHijriAr: formatHijri(ISSUED_AT, 'ar'),
   place: PLACE_EN,
   language: 'English only — Founder directive, 2026-08-06',
   firstCertificateSeq: FIRST_CERTIFICATE_SEQ,

@@ -1377,13 +1377,20 @@ export const RC_PROGRAMMES = {
       institution: 'مدارس السلطان حنفي الملكية',
       school: 'كلية السلطان حنفي للقرآن',
       place: 'إكورودو، لاغوس، نيجيريا',
+      // The certifying sentence, transcribed from the frozen master, plus the
+      // student noun it governs. Arabic inflects for the person named, and a
+      // certificate that says الطالب over a young woman's name has got her
+      // grammatically wrong on a document she keeps for life.
       intro: 'تشهد إدارة مدارس السلطان حنفي الملكية بأن',
+      studentM: 'الطالب',
+      studentF: 'الطالبة',
       signatoryRole: 'المدير، كلية السلطان حنفي للقرآن',
       chairmanName: 'د. زكريا أولانريوجو حنفي',
       chairmanRole: 'رئيس مجلس الإدارة',
       awardLabel: 'الشهادة الممنوحة',
       session: 'العام الدراسي',
       date: 'تاريخ الإصدار',
+      hijri: 'التاريخ الهجري',
       placeLabel: 'مكان الإصدار',
       sid: 'الرقم التعريفي للطالب',
       verify: 'التحقق من الشهادة',
@@ -1413,7 +1420,8 @@ export const RC_PROGRAMMES = {
         awardAr: 'إتمام حفظ القرآن الكريم كاملًا — ثلاثون جزءًا',
         // The master's sentence with only its stage clause replaced.
         stageAr: 'حفظ القرآن الكريم كاملًا — ثلاثين جزءًا —',
-        progressesToAr: 'وأُجيزَ التقدّم لامتحان الإجازة بالكلية',
+        progressesToArM: 'وأُجيزَ لهُ التقدّم لامتحان الإجازة بالكلية',
+        progressesToArF: 'وأُجيزَ لها التقدّم لامتحان الإجازة بالكلية',
         stageEn: 'the memorisation of the entire Glorious Qur’an, thirty juz’,',
         // NOT "and is hereby granted the Ijazah". The College's own published
         // pathway makes the Ijazah a separate award, made after examination by
@@ -1430,7 +1438,8 @@ export const RC_PROGRAMMES = {
         award: 'Memorisation of Ten Juz’ of the Glorious Qur’an',
         awardAr: 'حفظ عشرة أجزاء من القرآن الكريم',
         stageAr: 'حفظ عشرة أجزاء من القرآن الكريم',
-        progressesToAr: 'ويواصل برنامج الحفظ بالكلية',
+        progressesToArM: 'ويواصل برنامج الحفظ بالكلية',
+        progressesToArF: 'وتواصل برنامج الحفظ بالكلية',
         stageEn: 'the memorisation of ten juz’ of the Glorious Qur’an',
         progressesTo: 'the continuing Hifz programme of the College',
       },
@@ -1447,6 +1456,10 @@ export const RC_PROGRAMMES = {
     border: 'quran',
     signatory: {
       name: 'Imam Ahmad Sulaimiy',
+      // Supplied by the Founder, 2026-08-07. It was absent until he wrote it,
+      // and the line stayed Latin rather than being transliterated — this is
+      // the line above a man's signature.
+      nameAr: 'الإمام أحمد السليمي',
       role: 'Principal (Mudeer), Sultan Hanafi Qur’an College',
       // Written in blue. It is kept blue rather than converted to the black
       // the other two specimens use: blue ink on a printed sheet is what a
@@ -1567,6 +1580,14 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   const session = String(cert.academic_year || '').replace('/', ' – ');
   if (!session) throw new Error(`royal-college-certificate: ${serial} has no academic session`);
   const issued = formatDateEn(cert.issued_at);
+  // The Hijri date is SNAPSHOTTED by the issuer, never recomputed here — the
+  // same rule the frozen master follows, so the printed sheet and the
+  // Registrar's record can never disagree about which day this was. A sheet
+  // whose runtime lacked the calendar would otherwise print a different date
+  // from the one in the register.
+  const hijriEn = String(cert.issued_at_hijri || '').trim();
+  const hijriAr = String(cert.issued_at_hijri_ar || '').trim()
+    .replace(/[0-9]/g, (d) => '٠١٢٣٤٥٦٧٨٩'[+d]);
   const place = String(cert.place_en || 'Ikorodu, Lagos, Nigeria');
 
   // Name fitting. This is a GUARD, not a stylistic device: every name on the
@@ -1592,7 +1613,15 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   // (stage-certificate-template.js, Bible §13.10): أتمّت for a woman, أتمّ for
   // a man. A certificate that says أتمّ over a young woman's name has got her
   // grammatically wrong on a document she keeps for life.
-  const arDone = String(cert.student_sex || '').toLowerCase() === 'female' ? 'أتمّت' : 'أتمّ';
+  // ONE place decides, and every Arabic form on the sheet agrees with it: the
+  // verb of completion, the student noun in the certifying sentence, and the
+  // clause that says what follows. Scattering the test would let one of them
+  // drift out of agreement on a single student's sheet, which is exactly the
+  // class of error nobody proof-reads for.
+  const isFemale = String(cert.student_sex || '').toLowerCase() === 'female';
+  const arDone = isFemale ? 'أتمّت' : 'أتمّ';
+  const arStudent = AR ? (isFemale ? AR.studentF : AR.studentM) : '';
+  const arNext = isFemale ? award.progressesToArF : award.progressesToArM;
   // The Founder's sheet artwork, laid edge to edge under everything. It is his
   // file enlarged for press and otherwise untouched — see
   // scripts/build-quran-assets.py, which also states plainly what a 92 DPI
@@ -1678,7 +1707,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   <div class="rc-bilede">
     <div class="rc-lede rc-lede-en">This is to certify that</div>
     <span class="rc-bidiv rc-bidiv-sm"><i></i></span>
-    <div class="rc-lede rc-lede-ar" dir="rtl" lang="ar">${esc(AR.intro)}</div>
+    <div class="rc-lede rc-lede-ar" dir="rtl" lang="ar">${esc(`${AR.intro} ${arStudent}`)}</div>
   </div>` : `<div class="rc-lede">This is to certify that</div>`}
   ${AR && nameAr ? `
   <div class="rc-biname">
@@ -1711,7 +1740,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <p class="rc-body rc-body-ar" dir="rtl" lang="ar">قد ${esc(arDone)} بنجاحٍ
       ${esc(award.stageAr)} في العام الدراسي
       <span class="rc-arnum">${esc(session)}</span>، وفقًا للمناهج المعتمدة
-      والمعايير الأكاديمية المعمول بها في الكلية، ${esc(award.progressesToAr)}.</p>
+      والمعايير الأكاديمية المعمول بها في الكلية، ${esc(arNext)}.</p>
   </div>` : `
   <p class="rc-body">has satisfactorily completed ${esc(award.stageEn)} at ${esc(prog.school)}
   for the academic session ${esc(session)}, has met in full the academic and conduct
@@ -1762,16 +1791,16 @@ function sheetHtml({ cert, qrSvgMarkup }) {
       ? `<img class="rc-sig-ink" src="${esc(prog.signatory.ink)}" alt="" />`
       : '<div class="rc-sig-ink rc-sig-ink-blank"></div>'}
     <div class="rc-sig-line"></div>
-    <div class="rc-sig-name">${esc(prog.signatory.name)}</div>
     ${AR && prog.signatory.nameAr ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(prog.signatory.nameAr)}</div>` : ''}
+    <div class="rc-sig-name">${esc(prog.signatory.name)}</div>
     <div class="rc-sig-role">${esc(prog.signatory.role)}${AR
       ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.signatoryRole)}</span>` : ''}</div>
   </div>
   <div class="rc-sig rc-sig-r">
     <img class="rc-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="rc-sig-line"></div>
-    <div class="rc-sig-name">Dr. Zakariya Olanrewaju Anofi</div>
     ${AR ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(AR.chairmanName)}</div>` : ''}
+    <div class="rc-sig-name">Dr. Zakariya Olanrewaju Anofi</div>
     <div class="rc-sig-role">Chairman, Board of Governors${AR
       ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.chairmanRole)}</span>` : ''}</div>
   </div>
@@ -1822,6 +1851,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <div class="rc-plate-head"><span class="rc-plate-mark">SHRS</span>Certificate Verification</div>
     <div class="rc-plate-grid">
       ${AR ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.date)}</i> · Date of Award</span><b>${esc(issued)}</b></div>` : ''}
+      ${AR && hijriAr ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.hijri)}</i> · Hijri Date</span><b class="rc-pf-ar" dir="rtl" lang="ar">${esc(hijriAr)}</b></div>` : ''}
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.docId)}</i> · ` : ''}Document ID</span><b>${esc(docId)}</b></div>
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.code)}</i> · ` : ''}Verification Code</span><b>${esc(verifyCode)}</b></div>
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.archive)}</i> · ` : ''}Archive Reference</span><b>${esc(archiveRef)}</b></div>
@@ -2136,14 +2166,18 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-bidiv-sm i{width:1.1mm;height:1.1mm}
 
 /* The name: English left, Arabic right, one baseline, equal rank. */
-.rc-biname{position:absolute;left:44mm;right:44mm;top:85.6mm;height:12.6mm;
+.rc-biname{position:absolute;left:42mm;right:42mm;top:85.4mm;height:13mm;
   display:flex;align-items:center;gap:5mm}
 .rc-biname .rc-name{position:static;flex:1;height:auto;justify-content:flex-end;
   left:auto;right:auto;top:auto}
 .rc-namear{position:absolute;left:62mm;right:62mm;text-align:center;
   font-family:'Amiri',serif;font-weight:700;color:#241D10;line-height:1.2}
-.rc-biname .rc-namear{position:static;flex:1;text-align:left;font-size:19pt;
-  line-height:1.25;text-shadow:0 0.16mm 0 rgba(255,252,242,0.9)}
+/* 23pt against the Latin's 20: Amiri's letterforms sit smaller per point than
+   Cormorant's, so matching the NUMBER would have made the Arabic the junior
+   of the pair on the one line where neither may be. Matched by eye at the
+   printed size, then measured — the two now occupy the same cap height. */
+.rc-biname .rc-namear{position:static;flex:1;text-align:left;font-size:23pt;
+  line-height:1.15;text-shadow:0 0.16mm 0 rgba(255,252,242,0.9)}
 .rc-bidiv-name{width:1.8mm;height:9mm;align-self:center}
 .rc-bidiv-name i{width:1.9mm;height:1.9mm}
 /* Fallback: a holder with no Arabic name on file keeps the centred single
@@ -2205,9 +2239,9 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .sheet[data-border="quran"] .rc-sig-l{left:60mm;right:auto}
 .sheet[data-border="quran"] .rc-sig-r{right:60mm;left:auto}
 .sheet[data-border="quran"] .rc-sig-ink{height:5mm;max-width:44mm;margin-bottom:-0.7mm}
-.sheet[data-border="quran"] .rc-sig-name{margin-top:0.6mm;font-size:7.4pt}
-.rc-sig-namear{font-family:'Amiri',serif;font-size:6.8pt;font-weight:700;color:${INK};
-  direction:rtl;line-height:1.05;margin-top:0.05mm}
+.sheet[data-border="quran"] .rc-sig-name{margin-top:0.1mm;font-size:7.2pt}
+.rc-sig-namear{font-family:'Amiri',serif;font-size:8pt;font-weight:700;color:${INK};
+  direction:rtl;line-height:1.1;margin-top:0.55mm}
 .sheet[data-border="quran"] .rc-sig-role{margin-top:0.3mm;font-size:3.7pt;
   letter-spacing:0.08em;white-space:nowrap}
 .rc-sig-rolear{font-family:'Amiri',serif;font-size:5pt;color:${INK_SOFT};
@@ -2218,17 +2252,20 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
    the signatures rather than below them, because the artwork's bottom-left
    swoosh eats the field from x 0 to 59mm below y 161 — a plate at the foot
    would have had to start inside the ornament. Measured, not guessed. */
-.sheet[data-border="quran"] .rc-plate{left:56mm;width:185mm;top:140.4mm;height:9.4mm}
+.sheet[data-border="quran"] .rc-plate{left:52mm;width:193mm;top:140.4mm;height:9.4mm}
 .sheet[data-border="quran"] .rc-plate-head,
 .sheet[data-border="quran"] .rc-plate-bar,
 .sheet[data-border="quran"] .rc-plate-bar2,
 .sheet[data-border="quran"] .rc-plate-void{display:none}
 .sheet[data-border="quran"] .rc-plate-grid{position:absolute;left:0;right:0;top:0;
-  display:grid;grid-template-columns:repeat(5,1fr);gap:0 2.6mm}
+  display:grid;grid-template-columns:repeat(6,1fr);gap:0 2.2mm}
 .sheet[data-border="quran"] .rc-plate-micro{position:absolute;left:0;right:0;bottom:0;
   text-align:center;white-space:nowrap;overflow:hidden}
-.sheet[data-border="quran"] .rc-pf span i{font-family:'Amiri',serif;font-size:5.2pt;
+.sheet[data-border="quran"] .rc-pf span{font-size:3.8pt;letter-spacing:0.06em}
+.sheet[data-border="quran"] .rc-pf span i{font-family:'Amiri',serif;font-size:4.8pt;
   font-style:normal;letter-spacing:0;text-transform:none;unicode-bidi:isolate}
+.sheet[data-border="quran"] .rc-pf b{font-size:6.3pt;white-space:nowrap}
+.rc-pf-ar{font-family:'Amiri',serif;font-size:6.9pt;unicode-bidi:isolate}
 
 /* ── FOOT ── the artwork's own bottom band, used as it was drawn. */
 .sheet[data-border="quran"] .rc-cnwrap{left:64mm;width:66mm;top:167.2mm;height:12.4mm}
