@@ -896,8 +896,18 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   if (!m) {
     throw new Error(`royal-college-certificate: serial "${serial}" is not in the issuable format, so no certificate number can be engraved`);
   }
-  const [, code, year, seq] = m;
-  const displayNo = `SHRS-CERT-${code}-${seq}`;
+  const [, code, year, seq, tail] = m;
+  // The engraved number KEEPS its five-character check tail. An earlier cut of
+  // this master printed SHRS-CERT-JSS-000048, dropping it — the same mistake
+  // certificate-serial.js records at displayStageCertificateNo and warns
+  // against by name, and it was reintroduced here. The tail is the first five
+  // hex characters of this certificate's own HMAC, so it is what makes the
+  // printed number self-authenticating: a verifier holding the paper can check
+  // it against the verification plate's code, whose first five characters ARE
+  // this tail, with no database at all. Dropping it also meant the public
+  // verification page returned a longer number than the sheet carried, which
+  // is exactly what a verifier reads as a discrepancy.
+  const displayNo = `SHRS-CERT-${code}-${seq}-${tail}`;
   const uid = seq;
 
   const hash12 = String(cert.content_hash || '').slice(0, 12).toUpperCase();

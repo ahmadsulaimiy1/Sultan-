@@ -27,7 +27,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { generateStageCertificateSerial } from '../functions/_lib/certificate-serial.js';
+import { generateStageCertificateSerial, displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 import {
@@ -256,7 +256,10 @@ for (const [i, student] of roll.entries()) {
     // needs an even-length payload and the Student ID is 15 digits, so it is
     // left-padded, and the pad is part of what comes off the scanner.
     holderBarcode: `0${student.identityNo}`,
-    printedNo: `SHRS-CERT-${PROGRAMME}-${String(certId).padStart(6, '0')}`,
+    // The number as it is ENGRAVED, check tail included — see the note in
+    // royal-college-certificate.js. This is the single authority the register,
+    // the sheet and the public verification page all quote.
+    printedNo: displayStageCertificateNo(gen.serialNo),
     verifyUrl: `${ORIGIN}/verify-certificate/?ref=${gen.serialNo}`,
     // What the QR actually carries. /v/ is a permanent 301 to the verification
     // page (see _redirects) and exists to shorten the payload: the long form
@@ -463,6 +466,39 @@ const sqlOut = [
   '-- cannot mint a number that is already engraved on a printed document.',
   `SELECT setval('stage_certificate_serial_seq', ${lastSeq}, true);`,
   `SELECT setval('student_identity_seq', ${nextNewIdentitySeq - 1}, true);`,
+  '',
+  '-- ── Linking each certificate to its student record ───────────────────────',
+  '-- The rows above are complete and verifiable on their own: every certificate',
+  '-- is a SNAPSHOT, and the public verifier reads only the snapshot, so nothing',
+  '-- below is needed for a certificate to verify.',
+  '--',
+  '-- What it IS needed for is the Registrar\'s Office. stage_certificates.student_id',
+  '-- is the foreign key to students(id); until it is set, a certificate is',
+  '-- findable by any number printed on it but does NOT appear when a registrar',
+  '-- opens that student\'s record. This batch was minted from the Founder\'s roll',
+  '-- of names, not from student rows, so the issuer cannot set it — guessing a',
+  '-- foreign key from a name is exactly the kind of silent mismatch that ends',
+  '-- with one graduate\'s certificate filed under another graduate.',
+  '--',
+  '-- So the link is made here, deliberately, and only where it is unambiguous:',
+  '-- the UPDATE matches on the exact full name within this programme and refuses',
+  '-- any name that matches more or fewer than one active student. Run it AFTER',
+  '-- the JSS cohort exists in students, then run the audit query beneath it and',
+  '-- read the result: any row still showing NULL is a link a human must make.',
+  'UPDATE stage_certificates sc',
+  '   SET student_id = s.id',
+  '  FROM students s',
+  ' WHERE sc.student_id IS NULL',
+  `   AND sc.programme_code = ${q(PROGRAMME)}`,
+  '   AND s.full_name = sc.student_full_name',
+  '   AND (SELECT COUNT(*) FROM students s2 WHERE s2.full_name = sc.student_full_name) = 1;',
+  '',
+  '-- Audit: every certificate in this batch, and whether it reached a student.',
+  'SELECT serial_no, student_identity_no, student_full_name,',
+  '       CASE WHEN student_id IS NULL THEN \'NOT LINKED — link by hand\' ELSE \'linked\' END AS student_record',
+  '  FROM stage_certificates',
+  ` WHERE programme_code = ${q(PROGRAMME)} AND id BETWEEN ${FIRST_CERTIFICATE_SEQ} AND ${lastSeq}`,
+  ' ORDER BY id;',
   '',
 ].join('\n');
 writeFileSync(join(dir, `register-${stamp}.sql`), sqlOut);

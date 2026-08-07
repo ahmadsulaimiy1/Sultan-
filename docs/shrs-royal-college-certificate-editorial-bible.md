@@ -1,7 +1,7 @@
 # SHRS Royal College Certificate — Editorial Bible
 
 **Sultan Hanafi Royal College — Junior Secondary Graduation Certificate**
-**Certificate System v2.1 · programme code `JSS` · English only**
+**Certificate System v2.2 · programme code `JSS` · English only**
 
 This is the internal standard for the Royal College graduation certificate. It
 is the companion to `docs/shrs-certificate-editorial-bible.md`, which governs
@@ -146,7 +146,8 @@ Every element below is on the sheet. Where a decision had a cost, it is stated.
 | **Institutional seal** | Centred in the authentication band, 38mm | Vector, with the Royal College's own ring text. The v1.0 raster seal names the School of Islamic & Arabic Studies and is **not** reused here. |
 | **QR code** | 17.6mm, error correction H | Payload `https://shroyalschools.com/v/<serial>` — the `/v/` redirect exists to keep the symbol at 45×45 modules; the long form pushes it to 53×53, below the density a phone camera needs at this size |
 | **Code 128-C, archive** | Verification plate, left | Payload = archive number, year + 6-digit run. Identifies the **document**. |
-| **Code 128-C, holder** | Verification plate, centre | Payload = the permanent Student ID, left-padded to an even length. Identifies the **holder**. A sheet whose two codes disagree with the register is a sheet assembled from parts of two certificates. |
+| **Code 128-C, holder** | Verification plate, centre | Payload = the permanent Student ID with ONE leading zero, because Code 128-C encodes digits in pairs and needs an even-length payload. Identifies the **holder**. A sheet whose two codes disagree with the register is a sheet assembled from parts of two certificates. `functions/api/certificates/verify.js` strips that padding before parsing — without it, scanning the sheet's own holder barcode reported "no certificate found" on a genuine document. |
+| **The engraved number keeps its check tail** | Face, in the number cartouche | `SHRS-CERT-JSS-000048-3E309`, never the tail-less short form. The tail is the first five hex characters of this certificate's own HMAC, and it is the head of the printed verification code — so a verifier holding the paper can check the number against the plate **with no database at all**. v2.0 and v2.1 dropped it, which `certificate-serial.js` warns against by name; v2.2 restores it, and `scripts/verify-royal-college-verifiability.mjs` now fails the batch if it ever goes missing again. |
 | **Void warning + verification URL** | Foot of the verification plate | |
 
 **Exactly one QR per sheet.** Finding the right symbol is not enough — an extra

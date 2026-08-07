@@ -67,7 +67,10 @@ for (const e of reg.entries) {
   const id7 = String(e.certId).padStart(7, '0');
   const id6 = String(e.certId).padStart(6, '0');
   const expect = {
-    printedNo: `SHRS-CERT-${code}-${seq}`,
+    // WITH the check tail. certificate-serial.js §displayStageCertificateNo
+    // records why the tail is never dropped, and the Royal College master
+    // dropped it once anyway — so this gate re-derives the full form.
+    printedNo: `SHRS-CERT-${code}-${seq}-${suffix}`,
     documentId: `DID-${year}-${code}-${id7}`,
     archiveRef: `ARCH/${code}/${year}/${id6}`,
     verifyCode: String(e.contentHash).slice(0, 12).toUpperCase().replace(/(.{4})(?=.)/g, '$1-'),
