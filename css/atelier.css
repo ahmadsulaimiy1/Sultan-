@@ -222,3 +222,76 @@ html[data-pc-motion="reduced"] .at-curtain,
 html[data-pc-motion="reduced"] .crest-shimmer-wrap::after{display:none!important;}
 html[data-pc-motion="reduced"] section h2::after,
 html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!important;}
+
+/* ===================================================================
+   11. THE ARRIVAL — the default livery, raised
+   -------------------------------------------------------------------
+   The hero's scrim was a flat 88–93% wash from top to bottom, which is
+   heavy enough to grey the photograph out and even enough to leave the
+   frame without a subject. The photograph is the school's own building,
+   and it is worth seeing.
+
+   The scrim is rebuilt as three layers doing three separate jobs: a
+   spotlight that opens the middle of the frame where the building is; a
+   vertical ramp that closes the top and bottom where the type sits; and
+   a corner fall-off that stops the frame reading as a rectangle. The
+   type ends up on more darkness than before, not less — the wash is
+   heavier where the words are and lighter where they are not.
+   =================================================================== */
+.hero::before{
+  background:
+    /* the words, top and bottom */
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.94) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.62) 26%,
+                           rgba(var(--lv-cfd5,34,23,9),.50) 50%,
+                           rgba(var(--lv-cfd5,34,23,9),.72) 76%,
+                           rgba(var(--lv-cfd5,34,23,9),.95) 100%),
+    /* the building, lit */
+    radial-gradient(78% 62% at 50% 46%,rgba(var(--lv-g,198,161,91),.16),transparent 68%),
+    /* the corners, fallen away */
+    radial-gradient(150% 120% at 50% 45%,transparent 38%,rgba(var(--lv-cfd4,26,16,6),.72) 100%)!important;}
+/* The photograph itself gets a touch more presence: a school building in
+   Lagos sunlight is a warm picture and it should look like one. */
+.hero{background-blend-mode:normal;}
+@supports (filter:saturate(1)){
+  .hero{background-image:url("/assets/images/gallery/campus-hero.jpg");}
+}
+
+/* The drawn frame becomes a double rule — a heavy line and a hairline
+   inside it, at the width a certificate border is set. */
+.hero .frame{box-shadow:inset 0 0 0 1px rgba(var(--lv-gb,233,206,138),.14);}
+html[data-pc-ornament="full"] .hero .frame::after{
+  content:"";position:absolute;inset:7px;border:1px solid rgba(var(--lv-g,198,161,91),.22);
+  pointer-events:none;}
+
+/* The masthead sits on the page rather than floating above it: a lit
+   edge along its foot, the way a raised surface catches light. */
+header.nav::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;z-index:3;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-gb,233,206,138),.42) 22%,
+             rgba(var(--lv-gb,233,206,138),.42) 78%,transparent);}
+header.nav{position:relative;}
+
+/* Display type at this size does not need to be spread to fill the
+   frame; it needs to be set. Tighter tracking, a heavier optical
+   weight, and a shadow deep enough to seat it on the photograph. */
+.hero h1{letter-spacing:.012em;}
+.hero .hero-type,.hero .hero-subline{
+  text-shadow:0 2px 22px rgba(var(--lv-cfd4,26,16,6),.72),
+              0 1px 2px rgba(var(--lv-cfd4,26,16,6),.5);}
+.hero .lede{text-shadow:0 1px 14px rgba(var(--lv-cfd4,26,16,6),.6);}
+.hero-inner .eyebrow{text-shadow:0 1px 10px rgba(var(--lv-cfd4,26,16,6),.7);}
+
+/* A gilded threshold where the hero meets the page — the join a bound
+   volume has between the board and the first leaf. */
+.hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;z-index:3;
+  pointer-events:none;
+  background:linear-gradient(90deg,
+    transparent,
+    rgba(var(--lv-gd,156,122,60),.5) 12%,
+    rgba(var(--lv-gb,233,206,138),.9) 50%,
+    rgba(var(--lv-gd,156,122,60),.5) 88%,
+    transparent);
+  box-shadow:0 0 22px -4px rgba(var(--lv-gb,233,206,138),.55);}
+html[data-pc-ornament="none"] .hero::after,
+html[data-pc-ornament="none"] header.nav::after{display:none;}
