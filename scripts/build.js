@@ -396,7 +396,17 @@ function buildPage(page, manifest) {
      leaves the rest looking like unrelated thin pages. Every locale is
      listed including this one, which is what the spec asks for (a complete,
      self-referential set on every page). */
-  const altTag = I18N.locales().filter((l) => I18N.hasPage(pagePath, l.code)).map((l) => {
+  const altTag = I18N.locales().filter((l) => {
+    if (!I18N.hasPage(pagePath, l.code)) return false;
+    // An hreflang alternate is a promise to a search engine that the target
+    // is THIS page in that language. A page whose body is still English is
+    // not that, so it is left out until it is — otherwise the tag sends a
+    // French searcher to English text and tells Google the two are
+    // equivalent. The switcher still offers it, because a human who asks for
+    // French should get the French navigation and the notice explaining the
+    // rest; a crawler making an equivalence claim is a different matter.
+    return !untranslatedBodies.has(`${l.code}:${I18N.neutralPath(pagePath)}`);
+  }).map((l) => {
     const href = SITE_ORIGIN + I18N.pathFor(pagePath, l.code);
     return `<link rel="alternate" hreflang="${l.hreflang}" href="${href}" />\n`;
   }).join('') +
@@ -451,7 +461,9 @@ function buildPage(page, manifest) {
   //   extraCss    — stylesheets appended after the standard head
   //   headScripts — render-blocking scripts (theme flash prevention)
   //   extraScripts— deferred scripts appended after the standard set
-  const robotsTag = page.noindex ? '<meta name="robots" content="noindex" />\n' : '';
+  const robotsTag = page.noindex
+    ? `<meta name="robots" content="noindex,${page.untranslatedBody ? 'follow' : 'nofollow'}" />\n`
+    : '';
   const breadcrumbs = buildBreadcrumbs(page, manifest, lang);
   const bodyAttr = page.bodyClass ? ` class="${page.bodyClass}"` : '';
   const extraCss = (page.extraCss || [])
@@ -705,8 +717,17 @@ function expandManifestForLocales(manifest) {
         altHref: neutral,
         // Flags the body as still being in the default language, which is
         // what renders the notice. Removing this field (by authoring a real
-        // entry) removes the notice.
+        // entry) removes the notice, the noindex, and the hreflang exclusion
+        // together, for that page alone.
         untranslatedBody: true,
+        /* Kept out of the search index until the prose is genuinely in this
+           language. The page is ~90% identical to its English original, so
+           indexing it would put 72 near-duplicate URLs into competition with
+           the pages they were copied from, and would land a Yoruba searcher
+           on English prose. `follow` is deliberate: the links on the page are
+           real and should still be crawled, and the English original is
+           reachable through them. */
+        noindex: true,
       }));
     });
     console.log(`derived ${base.length} page(s) for locale "${locale.code}" (chrome translated, body pending)`);
@@ -719,6 +740,15 @@ function expandManifestForLocales(manifest) {
    Deliberately visible rather than a quiet <meta>: a reader who switched to
    Yoruba and met English prose should be told why, and given one click back
    to the edition that reads properly. */
+const untranslatedBodies = new Set();
+function recordUntranslatedBodies(manifest) {
+  manifest.forEach((page) => {
+    if (!page.untranslatedBody) return;
+    const lang = page.lang || I18N.defaultCode();
+    untranslatedBodies.add(`${lang}:${I18N.neutralPath('/' + page.output.replace(/index\.html$/, ''))}`);
+  });
+}
+
 function renderPartialNotice(page, lang) {
   if (!page.untranslatedBody) return '';
   const href = I18N.pathFor('/' + page.output.replace(/index\.html$/, ''), I18N.defaultCode());
@@ -752,6 +782,7 @@ function main() {
   const manifest = expandManifestForLocales(JSON.parse(read('pages/manifest.json')));
   // Must run before any page is rendered: it loads the availability map into
   // the shared core, which buildPage() then consults for altHref and hreflang.
+  recordUntranslatedBodies(manifest);
   buildLocaleRuntime(manifest);
   manifest.forEach((page) => buildPage(page, manifest));
   buildSearchIndex(manifest);
