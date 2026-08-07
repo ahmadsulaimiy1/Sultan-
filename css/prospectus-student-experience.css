@@ -44,7 +44,7 @@ body.pros-body{margin:0; background:rgb(var(--lv-w157,61,55,44)); font-family:'S
    edition: white border, caption strip, gentle rotation — a
    scrapbook/storybook idiom replacing octagram/hexagon badges. ---- */
 .se-polaroid{
-  background:#fff; padding:8px 8px 34px; box-shadow:0 8px 20px -6px rgba(0,0,0,0.35);
+  background:rgb(var(--lv-wh,255,255,255)); padding:8px 8px 34px; box-shadow:0 8px 20px -6px rgba(0,0,0,0.35);
   display:inline-block; position:relative;
 }
 .se-polaroid img{display:block; width:100%; height:auto; object-fit:cover;}
@@ -62,7 +62,7 @@ body.pros-body{margin:0; background:rgb(var(--lv-w157,61,55,44)); font-family:'S
 }
 .se-eyebrow::after{content:''; flex:1; height:1px; background:var(--se-line);}
 .se-spread.dark .se-eyebrow{color:var(--se-amber);}
-.se-spread.dark .se-eyebrow::after{background:rgba(var(--lv-w15,250,243,232),0.2);}
+.se-spread.dark .se-eyebrow::after{background:rgba(var(--lv-w15s,250,243,232),0.2);}
 h2.se-h2{
   font-family:'Playfair Display',serif; font-weight:700; font-style:italic; font-size:29pt; line-height:1.12; color:var(--se-forest); margin:0 0 10px;
 }
@@ -140,11 +140,11 @@ h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; 
   text-align:left; padding:9px 0; border-bottom:1px solid var(--se-line);
 }
 .se-spread.dark .se-imprint-table th{color:var(--se-amber);}
-.se-spread.dark .se-imprint-table td{color:rgba(var(--lv-w15,250,243,232),0.85); border-bottom-color:rgba(var(--lv-w15,250,243,232),0.18);}
+.se-spread.dark .se-imprint-table td{color:rgba(var(--lv-w15,250,243,232),0.85); border-bottom-color:rgba(var(--lv-w15s,250,243,232),0.18);}
 
 @media print{
   .se-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .se-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }

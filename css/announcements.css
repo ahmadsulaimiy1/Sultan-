@@ -12,7 +12,7 @@
 
 /* ---------- Ribbon (site-wide, between header and page content) ---------- */
 .ann-ribbon{
-  background:var(--navy-deep);border-bottom:1px solid rgba(var(--lv-g,198,161,91),0.25);
+  background:var(--navy-deep-bg);border-bottom:1px solid rgba(var(--lv-gs,198,161,91),0.25);
   position:relative;z-index:5;
 }
 .ann-ribbon-inner{
@@ -21,7 +21,7 @@
 .ann-ribbon-tag{
   display:flex;align-items:center;gap:6px;flex-shrink:0;
   font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--gold-bright);border-inline-end:1px solid rgba(var(--lv-g,198,161,91),0.28);padding-inline-end:16px;
+  color:var(--gold-bright);border-inline-end:1px solid rgba(var(--lv-gs,198,161,91),0.28);padding-inline-end:16px;
 }
 .ann-ribbon-tag svg{color:var(--gold);flex-shrink:0;}
 .ann-ribbon-track{
@@ -35,17 +35,17 @@
 }
 .ann-item{
   flex:0 0 auto;scroll-snap-align:start;display:flex;align-items:center;gap:8px;
-  padding:5px 14px;border:1px solid rgba(var(--lv-g,198,161,91),0.22);border-radius:99px;white-space:nowrap;
+  padding:5px 14px;border:1px solid rgba(var(--lv-gs,198,161,91),0.22);border-radius:99px;white-space:nowrap;
   font-family:'Inter','Cairo',sans-serif;font-size:0.74rem;color:var(--ivory);text-decoration:none;
   transition:border-color .2s ease,background .2s ease;
 }
-.ann-item:hover{border-color:var(--gold);background:rgba(var(--lv-g,198,161,91),0.08);}
+.ann-item:hover{border-color:var(--gold);background:rgba(var(--lv-gs,198,161,91),0.08);}
 .ann-item .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
 .ann-item.is-event .ai-dot{background:var(--crimson-bright,#B5495B);}
 .ann-item .ai-cat{font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);}
 .ann-ribbon-viewall{
   flex-shrink:0;font-family:'Cinzel','Amiri',serif;font-size:0.64rem;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--gold);text-decoration:none;padding-inline-start:16px;border-inline-start:1px solid rgba(var(--lv-g,198,161,91),0.28);
+  color:var(--gold);text-decoration:none;padding-inline-start:16px;border-inline-start:1px solid rgba(var(--lv-gs,198,161,91),0.28);
   white-space:nowrap;transition:color .2s ease;
 }
 .ann-ribbon-viewall:hover{color:var(--gold-bright);}
@@ -56,8 +56,8 @@
 
 /* ---------- Homepage hero / flagship section ---------- */
 .ann-hero .ann-hero-panel{
-  margin-top:34px;background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);
-  border:1px solid rgba(var(--lv-g,198,161,91),0.3);border-radius:4px;overflow:hidden;position:relative;
+  margin-top:34px;background:linear-gradient(160deg,var(--navy-bg) 0%,var(--navy-deep-bg) 100%);
+  border:1px solid rgba(var(--lv-gs,198,161,91),0.3);border-radius:4px;overflow:hidden;position:relative;
 }
 .ann-hero-placeholder{
   padding:56px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;
@@ -74,7 +74,7 @@
 }
 .ann-hero-link{
   margin-top:6px;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--gold-bright);text-decoration:none;border-bottom:1px solid rgba(var(--lv-g,198,161,91),0.4);padding-bottom:2px;
+  color:var(--gold-bright);text-decoration:none;border-bottom:1px solid rgba(var(--lv-gs,198,161,91),0.4);padding-bottom:2px;
   transition:color .2s ease,border-color .2s ease;
 }
 .ann-hero-link:hover{color:#fff;border-color:var(--gold-bright);}
@@ -87,7 +87,7 @@
 .ann-hero-media img{width:100%;height:100%;object-fit:cover;display:block;}
 .ann-hero-media:empty::before{
   content:"";position:absolute;inset:0;
-  background:repeating-linear-gradient(135deg,rgba(var(--lv-g,198,161,91),0.06) 0 2px,transparent 2px 14px);
+  background:repeating-linear-gradient(135deg,rgba(var(--lv-gs,198,161,91),0.06) 0 2px,transparent 2px 14px);
 }
 .ann-hero-body{padding:40px 42px;display:flex;flex-direction:column;gap:14px;justify-content:center;}
 .ann-hero-cat{
@@ -109,22 +109,22 @@
 .ann-rsvp-btn{
   display:inline-flex;align-items:center;gap:7px;font-family:'Cinzel','Amiri',serif;font-size:0.72rem;
   letter-spacing:0.05em;text-transform:uppercase;color:var(--gold-bright);background:transparent;
-  border:1px solid rgba(var(--lv-g,198,161,91),0.55);border-radius:var(--btn-radius);padding:9px 16px;cursor:pointer;
+  border:1px solid rgba(var(--lv-gs,198,161,91),0.55);border-radius:var(--btn-radius);padding:9px 16px;cursor:pointer;
   transition:background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
-.ann-rsvp-btn:hover:not(:disabled){background:rgba(var(--lv-g,198,161,91),0.14);transform:translateY(-1px);}
+.ann-rsvp-btn:hover:not(:disabled){background:rgba(var(--lv-gs,198,161,91),0.14);transform:translateY(-1px);}
 .ann-rsvp-btn.is-done{color:var(--forest-green);border-color:var(--forest-green);cursor:default;}
 .ann-rsvp-btn:disabled{opacity:0.9;}
 .ann-rsvp-count{font-size:0.76rem;color:rgba(var(--lv-p3,247,238,223),0.6);white-space:nowrap;}
 
 .ann-share-btn{
   display:inline-flex;align-items:center;gap:7px;font-size:0.78rem;color:rgba(var(--lv-p3,247,238,223),0.75);
-  background:transparent;border:1px solid rgba(var(--lv-p3,247,238,223),0.28);border-radius:var(--btn-radius);
+  background:transparent;border:1px solid rgba(var(--lv-p3s,247,238,223),0.28);border-radius:var(--btn-radius);
   padding:9px 15px;cursor:pointer;transition:background 0.2s ease, border-color 0.2s ease;
 }
-.ann-share-btn:hover{background:rgba(var(--lv-p3,247,238,223),0.08);border-color:rgba(var(--lv-p3,247,238,223),0.5);}
+.ann-share-btn:hover{background:rgba(var(--lv-p3s,247,238,223),0.08);border-color:rgba(var(--lv-p3s,247,238,223),0.5);}
 
-.ann-hero-gallery{margin-top:18px;padding-top:16px;border-top:1px solid rgba(var(--lv-g,198,161,91),0.22);}
+.ann-hero-gallery{margin-top:18px;padding-top:16px;border-top:1px solid rgba(var(--lv-gs,198,161,91),0.22);}
 .ann-hero-gallery h4{
   font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;
   color:var(--gold);margin:0 0 10px;
@@ -137,7 +137,7 @@
 /* Countdown strip — always renders one of two states: a real countdown,
    or "No upcoming scheduled events." Never blank. */
 .ann-countdown{
-  border-top:1px solid rgba(var(--lv-g,198,161,91),0.22);padding:18px 42px;
+  border-top:1px solid rgba(var(--lv-gs,198,161,91),0.22);padding:18px 42px;
   display:flex;align-items:center;justify-content:center;gap:28px;background:rgba(0,0,0,0.15);
 }
 .ann-countdown-empty{
@@ -161,17 +161,17 @@
 }
 .ann-filter-btn{
   font-family:'Inter','Cairo',sans-serif;font-size:0.78rem;font-weight:600;color:var(--navy);
-  background:var(--milk,rgb(var(--lv-p2,252,250,246)));border:1px solid var(--line);border-radius:99px;padding:8px 18px;
+  background:var(--milk-bg,rgb(var(--lv-p2,252,250,246)));border:1px solid var(--line);border-radius:99px;padding:8px 18px;
   cursor:pointer;transition:background .2s ease,border-color .2s ease,color .2s ease;
 }
 .ann-filter-btn:hover{border-color:var(--gold);}
-.ann-filter-btn.is-active{background:var(--navy);border-color:var(--navy);color:var(--gold-bright);}
+.ann-filter-btn.is-active{background:var(--navy-bg);border-color:var(--navy-bg);color:var(--gold-bright);}
 .ann-archive-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
 .ann-archive-card{
-  border:1px solid var(--line);border-radius:4px;padding:24px;background:var(--milk,rgb(var(--lv-p2,252,250,246)));
+  border:1px solid var(--line);border-radius:4px;padding:24px;background:var(--milk-bg,rgb(var(--lv-p2,252,250,246)));
   display:flex;flex-direction:column;gap:10px;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
 }
-.ann-archive-card:hover{border-color:var(--gold);box-shadow:0 18px 40px -28px rgba(var(--lv-cf,59,42,29),0.4);transform:translateY(-2px);}
+.ann-archive-card:hover{border-color:var(--gold);box-shadow:0 18px 40px -28px rgba(var(--lv-cfs,59,42,29),0.4);transform:translateY(-2px);}
 .ann-archive-card .ann-hero-cat{color:var(--navy-deep);}
 .ann-archive-card h4{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.3rem;color:var(--navy);margin:2px 0 0;}
 .ann-archive-card p{color:var(--ink-soft);font-size:0.92rem;line-height:1.55;margin:0;}

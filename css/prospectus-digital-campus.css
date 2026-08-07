@@ -43,7 +43,7 @@ body.pros-body{margin:0; background:#2a2d33; font-family:'Inter','Space Grotesk'
   background-image:linear-gradient(rgba(20,23,28,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(20,23,28,0.05) 1px, transparent 1px);
   background-size:14mm 14mm;
 }
-.dc-spread.dark .dc-grid-bg{background-image:linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);}
+.dc-spread.dark .dc-grid-bg{background-image:linear-gradient(rgba(var(--lv-wh,255,255,255),0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lv-wh,255,255,255),0.05) 1px, transparent 1px);}
 
 .dc-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.12em; text-transform:uppercase; color:var(--dc-ink-soft);}
 .dc-spread.dark .dc-folio{color:rgba(255,255,255,0.5);}
@@ -124,7 +124,7 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 .dc-stats .dc-stat-cell{background:var(--dc-off); text-align:center; padding:16px 6px;}
 .dc-stats .dc-stat-num{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:21pt; color:var(--dc-charcoal);}
 .dc-stats .dc-stat-label{font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--dc-ink-soft); margin-top:2px;}
-.dc-spread.dark .dc-stats{background:rgba(255,255,255,0.1);}
+.dc-spread.dark .dc-stats{background:rgba(var(--lv-wh,255,255,255),0.1);}
 .dc-spread.dark .dc-stats .dc-stat-cell{background:var(--dc-charcoal-soft);}
 .dc-spread.dark .dc-stats .dc-stat-num{color:var(--dc-gold-bright);}
 .dc-spread.dark .dc-stats .dc-stat-label{color:rgba(255,255,255,0.55);}
@@ -161,7 +161,7 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 
 @media print{
   .dc-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .dc-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }

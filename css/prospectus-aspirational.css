@@ -110,7 +110,7 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 .lx-feature-desc{font-family:'Cormorant Garamond',serif; font-size:11pt; color:var(--lx-ink-soft); line-height:1.55; max-width:80%; margin:0 auto;}
 .lx-spread.dark .lx-feature-title{color:#fff;}
 .lx-spread.dark .lx-feature-desc{color:rgba(var(--lv-p3,247,238,223),0.75);}
-.lx-spread.dark .lx-feature{border-color:rgba(var(--lv-p3,247,238,223),0.18);}
+.lx-spread.dark .lx-feature{border-color:rgba(var(--lv-p3s,247,238,223),0.18);}
 
 /* ---- Stat band — refined, framed rather than blocked ---- */
 .lx-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0;}
@@ -122,7 +122,7 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 
 /* ---- Ornamental frame — luxury gold-line border for section openers ---- */
 .lx-frame{position:absolute; inset:9mm; z-index:2; pointer-events:none; border:1pt solid var(--lx-gold);}
-.lx-frame::before{content:''; position:absolute; inset:3mm; border:0.5pt solid rgba(var(--lv-g,198,161,91),0.4);}
+.lx-frame::before{content:''; position:absolute; inset:3mm; border:0.5pt solid rgba(var(--lv-gs,198,161,91),0.4);}
 
 /* ---- Institutional Publication Information (imprint) page — a
    key/value ownership table matching the Governance Charter's own
@@ -141,11 +141,11 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
   text-align:left; padding:6px 0; border-bottom:1px solid var(--lx-line);
 }
 .lx-spread.dark .lx-imprint-table th{color:var(--lx-gold-bright);}
-.lx-spread.dark .lx-imprint-table td{color:rgba(var(--lv-p3,247,238,223),0.85); border-bottom-color:rgba(var(--lv-p3,247,238,223),0.18);}
+.lx-spread.dark .lx-imprint-table td{color:rgba(var(--lv-p3,247,238,223),0.85); border-bottom-color:rgba(var(--lv-p3s,247,238,223),0.18);}
 
 @media print{
   .lx-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .lx-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }
