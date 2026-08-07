@@ -186,7 +186,72 @@ function renderAdhkarStatic(lang) {
   </div>`;
 }
 
-function buildPage(page) {
+
+// --- Breadcrumbs ---------------------------------------------------------
+// Every serious institutional site tells the reader where in the building
+// they are standing. The trail is derived from the page's own output path
+// against the manifest, so it needs no per-page authoring and can never
+// drift from the URL it describes: /academics/quran-college/ becomes
+// Home › Academics › Sultan Hanafi Qur'an College. It also emits
+// schema.org BreadcrumbList, which is what puts the trail into a search
+// result rather than a bare URL.
+function buildBreadcrumbs(page, manifest, lang) {
+  if (page.slug === 'home' || page.slug === 'home-ar') return '';
+  const home = lang === 'ar' ? '/ar/' : '/';
+  const homeLabel = lang === 'ar' ? 'الرئيسية' : 'Home';
+  const url = '/' + page.output.replace(/index\.html$/, '');
+  // strip the locale prefix so the segments line up in both editions
+  const rel = lang === 'ar' ? url.replace(/^\/ar/, '') : url;
+  const segs = rel.split('/').filter(Boolean);
+
+  const byPath = new Map(
+    manifest
+      .filter((pg) => (pg.lang || 'en') === lang)
+      .map((pg) => ['/' + pg.output.replace(/index\.html$/, ''), pg])
+  );
+
+  const crumbs = [{ href: home, label: homeLabel }];
+  let acc = lang === 'ar' ? '/ar' : '';
+  segs.forEach((seg, i) => {
+    acc += '/' + seg + '/';
+    const match = byPath.get(acc);
+    const last = i === segs.length - 1;
+    // A page's own <title> is written for a browser tab ("… — Sultan Hanafi
+    // Royal Schools"); the trail wants only the leaf of it.
+    let label = match
+      ? match.title.split(/\s+[—|]\s+/)[0]
+      : seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    if (last) label = page.title.split(/\s+[—|]\s+/)[0];
+    crumbs.push({ href: last ? null : acc, label });
+  });
+
+  const items = crumbs.map((c, i) => {
+    const sep = i === 0 ? '' : `<span class="bc-sep" aria-hidden="true">${lang === 'ar' ? '\u2039' : '\u203A'}</span>`;
+    const body = c.href
+      ? `<a href="${c.href}">${escapeHtml(c.label)}</a>`
+      : `<span aria-current="page">${escapeHtml(c.label)}</span>`;
+    return sep + body;
+  }).join('');
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.label,
+      item: SITE_ORIGIN + (c.href || '/' + page.output.replace(/index\.html$/, '')),
+    })),
+  };
+
+  return `<nav class="breadcrumbs" aria-label="${lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}">
+  <div class="wrap">${items}</div>
+</nav>
+<script type="application/ld+json">${JSON.stringify(ld)}</script>
+`;
+}
+
+function buildPage(page, manifest) {
   const lang = page.lang || 'en';
   const dir = page.dir || 'ltr';
   // Arabic (or any future locale) pages use their own chrome partials —
@@ -268,6 +333,7 @@ function buildPage(page) {
   //   headScripts — render-blocking scripts (theme flash prevention)
   //   extraScripts— deferred scripts appended after the standard set
   const robotsTag = page.noindex ? '<meta name="robots" content="noindex" />\n' : '';
+  const breadcrumbs = buildBreadcrumbs(page, manifest, lang);
   const bodyAttr = page.bodyClass ? ` class="${page.bodyClass}"` : '';
   const extraCss = (page.extraCss || [])
     .map((href) => `<link rel="stylesheet" href="${href}">\n`).join('');
@@ -285,7 +351,7 @@ ${head}${robotsTag}${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag
 ${topbar}
 ${header}
 ${announcementRibbon}
-${content}
+${breadcrumbs}${content}
 ${footer}
 ${assistant}
 ${search}
@@ -312,6 +378,7 @@ ${personalisation}
 <script src="/js/search.js" defer></script>
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/policies.js" defer></script>
+<script src="/js/site-chrome.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
@@ -379,7 +446,7 @@ function buildSearchIndex(manifest) {
 
 function main() {
   const manifest = JSON.parse(read('pages/manifest.json'));
-  manifest.forEach(buildPage);
+  manifest.forEach((page) => buildPage(page, manifest));
   buildSearchIndex(manifest);
   versionAllHtml();
   updateServiceWorkerVersion();

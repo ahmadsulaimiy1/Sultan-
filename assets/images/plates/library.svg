@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="The School Library">
+  <title>The School Library</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C6A15B"/><stop offset="42%" stop-color="#F2DFA8"/>
+      <stop offset="58%" stop-color="#E9CE8A"/><stop offset="100%" stop-color="#9C7A3C"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3B2A1D"/><stop offset="55%" stop-color="#2A1B0D"/>
+      <stop offset="100%" stop-color="#1C1207"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="50%" cy="0%" r="72%">
+      <stop offset="0%" stop-color="#E9CE8A" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#E9CE8A" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="weave" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 0 L0 26" stroke="#E9CE8A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#ground)"/>
+  <rect width="1200" height="800" fill="url(#weave)"/>
+  <rect width="1200" height="800" fill="url(#lamp)"/>
+
+  <g stroke="url(#g)" fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" opacity=".92">
+    <!-- the room: a coffered ceiling and a tiled floor in one-point perspective -->
+    <path d="M120 150 L1080 150 M120 660 L1080 660" opacity=".5"/>
+    <path d="M120 150 L420 300 M1080 150 L780 300 M120 660 L420 520 M1080 660 L780 520" opacity=".45"/>
+    <rect x="420" y="300" width="360" height="220" rx="4" opacity=".55"/>
+    <!-- the far window, a pointed arch -->
+    <path d="M540 520 L540 400 Q600 330 660 400 L660 520 Z" opacity=".85"/>
+    <path d="M600 520 L600 356 M540 440 L660 440" opacity=".5"/>
+    <!-- ranges of shelving, left and right -->
+    <g opacity=".95">
+      <path d="M150 250 L390 320 L390 610 L150 640 Z"/>
+      <path d="M150 320 L390 380 M150 390 L390 440 M150 460 L390 500 M150 530 L390 560"/>
+      <path d="M1050 250 L810 320 L810 610 L1050 640 Z"/>
+      <path d="M1050 320 L810 380 M1050 390 L810 440 M1050 460 L810 500 M1050 530 L810 560"/>
+    </g>
+    <!-- the books themselves, set as short vertical strokes on each shelf -->
+    <g stroke-width="4" opacity=".62">
+      <path d="M175 300 L175 336 M191 303 L191 339 M207 306 L207 342 M223 309 L223 345 M239 312 L239 348 M262 316 L262 352 M278 319 L278 355 M300 323 L300 359 M322 327 L322 363 M344 331 L344 367"/>
+      <path d="M175 372 L175 404 M191 374 L191 406 M213 377 L213 409 M235 381 L235 413 M257 384 L257 416 M279 387 L279 419 M301 391 L301 423 M330 395 L330 427"/>
+      <path d="M175 440 L175 470 M197 443 L197 473 M219 446 L219 476 M241 449 L241 479 M270 452 L270 482 M292 455 L292 485 M320 459 L320 489"/>
+      <path d="M1025 300 L1025 336 M1009 303 L1009 339 M993 306 L993 342 M977 309 L977 345 M961 312 L961 348 M938 316 L938 352 M922 319 L922 355 M900 323 L900 359 M878 327 L878 363 M856 331 L856 367"/>
+      <path d="M1025 372 L1025 404 M1009 374 L1009 406 M987 377 L987 409 M965 381 L965 413 M943 384 L943 416 M921 387 L921 419 M899 391 L899 423 M870 395 L870 427"/>
+      <path d="M1025 440 L1025 470 M1003 443 L1003 473 M981 446 L981 476 M959 449 L959 479 M930 452 L930 482 M908 455 L908 485 M880 459 L880 489"/>
+    </g>
+    <!-- a reading table set on the axis, with an open volume upon it -->
+    <path d="M470 640 L730 640 L700 600 L500 600 Z" opacity=".9"/>
+    <path d="M500 600 L500 560 M700 600 L700 560" opacity=".5"/>
+    <path d="M560 600 Q600 586 640 600 Q600 590 560 600 Z" stroke-width="1.8"/>
+    <path d="M600 596 L600 566" stroke-width="1.2" opacity=".7"/>
+  </g>
+  <rect x="10" y="10" width="1180" height="780" rx="14" fill="none" stroke="url(#g)" stroke-width="1.1" opacity=".55"/>
+  <rect x="20" y="20" width="1160" height="760" rx="8" fill="none" stroke="url(#g)" stroke-width=".7" opacity=".3"/>
+  <g opacity=".75" stroke="url(#g)" stroke-width="1.2" fill="none">
+    <path d="M10 44 L10 24 Q10 10 24 10 L44 10"/>
+    <path d="M1156 10 L1176 10 Q1190 10 1190 24 L1190 44"/>
+    <path d="M10 756 L10 776 Q10 790 24 790 L44 790"/>
+    <path d="M1156 790 L1176 790 Q1190 790 1190 776 L1190 756"/>
+  </g>
+</svg>

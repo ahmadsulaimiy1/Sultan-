@@ -2573,3 +2573,183 @@ body.portal-body > .pr-sound-toggle{position:fixed;}
 .pc-panel,.pc-body{min-width:0;}
 .pc-segmented{flex-wrap:wrap;}
 .pc-segmented > button{flex:1 1 auto;min-width:0;white-space:normal;}
+
+/* ===================================================================
+   THE INSTITUTIONAL CHROME  (v4.4)
+   -------------------------------------------------------------------
+   The furniture a reader expects of a serious institution's site, and
+   notices only by its absence: a trail telling them where in the
+   building they are standing, a masthead that gets out of the way once
+   they have started reading, a way back to the top of a long chapter,
+   and photographs presented as plates rather than as pasted-in files.
+   =================================================================== */
+
+/* ---------- The trail ---------------------------------------------- */
+.breadcrumbs{
+  position:relative;z-index:3;
+  background:linear-gradient(180deg,#241708 0%,#1C1207 100%);
+  border-bottom:1px solid rgba(198,161,91,.2);
+  box-shadow:inset 0 -1px 0 rgba(233,206,138,.06);
+  font-size:.76rem;}
+.breadcrumbs .wrap{
+  display:flex;flex-wrap:wrap;align-items:center;gap:2px;
+  padding-top:11px;padding-bottom:11px;}
+.breadcrumbs a{
+  color:rgba(243,232,212,.66);text-decoration:none;
+  padding:3px 2px;border-bottom:1px solid transparent;
+  transition:color .25s ease,border-color .25s ease;}
+.breadcrumbs a:hover{color:var(--pr-gold-bright);border-bottom-color:rgba(233,206,138,.5);}
+.breadcrumbs [aria-current="page"]{
+  color:var(--pr-gold-bright);font-weight:600;letter-spacing:.01em;}
+.bc-sep{color:rgba(198,161,91,.5);padding:0 9px;font-size:.86em;line-height:1;}
+@media (max-width:640px){
+  .breadcrumbs{font-size:.71rem;}
+  .bc-sep{padding:0 6px;}
+}
+@media print{.breadcrumbs{display:none;}}
+
+/* ---------- The masthead, condensed --------------------------------
+   Once the reader has left the top of the page the masthead gives back
+   the height it was holding: the crest and the wordmark shrink, the
+   rows tighten, and a real shadow appears so the bar reads as floating
+   over the page rather than printed on it. The transition is on
+   dimensions only — nothing moves horizontally, so nothing jumps. */
+header.nav{
+  transition:box-shadow .45s var(--pr-ease),background .45s var(--pr-ease);}
+header.nav.is-condensed{
+  box-shadow:0 18px 40px -28px rgba(0,0,0,.95),0 1px 0 rgba(233,206,138,.14);}
+header.nav .brand-mark,header.nav .brand-mark img{
+  transition:width .4s var(--pr-ease),height .4s var(--pr-ease);}
+header.nav.is-condensed .brand-mark{width:38px;height:38px;}
+header.nav .nav.wrap,header.nav nav.wrap{
+  transition:padding .4s var(--pr-ease);}
+header.nav.is-condensed nav.wrap{padding-top:8px;padding-bottom:8px;}
+header.nav.is-condensed .brand-text .line2{
+  opacity:0;max-height:0;overflow:hidden;transition:opacity .3s,max-height .4s;}
+header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,max-height .4s;}
+@media (prefers-reduced-motion:reduce){
+  header.nav,header.nav *{transition:none!important;}
+}
+
+/* ---------- Back to top ---------------------------------------------
+   Offered only once there is enough page behind the reader for it to be
+   worth offering, and placed on the leading rail so it never contends
+   with the assistant, WhatsApp and sound controls on the trailing one. */
+.to-top{
+  position:fixed;inset-inline-start:26px;bottom:26px;z-index:197;
+  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  color:var(--pr-gold-deep,#9C7A3C);
+  background:linear-gradient(168deg,#FFFDF9,#F2E8D6);
+  border:1px solid rgba(198,161,91,.45);
+  box-shadow:0 10px 26px -14px rgba(42,28,16,.65),inset 0 1px 0 rgba(255,255,255,.9);
+  opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);
+  transition:opacity .4s var(--pr-ease),transform .4s var(--pr-ease),
+             visibility .4s,box-shadow .35s;}
+.to-top.is-shown{opacity:1;visibility:visible;transform:none;}
+.to-top:hover{transform:translateY(-3px);
+  box-shadow:0 16px 32px -14px rgba(42,28,16,.72),0 0 22px -6px rgba(198,161,91,.85),
+             inset 0 1px 0 rgba(255,255,255,.95);}
+.to-top svg{width:19px;height:19px;}
+@media (max-width:620px){.to-top{inset-inline-start:16px;bottom:16px;width:42px;height:42px;}}
+@media print{.to-top{display:none;}}
+
+/* ---------- Photographs, presented as plates ------------------------
+   A photograph on this site is framed, ruled and captioned — the way a
+   plate is bound into a printed volume — rather than dropped in as a
+   file. The frame is gold hairline over a cream mount; the image lifts
+   very slightly and warms under the pointer; and a caption, where one
+   exists, is set on a ribbon along the foot of the plate. */
+.gi-frame{
+  position:relative;overflow:hidden;isolation:isolate;
+  border-radius:var(--pr-r-md);
+  background:linear-gradient(168deg,#FFFDF9,#F4EBDA);
+  border:1px solid rgba(198,161,91,.34);
+  padding:8px;
+  box-shadow:var(--pr-shadow-soft),var(--pr-bevel);
+  transition:box-shadow .5s var(--pr-ease),border-color .5s var(--pr-ease);}
+.gi-frame img{
+  display:block;width:100%;height:auto;border-radius:calc(var(--pr-r-md) - 7px);
+  transition:transform .8s var(--pr-ease),filter .6s var(--pr-ease);}
+.gi-frame:hover{border-color:rgba(198,161,91,.6);
+  box-shadow:var(--pr-shadow-lift),var(--pr-glow),var(--pr-bevel);}
+.gi-frame:hover img{transform:scale(1.035);filter:saturate(1.06) brightness(1.02);}
+/* the inner rule that marks the mount */
+.gi-frame::after{
+  content:"";position:absolute;inset:8px;border-radius:calc(var(--pr-r-md) - 7px);
+  border:1px solid rgba(255,255,255,.4);pointer-events:none;z-index:2;
+  box-shadow:inset 0 0 0 1px rgba(198,161,91,.16);}
+@media (prefers-reduced-motion:reduce){
+  .gi-frame img{transition:none;}
+  .gi-frame:hover img{transform:none;}
+}
+
+/* An engraved plate is already dark and already framed, so it takes the
+   mount but not the cream — it sits in the page as an inset panel. */
+.gi-frame.is-plate{background:linear-gradient(168deg,#2A1B0D,#1C1207);
+  border-color:rgba(233,206,138,.28);}
+.gi-frame.is-plate::after{border-color:rgba(233,206,138,.14);
+  box-shadow:inset 0 0 0 1px rgba(233,206,138,.08);}
+.gi-frame.is-plate:hover img{transform:none;filter:none;}
+.gi-plate-note{
+  position:absolute;inset-inline-start:0;bottom:0;z-index:3;
+  padding:8px 16px 8px 18px;
+  font-family:'Cinzel','Amiri',serif;font-size:.6rem;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(233,206,138,.72);
+  background:linear-gradient(90deg,rgba(20,12,4,.86),rgba(20,12,4,0));
+  border-start-end-radius:10px;pointer-events:none;}
+[dir="rtl"] .gi-plate-note{
+  background:linear-gradient(270deg,rgba(20,12,4,.86),rgba(20,12,4,0));}
+
+/* ---------- The campus mosaic ---------------------------------------
+   A single frame shown at a time, on a timer, asks the reader to wait
+   for the school. A mosaic gives them the whole of it at a glance: one
+   lead plate at twice the size, five beside it, each captioned along
+   its foot. It is the arrangement a printed prospectus uses for the
+   same reason. */
+.cl-mosaic{
+  display:grid;gap:16px;margin-top:32px;
+  grid-template-columns:1fr;}
+@media (min-width:720px){
+  .cl-mosaic{grid-template-columns:repeat(2,1fr);}
+}
+/* Four columns by three rows, with the lead holding the left half for its
+   full height: one lead plus six closes the block exactly, with no ragged
+   tail row — the arrangement a printed prospectus uses for the same
+   reason. */
+@media (min-width:1040px){
+  .cl-mosaic{grid-template-columns:repeat(4,1fr);grid-auto-rows:206px;align-items:stretch;}
+  /* height:100% resolves against the grid area, which is what makes a
+     tile spanning three rows actually occupy three rows; without it the
+     figure is sized by its own photograph and the block goes ragged. */
+  .cl-tile{grid-column:span 1;grid-row:span 1;height:100%;}
+  .cl-tile.is-lead{grid-column:span 2;grid-row:span 3;}
+  .cl-tile > img{height:100%;}
+}
+.cl-tile{position:relative;margin:0;overflow:hidden;}
+.cl-tile img{width:100%;height:100%;object-fit:cover;}
+@media (max-width:1039px){
+  .cl-tile img{aspect-ratio:4/3;}
+  .cl-tile.is-lead img{aspect-ratio:16/9;}
+}
+/* the caption rides along the foot of the plate, over a fall of shadow,
+   and comes up to full strength when the pointer is on it */
+.cl-tile figcaption{
+  position:absolute;inset-inline:8px;bottom:8px;z-index:3;
+  padding:34px 16px 14px;pointer-events:none;
+  border-end-start-radius:calc(var(--pr-r-md) - 7px);
+  border-end-end-radius:calc(var(--pr-r-md) - 7px);
+  background:linear-gradient(180deg,rgba(20,12,4,0),rgba(20,12,4,.62) 42%,rgba(20,12,4,.9));
+  color:rgba(255,250,240,.92);font-size:.84rem;line-height:1.45;
+  opacity:.94;transition:opacity .45s var(--pr-ease);}
+.cl-tile:hover figcaption{opacity:1;}
+.cl-cap-k{
+  display:block;font-family:'Cinzel','Amiri',serif;
+  font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--pr-gold-bright);margin-bottom:5px;}
+.cl-tile.is-lead figcaption{font-size:.94rem;padding:44px 20px 18px;}
+.cl-tile.is-lead .cl-cap-k{font-size:.64rem;}
+.cl-foot{
+  display:flex;flex-wrap:wrap;align-items:center;gap:20px;margin-top:26px;}
+@media (max-width:560px){
+  .cl-tile figcaption{font-size:.79rem;padding:28px 13px 12px;}
+}
