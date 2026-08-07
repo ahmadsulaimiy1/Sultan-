@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=7f4080a8cc">
-<link rel="stylesheet" href="/css/personalisation.css?v=632a7c4fde">
+<link rel="stylesheet" href="/css/personalisation.css?v=f9bd7a76b2">
 <link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
 <script>
 (function(){
@@ -65,8 +65,8 @@
 </script>
 <meta name="robots" content="noindex" />
 <link rel="stylesheet" href="/css/portal.css?v=73e4122b67">
-<link rel="stylesheet" href="/css/prestige.css?v=06c138b7eb">
-<link rel="stylesheet" href="/css/motion.css?v=c10021e96a">
+<link rel="stylesheet" href="/css/prestige.css?v=5de6dbec3d">
+<link rel="stylesheet" href="/css/motion.css?v=3c9e848bd0">
 </head>
 <body class="portal-body">
 
@@ -552,6 +552,26 @@
     <div class="gateway-hero-rule" aria-hidden="true"></div>
   </section>
 
+
+  <!-- The quick rail. Somebody signing in for the fifth time this week
+       should not have to read eight explanations to reach their own door,
+       so every door is offered here in one row, above the fold, before
+       any of the detail below. -->
+  <nav class="gw-quick pr-reveal" aria-label="Go straight to your portal">
+    <p class="gw-quick-lab">Go straight in</p>
+    <div class="gw-quick-row">
+      <a class="gw-q" href="/portal/login/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>Parent</a>
+      <a class="gw-q" href="/portal/student/login/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7.5C10.4 6.1 8.3 5.4 4 5.4v12c4.3 0 6.4.7 8 2.1 1.6-1.4 3.7-2.1 8-2.1v-12c-4.3 0-6.4.7-8 2.1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 7.5v12" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></span>Student</a>
+      <a class="gw-q" href="/portal/staff/teacher/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Teacher</a>
+      <a class="gw-q" href="/portal/staff/offices/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></span>Office</a>
+      <a class="gw-q" href="/portal/founder/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Executive</a>
+      <a class="gw-q" href="/portal/apply/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Apply</a>
+      <a class="gw-q" href="/alumni-portal/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M9.4 13.6L7.8 21l4.2-2.4 4.2 2.4-1.6-7.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Alumni</a>
+      <a class="gw-q" href="/verify/"><span class="gw-q-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Verify</a>
+    </div>
+    <p class="gw-quick-note">Not sure which is yours? Every door is set out in full below, with what stands behind it and what you need to sign in.</p>
+  </nav>
+
   <p class="gw-group-head pr-reveal">I · Institutional &amp; Staff Access</p>
   <div class="gateway-grid pr-stagger">
     <a class="gateway-card" data-accent="governance" href="/portal/founder/">
@@ -1010,9 +1030,9 @@
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Theme</span></div>
           <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="Theme">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal (Default)</button>
-            <button type="button" data-value="light" role="radio">Light</button>
-            <button type="button" data-value="dark" role="radio">Dark</button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal</button>
+            <button type="button" data-value="light" role="radio">Clear</button>
+            <button type="button" data-value="dark" role="radio">Midnight</button>
           </div>
         </div>
 
@@ -1370,7 +1390,7 @@
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=e3d32ffda3" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
-<script src="/js/motion.js?v=6c78547e6e" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/portal-gateway.js?v=37ff46070c" defer></script>
 
 </body>

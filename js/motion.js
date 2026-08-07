@@ -345,51 +345,18 @@
   });
 
   /* the toggle */
-  function mountToggle() {
-    if (document.querySelector('[data-sound-toggle]')) return;
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'pr-sound-toggle';
-    b.setAttribute('data-sound-toggle', '');
-    function paint() {
-      b.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-      b.setAttribute('aria-label', enabled ? 'Interface sound on. Turn off.' : 'Interface sound off. Turn on.');
-      b.title = enabled ? 'Interface sound on' : 'Interface sound off';
-      b.innerHTML = enabled
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>'
-        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
-      b.classList.toggle('is-off', !enabled);
-    }
-    b.addEventListener('click', function () {
-      enabled = !enabled;
-      try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) {}
-      // The Personalisation Centre carries the same preference under its
-      // own key. Writing both keeps one setting in two places from
-      // disagreeing with itself, whichever control the reader used.
-      try {
-        var raw = localStorage.getItem('shrsPersonalisation');
-        var prefs = raw ? JSON.parse(raw) : {};
-        prefs.interfaceSound = enabled ? 'on' : 'off';
-        localStorage.setItem('shrsPersonalisation', JSON.stringify(prefs));
-        document.documentElement.setAttribute('data-pc-sound', prefs.interfaceSound);
-      } catch (e) { /* storage unavailable — the toggle still works for this visit */ }
-      // the spoken introduction listens for this and fades itself out
-      window.dispatchEvent(new Event(enabled ? 'shrs:sound-on' : 'shrs:sound-off'));
-      paint();
-      if (enabled) play('toggle');
-    });
 
-    // The Personalisation Centre can change this preference too; when it
-    // does, the floating toggle must show the new state rather than the
-    // one it was born with.
-    window.addEventListener('shrs:sound-off', function () { if (enabled) { enabled = false; paint(); } });
-    window.addEventListener('shrs:sound-on', function () { if (!enabled) { enabled = true; paint(); } });
-
-    paint();
-    document.body.appendChild(b);
+  // The floating toggle is retired: interface sound is a preference, and
+  // preferences belong in the Personalisation Centre, where this one now
+  // lives alongside typeface, leading, contrast and the rest. The module
+  // still listens for the preference so a change takes effect at once,
+  // without a reload.
+  function mountNothing() {
+    window.addEventListener('shrs:sound-off', function () { enabled = false; });
+    window.addEventListener('shrs:sound-on', function () { enabled = true; });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountToggle);
-  } else { mountToggle(); }
+    document.addEventListener('DOMContentLoaded', mountNothing);
+  } else { mountNothing(); }
 })();

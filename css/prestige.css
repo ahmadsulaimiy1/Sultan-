@@ -2355,7 +2355,6 @@ body.portal-body > .assistant-root,
 body.portal-body > .whatsapp-float,
 body.portal-body > .search-overlay,
 body.portal-body > .pwa-install-banner,
-body.portal-body > .pr-sound-toggle{position:fixed;}
 
 /* ===================================================================
    THE TYPOGRAPHIC ORDER  (v4.3)
@@ -2895,3 +2894,791 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
 .adk-std-ico svg{width:20px;height:20px;}
 .adk-std h3{font-family:'Cinzel','Amiri',serif;font-size:.98rem;color:var(--pr-coffee);margin:0 0 7px;}
 .adk-std p{font-size:.85rem;line-height:1.62;color:#54432c;margin:0;text-align:start;}
+
+/* ===================================================================
+   LEGIBILITY — THE CORRECTIONS  (v4.6)
+   -------------------------------------------------------------------
+   A full contrast audit was run over the site: every text-bearing
+   element was measured against the background actually rendered behind
+   it (the page screenshotted with every glyph made transparent, then
+   the pixel under each element sampled), and every pair scored against
+   WCAG AA. What follows fixes every failure it found.
+
+   The worst of it was the Adhkār Centre, and the cause was this file.
+   The prestige layer changed .adk-priority-card, .adk-wird-card,
+   .adk-sd-stat, .adk-progress-stat and .adk-achv-badge from the dark
+   navy they were designed as to a cream plate — but their text colours
+   live in css/brand.css and stayed white. White type on a white card:
+   measured ratios of 1.01 to 1.15, which is to say invisible. Sixty-nine
+   elements on that page alone. Every one of them is given the ink
+   palette here.
+   =================================================================== */
+
+/* ---- The Adhkār Centre, made legible --------------------------------- */
+.adk-priority-card h4,
+.adk-wird-card .awc-label,
+.adk-progress-stat .value,
+.adk-sd-stat .value,
+.adk-sd-ring .sd-pct,
+.adk-quick-mode h4,.adk-quick-modes h4{
+  color:var(--pr-coffee,#3B2A1D)!important;}
+
+.adk-priority-card p,
+.adk-priority-card .apc-translation,
+.adk-wird-card .awc-sub,
+.adk-progress-stat .label,
+.adk-sd-stat .label,
+.adk-progress-empty,
+.adk-wird-note,
+.adk-translation-preview,
+.adk-quick-mode p{
+  color:#54432c!important;}
+
+.adk-priority-card .apc-arabic{color:var(--pr-coffee,#3B2A1D)!important;}
+
+/* The gold that reads on navy is too pale on cream — the deep gold does
+   the same job at a legible ratio. */
+.adk-priority-card .apc-count,
+.adk-wird-card .awc-time,
+.adk-wird-card .awc-count,
+.adk-sd-stat .value,
+.adk-priority-card svg,
+.adk-progress-stat svg,
+.adk-repeat,
+.adk-static-repeat{
+  color:var(--pr-gold-deep,#9C7A3C)!important;}
+.adk-progress-stat--streak .value{color:var(--pr-gold-bright,#E9CE8A)!important;}
+
+/* The section heads sat as gold-on-navy chips; on the cream plate they
+   are set as gold on the institution's coffee, which is the same device
+   the rest of the site uses for a section head. */
+.adk-priority-head,.adk-progress-head,.adk-wird-head,.adk-section-head{
+  background:linear-gradient(120deg,var(--pr-coffee,#3B2A1D),#241708)!important;
+  color:var(--pr-gold-bright,#E9CE8A)!important;
+  border-radius:var(--pr-r-pill);padding:6px 16px!important;
+  box-shadow:0 8px 18px -12px rgba(42,28,16,.6);}
+
+.adk-sd-close{color:var(--pr-coffee,#3B2A1D)!important;}
+.adhkar-note{color:#4a3a24!important;}
+.adhkar-note strong{color:var(--pr-coffee,#3B2A1D)!important;}
+
+/* ---- The eyebrow, on cream ------------------------------------------
+   --gold (#C6A15B) against the cream band measures 1.5:1. The deep gold
+   carries the same colour at a legible weight, and the rule beside it
+   stays bright so the device still reads as gilt. */
+.eyebrow,.pr-eyebrow{color:var(--pr-gold-deep,#9C7A3C);}
+.eyebrow::before,.pr-eyebrow::before{background:linear-gradient(90deg,var(--pr-gold),var(--pr-gold-bright));}
+/* On every dark ground the bright gold is correct and is restored. */
+.pr-section.is-royal .pr-eyebrow,.pr-hero .pr-eyebrow,.pr-arrival .pr-eyebrow,
+.chapter-band .eyebrow,.chapter-band-alt .eyebrow,
+.academics > .wrap .eyebrow,.policies > .wrap .eyebrow,
+.portal-body .eyebrow,footer .eyebrow,.contact .eyebrow,
+.digital-campus-teaser .eyebrow,.governance .eyebrow,.adhkar-teaser .eyebrow,
+.hero .eyebrow,.foundation .eyebrow,.ct-hours .pr-eyebrow{
+  color:var(--pr-gold-bright,#E9CE8A);}
+
+/* ---- The outline button, on cream ------------------------------------
+   Designed for a dark band, where bright gold on near-black is correct.
+   On the cream it measured 1.31:1. It keeps its shape and takes the ink. */
+.pr-section.is-ivory .btn-outline,
+.wrap > .cl-foot .btn-outline,
+.plib .btn-outline,
+section:not(.is-royal):not(.hero):not(.contact):not(.academics):not(.policies) .btn-outline{
+  color:var(--pr-gold-deep,#9C7A3C);
+  border-color:rgba(198,161,91,.55);
+  background:linear-gradient(168deg,#FFFDF9,#F5ECDC);}
+.pr-section.is-ivory .btn-outline:hover,.wrap > .cl-foot .btn-outline:hover,
+.plib .btn-outline:hover{
+  color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold);
+  background:linear-gradient(168deg,#FFF8E8,#F2E5CC);}
+
+/* ---- Photographic heroes: a deeper scrim ------------------------------
+   The eyebrow and the standfirst sit over a sunlit photograph and were
+   measuring 1.23 and 2.59. The fall of shadow behind them is deepened
+   until the type carries, without darkening the photograph as a whole. */
+.pr-hero::after{
+  background:linear-gradient(180deg,rgba(20,12,4,.42) 0%,rgba(20,12,4,.24) 28%,
+             rgba(24,15,6,.78) 68%,rgba(20,12,4,.95) 100%);}
+.pr-hero-inner{position:relative;}
+.pr-hero-inner::before{
+  content:"";position:absolute;inset:-40px -40px -30px -40px;z-index:-1;pointer-events:none;
+  background:radial-gradient(120% 90% at 22% 78%, rgba(16,10,3,.72), transparent 72%);}
+[dir="rtl"] .pr-hero-inner::before{
+  background:radial-gradient(120% 90% at 78% 78%, rgba(16,10,3,.72), transparent 72%);}
+.pr-hero .pr-eyebrow{color:#F5E4B8;text-shadow:0 1px 10px rgba(0,0,0,.75);}
+.pr-hero-sub{color:rgba(255,252,246,.96);text-shadow:0 1px 14px rgba(0,0,0,.7);}
+
+/* ---- The remainder of the audit's findings --------------------------- */
+.ann-countdown-empty{color:#5c4c34!important;}
+.pr-body.src{color:#5d4c34;}
+.pr-photo-cap{color:#5d4c34;}
+.pr-path-age{color:var(--pr-gold-deep,#9C7A3C);}
+.pr-path-d{color:#4f4030;}
+.pr-stat-s{color:#5d4c34;}
+.el-voice .who,.quote-panel .who{color:#5d4c34;}
+.at-ref{color:var(--pr-gold-deep,#9C7A3C);}
+.ic-mt-day{color:#5d4c34;}
+.pr-quote cite,.pr-founder-card cite,cite{color:#5d4c34;}
+.plib .stat-num,.policy-head .stat-num{color:var(--pr-gold-deep,#9C7A3C);}
+.sign-row .lab{color:#6b5a40;}
+/* the mosaic caption eyebrow, over a photograph */
+.cl-cap-k{color:#F5E4B8;text-shadow:0 1px 8px rgba(0,0,0,.8);}
+
+/* ---- Second pass: the audit re-run, corrected by measured ground -----
+   Each rule below was written against the actual pixel sampled behind
+   the element, not against an assumption about which band it sits in. */
+
+/* Dark grounds that had taken the ink palette by mistake */
+.adk-static-section h2,.adk-static-section h3,
+.adk-static-section .adk-section-time,
+.adk-section-time{color:var(--pr-gold-bright,#E9CE8A)!important;}
+.adk-static-item h4{color:#FFF8EA!important;}
+.adk-static-translit,.adk-static-translation{color:rgba(247,238,223,.86)!important;}
+.adk-static-ref{color:rgba(233,206,138,.85)!important;}
+.ic-mt-day,.ic-mt-date{color:#FFF3DC!important;}
+.el-voices .who,.el-voice .who,.quote-panel .who{color:rgba(247,238,223,.9);}
+.pr-section.is-ivory .quote-panel .who,
+.pr-section.is-ivory .el-voice .who{color:#4a3a24;}
+
+/* Light gold bands — the deep gold is not dark enough against them */
+.adhkar-page > .wrap > .eyebrow,
+.adhkar-teaser .eyebrow,
+.adhkar-page .eyebrow,
+.at-ref,
+.adk-repeat,.adk-static-repeat{color:#6E5220!important;}
+.adk-priority-card .apc-count,
+.adk-wird-card .awc-time,
+.adk-wird-card .awc-count,
+.adk-progress-stat .value,
+.adk-sd-stat .value{color:#7A5A24!important;}
+
+/* Cream plates — a shade further down so small type carries */
+.pr-path-age{color:#7A5A24;}
+cite,.pr-quote cite,.pr-founder-card cite{color:#4a3a24;}
+.pr-stat-s,.pr-photo-cap,.pr-body.src{color:#4f4030;}
+.pr-section.is-ivory .btn-outline,.wrap > .cl-foot .btn-outline,.plib .btn-outline{
+  color:#7A5A24;}
+
+/* The photographic hero. The standfirst and its eyebrow sit over a
+   sunlit wall, and no text colour survives that on its own — the scrim
+   has to do the work. A single soft fall of shadow is laid under the
+   whole text column, top to bottom, so the type carries at full
+   strength while the photograph above it stays bright. */
+.pr-hero-inner::before{
+  inset:-120px -60px -40px -60px;
+  background:
+    linear-gradient(180deg,rgba(14,9,3,.62) 0%,rgba(14,9,3,.72) 60%,rgba(14,9,3,.8) 100%),
+    radial-gradient(130% 100% at 20% 70%, rgba(12,7,2,.55), transparent 78%);
+  -webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
+  mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);}
+[dir="rtl"] .pr-hero-inner::before{
+  background:
+    linear-gradient(180deg,rgba(14,9,3,.62) 0%,rgba(14,9,3,.72) 60%,rgba(14,9,3,.8) 100%),
+    radial-gradient(130% 100% at 80% 70%, rgba(12,7,2,.55), transparent 78%);}
+@media (max-width:760px){
+  .pr-hero-inner::before{inset:-80px -24px -30px -24px;}
+}
+
+/* The mosaic caption ribbon, deepened where a photograph is pale */
+.cl-tile figcaption{
+  background:linear-gradient(180deg,rgba(16,10,3,0),rgba(16,10,3,.74) 38%,rgba(16,10,3,.95));}
+
+/* ---- Third pass: the last of the audit ------------------------------- */
+/* The eyebrow appears on cream, on the pale gold band and on the dark
+   bands. One colour cannot serve all three, so the default is set dark
+   enough for the palest gold the site uses, and every dark ground
+   restores the bright gold above. */
+.eyebrow,.pr-eyebrow{color:#6E5220;}
+.pr-section.is-ivory .btn-outline,.wrap > .cl-foot .btn-outline,.plib .btn-outline{color:#6E5220;}
+
+/* A heading on a dark band must not take the ink colour brand.css gives
+   every heading — the same defect that made the photographic hero titles
+   invisible, in the one place it survived. */
+.adhkar-page > .wrap > h2,.adhkar-page > .wrap > h3,
+.adk-static-section > h3,.adk-static-section > h2{color:#FFF8EA!important;}
+
+/* The selected day chip carries a gold ground, so its label is ink. */
+.ic-mt-day.is-on,.ic-mt-date.is-on{color:#2A1B0D!important;}
+
+/* Attribution lines, on cream */
+cite,.pr-quote cite,.pr-founder-card cite{color:#3B2A1D;}
+.pr-section.is-ivory .quote-panel .who,.pr-section.is-ivory .el-voice .who,
+.el-figures .who,.wrap .quote-panel .who{color:#3B2A1D;}
+
+/* ---- Fourth pass ------------------------------------------------------
+   section.academics carries both the dark hero of an interior page and
+   the light "Our Schools" band of the homepage, so it cannot be treated
+   as one. The hero is distinguished by the crest icon it opens with. */
+.academics > .wrap .eyebrow{color:#6E5220;}
+.academics > .wrap:has(> .page-hero-icon) .eyebrow,
+.policies > .wrap:has(> .page-hero-icon) .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The testimonial attribution follows its band, dark or light. */
+.el-voices .who,.el-voices-track .who{color:rgba(247,238,223,.92)!important;}
+.pr-section.is-ivory .el-voices .who,
+.is-ivory .el-voices .who{color:#3B2A1D!important;}
+
+/* Attribution and outline buttons on cream, taken a shade further down. */
+cite,.pr-quote cite,.pr-founder-card cite,figure cite{color:#3B2A1D!important;}
+.pr-section.is-ivory .btn-outline,.wrap > .cl-foot .btn-outline,.plib .btn-outline{
+  color:#5F4518!important;}
+
+/* A milestone label on the dark timeline band. */
+.chapter-band .pr-path-t,.chapter-band-alt .pr-path-t,
+.pr-section.is-royal .pr-path-t{color:#FFF8EA;}
+.pr-section.is-royal .pr-path-d,.chapter-band-alt .pr-path-d{color:rgba(244,234,212,.84);}
+.pr-section.is-royal .pr-path-age,.chapter-band-alt .pr-path-age{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The ghost button and the tag chip were both drawn for a dark band. On
+   a cream one they keep their outline and take the ink. */
+.pr-section.is-ivory .pr-btn.is-ghost,
+.is-ivory .pr-btn.is-ghost,
+.chapter-band-light .pr-btn.is-ghost{
+  color:#5F4518;border-color:rgba(198,161,91,.55);
+  background:linear-gradient(168deg,#FFFDF9,#F5ECDC);}
+.pr-section.is-ivory .pr-btn.is-ghost:hover,.is-ivory .pr-btn.is-ghost:hover{
+  color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold);}
+.pr-section.is-ivory .tag,.is-ivory .tag,
+.school-block .tag,.fac-profile .tag,.ct-office .tag{color:#5F4518;}
+.pr-section.is-royal .tag,.chapter-band .tag,.chapter-band-alt .tag,
+.portal-body .tag,.gateway-card .tag{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* A bare inline link on a pale band. */
+.pr-section.is-ivory .text-link,.is-ivory .text-link{color:#6E5220;}
+.pr-section.is-royal .text-link,.chapter-band .text-link,.chapter-band-alt .text-link,
+.portal-body .text-link,footer .text-link,.text-link.on-dark{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* ---- Fifth pass: rules that follow their band instead of guessing ----
+   Some elements appear on both a cream band and a royal one. Rather than
+   enumerate every place each occurs, they take the colour of the band
+   they are standing in and step back from it — which is correct on any
+   ground, and stays correct when a band is later re-toned. */
+.el-voice .who,.el-voices .who,.quote-panel .who,.el-figures .who,
+.pr-quote cite,.at-ref{
+  color:inherit!important;opacity:.78;}
+.pr-section.is-royal .at-ref,.chapter-band .at-ref,.chapter-band-alt .at-ref{opacity:.86;}
+
+/* The ghost button is ink by default and only goes pale on a dark band —
+   the safer way round, since the cream bands outnumber the royal ones. */
+.pr-btn.is-ghost{
+  color:#5F4518;border-color:rgba(198,161,91,.5);
+  background:linear-gradient(168deg,#FFFDF9,#F5ECDC);}
+.pr-btn.is-ghost:hover{color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold);
+  background:linear-gradient(168deg,#FFF8E8,#F2E5CC);}
+.pr-section.is-royal .pr-btn.is-ghost,.pr-hero .pr-btn.is-ghost,
+.pr-arrival .pr-btn.is-ghost,.chapter-band .pr-btn.is-ghost,
+.chapter-band-alt .pr-btn.is-ghost,.portal-body .pr-btn.is-ghost,
+.academics > .wrap:has(> .page-hero-icon) .pr-btn.is-ghost{
+  color:var(--pr-gold-bright,#E9CE8A);border-color:rgba(233,206,138,.45);
+  background:rgba(255,255,255,.05);}
+.pr-section.is-royal .pr-btn.is-ghost:hover,.pr-hero .pr-btn.is-ghost:hover{
+  color:#fff;border-color:var(--pr-gold-bright);background:rgba(233,206,138,.14);}
+
+/* The Foundation band on the homepage is cream, not royal. */
+.foundation .eyebrow{color:#6E5220;}
+
+/* An open-ended age band is filled in a pale slate; its label takes ink. */
+.pr-age-fill.is-open{background:linear-gradient(120deg,#33525E,#5C8391);color:#fff;}
+
+/* Small emphasis and captions on the palest plates. */
+.pr-card b,.school-block b,.pr-body b,.cap,small{color:#3B2A1D;}
+.pr-section.is-royal .cap,.pr-section.is-royal small,
+.chapter-band .cap,.chapter-band-alt .cap{color:rgba(244,234,212,.86);}
+
+/* ---- Sixth pass: the last three ---------------------------------------- */
+/* The section head is a dark chip; the heading inside it must not take
+   the ink colour every heading inherits. */
+.adk-section-head h2,.adk-section-head h3,
+.adk-priority-head h2,.adk-progress-head h2,.adk-wird-head h2{
+  color:var(--pr-gold-bright,#E9CE8A)!important;margin:0;}
+
+/* The feature card was drawn dark and is now a cream plate. */
+.pr-feature .pr-feature-body h3{color:var(--pr-coffee,#3B2A1D);}
+.pr-feature .pr-feature-body p{color:#54432c;}
+.pr-feature .pr-feature-body > span:last-child{color:#6E5220;font-weight:600;}
+.pr-feature .pr-feature-body .tag{color:#5F4518;}
+.pr-section.is-royal .pr-feature .pr-feature-body h3{color:#FFF8EA;}
+.pr-section.is-royal .pr-feature .pr-feature-body p{color:rgba(244,234,212,.84);}
+.pr-section.is-royal .pr-feature .pr-feature-body > span:last-child{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* An attribution should sit just back from its band, not half-way to it. */
+.el-voice .who,.el-voices .who,.quote-panel .who,.el-figures .who,
+.pr-quote cite,.at-ref{opacity:.92;}
+
+/* Emphasis and captions, wherever they fall on a pale plate. */
+b,strong,small,.cap{color:inherit;}
+.pr-section.is-ivory b,.pr-section.is-ivory strong,.pr-section.is-ivory small,
+.pr-section.is-ivory .cap,.wrap > .cap,.school-block b,.school-block small{color:#3B2A1D;}
+
+/* The open-ended age band, deepened until its white label carries. */
+.pr-age-fill.is-open{background:linear-gradient(120deg,#2C4750,#48707E);}
+
+/* ---- Seventh pass: the last four -------------------------------------- */
+/* The Adhkār Centre's own hero stands on the pale gold band, not a dark
+   one — its title takes ink, and only the JS-rendered section chips are
+   dark. */
+.adhkar-page > .wrap > h2{color:var(--pr-coffee,#3B2A1D)!important;}
+.adhkar-page > .wrap > h3{color:var(--pr-coffee,#3B2A1D)!important;}
+.pr-age-fill.is-open{background:linear-gradient(120deg,#22383F,#3A5D68);}
+b,strong{color:#3B2A1D;}
+.pr-section.is-royal b,.pr-section.is-royal strong,.chapter-band b,.chapter-band strong,
+.chapter-band-alt b,.chapter-band-alt strong,.portal-body b,.portal-body strong,
+footer b,footer strong,.pr-hero b,.pr-hero strong,.gateway-card b{color:inherit;}
+.el-voice .who,.el-voices .who,.quote-panel .who,.el-figures .who{opacity:1;color:#3B2A1D!important;}
+.pr-section.is-royal .el-voice .who,.pr-section.is-royal .quote-panel .who,
+.el-voices-track .el-voice .who{color:inherit!important;opacity:.9;}
+
+/* ===================================================================
+   THE CLEAR EDITION  (v4.7)
+   -------------------------------------------------------------------
+   The institution's own livery is the royal coffee-and-gold, and it
+   remains the default. But a reader who wants daylight should not get a
+   half-measure: choosing Clear in the Personalisation Centre turns every
+   royal ground into pearl and ivory and keeps the whole of the ornament
+   — the corner rules, the gilt hairlines, the travelling light, the
+   engraved plates — so that it reads as a second livery of the same
+   house rather than as the dark one with the lights switched off.
+
+   Everything below is scoped to html[data-pc-theme="light"] and touches
+   nothing in the default.
+   =================================================================== */
+html[data-pc-theme="light"]{
+  --pearl:#FBF7EF;
+  --pearl-2:#F4EDE0;
+  --pearl-3:#EDE3D2;
+  --pearl-ink:#33281C;
+  --pearl-ink-2:#57472F;
+  --pearl-line:rgba(198,161,91,.34);
+}
+
+/* ---- The masthead, in porcelain ---- */
+html[data-pc-theme="light"] header.nav{
+  background:
+    radial-gradient(700px 140px at 12% 0%, rgba(233,206,138,.24), transparent 65%),
+    linear-gradient(155deg,#FFFDF8 0%,#F3EADB 130%);
+  border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] header.nav::before{opacity:.05;}
+html[data-pc-theme="light"] .navlinks > a,
+html[data-pc-theme="light"] .nav-drop-trigger,
+html[data-pc-theme="light"] .brand-text .line1{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .brand-text .line2{color:#8A6A2F;}
+html[data-pc-theme="light"] .search-toggle,
+html[data-pc-theme="light"] .menu-toggle,
+html[data-pc-theme="light"] .nav-drop-toggle{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .topbar{
+  background:linear-gradient(180deg,#F6EFE2,#EFE5D3);border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .topbar a,
+html[data-pc-theme="light"] .topbar .contacts a,
+html[data-pc-theme="light"] .pc-trigger,
+html[data-pc-theme="light"] .social-icon{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .ann-ribbon{
+  background:linear-gradient(180deg,#F9F3E8,#F2E9D9);border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .ann-ribbon *{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .breadcrumbs{
+  background:linear-gradient(180deg,#F6EFE2,#F1E7D5);border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .breadcrumbs a{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .breadcrumbs [aria-current="page"],
+html[data-pc-theme="light"] .breadcrumbs a:hover{color:#8A6A2F;}
+html[data-pc-theme="light"] .bc-sep{color:rgba(138,106,47,.6);}
+
+/* ---- The royal bands, in pearl ---- */
+html[data-pc-theme="light"] .pr-section.is-royal,
+html[data-pc-theme="light"] .chapter-band,
+html[data-pc-theme="light"] .chapter-band-alt,
+html[data-pc-theme="light"] .academics > .wrap:has(> .page-hero-icon),
+html[data-pc-theme="light"] .policies > .wrap:has(> .page-hero-icon),
+html[data-pc-theme="light"] section.contact,
+html[data-pc-theme="light"] .digital-campus-teaser,
+html[data-pc-theme="light"] .governance,
+html[data-pc-theme="light"] .adhkar-teaser{
+  background:
+    radial-gradient(900px 420px at 82% -10%, rgba(233,206,138,.28), transparent 62%),
+    radial-gradient(700px 380px at 8% 106%, rgba(198,161,91,.18), transparent 60%),
+    linear-gradient(168deg,var(--pearl) 0%,var(--pearl-2) 52%,var(--pearl-3) 100%)!important;
+  color:var(--pearl-ink)!important;
+  border-top:1px solid var(--pearl-line);border-bottom:1px solid var(--pearl-line);}
+
+html[data-pc-theme="light"] .pr-section.is-royal h1,
+html[data-pc-theme="light"] .pr-section.is-royal h2,
+html[data-pc-theme="light"] .pr-section.is-royal h3,
+html[data-pc-theme="light"] .pr-section.is-royal h4,
+html[data-pc-theme="light"] .chapter-band-alt h2,
+html[data-pc-theme="light"] .chapter-band-alt h3,
+html[data-pc-theme="light"] .academics > .wrap h2,
+html[data-pc-theme="light"] .policies > .wrap h2,
+html[data-pc-theme="light"] section.contact h2,
+html[data-pc-theme="light"] .digital-campus-teaser h2,
+html[data-pc-theme="light"] .governance h2,
+html[data-pc-theme="light"] .adhkar-teaser h2{color:var(--pearl-ink)!important;}
+
+html[data-pc-theme="light"] .pr-section.is-royal p,
+html[data-pc-theme="light"] .pr-section.is-royal li,
+html[data-pc-theme="light"] .chapter-band-alt p,
+html[data-pc-theme="light"] .academics > .wrap p,
+html[data-pc-theme="light"] .policies > .wrap p,
+html[data-pc-theme="light"] section.contact p,
+html[data-pc-theme="light"] .digital-campus-teaser p,
+html[data-pc-theme="light"] .governance p,
+html[data-pc-theme="light"] .adhkar-teaser p{color:var(--pearl-ink-2)!important;}
+
+html[data-pc-theme="light"] .pr-section.is-royal .pr-eyebrow,
+html[data-pc-theme="light"] .academics > .wrap .eyebrow,
+html[data-pc-theme="light"] .policies > .wrap .eyebrow,
+html[data-pc-theme="light"] section.contact .eyebrow,
+html[data-pc-theme="light"] .digital-campus-teaser .eyebrow,
+html[data-pc-theme="light"] .governance .eyebrow,
+html[data-pc-theme="light"] .adhkar-teaser .eyebrow{color:#8A6A2F!important;}
+
+/* Cards inside a pearl band become white plates rather than glass. */
+html[data-pc-theme="light"] .pr-section.is-royal .pr-card,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-doc,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-person,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-committee,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-org-node,
+html[data-pc-theme="light"] .chapter-band-alt .school-block,
+html[data-pc-theme="light"] .academics > .wrap .school-block,
+html[data-pc-theme="light"] .dc-sys,
+html[data-pc-theme="light"] .dc-tile{
+  background:linear-gradient(168deg,#FFFFFF,#F7F0E3)!important;
+  border-color:rgba(198,161,91,.3)!important;
+  color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .dc-tile h4,
+html[data-pc-theme="light"] .dc-sys h3{color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .dc-tile p,
+html[data-pc-theme="light"] .dc-sys p{color:var(--pearl-ink-2)!important;}
+
+/* ---- The Digital Campus gateway and portal, in pearl ---- */
+html[data-pc-theme="light"] body.portal-body{
+  background:
+    radial-gradient(1100px 560px at 78% -12%, rgba(233,206,138,.3), transparent 62%),
+    radial-gradient(900px 480px at 8% 106%, rgba(198,161,91,.18), transparent 60%),
+    linear-gradient(168deg,#FCF8F0 0%,#F4ECDE 52%,#EEE4D2 100%);
+  color:var(--pearl-ink);}
+html[data-pc-theme="light"] .portal-body::before{opacity:.28;}
+html[data-pc-theme="light"] .gateway-card{
+  background:
+    radial-gradient(520px 220px at 12% -20%, rgba(233,206,138,.26), transparent 62%),
+    linear-gradient(168deg,#FFFFFF 0%,#F8F1E3 52%,#F2E9D8 100%);
+  border-color:rgba(198,161,91,.34);
+  color:var(--pearl-ink);
+  box-shadow:0 2px 4px rgba(42,28,16,.06),0 22px 46px -28px rgba(42,28,16,.4),
+             inset 0 1px 0 rgba(255,255,255,.9);}
+html[data-pc-theme="light"] .gateway-card h2,
+html[data-pc-theme="light"] .gateway-card h3{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .gateway-card > p{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .gw-points li{color:#5b4a32;border-bottom-color:rgba(198,161,91,.16);}
+html[data-pc-theme="light"] .gw-points{border-top-color:rgba(198,161,91,.28);}
+html[data-pc-theme="light"] .gw-need{color:#7a6949;}
+html[data-pc-theme="light"] .gateway-title,
+html[data-pc-theme="light"] .gw-group-head{color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .gateway-sub{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .gateway-hero{
+  background:linear-gradient(160deg,#F8F1E3 0%,#F1E7D5 65%,#EADFC9 100%);
+  border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .gateway-eyebrow,
+html[data-pc-theme="light"] .gateway-card-eyebrow,
+html[data-pc-theme="light"] .gateway-card-cta{color:#8A6A2F;}
+html[data-pc-theme="light"] .portal-topbar{
+  background:linear-gradient(180deg,#F8F1E3,#F1E7D5);
+  border-bottom:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .portal-brand{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .portal-card{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .portal-aside-title,
+html[data-pc-theme="light"] .portal-aside-copy,
+html[data-pc-theme="light"] .portal-aside-points li{color:var(--pearl-ink-2)!important;}
+html[data-pc-theme="light"] .portal-aside-eyebrow{color:#8A6A2F!important;}
+
+/* ---- The closing band and the footer, in pearl ---- */
+html[data-pc-theme="light"] .pr-arrival{
+  background:linear-gradient(168deg,#FFFDF8,#F3EADB)!important;color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .pr-arrival h2{color:var(--pearl-ink)!important;}
+html[data-pc-theme="light"] .pr-arrival .lead{color:var(--pearl-ink-2)!important;}
+html[data-pc-theme="light"] .foot-arrival{
+  background:
+    radial-gradient(760px 260px at 50% 0%, rgba(233,206,138,.3), transparent 66%),
+    linear-gradient(180deg,#F8F1E3 0%,#F1E7D5 58%,#EADFC9 100%);
+  border-top:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] .foot-statement p{color:#8A6A2F;}
+html[data-pc-theme="light"] footer{
+  background:linear-gradient(180deg,#F1E7D5,#E9DCC4);color:var(--pearl-ink-2);
+  border-top:1px solid var(--pearl-line);}
+html[data-pc-theme="light"] footer h5,
+html[data-pc-theme="light"] footer .fs-sig,
+html[data-pc-theme="light"] footer .fd-item span,
+html[data-pc-theme="light"] footer a{color:var(--pearl-ink);}
+html[data-pc-theme="light"] footer .fd-item{
+  background:linear-gradient(168deg,#FFFDF8,#F6EEDF);border-color:rgba(198,161,91,.26);}
+html[data-pc-theme="light"] footer .fd-item svg{color:#8A6A2F;}
+html[data-pc-theme="light"] .fm-overlay-title,
+html[data-pc-theme="light"] .fm-overlay-sub,
+html[data-pc-theme="light"] .fm-campus-name,
+html[data-pc-theme="light"] .fm-campus-tag,
+html[data-pc-theme="light"] .fm-lede,
+html[data-pc-theme="light"] .fs-copy,
+html[data-pc-theme="light"] .foot-seal-badge,
+html[data-pc-theme="light"] .foot-contact-item{color:var(--pearl-ink-2)!important;}
+html[data-pc-theme="light"] .fm-eyebrow{color:#8A6A2F!important;}
+
+/* ---- The nav dropdowns, in pearl ---- */
+html[data-pc-theme="light"] .nav-drop-panel{
+  background:linear-gradient(165deg,#FFFDF8,#F4EBDB);
+  border-color:var(--pearl-line);border-top-color:var(--pr-gold);
+  box-shadow:0 28px 56px -26px rgba(42,28,16,.32);}
+html[data-pc-theme="light"] .nav-drop-panel a,
+html[data-pc-theme="light"] .nav-mega-item .t,
+html[data-pc-theme="light"] .pgx-cat-t,
+html[data-pc-theme="light"] .pgx-pane-t,
+html[data-pc-theme="light"] .nav-mega-intro h4{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .nav-mega-item .d,
+html[data-pc-theme="light"] .nav-mega-intro p,
+html[data-pc-theme="light"] .pgx-head p,
+html[data-pc-theme="light"] .pgx-pane-d,
+html[data-pc-theme="light"] .pgc-desc{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .pgx-pane-points li{color:#5b4a32;}
+html[data-pc-theme="light"] .pgx-head h4{color:var(--pearl-ink);}
+html[data-pc-theme="light"] .pgx-cat-ico,
+html[data-pc-theme="light"] .pgc-icon{color:#8A6A2F;}
+html[data-pc-theme="light"] .pgx-pane-eyebrow{color:#8A6A2F;}
+html[data-pc-theme="light"] .pgx-pane-need{color:#7a6949;}
+
+/* ---- The search overlay, the assistant, the drawer ---- */
+html[data-pc-theme="light"] .search-overlay{background:rgba(250,244,232,.9);}
+html[data-pc-theme="light"] .pc-overlay{background:rgba(60,44,24,.42);}
+
+/* ---- Ornament stays gold; only the ground changes ---- */
+html[data-pc-theme="light"] .pr-lightborder::after,
+html[data-pc-theme="light"] .pr-card::before,
+html[data-pc-theme="light"] .gateway-card::after{opacity:.6;}
+html[data-pc-theme="light"] .imperial-motion{opacity:.5;}
+html[data-pc-theme="light"] .mo-spot::before{
+  background:radial-gradient(600px circle at var(--sx,50%) var(--sy,30%),rgba(198,161,91,.20),transparent 62%);}
+
+/* The engraved plates keep their dark ground — they are plates, and a
+   plate is printed. They simply sit in a pearl mount instead of a cream one. */
+html[data-pc-theme="light"] .gi-frame{background:linear-gradient(168deg,#FFFFFF,#F5EDE0);}
+
+/* ---- The gateway's quick rail ---------------------------------------
+   A pupil signing in for the fifth time this week should reach their own
+   door in one movement. Eight doors in one row, above the fold, before
+   any of the explanation — the explanation is still there, underneath,
+   for the visitor meeting the Digital Campus for the first time. */
+.gw-quick{max-width:1300px;margin:26px auto 0;padding:0 22px;}
+.gw-quick-lab{
+  font-family:'Cinzel','Amiri',serif;font-size:.66rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--pr-gold-bright,#E9CE8A);margin:0 0 12px;
+  display:flex;align-items:center;gap:14px;}
+.gw-quick-lab::after{content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(233,206,138,.42),transparent);}
+[dir="rtl"] .gw-quick-lab::after{background:linear-gradient(270deg,rgba(233,206,138,.42),transparent);}
+.gw-quick-row{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fit,minmax(118px,1fr));}
+.gw-q{
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:16px 10px 14px;border-radius:var(--pr-r-md);text-decoration:none;
+  font-family:'Cinzel','Amiri',serif;font-size:.74rem;letter-spacing:.06em;
+  color:#FFF6E4;
+  background:linear-gradient(168deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+  border:1px solid rgba(233,206,138,.28);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.18),0 12px 26px -22px rgba(0,0,0,.9);
+  transition:transform .38s var(--pr-ease),box-shadow .38s var(--pr-ease),
+             border-color .38s,background .38s;}
+.gw-q:hover,.gw-q:focus-visible{
+  transform:translateY(-4px);border-color:rgba(233,206,138,.6);
+  background:linear-gradient(168deg,rgba(233,206,138,.2),rgba(233,206,138,.06));
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.34),0 18px 34px -20px rgba(0,0,0,.95),
+             0 0 26px -10px rgba(233,206,138,.6);}
+.gw-q-i{display:grid;place-items:center;width:26px;height:26px;color:var(--pr-gold-bright,#E9CE8A);}
+.gw-q-i svg{width:100%;height:100%;}
+.gw-quick-note{margin:14px 0 0;font-size:.8rem;color:rgba(243,232,212,.6);}
+@media (max-width:520px){
+  .gw-quick-row{grid-template-columns:repeat(4,1fr);gap:8px;}
+  .gw-q{font-size:.66rem;padding:13px 6px 11px;}
+  .gw-q-i{width:22px;height:22px;}
+}
+/* In the Clear edition the rail is a row of pearl plates. */
+html[data-pc-theme="light"] .gw-q{
+  color:#33281C;
+  background:linear-gradient(168deg,#FFFFFF,#F6EEDF);
+  border-color:rgba(198,161,91,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 12px 26px -22px rgba(42,28,16,.5);}
+html[data-pc-theme="light"] .gw-q-i{color:#8A6A2F;}
+html[data-pc-theme="light"] .gw-quick-lab{color:#8A6A2F;}
+html[data-pc-theme="light"] .gw-quick-note{color:#6b5a40;}
+
+/* ===================================================================
+   THE HOME ADDITIONS (v4.8)
+   -------------------------------------------------------------------
+   Three bands added to the homepage, none of them replacing anything
+   already standing there: the six distinguishing marks, the pathway
+   ladder against a single age axis, and the questions the admissions
+   office is actually asked. All three are drawn from material already
+   published elsewhere on the site and carry the link back to it, so
+   the homepage asserts nothing it cannot show.
+   =================================================================== */
+
+/* ---- 1. The six marks ------------------------------------------- */
+.hx-marks{background:var(--surface-tertiary,#FCFAF6);position:relative;}
+.hx-marks::before{content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.45),transparent);}
+.hx-marks-lede{max-width:660px;color:var(--on-surface-soft,#4a4944);
+  margin:14px 0 0;font-size:.98rem;text-align:justify;text-justify:inter-word;hyphens:auto;}
+.hx-mark-grid{display:grid;gap:20px;margin-top:34px;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));}
+.hx-mark{position:relative;isolation:isolate;padding:30px 28px 26px;
+  border:1px solid var(--line,rgba(198,161,91,.38));border-radius:var(--pr-r-md,14px);
+  background:linear-gradient(168deg,#FFFDF8,var(--surface,#FBF6EC));
+  box-shadow:0 20px 44px -38px rgba(60,42,22,.6);
+  transition:transform .5s var(--pr-ease,cubic-bezier(.16,.8,.24,1)),
+             box-shadow .5s var(--pr-ease,cubic-bezier(.16,.8,.24,1)),
+             border-color .5s;}
+.hx-mark:hover{transform:translateY(-5px);border-color:rgba(198,161,91,.72);
+  box-shadow:0 30px 58px -34px rgba(60,42,22,.62);}
+/* A hairline of gold that draws itself along the top edge on hover. */
+.hx-mark::after{content:"";position:absolute;inset-inline:0;top:-1px;height:2px;
+  border-radius:2px;transform:scaleX(0);transform-origin:left;
+  background:linear-gradient(90deg,var(--pr-gold-deep,#9C7A3C),var(--pr-gold-bright,#E9CE8A),var(--pr-gold-deep,#9C7A3C));
+  transition:transform .6s var(--pr-ease,cubic-bezier(.16,.8,.24,1));}
+[dir="rtl"] .hx-mark::after{transform-origin:right;}
+.hx-mark:hover::after{transform:scaleX(1);}
+.hx-mark-n{position:absolute;top:20px;inset-inline-end:24px;
+  font-family:'Cinzel','Amiri',serif;font-size:1.5rem;line-height:1;
+  color:rgba(198,161,91,.34);letter-spacing:.02em;pointer-events:none;}
+.hx-mark-i{display:grid;place-items:center;width:52px;height:52px;
+  border-radius:14px;color:var(--pr-gold-deep,#9C7A3C);
+  background:linear-gradient(160deg,rgba(233,206,138,.3),rgba(198,161,91,.1));
+  border:1px solid rgba(198,161,91,.36);margin-bottom:16px;}
+.hx-mark-i svg{width:26px;height:26px;}
+.hx-mark h3{font-family:'Cinzel','Amiri',serif;font-size:1.09rem;line-height:1.34;
+  margin:0 0 10px;color:var(--pr-coffee,#3B2A1D);}
+.hx-mark p{margin:0;font-size:.93rem;line-height:1.72;color:var(--on-surface-soft,#4a4944);
+  text-align:justify;text-justify:inter-word;hyphens:auto;}
+.hx-mark-link{display:inline-flex;align-items:center;gap:7px;margin-top:16px;
+  font-family:'Cinzel','Amiri',serif;font-size:.74rem;letter-spacing:.12em;
+  text-transform:uppercase;text-decoration:none;color:var(--pr-gold-deep,#9C7A3C);
+  border-bottom:1px solid rgba(198,161,91,.4);padding-bottom:3px;
+  transition:color .3s,border-color .3s,gap .3s;}
+.hx-mark-link:hover{color:var(--pr-coffee,#3B2A1D);border-color:var(--pr-gold-deep,#9C7A3C);gap:11px;}
+@media (max-width:520px){
+  .hx-mark{padding:26px 20px 22px;}
+  .hx-mark-n{font-size:1.2rem;top:16px;inset-inline-end:18px;}
+}
+
+/* ---- 2. The pathway ladder --------------------------------------- */
+/* Seventeen columns, one per year from two to eighteen. Each bar is
+   placed with --s and --e, so a row's span is written in the markup
+   where it can be read, not computed in a stylesheet where it cannot.
+   The bar is ornament: every row also states its range in words. */
+.hx-path{background:var(--surface-alt,#F1E8D8);position:relative;overflow:hidden;}
+.hx-path-lede{max-width:700px;color:var(--on-surface-soft,#4a4944);
+  margin:14px 0 0;font-size:.98rem;text-align:justify;text-justify:inter-word;hyphens:auto;}
+.hx-ladder{margin-top:34px;padding:30px 30px 26px;
+  border:1px solid var(--line,rgba(198,161,91,.38));border-radius:var(--pr-r-lg,18px);
+  background:linear-gradient(168deg,#FFFDF8,var(--surface,#FBF6EC));
+  box-shadow:0 24px 52px -40px rgba(60,42,22,.55);}
+.hx-axis{display:grid;grid-template-columns:repeat(17,1fr);
+  padding-bottom:9px;border-bottom:1px solid rgba(198,161,91,.3);}
+.hx-axis-t{grid-column:var(--c);position:relative;
+  font-family:'Cinzel','Amiri',serif;font-size:.74rem;letter-spacing:.06em;
+  color:var(--pr-gold-deep,#9C7A3C);}
+.hx-axis-t::after{content:"";position:absolute;inset-block-end:-10px;inset-inline-start:0;
+  width:1px;height:6px;background:rgba(198,161,91,.5);}
+.hx-axis-lab{margin:8px 0 20px;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(122,98,62,.62);}
+.hx-track + .hx-track{margin-top:16px;padding-top:16px;
+  border-top:1px dotted rgba(198,161,91,.3);}
+.hx-track-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:9px;}
+.hx-track-k{font-family:'Cinzel','Amiri',serif;font-size:.98rem;color:var(--pr-coffee,#3B2A1D);}
+.hx-track-v{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--pr-gold-deep,#9C7A3C);}
+.hx-bar-rail{display:grid;grid-template-columns:repeat(17,1fr);
+  background:repeating-linear-gradient(90deg,rgba(198,161,91,.14) 0 1px,transparent 1px calc(100% / 17));
+  border-radius:9px;}
+.hx-bar{grid-column:var(--s) / var(--e);display:flex;align-items:center;
+  min-height:44px;padding:9px 16px;border-radius:9px;text-decoration:none;
+  font-size:.84rem;line-height:1.4;color:#FFF6E4;
+  background:linear-gradient(120deg,var(--pr-coffee,#3B2A1D),#5A422C);
+  border:1px solid rgba(198,161,91,.42);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.2),0 12px 26px -22px rgba(60,42,22,.9);
+  transition:transform .42s var(--pr-ease,cubic-bezier(.16,.8,.24,1)),box-shadow .42s,filter .42s;}
+.hx-bar span{display:block;}
+.hx-bar:hover,.hx-bar:focus-visible{transform:translateY(-3px);filter:brightness(1.12);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.34),0 18px 34px -20px rgba(60,42,22,.95);}
+.hx-bar.is-rc{background:linear-gradient(120deg,#4A3520,#6B5030);}
+.hx-bar.is-ais{background:linear-gradient(120deg,#3F3324,#5E4A2E);}
+.hx-bar.is-qc{background:linear-gradient(120deg,#382B1E,#57432B);}
+/* The fifth school is constituted but not yet published, and the bar
+   says so by being an outline rather than a solid — an empty frame
+   waiting to be filled, not a claim already made. */
+.hx-bar.is-odl{background:linear-gradient(120deg,rgba(233,206,138,.16),rgba(198,161,91,.06));
+  border:1px dashed rgba(156,122,60,.62);color:var(--pr-coffee,#3B2A1D);
+  box-shadow:none;}
+.hx-bar.is-odl:hover{filter:none;
+  background:linear-gradient(120deg,rgba(233,206,138,.3),rgba(198,161,91,.12));}
+.hx-path-foot{margin:22px 0 0;font-size:.92rem;color:var(--on-surface-soft,#4a4944);}
+/* Below the fold of a phone the axis is meaningless: the bars become a
+   plain stack and each row's words carry the whole meaning. */
+@media (max-width:760px){
+  .hx-ladder{padding:24px 18px 20px;}
+  .hx-axis,.hx-axis-lab{display:none;}
+  .hx-bar-rail{grid-template-columns:1fr;background:none;}
+  .hx-bar{grid-column:1 / -1 !important;}
+}
+
+/* ---- 3. The questions -------------------------------------------- */
+.hx-faq{background:var(--surface,#FBF6EC);position:relative;}
+.hx-faq-lede{max-width:660px;color:var(--on-surface-soft,#4a4944);
+  margin:14px 0 0;font-size:.98rem;text-align:justify;text-justify:inter-word;hyphens:auto;}
+/* Multi-column rather than grid. In a grid, opening one question
+   stretches its whole row and leaves a hole beside it; in columns the
+   rest simply reflow around the answer, which is what a reader expects
+   of an accordion. */
+.hx-faq-grid{margin-top:32px;column-gap:12px;}
+@media (min-width:900px){.hx-faq-grid{column-count:2;}}
+@media (min-width:1240px){.hx-faq-grid{column-count:3;}}
+.hx-faq-grid > .hx-q{break-inside:avoid;-webkit-column-break-inside:avoid;
+  page-break-inside:avoid;margin-bottom:12px;}
+.hx-q{border:1px solid var(--line,rgba(198,161,91,.38));border-radius:var(--pr-r-md,14px);
+  background:linear-gradient(168deg,#FFFDF8,var(--surface-alt,#F4EDE0));
+  overflow:hidden;transition:border-color .4s,box-shadow .4s;}
+.hx-q[open]{border-color:rgba(198,161,91,.7);
+  box-shadow:0 22px 46px -38px rgba(60,42,22,.6);}
+.hx-q summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;
+  padding:18px 22px;}
+.hx-q summary::-webkit-details-marker{display:none;}
+.hx-q-t{flex:1;font-family:'Cinzel','Amiri',serif;font-size:.96rem;line-height:1.42;
+  color:var(--pr-coffee,#3B2A1D);}
+/* A plus that becomes a minus. Drawn in CSS so there is no icon to load
+   and no script to run — the accordion works with JavaScript off. */
+.hx-q summary::after{content:"";flex-shrink:0;width:15px;height:15px;position:relative;
+  background:
+    linear-gradient(var(--pr-gold-deep,#9C7A3C),var(--pr-gold-deep,#9C7A3C)) center/15px 1.6px no-repeat,
+    linear-gradient(var(--pr-gold-deep,#9C7A3C),var(--pr-gold-deep,#9C7A3C)) center/1.6px 15px no-repeat;
+  transition:transform .42s var(--pr-ease,cubic-bezier(.16,.8,.24,1)),background-size .42s;}
+.hx-q[open] summary::after{transform:rotate(180deg);
+  background:linear-gradient(var(--pr-gold-deep,#9C7A3C),var(--pr-gold-deep,#9C7A3C)) center/15px 1.6px no-repeat;}
+.hx-q summary:hover .hx-q-t{color:var(--pr-gold-deep,#9C7A3C);}
+.hx-q summary:focus-visible{outline:2px solid var(--pr-gold-deep,#9C7A3C);outline-offset:-3px;}
+.hx-q-a{padding:0 22px 20px;border-top:1px dotted rgba(198,161,91,.34);margin-top:-2px;}
+.hx-q-a p{margin:16px 0 0;font-size:.93rem;line-height:1.76;
+  color:var(--on-surface-soft,#4a4944);text-align:justify;text-justify:inter-word;hyphens:auto;}
+.hx-faq-foot{margin:24px 0 0;font-size:.92rem;color:var(--on-surface-soft,#4a4944);}
+@media (max-width:520px){.hx-q summary{padding:16px 17px;}.hx-q-a{padding:0 17px 17px;}}
+
+/* ---- The Clear edition ------------------------------------------- */
+html[data-pc-theme="light"] .hx-marks,
+html[data-pc-theme="light"] .hx-path,
+html[data-pc-theme="light"] .hx-faq{background:var(--pearl,#FBF7EF);}
+html[data-pc-theme="light"] .hx-mark,
+html[data-pc-theme="light"] .hx-ladder,
+html[data-pc-theme="light"] .hx-q{background:linear-gradient(168deg,#FFFFFF,#F6EEDF);
+  border-color:var(--pearl-line,rgba(198,161,91,.34));}
+html[data-pc-theme="light"] .hx-bar{color:#FFF8EA;}
+html[data-pc-theme="light"] .hx-bar.is-odl{color:#4A3A26;}
+html[data-pc-theme="light"] .hx-marks::before{opacity:.6;}
+
+/* ---- Reduced motion ---------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .hx-mark,.hx-mark::after,.hx-bar,.hx-mark-link,.hx-q summary::after{transition:none!important;}
+  .hx-mark:hover,.hx-bar:hover{transform:none!important;}
+}

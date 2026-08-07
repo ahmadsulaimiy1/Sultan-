@@ -410,4 +410,3 @@ html[data-pc-imagery="lean"] .mo-par-img img{transform:none!important;}
    The floating toggle and this control are one preference. When sound
    is off the floating toggle still shows its state, so the reader can
    see at a glance which way the setting stands. */
-html[data-pc-sound="off"] .pr-sound-toggle{opacity:.42;color:#9a9086;}
