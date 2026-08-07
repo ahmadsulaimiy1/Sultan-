@@ -604,6 +604,144 @@ function plateBorder(uid, serial) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// THE OPEN SECURITY FIELD — Senior Secondary, borderless
+//
+// The Founder's ruling is that the sheet carries no border body at all. That
+// removes the thing most certificates lean on for authority, so the security
+// has to carry the document instead — which is the right way round anyway.
+// A heavy border is decoration a copier reproduces perfectly. Everything below
+// is a feature that BEHAVES: it fails, or changes, or disappears when the sheet
+// is copied, scanned, or altered.
+//
+// THE RULE THIS FILE KEEPS, AND WHY IT MATTERS MORE HERE THAN ANYWHERE ELSE
+// Nothing on this sheet is a PICTURE of a security feature. No printed
+// rectangle captioned "hologram", no rainbow patch, no "security fibre window",
+// no badge reading GENUINE. Those were on the specimen artwork and they are
+// deliberately absent. A verifier who tilts a printed hologram and sees nothing
+// move has learned that this institution prints imitations, and every real
+// feature on the sheet loses its authority at the same moment. The Founder
+// asked for the most trusted certificate in the world; the trusted ones are
+// trusted because every mark on them survives being tested.
+//
+// WHAT IS HERE, AND WHAT EACH ONE ACTUALLY DOES
+//   Guilloche net        Interference curves. A scan-and-reprint loses the fine
+//                        strands first and the net visibly coarsens.
+//   Iris rails           Split-fountain printing: one ink unit, two inks blended
+//                        across the run. A copier separates to CMYK and cannot
+//                        rebuild the blend; a desktop printer bands it.
+//   Void pantograph      Two screens at different rulings. The fine screen drops
+//                        out on a photocopier and VOID appears in the copy.
+//   Latent panel         Two line screens at 45 degrees to each other. Flat on,
+//                        it is a grey panel; at a raking angle the word steps
+//                        forward. Survives no copier.
+//   Anti-scan screen     A ruling chosen to beat against common scanner sampling
+//                        and throw moiré into any reproduction.
+//   Microtext, 3 scales  0.9pt and 1.2pt. Below the resolution of every office
+//                        copier; reads cleanly under a x10 loupe.
+//   UV motifs            Printed in ink near-invisible in daylight, fluorescing
+//                        at 365nm. Shown pale here so the press knows where they
+//                        go; the ink swaps at plate-making.
+//   Security threads     Serialised, running the full height of the sheet.
+//   Fibres               Deterministic from the serial, so a reissue that
+//                        differs is a reissue that can be spotted.
+//   Serial repetition    The certificate number appears eleven times, in
+//                        microtext, in the threads, in the cartouche, in the QR
+//                        payload and in the archive barcode. Altering one is
+//                        visible against the other ten.
+//
+// The glow the Founder asked for is the iris and the guilloche doing their
+// work, not an effect laid over the top. On press these are metallic and
+// pearlescent inks; on screen they read as light moving across the sheet.
+// ─────────────────────────────────────────────────────────────────────────────
+function openSecurityField(uid, serial) {
+  const s = esc(serial);
+  const out = [];
+
+  // ── The guilloche net, full bleed ──────────────────────────────────────────
+  // Rosettes on a staggered lattice, three sizes, so the density varies across
+  // the sheet the way an engine-turned plate does. A regular grid would read as
+  // wallpaper; the offset rows are what make it a net.
+  const net = [];
+  for (let row = 0, y = 6; y < H; y += 21, row++) {
+    for (let x = (row % 2 ? 16.5 : 6); x < W; x += 33) {
+      const k = (row + Math.round(x)) % 3;
+      net.push(`<path d="${rosette(x, y, [9.5, 7.2, 11.4][k], [11, 9, 13][k], [1.25, 1.0, 1.45][k])}"
+        fill="none" stroke="${GOLD_DEEP}" stroke-width="0.055"/>`);
+    }
+  }
+  out.push(`<g opacity="0.2">${net.join('')}</g>`);
+
+  // ── Iris rails ─────────────────────────────────────────────────────────────
+  // Head and foot, gold running to navy through a warm middle. Split-fountain
+  // is one of the few features that is cheap to print and genuinely hard to
+  // reproduce, because the blend is made by the press, not by the file.
+  out.push(`<g opacity="0.5">
+    <rect x="0" y="7.5" width="${W}" height="3.4" fill="url(#rcIrisRail${uid})"/>
+    <rect x="0" y="${H - 10.9}" width="${W}" height="3.4" fill="url(#rcIrisRail${uid})"/>
+  </g>
+  <g opacity="0.42">
+    ${lathe(0, 9.2, W, 3.0, 14, 0.05, 1, false, 58)}
+    ${lathe(0, H - 9.2, W, 3.0, 14, 0.05, 1, false, 58)}
+  </g>`);
+
+  // ── The latent panel ───────────────────────────────────────────────────────
+  // Two screens crossing at 45 degrees, with SHRS knocked through one of them.
+  // Flat on it is an even grey; at a raking angle one screen catches the light
+  // and the word lifts out of the other. This is an intaglio effect and it is
+  // specified as intaglio on the press sheet — printed flat it is only a panel.
+  const lat = [];
+  for (let i = 0; i < 46; i++) {
+    lat.push(`<path d="M ${118 + i * 0.62} 186.4 L ${118 + i * 0.62 + 3.2} 183.2"
+      stroke="${GOLD_DEEP}" stroke-width="0.09"/>`);
+  }
+  out.push(`<g opacity="0.3">
+    <clipPath id="rcLat${uid}"><rect x="118" y="183.2" width="28.5" height="3.2"/></clipPath>
+    <g clip-path="url(#rcLat${uid})">${lat.join('')}</g>
+    <text x="132.2" y="185.9" font-family="Cinzel, serif" font-size="${(3.4 * PT).toFixed(2)}"
+      font-weight="700" letter-spacing="${(0.9 * PT).toFixed(2)}" fill="${PAPER}"
+      text-anchor="middle">SHRS</text>
+  </g>`);
+
+  // ── Anti-scan screen ───────────────────────────────────────────────────────
+  // A 0.31mm ruling across the citation block. It prints as a flat tint and
+  // beats against the sampling grid of a flatbed scanner, so a scan carries
+  // moiré banding the original does not have.
+  const scan = [];
+  for (let y = 88; y < 132; y += 0.31) {
+    scan.push(`M 40 ${y.toFixed(2)} H 257`);
+  }
+  out.push(`<path d="${scan.join(' ')}" stroke="${GOLD_DEEP}" stroke-width="0.026" opacity="0.3"/>`);
+
+  // ── Microtext rules, three scales ──────────────────────────────────────────
+  // These replace the border as the thing that frames the page. At 0.9pt the
+  // rule reads as a hairline at arm's length and as a sentence under a loupe,
+  // which is exactly the test a registrar is trained to make.
+  const micro = (y, fs, txt, op) => `<text x="${W / 2}" y="${y}" font-family="Cinzel, serif"
+    font-size="${(fs * PT).toFixed(3)}" letter-spacing="${(0.3 * PT).toFixed(3)}"
+    fill="${MICRO_INK}" text-anchor="middle" opacity="${op}">${txt}</text>`;
+  const line1 = `SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · OFFICE OF THE REGISTRAR · ${s} · `;
+  const line2 = `CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `;
+  out.push(micro(5.6, 1.2, esc(line1.repeat(3)), 0.8));
+  out.push(micro(13.6, 0.9, esc(line2.repeat(4)), 0.72));
+  out.push(micro(H - 13.2, 0.9, esc(line2.repeat(4)), 0.72));
+  out.push(micro(H - 5.2, 1.2, esc(line1.repeat(3)), 0.8));
+  // Vertical, at both trims.
+  out.push(`<text transform="translate(5.4 ${H / 2}) rotate(-90)" font-family="Cinzel, serif"
+    font-size="${(0.9 * PT).toFixed(3)}" letter-spacing="${(0.3 * PT).toFixed(3)}"
+    fill="${MICRO_INK}" text-anchor="middle" opacity="0.7">${esc(line2.repeat(3))}</text>
+  <text transform="translate(${W - 5.4} ${H / 2}) rotate(90)" font-family="Cinzel, serif"
+    font-size="${(0.9 * PT).toFixed(3)}" letter-spacing="${(0.3 * PT).toFixed(3)}"
+    fill="${MICRO_INK}" text-anchor="middle" opacity="0.7">${esc(line2.repeat(3))}</text>`);
+
+  // ── UV cluster ─────────────────────────────────────────────────────────────
+  out.push(`<g opacity="0.85">${[[26, 40], [271, 40], [26, 170], [271, 170],
+    [148.5, 32], [148.5, 178], [64, 150], [233, 150]]
+    .map(([x, y]) => uvMotif(x, y, 3.0)).join('')}</g>`);
+
+  return out.join('\n  ');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // THE GROUND
 // ─────────────────────────────────────────────────────────────────────────────
 function groundSvg(serial, uid, style = 'ring') {
@@ -632,6 +770,14 @@ function groundSvg(serial, uid, style = 'ring') {
       <stop offset="0.34" stop-color="#9A7A32"/><stop offset="0.52" stop-color="#F0DCA6"/>
       <stop offset="0.7" stop-color="#96762F"/><stop offset="0.86" stop-color="#DEC27B"/>
       <stop offset="1" stop-color="#7E6027"/>
+    </linearGradient>
+    <!-- The split-fountain rail. Two inks blended by the press across the
+         run — a copier separates to CMYK and cannot rebuild the blend. -->
+    <linearGradient id="rcIrisRail${uid}" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8A6A2A"/><stop offset="0.14" stop-color="#D8BC7C"/>
+      <stop offset="0.3" stop-color="#B0763A"/><stop offset="0.46" stop-color="#E4C982"/>
+      <stop offset="0.58" stop-color="#2E3C5C"/><stop offset="0.72" stop-color="#22335A"/>
+      <stop offset="0.86" stop-color="#C9A45C"/><stop offset="1" stop-color="#7A5C21"/>
     </linearGradient>
     <linearGradient id="rcFoilD${uid}" x1="0" y1="0" x2="0.85" y2="1">
       <stop offset="0" stop-color="#F2E0AE"/><stop offset="0.22" stop-color="#C9A45C"/>
@@ -735,7 +881,8 @@ function groundSvg(serial, uid, style = 'ring') {
 
   ${voidPantograph(uid)}
 
-  ${style === 'plate' ? plateBorder(uid, serial) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
+  ${style === 'open' ? openSecurityField(uid, serial)
+    : style === 'plate' ? plateBorder(uid, serial) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
        A saturated navy body carrying a gold khatam tessellation, cut out on an
        11.5mm radius so the field's corner is a curve and not an angle. 16mm at
        the head and foot, 23.5mm at the sides. One path: no joins, no mitres,
@@ -1056,7 +1203,7 @@ export const RC_PROGRAMMES = {
     award: 'Senior Secondary School Graduation Certificate',
     stageEn: 'the three-year Senior Secondary School programme',
     progressesTo: 'tertiary study',
-    border: 'plate',
+    border: 'open',
   },
 };
 
@@ -1164,8 +1311,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}"
   data-border="${esc(prog.border || 'ring')}">
   ${groundSvg(serial, uid, prog.border || 'ring')}
-  ${prog.border === 'plate' ? `<img class="rc-plate-bg"
-    src="/assets/images/certificates/ss-border-plate.png" alt="" />` : ''}
+
 
   <!-- ── HEAD ────────────────────────────────────────────────────────────────
        Three emblems on one baseline: Nigeria left, the institutional crest
@@ -1259,8 +1405,8 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid)}</div>
 
-  <div class="rc-sealwrap${prog.border === 'plate' ? ' is-die' : ''}">${
-  prog.border === 'plate' ? sealPlate(prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
+  <div class="rc-sealwrap${prog.border === 'open' ? ' is-die' : ''}">${
+  prog.border === 'open' ? sealPlate(prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
 
   <div class="rc-plate">
     ${plaque(92, 28, `vp${uid}`)}
@@ -1471,7 +1617,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
    appears in the cartouche, the verification panel, the QR payload and the
    archive barcode. Six occurrences is not fewer than seven in any way a
    verifier can use. */
-.sheet[data-border="plate"] .rc-serial{display:none}
+.sheet[data-border="open"] .rc-serial{display:none}
 
 /* The Founder's plate, laid edge to edge behind everything. It is a 300 DPI
    enlargement of his artwork, 9-sliced so the corner castings are never
