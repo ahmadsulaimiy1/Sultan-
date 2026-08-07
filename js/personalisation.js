@@ -63,9 +63,19 @@
       return Object.assign({}, DEFAULTS, stored);
     }catch(err){ return Object.assign({}, DEFAULTS); }
   }
+  // Raised while this module is the one writing, so the reconciler at the
+  // foot of the file can tell its own echo apart from a write made by
+  // another module — the livery invitation, the portal theme switch —
+  // and reload only for the latter. Without this the Centre's in-memory
+  // copy goes stale the moment anything else saves a preference, and the
+  // next control the visitor touches writes the stale copy back: a
+  // livery chosen in the invitation would silently revert to Royal.
+  var writingOwnPrefs = false;
   function savePrefs(prefs){
+    writingOwnPrefs = true;
     try{ window.localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); }catch(err){ /* storage unavailable — preferences just won't persist */ }
     document.dispatchEvent(new CustomEvent('sultan:personalisation-changed', { detail: prefs }));
+    writingOwnPrefs = false;
   }
 
   var prefs = loadPrefs();
@@ -237,6 +247,48 @@
   });
 
   applyFloatingVisibility();
+
+  // --- Reconciler: keep this module's copy of the preferences true ---
+  // Other modules write to the same store (the livery invitation, the
+  // portal theme switch), and another tab can write to it too. Whenever
+  // that happens, re-read, adopt the change, and put every control in
+  // the panel back in step with it. The panel is the mirror of the
+  // preference store; it must never be allowed to become an older copy
+  // of it, because the next click would write that older copy back.
+  function syncControls(){
+    root.querySelectorAll('[data-pc-set]').forEach(function(group){
+      var key = group.getAttribute('data-pc-set');
+      group.querySelectorAll('[role="radio"]').forEach(function(btn){
+        var on = prefs[key] === btn.getAttribute('data-value');
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-checked', String(on));
+      });
+    });
+    root.querySelectorAll('[data-pc-toggle]').forEach(function(sw){
+      var key = sw.getAttribute('data-pc-toggle');
+      sw.classList.toggle('is-on', !!prefs[key]);
+      sw.setAttribute('aria-checked', String(!!prefs[key]));
+    });
+  }
+  function adoptExternalPrefs(){
+    var fresh = loadPrefs();
+    var moved = false;
+    Object.keys(fresh).forEach(function(k){
+      if(prefs[k] !== fresh[k]){ prefs[k] = fresh[k]; moved = true; }
+    });
+    if(!moved) return;
+    applyAccessibility();
+    applyFloatingVisibility();
+    syncControls();
+  }
+  document.addEventListener('sultan:personalisation-changed', function(){
+    if(writingOwnPrefs) return;
+    adoptExternalPrefs();
+  });
+  window.addEventListener('storage', function(e){
+    if(e.key && e.key !== PREFS_KEY) return;
+    adoptExternalPrefs();
+  });
 
   // ================================================================
   // Islamic Preferences — Hijri date (tabular/"Kuwaiti algorithm"
