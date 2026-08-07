@@ -81,8 +81,20 @@ const GRADE_AR = null;
 //
 // `matchedAs` records HOW the match was made, because two of the five are short
 // forms rather than exact strings and that is a judgement the Founder — not
-// this script — is entitled to overturn. Both are printed on the register as
-// outstanding.
+// this script — is entitled to overturn. Both were printed on the register as
+// outstanding until he ruled on them.
+//
+// `founderRuling` carries that ruling. It is kept as a field rather than simply
+// changing `matchedAs` to 'exact', because the two are different facts: the
+// match still WAS made on a short form, and a later reader of this register is
+// entitled to see both that and the decision that settled it. A permanent
+// Student ID is the one number a person carries for life; the reasoning behind
+// it should survive longer than the conversation that produced it.
+//
+// Note what the ruling does NOT change: the name ENGRAVED on the sheet is still
+// the one on the Founder's roll. He confirmed an identity, not a re-spelling,
+// and the printed name is hashed into the serial — so changing it is a separate
+// instruction, given separately.
 const ROLL = [
   { en: 'Hameedah Adebimpe Ojewumi', sex: 'female',
     carryOverFrom: { register: 'IBT', name: 'Hameedah Adebimpe Ojewumi' }, matchedAs: 'exact' },
@@ -92,12 +104,14 @@ const ROLL = [
   { en: 'Aisha Anofi', sex: 'female',
     carryOverFrom: { register: 'IBT', name: 'Aisha Anofi' }, matchedAs: 'exact' },
   { en: 'Baqi Anofi', sex: 'male',
-    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'short-form' },
+    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'short-form',
+    founderRuling: { date: '2026-08-07', decision: 'Same student. Student ID carry-over approved.' } },
   { en: "Sa'ad Sanusi", sex: 'male' },
   { en: 'Fawaz Owolabi', sex: 'male' },
   { en: 'Radiah Apatira', sex: 'female' },
   { en: 'Faridah Aliu', sex: 'female',
-    carryOverFrom: { register: 'IDD', name: 'Faridah Ayomide Aliu' }, matchedAs: 'short-form' },
+    carryOverFrom: { register: 'IDD', name: 'Faridah Ayomide Aliu' }, matchedAs: 'short-form',
+    founderRuling: { date: '2026-08-07', decision: 'Same student. Student ID carry-over approved.' } },
   { en: 'Anisa Opeyemi Jokomba', sex: 'female' },
   { en: 'Ameerah Durodola', sex: 'female' },
   { en: 'Abdulrahman Abdullah', sex: 'male' },
@@ -242,6 +256,7 @@ for (const [i, student] of roll.entries()) {
     identityNo: student.identityNo,
     identitySource: student.identitySource,
     matchedAs: student.matchedAs || null,
+    founderRuling: student.founderRuling || null,
     gradeEn: GRADE_EN,
     gradeAr: GRADE_AR,
     serialNo: gen.serialNo,
@@ -352,7 +367,8 @@ function slug(s) {
 // ─────────────────────────────────────────────────────────────────────────────
 // THE REGISTER
 // ─────────────────────────────────────────────────────────────────────────────
-const pendingConfirmation = issued.filter((r) => r.matchedAs === 'short-form');
+const pendingConfirmation = issued.filter((r) => r.matchedAs === 'short-form' && !r.founderRuling);
+const ruledConfirmation = issued.filter((r) => r.founderRuling);
 
 const register = {
   programme: PROGRAMME,
@@ -381,6 +397,21 @@ const register = {
         + 'minted for one child. If they are different people, this certificate '
         + 'must be reissued with a new Student ID before it is printed.',
     })),
+    // Settled. Kept in full — a permanent number is worth the words.
+    founderRulings: ruledConfirmation.map((r) => {
+      const roll = ROLL.find((s2) => s2.en === r.studentEn);
+      return {
+        student: r.studentEn,
+        identityNo: r.identityNo,
+        matchedTo: roll.carryOverFrom.name,
+        matchedAs: r.matchedAs,
+        ruledOn: r.founderRuling.date,
+        decision: r.founderRuling.decision,
+        effect: 'One person, one permanent Student ID. No second number was minted, '
+          + 'and the number on this certificate is the same one this student already holds '
+          + `on the ${roll.carryOverFrom.register} register.`,
+      };
+    }),
   },
   entries: issued,
 };
@@ -422,7 +453,7 @@ const md = [
   ...(pendingConfirmation.length ? [
     '### Awaiting the Founder’s confirmation',
     '',
-    'Two carry-overs were matched on a short form of a name rather than on an',
+    'These carry-overs were matched on a short form of a name rather than on an',
     'exact string. They are treated as the same student, because minting a second',
     'permanent number for one child is the more damaging of the two errors — but',
     'that is the Founder’s call, not this pipeline’s, and it is recorded here',
@@ -432,6 +463,23 @@ const md = [
     '|---|---|---|',
     ...pendingConfirmation.map((r) => `| ${r.studentEn} | `
       + `${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name} | ${r.identityNo} |`),
+    '',
+  ] : []),
+  ...(ruledConfirmation.length ? [
+    '## Student ID carry-over — ruled by the Founder',
+    '',
+    'Each of these was matched to an existing register on a SHORT FORM of the name,',
+    'not an exact string, and was held open on the register until the Founder ruled.',
+    'He has: they are the same students, and the permanent Student ID carries across.',
+    'No second number was minted for any child.',
+    '',
+    '| This roll | Existing register | Student ID carried | Ruled | Decision |',
+    '|---|---|---|---|---|',
+    ...ruledConfirmation.map((r) => {
+      const roll = ROLL.find((s2) => s2.en === r.studentEn);
+      return `| ${r.studentEn} | ${roll.carryOverFrom.name} (${roll.carryOverFrom.register}) `
+        + `| ${r.identityNo} | ${r.founderRuling.date} | ${r.founderRuling.decision} |`;
+    }),
     '',
   ] : []),
   '## Verification',
@@ -514,6 +562,13 @@ if (pendingConfirmation.length) {
   console.log('\n  AWAITING THE FOUNDER’S CONFIRMATION — Student ID carry-over on a short-form name:');
   for (const r of pendingConfirmation) {
     console.log(`    ${r.studentEn}  →  ${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name}  (${r.identityNo})`);
+  }
+}
+if (ruledConfirmation.length) {
+  console.log('\n  RULED BY THE FOUNDER — Student ID carry-over on a short-form name:');
+  for (const r of ruledConfirmation) {
+    console.log(`    ${r.studentEn}  →  ${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name}`
+      + `  (${r.identityNo})  ${r.founderRuling.date} — ${r.founderRuling.decision}`);
   }
 }
 console.log('');

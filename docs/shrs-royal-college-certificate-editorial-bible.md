@@ -1,7 +1,7 @@
 # SHRS Royal College Certificate — Editorial Bible
 
 **Sultan Hanafi Royal College — Junior Secondary Graduation Certificate**
-**Certificate System v2.2 · programme code `JSS` · English only**
+**Certificate System v2.3 · programme code `JSS` · English only**
 
 This is the internal standard for the Royal College graduation certificate. It
 is the companion to `docs/shrs-certificate-editorial-bible.md`, which governs
@@ -117,6 +117,27 @@ more damaging of the two possible errors — but that is his call, not the
 pipeline's, and it is printed on the register as outstanding rather than
 resolved silently. If they are different people, those two certificates must be
 reissued with new Student IDs **before** they are printed.
+
+**The two short-form matches are settled.** Two of the five carry-overs were
+matched on a short form of a name rather than on an exact string, and both were
+held open on the register rather than resolved silently:
+
+| This roll | Existing register | Student ID carried | Ruled | Decision |
+|---|---|---|---|---|
+| Baqi Anofi | Baqi Olamiposi Anofi (I'dādiyyah) | 710699780947768 | 2026-08-07 | Same student. Carry-over approved. |
+| Faridah Aliu | Faridah Ayomide Aliu (I'dādiyyah) | 713944318135552 | 2026-08-07 | Same student. Carry-over approved. |
+
+The ruling is carried in the issuer's roll as a `founderRuling` field, printed
+on the register in full, and checked by `scripts/verify-royal-college-certificate.mjs`,
+which fails the batch if a short-form match is neither flagged nor ruled on, or
+if a ruling does not name its date and its decision. `matchedAs` still reads
+`short-form`: the match WAS made on a short form, and a later reader is entitled
+to see both that fact and the decision that settled it.
+
+**What the ruling did not change:** the name engraved on each sheet is still the
+one on the Founder's roll — *Baqi Anofi*, *Faridah Aliu*. He confirmed an
+identity, not a re-spelling, and the printed name is hashed into the serial, so
+changing it is a separate instruction given separately.
 
 ## 6. The security layer
 

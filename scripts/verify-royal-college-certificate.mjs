@@ -137,14 +137,21 @@ check(`every reused Student ID is declared, and every declared one is real `
 // A short-form match is a judgement the Founder is entitled to overturn. It
 // must be VISIBLE on the register, not resolved silently — this gate exists
 // because "we assumed they were the same person" is not a record.
+// Every short-form match must appear on the register in ONE of two states:
+// awaiting the Founder's ruling, or carrying it. Neither may be missing, and a
+// ruling must name the date and the decision — "we assumed they were the same
+// person" is not a record, and neither is "someone said it was fine once".
 const pending = reg.identityCarryOver?.awaitingFounderConfirmation || [];
+const ruled = reg.identityCarryOver?.founderRulings || [];
 const shortForm = (reg.identityCarryOver?.resolved || []).filter((r) => r.matchedAs === 'short-form');
-check('every short-form name match is printed as awaiting confirmation',
-  pending.length === shortForm.length,
-  `${shortForm.length} short-form match(es), ${pending.length} flagged`);
-if (pending.length) {
-  for (const p of pending) console.log(`       ~ ${p.student} → ${p.matchedTo} (${p.identityNo})`);
-}
+check('every short-form name match is either flagged or ruled on — none is silent',
+  pending.length + ruled.length === shortForm.length,
+  `${shortForm.length} short-form match(es): ${pending.length} awaiting, ${ruled.length} ruled`);
+check('every ruling names its date and its decision',
+  ruled.every((r) => r.ruledOn && r.decision && r.matchedTo && r.identityNo),
+  `${ruled.length} ruling(s)`);
+for (const p of pending) console.log(`       ~ ${p.student} → ${p.matchedTo} (${p.identityNo}) — AWAITING`);
+for (const r of ruled) console.log(`       · ${r.student} → ${r.matchedTo} (${r.identityNo}) — ruled ${r.ruledOn}: ${r.decision}`);
 
 // ── 3. Wording ──────────────────────────────────────────────────────────────
 console.log('\n— wording —');
