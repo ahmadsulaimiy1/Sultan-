@@ -7,11 +7,15 @@
 <title>Founder Dashboard (Pilot) — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body type-executive" data-atmosphere="founder">
@@ -29,6 +33,7 @@
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <button type="button" class="portal-logout" data-founder-clear hidden data-i18n="clear-token">Clear Token</button>
   </div>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <main class="portal-main">
@@ -44,7 +49,7 @@
       <button type="submit" class="portal-submit" data-founder-submit>View Dashboard</button>
     </form>
     <p class="portal-notice">This token is held by the Chairman/Board only, separate from the tokens used for day-to-day data entry. It is kept only in this browser tab's session storage — closing the tab clears it.</p>
-    <a class="portal-back-link" href="/">← Back to the main site</a>
+    <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
   </div>
 
   <div class="portal-loading-skeleton" data-founder-skeleton hidden aria-hidden="true">
@@ -102,7 +107,7 @@
     </div>
 
     <div class="pfd-section">
-      <h2>Strategic Priorities</h2>
+      <h2 data-i18n="portal.strategicPriorities">Strategic Priorities</h2>
       <div data-founder-strategic-progress></div>
     </div>
 

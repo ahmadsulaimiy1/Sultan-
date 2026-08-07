@@ -7,11 +7,15 @@
 <title>Graduation Control Centre — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body type-administrative" data-atmosphere="registrar">
@@ -26,6 +30,7 @@
     <a class="portal-topbar-link" href="/portal/staff/registrar/">Registrar's Office</a>
     <a class="portal-topbar-link" href="/portal/staff/approval-matrix/">Approval Matrix</a>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
@@ -38,7 +43,7 @@
     <div class="portal-hello-sub">Every graduate's live clearance status, in one place — Registry through the Founder, no stage skipped. A record locks itself automatically the moment its last required clearance is granted.</div>
 
     <div data-portal-loading class="portal-child-card" style="text-align:center;padding:32px;">
-      <p class="sub" style="margin:0;">Loading…</p>
+      <p class="sub" style="margin:0;" data-i18n="state.loading">Loading…</p>
     </div>
     <div data-portal-error class="portal-child-card" hidden>
       <h2 style="padding:0 0 8px;" data-portal-error-message>Could not load the Graduation Control Centre.</h2>
@@ -65,7 +70,7 @@
             <option value="verified">In institutional clearance</option>
             <option value="locked">Locked</option>
           </select>
-          <button type="button" class="registrar-btn" data-gcc-refresh>Refresh</button>
+          <button type="button" class="registrar-btn" data-gcc-refresh data-i18n="portal.refresh">Refresh</button>
         </div>
         <div class="gcc-bulk-bar" data-gcc-bulk-bar style="display:none;flex-wrap:wrap;gap:10px;align-items:center;padding:0 20px 14px;">
           <span data-gcc-bulk-count style="font-size:0.82rem;color:var(--ink-soft);"></span>

@@ -140,7 +140,7 @@
 .mo-marquee-track{display:flex;gap:56px;width:max-content;animation:mo-marq 34s linear infinite;}
 .mo-marquee:hover .mo-marquee-track{animation-play-state:paused;}
 .mo-marquee-item{display:inline-flex;align-items:center;gap:12px;white-space:nowrap;
-  font-family:'Cinzel',serif;font-size:1.02rem;letter-spacing:.06em;
+  font-family:var(--font-label);font-size:1.02rem;letter-spacing:.06em;
   /* Reading gold, not ornament gold — the marquee runs across a cream
      band, where --pr-gold-deep measured 3.2:1. */
   color:rgb(var(--lv-gt3,99,72,27));}

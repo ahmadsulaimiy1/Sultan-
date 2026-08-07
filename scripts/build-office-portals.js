@@ -38,7 +38,11 @@ function pageHtml(office) {
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
+<link rel="stylesheet" href="/css/i18n.css">
+<script src="/js/locale-registry.js"></script>
+<script src="/js/i18n-core.js"></script>
 <script src="/js/portal-theme.js"></script>
+<script src="/js/i18n.js" defer></script>
 </head>
 <body class="portal-body" data-office-slug="${esc(office.slug)}">
 
@@ -49,56 +53,57 @@ function pageHtml(office) {
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
     <div id="office-switcher-mount" hidden></div>
-    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
-    <button type="button" class="portal-logout" data-office-logout data-i18n="sign-out">Sign Out</button>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="portal.allOffices">All Offices</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
+    <button type="button" class="portal-logout" data-office-logout data-i18n="action.signOut">Sign Out</button>
   </div>
 </div>
 
 <main class="portal-main">
   <div class="portal-card" id="office-error" hidden>
-    <h1>Couldn't load this office</h1>
-    <p class="sub" data-error-message>Please try again.</p>
-    <a class="portal-back-link" href="/portal/staff/offices/">&larr; Back to all offices</a>
+    <h1 data-i18n="portal.loadFailed">Couldn't load this office</h1>
+    <p class="sub" data-error-message data-i18n="portal.tryAgain">Please try again.</p>
+    <a class="portal-back-link" href="/portal/staff/offices/" data-i18n="portal.backToAllOffices">&larr; Back to all offices</a>
   </div>
 
   <div class="portal-wrap" id="office-shell" hidden>
     <div class="exec-welcome">
       <div class="exec-welcome-eyebrow" id="office-eyebrow">OFFICE</div>
       <h1 id="office-name">${name}</h1>
-      <div class="exec-welcome-role" id="office-holder-line">Loading&hellip;</div>
+      <div class="exec-welcome-role" id="office-holder-line" data-i18n="state.loading">Loading&hellip;</div>
       <div class="exec-welcome-stats">
-        <div class="exec-welcome-stat"><span class="value" id="stat-staff-count">&mdash;</span><span class="label">Staff Assigned</span></div>
-        <div class="exec-welcome-stat"><span class="value" id="stat-appointments">&mdash;</span><span class="label">Seats Recorded</span></div>
-        <div class="exec-welcome-stat"><span class="value" id="stat-pending-workflow">&mdash;</span><span class="label">Pending Workflow</span></div>
-        <div class="exec-welcome-stat"><span class="value" id="stat-meetings">&mdash;</span><span class="label">Meetings Logged</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-staff-count">&mdash;</span><span class="label" data-i18n="portal.staffAssigned">Staff Assigned</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-appointments">&mdash;</span><span class="label" data-i18n="portal.seatsRecorded">Seats Recorded</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-pending-workflow">&mdash;</span><span class="label" data-i18n="portal.pendingWorkflow">Pending Workflow</span></div>
+        <div class="exec-welcome-stat"><span class="value" id="stat-meetings">&mdash;</span><span class="label" data-i18n="portal.meetingsLogged">Meetings Logged</span></div>
       </div>
     </div>
 ${deepLinkBanner}
 
     <nav class="office-tabs" role="tablist" aria-label="Office sections">
-      <button type="button" class="office-tab is-active" data-tab="dashboard">Dashboard</button>
-      <button type="button" class="office-tab" data-tab="operations" hidden>Operations Centre</button>
-      <button type="button" class="office-tab" data-tab="overview">Overview</button>
-      <button type="button" class="office-tab" data-tab="directory">Staff Directory</button>
-      <button type="button" class="office-tab" data-tab="responsibilities">Responsibilities</button>
-      <button type="button" class="office-tab" data-tab="priorities">Strategic Priorities</button>
-      <button type="button" class="office-tab" data-tab="objectives">Annual Objectives</button>
-      <button type="button" class="office-tab" data-tab="documents">Documents</button>
+      <button type="button" class="office-tab is-active" data-tab="dashboard" data-i18n="portal.dashboard">Dashboard</button>
+      <button type="button" class="office-tab" data-tab="operations" hidden data-i18n="portal.operationsCentre">Operations Centre</button>
+      <button type="button" class="office-tab" data-tab="overview" data-i18n="portal.overview">Overview</button>
+      <button type="button" class="office-tab" data-tab="directory" data-i18n="portal.staffDirectory">Staff Directory</button>
+      <button type="button" class="office-tab" data-tab="responsibilities" data-i18n="portal.responsibilities">Responsibilities</button>
+      <button type="button" class="office-tab" data-tab="priorities" data-i18n="portal.strategicPriorities">Strategic Priorities</button>
+      <button type="button" class="office-tab" data-tab="objectives" data-i18n="portal.annualObjectives">Annual Objectives</button>
+      <button type="button" class="office-tab" data-tab="documents" data-i18n="portal.documents">Documents</button>
       <button type="button" class="office-tab" data-tab="messages">Messages<span class="office-tab-badge" id="messages-tab-badge" hidden></span></button>
-      <button type="button" class="office-tab" data-tab="reports">Reports</button>
-      <button type="button" class="office-tab" data-tab="analytics">Analytics</button>
-      <button type="button" class="office-tab" data-tab="workflow">Workflow Centre</button>
-      <button type="button" class="office-tab" data-tab="notifications">Notifications</button>
-      <button type="button" class="office-tab" data-tab="meetings">Meetings</button>
-      <button type="button" class="office-tab" data-tab="resolutions" hidden>Resolutions</button>
-      <button type="button" class="office-tab" data-tab="archive">Archive</button>
+      <button type="button" class="office-tab" data-tab="reports" data-i18n="portal.reports">Reports</button>
+      <button type="button" class="office-tab" data-tab="analytics" data-i18n="portal.analytics">Analytics</button>
+      <button type="button" class="office-tab" data-tab="workflow" data-i18n="portal.workflowCentre">Workflow Centre</button>
+      <button type="button" class="office-tab" data-tab="notifications" data-i18n="portal.notifications">Notifications</button>
+      <button type="button" class="office-tab" data-tab="meetings" data-i18n="portal.meetings">Meetings</button>
+      <button type="button" class="office-tab" data-tab="resolutions" hidden data-i18n="portal.resolutions">Resolutions</button>
+      <button type="button" class="office-tab" data-tab="archive" data-i18n="portal.archive">Archive</button>
     </nav>
 
     <div class="office-panel is-active" id="panel-dashboard">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Executive Dashboard</h2><div class="meta">A live summary of this office &mdash; seats, workload, and activity.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.executiveDashboard">Executive Dashboard</h2><div class="meta" data-i18n="portal.liveSummary">A live summary of this office &mdash; seats, workload, and activity.</div></div>
         <div class="portal-stats">
-          <div class="portal-stat"><div class="label">Staff Assigned</div><div class="value" id="dash-staff-count-echo"></div></div>
+          <div class="portal-stat"><div class="label" data-i18n="portal.staffAssigned">Staff Assigned</div><div class="value" id="dash-staff-count-echo"></div></div>
         </div>
         <div class="pfd-note" style="padding:0 26px 20px;">Use the tabs above to review the Staff Directory, Documents, Workflow Centre, and Meetings for this office.</div>
       </div>
@@ -106,17 +111,17 @@ ${deepLinkBanner}
 
     <div class="office-panel" id="panel-operations">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Operations Centre</h2><div class="meta">Real, institution-scoped daily-operations data &mdash; students, staff, attendance, and admissions for this school specifically.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.operationsCentre">Operations Centre</h2><div class="meta">Real, institution-scoped daily-operations data &mdash; students, staff, attendance, and admissions for this school specifically.</div></div>
         <div class="exec-stat-grid" style="padding:0 26px 22px;" id="operations-stats"></div>
       </div>
       <div class="portal-child-card" id="operations-hifz-section" hidden>
         <div class="portal-child-head"><h2>Hifz Programme</h2></div>
         <div class="exec-stat-grid" style="padding:0 26px 12px;" id="operations-hifz-stats"></div>
-        <h3 class="pfd-subhead" style="padding:0 26px;">By stage</h3>
+        <h3 class="pfd-subhead" style="padding:0 26px;" data-i18n="portal.byStage">By stage</h3>
         <div class="pfd-bars" style="padding:0 26px 22px;" id="operations-hifz-bars"></div>
       </div>
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Admissions Pipeline</h2><div class="meta">This school's own applications &mdash; full review at the Admissions Review Centre.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.admissionsPipeline">Admissions Pipeline</h2><div class="meta">This school's own applications &mdash; full review at the Admissions Review Centre.</div></div>
         <div class="portal-stats" id="operations-admissions"></div>
         <div style="padding:0 26px 20px;"><a class="portal-back-link" href="/portal/staff/admissions/">Open Admissions Review Centre &rarr;</a></div>
       </div>
@@ -125,115 +130,115 @@ ${deepLinkBanner}
         <div id="operations-frameworks"></div>
       </div>
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Not Yet Tracked</h2><div class="meta">Named honestly &mdash; no fabricated figures stand in for these.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.notYetTracked">Not Yet Tracked</h2><div class="meta" data-i18n="portal.namedHonestly">Named honestly &mdash; no fabricated figures stand in for these.</div></div>
         <div id="operations-not-tracked"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-overview">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Office Overview</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.officeOverview">Office Overview</h2></div>
         <p style="padding:20px 26px 0;line-height:1.6;color:var(--ink);" id="office-description"></p>
         <div class="office-overview-grid" style="margin:16px 26px 26px;">
-          <div class="office-overview-field"><div class="label">Office Type</div><div class="value" id="office-type-value"></div></div>
-          <div class="office-overview-field"><div class="label">Layer</div><div class="value" id="office-layer-value"></div></div>
-          <div class="office-overview-field"><div class="label">Parent Office</div><div class="value" id="office-parent-value"></div></div>
+          <div class="office-overview-field"><div class="label" data-i18n="portal.officeType">Office Type</div><div class="value" id="office-type-value"></div></div>
+          <div class="office-overview-field"><div class="label" data-i18n="portal.layer">Layer</div><div class="value" id="office-layer-value"></div></div>
+          <div class="office-overview-field"><div class="label" data-i18n="portal.parentOffice">Parent Office</div><div class="value" id="office-parent-value"></div></div>
         </div>
       </div>
       <div class="portal-child-card" id="committees-section" hidden>
-        <div class="portal-child-head"><h2>Committees</h2><div class="meta">Standing committees of this office.</div></div>
+        <div class="portal-child-head"><h2>Committees</h2><div class="meta" data-i18n="portal.standingCommittees">Standing committees of this office.</div></div>
         <div style="padding:6px 26px 20px;" id="committees-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-directory">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Staff Directory</h2><div class="meta">Every recorded seat for this office, including any awaiting appointment.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.staffDirectory">Staff Directory</h2><div class="meta">Every recorded seat for this office, including any awaiting appointment.</div></div>
         <div style="padding:20px 26px;" id="directory-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-responsibilities">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Responsibilities</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.responsibilities">Responsibilities</h2></div>
         <p style="padding:20px 26px;line-height:1.6;color:var(--ink);" id="responsibilities-text"></p>
-        <p class="pfd-note" style="padding:0 26px 20px;">See the full <a id="responsibilities-matrix-link" href="/policies/">Policies Centre</a> for governing documents.</p>
+        <p class="pfd-note" style="padding:0 26px 20px;">See the full <a id="responsibilities-matrix-link" href="/policies/" data-i18n="nav.policies">Policies Centre</a> for governing documents.</p>
       </div>
     </div>
 
     <div class="office-panel" id="panel-priorities">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Strategic Priorities</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.strategicPriorities">Strategic Priorities</h2></div>
         <div id="priorities-panel-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-objectives">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Annual Objectives</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.annualObjectives">Annual Objectives</h2></div>
         <div id="objectives-panel-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-documents">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Documents</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.documents">Documents</h2></div>
         <div id="documents-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-messages">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Messages</h2><div class="meta">Real correspondence from parents and guardians, addressed to this office directly.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.messages">Messages</h2><div class="meta">Real correspondence from parents and guardians, addressed to this office directly.</div></div>
         <div id="office-messages-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-reports">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Reports</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.reports">Reports</h2></div>
         <div style="padding:20px 26px;" id="reports-panel-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-analytics">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Analytics</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.analytics">Analytics</h2></div>
         <div style="padding:20px 26px;" id="analytics-panel-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-workflow">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Workflow Centre</h2><div class="meta">Items awaiting this office's approval.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.workflowCentre">Workflow Centre</h2><div class="meta" data-i18n="portal.awaitingApproval">Items awaiting this office's approval.</div></div>
         <div id="workflow-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-notifications">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Notifications</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.notifications">Notifications</h2></div>
         <div style="padding:20px 26px;" id="notifications-panel-body"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-meetings">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Meetings</h2></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.meetings">Meetings</h2></div>
         <div style="padding:20px 26px;" id="meetings-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-resolutions">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Resolutions</h2><div class="meta">The Board's governance register for this office.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.resolutions">Resolutions</h2><div class="meta" data-i18n="portal.governanceRegister">The Board's governance register for this office.</div></div>
         <div style="padding:20px 26px;" id="resolutions-list"></div>
       </div>
     </div>
 
     <div class="office-panel" id="panel-archive">
       <div class="portal-child-card">
-        <div class="portal-child-head"><h2>Archive</h2><div class="meta">Past meetings and closed items for this office.</div></div>
+        <div class="portal-child-head"><h2 data-i18n="portal.archive">Archive</h2><div class="meta" data-i18n="portal.pastMeetings">Past meetings and closed items for this office.</div></div>
         <div style="padding:20px 26px;" id="archive-list"></div>
       </div>
     </div>
@@ -280,7 +285,11 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
+<link rel="stylesheet" href="/css/i18n.css">
+<script src="/js/locale-registry.js"></script>
+<script src="/js/i18n-core.js"></script>
 <script src="/js/portal-theme.js"></script>
+<script src="/js/i18n.js" defer></script>
 <style>
   .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
   .office-index-layer{margin-bottom:36px;}
@@ -296,11 +305,12 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
     <span>Sultan Hanafi</span>
   </a>
   <a class="portal-topbar-link" href="/portal/staff/login/">Staff Sign In</a>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 <main class="portal-main" style="align-items:flex-start;">
   <div class="office-index-wrap">
     <p class="portal-aside-eyebrow" style="color:var(--gold);">INSTITUTIONAL PORTAL ECOSYSTEM</p>
-    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--portal-heading);margin:6px 0 8px;">All Offices</h1>
+    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--portal-heading);margin:6px 0 8px;" data-i18n="portal.allOffices">All Offices</h1>
     <p style="color:var(--ink-soft);max-width:640px;margin-bottom:8px;">Every office in the Sultan Hanafi Royal Schools digital campus, grouped by layer. Offices without a confirmed appointment show an honest "Vacant &mdash; Awaiting Appointment" seat, not a fabricated name.</p>
     <p style="margin-bottom:8px;"><a href="/portal/staff/org-chart/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Organisational Chart &rarr;</a></p>
     <p style="margin-bottom:28px;"><a href="/portal/admin/centre/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Institutional Administration Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(sysadmin token required)</span></p>

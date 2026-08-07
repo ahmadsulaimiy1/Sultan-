@@ -79,8 +79,8 @@ html[data-pc-motion="reduced"] .rg-light::before{display:none;}
    markup as --v (0..100), so the bar is readable with CSS off. */
 .rg-bars{display:grid;gap:18px;margin-top:28px;}
 .rg-bar{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:baseline;}
-.rg-bar-k{font-family:'Cinzel','Amiri',serif;font-size:.9rem;color:var(--navy);}
-.rg-bar-v{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;
+.rg-bar-k{font-family:var(--font-label);font-size:.9rem;color:var(--navy);}
+.rg-bar-v{font-family:var(--font-label);font-size:1.05rem;
   color:rgb(var(--lv-gt,124,94,40));font-variant-numeric:tabular-nums;}
 .rg-bar-rail{grid-column:1 / -1;height:9px;border-radius:99px;position:relative;overflow:hidden;
   background:rgba(var(--lv-g,198,161,91),.16);
@@ -115,9 +115,9 @@ html[data-pc-motion="reduced"] .rg-light::before{display:none;}
   transition:stroke-dashoffset 1.7s cubic-bezier(.16,.8,.24,1);}
 .rg-ring.is-lit .arc{stroke-dashoffset:calc(283 - (283 * var(--v,0) / 100));}
 .rg-ring-n{position:absolute;top:38%;left:0;right:0;transform:translateY(-50%);
-  font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--navy);
+  font-family:var(--font-label);font-size:1.5rem;color:var(--navy);
   font-variant-numeric:tabular-nums;}
-.rg-ring-k{display:block;margin-top:10px;font-family:'Cinzel','Amiri',serif;
+.rg-ring-k{display:block;margin-top:10px;font-family:var(--font-label);
   font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
   color:rgb(var(--lv-gt,124,94,40));}
 .rg-ring-s{display:block;margin-top:4px;font-size:.78rem;color:var(--ink-soft);}
@@ -153,7 +153,7 @@ html[data-pc-motion="reduced"] .rg-light::before{display:none;}
   border:1px solid rgba(var(--lv-g,198,161,91),.28);
   box-shadow:var(--pr-shadow-soft);}
 .rg-plate-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
-.rg-plate-k{font-family:'Cinzel','Amiri',serif;font-size:.68rem;letter-spacing:.22em;
+.rg-plate-k{font-family:var(--font-label);font-size:.68rem;letter-spacing:.22em;
   text-transform:uppercase;color:rgb(var(--lv-gt,124,94,40));}
 .rg-plate-head::after{content:"";flex:1;height:1px;
   background:linear-gradient(90deg,rgba(var(--lv-g,198,161,91),.5),transparent);}

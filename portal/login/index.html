@@ -7,11 +7,15 @@
 <title>Parent Portal (Pilot) — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body" data-atmosphere="parent">
@@ -22,11 +26,12 @@
     <span>Sultan Hanafi</span>
   </a>
   <span class="portal-pilot-badge" data-i18n="pilot">Pilot</span>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <div class="portal-shell">
   <aside class="portal-aside" aria-hidden="true">
-    <p class="portal-aside-eyebrow">Parent Portal</p>
+    <p class="portal-aside-eyebrow" data-i18n="footer.parentPortal">Parent Portal</p>
     <h2 class="portal-aside-title">Your child's journey,<br>always within view.</h2>
     <p class="portal-aside-copy">Sign in to follow attendance, results, and fee status for your child — securely, in one place.</p>
     <ul class="portal-aside-points">
@@ -36,13 +41,13 @@
     </ul>
     <div class="portal-aside-cta">
       <p>New to Sultan Hanafi Royal Schools?</p>
-      <a href="/portal/register/">Create an Account →</a>
+      <a href="/portal/register/" data-i18n="footer.createAccount">Create an Account →</a>
     </div>
   </aside>
 
   <main class="portal-main portal-form-col">
     <div class="portal-card">
-      <h1>Parent Portal</h1>
+      <h1 data-i18n="footer.parentPortal">Parent Portal</h1>
       <p class="sub">Sign in to see your child's attendance, results, and fee status.</p>
 
       <div class="portal-error" data-portal-error></div>
@@ -53,10 +58,10 @@
           <input id="portal-email" name="email" type="email" autocomplete="email" required />
         </div>
         <div class="portal-field">
-          <label for="portal-password">Password</label>
+          <label for="portal-password" data-i18n="form.password">Password</label>
           <input id="portal-password" name="password" type="password" autocomplete="current-password" required />
         </div>
-        <button type="submit" class="portal-submit" data-portal-submit>Sign In</button>
+        <button type="submit" class="portal-submit" data-portal-submit data-i18n="action.signIn">Sign In</button>
         <a class="portal-back-link" href="/portal/forgot-password/">Forgot your password?</a>
       </form>
 
@@ -72,10 +77,10 @@
 
       <p class="portal-notice">
         This is an early pilot of our Parent Portal. Your login shows records only for your own child(ren) — nobody else can see them. If you have any questions about your data, contact us at
-        <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a>.
+        <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener" data-i18n="topbar.whatsapp">WhatsApp</a>.
       </p>
       <a class="portal-back-link" href="/portal/student/login/">Student? Sign in to the Student Portal →</a><br>
-      <a class="portal-back-link" href="/">← Back to the main site</a>
+      <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
     </div>
   </main>
 </div>

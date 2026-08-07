@@ -7,11 +7,15 @@
 <title>Database Setup — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=2d2be9847a">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=d221febc2c">
-<link rel="stylesheet" href="/css/motion.css?v=fda4a6216a">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body">
@@ -22,6 +26,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <span class="portal-pilot-badge">ICT Only</span>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <main class="portal-main">
@@ -41,7 +46,7 @@
     <p class="portal-notice">
       The "Setup Token" is the value you entered as <code>PORTAL_SETUP_TOKEN</code> in this environment's Cloudflare Pages settings — paste that exact value above, then click the button. Nothing else is needed.
     </p>
-    <a class="portal-back-link" href="/">← Back to the main site</a>
+    <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
   </div>
 </main>
 

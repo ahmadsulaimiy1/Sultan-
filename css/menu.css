@@ -62,7 +62,7 @@
     filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
   .ndh-title{flex:1;font-size:.68rem!important;letter-spacing:.24em!important;}
   .ndh-title::after{content:"Sultan Hanafi Royal Schools";display:block;
-    font-family:'Cormorant Garamond','Amiri',serif;font-size:1.02rem;letter-spacing:.01em;
+    font-family:var(--font-display);font-size:1.02rem;letter-spacing:.01em;
     text-transform:none;color:rgb(var(--lv-gl2,255,248,234));margin-top:2px;}
   [lang="ar"] .ndh-title::after{content:"مدارس السلطان حنفي الملكية";}
   .nav-drawer-close{border-radius:50%!important;width:42px!important;height:42px!important;
@@ -82,7 +82,7 @@
   .navlinks > .nav-drop > .nav-drop-trigger::before{
     content:counter(navrow,decimal-leading-zero);
     position:absolute;inset-inline-start:24px;top:50%;transform:translateY(-50%);
-    font-family:'Cinzel','Amiri',serif;font-size:.62rem;letter-spacing:.1em;
+    font-family:var(--font-label);font-size:.62rem;letter-spacing:.1em;
     color:rgba(var(--lv-gb,233,206,138),.45);pointer-events:none;transition:color .35s;}
   .navlinks > .nav-drop > .nav-drop-trigger{
     padding-inline-start:64px!important;padding-block:19px!important;

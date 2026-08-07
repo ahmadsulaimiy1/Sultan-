@@ -17,6 +17,23 @@ const PAGES = path.join(ROOT, 'pages');
 // top-level `this` is `module.exports`, so requiring it here hands back
 // `{ SHRS_ADHKAR: {...} }` with zero changes to the browser file itself.
 const SHRS_ADHKAR = require(path.join(ROOT, 'js/adhkar-data.js')).SHRS_ADHKAR;
+// Locale maths (which prefix owns which language, how a URL in one language
+// maps to the same page in another) lives in lib/i18n.js and is shipped
+// verbatim to the browser by buildLocaleRuntime() below, so the live
+// switcher can never disagree with the build about where a translation is.
+const I18N = require(path.join(ROOT, 'lib/i18n.js'));
+const DICTS = {};
+I18N.codes().forEach((code) => {
+  const file = path.join(ROOT, 'i18n', `${code}.json`);
+  const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const clean = {};
+  Object.keys(raw).forEach((k) => { if (k.charAt(0) !== '_') clean[k] = raw[k]; });
+  DICTS[code] = clean;
+});
+// Shorthand used throughout page assembly: t('nav.academics', 'yo').
+function t(key, lang, vars) {
+  return I18N.translate(DICTS, lang, key, vars);
+}
 // Used only to make og:*/canonical tags absolute, since social-media
 // crawlers won't reliably resolve relative URLs. Update once the site
 // has a confirmed production domain.
@@ -35,6 +52,18 @@ function fillTokens(template, tokens) {
 
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeAttr(s) {
+  return escapeHtml(s).replace(/"/g, '&quot;');
+}
+
+/* A page is a homepage if its output IS the locale root. Derived from the
+   path rather than matched against a growing list of slugs ('home',
+   'home-ar', 'home-yo', 'home-fr', …), which is the sort of list that gets
+   a new language added to it three releases late. */
+function isHomeSlug(page) {
+  return I18N.neutralPath('/' + page.output.replace(/index\.html$/, '')) === '/';
 }
 
 // --- Cache-busting -------------------------------------------------------
@@ -151,6 +180,8 @@ function updateServiceWorkerVersion() {
 const ADHKAR_STATIC_STRINGS = {
   en: { jumpMorning: 'Read Morning Adhkār', jumpEvening: 'Read Evening Adhkār', morningHead: 'Morning Adhkār', eveningHead: 'Evening Adhkār', repeatLabel: 'Repeat' },
   ar: { jumpMorning: 'اقرأ أذكار الصباح', jumpEvening: 'اقرأ أذكار المساء', morningHead: 'أذكار الصباح', eveningHead: 'أذكار المساء', repeatLabel: 'التكرار' },
+  yo: { jumpMorning: 'Ka Àdhkār Àárọ̀', jumpEvening: 'Ka Àdhkār Ìrọ̀lẹ́', morningHead: 'Àdhkār Àárọ̀', eveningHead: 'Àdhkār Ìrọ̀lẹ́', repeatLabel: 'Àtúnsọ' },
+  fr: { jumpMorning: 'Lire les Adhkār du matin', jumpEvening: 'Lire les Adhkār du soir', morningHead: 'Adhkār du matin', eveningHead: 'Adhkār du soir', repeatLabel: 'Répétitions' },
 };
 
 function renderAdhkarStaticSection(items, lang, headingText, anchorId) {
@@ -196,12 +227,15 @@ function renderAdhkarStatic(lang) {
 // schema.org BreadcrumbList, which is what puts the trail into a search
 // result rather than a bare URL.
 function buildBreadcrumbs(page, manifest, lang) {
-  if (page.slug === 'home' || page.slug === 'home-ar') return '';
-  const home = lang === 'ar' ? '/ar/' : '/';
-  const homeLabel = lang === 'ar' ? 'الرئيسية' : 'Home';
+  if (isHomeSlug(page)) return '';
+  const locale = I18N.get(lang);
+  const home = locale.pathPrefix ? locale.pathPrefix + '/' : '/';
+  const homeLabel = t('breadcrumb.home', lang);
   const url = '/' + page.output.replace(/index\.html$/, '');
-  // strip the locale prefix so the segments line up in both editions
-  const rel = lang === 'ar' ? url.replace(/^\/ar/, '') : url;
+  // Strip the locale prefix so the segments line up across every edition —
+  // derived from the registry rather than a literal '/ar', so a new
+  // language needs no change here.
+  const rel = I18N.neutralPath(url);
   const segs = rel.split('/').filter(Boolean);
 
   const byPath = new Map(
@@ -211,7 +245,7 @@ function buildBreadcrumbs(page, manifest, lang) {
   );
 
   const crumbs = [{ href: home, label: homeLabel }];
-  let acc = lang === 'ar' ? '/ar' : '';
+  let acc = locale.pathPrefix;
   segs.forEach((seg, i) => {
     acc += '/' + seg + '/';
     const match = byPath.get(acc);
@@ -226,7 +260,10 @@ function buildBreadcrumbs(page, manifest, lang) {
   });
 
   const items = crumbs.map((c, i) => {
-    const sep = i === 0 ? '' : `<span class="bc-sep" aria-hidden="true">${lang === 'ar' ? '\u2039' : '\u203A'}</span>`;
+    // The chevron points the way the script reads, so it follows direction
+    // rather than the specific language.
+    const chevron = locale.dir === 'rtl' ? '\u2039' : '\u203A';
+    const sep = i === 0 ? '' : `<span class="bc-sep" aria-hidden="true">${chevron}</span>`;
     const body = c.href
       ? `<a href="${c.href}">${escapeHtml(c.label)}</a>`
       : `<span aria-current="page">${escapeHtml(c.label)}</span>`;
@@ -244,21 +281,80 @@ function buildBreadcrumbs(page, manifest, lang) {
     })),
   };
 
-  return `<nav class="breadcrumbs" aria-label="${lang === 'ar' ? 'مسار التنقل' : 'Breadcrumb'}">
+  return `<nav class="breadcrumbs" aria-label="${escapeHtml(t('breadcrumb.label', lang))}">
   <div class="wrap">${items}</div>
 </nav>
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 `;
 }
 
+/* Reads a chrome partial in the requested language, falling back to the
+   default locale's file when that language has no hand-authored copy yet.
+   The fallback is what lets a new locale be added to the registry and build
+   immediately — in the default language's chrome, but building, linked and
+   switchable — instead of the build crashing on a missing file. Anything
+   still falling back is reported at the end of the run so the gap is
+   visible rather than silently permanent. */
+const partialFallbacks = new Map();
+function readPartial(name, lang) {
+  /* Preference order, most specific first:
+       1. partials/<name>.tpl.html   — the language-neutral template. One file
+          serves every locale, with {{t:key}} resolved from that locale's
+          dictionary. This is the target state for all chrome.
+       2. partials/<name>.<lang>.html — a hand-authored copy for one language.
+          The pre-existing Arabic partials; still honoured so nothing that
+          works today stops working, and so a locale can override the
+          template wholesale when a straight string swap isn't enough.
+       3. partials/<name>.html        — the default language's copy.
+     A template beats a hand-authored copy because the template is the one
+     that cannot drift: fixing a link in .tpl.html fixes it in all four
+     languages, whereas the same fix in header.html silently leaves
+     header.ar.html behind — which is how the Arabic nav ended up shipping an
+     untranslated "Create a Parent Account" before this change. */
+  const tpl = path.join(PARTIALS, `${name}.tpl.html`);
+  if (fs.existsSync(tpl)) {
+    return renderTemplate(fs.readFileSync(tpl, 'utf8'), lang);
+  }
+  const localised = path.join(PARTIALS, `${name}.${lang}.html`);
+  if (lang !== I18N.defaultCode() && fs.existsSync(localised)) {
+    return fs.readFileSync(localised, 'utf8');
+  }
+  if (lang !== I18N.defaultCode()) {
+    const key = `${lang}:${name}`;
+    partialFallbacks.set(key, (partialFallbacks.get(key) || 0) + 1);
+  }
+  return read(`partials/${name}.html`);
+}
+
+/* Resolves {{t:some.key}} against a locale's dictionary.
+ *
+ * Dictionary values are PLAIN TEXT, so they are HTML-escaped on the way in.
+ * This matters for the ampersand: "Press & News" and "Day & Boarding" are
+ * stored with a literal &, and emitting that raw produces invalid HTML —
+ * harmless for "& News", but "&copy" or "&times" in a future string would be
+ * silently parsed as an entity and render as © or ×. Escaping also keeps the
+ * output byte-identical to the hand-authored partials, which wrote &amp;.
+ *
+ * The escape covers text and attribute contexts alike (" included), since a
+ * token can appear in either and over-escaping a quote in body text is
+ * invisible to the reader. A value that must carry real markup does not
+ * belong in a dictionary — put it in the template. */
+const missingKeys = new Set();
+function renderTemplate(tpl, lang) {
+  return tpl.replace(/\{\{t:([\w.]+)\}\}/g, (whole, key) => {
+    const value = I18N.translate(DICTS, lang, key);
+    if (value.charAt(0) === '⟦') { missingKeys.add(`${lang}:${key}`); return whole; }
+    return escapeAttr(value);
+  });
+}
+
 function buildPage(page, manifest) {
-  const lang = page.lang || 'en';
-  const dir = page.dir || 'ltr';
-  // Arabic (or any future locale) pages use their own chrome partials —
-  // nav labels, footer copy, etc. can't be shared text across languages
-  // the way CSS/JS/images are. Falls back to the English partial name
-  // (no suffix) for locales that don't need their own file.
-  const suffix = lang === 'en' ? '' : `.${lang}`;
+  const lang = page.lang || I18N.defaultCode();
+  const locale = I18N.get(lang);
+  // Direction follows the language, from the registry. The manifest may
+  // still carry `dir` for the existing Arabic entries; the registry wins so
+  // the two can never contradict each other.
+  const dir = locale.dir;
 
   const pagePath = '/' + page.output.replace(/index\.html$/, '');
   const head = fillTokens(read('partials/head.html'), {
@@ -267,27 +363,54 @@ function buildPage(page, manifest) {
     OG_URL: `${SITE_ORIGIN}${pagePath}`,
     OG_IMAGE: `${SITE_ORIGIN}/assets/images/apple-touch-icon.png`,
   });
-  const topbar = fillTokens(read(`partials/topbar${suffix}.html`), {
-    ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
-  });
-  const header = read(`partials/header${suffix}.html`);
-  const announcementRibbon = read(`partials/announcement-ribbon${suffix}.html`);
+  /* The legacy {{ALT_HREF}} token addressed "the other language" — a question
+     that only has an answer while there are exactly two. The real N-way
+     choice now lives in the switcher, but the token still appears in the
+     personalisation panel and the <noscript> fallback, so it must resolve to
+     a DIFFERENT edition than the current one. Resolving it to the default
+     locale unconditionally would point an English page at itself, turning
+     that link into a no-op. So: the default locale if we are not already in
+     it, otherwise the first other locale — which reproduces the previous
+     behaviour exactly (en -> /ar/, ar -> /). */
+  const otherLocale = lang === I18N.defaultCode()
+    ? (I18N.locales().find((l) => l.code !== I18N.defaultCode()) || I18N.get(lang)).code
+    : I18N.defaultCode();
+  const altHref = page.altHref || I18N.resolvedPathFor(pagePath, otherLocale);
+  const topbar = fillTokens(readPartial('topbar', lang), { ALT_HREF: altHref });
+  const header = readPartial('header', lang);
+  const announcementRibbon = readPartial('announcement-ribbon', lang);
   const content = fillTokens(read(page.contentFile), {
     ADHKAR_STATIC: renderAdhkarStatic(lang),
   });
-  const footer = read(`partials/footer${suffix}.html`);
-  const assistant = read(`partials/assistant${suffix}.html`);
-  const search = read(`partials/search${suffix}.html`);
-  const personalisation = fillTokens(read(`partials/personalisation${suffix}.html`), {
-    ALT_HREF: page.altHref || (lang === 'ar' ? '/' : '/ar/'),
+  const footer = readPartial('footer', lang);
+  const assistant = readPartial('assistant', lang);
+  const search = readPartial('search', lang);
+  const personalisation = fillTokens(readPartial('personalisation', lang), {
+    ALT_HREF: altHref,
   });
 
-  // hreflang alternate — points at this page's translation counterpart,
-  // or a sensible fallback (e.g. the other language's homepage) when
-  // the specific page hasn't been translated yet
-  const altTag = page.altHref
-    ? `<link rel="alternate" hreflang="${page.altLang || (lang === 'ar' ? 'en' : 'ar')}" href="${page.altHref}" />\n`
-    : '';
+  /* hreflang — one alternate per locale plus x-default, not a single
+     "the other one". Search engines use this set to serve the right edition
+     to the right reader and to understand that these URLs are translations
+     rather than duplicate content; emitting only one of three alternates
+     leaves the rest looking like unrelated thin pages. Every locale is
+     listed including this one, which is what the spec asks for (a complete,
+     self-referential set on every page). */
+  const altTag = I18N.locales().filter((l) => {
+    if (!I18N.hasPage(pagePath, l.code)) return false;
+    // An hreflang alternate is a promise to a search engine that the target
+    // is THIS page in that language. A page whose body is still English is
+    // not that, so it is left out until it is — otherwise the tag sends a
+    // French searcher to English text and tells Google the two are
+    // equivalent. The switcher still offers it, because a human who asks for
+    // French should get the French navigation and the notice explaining the
+    // rest; a crawler making an equivalence claim is a different matter.
+    return !untranslatedBodies.has(`${l.code}:${I18N.neutralPath(pagePath)}`);
+  }).map((l) => {
+    const href = SITE_ORIGIN + I18N.pathFor(pagePath, l.code);
+    return `<link rel="alternate" hreflang="${l.hreflang}" href="${href}" />\n`;
+  }).join('') +
+    `<link rel="alternate" hreflang="x-default" href="${SITE_ORIGIN + I18N.pathFor(pagePath, I18N.defaultCode())}" />\n`;
 
   // The homepage "elevation" layer — figures/counters band, testimonial
   // swiper, admissions-journey band, 3D card tilt and motion — is homepage
@@ -302,7 +425,7 @@ function buildPage(page, manifest) {
   // older, plainer state: the Wird labels lost their dark pill and sat as
   // bright gold on parchment at 1.17:1, and the two languages drifted
   // visibly apart. The gate is on the homepage, not on the language.
-  const isHome = page.slug === 'home' || page.slug === 'home-ar';
+  const isHome = isHomeSlug(page);
   const elevateHead = isHome
     ? '<link rel="stylesheet" href="/css/elevate.css">\n'
     : '';
@@ -338,7 +461,9 @@ function buildPage(page, manifest) {
   //   extraCss    — stylesheets appended after the standard head
   //   headScripts — render-blocking scripts (theme flash prevention)
   //   extraScripts— deferred scripts appended after the standard set
-  const robotsTag = page.noindex ? '<meta name="robots" content="noindex" />\n' : '';
+  const robotsTag = page.noindex
+    ? `<meta name="robots" content="noindex,${page.untranslatedBody ? 'follow' : 'nofollow'}" />\n`
+    : '';
   const breadcrumbs = buildBreadcrumbs(page, manifest, lang);
   const bodyAttr = page.bodyClass ? ` class="${page.bodyClass}"` : '';
   const extraCss = (page.extraCss || [])
@@ -348,21 +473,38 @@ function buildPage(page, manifest) {
   const extraScripts = (page.extraScripts || [])
     .map((src) => `<script src="${src}" defer></script>\n`).join('');
 
+  /* The AI assistant's knowledge base is a per-language data file, and only
+     English and Arabic have one written. Referencing /js/assistant-data.yo.js
+     would 404 and leave the assistant silently empty on Yoruba pages, so we
+     fall back to the default locale's corpus — the assistant answers in
+     English on those pages, which is honest and useful, rather than not at
+     all. Drop in assistant-data.yo.js and this picks it up with no change. */
+  const assistantLang = fs.existsSync(path.join(ROOT, `js/assistant-data.${lang}.js`))
+    ? lang
+    : I18N.defaultCode();
+
+  // data-locale gives CSS a stable hook for per-language typography without
+  // re-deriving the language from `lang` in every selector (see css/i18n.css),
+  // and gives the runtime switcher something to flip on an instant switch.
   const html = `<!DOCTYPE html>
-<html lang="${lang}" dir="${dir}">
+<html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
-${head}${robotsTag}${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag}${headScripts}</head>
+${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
 ${header}
 ${announcementRibbon}
-${breadcrumbs}${content}
+${breadcrumbs}${renderPartialNotice(page, lang)}${content}
 ${footer}
 ${assistant}
 ${search}
 ${personalisation}
 
+<script src="/js/locale-registry.js"></script>
+<script src="/js/i18n-core.js"></script>
+<script src="/js/i18n.js" defer></script>
 <script src="/js/adhkar-data.js" defer></script>
 <script src="/js/reflections-data.js" defer></script>
 <script src="/js/portal-password-toggle.js" defer></script>
@@ -374,7 +516,7 @@ ${personalisation}
 <script src="/js/site.js" defer></script>
 <script src="/js/adhkar-app.js" defer></script>
 <script src="/js/announcements.js" defer></script>
-<script src="/js/assistant-data.${lang}.js" defer></script>
+<script src="/js/assistant-data.${assistantLang}.js" defer></script>
 <script src="/js/assistant.js" defer></script>
 <script src="/js/whatsapp-float.js" defer></script>
 <script src="/js/institution-carousel.js" defer></script>
@@ -453,12 +595,206 @@ function buildSearchIndex(manifest) {
   });
 }
 
+/* Which neutral paths each locale lacks, relative to the union of every
+   page built. Feeds I18N.hasPage()/resolvedPathFor() in both the build and
+   the browser, so neither ever links to a translation that was not built. */
+function computeMissingPages(manifest) {
+  const byLocale = new Map();
+  const union = new Set();
+  manifest.forEach((page) => {
+    const lang = page.lang || I18N.defaultCode();
+    const neutral = I18N.neutralPath('/' + page.output.replace(/index\.html$/, ''));
+    union.add(neutral);
+    if (!byLocale.has(lang)) byLocale.set(lang, new Set());
+    byLocale.get(lang).add(neutral);
+  });
+  const missing = {};
+  I18N.codes().forEach((code) => {
+    const have = byLocale.get(code) || new Set();
+    const absent = Array.from(union).filter((p) => !have.has(p)).sort();
+    if (absent.length) {
+      missing[code] = absent;
+      console.log(`locale "${code}" has no edition of: ${absent.join(', ')}`);
+    }
+  });
+  return missing;
+}
+
+/* Ships the locale registry and the shared i18n core to the browser.
+ *
+ * lib/i18n.js is copied rather than re-implemented so the switcher's idea of
+ * "the Yoruba URL for this page" is byte-for-byte the build's. Both land in
+ * js/ so they pick up the existing content-hash cache-busting for free —
+ * versionAssets() only rewrites /css/ and /js/ URLs. Both are generated, so
+ * they are regenerated on every build and must not be hand-edited. */
+function buildLocaleRuntime(manifest) {
+  const registry = JSON.parse(read('i18n/locales.json'));
+  // Teach this process's own copy of the core which editions exist, so
+  // buildPage()'s altHref and hreflang decisions match what the browser will
+  // compute from the same map below.
+  const missingPages = computeMissingPages(manifest);
+  I18N.setAvailability(missingPages);
+  const slim = {
+    defaultLocale: registry.defaultLocale,
+    // The registry's _comment block is documentation for maintainers; there
+    // is no reason to send it to every visitor.
+    locales: registry.locales.filter((l) => l.enabled !== false),
+    // Per-locale list of neutral paths that locale does NOT have, computed
+    // from the manifest that was actually built. Ships as an exception list
+    // because most pages exist in every language: /portal/select/ has no
+    // Arabic edition, and without this the switcher would offer a link to
+    // /ar/portal/select/, which 404s.
+    missing: missingPages,
+  };
+  const banner = '/* GENERATED by scripts/build.js from i18n/locales.json — do not edit. */\n';
+  fs.writeFileSync(
+    path.join(ROOT, 'js/locale-registry.js'),
+    banner + 'window.__SHRS_LOCALES__=' + JSON.stringify(slim) + ';\n'
+  );
+  const core = fs.readFileSync(path.join(ROOT, 'lib/i18n.js'), 'utf8');
+  fs.writeFileSync(
+    path.join(ROOT, 'js/i18n-core.js'),
+    '/* GENERATED by scripts/build.js from lib/i18n.js — do not edit. */\n' + core
+  );
+  console.log(`locale runtime: ${slim.locales.length} locales -> js/locale-registry.js, js/i18n-core.js`);
+}
+
+/* Names every chrome partial still being served in the default language on
+   a translated page. Without this the fallback is invisible: the page builds,
+   looks finished, and quietly shows English navigation above Yoruba prose. */
+function reportPartialFallbacks() {
+  if (!partialFallbacks.size) return;
+  const byLang = new Map();
+  partialFallbacks.forEach((count, key) => {
+    const [lang, name] = key.split(':');
+    if (!byLang.has(lang)) byLang.set(lang, []);
+    byLang.get(lang).push(`${name} (${count} page${count === 1 ? '' : 's'})`);
+  });
+  console.log('\ni18n chrome still falling back to the default language:');
+  byLang.forEach((names, lang) => {
+    console.log(`  ${lang}: ${names.sort().join(', ')}`);
+  });
+  console.log('  -> add partials/<name>.<lang>.html to translate these.\n');
+}
+
+/* Derives the page list for any locale that has no hand-authored entries.
+ *
+ * The manifest names 36 English pages and 35 Arabic ones, each written by
+ * hand. Requiring the same for Yoruba and French would mean 70 more entries
+ * before a single page could exist — and until they did, the hreflang tags
+ * and the language switcher would both point at URLs that 404, which is
+ * worse for a reader and for a crawler than an honest interim page.
+ *
+ * So a locale with no entries of its own inherits the default locale's page
+ * list: same slugs, same URLs under its own prefix, fully translated chrome
+ * (nav, topbar, footer, breadcrumbs, search), and the default language's
+ * body content behind a translated notice saying exactly that. As real
+ * translations land, a hand-authored entry for that page overrides the
+ * derived one — matching on output path — and the notice disappears for
+ * that page alone.
+ *
+ * Arabic is unaffected: it has its own entries, so nothing is derived for it.
+ */
+function expandManifestForLocales(manifest) {
+  const defaultCode = I18N.defaultCode();
+  const authored = new Set(manifest.map((p) => p.output));
+  const base = manifest.filter((p) => (p.lang || defaultCode) === defaultCode);
+  const derived = [];
+
+  I18N.locales().forEach((locale) => {
+    if (locale.code === defaultCode) return;
+    const hasOwn = manifest.some((p) => (p.lang || defaultCode) === locale.code);
+    if (hasOwn) return;
+
+    base.forEach((page) => {
+      const neutral = '/' + page.output.replace(/index\.html$/, '');
+      const target = I18N.pathFor(neutral, locale.code).replace(/^\//, '') + 'index.html';
+      if (authored.has(target)) return;
+      derived.push(Object.assign({}, page, {
+        slug: `${page.slug}-${locale.code}`,
+        output: target,
+        lang: locale.code,
+        dir: locale.dir,
+        altHref: neutral,
+        // Flags the body as still being in the default language, which is
+        // what renders the notice. Removing this field (by authoring a real
+        // entry) removes the notice, the noindex, and the hreflang exclusion
+        // together, for that page alone.
+        untranslatedBody: true,
+        /* Kept out of the search index until the prose is genuinely in this
+           language. The page is ~90% identical to its English original, so
+           indexing it would put 72 near-duplicate URLs into competition with
+           the pages they were copied from, and would land a Yoruba searcher
+           on English prose. `follow` is deliberate: the links on the page are
+           real and should still be crawled, and the English original is
+           reachable through them. */
+        noindex: true,
+      }));
+    });
+    console.log(`derived ${base.length} page(s) for locale "${locale.code}" (chrome translated, body pending)`);
+  });
+
+  return manifest.concat(derived);
+}
+
+/* The notice shown above default-language body content on a derived page.
+   Deliberately visible rather than a quiet <meta>: a reader who switched to
+   Yoruba and met English prose should be told why, and given one click back
+   to the edition that reads properly. */
+const untranslatedBodies = new Set();
+function recordUntranslatedBodies(manifest) {
+  manifest.forEach((page) => {
+    if (!page.untranslatedBody) return;
+    const lang = page.lang || I18N.defaultCode();
+    untranslatedBodies.add(`${lang}:${I18N.neutralPath('/' + page.output.replace(/index\.html$/, ''))}`);
+  });
+}
+
+function renderPartialNotice(page, lang) {
+  if (!page.untranslatedBody) return '';
+  const href = I18N.pathFor('/' + page.output.replace(/index\.html$/, ''), I18N.defaultCode());
+  return `<aside class="i18n-partial-notice" role="note">
+  <div class="wrap">
+    <strong>${escapeHtml(t('i18n.partial.title', lang))}</strong>
+    <p>${escapeHtml(t('i18n.partial.body', lang))}</p>
+    <a href="${href}" hreflang="${I18N.defaultCode()}">${escapeHtml(t('i18n.partial.cta', lang))}</a>
+  </div>
+</aside>
+`;
+}
+
 function main() {
-  const manifest = JSON.parse(read('pages/manifest.json'));
+  /* Parity gate, before anything is written. A key missing from one
+     dictionary renders as ⟦nav.academics⟧ on a live page, and the page still
+     "builds" — so the only place to catch it is here, loudly, before the
+     output exists. Runs in-process rather than as a separate npm step so it
+     cannot be skipped by building directly. */
+  const check = require('child_process').spawnSync(
+    process.execPath, [path.join(__dirname, 'i18n-check.js')],
+    { encoding: 'utf8' }
+  );
+  process.stdout.write(check.stdout || '');
+  if (check.status !== 0) {
+    process.stderr.write(check.stderr || '');
+    console.error('\nBuild aborted: translation dictionaries are not in parity.');
+    process.exit(1);
+  }
+
+  const manifest = expandManifestForLocales(JSON.parse(read('pages/manifest.json')));
+  // Must run before any page is rendered: it loads the availability map into
+  // the shared core, which buildPage() then consults for altHref and hreflang.
+  recordUntranslatedBodies(manifest);
+  buildLocaleRuntime(manifest);
   manifest.forEach((page) => buildPage(page, manifest));
   buildSearchIndex(manifest);
   versionAllHtml();
   updateServiceWorkerVersion();
+  reportPartialFallbacks();
+  if (missingKeys.size) {
+    console.error('\nTemplate keys with no translation (left as literal tokens):');
+    Array.from(missingKeys).sort().forEach((k) => console.error(`  ${k}`));
+    process.exit(1);
+  }
 }
 
 main();
