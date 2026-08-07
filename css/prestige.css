@@ -583,7 +583,10 @@
 .pr-tl-item:last-child{padding-bottom:0;}
 .pr-tl-dot{position:absolute;left:4px;top:1px;width:24px;height:24px;border-radius:50%;
   display:grid;place-items:center;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:#2a1c10;
-  background:linear-gradient(140deg,var(--pr-gold-bright),var(--pr-gold-deep));
+  /* The medallion runs the full gold scale, and a numeral sitting over
+     its darker end measured 2.66:1. Held to the bright half, where the
+     same ink reads at 6.8:1 at the darkest point. */
+  background:linear-gradient(140deg,var(--pr-gold-bright,#E9CE8A),var(--pr-gold,#C6A15B));
   box-shadow:0 0 0 5px var(--pr-ivory);z-index:1;}
 .pr-section.is-royal .pr-tl-dot{box-shadow:0 0 0 5px #241708;}
 .pr-tl-item h4{font-family:'Cinzel',serif;font-size:1.02rem;color:var(--pr-coffee);margin:0 0 3px;}
@@ -1698,7 +1701,7 @@
 .dc-sys .who{display:inline-block;margin-bottom:10px;padding:5px 13px;border-radius:var(--pr-r-pill);
   font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
   background:linear-gradient(168deg,rgba(198,161,91,.16),rgba(198,161,91,.06));
-  border:1px solid rgba(198,161,91,.32);color:var(--pr-gold-deep);}
+  border:1px solid rgba(198,161,91,.32);color:#5F4518;}
 
 @media (prefers-reduced-motion:reduce){
   .dc-net .pulse{animation:none;opacity:0;}
@@ -2723,11 +2726,15 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
   position:absolute;inset-inline-start:0;bottom:0;z-index:3;
   padding:8px 16px 8px 18px;
   font-family:'Cinzel','Amiri',serif;font-size:.6rem;letter-spacing:.2em;
-  text-transform:uppercase;color:rgba(233,206,138,.72);
-  background:linear-gradient(90deg,rgba(20,12,4,.86),rgba(20,12,4,0));
+  /* The plate's ground faded out across the label itself, so the last
+     third of the words sat on bare photograph and measured 1.93:1. It
+     now holds full strength under the whole label and only softens
+     past its trailing edge. */
+  text-transform:uppercase;color:rgba(240,220,166,.94);
+  background:linear-gradient(90deg,rgba(16,10,3,.92) 0%,rgba(16,10,3,.88) 76%,rgba(16,10,3,0) 100%);
   border-start-end-radius:10px;pointer-events:none;}
 [dir="rtl"] .gi-plate-note{
-  background:linear-gradient(270deg,rgba(20,12,4,.86),rgba(20,12,4,0));}
+  background:linear-gradient(270deg,rgba(16,10,3,.92) 0%,rgba(16,10,3,.88) 76%,rgba(16,10,3,0) 100%);}
 
 /* ---------- The campus mosaic ---------------------------------------
    A single frame shown at a time, on a timer, asks the reader to wait
@@ -2868,7 +2875,7 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
 .ct-office-ico svg{width:22px;height:22px;}
 .ct-office h3{font-family:'Cinzel','Amiri',serif;font-size:1.02rem;color:var(--pr-coffee);margin:0 0 8px;}
 .ct-office p{font-size:.87rem;line-height:1.62;color:#54432c;margin:0;flex:1;text-align:start;}
-.ct-office-go{margin-top:14px;font-size:.76rem;font-weight:600;color:var(--pr-gold-deep);
+.ct-office-go{margin-top:14px;font-size:.76rem;font-weight:600;color:var(--pr-gold-text,#7C5E28);
   transition:letter-spacing .3s var(--pr-ease);}
 .ct-office:hover .ct-office-go{letter-spacing:.02em;}
 .ct-note{margin-top:26px;font-size:.84rem;line-height:1.7;color:#6b5c44;max-width:78ch;}
@@ -3936,3 +3943,37 @@ html[data-pc-theme="light"] .policies > .wrap .eyebrow{color:#8A6A2F;}
    colour four steps darker: still recessive beside the coffee ink,
    now legible. Applied at source above; this note records why.
    ------------------------------------------------------------------- */
+
+/* ---- The chip rail, on the charcoal band ---------------------------
+   .mkt-cat-nav is a rail of outline chips; on the Media Centre and the
+   Marketplace it stands on the charcoal band, where its deep navy ink
+   measured 1.17:1. The chip has no ground of its own, so it takes the
+   ink of the band it stands on. */
+.chapter-band-alt .mkt-cat-nav a,.chapter-band .mkt-cat-nav a{
+  color:var(--pr-gold-bright,#E9CE8A);border-color:rgba(233,206,138,.4);}
+.chapter-band-alt .mkt-cat-nav a:hover,.chapter-band .mkt-cat-nav a:hover{
+  border-color:var(--pr-gold-bright,#E9CE8A);background:rgba(233,206,138,.14);}
+html[data-pc-theme="light"] .chapter-band-alt .mkt-cat-nav a{
+  color:#5F4518;border-color:rgba(198,161,91,.42);}
+
+/* ---- The gateway card, out of the drop-down -------------------------
+   .portal-gateway-card was drawn for the navigation drop-down, which is
+   a near-black panel, and its name, description and enter link were
+   inked for that. The /verify/ page lays the same card out on the milk
+   band, where the three measured 1.10:1, 1.03:1 and 1.47:1 — the whole
+   card blank. Inside the drop-down it keeps its dark treatment; out on
+   the page it takes the page's ink. */
+.wrap > .portal-gateway-grid .pgc-name,
+section .portal-gateway-grid .pgc-name{color:var(--pr-coffee,#3B2A1D);}
+.wrap > .portal-gateway-grid .pgc-desc,
+section .portal-gateway-grid .pgc-desc{color:#5a4a38;}
+.wrap > .portal-gateway-grid .pgc-enter,
+section .portal-gateway-grid .pgc-enter{color:var(--pr-gold-text,#7C5E28);font-weight:600;}
+.nav-drop-panel .portal-gateway-grid .pgc-name{color:var(--ivory,#F7EEDF);}
+.nav-drop-panel .portal-gateway-grid .pgc-desc{color:rgba(248,244,233,.72);}
+.nav-drop-panel .portal-gateway-grid .pgc-enter{color:var(--pr-gold-bright,#E9CE8A);}
+html[data-pc-theme="light"] section .portal-gateway-grid .pgc-name{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] section .portal-gateway-grid .pgc-desc{color:var(--pearl-ink-2,#57472F);}
+
+/* An empty shelf still has to be readable. */
+.mkt-empty{color:#6b6559;}

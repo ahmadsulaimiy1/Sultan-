@@ -78,9 +78,12 @@
 .idc-head img{width:38px;height:38px;object-fit:contain;
   filter:drop-shadow(0 3px 8px rgba(0,0,0,.6));}
 .idc-inst{font-family:'Cinzel',serif;font-size:clamp(.68rem,1.7vw,.84rem);
-  line-height:1.2;color:#FFF3D8;letter-spacing:.04em;}
+  /* The institution's name sits on the card's gold header, where an
+     ivory measured 2.98:1. It takes the near-black the rest of the
+     gold furniture uses, and reads as engraving rather than print. */
+  line-height:1.2;color:#241809;letter-spacing:.04em;}
 .idc-inst small{display:block;font-family:'Inter',sans-serif;font-weight:500;
-  font-size:.58em;letter-spacing:.2em;text-transform:uppercase;color:rgba(233,206,138,.85);margin-top:3px;}
+  font-size:.58em;letter-spacing:.2em;text-transform:uppercase;color:rgba(36,24,9,.78);margin-top:3px;}
 
 .idc-mid{display:flex;gap:clamp(11px,2.4vw,17px);margin-top:auto;align-items:flex-end;}
 /* portrait well */
@@ -93,7 +96,7 @@
 .idc-row{margin-bottom:6px;}
 .idc-row:last-child{margin-bottom:0;}
 .idc-k{display:block;font-family:'Inter',sans-serif;font-size:clamp(.44rem,1.1vw,.54rem);
-  letter-spacing:.22em;text-transform:uppercase;color:rgba(233,206,138,.72);}
+  letter-spacing:.22em;text-transform:uppercase;color:rgba(238,214,155,.95);}
 .idc-v{display:block;font-family:'Cinzel',serif;font-size:clamp(.72rem,1.9vw,.96rem);
   color:#fff;letter-spacing:.02em;line-height:1.25;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -150,10 +153,10 @@
 /* --- controls --- */
 .idc-controls{display:flex;gap:10px;justify-content:center;align-items:center;
   margin-top:22px;flex-wrap:wrap;}
-.idc-hint{font-size:.78rem;color:#8a7a60;letter-spacing:.02em;}
+.idc-hint{font-size:.78rem;color:rgba(238,224,196,.86);letter-spacing:.02em;}
 .idc-flip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
   padding:9px 18px;border-radius:999px;font-size:.84rem;font-weight:600;
-  color:var(--pr-gold-deep,#9C7A3C);background:linear-gradient(168deg,#FFFDF9,#F3EADA);
+  color:var(--pr-gold-text,#7C5E28);background:linear-gradient(168deg,#FFFDF9,#F3EADA);
   border:1px solid rgba(198,161,91,.4);
   box-shadow:0 6px 16px -10px rgba(42,28,16,.5),inset 0 1px 0 rgba(255,255,255,.85);
   transition:transform .35s cubic-bezier(.16,.8,.24,1),box-shadow .35s;}

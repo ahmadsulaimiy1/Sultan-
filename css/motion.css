@@ -143,7 +143,7 @@
   font-family:'Cinzel',serif;font-size:1.02rem;letter-spacing:.06em;
   /* Reading gold, not ornament gold — the marquee runs across a cream
      band, where --pr-gold-deep measured 3.2:1. */
-  color:var(--pr-gold-text,#7C5E28);}
+  color:#63481B;}
 .pr-section.is-royal .mo-marquee-item,.chapter-band .mo-marquee-item,
 .chapter-band-alt .mo-marquee-item,.portal-body .mo-marquee-item{
   color:var(--pr-gold-bright,#E9CE8A);}
