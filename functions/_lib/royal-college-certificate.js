@@ -130,6 +130,21 @@ export const RC_RULES = {
   khatam: 3.9,        // the tessellation's cell — finer, for a finer band
 };
 
+// A number inside an RTL sentence is a PROTECTED LEFT-TO-RIGHT SEGMENT. Without
+// that protection the bidi algorithm reorders the run at the paragraph's
+// direction and "2025 – 2026" prints as "2026 – 2025" — which it did, on every
+// Arabic citation in this batch. A reversed academic session is not a
+// typographic blemish; it is the certificate stating the wrong years.
+//
+// U+2066 LRI … U+2069 PDI, the Unicode isolate characters, rather than CSS
+// alone: they travel with the text into the PDF, into a copy-paste, and into
+// any downstream tool, none of which read our stylesheet.
+const LRI = '\u2066'; const PDI = '\u2069';
+function ltr(s) { return `${LRI}${s}${PDI}`; }
+// Arabic-Indic digits, for numerals set inside Arabic prose. Display only —
+// the register keeps the Western form, so nothing machine-readable changes.
+function arDigits(s) { return String(s).replace(/[0-9]/g, (d) => '٠١٢٣٤٥٦٧٨٩'[+d]); }
+
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -1169,6 +1184,25 @@ export function code128cSvg(digits, { unit = 0.38, height = 6.5 } = {}) {
 // a bevel, and a hairline keyline.
 // ─────────────────────────────────────────────────────────────────────────────
 // A short engine-turned strip, for the bilingual sheet's citation rule.
+// ── THE BILINGUAL PAIR ──────────────────────────────────────────────────────
+// One component for every English/Arabic pair on the sheet, so the rule is
+// stated once and cannot drift between blocks. The Founder's audit found
+// exactly that drift: names paired on one sheet and stacked on another, and
+// English sitting above Arabic in one block while Arabic sat above English in
+// the next. A shared component makes that class of inconsistency impossible
+// rather than merely unlikely.
+//
+// DEFAULT: side by side on one baseline, English left, Arabic right.
+// EXCEPTION: where the pair genuinely cannot fit on one line — the award
+// citation, whose English runs to sixty-seven characters — it stacks, and when
+// it stacks ARABIC GOES ABOVE. Never the other way.
+function biPair(en, ar, cls = '', stacked = false) {
+  const a = `<span class="bp-ar" dir="rtl" lang="ar">${esc(ar)}</span>`;
+  const e = `<span class="bp-en">${esc(en)}</span>`;
+  if (stacked) return `<div class="rc-bipair rc-bipair-stack ${cls}">${a}${e}</div>`;
+  return `<div class="rc-bipair ${cls}">${e}<span class="bp-div"><i></i></span>${a}</div>`;
+}
+
 function latheStrip(uid) {
   const w = 150; const h = 3.4;
   return `<svg class="rc-lathe-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1565,6 +1599,17 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   // name. A student whose Arabic form has not been given prints in Latin
   // alone, which is complete and correct, rather than in an invented Arabic.
   const nameAr = String(cert.student_name_ar || '').trim();
+  // On a bilingual programme the Arabic name is a REQUIRED FIELD, not an
+  // optional extra. Without it one graduate's sheet falls back to a centred
+  // English line while her classmates carry a matched pair, and a graduating
+  // class whose certificates do not match is not a class — it is three
+  // documents that happen to share a date. The fix is never to invent the
+  // Arabic; it is to refuse to print until a human supplies it.
+  if (prog.ar && !nameAr) {
+    throw new Error(`royal-college-certificate: ${serial} (${nameEn}) has no Arabic name, and `
+      + `${prog.code} is a bilingual award — every sheet in the batch must carry the same `
+      + 'matched name pair. Supply the Arabic form; it will never be transliterated here.');
+  }
   const studentId = String(cert.student_identity_no || '').trim();
   if (!/^\d{15}$/.test(studentId)) {
     throw new Error(`royal-college-certificate: ${serial} carries "${studentId}" where a 15-digit Student ID belongs`);
@@ -1670,13 +1715,16 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <img class="rc-em rc-em-mid" src="/assets/images/certificates/quran-college-crest.png" alt="" />` : ''}
     <img class="rc-em rc-em-side" src="/assets/images/crests/lagos-state-arms.png" alt="" />
   </div>
-  ${AR ? `<div class="rc-arline rc-ar-nation" dir="rtl" lang="ar">${esc(AR.nation)}</div>` : ''}
+  ${AR ? `
+  <!-- Four pairs, four baselines, one component. -->
+  ${biPair('Federal Republic of Nigeria · Lagos State', AR.nation, 'rc-p-nation')}
+  ${biPair(INSTITUTION, AR.institution, 'rc-p-inst')}
+  ${biPair(prog.school, AR.school, 'rc-p-school')}
+  ${biPair(place, AR.place, 'rc-p-place')}` : `
   <div class="rc-nation">Federal Republic of Nigeria <span class="rc-dot">·</span> Lagos State</div>
-  ${AR ? `<div class="rc-arline rc-ar-inst" dir="rtl" lang="ar">${esc(AR.institution)}</div>` : ''}
   <div class="rc-inst">${esc(INSTITUTION)}</div>
-  ${AR ? `<div class="rc-arline rc-ar-school" dir="rtl" lang="ar">${esc(AR.school)}</div>` : ''}
   <div class="rc-school">${esc(prog.school)}</div>
-  <div class="rc-place">${esc(place)}${AR ? ` <span class="rc-dot">·</span> <span dir="rtl" lang="ar">${esc(AR.place)}</span>` : ''}</div>
+  <div class="rc-place">${esc(place)}</div>`}
 
   <!-- ── TITLE ───────────────────────────────────────────────────────────── -->
   ${AR && award.titleAr ? `
@@ -1709,7 +1757,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <span class="rc-bidiv rc-bidiv-sm"><i></i></span>
     <div class="rc-lede rc-lede-ar" dir="rtl" lang="ar">${esc(`${AR.intro} ${arStudent}`)}</div>
   </div>` : `<div class="rc-lede">This is to certify that</div>`}
-  ${AR && nameAr ? `
+  ${AR ? `
   <div class="rc-biname">
     <div class="rc-name rc-name-en" style="font-size:${Math.min(20, namePt)}pt">${esc(nameEn)}</div>
     <span class="rc-bidiv rc-bidiv-name"><i></i></span>
@@ -1739,7 +1787,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <span class="rc-bidiv rc-bidiv-tall"><i></i></span>
     <p class="rc-body rc-body-ar" dir="rtl" lang="ar">قد ${esc(arDone)} بنجاحٍ
       ${esc(award.stageAr)} في العام الدراسي
-      <span class="rc-arnum">${esc(session)}</span>، وفقًا للمناهج المعتمدة
+      <bdi class="rc-arnum" dir="ltr">${esc(ltr(arDigits(session)))}</bdi>، وفقًا للمناهج المعتمدة
       والمعايير الأكاديمية المعمول بها في الكلية، ${esc(arNext)}.</p>
   </div>` : `
   <p class="rc-body">has satisfactorily completed ${esc(award.stageEn)} at ${esc(prog.school)}
@@ -1755,9 +1803,15 @@ function sheetHtml({ cert, qrSvgMarkup }) {
        across it. -->
   <div class="rc-lathebar">${latheStrip(uid)}</div>` : ''}
   <div class="rc-award">
-    <span class="rc-award-k">${AR ? `<span dir="rtl" lang="ar">${esc(AR.awardLabel)}</span> <span class="rc-dot">·</span> ` : ''}Award Conferred</span>
-    <span class="rc-award-v">${esc(award.award)}</span>
-    ${AR && award.awardAr ? `<span class="rc-award-ar" dir="rtl" lang="ar">${esc(award.awardAr)}</span>` : ''}
+    ${AR ? biPair('Award Conferred', AR.awardLabel, 'rc-award-k') : '<span class="rc-award-k">Award Conferred</span>'}
+    <!-- The only stacked pair on this sheet, and only because sixty-seven
+         characters of English will not share a 193mm line with its Arabic.
+         Stacked, ARABIC LEADS — the Founder's rule, and the right one on a
+         certificate whose subject is the Qur'an. -->
+    ${AR && award.awardAr
+      ? `<span class="rc-award-ar" dir="rtl" lang="ar">${esc(award.awardAr)}</span>
+    <span class="rc-award-v">${esc(award.award)}</span>`
+      : `<span class="rc-award-v">${esc(award.award)}</span>`}
   </div>
 
   ${isQuran ? `  <!-- The two Code 128-C symbols take the bare cream the artwork leaves on
@@ -1791,18 +1845,20 @@ function sheetHtml({ cert, qrSvgMarkup }) {
       ? `<img class="rc-sig-ink" src="${esc(prog.signatory.ink)}" alt="" />`
       : '<div class="rc-sig-ink rc-sig-ink-blank"></div>'}
     <div class="rc-sig-line"></div>
-    ${AR && prog.signatory.nameAr ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(prog.signatory.nameAr)}</div>` : ''}
-    <div class="rc-sig-name">${esc(prog.signatory.name)}</div>
-    <div class="rc-sig-role">${esc(prog.signatory.role)}${AR
-      ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.signatoryRole)}</span>` : ''}</div>
+    ${AR && prog.signatory.nameAr
+      ? `${biPair(prog.signatory.name, prog.signatory.nameAr, 'rc-sig-name')}
+    ${biPair(prog.signatory.role, AR.signatoryRole, 'rc-sig-role')}`
+      : `<div class="rc-sig-name">${esc(prog.signatory.name)}</div>
+    <div class="rc-sig-role">${esc(prog.signatory.role)}</div>`}
   </div>
   <div class="rc-sig rc-sig-r">
     <img class="rc-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="rc-sig-line"></div>
-    ${AR ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(AR.chairmanName)}</div>` : ''}
-    <div class="rc-sig-name">Dr. Zakariya Olanrewaju Anofi</div>
-    <div class="rc-sig-role">Chairman, Board of Governors${AR
-      ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.chairmanRole)}</span>` : ''}</div>
+    ${AR
+      ? `${biPair('Dr. Zakariya Olanrewaju Anofi', AR.chairmanName, 'rc-sig-name')}
+    ${biPair('Chairman, Board of Governors', AR.chairmanRole, 'rc-sig-role')}`
+      : `<div class="rc-sig-name">Dr. Zakariya Olanrewaju Anofi</div>
+    <div class="rc-sig-role">Chairman, Board of Governors</div>`}
   </div>
 
   <!-- ── AUTHENTICATION BAND ─────────────────────────────────────────────────
@@ -1851,7 +1907,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
     <div class="rc-plate-head"><span class="rc-plate-mark">SHRS</span>Certificate Verification</div>
     <div class="rc-plate-grid">
       ${AR ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.date)}</i> · Date of Award</span><b>${esc(issued)}</b></div>` : ''}
-      ${AR && hijriAr ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.hijri)}</i> · Hijri Date</span><b class="rc-pf-ar" dir="rtl" lang="ar">${esc(hijriAr)}</b></div>` : ''}
+      ${AR && hijriAr ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.hijri)}</i> · Hijri Date</span><b class="rc-pf-ar" dir="rtl" lang="ar"><bdi dir="rtl">${esc(hijriAr)}</bdi></b></div>` : ''}
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.docId)}</i> · ` : ''}Document ID</span><b>${esc(docId)}</b></div>
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.code)}</i> · ` : ''}Verification Code</span><b>${esc(verifyCode)}</b></div>
       <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.archive)}</i> · ` : ''}Archive Reference</span><b>${esc(archiveRef)}</b></div>
@@ -2106,29 +2162,48 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .sheet[data-border="quran"] .rc-serial{display:none}
 .sheet[data-border="quran"] .rc-ledger{display:none}
 
-/* ── HEAD ── Every institutional line in both scripts, Arabic above English
-   throughout. The order is not arbitrary: on a sheet whose subject is the
-   Qur'an, Arabic leads and English follows it, and it does so at every rank
-   so the pairing reads as a rule rather than as a decision taken line by
-   line. All of it is centred between the artwork's two ribbon rosettes. */
-.sheet[data-border="quran"] .rc-emblems{top:22.6mm;height:9.4mm;gap:8mm}
+/* ── THE BILINGUAL PAIR ── one rule, every pair ─────────────────────────
+   English left, Arabic right, one baseline, a struck lozenge between them.
+   The two halves are given EQUAL FLEX and mirrored alignment, so the divider
+   sits on the sheet's own centre line and neither language can grow into the
+   other's half. Optical sizing is per pair — Amiri sets smaller per point than
+   the Latin faces, so every pair states both sizes rather than one. */
+.rc-bipair{position:absolute;left:0;right:0;display:flex;align-items:baseline;
+  justify-content:center;gap:2.6mm}
+.rc-bipair .bp-en{flex:1;text-align:right;white-space:nowrap}
+.rc-bipair .bp-ar{flex:1;text-align:left;font-family:'Amiri',serif;direction:rtl;
+  white-space:nowrap}
+.rc-bipair .bp-div{position:relative;width:1.2mm;flex:0 0 auto;align-self:center;
+  display:flex;align-items:center;justify-content:center}
+.rc-bipair .bp-div i{width:1mm;height:1mm;background:${GOLD};transform:rotate(45deg);
+  opacity:0.85}
+/* The one stacked pair, and Arabic leads it. */
+.rc-bipair-stack{flex-direction:column;align-items:center;gap:0.6mm}
+.rc-bipair-stack .bp-en,.rc-bipair-stack .bp-ar{flex:none;text-align:center}
+
+/* ── HEAD ── four pairs, four baselines ───────────────────────────────── */
+.sheet[data-border="quran"] .rc-emblems{top:22.4mm;height:9.4mm;gap:8mm}
 .sheet[data-border="quran"] .rc-em-side{height:8.8mm}
 .sheet[data-border="quran"] .rc-em-mid{height:9.4mm}
-.rc-arline{position:absolute;left:0;right:0;text-align:center;
-  font-family:'Amiri',serif;direction:rtl}
-.sheet[data-border="quran"] .rc-ar-nation{top:33mm;font-size:6.8pt;font-weight:400;
-  color:${INK_SOFT}}
-.sheet[data-border="quran"] .rc-nation{top:37mm;font-size:5.1pt}
-.sheet[data-border="quran"] .rc-ar-inst{top:39.6mm;font-size:10.2pt;font-weight:700;
-  color:${GOLD_DEEP}}
-.sheet[data-border="quran"] .rc-inst{top:44.6mm;font-size:9.6pt;letter-spacing:0.14em}
-.sheet[data-border="quran"] .rc-ar-school{top:49mm;font-size:8.4pt;font-weight:700;
-  color:${INK}}
-.sheet[data-border="quran"] .rc-school{top:53.2mm;font-size:6.6pt;letter-spacing:0.16em}
-.sheet[data-border="quran"] .rc-place{top:56.8mm;font-size:4.8pt}
+.rc-p-nation{top:33.2mm}
+.rc-p-nation .bp-en{font-family:'Cinzel',serif;font-size:5.2pt;font-weight:400;
+  letter-spacing:0.2em;color:${INK_SOFT};text-transform:uppercase}
+.rc-p-nation .bp-ar{font-size:6.8pt;font-weight:400;color:${INK_SOFT}}
+.rc-p-inst{top:38.2mm}
+.rc-p-inst .bp-en{font-family:'Cinzel',serif;font-size:9.6pt;font-weight:800;
+  letter-spacing:0.13em;color:${GOLD_DEEP};text-transform:uppercase}
+.rc-p-inst .bp-ar{font-size:11pt;font-weight:700;color:${GOLD_DEEP}}
+.rc-p-school{top:44.4mm}
+.rc-p-school .bp-en{font-family:'Cinzel',serif;font-size:7pt;font-weight:700;
+  letter-spacing:0.15em;color:${INK};text-transform:uppercase}
+.rc-p-school .bp-ar{font-size:8.6pt;font-weight:700;color:${INK}}
+.rc-p-place{top:49.6mm}
+.rc-p-place .bp-en{font-family:'Inter',sans-serif;font-size:4.9pt;letter-spacing:0.18em;
+  color:${INK_SOFT};text-transform:uppercase}
+.rc-p-place .bp-ar{font-size:6pt;color:${INK_SOFT}}
 
-/* ── TITLE ── One baseline, two languages, a struck divider between them. */
-.rc-bititle{position:absolute;left:52mm;right:52mm;top:60.2mm;height:11.2mm;
+/* ── TITLE ── */
+.rc-bititle{position:absolute;left:52mm;right:52mm;top:54.4mm;height:11.2mm;
   display:flex;align-items:center;gap:5mm}
 .rc-title-en{flex:1;margin:0;text-align:right;font-family:'Cinzel',serif;
   font-size:12.6pt;font-weight:800;letter-spacing:0.055em;color:${GOLD_DEEP};
@@ -2137,25 +2212,22 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-title-ar{flex:1;text-align:left;font-family:'Amiri',serif;font-size:15.4pt;
   font-weight:700;color:${GOLD_DEEP};line-height:1.25;
   text-shadow:0 0.2mm 0 rgba(255,252,242,0.85)}
-/* The divider is a rule, not a border: it carries a lozenge at its middle so
-   it reads as struck metal rather than as a table cell edge. */
 .rc-bidiv{position:relative;width:1.5mm;align-self:stretch;display:flex;
   align-items:center;justify-content:center;flex:0 0 auto}
 .rc-bidiv::before{content:'';position:absolute;top:0.6mm;bottom:0.6mm;width:0.22mm;
   background:linear-gradient(180deg,rgba(168,134,63,0),${GOLD} 26%,${GOLD} 74%,rgba(168,134,63,0))}
 .rc-bidiv i{position:relative;width:1.5mm;height:1.5mm;background:${GOLD};
   transform:rotate(45deg)}
-.sheet[data-border="quran"] .rc-subtitle{top:72mm;font-size:6.4pt;letter-spacing:0.2em}
+.sheet[data-border="quran"] .rc-subtitle{top:66.4mm;font-size:6.4pt;letter-spacing:0.2em}
 .sheet[data-border="quran"] .rc-subtitle [lang="ar"]{font-family:'Amiri',serif;
   font-size:8pt;letter-spacing:0}
 .rc-motto{position:absolute;left:0;right:0;text-align:center;
   font-family:'Amiri','Scheherazade New',serif;font-size:9.4pt;font-weight:400;
   color:${GOLD_DEEP};line-height:1.4}
-.sheet[data-border="quran"] .rc-motto{top:75.6mm}
+.sheet[data-border="quran"] .rc-motto{top:70mm}
 
-/* ── CITATION ── */
 /* ── CITATION, as a two-column composition ─────────────────────────────── */
-.rc-bilede{position:absolute;left:56mm;right:56mm;top:79.6mm;height:5.2mm;
+.rc-bilede{position:absolute;left:56mm;right:56mm;top:74.4mm;height:5.2mm;
   display:flex;align-items:center;gap:4mm}
 .rc-bilede .rc-lede{position:static;flex:1;top:auto}
 .rc-lede-en{text-align:right}
@@ -2166,7 +2238,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-bidiv-sm i{width:1.1mm;height:1.1mm}
 
 /* The name: English left, Arabic right, one baseline, equal rank. */
-.rc-biname{position:absolute;left:42mm;right:42mm;top:85.4mm;height:13mm;
+.rc-biname{position:absolute;left:42mm;right:42mm;top:80mm;height:13mm;
   display:flex;align-items:center;gap:5mm}
 .rc-biname .rc-name{position:static;flex:1;height:auto;justify-content:flex-end;
   left:auto;right:auto;top:auto}
@@ -2182,45 +2254,49 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-bidiv-name i{width:1.9mm;height:1.9mm}
 /* Fallback: a holder with no Arabic name on file keeps the centred single
    line — the band is not padded out with a blank half. */
-.sheet[data-border="quran"][data-ar="0"] .rc-name{top:85.6mm;left:56mm;right:56mm;
-  height:12.6mm}
+
 
 /* Microtext: the serial at the 0.90pt press floor, under the name. */
-.rc-microrule{position:absolute;left:52mm;right:52mm;top:98.8mm;text-align:center;
+.rc-microrule{position:absolute;left:52mm;right:52mm;top:93.6mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:0.9pt;letter-spacing:0.32pt;
   color:${MICRO_INK};white-space:nowrap;overflow:hidden;text-overflow:clip;
   opacity:0.9}
-.sheet[data-border="quran"] .rc-namerule{top:100.2mm;left:96mm;right:96mm}
-.sheet[data-border="quran"] .rc-sid{top:101.8mm;font-size:5.4pt}
+.sheet[data-border="quran"] .rc-namerule{top:95mm;left:96mm;right:96mm}
+.sheet[data-border="quran"] .rc-sid{top:96.6mm;font-size:5.4pt}
 .sheet[data-border="quran"] .rc-sid [lang="ar"]{font-family:'Amiri',serif;font-size:6.6pt;
   letter-spacing:0}
 /* No Arabic name on file: the rule and the identity line close up rather than
    leaving a hole where a name should be. */
-.sheet[data-border="quran"][data-ar="0"] .rc-namerule{top:99.6mm}
-.sheet[data-border="quran"][data-ar="0"] .rc-sid{top:101.2mm}
+
+
 
 /* The citation, two columns. Stacked it costs 26mm of a 138mm field; side by
    side it costs 14, and neither reader is made to wait for the other. */
-.rc-bibody{position:absolute;left:43mm;right:43mm;top:107mm;height:16mm;
+.rc-bibody{position:absolute;left:43mm;right:43mm;top:101.8mm;height:16mm;
   display:flex;align-items:flex-start;gap:3.6mm}
-.sheet[data-border="quran"][data-ar="0"] .rc-bibody{top:106.2mm}
+
 .rc-bibody .rc-body{position:static;margin:0;font-size:7.9pt;line-height:1.42;
   color:${INK}}
 .rc-body-en{flex:1.24}
 .rc-body-ar{flex:1}
 .rc-body-en{text-align:left;hyphens:auto}
 .rc-body-ar{text-align:right;font-family:'Amiri',serif;font-size:8.4pt;line-height:1.58}
-.rc-arnum{unicode-bidi:isolate;direction:ltr}
+.rc-arnum{unicode-bidi:isolate;direction:ltr;font-family:'Amiri',serif}
 .rc-bidiv-tall{width:1.5mm;height:15mm}
 
 /* ── AWARD ── */
 /* The engine-turned rule, then the award. */
-.rc-lathebar{position:absolute;left:73.5mm;width:150mm;top:123.8mm;height:2.6mm}
+.rc-lathebar{position:absolute;left:73.5mm;width:150mm;top:118.8mm;height:2.6mm}
 .rc-lathe-svg{display:block;width:100%;height:100%}
-.sheet[data-border="quran"] .rc-award{top:127.4mm;left:52mm;right:52mm;height:11mm;gap:0.25mm}
-.sheet[data-border="quran"] .rc-award-k{font-size:4.4pt;letter-spacing:0.24em}
-.sheet[data-border="quran"] .rc-award-k [lang="ar"]{font-family:'Amiri',serif;
-  font-size:6pt;letter-spacing:0}
+.sheet[data-border="quran"] .rc-award{top:122.4mm;left:52mm;right:52mm;height:12mm;gap:0.5mm}
+/* A pair set in flow inside a flex column must be told to take the full
+   measure, or it shrinks to its content and wraps a two-word label onto
+   two lines — which "AWARD CONFERRED" duly did. */
+.sheet[data-border="quran"] .rc-award .rc-bipair{position:static;width:100%;gap:2mm}
+.rc-award-k .bp-en{font-family:'Inter',sans-serif;font-size:4.4pt;letter-spacing:0.24em;
+  color:${GOLD_DEEP};text-transform:uppercase}
+.rc-award-k .bp-ar{font-size:5.6pt;color:${GOLD_DEEP}}
+
 .sheet[data-border="quran"] .rc-award-v{font-size:8.2pt;letter-spacing:0.045em}
 .rc-award-ar{font-family:'Amiri',serif;font-size:8.2pt;font-weight:700;color:${INK};
   direction:rtl;line-height:1.1}
@@ -2235,24 +2311,30 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
    The layout gate measured the collision at 149.2 and was right — a signature
    box reaching into the QR is a scan failure waiting for the first parent who
    tries it. */
-.sheet[data-border="quran"] .rc-sig{top:150.6mm;width:68mm}
-.sheet[data-border="quran"] .rc-sig-l{left:60mm;right:auto}
-.sheet[data-border="quran"] .rc-sig-r{right:60mm;left:auto}
+.sheet[data-border="quran"] .rc-sig{top:147.4mm;width:74mm}
+.sheet[data-border="quran"] .rc-sig-l{left:56mm;right:auto}
+.sheet[data-border="quran"] .rc-sig-r{right:56mm;left:auto}
 .sheet[data-border="quran"] .rc-sig-ink{height:5mm;max-width:44mm;margin-bottom:-0.7mm}
 .sheet[data-border="quran"] .rc-sig-name{margin-top:0.1mm;font-size:7.2pt}
-.rc-sig-namear{font-family:'Amiri',serif;font-size:8pt;font-weight:700;color:${INK};
-  direction:rtl;line-height:1.1;margin-top:0.55mm}
+/* Inside a signature block the pairs sit in flow, not absolutely. */
+.rc-sig .rc-bipair{position:static;width:100%;margin-top:0.5mm;gap:2mm}
+.rc-sig-name .bp-en{font-family:'Cormorant Garamond',serif;font-size:7.6pt;
+  font-weight:600;color:${INK}}
+.rc-sig-name .bp-ar{font-size:8.4pt;font-weight:700;color:${INK}}
+.rc-sig-role .bp-en{font-family:'Inter',sans-serif;font-size:3.5pt;
+  letter-spacing:0.07em;color:${INK_SOFT};text-transform:uppercase;line-height:1.3}
+.rc-sig-role .bp-ar{font-size:4.6pt;color:${INK_SOFT};line-height:1.3}
+.rc-sig .rc-bipair .bp-div i{width:0.8mm;height:0.8mm}
 .sheet[data-border="quran"] .rc-sig-role{margin-top:0.3mm;font-size:3.7pt;
   letter-spacing:0.08em;white-space:nowrap}
-.rc-sig-rolear{font-family:'Amiri',serif;font-size:5pt;color:${INK_SOFT};
-  letter-spacing:0;text-transform:none;unicode-bidi:isolate}
+
 
 /* ── VERIFICATION PLATE ── */
 /* Five fields, each with its Arabic label above its English one. It sits ABOVE
    the signatures rather than below them, because the artwork's bottom-left
    swoosh eats the field from x 0 to 59mm below y 161 — a plate at the foot
    would have had to start inside the ornament. Measured, not guessed. */
-.sheet[data-border="quran"] .rc-plate{left:52mm;width:193mm;top:140.4mm;height:9.4mm}
+.sheet[data-border="quran"] .rc-plate{left:52mm;width:193mm;top:136.6mm;height:9.4mm}
 .sheet[data-border="quran"] .rc-plate-head,
 .sheet[data-border="quran"] .rc-plate-bar,
 .sheet[data-border="quran"] .rc-plate-bar2,

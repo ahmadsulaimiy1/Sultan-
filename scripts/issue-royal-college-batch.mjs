@@ -213,7 +213,18 @@ ROLLS.QUR = [
   // guessing wrong here puts one child's permanent number on another child's
   // certificate. She is issued a new Student ID. If the Registrar's records
   // show she is the same student, say so and it is a one-line change.
-  { en: 'Aisha Omoshalewa Anofi', sex: 'female', awardVariant: 'JUZ10' },
+  // Two of her three name-parts are ALREADY APPROVED and carried across from the
+  // Ibtida'iyyah register — عائشة (Aisha) and حنفي (Anofi, the school's own
+  // name). Only the middle name is new, and Yoruba middle names are exactly
+  // what that register's protocol sends to the Founder before print: أولاميبوسي
+  // (Olamiposi) and أولاديميجي (Oladimeji) were both proposed on the approved
+  // أولانريوجو and then ruled on. This follows the same pattern and is HELD
+  // under the same rule — proposed here, printed only once he rules.
+  { en: 'Aisha Omoshalewa Anofi', sex: 'female', awardVariant: 'JUZ10',
+    arProposal: 'عائشة أوموشاليوا حنفي',
+    arNote: 'عائشة and حنفي are already approved (IBT register). أوموشاليوا is '
+      + 'proposed on the approved أولاميبوسي / أولاديميجي pattern and awaits the '
+      + 'Founder\u2019s ruling.' },
 ];
 
 const ROLL = ROLLS[BATCH];
@@ -395,6 +406,19 @@ if (!RC_PROGRAMMES[PROGRAMME]) fail(`no award wording for programme "${PROGRAMME
 
 // ── Resolve the carried-over Student IDs from the real registers ────────────
 const registerCache = new Map();
+// The Arabic name a published register already carries for this student. It is
+// READ, never derived: باقي أولاميبوسي حنفي was approved by the Founder on
+// 2026-08-06 and is already engraved on Baqi's I'dādiyyah certificate, so
+// re-proposing it here would be inventing a second Arabic name for a boy who
+// already has one on an SHRS document.
+function arabicNameFromRegister(key, name) {
+  if (!registerCache.has(key)) {
+    registerCache.set(key, JSON.parse(readFileSync(join(process.cwd(), REGISTERS[key]), 'utf8')));
+  }
+  const hits = registerCache.get(key).entries.filter((e) => e.studentEn === name);
+  return hits.length === 1 ? (hits[0].studentAr || null) : null;
+}
+
 function identityFromRegister(key, name) {
   if (!registerCache.has(key)) {
     registerCache.set(key, JSON.parse(readFileSync(join(process.cwd(), REGISTERS[key]), 'utf8')));
@@ -412,11 +436,41 @@ let nextNewIdentitySeq = FIRST_NEW_IDENTITY_SEQ;
 const roll = ROLL.map((student) => {
   if (student.carryOverFrom) {
     const identityNo = identityFromRegister(student.carryOverFrom.register, student.carryOverFrom.name);
-    return { ...student, identityNo, identitySource: `carried from ${student.carryOverFrom.register}` };
+    const ar = student.ar
+      || arabicNameFromRegister(student.carryOverFrom.register, student.carryOverFrom.name);
+    return {
+      ...student, identityNo, ar,
+      identitySource: `carried from ${student.carryOverFrom.register}`,
+      arSource: student.ar ? 'supplied by the Founder for this batch'
+        : (ar ? `carried from the ${student.carryOverFrom.register} register` : null),
+    };
   }
   const seq = nextNewIdentitySeq++;
   return { ...student, identityNo: formatStudentIdentityNo(seq), identitySource: `newly issued (seq ${seq})` };
 });
+
+// A bilingual award has no monolingual sheets. If one graduate's Arabic name is
+// missing, her certificate would fall back to a centred English line while her
+// classmates carry a matched pair — and a graduating class whose certificates
+// do not match is not a class. The batch stops here, names everyone it is
+// waiting on, and signs nothing.
+if (RC_PROGRAMMES[PROGRAMME].ar) {
+  const missing = roll.filter((s) => !s.ar);
+  if (missing.length) {
+    console.error('\nBATCH HELD — this is a bilingual award and every sheet must carry a matched');
+    console.error('name pair. The following Arabic names are not on file:\n');
+    for (const m of missing) {
+      console.error(`  ${m.en}`);
+      if (m.arProposal) {
+        console.error(`      proposed: ${m.arProposal}`);
+        console.error(`      ${m.arNote}`);
+      }
+    }
+    console.error('\nNo Arabic name is ever transliterated or generated here. Supply the form,');
+    console.error('or rule on the proposal above, and the batch issues unchanged.\n');
+    process.exit(1);
+  }
+}
 
 for (const s of roll) {
   if (!isValidStudentIdentityNo(s.identityNo)) {
