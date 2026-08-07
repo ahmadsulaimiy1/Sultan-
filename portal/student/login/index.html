@@ -9,9 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
 <link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body" data-atmosphere="student">
@@ -21,12 +25,13 @@
     <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
     <span>Sultan Hanafi</span>
   </a>
-  <span class="portal-pilot-badge" data-i18n="pilot">Pilot</span>
+  <span class="portal-pilot-badge" data-i18n="portal.pilot">Pilot</span>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <div class="portal-shell">
   <aside class="portal-aside" aria-hidden="true">
-    <p class="portal-aside-eyebrow">Student Portal</p>
+    <p class="portal-aside-eyebrow" data-i18n="footer.studentPortal">Student Portal</p>
     <h2 class="portal-aside-title">Your record. Your<br>results. Your journey.</h2>
     <p class="portal-aside-copy">Sign in with the admission number and password issued by the school to view your own profile, attendance, and results.</p>
     <ul class="portal-aside-points">
@@ -42,7 +47,7 @@
 
   <main class="portal-main portal-form-col">
     <div class="portal-card">
-      <h1>Student Portal</h1>
+      <h1 data-i18n="footer.studentPortal">Student Portal</h1>
       <p class="sub">Sign in with your admission number to see your profile, attendance, results, and — for Qur'an College students — your Hifz &amp; Ijazah record.</p>
 
       <div class="portal-error" data-portal-error></div>
@@ -53,10 +58,10 @@
           <input id="portal-admission-no" name="admissionNo" type="text" autocomplete="username" required />
         </div>
         <div class="portal-field">
-          <label for="portal-password">Password</label>
+          <label for="portal-password" data-i18n="form.password">Password</label>
           <input id="portal-password" name="password" type="password" autocomplete="current-password" required />
         </div>
-        <button type="submit" class="portal-submit" data-portal-submit>Sign In</button>
+        <button type="submit" class="portal-submit" data-portal-submit data-i18n="action.signIn">Sign In</button>
       </form>
 
       <form data-portal-otp-form hidden>
@@ -71,10 +76,10 @@
 
       <p class="portal-notice">
         This is an early pilot of our Student Portal. Your login shows only your own records — nobody else can see them. If you don't yet have login details, or your activation link has expired, ask your teacher or contact the school at
-        <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a>.
+        <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> or via <a href="https://wa.me/2348073747650" target="_blank" rel="noopener" data-i18n="topbar.whatsapp">WhatsApp</a>.
       </p>
       <a class="portal-back-link" href="/portal/login/">Parent or guardian? Sign in here →</a><br>
-      <a class="portal-back-link" href="/">← Back to the main site</a>
+      <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
     </div>
   </main>
 </div>

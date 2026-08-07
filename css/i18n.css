@@ -228,3 +228,25 @@
   color: var(--crimson, #8c1d2b);
   text-underline-offset: 3px;
 }
+
+/* --- Portal stacking ------------------------------------------------------
+ * .portal-topbar and .portal-shell are siblings, both position:relative with
+ * z-index:1 (css/portal.css). Equal z-index means DOM order decides, and the
+ * shell comes second — so anything the topbar overflows downward is painted
+ * UNDER the page content. The switcher's dropdown lives exactly there, which
+ * made it open but unclickable on all 69 portal pages: the first heading in
+ * the shell swallowed the click.
+ *
+ * Raising the topbar fixes it for good. A topbar carrying a menu has to
+ * out-stack the content it hangs over; the switcher's own z-index cannot do
+ * this from inside, because the topbar's z-index:1 creates the stacking
+ * context that traps it.
+ *
+ * The selector is `body.portal-body > .portal-topbar` rather than a bare
+ * `.portal-topbar` because the z-index:1 comes from `body.portal-body > *`
+ * (css/portal.css:58) — specificity (0,1,1), which a bare class at (0,1,0)
+ * loses to no matter how late it is loaded. */
+body.portal-body > .portal-topbar {
+  position: relative;
+  z-index: 60;
+}

@@ -85,6 +85,52 @@ Chrome still falling back to English on a translated page is **reported at
 the end of every build**, so the gap is visible rather than silently
 permanent.
 
+## The portal
+
+The portal is the one part of the platform that must NOT switch by
+navigating. A portal page is a live view behind a session: re-rendering it by
+loading a second copy would drop the reader's fetched data and any half-filled
+form. So the portal translates in place, which requires the strings marked in
+the DOM.
+
+`scripts/i18n-portal.js` adds those marks to the 36 hand-authored pages:
+
+```
+<button data-i18n="action.signOut">Sign Out</button>
+<input data-i18n-attr="placeholder:form.email" placeholder="Email address">
+```
+
+It annotates a text node only when that node is its element's **only** child —
+the runtime sets `textContent`, which would otherwise delete sibling markup
+such as an icon `<svg>` next to a label — matches whole strings only, skips
+elements already annotated (so it is idempotent), and verifies that the
+rendered text of every file is unchanged afterwards, writing nothing for a
+file that fails.
+
+The 32 office portals are stamped out by `scripts/build-office-portals.js`,
+so their strings are marked **in that template** — one edit covering all of
+them — and `portal/select/` comes from `scripts/build.js` and is already
+translated as a normal public page. Both are skipped by the annotator, which
+is what keeps the annotation surviving a rebuild.
+
+`scripts/i18n-portal-assets.js` wires `css/i18n.css` and the runtime into
+every portal page, in the one order that works: `locale-registry.js` and
+`i18n-core.js` synchronously **before** `portal-theme.js`, which needs
+`SHRS_I18N` to resolve the stored locale's direction before first paint;
+`i18n.js` deferred.
+
+`js/portal-theme.js` previously carried a seven-key Arabic dictionary and its
+own EN/AR toggle — a second, parallel language system that knew nothing about
+the rest of the site and could not express a third language. It now does one
+language job: stamp the stored locale's `lang`/`dir` on `<html>`
+synchronously, so an Arabic reader never sees a frame of LTR layout. It reads
+the old `portalLang` preference once, so a reader who chose Arabic in the
+portal before this change stays in Arabic after it.
+
+All 69 portal pages carry the switcher, including the signed-out screens —
+sign in, register, set password — where it matters most, since a reader who
+cannot read the sign-in form cannot reach anything behind it.
+
 ## The switcher
 
 `js/i18n.js` picks a strategy per page:
@@ -184,8 +230,14 @@ Stated plainly so the gap is scoped rather than assumed closed.
 | Public page **body content**, Yorùbá + French | English, behind a translated interim notice |
 | Portal mega-menu prose (~75 strings in `header.tpl.html`) | English in all but Arabic |
 | `partials/assistant.*`, `partials/personalisation.*` | English for Yorùbá + French (reported each build) |
-| Portal UI (69 pages, ~9,800 lines of JS) | English; `js/portal-theme.js` carries a 7-key Arabic chrome dictionary |
+| Portal chrome — tabs, topbar, nav, sign-in screens (69 pages) | Translated, all 4 languages, switching in place |
+| Portal page-specific prose (~1,300 one-off strings) | English |
+| Strings rendered from portal JavaScript (~9,800 lines) | English |
 | Emails, PDFs, certificates, reports | English / existing bilingual behaviour unchanged |
+
+`SHRS_LOCALE.t()` is available to portal scripts that render rows at runtime;
+those call sites have not been converted yet, which is what the
+"strings rendered from portal JavaScript" row above refers to.
 
 Pages with untranslated bodies are generated with fully translated chrome and
 a visible, translated notice linking to the English edition, so `hreflang`

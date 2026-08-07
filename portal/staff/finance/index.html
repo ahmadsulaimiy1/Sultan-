@@ -9,9 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
 <link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body type-administrative" data-atmosphere="finance">
@@ -25,10 +29,11 @@
     <span class="portal-pilot-badge">Finance Office</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/office/finance/">Office Governance View</a>
-    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
-    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
-    <a class="portal-topbar-link" href="/portal/staff/documents/" data-i18n="staff-documents">Staff Documents</a>
-    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+    <a class="portal-topbar-link" href="/portal/staff/identity/" data-i18n="portal.myIdentity">My Identity</a>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="portal.allOffices">All Offices</a>
+    <a class="portal-topbar-link" href="/portal/staff/documents/" data-i18n="portal.staffDocuments">Staff Documents</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="action.signOut">Sign Out</button>
   </div>
 </div>
 
@@ -66,7 +71,7 @@
             <option value="Sultan Hanafi Basic School">Sultan Hanafi Basic School</option>
             <option value="Secular College">Secular College</option>
             <option value="Islamiyyah College">Islamiyyah College</option>
-            <option value="Qur'an College">Qur'an College</option>
+            <option value="Qur'an College" data-i18n="nav.quranCollege">Qur'an College</option>
           </select>
         </div>
         <div class="portal-field">
@@ -237,7 +242,7 @@
     <div class="portal-child-card">
       <div class="portal-child-head">
         <h2>Debtors &amp; Ageing Report</h2>
-        <button type="button" class="portal-text-btn" data-debtors-refresh>Refresh</button>
+        <button type="button" class="portal-text-btn" data-debtors-refresh data-i18n="portal.refresh">Refresh</button>
       </div>
       <div class="portal-stats" data-debtors-summary></div>
       <div data-debtors-list style="padding:0 20px 20px;"></div>
@@ -246,7 +251,7 @@
     <div class="office-group-head">Budget Health &amp; Forecasts</div>
 
     <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Not Yet Tracked</h2></div>
+      <div class="portal-child-head"><h2 data-i18n="portal.notYetTracked">Not Yet Tracked</h2></div>
       <p class="registrar-hint" style="padding:0 20px 20px;">Budget Health and Financial Forecasts are not shown here because no real budgeting or forecasting data model exists yet — this office currently records invoices, receipts, scholarships, and payment plans, not budget lines or projections. Building these honestly (rather than estimating from the invoice ledger) is tracked as a future Finance Platform phase in docs/finance-platform.md.</p>
     </div>
 
@@ -261,8 +266,8 @@
   </div>
   <div class="portal-card" data-portal-error hidden>
     <h1>Couldn't load the Finance Office</h1>
-    <p class="sub" data-portal-error-message>Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
 

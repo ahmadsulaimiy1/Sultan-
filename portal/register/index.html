@@ -9,9 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
 <link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body">
@@ -22,6 +26,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <span class="portal-pilot-badge">New Account</span>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <div class="portal-shell">
@@ -36,16 +41,16 @@
     </ul>
     <div class="portal-aside-cta">
       <p>Already have an account?</p>
-      <a href="/portal/login/">Sign In →</a>
+      <a href="/portal/login/" data-i18n="action.signIn">Sign In →</a>
     </div>
   </aside>
 
   <main class="portal-main portal-form-col">
   <div class="portal-card" data-portal-form-card>
     <div class="portal-steps">
-      <div class="portal-step is-active"><span class="portal-step-circle">1</span><span class="portal-step-label">Create Account</span></div>
+      <div class="portal-step is-active"><span class="portal-step-circle">1</span><span class="portal-step-label" data-i18n="portal.createAccount">Create Account</span></div>
       <div class="portal-step-line"></div>
-      <div class="portal-step"><span class="portal-step-circle">2</span><span class="portal-step-label">Verify Email</span></div>
+      <div class="portal-step"><span class="portal-step-circle">2</span><span class="portal-step-label" data-i18n="portal.verifyEmail">Verify Email</span></div>
       <div class="portal-step-line"></div>
       <div class="portal-step"><span class="portal-step-circle">3</span><span class="portal-step-label">Your Dashboard</span></div>
     </div>
@@ -67,7 +72,7 @@
         </select>
       </div>
       <div class="portal-field">
-        <label for="reg-name">Full name</label>
+        <label for="reg-name" data-i18n="form.fullName">Full name</label>
         <input id="reg-name" name="fullName" type="text" autocomplete="name" required />
       </div>
       <div class="portal-field-row">
@@ -92,29 +97,29 @@
       </div>
       <div class="portal-field-row">
         <div class="portal-field">
-          <label for="reg-password">Password</label>
+          <label for="reg-password" data-i18n="form.password">Password</label>
           <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="10" required data-password-strength />
         </div>
         <div class="portal-field">
-          <label for="reg-confirm-password">Confirm password</label>
+          <label for="reg-confirm-password" data-i18n="form.confirmPassword">Confirm password</label>
           <input id="reg-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" required />
         </div>
       </div>
-      <button type="submit" class="portal-submit" data-portal-submit>Create Account</button>
+      <button type="submit" class="portal-submit" data-portal-submit data-i18n="portal.createAccount">Create Account</button>
     </form>
 
     <p class="portal-notice">
       Use at least 10 characters — a memorable phrase is safer than a short, complex password. By creating an account you agree this is for genuine enquiries or admissions on behalf of a prospective or current student.
     </p>
     <a class="portal-back-link" href="/portal/login/">Already have an account? Sign in →</a><br>
-    <a class="portal-back-link" href="/">← Back to the main site</a>
+    <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
   </div>
 
   <div class="portal-card" data-portal-success-card hidden>
     <div class="portal-steps">
-      <div class="portal-step is-done"><span class="portal-step-circle">✓</span><span class="portal-step-label">Create Account</span></div>
+      <div class="portal-step is-done"><span class="portal-step-circle">✓</span><span class="portal-step-label" data-i18n="portal.createAccount">Create Account</span></div>
       <div class="portal-step-line"></div>
-      <div class="portal-step is-active"><span class="portal-step-circle">2</span><span class="portal-step-label">Verify Email</span></div>
+      <div class="portal-step is-active"><span class="portal-step-circle">2</span><span class="portal-step-label" data-i18n="portal.verifyEmail">Verify Email</span></div>
       <div class="portal-step-line"></div>
       <div class="portal-step"><span class="portal-step-circle">3</span><span class="portal-step-label">Your Dashboard</span></div>
     </div>

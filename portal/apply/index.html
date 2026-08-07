@@ -9,9 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
 <link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body">
@@ -21,7 +25,8 @@
     <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
     <span>Sultan Hanafi</span>
   </a>
-  <span class="portal-pilot-badge">Admissions</span>
+  <span class="portal-pilot-badge" data-i18n="nav.admissions">Admissions</span>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <main class="portal-main">
@@ -43,7 +48,7 @@
           <option value="Sultan Hanafi Basic School">Sultan Hanafi Basic School</option>
           <option value="Secular College">Secular College</option>
           <option value="Islamiyyah College">Islamiyyah College</option>
-          <option value="Qur'an College">Qur'an College</option>
+          <option value="Qur'an College" data-i18n="nav.quranCollege">Qur'an College</option>
         </select>
       </div>
       <div class="portal-field">
@@ -52,7 +57,7 @@
       </div>
       <div class="portal-field">
         <label for="apply-notes">Anything else we should know?</label>
-        <input id="apply-notes" name="notes" type="text" placeholder="Optional" />
+        <input id="apply-notes" name="notes" type="text" placeholder="Optional" / data-i18n-attr="placeholder:form.optional">
       </div>
       <button type="submit" class="portal-submit" data-portal-submit>Submit Enquiry</button>
     </form>
@@ -60,7 +65,7 @@
     <p class="portal-notice">
       Document upload isn't available yet — once your enquiry is reviewed, the Admissions/Registrar office will contact you directly about the required documents (birth certificate, passport photographs, previous school testimonial).
     </p>
-    <a class="portal-back-link" href="/portal/dashboard/">← Back to your dashboard</a>
+    <a class="portal-back-link" href="/portal/dashboard/" data-i18n="portal.backToDashboard">← Back to your dashboard</a>
   </div>
 
   <div class="portal-card" data-portal-success-card hidden>

@@ -9,9 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
 <link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 </head>
 <body class="portal-body">
@@ -23,14 +27,15 @@
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
     <span class="portal-pilot-badge">Staff</span>
-    <a class="portal-topbar-link" href="/portal/staff/identity/">My Identity</a>
-    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+    <a class="portal-topbar-link" href="/portal/staff/identity/" data-i18n="portal.myIdentity">My Identity</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="action.signOut">Sign Out</button>
   </div>
 </div>
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello">Staff Documents</div>
+    <div class="portal-hello" data-i18n="portal.staffDocuments">Staff Documents</div>
     <div class="portal-hello-sub">Duty rosters, examination guidelines, and term deadlines circulated by the Office of the Principal — internal to staff, never published to the public site.</div>
 
     <div class="exec-card">
@@ -143,8 +148,8 @@
   </div>
   <div class="portal-card" data-portal-error hidden>
     <h1>Couldn't load this page</h1>
-    <p class="sub" data-portal-error-message>Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
 

@@ -7,7 +7,9 @@
     "build": "node scripts/build.js",
     "i18n:check": "node scripts/i18n-check.js",
     "i18n:check:strict": "node scripts/i18n-check.js --strict",
-    "i18n:templatise": "node scripts/i18n-templatise.js"
+    "i18n:templatise": "node scripts/i18n-templatise.js",
+    "i18n:portal": "node scripts/i18n-portal.js && node scripts/i18n-portal-assets.js",
+    "test:i18n": "node scripts/test-i18n-switcher.mjs && node scripts/test-i18n-portal.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",

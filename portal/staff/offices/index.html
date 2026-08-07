@@ -9,10 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
-<link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
-<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
-<script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
+<link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
+<script src="/js/locale-registry.js?v=cd0ef30df5"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=bcf60e4d74" defer></script>
 <style>
   .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
   .office-index-layer{margin-bottom:36px;}
@@ -28,19 +29,19 @@
     <span>Sultan Hanafi</span>
   </a>
   <a class="portal-topbar-link" href="/portal/staff/login/">Staff Sign In</a>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 <main class="portal-main" style="align-items:flex-start;">
   <div class="office-index-wrap">
     <p class="portal-aside-eyebrow" style="color:var(--gold);">INSTITUTIONAL PORTAL ECOSYSTEM</p>
-    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--portal-heading);margin:6px 0 8px;">All Offices</h1>
+    <h1 style="font-family:'Cormorant Garamond','Amiri',serif;font-size:2.1rem;color:var(--portal-heading);margin:6px 0 8px;" data-i18n="portal.allOffices">All Offices</h1>
     <p style="color:var(--ink-soft);max-width:640px;margin-bottom:8px;">Every office in the Sultan Hanafi Royal Schools digital campus, grouped by layer. Offices without a confirmed appointment show an honest "Vacant &mdash; Awaiting Appointment" seat, not a fabricated name.</p>
     <p style="margin-bottom:8px;"><a href="/portal/staff/org-chart/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Organisational Chart &rarr;</a></p>
-    <p style="margin-bottom:8px;"><a href="/portal/admin/centre/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Institutional Administration Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(sysadmin token required)</span></p>
-    <p style="margin-bottom:28px;"><a href="/portal/staff/graduation-control/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Graduation Control Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(8 August 2026 ceremony — institutional approval workflow)</span></p>
+    <p style="margin-bottom:28px;"><a href="/portal/admin/centre/" style="color:var(--gold-bright,var(--gold));font-weight:600;">Institutional Administration Centre &rarr;</a> <span style="color:var(--ink-soft);font-size:0.82rem;">(sysadmin token required)</span></p>
         <div class="office-index-layer">
           <h3>Governance</h3>
           <a class="office-index-row" href="/portal/office/board-of-trustees/">Board of Governors</a>
-          <a class="office-index-row" href="/portal/office/executive/">Executive</a>
+          <a class="office-index-row" href="/portal/office/executive/">Head of Schools / Administrator</a>
           <a class="office-index-row" href="/portal/office/management-council/">Management Council</a>
           <a class="office-index-row" href="/portal/office/strategic-planning/">Strategic Planning</a>
           <a class="office-index-row" href="/portal/office/quality-assurance/">Quality Assurance</a>
@@ -61,10 +62,10 @@
         </div>
         <div class="office-index-layer">
           <h3>School Leadership</h3>
-          <a class="office-index-row" href="/portal/office/head-teacher/">Head Teacher — Basic School</a>
-          <a class="office-index-row" href="/portal/office/principal-royal-college/">Principal — Secular College</a>
-          <a class="office-index-row" href="/portal/office/raees/">Office of the Principal — Islamiyyah College</a>
-          <a class="office-index-row" href="/portal/office/mudeer/">Office of the Principal — Qur&#39;an College</a>
+          <a class="office-index-row" href="/portal/office/head-teacher/">Head Teacher — Sultan Hanafi Basic School</a>
+          <a class="office-index-row" href="/portal/office/principal-royal-college/">Principal — Sultan Hanafi Secular College</a>
+          <a class="office-index-row" href="/portal/office/raees/">Office of the Principal — Sultan Hanafi Islamiyyah College</a>
+          <a class="office-index-row" href="/portal/office/mudeer/">Office of the Principal — Sultan Hanafi Qur&#39;an College</a>
         </div>
         <div class="office-index-layer">
           <h3>Operational</h3>
@@ -86,7 +87,5 @@
         </div>
   </div>
 </main>
-<script src="/js/prestige.js?v=a6f8feb921" defer></script>
-<script src="/js/motion.js?v=5b8669b440" defer></script>
 </body>
 </html>

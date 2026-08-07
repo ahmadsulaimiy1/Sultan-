@@ -62,7 +62,15 @@ const UNDERDOTTED = /[ẹọṣẸỌṢ]/;
 const COMBINING = /[̣̀́]/;
 
 const dicts = {};
-LOCALES.forEach((l) => { dicts[l.code] = loadDict(l.code); });
+// Underscore-prefixed keys are metadata for maintainers, not translatable
+// strings; loadDict strips them, so keep the raw form for the few checks
+// (like _identical) that need to read them.
+const rawDicts = {};
+LOCALES.forEach((l) => {
+  dicts[l.code] = loadDict(l.code);
+  const file = path.join(I18N, `${l.code}.json`);
+  rawDicts[l.code] = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+});
 
 const errors = [];
 const warnings = [];
@@ -110,7 +118,14 @@ LOCALES.forEach((l) => {
     // legitimately identical across languages, so only flag strings long
     // enough that an exact match cannot be coincidence, and skip the keys
     // we know are deliberately Latin-invariant.
-    const invariant = /^(topbar\.(whatsapp|facebook|instagram|youtube)|brand\.name)$/.test(key);
+    /* Some words genuinely are the same in two languages — "Notifications"
+       and "Documents" are identical in English and French, and the brand
+       name is identical everywhere. A dictionary declares those in an
+       `_identical` array so the warning list stays short enough that a real
+       untranslated string still stands out in it. */
+    const declaredIdentical = (rawDicts[l.code]._identical || []).indexOf(key) > -1;
+    const invariant = declaredIdentical ||
+      /^(topbar\.(whatsapp|facebook|instagram|youtube)|brand\.name)$/.test(key);
     if (!invariant && val === src && src.length > 12) {
       warnings.push(`${l.code}: key "${key}" is identical to ${DEFAULT} ("${src.slice(0, 48)}…")`);
     }
