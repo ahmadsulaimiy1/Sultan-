@@ -1949,7 +1949,13 @@
    on headings, rules and figures shifts as the reader moves across the
    page. It is the difference between gold-coloured and gilded.
    =================================================================== */
-.pr-h2,.pr-hero-title,.pr-stat-n,.pr-letter,.idc-inst,.pr-arrival h2{
+/* .idc-inst was in this list but never in the background-clip:text rule
+   two lines below, and never in the background-image:none rule either.
+   The raking gradient therefore painted as an opaque gold block behind
+   the institution's name on every identity card — a hard-edged bar
+   across the header that read as a printing fault. The card has its own
+   holographic foil; it does not need this as well. */
+.pr-h2,.pr-hero-title,.pr-stat-n,.pr-letter,.pr-arrival h2{
   background-image:linear-gradient(
     calc(100deg + (var(--gx,50) - 50) * 0.6deg),
     var(--pr-gold-deep) 0%, var(--pr-gold-deep) 34%,
@@ -3086,7 +3092,7 @@ section:not(.is-royal):not(.hero):not(.contact) .btn-outline{
 .adhkar-teaser .eyebrow,
 .adhkar-page .eyebrow,
 .at-ref,
-.adk-repeat,.adk-static-repeat{color:#6E5220!important;}
+.adk-repeat,.adk-static-repeat{color:#63481B!important;}
 .adk-priority-card .apc-count,
 .adk-wird-card .awc-time,
 .adk-wird-card .awc-count,
@@ -3129,8 +3135,8 @@ cite,.pr-quote cite,.pr-founder-card cite{color:#4a3a24;}
    bands. One colour cannot serve all three, so the default is set dark
    enough for the palest gold the site uses, and every dark ground
    restores the bright gold above. */
-.eyebrow,.pr-eyebrow{color:#6E5220;}
-.pr-section.is-ivory .btn-outline,.wrap > .cl-foot .btn-outline,.plib .btn-outline{color:#6E5220;}
+.eyebrow,.pr-eyebrow{color:#63481B;}
+.pr-section.is-ivory .btn-outline,.wrap > .cl-foot .btn-outline,.plib .btn-outline{color:#63481B;}
 
 /* A heading on a dark band must not take the ink colour brand.css gives
    every heading — the same defect that made the photographic hero titles
@@ -3150,7 +3156,7 @@ cite,.pr-quote cite,.pr-founder-card cite{color:#3B2A1D;}
    section.academics carries both the dark hero of an interior page and
    the light "Our Schools" band of the homepage, so it cannot be treated
    as one. The hero is distinguished by the crest icon it opens with. */
-.academics > .wrap .eyebrow{color:#6E5220;}
+.academics > .wrap .eyebrow{color:#63481B;}
 .academics > .wrap:has(> .page-hero-icon) .eyebrow,
 .policies > .wrap:has(> .page-hero-icon) .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
 
@@ -3185,7 +3191,7 @@ cite,.pr-quote cite,.pr-founder-card cite,figure cite{color:#3B2A1D!important;}
 .portal-body .tag,.gateway-card .tag{color:var(--pr-gold-bright,#E9CE8A);}
 
 /* A bare inline link on a pale band. */
-.pr-section.is-ivory .text-link,.is-ivory .text-link{color:#6E5220;}
+.pr-section.is-ivory .text-link,.is-ivory .text-link{color:#63481B;}
 .pr-section.is-royal .text-link,.chapter-band .text-link,.chapter-band-alt .text-link,
 .portal-body .text-link,footer .text-link,.text-link.on-dark{color:var(--pr-gold-bright,#E9CE8A);}
 
@@ -3216,7 +3222,7 @@ cite,.pr-quote cite,.pr-founder-card cite,figure cite{color:#3B2A1D!important;}
   color:#fff;border-color:var(--pr-gold-bright);background:rgba(233,206,138,.14);}
 
 /* The Foundation band on the homepage is cream, not royal. */
-.foundation .eyebrow{color:#6E5220;}
+.foundation .eyebrow{color:#63481B;}
 
 /* An open-ended age band is filled in a pale slate; its label takes ink. */
 .pr-age-fill.is-open{background:linear-gradient(120deg,#33525E,#5C8391);color:#fff;}
@@ -3264,7 +3270,17 @@ b,strong,small,.cap{color:inherit;}
 b,strong{color:#3B2A1D;}
 .pr-section.is-royal b,.pr-section.is-royal strong,.chapter-band b,.chapter-band strong,
 .chapter-band-alt b,.chapter-band-alt strong,.portal-body b,.portal-body strong,
-footer b,footer strong,.pr-hero b,.pr-hero strong,.gateway-card b{color:inherit;}
+footer b,footer strong,.pr-hero b,.pr-hero strong,.gateway-card b,
+/* The dark bands that were missing from this list. A bolded phrase in
+   the governance note measured 1.0:1 — the coffee ink for the cream,
+   set on the coffee band itself. */
+.governance b,.governance strong,.facilities b,.facilities strong,
+.contact b,.contact strong,.digital-campus-teaser b,.digital-campus-teaser strong,
+.hero b,.hero strong,.pr-arrival b,.pr-arrival strong{color:inherit;}
+/* …and the pale plates that stand on those bands take the ink back. */
+.governance .page-crosslinks b,.chapter-band-alt .page-crosslinks b,
+.governance .school-block b,.chapter-band-alt .school-block b,
+.governance .pr-card b,.chapter-band-alt .pr-card b{color:#3B2A1D;}
 /* The attribution line follows its plate, not the band around it.
    .quote-panel and .el-voice are both dark plates wherever they stand,
    so the line is pale on both; the earlier reading — coffee, forced —
@@ -3892,7 +3908,7 @@ html[data-pc-theme="light"] .stat-tile .label{color:var(--pearl-ink,#33281C);}
 .academics > .wrap .eyebrow,
 .academics > .wrap:has(> .page-hero-icon) .eyebrow,
 .policies > .wrap .eyebrow,
-.policies > .wrap:has(> .page-hero-icon) .eyebrow{color:#6E5220;}
+.policies > .wrap:has(> .page-hero-icon) .eyebrow{color:#63481B;}
 html[data-pc-theme="light"] .academics > .wrap .eyebrow,
 html[data-pc-theme="light"] .policies > .wrap .eyebrow{color:#8A6A2F;}
 
@@ -3902,7 +3918,7 @@ html[data-pc-theme="light"] .policies > .wrap .eyebrow{color:#8A6A2F;}
 .chapter-band .school-block .text-link,.chapter-band-alt .school-block .text-link,
 .chapter-band .fac-profile .text-link,.chapter-band-alt .fac-profile .text-link,
 .chapter-band .pr-card .text-link,.chapter-band-alt .pr-card .text-link,
-.chapter-band .gal-item .text-link,.chapter-band-alt .gal-item .text-link{color:#6E5220;}
+.chapter-band .gal-item .text-link,.chapter-band-alt .gal-item .text-link{color:#63481B;}
 
 /* ===================================================================
    SMALL GOLD TYPE, ON PAPER (v4.13)
@@ -4014,3 +4030,23 @@ html[data-pc-theme="light"] .quote-panel .who{color:#F3E6C8;}
    line would follow whichever band it was on, and on the bare panel
    that resolved to the page's coffee — the same colour as the plate. */
 .quote-panel{color:var(--pr-milk,#F7EEDF);}
+
+
+/* ---- The crosslinks plate -------------------------------------------
+   .page-crosslinks is a near-white plate. On the Media Centre and the
+   Governance Headquarters it stands on the charcoal band, and its
+   eyebrow was taking the band's bright gold: 1.12:1 on its own plate. */
+.chapter-band-alt .page-crosslinks .eyebrow,.chapter-band .page-crosslinks .eyebrow,
+.governance .page-crosslinks .eyebrow,.facilities .page-crosslinks .eyebrow,
+.contact .page-crosslinks .eyebrow{color:#63481B;}
+.chapter-band-alt .page-crosslinks a,.chapter-band .page-crosslinks a,
+.governance .page-crosslinks a,.facilities .page-crosslinks a,
+.contact .page-crosslinks a{color:#3B2A1D;}
+
+/* The gateway's closing note stands on the portal's near-black ground
+   and had been taking the body ink for paper: 1.09:1. */
+.gateway-footnote,.gateway-footnote p{color:rgba(243,232,212,.78);}
+.gateway-footnote a{color:var(--pr-gold-bright,#E9CE8A);}
+html[data-pc-theme="light"] .gateway-footnote,
+html[data-pc-theme="light"] .gateway-footnote p{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .gateway-footnote a{color:#8A6A2F;}

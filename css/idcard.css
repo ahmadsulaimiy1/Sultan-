@@ -74,16 +74,24 @@
 /* --- content layer --- */
 .idc-body{position:absolute;inset:0;z-index:3;
   padding:clamp(15px,3.4vw,24px);display:flex;flex-direction:column;color:#F7EEDF;}
-.idc-head{display:flex;align-items:center;gap:11px;}
+/* The card turns, and the holographic sweep crosses the header as it
+   goes: at one phase the name sat on deep coffee, at another on a bright
+   gold band, and no single ink is right for both — measured 2.98:1 one
+   way and 3.94:1 the other. The header gets a plate of its own, so the
+   ground under the name is the same at every angle. */
+.idc-head{display:flex;align-items:center;gap:11px;position:relative;
+  padding:7px 11px;margin:-7px -11px 0;border-radius:10px;
+  background:linear-gradient(90deg,rgba(10,6,1,.34) 0%,rgba(10,6,1,.24) 62%,rgba(10,6,1,0) 100%);}
+[dir="rtl"] .idc-head{
+  background:linear-gradient(270deg,rgba(10,6,1,.34) 0%,rgba(10,6,1,.24) 62%,rgba(10,6,1,0) 100%);}
 .idc-head img{width:38px;height:38px;object-fit:contain;
   filter:drop-shadow(0 3px 8px rgba(0,0,0,.6));}
 .idc-inst{font-family:'Cinzel',serif;font-size:clamp(.68rem,1.7vw,.84rem);
-  /* The institution's name sits on the card's gold header, where an
-     ivory measured 2.98:1. It takes the near-black the rest of the
-     gold furniture uses, and reads as engraving rather than print. */
-  line-height:1.2;color:#241809;letter-spacing:.04em;}
+  line-height:1.2;color:#FFF3D8;letter-spacing:.04em;
+  text-shadow:0 1px 6px rgba(10,6,1,.9);}
 .idc-inst small{display:block;font-family:'Inter',sans-serif;font-weight:500;
-  font-size:.58em;letter-spacing:.2em;text-transform:uppercase;color:rgba(36,24,9,.78);margin-top:3px;}
+  font-size:.58em;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,225,178,.95);
+  text-shadow:0 1px 6px rgba(10,6,1,.9);margin-top:3px;}
 
 .idc-mid{display:flex;gap:clamp(11px,2.4vw,17px);margin-top:auto;align-items:flex-end;}
 /* portrait well */
