@@ -452,9 +452,100 @@ function cornerJewel(cx, cy, dx, dy, uid) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// THE MOORISH BORDER — Senior Secondary
+//
+// Reconstructed from the artwork the Founder supplied for the SS3 certificate,
+// which he asked to be kept unchanged and only brought up to press resolution.
+//
+// It could not be brought up by upscaling. The file is 1080 x 708 px, which on
+// a 297 x 210mm sheet is 92 DPI; reaching 300 DPI needs a 3.25x enlargement,
+// and enlargement cannot invent the hairline filigree or the microtext — the
+// filigree would come back soft and the microtext would print as grey mush. So
+// this takes the second route he authorised: drawn again as true vector, to
+// look exactly like the artwork, at any resolution.
+//
+// What is reproduced: the stepped navy-and-gold corner brackets, the double
+// gold frame with its pale engine-turned band between the rules, the rosettes
+// at the middle of each run, and the microtext rails at the head and foot.
+//
+// What is NOT reproduced, and why: the artwork's own lettering names the School
+// of Islamic & Arabic Studies — in its microtext rails and in its seal ring —
+// and this is a Royal College award. Reproducing that text would put the wrong
+// school on a senior graduate's certificate. The ornament is kept; the words
+// are the College's own.
+// ─────────────────────────────────────────────────────────────────────────────
+function moorishBracket(cx, cy, sx, sy, uid) {
+  const T = 5.4;
+  // A stepped Moorish shoulder: three treads down each arm, meeting on the
+  // diagonal. The step sizes are read off the artwork's own proportions.
+  const armX = [[54, T + 9.5], [41, T + 9.5], [41, T + 15], [29.5, T + 15],
+    [29.5, T + 21], [22, T + 21]];
+  const armY = armX.map(([x, y]) => [y, x]);
+  const seg = (pts) => pts.map(([x, y]) => `L ${x.toFixed(2)} ${y.toFixed(2)}`).join(' ');
+  const d = `M 54 ${T} L ${T} ${T} L ${T} 54 `
+    + seg(armY.slice().reverse().reverse()) + ' '
+    + seg(armX.slice().reverse()) + ' Z';
+  // Arabesque inside the shoulder: scrolled vine, drawn in gold on the navy.
+  const vine = `M ${T + 3.4} ${T + 15} C ${T + 9} ${T + 5}, ${T + 15} ${T + 3.4}, ${T + 24} ${T + 3.4}`
+    + ` M ${T + 3.4} ${T + 24} C ${T + 5} ${T + 15}, ${T + 15} ${T + 5}, ${T + 24} ${T + 3.4}`
+    + ` M ${T + 3.4} ${T + 33} C ${T + 8} ${T + 20}, ${T + 20} ${T + 8}, ${T + 33} ${T + 3.4}`;
+  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})">
+    <path d="${d}" fill="url(#rcNavyG${uid})" stroke="url(#rcFoil)" stroke-width="0.9"/>
+    <path d="${d}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.65"
+      transform="translate(1.3 1.3) scale(0.975)"/>
+    <path d="${vine}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.42" opacity="0.85"
+      stroke-linecap="round"/>
+    <path d="${vine}" fill="none" stroke="${GOLD}" stroke-width="0.16" opacity="0.9"
+      transform="translate(0.5 0.5)" stroke-linecap="round"/>
+    ${[[T + 12, T + 12], [T + 22, T + 6.5], [T + 6.5, T + 22]]
+      .map(([x, y]) => `<path d="${khatamStar(x, y, 2.5, Math.PI / 8)}" fill="none"
+        stroke="${GOLD_PALE}" stroke-width="0.22" opacity="0.8"/>`).join('')}
+  </g>`;
+}
+
+function moorishBorder(uid) {
+  const R = RC_RULES;
+  const frame = (inset, w, stroke) => `<rect x="${inset}" y="${inset}"
+    width="${(W - 2 * inset).toFixed(2)}" height="${(H - 2 * inset).toFixed(2)}"
+    fill="none" stroke="${stroke}" stroke-width="${w}"/>`;
+  // The pale engine-turned band that runs between the two gold rules.
+  const band = [];
+  for (const [x, y, len, vert] of [[13.2, 13.2, W - 26.4, false], [13.2, H - 13.2, W - 26.4, false],
+    [13.2, 13.2, H - 26.4, true], [W - 13.2, 13.2, H - 26.4, true]]) {
+    band.push(lathe(x, y - 1.6, len, 3.2, 4, 0.075, 0.5, vert));
+  }
+  const rosette = (cx, cy, r) => `<path d="${khatamStar(cx, cy, r, Math.PI / 8)}"
+      fill="url(#rcFoilD${uid})" stroke="${NAVY_DEEP}" stroke-width="0.22"/>
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.32).toFixed(2)}" fill="${NAVY_DEEP}"/>
+    <circle cx="${cx}" cy="${cy}" r="${(r * 0.32).toFixed(2)}" fill="none"
+      stroke="${GOLD_PALE}" stroke-width="0.16"/>`;
+  return `
+  <!-- Outer navy hairline, then the double gold frame with its pale band. -->
+  ${frame(4.0, 0.3, NAVY)}
+  ${frame(11.4, 1.5, 'url(#rcFoil)')}
+  <g opacity="0.55">${band.join('')}</g>
+  ${frame(15.0, 1.5, 'url(#rcFoil)')}
+  ${frame(16.6, 0.22, NAVY)}
+  ${frame(R.fieldH - 1.2, 0.9, 'url(#rcFoil)')}
+  ${frame(R.fieldH + 0.4, 0.16, NAVY)}
+
+  <!-- The four stepped shoulders. -->
+  ${moorishBracket(0, 0, 1, 1, uid)}
+  ${moorishBracket(W, 0, -1, 1, uid)}
+  ${moorishBracket(0, H, 1, -1, uid)}
+  ${moorishBracket(W, H, -1, -1, uid)}
+
+  <!-- Rosettes at the middle of each run, as the artwork sets them. -->
+  ${rosette(W / 2, 13.2, 4.6)}
+  ${rosette(W / 2, H - 13.2, 4.6)}
+  ${rosette(13.2, H / 2, 4.0)}
+  ${rosette(W - 13.2, H / 2, 4.0)}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // THE GROUND
 // ─────────────────────────────────────────────────────────────────────────────
-function groundSvg(serial, uid) {
+function groundSvg(serial, uid, style = 'ring') {
   const s = esc(serial);
   const R = RC_RULES;
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
@@ -526,6 +617,10 @@ function groundSvg(serial, uid) {
       <rect width="0.34" height="0.1" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
     <pattern id="rcCoarse${uid}" width="0.9" height="0.9" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
       <rect width="0.9" height="0.3" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
+    <linearGradient id="rcNavyG${uid}" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="${NAVY_RICH}"/><stop offset="0.45" stop-color="${NAVY}"/>
+      <stop offset="1" stop-color="${NAVY_DEEP}"/>
+    </linearGradient>
     <linearGradient id="rcMass${uid}" x1="0" y1="0" x2="0.62" y2="1">
       <stop offset="0" stop-color="#8A6A28"/><stop offset="0.09" stop-color="#E7CE8C"/>
       <stop offset="0.2" stop-color="#B08F45"/><stop offset="0.32" stop-color="#F3E3B4"/>
@@ -579,7 +674,7 @@ function groundSvg(serial, uid) {
 
   ${voidPantograph(uid)}
 
-  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
+  ${style === 'moorish' ? moorishBorder(uid) : `  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
        A saturated navy body carrying a gold khatam tessellation, cut out on an
        11.5mm radius so the field's corner is a curve and not an angle. 16mm at
        the head and foot, 23.5mm at the sides. One path: no joins, no mitres,
@@ -623,6 +718,8 @@ function groundSvg(serial, uid) {
   ${cornerJewel(W - JX, JY, -1, 1, uid)}
   ${cornerJewel(JX, H - JY, 1, -1, uid)}
   ${cornerJewel(W - JX, H - JY, -1, -1, uid)}
+
+`}
 
   <!-- Security threads, in the field's quiet margin, symmetric about centre. -->
   ${securityThread(23.6, 44, 134, serial, uid, 'L')}
@@ -853,6 +950,22 @@ export const RC_PROGRAMMES = {
     award: 'Junior Secondary School Graduation Certificate',
     stageEn: 'the three-year Junior Secondary School programme',
     progressesTo: 'the Senior Secondary School',
+    border: 'ring',
+  },
+  SS: {
+    code: 'SS',
+    labelEn: 'Senior Secondary School · SS 1 – SS 3',
+    school: 'Sultan Hanafi Royal College',
+    title: 'Certificate of Graduation',
+    // NOT "West African Senior School Certificate" and NOT "Senior School
+    // Certificate". Those are national awards made by WAEC and NECO on their
+    // own examinations; a school certificate borrowing either name would claim
+    // an authority this institution does not hold. This certifies what the
+    // College can certify: completion of its own senior programme.
+    award: 'Senior Secondary School Graduation Certificate',
+    stageEn: 'the three-year Senior Secondary School programme',
+    progressesTo: 'tertiary study',
+    border: 'moorish',
   },
 };
 
@@ -958,7 +1071,7 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   const microSerial = `${serial} · `.repeat(7);
 
   return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}">
-  ${groundSvg(serial, uid)}
+  ${groundSvg(serial, uid, prog.border || 'ring')}
 
   <!-- ── HEAD ────────────────────────────────────────────────────────────────
        Three emblems on one baseline: Nigeria left, the institutional crest

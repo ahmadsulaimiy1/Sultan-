@@ -24,7 +24,7 @@
  * a convenience default is how six real certificates once came to be signed by
  * a development literal — nobody chose it, the run simply succeeded.
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { generateStageCertificateSerial, displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
@@ -35,7 +35,11 @@ import {
 } from '../functions/_lib/royal-college-certificate.js';
 
 // ── Batch constants ─────────────────────────────────────────────────────────
-const PROGRAMME = 'JSS';
+// The batch this run issues. Selected by SHRS_BATCH so one audited pipeline
+// serves every Royal College stage — forking the script would fork the gates
+// with it, and the gates are the reason any of this is trustworthy.
+const BATCH = (process.env.SHRS_BATCH || 'JSS').toUpperCase();
+const PROGRAMME = BATCH;
 const ACADEMIC_YEAR = '2025/2026';
 const ISSUED_AT = '2026-08-08';
 const INSTITUTION_NAME = 'Sultan Hanafi Royal Schools — Sultan Hanafi Royal College';
@@ -47,7 +51,11 @@ const ORIGIN = 'https://www.shroyalschools.com';
 // 000042–000047, so this batch starts at 000048. That is not a convention; it
 // is the only correct value, and the span check below proves no other batch
 // claims these numbers.
-const FIRST_CERTIFICATE_SEQ = 48;
+const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61 }[BATCH];
+if (!FIRST_CERTIFICATE_SEQ) {
+  console.error(`No batch definition for "${BATCH}".`);
+  process.exit(2);
+}
 const PRIOR_SPANS = [
   { key: 'IBT', lo: 35, hi: 41 },
   { key: 'IDD', lo: 42, hi: 47 },
@@ -95,7 +103,8 @@ const GRADE_AR = null;
 // the one on the Founder's roll. He confirmed an identity, not a re-spelling,
 // and the printed name is hashed into the serial — so changing it is a separate
 // instruction, given separately.
-const ROLL = [
+const ROLLS = {};
+ROLLS.JSS = [
   { en: 'Hameedah Adebimpe Ojewumi', sex: 'female',
     carryOverFrom: { register: 'IBT', name: 'Hameedah Adebimpe Ojewumi' }, matchedAs: 'exact' },
   { en: 'Muhammad Ismail Seriki', sex: 'male',
@@ -118,12 +127,34 @@ const ROLL = [
   { en: 'Ameerah Abdulhafeez', sex: 'female' },
 ];
 
+// Senior Secondary, verbatim and in the Founder's order (2026-08-07).
+// Two of the four already hold an I'dadiyyah certificate under an EXACT name
+// match — no short form, nothing to rule on — so their permanent Student ID
+// carries across rather than a second number being minted for one person.
+ROLLS.SS = [
+  { en: 'Thoirah Makinde', sex: 'female',
+    carryOverFrom: { register: 'IDD', name: 'Thoirah Makinde' }, matchedAs: 'exact' },
+  { en: 'Abdulbasit Amobi Jabarr', sex: 'male',
+    carryOverFrom: { register: 'IDD', name: 'Abdulbasit Amobi Jabarr' }, matchedAs: 'exact' },
+  { en: 'Aisha Shode', sex: 'female' },
+  { en: 'Mazeed Hassan-Murtala', sex: 'male' },
+];
+
+const ROLL = ROLLS[BATCH];
+
 // Students who hold an SHRS certificate but are NOT on this roll. A name from
 // another stage appearing on a Royal College sheet is the same class of error
 // as a withdrawn one: the wrong award over the right name. Checked against the
 // rendered HTML, not against the roll, so a template that hard-codes a name
 // cannot slip past.
-const NOT_ON_THIS_ROLL = [
+// A name is residue only if it is NOT on the roll actually being issued. The
+// same list served the JSS batch; two of the names below — Thoirah Makinde and
+// Abdulbasit Amobi Jabarr — are legitimately on the Senior Secondary roll, and
+// the gate caught that on the first SS run rather than letting a real graduate
+// be filtered out of her own certificate. So the list is declared once and
+// filtered against ROLL at use, by full name AND by every part of it.
+const ROLL_WORDS = new Set(ROLL.flatMap((r) => r.en.split(/[^A-Za-z']+/).filter(Boolean)));
+const NOT_ON_THIS_ROLL_ALL = [
   'Abdulbasit Adedokun', 'Naheemah Ismail', 'Ashrof Akorede', 'Imran Adegoke',
   'Abdulateef Adedokun', 'Thoirah Makinde', 'Abdulbasit Amobi Jabarr',
   'Abdullah Oladimeji Anofi',
@@ -137,6 +168,44 @@ const NOT_ON_THIS_ROLL = [
   'Adedokun', 'Naheemah', 'Ashrof', 'Akorede', 'Abdulateef',
   'Thoirah', 'Makinde', 'Amobi', 'Jabarr', 'Oladimeji',
 ];
+// A Student ID is permanent and there is one per person. Uniqueness WITHIN a
+// batch is not enough — the number must not already belong to someone else in
+// any register this institution has issued. Read at run time, never assumed.
+function assertIdentityIsFreeAcrossRegisters(issuedRows) {
+  const taken = new Map();
+  // Published registers, AND any batch already issued into dist/ but not yet
+  // published. The JSS batch lived only in dist/ when the Senior Secondary run
+  // was first made, so a gate reading docs/ alone could not have seen the
+  // collision it was built to prevent.
+  const sources = Object.entries(REGISTERS);
+  try {
+    for (const d of readdirSync('dist/certificates')) {
+      for (const f of readdirSync(join('dist/certificates', d))) {
+        if (/^register-.*\.json$/.test(f)) sources.push([d, join('dist/certificates', d, f)]);
+      }
+    }
+  } catch { /* no dist yet — the published registers are the whole world */ }
+  for (const [code, path] of sources) {
+    let reg; try { reg = JSON.parse(readFileSync(path, 'utf8')); } catch { continue; }
+    for (const e of reg.entries) taken.set(e.identityNo, `${e.studentEn} (${code})`);
+  }
+  const clashes = [];
+  for (const r of issuedRows) {
+    const holder = taken.get(r.identityNo);
+    if (holder && holder.split(' (')[0] !== r.studentEn) {
+      clashes.push(`${r.studentEn} was given ${r.identityNo}, which already belongs to ${holder}`);
+    }
+  }
+  if (clashes.length) {
+    console.error('\nBATCH REJECTED — a permanent Student ID would be held by two different people:');
+    for (const c of clashes) console.error(`  ${c}`);
+    process.exit(1);
+  }
+}
+
+const NOT_ON_THIS_ROLL = NOT_ON_THIS_ROLL_ALL.filter(
+  (n) => !ROLL.some((r) => r.en === n) && !ROLL_WORDS.has(n));
+
 
 // The registers this batch's carry-overs are read from.
 const REGISTERS = {
@@ -149,7 +218,14 @@ const REGISTERS = {
 // scatters them — consecutive sequence values land 324 billion apart — so a
 // contiguous run here produces Student IDs with no visible order, which is the
 // point.
-const FIRST_NEW_IDENTITY_SEQ = 48;
+// Where this batch's NEW Student IDs begin. It is per batch and it must never
+// overlap a batch already issued: the JSS run consumed 48–55, so the Senior
+// Secondary run starts at 56. The first SS run got this wrong — it restarted at
+// 48 and handed Aisha Shode and Mazeed Hassan-Murtala numbers already engraved
+// on two JSS certificates, which is the single worst thing this pipeline can
+// produce: one permanent number, two different children. The cross-batch gate
+// below now refuses it outright rather than trusting this constant.
+const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56 }[BATCH];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRE-FLIGHT
@@ -283,6 +359,8 @@ for (const [i, student] of roll.entries()) {
     qrUrl: `${ORIGIN.replace('://www.', '://')}/v/${gen.serialNo}`,
   });
 }
+
+assertIdentityIsFreeAcrossRegisters(issued);
 
 // ── Uniqueness gate ─────────────────────────────────────────────────────────
 // A duplicated identifier in a graduation register is not a cosmetic fault; it
@@ -551,7 +629,7 @@ const sqlOut = [
 ].join('\n');
 writeFileSync(join(dir, `register-${stamp}.sql`), sqlOut);
 
-console.log(`\nSultan Hanafi Royal College — Junior Secondary graduation batch`);
+console.log(`\nSultan Hanafi Royal College — ${RC_PROGRAMMES[PROGRAMME].labelEn} graduation batch`);
 console.log(`  ${issued.length} certificates, ${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}–${String(lastSeq).padStart(6, '0')}`);
 console.log(`  signing key version ${issued[0].hashKeyVersion}`);
 console.log(`  written to ${dir}\n`);
