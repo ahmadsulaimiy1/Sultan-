@@ -1,0 +1,224 @@
+/* ===================================================================
+   THE ATELIER LAYER (v5.1)
+   -------------------------------------------------------------------
+   Everything here is finishing: the work that separates a page that is
+   well made from a page that feels expensive. None of it carries
+   meaning, so all of it yields — to prefers-reduced-motion, to the
+   Ornament setting, to the Motion setting — and the page reads exactly
+   the same with the whole file removed.
+
+   House rule throughout: an effect that announces itself has failed.
+   Every value below is deliberately one step quieter than the point at
+   which you would notice it happening.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   1. LETTERPRESS
+   Display type on paper takes a hairline of light along its top edge
+   and a whisper of shadow beneath — the debossed impression a metal
+   face leaves in a good stock. At 1px and these opacities it is not
+   visible as an effect; it is visible as weight.
+   ------------------------------------------------------------------- */
+html[data-pc-press="on"] .pr-section.is-ivory h2,
+html[data-pc-press="on"] .pr-section.is-ivory h1.page-title,
+html[data-pc-press="on"] .mvv h2,html[data-pc-press="on"] .academics > .wrap > h2,
+html[data-pc-press="on"] .hx-marks h2,html[data-pc-press="on"] .hx-path h2,
+html[data-pc-press="on"] .hx-faq h2,html[data-pc-press="on"] .hero-subline,
+html[data-pc-press="on"] .mono-letter .mg,html[data-pc-press="on"] .el-figure-n{
+  text-shadow:0 1px 0 rgba(255,255,255,.68), 0 -1px 0 rgba(var(--lv-cf,59,42,29),.09);}
+/* On a dark ground the impression runs the other way: the light catches
+   the lower edge, because the light is above. */
+html[data-pc-press="on"] .pr-section.is-royal h2,
+html[data-pc-press="on"] .chapter-band-alt > .wrap > h2,
+html[data-pc-press="on"] .governance h2,html[data-pc-press="on"] .contact h2{
+  text-shadow:0 -1px 0 rgba(0,0,0,.42), 0 1px 0 rgba(var(--lv-gb,233,206,138),.14);}
+
+/* -------------------------------------------------------------------
+   2. THE LETTERHEAD RULE, DRAWN
+   The double rule under every section heading now draws itself from the
+   start edge as the heading arrives, instead of being there already.
+   It is the single most on-brand motion available to this site: the
+   page is signing itself.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:no-preference){
+  html[data-pc-motion="standard"] section h2::after,
+  html[data-pc-motion="standard"] section h1.page-title::after{
+    transform-origin:left center;transform:scaleX(0);
+    transition:transform 1.05s cubic-bezier(.16,.8,.24,1) .12s;}
+  [dir="rtl"] html[data-pc-motion="standard"] section h2::after,
+  [dir="rtl"] html[data-pc-motion="standard"] section h1.page-title::after{transform-origin:right center;}
+  html[data-pc-motion="standard"] .pr-in h2::after,
+  html[data-pc-motion="standard"] .in h2::after,
+  html[data-pc-motion="standard"] .pr-in h1.page-title::after,
+  html[data-pc-motion="standard"] .in h1.page-title::after,
+  html[data-pc-motion="standard"] section.at-rule-in h2::after,
+  html[data-pc-motion="standard"] section.at-rule-in h1.page-title::after{transform:scaleX(1);}
+}
+
+/* -------------------------------------------------------------------
+   3. AMBIENT MOTES
+   A dark band is never perfectly still in a real room: there is always
+   something in the light. Twelve points of gold drift upward across the
+   royal grounds at wildly different speeds, none of them fast enough to
+   track with the eye. Drawn as one element with a radial-gradient tile,
+   so the whole effect costs a single compositor layer.
+   ------------------------------------------------------------------- */
+.at-motes{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+  opacity:0;transition:opacity 1.6s ease;}
+.at-motes.is-lit{opacity:1;}
+.at-motes span{position:absolute;display:block;border-radius:50%;
+  background:radial-gradient(circle,rgba(var(--lv-gb,233,206,138),.9),rgba(var(--lv-gb,233,206,138),0) 70%);
+  animation:at-drift var(--d,42s) linear infinite;animation-delay:var(--dl,0s);}
+@keyframes at-drift{
+  0%{transform:translate3d(0,110%,0) scale(.6);opacity:0;}
+  12%{opacity:var(--o,.5);}
+  88%{opacity:var(--o,.5);}
+  100%{transform:translate3d(var(--dx,14px),-14%,0) scale(1);opacity:0;}
+}
+html[data-pc-motes="off"] .at-motes,
+html[data-pc-motion="reduced"] .at-motes{display:none;}
+@media (prefers-reduced-motion:reduce){.at-motes{display:none;}}
+
+/* -------------------------------------------------------------------
+   4. THE VIGNETTE, AND THE LIT CENTRE
+   A dark band lit evenly reads as a rectangle of paint. Lit from above
+   and fallen away at the corners, it reads as a room.
+   ------------------------------------------------------------------- */
+.pr-section.is-royal,.governance,.contact,.digital-campus-teaser,
+.chapter-band-alt,.facilities{position:relative;}
+.pr-section.is-royal::before,.governance::before,.contact::before,
+.digital-campus-teaser::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(90% 60% at 50% -12%,rgba(var(--lv-gb,233,206,138),.10),transparent 62%),
+    radial-gradient(140% 100% at 50% 50%,transparent 42%,rgba(0,0,0,.30) 100%);}
+.pr-section.is-royal > *,.governance > *,.contact > *,
+.digital-campus-teaser > *{position:relative;z-index:1;}
+html[data-pc-ornament="none"] .pr-section.is-royal::before,
+html[data-pc-ornament="none"] .governance::before,
+html[data-pc-ornament="none"] .contact::before,
+html[data-pc-ornament="none"] .digital-campus-teaser::before{display:none;}
+
+/* -------------------------------------------------------------------
+   5. THE SPECULAR SWEEP
+   A single band of light crosses a card as the pointer enters it, the
+   way light crosses a varnished surface when you lean over it. Runs
+   once per entry — a loop would be a screensaver.
+   ------------------------------------------------------------------- */
+.hx-mark,.pr-card,.gateway-card,.ct-office,.dc-tile,.hx-q,.pr-feature,
+.institution-card,.pr-committee,.fac-profile{position:relative;isolation:isolate;}
+.hx-mark::after,.pr-card::after,.ct-office::after,.dc-tile::after,
+.hx-q::after,.pr-committee::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.30) 50%,transparent 62%);
+  transform:translateX(-130%);opacity:0;}
+.hx-mark:hover::after,.pr-card:hover::after,.ct-office:hover::after,
+.dc-tile:hover::after,.hx-q:hover::after,.pr-committee:hover::after{
+  opacity:1;transform:translateX(130%);
+  transition:transform 1.05s cubic-bezier(.22,.7,.3,1),opacity .2s;}
+[dir="rtl"] .hx-mark::after,[dir="rtl"] .pr-card::after,[dir="rtl"] .ct-office::after,
+[dir="rtl"] .dc-tile::after,[dir="rtl"] .hx-q::after{transform:translateX(130%);}
+[dir="rtl"] .hx-mark:hover::after,[dir="rtl"] .pr-card:hover::after,
+[dir="rtl"] .ct-office:hover::after,[dir="rtl"] .dc-tile:hover::after,
+[dir="rtl"] .hx-q:hover::after{transform:translateX(-130%);}
+@media (prefers-reduced-motion:reduce),(hover:none){
+  .hx-mark::after,.pr-card::after,.ct-office::after,.dc-tile::after,
+  .hx-q::after,.pr-committee::after{display:none;}
+}
+
+/* -------------------------------------------------------------------
+   6. THE RULED MARGIN
+   On a wide screen the reading column floats in space. A single hairline
+   down each side of the measure gives it an edge to sit against, the way
+   a ruled ledger does. Only above 1500px, where there is room for it to
+   be a margin rather than a border.
+   ------------------------------------------------------------------- */
+@media (min-width:1500px){
+  html[data-pc-ornament="full"] .pr-section.is-ivory > .wrap::before,
+  html[data-pc-ornament="full"] .pr-section.is-ivory > .wrap::after{
+    content:"";position:absolute;top:0;bottom:0;width:1px;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(var(--lv-g,198,161,91),.26) 12%,
+               rgba(var(--lv-g,198,161,91),.26) 88%,transparent);}
+  html[data-pc-ornament="full"] .pr-section.is-ivory > .wrap::before{inset-inline-start:-34px;}
+  html[data-pc-ornament="full"] .pr-section.is-ivory > .wrap::after{inset-inline-end:-34px;}
+  .pr-section.is-ivory > .wrap{position:relative;}
+}
+
+/* -------------------------------------------------------------------
+   7. THE LINK, UNDERWRITTEN
+   An inline link's rule wipes in from the start edge rather than fading.
+   Two properties, no pseudo-element, no layout cost.
+   ------------------------------------------------------------------- */
+.text-link,.hx-mark-link,.ct-office-go{
+  background-image:linear-gradient(currentColor,currentColor);
+  background-size:0% 1px;background-repeat:no-repeat;background-position:0 100%;
+  transition:background-size .42s cubic-bezier(.16,.8,.24,1),color .3s;}
+[dir="rtl"] .text-link,[dir="rtl"] .hx-mark-link{background-position:100% 100%;}
+.text-link:hover,.hx-mark-link:hover,.ct-office:hover .ct-office-go{background-size:100% 1px;}
+@media (prefers-reduced-motion:reduce){
+  .text-link,.hx-mark-link,.ct-office-go{transition:none;}
+}
+
+/* -------------------------------------------------------------------
+   8. THE PAGE WIPE
+   A gold curtain crosses the screen between pages, using the View
+   Transitions API where the browser has it. Where it does not, nothing
+   happens and navigation is exactly as it was.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:no-preference){
+  html[data-pc-pagewipe="on"]::view-transition-old(root){
+    animation:at-fade-out .28s cubic-bezier(.4,0,1,1) both;}
+  html[data-pc-pagewipe="on"]::view-transition-new(root){
+    animation:at-fade-in .5s cubic-bezier(0,0,.2,1) both;}
+}
+@keyframes at-fade-out{to{opacity:0;transform:scale(.994);}}
+@keyframes at-fade-in{from{opacity:0;transform:scale(1.006);}}
+.at-curtain{position:fixed;inset:0;z-index:200;pointer-events:none;
+  transform:scaleX(0);transform-origin:left center;
+  background:linear-gradient(100deg,
+    rgba(var(--lv-cfd4,26,16,6),.96),
+    rgba(var(--lv-gd,156,122,60),.9) 48%,
+    rgba(var(--lv-cfd4,26,16,6),.96));}
+.at-curtain.is-in{animation:at-curtain-in .46s cubic-bezier(.7,0,.3,1) both;}
+.at-curtain.is-out{animation:at-curtain-out .52s cubic-bezier(.7,0,.3,1) both;}
+@keyframes at-curtain-in{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+@keyframes at-curtain-out{from{transform:scaleX(1);transform-origin:right center;}
+                          to{transform:scaleX(0);transform-origin:right center;}}
+@media (prefers-reduced-motion:reduce){.at-curtain{display:none;}}
+
+/* -------------------------------------------------------------------
+   9. THE READING RULER
+   A band of warmth that follows the pointer down the page, so the line
+   being read is the line that is lit. Off by default — it is an aid,
+   not an ornament, and it belongs to whoever asks for it.
+   ------------------------------------------------------------------- */
+.at-ruler{position:fixed;inset-inline:0;height:var(--rh,58px);z-index:8;pointer-events:none;
+  top:0;transform:translate3d(0,var(--ry,-200px),0);opacity:0;transition:opacity .4s;
+  background:linear-gradient(180deg,transparent,rgba(var(--lv-gb,233,206,138),.16) 22%,
+             rgba(var(--lv-gb,233,206,138),.16) 78%,transparent);
+  border-top:1px solid rgba(var(--lv-g,198,161,91),.28);
+  border-bottom:1px solid rgba(var(--lv-g,198,161,91),.28);}
+html[data-pc-ruler="on"] .at-ruler{opacity:1;}
+
+/* -------------------------------------------------------------------
+   10. THE CREST, FOILED
+   The crest is stamped foil, not printed ink, and foil moves. A slow
+   sheen crosses it — 14 seconds, so it is never the reason your eye
+   went there.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:no-preference){
+  html[data-pc-ornament="full"] .crest-shimmer-wrap{position:relative;display:inline-block;overflow:hidden;}
+  html[data-pc-ornament="full"] .crest-shimmer-wrap::after{
+    content:"";position:absolute;inset:-20%;pointer-events:none;mix-blend-mode:screen;
+    background:linear-gradient(104deg,transparent 42%,rgba(255,248,225,.42) 50%,transparent 58%);
+    background-size:260% 100%;background-position:260% 0;
+    animation:at-foil 14s ease-in-out infinite;}
+}
+@keyframes at-foil{0%,62%{background-position:260% 0;}92%,100%{background-position:-60% 0;}}
+
+/* ---- Everything above yields to the Motion setting ---------------- */
+html[data-pc-motion="reduced"] .at-motes,
+html[data-pc-motion="reduced"] .at-curtain,
+html[data-pc-motion="reduced"] .crest-shimmer-wrap::after{display:none!important;}
+html[data-pc-motion="reduced"] section h2::after,
+html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!important;}

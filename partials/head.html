@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="/css/brand.css?v=c6e42521ba">
 <link rel="stylesheet" href="/css/personalisation.css?v=6f672ecc38">
 <link rel="stylesheet" href="/css/announcements.css?v=de201b90e8">
+<link rel="stylesheet" href="/css/atelier.css?v=7608221f94">
 <script>
 (function(){
   try{
@@ -39,6 +40,11 @@
     html.setAttribute('data-pc-parallax', p.parallax || 'on');
     html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
     html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');

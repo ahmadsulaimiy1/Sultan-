@@ -14,6 +14,11 @@
     parallax: 'on',
     revealStyle: 'rise',
     measure: 'standard',
+    letterpress: 'on',
+    motes: 'on',
+    pageWipe: 'on',
+    readingRuler: 'off',
+    numerals: 'auto',
     liveryPromptSeen: false,
     accent: 'royal-gold',
     readingMode: 'standard',
@@ -94,6 +99,11 @@
     html.setAttribute('data-pc-parallax', prefs.parallax);
     html.setAttribute('data-pc-reveal', prefs.revealStyle);
     html.setAttribute('data-pc-width', prefs.measure);
+    html.setAttribute('data-pc-press', prefs.letterpress);
+    html.setAttribute('data-pc-motes', prefs.motes);
+    html.setAttribute('data-pc-pagewipe', prefs.pageWipe);
+    html.setAttribute('data-pc-ruler', prefs.readingRuler);
+    html.setAttribute('data-pc-numerals', prefs.numerals);
     html.setAttribute('data-pc-text', prefs.textSize);
     html.setAttribute('data-pc-motion', prefs.motion);
     html.setAttribute('data-pc-accent', prefs.accent);

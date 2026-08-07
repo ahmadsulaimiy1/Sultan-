@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="/css/brand.css?v=c6e42521ba">
 <link rel="stylesheet" href="/css/personalisation.css?v=6f672ecc38">
 <link rel="stylesheet" href="/css/announcements.css?v=de201b90e8">
+<link rel="stylesheet" href="/css/atelier.css?v=7608221f94">
 <script>
 (function(){
   try{
@@ -42,6 +43,11 @@
     html.setAttribute('data-pc-parallax', p.parallax || 'on');
     html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
     html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
@@ -1192,6 +1198,47 @@
           </div>
         </div>
 
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الطبع البارز</span><p class="pc-option-desc">خيطٌ من الضوء على الحافّة العليا لخطّ العناوين وظلٌّ خفيف تحته — أثر الحرف المعدنيّ في الورق الجيّد.</p></div>
+          <div class="pc-segmented" data-pc-set="letterpress" role="radiogroup" aria-label="الطبع البارز">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">مفعّل</button>
+            <button type="button" data-value="off" role="radio">مُعطّل</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">ذرّات الضوء</span><p class="pc-option-desc">نقاطٌ ذهبية تنساب ببطء على الأرضيات الداكنة، كما أنّ في ضوء الغرفة الحقيقية شيئاً دائماً.</p></div>
+          <div class="pc-segmented" data-pc-set="motes" role="radiogroup" aria-label="ذرّات الضوء">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">مفعّل</button>
+            <button type="button" data-value="off" role="radio">مُعطّل</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">انتقالات الصفحات</span><p class="pc-option-desc">ستارٌ يعبر الشاشة بين صفحة وأخرى بدل أن تحلّ الصفحة محلّ سابقتها فحسب.</p></div>
+          <div class="pc-segmented" data-pc-set="pageWipe" role="radiogroup" aria-label="انتقالات الصفحات">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">مفعّل</button>
+            <button type="button" data-value="off" role="radio">مُعطّل</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">مسطرة القراءة</span><p class="pc-option-desc">شريطٌ دافئ يتبع المؤشّر في الصفحة، فيكون السطر الذي تقرؤه هو السطر المُضاء. وهو عونٌ لا زينة، ومُعطَّل حتى تطلبه.</p></div>
+          <div class="pc-segmented" data-pc-set="readingRuler" role="radiogroup" aria-label="مسطرة القراءة">
+            <button type="button" data-value="off" role="radio" aria-checked="true" class="is-active">مُعطّل</button>
+            <button type="button" data-value="on" role="radio">مفعّل</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الأرقام</span><p class="pc-option-desc">بأيّ أرقام تُكتب التواريخ والأوقات والأعداد في الصفحات العربية. و<em>كما نُشِرت</em> تُبقي كلّ صفحة كما كتبها محرّروها.</p></div>
+          <div class="pc-segmented" data-pc-set="numerals" role="radiogroup" aria-label="الأرقام">
+            <button type="button" data-value="auto" role="radio" aria-checked="true" class="is-active">كما نُشِرت</button>
+            <button type="button" data-value="arabic" role="radio">عربية ٠١٢</button>
+            <button type="button" data-value="western" role="radio">لاتينية 012</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1397,8 +1444,9 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=7134186bf8" defer></script>
+<script src="/js/personalisation.js?v=4af96d46e9" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
+<script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
