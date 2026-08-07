@@ -120,9 +120,13 @@
 .idc-chip::after{top:0;bottom:0;left:34%;width:1px;box-shadow:14px 0 0 -0.5px rgba(90,66,26,.55);}
 
 /* machine-readable strip */
-.idc-mrz{margin-top:11px;padding-top:9px;border-top:1px solid rgba(233,206,138,.26);
+/* The machine-readable strip runs across the card's holographic sweep,
+   which lifts the ground under it to a mid tone; the code measured
+   3.3:1 there. A real MRZ is printed on its own band, so it gets one. */
+.idc-mrz{margin-top:11px;padding:9px 10px 7px;border-radius:6px;
+  background:rgba(8,5,1,.55);border-top:1px solid rgba(233,206,138,.26);
   font-family:ui-monospace,'SFMono-Regular',Menlo,monospace;
-  font-size:clamp(.42rem,1.05vw,.55rem);letter-spacing:.14em;color:rgba(233,206,138,.62);
+  font-size:clamp(.42rem,1.05vw,.55rem);letter-spacing:.14em;color:rgba(243,226,178,.96);
   white-space:nowrap;overflow:hidden;}
 
 /* --- back face --- */
@@ -162,6 +166,8 @@
 .idc-controls{display:flex;gap:10px;justify-content:center;align-items:center;
   margin-top:22px;flex-wrap:wrap;}
 .idc-hint{font-size:.78rem;color:rgba(238,224,196,.86);letter-spacing:.02em;}
+/* The hint sits under the card, on the page, not on the card. */
+html[data-pc-theme="light"] .idc-hint{color:#57472F;}
 .idc-flip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
   padding:9px 18px;border-radius:999px;font-size:.84rem;font-weight:600;
   color:var(--pr-gold-text,#7C5E28);background:linear-gradient(168deg,#FFFDF9,#F3EADA);

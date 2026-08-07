@@ -4164,8 +4164,7 @@ html[data-pc-theme="light"] .foundation .eyebrow{color:#7C5E28;}
 html[data-pc-theme="light"] .hero .eyebrow,
 html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
 html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
-html[data-pc-theme="light"] .gateway-eyebrow,
-html[data-pc-theme="light"] .governance .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+html[data-pc-theme="light"] .gateway-eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
 
 /* The breadcrumb trail's current page, on the pearl chrome. */
 html[data-pc-theme="light"] .breadcrumbs span,
@@ -4218,7 +4217,6 @@ html[data-pc-theme="light"] .ct-form-card{
 html[data-pc-theme="light"] .ct-card-head{
   background:linear-gradient(120deg,rgba(198,161,91,.16),rgba(198,161,91,.06));}
 html[data-pc-theme="light"] .ct-hours-list li{border-bottom-color:rgba(198,161,91,.24);}
-html[data-pc-theme="light"] section.contact label,
 html[data-pc-theme="light"] section.contact legend{color:var(--pearl-ink-2,#57472F);}
 html[data-pc-theme="light"] section.contact input,
 html[data-pc-theme="light"] section.contact textarea,
@@ -4232,8 +4230,7 @@ html[data-pc-theme="light"] .pr-eyebrow{color:#74551F;}
 html[data-pc-theme="light"] .hero .eyebrow,
 html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
 html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
-html[data-pc-theme="light"] .gateway-eyebrow,
-html[data-pc-theme="light"] .governance .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+html[data-pc-theme="light"] .gateway-eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
 
 /* The ledger row gets a plate, so its names are read against a known
    ground rather than against whichever part of the crest watermark
@@ -4356,3 +4353,119 @@ html[data-pc-theme="light"] .dc-net text.hubname{
   fill:#FFF8EA;font-weight:700;
   stroke:rgba(8,5,1,.92);stroke-width:3.4px;stroke-linejoin:round;
   paint-order:stroke fill;}
+
+/* ---- The Clear edition: the homepage's own contact band -------------
+   section.contact on the homepage is a separate composition from the
+   Contact Centre — a contact list beside a short form — and it was not
+   reached by either. Every address, telephone number and address line in
+   it measured about 1.0:1 on the pearl. */
+html[data-pc-theme="light"] .contact-item strong{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .contact-item span,
+html[data-pc-theme="light"] .contact-item a{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .contact-item a:hover{color:#7C5E28;}
+html[data-pc-theme="light"] .contact-item .ico{color:#8A6A2F;}
+/* The form beside it keeps a plate of its own, dark in both editions,
+   so its labels stay pale. Its fields are white in both. */
+html[data-pc-theme="light"] .contact-form label{color:rgba(243,232,212,.88);}
+html[data-pc-theme="light"] .contact-form input,
+html[data-pc-theme="light"] .contact-form textarea{
+  background:#FFFFFF;color:var(--pearl-ink,#33281C);
+  border-color:var(--pearl-line,rgba(198,161,91,.34));}
+
+/* The governance band does turn pearl — it is the ledger rows standing
+   on it that keep their dark plates — so its eyebrow, its language chip
+   and its on-dark link all take the page's ink after all. */
+html[data-pc-theme="light"] .governance .eyebrow{color:#74551F;}
+html[data-pc-theme="light"] .governance .en-tag{color:#7C5E28;}
+html[data-pc-theme="light"] .governance .text-link.on-dark,
+html[data-pc-theme="light"] .governance p{color:#63481B;}
+html[data-pc-theme="light"] .governance h2,
+html[data-pc-theme="light"] .governance h1.page-title{color:var(--pearl-ink,#33281C)!important;}
+
+/* ---- The Clear edition: the gateway ---- */
+html[data-pc-theme="light"] .gateway-eyebrow{color:#7C5E28;}
+html[data-pc-theme="light"] .gateway-card-cta{color:#63481B;}
+html[data-pc-theme="light"] .gateway-card-eyebrow{color:#7C5E28;}
+html[data-pc-theme="light"] .gateway-sub,
+html[data-pc-theme="light"] .gateway-card p,
+html[data-pc-theme="light"] .gw-points li,
+html[data-pc-theme="light"] .gw-need{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .gw-group-head{color:#7C5E28;}
+html[data-pc-theme="light"] .gateway-main a{color:#63481B;}
+
+
+/* The last three, each losing to a more specific rule written earlier
+   in the sheet rather than to any disagreement about what is right. */
+html[data-pc-theme="light"] .governance .en-tag{color:#7C5E28!important;}
+/* The form's plate is a mid-tone wash over the band's crest watermark;
+   at 90% the labels measured 3.34:1 against the lit part of it. Full
+   strength, and the plate deepened so the reading does not depend on
+   which part of the watermark a label happens to fall on. */
+html[data-pc-theme="light"] section.contact .contact-form label{color:#FFFBF2!important;}
+section.contact .contact-form{background-color:rgba(8,5,1,.55)!important;}
+html[data-pc-theme="light"] section.contact .contact-form{background-color:rgba(8,5,1,.66)!important;}
+html[data-pc-theme="light"] .pr-org-tier .role,
+html[data-pc-theme="light"] .pr-org-tier .who,
+html[data-pc-theme="light"] .pr-tier-head .role,
+html[data-pc-theme="light"] .pr-tier-head .who{color:#7C5E28;}
+html[data-pc-theme="light"] .pr-section.is-royal .pr-org-tier .role,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-org-tier .who{color:#7C5E28;}
+
+/* ---- The Clear edition: the charcoal band, which is not charcoal here
+   .chapter-band-alt turns pearl in this edition, so everything the v4.10
+   pass lightened for the charcoal has to be turned back: the headings it
+   forced to milk, the ledes, the tags, the eyebrows and the links. The
+   cards standing on it keep their own pale grounds and are unaffected. */
+html[data-pc-theme="light"] .chapter-band-alt{
+  background:linear-gradient(180deg,var(--pearl-2,#F4EDE0),var(--pearl-3,#EDE3D2));}
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h1.page-title,
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h2,
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h3,
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h4{color:var(--pearl-ink,#33281C)!important;}
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > p,
+html[data-pc-theme="light"] .chapter-band-alt blockquote,
+html[data-pc-theme="light"] .chapter-band-alt > .wrap p{color:var(--pearl-ink-2,#57472F)!important;}
+html[data-pc-theme="light"] .chapter-band-alt .eyebrow,
+html[data-pc-theme="light"] .chapter-band-alt .tag{color:#74551F!important;}
+html[data-pc-theme="light"] .chapter-band-alt a,
+html[data-pc-theme="light"] .chapter-band-alt .text-link,
+html[data-pc-theme="light"] .chapter-band-alt .mkt-cat-nav a{color:#63481B!important;}
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h2::after,
+html[data-pc-theme="light"] .chapter-band-alt > .wrap > h1.page-title::after{
+  background-image:linear-gradient(90deg,#8A6A2F 0 100%),linear-gradient(90deg,#8A6A2F 0 100%);}
+
+/* The Facilities band keeps its dark plate in this edition, so its
+   eyebrow keeps the bright gold that belongs on it. */
+html[data-pc-theme="light"] .facilities > .wrap > .eyebrow,
+html[data-pc-theme="light"] .facilities > .wrap > .pr-eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The quote panel keeps its dark plate in this edition — it is a plate,
+   not a band — so the quotation on it stays pale. A Clear rule for
+   paragraphs on pale grounds had reached inside it. */
+html[data-pc-theme="light"] .quote-panel,
+html[data-pc-theme="light"] .quote-panel p,
+html[data-pc-theme="light"] .el-voice p{color:var(--pr-milk,#F7EEDF)!important;}
+html[data-pc-theme="light"] .quote-panel .mark{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* …and it is `.academics > .wrap p` that reaches it, which is more
+   specific than the rule above. Scoped to match. */
+html[data-pc-theme="light"] .academics > .wrap .quote-panel p,
+html[data-pc-theme="light"] .academics > .wrap .el-voice p,
+html[data-pc-theme="light"] .policies > .wrap .quote-panel p{color:var(--pr-milk,#F7EEDF)!important;}
+
+/* A 24px medallion carrying a two-figure numeral leaves no room for a
+   gradient to be wrong in: the numeral overflows the disc and the
+   reading depends on where it falls. Flat gold, dark ink, and a little
+   more room, in both editions. */
+.pr-tl-dot{background:#E2C685!important;color:#1A1006!important;
+  width:27px;height:27px;font-size:.7rem;}
+html[data-pc-theme="light"] .pr-tl-dot{background:#DEC07B!important;color:#1A1006!important;}
+
+/* Two different forms share the .contact-form class: the short one
+   beside the homepage's contact list, which stands on a dark plate, and
+   the three in the Contact Centre, which are pearl cards. The rules
+   above are written for the first; these return the second. */
+html[data-pc-theme="light"] .ct-form-card .contact-form label,
+html[data-pc-theme="light"] .ct-forms .contact-form label{color:var(--pearl-ink-2,#57472F)!important;}
+.ct-form-card .contact-form,.ct-forms .contact-form{background-color:transparent!important;}
+.ct-form-card .contact-form label,.ct-forms .contact-form label{color:inherit;}
