@@ -1,0 +1,113 @@
+/* ===================================================================
+   THE MASTHEAD CHRONOMETER
+   -------------------------------------------------------------------
+   The case, the dial and the crystal. js/clock.js draws the geometry
+   and turns the hands; everything a dial is made OF is here, as tokens,
+   so the watch is gold on cream in the Clear edition, gold on espresso
+   in Royal, and gold on near-black in Midnight without a second dial
+   ever being drawn.
+   =================================================================== */
+
+:root{
+  --rlx-gold-1:#E9CE8A;   /* the lit face of the case            */
+  --rlx-gold-2:#C6A15B;   /* its body                            */
+  --rlx-gold-3:#8C6834;   /* the shadowed face, and the rehaut   */
+  --rlx-flute:rgba(255,246,223,.55);
+  --rlx-face-1:#FFFDF8;   /* the dial, lit from the upper left   */
+  --rlx-face-2:#F4E9D6;
+  --rlx-face-3:#E3D2B4;
+  --rlx-track:rgba(59,42,29,.55);
+  --rlx-idx:#7C5E28;
+  --rlx-sig:rgba(59,42,29,.72);
+  --rlx-hand-1:#5B4423;   /* the two facets of a dauphine hand   */
+  --rlx-hand-2:#3B2A1D;
+  --rlx-hand-edge:rgba(20,12,4,.55);
+  --rlx-sec:#8C2F39;      /* the one red thing on the whole site */
+  --rlx-glass:rgba(255,255,255,.16);
+}
+html[data-pc-theme="royal"],html[data-pc-theme="dark"]{
+  --rlx-face-1:#3A2A18;
+  --rlx-face-2:#241708;
+  --rlx-face-3:#170E04;
+  --rlx-track:rgba(233,206,138,.5);
+  --rlx-idx:#E9CE8A;
+  --rlx-sig:rgba(233,206,138,.72);
+  --rlx-hand-1:#F7EEDF;
+  --rlx-hand-2:#C6A15B;
+  --rlx-hand-edge:rgba(255,246,223,.5);
+  --rlx-sec:#D8A24A;
+  --rlx-glass:rgba(255,246,223,.10);
+}
+
+.rlx{position:relative;display:inline-flex;align-items:center;}
+.rlx[hidden]{display:none;}
+.rlx-btn{
+  appearance:none;background:none;border:none;cursor:pointer;padding:0;
+  line-height:0;border-radius:50%;
+  filter:drop-shadow(0 3px 7px rgba(59,42,29,.35));
+  transition:transform .45s cubic-bezier(.16,.8,.24,1),filter .45s ease;}
+.rlx-btn:hover,.rlx-btn:focus-visible{
+  transform:translateY(-1px) scale(1.06);
+  filter:drop-shadow(0 6px 14px rgba(140,104,52,.55));}
+.rlx-btn .rlx-dial{width:38px;height:38px;display:block;}
+header.nav.is-condensed .rlx-btn .rlx-dial{width:32px;height:32px;}
+.rlx-btn .rlx-dial{transition:width .4s var(--pr-ease,ease),height .4s var(--pr-ease,ease);}
+
+/* Type on a dial is engraved, not set: small, tracked, and never bold. */
+.rlx-sig{font-family:var(--font-label,'Cinzel',serif);font-size:4.2px;letter-spacing:.9px;}
+.rlx-sub{font-family:var(--font-label,'Cinzel',serif);font-size:3.1px;letter-spacing:.7px;opacity:.72;}
+
+/* Deliberately NO transform-origin on the hands. The hands are turned
+   with the SVG attribute form rotate(angle cx cy), which carries its own
+   centre of rotation. A CSS transform-origin does not replace that
+   centre — the browser maps the presentation attribute onto the CSS
+   transform property and then applies the origin ON TOP of it, so
+   declaring one here translated every hand a second time and threw all
+   three clean off the dial. The indices, which use the same attribute
+   form and were never given an origin, were right all along. */
+.rlx-glass{pointer-events:none;}
+
+/* ---- the opened dial ---------------------------------------------- */
+.rlx-pop{
+  position:absolute;top:calc(100% + 16px);inset-inline-end:-8px;z-index:60;
+  width:250px;padding:22px 22px 18px;text-align:center;
+  border-radius:var(--pr-r-lg,20px);
+  background:linear-gradient(168deg,
+    rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)));
+  border:1px solid rgba(140,104,52,.42);
+  box-shadow:0 30px 60px -28px rgba(59,42,29,.6),
+             inset 0 1px 0 rgba(255,255,255,.9);
+  opacity:0;transform:translateY(-8px) scale(.97);transform-origin:top right;
+  transition:opacity .3s ease,transform .34s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .rlx-pop{transform-origin:top left;}
+.rlx-pop.is-shown{opacity:1;transform:translateY(0) scale(1);}
+html[data-pc-theme="royal"] .rlx-pop,
+html[data-pc-theme="dark"] .rlx-pop{
+  background:linear-gradient(168deg,#2A1B0C,#160E05);
+  border-color:rgba(233,206,138,.4);
+  box-shadow:0 30px 60px -28px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(233,206,138,.2);}
+.rlx-pop .rlx-dial.is-large{width:168px;height:168px;margin:0 auto 14px;display:block;
+  filter:drop-shadow(0 10px 22px rgba(59,42,29,.4));}
+.rlx-digits{
+  font-family:var(--font-label,'Cinzel',serif);font-size:1.5rem;letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;color:#3B2A1D;margin:0;}
+.rlx-date{font-size:.8rem;color:var(--ink-soft);margin:4px 0 0;}
+.rlx-zone{
+  display:block;margin-top:10px;padding-top:10px;
+  border-top:1px solid rgba(140,104,52,.3);
+  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));}
+html[data-pc-theme="royal"] .rlx-digits,
+html[data-pc-theme="dark"] .rlx-digits{color:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="royal"] .rlx-date,
+html[data-pc-theme="dark"] .rlx-date{color:rgba(var(--lv-p3,247,238,223),.78);}
+html[data-pc-theme="royal"] .rlx-zone,
+html[data-pc-theme="dark"] .rlx-zone{color:rgb(var(--lv-gb,233,206,138));
+  border-top-color:rgba(233,206,138,.3);}
+
+@media (max-width:700px){.rlx{display:none;}}
+html[data-pc-ornament="none"] .rlx{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .rlx-btn,.rlx-pop,.rlx-btn .rlx-dial{transition:none;}
+}

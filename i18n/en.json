@@ -279,5 +279,7 @@
   "now.closesIn": "Closes in {t}",
   "now.opensIn": "Opens in {t}",
   "now.opensOn": "Opens {d} at {t}",
-  "now.note": "Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere."
+  "now.note": "Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere.",
+  "clock.label": "The time in Ikorodu",
+  "clock.zone": "Ikorodu · West Africa Time"
 }

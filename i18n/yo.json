@@ -279,5 +279,7 @@
   "now.closesIn": "Yóò tì ní {t}",
   "now.opensIn": "Yóò ṣí ní {t}",
   "now.opensOn": "Yóò ṣí {d} ní {t}",
-  "now.note": "A ń kà á tààrà láti aago ẹ̀rọ rẹ, ní ìbámu pẹ̀lú àkókò tí àwọn ọ́fíìsì ń ṣiṣẹ́. A kò gba ohunkóhun, a kò sì fi ohunkóhun ránṣẹ́."
+  "now.note": "A ń kà á tààrà láti aago ẹ̀rọ rẹ, ní ìbámu pẹ̀lú àkókò tí àwọn ọ́fíìsì ń ṣiṣẹ́. A kò gba ohunkóhun, a kò sì fi ohunkóhun ránṣẹ́.",
+  "clock.label": "Àkókò ní Ikorodu",
+  "clock.zone": "Ikorodu · Àkókò Ìwọ̀-Oòrùn Áfíríkà"
 }

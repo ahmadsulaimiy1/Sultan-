@@ -290,5 +290,7 @@
   "now.closesIn": "Ferment dans {t}",
   "now.opensIn": "Ouvrent dans {t}",
   "now.opensOn": "Ouvrent {d} à {t}",
-  "now.note": "Calculé en direct depuis l’horloge de votre appareil, d’après les horaires que les bureaux tiennent réellement. Rien n’est téléchargé et rien n’est envoyé."
+  "now.note": "Calculé en direct depuis l’horloge de votre appareil, d’après les horaires que les bureaux tiennent réellement. Rien n’est téléchargé et rien n’est envoyé.",
+  "clock.label": "L’heure à Ikorodu",
+  "clock.zone": "Ikorodu · Heure d’Afrique de l’Ouest"
 }
