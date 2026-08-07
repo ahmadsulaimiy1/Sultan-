@@ -263,5 +263,8 @@
   "portal.off": "Off",
   "portal.standard": "Standard",
   "masthead.established": "Established July 2016",
-  "masthead.place": "Ikorodu, Lagos State"
+  "masthead.place": "Ikorodu, Lagos State",
+  "quick.login": "Login to Portal",
+  "quick.adhkar": "Adhkār Centre",
+  "quick.prayer": "Prayer Times"
 }

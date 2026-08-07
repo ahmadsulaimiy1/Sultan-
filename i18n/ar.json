@@ -263,5 +263,8 @@
   "portal.off": "إيقاف",
   "portal.standard": "قياسي",
   "masthead.established": "تأسست في يوليو ٢٠١٦",
-  "masthead.place": "إيكورودو، ولاية لاغوس"
+  "masthead.place": "إيكورودو، ولاية لاغوس",
+  "quick.login": "الدخول إلى البوابة",
+  "quick.adhkar": "مركز الأذكار",
+  "quick.prayer": "مواقيت الصلاة"
 }

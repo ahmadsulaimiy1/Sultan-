@@ -274,5 +274,8 @@
     "nav.menu"
   ],
   "masthead.established": "Fondée en juillet 2016",
-  "masthead.place": "Ikorodu, État de Lagos"
+  "masthead.place": "Ikorodu, État de Lagos",
+  "quick.login": "Accès au portail",
+  "quick.adhkar": "Centre des adhkār",
+  "quick.prayer": "Heures de prière"
 }
