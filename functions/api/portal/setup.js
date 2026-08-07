@@ -394,7 +394,7 @@ const STATEMENTS = [
     ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
-    ('EXE', 'Head of Schools / Administrator', 'established', 'All institutions', 'GV-01; Founder, Head of Schools & Chairman of the Board of Governors — Zakaria Olanrewaju Anofi'),
+    ('EXE', 'Head of Schools / Administrator', 'established', 'All institutions', 'GV-01; Founder, Head of Schools & Chairman of the Board of Governors — Zakariya Olanrewaju Anofi'),
     ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
     ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
     ('VPAC', 'Vice Principal — Academic', 'proposed', 'All institutions — academic-standing sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),

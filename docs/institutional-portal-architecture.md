@@ -91,7 +91,7 @@ Wiring them in is one real admin action per person:
 
 ```
 POST /api/portal/admin/staff  (header: x-sysadmin-token)
-{ "action": "create-staff", "staffNo": "STF-0001", "fullName": "Zakaria Olanrewaju Anofi",
+{ "action": "create-staff", "staffNo": "STF-0001", "fullName": "Zakariya Olanrewaju Anofi",
   "officeName": "Executive", "positionTitle": "Founder & Head of Schools / Administrator" }
 
 POST /api/portal/admin/staff

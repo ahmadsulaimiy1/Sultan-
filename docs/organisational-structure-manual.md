@@ -64,7 +64,7 @@ publish individual office-holders below the Heads of Departments.
 ```mermaid
 flowchart TD
   subgraph A["A. Board of Governors"]
-    A_Chair["Chairman<br/>Zakaria Olanrewaju Anofi"]
+    A_Chair["Chairman<br/>Zakariya Olanrewaju Anofi"]
     A_Sec["Secretary<br/>(Vacant)"]
     A_M1["Member<br/>Lukman Anofi"]
     A_M2["Member<br/>Lasisi-Ahmed Olayinka Idayat"]
@@ -81,7 +81,7 @@ flowchart TD
   end
 
   subgraph C["C. Management Team"]
-    C_HoS["Head of Schools / Administrator<br/>Zakaria Olanrewaju Anofi"]
+    C_HoS["Head of Schools / Administrator<br/>Zakariya Olanrewaju Anofi"]
     C_P1["Principal (Mudeer), Qur'an College<br/>Imam Ahmad Sulaimiy"]
     C_P2["Principal, Royal College<br/>Dr. Adegoke Musa Olatunji"]
     C_P3["Principal (Ra'ees), School of Islamic and Arabic Studies<br/>Shaykh Abubakr Solah"]
@@ -133,7 +133,7 @@ each Principal individually.
 ```mermaid
 flowchart TD
   subgraph A["A. Board of Governors — 5 Seats"]
-    Chair["Chairman<br/>Zakaria Olanrewaju Anofi<br/>BSc, MSc, FCA, FCCA"]
+    Chair["Chairman<br/>Zakariya Olanrewaju Anofi<br/>BSc, MSc, FCA, FCCA"]
     Sec["Secretary<br/>Vacant — governance gap,<br/>Governance Resolution Register Cat. 8"]
     Mem1["Member<br/>Lukman Anofi<br/>BSc, MBA, MSc, CPA, FCCA"]
     Mem2["Member<br/>Lasisi-Ahmed Olayinka Idayat<br/>B.Ed, M.Ed"]
@@ -176,7 +176,7 @@ committee, remain unpublished as of this Manual's version.
 
 ```mermaid
 flowchart TD
-  HoS["C. Head of Schools / Administrator<br/>Zakaria Olanrewaju Anofi<br/>M.Sc. Financial Management, B.Sc. Applied Accounting, FCA, FCCA"]
+  HoS["C. Head of Schools / Administrator<br/>Zakariya Olanrewaju Anofi<br/>M.Sc. Financial Management, B.Sc. Applied Accounting, FCA, FCCA"]
 
   subgraph Institutions["The Five Institutions"]
     P1["Principal<br/>Sultan Hanafi Qur'an College<br/>Imam Ahmad Sulaimiy"]

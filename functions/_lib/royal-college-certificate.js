@@ -789,6 +789,13 @@ function openSecurityField(uid, serial, prog = {}) {
 // THE GROUND
 // ─────────────────────────────────────────────────────────────────────────────
 function groundSvg(serial, uid, style = 'ring', groundProg = {}) {
+  // The Qur’an College sheet has a ground already: the Founder's own artwork,
+  // supplied whole with the instruction not to tweak it. Painting a guilloche
+  // net, an iris rail and a microtext wash over it would be tweaking it — so
+  // this returns nothing and the artwork is the ground. The security work does
+  // not disappear; it moves into the furniture, where it is on OUR ink and can
+  // be read, decoded and checked. See the note on RC_PROGRAMMES.QUR.
+  if (style === 'quran') return '';
   const s = esc(serial);
   const R = RC_RULES;
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
@@ -1161,6 +1168,17 @@ export function code128cSvg(digits, { unit = 0.38, height = 6.5 } = {}) {
 // One generator, so every panel on the sheet is cut the same way: lathe ground,
 // a bevel, and a hairline keyline.
 // ─────────────────────────────────────────────────────────────────────────────
+// A short engine-turned strip, for the bilingual sheet's citation rule.
+function latheStrip(uid) {
+  const w = 150; const h = 3.4;
+  return `<svg class="rc-lathe-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g opacity="0.72">${lathe(2, h / 2, w - 4, h - 1.2, 5, 0.07, 1, false, 34)}</g>
+  <path d="M 0 ${h / 2} H 6" stroke="${GOLD}" stroke-width="0.12" opacity="0.8"/>
+  <path d="M ${w - 6} ${h / 2} H ${w}" stroke="${GOLD}" stroke-width="0.12" opacity="0.8"/>
+  <path d="M ${w / 2 - 1.1} ${h / 2} l 1.1 -1.1 l 1.1 1.1 l -1.1 1.1 Z" fill="${GOLD}" opacity="0.9"/>
+</svg>`;
+}
+
 function plaque(w, h, uid) {
   return `<svg class="rc-plaque-bg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true" preserveAspectRatio="none">
@@ -1181,9 +1199,15 @@ function plaque(w, h, uid) {
 // layers under it — a lathe ground, a latent-image screen that photocopies as a
 // solid block, and the FULL serial in microtext. The face prints the timeless
 // short form; the covert layer keeps the year and the anti-forgery tail.
-function numberCartouche(displayNo, fullSerial, uid) {
+function numberCartouche(displayNo, fullSerial, uid, school = 'Sultan Hanafi Royal College') {
   const w = 62; const h = 18;
-  const micro = `${fullSerial} · SULTAN HANAFI ROYAL COLLEGE · `.repeat(8);
+  // The microtext rail names the ISSUING SCHOOL. It was hardcoded to the
+  // Royal College, which put that school's name in microtext on the foot of
+  // every Primary certificate already issued and would have put it on these.
+  // It is 0.78pt and almost nobody will read it — which is exactly why it has
+  // to be right: a security feature nobody checks is worthless, and one that
+  // contradicts the sheet when somebody finally does is worse than none.
+  const micro = `${fullSerial} · ${school.toUpperCase()} · `.repeat(8);
   // Fitted from Cormorant Garamond 600's own advances (caps ~0.577em, oldstyle
   // figures ~0.481em, hyphen ~0.279em) so a longer programme code cannot push
   // the number into the cartouche wall. The viewBox is in MILLIMETRES, so this
@@ -1310,6 +1334,127 @@ export const RC_PROGRAMMES = {
       ink: '/assets/images/certificates/signature-head-teacher.png',
     },
   },
+  QUR: {
+    code: 'QUR',
+    labelEn: 'Hifz of the Glorious Qur’an',
+    school: 'Sultan Hanafi Qur’an College',
+    // The College's own motto, taken from its own crest — the Arabic band
+    // beneath the open muṣḥaf reads الشعار (al-shiʿār, "the motto") and then
+    // this line. Nothing here is composed: it is transcribed from the emblem
+    // the Founder supplied, which is the only Arabic on this sheet that was
+    // not written by a human and handed over for engraving.
+    mottoAr: 'القرآن يعلو ولا يعلى',
+    // ── THE ARABIC HALF ─────────────────────────────────────────────────────
+    // This sheet is BILINGUAL, not English with Arabic ornament on it. The
+    // Founder's standard is the frozen Ibtidā'iyyah / I'dādiyyah master, where
+    // every institutional line carries its Arabic beside it, and he is right
+    // that a mostly-English Qur'an College certificate does not meet it.
+    //
+    // PROVENANCE MATTERS MORE THAN FLUENCY HERE. Every string below is one of
+    // three things, and nothing else:
+    //
+    //   (a) TRANSCRIBED from the frozen master, character for character —
+    //       functions/_lib/stage-certificate-template.js, which is under the
+    //       v1.0 freeze and already printed on issued certificates. The
+    //       institution, the nation, the place, the certifying sentence, the
+    //       field labels and the Chairman's name and office all come from
+    //       there. They are not retranslated: two SHRS certificates disagreeing
+    //       about how the institution writes its own name in Arabic is worse
+    //       than either wording alone.
+    //   (b) TRANSCRIBED from the College's own crest — its Arabic name and its
+    //       motto, read off the emblem the Founder supplied.
+    //   (c) DERIVED from the master's own sentence pattern by replacing only
+    //       the stage clause: "قد أتمّ بنجاحٍ متطلبات …" becomes "قد أتمّ
+    //       بنجاحٍ حفظ …". The frame is the institution's; the Hifz clause is
+    //       the only new Arabic on this sheet, and it is flagged for the
+    //       Mudeer's confirmation in the delivery note rather than presented
+    //       as settled.
+    //
+    // Nothing here is a name. Personal names in Arabic are never generated —
+    // see the note at nameAr in sheetHtml.
+    ar: {
+      nation: 'جمهورية نيجيريا الاتحادية · حكومة ولاية لاغوس',
+      institution: 'مدارس السلطان حنفي الملكية',
+      school: 'كلية السلطان حنفي للقرآن',
+      place: 'إكورودو، لاغوس، نيجيريا',
+      intro: 'تشهد إدارة مدارس السلطان حنفي الملكية بأن',
+      signatoryRole: 'المدير، كلية السلطان حنفي للقرآن',
+      chairmanName: 'د. زكريا أولانريوجو حنفي',
+      chairmanRole: 'رئيس مجلس الإدارة',
+      awardLabel: 'الشهادة الممنوحة',
+      session: 'العام الدراسي',
+      date: 'تاريخ الإصدار',
+      placeLabel: 'مكان الإصدار',
+      sid: 'الرقم التعريفي للطالب',
+      verify: 'التحقق من الشهادة',
+      docId: 'رقم الوثيقة',
+      code: 'رمز التحقق',
+      archive: 'المرجع الأرشيفي',
+      holder: 'حامل الشهادة',
+      document: 'الوثيقة',
+      seal: 'الختم الرسمي',
+      certNo: 'رقم الشهادة',
+    },
+    // This programme is the first to award TWO different things in one batch.
+    // Two students completed the whole Qur’an; one has memorised ten juz’.
+    // Those are different achievements and they may not share a title, an
+    // award line or a citation — a Ten Juz’ sheet reading "Certificate of
+    // Completion" would overstate a child's accomplishment on a permanent
+    // record, and a completion sheet reading "Ten Juz’" would rob one of
+    // hers. So the wording is per STUDENT, selected by cert.award_variant, and
+    // the batch refuses to render a QUR sheet that names no variant.
+    variants: {
+      COMPLETE: {
+        title: 'Certificate of Completion',
+        titleAr: 'شهادة إتمام حفظ القرآن الكريم',
+        labelEn: 'Hifz of the Glorious Qur’an · Thirty Juz’',
+        labelAr: 'ثلاثون جزءًا',
+        award: 'Completion of the Memorisation of the Glorious Qur’an (Thirty Juz’)',
+        awardAr: 'إتمام حفظ القرآن الكريم كاملًا — ثلاثون جزءًا',
+        // The master's sentence with only its stage clause replaced.
+        stageAr: 'حفظ القرآن الكريم كاملًا — ثلاثين جزءًا —',
+        progressesToAr: 'وأُجيزَ التقدّم لامتحان الإجازة بالكلية',
+        stageEn: 'the memorisation of the entire Glorious Qur’an, thirty juz’,',
+        // NOT "and is hereby granted the Ijazah". The College's own published
+        // pathway makes the Ijazah a separate award, made after examination by
+        // named scholars (academics-quran-college.html, Stage 4) and governed
+        // by IQ-02. Completing the memorisation is what this certificate can
+        // attest; admission to that examination is what follows from it.
+        progressesTo: 'the Ijazah examination of the College',
+      },
+      JUZ10: {
+        title: 'Certificate of Achievement',
+        titleAr: 'شهادة حفظ عشرة أجزاء',
+        labelEn: 'Hifz of the Glorious Qur’an · Ten Juz’',
+        labelAr: 'من القرآن الكريم',
+        award: 'Memorisation of Ten Juz’ of the Glorious Qur’an',
+        awardAr: 'حفظ عشرة أجزاء من القرآن الكريم',
+        stageAr: 'حفظ عشرة أجزاء من القرآن الكريم',
+        progressesToAr: 'ويواصل برنامج الحفظ بالكلية',
+        stageEn: 'the memorisation of ten juz’ of the Glorious Qur’an',
+        progressesTo: 'the continuing Hifz programme of the College',
+      },
+    },
+    // The Founder supplied the sheet artwork and said not to tweak it. So this
+    // programme draws no ground of its own: groundSvg returns nothing for
+    // 'quran' and the artwork is laid in full-bleed beneath the content. Every
+    // security element on this sheet therefore lives in the FURNITURE — the
+    // verification plate, the two Code 128 symbols, the engraved cartouche,
+    // the real QR in the slot his artwork reserves for one, and the check tail
+    // struck into his own laurel disc — and not as a wash printed over his
+    // work. That is the only reading of "use this background, don't tweak it"
+    // that also satisfies "as many security elements as possible".
+    border: 'quran',
+    signatory: {
+      name: 'Imam Ahmad Sulaimiy',
+      role: 'Principal (Mudeer), Sultan Hanafi Qur’an College',
+      // Written in blue. It is kept blue rather than converted to the black
+      // the other two specimens use: blue ink on a printed sheet is what a
+      // wet original signature looks like, and flattening it to black would
+      // make three different people's hands look like one plate.
+      ink: '/assets/images/certificates/signature-quran-mudeer.png',
+    },
+  },
 };
 
 const INSTITUTION = 'Sultan Hanafi Royal Schools';
@@ -1347,6 +1492,24 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   if (!prog) {
     throw new Error(`royal-college-certificate: no award wording for programme code "${cert.programme_code}" — refusing to print`);
   }
+  // A programme may award more than one thing. Where it does, the wording is
+  // resolved per certificate and the variant is REQUIRED — defaulting to the
+  // first entry would silently print "Certificate of Completion" over a child
+  // who has memorised ten juz’, which is the one error on this sheet that
+  // cannot be corrected after a ceremony.
+  let award = prog;
+  if (prog.variants) {
+    const key = String(cert.award_variant || '').toUpperCase();
+    if (!key) {
+      throw new Error(`royal-college-certificate: programme ${prog.code} awards `
+        + `${Object.keys(prog.variants).join(' and ')}, and this certificate names neither `
+        + '— refusing to print rather than guess which award a student earned');
+    }
+    if (!prog.variants[key]) {
+      throw new Error(`royal-college-certificate: programme ${prog.code} has no award variant "${key}"`);
+    }
+    award = { ...prog, ...prog.variants[key] };
+  }
   const serial = String(cert.serial_no || '');
   const m = serial.match(/^SHRS-CERT-([A-Z0-9]{2,4})-(\d{4})-(\d{6})-([0-9A-F]{5})$/);
   if (!m) {
@@ -1382,6 +1545,13 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   const nameEn = String(cert.student_full_name || '').trim();
   if (!nameEn) throw new Error(`royal-college-certificate: ${serial} has no student name`);
+  // The Arabic form of the holder's name, and ONLY where a human supplied one.
+  // It is never transliterated here and never will be: an engraved name is the
+  // one field on this document that belongs entirely to the person named, and
+  // a machine's guess at how their family writes it in Arabic is not their
+  // name. A student whose Arabic form has not been given prints in Latin
+  // alone, which is complete and correct, rather than in an invented Arabic.
+  const nameAr = String(cert.student_name_ar || '').trim();
   const studentId = String(cert.student_identity_no || '').trim();
   if (!/^\d{15}$/.test(studentId)) {
     throw new Error(`royal-college-certificate: ${serial} carries "${studentId}" where a 15-digit Student ID belongs`);
@@ -1392,7 +1562,8 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   // parts of two certificates. Code 128-C needs an even-length payload and the
   // Student ID is 15 digits, so it is left-padded — the pad is stripped by the
   // reader, and the register records the unpadded number.
-  const idBarcode = code128cSvg(`0${studentId}`, { unit: 0.38, height: 5.5 });
+  const idBarcode = code128cSvg(`0${studentId}`,
+    prog.border === 'quran' ? { unit: 0.44, height: 6.8 } : { unit: 0.38, height: 5.5 });
   const session = String(cert.academic_year || '').replace('/', ' – ');
   if (!session) throw new Error(`royal-college-certificate: ${serial} has no academic session`);
   const issued = formatDateEn(cert.issued_at);
@@ -1413,9 +1584,48 @@ function sheetHtml({ cert, qrSvgMarkup }) {
 
   const microSerial = `${serial} · `.repeat(7);
 
+  const isQuran = prog.border === 'quran';
+  // The Arabic half of the sheet, present only for a programme that declares
+  // one. Programmes that do not are untouched by every branch below.
+  const AR = prog.ar || null;
+  // The verb agrees with the graduate. Taken from the frozen master's own rule
+  // (stage-certificate-template.js, Bible §13.10): أتمّت for a woman, أتمّ for
+  // a man. A certificate that says أتمّ over a young woman's name has got her
+  // grammatically wrong on a document she keeps for life.
+  const arDone = String(cert.student_sex || '').toLowerCase() === 'female' ? 'أتمّت' : 'أتمّ';
+  // The Founder's sheet artwork, laid edge to edge under everything. It is his
+  // file enlarged for press and otherwise untouched — see
+  // scripts/build-quran-assets.py, which also states plainly what a 92 DPI
+  // source can and cannot give back at 600.
+  const plateBg = isQuran
+    ? '<img class="rc-plate-bg" src="/assets/images/certificates/quran-sheet-plate.jpg" alt="" />'
+    : '';
+  // The artwork carries a laurel-wreathed disc at the head, left blank. It is
+  // a seal position, so it is struck rather than decorated: the five hex
+  // characters engraved here ARE the first five of this certificate's own
+  // HMAC, the same five that close the printed number and open the
+  // verification code. A verifier holding the paper can read the tail off the
+  // seal, read it off the number, and off the plate, and see three
+  // independent places agree — with no database at all.
+  const laurelDie = isQuran ? `
+  <div class="rc-qdie">
+    <span class="rc-qdie-k">SHRS · Registrar</span>
+    <span class="rc-qdie-v">${esc(tail)}</span>
+  </div>` : '';
+  // And a blank gold medallion at the foot, likewise a seal position. Struck
+  // with the institution's mark rather than covered with a second seal image,
+  // which would hide the artwork the Founder asked to keep.
+  const footDie = isQuran ? `
+  <div class="rc-qmedal">
+    <span class="rc-qmedal-k" dir="rtl" lang="ar">${esc(AR.seal)}</span>
+    <span class="rc-qmedal-m">SHRS</span>
+    <span class="rc-qmedal-k">Official Seal</span>
+  </div>` : '';
+
   return `<section class="sheet" data-serial="${esc(serial)}" data-stage="${esc(code)}"
-  data-border="${esc(prog.border || 'ring')}">
+  data-border="${esc(prog.border || 'ring')}" data-ar="${nameAr ? '1' : '0'}">
   ${groundSvg(serial, uid, prog.border || 'ring', prog)}
+  ${plateBg}${laurelDie}${footDie}
 
 
   <!-- ── HEAD ────────────────────────────────────────────────────────────────
@@ -1424,43 +1634,113 @@ function sheetHtml({ cert, qrSvgMarkup }) {
        order, that the v1.0 master carries. -->
   <div class="rc-emblems">
     <img class="rc-em rc-em-side" src="/assets/images/crests/nigeria-coat-of-arms.png" alt="" />
-    <img class="rc-em rc-em-mid" src="/assets/images/crests/shrs-institutional-crest.png" alt="" />
+    <img class="rc-em rc-em-mid" src="/assets/images/crests/shrs-institutional-crest.png" alt="" />${isQuran ? `
+    <!-- The College's own crest, supplied by the Founder, set on the same
+         baseline as the other three rather than dropped in a corner: this is
+         its award and the emblem row is where a sheet says whose it is. -->
+    <img class="rc-em rc-em-mid" src="/assets/images/certificates/quran-college-crest.png" alt="" />` : ''}
     <img class="rc-em rc-em-side" src="/assets/images/crests/lagos-state-arms.png" alt="" />
   </div>
+  ${AR ? `<div class="rc-arline rc-ar-nation" dir="rtl" lang="ar">${esc(AR.nation)}</div>` : ''}
   <div class="rc-nation">Federal Republic of Nigeria <span class="rc-dot">·</span> Lagos State</div>
+  ${AR ? `<div class="rc-arline rc-ar-inst" dir="rtl" lang="ar">${esc(AR.institution)}</div>` : ''}
   <div class="rc-inst">${esc(INSTITUTION)}</div>
+  ${AR ? `<div class="rc-arline rc-ar-school" dir="rtl" lang="ar">${esc(AR.school)}</div>` : ''}
   <div class="rc-school">${esc(prog.school)}</div>
-  <div class="rc-place">${esc(place)}</div>
+  <div class="rc-place">${esc(place)}${AR ? ` <span class="rc-dot">·</span> <span dir="rtl" lang="ar">${esc(AR.place)}</span>` : ''}</div>
 
   <!-- ── TITLE ───────────────────────────────────────────────────────────── -->
+  ${AR && award.titleAr ? `
+  <!-- The two titles share one baseline, divided by a gold rule struck down
+       the sheet's own centre: neither language is the caption of the other. -->
+  <div class="rc-bititle">
+    <h1 class="rc-title rc-title-en">${esc(award.title)}</h1>
+    <span class="rc-bidiv"><i></i></span>
+    <div class="rc-title-ar" dir="rtl" lang="ar">${esc(award.titleAr)}</div>
+  </div>
+  <div class="rc-subtitle"><span dir="rtl" lang="ar">${esc(award.labelAr)}</span>
+    <span class="rc-dot">·</span> ${esc(award.labelEn)}</div>` : `
   <div class="rc-titlewrap">
     <span class="rc-rule rc-rule-l"></span>
-    <h1 class="rc-title">${esc(prog.title)}</h1>
+    <h1 class="rc-title">${esc(award.title)}</h1>
     <span class="rc-rule rc-rule-r"></span>
   </div>
-  <div class="rc-subtitle">${esc(prog.labelEn)}</div>
+  <div class="rc-subtitle">${esc(award.labelEn)}</div>`}
+  ${prog.mottoAr ? `<div class="rc-motto" dir="rtl" lang="ar">${esc(prog.mottoAr)}</div>` : ''}
 
   <!-- ── CITATION ────────────────────────────────────────────────────────── -->
-  <div class="rc-lede">This is to certify that</div>
-  <div class="rc-name" style="font-size:${namePt}pt">${esc(nameEn)}</div>
+  ${AR ? `
+  <!-- Intro and name both run as PAIRS on one baseline, English left, Arabic
+       right, at the same rank. Stacked, the second language reads as a caption
+       of the first; paired, neither is subordinate — and the holder's name, the
+       one line on this sheet that is entirely hers, is the line where that
+       matters most. -->
+  <div class="rc-bilede">
+    <div class="rc-lede rc-lede-en">This is to certify that</div>
+    <span class="rc-bidiv rc-bidiv-sm"><i></i></span>
+    <div class="rc-lede rc-lede-ar" dir="rtl" lang="ar">${esc(AR.intro)}</div>
+  </div>` : `<div class="rc-lede">This is to certify that</div>`}
+  ${AR && nameAr ? `
+  <div class="rc-biname">
+    <div class="rc-name rc-name-en" style="font-size:${Math.min(20, namePt)}pt">${esc(nameEn)}</div>
+    <span class="rc-bidiv rc-bidiv-name"><i></i></span>
+    <div class="rc-namear" dir="rtl" lang="ar">${esc(nameAr)}</div>
+  </div>` : `<div class="rc-name" style="font-size:${namePt}pt">${esc(nameEn)}</div>`}
+  ${isQuran ? `
+  <!-- A real microtext rule, not a hairline that looks like one: the full
+       serial repeated at the 0.90pt press floor, directly under the name. At
+       reading distance it is a rule; under a loupe it is this certificate's own
+       number, and a photocopier resolves it to a broken grey line. It sits
+       under the NAME because the name is what a forger changes. -->
+  <div class="rc-microrule">${esc(`${serial} · `.repeat(9))}</div>` : ''}
   <div class="rc-namerule"><span></span><i></i><span></span></div>
-  <div class="rc-sid">Student Identity Number <b>${esc(studentId)}</b></div>
+  <div class="rc-sid">${AR ? `<span dir="rtl" lang="ar">${esc(AR.sid)}</span> <span class="rc-dot">·</span> ` : ''}Student Identity Number <b>${esc(studentId)}</b></div>
 
-  <p class="rc-body">has satisfactorily completed ${esc(prog.stageEn)} at ${esc(prog.school)}
+  ${AR && award.stageAr ? `
+  <!-- The citation runs in two columns rather than two stacked paragraphs.
+       Stacked, the pair costs about 26mm of a field that has 138mm in it
+       altogether; side by side it costs 14mm, and — the reason that matters
+       more — neither reading order is made to wait for the other. A reader of
+       either language meets the sentence at the same height on the sheet. -->
+  <div class="rc-bibody">
+    <p class="rc-body rc-body-en">has satisfactorily completed ${esc(award.stageEn)}
+      at ${esc(prog.school)} for the academic session ${esc(session)}, has met in full
+      the academic and conduct requirements of the institution, and is hereby
+      graduated and admitted to ${esc(award.progressesTo)}.</p>
+    <span class="rc-bidiv rc-bidiv-tall"><i></i></span>
+    <p class="rc-body rc-body-ar" dir="rtl" lang="ar">قد ${esc(arDone)} بنجاحٍ
+      ${esc(award.stageAr)} في العام الدراسي
+      <span class="rc-arnum">${esc(session)}</span>، وفقًا للمناهج المعتمدة
+      والمعايير الأكاديمية المعمول بها في الكلية، ${esc(award.progressesToAr)}.</p>
+  </div>` : `
+  <p class="rc-body">has satisfactorily completed ${esc(award.stageEn)} at ${esc(prog.school)}
   for the academic session ${esc(session)}, has met in full the academic and conduct
   requirements of the institution, and is hereby graduated and admitted to
-  ${esc(prog.progressesTo)}.</p>
+  ${esc(award.progressesTo)}.</p>`}
 
+  ${isQuran ? `
+  <!-- An engine-turned rule between the citation and the award. It is a real
+       lathe — an interfering pair of sine strands solved at 0.07mm — so it
+       cannot be redrawn by hand and does not survive a scan-and-reprint
+       cleanly. Ours, on our own ink, above the Founder's field rather than
+       across it. -->
+  <div class="rc-lathebar">${latheStrip(uid)}</div>` : ''}
   <div class="rc-award">
-    <span class="rc-award-k">Award Conferred</span>
-    <span class="rc-award-v">${esc(prog.award)}</span>
+    <span class="rc-award-k">${AR ? `<span dir="rtl" lang="ar">${esc(AR.awardLabel)}</span> <span class="rc-dot">·</span> ` : ''}Award Conferred</span>
+    <span class="rc-award-v">${esc(award.award)}</span>
+    ${AR && award.awardAr ? `<span class="rc-award-ar" dir="rtl" lang="ar">${esc(award.awardAr)}</span>` : ''}
   </div>
 
-  <div class="rc-ledger">
+  ${isQuran ? `  <!-- The two Code 128-C symbols take the bare cream the artwork leaves on
+       either side of its foot medallion. The document code goes one side, the
+       holder code the other, so a scanner sweeping the foot cannot pick up
+       both in one pass and report the wrong one. -->
+  <div class="rc-qbars rc-qbars-holder">${idBarcode}<b><span dir="rtl" lang="ar">${esc(AR.holder)}</span> · Holder</b></div>
+  <div class="rc-qbars rc-qbars-doc">${barcode}<b><span dir="rtl" lang="ar">${esc(AR.document)}</span> · Document</b></div>` : `<div class="rc-ledger">
     <div class="rc-lg"><span>Academic Session</span><b>${esc(session)}</b></div>
     <div class="rc-lg"><span>Date of Award</span><b>${esc(issued)}</b></div>
     <div class="rc-lg"><span>Place of Issue</span><b>${esc(place)}</b></div>
-  </div>
+  </div>`}
 
   <!-- ── SIGNATURES ──────────────────────────────────────────────────────────
        Both specimens are now on file. The Principal's arrived on 2026-08-06 as
@@ -1470,19 +1750,30 @@ function sheetHtml({ cert, qrSvgMarkup }) {
        add information — the stroke shape is as faithful as that photograph and
        no more — and a higher-resolution capture would be worth re-running the
        one command for. -->
+  <!-- Both officers carry their office in both scripts. The NAMES are a
+       different matter: the Chairman's Arabic name is transcribed from the
+       frozen master, where it is already printed on issued certificates; the
+       Mudeer's has never been written down by anyone here, so his line stays
+       Latin until the College supplies it. An Arabic name assembled by
+       transliteration is not a rendering of a man's name, it is a guess at
+       it — and this is the line above his signature. -->
   <div class="rc-sig rc-sig-l">
     ${prog.signatory.ink
       ? `<img class="rc-sig-ink" src="${esc(prog.signatory.ink)}" alt="" />`
       : '<div class="rc-sig-ink rc-sig-ink-blank"></div>'}
     <div class="rc-sig-line"></div>
     <div class="rc-sig-name">${esc(prog.signatory.name)}</div>
-    <div class="rc-sig-role">${esc(prog.signatory.role)}</div>
+    ${AR && prog.signatory.nameAr ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(prog.signatory.nameAr)}</div>` : ''}
+    <div class="rc-sig-role">${esc(prog.signatory.role)}${AR
+      ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.signatoryRole)}</span>` : ''}</div>
   </div>
   <div class="rc-sig rc-sig-r">
     <img class="rc-sig-ink" src="/assets/images/certificates/signature-chairman.png" alt="" />
     <div class="rc-sig-line"></div>
-    <div class="rc-sig-name">Dr. Zakaria Olanrewaju Anofi</div>
-    <div class="rc-sig-role">Chairman, Board of Governors</div>
+    <div class="rc-sig-name">Dr. Zakariya Olanrewaju Anofi</div>
+    ${AR ? `<div class="rc-sig-namear" dir="rtl" lang="ar">${esc(AR.chairmanName)}</div>` : ''}
+    <div class="rc-sig-role">Chairman, Board of Governors${AR
+      ? ` <span class="rc-dot">·</span> <span class="rc-sig-rolear" dir="rtl" lang="ar">${esc(AR.chairmanRole)}</span>` : ''}</div>
   </div>
 
   <!-- ── AUTHENTICATION BAND ─────────────────────────────────────────────────
@@ -1490,11 +1781,20 @@ function sheetHtml({ cert, qrSvgMarkup }) {
        then the verification plate, left to right along the foot of the sheet.
        The pair on the left (22–124mm) and the plate on the right (173–276mm)
        are symmetric about the sheet centre. -->
-  <div class="rc-qr">
+  <div class="rc-qr">${isQuran ? `
+    <!-- The artwork reserves a gold-framed 17.6mm square at the foot and fills
+         it with a specimen pattern. A printed certificate carrying a QR that
+         resolves to nothing is worse than one carrying none: a parent who
+         scans it and gets nowhere learns that this institution prints
+         ornaments shaped like verification. So the specimen is replaced by
+         this certificate's real payload, at the exact size and position the
+         artwork reserved — no plaque of ours, because his frame is already
+         there. -->
+    <div class="rc-qr-img">${qrSvgMarkup}</div>` : `
     ${plaque(26, 28, `qr${uid}`)}
     <div class="rc-qr-cap">Verify Authenticity</div>
     <div class="rc-qr-img">${qrSvgMarkup}</div>
-    <div class="rc-qr-foot">Scan QR Code</div>
+    <div class="rc-qr-foot">Scan QR Code</div>`}
   </div>
 
   <!-- ── DUAL SERIAL ─────────────────────────────────────────────────────────
@@ -1510,19 +1810,22 @@ function sheetHtml({ cert, qrSvgMarkup }) {
   <div class="rc-serial rc-serial-tr">${esc(serial)}</div>
   <div class="rc-serial rc-serial-bl">${esc(serial)}</div>
 
-  <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid)}</div>
+  <div class="rc-cnwrap">${numberCartouche(displayNo, serial, uid, prog.school)}</div>
 
-  <div class="rc-sealwrap${prog.border === 'open' ? ' is-die' : ''}">${
-  prog.border === 'open' ? sealPlate(prog.school, prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>
+  ${isQuran ? '<!-- No seal plate: this sheet has two struck seal positions of its own,\n       and a third pasted over the artwork would be one seal too many. -->'
+    : `<div class="rc-sealwrap${prog.border === 'open' ? ' is-die' : ''}">${
+      prog.border === 'open' ? sealPlate(prog.school, prog.labelEn.split(' · ')[0]) : sealSvg(uid, prog.code)}</div>`}
 
   <div class="rc-plate">
-    ${plaque(92, 28, `vp${uid}`)}
+    ${isQuran ? '<!-- No plaque. The artwork is already engine-turned under this strip;\n         a panel of ours on top of it reads as a sticker, and a stretched one\n         (92x28mm of viewBox into a 173x13.6mm box) reads as a mistake. -->'
+    : plaque(92, 28, `vp${uid}`)}
     <div class="rc-plate-head"><span class="rc-plate-mark">SHRS</span>Certificate Verification</div>
     <div class="rc-plate-grid">
-      <div class="rc-pf"><span>Document ID</span><b>${esc(docId)}</b></div>
-      <div class="rc-pf"><span>Verification Code</span><b>${esc(verifyCode)}</b></div>
-      <div class="rc-pf"><span>Archive Reference</span><b>${esc(archiveRef)}</b></div>
-      <div class="rc-pf"><span>Student Identity No.</span><b>${esc(studentId)}</b></div>
+      ${AR ? `<div class="rc-pf"><span><i dir="rtl" lang="ar">${esc(AR.date)}</i> · Date of Award</span><b>${esc(issued)}</b></div>` : ''}
+      <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.docId)}</i> · ` : ''}Document ID</span><b>${esc(docId)}</b></div>
+      <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.code)}</i> · ` : ''}Verification Code</span><b>${esc(verifyCode)}</b></div>
+      <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.archive)}</i> · ` : ''}Archive Reference</span><b>${esc(archiveRef)}</b></div>
+      <div class="rc-pf"><span>${AR ? `<i dir="rtl" lang="ar">${esc(AR.sid)}</i> · ` : ''}Student Identity No.</span><b>${esc(studentId)}</b></div>
     </div>
     <div class="rc-plate-bar">${barcode}</div>
     <div class="rc-plate-bar2">${idBarcode}</div>
@@ -1547,6 +1850,12 @@ function docShell(title, sheetsHtml) {
 @font-face{font-family:'Cinzel';src:url('/assets/fonts/cinzel-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Cinzel';src:url('/assets/fonts/cinzel-latin-700-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Cinzel';src:url('/assets/fonts/cinzel-latin-800-normal.woff2') format('woff2');font-weight:800;font-style:normal;font-display:block}
+/* Amiri, for the two Arabic lines on the Qur'an College sheet: the College's
+   own motto and — where a human has supplied one — the holder's name. The
+   files are the Arabic cuts, self-hosted like every other face here, because a
+   press machine that cannot reach the network must still set the name. */
+@font-face{font-family:'Amiri';src:url('/assets/fonts/amiri-arabic-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Amiri';src:url('/assets/fonts/amiri-arabic-700-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Inter';src:url('/assets/fonts/inter-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Inter';src:url('/assets/fonts/inter-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:block}
 
@@ -1745,6 +2054,218 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
    below every piece of content. */
 .rc-plate-bg{position:absolute;left:0;top:0;width:297mm;height:210mm;
   z-index:0;pointer-events:none}
+
+/* ══ THE QUR’AN COLLEGE SHEET ═══════════════════════════════════════════════
+   Every position below is MEASURED off the Founder's artwork, not chosen by
+   eye. The file is 1080x768; an occupancy scan of it gives the clear cream
+   window, the two blank seal discs and the specimen QR's exact footprint, and
+   those measurements — converted at 297mm/1080px and 210mm/768px — are what
+   the numbers here are. That is why the content never crowds his ornament and
+   never sits on the ribbon rosettes: it was never allowed to.
+
+     clear head band   y 26–36   x 64–228   (between the two ribbon rosettes)
+     clear main field  y 42–162  x 42–255
+     specimen QR slot  x 203.7–221.3  y 167.0–184.6   (17.6mm square)
+     head laurel disc  centre (31.4, 44.6)  free bore ~13mm
+     foot gold disc    centre (148.7, 181.4)  flat face ~20.6mm
+     foot pockets      x 66–132 and x 164–199, y 166–186
+   ─────────────────────────────────────────────────────────────────────────── */
+.sheet[data-border="quran"]{background:#FBF7EE}
+/* The artwork, edge to edge, under everything and over nothing. */
+.sheet[data-border="quran"] .rc-plate-bg{object-fit:fill}
+.sheet[data-border="quran"] .rc-serial{display:none}
+.sheet[data-border="quran"] .rc-ledger{display:none}
+
+/* ── HEAD ── Every institutional line in both scripts, Arabic above English
+   throughout. The order is not arbitrary: on a sheet whose subject is the
+   Qur'an, Arabic leads and English follows it, and it does so at every rank
+   so the pairing reads as a rule rather than as a decision taken line by
+   line. All of it is centred between the artwork's two ribbon rosettes. */
+.sheet[data-border="quran"] .rc-emblems{top:22.6mm;height:9.4mm;gap:8mm}
+.sheet[data-border="quran"] .rc-em-side{height:8.8mm}
+.sheet[data-border="quran"] .rc-em-mid{height:9.4mm}
+.rc-arline{position:absolute;left:0;right:0;text-align:center;
+  font-family:'Amiri',serif;direction:rtl}
+.sheet[data-border="quran"] .rc-ar-nation{top:33mm;font-size:6.8pt;font-weight:400;
+  color:${INK_SOFT}}
+.sheet[data-border="quran"] .rc-nation{top:37mm;font-size:5.1pt}
+.sheet[data-border="quran"] .rc-ar-inst{top:39.6mm;font-size:10.2pt;font-weight:700;
+  color:${GOLD_DEEP}}
+.sheet[data-border="quran"] .rc-inst{top:44.6mm;font-size:9.6pt;letter-spacing:0.14em}
+.sheet[data-border="quran"] .rc-ar-school{top:49mm;font-size:8.4pt;font-weight:700;
+  color:${INK}}
+.sheet[data-border="quran"] .rc-school{top:53.2mm;font-size:6.6pt;letter-spacing:0.16em}
+.sheet[data-border="quran"] .rc-place{top:56.8mm;font-size:4.8pt}
+
+/* ── TITLE ── One baseline, two languages, a struck divider between them. */
+.rc-bititle{position:absolute;left:52mm;right:52mm;top:60.2mm;height:11.2mm;
+  display:flex;align-items:center;gap:5mm}
+.rc-title-en{flex:1;margin:0;text-align:right;font-family:'Cinzel',serif;
+  font-size:12.6pt;font-weight:800;letter-spacing:0.055em;color:${GOLD_DEEP};
+  text-transform:uppercase;line-height:1.1;
+  text-shadow:0 0.2mm 0 rgba(255,252,242,0.85)}
+.rc-title-ar{flex:1;text-align:left;font-family:'Amiri',serif;font-size:15.4pt;
+  font-weight:700;color:${GOLD_DEEP};line-height:1.25;
+  text-shadow:0 0.2mm 0 rgba(255,252,242,0.85)}
+/* The divider is a rule, not a border: it carries a lozenge at its middle so
+   it reads as struck metal rather than as a table cell edge. */
+.rc-bidiv{position:relative;width:1.5mm;align-self:stretch;display:flex;
+  align-items:center;justify-content:center;flex:0 0 auto}
+.rc-bidiv::before{content:'';position:absolute;top:0.6mm;bottom:0.6mm;width:0.22mm;
+  background:linear-gradient(180deg,rgba(168,134,63,0),${GOLD} 26%,${GOLD} 74%,rgba(168,134,63,0))}
+.rc-bidiv i{position:relative;width:1.5mm;height:1.5mm;background:${GOLD};
+  transform:rotate(45deg)}
+.sheet[data-border="quran"] .rc-subtitle{top:72mm;font-size:6.4pt;letter-spacing:0.2em}
+.sheet[data-border="quran"] .rc-subtitle [lang="ar"]{font-family:'Amiri',serif;
+  font-size:8pt;letter-spacing:0}
+.rc-motto{position:absolute;left:0;right:0;text-align:center;
+  font-family:'Amiri','Scheherazade New',serif;font-size:9.4pt;font-weight:400;
+  color:${GOLD_DEEP};line-height:1.4}
+.sheet[data-border="quran"] .rc-motto{top:75.6mm}
+
+/* ── CITATION ── */
+/* ── CITATION, as a two-column composition ─────────────────────────────── */
+.rc-bilede{position:absolute;left:56mm;right:56mm;top:79.6mm;height:5.2mm;
+  display:flex;align-items:center;gap:4mm}
+.rc-bilede .rc-lede{position:static;flex:1;top:auto}
+.rc-lede-en{text-align:right}
+.rc-lede-ar{text-align:left;font-family:'Amiri',serif;font-style:normal;
+  font-weight:400;font-size:8.6pt}
+.sheet[data-border="quran"] .rc-bilede .rc-lede{font-size:9pt}
+.rc-bidiv-sm{width:1.2mm;height:3.4mm;align-self:center}
+.rc-bidiv-sm i{width:1.1mm;height:1.1mm}
+
+/* The name: English left, Arabic right, one baseline, equal rank. */
+.rc-biname{position:absolute;left:44mm;right:44mm;top:85.6mm;height:12.6mm;
+  display:flex;align-items:center;gap:5mm}
+.rc-biname .rc-name{position:static;flex:1;height:auto;justify-content:flex-end;
+  left:auto;right:auto;top:auto}
+.rc-namear{position:absolute;left:62mm;right:62mm;text-align:center;
+  font-family:'Amiri',serif;font-weight:700;color:#241D10;line-height:1.2}
+.rc-biname .rc-namear{position:static;flex:1;text-align:left;font-size:19pt;
+  line-height:1.25;text-shadow:0 0.16mm 0 rgba(255,252,242,0.9)}
+.rc-bidiv-name{width:1.8mm;height:9mm;align-self:center}
+.rc-bidiv-name i{width:1.9mm;height:1.9mm}
+/* Fallback: a holder with no Arabic name on file keeps the centred single
+   line — the band is not padded out with a blank half. */
+.sheet[data-border="quran"][data-ar="0"] .rc-name{top:85.6mm;left:56mm;right:56mm;
+  height:12.6mm}
+
+/* Microtext: the serial at the 0.90pt press floor, under the name. */
+.rc-microrule{position:absolute;left:52mm;right:52mm;top:98.8mm;text-align:center;
+  font-family:'Inter',sans-serif;font-size:0.9pt;letter-spacing:0.32pt;
+  color:${MICRO_INK};white-space:nowrap;overflow:hidden;text-overflow:clip;
+  opacity:0.9}
+.sheet[data-border="quran"] .rc-namerule{top:100.2mm;left:96mm;right:96mm}
+.sheet[data-border="quran"] .rc-sid{top:101.8mm;font-size:5.4pt}
+.sheet[data-border="quran"] .rc-sid [lang="ar"]{font-family:'Amiri',serif;font-size:6.6pt;
+  letter-spacing:0}
+/* No Arabic name on file: the rule and the identity line close up rather than
+   leaving a hole where a name should be. */
+.sheet[data-border="quran"][data-ar="0"] .rc-namerule{top:99.6mm}
+.sheet[data-border="quran"][data-ar="0"] .rc-sid{top:101.2mm}
+
+/* The citation, two columns. Stacked it costs 26mm of a 138mm field; side by
+   side it costs 14, and neither reader is made to wait for the other. */
+.rc-bibody{position:absolute;left:43mm;right:43mm;top:107mm;height:16mm;
+  display:flex;align-items:flex-start;gap:3.6mm}
+.sheet[data-border="quran"][data-ar="0"] .rc-bibody{top:106.2mm}
+.rc-bibody .rc-body{position:static;margin:0;font-size:7.9pt;line-height:1.42;
+  color:${INK}}
+.rc-body-en{flex:1.24}
+.rc-body-ar{flex:1}
+.rc-body-en{text-align:left;hyphens:auto}
+.rc-body-ar{text-align:right;font-family:'Amiri',serif;font-size:8.4pt;line-height:1.58}
+.rc-arnum{unicode-bidi:isolate;direction:ltr}
+.rc-bidiv-tall{width:1.5mm;height:15mm}
+
+/* ── AWARD ── */
+/* The engine-turned rule, then the award. */
+.rc-lathebar{position:absolute;left:73.5mm;width:150mm;top:123.8mm;height:2.6mm}
+.rc-lathe-svg{display:block;width:100%;height:100%}
+.sheet[data-border="quran"] .rc-award{top:127.4mm;left:52mm;right:52mm;height:11mm;gap:0.25mm}
+.sheet[data-border="quran"] .rc-award-k{font-size:4.4pt;letter-spacing:0.24em}
+.sheet[data-border="quran"] .rc-award-k [lang="ar"]{font-family:'Amiri',serif;
+  font-size:6pt;letter-spacing:0}
+.sheet[data-border="quran"] .rc-award-v{font-size:8.2pt;letter-spacing:0.045em}
+.rc-award-ar{font-family:'Amiri',serif;font-size:8.2pt;font-weight:700;color:${INK};
+  direction:rtl;line-height:1.1}
+
+/* ── SIGNATURES + PARTICULARS ── the ledger sits between the two officers,
+   which buys the height a bilingual sheet needs at its foot. */
+/* x 60 and x 236, not x 41: below y 161 the artwork's clear field starts at
+   59.4mm on the left, and a signature block set to the sheet's own margins
+   would have printed the Mudeer's office over the gold swoosh. */
+/* 146.8, not lower: the signature block measures 16.8mm from its ink to the
+   foot of the Arabic office line, and the artwork's QR slot begins at 166.1mm.
+   The layout gate measured the collision at 149.2 and was right — a signature
+   box reaching into the QR is a scan failure waiting for the first parent who
+   tries it. */
+.sheet[data-border="quran"] .rc-sig{top:150.6mm;width:68mm}
+.sheet[data-border="quran"] .rc-sig-l{left:60mm;right:auto}
+.sheet[data-border="quran"] .rc-sig-r{right:60mm;left:auto}
+.sheet[data-border="quran"] .rc-sig-ink{height:5mm;max-width:44mm;margin-bottom:-0.7mm}
+.sheet[data-border="quran"] .rc-sig-name{margin-top:0.6mm;font-size:7.4pt}
+.rc-sig-namear{font-family:'Amiri',serif;font-size:6.8pt;font-weight:700;color:${INK};
+  direction:rtl;line-height:1.05;margin-top:0.05mm}
+.sheet[data-border="quran"] .rc-sig-role{margin-top:0.3mm;font-size:3.7pt;
+  letter-spacing:0.08em;white-space:nowrap}
+.rc-sig-rolear{font-family:'Amiri',serif;font-size:5pt;color:${INK_SOFT};
+  letter-spacing:0;text-transform:none;unicode-bidi:isolate}
+
+/* ── VERIFICATION PLATE ── */
+/* Five fields, each with its Arabic label above its English one. It sits ABOVE
+   the signatures rather than below them, because the artwork's bottom-left
+   swoosh eats the field from x 0 to 59mm below y 161 — a plate at the foot
+   would have had to start inside the ornament. Measured, not guessed. */
+.sheet[data-border="quran"] .rc-plate{left:56mm;width:185mm;top:140.4mm;height:9.4mm}
+.sheet[data-border="quran"] .rc-plate-head,
+.sheet[data-border="quran"] .rc-plate-bar,
+.sheet[data-border="quran"] .rc-plate-bar2,
+.sheet[data-border="quran"] .rc-plate-void{display:none}
+.sheet[data-border="quran"] .rc-plate-grid{position:absolute;left:0;right:0;top:0;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:0 2.6mm}
+.sheet[data-border="quran"] .rc-plate-micro{position:absolute;left:0;right:0;bottom:0;
+  text-align:center;white-space:nowrap;overflow:hidden}
+.sheet[data-border="quran"] .rc-pf span i{font-family:'Amiri',serif;font-size:5.2pt;
+  font-style:normal;letter-spacing:0;text-transform:none;unicode-bidi:isolate}
+
+/* ── FOOT ── the artwork's own bottom band, used as it was drawn. */
+.sheet[data-border="quran"] .rc-cnwrap{left:64mm;width:66mm;top:167.2mm;height:12.4mm}
+.rc-qbars{position:absolute;text-align:center}
+.rc-qbars svg{display:block;margin:0 auto}
+.rc-qbars b{display:block;font-family:'Inter',sans-serif;font-size:3.4pt;
+  letter-spacing:0.08em;color:${INK_SOFT};text-transform:uppercase;margin-top:0.3mm}
+.rc-qbars b [lang="ar"]{font-family:'Amiri',serif;font-size:4.6pt;letter-spacing:0}
+.rc-qbars-holder{left:64mm;width:66mm;top:180mm}
+.rc-qbars-doc{left:163mm;width:36mm;top:170mm}
+/* The real QR, over a knockout of bare paper, at the exact size and place the
+   artwork reserved (measured: x 203.98–221.58mm, y 166.98–184.55mm). */
+.sheet[data-border="quran"] .rc-qr{left:203mm;top:166.1mm;width:19.6mm;height:19.6mm;
+  background:#F7F1E4;box-shadow:0 0 0 0.15mm rgba(247,241,228,1)}
+.sheet[data-border="quran"] .rc-qr-img{position:absolute;width:17.6mm;height:17.6mm;
+  left:1mm;top:0.88mm}
+.sheet[data-border="quran"] .rc-qr-img svg{width:17.6mm;height:17.6mm;display:block}
+
+/* The two blank seal discs in the artwork, struck. Lettering only — his discs
+   are already there and better than anything redrawn. */
+.rc-qdie{position:absolute;left:24.4mm;top:39.4mm;width:14mm;height:11mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;line-height:1}
+.rc-qdie-k{font-family:'Inter',sans-serif;font-size:2.9pt;letter-spacing:0.09em;
+  color:#243050;text-transform:uppercase;opacity:0.95}
+.rc-qdie-v{font-family:'Cinzel',serif;font-size:8.2pt;font-weight:800;
+  letter-spacing:0.1em;color:#1A2338;margin-top:0.5mm}
+.rc-qmedal{position:absolute;left:138.4mm;top:172.2mm;width:20.6mm;height:15mm;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;line-height:1}
+.rc-qmedal-k{font-family:'Inter',sans-serif;font-size:2.8pt;letter-spacing:0.11em;
+  color:#7A5C21;text-transform:uppercase;opacity:0.9}
+.rc-qmedal-k[lang="ar"]{font-family:'Amiri',serif;font-size:4.4pt;letter-spacing:0;
+  text-transform:none;direction:rtl}
+.rc-qmedal-m{font-family:'Cinzel',serif;font-size:8.6pt;font-weight:800;
+  letter-spacing:0.09em;color:#6B4E18;margin:0.4mm 0;
+  text-shadow:0 0.14mm 0 rgba(255,246,214,0.75)}
 
 .rc-plate-void{position:absolute;left:0;right:0;bottom:1mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.1em;

@@ -86,7 +86,7 @@ asset: it is what "institutional" means in practice, and it should appear
 on every future policy document the school publishes.
 
 ### Heritage
-Founded by Zakaria Olanrewaju Anofi in memory of his father, Anofi Aliu
+Founded by Zakariya Olanrewaju Anofi in memory of his father, Anofi Aliu
 Akano, a Nigerian Ports Authority clerk whose own schooling was cut
 short. Officially registered December 2017, rooted in the Imowonla
 community. This origin story — a debt of gratitude made into an
@@ -301,7 +301,7 @@ assumption:
    deep-links to each page's real counterpart. **Recommended before
    this goes live**: a native Arabic speaker should review the
    translated copy — particularly the transliteration of personal names
-   (e.g. "Zakaria Olanrewaju Anofi" → زكريا أولانريواجو أنوفي, and the
+   (e.g. "Zakariya Olanrewaju Anofi" → زكريا أولانريواجو أنوفي, and the
    ~17 names in the governance ledger) and the Islamic terminology on
    the Royal College and Policies pages — per the translator's note
    still shown on `/ar/`.

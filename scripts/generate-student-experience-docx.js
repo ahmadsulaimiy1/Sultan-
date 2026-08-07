@@ -280,7 +280,7 @@ sections[0].children.push(pageBreak());
   B.push(polaroid('leadership/founder-ceo.jpg', 160, 'Sultan Zakaria, Founder'));
   B.push(body('Since 2016, Sultan Hanafi Royal Schools has taken children from the Imowonla community and given them access to the kind of education that was previously available only to the most privileged families in Nigeria. That sentence is easy to write. Living it, one child at a time, is the actual work.'));
   B.push(body('Every parent who entrusts us with a child is trusting us with something larger than a curriculum — a formation of character, faith, and confidence that will outlast every exam they ever sit.'));
-  B.push(pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakaria Olanrewaju Anofi · Founder & Head of Schools/Administrator'));
+  B.push(pullquote('Together, let us embark on a journey where every child discovers not only what they know, but who they are called to become.', 'Zakariya Olanrewaju Anofi · Founder & Head of Schools/Administrator'));
   sections.push({ properties: { page: { size: PAGE, margin: { top: 900, bottom: 900, left: 1200, right: 1200 } } }, children: B });
 }
 

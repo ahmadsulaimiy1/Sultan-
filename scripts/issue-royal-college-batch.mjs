@@ -24,7 +24,7 @@
  * a convenience default is how six real certificates once came to be signed by
  * a development literal — nobody chose it, the run simply succeeded.
  */
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { generateStageCertificateSerial, displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
@@ -56,7 +56,7 @@ const ORIGIN = 'https://www.shroyalschools.com';
 // 000042–000047, so this batch starts at 000048. That is not a convention; it
 // is the only correct value, and the span check below proves no other batch
 // claims these numbers.
-const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61, PRY: 65 }[BATCH];
+const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61, PRY: 65, QUR: 72 }[BATCH];
 if (!FIRST_CERTIFICATE_SEQ) {
   console.error(`No batch definition for "${BATCH}".`);
   process.exit(2);
@@ -64,7 +64,10 @@ if (!FIRST_CERTIFICATE_SEQ) {
 const PRIOR_SPANS = [
   { key: 'IBT', lo: 35, hi: 41 },
   { key: 'IDD', lo: 42, hi: 47 },
-];
+  { key: 'JSS', lo: 48, hi: 60 },
+  { key: 'SS', lo: 61, hi: 64 },
+  { key: 'PRY', lo: 65, hi: 71 },
+].filter((s) => s.key !== BATCH);
 
 // ── The grade ───────────────────────────────────────────────────────────────
 // Never printed — the certificate attests completion, not performance
@@ -177,6 +180,42 @@ ROLLS.PRY = [
   { en: 'Daud Aliu', sex: 'male' },
 ];
 
+// ── The Qur'an College roll ─────────────────────────────────────────────────
+// Three graduates, and — for the first time in this pipeline — TWO different
+// awards in one batch. Two students have completed the whole Qur'an; one has
+// memorised ten juz'. `awardVariant` selects the wording, and the renderer
+// refuses to print a QUR sheet that names no variant rather than defaulting to
+// the first one: a Ten Juz' sheet headed "Certificate of Completion" would
+// overstate a child's achievement on a permanent record.
+//
+// `ar` is the Arabic form of the name, and it appears ONLY where the Founder
+// wrote it out. It is never transliterated here. He supplied Zaynab's on
+// 2026-08-07; the other two have none on file and print in Latin alone, which
+// is complete and correct. An invented Arabic name is not a near miss, it is a
+// different name engraved on someone's certificate.
+ROLLS.QUR = [
+  // Corrected twice by the Founder before anything was signed — "Zainab Anofi",
+  // then "Zaynab Omobolanle Anofi", and finally this, which he marked LOCKED.
+  // The name engraved is the last one he wrote, in both scripts, exactly as he
+  // wrote it. Neither form is derived from the other here.
+  { en: 'Zaynab Zakariya Anofi', ar: 'زينب زكريا حنفي', sex: 'female',
+    awardVariant: 'COMPLETE' },
+  // Already holds an I'dadiyyah certificate under this EXACT name, so his
+  // permanent Student ID carries across. Minting a second number for him here
+  // would leave the institution holding two irreconcilable records of one boy.
+  { en: 'Baqi Olamiposi Anofi', sex: 'male', awardVariant: 'COMPLETE',
+    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'exact' },
+  // NOT carried over from the Ibtida'iyyah register's "Aisha Anofi". That is a
+  // short-form match on a common given name plus a family name shared by
+  // several students on these rolls, and the Founder has ruled on the two
+  // short forms he was asked about and not on this one. An unruled short-form
+  // carry-over is precisely what the cross-batch gate rejects, and it should:
+  // guessing wrong here puts one child's permanent number on another child's
+  // certificate. She is issued a new Student ID. If the Registrar's records
+  // show she is the same student, say so and it is a one-line change.
+  { en: 'Aisha Omoshalewa Anofi', sex: 'female', awardVariant: 'JUZ10' },
+];
+
 const ROLL = ROLLS[BATCH];
 
 // Students who hold an SHRS certificate but are NOT on this roll. A name from
@@ -205,6 +244,9 @@ const NOT_ON_THIS_ROLL_ALL = [
   'Adedokun', 'Naheemah', 'Ashrof', 'Akorede', 'Abdulateef',
   'Thoirah', 'Makinde', 'Amobi', 'Jabarr', 'Oladimeji',
 ];
+// This run's own output directory, needed by the cross-batch gate below.
+const stamp = `${ISSUED_AT}-${PROGRAMME}-${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}`;
+
 // A Student ID is permanent and there is one per person. Uniqueness WITHIN a
 // batch is not enough — the number must not already belong to someone else in
 // any register this institution has issued. Read at run time, never assumed.
@@ -229,6 +271,14 @@ function assertIdentityIsFreeAcrossRegisters(issuedRows) {
   try {
     for (const d of readdirSync('dist/certificates')) {
       if (publishedBatches.has(d)) { shadowed.push(d); continue; }
+      // THIS run's own previous build. A batch cannot collide with itself: the
+      // directory is about to be overwritten by what is being checked. Skipping
+      // it is not a loosening of the gate — leaving it in meant that correcting
+      // a student's NAME and re-issuing tripped the collision check against the
+      // superseded sheet, which reads as "one ID, two children" when it is one
+      // child under a corrected spelling. The gate still sees every other batch
+      // in dist/, and every published register.
+      if (d === stamp) continue;
       for (const f of readdirSync(join('dist/certificates', d))) {
         if (/^(register-.*|graduation-register)\.json$/.test(f)) {
           sources.push([d, join('dist/certificates', d, f)]);
@@ -311,7 +361,7 @@ const REGISTERS = {
 // on two JSS certificates, which is the single worst thing this pipeline can
 // produce: one permanent number, two different children. The cross-batch gate
 // below now refuses it outright rather than trusting this constant.
-const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56, PRY: 58 }[BATCH];
+const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56, PRY: 58, QUR: 65 }[BATCH];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRE-FLIGHT
@@ -419,6 +469,8 @@ for (const [i, student] of roll.entries()) {
     identitySource: student.identitySource,
     matchedAs: student.matchedAs || null,
     founderRuling: student.founderRuling || null,
+    nameAr: student.ar || null,
+    awardVariant: student.awardVariant || null,
     gradeEn: GRADE_EN,
     gradeAr: GRADE_AR,
     serialNo: gen.serialNo,
@@ -472,16 +524,26 @@ assertIdentityIsFreeAcrossRegisters(issued);
 // ─────────────────────────────────────────────────────────────────────────────
 // RENDER
 // ─────────────────────────────────────────────────────────────────────────────
-const stamp = `${ISSUED_AT}-${PROGRAMME}-${String(FIRST_CERTIFICATE_SEQ).padStart(6, '0')}`;
 const dir = join(process.cwd(), 'dist/certificates', stamp);
 mkdirSync(dir, { recursive: true });
+// Clear the directory first. A re-issue under a CORRECTED NAME writes a new
+// file and leaves the old one beside it — the superseded sheet keeps its serial
+// and its Student ID, and it is a valid-looking certificate for a person who
+// does not exist. It happened here: a name was locked late and the previous
+// spelling's sheet stayed in the batch folder, so the press file count went to
+// four for a roll of three. Nothing that carries a serial survives a re-issue.
+for (const f of readdirSync(dir)) {
+  if (/\.(html|pdf|png|json|md|sql)$/.test(f)) rmSync(join(dir, f));
+}
 
 const toRow = (r) => ({
   id: r.certId,
   serial_no: r.serialNo,
   student_identity_no: r.identityNo,
   student_full_name: r.studentEn,
+  student_name_ar: r.nameAr,
   student_sex: r.sex,
+  award_variant: r.awardVariant,
   programme_code: PROGRAMME,
   programme_label_en: RC_PROGRAMMES[PROGRAMME].labelEn,
   institution_name: INSTITUTION_NAME,
@@ -538,7 +600,11 @@ const register = {
   programme: PROGRAMME,
   programmeLabelEn: RC_PROGRAMMES[PROGRAMME].labelEn,
   school: RC_PROGRAMMES[PROGRAMME].school,
-  award: RC_PROGRAMMES[PROGRAMME].award,
+  // A programme with variants has no single award name, so the register lists
+  // what this batch actually conferred rather than flattening two different
+  // achievements into one line.
+  award: RC_PROGRAMMES[PROGRAMME].award
+    || [...new Set(issued.map((r) => RC_PROGRAMMES[PROGRAMME].variants[r.awardVariant].award))],
   institutionName: INSTITUTION_NAME,
   academicYear: ACADEMIC_YEAR,
   issuedAt: ISSUED_AT,

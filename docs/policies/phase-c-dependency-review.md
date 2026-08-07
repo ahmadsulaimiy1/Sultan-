@@ -42,7 +42,7 @@ Records Retention Policy, and Financial Controls Policy.
 
 | Fact | Source | Used in |
 |---|---|---|
-| Board of Trustees membership: Zakaria Olanrewaju Anofi, Mr. Lukman Anofi, Mrs. Lasisi-Ahmed Olayinka Idayat, Dr. Ismail Seriki | `about-governance.html` | Constitution & Governance Charter |
+| Board of Trustees membership: Zakariya Olanrewaju Anofi, Mr. Lukman Anofi, Mrs. Lasisi-Ahmed Olayinka Idayat, Dr. Ismail Seriki | `about-governance.html` | Constitution & Governance Charter |
 | CEO and a Board member both hold FCA/FCCA (accounting) qualifications | `about-governance.html` | Financial Controls Policy |
 | `docs/digital-assistant.md` — the AI assistant already self-discloses as AI, escalates to WhatsApp, does not currently authenticate users or persist conversation history server-side | existing docs | AI Usage Policy |
 | Parent Portal's actual security implementation (scrypt hashing, timing-safe comparisons, login lockout, activation-token pattern, admin-token-gated endpoints, Vercel Deployment Protection) | `docs/parent-portal-audit.md` | Information Security Policy |

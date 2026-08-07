@@ -79,7 +79,7 @@ below).
 
 Before walking through tiers A–J, one structural point needs to be
 stated clearly: **the Founder's personal status is not tier A, and is
-not part of the A–J hierarchy at all.** Zakaria Olanrewaju Anofi holds
+not part of the A–J hierarchy at all.** Zakariya Olanrewaju Anofi holds
 two constitutional offices — Chairman of the Board of Governors (tier A)
 and Head of Schools / Administrator (tier C) — and, separately, the
 personal and permanent status of "the Founder" under Charter Article
@@ -137,7 +137,7 @@ Governors in total through co-opted Governors (Charter Article 29).
 
 | Name | Role | Credentials |
 |---|---|---|
-| Zakaria Olanrewaju Anofi | Chairman | BSc., MSc., FCA, FCCA |
+| Zakariya Olanrewaju Anofi | Chairman | BSc., MSc., FCA, FCCA |
 | To Be Designated | Secretary | — |
 | Mr. Lukman Anofi | Member | BSc, MBA, MSc, CPA, FCCA |
 | Mrs. Lasisi-Ahmed Olayinka Idayat | Member | B.Ed, M.Ed |
@@ -231,7 +231,7 @@ Article 50). Its membership, restated by the 2026-08-04 amendment
 
 | Seat | Real current holder |
 |---|---|
-| Head of Schools / Administrator (Chair) | Zakaria Olanrewaju Anofi |
+| Head of Schools / Administrator (Chair) | Zakariya Olanrewaju Anofi |
 | Principal (Mudeer), Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
 | Principal, Sultan Hanafi Royal College | Dr. Adegoke Musa Olatunji |
 | Principal (Ra'ees), Sultan Hanafi School of Islamic and Arabic Studies | Shaykh Abubakr Solah |

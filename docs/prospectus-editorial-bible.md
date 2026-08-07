@@ -120,7 +120,7 @@ proud but not boastful, exactly the register Part X formalises below.
 
 ### The SHRS story, in the shape the prospectus should tell it
 
-**Past** — Founded December 2017 by Zakaria Olanrewaju Anofi, named
+**Past** — Founded December 2017 by Zakariya Olanrewaju Anofi, named
 for his late father Anofi Aliu Akano, a Nigerian Ports Authority clerk
 whose own education was limited but who was determined his children
 would have opportunities he didn't. The idea took shape during Lagos

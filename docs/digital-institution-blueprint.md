@@ -47,7 +47,7 @@ boundary a digital system for it would need to enforce.
 | Office | Real actor(s) | Digital state today | Core workflows | Core records | Approval chain | Permission boundary needed |
 |---|---|---|---|---|---|---|
 | **Board of Governors** | Board (composition undocumented — GV-02 Board Charter is Missing) | None | Approve Tier-1 policy, appoint/hold the Head of Schools / Administrator accountable, receive annual DSL/ICT reports | Board resolutions (`governance-resolution-register.md`, file-based) | Board is the terminal approval authority | Board-only read access to institution-wide aggregates; no operational write access |
-| **Head of Schools / Administrator** (Founder — Zakaria Olanrewaju Anofi) | One person | None — the "Founder Dashboard" the directive asks for doesn't exist | Approve Tier 2–4 documents, cross-institution oversight | — | Reports to Board | Read-only aggregate across all five institutions; not a data-entry role |
+| **Head of Schools / Administrator** (Founder — Zakariya Olanrewaju Anofi) | One person | None — the "Founder Dashboard" the directive asks for doesn't exist | Approve Tier 2–4 documents, cross-institution oversight | — | Reports to Board | Read-only aggregate across all five institutions; not a data-entry role |
 | **Management Team** | Head of Schools / Administrator + 4 Principals/Head Teachers + VP Administration + Registrar + ICT Head + Head R&D | None as a body; individual members interact with the site only as visitors today | Cross-institution coordination | — | Reports to Head of Schools / Administrator | N/A — a meeting body, not a data system, unless the Board later wants a shared Management Team dashboard |
 
 ### Registrar's Office

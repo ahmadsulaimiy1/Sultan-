@@ -91,7 +91,7 @@ is genuinely vacant.
 
 | Seat | Current Holder | Constitutional Basis |
 |---|---|---|
-| Chairman | Zakaria Olanrewaju Anofi (the Founder) | Article 10, Article 27F(d) — the Founder holds the office of Chairman directly, without requiring election under Article 39A, for as long as the Founder holds it |
+| Chairman | Zakariya Olanrewaju Anofi (the Founder) | Article 10, Article 27F(d) — the Founder holds the office of Chairman directly, without requiring election under Article 39A, for as long as the Founder holds it |
 | Secretary to the Board | **Vacant — to be designated** | Article 32A (a new core Board seat created by the 2026-08-04 amendment); tracked as an OPEN item in the Governance Resolution Register, Category 8 |
 | Other Member | Mr. Lukman Anofi | Article 32(b), Article 30(b) |
 | Other Member | Mrs. Lasisi-Ahmed Olayinka Idayat | Article 32(b), Article 30(b) |
@@ -148,7 +148,7 @@ This is the central practical distinction the 2026-08-04 amendment
 introduced, and the one a Board member most needs to hold clearly in
 mind. There is no longer an office of "Chief Executive Officer" under
 the Charter (Article 10) — it does not exist and this Handbook will
-never revive it. The Founder, Zakaria Olanrewaju Anofi, presently
+never revive it. The Founder, Zakariya Olanrewaju Anofi, presently
 holds **two separate constitutional offices**, not one fused role:
 
 ### 4.1 Chairman of the Board of Governors

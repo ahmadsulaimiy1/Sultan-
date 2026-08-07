@@ -38,7 +38,7 @@ curl -X POST https://<your-domain>/api/portal/admin/staff \
   -H "x-sysadmin-token: <token>" -H "content-type: application/json" \
   -d '{
     "action": "create-staff", "staffNo": "SHR-STF-0001",
-    "fullName": "Zakaria Olanrewaju Anofi", "positionTitle": "Head of Schools / Administrator",
+    "fullName": "Zakariya Olanrewaju Anofi", "positionTitle": "Head of Schools / Administrator",
     "dateJoined": "2017-12-01"
   }'
 

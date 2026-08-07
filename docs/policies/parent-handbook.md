@@ -77,7 +77,7 @@ worse outcome for a family than a clearly labelled link.
 *SHRS does not have a single overall Principal — it has a Head of Schools / Administrator and a
 Principal (or Head Teacher) per institution. This Handbook's welcome
 reflects that structure rather than inventing a single figurehead:* a
-welcome message from the Head of Schools / Administrator (Zakaria Olanrewaju Anofi) on behalf of
+welcome message from the Head of Schools / Administrator (Zakariya Olanrewaju Anofi) on behalf of
 the Board and Management Team, plus a short welcome from the
 Principal or Head Teacher of the specific institution the family's
 child is enrolled in. **The actual text of these welcome messages needs

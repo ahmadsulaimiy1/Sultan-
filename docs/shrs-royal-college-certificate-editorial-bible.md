@@ -184,7 +184,7 @@ Two blocks, both now carrying a real specimen:
   2026-08-06 as a 120 × 86 px photograph of a signature written light-on-dark;
   traced to vector by `scripts/trace-signature.py`, which discards the dark
   ground entirely and reduces the ink to fresh black Béziers.
-- **Dr. Zakaria Olanrewaju Anofi**, Chairman, Board of Governors —
+- **Dr. Zakariya Olanrewaju Anofi**, Chairman, Board of Governors —
   `assets/images/certificates/signature-chairman.png`, already on file.
 
 **Honest limit on the Principal's specimen.** Tracing does not add information.
