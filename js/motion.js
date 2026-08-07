@@ -38,21 +38,47 @@
   function splitWords(el) {
     if (el.dataset.moSplit) return;
     el.dataset.moSplit = '1';
-    var text = el.textContent.replace(/\s+/g, ' ').trim();
-    if (!text) return;
+    // A line break inside a heading is the author's own line-setting, and
+    // must survive being split into words. Reading textContent alone threw
+    // it away, so "Faith and Scholarship,<br>One Inheritance." came back as
+    // "Faith and Scholarship,One Inheritance." — the break gone and the two
+    // lines run together without even a space between them. The heading is
+    // walked instead, and <br> is carried through as itself.
+    var parts = [];
+    Array.prototype.forEach.call(el.childNodes, function (node) {
+      if (node.nodeType === 3) {
+        node.nodeValue.replace(/\s+/g, ' ').split(' ').forEach(function (w) {
+          if (w) parts.push(w);
+        });
+      } else if (node.nodeName === 'BR') {
+        parts.push('\n');
+      } else if (node.textContent) {
+        node.textContent.replace(/\s+/g, ' ').split(' ').forEach(function (w) {
+          if (w) parts.push(w);
+        });
+      }
+    });
+    if (!parts.length) return;
+
     var sr = document.createElement('span');
     sr.className = 'pr-sr';
-    sr.textContent = text;
+    sr.textContent = parts.join(' ').replace(/ ?\n ?/g, ' ');
     el.textContent = '';
     el.appendChild(sr);
+
     var holder = document.createElement('span');
     holder.setAttribute('aria-hidden', 'true');
-    text.split(' ').forEach(function (w, i) {
+    var wordIndex = 0;
+    parts.forEach(function (w, i) {
+      if (w === '\n') { holder.appendChild(document.createElement('br')); return; }
       var s = document.createElement('span');
       s.textContent = w;
-      s.style.setProperty('--w', i);
+      s.style.setProperty('--w', wordIndex);
+      wordIndex += 1;
       holder.appendChild(s);
-      if (i < text.split(' ').length - 1) holder.appendChild(document.createTextNode(' '));
+      if (i < parts.length - 1 && parts[i + 1] !== '\n') {
+        holder.appendChild(document.createTextNode(' '));
+      }
     });
     el.appendChild(holder);
   }

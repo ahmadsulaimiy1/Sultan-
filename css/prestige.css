@@ -322,9 +322,16 @@
 .pr-hero-inner{width:min(1180px,92%);margin:0 auto;padding:0 0 clamp(48px,8vh,110px);}
 .pr-hero .pr-eyebrow{color:var(--pr-gold-bright);}
 .pr-hero .pr-eyebrow::before{background:linear-gradient(90deg,transparent,var(--pr-gold-bright));}
+/* The colour is stated, not inherited. css/brand.css sets every heading
+   to --navy, which is a dark brown, and a direct rule on the element
+   always beats a colour inherited from .pr-hero — so the title of every
+   photographic hero on the site was being painted dark brown over a
+   sunlit photograph, and effectively disappeared. */
 .pr-hero-title{font-family:'Cinzel',serif;font-weight:700;line-height:1.06;
   font-size:clamp(2.4rem,6.4vw,4.6rem);margin:.4rem 0 0;
-  text-shadow:0 2px 30px rgba(0,0,0,.4);}
+  color:#fff;
+  text-shadow:0 2px 30px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.4);}
+.pr-hero-title span{color:inherit;}
 .pr-hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1.15rem,2.6vw,1.6rem);
   line-height:1.55;max-width:60ch;margin:1.1rem 0 0;color:rgba(255,255,255,.92);}
 .pr-hero-cues{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
@@ -2555,3 +2562,14 @@ body.portal-body > .pr-sound-toggle{position:fixed;}
    hero must not also reserve its own full run of padding beneath. */
 .policies > .wrap:first-child{padding-top:0;}
 #policies-hero{padding-bottom:clamp(48px,7vw,86px);}
+
+
+/* -------------------------------------------------------------------
+   The Personalisation drawer is 470px wide and its segmented controls
+   were laid out in a single non-wrapping row, so any control with more
+   than two long labels ran off the drawer's trailing edge and could not
+   be reached. They wrap now, and the panel clips nothing.
+   ------------------------------------------------------------------- */
+.pc-panel,.pc-body{min-width:0;}
+.pc-segmented{flex-wrap:wrap;}
+.pc-segmented > button{flex:1 1 auto;min-width:0;white-space:normal;}
