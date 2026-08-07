@@ -66,15 +66,17 @@ const GOLD_RED = '#B0763A';    // red gold — the second metal, for contrast ba
 // grounds only. The Founder rejected v1.1's large navy corner blocks and he was
 // right — navy at that scale fights the paper. At hairline weight it does the
 // opposite: it gives the gold an edge to sit against.
-const CRIMSON = '#9A2432';
-const CRIMSON_DEEP = '#6E1520';
-const CRIMSON_PALE = '#C2515D';
+// Crimson is retired at v2.1. It was introduced at v1.3 on the Founder's brief
+// for "flashy crimson", and withdrawn on his later reading of the proof: on a
+// gold ground it fought the metal rather than accenting it. The sheet now runs
+// two inks — gold and navy — plus the paper.
 const NAVY = '#1A2338';
 const NAVY_SOFT = '#2E3C5C';
+const NAVY_DEEP = '#0F1728';   // the border mass at its darkest
+const NAVY_RICH = '#22335A';   // and where the light crosses it
 const INK = '#2B2417';        // body text
 const INK_SOFT = '#5A4E37';
 const MICRO_INK = '#8B7440';
-const SERIAL_INK = '#9A2432';   // the dual serial — a contrasting ink, by design
 
 // The sheet. True A4 landscape — 297 x 210mm, filling the page edge to edge
 // under @page{size:A4 landscape;margin:0}. The v1.0 master draws 297 x 209.5
@@ -89,33 +91,43 @@ const H = 210;
 // addition has to land in real paper rather than on top of an ornament, and
 // because the layout gate re-measures against exactly these numbers.
 // ── THE BORDER, AND WHY IT IS THIS DEEP ─────────────────────────────────────
-// v1.2 gave the sheet about 10mm of ornament between the trim and the field.
-// The Founder's verdict was that the result still read cheap — "the bodies
-// should be more thick, more intentional, not just square bodies" — and that is
-// a correct reading of a border that is one narrow band of one colour.
+// v1.2 and v1.3 both drew the border as concentric ribbons on cream — a ring of
+// pale bands. The Founder's verdict was two out of ten: "I don't like the shapes
+// you're putting in the air and the angle of each border of the square… I have
+// expected you to design more heavy border certificate, not just the flat one."
 //
-// This is a 20mm ring of five layers in three inks, of one depth on all four
-// sides, mitred at 45 degrees at every corner so the bands are continuous —
-// a ring, not four runs meeting in a box. The first attempt at depth made the
-// side runs deeper than the head; that cannot mitre, and an unmitred corner has
-// to be covered by a patch, which is precisely what the Founder rejected. The
-// asymmetry the sheet does want is in the type, not the ornament: the text
-// field is inset 26mm at the sides against the ring's 20mm, so the sides carry
-// a wider quiet margin without breaking the frame.
+// That is a correct reading, and the reference he supplied says exactly what is
+// missing. A heavy border is not a wider ring of hairlines; it is a SOLID,
+// SATURATED, PATTERNED MASS — deep navy carrying a gold Islamic khatam
+// tessellation, with the field cut out of it on a large radius so the corner is
+// never a right angle. Weight comes from value contrast, not from stroke width,
+// and the corner problem disappears when there is no corner.
+//
+// The mass is drawn as one path — outer rounded rectangle plus inner rounded
+// rectangle, filled even-odd — so the head, the foot and the two sides are
+// literally the same object. There is no join anywhere on the sheet, which is
+// why the depth no longer has to be equal on all four sides: 8mm at the head
+// and foot, 11.8mm at the sides, as the landscape proportion wants.
+//
+// v2.0 ran that mass at twice this depth. The Founder's call was to halve it and
+// let the sheet breathe — a narrower band of worked metal against a wide, open,
+// lightly patterned field, which is the more confident of the two documents.
+//
+// The inner edge is set by the type it has to clear: the emblem row starts at
+// 21.5mm, the seal ends at 190mm, and the signature block reaches out to 30mm.
 //
 // Every value below is a distance from the sheet edge, in mm.
 export const RC_RULES = {
-  microRailTop: 4.4,
-  microRailBottom: 205.6,
-  trim: 6.2,              // outer navy hairline
-  goldBar: [7.4, 9.2],    // solid gold fillet — the ring's weight
-  crimson: [10.0, 15.0],  // crimson guilloche ribbon
-  bead: 15.4,             // navy bead-and-reel between the two ribbons
-  rope: [15.8, 19.0],     // engine-turned gold ribbon
-  fieldH: 20,             // the ring's inner edge, and the head/foot text inset
-  fieldV: 26,             // the side text inset — quiet margin, not ornament
-  boss: 13.1,             // the corner boss's centre, on the corner diagonal
-  bossR: 6.7,
+  edge: 2.0,          // outer gold keyline
+  body: 3.4,          // where the gold mass begins
+  fieldH: 11.4,       // the mass's inner edge, head and foot — 8mm of metal
+  fieldV: 15.2,       // the mass's inner edge, at the two sides — 11.8mm
+  fieldR: 8.0,        // and the radius that inner edge turns on
+  railH: 6.1,         // horizontal microtext rail, struck on the mass
+  railV: 6.1,         // vertical microtext rail
+  bossH: 7.4,         // head/foot centre ornament
+  bossV: 9.3,         // side medallion — the centre of the side mass
+  khatam: 3.9,        // the tessellation's cell — finer, for a finer band
 };
 
 function esc(s) {
@@ -243,8 +255,8 @@ function securityThread(x, y0, y1, serial, uid, side) {
   const windows = [];
   const step = 6.2;
   for (let y = y0 + 2.4; y < y1 - 2.4; y += step) {
-    windows.push(`<rect x="${(x - 0.95).toFixed(2)}" y="${y.toFixed(2)}" width="1.9" height="3.4" rx="0.35"
-      fill="url(#rcThread${uid})" stroke="${GOLD_DEEP}" stroke-width="0.08" opacity="0.72"/>`);
+    windows.push(`<rect x="${(x - 0.72).toFixed(2)}" y="${y.toFixed(2)}" width="1.44" height="2.9" rx="0.28"
+      fill="url(#rcThread${uid})" stroke="${GOLD_DEEP}" stroke-width="0.07" opacity="0.6"/>`);
   }
   const micro = `${serial} · SHRS ROYAL COLLEGE · `.repeat(5);
   return `<g>
@@ -260,142 +272,182 @@ function securityThread(x, y0, y1, serial, uid, side) {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THE CORNER BOSS
+// THE BORDER MASS
 //
-// The ring itself is continuous: every band is mitred at 45 degrees, so the
-// crimson ribbon that runs along the head is the same ribbon that runs down the
-// side. There is no join to hide, and nothing is patched over one.
-//
-// What sits on the corner is a boss — a struck medallion riding the ring on its
-// own diagonal, overlapping the trim line outside it and the field rule inside
-// it. Gold rim, crimson ground, a gold rosette engraved on the crimson, a navy
-// pip at the centre: all three inks in one piece, at the four points of the
-// sheet the eye reaches first.
+// One path, not four runs: the outer rounded rectangle and the inner rounded
+// rectangle in a single even-odd fill. The head, the foot and both sides are
+// the same object, so nothing meets anything, and the inner edge turns the
+// corner on an 11.5mm radius rather than at ninety degrees.
 // ─────────────────────────────────────────────────────────────────────────────
-function cornerBoss(cx, cy, sx, sy, uid) {
-  const m = RC_RULES.boss;
-  const R = RC_RULES.bossR;
-  // Beads set into the rim, so the boss has a machined edge rather than a
-  // drawn circle. They are struck, not printed at a screen percentage.
-  const beads = [];
-  for (let i = 0; i < 20; i++) {
-    const a = (i / 20) * Math.PI * 2 + Math.PI / 40;
-    const bx = m + (R - 0.72) * Math.cos(a);
-    const by = m + (R - 0.72) * Math.sin(a);
-    beads.push(`M ${bx.toFixed(2)} ${by.toFixed(2)} m -0.24 0 a 0.24 0.24 0 1 0 0.48 0 a 0.24 0.24 0 1 0 -0.48 0`);
-  }
-  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})">
-    <circle cx="${m}" cy="${m}" r="${R}" fill="url(#rcFoilD${uid})" stroke="${GOLD_DEEP}" stroke-width="0.26"/>
-    <path d="${beads.join(' ')}" fill="${GOLD_DEEP}" opacity="0.55"/>
-    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="${CRIMSON}"/>
-    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="url(#rcRoundel${uid})"/>
-    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.3"/>
-    <circle cx="${m}" cy="${m}" r="${(R - 2.3).toFixed(2)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.85"/>
-    <g opacity="0.9">${medallion(m, m, 0.46, 0.09, 1, GOLD_PALE)}</g>
-    <circle cx="${m}" cy="${m}" r="0.9" fill="${NAVY}"/>
-    <circle cx="${m}" cy="${m}" r="0.9" fill="none" stroke="${GOLD_PALE}" stroke-width="0.16"/>
-  </g>`;
+function rr(x, y, w, h, r) {
+  return `M ${(x + r).toFixed(2)} ${y.toFixed(2)} H ${(x + w - r).toFixed(2)}`
+    + ` A ${r} ${r} 0 0 1 ${(x + w).toFixed(2)} ${(y + r).toFixed(2)}`
+    + ` V ${(y + h - r).toFixed(2)} A ${r} ${r} 0 0 1 ${(x + w - r).toFixed(2)} ${(y + h).toFixed(2)}`
+    + ` H ${(x + r).toFixed(2)} A ${r} ${r} 0 0 1 ${x.toFixed(2)} ${(y + h - r).toFixed(2)}`
+    + ` V ${(y + r).toFixed(2)} A ${r} ${r} 0 0 1 ${(x + r).toFixed(2)} ${y.toFixed(2)} Z`;
+}
+
+function outerRing(inset, r) {
+  return rr(inset, inset, W - 2 * inset, H - 2 * inset, r);
+}
+
+function innerRing(dx, dy, r) {
+  return rr(RC_RULES.fieldV + dx, RC_RULES.fieldH + dy,
+    W - 2 * (RC_RULES.fieldV + dx), H - 2 * (RC_RULES.fieldH + dy), r);
+}
+
+function massPath(outInset, outR, inDx, inDy, inR) {
+  return `${outerRing(outInset, outR)} ${innerRing(inDx, inDy, inR)}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THE BORDER BANDS
+// THE KHATAM TESSELLATION
 //
-// AN SVG <pattern> FILL IS RASTERISED INTO THE PDF, whatever it contains — the
-// finding that took the v1.2 press file from 102MB to 8.6MB. So every band here
-// is emitted as real vector: the motif repeated along the run with its own
-// offsets, concatenated into one path per stroke weight, clipped to the band.
+// The eight-point star of Islamic geometry, {8/3}, on a square lattice, with a
+// concentric octagon inside each star and a struck lozenge in every interstice.
+// Gold on navy, at hairline weight — this is the layer that makes the mass read
+// as worked metal rather than as a printed block of colour.
+//
+// Emitted as real vector paths, and only for the cells the mass actually
+// touches. An SVG <pattern> would be rasterised into the PDF whatever it holds;
+// generating 1,500 cells and clipping them would be honest but wasteful.
 // ─────────────────────────────────────────────────────────────────────────────
-
-// A run helper: `along` is the direction of travel, `across` is the band's own
-// depth. Mapping the pair to (x, y) is the only difference between a head run
-// and a side run.
-function runner(x, y, vertical) {
-  return (u, v) => (vertical
-    ? `${(x + v).toFixed(2)} ${(y + u).toFixed(2)}`
-    : `${(x + u).toFixed(2)} ${(y + v).toFixed(2)}`);
-}
-
-// The engine-turned gold band: interlocking rope arcs with a struck quatrefoil
-// in each cell. On the deeper side runs it is doubled — two counter-phased
-// ropes, which is what gives a wide band its braid.
-function ropeBand(x, y, len, depth, vertical, clipId, uid) {
-  const C = Math.min(6.6, depth * 1.05);
-  const n = Math.ceil(len / C) + 1;
-  const rows = depth > 4.6 ? 2 : 1;
-  const P = runner(x, y, vertical);
-  const rope = []; const foil = []; const dots = [];
-  for (let row = 0; row < rows; row++) {
-    const top = rows === 1 ? (depth - C) / 2 : row * (depth / 2) + (depth / 2 - C) / 2;
-    const h = top + C / 2;
-    const q = C / 4;
-    const r = C * 0.185;
-    const phase = row * (C / 2);
-    for (let i = -1; i < n; i++) {
-      const o = i * C + phase;
-      rope.push(`M ${P(o, h)} Q ${P(o + q, top)} ${P(o + C / 2, h)} T ${P(o + C, h)}`);
-      rope.push(`M ${P(o, h)} Q ${P(o + q, top + C)} ${P(o + C / 2, h)} T ${P(o + C, h)}`);
-      foil.push(`M ${P(o + C / 2, h - r * 2)} A ${r} ${r} 0 0 1 ${P(o + C / 2 + r, h - r)}`
-        + ` A ${r} ${r} 0 0 1 ${P(o + C / 2, h)} A ${r} ${r} 0 0 1 ${P(o + C / 2 - r, h - r)}`
-        + ` A ${r} ${r} 0 0 1 ${P(o + C / 2, h - r * 2)} Z`);
-      dots.push(`M ${P(o + C / 2, h - r)} m -0.3 0 a 0.3 0.3 0 1 0 0.6 0 a 0.3 0.3 0 1 0 -0.6 0`);
+function khatamField() {
+  const c = RC_RULES.khatam;
+  const R = c * 0.545;
+  const idx = [0, 3, 6, 1, 4, 7, 2, 5];
+  const star = []; const oct = []; const pip = [];
+  const insideMass = (x, y) => (
+    x < RC_RULES.fieldV + c || x > W - RC_RULES.fieldV - c
+    || y < RC_RULES.fieldH + c || y > H - RC_RULES.fieldH - c);
+  for (let gy = 0; gy <= H + c; gy += c) {
+    for (let gx = 0; gx <= W + c; gx += c) {
+      if (!insideMass(gx, gy)) continue;
+      const p = [];
+      for (let k = 0; k < 8; k++) {
+        const a = k * Math.PI / 4 + Math.PI / 8;
+        p.push([gx + R * Math.cos(a), gy + R * Math.sin(a)]);
+      }
+      star.push(`M${idx.map((i) => `${p[i][0].toFixed(2)} ${p[i][1].toFixed(2)}`).join('L')}Z`);
+      const q = p.map(([px, py]) => [gx + (px - gx) * 0.46, gy + (py - gy) * 0.46]);
+      oct.push(`M${q.map(([px, py]) => `${px.toFixed(2)} ${py.toFixed(2)}`).join('L')}Z`);
+      const h = c * 0.2; const mx = gx + c / 2; const my = gy + c / 2;
+      pip.push(`M ${mx.toFixed(2)} ${(my - h).toFixed(2)} L ${(mx + h).toFixed(2)} ${my.toFixed(2)}`
+        + ` L ${mx.toFixed(2)} ${(my + h).toFixed(2)} L ${(mx - h).toFixed(2)} ${my.toFixed(2)} Z`);
     }
   }
-  return `<g clip-path="url(#${clipId})">
-    <rect x="${x}" y="${y}" width="${vertical ? depth : len}" height="${vertical ? len : depth}"
-      fill="url(#rcGoldGround${uid})"/>
-    <path d="${rope.join(' ')}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.72"/>
-    <path d="${foil.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.09" opacity="0.66"/>
-    <path d="${dots.join(' ')}" fill="none" stroke="${GOLD_RED}" stroke-width="0.085" opacity="0.62"/>
-  </g>`;
+  return `<path d="${star.join(' ')}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.3" opacity="0.5"
+      transform="translate(0.3 0.3)"/>
+    <path d="${star.join(' ')}" fill="none" stroke="#5E4415" stroke-width="0.26" opacity="0.72"/>
+    <path d="${oct.join(' ')}" fill="none" stroke="#6B4E19" stroke-width="0.15" opacity="0.5"/>
+    <path d="${pip.join(' ')}" fill="#5E4415" fill-opacity="0.26"
+      stroke="#4A3510" stroke-width="0.12" stroke-opacity="0.6"/>`;
 }
 
-// The crimson band: a two-colour lathe. Crimson strands over a pale gold
-// ground, with a counter-line in red gold between them. This is the layer that
-// makes the border read as a bond certificate rather than a diploma frame —
-// and it is the layer a desktop scanner reproduces worst, because it has to
-// hold two inks in register at hairline weight.
-function crimsonBand(x, y, len, depth, vertical, clipId, uid) {
-  const P = runner(x, y, vertical);
-  const steps = Math.max(120, Math.round(len * 1.4));
-  const strand = (phase, amp, freq) => {
-    const pts = [];
-    for (let i = 0; i <= steps; i++) {
-      const u = (i / steps) * len;
-      const v = depth / 2 + amp * Math.sin((u / len) * Math.PI * 2 * freq + phase)
-        * Math.cos((u / len) * Math.PI * 2 * (freq / 4.5) + phase * 0.6);
-      pts.push(P(u, v));
+// A khatam wash across the open field: the border's own star, at three times
+// the scale and a twentieth of the weight. It gives the paper a premium ground
+// to sit on without taking any weight off the type — the field stays open, and
+// the pattern is there when the sheet is tilted to the light.
+function khatamWash() {
+  const c = 15.6;
+  const R = c * 0.545;
+  const idx = [0, 3, 6, 1, 4, 7, 2, 5];
+  const star = []; const oct = [];
+  for (let gy = RC_RULES.fieldH + 4; gy <= H - RC_RULES.fieldH - 2; gy += c) {
+    for (let gx = RC_RULES.fieldV + 4; gx <= W - RC_RULES.fieldV - 2; gx += c) {
+      const p = [];
+      for (let k = 0; k < 8; k++) {
+        const a = k * Math.PI / 4 + Math.PI / 8;
+        p.push([gx + R * Math.cos(a), gy + R * Math.sin(a)]);
+      }
+      star.push(`M${idx.map((i) => `${p[i][0].toFixed(2)} ${p[i][1].toFixed(2)}`).join('L')}Z`);
+      const q = p.map(([px, py]) => [gx + (px - gx) * 0.44, gy + (py - gy) * 0.44]);
+      oct.push(`M${q.map(([px, py]) => `${px.toFixed(2)} ${py.toFixed(2)}`).join('L')}Z`);
     }
-    return `M${pts.join('L')}`;
-  };
-  const cycles = Math.max(14, Math.round(len / 9));
-  const a = depth * 0.34;
-  const crim = [0, 1, 2, 3].map((k) => strand(k * Math.PI / 2, a, cycles)).join(' ');
-  const counter = [0, 1].map((k) => strand(k * Math.PI + Math.PI / 4, a * 0.62, cycles * 1.5)).join(' ');
-  return `<g clip-path="url(#${clipId})">
-    <rect x="${vertical ? x : x}" y="${vertical ? y : y}"
-      width="${vertical ? depth : len}" height="${vertical ? len : depth}" fill="url(#rcCrimsonGround${uid})"/>
-    <path d="${counter}" fill="none" stroke="${GOLD_RED}" stroke-width="0.1" opacity="0.5"/>
-    <path d="${crim}" fill="none" stroke="${CRIMSON}" stroke-width="0.16" opacity="0.8"/>
-    <path d="${crim}" fill="none" stroke="${CRIMSON_PALE}" stroke-width="0.07" opacity="0.5"
-      transform="translate(${vertical ? '0.28 0' : '0 0.28'})"/>
+  }
+  return `<g opacity="0.16">
+    <path d="${star.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.1"/>
+    <path d="${oct.join(' ')}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.08"/>
   </g>`;
 }
 
-// A navy bead-and-reel rule: the hairline that separates two ornamental bands
-// and gives the gold an edge to sit against. Navy at 0.12mm, never at scale.
-function beadRule(x, y, len, vertical) {
-  const P = runner(x, y, vertical);
-  const pitch = 2.4;
-  const n = Math.ceil(len / pitch);
-  const beads = [];
-  for (let i = 0; i < n; i++) {
-    const o = i * pitch;
-    beads.push(`M ${P(o + 0.6, 0)} m -0.26 0 a 0.26 0.26 0 1 0 0.52 0 a 0.26 0.26 0 1 0 -0.52 0`);
-    beads.push(`M ${P(o + 1.5, -0.34)} L ${P(o + 1.5, 0.34)}`);
+// ─────────────────────────────────────────────────────────────────────────────
+// THE LOBED MEDALLION
+//
+// Twelve lobes, gold rim, crimson ground, a gold rosette engraved on the
+// crimson, a navy pip. Struck on the mass at the centre of each side, and in a
+// smaller size at the head and foot — the rhythm the reference uses to stop a
+// long run of pattern from reading as wallpaper.
+// ─────────────────────────────────────────────────────────────────────────────
+function lobedMedallion(cx, cy, R, uid, lobes = 12) {
+  // A closed run of quadratics through the twelve vertices, each bowed out.
+  const path = [];
+  for (let k = 0; k <= lobes; k++) {
+    const a = (k / lobes) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + R * 0.84 * Math.cos(a); const y = cy + R * 0.84 * Math.sin(a);
+    if (k === 0) { path.push(`M ${x.toFixed(2)} ${y.toFixed(2)}`); continue; }
+    const am = a - Math.PI / lobes;
+    const mx = cx + R * 1.14 * Math.cos(am); const my = cy + R * 1.14 * Math.sin(am);
+    path.push(`Q ${mx.toFixed(2)} ${my.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)}`);
   }
+  path.push('Z');
   return `<g>
-    <path d="M ${P(0, 0)} L ${P(len, 0)}" stroke="${NAVY}" stroke-width="0.12" opacity="0.72"/>
-    <path d="${beads.join(' ')}" fill="none" stroke="${NAVY_SOFT}" stroke-width="0.11" opacity="0.6"/>
+    <path d="${path.join(' ')}" fill="url(#rcFoilD${uid})" stroke="${NAVY_DEEP}" stroke-width="0.3"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.78).toFixed(2)}" fill="none" stroke="${NAVY}" stroke-width="0.16" opacity="0.7"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.7).toFixed(2)}" fill="${NAVY_DEEP}"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.7).toFixed(2)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.3"/>
+    <g opacity="0.95">${medallion(cx, cy, R * 0.09, 0.13, 1, '#F0DDAC')}</g>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.14).toFixed(2)}" fill="${NAVY_DEEP}"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.14).toFixed(2)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.16"/>
+  </g>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE CORNER JEWEL
+//
+// Two earlier cuts of this were freehand: first a radiating palm spray, then a
+// bezier vine. Both read as crude — drawn ornament that is nearly right is
+// worse than no ornament at all, and neither belonged to the geometry of the
+// border it sat against.
+//
+// So the corner takes the border's own language instead: the same eight-point
+// khatam star, struck as a jewel where the gold fillet turns its radius, with a
+// crimson boss at the centre and a pendant of three diminishing lozenges
+// trailing inward on the diagonal. It is disciplined, it repeats a motif the
+// eye has already learned from the mass, and it is drawn from a construction
+// rather than by hand.
+// ─────────────────────────────────────────────────────────────────────────────
+function khatamStar(cx, cy, R, rot = 0) {
+  const idx = [0, 3, 6, 1, 4, 7, 2, 5];
+  const p = [];
+  for (let k = 0; k < 8; k++) {
+    const a = k * Math.PI / 4 + rot;
+    p.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]);
+  }
+  return `M${idx.map((i) => `${p[i][0].toFixed(2)} ${p[i][1].toFixed(2)}`).join('L')}Z`;
+}
+
+function cornerJewel(cx, cy, dx, dy, uid) {
+  const R = 4.1;
+  const u = Math.SQRT1_2;
+  const pend = [[7.4, 1.2], [10.8, 0.85], [13.6, 0.56]].map(([d, r]) => {
+    const px = cx + dx * d * u; const py = cy + dy * d * u;
+    return `<path d="M ${px.toFixed(2)} ${(py - r).toFixed(2)} L ${(px + r).toFixed(2)} ${py.toFixed(2)}`
+      + ` L ${px.toFixed(2)} ${(py + r).toFixed(2)} L ${(px - r).toFixed(2)} ${py.toFixed(2)} Z"
+      fill="none" stroke="${GOLD}" stroke-width="0.17" opacity="0.85"/>`
+      + `<circle cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="${(r * 0.3).toFixed(2)}"
+      fill="${NAVY}" opacity="0.7"/>`;
+  }).join('');
+  return `<g>
+    <path d="${khatamStar(cx, cy, R, Math.PI / 8)}" fill="url(#rcFoilD${uid})"
+      stroke="${NAVY_DEEP}" stroke-width="0.26"/>
+    <path d="${khatamStar(cx, cy, R * 0.72, 0)}" fill="none" stroke="${GOLD_PALE}"
+      stroke-width="0.15" opacity="0.9"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.38).toFixed(2)}" fill="${NAVY_DEEP}"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.38).toFixed(2)}" fill="none"
+      stroke="${GOLD_PALE}" stroke-width="0.18"/>
+    <circle cx="${cx}" cy="${cy}" r="${(R * 0.13).toFixed(2)}" fill="${GOLD_PALE}"/>
+    ${pend}
   </g>`;
 }
 
@@ -411,22 +463,13 @@ function groundSvg(serial, uid) {
   const hReps = Math.ceil(285 / (hText.length * 1.42)) + 1;
   const microFs = (0.9 * PT).toFixed(3);
   const microTrack = (0.34 * PT).toFixed(3);
-  // Mitre clips. Each band [a, b] is drawn edge to edge and then cut on the two
-  // corner diagonals, so the head run and the side run meet on a 45-degree join
-  // and the ring is continuous. No run stops short of anything; there is no
-  // corner to patch.
-  const mitre = (id, a, b, side) => {
-    const pts = {
-      T: [[a, a], [W - a, a], [W - b, b], [b, b]],
-      B: [[a, H - a], [W - a, H - a], [W - b, H - b], [b, H - b]],
-      L: [[a, a], [b, b], [b, H - b], [a, H - a]],
-      Rt: [[W - a, a], [W - b, b], [W - b, H - b], [W - a, H - a]],
-    }[side];
-    return `<clipPath id="${id}"><polygon points="${pts.map((q) => q.join(',')).join(' ')}"/></clipPath>`;
-  };
-  const RAIL = (R.crimson[0] + R.crimson[1]) / 2;   // the side microtext rail
-  const CRD = R.crimson[1] - R.crimson[0];
-  const RPD = R.rope[1] - R.rope[0];
+  // The mass, as a single even-odd path, and the same shape inset by 1.6mm so
+  // the tessellation never runs into the fillets.
+  const MASS = massPath(R.body, 4.2, 0, 0, R.fieldR);
+  const MASS_IN = massPath(R.body + 1.7, 3.4, -1.6, -1.6, R.fieldR + 1.2);
+  // The corner jewel sits on the 45-degree point of the inner edge's radius.
+  const JX = R.fieldV + R.fieldR - R.fieldR * Math.SQRT1_2;
+  const JY = R.fieldH + R.fieldR - R.fieldR * Math.SQRT1_2;
 
   return `<svg class="rc-ground" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
@@ -459,8 +502,8 @@ function groundSvg(serial, uid) {
       <stop offset="1" stop-color="#6E1520" stop-opacity="0.75"/>
     </radialGradient>
     <linearGradient id="rcThread${uid}" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#B9A7C8"/><stop offset="0.3" stop-color="#E8DCC0"/>
-      <stop offset="0.6" stop-color="#A9C3BC"/><stop offset="1" stop-color="#D9C9A8"/>
+      <stop offset="0" stop-color="#C9A96A"/><stop offset="0.28" stop-color="#F0DFB2"/>
+      <stop offset="0.58" stop-color="#A98446"/><stop offset="1" stop-color="#E2C98F"/>
     </linearGradient>
     <linearGradient id="rcIris${uid}" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#B8933F" stop-opacity="0"/>
@@ -483,12 +526,24 @@ function groundSvg(serial, uid) {
       <rect width="0.34" height="0.1" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
     <pattern id="rcCoarse${uid}" width="0.9" height="0.9" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
       <rect width="0.9" height="0.3" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
-    ${['T', 'B', 'L', 'Rt'].map((side) => mitre(`rcCr${side}${uid}`, R.crimson[0], R.crimson[1], side)).join('')}
-    ${['T', 'B', 'L', 'Rt'].map((side) => mitre(`rcRp${side}${uid}`, R.rope[0], R.rope[1], side)).join('')}
-    <path id="rcRailT${uid}" d="M 8 ${R.microRailTop} H 289"/>
-    <path id="rcRailB${uid}" d="M 8 ${R.microRailBottom} H 289"/>
-    <path id="rcRailL${uid}" d="M ${RAIL} ${H - 34} L ${RAIL} 34"/>
-    <path id="rcRailR${uid}" d="M ${W - RAIL} 34 L ${W - RAIL} ${H - 34}"/>
+    <linearGradient id="rcMass${uid}" x1="0" y1="0" x2="0.62" y2="1">
+      <stop offset="0" stop-color="#8A6A28"/><stop offset="0.09" stop-color="#E7CE8C"/>
+      <stop offset="0.2" stop-color="#B08F45"/><stop offset="0.32" stop-color="#F3E3B4"/>
+      <stop offset="0.44" stop-color="#A6842F"/><stop offset="0.57" stop-color="#EBD59A"/>
+      <stop offset="0.7" stop-color="#9C7B2C"/><stop offset="0.84" stop-color="#E2C583"/>
+      <stop offset="1" stop-color="#7E6027"/>
+    </linearGradient>
+    <linearGradient id="rcMassSheen${uid}" x1="0" y1="0" x2="1" y2="0.55">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="0.34" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="0.66" stop-color="#FFF8E4" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#4A3510" stop-opacity="0.18"/>
+    </linearGradient>
+    <clipPath id="rcMassClip${uid}"><path d="${MASS_IN}" clip-rule="evenodd"/></clipPath>
+    <path id="rcRailT${uid}" d="M 10 ${R.railH} H 287"/>
+    <path id="rcRailB${uid}" d="M 10 ${H - R.railH} H 287"/>
+    <path id="rcRailL${uid}" d="M ${R.railV} ${H - 10} L ${R.railV} 10"/>
+    <path id="rcRailR${uid}" d="M ${W - R.railV} 10 L ${W - R.railV} ${H - 10}"/>
   </defs>
 
   <!-- Paper. Flat vector: exact at any resolution. -->
@@ -506,83 +561,72 @@ function groundSvg(serial, uid) {
     ${lathe(28, 130, 241, 9.0, 5, 0.075, 0.5)}
     ${lathe(28, 156, 241, 7.2, 5, 0.075, 0.55)}
   </g>
-  <g opacity="0.13" stroke="${CRIMSON}">
-    ${lathe(28, 66, 241, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), CRIMSON)}
-    ${lathe(28, 143, 241, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), CRIMSON)}
+  <g opacity="0.16">
+    ${lathe(24, 66, 249, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), NAVY_SOFT)}
+    ${lathe(24, 143, 249, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), NAVY_SOFT)}
   </g>
 
-  <!-- Intaglio medallions: gold behind the citation, crimson flanking. -->
+  ${khatamWash()}
+
+  <!-- Intaglio medallions, gold: one large behind the citation, two flanking. -->
   <g opacity="0.15">${medallion(148.5, 96, 4.4, 0.085, 1)}</g>
   <g opacity="0.1">${medallion(148.5, 96, 2.7, 0.08, 1)}</g>
-  <g opacity="0.1">${medallion(62, 104, 1.55, 0.08, 1, CRIMSON)}</g>
-  <g opacity="0.1">${medallion(235, 104, 1.55, 0.08, 1, CRIMSON)}</g>
+  <g opacity="0.1">${medallion(62, 104, 1.55, 0.08, 1, NAVY_SOFT)}</g>
+  <g opacity="0.1">${medallion(235, 104, 1.55, 0.08, 1, NAVY_SOFT)}</g>
 
   <rect x="${R.fieldV}" y="54" width="${W - 2 * R.fieldV}" height="26"
     fill="url(#rcIris${uid})" mask="url(#rcIrisMask${uid})"/>
 
   ${voidPantograph(uid)}
 
-  <!-- ── THE RING ─────────────────────────────────────────────────────────────
-       Outer navy hairline, solid gold fillet, crimson lathe ribbon, navy
-       bead-and-reel, engine-turned gold ribbon, inner fillet. Five layers,
-       three inks, 20mm deep, mitred at every corner. -->
-  <rect x="${R.trim}" y="${R.trim}" width="${W - 2 * R.trim}" height="${H - 2 * R.trim}"
-    fill="none" stroke="${NAVY}" stroke-width="0.22" opacity="0.75"/>
+  <!-- ── THE BORDER MASS ──────────────────────────────────────────────────────
+       A saturated navy body carrying a gold khatam tessellation, cut out on an
+       11.5mm radius so the field's corner is a curve and not an angle. 16mm at
+       the head and foot, 23.5mm at the sides. One path: no joins, no mitres,
+       nothing patched over a corner. -->
+  <path d="${MASS}" fill-rule="evenodd" fill="url(#rcMass${uid})"/>
+  <g clip-path="url(#rcMassClip${uid})">${khatamField()}</g>
+  <path d="${MASS}" fill-rule="evenodd" fill="url(#rcMassSheen${uid})"/>
 
-  <!-- Solid gold fillet — the ring's weight. -->
-  <rect x="${R.goldBar[0]}" y="${R.goldBar[0]}" width="${W - 2 * R.goldBar[0]}"
-    height="${H - 2 * R.goldBar[0]}" fill="none" stroke="url(#rcFoil)"
-    stroke-width="${R.goldBar[1] - R.goldBar[0]}"/>
+  <!-- Fillets. Gold against navy on both edges of the mass, with a hairline
+       counter-line inboard of each and a crimson keyline on the field side. -->
+  <path d="${outerRing(R.edge, 3.0)}" fill="none" stroke="${NAVY}" stroke-width="0.5"/>
+  <path d="${outerRing(R.body, 4.2)}" fill="none" stroke="${NAVY_DEEP}" stroke-width="0.85"/>
+  <path d="${outerRing(R.body + 1.1, 3.6)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.75"/>
+  <path d="${innerRing(-2.2, -2.2, R.fieldR + 1.7)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.75"/>
+  <path d="${innerRing(-1.2, -1.2, R.fieldR + 0.9)}" fill="none" stroke="${NAVY_DEEP}" stroke-width="0.85"/>
+  <path d="${innerRing(0.2, 0.2, R.fieldR - 0.1)}" fill="none" stroke="url(#rcFoil)" stroke-width="1.1"/>
+  <path d="${innerRing(1.5, 1.5, R.fieldR - 1.1)}" fill="none" stroke="${NAVY}" stroke-width="0.3" opacity="0.85"/>
+  <path d="${innerRing(2.3, 2.3, R.fieldR - 1.8)}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.12" opacity="0.55"/>
 
-  <!-- Crimson lathe ribbon, mitred. -->
-  ${crimsonBand(0, R.crimson[0], W, CRD, false, `rcCrT${uid}`, uid)}
-  ${crimsonBand(0, H - R.crimson[1], W, CRD, false, `rcCrB${uid}`, uid)}
-  ${crimsonBand(R.crimson[0], 0, H, CRD, true, `rcCrL${uid}`, uid)}
-  ${crimsonBand(W - R.crimson[1], 0, H, CRD, true, `rcCrRt${uid}`, uid)}
-  <rect x="${R.crimson[0]}" y="${R.crimson[0]}" width="${W - 2 * R.crimson[0]}"
-    height="${H - 2 * R.crimson[0]}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.8"/>
-  <rect x="${R.crimson[1]}" y="${R.crimson[1]}" width="${W - 2 * R.crimson[1]}"
-    height="${H - 2 * R.crimson[1]}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.8"/>
-
-  <!-- Navy bead-and-reel between the two ribbons; it turns the corner too. -->
-  ${beadRule(R.bead, R.bead, W - 2 * R.bead, false)}
-  ${beadRule(R.bead, H - R.bead, W - 2 * R.bead, false)}
-  ${beadRule(R.bead, R.bead, H - 2 * R.bead, true)}
-  ${beadRule(W - R.bead, R.bead, H - 2 * R.bead, true)}
-
-  <!-- Engine-turned gold ribbon, mitred. -->
-  ${ropeBand(0, R.rope[0], W, RPD, false, `rcRpT${uid}`, uid)}
-  ${ropeBand(0, H - R.rope[1], W, RPD, false, `rcRpB${uid}`, uid)}
-  ${ropeBand(R.rope[0], 0, H, RPD, true, `rcRpL${uid}`, uid)}
-  ${ropeBand(W - R.rope[1], 0, H, RPD, true, `rcRpRt${uid}`, uid)}
-
-  <!-- Inner fillet and the field rule. -->
-  <rect x="${R.fieldH - 1.1}" y="${R.fieldH - 1.1}" width="${W - 2 * (R.fieldH - 1.1)}"
-    height="${H - 2 * (R.fieldH - 1.1)}" fill="none" stroke="url(#rcFoil)" stroke-width="0.9"/>
-  <rect x="${R.fieldH + 0.9}" y="${R.fieldH + 0.9}" width="${W - 2 * (R.fieldH + 0.9)}"
-    height="${H - 2 * (R.fieldH + 0.9)}" fill="none" stroke="${NAVY}" stroke-width="0.1" opacity="0.55"/>
-
-  <!-- The four corner bosses, struck over the mitres. -->
-  ${cornerBoss(0, 0, 1, 1, uid)}
-  ${cornerBoss(W, 0, -1, 1, uid)}
-  ${cornerBoss(0, H, 1, -1, uid)}
-  ${cornerBoss(W, H, -1, -1, uid)}
-
-  <!-- Security threads, symmetric about the sheet centre. -->
-  ${securityThread(23.2, 44, 166, serial, uid, 'L')}
-  ${securityThread(W - 23.2, 44, 166, serial, uid, 'R')}
-
-  <!-- Microtext rails. Solid light ink, never an opacity: an opacity on type
-       this small becomes a screen percentage at separation and is the first
-       thing to drop out on press. The side rails run inside the crimson band,
-       where crimson-on-gold microtext is a second register a copier must hold. -->
+  <!-- Microtext rails, struck on the mass in pale gold. Solid ink, never an
+       opacity: an opacity on type this small becomes a screen percentage at
+       separation and is the first thing to drop out on press. -->
   <g font-family="Inter, sans-serif" font-weight="400"
-     font-size="${microFs}" letter-spacing="${microTrack}">
-    <text fill="${MICRO_INK}"><textPath href="#rcRailT${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
-    <text fill="${MICRO_INK}"><textPath href="#rcRailB${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
-    <text fill="${CRIMSON_DEEP}"><textPath href="#rcRailL${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
-    <text fill="${CRIMSON_DEEP}"><textPath href="#rcRailR${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
+     font-size="${microFs}" letter-spacing="${microTrack}" fill="#5E4415">
+    <text><textPath href="#rcRailT${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
+    <text><textPath href="#rcRailB${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
+    <text><textPath href="#rcRailL${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
+    <text><textPath href="#rcRailR${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
   </g>
+
+  <!-- Lobed medallions: the two sides at full size, the head and foot smaller.
+       They break the run of pattern, and they carry the third ink. -->
+  ${lobedMedallion(R.bossV, H / 2, 5.6, uid)}
+  ${lobedMedallion(W - R.bossV, H / 2, 5.6, uid)}
+  ${lobedMedallion(W / 2, R.bossH, 4.3, uid, 10)}
+  ${lobedMedallion(W / 2, H - R.bossH, 4.3, uid, 10)}
+
+  <!-- Corner jewels, struck where the gold fillet turns its radius, each with a
+       pendant of three diminishing lozenges trailing in on the diagonal. -->
+  ${cornerJewel(JX, JY, 1, 1, uid)}
+  ${cornerJewel(W - JX, JY, -1, 1, uid)}
+  ${cornerJewel(JX, H - JY, 1, -1, uid)}
+  ${cornerJewel(W - JX, H - JY, -1, -1, uid)}
+
+  <!-- Security threads, in the field's quiet margin, symmetric about centre. -->
+  ${securityThread(23.6, 44, 134, serial, uid, 'L')}
+  ${securityThread(W - 23.6, 44, 134, serial, uid, 'R')}
 
   ${fibres(serial)}
 
@@ -1174,13 +1218,13 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-plate-micro{position:absolute;left:3.4mm;right:3.4mm;bottom:3.4mm;overflow:hidden;
   white-space:nowrap;font-family:'Inter',sans-serif;font-size:0.9pt;font-weight:400;
   letter-spacing:0.34pt;color:${MICRO_INK}}
-.rc-serial{position:absolute;font-family:'Inter',sans-serif;font-size:6.6pt;font-weight:600;
-  letter-spacing:0.1em;color:${SERIAL_INK};white-space:nowrap;
-  padding:0.5mm 1.6mm;border-radius:0.7mm;
-  background:linear-gradient(90deg,rgba(246,239,225,0),rgba(250,245,234,0.94) 12%,
-    rgba(250,245,234,0.94) 88%,rgba(246,239,225,0))}
-.rc-serial-tr{right:42mm;top:10.6mm}
-.rc-serial-bl{left:42mm;bottom:10.6mm}
+.rc-serial{position:absolute;font-family:'Inter',sans-serif;font-size:5.8pt;font-weight:600;
+  letter-spacing:0.12em;color:#F3E2B4;white-space:nowrap;
+  padding:0.4mm 2.2mm;border-radius:0.5mm;
+  border:0.18mm solid rgba(216,188,124,0.55);
+  background:linear-gradient(180deg,rgba(34,51,90,0.85),rgba(15,23,40,0.9))}
+.rc-serial-tr{right:46mm;top:5.4mm}
+.rc-serial-bl{left:46mm;bottom:5.4mm}
 
 .rc-plate-void{position:absolute;left:0;right:0;bottom:1mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.1em;
