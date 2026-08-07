@@ -267,3 +267,13 @@ html[data-pc-motion="reduced"] .adk-ctr-dial::before{display:none;}
    generic tertiary surface, so it belongs to the page it is in. */
 .adk-figures{margin:44px 0 8px;padding:38px 0 6px;background:transparent;}
 .adk-figures::before{inset-inline:0;}
+
+/* ---- The light on a clipped frame ---------------------------------
+   Photograph frames clip their contents (the image is scaled on hover
+   and must not escape), so a ring drawn at a negative inset behind the
+   background is cut away and never seen. On those the ring is drawn
+   inside the border box and above the picture instead — same arc, same
+   timing, but where it can actually be looked at. */
+.gi-frame.rg-light::before,.gal-item.rg-light::before{
+  inset:0;z-index:3;padding:2px;border-radius:inherit;}
+.gal-item.rg-light{position:relative;isolation:isolate;}
