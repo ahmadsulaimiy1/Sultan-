@@ -18,7 +18,7 @@ import { chromium } from 'playwright-core';
 const ROOT = process.cwd();
 const DIR = 'dist/graduation-programme';
 const NAME = 'SHRS-Graduation-Programme-2026';
-const PAGES = 2;   // two printed sides of a trifold
+const PAGES = 4;   // four printed sides: two trifold sheets
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.png': 'image/png',

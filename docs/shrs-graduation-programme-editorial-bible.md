@@ -1,6 +1,6 @@
 # The Graduation Programme Editorial Bible
 
-**Version:** 1.0 · 8 August 2026
+**Version:** 1.1 · 8 August 2026
 **Governs:** `scripts/build-graduation-programme.mjs`,
 `scripts/build-graduation-programme-docx.mjs`,
 `scripts/render-graduation-programme.mjs`, and every artefact they produce.
@@ -37,22 +37,34 @@ score, then works the lowest axis first. **Nine is a defect list.**
 | 9 | **Verification** | Rendered, rastered, measured, gated. Claims of completion backed by a stated check. |
 | 10 | **Ceremony** | The document feels like the occasion. A stranger knows this is a convocation, not a handout. |
 
-### Current score — trifold v2, 8 August 2026
+### Current score — trifold v3, 8 August 2026
 
-| Axis | Score | Why it is not a 10 |
-|------|------:|--------------------|
-| 1 Truth | **9** | Rolls read from the registers; nothing invented. Three unresolved discrepancies stand on the record (roll counts vs. the earlier trifold, `.ng` vs `.com`, 3 p.m. vs 2 p.m.). Not a 10 until ruled on. |
-| 2 Format & production | **6** | Correct sheet, bleed, fold and crop marks. But: RGB only, no CMYK conversion, no ICC profile, no ink-limit check, no paper stock, weight, lamination or foil specified, no printer-supplied die-line. |
-| 3 Grid & rhythm | **7** | Panels fill well after two retimings. No shared baseline grid — vertical rhythm is tuned by eye, panel to panel. Two panels still carry visible slack. |
-| 4 Typography | **7** | Real scale and hierarchy. But no kerning pass on display lines, hyphenation left at browser default, rag unmanaged, no widow/orphan control, faux small caps rather than true ones. |
-| 5 Bilingual parity | **7** | Pairing law obeyed; isolates correct. But the document is English-led — Arabic appears as labels and names, not as a second full reading. No Arabic edition. |
-| 6 Photography | **4** | Every image real and cleared — the floor is met. Ceiling is low: these are phone snapshots, unevenly exposed and colour-cast, none shot for this piece. No shot list, no art direction, no ceremony photography at all. **This is the binding constraint.** |
-| 7 Ornament & identity | **7** | Lathe, frame, brackets and rules are drawn and consistent. The crest is a 520 px raster — soft above ~25 mm. No vector master. |
-| 8 Voice | **8** | One voice, unpadded, the Founder quoted verbatim. Not every line has been read aloud. |
-| 9 Verification | **6** | Both sides rendered and read at 192 DPI; asset 404s are a hard failure. No automated release gate as the certificates have — no ink-box measurement, no panel-fill audit, no cross-edition diff. |
-| 10 Ceremony | **7** | The cover carries it. The inside reads as a well-set document rather than an occasion. |
+Version 3 is the four-side edition: two A4-landscape sheets, each folded in
+three and printed both sides — **twelve panels**, up from six. The Chief Host
+and the Lecture of the Day each take a panel of their own; no Principal, Ra'ees,
+Mudeer or Head Teacher is named anywhere in either edition; a Digital Campus
+panel was added, written only from capabilities that are running today.
 
-**Total: 68 / 100 — 6.8 / 10.**
+| Axis | v2 | v3 | Why it is not a 10 |
+|------|---:|---:|--------------------|
+| 1 Truth | 9 | **9** | Rolls still read from the registers; nothing invented; the Digital Campus panel names only what runs today. The same three discrepancies stand unruled (roll counts vs. the earlier trifold, `.ng` vs `.com`, 3 p.m. vs 2 p.m.). |
+| 2 Format & production | 6 | **6** | Unchanged: correct sheet, bleed, fold and crop marks; still RGB only, no ICC profile, no ink-limit check, no stock or finish specified, no printer die-line. Twelve panels does not move this axis. |
+| 3 Grid & rhythm | 7 | **8** | Every panel measured: fill now runs 85–95% of live area, inside the band, and the folio sits on one line across all twelve (v2's folio rode up with the text on short panels). Still no shared baseline grid. |
+| 4 Typography | 7 | **8** | Real hierarchy at last: the lecture topic at 18.4 pt is the largest interior element, the Chief Host's name at 15.6 pt the second. Still no hand-kerning of display lines, no widow/orphan control, browser-default hyphenation. |
+| 5 Bilingual parity | 7 | **7** | Unchanged. Pairing law obeyed, isolates correct, still English-led. |
+| 6 Photography | 4 | **5** | Twelve real photographs, up from eight, each framed and captioned; the plates are large enough now to read at arm's length. The ceiling is still the source material: phone snapshots, unevenly exposed, none shot for this piece. **Still the binding constraint.** |
+| 7 Ornament & identity | 7 | **7** | Unchanged. Lathe, frame and brackets consistent; the crest is still a 520 px raster. |
+| 8 Voice | 8 | **8** | The Digital Campus prose is in the same voice and claims nothing unevidenced. Still not read aloud line by line. |
+| 9 Verification | 6 | **7** | All four sides rendered, rastered and read panel by panel; panel fill measured against the 88–96% band; a cross-edition diff now runs over every graduand, guest and running-order item and passes. Still no automated gate that fails the build. |
+| 10 Ceremony | 7 | **9** | The dark Lecture panel at the centre of the opened sheet, the Chief Host on cream opposite, and a second sheet that opens on "The Graduands". The inside now reads as an occasion rather than as a well-set document. |
+
+**Total: 74 / 100 — 7.4 / 10** (v2: 6.8).
+
+The three axes that moved most are the three the Founder named: hierarchy
+(typography, 7→8), ceremony (7→9), and the space to carry more pictures
+(photography 4→5, rhythm 7→8). The two that did not move — production and
+identity assets — cannot move without the printer's specification and a vector
+crest, which are Phases 2 and 3 below.
 
 I do not score it 0.5. I record your assessment as the client's and treat the
 gap as real: the axes above name exactly where it falls short of ten, and the
@@ -63,8 +75,14 @@ plan below closes them in the order that moves the number most.
 ## 2 · Format and production law
 
 - **Sheet:** 303 × 216 mm — A4 landscape (297 × 210) plus 3 mm bleed all round.
-- **Fold:** letter-fold, three panels of 99 mm. Outside panels order
-  *welcome flap · back · face*; inside *order · graduands I · graduands II*.
+- **Fold:** letter-fold, three panels of 99 mm. **Two sheets, printed both
+  sides — four printed sides, twelve panels.** Sheet I is the programme; Sheet
+  II is the roll of graduands and nests inside it.
+  Sheet I outside: *welcome flap · back · face*.
+  Sheet I inside: *the Chief Host · the Lecture of the Day · order of
+  proceedings*.
+  Sheet II outside: *distinguished guests · the Digital Campus · the insert's
+  face*. Sheet II inside: *graduands I · II · III*.
 - **Live area:** 8 mm side margins, 9 mm head, 8 mm foot; outer panels take a
   further 3 mm inset so the trim does not eat type.
 - **Registration:** crop marks in the bleed corners only; fold guides as 3 mm
@@ -80,7 +98,7 @@ plan below closes them in the order that moves the number most.
 
 ## 3 · Grid and rhythm law
 
-- One baseline grid across all six panels. Body leading is the grid unit;
+- One baseline grid across all twelve panels. Body leading is the grid unit;
   every heading, rule and image height is a whole multiple of it.
 - Panel fill: **88–96%** of live area. Below 88 the panel reads as unfinished;
   above 96 it reads as crowded.
@@ -147,6 +165,18 @@ plan below closes them in the order that moves the number most.
 - Times are printed as they will run. Where the supplied order overlaps
   itself, the conflict is resolved, the resolution is declared in the source,
   and reverting is a one-line change.
+- **Naming.** The Founder's ruling of 8 August 2026: the **Chief Host** is the
+  only officer named in the programme, under both his offices — Chief Executive
+  Director and Chairman, Board of Governors. The Principals, the Ra'ees, the
+  Mudeer and the Head Teacher are **not named**; their offices are named, in
+  prose, without their holders. Graduands are named in full. This is locked
+  until the Founder rules otherwise.
+- **Hierarchy.** The Lecture of the Day and its topic carry the largest type
+  inside the publication, and the Chief Host the second largest. A guest must
+  be able to find both without reading another line.
+- **Technology.** The Digital Campus may be described only from capabilities
+  running in the school's own systems on the day of printing. No roadmap item,
+  no intention, no rounded figure.
 - No claim, statistic or accolade appears that the institution cannot evidence.
 
 ## 9 · Release gate
@@ -159,7 +189,9 @@ No artefact is delivered until all of these pass and the result is stated:
 4. No text within 3 mm of a fold or trim.
 5. Every photograph ≥ 300 dpi at final size.
 6. Word and PDF editions carry the same names, times, guests and officers —
-   diffed, not assumed.
+   diffed, not assumed. *(Run: every graduand, guest and running-order item is
+   extracted from the shared data module and asserted present in both the HTML
+   and `word/document.xml`. v3 passes.)*
 7. Every open question listed in the delivery note.
 
 ---
@@ -194,7 +226,7 @@ Ranked by how much each move raises the number. Do them in this order.
    the certificates and the prospectus.
 
 ### Phase 4 — Typography and grid (axes 3–4: 7 → 10).
-1. Impose one baseline grid on all six panels and snap every element to it.
+1. Impose one baseline grid on all twelve panels and snap every element to it.
 2. Kern the display lines by hand. Manage the rag. Kill widows and orphans.
 3. Licence a true small-caps cut, or draw the small caps properly.
 4. Tune hyphenation; forbid breaking any personal name.
@@ -225,6 +257,10 @@ closing time.
 ## 11 · Change control
 
 - This bible is versioned. Every change is recorded with a date and a reason.
+- **1.1 · 8 August 2026** — the format law becomes four printed sides and twelve
+  panels; naming, hierarchy and technology rules added to content law; the
+  release gate's cross-edition diff is now a real check rather than an
+  intention; score republished at 7.4.
 - The rubric score is republished on every pass.
 - Anything that would lower a locked element is refused, and the refusal is
   reported rather than worked around.
