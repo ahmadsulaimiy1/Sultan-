@@ -1,0 +1,169 @@
+/* ===================================================================
+   THE REGALIA LAYER (v5.3)
+   -------------------------------------------------------------------
+   Light that travels, and figures that draw themselves.
+
+   Two things the site asked for and did not have. The first is a
+   single, shared treatment for a light running the border of a shape —
+   applied to cards, to photographs, to plates, to the crest — rather
+   than the three separate one-off implementations it had. The second is
+   a set of drawn figures: bars, rings, ladders and comparisons that
+   animate from nothing as they arrive, so a number on this site is
+   something you watch being measured rather than something printed.
+
+   Everything yields to the Ornament and Motion settings, and to
+   prefers-reduced-motion. With the file removed the page still reads.
+   =================================================================== */
+
+@property --rg-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+
+/* ===================================================================
+   1. THE TRAVELLING LIGHT
+   A conic gradient rotated behind the element, masked to the border
+   box, so a single bright arc runs the perimeter. One element, one
+   compositor layer, no JavaScript.
+   =================================================================== */
+.rg-light{position:relative;isolation:isolate;}
+.rg-light::before{
+  content:"";position:absolute;inset:-1.5px;z-index:-1;border-radius:inherit;
+  padding:1.5px;pointer-events:none;
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 186deg,
+    rgba(var(--lv-g,198,161,91),.05) 214deg,
+    rgba(var(--lv-gb,233,206,138),.85) 248deg,
+    rgb(var(--lv-gl,255,246,223)) 262deg,
+    rgba(var(--lv-gb,233,206,138),.85) 276deg,
+    rgba(var(--lv-g,198,161,91),.05) 306deg,
+    transparent 336deg 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .6s ease;
+  animation:rg-orbit var(--rg-dur,7s) linear infinite;
+  animation-delay:var(--rg-delay,0s);}
+.rg-light.is-lit::before,.rg-light:hover::before,.rg-light:focus-within::before{opacity:1;}
+/* On a photograph the light is brighter and the arc narrower — a frame
+   catching a raking light rather than a card glowing. */
+.rg-light.on-photo::before{
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 200deg,rgba(var(--lv-gb,233,206,138),.5) 236deg,
+    rgb(var(--lv-gl,255,246,223)) 256deg,rgba(var(--lv-gb,233,206,138),.5) 276deg,
+    transparent 312deg 360deg);
+  padding:2px;}
+@keyframes rg-orbit{to{--rg-angle:360deg;}}
+@supports not (background:conic-gradient(from 0deg,red,blue)){.rg-light::before{display:none;}}
+html[data-pc-ornament="none"] .rg-light::before,
+html[data-pc-motion="reduced"] .rg-light::before{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .rg-light::before{animation:none;opacity:.5;}
+}
+
+/* A quieter cousin: a light that runs once when the shape arrives and
+   then rests, for things that should be announced rather than lit. */
+.rg-sweep{position:relative;overflow:hidden;isolation:isolate;}
+.rg-sweep::after{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(104deg,transparent 40%,rgba(var(--lv-gl,255,246,223),.42) 50%,transparent 60%);
+  transform:translateX(-140%);}
+.rg-sweep.is-lit::after{animation:rg-pass 1.4s cubic-bezier(.3,.7,.3,1) .25s 1 both;}
+@keyframes rg-pass{to{transform:translateX(140%);}}
+@media (prefers-reduced-motion:reduce){.rg-sweep::after{display:none;}}
+
+/* ===================================================================
+   2. THE DRAWN FIGURES
+   =================================================================== */
+
+/* ---- The measured bar --------------------------------------------
+   A horizontal bar that fills from nothing to its value as it arrives,
+   with the figure counting up beside it. The value is written in the
+   markup as --v (0..100), so the bar is readable with CSS off. */
+.rg-bars{display:grid;gap:18px;margin-top:28px;}
+.rg-bar{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:baseline;}
+.rg-bar-k{font-family:'Cinzel','Amiri',serif;font-size:.9rem;color:var(--navy);}
+.rg-bar-v{font-family:'Cinzel','Amiri',serif;font-size:1.05rem;
+  color:rgb(var(--lv-gt,124,94,40));font-variant-numeric:tabular-nums;}
+.rg-bar-rail{grid-column:1 / -1;height:9px;border-radius:99px;position:relative;overflow:hidden;
+  background:rgba(var(--lv-g,198,161,91),.16);
+  box-shadow:inset 0 1px 2px rgba(var(--lv-cfd2,42,28,16),.22);}
+.rg-bar-fill{position:absolute;inset:0 auto 0 0;width:calc(var(--v,0) * 1%);
+  border-radius:99px;transform-origin:left center;transform:scaleX(0);
+  background:linear-gradient(90deg,rgb(var(--lv-gd,156,122,60)),rgb(var(--lv-gb,233,206,138)));
+  box-shadow:0 0 14px -3px rgba(var(--lv-gb,233,206,138),.7);
+  transition:transform 1.5s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .rg-bar-fill{inset:0 0 0 auto;transform-origin:right center;}
+.rg-bar.is-lit .rg-bar-fill{transform:scaleX(1);}
+/* the moving highlight inside the bar, so a filled bar is not a
+   printed rectangle */
+.rg-bar-fill::after{content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);
+  background-size:240% 100%;animation:rg-bar-sheen 4.6s ease-in-out infinite;}
+@keyframes rg-bar-sheen{0%,100%{background-position:200% 0;}55%{background-position:-60% 0;}}
+@media (prefers-reduced-motion:reduce){
+  .rg-bar-fill{transition:none;transform:scaleX(1);}
+  .rg-bar-fill::after{animation:none;}
+}
+
+/* ---- The measured ring --------------------------------------------
+   A dial that draws its arc as it arrives. --v is 0..100. */
+.rg-rings{display:grid;gap:20px;margin-top:30px;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.rg-ring{text-align:center;position:relative;}
+.rg-ring svg{width:100%;max-width:132px;height:auto;transform:rotate(-90deg);}
+.rg-ring .trk{fill:none;stroke:rgba(var(--lv-g,198,161,91),.18);stroke-width:7;}
+.rg-ring .arc{fill:none;stroke:url(#rg-grad);stroke-width:7;stroke-linecap:round;
+  stroke-dasharray:283;stroke-dashoffset:283;
+  transition:stroke-dashoffset 1.7s cubic-bezier(.16,.8,.24,1);}
+.rg-ring.is-lit .arc{stroke-dashoffset:calc(283 - (283 * var(--v,0) / 100));}
+.rg-ring-n{position:absolute;top:38%;left:0;right:0;transform:translateY(-50%);
+  font-family:'Cinzel','Amiri',serif;font-size:1.5rem;color:var(--navy);
+  font-variant-numeric:tabular-nums;}
+.rg-ring-k{display:block;margin-top:10px;font-family:'Cinzel','Amiri',serif;
+  font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgb(var(--lv-gt,124,94,40));}
+.rg-ring-s{display:block;margin-top:4px;font-size:.78rem;color:var(--ink-soft);}
+@media (prefers-reduced-motion:reduce){
+  .rg-ring .arc{transition:none;stroke-dashoffset:calc(283 - (283 * var(--v,0) / 100));}
+}
+
+/* ---- The comparison ladder ----------------------------------------
+   Two values set against each other on one axis, for the places where
+   the point is a relationship rather than a number. */
+.rg-cmp{display:grid;gap:14px;margin-top:26px;}
+.rg-cmp-row{display:grid;grid-template-columns:minmax(96px,auto) 1fr;gap:14px;align-items:center;}
+.rg-cmp-k{font-size:.84rem;color:var(--ink-soft);text-align:end;}
+.rg-cmp-track{position:relative;height:34px;border-radius:8px;overflow:hidden;
+  background:rgba(var(--lv-g,198,161,91),.10);}
+.rg-cmp-a,.rg-cmp-b{position:absolute;inset-block:0;inset-inline-start:0;
+  display:flex;align-items:center;padding-inline:12px;font-size:.78rem;
+  transform-origin:left center;transform:scaleX(0);
+  transition:transform 1.4s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .rg-cmp-a,[dir="rtl"] .rg-cmp-b{transform-origin:right center;}
+.rg-cmp-a{width:calc(var(--a,0) * 1%);
+  background:linear-gradient(90deg,rgb(var(--lv-cf,59,42,29)),rgb(var(--lv-cfs,59,42,29)));color:#FFF6E4;}
+.rg-cmp-b{width:calc(var(--b,0) * 1%);
+  background:linear-gradient(90deg,rgba(var(--lv-gd,156,122,60),.35),rgba(var(--lv-gb,233,206,138),.5));
+  color:var(--navy);transition-delay:.14s;}
+.rg-cmp-row.is-lit .rg-cmp-a,.rg-cmp-row.is-lit .rg-cmp-b{transform:scaleX(1);}
+
+/* ---- The figure plate ---------------------------------------------
+   The frame the figures sit in: an engraved plate with a travelling
+   light around it and a ruled head. */
+.rg-plate{position:relative;padding:34px 32px 30px;border-radius:var(--pr-r-lg,22px);
+  background:linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)));
+  border:1px solid rgba(var(--lv-g,198,161,91),.28);
+  box-shadow:var(--pr-shadow-soft);}
+.rg-plate-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+.rg-plate-k{font-family:'Cinzel','Amiri',serif;font-size:.68rem;letter-spacing:.22em;
+  text-transform:uppercase;color:rgb(var(--lv-gt,124,94,40));}
+.rg-plate-head::after{content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(var(--lv-g,198,161,91),.5),transparent);}
+[dir="rtl"] .rg-plate-head::after{background:linear-gradient(270deg,rgba(var(--lv-g,198,161,91),.5),transparent);}
+.rg-plate-note{margin:20px 0 0;font-size:.82rem;color:var(--ink-soft);}
+@media (max-width:560px){.rg-plate{padding:26px 20px 24px;}}
+
+/* ---- The band the figures live in --------------------------------- */
+.rg-figures{background:var(--surface-tertiary-bg,#FCFAF6);position:relative;}
+.rg-figures::before{content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.45),transparent);}
+.rg-lede{max-width:680px;color:var(--ink-soft);margin:14px 0 0;font-size:.98rem;
+  text-align:justify;text-justify:inter-word;hyphens:auto;}

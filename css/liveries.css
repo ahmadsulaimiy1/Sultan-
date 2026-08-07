@@ -1407,3 +1407,17 @@ html[data-pc-theme="dark"] .ann-ribbon{background:#100B05!important;}
 html[data-pc-theme="dark"] .breadcrumbs{background:#130D07!important;}
 html[data-pc-theme="dark"] .strip,html[data-pc-theme="dark"] .pc-strip{
   background:linear-gradient(90deg,#1B120A,#241809 50%,#1B120A)!important;}
+
+/* The measured figures, in Midnight. */
+html[data-pc-theme="dark"] .rg-plate{
+  background:linear-gradient(168deg,#241A11,#1B130B)!important;
+  border-color:rgba(233,206,138,.24)!important;}
+html[data-pc-theme="dark"] .rg-ring-n,html[data-pc-theme="dark"] .rg-bar-k{
+  color:var(--mn-ink)!important;}
+html[data-pc-theme="dark"] .rg-ring-k,html[data-pc-theme="dark"] .rg-bar-v,
+html[data-pc-theme="dark"] .rg-plate-k{color:var(--mn-gold)!important;}
+html[data-pc-theme="dark"] .rg-ring-s,html[data-pc-theme="dark"] .rg-plate-note,
+html[data-pc-theme="dark"] .rg-lede,html[data-pc-theme="dark"] .rg-cmp-k{
+  color:var(--mn-ink-2)!important;}
+html[data-pc-theme="dark"] .rg-figures{background:#1A130C!important;}
+html[data-pc-theme="dark"] .rg-bar-rail{background:rgba(233,206,138,.14)!important;}
