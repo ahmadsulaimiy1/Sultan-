@@ -51,14 +51,30 @@
 const PT = 0.35278;   // mm per point — the user unit of every SVG here is the mm
 
 // ── Palette, sampled off the supplied artwork ────────────────────────────────
+// Three metals, not one. A single gold reads as a template; a security
+// engraver lays a yellow gold against a red gold against a pale one, and the
+// difference between them is most of what makes an engraved border look
+// struck rather than printed.
 const PAPER = '#F6EFE1';
 const PAPER_DEEP = '#EDE2CC';
-const GOLD = '#A8863F';
-const GOLD_DEEP = '#7A5C21';
+const GOLD = '#A8863F';        // yellow gold — the working metal
+const GOLD_DEEP = '#7A5C21';   // its shadow
+const GOLD_PALE = '#D8BC7C';   // pale gold — highlights and counter-lines
+const GOLD_RED = '#B0763A';    // red gold — the second metal, for contrast bands
+// Crimson and navy, used STRUCTURALLY. The crimson carries a whole band of the
+// border and every roundel; the navy is hairlines, bead rules and small
+// grounds only. The Founder rejected v1.1's large navy corner blocks and he was
+// right — navy at that scale fights the paper. At hairline weight it does the
+// opposite: it gives the gold an edge to sit against.
+const CRIMSON = '#9A2432';
+const CRIMSON_DEEP = '#6E1520';
+const CRIMSON_PALE = '#C2515D';
+const NAVY = '#1A2338';
+const NAVY_SOFT = '#2E3C5C';
 const INK = '#2B2417';        // body text
 const INK_SOFT = '#5A4E37';
 const MICRO_INK = '#8B7440';
-const SERIAL_INK = '#A2452C';   // the dual serial — a contrasting ink, by design
+const SERIAL_INK = '#9A2432';   // the dual serial — a contrasting ink, by design
 
 // The sheet. True A4 landscape — 297 x 210mm, filling the page edge to edge
 // under @page{size:A4 landscape;margin:0}. The v1.0 master draws 297 x 209.5
@@ -72,14 +88,34 @@ const H = 210;
 // 1080x708 px onto 297x210mm. Recorded as constants because every later
 // addition has to land in real paper rather than on top of an ornament, and
 // because the layout gate re-measures against exactly these numbers.
+// ── THE BORDER, AND WHY IT IS THIS DEEP ─────────────────────────────────────
+// v1.2 gave the sheet about 10mm of ornament between the trim and the field.
+// The Founder's verdict was that the result still read cheap — "the bodies
+// should be more thick, more intentional, not just square bodies" — and that is
+// a correct reading of a border that is one narrow band of one colour.
+//
+// This is a 20mm ring of five layers in three inks, of one depth on all four
+// sides, mitred at 45 degrees at every corner so the bands are continuous —
+// a ring, not four runs meeting in a box. The first attempt at depth made the
+// side runs deeper than the head; that cannot mitre, and an unmitred corner has
+// to be covered by a patch, which is precisely what the Founder rejected. The
+// asymmetry the sheet does want is in the type, not the ornament: the text
+// field is inset 26mm at the sides against the ring's 20mm, so the sides carry
+// a wider quiet margin without breaking the frame.
+//
+// Every value below is a distance from the sheet edge, in mm.
 export const RC_RULES = {
-  microRailTop: 4.6,     // outer microtext rail, top
-  microRailBottom: 205.4,
-  trim: 7.0,             // trim rule
-  frame: 10.5,           // heavy engraved gold frame
-  frameInner: 12.6,      // hairline inside it
-  vRail: 15.0,           // vertical microtext columns
-  field: 17.5,           // open field begins on all four sides
+  microRailTop: 4.4,
+  microRailBottom: 205.6,
+  trim: 6.2,              // outer navy hairline
+  goldBar: [7.4, 9.2],    // solid gold fillet — the ring's weight
+  crimson: [10.0, 15.0],  // crimson guilloche ribbon
+  bead: 15.4,             // navy bead-and-reel between the two ribbons
+  rope: [15.8, 19.0],     // engine-turned gold ribbon
+  fieldH: 20,             // the ring's inner edge, and the head/foot text inset
+  fieldV: 26,             // the side text inset — quiet margin, not ornament
+  boss: 13.1,             // the corner boss's centre, on the corner diagonal
+  bossR: 6.7,
 };
 
 function esc(s) {
@@ -189,107 +225,21 @@ function uvMotif(cx, cy, r = 3.2) {
     + `<circle cx="${cx}" cy="${cy}" r="${(r * 0.3).toFixed(2)}" fill="none" stroke="#D2C8DE" stroke-width="0.14" opacity="0.5"/></g>`;
 }
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// THE CORNER FANS
-//
-// v1.1 put a 22mm navy block carrying a star lattice in each corner. The
-// Founder's verdict on it was "not recommended … something just being patched",
-// and he is right: a filled rectangle dropped over a corner is applique, not
-// engraving. It also fought the sheet — four dark masses on a warm ground pull
-// the eye to the edges, which is the opposite of what a certificate wants.
-//
-// Replaced by the treatment a security engraver actually uses: a quarter
-// rosette FAN, struck from the corner of the field, its rays and arcs cut on
-// the same lathe as the rest of the sheet. It belongs to the paper instead of
-// sitting on top of it, and it is generated geometry rather than a decal.
-// ─────────────────────────────────────────────────────────────────────────────
-const FAN_R = 14;
-
-function cornerFan(cx, cy, sx, sy) {
-  const R = FAN_R;
-  const rays = [];
-  // 19 rays across the quadrant, alternating weight — the alternation is what
-  // gives an engraved fan its shimmer, and it is also what a photocopier's
-  // threshold destroys first.
-  for (let i = 0; i <= 18; i++) {
-    const a = (i / 18) * (Math.PI / 2);
-    const r0 = 3.2;
-    const r1 = i % 2 ? R * 0.78 : R;
-    rays.push(`<path d="M ${(r0 * Math.cos(a)).toFixed(2)} ${(r0 * Math.sin(a)).toFixed(2)} `
-      + `L ${(r1 * Math.cos(a)).toFixed(2)} ${(r1 * Math.sin(a)).toFixed(2)}" `
-      + `stroke="${GOLD_DEEP}" stroke-width="${i % 2 ? 0.09 : 0.13}" opacity="${i % 2 ? 0.5 : 0.72}"/>`);
-  }
-  const arcs = [3.2, 6.1, 9.0, 11.6, 14].map((r, i) =>
-    `<path d="M ${r} 0 A ${r} ${r} 0 0 1 0 ${r}" fill="none" stroke="${GOLD_DEEP}" `
-    + `stroke-width="${i === 0 || i === 4 ? 0.16 : 0.085}" opacity="${i === 0 || i === 4 ? 0.8 : 0.45}"/>`);
-  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})" fill="none">
-    ${rays.join('')}${arcs.join('')}
-    <path d="M ${R} 0 A ${R} ${R} 0 0 1 0 ${R}" fill="none" stroke="url(#rcFoil)" stroke-width="0.45"/>
+// The void pantograph. Two screens of the same ink at different rulings: the
+// fine one disappears on a photocopier, the coarse one survives, so a copy
+// carries the word the original does not show.
+function voidPantograph(uid) {
+  return `<g opacity="0.5">
+    <rect x="${RC_RULES.fieldV}" y="88" width="${W - 2 * RC_RULES.fieldV}" height="34" fill="url(#rcFine${uid})"/>
+    <text x="148.5" y="112" font-family="Cinzel, serif" font-size="17" font-weight="800"
+      letter-spacing="7" text-anchor="middle" fill="url(#rcCoarse${uid})" opacity="0.55">VOID</text>
   </g>`;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// THE ENGINE-TURNED BORDER
-//
-// AN SVG <pattern> FILL IS RASTERISED INTO THE PDF, whatever it contains.
-// Measured by disabling one layer at a time and re-exporting a single page:
-// with the four pattern-filled band rects the page came to 8.56MB, and with
-// their fill set to `none` it came to 1.32MB — the border alone was 85% of the
-// file. Simplifying the tile's contents from a 96-point rosette to four arcs
-// changed the figure by nothing at all, because the cost is the raster, not the
-// geometry. A 13-page press file at 102MB is not one a printer wants by email.
-//
-// So the band is emitted as REAL VECTOR: the cell repeated along each side with
-// its own offsets, concatenated into one path per stroke weight. Three paths
-// per side instead of a rasterised tile, and the engraving stays engraving all
-// the way into the press file.
-// ─────────────────────────────────────────────────────────────────────────────
-const ROPE_CELL = 6.2;
-
-function ropeBand(x, y, len, vertical, clipId) {
-  const C = ROPE_CELL;
-  const h = C / 2;
-  const q = C / 4;
-  const r = 1.15;                      // quatrefoil lobe radius
-  const n = Math.ceil(len / C);
-  // (u, v) are along-the-band and across-the-band; mapping them to (x, y) is
-  // the only thing that differs between a horizontal run and a vertical one.
-  const P = (u, v) => (vertical
-    ? `${(x + v).toFixed(2)} ${(y + u).toFixed(2)}`
-    : `${(x + u).toFixed(2)} ${(y + v).toFixed(2)}`);
-  const rope = [];
-  const foil = [];
-  const dots = [];
-  for (let i = 0; i < n; i++) {
-    const o = i * C;
-    rope.push(`M ${P(o, h)} Q ${P(o + q, 0)} ${P(o + h, h)} T ${P(o + C, h)}`);
-    rope.push(`M ${P(o, h)} Q ${P(o + q, C)} ${P(o + h, h)} T ${P(o + C, h)}`);
-    foil.push(`M ${P(o + h, h - r * 2)} A ${r} ${r} 0 0 1 ${P(o + h + r, h - r)}`
-      + ` A ${r} ${r} 0 0 1 ${P(o + h, h)} A ${r} ${r} 0 0 1 ${P(o + h - r, h - r)}`
-      + ` A ${r} ${r} 0 0 1 ${P(o + h, h - r * 2)} Z`);
-    dots.push(`M ${P(o + h, h - r)} m -0.32 0 a 0.32 0.32 0 1 0 0.64 0 a 0.32 0.32 0 1 0 -0.64 0`);
-  }
-  return `<g clip-path="url(#${clipId})">
-    <path d="${rope.join(' ')}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.13" opacity="0.7"/>
-    <path d="${foil.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.085" opacity="0.62"/>
-    <path d="${dots.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.075" opacity="0.5"/>
-  </g>`;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// THE SECURITY THREAD
-//
-// A windowed thread, as a banknote carries it: a continuous metallic line that
-// surfaces through a run of windows, with the document's own serial repeating
-// along it in microtext. Two of them, symmetric about the sheet centre, in
-// place of v1.1's flat holographic strips — a strip is a rectangle of tint, a
-// thread is a structure.
-// ─────────────────────────────────────────────────────────────────────────────
+// The security thread. Windows: short, frequent and low-contrast. The first cut
+// used 2.7 x 5.4mm at 9.4mm centres, which read on the proof as a column of
+// pale capsules rather than as a thread surfacing through paper.
 function securityThread(x, y0, y1, serial, uid, side) {
-  // Windows: short, frequent and low-contrast. The first cut used 2.7 x 5.4mm
-  // at 9.4mm centres, which read on the proof as a column of pale capsules
-  // rather than as a thread surfacing through paper.
   const windows = [];
   const step = 6.2;
   for (let y = y0 + 2.4; y < y1 - 2.4; y += step) {
@@ -301,26 +251,151 @@ function securityThread(x, y0, y1, serial, uid, side) {
     <path d="M ${x} ${y0} V ${y1}" stroke="${GOLD_DEEP}" stroke-width="0.5" opacity="0.26"/>
     <path d="M ${x} ${y0} V ${y1}" stroke="url(#rcThread${uid})" stroke-width="0.34" opacity="0.72"/>
     ${windows.join('')}
-    <path id="rcThreadT${uid}${side}" d="M ${x + 2.6} ${y1} L ${x + 2.6} ${y0}" fill="none"/>
+    <path id="rcThreadT${uid}${side}" d="M ${x + 1.9} ${y1} L ${x + 1.9} ${y0}" fill="none"/>
     <text font-family="Inter, sans-serif" font-size="${(0.85 * PT).toFixed(3)}"
       letter-spacing="${(0.26 * PT).toFixed(3)}" fill="${MICRO_INK}">
       <textPath href="#rcThreadT${uid}${side}" startOffset="0">${esc(micro)}</textPath></text>
   </g>`;
 }
 
+
 // ─────────────────────────────────────────────────────────────────────────────
-// THE VOID PANTOGRAPH
+// THE CORNER BOSS
 //
-// Two screens at the same angle but different frequencies. On the sheet they
-// integrate to one flat tint; a copier's sampling grid beats against the fine
-// one and drops it, so the coarse one surfaces and the word appears. Drawn
-// here at press values — it is a real feature of the plate, not a mock-up.
+// The ring itself is continuous: every band is mitred at 45 degrees, so the
+// crimson ribbon that runs along the head is the same ribbon that runs down the
+// side. There is no join to hide, and nothing is patched over one.
+//
+// What sits on the corner is a boss — a struck medallion riding the ring on its
+// own diagonal, overlapping the trim line outside it and the field rule inside
+// it. Gold rim, crimson ground, a gold rosette engraved on the crimson, a navy
+// pip at the centre: all three inks in one piece, at the four points of the
+// sheet the eye reaches first.
 // ─────────────────────────────────────────────────────────────────────────────
-function voidPantograph(uid) {
-  return `<g opacity="0.5">
-    <rect x="${RC_RULES.field}" y="88" width="${W - 2 * RC_RULES.field}" height="34" fill="url(#rcFine${uid})"/>
-    <text x="148.5" y="112" font-family="Cinzel, serif" font-size="17" font-weight="800"
-      letter-spacing="7" text-anchor="middle" fill="url(#rcCoarse${uid})" opacity="0.55">VOID</text>
+function cornerBoss(cx, cy, sx, sy, uid) {
+  const m = RC_RULES.boss;
+  const R = RC_RULES.bossR;
+  // Beads set into the rim, so the boss has a machined edge rather than a
+  // drawn circle. They are struck, not printed at a screen percentage.
+  const beads = [];
+  for (let i = 0; i < 20; i++) {
+    const a = (i / 20) * Math.PI * 2 + Math.PI / 40;
+    const bx = m + (R - 0.72) * Math.cos(a);
+    const by = m + (R - 0.72) * Math.sin(a);
+    beads.push(`M ${bx.toFixed(2)} ${by.toFixed(2)} m -0.24 0 a 0.24 0.24 0 1 0 0.48 0 a 0.24 0.24 0 1 0 -0.48 0`);
+  }
+  return `<g transform="translate(${cx} ${cy}) scale(${sx} ${sy})">
+    <circle cx="${m}" cy="${m}" r="${R}" fill="url(#rcFoilD${uid})" stroke="${GOLD_DEEP}" stroke-width="0.26"/>
+    <path d="${beads.join(' ')}" fill="${GOLD_DEEP}" opacity="0.55"/>
+    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="${CRIMSON}"/>
+    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="url(#rcRoundel${uid})"/>
+    <circle cx="${m}" cy="${m}" r="${(R - 1.45).toFixed(2)}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.3"/>
+    <circle cx="${m}" cy="${m}" r="${(R - 2.3).toFixed(2)}" fill="none" stroke="${GOLD_PALE}" stroke-width="0.2" opacity="0.85"/>
+    <g opacity="0.9">${medallion(m, m, 0.46, 0.09, 1, GOLD_PALE)}</g>
+    <circle cx="${m}" cy="${m}" r="0.9" fill="${NAVY}"/>
+    <circle cx="${m}" cy="${m}" r="0.9" fill="none" stroke="${GOLD_PALE}" stroke-width="0.16"/>
+  </g>`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// THE BORDER BANDS
+//
+// AN SVG <pattern> FILL IS RASTERISED INTO THE PDF, whatever it contains — the
+// finding that took the v1.2 press file from 102MB to 8.6MB. So every band here
+// is emitted as real vector: the motif repeated along the run with its own
+// offsets, concatenated into one path per stroke weight, clipped to the band.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// A run helper: `along` is the direction of travel, `across` is the band's own
+// depth. Mapping the pair to (x, y) is the only difference between a head run
+// and a side run.
+function runner(x, y, vertical) {
+  return (u, v) => (vertical
+    ? `${(x + v).toFixed(2)} ${(y + u).toFixed(2)}`
+    : `${(x + u).toFixed(2)} ${(y + v).toFixed(2)}`);
+}
+
+// The engine-turned gold band: interlocking rope arcs with a struck quatrefoil
+// in each cell. On the deeper side runs it is doubled — two counter-phased
+// ropes, which is what gives a wide band its braid.
+function ropeBand(x, y, len, depth, vertical, clipId, uid) {
+  const C = Math.min(6.6, depth * 1.05);
+  const n = Math.ceil(len / C) + 1;
+  const rows = depth > 4.6 ? 2 : 1;
+  const P = runner(x, y, vertical);
+  const rope = []; const foil = []; const dots = [];
+  for (let row = 0; row < rows; row++) {
+    const top = rows === 1 ? (depth - C) / 2 : row * (depth / 2) + (depth / 2 - C) / 2;
+    const h = top + C / 2;
+    const q = C / 4;
+    const r = C * 0.185;
+    const phase = row * (C / 2);
+    for (let i = -1; i < n; i++) {
+      const o = i * C + phase;
+      rope.push(`M ${P(o, h)} Q ${P(o + q, top)} ${P(o + C / 2, h)} T ${P(o + C, h)}`);
+      rope.push(`M ${P(o, h)} Q ${P(o + q, top + C)} ${P(o + C / 2, h)} T ${P(o + C, h)}`);
+      foil.push(`M ${P(o + C / 2, h - r * 2)} A ${r} ${r} 0 0 1 ${P(o + C / 2 + r, h - r)}`
+        + ` A ${r} ${r} 0 0 1 ${P(o + C / 2, h)} A ${r} ${r} 0 0 1 ${P(o + C / 2 - r, h - r)}`
+        + ` A ${r} ${r} 0 0 1 ${P(o + C / 2, h - r * 2)} Z`);
+      dots.push(`M ${P(o + C / 2, h - r)} m -0.3 0 a 0.3 0.3 0 1 0 0.6 0 a 0.3 0.3 0 1 0 -0.6 0`);
+    }
+  }
+  return `<g clip-path="url(#${clipId})">
+    <rect x="${x}" y="${y}" width="${vertical ? depth : len}" height="${vertical ? len : depth}"
+      fill="url(#rcGoldGround${uid})"/>
+    <path d="${rope.join(' ')}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.72"/>
+    <path d="${foil.join(' ')}" fill="none" stroke="${GOLD}" stroke-width="0.09" opacity="0.66"/>
+    <path d="${dots.join(' ')}" fill="none" stroke="${GOLD_RED}" stroke-width="0.085" opacity="0.62"/>
+  </g>`;
+}
+
+// The crimson band: a two-colour lathe. Crimson strands over a pale gold
+// ground, with a counter-line in red gold between them. This is the layer that
+// makes the border read as a bond certificate rather than a diploma frame —
+// and it is the layer a desktop scanner reproduces worst, because it has to
+// hold two inks in register at hairline weight.
+function crimsonBand(x, y, len, depth, vertical, clipId, uid) {
+  const P = runner(x, y, vertical);
+  const steps = Math.max(120, Math.round(len * 1.4));
+  const strand = (phase, amp, freq) => {
+    const pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const u = (i / steps) * len;
+      const v = depth / 2 + amp * Math.sin((u / len) * Math.PI * 2 * freq + phase)
+        * Math.cos((u / len) * Math.PI * 2 * (freq / 4.5) + phase * 0.6);
+      pts.push(P(u, v));
+    }
+    return `M${pts.join('L')}`;
+  };
+  const cycles = Math.max(14, Math.round(len / 9));
+  const a = depth * 0.34;
+  const crim = [0, 1, 2, 3].map((k) => strand(k * Math.PI / 2, a, cycles)).join(' ');
+  const counter = [0, 1].map((k) => strand(k * Math.PI + Math.PI / 4, a * 0.62, cycles * 1.5)).join(' ');
+  return `<g clip-path="url(#${clipId})">
+    <rect x="${vertical ? x : x}" y="${vertical ? y : y}"
+      width="${vertical ? depth : len}" height="${vertical ? len : depth}" fill="url(#rcCrimsonGround${uid})"/>
+    <path d="${counter}" fill="none" stroke="${GOLD_RED}" stroke-width="0.1" opacity="0.5"/>
+    <path d="${crim}" fill="none" stroke="${CRIMSON}" stroke-width="0.16" opacity="0.8"/>
+    <path d="${crim}" fill="none" stroke="${CRIMSON_PALE}" stroke-width="0.07" opacity="0.5"
+      transform="translate(${vertical ? '0.28 0' : '0 0.28'})"/>
+  </g>`;
+}
+
+// A navy bead-and-reel rule: the hairline that separates two ornamental bands
+// and gives the gold an edge to sit against. Navy at 0.12mm, never at scale.
+function beadRule(x, y, len, vertical) {
+  const P = runner(x, y, vertical);
+  const pitch = 2.4;
+  const n = Math.ceil(len / pitch);
+  const beads = [];
+  for (let i = 0; i < n; i++) {
+    const o = i * pitch;
+    beads.push(`M ${P(o + 0.6, 0)} m -0.26 0 a 0.26 0.26 0 1 0 0.52 0 a 0.26 0.26 0 1 0 -0.52 0`);
+    beads.push(`M ${P(o + 1.5, -0.34)} L ${P(o + 1.5, 0.34)}`);
+  }
+  return `<g>
+    <path d="M ${P(0, 0)} L ${P(len, 0)}" stroke="${NAVY}" stroke-width="0.12" opacity="0.72"/>
+    <path d="${beads.join(' ')}" fill="none" stroke="${NAVY_SOFT}" stroke-width="0.11" opacity="0.6"/>
   </g>`;
 }
 
@@ -331,56 +406,89 @@ function groundSvg(serial, uid) {
   const s = esc(serial);
   const R = RC_RULES;
   const vText = `SULTAN HANAFI ROYAL COLLEGE · JUNIOR SECONDARY GRADUATION · ${s} · `;
-  const vReps = Math.ceil(166 / (vText.length * 1.38)) + 1;
+  const vReps = Math.ceil(150 / (vText.length * 1.38)) + 1;
   const hText = `SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `;
   const hReps = Math.ceil(285 / (hText.length * 1.42)) + 1;
   const microFs = (0.9 * PT).toFixed(3);
   const microTrack = (0.34 * PT).toFixed(3);
-  const band = R.field - R.frame;   // the border band's width
+  // Mitre clips. Each band [a, b] is drawn edge to edge and then cut on the two
+  // corner diagonals, so the head run and the side run meet on a 45-degree join
+  // and the ring is continuous. No run stops short of anything; there is no
+  // corner to patch.
+  const mitre = (id, a, b, side) => {
+    const pts = {
+      T: [[a, a], [W - a, a], [W - b, b], [b, b]],
+      B: [[a, H - a], [W - a, H - a], [W - b, H - b], [b, H - b]],
+      L: [[a, a], [b, b], [b, H - b], [a, H - a]],
+      Rt: [[W - a, a], [W - b, b], [W - b, H - b], [W - a, H - a]],
+    }[side];
+    return `<clipPath id="${id}"><polygon points="${pts.map((q) => q.join(',')).join(' ')}"/></clipPath>`;
+  };
+  const RAIL = (R.crimson[0] + R.crimson[1]) / 2;   // the side microtext rail
+  const CRD = R.crimson[1] - R.crimson[0];
+  const RPD = R.rope[1] - R.rope[0];
 
   return `<svg class="rc-ground" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
+    <!-- Three metals. The flat gradient is the working gold; the deep one is
+         what a struck cartouche looks like when the light crosses it. -->
     <linearGradient id="rcFoil" x1="0" y1="0" x2="1" y2="0.35">
       <stop offset="0" stop-color="#8A6A2A"/><stop offset="0.18" stop-color="#E4C982"/>
       <stop offset="0.34" stop-color="#9A7A32"/><stop offset="0.52" stop-color="#F0DCA6"/>
       <stop offset="0.7" stop-color="#96762F"/><stop offset="0.86" stop-color="#DEC27B"/>
       <stop offset="1" stop-color="#7E6027"/>
     </linearGradient>
+    <linearGradient id="rcFoilD${uid}" x1="0" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#F2E0AE"/><stop offset="0.22" stop-color="#C9A45C"/>
+      <stop offset="0.5" stop-color="#B0763A"/><stop offset="0.74" stop-color="#E0C384"/>
+      <stop offset="1" stop-color="#7A5C21"/>
+    </linearGradient>
+    <!-- The bands are ribbons, not lines on paper: each carries its own ground
+         so it reads as a body of colour with the lathe engraved into it. -->
+    <linearGradient id="rcCrimsonGround${uid}" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#E7C3BC"/><stop offset="0.42" stop-color="#F4DED6"/>
+      <stop offset="1" stop-color="#DCB2AA"/>
+    </linearGradient>
+    <linearGradient id="rcGoldGround${uid}" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#EEDFBB"/><stop offset="0.45" stop-color="#F8EFD6"/>
+      <stop offset="1" stop-color="#E4CE9E"/>
+    </linearGradient>
+    <radialGradient id="rcRoundel${uid}" cx="0.36" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#C2515D" stop-opacity="0.85"/>
+      <stop offset="0.55" stop-color="#9A2432" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#6E1520" stop-opacity="0.75"/>
+    </radialGradient>
     <linearGradient id="rcThread${uid}" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#B9A7C8"/><stop offset="0.3" stop-color="#E8DCC0"/>
       <stop offset="0.6" stop-color="#A9C3BC"/><stop offset="1" stop-color="#D9C9A8"/>
     </linearGradient>
-    <!-- The iris: a split-duct roll, gold into terracotta into gold. A copier
-         reproduces the hues but not the continuity of the transition. -->
     <linearGradient id="rcIris${uid}" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#B8933F" stop-opacity="0"/>
-      <stop offset="0.22" stop-color="#B8933F" stop-opacity="0.20"/>
-      <stop offset="0.5" stop-color="#A65437" stop-opacity="0.17"/>
-      <stop offset="0.78" stop-color="#B8933F" stop-opacity="0.20"/>
+      <stop offset="0.2" stop-color="#B8933F" stop-opacity="0.20"/>
+      <stop offset="0.5" stop-color="#9A2432" stop-opacity="0.15"/>
+      <stop offset="0.8" stop-color="#B8933F" stop-opacity="0.20"/>
       <stop offset="1" stop-color="#B8933F" stop-opacity="0"/>
     </linearGradient>
+    <linearGradient id="rcIrisFade${uid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/>
+      <stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="rcIrisMask${uid}"><rect x="0" y="54" width="${W}" height="26" fill="url(#rcIrisFade${uid})"/></mask>
     <radialGradient id="rcVignette${uid}" cx="0.5" cy="0.44" r="0.8">
       <stop offset="0" stop-color="#FFFCF4" stop-opacity="0.92"/>
       <stop offset="0.58" stop-color="${PAPER}" stop-opacity="0"/>
       <stop offset="1" stop-color="#D8C9AC" stop-opacity="0.46"/>
     </radialGradient>
-    <linearGradient id="rcIrisFade${uid}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000"/><stop offset="0.28" stop-color="#fff"/>
-      <stop offset="0.72" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
-    </linearGradient>
-    <mask id="rcIrisMask${uid}"><rect x="0" y="52" width="${W}" height="28" fill="url(#rcIrisFade${uid})"/></mask>
-    <clipPath id="rcBandT${uid}"><rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${band}"/></clipPath>
-    <clipPath id="rcBandB${uid}"><rect x="${R.frame}" y="${H - R.field}" width="${W - 2 * R.frame}" height="${band}"/></clipPath>
-    <clipPath id="rcBandL${uid}"><rect x="${R.frame}" y="${R.field}" width="${band}" height="${H - 2 * R.field}"/></clipPath>
-    <clipPath id="rcBandR${uid}"><rect x="${W - R.field}" y="${R.field}" width="${band}" height="${H - 2 * R.field}"/></clipPath>
     <pattern id="rcFine${uid}" width="0.34" height="0.34" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
       <rect width="0.34" height="0.1" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
     <pattern id="rcCoarse${uid}" width="0.9" height="0.9" patternUnits="userSpaceOnUse" patternTransform="rotate(52)">
       <rect width="0.9" height="0.3" fill="${GOLD_DEEP}" opacity="0.13"/></pattern>
-    <path id="rcRailT${uid}" d="M 6 ${R.microRailTop} H 291"/>
-    <path id="rcRailB${uid}" d="M 6 ${R.microRailBottom} H 291"/>
-    <path id="rcRailL${uid}" d="M ${R.vRail} 188 L ${R.vRail} 22"/>
-    <path id="rcRailR${uid}" d="M ${W - R.vRail} 22 L ${W - R.vRail} 188"/>
+    ${['T', 'B', 'L', 'Rt'].map((side) => mitre(`rcCr${side}${uid}`, R.crimson[0], R.crimson[1], side)).join('')}
+    ${['T', 'B', 'L', 'Rt'].map((side) => mitre(`rcRp${side}${uid}`, R.rope[0], R.rope[1], side)).join('')}
+    <path id="rcRailT${uid}" d="M 8 ${R.microRailTop} H 289"/>
+    <path id="rcRailB${uid}" d="M 8 ${R.microRailBottom} H 289"/>
+    <path id="rcRailL${uid}" d="M ${RAIL} ${H - 34} L ${RAIL} 34"/>
+    <path id="rcRailR${uid}" d="M ${W - RAIL} 34 L ${W - RAIL} ${H - 34}"/>
   </defs>
 
   <!-- Paper. Flat vector: exact at any resolution. -->
@@ -388,75 +496,97 @@ function groundSvg(serial, uid) {
   <rect x="0" y="0" width="${W}" height="${H}" fill="url(#rcVignette${uid})"/>
 
   <!-- ── THE GUILLOCHE NET ────────────────────────────────────────────────────
-       Three wave systems at different frequencies and phases, crossing the
-       whole field. No area of this sheet is bare paper: bare paper is where a
-       forger's inkjet has nothing to match. -->
-  <g opacity="0.26">
-    ${lathe(19, 52, 259, 7.2, 5, 0.075, 0.55)}
-    ${lathe(19, 78, 259, 9.0, 5, 0.075, 0.5)}
-    ${lathe(19, 104, 259, 10.4, 5, 0.075, 0.44)}
-    ${lathe(19, 130, 259, 9.0, 5, 0.075, 0.5)}
-    ${lathe(19, 156, 259, 7.2, 5, 0.075, 0.55)}
+       Gold systems crossing the whole field, with a crimson counter-system
+       under them. Two inks in the ground, not one: the crimson is what a
+       colour copier reproduces as a muddy brown and a scanner loses first. -->
+  <g opacity="0.24">
+    ${lathe(28, 52, 241, 7.2, 5, 0.075, 0.55)}
+    ${lathe(28, 78, 241, 9.0, 5, 0.075, 0.5)}
+    ${lathe(28, 104, 241, 10.4, 5, 0.075, 0.44)}
+    ${lathe(28, 130, 241, 9.0, 5, 0.075, 0.5)}
+    ${lathe(28, 156, 241, 7.2, 5, 0.075, 0.55)}
   </g>
-  <g opacity="0.2">
-    ${lathe(19, 66, 259, 5.6, 3, 0.07, 0.6)}
-    ${lathe(19, 143, 259, 5.6, 3, 0.07, 0.6)}
+  <g opacity="0.13" stroke="${CRIMSON}">
+    ${lathe(28, 66, 241, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), CRIMSON)}
+    ${lathe(28, 143, 241, 5.6, 3, 0.07, 1).replace(new RegExp(GOLD_DEEP, 'g'), CRIMSON)}
   </g>
 
-  <!-- Intaglio medallions: one large behind the citation, two flanking. -->
+  <!-- Intaglio medallions: gold behind the citation, crimson flanking. -->
   <g opacity="0.15">${medallion(148.5, 96, 4.4, 0.085, 1)}</g>
   <g opacity="0.1">${medallion(148.5, 96, 2.7, 0.08, 1)}</g>
-  <g opacity="0.12">${medallion(58, 104, 1.55, 0.08, 1)}</g>
-  <g opacity="0.12">${medallion(239, 104, 1.55, 0.08, 1)}</g>
+  <g opacity="0.1">${medallion(62, 104, 1.55, 0.08, 1, CRIMSON)}</g>
+  <g opacity="0.1">${medallion(235, 104, 1.55, 0.08, 1, CRIMSON)}</g>
 
-  <!-- The iris band, behind the title. Masked vertically as well as
-       horizontally: a split-duct roll has no edge, and the first cut's hard
-       top and bottom lines read as a pasted rectangle. -->
-  <rect x="${R.field}" y="52" width="${W - 2 * R.field}" height="28"
+  <rect x="${R.fieldV}" y="54" width="${W - 2 * R.fieldV}" height="26"
     fill="url(#rcIris${uid})" mask="url(#rcIrisMask${uid})"/>
 
   ${voidPantograph(uid)}
 
-  <!-- ── THE BORDER ───────────────────────────────────────────────────────────
-       Trim rule, then an engine-turned band on all four sides, then the field
-       rule and a scalloped inner line. -->
+  <!-- ── THE RING ─────────────────────────────────────────────────────────────
+       Outer navy hairline, solid gold fillet, crimson lathe ribbon, navy
+       bead-and-reel, engine-turned gold ribbon, inner fillet. Five layers,
+       three inks, 20mm deep, mitred at every corner. -->
   <rect x="${R.trim}" y="${R.trim}" width="${W - 2 * R.trim}" height="${H - 2 * R.trim}"
-    fill="none" stroke="url(#rcFoil)" stroke-width="0.8"/>
-  ${ropeBand(R.frame, R.frame, W - 2 * R.frame, false, `rcBandT${uid}`)}
-  ${ropeBand(R.frame, H - R.field, W - 2 * R.frame, false, `rcBandB${uid}`)}
-  ${ropeBand(R.frame, R.field, H - 2 * R.field, true, `rcBandL${uid}`)}
-  ${ropeBand(W - R.field, R.field, H - 2 * R.field, true, `rcBandR${uid}`)}
-  <rect x="${R.frame}" y="${R.frame}" width="${W - 2 * R.frame}" height="${H - 2 * R.frame}"
-    fill="none" stroke="url(#rcFoil)" stroke-width="1.1"/>
-  <rect x="${R.field}" y="${R.field}" width="${W - 2 * R.field}" height="${H - 2 * R.field}"
-    fill="none" stroke="url(#rcFoil)" stroke-width="0.85"/>
-  <rect x="${R.field + 1.4}" y="${R.field + 1.4}" width="${W - 2 * R.field - 2.8}"
-    height="${H - 2 * R.field - 2.8}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.11" opacity="0.6"/>
+    fill="none" stroke="${NAVY}" stroke-width="0.22" opacity="0.75"/>
 
-  <!-- Corner fans — see the note above the generator. -->
-  ${cornerFan(R.field, R.field, 1, 1)}
-  ${cornerFan(W - R.field, R.field, -1, 1)}
-  ${cornerFan(R.field, H - R.field, 1, -1)}
-  ${cornerFan(W - R.field, H - R.field, -1, -1)}
+  <!-- Solid gold fillet — the ring's weight. -->
+  <rect x="${R.goldBar[0]}" y="${R.goldBar[0]}" width="${W - 2 * R.goldBar[0]}"
+    height="${H - 2 * R.goldBar[0]}" fill="none" stroke="url(#rcFoil)"
+    stroke-width="${R.goldBar[1] - R.goldBar[0]}"/>
+
+  <!-- Crimson lathe ribbon, mitred. -->
+  ${crimsonBand(0, R.crimson[0], W, CRD, false, `rcCrT${uid}`, uid)}
+  ${crimsonBand(0, H - R.crimson[1], W, CRD, false, `rcCrB${uid}`, uid)}
+  ${crimsonBand(R.crimson[0], 0, H, CRD, true, `rcCrL${uid}`, uid)}
+  ${crimsonBand(W - R.crimson[1], 0, H, CRD, true, `rcCrRt${uid}`, uid)}
+  <rect x="${R.crimson[0]}" y="${R.crimson[0]}" width="${W - 2 * R.crimson[0]}"
+    height="${H - 2 * R.crimson[0]}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.8"/>
+  <rect x="${R.crimson[1]}" y="${R.crimson[1]}" width="${W - 2 * R.crimson[1]}"
+    height="${H - 2 * R.crimson[1]}" fill="none" stroke="${GOLD_DEEP}" stroke-width="0.14" opacity="0.8"/>
+
+  <!-- Navy bead-and-reel between the two ribbons; it turns the corner too. -->
+  ${beadRule(R.bead, R.bead, W - 2 * R.bead, false)}
+  ${beadRule(R.bead, H - R.bead, W - 2 * R.bead, false)}
+  ${beadRule(R.bead, R.bead, H - 2 * R.bead, true)}
+  ${beadRule(W - R.bead, R.bead, H - 2 * R.bead, true)}
+
+  <!-- Engine-turned gold ribbon, mitred. -->
+  ${ropeBand(0, R.rope[0], W, RPD, false, `rcRpT${uid}`, uid)}
+  ${ropeBand(0, H - R.rope[1], W, RPD, false, `rcRpB${uid}`, uid)}
+  ${ropeBand(R.rope[0], 0, H, RPD, true, `rcRpL${uid}`, uid)}
+  ${ropeBand(W - R.rope[1], 0, H, RPD, true, `rcRpRt${uid}`, uid)}
+
+  <!-- Inner fillet and the field rule. -->
+  <rect x="${R.fieldH - 1.1}" y="${R.fieldH - 1.1}" width="${W - 2 * (R.fieldH - 1.1)}"
+    height="${H - 2 * (R.fieldH - 1.1)}" fill="none" stroke="url(#rcFoil)" stroke-width="0.9"/>
+  <rect x="${R.fieldH + 0.9}" y="${R.fieldH + 0.9}" width="${W - 2 * (R.fieldH + 0.9)}"
+    height="${H - 2 * (R.fieldH + 0.9)}" fill="none" stroke="${NAVY}" stroke-width="0.1" opacity="0.55"/>
+
+  <!-- The four corner bosses, struck over the mitres. -->
+  ${cornerBoss(0, 0, 1, 1, uid)}
+  ${cornerBoss(W, 0, -1, 1, uid)}
+  ${cornerBoss(0, H, 1, -1, uid)}
+  ${cornerBoss(W, H, -1, -1, uid)}
 
   <!-- Security threads, symmetric about the sheet centre. -->
-  ${securityThread(24.5, 44, 156, serial, uid, 'L')}
-  ${securityThread(W - 24.5, 44, 156, serial, uid, 'R')}
+  ${securityThread(23.2, 44, 166, serial, uid, 'L')}
+  ${securityThread(W - 23.2, 44, 166, serial, uid, 'R')}
 
   <!-- Microtext rails. Solid light ink, never an opacity: an opacity on type
        this small becomes a screen percentage at separation and is the first
-       thing to drop out on press. -->
-  <g font-family="Inter, sans-serif" font-weight="400" fill="${MICRO_INK}"
+       thing to drop out on press. The side rails run inside the crimson band,
+       where crimson-on-gold microtext is a second register a copier must hold. -->
+  <g font-family="Inter, sans-serif" font-weight="400"
      font-size="${microFs}" letter-spacing="${microTrack}">
-    <text><textPath href="#rcRailT${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
-    <text><textPath href="#rcRailB${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
-    <text><textPath href="#rcRailL${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
-    <text><textPath href="#rcRailR${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
+    <text fill="${MICRO_INK}"><textPath href="#rcRailT${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
+    <text fill="${MICRO_INK}"><textPath href="#rcRailB${uid}" startOffset="0">${esc(hText.repeat(hReps))}</textPath></text>
+    <text fill="${CRIMSON_DEEP}"><textPath href="#rcRailL${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
+    <text fill="${CRIMSON_DEEP}"><textPath href="#rcRailR${uid}" startOffset="0">${esc(vText.repeat(vReps))}</textPath></text>
   </g>
 
   ${fibres(serial)}
 
-  ${[[46, 84], [251, 84], [46, 140], [251, 140], [148.5, 40], [148.5, 152]]
+  ${[[54, 86], [243, 86], [54, 138], [243, 138], [148.5, 42], [148.5, 152]]
     .map(([cx, cy]) => uvMotif(cx, cy)).join('')}
 </svg>`;
 }
@@ -919,19 +1049,19 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rc-ground text{white-space:pre}
 
 /* ── HEAD ─────────────────────────────────────────────────────────────── */
-.rc-emblems{position:absolute;left:0;right:0;top:19mm;height:14mm;
+.rc-emblems{position:absolute;left:0;right:0;top:21.5mm;height:12.5mm;
   display:flex;align-items:flex-end;justify-content:center;gap:56mm}
 .rc-em{display:block;object-fit:contain}
-.rc-em-side{height:12.4mm;width:auto;opacity:0.93}
-.rc-em-mid{height:14mm;width:auto}
-.rc-nation{position:absolute;left:0;right:0;top:34.4mm;text-align:center;
+.rc-em-side{height:11.2mm;width:auto;opacity:0.93}
+.rc-em-mid{height:12.5mm;width:auto}
+.rc-nation{position:absolute;left:0;right:0;top:35.4mm;text-align:center;
   font-family:'Cinzel',serif;font-size:6.2pt;font-weight:400;letter-spacing:0.26em;
   color:${INK_SOFT};text-transform:uppercase}
 .rc-dot{color:${GOLD};padding:0 0.35em}
-.rc-inst{position:absolute;left:0;right:0;top:38.8mm;text-align:center;
+.rc-inst{position:absolute;left:0;right:0;top:39.4mm;text-align:center;
   font-family:'Cinzel',serif;font-size:12.6pt;font-weight:800;letter-spacing:0.15em;
   color:${GOLD_DEEP};text-transform:uppercase}
-.rc-school{position:absolute;left:0;right:0;top:45.8mm;text-align:center;
+.rc-school{position:absolute;left:0;right:0;top:46mm;text-align:center;
   font-family:'Cinzel',serif;font-size:9pt;font-weight:700;letter-spacing:0.19em;
   color:${INK};text-transform:uppercase}
 .rc-place{position:absolute;left:0;right:0;top:51.2mm;text-align:center;
@@ -939,7 +1069,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   color:${INK_SOFT};text-transform:uppercase}
 
 /* ── TITLE ────────────────────────────────────────────────────────────── */
-.rc-titlewrap{position:absolute;left:38mm;right:38mm;top:56.4mm;height:12mm;
+.rc-titlewrap{position:absolute;left:40mm;right:40mm;top:55.4mm;height:12mm;
   display:flex;align-items:center;justify-content:center;gap:6mm}
 .rc-title{margin:0;font-family:'Cinzel',serif;font-size:24pt;font-weight:800;
   letter-spacing:0.085em;color:${GOLD_DEEP};text-transform:uppercase;white-space:nowrap;
@@ -952,39 +1082,39 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   background:${GOLD};transform:rotate(45deg)}
 .rc-rule-l::after{right:0}
 .rc-rule-r::after{left:0}
-.rc-subtitle{position:absolute;left:0;right:0;top:69.6mm;text-align:center;
+.rc-subtitle{position:absolute;left:0;right:0;top:68.6mm;text-align:center;
   font-family:'Cinzel',serif;font-size:7.6pt;font-weight:400;letter-spacing:0.3em;
   color:${INK_SOFT};text-transform:uppercase}
 
 /* ── CITATION ─────────────────────────────────────────────────────────── */
-.rc-lede{position:absolute;left:0;right:0;top:77.2mm;text-align:center;
+.rc-lede{position:absolute;left:0;right:0;top:75mm;text-align:center;
   font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
   font-size:11.4pt;letter-spacing:0.045em;color:${INK_SOFT}}
-.rc-name{position:absolute;left:52mm;right:52mm;top:83mm;height:13mm;
+.rc-name{position:absolute;left:52mm;right:52mm;top:80mm;height:13mm;
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:0.035em;
   color:#241D10;white-space:nowrap;text-shadow:0 0.16mm 0 rgba(255,252,242,0.9)}
-.rc-namerule{position:absolute;left:82mm;right:82mm;top:96.6mm;height:2mm;
+.rc-namerule{position:absolute;left:82mm;right:82mm;top:93.8mm;height:2mm;
   display:flex;align-items:center;gap:2.4mm}
 .rc-namerule span{flex:1;height:0.28mm;background:linear-gradient(90deg,rgba(168,134,63,0),${GOLD})}
 .rc-namerule span:last-child{background:linear-gradient(270deg,rgba(168,134,63,0),${GOLD})}
 .rc-namerule i{width:1.5mm;height:1.5mm;background:${GOLD};transform:rotate(45deg)}
-.rc-sid{position:absolute;left:0;right:0;top:99.6mm;text-align:center;
+.rc-sid{position:absolute;left:0;right:0;top:96.4mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:6pt;font-weight:400;letter-spacing:0.16em;
   color:${INK_SOFT};text-transform:uppercase}
 .rc-sid b{font-weight:600;color:${INK};letter-spacing:0.12em}
-.rc-body{position:absolute;left:58mm;right:58mm;top:103mm;margin:0;text-align:center;
+.rc-body{position:absolute;left:60mm;right:60mm;top:100mm;margin:0;text-align:center;
   font-family:'Cormorant Garamond',serif;font-weight:500;font-size:11.4pt;line-height:1.6;
   letter-spacing:0.012em;color:${INK}}
 
-.rc-award{position:absolute;left:62mm;right:62mm;top:123.5mm;height:10mm;
+.rc-award{position:absolute;left:62mm;right:62mm;top:121mm;height:10mm;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.9mm}
 .rc-award-k{font-family:'Inter',sans-serif;font-size:5.6pt;font-weight:400;
   letter-spacing:0.34em;color:${GOLD_DEEP};text-transform:uppercase}
 .rc-award-v{font-family:'Cinzel',serif;font-size:11pt;font-weight:700;
   letter-spacing:0.07em;color:${INK};text-transform:uppercase;white-space:nowrap}
 
-.rc-ledger{position:absolute;left:48mm;right:48mm;top:135mm;height:8.5mm;
+.rc-ledger{position:absolute;left:48mm;right:48mm;top:132mm;height:8.5mm;
   display:flex;align-items:stretch;justify-content:space-between}
 .rc-lg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:0.8mm;border-left:0.2mm solid rgba(168,134,63,0.4)}
@@ -995,7 +1125,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   letter-spacing:0.02em;color:${INK}}
 
 /* ── SIGNATURES ───────────────────────────────────────────────────────── */
-.rc-sig{position:absolute;top:144.5mm;width:60mm;text-align:center}
+.rc-sig{position:absolute;top:141.5mm;width:60mm;text-align:center}
 .rc-sig-l{left:30mm}
 .rc-sig-r{right:30mm}
 .rc-sig-ink{display:block;height:10mm;width:auto;max-width:52mm;margin:0 auto -1.4mm;
@@ -1008,7 +1138,7 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
 /* ── AUTHENTICATION BAND ──────────────────────────────────────────────── */
 .rc-plaque-bg{position:absolute;left:0;top:0;width:100%;height:100%}
-.rc-qr{position:absolute;left:34mm;top:164mm;width:26mm;height:28mm}
+.rc-qr{position:absolute;left:34mm;top:160mm;width:26mm;height:28mm}
 .rc-qr-cap{position:absolute;left:0;right:0;top:1.5mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.5pt;font-weight:600;letter-spacing:0.13em;
   color:${MICRO_INK};text-transform:uppercase}
@@ -1018,14 +1148,14 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   font-family:'Inter',sans-serif;font-size:4.5pt;font-weight:400;letter-spacing:0.13em;
   color:${MICRO_INK};text-transform:uppercase}
 
-.rc-cnwrap{position:absolute;left:64mm;top:169mm;width:62mm;height:18mm}
+.rc-cnwrap{position:absolute;left:64mm;top:165mm;width:62mm;height:18mm}
 .rc-cn{display:block;width:100%;height:100%}
 
-.rc-sealwrap{position:absolute;left:129.5mm;top:157mm;width:38mm;height:38mm}
+.rc-sealwrap{position:absolute;left:129.5mm;top:152mm;width:38mm;height:38mm}
 .rc-seal-svg{display:block;width:100%;height:100%;
   filter:drop-shadow(0 0.35mm 0.6mm rgba(64,46,12,0.28))}
 
-.rc-plate{position:absolute;left:171mm;top:164mm;width:92mm;height:28mm}
+.rc-plate{position:absolute;left:171mm;top:160mm;width:92mm;height:28mm}
 .rc-plate-head{position:absolute;left:0;right:0;top:1.5mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.6pt;font-weight:600;letter-spacing:0.2em;
   color:${MICRO_INK};text-transform:uppercase}
@@ -1049,8 +1179,8 @@ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   padding:0.5mm 1.6mm;border-radius:0.7mm;
   background:linear-gradient(90deg,rgba(246,239,225,0),rgba(250,245,234,0.94) 12%,
     rgba(250,245,234,0.94) 88%,rgba(246,239,225,0))}
-.rc-serial-tr{right:19mm;top:11.4mm}
-.rc-serial-bl{left:19mm;bottom:11.4mm}
+.rc-serial-tr{right:42mm;top:10.6mm}
+.rc-serial-bl{left:42mm;bottom:10.6mm}
 
 .rc-plate-void{position:absolute;left:0;right:0;bottom:1mm;text-align:center;
   font-family:'Inter',sans-serif;font-size:4.2pt;font-weight:400;letter-spacing:0.1em;
