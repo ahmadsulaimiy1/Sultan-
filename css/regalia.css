@@ -167,3 +167,103 @@ html[data-pc-motion="reduced"] .rg-light::before{display:none;}
   background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.45),transparent);}
 .rg-lede{max-width:680px;color:var(--ink-soft);margin:14px 0 0;font-size:.98rem;
   text-align:justify;text-justify:inter-word;hyphens:auto;}
+
+/* ===================================================================
+   6. THE ADHKĀR CENTRE, LIT
+   -------------------------------------------------------------------
+   The Centre was the most static room in the house: a working
+   instrument rendered as plain cards on a plain ground. Nothing here
+   changes what it does — the counter, the wird, the search and the
+   session all behave exactly as before. What changes is that the
+   surfaces now hold light, and the panels announce themselves with a
+   ruled head rather than beginning abruptly.
+   =================================================================== */
+
+/* The travelling light, extended to the app's own cards. Same arc, same
+   mask, same staggering — regalia.js now keeps watching the DOM, so the
+   panels the app writes after load are lit like everything else. */
+.adk-priority-card,.adk-wird-card,.adk-quick-mode,.adk-sd-stat,
+.adk-progress-stat,.adk-achv-badge,.adk-ctr-dial{position:relative;isolation:isolate;}
+.adk-priority-card::before,.adk-wird-card::before,.adk-quick-mode::before,
+.adk-sd-stat::before,.adk-progress-stat::before,.adk-achv-badge::before,
+.adk-ctr-dial::before{
+  content:"";position:absolute;inset:-1.5px;z-index:-1;border-radius:inherit;
+  padding:1.5px;pointer-events:none;
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 190deg,
+    rgba(var(--lv-g,198,161,91),.05) 216deg,
+    rgba(var(--lv-gb,233,206,138),.80) 248deg,
+    rgb(var(--lv-gl,255,246,223)) 262deg,
+    rgba(var(--lv-gb,233,206,138),.80) 276deg,
+    rgba(var(--lv-g,198,161,91),.05) 304deg,
+    transparent 334deg 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .6s ease;
+  animation:rg-orbit var(--rg-dur,7.5s) linear infinite;
+  animation-delay:var(--rg-delay,0s);}
+.adk-priority-card.is-lit::before,.adk-wird-card.is-lit::before,
+.adk-quick-mode.is-lit::before,.adk-sd-stat.is-lit::before,
+.adk-progress-stat.is-lit::before,.adk-achv-badge.is-lit::before,
+.adk-ctr-dial.is-lit::before{opacity:.72;}
+.adk-priority-card:hover::before,.adk-wird-card:hover::before,
+.adk-quick-mode:hover::before,.adk-sd-stat:hover::before,
+.adk-progress-stat:hover::before,.adk-achv-badge:hover::before,
+.adk-priority-card:focus-within::before,.adk-wird-card:focus-within::before,
+.adk-quick-mode:focus-within::before,.adk-ctr-dial:hover::before{opacity:1;}
+@supports not (background:conic-gradient(from 0deg,red,blue)){
+  .adk-priority-card::before,.adk-wird-card::before,.adk-quick-mode::before,
+  .adk-sd-stat::before,.adk-progress-stat::before,.adk-achv-badge::before,
+  .adk-ctr-dial::before{display:none;}
+}
+html[data-pc-ornament="none"] .adk-priority-card::before,
+html[data-pc-ornament="none"] .adk-wird-card::before,
+html[data-pc-ornament="none"] .adk-quick-mode::before,
+html[data-pc-ornament="none"] .adk-sd-stat::before,
+html[data-pc-ornament="none"] .adk-progress-stat::before,
+html[data-pc-ornament="none"] .adk-achv-badge::before,
+html[data-pc-ornament="none"] .adk-ctr-dial::before,
+html[data-pc-motion="reduced"] .adk-priority-card::before,
+html[data-pc-motion="reduced"] .adk-wird-card::before,
+html[data-pc-motion="reduced"] .adk-quick-mode::before,
+html[data-pc-motion="reduced"] .adk-sd-stat::before,
+html[data-pc-motion="reduced"] .adk-progress-stat::before,
+html[data-pc-motion="reduced"] .adk-achv-badge::before,
+html[data-pc-motion="reduced"] .adk-ctr-dial::before{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .adk-priority-card::before,.adk-wird-card::before,.adk-quick-mode::before,
+  .adk-sd-stat::before,.adk-progress-stat::before,.adk-achv-badge::before,
+  .adk-ctr-dial::before{animation:none;opacity:.45;}
+}
+
+/* Each panel opens on a ruled head that draws itself, the same device
+   the letterhead uses, so the Centre reads as a sequence of chapters
+   rather than one long scroll of boxes. */
+.adk-priority-head,.adk-progress-head,.adk-wird-head,.adk-section-head{
+  position:relative;}
+.adk-priority-head::after,.adk-progress-head::after,
+.adk-wird-head::after,.adk-section-head::after{
+  content:"";position:absolute;inset-inline-start:0;bottom:-9px;height:1px;width:100%;
+  background:linear-gradient(90deg,rgba(var(--lv-g,198,161,91),.55),
+    rgba(var(--lv-g,198,161,91),.14) 46%,transparent);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform 1.1s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .adk-priority-head::after,[dir="rtl"] .adk-progress-head::after,
+[dir="rtl"] .adk-wird-head::after,[dir="rtl"] .adk-section-head::after{
+  transform-origin:right center;
+  background:linear-gradient(270deg,rgba(var(--lv-g,198,161,91),.55),
+    rgba(var(--lv-g,198,161,91),.14) 46%,transparent);}
+.adk-priority-panel.is-lit .adk-priority-head::after,
+.adk-progress-panel.is-lit .adk-progress-head::after,
+.adk-wird-panel.is-lit .adk-wird-head::after,
+.adk-section-head::after{transform:scaleX(1);}
+@media (prefers-reduced-motion:reduce){
+  .adk-priority-head::after,.adk-progress-head::after,
+  .adk-wird-head::after,.adk-section-head::after{transition:none;transform:scaleX(1);}
+}
+
+/* The figures band sits on the Centre's own ground rather than the
+   generic tertiary surface, so it belongs to the page it is in. */
+.adk-figures{margin:44px 0 8px;padding:38px 0 6px;background:transparent;}
+.adk-figures::before{inset-inline:0;}
