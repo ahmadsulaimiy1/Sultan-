@@ -368,6 +368,7 @@ ${personalisation}
 <script src="/js/portal-password-toggle.js" defer></script>
 <script src="/js/portal-password-strength.js" defer></script>
 <script src="/js/personalisation.js" defer></script>
+<script src="/js/livery-prompt.js" defer></script>
 <script src="/js/site.js" defer></script>
 <script src="/js/adhkar-app.js" defer></script>
 <script src="/js/announcements.js" defer></script>

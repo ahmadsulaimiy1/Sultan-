@@ -12,8 +12,8 @@
 
 :root{
   --im-navy:#1B3A5C; --im-navy-deep:#122740; --im-steel:#4A5568;
-  --im-burgundy:#8A6B36; --im-burgundy-bright:#C6A15B;
-  --im-paper:#F5F3EE; --im-paper-dim:#EDE9DF; --im-white:#FFFFFF;
+  --im-burgundy:rgb(var(--lv-w236,138,107,54)); --im-burgundy-bright:rgb(var(--lv-g,198,161,91));
+  --im-paper:rgb(var(--lv-w05,245,243,238)); --im-paper-dim:rgb(var(--lv-w237,237,233,223)); --im-white:#FFFFFF;
   --im-ink:#1E2429; --im-ink-soft:rgba(30,36,41,0.62);
   --im-line:rgba(30,36,41,0.14);
 }
@@ -45,10 +45,10 @@ body.pros-body{margin:0; background:#33383e; font-family:'IBM Plex Sans','Arial'
   background-image:linear-gradient(rgba(27,58,92,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(27,58,92,0.06) 1px, transparent 1px);
   background-size:12mm 12mm;
 }
-.im-spread.dark .im-grid-bg{background-image:linear-gradient(rgba(245,243,238,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(245,243,238,0.06) 1px, transparent 1px);}
+.im-spread.dark .im-grid-bg{background-image:linear-gradient(rgba(var(--lv-w05,245,243,238),0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lv-w05,245,243,238),0.06) 1px, transparent 1px);}
 
 .im-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'IBM Plex Sans',sans-serif; font-size:7.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--im-ink-soft);}
-.im-spread.dark .im-folio{color:rgba(245,243,238,0.55);}
+.im-spread.dark .im-folio{color:rgba(var(--lv-w05,245,243,238),0.55);}
 
 /* ---- Pillar block — numbered square badge, the icon/marker system
    throughout this edition, replacing octagram/hexagon/polaroid. ---- */
@@ -66,7 +66,7 @@ body.pros-body{margin:0; background:#33383e; font-family:'IBM Plex Sans','Arial'
   color:var(--im-burgundy); margin:0 0 8px; padding-bottom:6px; border-bottom:2px solid var(--im-navy);
   display:inline-block;
 }
-.im-spread.dark .im-eyebrow{color:var(--im-burgundy-bright); border-bottom-color:rgba(245,243,238,0.4);}
+.im-spread.dark .im-eyebrow{color:var(--im-burgundy-bright); border-bottom-color:rgba(var(--lv-w05,245,243,238),0.4);}
 h2.im-h2{
   font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:25pt; line-height:1.15; color:var(--im-navy); margin:0 0 10px;
 }
@@ -74,12 +74,12 @@ h2.im-h2{
 h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5pt; color:var(--im-navy); margin:0 0 6px;}
 .im-spread.dark h3.im-h3{color:var(--im-burgundy-bright);}
 .im-spread p{font-family:'IBM Plex Sans',sans-serif; font-weight:400; font-size:10pt; line-height:1.7; color:var(--im-ink); margin:0 0 12px;}
-.im-spread.dark p{color:rgba(245,243,238,0.85);}
+.im-spread.dark p{color:rgba(var(--lv-w05,245,243,238),0.85);}
 .im-lede{
   font-family:'IBM Plex Sans',sans-serif; font-weight:300; font-size:13pt; line-height:1.55; color:var(--im-steel);
   margin:0 0 18px; max-width:92%;
 }
-.im-spread.dark .im-lede{color:rgba(245,243,238,0.7);}
+.im-spread.dark .im-lede{color:rgba(var(--lv-w05,245,243,238),0.7);}
 .im-caption{font-family:'IBM Plex Sans',sans-serif; font-size:7.5pt; letter-spacing:0.05em; text-transform:uppercase; color:var(--im-ink-soft); margin-top:6px;}
 
 /* ---- Report panel — bordered callout, the executive-report
@@ -87,7 +87,7 @@ h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5
 .im-panel{
   border:1px solid var(--im-line); border-left:4px solid var(--im-navy); background:var(--im-paper); padding:16px 18px; margin:14px 0;
 }
-.im-spread.dark .im-panel{background:rgba(245,243,238,0.06); border-color:rgba(245,243,238,0.16); border-left-color:var(--im-burgundy-bright);}
+.im-spread.dark .im-panel{background:rgba(var(--lv-w05,245,243,238),0.06); border-color:rgba(var(--lv-w05,245,243,238),0.16); border-left-color:var(--im-burgundy-bright);}
 .im-panel .im-panel-tag{display:block; font-family:'IBM Plex Sans',sans-serif; font-size:7.5pt; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--im-burgundy); margin-bottom:6px;}
 .im-spread.dark .im-panel .im-panel-tag{color:var(--im-burgundy-bright);}
 .im-panel p{margin:0; font-size:9.5pt;}
@@ -118,7 +118,7 @@ h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5
 .im-timeline-title{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:11pt; color:var(--im-navy); margin-bottom:3px;}
 .im-spread.dark .im-timeline-title{color:#fff;}
 .im-timeline-desc{font-family:'IBM Plex Sans',sans-serif; font-size:9.5pt; color:var(--im-ink-soft); line-height:1.6;}
-.im-spread.dark .im-timeline-desc{color:rgba(245,243,238,0.65);}
+.im-spread.dark .im-timeline-desc{color:rgba(var(--lv-w05,245,243,238),0.65);}
 
 /* ---- Strategic pillar row ---- */
 .im-pillar-row{display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--im-line); align-items:flex-start;}
@@ -126,19 +126,19 @@ h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5
 .im-pillar-body{flex:1;}
 .im-pillar-title{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:12pt; color:var(--im-navy); margin-bottom:4px;}
 .im-pillar-desc{font-family:'IBM Plex Sans',sans-serif; font-size:9.5pt; color:var(--im-ink-soft); line-height:1.6;}
-.im-spread.dark .im-pillar-row{border-color:rgba(245,243,238,0.14);}
+.im-spread.dark .im-pillar-row{border-color:rgba(var(--lv-w05,245,243,238),0.14);}
 .im-spread.dark .im-pillar-title{color:#fff;}
-.im-spread.dark .im-pillar-desc{color:rgba(245,243,238,0.68);}
+.im-spread.dark .im-pillar-desc{color:rgba(var(--lv-w05,245,243,238),0.68);}
 
 /* ---- Stat band ---- */
 .im-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--im-navy); margin:16px 0;}
 .im-stats .im-stat-cell{background:var(--im-paper); text-align:center; padding:16px 6px;}
 .im-stats .im-stat-num{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:21pt; color:var(--im-navy);}
 .im-stats .im-stat-label{font-family:'IBM Plex Sans',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--im-ink-soft); margin-top:2px;}
-.im-spread.dark .im-stats{background:rgba(245,243,238,0.15);}
+.im-spread.dark .im-stats{background:rgba(var(--lv-w05,245,243,238),0.15);}
 .im-spread.dark .im-stats .im-stat-cell{background:#1E3350;}
 .im-spread.dark .im-stats .im-stat-num{color:var(--im-burgundy-bright);}
-.im-spread.dark .im-stats .im-stat-label{color:rgba(245,243,238,0.55);}
+.im-spread.dark .im-stats .im-stat-label{color:rgba(var(--lv-w05,245,243,238),0.55);}
 
 /* ---- Institutional Publication Information (imprint) page — a
    key/value ownership table matching the Governance Charter's own
@@ -156,8 +156,8 @@ h3.im-h3{font-family:'IBM Plex Sans',sans-serif; font-weight:700; font-size:13.5
   font-family:'IBM Plex Sans',sans-serif; font-size:9.5pt; line-height:1.6; color:var(--im-ink);
   text-align:left; padding:9px 0; border-bottom:1px solid var(--im-line);
 }
-.im-spread.dark .im-imprint-table th{color:var(--im-burgundy-bright); border-bottom-color:rgba(245,243,238,0.16);}
-.im-spread.dark .im-imprint-table td{color:rgba(245,243,238,0.85); border-bottom-color:rgba(245,243,238,0.16);}
+.im-spread.dark .im-imprint-table th{color:var(--im-burgundy-bright); border-bottom-color:rgba(var(--lv-w05,245,243,238),0.16);}
+.im-spread.dark .im-imprint-table td{color:rgba(var(--lv-w05,245,243,238),0.85); border-bottom-color:rgba(var(--lv-w05,245,243,238),0.16);}
 
 @media print{
   .im-toolbar{display:none;}

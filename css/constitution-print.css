@@ -36,7 +36,7 @@
      family — a near-black navy is exactly the kind of "unrelated colour
      family" it rules out, regardless of how the earlier complaint was
      addressed. --doc-dark is now a genuine deep espresso/cocoa brown,
-     one shade darker and richer than the sitewide --navy-deep (#221709)
+     one shade darker and richer than the sitewide --navy-deep (rgb(var(--lv-cfd5,34,23,9)))
      for this document's own more dramatic full-bleed treatment, but
      strictly within the same warm-brown family, not a departure from
      it; --doc-dark-deep is a near-black cocoa for the same reason.
@@ -45,8 +45,8 @@
      Royal Identity Palette tones before this round (see brand.css's own
      comment: "the confirmed palette. --ivory now renders Premium
      Cream."). */
-  --doc-dark: #1D1108;
-  --doc-dark-deep: #140C05;
+  --doc-dark: rgb(var(--lv-w125,29,17,8));
+  --doc-dark-deep: rgb(var(--lv-w126,20,12,5));
   margin: 0;
   background: var(--doc-dark-deep);
   color: var(--ink);
@@ -92,9 +92,9 @@
 .page.cover { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0.5in; }
 .cover-crest { width: 100px; height: auto; margin-bottom: 22px; }
 .cover-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 12pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ivory); margin-bottom: 4px; }
-.cover-sub-line { font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10.5pt; color: rgba(247,238,223,0.72); margin-bottom: 34px; }
+.cover-sub-line { font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10.5pt; color: rgba(var(--lv-p3,247,238,223),0.72); margin-bottom: 34px; }
 .cover-title { font-family: 'Cinzel', 'Amiri', serif; font-size: 42pt; line-height: 1.08; color: var(--milk); margin: 0 0 10px; letter-spacing: 0.01em; }
-.cover-title-sub { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 16pt; color: rgba(247,238,223,0.88); margin: 0 0 30px; }
+.cover-title-sub { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 16pt; color: rgba(var(--lv-p3,247,238,223),0.88); margin: 0 0 30px; }
 .cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 22px; }
 .cover-version { font-family: 'Cinzel', 'Amiri', serif; font-size: 13pt; font-weight: 700; letter-spacing: 0.16em; color: var(--gold-bright); margin-bottom: 0; }
 /* The cover carries no draft-status marking of its own — see Drafting
@@ -105,10 +105,10 @@
    instrument's present legal status is hidden — it simply isn't printed
    across the title page itself, which reads instead as a title page. */
 .cover-footer-line { position: absolute; left: 0.5in; right: 0.5in; bottom: 0.5in; }
-.cover-footer-rule { height: 1px; background: linear-gradient(90deg, transparent, rgba(233,206,138,0.5), transparent); margin-bottom: 10px; }
+.cover-footer-rule { height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--lv-gb,233,206,138),0.5), transparent); margin-bottom: 10px; }
 .cover-footer-text {
   display: flex; justify-content: space-between; font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt;
-  letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,238,223,0.55);
+  letter-spacing: 0.08em; text-transform: uppercase; color: rgba(var(--lv-p3,247,238,223),0.55);
 }
 
 /* ---- Back cover: a genuinely composed closing page, not a centred
@@ -120,8 +120,8 @@
    block itself is set larger so it reads as deliberately composed
    rather than under-filled. ---- */
 .back-cover { display: flex; align-items: center; justify-content: center; padding: 0.55in; position: relative; }
-.back-cover::before { content: ''; position: absolute; inset: 0.42in; border: 1px solid rgba(233,206,138,0.32); }
-.back-cover::after { content: ''; position: absolute; inset: 0.54in; border: 1px solid rgba(233,206,138,0.15); }
+.back-cover::before { content: ''; position: absolute; inset: 0.42in; border: 1px solid rgba(var(--lv-gb,233,206,138),0.32); }
+.back-cover::after { content: ''; position: absolute; inset: 0.54in; border: 1px solid rgba(var(--lv-gb,233,206,138),0.15); }
 .back-cover-inner { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 5in; }
 .back-cover-crest { width: 92px; height: auto; margin-bottom: 34px; opacity: 0.95; }
 .back-cover-rule { width: 120px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-bright), transparent); margin: 0 auto 28px; }
@@ -132,19 +132,19 @@
 }
 .back-cover-schools {
   font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 11pt; line-height: 1.55;
-  color: rgba(247,238,223,0.7); max-width: 4.8in;
+  color: rgba(var(--lv-p3,247,238,223),0.7); max-width: 4.8in;
 }
-.back-cover-meta { font-family: 'Inter', sans-serif; font-size: 9pt; color: rgba(247,238,223,0.82); line-height: 2.3; }
+.back-cover-meta { font-family: 'Inter', sans-serif; font-size: 9pt; color: rgba(var(--lv-p3,247,238,223),0.82); line-height: 2.3; }
 .back-cover-meta span {
   display: inline-block; min-width: 1.2in; text-align: right; margin-right: 12px;
   font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.09em; text-transform: uppercase;
   color: var(--gold-bright);
 }
 .back-cover-motto svg { width: 30px; height: 30px; opacity: 0.55; }
-.back-cover-qr { width: 0.78in; height: 0.78in; border: 1px solid rgba(233,206,138,0.4); padding: 4px; background: var(--parchment); }
+.back-cover-qr { width: 0.78in; height: 0.78in; border: 1px solid rgba(var(--lv-gb,233,206,138),0.4); padding: 4px; background: var(--parchment); }
 .back-cover-qr-label {
   font-family: 'Inter', sans-serif; font-size: 7.5pt; letter-spacing: 0.06em; text-transform: uppercase;
-  color: rgba(247,238,223,0.62); margin-top: 8px;
+  color: rgba(var(--lv-p3,247,238,223),0.62); margin-top: 8px;
 }
 
 /* ---- Half-title, title page, copyright/imprint page: the premium
@@ -201,11 +201,11 @@
 .imprint-table th {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.05em; text-transform: uppercase;
   color: var(--bronze); text-align: left; vertical-align: top; padding: 9px 14px 9px 0; width: 2.1in;
-  border-bottom: 1px solid rgba(198,161,91,0.25); white-space: nowrap;
+  border-bottom: 1px solid rgba(var(--lv-g,198,161,91),0.25); white-space: nowrap;
 }
 .imprint-table td {
   font-family: 'Inter', sans-serif; font-size: 9pt; line-height: 1.55; color: var(--ink);
-  text-align: left; padding: 9px 0; border-bottom: 1px solid rgba(198,161,91,0.25);
+  text-align: left; padding: 9px 0; border-bottom: 1px solid rgba(var(--lv-g,198,161,91),0.25);
 }
 
 .revision-table, .abbrev-table { margin-top: 4px; }
@@ -219,26 +219,26 @@
 /* ---- QR verification row (Institutional Information page) ---- */
 .qr-row { display: flex; gap: 0.28in; margin-top: 22px; justify-content: space-between; }
 .qr-card { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.qr-card img { width: 1.05in; height: 1.05in; border: 1px solid rgba(198,161,91,0.35); padding: 6px; background: var(--parchment); }
+.qr-card img { width: 1.05in; height: 1.05in; border: 1px solid rgba(var(--lv-g,198,161,91),0.35); padding: 6px; background: var(--parchment); }
 .qr-label { font-family: 'Cinzel', 'Amiri', serif; font-size: 7.5pt; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy); margin-top: 8px; line-height: 1.5; }
 .qr-label span { display: block; font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; text-transform: none; letter-spacing: 0; font-size: 8pt; color: var(--ink-soft); margin-top: 2px; }
 .qr-reserved { justify-content: flex-start; }
-.qr-reserved-mark { width: 1.05in; height: 1.05in; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(198,161,91,0.5); }
+.qr-reserved-mark { width: 1.05in; height: 1.05in; display: flex; align-items: center; justify-content: center; border: 1px dashed rgba(var(--lv-g,198,161,91),0.5); }
 .qr-reserved-mark svg { width: 34px; height: 34px; opacity: 0.5; }
 
 /* ---- Proclamation / Preamble ceremonial page ---- */
 .page.ceremony { display: flex; flex-direction: column; justify-content: center; }
 .ceremony-eyebrow { font-family: 'Cinzel', 'Amiri', serif; font-size: 9pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-bright); margin: 0 0 14px; text-align: center; }
 .ceremony h2 { font-family: 'Cinzel', 'Amiri', serif; font-size: 21pt; color: var(--milk); text-align: center; margin: 0 0 26px; }
-.ceremony p { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 13.5pt; line-height: 1.7; color: rgba(247,238,223,0.9); text-align: center; margin: 0 0 16px; }
+.ceremony p { font-family: 'Cormorant Garamond', 'Amiri', serif; font-size: 13.5pt; line-height: 1.7; color: rgba(var(--lv-p3,247,238,223),0.9); text-align: center; margin: 0 0 16px; }
 .ceremony p.drop-cap { text-align: left; max-width: 4.6in; margin-left: auto; margin-right: auto; }
 .ceremony p.drop-cap::first-letter {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 40pt; line-height: 0.7; font-weight: 600;
   color: var(--gold-bright); float: left; margin: 6px 8px 0 0;
 }
 .ceremony .now-therefore {
-  font-style: italic; font-size: 14.5pt; color: var(--gold-bright); border-top: 1px solid rgba(233,206,138,0.4);
-  border-bottom: 1px solid rgba(233,206,138,0.4); padding: 18px 0; margin-top: 10px;
+  font-style: italic; font-size: 14.5pt; color: var(--gold-bright); border-top: 1px solid rgba(var(--lv-gb,233,206,138),0.4);
+  border-bottom: 1px solid rgba(var(--lv-gb,233,206,138),0.4); padding: 18px 0; margin-top: 10px;
 }
 
 /* ---- Execution page signature table: a light-on-dark variant of
@@ -247,10 +247,10 @@
 .execution-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-family: 'Cormorant Garamond', 'Amiri', serif; }
 .execution-table th {
   font-family: 'Cinzel', 'Amiri', serif; font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--gold-bright); text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(233,206,138,0.45);
+  color: var(--gold-bright); text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(var(--lv-gb,233,206,138),0.45);
 }
 .execution-table td {
-  padding: 22px 10px 8px; border-bottom: 1px solid rgba(247,238,223,0.25); color: rgba(247,238,223,0.92);
+  padding: 22px 10px 8px; border-bottom: 1px solid rgba(var(--lv-p3,247,238,223),0.25); color: rgba(var(--lv-p3,247,238,223),0.92);
   font-size: 11pt; text-align: left; min-width: 120px;
 }
 
@@ -272,7 +272,7 @@
   max-width: 5.4in; border-top: 1.5px solid var(--gold-bright); border-bottom: 1.5px solid var(--gold-bright);
   padding: 22px 0; margin: 0;
 }
-.part-index { font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10.5pt; color: rgba(247,238,223,0.6); margin-top: 20px; }
+.part-index { font-family: 'Cormorant Garamond', 'Amiri', serif; font-style: italic; font-size: 10.5pt; color: rgba(var(--lv-p3,247,238,223),0.6); margin-top: 20px; }
 
 /* ---- Table of contents (flowing light page) ---- */
 .toc-page { padding: 1in 0.95in 0.6in; background: var(--ivory); }
@@ -337,9 +337,9 @@ table.const-table th {
   border: 0.5pt solid var(--navy);
 }
 table.const-table.wide th { font-size: 6pt; padding: 5px 5px; }
-table.const-table td { padding: 6px 7px; border: 0.5pt solid rgba(198,161,91,0.35); vertical-align: top; color: var(--ink); line-height: 1.35; }
+table.const-table td { padding: 6px 7px; border: 0.5pt solid rgba(var(--lv-g,198,161,91),0.35); vertical-align: top; color: var(--ink); line-height: 1.35; }
 table.const-table.wide td { padding: 5px 5px; }
-table.const-table tr:nth-child(even) td { background: rgba(198,161,91,0.06); }
+table.const-table tr:nth-child(even) td { background: rgba(var(--lv-g,198,161,91),0.06); }
 
 /* ---- Schedules section ---- */
 .schedules-page { padding: 1in 0.95in 0.7in; background: var(--ivory); page-break-before: always; }

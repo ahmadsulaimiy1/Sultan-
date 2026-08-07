@@ -5,6 +5,16 @@
   var DEFAULTS = {
     textSize: 'medium',
     theme: 'royal',
+    livery: 'royal',
+    ornament: 'full',
+    corners: 'soft',
+    depth: 'standard',
+    grain: 'on',
+    cursorLight: 'on',
+    parallax: 'on',
+    revealStyle: 'rise',
+    measure: 'standard',
+    liveryPromptSeen: false,
     accent: 'royal-gold',
     readingMode: 'standard',
     textDensity: 'comfortable',
@@ -75,6 +85,15 @@
   function applyAccessibility(){
     var html = document.documentElement;
     html.setAttribute('data-pc-theme', prefs.theme);
+    html.setAttribute('data-pc-livery', prefs.livery);
+    html.setAttribute('data-pc-ornament', prefs.ornament);
+    html.setAttribute('data-pc-corners', prefs.corners);
+    html.setAttribute('data-pc-depth', prefs.depth);
+    html.setAttribute('data-pc-grain', prefs.grain);
+    html.setAttribute('data-pc-cursor', prefs.cursorLight);
+    html.setAttribute('data-pc-parallax', prefs.parallax);
+    html.setAttribute('data-pc-reveal', prefs.revealStyle);
+    html.setAttribute('data-pc-width', prefs.measure);
     html.setAttribute('data-pc-text', prefs.textSize);
     html.setAttribute('data-pc-motion', prefs.motion);
     html.setAttribute('data-pc-accent', prefs.accent);

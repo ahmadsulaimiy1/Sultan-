@@ -1,9 +1,37 @@
+<!-- The livery invitation. Shown once, on a visitor's first arrival,
+     and never again once they have answered it either way. It is a
+     genuine offer rather than a notice: the six swatches are live, so
+     the page recolours under the panel as the pointer moves across
+     them, and the choice is made by seeing rather than by reading. -->
+<div class="lvp-root" data-livery-prompt hidden>
+  <div class="lvp-scrim" data-lvp-scrim></div>
+  <div class="lvp-card" role="dialog" aria-modal="true" aria-labelledby="lvp-t" aria-describedby="lvp-d">
+    <span class="lvp-crest" aria-hidden="true"><img src="/assets/images/brand-mark.png" alt="" width="46" height="46" /></span>
+    <p class="lvp-eyebrow">Before you begin</p>
+    <h2 class="lvp-title" id="lvp-t">Dress the school in your own colour</h2>
+    <p class="lvp-desc" id="lvp-d">This site is published in six liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
+    <div class="lvp-grid" data-lvp-grid role="radiogroup" aria-label="Choose a livery">
+      <button type="button" data-value="royal" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
+      <button type="button" data-value="coffee"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="lvp-n">Coffee Brown</span></button>
+      <button type="button" data-value="sapphire"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="lvp-n">Sapphire Blue</span></button>
+      <button type="button" data-value="emerald"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="lvp-n">Emerald Green</span></button>
+      <button type="button" data-value="garnet"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="lvp-n">Garnet Red</span></button>
+      <button type="button" data-value="obsidian"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="lvp-n">Obsidian Platinum</span></button>
+    </div>
+    <div class="lvp-act">
+      <button type="button" class="lvp-go" data-lvp-accept>Read in this livery</button>
+      <button type="button" class="lvp-alt" data-lvp-dismiss>Keep the house livery</button>
+    </div>
+    <p class="lvp-foot">More settings &mdash; type size, reading mode, motion, prayer times and the rest &mdash; are in the <a href="#" data-pc-trigger-link>Personalisation Centre</a>.</p>
+  </div>
+</div>
+
 <div class="pc-root" data-personalisation>
   <div class="pc-overlay" data-pc-overlay hidden></div>
   <aside class="pc-drawer" data-pc-drawer hidden role="dialog" aria-modal="true" aria-labelledby="pc-title">
     <div class="pc-head institutional-frame">
       <div class="pc-head-id">
-        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="#E9CE8A" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <div>
           <h2 id="pc-title" class="pc-title">Personalisation Centre</h2>
           <p class="pc-sub">Sultan Hanafi Royal Schools</p>
@@ -97,6 +125,18 @@
             <button type="button" data-value="small" role="radio">Small</button>
             <button type="button" data-value="medium" role="radio" aria-checked="true" class="is-active">Medium</button>
             <button type="button" data-value="large" role="radio">Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option pc-option-livery">
+          <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
+          <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Warm &amp; traditional</span></button>
+            <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
+            <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
+            <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
+            <button type="button" data-value="obsidian" role="radio"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="pc-lv-name">Obsidian Platinum</span><span class="pc-lv-sub">Monochrome</span></button>
           </div>
         </div>
 
@@ -233,6 +273,77 @@
           <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
             <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
             <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ornament</span><p class="pc-option-desc">The engraved furniture — corner rules, travelling-light rings, guilloche, watermarks and letterhead rules. Reduce it for a plainer page; remove it for a document.</p></div>
+          <div class="pc-segmented" data-pc-set="ornament" role="radiogroup" aria-label="Ornament">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="restrained" role="radio">Restrained</button>
+            <button type="button" data-value="none" role="radio">None</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Corners</span><p class="pc-option-desc">Softened corners read as objects you could pick up; square ones read as printed matter.</p></div>
+          <div class="pc-segmented" data-pc-set="corners" role="radiogroup" aria-label="Corners">
+            <button type="button" data-value="soft" role="radio" aria-checked="true" class="is-active">Softened</button>
+            <button type="button" data-value="sharp" role="radio">Squared</button>
+            <button type="button" data-value="pill" role="radio">Rounded</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Depth</span><p class="pc-option-desc">How far the cards and panels stand off the page.</p></div>
+          <div class="pc-segmented" data-pc-set="depth" role="radiogroup" aria-label="Depth">
+            <button type="button" data-value="flat" role="radio">Flat</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="pronounced" role="radio">Pronounced</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Paper Grain</span><p class="pc-option-desc">A fine laid texture across the pale bands, the way a good stock is not perfectly smooth.</p></div>
+          <div class="pc-segmented" data-pc-set="grain" role="radiogroup" aria-label="Paper grain">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Raking Light</span><p class="pc-option-desc">The gilt highlight that follows the pointer across headings, rules and figures — the difference between gold-coloured and gilded.</p></div>
+          <div class="pc-segmented" data-pc-set="cursorLight" role="radiogroup" aria-label="Raking light">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Parallax Depth</span><p class="pc-option-desc">How far the layers drift against each other as the page scrolls.</p></div>
+          <div class="pc-segmented" data-pc-set="parallax" role="radiogroup" aria-label="Parallax depth">
+            <button type="button" data-value="off" role="radio">Off</button>
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="deep" role="radio">Deep</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">How Sections Arrive</span><p class="pc-option-desc">The movement a band makes as it comes into view.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="revealStyle" role="radiogroup" aria-label="Reveal style">
+            <button type="button" data-value="rise" role="radio" aria-checked="true" class="is-active">Rise</button>
+            <button type="button" data-value="unveil" role="radio">Unveil</button>
+            <button type="button" data-value="settle" role="radio">Settle</button>
+            <button type="button" data-value="none" role="radio">Still</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Measure</span><p class="pc-option-desc">The width of the reading column. A narrower measure is easier on the eye; a wider one fits more to the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="measure" role="radiogroup" aria-label="Measure">
+            <button type="button" data-value="narrow" role="radio">Narrow</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
           </div>
         </div>
 
