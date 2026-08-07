@@ -79,11 +79,11 @@
     --font-body:'Inter','Cairo',sans-serif;
   }
   :root[data-pc-theme="dark"]{
-    --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.66);
+    --surface:#1C140C; --on-surface:#F1E7D6; --on-surface-soft:rgba(241,231,214,0.78);
     --surface-alt:#1C140C; --surface-tertiary:#1C140C; --surface-warm:#1C140C;
   }
   :root[data-pc-theme="light"]{
-    --surface:#FFFFFF; --on-surface:#241B12; --on-surface-soft:rgba(36,27,18,0.6);
+    --surface:#FFFFFF; --on-surface:#241B12; --on-surface-soft:rgba(36,27,18,0.80);
     --surface-alt:#FFFFFF; --surface-tertiary:#FFFFFF; --surface-warm:#FFFFFF;
   }
 

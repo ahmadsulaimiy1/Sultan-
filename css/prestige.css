@@ -3389,7 +3389,7 @@ html[data-pc-theme="light"] .policies > .wrap .eyebrow,
 html[data-pc-theme="light"] section.contact .eyebrow,
 html[data-pc-theme="light"] .digital-campus-teaser .eyebrow,
 html[data-pc-theme="light"] .governance .eyebrow,
-html[data-pc-theme="light"] .adhkar-teaser .eyebrow{color:#8A6A2F!important;}
+html[data-pc-theme="light"] .adhkar-teaser .eyebrow{color:#74551F!important;}
 
 /* Cards inside a pearl band become white plates rather than glass. */
 html[data-pc-theme="light"] .pr-section.is-royal .pr-card,
@@ -3471,15 +3471,26 @@ html[data-pc-theme="light"] footer a{color:var(--pearl-ink);}
 html[data-pc-theme="light"] footer .fd-item{
   background:linear-gradient(168deg,#FFFDF8,#F6EEDF);border-color:rgba(198,161,91,.26);}
 html[data-pc-theme="light"] footer .fd-item svg{color:#8A6A2F;}
-html[data-pc-theme="light"] .fm-overlay-title,
-html[data-pc-theme="light"] .fm-overlay-sub,
-html[data-pc-theme="light"] .fm-campus-name,
-html[data-pc-theme="light"] .fm-campus-tag,
-html[data-pc-theme="light"] .fm-lede,
+/* The footer's map block is a photograph with a near-black overlay, and
+   it stays a photograph in the Clear edition — a pearl page does not
+   make a satellite image pale. Everything laid over it therefore keeps
+   the pale ink it has in the Royal edition; the earlier Clear pass swept
+   these in with the rest of the footer and left the campus name, the
+   lede and the visit button at 1.2:1 to 2.0:1 on the map. Only the parts
+   of the footer that really do turn pearl take the dark ink. */
 html[data-pc-theme="light"] .fs-copy,
 html[data-pc-theme="light"] .foot-seal-badge,
 html[data-pc-theme="light"] .foot-contact-item{color:var(--pearl-ink-2)!important;}
-html[data-pc-theme="light"] .fm-eyebrow{color:#8A6A2F!important;}
+html[data-pc-theme="light"] .fm-overlay-title,
+html[data-pc-theme="light"] .fm-overlay-sub,
+html[data-pc-theme="light"] .fm-campus-name{color:#FFF6E4!important;}
+html[data-pc-theme="light"] .fm-campus-tag,
+html[data-pc-theme="light"] .fm-lede{color:rgba(243,232,212,.82)!important;}
+html[data-pc-theme="light"] .fm-btn{color:#FFF6E4!important;border-color:rgba(233,206,138,.6)!important;}
+/* …except the primary, which brings its own gold ground with it. */
+html[data-pc-theme="light"] .fm-btn.is-primary{color:#241809!important;}
+html[data-pc-theme="light"] .fm-eyebrow{color:var(--pr-gold-bright,#E9CE8A)!important;}
+html[data-pc-theme="light"] .foot-dash-eyebrow{color:#7C5E28;}
 
 /* ---- The nav dropdowns, in pearl ---- */
 html[data-pc-theme="light"] .nav-drop-panel{
@@ -4050,3 +4061,298 @@ html[data-pc-theme="light"] .quote-panel .who{color:#F3E6C8;}
 html[data-pc-theme="light"] .gateway-footnote,
 html[data-pc-theme="light"] .gateway-footnote p{color:var(--pearl-ink-2,#57472F);}
 html[data-pc-theme="light"] .gateway-footnote a{color:#8A6A2F;}
+
+/* ===================================================================
+   THE CLEAR EDITION — THE MASTHEAD (v4.14)
+   -------------------------------------------------------------------
+   The Clear edition turned every band of the page pearl but left the
+   masthead alone, and the masthead is written for near-black: the
+   wordmark, the eight section tiles and the quick rail beneath them
+   were all ivory. On the pearl ground that is white on cream — the
+   whole of the site's navigation, invisible, on every page.
+
+   The wordmark is the awkward one. It is not coloured type at all: it
+   is a white-to-gold gradient clipped to the glyphs, so setting a
+   colour on it does nothing while -webkit-text-fill-color stays
+   transparent. It takes the same shimmer, run between coffee and gold
+   instead of between white and gold, so the letters keep their sweep.
+   =================================================================== */
+html[data-pc-theme="light"] .brand-text .line1{
+  background-image:linear-gradient(100deg,#33281C 30%,#8A6A2F 45%,#33281C 60%);
+  -webkit-text-fill-color:transparent;color:transparent;}
+@media (prefers-reduced-motion:reduce){
+  html[data-pc-theme="light"] .brand-text .line1{
+    background:none;-webkit-text-fill-color:#33281C;color:#33281C;}
+}
+html[data-pc-theme="light"] .brand-text .line2{color:#8A6A2F;}
+
+/* The eight section tiles and their labels. */
+html[data-pc-theme="light"] .nav-drop-trigger,
+html[data-pc-theme="light"] .nav-drop-trigger span,
+html[data-pc-theme="light"] .navlinks > a,
+html[data-pc-theme="light"] .mnr-item,
+html[data-pc-theme="light"] .mnr-item span{color:#33281C;}
+html[data-pc-theme="light"] .nav-drop.is-active > .nav-drop-trigger{color:#8A6A2F;}
+
+/* The quick rail under them — Start Admission, Adhkār Centre, Prayer
+   Times, Contact. The gold CTA at its head keeps its dark ink because
+   it keeps its gold ground. */
+html[data-pc-theme="light"] .mqr-item{color:#33281C;}
+html[data-pc-theme="light"] .mqr-item svg,
+html[data-pc-theme="light"] .mnr-item svg{color:#8A6A2F;}
+html[data-pc-theme="light"] .mqr-item:hover{color:#7C5E28;background:rgba(198,161,91,.12);}
+html[data-pc-theme="light"] .mqr-item.mqr-cta,
+html[data-pc-theme="light"] .mqr-item.mqr-cta svg{color:#241809;}
+
+/* The notice ribbon and the breadcrumb trail sit in the same chrome. */
+html[data-pc-theme="light"] .ann-ribbon,
+html[data-pc-theme="light"] .ann-ribbon *,
+html[data-pc-theme="light"] .pr-crumbs,
+html[data-pc-theme="light"] .pr-crumbs a{color:#4A3D2C;}
+html[data-pc-theme="light"] .pr-crumbs [aria-current]{color:#33281C;}
+
+/* The section-tile ribbon carries a 16% black wash so its tiles read
+   against the near-black masthead. On the pearl masthead that wash is
+   the grey haze visible behind the tiles; the Clear edition takes a
+   warm hairline-separated band instead. */
+html[data-pc-theme="light"] .mobile-nav-ribbon{
+  background:linear-gradient(180deg,rgba(198,161,91,.10),rgba(198,161,91,.04));
+  border-top:1px solid rgba(198,161,91,.24);
+  border-bottom:1px solid rgba(198,161,91,.24);}
+html[data-pc-theme="light"] .mnr-item{
+  background:linear-gradient(168deg,#FFFFFF,#F7F0E2);
+  border-color:rgba(198,161,91,.32);}
+html[data-pc-theme="light"] .mnr-item:hover,
+html[data-pc-theme="light"] .mnr-item:active{
+  background:linear-gradient(168deg,#FFFDF6,#F2E7D2);border-color:rgba(198,161,91,.6);}
+html[data-pc-theme="light"] .mobile-quick-row{
+  background:linear-gradient(180deg,rgba(255,253,248,.9),rgba(246,238,223,.9));
+  border-bottom:1px solid rgba(198,161,91,.24);}
+
+
+/* ---- The Clear edition, remaining inversions ------------------------
+   Three families of element are written for a dark band and were left
+   pale when their band turned pearl: the on-dark link modifier, the
+   Digital Campus tiles' sign-in links, and the governance ledger. And
+   the soft body ink, which is a 74% wash of the coffee, sits lighter on
+   pearl than on ivory — 4.38:1 there — so the Clear edition takes its
+   own, slightly deeper cut. */
+html[data-pc-theme="light"]{--ink-soft:rgba(42,32,22,0.82);}
+html[data-pc-theme="light"] .text-link.on-dark{color:#7C5E28;}
+html[data-pc-theme="light"] .text-link.on-dark:hover{color:#33281C;}
+html[data-pc-theme="light"] .dc-tile-link{color:#7C5E28;}
+html[data-pc-theme="light"] .dc-tile h4{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .dc-tile p{color:var(--pearl-ink-2,#57472F);}
+/* The governance band keeps its dark plate in the Clear edition — it is
+   a watermarked crest on a deep ground, not a pearl band — so the
+   ledger keeps the pale ink it has in the Royal edition. */
+html[data-pc-theme="light"] .ledger .lg-name{color:#FFF6E4;}
+html[data-pc-theme="light"] .ledger .lg-cred{color:rgba(243,232,212,.8);}
+html[data-pc-theme="light"] .ledger .lg-role{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The pearl ground is lighter than the ivory, so the eyebrow's gold has
+   to go a step deeper again to hold 4.5:1 on it. */
+html[data-pc-theme="light"] .eyebrow,
+html[data-pc-theme="light"] .pr-eyebrow,
+html[data-pc-theme="light"] .academics > .wrap .eyebrow,
+html[data-pc-theme="light"] .policies > .wrap .eyebrow,
+html[data-pc-theme="light"] .foundation .eyebrow{color:#7C5E28;}
+
+/* The hero keeps its photograph in the Clear edition — a pearl page does
+   not bleach a photograph — so its eyebrow keeps the bright gold, and
+   the blanket rule above must not reach it. */
+html[data-pc-theme="light"] .hero .eyebrow,
+html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
+html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
+html[data-pc-theme="light"] .gateway-eyebrow,
+html[data-pc-theme="light"] .governance .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The breadcrumb trail's current page, on the pearl chrome. */
+html[data-pc-theme="light"] .breadcrumbs span,
+html[data-pc-theme="light"] .breadcrumbs [aria-current]{color:#33281C;}
+html[data-pc-theme="light"] .breadcrumbs a{color:#63481B;}
+
+/* The governance ledger stands on a watermarked plate, not on flat ink;
+   at 80% the credential line measured 3.58:1 against the lit part of it.
+   Full strength, and a shadow so the reading holds over the watermark. */
+html[data-pc-theme="light"] .ledger .lg-name,
+.ledger .lg-name{color:#FFFDF6;text-shadow:0 1px 8px rgba(10,6,1,.8);}
+html[data-pc-theme="light"] .ledger .lg-cred,
+.ledger .lg-cred{color:rgba(250,243,229,.95);text-shadow:0 1px 8px rgba(10,6,1,.8);}
+
+/* ===================================================================
+   THE CONTACT CENTRE, IN THE CLEAR EDITION (v4.15)
+   -------------------------------------------------------------------
+   The Contact Centre was built as a dark band: a calling card, an hours
+   table, a twelve-office directory and three forms, all set in pale ink
+   on near-black. The Clear edition turns the band pearl but never
+   inverted any of it, so the whole page — every office name, every
+   address, every form label — measured between 1.0:1 and 1.3:1. This is
+   the inversion the band needed.
+   =================================================================== */
+html[data-pc-theme="light"] .ct-card-name,
+html[data-pc-theme="light"] .ct-office h3,
+html[data-pc-theme="light"] .ct-form-card h3,
+html[data-pc-theme="light"] .ct-dir-grid h3{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .ct-card-sub,
+html[data-pc-theme="light"] .ct-k,
+html[data-pc-theme="light"] .ct-hours-list span,
+html[data-pc-theme="light"] .ct-form-n,
+html[data-pc-theme="light"] .ct-office .tag{color:#7C5E28;}
+html[data-pc-theme="light"] .ct-v,
+html[data-pc-theme="light"] .ct-hours-list em,
+html[data-pc-theme="light"] .ct-office p,
+html[data-pc-theme="light"] .ct-form-card p,
+html[data-pc-theme="light"] .ct-dir-grid p,
+html[data-pc-theme="light"] .ct-dir-grid li{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .ct-v a{color:#63481B;border-bottom-color:rgba(156,122,60,.42);}
+html[data-pc-theme="light"] .ct-v a:hover{color:#33281C;border-bottom-color:#7C5E28;}
+html[data-pc-theme="light"] .ct-go,
+html[data-pc-theme="light"] .ct-office-go{color:#7C5E28;}
+html[data-pc-theme="light"] .ct-card,
+html[data-pc-theme="light"] .ct-hours,
+html[data-pc-theme="light"] .ct-office,
+html[data-pc-theme="light"] .ct-form-card{
+  background:linear-gradient(168deg,#FFFFFF,#F6EEDF);
+  border-color:var(--pearl-line,rgba(198,161,91,.34));}
+html[data-pc-theme="light"] .ct-card-head{
+  background:linear-gradient(120deg,rgba(198,161,91,.16),rgba(198,161,91,.06));}
+html[data-pc-theme="light"] .ct-hours-list li{border-bottom-color:rgba(198,161,91,.24);}
+html[data-pc-theme="light"] section.contact label,
+html[data-pc-theme="light"] section.contact legend{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] section.contact input,
+html[data-pc-theme="light"] section.contact textarea,
+html[data-pc-theme="light"] section.contact select{
+  background:#FFFFFF;color:var(--pearl-ink,#33281C);
+  border-color:var(--pearl-line,rgba(198,161,91,.34));}
+
+/* The eyebrow, one step deeper again on the palest pearl. */
+html[data-pc-theme="light"] .eyebrow,
+html[data-pc-theme="light"] .pr-eyebrow{color:#74551F;}
+html[data-pc-theme="light"] .hero .eyebrow,
+html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
+html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
+html[data-pc-theme="light"] .gateway-eyebrow,
+html[data-pc-theme="light"] .governance .eyebrow{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The ledger row gets a plate, so its names are read against a known
+   ground rather than against whichever part of the crest watermark
+   happens to be behind them. */
+
+
+
+/* The form labels and their optional markers live in .ct-form-card, not
+   in a section that matched the earlier selector; on the pearl card they
+   kept the bright gold, at 1.38:1. */
+html[data-pc-theme="light"] .ct-form-card label,
+html[data-pc-theme="light"] .ct-forms label{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .ct-opt{color:#74551F;}
+html[data-pc-theme="light"] .ct-form-card input,
+html[data-pc-theme="light"] .ct-form-card textarea,
+html[data-pc-theme="light"] .ct-form-card select{
+  background:#FFFFFF;color:var(--pearl-ink,#33281C);
+  border-color:var(--pearl-line,rgba(198,161,91,.34));}
+
+/* The ledger row's plate sits over the crest watermark, and in the lit
+   part of the watermark the names over it measured 4.25:1. An inset
+   shadow deepens the plate without replacing the gradient it already
+   carries — overriding background-image here turns every .el-on-dark
+   card translucent and costs far more than it gains. */
+/* background-color composes underneath whatever translucent gradient
+   the card already carries, so the plate deepens without any of its
+   own treatment being replaced. */
+.ledger-row{background-color:rgba(8,5,1,.58)!important;}
+
+/* ---- The Clear edition: the last of the dark-band furniture ---------
+   Everything below is written for a near-black band and was left as it
+   was when the band turned pearl. Measured on /academics/, /about/ and
+   /digital-campus/ at between 1.0:1 and 1.5:1. */
+
+/* The arrival card is a milk plate in this edition, whatever it is in
+   the Royal one, so its eyebrow takes the paper's gold, not the band's. */
+html[data-pc-theme="light"] .pr-arrival.pr-milklight .pr-eyebrow{color:#74551F;}
+
+/* The seven-stage pathway. The band-scoped rules above name
+   .pr-section.is-royal, which is a pearl band in this edition, so these
+   have to carry the same scope to reach them. */
+html[data-pc-theme="light"] .pr-path-age,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-path-age,
+html[data-pc-theme="light"] .chapter-band-alt .pr-path-age{color:#74551F;}
+html[data-pc-theme="light"] .pr-path-t,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-path-t,
+html[data-pc-theme="light"] .chapter-band .pr-path-t,
+html[data-pc-theme="light"] .chapter-band-alt .pr-path-t{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .pr-path-d,
+html[data-pc-theme="light"] .pr-section.is-royal .pr-path-d,
+html[data-pc-theme="light"] .chapter-band-alt .pr-path-d{color:var(--pearl-ink-2,#57472F);}
+
+/* The ghost button — an outline with no ground of its own, so it takes
+   whatever is behind it. Inside .pr-cta that is still the dark plate,
+   which keeps its own treatment in this edition too. */
+html[data-pc-theme="light"] .pr-btn.is-ghost{
+  color:#63481B;border-color:rgba(156,122,60,.6);}
+html[data-pc-theme="light"] .pr-btn.is-ghost:hover{
+  background:rgba(198,161,91,.14);color:#33281C;}
+html[data-pc-theme="light"] .pr-cta .pr-btn.is-ghost{
+  color:var(--pr-gold-bright,#E9CE8A);border-color:rgba(233,206,138,.6);}
+html[data-pc-theme="light"] .pr-cta .pr-btn.is-ghost:hover{
+  background:rgba(233,206,138,.12);color:#FFF6DF;}
+
+/* Tags and inline links on the pearl plates. */
+html[data-pc-theme="light"] .tag{color:#5F4518;}
+html[data-pc-theme="light"] .pr-section.is-royal .tag,
+html[data-pc-theme="light"] .chapter-band-alt .tag{color:#5F4518;}
+html[data-pc-theme="light"] .pr-section.is-royal .text-link,
+html[data-pc-theme="light"] .chapter-band-alt .text-link,
+html[data-pc-theme="light"] section.contact .text-link,
+html[data-pc-theme="light"] .digital-campus-teaser .text-link,
+html[data-pc-theme="light"] .adhkar-teaser .text-link{color:#63481B;}
+
+/* Labels drawn inside SVG diagrams follow the same rule as type. */
+html[data-pc-theme="light"] .pr-section.is-royal svg text,
+html[data-pc-theme="light"] .pr-diagram text{fill:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .pr-cta svg text{fill:#FFF6DF;}
+
+/* The hero keeps its photograph in this edition, and so does everything
+   standing on it — including the ghost buttons in its cue row. */
+html[data-pc-theme="light"] .pr-hero .pr-btn.is-ghost,
+html[data-pc-theme="light"] .hero .pr-btn.is-ghost,
+html[data-pc-theme="light"] .pr-hero-cues .pr-btn.is-ghost{
+  color:var(--pr-gold-bright,#E9CE8A);border-color:rgba(233,206,138,.6);}
+html[data-pc-theme="light"] .pr-hero .pr-btn.is-ghost:hover,
+html[data-pc-theme="light"] .pr-hero-cues .pr-btn.is-ghost:hover{
+  background:rgba(233,206,138,.14);color:#FFF6DF;}
+/* SVG labels drawn on the dark diagram plates keep their pale fill. */
+html[data-pc-theme="light"] .dc-diagram text,
+html[data-pc-theme="light"] .pr-hero svg text{fill:#FFF6DF;}
+
+/* The Digital Campus network diagram carries its own dark plate inside
+   the band, so its labels keep the pale fill in this edition too. */
+/* The diagram's outer nodes stand on the band itself, which is pearl in
+   this edition, so their labels take the page's ink. Only the hub is a
+   dark medallion, and it is handled separately below. The node rings and
+   the links between them also have to be drawn in a gold dark enough to
+   be seen on pearl rather than the wash that works on near-black. */
+html[data-pc-theme="light"] .pr-section.is-royal .dc-net text,
+html[data-pc-theme="light"] .pr-section.is-royal .dc-net svg text,
+html[data-pc-theme="light"] .dc-net text{fill:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .pr-section.is-royal .dc-net text.sub,
+html[data-pc-theme="light"] .dc-net text.sub{fill:#7C5E28;}
+html[data-pc-theme="light"] .dc-net .node{fill:rgba(255,255,255,.7);stroke:rgba(156,122,60,.65);}
+html[data-pc-theme="light"] .dc-net .link{stroke:rgba(156,122,60,.5);}
+html[data-pc-theme="light"] .dc-net .ring{stroke:rgba(156,122,60,.34);}
+html[data-pc-theme="light"] .dc-net .pulse{fill:#8A6A2F;}
+
+/* The hub is a gradient medallion that runs from gold to coffee, and it
+   turns under the ring animation, so no single fill is right for the two
+   words at its centre — measured 1.89:1 one way and 1.05:1 the other.
+   The glyphs are drawn light with the stroke painted first, which puts a
+   dark halo around each letter: readable on the gold end and on the
+   coffee end alike, and it reads as struck lettering rather than as a
+   compromise. */
+.dc-net text.hubname,
+html[data-pc-theme="light"] .pr-section.is-royal .dc-net text.hubname,
+html[data-pc-theme="light"] .dc-net text.hubname{
+  fill:#FFF8EA;font-weight:700;
+  stroke:rgba(8,5,1,.92);stroke-width:3.4px;stroke-linejoin:round;
+  paint-order:stroke fill;}
