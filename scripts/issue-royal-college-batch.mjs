@@ -220,11 +220,24 @@ ROLLS.QUR = [
   // (Olamiposi) and أولاديميجي (Oladimeji) were both proposed on the approved
   // أولانريوجو and then ruled on. This follows the same pattern and is HELD
   // under the same rule — proposed here, printed only once he rules.
+  //
+  // RULED, 2026-08-07: عائشة أمشالوا حنفي.
+  //
+  // Note what the ruling did, because it is the reason the proposal existed.
+  // This pipeline proposed أوموشاليوا, built on the approved أولاميبوسي /
+  // أولاديميجي pattern. The Founder ruled أمشالوا — a DIFFERENT form. His
+  // governs, verbatim, and the proposal is recorded beside it rather than
+  // quietly replaced: a family's own spelling of its own name is not a pattern
+  // to be extrapolated, and this is the case that proves it. Had the batch
+  // printed on the proposal, a girl's certificate would have carried a name
+  // her family does not use.
   { en: 'Aisha Omoshalewa Anofi', sex: 'female', awardVariant: 'JUZ10',
-    arProposal: 'عائشة أوموشاليوا حنفي',
-    arNote: 'عائشة and حنفي are already approved (IBT register). أوموشاليوا is '
-      + 'proposed on the approved أولاميبوسي / أولاديميجي pattern and awaits the '
-      + 'Founder\u2019s ruling.' },
+    ar: 'عائشة أمشالوا حنفي',
+    arRuling: { date: '2026-08-07', decision: 'Arabic name ruled by the Founder.',
+      pipelineProposed: 'عائشة أوموشاليوا حنفي',
+      note: 'The Founder\u2019s form differs from the proposal and governs. '
+        + 'عائشة and حنفي were already approved on the Ibtida\u2019iyyah register; '
+        + 'the middle name was his to give and he gave it.' } },
 ];
 
 const ROLL = ROLLS[BATCH];
@@ -524,6 +537,7 @@ for (const [i, student] of roll.entries()) {
     matchedAs: student.matchedAs || null,
     founderRuling: student.founderRuling || null,
     nameAr: student.ar || null,
+    arRuling: student.arRuling || null,
     awardVariant: student.awardVariant || null,
     gradeEn: GRADE_EN,
     gradeAr: GRADE_AR,
