@@ -1,6 +1,7 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026
+**Date:** 8 August 2026 · **Revision 2** — extended after the Registrar's
+Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
 **Sources of truth used, in order of authority:**
@@ -11,6 +12,11 @@ certificate for the Class of 2026.
    Founder's lists of 7 August 2026, with his rulings recorded beside them.
 3. The school's own **Programme of Event** (`Programme_of_Event1.docx`, supplied
    7 August 2026). Authoritative on the running order.
+4. The Registrar's **Notice of the 2026 Combined Graduation Ceremony**,
+   2 July 2026 (`DOC-20260703-WA0002.pdf`). The notice sent to parents.
+   Authoritative on the published time, the venue, the fees and the guest
+   allocation — **and it carries a roll of graduands that does not agree with
+   the certificate rolls.** See §8.
 
 **Verdict: 6 defects found and corrected. 4 of the 6 were mine. 27 of the 40
 certificates cannot be minted in this environment and are blocked on one input.**
@@ -242,3 +248,209 @@ now follows them exactly.
   at 192 DPI, and the corrected order panel read.
 - Cross-edition diff between the press PDF and `word/document.xml` re-run: every
   graduand, guest and running-order item present in both.
+
+---
+
+# REVISION 2 — the Registrar's Notice of 2 July 2026
+
+## 8 · Two official rolls of the same ceremony, and they disagree
+
+This is the most serious finding in the whole audit, and it is not a defect in
+anything I built. **The institution holds two official rolls of the Class of
+2026 and they name different children.**
+
+| | Registrar's Notice, 2 July | Certificate rolls, 6–7 August |
+|---|---|---|
+| Categories | **seven** (adds *Islamiyyah (Tamyidi)*) | six |
+| Awards | **45** | 40 |
+| Distinct names | 35 | 34 |
+
+```
+
+  REGISTRAR’S NOTICE, 2 JULY 2026        vs        THE ROLLS OF 6–7 AUGUST 2026
+  ────────────────────────────────────────────────────────────────────────────
+  COLUMN                  → PROG   JUL   AUG   STATE
+  Basic 5                → PRY      6     7   DIFFERENT PEOPLE
+  JSS 3                  → JSS     15    13   DIFFERENT PEOPLE
+  SSS 3                  → SS       4     4   same people, spellings differ
+  Quran college          → QUR      4     3   DIFFERENT PEOPLE
+  Islamiyyah (Tamyidi)   → —        2     0   NO SUCH CERTIFICATE PROGRAMME
+  Ibtidaiyah             → IBT      9     7   DIFFERENT PEOPLE
+  Idadiyah               → IDD      5     6   DIFFERENT PEOPLE
+                                   45    40
+
+  ── ON THE REGISTRAR’S ROLL, ON NO CERTIFICATE ROLL ─────────────────────────
+     Each of these is a child who would receive NO certificate for that award.
+     Basic 5                Naheemah Ismail
+     JSS 3                  Allison Ganiyah
+     JSS 3                  Anisa Jokumba
+     JSS 3                  Fareedah Aliu
+     JSS 3                  Fateemah Ibrahim
+     JSS 3                  Jubril Lawal
+     JSS 3                  Muhammad Ismail
+     Quran college          Sofiah Anofi
+     Quran college          Zainab Anofi
+     Islamiyyah (Tamyidi)   Abdulbasit Adedokun
+     Islamiyyah (Tamyidi)   Muhammad fatih
+     Ibtidaiyah             Ameerah Abdulhafeez
+     Ibtidaiyah             Ashrof Ojewumi
+     Ibtidaiyah             Fareedah Aliu
+     Ibtidaiyah             Muhammad Ismail
+     Ibtidaiyah             Naheemah Ismaeel
+     Idadiyah               Balogun Yaseer
+     Idadiyah               Basit Jabarr
+
+  ── ON A CERTIFICATE ROLL, ON NO REGISTRAR COLUMN ───────────────────────────
+     Each of these is an award the Registrar’s notice does not record.
+     Basic 5                Naheemah Ismai Seriki
+     Basic 5                Al-ameen Abidemi Jokomba
+     JSS 3                  Muhammad Ismail Seriki
+     JSS 3                  Fatimah Desire Ibrahim
+     JSS 3                  Faridah Aliu
+     JSS 3                  Anisa Opeyemi Jokomba
+     Quran college          Zaynab Zakariya Anofi
+     Ibtidaiyah             Abdulbasit Adedokun  ← ALREADY MINTED AND PUBLISHED
+     Ibtidaiyah             Naheemah Ismail  ← ALREADY MINTED AND PUBLISHED
+     Ibtidaiyah             Ashrof Akorede  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Muhammad Ismail Seriki  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Faridah Ayomide Aliu  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Abdulbasit Amobi Jabarr  ← ALREADY MINTED AND PUBLISHED
+
+  ── SAME PERSON, DIFFERENT SPELLING ─────────────────────────────────────────
+     The certificate spelling is engraved and hashed into its number.
+     PRY   Registrar: Ashraf Ojewumi             Certificate: Ashraf Korede Ojewumi
+     PRY   Registrar: Imran Adegoke              Certificate: Imran Iremide Adegoke
+     JSS   Registrar: Hameedah Ojewumi           Certificate: Hameedah Adebimpe Ojewumi
+     SS    Registrar: Abdulbasit Jabarr          Certificate: Abdulbasit Amobi Jabarr
+     QUR   Registrar: Aisha Anofi                Certificate: Aisha Omoshalewa Anofi
+     QUR   Registrar: Baqi Anofi                 Certificate: Baqi Olamiposi Anofi
+     IBT   Registrar: Hameedah Ojewumi           Certificate: Hameedah Adebimpe Ojewumi  [MINTED]
+     IDD   Registrar: Abdullah Anofi             Certificate: Abdullah Oladimeji Anofi  [MINTED]
+     IDD   Registrar: Baqi Anofi                 Certificate: Baqi Olamiposi Anofi  [MINTED]
+
+  ── POSSIBLY THE SAME CHILD UNDER TWO FAMILY NAMES ──────────────────────────
+     Given name matches; family name does not. Not resolved here — but if any
+     of these IS one child, a permanent record carries the wrong name.
+     PRY   Registrar: Naheemah Ismail          Certificate: Naheemah Ismai Seriki
+     JSS   Registrar: Anisa Jokumba            Certificate: Anisa Opeyemi Jokomba
+     JSS   Registrar: Muhammad Ismail          Certificate: Muhammad Ismail Seriki
+     IBT   Registrar: Ashrof Ojewumi           Certificate: Ashrof Akorede  ← ONE OF THESE IS ALREADY MINTED
+     IBT   Registrar: Naheemah Ismaeel         Certificate: Naheemah Ismail  ← ONE OF THESE IS ALREADY MINTED
+
+  Registrar’s notice: 45 awards · 35 distinct names · 35 distinct children if short forms are merged.
+  Certificate rolls:  40 awards · 34 distinct names · 30 distinct children if short forms are merged.
+  The certificate system mints one permanent Student ID per DISTINCT NAME.
+
+  THIS SCRIPT RESOLVES NOTHING. Both documents are official. The later one
+  carries the Founder’s written rulings and has already been minted for two
+  stages; the earlier one is the notice the parents were sent. Which governs
+  is a ruling for the Founder and the Registrar, and it must be made before
+  the four outstanding batches are signed.
+```
+
+### What each difference would cost
+
+- **18 children are on the Registrar's roll and on no certificate roll.** If
+  the July notice is right, each of them attends their own graduation and
+  receives nothing.
+- **13 awards are on a certificate roll and on no Registrar column** — and
+  **six of those are already minted and published** (Ibtidā'iyyah and
+  I'dādiyyah). If the July notice is right, six certificates have already been
+  issued that should not have been, and they would have to be revoked and
+  re-issued.
+- **There is no Tamyīdī certificate anywhere in this institution's system.**
+  The Registrar names two children under *Islamiyyah (Tamyidi)*; no such award
+  exists in `PROGRAMMES` or `RC_PROGRAMMES`, no wording has ever been approved
+  for it, and no serial range is reserved. If those two are to receive
+  certificates, an award has to be created and worded first — that is a
+  Founder's decision about what the institution confers, not a template edit.
+- **Two children may be carrying the wrong family name on a permanent record.**
+  The Ibtidā'iyyah batch is minted. It engraves **Ashrof Akorede**; the
+  Registrar's roll for the same stage says **Ashrof Ojewumi**, and the Primary
+  roll says **Ashraf Korede Ojewumi**. If these are one child, a certificate
+  already in existence carries his middle name where his family name belongs.
+  The same pattern applies to **Naheemah Ismail / Naheemah Ismaeel /
+  Naheemah Ismai Seriki**.
+
+### What I did about it
+
+Nothing to the rolls. **I changed no name, added no child and removed none.**
+Choosing between two official documents about who graduated is not a decision
+this pipeline may make: guessing wrong either denies a child a certificate at
+their own graduation, or confers an award on a child who did not earn it.
+
+What I built instead is `scripts/reconcile-registrar-roll.mjs`, which
+transcribes the Registrar's roll verbatim, diffs it against the certificate
+rolls, and prints every difference with its consequence. It resolves nothing
+and can be re-run after any ruling.
+
+**This blocks the four outstanding batches.** Minting JSS, SS, PRY and QUR now
+would mint the August set, and if the July set governs, 27 certificates would be
+wrong on the day they were handed out.
+
+---
+
+## 9 · Three more of my errors, corrected — all evidenced by the notice
+
+### 9.1 · The venue was wrong
+
+The notice says **"Venue: School Hall"**, and again in prose: *"The ceremony
+will be held in the school hall."* Both editions printed **School Grounds**,
+which appears in no school document. Corrected to **School Hall** on the face
+and on the Lecture panel.
+
+### 9.2 · The published time was wrong
+
+The notice publishes the ceremony to parents as **10:00 a.m. – 3:00 p.m.** The
+face printed 10:00 a.m. – 2:00 p.m., computed from the last item in the running
+order. Both facts are true and both now print: **the window on the face
+(10:00 – 3:00, as parents were told), the items on the order panel (10:05 to
+2:00, as the school scheduled them).** This closes the open question about the
+closing time — 3 p.m. was never wrong; it is the hall booking, not the last item.
+
+### 9.3 · The school's own motto was displaced
+
+The letterhead carries **"Motto: Learning Today, Leading Tomorrow."** The back
+panel printed the ceremony tagline in the position a reader takes the motto to
+be, so the publication misrepresented the institution to itself. The back panel
+now carries the real motto; the ceremony tagline stays on the face, where it
+belongs.
+
+---
+
+## 10 · One open question closed, one new one opened
+
+**Closed — the apostrophe.** Both official documents write **`Sa'ad Sanusi`**
+with U+0027. The Registrar's notice and the Founder's roll agree, and the
+programme now matches both. Nothing further is needed.
+
+**New — the telephone number.** Two official school documents give two
+different numbers:
+
+| Document | Number |
+|---|---|
+| Programme of Event, 7 August | `+234 (0) 807 374 7650` |
+| Registrar's Notice, 2 July | `+234 802 456 7452` |
+
+The programme prints the first, from the more recent document. **Which is the
+school's line?** It appears on the back panel of four hundred programmes.
+
+**Still open — the domain.** Both letterheads read `shroyalschools.ng`. Every
+QR, every verification URL and the live site are `.com`. Now confirmed twice
+from the school's own stationery, and still unruled.
+
+---
+
+## 11 · Revised standing of the roll-out
+
+| | |
+|---|---|
+| Certificates issued and published | **13** (Ibtidā'iyyah 7, I'dādiyyah 6) — **six of them contested by the July roll** |
+| Certificates prepared, not minted | **27** (JSS 13, PRY 7, SS 4, QUR 3) |
+| Blocked on the signing key | all 27 |
+| **Blocked on a ruling about who is on the roll** | **all 27, and possibly 6 already issued** |
+| Children on the July roll with no award defined at all | **2** (Tamyīdī) |
+
+The key alone is no longer the only blocker. Even with the key in hand, minting
+now would commit the August roll permanently. **The roll must be ruled on
+first.**

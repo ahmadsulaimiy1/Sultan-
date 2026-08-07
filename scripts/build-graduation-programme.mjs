@@ -190,7 +190,20 @@ const CEO_WORD = [
   + 'are its clearest evidence.',
 ];
 
+// The school's own motto, from the letterhead of the Registrar's Notice of
+// the 2026 Combined Graduation Ceremony, 2 July 2026. TAGLINE is this
+// ceremony's line and is not a substitute for it — the back panel used to
+// print the tagline where a reader takes the motto to be.
+const MOTTO = 'Learning Today, Leading Tomorrow';
 const TAGLINE = 'Celebrating Achievement, Inspiring Futures';
+// That same notice publishes the ceremony to parents as 10:00 a.m. – 3:00
+// p.m. in the SCHOOL HALL. The order of proceedings runs 10:05 to 2:00; the
+// hall is held until 3:00. Both are true and both print — the window on the
+// face, the items on the order panel. An earlier pass printed 'School
+// Grounds', which is in no school document.
+const HALL = 'School Hall';
+const WINDOW_OPENS = '10:00';
+const WINDOW_CLOSES = '15:00';
 const OPENS = ORDER[0][0];
 const CLOSES = ORDER[ORDER.length - 1][1];
 const to12 = (t) => {
@@ -333,7 +346,7 @@ const panelBack = `<section class="panel p-b">
     <h1 class="bk-inst">Sultan Hanafi Royal Schools</h1>
     <div class="bk-est">Established MMXVII · Ikorodu · Lagos State</div>
     <div class="bk-lathe">${lathe('lb', 400, 22, 20, 0.6)}</div>
-    <div class="bk-tag">${esc(TAGLINE)}</div>
+    <div class="bk-tag">${esc(MOTTO)}</div>
     ${sh('The Four Schools')}
     <div class="schools">
       <div><b>Nursery and Primary School</b><span>Ages 2 to 10</span></div>
@@ -379,7 +392,7 @@ const panelCover = `<section class="panel p-c">
     <div class="cv-when">
       <b>Saturday, 8 August 2026</b>
       <span dir="rtl" lang="ar">٢٥ صفر ١٤٤٨هـ</span>
-      <span class="cv-hours">${to12(OPENS)} – ${to12(CLOSES)} · School Grounds</span>
+      <span class="cv-hours">${to12(WINDOW_OPENS)} – ${to12(WINDOW_CLOSES)} · ${esc(HALL)}</span>
     </div>
     <div class="cv-lathe cv-lathe-b">${lathe('lc2', 400, 22, 20, 0.6, true)}</div>
     <div class="cv-tag">${esc(TAGLINE)}</div>
@@ -429,7 +442,7 @@ const panelLecture = `<section class="panel p-lec">
     <div class="lc-by">Delivered by</div>
     <div class="lc-name">${esc(LECTURE.by)}</div>
     <div class="lc-when">${LECTURE_SLOT[0]} – ${LECTURE_SLOT[1]} · Saturday, 8 August 2026</div>
-    <div class="lc-seat">The School Grounds · Ikorodu, Lagos State</div>
+    <div class="lc-seat">The School Hall · Ikorodu, Lagos State</div>
     <div class="lc-lathe lc-lathe-b">${lathe('ll2', 400, 22, 20, 0.6, true)}</div>
     ${plate('recitation-assembly-1.jpg', 'The Assembly Hall', 72, 'plate-dk')}
     <div class="fol fol-dk">V · The Lecture</div>
@@ -966,7 +979,7 @@ writeFileSync(join(OUT, 'SHRS-Graduation-Programme-2026.html'), html);
 export {
   AWARDS, ORDER, OFFICERS, TOTAL, PEOPLE, COORDINATORS, VENUE, WEB, MAIL, TEL,
   CHIEF_HOST, LECTURE, LECTURE_SLOT, GUESTS, FIGURES, WELCOME, CEO_WORD, DIGITAL,
-  TAGLINE, OPENS, CLOSES, to12,
+  MOTTO, TAGLINE, HALL, OPENS, CLOSES, WINDOW_OPENS, WINDOW_CLOSES, to12,
 };
 
 console.log(`\nGraduation Ceremony Programme — trifold, 4 sides, 12 panels`);

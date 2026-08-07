@@ -25,7 +25,7 @@ import {
 import {
   AWARDS, ORDER, TOTAL, PEOPLE, COORDINATORS, VENUE, WEB, MAIL, TEL,
   CHIEF_HOST, LECTURE, LECTURE_SLOT, GUESTS, FIGURES, WELCOME, CEO_WORD, DIGITAL,
-  TAGLINE, OPENS, CLOSES, to12,
+  MOTTO, TAGLINE, HALL, OPENS, CLOSES, WINDOW_OPENS, WINDOW_CLOSES, to12,
 } from './build-graduation-programme.mjs';
 
 // No Principal, Ra'ees, Mudeer or Head Teacher is named in this programme. The
@@ -256,7 +256,7 @@ const panelBack = [
   line('Established MMXVII · Ikorodu · Lagos State',
     { size: 9, font: SANS, color: SOFT, caps: true, track: 40, before: 60 }),
   rule({ before: 120, after: 80 }),
-  line(TAGLINE, { size: 18, italics: true, color: GOLD, after: 60 }),
+  line(MOTTO, { size: 18, italics: true, color: GOLD, after: 60 }),
   ...plate('campus-gate.jpg', COL, 34, 'The Campus Gate'),
   sh('The Four Schools'),
   ...[
@@ -305,7 +305,7 @@ const panelCover = [
   rule({ before: 150, after: 150, heavy: true }),
   line('Saturday, 8 August 2026', { size: 20, bold: true, after: 60 }),
   arabic('٢٥ صفر ١٤٤٨هـ', { size: 18, after: 60 }),
-  line(`${to12(OPENS)} – ${to12(CLOSES)} · School Grounds`,
+  line(`${to12(WINDOW_OPENS)} – ${to12(WINDOW_CLOSES)} · ${HALL}`,
     { size: 9, font: SANS, color: SOFT, caps: true, track: 30, after: 180 }),
   line(TAGLINE, { size: 17, italics: true, color: GOLD, after: 70 }),
   line(`${TOTAL} awards · ${PEOPLE} graduands · four schools`,
@@ -399,7 +399,7 @@ const panelLecture = [
   line(LECTURE.by, { size: 26, bold: true }),
   line(`${LECTURE_SLOT[0]} – ${LECTURE_SLOT[1]} · Saturday, 8 August 2026`,
     { size: 10, font: SANS, color: GOLD, caps: true, track: 50, before: 140 }),
-  line('The School Grounds · Ikorodu, Lagos State',
+  line('The School Hall · Ikorodu, Lagos State',
     { size: 9, font: SANS, color: SOFT, caps: true, track: 40, before: 50, after: 240 }),
   ...plate('recitation-assembly-1.jpg', COL, 68, 'The Assembly Hall'),
 ];
