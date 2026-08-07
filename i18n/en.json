@@ -267,5 +267,17 @@
   "quick.login": "Login to Portal",
   "quick.adhkar": "Adhkār Centre",
   "quick.prayer": "Prayer Times",
-  "listen.open": "Listen to this page"
+  "listen.open": "Listen to this page",
+  "now.eyebrow": "The School, Right Now",
+  "now.place": "Ikorodu, Lagos State · West Africa Time",
+  "now.time": "Local time",
+  "now.offices": "The offices",
+  "now.today": "Today's hours",
+  "now.allHours": "All opening hours →",
+  "now.open": "Open",
+  "now.closed": "Closed",
+  "now.closesIn": "Closes in {t}",
+  "now.opensIn": "Opens in {t}",
+  "now.opensOn": "Opens {d} at {t}",
+  "now.note": "Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere."
 }

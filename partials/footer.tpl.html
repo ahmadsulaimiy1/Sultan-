@@ -11,6 +11,38 @@
     </div>
   </div>
   <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="{{t:now.open}}" data-s-closed="{{t:now.closed}}"
+      data-s-closes="{{t:now.closesIn}}" data-s-opens="{{t:now.opensIn}}"
+      data-s-openson="{{t:now.opensOn}}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">{{t:now.eyebrow}}</p>
+        <p class="now-place">{{t:now.place}}</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">{{t:now.time}}</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">{{t:now.offices}}</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">{{t:now.today}}</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">{{t:now.allHours}}</a></span>
+        </div>
+      </div>
+      <p class="now-foot">{{t:now.note}}</p>
+    </section>
+  </div>
+
+  <div class="wrap">
     <p class="foot-dash-eyebrow">{{t:footer.glance}}</p>
     <div class="foot-dashboard">
       <a href="/about/governance/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14M5 7L2 13a3 3 0 006 0L5 7zm14 0l-3 6a3 3 0 006 0l-3-6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{t:nav.governance}}</span></a>

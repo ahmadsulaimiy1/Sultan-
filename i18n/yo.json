@@ -267,5 +267,17 @@
   "quick.login": "Wọlé sí Ẹnu-ọ̀nà",
   "quick.adhkar": "Ilé Adhkār",
   "quick.prayer": "Àkókò Ìrun",
-  "listen.open": "Fetí sí ojú-ìwé yìí"
+  "listen.open": "Fetí sí ojú-ìwé yìí",
+  "now.eyebrow": "Ilé-ẹ̀kọ́ Ní Ìsinsìnyí",
+  "now.place": "Ikorodu, Ìpínlẹ̀ Èkó · Àkókò Ìwọ̀-Oòrùn Áfíríkà",
+  "now.time": "Àkókò ìbílẹ̀",
+  "now.offices": "Àwọn ọ́fíìsì",
+  "now.today": "Àkókò òní",
+  "now.allHours": "Gbogbo àkókò ìṣílẹ̀kùn →",
+  "now.open": "Ṣí sílẹ̀",
+  "now.closed": "Tì",
+  "now.closesIn": "Yóò tì ní {t}",
+  "now.opensIn": "Yóò ṣí ní {t}",
+  "now.opensOn": "Yóò ṣí {d} ní {t}",
+  "now.note": "A ń kà á tààrà láti aago ẹ̀rọ rẹ, ní ìbámu pẹ̀lú àkókò tí àwọn ọ́fíìsì ń ṣiṣẹ́. A kò gba ohunkóhun, a kò sì fi ohunkóhun ránṣẹ́."
 }

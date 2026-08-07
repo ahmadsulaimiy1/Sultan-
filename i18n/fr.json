@@ -278,5 +278,17 @@
   "quick.login": "Accès au portail",
   "quick.adhkar": "Centre des adhkār",
   "quick.prayer": "Heures de prière",
-  "listen.open": "Écouter cette page"
+  "listen.open": "Écouter cette page",
+  "now.eyebrow": "L’école, en ce moment",
+  "now.place": "Ikorodu, État de Lagos · Heure d’Afrique de l’Ouest",
+  "now.time": "Heure locale",
+  "now.offices": "Les bureaux",
+  "now.today": "Horaires du jour",
+  "now.allHours": "Tous les horaires →",
+  "now.open": "Ouverts",
+  "now.closed": "Fermés",
+  "now.closesIn": "Ferment dans {t}",
+  "now.opensIn": "Ouvrent dans {t}",
+  "now.opensOn": "Ouvrent {d} à {t}",
+  "now.note": "Calculé en direct depuis l’horloge de votre appareil, d’après les horaires que les bureaux tiennent réellement. Rien n’est téléchargé et rien n’est envoyé."
 }
