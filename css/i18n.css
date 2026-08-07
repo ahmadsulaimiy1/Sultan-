@@ -132,13 +132,24 @@
 
 .lang-switch-globe { display: inline-flex; opacity: 0.85; }
 
+/* FIXED, not absolute, and positioned by js/i18n.js at open time.
+ *
+ * .topbar carries `overflow:hidden` (css/brand.css) to contain its animated
+ * ::before shimmer, which is inset -10% beyond the bar on every side. An
+ * absolutely-positioned dropdown is a descendant of that box, so the bar
+ * clipped it to its own height: the menu opened showing only its first row
+ * and silently swallowed العربية, Yorùbá and Français. Every option was in
+ * the DOM with a real height — which is why a DOM-level test passed and only
+ * a screenshot caught it.
+ *
+ * A fixed element is laid out against the viewport, so no ancestor's overflow
+ * can clip it (no ancestor here sets transform/filter/perspective, which are
+ * the things that would re-parent a fixed box). The cost is that `top`/`left`
+ * must be computed rather than inherited from the summary, which
+ * positionMenu() in js/i18n.js does on open, on scroll and on resize. */
 .lang-switch-menu {
-  position: absolute;
-  z-index: 120;
-  top: calc(100% + 6px);
-  /* Logical properties so the panel hangs from the correct edge in Arabic
-     without a mirrored [dir="rtl"] rule. */
-  inset-inline-start: 0;
+  position: fixed;
+  z-index: 1200;
   min-width: 12rem;
   margin: 0;
   padding: 6px;

@@ -38,7 +38,29 @@ await page.waitForSelector('[data-locale-option]', { state: 'attached' });
 check(await page.locator('[data-locale-option]').count() === 4,
   'switcher offers all four locales');
 
+/* Paint check, not a DOM check.
+ *
+ * This exists because a DOM-level assertion shipped a broken switcher to
+ * production. .topbar carries overflow:hidden to contain its animated
+ * shimmer, which clipped the dropdown to the bar's own height: the menu
+ * opened showing only "English" and swallowed العربية, Yorùbá and Français.
+ * Every option was in the DOM, every option had a real height, and
+ * Playwright's isVisible() returned true for all four — because it reports
+ * an element's own box, not whether an ancestor clips it away.
+ *
+ * elementFromPoint at each option's centre is the honest question: is this
+ * thing actually on screen where a person could click it? */
 await page.locator('.lang-switch > summary').click();
+await page.waitForTimeout(400);
+const painted = await page.evaluate(() =>
+  [...document.querySelectorAll('[data-locale-option)'.replace(')', ']'))].map((a) => {
+    const r = a.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return { label: a.textContent.trim(), painted: !!hit && (hit === a || a.contains(hit)) };
+  }));
+check(painted.length === 4 && painted.every((o) => o.painted),
+  `all four options are actually painted on screen, not merely in the DOM (${painted.map((o) => o.label + (o.painted ? '' : ' NOT-PAINTED')).join(', ')})`);
+
 await page.locator('[data-locale-option="yo"]').click();
 await page.waitForURL('**/yo/academics/', { timeout: 5000 }).catch(() => {});
 // waitForURL resolves as soon as the URL changes, which can be before the new
