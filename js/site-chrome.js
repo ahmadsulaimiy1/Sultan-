@@ -39,6 +39,18 @@
       window.requestAnimationFrame(measure);
     }
 
+    // A link anywhere in the page's prose can open the Personalisation
+    // Centre, so the drawer can be referred to by name in running text
+    // rather than only found by hunting for its control in the top bar.
+    document.querySelectorAll('[data-pc-trigger-link]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var trigger = document.querySelector('[data-pc-trigger]');
+        if (!trigger) return;          // no drawer on this page — follow the href
+        e.preventDefault();
+        trigger.click();
+      });
+    });
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
     measure();
