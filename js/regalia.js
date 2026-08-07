@@ -39,7 +39,7 @@
   // portal and announcement strips replace their own contents as they
   // load. So the selector covers those too and the observer keeps
   // watching rather than taking one census at load and stopping.
-  var SEL = '.rg-light, .rg-sweep, .rg-bar, .rg-ring, .rg-cmp-row, [data-rg],'
+  var SEL = '.rg-light, .rg-edged, .rg-sweep, .rg-bar, .rg-ring, .rg-cmp-row, [data-rg],'
           + '.adk-priority-card, .adk-wird-card, .adk-quick-mode, .adk-sd-stat,'
           + '.adk-progress-stat, .adk-achv-badge, .adk-ctr-dial';
   var io = null, seen = 0;

@@ -277,3 +277,51 @@ html[data-pc-motion="reduced"] .adk-ctr-dial::before{display:none;}
 .gi-frame.rg-light::before,.gal-item.rg-light::before{
   inset:0;z-index:3;padding:2px;border-radius:inherit;}
 .gal-item.rg-light{position:relative;isolation:isolate;}
+
+/* ===================================================================
+   7. THE GILDED EDGE
+   -------------------------------------------------------------------
+   The travelling light of section 1 is drawn on ::before, which means
+   it can only be given to an element that does not already own that
+   pseudo-element — and most of the site's furniture does. So the great
+   majority of the cards, plates, panels and tables on this site could
+   not have it.
+
+   This is the same arc, drawn on a real child element instead. It can
+   be added to anything, it never argues with a rule that is already
+   there, and js/edge.js puts one into every card-like shape on every
+   page rather than the handful that happened to be free.
+
+   The ring is drawn inside the border box and above the ground so a
+   host that clips its contents cannot cut it away, and it is masked to
+   the perimeter, so at 1.6px it runs the edge and never crosses type.
+   =================================================================== */
+.rg-edged{position:relative;}
+.rg-edge{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  border-radius:inherit;padding:1.6px;
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 188deg,
+    rgba(var(--lv-g,198,161,91),.06) 214deg,
+    rgba(var(--lv-gb,233,206,138),.82) 246deg,
+    rgb(var(--lv-gl,255,246,223)) 262deg,
+    rgba(var(--lv-gb,233,206,138),.82) 278deg,
+    rgba(var(--lv-g,198,161,91),.06) 310deg,
+    transparent 338deg 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .7s ease;
+  animation:rg-orbit var(--rg-dur,9s) linear infinite;
+  animation-delay:var(--rg-delay,0s);}
+/* Lit quietly on arrival, fully while the shape is addressed. */
+.rg-edged.is-lit > .rg-edge{opacity:.55;}
+.rg-edged:hover > .rg-edge,
+.rg-edged:focus-within > .rg-edge{opacity:1;}
+@supports not (background:conic-gradient(from 0deg,red,blue)){.rg-edge{display:none;}}
+html[data-pc-ornament="none"] .rg-edge,
+html[data-pc-motion="reduced"] .rg-edge{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .rg-edge{animation:none;opacity:.4;}
+  .rg-edged.is-lit > .rg-edge{opacity:.4;}
+}
