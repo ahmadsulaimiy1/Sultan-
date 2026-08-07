@@ -322,6 +322,12 @@ function buildPage(page, manifest) {
   const prestigeHead = isPrestige
     ? '<link rel="stylesheet" href="/css/prestige.css">\n<link rel="stylesheet" href="/css/motion.css">\n'
     : '';
+  // The masthead and colophon layer is the last stylesheet on every
+  // page, deliberately. It restyles furniture that brand.css, elevate.css
+  // and prestige.css all have their own rules for at the same specificity,
+  // so the only thing that decides the winner is source order.
+  const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
+
   const prestigeScripts = isPrestige
     ? '<script src="/js/prestige.js" defer></script>\n<script src="/js/motion.js" defer></script>\n'
     : '';
@@ -351,7 +357,7 @@ function buildPage(page, manifest) {
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}">
 <head>
-${head}${robotsTag}${extraCss}${elevateHead}${prestigeHead}${idcardHead}${altTag}${headScripts}</head>
+${head}${robotsTag}${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
