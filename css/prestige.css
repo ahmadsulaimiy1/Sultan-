@@ -4258,7 +4258,7 @@ html[data-pc-theme="light"] .ct-form-card select{
 /* background-color composes underneath whatever translucent gradient
    the card already carries, so the plate deepens without any of its
    own treatment being replaced. */
-.ledger-row{background-color:rgba(8,5,1,.58)!important;}
+
 
 /* ---- The Clear edition: the last of the dark-band furniture ---------
    Everything below is written for a near-black band and was left as it
@@ -4469,3 +4469,45 @@ html[data-pc-theme="light"] .ct-form-card .contact-form label,
 html[data-pc-theme="light"] .ct-forms .contact-form label{color:var(--pearl-ink-2,#57472F)!important;}
 .ct-form-card .contact-form,.ct-forms .contact-form{background-color:transparent!important;}
 .ct-form-card .contact-form label,.ct-forms .contact-form label{color:inherit;}
+
+/* The curriculum panel is an emerald plate in both editions, so its
+   prose keeps the ivory it is set in; the Clear rule for paragraphs on
+   pale bands had reached inside it. */
+html[data-pc-theme="light"] .curriculum p,
+html[data-pc-theme="light"] .academics > .wrap .curriculum p,
+html[data-pc-theme="light"] .curriculum li{color:var(--pr-milk,#F7EEDF)!important;}
+html[data-pc-theme="light"] .curriculum h3,
+html[data-pc-theme="light"] .curriculum h4{color:var(--pr-gold-bright,#E9CE8A)!important;}
+
+/* ---- The Clear edition: the founder spotlight and the older org chart
+   The Arabic Governance Headquarters still carries two components the
+   English page has moved on from — .founder-spotlight and .org-chart —
+   and neither had ever been given a pearl treatment. */
+html[data-pc-theme="light"] .founder-spotlight .fs-name{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .founder-spotlight .fs-cred{color:var(--pearl-ink-2,#57472F);}
+html[data-pc-theme="light"] .founder-spotlight .fs-label,
+html[data-pc-theme="light"] .founder-spotlight .fs-role{color:#7C5E28;}
+html[data-pc-theme="light"] .chapter-band-alt .ledger-heading,
+html[data-pc-theme="light"] .ledger-heading{color:#74551F!important;border-bottom-color:rgba(156,122,60,.55);}
+html[data-pc-theme="light"] .org-node .on-name{color:var(--pearl-ink,#33281C);}
+html[data-pc-theme="light"] .org-node .on-role,
+html[data-pc-theme="light"] .org-node .on-count{color:var(--pearl-ink-2,#57472F);}
+
+/* The ledger row's plate has to reach the older markup too, which does
+   not carry .el-on-dark and so had no plate at all. */
+.ledger-row,.ledger .ledger-row{background-color:rgba(8,5,1,.80)!important;
+  border-radius:var(--pr-r-sm,8px);}
+.ledger-row .lg-role{color:var(--pr-gold-bright,#E9CE8A);}
+html[data-pc-theme="light"] .ledger-row .lg-role{color:var(--pr-gold-bright,#E9CE8A);}
+
+/* The org chart's nodes carry their own dark plates, so their role and
+   count lines keep the pale ink; only the name was ever meant to change
+   with the band, and on these nodes it does not change either. */
+html[data-pc-theme="light"] .org-node .on-name{color:#FFF8EA;}
+html[data-pc-theme="light"] .org-node .on-role,
+html[data-pc-theme="light"] .org-node .on-count{color:rgba(243,232,212,.82);}
+
+/* The ledger row's plate is drawn on the row, but the row is a grid with
+   gaps and the crest watermark shows between its cells; padding closes
+   the gap so the plate is continuous under the whole row. */
+.ledger-row{padding:14px 16px;}
