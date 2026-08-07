@@ -3597,7 +3597,7 @@ html[data-pc-theme="light"] .gw-quick-note{color:rgb(var(--lv-w100,107,90,64));}
 .hx-mark:hover::after{transform:scaleX(1);}
 .hx-mark-n{position:absolute;top:20px;inset-inline-end:24px;
   font-family:var(--font-label);font-size:1.5rem;line-height:1;
-  color:rgba(var(--lv-gd,156,122,60),.7);letter-spacing:.02em;pointer-events:none;}
+  color:rgba(var(--lv-gt,124,84,48),.86);letter-spacing:.02em;pointer-events:none;}
 .hx-mark-i{display:grid;place-items:center;width:52px;height:52px;
   border-radius:14px;color:var(--pr-gold-deep,rgb(var(--lv-gd,156,122,60)));
   background:linear-gradient(160deg,rgba(var(--lv-gbs,233,206,138),.3),rgba(var(--lv-gs,198,161,91),.1));

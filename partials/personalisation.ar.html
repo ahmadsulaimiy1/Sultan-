@@ -131,8 +131,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">الحُلّة</span><p class="pc-option-desc">اللون الذي تُكسى به المؤسسة كلّها — اللون المميّز والأرضيات والأوراق والأحبار معاً. وكلّ حُلّة مفحوصة بمعيار الوضوح نفسه؛ أمّا الشعار والصور وألوان المدارس الخمس الخاصّة فلا تتغيّر.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="الحُلّة">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">الذهب الملكي</span><span class="pc-lv-sub">حُلّة الدار</span></button>
-            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">البُنّي القهوي</span><span class="pc-lv-sub">دافئ وتقليدي</span></button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">الذهب الملكي</span><span class="pc-lv-sub">حُلّة الدار — بُنّي وذهب</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">البُنّي القهوي</span><span class="pc-lv-sub">أرضية لاتيه وأشرطة إسبريسو</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">الأزرق الياقوتي</span><span class="pc-lv-sub">عميق وعلميّ</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">الأخضر الزمرّدي</span><span class="pc-lv-sub">هادئ ونضِر</span></button>
             <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">الأحمر العقيقي</span><span class="pc-lv-sub">احتفالي</span></button>
@@ -266,6 +266,15 @@
             <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">تشغيل</button>
             <button type="button" data-value="off" role="radio">إيقاف</button>
           </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">الكلمة المسجّلة</span><p class="pc-option-desc">كلمة ترحيب المدرسة المسجّلة، تُسمع مرّة واحدة عند أول زيارة ولا تُعاد في الجلسة نفسها. ولها مفتاحها الخاص، فإسكات واجهة الموقع لا يُسكِت الصوت معها.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="الكلمة المسجّلة">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">تعمل</button>
+            <button type="button" data-value="off" role="radio">متوقّفة</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>استماع الكلمة</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
         </div>
 
         <div class="pc-option">

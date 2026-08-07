@@ -22,12 +22,13 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/liveries.css?v=91daff1615">
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=31a1828d05">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
 <script>
 (function(){
   try{
@@ -81,7 +82,7 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
-<link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/governance/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/governance/" />
@@ -113,9 +114,13 @@
       <!-- Language switcher mount. js/i18n.js fills this with one entry per
            registered locale, each written in its own language and script, so
            adding a fifth language needs no change to this file. The
-           <noscript> fallback is a real link to this page in the default
+           <noscript> fallback is a real link to this page in another
            language (/ar/about/governance/), so the site is never trapped in one
-           language when scripting is unavailable. -->
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
       <span class="lang-switch-mount" data-locale-switcher></span>
       <noscript><a href="/ar/about/governance/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
@@ -668,11 +673,11 @@
       <p class="pr-lead pr-dropcap">Five seats, each recorded against the name of its holder, so that the composition of the Board may be read at a glance and without inference.</p>
     </div>
     <div class="pr-people pr-stagger" style="margin-top:30px;">
-      <article class="pr-person pr-tilt" data-tilt-max="4"><span class="nm">Dr. Zakariya Olanrewaju Anofi</span><span class="rl">Chairman</span><span class="cr">B.Sc. · M.Sc. · FCA · FCCA</span></article>
-      <article class="pr-person pr-tilt is-vacant" data-tilt-max="4"><span class="nm">To Be Designated</span><span class="rl">Secretary</span><span class="cr">The seat is constituted; the appointment is pending.</span></article>
-      <article class="pr-person pr-tilt" data-tilt-max="4"><span class="nm">Mr. Lukman Anofi</span><span class="rl">Member</span><span class="cr">B.Sc. · MBA · M.Sc. · CPA · FCCA</span></article>
-      <article class="pr-person pr-tilt" data-tilt-max="4"><span class="nm">Mrs. Lasisi-Ahmed Olayinka Idayat</span><span class="rl">Member</span><span class="cr">B.Ed · M.Ed</span></article>
-      <article class="pr-person pr-tilt" data-tilt-max="4"><span class="nm">Dr. Ismail Seriki</span><span class="rl">Member</span><span class="cr">&nbsp;</span></article>
+      <article class="pr-person pr-tilt rg-light" data-tilt-max="4"><span class="nm">Dr. Zakariya Olanrewaju Anofi</span><span class="rl">Chairman</span><span class="cr">B.Sc. · M.Sc. · FCA · FCCA</span></article>
+      <article class="pr-person pr-tilt is-vacant rg-light" data-tilt-max="4"><span class="nm">To Be Designated</span><span class="rl">Secretary</span><span class="cr">The seat is constituted; the appointment is pending.</span></article>
+      <article class="pr-person pr-tilt rg-light" data-tilt-max="4"><span class="nm">Mr. Lukman Anofi</span><span class="rl">Member</span><span class="cr">B.Sc. · MBA · M.Sc. · CPA · FCCA</span></article>
+      <article class="pr-person pr-tilt rg-light" data-tilt-max="4"><span class="nm">Mrs. Lasisi-Ahmed Olayinka Idayat</span><span class="rl">Member</span><span class="cr">B.Ed · M.Ed</span></article>
+      <article class="pr-person pr-tilt rg-light" data-tilt-max="4"><span class="nm">Dr. Ismail Seriki</span><span class="rl">Member</span><span class="cr">&nbsp;</span></article>
     </div>
 
     <div class="pr-reveal" style="max-width:800px;margin-top:44px;" id="board-committees">
@@ -724,12 +729,12 @@
       <p class="pr-lead">Each institution has a named head who answers for it — publicly, on this page, by name.</p>
     </div>
     <div class="pr-people pr-stagger" style="margin-top:30px;">
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><img class="por" src="/assets/images/leadership/founder-ceo.jpg" alt="Dr. Zakariya Olanrewaju Anofi" loading="lazy" width="74" height="74"><div><span class="nm">Dr. Zakariya Olanrewaju Anofi</span><span class="rl">Head of Schools / Administrator</span><span class="cr">M.Sc. Financial Management · B.Sc. Applied Accounting · FCA · FCCA</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><img class="por" src="/assets/images/leadership/imam-ahmad-sulaimiy.jpg" alt="Imam Ahmad Sulaimiy" loading="lazy" width="74" height="74"><div><span class="nm">Imam Ahmad Sulaimiy</span><span class="rl">Principal (Mudeer), Qur'an College</span><span class="cr">B.Sc. Qur'an Sciences · B.A. Islamic and Arabic Studies</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Dr. Adegoke Musa Olatunji</span><span class="rl">Principal, Royal College</span><span class="cr">PhD · M.Ed Health Edu. · B.Sc. Ed. Human Kinetics · NCE · MTRCN</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><img class="por" src="/assets/images/leadership/shaykh-abubakr-solah.jpg" alt="Shaykh Abubakr Solah" loading="lazy" width="74" height="74"><div><span class="nm">Shaykh Abubakr Solah</span><span class="rl">Principal (Ra'ees), School of Islamic and Arabic Studies</span><span class="cr">B.A. (in view) · Diploma &amp; Certificate in Arabic Language</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">KA</span><div><span class="nm">Mrs. Kareemat Abdurazaq</span><span class="rl">Head Teacher, Nursery and Primary School</span><span class="cr">B.Ed · NCE</span></div></article>
-      <article class="pr-person has-photo pr-tilt is-vacant" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">V</span><div><span class="nm">Vacant</span><span class="rl">Head, Online &amp; Distance Learning School</span><span class="cr">The post is constituted; the appointment is pending.</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><img class="por" src="/assets/images/leadership/founder-ceo.jpg" alt="Dr. Zakariya Olanrewaju Anofi" loading="lazy" width="74" height="74"><div><span class="nm">Dr. Zakariya Olanrewaju Anofi</span><span class="rl">Head of Schools / Administrator</span><span class="cr">M.Sc. Financial Management · B.Sc. Applied Accounting · FCA · FCCA</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><img class="por" src="/assets/images/leadership/imam-ahmad-sulaimiy.jpg" alt="Imam Ahmad Sulaimiy" loading="lazy" width="74" height="74"><div><span class="nm">Imam Ahmad Sulaimiy</span><span class="rl">Principal (Mudeer), Qur'an College</span><span class="cr">B.Sc. Qur'an Sciences · B.A. Islamic and Arabic Studies</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Dr. Adegoke Musa Olatunji</span><span class="rl">Principal, Royal College</span><span class="cr">PhD · M.Ed Health Edu. · B.Sc. Ed. Human Kinetics · NCE · MTRCN</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><img class="por" src="/assets/images/leadership/shaykh-abubakr-solah.jpg" alt="Shaykh Abubakr Solah" loading="lazy" width="74" height="74"><div><span class="nm">Shaykh Abubakr Solah</span><span class="rl">Principal (Ra'ees), School of Islamic and Arabic Studies</span><span class="cr">B.A. (in view) · Diploma &amp; Certificate in Arabic Language</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">KA</span><div><span class="nm">Mrs. Kareemat Abdurazaq</span><span class="rl">Head Teacher, Nursery and Primary School</span><span class="cr">B.Ed · NCE</span></div></article>
+      <article class="pr-person has-photo pr-tilt is-vacant rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">V</span><div><span class="nm">Vacant</span><span class="rl">Head, Online &amp; Distance Learning School</span><span class="cr">The post is constituted; the appointment is pending.</span></div></article>
     </div>
 
     <div class="pr-reveal" style="max-width:820px;margin-top:44px;" id="management-committees">
@@ -787,14 +792,14 @@
       <p class="pr-lead">The people who run the subjects, the register and the school day.</p>
     </div>
     <div class="pr-people pr-stagger" style="margin-top:30px;">
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AF</span><div><span class="nm">Mrs. Anofi-Badmus Fatimat Omolola</span><span class="rl">Vice Principal (Administration), Royal College</span><span class="cr">HND Accounting · PGDE</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Mrs. Anofi-Abdulkareem Mariam Tope</span><span class="rl">Registrar, Royal College</span><span class="cr">B.Sc. Microbiology · PGDE</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">OA</span><div><span class="nm">Mr. Oladele Abdulwasiu Adebayo</span><span class="rl">Head, Research &amp; Development</span><span class="cr">B.A/M.A History · PGDE · TRCN — office pending Board recognition, per the Governance Resolution Register</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">YS</span><div><span class="nm">Mr. Yusuf Shola Monsuru</span><span class="rl">Head of Department, English</span><span class="cr">HND · Diploma Phonology &amp; Public Speaking · TEFL</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Mr. Afolabi Morufu Olalekan</span><span class="rl">Head of Department, Commerce &amp; Management</span><span class="cr">B.Sc.(Ed) Accounting Edu. · NCE</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">NL</span><div><span class="nm">Mrs. Nimota Lamidi-Okoh</span><span class="rl">Head of Department, Mathematics</span><span class="cr">PGDE · B.Sc. · TRCN</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">OA</span><div><span class="nm">Mr. Oguntade Adebola Aliu</span><span class="rl">ICT Head</span><span class="cr">M.Sc. Information Tech. · B.Sc. Computer Science</span></div></article>
-      <article class="pr-person has-photo pr-tilt" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">KJ</span><div><span class="nm">Mr. Kassim Jamal Ayopo</span><span class="rl">Head of Department, Science</span><span class="cr">B.Sc. Chemistry</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AF</span><div><span class="nm">Mrs. Anofi-Badmus Fatimat Omolola</span><span class="rl">Vice Principal (Administration), Royal College</span><span class="cr">HND Accounting · PGDE</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Mrs. Anofi-Abdulkareem Mariam Tope</span><span class="rl">Registrar, Royal College</span><span class="cr">B.Sc. Microbiology · PGDE</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">OA</span><div><span class="nm">Mr. Oladele Abdulwasiu Adebayo</span><span class="rl">Head, Research &amp; Development</span><span class="cr">B.A/M.A History · PGDE · TRCN — office pending Board recognition, per the Governance Resolution Register</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">YS</span><div><span class="nm">Mr. Yusuf Shola Monsuru</span><span class="rl">Head of Department, English</span><span class="cr">HND · Diploma Phonology &amp; Public Speaking · TEFL</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">AM</span><div><span class="nm">Mr. Afolabi Morufu Olalekan</span><span class="rl">Head of Department, Commerce &amp; Management</span><span class="cr">B.Sc.(Ed) Accounting Edu. · NCE</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">NL</span><div><span class="nm">Mrs. Nimota Lamidi-Okoh</span><span class="rl">Head of Department, Mathematics</span><span class="cr">PGDE · B.Sc. · TRCN</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">OA</span><div><span class="nm">Mr. Oguntade Adebola Aliu</span><span class="rl">ICT Head</span><span class="cr">M.Sc. Information Tech. · B.Sc. Computer Science</span></div></article>
+      <article class="pr-person has-photo pr-tilt rg-light" data-tilt-max="4"><span class="por-fallback" aria-hidden="true">KJ</span><div><span class="nm">Mr. Kassim Jamal Ayopo</span><span class="rl">Head of Department, Science</span><span class="cr">B.Sc. Chemistry</span></div></article>
     </div>
 
     <div class="pr-reveal" style="max-width:820px;margin-top:44px;" id="student-governance">
@@ -1216,8 +1221,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery</span></button>
-            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Warm &amp; traditional</span></button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
             <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
@@ -1351,6 +1356,15 @@
             <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
             <button type="button" data-value="off" role="radio">Off</button>
           </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
         </div>
 
         <div class="pc-option">
@@ -1682,9 +1696,10 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=4af96d46e9" defer></script>
+<script src="/js/personalisation.js?v=e1bf725623" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=e4113ff864" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1703,7 +1718,7 @@
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/intro.js?v=e3d32ffda3" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 

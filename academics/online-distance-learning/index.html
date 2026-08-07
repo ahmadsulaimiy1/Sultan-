@@ -22,12 +22,13 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/liveries.css?v=91daff1615">
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=31a1828d05">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
 <script>
 (function(){
   try{
@@ -81,7 +82,7 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
-<link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
@@ -113,9 +114,13 @@
       <!-- Language switcher mount. js/i18n.js fills this with one entry per
            registered locale, each written in its own language and script, so
            adding a fifth language needs no change to this file. The
-           <noscript> fallback is a real link to this page in the default
+           <noscript> fallback is a real link to this page in another
            language (/ar/academics/online-distance-learning/), so the site is never trapped in one
-           language when scripting is unavailable. -->
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
       <span class="lang-switch-mount" data-locale-switcher></span>
       <noscript><a href="/ar/academics/online-distance-learning/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
@@ -575,13 +580,13 @@
     <p class="eyebrow">School V of V</p>
     <h1 class="page-title" style="margin-top:10px;">Sultan Hanafi Online &amp; Distance Learning School</h1>
 
-    <div class="school-block pr-tilt" data-tilt-max="3" style="margin-top:26px;">
+    <div class="school-block pr-tilt rg-light" data-tilt-max="3" style="margin-top:26px;">
       <span class="tag">V — Newly Established</span>
       <h3><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 5h16v11H4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 20h6M12 16v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Online &amp; Distance Learning School</h3>
       <p class="pr-dropcap">Sultan Hanafi Royal Schools' fifth institution, newly constituted under the Head of Schools / Administrator's office as part of the governance restructuring that established the Board of Governors. It stands alongside the Basic School, Royal College, Islamiyyah School, and Qur'an College as a distinct school within SHRS, not a rebranding of the existing Digital Campus systems those four institutions already share.</p>
     </div>
 
-    <div class="school-block pr-tilt" data-tilt-max="3">
+    <div class="school-block pr-tilt rg-light" data-tilt-max="3">
       <span class="tag">The Fifth Institution</span>
       <h3>Constituted, and Under Formation</h3>
       <p>The Online &amp; Distance Learning School is constituted under the office of the Head of Schools / Administrator. Its curriculum, its faculty, its fee structure and its admission process are being settled by the Board of Governors and the Management Team, and each is published here upon adoption, in the terms in which it was resolved.</p>
@@ -956,8 +961,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery</span></button>
-            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Warm &amp; traditional</span></button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
             <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
@@ -1091,6 +1096,15 @@
             <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
             <button type="button" data-value="off" role="radio">Off</button>
           </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
         </div>
 
         <div class="pc-option">
@@ -1422,9 +1436,10 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=4af96d46e9" defer></script>
+<script src="/js/personalisation.js?v=e1bf725623" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=e4113ff864" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1443,7 +1458,7 @@
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/intro.js?v=e3d32ffda3" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 

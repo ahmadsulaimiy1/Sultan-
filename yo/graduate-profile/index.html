@@ -22,12 +22,13 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/liveries.css?v=91daff1615">
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=31a1828d05">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
 <script>
 (function(){
   try{
@@ -82,7 +83,7 @@
 </script>
 <meta name="robots" content="noindex,follow" />
 <link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
-<link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/idcard.css?v=d91cd4d597">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/graduate-profile/" />
@@ -115,12 +116,16 @@
       <!-- Language switcher mount. js/i18n.js fills this with one entry per
            registered locale, each written in its own language and script, so
            adding a fifth language needs no change to this file. The
-           <noscript> fallback is a real link to this page in the default
+           <noscript> fallback is a real link to this page in another
            language (/graduate-profile/), so the site is never trapped in one
-           language when scripting is unavailable. -->
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
       <span class="lang-switch-mount" data-locale-switcher></span>
       <noscript><a href="/graduate-profile/" class="lang-switch-fallback">Yí èdè padà</a></noscript>
-      <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
+      <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Ibùdó Ìṣàtúnṣe">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">Ṣàtúnṣe</span>
       </button>
@@ -162,7 +167,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--discover">
         <a href="/about/" class="nav-drop-trigger">Ṣàwárí SHRS</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel">
           <div class="nav-mega-intro">
             <h4>Ṣàwárí SHRS</h4>
@@ -191,7 +196,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--academics">
         <a href="/academics/" class="nav-drop-trigger">Ètò Ẹ̀kọ́</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel">
           <div class="nav-mega-intro">
             <h4>Ètò Ẹ̀kọ́</h4>
@@ -235,7 +240,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--studentlife">
         <a href="/student-life/" class="nav-drop-trigger">Ìgbésí-ayé Akẹ́kọ̀ọ́</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel">
           <div class="nav-mega-intro">
             <h4>Ìgbésí-ayé Akẹ́kọ̀ọ́</h4>
@@ -261,7 +266,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--admissions">
         <a href="/admission/" class="nav-drop-trigger">Ìgbàwọlé</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-compact">
           <div class="nav-mega-intro">
             <h4>Ìgbàwọlé</h4>
@@ -273,14 +278,14 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--governance">
         <a href="/about/governance/" class="nav-drop-trigger">Ìṣàkóso</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-compact">
           <div class="nav-mega-intro">
             <h4>Ìṣàkóso</h4>
             <p>Bí a ṣe ń darí, ṣe ìṣirò, tí a sì ń ṣàkóso ilé-ẹ̀kọ́ náà.</p>
             <a class="nmi-cta" href="/about/governance/">Ilé-iṣẹ́ Àgbà Ìṣàkóso →</a>
             <a class="nmi-secondary" href="/about/governance/#board-of-governors">Ìgbìmọ̀ Alábòójútó →</a>
-            <a class="nmi-secondary" href="/about/governance/#committees">Àwọn Ìgbìmọ̀ →</a>
+            <a class="nmi-secondary" href="/about/governance/#committees">Committees →</a>
             <a class="nmi-secondary" href="/about/governance/#school-leadership">Àwọn Aṣáájú Ilé-ẹ̀kọ́ →</a>
             <a class="nmi-secondary" href="/policies/">Ibùdó Àwọn Ìlànà →</a>
             <a class="nmi-secondary" href="/announcements/">Àkójọpọ̀ Ìkéde →</a>
@@ -290,7 +295,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--digitalcampus">
         <a href="/digital-campus/" class="nav-drop-trigger">Ogba Díjítà</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel">
           <div class="nav-mega-intro">
             <h4>Ogba Díjítà</h4>
@@ -316,7 +321,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--contact">
         <a href="/contact/" class="nav-drop-trigger">Ìbánisọ̀rọ̀</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-compact">
           <div class="nav-mega-intro">
             <h4>Ìbánisọ̀rọ̀</h4>
@@ -328,7 +333,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--verify">
         <a href="/verify-certificate/" class="nav-drop-trigger">Ṣàyẹ̀wò Ìwé-ẹ̀rí</a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-verify">
           <div class="nav-mega-intro">
             <h4>Ṣàyẹ̀wò Ìwé-ẹ̀rí SHRS</h4>
@@ -358,7 +363,7 @@
       </div>
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
-        <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="nav-drop-toggle" aria-label="Ṣí/Ti àkójọ abẹ́" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="nav-drop-panel nav-mega-panel is-portal">
           <div class="pgx">
           <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
@@ -418,7 +423,7 @@
               </div>
               <div class="pgx-panes">
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
               <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
               <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
@@ -426,7 +431,7 @@
               <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Ẹnu-ọ̀nà Akẹ́kọ̀ọ́</h4>
               <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
               <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
@@ -434,7 +439,7 @@
               <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Applicant Portal</h4>
               <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
               <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
@@ -442,7 +447,7 @@
               <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Academic Staff Portal</h4>
               <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
               <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
@@ -450,7 +455,7 @@
               <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Administrative Portal</h4>
               <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
               <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
@@ -458,7 +463,7 @@
               <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Executive Portal</h4>
               <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
               <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
@@ -466,7 +471,7 @@
               <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Alumni Portal</h4>
               <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
               <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
@@ -474,7 +479,7 @@
               <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
             </div>
             <div class="pgx-pane">
-              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <p class="pgx-pane-eyebrow">Ẹnu-ọ̀nà Rẹ</p>
               <h4 class="pgx-pane-t">Public Verification Portal</h4>
               <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
               <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
@@ -1026,8 +1031,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery</span></button>
-            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Warm &amp; traditional</span></button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
             <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
@@ -1161,6 +1166,15 @@
             <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
             <button type="button" data-value="off" role="radio">Off</button>
           </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
         </div>
 
         <div class="pc-option">
@@ -1492,9 +1506,10 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=4af96d46e9" defer></script>
+<script src="/js/personalisation.js?v=e1bf725623" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=e4113ff864" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1513,7 +1528,7 @@
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/intro.js?v=e3d32ffda3" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/idcard.js?v=0e6bd7f1e1" defer></script>

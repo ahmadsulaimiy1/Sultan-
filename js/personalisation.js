@@ -34,6 +34,7 @@
     links: 'hover',
     focusRing: 'standard',
     interfaceSound: 'on',
+    spokenIntro: 'on',
     imagery: 'full',
     dateFormat: 'both',
     timeFormat: '24h',
@@ -63,9 +64,19 @@
       return Object.assign({}, DEFAULTS, stored);
     }catch(err){ return Object.assign({}, DEFAULTS); }
   }
+  // Raised while this module is the one writing, so the reconciler at the
+  // foot of the file can tell its own echo apart from a write made by
+  // another module — the livery invitation, the portal theme switch —
+  // and reload only for the latter. Without this the Centre's in-memory
+  // copy goes stale the moment anything else saves a preference, and the
+  // next control the visitor touches writes the stale copy back: a
+  // livery chosen in the invitation would silently revert to Royal.
+  var writingOwnPrefs = false;
   function savePrefs(prefs){
+    writingOwnPrefs = true;
     try{ window.localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); }catch(err){ /* storage unavailable — preferences just won't persist */ }
     document.dispatchEvent(new CustomEvent('sultan:personalisation-changed', { detail: prefs }));
+    writingOwnPrefs = false;
   }
 
   var prefs = loadPrefs();
@@ -123,9 +134,14 @@
     // sound toggle writes, so the two controls are one setting rather
     // than two that can disagree. js/motion.js listens for this event.
     html.setAttribute('data-pc-sound', prefs.interfaceSound);
+    html.setAttribute('data-pc-intro', prefs.spokenIntro);
     try {
       window.localStorage.setItem('shrsSound', prefs.interfaceSound === 'off' ? 'off' : 'on');
       window.dispatchEvent(new Event(prefs.interfaceSound === 'off' ? 'shrs:sound-off' : 'shrs:sound-on'));
+      // The spoken introduction carries its own switch, so silencing the
+      // interface no longer silences the school's voice by side effect.
+      window.localStorage.setItem('shrsIntroVoice', prefs.spokenIntro === 'off' ? 'off' : 'on');
+      if(prefs.spokenIntro === 'off') window.dispatchEvent(new Event('shrs:intro-off'));
     } catch (e) { /* storage unavailable — the attribute still applies */ }
     ensureDyslexiaFont();
   }
@@ -237,6 +253,82 @@
   });
 
   applyFloatingVisibility();
+
+  // --- The spoken introduction: play it on request ---
+  // Browsers will not produce sound without a gesture, and a press is a
+  // gesture, so this always works where the automatic playing may not.
+  (function(){
+    var btn = root.querySelector('[data-pc-intro-play]');
+    var state = root.querySelector('[data-pc-intro-state]');
+    if(!btn) return;
+    var AR = STRIP_LANG === 'ar';
+    function say(msg){ if(state) state.textContent = msg || ''; }
+    function label(playing){
+      btn.textContent = playing
+        ? (AR ? 'إيقاف' : 'Stop')
+        : (AR ? 'استماع الكلمة' : 'Play the introduction');
+    }
+    btn.addEventListener('click', function(){
+      var intro = window.SHRS_INTRO;
+      if(!intro){ say(AR ? 'التسجيل غير متاح على هذه الصفحة.' : 'The recording is not available on this page.'); return; }
+      if(intro.speaking()){ intro.stop(); label(false); say(''); return; }
+      if(prefs.spokenIntro === 'off'){
+        prefs.spokenIntro = 'on';
+        savePrefs(prefs); applyAccessibility(); syncControls();
+      }
+      say(AR ? 'جارٍ التشغيل…' : 'Playing…');
+      label(true);
+      Promise.resolve(intro.play()).then(function(ok){
+        if(!ok){ label(false); say(AR ? 'تعذّر التشغيل.' : 'It would not play.'); return; }
+        var poll = window.setInterval(function(){
+          if(intro.speaking()) return;
+          window.clearInterval(poll); label(false); say('');
+        }, 400);
+      });
+    });
+  })();
+
+  // --- Reconciler: keep this module's copy of the preferences true ---
+  // Other modules write to the same store (the livery invitation, the
+  // portal theme switch), and another tab can write to it too. Whenever
+  // that happens, re-read, adopt the change, and put every control in
+  // the panel back in step with it. The panel is the mirror of the
+  // preference store; it must never be allowed to become an older copy
+  // of it, because the next click would write that older copy back.
+  function syncControls(){
+    root.querySelectorAll('[data-pc-set]').forEach(function(group){
+      var key = group.getAttribute('data-pc-set');
+      group.querySelectorAll('[role="radio"]').forEach(function(btn){
+        var on = prefs[key] === btn.getAttribute('data-value');
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-checked', String(on));
+      });
+    });
+    root.querySelectorAll('[data-pc-toggle]').forEach(function(sw){
+      var key = sw.getAttribute('data-pc-toggle');
+      sw.classList.toggle('is-on', !!prefs[key]);
+      sw.setAttribute('aria-checked', String(!!prefs[key]));
+    });
+  }
+  function adoptExternalPrefs(){
+    var fresh = loadPrefs();
+    var moved = false;
+    Object.keys(fresh).forEach(function(k){
+      if(prefs[k] !== fresh[k]){ prefs[k] = fresh[k]; moved = true; }
+    });
+    if(!moved) return;
+    applyAccessibility();
+    applyFloatingVisibility();
+    syncControls();
+  }
+  document.addEventListener('sultan:personalisation-changed', function(){
+    if(writingOwnPrefs) return;
+    adoptExternalPrefs();
+  });
+  window.addEventListener('storage', function(e){
+    if(e.key && e.key !== PREFS_KEY) return;
+    adoptExternalPrefs();
+  });
 
   // ================================================================
   // Islamic Preferences — Hijri date (tabular/"Kuwaiti algorithm"

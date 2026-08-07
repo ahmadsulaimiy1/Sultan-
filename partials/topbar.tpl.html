@@ -22,12 +22,16 @@
       <!-- Language switcher mount. js/i18n.js fills this with one entry per
            registered locale, each written in its own language and script, so
            adding a fifth language needs no change to this file. The
-           <noscript> fallback is a real link to this page in the default
+           <noscript> fallback is a real link to this page in another
            language ({{ALT_HREF}}), so the site is never trapped in one
-           language when scripting is unavailable. -->
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
       <span class="lang-switch-mount" data-locale-switcher></span>
       <noscript><a href="{{ALT_HREF}}" class="lang-switch-fallback">{{t:locale.switchTo}}</a></noscript>
-      <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
+      <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="{{t:portal.personalisationCentre}}">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">{{t:personalise.open}}</span>
       </button>

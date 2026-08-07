@@ -22,12 +22,13 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/liveries.css?v=91daff1615">
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=31a1828d05">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=e4b72bdf46">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=57561ccb7e">
 <script>
 (function(){
   try{
@@ -81,7 +82,7 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=0b0839aa71">
-<link rel="stylesheet" href="/css/prestige.css?v=bda7720f72">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/contact/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/contact/" />
@@ -113,9 +114,13 @@
       <!-- Language switcher mount. js/i18n.js fills this with one entry per
            registered locale, each written in its own language and script, so
            adding a fifth language needs no change to this file. The
-           <noscript> fallback is a real link to this page in the default
+           <noscript> fallback is a real link to this page in another
            language (/ar/contact/), so the site is never trapped in one
-           language when scripting is unavailable. -->
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
       <span class="lang-switch-mount" data-locale-switcher></span>
       <noscript><a href="/ar/contact/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
@@ -642,73 +647,73 @@
     </div>
 
     <div class="ct-dir pr-stagger">
-      <a class="ct-office" href="/admission/">
+      <a class="ct-office rg-light" href="/admission/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <h3>Admissions</h3>
         <p>Places, entry assessments, the admission letter and the class acceptance ticket. Start the ten-stage journey, or track an application already lodged.</p>
         <span class="ct-office-go">The admissions journey &rarr;</span>
       </a>
-      <a class="ct-office" href="/portal/staff/offices/">
+      <a class="ct-office rg-light" href="/portal/staff/offices/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
         <h3>The Registrar's Office</h3>
         <p>Enrolment, the student register, transcripts, transfer certificates, replacement credentials, and every record the school keeps under a pupil's admission number.</p>
         <span class="ct-office-go">Records &amp; credentials &rarr;</span>
       </a>
-      <a class="ct-office" href="/admission/#fees">
+      <a class="ct-office rg-light" href="/admission/#fees">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M3 11h18" stroke="currentColor" stroke-width="1.3"/><path d="M7 15h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
         <h3>The Bursary</h3>
         <p>Fees for the class you are applying to, payment, receipts, statements, and anything available by way of scholarship or financial support. Figures are given in writing on request.</p>
         <span class="ct-office-go">Fees &amp; support &rarr;</span>
       </a>
-      <a class="ct-office" href="/academics/">
+      <a class="ct-office rg-light" href="/academics/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <h3>The Academic Office</h3>
         <p>Curriculum, timetable, subject choices, assessment, promotion and examination entry across the Basic School and Royal College. Departmental heads answer through this office.</p>
         <span class="ct-office-go">The five institutions &rarr;</span>
       </a>
-      <a class="ct-office" href="/academics/quran-college/">
+      <a class="ct-office rg-light" href="/academics/quran-college/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h7v15H4a1 1 0 01-1-1V6a1 1 0 011-1zm16 0h-7v15h7a1 1 0 001-1V6a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <h3>Qur'&#257;n College &amp; Islamiyyah</h3>
         <p>&#7716;if&#7827; enrolment, the mur&#257;ja&rsquo;ah standard, Ij&#257;zah examination, and admission to the School of Islamic and Arabic Studies, which is open to the wider Muslim Ummah at any age.</p>
         <span class="ct-office-go">Qur'&#257;n College &rarr;</span>
       </a>
-      <a class="ct-office" href="/boarding/">
+      <a class="ct-office rg-light" href="/boarding/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 19v-8a2 2 0 012-2h7a2 2 0 012 2v1h3a2 2 0 012 2v5M3 19h18M3 15h18" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <h3>Boarding &amp; Student Welfare</h3>
         <p>Full and half boarding, the house routine, supervision, the sick bay, dietary requirements, and anything concerning a boarder's day outside the classroom.</p>
         <span class="ct-office-go">Boarding &rarr;</span>
       </a>
-      <a class="ct-office" href="/policies/#policy-SW-01">
+      <a class="ct-office rg-light" href="/policies/#policy-SW-01">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <h3>Safeguarding</h3>
         <p>Any concern for the welfare or safety of a child. It is received at Executive Management level, logged in a single cross-institution register, and answered the same day it is raised.</p>
         <span class="ct-office-go">The safeguarding policy &rarr;</span>
       </a>
-      <a class="ct-office" href="/policies/#policy-PA-01">
+      <a class="ct-office rg-light" href="/policies/#policy-PA-01">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <h3>Complaints</h3>
         <p>A formal written complaint is considered through the Disciplinary &amp; Ethics Committee, under a published procedure with stated stages and a stated route of appeal.</p>
         <span class="ct-office-go">The complaint procedure &rarr;</span>
       </a>
-      <a class="ct-office" href="/about/governance/">
+      <a class="ct-office rg-light" href="/about/governance/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7L2 13a3 3 0 006 0L5 7zm14 0l-3 6a3 3 0 006 0l-3-6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <h3>The Governance Headquarters</h3>
         <p>The Board of Governors, the Management Council, the standing committees, and the leadership of each of the five schools &mdash; every office named, with the authority it holds.</p>
         <span class="ct-office-go">The leadership directory &rarr;</span>
       </a>
-      <a class="ct-office" href="/foundation/">
+      <a class="ct-office rg-light" href="/foundation/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <h3>The Foundation</h3>
         <p>The Sultan Zakariya Hanafi Foundation keeps its own line, separate from the school's admissions and enquiries: giving, partnership, aid agencies and community programmes.</p>
         <span class="ct-office-go">Contact the Foundation &rarr;</span>
       </a>
-      <a class="ct-office" href="/press/">
+      <a class="ct-office rg-light" href="/press/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="16" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 9h6M7 13h6M7 17h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
         <h3>Media &amp; Press</h3>
         <p>Journalists, broadcasters and partners: the official boilerplate, the crest and brand assets, photography, and the officer authorised to speak for the institution.</p>
         <span class="ct-office-go">The Media Centre &rarr;</span>
       </a>
-      <a class="ct-office" href="/verify/">
+      <a class="ct-office rg-light" href="/verify/">
         <span class="ct-office-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
         <h3>Verification &amp; Records</h3>
         <p>An employer, university or examinations body checking a certificate, graduation document, identity card or receipt needs no account and need not write: the register answers directly.</p>
@@ -838,7 +843,7 @@
       </article>
     </div>
 
-    <div class="gi-frame ct-photo pr-reveal">
+    <div class="gi-frame ct-photo pr-reveal rg-light on-photo">
       <img src="/assets/images/campus/campus-gate.jpg" alt="The gate of Sultan Hanafi Royal Schools on Imowonla Road, Ikorodu, carrying the school's name and website" loading="lazy" width="1600" height="1068" />
       <span class="gi-plate-note">The gate at 15 Imowonla Road</span>
     </div>
@@ -1216,8 +1221,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery</span></button>
-            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Warm &amp; traditional</span></button>
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
             <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
@@ -1351,6 +1356,15 @@
             <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
             <button type="button" data-value="off" role="radio">Off</button>
           </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
         </div>
 
         <div class="pc-option">
@@ -1682,9 +1696,10 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=4af96d46e9" defer></script>
+<script src="/js/personalisation.js?v=e1bf725623" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=e4113ff864" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1703,7 +1718,7 @@
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=0e27bc1212" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
-<script src="/js/intro.js?v=e3d32ffda3" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 
