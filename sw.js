@@ -10,7 +10,7 @@
 // and as a speed boost for static assets (css/js/images), which are
 // safe to serve stale-while-revalidate since a page reload always
 // re-fetches its own HTML fresh.
-const CACHE_VERSION = 'shrs-pwa-704860ad51';
+const CACHE_VERSION = 'shrs-pwa-11c3579566';
 const APP_SHELL = [
   '/css/brand.css',
   '/css/personalisation.css',

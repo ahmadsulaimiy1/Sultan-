@@ -450,6 +450,7 @@ function buildPage(page, manifest) {
   // and prestige.css all have their own rules for at the same specificity,
   // so the only thing that decides the winner is source order.
   const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
+  const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n';
 
   const prestigeScripts = isPrestige
     ? '<script src="/js/prestige.js" defer></script>\n<script src="/js/motion.js" defer></script>\n'
@@ -496,7 +497,7 @@ function buildPage(page, manifest) {
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
 ${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
-${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${altTag}${headScripts}</head>
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${listenHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
@@ -538,6 +539,7 @@ ${personalisation}
 <script src="/js/site-chrome.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
+<script src="/js/listen.js" defer></script>
 ${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
 </body>
 </html>

@@ -1,0 +1,114 @@
+/* ===================================================================
+   THE READER
+   -------------------------------------------------------------------
+   A bar pinned to the foot of the window while a page is being read
+   aloud, and a lit passage in the page itself so a reader can follow
+   with their eyes. Both take the livery's own gold; neither exists
+   until the reader asks for one.
+   =================================================================== */
+
+.lsn-bar{
+  position:fixed;inset-inline:0;bottom:0;z-index:340;pointer-events:none;
+  transform:translateY(110%);transition:transform .42s cubic-bezier(.16,.8,.24,1);}
+.lsn-bar.is-open{transform:translateY(0);}
+html[data-pc-motion="reduced"] .lsn-bar{transition:none;}
+
+.lsn-inner{
+  pointer-events:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  max-width:1180px;margin:0 auto 14px;padding:12px 18px;
+  border-radius:var(--pr-r-lg,18px);
+  background:linear-gradient(168deg,
+    rgb(var(--lv-cfd2,42,28,16)) 0%,rgb(var(--lv-cfd4,26,16,6)) 100%);
+  border:1px solid rgba(var(--lv-gb,233,206,138),.42);
+  box-shadow:0 26px 60px -28px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.22);
+  color:rgb(var(--lv-p3,247,238,223));}
+@media (max-width:620px){
+  .lsn-inner{margin-inline:12px;gap:10px;padding:10px 12px;}
+  .lsn-rate{display:none;}
+}
+
+/* The five bars of a level meter, still until it speaks. */
+.lsn-wave{display:inline-flex;align-items:flex-end;gap:3px;height:18px;flex-shrink:0;}
+.lsn-wave i{
+  display:block;width:3px;height:5px;border-radius:2px;
+  background:linear-gradient(180deg,rgb(var(--lv-gl,255,246,223)),rgb(var(--lv-g,198,161,91)));
+  transform-origin:bottom;}
+.lsn-bar.is-speaking .lsn-wave i{animation:lsn-wave 1.05s ease-in-out infinite;}
+.lsn-bar.is-speaking .lsn-wave i:nth-child(2){animation-delay:.12s;}
+.lsn-bar.is-speaking .lsn-wave i:nth-child(3){animation-delay:.24s;}
+.lsn-bar.is-speaking .lsn-wave i:nth-child(4){animation-delay:.36s;}
+.lsn-bar.is-speaking .lsn-wave i:nth-child(5){animation-delay:.48s;}
+@keyframes lsn-wave{0%,100%{height:5px;}50%{height:18px;}}
+@media (prefers-reduced-motion:reduce){.lsn-bar.is-speaking .lsn-wave i{animation:none;height:11px;}}
+html[data-pc-motion="reduced"] .lsn-bar.is-speaking .lsn-wave i{animation:none;height:11px;}
+
+.lsn-btn{
+  appearance:none;cursor:pointer;border-radius:99px;padding:8px 16px;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.7rem;letter-spacing:.11em;
+  text-transform:uppercase;transition:background .3s ease,border-color .3s ease,color .3s ease;}
+.lsn-play{
+  border:1px solid rgba(var(--lv-gb,233,206,138),.75);
+  background:linear-gradient(135deg,rgb(var(--lv-g,198,161,91)),rgb(var(--lv-gb,233,206,138)));
+  color:rgb(var(--lv-cfd4,26,16,6));font-weight:600;}
+.lsn-play:hover{filter:brightness(1.07);}
+.lsn-stop{
+  border:1px solid rgba(var(--lv-gb,233,206,138),.45);background:transparent;
+  color:rgb(var(--lv-gb,233,206,138));}
+.lsn-stop:hover{background:rgba(var(--lv-gb,233,206,138),.14);border-color:rgb(var(--lv-gb,233,206,138));}
+
+.lsn-label{font-size:.82rem;color:rgba(var(--lv-p3,247,238,223),.86);min-width:5.5em;}
+.lsn-meter{
+  flex:1;min-width:90px;height:3px;border-radius:99px;overflow:hidden;
+  background:rgba(var(--lv-gb,233,206,138),.18);}
+.lsn-meter i{
+  display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left center;
+  background:linear-gradient(90deg,rgb(var(--lv-g,198,161,91)),rgb(var(--lv-gl,255,246,223)));
+  transition:transform .5s ease;}
+[dir="rtl"] .lsn-meter i{transform-origin:right center;}
+
+.lsn-rate{
+  display:inline-flex;align-items:center;gap:7px;font-size:.72rem;
+  color:rgba(var(--lv-p3,247,238,223),.7);
+  font-family:var(--font-label,'Cinzel',serif);letter-spacing:.1em;text-transform:uppercase;}
+.lsn-rate-sel{
+  background:rgba(var(--lv-gb,233,206,138),.10);color:rgb(var(--lv-p3,247,238,223));
+  border:1px solid rgba(var(--lv-gb,233,206,138),.4);border-radius:8px;
+  padding:5px 8px;font-size:.75rem;font-family:inherit;cursor:pointer;}
+.lsn-close{
+  appearance:none;background:none;border:none;cursor:pointer;font-size:1.4rem;line-height:1;
+  color:rgba(var(--lv-gb,233,206,138),.75);padding:0 4px;transition:color .3s ease;}
+.lsn-close:hover{color:rgb(var(--lv-gl,255,246,223));}
+
+/* ---- The lit passage ----------------------------------------------
+   The paragraph being spoken, marked in the page. Alpha over the
+   reader's own ground rather than a colour of its own, so it holds in
+   every edition and never touches the ink. */
+.lsn-lit{
+  position:relative;border-radius:6px;
+  box-shadow:0 0 0 6px rgba(var(--lv-gb,233,206,138),.14);
+  background:rgba(var(--lv-gb,233,206,138),.14);
+  transition:background .35s ease,box-shadow .35s ease;}
+html[data-pc-theme="dark"] .lsn-lit{
+  box-shadow:0 0 0 6px rgba(233,206,138,.16);
+  background:rgba(233,206,138,.16);}
+@media (prefers-reduced-motion:reduce){.lsn-lit{transition:none;}}
+
+/* Room at the foot of the page for the bar, so it never covers the
+   last line of what it is reading. */
+html.has-reader body{padding-bottom:96px;}
+
+/* ---- The control in the masthead ---------------------------------- */
+.listen-toggle{
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;padding:6px;position:relative;
+  color:var(--gold-bright);transition:color .3s ease,transform .3s ease;}
+.listen-toggle:hover{color:#fff;transform:translateY(-1px);}
+html[data-pc-theme="light"] .listen-toggle{color:rgb(var(--lv-gt2,138,106,47));}
+html[data-pc-theme="light"] .listen-toggle:hover{color:rgb(var(--lv-gt,124,84,48));}
+.listen-toggle::after{
+  content:"";position:absolute;inset:-3px;border-radius:50%;pointer-events:none;
+  border:1px solid currentColor;opacity:0;transform:scale(.6);
+  transition:opacity .6s ease,transform .6s ease;}
+.listen-toggle:hover::after{opacity:.6;transform:scale(1.3);}
+@media (prefers-reduced-motion:reduce){.listen-toggle,.listen-toggle::after{transition:none;}}

@@ -86,6 +86,7 @@
 <link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=a3cfac8216">
+<link rel="stylesheet" href="/css/listen.css?v=3bd13013d5">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/gallery/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/gallery/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/gallery/" />
@@ -154,6 +155,7 @@
       <span class="brand-text"><span class="line1">SULTAN HANAFI</span><br/><span class="line2">Écoles Royales</span></span>
     </a>
     <span class="mh-standing"><span class="mh-standing-t">Fondée en juillet 2016</span><span class="mh-standing-d">&middot;</span><span class="mh-standing-t">Ikorodu, État de Lagos</span></span>
+    <button class="listen-toggle" data-listen-toggle hidden aria-label="Écouter cette page" title="Écouter cette page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Rechercher sur le site" title="Recherche">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -1164,6 +1166,13 @@
             <button type="button" data-value="lean" role="radio">Lean</button>
           </div>
         </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Read This Page Aloud</span><p class="pc-option-desc">Puts a listen control in the masthead. It reads the page's own headings and paragraphs using the voice already installed on your device — nothing is fetched and nothing is sent anywhere — and lights each passage as it is spoken.</p></div>
+          <div class="pc-segmented" data-pc-set="readAloud" role="radiogroup" aria-label="Read this page aloud">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
 
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Ornament</span><p class="pc-option-desc">The engraved furniture — corner rules, travelling-light rings, guilloche, watermarks and letterhead rules. Reduce it for a plainer page; remove it for a document.</p></div>
@@ -1486,7 +1495,7 @@
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=f1cd7f0f5d" defer></script>
+<script src="/js/personalisation.js?v=1292aa3abe" defer></script>
 <script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/regalia.js?v=e4113ff864" defer></script>
@@ -1509,6 +1518,7 @@
 <script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=d736fc8544" defer></script>
+<script src="/js/listen.js?v=235af538fc" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 
