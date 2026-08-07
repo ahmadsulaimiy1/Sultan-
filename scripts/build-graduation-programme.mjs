@@ -55,7 +55,7 @@ const AWARDS = [
     title: 'Junior Secondary School Graduation', ar: '',
     note: 'Completion of the three-year Junior Secondary programme',
     names: ['Hameedah Adebimpe Ojewumi', 'Muhammad Ismail Seriki', 'Fatimah Desire Ibrahim',
-      'Aisha Anofi', 'Baqi Anofi', 'Sa’ad Sanusi', 'Fawaz Owolabi', 'Radiah Apatira',
+      'Aisha Anofi', 'Baqi Anofi', "Sa'ad Sanusi", 'Fawaz Owolabi', 'Radiah Apatira',
       'Faridah Aliu', 'Anisa Opeyemi Jokomba', 'Ameerah Durodola',
       'Abdulrahman Abdullah', 'Ameerah Abdulhafeez'] },
   { code: 'SS', school: 'Sultan Hanafi Royal College',
@@ -72,21 +72,39 @@ const TOTAL = AWARDS.reduce((n, a) => n + a.names.length, 0);
 const PEOPLE = new Set(AWARDS.flatMap((a) => a.names)).size;
 
 // ── THE ORDER OF PROCEEDINGS ────────────────────────────────────────────────
-// The Founder's list of 2026-08-07, in his sequence and his wording.
+// SOURCE: the school's own "Programme of Event" (Programme_of_Event1.docx,
+// supplied 2026-08-07). Fourteen items, in the school's sequence and wording.
 //
-// ONE CLASS OF CHANGE, made and declared: his times overlapped in four places.
-// The Graduands were introduced at 10:10, during the anthems and across the
-// whole of the Key Guests' slot; and the Donation, the Goodwill Message and the
-// Refreshments all fell inside Ṣolātu Ẓuhr. Read literally, five things happen
-// during the prayer. Every item he listed is kept, in his order; only the
-// minutes are resolved so the sequence can actually be run. Reverting any line
-// is a one-line change here.
+// ITS SEQUENCE IS FOLLOWED EXACTLY. An earlier pass here reordered two pairs —
+// Key Guests / Graduands, and Donation / Goodwill Message — while claiming to
+// keep the school's order. That was wrong and is corrected: the sequence below
+// is the document's, line for line.
+//
+// ONE CLASS OF CHANGE, made and declared: the document's TIMES contradict
+// themselves in four places and cannot be printed as written.
+//   · "Introduction of the Graduands 10:10-10:30" runs back through the anthems
+//     and across the whole of the Key Guests' slot. Given 10:30–10:45, which
+//     moves the Welcome Address from 10:30 to 10:45.
+//   · "Solatu Dhur 12:45 – 1: 1:20" is malformed. Read as 12:45–13:20.
+//   · Donation "1:00-1:05" and Light Refreshments "1:05-1:20" both fall INSIDE
+//     that prayer. Their DURATIONS are kept — five minutes and fifteen — and
+//     they are placed after it.
+//   · "Royal Students Presentation" and "Goodwill message" carry no time at
+//     all. Fifteen minutes and five, in their printed positions.
+//
+// Nothing is added and nothing is dropped. A previous pass also printed an
+// "Arrival and Seating of Guests 10:00–10:05" that appears in no school
+// document; it has been removed. The ceremony begins at 10:05, as written.
+//
+// Two wordings are normalised for a formal programme and nothing else is:
+// "Lecture! Lecture!! Lecture!!!" prints as "Lecture", and "Solatu Dhur" as
+// "Ṣolātu Ẓuhr" beside the Arabic صلاة الظهر. Reverting either is a one-line
+// change here.
 const ORDER = [
-  ['10:00', '10:05', 'Arrival and Seating of Guests', ''],
   ['10:05', '10:10', 'Recitation from the Glorious Qur’an', 'تلاوة من القرآن الكريم'],
   ['10:10', '10:15', 'National Anthem and School Anthem', ''],
-  ['10:15', '10:30', 'Introduction of the Graduands', ''],
-  ['10:30', '10:45', 'Introduction of Key Guests', ''],
+  ['10:15', '10:30', 'Introduction of Key Guests', ''],
+  ['10:30', '10:45', 'Introduction of the Graduands', ''],
   ['10:45', '11:30', 'Welcome Address by the School Heads', ''],
   ['11:30', '11:40', 'Chairman’s Opening Speech', ''],
   ['11:40', '11:50', 'Primary Pupils’ Presentations', ''],
@@ -94,8 +112,8 @@ const ORDER = [
   ['12:00', '12:45', 'Lecture', ''],
   ['12:45', '13:20', 'Ṣolātu Ẓuhr', 'صلاة الظهر'],
   ['13:20', '13:35', 'Royal Students’ Presentation', 'All Units'],
-  ['13:35', '13:40', 'Goodwill Message', ''],
-  ['13:40', '13:45', 'Donation', ''],
+  ['13:35', '13:40', 'Donation', ''],
+  ['13:40', '13:45', 'Goodwill Message', ''],
   ['13:45', '14:00', 'Light Refreshments', ''],
 ];
 
@@ -109,9 +127,11 @@ const OFFICERS = [
 
 const COORDINATORS = 'Mr. Shola  ·  Ustādh Shereef Alwaafir';
 const VENUE = '15 Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road, Ikorodu, Lagos State';
-// The live domain. The supplied letterhead reads .ng; every verification URL,
-// every QR on every certificate issued this week and the site itself are .com,
-// so a guest who types the .ng reaches nothing.
+// The live domain. The school's own letterhead — on the Programme of Event
+// itself — reads https://shroyalschools.ng. Every verification URL, every QR
+// in the certificate registers, and the live site are .com, so a guest who
+// types the .ng reaches nothing. The .com prints until the Founder rules
+// otherwise, and the discrepancy is reported rather than smoothed.
 const WEB = 'shroyalschools.com';
 const MAIL = 'shroyalschools@gmail.com';
 const TEL = '+234 (0) 807 374 7650';
