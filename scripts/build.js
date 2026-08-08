@@ -460,6 +460,16 @@ function buildPage(page, manifest) {
   const homefxScript = wantsHomefx
     ? '<script src="/js/homefx.js" defer></script>\n' : '';
 
+  // The story layer — the drawn instruments on the long narrative pages
+  // (the quartered shield, the CLEVER rosette, the chain of
+  // accountability, the escalation, the numbered undertakings). It reads
+  // its labels out of the cards already on the page, so it must load
+  // after prestige.css and after homefx.css, which is why it rides here
+  // rather than in extraCss. Opt in with story:true in the manifest.
+  const wantsStory = page.story === true;
+  const storyHead = wantsStory ? '<link rel="stylesheet" href="/css/story.css">\n' : '';
+  const storyScript = wantsStory ? '<script src="/js/story.js" defer></script>\n' : '';
+
   const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
   const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n'
     + '<link rel="stylesheet" href="/css/clock.css">\n';
@@ -509,7 +519,7 @@ function buildPage(page, manifest) {
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
 ${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
-${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${homefxHead}${listenHead}${altTag}${headScripts}</head>
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${homefxHead}${storyHead}${listenHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
@@ -556,7 +566,7 @@ ${personalisation}
 <script src="/js/mega.js" defer></script>
 <script src="/js/edge.js" defer></script>
 <script src="/js/clock.js" defer></script>
-${elevateScripts}${prestigeScripts}${idcardScripts}${homefxScript}${extraScripts}
+${elevateScripts}${prestigeScripts}${idcardScripts}${homefxScript}${storyScript}${extraScripts}
 </body>
 </html>
 `;

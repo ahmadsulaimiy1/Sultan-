@@ -1,0 +1,621 @@
+/* ===================================================================
+   THE STORY LAYER — Discover SHRS, drawn rather than recited
+   -------------------------------------------------------------------
+   The audit of /about/ measured one defect above all the others: the
+   text column filled between 0.31 and 0.39 of the band it sat in on
+   every prose section, and six of the ten sections carried no figure
+   of any kind. Two of them — "No One Person Decides" and "What Happens
+   on the Bad Day" — described a *structure* and a *sequence* entirely
+   in sentences, which is the one thing prose is worst at. The page
+   read as a stack of paragraphs with photographs between them, and it
+   did not move.
+
+   This layer answers that. Nothing here is decoration hung on the
+   outside of the page: every figure draws something the page was
+   already claiming in words, and every one of them takes its labels
+   from the cards already in the markup, so a figure cannot drift out
+   of agreement with the text beside it and a translated page gets a
+   translated figure with no second source to maintain.
+
+     1. Grounds and tokens
+     2. The margin apparatus — the fill-ratio fix
+     3. The founder's hand — a signature that writes itself
+     4. The shield, assembled — the crest as an instrument
+     5. The CLEVER rosette
+     6. The chain of accountability
+     7. The escalation
+     8. The five undertakings
+     9. Ambient — motes, and the lit edge
+    10. Motion: Reduced, and reduced-motion
+
+   Everything that moves stops when Motion: Reduced is set, and every
+   figure is reachable and announced from the keyboard.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   1. GROUNDS AND TOKENS
+   -------------------------------------------------------------------
+   Every figure root carries .st, so one small set of tokens re-points
+   for Midnight and for the dark royal band and the figures follow
+   without any per-shape overrides.
+   ------------------------------------------------------------------- */
+.st{
+  --st-ink:rgb(var(--lv-cf2,51,40,28));
+  --st-ink-soft:rgba(var(--lv-cf2,51,40,28),.74);
+  --st-plate:rgb(var(--lv-p2,252,250,246));
+  --st-plate-2:rgb(var(--lv-p3,247,238,223));
+  --st-line:rgba(var(--lv-g,198,161,91),.42);
+  --st-gold:rgb(var(--lv-g,198,161,91));
+  --st-gold-b:rgb(var(--lv-gb,233,206,138));
+  --st-gold-d:rgb(var(--lv-gd,156,122,60));
+  /* --st-gold-d is a DRAWING gold: right for a rule, a ring or a
+     stroke, and measured at 3.4–3.8:1 against the pale plates — below
+     the 4.5 a small label needs. Every label here takes --st-gold-t
+     instead, which is the livery's text-safe accent and inverts for
+     Midnight on its own. */
+  --st-gold-t:rgb(var(--lv-gt3,99,72,27));
+  --st-ease:cubic-bezier(.16,.8,.24,1);
+}
+html[data-pc-theme="dark"] .st{
+  --st-ink:rgb(var(--lv-w30,241,231,214));
+  --st-ink-soft:rgba(var(--lv-w30,241,231,214),.78);
+  --st-plate:rgb(var(--lv-w52,28,20,12));
+  --st-plate-2:rgb(var(--lv-w52,28,20,12));
+}
+/* The royal band is dark in every theme, so the figures inside it take
+   the light ink whatever the reader has chosen. */
+.pr-section.is-royal .st{
+  --st-ink:rgb(var(--lv-w06,244,234,212));
+  --st-ink-soft:rgba(var(--lv-w06,244,234,212),.80);
+  --st-plate:rgba(255,255,255,.045);
+  --st-plate-2:rgba(255,255,255,.03);
+}
+
+/* A figure is a piece of furniture in its own right: it gets a plate,
+   a hairline and a caption, and it is announced like a plate in a
+   book rather than dropped between two paragraphs. */
+.st-figure{
+  position:relative;margin:38px 0 0;padding:26px 24px 20px;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);border-radius:22px;
+  box-shadow:var(--pr-shadow-soft,0 18px 40px -28px rgba(20,13,4,.35));
+  overflow:hidden;
+}
+.pr-section.is-royal .st-figure{
+  background:linear-gradient(168deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border-color:rgba(var(--lv-gb,233,206,138),.26);
+}
+.st-figure svg{display:block;width:100%;height:auto;overflow:visible;}
+.st-figure-cap{
+  margin:16px 0 0;font-family:var(--font-body,'Inter',sans-serif);
+  font-size:.8rem;line-height:1.6;color:var(--st-ink-soft);text-align:center;
+}
+.st-figure-cap b{color:var(--st-ink);font-weight:600;}
+
+/* The figure's own eyebrow, set on the hairline that opens it. */
+.st-figure-head{
+  display:flex;align-items:center;gap:14px;margin:0 0 18px;
+}
+.st-figure-head::before,.st-figure-head::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--st-line),transparent);
+}
+.st-figure-head span{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--st-gold-t);white-space:nowrap;
+}
+
+/* -------------------------------------------------------------------
+   2. THE MARGIN APPARATUS
+   -------------------------------------------------------------------
+   The measured defect. A 60ch column of prose in a 1180px band leaves
+   two thirds of the band empty, and the eye reads that emptiness as
+   nothing happening. These put something in it that earns its place:
+   a line lifted out of the argument, or the three facts the paragraph
+   is built on, set as a plaque.
+
+   They float to the side the language ends on, so the Arabic page
+   gets them on the left without a second rule.
+   ------------------------------------------------------------------- */
+.st-aside{
+  float:right;float:inline-end;
+  width:min(300px,42%);margin:6px 0 22px 34px;
+  margin-inline:34px 0;margin-inline-end:0;margin-inline-start:34px;
+  position:relative;
+}
+[dir="rtl"] .st-aside{margin-inline-start:34px;margin-inline-end:0;}
+@media (max-width:820px){
+  .st-aside{float:none;width:auto;margin-inline:0;margin:22px 0;}
+}
+
+/* A line lifted out of the argument and set in the display face. */
+.st-aside-quote{
+  padding:20px 0 20px 22px;padding-inline:22px 0;
+  border-inline-start:3px solid var(--st-gold);
+}
+.st-aside-quote p{
+  margin:0;font-family:var(--font-display,'Cormorant Garamond',serif);
+  font-size:clamp(1.16rem,2.2vw,1.42rem);line-height:1.42;font-style:italic;
+  color:var(--st-ink);
+}
+.st-aside-quote .st-who{
+  display:block;margin-top:12px;font-family:var(--font-label,'Cinzel',serif);
+  font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-style:normal;
+  color:var(--st-gold-t);
+}
+
+/* The three facts a paragraph rests on, set where they can be checked
+   against it without leaving the line. */
+.st-aside-facts{
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);border-radius:18px;padding:22px 22px 18px;
+  box-shadow:var(--pr-shadow-soft,0 18px 40px -28px rgba(20,13,4,.32));
+}
+/* These three are <span>s, not <b>s, on purpose. The Midnight edition
+   carries `strong, b { color: inherit !important }` site-wide — which is
+   right for emphasis inside a paragraph and wrong for a label whose
+   colour IS its meaning. A span is outside that rule. */
+.st-aside-facts .st-facts-k{
+  display:block;font-family:var(--font-label,'Cinzel',serif);
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--st-gold-t);margin-bottom:14px;
+}
+.st-aside-facts dl{margin:0;display:grid;gap:13px;}
+.st-aside-facts dt{
+  font-family:var(--font-label,'Cinzel',serif);font-size:1.06rem;
+  color:var(--st-ink);line-height:1.2;
+}
+.st-aside-facts dd{
+  margin:3px 0 0;font-size:.82rem;line-height:1.5;color:var(--st-ink-soft);
+}
+.st-aside-facts dl > div{
+  padding-inline-start:14px;position:relative;
+}
+.st-aside-facts dl > div::before{
+  content:"";position:absolute;inset-inline-start:0;top:5px;
+  width:5px;height:5px;transform:rotate(45deg);
+  background:var(--st-gold);
+}
+
+/* -------------------------------------------------------------------
+   3. THE FOUNDER'S HAND
+   -------------------------------------------------------------------
+   Four paragraphs signed by nobody ended as four paragraphs. The
+   signature writes itself once, when the passage is reached, over a
+   seal that turns — which is the difference between a letter and a
+   block of text attributed in a caption.
+   ------------------------------------------------------------------- */
+.st-sign{
+  display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+  margin:26px 0 0;padding:22px 0 0;border-top:1px solid var(--st-line);
+}
+.st-sign-ink{flex:0 0 auto;width:min(280px,64%);}
+.st-sign-ink svg{display:block;width:100%;height:auto;overflow:visible;}
+.st-sign-ink path{
+  fill:none;stroke:var(--st-gold-d);stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:var(--len,900);stroke-dashoffset:var(--len,900);
+}
+html[data-pc-theme="dark"] .st-sign-ink path{stroke:var(--st-gold-b);}
+.st-sign.is-lit .st-sign-ink path{
+  transition:stroke-dashoffset 2.6s var(--st-ease) .15s;
+  stroke-dashoffset:0;
+}
+.st-sign-who{flex:1 1 220px;min-width:200px;}
+.st-sign-who .st-sign-n{
+  display:block;font-family:var(--font-label,'Cinzel',serif);
+  font-size:1.02rem;color:var(--st-ink);
+}
+.st-sign-who span{
+  display:block;margin-top:5px;font-size:.8rem;line-height:1.5;color:var(--st-ink-soft);
+}
+
+/* The seal: a turning gilt medallion the signature is set against. */
+.st-seal{
+  flex:0 0 auto;width:74px;height:74px;position:relative;
+  display:grid;place-items:center;
+}
+.st-seal::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,
+    rgba(var(--lv-gd,156,122,60),.0),
+    rgba(var(--lv-gb,233,206,138),.85) 22%,
+    rgba(var(--lv-gd,156,122,60),.0) 46%,
+    rgba(var(--lv-gb,233,206,138),.85) 74%,
+    rgba(var(--lv-gd,156,122,60),.0));
+  -webkit-mask:radial-gradient(circle,transparent 60%,#000 61%);
+          mask:radial-gradient(circle,transparent 60%,#000 61%);
+  animation:st-turn 14s linear infinite;
+}
+.st-seal::after{
+  content:"";position:absolute;inset:9px;border-radius:50%;
+  border:1px solid var(--st-line);
+  background:radial-gradient(circle at 32% 28%,
+    rgba(var(--lv-gb,233,206,138),.30),rgba(var(--lv-gd,156,122,60),.14) 60%,transparent);
+}
+.st-sign .st-seal > i{
+  position:relative;z-index:1;font-style:normal;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.9rem;letter-spacing:.06em;
+  color:var(--st-gold-t);
+}
+@keyframes st-turn{to{transform:rotate(360deg);}}
+
+/* -------------------------------------------------------------------
+   4. THE SHIELD, ASSEMBLED
+   -------------------------------------------------------------------
+   "Every Quadrant Tells Part of the Story" was four cards beside four
+   cropped photographs of the devices. The shield itself — the thing
+   the section is about — was a 150px picture at the top and played no
+   part. Here it is drawn at size, quartered, and wired to the cards
+   both ways: address a quadrant and its card lights; address a card
+   and its quadrant lights. The devices arrive one after another as
+   the section is reached, and a light travels the shield's edge.
+   ------------------------------------------------------------------- */
+.st-crest{
+  display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:40px;align-items:center;
+  margin-top:40px;
+}
+@media (max-width:900px){.st-crest{grid-template-columns:1fr;gap:26px;}}
+/* The shield keeps station beside the four cards while they are read,
+   so whichever card is under the eye has its quarter next to it. */
+.st-shield{position:sticky;top:104px;}
+@media (max-width:900px){.st-shield{position:static;max-width:300px;margin-inline:auto;}}
+.st-shield svg{display:block;width:100%;height:auto;overflow:visible;}
+
+.st-sh-body{
+  fill:rgba(var(--lv-cfd2,42,28,16),.28);
+  stroke:var(--st-gold);stroke-width:2.4;
+  stroke-dasharray:var(--len,1400);stroke-dashoffset:var(--len,1400);
+}
+.pr-section.is-royal .st-sh-body{fill:rgba(255,255,255,.05);}
+.st-shield.is-lit .st-sh-body{
+  transition:stroke-dashoffset 1.9s var(--st-ease);stroke-dashoffset:0;
+}
+.st-sh-rule{
+  fill:none;stroke:rgba(var(--lv-gb,233,206,138),.55);stroke-width:1.4;
+  stroke-dasharray:var(--len,700);stroke-dashoffset:var(--len,700);
+}
+.st-shield.is-lit .st-sh-rule{
+  transition:stroke-dashoffset 1.2s var(--st-ease) 1.1s;stroke-dashoffset:0;
+}
+
+/* One quadrant. The wash is what lights; the device sits above it. */
+.st-sh-q{cursor:pointer;outline:none;}
+.st-sh-q .wash{
+  fill:rgba(var(--lv-gb,233,206,138),0);
+  transition:fill .45s var(--st-ease);
+}
+.st-sh-q .dev{
+  fill:var(--st-gold-b);opacity:0;transform:scale(.82);transform-origin:var(--ox,50%) var(--oy,50%);
+  transition:opacity .7s var(--st-ease),transform .7s var(--st-ease),fill .4s ease;
+}
+.st-shield.is-lit .st-sh-q .dev{opacity:.9;transform:scale(1);transition-delay:var(--d,0s);}
+.st-sh-q.is-hot .wash{fill:rgba(var(--lv-gb,233,206,138),.20);}
+.st-sh-q.is-hot .dev{opacity:1;fill:rgb(var(--lv-gl,255,246,223));}
+.st-sh-q:focus-visible .wash{fill:rgba(var(--lv-gb,233,206,138),.26);}
+.st-sh-q:focus-visible .edge{stroke:rgb(var(--lv-gl,255,246,223));stroke-width:2.6;}
+.st-sh-q .edge{fill:none;stroke:transparent;stroke-width:0;transition:stroke .3s ease;}
+/* The quadrant's own name, shown only while it is addressed. */
+.st-sh-q .tag{
+  font-family:var(--font-label,'Cinzel',serif);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;fill:rgb(var(--lv-gl,255,246,223));
+  paint-order:stroke fill;stroke:rgba(var(--lv-cfd5,34,23,9),.85);stroke-width:3.4;
+  opacity:0;transition:opacity .35s ease;text-anchor:middle;pointer-events:none;
+}
+.st-sh-q.is-hot .tag,.st-sh-q:focus-visible .tag{opacity:1;}
+
+/* The travelling light on the shield's own edge. */
+.st-sh-trace{
+  fill:none;stroke:rgb(var(--lv-gl,255,246,223));stroke-width:2.6;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(var(--lv-gb,233,206,138),.9));
+  stroke-dasharray:70 1400;stroke-dashoffset:0;opacity:0;
+}
+.st-shield.is-lit .st-sh-trace{opacity:.85;animation:st-trace 7s linear 1.9s infinite;}
+@keyframes st-trace{to{stroke-dashoffset:-1470;}}
+
+/* The card, when its quadrant is addressed. */
+.pr-quad.is-hot{
+  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.55),
+             0 26px 54px -26px rgba(var(--lv-gd,156,122,60),.7);
+  transform:translateY(-3px);
+}
+.pr-quad{transition:box-shadow .4s var(--st-ease),transform .4s var(--st-ease);}
+
+/* -------------------------------------------------------------------
+   5. THE CLEVER ROSETTE
+   -------------------------------------------------------------------
+   Six letters in six identical boxes is an acronym typeset. A rosette
+   is the same six values shown as one standard held at six points,
+   which is what the sentence above them actually claims. Each segment
+   is wired to its card, the ring draws itself, and a guilloche turns
+   behind it at a speed you notice only if you look for it.
+   ------------------------------------------------------------------- */
+.st-rosette{
+  width:min(420px,100%);margin:0 auto;position:relative;
+}
+.st-rosette svg{display:block;width:100%;height:auto;overflow:visible;}
+.st-rose-guilloche{
+  fill:none;stroke:var(--st-line);stroke-width:1;stroke-dasharray:3 9;
+  transform-origin:50% 50%;
+}
+.st-rosette.is-lit .st-rose-guilloche{animation:st-turn 60s linear infinite;}
+.st-rose-seg{cursor:pointer;outline:none;}
+.st-rose-seg .seg{
+  fill:rgba(var(--lv-g,198,161,91),.17);
+  stroke:rgba(var(--lv-g,198,161,91),.6);stroke-width:1.2;
+  opacity:0;transform:scale(.9);transform-origin:50% 50%;
+  transition:opacity .7s var(--st-ease),transform .7s var(--st-ease),fill .35s ease,stroke .35s ease;
+}
+.st-rosette.is-lit .st-rose-seg .seg{opacity:1;transform:scale(1);transition-delay:var(--d,0s);}
+.st-rose-seg .ltr{
+  font-family:var(--font-label,'Cinzel',serif);font-size:26px;font-weight:600;
+  fill:var(--st-gold-d);text-anchor:middle;dominant-baseline:central;
+  transition:fill .35s ease;pointer-events:none;
+}
+html[data-pc-theme="dark"] .st-rose-seg .ltr,
+.pr-section.is-royal .st-rose-seg .ltr{fill:var(--st-gold-b);}
+.st-rose-seg .nm{
+  font-family:var(--font-body,'Inter',sans-serif);font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;fill:var(--st-ink-soft);text-anchor:middle;
+  transition:fill .35s ease;pointer-events:none;
+}
+.st-rose-seg.is-hot .seg{
+  fill:rgba(var(--lv-gb,233,206,138),.34);
+  stroke:rgb(var(--lv-gb,233,206,138));
+}
+.st-rose-seg.is-hot .ltr{fill:var(--st-ink);}
+.st-rose-seg.is-hot .nm{fill:var(--st-ink);}
+.st-rose-seg:focus-visible .seg{
+  fill:rgba(var(--lv-gb,233,206,138),.34);stroke:rgb(var(--lv-gl,255,246,223));stroke-width:2;
+}
+.st-rose-hub{fill:var(--st-plate);stroke:var(--st-line);stroke-width:1;}
+.st-rose-hub-t{
+  font-family:var(--font-label,'Cinzel',serif);font-size:15px;letter-spacing:.16em;
+  fill:var(--st-ink);text-anchor:middle;
+}
+.st-rose-hub-s{
+  font-family:var(--font-body,'Inter',sans-serif);font-size:8.5px;letter-spacing:.16em;
+  text-transform:uppercase;fill:var(--st-ink-soft);text-anchor:middle;
+}
+.pr-card.is-hot{
+  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.55),
+             0 26px 54px -26px rgba(var(--lv-gd,156,122,60),.65);
+}
+
+/* -------------------------------------------------------------------
+   6. THE CHAIN OF ACCOUNTABILITY
+   -------------------------------------------------------------------
+   "No One Person Decides" is a claim about a shape, and it was made
+   only in sentences. Drawn, the shape is checkable at a glance: one
+   Board above one Head of Schools above five named institutions, each
+   with the person who answers for it printed on it. The names are
+   read out of the cards below, so the figure cannot contradict them.
+   ------------------------------------------------------------------- */
+.st-chain-node rect{
+  fill:var(--st-plate);stroke:var(--st-line);stroke-width:1.2;
+  transition:stroke .4s ease,fill .4s ease;
+}
+.st-chain-node.is-crown rect{
+  fill:rgba(var(--lv-cfd2,42,28,16),.92);stroke:rgb(var(--lv-gb,233,206,138));stroke-width:1.6;
+}
+.st-chain-node.is-crown .t{fill:rgb(var(--lv-gl,255,246,223));}
+.st-chain-node.is-crown .s{fill:rgba(var(--lv-gp,243,226,188),.86);}
+.st-chain-node .t{
+  font-family:var(--font-label,'Cinzel',serif);font-size:14px;
+  fill:var(--st-ink);text-anchor:middle;
+}
+.st-chain-node .s{
+  font-family:var(--font-body,'Inter',sans-serif);font-size:11px;
+  fill:var(--st-ink-soft);text-anchor:middle;
+}
+.st-chain-node{opacity:0;transform:translateY(14px);transition:opacity .7s var(--st-ease),transform .7s var(--st-ease);}
+.st-chain.is-lit .st-chain-node{opacity:1;transform:none;transition-delay:var(--d,0s);}
+.st-chain-wire{
+  fill:none;stroke:var(--st-gold);stroke-width:1.6;stroke-linecap:round;
+  stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);
+}
+.st-chain.is-lit .st-chain-wire{transition:stroke-dashoffset 1.5s var(--st-ease) .2s;stroke-dashoffset:0;}
+/* A bead of light running the bus, so the diagram is never quite still. */
+.st-chain-bead{
+  fill:none;stroke:rgb(var(--lv-gl,255,246,223));stroke-width:2.6;stroke-linecap:round;
+  filter:drop-shadow(0 0 5px rgba(var(--lv-gb,233,206,138),.9));
+  stroke-dasharray:46 900;opacity:0;
+}
+.st-chain.is-lit .st-chain-bead{opacity:.9;animation:st-bus 6s linear 1.4s infinite;}
+@keyframes st-bus{from{stroke-dashoffset:46;}to{stroke-dashoffset:-900;}}
+
+/* -------------------------------------------------------------------
+   7. THE ESCALATION
+   -------------------------------------------------------------------
+   The safeguarding section describes an order of events — something
+   happens, a First Aider sees it, it goes to the nurse, the guardian
+   is told the same day, and the policy that governs all of it is
+   published. Drawn as a rail with five stations, the *order* is the
+   information, and it is the one thing a worried parent is reading
+   the section for.
+   ------------------------------------------------------------------- */
+.st-esc-rail{
+  fill:none;stroke:var(--st-line);stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:var(--len,800);stroke-dashoffset:var(--len,800);
+}
+.st-esc.is-lit .st-esc-rail{transition:stroke-dashoffset 1.6s var(--st-ease);stroke-dashoffset:0;}
+.st-esc-run{
+  fill:none;stroke:rgb(var(--lv-gb,233,206,138));stroke-width:3;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(var(--lv-gb,233,206,138),.8));
+  stroke-dasharray:64 900;opacity:0;
+}
+.st-esc.is-lit .st-esc-run{opacity:.95;animation:st-run 5.5s linear 1.2s infinite;}
+@keyframes st-run{from{stroke-dashoffset:64;}to{stroke-dashoffset:-900;}}
+.st-esc-stn{cursor:default;outline:none;opacity:0;transform:translateY(12px);
+  transition:opacity .6s var(--st-ease),transform .6s var(--st-ease);}
+.st-esc.is-lit .st-esc-stn{opacity:1;transform:none;transition-delay:var(--d,0s);}
+.st-esc-stn .disc{
+  fill:var(--st-plate);stroke:var(--st-gold);stroke-width:1.6;
+  transition:fill .4s ease,stroke .4s ease;
+}
+.st-esc-stn.is-origin .disc{fill:rgba(var(--lv-cfd2,42,28,16),.92);stroke:rgb(var(--lv-gb,233,206,138));}
+.st-esc-stn.is-origin .gl{stroke:rgb(var(--lv-gl,255,246,223));}
+.st-esc-stn .gl{
+  fill:none;stroke:var(--st-gold-d);stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+html[data-pc-theme="dark"] .st-esc-stn .gl{stroke:var(--st-gold-b);}
+.st-esc-stn .n{
+  font-family:var(--font-label,'Cinzel',serif);font-size:10px;letter-spacing:.14em;
+  fill:var(--st-gold-t);text-anchor:middle;
+}
+.st-esc-stn .t{
+  font-family:var(--font-body,'Inter',sans-serif);font-size:12px;font-weight:600;
+  fill:var(--st-ink);text-anchor:middle;
+}
+.st-esc-stn.is-hot .disc{fill:rgba(var(--lv-gb,233,206,138),.26);stroke:rgb(var(--lv-gb,233,206,138));stroke-width:2.2;}
+
+/* -------------------------------------------------------------------
+   8. THE FIVE UNDERTAKINGS
+   -------------------------------------------------------------------
+   The one section on the page carrying no figure and no photograph at
+   all was the one making five specific, checkable promises — the part
+   a family is most likely to read twice. Each undertaking now takes a
+   numbered gilt seal whose ring closes as the item arrives, a drawn
+   device of its own, and a lit rule down its inner edge.
+   ------------------------------------------------------------------- */
+.st-pledges{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:14px;counter-reset:pl;}
+.st-pledges li{
+  position:relative;display:grid;
+  grid-template-columns:56px 1fr;gap:18px;align-items:start;
+  padding:18px 20px;border-radius:16px;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 16px 34px -26px rgba(20,13,4,.3));
+  opacity:0;transform:translateY(16px);
+  transition:opacity .7s var(--st-ease),transform .7s var(--st-ease),
+             box-shadow .4s ease,border-color .4s ease;
+}
+.st-pledges.is-lit li{opacity:1;transform:none;transition-delay:var(--d,0s);}
+.st-pledges li:hover,.st-pledges li:focus-within{
+  border-color:rgba(var(--lv-gb,233,206,138),.6);
+  box-shadow:0 22px 46px -26px rgba(var(--lv-gd,156,122,60),.55);
+}
+/* The lit rule down the inner edge, drawn as the item settles. */
+.st-pledges li::before{
+  content:"";position:absolute;inset-block:14px;inset-inline-start:0;width:3px;
+  border-radius:99px;transform:scaleY(0);transform-origin:top;
+  background:linear-gradient(180deg,
+    rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-g,198,161,91)),transparent);
+  transition:transform .9s var(--st-ease);
+}
+.st-pledges.is-lit li::before{transform:scaleY(1);transition-delay:calc(var(--d,0s) + .2s);}
+
+.st-pl-seal{
+  position:relative;width:56px;height:56px;display:grid;place-items:center;
+}
+.st-pl-seal svg{position:absolute;inset:0;width:56px;height:56px;overflow:visible;}
+.st-pl-seal .trk{fill:none;stroke:rgba(var(--lv-g,198,161,91),.26);stroke-width:2;}
+.st-pl-seal .arc{
+  fill:none;stroke:var(--st-gold-d);stroke-width:2.8;stroke-linecap:round;
+  stroke-dasharray:157;stroke-dashoffset:157;transform:rotate(-90deg);transform-origin:50% 50%;
+}
+.st-pledges.is-lit .st-pl-seal .arc{
+  transition:stroke-dashoffset 1.1s var(--st-ease);stroke-dashoffset:0;
+  transition-delay:calc(var(--d,0s) + .25s);
+}
+.st-pl-seal .gl{
+  position:relative;width:26px;height:26px;fill:none;
+  stroke:var(--st-gold-d);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+  inset:auto;
+}
+html[data-pc-theme="dark"] .st-pl-seal .gl{stroke:var(--st-gold-b);}
+.st-pledges li .st-pl-seal .st-pl-n{
+  position:absolute;inset-inline-start:-4px;top:-4px;
+  width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;
+  background:linear-gradient(160deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)));
+  color:rgb(var(--lv-cfd5,34,23,9));
+  box-shadow:0 3px 8px -3px rgba(var(--lv-gd,156,122,60),.8);
+  /* The badge ground is gold in every theme, so its numeral must be the
+     one that does not invert with the page. */
+}
+.st-pl-body{font-size:1rem;line-height:1.62;color:var(--st-ink-soft);}
+.st-pl-body b{
+  display:block;font-family:var(--font-label,'Cinzel',serif);
+  font-size:.98rem;color:var(--st-ink);margin-bottom:5px;letter-spacing:.01em;
+}
+
+/* -------------------------------------------------------------------
+   9. AMBIENT
+   -------------------------------------------------------------------
+   The royal band is the darkest thing on the page and was the most
+   inert. Gilt motes drift across it — slowly enough that they read as
+   air rather than as animation, and they are the only thing on this
+   page that never stops while the band is on screen.
+   ------------------------------------------------------------------- */
+.st-motes{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1;}
+.st-motes i{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:radial-gradient(circle,rgb(var(--lv-gl,255,246,223)),
+    rgba(var(--lv-gb,233,206,138),.55) 50%,transparent 70%);
+  opacity:0;animation:st-drift var(--dur,26s) linear var(--dly,0s) infinite;
+}
+@keyframes st-drift{
+  0%{opacity:0;transform:translate3d(0,20px,0) scale(.7);}
+  12%{opacity:var(--pk,.5);}
+  88%{opacity:var(--pk,.5);}
+  100%{opacity:0;transform:translate3d(var(--dx,26px),-130px,0) scale(1.15);}
+}
+
+/* -------------------------------------------------------------------
+   10. MOTION: REDUCED
+   -------------------------------------------------------------------
+   Everything here is a state a reader may not want. Under either the
+   site's own Motion: Reduced or the operating system's setting, every
+   figure is drawn complete and still — nothing is hidden, only held.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .st-sign-ink path,.st-sh-body,.st-sh-rule,.st-chain-wire,.st-esc-rail{stroke-dashoffset:0!important;}
+  .st-sh-q .dev,.st-rose-seg .seg,.st-chain-node,.st-esc-stn,.st-pledges li{
+    opacity:1!important;transform:none!important;transition:none!important;}
+  .st-pledges li::before{transform:scaleY(1)!important;}
+  .st-pl-seal .arc{stroke-dashoffset:0!important;}
+  .st-sh-trace,.st-chain-bead,.st-esc-run,.st-motes{display:none!important;}
+  .st-seal::before,.st-rose-guilloche{animation:none!important;}
+}
+html[data-pc-motion="reduced"] .st-sign-ink path,
+html[data-pc-motion="reduced"] .st-sh-body,
+html[data-pc-motion="reduced"] .st-sh-rule,
+html[data-pc-motion="reduced"] .st-chain-wire,
+html[data-pc-motion="reduced"] .st-esc-rail{stroke-dashoffset:0!important;}
+html[data-pc-motion="reduced"] .st-sh-q .dev,
+html[data-pc-motion="reduced"] .st-rose-seg .seg,
+html[data-pc-motion="reduced"] .st-chain-node,
+html[data-pc-motion="reduced"] .st-esc-stn,
+html[data-pc-motion="reduced"] .st-pledges li{
+  opacity:1!important;transform:none!important;transition:none!important;}
+html[data-pc-motion="reduced"] .st-pledges li::before{transform:scaleY(1)!important;}
+html[data-pc-motion="reduced"] .st-pl-seal .arc{stroke-dashoffset:0!important;}
+html[data-pc-motion="reduced"] .st-sh-trace,
+html[data-pc-motion="reduced"] .st-chain-bead,
+html[data-pc-motion="reduced"] .st-esc-run,
+html[data-pc-motion="reduced"] .st-motes{display:none!important;}
+html[data-pc-motion="reduced"] .st-seal::before,
+html[data-pc-motion="reduced"] .st-rose-guilloche{animation:none!important;}
+
+/* Small screens: the wide figures scroll inside their own plate rather
+   than shrinking their labels past legibility or pushing the page. */
+@media (max-width:720px){
+  .st-figure{padding-inline:14px;}
+  .st-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .st-scroll > svg{min-width:640px;}
+  /* A wide figure that scrolls inside its own plate has to say so. The
+     fade rides on the plate, which does not scroll, so it stays at the
+     edge rather than travelling away with the diagram. */
+  .st-figure:has(.st-scroll)::after{
+    content:"";position:absolute;top:1px;bottom:1px;inset-inline-end:1px;width:36px;
+    pointer-events:none;border-radius:0 21px 21px 0;
+    background:linear-gradient(90deg,transparent,var(--st-plate-2));}
+  [dir="rtl"] .st-figure:has(.st-scroll)::after{
+    border-radius:21px 0 0 21px;
+    background:linear-gradient(270deg,transparent,var(--st-plate-2));}
+  .st-pledges li{grid-template-columns:44px 1fr;gap:14px;padding:16px 14px;}
+  .st-pl-seal{width:44px;height:44px;}
+  .st-pl-seal svg{width:44px;height:44px;}
+}

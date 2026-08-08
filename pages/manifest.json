@@ -16,7 +16,8 @@
     "contentFile": "pages/about.html",
     "altHref": "/ar/about/",
     "prestige": true,
-    "homefx": true
+    "homefx": true,
+    "story": true
   },
   {
     "slug": "about-governance",
