@@ -142,7 +142,7 @@ for (const code of CODES) {
     // The Registrar's own form is always a candidate. Letter case is normalised
     // to the house form — "Muhammad fatih" → "Muhammad Fatih" — because a
     // capital is not a spelling.
-    const cased = asWritten.replace(/(^|[\s-])([a-z])/g,
+    const cased = asWritten.replace(/(^|\s)([a-z])/g,
       (m, p1, p2) => p1 + p2.toUpperCase());
     const cands = [{ n: cased, where: "Registrar's notice" }, ...variants];
     // Fullest = most name-parts; ties broken by the longer string, then by

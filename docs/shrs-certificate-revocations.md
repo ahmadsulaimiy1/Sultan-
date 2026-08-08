@@ -78,9 +78,60 @@ unchanged. Nothing new needs to be transliterated for him, and nothing will be.
 
 ## Open entries
 
-| Ref | Certificate | Holder | Ordered | Executed |
+The Registrar's roll became authoritative on 8 August 2026, after thirteen
+certificates had been minted against a different one. `scripts/plan-certificate-reissue.mjs`
+computes the consequence per certificate and writes
+`docs/graduation-registers/reissue-plan-2026.json`. Of the thirteen:
+**5 KEEP · 4 REISSUE · 4 REVOKE.**
+
+### Revoked outright — the holder is not on the Registrar's roll for that award
+
+| Ref | Certificate | Holder | Programme | Reason |
 |---|---|---|---|---|
-| R-2026-001 | `SHRS-CERT-IBT-2026-000037-22C49` | Abdulbasit Adedokun | 8 Aug 2026 | — |
+| R-2026-001 | `SHRS-CERT-IBT-2026-000037-22C49` | Abdulbasit Adedokun | Ibtidā'iyyah | Tamhīdī graduand; no Ibtidā'iyyah entitlement |
+| R-2026-002 | `SHRS-CERT-IDD-2026-000042-56798` | Muhammad Ismail Seriki | I'dādiyyah | Not on the Registrar's I'dādiyyah roll |
+| R-2026-003 | `SHRS-CERT-IDD-2026-000044-8B125` | Faridah Ayomide Aliu | I'dādiyyah | Not on the Registrar's I'dādiyyah roll |
+| R-2026-004 | `SHRS-CERT-IDD-2026-000046-7E37A` | Abdulbasit Amobi Jabarr | I'dādiyyah | Not on the Registrar's I'dādiyyah roll — **see the open name question below** |
+
+### Revoked and reissued — the right award, the wrong name
+
+Each holder IS on the Registrar's roll for that award, but the canonical roll
+carries a fuller name. The engraved name is hashed into the number, so it cannot
+be corrected in place. Each keeps the same permanent Student ID.
+
+| Ref | Certificate | Engraved as | Reissue as | New number |
+|---|---|---|---|---|
+| R-2026-005 | `SHRS-CERT-IBT-2026-000036-B9E10` | Aisha Anofi | Aisha Omoshalewa Anofi | 000054 |
+| R-2026-006 | `SHRS-CERT-IBT-2026-000038-2944F` | Naheemah Ismail | Naheemah Ismail Seriki | 000060 |
+| R-2026-007 | `SHRS-CERT-IBT-2026-000039-518A8` | Ashrof Akorede | Ashraf Korede Ojewumi | 000056 |
+| R-2026-008 | `SHRS-CERT-IBT-2026-000040-60DAF` | Imran Adegoke | Imran Iremide Adegoke | 000058 |
+
+R-2026-005 to 008 close the question left open on 8 August about whether 000038
+and 000039 must be reissued. **They must** — and so must two more.
+
+### Untouched
+
+`000035` Hameedah Adebimpe Ojewumi · `000041` Abdulateef Adedokun ·
+`000043` Baqi Olamiposi Anofi · `000045` Thoirah Makinde ·
+`000047` Abdullah Oladimeji Anofi. Right award, right name, nothing to do.
+
+### The numbers do not move
+
+`000035`–`000047` are spent, revoked or not: the sequence issues a number once,
+ever, and a revoked certificate has still been issued. All replacements and all
+new awards take **000048–000087**, forty numbers, allocated in
+`reissue-plan-2026.json`.
+
+### Two names must be ruled before any of this is minted
+
+- **Basit Jabarr** (Registrar, I'dādiyyah) vs **Abdulbasit Amobi Jabarr**
+  (Registrar, SSS 3 — and the holder of revoked 000046). One boy with two
+  awards, or two boys? The given names differ as strings, so the rule cannot
+  merge them and must not guess. If they are one, R-2026-004 becomes a reissue
+  rather than a revocation.
+- **Balogun Yaseer** (Registrar, I'dādiyyah). The family name appears to stand
+  first; every other name on the roll is given-name-first. Which order is
+  engraved?
 
 ---
 
