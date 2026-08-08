@@ -515,7 +515,7 @@ const rollPanel = (codes, lead, file, cap) => [
   ...plate(file, COL, 62, cap),
 ];
 
-const panelRollA = rollPanel(['QUR', 'IBT'], true,
+const panelRollA = rollPanel(['QUR', 'TMH', 'IBT'], true,
   'quran-recitation-1.jpg', 'Qur’an Recitation');
 const panelRollB = rollPanel(['IDD', 'PRY'], false,
   'basic-school-classroom.jpg', 'A Classroom in Session');

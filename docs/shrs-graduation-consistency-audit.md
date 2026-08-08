@@ -1,6 +1,6 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026 · **Revision 3** — extended after the Registrar's
+**Date:** 8 August 2026 · **Revision 4** — extended after the Registrar's
 Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
@@ -546,3 +546,77 @@ carries **Ashrof Akorede** — his middle name where his family name belongs —
 whether the Registrar's 45 or the Founder's 40 is the roll of this ceremony — is
 still open, and it is the one that decides whether eighteen children receive a
 certificate on Saturday.
+
+---
+
+# REVISION 4 — "Those who show in Tamheediy shouldn't have the right to Ibtidā'iyyah at all"
+
+The two stages are mutually exclusive. Applied everywhere it reaches.
+
+## 15 · The consequence: one minted certificate must be revoked
+
+The Registrar's notice places **Abdulbasit Adedokun** under Tamhīdī. The
+published Ibtidā'iyyah register places him under Ibtidā'iyyah — and a
+certificate was minted for him there on 8 August:
+
+> `SHRS-CERT-IBT-2026-000037-22C49` · `DID-2026-IBT-0000037` · Student ID `711232557821021`
+
+On this ruling **that certificate confers an award he is not entitled to.**
+
+It is not a transcription error. `TMH` did not exist in this system until today,
+so the roll it was minted from was correct as the institution then understood
+its own stages. It is nonetheless wrong now, and a wrong permanent record does
+not become right by being explicable.
+
+**Revocation R-2026-001 is ordered** and recorded in
+`docs/shrs-certificate-revocations.md`, a new register. It sets out the whole
+remedy: revoke on the live system so public verification returns *revoked* and
+never *genuine*; recover the sheet; issue a Tamhīdiyyah certificate in its
+place **carrying the same permanent Student ID**, because he is one child and
+holds one number for life; and do **not** renumber the Ibtidā'iyyah batch —
+000037 stays consumed, since a number is issued once, ever, and a revoked
+certificate has still been issued.
+
+**It cannot be executed today.** The Ibtidā'iyyah batch is sealed at key version
+1 (the retired development literal), so it can never be re-minted at that
+number under any circumstances; and the replacement Tamhīdiyyah award still has
+no approved wording, no roster and no serial range.
+
+His Arabic name is not a blocker: **عبد الباسط أددوكن** was approved for the
+Ibtidā'iyyah batch and carries across unchanged.
+
+## 16 · What was changed in the publications
+
+- **The Ibtidā'iyyah roll now prints six, not seven.** Abdulbasit Adedokun is
+  off it.
+- **A Tamhīdiyyah roll now prints, with two names**, between the Qur'an College
+  and Ibtidā'iyyah — the stage that precedes Ibtidā'iyyah, printed where it
+  belongs. Both editions.
+- **The published register file was not edited.** It is the true record of what
+  was minted on 8 August and it stays true. The programme states its one
+  departure from it in a single line of source rather than hiding it in data.
+- **"Muhammad fatih" prints as "Muhammad Fatih"** — letter case only, to match
+  every other name on every roll. The spelling is untouched and still awaits a
+  ruling.
+
+The ceremony programme now carries **41 awards across 35 graduands**, up from
+40 and 34.
+
+## 17 · The rule is now a gate, not a note
+
+`scripts/preflight-graduation-coverage.mjs` fails the build if any child appears
+on both the Tamhīdī and the Ibtidā'iyyah roll. It also carries a
+**pending-revocation register**, so a minted certificate that a ruling has put
+beyond entitlement is reported on every run as exactly that — rather than as a
+generic coverage mismatch that would hide real ones behind it.
+
+## 18 · Still open
+
+| | Question |
+|---|---|
+| **1** | **Which roll governs — the Registrar's 45 or the certificate rolls' 40?** Still the blocker on all 27 outstanding certificates. |
+| 2 | The Tamhīdiyyah engraved wording, English and Arabic. Provisional in code, unapproved. |
+| 3 | "Muhammad fatih" — the spelling as the notice sets it. |
+| 4 | Which spelling Ashrof and Naheemah's certificates should carry, and whether 000038 and 000039 must be revoked too. |
+| 5 | The telephone number — two official documents, two numbers. |
+| 6 | `shroyalschools.ng` or `.com`. |

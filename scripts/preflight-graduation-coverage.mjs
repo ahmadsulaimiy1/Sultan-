@@ -51,6 +51,18 @@ if (from < 0 || to < 0) {
 const ROLLS = new Function(`${SRC.slice(from, to)}\nreturn ROLLS;`)();
 
 // The two batches already minted and published.
+// Certificates that HAVE been minted but that a ruling has since put beyond the
+// holder's entitlement. They are not build errors and they are not resolved by
+// rebuilding: a minted certificate is undone by revocation on the live system,
+// which is the Registrar's act. Listed here so the coverage check reports them
+// as the pending revocations they are, rather than as a mismatch that hides
+// real ones behind it. Cleared when the revocation is recorded as executed.
+const REVOCATION_PENDING = {
+  IBT: [['Abdulbasit Adedokun', 'SHRS-CERT-IBT-2026-000037-22C49',
+    'Founder’s ruling of 8 August 2026: a Tamhīdī graduand has no Ibtidā’iyyah '
+    + 'entitlement. See docs/shrs-certificate-revocations.md.']],
+};
+
 const PUBLISHED = {
   IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
   IDD: 'docs/graduation-registers/2026-08-08-IDD-000042.json',
@@ -75,19 +87,33 @@ const rollFor = (code) => (PUBLISHED[code]
 let printedTotal = 0;
 const people = new Set();
 console.log('\n  CODE   PROGRAMME                        PRINTED  CERTIFICATE  STATE');
-for (const code of ['QUR', 'IBT', 'IDD', 'PRY', 'JSS', 'SS']) {
+for (const code of ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS']) {
   const printed = byCode[code]?.names || [];
   const roll = rollFor(code);
   printedTotal += printed.length;
   printed.forEach((n) => people.add(n));
   const missing = printed.filter((n) => !roll.includes(n));
   const extra = roll.filter((n) => !printed.includes(n));
-  const state = PUBLISHED[code] ? 'ISSUED' : 'AWAITING KEY';
+  const state = code === 'TMH' ? 'NO BATCH — WORDING UNAPPROVED'
+    : PUBLISHED[code] ? 'ISSUED' : 'AWAITING KEY';
   const title = (byCode[code]?.title || RC_PROGRAMMES[code]?.labelEn || code).slice(0, 32);
   console.log(`  ${code.padEnd(6)} ${title.padEnd(32)} ${String(printed.length).padStart(7)}`
     + `  ${String(roll.length).padStart(11)}  ${state}`);
-  for (const n of missing) flag(`${code}: "${n}" is printed in the programme but holds no certificate roll place`);
-  for (const n of extra) flag(`${code}: "${n}" is on the certificate roll but is not printed in the programme`);
+  // Tamhīdī is the one roll that legitimately has no certificate places yet:
+  // the stage was only confirmed on 8 August and its wording is not approved.
+  // Reporting it as a coverage failure every run would train the eye to ignore
+  // the check; it is carried as a named gap instead, and named again below.
+  if (code === 'TMH') {
+    notes.push(`Tamhīdī: ${printed.length} graduands printed, 0 certificates — `
+      + 'stage confirmed, wording unapproved, no serial range');
+  } else {
+    for (const n of missing) flag(`${code}: "${n}" is printed in the programme but holds no certificate roll place`);
+  }
+  const pending = (REVOCATION_PENDING[code] || []).map((x) => x[0]);
+  for (const n of extra) {
+    if (pending.includes(n)) continue;
+    flag(`${code}: "${n}" is on the certificate roll but is not printed in the programme`);
+  }
 }
 console.log(`  ${''.padEnd(39)} ${String(printedTotal).padStart(7)}`);
 notes.push(`${printedTotal} awards across ${people.size} distinct graduands`);
@@ -170,11 +196,39 @@ for (const [code, roll] of Object.entries(ROLLS)) {
 }
 notes.push(`${withArabic} Arabic names on the outstanding rolls, each traced to a written ruling`);
 
+// ── 5b · Tamhīdī and Ibtidā'iyyah are mutually exclusive ────────────────────
+// The Founder's ruling of 8 August 2026: "Those who show in Tamheediy shouldn't
+// have the right to Ibtida'iyyah at all." A child on both rolls is holding an
+// award the institution says they are not entitled to, so this is a hard gate
+// rather than a note. It caught Abdulbasit Adedokun, whose Ibtidā'iyyah
+// certificate 000037 was already minted before the stages were distinguished.
+const rollNames = (code) => new Set((byCode[code]?.names) || []);
+const tmh = rollNames('TMH');
+const ibt = rollNames('IBT');
+for (const n of tmh) {
+  if (ibt.has(n)) {
+    flag(`${n} is on BOTH the Tamhīdī and the Ibtidā'iyyah roll. The Founder's `
+      + 'ruling of 8 August 2026 makes the two stages mutually exclusive.');
+  }
+}
+if (tmh.size) notes.push(`Tamhīdī ${tmh.size}, Ibtidā'iyyah ${ibt.size}, no student on both`);
+
 // ── 6 · Qur'an College award variants ───────────────────────────────────────
 for (const r of ROLLS.QUR || []) {
   if (!r.awardVariant) {
     flag(`QUR/${r.en}: no awardVariant. A Ten Juz' sheet headed "Certificate of `
       + 'Completion" would overstate a child’s achievement on a permanent record.');
+  }
+}
+
+// ── Pending revocations ─────────────────────────────────────────────────────
+const pendingAll = Object.entries(REVOCATION_PENDING).flatMap(([c, rows]) =>
+  rows.map(([n, serial, why]) => ({ c, n, serial, why })));
+if (pendingAll.length) {
+  console.log('\n  PENDING REVOCATIONS — minted, and now beyond entitlement:');
+  for (const p of pendingAll) {
+    console.log(`    ${p.c}  ${p.n}  ${p.serial}`);
+    console.log(`         ${p.why}`);
   }
 }
 

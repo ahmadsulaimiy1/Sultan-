@@ -33,15 +33,41 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 const reg = (f) => JSON.parse(readFileSync(`docs/graduation-registers/${f}`, 'utf8'))
   .entries.map((e) => e.studentEn);
 
+// FOUNDER'S RULING, 8 August 2026: "Those who show in Tamheediy shouldn't have
+// the right to Ibtida'iyyah at all." The two stages are mutually exclusive.
+//
+// The Registrar's Notice of 2 July places Abdulbasit Adedokun under Tamhīdī.
+// The published Ibtidā'iyyah register places him under Ibtidā'iyyah, and a
+// certificate has already been minted for him there — 000037. On this ruling
+// that certificate should not exist. He is moved to Tamhīdī on this programme
+// and taken off the Ibtidā'iyyah roll; the certificate itself is a revocation
+// for the Registrar to make, recorded in docs/shrs-certificate-revocations.md.
+//
+// The register file is NOT edited. It is the permanent record of what was
+// issued on 8 August, and it is still true that this is what was issued. The
+// filter below states the departure from it in one line rather than hiding it
+// inside the data.
+const TAMHIDI_EXCLUDES_IBT = ['Abdulbasit Adedokun'];
+
 const AWARDS = [
   { code: 'QUR', school: 'Sultan Hanafi Qur’an College',
     title: 'Ḥifẓ of the Glorious Qur’an', ar: 'حفظ القرآن الكريم',
     note: 'Complete memorisation, and Ten Juz’',
     names: ['Zaynab Zakariya Anofi', 'Baqi Olamiposi Anofi', 'Aisha Omoshalewa Anofi'] },
+  // Tamhīdī, the preparatory stage, confirmed by the Founder on 8 August 2026.
+  // The roll is the Registrar's, verbatim — except that "Muhammad fatih" is
+  // set with a capital F to match every other name on every roll. That is a
+  // change of letter case and nothing else; the spelling is untouched and is
+  // still awaiting his ruling.
+  { code: 'TMH', school: 'Sultan Hanafi School of Islamic and Arabic Studies',
+    title: 'Tamhīdiyyah', ar: 'المرحلة التمهيدية',
+    note: 'The preparatory stage of Islamic and Arabic Studies',
+    names: ['Abdulbasit Adedokun', 'Muhammad Fatih'] },
   { code: 'IBT', school: 'Sultan Hanafi School of Islamic and Arabic Studies',
     title: 'Ibtidā’iyyah', ar: 'المرحلة الابتدائية',
     note: 'The elementary stage of Islamic and Arabic Studies',
-    names: reg('2026-08-08-IBT-000035.json') },
+    names: reg('2026-08-08-IBT-000035.json')
+      .filter((n) => !TAMHIDI_EXCLUDES_IBT.includes(n)) },
   { code: 'IDD', school: 'Sultan Hanafi School of Islamic and Arabic Studies',
     title: 'I‘dādiyyah', ar: 'المرحلة الإعدادية',
     note: 'The preparatory stage of Islamic and Arabic Studies',
@@ -540,8 +566,10 @@ const rollPanel = (codes, numeral, lead, plates) => `<section class="panel p-r">
   </div>
 </section>`;
 
-const panelRollA = rollPanel(['QUR', 'IBT'], 'X', true,
-  plate('quran-recitation-1.jpg', 'Qur’an Recitation', 72));
+// Tamhīdī sits between the Qur'an College and Ibtidā'iyyah: it is the stage
+// that precedes Ibtidā'iyyah, and the two are mutually exclusive.
+const panelRollA = rollPanel(['QUR', 'TMH', 'IBT'], 'X', true,
+  plate('quran-recitation-1.jpg', 'Qur’an Recitation', 58));
 const panelRollB = rollPanel(['IDD', 'PRY'], 'XI', false,
   plate('basic-school-classroom.jpg', 'A Classroom in Session', 76));
 const panelRollC = rollPanel(['JSS', 'SS'], 'XII', false,
