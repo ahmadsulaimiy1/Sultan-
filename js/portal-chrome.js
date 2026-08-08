@@ -86,6 +86,7 @@
 
     // --- the foot ----------------------------------------------------
     if (hasFooter) return;
+    adoptLateFooter();
     var foot = document.createElement('footer');
     foot.className = 'pch-foot';
     foot.innerHTML =
@@ -106,6 +107,27 @@
       + '<div class="pch-rule" aria-hidden="true"></div>'
       + '<p class="pch-note">' + esc(T.note) + '</p>';
     document.body.appendChild(foot);
+  }
+
+  // portal-shell.js writes its own thin utility strip — verification
+  // links and a version number — and it writes it AFTER this file runs.
+  // Left alone that gave those pages two footers stacked on one another.
+  // When it appears it is taken into the colophon as its top row, so
+  // the page ends on one foot carrying both.
+  function adoptLateFooter() {
+    if (!('MutationObserver' in window)) return;
+    var obs = new MutationObserver(function () {
+      var late = document.querySelector('footer:not(.pch-foot)');
+      if (!late) return;
+      obs.disconnect();
+      var mine = document.querySelector('.pch-foot');
+      if (!mine || mine.contains(late)) return;
+      late.classList.add('pch-adopted');
+      mine.insertBefore(late, mine.firstChild);
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    // It either arrives with the shell or it does not arrive at all.
+    window.setTimeout(function () { obs.disconnect(); }, 8000);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);

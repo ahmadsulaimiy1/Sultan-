@@ -185,3 +185,14 @@ html:not([data-pc-theme="dark"]) .office-index-wrap p > a{
   color:rgb(var(--lv-gt3,99,72,27))!important;}
 html:not([data-pc-theme="dark"]) .office-index-wrap p > a:hover{
   color:rgb(var(--lv-gt,124,84,48))!important;}
+
+/* The shell's own utility strip, taken into the colophon as its top row
+   rather than left to stack beneath it as a second footer. */
+.pch-foot .pch-adopted{
+  max-width:1180px;margin:0 auto 22px;padding:0 0 18px;
+  border-bottom:1px solid rgba(233,206,138,.22);
+  background:none!important;box-shadow:none!important;border-top:none!important;}
+.pch-foot .pch-adopted a{color:rgba(233,206,138,.88)!important;}
+.pch-foot .pch-adopted a:hover{color:#FFF6DF!important;}
+.pch-foot .pch-adopted,
+.pch-foot .pch-adopted *{color:rgba(247,238,223,.7);}
