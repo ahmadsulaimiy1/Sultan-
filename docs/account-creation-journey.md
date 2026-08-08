@@ -156,7 +156,7 @@ curl -X POST https://<your-domain>/api/portal/staff/admissions-applications \
 ## Testing note
 
 **Updated — actually run end-to-end, not just mocked.** This sandbox
-still has no egress to Neon or to shroyalschools.ng (confirmed directly:
+still has no egress to Neon or to shroyalschools.com (confirmed directly:
 both return a blocked-proxy error), so the real production database was
 not reachable. But `@neondatabase/serverless`'s `neon()` is an HTTP
 client with no Neon-specific behaviour beyond the transport — the exact

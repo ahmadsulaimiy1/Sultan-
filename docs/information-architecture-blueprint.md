@@ -22,9 +22,9 @@ Two real findings surfaced during this audit that belong in front of
 everything else, because they affect trust in what's already published:
 
 1. **Two different domains appear in published contact emails** —
-   `info@shroyalschools.ng` (general enquiries) vs.
+   `info@shroyalschools.com` (general enquiries) vs.
    `principal@shrschools.ng` (Principal's Office) — `shrschools.ng`
-   vs. `shroyalschools.ng`. If the second domain isn't actually
+   vs. `shroyalschools.com`. If the second domain isn't actually
    registered and monitored, that address silently fails. Worth
    confirming with the school before any IA work proceeds — it's a
    findable, fixable issue, not a new one this redesign created.

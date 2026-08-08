@@ -16,7 +16,7 @@ next to it, not an assumption that work elsewhere implies it's done.
 | Database (production) | ☐ Not confirmed | A **separate** Neon project exists (never the same one as staging); `/api/portal/setup` has been run against it. |
 | Email | ☐ Not confirmed | A Resend account exists, a sending domain is verified (SPF/DKIM present), and one real transactional email has been received (not just sent-without-error) as proof. |
 | Storage (R2) | ☐ Not started | Deliberately deferred until the KYC Document Centre is Board-approved — see the onboarding reality-check doc. Not a gap to close yet. |
-| Domain ownership confirmed | ☐ Not confirmed | Whoever holds registrar access has personally verified `shroyalschools.ng` (or the intended domain) status — this session's own attempt to check was blocked by its own network policy and proves nothing either way. |
+| Domain ownership confirmed | ☐ Not confirmed | Whoever holds registrar access has personally verified the retired `.ng` domain (or the intended domain) status — this session's own attempt to check was blocked by its own network policy and proves nothing either way. |
 
 ## Security
 

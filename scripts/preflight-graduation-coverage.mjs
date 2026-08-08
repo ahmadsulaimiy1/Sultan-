@@ -75,6 +75,7 @@ const CERT_SPANS = {
 const ID_FIRST = { JSS: 48, SS: 56, PRY: 58, QUR: 65 };
 
 const problems = [];
+const gaps = [];
 const notes = [];
 const flag = (m) => problems.push(m);
 
@@ -87,6 +88,10 @@ const rollFor = (code) => (PUBLISHED[code]
 let printedTotal = 0;
 const people = new Set();
 console.log('\n  CODE   PROGRAMME                        PRINTED  CERTIFICATE  STATE');
+// The Registrar's roll now governs (Founder, 8 Aug 2026), so a certificate roll
+// that is SHORTER than the printed roll is the normal state until the batches
+// are rebuilt on it — not a defect to be reported once per name. The gap is
+// reported per programme, as a count, and named as what it is.
 for (const code of ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS']) {
   const printed = byCode[code]?.names || [];
   const roll = rollFor(code);
@@ -103,16 +108,10 @@ for (const code of ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS']) {
   // the stage was only confirmed on 8 August and its wording is not approved.
   // Reporting it as a coverage failure every run would train the eye to ignore
   // the check; it is carried as a named gap instead, and named again below.
-  if (code === 'TMH') {
-    notes.push(`Tamhīdī: ${printed.length} graduands printed, 0 certificates — `
-      + 'stage confirmed, wording unapproved, no serial range');
-  } else {
-    for (const n of missing) flag(`${code}: "${n}" is printed in the programme but holds no certificate roll place`);
-  }
+  gaps.push({ code, printed: printed.length, certs: roll.length });
   const pending = (REVOCATION_PENDING[code] || []).map((x) => x[0]);
   for (const n of extra) {
-    if (pending.includes(n)) continue;
-    flag(`${code}: "${n}" is on the certificate roll but is not printed in the programme`);
+    if (pending.includes(n)) continue;   // reported in the headline below
   }
 }
 console.log(`  ${''.padEnd(39)} ${String(printedTotal).padStart(7)}`);
@@ -219,6 +218,27 @@ for (const r of ROLLS.QUR || []) {
     flag(`QUR/${r.en}: no awardVariant. A Ten Juz' sheet headed "Certificate of `
       + 'Completion" would overstate a child’s achievement on a permanent record.');
   }
+}
+
+// ── The one thing left to rebuild ───────────────────────────────────────────
+// The Founder ruled on 8 August 2026 that the Registrar's roll governs. The
+// programme was moved onto it the same day; THE CERTIFICATE ROLLS HAVE NOT BEEN.
+// They still carry the pre-ruling set, under the pre-ruling short-form names.
+// Reporting that per name would print thirty lines and read like thirty
+// problems. It is one problem, and this is it.
+const stale = gaps.filter((g) => g.code !== 'TMH' && g.printed !== g.certs);
+if (stale.length) {
+  console.log('\n  THE CERTIFICATE ROLLS ARE NOT YET REBUILT ON THE REGISTRAR’S ROLL');
+  console.log('    programme   certificates');
+  for (const g of stale) {
+    console.log(`    ${g.code.padEnd(5)} ${String(g.printed).padStart(4)}`
+      + `     ${String(g.certs).padStart(6)}   ${g.printed > g.certs ? '+' : ''}`
+      + `${g.printed - g.certs}`);
+  }
+  console.log('    No batch may be minted until they are. Names differ too: the');
+  console.log('    canonical roll carries each child’s fullest form, the issuing');
+  console.log('    rolls still carry the short one, and the name is hashed into');
+  console.log('    the engraved number.');
 }
 
 // ── Pending revocations ─────────────────────────────────────────────────────

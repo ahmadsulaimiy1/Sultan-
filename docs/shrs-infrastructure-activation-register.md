@@ -56,7 +56,7 @@ step-by-step walkthroughs.
 | DMARC | Policy for handling SPF/DKIM failures, protects domain reputation | High | Free | ICT | SPF + DKIM configured | Not Started — Resend's auto-configure did not add a DMARC record; SPF+DKIM alone are enough for Resend to send, but a DMARC policy record is still a real gap worth closing |
 
 **Email infrastructure note (2026-07-28):** wiring Resend up surfaced two genuine, previously-undetected bugs, only findable once a real domain and a real inbox existed to test against:
-1. `functions/_lib/email.js`'s `SITE_ORIGIN` (and `scripts/build.js`'s copy, plus `sitemap.xml`/`robots.txt`/every public `info@` contact address) were still hardcoded to `shroyalschools.ng` — a domain that was never actually purchased. Fixed to `shroyalschools.com`, the real registered domain, and merged to `main`.
+1. `functions/_lib/email.js`'s `SITE_ORIGIN` (and `scripts/build.js`'s copy, plus `sitemap.xml`/`robots.txt`/every public `info@` contact address) were still hardcoded to the retired `.ng` domain — a domain that was never actually purchased. Fixed to `shroyalschools.com`, the real registered domain, and merged to `main`.
 2. Even after that fix, `SITE_ORIGIN` was a single hardcoded constant shared by Preview and Production — two environments with two separate Neon databases. A verification token written by a Preview request only exists in Preview's database, so a hardcoded link always pointed to Production regardless of which environment issued it, and verification failed. Fixed by deriving the link's origin from the request that issued it (`siteOriginFromRequest()`), so each environment's emails always point back to itself.
 
 ## Identity Infrastructure

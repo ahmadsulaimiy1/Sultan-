@@ -1,6 +1,6 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026 · **Revision 4** — extended after the Registrar's
+**Date:** 8 August 2026 · **Revision 5** — extended after the Registrar's
 Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
@@ -118,7 +118,7 @@ number changes with the name.
 ### 3.4 · The domain note was imprecise
 
 The school's own letterhead, on this very document, reads
-`https://shroyalschools.ng`. Every verification URL, every QR in the registers,
+`https://shroyalschools.com`. Every verification URL, every QR in the registers,
 and the live site are `.com`. A guest who types the `.ng` reaches nothing. The
 `.com` prints; the source comment now cites the letterhead it disagrees with
 rather than describing it vaguely. **Still awaiting the Founder's ruling.**
@@ -223,7 +223,7 @@ settled before the four batches are minted.
 | | Question | Cost of deciding late |
 |---|---|---|
 | 1 | **`Sa'ad Sanusi`** — U+0027 as on the certificate roll, or U+2019 as the programme had it? | **High.** After minting, changing it means re-minting: the name is hashed into the engraved number. |
-| 2 | **`shroyalschools.ng` or `.com`?** The letterhead says `.ng`; everything that must resolve says `.com`. | **High.** Every certificate QR and verification URL carries it. |
+| 2 | **the retired `.ng` domain or `.com`?** The letterhead says `.ng`; everything that must resolve says `.com`. | **High.** Every certificate QR and verification URL carries it. |
 | 3 | **"Lecture" or "Lecture! Lecture!! Lecture!!!"**, and **"Ṣolātu Ẓuhr" or "Solatu Dhur"**? | Low. Programme only, one line each. |
 | 4 | **Closing time** — 1:20 p.m. (last stated), 2:00 p.m. (printed, from the items listed), or 3 p.m. (earlier trifold)? | Low. Programme only. |
 
@@ -435,7 +435,7 @@ different numbers:
 The programme prints the first, from the more recent document. **Which is the
 school's line?** It appears on the back panel of four hundred programmes.
 
-**Still open — the domain.** Both letterheads read `shroyalschools.ng`. Every
+**Still open — the domain.** Both letterheads read `shroyalschools.com`. Every
 QR, every verification URL and the live site are `.com`. Now confirmed twice
 from the school's own stationery, and still unruled.
 
@@ -619,4 +619,117 @@ generic coverage mismatch that would hide real ones behind it.
 | 3 | "Muhammad fatih" — the spelling as the notice sets it. |
 | 4 | Which spelling Ashrof and Naheemah's certificates should carry, and whether 000038 and 000039 must be revoked too. |
 | 5 | The telephone number — two official documents, two numbers. |
-| 6 | `shroyalschools.ng` or `.com`. |
+| 6 | the retired `.ng` domain or `.com`. |
+
+---
+
+# REVISION 5 — the Registrar governs, and the fullest name prints
+
+Four rulings, 8 August 2026. All four applied; three of them close open items
+outright.
+
+## 19 · "It should be in alignment with the registrar's one. She knows better."
+
+**The Registrar's Notice of 2 July 2026 is the roll.** Seven categories,
+**45 awards, 33 children**. Every other list is a working paper from here on.
+
+## 20 · "Use the longer one, which means the three names."
+
+Where this institution has ever written a fuller form of a child's name, the
+fuller form prints and is engraved.
+
+This is not applied by hand. **`scripts/build-canonical-roll.mjs`** collects
+every variant from six sources — the Registrar's notice, the two published
+registers, both issuing scripts and their withdrawal lists — clusters them,
+chooses the fullest by rule, and prints the whole derivation. It writes
+`docs/graduation-registers/canonical-roll-2026.json`, and the programme now
+reads that **and nothing else**, so the programme, the certificates and the
+registers cannot disagree about a name again.
+
+**Nothing is invented.** The chosen name always appears verbatim in a source;
+parts are never combined across variants to manufacture a fuller name than any
+document actually carries.
+
+**Eighteen names gained a fuller form.** Among them:
+
+| Registrar wrote | Now prints |
+|---|---|
+| Aisha Anofi | Aisha Omoshalewa Anofi |
+| Zainab Anofi | Zaynab Zakariya Anofi |
+| Ashrof Ojewumi | Ashraf Korede Ojewumi |
+| Naheemah Ismaeel | Naheemah Ismail Seriki |
+| Muhammad Ismail | Muhammad Ismail Seriki |
+| Fareedah Aliu | Faridah Ayomide Aliu |
+| Anisa Jokumba | Anisa Opeyemi Jokomba |
+| Abdulbasit Jabarr | Abdulbasit Amobi Jabarr |
+
+**A bug this caught, worth naming.** The first cut split names on hyphens as
+well as spaces, which made the given name of both *Al-ameen Okoh* and *Al-ameen
+Abidemi Jokomba* the token "al" — and merged two different boys into one child.
+Two boys, one certificate. A hyphen binds a name; it does not divide one. Fixed,
+and the reason is in the source so it is not re-introduced.
+
+**One child is dropped by the ruling.** *Al-ameen Abidemi Jokomba* is on our
+Primary working roll and **is not on the Registrar's Basic 5**. Aligning to her
+roll removes him. If that is wrong, it is a one-line correction — but it must
+be her correction, not mine.
+
+## 21 · The telephone and the domain
+
+**The telephone is the site's**: `+234 807 374 7650`. It appears 934 times
+across the site against 0 for the Registrar's `+234 802 456 7452`. Already what
+the programme printed; now confirmed rather than assumed.
+
+**"Nothing .ng should ever reflect from now on."** Done, and audited: **zero**
+occurrences of `shroyalschools.ng` remain in any tracked file. Live code fixed
+(a seeded guardian address in `functions/api/portal/setup.js`). Across eighteen
+documents, every address a reader could type or click became `.com`; the dozen
+sentences that *record the .ng as a defect we removed* keep their meaning but
+no longer carry the hostname — deleting them would have falsified the audit
+trail, and printing them would have reflected the .ng.
+
+## 22 · The Tamhīdiyyah award, named
+
+Set to the standard of the certificates it joins, with the reasoning in the
+source beside it:
+
+| | |
+|---|---|
+| **English** | **Tamhīdiyyah — Preparatory Stage** |
+| **Arabic** | **المرحلة التمهيدية** |
+| Sentence | "…the preparatory educational stage" · "المرحلة التمهيدية" |
+
+The house pattern is set by the two stages already engraved: the Arabic name of
+the stage, romanised with its diacritics, an em dash, the plain English gloss.
+تمهيدية → *tamhīdiyyah*, in exact parallel with ابتدائية → *Ibtidā'iyyah* and
+إعدادية → *I'dādiyyah*, so the three read as one series on a shelf. The Arabic
+is definite on both words, as its two siblings are. Nothing is composed.
+
+Not *Preparatory Certificate*, not *Foundation Stage*, not *Nursery Islamiyyah*
+— the first two name a level this school does not use, and the third would put
+another department on a child's permanent record.
+
+It holds **one confirmation** before the first sheet is minted, because it is
+engraved text on a permanent record.
+
+## 23 · What is left
+
+**One thing, and it is real work rather than a question.**
+
+```
+THE CERTIFICATE ROLLS ARE NOT YET REBUILT ON THE REGISTRAR'S ROLL
+  programme   certificates
+  QUR      4          3   +1
+  IBT      9          7   +2
+  IDD      5          6   -1
+  PRY      6          7   -1
+  JSS     15         13   +2
+```
+
+The programme moved onto her roll the same day. The issuing rolls have not.
+They still carry the pre-ruling set under the pre-ruling short-form names — and
+the name is hashed into the engraved number, so a short form mints a different
+certificate from a full one. **No batch may be minted until they are rebuilt.**
+The preflight prints this table on every run.
+
+Then, and only then: the signing key.

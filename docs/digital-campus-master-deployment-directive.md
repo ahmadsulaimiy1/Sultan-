@@ -69,7 +69,7 @@ than estimating.
 
 ### What does not exist, or cannot be confirmed to exist
 
-- **Domain.** `https://shroyalschools.ng` is hardcoded as a constant (`SITE_ORIGIN` in `functions/_lib/email.js`, mirrored in `scripts/build.js`) for building absolute links inside emails and canonical tags. **A hardcoded string is not evidence of a registered, resolvable, hosted domain.** This session attempted to verify it directly — see the evidence box below.
+- **Domain.** `https://shroyalschools.com` is hardcoded as a constant (`SITE_ORIGIN` in `functions/_lib/email.js`, mirrored in `scripts/build.js`) for building absolute links inside emails and canonical tags. **A hardcoded string is not evidence of a registered, resolvable, hosted domain.** This session attempted to verify it directly — see the evidence box below.
 - **Production environment.** No Cloudflare Pages project, no Neon project, no environment variables for either, are confirmed to exist anywhere reachable from this session.
 - **Cloudflare Pages project.** Not confirmed. No `wrangler.toml`, no CI workflow, no Cloudflare account/API access available to this session.
 - **Production database.** Not confirmed. `DATABASE_URL` has never been observed set to a real Neon connection string in this engagement — every real database interaction this engagement has ever performed was against a local Postgres instance in a sandbox, torn down after each session.
@@ -81,20 +81,20 @@ than estimating.
 
 ### Direct evidence: attempted production verification, this session
 
-This session ran an actual outbound check against `https://shroyalschools.ng` and `https://www.shroyalschools.ng` (via `curl` and via the web-fetch tool). Both attempts returned a **403 from this sandbox's own outbound network gateway**, confirmed via the gateway's own status endpoint:
+This session ran an actual outbound check against `https://shroyalschools.com` and `https://www.shroyalschools.com` (via `curl` and via the web-fetch tool). Both attempts returned a **403 from this sandbox's own outbound network gateway**, confirmed via the gateway's own status endpoint:
 
 ```
 "recentRelayFailures": [
   { "kind": "connect_rejected",
     "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
-    "host": "shroyalschools.ng:443" },
+    "host": "shroyalschools.com:443" },
   { "kind": "connect_rejected",
     "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
-    "host": "www.shroyalschools.ng:443" }
+    "host": "www.shroyalschools.com:443" }
 ]
 ```
 
-This means: **this sandbox's network policy blocked the connection attempt before it reached the internet.** This is not evidence the domain is down, unregistered, or broken — it is evidence only that *this session cannot check*. It is the same class of restriction already documented elsewhere in this engagement for Neon/`console.neon.tech` access. Anyone with unrestricted network access (a normal browser, a phone) is the only way to actually answer "is `shroyalschools.ng` live" — this document does not claim an answer either way.
+This means: **this sandbox's network policy blocked the connection attempt before it reached the internet.** This is not evidence the domain is down, unregistered, or broken — it is evidence only that *this session cannot check*. It is the same class of restriction already documented elsewhere in this engagement for Neon/`console.neon.tech` access. Anyone with unrestricted network access (a normal browser, a phone) is the only way to actually answer "is the retired `.ng` domain live" — this document does not claim an answer either way.
 
 ---
 
@@ -107,12 +107,12 @@ purely a design proposal**:
 
 | Subdomain | Purpose | Status |
 |---|---|---|
-| `shroyalschools.ng` (or `.com`, if repurchased) | Public marketing site | Domain ownership: unconfirmed from this session |
-| `portal.shroyalschools.ng` | Guardian/Student/Staff portals | Not Started |
-| `admissions.shroyalschools.ng` | Admissions-specific funnel | Not Started |
-| `lms.shroyalschools.ng` | Future LMS | Not Started (LMS itself Not Started) |
-| `staff.shroyalschools.ng` | Staff-only surfaces | Not Started |
-| `registry.shroyalschools.ng` | Registrar's Office | Not Started |
+| the retired `.ng` domain (or `.com`, if repurchased) | Public marketing site | Domain ownership: unconfirmed from this session |
+| `portal.shroyalschools.com` | Guardian/Student/Staff portals | Not Started |
+| `admissions.shroyalschools.com` | Admissions-specific funnel | Not Started |
+| `lms.shroyalschools.com` | Future LMS | Not Started (LMS itself Not Started) |
+| `staff.shroyalschools.com` | Staff-only surfaces | Not Started |
+| `registry.shroyalschools.com` | Registrar's Office | Not Started |
 
 Today, every portal path (`/portal/...`) is served from the **same
 origin** as the public marketing site — there is no subdomain
@@ -304,7 +304,7 @@ confirm either, per Phase 1's evidence.**
 |---|---|
 | Cloudflare Pages project | Not confirmed to exist |
 | Neon production database | Not confirmed to exist |
-| Domain (`shroyalschools.ng`) | Ownership/hosting not confirmed from this session (network policy blocked the check — see Phase 1) |
+| Domain (the retired `.ng` domain) | Ownership/hosting not confirmed from this session (network policy blocked the check — see Phase 1) |
 | Email sending (Resend account) | Not Started (code Developed, account not configured) |
 | Institutional mailboxes | Not Started |
 | CI/CD pipeline | Not Started (no workflow files exist) |
@@ -316,7 +316,7 @@ confirm either, per Phase 1's evidence.**
 
 ### Immediate (infrastructure, before further large module builds)
 
-1. Confirm domain ownership/status for `shroyalschools.ng` (or decide
+1. Confirm domain ownership/status for the retired `.ng` domain (or decide
    on an alternative) — a human, outside this session, with an
    unrestricted network connection, needs to actually check this.
 2. Create a Cloudflare account (if one doesn't already exist) and

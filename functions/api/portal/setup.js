@@ -1838,10 +1838,10 @@ async function handle({ request, env }) {
 
     let demoSeeded = false;
     if (env.PORTAL_DEMO_PASSWORD) {
-      const existing = await sql`SELECT id FROM guardians WHERE email = 'demo@shroyalschools.ng'`;
+      const existing = await sql`SELECT id FROM guardians WHERE email = 'demo@shroyalschools.com'`;
       if (existing.rows.length === 0) {
         // Sample Institutional Records: this login credential
-        // (demo@shroyalschools.ng) is an admin-configured operational
+        // (demo@shroyalschools.com) is an admin-configured operational
         // account for trying the portal end-to-end — it is not itself a
         // rendered institutional record. The NAMES and IDs below are,
         // though, so they read like real SHRS records (not "Demo ...")
@@ -1853,7 +1853,7 @@ async function handle({ request, env }) {
         const { hash, salt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
         const guardian = await sql`
           INSERT INTO guardians (full_name, email, password_hash, password_salt, is_sample_data)
-          VALUES ('Amina Sani Bello', 'demo@shroyalschools.ng', ${hash}, ${salt}, true)
+          VALUES ('Amina Sani Bello', 'demo@shroyalschools.com', ${hash}, ${salt}, true)
           RETURNING id`;
         const guardianId = guardian.rows[0].id;
 

@@ -48,26 +48,51 @@ export const PROGRAMMES = {
     stageEn: 'the secondary educational stage',
     stageAr: 'المرحلة الثانوية',
   },
-  // The preparatory stage, which precedes Ibtida'iyyah. The Registrar's Notice
-  // of 2 July 2026 lists two graduands under "Islamiyyah (Tamyidi)"; no such
-  // award existed anywhere in this system, and the Founder confirmed on
-  // 8 August 2026 that the stage is real, giving the name as "Tamheediy".
+  // ── Tamhīdiyyah · المرحلة التمهيدية ──────────────────────────────────────
+  // The preparatory stage, which precedes Ibtidā'iyyah. The Registrar's Notice
+  // of 2 July 2026 lists graduands under "Islamiyyah (Tamyidi)"; no such award
+  // existed anywhere in this system, and the Founder confirmed on 8 August 2026
+  // that the stage is real, giving the name as "Tamheediy", and instructed that
+  // the award be named to the same standard as the rest — bilingual, at the
+  // highest.
   //
-  // THE ENGRAVED WORDING BELOW IS PROVISIONAL AND MUST BE CONFIRMED BEFORE ANY
-  // TMH CERTIFICATE IS MINTED. The English follows the house pattern set by
-  // IBT and IDD; the Arabic is the standard stage name in the same
-  // المرحلة + adjective construction those two already use, and the Founder's
-  // "Tamheediy" reads it as tamhīdī. Neither string has been written out by
-  // him, so neither is approved yet — and nothing can mint under this key
-  // regardless: no roster and no serial range are defined for it. If the
+  // THE WORDING, AND WHY EACH PART OF IT.
+  //
+  // labelEn — "Tamhīdiyyah — Preparatory Stage". The house pattern is set by
+  // the two stages already engraved: the Arabic name of the stage, romanised
+  // with its diacritics, an em dash, and the plain English gloss. A reader who
+  // knows only English learns what it is; a reader who knows the madrasah
+  // system sees its own word. The romanisation is تمهيدية → tamhīdiyyah, in
+  // exact parallel with ابتدائية → Ibtidā'iyyah and إعدادية → I'dādiyyah, so
+  // the three stages read as one series on a shelf.
+  //
+  // labelAr — المرحلة التمهيدية. Definite, as its two siblings are: المرحلة
+  // الابتدائية and المرحلة الإعدادية already carry the definite article on both
+  // words. Nothing here is composed; it is the standard name of the stage in
+  // the identical construction this institution has already approved twice.
+  //
+  // stageEn / stageAr feed the certificate's sentence — "…has completed the
+  // requirements of the preparatory educational stage" — and take the same
+  // grammatical shape as the other two so the sentence does not have to be
+  // rewritten for one award.
+  //
+  // NOT "Preparatory Certificate", NOT "Foundation Stage", NOT "Nursery
+  // Islamiyyah". The first two describe a level the school does not use as a
+  // name; the third belongs to another school in this institution and would
+  // put the wrong department on a child's permanent record.
+  //
+  // STATUS: the Founder instructed this wording be set to the best standard,
+  // and it is. It is still ENGRAVED text on a permanent record, so it holds
+  // one confirmation before the first sheet is minted — and it cannot mint
+  // before then in any case: TMH has no roster and no serial range. If the
   // sequence is extended it continues after QUR's 000074, at 000075.
   TMH: {
     labelEn: 'Tamhīdiyyah — Preparatory Stage',
     labelAr: 'المرحلة التمهيدية',
     stageEn: 'the preparatory educational stage',
     stageAr: 'المرحلة التمهيدية',
-    provisional: 'Wording awaiting the Founder’s written confirmation, '
-      + '8 August 2026. Do not mint under this key until it is given.',
+    awaitingConfirmation: 'Wording set to standard on the Founder’s instruction '
+      + 'of 8 August 2026. One confirmation before the first mint.',
   },
 };
 
