@@ -390,21 +390,82 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
 // press resolution, and no new colour enters the sheet — every value is drawn
 // from the existing gold ramp.
 function tmhRegalia() {
-  // Halo: two interfering rosettes on the name band's own centre line, at the
-  // opacity the plaque grounds already use, so it reads as worked paper rather
-  // than as a graphic sitting on top of one.
+  // 1 · CEREMONIAL RULE, y 70. The plate's own five-star flourish sits centred
+  //     here with clear ground either side of it — measured, not assumed: no
+  //     element of the sheet occupies y 62–77 at any x. Two engraved rules run
+  //     outward from the stars to terminal rosettes near the margins, which
+  //     turns an isolated ornament into a full-width order ribbon. It is the
+  //     single most visible addition and it displaces nothing.
+  const rule = (right) => `<svg class="tmh-rule${right ? ' r' : ''}"
+    viewBox="0 0 96 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs><linearGradient id="tmhR${right ? 'b' : 'a'}" x1="0" x2="1">
+      <stop offset="0" stop-color="#B08A2E" stop-opacity="0"/>
+      <stop offset="0.30" stop-color="#B08A2E" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#8A6A24" stop-opacity="1"/>
+    </linearGradient></defs>
+    <rect x="10" y="3.72" width="80" height="0.34" fill="url(#tmhR${right ? 'b' : 'a'})"/>
+    <rect x="14" y="4.62" width="72" height="0.20" fill="url(#tmhR${right ? 'b' : 'a'})"/>
+    <g transform="translate(93,4)">
+      ${guillocheMedallion(0, 0, 3.1, '#8A6A24', 0.95)}
+      <circle r="0.62" fill="#C9A74A"/>
+    </g>
+  </svg>`;
+
+  // 2 · THE NAME CARTOUCHE. Four loose corner brackets read as crop marks on
+  //     the first proof — present, but not an enclosure. This is a real one:
+  //     a double-cut rule across the top at y 102.2, sides descending x 28 and
+  //     x 269, closed at the foot by the name rule the sheet already carries.
+  //     Open-bottomed on purpose; a fully closed box around a person's name
+  //     reads as a form field, not an engraving.
+  //
+  //     Every edge was placed against the measured ink: the intro line ends at
+  //     y 100.6 (1.6mm above the top rule), the Latin name's glyphs run x 37–123
+  //     and the Arabic x 163–206 (both well inside x 28–269), and the body
+  //     paragraph starts at y 121.0 — below the foot, which is the existing rule.
+  const cart = `<svg class="tmh-cart" viewBox="0 0 241 18" xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true" preserveAspectRatio="none">
+    <g fill="#A9862F">
+      <rect x="0" y="0" width="241" height="0.30"/>
+      <rect x="3.2" y="1.05" width="234.6" height="0.18"/>
+      <rect x="0" y="0" width="0.30" height="18"/>
+      <rect x="240.7" y="0" width="0.30" height="18"/>
+      <rect x="1.05" y="1.05" width="0.18" height="16.95"/>
+      <rect x="239.77" y="1.05" width="0.18" height="16.95"/>
+      <!-- Foot returns. On the first proof the verticals stopped in mid-air:
+           the frame's foot is the sheet's own name rule, which spans x 70–227,
+           so the sides at x 28 and x 269 met nothing and the cartouche read as
+           unfinished. An engraved frame returns inward at the foot; these are
+           that return, cut to the same double hairline as the head. -->
+      <rect x="0" y="17.70" width="15" height="0.30"/>
+      <rect x="226" y="17.70" width="15" height="0.30"/>
+      <rect x="1.05" y="16.65" width="12.2" height="0.18"/>
+      <rect x="227.75" y="16.65" width="12.2" height="0.18"/>
+    </g>
+    <g fill="#B8912F">
+      <circle cx="16.6" cy="17.85" r="0.62"/>
+      <circle cx="224.4" cy="17.85" r="0.62"/>
+    </g>
+    <g fill="#B8912F">
+      <rect x="-0.85" y="-0.85" width="1.9" height="1.9" transform="rotate(45 0.1 0.1)"/>
+      <rect x="239.95" y="-0.85" width="1.9" height="1.9" transform="rotate(45 240.9 0.1)"/>
+    </g>
+    <g transform="translate(120.5,0)">
+      ${guillocheMedallion(0, 0, 2.6, '#A9862F', 0.9)}
+      <circle r="0.5" fill="#C9A74A"/>
+    </g>
+  </svg>`;
+
+  // 3 · Worked ground behind the name pair. Kept quiet deliberately — it is
+  //     paper, not a graphic. The cartouche above it is what carries the weight.
   const halo = `<svg class="tmh-halo" viewBox="0 0 240 26" xmlns="http://www.w3.org/2000/svg"
     preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    ${guillocheMedallion(70, 13, 12.5, '#8C6516', 0.30)}
-    ${guillocheMedallion(170, 13, 12.5, '#8C6516', 0.30)}
-    ${guillocheBand(94, 11.9, 52, 2.2, 4, '#8C6516', 0.42)}
+    ${guillocheMedallion(70, 13, 12.5, '#8C6516', 0.26)}
+    ${guillocheMedallion(170, 13, 12.5, '#8C6516', 0.26)}
+    ${guillocheBand(94, 11.9, 52, 2.2, 4, '#8C6516', 0.34)}
   </svg>`;
-  // Brackets: an L of two hairlines at each corner of the band, the outer
-  // heavier than the inner, which is how an engraved corner is cut.
-  const bracket = (cls) => `<span class="tmh-br ${cls}"><i></i><b></b>`
-    + '<i class="in"></i><b class="in"></b><em></em></span>';
-  // Palmettes: a single path, mirrored. Drawn from the same lobe geometry as
-  // the corner medallions so it belongs to this sheet's ornament vocabulary.
+
+  // 4 · Palmettes flanking the title, in the 17mm of clear ground the sheet
+  //     leaves at each side of the title frame's own 202mm box.
   const palmette = (flip) => `<svg class="tmh-palm${flip ? ' flip' : ''}"
     viewBox="0 0 46 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <g fill="none" stroke="#A9862F" stroke-width="0.42" stroke-linecap="round">
@@ -418,8 +479,9 @@ function tmhRegalia() {
     <circle cx="24.4" cy="7" r="1.05" fill="#B8912F"/>
     <circle cx="43.4" cy="7" r="0.62" fill="#B8912F"/>
   </svg>`;
-  return `${halo}
-  ${bracket('tmh-br-tl')}${bracket('tmh-br-tr')}${bracket('tmh-br-bl')}${bracket('tmh-br-br')}
+
+  return `${rule(false)}${rule(true)}
+  ${halo}${cart}
   ${palmette(false)}${palmette(true)}`;
 }
 
@@ -1906,51 +1968,41 @@ function docShell(title, sheetsHtml) {
   .o5-name-rule b{width:1.15mm;height:1.15mm;border:.14mm solid #A98A3C;transform:rotate(45deg);
     background:none;flex:0 0 auto;}
   /* ============ TAMHĪDIYYAH REGALIA (TMH only) ============ */
-  /* Every rule in this block is prefixed with the stage selector, so it cannot
-     reach the Ibtidā'iyyah or I'dādiyyah sheets even by accident. Positions are
-     in the same mm grid as everything above and were checked against a rendered
-     proof, not estimated: the name band's ink runs y 103.6–119.2 and x 60–237,
-     and nothing here enters that box. */
+  /* Every rule is prefixed with the stage selector, so it cannot reach the
+     Ibtidā'iyyah or I'dādiyyah sheets even by accident — and that is not left
+     as a claim: scripts/verify-stage-sheet-isolation.mjs renders those sheets
+     from the working tree and from a git ref and compares them byte for byte.
 
-  /* 1 · Guilloché halo behind the name pair. z-index 0 puts it under the type
-        (which is in the default stacking order above it) and over the plate. */
-  .sheet[data-stage="TMH"] .tmh-halo{
-    position:absolute;left:28mm;top:99.6mm;width:241mm;height:26mm;z-index:0;
-    pointer-events:none;}
+     Positions are in the same mm grid as everything above and were taken from a
+     measured ink map of the rendered sheet, not estimated. The two regions used
+     are genuinely empty: y 62–77 carries no element at any x, and the name band
+     leaves x 22–37 and x 206–275 clear. */
 
-  /* 2 · Corner brackets. Two hairlines rather than a box: an engraved corner is
-        cut, not drawn, and a closed rectangle around a name reads as a form
-        field. The outer arm is the heavier of the two, as a burin leaves it. */
-  .sheet[data-stage="TMH"] .tmh-br{position:absolute;width:9mm;height:9mm;z-index:0;}
-  .sheet[data-stage="TMH"] .tmh-br i,
-  .sheet[data-stage="TMH"] .tmh-br b{position:absolute;display:block;
-    background:linear-gradient(90deg,#B08A2E,rgba(176,138,46,0));}
-  .sheet[data-stage="TMH"] .tmh-br i{width:11mm;height:.32mm;top:0;left:0;}
-  .sheet[data-stage="TMH"] .tmh-br b{width:.32mm;height:9mm;top:0;left:0;
-    background:linear-gradient(180deg,#B08A2E,rgba(176,138,46,0));}
-  /* The inner cut, set in 0.9mm and run shorter — the proportion a burin
-     leaves when a corner is doubled. */
-  .sheet[data-stage="TMH"] .tmh-br i.in{width:6.4mm;height:.2mm;top:.9mm;left:.9mm;}
-  .sheet[data-stage="TMH"] .tmh-br b.in{width:.2mm;height:5.2mm;top:.9mm;left:.9mm;
-    background:linear-gradient(180deg,#B08A2E,rgba(176,138,46,0));}
-  /* The pip where the two cuts meet. */
-  .sheet[data-stage="TMH"] .tmh-br em{position:absolute;top:-.55mm;left:-.55mm;
-    width:1.35mm;height:1.35mm;transform:rotate(45deg);
-    background:linear-gradient(135deg,#E6CE8E,#B08A2E 55%,#8A6A24);}
-  .sheet[data-stage="TMH"] .tmh-br-tl{left:30mm;top:100.4mm;}
-  .sheet[data-stage="TMH"] .tmh-br-tr{right:30mm;top:100.4mm;transform:scaleX(-1);}
-  .sheet[data-stage="TMH"] .tmh-br-bl{left:30mm;top:115.6mm;transform:scaleY(-1);}
-  .sheet[data-stage="TMH"] .tmh-br-br{right:30mm;top:115.6mm;transform:scale(-1,-1);}
+  /* 1 · Ceremonial rule at y 70, running outward from the plate's own star
+        flourish to a terminal rosette at each margin. */
+  .sheet[data-stage="TMH"] .tmh-rule{position:absolute;top:66mm;width:96mm;height:8mm;
+    z-index:0;pointer-events:none;}
+  .sheet[data-stage="TMH"] .tmh-rule:not(.r){left:24mm;}
+  .sheet[data-stage="TMH"] .tmh-rule.r{right:24mm;transform:scaleX(-1);}
 
-  /* 3 · Palmettes flanking the title. They sit OUTSIDE the title frame's own
-        202mm box (which starts at x 47.5), in the 17mm of clear ground the
-        sheet leaves at each side of it. */
+  /* 2 · The name cartouche. Top rule at 102.2 — 1.6mm below the intro line's
+        measured foot — sides at x 28 and x 269, foot closed by the name rule
+        the sheet already carries at 117.4. preserveAspectRatio is none on the
+        SVG so the hairlines stay hairlines at any scale. */
+  .sheet[data-stage="TMH"] .tmh-cart{position:absolute;left:28mm;top:102.2mm;
+    width:241mm;height:18mm;z-index:0;pointer-events:none;}
+
+  /* 3 · Worked ground behind the name pair. */
+  .sheet[data-stage="TMH"] .tmh-halo{position:absolute;left:28mm;top:99.6mm;
+    width:241mm;height:26mm;z-index:0;pointer-events:none;}
+
+  /* 4 · Palmettes flanking the title, outside its 202mm frame. */
   .sheet[data-stage="TMH"] .tmh-palm{position:absolute;top:84.4mm;
     width:26mm;height:8mm;z-index:0;opacity:.92;}
   .sheet[data-stage="TMH"] .tmh-palm:not(.flip){left:19.5mm;}
   .sheet[data-stage="TMH"] .tmh-palm.flip{right:19.5mm;transform:scaleX(-1);}
 
-  /* 4 · The stage identifier: a sixteen-ray star struck on the name rule, where
+  /* 5 · The stage identifier: a sixteen-ray star struck on the name rule, where
         Ibtidā'iyyah carries a lozenge and I'dādiyyah an eight-point khatam. One
         ornament tells the stages apart; the family still reads as one family. */
   .sheet[data-stage="TMH"] .o5-name-rule i{
