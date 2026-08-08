@@ -102,11 +102,43 @@ alternative.
 
 ---
 
+## Two other records the Registrar must supply
+
+Rebuilding the issuing rolls onto the Registrar's own list surfaced two facts
+the certificates need that no SHRS document currently states. Neither is an
+Arabic question and neither is the Founder's to rule on — they are records the
+Registrar holds.
+
+**1 · Sofiah Anofi's Qur'an College award.** Two awards are conferred by the
+Qur'an College: complete memorisation, and ten juz'. The Registrar's list names
+her under Qur'an College without saying which. The renderer refuses a sheet that
+names no variant rather than defaulting to the first one, and it is right to: a
+Ten Juz' sheet headed *Certificate of Completion* would overstate a child's
+achievement on a permanent record, and the opposite understates it.
+
+**2 · Five graduands' sex.** The certificate wording is gendered in both
+languages. Twenty-seven of the thirty-two children are on record from an earlier
+SHRS register or an approved roll; these five reach this pipeline for the first
+time on the Notice of 2 July, which lists names and stages and states no sex:
+
+```
+Sofiah Anofi · Muhammad Fatih · Yaseer Balogun · Allison Ganiyah · Jubril Lawal
+```
+
+Several read unambiguously to a reader of Arabic names. That is not a record,
+and this pipeline holds the batch rather than keeping a guess beside a fact —
+the same rule that governs the Arabic names above, applied to the same children.
+
+---
+
 ## What happens when this is answered
 
 | | |
 |---|---|
-| Arabic names | **the last gate** — this document |
+| Arabic names | **outstanding** — the seven lines above |
+| Sofiah Anofi’s award variant | **outstanding** — the Registrar’s record |
+| Five graduands’ sex | **outstanding** — the Registrar’s record |
+| The issuing rolls | ✅ rebuilt on the plan; every batch reads one source |
 | Tamhīdiyyah wording | ✅ confirmed and locked, 8 August 2026 |
 | The roll | ✅ the Registrar's, 45 awards, 32 children |
 | Every name at its fullest form | ✅ computed, with the derivation published |
@@ -114,5 +146,11 @@ alternative.
 | Sequence allocation | ✅ 000048–000086 |
 | Signing key | in the Board's credential store, not in this environment |
 
-Answer the seven lines and supply the key, and all thirty-nine mint in one run.
-Nothing else is outstanding.
+The four secular batches — Qur'an College, Primary, Junior and Senior Secondary
+— are complete but for Sofiah Anofi's award variant and the five sexes. The
+three stage batches wait on those and on the seven Arabic lines. Supply them
+with the signing key and all thirty-nine mint.
+
+Every one of these holds is the pipeline refusing to write down something
+nobody told it. None of them is a defect, and none can be cleared from inside
+this repository.

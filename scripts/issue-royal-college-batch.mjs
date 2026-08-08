@@ -7,7 +7,7 @@
  *
  * This is not a mock-up generator. It drives the same identifier engine the
  * Registrar's Office runs in production — generateStageCertificateSerial for
- * the serial and content hash, formatStudentIdentityNo for the permanent
+ * the serial and content hash, the Class of 2026 plan for the permanent
  * Student ID, qrSvgForPrint for the verification payload — against an in-memory
  * sequence rather than Neon. Every identifier it prints is therefore the
  * identifier the live system would have produced for the same inputs, which is
@@ -28,11 +28,12 @@ import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'nod
 import { join } from 'node:path';
 
 import { generateStageCertificateSerial, displayStageCertificateNo, formatHijri } from '../functions/_lib/certificate-serial.js';
-import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
+import { isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 import {
   RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
 } from '../functions/_lib/royal-college-certificate.js';
+import { PLAN, REGISTERS, assertSexOnRecord, rollFor } from './_lib/class-of-2026.mjs';
 
 // ── Batch constants ─────────────────────────────────────────────────────────
 // The batch this run issues. Selected by SHRS_BATCH so one audited pipeline
@@ -52,22 +53,23 @@ const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const ORIGIN = 'https://www.shroyalschools.com';
 
 // The certificate sequence is GLOBAL — one number is issued once, ever, across
-// every stage and every year. Ibtida'iyyah ran 000035–000041 and I'dadiyyah ran
-// 000042–000047, so this batch starts at 000048. That is not a convention; it
-// is the only correct value, and the span check below proves no other batch
-// claims these numbers.
-const FIRST_CERTIFICATE_SEQ = { JSS: 48, SS: 61, PRY: 65, QUR: 72 }[BATCH];
-if (!FIRST_CERTIFICATE_SEQ) {
-  console.error(`No batch definition for "${BATCH}".`);
+// every stage and every year. It used to be declared here, one hard-coded first
+// number per batch, with a table of every other batch's span beside it so the
+// two could be checked against each other. Both tables were maintained by hand,
+// and the first Senior Secondary run proved what that is worth: it restarted at
+// a number the Junior Secondary batch had already consumed.
+//
+// The allocation is now computed once, for every certificate in the Class of
+// 2026 at once, by scripts/plan-certificate-reissue.mjs — from the Registrar's
+// roll and the thirteen certificates already minted against the old one. This
+// batch reads its own numbers out of that plan. There is nothing left here for
+// two hand-kept tables to disagree about.
+const ROLL = rollFor(BATCH);
+if (!ROLL.length) {
+  console.error(`No batch definition for "${BATCH}" in the Class of 2026 plan.`);
   process.exit(2);
 }
-const PRIOR_SPANS = [
-  { key: 'IBT', lo: 35, hi: 41 },
-  { key: 'IDD', lo: 42, hi: 47 },
-  { key: 'JSS', lo: 48, hi: 60 },
-  { key: 'SS', lo: 61, hi: 64 },
-  { key: 'PRY', lo: 65, hi: 71 },
-].filter((s) => s.key !== BATCH);
+const FIRST_CERTIFICATE_SEQ = ROLL[0].certificateSeq;
 
 // ── The grade ───────────────────────────────────────────────────────────────
 // Never printed — the certificate attests completion, not performance
@@ -83,193 +85,22 @@ const GRADE_EN = 'Excellent';
 const GRADE_AR = null;
 
 // ── The roll ────────────────────────────────────────────────────────────────
-// THE FOUNDER'S LIST, VERBATIM AND AUTHORITATIVE (2026-08-06), in his order.
-// No name is expanded, abbreviated, reordered or "corrected" here: a student's
-// name is whatever their institution records.
+// It used to be declared here: four hand-written lists of names, each with its
+// own carry-over declarations and its own first-Student-ID constant. That was
+// right while the Founder's roll was the only roll. It stopped being right on
+// 8 August 2026, when the Registrar's Notice of 2 July became authoritative and
+// every name moved to its fullest recorded form — because the same
+// reconciliation then had to be applied identically in four hand-maintained
+// places, and the way four hand-maintained copies fail is by printing one
+// child's permanent number on another child's certificate.
 //
-// `carryOverFrom` names a graduation register this student already appears in.
-// The Student ID is PERMANENT and there is one per person — a student who holds
-// an Ibtida'iyyah or I'dadiyyah certificate must carry the same number onto
-// this one, or the institution ends up with two irreconcilable records of one
-// child. The number is not re-derived here; it is read out of that register at
-// run time and cross-checked against the generator, so a typo in either fails
-// the run rather than reaching a printed sheet.
+// So the roll comes from scripts/_lib/class-of-2026.mjs, which reads the plan.
+// Each row arrives complete: the name to engrave, the certificate number, the
+// permanent Student ID with its provenance, the approved Arabic name where one
+// exists, and the award variant where the programme has more than one.
 //
-// `matchedAs` records HOW the match was made, because two of the five are short
-// forms rather than exact strings and that is a judgement the Founder — not
-// this script — is entitled to overturn. Both were printed on the register as
-// outstanding until he ruled on them.
-//
-// `founderRuling` carries that ruling. It is kept as a field rather than simply
-// changing `matchedAs` to 'exact', because the two are different facts: the
-// match still WAS made on a short form, and a later reader of this register is
-// entitled to see both that and the decision that settled it. A permanent
-// Student ID is the one number a person carries for life; the reasoning behind
-// it should survive longer than the conversation that produced it.
-//
-// Note what the ruling does NOT change: the name ENGRAVED on the sheet is still
-// the one on the Founder's roll. He confirmed an identity, not a re-spelling,
-// and the printed name is hashed into the serial — so changing it is a separate
-// instruction, given separately.
-const ROLLS = {};
-ROLLS.JSS = [
-  { en: 'Hameedah Adebimpe Ojewumi', sex: 'female',
-    carryOverFrom: { register: 'IBT', name: 'Hameedah Adebimpe Ojewumi' }, matchedAs: 'exact' },
-  { en: 'Muhammad Ismail Seriki', sex: 'male',
-    carryOverFrom: { register: 'IDD', name: 'Muhammad Ismail Seriki' }, matchedAs: 'exact' },
-  { en: 'Fatimah Desire Ibrahim', sex: 'female' },
-  { en: 'Aisha Anofi', sex: 'female',
-    carryOverFrom: { register: 'IBT', name: 'Aisha Anofi' }, matchedAs: 'exact' },
-  { en: 'Baqi Anofi', sex: 'male',
-    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'short-form',
-    founderRuling: { date: '2026-08-07', decision: 'Same student. Student ID carry-over approved.' } },
-  { en: "Sa'ad Sanusi", sex: 'male' },
-  { en: 'Fawaz Owolabi', sex: 'male' },
-  { en: 'Radiah Apatira', sex: 'female' },
-  { en: 'Faridah Aliu', sex: 'female',
-    carryOverFrom: { register: 'IDD', name: 'Faridah Ayomide Aliu' }, matchedAs: 'short-form',
-    founderRuling: { date: '2026-08-07', decision: 'Same student. Student ID carry-over approved.' } },
-  { en: 'Anisa Opeyemi Jokomba', sex: 'female' },
-  { en: 'Ameerah Durodola', sex: 'female' },
-  { en: 'Abdulrahman Abdullah', sex: 'male' },
-  { en: 'Ameerah Abdulhafeez', sex: 'female' },
-];
-
-// Senior Secondary, verbatim and in the Founder's order (2026-08-07).
-// Two of the four already hold an I'dadiyyah certificate under an EXACT name
-// match — no short form, nothing to rule on — so their permanent Student ID
-// carries across rather than a second number being minted for one person.
-ROLLS.SS = [
-  { en: 'Thoirah Makinde', sex: 'female',
-    carryOverFrom: { register: 'IDD', name: 'Thoirah Makinde' }, matchedAs: 'exact' },
-  { en: 'Abdulbasit Amobi Jabarr', sex: 'male',
-    carryOverFrom: { register: 'IDD', name: 'Abdulbasit Amobi Jabarr' }, matchedAs: 'exact' },
-  { en: 'Aisha Shode', sex: 'female' },
-  { en: 'Mazeed Hassan-Murtala', sex: 'male' },
-];
-
-// ── The secular Primary roll ────────────────────────────────────────────────
-// These seven are the Nursery and Primary School's own graduates. They are NOT
-// the Ibtida'iyyah seven, and the distinction cost some care to establish:
-//
-// Two register files under dist/certificates/ carry exactly these seven names
-// against Student IDs — 2026-08-08-IBT-000014 and 2026-08-08-IBT-000035 — and
-// a third, docs/graduation-registers/2026-08-08-IBT-000035.json, carries seven
-// DIFFERENT names against the same IDs as the second. Taking any of them at
-// face value would have put an existing child's permanent number on a
-// different child's certificate.
-//
-// The published register wins, and the evidence is unambiguous. Only the docs/
-// file is committed to the repository; both dist/ files are untracked build
-// output, and both predate it. The commit that wrote the docs/ register says
-// what happened in its own subject line: "Ibtida'iyyah roll: regenerate on the
-// final authoritative list of seven". The Ibtida'iyyah roll was corrected, and
-// the dist/ folders are stale renders from before that correction.
-//
-// So these seven hold no Student ID in any published register, and each is
-// issued a new one here. If the Registrar's records show otherwise for any of
-// them, the number must be carried over instead and this roll amended — say
-// so and it is a one-line change per student.
-// FOUNDER'S RULING, 8 August 2026. Presented with three spellings each for two
-// children — across the minted Ibtida'iyyah register, the Registrar's Notice of
-// 2 July and this roll — he ruled: "They are one." Each set is ONE child.
-//
-//   Naheemah Ismail (IBT cert 000038) = Naheemah Ismaeel (Registrar)
-//     = Naheemah Ismai Seriki (here)
-//   Ashrof Akorede (IBT cert 000039) = Ashrof Ojewumi (Registrar)
-//     = Ashraf Korede Ojewumi (here)
-//
-// So each carries her or his EXISTING permanent Student ID rather than being
-// minted a second one. That is the whole force of the ruling and it is applied
-// below. Without it this batch would have handed one child two permanent
-// numbers — the single worst thing this pipeline can produce.
-//
-// WHAT THE RULING DOES NOT SETTLE, and what is therefore NOT changed here: the
-// SPELLING to engrave. Cert 000039 is already minted reading "Ashrof Akorede",
-// which on this ruling carries his middle name where his family name belongs.
-// The name printed here is still the one on the Founder's own roll, because he
-// confirmed an identity, not a re-spelling. Correcting either sheet is a
-// separate instruction, given separately — and on the minted one it means a
-// revoke-and-reissue, since the name is hashed into the engraved number.
-ROLLS.PRY = [
-  { en: 'Naheemah Ismai Seriki', sex: 'female',
-    carryOverFrom: { register: 'IBT', name: 'Naheemah Ismail' },
-    matchedAs: 'different-family-name',
-    founderRuling: { date: '2026-08-08', decision: 'They are one. Same student; '
-      + 'Student ID carry-over approved.' } },
-  { en: 'Ashraf Korede Ojewumi', sex: 'male',
-    carryOverFrom: { register: 'IBT', name: 'Ashrof Akorede' },
-    matchedAs: 'different-family-name',
-    founderRuling: { date: '2026-08-08', decision: 'They are one. Same student; '
-      + 'Student ID carry-over approved.' } },
-  { en: 'Al-ameen Okoh', sex: 'male' },
-  { en: 'Al-ameen Abidemi Jokomba', sex: 'male' },
-  { en: 'Aisha Lawal', sex: 'female' },
-  { en: 'Imran Iremide Adegoke', sex: 'male' },
-  { en: 'Daud Aliu', sex: 'male' },
-];
-
-// ── The Qur'an College roll ─────────────────────────────────────────────────
-// Three graduates, and — for the first time in this pipeline — TWO different
-// awards in one batch. Two students have completed the whole Qur'an; one has
-// memorised ten juz'. `awardVariant` selects the wording, and the renderer
-// refuses to print a QUR sheet that names no variant rather than defaulting to
-// the first one: a Ten Juz' sheet headed "Certificate of Completion" would
-// overstate a child's achievement on a permanent record.
-//
-// `ar` is the Arabic form of the name, and it appears ONLY where the Founder
-// wrote it out. It is never transliterated here. He supplied Zaynab's on
-// 2026-08-07; the other two have none on file and print in Latin alone, which
-// is complete and correct. An invented Arabic name is not a near miss, it is a
-// different name engraved on someone's certificate.
-ROLLS.QUR = [
-  // Corrected twice by the Founder before anything was signed — "Zainab Anofi",
-  // then "Zaynab Omobolanle Anofi", and finally this, which he marked LOCKED.
-  // The name engraved is the last one he wrote, in both scripts, exactly as he
-  // wrote it. Neither form is derived from the other here.
-  { en: 'Zaynab Zakariya Anofi', ar: 'زينب زكريا حنفي', sex: 'female',
-    awardVariant: 'COMPLETE' },
-  // Already holds an I'dadiyyah certificate under this EXACT name, so his
-  // permanent Student ID carries across. Minting a second number for him here
-  // would leave the institution holding two irreconcilable records of one boy.
-  { en: 'Baqi Olamiposi Anofi', sex: 'male', awardVariant: 'COMPLETE',
-    carryOverFrom: { register: 'IDD', name: 'Baqi Olamiposi Anofi' }, matchedAs: 'exact' },
-  // NOT carried over from the Ibtida'iyyah register's "Aisha Anofi". That is a
-  // short-form match on a common given name plus a family name shared by
-  // several students on these rolls, and the Founder has ruled on the two
-  // short forms he was asked about and not on this one. An unruled short-form
-  // carry-over is precisely what the cross-batch gate rejects, and it should:
-  // guessing wrong here puts one child's permanent number on another child's
-  // certificate. She is issued a new Student ID. If the Registrar's records
-  // show she is the same student, say so and it is a one-line change.
-  // Two of her three name-parts are ALREADY APPROVED and carried across from the
-  // Ibtida'iyyah register — عائشة (Aisha) and حنفي (Anofi, the school's own
-  // name). Only the middle name is new, and Yoruba middle names are exactly
-  // what that register's protocol sends to the Founder before print: أولاميبوسي
-  // (Olamiposi) and أولاديميجي (Oladimeji) were both proposed on the approved
-  // أولانريوجو and then ruled on. This follows the same pattern and is HELD
-  // under the same rule — proposed here, printed only once he rules.
-  //
-  // RULED, 2026-08-07: عائشة أمشالوا حنفي.
-  //
-  // Note what the ruling did, because it is the reason the proposal existed.
-  // This pipeline proposed أوموشاليوا, built on the approved أولاميبوسي /
-  // أولاديميجي pattern. The Founder ruled أمشالوا — a DIFFERENT form. His
-  // governs, verbatim, and the proposal is recorded beside it rather than
-  // quietly replaced: a family's own spelling of its own name is not a pattern
-  // to be extrapolated, and this is the case that proves it. Had the batch
-  // printed on the proposal, a girl's certificate would have carried a name
-  // her family does not use.
-  { en: 'Aisha Omoshalewa Anofi', sex: 'female', awardVariant: 'JUZ10',
-    ar: 'عائشة أمشالوا حنفي',
-    arRuling: { date: '2026-08-07', decision: 'Arabic name ruled by the Founder.',
-      pipelineProposed: 'عائشة أوموشاليوا حنفي',
-      note: 'The Founder\u2019s form differs from the proposal and governs. '
-        + 'عائشة and حنفي were already approved on the Ibtida\u2019iyyah register; '
-        + 'the middle name was his to give and he gave it.' } },
-];
-
-const ROLL = ROLLS[BATCH];
+// Every gate below is unchanged. The script has not become more trusting; it
+// has stopped holding a private opinion about who is graduating.
 
 // Students who hold an SHRS certificate but are NOT on this roll. A name from
 // another stage appearing on a Royal College sheet is the same class of error
@@ -350,7 +181,7 @@ function assertIdentityIsFreeAcrossRegisters(issuedRows) {
     let reg; try { reg = JSON.parse(readFileSync(path, 'utf8')); } catch { continue; }
     for (const e of reg.entries) {
       if (!taken.has(e.identityNo)) taken.set(e.identityNo, []);
-      taken.get(e.identityNo).push({ name: e.studentEn, code });
+      taken.get(e.identityNo).push({ name: e.studentEn, code, serialNo: e.serialNo });
     }
   }
   const clashes = [];
@@ -360,27 +191,25 @@ function assertIdentityIsFreeAcrossRegisters(issuedRows) {
       // own earlier run, re-read out of dist/ on a re-issue.
       if (holder.name === r.studentEn) continue;
       // A DECLARED carry-over. One person can appear on two rolls under two
-      // written forms of one name (a short form on one register, the full form
-      // on another), and carrying the Student ID across is the whole reason
-      // carryOverFrom exists — reusing the number there is correct, not a
-      // collision. The exemption is deliberately narrow: it applies only to the
-      // exact register and name the roll declares, and only where the Founder
-      // has ruled that the two names are one student. An undeclared reuse, or a
-      // declared one nobody has ruled on, still fails the batch. This is what
-      // separates a lawful carry-over from the fault this gate was built for —
-      // the Senior Secondary run that minted fresh IDs from an overlapping
-      // sequence and handed two children numbers already engraved on two other
-      // children's certificates. That had no declaration and no ruling, and it
-      // still stops the batch dead.
-      const declared = r.carryOverFrom
-        && holder.code === r.carryOverFrom.register
-        && holder.name === r.carryOverFrom.name;
-      if (declared && r.founderRuling) continue;
-      if (declared) {
-        clashes.push(`${r.studentEn} would take ${r.identityNo} from ${holder.name} (${holder.code}) `
-          + 'on an undeclared name match — the Founder has not ruled that these are one student');
-        continue;
-      }
+      // written forms of one name — a short form on one register, the fullest
+      // form on the Registrar's — and carrying the permanent Student ID across
+      // is the whole reason the plan records where a number came from. Reusing
+      // it there is correct, not a collision.
+      //
+      // The exemption names ONE CERTIFICATE. The plan says which minted sheet
+      // each carried number came from, and the exemption applies only when the
+      // number's existing holder is that exact sheet — not a matching register,
+      // not a matching name, that certificate. It was previously a register-and-
+      // name pair plus a recorded ruling; a serial is the same guarantee with
+      // nothing left to spell two ways, and the rulings themselves now live in
+      // the plan, which is where the identity question was decided.
+      //
+      // Anything else still stops the batch dead — including the fault this gate
+      // was built for: the Senior Secondary run that minted fresh IDs from an
+      // overlapping sequence and handed two children numbers already engraved on
+      // two other children's certificates.
+      const declared = r.carriedFrom && holder.serialNo === r.carriedFrom;
+      if (declared) continue;
       clashes.push(`${r.studentEn} was given ${r.identityNo}, `
         + `which already belongs to ${holder.name} (${holder.code})`);
     }
@@ -396,25 +225,21 @@ const NOT_ON_THIS_ROLL = NOT_ON_THIS_ROLL_ALL.filter(
   (n) => !ROLL.some((r) => r.en === n) && !ROLL_WORDS.has(n));
 
 
-// The registers this batch's carry-overs are read from.
-const REGISTERS = {
-  IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
-  IDD: 'docs/graduation-registers/2026-08-08-IDD-000042.json',
-};
-
-// New students get sequence numbers that continue the student register. IBT
-// used 35–41 and IDD used 42–47, so the next free value is 48. The generator
-// scatters them — consecutive sequence values land 324 billion apart — so a
-// contiguous run here produces Student IDs with no visible order, which is the
-// point.
-// Where this batch's NEW Student IDs begin. It is per batch and it must never
-// overlap a batch already issued: the JSS run consumed 48–55, so the Senior
-// Secondary run starts at 56. The first SS run got this wrong — it restarted at
-// 48 and handed Aisha Shode and Mazeed Hassan-Murtala numbers already engraved
-// on two JSS certificates, which is the single worst thing this pipeline can
-// produce: one permanent number, two different children. The cross-batch gate
-// below now refuses it outright rather than trusting this constant.
-const FIRST_NEW_IDENTITY_SEQ = { JSS: 48, SS: 56, PRY: 58, QUR: 65 }[BATCH];
+// New Student IDs are no longer minted here either. They were, from a per-batch
+// first-value constant, and the first Senior Secondary run restarted that
+// constant at 48 and handed Aisha Shode and Mazeed Hassan-Murtala numbers
+// already engraved on two Junior Secondary certificates — one permanent number,
+// two different children, the single worst thing this pipeline can produce.
+//
+// The plan now allocates every permanent Student ID for the Class of 2026 in
+// one pass, keyed on the CHILD rather than the certificate. That distinction is
+// not academic: Ameerah Abdulhafeez holds no certificate yet and appears twice
+// on the Registrar's roll, for Ibtida'iyyah and for Junior Secondary. Allocating
+// per certificate would have minted her two permanent numbers in a single run;
+// allocating per child mints one, and both sheets carry it.
+//
+// The cross-batch gate below still refuses a collision outright. It no longer
+// has a constant to trust.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRE-FLIGHT
@@ -436,60 +261,48 @@ const env = {
 };
 
 const lastSeq = FIRST_CERTIFICATE_SEQ + ROLL.length - 1;
-for (const s of PRIOR_SPANS) {
-  if (FIRST_CERTIFICATE_SEQ <= s.hi && lastSeq >= s.lo) {
-    fail(`certificate numbers ${FIRST_CERTIFICATE_SEQ}–${lastSeq} overlap the ${s.key} `
-      + `batch's ${s.lo}–${s.hi}. The sequence is global; two certificates may never `
-      + 'carry the same engraved number.');
+
+// This batch's numbers must be exactly the block the plan allocated it —
+// contiguous, in order, and claimed by no other batch and no minted sheet.
+// Checked against the plan itself rather than against a remembered table, so a
+// hand-edited plan fails here instead of at the press.
+{
+  for (const [i, r] of ROLL.entries()) {
+    if (r.certificateSeq !== FIRST_CERTIFICATE_SEQ + i) {
+      fail(`the plan allocates ${PROGRAMME} a non-contiguous block: ${r.en} holds `
+        + `${r.certificateSeq} where ${FIRST_CERTIFICATE_SEQ + i} was expected.`);
+    }
+  }
+  const mine = new Set(ROLL.map((r) => r.certificateSeq));
+  for (const other of PLAN.toMint) {
+    if (other.code !== PROGRAMME && mine.has(other.certificateSeq)) {
+      fail(`certificate number ${other.certificateSeq} is claimed by both ${PROGRAMME} `
+        + `and ${other.code} (${other.name}). The sequence is global; two certificates `
+        + 'may never carry the same engraved number.');
+    }
+  }
+  // A revoked certificate has still been issued. Its number is spent forever.
+  for (const a of PLAN.actions) {
+    const n = Number(a.cert.match(/-(\d{6})-/)[1]);
+    if (mine.has(n)) {
+      fail(`certificate number ${n} is already engraved on ${a.cert} (${a.name}).`);
+    }
   }
 }
 
 if (!RC_PROGRAMMES[PROGRAMME]) fail(`no award wording for programme "${PROGRAMME}"`);
 
-// ── Resolve the carried-over Student IDs from the real registers ────────────
-const registerCache = new Map();
-// The Arabic name a published register already carries for this student. It is
-// READ, never derived: باقي أولاميبوسي حنفي was approved by the Founder on
-// 2026-08-06 and is already engraved on Baqi's I'dādiyyah certificate, so
-// re-proposing it here would be inventing a second Arabic name for a boy who
-// already has one on an SHRS document.
-function arabicNameFromRegister(key, name) {
-  if (!registerCache.has(key)) {
-    registerCache.set(key, JSON.parse(readFileSync(join(process.cwd(), REGISTERS[key]), 'utf8')));
-  }
-  const hits = registerCache.get(key).entries.filter((e) => e.studentEn === name);
-  return hits.length === 1 ? (hits[0].studentAr || null) : null;
-}
+// ── The roll, as the plan gives it ──────────────────────────
+// Nothing is resolved here any more. rollFor() has already read each carried
+// Student ID out of the certificate the plan says it came from and confirmed
+// the two agree, and has read each approved Arabic name out of a published
+// register by EXACT name — a form approved for a shorter name is not a form
+// approved for a longer one.
+const roll = ROLL;
 
-function identityFromRegister(key, name) {
-  if (!registerCache.has(key)) {
-    registerCache.set(key, JSON.parse(readFileSync(join(process.cwd(), REGISTERS[key]), 'utf8')));
-  }
-  const reg = registerCache.get(key);
-  const hits = reg.entries.filter((e) => e.studentEn === name);
-  if (hits.length !== 1) {
-    fail(`carry-over lookup for "${name}" in ${REGISTERS[key]} matched ${hits.length} entries — `
-      + 'a Student ID may only be carried across when exactly one record names it.');
-  }
-  return hits[0].identityNo;
-}
-
-let nextNewIdentitySeq = FIRST_NEW_IDENTITY_SEQ;
-const roll = ROLL.map((student) => {
-  if (student.carryOverFrom) {
-    const identityNo = identityFromRegister(student.carryOverFrom.register, student.carryOverFrom.name);
-    const ar = student.ar
-      || arabicNameFromRegister(student.carryOverFrom.register, student.carryOverFrom.name);
-    return {
-      ...student, identityNo, ar,
-      identitySource: `carried from ${student.carryOverFrom.register}`,
-      arSource: student.ar ? 'supplied by the Founder for this batch'
-        : (ar ? `carried from the ${student.carryOverFrom.register} register` : null),
-    };
-  }
-  const seq = nextNewIdentitySeq++;
-  return { ...student, identityNo: formatStudentIdentityNo(seq), identitySource: `newly issued (seq ${seq})` };
-});
+// The certificate wording is gendered. An unrecorded sex is not a blank field
+// on the sheet; it is a sheet that would have to guess.
+assertSexOnRecord(roll, fail);
 
 // A bilingual award has no monolingual sheets. If one graduate's Arabic name is
 // missing, her certificate would fall back to a centred English line while her
@@ -563,9 +376,11 @@ for (const [i, student] of roll.entries()) {
     sex: student.sex,
     identityNo: student.identityNo,
     identitySource: student.identitySource,
-    matchedAs: student.matchedAs || null,
-    founderRuling: student.founderRuling || null,
+    carriedFrom: student.carriedFrom || null,
+    replaces: student.replaces || null,
+    sexSource: student.sexSource,
     nameAr: student.ar || null,
+    arSource: student.arSource || null,
     arRuling: student.arRuling || null,
     awardVariant: student.awardVariant || null,
     gradeEn: GRADE_EN,
@@ -695,8 +510,12 @@ function slug(s) {
 // ─────────────────────────────────────────────────────────────────────────────
 // THE REGISTER
 // ─────────────────────────────────────────────────────────────────────────────
-const pendingConfirmation = issued.filter((r) => r.matchedAs === 'short-form' && !r.founderRuling);
-const ruledConfirmation = issued.filter((r) => r.founderRuling);
+// Sheets this batch replaces. A reissue is not a correction — the engraved name
+// is hashed into the engraved number, so the superseded certificate is revoked
+// and a new one issued at a new number, carrying the same permanent Student ID.
+// Named on the register because a reader is entitled to see which sheet a
+// certificate stands in place of.
+const reissues = issued.filter((r) => r.replaces);
 
 const register = {
   programme: PROGRAMME,
@@ -720,33 +539,24 @@ const register = {
     rule: 'The Student ID is permanent and there is one per person. A student '
       + 'already holding an SHRS certificate carries the same number onto this one.',
     resolved: issued.filter((r) => r.identitySource.startsWith('carried'))
-      .map((r) => ({ student: r.studentEn, identityNo: r.identityNo, source: r.identitySource, matchedAs: r.matchedAs })),
-    awaitingFounderConfirmation: pendingConfirmation.map((r) => ({
-      student: r.studentEn,
-      identityNo: r.identityNo,
-      matchedTo: ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name,
-      question: 'This roll gives a short form of a name already on the '
-        + 'I’dādiyyah register. Treated as the same student, so the '
-        + 'Student ID is carried across rather than a second permanent number '
-        + 'minted for one child. If they are different people, this certificate '
-        + 'must be reissued with a new Student ID before it is printed.',
-    })),
-    // Settled. Kept in full — a permanent number is worth the words.
-    founderRulings: ruledConfirmation.map((r) => {
-      const roll = ROLL.find((s2) => s2.en === r.studentEn);
-      return {
-        student: r.studentEn,
-        identityNo: r.identityNo,
-        matchedTo: roll.carryOverFrom.name,
-        matchedAs: r.matchedAs,
-        ruledOn: r.founderRuling.date,
-        decision: r.founderRuling.decision,
-        effect: 'One person, one permanent Student ID. No second number was minted, '
-          + 'and the number on this certificate is the same one this student already holds '
-          + `on the ${roll.carryOverFrom.register} register.`,
-      };
-    }),
+      .map((r) => ({ student: r.studentEn, identityNo: r.identityNo, source: r.identitySource })),
+    // WHERE each carried number came from — one certificate, named. Every
+    // identity question on this roll was decided before the plan was computed;
+    // the decisions are recorded in docs/graduation-registers/reissue-plan-2026.json
+    // and in docs/shrs-graduation-consistency-audit.md, and are not restated
+    // here as though this run had made them.
+    carriedFrom: issued.filter((r) => r.carriedFrom)
+      .map((r) => ({ student: r.studentEn, identityNo: r.identityNo, certificate: r.carriedFrom })),
   },
+  // Certificates this batch supersedes. Each must be revoked on the live system
+  // before its replacement is handed over; see docs/shrs-certificate-revocations.md.
+  reissues: reissues.map((r) => ({
+    student: r.studentEn, replaces: r.replaces, replacedBy: r.serialNo,
+    identityNo: r.identityNo,
+    note: 'The engraved name is hashed into the engraved number, so the name '
+      + 'could not be corrected in place. Same child, same permanent Student ID, '
+      + 'new certificate number.',
+  })),
   entries: issued,
 };
 
@@ -781,39 +591,35 @@ const md = [
   '',
   '| Student | Student ID | Source |',
   '|---|---|---|',
-  ...issued.map((r) => `| ${r.studentEn} | ${r.identityNo} | ${r.identitySource}`
-    + `${r.matchedAs ? ` (${r.matchedAs} match)` : ''} |`),
+  ...issued.map((r) => `| ${r.studentEn} | ${r.identityNo} | ${r.identitySource} |`),
   '',
-  ...(pendingConfirmation.length ? [
-    '### Awaiting the Founder’s confirmation',
+  ...(issued.some((r) => r.carriedFrom) ? [
+    '### Where each carried number came from',
     '',
-    'These carry-overs were matched on a short form of a name rather than on an',
-    'exact string. They are treated as the same student, because minting a second',
-    'permanent number for one child is the more damaging of the two errors — but',
-    'that is the Founder’s call, not this pipeline’s, and it is recorded here',
-    'rather than assumed silently.',
+    'A carried Student ID names ONE certificate, not a register and a name. The',
+    'number on the sheet below is the number already engraved on that certificate,',
+    'read out of it at issue and confirmed against the plan.',
     '',
-    '| This roll | Existing register | Student ID carried |',
+    '| Student | Student ID | Carried from |',
     '|---|---|---|',
-    ...pendingConfirmation.map((r) => `| ${r.studentEn} | `
-      + `${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name} | ${r.identityNo} |`),
+    ...issued.filter((r) => r.carriedFrom)
+      .map((r) => `| ${r.studentEn} | ${r.identityNo} | ${r.carriedFrom} |`),
     '',
   ] : []),
-  ...(ruledConfirmation.length ? [
-    '## Student ID carry-over — ruled by the Founder',
+  ...(reissues.length ? [
+    '## Certificates this batch supersedes',
     '',
-    'Each of these was matched to an existing register on a SHORT FORM of the name,',
-    'not an exact string, and was held open on the register until the Founder ruled.',
-    'He has: they are the same students, and the permanent Student ID carries across.',
-    'No second number was minted for any child.',
+    'Each holder IS entitled to this award; the sheet already minted carries a',
+    'shorter form of the name. The engraved name is hashed into the engraved',
+    'number, so it cannot be corrected in place: the old sheet is revoked and a',
+    'new one issued at a new number, carrying the same permanent Student ID.',
     '',
-    '| This roll | Existing register | Student ID carried | Ruled | Decision |',
-    '|---|---|---|---|---|',
-    ...ruledConfirmation.map((r) => {
-      const roll = ROLL.find((s2) => s2.en === r.studentEn);
-      return `| ${r.studentEn} | ${roll.carryOverFrom.name} (${roll.carryOverFrom.register}) `
-        + `| ${r.identityNo} | ${r.founderRuling.date} | ${r.founderRuling.decision} |`;
-    }),
+    '| Student | Revoked | Replaced by | Student ID |',
+    '|---|---|---|---|',
+    ...reissues.map((r) => `| ${r.studentEn} | ${r.replaces} | ${r.serialNo} | ${r.identityNo} |`),
+    '',
+    'Revocation is an act of the Office of the Registrar on the live system.',
+    'See docs/shrs-certificate-revocations.md.',
     '',
   ] : []),
   '## Verification',
@@ -847,7 +653,11 @@ const sqlOut = [
   '-- Move the sequences past what this batch consumed, so the next issuance',
   '-- cannot mint a number that is already engraved on a printed document.',
   `SELECT setval('stage_certificate_serial_seq', ${lastSeq}, true);`,
-  `SELECT setval('student_identity_seq', ${nextNewIdentitySeq - 1}, true);`,
+  // Past the WHOLE Class of 2026 allocation, not just this batch's slice. The
+  // plan allocates Student IDs per child across every batch, so a value that
+  // covered only this run would let the next issuance mint a number already
+  // engraved on a sheet from a later batch in the same plan.
+  `SELECT setval('student_identity_seq', ${PLAN.identityAllocatedThrough}, true);`,
   '',
   '-- ── Linking each certificate to its student record ───────────────────────',
   '-- The rows above are complete and verifiable on their own: every certificate',
@@ -892,17 +702,16 @@ console.log(`  written to ${dir}\n`);
 for (const r of issued) {
   console.log(`  ${r.printedNo}  ${r.identityNo}  ${r.studentEn}`);
 }
-if (pendingConfirmation.length) {
-  console.log('\n  AWAITING THE FOUNDER’S CONFIRMATION — Student ID carry-over on a short-form name:');
-  for (const r of pendingConfirmation) {
-    console.log(`    ${r.studentEn}  →  ${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name}  (${r.identityNo})`);
+if (issued.some((r) => r.carriedFrom)) {
+  console.log('\n  PERMANENT STUDENT ID CARRIED FROM AN EXISTING CERTIFICATE:');
+  for (const r of issued.filter((x) => x.carriedFrom)) {
+    console.log(`    ${r.studentEn}  ${r.identityNo}  ←  ${r.carriedFrom}`);
   }
 }
-if (ruledConfirmation.length) {
-  console.log('\n  RULED BY THE FOUNDER — Student ID carry-over on a short-form name:');
-  for (const r of ruledConfirmation) {
-    console.log(`    ${r.studentEn}  →  ${ROLL.find((s) => s.en === r.studentEn).carryOverFrom.name}`
-      + `  (${r.identityNo})  ${r.founderRuling.date} — ${r.founderRuling.decision}`);
+if (reissues.length) {
+  console.log('\n  SUPERSEDES — revoke each of these on the live system before hand-over:');
+  for (const r of reissues) {
+    console.log(`    ${r.replaces}  →  ${r.serialNo}  (${r.studentEn})`);
   }
 }
 console.log('');

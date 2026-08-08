@@ -1,6 +1,6 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026 · **Revision 5** — extended after the Registrar's
+**Date:** 8 August 2026 · **Revision 6** — extended after the Registrar's
 Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
@@ -733,3 +733,98 @@ certificate from a full one. **No batch may be minted until they are rebuilt.**
 The preflight prints this table on every run.
 
 Then, and only then: the signing key.
+
+---
+
+# REVISION 6 — the issuing rolls rebuilt on the plan
+
+## 24 · One roll, read by everything
+
+Revision 5 ended with the one thing left: the certificate rolls still carried
+the pre-ruling set under pre-ruling short-form names, in four hand-written lists
+inside the two issuing scripts. **They are rebuilt.**
+
+They are not rewritten by hand onto the Registrar's list, which would only have
+produced four hand-maintained copies of one reconciliation. Both issuing scripts
+now read `docs/graduation-registers/reissue-plan-2026.json`, computed by
+`scripts/plan-certificate-reissue.mjs` from the canonical roll and the thirteen
+minted certificates, through one shared module, `scripts/_lib/class-of-2026.mjs`.
+
+What each script lost is worth naming, because each was a hand-kept constant
+that had already failed once:
+
+| Removed | What it was | How it failed |
+|---|---|---|
+| `FIRST_CERTIFICATE_SEQ` per batch | the first engraved number | — |
+| `PRIOR_SPANS` | a table of every other batch's numbers, to check the above | maintained against the thing it checked |
+| `FIRST_NEW_IDENTITY_SEQ` per batch | the first permanent Student ID | the first Senior Secondary run restarted it at 48 and handed two children numbers already engraved on two Junior Secondary certificates |
+| four `ROLLS` lists | who is graduating | drifted from the Registrar's roll the moment hers became authoritative |
+| per-batch `withdrawnEn` lists | residue guards | grew by hand as rolls multiplied |
+
+The preflight no longer parses the rolls out of the issuing script's source
+either. It checks the plan — which, now, is the same act.
+
+**The rolls reconcile exactly.** 45 printed awards, 45 certificate places, per
+programme, with no programme differing by one.
+
+## 25 · A second permanent number, caught before it was minted
+
+The plan allocated certificate numbers per certificate and Student IDs alongside
+them. Those are not the same allocation, and this roll contains the case that
+proves it:
+
+> **Ameerah Abdulhafeez** holds no certificate yet and appears **twice** on the
+> Registrar's roll — Ibtidā'iyyah and Junior Secondary.
+
+Allocating per certificate would have minted her **two permanent Student
+numbers in a single run** — the single worst thing this pipeline can produce,
+and the fault it exists to prevent. Allocation is now keyed on the child: she is
+issued `716656078450081` once, and both sheets carry it.
+
+Eight children receive more than one certificate. Each holds one number.
+
+The floor for new numbers is no longer a constant either. The Student ID body is
+a bijection of its sequence value, so the plan recovers the sequence behind
+every already-issued number and starts after the highest — 47, read, not
+remembered.
+
+## 26 · Two records only the Registrar can supply
+
+Rebuilding surfaced two facts the certificates need that no SHRS document
+states. Neither is an Arabic question.
+
+**Sofiah Anofi's Qur'an College award.** Two awards are conferred — complete
+memorisation, and ten juz'. The Registrar's list names her without saying which,
+and the renderer refuses a sheet that names no variant rather than defaulting to
+the first. It is right to: a Ten Juz' sheet headed *Certificate of Completion*
+overstates a child's achievement on a permanent record, and the reverse
+understates it.
+
+**Five graduands' sex.** The wording is gendered in both languages. Twenty-seven
+of thirty-two are on record from an earlier register or an approved roll. These
+five appear for the first time on the Notice of 2 July, which states none:
+
+```
+Sofiah Anofi · Muhammad Fatih · Yaseer Balogun · Allison Ganiyah · Jubril Lawal
+```
+
+Several read unambiguously to a reader of Arabic names. That is not a record,
+and the batch is held rather than a guess kept beside a fact — the same rule
+that governs the Arabic names, applied to the same children.
+
+## 27 · Standing
+
+| | |
+|---|---|
+| The roll | ✅ the Registrar's — 45 awards, 32 children |
+| The issuing rolls | ✅ rebuilt; one source, read by every batch and by the preflight |
+| Certificate numbers | ✅ 000035–000086, contiguous, each claimed once |
+| Permanent Student IDs | ✅ 32 children, 32 numbers, proved in both directions |
+| Tamhīdiyyah wording | ✅ confirmed and locked, 8 August 2026 |
+| Seven Arabic names | ⏳ outstanding — `docs/shrs-arabic-names-for-ruling-2026.md` |
+| Sofiah Anofi's award variant | ⏳ outstanding — the Registrar's record |
+| Five graduands' sex | ⏳ outstanding — the Registrar's record |
+| The signing key | in the Board's credential store, not in this environment |
+
+Every remaining hold is this pipeline refusing to write down something nobody
+told it. None is a defect, and none can be cleared from inside this repository.

@@ -28,6 +28,7 @@ import {
 } from '../functions/_lib/stage-certificate-template.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
+import { PLAN, assertSexOnRecord, rollFor } from './_lib/class-of-2026.mjs';
 
 // ── Batch selection ─────────────────────────────────────────────────────
 //     node scripts/issue-certificate-batch.mjs [IBT|IDD]
@@ -258,6 +259,146 @@ const BATCHES = {
   },
 };
 
+// ── The rebuilt Class of 2026 stage batches ─────────────────────────────
+// Everything above this line is the historical record: what was minted on
+// 8 August 2026, reproducible byte for byte, and sealed. Nothing in it changes.
+//
+// What follows is what must be minted NOW. The Registrar's Notice of 2 July
+// 2026 became authoritative later that same day; on it, Tamhidiyyah is a real
+// stage of this institution, its graduands hold no Ibtida'iyyah entitlement,
+// and every name stands at its fullest recorded form. Four of the seven
+// Ibtida'iyyah sheets already minted therefore carry a name that is not the
+// child's full name — and because the engraved name is hashed into the engraved
+// number, none of them can be corrected in place.
+//
+// So these are not edits to the batches above. They are new batches, at new
+// numbers, replacing sheets that must be revoked. The rolls, the certificate
+// numbers and the permanent Student IDs all come from the Class of 2026 plan;
+// what is declared here is only what the plan cannot compute — the Arabic.
+//
+// `approvedAr` stays a HAND-WRITTEN second transcription, as it has always
+// been. It is not copied from the register the roll reads its Arabic out of;
+// that is the entire point of it. أ and ا, ي and ى, ة and ه look near-identical
+// at body size, and the only thing that catches a one-code-point slip is two
+// independent transcriptions of the same name disagreeing.
+function fromPlan(code, decl) {
+  const roll = rollFor(code);
+  const mine = roll.map((r) => r.en);
+  // The residue guards — names that must NOT appear anywhere in this batch's
+  // rendered output. They used to be hand-written per batch, which was workable
+  // when there were two rolls and is not workable across seven. They are now
+  // derived from the plan itself: every OTHER programme's graduands, by full
+  // name and by name-part.
+  //
+  // A guard that matches a name legitimately on this roll is worse than no
+  // guard at all — it rejects every correct batch — so colliding guards are
+  // dropped. They are dropped VISIBLY, printed at run time, because a silently
+  // shrinking guard list is a gate quietly turning itself off. ('Adegoke' has
+  // to go on the Ibtida'iyyah roll for exactly this reason: Imran Iremide
+  // Adegoke is on it.)
+  const others = [...new Set(PLAN.toMint.filter((r) => r.code !== code).map((r) => r.name)
+    .concat(PLAN.actions.filter((a) => a.code !== code).map((a) => a.name)))]
+    .filter((n) => !mine.includes(n));
+  const parts = [...new Set(others.flatMap((n) => n.split(/\s+/)).filter((w) => w.length > 3))];
+  const collides = (g) => mine.some((n) => n.toLowerCase().includes(g.toLowerCase()));
+  const dropped = [...others, ...parts].filter(collides);
+  if (dropped.length) {
+    console.log(`  ${code}: ${dropped.length} residue guard(s) dropped — they match a name `
+      + `on this very roll: ${[...new Set(dropped)].join(', ')}`);
+  }
+  return {
+    programme: code,
+    firstCertificateSeq: roll[0].certificateSeq,
+    // Not a first value plus an offset. The plan allocates a permanent Student
+    // ID per CHILD, and a child holding two awards carries one number onto both.
+    identityFromPlan: true,
+    roll: roll.map((r) => ({
+      en: r.en, ar: r.ar, sex: r.sex, identityNo: r.identityNo,
+      replaces: r.replaces, carriedFrom: r.carriedFrom, arSource: r.arSource,
+    })),
+    withdrawnEn: [...others, ...parts].filter((g) => !collides(g)),
+    // Arabic guards are only ever the strings this institution has actually
+    // approved. Nothing is transliterated to build a guard, any more than to
+    // build a name.
+    withdrawnAr: [],
+    ...decl,
+  };
+}
+
+// The three name-parts below are the only ones on these rolls whose Arabic is
+// already approved AT THE FULL NAME TO BE ENGRAVED. Seven names are not, and
+// they are declared outstanding — see docs/shrs-arabic-names-for-ruling-2026.md.
+// A form approved for "Naheemah Ismail" is not a form approved for "Naheemah
+// Ismail Seriki", and this file will not treat it as one.
+const OUTSTANDING = {
+  Omoshalewa: 'أمشالوا was ruled for her Qur’an College sheet on 2026-08-07; '
+    + 'whether that is the same child is the Founder’s to confirm',
+  Abdulhafeez: 'عبد الحفيظ proposed on the عبد الباسط / عبد اللطيف pattern — awaiting confirmation',
+  Ameerah: 'أميرة proposed as standard Arabic — awaiting confirmation',
+  Korede: 'كوردي is on record; the assembled أشرف كوردي أوجومي awaits confirmation',
+  Ashraf: 'أشرف is on record for him as “Ashrof”; the assembly awaits confirmation',
+  Ojewumi: 'أوجومي is on record; the assembly awaits confirmation',
+  Iremide: 'Yoruba, no institutional precedent — the Founder’s to give',
+  Balogun: 'Yoruba, no institutional precedent — the Founder’s to give',
+  Yaseer: 'ياسر proposed as standard Arabic — awaiting confirmation',
+  Fatih: 'فاتح proposed as standard Arabic — awaiting confirmation',
+  Muhammad: 'محمد is on record; “Muhammad Fatih” awaits confirmation as a whole',
+  Seriki: 'سركي is on record; the assembled نعيمة إسماعيل سركي awaits confirmation',
+  Naheemah: 'نعيمة is on record; the assembly awaits confirmation',
+  Ismail: 'إسماعيل is on record; the assembly awaits confirmation',
+  Imran: 'عمران is on record; the assembly awaits her middle name',
+  Adegoke: 'أدغكي is on record; the assembly awaits his middle name',
+  Aisha: 'عائشة is on record; the assembly awaits confirmation',
+  Anofi: 'حنفي is the school’s own name; the assembly awaits confirmation',
+};
+
+BATCHES.TMH = fromPlan('TMH', {
+  approvedAr: { 'Abdulbasit Adedokun': 'عبد الباسط أددوكن' },
+  arabicNames: {
+    status: 'HELD — one name of two is approved',
+    approvedAndCarriedAcross: {
+      Adedokun: 'أددوكن — approved on the Ibtidā’iyyah register',
+      Abdulbasit: 'عبد الباسط — approved on the Ibtidā’iyyah register',
+    },
+    standardArabicNoChoiceToMake: {},
+    awaitingConfirmation: { Muhammad: OUTSTANDING.Muhammad, Fatih: OUTSTANDING.Fatih },
+  },
+});
+
+BATCHES.IBT2026 = fromPlan('IBT', {
+  approvedAr: {
+    'Faridah Ayomide Aliu': 'فريدة أيومدي علي',
+    'Muhammad Ismail Seriki': 'محمد إسماعيل سركي',
+  },
+  arabicNames: {
+    status: 'HELD — four of seven names have no approved form at their full length',
+    approvedAndCarriedAcross: {
+      Faridah: 'فريدة — approved on the I‘dādiyyah register',
+      Ayomide: 'أيومدي — confirmed by the Founder, 2026-08-06',
+      Aliu: 'علي — the approved form, NOT عليو',
+    },
+    standardArabicNoChoiceToMake: {},
+    awaitingConfirmation: {
+      Aisha: OUTSTANDING.Aisha, Omoshalewa: OUTSTANDING.Omoshalewa, Anofi: OUTSTANDING.Anofi,
+      Ameerah: OUTSTANDING.Ameerah, Abdulhafeez: OUTSTANDING.Abdulhafeez,
+      Ashraf: OUTSTANDING.Ashraf, Korede: OUTSTANDING.Korede, Ojewumi: OUTSTANDING.Ojewumi,
+      Imran: OUTSTANDING.Imran, Iremide: OUTSTANDING.Iremide, Adegoke: OUTSTANDING.Adegoke,
+      Muhammad: OUTSTANDING.Muhammad, Ismail: OUTSTANDING.Ismail, Seriki: OUTSTANDING.Seriki,
+      Naheemah: OUTSTANDING.Naheemah,
+    },
+  },
+});
+
+BATCHES.IDD2026 = fromPlan('IDD', {
+  approvedAr: {},
+  arabicNames: {
+    status: 'HELD — the single name on this roll has no approved Arabic form',
+    approvedAndCarriedAcross: {},
+    standardArabicNoChoiceToMake: {},
+    awaitingConfirmation: { Yaseer: OUTSTANDING.Yaseer, Balogun: OUTSTANDING.Balogun },
+  },
+});
+
 const BATCH = BATCHES[BATCH_KEY];
 if (!BATCH) {
   console.error(`unknown batch "${BATCH_KEY}" — expected one of ${Object.keys(BATCHES).join(', ')}`);
@@ -307,6 +448,38 @@ for (const a of spans) {
       process.exit(1);
     }
   }
+}
+
+// ── A bilingual award has no monolingual sheets ─────────────────────────
+// A stage certificate carries the child's name in Arabic AND in English, on one
+// baseline. If one graduand's Arabic name is missing, her sheet would fall back
+// to a lone English line while her classmates carry a matched pair — and a
+// graduating class whose certificates do not match is not a class.
+//
+// So the batch stops here, names everyone it is waiting on, and signs nothing.
+// It is stated as a hold rather than a failure because nothing is wrong: the
+// pipeline is doing the one thing it was built to do, which is refuse to invent
+// a child's name.
+{
+  const missing = CLASS_ROLL.filter((r) => !r.ar);
+  if (missing.length) {
+    console.error(`\nBATCH HELD — ${BATCH_KEY} is a bilingual award and ${missing.length} of `
+      + `${CLASS_ROLL.length} sheets have no approved Arabic name at the full length to be`);
+    console.error('engraved. A form approved for a shorter name is NOT a form approved for a');
+    console.error('longer one: the printed name is hashed into the printed number.\n');
+    for (const m of missing) console.error(`  ${m.en}`);
+    console.error('\nNo Arabic name is ever transliterated, generated or guessed here.');
+    console.error('See docs/shrs-arabic-names-for-ruling-2026.md. Supply the forms and the');
+    console.error('batch issues unchanged.\n');
+    process.exit(1);
+  }
+}
+
+// The certificate wording is gendered; an unrecorded sex is a sheet that would
+// have to guess. Applies to the plan-driven rolls, whose graduands reach this
+// pipeline for the first time on the Registrar's Notice.
+if (BATCH.identityFromPlan) {
+  assertSexOnRecord(CLASS_ROLL, (m) => { console.error(`BATCH REJECTED — ${m}`); process.exit(1); });
 }
 
 // A guard that matches a CURRENT student is a gate that can never pass; a
@@ -429,7 +602,11 @@ const sql = sequenceStub(FIRST_CERTIFICATE_SEQ);
 // ── Issue ───────────────────────────────────────────────────────────────
 const issued = [];
 for (const [i, student] of CLASS_ROLL.entries()) {
-  const identityNo = formatStudentIdentityNo(FIRST_IDENTITY_SEQ + i);
+  // A plan-driven roll arrives with its permanent Student ID already resolved —
+  // carried from the certificate that already holds it, or allocated once for
+  // that child across every award. The sealed batches above still derive theirs
+  // from their own first-value, which is how they were minted and must stay.
+  const identityNo = student.identityNo || formatStudentIdentityNo(FIRST_IDENTITY_SEQ + i);
   if (!isValidStudentIdentityNo(identityNo)) {
     throw new Error(`invalid student identity number for ${student.en}: ${identityNo}`);
   }
@@ -624,7 +801,12 @@ const sqlOut = [
   '-- rather than generated, and the sequence is advanced past them so the',
   '-- registrar never re-issues one of these values to a different student.',
   ...issued.map((r) => `UPDATE students SET identity_no = ${q(r.identityNo)} WHERE full_name = ${q(r.studentEn)} AND identity_no IS NULL;`),
-  `SELECT setval('student_identity_seq', ${FIRST_IDENTITY_SEQ + issued.length - 1}, true);`,
+  // For a plan-driven batch this is past the WHOLE Class of 2026 allocation, not
+  // just this batch's slice: the plan allocates Student IDs per child across
+  // every batch, so a value covering only this run would let the next issuance
+  // mint a number already engraved on a sheet from a later batch in the plan.
+  `SELECT setval('student_identity_seq', ${BATCH.identityFromPlan
+    ? PLAN.identityAllocatedThrough : FIRST_IDENTITY_SEQ + issued.length - 1}, true);`,
   '',
   // Column list checked against sql/schema.sql, not written from memory.
   // The previous version named a `status` column that stage_certificates

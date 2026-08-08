@@ -28,6 +28,8 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 
+import { formatStudentIdentityNo } from '../functions/_lib/identity-no.js';
+
 const CANON = JSON.parse(readFileSync('docs/graduation-registers/canonical-roll-2026.json', 'utf8'));
 const canon = (c) => (CANON.categories.find((x) => x.code === c) || { names: [] }).names;
 
@@ -111,6 +113,113 @@ const SPENT_TO = 47;
 let seq = SPENT_TO;
 for (const r of toMint) { seq += 1; r.certificateSeq = seq; }
 
+// ── The permanent Student ID ────────────────────────────────────────────────
+// A certificate number is allocated per CERTIFICATE. A Student ID is allocated
+// per CHILD, and once — it is the one number a person carries for life, across
+// every stage and every year.
+//
+// Those two facts are not the same fact, and conflating them is how a pipeline
+// hands one child two permanent numbers. This roll contains the case exactly:
+// Ameerah Abdulhafeez holds no certificate yet and appears TWICE on it, for
+// Ibtidā'iyyah and for Junior Secondary. Allocating alongside the certificate
+// sequence would have minted her two numbers in a single run.
+//
+// So allocation here is keyed on the child, not the row. Children are keyed by
+// their canonical name string, which is safe precisely because the canonical
+// roll has already resolved every alternative spelling of one child down to one
+// string — two rows reading the same string are one child by construction. (The
+// converse risk, two DIFFERENT children sharing a full name, would defeat this;
+// no such pair exists on this roll, and the gate below would not catch it. If
+// one ever appears the Registrar must distinguish them before this runs.)
+const identityTaken = new Map();          // identityNo → who already holds it
+{
+  // Which sequence values are already consumed is READ, not assumed. The
+  // Student ID body is a bijection of the sequence — (seq·MULT + OFFSET) mod
+  // 10^12 — so every issued number has exactly one sequence value behind it,
+  // and it is recovered here by forward-mapping a bounded range rather than
+  // by trusting a constant somebody remembered to update.
+  const bySeq = new Map();
+  for (let s = 1; s <= 5000; s += 1) bySeq.set(formatStudentIdentityNo(s), s);
+  for (const [code, rows] of Object.entries(minted)) {
+    for (const e of rows) {
+      identityTaken.set(e.identityNo, { name: e.studentEn, code });
+      const s = bySeq.get(e.identityNo);
+      if (s === undefined) {
+        console.error(`  ${e.identityNo} (${e.studentEn}) is not in the first 5000 of the `
+          + 'Student ID sequence — the allocation floor below cannot be computed.');
+        process.exit(1);
+      }
+      e.identitySeq = s;
+    }
+  }
+}
+const identitySpentTo = Math.max(...Object.values(minted).flat().map((e) => e.identitySeq));
+let idSeq = identitySpentTo;
+const perChild = new Map();
+for (const r of toMint) {
+  if (r.identity) {
+    // Already holds one, from a certificate minted on 8 August. It carries.
+    perChild.set(r.name, { identityNo: r.identity, source: `carried from ${r.identityFrom}` });
+  } else if (!perChild.has(r.name)) {
+    idSeq += 1;
+    perChild.set(r.name, {
+      identityNo: formatStudentIdentityNo(idSeq),
+      source: `newly issued (identity sequence ${idSeq})`,
+      identitySeq: idSeq,
+    });
+  }
+  const held = perChild.get(r.name);
+  r.identity = held.identityNo;
+  r.identitySource = held.source;
+}
+
+// One number, one child — proved, not asserted. Checked in both directions:
+// no child holding two numbers, and no number held by two children (including
+// the thirteen already minted).
+{
+  const byChild = new Map();
+  const byNumber = new Map();
+  const faults = [];
+  for (const r of toMint) {
+    if (byChild.has(r.name) && byChild.get(r.name) !== r.identity) {
+      faults.push(`${r.name} would hold two permanent Student IDs: `
+        + `${byChild.get(r.name)} and ${r.identity}`);
+    }
+    byChild.set(r.name, r.identity);
+    const prior = identityTaken.get(r.identity);
+    if (prior && prior.name !== r.name) {
+      // A number already engraved on a minted certificate, now appearing under
+      // a different written name. That is either the worst fault this pipeline
+      // can produce — one number, two children — or the most ordinary lawful
+      // thing it does: the same child, under the fuller name the Registrar's
+      // roll gives her. The two are told apart by evidence, not by charity.
+      //
+      // The carry is lawful only if this row DECLARES where the number came
+      // from (identityFrom names one specific certificate), that certificate is
+      // the one the prior holder holds, and the clustering that built the
+      // canonical roll agrees the two written forms are one child. Anything
+      // short of all three stops the plan.
+      const declared = r.identityFrom
+        && (minted[prior.code] || []).some((e) => e.serialNo === r.identityFrom
+          && e.studentEn === prior.name)
+        && same(r.name, prior.name);
+      if (!declared) {
+        faults.push(`${r.name} would take ${r.identity}, which already belongs to `
+          + `${prior.name} (${prior.code})`);
+      }
+    }
+    if (byNumber.has(r.identity) && byNumber.get(r.identity) !== r.name) {
+      faults.push(`${r.identity} would be held by both ${byNumber.get(r.identity)} and ${r.name}`);
+    }
+    byNumber.set(r.identity, r.name);
+  }
+  if (faults.length) {
+    console.error('\n  PLAN REJECTED — the permanent Student ID allocation is not one-to-one:');
+    for (const f of faults) console.error(`    ${f}`);
+    process.exit(1);
+  }
+}
+
 // ── Report ──────────────────────────────────────────────────────────────────
 const L = (s = '') => console.log(s);
 const tally = (k) => actions.filter((a) => a.kind === k).length;
@@ -137,7 +246,21 @@ L('\n  ── TO BE MINTED ─────────────────�
 L('     SEQ     PROG  NAME                          STUDENT ID');
 for (const r of toMint) {
   L(`     ${String(r.certificateSeq).padStart(6, '0')}  ${r.code.padEnd(4)}  ${r.name.padEnd(28)} `
-    + `${r.identity ? `${r.identity} (carried)` : 'new'}`);
+    + `${r.identity}  ${r.identitySource.startsWith('carried') ? 'carried' : 'new'}`);
+}
+
+L('\n  ── ONE CHILD, ONE PERMANENT NUMBER ─────────────────────────────────────');
+L(`     Student ID sequence spent through ${identitySpentTo}; `
+  + `this plan allocates ${identitySpentTo + 1}–${idSeq}.`);
+const awards = new Map();
+for (const r of toMint) awards.set(r.name, (awards.get(r.name) || 0).valueOf() + 1);
+const multi = [...awards].filter(([, n]) => n > 1);
+L(`     ${awards.size} children · ${toMint.length} certificates · `
+  + `${multi.length} children receiving more than one`);
+for (const [name, n] of multi) {
+  const rows = toMint.filter((r) => r.name === name);
+  L(`       ${name.padEnd(28)} ${n} awards (${rows.map((r) => r.code).join(', ')})  `
+    + `${rows[0].identity}  ${rows[0].identitySource.startsWith('carried') ? 'carried' : 'new'}`);
 }
 
 L('\n  ── NAMES THAT STILL NEED A RULING ──────────────────────────────────────');
@@ -166,6 +289,7 @@ if (process.argv.includes('--write')) {
       generatedBy: 'scripts/plan-certificate-reissue.mjs',
       authority: 'Founder’s ruling, 8 August 2026 — the Registrar’s roll governs.',
       spentThrough: SPENT_TO, allocatedThrough: seq,
+      identitySpentThrough: identitySpentTo, identityAllocatedThrough: idSeq,
       actions, toMint, openNameQuestions: OPEN, ruledNameQuestions: CLOSED,
     }, null, 2)}\n`);
   L('  → docs/graduation-registers/reissue-plan-2026.json\n');

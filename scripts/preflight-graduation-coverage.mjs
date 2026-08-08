@@ -5,251 +5,266 @@
  *
  *     node scripts/preflight-graduation-coverage.mjs
  *
- * The four outstanding batches (JSS, SS, PRY, QUR) mint production
- * certificates, and scripts/issue-royal-college-batch.mjs refuses to run
- * without DOCUMENT_HASH_SECRET — correctly, because the five characters
- * engraved on a certificate face derive from that key, and this repository has
- * already once produced real certificates signed by a development literal
- * simply because a run succeeded.
+ * The outstanding batches mint production certificates, and both issuing
+ * scripts refuse to run without DOCUMENT_HASH_SECRET — correctly, because the
+ * five characters engraved on a certificate face derive from that key, and this
+ * repository has already once produced real certificates signed by a
+ * development literal simply because a run succeeded.
  *
  * So this script answers the question that can be answered without the key:
- * IF the key were supplied right now, would all forty certificates mint clean?
- * It reads the same rolls the issuing script uses, the same published
- * registers, and the same programme table, and it checks:
+ * IF the key were supplied right now, would every certificate mint clean?
+ *
+ * It used to read the rolls out of the issuing script's source. It no longer
+ * needs to: since 8 August 2026 there is one roll, computed by
+ * scripts/plan-certificate-reissue.mjs from the Registrar's Notice and the
+ * thirteen certificates already minted, and the issuing scripts read it too.
+ * This checks that plan — which is now the same act as checking them.
  *
  *   1  every graduand printed in the ceremony programme holds exactly one
- *      certificate roll place for that programme, and nobody is on a roll who
- *      is not in the programme
- *   2  the GLOBAL certificate sequence is contiguous and unshared
- *   3  the permanent Student ID sequence spans do not overlap
- *   4  every carry-over resolves against a published register, and every
- *      short-form match carries a Founder's ruling
- *   5  no Arabic name is present that the Founder did not write
+ *      certificate place for that programme, and nobody holds a place who is
+ *      not in the programme
+ *   2  the GLOBAL certificate sequence is contiguous, unshared, and claims no
+ *      number already engraved on a minted sheet
+ *   3  one child, one permanent Student ID — in both directions
+ *   4  every carried Student ID resolves against the exact certificate it
+ *      claims to come from
+ *   5  no Arabic name is present that the Founder did not write, and every
+ *      bilingual sheet still waiting on one is named
  *   6  every Qur'an College entry names its award variant
+ *   7  every graduand's sex is on record, because the wording is gendered
+ *   8  Tamhidiyyah and Ibtida'iyyah are mutually exclusive
  *
  * It writes nothing and signs nothing. It is safe to run at any time.
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { AWARDS } from './build-graduation-programme.mjs';
 import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
+import { PLAN, REGISTERS, rollFor } from './_lib/class-of-2026.mjs';
 
-// ── The rolls, read from the issuing script rather than retyped ─────────────
-// Retyping them would create a second list to fall out of step with the first,
-// which is the exact class of error this script exists to catch. The block
-// between these two markers is pure object-literal data — no calls, no I/O —
-// so evaluating it in isolation is safe and gives the real rolls.
-const SRC = readFileSync('scripts/issue-royal-college-batch.mjs', 'utf8');
-const from = SRC.indexOf('const ROLLS = {};');
-const to = SRC.indexOf('const ROLL = ROLLS[BATCH];');
-if (from < 0 || to < 0) {
-  console.error('PREFLIGHT ABORTED — the roll block markers moved in '
-    + 'scripts/issue-royal-college-batch.mjs. Fix this script rather than '
-    + 'guessing at the rolls.');
-  process.exit(2);
-}
-// eslint-disable-next-line no-new-func
-const ROLLS = new Function(`${SRC.slice(from, to)}\nreturn ROLLS;`)();
+const ORDER = ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS'];
 
-// The two batches already minted and published.
 // Certificates that HAVE been minted but that a ruling has since put beyond the
 // holder's entitlement. They are not build errors and they are not resolved by
 // rebuilding: a minted certificate is undone by revocation on the live system,
-// which is the Registrar's act. Listed here so the coverage check reports them
-// as the pending revocations they are, rather than as a mismatch that hides
-// real ones behind it. Cleared when the revocation is recorded as executed.
-const REVOCATION_PENDING = {
-  IBT: [['Abdulbasit Adedokun', 'SHRS-CERT-IBT-2026-000037-22C49',
-    'Founder’s ruling of 8 August 2026: a Tamhīdī graduand has no Ibtidā’iyyah '
-    + 'entitlement. See docs/shrs-certificate-revocations.md.']],
-};
-
-const PUBLISHED = {
-  IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
-  IDD: 'docs/graduation-registers/2026-08-08-IDD-000042.json',
-};
-
-// The planned spans, transcribed from the issuing script's own constants.
-const CERT_SPANS = {
-  IBT: [35, 41], IDD: [42, 47], JSS: [48, 60], SS: [61, 64], PRY: [65, 71], QUR: [72, 74],
-};
-const ID_FIRST = { JSS: 48, SS: 56, PRY: 58, QUR: 65 };
+// which is the Registrar's act. Cleared when the revocation is recorded as
+// executed. Read from the plan, so this cannot drift from what was computed.
+const REVOKE = PLAN.actions.filter((a) => a.kind === 'REVOKE');
+const REISSUE = PLAN.actions.filter((a) => a.kind === 'REISSUE');
+const KEEP = PLAN.actions.filter((a) => a.kind === 'KEEP');
 
 const problems = [];
-const gaps = [];
+const held = [];
 const notes = [];
 const flag = (m) => problems.push(m);
+const hold = (m) => held.push(m);
 
-// ── 1 · Programme roll vs certificate roll ──────────────────────────────────
+// ── 1 · Programme roll vs certificate places ────────────────────────────────
+// A "place" is a certificate this child will hold for this programme when the
+// plan is executed: one already minted and KEPT, or one to be minted.
 const byCode = Object.fromEntries(AWARDS.map((a) => [a.code, a]));
-const rollFor = (code) => (PUBLISHED[code]
-  ? JSON.parse(readFileSync(PUBLISHED[code], 'utf8')).entries.map((e) => e.studentEn)
-  : (ROLLS[code] || []).map((r) => r.en));
+const placesFor = (code) => [
+  ...KEEP.filter((a) => a.code === code).map((a) => a.name),
+  ...PLAN.toMint.filter((r) => r.code === code).map((r) => r.name),
+];
 
 let printedTotal = 0;
+let placesTotal = 0;
 const people = new Set();
-console.log('\n  CODE   PROGRAMME                        PRINTED  CERTIFICATE  STATE');
-// The Registrar's roll now governs (Founder, 8 Aug 2026), so a certificate roll
-// that is SHORTER than the printed roll is the normal state until the batches
-// are rebuilt on it — not a defect to be reported once per name. The gap is
-// reported per programme, as a count, and named as what it is.
-for (const code of ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS']) {
+console.log('\n  CODE   PROGRAMME                        PRINTED  CERTIFICATES  STATE');
+for (const code of ORDER) {
   const printed = byCode[code]?.names || [];
-  const roll = rollFor(code);
+  const places = placesFor(code);
   printedTotal += printed.length;
+  placesTotal += places.length;
   printed.forEach((n) => people.add(n));
-  const missing = printed.filter((n) => !roll.includes(n));
-  const extra = roll.filter((n) => !printed.includes(n));
-  const state = code === 'TMH' ? 'NO BATCH — WORDING UNAPPROVED'
-    : PUBLISHED[code] ? 'ISSUED' : 'AWAITING KEY';
+  for (const n of printed) {
+    if (!places.includes(n)) {
+      flag(`${code}/${n} is printed in the ceremony programme but holds no `
+        + 'certificate place. A graduand crossing the stage to no certificate.');
+    }
+  }
+  for (const n of places) {
+    if (!printed.includes(n)) {
+      flag(`${code}/${n} holds a certificate place but is not printed in the `
+        + 'ceremony programme for that award.');
+    }
+  }
+  const mint = PLAN.toMint.filter((r) => r.code === code).length;
+  const kept = KEEP.filter((a) => a.code === code).length;
+  const state = mint === 0 ? 'ISSUED' : kept ? `${kept} issued · ${mint} to mint` : `${mint} to mint`;
   const title = (byCode[code]?.title || RC_PROGRAMMES[code]?.labelEn || code).slice(0, 32);
   console.log(`  ${code.padEnd(6)} ${title.padEnd(32)} ${String(printed.length).padStart(7)}`
-    + `  ${String(roll.length).padStart(11)}  ${state}`);
-  // Tamhīdī is the one roll that legitimately has no certificate places yet:
-  // the stage was only confirmed on 8 August and its wording is not approved.
-  // Reporting it as a coverage failure every run would train the eye to ignore
-  // the check; it is carried as a named gap instead, and named again below.
-  gaps.push({ code, printed: printed.length, certs: roll.length });
-  const pending = (REVOCATION_PENDING[code] || []).map((x) => x[0]);
-  for (const n of extra) {
-    if (pending.includes(n)) continue;   // reported in the headline below
-  }
+    + `  ${String(places.length).padStart(12)}  ${state}`);
 }
-console.log(`  ${''.padEnd(39)} ${String(printedTotal).padStart(7)}`);
+console.log(`  ${''.padEnd(39)} ${String(printedTotal).padStart(7)}  ${String(placesTotal).padStart(12)}`);
 notes.push(`${printedTotal} awards across ${people.size} distinct graduands`);
 
 // ── 2 · The global certificate sequence ─────────────────────────────────────
-const spans = Object.entries(CERT_SPANS)
-  .map(([k, [lo, hi]]) => ({ k, lo, hi, want: rollFor(k).length }))
-  .sort((a, b) => a.lo - b.lo);
-let cursor = null;
-for (const s of spans) {
-  if (s.hi - s.lo + 1 !== s.want) {
-    flag(`${s.k}: the sequence reserves ${s.lo}–${s.hi} (${s.hi - s.lo + 1} numbers) `
-      + `but the roll has ${s.want} students`);
-  }
-  if (cursor !== null && s.lo !== cursor + 1) {
-    flag(`the certificate sequence jumps from ${cursor} to ${s.lo} at ${s.k} — `
+// One number is issued once, ever. Every number from the first minted to the
+// last allocated must be claimed exactly once, by a minted certificate or by
+// the plan — no gaps, no sharing. A revoked certificate still holds its number.
+{
+  const claims = new Map();
+  const claim = (n, who) => {
+    if (claims.has(n)) {
+      flag(`certificate number ${String(n).padStart(6, '0')} is claimed twice: `
+        + `${claims.get(n)} and ${who}. Two certificates may never carry the same `
+        + 'engraved number.');
+    } else claims.set(n, who);
+  };
+  for (const a of PLAN.actions) claim(Number(a.cert.match(/-(\d{6})-/)[1]), `${a.kind} ${a.name}`);
+  for (const r of PLAN.toMint) claim(r.certificateSeq, `mint ${r.code} ${r.name}`);
+  const lo = Math.min(...claims.keys());
+  const hi = Math.max(...claims.keys());
+  for (let n = lo; n <= hi; n += 1) {
+    if (!claims.has(n)) flag(`the certificate sequence skips ${String(n).padStart(6, '0')} — `
       + 'the sequence is global and must be contiguous');
   }
-  cursor = s.hi;
+  if (hi !== PLAN.allocatedThrough) {
+    flag(`the plan says it allocated through ${PLAN.allocatedThrough} but the highest `
+      + `number claimed is ${hi}`);
+  }
+  notes.push(`certificate sequence ${lo}–${hi}, contiguous, ${hi - lo + 1} numbers`);
 }
-notes.push(`certificate sequence ${spans[0].lo}–${cursor}, contiguous, ${cursor - spans[0].lo + 1} numbers`);
 
-// ── 3 · The permanent Student ID spans ──────────────────────────────────────
-// A carried-over student consumes no new number, so a batch's new-ID span is
-// as long as its count of students without a carry-over.
-const idSpans = [];
-for (const [code, first] of Object.entries(ID_FIRST)) {
-  const fresh = (ROLLS[code] || []).filter((r) => !r.carryOverFrom).length;
-  idSpans.push({ code, lo: first, hi: first + fresh - 1, fresh });
-}
-idSpans.sort((a, b) => a.lo - b.lo);
-for (let i = 1; i < idSpans.length; i += 1) {
-  if (idSpans[i].lo <= idSpans[i - 1].hi) {
-    flag(`Student ID spans collide: ${idSpans[i - 1].code} takes `
-      + `${idSpans[i - 1].lo}–${idSpans[i - 1].hi} and ${idSpans[i].code} starts at ${idSpans[i].lo}. `
-      + 'One permanent number, two different children.');
+// ── 3 · One child, one permanent Student ID ─────────────────────────────────
+// Checked in both directions, across the minted certificates AND the plan.
+// A child with two numbers is an institution holding two irreconcilable records
+// of one person; a number held by two children is one child's identity printed
+// on another child's certificate. Both are terminal.
+{
+  const byChild = new Map();
+  const byNumber = new Map();
+  const add = (name, id, where) => {
+    if (byChild.has(name) && byChild.get(name).id !== id) {
+      flag(`${name} would hold two permanent Student IDs: `
+        + `${byChild.get(name).id} (${byChild.get(name).where}) and ${id} (${where})`);
+    }
+    if (byNumber.has(id) && byNumber.get(id).name !== name) {
+      flag(`Student ID ${id} would be held by two children: `
+        + `${byNumber.get(id).name} (${byNumber.get(id).where}) and ${name} (${where})`);
+    }
+    byChild.set(name, { id, where });
+    byNumber.set(id, { name, where });
+  };
+  // The minted certificates are matched to the canonical roll by the plan, so a
+  // REISSUE row's number legitimately belongs to the child under the FULLER
+  // name. Registering it under the fuller name is what the reissue means.
+  for (const a of PLAN.actions) {
+    add(a.to || a.name, a.id, a.cert);
+  }
+  for (const r of PLAN.toMint) add(r.name, r.identity, `${r.code} ${r.certificateSeq}`);
+  notes.push(`${byChild.size} children hold ${byNumber.size} permanent Student IDs`);
+  const multi = ORDER.flatMap((c) => PLAN.toMint.filter((r) => r.code === c))
+    .reduce((m, r) => m.set(r.name, (m.get(r.name) || 0) + 1), new Map());
+  const dual = [...multi].filter(([, n]) => n > 1);
+  if (dual.length) {
+    notes.push(`${dual.length} children receive more than one certificate, each on one number`);
   }
 }
-notes.push('new Student ID spans: '
-  + idSpans.map((s) => `${s.code} ${s.lo}–${s.hi}`).join(', '));
 
-// ── 4 · Carry-overs ─────────────────────────────────────────────────────────
-const registerNames = {};
-for (const [code, file] of Object.entries(PUBLISHED)) {
-  if (!existsSync(file)) { flag(`published register missing: ${file}`); continue; }
-  registerNames[code] = new Set(JSON.parse(readFileSync(file, 'utf8')).entries.map((e) => e.studentEn));
-}
-let carryOvers = 0;
-for (const [code, roll] of Object.entries(ROLLS)) {
-  for (const r of roll) {
-    if (!r.carryOverFrom) continue;
-    carryOvers += 1;
-    const src = registerNames[r.carryOverFrom.register];
-    if (!src) { flag(`${code}/${r.en}: carries over from ${r.carryOverFrom.register}, which has no published register`); continue; }
-    if (!src.has(r.carryOverFrom.name)) {
-      flag(`${code}/${r.en}: carries over from ${r.carryOverFrom.register} as `
-        + `"${r.carryOverFrom.name}", which is not on that register`);
-    }
-    if (r.matchedAs !== 'exact' && !r.founderRuling) {
-      flag(`${code}/${r.en}: carry-over matched as "${r.matchedAs}" with no `
-        + 'Founder’s ruling. Any match that is not EXACT can put one child’s '
-        + 'permanent number on another child’s certificate.');
+// ── 4 · Carry-overs resolve against the certificate they name ───────────────
+{
+  const minted = {};
+  for (const [code, file] of Object.entries(REGISTERS)) {
+    if (!existsSync(file)) { flag(`published register missing: ${file}`); continue; }
+    minted[code] = JSON.parse(readFileSync(file, 'utf8')).entries;
+  }
+  const all = Object.values(minted).flat();
+  let carried = 0;
+  for (const r of PLAN.toMint) {
+    if (!r.identityFrom) continue;
+    carried += 1;
+    const src = all.filter((e) => e.serialNo === r.identityFrom);
+    if (src.length !== 1) {
+      flag(`${r.code}/${r.name}: carries a Student ID from ${r.identityFrom}, which `
+        + `matches ${src.length} entries in the published registers`);
+    } else if (src[0].identityNo !== r.identity) {
+      flag(`${r.code}/${r.name}: carries ${r.identity} from ${r.identityFrom}, but that `
+        + `certificate carries ${src[0].identityNo}`);
     }
   }
+  notes.push(`${carried} Student ID carry-overs, each resolved against one named certificate`);
 }
-notes.push(`${carryOvers} Student ID carry-overs, all resolved`);
 
 // ── 5 · Arabic names ────────────────────────────────────────────────────────
 // The rule is absolute: a name is printed in Arabic only where the Founder
-// wrote it. Anything the pipeline could only propose stays off the sheet.
-let withArabic = 0;
-for (const [code, roll] of Object.entries(ROLLS)) {
-  for (const r of roll) {
-    if (!r.ar) continue;
-    withArabic += 1;
-    if (!r.arRuling && !/Founder|LOCKED|he wrote/i.test(SRC.slice(Math.max(0, SRC.indexOf(r.en) - 1200), SRC.indexOf(r.en)))) {
-      flag(`${code}/${r.en}: carries an Arabic name with no recorded Founder ruling nearby. Verify by hand before printing.`);
+// wrote it. A form approved for a shorter name is NOT approved for a longer
+// one — the printed name is hashed into the printed number. A sheet still
+// waiting on one is HELD, not failed: nothing is wrong, the pipeline is
+// refusing to invent a child's name.
+const BILINGUAL = ['TMH', 'IBT', 'IDD'];
+{
+  let withArabic = 0;
+  const waiting = [];
+  for (const code of BILINGUAL) {
+    for (const r of rollFor(code)) {
+      if (r.ar) { withArabic += 1; continue; }
+      waiting.push(`${code}  ${r.en}`);
     }
   }
-}
-notes.push(`${withArabic} Arabic names on the outstanding rolls, each traced to a written ruling`);
-
-// ── 5b · Tamhīdī and Ibtidā'iyyah are mutually exclusive ────────────────────
-// The Founder's ruling of 8 August 2026: "Those who show in Tamheediy shouldn't
-// have the right to Ibtida'iyyah at all." A child on both rolls is holding an
-// award the institution says they are not entitled to, so this is a hard gate
-// rather than a note. It caught Abdulbasit Adedokun, whose Ibtidā'iyyah
-// certificate 000037 was already minted before the stages were distinguished.
-const rollNames = (code) => new Set((byCode[code]?.names) || []);
-const tmh = rollNames('TMH');
-const ibt = rollNames('IBT');
-for (const n of tmh) {
-  if (ibt.has(n)) {
-    flag(`${n} is on BOTH the Tamhīdī and the Ibtidā'iyyah roll. The Founder's `
-      + 'ruling of 8 August 2026 makes the two stages mutually exclusive.');
+  notes.push(`${withArabic} approved Arabic names carried onto the stage rolls`);
+  if (waiting.length) {
+    hold(`${waiting.length} bilingual sheet(s) have no approved Arabic name at the `
+      + 'full length to be engraved:\n        ' + waiting.join('\n        ')
+      + '\n      See docs/shrs-arabic-names-for-ruling-2026.md.');
   }
 }
-if (tmh.size) notes.push(`Tamhīdī ${tmh.size}, Ibtidā'iyyah ${ibt.size}, no student on both`);
 
 // ── 6 · Qur'an College award variants ───────────────────────────────────────
-for (const r of ROLLS.QUR || []) {
-  if (!r.awardVariant) {
-    flag(`QUR/${r.en}: no awardVariant. A Ten Juz' sheet headed "Certificate of `
-      + 'Completion" would overstate a child’s achievement on a permanent record.');
+{
+  const missing = rollFor('QUR').filter((r) => !r.awardVariant).map((r) => r.en);
+  if (missing.length) {
+    hold(`${missing.length} Qur’an College sheet(s) name no award variant — `
+      + `${missing.join(', ')}.\n      A Ten Juz’ sheet headed “Certificate of `
+      + 'Completion” would overstate a child’s achievement on a permanent record,\n'
+      + '      so the renderer refuses rather than choosing one.');
   }
 }
 
-// ── The one thing left to rebuild ───────────────────────────────────────────
-// The Founder ruled on 8 August 2026 that the Registrar's roll governs. The
-// programme was moved onto it the same day; THE CERTIFICATE ROLLS HAVE NOT BEEN.
-// They still carry the pre-ruling set, under the pre-ruling short-form names.
-// Reporting that per name would print thirty lines and read like thirty
-// problems. It is one problem, and this is it.
-const stale = gaps.filter((g) => g.code !== 'TMH' && g.printed !== g.certs);
-if (stale.length) {
-  console.log('\n  THE CERTIFICATE ROLLS ARE NOT YET REBUILT ON THE REGISTRAR’S ROLL');
-  console.log('    programme   certificates');
-  for (const g of stale) {
-    console.log(`    ${g.code.padEnd(5)} ${String(g.printed).padStart(4)}`
-      + `     ${String(g.certs).padStart(6)}   ${g.printed > g.certs ? '+' : ''}`
-      + `${g.printed - g.certs}`);
+// ── 7 · Sex is on record ────────────────────────────────────────────────────
+// The certificate wording is gendered. Five graduands reach this pipeline for
+// the first time on the Registrar's Notice, which lists names and stages and
+// states no sex. It is not inferred here from a name.
+{
+  const missing = [...new Set(ORDER.flatMap((c) => rollFor(c).filter((r) => !r.sex).map((r) => r.en)))];
+  if (missing.length) {
+    hold(`${missing.length} graduand(s) have no sex on record — ${missing.join(', ')}.\n`
+      + '      The certificate wording is gendered; it is not inferred from a name.');
   }
-  console.log('    No batch may be minted until they are. Names differ too: the');
-  console.log('    canonical roll carries each child’s fullest form, the issuing');
-  console.log('    rolls still carry the short one, and the name is hashed into');
-  console.log('    the engraved number.');
 }
 
-// ── Pending revocations ─────────────────────────────────────────────────────
-const pendingAll = Object.entries(REVOCATION_PENDING).flatMap(([c, rows]) =>
-  rows.map(([n, serial, why]) => ({ c, n, serial, why })));
-if (pendingAll.length) {
-  console.log('\n  PENDING REVOCATIONS — minted, and now beyond entitlement:');
-  for (const p of pendingAll) {
-    console.log(`    ${p.c}  ${p.n}  ${p.serial}`);
-    console.log(`         ${p.why}`);
+// ── 8 · Tamhidiyyah and Ibtida'iyyah are mutually exclusive ─────────────────
+// The Founder's ruling of 8 August 2026: "Those who show in Tamheediy shouldn't
+// have the right to Ibtida'iyyah at all." A child on both rolls holds an award
+// the institution says they are not entitled to, so this is a hard gate. It
+// caught Abdulbasit Adedokun, whose Ibtida'iyyah certificate 000037 was minted
+// before the two stages were distinguished in this system at all.
+{
+  const tmh = new Set(byCode.TMH?.names || []);
+  const ibt = new Set(byCode.IBT?.names || []);
+  for (const n of tmh) {
+    if (ibt.has(n)) {
+      flag(`${n} is on BOTH the Tamhīdī and the Ibtidā'iyyah roll. The Founder's `
+        + 'ruling of 8 August 2026 makes the two stages mutually exclusive.');
+    }
   }
+  if (tmh.size) notes.push(`Tamhīdī ${tmh.size}, Ibtidā'iyyah ${ibt.size}, no student on both`);
+}
+
+// ── What the Registrar must do on the live system ───────────────────────────
+if (REVOKE.length || REISSUE.length) {
+  console.log('\n  PENDING ON THE LIVE SYSTEM — the Registrar’s act, not a build step:');
+  for (const a of REVOKE) {
+    console.log(`    REVOKE   ${a.cert}  ${a.name} (${a.code})`);
+    console.log(`             ${a.why}`);
+  }
+  for (const a of REISSUE) {
+    const to = PLAN.toMint.find((r) => r.replaces === a.cert);
+    console.log(`    REISSUE  ${a.cert}  ${a.name} → ${a.to}`
+      + `${to ? `  at ${String(to.certificateSeq).padStart(6, '0')}` : ''}`);
+  }
+  console.log('    See docs/shrs-certificate-revocations.md.');
 }
 
 // ── The verdict ─────────────────────────────────────────────────────────────
@@ -261,15 +276,26 @@ if (problems.length) {
   for (const p of problems) console.log(`    ✗ ${p}`);
   process.exit(1);
 }
-const outstanding = Object.keys(CERT_SPANS).filter((k) => !PUBLISHED[k]);
 console.log('  PREFLIGHT PASSED — every check that can run without the signing key.');
-console.log(`  Issued and published: ${Object.keys(PUBLISHED).join(', ')} `
-  + `(${Object.keys(PUBLISHED).reduce((a, k) => a + rollFor(k).length, 0)} certificates)`);
-console.log(`  Awaiting the signing key: ${outstanding.join(', ')} `
-  + `(${outstanding.reduce((a, k) => a + rollFor(k).length, 0)} certificates)`);
-console.log('\n  To mint them, with the production key from the Board’s credential store:');
-for (const b of outstanding) {
+console.log(`  Minted and published: ${PLAN.actions.length} certificates `
+  + `(${KEEP.length} stand, ${REISSUE.length} to be reissued, ${REVOKE.length} to be revoked)`);
+console.log(`  To be minted: ${PLAN.toMint.length}, numbers `
+  + `${String(PLAN.spentThrough + 1).padStart(6, '0')}–${String(PLAN.allocatedThrough).padStart(6, '0')}`);
+
+if (held.length) {
+  console.log(`\n  ${held.length} BATCH HOLD(S) — nothing is wrong; these are rulings still owed:`);
+  for (const h of held) console.log(`    · ${h}`);
+}
+
+console.log('\n  To mint, with the production key from the Board’s credential store:');
+for (const b of ['QUR', 'PRY', 'JSS', 'SS']) {
   console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=${b} \\`);
   console.log('      node scripts/issue-royal-college-batch.mjs');
 }
-console.log('  In that order — the sequence is global and each batch reads the one before it.\n');
+for (const b of ['TMH', 'IBT2026', 'IDD2026']) {
+  console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 \\`);
+  console.log(`      node scripts/issue-certificate-batch.mjs ${b}`);
+}
+console.log('  Certificate numbers come from the plan, so batch order does not change');
+console.log('  them — but the three stage batches stay HELD until the Arabic names and');
+console.log('  the two records above are supplied.\n');
