@@ -196,6 +196,49 @@
     window.requestAnimationFrame(run);
   })();
 
+  // --- the arrival ----------------------------------------------------
+  // Everything the hero gains is drawn by CSS; what needs a script is
+  // the markup to hang it on, and knowing when the reader has taken the
+  // cue's advice so the cue can put itself away.
+  (function arrival() {
+    var hero = document.querySelector('.hero');
+    if (!hero || hero.querySelector('.hfx-rise')) return;
+
+    ['hfx-rise', 'hfx-sweep', 'hfx-meridian'].forEach(function (cls) {
+      var d = document.createElement('div');
+      d.className = cls;
+      d.setAttribute('aria-hidden', 'true');
+      hero.appendChild(d);
+    });
+
+    // The crest's own frame: a ring and a lozenge, each drawing itself.
+    var wrap = hero.querySelector('.crest-shimmer-wrap');
+    if (wrap && !wrap.querySelector('.hfx-crest-ring')) {
+      var ring = document.createElement('span');
+      ring.className = 'hfx-crest-ring';
+      ring.setAttribute('aria-hidden', 'true');
+      ring.innerHTML = '<svg viewBox="0 0 100 100" focusable="false">'
+        + '<circle cx="50" cy="50" r="47" style="--len:296"/>'
+        + '<path d="M50 6 L94 50 L50 94 L6 50 Z" style="--len:250"/></svg>';
+      wrap.appendChild(ring);
+    }
+
+    var cue = document.createElement('div');
+    cue.className = 'hfx-cue';
+    cue.setAttribute('aria-hidden', 'true');
+    cue.innerHTML = '<span class="hfx-cue-t">'
+      + (document.documentElement.lang === 'ar' ? 'تابع النزول' : 'Read on')
+      + '</span><span class="hfx-cue-r"></span>';
+    hero.appendChild(cue);
+
+    function retire() {
+      if ((window.scrollY || 0) < 90) return;
+      cue.classList.add('is-gone');
+      window.removeEventListener('scroll', retire);
+    }
+    window.addEventListener('scroll', retire, { passive: true });
+  })();
+
   place();
   measure();
   window.addEventListener('scroll', onScroll, { passive: true });

@@ -225,3 +225,115 @@ html[data-pc-motion="reduced"] .cst-pip{animation:none;display:none;}
 .gt-node:focus-visible{
   outline:2px solid rgb(var(--lv-gb,233,206,138));outline-offset:3px;}
 .gt-node:focus-visible::after{opacity:1;}
+
+/* -------------------------------------------------------------------
+   4. THE ARRIVAL
+   The hero was a photograph with type on it and nothing that moved. It
+   is the first thing anyone sees and it was the stillest thing on the
+   page. Five additions, all of them light rather than decoration:
+
+     · a crest that draws its own frame before the mark appears;
+     · gold light rising slowly through the scrim, as dust does in a
+       shaft of sun;
+     · a raking sweep across the whole band, once, twelve seconds apart;
+     · a meridian of light along the foot of the band;
+     · a scroll cue that breathes, and puts itself away the moment the
+       reader has taken its advice.
+   ------------------------------------------------------------------- */
+.hero{position:relative;isolation:isolate;}
+
+/* Gold rising through the scrim. Two layers at different speeds and
+   sizes so it reads as depth rather than as a pattern. */
+.hero > .hfx-rise{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;
+  background-image:
+    radial-gradient(1.7px 1.7px at 14% 88%,rgba(255,246,223,.9),transparent 60%),
+    radial-gradient(1.3px 1.3px at 31% 96%,rgba(233,206,138,.8),transparent 60%),
+    radial-gradient(2px 2px at 52% 90%,rgba(255,246,223,.75),transparent 60%),
+    radial-gradient(1.4px 1.4px at 71% 97%,rgba(233,206,138,.75),transparent 60%),
+    radial-gradient(1.8px 1.8px at 88% 91%,rgba(255,246,223,.8),transparent 60%),
+    radial-gradient(1.2px 1.2px at 22% 93%,rgba(233,206,138,.7),transparent 60%),
+    radial-gradient(1.5px 1.5px at 63% 94%,rgba(255,246,223,.7),transparent 60%);
+  background-size:100% 260%,100% 260%,100% 260%,100% 260%,
+                  100% 420%,100% 420%,100% 420%;
+  animation:hfx-rise-a 34s linear infinite,hfx-rise-b 53s linear infinite;}
+@keyframes hfx-rise-a{
+  to{background-position:0 -260%,0 -260%,0 -260%,0 -260%,0 0,0 0,0 0;}}
+@keyframes hfx-rise-b{
+  to{background-position:0 0,0 0,0 0,0 0,0 -420%,0 -420%,0 -420%;}}
+
+/* One raking pass of light across the band. */
+.hero > .hfx-sweep{
+  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+.hero > .hfx-sweep::before{
+  content:"";position:absolute;top:-30%;bottom:-30%;width:38%;
+  background:linear-gradient(104deg,transparent,
+    rgba(255,246,223,.10) 42%,rgba(255,246,223,.20) 50%,
+    rgba(255,246,223,.10) 58%,transparent);
+  transform:translateX(-160%) skewX(-14deg);
+  animation:hfx-sweep 12s cubic-bezier(.4,0,.25,1) 2.5s infinite;}
+@keyframes hfx-sweep{0%{transform:translateX(-160%) skewX(-14deg);}
+  26%,100%{transform:translateX(360%) skewX(-14deg);}}
+
+/* The meridian along the foot of the band. */
+.hero > .hfx-meridian{
+  position:absolute;inset-inline:0;bottom:0;height:1px;z-index:3;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-g,198,161,91),.5) 16%,
+    rgba(var(--lv-gl,255,246,223),.95) 50%,
+    rgba(var(--lv-g,198,161,91),.5) 84%,transparent);
+  transform:scaleX(0);transform-origin:center;
+  animation:hfx-mer 1.8s cubic-bezier(.16,.8,.24,1) .5s forwards;}
+@keyframes hfx-mer{to{transform:scaleX(1);}}
+.hero > .hfx-meridian::after{
+  content:"";position:absolute;inset-block:-1px;width:16%;
+  background:linear-gradient(90deg,transparent,rgb(var(--lv-gl,255,246,223)),transparent);
+  filter:blur(.5px);
+  animation:hfx-mer-run 16s cubic-bezier(.45,0,.25,1) 4s infinite;}
+@keyframes hfx-mer-run{0%{transform:translateX(-120%);opacity:0;}
+  8%{opacity:1;}30%{transform:translateX(700%);opacity:0;}
+  100%{transform:translateX(700%);opacity:0;}}
+
+/* The crest draws its own frame, then the mark arrives inside it. */
+.hero .crest-shimmer-wrap{position:relative;display:inline-block;}
+.hero .hfx-crest-ring{
+  position:absolute;inset:-14px;pointer-events:none;color:rgba(233,206,138,.65);}
+.hero .hfx-crest-ring svg{width:100%;height:100%;display:block;}
+.hero .hfx-crest-ring circle,.hero .hfx-crest-ring path{
+  fill:none;stroke:currentColor;stroke-width:.8;
+  stroke-dasharray:var(--len,320);stroke-dashoffset:var(--len,320);
+  animation:hfx-draw 2.4s cubic-bezier(.16,.8,.24,1) .3s forwards;}
+.hero .hfx-crest-ring path{animation-delay:.9s;}
+@keyframes hfx-draw{to{stroke-dashoffset:0;}}
+
+/* The scroll cue. It breathes until it is taken, then it goes. */
+.hfx-cue{
+  position:absolute;left:50%;bottom:22px;z-index:4;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  pointer-events:none;transition:opacity .6s ease,transform .6s ease;}
+.hfx-cue.is-gone{opacity:0;transform:translateX(-50%) translateY(10px);}
+.hfx-cue-t{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.56rem;letter-spacing:.24em;
+  text-transform:uppercase;color:rgba(255,246,223,.72);}
+.hfx-cue-r{
+  width:1px;height:36px;
+  background:linear-gradient(180deg,rgba(233,206,138,.1),rgba(233,206,138,.9),transparent);
+  animation:hfx-cue 2.6s ease-in-out infinite;}
+@keyframes hfx-cue{0%,100%{transform:scaleY(.55);opacity:.5;}
+  50%{transform:scaleY(1);opacity:1;}}
+@media (max-width:700px){.hfx-cue{display:none;}}
+
+html[data-pc-ornament="none"] .hero > .hfx-rise,
+html[data-pc-ornament="none"] .hero > .hfx-sweep,
+html[data-pc-ornament="none"] .hfx-cue,
+html[data-pc-ornament="none"] .hero .hfx-crest-ring{display:none;}
+html[data-pc-motion="reduced"] .hero > .hfx-rise,
+html[data-pc-motion="reduced"] .hero > .hfx-sweep,
+html[data-pc-motion="reduced"] .hfx-cue-r,
+html[data-pc-motion="reduced"] .hero > .hfx-meridian::after{animation:none!important;}
+@media (prefers-reduced-motion:reduce){
+  .hero > .hfx-rise,.hero > .hfx-sweep::before,
+  .hfx-cue-r,.hero > .hfx-meridian::after{animation:none!important;}
+  .hero > .hfx-meridian{animation:none;transform:scaleX(1);}
+  .hero .hfx-crest-ring circle,.hero .hfx-crest-ring path{animation:none;stroke-dashoffset:0;}
+}
