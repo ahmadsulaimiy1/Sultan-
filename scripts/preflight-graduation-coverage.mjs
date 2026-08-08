@@ -41,6 +41,8 @@ import { AWARDS } from './build-graduation-programme.mjs';
 import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
 import { PLAN, REGISTERS, rollFor } from './_lib/class-of-2026.mjs';
 
+const CANON = JSON.parse(readFileSync('docs/graduation-registers/canonical-roll-2026.json', 'utf8'));
+
 const ORDER = ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS'];
 
 // Certificates that HAVE been minted but that a ruling has since put beyond the
@@ -250,6 +252,20 @@ const BILINGUAL = ['TMH', 'IBT', 'IDD'];
     }
   }
   if (tmh.size) notes.push(`Tamhīdī ${tmh.size}, Ibtidā'iyyah ${ibt.size}, no student on both`);
+}
+
+// ── 9 · Children a ruling has removed from a roll ───────────────────────────
+// Removing a name from a category is not the same as placing it somewhere else.
+// A child who is on no roll at all is not a bookkeeping remainder: he is not in
+// the ceremony programme, he crosses no stage, and he receives no certificate.
+// That is a real outcome and it is reported here every run — the one thing a
+// coverage check must never do is let a child fall quietly out of his own
+// graduation.
+for (const u of CANON.withdrawnByRuling || []) {
+  if (u.alsoOn && u.alsoOn.length) continue;      // withdrawn here, placed elsewhere
+  hold(`${u.name} is on NO roll and receives NO certificate.\n`
+    + `      Withdrawn from ${u.code}: ${u.why}\n`
+    + `      ${u.standing}`);
 }
 
 // ── What the Registrar must do on the live system ───────────────────────────

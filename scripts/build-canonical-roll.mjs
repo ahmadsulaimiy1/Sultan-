@@ -56,16 +56,56 @@ for (const [code, f] of Object.entries({
   }
 }
 
-const rcSrc = readFileSync('scripts/issue-royal-college-batch.mjs', 'utf8');
-const rcBlock = rcSrc.slice(rcSrc.indexOf('const ROLLS = {};'), rcSrc.indexOf('const ROLL = ROLLS[BATCH];'));
-// eslint-disable-next-line no-new-func
-const RC = new Function(`${rcBlock}\nreturn ROLLS;`)();
-for (const [code, roll] of Object.entries(RC)) {
-  for (const r of roll) {
-    add(r.en, `${code} issuing roll`);
-    if (r.carryOverFrom) add(r.carryOverFrom.name, `${code} carry-over reference`);
-  }
-}
+// The Royal College working papers as they stood on 8 August 2026 — the four
+// hand-written rolls the issuing script then carried, and the carry-over
+// references beside them. They were read out of that script's source until the
+// rolls were rebuilt onto the plan and the lists ceased to exist there.
+//
+// They are TRANSCRIBED here rather than dropped, because they are the only
+// place several children's fullest names were ever written down: "Fatimah
+// Desire Ibrahim", "Anisa Opeyemi Jokomba", "Zaynab Zakariya Anofi", "Aisha
+// Omoshalewa Anofi", "Naheemah Ismai Seriki" appear in no register and on no
+// Registrar's list. Losing them would silently shorten five children's names
+// on their own certificates.
+//
+// This list is CLOSED. It is a record of what those papers said on that day,
+// not a roll: it adds no child and removes none, exactly as every other source
+// below Source 1. Nothing is ever added to it — a new name is a new document,
+// and a new document gets its own source.
+const RC_WORKING_PAPERS_2026_08_08 = [
+  ['Hameedah Adebimpe Ojewumi', 'JSS issuing roll'],
+  ['Muhammad Ismail Seriki', 'JSS issuing roll'],
+  ['Fatimah Desire Ibrahim', 'JSS issuing roll'],
+  ['Aisha Anofi', 'JSS issuing roll'],
+  ['Baqi Anofi', 'JSS issuing roll'],
+  ['Baqi Olamiposi Anofi', 'JSS carry-over reference'],
+  ["Sa'ad Sanusi", 'JSS issuing roll'],
+  ['Fawaz Owolabi', 'JSS issuing roll'],
+  ['Radiah Apatira', 'JSS issuing roll'],
+  ['Faridah Aliu', 'JSS issuing roll'],
+  ['Faridah Ayomide Aliu', 'JSS carry-over reference'],
+  ['Anisa Opeyemi Jokomba', 'JSS issuing roll'],
+  ['Ameerah Durodola', 'JSS issuing roll'],
+  ['Abdulrahman Abdullah', 'JSS issuing roll'],
+  ['Ameerah Abdulhafeez', 'JSS issuing roll'],
+  ['Thoirah Makinde', 'SS issuing roll'],
+  ['Abdulbasit Amobi Jabarr', 'SS issuing roll'],
+  ['Aisha Shode', 'SS issuing roll'],
+  ['Mazeed Hassan-Murtala', 'SS issuing roll'],
+  ['Naheemah Ismai Seriki', 'PRY issuing roll'],
+  ['Naheemah Ismail', 'PRY carry-over reference'],
+  ['Ashraf Korede Ojewumi', 'PRY issuing roll'],
+  ['Ashrof Akorede', 'PRY carry-over reference'],
+  ['Al-ameen Okoh', 'PRY issuing roll'],
+  ['Al-ameen Abidemi Jokomba', 'PRY issuing roll'],
+  ['Aisha Lawal', 'PRY issuing roll'],
+  ['Imran Iremide Adegoke', 'PRY issuing roll'],
+  ['Daud Aliu', 'PRY issuing roll'],
+  ['Zaynab Zakariya Anofi', 'QUR issuing roll'],
+  ['Baqi Olamiposi Anofi', 'QUR issuing roll'],
+  ['Aisha Omoshalewa Anofi', 'QUR issuing roll'],
+];
+for (const [n, where] of RC_WORKING_PAPERS_2026_08_08) add(n, where);
 
 // The stage script's rolls AND its withdrawal lists. The withdrawal lists are
 // the richest source of fuller spellings in the repository: they exist because
@@ -125,6 +165,37 @@ const RULED_FORM = {
 };
 const RULED_ONE = SAME_CHILD.map((g) => g.forms);
 
+// ── Names the Founder has REMOVED from a category ───────────────────────────
+// Adding or removing a child is the Registrar's act, with one exception: the
+// Founder may rule on it directly, and on 8 August 2026 he did.
+//
+//     "Only Abdul Basit Adedokun is now in Tamheediyyah."
+//
+// Her notice lists two under Islamiyyah (Tamyidi). One stands.
+//
+// The removal is recorded here rather than edited out of her transcription
+// above, on the same principle as every other ruling in this file: her document
+// stays verbatim, and his correction stays visible beside it. A future reader
+// can see both what she wrote and what he decided.
+//
+// WHAT THIS DOES NOT DO — and the distinction matters to a child. Removing a
+// name from a category is not the same as placing it somewhere else. The
+// ruling says where Muhammad Fatih is NOT; it does not say where he is. He is
+// therefore carried below as UNPLACED, and holds a place on no roll and no
+// certificate until that is ruled. He is not silently deleted, and he is not
+// silently moved: either would be this pipeline deciding a child's award.
+const WITHDRAWN_FROM = {
+  TMH: [{
+    name: 'Muhammad fatih',
+    why: 'Founder’s ruling, 8 Aug 2026 — "Only Abdul Basit Adedokun is now in '
+      + 'Tamheediyyah."',
+    standing: 'UNPLACED — the ruling states which stage he is not in. It does '
+      + 'not state which stage he is in, and this file will not choose one for '
+      + 'him. He appears on no roll until the Registrar or the Founder places '
+      + 'him, and the preflight reports him on every run.',
+  }],
+};
+
 const norm = (s) => s.toLowerCase().replace(/[^a-z\s-]/g, '').trim();
 // Split on WHITESPACE ONLY. A hyphen binds a name, it does not divide one:
 // "Al-ameen" is one given name and "Hassan-Murtala" is one family name. An
@@ -155,8 +226,19 @@ const CODES = ['QUR', 'TMH', 'IBT', 'IDD', 'PRY', 'JSS', 'SS'];
 const roll = {};
 const derivations = [];
 
+const unplaced = [];
 for (const code of CODES) {
-  roll[code] = REGISTRAR[code].names.map((asWritten) => {
+  const removed = new Set((WITHDRAWN_FROM[code] || []).map((w) => w.name));
+  for (const w of WITHDRAWN_FROM[code] || []) {
+    if (!REGISTRAR[code].names.includes(w.name)) {
+      console.error(`  "${w.name}" is withdrawn from ${code} but is not on the `
+        + 'Registrar’s list for it. A withdrawal that removes nothing is a '
+        + 'ruling that has silently stopped applying.');
+      process.exit(1);
+    }
+    unplaced.push({ code, ...w });
+  }
+  roll[code] = REGISTRAR[code].names.filter((n) => !removed.has(n)).map((asWritten) => {
     const variants = pool.filter((c) => sameChild(asWritten, c.n));
     // The Registrar's own form is always a candidate. Letter case is normalised
     // to the house form — "Muhammad fatih" → "Muhammad Fatih" — because a
@@ -187,6 +269,14 @@ for (const code of CODES) {
     }
     return best.n;
   });
+}
+
+// A child removed from every category holds no award anywhere. That is a real
+// outcome, not a bookkeeping detail, and it is stated rather than left for a
+// reader to notice by counting.
+for (const u of unplaced) {
+  const stillOn = CODES.filter((c) => roll[c].some((n) => sameChild(u.name, n)));
+  u.alsoOn = stillOn;
 }
 
 // ── Report ──────────────────────────────────────────────────────────────────
@@ -254,6 +344,7 @@ if (process.argv.includes('--write')) {
       code: c, registrarColumn: REGISTRAR[c].col, count: roll[c].length, names: roll[c],
     })),
     fullerNamesAdopted: adopted,
+    withdrawnByRuling: unplaced,
   };
   writeFileSync('docs/graduation-registers/canonical-roll-2026.json',
     `${JSON.stringify(out, null, 2)}\n`);

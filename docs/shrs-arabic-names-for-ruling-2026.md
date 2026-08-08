@@ -13,9 +13,13 @@ child's name **in Arabic as well as English**. The Royal College, Primary and
 Qur'an College sheets do not require it, so they are unaffected.
 
 The Registrar's roll became authoritative on 8 August, and every name now stands
-at its fullest form. **Ten stage certificates must be minted.** Three already
-have an approved Arabic name. **Seven do not**, because the fuller English name
+at its fullest form. **Nine stage certificates must be minted.** Four already
+have an approved Arabic name. **Five do not**, because the fuller English name
 is longer than the Arabic form that was approved for the shorter one.
+
+*Revised after the ruling of 8 August 2026 — "Only Abdul Basit Adedokun is now
+in Tamhīdiyyah." Muhammad Fatih leaves the Tamhīdiyyah roll, and with him the
+two words this document was waiting on for his sheet.*
 
 The standing rule is absolute and is not being bent here:
 
@@ -54,7 +58,6 @@ and عبد اللطيف (Abdulateef), which you approved on that basis.
 
 | Name-part | Arabic | Same pattern as |
 |---|---|---|
-| Fatih | **فاتح** | a standard Arabic name |
 | Ameerah | **أميرة** | a standard Arabic name |
 | Abdulhafeez | **عبد الحفيظ** | عبد الباسط · عبد اللطيف · عبد الله, all approved |
 | Yaseer | **ياسر** | a standard Arabic name |
@@ -75,7 +78,6 @@ be extrapolated.
 | **Iremide** | Imran Iremide Adegoke (IBT) | — |
 | **Balogun** | Yaseer Balogun (IDD) | — |
 | **Abdulhafeez** | Ameerah Abdulhafeez (IBT) | proposed in Group B; confirm or correct |
-| **Fatih** | Muhammad Fatih (TMH) | proposed in Group B; confirm or correct |
 
 **Note on Omoshalewa — this one may already be settled.** You ruled
 **عائشة أمشالوا حنفي** on 7 August for her Qur'an College sheet. If that is the
@@ -89,16 +91,21 @@ needed. Confirm and Group C reduces to **two** words: *Iremide* and *Balogun*.
 ```
 1  Naheemah Ismail Seriki   نعيمة إسماعيل سركي         confirm assembly
 2  Ashraf Korede Ojewumi    أشرف كوردي أوجومي          confirm assembly
-3  Aisha Omoshalewa Anofi   عائشة أمشالوا حنفي         confirm — same child as the Qur'an College sheet?
-4  Muhammad Fatih           محمد فاتح                  confirm فاتح
-5  Ameerah Abdulhafeez      أميرة عبد الحفيظ           confirm أميرة عبد الحفيظ
-6  Yaseer Balogun           ياسر ⟨Balogun⟩             ياسر confirm · Balogun YOURS TO GIVE
-7  Imran Iremide Adegoke    عمران ⟨Iremide⟩ أدغكي      Iremide YOURS TO GIVE
+3  Ameerah Abdulhafeez      أميرة عبد الحفيظ           confirm أميرة عبد الحفيظ
+4  Yaseer Balogun           ياسر ⟨Balogun⟩             ياسر confirm · Balogun YOURS TO GIVE
+5  Imran Iremide Adegoke    عمران ⟨Iremide⟩ أدغكي      Iremide YOURS TO GIVE
 ```
 
 **Two words are genuinely yours to give: *Iremide* and *Balogun*.** The other
-five are confirmations of forms already approved or of standard Arabic with no
+three are confirmations of forms already approved or of standard Arabic with no
 alternative.
+
+*Aisha Omoshalewa Anofi is off this list.* عائشة أمشالوا حنفي, which you ruled
+on 7 August for her Qur'an College sheet, is now carried onto her Ibtidā'iyyah
+sheet as the same string for the same child. Nothing new was derived.
+
+*Muhammad Fatih is off this list* on your ruling of 8 August. See below — his
+standing is now a placement question, not a name one.
 
 ---
 
@@ -135,7 +142,9 @@ the same rule that governs the Arabic names above, applied to the same children.
 
 | | |
 |---|---|
-| Arabic names | **outstanding** — the seven lines above |
+| Tamhīdiyyah | ✅ **COMPLETE** — one graduand, Abdulbasit Adedokun, ready to mint |
+| Arabic names | **outstanding** — the five lines above, all Ibtidā'iyyah and I'dādiyyah |
+| Muhammad Fatih's placement | **outstanding** — see below |
 | Sofiah Anofi’s award variant | **outstanding** — the Registrar’s record |
 | Five graduands’ sex | **outstanding** — the Registrar’s record |
 | The issuing rolls | ✅ rebuilt on the plan; every batch reads one source |
@@ -146,10 +155,28 @@ the same rule that governs the Arabic names above, applied to the same children.
 | Sequence allocation | ✅ 000048–000086 |
 | Signing key | in the Board's credential store, not in this environment |
 
+**Tamhīdiyyah is complete and waits on the signing key alone.** Abdulbasit
+Adedokun's Arabic name عبد الباسط أددوكن was approved for the Ibtidā'iyyah
+register and carries across unchanged; his sex is on that register too. Every
+gate passes; nothing about his sheet is outstanding.
+
 The four secular batches — Qur'an College, Primary, Junior and Senior Secondary
-— are complete but for Sofiah Anofi's award variant and the five sexes. The
-three stage batches wait on those and on the seven Arabic lines. Supply them
-with the signing key and all thirty-nine mint.
+— are complete but for Sofiah Anofi's award variant and four sexes. The two
+remaining stage batches wait on those and on the five Arabic lines. Supply them
+with the signing key and all thirty-eight mint.
+
+---
+
+## Muhammad Fatih — a placement, not a name
+
+Your ruling removes him from Tamhīdiyyah. It does not say where he belongs, and
+this pipeline will not choose a stage for a child. **As things stand he is on no
+roll: he is not named in the ceremony programme, he crosses no stage, and he
+receives no certificate.** The preflight reports it on every run rather than
+letting him fall quietly out of his own graduation.
+
+One line settles it — the stage he is in, or that he is not graduating this
+year.
 
 Every one of these holds is the pipeline refusing to write down something
 nobody told it. None of them is a defect, and none can be cleared from inside

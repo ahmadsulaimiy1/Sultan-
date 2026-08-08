@@ -1,6 +1,6 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026 · **Revision 6** — extended after the Registrar's
+**Date:** 8 August 2026 · **Revision 7** — extended after the Registrar's
 Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
@@ -828,3 +828,122 @@ that governs the Arabic names, applied to the same children.
 
 Every remaining hold is this pipeline refusing to write down something nobody
 told it. None is a defect, and none can be cleared from inside this repository.
+
+---
+
+# REVISION 7 — "Only Abdul Basit Adedokun is now in Tamhīdiyyah"
+
+## 28 · The ruling, and the thing it does not say
+
+> *"Only Abdul Basit Adedokun is now in Tamheediyyah. Issue out his certificate
+> now to look like those of Ibtidā'iyyah, but more flashy."*
+
+The Registrar's Notice lists two under **Islamiyyah (Tamyidi)**. One stands.
+
+Adding or removing a child from a category is the Registrar's act, and the
+Founder's directly — so the removal is recorded in
+`scripts/build-canonical-roll.mjs` under `WITHDRAWN_FROM`, **beside** her
+transcription rather than edited into it, on the same principle as every other
+ruling in that file. Her document stays verbatim; his correction stays visible.
+
+**What the ruling does not do is place Muhammad Fatih anywhere.** It states the
+stage he is not in. It does not state the stage he is in, and nothing in this
+repository is entitled to choose one for a child. He is therefore carried as
+**UNPLACED** — on no roll, in no programme panel, holding no certificate — and
+the preflight names him on every run:
+
+```
+· Muhammad fatih is on NO roll and receives NO certificate.
+  Withdrawn from TMH: Founder's ruling, 8 Aug 2026
+  UNPLACED — the ruling states which stage he is not in…
+```
+
+That is the one outcome a coverage check must never let pass quietly. A child
+who silently disappears from a roll disappears from his own graduation.
+
+**The seven Arabic names became five**, because two of them — محمد and فاتح —
+were only ever needed for his sheet.
+
+## 29 · Tamhīdiyyah is complete
+
+With one graduand the batch has nothing left outstanding:
+
+| | |
+|---|---|
+| Name to engrave | Abdulbasit Adedokun |
+| Arabic | **عبد الباسط أددوكن** — approved on the Ibtidā'iyyah register, carried across |
+| Sex | on the Ibtidā'iyyah register |
+| Certificate number | **000052**, from the plan |
+| Permanent Student ID | **711232557821021** — his own, carried from the certificate being revoked |
+| Standing | **every gate passes; it waits on the signing key alone** |
+
+His Ibtidā'iyyah certificate 000037 is revoked under R-2026-001 and this replaces
+it. Same child, same permanent number, different award — which is exactly what
+the revocation record said would happen.
+
+## 30 · "More flashy" — what was added, and what was protected
+
+The instruction has two halves and both are load-bearing. **Like Ibtidā'iyyah**
+means the same plate, the same border architecture, the same measured grid — it
+is one document family and a graduating class whose certificates do not match is
+not a class. **More flashy** means this sheet carries more.
+
+So the regalia is an ADDITIVE layer behind one programme-code test. It moves no
+element, changes no size, and touches no shared rule; every ornament sits in
+space this sheet already leaves empty, measured on a rendered proof rather than
+assumed. Four additions:
+
+| | |
+|---|---|
+| **Guilloché halo** | two interfering rosettes and a woven band behind the name pair, so the name sits on worked ground rather than plain field |
+| **Corner brackets** | a double cut at each corner of the name band — outer arm heavy, inner arm short, with a lozenge pip where they meet. Cut corners rather than a box: a closed rectangle around a name reads as a form field |
+| **Palmettes** | mirrored illuminated flourishes flanking the title, in the 17mm of clear ground at each side of the title frame |
+| **Sixteen-ray star** | the stage identifier on the name rule, where Ibtidā'iyyah carries a lozenge and I'dādiyyah an eight-point khatam. One ornament tells the stages apart, on the principle the Founder set himself |
+
+Everything is vector. No raster enters the layer, so it holds at any press
+resolution, and no new colour enters the sheet — every value comes from the
+existing gold ramp.
+
+### The protection is proved, not asserted
+
+"Every rule is prefixed `[data-stage="TMH"]`" is a claim about source. The claim
+that matters is about output. `scripts/verify-stage-sheet-isolation.mjs` renders
+the other stages twice — from the working tree and from the template at a git
+ref — and compares the rendered sheets byte for byte:
+
+```
+STAGE ISOLATION — IBT, IDD rendered from the working tree and from HEAD
+  identical   … × 8
+PASSED — all 8 sheet(s) render identically.
+```
+
+A mistyped prefix, an over-matching selector, or a shared element nudged by an
+added sibling would not show in a source diff. This catches all three.
+
+## 31 · A design proof is not a certificate
+
+Artwork cannot be judged from source, so `scripts/proof-certificate-design.mjs`
+renders it. It deliberately cannot reach the signing code — it never imports it
+— and every identifier on a proof is the format's null: sequence `000000`, which
+the global sequence starts past, and check tail `00000`. **SPECIMEN — NOT A
+CERTIFICATE** is struck across the face and repeated in the foot rule, and the
+QR encodes a dead URL rather than the verification host.
+
+That separation is the point. A signed certificate is a permanent institutional
+record; a proof is a picture of one, and producing the second must never become
+a way of accidentally producing the first.
+
+## 32 · Standing
+
+| | |
+|---|---|
+| The roll | ✅ 44 awards, 31 children |
+| Tamhīdiyyah | ✅ **complete — waits on the signing key alone** |
+| Certificate numbers | ✅ 000035–000085, contiguous, each claimed once |
+| Permanent Student IDs | ✅ 31 children, 31 numbers, proved both ways |
+| Ibtidā'iyyah / I'dādiyyah artwork | ✅ pixel-identical, proved by rendering |
+| Five Arabic names | ⏳ outstanding |
+| Sofiah Anofi's award variant | ⏳ outstanding — the Registrar's record |
+| Four graduands' sex | ⏳ outstanding — the Registrar's record |
+| Muhammad Fatih's placement | ⏳ outstanding — the ruling removed him from a stage without naming another |
+| The signing key | in the Board's credential store, not in this environment |

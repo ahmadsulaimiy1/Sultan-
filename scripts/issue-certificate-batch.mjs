@@ -341,8 +341,6 @@ const OUTSTANDING = {
   Iremide: 'Yoruba, no institutional precedent — the Founder’s to give',
   Balogun: 'Yoruba, no institutional precedent — the Founder’s to give',
   Yaseer: 'ياسر proposed as standard Arabic — awaiting confirmation',
-  Fatih: 'فاتح proposed as standard Arabic — awaiting confirmation',
-  Muhammad: 'محمد is on record; “Muhammad Fatih” awaits confirmation as a whole',
   Seriki: 'سركي is on record; the assembled نعيمة إسماعيل سركي awaits confirmation',
   Naheemah: 'نعيمة is on record; the assembly awaits confirmation',
   Ismail: 'إسماعيل is on record; the assembly awaits confirmation',
@@ -352,23 +350,40 @@ const OUTSTANDING = {
   Anofi: 'حنفي is the school’s own name; the assembly awaits confirmation',
 };
 
+// One graduand. The Founder ruled on 8 August 2026: "Only Abdul Basit Adedokun
+// is now in Tamheediyyah." Both parts of his name were approved in Arabic for
+// the Ibtidā'iyyah register and carry across unchanged — nothing is derived —
+// and his sex is on that register too. This batch is therefore complete and
+// waits on the signing key alone.
 BATCHES.TMH = fromPlan('TMH', {
   approvedAr: { 'Abdulbasit Adedokun': 'عبد الباسط أددوكن' },
   arabicNames: {
-    status: 'HELD — one name of two is approved',
+    status: 'COMPLETE — every name approved',
     approvedAndCarriedAcross: {
       Adedokun: 'أددوكن — approved on the Ibtidā’iyyah register',
       Abdulbasit: 'عبد الباسط — approved on the Ibtidā’iyyah register',
     },
     standardArabicNoChoiceToMake: {},
-    awaitingConfirmation: { Muhammad: OUTSTANDING.Muhammad, Fatih: OUTSTANDING.Fatih },
+    awaitingConfirmation: {},
   },
 });
 
+// The provenance buckets below are per NAME-PART, and that is not the same
+// question as whether a SHEET may print. Nearly every part on this roll is
+// already approved — أشرف, كوردي, أوجومي, نعيمة, إسماعيل, سركي, عمران, أدغكي
+// are all on record. What is not settled is the ASSEMBLY at the full length now
+// to be engraved: a form approved for "Naheemah Ismail" is not a form approved
+// for "Naheemah Ismail Seriki".
+//
+// So the parts sit where they honestly belong — approved — and the per-sheet
+// Arabic gate above does the real work, holding the four sheets whose full name
+// has no approved form. Filing an approved part as "awaiting" to force a hold
+// would be recording a falsehood to get a true outcome.
 BATCHES.IBT2026 = fromPlan('IBT', {
   approvedAr: {
     'Faridah Ayomide Aliu': 'فريدة أيومدي علي',
     'Muhammad Ismail Seriki': 'محمد إسماعيل سركي',
+    'Aisha Omoshalewa Anofi': 'عائشة أمشالوا حنفي',
   },
   arabicNames: {
     status: 'HELD — four of seven names have no approved form at their full length',
@@ -376,15 +391,23 @@ BATCHES.IBT2026 = fromPlan('IBT', {
       Faridah: 'فريدة — approved on the I‘dādiyyah register',
       Ayomide: 'أيومدي — confirmed by the Founder, 2026-08-06',
       Aliu: 'علي — the approved form, NOT عليو',
+      Muhammad: 'محمد — approved on the I‘dādiyyah register',
+      Ismail: 'إسماعيل — approved on both registers',
+      Seriki: 'سركي — approved on the I‘dādiyyah register',
+      Aisha: 'عائشة — approved on the Ibtidā’iyyah register',
+      Omoshalewa: 'أمشالوا — ruled by the Founder, 2026-08-07',
+      Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
+      Ashraf: 'أشرف — approved for him on the Ibtidā’iyyah register',
+      Korede: 'كوردي — the approved form of Korede',
+      Ojewumi: 'أوجومي — approved on the Ibtidā’iyyah register',
+      Naheemah: 'نعيمة — approved on the Ibtidā’iyyah register',
+      Imran: 'عمران — approved on the Ibtidā’iyyah register',
+      Adegoke: 'أدغكي — approved on the Ibtidā’iyyah register',
     },
     standardArabicNoChoiceToMake: {},
     awaitingConfirmation: {
-      Aisha: OUTSTANDING.Aisha, Omoshalewa: OUTSTANDING.Omoshalewa, Anofi: OUTSTANDING.Anofi,
       Ameerah: OUTSTANDING.Ameerah, Abdulhafeez: OUTSTANDING.Abdulhafeez,
-      Ashraf: OUTSTANDING.Ashraf, Korede: OUTSTANDING.Korede, Ojewumi: OUTSTANDING.Ojewumi,
-      Imran: OUTSTANDING.Imran, Iremide: OUTSTANDING.Iremide, Adegoke: OUTSTANDING.Adegoke,
-      Muhammad: OUTSTANDING.Muhammad, Ismail: OUTSTANDING.Ismail, Seriki: OUTSTANDING.Seriki,
-      Naheemah: OUTSTANDING.Naheemah,
+      Iremide: OUTSTANDING.Iremide,
     },
   },
 });

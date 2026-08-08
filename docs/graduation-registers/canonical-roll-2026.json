@@ -4,8 +4,8 @@
   "nameRule": "Founder’s ruling of 8 August 2026: where a fuller form of a child’s name has ever been written down by this institution, the fuller form is the one that prints and is engraved. No name is assembled from parts of two variants.",
   "generatedBy": "scripts/build-canonical-roll.mjs",
   "totals": {
-    "awards": 45,
-    "children": 32,
+    "awards": 44,
+    "children": 31,
     "multipleAwards": 11
   },
   "categories": [
@@ -23,10 +23,9 @@
     {
       "code": "TMH",
       "registrarColumn": "Islamiyyah (Tamyidi)",
-      "count": 2,
+      "count": 1,
       "names": [
-        "Abdulbasit Adedokun",
-        "Muhammad Fatih"
+        "Abdulbasit Adedokun"
       ]
     },
     {
@@ -360,6 +359,15 @@
         "Abdulbasit Jabarr",
         "Abdulbasit Amobi Jabarr"
       ]
+    }
+  ],
+  "withdrawnByRuling": [
+    {
+      "code": "TMH",
+      "name": "Muhammad fatih",
+      "why": "Founder’s ruling, 8 Aug 2026 — \"Only Abdul Basit Adedokun is now in Tamheediyyah.\"",
+      "standing": "UNPLACED — the ruling states which stage he is not in. It does not state which stage he is in, and this file will not choose one for him. He appears on no roll until the Registrar or the Founder places him, and the preflight reports him on every run.",
+      "alsoOn": []
     }
   ]
 }
