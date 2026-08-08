@@ -91,8 +91,10 @@ export const PROGRAMMES = {
     labelAr: 'المرحلة التمهيدية',
     stageEn: 'the preparatory educational stage',
     stageAr: 'المرحلة التمهيدية',
-    awaitingConfirmation: 'Wording set to standard on the Founder’s instruction '
-      + 'of 8 August 2026. One confirmation before the first mint.',
+    // CONFIRMED by the Founder, 8 August 2026. The wording above is the
+    // engraved wording; it is now locked on the same terms as IBT and IDD and
+    // may not be changed without a written ruling.
+    confirmed: { date: '2026-08-08', by: 'The Founder' },
   },
 };
 
