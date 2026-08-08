@@ -427,10 +427,10 @@ function buildPage(page, manifest) {
   // visibly apart. The gate is on the homepage, not on the language.
   const isHome = isHomeSlug(page);
   const elevateHead = isHome
-    ? '<link rel="stylesheet" href="/css/elevate.css">\n'
+    ? '<link rel="stylesheet" href="/css/elevate.css">\n<link rel="stylesheet" href="/css/homefx.css">\n'
     : '';
   const elevateScripts = isHome
-    ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n'
+    ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n<script src="/js/homefx.js" defer></script>\n'
     : '';
 
   // The "prestige" flagship layer (luxury interior-page design system +

@@ -84,6 +84,7 @@
 <meta name="robots" content="noindex,follow" />
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/elevate.css?v=efa08f979d">
+<link rel="stylesheet" href="/css/homefx.css?v=a5c53d5a9c">
 <link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=b4aaca0539">
@@ -916,6 +917,82 @@
 <!-- Wayfinding. Six real destinations, chosen because a visitor arrives
      as one of six people and the site should not make them guess which
      of eighteen sections is theirs. Every route below already exists. -->
+<!-- The five institutions, drawn. Every name, age band and descriptor
+     below is the one the Academics section on this same page publishes;
+     the drawing carries nothing the text does not already say. -->
+<section class="cst-band reveal" id="constellation" aria-labelledby="cst-h">
+  <div class="wrap">
+    <p class="eyebrow">One Board, One Standard</p>
+    <h2 id="cst-h" style="margin-top:10px;">Five Institutions, One Inheritance</h2>
+    <p class="cst-lede">Sultan Hanafi is not one school with five departments; it is five institutions under one board, one crest and one standard. Two are governed by age. Three are governed by readiness, and take a pupil — or an adult — at whatever stage they arrive. The map below is the whole of it.</p>
+
+    <figure class="cst-figure" data-cst>
+      <svg class="cst-svg" viewBox="0 0 900 520" role="img" aria-labelledby="cst-t cst-d">
+        <title id="cst-t">The five institutions of Sultan Hanafi Royal Schools</title>
+        <desc id="cst-d">A ring of five institutions around the central board of governors: the Nursery &amp; Primary School for ages two to ten; the Royal College for ages ten and above, established 2021; the School of Islamic &amp; Arabic Studies, all ages, weekday and weekend; the Qur'an College, day and boarding, twenty-four to thirty-six months; and the Online &amp; Distance Learning School, newly established.</desc>
+        <defs>
+          <radialGradient id="cst-core" cx="42%" cy="32%" r="72%">
+            <stop offset="0%" stop-color="rgb(var(--lv-cf,59,42,29))"/>
+            <stop offset="100%" stop-color="rgb(var(--lv-cfd4,26,16,6))"/>
+          </radialGradient>
+          <linearGradient id="cst-spoke" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(var(--lv-g,198,161,91),0)"/>
+            <stop offset="50%" stop-color="rgba(var(--lv-g,198,161,91),.75)"/>
+            <stop offset="100%" stop-color="rgba(var(--lv-g,198,161,91),0)"/>
+          </linearGradient>
+        </defs>
+
+        <circle class="cst-orbit" cx="450" cy="260" r="176" fill="none"/>
+        <circle class="cst-orbit cst-orbit-2" cx="450" cy="260" r="206" fill="none"/>
+
+        <g class="cst-spokes" fill="none" stroke="url(#cst-spoke)" stroke-width="1.4">
+          <path class="cst-spoke" d="M450 260 L450 84"/>
+          <path class="cst-spoke" d="M450 260 L617 174"/>
+          <path class="cst-spoke" d="M450 260 L553 403"/>
+          <path class="cst-spoke" d="M450 260 L347 403"/>
+          <path class="cst-spoke" d="M450 260 L283 174"/>
+        </g>
+
+        <g class="cst-core">
+          <circle cx="450" cy="260" r="62" fill="url(#cst-core)"
+            stroke="rgba(var(--lv-gb,233,206,138),.7)" stroke-width="1.4"/>
+          <text class="cst-core-t" x="450" y="253" text-anchor="middle">Board of</text>
+          <text class="cst-core-t" x="450" y="272" text-anchor="middle">Governors</text>
+        </g>
+
+        <g class="cst-node" data-i="0">
+          <circle cx="450" cy="84" r="52"/>
+          <text class="cst-n" x="450" y="80" text-anchor="middle">Nursery &amp; Primary</text>
+          <text class="cst-s" x="450" y="97" text-anchor="middle">Ages 2&ndash;10 &middot; Day</text>
+        </g>
+        <g class="cst-node" data-i="1">
+          <circle cx="617" cy="174" r="52"/>
+          <text class="cst-n" x="617" y="170" text-anchor="middle">Royal College</text>
+          <text class="cst-s" x="617" y="187" text-anchor="middle">Ages 10+ &middot; Est. 2021</text>
+        </g>
+        <g class="cst-node" data-i="2">
+          <circle cx="553" cy="403" r="52"/>
+          <text class="cst-n" x="553" y="399" text-anchor="middle">Qur'an College</text>
+          <text class="cst-s" x="553" y="416" text-anchor="middle">24&ndash;36 months</text>
+        </g>
+        <g class="cst-node" data-i="3">
+          <circle cx="347" cy="403" r="52"/>
+          <text class="cst-n" x="347" y="399" text-anchor="middle">Islamic &amp; Arabic</text>
+          <text class="cst-s" x="347" y="416" text-anchor="middle">All ages</text>
+        </g>
+        <g class="cst-node" data-i="4">
+          <circle cx="283" cy="174" r="52"/>
+          <text class="cst-n" x="283" y="170" text-anchor="middle">Online &amp; Distance</text>
+          <text class="cst-s" x="283" y="187" text-anchor="middle">Newly established</text>
+        </g>
+
+        <circle class="cst-pip" r="3.2" cx="450" cy="260"/>
+      </svg>
+      <figcaption class="cst-cap">Every one of the five answers to the same board, keeps the same register, and issues documents against the same seal. <a class="text-link" href="/academics/">The five in full &rarr;</a></figcaption>
+    </figure>
+  </div>
+</section>
+
 <section class="wf-band reveal" id="begin" aria-labelledby="wf-h">
   <div class="wrap">
     <p class="eyebrow">Where Would You Like to Begin?</p>
@@ -2292,6 +2369,7 @@
 <script src="/js/clock.js?v=1867395bb8" defer></script>
 <script src="/js/elevate.js?v=f9ef0d91b6" defer></script>
 <script src="/js/elevate-motion.js?v=38821b6477" defer></script>
+<script src="/js/homefx.js?v=9667c90282" defer></script>
 <script src="/js/prestige.js?v=a6f8feb921" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 
