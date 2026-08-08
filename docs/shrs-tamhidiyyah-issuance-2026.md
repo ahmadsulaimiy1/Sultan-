@@ -4,14 +4,14 @@
 **Graduand:** one — **Abdulbasit Adedokun** · عبد الباسط أددوكن
 **Approved by the Founder:** 8 August 2026 — *"Only Abdul Basit Adedokun is now
 in Tamhīdiyyah. Issue out his certificate now."*
-**Status:** every gate passes. **Waits on the signing key alone.**
+**Status:** every gate passes. Two routes below — **Route A issues it on the
+live system today, with nobody handling the key.**
 
 ---
 
-## Why this document exists rather than a finished certificate
+## Why the certificate is not simply attached to this document
 
-The certificate is not minted here, and that is not a gap in the work — it is
-the control the whole system is built around.
+It is not a gap in the work. It is the control the whole system is built around.
 
 The five characters engraved on a certificate's face are the head of an
 HMAC-SHA256 over the certificate's own fields, keyed by `DOCUMENT_HASH_SECRET`.
@@ -27,11 +27,107 @@ without the key. Substituting any other value would mint a certificate whose
 engraved number cannot be verified against the record, which is worse than no
 certificate at all.
 
-So the approval is executed by one command, run by someone holding the key.
+There are therefore two ways to issue it, and neither involves a substitute
+key. **Route A runs it inside production, which already holds the key** — the
+Registrar's Office signs it there, so nobody fetches or carries anything. Route B
+is one command for whoever holds the key file directly.
 
 ---
 
-## The one command
+## Route A — issue it on the live system (no key handling by anyone)
+
+**This is the route to a printed certificate today.** Production already holds
+the signing key in its own environment, so nobody has to fetch it, paste it or
+carry it: the Registrar's Office mints the certificate inside the environment
+that has it.
+
+The screen is **Certificate Generation Centre**, `/portal/staff/certificate-centre/`.
+It issues, prints, registers and revokes — all of it already built.
+
+### Prerequisite: deploy this branch
+
+Two things this route needs are on `claude/wec-institutional-design-kt3u0t` and
+not yet in production:
+
+1. **`PROGRAMMES.TMH`** — without it the endpoint answers *"Unknown programme
+   code TMH"* and nothing is issued.
+2. **The Tamhīdiyyah title wording and regalia** in the sheet template —
+   without them the certificate would print under the wrong stage name.
+
+A third thing was found while checking this route and is fixed on the same
+branch: **Tamhīdiyyah was missing from the programme picker entirely**, and
+I'dādiyyah was mislabelled *"Preparatory Stage"* when it is the **Intermediate**
+stage. A registrar looking for the preparatory award would have found that line,
+selected it, and conferred the wrong award — with every downstream gate passing,
+because the numbering and the hash would have been correct for the programme
+actually chosen. `scripts/verify-certificate-centre-programmes.mjs` now checks
+the picker against the engine on both code and label.
+
+### The steps
+
+| | |
+|---|---|
+| 1 | **Check the student record first** — see the warning below. This is the one step that can go wrong silently. |
+| 2 | Sign in to `/portal/staff/certificate-centre/` as the Registrar (or any role holding `certificates` **C**). |
+| 3 | **Programme:** Tamhīdiyyah — Preparatory Stage (TMH). **Academic Year:** 2025/2026. **Issue Date:** 2026-08-08. |
+| 4 | Roster: one row — full name **Abdulbasit Adedokun**, Arabic **عبد الباسط أددوكن**, sex **male**. Give his **admission number** if he has one: it matches exactly, where a name match does not. |
+| 5 | **Preview Roster.** It must report him **matched**, not *new*. If it says new, stop — see the warning. |
+| 6 | **Generate Batch.** Production signs it. |
+| 7 | **Open Full Batch for Printing**, or open the certificate from the Certificate Register. Both give print-ready HTML and PDF. |
+| 8 | Scan the QR on the printed sheet and confirm the public page reports it genuine, with the right name and award. |
+
+### ⚠ The one thing that can go wrong quietly
+
+If the roster row does **not** match an existing student, the endpoint **creates
+a new student and mints a new permanent Student ID**. That would give Abdulbasit
+a second permanent number — the single worst outcome this whole pipeline exists
+to prevent.
+
+Where he already exists as a student, `ensureStudentIdentityNo` returns the
+number he holds and never rewrites it, so **711232557821021** carries onto the
+new certificate by itself. Confirm before issuing:
+
+```sql
+SELECT id, full_name, admission_no, identity_no
+  FROM students
+ WHERE LOWER(full_name) = LOWER('Abdulbasit Adedokun');
+```
+
+- **One row, `identity_no = 711232557821021`** → proceed. Step 5 will say matched.
+- **One row, `identity_no` empty** → set it to `711232557821021` before issuing.
+  It is his, from certificate 000037.
+- **No row** → create his student record first, with that identity number. Do not
+  let the batch create him.
+- **More than one row** → the endpoint refuses as ambiguous and names the
+  admission numbers. Use the admission number in the roster.
+
+### The number will not be 000052
+
+The live system takes the next value from `stage_certificate_serial_seq`, not
+from the plan's ordering. Issuing Tamhīdiyyah first means it takes the first free
+number — **000048** if the published batches were imported and the sequence set
+past 47.
+
+That is correct, not a fault. The only inviolable rule is that a number is issued
+**once, ever**; which stage happens to take 48 is a convenience. Afterwards,
+re-run:
+
+```bash
+node scripts/plan-certificate-reissue.mjs --write
+node scripts/preflight-graduation-coverage.mjs
+```
+
+so the remaining thirty-seven are re-based on what was actually consumed. Do that
+before minting anything else, or two certificates will be allocated one number.
+
+---
+
+## Route B — issue it from this repository
+
+For whoever holds the key file and would rather not go through the portal. Same
+certificate, same engine; this route also writes the register and the import SQL.
+
+### The one command
 
 ```bash
 DOCUMENT_HASH_SECRET='<the v2 key from the Board’s credential store>' \
@@ -111,22 +207,37 @@ refuses the batch if it does not match the plan.
 
 ---
 
-## Two things that must follow, on the live system
+## Revoking the old certificate
 
-These are acts of the **Office of the Registrar**, not build steps. Neither is
-done by the command above.
+**Deferred by the Founder, 8 August 2026: print the new one first, revoke later.**
+That is his call and it is recorded here rather than argued with. One consequence
+belongs on the record, in one sentence: **until it is revoked, 000037 still
+reports genuine**, so for that period the boy holds two live awards — the
+Ibtidā'iyyah one the ruling says is not his, and the Tamhīdiyyah one that is.
+Nothing about the new certificate is affected.
 
-### 1 · Revoke `SHRS-CERT-IBT-2026-000037-22C49`
+It takes about a minute whenever you want it, on the same screen:
+
+> Certificate Register → search `SHRS-CERT-IBT-2026-000037-22C49` → **Revoke**.
+> The note is mandatory; use:
+> *"Founder's ruling, 8 August 2026 — Tamhīdī graduand, no Ibtidā'iyyah
+> entitlement. Replaced by the Tamhīdiyyah certificate. R-2026-001."*
+
+Public verification then shows revoked immediately, and the serial is never
+reused. Full record: `docs/shrs-certificate-revocations.md`, **R-2026-001**.
+
+## What must follow if you took Route B
+
+Route A does all of this inside the live system already. These apply only to a
+batch minted from the repository.
+
+### 1 · Recover the printed sheet of `SHRS-CERT-IBT-2026-000037-22C49`
 
 His Ibtidā'iyyah certificate, minted on 8 August before the two stages were
 distinguished in this system at all. On the ruling that a Tamhīdī graduand has
 no Ibtidā'iyyah entitlement, it confers an award that is not his.
 
-Revoke it through the Registrar's Office (`revoke` action, with a note citing
-this ruling). Public verification must then return **revoked** — never
-*genuine*. The sheet has not been handed over; recover it if it has.
-
-Full record: `docs/shrs-certificate-revocations.md`, entry **R-2026-001**.
+If it has been handed over, recover it before the replacement is given.
 
 ### 2 · Import the register and link the student record
 
