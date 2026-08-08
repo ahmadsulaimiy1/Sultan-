@@ -472,3 +472,84 @@ html[data-pc-motion="reduced"] .pr-path-dot::after{animation:none!important;}
 html[data-pc-ornament="none"] .hfx-leaf{display:none;}
 html[data-pc-theme="royal"] .hfx-leaf,
 html[data-pc-theme="dark"] .hfx-leaf{opacity:.07;}
+
+/* -------------------------------------------------------------------
+   7. THE BRAID
+   The one claim this school makes about itself — that the two curricula
+   are one upbringing rather than two timetables — drawn. Both strands
+   run the length of the figure and cross twice; neither is above the
+   other, and they begin and end at the same two points.
+   ------------------------------------------------------------------- */
+.brd-figure{margin:30px 0 0;}
+.brd-svg{display:block;width:100%;height:auto;max-width:920px;margin:0 auto;overflow:visible;}
+.brd-cap-t{margin:10px auto 0;max-width:720px;text-align:center;
+  font-size:.84rem;line-height:1.65;color:var(--ink-soft);}
+
+.brd-strand{
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  transition:stroke-dashoffset 2.4s cubic-bezier(.16,.8,.24,1);}
+[data-brd].is-lit .brd-strand{stroke-dashoffset:0;}
+[data-brd].is-lit .brd-2{transition-delay:.22s;}
+
+.brd-knots circle{
+  fill:rgb(var(--lv-gl,255,246,223));
+  stroke:rgba(var(--lv-g,198,161,91),.9);stroke-width:1.6;
+  opacity:0;transform:scale(.4);transform-origin:center;
+  transition:opacity .6s ease 1.5s,transform .7s cubic-bezier(.34,1.56,.64,1) 1.5s;}
+[data-brd].is-lit .brd-knots circle{opacity:1;transform:scale(1);}
+.brd-ends circle{
+  fill:rgb(var(--lv-cf,59,42,29));
+  stroke:rgb(var(--lv-gb,233,206,138));stroke-width:2;
+  opacity:0;transition:opacity .7s ease 1.9s;}
+[data-brd].is-lit .brd-ends circle{opacity:1;}
+
+.brd-lab,.brd-sub,.brd-cap,.brd-mid{
+  opacity:0;transition:opacity .8s ease 1.7s;}
+[data-brd].is-lit .brd-lab,
+[data-brd].is-lit .brd-sub,
+[data-brd].is-lit .brd-cap,
+[data-brd].is-lit .brd-mid{opacity:1;}
+.brd-lab{font-family:var(--font-label,'Cinzel',serif);font-size:13px;
+  fill:rgb(var(--lv-cf,59,42,29));}
+.brd-sub{font-size:10.5px;fill:rgb(var(--lv-gt3,99,72,27));letter-spacing:.3px;}
+.brd-lab-2{fill:#2F5A3E;}
+.brd-sub-2{fill:#3F6B4E;}
+.brd-cap{font-family:var(--font-label,'Cinzel',serif);font-size:11px;
+  letter-spacing:1.4px;text-transform:uppercase;fill:rgb(var(--lv-gt3,99,72,27));}
+.brd-mid{font-family:var(--font-label,'Cinzel',serif);font-size:11.5px;
+  letter-spacing:1.6px;text-transform:uppercase;fill:rgba(var(--lv-ink2,87,71,47),.85);}
+
+html[data-pc-theme="royal"] .brd-lab,html[data-pc-theme="dark"] .brd-lab{fill:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="royal"] .brd-lab-2,html[data-pc-theme="dark"] .brd-lab-2{fill:#8FC7A2;}
+html[data-pc-theme="royal"] .brd-sub-2,html[data-pc-theme="dark"] .brd-sub-2{fill:#7FB894;}
+html[data-pc-theme="royal"] .brd-sub,html[data-pc-theme="dark"] .brd-sub,
+html[data-pc-theme="royal"] .brd-cap,html[data-pc-theme="dark"] .brd-cap{fill:rgb(var(--lv-gb,233,206,138));}
+html[data-pc-theme="royal"] .brd-mid,html[data-pc-theme="dark"] .brd-mid{fill:rgba(var(--lv-p3,247,238,223),.8);}
+html[data-pc-theme="dark"] .brd-ends circle{fill:rgb(var(--lv-cfd4,26,16,6));}
+
+@media (max-width:640px){
+  .brd-lab{font-size:16px;} .brd-sub{font-size:13px;}
+  .brd-cap,.brd-mid{font-size:14px;letter-spacing:1px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .brd-strand{transition:none;stroke-dashoffset:0;}
+  .brd-knots circle,.brd-ends circle,
+  .brd-lab,.brd-sub,.brd-cap,.brd-mid{transition:none;opacity:1;transform:none;}
+}
+
+/* -------------------------------------------------------------------
+   8. THE CAPTIONS, IN MIDNIGHT
+   --ink-soft is not inverted for the Midnight edition: it stays at
+   rgba(37,28,20,.74), and Midnight relies on per-component rules to
+   light its type instead. Every lede and caption written for these new
+   figures took --ink-soft and was therefore dark ink on Midnight's dark
+   ground — the braid's caption measured 1.47:1. They take Midnight's
+   own soft ink. The Royal edition needs none of this: its chrome is
+   dark but its pages are cream, where --ink-soft is right.
+   ------------------------------------------------------------------- */
+html[data-pc-theme="dark"] .brd-cap-t,
+html[data-pc-theme="dark"] .cst-lede,
+html[data-pc-theme="dark"] .cst-cap,
+html[data-pc-theme="dark"] .wf-lede,
+html[data-pc-theme="dark"] .rg-lede{
+  color:rgba(243,237,227,.80)!important;}

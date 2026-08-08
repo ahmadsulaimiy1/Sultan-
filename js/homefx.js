@@ -317,6 +317,21 @@
     });
   })();
 
+  // --- the braid --------------------------------------------------------
+  (function braid() {
+    var f = document.querySelector('[data-brd]');
+    if (!f) return;
+    if (!('IntersectionObserver' in window)) { f.classList.add('is-lit'); return; }
+    var io4 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-lit');
+        io4.unobserve(e.target);
+      });
+    }, { threshold: 0.22 });
+    io4.observe(f);
+  })();
+
   place();
   measure();
   window.addEventListener('scroll', onScroll, { passive: true });
