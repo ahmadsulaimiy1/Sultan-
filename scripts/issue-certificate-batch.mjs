@@ -606,11 +606,22 @@ function sequenceStub(start) {
 // this script's, so their hashes are reproduced exactly as issued by running
 // with DOCUMENT_HASH_SECRET explicitly set to that same literal. What must
 // never recur is a batch minted that way by DEFAULT, so the key is now an act.
+// It is stated as an instruction rather than thrown as a stack trace, because
+// the person who hits it is a registrar holding a key, not a developer reading
+// a crash. A refusal that looks like a bug invites someone to work around it.
 if (!process.env.DOCUMENT_HASH_SECRET) {
-  throw new Error('DOCUMENT_HASH_SECRET is not set — refusing to issue. This '
-    + 'script mints production certificates; the key that signs them must be '
-    + 'supplied deliberately, never defaulted. To reproduce the 2026-08-08 '
-    + 'batches byte for byte, set it to the key they were issued under.');
+  console.error('\nBATCH HELD — the signing key was not supplied.\n');
+  console.error('  Every certificate this mints carries five characters derived from that key,');
+  console.error('  engraved on its own face. That is what makes the printed number');
+  console.error('  self-checking. Signing with anything else produces a document whose number');
+  console.error('  cannot be verified against the record — worse than no document.\n');
+  console.error('  It lives in Cloudflare Pages (encrypted) and in the Board’s credential');
+  console.error('  store, never in this repository. See docs/certificate-key-deployment.md.\n');
+  console.error('  To issue, supply it deliberately:\n');
+  console.error(`    DOCUMENT_HASH_SECRET='<the v2 key>' DOCUMENT_HASH_KEY_VERSION=2 \\`);
+  console.error(`      node scripts/issue-certificate-batch.mjs ${BATCH_KEY}\n`);
+  console.error('  Nothing has been written. Every other gate for this batch has passed.\n');
+  process.exit(1);
 }
 // DOCUMENT_HASH_KEY_VERSION travels with the secret. Omitting it silently
 // defaults to version 1 — which is RETIRED, so signing refuses outright rather
