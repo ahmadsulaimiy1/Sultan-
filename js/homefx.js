@@ -88,10 +88,22 @@
     height = (last.top + y + last.height) - top;
     rail.style.top = top + 'px';
     rail.style.height = height + 'px';
-    // Sit the rail in the margin beside the measure, not over the text.
+    // Sit the rail in the margin beside the measure, not over the text —
+    // and on the side the language runs FROM, so the node labels open
+    // inward across the page rather than outward off it. Placed on the
+    // left in Arabic, the labels (which are laid out even while they are
+    // invisible) pushed 110px of horizontal scroll onto the page.
     var wrap = document.querySelector('.wrap');
-    var left = wrap ? wrap.getBoundingClientRect().left : 40;
-    rail.style.left = Math.max(18, left - 34) + 'px';
+    var box = wrap ? wrap.getBoundingClientRect() : null;
+    var rtl = (document.documentElement.getAttribute('dir') === 'rtl');
+    if (rtl) {
+      var gap = box ? (window.innerWidth - box.right) : 40;
+      rail.style.left = 'auto';
+      rail.style.right = Math.max(18, gap - 34) + 'px';
+    } else {
+      rail.style.right = 'auto';
+      rail.style.left = Math.max(18, (box ? box.left : 40) - 34) + 'px';
+    }
     nodes.forEach(function (n) {
       var r = n.sec.getBoundingClientRect();
       n.el.style.top = ((r.top + y) - top) + 'px';
