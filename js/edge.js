@@ -33,6 +33,7 @@
     '.gi-frame', '.gal-item', '.school-block', '.pr-stat', '.pr-metric',
     // the homepage's own furniture
     '.hx-mark', '.hx-q', '.hx-track', '.el-stage', '.cl-tile',
+    '.pr-chart-card', '.pr-agechart', '.pr-path', '.mv-lead',
     '.contact-item', '.ic-visual', '.mono-letter', '.teaser',
     '.pr-quad', '.pr-panel', '.pr-band-card', '.sw-card', '.tm-card'
   ].join(',');

@@ -15,7 +15,8 @@
     "description": "The Director's message, the founding story behind Sultan Hanafi Royal Schools, our seal, and our Mission, Vision & the CLEVER Standard.",
     "contentFile": "pages/about.html",
     "altHref": "/ar/about/",
-    "prestige": true
+    "prestige": true,
+    "homefx": true
   },
   {
     "slug": "about-governance",
@@ -33,7 +34,8 @@
     "description": "Five institutions under one Board of Governors: the Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur'an College, and the Online & Distance Learning School. Compare them and find the right fit.",
     "contentFile": "pages/academics.html",
     "altHref": "/ar/academics/",
-    "prestige": true
+    "prestige": true,
+    "homefx": true
   },
   {
     "slug": "academics-nursery-primary",
@@ -217,7 +219,8 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/about/",
-    "prestige": true
+    "prestige": true,
+    "homefx": true
   },
   {
     "slug": "about-governance-ar",
@@ -239,7 +242,8 @@
     "lang": "ar",
     "dir": "rtl",
     "altHref": "/academics/",
-    "prestige": true
+    "prestige": true,
+    "homefx": true
   },
   {
     "slug": "academics-nursery-primary-ar",

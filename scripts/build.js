@@ -427,10 +427,10 @@ function buildPage(page, manifest) {
   // visibly apart. The gate is on the homepage, not on the language.
   const isHome = isHomeSlug(page);
   const elevateHead = isHome
-    ? '<link rel="stylesheet" href="/css/elevate.css">\n<link rel="stylesheet" href="/css/homefx.css">\n'
+    ? '<link rel="stylesheet" href="/css/elevate.css">\n'
     : '';
   const elevateScripts = isHome
-    ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n<script src="/js/homefx.js" defer></script>\n'
+    ? '<script src="/js/elevate.js" defer></script>\n<script src="/js/elevate-motion.js" defer></script>\n'
     : '';
 
   // The "prestige" flagship layer (luxury interior-page design system +
@@ -449,6 +449,17 @@ function buildPage(page, manifest) {
   // page, deliberately. It restyles furniture that brand.css, elevate.css
   // and prestige.css all have their own rules for at the same specificity,
   // so the only thing that decides the winner is source order.
+  // The homepage's own layer — the golden thread down the margin, the
+  // illuminated section heads, the constellation and the lit arrival.
+  // It is not homepage-only any more: any long page can ask for it with
+  // homefx:true in the manifest, and it must load after prestige.css,
+  // which is why it rides here rather than in extraCss.
+  const wantsHomefx = isHome || page.homefx === true;
+  const homefxHead = wantsHomefx
+    ? '<link rel="stylesheet" href="/css/homefx.css">\n' : '';
+  const homefxScript = wantsHomefx
+    ? '<script src="/js/homefx.js" defer></script>\n' : '';
+
   const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
   const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n'
     + '<link rel="stylesheet" href="/css/clock.css">\n';
@@ -498,7 +509,7 @@ function buildPage(page, manifest) {
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
 ${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
-${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${listenHead}${altTag}${headScripts}</head>
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${homefxHead}${listenHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
@@ -545,7 +556,7 @@ ${personalisation}
 <script src="/js/mega.js" defer></script>
 <script src="/js/edge.js" defer></script>
 <script src="/js/clock.js" defer></script>
-${elevateScripts}${prestigeScripts}${idcardScripts}${extraScripts}
+${elevateScripts}${prestigeScripts}${idcardScripts}${homefxScript}${extraScripts}
 </body>
 </html>
 `;

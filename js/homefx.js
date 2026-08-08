@@ -251,6 +251,72 @@
     window.addEventListener('scroll', retire, { passive: true });
   })();
 
+  // --- the chronicle ---------------------------------------------------
+  // The founding timeline draws itself once, when it arrives.
+  (function chronicle() {
+    var path = document.querySelector('.pr-path');
+    if (!path) return;
+    if (!('IntersectionObserver' in window)) { path.classList.add('is-lit'); return; }
+    var io2 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-lit');
+        io2.unobserve(e.target);
+      });
+    }, { threshold: 0.25 });
+    io2.observe(path);
+  })();
+
+  // --- the age chart, and the margin ------------------------------------
+  (function chart() {
+    var c = document.querySelector('.pr-agechart');
+    if (!c) return;
+    if (!('IntersectionObserver' in window)) { c.classList.add('is-lit'); return; }
+    var io3 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-lit');
+        io3.unobserve(e.target);
+      });
+    }, { threshold: 0.2 });
+    io3.observe(c);
+  })();
+
+  // A crest held faintly in the empty column beside a long prose
+  // section — the way a watermark sits in the leaf of a printed book.
+  // Only where there is genuinely a wide empty column: a section whose
+  // text is set on a measure much narrower than the band it sits in,
+  // and which has no figure of its own already occupying that space.
+  (function leaves() {
+    var bands = document.querySelectorAll('section.pr-section');
+    var side = 0;
+    Array.prototype.forEach.call(bands, function (band) {
+      // Skip a band that already has something occupying that column.
+      // Not every svg — almost every section carries small inline icons,
+      // and excluding those left nothing at all to place a leaf in.
+      // Only a figure big enough to be the column's own occupant.
+      if (band.querySelector('.hfx-leaf, figure, table, .pr-agechart, .pr-path')) return;
+      var big = Array.prototype.slice.call(band.querySelectorAll('img, svg'))
+        .some(function (m) { var r = m.getBoundingClientRect(); return r.width > 150 || r.height > 150; });
+      if (big) return;
+      var body = band.querySelector('.pr-body, .pr-lead');
+      if (!body) return;
+      var bw = band.getBoundingClientRect().width;
+      var tw = body.getBoundingClientRect().width;
+      if (!bw || tw / bw > 0.62) return;      // no empty column to fill
+      var leaf = document.createElement('span');
+      leaf.className = 'hfx-leaf';
+      leaf.setAttribute('aria-hidden', 'true');
+      // Alternate sides down the page so it reads as a printed book
+      // rather than as a repeated stamp.
+      leaf.style[side % 2 ? 'left' : 'right'] = '2%';
+      leaf.style.top = '18%';
+      side += 1;
+      if (getComputedStyle(band).position === 'static') band.style.position = 'relative';
+      band.appendChild(leaf);
+    });
+  })();
+
   place();
   measure();
   window.addEventListener('scroll', onScroll, { passive: true });

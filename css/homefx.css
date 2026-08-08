@@ -337,3 +337,138 @@ html[data-pc-motion="reduced"] .hero > .hfx-meridian::after{animation:none!impor
   .hero > .hfx-meridian{animation:none;transform:scaleX(1);}
   .hero .hfx-crest-ring circle,.hero .hfx-crest-ring path{animation:none;stroke-dashoffset:0;}
 }
+
+/* -------------------------------------------------------------------
+   5. THE CHRONICLE
+   The founding timeline was a row of dots joined by a dashed rule: the
+   right information, laid out as a diagram of it rather than as a
+   record. Nothing about the content changes here. What changes is that
+   the rule now draws itself across the years, each medallion arrives in
+   turn with a ring opening behind it, and a bead of light travels the
+   whole span once it is drawn — so a reader watches the school's own
+   history being laid down rather than reading a finished chart.
+   ------------------------------------------------------------------- */
+.pr-path{position:relative;}
+.pr-path-line{
+  background:linear-gradient(90deg,
+    rgba(var(--lv-g,198,161,91),.25),
+    rgb(var(--lv-g,198,161,91)) 12%,
+    rgb(var(--lv-gb,233,206,138)) 50%,
+    rgb(var(--lv-g,198,161,91)) 88%,
+    rgba(var(--lv-g,198,161,91),.25))!important;
+  opacity:1!important;height:1.5px!important;
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform 1.6s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .pr-path-line{transform-origin:right center;}
+.pr-path.is-lit .pr-path-line{transform:scaleX(1);}
+/* The bead that runs the span once the rule is down. */
+.pr-path-line::after{
+  content:"";position:absolute;inset-block:-2px;width:9%;border-radius:99px;
+  background:linear-gradient(90deg,transparent,rgb(var(--lv-gl,255,246,223)),transparent);
+  filter:blur(.4px);opacity:0;}
+.pr-path.is-lit .pr-path-line::after{
+  animation:pr-path-run 9s cubic-bezier(.45,0,.3,1) 1.8s infinite;}
+@keyframes pr-path-run{
+  0%{transform:translateX(-120%);opacity:0;}
+  6%{opacity:1;}
+  34%{transform:translateX(1150%);opacity:0;}
+  100%{transform:translateX(1150%);opacity:0;}}
+
+.pr-path-step{
+  transition:transform .5s cubic-bezier(.16,.8,.24,1);}
+.pr-path-step:hover{transform:translateY(-3px);}
+.pr-path-dot{
+  width:22px!important;height:22px!important;
+  opacity:0;transform:scale(.3);
+  transition:opacity .6s ease,transform .7s cubic-bezier(.34,1.56,.64,1),
+             box-shadow .5s ease;}
+.pr-path.is-lit .pr-path-dot{opacity:1;transform:scale(1);}
+/* A ring opens behind each medallion as it lands. */
+.pr-path-dot::after{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:1px solid rgba(var(--lv-g,198,161,91),.8);
+  opacity:0;transform:scale(.5);}
+.pr-path.is-lit .pr-path-dot::after{animation:pr-path-ring 1.5s ease-out forwards;}
+@keyframes pr-path-ring{
+  0%{opacity:.9;transform:scale(.5);}
+  100%{opacity:0;transform:scale(1.9);}}
+.pr-path-step:hover .pr-path-dot{
+  box-shadow:0 0 0 6px rgba(var(--lv-gs,198,161,91),.2),
+             0 0 20px 2px rgba(var(--lv-gb,233,206,138),.6);}
+
+.pr-path-age,.pr-path-t,.pr-path-d{
+  opacity:0;transform:translateY(9px);
+  transition:opacity .7s ease,transform .8s cubic-bezier(.16,.8,.24,1);}
+.pr-path.is-lit .pr-path-age,
+.pr-path.is-lit .pr-path-t,
+.pr-path.is-lit .pr-path-d{opacity:1;transform:none;}
+.pr-path.is-lit .pr-path-t{transition-delay:.08s;}
+.pr-path.is-lit .pr-path-d{transition-delay:.16s;}
+/* Each step follows the one before it, so the years arrive in order. */
+.pr-path.is-lit .pr-path-step:nth-child(2) > *{transition-delay:.14s;}
+.pr-path.is-lit .pr-path-step:nth-child(3) > *{transition-delay:.28s;}
+.pr-path.is-lit .pr-path-step:nth-child(4) > *{transition-delay:.42s;}
+.pr-path.is-lit .pr-path-step:nth-child(5) > *{transition-delay:.56s;}
+.pr-path.is-lit .pr-path-step:nth-child(6) > *{transition-delay:.70s;}
+.pr-path.is-lit .pr-path-step:nth-child(7) > *{transition-delay:.84s;}
+
+html[data-pc-motion="reduced"] .pr-path-line::after{animation:none!important;display:none;}
+html[data-pc-motion="reduced"] .pr-path-dot::after{animation:none!important;}
+@media (prefers-reduced-motion:reduce){
+  .pr-path-line{transition:none;transform:scaleX(1);}
+  .pr-path-line::after,.pr-path-dot::after{animation:none;display:none;}
+  .pr-path-dot,.pr-path-age,.pr-path-t,.pr-path-d,.pr-path-step{
+    transition:none;opacity:1;transform:none;}
+}
+
+/* -------------------------------------------------------------------
+   6. THE AGE CHART, AND THE MARGIN
+   Two things on the Academics and Discover pages.
+
+   The age chart already grew its bars. What it did not have was any
+   sense of the light that everything else on the site now carries, so
+   each bar takes a sheen that passes along it after it has grown, and
+   the five rows arrive one after another rather than all at once.
+
+   And the long prose sections are set on a narrow measure with a wide
+   empty column beside them — right for reading, and empty on the page.
+   The crest is held faintly in that column, the way a watermark sits in
+   the leaf of a printed book.
+   ------------------------------------------------------------------- */
+.pr-age-row{
+  opacity:0;transform:translateY(10px);
+  transition:opacity .7s ease,transform .8s cubic-bezier(.16,.8,.24,1);}
+.pr-agechart.is-lit .pr-age-row{opacity:1;transform:none;}
+.pr-agechart.is-lit .pr-age-row:nth-child(2){transition-delay:.10s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(3){transition-delay:.20s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(4){transition-delay:.30s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(5){transition-delay:.40s;}
+.pr-age-fill{position:relative;overflow:hidden;}
+.pr-age-fill::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 34%,
+    rgba(255,255,255,.42) 49%,rgba(255,255,255,.6) 51%,
+    rgba(255,255,255,.42) 53%,transparent 66%);
+  transform:translateX(-140%);}
+.pr-agechart.is-lit .pr-age-fill::after{
+  animation:pr-age-sheen 7.5s cubic-bezier(.4,0,.25,1) 1.9s infinite;}
+@keyframes pr-age-sheen{
+  0%{transform:translateX(-140%);}
+  22%,100%{transform:translateX(180%);}}
+.pr-age-track{position:relative;}
+.pr-age-track::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:repeating-linear-gradient(90deg,
+    rgba(var(--lv-g,198,161,91),.18) 0 1px,transparent 1px 12.5%);
+  opacity:.7;}
+
+/* The crest in the margin of a long prose column. */
+.hfx-leaf{
+  position:absolute;pointer-events:none;z-index:0;opacity:.05;
+  width:min(38vw,430px);aspect-ratio:1/.9;
+  background-image:url("/assets/images/crest-watermark.png");
+  background-size:contain;background-repeat:no-repeat;background-position:center;}
+@media (max-width:1180px){.hfx-leaf{display:none;}}
+html[data-pc-ornament="none"] .hfx-leaf{display:none;}
+html[data-pc-theme="royal"] .hfx-leaf,
+html[data-pc-theme="dark"] .hfx-leaf{opacity:.07;}
