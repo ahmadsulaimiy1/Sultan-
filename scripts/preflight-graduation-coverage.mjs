@@ -146,10 +146,10 @@ for (const [code, roll] of Object.entries(ROLLS)) {
       flag(`${code}/${r.en}: carries over from ${r.carryOverFrom.register} as `
         + `"${r.carryOverFrom.name}", which is not on that register`);
     }
-    if (r.matchedAs === 'short-form' && !r.founderRuling) {
-      flag(`${code}/${r.en}: matched on a SHORT FORM with no Founder's ruling. `
-        + 'An unruled short-form carry-over can put one child’s permanent number '
-        + 'on another child’s certificate.');
+    if (r.matchedAs !== 'exact' && !r.founderRuling) {
+      flag(`${code}/${r.en}: carry-over matched as "${r.matchedAs}" with no `
+        + 'Founder’s ruling. Any match that is not EXACT can put one child’s '
+        + 'permanent number on another child’s certificate.');
     }
   }
 }

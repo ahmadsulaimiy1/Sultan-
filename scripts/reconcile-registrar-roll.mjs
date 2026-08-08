@@ -61,6 +61,36 @@ const MAP = {
   Ibtidaiyah: 'IBT', Idadiyah: 'IDD', 'Islamiyyah (Tamyidi)': null,
 };
 
+// The Founder's rulings on this reconciliation, as given. Each records what was
+// decided AND what the decision does not reach, because a ruling that settles
+// an identity does not thereby settle a spelling, and a stage that exists does
+// not thereby have approved wording.
+const RULINGS = [
+  {
+    date: '2026-08-08',
+    on: 'Islamiyyah (Tamyidi) — does the stage exist?',
+    ruled: 'Yes. "Tamheediy" — the preparatory stage. Registered as TMH in '
+      + 'functions/_lib/certificate-serial.js.',
+    open: [
+      'The engraved English and Arabic wording. Provisional, not approved.',
+      'Whether Abdulbasit Adedokun belongs to TMH as the Registrar has him, or '
+        + 'to IBT as certificate 000037 — ALREADY MINTED — has him.',
+      'The spelling of "Muhammad fatih", as the notice sets it.',
+      'A serial range. TMH would continue after QUR at 000075.',
+    ],
+  },
+  {
+    date: '2026-08-08',
+    on: 'Ashrof / Naheemah — one child each, or several?',
+    ruled: 'They are one. Student ID carry-overs applied to the Primary roll.',
+    open: [
+      'WHICH SPELLING IS ENGRAVED. Three exist for each child.',
+      'Whether certificates 000038 and 000039 — already minted under '
+        + '"Naheemah Ismail" and "Ashrof Akorede" — must be revoked and reissued.',
+    ],
+  },
+];
+
 const PUBLISHED = {
   IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
   IDD: 'docs/graduation-registers/2026-08-08-IDD-000042.json',
@@ -187,6 +217,14 @@ line(`  Registrar’s notice: ${regTotal} awards · ${strict(regAll)} distinct n
 line(`  Certificate rolls:  ${augTotal} awards · ${strict(augAll)} distinct names `
   + `· ${loose(augAll)} distinct children if short forms are merged.`);
 line('  The certificate system mints one permanent Student ID per DISTINCT NAME.');
+line();
+line('  ── RULINGS GIVEN, AND WHAT EACH LEAVES OPEN ────────────────────────────────');
+for (const r of RULINGS) {
+  line(`     ${r.date}  ${r.on}`);
+  line(`                 RULED: ${r.ruled}`);
+  for (const o of r.open) line(`                 STILL OPEN: ${o}`);
+}
+
 line();
 line('  THIS SCRIPT RESOLVES NOTHING. Both documents are official. The later one');
 line('  carries the Founder’s written rulings and has already been minted for two');

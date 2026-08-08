@@ -1,6 +1,6 @@
 # Graduation 2026 — full consistency audit
 
-**Date:** 8 August 2026 · **Revision 2** — extended after the Registrar's
+**Date:** 8 August 2026 · **Revision 3** — extended after the Registrar's
 Notice of 2 July 2026 was supplied.
 **Scope:** the ceremony programme, the running order, and every graduation
 certificate for the Class of 2026.
@@ -454,3 +454,95 @@ from the school's own stationery, and still unruled.
 The key alone is no longer the only blocker. Even with the key in hand, minting
 now would commit the August roll permanently. **The roll must be ruled on
 first.**
+
+---
+
+# REVISION 3 — the Founder's rulings of 8 August 2026
+
+Two rulings given. Both applied. Neither closes the batches.
+
+## 12 · "Yes, it's existing. Tamheediy."
+
+The preparatory stage is real. It is now registered as **`TMH`** in
+`functions/_lib/certificate-serial.js`, alongside `IBT`, `IDD` and `THN`, in the
+same shape they use.
+
+**The engraved wording is PROVISIONAL and marked as such in the code.** The
+English — *Tamhīdiyyah — Preparatory Stage* — follows the house pattern set by
+Ibtidā'iyyah and I'dādiyyah. The Arabic — **المرحلة التمهيدية** — is the standard
+stage name in the same المرحلة + adjective construction those two already carry,
+and the Founder's "Tamheediy" reads it as *tamhīdī*. **Neither string has been
+written out by him, so neither is approved**, and nothing can mint under the key
+regardless: no roster and no serial range exist for it. If the sequence is
+extended, TMH continues after QUR's 000074, at **000075**.
+
+### What this ruling opens rather than closes
+
+**Abdulbasit Adedokun has already been given an Ibtidā'iyyah certificate.**
+Certificate `SHRS-CERT-IBT-2026-000037-22C49`, minted and published. The
+Registrar's notice places him under **Tamhīdī**, not Ibtidā'iyyah. Now that the
+Tamhīdī stage is confirmed to exist, that is no longer a categorisation
+question — it is a question of whether a child is holding a certificate for the
+wrong stage. **This needs a ruling of its own, and it cannot be inferred from
+the one given.**
+
+Also unresolved: **"Muhammad fatih"**, as the notice sets it, with a lower-case
+family name and no other document to check it against.
+
+## 13 · "They are one."
+
+Presented with three spellings each for two children, the Founder ruled that
+each set is one child:
+
+| | Minted Ibtidā'iyyah certificate | Registrar's notice | Primary roll |
+|---|---|---|---|
+| | Naheemah Ismail · cert 000038 | Naheemah Ismaeel | Naheemah Ismai Seriki |
+| | Ashrof Akorede · cert 000039 | Ashrof Ojewumi | Ashraf Korede Ojewumi |
+
+### Applied
+
+Each now **carries her or his existing permanent Student ID** into the Primary
+batch instead of being minted a second one. Without this, the Primary run would
+have handed one child two permanent numbers — the single worst outcome this
+pipeline is built to prevent. Recorded in the roll with the date and the
+decision, exactly as every other ruling is.
+
+The Primary batch's fresh Student ID span accordingly shortens from 58–64 to
+**58–62**. The Qur'an College batch still starts at 65; the cross-batch gate
+confirms no collision, and the preflight passes.
+
+The gate was also **tightened while I was here**: it demanded a written ruling
+only for carry-overs matched on a *short form*. A match on a *different family
+name* — precisely what has just been ruled on — could have passed unruled. It
+now requires a ruling for any match that is not exact.
+
+### Not applied, because the ruling does not reach it
+
+**Which spelling is engraved.** The Founder confirmed an identity, not a
+re-spelling, so no printed name was changed. On his ruling, certificate 000039
+carries **Ashrof Akorede** — his middle name where his family name belongs — and
+000038 carries **Naheemah Ismail** where the Primary roll has **Ismai Seriki**.
+
+**Two questions follow, and both are his:**
+
+1. Which spelling should each child's certificates carry?
+2. Do certificates **000038** and **000039**, already minted and published, have
+   to be revoked and reissued to match? The name is hashed into the engraved
+   number, so a corrected name is a new certificate, not an amendment.
+
+---
+
+## 14 · Standing after these rulings
+
+| | |
+|---|---|
+| Certificates issued and published | 13 — **two now known to be spelled against the ruling**, one possibly for the wrong stage |
+| Certificates prepared, not minted | 27 |
+| Awards with a stage but no approved wording | **2** (Tamhīdī) |
+| Blocked on the signing key | all 27 |
+| Blocked on which roll governs | **all 27** |
+
+**The rulings did not unblock the batches.** The question that blocks them —
+whether the Registrar's 45 or the Founder's 40 is the roll of this ceremony — is
+still open, and it is the one that decides whether eighteen children receive a
+certificate on Saturday.

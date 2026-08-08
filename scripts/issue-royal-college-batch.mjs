@@ -170,9 +170,38 @@ ROLLS.SS = [
 // issued a new one here. If the Registrar's records show otherwise for any of
 // them, the number must be carried over instead and this roll amended — say
 // so and it is a one-line change per student.
+// FOUNDER'S RULING, 8 August 2026. Presented with three spellings each for two
+// children — across the minted Ibtida'iyyah register, the Registrar's Notice of
+// 2 July and this roll — he ruled: "They are one." Each set is ONE child.
+//
+//   Naheemah Ismail (IBT cert 000038) = Naheemah Ismaeel (Registrar)
+//     = Naheemah Ismai Seriki (here)
+//   Ashrof Akorede (IBT cert 000039) = Ashrof Ojewumi (Registrar)
+//     = Ashraf Korede Ojewumi (here)
+//
+// So each carries her or his EXISTING permanent Student ID rather than being
+// minted a second one. That is the whole force of the ruling and it is applied
+// below. Without it this batch would have handed one child two permanent
+// numbers — the single worst thing this pipeline can produce.
+//
+// WHAT THE RULING DOES NOT SETTLE, and what is therefore NOT changed here: the
+// SPELLING to engrave. Cert 000039 is already minted reading "Ashrof Akorede",
+// which on this ruling carries his middle name where his family name belongs.
+// The name printed here is still the one on the Founder's own roll, because he
+// confirmed an identity, not a re-spelling. Correcting either sheet is a
+// separate instruction, given separately — and on the minted one it means a
+// revoke-and-reissue, since the name is hashed into the engraved number.
 ROLLS.PRY = [
-  { en: 'Naheemah Ismai Seriki', sex: 'female' },
-  { en: 'Ashraf Korede Ojewumi', sex: 'male' },
+  { en: 'Naheemah Ismai Seriki', sex: 'female',
+    carryOverFrom: { register: 'IBT', name: 'Naheemah Ismail' },
+    matchedAs: 'different-family-name',
+    founderRuling: { date: '2026-08-08', decision: 'They are one. Same student; '
+      + 'Student ID carry-over approved.' } },
+  { en: 'Ashraf Korede Ojewumi', sex: 'male',
+    carryOverFrom: { register: 'IBT', name: 'Ashrof Akorede' },
+    matchedAs: 'different-family-name',
+    founderRuling: { date: '2026-08-08', decision: 'They are one. Same student; '
+      + 'Student ID carry-over approved.' } },
   { en: 'Al-ameen Okoh', sex: 'male' },
   { en: 'Al-ameen Abidemi Jokomba', sex: 'male' },
   { en: 'Aisha Lawal', sex: 'female' },

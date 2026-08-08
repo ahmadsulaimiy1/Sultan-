@@ -48,6 +48,27 @@ export const PROGRAMMES = {
     stageEn: 'the secondary educational stage',
     stageAr: 'المرحلة الثانوية',
   },
+  // The preparatory stage, which precedes Ibtida'iyyah. The Registrar's Notice
+  // of 2 July 2026 lists two graduands under "Islamiyyah (Tamyidi)"; no such
+  // award existed anywhere in this system, and the Founder confirmed on
+  // 8 August 2026 that the stage is real, giving the name as "Tamheediy".
+  //
+  // THE ENGRAVED WORDING BELOW IS PROVISIONAL AND MUST BE CONFIRMED BEFORE ANY
+  // TMH CERTIFICATE IS MINTED. The English follows the house pattern set by
+  // IBT and IDD; the Arabic is the standard stage name in the same
+  // المرحلة + adjective construction those two already use, and the Founder's
+  // "Tamheediy" reads it as tamhīdī. Neither string has been written out by
+  // him, so neither is approved yet — and nothing can mint under this key
+  // regardless: no roster and no serial range are defined for it. If the
+  // sequence is extended it continues after QUR's 000074, at 000075.
+  TMH: {
+    labelEn: 'Tamhīdiyyah — Preparatory Stage',
+    labelAr: 'المرحلة التمهيدية',
+    stageEn: 'the preparatory educational stage',
+    stageAr: 'المرحلة التمهيدية',
+    provisional: 'Wording awaiting the Founder’s written confirmation, '
+      + '8 August 2026. Do not mint under this key until it is given.',
+  },
 };
 
 // The canonical field set the content hash covers — one function used
