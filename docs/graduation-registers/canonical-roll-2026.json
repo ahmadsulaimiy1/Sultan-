@@ -5,8 +5,8 @@
   "generatedBy": "scripts/build-canonical-roll.mjs",
   "totals": {
     "awards": 45,
-    "children": 33,
-    "multipleAwards": 10
+    "children": 32,
+    "multipleAwards": 11
   },
   "categories": [
     {
@@ -51,9 +51,9 @@
       "count": 5,
       "names": [
         "Abdullah Oladimeji Anofi",
-        "Balogun Yaseer",
+        "Yaseer Balogun",
         "Baqi Olamiposi Anofi",
-        "Basit Jabarr",
+        "Abdulbasit Amobi Jabarr",
         "Thoirah Makinde"
       ]
     },
@@ -221,12 +221,31 @@
     },
     {
       "code": "IDD",
+      "asWritten": "Balogun Yaseer",
+      "chosen": "Yaseer Balogun",
+      "from": "Founder’s ruling, 8 Aug 2026 — name order corrected to given-name-first",
+      "seen": [
+        "Balogun Yaseer"
+      ]
+    },
+    {
+      "code": "IDD",
       "asWritten": "Baqi Anofi",
       "chosen": "Baqi Olamiposi Anofi",
       "from": "published IDD register",
       "seen": [
         "Baqi Anofi",
         "Baqi Olamiposi Anofi"
+      ]
+    },
+    {
+      "code": "IDD",
+      "asWritten": "Basit Jabarr",
+      "chosen": "Abdulbasit Amobi Jabarr",
+      "from": "published IDD register",
+      "seen": [
+        "Basit Jabarr",
+        "Abdulbasit Amobi Jabarr"
       ]
     },
     {

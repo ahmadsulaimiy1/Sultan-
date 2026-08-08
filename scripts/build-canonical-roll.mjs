@@ -103,7 +103,26 @@ const SAME_CHILD = [
     forms: ['Fateemah Ibrahim', 'Fatimah Desire Ibrahim'] },
   { why: 'Same given name and stage; Jokumba/Jokomba is one letter apart',
     forms: ['Anisa Jokumba', 'Anisa Opeyemi Jokomba'] },
+  // Ruled by the Founder, 8 August 2026: "They are one." Basit is the short
+  // form of Abdulbasit, and he holds two awards — I'dādiyyah and Senior
+  // Secondary. The rule could not merge these because the given names differ
+  // as strings, and it was right not to guess.
+  { why: 'Founder’s ruling, 8 Aug 2026 — Basit is Abdulbasit, one boy, two awards',
+    forms: ['Basit Jabarr', 'Abdulbasit Jabarr', 'Abdulbasit Amobi Jabarr'] },
 ];
+
+// Names the Founder has GIVEN, as distinct from names he has chosen between.
+// The fullest-form rule can only pick from forms this institution has written
+// down; where he supplies the form itself, it governs outright. Recorded here
+// rather than edited into the Registrar's transcription, so her document stays
+// verbatim and his correction stays visible beside it.
+const RULED_FORM = {
+  // 8 August 2026: "Yaseer Balogun is the name." The Registrar's notice has the
+  // family name standing first; every other name on the roll is
+  // given-name-first, and he confirmed the order.
+  'Balogun Yaseer': { to: 'Yaseer Balogun',
+    why: 'Founder’s ruling, 8 Aug 2026 — name order corrected to given-name-first' },
+};
 const RULED_ONE = SAME_CHILD.map((g) => g.forms);
 
 const norm = (s) => s.toLowerCase().replace(/[^a-z\s-]/g, '').trim();
@@ -144,6 +163,13 @@ for (const code of CODES) {
     // capital is not a spelling.
     const cased = asWritten.replace(/(^|\s)([a-z])/g,
       (m, p1, p2) => p1 + p2.toUpperCase());
+    // A form the Founder has given outright overrides the search entirely.
+    const ruled = RULED_FORM[asWritten];
+    if (ruled) {
+      derivations.push({ code, asWritten, chosen: ruled.to, from: ruled.why,
+        seen: [cased] });
+      return ruled.to;
+    }
     const cands = [{ n: cased, where: "Registrar's notice" }, ...variants];
     // Fullest = most name-parts; ties broken by the longer string, then by
     // preferring a source that is a permanent record.

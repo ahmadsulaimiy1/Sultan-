@@ -2,7 +2,7 @@
   "generatedBy": "scripts/plan-certificate-reissue.mjs",
   "authority": "Founder’s ruling, 8 August 2026 — the Registrar’s roll governs.",
   "spentThrough": 47,
-  "allocatedThrough": 87,
+  "allocatedThrough": 86,
   "actions": [
     {
       "kind": "KEEP",
@@ -93,12 +93,11 @@
       "id": "717188855323348"
     },
     {
-      "kind": "REVOKE",
+      "kind": "KEEP",
       "code": "IDD",
       "name": "Abdulbasit Amobi Jabarr",
       "cert": "SHRS-CERT-IDD-2026-000046-7E37A",
-      "id": "710433392511139",
-      "why": "not on the Registrar’s IDD roll"
+      "id": "710433392511139"
     },
     {
       "kind": "KEEP",
@@ -215,19 +214,11 @@
     },
     {
       "code": "IDD",
-      "name": "Balogun Yaseer",
+      "name": "Yaseer Balogun",
       "replaces": null,
       "identity": null,
       "identityFrom": null,
       "certificateSeq": 61
-    },
-    {
-      "code": "IDD",
-      "name": "Basit Jabarr",
-      "replaces": null,
-      "identity": null,
-      "identityFrom": null,
-      "certificateSeq": 62
     },
     {
       "code": "PRY",
@@ -235,7 +226,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 63
+      "certificateSeq": 62
     },
     {
       "code": "PRY",
@@ -243,7 +234,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 64
+      "certificateSeq": 63
     },
     {
       "code": "PRY",
@@ -251,7 +242,7 @@
       "replaces": null,
       "identity": "717721632196601",
       "identityFrom": "SHRS-CERT-IBT-2026-000039-518A8",
-      "certificateSeq": 65
+      "certificateSeq": 64
     },
     {
       "code": "PRY",
@@ -259,7 +250,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 66
+      "certificateSeq": 65
     },
     {
       "code": "PRY",
@@ -267,7 +258,7 @@
       "replaces": null,
       "identity": "710966169384396",
       "identityFrom": "SHRS-CERT-IBT-2026-000040-60DAF",
-      "certificateSeq": 67
+      "certificateSeq": 66
     },
     {
       "code": "PRY",
@@ -275,7 +266,7 @@
       "replaces": null,
       "identity": "714477095008816",
       "identityFrom": "SHRS-CERT-IBT-2026-000038-2944F",
-      "certificateSeq": 68
+      "certificateSeq": 67
     },
     {
       "code": "JSS",
@@ -283,7 +274,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 69
+      "certificateSeq": 68
     },
     {
       "code": "JSS",
@@ -291,7 +282,7 @@
       "replaces": null,
       "identity": "717988020633236",
       "identityFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
-      "certificateSeq": 70
+      "certificateSeq": 69
     },
     {
       "code": "JSS",
@@ -299,7 +290,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 71
+      "certificateSeq": 70
     },
     {
       "code": "JSS",
@@ -307,7 +298,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 72
+      "certificateSeq": 71
     },
     {
       "code": "JSS",
@@ -315,7 +306,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 73
+      "certificateSeq": 72
     },
     {
       "code": "JSS",
@@ -323,7 +314,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 74
+      "certificateSeq": 73
     },
     {
       "code": "JSS",
@@ -331,7 +322,7 @@
       "replaces": null,
       "identity": "710699780947768",
       "identityFrom": "SHRS-CERT-IDD-2026-000043-6EEAF",
-      "certificateSeq": 75
+      "certificateSeq": 74
     },
     {
       "code": "JSS",
@@ -339,7 +330,7 @@
       "replaces": null,
       "identity": "713944318135552",
       "identityFrom": "SHRS-CERT-IDD-2026-000044-8B125",
-      "certificateSeq": 76
+      "certificateSeq": 75
     },
     {
       "code": "JSS",
@@ -347,7 +338,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 77
+      "certificateSeq": 76
     },
     {
       "code": "JSS",
@@ -355,7 +346,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 78
+      "certificateSeq": 77
     },
     {
       "code": "JSS",
@@ -363,7 +354,7 @@
       "replaces": null,
       "identity": "714743483445443",
       "identityFrom": "SHRS-CERT-IBT-2026-000035-368DC",
-      "certificateSeq": 79
+      "certificateSeq": 78
     },
     {
       "code": "JSS",
@@ -371,7 +362,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 80
+      "certificateSeq": 79
     },
     {
       "code": "JSS",
@@ -379,7 +370,7 @@
       "replaces": null,
       "identity": "717455243759974",
       "identityFrom": "SHRS-CERT-IDD-2026-000042-56798",
-      "certificateSeq": 81
+      "certificateSeq": 80
     },
     {
       "code": "JSS",
@@ -387,7 +378,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 82
+      "certificateSeq": 81
     },
     {
       "code": "JSS",
@@ -395,7 +386,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 83
+      "certificateSeq": 82
     },
     {
       "code": "SS",
@@ -403,7 +394,7 @@
       "replaces": null,
       "identity": "710433392511139",
       "identityFrom": "SHRS-CERT-IDD-2026-000046-7E37A",
-      "certificateSeq": 84
+      "certificateSeq": 83
     },
     {
       "code": "SS",
@@ -411,7 +402,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 85
+      "certificateSeq": 84
     },
     {
       "code": "SS",
@@ -419,7 +410,7 @@
       "replaces": null,
       "identity": null,
       "identityFrom": null,
-      "certificateSeq": 86
+      "certificateSeq": 85
     },
     {
       "code": "SS",
@@ -427,19 +418,18 @@
       "replaces": null,
       "identity": "717188855323348",
       "identityFrom": "SHRS-CERT-IDD-2026-000045-F546F",
-      "certificateSeq": 87
+      "certificateSeq": 86
     }
   ],
-  "openNameQuestions": [
+  "openNameQuestions": [],
+  "ruledNameQuestions": [
     [
-      "Basit Jabarr (Registrar, I‘dādiyyah)",
-      "Abdulbasit Amobi Jabarr (Registrar SSS 3, and minted at 000046)",
-      "One boy holding two awards, or two boys? The given names differ as strings, so the rule cannot merge them and must not guess."
+      "Basit Jabarr vs Abdulbasit Amobi Jabarr",
+      "RULED: \"They are one.\" Basit is the short form of Abdulbasit; one boy, two awards. His I‘dādiyyah certificate 000046 already carries the fuller name for the right programme, so it is KEPT rather than revoked."
     ],
     [
-      "Balogun Yaseer (Registrar, I‘dādiyyah)",
-      "—",
-      "Family name appears to stand first. Every other name on the roll is given-name-first. Which order is engraved?"
+      "Balogun Yaseer",
+      "RULED: \"Yaseer Balogun is the name.\" Given-name-first, as every other name on the roll is."
     ]
   ]
 }

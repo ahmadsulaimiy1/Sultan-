@@ -82,7 +82,7 @@ The Registrar's roll became authoritative on 8 August 2026, after thirteen
 certificates had been minted against a different one. `scripts/plan-certificate-reissue.mjs`
 computes the consequence per certificate and writes
 `docs/graduation-registers/reissue-plan-2026.json`. Of the thirteen:
-**5 KEEP · 4 REISSUE · 4 REVOKE.**
+**6 KEEP · 4 REISSUE · 3 REVOKE.**
 
 ### Revoked outright — the holder is not on the Registrar's roll for that award
 
@@ -91,7 +91,7 @@ computes the consequence per certificate and writes
 | R-2026-001 | `SHRS-CERT-IBT-2026-000037-22C49` | Abdulbasit Adedokun | Ibtidā'iyyah | Tamhīdī graduand; no Ibtidā'iyyah entitlement |
 | R-2026-002 | `SHRS-CERT-IDD-2026-000042-56798` | Muhammad Ismail Seriki | I'dādiyyah | Not on the Registrar's I'dādiyyah roll |
 | R-2026-003 | `SHRS-CERT-IDD-2026-000044-8B125` | Faridah Ayomide Aliu | I'dādiyyah | Not on the Registrar's I'dādiyyah roll |
-| R-2026-004 | `SHRS-CERT-IDD-2026-000046-7E37A` | Abdulbasit Amobi Jabarr | I'dādiyyah | Not on the Registrar's I'dādiyyah roll — **see the open name question below** |
+| ~~R-2026-004~~ | `SHRS-CERT-IDD-2026-000046-7E37A` | Abdulbasit Amobi Jabarr | I'dādiyyah | **WITHDRAWN — the certificate stands.** See below. |
 
 ### Revoked and reissued — the right award, the wrong name
 
@@ -122,16 +122,28 @@ ever, and a revoked certificate has still been issued. All replacements and all
 new awards take **000048–000087**, forty numbers, allocated in
 `reissue-plan-2026.json`.
 
-### Two names must be ruled before any of this is minted
+### R-2026-004 · withdrawn on the ruling of 8 August 2026
 
-- **Basit Jabarr** (Registrar, I'dādiyyah) vs **Abdulbasit Amobi Jabarr**
-  (Registrar, SSS 3 — and the holder of revoked 000046). One boy with two
-  awards, or two boys? The given names differ as strings, so the rule cannot
-  merge them and must not guess. If they are one, R-2026-004 becomes a reissue
-  rather than a revocation.
-- **Balogun Yaseer** (Registrar, I'dādiyyah). The family name appears to stand
-  first; every other name on the roll is given-name-first. Which order is
-  engraved?
+> *"They are one, and Yaseer Balogun is the name."*
+
+**Basit is the short form of Abdulbasit.** One boy, holding two awards —
+I'dādiyyah and Senior Secondary. On the fullest-name rule his I'dādiyyah entry
+therefore reads **Abdulbasit Amobi Jabarr**, which is exactly what certificate
+`000046` already carries, for exactly that programme.
+
+So the revocation is withdrawn and **the certificate stands untouched**. This is
+the one case in the whole reconciliation where a ruling *saved* a sheet rather
+than costing one, and it is why the rule was written to refuse to merge two
+given names that differ as strings: had it guessed either way it would have been
+guessing about a child's identity, and half the time it would have been wrong.
+
+**Yaseer Balogun.** The Registrar's notice has the family name standing first;
+every other name on the roll is given-name-first. The order is corrected in
+`scripts/build-canonical-roll.mjs` under `RULED_FORM` — recorded there as a name
+the Founder *gave*, distinct from the names he chose between, and kept beside
+the Registrar's transcription rather than edited into it.
+
+**No name question remains open.**
 
 ---
 

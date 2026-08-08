@@ -50,6 +50,7 @@ const SAME_CHILD = [
   ['Fareedah Aliu', 'Faridah Aliu', 'Faridah Ayomide Aliu'],
   ['Fateemah Ibrahim', 'Fatimah Desire Ibrahim'],
   ['Anisa Jokumba', 'Anisa Opeyemi Jokomba'],
+  ['Basit Jabarr', 'Abdulbasit Jabarr', 'Abdulbasit Amobi Jabarr'],
 ];
 const norm = (s) => s.toLowerCase().replace(/[^a-z\s-]/g, '').trim();
 const parts = (s) => norm(s).split(/\s+/).filter(Boolean);
@@ -142,15 +143,22 @@ for (const r of toMint) {
 L('\n  ── NAMES THAT STILL NEED A RULING ──────────────────────────────────────');
 // Two forms the clustering deliberately refused to merge, because merging them
 // would be a guess about a child's identity rather than about a spelling.
-const OPEN = [
-  ['Basit Jabarr (Registrar, I‘dādiyyah)', 'Abdulbasit Amobi Jabarr (Registrar SSS 3, and minted at 000046)',
-    'One boy holding two awards, or two boys? The given names differ as strings, '
-    + 'so the rule cannot merge them and must not guess.'],
-  ['Balogun Yaseer (Registrar, I‘dādiyyah)', '—',
-    'Family name appears to stand first. Every other name on the roll is '
-    + 'given-name-first. Which order is engraved?'],
+// Both were ruled on 8 August 2026 and are closed. Kept as a record of what was
+// asked and what was answered, because a name question that has been settled is
+// still a name question that was once open.
+const OPEN = [];
+const CLOSED = [
+  ['Basit Jabarr vs Abdulbasit Amobi Jabarr',
+    'RULED: "They are one." Basit is the short form of Abdulbasit; one boy, two '
+    + 'awards. His I‘dādiyyah certificate 000046 already carries the fuller name '
+    + 'for the right programme, so it is KEPT rather than revoked.'],
+  ['Balogun Yaseer',
+    'RULED: "Yaseer Balogun is the name." Given-name-first, as every other name '
+    + 'on the roll is.'],
 ];
-for (const [a, b, why] of OPEN) { L(`     ${a}`); L(`     ${b === '—' ? '' : `vs   ${b}`}`); L(`          ${why}`); L(); }
+if (!OPEN.length) L('     (none — both were ruled on 8 August 2026)');
+L('\n  ── NAME QUESTIONS RULED ────────────────────────────────────────────────');
+for (const [q, a] of CLOSED) { L(`     ${q}`); L(`          ${a}`); L(); }
 
 if (process.argv.includes('--write')) {
   writeFileSync('docs/graduation-registers/reissue-plan-2026.json',
@@ -158,7 +166,7 @@ if (process.argv.includes('--write')) {
       generatedBy: 'scripts/plan-certificate-reissue.mjs',
       authority: 'Founder’s ruling, 8 August 2026 — the Registrar’s roll governs.',
       spentThrough: SPENT_TO, allocatedThrough: seq,
-      actions, toMint, openNameQuestions: OPEN,
+      actions, toMint, openNameQuestions: OPEN, ruledNameQuestions: CLOSED,
     }, null, 2)}\n`);
   L('  → docs/graduation-registers/reissue-plan-2026.json\n');
 }
