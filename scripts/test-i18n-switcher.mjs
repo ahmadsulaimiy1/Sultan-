@@ -38,7 +38,61 @@ await page.waitForSelector('[data-locale-option]', { state: 'attached' });
 check(await page.locator('[data-locale-option]').count() === 4,
   'switcher offers all four locales');
 
+/* Paint check, not a DOM check.
+ *
+ * This exists because a DOM-level assertion shipped a broken switcher to
+ * production. .topbar carries overflow:hidden to contain its animated
+ * shimmer, which clipped the dropdown to the bar's own height: the menu
+ * opened showing only "English" and swallowed العربية, Yorùbá and Français.
+ * Every option was in the DOM, every option had a real height, and
+ * Playwright's isVisible() returned true for all four — because it reports
+ * an element's own box, not whether an ancestor clips it away.
+ *
+ * elementFromPoint at each option's centre is the honest question: is this
+ * thing actually on screen where a person could click it? */
 await page.locator('.lang-switch > summary').click();
+await page.waitForTimeout(400);
+const painted = await page.evaluate(() =>
+  [...document.querySelectorAll('[data-locale-option)'.replace(')', ']'))].map((a) => {
+    const r = a.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return { label: a.textContent.trim(), painted: !!hit && (hit === a || a.contains(hit)) };
+  }));
+check(painted.length === 4 && painted.every((o) => o.painted),
+  `all four options are actually painted on screen, not merely in the DOM (${painted.map((o) => o.label + (o.painted ? '' : ' NOT-PAINTED')).join(', ')})`);
+
+/* Contrast check.
+ *
+ * Also from a live defect: the Clear edition darkens every topbar link
+ * (html[data-pc-theme="light"] .topbar a) at a specificity that outranked the
+ * dropdown's own colour, so dark ink landed on the dark panel at 1.97:1 and
+ * the four languages read as smudges. Paint alone would not have caught it —
+ * the pixels were there, they just could not be read. */
+const contrast = await page.evaluate(() => {
+  const toRgb = (s) => (s.match(/[\d.]+/g) || ['0', '0', '0']).slice(0, 3).map(Number);
+  const lum = (c) => {
+    const [r, g, b] = c.map((v) => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const menu = document.querySelector('.lang-switch-menu');
+  const bg = toRgb(getComputedStyle(menu).backgroundColor);
+  return [...document.querySelectorAll('[data-locale-option]')].map((a) => {
+    const fg = toRgb(getComputedStyle(a).color);
+    const l1 = lum(fg);
+    const l2 = lum(bg);
+    return {
+      label: a.textContent.trim(),
+      ratio: +((Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)).toFixed(2),
+    };
+  });
+});
+const worst = Math.min(...contrast.map((c) => c.ratio));
+check(worst >= 4.5,
+  `every language reads at WCAG AA or better against the panel (worst ${worst}:1)`);
+
 await page.locator('[data-locale-option="yo"]').click();
 await page.waitForURL('**/yo/academics/', { timeout: 5000 }).catch(() => {});
 // waitForURL resolves as soon as the URL changes, which can be before the new

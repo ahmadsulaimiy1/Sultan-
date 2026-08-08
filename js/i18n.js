@@ -190,12 +190,66 @@
           '<ul role="menu" class="lang-switch-menu">' + items + '</ul>' +
         '</details>';
     });
+    // innerHTML above replaced the control, so the per-control toggle
+    // listener that positions the fixed menu has to be re-attached.
+    bindMenuPositioning();
   }
 
   function escapeHtml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+
+  /* The menu is position:fixed so that .topbar's overflow:hidden — which is
+     there to contain its animated shimmer — cannot clip it. Fixed means the
+     viewport is the containing block, so the panel's coordinates have to be
+     computed from the summary rather than inherited from it.
+
+     Aligned by its inline-END edge to the summary's, because the switcher
+     sits at the far end of the topbar in both directions: hanging the panel
+     from the start edge pushes it off-screen in LTR. Clamped to the viewport
+     so it can never open partly outside the window on a narrow screen. */
+  function positionMenu(details) {
+    var summary = details.querySelector('summary');
+    var menu = details.querySelector('.lang-switch-menu');
+    if (!summary || !menu) return;
+
+    var r = summary.getBoundingClientRect();
+    var rtl = (document.documentElement.getAttribute('dir') || 'ltr') === 'rtl';
+    menu.style.top = Math.round(r.bottom + 6) + 'px';
+
+    // Measure after the top is set, since width can depend on layout.
+    var w = menu.offsetWidth || 192;
+    var left = rtl ? r.left : r.right - w;
+    var margin = 8;
+    left = Math.max(margin, Math.min(left, window.innerWidth - w - margin));
+    menu.style.left = Math.round(left) + 'px';
+    menu.style.insetInlineStart = 'auto';
+  }
+
+  function openMenus() {
+    return document.querySelectorAll('[data-lang-switch][open]');
+  }
+
+  function repositionOpen() {
+    openMenus().forEach(positionMenu);
+  }
+
+  /* `toggle` does not bubble, so it cannot be delegated from the document —
+     it is bound per control after every render. Scroll and resize are bound
+     once, and only do work while something is open. */
+  function bindMenuPositioning(root) {
+    (root || document).querySelectorAll('[data-lang-switch]').forEach(function (details) {
+      if (details.__shrsBound) return;
+      details.__shrsBound = true;
+      details.addEventListener('toggle', function () {
+        if (details.hasAttribute('open')) positionMenu(details);
+      });
+    });
+  }
+
+  window.addEventListener('scroll', repositionOpen, { passive: true });
+  window.addEventListener('resize', repositionOpen);
 
   // One delegated listener on the document, so switchers injected later
   // (the portal builds its topbar at runtime) work without re-binding.
