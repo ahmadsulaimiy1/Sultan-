@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      6eff26e4edb24afc94f91add7ece676e3cf9b708
-short       6eff26e4
+commit      89e351fc4b3d882bad3c618d085d3395ca644b03
+short       89e351fc
 branch      main
-subject     The chronometer on a phone, the regnal strip, and the 16fps defect
-built (UTC) 2026-08-09T14:59:17Z
+subject     A build stamp, so "has it deployed?" stops being unanswerable
+built (UTC) 2026-08-09T15:10:38Z
 assets      shrs-pwa-959c7f3b73
 pages       143
 

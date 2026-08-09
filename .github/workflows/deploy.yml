@@ -1,0 +1,225 @@
+name: Deploy — publish the site, and say what is actually live
+
+# WHY THIS EXISTS.
+#
+# Work was pushed to main, correctly and completely, three times over, and
+# the site did not change. Everything checkable from the repository was
+# right: the files tracked, every page rebuilt, the service worker's cache
+# version rolled over, HTML headers set to revalidate, nothing intercepting
+# static routes. And still nothing changed on the screen.
+#
+# The reason that could not be diagnosed is that publishing depended on a
+# Cloudflare Pages Git integration configured in a dashboard — invisible
+# from the repository, invisible from a browser, and silent when it does
+# not run. From outside, a deploy that never happened and a cache that will
+# not let go look exactly the same, and they need opposite fixes.
+#
+# So publishing moves here, where it leaves a log anybody can read.
+#
+# THE HALF THAT NEEDS NOTHING AT ALL.
+#
+# The development sandbox this site is built in cannot reach
+# shroyalschools.com — its egress proxy refuses the host — so nobody
+# working on the code could ever answer "what is the live site serving?"
+# A GitHub runner has no such restriction. The AUDIT job below therefore
+# asks the live site that question directly and writes the answer into the
+# run summary. It needs no secret and no permission, it runs on every push
+# and every week, and it will keep producing a dated, machine-made answer
+# from the moment it lands.
+#
+# THE HALF THAT NEEDS TWO SECRETS.
+#
+# The DEPLOY job publishes to the Cloudflare Pages project
+# `shroyalschools-web` (the project named in wrangler.toml and in
+# docs/shrs-infrastructure-activation-register.md). It needs:
+#
+#     CLOUDFLARE_API_TOKEN   an API token with the
+#                            "Cloudflare Pages: Edit" permission
+#     CLOUDFLARE_ACCOUNT_ID  the account ID from the Cloudflare dashboard
+#
+# added under Settings → Secrets and variables → Actions in this
+# repository. Until they are there the deploy SKIPS rather than fails, so
+# the audit still runs and still reports — a missing secret must not hide
+# the diagnosis it was added to obtain.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Once a week, so a deploy that quietly stops working cannot go
+    # unnoticed for another month.
+    - cron: '17 6 * * 1'
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    outputs:
+      expected: ${{ steps.build.outputs.expected }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        id: build
+        run: |
+          npm run build
+          echo "----- version.txt as built -----"
+          cat version.txt
+          # The fingerprint the live site should be carrying once this
+          # deploy lands. The audit job compares against it.
+          echo "expected=$(grep -m1 '^assets' version.txt | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+
+      - name: Fail if the build left conflict markers anywhere
+        run: |
+          # Merge markers reached the live site once already, inside the
+          # shared <head> of all 220 pages. Never again silently.
+          if grep -rlE '^(<<<<<<< |>>>>>>> )' \
+               --include='*.html' --include='*.css' --include='*.js' --include='*.json' \
+               . | grep -v node_modules | grep -q .; then
+            echo "::error::Merge conflict markers present in the build output."
+            grep -rlE '^(<<<<<<< |>>>>>>> )' \
+              --include='*.html' --include='*.css' --include='*.js' --include='*.json' \
+              . | grep -v node_modules
+            exit 1
+          fi
+          echo "No conflict markers. Good."
+
+      - name: Check for the deploy credentials
+        id: creds
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "ready=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Deploy skipped — credentials not set"
+              echo
+              echo "This workflow can publish the site, but it needs two secrets"
+              echo "in **Settings → Secrets and variables → Actions**:"
+              echo
+              echo '| Secret | Where to get it |'
+              echo '| --- | --- |'
+              echo '| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens → Create Token → permission **Cloudflare Pages: Edit** |'
+              echo '| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → Workers & Pages → the ID shown in the right-hand column |'
+              echo
+              echo "The audit below still ran, and still reports what the live site is serving."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publish to Cloudflare Pages
+        if: steps.creds.outputs.ready == 'yes'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=shroyalschools-web --branch=main
+
+  audit:
+    name: What is actually live
+    runs-on: ubuntu-latest
+    needs: deploy
+    # Runs even when the deploy was skipped or failed — reporting the live
+    # state is most valuable exactly when publishing did not work.
+    if: always()
+    steps:
+      - name: Ask the live site what it is serving
+        run: |
+          set -uo pipefail
+          EXPECTED='${{ needs.deploy.outputs.expected }}'
+          FAIL=0
+
+          probe () {
+            local url="$1" label="$2"
+            echo "## $label" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+            local code
+            code=$(curl -sS -m 45 -o /tmp/body -D /tmp/head -w '%{http_code}' "$url" || echo 000)
+            echo "HTTP $code  $url" | tee -a "$GITHUB_STEP_SUMMARY"
+
+            if [ "$code" = "000" ]; then
+              echo "UNREACHABLE from the runner." | tee -a "$GITHUB_STEP_SUMMARY"
+              echo '```' >> "$GITHUB_STEP_SUMMARY"
+              FAIL=1
+              return
+            fi
+
+            grep -iE '^(cf-cache-status|age|cache-control|last-modified):' /tmp/head \
+              | tee -a "$GITHUB_STEP_SUMMARY" || true
+
+            # The build stamp, if this deploy has ever landed.
+            local stamp
+            stamp=$(grep -o 'name="shrs-build" content="[^"]*"' /tmp/body | head -1 | sed 's/.*content="//;s/"//')
+            if [ -n "$stamp" ]; then
+              echo "build stamp   $stamp" | tee -a "$GITHUB_STEP_SUMMARY"
+              if [ -n "$EXPECTED" ] && [ "$stamp" != "$EXPECTED" ]; then
+                echo "EXPECTED      $EXPECTED   <-- live site is NOT this build" | tee -a "$GITHUB_STEP_SUMMARY"
+              fi
+            else
+              echo "build stamp   ABSENT — the live site predates the stamp, so this deploy has never landed" \
+                | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+
+            # Three things that only exist in the recent work.
+            for asset in armorial.css kinetic.css thrift.js; do
+              if grep -q "$asset" /tmp/body; then
+                echo "$asset        present" | tee -a "$GITHUB_STEP_SUMMARY"
+              else
+                echo "$asset        MISSING" | tee -a "$GITHUB_STEP_SUMMARY"
+              fi
+            done
+
+            # And the defect that was live for a while.
+            if grep -q '<<<<<<< HEAD' /tmp/body; then
+              echo "CONFLICT MARKERS PRESENT IN THE LIVE PAGE" | tee -a "$GITHUB_STEP_SUMMARY"
+              FAIL=1
+            fi
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          }
+
+          {
+            echo "# Live site report"
+            echo
+            echo "Taken $(date -u '+%Y-%m-%d %H:%M UTC') by a GitHub runner, which can reach the"
+            echo "site the development sandbox cannot."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          probe https://shroyalschools.com/                      "shroyalschools.com"
+          probe https://shroyalschools-web.pages.dev/            "shroyalschools-web.pages.dev (the Pages origin)"
+
+          echo "## The build stamp file" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          curl -sS -m 45 https://shroyalschools.com/version.txt 2>&1 | head -20 \
+            | tee -a "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          {
+            echo
+            echo "### How to read this"
+            echo
+            echo "* Stamp matches, assets present — publishing works. Anything still"
+            echo "  looking old is a cache on the way to the screen: reload bypassing"
+            echo "  cache, and close every window of the installed app once so its"
+            echo "  service worker can hand over."
+            echo "* Stamp absent or older, assets missing — publishing is the problem."
+            echo "  If the deploy job above was skipped, add the two secrets. If it ran"
+            echo "  and this still says missing, read its log."
+            echo "* The two hosts disagreeing — the Pages origin has the new build and"
+            echo "  the custom domain has not — is an edge cache on the domain."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit $FAIL
