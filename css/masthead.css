@@ -1293,16 +1293,44 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
    -------------------------------------------------------------------
    The band carrying the Hijri date, the hour and the next prayer sits
    at the very top of every page — it is the first thing the site says,
-   on all one hundred and forty-three of them — and it was a flat cream
-   bar with hairline separators. It is now struck: an espresso ground
-   with a gilt cornice above and below, engine-turned, its type set in
-   the display face in gold, its separators lozenges rather than rules,
-   and one slow travelling light running its whole length.
+   on all one hundred and forty-three of them.
 
-   It is dark in EVERY edition on purpose. This is chrome, not page:
-   the quick row directly beneath it is already espresso and gold, and
-   a gilt cornice above a cream page is the arrangement this band has
-   always been reaching for.
+   IT IS A BAR OF GOLD. Not a brown band with gold writing on it, which
+   is what it was and which is a different thing entirely.
+
+   Metal is not a colour, it is a RANGE, and that is the whole of the
+   difference. A flat gold fill reads as yellow paint. What makes a
+   surface read as struck metal is the way light falls across it: a
+   dark lip at the top where the bevel turns away, the tone rising
+   through the body, a narrow specular band where the surface faces the
+   light square on, then falling back through the deeper tones to a
+   second dark lip at the bottom. Eight stops, top to bottom, in that
+   order — that is the whole trick, and nothing else in this rule
+   matters half as much.
+
+   Four things are laid over it:
+
+     · a BRUSHED FINISH — hairline striations, a machined surface
+       rather than a polished mirror, because a mirror at this size
+       reads as plastic
+     · a MILLED EDGE — the fine vertical ticks along the top and bottom
+       lips, the way the rim of a struck coin is milled
+     · TWO DARK LIPS, in neutral black rather than brown, so the bevel
+       still reads when a reader chooses the sapphire, emerald, garnet
+       or platinum livery and the metal is no longer gold
+     · one travelling SPECULAR SWEEP, the light moving over the bar
+
+   The type is ENGRAVED, not printed: the darkest ink the livery has,
+   with a hairline of white beneath each letter, which is what a letter
+   cut into metal does to the light sitting in the cut. The separators
+   invert too — they were gold lozenges, invisible on gold, and are now
+   struck dark.
+
+   Every colour comes from the livery's own metal ramp (gl, gp, gb, g,
+   gd), deliberately NOT the gt/gt2/gt3 text golds: those invert for the
+   Midnight edition, and a bar of gold that turns pale in the dark is
+   not a bar of gold. The bar is the same metal in all three editions,
+   because a gilt cornice does not change when the room does.
 
    The strip also becomes the chronometer's home on a phone. There is
    no room for a 38mm dial in a 390px masthead beside the crest, the
@@ -1314,27 +1342,55 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
 .pc-islamic-strip{
   position:relative;overflow:hidden;
   background:
-    linear-gradient(90deg,rgba(var(--lv-gl,255,246,223),.05),transparent 22%,transparent 78%,rgba(var(--lv-gl,255,246,223),.05)),
-    repeating-linear-gradient(115deg,
-      rgba(var(--lv-gb,233,206,138),.055) 0 2px, transparent 2px 7px),
-    linear-gradient(180deg,#2A1B0C 0%,#1B1006 52%,#241608 100%)!important;
-  border-top:1px solid rgba(var(--lv-gb,233,206,138),.34)!important;
-  border-bottom:1px solid rgba(var(--lv-gd,156,122,60),.55)!important;
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.18),
-             inset 0 -1px 0 rgba(0,0,0,.5),
-             0 2px 10px -6px rgba(0,0,0,.6);
+    /* the milled edge — fine ticks along both lips, as on a coin rim */
+    repeating-linear-gradient(90deg,rgba(0,0,0,.20) 0 1px,transparent 1px 4px)
+      top    /100% 3px no-repeat,
+    repeating-linear-gradient(90deg,rgba(0,0,0,.20) 0 1px,transparent 1px 4px)
+      bottom /100% 3px no-repeat,
+    /* the brushed finish */
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.055) 0 1px,
+      rgba(0,0,0,.035) 1px 2px,
+      transparent 2px 5px),
+    /* the two bevel lips, neutral so they survive a change of metal */
+    linear-gradient(180deg,
+      rgba(0,0,0,.50),rgba(0,0,0,0) 10%,
+      rgba(0,0,0,0) 86%,rgba(0,0,0,.55)),
+    /* THE METAL: eight stops, dark lip -> body -> specular -> body -> dark lip */
+    linear-gradient(180deg,
+      rgb(var(--lv-gd,156,122,60))   0%,
+      rgb(var(--lv-g,198,161,91))   11%,
+      rgb(var(--lv-gb,233,206,138)) 29%,
+      rgb(var(--lv-gl,255,246,223)) 45%,
+      rgb(var(--lv-gp,243,226,188)) 55%,
+      rgb(var(--lv-gb,233,206,138)) 69%,
+      rgb(var(--lv-g,198,161,91))   85%,
+      rgb(var(--lv-gd,156,122,60)) 100%)!important;
+  border:0!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.60),
+    inset 0 -1px 0 rgba(0,0,0,.42),
+    0 4px 14px -6px rgba(var(--lv-gd,156,122,60),.75),
+    0 1px 0 rgba(0,0,0,.28);
 }
 /* The travelling light: one pass of gold along the cornice, slow
    enough to read as a highlight moving over metal. */
 .pc-islamic-strip::after{
   content:"";position:absolute;inset-block:0;inset-inline-start:-40%;
   width:34%;pointer-events:none;z-index:0;
-  background:linear-gradient(90deg,
+  /* Light moving over a polished bar: white at the core, warm at the
+     shoulders, and narrow — a wide soft glow reads as fog, not shine. */
+  background:linear-gradient(100deg,
     transparent,
-    rgba(var(--lv-gb,233,206,138),.13) 42%,
-    rgba(var(--lv-gl,255,246,223),.22) 50%,
-    rgba(var(--lv-gb,233,206,138),.13) 58%,
+    rgba(255,255,255,.07) 38%,
+    rgba(255,255,255,.30) 48%,
+    rgba(255,252,240,.42) 50%,
+    rgba(255,255,255,.30) 52%,
+    rgba(255,255,255,.07) 62%,
     transparent);
+  /* screen on a band this bright blows the specular to flat white and
+     the engraving under it disappears with it. Held back to a sheen. */
+  mix-blend-mode:screen;
   animation:rgn-sweep 13s linear infinite;
 }
 @keyframes rgn-sweep{to{transform:translateX(410%);}}
@@ -1352,27 +1408,40 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
   gap:16px!important;padding:8px 24px!important;
   color:rgb(var(--lv-gp,243,226,188))!important;
 }
-.pc-islamic-strip .pc-strip-item{
+/* ENGRAVED, not printed. A letter cut into metal is dark in the cut and
+   catches a hairline of light on the lower wall of the cut — which is
+   the whole of why the shadow below is white and the one above is
+   black. Reverse the two and the type reads as embossed instead, which
+   is a different object. */
+.pc-islamic-strip .pc-strip-item,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-item,
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-item{
   font-family:var(--font-label,'Cinzel',serif)!important;
-  font-size:.74rem;letter-spacing:.055em;font-weight:600;
-  color:rgb(var(--lv-gp,243,226,188))!important;
-  text-shadow:0 1px 0 rgba(0,0,0,.55);
+  font-size:.76rem;letter-spacing:.07em;font-weight:700;
+  color:rgb(var(--lv-cfd5,34,23,9))!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.55),
+              0 -1px 0 rgba(0,0,0,.18);
 }
 .pc-islamic-strip .pc-strip-clock{
-  color:rgb(var(--lv-gl,255,246,223))!important;
-  font-variant-numeric:tabular-nums;letter-spacing:.1em;
-  text-shadow:0 0 12px rgba(var(--lv-gb,233,206,138),.45),0 1px 0 rgba(0,0,0,.6);
+  color:rgb(var(--lv-cfd5,34,23,9))!important;
+  font-variant-numeric:tabular-nums;letter-spacing:.11em;font-weight:700;
+  text-shadow:0 1px 0 rgba(255,255,255,.6),0 -1px 0 rgba(0,0,0,.2);
 }
 .pc-islamic-strip .pc-strip-countdown{
-  color:rgba(var(--lv-gp,243,226,188),.78)!important;opacity:1;font-weight:500;}
-.pc-islamic-strip .pc-strip-icon{color:rgb(var(--lv-gb,233,206,138))!important;}
+  color:rgba(var(--lv-cfd5,34,23,9),.82)!important;opacity:1;font-weight:600;}
+.pc-islamic-strip .pc-strip-icon{
+  color:rgb(var(--lv-cfd5,34,23,9))!important;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.5));}
 
-/* A lozenge, not a rule. */
+/* The lozenges were gold, which on gold is nothing at all. Struck dark,
+   with a lit lower facet, they read as punched into the bar. */
 .pc-islamic-strip .pc-strip-sep{
-  width:6px!important;height:6px!important;flex:0 0 auto;
-  background:linear-gradient(140deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)))!important;
+  width:7px!important;height:7px!important;flex:0 0 auto;
+  background:linear-gradient(140deg,
+    rgba(var(--lv-cfd5,34,23,9),.85),rgba(var(--lv-cfd5,34,23,9),.55))!important;
   transform:rotate(45deg);
-  box-shadow:0 0 0 2px rgba(var(--lv-gb,233,206,138),.14);
+  box-shadow:0 0 0 1px rgba(0,0,0,.18),
+             1px 1px 0 rgba(255,255,255,.45);
 }
 /* An item that has nothing to say — the prayer slot before its times
    have resolved, or with prayer times switched off — takes its own
@@ -1381,19 +1450,30 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
 .pc-islamic-strip .pc-strip-item:empty{display:none;}
 .pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
 
-.pc-islamic-strip .pc-adhkar-link{
-  color:rgb(var(--lv-gb,233,206,138))!important;
-  border-bottom-color:rgba(var(--lv-gb,233,206,138),.45)!important;
+/* The Midnight edition lights every link on the page, with !important,
+   which is right everywhere except here: this link sits on a bar of
+   gold that does not go dark when the page does, and it measured
+   1.05:1 — near-white ink on pale metal. Naming the theme as well as
+   the bar settles it. */
+.pc-islamic-strip .pc-adhkar-link,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-adhkar-link,
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
+  color:rgb(var(--lv-cfd5,34,23,9))!important;
+  border-bottom-color:rgba(var(--lv-cfd5,34,23,9),.45)!important;
 }
 .pc-islamic-strip .pc-adhkar-link:hover{
-  color:rgb(var(--lv-gl,255,246,223))!important;
-  border-bottom-color:rgb(var(--lv-gb,233,206,138))!important;
+  color:rgb(var(--lv-cfd5,34,23,9))!important;
+  border-bottom-color:rgba(var(--lv-cfd5,34,23,9),.9)!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.75);
 }
 
 /* ---- the chronometer, in the strip -------------------------------- */
 .pc-islamic-strip .rlx{margin-inline-end:2px;}
 .pc-islamic-strip .rlx .rlx-dial{width:26px;height:26px;}
-.pc-islamic-strip .rlx-btn{filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));}
+/* On a bright bar the watch needs a seated shadow rather than a glow,
+   or it floats. */
+.pc-islamic-strip .rlx-btn{
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 3px 6px rgba(0,0,0,.28));}
 .pc-islamic-strip .rlx-pop{inset-inline-end:auto;inset-inline-start:-8px;transform-origin:top left;}
 [dir="rtl"] .pc-islamic-strip .rlx-pop{inset-inline-start:auto;inset-inline-end:-8px;transform-origin:top right;}
 
