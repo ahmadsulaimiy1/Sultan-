@@ -284,14 +284,52 @@ export async function pendingOperations() {
   return out.sort((a, b) => a.createdAt - b.createdAt);
 }
 
-export async function markOperation(operationId, syncState, serverAck = null) {
+/**
+ * Records the outcome of one delivery attempt.
+ *
+ * `lastAttemptAt` and `retryCount` together are what the sync engine reads to
+ * honour SYNC.retryBackoffMs — without the timestamp, "wait thirty seconds
+ * before trying again" has nothing to measure from, and a device that reloads
+ * mid-backoff would hammer a server that is already struggling.
+ *
+ * opts.countRetry is separate from the state because a transient failure goes
+ * back to 'pending' (it will be tried again) while still consuming an attempt.
+ * Only 'failed' is terminal.
+ */
+export async function markOperation(operationId, syncState, serverAck = null, opts = {}) {
   const db = await openDb();
   const row = await wrap(tx(db, STORE.queue).get(operationId));
   if (!row) return;
   row.syncState = syncState;
   row.serverAck = serverAck;
-  if (syncState === 'failed') row.retryCount += 1;
+  row.lastAttemptAt = Date.now();
+  if (syncState === 'failed' || opts.countRetry) row.retryCount += 1;
   await wrap(tx(db, STORE.queue, 'readwrite').put(row));
+}
+
+/**
+ * Removes a queued operation outright. Used only when a human has explicitly
+ * discarded a conflicted or failed edit — the engine itself never deletes an
+ * operation it could not deliver, because a silently dropped institutional
+ * write is exactly the failure this whole layer exists to prevent.
+ */
+export async function removeOperation(operationId) {
+  const db = await openDb();
+  await wrap(tx(db, STORE.queue, 'readwrite').delete(operationId));
+}
+
+/** Every queued operation regardless of state, newest last. For the UI that
+ *  has to show a person what is waiting, what failed, and what conflicted. */
+export async function allOperations() {
+  if (!sessionValid()) return [];
+  const db = await openDb();
+  const rows = await wrap(tx(db, STORE.queue).getAll());
+  const out = [];
+  for (const row of rows) {
+    const payload = await open(row.sealed);
+    out.push({ ...row, payload: payload || null, sealed: undefined });
+  }
+  return out.sort((a, b) => a.createdAt - b.createdAt);
 }
 
 /* ── Meta, device identity, sweeps, purge ────────────────────────────────── */

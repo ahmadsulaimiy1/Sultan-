@@ -118,13 +118,31 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Invalid period.' }, 400);
   }
 
+  // A completion queued on a phone with no signal belongs to the day it
+  // happened, not to the day the signal came back. The client may therefore
+  // name the date — but only within a window it could plausibly have been
+  // holding it: never the future, and never further back than the seven days
+  // the offline store keeps a record for. Outside that, the server's own
+  // "today" stands, because an unbounded client-supplied date is a way to
+  // fabricate a streak.
+  const today = new Date().toISOString().slice(0, 10);
+  let completionDate = today;
+  const claimed = body && typeof body.completionDate === 'string' ? body.completionDate.slice(0, 10) : null;
+  if (claimed && /^\d{4}-\d{2}-\d{2}$/.test(claimed)) {
+    const claimedMs = Date.parse(claimed + 'T00:00:00Z');
+    const todayMs = Date.parse(today + 'T00:00:00Z');
+    const sevenDays = 7 * 86400000;
+    if (Number.isFinite(claimedMs) && claimedMs <= todayMs && todayMs - claimedMs <= sevenDays) {
+      completionDate = claimed;
+    }
+  }
+
   try {
-    const today = new Date().toISOString().slice(0, 10);
     await sql`
       INSERT INTO adhkar_completions (guardian_id, period, completion_date, completed_at)
-      VALUES (${session.guardianId}, ${period}, ${today}, now())
+      VALUES (${session.guardianId}, ${period}, ${completionDate}, now())
       ON CONFLICT (guardian_id, period, completion_date) DO NOTHING`;
-    return json({ ok: true });
+    return json({ ok: true, completionDate });
   } catch (err) {
     console.error('portal adhkar POST error', err);
     return json({ error: 'Could not save your Adhkar progress right now.' }, 500);
