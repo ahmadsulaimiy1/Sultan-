@@ -10,6 +10,8 @@
      · the escalation, built from the safeguarding cards
      · the numbered undertakings
      · gilt motes drifting in the royal band
+     · the five institutions, filtered by the student's age
+     · the questions families ask
 
    One rule governs all of it: NOTHING HERE INVENTS A LABEL. Every
    name a figure prints is read out of a card already in the markup,
@@ -547,6 +549,107 @@
     band.insertBefore(layer, band.firstChild);
   }
 
+
+  /* =================================================================
+     7. THE INSTITUTIONS INSTRUMENT
+     -----------------------------------------------------------------
+     A comparison table is the right structure and a poor instrument.
+     The chips do the matching the reader was being asked to do in
+     their head. A row that does not fit is DIMMED, never removed: a
+     parent with a nine-year-old still wants to see what a fourteen-
+     year-old gets, and a filter that hides four fifths of a table
+     answers a narrower question than the one being asked.
+     ================================================================= */
+  function institutions() {
+    var tool = document.querySelector('.ins-tool');
+    if (!tool) return;
+    var chips = Array.prototype.slice.call(tool.querySelectorAll('.ins-chip'));
+    var rows = Array.prototype.slice.call(tool.querySelectorAll('.ins-table tbody tr'));
+    var note = tool.querySelector('[data-ins-note]');
+    if (!chips.length || !rows.length) return;
+
+    var ALL = note ? note.textContent.trim() : '';
+
+    function name(row) {
+      var b = row.querySelector('th b');
+      return b ? text(b) : '';
+    }
+
+    function apply(age, label) {
+      var fits = [];
+      rows.forEach(function (r) {
+        var min = parseFloat(r.getAttribute('data-min'));
+        var max = parseFloat(r.getAttribute('data-max'));
+        var ok = (age === null) || (age >= min && age <= max);
+        r.classList.toggle('is-fit', age !== null && ok);
+        r.classList.toggle('is-dim', age !== null && !ok);
+        if (age !== null && ok) fits.push(name(r));
+      });
+      if (!note) return;
+      if (age === null) { note.textContent = ALL; return; }
+      if (!fits.length) {
+        note.textContent = 'Nothing on this table is published for that age yet — '
+          + 'ask the admissions office, which answers directly.';
+        return;
+      }
+      note.textContent = (fits.length === 1 ? 'One institution takes ' : fits.length + ' institutions take ')
+        + label + ': ' + fits.join(' · ') + '.';
+    }
+
+    chips.forEach(function (chip) {
+      chip.setAttribute('aria-pressed', 'false');
+      chip.addEventListener('click', function () {
+        var raw = chip.getAttribute('data-age');
+        var age = raw === '' ? null : parseFloat(raw);
+        chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip && age !== null)); });
+        apply(age, (chip.textContent || '').trim().toLowerCase());
+      });
+    });
+  }
+
+  /* =================================================================
+     8. THE QUESTIONS
+     -----------------------------------------------------------------
+     <details> already opens, closes, prints and works with the script
+     blocked. Two things are added and nothing else: one panel open at
+     a time, and a height that animates instead of jumping. If either
+     fails, the accordion is still a working accordion.
+     ================================================================= */
+  function questions() {
+    var box = document.querySelector('[data-faq]');
+    if (!box) return;
+    var items = Array.prototype.slice.call(box.querySelectorAll('details'));
+    items.forEach(function (d) {
+      var body = d.querySelector('.faq-a');
+      d.addEventListener('toggle', function () {
+        if (!d.open) return;
+        items.forEach(function (o) { if (o !== d && o.open) o.open = false; });
+        if (still || !body) return;
+        /* Animate from nothing to the panel's own height, then release
+           it, so a long answer is never trapped at a measured height
+           if the type reflows afterwards. */
+        var h = body.scrollHeight;
+        body.style.overflow = 'hidden';
+        body.animate(
+          [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
+          { duration: 320, easing: 'cubic-bezier(.16,.8,.24,1)' }
+        ).onfinish = function () { body.style.overflow = ''; };
+      });
+    });
+  }
+
+  /* One pass of light across a head as it is reached — once, not on a
+     loop. A repeating shimmer on type is a cheap effect; one pass reads
+     as the light moving over gilt as you come to it. */
+  function sheen() {
+    Array.prototype.forEach.call(document.querySelectorAll('.arm-sheen'), arrive);
+  }
+
+  /* The medal on the recognition card draws itself like the rest. */
+  function recognition() {
+    Array.prototype.forEach.call(document.querySelectorAll('.rec-card'), arrive);
+  }
+
   /* ---------------------------------------------------------------- */
   function mount() {
     try { shield(); } catch (e) {}
@@ -556,6 +659,10 @@
     try { pledges(); } catch (e) {}
     try { signoff(); } catch (e) {}
     try { motes(); } catch (e) {}
+    try { institutions(); } catch (e) {}
+    try { questions(); } catch (e) {}
+    try { recognition(); } catch (e) {}
+    try { sheen(); } catch (e) {}
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);

@@ -619,3 +619,320 @@ html[data-pc-motion="reduced"] .st-rose-guilloche{animation:none!important;}
   .st-pl-seal{width:44px;height:44px;}
   .st-pl-seal svg{width:44px;height:44px;}
 }
+
+/* ===================================================================
+   PART TWO — THE INSTRUMENTS THE PAGE WAS MISSING
+   -------------------------------------------------------------------
+   The first part of this file answered how the page LOOKED. This part
+   answers what it did not SAY. Six sections were added to /about/ —
+   the five institutions compared, the campus, recognition, the
+   Foundation, the questions families ask, and a calling card — and
+   these are their furniture.
+
+    11. The institutions instrument
+    12. The campus groups
+    13. Recognition
+    14. The Foundation's six
+    15. The questions
+    16. The calling card
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   11. THE INSTITUTIONS INSTRUMENT
+   -------------------------------------------------------------------
+   A comparison table is the right structure and a poor instrument: six
+   columns of prose, and the reader still has to do the matching. The
+   age chips do the matching. A row that fits is lifted and gilded; a
+   row that does not is held back rather than hidden, because a parent
+   with a nine-year-old still wants to see what the fourteen-year-old
+   gets.
+   ------------------------------------------------------------------- */
+.ins-tool{
+  margin-top:30px;padding:26px 26px 22px;border-radius:24px;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 20px 44px -30px rgba(20,13,4,.35));
+}
+.ins-ask{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-bottom:20px;}
+.ins-ask-k{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--st-gold-t);
+}
+.ins-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.ins-chip{
+  font-family:var(--font-body,'Inter',sans-serif);font-size:.84rem;font-weight:600;
+  padding:8px 15px;border-radius:999px;cursor:pointer;
+  color:var(--st-ink-soft);background:transparent;
+  border:1px solid var(--st-line);
+  transition:background .3s var(--st-ease),color .3s var(--st-ease),
+             border-color .3s var(--st-ease),box-shadow .3s var(--st-ease);
+}
+.ins-chip:hover{border-color:rgba(var(--lv-gb,233,206,138),.8);color:var(--st-ink);}
+.ins-chip[aria-pressed="true"]{
+  background:linear-gradient(150deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)));
+  color:rgb(var(--lv-cfd5,34,23,9));border-color:transparent;
+  box-shadow:0 8px 18px -8px rgba(var(--lv-gd,156,122,60),.9);
+}
+.ins-note{margin:0;font-size:.84rem;color:var(--st-ink-soft);flex:1 1 100%;}
+.ins-note b{color:var(--st-ink);}
+
+/* Scroll shadows. The two `local` layers travel with the content and
+   cover the two `scroll` shadows as each end is reached, so a shadow
+   appears on exactly the side that still has table left on it — the
+   table says it scrolls, and says which way, without a word of copy or
+   a line of script. */
+.ins-scroll{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;
+  background:
+    linear-gradient(90deg,var(--st-plate),rgba(255,255,255,0)) left center / 34px 100% no-repeat local,
+    linear-gradient(270deg,var(--st-plate),rgba(255,255,255,0)) right center / 34px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%,rgba(var(--lv-gd,156,122,60),.30),transparent) left center / 16px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%,rgba(var(--lv-gd,156,122,60),.30),transparent) right center / 16px 100% no-repeat scroll;
+}
+.ins-table{width:100%;min-width:820px;border-collapse:separate;border-spacing:0;}
+.ins-cap{
+  caption-side:bottom;margin-top:12px;font-size:.76rem;line-height:1.5;
+  color:var(--st-ink-soft);text-align:start;
+}
+.ins-table thead th{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.64rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--st-gold-t);text-align:start;
+  padding:0 14px 11px;border-bottom:1px solid var(--st-line);white-space:nowrap;
+}
+.ins-table tbody th,.ins-table tbody td{
+  padding:16px 14px;vertical-align:top;font-size:.9rem;line-height:1.55;
+  color:var(--st-ink-soft);border-bottom:1px solid rgba(var(--lv-g,198,161,91),.18);
+  text-align:start;font-weight:400;
+}
+.ins-table tbody th{min-width:190px;}
+.ins-table tbody th b{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-weight:600;
+  font-size:1rem;color:var(--st-ink);margin-bottom:3px;
+}
+.ins-table tbody th span{
+  display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--st-gold-t);
+}
+.ins-table tbody td b{color:var(--st-ink);font-weight:600;}
+.ins-table tbody tr{transition:opacity .45s var(--st-ease);}
+.ins-table tbody tr > *{
+  transition:background .45s var(--st-ease),box-shadow .45s var(--st-ease);
+}
+/* The fit: a gilded band, and a lit rule down the leading edge. */
+.ins-table tbody tr.is-fit > *{background:rgba(var(--lv-gb,233,206,138),.16);}
+.ins-table tbody tr.is-fit > *:first-child{
+  box-shadow:inset 3px 0 0 rgb(var(--lv-g,198,161,91));
+  border-start-start-radius:12px;border-end-start-radius:12px;
+}
+.ins-table tbody tr.is-fit > *:last-child{
+  border-start-end-radius:12px;border-end-end-radius:12px;
+}
+[dir="rtl"] .ins-table tbody tr.is-fit > *:first-child{box-shadow:inset -3px 0 0 rgb(var(--lv-g,198,161,91));}
+.ins-table tbody tr.is-dim{opacity:.42;}
+.ins-table tbody tr.is-pending th b{opacity:.9;}
+.ins-foot{
+  margin:16px 0 0;font-size:.84rem;line-height:1.6;color:var(--st-ink-soft);
+}
+@media (max-width:720px){.ins-tool{padding:18px 14px 16px;}}
+
+/* -------------------------------------------------------------------
+   12. THE CAMPUS GROUPS
+   ------------------------------------------------------------------- */
+.cmp-grid{
+  display:grid;gap:22px;margin-top:32px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+.cmp-card{
+  position:relative;padding:28px 26px 24px;border-radius:20px;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 18px 40px -28px rgba(20,13,4,.32));
+  transition:transform .5s var(--st-ease),box-shadow .5s var(--st-ease);
+}
+.cmp-card:hover{transform:translateY(-4px);
+  box-shadow:0 28px 54px -26px rgba(var(--lv-gd,156,122,60),.6);}
+.cmp-card h3{
+  font-family:var(--font-label,'Cinzel',serif);font-size:1.12rem;
+  color:var(--st-ink);margin:0 0 8px;
+}
+.cmp-lede{margin:0 0 14px;font-size:.92rem;line-height:1.6;color:var(--st-ink-soft);}
+.cmp-list{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:9px;}
+.cmp-list li{
+  position:relative;padding-inline-start:20px;font-size:.92rem;line-height:1.5;
+  color:var(--st-ink);
+}
+.cmp-list li::before{
+  content:"";position:absolute;inset-inline-start:2px;top:.52em;
+  width:7px;height:7px;transform:rotate(45deg);
+  background:linear-gradient(140deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)));
+  box-shadow:0 0 0 2px rgba(var(--lv-g,198,161,91),.16);
+}
+.cmp-note{
+  margin:0;padding-top:13px;border-top:1px solid rgba(var(--lv-g,198,161,91),.22);
+  font-size:.82rem;line-height:1.55;color:var(--st-ink-soft);font-style:italic;
+}
+
+/* -------------------------------------------------------------------
+   13. RECOGNITION
+   ------------------------------------------------------------------- */
+.rec-grid{
+  display:grid;gap:22px;margin-top:32px;
+  grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+}
+.rec-card{
+  position:relative;padding:28px 26px 24px;border-radius:20px;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 18px 40px -28px rgba(20,13,4,.32));
+  transition:transform .5s var(--st-ease),box-shadow .5s var(--st-ease);
+}
+.rec-card:hover{transform:translateY(-4px);
+  box-shadow:0 28px 54px -26px rgba(var(--lv-gd,156,122,60),.6);}
+.rec-card h3{
+  font-family:var(--font-label,'Cinzel',serif);font-size:1.1rem;
+  color:var(--st-ink);margin:0 0 10px;
+}
+.rec-card p{margin:0 0 11px;font-size:.94rem;line-height:1.62;color:var(--st-ink-soft);}
+.rec-card p b{color:var(--st-ink);font-weight:600;}
+.rec-src{
+  margin:0!important;padding-top:12px;
+  border-top:1px solid rgba(var(--lv-g,198,161,91),.22);
+  font-size:.79rem!important;font-style:italic;
+}
+/* The medal: two ribbons and a struck disc, drawn as the card arrives. */
+.rec-medal{width:62px;height:76px;margin-bottom:14px;}
+.rec-medal svg{display:block;width:100%;height:auto;overflow:visible;}
+.rec-medal .rb{fill:rgba(var(--lv-g,198,161,91),.55);}
+.rec-medal .rb-r{fill:rgba(var(--lv-gd,156,122,60),.62);}
+.rec-medal .rk{
+  fill:none;stroke:rgb(var(--lv-gd,156,122,60));stroke-width:2.4;
+  stroke-dasharray:145;stroke-dashoffset:145;
+}
+.rec-medal .ri{fill:rgba(var(--lv-gb,233,206,138),.28);stroke:rgba(var(--lv-g,198,161,91),.6);stroke-width:1;}
+.rec-medal .rs{
+  fill:rgb(var(--lv-gd,156,122,60));opacity:0;transform:translateY(4px);
+  transition:opacity .7s var(--st-ease) .5s,transform .7s var(--st-ease) .5s;
+}
+html[data-pc-theme="dark"] .rec-medal .rk{stroke:rgb(var(--lv-gb,233,206,138));}
+html[data-pc-theme="dark"] .rec-medal .rs{fill:rgb(var(--lv-gb,233,206,138));}
+.rec-card.is-lit .rec-medal .rk{transition:stroke-dashoffset 1.3s var(--st-ease);stroke-dashoffset:0;}
+.rec-card.is-lit .rec-medal .rs{opacity:1;transform:none;}
+
+/* -------------------------------------------------------------------
+   14. THE FOUNDATION'S SIX
+   ------------------------------------------------------------------- */
+.fdn-list{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:f;}
+.fdn-list li{
+  position:relative;display:grid;grid-template-columns:44px 1fr;gap:14px;
+  align-items:start;padding:15px 18px;
+  font-size:.9rem;line-height:1.55;color:var(--st-ink-soft);
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  transition:transform .4s var(--st-ease),box-shadow .4s var(--st-ease),
+             border-color .4s var(--st-ease);
+}
+.fdn-list li:first-child{border-start-start-radius:18px;border-start-end-radius:18px;}
+.fdn-list li:last-child{border-end-start-radius:18px;border-end-end-radius:18px;}
+.fdn-list li + li{border-top:0;}
+.fdn-list li:hover{
+  transform:translateX(4px);border-color:rgba(var(--lv-gb,233,206,138),.7);
+  box-shadow:0 16px 32px -22px rgba(var(--lv-gd,156,122,60),.7);z-index:1;
+}
+[dir="rtl"] .fdn-list li:hover{transform:translateX(-4px);}
+/* .fdn-t exists because the description used to be a bare text node
+   beside the <b>. A text node that is a direct child of a grid
+   container becomes its own ANONYMOUS GRID ITEM — so it was being
+   placed in the 44px numeral column and wrapped to one word per line.
+   The title and its description are one cell, and this is the wrapper
+   that says so. */
+.fdn-list .fdn-t{display:block;min-width:0;}
+.fdn-list b{display:block;font-family:var(--font-label,'Cinzel',serif);
+  font-size:.98rem;color:var(--st-ink);margin-bottom:3px;}
+.fdn-n{
+  display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.78rem;
+  color:var(--st-gold-t);
+  border:1px solid rgba(var(--lv-g,198,161,91),.5);
+  background:radial-gradient(circle at 32% 26%,rgba(var(--lv-gb,233,206,138),.28),transparent 62%);
+}
+
+/* -------------------------------------------------------------------
+   15. THE QUESTIONS
+   -------------------------------------------------------------------
+   Built on <details>, so the answers are present and readable with
+   JavaScript off. The script only adds the one-at-a-time behaviour and
+   the height transition; it is not what makes the content reachable.
+   ------------------------------------------------------------------- */
+.faq{margin-top:30px;display:grid;gap:12px;max-width:900px;}
+.faq-i{
+  border-radius:16px;overflow:hidden;
+  background:linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 14px 32px -26px rgba(20,13,4,.3));
+  transition:border-color .4s var(--st-ease),box-shadow .4s var(--st-ease);
+}
+.faq-i[open]{
+  border-color:rgba(var(--lv-gb,233,206,138),.65);
+  box-shadow:0 22px 44px -26px rgba(var(--lv-gd,156,122,60),.6);
+}
+.faq-i > summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;
+  padding:18px 22px;font-family:var(--font-label,'Cinzel',serif);
+  font-size:1.02rem;color:var(--st-ink);
+}
+.faq-i > summary::-webkit-details-marker{display:none;}
+.faq-i > summary > span{flex:1;}
+.faq-i > summary:hover{background:rgba(var(--lv-g,198,161,91),.07);}
+.faq-i > summary:focus-visible{outline:2px solid rgb(var(--lv-g,198,161,91));outline-offset:-3px;}
+/* The marker: a gilt lozenge that turns to a bar as it opens. */
+.faq-i > summary > i{
+  flex:0 0 auto;position:relative;width:16px;height:16px;
+}
+.faq-i > summary > i::before,.faq-i > summary > i::after{
+  content:"";position:absolute;inset-inline-start:0;top:50%;width:16px;height:2px;
+  border-radius:2px;margin-top:-1px;
+  background:linear-gradient(90deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)));
+  transition:transform .45s var(--st-ease),opacity .45s var(--st-ease);
+}
+.faq-i > summary > i::after{transform:rotate(90deg);}
+.faq-i[open] > summary > i::after{transform:rotate(0);opacity:0;}
+.faq-a{padding:0 22px 20px;}
+.faq-a p{margin:0 0 11px;font-size:.96rem;line-height:1.72;color:var(--st-ink-soft);}
+.faq-a p:last-child{margin-bottom:0;}
+.faq-a b{color:var(--st-ink);font-weight:600;}
+
+/* -------------------------------------------------------------------
+   16. THE CALLING CARD
+   ------------------------------------------------------------------- */
+.card2{
+  position:relative;margin-top:28px;padding:38px 34px;border-radius:24px;
+  background:
+    radial-gradient(circle at 24% 16%,rgba(var(--lv-gb,233,206,138),.16),transparent 54%),
+    linear-gradient(168deg,var(--st-plate),var(--st-plate-2));
+  border:1px solid var(--st-line);
+  box-shadow:var(--pr-shadow-soft,0 24px 52px -32px rgba(20,13,4,.4));
+}
+.card2-grid{display:grid;gap:34px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+.card2-k{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--st-gold-t);
+  margin-bottom:14px;
+}
+.card2-v{
+  margin:0 0 12px;font-family:var(--font-label,'Cinzel',serif);
+  font-size:1.02rem;line-height:1.55;color:var(--st-ink);
+}
+.card2-v a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(var(--lv-g,198,161,91),.5);}
+.card2-v a:hover{border-bottom-color:rgb(var(--lv-g,198,161,91));}
+.card2-n{margin:0 0 10px;font-size:.85rem;line-height:1.6;color:var(--st-ink-soft);}
+.card2-hours{margin:0 0 12px;display:grid;gap:9px;}
+.card2-hours > div{
+  display:flex;justify-content:space-between;gap:14px;align-items:baseline;
+  border-bottom:1px dotted rgba(var(--lv-g,198,161,91),.4);padding-bottom:7px;
+}
+.card2-hours dt{font-size:.85rem;color:var(--st-ink-soft);}
+.card2-hours dd{
+  margin:0;font-family:var(--font-label,'Cinzel',serif);font-size:.9rem;
+  color:var(--st-ink);white-space:nowrap;
+}
+@media (max-width:640px){.card2{padding:26px 20px;}}

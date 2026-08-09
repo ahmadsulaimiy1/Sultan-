@@ -43,6 +43,50 @@ function read(relPath) {
   return fs.readFileSync(path.join(ROOT, relPath), 'utf8');
 }
 
+/* --- FAQ structured data -------------------------------------------------
+   A page carrying a [data-faq] accordion gets a schema.org FAQPage block
+   generated FROM that accordion, not written alongside it. Hand-authored
+   JSON-LD is the classic silent drift: the visible answer is edited, the
+   structured copy is not, and the search engine is then quoting a version
+   of the school's fee policy that no longer exists on the page. Generating
+   it at build time makes that impossible — and it means a translated
+   accordion produces translated structured data with no second source.
+
+   Anything that fails to parse is skipped rather than guessed at. */
+function withFaqSchema(html) {
+  if (html.indexOf('data-faq') < 0) return html;
+  const strip = (s) => s
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+  const items = [];
+  const detail = /<details\b[^>]*>([\s\S]*?)<\/details>/g;
+  let m;
+  while ((m = detail.exec(html)) !== null) {
+    const inner = m[1];
+    const q = /<summary\b[^>]*>([\s\S]*?)<\/summary>/.exec(inner);
+    const a = /<div class="faq-a"[^>]*>([\s\S]*?)<\/div>/.exec(inner);
+    if (!q || !a) continue;
+    const question = strip(q[1]);
+    const answer = strip(a[1]);
+    if (!question || !answer) continue;
+    items.push({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    });
+  }
+  if (!items.length) return html;
+  const block = '\n<script type="application/ld+json">'
+    + JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items })
+        .replace(/</g, '\\u003c')
+    + '</script>\n';
+  return html + block;
+}
+
 function fillTokens(template, tokens) {
   return Object.entries(tokens).reduce(
     (out, [key, value]) => out.split(`{{${key}}}`).join(value),
@@ -379,9 +423,9 @@ function buildPage(page, manifest) {
   const topbar = fillTokens(readPartial('topbar', lang), { ALT_HREF: altHref });
   const header = readPartial('header', lang);
   const announcementRibbon = readPartial('announcement-ribbon', lang);
-  const content = fillTokens(read(page.contentFile), {
+  const content = withFaqSchema(fillTokens(read(page.contentFile), {
     ADHKAR_STATIC: renderAdhkarStatic(lang),
-  });
+  }));
   const footer = readPartial('footer', lang);
   const assistant = readPartial('assistant', lang);
   const search = readPartial('search', lang);
@@ -471,6 +515,15 @@ function buildPage(page, manifest) {
   const storyScript = wantsStory ? '<script src="/js/story.js" defer></script>\n' : '';
 
   const mastheadHead = '<link rel="stylesheet" href="/css/masthead.css">\n';
+  // The armorial — the house's metalwork. It restyles the three pieces of
+  // furniture the whole site is built from (the icon mount, the hero
+  // medallion and the card) as struck and chased objects rather than
+  // drawn boxes. It ships on EVERY page, deliberately: the complaint it
+  // answers is that the site read as correct and anonymous, and a fix
+  // applied to eight pages would leave the other hundred and thirty-five
+  // exactly as they were. It changes no layout and repaints no glyph —
+  // see the rules at the head of css/armorial.css.
+  const armorialHead = '<link rel="stylesheet" href="/css/armorial.css">\n';
   const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n'
     + '<link rel="stylesheet" href="/css/clock.css">\n';
 
@@ -519,7 +572,7 @@ function buildPage(page, manifest) {
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
 ${head}${robotsTag}<link rel="stylesheet" href="/css/i18n.css">
-${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${homefxHead}${storyHead}${listenHead}${altTag}${headScripts}</head>
+${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${armorialHead}${homefxHead}${storyHead}${listenHead}${altTag}${headScripts}</head>
 <body${bodyAttr}>
 
 ${topbar}
