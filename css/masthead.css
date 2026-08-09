@@ -1289,188 +1289,118 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
 }
 
 /* ===================================================================
-   §18. THE REGNAL STRIP
+   §18. THE PANEL, AND THE ONE ROW
    -------------------------------------------------------------------
-   The band carrying the Hijri date, the hour and the next prayer sits
-   at the top of every page. It has now been wrong twice, in opposite
-   directions, and both failures came from the same mistake: treating a
-   LEGEND as a FEATURE.
+   The band carrying the Hijri date, the hour and the next prayer is
+   back to the way it was designed in css/personalisation.css, and this
+   section no longer restyles a single thing about how it LOOKS.
 
-   First it was a slab of espresso. Then, asked for gold, a slab of
-   polished gold — which was worse, because a full-width bar of bright
-   metal across the top of every page shouts, and the one thing luxury
-   never does is shout. A house that has to tell you it is grand is
-   telling you it is not.
+   I restyled it twice and was wrong twice — first an espresso slab,
+   then a bar of polished gold — and the lesson is worth leaving here
+   for whoever reads this next: THIS BAND IS A LEGEND, NOT A FEATURE.
+   It is read once, at a glance, and then it should be out of the way.
+   Both of my versions made the first thing on every page compete with
+   the crest beneath it. The quiet cream band was right all along.
 
-   THE THIRD ANSWER IS RESTRAINT, and it is the right one.
+   So nothing below sets a ground, a border, a type colour or an
+   ornament. Two things only are added, and both are structural:
 
-   Look at where gold actually appears on the objects this school would
-   want to be compared to — a Cartier box, the edge of a fine book, an
-   engraved calling card, the fascia of a good hotel. It is never a
-   field. It is a HAIRLINE, an EDGE, a small MARK, set against a quiet
-   ground. The value comes from the precision of the line and the space
-   around it, not from the quantity of metal.
+   1. THE CHRONOMETER'S SEAT. There is no room for a 38mm dial in a
+      390px masthead beside the crest, the reader, the search and the
+      menu, so on a narrow screen js/clock.js moves the watch into this
+      band — where the time already is, which is where a reader would
+      look for it. One instance, relocated; never a second dial drawn,
+      because a duplicate would keep its own time and the two would
+      visibly disagree inside a minute.
 
-   So the ground belongs to the page — ivory over parchment in the
-   Clear edition, black lacquer in Royal and Midnight — and every scrap
-   of gold in this band is in two places only:
+   2. ONE ROW, AT EVERY WIDTH. The band used to wrap onto a second line
+      on a phone, which is what a flex row does when it runs out of
+      space, and two ragged lines is not what a legend should look
+      like. It now holds a single row everywhere by giving up size
+      rather than giving up content: the type, the tracking, the gaps
+      and the dial all shrink together through the narrow widths, and
+      nothing is ever dropped or hidden. Measured to fit at 320px,
+      which is the narrowest screen still in real use.
+   =================================================================== */
 
-     · a FRENCH RULE above and below: the thick-thin pair a compositor
-       sets under a masthead, one firm line and one hairline with a
-       breath between them. It is four pixels of ornament and it does
-       more than thirty-six pixels of gold did.
-     · the small lozenges between the entries.
-
-   The type is engraved into that ground rather than laid on it, small
-   and generously letterspaced, because tracking is what makes a short
-   line of type read as inscribed rather than typed.
-
-   No sheen, no sweep, no travelling light. This band is the quietest
-   thing on the page on purpose — it is a legend, it is read once, and
-   then it should get out of the way. The movement belongs to the crest
-   and the plates beneath it, which are what a visitor came to look at.
-
-   The strip is also the chronometer's home on a phone. There is no
-   room for a 38mm dial in a 390px masthead beside the crest, the
-   reader, the search and the menu — so on a narrow screen the watch
-   goes where the time already is. js/clock.js moves the one instance;
-   it is never drawn twice, so it cannot drift out of step with itself.
-   ------------------------------------------------------------------- */
-.pc-islamic-strip{
-  position:relative;overflow:hidden;
-  background:
-    /* the French rule, above: one firm line, a breath, one hairline */
-    linear-gradient(180deg,
-      rgba(var(--lv-gd,156,122,60),.85) 0 1px,
-      transparent 1px 3px,
-      rgba(var(--lv-g,198,161,91),.42) 3px 4px,
-      transparent 4px) top/100% 4px no-repeat,
-    /* and below, mirrored, so the pair frames the line of type */
-    linear-gradient(0deg,
-      rgba(var(--lv-gd,156,122,60),.85) 0 1px,
-      transparent 1px 3px,
-      rgba(var(--lv-g,198,161,91),.42) 3px 4px,
-      transparent 4px) bottom/100% 4px no-repeat,
-    /* The ground is the page's own paper, but lit from the centre and
-       falling away at both rules — so the band reads as a slightly
-       recessed panel of vellum rather than as a third flat surface
-       stacked on the two flat surfaces around it. The topbar above and
-       the masthead below are both ivory; without this curvature the
-       three of them read as one washed-out block. */
-    linear-gradient(180deg,
-      rgb(var(--lv-p6,234,224,192)) 0%,
-      rgb(var(--lv-p2,252,250,246)) 48%,
-      rgb(var(--lv-p3,247,238,223)) 62%,
-      rgb(var(--lv-p6,234,224,192)) 100%)!important;
-  border:0!important;
-  box-shadow:none!important;
-}
-/* Royal and Midnight are dark editions; the band follows the chrome
-   rather than punching a pale hole in it. Black lacquer, same rules. */
-html[data-pc-theme="royal"] .pc-islamic-strip,
-html[data-pc-theme="dark"] .pc-islamic-strip{
-  background:
-    linear-gradient(180deg,
-      rgba(var(--lv-gb,233,206,138),.85) 0 1px,
-      transparent 1px 3px,
-      rgba(var(--lv-gb,233,206,138),.34) 3px 4px,
-      transparent 4px) top/100% 4px no-repeat,
-    linear-gradient(0deg,
-      rgba(var(--lv-gb,233,206,138),.85) 0 1px,
-      transparent 1px 3px,
-      rgba(var(--lv-gb,233,206,138),.34) 3px 4px,
-      transparent 4px) bottom/100% 4px no-repeat,
-    linear-gradient(180deg,#17110A,#100B06)!important;
-}
-
-/* .topbar .wrap sets space-between for the row above, and the strip's
-   inner IS a .wrap — so the three items were being flung to the two
-   ends of an 1180px measure with the hour marooned in the middle. The
-   strip is a legend, not a toolbar: it sits together, centred. */
-.topbar .pc-islamic-strip-inner,
-.pc-islamic-strip .pc-islamic-strip-inner{
-  position:relative;z-index:1;
-  display:flex;align-items:center;justify-content:center!important;
-  gap:18px!important;padding:9px 24px!important;
-}
-
-/* Engraved, not printed — and small. Tracking is what makes a short
-   line read as inscribed rather than typed. */
-.pc-islamic-strip .pc-strip-item,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-item,
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-item{
-  font-family:var(--font-label,'Cinzel',serif)!important;
-  font-size:.7rem;letter-spacing:.14em;font-weight:600;
-  color:rgb(var(--lv-cf2,51,40,28))!important;
-  text-shadow:0 1px 0 rgba(255,255,255,.5);
-}
-.pc-islamic-strip .pc-strip-clock{
-  color:rgb(var(--lv-cf2,51,40,28))!important;
-  font-variant-numeric:tabular-nums;letter-spacing:.16em;
-}
-.pc-islamic-strip .pc-strip-countdown{
-  color:rgba(var(--lv-cf2,51,40,28),.72)!important;opacity:1;font-weight:500;
-  letter-spacing:.08em;}
-.pc-islamic-strip .pc-strip-icon{color:rgba(var(--lv-gt3,99,72,27),.9)!important;}
-
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-item,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-item,
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-clock,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-clock{
-  color:rgb(var(--lv-gp,243,226,188))!important;
-  text-shadow:0 1px 0 rgba(0,0,0,.5);
-}
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-countdown,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-countdown{
-  color:rgba(var(--lv-gp,243,226,188),.74)!important;}
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-icon,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-icon{
-  color:rgba(var(--lv-gb,233,206,138),.9)!important;}
-
-/* Small. A separator that competes with the words it separates has
-   stopped being punctuation. */
-.pc-islamic-strip .pc-strip-sep{
-  width:4px!important;height:4px!important;flex:0 0 auto;
-  background:rgb(var(--lv-g,198,161,91))!important;
-  transform:rotate(45deg);box-shadow:none;
-}
-
-.pc-islamic-strip .pc-adhkar-link,
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-adhkar-link,
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
-  color:rgb(var(--lv-gt3,99,72,27))!important;
-  border-bottom-color:rgba(var(--lv-gt3,99,72,27),.4)!important;
-}
-html[data-pc-theme="dark"] .pc-islamic-strip .pc-adhkar-link,
-html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
-  color:rgb(var(--lv-gb,233,206,138))!important;
-  border-bottom-color:rgba(var(--lv-gb,233,206,138),.4)!important;
-}
-
-/* An item with nothing to say — the prayer slot before its times have
-   resolved — takes its own separator with it, so the strip never shows
-   a gap between two lozenges with nothing in between. */
-.pc-islamic-strip .pc-strip-item:empty{display:none;}
-.pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
-
-/* ---- the chronometer, in the strip -------------------------------- */
-.pc-islamic-strip .rlx{margin-inline-end:2px;}
-.pc-islamic-strip .rlx .rlx-dial{width:26px;height:26px;}
-/* On a bright bar the watch needs a seated shadow rather than a glow,
-   or it floats. */
-.pc-islamic-strip .rlx-btn{
-  filter:drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 3px 6px rgba(0,0,0,.28));}
+/* ---- 1. the chronometer's seat ------------------------------------ */
+.pc-islamic-strip .rlx{margin-inline-end:2px;flex:0 0 auto;}
+.pc-islamic-strip .rlx .rlx-dial{width:24px;height:24px;}
+.pc-islamic-strip .rlx-btn{filter:drop-shadow(0 2px 4px rgba(59,42,29,.4));}
 .pc-islamic-strip .rlx-pop{inset-inline-end:auto;inset-inline-start:-8px;transform-origin:top left;}
 [dir="rtl"] .pc-islamic-strip .rlx-pop{inset-inline-start:auto;inset-inline-end:-8px;transform-origin:top right;}
 
-@media (max-width:640px){
-  .pc-islamic-strip-inner{gap:5px 16px!important;padding:8px 14px!important;}
-  .pc-islamic-strip .pc-strip-item{font-size:.66rem;letter-spacing:.1em;}
-  /* The row wraps on a phone, and a wrapped row puts a separator at the
-     START of the second line — an orphan lozenge with nothing before it
-     to separate. Punctuation that begins a line is not punctuation, so
-     below this width the space does the separating on its own. */
-  .pc-islamic-strip .pc-strip-sep{display:none!important;}
+/* ---- 2. one row -----------------------------------------------------
+   nowrap is what forces the single line; everything else is what makes
+   a single line FIT, so that nowrap never turns into an overflow.
+
+   The type scales with the viewport rather than stepping at
+   breakpoints, because the widths in between are where a stepped scale
+   leaves a row a few pixels too long. min-width:0 lets the items
+   actually shrink — a flex item refuses to go below its content width
+   without it, which is the usual reason a "nowrap" row overflows
+   anyway. */
+/* SQUEEZED, not spread. The strip's inner element is a .wrap, and
+   .topbar .wrap sets justify-content:space-between for the contact row
+   above it — which beats personalisation.css's own centre on
+   specificity. So on a wide screen the three entries were flung to the
+   two ends of an 1180px measure with the hour marooned in the middle
+   and the separators stranded in open space. The band is a legend: it
+   reads as one line, sitting together. */
+.topbar .pc-islamic-strip-inner,
+.pc-islamic-strip .pc-islamic-strip-inner{
+  justify-content:center!important;
+  flex-wrap:nowrap!important;
+  gap:clamp(6px,1.6vw,14px)!important;
+  padding-inline:clamp(10px,3vw,24px)!important;
+  min-width:0;
+}
+
+/* An entry with nothing to say — the prayer slot before its times have
+   resolved, or with prayer times switched off — takes its own
+   separator with it. Otherwise the row carries a rule with nothing on
+   either side of it, which is what was leaving two orphan strokes
+   floating in the middle of the band. */
+.pc-islamic-strip .pc-strip-item:empty{display:none;}
+.pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
+.pc-islamic-strip .pc-strip-item{
+  min-width:0;flex:0 1 auto;
+  font-size:clamp(.58rem,1.75vw,.74rem);
+}
+/* The date is the one item that can lose a little of itself gracefully
+   at the very bottom of the range: it is the longest, and the hour
+   beside it is the thing being looked for. */
+.pc-islamic-strip .pc-strip-hijri{flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;}
+.pc-islamic-strip .pc-strip-clock,
+.pc-islamic-strip .pc-adhkar-link{flex:0 0 auto;}
+.pc-islamic-strip .pc-strip-sep{flex:0 0 auto;}
+
+@media (max-width:520px){
+  .pc-islamic-strip .rlx .rlx-dial{width:20px;height:20px;}
+  .pc-islamic-strip .pc-strip-item{letter-spacing:0;}
+}
+
+/* ---- 3. the Midnight ground, corrected -----------------------------
+   MEASURED, and this one is a real defect rather than a matter of
+   taste, which is why it is fixed here rather than left alone with the
+   rest of the panel's appearance.
+
+   The band's ground is built from the --lv-w238/--lv-w41 paper tokens.
+   Those inverted for the Midnight edition into MID tones rather than
+   dark ones, so the strip came out at rgb(69,59,35) — a murky olive —
+   while the topbar directly above it is rgb(16,11,5) and the masthead
+   directly below is rgb(23,16,9). A pale band stranded between two
+   near-black ones, and the light type on it measured 3.5:1, under the
+   4.5 it needs.
+
+   The correction is the smallest one that fixes both: the band takes
+   the tone of the chrome it sits in. Nothing here touches the Clear or
+   Royal editions, where the panel is exactly as it was designed.
+   ------------------------------------------------------------------- */
+html[data-pc-theme="dark"] .pc-islamic-strip{
+  background:linear-gradient(180deg,rgb(20,14,7),rgb(27,19,9))!important;
+  border-top-color:rgba(var(--lv-gb,233,206,138),.22)!important;
+  border-bottom-color:rgba(var(--lv-gb,233,206,138),.16)!important;
 }
 
 /* ===================================================================
