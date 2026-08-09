@@ -641,6 +641,11 @@
   /* One pass of light across a head as it is reached — once, not on a
      loop. A repeating shimmer on type is a cheap effect; one pass reads
      as the light moving over gilt as you come to it. */
+  /* The attestation seal closes and ticks as the stage is reached. */
+  function attestations() {
+    Array.prototype.forEach.call(document.querySelectorAll('.att-stage'), arrive);
+  }
+
   function sheen() {
     Array.prototype.forEach.call(document.querySelectorAll('.arm-sheen'), arrive);
   }
@@ -663,6 +668,7 @@
     try { questions(); } catch (e) {}
     try { recognition(); } catch (e) {}
     try { sheen(); } catch (e) {}
+    try { attestations(); } catch (e) {}
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);

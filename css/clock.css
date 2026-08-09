@@ -106,7 +106,15 @@ html[data-pc-theme="royal"] .rlx-zone,
 html[data-pc-theme="dark"] .rlx-zone{color:rgb(var(--lv-gb,233,206,138));
   border-top-color:rgba(233,206,138,.3);}
 
-@media (max-width:700px){.rlx{display:none;}}
+/* The watch is no longer withdrawn on a phone. Below the width at
+   which the masthead becomes a single tight row it either shrinks to
+   28mm and stays where it is, or — when the regnal strip is showing —
+   js/clock.js moves it into the strip, beside the hour it is telling.
+   One instance either way. */
+@media (max-width:700px){
+  .rlx-btn .rlx-dial{width:28px;height:28px;}
+  header.nav .rlx{margin-inline-start:auto;}
+}
 html[data-pc-ornament="none"] .rlx{display:none;}
 @media (prefers-reduced-motion:reduce){
   .rlx-btn,.rlx-pop,.rlx-btn .rlx-dial{transition:none;}

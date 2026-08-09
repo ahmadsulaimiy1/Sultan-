@@ -62,13 +62,24 @@ html[data-pc-theme="dark"] .st{
   --st-plate:rgb(var(--lv-w52,28,20,12));
   --st-plate-2:rgb(var(--lv-w52,28,20,12));
 }
-/* The royal band is dark in every theme, so the figures inside it take
-   the light ink whatever the reader has chosen. */
+/* The royal band's INK follows --lv-w06, which inverts correctly in all
+   three editions on its own. Its GOLD does not have that luxury: the
+   band is cream in the Clear edition and espresso in Royal and
+   Midnight, and no single livery token turns over at that boundary.
+   Measured both ways round while getting this wrong twice —
+   bright gold on the Clear band read 1.30:1, the text-safe dark gold on
+   the Royal band 1.86:1 — so the boundary is named here, once, for
+   everything that will ever sit on this band. */
 .pr-section.is-royal .st{
   --st-ink:rgb(var(--lv-w06,244,234,212));
   --st-ink-soft:rgba(var(--lv-w06,244,234,212),.80);
   --st-plate:rgba(255,255,255,.045);
   --st-plate-2:rgba(255,255,255,.03);
+  --st-gold-t:rgb(var(--lv-gt3,99,72,27));
+}
+html[data-pc-theme="royal"] .pr-section.is-royal .st,
+html[data-pc-theme="dark"] .pr-section.is-royal .st{
+  --st-gold-t:rgb(var(--lv-gb,233,206,138));
 }
 
 /* A figure is a piece of furniture in its own right: it gets a plate,
@@ -936,3 +947,88 @@ html[data-pc-theme="dark"] .rec-medal .rs{fill:rgb(var(--lv-gb,233,206,138));}
   color:var(--st-ink);white-space:nowrap;
 }
 @media (max-width:640px){.card2{padding:26px 20px;}}
+
+/* -------------------------------------------------------------------
+   17. THE ATTESTATION STAGE
+   -------------------------------------------------------------------
+   The one sentence on this page written by somebody who is not the
+   school was, until now, the smallest thing on it — a 300px pull-quote
+   wedged beside a list. It is set on the royal band now, at the size a
+   sentence like that is worth, and it types itself once as it is
+   reached because it is the only place on the page where the reader
+   should be made to slow down to the speed of the words.
+   ------------------------------------------------------------------- */
+.att-stage{
+  position:relative;max-width:900px;margin:34px auto 0;
+  padding:52px 46px 40px;border-radius:26px;text-align:center;
+  background:
+    radial-gradient(120% 90% at 50% 0%,rgba(var(--lv-gb,233,206,138),.14),transparent 62%),
+    linear-gradient(168deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid rgba(var(--lv-gb,233,206,138),.32);
+  box-shadow:0 34px 70px -40px rgba(0,0,0,.8),
+             inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.2);
+}
+.att-mark{
+  position:absolute;top:-2px;inset-inline-start:50%;transform:translateX(-50%);
+  font-family:var(--font-display,'Cormorant Garamond',serif);
+  font-size:6rem;line-height:1;pointer-events:none;
+  color:rgba(var(--lv-gb,233,206,138),.34);
+}
+[dir="rtl"] .att-mark{transform:translateX(50%);}
+.att-q{margin:22px 0 0;}
+.att-q p{
+  margin:0;font-family:var(--font-display,'Cormorant Garamond',serif);
+  font-size:clamp(1.32rem,3.1vw,2.05rem);line-height:1.42;font-style:italic;
+  color:var(--st-ink);
+}
+.att-by{
+  display:flex;align-items:center;justify-content:center;gap:15px;
+  margin-top:28px;
+}
+.att-seal{flex:0 0 auto;width:46px;height:46px;}
+.att-seal svg{display:block;width:46px;height:46px;overflow:visible;}
+.att-seal .t{fill:none;stroke:rgba(var(--lv-gb,233,206,138),.28);stroke-width:2;}
+.att-seal .a{
+  fill:none;stroke:rgb(var(--lv-gb,233,206,138));stroke-width:2.2;stroke-linecap:round;
+  stroke-dasharray:151;stroke-dashoffset:151;
+  transform:rotate(-90deg);transform-origin:50% 50%;
+}
+.att-seal .k{
+  fill:none;stroke:rgb(var(--lv-gl,255,246,223));stroke-width:2.6;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:26;stroke-dashoffset:26;
+}
+.att-stage.is-lit .att-seal .a{transition:stroke-dashoffset 1.2s var(--st-ease) .2s;stroke-dashoffset:0;}
+.att-stage.is-lit .att-seal .k{transition:stroke-dashoffset .5s var(--st-ease) 1.2s;stroke-dashoffset:0;}
+.att-who{text-align:start;}
+.att-who b{
+  display:block;font-family:var(--font-label,'Cinzel',serif);
+  font-size:1.02rem;color:var(--st-ink);
+}
+/* The bright gold is a DARK-GROUND gold. The royal band is dark in
+   Midnight but cream in the Clear and Royal editions — measured at
+   1.30:1 there — so the attribution takes the livery's text-safe
+   accent, which inverts with the ground on its own. */
+.att-who > span{
+  display:block;margin-top:2px;font-size:.78rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--st-gold-t);
+}
+.att-rule{
+  height:1px;margin:30px auto 22px;max-width:340px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-gb,233,206,138),.55),transparent);
+}
+.att-note{
+  margin:0 auto;max-width:660px;font-size:.88rem;line-height:1.72;
+  color:var(--st-ink-soft);
+}
+.att-note b{color:var(--st-ink);font-weight:600;}
+@media (max-width:640px){
+  .att-stage{padding:44px 20px 30px;}
+  .att-by{flex-direction:column;gap:10px;}
+  .att-who{text-align:center;}
+}
+@media (prefers-reduced-motion:reduce){
+  .att-seal .a,.att-seal .k{stroke-dashoffset:0!important;transition:none!important;}
+}
+html[data-pc-motion="reduced"] .att-seal .a,
+html[data-pc-motion="reduced"] .att-seal .k{stroke-dashoffset:0!important;transition:none!important;}

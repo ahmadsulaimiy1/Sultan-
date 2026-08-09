@@ -370,21 +370,17 @@ html[data-pc-theme="royal"]:not([data-pc-livery]) .mobile-quick-row{
    depth rather than as a pattern. Nothing here is ever in front of type. */
 html[data-pc-theme="royal"][data-pc-livery="royal"] header.nav > .mh-dust,
 html[data-pc-theme="royal"]:not([data-pc-livery]) header.nav > .mh-dust{
-  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
-  background-image:
+  --dust-a:
     radial-gradient(1.4px 1.4px at 12% 30%,rgba(255,246,223,.85),transparent 60%),
     radial-gradient(1.1px 1.1px at 34% 68%,rgba(233,206,138,.7),transparent 60%),
     radial-gradient(1.6px 1.6px at 57% 22%,rgba(255,246,223,.75),transparent 60%),
-    radial-gradient(1.2px 1.2px at 73% 55%,rgba(233,206,138,.65),transparent 60%),
+    radial-gradient(1.2px 1.2px at 73% 55%,rgba(233,206,138,.65),transparent 60%);
+  --dust-b:
     radial-gradient(1.5px 1.5px at 89% 34%,rgba(255,246,223,.8),transparent 60%),
     radial-gradient(1.1px 1.1px at 22% 82%,rgba(233,206,138,.6),transparent 60%),
     radial-gradient(1.3px 1.3px at 46% 90%,rgba(255,246,223,.6),transparent 60%),
     radial-gradient(1.2px 1.2px at 66% 12%,rgba(233,206,138,.7),transparent 60%);
-  background-size:640px 100%,640px 100%,640px 100%,640px 100%,
-                  980px 100%,980px 100%,980px 100%,980px 100%;
-  animation:mh-dust-a 44s linear infinite,mh-dust-b 67s linear infinite;}
-@keyframes mh-dust-a{to{background-position:640px 0,640px 0,640px 0,640px 0,0 0,0 0,0 0,0 0;}}
-@keyframes mh-dust-b{to{background-position:0 0,0 0,0 0,0 0,-980px 0,-980px 0,-980px 0,-980px 0;}}
+  opacity:.5;}
 
 /* ---- The wordmark, in gold leaf ------------------------------------ */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .brand-text .line1,
@@ -677,19 +673,17 @@ html[data-pc-theme="light"] .mobile-quick-row{
 
 /* ---- Gold dust, at the strength cream can carry -------------------- */
 html[data-pc-theme="light"] header.nav > .mh-dust{
-  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.42;
-  background-image:
+  --dust-a:
     radial-gradient(1.5px 1.5px at 12% 30%,rgba(176,133,58,.55),transparent 62%),
     radial-gradient(1.2px 1.2px at 34% 68%,rgba(198,161,91,.5),transparent 62%),
     radial-gradient(1.7px 1.7px at 57% 22%,rgba(176,133,58,.5),transparent 62%),
-    radial-gradient(1.3px 1.3px at 73% 55%,rgba(198,161,91,.45),transparent 62%),
+    radial-gradient(1.3px 1.3px at 73% 55%,rgba(198,161,91,.45),transparent 62%);
+  --dust-b:
     radial-gradient(1.6px 1.6px at 89% 34%,rgba(176,133,58,.5),transparent 62%),
     radial-gradient(1.2px 1.2px at 22% 82%,rgba(198,161,91,.42),transparent 62%),
     radial-gradient(1.4px 1.4px at 46% 90%,rgba(176,133,58,.42),transparent 62%),
     radial-gradient(1.3px 1.3px at 66% 12%,rgba(198,161,91,.5),transparent 62%);
-  background-size:640px 100%,640px 100%,640px 100%,640px 100%,
-                  980px 100%,980px 100%,980px 100%,980px 100%;
-  animation:mh-dust-a 44s linear infinite,mh-dust-b 67s linear infinite;}
+  opacity:.42;}
 
 /* ---- A bloom behind the crest rather than a burning halo ----------- */
 html[data-pc-theme="light"] .brand{isolation:isolate;}
@@ -1293,3 +1287,167 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
   .gw-q,.gw-q-i,.gateway-card-cta{transition:none!important;}
   .gateway-card::after{transform:scaleX(1);}
 }
+
+/* ===================================================================
+   §18. THE REGNAL STRIP
+   -------------------------------------------------------------------
+   The band carrying the Hijri date, the hour and the next prayer sits
+   at the very top of every page — it is the first thing the site says,
+   on all one hundred and forty-three of them — and it was a flat cream
+   bar with hairline separators. It is now struck: an espresso ground
+   with a gilt cornice above and below, engine-turned, its type set in
+   the display face in gold, its separators lozenges rather than rules,
+   and one slow travelling light running its whole length.
+
+   It is dark in EVERY edition on purpose. This is chrome, not page:
+   the quick row directly beneath it is already espresso and gold, and
+   a gilt cornice above a cream page is the arrangement this band has
+   always been reaching for.
+
+   The strip also becomes the chronometer's home on a phone. There is
+   no room for a 38mm dial in a 390px masthead beside the crest, the
+   reader, the search and the menu — so on a narrow screen the watch
+   goes where the time already is, which is where you would look for
+   it anyway. js/clock.js moves the one instance; it is never drawn
+   twice, so it cannot drift out of step with itself.
+   ------------------------------------------------------------------- */
+.pc-islamic-strip{
+  position:relative;overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(var(--lv-gl,255,246,223),.05),transparent 22%,transparent 78%,rgba(var(--lv-gl,255,246,223),.05)),
+    repeating-linear-gradient(115deg,
+      rgba(var(--lv-gb,233,206,138),.055) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg,#2A1B0C 0%,#1B1006 52%,#241608 100%)!important;
+  border-top:1px solid rgba(var(--lv-gb,233,206,138),.34)!important;
+  border-bottom:1px solid rgba(var(--lv-gd,156,122,60),.55)!important;
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.18),
+             inset 0 -1px 0 rgba(0,0,0,.5),
+             0 2px 10px -6px rgba(0,0,0,.6);
+}
+/* The travelling light: one pass of gold along the cornice, slow
+   enough to read as a highlight moving over metal. */
+.pc-islamic-strip::after{
+  content:"";position:absolute;inset-block:0;inset-inline-start:-40%;
+  width:34%;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,
+    transparent,
+    rgba(var(--lv-gb,233,206,138),.13) 42%,
+    rgba(var(--lv-gl,255,246,223),.22) 50%,
+    rgba(var(--lv-gb,233,206,138),.13) 58%,
+    transparent);
+  animation:rgn-sweep 13s linear infinite;
+}
+@keyframes rgn-sweep{to{transform:translateX(410%);}}
+[dir="rtl"] .pc-islamic-strip::after{animation-name:rgn-sweep-rtl;}
+@keyframes rgn-sweep-rtl{to{transform:translateX(-410%);}}
+
+/* .topbar .wrap sets space-between for the row above, and the strip's
+   inner IS a .wrap — so the three items were being flung to the two
+   ends of an 1180px measure with the hour marooned in the middle. The
+   strip is a legend, not a toolbar: it sits together, centred. */
+.topbar .pc-islamic-strip-inner,
+.pc-islamic-strip .pc-islamic-strip-inner{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center!important;
+  gap:16px!important;padding:8px 24px!important;
+  color:rgb(var(--lv-gp,243,226,188))!important;
+}
+.pc-islamic-strip .pc-strip-item{
+  font-family:var(--font-label,'Cinzel',serif)!important;
+  font-size:.74rem;letter-spacing:.055em;font-weight:600;
+  color:rgb(var(--lv-gp,243,226,188))!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.55);
+}
+.pc-islamic-strip .pc-strip-clock{
+  color:rgb(var(--lv-gl,255,246,223))!important;
+  font-variant-numeric:tabular-nums;letter-spacing:.1em;
+  text-shadow:0 0 12px rgba(var(--lv-gb,233,206,138),.45),0 1px 0 rgba(0,0,0,.6);
+}
+.pc-islamic-strip .pc-strip-countdown{
+  color:rgba(var(--lv-gp,243,226,188),.78)!important;opacity:1;font-weight:500;}
+.pc-islamic-strip .pc-strip-icon{color:rgb(var(--lv-gb,233,206,138))!important;}
+
+/* A lozenge, not a rule. */
+.pc-islamic-strip .pc-strip-sep{
+  width:6px!important;height:6px!important;flex:0 0 auto;
+  background:linear-gradient(140deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)))!important;
+  transform:rotate(45deg);
+  box-shadow:0 0 0 2px rgba(var(--lv-gb,233,206,138),.14);
+}
+/* An item that has nothing to say — the prayer slot before its times
+   have resolved, or with prayer times switched off — takes its own
+   separator with it, so the strip never shows a gap between two
+   lozenges with nothing in between. */
+.pc-islamic-strip .pc-strip-item:empty{display:none;}
+.pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
+
+.pc-islamic-strip .pc-adhkar-link{
+  color:rgb(var(--lv-gb,233,206,138))!important;
+  border-bottom-color:rgba(var(--lv-gb,233,206,138),.45)!important;
+}
+.pc-islamic-strip .pc-adhkar-link:hover{
+  color:rgb(var(--lv-gl,255,246,223))!important;
+  border-bottom-color:rgb(var(--lv-gb,233,206,138))!important;
+}
+
+/* ---- the chronometer, in the strip -------------------------------- */
+.pc-islamic-strip .rlx{margin-inline-end:2px;}
+.pc-islamic-strip .rlx .rlx-dial{width:26px;height:26px;}
+.pc-islamic-strip .rlx-btn{filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));}
+.pc-islamic-strip .rlx-pop{inset-inline-end:auto;inset-inline-start:-8px;transform-origin:top left;}
+[dir="rtl"] .pc-islamic-strip .rlx-pop{inset-inline-start:auto;inset-inline-end:-8px;transform-origin:top right;}
+
+@media (max-width:640px){
+  .pc-islamic-strip-inner{gap:11px!important;padding:7px 14px!important;}
+  .pc-islamic-strip .pc-strip-item{font-size:.68rem;}
+}
+@media (prefers-reduced-motion:reduce){.pc-islamic-strip::after{animation:none;opacity:0;}}
+html[data-pc-motion="reduced"] .pc-islamic-strip::after{animation:none;opacity:0;}
+
+/* ===================================================================
+   §19. THE GOLD DUST, REBUILT — the site's single worst frame cost
+   -------------------------------------------------------------------
+   MEASURED, and it is worth writing down exactly, because nothing else
+   on the site came close:
+
+       /about/  with the masthead's animations left alone   16 fps
+       /about/  with ONLY .mh-dust stopped                   57 fps
+
+   Every page. Not the eighty travelling lights, not the motes, not the
+   conic-gradient rims — one element. .mh-dust animated
+   BACKGROUND-POSITION across eight radial gradients on a full-width
+   sticky band, and background-position is not a compositor property.
+   Every frame, the browser re-rasterised eight radial gradients across
+   roughly 1400x130 pixels of always-visible chrome, sixty times a
+   second, to move some specks a few pixels sideways. The whole site
+   was paying for it on every page and every scroll.
+
+   The picture is identical. The mechanics are not: the specks now live
+   on two pseudo-element layers, each twice the width of the band and
+   tiled, and each is moved with transform: translate3d — which the
+   compositor does on its own thread for nothing. Each layer travels
+   exactly one tile width, so the loop is seamless.
+
+   The rule this leaves behind: NEVER ANIMATE BACKGROUND-POSITION ON
+   ANYTHING LARGE. Put the pattern on a wider layer and translate it.
+   =================================================================== */
+header.nav > .mh-dust{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+header.nav > .mh-dust::before,
+header.nav > .mh-dust::after{
+  content:"";position:absolute;top:0;bottom:0;inset-inline-start:0;
+  width:200%;will-change:transform;
+}
+header.nav > .mh-dust::before{
+  background-image:var(--dust-a);
+  background-size:320px 100%;
+  animation:mh-dust-a 44s linear infinite;
+}
+header.nav > .mh-dust::after{
+  background-image:var(--dust-b);
+  background-size:490px 100%;
+  animation:mh-dust-b 67s linear infinite;
+}
+@keyframes mh-dust-a{to{transform:translate3d(-320px,0,0);}}
+@keyframes mh-dust-b{to{transform:translate3d(490px,0,0);}}

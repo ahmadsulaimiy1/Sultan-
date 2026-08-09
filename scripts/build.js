@@ -523,7 +523,8 @@ function buildPage(page, manifest) {
   // applied to eight pages would leave the other hundred and thirty-five
   // exactly as they were. It changes no layout and repaints no glyph —
   // see the rules at the head of css/armorial.css.
-  const armorialHead = '<link rel="stylesheet" href="/css/armorial.css">\n';
+  const armorialHead = '<link rel="stylesheet" href="/css/armorial.css">\n'
+    + '<link rel="stylesheet" href="/css/kinetic.css">\n';
   const listenHead = '<link rel="stylesheet" href="/css/listen.css">\n'
     + '<link rel="stylesheet" href="/css/clock.css">\n';
 
@@ -619,7 +620,9 @@ ${personalisation}
 <script src="/js/mega.js" defer></script>
 <script src="/js/edge.js" defer></script>
 <script src="/js/clock.js" defer></script>
-${elevateScripts}${prestigeScripts}${idcardScripts}${homefxScript}${storyScript}${extraScripts}
+${elevateScripts}${prestigeScripts}${idcardScripts}${homefxScript}${storyScript}<script src="/js/kinetic.js" defer></script>
+<script src="/js/thrift.js" defer></script>
+${extraScripts}
 </body>
 </html>
 `;

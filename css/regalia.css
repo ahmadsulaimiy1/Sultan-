@@ -325,3 +325,60 @@ html[data-pc-motion="reduced"] .rg-edge{display:none;}
   .rg-edge{animation:none;opacity:.4;}
   .rg-edged.is-lit > .rg-edge{opacity:.4;}
 }
+
+/* ===================================================================
+   §8. THE DIAMOND
+   -------------------------------------------------------------------
+   The gold light in §7 is a highlight travelling over metal. This is a
+   different thing entirely, and it is why the two are drawn separately
+   rather than one being tinted into the other.
+
+   Gold reflects. A diamond REFRACTS — it splits what falls on it, and
+   what you see travelling across a cut stone is not a white streak but
+   a very tight white core with colour thrown off either side of it,
+   blue leading and warm trailing. That dispersion is the whole of the
+   effect; a plain white sweep reads as a screen glare and nothing else.
+
+   So the diamond light is: narrower than the gold (a hard core, not a
+   soft bloom), spectral at its shoulders, and turning the OTHER WAY.
+   Two lights running the same direction at different speeds read as
+   one light stuttering. Counter-rotating, they read as two facets of
+   one setting catching the room, which is what they are.
+
+   It is deliberately not everywhere. js/edge.js gives it only to the
+   crown shapes — the arrival panels, the crest, the stat plates, the
+   gold buttons — so it stays an event.
+   ------------------------------------------------------------------- */
+@property --rg-angle2{syntax:'<angle>';initial-value:0deg;inherits:false;}
+
+.rg-edge.is-diamond{
+  padding:1.1px;z-index:4;
+  background:conic-gradient(from var(--rg-angle2),
+    transparent 0deg 288deg,
+    rgba(148,196,255,.10) 300deg,
+    rgba(176,214,255,.62) 316deg,
+    rgba(226,242,255,.94) 325deg,
+    rgb(255,255,255) 330deg,
+    rgba(255,246,214,.86) 336deg,
+    rgba(255,206,222,.52) 344deg,
+    rgba(214,178,255,.16) 350deg,
+    transparent 356deg 360deg);
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.55));
+  animation-name:rg-orbit2;
+}
+@keyframes rg-orbit2{to{--rg-angle2:-360deg;}}
+.rg-edged.is-lit > .rg-edge.is-diamond{opacity:.42;}
+.rg-edged:hover > .rg-edge.is-diamond,
+.rg-edged:focus-within > .rg-edge.is-diamond{opacity:.95;}
+
+/* The gold button wears both, and wears them tighter: a control is a
+   smaller object than a panel and a 1.6px band on one reads as a
+   border rather than as a light. */
+.pr-btn.rg-edged > .rg-edge{padding:1.2px;}
+.pr-btn.rg-edged > .rg-edge.is-diamond{padding:.9px;}
+.pr-btn.is-gold.rg-edged.is-lit > .rg-edge{opacity:.7;}
+
+@media (prefers-reduced-motion:reduce){
+  .rg-edge.is-diamond{animation:none;opacity:.3;}
+  .rg-edged.is-lit > .rg-edge.is-diamond{opacity:.3;}
+}

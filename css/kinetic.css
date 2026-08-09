@@ -1,0 +1,175 @@
+/* ===================================================================
+   THE KINETIC LAYER — type that behaves like type
+   -------------------------------------------------------------------
+   Three instruments, and one rule that governs all three: THE WORDS
+   ARE ALWAYS IN THE PAGE. Nothing here is a script that types text
+   into an empty element — a reader with the script blocked, a screen
+   reader, and a search engine all get the sentence whole. What the
+   script animates is a copy marked aria-hidden; the real text is
+   either already visible or sitting in a visually-hidden span beside
+   it. An effect that can lose the sentence is not an effect, it is a
+   defect with a delay on it.
+
+     1. The royal ticker
+     2. The turning word
+     3. The line lift
+     4. Motion: Reduced
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   1. THE ROYAL TICKER
+   -------------------------------------------------------------------
+   A band of the things the school can actually be held to, moving
+   slowly enough to be read rather than glimpsed. It pauses the moment
+   a pointer rests on it or a key reaches it, because a line of text
+   that will not hold still while you read it is an insult dressed as
+   an effect.
+   ------------------------------------------------------------------- */
+.kx-ticker{
+  position:relative;overflow:hidden;
+  padding:0;margin:0;
+  background:
+    linear-gradient(90deg,rgba(var(--lv-gl,255,246,223),.06),transparent 18%,transparent 82%,rgba(var(--lv-gl,255,246,223),.06)),
+    repeating-linear-gradient(115deg,rgba(var(--lv-gb,233,206,138),.05) 0 2px,transparent 2px 8px),
+    linear-gradient(180deg,#2A1B0C,#170E05 55%,#221407);
+  border-top:1px solid rgba(var(--lv-gb,233,206,138),.34);
+  border-bottom:1px solid rgba(var(--lv-gd,156,122,60),.55);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.16),
+             inset 0 -1px 0 rgba(0,0,0,.5);
+}
+/* The two ends fade into the ground, so a line neither appears nor
+   vanishes at a hard edge. */
+.kx-ticker::before,.kx-ticker::after{
+  content:"";position:absolute;inset-block:0;width:88px;z-index:2;pointer-events:none;
+}
+.kx-ticker::before{inset-inline-start:0;background:linear-gradient(90deg,#1B1006,transparent);}
+.kx-ticker::after{inset-inline-end:0;background:linear-gradient(270deg,#1B1006,transparent);}
+[dir="rtl"] .kx-ticker::before{background:linear-gradient(270deg,#1B1006,transparent);}
+[dir="rtl"] .kx-ticker::after{background:linear-gradient(90deg,#1B1006,transparent);}
+
+.kx-track{display:flex;width:max-content;will-change:transform;}
+.kx-run{
+  display:flex;align-items:center;gap:0;flex:0 0 auto;
+  padding:13px 0;
+}
+.kx-item{
+  display:inline-flex;align-items:center;gap:14px;
+  padding-inline:22px;white-space:nowrap;
+  font-family:var(--font-label,'Cinzel',serif);
+  font-size:.82rem;letter-spacing:.055em;
+  color:rgb(var(--lv-gp,243,226,188));
+  text-shadow:0 1px 0 rgba(0,0,0,.55);
+}
+.kx-item b{color:rgb(var(--lv-gl,255,246,223));font-weight:600;}
+/* A lozenge between entries, struck the same way as the strip's. */
+.kx-item::after{
+  content:"";width:6px;height:6px;flex:0 0 auto;transform:rotate(45deg);
+  background:linear-gradient(140deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-gd,156,122,60)));
+  box-shadow:0 0 0 2px rgba(var(--lv-gb,233,206,138),.14);
+}
+.kx-ticker.is-running .kx-track{animation:kx-run var(--kx-dur,64s) linear infinite;}
+[dir="rtl"] .kx-ticker.is-running .kx-track{animation-name:kx-run-rtl;}
+@keyframes kx-run{to{transform:translateX(-50%);}}
+@keyframes kx-run-rtl{to{transform:translateX(50%);}}
+.kx-ticker:hover .kx-track,
+.kx-ticker:focus-within .kx-track{animation-play-state:paused;}
+
+/* One slow pass of light along the band, as on the regnal strip. */
+.kx-ticker .kx-sheen{
+  position:absolute;inset-block:0;inset-inline-start:-40%;width:30%;
+  z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-gb,233,206,138),.12) 44%,
+    rgba(var(--lv-gl,255,246,223),.2) 50%,
+    rgba(var(--lv-gb,233,206,138),.12) 56%,transparent);
+  animation:kx-sheen 15s linear infinite;
+}
+@keyframes kx-sheen{to{transform:translateX(440%);}}
+
+/* -------------------------------------------------------------------
+   2. THE TURNING WORD
+   -------------------------------------------------------------------
+   One noun in a sentence, replaced on a slow cycle. The five
+   institutions are five answers to the same sentence, and a list of
+   five would be read as a list; turned through one at a time, each is
+   read as a claim.
+   ------------------------------------------------------------------- */
+.kx-cycle{
+  display:inline-grid;vertical-align:baseline;
+  overflow:hidden;
+}
+.kx-cycle > .kx-word{
+  grid-area:1/1;
+  color:var(--kx-accent,rgb(var(--lv-gt3,99,72,27)));
+  opacity:0;transform:translateY(.55em) rotateX(-34deg);
+  transform-origin:50% 0;
+  transition:opacity .5s cubic-bezier(.16,.8,.24,1),transform .5s cubic-bezier(.16,.8,.24,1);
+}
+.kx-cycle > .kx-word.is-in{opacity:1;transform:none;}
+.kx-cycle > .kx-word.is-out{opacity:0;transform:translateY(-.55em) rotateX(34deg);}
+html[data-pc-theme="dark"] .kx-cycle > .kx-word{--kx-accent:rgb(var(--lv-gb,233,206,138));}
+/* The sizer holds the grid open at the width of the longest word, so
+   the sentence around it never jumps as the words turn. */
+.kx-cycle > .kx-sizer{grid-area:1/1;visibility:hidden;pointer-events:none;}
+
+/* -------------------------------------------------------------------
+   3. THE LINE LIFT
+   ------------------------------------------------------------------- */
+.kx-lines{display:block;}
+.kx-lines .kx-line{
+  display:block;overflow:hidden;
+}
+.kx-lines .kx-line > span{
+  display:inline-block;
+  transform:translateY(105%);opacity:0;
+  transition:transform .78s cubic-bezier(.16,.8,.24,1),opacity .78s cubic-bezier(.16,.8,.24,1);
+  transition-delay:var(--d,0s);
+}
+.kx-lines.is-lit .kx-line > span{transform:none;opacity:1;}
+
+/* -------------------------------------------------------------------
+   4. MOTION: REDUCED
+   -------------------------------------------------------------------
+   The ticker stops and becomes a list you scroll yourself; the turning
+   word settles on the first of its set; the lines are simply up.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .kx-ticker .kx-track{animation:none!important;}
+  .kx-ticker{overflow-x:auto;}
+  .kx-ticker .kx-sheen{display:none;}
+  .kx-lines .kx-line > span{transform:none!important;opacity:1!important;transition:none!important;}
+  .kx-cycle > .kx-word{transition:none!important;}
+}
+html[data-pc-motion="reduced"] .kx-ticker .kx-track{animation:none!important;}
+html[data-pc-motion="reduced"] .kx-ticker{overflow-x:auto;}
+html[data-pc-motion="reduced"] .kx-ticker .kx-sheen{display:none;}
+html[data-pc-motion="reduced"] .kx-lines .kx-line > span{
+  transform:none!important;opacity:1!important;transition:none!important;}
+html[data-pc-motion="reduced"] .kx-cycle > .kx-word{transition:none!important;}
+
+@media print{
+  .kx-ticker{background:none;border:0;}
+  .kx-ticker .kx-sheen,.kx-ticker::before,.kx-ticker::after{display:none;}
+  .kx-item{color:#000;text-shadow:none;}
+}
+
+/* ===================================================================
+   THRIFT — the paused state
+   -------------------------------------------------------------------
+   js/thrift.js marks a band [data-idle] when it is outside the
+   viewport, and the root [data-idle-all] when the tab is hidden. Both
+   states mean exactly one thing: stop turning, nobody is looking.
+
+   Only animation is paused, never transition and never opacity — a
+   paused ornament keeps whatever appearance it had, so scrolling back
+   to a band shows it exactly as it was left rather than mid-rebuild.
+   =================================================================== */
+[data-idle],
+[data-idle] *,
+[data-idle]::before,[data-idle]::after,
+[data-idle] *::before,[data-idle] *::after,
+html[data-idle-all] *,
+html[data-idle-all] *::before,
+html[data-idle-all] *::after{
+  animation-play-state:paused!important;
+}

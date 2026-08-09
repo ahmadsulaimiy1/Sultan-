@@ -113,10 +113,19 @@
       i += 1;
       // Hand-set rhythm: a compositor rests longer after punctuation than
       // between letters. Without this it reads as a machine, not a pen.
+      //
+      // The pace is derived from the LENGTH of the line, not fixed. At a
+      // constant 30ms a character, a six-word heading snaps past before
+      // the eye reaches it and a 168-character attestation takes fifteen
+      // seconds — measured — which is not an effect, it is a reader kept
+      // waiting. Every line now takes about the same four seconds to
+      // set, with the punctuation rests kept proportional so the rhythm
+      // survives the change of speed.
+      var base = Math.min(52, Math.max(11, 3800 / Math.max(1, full.length)));
       var delay =
-        ch === ',' || ch === ';' ? 240 :
-        ch === '.' || ch === '—' || ch === ':' ? 340 :
-        ch === ' ' ? 64 : 30 + Math.random() * 28;
+        ch === ',' || ch === ';' ? base * 5.5 :
+        ch === '.' || ch === '—' || ch === ':' ? base * 7.5 :
+        ch === ' ' ? base * 1.7 : base + Math.random() * base * 0.6;
       setTimeout(step, delay);
     })();
   }

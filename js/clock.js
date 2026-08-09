@@ -339,4 +339,66 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && host.classList.contains('is-open')) { closePop(); btn.focus(); }
   });
+
+  /* ------------------------------------------------------------------
+     WHERE THE WATCH LIVES
+     ------------------------------------------------------------------
+     The masthead at 390px already carries the crest, the reader, the
+     search and the menu; a 38mm dial does not fit beside them, which
+     is why the watch used to be withdrawn on a phone altogether. It is
+     not withdrawn any more — it moves.
+
+     Below the narrow breakpoint, and only while the regnal strip is
+     actually showing, the watch goes into the strip beside the hour it
+     is telling, which is where a reader would look for it in any case.
+     If the strip is off, it stays in the masthead at 28mm.
+
+     ONE INSTANCE, MOVED — never a second dial drawn. A duplicate would
+     have its own timer, its own IntersectionObserver and its own idea
+     of the hour, and the two would visibly disagree within a minute. A
+     comment node marks the seat in the masthead so the watch can always
+     be put back exactly where it sat.
+     ------------------------------------------------------------------ */
+  var NARROW = 700;
+  var seat = document.createComment('rlx-seat');
+  if (host.parentNode) host.parentNode.insertBefore(seat, host);
+
+  function stripInner() {
+    var strip = document.querySelector('.pc-islamic-strip');
+    if (!strip) return null;
+    // Hidden by the reader's own setting, or by CSS — either way, not a home.
+    if (!strip.classList.contains('is-visible')) return null;
+    if (getComputedStyle(strip).display === 'none') return null;
+    return strip.querySelector('.pc-islamic-strip-inner');
+  }
+
+  function place() {
+    var narrow = window.innerWidth <= NARROW;
+    var inner = narrow ? stripInner() : null;
+    if (inner) {
+      if (host.parentNode !== inner) {
+        closePop();
+        inner.insertBefore(host, inner.firstChild);
+      }
+      host.classList.add('is-instrip');
+    } else if (host.parentNode !== seat.parentNode || host.previousSibling !== seat) {
+      if (seat.parentNode) {
+        closePop();
+        seat.parentNode.insertBefore(host, seat.nextSibling);
+      }
+      host.classList.remove('is-instrip');
+    }
+  }
+
+  place();
+  var placeTimer = null;
+  function replace() {
+    window.clearTimeout(placeTimer);
+    placeTimer = window.setTimeout(place, 120);
+  }
+  window.addEventListener('resize', replace, { passive: true });
+  // The strip can be switched on or off from the Personalisation Centre
+  // while the page is open, which changes the answer to "is there a
+  // home for the watch down there?"
+  document.addEventListener('sultan:personalisation-changed', replace);
 })();

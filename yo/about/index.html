@@ -22,19 +22,13 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<<<<<<< HEAD
-<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
-<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
-=======
 <link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
 <link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
-<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
->>>>>>> origin/main
+<link rel="stylesheet" href="/css/regalia.css?v=af55f443de">
 <script>
 (function(){
   try{
@@ -91,12 +85,13 @@
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<link rel="stylesheet" href="/css/masthead.css?v=b4aaca0539">
+<link rel="stylesheet" href="/css/masthead.css?v=712e6d767b">
 <link rel="stylesheet" href="/css/armorial.css?v=03c38ae694">
-<link rel="stylesheet" href="/css/homefx.css?v=914ae7bedd">
-<link rel="stylesheet" href="/css/story.css?v=c9e87d4ce0">
+<link rel="stylesheet" href="/css/kinetic.css?v=99fda0f698">
+<link rel="stylesheet" href="/css/homefx.css?v=be4125eb52">
+<link rel="stylesheet" href="/css/story.css?v=c099a2fa67">
 <link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
-<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/" />
@@ -626,6 +621,27 @@
     </div>
   </div>
 </section>
+
+<!-- ===================== THE ROYAL TICKER =====================
+     Ten things the school can be held to, moving slowly enough to be
+     read rather than glimpsed, and pausing the moment a pointer rests
+     on the band. Every entry is sourced from a page of this site; the
+     markup carries one run and js/kinetic.js clones the second, so the
+     list is edited in exactly one place. -->
+<div class="kx-ticker" aria-label="What Sultan Hanafi Royal Schools can be held to">
+  <div class="kx-run">
+    <span class="kx-item">Founded <b>July 2016</b> &middot; Ikorodu, Lagos State</span>
+    <span class="kx-item"><b>Five institutions</b> &middot; one Board of Governors</span>
+    <span class="kx-item"><b>Two national curricula</b> &mdash; Nigerian and Saudi Arabian</span>
+    <span class="kx-item"><b>BECE &middot; WAEC &middot; NECO</b> &mdash; the same papers as every other candidate in Nigeria</span>
+    <span class="kx-item"><b>Ij&#257;zah</b> examined by named scholars, entered in the register under a unique reference</span>
+    <span class="kx-item"><b>Gold</b> at the SPELL Africa International Spelling Leaders Competition</span>
+    <span class="kx-item">Independently reported by <b>Punch Newspapers</b>, August 2023</span>
+    <span class="kx-item"><b>Thirteen dedicated rooms</b> &middot; three science laboratories</span>
+    <span class="kx-item">Every document we issue is <b>verifiable</b> &mdash; no account, no fee</span>
+    <span class="kx-item">Open to <b>Muslims and non-Muslims</b>, to sons and daughters alike</span>
+  </div>
+</div>
 
 <!-- Founder / Director's message -->
 <section class="pr-section is-ivory" id="founder">
@@ -1193,8 +1209,8 @@
 <!-- Welcome / commitments + testimonial -->
 <section class="pr-section" id="welcome">
   <div class="wrap">
-    <div class="pr-grid cols-2" style="gap:40px;align-items:center;">
-      <div class="pr-reveal">
+    <div class="pr-reveal" style="max-width:900px;">
+      <div>
         <p class="pr-eyebrow">Our Undertaking</p>
         <h2 class="pr-h2" style="font-size:clamp(1.6rem,3.6vw,2.3rem);">What This School Undertakes to Do</h2>
         <p class="pr-body">Every prospectus promises a safe and inclusive environment. Below is the same promise written as five things a family can hold us to, and check.</p>
@@ -1246,11 +1262,48 @@
           </li>
         </ol>
       </div>
-      <div class="pr-quote pr-glow-hover pr-reveal">
-        <div class="mk">&ldquo;</div>
-        <p>Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody.</p>
-        <div class="who">Dr. Ismail Akeem Seriki · Parent &amp; Board Member</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ATTESTATIONS =====================
+     The school's one published parent testimony was a 300px pull-quote
+     wedged beside a list. It is the only thing on this page written by
+     somebody who is not the school, which makes it the single most
+     valuable sentence here — and it was the smallest.
+
+     It now has a stage. The stage holds many; the school holds one.
+     That is stated rather than disguised, and the invitation beneath
+     it is how the second one arrives. NO ATTESTATION IS EVER SET HERE
+     THAT WAS NOT GIVEN — a school that writes its own reviews has
+     already told you what it is. -->
+<section class="pr-section is-royal mo-spot" id="attestations">
+  <div class="wrap st">
+    <div class="pr-reveal pr-center" style="max-width:760px;margin-inline:auto;">
+      <p class="pr-eyebrow is-centered">Attestations</p>
+      <h2 class="pr-h2" style="text-align:center;">What Somebody Who Is Not Us Has Said</h2>
+    </div>
+
+    <div class="att-stage pr-reveal">
+      <span class="att-mark" aria-hidden="true">&ldquo;</span>
+      <blockquote class="att-q">
+        <p class="pr-type" data-pr-type>Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody.</p>
+      </blockquote>
+      <div class="att-by">
+        <span class="att-seal" aria-hidden="true">
+          <svg viewBox="0 0 56 56" focusable="false">
+            <circle class="t" cx="28" cy="28" r="24"/>
+            <circle class="a" cx="28" cy="28" r="24"/>
+            <path class="k" d="M19 28.6 25.2 34.6 37.4 21.8"/>
+          </svg>
+        </span>
+        <span class="att-who">
+          <b>Dr. Ismail Akeem Seriki</b>
+          <span>Parent &amp; Board Member</span>
+        </span>
       </div>
+      <p class="att-rule" aria-hidden="true"></p>
+      <p class="att-note">This is the one attestation the school has published. It is set here under a name and a relationship, because an anonymous testimonial proves nothing and costs nothing to write. <b>If your child is here and you would put your name to a sentence about it</b>, the school will set it beside this one — <a href="/contact/">write to the Registrar's Office</a>.</p>
     </div>
   </div>
 </section>
@@ -2266,12 +2319,14 @@
 <script src="/js/listen.js?v=235af538fc" defer></script>
 <script src="/js/footer-live.js?v=9b675c12c3" defer></script>
 <script src="/js/mega.js?v=23b6a172e2" defer></script>
-<script src="/js/edge.js?v=2f8720cbef" defer></script>
-<script src="/js/clock.js?v=1867395bb8" defer></script>
-<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/edge.js?v=a505ed6b73" defer></script>
+<script src="/js/clock.js?v=c31a88dfc3" defer></script>
+<script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/homefx.js?v=f5babcd80a" defer></script>
-<script src="/js/story.js?v=5897c66ae7" defer></script>
+<script src="/js/story.js?v=3894b3e9b9" defer></script>
+<script src="/js/kinetic.js?v=3a0574ce67" defer></script>
+<script src="/js/thrift.js?v=630a23c507" defer></script>
 
 </body>
 </html>
