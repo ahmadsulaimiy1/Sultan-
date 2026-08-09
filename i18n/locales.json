@@ -38,7 +38,8 @@
       "script": "latin",
       "currency": "NGN",
       "fontStack": "'Cormorant Garamond', 'Inter', Georgia, serif",
-      "enabled": true
+      "enabled": true,
+      "switcherLabel": "Choose language"
     },
     {
       "code": "ar",
@@ -53,7 +54,8 @@
       "script": "arabic",
       "currency": "NGN",
       "fontStack": "'Amiri', 'Cairo', 'Noto Naskh Arabic', serif",
-      "enabled": true
+      "enabled": true,
+      "switcherLabel": "اختيار اللغة"
     },
     {
       "code": "yo",
@@ -68,7 +70,8 @@
       "script": "latin-extended",
       "currency": "NGN",
       "fontStack": "'Charis SIL', 'Gentium Plus', 'Noto Sans', 'Inter', Georgia, serif",
-      "enabled": true
+      "enabled": true,
+      "switcherLabel": "Yan èdè"
     },
     {
       "code": "fr",
@@ -83,7 +86,8 @@
       "script": "latin",
       "currency": "NGN",
       "fontStack": "'Cormorant Garamond', 'Inter', Georgia, serif",
-      "enabled": true
+      "enabled": true,
+      "switcherLabel": "Choisir la langue"
     }
   ]
 }

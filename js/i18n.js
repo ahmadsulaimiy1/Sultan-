@@ -179,7 +179,7 @@
 
       mount.innerHTML =
         '<details class="lang-switch" data-lang-switch>' +
-          '<summary aria-label="' + escapeAttr(I18N.translate(dicts, active, 'a11y.languageSwitcher')) + '">' +
+          '<summary aria-label="' + escapeAttr(switcherLabel(active)) + '">' +
             '<span class="lang-switch-globe" aria-hidden="true">' +
               '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5">' +
               '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/>' +
@@ -193,6 +193,22 @@
     // innerHTML above replaced the control, so the per-control toggle
     // listener that positions the fixed menu has to be re-attached.
     bindMenuPositioning();
+  }
+
+  /* The accessible name for the control.
+   *
+   * Public pages are pre-rendered in their language and deliberately fetch NO
+   * dictionary — that is what makes this system free at load time there. So
+   * translate() has nothing to look in and returns its ⟦key⟧ marker, and that
+   * marker was landing in the aria-label: a screen reader announced the
+   * switcher as "left double bracket a11y dot languageSwitcher". The label
+   * therefore comes from the locale REGISTRY, which every page already has,
+   * with the dictionary preferred when one happens to be loaded. */
+  function switcherLabel(code) {
+    var fromDict = I18N.translate(dicts, code, 'a11y.languageSwitcher');
+    if (fromDict.charAt(0) !== '⟦') return fromDict;
+    var l = I18N.get(code);
+    return l.switcherLabel || l.name || 'Choose language';
   }
 
   function escapeHtml(s) {

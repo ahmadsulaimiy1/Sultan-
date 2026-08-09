@@ -61,6 +61,17 @@ const painted = await page.evaluate(() =>
 check(painted.length === 4 && painted.every((o) => o.painted),
   `all four options are actually painted on screen, not merely in the DOM (${painted.map((o) => o.label + (o.painted ? '' : ' NOT-PAINTED')).join(', ')})`);
 
+/* The control's accessible name.
+ *
+ * Public pages fetch no dictionary by design, so translate() has nothing to
+ * look in and returns its ⟦key⟧ marker. That marker was reaching the
+ * aria-label, and a screen reader announced the switcher as
+ * "left double bracket a11y dot languageSwitcher". The label now comes from
+ * the locale registry, which every page carries. */
+const ariaLabel = await page.getAttribute('.lang-switch > summary', 'aria-label');
+check(!!ariaLabel && !ariaLabel.includes('\u27E6'),
+  `switcher has a real accessible name, not a missing-key marker ("${ariaLabel}")`);
+
 /* Contrast check.
  *
  * Also from a live defect: the Clear edition darkens every topbar link
