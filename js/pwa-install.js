@@ -8,11 +8,11 @@
 (function () {
   'use strict';
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
-    });
-  }
+  // Registration moved to js/shrs-connectivity.js, which also owns the
+  // update lifecycle (a waiting worker, the prompt, the reload). Two
+  // registrations for the same URL are harmless in themselves, but two
+  // owners of the reload-on-controllerchange rule are not — the page can
+  // end up reloading twice. One owner.
 
   var deferredPrompt = null;
   var STORAGE_KEY = 'shrsPwaInstallDismissed';

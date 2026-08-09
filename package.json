@@ -13,7 +13,8 @@
     "certificates:import": "node scripts/build-production-import.mjs",
     "certificates:accept": "node scripts/verify-certificate-acceptance.mjs",
     "certificates:rehearse": "node --import ./scripts/_lib/neon-pg-register.mjs scripts/verify-certificate-acceptance.mjs",
-    "test:offline": "node scripts/test-offline-foundation.mjs"
+    "test:offline": "node scripts/test-offline-foundation.mjs",
+    "test:offline:shell": "node scripts/test-offline-shell.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",

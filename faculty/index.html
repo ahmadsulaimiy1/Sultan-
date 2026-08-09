@@ -21,12 +21,13 @@
 <meta name="twitter:description" content="The named educators leading and teaching across our five institutions, organised by school.">
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<<<<<<< HEAD
-<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
-<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
-<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
-=======
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- crossorigin: without it this stylesheet comes back opaque, and an opaque
+     response is indistinguishable from a failure — so the service worker
+     could not tell a cached font sheet from a cached 404. Google serves
+     Access-Control-Allow-Origin: *, so asking for CORS costs nothing and
+     lets sw.js store only responses it can actually verify. -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
 <link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
@@ -34,7 +35,6 @@
 <link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
 <link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
->>>>>>> origin/main
 <script>
 (function(){
   try{
@@ -1619,7 +1619,8 @@
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
 <script src="/js/policies.js?v=6e17d51c0f" defer></script>
 <script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
-<script src="/js/pwa-install.js?v=1ef157657c" defer></script>
+<script src="/js/shrs-connectivity.js?v=87ecd45539" defer></script>
+<script src="/js/pwa-install.js?v=187a68e78b" defer></script>
 <script src="/js/intro.js?v=d736fc8544" defer></script>
 <script src="/js/listen.js?v=235af538fc" defer></script>
 <script src="/js/footer-live.js?v=9b675c12c3" defer></script>

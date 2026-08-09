@@ -16,7 +16,7 @@
  * FAIL LOUDLY: a test that cannot catch a safeguarding note reaching a device
  * is not a test, it is a comment.
  */
-import { chromium } from 'playwright';
+import { chromium } from 'playwright-core';
 import { createServer } from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
 import { extname, join } from 'node:path';

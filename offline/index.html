@@ -6,21 +6,249 @@
 <meta name="robots" content="noindex" />
 <title>You're Offline — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<!--
+  One document, four languages.
+
+  This page is never navigated to; it is handed over by sw.js in place of a
+  page that could not be reached. By the time it runs, the address it stands
+  in for is gone from its own point of view — so the worker writes both the
+  requested path and the language of that path into the document before
+  serving it (window.__SHRS_OFFLINE_LANG / __SHRS_OFFLINE_FROM). A visitor
+  who was reading /ar/about/ is answered in Arabic, right to left, and is
+  offered the Arabic homepage — not dropped into English.
+
+  Everything here is inline. A page whose whole purpose is to work with no
+  network cannot depend on a stylesheet or a script arriving.
+-->
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#3B2A1D;color:#F7EEDF;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;text-align:center;padding:24px;box-sizing:border-box;}
-  .wrap{max-width:420px;}
-  img{width:72px;height:64px;margin-bottom:20px;}
-  h1{font-size:1.4rem;margin:0 0 12px;color:#E9CE8A;}
-  p{font-size:0.98rem;line-height:1.6;color:rgba(247,238,223,0.85);margin:0 0 22px;}
-  button{background:#C6A15B;color:#221709;border:none;border-radius:999px;padding:12px 28px;font-size:0.95rem;font-weight:600;cursor:pointer;}
+  :root{
+    --ink:#F7EEDF; --ground:#3B2A1D; --gold:#C6A15B; --gold-bright:#E9CE8A;
+    --line:rgba(233,206,138,0.22);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:var(--ground);color:var(--ink);padding:32px 24px;
+    font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  }
+  html[lang='ar'] body{font-family:'Amiri','Cairo','Noto Naskh Arabic',serif;}
+  html[lang='yo'] body{font-family:'Charis SIL Yoruba','Charis SIL',Georgia,serif;}
+  .wrap{max-width:560px;width:100%;text-align:center;}
+  .crest{width:76px;height:auto;margin:0 0 22px;opacity:0.95;}
+  h1{font-size:1.7rem;line-height:1.3;margin:0 0 14px;color:var(--gold-bright);font-weight:600;}
+  p{
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    font-size:0.96rem;line-height:1.7;color:rgba(247,238,223,0.84);margin:0 0 20px;
+  }
+  html[lang='ar'] p{font-family:'Cairo','Inter',system-ui,sans-serif;}
+  html[lang='yo'] p{font-family:'Charis SIL Yoruba','Inter',system-ui,sans-serif;}
+  .requested{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.78rem;
+    color:rgba(247,238,223,0.55);word-break:break-all;margin:0 0 26px;
+  }
+  .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:34px;}
+  button,.link{
+    font-family:'Cinzel',Georgia,serif;font-size:0.84rem;letter-spacing:0.08em;
+    text-transform:uppercase;padding:12px 26px;border-radius:999px;cursor:pointer;
+    text-decoration:none;display:inline-block;border:1px solid var(--gold);
+  }
+  button{background:var(--gold);color:#221709;font-weight:600;}
+  .link{background:transparent;color:var(--gold-bright);}
+  button:hover{background:var(--gold-bright);}
+  .link:hover{background:rgba(198,161,91,0.14);}
+  .saved{border-top:1px solid var(--line);padding-top:24px;text-align:start;}
+  .saved h2{
+    font-family:'Cinzel',Georgia,serif;font-size:0.72rem;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 14px;font-weight:600;
+  }
+  .saved ul{list-style:none;margin:0;padding:0;}
+  .saved li{border-bottom:1px solid rgba(233,206,138,0.10);}
+  .saved a{
+    display:block;padding:10px 2px;color:var(--ink);text-decoration:none;
+    font-family:'Inter',system-ui,sans-serif;font-size:0.88rem;
+  }
+  .saved a:hover{color:var(--gold-bright);}
+  .saved .empty{
+    font-family:'Inter',system-ui,sans-serif;font-size:0.86rem;
+    color:rgba(247,238,223,0.6);line-height:1.65;margin:0;
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <img src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" />
-  <h1>You're currently offline</h1>
-  <p>This page couldn't be loaded because there's no internet connection right now. Anything you've visited recently may still be available from where you left off.</p>
-  <button type="button" onclick="location.reload()">Try Again</button>
+  <img class="crest" src="/assets/images/crest-full.png" alt="" />
+  <h1 data-t="heading">You're currently offline</h1>
+  <p data-t="body">This page hasn't been saved to this device, so it can't be opened without a connection.</p>
+  <p class="requested" data-requested hidden></p>
+  <div class="actions">
+    <button type="button" data-retry>Try Again</button>
+    <a class="link" data-home href="/">Homepage</a>
+  </div>
+  <div class="saved">
+    <h2 data-t="savedHead">Available on this device</h2>
+    <ul data-saved-list hidden></ul>
+    <p class="empty" data-t="savedNone" data-saved-empty>No pages have been saved yet. Once you have opened a page while connected, it will still open here without a connection.</p>
+  </div>
 </div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STR = {
+    en: {
+      title: "You're Offline — Sultan Hanafi Royal Schools",
+      heading: "You're currently offline",
+      body: "This page hasn't been saved to this device, so it can't be opened without a connection.",
+      retry: 'Try Again',
+      home: 'Homepage',
+      requested: 'Requested',
+      savedHead: 'Available on this device',
+      savedNone: 'No pages have been saved yet. Once you have opened a page while connected, it will still open here without a connection.',
+    },
+    ar: {
+      title: 'أنت غير متصل — مدارس السلطان حنفي الملكية',
+      heading: 'أنت غير متصل بالإنترنت حاليًا',
+      body: 'لم تُحفظ هذه الصفحة على هذا الجهاز، لذلك لا يمكن فتحها دون اتصال.',
+      retry: 'أعد المحاولة',
+      home: 'الصفحة الرئيسية',
+      requested: 'الصفحة المطلوبة',
+      savedHead: 'متاح على هذا الجهاز',
+      savedNone: 'لم تُحفظ أي صفحة بعد. بمجرد فتحك لصفحة أثناء الاتصال، ستظل تُفتح هنا دون اتصال.',
+    },
+    yo: {
+      title: 'O kò sí lórí ayélujára — Àwọn Ilé-ẹ̀kọ́ Ọba Sultan Hanafi',
+      heading: 'O kò sí lórí ayélujára báyìí',
+      body: 'A kò tí ì pa ojú-ìwé yìí mọ́ sínú ẹ̀rọ yìí, nítorí náà kò ṣeé ṣí láìsí ìsopọ̀.',
+      retry: 'Gbìyànjú Lẹ́ẹ̀kansí',
+      home: 'Ojú-ìwé Àkọ́kọ́',
+      requested: 'Ojú-ìwé tí a béèrè',
+      savedHead: 'Ó wà lórí ẹ̀rọ yìí',
+      savedNone: 'A kò tí ì pa ojú-ìwé kankan mọ́. Nígbà tí o bá ṣí ojú-ìwé kan pẹ̀lú ìsopọ̀, yóò ṣí síbí láìsí ìsopọ̀.',
+    },
+    fr: {
+      title: 'Vous êtes hors ligne — Écoles Royales Sultan Hanafi',
+      heading: 'Vous êtes actuellement hors ligne',
+      body: "Cette page n'a pas été enregistrée sur cet appareil ; elle ne peut donc pas être ouverte sans connexion.",
+      retry: 'Réessayer',
+      home: 'Accueil',
+      requested: 'Page demandée',
+      savedHead: 'Disponible sur cet appareil',
+      savedNone: "Aucune page n'a encore été enregistrée. Dès que vous ouvrirez une page en étant connecté, elle s'ouvrira aussi ici sans connexion.",
+    },
+  };
+
+  var PREFIX = { ar: '/ar', yo: '/yo', fr: '/fr' };
+  var DIR = { ar: 'rtl' };
+
+  function localeOf(path) {
+    for (var code in PREFIX) {
+      if (path === PREFIX[code] || path.indexOf(PREFIX[code] + '/') === 0) return code;
+    }
+    return 'en';
+  }
+
+  // The worker's injection is authoritative. The fallbacks below matter only
+  // when this page is opened directly (a bookmark, a developer, a browser
+  // restoring a tab) — in which case the reader's stored preference is the
+  // best evidence available.
+  var from = window.__SHRS_OFFLINE_FROM || '';
+  var lang = window.__SHRS_OFFLINE_LANG;
+  if (!lang) {
+    lang = from ? localeOf(from) : null;
+    if (!lang) {
+      try { lang = window.localStorage.getItem('shrsLocale'); } catch (e) { lang = null; }
+    }
+  }
+  if (!STR[lang]) lang = 'en';
+  var t = STR[lang];
+
+  var html = document.documentElement;
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', DIR[lang] || 'ltr');
+  document.title = t.title;
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-t]'), function (el) {
+    var key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+
+  var retry = document.querySelector('[data-retry]');
+  retry.textContent = t.retry;
+  retry.addEventListener('click', function () {
+    // Reload the address the visitor actually asked for, not this stand-in.
+    if (from) window.location.replace(from);
+    else window.location.reload();
+  });
+
+  var home = document.querySelector('[data-home]');
+  home.textContent = t.home;
+  home.setAttribute('href', (PREFIX[lang] || '') + '/');
+
+  if (from) {
+    var req = document.querySelector('[data-requested]');
+    req.textContent = t.requested + ': ' + from;
+    req.hidden = false;
+  }
+
+  // What IS readable right now. Enumerating the page cache turns a dead end
+  // into a table of contents — and it is honest, because every entry listed
+  // is a page the device can actually open at this moment.
+  var list = document.querySelector('[data-saved-list]');
+  var empty = document.querySelector('[data-saved-empty]');
+
+  function titleFromPath(path) {
+    var clean = path.replace(/\/$/, '');
+    var prefix = PREFIX[lang] || '';
+    if (prefix && clean.indexOf(prefix) === 0) clean = clean.slice(prefix.length);
+    if (!clean) return t.home;
+    var last = clean.split('/').filter(Boolean).pop() || '';
+    return last.replace(/-/g, ' ').replace(/^\w/, function (c) { return c.toUpperCase(); });
+  }
+
+  if (window.caches && caches.keys) {
+    caches.keys().then(function (names) {
+      var pageCaches = names.filter(function (n) { return /^shrs-pwa-.*-pages$/.test(n); });
+      return Promise.all(pageCaches.map(function (n) {
+        return caches.open(n).then(function (c) { return c.keys(); });
+      }));
+    }).then(function (groups) {
+      var seen = {};
+      var items = [];
+      groups.forEach(function (reqs) {
+        reqs.forEach(function (r) {
+          var p;
+          try { p = new URL(r.url).pathname; } catch (e) { return; }
+          if (seen[p]) return;
+          // Only offer pages in the language the reader is already in —
+          // a French reader handed a list of Arabic URLs is not helped.
+          if (localeOf(p) !== lang) return;
+          if (p === from) return;
+          seen[p] = true;
+          items.push(p);
+        });
+      });
+      if (!items.length) return;
+      items.sort();
+      items.slice(0, 12).forEach(function (p) {
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = p;
+        a.textContent = titleFromPath(p);
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      list.hidden = false;
+      empty.hidden = true;
+    }).catch(function () { /* no CacheStorage — the empty notice stands */ });
+  }
+
+  // If the connection comes back while this page is open, go straight to
+  // where the visitor was heading. No spinner, no second tap.
+  window.addEventListener('online', function () {
+    if (from) window.location.replace(from);
+  });
+})();
+</script>
 </body>
 </html>

@@ -192,17 +192,25 @@ function updateServiceWorkerVersion() {
     return; // no service worker in this checkout — nothing to do
   }
   const hash = crypto.createHash('md5');
-  ['css', 'js'].forEach((sub) => {
+  // i18n is in here as well as css/js because sw.js precaches the four
+  // dictionaries and the offline document. Those are what an offline device
+  // reads its interface out of, so a corrected translation has to retire the
+  // cache exactly as a changed stylesheet does — otherwise the fix ships and
+  // installed devices keep the old wording indefinitely.
+  ['css', 'js', 'i18n'].forEach((sub) => {
     const dir = path.join(ROOT, sub);
     let files = [];
     try {
-      files = fs.readdirSync(dir).filter((f) => /\.(css|js)$/.test(f)).sort();
+      files = fs.readdirSync(dir).filter((f) => /\.(css|js|json)$/.test(f)).sort();
     } catch (e) { /* directory absent — skip */ }
     files.forEach((f) => {
       hash.update(f);
       hash.update(fs.readFileSync(path.join(dir, f)));
     });
   });
+  try {
+    hash.update(fs.readFileSync(path.join(ROOT, 'offline', 'index.html')));
+  } catch (e) { /* no offline document — skip */ }
   const version = 'shrs-pwa-' + hash.digest('hex').slice(0, 10);
   const updated = sw.replace(/shrs-pwa-[A-Za-z0-9]+/g, version);
   if (updated !== sw) {
@@ -612,6 +620,7 @@ ${personalisation}
 <script src="/js/admission-journey.js" defer></script>
 <script src="/js/policies.js" defer></script>
 <script src="/js/site-chrome.js" defer></script>
+<script src="/js/shrs-connectivity.js" defer></script>
 <script src="/js/pwa-install.js" defer></script>
 <script src="/js/intro.js" defer></script>
 <script src="/js/listen.js" defer></script>
