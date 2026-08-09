@@ -577,7 +577,12 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon::after{
 
 /* iii. A ripple of gold out of the point of contact on a plate. */
 .mnr-item,.fd-item{overflow:hidden;}
-.mnr-item > svg,.mnr-item > span,.fd-item > svg,.fd-item > span{position:relative;z-index:1;}
+/* js/lumina.js wraps each mark in a .lum-mount, so the mount is now the
+   direct child that this rule has to reach. The svg selectors stay for
+   any mark that is not mounted — a square one, or one added before the
+   script runs. */
+.mnr-item > svg,.mnr-item > span,.fd-item > svg,.fd-item > span,
+.mnr-item > .lum-mount,.fd-item > .lum-mount{position:relative;z-index:1;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item::before,
 html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item::before{
   content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;

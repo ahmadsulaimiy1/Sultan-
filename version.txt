@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      dfd27929ccfed907feec534dc61ec49375b5b1d5
-short       dfd27929
+commit      bc431bef2760effaf9a01d7f3574442e1333f086
+short       bc431bef
 branch      main
-subject     Two rows, composed rather than wrapped
-built (UTC) 2026-08-09T17:25:47Z
-assets      shrs-pwa-c860bc420d
+subject     The next prayer is back, and it can no longer go missing
+built (UTC) 2026-08-09T18:02:50Z
+assets      shrs-pwa-cd42d7a99b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

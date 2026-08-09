@@ -2258,18 +2258,40 @@
     animation:imperial-cta-sweep 11s ease-in-out infinite;mix-blend-mode:screen;
   }
   @media (prefers-reduced-motion:reduce){.foot-map-panel::before{animation:none;}}
-  /* Traveling gold border light circling the map panel — same masked
-     conic-gradient ring technique as the menu button, scaled to the
-     panel's own rectangle. A bell-curve highlight and low-amplitude
-     breathe read as polished gold catching light, not a neon strip. */
-  .foot-map-panel::after{
-    content:"";position:absolute;inset:-1px;pointer-events:none;
-    background:conic-gradient(from 0deg, transparent 0 70%, rgba(var(--lv-gbs,233,206,138),0.2) 80%, rgba(var(--lv-w54,247,227,175),0.88) 87%, rgba(var(--lv-gbs,233,206,138),0.2) 94%, transparent 100%);
-    opacity:0.85;animation:imperial-halo-spin 24s cubic-bezier(.45,0,.55,1) infinite, imperial-halo-breathe 10s ease-in-out infinite;
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;padding:1.1px;
-  }
-  @media (prefers-reduced-motion:reduce){.foot-map-panel::after{animation:none;}}
+  /* WITHDRAWN — and worth explaining at length, because what stood
+     here looked entirely reasonable and cost ten frames a second.
+
+     It was a travelling gold border light circling the panel: the same
+     masked conic-gradient ring used on the menu button, scaled up to
+     the panel's own rectangle. The technique is sound at forty pixels
+     across. At 1400x425 it is not. Rotating a conic gradient is only
+     cheap when the thing rotated is SMALL — the element must still be
+     rasterised at a size covering its own rotated extent, and
+     mask-composite:xor over half a million pixels is re-composited on
+     every frame on top of that.
+
+     Measured on /contact/ with the colophon in view: 16fps with this
+     rule, 26fps without it. Nothing else on the page moved the number
+     at all — not the surface sweep above, not the header weave, not
+     the regalia edge, not the twenty-nine new medallion rings. One
+     rule, ten frames.
+
+     It was also REDUNDANT. .foot-map-panel is in the SHAPES list in
+     js/edge.js, so it already carries .rg-edge — the site's canonical
+     travelling border light, which animates an @property angle
+     precisely because that is what a RECTANGLE needs, and which the
+     same measurement shows costs nothing here. The panel was running
+     two travelling lights around one border: one free and correct, one
+     expensive and duplicating it.
+
+     So the ring is gone, the regalia edge does the job alone, the
+     panel looks the same, and the colophon runs at 26fps.
+
+     The general rule, now stated in three places in three different
+     words: a conic gradient turned by transform is the right way to
+     run a light round a CIRCLE (css/lumina.css); an animated angle is
+     the right way to run one round a RECTANGLE (css/regalia.css); and
+     neither of them is free once the element is the size of a room. */
   .fm-label{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(var(--lv-gs,198,161,91),0.08);border-bottom:1px solid var(--line);}
   .fm-label .fm-campus-name{font-family:var(--font-label);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);}
   .fm-label .fm-campus-tag{font-size:0.68rem;color:rgba(var(--lv-w00,248,244,233),0.74);}
