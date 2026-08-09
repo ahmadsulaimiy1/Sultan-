@@ -715,3 +715,31 @@ if (reissues.length) {
   }
 }
 console.log('');
+
+
+// ── THE STEP THAT IS NOT DONE YET, SAID LOUDLY ──────────────────────────
+// A certificate exists as a DOCUMENT the moment this script finishes. It does
+// not exist as a RECORD until the SQL below is imported, and the public
+// verifier reads only records.
+//
+// That gap is not hypothetical. Certificates were minted, printed, signed and
+// handed to graduands, and they returned nothing on the public verification
+// page — because the import was never run. Nothing failed and nothing warned:
+// the sheets, the register and the press file were all perfect, and the only
+// place the omission showed was a graduand typing their own number and being
+// told there was no such certificate.
+//
+// So the run does not end with "written to …". It ends here, with the step
+// that is still outstanding, and it is the last thing on the screen.
+console.log('\n  ────────────────────────────────────────────────────────────────');
+console.log('  NOT FINISHED. These certificates do not verify yet.\n');
+console.log('  They are documents. They become records — and only then resolve on');
+console.log('  the public verification page — when this is imported into the live');
+console.log('  database:\n');
+console.log(`      ${join(dir, `register-${stamp}.sql`)}\n`);
+console.log('  Then prove it, against the real site, before any sheet is handed over:\n');
+console.log('      node scripts/verify-issued-certificates-live.mjs\n');
+console.log('  Do not release a certificate that has not passed that check. A holder');
+console.log('  whose number returns nothing has been handed a document the school');
+console.log('  itself cannot confirm.');
+console.log('  ────────────────────────────────────────────────────────────────\n');

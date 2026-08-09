@@ -256,7 +256,34 @@ export async function onRequestGet({ request, env }) {
     // endpoint fill verification_log with rows on demand, drowning exactly
     // the signal the table is for.
     if (identifier) await logVerification(sql, request, ref, 'not_found');
-    return json({ ok: true, found: false });
+    // TWO DIFFERENT ANSWERS, and until now they were the same one.
+    //
+    // `identifier` is non-null only when the reference is a shape THIS
+    // INSTITUTION ISSUES — a stage-certificate serial, engraved number,
+    // Student ID, verification code, archive path or document id. The
+    // endpoint already relied on that distinction to decide whether to write
+    // an audit row, and then discarded it, returning the identical
+    // `{found:false}` for "this is not one of our numbers" and for "this IS
+    // one of our numbers and we hold no record of it".
+    //
+    // Those are not the same fact and must not read the same way. The second
+    // is what a graduand holding a genuine certificate sees when the record
+    // behind it is missing, and answering that with an undifferentiated "not
+    // found" tells a real awardee, in public, that their document appears to
+    // be nothing — which is the accusation this whole family of code is
+    // written to avoid. It is also the institution's own alarm: a well-formed
+    // number with no row means a record has gone missing or was never
+    // created, and nobody can act on a signal that looks like a typo.
+    //
+    // So the shape is reported. It is not a verdict and is never rendered as
+    // one: `found` stays false, no status is asserted, and nothing here says
+    // the document is genuine — only that the number is one of ours.
+    return json({
+      ok: true,
+      found: false,
+      referenceRecognised: Boolean(identifier),
+      referenceKind: identifier ? identifier.kind : null,
+    });
   } catch (err) {
     console.error('certificate verify error', err);
     return json({ error: 'Could not complete verification: ' + (err && err.message ? err.message : 'unknown error') }, 500);

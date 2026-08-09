@@ -8,6 +8,17 @@
     en: {
       valid: 'Genuine — active credential', revoked: 'This credential has been revoked',
       notfound: 'No certificate or Ijazah found with that reference number',
+      notOurs: 'Not a Sultan Hanafi reference number',
+      notOursNote: 'This is not one of the number formats Sultan Hanafi Royal Schools '
+        + 'issues. Check the number on the document — the certificate number is printed '
+        + 'in its own panel at the foot of the sheet, and the verification code beside '
+        + 'the QR code will also work.',
+      noRecord: 'No record on file for this number',
+      noRecordNote: 'This IS a Sultan Hanafi certificate number, and this page holds no '
+        + 'record against it. That is a statement about our records, not about your '
+        + 'document — nothing here says the certificate is not genuine. If you are '
+        + 'holding a certificate issued by the school, please contact the Registrar’s '
+        + 'Office with the number and it will be resolved.',
       integrityFailed: 'Integrity check failed — this record does not match its cryptographic signature. Contact the Registrar.',
       indexBadge: 'This is a Student ID, not a certificate number',
       indexNote: 'It identifies a student who holds the credentials below. Verify a single credential by its own certificate number.',
@@ -23,6 +34,15 @@
     ar: {
       valid: 'أصلية — بيانات اعتماد سارية', revoked: 'تم إلغاء هذه الشهادة/الإجازة',
       notfound: 'لم يُعثر على شهادة أو إجازة بهذا الرقم المرجعي',
+      notOurs: 'ليس رقمًا مرجعيًا صادرًا عن مدارس السلطان حنفي',
+      notOursNote: 'هذا ليس من صيغ الأرقام التي تصدرها مدارس السلطان حنفي الملكية. '
+        + 'يُرجى مراجعة الرقم المدوَّن على الوثيقة؛ فرقم الشهادة مطبوعٌ في لوحته الخاصة '
+        + 'أسفل الورقة، ويصلح كذلك رمز التحقق المجاور لرمز الاستجابة السريعة.',
+      noRecord: 'لا يوجد سجل مقابل هذا الرقم',
+      noRecordNote: 'هذا رقم شهادةٍ صادرٍ عن مدارس السلطان حنفي، ولا يوجد لدى هذه الصفحة '
+        + 'سجلٌّ مقابله. وهذا قولٌ عن سجلاتنا لا عن وثيقتك؛ ولا شيء هنا يفيد أن الشهادة '
+        + 'غير صحيحة. فإن كنت تحمل شهادةً صادرةً عن المدرسة، فيُرجى مراجعة مكتب المسجِّل '
+        + 'بهذا الرقم ليُعالَج الأمر.',
       integrityFailed: 'فشل فحص السلامة — لا يطابق هذا السجل توقيعه التشفيري. يرجى التواصل مع مكتب المسجّل.',
       indexBadge: 'هذا رقم أكاديمي للطالب، وليس رقم شهادة',
       indexNote: 'يشير إلى طالب يحمل الشهادات المدرجة أدناه. للتحقق من شهادة بعينها، استخدم رقم الشهادة الخاص بها.',
@@ -45,9 +65,24 @@
 
   function render(resultEl, data) {
     if (!data.found) {
+      // TWO DIFFERENT ANSWERS. A number this school does not issue is a
+      // different fact from one it does issue and holds no record of, and a
+      // graduand holding a genuine certificate must never be shown the first
+      // message when the second is true — that reads as "your document is
+      // nothing". Neither state asserts anything about the document itself;
+      // both say only what this page can honestly say.
+      //
+      // `referenceRecognised` is absent on an older cached copy of the API
+      // response, so undefined falls back to the original single message
+      // rather than silently claiming the number is not ours.
+      var recognised = data.referenceRecognised === true;
+      var unknownShape = data.referenceRecognised === false;
       resultEl.innerHTML =
         '<div class="cert-verify-result is-notfound">' +
-        '<span class="cert-verify-badge notfound">' + t.notfound + '</span>' +
+        '<span class="cert-verify-badge notfound">'
+          + (recognised ? t.noRecord : unknownShape ? t.notOurs : t.notfound) + '</span>' +
+        (recognised ? '<p class="cert-verify-note">' + t.noRecordNote + '</p>' : '') +
+        (unknownShape ? '<p class="cert-verify-note">' + t.notOursNote + '</p>' : '') +
         '</div>';
       return;
     }
