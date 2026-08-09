@@ -104,7 +104,7 @@
           '</div>' +
           detailsHtml(opts.details) +
           (opts.status ? '<div class="id-card-status-line"><span class="k">Status</span><span class="v">' + esc(opts.status) + '</span></div>' : '') +
-          (isFounder ? '<div class="id-card-signature" aria-hidden="true">Founder &amp; Chief Executive Officer</div>' : '') +
+          (isFounder ? '<div class="id-card-signature" aria-hidden="true">Founder &amp; Chairman of the Board of Governors</div>' : '') +
         '</div>' +
         '<div class="id-card-face-footer">' +
           '<span>Sultan Hanafi Royal Schools</span>' +

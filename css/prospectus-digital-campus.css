@@ -9,7 +9,7 @@
 
 :root{
   --dc-white:#FFFFFF; --dc-off:#F4F5F7; --dc-charcoal:#14171C; --dc-charcoal-deep:#0A0C10;
-  --dc-charcoal-soft:#1E222A; --dc-gold:#C6A15B; --dc-gold-bright:#E9CE8A; --dc-gold-dim:#A9832E;
+  --dc-charcoal-soft:#1E222A; --dc-gold:rgb(var(--lv-g,198,161,91)); --dc-gold-bright:rgb(var(--lv-gb,233,206,138)); --dc-gold-dim:rgb(var(--lv-w220,169,131,46));
   --dc-ink:#14171C; --dc-ink-soft:rgba(20,23,28,0.62); --dc-line:rgba(20,23,28,0.12);
   --dc-glass-fill:rgba(255,255,255,0.06); --dc-glass-line:rgba(255,255,255,0.14);
   --dc-glass-fill-light:rgba(20,23,28,0.04); --dc-glass-line-light:rgba(20,23,28,0.10);
@@ -43,7 +43,7 @@ body.pros-body{margin:0; background:#2a2d33; font-family:'Inter','Space Grotesk'
   background-image:linear-gradient(rgba(20,23,28,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(20,23,28,0.05) 1px, transparent 1px);
   background-size:14mm 14mm;
 }
-.dc-spread.dark .dc-grid-bg{background-image:linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);}
+.dc-spread.dark .dc-grid-bg{background-image:linear-gradient(rgba(var(--lv-wh,255,255,255),0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--lv-wh,255,255,255),0.05) 1px, transparent 1px);}
 
 .dc-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.12em; text-transform:uppercase; color:var(--dc-ink-soft);}
 .dc-spread.dark .dc-folio{color:rgba(255,255,255,0.5);}
@@ -84,7 +84,10 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 
 /* ---- Glass panel — the signature glassmorphism callout/status card ---- */
 .dc-glass{
-  background:var(--dc-glass-fill-light); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  /* Opaque, not frosted. The backdrop blur softened both the panel and
+     the type inside it, and it does not survive print; a solid tinted
+     fill reads sharp on screen and on paper. */
+  background:var(--dc-glass-fill-light);
   border:1px solid var(--dc-glass-line-light); border-radius:10px; padding:18px 20px; position:relative; margin:14px 0;
 }
 .dc-spread.dark .dc-glass{background:var(--dc-glass-fill); border-color:var(--dc-glass-line);}
@@ -121,7 +124,7 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 .dc-stats .dc-stat-cell{background:var(--dc-off); text-align:center; padding:16px 6px;}
 .dc-stats .dc-stat-num{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:21pt; color:var(--dc-charcoal);}
 .dc-stats .dc-stat-label{font-family:'Space Grotesk',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--dc-ink-soft); margin-top:2px;}
-.dc-spread.dark .dc-stats{background:rgba(255,255,255,0.1);}
+.dc-spread.dark .dc-stats{background:rgba(var(--lv-wh,255,255,255),0.1);}
 .dc-spread.dark .dc-stats .dc-stat-cell{background:var(--dc-charcoal-soft);}
 .dc-spread.dark .dc-stats .dc-stat-num{color:var(--dc-gold-bright);}
 .dc-spread.dark .dc-stats .dc-stat-label{color:rgba(255,255,255,0.55);}
@@ -158,7 +161,7 @@ h3.dc-h3{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14pt
 
 @media print{
   .dc-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .dc-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }

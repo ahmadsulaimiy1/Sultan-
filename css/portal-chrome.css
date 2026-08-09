@@ -1,0 +1,198 @@
+/* ===================================================================
+   THE PORTAL CHROME
+   -------------------------------------------------------------------
+   Sixty-eight pages of the Digital Campus are hand-authored rather than
+   built from the partials, so none of them carried the site's masthead
+   or its colophon. They opened on a thin white strip with a crest in it
+   and ended on nothing at all — the page simply stopped.
+
+   They should not wear the marketing masthead: a portal is a room you
+   are already inside, and eight section plates and a quick row would be
+   noise there. So this is chrome of its own — the same materials, at
+   working weight. An espresso band with the crest, the standing line
+   and the chronometer at the head; a ruled colophon with the way back
+   out at the foot; and the gold hairline on both that ties them to
+   everything else the school publishes.
+   =================================================================== */
+
+/* ---- The head ------------------------------------------------------ */
+.portal-topbar{
+  position:relative;isolation:isolate;
+  background:
+    radial-gradient(700px 160px at 50% -60%,rgba(233,206,138,.20),transparent 74%),
+    linear-gradient(168deg,#3B2A1D 0%,#241708 62%,#1C1207 100%)!important;
+  border-bottom:1px solid rgba(233,206,138,.45)!important;
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.18),
+             0 14px 30px -24px rgba(0,0,0,.9)!important;
+  padding:14px 28px!important;}
+.portal-topbar::after{
+  content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.5) 16%,rgba(255,246,223,.9) 50%,
+    rgba(198,161,91,.5) 84%,transparent);
+  transform:scaleX(0);transform-origin:center;
+  animation:pch-rule 1.4s cubic-bezier(.16,.8,.24,1) .2s forwards;}
+@keyframes pch-rule{to{transform:scaleX(1);}}
+
+.portal-brand{position:relative;}
+.portal-brand img{
+  width:38px!important;height:38px!important;
+  filter:drop-shadow(0 0 10px rgba(233,206,138,.4));}
+.portal-brand span{color:#FFF6DF!important;}
+.portal-topbar-link{color:rgba(247,238,223,.86)!important;}
+.portal-topbar-link:hover{color:#FFF6DF!important;}
+.portal-logout{
+  border:1px solid rgba(233,206,138,.55)!important;
+  background:linear-gradient(150deg,rgba(233,206,138,.16),rgba(198,161,91,.06))!important;
+  color:#EBD3A0!important;border-radius:99px!important;
+  transition:background .35s ease,border-color .35s ease,color .35s ease;}
+.portal-logout:hover{
+  border-color:#E9CE8A!important;color:#1A1006!important;
+  background:linear-gradient(135deg,#C6A15B,#E9CE8A)!important;}
+
+/* The standing line, folded away where the bar is tight. */
+.pch-standing{
+  display:none;align-items:center;gap:12px;margin-inline:auto;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.22em;
+  text-transform:uppercase;white-space:nowrap;color:rgba(233,206,138,.8);}
+@media (min-width:1080px){.pch-standing{display:flex;}}
+.pch-standing::before,.pch-standing::after{
+  content:"";width:44px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.7));}
+.pch-standing::after{background:linear-gradient(270deg,transparent,rgba(198,161,91,.7));}
+
+.pch-clock{display:none;align-items:center;}
+@media (min-width:760px){.pch-clock{display:inline-flex;}}
+
+/* ---- The foot ------------------------------------------------------ */
+.pch-foot{
+  position:relative;isolation:isolate;margin-top:auto;
+  padding:34px 28px 26px;
+  background:linear-gradient(168deg,#241708 0%,#170E04 100%);
+  border-top:1px solid rgba(233,206,138,.4);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.16);}
+.pch-foot::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("/assets/images/crest-watermark.png");
+  background-size:auto 150%;background-repeat:no-repeat;background-position:center;}
+.pch-foot-inner{
+  max-width:1180px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:22px;flex-wrap:wrap;}
+.pch-foot-brand{display:flex;align-items:center;gap:14px;min-width:0;}
+.pch-foot-brand img{width:38px;height:38px;flex-shrink:0;
+  filter:drop-shadow(0 0 10px rgba(233,206,138,.35));}
+.pch-foot-name{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.84rem;
+  letter-spacing:.06em;color:#FFF6DF;}
+.pch-foot-sig{display:block;font-size:.72rem;color:rgba(247,238,223,.66);margin-top:3px;}
+.pch-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.pch-link{
+  position:relative;font-family:var(--font-label,'Cinzel',serif);font-size:.64rem;
+  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  color:rgba(233,206,138,.9);padding:7px 13px;border-radius:99px;
+  border:1px solid rgba(233,206,138,.3);
+  transition:background .35s ease,border-color .35s ease,color .35s ease,transform .35s ease;}
+.pch-link:hover,.pch-link:focus-visible{
+  color:#FFF6DF;border-color:rgba(233,206,138,.8);transform:translateY(-1px);
+  background:rgba(233,206,138,.14);}
+.pch-badge{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(247,238,223,.66);
+  padding:7px 14px;border-radius:99px;border:1px dashed rgba(233,206,138,.34);}
+.pch-rule{
+  max-width:1180px;margin:22px auto 0;height:1px;
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.45) 20%,rgba(233,206,138,.7) 50%,
+    rgba(198,161,91,.45) 80%,transparent);}
+.pch-note{
+  max-width:1180px;margin:14px auto 0;text-align:center;
+  font-size:.7rem;line-height:1.6;color:rgba(247,238,223,.56);}
+
+/* The whole page becomes a column so the colophon sits at the bottom of
+   a short page rather than floating in the middle of the window. */
+html.has-portal-chrome,html.has-portal-chrome body{min-height:100%;}
+html.has-portal-chrome body{display:flex;flex-direction:column;min-height:100vh;}
+html.has-portal-chrome body > main,
+html.has-portal-chrome body > .portal-main{flex:1 0 auto;}
+
+@media (max-width:620px){
+  .pch-foot{padding:26px 16px 20px;}
+  .pch-foot-inner{justify-content:center;text-align:center;}
+}
+@media (prefers-reduced-motion:reduce){
+  .portal-topbar::after{animation:none;transform:scaleX(1);}
+  .pch-link,.portal-logout{transition:none;}
+}
+html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:scaleX(1);}
+
+/* ---- What the espresso bar changes underneath it -------------------
+   The bar used to be pale, so everything sitting in it was inked dark.
+   Taking it to espresso means re-lighting its contents; anything left
+   behind is dark ink on a dark ground. Measured before and after:
+   the calendar link was the one that had been left. */
+.portal-topbar-calendar{
+  color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;
+  border-radius:99px;}
+.portal-topbar-calendar:hover{
+  color:#FFF6DF!important;border-color:rgba(233,206,138,.85)!important;
+  background:rgba(233,206,138,.12);}
+.portal-topbar .lang-switch > summary{
+  color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;}
+.portal-topbar .lang-switch > summary:hover{
+  color:#FFF6DF!important;border-color:rgba(233,206,138,.8)!important;
+  background:rgba(233,206,138,.12);}
+
+/* The chronometer sits on espresso here whatever edition the visitor
+   has chosen for the marketing site, so it takes the dark dial. */
+.portal-topbar{
+  --rlx-face-1:#3A2A18; --rlx-face-2:#241708; --rlx-face-3:#170E04;
+  --rlx-track:rgba(233,206,138,.5); --rlx-idx:#E9CE8A;
+  --rlx-sig:rgba(233,206,138,.75);
+  --rlx-hand-1:#F7EEDF; --rlx-hand-2:#C6A15B;
+  --rlx-hand-edge:rgba(255,246,223,.5);
+  --rlx-sec:#D8A24A; --rlx-glass:rgba(255,246,223,.1);}
+
+/* ---- An older defect, found while measuring ------------------------
+   Every .portal-back-link on the sign-in, forgot-password and apply
+   screens is inked in bright gold at 85% — right on a dark panel, and
+   1.31:1 on the pale card those screens actually put it on. Six links
+   across three pages, unreadable since the screens were written. They
+   take the deep gold wherever the ground is paper; Midnight, whose
+   cards really are dark, keeps the bright gold it was written for. */
+html:not([data-pc-theme="dark"]) .portal-card .portal-back-link{
+  color:rgb(var(--lv-gt3,99,72,27))!important;}
+html:not([data-pc-theme="dark"]) .portal-card .portal-back-link:hover{
+  color:rgb(var(--lv-gt,124,84,48))!important;}
+/* Only the card. The same link inside .portal-aside-cta sits on that
+   aside's dark panel, where the pale ink it was written with is right —
+   a first pass gave it the deep gold too and took it to 2.1:1. */
+
+/* The aside's eyebrow measured 4.22:1 on the aside's own dark panel; a
+   little more gold clears it. Scoped to that panel — the same class is
+   used on the office index, which is paper, where brightening it took
+   it the wrong way. */
+.portal-aside .portal-aside-eyebrow{color:#E4C87F!important;}
+
+/* ---- The office index -----------------------------------------------
+   The staff office index was written for a dark ground and renders on
+   paper: its section headings, its two head links and its eyebrow are
+   all bright gold, measuring 1.37:1, 1.46:1 and 1.56:1. The rows
+   beneath them were inked dark and were right all along. Paper gets the
+   deep gold; Midnight keeps what it was written with. */
+html:not([data-pc-theme="dark"]) .office-index-wrap h3,
+html:not([data-pc-theme="dark"]) .office-index-wrap .portal-aside-eyebrow,
+html:not([data-pc-theme="dark"]) .office-index-wrap p > a{
+  color:rgb(var(--lv-gt3,99,72,27))!important;}
+html:not([data-pc-theme="dark"]) .office-index-wrap p > a:hover{
+  color:rgb(var(--lv-gt,124,84,48))!important;}
+
+/* The shell's own utility strip, taken into the colophon as its top row
+   rather than left to stack beneath it as a second footer. */
+.pch-foot .pch-adopted{
+  max-width:1180px;margin:0 auto 22px;padding:0 0 18px;
+  border-bottom:1px solid rgba(233,206,138,.22);
+  background:none!important;box-shadow:none!important;border-top:none!important;}
+.pch-foot .pch-adopted a{color:rgba(233,206,138,.88)!important;}
+.pch-foot .pch-adopted a:hover{color:#FFF6DF!important;}
+.pch-foot .pch-adopted,
+.pch-foot .pch-adopted *{color:rgba(247,238,223,.7);}

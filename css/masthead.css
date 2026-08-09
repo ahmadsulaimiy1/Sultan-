@@ -1,0 +1,1295 @@
+/* ===================================================================
+   THE MASTHEAD AND THE COLOPHON (v1.0)
+   -------------------------------------------------------------------
+   The two things a visitor sees on every page, and the two that were
+   still wearing furniture built for something else.
+
+   The institutional ribbon and the quick row were designed as mobile
+   chrome — fixed 78px tiles on a horizontal scroller — and then shown
+   all the way up to 1440px. On a laptop that meant eight small boxes
+   hugging the left edge of a 1440px band with half the width empty
+   beside them, out of line with the masthead's own 1180px measure
+   above. Nothing was broken; it simply read as a toolbar rather than
+   as the front of an institution.
+
+   Here they are set on the same measure as everything else, given a
+   plate finish, a medallion for the mark, a rule that draws itself,
+   and the travelling light. Below 861px the scroller is kept exactly
+   as it was, because on a phone a scroller is right.
+
+   The colophon takes the same treatment, so the foot of the page
+   answers the head of it.
+
+   Everything yields to the Ornament and Motion settings and to
+   prefers-reduced-motion. Remove this file and the site still reads.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   1. THE READING RULE
+   A hairline of gold across the very top of the masthead that fills as
+   the page is read. It is the only thing on the page that reports the
+   reader's own position back to them, and it costs one element.
+   ------------------------------------------------------------------- */
+.mh-progress{
+  position:absolute;inset-inline:0;top:0;height:2px;z-index:6;pointer-events:none;
+  background:rgba(var(--lv-g,198,161,91),.12);}
+.mh-progress-fill{
+  display:block;height:100%;width:100%;transform:scaleX(var(--mh-read,0));
+  transform-origin:left center;
+  background:linear-gradient(90deg,
+    rgba(var(--lv-gd,156,122,60),.9),
+    rgb(var(--lv-gb,233,206,138)) 55%,
+    rgb(var(--lv-gl,255,246,223)) 78%,
+    rgba(var(--lv-gb,233,206,138),.9));
+  box-shadow:0 0 12px 0 rgba(var(--lv-gb,233,206,138),.55);}
+[dir="rtl"] .mh-progress-fill{transform-origin:right center;}
+html[data-pc-ornament="none"] .mh-progress{display:none;}
+
+/* -------------------------------------------------------------------
+   2. THE RIBBON AND THE QUICK ROW, ON THE MEASURE
+   The bands stay full-bleed — they are bands — but their contents are
+   centred on the same 1180px measure the masthead uses, so the three
+   rows read as one masthead instead of three unrelated strips.
+   ------------------------------------------------------------------- */
+@media (min-width:861px) and (max-width:1440px){
+  .mobile-nav-ribbon,.mobile-quick-row{
+    padding-inline:max(24px,calc((100% - 1180px) / 2));
+    overflow:visible;scroll-snap-type:none;}
+
+  .mobile-nav-ribbon{
+    display:grid;grid-auto-flow:column;grid-auto-columns:1fr;
+    gap:12px;padding-block:14px;align-items:stretch;}
+  .mnr-item{width:auto;min-width:0;padding:15px 8px 13px;gap:9px;border-radius:14px;}
+
+  .mobile-quick-row{
+    display:grid;grid-auto-flow:column;grid-auto-columns:1fr;}
+  .mqr-item{padding:12px 10px;}
+}
+
+/* -------------------------------------------------------------------
+   3. THE PLATE
+   An engraved tile: a shallow warm gradient, a gold hairline, a bevel
+   along the top edge, and a rule beneath the label that draws out from
+   the centre when the tile is addressed.
+   ------------------------------------------------------------------- */
+.mnr-item{
+  position:relative;isolation:isolate;border-radius:14px;
+  background:linear-gradient(168deg,
+    rgba(var(--lv-gb,233,206,138),.10),
+    rgba(var(--lv-g,198,161,91),.028) 62%,
+    rgba(var(--lv-g,198,161,91),.06));
+  border:1px solid rgba(var(--lv-g,198,161,91),.30);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.16),
+             0 1px 0 rgba(0,0,0,.22);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             border-color .45s ease,box-shadow .45s ease,background .45s ease;}
+.mnr-item::after{
+  content:"";position:absolute;left:50%;bottom:9px;width:64%;height:1px;
+  transform:translateX(-50%) scaleX(0);transform-origin:center;
+  background:linear-gradient(90deg,transparent,
+    rgb(var(--lv-gb,233,206,138)),transparent);
+  transition:transform .55s cubic-bezier(.16,.8,.24,1);}
+.mnr-item:hover,.mnr-item:focus-visible{
+  transform:translateY(-3px);
+  border-color:rgba(var(--lv-gb,233,206,138),.72);
+  background:linear-gradient(168deg,
+    rgba(var(--lv-gb,233,206,138),.20),
+    rgba(var(--lv-g,198,161,91),.06) 62%,
+    rgba(var(--lv-g,198,161,91),.10));
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.30),
+             0 14px 26px -18px rgba(0,0,0,.9),
+             0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
+.mnr-item:hover::after,.mnr-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
+.mnr-item.mnr-more{
+  border-style:solid;
+  background:linear-gradient(168deg,rgba(var(--lv-g,198,161,91),.05),transparent);
+  border-color:rgba(var(--lv-g,198,161,91),.22);}
+
+/* The medallion. The mark sits in a ring rather than loose on the
+   plate, which is what makes eight of them read as a set. */
+.mnr-item svg{
+  width:22px;height:22px;padding:8px;box-sizing:content-box;border-radius:50%;
+  border:1px solid rgba(var(--lv-g,198,161,91),.34);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(var(--lv-gb,233,206,138),.16),rgba(var(--lv-g,198,161,91),.04) 70%);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             border-color .45s ease,box-shadow .45s ease;}
+.mnr-item:hover svg,.mnr-item:focus-visible svg{
+  transform:translateY(-1px) scale(1.06);
+  border-color:rgba(var(--lv-gb,233,206,138),.8);
+  box-shadow:0 0 16px -2px rgba(var(--lv-gb,233,206,138),.55);}
+.mnr-item span{
+  font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.6rem;letter-spacing:.09em;
+  text-transform:uppercase;font-weight:600;padding-bottom:8px;}
+
+/* -------------------------------------------------------------------
+   4. THE QUICK ROW
+   Five destinations on one rule. The dividers fade at their ends so
+   the row reads as ruled paper rather than as a table.
+   ------------------------------------------------------------------- */
+.mqr-item{
+  position:relative;isolation:isolate;border-inline-end:none;
+  font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;
+  transition:background .4s ease,color .4s ease;}
+.mqr-item + .mqr-item::before{
+  content:"";position:absolute;inset-inline-start:0;top:22%;bottom:22%;width:1px;
+  background:linear-gradient(180deg,transparent,
+    rgba(var(--lv-g,198,161,91),.34) 22%,
+    rgba(var(--lv-g,198,161,91),.34) 78%,transparent);}
+.mqr-item::after{
+  content:"";position:absolute;left:14%;right:14%;bottom:6px;height:1px;
+  transform:scaleX(0);transform-origin:center;
+  background:linear-gradient(90deg,transparent,
+    rgb(var(--lv-gb,233,206,138)),transparent);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1);}
+.mqr-item:hover::after,.mqr-item:focus-visible::after{transform:scaleX(1);}
+.mqr-item:hover{background:linear-gradient(180deg,
+  rgba(var(--lv-gb,233,206,138),.13),rgba(var(--lv-g,198,161,91),.04));}
+
+/* The one gold cell keeps its fill and gains a slow pass of light
+   across it, the same device the crest uses. */
+.mqr-item.mqr-cta{overflow:hidden;}
+.mqr-item.mqr-cta::before{display:none;}
+.mqr-item.mqr-cta > .mqr-sheen{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 32%,
+    rgba(255,255,255,.42) 48%,rgba(255,255,255,.62) 50%,
+    rgba(255,255,255,.42) 52%,transparent 68%);
+  transform:translateX(-130%);
+  animation:mh-cta-pass 9s cubic-bezier(.4,0,.2,1) 2.2s infinite;}
+@keyframes mh-cta-pass{0%{transform:translateX(-130%);}22%,100%{transform:translateX(130%);}}
+.mqr-item.mqr-cta:hover{filter:brightness(1.06);}
+
+/* -------------------------------------------------------------------
+   5. THE HEAD OF THE MASTHEAD
+   A drawn gold rule under the wordmark band, and a crest that holds a
+   slow halo rather than a static glow.
+   ------------------------------------------------------------------- */
+header.nav nav.wrap{position:relative;}
+header.nav nav.wrap::after{
+  content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-g,198,161,91),.42) 18%,
+    rgba(var(--lv-gb,233,206,138),.62) 50%,
+    rgba(var(--lv-g,198,161,91),.42) 82%,transparent);
+  transform:scaleX(0);transform-origin:center;
+  animation:mh-rule-in 1.5s cubic-bezier(.16,.8,.24,1) .25s forwards;}
+@keyframes mh-rule-in{to{transform:scaleX(1);}}
+
+/* A glint travels the rule, once every eighteen seconds. The crest is
+   left alone: it already carries the foil sheen from the atelier layer,
+   and its wrapper clips, so a halo drawn round it would never be seen. */
+header.nav nav.wrap > .mh-glint{
+  position:absolute;inset-inline-start:0;bottom:0;width:22%;height:1px;
+  pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-gl,255,246,223),.95) 50%,transparent);
+  filter:blur(.4px);
+  animation:mh-glint-pass 18s cubic-bezier(.45,0,.25,1) 3s infinite;}
+@keyframes mh-glint-pass{
+  0%{transform:translateX(-120%);opacity:0;}
+  6%{opacity:1;}
+  26%{transform:translateX(520%);opacity:0;}
+  100%{transform:translateX(520%);opacity:0;}}
+[dir="rtl"] header.nav nav.wrap > .mh-glint{animation-name:mh-glint-pass-rtl;}
+@keyframes mh-glint-pass-rtl{
+  0%{transform:translateX(120%);opacity:0;}
+  6%{opacity:1;}
+  26%{transform:translateX(-520%);opacity:0;}
+  100%{transform:translateX(-520%);opacity:0;}}
+
+/* -------------------------------------------------------------------
+   6. THE COLOPHON
+   The foot of the page, answering the head of it: the same plate, the
+   same medallion, the same rule.
+   ------------------------------------------------------------------- */
+.foot-dashboard{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:11px;}
+.fd-item{
+  flex:1 1 148px;max-width:210px;
+  position:relative;isolation:isolate;border-radius:14px;
+  background:linear-gradient(168deg,
+    rgba(var(--lv-gb,233,206,138),.085),
+    rgba(var(--lv-g,198,161,91),.022) 62%,
+    rgba(var(--lv-g,198,161,91),.055));
+  border:1px solid rgba(var(--lv-g,198,161,91),.26);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.13);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             border-color .45s ease,box-shadow .45s ease,background .45s ease;}
+.fd-item::after{
+  content:"";position:absolute;left:50%;bottom:8px;width:58%;height:1px;
+  transform:translateX(-50%) scaleX(0);transform-origin:center;
+  background:linear-gradient(90deg,transparent,
+    rgb(var(--lv-gb,233,206,138)),transparent);
+  transition:transform .55s cubic-bezier(.16,.8,.24,1);}
+.fd-item:hover,.fd-item:focus-visible{
+  transform:translateY(-3px);
+  border-color:rgba(var(--lv-gb,233,206,138),.7);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.26),
+             0 16px 30px -20px rgba(0,0,0,.95);}
+.fd-item:hover::after,.fd-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
+.fd-item span{
+  font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.6rem;letter-spacing:.08em;
+  text-transform:uppercase;padding-bottom:7px;}
+@media (max-width:600px){
+  .fd-item{flex:1 1 96px;}
+  .fd-item span{font-size:.56rem;letter-spacing:.05em;}
+}
+
+/* The seal at the very bottom: a ruled head above it and the crest
+   held faintly behind, so the last band of the page is signed. */
+.foot-seal{position:relative;isolation:isolate;}
+.foot-seal::before{
+  content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-g,198,161,91),.45) 26%,
+    rgba(var(--lv-gb,233,206,138),.6) 50%,
+    rgba(var(--lv-g,198,161,91),.45) 74%,transparent);}
+.foot-seal::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("/assets/images/crest-watermark.png");
+  background-size:auto 132%;background-repeat:no-repeat;background-position:center;}
+html[data-pc-ornament="none"] .foot-seal::after{display:none;}
+
+/* -------------------------------------------------------------------
+   7. WHAT YIELDS
+   ------------------------------------------------------------------- */
+html[data-pc-ornament="none"] .mnr-item::after,
+html[data-pc-ornament="none"] .mqr-item::after,
+html[data-pc-ornament="none"] .fd-item::after,
+html[data-pc-ornament="none"] header.nav nav.wrap > .mh-glint,
+html[data-pc-ornament="none"] header.nav nav.wrap::after{display:none;}
+html[data-pc-motion="reduced"] header.nav nav.wrap > .mh-glint,
+html[data-pc-motion="reduced"] .mqr-item.mqr-cta > .mqr-sheen{animation:none;}
+html[data-pc-motion="reduced"] header.nav nav.wrap::after{animation:none;transform:scaleX(1);}
+@media (prefers-reduced-motion:reduce){
+  .mnr-item,.mnr-item::after,.mnr-item svg,
+  .mqr-item,.mqr-item::after,.fd-item,.fd-item::after{transition:none;}
+  header.nav nav.wrap > .mh-glint,.mqr-item.mqr-cta > .mqr-sheen{animation:none;}
+  header.nav nav.wrap::after{animation:none;transform:scaleX(1);}
+  .mh-progress-fill{transition:none;}
+}
+
+/* -------------------------------------------------------------------
+   8. THE STANDING LINE
+   The masthead was a crest at one edge, a menu at the other and a
+   search glyph adrift in the middle of a 1180px measure. The search
+   and the menu belong together on the right; the space between them
+   and the crest is where a masthead says who and where it is.
+   ------------------------------------------------------------------- */
+@media (max-width:1440px){
+  header.nav nav.wrap{justify-content:flex-start;gap:16px;}
+  header.nav nav.wrap > .brand{margin-inline-end:auto;}
+}
+.mh-standing{
+  display:none;align-items:center;gap:12px;margin-inline:auto;
+  font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.62rem;letter-spacing:.24em;
+  text-transform:uppercase;white-space:nowrap;
+  color:rgba(var(--lv-gb,233,206,138),.72);}
+@media (min-width:1020px){.mh-standing{display:flex;}}
+.mh-standing::before,.mh-standing::after{
+  content:"";width:52px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.6));}
+.mh-standing::after{background:linear-gradient(270deg,transparent,rgba(var(--lv-g,198,161,91),.6));}
+.mh-standing-d{color:rgba(var(--lv-g,198,161,91),.8);letter-spacing:0;}
+header.nav.is-condensed .mh-standing{
+  opacity:0;max-width:0;overflow:hidden;
+  transition:opacity .3s ease,max-width .45s cubic-bezier(.16,.8,.24,1);}
+.mh-standing{transition:opacity .3s ease,max-width .45s cubic-bezier(.16,.8,.24,1);
+  opacity:1;max-width:640px;}
+html[data-pc-theme="light"] .mh-standing{color:rgb(var(--lv-gt2,138,106,47));}
+
+/* The notices tag measured 4.48:1 in the Midnight edition — a rounding
+   away from the threshold, on a label that heads the strip beside it.
+   A slightly brighter gold clears it without changing its character. */
+html[data-pc-theme="dark"] .ann-ribbon-tag{color:#F4E2B4!important;}
+html[data-pc-theme="dark"] .ann-ribbon-tag svg{color:#F4E2B4!important;}
+
+/* -------------------------------------------------------------------
+   9. THE LANGUAGE SWITCH IN THE CLEAR EDITION
+   The switcher takes the gold-bright of the dark topbar. On the Clear
+   edition's cream topbar that measured 1.31:1 — the current language
+   was, in practice, not there. It takes the same ink as everything
+   else in that bar, and its border the same rule.
+   ------------------------------------------------------------------- */
+html[data-pc-theme="light"] .lang-switch > summary{
+  color:rgb(var(--lv-ink2,87,71,47));
+  border-color:rgba(var(--lv-g,198,161,91),.45);}
+html[data-pc-theme="light"] .lang-switch > summary:hover,
+html[data-pc-theme="light"] .lang-switch > summary:focus-visible{
+  color:rgb(var(--lv-gt,124,84,48));
+  border-color:rgba(var(--lv-g,198,161,91),.85);
+  background:rgba(var(--lv-g,198,161,91),.10);}
+html[data-pc-theme="light"] .lang-switch > summary:focus-visible{
+  outline-color:rgb(var(--lv-gt,124,84,48));}
+html[data-pc-theme="light"] .lang-switch-globe{opacity:.72;}
+
+/* ===================================================================
+   10. ROYAL GOLD, GILDED
+   -------------------------------------------------------------------
+   The house default has always been coffee brown with gold on it —
+   --navy is #3B2A1D, which is a brown, and the masthead was two browns
+   in a gradient. That is why the front of the site read brown even
+   though nobody had chosen the Coffee livery.
+
+   The default is not repainted here: the palette is untouched and every
+   other page band stays exactly as it is. What changes is the chrome —
+   masthead, rails and colophon — which is taken down to a near-black
+   warm ground so that the gold on it is the thing you see. Black and
+   gold, which is what royal has always meant on paper.
+
+   Every rule in this section is scoped to the Royal livery AND the
+   Royal theme. The Clear and Midnight editions paint this same chrome
+   themselves, to their own measured contrast — gilding on top of Clear
+   put a near-black ground under that edition's dark ink and took the
+   top bar to 1.8:1. Choose
+   Coffee, Sapphire, Emerald, Garnet or Obsidian and none of it applies;
+   those liveries keep their own chrome, driven by their own tokens.
+   =================================================================== */
+
+/* ---- The band ------------------------------------------------------ */
+html[data-pc-theme="royal"][data-pc-livery="royal"] header.nav,
+html[data-pc-theme="royal"]:not([data-pc-livery]) header.nav{
+  background:
+    radial-gradient(1100px 240px at 50% -42%,rgba(233,206,138,.26),transparent 72%),
+    radial-gradient(620px 150px at 8% 0%,rgba(233,206,138,.10),transparent 66%),
+    linear-gradient(168deg,#251807 0%,#150D04 54%,#1D1206 100%);
+  border-bottom-color:rgba(233,206,138,.34);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mobile-nav-ribbon{
+  background:linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.16));
+  border-top-color:rgba(233,206,138,.26);
+  border-bottom-color:rgba(233,206,138,.26);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-quick-row,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mobile-quick-row{
+  background:linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.44));
+  border-bottom-color:rgba(233,206,138,.24);}
+
+/* Gold dust, drifting. Two layers at different speeds, so it reads as
+   depth rather than as a pattern. Nothing here is ever in front of type. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] header.nav > .mh-dust,
+html[data-pc-theme="royal"]:not([data-pc-livery]) header.nav > .mh-dust{
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 30%,rgba(255,246,223,.85),transparent 60%),
+    radial-gradient(1.1px 1.1px at 34% 68%,rgba(233,206,138,.7),transparent 60%),
+    radial-gradient(1.6px 1.6px at 57% 22%,rgba(255,246,223,.75),transparent 60%),
+    radial-gradient(1.2px 1.2px at 73% 55%,rgba(233,206,138,.65),transparent 60%),
+    radial-gradient(1.5px 1.5px at 89% 34%,rgba(255,246,223,.8),transparent 60%),
+    radial-gradient(1.1px 1.1px at 22% 82%,rgba(233,206,138,.6),transparent 60%),
+    radial-gradient(1.3px 1.3px at 46% 90%,rgba(255,246,223,.6),transparent 60%),
+    radial-gradient(1.2px 1.2px at 66% 12%,rgba(233,206,138,.7),transparent 60%);
+  background-size:640px 100%,640px 100%,640px 100%,640px 100%,
+                  980px 100%,980px 100%,980px 100%,980px 100%;
+  animation:mh-dust-a 44s linear infinite,mh-dust-b 67s linear infinite;}
+@keyframes mh-dust-a{to{background-position:640px 0,640px 0,640px 0,640px 0,0 0,0 0,0 0,0 0;}}
+@keyframes mh-dust-b{to{background-position:0 0,0 0,0 0,0 0,-980px 0,-980px 0,-980px 0,-980px 0;}}
+
+/* ---- The wordmark, in gold leaf ------------------------------------ */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .brand-text .line1,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .brand-text .line1{
+  background-image:linear-gradient(96deg,
+    #C6A15B 0%,#E9CE8A 26%,#FFF6DF 42%,#E9CE8A 58%,#C6A15B 78%,#E9CE8A 100%);
+  background-size:260% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:mh-leaf 13s ease-in-out infinite;}
+@keyframes mh-leaf{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .brand-text .line2,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .brand-text .line2{color:rgba(233,206,138,.86);}
+
+/* ---- The plates, gilded -------------------------------------------- */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
+  background:linear-gradient(168deg,
+    rgba(233,206,138,.155),rgba(198,161,91,.045) 60%,rgba(233,206,138,.10));
+  border-color:rgba(233,206,138,.44);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.24),0 1px 0 rgba(0,0,0,.4);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:hover,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:focus-visible,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item:hover{
+  border-color:rgba(255,246,223,.85);
+  background:linear-gradient(168deg,
+    rgba(233,206,138,.30),rgba(198,161,91,.10) 60%,rgba(233,206,138,.18));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.42),
+             0 16px 30px -18px rgba(0,0,0,.95),
+             0 0 22px -6px rgba(233,206,138,.45);}
+
+/* The medallions breathe, staggered, so eight of them read as a set
+   that is alive rather than eight copies of one glow. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item svg{
+  border-color:rgba(233,206,138,.5);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.26),rgba(198,161,91,.06) 72%);
+  animation:mh-breathe 6.5s ease-in-out infinite;}
+@keyframes mh-breathe{
+  0%,100%{box-shadow:0 0 0 0 rgba(233,206,138,0);}
+  50%{box-shadow:0 0 14px -3px rgba(233,206,138,.5);}}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
+
+/* ---- The quick row, in gold ---------------------------------------- */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mqr-item{color:#EBD3A0;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item:hover{color:#FFF6DF;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item.mqr-cta{
+  background:linear-gradient(135deg,#C6A15B 0%,#E9CE8A 42%,#FFF3D2 58%,#C6A15B 100%);
+  background-size:220% 100%;color:#1A1006;
+  animation:mh-cta-shift 11s ease-in-out infinite;}
+@keyframes mh-cta-shift{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item.mqr-cta svg{color:#1A1006;}
+
+/* ---- The Islamic strip, on gold leaf rather than on paper ---------- */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .pc-islamic-strip,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .pc-islamic-strip{
+  background:linear-gradient(180deg,#F7EBC9 0%,#EEDCAE 100%);
+  border-top-color:rgba(160,120,50,.55);
+  border-bottom-color:rgba(160,120,50,.4);}
+
+/* ---- The standing line and the rules ------------------------------- */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mh-standing{color:rgba(233,206,138,.86);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mh-standing::before,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mh-standing::after{
+  background:linear-gradient(90deg,transparent,rgba(233,206,138,.85));}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mh-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(233,206,138,.85));}
+html[data-pc-theme="royal"][data-pc-livery="royal"] header.nav nav.wrap::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.6) 16%,rgba(255,246,223,.9) 50%,
+    rgba(198,161,91,.6) 84%,transparent);}
+
+/* ---- The colophon, gilded to match --------------------------------- */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .fd-item{
+  background:linear-gradient(168deg,
+    rgba(233,206,138,.13),rgba(198,161,91,.035) 60%,rgba(233,206,138,.085));
+  border-color:rgba(233,206,138,.36);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item:hover{
+  border-color:rgba(255,246,223,.8);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.34),
+             0 18px 32px -20px rgba(0,0,0,.95),
+             0 0 20px -6px rgba(233,206,138,.4);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item svg{
+  border-color:rgba(233,206,138,.46);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.22),rgba(198,161,91,.05) 72%);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .foot-seal::before{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.65) 24%,rgba(255,246,223,.9) 50%,
+    rgba(198,161,91,.65) 76%,transparent);}
+
+/* ---- What yields --------------------------------------------------- */
+html[data-pc-ornament="none"] header.nav > .mh-dust{display:none;}
+html[data-pc-motion="reduced"] header.nav > .mh-dust,
+html[data-pc-motion="reduced"] .brand-text .line1,
+html[data-pc-motion="reduced"] .mnr-item svg,
+html[data-pc-motion="reduced"] .mqr-item.mqr-cta{animation:none!important;}
+@media (prefers-reduced-motion:reduce){
+  header.nav > .mh-dust,.brand-text .line1,
+  .mnr-item svg,.mqr-item.mqr-cta{animation:none!important;}
+}
+
+/* ---- The bands that frame the masthead ----------------------------
+   The top bar, the notices ribbon and the breadcrumb were all mixed
+   from the same two browns as the masthead, so gilding the masthead
+   alone left it framed above and below by exactly what it was gilded
+   away from. They come down to the same near-black ground and take a
+   gold hairline each. Royal only. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .topbar,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .topbar{
+  background:linear-gradient(90deg,#150D04 0%,#241708 50%,#150D04 100%);
+  border-bottom:1px solid rgba(233,206,138,.22);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .ann-ribbon,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .ann-ribbon{
+  background:linear-gradient(180deg,#1A1006,#120A03)!important;
+  border-bottom:1px solid rgba(233,206,138,.20);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .breadcrumbs,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .breadcrumbs{
+  background:linear-gradient(180deg,#1D1206,#150D04);
+  border-bottom:1px solid rgba(233,206,138,.16);}
+
+/* ---- More gold on the plates --------------------------------------
+   At .155 the fill read as a tint of the band rather than as gilding.
+   Raised, with a true gold hairline and a lit top edge. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item,
+html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
+  background:
+    linear-gradient(180deg,rgba(255,246,223,.10),transparent 34%),
+    linear-gradient(168deg,rgba(233,206,138,.26),rgba(198,161,91,.08) 58%,rgba(233,206,138,.17));
+  border-color:rgba(233,206,138,.62);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.34),
+             inset 0 -14px 22px -18px rgba(233,206,138,.5),
+             0 1px 0 rgba(0,0,0,.5);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item span{color:#F6EEDC;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg{
+  color:#F2DCA6;border-color:rgba(233,206,138,.72);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(255,246,223,.30),rgba(198,161,91,.08) 72%);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item.mnr-more{
+  background:linear-gradient(168deg,rgba(233,206,138,.12),transparent);
+  border-color:rgba(233,206,138,.4);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item{
+  background:
+    linear-gradient(180deg,rgba(255,246,223,.07),transparent 34%),
+    linear-gradient(168deg,rgba(233,206,138,.20),rgba(198,161,91,.05) 58%,rgba(233,206,138,.13));
+  border-color:rgba(233,206,138,.5);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item svg{color:#F2DCA6;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item span{color:#F6EEDC;}
+
+/* ===================================================================
+   11. MORE MOVEMENT
+   Nine things that move in the chrome, none of them fast, none of them
+   in front of anything you are trying to read, and all of them off
+   under Motion: Reduced or prefers-reduced-motion.
+   =================================================================== */
+
+/* i. A halo behind the crest. The crest's own wrapper clips, so the
+   halo is drawn by the brand link over the same spot instead. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .brand{isolation:isolate;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .brand::before{
+  content:"";position:absolute;inset-inline-start:-13px;top:50%;
+  width:74px;height:74px;margin-top:-37px;border-radius:50%;z-index:-1;pointer-events:none;
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 200deg,
+    rgba(233,206,138,.28) 244deg,
+    rgba(255,246,223,.55) 264deg,
+    rgba(233,206,138,.28) 284deg,
+    transparent 326deg 360deg);
+  filter:blur(6px);
+  animation:rg-orbit 13s linear infinite;}
+header.nav.is-condensed .brand::before{width:58px;height:58px;margin-top:-29px;}
+@supports not (background:conic-gradient(from 0deg,red,blue)){
+  html[data-pc-theme="royal"][data-pc-livery="royal"] .brand::before{display:none;}}
+
+/* ii. A filigree that breathes along the foot of the ribbon. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon{position:relative;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon::after{
+  content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(233,206,138,.15) 12%,rgba(255,246,223,.75) 50%,
+    rgba(233,206,138,.15) 88%,transparent);
+  opacity:.55;animation:mh-filigree 8.5s ease-in-out infinite;}
+@keyframes mh-filigree{0%,100%{opacity:.35;}50%{opacity:.95;}}
+
+/* iii. A ripple of gold out of the point of contact on a plate. */
+.mnr-item,.fd-item{overflow:hidden;}
+.mnr-item > svg,.mnr-item > span,.fd-item > svg,.fd-item > span{position:relative;z-index:1;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item::before,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item::before{
+  content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;
+  margin:-4px 0 0 -4px;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,246,223,.42),rgba(233,206,138,0) 70%);
+  transform:scale(0);opacity:0;
+  transition:transform .75s cubic-bezier(.16,.8,.24,1),opacity .75s ease;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:hover::before,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:focus-within::before,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item:hover::before,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item:focus-within::before{transform:scale(26);opacity:1;}
+
+/* iv. The search glyph keeps the hover ring brand.css already gives it.
+   A permanent ping was drafted here and taken out again: that ring is
+   driven by opacity and transform on the same pseudo-element, and two
+   owners for one animation is how a working effect stops working. */
+
+/* v. The MENU control, on a slow gold shift rather than a flat fill. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .menu-toggle{
+  background:linear-gradient(120deg,
+    rgba(233,206,138,.10),rgba(255,246,223,.22) 42%,rgba(233,206,138,.10) 78%);
+  background-size:240% 100%;border-color:rgba(233,206,138,.7);color:#F6EEDC;
+  animation:mh-leaf 15s ease-in-out infinite;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .menu-toggle:hover{border-color:#FFF6DF;}
+
+/* vi. The standing line's rules extend as the page settles. */
+.mh-standing::before,.mh-standing::after{
+  transform:scaleX(0);transform-origin:inherit;
+  animation:mh-rule-in 1.2s cubic-bezier(.16,.8,.24,1) .6s forwards;}
+.mh-standing::before{transform-origin:right center;}
+.mh-standing::after{transform-origin:left center;}
+
+/* vii. Primary buttons across the site catch a pass of light on hover,
+   the same gesture as the gold cell in the quick row. */
+/* .btn-gold is left alone — it has carried its own sweep since brand.css
+   was written, and a second one on the same pseudo-element would cancel
+   the first. This is for the two primary buttons that had none. */
+.pr-btn.is-primary,.fm-btn.is-primary{position:relative;overflow:hidden;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .pr-btn.is-primary::after,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fm-btn.is-primary::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 34%,
+    rgba(255,255,255,.42) 49%,rgba(255,255,255,.62) 51%,
+    rgba(255,255,255,.42) 53%,transparent 66%);
+  transform:translateX(-140%);transition:transform .9s cubic-bezier(.3,.7,.3,1);}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .pr-btn.is-primary:hover::after,
+html[data-pc-theme="royal"][data-pc-livery="royal"] .fm-btn.is-primary:hover::after{transform:translateX(140%);}
+
+/* viii. The colophon's seal breathes with the crest behind it. */
+html[data-pc-theme="royal"][data-pc-livery="royal"] .foot-seal::after{
+  animation:mh-seal 17s ease-in-out infinite;}
+@keyframes mh-seal{0%,100%{opacity:.04;}50%{opacity:.09;}}
+
+/* ix. What yields ---------------------------------------------------- */
+html[data-pc-ornament="none"] .brand::before,
+html[data-pc-ornament="none"] .mobile-nav-ribbon::after{display:none;}
+html[data-pc-motion="reduced"] .brand::before,
+html[data-pc-motion="reduced"] .mobile-nav-ribbon::after,
+html[data-pc-motion="reduced"] .menu-toggle,
+html[data-pc-motion="reduced"] .foot-seal::after{animation:none!important;}
+html[data-pc-motion="reduced"] .mh-standing::before,
+html[data-pc-motion="reduced"] .mh-standing::after{animation:none;transform:scaleX(1);}
+@media (prefers-reduced-motion:reduce){
+  .brand::before,.mobile-nav-ribbon::after,
+  .menu-toggle,.foot-seal::after{animation:none!important;}
+  .mh-standing::before,.mh-standing::after{animation:none;transform:scaleX(1);}
+  .mnr-item::before,.fd-item::before,
+  .pr-btn.is-primary::after,.fm-btn.is-primary::after{transition:none;}
+}
+
+/* ===================================================================
+   12. THE CLEAR EDITION, THE HOUSE DEFAULT
+   -------------------------------------------------------------------
+   Clear is what a visitor now gets with no preference set: off-white,
+   ivory and cream, with the gold kept for the touches. It is the
+   quietest of the three editions and it is the one the school chose.
+
+   Everything the Royal edition gained in sections 10 and 11 is carried
+   here in an ivory register — the same gestures, transposed. Gold on
+   cream cannot be as loud as gold on black without becoming illegible,
+   so each one is set at the strength cream can carry, and the type is
+   left exactly where the legibility programme measured it.
+   =================================================================== */
+
+/* ---- The bands keep their cream and gain a firmer gold rule -------- */
+html[data-pc-theme="light"] header.nav{
+  border-bottom-color:rgba(var(--lv-g,198,161,91),.5);}
+html[data-pc-theme="light"] .mobile-nav-ribbon{
+  border-top-color:rgba(var(--lv-g,198,161,91),.34);
+  border-bottom-color:rgba(var(--lv-g,198,161,91),.34);}
+html[data-pc-theme="light"] .mobile-quick-row{
+  border-bottom-color:rgba(var(--lv-g,198,161,91),.34);}
+
+/* ---- Gold dust, at the strength cream can carry -------------------- */
+html[data-pc-theme="light"] header.nav > .mh-dust{
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.42;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 30%,rgba(176,133,58,.55),transparent 62%),
+    radial-gradient(1.2px 1.2px at 34% 68%,rgba(198,161,91,.5),transparent 62%),
+    radial-gradient(1.7px 1.7px at 57% 22%,rgba(176,133,58,.5),transparent 62%),
+    radial-gradient(1.3px 1.3px at 73% 55%,rgba(198,161,91,.45),transparent 62%),
+    radial-gradient(1.6px 1.6px at 89% 34%,rgba(176,133,58,.5),transparent 62%),
+    radial-gradient(1.2px 1.2px at 22% 82%,rgba(198,161,91,.42),transparent 62%),
+    radial-gradient(1.4px 1.4px at 46% 90%,rgba(176,133,58,.42),transparent 62%),
+    radial-gradient(1.3px 1.3px at 66% 12%,rgba(198,161,91,.5),transparent 62%);
+  background-size:640px 100%,640px 100%,640px 100%,640px 100%,
+                  980px 100%,980px 100%,980px 100%,980px 100%;
+  animation:mh-dust-a 44s linear infinite,mh-dust-b 67s linear infinite;}
+
+/* ---- A bloom behind the crest rather than a burning halo ----------- */
+html[data-pc-theme="light"] .brand{isolation:isolate;}
+html[data-pc-theme="light"] .brand::before{
+  content:"";position:absolute;inset-inline-start:-13px;top:50%;
+  width:74px;height:74px;margin-top:-37px;border-radius:50%;z-index:-1;pointer-events:none;
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 206deg,
+    rgba(198,161,91,.26) 246deg,
+    rgba(233,206,138,.42) 264deg,
+    rgba(198,161,91,.26) 282deg,
+    transparent 322deg 360deg);
+  filter:blur(7px);
+  animation:rg-orbit 15s linear infinite;}
+html[data-pc-theme="light"] header.nav.is-condensed .brand::before{
+  width:58px;height:58px;margin-top:-29px;}
+@supports not (background:conic-gradient(from 0deg,red,blue)){
+  html[data-pc-theme="light"] .brand::before{display:none;}}
+
+/* ---- The filigree along the foot of the ribbon --------------------- */
+html[data-pc-theme="light"] .mobile-nav-ribbon{position:relative;}
+html[data-pc-theme="light"] .mobile-nav-ribbon::after{
+  content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.2) 12%,rgba(176,133,58,.8) 50%,
+    rgba(198,161,91,.2) 88%,transparent);
+  opacity:.5;animation:mh-filigree 8.5s ease-in-out infinite;}
+
+/* ---- The plates: a lit top edge, a firmer hairline, a gold ripple -- */
+html[data-pc-theme="light"] .mnr-item,
+html[data-pc-theme="light"] .fd-item{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.85),transparent 40%),
+    linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
+  border-color:rgba(var(--lv-g,198,161,91),.52);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 1px 2px rgba(var(--lv-cf,59,42,29),.06);}
+html[data-pc-theme="light"] .mnr-item:hover,
+html[data-pc-theme="light"] .mnr-item:focus-visible,
+html[data-pc-theme="light"] .fd-item:hover,
+html[data-pc-theme="light"] .fd-item:focus-visible{
+  border-color:rgb(var(--lv-g,198,161,91));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 14px 26px -18px rgba(var(--lv-cf,59,42,29),.45),
+             0 0 0 1px rgba(var(--lv-g,198,161,91),.22);}
+html[data-pc-theme="light"] .mnr-item::before,
+html[data-pc-theme="light"] .fd-item::before{
+  content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;
+  margin:-4px 0 0 -4px;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(233,206,138,.55),rgba(198,161,91,0) 70%);
+  transform:scale(0);opacity:0;
+  transition:transform .75s cubic-bezier(.16,.8,.24,1),opacity .75s ease;}
+html[data-pc-theme="light"] .mnr-item:hover::before,
+html[data-pc-theme="light"] .mnr-item:focus-within::before,
+html[data-pc-theme="light"] .fd-item:hover::before,
+html[data-pc-theme="light"] .fd-item:focus-within::before{transform:scale(26);opacity:1;}
+
+/* ---- The medallions breathe, staggered ---------------------------- */
+html[data-pc-theme="light"] .mnr-item svg,
+html[data-pc-theme="light"] .fd-item svg{
+  border-color:rgba(var(--lv-g,198,161,91),.6);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.34),rgba(255,253,249,.4) 74%);}
+html[data-pc-theme="light"] .mnr-item svg{
+  animation:mh-breathe-lite 6.5s ease-in-out infinite;}
+@keyframes mh-breathe-lite{
+  0%,100%{box-shadow:0 0 0 0 rgba(198,161,91,0);}
+  50%{box-shadow:0 0 12px -3px rgba(198,161,91,.55);}}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
+
+/* ---- The gold cell keeps its pass of light ------------------------- */
+html[data-pc-theme="light"] .mqr-item.mqr-cta{
+  background:linear-gradient(135deg,#C6A15B 0%,#E9CE8A 42%,#FFF3D2 58%,#C6A15B 100%);
+  background-size:220% 100%;
+  animation:mh-cta-shift 11s ease-in-out infinite;}
+
+/* ---- The MENU control, on a slow gold shift ----------------------- */
+html[data-pc-theme="light"] .menu-toggle{
+  background:linear-gradient(120deg,
+    rgba(233,206,138,.20),rgba(255,253,249,.85) 42%,rgba(233,206,138,.20) 78%);
+  background-size:240% 100%;border-color:rgba(var(--lv-g,198,161,91),.8);
+  animation:mh-leaf 15s ease-in-out infinite;}
+
+/* ---- The rules, and the seal at the foot -------------------------- */
+html[data-pc-theme="light"] header.nav nav.wrap::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.45) 16%,rgba(176,133,58,.85) 50%,
+    rgba(198,161,91,.45) 84%,transparent);}
+html[data-pc-theme="light"] header.nav nav.wrap > .mh-glint{
+  background:linear-gradient(90deg,transparent,rgba(255,246,223,.9) 50%,transparent);
+  box-shadow:0 0 6px 1px rgba(233,206,138,.6);}
+html[data-pc-theme="light"] .mh-progress{background:rgba(var(--lv-g,198,161,91),.16);}
+html[data-pc-theme="light"] .foot-seal::after{animation:mh-seal 17s ease-in-out infinite;}
+
+/* ---- A pass of light on the primary buttons ----------------------- */
+html[data-pc-theme="light"] .pr-btn.is-primary::after,
+html[data-pc-theme="light"] .fm-btn.is-primary::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 34%,
+    rgba(255,255,255,.46) 49%,rgba(255,255,255,.66) 51%,
+    rgba(255,255,255,.46) 53%,transparent 66%);
+  transform:translateX(-140%);transition:transform .9s cubic-bezier(.3,.7,.3,1);}
+html[data-pc-theme="light"] .pr-btn.is-primary:hover::after,
+html[data-pc-theme="light"] .fm-btn.is-primary:hover::after{transform:translateX(140%);}
+
+/* ---- What yields --------------------------------------------------- */
+html[data-pc-ornament="none"][data-pc-theme="light"] header.nav > .mh-dust,
+html[data-pc-ornament="none"][data-pc-theme="light"] .brand::before,
+html[data-pc-ornament="none"][data-pc-theme="light"] .mobile-nav-ribbon::after{display:none;}
+html[data-pc-motion="reduced"][data-pc-theme="light"] header.nav > .mh-dust,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .brand::before,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .mobile-nav-ribbon::after,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .mnr-item svg,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .menu-toggle,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .mqr-item.mqr-cta,
+html[data-pc-motion="reduced"][data-pc-theme="light"] .foot-seal::after{animation:none!important;}
+
+/* ===================================================================
+   13. A FLAG THAT WAS NOT A DEFECT
+   -------------------------------------------------------------------
+   The Adhkar Centre's section chip was flagged at 1.58:1 and deepened
+   here to a dark gold. That was wrong and is reverted. The chip does not
+   sit on paper: it sits at the right-hand end of the section head, which
+   is a dark espresso band in every edition, and the bright gold
+   prestige.css gives it is correct there. Two things misled me — the
+   auditor sampling the chip's own gold border rather than the band
+   behind it, and my own walk up the DOM stopping at .adhkar-page, which
+   is white, instead of at the head that actually paints. Deepening the
+   ink made a legible chip dim.
+
+   The lesson is in the file rather than only in the history: when a
+   measurement and a screenshot disagree, the screenshot is the site.
+   =================================================================== */
+
+/* ===================================================================
+   14. THE RIBBON, OPENED
+   -------------------------------------------------------------------
+   The panel that drops beneath the plates. It is the same index the
+   drawer carries, cloned, so there is one source for the navigation;
+   what this adds is that the masthead can be read without opening
+   anything, which is the difference between a toolbar and an index.
+   =================================================================== */
+.mh-mega{
+  position:relative;z-index:8;overflow:hidden;
+  max-height:0;opacity:0;
+  transition:max-height .42s cubic-bezier(.16,.8,.24,1),opacity .3s ease;}
+.mh-mega.is-open{max-height:min(62vh,540px);opacity:1;}
+html[data-pc-motion="reduced"] .mh-mega{transition:none;}
+@media (prefers-reduced-motion:reduce){.mh-mega{transition:none;}}
+
+.mh-mega-inner{
+  padding-inline:max(24px,calc((100% - 1180px) / 2));
+  padding-block:26px 28px;
+  border-bottom:1px solid rgba(var(--lv-g,198,161,91),.34);
+  background:
+    radial-gradient(760px 200px at 50% -30%,rgba(var(--lv-gb,233,206,138),.14),transparent 70%),
+    linear-gradient(180deg,rgba(var(--lv-gb,233,206,138),.07),rgba(var(--lv-g,198,161,91),.02));
+  max-height:inherit;overflow-y:auto;}
+html[data-pc-theme="royal"] .mh-mega-inner,
+html[data-pc-theme="dark"] .mh-mega-inner{
+  background:
+    radial-gradient(760px 200px at 50% -30%,rgba(233,206,138,.13),transparent 70%),
+    linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.44));}
+
+/* The cloned index, laid out as columns rather than as the drawer's
+   single stack — the masthead has width the drawer never had. */
+.mh-mega-body{
+  display:grid;gap:20px 40px;align-items:start;
+  grid-template-columns:minmax(200px,.8fr) 2.4fr;}
+@media (max-width:1040px){.mh-mega-body{grid-template-columns:1fr;}}
+.mh-mega-body .nav-mega-intro{grid-column:1;grid-row:1;}
+/* The drawer keeps its children in one stack, which is right in a
+   540px panel and wrong across 1180px. Here they run as columns. */
+.mh-mega-body .nav-mega-col{
+  grid-column:2;grid-row:1 / span 2;
+  display:grid;gap:2px 22px;align-content:start;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));}
+@media (max-width:1040px){
+  .mh-mega-body .nav-mega-col{grid-column:1;grid-row:auto;}
+}
+.mh-mega-body .nav-mega-intro h4{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.98rem;margin:0 0 8px;
+  color:var(--navy);}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-intro h4,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-intro h4{color:rgb(var(--lv-gb,233,206,138));}
+.mh-mega-body .nav-mega-intro p{font-size:.84rem;line-height:1.6;color:var(--ink-soft);margin:0;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-intro p,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-intro p{
+  color:rgba(var(--lv-p3,247,238,223),.78);}
+
+.mh-mega-body .nav-mega-item{
+  display:block;padding:9px 12px;border-radius:10px;text-decoration:none;
+  border:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,transform .3s ease;}
+.mh-mega-body .nav-mega-item:hover,
+.mh-mega-body .nav-mega-item:focus-visible{
+  background:rgba(var(--lv-gb,233,206,138),.16);
+  border-color:rgba(var(--lv-g,198,161,91),.4);
+  transform:translateX(3px);}
+[dir="rtl"] .mh-mega-body .nav-mega-item:hover{transform:translateX(-3px);}
+.mh-mega-body .nav-mega-item .t{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.86rem;
+  color:var(--navy);}
+.mh-mega-body .nav-mega-item .d{
+  display:block;font-size:.76rem;color:var(--ink-soft);margin-top:2px;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-item .t,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-item .t{color:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-item .d,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-item .d{color:rgba(var(--lv-p3,247,238,223),.7);}
+
+.mh-mega-body .nav-mega-featured{
+  grid-column:1;grid-row:2;padding-top:16px;margin-top:4px;
+  border-top:1px solid rgba(var(--lv-g,198,161,91),.34);}
+.mh-mega-body .nav-mega-featured-label{
+  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgb(var(--lv-gt3,99,72,27));margin-bottom:7px;}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-featured-label,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-featured-label{
+  color:rgb(var(--lv-gb,233,206,138));}
+/* brand.css sets this link to #fff !important, which is right inside the
+   drawer's dark panel and invisible in the masthead's pale one. The clone
+   is a different room, so it takes the room's own ink — and it must be
+   !important to answer an !important. */
+.mh-mega-body .nav-mega-featured-link{
+  display:inline-block;font-family:var(--font-label,'Cinzel',serif);font-size:.9rem;
+  color:var(--navy)!important;text-decoration:none;
+  border-bottom:1px solid rgba(var(--lv-g,198,161,91),.45);
+  transition:border-color .3s ease;}
+.mh-mega-body .nav-mega-featured-link:hover{border-color:rgb(var(--lv-g,198,161,91));}
+html[data-pc-theme="royal"] .mh-mega-body .nav-mega-featured-link,
+html[data-pc-theme="dark"] .mh-mega-body .nav-mega-featured-link{
+  color:rgb(var(--lv-gb,233,206,138))!important;}
+
+/* The plate keeps a lit edge while its own panel is open, so the two
+   read as one object and not as a panel that arrived from nowhere. */
+.mnr-item.is-open{
+  border-color:rgb(var(--lv-g,198,161,91));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 0 0 1px rgba(var(--lv-g,198,161,91),.3);}
+.mnr-item.is-open::after{transform:translateX(-50%) scaleX(1);}
+html[data-pc-theme="royal"] .mnr-item.is-open,
+html[data-pc-theme="dark"] .mnr-item.is-open{
+  border-color:rgba(255,246,223,.9);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.4),
+             0 0 22px -6px rgba(233,206,138,.55);}
+
+@media (max-width:860px){.mh-mega{display:none;}}
+
+/* ===================================================================
+   15. THE ROYAL BROWN, RETURNED TO THE MASTHEAD
+   -------------------------------------------------------------------
+   The Clear edition took the whole masthead to paper, and paper alone
+   has no depth: seven pale bands stacked on one another with gold
+   hairlines between them. The house colour is a coffee brown and it
+   belongs at the front of the school's own page — not as the ground it
+   used to be, but as the one dark band the pale ones are set against.
+
+   So the quick row becomes espresso with gold set into it, the plate
+   labels take coffee ink rather than near-black, the medallions take
+   warm bronze, and every hairline goes from yellow gold to the gold
+   that has brown in it. Cream above, coffee through the middle, cream
+   below — which is the way the school's own crest is coloured.
+
+   Clear edition only. Royal has its black and gold; Midnight has its
+   own dark.
+   =================================================================== */
+
+/* ---- The one dark band --------------------------------------------- */
+html[data-pc-theme="light"] .mobile-quick-row{
+  background:linear-gradient(180deg,#3B2A1D 0%,#2A1D12 100%);
+  border-top:1px solid rgba(198,161,91,.45);
+  border-bottom:1px solid rgba(198,161,91,.5);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.16),
+             inset 0 -8px 18px -14px rgba(0,0,0,.9);}
+html[data-pc-theme="light"] .mqr-item{color:#EBD3A0;}
+html[data-pc-theme="light"] .mqr-item svg{color:#E9CE8A;}
+html[data-pc-theme="light"] .mqr-item:hover{
+  color:#FFF6DF;
+  background:linear-gradient(180deg,rgba(233,206,138,.16),rgba(198,161,91,.06));}
+html[data-pc-theme="light"] .mqr-item + .mqr-item::before{
+  background:linear-gradient(180deg,transparent,
+    rgba(233,206,138,.38) 22%,rgba(233,206,138,.38) 78%,transparent);}
+html[data-pc-theme="light"] .mqr-item::after{
+  background:linear-gradient(90deg,transparent,#FFF6DF,transparent);}
+/* The gold cell keeps its fill; against espresso it now reads as the
+   one lit key on a dark keyboard rather than as a stripe on paper. */
+html[data-pc-theme="light"] .mqr-item.mqr-cta{
+  color:#1A1006;box-shadow:0 0 26px -8px rgba(233,206,138,.75);}
+html[data-pc-theme="light"] .mqr-item.mqr-cta svg{color:#1A1006;}
+
+/* ---- Coffee in the ink and the ornament ---------------------------- */
+html[data-pc-theme="light"] .mnr-item span{color:#3B2A1D;}
+html[data-pc-theme="light"] .mnr-item svg{
+  color:#7C5E28;
+  border-color:rgba(140,104,52,.62);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);}
+html[data-pc-theme="light"] .mnr-item{
+  border-color:rgba(140,104,52,.5);}
+html[data-pc-theme="light"] .mnr-item:hover,
+html[data-pc-theme="light"] .mnr-item:focus-visible{
+  border-color:#8C6834;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 14px 26px -18px rgba(59,42,29,.55),
+             0 0 0 1px rgba(140,104,52,.28);}
+html[data-pc-theme="light"] .mnr-item::after{
+  background:linear-gradient(90deg,transparent,#8C6834,transparent);}
+
+/* ---- The hairlines take the brown-gold ----------------------------- */
+html[data-pc-theme="light"] header.nav{
+  border-bottom-color:rgba(140,104,52,.55);}
+html[data-pc-theme="light"] .mobile-nav-ribbon{
+  border-top-color:rgba(140,104,52,.34);
+  border-bottom-color:rgba(140,104,52,.42);}
+html[data-pc-theme="light"] .mobile-nav-ribbon::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(140,104,52,.22) 12%,rgba(124,94,40,.85) 50%,
+    rgba(140,104,52,.22) 88%,transparent);}
+html[data-pc-theme="light"] header.nav nav.wrap::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(140,104,52,.5) 16%,rgba(124,94,40,.9) 50%,
+    rgba(140,104,52,.5) 84%,transparent);}
+html[data-pc-theme="light"] .mh-standing{color:#6B5222;}
+html[data-pc-theme="light"] .mh-standing::before{
+  background:linear-gradient(90deg,transparent,rgba(124,94,40,.75));}
+html[data-pc-theme="light"] .mh-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(124,94,40,.75));}
+
+/* ---- The wordmark and the crest sit in coffee ---------------------- */
+html[data-pc-theme="light"] .brand-text .line1{color:#3B2A1D;}
+html[data-pc-theme="light"] .brand-text .line2{color:#7C5E28;}
+html[data-pc-theme="light"] .brand::before{
+  background:conic-gradient(from var(--rg-angle),
+    transparent 0deg 206deg,
+    rgba(140,104,52,.30) 246deg,
+    rgba(233,206,138,.55) 264deg,
+    rgba(140,104,52,.30) 282deg,
+    transparent 322deg 360deg);}
+
+/* ---- A ruled band of coffee under the breadcrumb ------------------- */
+html[data-pc-theme="light"] .breadcrumbs{
+  border-bottom:1px solid rgba(140,104,52,.28);}
+
+/* ===================================================================
+   16. THE SIX WAYS IN
+   -------------------------------------------------------------------
+   The homepage runs to eighteen sections. A visitor arrives as one of
+   about six people, and asking them to find which of the eighteen is
+   theirs is the one thing a large site does that a small one never
+   has to. This is the shortcut: six doors, each opening on what that
+   person actually came for.
+
+   The icon draws itself as the card arrives, the plate lifts, a rule
+   draws beneath the label, and the whole shape carries the travelling
+   light. Everything yields to Motion: Reduced.
+   =================================================================== */
+.wf-band{background:var(--surface-tertiary-bg,#FCFAF6);position:relative;}
+.wf-band::before{content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.45),transparent);}
+.wf-lede{max-width:680px;color:var(--ink-soft);margin:14px 0 0;font-size:.98rem;
+  text-align:justify;text-justify:inter-word;hyphens:auto;}
+
+.wf-grid{
+  display:grid;gap:16px;margin-top:34px;
+  grid-template-columns:repeat(auto-fit,minmax(276px,1fr));}
+.wf-card{
+  position:relative;isolation:isolate;display:flex;flex-direction:column;gap:9px;
+  padding:26px 24px 22px;border-radius:var(--pr-r-lg,18px);text-decoration:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.7),transparent 42%),
+    linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)));
+  border:1px solid rgba(140,104,52,.36);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),
+             0 1px 2px rgba(var(--lv-cf,59,42,29),.05);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             border-color .45s ease,box-shadow .45s ease;}
+.wf-card:hover,.wf-card:focus-visible{
+  transform:translateY(-4px);
+  border-color:#8C6834;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 22px 40px -26px rgba(var(--lv-cf,59,42,29),.6),
+             0 0 0 1px rgba(140,104,52,.24);}
+
+.wf-ico{
+  display:grid;place-items:center;width:54px;height:54px;border-radius:16px;
+  color:#7C5E28;margin-bottom:4px;
+  border:1px solid rgba(140,104,52,.4);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             box-shadow .45s ease,border-color .45s ease;}
+.wf-ico svg{width:26px;height:26px;}
+.wf-card:hover .wf-ico{
+  transform:translateY(-2px) scale(1.06) rotate(-3deg);
+  border-color:#8C6834;
+  box-shadow:0 0 22px -4px rgba(198,161,91,.7);}
+
+.wf-k{
+  position:relative;font-family:var(--font-label,'Cinzel',serif);font-size:1.02rem;
+  color:#3B2A1D;padding-bottom:10px;}
+.wf-k::after{
+  content:"";position:absolute;inset-inline-start:0;bottom:2px;height:1px;width:62%;
+  background:linear-gradient(90deg,#8C6834,transparent);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .55s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .wf-k::after{transform-origin:right center;
+  background:linear-gradient(270deg,#8C6834,transparent);}
+.wf-card:hover .wf-k::after,.wf-card:focus-visible .wf-k::after{transform:scaleX(1);}
+.wf-d{font-size:.86rem;line-height:1.62;color:var(--ink-soft);flex:1;}
+.wf-go{
+  margin-top:10px;font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;
+  letter-spacing:.13em;text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));
+  transition:transform .45s cubic-bezier(.16,.8,.24,1);display:inline-block;}
+.wf-card:hover .wf-go{transform:translateX(4px);}
+[dir="rtl"] .wf-card:hover .wf-go{transform:translateX(-4px);}
+
+/* Only Midnight takes the dark plate. The Royal edition is black and
+   gold in its CHROME and cream in its PAGES — a first draft gave these
+   cards Royal's pale ink on Royal's cream ground and measured 1.03:1,
+   which is the whole card invisible. Royal keeps the light plate. */
+html[data-pc-theme="dark"] .wf-band{background:transparent;}
+html[data-pc-theme="dark"] .wf-card{
+  background:linear-gradient(168deg,rgba(233,206,138,.12),rgba(198,161,91,.04));
+  border-color:rgba(233,206,138,.34);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.18);}
+html[data-pc-theme="dark"] .wf-k{color:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="dark"] .wf-d{color:rgba(var(--lv-p3,247,238,223),.78);}
+html[data-pc-theme="dark"] .wf-ico{
+  color:#F2DCA6;border-color:rgba(233,206,138,.46);
+  background:radial-gradient(120% 120% at 50% 0%,rgba(233,206,138,.24),rgba(198,161,91,.06) 74%);}
+html[data-pc-theme="dark"] .wf-go{color:rgb(var(--lv-gb,233,206,138));}
+html[data-pc-theme="dark"] .wf-k::after{
+  background:linear-gradient(90deg,rgb(var(--lv-gb,233,206,138)),transparent);}
+
+@media (prefers-reduced-motion:reduce){
+  .wf-card,.wf-ico,.wf-k::after,.wf-go{transition:none;}
+  .wf-k::after{transform:scaleX(1);}
+}
+html[data-pc-motion="reduced"] .wf-card,
+html[data-pc-motion="reduced"] .wf-ico,
+html[data-pc-motion="reduced"] .wf-go{transition:none;}
+
+/* The folio numeral on the six marks was raised to the gold-text tone in
+   the pale editions and clears there. In Midnight two rules in
+   liveries.css hold it at 30% and 42% alpha, which measure 2.13:1 and
+   2.83:1 on the card it sits on. At 85% it reads at 6.9:1 and is still
+   plainly ornament rather than a heading. */
+html[data-pc-theme="dark"] .hx-mark-n{color:rgba(233,206,138,.85)!important;}
+
+/* ===================================================================
+   17. THE DIGITAL CAMPUS GATEWAY, RAISED
+   -------------------------------------------------------------------
+   The gateway was composed for the dark chrome: its hero mixes
+   --navy-bg into --navy-deep-bg and its ink is set light against that.
+   In the Clear edition those two tokens both resolve pale, so the hero
+   painted cream, the light ink nearly vanished into it, and the eight
+   doors became flat white boxes on a flat white ground. It did not
+   look cheap because it was badly designed; it looked cheap because
+   half its design had been washed out from under it.
+
+   So the hero is given its own dark ground in every edition — it is a
+   threshold, and a threshold should feel like one — and the eight
+   doors take the plate, the medallion and the hairline the rest of the
+   site now uses.
+   =================================================================== */
+
+/* ---- The threshold ------------------------------------------------- */
+.gateway-hero{
+  background:
+    radial-gradient(900px 260px at 50% -30%,rgba(233,206,138,.20),transparent 72%),
+    linear-gradient(162deg,#3B2A1D 0%,#1C1207 62%,#241708 100%)!important;
+  border-top:1px solid rgba(233,206,138,.32);
+  border-bottom:1px solid rgba(233,206,138,.45);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.18),
+             0 24px 50px -34px rgba(0,0,0,.85);}
+.gateway-hero::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.06;
+  background-image:url("/assets/images/crest-watermark.png");
+  background-size:auto 150%;background-repeat:no-repeat;background-position:center;}
+html[data-pc-ornament="none"] .gateway-hero::after{display:none;}
+.gateway-hero > *{position:relative;z-index:1;}
+.gateway-title,.gateway-sub,.gateway-eyebrow,.gateway-typewriter{position:relative;z-index:1;}
+.gateway-hero .gateway-title{color:#FFF6DF!important;}
+.gateway-hero .gateway-sub,
+.gateway-hero .gateway-typewriter{color:rgba(247,238,223,.86)!important;}
+.gateway-hero .gateway-eyebrow{color:#E9CE8A!important;}
+.gateway-hero-rule{
+  background:linear-gradient(90deg,transparent,
+    rgba(198,161,91,.6) 20%,rgba(255,246,223,.9) 50%,
+    rgba(198,161,91,.6) 80%,transparent)!important;height:1px;}
+
+/* ---- The eight doors ----------------------------------------------- */
+html[data-pc-theme="light"] .gateway-card{
+  border-radius:var(--pr-r-lg,18px);
+  border:1px solid rgba(140,104,52,.4);
+  border-top:1px solid rgba(140,104,52,.4);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.72),transparent 40%),
+    linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 2px 3px rgba(59,42,29,.05);
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),
+             box-shadow .45s ease,border-color .45s ease!important;}
+/* The accent each door carries is kept, but as a lit edge that draws
+   across the head of the plate rather than a 4px slab on top of it. */
+html[data-pc-theme="light"] .gateway-card::after{
+  content:"";position:absolute;inset-inline:0;top:0;height:2px;z-index:2;
+  background:linear-gradient(90deg,transparent,
+    var(--gate-accent,rgb(var(--lv-g,198,161,91))) 22%,
+    var(--gate-accent,rgb(var(--lv-g,198,161,91))) 78%,transparent);
+  transform:scaleX(.34);transform-origin:center;
+  transition:transform .6s cubic-bezier(.16,.8,.24,1);}
+html[data-pc-theme="light"] .gateway-card:hover,html[data-pc-theme="light"] .gateway-card:focus-visible{
+  transform:translateY(-5px)!important;
+  border-color:#8C6834;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 26px 46px -28px rgba(59,42,29,.62),
+             0 0 0 1px rgba(140,104,52,.24)!important;}
+html[data-pc-theme="light"] .gateway-card:hover::after,html[data-pc-theme="light"] .gateway-card:focus-visible::after{transform:scaleX(1);}
+
+html[data-pc-theme="light"] .gateway-card-icon{
+  display:grid;place-items:center;width:52px;height:52px;border-radius:15px;
+  color:#7C5E28;
+  border:1px solid rgba(140,104,52,.42);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.42),rgba(247,238,223,.5) 74%)!important;
+  transition:transform .5s cubic-bezier(.16,.8,.24,1),box-shadow .45s ease,border-color .45s ease;}
+html[data-pc-theme="light"] .gateway-card:hover .gateway-card-icon{
+  transform:translateY(-2px) scale(1.06);
+  border-color:#8C6834;box-shadow:0 0 20px -4px rgba(198,161,91,.65);}
+html[data-pc-theme="light"] .gateway-card-eyebrow{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.16em;
+  text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));}
+html[data-pc-theme="light"] .gateway-card-cta{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;letter-spacing:.13em;
+  text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));
+  transition:transform .45s cubic-bezier(.16,.8,.24,1);display:inline-block;}
+html[data-pc-theme="light"] .gateway-card:hover .gateway-card-cta{transform:translateX(4px);}
+html[data-pc-theme="light"] [dir="rtl"] .gateway-card:hover .gateway-card-cta{transform:translateX(-4px);}
+
+/* ---- The straight-in chips ----------------------------------------- */
+html[data-pc-theme="light"] .gw-q{
+  border-radius:14px;
+  border:1px solid rgba(140,104,52,.4)!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.7),transparent 42%),
+    linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 1px 0 rgba(59,42,29,.06)!important;
+  transition:transform .45s cubic-bezier(.16,.8,.24,1),
+             border-color .4s ease,box-shadow .4s ease!important;}
+html[data-pc-theme="light"] .gw-q:hover,html[data-pc-theme="light"] .gw-q:focus-visible{
+  transform:translateY(-3px)!important;border-color:#8C6834!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 14px 24px -18px rgba(59,42,29,.5),
+             0 0 0 1px rgba(140,104,52,.22)!important;}
+html[data-pc-theme="light"] .gw-q-i{
+  display:grid;place-items:center;width:40px;height:40px;border-radius:50%;
+  color:#7C5E28!important;
+  border:1px solid rgba(140,104,52,.42);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);
+  transition:transform .45s cubic-bezier(.16,.8,.24,1),box-shadow .4s ease;}
+html[data-pc-theme="light"] .gw-q:hover .gw-q-i{transform:translateY(-1px) scale(1.07);
+  box-shadow:0 0 16px -3px rgba(198,161,91,.6);}
+html[data-pc-theme="light"] .gw-quick-lab{
+  font-family:var(--font-label,'Cinzel',serif);letter-spacing:.16em;
+  text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));}
+
+/* Royal and Midnight take the dark plate. Both keep portal.css's own
+   light ink — the gateway was composed for dark chrome — so a pale plate
+   under it measured 1.02:1. Only the Clear edition gets paper here. */
+html[data-pc-theme="dark"] .gateway-card,
+html[data-pc-theme="dark"] .gw-q,
+html[data-pc-theme="royal"] .gateway-card,
+html[data-pc-theme="royal"] .gw-q{
+  background:linear-gradient(168deg,rgba(233,206,138,.11),rgba(198,161,91,.035))!important;
+  border-color:rgba(233,206,138,.32)!important;}
+html[data-pc-theme="dark"] .gateway-card-icon,
+html[data-pc-theme="dark"] .gw-q-i,
+html[data-pc-theme="royal"] .gateway-card-icon,
+html[data-pc-theme="royal"] .gw-q-i{
+  color:#F2DCA6!important;border-color:rgba(233,206,138,.44);
+  background:radial-gradient(120% 120% at 50% 0%,rgba(233,206,138,.22),rgba(198,161,91,.05) 74%)!important;}
+html[data-pc-theme="dark"] .gateway-card-eyebrow,
+html[data-pc-theme="dark"] .gateway-card-cta,
+html[data-pc-theme="dark"] .gw-quick-lab,
+html[data-pc-theme="royal"] .gateway-card-eyebrow,
+html[data-pc-theme="royal"] .gateway-card-cta,
+html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
+
+@media (prefers-reduced-motion:reduce){
+  .gateway-card,.gateway-card::after,.gateway-card-icon,
+  .gw-q,.gw-q-i,.gateway-card-cta{transition:none!important;}
+  .gateway-card::after{transform:scaleX(1);}
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-locale="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,21 +22,56 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
-<link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
+<<<<<<< HEAD
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+=======
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+<link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
+<link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
+>>>>>>> origin/main
 <script>
 (function(){
   try{
     var raw = localStorage.getItem('shrsPersonalisation');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
-    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-theme', p.theme || 'light');
+    html.setAttribute('data-pc-livery', p.livery || 'royal');
+    html.setAttribute('data-pc-ornament', p.ornament || 'full');
+    html.setAttribute('data-pc-corners', p.corners || 'soft');
+    html.setAttribute('data-pc-depth', p.depth || 'standard');
+    html.setAttribute('data-pc-grain', p.grain || 'on');
+    html.setAttribute('data-pc-cursor', p.cursorLight || 'on');
+    html.setAttribute('data-pc-parallax', p.parallax || 'on');
+    html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
+    html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -52,7 +87,17 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="alternate" hreflang="ar" href="/ar/about/" />
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<link rel="stylesheet" href="/css/masthead.css?v=b4aaca0539">
+<link rel="stylesheet" href="/css/homefx.css?v=914ae7bedd">
+<link rel="stylesheet" href="/css/story.css?v=53bfe6d6a9">
+<link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/" />
+<link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/" />
+<link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/" />
 </head>
 <body>
 
@@ -77,7 +122,18 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.3 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
       </a>
       <span class="topbar-divider" aria-hidden="true"></span>
-      <a href="/ar/about/" class="lang-switch" lang="ar" dir="rtl">العربية</a>
+      <!-- Language switcher mount. js/i18n.js fills this with one entry per
+           registered locale, each written in its own language and script, so
+           adding a fifth language needs no change to this file. The
+           <noscript> fallback is a real link to this page in another
+           language (/ar/about/), so the site is never trapped in one
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
+      <span class="lang-switch-mount" data-locale-switcher></span>
+      <noscript><a href="/ar/about/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">Personalise</span>
@@ -98,12 +154,25 @@
 </div>
 
 <header class="nav">
+  <div class="mh-progress" aria-hidden="true"><span class="mh-progress-fill"></span></div>
   <div class="imperial-motion" aria-hidden="true"></div>
+  <div class="mh-dust" aria-hidden="true"></div>
   <nav class="wrap">
     <a href="/" class="brand">
       <span class="crest-shimmer-wrap"><img class="brand-mark" src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" /></span>
       <span class="brand-text"><span class="line1">SULTAN HANAFI</span><br/><span class="line2">Royal Schools</span></span>
     </a>
+    <span class="mh-standing"><span class="mh-standing-t">Established July 2016</span><span class="mh-standing-d">&middot;</span><span class="mh-standing-t">Ikorodu, Lagos State</span></span>
+    <span class="rlx" data-clock hidden>
+      <button type="button" class="rlx-btn" data-clock-btn aria-expanded="false"
+        data-label-base="The time in Ikorodu" aria-label="The time in Ikorodu"></button>
+      <div class="rlx-pop" data-clock-pop hidden role="dialog" aria-label="The time in Ikorodu">
+        <p class="rlx-digits" data-clock-digits>&mdash;&mdash;:&mdash;&mdash;</p>
+        <p class="rlx-date" data-clock-date>&nbsp;</p>
+        <span class="rlx-zone">Ikorodu · West Africa Time</span>
+      </div>
+    </span>
+    <button class="listen-toggle" data-listen-toggle hidden aria-label="Listen to this page" title="Listen to this page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Search the site" title="Search">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -178,7 +247,7 @@
               <span class="nav-mega-text"><span class="t">Morning &amp; Evening Adhkār</span><span class="d">Daily remembrance, with sources</span></span>
             </a>
             <a class="nav-mega-item" href="/quran-centre/">
-              <span class="nav-mega-text"><span class="t">Digital Qur'an Centre</span><span class="d">Read Al-Fātiḥah &amp; Surahs 93–114</span></span>
+              <span class="nav-mega-text"><span class="t">The Digital Qur'ān Centre</span><span class="d">Adhkār, the Ḥifẓ record, and the daily wird</span></span>
             </a>
             <a class="nav-mega-item" href="/faculty/">
               <span class="nav-mega-text"><span class="t">Faculty Directory</span><span class="d">Meet our educators</span></span>
@@ -317,12 +386,134 @@
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="nav-drop-panel nav-mega-panel is-compact">
-          <div class="nav-mega-intro">
-            <h4>SHRS Digital Campus Gateway</h4>
-            <p>One coherent Digital Campus — Executive, Administrative, Academic Staff, Student, Parent/Guardian, Applicant, Alumni, and Public Verification. Select "Login to Portal" and choose your destination.</p>
-            <a class="nmi-cta" href="/portal/select/">Open the Gateway →</a>
-            <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account →</a>
+        <div class="nav-drop-panel nav-mega-panel is-portal">
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>Which of these are you?</h4>
+              <p>Choose the description that fits you, and the gateway it opens is set out beside it.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="Choose the category you belong to">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a parent or guardian</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a student here</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am applying for a place</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I teach at the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">I work in an office of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I sit on the Board or the Management Council</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a graduate of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am verifying a document</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
+              <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
+              <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Student Portal</h4>
+              <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
+              <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
+              <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
+              <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
+              <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
+              <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
+              <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
+              <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
+              <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
+              <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
+              <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
+              <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
+              <p class="pgx-pane-need">No account is required.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
+              <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
+              <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
+              <a class="pgx-pane-cta" href="/verify/">Verify a Document &rarr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">See all eight gateways &rarr;</a>
+              <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account &rarr;</a>
+            </div>
           </div>
         </div>
       </div>
@@ -330,6 +521,7 @@
         <a href="/admission/" class="nav-mark">Start Admission</a>
       </div>
     </div>
+    <span class="mh-glint" aria-hidden="true"></span>
   </nav>
   <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
     <a href="/about/" class="mnr-item">
@@ -366,7 +558,7 @@
     </button>
   </div>
   <div class="mobile-quick-row">
-    <a href="/portal/select/" class="mqr-item mqr-cta">
+    <a href="/portal/select/" class="mqr-item mqr-cta"><span class="mqr-sheen" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Login to Portal
     </a>
@@ -402,116 +594,499 @@
   </div>
 </div>
 
-<section class="director reveal" id="director">
-  <div class="wrap director-grid">
-    <div class="director-card">
-      <span class="role">Director's Message</span>
-      <h3>Zakariya Olanrewaju Anofi</h3>
-      <p class="creds">B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN) · Doctoral Candidate, Edgewood University, Madison, Wisconsin</p>
-    </div>
-    <div class="director-body">
-      <p>My name is Zakariya Olanrewaju Anofi, and it is my privilege to welcome you to Sultan Hanafi Royal Schools — a hybrid Islamic and secular institution built in Ikorodu, Lagos State, on a single conviction: that faith and scholarship are not rival inheritances but one and the same, and that a child raised well in both will want for neither. As Director, I hold our staff and our institution to that standard in a school that is nurturing, secure, and genuinely inclusive.</p>
-      <p>Two decades across banking, insurance, oil &amp; gas, and consulting — in corporate reporting, taxation management, revenue generation, financial and business advisory, governance, and leadership — shaped how I think about building institutions meant to last. That same discipline is what led me to invest in schools whose only purpose is to educate.</p>
-      <p>Our doors are open to Muslims and non-Muslims, to sons and daughters alike. Every educator on our staff is here to equip students with the knowledge, character, and practical skill a fast-changing world will genuinely ask of them. Whether you are considering us for the first time, already a parent in our community, or returning as one of our own alumni, you are welcome here.</p>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">›</span><span aria-current="page">Our Story</span></div>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://shroyalschools.com/"},{"@type":"ListItem","position":2,"name":"Our Story","item":"https://shroyalschools.com/about/"}]}</script>
+<div class="mo-rail" aria-hidden="true"></div>
+<!-- ===================== DISCOVER SHRS · FLAGSHIP ===================== -->
+
+<!-- Immersive hero -->
+<section class="pr-hero">
+  <div class="pr-hero-media mo-par-img">
+    <img src="/assets/images/gallery/campus-hero.jpg" alt="The Sultan Hanafi Royal Schools campus in Ikorodu, Lagos State" width="1600" height="900" fetchpriority="high">
+  </div>
+  <div class="pr-hero-frame" aria-hidden="true"><i></i></div>
+  <div class="pr-hero-inner">
+    <p class="pr-eyebrow">Our Founding and Our Standard</p>
+    <h1 class="pr-hero-title mo-words">Faith and Scholarship,<br>One Inheritance.</h1>
+    <p class="pr-hero-sub">A hybrid Islamic and secular institution in Ikorodu, Lagos State — built on the conviction that a child raised well in both faith and knowledge will want for neither, and named in honour of a father who believed exactly that.</p>
+    <div class="pr-hero-cues">
+      <a href="#story" class="pr-btn is-gold mo-mag" data-mag="7">Read Our Story <span class="a">→</span></a>
+      <a href="#founder" class="pr-btn is-ghost mo-mag" data-mag="7">Meet the Founder</a>
     </div>
   </div>
 </section>
 
-<section class="director reveal" id="story" style="background:var(--ivory);padding-top:0;">
-  <div class="wrap" style="max-width:820px;">
-    <p class="eyebrow">Our Story</p>
-    <h2 style="font-size:2.1rem;margin:10px 0 20px;">A Legacy Named in Honour of a Father</h2>
-    <p style="color:#4a4944;font-size:0.97rem;margin-bottom:14px;">Sultan Hanafi Royal Schools was founded by Zakariya Olanrewaju Anofi, a professional accountant and educationist, in July 2016. The school takes its name from the founder's late father, Anofi Aliu Akano — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't. Building the school became a way to honour that legacy after his father's passing, during a period when the founder and his younger brother were serving the nation during their NYSC year.</p>
-    <p style="color:#4a4944;font-size:0.97rem;margin-bottom:14px;">The idea took shape years earlier, during Lagos Governor Babatunde Fashola's administration, and was carried through with the encouragement of the founder's mentor, Governor Seyi Makinde, his brother Lukman Olajide Anofi, and others. Rooted in the Imowonla community in Ikorodu, the school has grown into a byword for what focused, values-led education can do for an underserved area — extending its reach through free community lectures, humanitarian relief during the COVID-19 lockdown, and infrastructure support such as road maintenance and community electrification.</p>
-
-    <div class="light-photo-pair">
-      <span class="lpp-label">Scholarly Ties Abroad</span>
-      <div class="lpp-grid">
-        <div class="lpp-frame"><img src="/assets/images/gallery/scholarly-visit-1.jpg" alt="A Sultan Hanafi Royal Schools delegation meeting Islamic scholars during a visit abroad" loading="lazy" width="1600" height="721" /></div>
-        <div class="lpp-frame"><img src="/assets/images/gallery/scholarly-visit-2.jpg" alt="A second gathering from the same scholarly visit abroad" loading="lazy" width="1600" height="1600" /></div>
-      </div>
-      <p>SULTAN's Islamic and Qur'anic programme is grounded in real scholarly relationships, not built in isolation — visits like this one connect the school to the wider community of Islamic scholarship its curriculum draws on.</p>
-    </div>
-
-    <p style="font-size:0.8rem;color:#8a8880;margin-top:24px;">Source: independent reporting by Punch Newspapers, August 2023.</p>
-  </div>
-</section>
-
-<section class="seal-section reveal">
-  <div class="wrap seal-inner">
-    <span class="crest-shimmer-wrap"><img class="crest-img" src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest, quartered shield" /></span>
-    <h2>Every Quadrant Tells Part of the Story</h2>
-    <div class="seal-quads">
-      <div class="seal-quad"><div class="glyph">Crescent &amp; Star</div><p>Faith as the compass of everything taught here.</p></div>
-      <div class="seal-quad"><div class="glyph">The Open Book</div><p>Knowledge held open, never closed to those who seek it.</p></div>
-      <div class="seal-quad"><div class="glyph">Three Stars</div><p>Discipline, character, and excellence in constant orbit.</p></div>
-      <div class="seal-quad"><div class="glyph">The Tree</div><p>Growth measured in decades, not terms.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="intro reveal" id="welcome">
-  <div class="wrap intro-grid">
-    <div>
-      <p class="eyebrow">Explore Excellence</p>
-      <h2>Welcome to Sultan Hanafi Royal Schools</h2>
-      <p style="color:#4a4944;font-size:1rem;">We are deeply committed to ensuring that every student receives the highest quality education in a nurturing, safe, and inclusive environment.</p>
-      <ul>
-        <li>Excel in academic knowledge across various subjects.</li>
-        <li>Develop a strong moral compass and exhibit exemplary character.</li>
-        <li>Receive faith-based education to deepen understanding of Islam.</li>
-        <li>Cultivate entrepreneurship skills, fostering innovation and creativity.</li>
-        <li>Gain financial literacy to make informed decisions and manage resources effectively.</li>
-      </ul>
-    </div>
-    <div class="quote-panel">
-      <span class="mark">&ldquo;</span>
-      <p>Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody.</p>
-      <div class="who">Dr. Ismail Akeem Seriki · Parent &amp; Board Member</div>
-    </div>
-  </div>
-</section>
-
-<section class="mvv reveal" id="values">
+<!-- Founder / Director's message -->
+<section class="pr-section is-ivory" id="founder">
   <div class="wrap">
-    <p class="eyebrow">Our Foundation</p>
-    <h2 style="margin-top:10px;">Mission, Vision &amp; Values</h2>
-    <div class="mv-asym" style="margin-top:38px;">
-      <div class="mv-lead">
-        <span class="mv-label">Mission</span>
-        <p>To provide holistic education by imparting both Islamic and secular knowledge through rigorous research and effective teaching methods — promoting ethical behaviour and instilling strong values in pursuit of a secure, informed, and progressive society.</p>
-      </div>
-      <div class="mv-aside">
-        <span class="mv-label">Vision</span>
-        <p>To be recognised as a leading institution excelling in knowledge dissemination and character building — creating a positive impact wherever our presence is felt.</p>
-      </div>
+    <div class="pr-reveal" style="max-width:760px;margin-bottom:34px;">
+      <p class="pr-eyebrow">A Word From Our Founder</p>
+      <h2 class="pr-h2">The Conviction Behind the School</h2>
     </div>
-    <p class="eyebrow" style="margin-bottom:8px;">Our Values</p>
-    <h3 class="h3-sub" style="margin-bottom:24px;">The CLEVER Standard</h3>
-    <div class="monogram-rail stagger">
-      <div class="mono-letter"><span class="mg">C</span><span class="mw">Creativity</span><span class="md">Innovative thinking</span></div>
-      <div class="mono-letter"><span class="mg">L</span><span class="mw">Leadership</span><span class="md">Empowering leaders</span></div>
-      <div class="mono-letter"><span class="mg">E</span><span class="mw">Engagement</span><span class="md">Active participation</span></div>
-      <div class="mono-letter"><span class="mg">V</span><span class="mw">Versatility</span><span class="md">Well-rounded growth</span></div>
-      <div class="mono-letter"><span class="mg">E</span><span class="mw">Ethics</span><span class="md">Moral responsibility</span></div>
-      <div class="mono-letter"><span class="mg">R</span><span class="mw">Reliability</span><span class="md">Trust &amp; accountability</span></div>
+    <div class="pr-founder pr-reveal">
+      <aside class="pr-founder-card pr-diamond pr-tilt" data-tilt-max="3">
+        <img class="crest" src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest">
+        <span class="role">Founder &amp; Director</span>
+        <h3>Dr. Zakariya Olanrewaju Anofi</h3>
+        <p class="pr-creds">B.Sc. Applied Accounting (Oxford Brookes University) · M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University) · FCCA (UK) · FCA (ICAN) · Doctoral Candidate, Edgewood University, Madison, Wisconsin</p>
+      </aside>
+      <div class="pr-founder-body st">
+        <!-- The margin apparatus. The audit measured the text column
+             filling barely a third of this band; the line the passage
+             actually turns on now sits in the space that emptiness
+             left, where it can be read on its own. -->
+        <aside class="st-aside st-aside-quote">
+          <p>Governance is what keeps a good intention alive after the person who had it has gone.</p>
+          <span class="st-who">On why the Board can overrule him</span>
+        </aside>
+        <p>It is my privilege to welcome you to Sultan Hanafi Royal Schools, a hybrid Islamic and secular institution built in Ikorodu, Lagos State, on a single conviction: that faith and scholarship are one inheritance, not two, and that a child raised well in both will want for neither. As Director, I hold our staff and our institution to that standard in a school that is secure, orderly and genuinely inclusive.</p>
+        <p>My father, Anofi Aliu Akano, was a clerk at the Nigerian Ports Authority. He did not live to see this school. It was built after he died, in the year my younger brother and I were serving the country under the NYSC, which is to say it was built by two young men with very little, out of an obligation neither of us had to discuss with the other.</p>
+        <p>The two decades I then spent in banking, insurance, oil and gas, and consulting taught me the unglamorous half of building an institution. Governance is what keeps a good intention alive after the person who had it has gone. An organisation without accounts, minutes and published policy has good intentions and nothing else. That is the discipline I have tried to put underneath this school: a Board of Governors that can overrule me, policies any parent may read in full, and a register in which every result and every certificate we issue can be checked long after all of us are gone.</p>
+        <p>Our doors are open to Muslims and non-Muslims, to sons and daughters alike. Every educator here is expected to send a child out able to sit a national examination, hold a Qur'anic text in memory, argue a position honestly, and earn a living, and to be judged on whether that happens. Whether you are considering us for the first time, already a parent in our community, or returning as one of our own alumni, you are welcome here.</p>
+
+        <!-- The sign-off. Four paragraphs addressed to a reader ended,
+             until now, attributed to nobody: the flourish is drawn as
+             the passage is reached, and the name is set in type beneath
+             it. The flourish is an ornament, not a facsimile of anyone's
+             hand, which is why it is hidden from assistive technology
+             and the name is printed. -->
+        <div class="st-sign">
+          <div class="st-sign-ink" aria-hidden="true">
+            <svg viewBox="0 0 300 92" role="presentation" focusable="false">
+              <path d="M12,60 C50,18 100,14 124,40 C140,57 120,80 102,71 C88,64 94,43 112,37 C152,22 200,31 230,54 C248,68 278,62 292,40"/>
+              <path d="M26,78 C92,88 202,88 276,74"/>
+            </svg>
+          </div>
+          <div class="st-seal" aria-hidden="true"><i>SHRS</i></div>
+          <div class="st-sign-who">
+            <span class="st-sign-n">Dr. Zakariya Olanrewaju Anofi</span>
+            <span>Founder, Chairman of the Board of Governors &amp; Head of Schools</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- Pledge line (typewriter) -->
+<section class="pr-section is-ivory" style="padding-top:0;">
+  <div class="wrap">
+    <div class="pr-pledge pr-reveal">
+      <div class="pr-pledge-rule" aria-hidden="true"></div>
+      <blockquote><span class="pr-type" data-pr-type>Faith and scholarship are not rival inheritances. They are one and the same.</span></blockquote>
+      <cite>Dr. Zakariya Olanrewaju Anofi · Founder, Chairman of the Board of Governors &amp; Head of Schools</cite>
+      <div class="pr-pledge-rule is-btm" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Story -->
+<section class="pr-section" id="story">
+  <div class="wrap">
+    <div class="pr-reveal st" style="max-width:960px;">
+      <p class="pr-eyebrow">Our Story</p>
+      <h2 class="pr-h2">A Legacy Named in Honour of a Father</h2>
+      <!-- The four facts the three paragraphs beneath rest on, set
+           where a reader can check the prose against them without
+           leaving the line. -->
+      <aside class="st-aside st-aside-facts">
+        <span class="st-facts-k">The Founding, in Short</span>
+        <dl>
+          <div><dt>July 2016</dt><dd>Founded by Dr. Zakariya Olanrewaju Anofi, a chartered accountant, in the year he and his brother were serving under the NYSC.</dd></div>
+          <div><dt>Anofi Aliu Akano</dt><dd>The founder's late father, a clerk at the Nigerian Ports Authority, whom the school is named in honour of.</dd></div>
+          <div><dt>Imowonla, Ikorodu</dt><dd>The community the school is rooted in, and the one it was built to serve.</dd></div>
+          <div><dt>Five institutions</dt><dd>Grown from one school, under a single Board of Governors.</dd></div>
+        </dl>
+      </aside>
+      <p class="pr-lead">Sultan Hanafi Royal Schools was founded by Dr. Zakariya Olanrewaju Anofi — a chartered accountant — in July 2016.</p>
+      <p class="pr-body">The school takes its name from the founder's late father, <b>Anofi Aliu Akano</b> — a clerk at the Nigerian Ports Authority whose own education was limited, but who was determined that his children would have the opportunities he didn't. Building the school became a way to honour that legacy after his father's passing, during a period when the founder and his younger brother were serving the nation during their NYSC year.</p>
+      <p class="pr-body pr-dropcap">The idea took shape years earlier, during Lagos Governor Babatunde Fashola's administration, and was carried through with the encouragement of the founder's mentor, Governor Seyi Makinde, his brother Lukman Olajide Anofi, and others. Rooted in the Imowonla community in Ikorodu, the school has grown into a byword for what focused, values-led education can do for an underserved area.</p>
+    </div>
+
+    <!-- Milestone timeline -->
+    <div class="pr-path pr-stagger" style="margin-top:34px;">
+      <div class="pr-path-line" aria-hidden="true"></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">2016</div><div class="pr-path-t">Founded</div><div class="pr-path-d">Named in honour of the founder's father.</div></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">2017</div><div class="pr-path-t">The Imowonla Campus</div><div class="pr-path-d">The school takes root at its present home in the Imowonla community, Ikorodu.</div></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">2020</div><div class="pr-path-t">Community First</div><div class="pr-path-d">Humanitarian relief through the COVID-19 lockdown.</div></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">2021</div><div class="pr-path-t">Royal College</div><div class="pr-path-d">The secondary college is established.</div></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">2023</div><div class="pr-path-t">Recognised</div><div class="pr-path-d">Independently reported by Punch Newspapers.</div></div>
+      <div class="pr-path-step"><div class="pr-path-dot"></div><div class="pr-path-age">Now</div><div class="pr-path-t">A Fifth Institution</div><div class="pr-path-d">The Online &amp; Distance Learning School is constituted under the Head of Schools' office; its programme is in preparation.</div></div>
+    </div>
+
+    <!-- Scholarly ties -->
+    <div class="pr-reveal" style="margin-top:44px;">
+      <div class="pr-grid cols-2" style="align-items:center;">
+        <div>
+          <div class="pr-photo-grid">
+            <figure class="pr-photo" style="margin:0;"><img src="/assets/images/gallery/scholarly-visit-1.jpg" alt="A Sultan Hanafi Royal Schools delegation meeting Islamic scholars during a visit abroad" loading="lazy" width="1600" height="721" /></figure>
+            <figure class="pr-photo" style="margin:0;"><img src="/assets/images/gallery/scholarly-visit-2.jpg" alt="A second gathering from the same scholarly visit abroad" loading="lazy" width="1600" height="1600" /></figure>
+          </div>
+          <p class="pr-photo-cap">Delegations abroad, photographed on visit.</p>
+        </div>
+        <div>
+          <p class="pr-eyebrow">Scholarly Ties Abroad</p>
+          <h3 class="pr-h3">Grounded in Real Relationships</h3>
+          <p class="pr-body">The Institution's Islamic and Qur'anic programme is grounded in real scholarly relationships. Visits like these connect the school to the wider community of Islamic scholarship its curriculum draws on. Beyond the classroom, the school extends its reach through free community lectures, humanitarian relief, and infrastructure support such as road maintenance and community electrification.</p>
+          <p class="pr-body src">Source: independent reporting by Punch Newspapers, August 2023.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The crest -->
+<section class="pr-section is-royal mo-spot">
+  <div class="wrap">
+    <div class="pr-reveal pr-center" style="max-width:760px;margin-inline:auto;">
+      <img class="pr-crest-img" src="/assets/images/crest-full.png" alt="The Sultan Hanafi Royal Schools crest: a quartered shield bearing a crescent and star, an open book, three stars and a tree, within laurels" width="150" height="150">
+      <p class="pr-eyebrow is-centered">Our Crest</p>
+      <h2 class="pr-h2">Every Quadrant Tells Part of the Story</h2>
+      <p class="pr-lead" style="text-align:center;">A shield is a promise made in shorthand. Ours is quartered, and each quarter names something the school has agreed to be held to.</p>
+    </div>
+
+    <!-- The shield, drawn at size and quartered. Until now the section
+         claimed that each quarter names something the school is held to,
+         and showed the shield at 150px where none of the four could be
+         told apart. Address a quadrant and its card lights; address a
+         card and its quadrant lights. Both directions work from the
+         keyboard. -->
+    <div class="st st-crest">
+      <div class="st-shield" data-st="shield"
+           data-st-label="The school shield, quartered — each quarter answers to one of the four cards beside it"></div>
+      <div class="pr-grid pr-stagger">
+      <article class="pr-card pr-tilt pr-quad">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/crescent-star.png" alt="The crescent and star from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3>Crescent &amp; Star</h3>
+          <p>Faith, set at the head of the shield — because everything taught beneath it answers to that first. Islam here is not a subject on the timetable; it is the ground the timetable stands on.</p>
+        </div>
+      </article>
+
+      <article class="pr-card pr-tilt pr-quad">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/open-book.png" alt="The open book from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3>The Open Book</h3>
+          <p>Knowledge, held open. A closed book guards; an open one gives. The device is a standing undertaking that what is known here is taught here — to Muslims and non-Muslims, to sons and daughters, without reservation.</p>
+        </div>
+      </article>
+
+      <article class="pr-card pr-tilt pr-quad">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/three-stars.png" alt="The three stars from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3>Three Stars</h3>
+          <p>Discipline, character and excellence — three, because not one of them survives alone. A disciplined child without character is merely obedient, and character without excellence asks too little of a life.</p>
+        </div>
+      </article>
+
+      <article class="pr-card pr-tilt pr-quad">
+        <div class="pr-quad-ico"><img src="/assets/images/crest-quadrants/tree.png" alt="The tree from the school crest" width="62" height="62" loading="lazy"></div>
+        <div class="pr-quad-body">
+          <h3>The Tree</h3>
+          <p>Growth measured in decades. The tree is the one device on this shield that cannot be hurried — and the school was built the same way: rooted in Imowonla, grown season by season, and intended to outlast the people who planted it.</p>
+        </div>
+      </article>
+      </div>
+    </div>
+    <p class="st st-figure-cap" style="margin-top:28px;">The shield draws itself as the band is reached. <b>Rest on a quarter</b> — or on its card — and the other lights with it.</p>
+  </div>
+</section>
+
+<!-- Mission, Vision & the CLEVER standard + stats -->
+<section class="pr-section is-ivory" id="values">
+  <div class="wrap">
+    <div class="pr-reveal" style="max-width:760px;">
+      <p class="pr-eyebrow">Our Foundation</p>
+      <h2 class="pr-h2">Mission, Vision &amp; the CLEVER Standard</h2>
+    </div>
+
+    <div class="pr-grid cols-2 pr-stagger" style="margin-top:28px;">
+      <article class="pr-card pr-tilt mo-lift">
+        <div class="pr-ico mo-ico-mount mo-float"><svg class="mo-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+        <h3>Our Mission</h3>
+        <p style="font-style:italic;">&ldquo;To provide holistic education by imparting both Islamic and secular knowledge through rigorous research and effective teaching methods — promoting ethical behaviour and instilling strong values in pursuit of a secure, informed, and progressive society.&rdquo;</p>
+        <p class="pr-body src">Adopted by the Board of Governors, and carried here in the words in which it was adopted.</p>
+        <p style="margin-top:12px;">What that means in practice is a single academic standard, applied without exception. Every subject this school teaches &mdash; Mathematics, the Sciences, Information and Communication Technology, the Humanities, Languages, Arabic and the Islamic sciences alike &mdash; is a department with named staff, a written scheme of work, and examinations set and marked on the same terms. Nothing is taught as a supplement to anything else, and no subject is graded more gently than another. That parity is the whole of the school&rsquo;s method, and it is what makes rigorous research and effective teaching a claim the institution can be held to rather than a phrase in a paragraph.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <div class="pr-ico mo-ico-mount mo-float"><svg class="mo-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>Our Vision</h3>
+        <p style="font-style:italic;">&ldquo;To be recognised as a leading institution excelling in knowledge dissemination and character building — creating a positive impact wherever our presence is felt.&rdquo;</p>
+        <p class="pr-body src">Adopted by the Board of Governors, and carried here in the words in which it was adopted.</p>
+        <p style="margin-top:12px;">The institution asks to be measured rather than described, and offers four measures. The first is academic: pupils sit the BECE, WAEC and NECO under the same conditions as every other candidate in Nigeria, on papers set and marked by the same national bodies. The second is what a graduate can carry away and have checked &mdash; a national qualification, and, where it is earned, an Ij&#257;zah examined by named scholars, each entered in the register under a reference a stranger can verify twenty years later. The third is how the school teaches: a Digital Campus that puts a pupil&rsquo;s whole record in their family&rsquo;s hands, and a governance library published entire. The fourth is what the Imowonla community can do that it could not do before this school stood here.</p>
+      </article>
+    </div>
+
+    <div class="pr-reveal" style="margin-top:44px;max-width:640px;">
+      <p class="pr-eyebrow">Our Values</p>
+      <h2 class="pr-h2" style="font-size:clamp(1.5rem,3.4vw,2.1rem);">The CLEVER Standard</h2>
+      <p class="pr-body">Six values, held to the same measure across every one of our institutions.</p>
+    </div>
+
+    <!-- The rosette. Six letters in six identical boxes is an acronym
+         typeset; a rosette is the same six values shown as one standard
+         held at six points, which is what the sentence above actually
+         claims. The hub names whichever value is being addressed, so
+         the ring stays legible without six labels crowding it. -->
+    <figure class="st st-figure" style="max-width:560px;margin:26px auto 0;">
+      <div class="st-figure-head"><span>One Standard, Six Points</span></div>
+      <div class="st-rosette" data-st="rosette" data-st-hub="CLEVER|One standard, six points"></div>
+      <figcaption class="st-figure-cap">Address a segment — or its card below — and the ring names the value. <b>Every institution is held to all six.</b></figcaption>
+    </figure>
+
+    <div class="pr-grid cols-3 pr-stagger st-values" style="margin-top:22px;">
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">C</span></div><h3>Creativity</h3><p>Innovative thinking. Children here are taught to build, cost and pitch something of their own.</p></article>
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">L</span></div><h3>Leadership</h3><p>Empowering leaders who lead early, and lead justly.</p></article>
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">E</span></div><h3>Engagement</h3><p>Active participation. A serious matter concerning a child reaches the guardian the day it happens.</p></article>
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">V</span></div><h3>Versatility</h3><p>Well-rounded growth across faith, scholarship and skill.</p></article>
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">E</span></div><h3>Ethics</h3><p>Moral responsibility as the ground everything is built on.</p></article>
+      <article class="pr-card pr-tilt mo-lift"><div class="pr-ico mo-ico-mount mo-float"><span class="pr-letter">R</span></div><h3>Reliability</h3><p>Trust &amp; accountability — what the school says, families can check.</p></article>
+    </div>
+
+    <div class="pr-stats pr-sheen pr-reveal" style="margin-top:44px;">
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2016" data-plain data-anim="roll">0</div>
+        <div class="pr-stat-l">Founded</div>
+        <div class="pr-stat-s">Ikorodu, Lagos State</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="45"/><circle class="arc" cx="50" cy="50" r="45" data-value="100"/></svg><div class="pr-stat-n" data-count-to="5">0</div></div>
+        <div class="pr-stat-l">Institutions</div>
+        <div class="pr-stat-s">One Board of Governors</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="6">0</div><div class="pr-stat-bar" data-w="100"></div>
+        <div class="pr-stat-l">CLEVER Values</div>
+        <div class="pr-stat-s">One standard, held</div>
+      </div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2" data-anim="roll">0</div>
+        <div class="pr-stat-l">National Curricula</div>
+        <div class="pr-stat-s">Nigerian &amp; Saudi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Leadership -->
+<section class="pr-section" id="leadership">
+  <div class="wrap">
+    <div class="pr-reveal" style="max-width:820px;">
+      <p class="pr-eyebrow">Who Runs This School</p>
+      <h2 class="pr-h2">No One Person Decides</h2>
+      <p class="pr-lead">A Board of Governors holds the institution to account. Beneath it, each school is led by a named head who answers for it, in public, on this website.</p>
+    </div>
+
+    <!-- The chain of accountability. This section makes a claim about a
+         SHAPE — one Board above one office above five named institutions
+         — and made it entirely in sentences, which is the one thing
+         prose is worst at. Drawn, it is checkable at a glance. Every
+         name on it is read out of the cards below at runtime, so the
+         figure cannot drift out of agreement with them. -->
+    <figure class="st st-figure" style="margin-top:34px;">
+      <div class="st-figure-head"><span>The Chain of Accountability</span></div>
+      <div class="st-chain st-scroll" data-st="chain"
+           data-st-label="The chain of accountability: the Board of Governors above the Head of Schools, above the five institutions and the person who answers for each"
+           data-st-board="Board of Governors|Can overrule the founder"
+           data-st-head="Head of Schools / Administrator|One office, answering to the Board"
+           data-st-fifth="Online &amp; Distance Learning School|Newly constituted · programme in preparation"></div>
+      <figcaption class="st-figure-cap">Five institutions, one Board. <b>Every box below the Board carries the name of the person who answers for it</b> — and each is wired to its card below.</figcaption>
+    </figure>
+
+    <div class="pr-grid cols-2 pr-stagger" style="margin-top:30px;">
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>Mrs. Mariam Tope AbdulKareem</h3>
+        <p><b>Head Teacher, Nursery and Primary School.</b> Accountable for the earliest years, ages two to ten: the Nigerian curriculum with Islamic formation running through it, and the years in which reading, arithmetic and self-command are either established or they are not.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>Dr. Adegoke Musa Olatunji</h3>
+        <p><b>Principal, Royal College.</b> Accountable for the secondary school, JSS1 through SSS3, and for its academic departments and its biology and chemistry laboratories. His students sit the BECE, then WAEC and NECO.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>Shaykh Abubakr Solah</h3>
+        <p><b>Principal, School of Islamic and Arabic Studies.</b> Accountable for the Arabic and Islamic sciences programme, taught to the Saudi Arabian curriculum on weekdays and at weekends. It is open to the wider Muslim Ummah at any age, adults included, with no standard admission process to clear.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>Imam Ahmad Sulaimiy</h3>
+        <p><b>Principal, Qur'an College.</b> Accountable for the Hifz programme, the complete memorisation of the Qur'an, which runs 24 to 36 months and ends in Ijazah. The college takes day students, and boarders aged nine to sixteen.</p>
+      </article>
+    </div>
+
+    <p class="pr-body" style="margin-top:26px;">The fifth institution, the Online &amp; Distance Learning School, is newly constituted under the Head of Schools / Administrator's office. Its programme details are not yet published, and we will not publish them before they are settled. The Board of Governors, its committees and the full management structure are set out on the <a href="/about/governance/">Governance and Leadership page</a>.</p>
+  </div>
+</section>
+
+<!-- Pastoral care & safeguarding -->
+<section class="pr-section is-ivory" id="safeguarding">
+  <div class="wrap">
+    <div class="pr-reveal" style="max-width:820px;">
+      <p class="pr-eyebrow">Pastoral Care &amp; Safeguarding</p>
+      <h2 class="pr-h2">What Happens on the Bad Day</h2>
+      <p class="pr-lead">A school is best judged on the ordinary day something goes wrong. Here is what is in place, and where a parent can read it in full before enrolling.</p>
+    </div>
+
+    <!-- The escalation. What a worried parent is reading this section
+         for is the ORDER of events, and the order was the one thing the
+         four cards did not show. The rail carries it, the stations are
+         the cards themselves, and a light runs the length of it so the
+         direction is never in doubt. -->
+    <figure class="st st-figure" style="margin-top:34px;">
+      <div class="st-figure-head"><span>What Happens, In Order</span></div>
+      <div class="st-esc st-scroll" data-st="escalation"
+           data-st-label="What happens, in order: an incident, the First Aider, the nurse and sick bay, the guardian told the same day, and the published policy governing all of it"
+           data-st-origin="Something happens"></div>
+      <figcaption class="st-figure-cap">Left to right, the order it actually runs in. <b>Stations two to five are the four cards below</b>, and each lights with its own.</figcaption>
+    </figure>
+
+    <div class="pr-grid cols-2 pr-stagger" style="margin-top:30px;">
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>A Certified First Aider on Duty</h3>
+        <p>A currently certified First Aider is on duty on the campus through the school day, and certification is renewed on a defined schedule &mdash; so that &ldquo;certified&rdquo; means certified now rather than certified once. A First Aider who recognises an incident beyond their training escalates it rather than exceeding it.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>The Sick Bay</h3>
+        <p>Anything beyond minor first aid is escalated at once to the school&rsquo;s nurse. The campus keeps a sick bay &mdash; a room a child can be taken out of class to and watched in, rather than sent home by default &mdash; with a first-aid cabinet held to the standard set out in SW-06.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>Told the Same Day</h3>
+        <p>Any safety incident, any illness beyond minor first aid, and any substantive disciplinary matter is communicated to the guardian the same day. A parent does not learn about a difficult week at the end of term.</p>
+      </article>
+      <article class="pr-card pr-tilt mo-lift">
+        <h3>A Policy You Can Read First</h3>
+        <p>The Child Protection &amp; Safeguarding Policy is published in full, alongside the rest of the policy library, so a family can read the standard we hold ourselves to before they trust us with a child.</p>
+      </article>
+    </div>
+
+    <p class="pr-body" style="margin-top:26px;"><a href="/policies/">Read the Child Protection &amp; Safeguarding Policy and the full policy library</a>.</p>
+  </div>
+</section>
+
+<!-- Welcome / commitments + testimonial -->
+<section class="pr-section" id="welcome">
+  <div class="wrap">
+    <div class="pr-grid cols-2" style="gap:40px;align-items:center;">
+      <div class="pr-reveal">
+        <p class="pr-eyebrow">Our Undertaking</p>
+        <h2 class="pr-h2" style="font-size:clamp(1.6rem,3.6vw,2.3rem);">What This School Undertakes to Do</h2>
+        <p class="pr-body">Every prospectus promises a safe and inclusive environment. Below is the same promise written as five things a family can hold us to, and check.</p>
+        <!-- The five undertakings. This was the one section on the page
+             carrying neither a figure nor a photograph — and it is the
+             part a family is most likely to read twice. Each promise now
+             takes a numbered seal whose ring closes as the item arrives,
+             a device of its own, and a lit rule down its inner edge. -->
+        <ol class="st st-pledges">
+          <li>
+            <span class="st-pl-seal">
+              <svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle class="trk" cx="28" cy="28" r="25"/><circle class="arc" cx="28" cy="28" r="25"/></svg>
+              <svg class="gl" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 4h15v11h-15z"/><path d="M9 15v5.5l3-2 3 2V15"/><path d="M8 8h8M8 11h5"/></svg>
+              <span class="st-pl-n" aria-hidden="true">1</span>
+            </span>
+            <span class="st-pl-body"><b>A national qualification</b>Sat under the same conditions as every other candidate in Nigeria: the BECE, then WAEC and NECO. No internal certificate stands in for them.</span>
+          </li>
+          <li>
+            <span class="st-pl-seal">
+              <svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle class="trk" cx="28" cy="28" r="25"/><circle class="arc" cx="28" cy="28" r="25"/></svg>
+              <svg class="gl" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5a3 3 0 0 1 3-3h5v17H7a3 3 0 0 0-3 3z"/><path d="M20 5a3 3 0 0 0-3-3h-5v17h5a3 3 0 0 1 3 3z"/></svg>
+              <span class="st-pl-n" aria-hidden="true">2</span>
+            </span>
+            <span class="st-pl-body"><b>Arabic and the Islamic sciences, taught as sciences</b>Arabic carried past phrasebook competence into its own grammar, poetry, rhetoric and literature — and the Islamic sciences taught with texts, method and examination.</span>
+          </li>
+          <li>
+            <span class="st-pl-seal">
+              <svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle class="trk" cx="28" cy="28" r="25"/><circle class="arc" cx="28" cy="28" r="25"/></svg>
+              <svg class="gl" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17 6 6.5l4 5 2-6.5 2 6.5 4-5L20 17z"/><path d="M4.5 20h15"/></svg>
+              <span class="st-pl-n" aria-hidden="true">3</span>
+            </span>
+            <span class="st-pl-body"><b>A named leadership role, open to every student</b>Class Captain, House Prefect, Student Representative to school management, Head Boy or Head Girl.</span>
+          </li>
+          <li>
+            <span class="st-pl-seal">
+              <svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle class="trk" cx="28" cy="28" r="25"/><circle class="arc" cx="28" cy="28" r="25"/></svg>
+              <svg class="gl" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17.5 8.5 12l4 4 8-9"/><path d="M16 7.5h4.5V12"/><path d="M3 21h18"/></svg>
+              <span class="st-pl-n" aria-hidden="true">4</span>
+            </span>
+            <span class="st-pl-body"><b>Enterprise and financial literacy, as a thread</b>Taught across the year groups from Primary through Royal College, so a child leaves able to cost and price a small business.</span>
+          </li>
+          <li>
+            <span class="st-pl-seal">
+              <svg viewBox="0 0 56 56" aria-hidden="true" focusable="false"><circle class="trk" cx="28" cy="28" r="25"/><circle class="arc" cx="28" cy="28" r="25"/></svg>
+              <svg class="gl" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 20 6v6c0 5-4 8-8 9.2C8 20 4 17 4 12V6z"/><path d="M8.5 12.2 11 14.7l4.5-5"/></svg>
+              <span class="st-pl-n" aria-hidden="true">5</span>
+            </span>
+            <span class="st-pl-body"><b>A record that can be checked</b>Any certificate, graduation document, identity card or fee receipt we issue can be confirmed as genuine against the school's own register on our <a href="/verify/">public verification portal</a> — with no account and no fee.</span>
+          </li>
+        </ol>
+      </div>
+      <div class="pr-quote pr-glow-hover pr-reveal">
+        <div class="mk">&ldquo;</div>
+        <p>Most parents have confirmed that the values and morals the school instils in our children are worth more than the money we pay. I would recommend the school to anybody.</p>
+        <div class="who">Dr. Ismail Akeem Seriki · Parent &amp; Board Member</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Closing CTA -->
+<section class="pr-section is-ivory">
+  <div class="wrap">
+    <div class="pr-arrival pr-milklight pr-reveal">
+      <div class="pr-arrival-media"><img src="/assets/images/gallery/campus-building.jpg" alt="The Sultan Hanafi campus" loading="lazy" width="1600" height="900"></div>
+      <svg class="pr-arrival-geo" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M12.5,22.5 -52.5,22.5 -52.5,-42.5 12.5,-42.5 Z"/><path d="M26.0,-10.0 -20.0,36.0 -66.0,-10.0 -20.0,-56.0 Z"/><path d="M144.5,22.5 79.5,22.5 79.5,-42.5 144.5,-42.5 Z"/><path d="M158.0,-10.0 112.0,36.0 66.0,-10.0 112.0,-56.0 Z"/><path d="M276.5,22.5 211.5,22.5 211.5,-42.5 276.5,-42.5 Z"/><path d="M290.0,-10.0 244.0,36.0 198.0,-10.0 244.0,-56.0 Z"/><path d="M408.5,22.5 343.5,22.5 343.5,-42.5 408.5,-42.5 Z"/><path d="M422.0,-10.0 376.0,36.0 330.0,-10.0 376.0,-56.0 Z"/><path d="M540.5,22.5 475.5,22.5 475.5,-42.5 540.5,-42.5 Z"/><path d="M554.0,-10.0 508.0,36.0 462.0,-10.0 508.0,-56.0 Z"/><path d="M672.5,22.5 607.5,22.5 607.5,-42.5 672.5,-42.5 Z"/><path d="M686.0,-10.0 640.0,36.0 594.0,-10.0 640.0,-56.0 Z"/><path d="M804.5,22.5 739.5,22.5 739.5,-42.5 804.5,-42.5 Z"/><path d="M818.0,-10.0 772.0,36.0 726.0,-10.0 772.0,-56.0 Z"/><path d="M936.5,22.5 871.5,22.5 871.5,-42.5 936.5,-42.5 Z"/><path d="M950.0,-10.0 904.0,36.0 858.0,-10.0 904.0,-56.0 Z"/><path d="M1068.5,22.5 1003.5,22.5 1003.5,-42.5 1068.5,-42.5 Z"/><path d="M1082.0,-10.0 1036.0,36.0 990.0,-10.0 1036.0,-56.0 Z"/><path d="M1200.5,22.5 1135.5,22.5 1135.5,-42.5 1200.5,-42.5 Z"/><path d="M1214.0,-10.0 1168.0,36.0 1122.0,-10.0 1168.0,-56.0 Z"/><path d="M78.5,136.0 13.5,136.0 13.5,71.0 78.5,71.0 Z"/><path d="M92.0,103.5 46.0,149.5 0.0,103.5 46.0,57.5 Z"/><path d="M210.5,136.0 145.5,136.0 145.5,71.0 210.5,71.0 Z"/><path d="M224.0,103.5 178.0,149.5 132.0,103.5 178.0,57.5 Z"/><path d="M342.5,136.0 277.5,136.0 277.5,71.0 342.5,71.0 Z"/><path d="M356.0,103.5 310.0,149.5 264.0,103.5 310.0,57.5 Z"/><path d="M474.5,136.0 409.5,136.0 409.5,71.0 474.5,71.0 Z"/><path d="M488.0,103.5 442.0,149.5 396.0,103.5 442.0,57.5 Z"/><path d="M606.5,136.0 541.5,136.0 541.5,71.0 606.5,71.0 Z"/><path d="M620.0,103.5 574.0,149.5 528.0,103.5 574.0,57.5 Z"/><path d="M738.5,136.0 673.5,136.0 673.5,71.0 738.5,71.0 Z"/><path d="M752.0,103.5 706.0,149.5 660.0,103.5 706.0,57.5 Z"/><path d="M870.5,136.0 805.5,136.0 805.5,71.0 870.5,71.0 Z"/><path d="M884.0,103.5 838.0,149.5 792.0,103.5 838.0,57.5 Z"/><path d="M1002.5,136.0 937.5,136.0 937.5,71.0 1002.5,71.0 Z"/><path d="M1016.0,103.5 970.0,149.5 924.0,103.5 970.0,57.5 Z"/><path d="M1134.5,136.0 1069.5,136.0 1069.5,71.0 1134.5,71.0 Z"/><path d="M1148.0,103.5 1102.0,149.5 1056.0,103.5 1102.0,57.5 Z"/><path d="M1266.5,136.0 1201.5,136.0 1201.5,71.0 1266.5,71.0 Z"/><path d="M1280.0,103.5 1234.0,149.5 1188.0,103.5 1234.0,57.5 Z"/><path d="M12.5,249.6 -52.5,249.6 -52.5,184.5 12.5,184.5 Z"/><path d="M26.0,217.0 -20.0,263.0 -66.0,217.0 -20.0,171.0 Z"/><path d="M144.5,249.6 79.5,249.6 79.5,184.5 144.5,184.5 Z"/><path d="M158.0,217.0 112.0,263.0 66.0,217.0 112.0,171.0 Z"/><path d="M276.5,249.6 211.5,249.6 211.5,184.5 276.5,184.5 Z"/><path d="M290.0,217.0 244.0,263.0 198.0,217.0 244.0,171.0 Z"/><path d="M408.5,249.6 343.5,249.6 343.5,184.5 408.5,184.5 Z"/><path d="M422.0,217.0 376.0,263.0 330.0,217.0 376.0,171.0 Z"/><path d="M540.5,249.6 475.5,249.6 475.5,184.5 540.5,184.5 Z"/><path d="M554.0,217.0 508.0,263.0 462.0,217.0 508.0,171.0 Z"/><path d="M672.5,249.6 607.5,249.6 607.5,184.5 672.5,184.5 Z"/><path d="M686.0,217.0 640.0,263.0 594.0,217.0 640.0,171.0 Z"/><path d="M804.5,249.6 739.5,249.6 739.5,184.5 804.5,184.5 Z"/><path d="M818.0,217.0 772.0,263.0 726.0,217.0 772.0,171.0 Z"/><path d="M936.5,249.6 871.5,249.6 871.5,184.5 936.5,184.5 Z"/><path d="M950.0,217.0 904.0,263.0 858.0,217.0 904.0,171.0 Z"/><path d="M1068.5,249.6 1003.5,249.6 1003.5,184.5 1068.5,184.5 Z"/><path d="M1082.0,217.0 1036.0,263.0 990.0,217.0 1036.0,171.0 Z"/><path d="M1200.5,249.6 1135.5,249.6 1135.5,184.5 1200.5,184.5 Z"/><path d="M1214.0,217.0 1168.0,263.0 1122.0,217.0 1168.0,171.0 Z"/><path d="M78.5,363.1 13.5,363.1 13.5,298.0 78.5,298.0 Z"/><path d="M92.0,330.6 46.0,376.6 0.0,330.6 46.0,284.6 Z"/><path d="M210.5,363.1 145.5,363.1 145.5,298.0 210.5,298.0 Z"/><path d="M224.0,330.6 178.0,376.6 132.0,330.6 178.0,284.6 Z"/><path d="M342.5,363.1 277.5,363.1 277.5,298.0 342.5,298.0 Z"/><path d="M356.0,330.6 310.0,376.6 264.0,330.6 310.0,284.6 Z"/><path d="M474.5,363.1 409.5,363.1 409.5,298.0 474.5,298.0 Z"/><path d="M488.0,330.6 442.0,376.6 396.0,330.6 442.0,284.6 Z"/><path d="M606.5,363.1 541.5,363.1 541.5,298.0 606.5,298.0 Z"/><path d="M620.0,330.6 574.0,376.6 528.0,330.6 574.0,284.6 Z"/><path d="M738.5,363.1 673.5,363.1 673.5,298.0 738.5,298.0 Z"/><path d="M752.0,330.6 706.0,376.6 660.0,330.6 706.0,284.6 Z"/><path d="M870.5,363.1 805.5,363.1 805.5,298.0 870.5,298.0 Z"/><path d="M884.0,330.6 838.0,376.6 792.0,330.6 838.0,284.6 Z"/><path d="M1002.5,363.1 937.5,363.1 937.5,298.0 1002.5,298.0 Z"/><path d="M1016.0,330.6 970.0,376.6 924.0,330.6 970.0,284.6 Z"/><path d="M1134.5,363.1 1069.5,363.1 1069.5,298.0 1134.5,298.0 Z"/><path d="M1148.0,330.6 1102.0,376.6 1056.0,330.6 1102.0,284.6 Z"/><path d="M1266.5,363.1 1201.5,363.1 1201.5,298.0 1266.5,298.0 Z"/><path d="M1280.0,330.6 1234.0,376.6 1188.0,330.6 1234.0,284.6 Z"/><path d="M12.5,476.6 -52.5,476.6 -52.5,411.6 12.5,411.6 Z"/><path d="M26.0,444.1 -20.0,490.1 -66.0,444.1 -20.0,398.1 Z"/><path d="M144.5,476.6 79.5,476.6 79.5,411.6 144.5,411.6 Z"/><path d="M158.0,444.1 112.0,490.1 66.0,444.1 112.0,398.1 Z"/><path d="M276.5,476.6 211.5,476.6 211.5,411.6 276.5,411.6 Z"/><path d="M290.0,444.1 244.0,490.1 198.0,444.1 244.0,398.1 Z"/><path d="M408.5,476.6 343.5,476.6 343.5,411.6 408.5,411.6 Z"/><path d="M422.0,444.1 376.0,490.1 330.0,444.1 376.0,398.1 Z"/><path d="M540.5,476.6 475.5,476.6 475.5,411.6 540.5,411.6 Z"/><path d="M554.0,444.1 508.0,490.1 462.0,444.1 508.0,398.1 Z"/><path d="M672.5,476.6 607.5,476.6 607.5,411.6 672.5,411.6 Z"/><path d="M686.0,444.1 640.0,490.1 594.0,444.1 640.0,398.1 Z"/><path d="M804.5,476.6 739.5,476.6 739.5,411.6 804.5,411.6 Z"/><path d="M818.0,444.1 772.0,490.1 726.0,444.1 772.0,398.1 Z"/><path d="M936.5,476.6 871.5,476.6 871.5,411.6 936.5,411.6 Z"/><path d="M950.0,444.1 904.0,490.1 858.0,444.1 904.0,398.1 Z"/><path d="M1068.5,476.6 1003.5,476.6 1003.5,411.6 1068.5,411.6 Z"/><path d="M1082.0,444.1 1036.0,490.1 990.0,444.1 1036.0,398.1 Z"/><path d="M1200.5,476.6 1135.5,476.6 1135.5,411.6 1200.5,411.6 Z"/><path d="M1214.0,444.1 1168.0,490.1 1122.0,444.1 1168.0,398.1 Z"/></svg>
+      <div class="pr-arrival-frame" aria-hidden="true"><i></i></div>
+      <img class="pr-arrival-crest" src="/assets/images/crest-full.png" alt="" aria-hidden="true" width="96" height="96">
+      <p class="pr-eyebrow is-centered">Sultan Hanafi Royal Schools</p>
+      <h2>Come and See for Yourself</h2>
+      <p class="lead">The best way to understand a school is to stand inside it. Begin an application, arrange a visit, or explore the five institutions that make up Sultan Hanafi Royal Schools.</p>
+      <div class="pr-arrival-rule" aria-hidden="true"></div>
+      <div class="pr-arrival-row"><a href="/admission/" class="pr-btn is-gold mo-mag" data-mag="7">Begin an Application <span class="a">→</span></a>
+        <a href="/academics/" class="pr-btn is-ghost mo-mag" data-mag="7">Explore the Academics</a>
+        <a href="/contact/" class="pr-btn is-ghost mo-mag" data-mag="7">Arrange a Visit</a></div>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="foot-arrival">
     <div class="foot-motion" aria-hidden="true"></div>
-    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
+    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
     <div class="foot-statement wrap">
-      <p>&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>
+      <p>“Forming Scholars, Leaders and Guardians of Excellence.”</p>
       <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
     </div>
   </div>
+  <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="Open" data-s-closed="Closed"
+      data-s-closes="Closes in {t}" data-s-opens="Opens in {t}"
+      data-s-openson="Opens {d} at {t}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">The School, Right Now</p>
+        <p class="now-place">Ikorodu, Lagos State · West Africa Time</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">Local time</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">The offices</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">Today's hours</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">All opening hours →</a></span>
+        </div>
+      </div>
+      <p class="now-foot">Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere.</p>
+    </section>
+  </div>
+
   <div class="wrap">
     <p class="foot-dash-eyebrow">The Institution, At A Glance</p>
     <div class="foot-dashboard">
@@ -640,7 +1215,7 @@
 
 <div class="assistant-root" data-assistant>
   <button class="assistant-launcher" data-assistant-toggle aria-label="Open the digital academic assistant" aria-expanded="false">
-    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="#E9CE8A" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
   </button>
   <div class="assistant-panel" data-assistant-panel hidden>
     <div class="assistant-head" data-assistant-head>
@@ -728,12 +1303,40 @@
   </div>
 </div>
 
+<!-- The livery invitation. Shown once, on a visitor's first arrival,
+     and never again once they have answered it either way. It is a
+     genuine offer rather than a notice: the six swatches are live, so
+     the page recolours under the panel as the pointer moves across
+     them, and the choice is made by seeing rather than by reading. -->
+<div class="lvp-root" data-livery-prompt hidden>
+  <div class="lvp-scrim" data-lvp-scrim></div>
+  <div class="lvp-card" role="dialog" aria-modal="true" aria-labelledby="lvp-t" aria-describedby="lvp-d">
+    <span class="lvp-crest" aria-hidden="true"><img src="/assets/images/brand-mark.png" alt="" width="46" height="46" /></span>
+    <p class="lvp-eyebrow">Before you begin</p>
+    <h2 class="lvp-title" id="lvp-t">Dress the school in your own colour</h2>
+    <p class="lvp-desc" id="lvp-d">This site is published in six liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
+    <div class="lvp-grid" data-lvp-grid role="radiogroup" aria-label="Choose a livery">
+      <button type="button" data-value="royal" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
+      <button type="button" data-value="coffee"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="lvp-n">Coffee Brown</span></button>
+      <button type="button" data-value="sapphire"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="lvp-n">Sapphire Blue</span></button>
+      <button type="button" data-value="emerald"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="lvp-n">Emerald Green</span></button>
+      <button type="button" data-value="garnet"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="lvp-n">Garnet Red</span></button>
+      <button type="button" data-value="obsidian"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="lvp-n">Obsidian Platinum</span></button>
+    </div>
+    <div class="lvp-act">
+      <button type="button" class="lvp-go" data-lvp-accept>Read in this livery</button>
+      <button type="button" class="lvp-alt" data-lvp-dismiss>Keep the house livery</button>
+    </div>
+    <p class="lvp-foot">More settings &mdash; type size, reading mode, motion, prayer times and the rest &mdash; are in the <a href="#" data-pc-trigger-link>Personalisation Centre</a>.</p>
+  </div>
+</div>
+
 <div class="pc-root" data-personalisation>
   <div class="pc-overlay" data-pc-overlay hidden></div>
   <aside class="pc-drawer" data-pc-drawer hidden role="dialog" aria-modal="true" aria-labelledby="pc-title">
     <div class="pc-head institutional-frame">
       <div class="pc-head-id">
-        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="#E9CE8A" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <div>
           <h2 id="pc-title" class="pc-title">Personalisation Centre</h2>
           <p class="pc-sub">Sultan Hanafi Royal Schools</p>
@@ -830,12 +1433,24 @@
           </div>
         </div>
 
+        <div class="pc-option pc-option-livery">
+          <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
+          <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
+            <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
+            <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
+            <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
+            <button type="button" data-value="obsidian" role="radio"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="pc-lv-name">Obsidian Platinum</span><span class="pc-lv-sub">Monochrome</span></button>
+          </div>
+        </div>
+
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Theme</span></div>
           <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="Theme">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal (Default)</button>
-            <button type="button" data-value="light" role="radio">Light</button>
-            <button type="button" data-value="dark" role="radio">Dark</button>
+            <button type="button" data-value="royal" role="radio">Royal</button>
+            <button type="button" data-value="light" role="radio" aria-checked="true" class="is-active">Clear</button>
+            <button type="button" data-value="dark" role="radio">Midnight</button>
           </div>
         </div>
 
@@ -874,6 +1489,226 @@
             <button type="button" data-value="reduced" role="radio">Reduced Motion</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Body Typeface</span><p class="pc-option-desc">The face running text is set in. The serif is the institution&rsquo;s own; the humanist sans is set slightly wider and suits screens read at a distance.</p></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">Serif</button>
+            <button type="button" data-value="sans" role="radio">Sans</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Leading</span><p class="pc-option-desc">The space between lines. Generous leading helps a long passage; tight leading fits more on the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">Tight</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="generous" role="radio">Generous</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Tracking</span><p class="pc-option-desc">The space between letters. Open tracking is recommended for readers with dyslexia.</p></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="open" role="radio">Open</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Alignment</span><p class="pc-option-desc">Running prose is justified to both margins, as a printed page is. Ragged-right removes the word-spacing that justification requires.</p></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">Justified</button>
+            <button type="button" data-value="ragged" role="radio">Ragged Right</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Drop Capitals</span><p class="pc-option-desc">The three-line versal that opens a chapter. Some screen magnifiers reflow awkwardly around it.</p></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Show</button>
+            <button type="button" data-value="off" role="radio">Hide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Arabic Script Size</span><p class="pc-option-desc">Arabic carries its meaning in marks that sit above and below the line, and is set larger than Latin at the same nominal size.</p></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="large" role="radio">Large</button>
+            <button type="button" data-value="xlarge" role="radio">Very Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Contrast</span><p class="pc-option-desc">Raises every text colour, border and rule to the strongest ratio the palette allows.</p></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high" role="radio">High</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Links</span><p class="pc-option-desc">Underlining every link in running text, rather than only on hover.</p></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">On Hover</button>
+            <button type="button" data-value="always" role="radio">Always Underlined</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Focus Ring</span><p class="pc-option-desc">The outline that marks where the keyboard is. A strong ring is recommended for anyone navigating without a mouse.</p></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="strong" role="radio">Strong</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Interface Sound</span><p class="pc-option-desc">The soft mechanical response on buttons, panels and confirmations. Silent by preference, and silent by default on any device that asks for reduced motion.</p></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Imagery</span><p class="pc-option-desc">Lean loads photographs only when they reach the screen and holds decorative layers back — for a slower connection or a metered one.</p></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Read This Page Aloud</span><p class="pc-option-desc">Puts a listen control in the masthead. It reads the page's own headings and paragraphs using the voice already installed on your device — nothing is fetched and nothing is sent anywhere — and lights each passage as it is spoken.</p></div>
+          <div class="pc-segmented" data-pc-set="readAloud" role="radiogroup" aria-label="Read this page aloud">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ornament</span><p class="pc-option-desc">The engraved furniture — corner rules, travelling-light rings, guilloche, watermarks and letterhead rules. Reduce it for a plainer page; remove it for a document.</p></div>
+          <div class="pc-segmented" data-pc-set="ornament" role="radiogroup" aria-label="Ornament">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="restrained" role="radio">Restrained</button>
+            <button type="button" data-value="none" role="radio">None</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Corners</span><p class="pc-option-desc">Softened corners read as objects you could pick up; square ones read as printed matter.</p></div>
+          <div class="pc-segmented" data-pc-set="corners" role="radiogroup" aria-label="Corners">
+            <button type="button" data-value="soft" role="radio" aria-checked="true" class="is-active">Softened</button>
+            <button type="button" data-value="sharp" role="radio">Squared</button>
+            <button type="button" data-value="pill" role="radio">Rounded</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Depth</span><p class="pc-option-desc">How far the cards and panels stand off the page.</p></div>
+          <div class="pc-segmented" data-pc-set="depth" role="radiogroup" aria-label="Depth">
+            <button type="button" data-value="flat" role="radio">Flat</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="pronounced" role="radio">Pronounced</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Paper Grain</span><p class="pc-option-desc">A fine laid texture across the pale bands, the way a good stock is not perfectly smooth.</p></div>
+          <div class="pc-segmented" data-pc-set="grain" role="radiogroup" aria-label="Paper grain">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Raking Light</span><p class="pc-option-desc">The gilt highlight that follows the pointer across headings, rules and figures — the difference between gold-coloured and gilded.</p></div>
+          <div class="pc-segmented" data-pc-set="cursorLight" role="radiogroup" aria-label="Raking light">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Parallax Depth</span><p class="pc-option-desc">How far the layers drift against each other as the page scrolls.</p></div>
+          <div class="pc-segmented" data-pc-set="parallax" role="radiogroup" aria-label="Parallax depth">
+            <button type="button" data-value="off" role="radio">Off</button>
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="deep" role="radio">Deep</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">How Sections Arrive</span><p class="pc-option-desc">The movement a band makes as it comes into view.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="revealStyle" role="radiogroup" aria-label="Reveal style">
+            <button type="button" data-value="rise" role="radio" aria-checked="true" class="is-active">Rise</button>
+            <button type="button" data-value="unveil" role="radio">Unveil</button>
+            <button type="button" data-value="settle" role="radio">Settle</button>
+            <button type="button" data-value="none" role="radio">Still</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Measure</span><p class="pc-option-desc">The width of the reading column. A narrower measure is easier on the eye; a wider one fits more to the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="measure" role="radiogroup" aria-label="Measure">
+            <button type="button" data-value="narrow" role="radio">Narrow</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Letterpress</span><p class="pc-option-desc">A hairline of light along the top edge of display type and a whisper of shadow beneath &mdash; the impression a metal face leaves in a good stock.</p></div>
+          <div class="pc-segmented" data-pc-set="letterpress" role="radiogroup" aria-label="Letterpress">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ambient Motes</span><p class="pc-option-desc">Points of gold drifting slowly across the dark bands, the way there is always something in the light in a real room.</p></div>
+          <div class="pc-segmented" data-pc-set="motes" role="radiogroup" aria-label="Ambient motes">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Page Transitions</span><p class="pc-option-desc">A curtain crosses the screen between pages instead of the page simply replacing itself.</p></div>
+          <div class="pc-segmented" data-pc-set="pageWipe" role="radiogroup" aria-label="Page transitions">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Reading Ruler</span><p class="pc-option-desc">A band of warmth that follows the pointer down the page, so the line you are reading is the line that is lit. An aid rather than an ornament, and off unless you ask for it.</p></div>
+          <div class="pc-segmented" data-pc-set="readingRuler" role="radiogroup" aria-label="Reading ruler">
+            <button type="button" data-value="off" role="radio" aria-checked="true" class="is-active">Off</button>
+            <button type="button" data-value="on" role="radio">On</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Numerals</span><p class="pc-option-desc">Which figures the Arabic pages set dates, times and counts in. <em>As published</em> keeps each page as its editors wrote it.</p></div>
+          <div class="pc-segmented" data-pc-set="numerals" role="radiogroup" aria-label="Numerals">
+            <button type="button" data-value="auto" role="radio" aria-checked="true" class="is-active">As published</button>
+            <button type="button" data-value="arabic" role="radio">Arabic-Indic ٠١٢</button>
+            <button type="button" data-value="western" role="radio">Western 012</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1076,11 +1911,17 @@
 </div>
 
 
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/adhkar-data.js?v=ef5213731a" defer></script>
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=20f42159c5" defer></script>
+<script src="/js/personalisation.js?v=1292aa3abe" defer></script>
+<script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
+<script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1089,16 +1930,26 @@
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
-<script src="/js/quran-data.js?v=4fced7d871" defer></script>
-<script src="/js/quran-reader.js?v=d401f4f4ce" defer></script>
-<script src="/js/certificate-verify.js?v=e901a84ce6" defer></script>
+<script src="/js/certificate-verify.js?v=c2e7ac776a" defer></script>
 <script src="/js/identity-verify.js?v=0b364c22e9" defer></script>
 <script src="/js/receipt-verify.js?v=daae2f1f8f" defer></script>
 <script src="/js/graduation-document-verify.js?v=366115e4eb" defer></script>
 <script src="/js/graduate-profile.js?v=f212c6e2a4" defer></script>
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
+<script src="/js/policies.js?v=6e17d51c0f" defer></script>
+<script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
+<script src="/js/listen.js?v=235af538fc" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/mega.js?v=23b6a172e2" defer></script>
+<script src="/js/edge.js?v=2f8720cbef" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
+<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
+<script src="/js/homefx.js?v=f5babcd80a" defer></script>
+<script src="/js/story.js?v=5deba9672d" defer></script>
 
 </body>
 </html>

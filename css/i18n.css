@@ -1,0 +1,305 @@
+/* Locale typography and the language switcher.
+ *
+ * Loaded on every page, after brand.css so its :root overrides win.
+ *
+ * The three font ROLES (display / label / body) are declared once in
+ * brand.css as custom properties and consumed by all 153 rules that used to
+ * hardcode a stack. That is what makes per-language typography a variable
+ * swap here rather than a parallel stylesheet per locale.
+ */
+
+/* --- Yoruba ---------------------------------------------------------------
+ * Charis SIL, self-hosted, subset to the exact Yoruba repertoire (~15 KB per
+ * weight — see scripts/build-yoruba-font.py for how it is produced).
+ *
+ * Self-hosted rather than pulled from the Google Fonts CDN like the other
+ * four families, for a reason specific to this language: NONE of Cormorant
+ * Garamond, Cinzel, Inter or Amiri contains ẹ, ọ or ṣ. On a Yoruba page each
+ * of those letters would fall back to whatever the operating system offers,
+ * so a single word — Ìgbésí-ayé Akẹ́kọ̀ọ́ — would render in two different
+ * typefaces, breaking at exactly the letters that carry meaning ("ọkọ̀"
+ * vehicle vs "oko" farm are different words, not spelling variants).
+ * Charis SIL is drawn by SIL for African orthographies: it has the
+ * underdotted letters as real glyphs and the mark/mkmk GPOS features that
+ * stack an acute or grave cleanly ABOVE an underdot rather than colliding
+ * with it.
+ *
+ * No unicode-range: the whole page is set in one coherent face, which is the
+ * point. The files only download on pages that actually select them.
+ */
+@font-face {
+  font-family: 'Charis SIL Yoruba';
+  src: url('/assets/fonts/charis-sil-yoruba-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL Yoruba';
+  src: url('/assets/fonts/charis-sil-yoruba-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charis SIL Yoruba';
+  src: url('/assets/fonts/charis-sil-yoruba-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Yoruba resolves all three roles to Charis SIL. Hierarchy is carried by
+   weight, size, letter-spacing and case — all of which the existing rules
+   still apply — rather than by family, because the alternative is a label
+   font (Cinzel) that cannot spell the language. */
+:root[data-locale='yo'] {
+  --font-display: 'Charis SIL Yoruba', 'Cormorant Garamond', Georgia, serif;
+  --font-label: 'Charis SIL Yoruba', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Charis SIL Yoruba', 'Inter', system-ui, sans-serif;
+}
+
+/* Tone marks sit above the cap line; the site's tight display leading would
+   clip them. A small line-height floor on headings costs nothing in the
+   other languages because it is scoped to Yoruba. */
+:root[data-locale='yo'] h1,
+:root[data-locale='yo'] h2,
+:root[data-locale='yo'] h3,
+:root[data-locale='yo'] .nav-mega-panel a,
+:root[data-locale='yo'] .lang-switch-label {
+  line-height: 1.28;
+}
+
+/* --- Arabic ---------------------------------------------------------------
+ * Already correct sitewide (Amiri/Cairo are appended to every stack); named
+ * here so the registry's fontStack and the CSS agree, and so a future
+ * change is made in one place. */
+:root[data-locale='ar'] {
+  --font-display: 'Amiri', 'Cormorant Garamond', serif;
+  --font-label: 'Amiri', 'Cinzel', serif;
+  --font-body: 'Cairo', 'Inter', sans-serif;
+}
+
+/* --- French ---------------------------------------------------------------
+ * Shares the English Latin typography exactly, as specified. Declared
+ * explicitly rather than left to inherit so that the intent is legible and
+ * a future change to English does not silently move French with it. */
+:root[data-locale='fr'] {
+  --font-display: 'Cormorant Garamond', 'Amiri', serif;
+  --font-label: 'Cinzel', 'Amiri', serif;
+  --font-body: 'Inter', 'Cairo', sans-serif;
+}
+
+/* --- The switcher ---------------------------------------------------------
+ * A native <details> disclosure: keyboard-operable, screen-reader-announced
+ * and Escape-closable without a line of JavaScript, and still usable if the
+ * runtime never attaches. */
+.lang-switch {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-label);
+}
+
+.lang-switch > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid rgba(var(--lv-gbs, 233, 206, 138), 0.38);
+  border-radius: var(--btn-radius, 3px);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: var(--gold-bright);
+  background: transparent;
+  list-style: none;
+  white-space: nowrap;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.lang-switch > summary::-webkit-details-marker,
+.lang-switch > summary::marker { display: none; content: ''; }
+
+.lang-switch > summary:hover,
+.lang-switch > summary:focus-visible {
+  border-color: var(--gold-bright);
+  background: rgba(var(--lv-gbs, 233, 206, 138), 0.1);
+}
+.lang-switch > summary:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+}
+
+.lang-switch-globe { display: inline-flex; opacity: 0.85; }
+
+/* FIXED, not absolute, and positioned by js/i18n.js at open time.
+ *
+ * .topbar carries `overflow:hidden` (css/brand.css) to contain its animated
+ * ::before shimmer, which is inset -10% beyond the bar on every side. An
+ * absolutely-positioned dropdown is a descendant of that box, so the bar
+ * clipped it to its own height: the menu opened showing only its first row
+ * and silently swallowed العربية, Yorùbá and Français. Every option was in
+ * the DOM with a real height — which is why a DOM-level test passed and only
+ * a screenshot caught it.
+ *
+ * A fixed element is laid out against the viewport, so no ancestor's overflow
+ * can clip it (no ancestor here sets transform/filter/perspective, which are
+ * the things that would re-parent a fixed box). The cost is that `top`/`left`
+ * must be computed rather than inherited from the summary, which
+ * positionMenu() in js/i18n.js does on open, on scroll and on resize. */
+.lang-switch-menu {
+  position: fixed;
+  z-index: 1200;
+  min-width: 12rem;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--navy-deep-bg, #221709);
+  border: 1px solid rgba(var(--lv-gbs, 233, 206, 138), 0.32);
+  border-radius: var(--btn-radius, 3px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+}
+
+.lang-switch-menu li { margin: 0; }
+
+.lang-switch-menu a {
+  display: block;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  letter-spacing: 0;
+  line-height: 1.5;
+  color: var(--ivory, #f7eedf);
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.lang-switch-menu a:hover,
+.lang-switch-menu a:focus-visible {
+  background: rgba(var(--lv-gbs, 233, 206, 138), 0.14);
+  color: var(--gold-bright);
+}
+.lang-switch-menu a[aria-current='true'] {
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+.lang-switch-menu a[aria-current='true']::after {
+  content: '✓';
+  float: inline-end;
+  opacity: 0.9;
+}
+
+/* Each option is written in its own language, so it must also be set in its
+   own face — otherwise "العربية" in the menu renders in Cormorant and
+   "Yorùbá" loses its underdots while the reader is still deciding. */
+.lang-switch-menu a[lang='ar'] { font-family: 'Amiri', 'Cairo', serif; font-size: 0.98rem; }
+.lang-switch-menu a[lang='yo'] { font-family: 'Charis SIL Yoruba', serif; }
+
+/* The topbar is dense on small screens; the label is redundant next to the
+   globe once space is tight. */
+@media (max-width: 640px) {
+  .lang-switch-label { display: none; }
+  .lang-switch > summary { padding: 4px 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-switch > summary,
+  .lang-switch-menu a { transition: none; }
+}
+
+/* --- Interim translation notice -------------------------------------------
+ * Shown above body content that is still in the default language on an
+ * otherwise-translated page (see renderPartialNotice in scripts/build.js).
+ * Styled as a calm institutional note rather than a warning banner: the page
+ * is usable, not broken, and the tone should say so. */
+.i18n-partial-notice {
+  background: var(--surface-warm-bg, #eae0c0);
+  border-block-end: 1px solid rgba(var(--lv-gbs, 233, 206, 138), 0.5);
+  padding: 14px 0;
+  font-family: var(--font-body);
+}
+.i18n-partial-notice strong {
+  display: block;
+  font-family: var(--font-label);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bronze, #7a5c2e);
+  margin-block-end: 4px;
+}
+.i18n-partial-notice p {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--on-surface, #2a2621);
+  max-width: 62ch;
+}
+.i18n-partial-notice a {
+  font-size: 0.86rem;
+  color: var(--crimson, #8c1d2b);
+  text-underline-offset: 3px;
+}
+
+/* --- Portal stacking ------------------------------------------------------
+ * .portal-topbar and .portal-shell are siblings, both position:relative with
+ * z-index:1 (css/portal.css). Equal z-index means DOM order decides, and the
+ * shell comes second — so anything the topbar overflows downward is painted
+ * UNDER the page content. The switcher's dropdown lives exactly there, which
+ * made it open but unclickable on all 69 portal pages: the first heading in
+ * the shell swallowed the click.
+ *
+ * Raising the topbar fixes it for good. A topbar carrying a menu has to
+ * out-stack the content it hangs over; the switcher's own z-index cannot do
+ * this from inside, because the topbar's z-index:1 creates the stacking
+ * context that traps it.
+ *
+ * The selector is `body.portal-body > .portal-topbar` rather than a bare
+ * `.portal-topbar` because the z-index:1 comes from `body.portal-body > *`
+ * (css/portal.css:58) — specificity (0,1,1), which a bare class at (0,1,0)
+ * loses to no matter how late it is loaded. */
+body.portal-body > .portal-topbar {
+  position: relative;
+  z-index: 60;
+}
+
+
+/* --- Switcher panel in the Clear (light) edition --------------------------
+ * The Clear edition darkens every topbar link for its pale bar:
+ *   html[data-pc-theme="light"] .topbar a { color: var(--pearl-ink-2) }
+ * at specificity (0,3,2), which outranks `.lang-switch-menu a` at (0,1,1).
+ * The dropdown inherited that dark ink while keeping its dark panel, giving
+ * 1.97:1 — well under the 4.5:1 WCAG AA needs for body text, and the reason
+ * the four languages read as barely-there smudges.
+ *
+ * Rather than fight the theme for a light-on-dark panel, the panel follows
+ * the theme: pale paper and dark ink in the Clear edition, matching the bar
+ * it hangs from. Selectors are pinned to (0,4,2) so they win outright rather
+ * than by load order, which a future stylesheet reshuffle could silently
+ * reverse. */
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu {
+  background: var(--pearl, #fbf7ef);
+  border-color: var(--line, rgba(198, 161, 91, 0.38));
+  box-shadow: 0 18px 44px rgba(51, 40, 28, 0.18);
+}
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a {
+  color: var(--pearl-ink, #33281c);
+}
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a:hover,
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a:focus-visible {
+  background: var(--pearl-2, #f4ede0);
+  color: var(--pearl-ink, #33281c);
+}
+/* The current language still reads as chosen, but in an ink dark enough to
+   pass on pale paper — the gold used on the dark panel would not. */
+html[data-pc-theme="light"] .lang-switch[data-lang-switch] .lang-switch-menu a[aria-current="true"] {
+  color: var(--pearl-ink, #33281c);
+  font-weight: 700;
+}
+
+/* The dark editions keep the dark panel, but pin the ink with the same
+   specificity so no future theme rule can dim it the way the Clear edition
+   did. */
+html[data-pc-theme="royal"] .lang-switch[data-lang-switch] .lang-switch-menu a,
+html[data-pc-theme="dark"] .lang-switch[data-lang-switch] .lang-switch-menu a {
+  color: var(--ivory, #f7eedf);
+}

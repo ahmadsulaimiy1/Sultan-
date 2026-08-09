@@ -7,10 +7,18 @@
 <title>WAEC Readiness Framework — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/portal.css?v=73e4122b67">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=11a0d5f19c">
 </head>
 <body class="portal-body" data-exam-body="WAEC">
 
@@ -23,6 +31,7 @@
     <span class="portal-pilot-badge">WAEC Readiness</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
     <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
   </div>
 </div>
@@ -54,12 +63,16 @@
   </div>
   <div class="portal-card" data-portal-error hidden>
     <h1>Couldn't load the WAEC Readiness Framework</h1>
-    <p class="sub" data-portal-error-message>Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/">← Back to sign in</a>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
 
 <script src="/js/portal-office-switcher.js?v=9875bfcf96" defer></script>
 <script src="/js/portal-staff-exam-readiness.js?v=f8c1019690" defer></script>
+<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
+<script src="/js/portal-chrome.js?v=5c77b5b3d2" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
 </body>
 </html>

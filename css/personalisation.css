@@ -9,7 +9,7 @@
 /* --- Topbar trigger --- */
 .pc-trigger{
   display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;
-  color:var(--gold-bright);font-family:'Inter','Cairo',sans-serif;font-size:0.76rem;
+  color:var(--gold-bright);font-family:var(--font-body);font-size:0.76rem;
   padding:0;margin-inline-start:14px;transition:color .2s ease;
 }
 .pc-trigger:hover{color:#fff;}
@@ -18,31 +18,31 @@
 
 /* --- Overlay + drawer shell --- */
 .pc-overlay{
-  position:fixed;inset:0;background:rgba(20,14,8,0.55);z-index:400;
+  position:fixed;inset:0;background:rgba(var(--lv-w55,20,14,8),0.55);z-index:400;
   opacity:0;transition:opacity .3s ease;
 }
 .pc-overlay.is-visible{opacity:1;}
 .pc-drawer{
   position:fixed;top:0;bottom:0;right:0;width:min(440px, 100vw);z-index:401;
-  background:var(--surface);color:var(--on-surface);
-  box-shadow:-24px 0 60px -20px rgba(20,14,8,0.5);
+  background:var(--surface-bg);color:var(--on-surface);
+  box-shadow:-24px 0 60px -20px rgba(var(--lv-w55,20,14,8),0.5);
   display:flex;flex-direction:column;
   transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
 }
-[dir="rtl"] .pc-drawer{right:auto;left:0;transform:translateX(-100%);box-shadow:24px 0 60px -20px rgba(20,14,8,0.5);}
+[dir="rtl"] .pc-drawer{right:auto;left:0;transform:translateX(-100%);box-shadow:24px 0 60px -20px rgba(var(--lv-w55,20,14,8),0.5);}
 .pc-drawer.is-open{transform:translateX(0);}
 html[data-pc-motion="reduced"] .pc-drawer{transition:none;}
 
 /* --- Head --- */
 .pc-head{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  background:var(--navy-deep);color:var(--gold-bright);padding:22px 24px;flex-shrink:0;
+  background:var(--navy-deep-bg);color:var(--gold-bright);padding:22px 24px;flex-shrink:0;
 }
 .pc-head-id{display:flex;align-items:center;gap:12px;}
-.pc-title{font-family:'Cinzel','Amiri',serif;font-size:1.02rem;letter-spacing:0.02em;color:#fff;margin:0;}
-.pc-sub{font-size:0.74rem;color:rgba(233,206,138,0.75);margin:2px 0 0;}
+.pc-title{font-family:var(--font-label);font-size:1.02rem;letter-spacing:0.02em;color:#fff;margin:0;}
+.pc-sub{font-size:0.74rem;color:rgba(var(--lv-gb,233,206,138),0.75);margin:2px 0 0;}
 .pc-close{
-  background:none;border:1px solid rgba(233,206,138,0.35);color:var(--gold-bright);
+  background:none;border:1px solid rgba(var(--lv-gbs,233,206,138),0.35);color:var(--gold-bright);
   width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.85rem;
   display:flex;align-items:center;justify-content:center;transition:border-color .2s ease,color .2s ease;
 }
@@ -51,17 +51,17 @@ html[data-pc-motion="reduced"] .pc-drawer{transition:none;}
 /* --- Tabs (vertical rail desktop, horizontal scroll strip mobile) --- */
 .pc-tabs{
   display:flex;flex-direction:column;gap:2px;flex-shrink:0;
-  background:rgba(59,42,29,0.04);border-bottom:1px solid var(--line);
+  background:rgba(var(--lv-cfs,59,42,29),0.04);border-bottom:1px solid var(--line);
   overflow-x:auto;
 }
 .pc-tab{
   display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;
-  padding:12px 20px;font-family:'Inter','Cairo',sans-serif;font-size:0.82rem;color:var(--on-surface-soft);
+  padding:12px 20px;font-family:var(--font-body);font-size:0.82rem;color:var(--on-surface-soft);
   text-align:start;border-inline-start:3px solid transparent;transition:color .2s ease,border-color .2s ease,background .2s ease;
   white-space:nowrap;
 }
 .pc-tab svg{flex-shrink:0;opacity:0.8;}
-.pc-tab:hover{color:var(--on-surface);background:rgba(198,161,91,0.08);}
+.pc-tab:hover{color:var(--on-surface);background:rgba(var(--lv-gs,198,161,91),0.08);}
 .pc-tab.is-active{color:var(--navy);border-inline-start-color:var(--accent);background:var(--accent-wash);font-weight:600;}
 :root[data-pc-theme="dark"] .pc-tab.is-active{color:var(--accent-bright);}
 
@@ -94,9 +94,9 @@ html[data-pc-motion="reduced"] .pc-panel.is-active{animation:none;}
 }
 a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
 .pc-lang-row.is-queued{opacity:0.55;}
-.pc-lang-name{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;}
+.pc-lang-name{font-family:var(--font-display);font-size:1.05rem;}
 .pc-lang-badge{
-  font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;
+  font-family:var(--font-label);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;
   padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--on-surface-soft);
 }
 .pc-lang-badge.is-current{border-color:var(--accent);color:var(--accent);background:var(--accent-wash);}
@@ -105,20 +105,20 @@ a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
 /* --- Segmented control (radio-style button group) --- */
 .pc-option{margin-bottom:26px;}
 .pc-option-label{margin-bottom:10px;}
-.pc-option-title{font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--on-surface);}
+.pc-option-title{font-family:var(--font-label);font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--on-surface);}
 .pc-option-desc{font-size:0.78rem;color:var(--on-surface-soft);margin:2px 0 0;line-height:1.45;}
 .pc-segmented{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
 .pc-segmented-wrap{flex-wrap:wrap;border-radius:0;border:none;gap:8px;}
 .pc-segmented button{
   flex:1;background:none;border:none;cursor:pointer;padding:10px 8px;font-size:0.78rem;
-  font-family:'Inter','Cairo',sans-serif;color:var(--on-surface-soft);
+  font-family:var(--font-body);color:var(--on-surface-soft);
   border-inline-start:1px solid var(--line);transition:background .2s ease,color .2s ease;
 }
 .pc-segmented-wrap button{flex:none;border:1px solid var(--line);border-radius:999px;padding:8px 16px;}
 .pc-segmented button:first-child{border-inline-start:none;}
 .pc-segmented-wrap button:first-child{border-inline-start:1px solid var(--line);}
-.pc-segmented button:hover{background:rgba(198,161,91,0.08);}
-.pc-segmented button.is-active{background:var(--navy);color:#fff;font-weight:600;}
+.pc-segmented button:hover{background:rgba(var(--lv-gs,198,161,91),0.08);}
+.pc-segmented button.is-active{background:var(--navy-bg);color:#fff;font-weight:600;}
 .pc-segmented button:disabled{opacity:0.4;cursor:not-allowed;}
 .pc-segmented button:disabled:hover{background:none;}
 
@@ -127,10 +127,10 @@ a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
 .pc-toggle-row:last-child{border-bottom:none;}
 .pc-switch{
   position:relative;width:42px;height:24px;border-radius:999px;border:1px solid var(--line);
-  background:rgba(59,42,29,0.12);cursor:pointer;flex-shrink:0;transition:background .2s ease,border-color .2s ease;
+  background:rgba(var(--lv-cfs,59,42,29),0.12);cursor:pointer;flex-shrink:0;transition:background .2s ease,border-color .2s ease;
 }
 .pc-switch-knob{
-  position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+  position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:rgb(var(--lv-wh,255,255,255));
   box-shadow:0 2px 4px rgba(0,0,0,0.25);transition:transform .2s ease;
 }
 [dir="rtl"] .pc-switch-knob{left:auto;right:2px;}
@@ -140,15 +140,15 @@ a.pc-lang-row:hover{padding-inline-start:8px;color:var(--on-surface);}
 html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-switch-knob{transition:none;}
 
 /* --- Islamic preferences preview card --- */
-.pc-islamic-preview{background:rgba(198,161,91,0.08);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:22px;}
+.pc-islamic-preview{background:rgba(var(--lv-gs,198,161,91),0.08);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:22px;}
 .pc-islamic-preview-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;}
 .pc-islamic-preview-label{font-size:0.76rem;color:var(--on-surface-soft);}
 .pc-islamic-icon-label{display:inline-flex;align-items:center;gap:5px;}
 .pc-islamic-icon-label svg{color:var(--gold);flex-shrink:0;}
-.pc-islamic-preview-value{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;color:var(--on-surface);}
+.pc-islamic-preview-value{font-family:var(--font-display);font-size:1.05rem;color:var(--on-surface);}
 .pc-text-btn{
   background:none;border:none;color:var(--accent);font-size:0.76rem;text-decoration:underline;cursor:pointer;
-  padding:6px 0 0;font-family:'Inter','Cairo',sans-serif;
+  padding:6px 0 0;font-family:var(--font-body);
 }
 .pc-islamic-note{margin-top:10px;}
 
@@ -160,7 +160,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 }
 .pc-office-row:hover{border-color:var(--accent);}
 .pc-office-row[aria-checked="true"]{border-color:var(--accent);background:var(--accent-wash);}
-.pc-office-name{font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.02em;color:var(--on-surface);}
+.pc-office-name{font-family:var(--font-label);font-size:0.78rem;letter-spacing:0.02em;color:var(--on-surface);}
 .pc-office-desc{font-size:0.76rem;color:var(--on-surface-soft);}
 
 /* --- Hijri mini-calendar ---
@@ -169,7 +169,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
    calculated Hijri date, "today" and "Friday" are the only two states
    marked, no fabricated events. */
 .pc-hcal-widget{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:6px;}
-.pc-hcal-month{font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);text-align:center;margin-bottom:10px;}
+.pc-hcal-month{font-family:var(--font-label);font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);text-align:center;margin-bottom:10px;}
 .pc-hcal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
 .pc-hcal-dow span{text-align:center;font-size:0.62rem;color:var(--on-surface-soft);text-transform:uppercase;}
 .pc-hcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
@@ -187,7 +187,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 
 /* --- Today's Adhkar widget --- */
 .pc-adhkar-widget-body{margin:8px 0 10px;}
-.pc-adhkar-period{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.1rem;color:var(--on-surface);display:block;margin-bottom:8px;}
+.pc-adhkar-period{font-family:var(--font-display);font-size:1.1rem;color:var(--on-surface);display:block;margin-bottom:8px;}
 .pc-adhkar-progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
 .pc-adhkar-progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s ease;}
 .pc-adhkar-progress-label{font-size:0.74rem;color:var(--on-surface-soft);display:block;margin-top:6px;}
@@ -196,14 +196,14 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-verse-arabic{font-family:'Amiri','Cormorant Garamond',serif;font-size:1.35rem;line-height:2;color:var(--on-surface);margin:8px 0;}
 .pc-verse-arabic:empty{display:none;}
 .pc-verse-translation{font-size:0.88rem;line-height:1.6;color:var(--on-surface);font-style:italic;margin:6px 0;}
-.pc-verse-ref{font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin:0;}
+.pc-verse-ref{font-family:var(--font-label);font-size:0.66rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin:0;}
 
 /* --- Cards (Security tab, muted "coming soon" state) --- */
 .pc-card{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
 .pc-card-muted{opacity:0.75;}
 .pc-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
 .pc-badge{
-  font-family:'Cinzel','Amiri',serif;font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;
+  font-family:var(--font-label);font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;
   padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--on-surface-soft);flex-shrink:0;
 }
 
@@ -211,7 +211,7 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
 .pc-form{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
 .pc-form input, .pc-form select, .pc-form textarea{
   width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;
-  background:var(--surface);color:var(--on-surface);font-family:'Inter','Cairo',sans-serif;font-size:0.84rem;
+  background:var(--surface-bg);color:var(--on-surface);font-family:var(--font-body);font-size:0.84rem;
 }
 .pc-form input:focus, .pc-form select:focus, .pc-form textarea:focus{outline:1.5px solid var(--accent);border-color:var(--accent);}
 .pc-form button{align-self:flex-start;}
@@ -228,21 +228,21 @@ html[data-pc-motion="reduced"] .pc-switch, html[data-pc-motion="reduced"] .pc-sw
    page width and the visibility toggle; .pc-islamic-strip-inner
    applies the shared max-width/padding for content alignment. */
 .pc-islamic-strip{
-  display:none;background:linear-gradient(180deg,#F8F2E4 0%,#F1E7D2 100%);
-  border-top:1px solid rgba(198,161,91,0.4);border-bottom:1px solid rgba(198,161,91,0.25);
+  display:none;background:linear-gradient(180deg,rgb(var(--lv-w238,248,242,228)) 0%,rgb(var(--lv-w41,241,231,210)) 100%);
+  border-top:1px solid rgba(var(--lv-gs,198,161,91),0.4);border-bottom:1px solid rgba(var(--lv-gs,198,161,91),0.25);
 }
 .pc-islamic-strip.is-visible{display:block;}
 .pc-islamic-strip-inner{
   display:flex;align-items:center;justify-content:center;gap:14px;
-  padding:6px 24px;font-size:0.74rem;color:#4A3B22;flex-wrap:wrap;
+  padding:6px 24px;font-size:0.74rem;color:rgb(var(--lv-w119,74,59,34));flex-wrap:wrap;
 }
 .pc-strip-item{white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:0.01em;}
-.pc-strip-icon{color:#8B6A2E;flex-shrink:0;}
-.pc-strip-clock{font-family:'Cinzel','Amiri',serif;font-variant-numeric:tabular-nums;letter-spacing:0.04em;color:#3A2E17;}
+.pc-strip-icon{color:rgb(var(--lv-w21,139,106,46));flex-shrink:0;}
+.pc-strip-clock{font-family:var(--font-label);font-variant-numeric:tabular-nums;letter-spacing:0.04em;color:rgb(var(--lv-w71,58,46,23));}
 .pc-strip-countdown{font-weight:500;opacity:0.75;font-size:0.94em;}
-.pc-strip-sep{width:1px;height:12px;background:rgba(139,106,46,0.3);flex-shrink:0;}
-.pc-adhkar-link{color:#4A3B22;text-decoration:none;border-bottom:1px dotted rgba(139,106,46,0.5);transition:color .2s ease,border-color .2s ease;}
-.pc-adhkar-link:hover{color:#8B6A2E;border-color:#8B6A2E;}
+.pc-strip-sep{width:1px;height:12px;background:rgba(var(--lv-w21s,139,106,46),0.3);flex-shrink:0;}
+.pc-adhkar-link{color:rgb(var(--lv-w119,74,59,34));text-decoration:none;border-bottom:1px dotted rgba(var(--lv-w21s,139,106,46),0.5);transition:color .2s ease,border-color .2s ease;}
+.pc-adhkar-link:hover{color:rgb(var(--lv-w21,139,106,46));border-color:rgb(var(--lv-w21s,139,106,46));}
 @media (max-width:640px){
   .pc-islamic-strip-inner{gap:9px;padding:6px 16px;font-size:0.68rem;}
 }
@@ -282,3 +282,373 @@ body.pc-lock{overflow:hidden;}
   .pc-head{padding:18px;}
   .pc-body{padding:18px 18px 32px;}
 }
+
+/* ===================================================================
+   THE READER'S OWN SETTINGS
+   -------------------------------------------------------------------
+   Eleven further preferences, each of which changes the page rather
+   than merely being remembered. Every one is written to <html> before
+   first paint by the script in partials/head.html, so a returning
+   reader never sees the default flash past on the way to their own.
+   =================================================================== */
+
+/* --- Body typeface -------------------------------------------------
+   The institution is set in a serif. A humanist sans is offered for
+   readers who find it easier on a screen, and is scaled up very
+   slightly because it runs smaller at the same nominal size. */
+html[data-pc-face="sans"] body,
+html[data-pc-face="sans"] p,
+html[data-pc-face="sans"] li,
+html[data-pc-face="sans"] .pr-body,
+html[data-pc-face="sans"] .pr-lead{
+  font-family:var(--font-body);
+  font-size:1.008em;
+}
+
+/* --- Leading ------------------------------------------------------- */
+html[data-pc-leading="tight"]    p,html[data-pc-leading="tight"]    li{line-height:1.48;}
+html[data-pc-leading="generous"] p,html[data-pc-leading="generous"] li{line-height:2.02;}
+html[data-pc-leading="generous"] .pr-lead{line-height:1.95;}
+
+/* --- Tracking ------------------------------------------------------
+   Open and wide tracking are the recommendation for readers with
+   dyslexia; word-spacing rises with letter-spacing so words do not
+   dissolve into one another. */
+html[data-pc-tracking="open"] p,html[data-pc-tracking="open"] li,
+html[data-pc-tracking="open"] .pr-body{letter-spacing:.018em;word-spacing:.06em;}
+html[data-pc-tracking="wide"] p,html[data-pc-tracking="wide"] li,
+html[data-pc-tracking="wide"] .pr-body{letter-spacing:.042em;word-spacing:.13em;}
+
+/* --- Alignment ----------------------------------------------------- */
+html[data-pc-align="ragged"] .pr-justify,
+html[data-pc-align="ragged"] .pr-body,
+html[data-pc-align="ragged"] .pr-section p.pr-body,
+html[data-pc-align="ragged"] .policy-body .section-block > p,
+html[data-pc-align="ragged"] .school-block > p,
+html[data-pc-align="ragged"] .chapter-band p,
+html[data-pc-align="ragged"] .chapter-band-alt p,
+html[data-pc-align="ragged"] .pr-prose p{
+  text-align:start;hyphens:none;-webkit-hyphens:none;}
+
+/* --- Drop capitals -------------------------------------------------- */
+html[data-pc-versal="off"] .pr-dropcap::first-letter{
+  float:none;font-size:inherit;line-height:inherit;font-family:inherit;
+  padding:0;margin:0;color:inherit;text-shadow:none;}
+
+/* --- Arabic script size --------------------------------------------
+   Arabic carries meaning in marks set above and below the line, and at
+   the same nominal size it reads smaller than Latin. This scales the
+   Arabic alone, wherever it appears — the adhkār, the Qur'ānic text,
+   the Arabic edition of the site — without touching the Latin around
+   it. */
+html[data-pc-arabic="large"]  [lang="ar"],
+html[data-pc-arabic="large"]  .adk-static-arabic,
+html[data-pc-arabic="large"]  .pc-verse-arabic,
+html[data-pc-arabic="large"]  [dir="rtl"] p{font-size:1.14em;line-height:2.05;}
+html[data-pc-arabic="xlarge"] [lang="ar"],
+html[data-pc-arabic="xlarge"] .adk-static-arabic,
+html[data-pc-arabic="xlarge"] .pc-verse-arabic,
+html[data-pc-arabic="xlarge"] [dir="rtl"] p{font-size:1.30em;line-height:2.2;}
+
+/* --- Contrast -------------------------------------------------------
+   Not a separate theme: the same palette held at its strongest legible
+   ratio. Body text goes to near-black on cream and near-white on the
+   royal bands, hairlines double in weight, and the soft greys that
+   carry captions and labels are pulled up to readable strength. */
+html[data-pc-contrast="high"] body{color:rgb(var(--lv-w239,26,20,12));}
+html[data-pc-contrast="high"] p,
+html[data-pc-contrast="high"] li,
+html[data-pc-contrast="high"] .pr-body,
+html[data-pc-contrast="high"] .pr-lead{color:rgb(var(--lv-w240,34,26,16));}
+html[data-pc-contrast="high"] .cap,
+html[data-pc-contrast="high"] .pc-option-desc,
+html[data-pc-contrast="high"] .plib-cat,
+html[data-pc-contrast="high"] .gw-need,
+html[data-pc-contrast="high"] .pgx-pane-need{color:rgb(var(--lv-w241,74,60,40));}
+html[data-pc-contrast="high"] .pr-section.is-royal p,
+html[data-pc-contrast="high"] .chapter-band p,
+html[data-pc-contrast="high"] .chapter-band-alt p,
+html[data-pc-contrast="high"] .portal-body p,
+html[data-pc-contrast="high"] footer p,
+html[data-pc-contrast="high"] .gateway-card p{color:rgb(var(--lv-w120,255,249,238));}
+html[data-pc-contrast="high"] .gw-points li,
+html[data-pc-contrast="high"] .pgx-pane-points li{color:rgba(var(--lv-w120,255,249,238),.92);}
+html[data-pc-contrast="high"] .pr-card,
+html[data-pc-contrast="high"] .school-block,
+html[data-pc-contrast="high"] .gateway-card,
+html[data-pc-contrast="high"] .plib,
+html[data-pc-contrast="high"] .institution-card{border-width:2px;}
+
+/* --- Link underlines ------------------------------------------------ */
+html[data-pc-links="always"] .pr-body a,
+html[data-pc-links="always"] p a,
+html[data-pc-links="always"] li a,
+html[data-pc-links="always"] .text-link{
+  text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:from-font;}
+
+/* --- Focus ring ------------------------------------------------------ */
+html[data-pc-focus="strong"] :focus-visible{
+  outline:3px solid var(--gold-bright,rgb(var(--lv-gbs,233,206,138)));outline-offset:3px;
+  border-radius:3px;
+  box-shadow:0 0 0 6px rgba(var(--lv-gs,198,161,91),.28);}
+
+/* --- Imagery ---------------------------------------------------------
+   Lean holds back the decorative layers — the weave, the drifting dust,
+   the raking sheen, the parallax — and leaves the photographs and the
+   words. It is the setting for a metered connection, and it is also the
+   quietest the site knows how to be. */
+html[data-pc-imagery="lean"] .imperial-motion,
+html[data-pc-imagery="lean"] .foot-motion,
+html[data-pc-imagery="lean"] .mo-spot::before,
+html[data-pc-imagery="lean"] .pr-sheen::after,
+html[data-pc-imagery="lean"] header.nav::before,
+html[data-pc-imagery="lean"] .portal-body::before{display:none!important;}
+html[data-pc-imagery="lean"] .mo-par,
+html[data-pc-imagery="lean"] .mo-par-img img{transform:none!important;}
+
+/* --- Interface sound -------------------------------------------------
+   The floating toggle and this control are one preference. When sound
+   is off the floating toggle still shows its state, so the reader can
+   see at a glance which way the setting stands. */
+
+/* ===================================================================
+   THE LIVERY CHOOSER
+   =================================================================== */
+.pc-livery-grid{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));}
+.pc-livery-grid button{
+  display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  padding:12px 13px;border-radius:12px;cursor:pointer;text-align:start;
+  border:1px solid rgba(var(--lv-gs,198,161,91),.3);
+  background:linear-gradient(168deg,rgba(var(--lv-wh,255,255,255),.07),rgba(var(--lv-wh,255,255,255),.02));
+  color:inherit;font:inherit;
+  transition:border-color .3s,background .3s,transform .3s;}
+.pc-livery-grid button:hover{transform:translateY(-2px);border-color:rgba(var(--lv-gbs,233,206,138),.6);}
+.pc-livery-grid button.is-active{
+  border-color:rgb(var(--lv-gbs,233,206,138));
+  background:linear-gradient(168deg,rgba(var(--lv-gbs,233,206,138),.2),rgba(var(--lv-gbs,233,206,138),.05));}
+/* The swatch shows the livery's own three tones — accent, ground, paper —
+   in its own colours, not in the colours of whatever is currently on. */
+.pc-lv-swatch{display:block;width:100%;height:26px;border-radius:6px;
+  border:1px solid rgba(0,0,0,.28);box-shadow:inset 0 1px 0 rgba(var(--lv-bev,255,255,255),.35);}
+/* Literal colours, deliberately. These were written as --lv- reads, which
+   meant every swatch was repainted in the livery currently on — so all six
+   looked alike and the chooser showed nothing to choose between. A swatch
+   must always be its own livery's accent, band and paper, whatever is on. */
+.pc-lv-swatch[data-lv="royal"]   {background:linear-gradient(100deg,#E9CE8A 0 34%,#3B2A1D 34% 67%,#F7EEDF 67% 100%);}
+.pc-lv-swatch[data-lv="coffee"]  {background:linear-gradient(100deg,#E9CE8A 0 34%,#200E07 34% 67%,#EEDFD1 67% 100%);}
+.pc-lv-swatch[data-lv="sapphire"]{background:linear-gradient(100deg,#C1D3E6 0 34%,#252F39 34% 67%,#EAEFF6 67% 100%);}
+.pc-lv-swatch[data-lv="emerald"] {background:linear-gradient(100deg,#AFDAC5 0 34%,#213029 34% 67%,#E5F2EC 67% 100%);}
+.pc-lv-swatch[data-lv="garnet"]  {background:linear-gradient(100deg,#E9CD9A 0 34%,#45232C 34% 67%,#F7EEE0 67% 100%);}
+.pc-lv-swatch[data-lv="obsidian"]{background:linear-gradient(100deg,#CFD0D3 0 34%,#2D2E2F 34% 67%,#EFEFF0 67% 100%);}
+.pc-lv-name{font-family:var(--font-label);font-size:.8rem;line-height:1.2;}
+.pc-lv-sub{font-size:.68rem;opacity:.72;line-height:1.3;}
+
+/* ===================================================================
+   THE CRAFT SETTINGS
+   -------------------------------------------------------------------
+   Each of these is load-bearing rather than decorative: it changes a
+   token the rest of the system already reads, so one switch reaches
+   every component at once instead of a list of special cases.
+   =================================================================== */
+
+/* ---- Ornament ---- */
+html[data-pc-ornament="restrained"]{--pr-orn:.45;}
+html[data-pc-ornament="none"]{--pr-orn:0;}
+html[data-pc-ornament="restrained"] .pr-lightborder::after,
+html[data-pc-ornament="restrained"] .pr-card::before,
+html[data-pc-ornament="restrained"] .imperial-motion,
+html[data-pc-ornament="restrained"] .crest-watermark::before,
+html[data-pc-ornament="restrained"] .idc-guilloche,
+html[data-pc-ornament="restrained"] .mo-ico-mount::before{opacity:.4!important;}
+html[data-pc-ornament="none"] .pr-lightborder::after,
+html[data-pc-ornament="none"] .pr-card::before,
+html[data-pc-ornament="none"] .imperial-motion,
+html[data-pc-ornament="none"] .crest-watermark::before,
+html[data-pc-ornament="none"] .idc-guilloche,
+html[data-pc-ornament="none"] .mo-ico-mount::before,
+html[data-pc-ornament="none"] .corner,
+html[data-pc-ornament="none"] .hero .frame,
+html[data-pc-ornament="none"] .institutional-frame::before,
+html[data-pc-ornament="none"] .pr-photo::before{display:none!important;}
+html[data-pc-ornament="none"] section h2::after,
+html[data-pc-ornament="none"] section h1.page-title::after{opacity:.35;}
+
+/* ---- Corners ---- */
+html[data-pc-corners="sharp"]{
+  --pr-r-xs:0px;--pr-r-sm:0px;--pr-r-md:0px;--pr-r-lg:0px;--pr-r-xl:0px;--pr-r-pill:0px;
+  --radius-md:0px;--btn-radius:0px;}
+html[data-pc-corners="pill"]{
+  --pr-r-xs:10px;--pr-r-sm:16px;--pr-r-md:24px;--pr-r-lg:32px;--pr-r-xl:44px;--pr-r-pill:999px;
+  --radius-md:20px;--btn-radius:999px;}
+
+/* ---- Depth ---- */
+html[data-pc-depth="flat"]{
+  --pr-shadow-soft:0 1px 2px rgba(var(--lv-cfd2,42,28,16),.06);
+  --pr-shadow:0 2px 5px rgba(var(--lv-cfd2,42,28,16),.10);
+  --pr-shadow-lift:0 4px 10px rgba(var(--lv-cfd2,42,28,16),.14);}
+html[data-pc-depth="pronounced"]{
+  --pr-shadow-soft:
+    0 2px 4px rgba(var(--lv-cfd2,42,28,16),.10),
+    0 14px 32px -14px rgba(var(--lv-cfd2,42,28,16),.34),
+    0 40px 74px -40px rgba(var(--lv-cfd2,42,28,16),.44);
+  --pr-shadow:
+    0 2px 5px rgba(var(--lv-cfd2,42,28,16),.14),
+    0 22px 46px -16px rgba(var(--lv-cfd2,42,28,16),.46),
+    0 66px 120px -46px rgba(var(--lv-cfd2,42,28,16),.62);
+  --pr-shadow-lift:
+    0 4px 8px rgba(var(--lv-cfd2,42,28,16),.18),
+    0 32px 66px -18px rgba(var(--lv-cfd2,42,28,16),.52),
+    0 90px 150px -52px rgba(var(--lv-cfd2,42,28,16),.7);}
+
+/* ---- Paper grain ---- */
+/* A laid texture, drawn rather than fetched: two crossed hairline
+   gradients at a low angle, which is what a laid stock actually is. */
+html[data-pc-grain="on"] .pr-section.is-ivory::after,
+html[data-pc-grain="on"] .hx-marks::after,
+html[data-pc-grain="on"] .hx-path::after,
+html[data-pc-grain="on"] .hx-faq::after,
+html[data-pc-grain="on"] .mvv::after,
+html[data-pc-grain="on"] .academics::after,
+html[data-pc-grain="on"] .policies::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:repeating-linear-gradient(97deg,rgba(var(--lv-cfs,59,42,29),.028) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(7deg,rgba(var(--lv-cfs,59,42,29),.02) 0 1px,transparent 1px 7px);}
+html[data-pc-grain="on"] .pr-section.is-ivory,
+html[data-pc-grain="on"] .hx-marks,html[data-pc-grain="on"] .hx-path,
+html[data-pc-grain="on"] .hx-faq,html[data-pc-grain="on"] .mvv,
+html[data-pc-grain="on"] .academics,html[data-pc-grain="on"] .policies{position:relative;}
+html[data-pc-grain="on"] .pr-section.is-ivory > *,
+html[data-pc-grain="on"] .hx-marks > *,html[data-pc-grain="on"] .hx-path > *,
+html[data-pc-grain="on"] .hx-faq > *,html[data-pc-grain="on"] .mvv > *,
+html[data-pc-grain="on"] .academics > *,html[data-pc-grain="on"] .policies > *{position:relative;z-index:1;}
+
+/* ---- Raking light ---- */
+html[data-pc-cursor="off"] .mo-spot::before{display:none;}
+
+/* ---- Parallax depth ---- */
+html[data-pc-parallax="off"] .mo-par,
+html[data-pc-parallax="off"] .mo-par-img img{transform:none!important;}
+html[data-pc-parallax="deep"]{--par-depth:52px;}
+
+/* ---- How sections arrive ---- */
+html[data-pc-reveal="unveil"] .pr-reveal:not(.pr-in),
+html[data-pc-reveal="unveil"] .reveal:not(.in){
+  opacity:0;clip-path:inset(0 0 100% 0);transform:none;}
+html[data-pc-reveal="unveil"] .pr-reveal.pr-in,
+html[data-pc-reveal="unveil"] .reveal.in{clip-path:inset(0 0 0 0);}
+html[data-pc-reveal="settle"] .pr-reveal:not(.pr-in),
+html[data-pc-reveal="settle"] .reveal:not(.in){
+  opacity:0;transform:translateY(-16px) scale(1.012);}
+html[data-pc-reveal="none"] .pr-reveal,html[data-pc-reveal="none"] .reveal,
+html[data-pc-reveal="none"] .pr-stagger > *,html[data-pc-reveal="none"] .stagger > *,
+html[data-pc-reveal="none"] .mo-rise,html[data-pc-reveal="none"] .mo-words > span{
+  opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important;}
+
+/* ---- Measure ---- */
+html[data-pc-width="narrow"]{--wrap-max:1080px;--measure-max:60ch;}
+html[data-pc-width="wide"]{--wrap-max:1480px;--measure-max:82ch;}
+html[data-pc-width="narrow"] .wrap,html[data-pc-width="narrow"] .pr-wrap{max-width:var(--wrap-max)!important;}
+html[data-pc-width="wide"] .wrap,html[data-pc-width="wide"] .pr-wrap{max-width:var(--wrap-max)!important;}
+html[data-pc-width="narrow"] .pr-lead,html[data-pc-width="narrow"] .pr-body,
+html[data-pc-width="narrow"] .hx-marks-lede,html[data-pc-width="narrow"] .hx-path-lede,
+html[data-pc-width="narrow"] .hx-faq-lede{max-width:var(--measure-max);}
+
+/* ===================================================================
+   THE LIVERY INVITATION
+   -------------------------------------------------------------------
+   A card, not a banner. It sits centred on a scrim dark enough to stop
+   the page competing with it, carries the crest so it is plainly the
+   school speaking, and animates in on the same easing as everything
+   else on the site rather than on a modal library's default.
+   =================================================================== */
+.lvp-root{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:22px;}
+.lvp-root[hidden]{display:none;}
+.lvp-scrim{position:absolute;inset:0;cursor:pointer;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(var(--lv-cfd2s,42,28,16),.72),rgba(var(--lv-cfd4s,26,16,6),.9));
+  opacity:0;transition:opacity .5s cubic-bezier(.16,.8,.24,1);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
+.lvp-root.is-open .lvp-scrim{opacity:1;}
+.lvp-card{position:relative;max-width:640px;width:100%;max-height:92vh;overflow:auto;
+  padding:38px 36px 30px;text-align:center;border-radius:var(--pr-r-xl,30px);
+  background:linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p3s,247,238,223)));
+  border:1px solid rgba(var(--lv-gs,198,161,91),.45);
+  box-shadow:0 40px 90px -40px rgba(var(--lv-cfd4s,26,16,6),.8),
+             inset 0 1px 0 rgba(var(--lv-bev,255,255,255),.85);
+  opacity:0;transform:translateY(22px) scale(.972);
+  transition:opacity .62s cubic-bezier(.16,.8,.24,1),transform .62s cubic-bezier(.16,.8,.24,1);}
+.lvp-root.is-open .lvp-card{opacity:1;transform:none;}
+/* A hairline of gold that draws itself along the top of the card. */
+.lvp-card::before{content:"";position:absolute;inset-inline:14%;top:0;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgb(var(--lv-gbs,233,206,138)),transparent);
+  transform:scaleX(0);transform-origin:center;
+  transition:transform .9s cubic-bezier(.16,.8,.24,1) .22s;}
+.lvp-root.is-open .lvp-card::before{transform:scaleX(1);}
+.lvp-crest{display:block;margin:0 auto 12px;width:46px;height:46px;}
+.lvp-crest img{width:100%;height:100%;object-fit:contain;}
+.lvp-eyebrow{font-family:var(--font-label);font-size:.64rem;letter-spacing:.24em;
+  text-transform:uppercase;color:rgb(var(--lv-gt,124,94,40));margin:0 0 8px;}
+.lvp-title{font-family:var(--font-label);font-size:clamp(1.25rem,3vw,1.7rem);
+  line-height:1.24;margin:0 0 12px;color:rgb(var(--lv-cf,59,42,29));}
+.lvp-desc{margin:0 auto 22px;max-width:52ch;font-size:.92rem;line-height:1.7;
+  color:rgb(var(--lv-ink2,87,71,47));}
+.lvp-grid{display:grid;gap:9px;grid-template-columns:repeat(3,1fr);margin-bottom:22px;}
+@media (max-width:520px){.lvp-grid{grid-template-columns:repeat(2,1fr);}}
+.lvp-grid button{display:flex;flex-direction:column;gap:7px;align-items:stretch;cursor:pointer;
+  padding:10px 10px 9px;border-radius:12px;font:inherit;color:inherit;
+  border:1px solid rgba(var(--lv-gs,198,161,91),.3);
+  background:linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-p4,247,240,226)));
+  transition:transform .34s cubic-bezier(.16,.8,.24,1),border-color .34s,box-shadow .34s;}
+.lvp-grid button:hover{transform:translateY(-3px);border-color:rgba(var(--lv-gds,156,122,60),.7);
+  box-shadow:0 16px 30px -20px rgba(var(--lv-cfd2s,42,28,16),.6);}
+.lvp-grid button.is-active{border-color:rgb(var(--lv-gds,156,122,60));
+  box-shadow:0 0 0 2px rgba(var(--lv-gbs,233,206,138),.45),
+             0 16px 30px -20px rgba(var(--lv-cfd2s,42,28,16),.6);}
+.lvp-grid .pc-lv-swatch{height:34px;}
+.lvp-n{font-family:var(--font-label);font-size:.72rem;line-height:1.2;
+  color:rgb(var(--lv-cf,59,42,29));}
+.lvp-act{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.lvp-go{cursor:pointer;font:inherit;padding:13px 26px;border:0;border-radius:var(--pr-r-pill,999px);
+  font-family:var(--font-label);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgb(var(--lv-cfd3,36,24,9));
+  background:linear-gradient(120deg,rgb(var(--lv-gs,198,161,91)),rgb(var(--lv-gbs,233,206,138)));
+  box-shadow:0 12px 26px -12px rgba(var(--lv-gs,198,161,91),.8),inset 0 1px 0 rgba(var(--lv-bev,255,255,255),.6);
+  transition:transform .3s,box-shadow .3s;}
+.lvp-go:hover{transform:translateY(-2px);box-shadow:0 18px 34px -12px rgba(var(--lv-gs,198,161,91),.9);}
+.lvp-alt{cursor:pointer;font:inherit;padding:13px 22px;border-radius:var(--pr-r-pill,999px);
+  font-family:var(--font-label);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgb(var(--lv-gt3,99,72,27));background:transparent;
+  border:1px solid rgba(var(--lv-gds,156,122,60),.5);transition:background .3s,border-color .3s;}
+.lvp-alt:hover{background:rgba(var(--lv-gs,198,161,91),.12);border-color:rgb(var(--lv-gds,156,122,60));}
+.lvp-foot{margin:18px 0 0;font-size:.78rem;color:rgb(var(--lv-ink3,109,96,70));}
+.lvp-foot a{color:rgb(var(--lv-gt3,99,72,27));}
+@media (prefers-reduced-motion:reduce){
+  .lvp-card,.lvp-scrim,.lvp-card::before,.lvp-grid button{transition:none!important;transform:none!important;}
+}
+
+/* --- The spoken introduction ---------------------------------------
+   A switch is not enough for a recording: a visitor who has already
+   heard it, or who arrived after it played, needs a way to hear it
+   again. This is that way. */
+.pc-intro-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;}
+.pc-intro-play{
+  appearance:none;border:1px solid rgba(var(--lv-g,198,161,91),.5);
+  background:linear-gradient(150deg,rgba(var(--lv-gb,233,206,138),.20),rgba(var(--lv-g,198,161,91),.08));
+  color:rgb(var(--lv-gt,124,84,48));
+  font-family:var(--font-label);font-size:.72rem;letter-spacing:.12em;
+  text-transform:uppercase;padding:9px 16px;border-radius:99px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:9px;
+  transition:background .35s ease,border-color .35s ease,transform .35s ease;}
+.pc-intro-play::before{
+  content:"";width:9px;height:9px;border-radius:50%;
+  background:rgb(var(--lv-g,198,161,91));
+  box-shadow:0 0 0 0 rgba(var(--lv-g,198,161,91),.55);
+  animation:pc-intro-pulse 2.6s ease-out infinite;}
+@keyframes pc-intro-pulse{
+  0%{box-shadow:0 0 0 0 rgba(var(--lv-g,198,161,91),.5);}
+  70%{box-shadow:0 0 0 9px rgba(var(--lv-g,198,161,91),0);}
+  100%{box-shadow:0 0 0 0 rgba(var(--lv-g,198,161,91),0);}}
+.pc-intro-play:hover{border-color:rgb(var(--lv-g,198,161,91));transform:translateY(-1px);
+  background:linear-gradient(150deg,rgba(var(--lv-gb,233,206,138),.32),rgba(var(--lv-g,198,161,91),.14));}
+.pc-intro-state{font-size:.78rem;color:var(--ink-soft);}
+@media (prefers-reduced-motion:reduce){.pc-intro-play::before{animation:none;}}
+html[data-pc-motion="reduced"] .pc-intro-play::before{animation:none;}

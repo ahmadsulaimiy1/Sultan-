@@ -19,21 +19,56 @@
 <meta name="twitter:image" content="{{OG_IMAGE}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
-<link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
+<<<<<<< HEAD
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+=======
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+<link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
+<link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
+>>>>>>> origin/main
 <script>
 (function(){
   try{
     var raw = localStorage.getItem('shrsPersonalisation');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
-    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-theme', p.theme || 'light');
+    html.setAttribute('data-pc-livery', p.livery || 'royal');
+    html.setAttribute('data-pc-ornament', p.ornament || 'full');
+    html.setAttribute('data-pc-corners', p.corners || 'soft');
+    html.setAttribute('data-pc-depth', p.depth || 'standard');
+    html.setAttribute('data-pc-grain', p.grain || 'on');
+    html.setAttribute('data-pc-cursor', p.cursorLight || 'on');
+    html.setAttribute('data-pc-parallax', p.parallax || 'on');
+    html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
+    html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){

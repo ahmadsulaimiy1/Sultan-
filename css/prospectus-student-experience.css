@@ -10,14 +10,14 @@
 
 :root{
   --se-forest:#1F3A2E; --se-forest-deep:#122019; --se-forest-bright:#2E5645;
-  --se-terracotta:#C4633B; --se-terracotta-bright:#DE7E52; --se-amber:#D89A44;
-  --se-cream:#FAF3E8; --se-paper:#F3E9D8; --se-white:#FFFFFF;
-  --se-ink:#2B2620; --se-ink-soft:rgba(43,38,32,0.62);
-  --se-line:rgba(43,38,32,0.14);
+  --se-terracotta:rgb(var(--lv-w153,196,99,59)); --se-terracotta-bright:rgb(var(--lv-w154,222,126,82)); --se-amber:rgb(var(--lv-w155,216,154,68));
+  --se-cream:rgb(var(--lv-w15,250,243,232)); --se-paper:rgb(var(--lv-w156,243,233,216)); --se-white:#FFFFFF;
+  --se-ink:rgb(var(--lv-w60,43,38,32)); --se-ink-soft:rgba(var(--lv-w60,43,38,32),0.62);
+  --se-line:rgba(var(--lv-w60,43,38,32),0.14);
 }
 
 *{box-sizing:border-box;}
-body.pros-body{margin:0; background:#3d372c; font-family:'Source Sans Pro','Playfair Display',serif;}
+body.pros-body{margin:0; background:rgb(var(--lv-w157,61,55,44)); font-family:'Source Sans Pro','Playfair Display',serif;}
 
 .se-toolbar{
   position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
@@ -38,13 +38,13 @@ body.pros-body{margin:0; background:#3d372c; font-family:'Source Sans Pro','Play
 .se-spread.cover{padding:0; display:flex; align-items:flex-end;}
 
 .se-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--se-ink-soft);}
-.se-spread.dark .se-folio{color:rgba(250,243,232,0.55);}
+.se-spread.dark .se-folio{color:rgba(var(--lv-w15,250,243,232),0.55);}
 
 /* ---- Polaroid photo frame — the signature photo treatment in this
    edition: white border, caption strip, gentle rotation — a
    scrapbook/storybook idiom replacing octagram/hexagon badges. ---- */
 .se-polaroid{
-  background:#fff; padding:8px 8px 34px; box-shadow:0 8px 20px -6px rgba(0,0,0,0.35);
+  background:rgb(var(--lv-wh,255,255,255)); padding:8px 8px 34px; box-shadow:0 8px 20px -6px rgba(0,0,0,0.35);
   display:inline-block; position:relative;
 }
 .se-polaroid img{display:block; width:100%; height:auto; object-fit:cover;}
@@ -62,7 +62,7 @@ body.pros-body{margin:0; background:#3d372c; font-family:'Source Sans Pro','Play
 }
 .se-eyebrow::after{content:''; flex:1; height:1px; background:var(--se-line);}
 .se-spread.dark .se-eyebrow{color:var(--se-amber);}
-.se-spread.dark .se-eyebrow::after{background:rgba(250,243,232,0.2);}
+.se-spread.dark .se-eyebrow::after{background:rgba(var(--lv-w15s,250,243,232),0.2);}
 h2.se-h2{
   font-family:'Playfair Display',serif; font-weight:700; font-style:italic; font-size:29pt; line-height:1.12; color:var(--se-forest); margin:0 0 10px;
 }
@@ -70,7 +70,7 @@ h2.se-h2{
 h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; color:var(--se-forest); margin:0 0 6px;}
 .se-spread.dark h3.se-h3{color:var(--se-amber);}
 .se-spread p{font-family:'Source Sans Pro',sans-serif; font-size:10pt; line-height:1.75; color:var(--se-ink); margin:0 0 12px;}
-.se-spread.dark p{color:rgba(250,243,232,0.85);}
+.se-spread.dark p{color:rgba(var(--lv-w15,250,243,232),0.85);}
 .se-lede{
   font-family:'Playfair Display',serif; font-style:italic; font-size:14pt; line-height:1.55; color:var(--se-forest);
   margin:0 0 18px; max-width:92%;
@@ -112,7 +112,7 @@ h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; 
 .se-chapter-title{font-family:'Playfair Display',serif; font-weight:700; font-size:13pt; color:var(--se-forest); margin-bottom:4px;}
 .se-chapter-desc{font-family:'Source Sans Pro',sans-serif; font-size:9.5pt; color:var(--se-ink-soft); line-height:1.65;}
 .se-spread.dark .se-chapter-title{color:#fff;}
-.se-spread.dark .se-chapter-desc{color:rgba(250,243,232,0.75);}
+.se-spread.dark .se-chapter-desc{color:rgba(var(--lv-w15,250,243,232),0.75);}
 
 /* ---- Stat band ---- */
 .se-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--se-terracotta); margin:16px 0;}
@@ -121,7 +121,7 @@ h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; 
 .se-stats .se-stat-label{font-family:'Source Sans Pro',sans-serif; font-size:7.5pt; letter-spacing:0.06em; text-transform:uppercase; color:var(--se-ink-soft); margin-top:2px;}
 .se-spread.dark .se-stats .se-stat-cell{background:var(--se-forest);}
 .se-spread.dark .se-stats .se-stat-num{color:var(--se-amber);}
-.se-spread.dark .se-stats .se-stat-label{color:rgba(250,243,232,0.6);}
+.se-spread.dark .se-stats .se-stat-label{color:rgba(var(--lv-w15,250,243,232),0.6);}
 
 /* ---- Institutional Publication Information (imprint) page — a
    key/value ownership table matching the Governance Charter's own
@@ -140,11 +140,11 @@ h3.se-h3{font-family:'Playfair Display',serif; font-weight:700; font-size:15pt; 
   text-align:left; padding:9px 0; border-bottom:1px solid var(--se-line);
 }
 .se-spread.dark .se-imprint-table th{color:var(--se-amber);}
-.se-spread.dark .se-imprint-table td{color:rgba(250,243,232,0.85); border-bottom-color:rgba(250,243,232,0.18);}
+.se-spread.dark .se-imprint-table td{color:rgba(var(--lv-w15,250,243,232),0.85); border-bottom-color:rgba(var(--lv-w15s,250,243,232),0.18);}
 
 @media print{
   .se-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .se-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }

@@ -1,38 +1,29 @@
-/* Portal Dark Mode toggle. Reuses the exact same shrsPersonalisation
-   localStorage key + data-pc-theme attribute mechanism as the public
-   site's Personalisation Centre (js/personalisation.js, applied via
-   the inline FOUC-prevention script in partials/head.html) so a
-   visitor's theme choice is one unified preference across the whole
-   site, not a second parallel toggle. This file exists because the
-   53 portal pages are standalone HTML (they don't include the public
-   site's header/personalisation partials), so the portal needs its
-   own small entry point into the same mechanism. Applied synchronously
-   (this script is NOT deferred) so data-pc-theme is set on <html>
-   before the body paints — no flash of the wrong theme. */
+/* Portal appearance toggle, and the portal's synchronous locale bootstrap.
+ *
+ * Reuses the exact same shrsPersonalisation localStorage key + data-pc-theme
+ * attribute mechanism as the public site's Personalisation Centre
+ * (js/personalisation.js, applied via the inline FOUC-prevention script in
+ * partials/head.html) so a visitor's theme choice is one unified preference
+ * across the whole site, not a second parallel toggle. This file exists
+ * because the portal pages are standalone HTML (they don't include the public
+ * site's header/personalisation partials), so the portal needs its own small
+ * entry point into the same mechanism. Applied synchronously (this script is
+ * NOT deferred) so data-pc-theme is set on <html> before the body paints.
+ *
+ * LANGUAGE is no longer handled here. This file used to carry a seven-key
+ * Arabic dictionary and its own EN/AR toggle button — a second, parallel
+ * language system that knew nothing about the rest of the site and could not
+ * express a third language. It now does exactly one language job: apply the
+ * stored locale's lang/dir to <html> synchronously, before first paint, so an
+ * Arabic reader never sees a frame of LTR layout. Everything else — the
+ * switcher control, the dictionaries, the in-place text swap — belongs to
+ * js/i18n.js, which is shared with the public site.
+ */
 (function(){
   var PREFS_KEY = 'shrsPersonalisation';
+  var LOCALE_KEY = 'shrsLocale';
   var ORDER = ['royal', 'light', 'dark'];
   var LABEL = { royal: 'Royal (Default)', light: 'Light', dark: 'Dark' };
-
-  /* RTL Arabic — real, working layout capability: flips dir/lang on
-     <html> and translates the topbar chrome shared by every one of the
-     53 portal pages (data-i18n attributes, added by the build tooling).
-     Scope named honestly: this proves the direction-flip + logical-CSS
-     foundation end-to-end on real, correctly-translated UI strings.
-     Full in-page module content (Dashboard/Analytics/etc. tab bodies,
-     and dynamic JS-rendered data) stays English until a broader
-     translation pass — the same honestly-deferred scope as task #119
-     (full site + policy translation), not a hidden gap. */
-  var AR = {
-    'sign-out': 'تسجيل الخروج',
-    'all-offices': 'جميع المكاتب',
-    'org-chart': 'الهيكل التنظيمي',
-    'admin-centre': 'مركز الإدارة',
-    'clear-token': 'مسح الرمز',
-    'pilot': 'تجريبي',
-    'staff-documents': 'مستندات الموظفين'
-  };
-  var EN = {}; // populated lazily from the DOM's own English text on first run
 
   function loadPrefs(){
     try{
@@ -45,28 +36,46 @@
     try{ document.dispatchEvent(new CustomEvent('sultan:personalisation-changed', { detail: prefs })); }catch(err){}
   }
 
-  function applyDir(lang){
-    var html = document.documentElement;
-    html.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
-    html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-  }
-  function applyI18nText(lang){
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var key = el.getAttribute('data-i18n');
-      if (lang === 'ar') {
-        if (EN[key] === undefined) EN[key] = el.textContent;
-        if (AR[key] !== undefined) el.textContent = AR[key];
-      } else if (EN[key] !== undefined) {
-        el.textContent = EN[key];
-      }
-    });
-  }
-
   var prefs = loadPrefs();
   var theme = ORDER.indexOf(prefs.theme) > -1 ? prefs.theme : 'royal';
   document.documentElement.setAttribute('data-pc-theme', theme);
-  var lang = prefs.portalLang === 'ar' ? 'ar' : 'en';
-  applyDir(lang); // safe before body exists — only touches <html> attributes
+
+  /* Synchronous locale bootstrap. js/i18n.js is deferred (it fetches a
+     dictionary and builds a control, neither of which should block paint),
+     but direction cannot wait for it: flipping to RTL after first paint is a
+     visible lurch. So read the stored preference here and stamp <html> now.
+     js/i18n.js then finds the document already in the right direction and has
+     only the text left to do.
+
+     prefs.portalLang is read once for continuity: it is where the old
+     portal-only toggle stored its choice, and a reader who picked Arabic in
+     the portal before this change should stay in Arabic after it. */
+  (function bootstrapLocale(){
+    var stored = null;
+    try{ stored = window.localStorage.getItem(LOCALE_KEY); }catch(err){}
+    if(!stored){
+      var m = document.cookie.match(/(?:^|; )shrs_locale=([^;]*)/);
+      if(m) { try { stored = decodeURIComponent(m[1]); } catch(err){} }
+    }
+    if(!stored && prefs.portalLang) stored = prefs.portalLang;
+    if(!stored) return;
+
+    // SHRS_I18N is loaded before this file on portal pages; if it is absent
+    // (a page that hasn't been rewired yet) fall back to the one direction
+    // fact we can state without the registry.
+    var dir = null;
+    if(window.SHRS_I18N && window.SHRS_I18N.isKnown(stored)){
+      dir = window.SHRS_I18N.get(stored).dir;
+    } else if(stored === 'ar'){
+      dir = 'rtl';
+    }
+    if(!dir) return;
+
+    var html = document.documentElement;
+    html.setAttribute('lang', stored);
+    html.setAttribute('dir', dir);
+    html.setAttribute('data-locale', stored);
+  })();
 
   var ICONS = {
     royal: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>',
@@ -78,8 +87,11 @@
   function render(){
     if(!btn) return;
     btn.innerHTML = ICONS[theme];
-    btn.setAttribute('aria-label', 'Appearance: ' + LABEL[theme] + '. Activate to change.');
-    btn.title = 'Appearance: ' + LABEL[theme];
+    var label = (window.SHRS_LOCALE && window.SHRS_LOCALE.t)
+      ? window.SHRS_LOCALE.t('portal.appearance') + ': ' + LABEL[theme]
+      : 'Appearance: ' + LABEL[theme];
+    btn.setAttribute('aria-label', label + '. Activate to change.');
+    btn.title = label;
   }
 
   function cycle(){
@@ -91,38 +103,13 @@
     render();
   }
 
-  var langBtn;
-  function renderLang(){
-    if(!langBtn) return;
-    langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
-    langBtn.setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
-    langBtn.title = langBtn.getAttribute('aria-label');
-  }
-  function toggleLang(){
-    lang = lang === 'ar' ? 'en' : 'ar';
-    applyDir(lang);
-    applyI18nText(lang);
-    var p = loadPrefs();
-    p.portalLang = lang;
-    savePrefs(p);
-    renderLang();
-  }
-
   function inject(){
-    applyI18nText(lang);
     if(document.querySelector('.portal-theme-toggle')) return;
     var topbar = document.querySelector('.portal-topbar');
     if(!topbar) return;
     var actions = topbar.lastElementChild;
     var mount = (actions && actions !== topbar.firstElementChild) ? actions : topbar;
     var prepend = mount === actions ? function(el){ actions.insertBefore(el, actions.firstChild); } : function(el){ topbar.appendChild(el); };
-
-    langBtn = document.createElement('button');
-    langBtn.type = 'button';
-    langBtn.className = 'portal-lang-toggle';
-    langBtn.addEventListener('click', toggleLang);
-    renderLang();
-    prepend(langBtn);
 
     btn = document.createElement('button');
     btn.type = 'button';
@@ -131,6 +118,10 @@
     render();
     prepend(btn);
   }
+
+  // Re-label the appearance button when the reader changes language, since
+  // its accessible name is prose too.
+  document.addEventListener('shrs:locale-changed', render);
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', inject);

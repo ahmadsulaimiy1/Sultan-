@@ -7,10 +7,18 @@
 <title>Founder Dashboard (Pilot) — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/portal.css?v=73e4122b67">
-<script src="/js/portal-theme.js?v=c9011a33da"></script>
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=2afd2d31b3"></script>
+<script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=11a0d5f19c">
 </head>
 <body class="portal-body type-executive" data-atmosphere="founder">
 
@@ -27,6 +35,7 @@
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <button type="button" class="portal-logout" data-founder-clear hidden data-i18n="clear-token">Clear Token</button>
   </div>
+  <span class="lang-switch-mount" data-locale-switcher></span>
 </div>
 
 <main class="portal-main">
@@ -42,7 +51,7 @@
       <button type="submit" class="portal-submit" data-founder-submit>View Dashboard</button>
     </form>
     <p class="portal-notice">This token is held by the Chairman/Board only, separate from the tokens used for day-to-day data entry. It is kept only in this browser tab's session storage — closing the tab clears it.</p>
-    <a class="portal-back-link" href="/">← Back to the main site</a>
+    <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
   </div>
 
   <div class="portal-loading-skeleton" data-founder-skeleton hidden aria-hidden="true">
@@ -100,7 +109,7 @@
     </div>
 
     <div class="pfd-section">
-      <h2>Strategic Priorities</h2>
+      <h2 data-i18n="portal.strategicPriorities">Strategic Priorities</h2>
       <div data-founder-strategic-progress></div>
     </div>
 
@@ -183,5 +192,9 @@
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>
 <script src="/js/portal-founder-dashboard.js?v=1b151cea77" defer></script>
 <script src="/js/portal-office-switcher.js?v=9875bfcf96" defer></script>
+<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
+<script src="/js/portal-chrome.js?v=5c77b5b3d2" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
 </body>
 </html>

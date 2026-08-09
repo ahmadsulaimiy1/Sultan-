@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="The Sultan Zakariya Hanafi Foundation">
+  <title>The Sultan Zakariya Hanafi Foundation</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C6A15B"/><stop offset="42%" stop-color="#F2DFA8"/>
+      <stop offset="58%" stop-color="#E9CE8A"/><stop offset="100%" stop-color="#9C7A3C"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3B2A1D"/><stop offset="55%" stop-color="#2A1B0D"/>
+      <stop offset="100%" stop-color="#1C1207"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="50%" cy="26%" r="64%">
+      <stop offset="0%" stop-color="#E9CE8A" stop-opacity=".20"/>
+      <stop offset="100%" stop-color="#E9CE8A" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="weave" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 0 L0 26" stroke="#E9CE8A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <clipPath id="canopyClip"><circle cx="600" cy="310" r="196"/></clipPath>
+  </defs>
+  <rect width="1200" height="800" fill="url(#ground)"/>
+  <rect width="1200" height="800" fill="url(#weave)"/>
+  <rect width="1200" height="800" fill="url(#lamp)"/>
+
+  <g stroke="url(#g)" fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <!-- the institution's own eight-point star, as the plate's medallion -->
+    <polygon points="850.0,380.0 600.0,630.0 350.0,380.0 600.0,130.0" stroke-width="1.7" opacity="0.55"/>
+    <polygon points="776.8,556.8 423.2,556.8 423.2,203.2 776.8,203.2" stroke-width="1.7" opacity="0.55"/>
+    <polygon points="834.0,380.0 600.0,614.0 366.0,380.0 600.0,146.0" stroke-width="0.8" opacity="0.3"/>
+    <polygon points="765.5,545.5 434.5,545.5 434.5,214.5 765.5,214.5" stroke-width="0.8" opacity="0.3"/>
+    <circle cx="600" cy="380" r="192" stroke-width="1" opacity=".26"/>
+    <circle cx="600" cy="380" r="306" stroke-width=".9" opacity=".2"/>
+
+    <!-- the tree of the crest, cut in line -->
+    <g clip-path="url(#canopyClip)" opacity=".9"><circle cx="600" cy="262" r="132" stroke-width="1.5" opacity="0.95"/><circle cx="508" cy="308" r="92" stroke-width="1.5" opacity="0.8"/><circle cx="692" cy="308" r="92" stroke-width="1.5" opacity="0.8"/><circle cx="460" cy="372" r="66" stroke-width="1.5" opacity="0.62"/><circle cx="740" cy="372" r="66" stroke-width="1.5" opacity="0.62"/><circle cx="600" cy="356" r="104" stroke-width="1.5" opacity="0.5"/></g>
+    <g opacity=".95">
+      <!-- a tapered trunk -->
+      <path d="M585 566 Q591 450 588 366
+               L612 366 Q609 450 615 566 Z" stroke-width="1.8"/>
+      <!-- boughs rising into the canopy -->
+      <path d="M594 410 Q536 374 496 308
+               M606 410 Q664 374 704 308
+               M595 376 Q562 324 548 264
+               M605 376 Q638 324 652 264
+               M600 366 L600 248" stroke-width="2"/>
+      <!-- roots, into the ground line -->
+      <path d="M585 566 Q540 578 482 586
+               M615 566 Q660 578 718 586
+               M592 566 Q570 586 544 600
+               M608 566 Q630 586 656 600" stroke-width="1.6" opacity=".7"/>
+    </g>
+
+    <!-- six leaves on the outer ring, for the six focus areas -->
+    <path d="M304.4 281.8 Q320.4 300.8 304.4 319.8 Q288.4 300.8 304.4 281.8 Z" transform="rotate(-75.0 304.4 300.8)" stroke-width="1.4" opacity=".72"/><path d="M383.6 144.6 Q399.6 163.6 383.6 182.6 Q367.6 163.6 383.6 144.6 Z" transform="rotate(-45.0 383.6 163.6)" stroke-width="1.4" opacity=".72"/><path d="M520.8 65.4 Q536.8 84.4 520.8 103.4 Q504.8 84.4 520.8 65.4 Z" transform="rotate(-15.0 520.8 84.4)" stroke-width="1.4" opacity=".72"/><path d="M679.2 65.4 Q695.2 84.4 679.2 103.4 Q663.2 84.4 679.2 65.4 Z" transform="rotate(15.0 679.2 84.4)" stroke-width="1.4" opacity=".72"/><path d="M816.4 144.6 Q832.4 163.6 816.4 182.6 Q800.4 163.6 816.4 144.6 Z" transform="rotate(45.0 816.4 163.6)" stroke-width="1.4" opacity=".72"/><path d="M895.6 281.8 Q911.6 300.8 895.6 319.8 Q879.6 300.8 895.6 281.8 Z" transform="rotate(75.0 895.6 300.8)" stroke-width="1.4" opacity=".72"/>
+
+    <!-- the ground the Foundation stands on -->
+    <path d="M240 612 L460 612 M740 612 L960 612" stroke-width="1.4" opacity=".55"/>
+    <path d="M460 612 Q600 628 740 612" stroke-width="1.4" opacity=".55"/>
+    <path d="M300 628 L900 628" stroke-width=".8" opacity=".28"/>
+
+    <!-- light falling on the device -->
+    <g stroke-width="1" opacity=".2">
+      <path d="M600 78 L600 116 M430 118 L456 158 M770 118 L744 158 M292 244 L342 264 M908 244 L858 264"/>
+    </g>
+  </g>
+
+  <rect x="10" y="10" width="1180" height="780" rx="14" fill="none" stroke="url(#g)" stroke-width="1.1" opacity=".55"/>
+  <rect x="20" y="20" width="1160" height="760" rx="8" fill="none" stroke="url(#g)" stroke-width=".7" opacity=".3"/>
+  <g opacity=".75" stroke="url(#g)" stroke-width="1.2" fill="none">
+    <path d="M10 44 L10 24 Q10 10 24 10 L44 10"/>
+    <path d="M1156 10 L1176 10 Q1190 10 1190 24 L1190 44"/>
+    <path d="M10 756 L10 776 Q10 790 24 790 L44 790"/>
+    <path d="M1156 790 L1176 790 Q1190 790 1190 776 L1190 756"/>
+  </g>
+</svg>

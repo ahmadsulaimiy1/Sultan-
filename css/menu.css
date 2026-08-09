@@ -1,0 +1,175 @@
+/* ===================================================================
+   THE FULL MENU (v5.2)
+   -------------------------------------------------------------------
+   The drawer was the one piece of the site that had never been given
+   the same care as the rest of it: a flat brown sheet from edge to
+   edge, ten rows of plain uppercase, no crest, no rules, no order — a
+   list of links in a box. Opening it was the moment the site stopped
+   looking expensive.
+
+   It is now a panel rather than a sheet. It comes in from the trailing
+   edge against a scrim, at a width that leaves the page visible behind
+   it; it opens with the school's own mark and a ruled head; each entry
+   is a struck row with a numeral, a hairline and a light that travels
+   along it as the pointer passes; and it closes with the portal plate.
+
+   Nothing about its behaviour changed — the same markup, the same
+   toggle, the same accordion. This is entirely a matter of finish.
+   =================================================================== */
+
+/* ---------- The scrim ---------- */
+.navlinks::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(var(--lv-cfd2,42,28,16),.66),rgba(var(--lv-cfd4,26,16,6),.88));
+  opacity:0;transition:opacity .5s cubic-bezier(.16,.8,.24,1);}
+.navlinks.open::before{opacity:1;}
+
+@media (max-width:1440px){
+  /* ---------- The panel ---------- */
+  .navlinks{
+    inset:0 0 0 auto!important;
+    width:min(var(--menu-w,520px),100vw)!important;
+    background:
+      radial-gradient(120% 55% at 50% -8%,rgba(var(--lv-gb,233,206,138),.13),transparent 62%),
+      linear-gradient(168deg,rgb(var(--lv-cfd2s,42,28,16)) 0%,rgb(var(--lv-cfd4,26,16,6)) 62%,rgb(var(--lv-cfd3s,36,24,9)) 100%)!important;
+    border-inline-start:1px solid rgba(var(--lv-gb,233,206,138),.24);
+    box-shadow:-40px 0 90px -40px rgba(0,0,0,.9);
+    transform:translateX(102%);opacity:0;
+    transition:transform .58s cubic-bezier(.16,.8,.24,1),opacity .4s;
+    display:flex!important;pointer-events:none;
+  }
+  [dir="rtl"] .navlinks{transform:translateX(-102%);
+    border-inline-start:0;border-inline-end:1px solid rgba(var(--lv-gb,233,206,138),.24);
+    box-shadow:40px 0 90px -40px rgba(0,0,0,.9);}
+  .navlinks.open{transform:none;opacity:1;pointer-events:auto;}
+
+  /* A hairline of gold down the leading edge of the panel. */
+  .navlinks::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:2px;
+    background:linear-gradient(180deg,transparent,rgba(var(--lv-gb,233,206,138),.85) 18%,
+               rgba(var(--lv-gb,233,206,138),.85) 82%,transparent);
+    opacity:0;transition:opacity .7s ease .18s;pointer-events:none;}
+  .navlinks.open::after{opacity:1;}
+
+  /* ---------- The head ---------- */
+  .nav-drawer-head{
+    padding:20px 24px 18px!important;
+    background:linear-gradient(180deg,rgba(var(--lv-gb,233,206,138),.09),transparent)!important;
+    border-bottom:1px solid rgba(var(--lv-gb,233,206,138),.22)!important;
+    align-items:center;gap:14px;
+  }
+  .nav-drawer-head::before{
+    content:"";width:34px;height:34px;flex-shrink:0;border-radius:9px;
+    background:url("/assets/images/brand-mark.png") center/contain no-repeat;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
+  .ndh-title{flex:1;font-size:.68rem!important;letter-spacing:.24em!important;}
+  .ndh-title::after{content:"Sultan Hanafi Royal Schools";display:block;
+    font-family:var(--font-display);font-size:1.02rem;letter-spacing:.01em;
+    text-transform:none;color:rgb(var(--lv-gl2,255,248,234));margin-top:2px;}
+  [lang="ar"] .ndh-title::after{content:"مدارس السلطان حنفي الملكية";}
+  .nav-drawer-close{border-radius:50%!important;width:42px!important;height:42px!important;
+    border-color:rgba(var(--lv-gb,233,206,138),.32)!important;
+    transition:transform .4s cubic-bezier(.16,.8,.24,1),border-color .3s,background .3s!important;}
+  .nav-drawer-close:hover{transform:rotate(90deg);}
+
+  /* ---------- The rows ---------- */
+  .navlinks > .nav-drop{
+    position:relative;isolation:isolate;
+    border-bottom:1px solid rgba(var(--lv-gb,233,206,138),.13)!important;
+    counter-increment:navrow;
+  }
+  .navlinks{counter-reset:navrow;}
+  /* The numeral. Struck small in the margin, the way a contents page
+     numbers its chapters. */
+  .navlinks > .nav-drop > .nav-drop-trigger::before{
+    content:counter(navrow,decimal-leading-zero);
+    position:absolute;inset-inline-start:24px;top:50%;transform:translateY(-50%);
+    font-family:var(--font-label);font-size:.62rem;letter-spacing:.1em;
+    color:rgba(var(--lv-gb,233,206,138),.45);pointer-events:none;transition:color .35s;}
+  .navlinks > .nav-drop > .nav-drop-trigger{
+    padding-inline-start:64px!important;padding-block:19px!important;
+    font-size:.92rem!important;letter-spacing:.11em!important;
+    color:rgb(var(--lv-gl2,255,248,234))!important;
+    transition:color .35s,padding-inline-start .4s cubic-bezier(.16,.8,.24,1)!important;}
+  /* A light that travels along the row as the pointer passes it. */
+  .navlinks > .nav-drop::before{
+    content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(90deg,rgba(var(--lv-gb,233,206,138),.16),rgba(var(--lv-gb,233,206,138),.03) 46%,transparent 72%);
+    transform:scaleX(0);transform-origin:left center;
+    transition:transform .5s cubic-bezier(.16,.8,.24,1);}
+  [dir="rtl"] .navlinks > .nav-drop::before{transform-origin:right center;
+    background:linear-gradient(270deg,rgba(var(--lv-gb,233,206,138),.16),rgba(var(--lv-gb,233,206,138),.03) 46%,transparent 72%);}
+  .navlinks > .nav-drop:hover::before,
+  .navlinks > .nav-drop:focus-within::before,
+  .navlinks > .nav-drop.is-open::before{transform:scaleX(1);}
+  .navlinks > .nav-drop:hover > .nav-drop-trigger,
+  .navlinks > .nav-drop:focus-within > .nav-drop-trigger{
+    color:rgb(var(--lv-gb,233,206,138))!important;padding-inline-start:72px!important;}
+  .navlinks > .nav-drop:hover > .nav-drop-trigger::before{color:rgb(var(--lv-gb,233,206,138));}
+  /* A gold rule that draws itself under the row being touched. */
+  .navlinks > .nav-drop::after{
+    content:"";position:absolute;inset-inline:24px;bottom:-1px;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,rgb(var(--lv-gb,233,206,138)),transparent);
+    transform:scaleX(0);transform-origin:left center;
+    transition:transform .55s cubic-bezier(.16,.8,.24,1);}
+  [dir="rtl"] .navlinks > .nav-drop::after{transform-origin:right center;
+    background:linear-gradient(270deg,rgb(var(--lv-gb,233,206,138)),transparent);}
+  .navlinks > .nav-drop:hover::after,.navlinks > .nav-drop:focus-within::after{transform:scaleX(1);}
+
+  .nav-drop-toggle{
+    inset-inline-end:20px!important;width:42px!important;height:42px!important;
+    border-radius:50%!important;color:rgba(var(--lv-gb,233,206,138),.7)!important;
+    transition:transform .42s cubic-bezier(.16,.8,.24,1),background .3s,color .3s!important;}
+  .nav-drop-toggle:hover{background:rgba(var(--lv-gb,233,206,138),.12)!important;
+    color:rgb(var(--lv-gb,233,206,138))!important;}
+  .nav-drop-toggle[aria-expanded="true"]{transform:rotate(180deg)!important;}
+
+  /* ---------- The opened sub-panel ---------- */
+  .navlinks .nav-drop-panel{
+    background:rgba(0,0,0,.24)!important;
+    border-inline-start:2px solid rgba(var(--lv-gb,233,206,138),.35)!important;
+    margin-inline-start:24px!important;padding:6px 20px 14px!important;
+  }
+  .navlinks .nav-mega-intro h4{color:rgb(var(--lv-gb,233,206,138))!important;
+    font-size:.74rem!important;letter-spacing:.16em!important;text-transform:uppercase!important;}
+  .navlinks .nav-mega-intro p{color:rgba(var(--lv-gl,255,246,223),.66)!important;font-size:.82rem!important;}
+  .navlinks .nav-mega-item{border-radius:10px;padding:11px 12px!important;
+    transition:background .3s,transform .3s cubic-bezier(.16,.8,.24,1)!important;}
+  .navlinks .nav-mega-item:hover{background:rgba(var(--lv-gb,233,206,138),.10)!important;
+    transform:translateX(4px);}
+  [dir="rtl"] .navlinks .nav-mega-item:hover{transform:translateX(-4px);}
+  .navlinks .nav-mega-text .t{color:rgb(var(--lv-gl2,255,248,234))!important;}
+  .navlinks .nav-mega-text .d{color:rgba(var(--lv-gl,255,246,223),.58)!important;}
+
+  /* ---------- The foot ---------- */
+  .nav-drawer-actions{padding:20px 24px 30px!important;display:flex!important;
+    flex-direction:column;gap:11px;}
+  .nav-drawer-actions .nav-mark{
+    text-align:center;padding:15px 20px!important;border-radius:999px!important;
+    background:linear-gradient(120deg,rgb(var(--lv-g,198,161,91)),rgb(var(--lv-gb,233,206,138)))!important;
+    color:rgb(var(--lv-cfd3,36,24,9))!important;border:0!important;
+    box-shadow:0 14px 30px -14px rgba(var(--lv-g,198,161,91),.8),inset 0 1px 0 rgba(255,255,255,.5);}
+}
+
+/* On a wide screen the drawer is a side panel rather than a full sheet. */
+@media (min-width:721px) and (max-width:1440px){ .navlinks{--menu-w:540px;} }
+@media (max-width:720px){ .navlinks{--menu-w:100vw;} }
+
+@media (prefers-reduced-motion:reduce){
+  .navlinks,.navlinks::before,.navlinks::after,
+  .navlinks > .nav-drop::before,.navlinks > .nav-drop::after,
+  .nav-drawer-close,.nav-drop-toggle{transition:none!important;}
+  .navlinks{transform:none!important;}
+}
+
+/* The sub-panel's items inherit the mega-menu's desktop grid, which
+   centres them; inside the drawer they are a list and read as one. */
+@media (max-width:1440px){
+  .navlinks .nav-mega-panel{display:block!important;}
+  .navlinks .nav-mega-col{display:block!important;text-align:start!important;}
+  .navlinks .nav-mega-item{display:flex!important;align-items:flex-start;gap:11px;
+    text-align:start!important;justify-content:flex-start!important;}
+  .navlinks .nav-mega-text{text-align:start!important;}
+  .navlinks .nav-mega-item .ic,.navlinks .nav-mega-item svg{flex-shrink:0;margin-top:2px;}
+  .navlinks .nav-mega-featured{margin-top:14px;padding-top:14px;
+    border-top:1px solid rgba(var(--lv-gb,233,206,138),.16);}
+  .navlinks .nav-mega-intro{text-align:start!important;padding:4px 0 10px!important;}
+}

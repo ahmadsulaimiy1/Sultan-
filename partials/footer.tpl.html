@@ -1,0 +1,169 @@
+<footer>
+  <div class="foot-arrival">
+    <div class="foot-motion" aria-hidden="true"></div>
+    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="foot-statement wrap">
+      <p>{{t:footer.tagline}}</p>
+      <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="{{t:now.open}}" data-s-closed="{{t:now.closed}}"
+      data-s-closes="{{t:now.closesIn}}" data-s-opens="{{t:now.opensIn}}"
+      data-s-openson="{{t:now.opensOn}}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">{{t:now.eyebrow}}</p>
+        <p class="now-place">{{t:now.place}}</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">{{t:now.time}}</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">{{t:now.offices}}</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">{{t:now.today}}</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">{{t:now.allHours}}</a></span>
+        </div>
+      </div>
+      <p class="now-foot">{{t:now.note}}</p>
+    </section>
+  </div>
+
+  <div class="wrap">
+    <p class="foot-dash-eyebrow">{{t:footer.glance}}</p>
+    <div class="foot-dashboard">
+      <a href="/about/governance/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14M5 7L2 13a3 3 0 006 0L5 7zm14 0l-3 6a3 3 0 006 0l-3-6z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{t:nav.governance}}</span></a>
+      <a href="/academics/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-4 9 4-9 4-9-4zm0 0v6c3 2 6 3 9 3s6-1 9-3V8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.academics}}</span></a>
+      <a href="/academics/quran-college/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v15H4a1 1 0 01-1-1V6a1 1 0 011-1zm16 0h-7v15h7a1 1 0 001-1V6a1 1 0 00-1-1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.quranCollege}}</span></a>
+      <a href="/academics/arabic-islamic-studies/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3a9 9 0 100 18 7.2 7.2 0 010-18z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.islamiyyah}}</span></a>
+      <a href="/admission/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{t:nav.admissions}}</span></a>
+      <a href="/boarding/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19v-8a2 2 0 012-2h7a2 2 0 012 2v1h3a2 2 0 012 2v5M3 19h18M3 15h18M7 11V9a2 2 0 012-2h2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>{{t:nav.studentLife}}</span></a>
+      <a href="/facilities/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V9l8-6 8 6v12M4 21h16M9 21v-7h6v7" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:footer.campus}}</span></a>
+      <a href="/portal/login/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>{{t:footer.parentPortal}}</span></a>
+      <a href="/portal/student/login/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4L3 8.5 12 13l9-4.5L12 4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 10.5V15c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:footer.studentPortal}}</span></a>
+      <a href="/foundation/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.foundation}}</span></a>
+      <a href="/policies/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 10h6M9 14h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>Policies</span></a>
+      <a href="/announcements/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 0116 0v4l2 3H2l2-3v-4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9.5 20a2.5 2.5 0 005 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>{{t:footer.notices}}</span></a>
+      <a href="/marketplace/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8l1.5-4h13L20 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M4 8h16v11a1 1 0 01-1 1H5a1 1 0 01-1-1V8z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.marketplace}}</span></a>
+      <a href="/gallery/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="15" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8.5" cy="9.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4 16l5-4.5 3.5 3L16 11l4.5 5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>Gallery</span></a>
+      <a href="/press/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="14" height="16" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 9h6M7 13h6M7 17h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>{{t:footer.pressNews}}</span></a>
+      <a href="/online-courses/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 21h6M12 17v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>Online Courses</span></a>
+      <a href="/verify-certificate/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:footer.verifyCertificate}}</span></a>
+      <a href="/verify-identity/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 19.5c1.2-3.6 4-5.4 6.5-5.4s5.3 1.8 6.5 5.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>{{t:footer.verifyIdentity}}</span></a>
+      <a href="/verify-receipt/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span>{{t:footer.verifyReceipt}}</span></a>
+      <a href="#campus-map" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span>{{t:footer.campusMap}}</span></a>
+      <a href="/contact/" class="fd-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>{{t:nav.contact}}</span></a>
+    </div>
+
+    <div class="foot-grid">
+      <div>
+        <h5><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>{{t:brand.full}}</h5>
+        <p style="max-width:320px;">{{t:footer.blurb}}</p>
+        <ul style="margin-top:14px;">
+          <li><a href="/about/">{{t:footer.about}}</a></li>
+          <li><a href="/about/governance/">{{t:footer.governanceLeadership}}</a></li>
+          <li><a href="/foundation/">{{t:nav.foundation}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M3 8l9-4 9 4-9 4-9-4zm0 0v6c3 2 6 3 9 3s6-1 9-3V8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>{{t:footer.academic}}</h5>
+        <ul>
+          <li><a href="/academics/nursery-primary/">Sultan Hanafi Nursery and Primary School</a></li>
+          <li><a href="/academics/royal-college/">Sultan Hanafi Royal College</a></li>
+          <li><a href="/academics/arabic-islamic-studies/">Sultan Hanafi School of Islamic and Arabic Studies</a></li>
+          <li><a href="/academics/quran-college/">Sultan Hanafi Qur'an College</a></li>
+          <li><a href="/academics/online-distance-learning/">Sultan Hanafi Online &amp; Distance Learning School</a></li>
+          <li><a href="/faculty/">{{t:nav.faculty}}</a></li>
+          <li><a href="/academic-calendar/">{{t:footer.academicCalendar}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="9" cy="7" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="17" cy="8.5" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.5 19c0-3 2.5-5.2 5.5-5.2s5.5 2.2 5.5 5.2M15 19c0-2.2 1.6-4 4.5-4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>{{t:footer.parentResources}}</h5>
+        <ul>
+          <li><a href="/portal/register/">{{t:footer.createAccount}}</a></li>
+          <li><a href="/portal/login/">Parent Portal (Pilot)</a></li>
+          <li><a href="/portal/student/login/">Student Portal (Pilot)</a></li>
+          <li><a href="/admission/">{{t:footer.admission}}</a></li>
+          <li><a href="/boarding/">{{t:nav.boarding}}</a></li>
+          <li><a href="/digital-campus/">{{t:nav.digitalCampus}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 10h6M9 14h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>{{t:nav.governance}}</h5>
+        <ul>
+          <li><a href="/policies/">{{t:nav.policies}}</a></li>
+          <li><a href="/announcements/">{{t:nav.noticeArchive}}</a></li>
+          <li><a href="/strategic-plan/">{{t:nav.direction}}</a></li>
+          <li><a href="/contact/">{{t:footer.complaints}}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>{{t:nav.contact}}</h5>
+        <p class="foot-contact-item">15, Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road, Ikorodu, Lagos State.</p>
+        <p class="foot-contact-item"><a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></p>
+        <p class="foot-contact-item"><a href="tel:+2348073747650">+234 807 374 7650</a></p>
+      </div>
+    </div>
+
+    <div class="foot-quick-actions">
+      <a href="/portal/login/" class="is-primary">{{t:footer.registerLogin}} <span class="arrow">→</span></a>
+      <a href="/admission/">{{t:footer.startAdmission}}</a>
+      <a href="/portal/student/login/">{{t:footer.studentPortal}}</a>
+      <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">{{t:nav.chatWhatsapp}}</a>
+    </div>
+  </div>
+
+  <div class="foot-map-section" id="campus-map">
+    <div class="wrap">
+      <div class="foot-map-intro">
+        <span class="fm-eyebrow">{{t:footer.visitTitle}}</span>
+        <p class="fm-lede">{{t:footer.visitBlurb}}</p>
+      </div>
+      <div class="foot-map-panel">
+        <div class="fm-label">
+          <span class="fm-campus-name">{{t:footer.mainCampus}}</span>
+          <span class="fm-campus-tag">15, Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road</span>
+        </div>
+        <div class="fm-frame">
+          <iframe src="https://maps.google.com/maps?q=15+Imowonla+Road+AP+Bus+Stop+Off+Gberigbe+Agura+Road+Ikorodu+Lagos+State+Nigeria&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map showing the Sultan Hanafi Royal Schools campus in Ikorodu, Lagos State" allowfullscreen></iframe>
+          <div class="fm-overlay">
+            <span class="fm-overlay-title">{{t:brand.full}}</span>
+            <span class="fm-overlay-sub">Ikorodu, Lagos State, Nigeria</span>
+          </div>
+        </div>
+        <div class="fm-actions">
+          <a class="fm-btn is-primary" href="https://www.google.com/maps/dir/?api=1&amp;destination=15+Imowonla+Road+AP+Bus+Stop+Off+Gberigbe+Agura+Road+Ikorodu+Lagos+State+Nigeria" target="_blank" rel="noopener">{{t:footer.getDirections}}</a>
+          <a class="fm-btn" href="https://www.google.com/maps/search/?api=1&amp;query=15+Imowonla+Road+AP+Bus+Stop+Off+Gberigbe+Agura+Road+Ikorodu+Lagos+State+Nigeria" target="_blank" rel="noopener">{{t:footer.openInMaps}}</a>
+          <a class="fm-btn" href="/contact/">{{t:footer.contactAdmissions}}</a>
+          <a class="fm-btn" href="https://wa.me/2348073747650?text=Hello%2C%20I%27d%20like%20to%20schedule%20a%20campus%20visit%20to%20Sultan%20Hanafi%20Royal%20Schools." target="_blank" rel="noopener">{{t:footer.scheduleVisit}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="foot-seal">
+      <div class="foot-seal-brand">
+        <span class="crest-shimmer-wrap"><img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" /></span>
+        <div class="foot-seal-text">
+          <span class="fs-copy">Copyright © Sultan Hanafi Royal Schools</span>
+          <span class="fs-sig">Established July 2016 · Ikorodu, Lagos State</span>
+        </div>
+      </div>
+      <div class="foot-seal-badge">Governed by a Board of Governors</div>
+    </div>
+  </div>
+</footer>

@@ -13,16 +13,16 @@
    ============================================================ */
 
 :root{
-  --lx-coffee:#3B2A1D; --lx-coffee-deep:#221709; --lx-bronze:#7C5430; --lx-bronze-bright:#A47843;
-  --lx-gold:#C6A15B; --lx-gold-bright:#E9CE8A;
-  --lx-ivory:#F7EEDF; --lx-cream:#F1E4C8; --lx-parchment:#EAE0C0; --lx-milk:#FCFAF6;
-  --lx-charcoal:#2A2621; --lx-charcoal-deep:#1C1914;
-  --lx-ink:#2A2016; --lx-ink-soft:rgba(42,32,22,0.62);
-  --lx-line:rgba(198,161,91,0.38);
+  --lx-coffee:rgb(var(--lv-cf,59,42,29)); --lx-coffee-deep:rgb(var(--lv-cfd5,34,23,9)); --lx-bronze:rgb(var(--lv-bz,124,84,48)); --lx-bronze-bright:rgb(var(--lv-bzb,164,120,67));
+  --lx-gold:rgb(var(--lv-g,198,161,91)); --lx-gold-bright:rgb(var(--lv-gb,233,206,138));
+  --lx-ivory:rgb(var(--lv-p3,247,238,223)); --lx-cream:rgb(var(--lv-p5,241,228,200)); --lx-parchment:rgb(var(--lv-p6,234,224,192)); --lx-milk:rgb(var(--lv-p2,252,250,246));
+  --lx-charcoal:rgb(var(--lv-ch,42,38,33)); --lx-charcoal-deep:rgb(var(--lv-chd,28,25,20));
+  --lx-ink:rgb(var(--lv-ink,42,32,22)); --lx-ink-soft:rgba(var(--lv-ink,42,32,22),0.62);
+  --lx-line:rgba(var(--lv-g,198,161,91),0.38);
 }
 
 *{box-sizing:border-box;}
-body.pros-body{margin:0; background:#3a3226; font-family:'Cormorant Garamond','Fraunces',serif;}
+body.pros-body{margin:0; background:rgb(var(--lv-w250,58,50,38)); font-family:'Cormorant Garamond','Fraunces',serif;}
 
 .lx-toolbar{
   position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
@@ -43,7 +43,7 @@ body.pros-body{margin:0; background:#3a3226; font-family:'Cormorant Garamond','F
 .lx-spread.cover{padding:0; display:flex; align-items:flex-end;}
 
 .lx-folio{position:absolute; bottom:9mm; left:16mm; right:16mm; z-index:3; display:flex; justify-content:space-between; font-family:'Jost',sans-serif; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--lx-ink-soft);}
-.lx-spread.dark .lx-folio{color:rgba(247,238,223,0.55);}
+.lx-spread.dark .lx-folio{color:rgba(var(--lv-p3,247,238,223),0.55);}
 
 /* ---- Rosette medallion — the ornamental mark of this edition:
    a small refined eight-point rosette flanked by thin gold rules,
@@ -69,7 +69,7 @@ h2.lx-h2{
 h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:var(--lx-coffee); margin:0 0 6px;}
 .lx-spread.dark h3.lx-h3{color:var(--lx-gold-bright);}
 .lx-spread p{font-family:'Cormorant Garamond',serif; font-size:12.5pt; line-height:1.65; color:var(--lx-ink); margin:0 0 12px;}
-.lx-spread.dark p{color:rgba(247,238,223,0.85);}
+.lx-spread.dark p{color:rgba(var(--lv-p3,247,238,223),0.85);}
 .lx-lede{
   font-family:'Fraunces',serif; font-style:italic; font-weight:500; font-size:15pt; line-height:1.5; color:var(--lx-coffee);
   text-align:center; margin:0 auto 18px; max-width:82%;
@@ -91,7 +91,7 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 /* ---- Cinematic full-bleed hero ---- */
 .lx-hero{position:relative; margin:-18mm -16mm 0; height:150mm;}
 .lx-hero img{width:100%; height:100%; object-fit:cover; display:block; filter:sepia(0.12) contrast(1.05);}
-.lx-hero .lx-hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(34,23,9,0.15) 0%, rgba(34,23,9,0.1) 40%, rgba(34,23,9,0.92) 90%);}
+.lx-hero .lx-hero-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(var(--lv-cfd5,34,23,9),0.15) 0%, rgba(var(--lv-cfd5,34,23,9),0.1) 40%, rgba(var(--lv-cfd5,34,23,9),0.92) 90%);}
 .lx-hero .lx-hero-bar{
   position:absolute; left:0; right:0; bottom:0; padding:14mm 16mm 10mm; text-align:center;
 }
@@ -109,8 +109,8 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 .lx-feature-title{font-family:'Fraunces',serif; font-weight:600; font-size:13pt; color:var(--lx-coffee); margin-bottom:5px;}
 .lx-feature-desc{font-family:'Cormorant Garamond',serif; font-size:11pt; color:var(--lx-ink-soft); line-height:1.55; max-width:80%; margin:0 auto;}
 .lx-spread.dark .lx-feature-title{color:#fff;}
-.lx-spread.dark .lx-feature-desc{color:rgba(247,238,223,0.75);}
-.lx-spread.dark .lx-feature{border-color:rgba(247,238,223,0.18);}
+.lx-spread.dark .lx-feature-desc{color:rgba(var(--lv-p3,247,238,223),0.75);}
+.lx-spread.dark .lx-feature{border-color:rgba(var(--lv-p3s,247,238,223),0.18);}
 
 /* ---- Stat band — refined, framed rather than blocked ---- */
 .lx-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0;}
@@ -118,11 +118,11 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
 .lx-stats .lx-stat-num{font-family:'Fraunces',serif; font-weight:600; font-size:22pt; color:var(--lx-coffee);}
 .lx-stats .lx-stat-label{font-family:'Jost',sans-serif; font-size:7pt; letter-spacing:0.08em; text-transform:uppercase; color:var(--lx-ink-soft); margin-top:3px;}
 .lx-spread.dark .lx-stats .lx-stat-num{color:var(--lx-gold-bright);}
-.lx-spread.dark .lx-stats .lx-stat-label{color:rgba(247,238,223,0.6);}
+.lx-spread.dark .lx-stats .lx-stat-label{color:rgba(var(--lv-p3,247,238,223),0.6);}
 
 /* ---- Ornamental frame — luxury gold-line border for section openers ---- */
 .lx-frame{position:absolute; inset:9mm; z-index:2; pointer-events:none; border:1pt solid var(--lx-gold);}
-.lx-frame::before{content:''; position:absolute; inset:3mm; border:0.5pt solid rgba(198,161,91,0.4);}
+.lx-frame::before{content:''; position:absolute; inset:3mm; border:0.5pt solid rgba(var(--lv-gs,198,161,91),0.4);}
 
 /* ---- Institutional Publication Information (imprint) page — a
    key/value ownership table matching the Governance Charter's own
@@ -141,11 +141,11 @@ h3.lx-h3{font-family:'Fraunces',serif; font-weight:600; font-size:16pt; color:va
   text-align:left; padding:6px 0; border-bottom:1px solid var(--lx-line);
 }
 .lx-spread.dark .lx-imprint-table th{color:var(--lx-gold-bright);}
-.lx-spread.dark .lx-imprint-table td{color:rgba(247,238,223,0.85); border-bottom-color:rgba(247,238,223,0.18);}
+.lx-spread.dark .lx-imprint-table td{color:rgba(var(--lv-p3,247,238,223),0.85); border-bottom-color:rgba(var(--lv-p3s,247,238,223),0.18);}
 
 @media print{
   .lx-toolbar{display:none;}
-  body.pros-body{background:#fff;}
+  body.pros-body{background:rgb(var(--lv-wh,255,255,255));}
   .lx-spread{box-shadow:none; margin:0; width:auto; height:297mm; min-height:297mm; max-height:297mm;}
   @page{size:210mm 297mm; margin:0;}
 }

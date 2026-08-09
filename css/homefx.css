@@ -1,0 +1,555 @@
+/* ===================================================================
+   THE HOMEPAGE, LIT
+   -------------------------------------------------------------------
+   The homepage runs to nineteen sections and eighteen thousand pixels.
+   Read straight down it was a stack: each band well made, none of them
+   aware of the others, and nothing carrying the eye between them.
+
+   Three things are added here, and they are all one idea — that a long
+   page should feel like a single continuous object rather than a pile
+   of separate ones.
+
+   1. THE GOLDEN THREAD. A gold rail down the side of the whole page
+      that fills as it is read, with a node at every section that lights
+      as that section arrives and holds its light afterwards. It is the
+      page's own spine, and it is the thing that makes eighteen thousand
+      pixels feel like one document.
+   2. THE ILLUMINATED HEAD. Every section opening takes a drawn rule and
+      a small turning medallion, so a new band announces itself instead
+      of merely starting.
+   3. THE CONSTELLATION. The five institutions, drawn as a network that
+      draws itself, with light travelling the lines between them.
+
+   All three yield to Motion: Reduced and to prefers-reduced-motion, and
+   none of them carries information that is not also in the text.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   1. THE GOLDEN THREAD
+   ------------------------------------------------------------------- */
+.gt-rail{
+  position:absolute;top:0;width:2px;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,
+    transparent,
+    rgba(var(--lv-g,198,161,91),.16) 3%,
+    rgba(var(--lv-g,198,161,91),.16) 97%,
+    transparent);}
+.gt-fill{
+  position:absolute;inset:0 0 auto 0;transform-origin:top center;
+  transform:scaleY(var(--gt,0));
+  background:linear-gradient(180deg,
+    rgba(var(--lv-gd,156,122,60),.35),
+    rgb(var(--lv-g,198,161,91)) 18%,
+    rgb(var(--lv-gb,233,206,138)) 62%,
+    rgb(var(--lv-gl,255,246,223)));
+  box-shadow:0 0 14px 1px rgba(var(--lv-gb,233,206,138),.5);}
+/* The head of the fill carries a bead of light, so the eye can see the
+   thread being drawn rather than only that it has grown. */
+.gt-bead{
+  position:absolute;left:50%;top:0;width:9px;height:9px;margin:-4px 0 0 -4.5px;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgb(var(--lv-gl,255,246,223)),
+    rgba(var(--lv-gb,233,206,138),.6) 55%,transparent 72%);
+  box-shadow:0 0 16px 3px rgba(var(--lv-gb,233,206,138),.65);
+  transform:translateY(calc(var(--gt-px,0) * 1px));}
+
+.gt-node{
+  position:absolute;left:50%;width:13px;height:13px;margin-left:-6.5px;
+  transform:translateY(-6.5px) rotate(45deg) scale(.55);
+  border:1px solid rgba(var(--lv-g,198,161,91),.5);
+  background:rgb(var(--lv-p1,255,253,249));
+  opacity:.45;pointer-events:auto;cursor:pointer;
+  transition:transform .6s cubic-bezier(.16,.8,.24,1),
+             opacity .5s ease,background .5s ease,box-shadow .5s ease,border-color .5s ease;}
+.gt-node.is-lit{
+  opacity:1;transform:translateY(-6.5px) rotate(45deg) scale(1);
+  background:linear-gradient(135deg,rgb(var(--lv-gb,233,206,138)),rgb(var(--lv-g,198,161,91)));
+  border-color:rgb(var(--lv-gl,255,246,223));
+  box-shadow:0 0 14px 1px rgba(var(--lv-gb,233,206,138),.6);}
+.gt-node:hover,.gt-node:focus-visible{
+  transform:translateY(-6.5px) rotate(45deg) scale(1.35);
+  box-shadow:0 0 20px 3px rgba(var(--lv-gb,233,206,138),.75);}
+/* The section's name, shown only while its node is addressed. */
+.gt-node::after{
+  content:attr(data-label);
+  position:absolute;left:22px;top:50%;
+  transform:rotate(-45deg) translate(-2px,-50%);transform-origin:left center;
+  white-space:nowrap;opacity:0;pointer-events:none;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;color:rgb(var(--lv-gt3,99,72,27));
+  background:rgba(var(--lv-p1,255,253,249),.94);padding:5px 10px;border-radius:99px;
+  border:1px solid rgba(var(--lv-g,198,161,91),.4);
+  transition:opacity .35s ease;}
+.gt-node:hover::after,.gt-node:focus-visible::after{opacity:1;}
+[dir="rtl"] .gt-node::after{left:auto;right:22px;transform:rotate(-45deg) translate(2px,-50%);
+  transform-origin:right center;}
+
+html[data-pc-theme="royal"] .gt-node,
+html[data-pc-theme="dark"] .gt-node{background:rgb(var(--lv-cfd2,42,28,16));}
+html[data-pc-theme="royal"] .gt-node::after,
+html[data-pc-theme="dark"] .gt-node::after{
+  color:rgb(var(--lv-gb,233,206,138));
+  background:rgba(var(--lv-cfd4,26,16,6),.94);
+  border-color:rgba(233,206,138,.4);}
+
+/* The thread is a wide-screen ornament. On a narrow screen the margin
+   it lives in does not exist, and a rail over the text would be worse
+   than no rail at all. */
+@media (max-width:1120px){.gt-rail{display:none;}}
+html[data-pc-ornament="none"] .gt-rail{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .gt-fill{transition:none;} .gt-bead{display:none;}
+  .gt-node{transition:none;}
+}
+html[data-pc-motion="reduced"] .gt-bead{display:none;}
+
+/* -------------------------------------------------------------------
+   2. THE ILLUMINATED HEAD
+   A drawn rule and a turning medallion at each section opening.
+   ------------------------------------------------------------------- */
+.hfx-head{position:relative;}
+.hfx-head::before{
+  content:"";position:absolute;inset-inline-start:0;bottom:-14px;height:1px;width:min(340px,60%);
+  background:linear-gradient(90deg,
+    rgb(var(--lv-g,198,161,91)),rgba(var(--lv-g,198,161,91),.15) 62%,transparent);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform 1.1s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .hfx-head::before{transform-origin:right center;
+  background:linear-gradient(270deg,
+    rgb(var(--lv-g,198,161,91)),rgba(var(--lv-g,198,161,91),.15) 62%,transparent);}
+.hfx-head.is-lit::before{transform:scaleX(1);}
+.hfx-mark{
+  position:absolute;inset-inline-start:-46px;top:.15em;width:26px;height:26px;
+  pointer-events:none;opacity:0;transform:rotate(-120deg) scale(.6);
+  transition:opacity .7s ease,transform .9s cubic-bezier(.16,.8,.24,1);}
+.hfx-head.is-lit .hfx-mark{opacity:.9;transform:rotate(0deg) scale(1);}
+.hfx-mark svg{width:100%;height:100%;display:block;
+  color:rgb(var(--lv-g,198,161,91));}
+@media (max-width:1240px){.hfx-mark{display:none;}}
+html[data-pc-ornament="none"] .hfx-mark,
+html[data-pc-ornament="none"] .hfx-head::before{display:none;}
+@media (prefers-reduced-motion:reduce){
+  .hfx-head::before{transition:none;transform:scaleX(1);}
+  .hfx-mark{transition:none;opacity:.9;transform:none;}
+}
+
+/* -------------------------------------------------------------------
+   3. THE CONSTELLATION
+   The five institutions as a drawn network: the spokes draw themselves
+   outward from the board, the nodes arrive one after another, a pip of
+   light runs each spoke in turn, and the two orbits turn against one
+   another for as long as the figure is on screen.
+   ------------------------------------------------------------------- */
+.cst-band{position:relative;background:var(--surface-tertiary-bg,#FCFAF6);}
+.cst-band::before{content:"";position:absolute;inset-inline:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.45),transparent);}
+.cst-lede{max-width:700px;color:var(--ink-soft);margin:14px 0 0;font-size:.98rem;
+  text-align:justify;text-justify:inter-word;hyphens:auto;}
+.cst-figure{margin:26px 0 0;}
+.cst-svg{display:block;width:100%;height:auto;max-width:920px;margin:0 auto;overflow:visible;}
+.cst-cap{margin:6px auto 0;max-width:700px;text-align:center;
+  font-size:.82rem;line-height:1.6;color:var(--ink-soft);}
+
+.cst-orbit{
+  stroke:rgba(var(--lv-g,198,161,91),.22);stroke-width:1;
+  stroke-dasharray:3 9;transform-origin:450px 260px;
+  animation:cst-turn 78s linear infinite;}
+.cst-orbit-2{stroke-dasharray:2 14;opacity:.6;animation-duration:112s;animation-direction:reverse;}
+@keyframes cst-turn{to{transform:rotate(360deg);}}
+
+.cst-spoke{
+  stroke-dasharray:200;stroke-dashoffset:200;
+  transition:stroke-dashoffset 1.1s cubic-bezier(.16,.8,.24,1);}
+[data-cst].is-lit .cst-spoke{stroke-dashoffset:0;}
+[data-cst].is-lit .cst-spoke:nth-child(2){transition-delay:.10s;}
+[data-cst].is-lit .cst-spoke:nth-child(3){transition-delay:.20s;}
+[data-cst].is-lit .cst-spoke:nth-child(4){transition-delay:.30s;}
+[data-cst].is-lit .cst-spoke:nth-child(5){transition-delay:.40s;}
+
+.cst-core circle{
+  filter:drop-shadow(0 8px 22px rgba(var(--lv-cf,59,42,29),.45));
+  transform-origin:450px 260px;transform:scale(.7);opacity:0;
+  transition:transform .9s cubic-bezier(.16,.8,.24,1),opacity .7s ease;}
+[data-cst].is-lit .cst-core circle{transform:scale(1);opacity:1;}
+.cst-core-t{
+  font-family:var(--font-label,'Cinzel',serif);font-size:13px;
+  fill:rgb(var(--lv-gb,233,206,138));letter-spacing:.5px;
+  opacity:0;transition:opacity .6s ease .5s;}
+[data-cst].is-lit .cst-core-t{opacity:1;}
+
+.cst-node circle{
+  fill:rgb(var(--lv-p1,255,253,249));
+  stroke:rgba(var(--lv-g,198,161,91),.6);stroke-width:1.3;
+  filter:drop-shadow(0 6px 16px rgba(var(--lv-cf,59,42,29),.18));
+  opacity:0;transition:opacity .7s ease,transform .8s cubic-bezier(.16,.8,.24,1);}
+.cst-node text{opacity:0;transition:opacity .6s ease;}
+.cst-n{font-family:var(--font-label,'Cinzel',serif);font-size:12.5px;
+  fill:rgb(var(--lv-cf,59,42,29));}
+.cst-s{font-size:10.5px;fill:rgb(var(--lv-gt3,99,72,27));
+  letter-spacing:.4px;text-transform:uppercase;}
+[data-cst].is-lit .cst-node circle,
+[data-cst].is-lit .cst-node text{opacity:1;}
+[data-cst].is-lit .cst-node[data-i="1"] circle,[data-cst].is-lit .cst-node[data-i="1"] text{transition-delay:.12s;}
+[data-cst].is-lit .cst-node[data-i="2"] circle,[data-cst].is-lit .cst-node[data-i="2"] text{transition-delay:.24s;}
+[data-cst].is-lit .cst-node[data-i="3"] circle,[data-cst].is-lit .cst-node[data-i="3"] text{transition-delay:.36s;}
+[data-cst].is-lit .cst-node[data-i="4"] circle,[data-cst].is-lit .cst-node[data-i="4"] text{transition-delay:.48s;}
+.cst-node:hover circle{stroke:rgb(var(--lv-gb,233,206,138));stroke-width:2;}
+
+/* The pip of light that runs a spoke. js/homefx.js moves it. */
+.cst-pip{fill:rgb(var(--lv-gl,255,246,223));opacity:0;
+  filter:drop-shadow(0 0 6px rgba(var(--lv-gb,233,206,138),.9));}
+[data-cst].is-lit .cst-pip{opacity:1;}
+
+html[data-pc-theme="royal"] .cst-band,
+html[data-pc-theme="dark"] .cst-band{background:transparent;}
+html[data-pc-theme="dark"] .cst-node circle{fill:rgb(var(--lv-cfd2,42,28,16));}
+html[data-pc-theme="dark"] .cst-n{fill:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="dark"] .cst-s{fill:rgb(var(--lv-gb,233,206,138));}
+
+@media (max-width:620px){
+  .cst-n{font-size:15px;} .cst-s{font-size:12.5px;} .cst-core-t{font-size:15px;}
+}
+html[data-pc-ornament="none"] .cst-orbit,
+html[data-pc-ornament="none"] .cst-pip{display:none;}
+html[data-pc-motion="reduced"] .cst-orbit,
+html[data-pc-motion="reduced"] .cst-pip{animation:none;display:none;}
+@media (prefers-reduced-motion:reduce){
+  .cst-orbit{animation:none;}
+  .cst-pip{display:none;}
+  .cst-spoke{transition:none;stroke-dashoffset:0;}
+  .cst-core circle,.cst-core-t,.cst-node circle,.cst-node text{transition:none;opacity:1;transform:none;}
+}
+
+/* The rail is a navigation region; it must be reachable and visible when
+   it is reached, even though it is quiet until then. */
+.gt-node:focus-visible{
+  outline:2px solid rgb(var(--lv-gb,233,206,138));outline-offset:3px;}
+.gt-node:focus-visible::after{opacity:1;}
+
+/* -------------------------------------------------------------------
+   4. THE ARRIVAL
+   The hero was a photograph with type on it and nothing that moved. It
+   is the first thing anyone sees and it was the stillest thing on the
+   page. Five additions, all of them light rather than decoration:
+
+     · a crest that draws its own frame before the mark appears;
+     · gold light rising slowly through the scrim, as dust does in a
+       shaft of sun;
+     · a raking sweep across the whole band, once, twelve seconds apart;
+     · a meridian of light along the foot of the band;
+     · a scroll cue that breathes, and puts itself away the moment the
+       reader has taken its advice.
+   ------------------------------------------------------------------- */
+.hero{position:relative;isolation:isolate;}
+
+/* Gold rising through the scrim. Two layers at different speeds and
+   sizes so it reads as depth rather than as a pattern. */
+.hero > .hfx-rise{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;
+  background-image:
+    radial-gradient(1.7px 1.7px at 14% 88%,rgba(255,246,223,.9),transparent 60%),
+    radial-gradient(1.3px 1.3px at 31% 96%,rgba(233,206,138,.8),transparent 60%),
+    radial-gradient(2px 2px at 52% 90%,rgba(255,246,223,.75),transparent 60%),
+    radial-gradient(1.4px 1.4px at 71% 97%,rgba(233,206,138,.75),transparent 60%),
+    radial-gradient(1.8px 1.8px at 88% 91%,rgba(255,246,223,.8),transparent 60%),
+    radial-gradient(1.2px 1.2px at 22% 93%,rgba(233,206,138,.7),transparent 60%),
+    radial-gradient(1.5px 1.5px at 63% 94%,rgba(255,246,223,.7),transparent 60%);
+  background-size:100% 260%,100% 260%,100% 260%,100% 260%,
+                  100% 420%,100% 420%,100% 420%;
+  animation:hfx-rise-a 34s linear infinite,hfx-rise-b 53s linear infinite;}
+@keyframes hfx-rise-a{
+  to{background-position:0 -260%,0 -260%,0 -260%,0 -260%,0 0,0 0,0 0;}}
+@keyframes hfx-rise-b{
+  to{background-position:0 0,0 0,0 0,0 0,0 -420%,0 -420%,0 -420%;}}
+
+/* One raking pass of light across the band. */
+.hero > .hfx-sweep{
+  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+.hero > .hfx-sweep::before{
+  content:"";position:absolute;top:-30%;bottom:-30%;width:38%;
+  background:linear-gradient(104deg,transparent,
+    rgba(255,246,223,.10) 42%,rgba(255,246,223,.20) 50%,
+    rgba(255,246,223,.10) 58%,transparent);
+  transform:translateX(-160%) skewX(-14deg);
+  animation:hfx-sweep 12s cubic-bezier(.4,0,.25,1) 2.5s infinite;}
+@keyframes hfx-sweep{0%{transform:translateX(-160%) skewX(-14deg);}
+  26%,100%{transform:translateX(360%) skewX(-14deg);}}
+
+/* The meridian along the foot of the band. */
+.hero > .hfx-meridian{
+  position:absolute;inset-inline:0;bottom:0;height:1px;z-index:3;pointer-events:none;
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-g,198,161,91),.5) 16%,
+    rgba(var(--lv-gl,255,246,223),.95) 50%,
+    rgba(var(--lv-g,198,161,91),.5) 84%,transparent);
+  transform:scaleX(0);transform-origin:center;
+  animation:hfx-mer 1.8s cubic-bezier(.16,.8,.24,1) .5s forwards;}
+@keyframes hfx-mer{to{transform:scaleX(1);}}
+.hero > .hfx-meridian::after{
+  content:"";position:absolute;inset-block:-1px;width:16%;
+  background:linear-gradient(90deg,transparent,rgb(var(--lv-gl,255,246,223)),transparent);
+  filter:blur(.5px);
+  animation:hfx-mer-run 16s cubic-bezier(.45,0,.25,1) 4s infinite;}
+@keyframes hfx-mer-run{0%{transform:translateX(-120%);opacity:0;}
+  8%{opacity:1;}30%{transform:translateX(700%);opacity:0;}
+  100%{transform:translateX(700%);opacity:0;}}
+
+/* The crest draws its own frame, then the mark arrives inside it. */
+.hero .crest-shimmer-wrap{position:relative;display:inline-block;}
+.hero .hfx-crest-ring{
+  position:absolute;inset:-14px;pointer-events:none;color:rgba(233,206,138,.65);}
+.hero .hfx-crest-ring svg{width:100%;height:100%;display:block;}
+.hero .hfx-crest-ring circle,.hero .hfx-crest-ring path{
+  fill:none;stroke:currentColor;stroke-width:.8;
+  stroke-dasharray:var(--len,320);stroke-dashoffset:var(--len,320);
+  animation:hfx-draw 2.4s cubic-bezier(.16,.8,.24,1) .3s forwards;}
+.hero .hfx-crest-ring path{animation-delay:.9s;}
+@keyframes hfx-draw{to{stroke-dashoffset:0;}}
+
+/* The scroll cue. It breathes until it is taken, then it goes. */
+.hfx-cue{
+  position:absolute;left:50%;bottom:22px;z-index:4;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  pointer-events:none;transition:opacity .6s ease,transform .6s ease;}
+.hfx-cue.is-gone{opacity:0;transform:translateX(-50%) translateY(10px);}
+.hfx-cue-t{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.56rem;letter-spacing:.24em;
+  text-transform:uppercase;color:rgba(255,246,223,.72);}
+.hfx-cue-r{
+  width:1px;height:36px;
+  background:linear-gradient(180deg,rgba(233,206,138,.1),rgba(233,206,138,.9),transparent);
+  animation:hfx-cue 2.6s ease-in-out infinite;}
+@keyframes hfx-cue{0%,100%{transform:scaleY(.55);opacity:.5;}
+  50%{transform:scaleY(1);opacity:1;}}
+@media (max-width:700px){.hfx-cue{display:none;}}
+
+html[data-pc-ornament="none"] .hero > .hfx-rise,
+html[data-pc-ornament="none"] .hero > .hfx-sweep,
+html[data-pc-ornament="none"] .hfx-cue,
+html[data-pc-ornament="none"] .hero .hfx-crest-ring{display:none;}
+html[data-pc-motion="reduced"] .hero > .hfx-rise,
+html[data-pc-motion="reduced"] .hero > .hfx-sweep,
+html[data-pc-motion="reduced"] .hfx-cue-r,
+html[data-pc-motion="reduced"] .hero > .hfx-meridian::after{animation:none!important;}
+@media (prefers-reduced-motion:reduce){
+  .hero > .hfx-rise,.hero > .hfx-sweep::before,
+  .hfx-cue-r,.hero > .hfx-meridian::after{animation:none!important;}
+  .hero > .hfx-meridian{animation:none;transform:scaleX(1);}
+  .hero .hfx-crest-ring circle,.hero .hfx-crest-ring path{animation:none;stroke-dashoffset:0;}
+}
+
+/* -------------------------------------------------------------------
+   5. THE CHRONICLE
+   The founding timeline was a row of dots joined by a dashed rule: the
+   right information, laid out as a diagram of it rather than as a
+   record. Nothing about the content changes here. What changes is that
+   the rule now draws itself across the years, each medallion arrives in
+   turn with a ring opening behind it, and a bead of light travels the
+   whole span once it is drawn — so a reader watches the school's own
+   history being laid down rather than reading a finished chart.
+   ------------------------------------------------------------------- */
+.pr-path{position:relative;}
+.pr-path-line{
+  background:linear-gradient(90deg,
+    rgba(var(--lv-g,198,161,91),.25),
+    rgb(var(--lv-g,198,161,91)) 12%,
+    rgb(var(--lv-gb,233,206,138)) 50%,
+    rgb(var(--lv-g,198,161,91)) 88%,
+    rgba(var(--lv-g,198,161,91),.25))!important;
+  opacity:1!important;height:1.5px!important;
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform 1.6s cubic-bezier(.16,.8,.24,1);}
+[dir="rtl"] .pr-path-line{transform-origin:right center;}
+.pr-path.is-lit .pr-path-line{transform:scaleX(1);}
+/* The bead that runs the span once the rule is down. */
+.pr-path-line::after{
+  content:"";position:absolute;inset-block:-2px;width:9%;border-radius:99px;
+  background:linear-gradient(90deg,transparent,rgb(var(--lv-gl,255,246,223)),transparent);
+  filter:blur(.4px);opacity:0;}
+.pr-path.is-lit .pr-path-line::after{
+  animation:pr-path-run 9s cubic-bezier(.45,0,.3,1) 1.8s infinite;}
+@keyframes pr-path-run{
+  0%{transform:translateX(-120%);opacity:0;}
+  6%{opacity:1;}
+  34%{transform:translateX(1150%);opacity:0;}
+  100%{transform:translateX(1150%);opacity:0;}}
+
+.pr-path-step{
+  transition:transform .5s cubic-bezier(.16,.8,.24,1);}
+.pr-path-step:hover{transform:translateY(-3px);}
+.pr-path-dot{
+  width:22px!important;height:22px!important;
+  opacity:0;transform:scale(.3);
+  transition:opacity .6s ease,transform .7s cubic-bezier(.34,1.56,.64,1),
+             box-shadow .5s ease;}
+.pr-path.is-lit .pr-path-dot{opacity:1;transform:scale(1);}
+/* A ring opens behind each medallion as it lands. */
+.pr-path-dot::after{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:1px solid rgba(var(--lv-g,198,161,91),.8);
+  opacity:0;transform:scale(.5);}
+.pr-path.is-lit .pr-path-dot::after{animation:pr-path-ring 1.5s ease-out forwards;}
+@keyframes pr-path-ring{
+  0%{opacity:.9;transform:scale(.5);}
+  100%{opacity:0;transform:scale(1.9);}}
+.pr-path-step:hover .pr-path-dot{
+  box-shadow:0 0 0 6px rgba(var(--lv-gs,198,161,91),.2),
+             0 0 20px 2px rgba(var(--lv-gb,233,206,138),.6);}
+
+.pr-path-age,.pr-path-t,.pr-path-d{
+  opacity:0;transform:translateY(9px);
+  transition:opacity .7s ease,transform .8s cubic-bezier(.16,.8,.24,1);}
+.pr-path.is-lit .pr-path-age,
+.pr-path.is-lit .pr-path-t,
+.pr-path.is-lit .pr-path-d{opacity:1;transform:none;}
+.pr-path.is-lit .pr-path-t{transition-delay:.08s;}
+.pr-path.is-lit .pr-path-d{transition-delay:.16s;}
+/* Each step follows the one before it, so the years arrive in order. */
+.pr-path.is-lit .pr-path-step:nth-child(2) > *{transition-delay:.14s;}
+.pr-path.is-lit .pr-path-step:nth-child(3) > *{transition-delay:.28s;}
+.pr-path.is-lit .pr-path-step:nth-child(4) > *{transition-delay:.42s;}
+.pr-path.is-lit .pr-path-step:nth-child(5) > *{transition-delay:.56s;}
+.pr-path.is-lit .pr-path-step:nth-child(6) > *{transition-delay:.70s;}
+.pr-path.is-lit .pr-path-step:nth-child(7) > *{transition-delay:.84s;}
+
+html[data-pc-motion="reduced"] .pr-path-line::after{animation:none!important;display:none;}
+html[data-pc-motion="reduced"] .pr-path-dot::after{animation:none!important;}
+@media (prefers-reduced-motion:reduce){
+  .pr-path-line{transition:none;transform:scaleX(1);}
+  .pr-path-line::after,.pr-path-dot::after{animation:none;display:none;}
+  .pr-path-dot,.pr-path-age,.pr-path-t,.pr-path-d,.pr-path-step{
+    transition:none;opacity:1;transform:none;}
+}
+
+/* -------------------------------------------------------------------
+   6. THE AGE CHART, AND THE MARGIN
+   Two things on the Academics and Discover pages.
+
+   The age chart already grew its bars. What it did not have was any
+   sense of the light that everything else on the site now carries, so
+   each bar takes a sheen that passes along it after it has grown, and
+   the five rows arrive one after another rather than all at once.
+
+   And the long prose sections are set on a narrow measure with a wide
+   empty column beside them — right for reading, and empty on the page.
+   The crest is held faintly in that column, the way a watermark sits in
+   the leaf of a printed book.
+   ------------------------------------------------------------------- */
+.pr-age-row{
+  opacity:0;transform:translateY(10px);
+  transition:opacity .7s ease,transform .8s cubic-bezier(.16,.8,.24,1);}
+.pr-agechart.is-lit .pr-age-row{opacity:1;transform:none;}
+.pr-agechart.is-lit .pr-age-row:nth-child(2){transition-delay:.10s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(3){transition-delay:.20s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(4){transition-delay:.30s;}
+.pr-agechart.is-lit .pr-age-row:nth-child(5){transition-delay:.40s;}
+.pr-age-fill{position:relative;overflow:hidden;}
+.pr-age-fill::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 34%,
+    rgba(255,255,255,.42) 49%,rgba(255,255,255,.6) 51%,
+    rgba(255,255,255,.42) 53%,transparent 66%);
+  transform:translateX(-140%);}
+.pr-agechart.is-lit .pr-age-fill::after{
+  animation:pr-age-sheen 7.5s cubic-bezier(.4,0,.25,1) 1.9s infinite;}
+@keyframes pr-age-sheen{
+  0%{transform:translateX(-140%);}
+  22%,100%{transform:translateX(180%);}}
+.pr-age-track{position:relative;}
+.pr-age-track::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:repeating-linear-gradient(90deg,
+    rgba(var(--lv-g,198,161,91),.18) 0 1px,transparent 1px 12.5%);
+  opacity:.7;}
+
+/* The crest in the margin of a long prose column. */
+.hfx-leaf{
+  position:absolute;pointer-events:none;z-index:0;opacity:.05;
+  width:min(38vw,430px);aspect-ratio:1/.9;
+  background-image:url("/assets/images/crest-watermark.png");
+  background-size:contain;background-repeat:no-repeat;background-position:center;}
+@media (max-width:1180px){.hfx-leaf{display:none;}}
+html[data-pc-ornament="none"] .hfx-leaf{display:none;}
+html[data-pc-theme="royal"] .hfx-leaf,
+html[data-pc-theme="dark"] .hfx-leaf{opacity:.07;}
+
+/* -------------------------------------------------------------------
+   7. THE BRAID
+   The one claim this school makes about itself — that the two curricula
+   are one upbringing rather than two timetables — drawn. Both strands
+   run the length of the figure and cross twice; neither is above the
+   other, and they begin and end at the same two points.
+   ------------------------------------------------------------------- */
+.brd-figure{margin:30px 0 0;}
+.brd-svg{display:block;width:100%;height:auto;max-width:920px;margin:0 auto;overflow:visible;}
+.brd-cap-t{margin:10px auto 0;max-width:720px;text-align:center;
+  font-size:.84rem;line-height:1.65;color:var(--ink-soft);}
+
+.brd-strand{
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  transition:stroke-dashoffset 2.4s cubic-bezier(.16,.8,.24,1);}
+[data-brd].is-lit .brd-strand{stroke-dashoffset:0;}
+[data-brd].is-lit .brd-2{transition-delay:.22s;}
+
+.brd-knots circle{
+  fill:rgb(var(--lv-gl,255,246,223));
+  stroke:rgba(var(--lv-g,198,161,91),.9);stroke-width:1.6;
+  opacity:0;transform:scale(.4);transform-origin:center;
+  transition:opacity .6s ease 1.5s,transform .7s cubic-bezier(.34,1.56,.64,1) 1.5s;}
+[data-brd].is-lit .brd-knots circle{opacity:1;transform:scale(1);}
+.brd-ends circle{
+  fill:rgb(var(--lv-cf,59,42,29));
+  stroke:rgb(var(--lv-gb,233,206,138));stroke-width:2;
+  opacity:0;transition:opacity .7s ease 1.9s;}
+[data-brd].is-lit .brd-ends circle{opacity:1;}
+
+.brd-lab,.brd-sub,.brd-cap,.brd-mid{
+  opacity:0;transition:opacity .8s ease 1.7s;}
+[data-brd].is-lit .brd-lab,
+[data-brd].is-lit .brd-sub,
+[data-brd].is-lit .brd-cap,
+[data-brd].is-lit .brd-mid{opacity:1;}
+.brd-lab{font-family:var(--font-label,'Cinzel',serif);font-size:13px;
+  fill:rgb(var(--lv-cf,59,42,29));}
+.brd-sub{font-size:10.5px;fill:rgb(var(--lv-gt3,99,72,27));letter-spacing:.3px;}
+.brd-lab-2{fill:#2F5A3E;}
+.brd-sub-2{fill:#3F6B4E;}
+.brd-cap{font-family:var(--font-label,'Cinzel',serif);font-size:11px;
+  letter-spacing:1.4px;text-transform:uppercase;fill:rgb(var(--lv-gt3,99,72,27));}
+.brd-mid{font-family:var(--font-label,'Cinzel',serif);font-size:11.5px;
+  letter-spacing:1.6px;text-transform:uppercase;fill:rgba(var(--lv-ink2,87,71,47),.85);}
+
+html[data-pc-theme="royal"] .brd-lab,html[data-pc-theme="dark"] .brd-lab{fill:rgb(var(--lv-p3,247,238,223));}
+html[data-pc-theme="royal"] .brd-lab-2,html[data-pc-theme="dark"] .brd-lab-2{fill:#8FC7A2;}
+html[data-pc-theme="royal"] .brd-sub-2,html[data-pc-theme="dark"] .brd-sub-2{fill:#7FB894;}
+html[data-pc-theme="royal"] .brd-sub,html[data-pc-theme="dark"] .brd-sub,
+html[data-pc-theme="royal"] .brd-cap,html[data-pc-theme="dark"] .brd-cap{fill:rgb(var(--lv-gb,233,206,138));}
+html[data-pc-theme="royal"] .brd-mid,html[data-pc-theme="dark"] .brd-mid{fill:rgba(var(--lv-p3,247,238,223),.8);}
+html[data-pc-theme="dark"] .brd-ends circle{fill:rgb(var(--lv-cfd4,26,16,6));}
+
+@media (max-width:640px){
+  .brd-lab{font-size:16px;} .brd-sub{font-size:13px;}
+  .brd-cap,.brd-mid{font-size:14px;letter-spacing:1px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .brd-strand{transition:none;stroke-dashoffset:0;}
+  .brd-knots circle,.brd-ends circle,
+  .brd-lab,.brd-sub,.brd-cap,.brd-mid{transition:none;opacity:1;transform:none;}
+}
+
+/* -------------------------------------------------------------------
+   8. THE CAPTIONS, IN MIDNIGHT
+   --ink-soft is not inverted for the Midnight edition: it stays at
+   rgba(37,28,20,.74), and Midnight relies on per-component rules to
+   light its type instead. Every lede and caption written for these new
+   figures took --ink-soft and was therefore dark ink on Midnight's dark
+   ground — the braid's caption measured 1.47:1. They take Midnight's
+   own soft ink. The Royal edition needs none of this: its chrome is
+   dark but its pages are cream, where --ink-soft is right.
+   ------------------------------------------------------------------- */
+html[data-pc-theme="dark"] .brd-cap-t,
+html[data-pc-theme="dark"] .cst-lede,
+html[data-pc-theme="dark"] .cst-cap,
+html[data-pc-theme="dark"] .wf-lede,
+html[data-pc-theme="dark"] .rg-lede{
+  color:rgba(243,237,227,.80)!important;}

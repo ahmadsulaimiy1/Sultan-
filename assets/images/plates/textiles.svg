@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Home Economics — Textiles">
+  <title>Home Economics — Textiles</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C6A15B"/><stop offset="42%" stop-color="#F2DFA8"/>
+      <stop offset="58%" stop-color="#E9CE8A"/><stop offset="100%" stop-color="#9C7A3C"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3B2A1D"/><stop offset="55%" stop-color="#2A1B0D"/>
+      <stop offset="100%" stop-color="#1C1207"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="50%" cy="0%" r="72%">
+      <stop offset="0%" stop-color="#E9CE8A" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#E9CE8A" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="weave" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 0 L0 26" stroke="#E9CE8A" stroke-width=".5" opacity=".07"/>
+    </pattern>
+    <pattern id="cloth" width="9" height="9" patternUnits="userSpaceOnUse">
+      <path d="M0 4.5 L9 4.5" stroke="#E9CE8A" stroke-width="2.4" opacity=".30"/>
+      <path d="M4.5 0 L4.5 9" stroke="#C6A15B" stroke-width="1.1" opacity=".22"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#ground)"/>
+  <rect width="1200" height="800" fill="url(#weave)"/>
+  <rect width="1200" height="800" fill="url(#lamp)"/>
+
+  <g stroke="url(#g)" fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.6" opacity=".94">
+    <!-- the upright frame loom -->
+    <path d="M228 132 L228 668 M652 132 L652 668" stroke-width="4"/>
+    <path d="M204 132 L676 132 M204 668 L676 668" stroke-width="5"/>
+    <path d="M228 156 L652 156" stroke-width="2" opacity=".6"/>
+    <!-- the warp, hung from the top beam -->
+    <g stroke-width=".9" opacity=".45"><path d="M272 180 L272 596 M290 180 L290 596 M308 180 L308 596 M326 180 L326 596 M344 180 L344 596 M362 180 L362 596 M380 180 L380 596 M398 180 L398 596 M416 180 L416 596 M434 180 L434 596 M452 180 L452 596 M470 180 L470 596 M488 180 L488 596 M506 180 L506 596 M524 180 L524 596 M542 180 L542 596 M560 180 L560 596 M578 180 L578 596 M596 180 L596 596 M614 180 L614 596"/></g>
+    <!-- the cloth already woven, growing from the bottom beam -->
+    <rect x="264" y="392" width="352" height="212" fill="url(#cloth)" stroke="none"/>
+    <rect x="264" y="392" width="352" height="212" stroke-width="1.2" opacity=".55"/>
+    <path d="M264 392 L616 392" stroke-width="2.6" opacity=".9"/>
+    <!-- the heddle bar and the shed it opens -->
+    <path d="M240 344 L640 344" stroke-width="3" opacity=".8"/>
+    <path d="M264 344 L288 372 M300 344 L324 372 M336 344 L360 372 M372 344 L396 372
+             M408 344 L432 372 M444 344 L468 372 M480 344 L504 372 M516 344 L540 372
+             M552 344 L576 372 M588 344 L612 372" stroke-width=".9" opacity=".4"/>
+    <!-- the shuttle, in the middle of its pass -->
+    <path d="M414 380 L508 366 L556 380 L508 394 Z" stroke-width="1.8"/>
+    <path d="M414 380 L336 380" stroke-width="1.1" opacity=".55"/>
+    <!-- needle and thread, drawn clear of the loom -->
+    <path d="M796 208 L946 358" stroke-width="2.8"/>
+    <ellipse cx="802" cy="214" rx="9" ry="5" transform="rotate(45 802 214)" stroke-width="1.6"/>
+    <path d="M802 214 Q718 292 796 366 Q874 438 776 500 Q684 558 780 606" stroke-width="1.5" opacity=".72"/>
+    <!-- a bolt of cloth, rolled -->
+    <g opacity=".92">
+      <path d="M760 648 L1020 648 M760 700 L1020 700"/>
+      <ellipse cx="760" cy="674" rx="14" ry="26"/>
+      <ellipse cx="1020" cy="674" rx="14" ry="26" opacity=".5"/>
+      <path d="M790 656 L790 692 M824 656 L824 692 M858 656 L858 692 M892 656 L892 692
+               M926 656 L926 692 M960 656 L960 692" stroke-width=".9" opacity=".38"/>
+    </g>
+    <!-- a reel of thread -->
+    <g opacity=".92" transform="translate(880,430)">
+      <path d="M-34 -60 L-34 60 M34 -60 L34 60"/>
+      <ellipse cx="0" cy="-60" rx="34" ry="11"/>
+      <ellipse cx="0" cy="60" rx="34" ry="11"/>
+      <path d="M-28 -30 L28 -24 M-28 -8 L28 -2 M-28 14 L28 20 M-28 36 L28 42" stroke-width="1" opacity=".45"/>
+    </g>
+    <!-- shears -->
+    <g opacity=".9" transform="translate(112,556) rotate(-16)">
+      <path d="M14 0 L104 -50 M14 -50 L104 0" stroke-width="2.4"/>
+      <circle cx="0" cy="6" r="13" stroke-width="1.8"/>
+      <circle cx="0" cy="-56" r="13" stroke-width="1.8"/>
+      <circle cx="59" cy="-25" r="3.2" stroke-width="1.4"/>
+    </g>
+  </g>
+  <rect x="10" y="10" width="1180" height="780" rx="14" fill="none" stroke="url(#g)" stroke-width="1.1" opacity=".55"/>
+  <rect x="20" y="20" width="1160" height="760" rx="8" fill="none" stroke="url(#g)" stroke-width=".7" opacity=".3"/>
+  <g opacity=".75" stroke="url(#g)" stroke-width="1.2" fill="none">
+    <path d="M10 44 L10 24 Q10 10 24 10 L44 10"/>
+    <path d="M1156 10 L1176 10 Q1190 10 1190 24 L1190 44"/>
+    <path d="M10 756 L10 776 Q10 790 24 790 L44 790"/>
+    <path d="M1156 790 L1176 790 Q1190 790 1190 776 L1190 756"/>
+  </g>
+</svg>

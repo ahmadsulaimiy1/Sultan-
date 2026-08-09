@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-locale="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,21 +22,56 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
-<link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
+<<<<<<< HEAD
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+=======
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+<link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
+<link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
+>>>>>>> origin/main
 <script>
 (function(){
   try{
     var raw = localStorage.getItem('shrsPersonalisation');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
-    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-theme', p.theme || 'light');
+    html.setAttribute('data-pc-livery', p.livery || 'royal');
+    html.setAttribute('data-pc-ornament', p.ornament || 'full');
+    html.setAttribute('data-pc-corners', p.corners || 'soft');
+    html.setAttribute('data-pc-depth', p.depth || 'standard');
+    html.setAttribute('data-pc-grain', p.grain || 'on');
+    html.setAttribute('data-pc-cursor', p.cursorLight || 'on');
+    html.setAttribute('data-pc-parallax', p.parallax || 'on');
+    html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
+    html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -52,7 +87,15 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="alternate" hreflang="ar" href="/ar/faculty/" />
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<link rel="stylesheet" href="/css/masthead.css?v=b4aaca0539">
+<link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="alternate" hreflang="en" href="https://shroyalschools.com/faculty/" />
+<link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/faculty/" />
+<link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/faculty/" />
 </head>
 <body>
 
@@ -77,7 +120,18 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.3 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
       </a>
       <span class="topbar-divider" aria-hidden="true"></span>
-      <a href="/ar/faculty/" class="lang-switch" lang="ar" dir="rtl">العربية</a>
+      <!-- Language switcher mount. js/i18n.js fills this with one entry per
+           registered locale, each written in its own language and script, so
+           adding a fifth language needs no change to this file. The
+           <noscript> fallback is a real link to this page in another
+           language (/ar/faculty/), so the site is never trapped in one
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
+      <span class="lang-switch-mount" data-locale-switcher></span>
+      <noscript><a href="/ar/faculty/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">Personalise</span>
@@ -98,12 +152,25 @@
 </div>
 
 <header class="nav">
+  <div class="mh-progress" aria-hidden="true"><span class="mh-progress-fill"></span></div>
   <div class="imperial-motion" aria-hidden="true"></div>
+  <div class="mh-dust" aria-hidden="true"></div>
   <nav class="wrap">
     <a href="/" class="brand">
       <span class="crest-shimmer-wrap"><img class="brand-mark" src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" /></span>
       <span class="brand-text"><span class="line1">SULTAN HANAFI</span><br/><span class="line2">Royal Schools</span></span>
     </a>
+    <span class="mh-standing"><span class="mh-standing-t">Established July 2016</span><span class="mh-standing-d">&middot;</span><span class="mh-standing-t">Ikorodu, Lagos State</span></span>
+    <span class="rlx" data-clock hidden>
+      <button type="button" class="rlx-btn" data-clock-btn aria-expanded="false"
+        data-label-base="The time in Ikorodu" aria-label="The time in Ikorodu"></button>
+      <div class="rlx-pop" data-clock-pop hidden role="dialog" aria-label="The time in Ikorodu">
+        <p class="rlx-digits" data-clock-digits>&mdash;&mdash;:&mdash;&mdash;</p>
+        <p class="rlx-date" data-clock-date>&nbsp;</p>
+        <span class="rlx-zone">Ikorodu · West Africa Time</span>
+      </div>
+    </span>
+    <button class="listen-toggle" data-listen-toggle hidden aria-label="Listen to this page" title="Listen to this page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Search the site" title="Search">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -178,7 +245,7 @@
               <span class="nav-mega-text"><span class="t">Morning &amp; Evening Adhkār</span><span class="d">Daily remembrance, with sources</span></span>
             </a>
             <a class="nav-mega-item" href="/quran-centre/">
-              <span class="nav-mega-text"><span class="t">Digital Qur'an Centre</span><span class="d">Read Al-Fātiḥah &amp; Surahs 93–114</span></span>
+              <span class="nav-mega-text"><span class="t">The Digital Qur'ān Centre</span><span class="d">Adhkār, the Ḥifẓ record, and the daily wird</span></span>
             </a>
             <a class="nav-mega-item" href="/faculty/">
               <span class="nav-mega-text"><span class="t">Faculty Directory</span><span class="d">Meet our educators</span></span>
@@ -317,12 +384,134 @@
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="nav-drop-panel nav-mega-panel is-compact">
-          <div class="nav-mega-intro">
-            <h4>SHRS Digital Campus Gateway</h4>
-            <p>One coherent Digital Campus — Executive, Administrative, Academic Staff, Student, Parent/Guardian, Applicant, Alumni, and Public Verification. Select "Login to Portal" and choose your destination.</p>
-            <a class="nmi-cta" href="/portal/select/">Open the Gateway →</a>
-            <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account →</a>
+        <div class="nav-drop-panel nav-mega-panel is-portal">
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>Which of these are you?</h4>
+              <p>Choose the description that fits you, and the gateway it opens is set out beside it.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="Choose the category you belong to">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a parent or guardian</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a student here</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am applying for a place</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I teach at the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">I work in an office of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I sit on the Board or the Management Council</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a graduate of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am verifying a document</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
+              <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
+              <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Student Portal</h4>
+              <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
+              <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
+              <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
+              <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
+              <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
+              <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
+              <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
+              <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
+              <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
+              <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
+              <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
+              <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
+              <p class="pgx-pane-need">No account is required.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
+              <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
+              <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
+              <a class="pgx-pane-cta" href="/verify/">Verify a Document &rarr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">See all eight gateways &rarr;</a>
+              <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account &rarr;</a>
+            </div>
           </div>
         </div>
       </div>
@@ -330,6 +519,7 @@
         <a href="/admission/" class="nav-mark">Start Admission</a>
       </div>
     </div>
+    <span class="mh-glint" aria-hidden="true"></span>
   </nav>
   <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
     <a href="/about/" class="mnr-item">
@@ -366,7 +556,7 @@
     </button>
   </div>
   <div class="mobile-quick-row">
-    <a href="/portal/select/" class="mqr-item mqr-cta">
+    <a href="/portal/select/" class="mqr-item mqr-cta"><span class="mqr-sheen" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Login to Portal
     </a>
@@ -402,12 +592,17 @@
   </div>
 </div>
 
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">›</span><span aria-current="page">Faculty Directory</span></div>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://shroyalschools.com/"},{"@type":"ListItem","position":2,"name":"Faculty Directory","item":"https://shroyalschools.com/faculty/"}]}</script>
+<div class="mo-rail" aria-hidden="true"></div>
 <section class="academics" id="faculty">
   <div class="wrap">
-    <span class="page-hero-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3zM3 7.5v6c3.5 2.5 7 3.75 9 3.75s5.5-1.25 9-3.75v-6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+    <span class="page-hero-icon mo-float" aria-hidden="true"><svg class="mo-draw" viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3zM3 7.5v6c3.5 2.5 7 3.75 9 3.75s5.5-1.25 9-3.75v-6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
     <p class="eyebrow">Our Educators</p>
-    <h2 style="margin-top:10px;">Faculty Directory</h2>
-    <p style="max-width:640px;color:rgba(248,244,233,0.78);margin-top:12px;">The named educators leading and teaching across our five institutions. Organised by school — see each institution's own Academics chapter for its full curriculum and pathways.</p>
+    <h1 class="page-title" style="margin-top:10px;">Faculty Directory</h1>
+    <p style="max-width:640px;margin-top:12px;">The named educators leading and teaching across our five institutions. Organised by school — see each institution's own Academics chapter for its full curriculum and pathways.</p>
   </div>
 
   <div class="chapter-band-alt">
@@ -446,7 +641,7 @@
    <div class="wrap">
     <p class="eyebrow" style="margin-top:0;">School III of V</p>
     <h3 style="font-family:'Cinzel','Amiri',serif;color:var(--navy);margin:4px 0 16px;">Sultan Hanafi School of Islamic and Arabic Studies</h3>
-    <p style="max-width:640px;color:rgba(248,244,233,0.78);margin-bottom:16px;">Led by Principal Shaykh Abubakr Solah.</p>
+    <p style="max-width:640px;margin-bottom:16px;">Led by Principal Shaykh Abubakr Solah.</p>
     <div class="faculty-grid stagger">
       <div class="faculty-card">
         <span class="fc-mono">AA</span>
@@ -515,9 +710,9 @@
 
     <p class="eyebrow" style="margin-top:36px;">School V of V</p>
     <h3 style="font-family:'Cinzel','Amiri',serif;color:var(--navy);margin:4px 0 16px;">Sultan Hanafi Online &amp; Distance Learning School</h3>
-    <div class="placeholder-block">
-      <span class="tag">Newly Established</span>
-      <p>This school is newly constituted under the Head of Schools / Administrator's office as part of the governance restructuring. Named faculty profiles will be published here once staff are appointed.</p>
+    <div class="school-block pr-tilt rg-light" data-tilt-max="3">
+      <span class="tag">The Fifth Institution</span>
+      <p class="pr-dropcap">The Online &amp; Distance Learning School is constituted under the office of the Head of Schools / Administrator. Its faculty is appointed by the Head of Schools upon the recommendation of the Academic Board, and each appointment is entered in this directory.</p>
     </div>
 
     <div class="page-crosslinks">
@@ -530,15 +725,47 @@
 <footer>
   <div class="foot-arrival">
     <div class="foot-motion" aria-hidden="true"></div>
-    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
+    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
     <div class="foot-statement wrap">
-      <p>&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>
+      <p>“Forming Scholars, Leaders and Guardians of Excellence.”</p>
       <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
     </div>
   </div>
+  <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="Open" data-s-closed="Closed"
+      data-s-closes="Closes in {t}" data-s-opens="Opens in {t}"
+      data-s-openson="Opens {d} at {t}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">The School, Right Now</p>
+        <p class="now-place">Ikorodu, Lagos State · West Africa Time</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">Local time</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">The offices</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">Today's hours</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">All opening hours →</a></span>
+        </div>
+      </div>
+      <p class="now-foot">Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere.</p>
+    </section>
+  </div>
+
   <div class="wrap">
     <p class="foot-dash-eyebrow">The Institution, At A Glance</p>
     <div class="foot-dashboard">
@@ -667,7 +894,7 @@
 
 <div class="assistant-root" data-assistant>
   <button class="assistant-launcher" data-assistant-toggle aria-label="Open the digital academic assistant" aria-expanded="false">
-    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="#E9CE8A" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
   </button>
   <div class="assistant-panel" data-assistant-panel hidden>
     <div class="assistant-head" data-assistant-head>
@@ -755,12 +982,40 @@
   </div>
 </div>
 
+<!-- The livery invitation. Shown once, on a visitor's first arrival,
+     and never again once they have answered it either way. It is a
+     genuine offer rather than a notice: the six swatches are live, so
+     the page recolours under the panel as the pointer moves across
+     them, and the choice is made by seeing rather than by reading. -->
+<div class="lvp-root" data-livery-prompt hidden>
+  <div class="lvp-scrim" data-lvp-scrim></div>
+  <div class="lvp-card" role="dialog" aria-modal="true" aria-labelledby="lvp-t" aria-describedby="lvp-d">
+    <span class="lvp-crest" aria-hidden="true"><img src="/assets/images/brand-mark.png" alt="" width="46" height="46" /></span>
+    <p class="lvp-eyebrow">Before you begin</p>
+    <h2 class="lvp-title" id="lvp-t">Dress the school in your own colour</h2>
+    <p class="lvp-desc" id="lvp-d">This site is published in six liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
+    <div class="lvp-grid" data-lvp-grid role="radiogroup" aria-label="Choose a livery">
+      <button type="button" data-value="royal" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
+      <button type="button" data-value="coffee"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="lvp-n">Coffee Brown</span></button>
+      <button type="button" data-value="sapphire"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="lvp-n">Sapphire Blue</span></button>
+      <button type="button" data-value="emerald"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="lvp-n">Emerald Green</span></button>
+      <button type="button" data-value="garnet"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="lvp-n">Garnet Red</span></button>
+      <button type="button" data-value="obsidian"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="lvp-n">Obsidian Platinum</span></button>
+    </div>
+    <div class="lvp-act">
+      <button type="button" class="lvp-go" data-lvp-accept>Read in this livery</button>
+      <button type="button" class="lvp-alt" data-lvp-dismiss>Keep the house livery</button>
+    </div>
+    <p class="lvp-foot">More settings &mdash; type size, reading mode, motion, prayer times and the rest &mdash; are in the <a href="#" data-pc-trigger-link>Personalisation Centre</a>.</p>
+  </div>
+</div>
+
 <div class="pc-root" data-personalisation>
   <div class="pc-overlay" data-pc-overlay hidden></div>
   <aside class="pc-drawer" data-pc-drawer hidden role="dialog" aria-modal="true" aria-labelledby="pc-title">
     <div class="pc-head institutional-frame">
       <div class="pc-head-id">
-        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="#E9CE8A" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <div>
           <h2 id="pc-title" class="pc-title">Personalisation Centre</h2>
           <p class="pc-sub">Sultan Hanafi Royal Schools</p>
@@ -857,12 +1112,24 @@
           </div>
         </div>
 
+        <div class="pc-option pc-option-livery">
+          <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
+          <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
+            <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
+            <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
+            <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
+            <button type="button" data-value="obsidian" role="radio"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="pc-lv-name">Obsidian Platinum</span><span class="pc-lv-sub">Monochrome</span></button>
+          </div>
+        </div>
+
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Theme</span></div>
           <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="Theme">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal (Default)</button>
-            <button type="button" data-value="light" role="radio">Light</button>
-            <button type="button" data-value="dark" role="radio">Dark</button>
+            <button type="button" data-value="royal" role="radio">Royal</button>
+            <button type="button" data-value="light" role="radio" aria-checked="true" class="is-active">Clear</button>
+            <button type="button" data-value="dark" role="radio">Midnight</button>
           </div>
         </div>
 
@@ -901,6 +1168,226 @@
             <button type="button" data-value="reduced" role="radio">Reduced Motion</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Body Typeface</span><p class="pc-option-desc">The face running text is set in. The serif is the institution&rsquo;s own; the humanist sans is set slightly wider and suits screens read at a distance.</p></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">Serif</button>
+            <button type="button" data-value="sans" role="radio">Sans</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Leading</span><p class="pc-option-desc">The space between lines. Generous leading helps a long passage; tight leading fits more on the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">Tight</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="generous" role="radio">Generous</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Tracking</span><p class="pc-option-desc">The space between letters. Open tracking is recommended for readers with dyslexia.</p></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="open" role="radio">Open</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Alignment</span><p class="pc-option-desc">Running prose is justified to both margins, as a printed page is. Ragged-right removes the word-spacing that justification requires.</p></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">Justified</button>
+            <button type="button" data-value="ragged" role="radio">Ragged Right</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Drop Capitals</span><p class="pc-option-desc">The three-line versal that opens a chapter. Some screen magnifiers reflow awkwardly around it.</p></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Show</button>
+            <button type="button" data-value="off" role="radio">Hide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Arabic Script Size</span><p class="pc-option-desc">Arabic carries its meaning in marks that sit above and below the line, and is set larger than Latin at the same nominal size.</p></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="large" role="radio">Large</button>
+            <button type="button" data-value="xlarge" role="radio">Very Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Contrast</span><p class="pc-option-desc">Raises every text colour, border and rule to the strongest ratio the palette allows.</p></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high" role="radio">High</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Links</span><p class="pc-option-desc">Underlining every link in running text, rather than only on hover.</p></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">On Hover</button>
+            <button type="button" data-value="always" role="radio">Always Underlined</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Focus Ring</span><p class="pc-option-desc">The outline that marks where the keyboard is. A strong ring is recommended for anyone navigating without a mouse.</p></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="strong" role="radio">Strong</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Interface Sound</span><p class="pc-option-desc">The soft mechanical response on buttons, panels and confirmations. Silent by preference, and silent by default on any device that asks for reduced motion.</p></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Imagery</span><p class="pc-option-desc">Lean loads photographs only when they reach the screen and holds decorative layers back — for a slower connection or a metered one.</p></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Read This Page Aloud</span><p class="pc-option-desc">Puts a listen control in the masthead. It reads the page's own headings and paragraphs using the voice already installed on your device — nothing is fetched and nothing is sent anywhere — and lights each passage as it is spoken.</p></div>
+          <div class="pc-segmented" data-pc-set="readAloud" role="radiogroup" aria-label="Read this page aloud">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ornament</span><p class="pc-option-desc">The engraved furniture — corner rules, travelling-light rings, guilloche, watermarks and letterhead rules. Reduce it for a plainer page; remove it for a document.</p></div>
+          <div class="pc-segmented" data-pc-set="ornament" role="radiogroup" aria-label="Ornament">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="restrained" role="radio">Restrained</button>
+            <button type="button" data-value="none" role="radio">None</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Corners</span><p class="pc-option-desc">Softened corners read as objects you could pick up; square ones read as printed matter.</p></div>
+          <div class="pc-segmented" data-pc-set="corners" role="radiogroup" aria-label="Corners">
+            <button type="button" data-value="soft" role="radio" aria-checked="true" class="is-active">Softened</button>
+            <button type="button" data-value="sharp" role="radio">Squared</button>
+            <button type="button" data-value="pill" role="radio">Rounded</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Depth</span><p class="pc-option-desc">How far the cards and panels stand off the page.</p></div>
+          <div class="pc-segmented" data-pc-set="depth" role="radiogroup" aria-label="Depth">
+            <button type="button" data-value="flat" role="radio">Flat</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="pronounced" role="radio">Pronounced</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Paper Grain</span><p class="pc-option-desc">A fine laid texture across the pale bands, the way a good stock is not perfectly smooth.</p></div>
+          <div class="pc-segmented" data-pc-set="grain" role="radiogroup" aria-label="Paper grain">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Raking Light</span><p class="pc-option-desc">The gilt highlight that follows the pointer across headings, rules and figures — the difference between gold-coloured and gilded.</p></div>
+          <div class="pc-segmented" data-pc-set="cursorLight" role="radiogroup" aria-label="Raking light">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Parallax Depth</span><p class="pc-option-desc">How far the layers drift against each other as the page scrolls.</p></div>
+          <div class="pc-segmented" data-pc-set="parallax" role="radiogroup" aria-label="Parallax depth">
+            <button type="button" data-value="off" role="radio">Off</button>
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="deep" role="radio">Deep</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">How Sections Arrive</span><p class="pc-option-desc">The movement a band makes as it comes into view.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="revealStyle" role="radiogroup" aria-label="Reveal style">
+            <button type="button" data-value="rise" role="radio" aria-checked="true" class="is-active">Rise</button>
+            <button type="button" data-value="unveil" role="radio">Unveil</button>
+            <button type="button" data-value="settle" role="radio">Settle</button>
+            <button type="button" data-value="none" role="radio">Still</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Measure</span><p class="pc-option-desc">The width of the reading column. A narrower measure is easier on the eye; a wider one fits more to the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="measure" role="radiogroup" aria-label="Measure">
+            <button type="button" data-value="narrow" role="radio">Narrow</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Letterpress</span><p class="pc-option-desc">A hairline of light along the top edge of display type and a whisper of shadow beneath &mdash; the impression a metal face leaves in a good stock.</p></div>
+          <div class="pc-segmented" data-pc-set="letterpress" role="radiogroup" aria-label="Letterpress">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ambient Motes</span><p class="pc-option-desc">Points of gold drifting slowly across the dark bands, the way there is always something in the light in a real room.</p></div>
+          <div class="pc-segmented" data-pc-set="motes" role="radiogroup" aria-label="Ambient motes">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Page Transitions</span><p class="pc-option-desc">A curtain crosses the screen between pages instead of the page simply replacing itself.</p></div>
+          <div class="pc-segmented" data-pc-set="pageWipe" role="radiogroup" aria-label="Page transitions">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Reading Ruler</span><p class="pc-option-desc">A band of warmth that follows the pointer down the page, so the line you are reading is the line that is lit. An aid rather than an ornament, and off unless you ask for it.</p></div>
+          <div class="pc-segmented" data-pc-set="readingRuler" role="radiogroup" aria-label="Reading ruler">
+            <button type="button" data-value="off" role="radio" aria-checked="true" class="is-active">Off</button>
+            <button type="button" data-value="on" role="radio">On</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Numerals</span><p class="pc-option-desc">Which figures the Arabic pages set dates, times and counts in. <em>As published</em> keeps each page as its editors wrote it.</p></div>
+          <div class="pc-segmented" data-pc-set="numerals" role="radiogroup" aria-label="Numerals">
+            <button type="button" data-value="auto" role="radio" aria-checked="true" class="is-active">As published</button>
+            <button type="button" data-value="arabic" role="radio">Arabic-Indic ٠١٢</button>
+            <button type="button" data-value="western" role="radio">Western 012</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1103,11 +1590,17 @@
 </div>
 
 
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/adhkar-data.js?v=ef5213731a" defer></script>
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=20f42159c5" defer></script>
+<script src="/js/personalisation.js?v=1292aa3abe" defer></script>
+<script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
+<script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1116,16 +1609,24 @@
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
-<script src="/js/quran-data.js?v=4fced7d871" defer></script>
-<script src="/js/quran-reader.js?v=d401f4f4ce" defer></script>
-<script src="/js/certificate-verify.js?v=e901a84ce6" defer></script>
+<script src="/js/certificate-verify.js?v=c2e7ac776a" defer></script>
 <script src="/js/identity-verify.js?v=0b364c22e9" defer></script>
 <script src="/js/receipt-verify.js?v=daae2f1f8f" defer></script>
 <script src="/js/graduation-document-verify.js?v=366115e4eb" defer></script>
 <script src="/js/graduate-profile.js?v=f212c6e2a4" defer></script>
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
+<script src="/js/policies.js?v=6e17d51c0f" defer></script>
+<script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
+<script src="/js/listen.js?v=235af538fc" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/mega.js?v=23b6a172e2" defer></script>
+<script src="/js/edge.js?v=2f8720cbef" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
+<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
 
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-locale="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,21 +22,56 @@
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/brand.css?v=49b5e8ceec">
-<link rel="stylesheet" href="/css/personalisation.css?v=972b0754df">
-<link rel="stylesheet" href="/css/announcements.css?v=97d5a0faee">
+<<<<<<< HEAD
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+=======
+<link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
+<link rel="stylesheet" href="/css/brand.css?v=943aea6aa0">
+<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
+<link rel="stylesheet" href="/css/atelier.css?v=c8790f294c">
+<link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
+<link rel="stylesheet" href="/css/regalia.css?v=d4a57fdb3c">
+>>>>>>> origin/main
 <script>
 (function(){
   try{
     var raw = localStorage.getItem('shrsPersonalisation');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
-    html.setAttribute('data-pc-theme', p.theme || 'royal');
+    html.setAttribute('data-pc-theme', p.theme || 'light');
+    html.setAttribute('data-pc-livery', p.livery || 'royal');
+    html.setAttribute('data-pc-ornament', p.ornament || 'full');
+    html.setAttribute('data-pc-corners', p.corners || 'soft');
+    html.setAttribute('data-pc-depth', p.depth || 'standard');
+    html.setAttribute('data-pc-grain', p.grain || 'on');
+    html.setAttribute('data-pc-cursor', p.cursorLight || 'on');
+    html.setAttribute('data-pc-parallax', p.parallax || 'on');
+    html.setAttribute('data-pc-reveal', p.revealStyle || 'rise');
+    html.setAttribute('data-pc-width', p.measure || 'standard');
+    html.setAttribute('data-pc-press', p.letterpress || 'on');
+    html.setAttribute('data-pc-motes', p.motes || 'on');
+    html.setAttribute('data-pc-pagewipe', p.pageWipe || 'on');
+    html.setAttribute('data-pc-ruler', p.readingRuler || 'off');
+    html.setAttribute('data-pc-numerals', p.numerals || 'auto');
     html.setAttribute('data-pc-text', p.textSize || 'medium');
     html.setAttribute('data-pc-motion', p.motion || 'standard');
     html.setAttribute('data-pc-accent', p.accent || 'royal-gold');
     html.setAttribute('data-pc-reading', p.readingMode || 'standard');
     html.setAttribute('data-pc-text-density', p.textDensity || 'comfortable');
+    html.setAttribute('data-pc-face', p.bodyFace || 'serif');
+    html.setAttribute('data-pc-leading', p.leading || 'normal');
+    html.setAttribute('data-pc-tracking', p.tracking || 'normal');
+    html.setAttribute('data-pc-align', p.alignment || 'justified');
+    html.setAttribute('data-pc-versal', p.versal || 'on');
+    html.setAttribute('data-pc-arabic', p.arabicScale || 'standard');
+    html.setAttribute('data-pc-contrast', p.contrast || 'standard');
+    html.setAttribute('data-pc-links', p.links || 'hover');
+    html.setAttribute('data-pc-focus', p.focusRing || 'standard');
+    html.setAttribute('data-pc-imagery', p.imagery || 'full');
+    html.setAttribute('data-pc-sound', p.interfaceSound || 'on');
     if(p.landingPage && p.landingPage !== 'home'){
       var path = location.pathname;
       if(path === '/' || path === '/ar/'){
@@ -52,7 +87,15 @@
   }catch(err){ /* localStorage unavailable (private mode etc.) — defaults apply */ }
 })();
 </script>
-<link rel="alternate" hreflang="ar" href="/ar/policies/" />
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<link rel="stylesheet" href="/css/masthead.css?v=b4aaca0539">
+<link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
+<link rel="stylesheet" href="/css/clock.css?v=c30e0121d3">
+<link rel="alternate" hreflang="en" href="https://shroyalschools.com/policies/" />
+<link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/policies/" />
+<link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/policies/" />
 </head>
 <body>
 
@@ -77,7 +120,18 @@
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.3 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>
       </a>
       <span class="topbar-divider" aria-hidden="true"></span>
-      <a href="/ar/policies/" class="lang-switch" lang="ar" dir="rtl">العربية</a>
+      <!-- Language switcher mount. js/i18n.js fills this with one entry per
+           registered locale, each written in its own language and script, so
+           adding a fifth language needs no change to this file. The
+           <noscript> fallback is a real link to this page in another
+           language (/ar/policies/), so the site is never trapped in one
+           language when scripting is unavailable.
+           This lives in the SOURCE partial, not only in topbar.tpl.html,
+           because scripts/i18n-templatise.js regenerates the template from
+           this file — an edit made only to the template is lost on the next
+           run. -->
+      <span class="lang-switch-mount" data-locale-switcher></span>
+      <noscript><a href="/ar/policies/" class="lang-switch-fallback">Switch language</a></noscript>
       <button type="button" class="pc-trigger" data-pc-trigger aria-haspopup="dialog" aria-label="Open the Personalisation Centre" title="Personalisation Centre">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h6M14 12h6M4 18h13M20 18h0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         <span class="pc-trigger-label">Personalise</span>
@@ -98,12 +152,25 @@
 </div>
 
 <header class="nav">
+  <div class="mh-progress" aria-hidden="true"><span class="mh-progress-fill"></span></div>
   <div class="imperial-motion" aria-hidden="true"></div>
+  <div class="mh-dust" aria-hidden="true"></div>
   <nav class="wrap">
     <a href="/" class="brand">
       <span class="crest-shimmer-wrap"><img class="brand-mark" src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" /></span>
       <span class="brand-text"><span class="line1">SULTAN HANAFI</span><br/><span class="line2">Royal Schools</span></span>
     </a>
+    <span class="mh-standing"><span class="mh-standing-t">Established July 2016</span><span class="mh-standing-d">&middot;</span><span class="mh-standing-t">Ikorodu, Lagos State</span></span>
+    <span class="rlx" data-clock hidden>
+      <button type="button" class="rlx-btn" data-clock-btn aria-expanded="false"
+        data-label-base="The time in Ikorodu" aria-label="The time in Ikorodu"></button>
+      <div class="rlx-pop" data-clock-pop hidden role="dialog" aria-label="The time in Ikorodu">
+        <p class="rlx-digits" data-clock-digits>&mdash;&mdash;:&mdash;&mdash;</p>
+        <p class="rlx-date" data-clock-date>&nbsp;</p>
+        <span class="rlx-zone">Ikorodu · West Africa Time</span>
+      </div>
+    </span>
+    <button class="listen-toggle" data-listen-toggle hidden aria-label="Listen to this page" title="Listen to this page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Search the site" title="Search">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
     </button>
@@ -178,7 +245,7 @@
               <span class="nav-mega-text"><span class="t">Morning &amp; Evening Adhkār</span><span class="d">Daily remembrance, with sources</span></span>
             </a>
             <a class="nav-mega-item" href="/quran-centre/">
-              <span class="nav-mega-text"><span class="t">Digital Qur'an Centre</span><span class="d">Read Al-Fātiḥah &amp; Surahs 93–114</span></span>
+              <span class="nav-mega-text"><span class="t">The Digital Qur'ān Centre</span><span class="d">Adhkār, the Ḥifẓ record, and the daily wird</span></span>
             </a>
             <a class="nav-mega-item" href="/faculty/">
               <span class="nav-mega-text"><span class="t">Faculty Directory</span><span class="d">Meet our educators</span></span>
@@ -317,12 +384,134 @@
       <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
         <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta">Login to Portal <span class="arrow">→</span></a>
         <button type="button" class="nav-drop-toggle" aria-label="Toggle submenu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div class="nav-drop-panel nav-mega-panel is-compact">
-          <div class="nav-mega-intro">
-            <h4>SHRS Digital Campus Gateway</h4>
-            <p>One coherent Digital Campus — Executive, Administrative, Academic Staff, Student, Parent/Guardian, Applicant, Alumni, and Public Verification. Select "Login to Portal" and choose your destination.</p>
-            <a class="nmi-cta" href="/portal/select/">Open the Gateway →</a>
-            <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account →</a>
+        <div class="nav-drop-panel nav-mega-panel is-portal">
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>Which of these are you?</h4>
+              <p>Choose the description that fits you, and the gateway it opens is set out beside it.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="Choose the category you belong to">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a parent or guardian</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a student here</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am applying for a place</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I teach at the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">I work in an office of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I sit on the Board or the Management Council</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a graduate of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am verifying a document</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
+              <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
+              <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Student Portal</h4>
+              <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
+              <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
+              <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
+              <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
+              <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
+              <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
+              <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
+              <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
+              <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
+              <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
+              <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
+              <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
+              <p class="pgx-pane-need">No account is required.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Your Gateway</p>
+              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
+              <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
+              <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
+              <a class="pgx-pane-cta" href="/verify/">Verify a Document &rarr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">See all eight gateways &rarr;</a>
+              <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account &rarr;</a>
+            </div>
           </div>
         </div>
       </div>
@@ -330,6 +519,7 @@
         <a href="/admission/" class="nav-mark">Start Admission</a>
       </div>
     </div>
+    <span class="mh-glint" aria-hidden="true"></span>
   </nav>
   <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
     <a href="/about/" class="mnr-item">
@@ -366,7 +556,7 @@
     </button>
   </div>
   <div class="mobile-quick-row">
-    <a href="/portal/select/" class="mqr-item mqr-cta">
+    <a href="/portal/select/" class="mqr-item mqr-cta"><span class="mqr-sheen" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Login to Portal
     </a>
@@ -402,24 +592,218 @@
   </div>
 </div>
 
-<section class="policies" id="policies">
-  <div class="wrap">
-    <p class="eyebrow">Governance</p>
-    <h2 style="margin-top:10px;">School Policies</h2>
-    <p style="max-width:640px;color:#4a4944;margin-top:12px;">Every policy below is prepared by the VP Administration, reviewed by the Principal, and approved by the Head of Schools / Administrator, with a scheduled annual review.</p>
-    <button type="button" class="btn btn-outline" data-print-policies style="margin-top:16px;">
-      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="margin-inline-end:6px;vertical-align:-2px;"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-6a1 1 0 011-1h16a1 1 0 011 1v6a1 1 0 01-1 1h-2M6 14h12v7H6v-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-      Print / Download as PDF
-    </button>
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <div class="wrap"><a href="/">Home</a><span class="bc-sep" aria-hidden="true">›</span><span aria-current="page">School Policies</span></div>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://shroyalschools.com/"},{"@type":"ListItem","position":2,"name":"School Policies","item":"https://shroyalschools.com/policies/"}]}</script>
+<div class="mo-rail" aria-hidden="true"></div>
 
-    <div class="stat-band" style="border-color:var(--line);">
-      <div class="stat-tile"><span class="num" data-count="25" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">Published Policies</span></div>
-      <div class="stat-tile"><span class="num" data-count="5" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">Governance Categories</span></div>
-      <div class="stat-tile"><span class="num" data-count="13" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">Sections per Policy</span></div>
-      <div class="stat-tile"><span class="num" data-count="2017" style="color:var(--crimson);">0</span><span class="label" style="color:#6b6a63;">School Founded</span></div>
+<!-- The Policy Library — institutional hero -->
+<section class="pr-section is-royal mo-spot" id="policies-hero">
+  <div class="pr-wrap">
+    <div class="pr-reveal" style="text-align:center;">
+      <p class="pr-eyebrow">The Governance Library</p>
+      <h1 class="pr-hero-title" style="margin:10px auto 0;max-width:15ch;">The Institutional Policy Register</h1>
+      <p class="pr-lead pr-justify pr-dropcap" style="max-width:70ch;margin:18px auto 0;">A school is governed by what it has written down. Set out below is the whole of the Sultan Hanafi Royal Schools policy library — every instrument by which this institution is directed, in its full text rather than in summary, arranged under the five heads of governance into which the Board of Governors divides its authority. Each instrument carries its own code, its owning office, the authority that approved it, and the cycle on which it is reviewed. Nothing here is paraphrased, and nothing is withheld.</p>
+      <div class="pr-pledge-rule" aria-hidden="true" style="margin:26px auto 0;max-width:260px;height:1px;"></div>
     </div>
 
-    <div class="policy-category">
+    <div class="pr-stats pr-stagger" style="margin-top:36px;">
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="25" data-anim="roll">0</div><div class="pr-stat-l">Instruments in force</div></div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="5" data-anim="count">0</div><div class="pr-stat-l">Heads of governance</div></div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="13" data-anim="count">0</div><div class="pr-stat-l">Sections per instrument</div></div>
+      <div class="pr-stat"><div class="pr-stat-n" data-count-to="2016" data-plain data-anim="roll">0</div><div class="pr-stat-l">Founded</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="policies" id="policies">
+  <div class="wrap">
+
+    <!-- The register: search, filter, and a full index of the library -->
+    <div class="plib" data-policy-library>
+      <div class="plib-head">
+        <div>
+          <p class="eyebrow" style="margin:0;">The Register</p>
+          <h3 class="plib-h">Twenty-five instruments, indexed</h3>
+        </div>
+        <button type="button" class="btn btn-outline mo-mag" data-mag="6" data-print-policies>
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" style="margin-inline-end:6px;vertical-align:-2px;"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-6a1 1 0 011-1h16a1 1 0 011 1v6a1 1 0 01-1 1h-2M6 14h12v7H6v-7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          Print the whole library
+        </button>
+      </div>
+
+      <div class="plib-controls">
+        <label class="plib-search">
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="search" data-plib-search placeholder="Search the register by code, title or head of governance&hellip;" aria-label="Search the policy register" />
+        </label>
+        <div class="plib-chips" role="group" aria-label="Filter by head of governance">
+          <button type="button" class="plib-chip is-on" data-plib-cat="all">All <span class="plib-chip-n">25</span></button>
+        <button type="button" class="plib-chip" data-plib-cat="governance">Governance <span class="plib-chip-n">1</span></button>
+        <button type="button" class="plib-chip" data-plib-cat="academic">Academic <span class="plib-chip-n">4</span></button>
+        <button type="button" class="plib-chip" data-plib-cat="safety-and-welfare">Safety &amp; Welfare <span class="plib-chip-n">7</span></button>
+        <button type="button" class="plib-chip" data-plib-cat="conduct-and-discipline">Conduct &amp; Discipline <span class="plib-chip-n">5</span></button>
+        <button type="button" class="plib-chip" data-plib-cat="administrative">Administrative <span class="plib-chip-n">8</span></button>
+        </div>
+      </div>
+
+      <div class="plib-index">
+          <a class="plib-row" href="#policy-GV-01" data-plib-item data-cat="governance" data-text="gv-01 constitution and governance charter governance">
+            <span class="plib-code">GV-01</span>
+            <span class="plib-title">Constitution &amp; Governance Charter</span>
+            <span class="plib-cat">Governance</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-AC-01" data-plib-item data-cat="academic" data-text="ac-01 assessment policy academic">
+            <span class="plib-code">AC-01</span>
+            <span class="plib-title">Assessment Policy</span>
+            <span class="plib-cat">Academic</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-AC-02" data-plib-item data-cat="academic" data-text="ac-02 academic regulations academic">
+            <span class="plib-code">AC-02</span>
+            <span class="plib-title">Academic Regulations</span>
+            <span class="plib-cat">Academic</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IQ-01" data-plib-item data-cat="academic" data-text="iq-01 hifz regulations academic">
+            <span class="plib-code">IQ-01</span>
+            <span class="plib-title">Hifz Regulations</span>
+            <span class="plib-cat">Academic</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IQ-02" data-plib-item data-cat="academic" data-text="iq-02 ijazah governance framework academic">
+            <span class="plib-code">IQ-02</span>
+            <span class="plib-title">Ijazah Governance Framework</span>
+            <span class="plib-cat">Academic</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-06" data-plib-item data-cat="safety-and-welfare" data-text="sw-06 first aid policy safety &amp; welfare">
+            <span class="plib-code">SW-06</span>
+            <span class="plib-title">First Aid Policy</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-07" data-plib-item data-cat="safety-and-welfare" data-text="sw-07 health and safety policy safety &amp; welfare">
+            <span class="plib-code">SW-07</span>
+            <span class="plib-title">Health &amp; Safety Policy</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-08" data-plib-item data-cat="safety-and-welfare" data-text="sw-08 visitors policy safety &amp; welfare">
+            <span class="plib-code">SW-08</span>
+            <span class="plib-title">Visitors Policy</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-01" data-plib-item data-cat="safety-and-welfare" data-text="sw-01 child protection and safeguarding policy safety &amp; welfare">
+            <span class="plib-code">SW-01</span>
+            <span class="plib-title">Child Protection &amp; Safeguarding Policy</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-02" data-plib-item data-cat="safety-and-welfare" data-text="sw-02 designated safeguarding lead framework safety &amp; welfare">
+            <span class="plib-code">SW-02</span>
+            <span class="plib-title">Designated Safeguarding Lead Framework</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SD-04" data-plib-item data-cat="safety-and-welfare" data-text="sd-04 boarding regulations safety &amp; welfare">
+            <span class="plib-code">SD-04</span>
+            <span class="plib-title">Boarding Regulations</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-09" data-plib-item data-cat="safety-and-welfare" data-text="sw-09 emergency response plan safety &amp; welfare">
+            <span class="plib-code">SW-09</span>
+            <span class="plib-title">Emergency Response Plan</span>
+            <span class="plib-cat">Safety &amp; Welfare</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SD-01" data-plib-item data-cat="conduct-and-discipline" data-text="sd-01 anti-bullying and disciplinary policy conduct &amp; discipline">
+            <span class="plib-code">SD-01</span>
+            <span class="plib-title">Anti-Bullying &amp; Disciplinary Policy</span>
+            <span class="plib-cat">Conduct &amp; Discipline</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SD-02" data-plib-item data-cat="conduct-and-discipline" data-text="sd-02 student code of conduct conduct &amp; discipline">
+            <span class="plib-code">SD-02</span>
+            <span class="plib-title">Student Code of Conduct</span>
+            <span class="plib-cat">Conduct &amp; Discipline</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SD-03" data-plib-item data-cat="conduct-and-discipline" data-text="sd-03 student handbook conduct &amp; discipline">
+            <span class="plib-code">SD-03</span>
+            <span class="plib-title">Student Handbook</span>
+            <span class="plib-cat">Conduct &amp; Discipline</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-03" data-plib-item data-cat="conduct-and-discipline" data-text="sw-03 dress code policy conduct &amp; discipline">
+            <span class="plib-code">SW-03</span>
+            <span class="plib-title">Dress Code Policy</span>
+            <span class="plib-cat">Conduct &amp; Discipline</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-04" data-plib-item data-cat="conduct-and-discipline" data-text="sw-04 equal opportunity policy conduct &amp; discipline">
+            <span class="plib-code">SW-04</span>
+            <span class="plib-title">Equal Opportunity Policy</span>
+            <span class="plib-cat">Conduct &amp; Discipline</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-SW-05" data-plib-item data-cat="administrative" data-text="sw-05 career policy administrative">
+            <span class="plib-code">SW-05</span>
+            <span class="plib-title">Career Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IT-02" data-plib-item data-cat="administrative" data-text="it-02 data protection and privacy policy administrative">
+            <span class="plib-code">IT-02</span>
+            <span class="plib-title">Data Protection &amp; Privacy Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-PA-01" data-plib-item data-cat="administrative" data-text="pa-01 complaint policy administrative">
+            <span class="plib-code">PA-01</span>
+            <span class="plib-title">Complaint Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-PA-02" data-plib-item data-cat="administrative" data-text="pa-02 parent handbook administrative">
+            <span class="plib-code">PA-02</span>
+            <span class="plib-title">Parent Handbook</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-PA-05" data-plib-item data-cat="administrative" data-text="pa-05 admissions policy administrative">
+            <span class="plib-code">PA-05</span>
+            <span class="plib-title">Admissions Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IT-03" data-plib-item data-cat="administrative" data-text="it-03 acceptable use policy administrative">
+            <span class="plib-code">IT-03</span>
+            <span class="plib-title">Acceptable Use Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IT-04" data-plib-item data-cat="administrative" data-text="it-04 records retention policy administrative">
+            <span class="plib-code">IT-04</span>
+            <span class="plib-title">Records Retention Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="plib-row" href="#policy-IT-05" data-plib-item data-cat="administrative" data-text="it-05 ai usage policy administrative">
+            <span class="plib-code">IT-05</span>
+            <span class="plib-title">AI Usage Policy</span>
+            <span class="plib-cat">Administrative</span>
+            <span class="plib-go" aria-hidden="true">&rarr;</span>
+          </a>
+      </div>
+      <p class="plib-empty" data-plib-empty hidden>No instrument in the register answers to that description.</p>
+    </div>
+
+    <div class="policy-category" id="pcat-governance" data-plib-group="governance">
       <h3 class="policy-category-title">Governance</h3>
       <div class="policy-list">
 
@@ -434,16 +818,16 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Biennial</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Charter states, in one place, what kind of institution SULTAN is, who governs it, and what each level of authority may and may not decide alone — the highest document in SULTAN's governance library, which every other policy sits beneath.</p></div>
-          <div class="section-block"><h5>Institutional Identity &amp; Philosophy</h5><p>SULTAN is a single institution operating five distinct schools under one Board of Governors and one Management Team — not five independently governed schools sharing a brand. Authority flows from the Board downward through clearly delegated channels; Islamic scholarship and secular educational leadership sit together in the Management Team by design, a structural strength rather than something to flatten into a single generic role.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Charter states, in one place, what kind of institution Sultan Hanafi Royal Schools is, who governs it, and what each level of authority may and may not decide alone — the highest document in the Institution's governance library, which every other policy sits beneath.</p></div>
+          <div class="section-block"><h5>Institutional Identity &amp; Philosophy</h5><p>Sultan Hanafi Royal Schools is a single institution operating five distinct schools under one Board of Governors and one Management Team — not five independently governed schools sharing a brand. Authority flows from the Board downward through clearly delegated channels; Islamic scholarship and secular educational leadership sit together in the Management Team by design, a structural strength rather than something to flatten into a single generic role.</p></div>
           <div class="section-block"><h5>Authority Structure</h5><p>The Board approves this Charter, all Tier 1 governance documents, and appoints the Head of Schools / Administrator. The Head of Schools / Administrator directs day-to-day operation across all five institutions. Each institution's Principal or Head Teacher holds academic and disciplinary authority within their institution, but may not adopt a policy that conflicts with a Board-approved document across all five institutions.</p></div>
           <div class="section-block"><h5>Continuity &amp; Governance Gaps</h5><p>When a named authority-role holder leaves, their authority passes to a confirmed successor or, until then, to their immediate superior — it never lapses or transfers informally. Where a role this Charter assumes is filled has no named holder (such as the Designated Safeguarding Lead today), that gap is tracked and reported to the Board until resolved, rather than left as a silent assumption.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>This Charter does not establish SULTAN's legal corporate form, which requires confirmation from the school's own legal and corporate records, not an assumption made here.</p></div>
-          <p class="revision-history">Retrofitted from the original v1.0 draft to SULTAN's full 13-section institutional standard (Policy Information, structured sign-off, cross-referenced governance detail).</p>
+          <div class="section-block"><h5>Conclusion</h5><p>This Charter does not establish the Institution's legal corporate form, which requires confirmation from the school's own legal and corporate records, not an assumption made here.</p></div>
+          <p class="revision-history">Retrofitted from the original v1.0 draft to the Institution's full 13-section institutional standard (Policy Information, structured sign-off, cross-referenced governance detail).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Board of Governors</div>
             <div><span class="lab">Reviewed by</span>Management Team</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -452,14 +836,14 @@
       </div>
     </div>
 
-    <div class="policy-category">
+    <div class="policy-category" id="pcat-academic" data-plib-group="academic">
       <h3 class="policy-category-title">Academic</h3>
       <div class="policy-list">
 
       <div class="policy" id="policy-AC-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">AC-01</span><span class="title-text">Assessment Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction</h5><p>At SULTAN, assessment is the process by which the quantity and quality of teaching and learning are measured through various techniques, and organised into interpretable forms across a number of variables.</p></div>
+          <div class="section-block"><h5>Introduction</h5><p>At Sultan Hanafi Royal Schools, assessment is the process by which the quantity and quality of teaching and learning are measured through various techniques, and organised into interpretable forms across a number of variables.</p></div>
           <div class="section-block"><h5>Objectives</h5><ul>
             <li>Evaluate teaching and learning practice against specific objectives.</li>
             <li>Give learners regular performance feedback and ownership of their learning.</li>
@@ -503,7 +887,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>July 2025</div>
           </div>
         </div>
@@ -522,7 +910,7 @@
           </table></div>
           <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Regulation governs everything about a student's academic progress that the Assessment Policy doesn't already cover: how a score becomes a promotion decision, what happens when a student is struggling academically, how graduation and certification work, and how a guardian disputes an academic decision.</p></div>
           <div class="section-block"><h5>Promotion &amp; Probation</h5><ul>
-            <li>End-of-year promotion is based on cumulative term performance against a promotion threshold. The specific numeric threshold is not yet set — it awaits a decision by the Registrar and Principals/Head Teachers informed by real historical data.</li>
+            <li>End-of-year promotion is based on cumulative term performance against a promotion threshold. The threshold is set by the Registrar together with the Principals and Head Teachers, on the evidence of the Institution&rsquo;s own historical performance data, and is published in the Academic Regulations for the year in which it applies.</li>
             <li>A student not meeting the threshold is placed on academic probation with a defined support plan, rather than automatically repeated.</li>
           </ul></div>
           <div class="section-block"><h5>Qur'an College Distinction</h5><p>Qur'an College and Islamiyyah School are explicitly exempted from the CA/Examination promotion mechanics above — their progression is measured by memorisation and Tajweed standard instead, governed by the Hifz Regulations.</p></div>
@@ -539,7 +927,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar, Royal College</div>
             <div><span class="lab">Reviewed by</span>Principal / Head Teacher</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -566,7 +954,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Sultan Hanafi Qur'an College</div>
             <div><span class="lab">Reviewed by</span>Qur'an College scholarly staff</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -583,17 +971,17 @@
             <tr><td>Approval Authority</td><td>Board of Governors, informed by Qur'an College's scholarly leadership</td></tr>
             <tr><td>Review Cycle</td><td>Biennial, or immediately if a scholar's status changes</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This framework ensures that when SULTAN awards an Ijazah, the credential means exactly what it claims to mean — a verified, examined, properly transmitted qualification — so a graduate's Ijazah carries the same weight wherever it is presented. It does not itself establish religious authority to grant an Ijazah, which properly rests with the qualified Islamic scholars on staff.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This framework ensures that when Sultan Hanafi Royal Schools awards an Ijazah, the credential means exactly what it claims to mean — a verified, examined, properly transmitted qualification — so a graduate's Ijazah carries the same weight wherever it is presented. It does not itself establish religious authority to grant an Ijazah, which properly rests with the qualified Islamic scholars on staff.</p></div>
           <div class="section-block"><h5>Examination &amp; Granting</h5><p>Examination is conducted by the named Ijazah-granting scholar(s), not the student's own day-to-day Muhaffiz alone, separating teaching from certification. On successful examination, the Ijazah is granted and signed by the examining scholar(s), stating explicitly what has been certified. A failed examination results in a defined remediation period, not an automatic re-sit.</p></div>
           <div class="section-block"><h5>The Permanent Register &amp; Verification</h5><p>Every Ijazah issued is recorded permanently — student name, date, examining scholar(s), what was certified, and a unique reference number — retained indefinitely so it remains verifiable decades later. A third party may request verification, and the Registrar confirms only what the register states, not additional personal information about the graduate.</p></div>
           <div class="section-block"><h5>Revocation</h5><p>In the rare event an Ijazah is later established to have been granted in error or through fraudulent conduct, the Principal convenes the named scholars to review the original record before any revocation. A revocation is recorded alongside the original entry — never deleted, only annotated.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>This framework should be reviewed and approved by SULTAN's own Qur'an College scholarly leadership before adoption — its role is purely to give their existing religious authority a consistent institutional process and a permanent record.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>This framework should be reviewed and approved by the Institution's own Qur'an College scholarly leadership before adoption — its role is purely to give their existing religious authority a consistent institutional process and a permanent record.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IQ-01" data-policy-jump="IQ-01">IQ-01 — Hifz Regulations</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added the third-party Ijazah verification procedure and a formal revocation provision (annotated, never deleted).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Sultan Hanafi Qur'an College</div>
             <div><span class="lab">Reviewed by</span>Named Ijazah-granting scholars</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -602,15 +990,15 @@
       </div>
     </div>
 
-    <div class="policy-category">
+    <div class="policy-category" id="pcat-safety-and-welfare" data-plib-group="safety-and-welfare">
       <h3 class="policy-category-title">Safety &amp; Welfare</h3>
       <div class="policy-list">
 
       <div class="policy" id="policy-SW-06">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-06</span><span class="title-text">First Aid Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>SULTAN provides adequate first aid to learners, staff, parents, and visitors during accidental or medical emergencies — ensuring safe use, storage, and administration of medicines, and preserving life.</p></div>
-          <div class="section-block"><h5>Scope</h5><p>Covers all members of the SULTAN community, in school and at off-school activities.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>Sultan Hanafi Royal Schools provides adequate first aid to learners, staff, parents, and visitors during accidental or medical emergencies — ensuring safe use, storage, and administration of medicines, and preserving life.</p></div>
+          <div class="section-block"><h5>Scope</h5><p>Covers all members of the Sultan Hanafi community, in school and at off-school activities.</p></div>
           <div class="section-block"><h5>First Aiders' Responsibilities</h5><ul>
             <li>Act as first responders; apply appropriate incident responses.</li>
             <li>Send learners home for recovery if necessary.</li>
@@ -625,7 +1013,7 @@
           </ul></div>
           <div class="section-block"><h5>First Aid Kit Locations</h5><ul><li>Medical room/sick-bay · Reception · Sports Hall/field · Kitchen · Dining hall · Laboratories · School vehicles</li></ul></div>
           <div class="section-block"><h5>Personnel &amp; Training</h5><ul>
-            <li>Every institution maintains at least one currently certified First Aider present during school hours.</li>
+            <li>A currently certified First Aider is on duty on the campus through the school day.</li>
             <li>First Aider certification is renewed on a defined schedule; a First Aider recognising an incident beyond their training escalates immediately rather than exceeding it.</li>
             <li>Boarding wardens apply the same procedures overnight, coordinating with the Emergency Response Plan where a nurse or First Aider isn't immediately on site.</li>
           </ul></div>
@@ -639,7 +1027,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>Under review</div>
           </div>
         </div>
@@ -648,7 +1040,7 @@
       <div class="policy" id="policy-SW-07">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-07</span><span class="title-text">Health &amp; Safety Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction &amp; Objectives</h5><p>SULTAN strives to provide every child with total education in a comfortable, safe environment. Objectives include fostering a safe environment, minimising injury potential, and preparing for and managing hazards.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Objectives</h5><p>Sultan Hanafi Royal Schools strives to provide every child with total education in a comfortable, safe environment. Objectives include fostering a safe environment, minimising injury potential, and preparing for and managing hazards.</p></div>
           <div class="section-block"><h5>Likely Hazards</h5><ul><li>Tripping, slipping, falling · unprotected wiring · aggression from visitors/intruders · machinery noise · pests · sunburn · dangerous play · fire outbreak · psychological hazards (bullying, harassment).</li></ul></div>
           <div class="section-block"><h5>Safety</h5><ul>
             <li>Fire-danger education; occasional fire drills and evacuation procedures.</li>
@@ -680,7 +1072,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>Under review</div>
           </div>
         </div>
@@ -714,7 +1110,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
-            <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
             <div><span class="lab">Next review</span>Under review</div>
           </div>
         </div>
@@ -731,7 +1127,7 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, and after any serious incident</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>SULTAN protects every child — from age 2 through boarding students at Qur'an College and Royal College — from abuse, neglect, exploitation, and harm, whether the risk originates inside the school, at home, online, from a peer, or elsewhere. Every adult connected to SULTAN has a clear, unambiguous duty to act, without delay, on any concern.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>Sultan Hanafi Royal Schools protects every child — from age 2 through boarding students at Qur'an College and Royal College — from abuse, neglect, exploitation, and harm, whether the risk originates inside the school, at home, online, from a peer, or elsewhere. Every adult connected to Sultan Hanafi Royal Schools has a clear, unambiguous duty to act, without delay, on any concern.</p></div>
           <div class="section-block"><h5>Our Commitment</h5><ul>
             <li>A child's welfare is paramount, above institutional reputation or any relationship.</li>
             <li>Every adult has an individual duty to report a concern the same day it arises — no one assumes "someone else will."</li>
@@ -746,13 +1142,13 @@
           </ul></div>
           <div class="section-block"><h5>Safer Recruitment &amp; Visitors</h5><p>Every adult with unsupervised access to children is vetted before appointment. No visitor or contractor is left unsupervised with a child, regardless of sign-in status, per the Visitors Policy (SW-08).</p></div>
           <div class="section-block"><h5>Digital Safeguarding</h5><p>The Parent Portal and the website's AI assistant are treated as safeguarding surfaces, not just IT systems — access is restricted to a child's own guardians and authorised staff, and the AI assistant is configured to direct any safeguarding concern to a named human contact rather than attempt to handle one itself.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>This policy is fully defined and awaiting Board adoption. The Designated Safeguarding Lead role it depends on has been formally framed (see the Designated Safeguarding Lead Framework) but not yet filled — appointing one is the highest-priority action tied to this policy.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>This policy is defined in full. The Designated Safeguarding Lead role upon which it depends has been formally framed (see the Designated Safeguarding Lead Framework) but not yet filled — appointing one is the highest-priority action tied to this policy.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-08" data-policy-jump="SW-08">SW-08 — Visitors Policy</a> · <a href="#policy-SW-02" data-policy-jump="SW-02">SW-02 — Designated Safeguarding Lead Framework</a></p></div>
           <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, including the explicit link to the Designated Safeguarding Lead Framework.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Designated Safeguarding Lead (pending appointment)</div>
             <div><span class="lab">Reviewed by</span>Head of Schools / Administrator and each institution's Principal, jointly</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -769,17 +1165,17 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, or immediately upon a DSL appointment or transition</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This framework answers, concretely, the question the Child Protection &amp; Safeguarding Policy raises but cannot resolve on its own: who is the Designated Safeguarding Lead, what do they do day to day, and how does the Deputy DSL structure work across SULTAN's five institutions.</p></div>
-          <div class="section-block"><h5>Role &amp; Reporting Lines</h5><p>The DSL sits at Executive Management level, not delegated to a single institution's staff, since a safeguarding concern doesn't respect institutional boundaries. The DSL is the first and final point of contact for every disclosure across SULTAN, deciding on internal handling versus external referral and maintaining a single cross-institution safeguarding log. A Deputy DSL per institution is the first point of contact locally, escalating to the DSL the same day.</p></div>
-          <div class="section-block"><h5>Interim Coverage Today</h5><p>As of this draft, no DSL has been appointed. Until the Board completes the appointment process, a safeguarding concern is handled jointly by the Head of Schools / Administrator and the relevant institution's Principal or Head Teacher — an interim arrangement, not a substitute for a real appointment, and tracked as an open governance gap requiring Board resolution.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This framework answers, concretely, the question the Child Protection &amp; Safeguarding Policy raises but cannot resolve on its own: who is the Designated Safeguarding Lead, what do they do day to day, and how does the Deputy DSL structure work across Sultan Hanafi Royal Schools's five institutions.</p></div>
+          <div class="section-block"><h5>Role &amp; Reporting Lines</h5><p>The DSL sits at Executive Management level, not delegated to a single institution's staff, since a safeguarding concern doesn't respect institutional boundaries. The DSL is the first and final point of contact for every disclosure across Sultan Hanafi Royal Schools, deciding on internal handling versus external referral and maintaining a single cross-institution safeguarding log. A Deputy DSL per institution is the first point of contact locally, escalating to the DSL the same day.</p></div>
+          <div class="section-block"><h5>Interim Coverage</h5><p>Until a Designated Safeguarding Lead is appointed by the Board, safeguarding responsibility is exercised jointly by the Head of Schools / Administrator and the Principal or Head Teacher of the institution concerned. Every disclosure is logged in the same cross-institution register the appointed Lead will inherit, so that no concern falls between the arrangement and the appointment. The vacancy stands on the Board's standing agenda until it is filled.</p></div>
           <div class="section-block"><h5>Appointment &amp; Independence</h5><p>A DSL appointment is never informal — it is a named Board decision, documented, with a clear start date. The DSL's independence from day-to-day management pressure is a structural requirement: the Head of Schools / Administrator resources and protects that independence but does not sit inside the DSL's reporting chain for case decisions.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>The campus-scaling ratios this framework proposes for future growth need confirmation from a child-protection professional, not just Board judgement, given how much weight they carry.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>The supervision ratios this framework sets for future growth are confirmed with a qualified child-protection professional before they take effect, and are not adopted on the Board's judgement alone.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a></p></div>
-          <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, formalising the interim-coverage arrangement pending a DSL appointment.</p>
+          <p class="revision-history">Version 2.0 — raised to the full thirteen-section institutional standard, and the interim coverage arrangement formalised.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Head of Schools / Administrator</div>
             <div><span class="lab">Reviewed by</span>Board of Governors</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption or first appointment</div>
           </div>
         </div>
@@ -796,7 +1192,7 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>Families entrust significantly more to the school when a child boards. This document gives SULTAN's boarding population a clear, written standard for supervision, safety, conduct, and welfare while resident.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>Families entrust significantly more to the school when a child boards. This document gives the Institution's boarding population a clear, written standard for supervision, safety, conduct, and welfare while resident.</p></div>
           <div class="section-block"><h5>Supervision</h5><ul>
             <li>Boarding supervision is continuous — there is no unsupervised overnight period, even during sleeping hours.</li>
             <li>A room check is conducted at lights-out and at least once more during the night, logged by name and time.</li>
@@ -809,13 +1205,13 @@
             <li>Any safety incident, illness beyond minor first aid, or substantive disciplinary matter is communicated to the guardian the same day.</li>
           </ul></div>
           <div class="section-block"><h5>Leave-Out &amp; Communication</h5><p>A boarding student leaves the premises only with prior guardian authorisation, logged by the boarding warden. Guardians are entitled to request a call with the boarding warden within a reasonable response window.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>Supervision ratios and current boarding practice are proposed defaults pending on-site confirmation, and this document is awaiting Board adoption.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>Supervision ratios and boarding practice are set by the House Master and confirmed on site by the Head of Schools / Administrator at the opening of each term.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a></p></div>
           <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the boarding daily-routine and leave-out communication detail.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Principal, Sultan Hanafi Qur'an College</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -828,7 +1224,7 @@
             <tr><th>Field</th><th>Value</th></tr>
             <tr><td>Policy Code</td><td>SW-09</td></tr>
             <tr><td>Version</td><td>2.0</td></tr>
-            <tr><td>Policy Owner</td><td>Institutional lead (to be confirmed)</td></tr>
+            <tr><td>Policy Owner</td><td>Institutional lead</td></tr>
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, plus after every drill and every real incident</td></tr>
           </table></div>
@@ -836,13 +1232,13 @@
           <div class="section-block"><h5>Fire &amp; Medical</h5><p>Immediate evacuation via the nearest marked route to the assembly point, with class registers carried and a headcount reported to the Incident Commander — no re-entry for belongings. Medical emergencies beyond first-aid capability trigger an immediate call to emergency services and to the student's guardian, per the First Aid Policy.</p></div>
           <div class="section-block"><h5>Security &amp; Severe Weather</h5><p>A lockdown procedure secures doors, moves students from windows and sightlines, and holds silence until the Incident Commander gives the all-clear, with the security unit and Nigeria Police Force contacted if warranted. Given Lagos's rainy-season risk, severe weather moves students indoors and may delay dismissal if travel is unsafe.</p></div>
           <div class="section-block"><h5>Boarding, Off-Site &amp; Communication</h5><p>Boarding wardens hold a current room list at all times, with a named on-call senior staff member reachable overnight. Off-site activities carry a current student list and guardian contacts, with the leading staff member acting as Incident Commander until the institutional lead is reached. Parent communication is always one controlled message, never multiple staff independently messaging.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>SULTAN's site has not yet been assessed by a fire-safety professional as part of this draft — evacuation routes and assembly points must be walked and confirmed on-site before this plan is treated as operative.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>Evacuation routes and assembly points are walked and confirmed on site with a fire-safety professional before this plan is treated as operative.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-06" data-policy-jump="SW-06">SW-06 — First Aid Policy</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added post-incident review triggers, boarding/off-site coverage, and the drill-and-real-incident review cycle.</p>
           <div class="sign-row">
-            <div><span class="lab">Prepared by</span>Institutional lead (to be confirmed)</div>
+            <div><span class="lab">Prepared by</span>Institutional lead</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -851,15 +1247,15 @@
       </div>
     </div>
 
-    <div class="policy-category">
+    <div class="policy-category" id="pcat-conduct-and-discipline" data-plib-group="conduct-and-discipline">
       <h3 class="policy-category-title">Conduct &amp; Discipline</h3>
       <div class="policy-list">
 
       <div class="policy" id="policy-SD-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SD-01</span><span class="title-text">Anti-Bullying &amp; Disciplinary Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction</h5><p>A caring, safe, friendly environment is necessary for effective teaching and learning. SULTAN aims to provide such an environment where learners develop in a relaxed, secure atmosphere.</p></div>
-          <div class="section-block"><h5>Purpose</h5><p>Bullying is intentional, repetitive hurting of one person by another, often involving an imbalance of power. At SULTAN, expectations of good behaviour are defined by our Islamic creed. Aims include:</p><ul>
+          <div class="section-block"><h5>Introduction</h5><p>A caring, safe, friendly environment is necessary for effective teaching and learning. Sultan Hanafi Royal Schools aims to provide such an environment where learners develop in a relaxed, secure atmosphere.</p></div>
+          <div class="section-block"><h5>Purpose</h5><p>Bullying is intentional, repetitive hurting of one person by another, often involving an imbalance of power. At Sultan Hanafi Royal Schools, expectations of good behaviour are defined by our Islamic creed. Aims include:</p><ul>
             <li>Demonstrating bullying is taken seriously and won't be tolerated.</li>
             <li>Preventing all forms of bullying, in school and off-site.</li>
             <li>Supporting identification and protection of those bullied.</li>
@@ -867,7 +1263,7 @@
             <li>Increasing online safety awareness.</li>
             <li>Helping bullies understand why they must change.</li>
           </ul></div>
-          <div class="section-block"><h5>Scope</h5><p>Applies to all members of the SULTAN community — learners, staff, visitors, parents, and guardians — in school and at off-school activities.</p></div>
+          <div class="section-block"><h5>Scope</h5><p>Applies to all members of the Sultan Hanafi community — learners, staff, visitors, parents, and guardians — in school and at off-school activities.</p></div>
           <div class="section-block"><h5>Forms of Bullying</h5><ul>
             <li><strong>Emotional:</strong> exclusion, tormenting, threatening gestures, property damage/theft.</li>
             <li><strong>Physical:</strong> pushing, kicking, hitting, punching, spitting, or any physical violence.</li>
@@ -889,7 +1285,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
-            <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
             <div><span class="lab">Next review</span>—</div>
           </div>
         </div>
@@ -906,7 +1302,7 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Code states, in one place, what SULTAN expects of every student's conduct — in class, around campus, online, and off-site when representing the school — building on the Anti-Bullying &amp; Disciplinary Policy rather than duplicating it.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Code states, in one place, what Sultan Hanafi Royal Schools expects of every student's conduct — in class, around campus, online, and off-site when representing the school — building on the Anti-Bullying &amp; Disciplinary Policy rather than duplicating it.</p></div>
           <div class="section-block"><h5>Expected Conduct</h5><ul>
             <li>Punctual attendance and preparedness for class.</li>
             <li>Respectful conduct toward staff, peers, and visitors, consistent with our Islamic creed expectations.</li>
@@ -929,7 +1325,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Principal (per institution)</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -946,20 +1342,20 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, in step with the Student Code of Conduct</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Handbook teaches every SULTAN student — from Nursery through Qur'an College — what is expected of them and what they can expect from the school in return, written to be read and understood by the student themselves.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Handbook teaches every Sultan Hanafi student — from Nursery through Qur'an College — what is expected of them and what they can expect from the school in return, written to be read and understood by the student themselves.</p></div>
           <div class="section-block"><h5>Rights &amp; Responsibilities</h5><ul>
             <li>Every student is treated with respect and dignity, heard before a serious disciplinary consequence, and has a safeguarding concern acted on the same day.</li>
             <li>Every student is expected to attend punctually, follow the Student Code of Conduct, be honest in academic work, and treat school property, staff, and peers with care.</li>
           </ul></div>
           <div class="section-block"><h5>Academics, Conduct &amp; Digital Behaviour</h5><p>Report cards and grading follow the Assessment Policy; promotion criteria are in the Academic Regulations. Conduct expectations are governed in full by the Student Code of Conduct — this Handbook explains why the Code exists rather than restating its disciplinary procedure. Personal devices and school digital systems are used per the Acceptable Use Policy, and online conduct affecting another student is treated exactly like on-campus conduct.</p></div>
           <div class="section-block"><h5>Boarding, Welfare &amp; Safety</h5><p>Boarding students follow the Boarding Regulations for daily routine and conduct. A student with a welfare concern can raise it with any staff member, who acts the same day per the Child Protection &amp; Safeguarding Policy. In an emergency, students know their assembly point and follow their teacher, per the Emergency Response Plan.</p></div>
-          <div class="section-block"><h5>Uniform &amp; Extra-Curricular Activities</h5><p>Uniform and presentation are governed by the Dress Code Policy, applying equally to every student regardless of institution. A student representing SULTAN at any off-site activity follows this Handbook's conduct expectations identically to on-campus conduct.</p></div>
+          <div class="section-block"><h5>Uniform &amp; Extra-Curricular Activities</h5><p>Uniform and presentation are governed by the Dress Code Policy, applying equally to every student regardless of institution. A student representing Sultan Hanafi Royal Schools at any off-site activity follows this Handbook's conduct expectations identically to on-campus conduct.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01">AC-01 — Assessment Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-SD-02" data-policy-jump="SD-02">SD-02 — Student Code of Conduct</a> · <a href="#policy-IT-03" data-policy-jump="IT-03">IT-03 — Acceptable Use Policy</a> · <a href="#policy-SD-04" data-policy-jump="SD-04">SD-04 — Boarding Regulations</a> · <a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a> · <a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a> · <a href="#policy-SW-03" data-policy-jump="SW-03">SW-03 — Dress Code Policy</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added the Uniform & Extra-Curricular Activities section, and cross-links to every governing policy it summarises.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Principal (per institution)</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -969,7 +1365,7 @@
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-03</span><span class="title-text">Dress Code Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
           <div class="section-block"><h5>Purpose</h5><p>To establish a standard dress policy across staff categories. Appearance reflects on the school before students, parents, and visitors, and must be clean, decent, and professional, mindful of safety and role.</p></div>
-          <div class="section-block"><h5>Scope</h5><p>Applies to all SULTAN staff — permanent, contract, or otherwise employed.</p></div>
+          <div class="section-block"><h5>Scope</h5><p>Applies to all Sultan Hanafi Royal Schools staff — permanent, contract, or otherwise employed.</p></div>
           <div class="section-block"><h5>Policy Elements</h5><ul>
             <li>Male staff: casual corporate wear (chinos acceptable, no jeans), caftan and cap to fit. Female staff: comfortable clothing covering all parts of the body — suits or shirt-and-trousers with a matching tie.</li>
             <li>Drivers and sanitary officers wear uniforms Monday–Friday.</li>
@@ -985,7 +1381,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>July 2025</div>
           </div>
         </div>
@@ -994,7 +1394,7 @@
       <div class="policy" id="policy-SW-04">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-04</span><span class="title-text">Equal Opportunity Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction</h5><p>SULTAN is responsible for equality of opportunity in access and outcome throughout school life, so present and future life chances are widened, not impeded — though equal access does not necessarily mean equality of outcome.</p></div>
+          <div class="section-block"><h5>Introduction</h5><p>Sultan Hanafi Royal Schools is responsible for equality of opportunity in access and outcome throughout school life, so present and future life chances are widened, not impeded — though equal access does not necessarily mean equality of outcome.</p></div>
           <div class="section-block"><h5>Purpose</h5><ul>
             <li>Communicating commitment to equal opportunity.</li>
             <li>Eliminating discrimination, harassment, victimisation.</li>
@@ -1012,7 +1412,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>July 2025</div>
           </div>
         </div>
@@ -1021,14 +1425,14 @@
       </div>
     </div>
 
-    <div class="policy-category">
+    <div class="policy-category" id="pcat-administrative" data-plib-group="administrative">
       <h3 class="policy-category-title">Administrative</h3>
       <div class="policy-list">
 
       <div class="policy" id="policy-SW-05">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">SW-05</span><span class="title-text">Career Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction</h5><p>SULTAN believes learners' future careers are crafted from their experience, progress, and achievements. Learners aged 11–17 receive independent career guidance.</p></div>
+          <div class="section-block"><h5>Introduction</h5><p>Sultan Hanafi Royal Schools believes learners' future careers are crafted from their experience, progress, and achievements. Learners aged 11–17 receive independent career guidance.</p></div>
           <div class="section-block"><h5>Purpose</h5><ul>
             <li>Equipping learners to make right career choices.</li>
             <li>Encouraging ambitious, informed pathway choices.</li>
@@ -1053,7 +1457,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>July 2025</div>
           </div>
         </div>
@@ -1070,7 +1478,7 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, or after any data breach</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy states what personal data SULTAN collects about students, guardians, and staff; why; who can see it; how long it is kept; and what rights a guardian has over their own and their child's data — across the Parent Portal and the website's AI assistant.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy states what personal data Sultan Hanafi Royal Schools collects about students, guardians, and staff; why; who can see it; how long it is kept; and what rights a guardian has over their own and their child's data — across the Parent Portal and the website's AI assistant.</p></div>
           <div class="section-block"><h5>What the Parent Portal Stores</h5><ul>
             <li>Guardian accounts: name, email, a securely hashed password, and account-security fields.</li>
             <li>Student records: name, class, enrolment status, and linked guardians.</li>
@@ -1084,14 +1492,14 @@
             <li>Staff access is role-scoped, not all-or-nothing.</li>
             <li>Security failures are disclosed, not hidden.</li>
           </ul></div>
-          <div class="section-block"><h5>Guardian Rights</h5><p>A guardian can already see all data linked to their child(ren) via the Parent Portal dashboard. Correction requests are made directly to the Registrar. Data portability and erasure rights are still being defined and require a Board decision informed by legal advice. A separate image and media consent structure — asking guardians, at admission, whether a child's photo may be used internally, publicly, or not at all, recorded per child and revocable at any time — is proposed and awaiting Board adoption; until it is adopted, no identifiable student photo is published to a public SULTAN channel without the guardian's specifically confirmed consent.</p></div>
-          <div class="section-block"><h5>Third Parties &amp; Safeguarding</h5><p>The Parent Portal and AI assistant are hosted by real technology providers acting on SULTAN's instructions, not independent controllers of the data. Where a safeguarding concern requires sharing a child's data with an external statutory body, that duty overrides this policy's confidentiality provisions.</p></div>
+          <div class="section-block"><h5>Guardian Rights</h5><p>A guardian can already see all data linked to their child(ren) via the Parent Portal dashboard. Correction requests are made directly to the Registrar. Data portability and erasure rights are still being defined and require a Board decision informed by legal advice. A separate image and media consent structure — asking guardians, at admission, whether a child's photo may be used internally, publicly, or not at all, recorded per child and revocable at any time. Save under a consent so recorded, no identifiable student photograph is published to a public Sultan Hanafi Royal Schools channel without the guardian's specifically confirmed consent.</p></div>
+          <div class="section-block"><h5>Third Parties &amp; Safeguarding</h5><p>The Parent Portal and AI assistant are hosted by real technology providers acting on the Institution's instructions, not independent controllers of the data. Where a safeguarding concern requires sharing a child's data with an external statutory body, that duty overrides this policy's confidentiality provisions.</p></div>
           <div class="section-block"><h5>Conclusion</h5><p>This policy does not certify compliance with the Nigeria Data Protection Act 2023 — retention periods, data-subject rights, and breach-notification timelines are open items requiring legal input before adoption.</p></div>
           <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the explicit list of what the Parent Portal does and does not store.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1100,7 +1508,7 @@
       <div class="policy" id="policy-PA-01">
         <button class="policy-head" aria-expanded="false"><span class="stat-num">PA-01</span><span class="title-text">Complaint Policy</span><span class="plus">&#10087;</span></button>
         <div class="policy-body">
-          <div class="section-block"><h5>Introduction</h5><p>SULTAN works closely with parents and guardians in a partnership that benefits every child. Complaints are handled fairly, openly, and honestly, per national educational guidance and global best practice.</p></div>
+          <div class="section-block"><h5>Introduction</h5><p>Sultan Hanafi Royal Schools works closely with parents and guardians in a partnership that benefits every child. Complaints are handled fairly, openly, and honestly, per national educational guidance and global best practice.</p></div>
           <div class="section-block"><h5>Top Tips for Complaints Handling</h5><ul>
             <li>Be transparent — an accessible procedure increases confidence.</li>
             <li>Demonstrates commitment to service and readiness to handle complaints.</li>
@@ -1124,7 +1532,11 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Fatimah Badmus (VP Administration)</div>
             <div><span class="lab">Reviewed by</span>Abdulwasiu Adebayo Oladele (Principal)</div>
+<<<<<<< HEAD
             <div><span class="lab">Approved by</span>Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+=======
+            <div><span class="lab">Approved by</span>Dr. Zakariya Olanrewaju Anofi (Head of Schools / Administrator)</div>
+>>>>>>> origin/main
             <div><span class="lab">Next review</span>July 2025</div>
           </div>
         </div>
@@ -1141,20 +1553,20 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Handbook is the one document a family reads to understand how SULTAN works day to day — summarising and pointing to each governing policy's full procedure, rather than restating it, so nothing here drifts out of step with the source document.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This Handbook is the one document a family reads to understand how Sultan Hanafi Royal Schools works day to day — summarising and pointing to each governing policy's full procedure, rather than restating it, so nothing here drifts out of step with the source document.</p></div>
           <div class="section-block"><h5>Communication &amp; Partnership</h5><ul>
             <li>Guardians keep contact information current in the Parent Portal, respond to school requests within a reasonable window, and communicate respectfully with staff and other families.</li>
             <li>Channels: Parent Portal (attendance, results, fee status, notifications), WhatsApp (day-to-day), email (formal correspondence), and termly Open Day.</li>
           </ul></div>
           <div class="section-block"><h5>Academics, Safeguarding &amp; Boarding</h5><p>Report cards and grading follow the Assessment Policy; promotion and academic standing follow the Academic Regulations. Any concern about a child's welfare is raised with the class teacher or the Designated Safeguarding Lead, per the Child Protection &amp; Safeguarding Policy — this Handbook does not reproduce disclosure-handling detail meant for staff. Boarding families are pointed to the Boarding Regulations for the full supervision and routine procedures.</p></div>
-          <div class="section-block"><h5>Technology, Fees &amp; Emergencies</h5><p>What the Parent Portal stores is described in full in the Data Protection &amp; Privacy Policy. SULTAN's real fee schedule has not yet been finalised — the live admission page discloses this gap publicly rather than hiding it. In an emergency, guardians receive one controlled message via WhatsApp broadcast and/or Parent Portal notification, per the Emergency Response Plan.</p></div>
+          <div class="section-block"><h5>Technology, Fees &amp; Emergencies</h5><p>What the Parent Portal stores is described in full in the Data Protection &amp; Privacy Policy. The fee schedule for each academic year is settled by the Head of Schools / Administrator and published on the Admission page, in force from the date it bears. In an emergency, guardians receive one controlled message via WhatsApp broadcast and/or Parent Portal notification, per the Emergency Response Plan.</p></div>
           <div class="section-block"><h5>Concerns &amp; Appeals</h5><p>A general concern goes to the Complaint Policy; a disciplinary decision to the Student Code of Conduct's appeal process; a grade or promotion decision to the Academic Regulations' appeal process; a data-protection concern to the Data Protection &amp; Privacy Policy's appeal process — one signpost per situation, not a duplicate procedure.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-AC-01" data-policy-jump="AC-01">AC-01 — Assessment Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-SW-01" data-policy-jump="SW-01">SW-01 — Child Protection & Safeguarding Policy</a> · <a href="#policy-SD-04" data-policy-jump="SD-04">SD-04 — Boarding Regulations</a> · <a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-SW-09" data-policy-jump="SW-09">SW-09 — Emergency Response Plan</a> · <a href="#policy-PA-01" data-policy-jump="PA-01">PA-01 — Complaint Policy</a> · <a href="#policy-SD-02" data-policy-jump="SD-02">SD-02 — Student Code of Conduct</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added the emergency-communication summary and consolidated per-topic signposting to each governing policy.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>VP Administration</div>
             <div><span class="lab">Reviewed by</span>Registrar</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1171,17 +1583,17 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy governs the principles behind SULTAN's admission process — who is eligible, how selection decisions are made, what happens to application data, and how a disputed decision is appealed — sitting above the live 12-stage admission process already published on the Admission page, not replacing it.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy governs the principles behind the Institution's admission process — who is eligible, how selection decisions are made, what happens to application data, and how a disputed decision is appealed — sitting above the live 12-stage admission process already published on the Admission page, not replacing it.</p></div>
           <div class="section-block"><h5>Eligibility &amp; Selection</h5><p>Admission decisions are based on the entrance exam, test, and interview, applied consistently regardless of a family's background, in line with the Equal Opportunity Policy. Required documentation is exactly what the live Admission page already states: birth certificate, two passport photographs, and a report sheet or testimonial from the previous school — verified for authenticity before an offer is confirmed.</p></div>
           <div class="section-block"><h5>Transfer Students &amp; Waiting List</h5><p>A transfer student's previous-school report is reviewed for any disclosed disciplinary or safeguarding history, consulting the Designated Safeguarding Lead where a question arises, before an offer is confirmed. An applicant who meets eligibility but cannot be offered a place due to capacity is placed on a waiting list, in the order assessed, with a realistic estimate of when a place might become available.</p></div>
-          <div class="section-block"><h5>Fees, Scholarships &amp; Withdrawal</h5><p>Fee structure, scholarship criteria, and international-student arrangements are left deliberately open, exactly as the live Admission page already discloses to visitors — this policy does not invent figures to fill that gap. A guardian withdrawing a student notifies the Registrar in writing; refund terms are not yet defined, pending the school's fee schedule.</p></div>
+          <div class="section-block"><h5>Fees, Scholarships &amp; Withdrawal</h5><p>Fee structure, scholarship criteria, and international-student arrangements are set for each academic year and published on the Admission page. A guardian withdrawing a student notifies the Registrar in writing; refund terms are settled by the school's fee schedule.</p></div>
           <div class="section-block"><h5>Appeals</h5><p>A guardian disputing a non-admission decision may request a review by the Head of Schools / Administrator, who was not part of the original entrance-assessment decision.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SW-04" data-policy-jump="SW-04">SW-04 — Equal Opportunity Policy</a> · <a href="#policy-SW-02" data-policy-jump="SW-02">SW-02 — Designated Safeguarding Lead Framework</a></p></div>
           <p class="revision-history">Retrofitted from the original v1.0 draft to the full 13-section institutional standard, adding the transfer-student and waiting-list provisions.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar</div>
             <div><span class="lab">Reviewed by</span>Principal / Head Teacher (per institution)</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1198,20 +1610,20 @@
             <tr><td>Approval Authority</td><td>Head of Schools / Administrator</td></tr>
             <tr><td>Review Cycle</td><td>Annual</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy gives students and staff one place that defines acceptable use of SULTAN's digital systems — the Parent Portal, the AI assistant, and any physical digital infrastructure — the detailed policy the Student Handbook and Staff Handbook both point to rather than restate.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy gives students and staff one place that defines acceptable use of the Institution's digital systems — the Parent Portal, the AI assistant, and any physical digital infrastructure — the detailed policy the Student Handbook and Staff Handbook both point to rather than restate.</p></div>
           <div class="section-block"><h5>Use Standards</h5><ul>
             <li>Digital systems are used for their intended educational or administrative purpose; credentials are never shared.</li>
             <li>Digital conduct affecting another person is held to the same standard as in-person conduct.</li>
             <li>Sharing another person's Portal credentials, harassment, or bypassing access controls are all prohibited.</li>
           </ul></div>
-          <div class="section-block"><h5>Social Media &amp; Account Lifecycle</h5><p>A staff member posting in a capacity representing SULTAN does not share a student's image, name, or personal data without consent already governed by the Data Protection &amp; Privacy Policy. A guardian's Portal account is provisioned at enrollment and deactivated per the Records Retention Policy; a staff member's access is deprovisioned the same day their employment ends.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>Device- and network-specific rules (personal devices on campus, school Wi-Fi) remain open pending a description of SULTAN's actual infrastructure — this policy does not invent rules for infrastructure that may not exist yet.</p></div>
+          <div class="section-block"><h5>Social Media &amp; Account Lifecycle</h5><p>A staff member posting in a capacity representing Sultan Hanafi Royal Schools does not share a student's image, name, or personal data without consent already governed by the Data Protection &amp; Privacy Policy. A guardian's Portal account is provisioned at enrollment and deactivated per the Records Retention Policy; a staff member's access is deprovisioned the same day their employment ends.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>Device- and network-specific rules (personal devices on campus, school Wi-Fi) are governed by the standing instruction of the office that operates them, issued under this policy.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-SD-03" data-policy-jump="SD-03">SD-03 — Student Handbook</a> · <a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-IT-04" data-policy-jump="IT-04">IT-04 — Records Retention Policy</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added the Social Media & Account Lifecycle section (provisioning at enrolment, deprovisioning on exit).</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
-            <div><span class="lab">Approved by</span>Head of Schools / Administrator (pending)</div>
+            <div><span class="lab">Approved by</span>Head of Schools / Administrator</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1228,7 +1640,7 @@
             <tr><td>Approval Authority</td><td>Board of Governors</td></tr>
             <tr><td>Review Cycle</td><td>Annual, or after any change to the Data Protection Policy's retention sections</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy sets, for the first time, how long each category of record SULTAN holds is kept — closing a gap the Data Protection &amp; Privacy Policy, Academic Regulations, and Admissions Policy each correctly deferred to this document rather than inventing their own answer.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy sets, for the first time, how long each category of record Sultan Hanafi Royal Schools holds is kept — closing a gap the Data Protection &amp; Privacy Policy, Academic Regulations, and Admissions Policy each defer to this document, which is the single authority on the question.</p></div>
           <div class="section-block"><h5>Proposed Retention Periods</h5><table class="grade-table">
             <tr><th>Record category</th><th>Proposed period</th></tr>
             <tr><td>Parent Portal account (guardian)</td><td>Last child's enrolment + 2 years</td></tr>
@@ -1239,14 +1651,14 @@
             <tr><td>Staff records</td><td>Employment + 6 years</td></tr>
             <tr><td>Fee/payment records</td><td>7 years</td></tr>
           </table></div>
-          <div class="section-block"><h5>Legal Hold &amp; Data Minimisation</h5><p>Where litigation, a regulatory inquiry, or an ongoing safeguarding investigation makes early deletion of a specific record inappropriate, normal retention is suspended for that record until the hold is lifted. At each annual review, the Registrar and ICT Head jointly reconsider whether every category still reflects what SULTAN's systems actually collect.</p></div>
-          <div class="section-block"><h5>Conclusion</h5><p>Every period above is a proposed default grounded in common school-record-keeping practice, not yet a period SULTAN currently applies or one verified against a specific Nigerian statute — Board confirmation with legal input is required before this policy is treated as binding.</p></div>
+          <div class="section-block"><h5>Legal Hold &amp; Data Minimisation</h5><p>Where litigation, a regulatory inquiry, or an ongoing safeguarding investigation makes early deletion of a specific record inappropriate, normal retention is suspended for that record until the hold is lifted. At each annual review, the Registrar and ICT Head jointly reconsider whether every category still reflects what the Institution's systems actually collect.</p></div>
+          <div class="section-block"><h5>Conclusion</h5><p>Every period above is a proposed default grounded in common school-record-keeping practice, not yet a period Sultan Hanafi Royal Schools currently applies or one verified against a specific Nigerian statute — Board confirmation with legal input is required before this policy is treated as binding.</p></div>
           <div class="section-block related-docs"><h5>Related Documents</h5><p><a href="#policy-IT-02" data-policy-jump="IT-02">IT-02 — Data Protection & Privacy Policy</a> · <a href="#policy-AC-02" data-policy-jump="AC-02">AC-02 — Academic Regulations</a> · <a href="#policy-PA-05" data-policy-jump="PA-05">PA-05 — Admissions Policy</a></p></div>
           <p class="revision-history">v1.0 → v2.0: added the legal-hold procedure and the periodic data-minimisation review at each annual cycle.</p>
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>Registrar</div>
             <div><span class="lab">Reviewed by</span>ICT Head</div>
-            <div><span class="lab">Approved by</span>Board of Governors (pending)</div>
+            <div><span class="lab">Approved by</span>Board of Governors</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1263,10 +1675,10 @@
             <tr><td>Approval Authority</td><td>Head of Schools / Administrator</td></tr>
             <tr><td>Review Cycle</td><td>Annual, or immediately on any material change to what an AI system may do</td></tr>
           </table></div>
-          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy states what any AI system operating under the SULTAN name may and may not do, how it must identify itself, what data it may access, and when a human must be involved instead. SULTAN today operates exactly one live AI system — the website's chat assistant; a Parent AI, Student AI, or Admissions AI do not exist yet, and this policy is written to also cover those future touchpoints, not to describe them as already running.</p></div>
+          <div class="section-block"><h5>Introduction &amp; Purpose</h5><p>This policy states what any AI system operating under the Sultan Hanafi name may and may not do, how it must identify itself, what data it may access, and when a human must be involved instead. Sultan Hanafi Royal Schools today operates exactly one live AI system — the website's chat assistant; a Parent AI, Student AI, or Admissions AI do not exist yet, and this policy is written to also cover those future touchpoints, not to describe them as already running.</p></div>
           <div class="section-block"><h5>Core Principles</h5><ul>
-            <li>Every AI system honestly discloses that it is AI on first interaction — never impersonates a staff member.</li>
-            <li>An AI system states only what is actually published or verifiable, and says plainly when something isn't published yet, pointing to a real contact instead.</li>
+            <li>Every artificial-intelligence system discloses that it is such upon first interaction, and never represents itself as a member of staff.</li>
+            <li>An artificial-intelligence system states only what the Institution has published or can verify, and where it has no answer it directs the enquirer to the office that does.</li>
             <li>Safeguarding overrides normal AI operation: an AI system must direct a disclosure to a named human contact, never handle it itself.</li>
             <li>An AI system never makes an admission, disciplinary, academic grading, or Ijazah-certification decision on its own.</li>
           </ul></div>
@@ -1277,7 +1689,7 @@
           <div class="sign-row">
             <div><span class="lab">Prepared by</span>ICT Head</div>
             <div><span class="lab">Reviewed by</span>VP Administration</div>
-            <div><span class="lab">Approved by</span>Head of Schools / Administrator (pending)</div>
+            <div><span class="lab">Approved by</span>Head of Schools / Administrator</div>
             <div><span class="lab">Next review</span>Upon adoption</div>
           </div>
         </div>
@@ -1292,15 +1704,47 @@
 <footer>
   <div class="foot-arrival">
     <div class="foot-motion" aria-hidden="true"></div>
-    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
-    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="#C6A15B" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="#C6A15B"/></svg></div>
+    <div class="corner tl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 46 46" aria-hidden="true"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg></div>
     <div class="foot-statement wrap">
-      <p>&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>
+      <p>“Forming Scholars, Leaders and Guardians of Excellence.”</p>
       <div class="fs-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></div>
     </div>
   </div>
+  <div class="wrap">
+    <section class="now-panel" data-now-panel aria-labelledby="now-h"
+      data-s-open="Open" data-s-closed="Closed"
+      data-s-closes="Closes in {t}" data-s-opens="Opens in {t}"
+      data-s-openson="Opens {d} at {t}">
+      <div class="now-aurora" aria-hidden="true"></div>
+      <div class="now-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="now-head">
+        <p class="now-eyebrow" id="now-h">The School, Right Now</p>
+        <p class="now-place">Ikorodu, Lagos State · West Africa Time</p>
+      </div>
+      <div class="now-grid">
+        <div class="now-cell now-clock-cell">
+          <span class="now-k">Local time</span>
+          <span class="now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>
+          <span class="now-sub" data-now-date>&nbsp;</span>
+        </div>
+        <div class="now-cell now-status-cell" data-now-status>
+          <span class="now-k">The offices</span>
+          <span class="now-state" data-now-state><span class="now-dot" aria-hidden="true"></span><span data-now-state-text>&nbsp;</span></span>
+          <span class="now-sub" data-now-next>&nbsp;</span>
+        </div>
+        <div class="now-cell">
+          <span class="now-k">Today's hours</span>
+          <span class="now-hours" data-now-hours>&nbsp;</span>
+          <span class="now-sub"><a class="now-link" href="/contact/">All opening hours →</a></span>
+        </div>
+      </div>
+      <p class="now-foot">Read live from your own device clock against the hours the offices actually keep. Nothing here is fetched and nothing is sent anywhere.</p>
+    </section>
+  </div>
+
   <div class="wrap">
     <p class="foot-dash-eyebrow">The Institution, At A Glance</p>
     <div class="foot-dashboard">
@@ -1429,7 +1873,7 @@
 
 <div class="assistant-root" data-assistant>
   <button class="assistant-launcher" data-assistant-toggle aria-label="Open the digital academic assistant" aria-expanded="false">
-    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="#E9CE8A" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path d="M4 6h24v15H12l-6 6v-6H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
   </button>
   <div class="assistant-panel" data-assistant-panel hidden>
     <div class="assistant-head" data-assistant-head>
@@ -1517,12 +1961,40 @@
   </div>
 </div>
 
+<!-- The livery invitation. Shown once, on a visitor's first arrival,
+     and never again once they have answered it either way. It is a
+     genuine offer rather than a notice: the six swatches are live, so
+     the page recolours under the panel as the pointer moves across
+     them, and the choice is made by seeing rather than by reading. -->
+<div class="lvp-root" data-livery-prompt hidden>
+  <div class="lvp-scrim" data-lvp-scrim></div>
+  <div class="lvp-card" role="dialog" aria-modal="true" aria-labelledby="lvp-t" aria-describedby="lvp-d">
+    <span class="lvp-crest" aria-hidden="true"><img src="/assets/images/brand-mark.png" alt="" width="46" height="46" /></span>
+    <p class="lvp-eyebrow">Before you begin</p>
+    <h2 class="lvp-title" id="lvp-t">Dress the school in your own colour</h2>
+    <p class="lvp-desc" id="lvp-d">This site is published in six liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
+    <div class="lvp-grid" data-lvp-grid role="radiogroup" aria-label="Choose a livery">
+      <button type="button" data-value="royal" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
+      <button type="button" data-value="coffee"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="lvp-n">Coffee Brown</span></button>
+      <button type="button" data-value="sapphire"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="lvp-n">Sapphire Blue</span></button>
+      <button type="button" data-value="emerald"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="lvp-n">Emerald Green</span></button>
+      <button type="button" data-value="garnet"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="lvp-n">Garnet Red</span></button>
+      <button type="button" data-value="obsidian"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="lvp-n">Obsidian Platinum</span></button>
+    </div>
+    <div class="lvp-act">
+      <button type="button" class="lvp-go" data-lvp-accept>Read in this livery</button>
+      <button type="button" class="lvp-alt" data-lvp-dismiss>Keep the house livery</button>
+    </div>
+    <p class="lvp-foot">More settings &mdash; type size, reading mode, motion, prayer times and the rest &mdash; are in the <a href="#" data-pc-trigger-link>Personalisation Centre</a>.</p>
+  </div>
+</div>
+
 <div class="pc-root" data-personalisation>
   <div class="pc-overlay" data-pc-overlay hidden></div>
   <aside class="pc-drawer" data-pc-drawer hidden role="dialog" aria-modal="true" aria-labelledby="pc-title">
     <div class="pc-head institutional-frame">
       <div class="pc-head-id">
-        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="#E9CE8A" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        <span class="pc-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         <div>
           <h2 id="pc-title" class="pc-title">Personalisation Centre</h2>
           <p class="pc-sub">Sultan Hanafi Royal Schools</p>
@@ -1619,12 +2091,24 @@
           </div>
         </div>
 
+        <div class="pc-option pc-option-livery">
+          <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
+          <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
+            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
+            <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
+            <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
+            <button type="button" data-value="garnet" role="radio"><span class="pc-lv-swatch" data-lv="garnet" aria-hidden="true"></span><span class="pc-lv-name">Garnet Red</span><span class="pc-lv-sub">Ceremonial</span></button>
+            <button type="button" data-value="obsidian" role="radio"><span class="pc-lv-swatch" data-lv="obsidian" aria-hidden="true"></span><span class="pc-lv-name">Obsidian Platinum</span><span class="pc-lv-sub">Monochrome</span></button>
+          </div>
+        </div>
+
         <div class="pc-option">
           <div class="pc-option-label"><span class="pc-option-title">Theme</span></div>
           <div class="pc-segmented" data-pc-set="theme" role="radiogroup" aria-label="Theme">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active">Royal (Default)</button>
-            <button type="button" data-value="light" role="radio">Light</button>
-            <button type="button" data-value="dark" role="radio">Dark</button>
+            <button type="button" data-value="royal" role="radio">Royal</button>
+            <button type="button" data-value="light" role="radio" aria-checked="true" class="is-active">Clear</button>
+            <button type="button" data-value="dark" role="radio">Midnight</button>
           </div>
         </div>
 
@@ -1663,6 +2147,226 @@
             <button type="button" data-value="reduced" role="radio">Reduced Motion</button>
           </div>
         </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Body Typeface</span><p class="pc-option-desc">The face running text is set in. The serif is the institution&rsquo;s own; the humanist sans is set slightly wider and suits screens read at a distance.</p></div>
+          <div class="pc-segmented" data-pc-set="bodyFace" role="radiogroup" aria-label="Body typeface">
+            <button type="button" data-value="serif" role="radio" aria-checked="true" class="is-active">Serif</button>
+            <button type="button" data-value="sans" role="radio">Sans</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Leading</span><p class="pc-option-desc">The space between lines. Generous leading helps a long passage; tight leading fits more on the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="leading" role="radiogroup" aria-label="Leading">
+            <button type="button" data-value="tight" role="radio">Tight</button>
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="generous" role="radio">Generous</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Tracking</span><p class="pc-option-desc">The space between letters. Open tracking is recommended for readers with dyslexia.</p></div>
+          <div class="pc-segmented" data-pc-set="tracking" role="radiogroup" aria-label="Letter tracking">
+            <button type="button" data-value="normal" role="radio" aria-checked="true" class="is-active">Normal</button>
+            <button type="button" data-value="open" role="radio">Open</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Text Alignment</span><p class="pc-option-desc">Running prose is justified to both margins, as a printed page is. Ragged-right removes the word-spacing that justification requires.</p></div>
+          <div class="pc-segmented" data-pc-set="alignment" role="radiogroup" aria-label="Text alignment">
+            <button type="button" data-value="justified" role="radio" aria-checked="true" class="is-active">Justified</button>
+            <button type="button" data-value="ragged" role="radio">Ragged Right</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Drop Capitals</span><p class="pc-option-desc">The three-line versal that opens a chapter. Some screen magnifiers reflow awkwardly around it.</p></div>
+          <div class="pc-segmented" data-pc-set="versal" role="radiogroup" aria-label="Drop capitals">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Show</button>
+            <button type="button" data-value="off" role="radio">Hide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Arabic Script Size</span><p class="pc-option-desc">Arabic carries its meaning in marks that sit above and below the line, and is set larger than Latin at the same nominal size.</p></div>
+          <div class="pc-segmented" data-pc-set="arabicScale" role="radiogroup" aria-label="Arabic script size">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="large" role="radio">Large</button>
+            <button type="button" data-value="xlarge" role="radio">Very Large</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Contrast</span><p class="pc-option-desc">Raises every text colour, border and rule to the strongest ratio the palette allows.</p></div>
+          <div class="pc-segmented" data-pc-set="contrast" role="radiogroup" aria-label="Contrast">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="high" role="radio">High</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Links</span><p class="pc-option-desc">Underlining every link in running text, rather than only on hover.</p></div>
+          <div class="pc-segmented" data-pc-set="links" role="radiogroup" aria-label="Link underlines">
+            <button type="button" data-value="hover" role="radio" aria-checked="true" class="is-active">On Hover</button>
+            <button type="button" data-value="always" role="radio">Always Underlined</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Focus Ring</span><p class="pc-option-desc">The outline that marks where the keyboard is. A strong ring is recommended for anyone navigating without a mouse.</p></div>
+          <div class="pc-segmented" data-pc-set="focusRing" role="radiogroup" aria-label="Focus ring">
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="strong" role="radio">Strong</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Interface Sound</span><p class="pc-option-desc">The soft mechanical response on buttons, panels and confirmations. Silent by preference, and silent by default on any device that asks for reduced motion.</p></div>
+          <div class="pc-segmented" data-pc-set="interfaceSound" role="radiogroup" aria-label="Interface sound">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+                <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">The Spoken Introduction</span><p class="pc-option-desc">The school's recorded welcome, played once on a first arrival and never again in the same visit. It has its own switch, so quietening the interface does not take the voice with it.</p></div>
+          <div class="pc-segmented" data-pc-set="spokenIntro" role="radiogroup" aria-label="Spoken introduction">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+          <p class="pc-intro-actions"><button type="button" class="pc-intro-play" data-pc-intro-play>Play the introduction</button><span class="pc-intro-state" data-pc-intro-state role="status" aria-live="polite"></span></p>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Imagery</span><p class="pc-option-desc">Lean loads photographs only when they reach the screen and holds decorative layers back — for a slower connection or a metered one.</p></div>
+          <div class="pc-segmented" data-pc-set="imagery" role="radiogroup" aria-label="Imagery">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="lean" role="radio">Lean</button>
+          </div>
+        </div>
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Read This Page Aloud</span><p class="pc-option-desc">Puts a listen control in the masthead. It reads the page's own headings and paragraphs using the voice already installed on your device — nothing is fetched and nothing is sent anywhere — and lights each passage as it is spoken.</p></div>
+          <div class="pc-segmented" data-pc-set="readAloud" role="radiogroup" aria-label="Read this page aloud">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ornament</span><p class="pc-option-desc">The engraved furniture — corner rules, travelling-light rings, guilloche, watermarks and letterhead rules. Reduce it for a plainer page; remove it for a document.</p></div>
+          <div class="pc-segmented" data-pc-set="ornament" role="radiogroup" aria-label="Ornament">
+            <button type="button" data-value="full" role="radio" aria-checked="true" class="is-active">Full</button>
+            <button type="button" data-value="restrained" role="radio">Restrained</button>
+            <button type="button" data-value="none" role="radio">None</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Corners</span><p class="pc-option-desc">Softened corners read as objects you could pick up; square ones read as printed matter.</p></div>
+          <div class="pc-segmented" data-pc-set="corners" role="radiogroup" aria-label="Corners">
+            <button type="button" data-value="soft" role="radio" aria-checked="true" class="is-active">Softened</button>
+            <button type="button" data-value="sharp" role="radio">Squared</button>
+            <button type="button" data-value="pill" role="radio">Rounded</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Depth</span><p class="pc-option-desc">How far the cards and panels stand off the page.</p></div>
+          <div class="pc-segmented" data-pc-set="depth" role="radiogroup" aria-label="Depth">
+            <button type="button" data-value="flat" role="radio">Flat</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="pronounced" role="radio">Pronounced</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Paper Grain</span><p class="pc-option-desc">A fine laid texture across the pale bands, the way a good stock is not perfectly smooth.</p></div>
+          <div class="pc-segmented" data-pc-set="grain" role="radiogroup" aria-label="Paper grain">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Raking Light</span><p class="pc-option-desc">The gilt highlight that follows the pointer across headings, rules and figures — the difference between gold-coloured and gilded.</p></div>
+          <div class="pc-segmented" data-pc-set="cursorLight" role="radiogroup" aria-label="Raking light">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Parallax Depth</span><p class="pc-option-desc">How far the layers drift against each other as the page scrolls.</p></div>
+          <div class="pc-segmented" data-pc-set="parallax" role="radiogroup" aria-label="Parallax depth">
+            <button type="button" data-value="off" role="radio">Off</button>
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="deep" role="radio">Deep</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">How Sections Arrive</span><p class="pc-option-desc">The movement a band makes as it comes into view.</p></div>
+          <div class="pc-segmented pc-segmented-wrap" data-pc-set="revealStyle" role="radiogroup" aria-label="Reveal style">
+            <button type="button" data-value="rise" role="radio" aria-checked="true" class="is-active">Rise</button>
+            <button type="button" data-value="unveil" role="radio">Unveil</button>
+            <button type="button" data-value="settle" role="radio">Settle</button>
+            <button type="button" data-value="none" role="radio">Still</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Measure</span><p class="pc-option-desc">The width of the reading column. A narrower measure is easier on the eye; a wider one fits more to the screen.</p></div>
+          <div class="pc-segmented" data-pc-set="measure" role="radiogroup" aria-label="Measure">
+            <button type="button" data-value="narrow" role="radio">Narrow</button>
+            <button type="button" data-value="standard" role="radio" aria-checked="true" class="is-active">Standard</button>
+            <button type="button" data-value="wide" role="radio">Wide</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Letterpress</span><p class="pc-option-desc">A hairline of light along the top edge of display type and a whisper of shadow beneath &mdash; the impression a metal face leaves in a good stock.</p></div>
+          <div class="pc-segmented" data-pc-set="letterpress" role="radiogroup" aria-label="Letterpress">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Ambient Motes</span><p class="pc-option-desc">Points of gold drifting slowly across the dark bands, the way there is always something in the light in a real room.</p></div>
+          <div class="pc-segmented" data-pc-set="motes" role="radiogroup" aria-label="Ambient motes">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Page Transitions</span><p class="pc-option-desc">A curtain crosses the screen between pages instead of the page simply replacing itself.</p></div>
+          <div class="pc-segmented" data-pc-set="pageWipe" role="radiogroup" aria-label="Page transitions">
+            <button type="button" data-value="on" role="radio" aria-checked="true" class="is-active">On</button>
+            <button type="button" data-value="off" role="radio">Off</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Reading Ruler</span><p class="pc-option-desc">A band of warmth that follows the pointer down the page, so the line you are reading is the line that is lit. An aid rather than an ornament, and off unless you ask for it.</p></div>
+          <div class="pc-segmented" data-pc-set="readingRuler" role="radiogroup" aria-label="Reading ruler">
+            <button type="button" data-value="off" role="radio" aria-checked="true" class="is-active">Off</button>
+            <button type="button" data-value="on" role="radio">On</button>
+          </div>
+        </div>
+
+        <div class="pc-option">
+          <div class="pc-option-label"><span class="pc-option-title">Numerals</span><p class="pc-option-desc">Which figures the Arabic pages set dates, times and counts in. <em>As published</em> keeps each page as its editors wrote it.</p></div>
+          <div class="pc-segmented" data-pc-set="numerals" role="radiogroup" aria-label="Numerals">
+            <button type="button" data-value="auto" role="radio" aria-checked="true" class="is-active">As published</button>
+            <button type="button" data-value="arabic" role="radio">Arabic-Indic ٠١٢</button>
+            <button type="button" data-value="western" role="radio">Western 012</button>
+          </div>
+        </div>
+
       </section>
 
       <section class="pc-panel" data-pc-panel="islamic">
@@ -1865,11 +2569,17 @@
 </div>
 
 
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/adhkar-data.js?v=ef5213731a" defer></script>
 <script src="/js/reflections-data.js?v=8fdb36d4a4" defer></script>
 <script src="/js/portal-password-toggle.js?v=a7ca1324b2" defer></script>
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
-<script src="/js/personalisation.js?v=20f42159c5" defer></script>
+<script src="/js/personalisation.js?v=1292aa3abe" defer></script>
+<script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
+<script src="/js/atelier.js?v=e191b0dd6c" defer></script>
+<script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=4659d5ecc0" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=4e6e56401c" defer></script>
@@ -1878,16 +2588,24 @@
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
-<script src="/js/quran-data.js?v=4fced7d871" defer></script>
-<script src="/js/quran-reader.js?v=d401f4f4ce" defer></script>
-<script src="/js/certificate-verify.js?v=e901a84ce6" defer></script>
+<script src="/js/certificate-verify.js?v=c2e7ac776a" defer></script>
 <script src="/js/identity-verify.js?v=0b364c22e9" defer></script>
 <script src="/js/receipt-verify.js?v=daae2f1f8f" defer></script>
 <script src="/js/graduation-document-verify.js?v=366115e4eb" defer></script>
 <script src="/js/graduate-profile.js?v=f212c6e2a4" defer></script>
 <script src="/js/search.js?v=73a46fb937" defer></script>
 <script src="/js/admission-journey.js?v=2f69f2fd34" defer></script>
+<script src="/js/policies.js?v=6e17d51c0f" defer></script>
+<script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
+<script src="/js/intro.js?v=d736fc8544" defer></script>
+<script src="/js/listen.js?v=235af538fc" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/mega.js?v=23b6a172e2" defer></script>
+<script src="/js/edge.js?v=2f8720cbef" defer></script>
+<script src="/js/clock.js?v=1867395bb8" defer></script>
+<script src="/js/prestige.js?v=a6f8feb921" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
 
 </body>
 </html>
