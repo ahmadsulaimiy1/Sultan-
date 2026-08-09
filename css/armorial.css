@@ -1,0 +1,397 @@
+/* ===================================================================
+   THE ARMORIAL — the house's metalwork
+   -------------------------------------------------------------------
+   The furniture this site is built from was correct and plain. An icon
+   sat in a rounded square with a flat wash behind it; a card was a
+   rounded rectangle with a hairline; a section head was type on a rule.
+   Correct, and anonymous — the same shapes any competent template
+   ships with. Nothing about them said whose building you were standing
+   in.
+
+   This is the metalwork. It restyles the three pieces of furniture
+   that carry the whole site — the icon mount, the hero medallion and
+   the card — as struck and chased objects rather than drawn boxes, and
+   adds a small set of ornaments any page can call on.
+
+   FIVE RULES GOVERN IT.
+
+   1. It changes no layout. Every rule here is surface: ground, rim,
+      bevel, light. Nothing is moved, resized past a few pixels, or
+      re-flowed, so it cannot break a page it has never seen.
+
+   2. It never takes a page's own colour away. Several pages give their
+      hero medallion a scoped accent — Qur'an College its forest green,
+      Nursery & Primary its terracotta, Governance its Oxford navy.
+      Those are deliberate. The glyph therefore keeps currentColor
+      throughout: the gilding is done by the SETTING around it, never
+      by repainting the glyph, so a scoped accent survives intact.
+
+   3. It carries its own grounds. Every ornament re-points for Midnight
+      and for dark bands, so nothing here can end as dark metal on a
+      dark plate.
+
+   4. Ambient light is slow and cheap. The rim light is one animated
+      angle on a conic gradient — a compositor job — and it is staggered
+      so a grid of eight mounts does not pulse in unison.
+
+   5. Everything stops for Motion: Reduced.
+
+     1. Tokens and the gilt
+     2. The chased mount — .pr-ico, .pr-quad-ico
+     3. The hero medallion — .page-hero-icon
+     4. The engraved glyph
+     5. The card, framed
+     6. Ornaments — rules, corners, crowns, lozenges
+     7. The sheen
+     8. Motion: Reduced
+   =================================================================== */
+
+@property --arm-ang{syntax:'<angle>';initial-value:0deg;inherits:false;}
+
+/* -------------------------------------------------------------------
+   1. TOKENS AND THE GILT
+   ------------------------------------------------------------------- */
+:root{
+  --arm-gold:rgb(var(--lv-g,198,161,91));
+  --arm-gold-b:rgb(var(--lv-gb,233,206,138));
+  --arm-gold-d:rgb(var(--lv-gd,156,122,60));
+  --arm-gold-l:rgb(var(--lv-gl,255,246,223));
+  --arm-ease:cubic-bezier(.16,.8,.24,1);
+
+  /* The engine-turned ground: a rosette of fine rays, the way a watch
+     dial or a banknote plate is turned. Two conics at different pitches
+     so it never reads as a regular fan. */
+  --arm-turned:
+    repeating-conic-gradient(from 0deg at 50% 50%,
+      rgba(var(--lv-g,198,161,91),.11) 0deg 2.2deg,
+      transparent 2.2deg 6deg),
+    repeating-conic-gradient(from 8deg at 50% 50%,
+      rgba(var(--lv-gb,233,206,138),.10) 0deg 1.1deg,
+      transparent 1.1deg 11deg);
+
+  /* Four studs at the diagonals, as on a chased setting. */
+  --arm-studs:
+    radial-gradient(circle at 14% 14%, rgba(var(--lv-gd,156,122,60),.85) 0 1.5px, transparent 1.9px),
+    radial-gradient(circle at 86% 14%, rgba(var(--lv-gd,156,122,60),.85) 0 1.5px, transparent 1.9px),
+    radial-gradient(circle at 14% 86%, rgba(var(--lv-gd,156,122,60),.85) 0 1.5px, transparent 1.9px),
+    radial-gradient(circle at 86% 86%, rgba(var(--lv-gd,156,122,60),.85) 0 1.5px, transparent 1.9px);
+
+  /* The struck edge: an outer gilt line, a pale land, an inner gilt
+     line. Three rings is what separates a struck medal from a border. */
+  --arm-strike:
+    inset 0 0 0 1px rgba(var(--lv-gd,156,122,60),.55),
+    inset 0 0 0 3px rgba(255,255,255,.55),
+    inset 0 0 0 4px rgba(var(--lv-g,198,161,91),.34),
+    inset 0 1px 0 3px rgba(255,255,255,.75);
+}
+html[data-pc-theme="dark"]{
+  --arm-strike:
+    inset 0 0 0 1px rgba(var(--lv-gb,233,206,138),.50),
+    inset 0 0 0 3px rgba(var(--lv-gb,233,206,138),.10),
+    inset 0 0 0 4px rgba(var(--lv-gb,233,206,138),.26),
+    inset 0 1px 0 3px rgba(var(--lv-gb,233,206,138),.16);
+}
+
+/* -------------------------------------------------------------------
+   2. THE CHASED MOUNT
+   -------------------------------------------------------------------
+   .pr-ico appears on fifty-one cards across the site and .pr-quad-ico
+   on the crest. Same object, struck instead of drawn.
+   ------------------------------------------------------------------- */
+.pr-ico,
+.pr-quad-ico{
+  position:relative;isolation:isolate;overflow:visible;
+  background:
+    var(--arm-studs),
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.85), transparent 58%),
+    var(--arm-turned),
+    linear-gradient(146deg,
+      rgba(var(--lv-g,198,161,91),.22),
+      rgba(var(--lv-gb,233,206,138),.07) 54%,
+      rgba(var(--lv-gd,156,122,60),.16));
+  border:0;
+  box-shadow:var(--arm-strike),
+             0 10px 22px -14px rgba(var(--lv-gd,156,122,60),.65);
+  transition:transform .5s var(--arm-ease), box-shadow .5s var(--arm-ease);
+}
+html[data-pc-theme="dark"] .pr-ico,
+html[data-pc-theme="dark"] .pr-quad-ico,
+.pr-section.is-royal .pr-ico,
+.pr-section.is-royal .pr-quad-ico{
+  background:
+    var(--arm-studs),
+    radial-gradient(circle at 32% 26%, rgba(var(--lv-gb,233,206,138),.30), transparent 58%),
+    var(--arm-turned),
+    linear-gradient(146deg,
+      rgba(var(--lv-gb,233,206,138),.16),
+      rgba(var(--lv-gd,156,122,60),.06) 54%,
+      rgba(var(--lv-gd,156,122,60),.14));
+}
+
+/* The rim light. One animated angle, masked to the rim only, and held
+   at low opacity so it reads as a turning highlight on metal rather
+   than as an animation running on the page. */
+.pr-ico::after,
+.pr-quad-ico::after,
+.page-hero-icon::after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;z-index:2;
+  padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--arm-ang),
+    transparent 0 62%,
+    rgba(var(--lv-gl,255,246,223),.95) 76%,
+    rgba(var(--lv-gb,233,206,138),.45) 82%,
+    transparent 92%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.5;
+  animation:arm-turn var(--arm-dur,11s) linear var(--arm-dly,0s) infinite;
+}
+/* Staggered, so a row of mounts does not beat in time. */
+.pr-ico:nth-of-type(3n+1)::after{--arm-dly:-1.9s;--arm-dur:12.5s;}
+.pr-ico:nth-of-type(3n+2)::after{--arm-dly:-5.2s;--arm-dur:10.5s;}
+.pr-grid > *:nth-child(2) .pr-ico::after{--arm-dly:-3.1s;--arm-dur:13s;}
+.pr-grid > *:nth-child(3) .pr-ico::after{--arm-dly:-6.4s;--arm-dur:11.5s;}
+.pr-grid > *:nth-child(4) .pr-ico::after{--arm-dly:-8.8s;--arm-dur:14s;}
+.pr-grid > *:nth-child(5) .pr-ico::after{--arm-dly:-2.4s;--arm-dur:12s;}
+.pr-grid > *:nth-child(6) .pr-ico::after{--arm-dly:-7.1s;--arm-dur:10s;}
+@keyframes arm-turn{to{--arm-ang:360deg;}}
+
+.pr-card:hover .pr-ico,
+.mo-lift:hover .pr-ico,
+.pr-quad:hover .pr-quad-ico{
+  transform:translateY(-4px) scale(1.05);
+  box-shadow:var(--arm-strike),
+             0 18px 34px -16px rgba(var(--lv-gd,156,122,60),.85),
+             0 0 26px -6px rgba(var(--lv-gb,233,206,138),.5);
+}
+.pr-card:hover .pr-ico::after,
+.pr-quad:hover .pr-quad-ico::after{opacity:1;}
+
+/* -------------------------------------------------------------------
+   3. THE HERO MEDALLION
+   -------------------------------------------------------------------
+   Forty-nine pages open with one. It gets the same striking, one size
+   up, plus a laurel ring — the crest's own device, reduced to the one
+   line that survives at 70px.
+   ------------------------------------------------------------------- */
+.page-hero-icon{
+  position:relative;isolation:isolate;
+  background:
+    var(--arm-studs),
+    radial-gradient(circle at 30% 24%, rgba(255,255,255,.9), transparent 56%),
+    var(--arm-turned),
+    linear-gradient(150deg,
+      rgba(var(--lv-g,198,161,91),.26),
+      rgba(var(--lv-gb,233,206,138),.06) 52%,
+      rgba(var(--lv-gd,156,122,60),.18));
+  border:0;
+  box-shadow:var(--arm-strike),
+             0 14px 28px -16px rgba(var(--lv-gd,156,122,60),.7);
+  overflow:visible;
+}
+/* The laurel: two arcs closing on a lozenge, struck outside the rim. */
+.page-hero-icon::before{
+  content:"";position:absolute;inset:-9px;border-radius:calc(var(--pr-r-md,16px) + 8px);
+  border:1px solid rgba(var(--lv-g,198,161,91),.34);
+  -webkit-mask:conic-gradient(from -60deg,#000 0 120deg,transparent 120deg 180deg,#000 180deg 300deg,transparent 300deg);
+          mask:conic-gradient(from -60deg,#000 0 120deg,transparent 120deg 180deg,#000 180deg 300deg,transparent 300deg);
+  pointer-events:none;
+}
+html[data-pc-theme="dark"] .page-hero-icon::before,
+.is-royal .page-hero-icon::before{border-color:rgba(var(--lv-gb,233,206,138),.42);}
+.page-hero-icon:hover{
+  transform:translateY(-3px) rotate(-2deg);
+  box-shadow:var(--arm-strike),
+             0 22px 40px -18px rgba(var(--lv-gd,156,122,60),.9),
+             0 0 30px -6px rgba(var(--lv-gb,233,206,138),.55);
+}
+.is-royal .page-hero-icon,.governance .page-hero-icon,
+html[data-pc-theme="dark"] .page-hero-icon{
+  background:
+    var(--arm-studs),
+    radial-gradient(circle at 30% 24%, rgba(var(--lv-gb,233,206,138),.32), transparent 56%),
+    var(--arm-turned),
+    linear-gradient(150deg,
+      rgba(var(--lv-gb,233,206,138),.18),
+      rgba(var(--lv-gd,156,122,60),.05) 52%,
+      rgba(var(--lv-gd,156,122,60),.16));
+  border:0;
+}
+
+/* -------------------------------------------------------------------
+   4. THE ENGRAVED GLYPH
+   -------------------------------------------------------------------
+   The glyph keeps currentColor — see rule 2 at the head of this file.
+   What changes is how it is CUT: a rounded burin, a hairline of light
+   above and a hairline of shadow below, which is what makes a line
+   read as engraved into a surface rather than printed on it.
+
+   The two selectors are deliberately narrow. A stroked icon declares
+   fill="none"; a solid icon declares a fill. Matching on that attribute
+   means neither treatment can land on the wrong kind of glyph.
+   ------------------------------------------------------------------- */
+.pr-ico svg,
+.page-hero-icon svg,
+.pr-quad-ico svg{
+  position:relative;z-index:1;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.72))
+         drop-shadow(0 -1px 0 rgba(var(--lv-cfd5,34,23,9),.16));
+  transition:transform .5s var(--arm-ease);
+}
+html[data-pc-theme="dark"] .pr-ico svg,
+html[data-pc-theme="dark"] .page-hero-icon svg,
+html[data-pc-theme="dark"] .pr-quad-ico svg,
+.pr-section.is-royal .pr-ico svg,
+.pr-section.is-royal .pr-quad-ico svg{
+  filter:drop-shadow(0 1px 0 rgba(var(--lv-cfd5,34,23,9),.6))
+         drop-shadow(0 0 6px rgba(var(--lv-gb,233,206,138),.35));
+}
+.pr-card:hover .pr-ico svg,
+.pr-quad:hover .pr-quad-ico svg{transform:scale(1.06);}
+/* An image in the mount — the crest quadrants — is lit, not stroked. */
+.pr-quad-ico img{position:relative;z-index:1;
+  filter:drop-shadow(0 2px 3px rgba(var(--lv-cfd5,34,23,9),.22));}
+
+/* The letter mounts on the CLEVER cards are set in the display face,
+   struck rather than typed. */
+.pr-ico .pr-letter{
+  position:relative;z-index:1;
+  font-family:var(--font-label,'Cinzel',serif);font-size:1.5rem;line-height:1;
+  text-shadow:0 1px 0 rgba(255,255,255,.75),0 -1px 0 rgba(var(--lv-cfd5,34,23,9),.18);
+}
+html[data-pc-theme="dark"] .pr-ico .pr-letter{
+  text-shadow:0 1px 0 rgba(var(--lv-cfd5,34,23,9),.7);}
+
+/* -------------------------------------------------------------------
+   5. THE CARD, FRAMED
+   -------------------------------------------------------------------
+   A hairline inset a few pixels inside the edge is the difference
+   between a panel and a mounted plate. It is drawn only from the
+   corners, so it reads as a frame rather than as a second border, and
+   it closes on address.
+   ------------------------------------------------------------------- */
+.pr-card{position:relative;}
+.pr-card::after{
+  content:"";position:absolute;inset:7px;border-radius:inherit;pointer-events:none;
+  border:1px solid rgba(var(--lv-g,198,161,91),.52);
+  /* 26%, not 30%: on a wide card two 30% patches per edge very nearly
+     meet in the middle, and the frame stops reading as brackets. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) top left    / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) top right   / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) bottom left / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) bottom right/ 26% 26% no-repeat;
+          mask:
+    linear-gradient(#000 0 0) top left    / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) top right   / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) bottom left / 26% 26% no-repeat,
+    linear-gradient(#000 0 0) bottom right/ 26% 26% no-repeat;
+  opacity:1;
+  transition:opacity .5s var(--arm-ease),
+             -webkit-mask-size .6s var(--arm-ease), mask-size .6s var(--arm-ease),
+             border-color .5s var(--arm-ease);
+}
+.pr-card:hover::after{
+  border-color:rgba(var(--lv-gb,233,206,138),.85);
+  -webkit-mask-size:50% 50%; mask-size:50% 50%;
+}
+html[data-pc-theme="dark"] .pr-card::after{border-color:rgba(var(--lv-gb,233,206,138),.34);}
+
+/* -------------------------------------------------------------------
+   6. ORNAMENTS
+   -------------------------------------------------------------------
+   Opt-in, for pages that want them. Nothing below applies unless the
+   class is written.
+   ------------------------------------------------------------------- */
+
+/* A divider: two tapering rules closing on a struck lozenge. */
+.arm-rule{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin:34px 0;pointer-events:none;
+}
+.arm-rule::before,.arm-rule::after{
+  content:"";flex:1;max-width:280px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-g,198,161,91),.6));
+}
+.arm-rule::after{background:linear-gradient(270deg,transparent,rgba(var(--lv-g,198,161,91),.6));}
+.arm-rule i{
+  display:block;width:11px;height:11px;transform:rotate(45deg);
+  background:linear-gradient(140deg,var(--arm-gold-b),var(--arm-gold-d));
+  box-shadow:0 0 0 3px rgba(var(--lv-g,198,161,91),.16),
+             0 2px 6px -2px rgba(var(--lv-gd,156,122,60),.8);
+}
+.arm-rule.is-tight{margin:20px 0;}
+
+/* Ornamental corner brackets, drawn on any block. */
+.arm-corners{position:relative;}
+.arm-corners > .c{
+  position:absolute;width:22px;height:22px;pointer-events:none;
+  border:1px solid rgba(var(--lv-g,198,161,91),.62);
+}
+.arm-corners > .c.tl{top:10px;left:10px;border-right:0;border-bottom:0;border-top-left-radius:5px;}
+.arm-corners > .c.tr{top:10px;right:10px;border-left:0;border-bottom:0;border-top-right-radius:5px;}
+.arm-corners > .c.bl{bottom:10px;left:10px;border-right:0;border-top:0;border-bottom-left-radius:5px;}
+.arm-corners > .c.br{bottom:10px;right:10px;border-left:0;border-top:0;border-bottom-right-radius:5px;}
+html[data-pc-theme="dark"] .arm-corners > .c{border-color:rgba(var(--lv-gb,233,206,138),.5);}
+
+/* A struck plate: the ground the ornaments are set on. */
+.arm-plate{
+  position:relative;border-radius:22px;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,255,255,.7), transparent 52%),
+    linear-gradient(168deg,rgb(var(--lv-p2,252,250,246)),rgb(var(--lv-p3,247,238,223)));
+  box-shadow:var(--arm-strike),0 22px 46px -30px rgba(var(--lv-gd,156,122,60),.6);
+}
+html[data-pc-theme="dark"] .arm-plate{
+  background:
+    radial-gradient(circle at 26% 18%, rgba(var(--lv-gb,233,206,138),.10), transparent 52%),
+    linear-gradient(168deg,rgb(var(--lv-w52,28,20,12)),rgb(var(--lv-w52,28,20,12)));
+}
+
+/* -------------------------------------------------------------------
+   7. THE SHEEN
+   -------------------------------------------------------------------
+   A single pass of light across a heading when it is reached. Once, not
+   on a loop: a repeating shimmer on type is a cheap effect, and one
+   pass reads as the light moving over gilt as you come to it.
+   ------------------------------------------------------------------- */
+.arm-sheen{
+  background-image:linear-gradient(100deg,
+    currentColor 0 42%,
+    rgba(var(--lv-gl,255,246,223),.98) 50%,
+    currentColor 58% 100%);
+  background-size:260% 100%;background-position:120% 0;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+/* Without background-clip:text, a transparent text-fill is invisible
+   type — so the whole effect is withdrawn rather than risked. */
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){
+  .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
+}
+.arm-sheen.is-lit{
+  transition:background-position 1.5s var(--arm-ease) .15s;
+  background-position:-40% 0;
+}
+
+/* -------------------------------------------------------------------
+   8. MOTION: REDUCED
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  .pr-ico::after,.pr-quad-ico::after,.page-hero-icon::after{animation:none!important;opacity:.65;}
+  .pr-card::after{transition:none!important;}
+  .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
+}
+html[data-pc-motion="reduced"] .pr-ico::after,
+html[data-pc-motion="reduced"] .pr-quad-ico::after,
+html[data-pc-motion="reduced"] .page-hero-icon::after{animation:none!important;opacity:.65;}
+html[data-pc-motion="reduced"] .pr-card::after{transition:none!important;}
+html[data-pc-motion="reduced"] .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
+
+/* Printing gets the object, not the light. */
+@media print{
+  .pr-ico::after,.pr-quad-ico::after,.page-hero-icon::after,.pr-card::after{display:none;}
+  .arm-sheen{-webkit-text-fill-color:currentColor;background-image:none;}
+}
