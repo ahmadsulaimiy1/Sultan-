@@ -193,10 +193,21 @@ same message that corrected §4d's institution split below. It is
 recorded here in full, exactly as supplied, rather than merged into
 §4a/4b or treated as a silent replacement:
 
+> **Departure recorded.** The school has since confirmed that Mrs
+> Kareemat has left, and instructed that she no longer appear anywhere
+> on the website or in these documents. Her row below is struck rather
+> than deleted, because this register's whole function is to show what
+> was supplied and what does not reconcile — silently removing a row
+> would make the reconciliation notes further down describe a table
+> that no longer exists. **Mathematics at JSS/SSS therefore has no
+> named teacher in either roster and needs one.** Nothing published on
+> the website carried this name; the only place it appeared was this
+> table.
+
 | Teacher | Subjects |
 |---|---|
 | Mrs Ganiyu Ige (Rukayah) | English Language |
-| Mrs Kareemat | Mathematics |
+| ~~Mrs Kareemat~~ — **departed; post to be filled** | Mathematics |
 | Mrs Fatimat Badmus | Basic Science, Physics |
 | Mrs Adeyemo Zainab (Rukayah) | Biology, Agricultural Science |
 | Mrs Opakunle | Chemistry |
@@ -220,9 +231,10 @@ against Computer Studies/ICT — possibly the same person with a dropped
 surname and a different-term assignment, possibly not. Eight names in
 §4a/4b (Ogunyinka Hassanah, Oduyebo Jamiu, Maruf Afolabi, Oguntade
 Adebola, Yusuf Raqeebah, Oladele Abdulwasiu, Okoh Nimota, Kassim Jamal)
-do not appear at all in this second list; nine names here (Kareemat,
-Fatimat Badmus, Opakunle, Ismail, Omotola, Basirat, Lawal, Amina,
-Mariam, Khadijah, Hafsat) do not appear in §4a/4b.
+do not appear at all in this second list; nine names here (Kareemat —
+since departed, see the note above — Fatimat Badmus, Opakunle, Ismail,
+Omotola, Basirat, Lawal, Amina, Mariam, Khadijah, Hafsat) do not appear
+in §4a/4b.
 
 **This register cannot resolve which roster is current** — that needs
 one direct answer from the school: is this a correction/update
