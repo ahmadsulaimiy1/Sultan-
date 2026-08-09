@@ -12,7 +12,8 @@
     "test:i18n": "node scripts/test-i18n-switcher.mjs && node scripts/test-i18n-portal.mjs",
     "certificates:import": "node scripts/build-production-import.mjs",
     "certificates:accept": "node scripts/verify-certificate-acceptance.mjs",
-    "certificates:rehearse": "node --import ./scripts/_lib/neon-pg-register.mjs scripts/verify-certificate-acceptance.mjs"
+    "certificates:rehearse": "node --import ./scripts/_lib/neon-pg-register.mjs scripts/verify-certificate-acceptance.mjs",
+    "test:offline": "node scripts/test-offline-foundation.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",

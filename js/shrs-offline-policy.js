@@ -15,8 +15,20 @@
  * much is a child's home address in a stranger's hands.
  */
 
-export const POLICY_STATUS = 'PROPOSED — not yet approved by the Founder';
-export const POLICY_VERSION = 1;
+export const POLICY_STATUS = 'APPROVED — the Founder, 9 August 2026';
+export const POLICY_VERSION = 2;
+/* Approved unchanged, with one amendment: the guardian's phone number is
+ * removed from the offline allowlist. The Founder's reasoning, recorded because
+ * a future reader will otherwise re-add it as an obvious convenience —
+ *
+ *   "A Registrar can see it when online, but there's no strong reason to retain
+ *    a parent's personal number on a device after connectivity disappears. If
+ *    an emergency workflow genuinely requires it, make that a deliberate,
+ *    narrowly scoped exception later."
+ *
+ * So it is not merely absent, it is refused. Any future emergency-contact
+ * feature must be argued for on its own terms and scoped to that workflow,
+ * not smuggled in by widening the student allowlist. */
 
 /* ── 1. DATA SCOPE — what a Registrar can reach offline ────────────────────
  *
@@ -77,7 +89,11 @@ export const NEVER_CACHED_FIELDS = [
 export const CACHEABLE_STUDENT_FIELDS = [
   'id', 'identity_no', 'admission_no', 'full_name', 'full_name_ar',
   'sex', 'date_of_birth', 'class_name', 'programme_code', 'enrolment_status',
-  'guardian_name', 'guardian_phone', 'photo_url', 'updated_at',
+  // guardian_name identifies who to ask for; guardian_phone is how to reach
+  // them, and that is the part that must not survive on a lost device. The
+  // Registrar sees the number online, where the server can decide whether they
+  // still should. See the amendment note at POLICY_STATUS.
+  'guardian_name', 'photo_url', 'updated_at',
 ];
 
 export const CACHEABLE_CERTIFICATE_FIELDS = [
