@@ -240,6 +240,179 @@ async function enforceScope(entity) {
   for (const row of rows.slice(0, rows.length - cap)) store.delete(row.key);
 }
 
+/**
+ * Every held record of one entity, opened. This is the widest read in the
+ * store and exists for exactly one caller — offline search, which cannot work
+ * over ciphertext. It returns only what putRecord was allowed to write, so a
+ * field on the never-cached list cannot appear here for the simple reason that
+ * it was never on the device.
+ */
+export async function listRecords(entity) {
+  if (!sessionValid()) return [];
+  const db = await openDb();
+  const rows = await wrap(tx(db, STORE.records).index('entity').getAll(entity));
+  const now = Date.now();
+  const out = [];
+  for (const row of rows) {
+    if ((now - row.syncedAt) > LIFETIMES.recordRetentionMs) continue;
+    const data = await open(row.sealed);
+    if (data) out.push({ id: row.id, entity: row.entity, data, syncedAt: row.syncedAt });
+  }
+  return out;
+}
+
+/* ── Authorised documents ────────────────────────────────────────────────
+ *
+ * A document is something the school ISSUED TO THIS PERSON and they chose to
+ * keep — their child's certificate, their own receipt. That is why it is held
+ * for thirty days rather than seven, and why there are only twenty slots: this
+ * is a person's own small shelf, not a mirror of the school's filing cabinet.
+ *
+ * Two things separate it from the record cache. A document is opaque bytes, so
+ * the field allowlist cannot inspect it — authority has to be established
+ * BEFORE it is stored, by the caller passing the ownership the server
+ * confirmed. And it is sealed with the same session key as everything else, so
+ * a document cached under one authorisation is unreadable under another.
+ */
+export async function putDocument(key, bytes, meta = {}) {
+  if (!sessionValid()) return { stored: false, reason: 'session-expired' };
+  if (!meta.ownedBy) {
+    // Refusing rather than storing. A document with no recorded owner cannot
+    // be checked against the person reading it later, and an unowned document
+    // on a shared device is exactly the leak this layer exists to prevent.
+    return { stored: false, reason: 'owner-not-established' };
+  }
+  const size = bytes && (bytes.byteLength || bytes.length || 0);
+  if (size > STORAGE.maxDocumentBytes) {
+    return { stored: false, reason: 'too-large', size, limit: STORAGE.maxDocumentBytes };
+  }
+
+  const db = await openDb();
+  const now = Date.now();
+  const row = {
+    key: String(key),
+    ownedBy: String(meta.ownedBy),
+    label: meta.label || null,
+    mime: meta.mime || 'application/octet-stream',
+    size: size || 0,
+    savedAt: now,
+    accessedAt: now,
+    sealed: await seal({ bytes: Array.from(new Uint8Array(bytes)) }),
+  };
+  await wrap(tx(db, STORE.documents, 'readwrite').put(row));
+  await enforceDocumentCap();
+  return { stored: true, key: row.key };
+}
+
+/**
+ * Reads a document back. Returns null — never the bytes — if the session has
+ * expired, the thirty days have passed, the reader is not the owner, or
+ * decryption fails. Each of those is a refusal, not a degraded answer.
+ */
+export async function getDocument(key, readerId) {
+  if (!sessionValid()) return null;
+  const db = await openDb();
+  const row = await wrap(tx(db, STORE.documents).get(String(key)));
+  if (!row) return null;
+
+  if ((Date.now() - row.savedAt) > LIFETIMES.documentRetentionMs) {
+    await evictDocument(key, 'expired');
+    return null;
+  }
+  if (readerId != null && String(readerId) !== row.ownedBy) return null;
+
+  const opened = await open(row.sealed);
+  if (!opened || !opened.bytes) { await evictDocument(key, 'unreadable'); return null; }
+
+  row.accessedAt = Date.now();
+  wrap(tx(db, STORE.documents, 'readwrite').put(row)).catch(() => {});
+
+  return {
+    key: row.key,
+    label: row.label,
+    mime: row.mime,
+    savedAt: row.savedAt,
+    bytes: new Uint8Array(opened.bytes),
+  };
+}
+
+/** The shelf, without opening anything. Metadata only — enough to list, to
+ *  show a freshness stamp, and to offer eviction. */
+export async function documentIndex() {
+  if (!sessionValid()) return [];
+  const db = await openDb();
+  const rows = await wrap(tx(db, STORE.documents).getAll());
+  return rows
+    .map(({ key, label, mime, size, savedAt, accessedAt, ownedBy }) =>
+      ({ key, label, mime, size, savedAt, accessedAt, ownedBy }))
+    .sort((a, b) => b.accessedAt - a.accessedAt);
+}
+
+async function enforceDocumentCap() {
+  const db = await openDb();
+  const rows = await wrap(tx(db, STORE.documents).getAll());
+  if (rows.length <= SCOPE.maxDocuments) return;
+  rows.sort((a, b) => a.accessedAt - b.accessedAt);
+  const store = tx(db, STORE.documents, 'readwrite');
+  for (const row of rows.slice(0, rows.length - SCOPE.maxDocuments)) store.delete(row.key);
+}
+
+/* ── Eviction ────────────────────────────────────────────────────────────
+ *
+ * On the honesty of "secure erase": IndexedDB gives no guarantee that a
+ * deleted value is overwritten on the physical medium, and no browser API
+ * does. Claiming a secure wipe here would be a lie.
+ *
+ * What IS guaranteed is the thing that actually protects the child: every
+ * value is stored as AES-GCM ciphertext under a key derived from the session
+ * secret and never persisted anywhere. Deletion removes the ciphertext AND its
+ * metadata together; lock() and purgeAll() drop the key from memory. Residue
+ * left behind by the storage engine is unreadable without a key that no longer
+ * exists on the device.
+ */
+export async function evictDocument(key, reason = 'requested') {
+  const db = await openDb();
+  await wrap(tx(db, STORE.documents, 'readwrite').delete(String(key)));
+  return { evicted: String(key), reason };
+}
+
+export async function evictRecord(entity, id, reason = 'requested') {
+  await deleteRecord(entity, id);
+  return { evicted: keyOf(entity, id), reason };
+}
+
+/**
+ * Frees space under pressure, oldest-accessed first, documents before records.
+ *
+ * Documents go first deliberately: a document can be downloaded again from the
+ * school, whereas an evicted record is a Registrar losing the working set they
+ * came to a place with no signal in order to use. Neither ever touches the
+ * outbound queue — a device that fills up must not resolve it by discarding
+ * someone's unsent work.
+ */
+export async function evictUnderPressure(bytesNeeded = 0) {
+  const db = await openDb();
+  const freed = { documents: 0, records: 0, bytes: 0 };
+  let need = bytesNeeded;
+
+  const docs = (await wrap(tx(db, STORE.documents).getAll())).sort((a, b) => a.accessedAt - b.accessedAt);
+  for (const row of docs) {
+    if (need <= 0) break;
+    await wrap(tx(db, STORE.documents, 'readwrite').delete(row.key));
+    freed.documents += 1; freed.bytes += row.size || 0; need -= row.size || 0;
+  }
+
+  if (need > 0) {
+    const records = (await wrap(tx(db, STORE.records).getAll())).sort((a, b) => a.accessedAt - b.accessedAt);
+    for (const row of records) {
+      if (need <= 0) break;
+      await wrap(tx(db, STORE.records, 'readwrite').delete(row.key));
+      freed.records += 1; need -= 2048;   // records are small; a nominal figure
+    }
+  }
+  return freed;
+}
+
 /* ── The outbound queue ──────────────────────────────────────────────────── */
 
 /**

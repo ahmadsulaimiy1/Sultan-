@@ -176,15 +176,32 @@ export function bindPrefetch(container, resolve) {
  * deliberately never reassuring about data it cannot vouch for.
  */
 export function freshnessLabel(env, lang = 'en') {
-  const t = lang === 'ar' ? {
-    live: 'مباشر', synced: 'آخر مزامنة', unavailable: 'غير متاح دون اتصال',
-    locked: 'انتهت الجلسة دون اتصال — يرجى إعادة الاتصال',
-    justNow: 'قبل لحظات', min: 'دقيقة', hour: 'ساعة', day: 'يوم',
-  } : {
-    live: 'Live', synced: 'Last synchronised', unavailable: 'Not available offline',
-    locked: 'Offline session expired — reconnect to continue',
-    justNow: 'moments ago', min: 'min', hour: 'h', day: 'd',
+  // All four languages the estate speaks. A freshness stamp is the one label a
+  // reader must never have to guess at, so it is not left to fall back to
+  // English on a Yoruba or French page.
+  const PACKS = {
+    en: {
+      live: 'Live', synced: 'Last synchronised', unavailable: 'Not available offline',
+      locked: 'Offline session expired — reconnect to continue',
+      justNow: 'moments ago', min: 'min', hour: 'h', day: 'd',
+    },
+    ar: {
+      live: 'مباشر', synced: 'آخر مزامنة', unavailable: 'غير متاح دون اتصال',
+      locked: 'انتهت الجلسة دون اتصال — يرجى إعادة الاتصال',
+      justNow: 'قبل لحظات', min: 'دقيقة', hour: 'ساعة', day: 'يوم',
+    },
+    yo: {
+      live: 'Tààrà', synced: 'Ìmúbáramu tí ó kẹ́yìn', unavailable: 'Kò sí láìsí ìsopọ̀',
+      locked: 'Àkókò ìṣiṣẹ́ láìsí ìsopọ̀ ti pari — sopọ̀ padà láti tẹ̀síwájú',
+      justNow: 'ní ìṣẹ́jú díẹ̀ sẹ́yìn', min: 'ìṣ', hour: 'wk', day: 'ọj',
+    },
+    fr: {
+      live: 'En direct', synced: 'Dernière synchronisation', unavailable: 'Indisponible hors ligne',
+      locked: 'Session hors ligne expirée — reconnectez-vous pour continuer',
+      justNow: 'à l’instant', min: 'min', hour: 'h', day: 'j',
+    },
   };
+  const t = PACKS[lang] || PACKS.en;
 
   if (env.source === SOURCE.LOCKED) return { tone: 'locked', text: t.locked };
   if (env.source === SOURCE.UNAVAILABLE) return { tone: 'unavailable', text: t.unavailable };

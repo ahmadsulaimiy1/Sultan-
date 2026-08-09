@@ -21,7 +21,7 @@
 // "helpfully" answered from a stale copy. A request for live institutional
 // data either reaches the server or fails honestly. Nothing here may fail
 // open.
-const CACHE_VERSION = 'shrs-pwa-5c0d62de37';
+const CACHE_VERSION = 'shrs-pwa-36f9b70f59';
 
 // One cache per lifetime rule, all sharing the version so a build retires
 // the whole set together.
