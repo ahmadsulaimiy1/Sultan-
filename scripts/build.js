@@ -233,9 +233,16 @@ function gitFact(args, fallback) {
 }
 
 function writeBuildStamp(pageCount, assetVersion) {
-  const sha = gitFact(['rev-parse', 'HEAD'], 'unknown');
+  const sha = process.env.CF_PAGES_COMMIT_SHA || gitFact(['rev-parse', 'HEAD'], 'unknown');
   const short = gitFact(['rev-parse', '--short', 'HEAD'], 'unknown');
-  const branch = gitFact(['rev-parse', '--abbrev-ref', 'HEAD'], 'unknown');
+  /* A CI checkout is usually a detached HEAD, so git answers "HEAD" — which
+     is the one answer a stamp meant to remove confusion must not give. The
+     build platforms each name the branch in the environment; ask them first
+     and fall back to git only for a local build. */
+  const branch = process.env.CF_PAGES_BRANCH
+    || process.env.GITHUB_REF_NAME
+    || process.env.VERCEL_GIT_COMMIT_REF
+    || gitFact(['rev-parse', '--abbrev-ref', 'HEAD'], 'unknown');
   const subject = gitFact(['log', '-1', '--pretty=%s'], '');
   const when = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
   const body = [
