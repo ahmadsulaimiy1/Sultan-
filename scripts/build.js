@@ -886,6 +886,16 @@ function main() {
   versionAllHtml();
   updateServiceWorkerVersion();
   reportPartialFallbacks();
+
+  // The last thing the build does is check its own output, and refuse.
+  //
+  // A merge conflict once reached partials/head.html, the build propagated it
+  // into 149 published pages' <head>, four stylesheets were dropped from every
+  // public page — and the build reported success the whole way. Nothing was
+  // looking. Now something is, and a failure here exits non-zero so the deploy
+  // never happens. See scripts/validate-public-site.js.
+  if (!require('./validate-public-site.js').run()) process.exit(1);
+
   if (missingKeys.size) {
     console.error('\nTemplate keys with no translation (left as literal tokens):');
     Array.from(missingKeys).sort().forEach((k) => console.error(`  ${k}`));

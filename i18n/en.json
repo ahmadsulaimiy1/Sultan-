@@ -1,4 +1,5 @@
 {
+  "_reviewStatus": "REVIEWED — the institution’s own language. Held to the same standard as every other locale: any new key must be written, not machine-produced, and checked against the wording the school actually uses.",
   "locale.name": "English",
   "locale.switchTo": "Switch language",
   "locale.current": "Current language: {lang}",

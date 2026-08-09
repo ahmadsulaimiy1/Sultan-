@@ -18,7 +18,8 @@
     "test:sync": "node scripts/test-sync-engine.mjs",
     "test:search": "node scripts/test-offline-search.mjs",
     "test:certificate-offline": "node scripts/test-certificate-offline.mjs",
-    "certificates:register": "node scripts/build-certificate-register.mjs"
+    "certificates:register": "node scripts/build-certificate-register.mjs",
+    "test:sync:lifecycle": "node scripts/test-sync-lifecycle.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",

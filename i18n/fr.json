@@ -1,4 +1,5 @@
 {
+  "_reviewStatus": "TECHNICALLY IMPLEMENTED — LINGUISTIC REVIEW REQUIRED. These strings were authored during development, not by a qualified French speaker. Do not describe this as a professional translation until a native speaker has reviewed it. Remove this key when that review is complete and record who did it.",
   "locale.name": "Français",
   "locale.switchTo": "Changer de langue",
   "locale.current": "Langue actuelle : {lang}",

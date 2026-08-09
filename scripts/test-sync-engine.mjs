@@ -309,7 +309,7 @@ async function main() {
     check("the person's own version is kept, not discarded",
       conflicted.conflicts[0] && conflicted.conflicts[0].payload && conflicted.conflicts[0].payload.period === 'evening');
     check("the server's version is recorded alongside it",
-      conflicted.conflicts[0].serverAck && conflicted.conflicts[0].serverAck.serverView);
+      conflicted.conflicts[0].serverAck && conflicted.conflicts[0].serverAck.serverResponse);
 
     await set({ adhkar: 'ok' });
     await page.evaluate(() => window.ageQueue());

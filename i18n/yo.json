@@ -1,4 +1,5 @@
 {
+  "_reviewStatus": "TECHNICALLY IMPLEMENTED — LINGUISTIC REVIEW REQUIRED. These strings were authored during development, not by a qualified Yoruba speaker. The orthography (underdotted e/o/s and tone marks) is applied deliberately and consistently, and the self-hosted Charis SIL face renders it correctly — but correctness of register, idiom and institutional tone has NOT been confirmed. Do not describe this as a professional translation until a native speaker has reviewed it. Remove this key when that review is complete and record who did it.",
   "locale.name": "Yorùbá",
   "locale.switchTo": "Yí èdè padà",
   "locale.current": "Èdè lọ́wọ́lọ́wọ́: {lang}",

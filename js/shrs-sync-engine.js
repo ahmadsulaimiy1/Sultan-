@@ -287,11 +287,14 @@ async function deliver(op) {
     // The record moved under us. Rule 3: this is where the engine stops and a
     // person decides. What they typed stays in the queue as a draft; nothing
     // is overwritten in either direction.
-    let serverView = null;
-    try { serverView = await res.json(); } catch (e) { serverView = null; }
+    // The server's WHOLE reply, under a name that says so. It was called
+    // `serverView` and nested as serverAck.serverView.serverView — which is
+    // exactly how a future interface ends up showing a person the wrong field.
+    let serverResponse = null;
+    try { serverResponse = await res.json(); } catch (e) { serverResponse = null; }
     await store.markOperation(op.operationId, SYNC_OUTCOME.CONFLICT, {
       reason: 'server-record-changed',
-      serverView,
+      serverResponse,
       // Recorded for the reader: an additive operation should never reach
       // here, so if it does the registry entry is wrong, not the data.
       unexpectedForKind: spec.conflict === 'impossible' ? spec.kind : null,
