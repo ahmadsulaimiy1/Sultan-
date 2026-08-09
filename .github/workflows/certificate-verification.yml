@@ -165,7 +165,20 @@ jobs:
       - name: Rebuild the production import from the sealed registers
         run: npm run certificates:import
 
-      - name: Import the certificate records into the live database
+      # The first live run of this workflow (9 Aug 2026) answered a question
+      # nobody had asked: the public endpoint returned
+      #     relation "stage_certificates" does not exist
+      # for all thirteen certificates. Not "no record" — no TABLE. The
+      # certificate schema had never been applied to the production database,
+      # so the records could not have been imported even if someone had tried;
+      # the import would have failed on the same missing relation.
+      #
+      # sql/schema.sql is the project's own canonical setup and is written to
+      # be re-runnable: all 69 CREATE TABLE statements are IF NOT EXISTS, and
+      # every seed INSERT carries ON CONFLICT or a NOT EXISTS guard (its own
+      # comment at the offices seed says so). Applying it adds what is missing
+      # and leaves what is present alone.
+      - name: Apply the database schema (idempotent — creates only what is missing)
         if: >-
           steps.caps.outputs.db == 'yes' &&
           (github.event_name != 'workflow_dispatch' || inputs.run_import)
@@ -174,6 +187,17 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          psql "$PGCONN" -v ON_ERROR_STOP=1 -f sql/schema.sql 2>&1 | tail -20
+          echo "### Database schema applied (idempotent)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Import the certificate records into the live database
+        if: >-
+          steps.caps.outputs.db == 'yes' &&
+          (github.event_name != 'workflow_dispatch' || inputs.run_import)
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
           # ON_ERROR_STOP with the file's own transaction means a failed check
           # rolls the whole import back. Safe to run repeatedly: every insert
           # carries ON CONFLICT DO NOTHING and the sequence repairs only ever
