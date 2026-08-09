@@ -54,7 +54,7 @@ boundary a digital system for it would need to enforce.
 
 | | |
 |---|---|
-| **Real actor** | Registrar, Royal College (Mrs. Anofi-Abdulkareem Mariam Tope) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
+| **Real actor** | Registrar, Royal College (Mrs. Mariam Tope Anofi-AbdulKareem) — the only office in this map with a named person **and** a documented job description already (AC-02, PA-05) |
 | **Digital state today** | Partial, API-only: `admin/students.js` covers enrolment (create/update student + guardian + class), `admin/create-student-login.js` issues Student Portal credentials. Nothing else. |
 | **Workflows the office actually owns (per AC-02/PA-05)** | Admissions document verification, waiting-list administration, enrolment, promotion/probation threshold-setting (jointly with Principals), transfer review (incl. disciplinary/safeguarding history via DSL), withdrawal processing, exam-misconduct escalation, academic-appeal handling, full academic-record retention |
 | **Workflows with NO digital trace at all** | Promotion decisions, graduation, certificate issuance, transcript generation, third-party credential verification, transfer-in/out record, withdrawal record (only a status flag exists: `students.status`) |
@@ -66,7 +66,8 @@ boundary a digital system for it would need to enforce.
 
 | | |
 |---|---|
-| **Real actor** | Principal / Head Teacher per institution (named for Basic School: Mrs. Mariam Tope AbdulKareem; others not named in current docs) |
+| **Real actor** | Principal / Head Teacher per institution (named for Basic School: Mrs. Mariam Tope Anofi-AbdulKareem; Royal College: Dr. Adegoke Musa Olatunji; others not named in current docs) |
+| **⚠ Overlap with the Registrar office above** | The Basic School Head Teacher and the Registrar are **the same person**. Where AC-02/PA-05 make a decision joint between Registrar and Principal — promotion and probation thresholds, student status changes, finalised results — that jointness does not exist for the Basic School. Recorded in `docs/data-ownership-register.md`; the remedy is set out in `docs/role-permission-matrix.md` |
 | **Digital state today** | None. All `term_results`/`attendance_summary` entry happens via the Registrar-equivalent admin token, not per-teacher, per-subject |
 | **Core workflows missing** | Timetable, subject/curriculum assignment (AC-08 Curriculum Framework is itself only Partial), lesson planning, per-teacher grade entry, report-card generation |
 | **Permission boundary needed** | Principal: read/write within their own institution only. This is the first office where "which institution does this person belong to" becomes a real access-control question — today every admin action is one undifferentiated bearer token |

@@ -112,9 +112,9 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | Code | Role | Status | Scope | Real person / source |
 |---|---|---|---|---|
 | **EXE** | Head of Schools / Administrator / Executive Leadership *(role code unchanged; label updated per the 2026-08-04 amendment — no office of CEO exists)* | Established | All institutions | GV-01; Zakariya Olanrewaju Anofi, Founder, Chairman of the Board of Governors & Head of Schools / Administrator |
-| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Mariam Tope AbdulKareem) |
+| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Mariam Tope Anofi-AbdulKareem) |
 | **VP** | Vice Principal | Proposed | Own institution, mirrors Principal minus final approval authority | Not yet documented — recommended where an institution's size warrants it |
-| **REG** | Registrar | Established | All institutions (academic records are institution-wide) | AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope |
+| **REG** | Registrar | Established | All institutions (academic records are institution-wide) | AC-02, PA-05; Mrs. Mariam Tope Anofi-AbdulKareem |
 | **AREG** | Assistant Registrar | Proposed | Delegated subset of Registrar's scope | Not yet documented — recommended once Registrar workload requires it |
 | **ADM** | Admissions Officer | Proposed | All institutions, pre-enrolment only | PA-05 describes the admissions *process*; no standing officer role documented yet — today the Registrar performs verification |
 | **FIN** | Finance Officer (covers Accounts Officer / Bursar) | Proposed | All institutions | FN-01 establishes the *principle* of financial control; no officer role documented. Consolidated into one code — split only if the school later separates the duties |
@@ -127,6 +127,35 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | **ICT** | ICT Administrator | Proposed | All institutions, system-level | IT-06 names an "ICT Head" as a Management Team member — this role is that person's operational tier |
 | **SYSADMIN** | System Administrator | Proposed — one account, tightly held | Everything, technical only | The single highest-privilege technical role; see §4.20 |
 | **DSL** | Designated Safeguarding Lead | Established (role defined, not yet appointed) | All institutions, safeguarding-relevant fields only | SW-02 |
+
+> ### ⚠ PRIN and REG are currently the same person
+>
+> Mrs. Mariam Tope Anofi-AbdulKareem appears against **both** rows above.
+> That is not a duplicate to be tidied away — she genuinely holds two
+> offices: Registrar of Royal College and Head Teacher of the Nursery and
+> Primary School. Earlier drafts of this matrix and of the governance
+> pages recorded the two offices under two spellings of her name and so
+> treated them as two people. They are one.
+>
+> **The consequence is a real internal control, not a data-entry
+> detail.** `docs/data-ownership-register.md` sets the approval authority
+> for a change of student status as *"Registrar + Principal"* — a
+> deliberate two-person check, so that no single officer can both create
+> a record and approve a change to it. For the Nursery and Primary
+> School, both halves of that check are now the same individual, and the
+> control does not exist.
+>
+> This document does not decide what to do about it; that is the Board's.
+> The three ordinary answers are: appoint the **AREG** (Assistant
+> Registrar) role already proposed above and route Basic School approvals
+> through it; name a second approver from the Management Team for Basic
+> School status changes only; or accept the concentration explicitly, in
+> writing, with the Board recording that it has done so. What must not
+> happen is the control staying on paper while one person holds both
+> ends of it.
+>
+> The identity-platform consequence — one `staff` row cannot carry two
+> offices — is recorded in `docs/staff-identity-platform.md`.
 | *(for context)* GUARDIAN | Guardian | Established, built | Own linked children only | Live — Parent Portal |
 | *(for context)* STUDENT | Student | Established, built | Own record only | Live — Student Portal |
 

@@ -235,7 +235,7 @@ Article 50). Its membership, restated by the 2026-08-04 amendment
 | Principal (Mudeer), Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
 | Principal, Sultan Hanafi Royal College | Dr. Adegoke Musa Olatunji |
 | Principal (Ra'ees), Sultan Hanafi School of Islamic and Arabic Studies | Shaykh Abubakr Solah |
-| Head Teacher, Sultan Hanafi Nursery and Primary School | Mrs. Mariam Tope AbdulKareem |
+| Head Teacher, Sultan Hanafi Nursery and Primary School | Mrs. Mariam Tope Anofi-AbdulKareem |
 | Head, Sultan Hanafi Online & Distance Learning School | Vacant |
 
 The sixth seat is vacant because Sultan Hanafi Online & Distance
@@ -334,7 +334,7 @@ it — she does not appear in the roster below.
 
 | Name | Role | Credentials |
 |---|---|---|
-| Mrs. Anofi-Abdulkareem Mariam Tope | Registrar, Royal College | B.Sc. Microbiology, PGDE |
+| Mrs. Mariam Tope Anofi-AbdulKareem | Registrar, Royal College — **and** Head Teacher, Sultan Hanafi Nursery and Primary School (one person, two offices; she also appears in the Management Team table above) | B.Sc. Microbiology, B.Ed, PGDE, NCE |
 | Mr. Oladele Abdulwasiu Adebayo | Head, Research & Development *(office pending Board recognition)* | B.A/M.A History, PGDE, TRCN |
 | Mr. Yusuf Shola Monsuru | HoD English | HND, Diploma Phonology & Public Speaking, TEFL |
 | Mr. Afolabi Morufu Olalekan | HoD Commerce & Management | B.Sc.(Ed) Accounting Edu., NCE |

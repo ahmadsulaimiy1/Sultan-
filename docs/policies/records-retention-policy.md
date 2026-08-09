@@ -15,7 +15,7 @@ procedure and a periodic data-minimisation review.*
 | Policy Title | Records Retention Policy |
 | Version | 2.1 (retrofitted from v1.0, Phase C; archival/destruction-authority section added post-Registrar's-Office phase) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Registrar, Secular College (Mrs. Anofi-Abdulkareem Mariam Tope), jointly with the ICT Head for Portal-held data |
+| Policy Owner | Registrar, Secular College (Mrs. Mariam Tope Anofi-AbdulKareem), jointly with the ICT Head for Portal-held data |
 | Approval Authority | Board of Governors, with legal input given the intersection with the NDPA 2023 |
 | Review Cycle | Annual, or immediately after any change to the Data Protection & Privacy Policy's retention-related sections |
 | Next Review Date | Not yet set — to be fixed upon adoption |

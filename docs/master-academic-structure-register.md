@@ -384,7 +384,7 @@ Established roles today: **EXE** (Head of Schools / Administrator /
 Executive Leadership — named individual: Zakariya Olanrewaju Anofi,
 also Chairman of the Board of Governors, per GV-01), **PRIN** (Principal/
 Head Teacher, per-institution), **REG** (Registrar — named individual:
-Mrs. Anofi-Abdulkareem Mariam Tope, per AC-02/PA-05), **DSL**
+Mrs. Mariam Tope Anofi-AbdulKareem, per AC-02/PA-05), **DSL**
 (Designated Safeguarding Lead, per SW-02 — role defined, not yet
 appointed).
 

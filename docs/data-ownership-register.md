@@ -17,7 +17,7 @@ Officer.*
 
 | Record type | Owner office | Responsible officer | Retention authority | Approval authority | Export authority | Deletion authority |
 |---|---|---|---|---|---|---|
-| **Student record** | Registrar | Registrar (Mrs. Anofi-Abdulkareem Mariam Tope) | Enrolment + 7 years after graduation/withdrawal (IT-04 §7.1) | Registrar + Principal (status changes) | Registrar | **None** — archived via `status`, never deleted, except a data-protection deletion request (below) |
+| **Student record** | Registrar | Registrar (Mrs. Mariam Tope Anofi-AbdulKareem) | Enrolment + 7 years after graduation/withdrawal (IT-04 §7.1) | Registrar + Principal (status changes) — ⚠ **see the note below: for the Nursery and Primary School these are the same person** | Registrar | **None** — archived via `status`, never deleted, except a data-protection deletion request (below) |
 | **Guardian record** | Registrar | Registrar | Duration of last linked child's enrolment + 2 years (IT-04 §7.1) | Registrar | Registrar | Data-protection deletion request only (IT-02/`privacy_requests`, actioned by Registrar) |
 | **Staff record** *(personnel file, not portal login)* | **Ungoverned** — no HR office exists yet | Unassigned | Employment + 6 years (IT-04 §7.1 — proposed) | N/A — no HR policy exists to route this through (HR-04/05/06/07 Missing) | N/A | N/A — do not build this record type until HR governance exists |
 | **Staff portal account** *(login credential only)* | ICT | System Administrator | Duration of employment; deactivated (Archived) on departure, not deleted, mirroring student/guardian accounts | Executive (new account creation) | System Administrator | System Administrator, on confirmed departure — Archive by default, Delete only via data-protection request |
@@ -38,6 +38,29 @@ Officer.*
 | **Policy document** | Policy-owning office per `policy-code-index.md` | Varies per code (e.g. Registrar owns AC-02) | Permanent — version-controlled in git, superseded versions kept in history, not deleted | Board of Governors (Tier 1), Head of Schools / Administrator (Tier 2–4) | Public, for Public-classified documents (already true — they're on the live site) | Never — git history is the retention mechanism |
 | **Website content** | ICT / Communications function | Whoever holds repository access today | Permanent — version-controlled | Head of Schools / Administrator / Management Team | Public (it's a public website) | Content can be removed from the live site; git history retains it |
 | **Governance document** *(Board resolutions, registers, audits)* | Board of Governors | Board Secretary role (not yet named) | Permanent — version-controlled | Board of Governors | Internal by default (see `policy-code-index.md`'s classification principle) | Never |
+
+## ⚠ One two-person control currently has one person in it
+
+Two rows above set the approval authority for a change to a student's
+record as **"Registrar + Principal"** — Student record (status changes)
+and Result record (finalised per-term, AC-02). That pairing is a
+deliberate separation of duties: the officer who holds the record does
+not, alone, approve a change to it.
+
+**For the Sultan Hanafi Nursery and Primary School, both halves of that
+pair are the same individual.** Mrs. Mariam Tope Anofi-AbdulKareem is
+Registrar of Royal College and Head Teacher of the Nursery and Primary
+School. Until recently the two offices were recorded under two spellings
+of her name and were therefore read, here and elsewhere, as two people.
+
+Nothing above is factually wrong about *offices*; what is wrong is the
+assurance a reader takes from the phrase "Registrar + Principal", which
+for one institution describes a control that does not operate. This
+register records the gap and does not close it — the remedy is the
+Board's, and the options are set out in
+`docs/role-permission-matrix.md`. Note that the same concentration does
+**not** apply to Royal College, where the Principal is Dr. Adegoke Musa
+Olatunji and the pairing works as intended.
 
 ## What this register deliberately leaves open
 

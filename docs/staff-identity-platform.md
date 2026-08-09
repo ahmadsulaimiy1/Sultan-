@@ -54,17 +54,42 @@ curl -X POST https://<your-domain>/api/portal/admin/staff \
   -H "x-sysadmin-token: <token>" -H "content-type: application/json" \
   -d '{
     "action": "create-staff", "staffNo": "SHR-STF-0003",
-    "fullName": "Mrs. Anofi-Abdulkareem Mariam Tope", "positionTitle": "Registrar",
+    "fullName": "Mrs. Mariam Tope Anofi-AbdulKareem", "positionTitle": "Registrar",
     "officeName": "Registrar'\''s Office", "reportsToStaffNo": "SHR-STF-0001"
   }'
 ```
 
 Repeat the pattern for the remaining named Management Team members (Shaykh Ahmad
 Ibrahim — Principal, Qur'an College; Shaykh Abubakr Solah — Principal,
-School of Islamic and Arabic Studies; Mrs. Mariam Tope AbdulKareem — Head
-Teacher, Basic School; Mr. Oguntade Adebola Aliu — ICT Head, office
-`ICT Office`; Mr. Oladele Abdulwasiu Adebayo — Head, Research &
+School of Islamic and Arabic Studies; Mr. Oguntade Adebola Aliu — ICT Head,
+office `ICT Office`; Mr. Oladele Abdulwasiu Adebayo — Head, Research &
 Development).
+
+> **One person, two offices — and the schema has room for one.**
+> `SHR-STF-0003` above is Mrs. Mariam Tope Anofi-AbdulKareem as Registrar
+> of Royal College. She is **also** Head Teacher of the Nursery and
+> Primary School. `create-staff` accepts a single `positionTitle` and a
+> single `officeName`, so this is the first real appointment the identity
+> platform cannot express, and it must not be resolved by creating a
+> second `staffNo` for her: two staff numbers for one person breaks the
+> directory, the reporting line and every count taken from the table.
+>
+> Two ways out, and the school should pick one before anybody is
+> onboarded:
+>
+> 1. **Primary office plus secondary appointments** — keep one `staff`
+>    row carrying the office the person reports through, and add a
+>    `staff_appointment` table (staffNo, institution, positionTitle,
+>    office, from/to) for the rest. Correct, and the only version that
+>    survives a third appointment or a hand-over of one office and not
+>    the other.
+> 2. **A single combined `positionTitle` string** — expedient, and it
+>    stops being true the moment either office changes hands.
+>
+> Whichever is chosen, the ROLE GRANTS below are unaffected in mechanism
+> and very much affected in meaning: this person needs both `REG` and
+> `PRIN`, which is a separation-of-duties question rather than a
+> technical one. It is recorded in `docs/role-permission-matrix.md`.
 
 ## Granting roles
 

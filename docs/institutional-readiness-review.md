@@ -26,8 +26,7 @@ answers below build from.
 already grants them real permissions in `permission-matrix.js`, and
 they can be onboarded via `admin/staff.js` today.
 
-- **Registrar's Office** — the strongest case. Mrs. Anofi-Abdulkareem
-  Mariam Tope is the only office-holder in the entire directory with
+- **Registrar's Office** — the strongest case. Mrs. Mariam Tope Anofi-AbdulKareem is the only office-holder in the entire directory with
   *both* a named person and a documented job description (AC-02, PA-05)
   predating this phase. The REG role already carries real grants across
   more system areas (§4.1, 4.2, 4.6, 4.7, 4.11, 4.13, 4.14 of the

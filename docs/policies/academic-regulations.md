@@ -15,7 +15,7 @@ transfer students' academic standing.*
 | Policy Title | Academic Regulations |
 | Version | 2.0 (retrofitted from v1.0, Phase B) |
 | Effective Date | Not yet effective — pending Board adoption |
-| Policy Owner | Registrar, Secular College (Mrs. Anofi-Abdulkareem Mariam Tope), in consultation with each institution's Principal/Head Teacher |
+| Policy Owner | Registrar, Secular College (Mrs. Mariam Tope Anofi-AbdulKareem), in consultation with each institution's Principal/Head Teacher |
 | Approval Authority | Board of Governors |
 | Review Cycle | Annual |
 | Next Review Date | Not yet set — to be fixed upon adoption |

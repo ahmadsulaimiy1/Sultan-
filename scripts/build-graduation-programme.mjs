@@ -133,7 +133,7 @@ const OFFICERS = [
   ['Imam Ahmad Sulaimiy', 'الإمام أحمد السليمي', 'Principal (Mudeer), Sultan Hanafi Qur’an College'],
   ['Dr. Adegoke Musa Olatunji', '', 'Principal, Sultan Hanafi Royal College'],
   ['Shaykh Abubakr Solah', 'الشيخ أبو بكر صلاح', 'Principal (Ra’ees), School of Islamic and Arabic Studies'],
-  ['Mrs. Mariam Tope AbdulKareem', '', 'Head Teacher, Nursery and Primary School'],
+  ['Mrs. Mariam Tope Anofi-AbdulKareem', '', 'Head Teacher, Nursery and Primary School'],
 ];
 
 const COORDINATORS = 'Mr. Shola  ·  Ustādh Shereef Alwaafir';

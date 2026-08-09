@@ -81,12 +81,24 @@ auto-seed real staff members (see the comment directly above the
 `institutions`/`roles`/`offices` INSERT statements in
 `functions/api/portal/setup.js`): staff records are an explicit,
 admin-mediated action, the same way guardian and student records are
-never auto-created. Six real, publicly-named office-holders already
-exist as text on `pages/about-governance.html` (Head of Schools / Administrator Zakaria
-Olanrewaju Anofi; Registrar Mrs. Anofi-Abdulkareem Mariam Tope; Head
-Teacher Mrs. Mariam Tope AbdulKareem; three Principals — Royal College,
-Qur'an College, School of Islamic and Arabic Studies) but have **no `staff` row in
-the database** — that page is marketing copy, not a system of record.
+never auto-created. **Five** real, publicly-named office-holders already
+exist as text on `pages/about-governance.html` — Head of Schools /
+Administrator Zakaria Olanrewaju Anofi; Mrs. Mariam Tope
+Anofi-AbdulKareem, who holds **two** offices, Registrar of Royal College
+and Head Teacher of the Nursery and Primary School; and three Principals
+(Royal College, Qur'an College, School of Islamic and Arabic Studies) —
+but have **no `staff` row in the database**: that page is marketing copy,
+not a system of record.
+
+> **Six offices, five people.** Earlier drafts of this document counted
+> the Registrar and the Head Teacher as two office-holders. They are one
+> person. That is not a cosmetic correction — it means the `staff` table
+> cannot be populated one-row-per-office, because the very first real
+> person to be onboarded holds two. See the note under the identity
+> platform's create-staff example in `docs/staff-identity-platform.md`,
+> and the separation-of-duties consequence recorded in
+> `docs/role-permission-matrix.md`.
+
 Wiring them in is one real admin action per person:
 
 ```

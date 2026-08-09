@@ -1351,7 +1351,7 @@ export const RC_PROGRAMMES = {
     // award at a glance, which is the point: a parent holding this and an
     // Ibtida'iyyah certificate must never wonder which school issued which.
     accent: '#C9784B',
-    // The office changed hands: Mrs. Mariam Tope AbdulKareem is Head Teacher,
+    // The office changed hands: Mrs. Mariam Tope Anofi-AbdulKareem is Head Teacher,
     // and the signature the Founder supplied is HERS. It was briefly attached
     // to the outgoing Head Teacher's name here, which is the one error this
     // file must never make — a signature under the wrong name is not a naming
@@ -1363,7 +1363,7 @@ export const RC_PROGRAMMES = {
     // weight preserved) so it sits on the guilloche as ink rather than as a
     // white card pasted over the field.
     signatory: {
-      name: 'Mrs. Mariam Tope AbdulKareem',
+      name: 'Mrs. Mariam Tope Anofi-AbdulKareem',
       role: 'Head Teacher, Nursery and Primary School',
       ink: '/assets/images/certificates/signature-head-teacher.png',
     },

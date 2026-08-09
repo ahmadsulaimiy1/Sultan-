@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      2fe1f86482eb2dea7231d5b295b69c75f70a690f
-short       2fe1f864
+commit      31559f79e0988ff1f786e53b864caeff7236fdda
+short       31559f79
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     A light runs the rim of every medallion, and the colophon gets ten frames back
-built (UTC) 2026-08-09T19:58:47Z
+subject     Mrs Kareemat is removed, and the initials she left behind are corrected
+built (UTC) 2026-08-09T20:17:02Z
 assets      shrs-pwa-cd42d7a99b
 pages       143
 

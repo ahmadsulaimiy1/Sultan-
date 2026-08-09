@@ -15,9 +15,9 @@ sync with it.*
 | Principal, Royal College | Dr. Adegoke Musa Olatunji | |
 | Principal, Qur'an College | Shaykh Ahmad Ibrahim | Owns Boarding Regulations, Ijazah Governance Framework, Hifz Regulations. |
 | Principal, School of Islamic & Arabic Studies | Shaykh Abubakr Solah | |
-| Head Teacher, Nursery & Primary | Mrs. Mariam Tope AbdulKareem | |
+| Head Teacher, Nursery & Primary | Mrs. Mariam Tope Anofi-AbdulKareem | Also the Registrar (below) — one person, two real roles. The two used to be recorded under two spellings of her name and were read as two people. Where a Phase B document makes a decision joint between Head Teacher and Registrar, it is not joint for this institution. |
 | VP Administration | Mrs. Anofi-Badmus Fatimat Omolola | Signs as "Fatimah Badmus" on the live policies page — same person, name variant, not a second role. Owns Student Code of Conduct. |
-| Registrar, Royal College | Mrs. Anofi-Abdulkareem Mariam Tope | |
+| Registrar, Royal College | Mrs. Mariam Tope Anofi-AbdulKareem | Also the Head Teacher, Nursery & Primary (above). Unlike the VP Administration row, this is **not** a name variant of one role — it is one person genuinely holding two roles, which is the harder case: see `docs/role-permission-matrix.md`. |
 | ICT Head | Mr. Oguntade Adebola Aliu | Proposed owner, Data Protection & Privacy Policy. |
 | Head, Research & Development | Mr. Oladele Abdulwasiu Adebayo | **Unresolved conflict, carried forward, not resolved here:** the live policies page signs him as "Principal" in every sign-row. Phase A and Phase B both use his governance-roster title (Head, Research & Development) consistently and do not adopt "Principal" for him, to avoid entrenching an unverified title. Flagged again in the consistency audit. |
 | Designated Safeguarding Lead (DSL) | *role does not yet exist* | Every Phase B document that would naturally name a DSL says so explicitly — none silently assume the role is filled. |

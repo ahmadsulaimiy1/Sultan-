@@ -395,11 +395,11 @@ const STATEMENTS = [
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
     ('EXE', 'Head of Schools / Administrator', 'established', 'All institutions', 'GV-01; Founder, Head of Schools & Chairman of the Board of Governors — Zakariya Olanrewaju Anofi'),
-    ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution)'),
+    ('PRIN', 'Principal / Head Teacher', 'established', 'Own institution', 'GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Mariam Tope Anofi-AbdulKareem, who also holds REG — see docs/role-permission-matrix.md on the separation-of-duties consequence)'),
     ('VP', 'Vice Principal', 'proposed', 'Own institution, mirrors Principal minus final approval authority', 'Not yet documented'),
     ('VPAC', 'Vice Principal — Academic', 'proposed', 'All institutions — academic-standing sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
     ('VPAD', 'Vice Principal — Administration', 'proposed', 'All institutions — administrative sign-off in the Graduation Approval Workflow', 'Graduation Documents Programme Executive Directive; no appointment holder yet'),
-    ('REG', 'Registrar', 'established', 'All institutions (academic records are institution-wide)', 'AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope'),
+    ('REG', 'Registrar', 'established', 'All institutions (academic records are institution-wide)', 'AC-02, PA-05; Mrs. Mariam Tope Anofi-AbdulKareem'),
     ('AREG', 'Assistant Registrar', 'proposed', 'Delegated subset of Registrar''s scope', 'Not yet documented'),
     ('ADM', 'Admissions Officer', 'proposed', 'All institutions, pre-enrolment only', 'PA-05 describes the process; no standing officer role documented yet'),
     ('FIN', 'Finance Officer', 'proposed', 'All institutions', 'FN-01 establishes the principle; no officer role documented'),
