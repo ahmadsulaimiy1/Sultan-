@@ -1,178 +1,272 @@
-# Certificates that do not verify — what happened and how it is repaired
+# Live verification recovery — the thirteen issued certificates
 
-**Raised by the Founder, 9 August 2026:** *"All those certificates that were
-issued are no longer verified on the portal once their numbers are clicked on
-the verification bar. They don't show up anything. The certificates have been
-awarded to the awardees."*
+**Founder's directive, 9 August 2026:** *"The issued certificates are the
+authoritative documents. Do not regenerate, renumber, re-mint, modify, or
+replace any already-issued certificate… The live database must be brought into
+agreement with the certificates — not the certificates brought into agreement
+with the database."*
 
-This is the written answer. It states what was found, what was proved, what
-could not be proved from where the investigation ran, and the exact steps that
-put it right.
+Nothing in this procedure alters a certificate. No identifier is recalculated,
+no cryptographic field is recomputed, and no number is re-issued. The thirteen
+sheets in circulation are the authority; this brings the live system up to them.
 
 ---
 
-## 1. What is actually wrong
+## 0. The finding that changes the order of work
 
-**Minting a certificate and creating its record are two different acts, and
-only the first one happened.**
+Running the real verification endpoint against a real database — not a
+simulation of it — turned up a second requirement that the SQL import does not
+satisfy and that would otherwise have produced a **worse** public answer than
+the one being fixed.
 
-The issuing scripts produce four things: the printable sheets, the register in
-JSON, a human-readable register in Markdown, and an SQL file. The SQL file is
-what creates the rows the public verifier reads. **Nothing in this repository
-writes those rows to the live database** — that step is a human import, and it
-was never run for the 8 August 2026 graduation.
+The certificates were signed under **two different key versions**. The seven
+Ibtidā'iyyah certificates (000035–000041) carry `hash_key_version = 1`; the six
+I'dādiyyah certificates (000042–000047) carry version 2. The endpoint verifies
+each row under **the key that signed it** — that is the whole point of key
+versioning — and it resolves which key that is from the deployment's
+environment.
 
-So every artefact the school has looked at is correct. The sheets are correct,
-the printed numbers are correct, the register is correct, the QR codes point at
-the right addresses. The only place the omission shows is the one place the
-school does not look: a graduand typing their own number into the public page
-and being told there is nothing there.
+Three configurations were tested against the real code. What the public page
+would say differs completely:
 
-That is why the site "looks downgraded" without any deployment having removed
-anything. The verification page, the `/v/*` short link, the API route, the
-number-parsing code and the page build were all checked and are all intact —
-see §4. There is simply no record behind the numbers.
+| Cloudflare configuration | IBT 000035–000041 | IDD 000042–000047 | What a graduand sees |
+|---|---|---|---|
+| No key variables set | `key_unavailable` | `key_unavailable` | "Integrity check failed" on all thirteen |
+| `DOCUMENT_HASH_SECRET` set, `DOCUMENT_HASH_KEY_VERSION` **not** set | **`mismatch`** | `key_unavailable` | Seven genuine certificates publicly reported as **not matching their signature** |
+| `DOCUMENT_HASH_KEY_VERSION=2` + both keys set | **intact** | **intact** | "Genuine — active credential" |
 
-## 2. The repair — two imports, in this order
+The middle row is the dangerous one. With the version left unset it defaults to
+1, so the endpoint checks the v1 Ibtidā'iyyah certificates against the *v2* key
+and gets a mismatch — which the public page renders as *"Integrity check
+failed — this record does not match its cryptographic signature."* That is an
+accusation of forgery levelled at seven real children's documents, and it is
+reached by a configuration that looks complete.
 
-Both files are already in the repository, already generated, already correct.
-They are imported into the **live** database (the Neon production branch that
-Cloudflare Pages uses), by someone with database access.
+**Production therefore needs three variables, not one:**
 
-```
-1.  docs/graduation-registers/2026-08-08-IBT-000035.sql      (7 certificates)
-2.  docs/graduation-registers/2026-08-08-IDD-000042.sql      (6 certificates)
-```
+| Variable | Value | Why |
+|---|---|---|
+| `DOCUMENT_HASH_KEY_VERSION` | `2` | Names the current signing version. Unset ⇒ defaults to 1 ⇒ the table's middle row. |
+| `DOCUMENT_HASH_SECRET` | the production v2 key | Signs new certificates; verifies the six I'dādiyyah ones. |
+| `DOCUMENT_HASH_SECRET_V1` | `batch-issuance-development-secret` | The **retired** key the Ibtidā'iyyah batch was signed under. It must never sign again — it is already public in this repository — but it must remain configured or those seven certificates never verify again. |
 
-**The order matters and is not interchangeable.** Each file ends by advancing
-the numbering sequences past its own batch, with a plain `setval`. IBT sets
-them to 41; IDD sets them to 47. Imported the wrong way round, the final state
-is 41 — and the next certificate the Registrar issues is numbered 000042, which
-is already on Yaseer Balogun's document. **IBT first, then IDD.**
+`DOCUMENT_HASH_SECRET_V1` is not a secret and does not need protecting: it is
+the development literal already committed in plaintext, which is exactly why it
+is retired. The production v2 key is a real secret and the standing rule holds —
+never in the repository, never in chat, never in a log.
 
-Neither file is safe to run twice. The certificate rows carry explicit `id` and
-`serial_no` values under unique constraints, so a second run fails loudly on a
-duplicate rather than quietly doubling anything. If an import errors part-way,
-stop and read the error — do not re-run to "make sure".
+**Do the import and the key configuration in the same maintenance window.** The
+import alone moves the public answer from "no such certificate" to "this
+certificate does not match its signature", which is not an improvement.
 
-One thing to check while importing: the first block of each file attaches the
-permanent Student ID to an existing student row, matched on `full_name`, and
-only where no ID is set yet:
+---
 
-```sql
-UPDATE students SET identity_no = '714743483445443'
-  WHERE full_name = 'Hameedah Adebimpe Ojewumi' AND identity_no IS NULL;
-```
+## 1. The import
 
-If a graduand has no `students` row on the live database, or is filed there
-under a different spelling, that `UPDATE` matches nothing and reports `UPDATE 0`.
-The certificate still verifies — the certificate row carries the Student ID
-itself — but the child's own record will not be linked to it. Note any `UPDATE 0`
-lines and give them to the Registrar's Office to reconcile; do not edit the SQL.
-
-## 3. Proving it, before anyone is told it is fixed
+One file, generated from the two sealed registers and safe to run repeatedly:
 
 ```
-node scripts/verify-issued-certificates-live.mjs
+docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql
 ```
 
-This asks the **public** endpoint exactly what a holder asks it. For all
-thirteen certificates it checks every number printed on the sheet — the full
+Regenerate it any time with `npm run certificates:import`. The generator
+(`scripts/build-production-import.mjs`) lifts each `INSERT` out of the sealed
+register **as text** and asserts the copy is byte-identical before writing, so
+it is structurally incapable of producing a value that differs from what is
+printed on a sheet. It never imports the signing code and never recomputes a
+serial, a hash, a document id or an archive reference.
+
+What it adds around those untouched statements:
+
+- **Idempotency.** `ON CONFLICT DO NOTHING` on every insert. The Student ID
+  attachments are guarded by `identity_no IS NULL`, so they neither duplicate
+  nor overwrite. Proven by running it three times against a real PostgreSQL 16
+  and diffing a full data dump: **byte-identical, sequences included.**
+- **A sequence repair that cannot go backwards.** Driven from
+  `GREATEST(what is in the table, where the counter already stands)` rather
+  than a bare `setval`.
+- **One transaction**, so a failed run leaves nothing behind.
+- **A verification block that makes `DO NOTHING` honest.** It re-reads all
+  thirteen rows and aborts unless each one's serial, content hash, printed name
+  **and** Student ID agree with the certificate. Tested by planting a row that
+  occupies a real serial with the wrong child behind it: the import raised
+  `IMPORT ABORTED — record content hash disagrees with the certificate` and
+  rolled back.
+
+### Numbering — the specific hazard
+
+The two sealed register files each end with a plain `setval` to their own last
+number. Run in the order IDD-then-IBT, that leaves the counter at **41**, and
+the next certificate the Registrar issues is **000042** — a number already
+engraved on Muhammad Ismail Seriki's document. This was reproduced, not
+theorised:
+
+```
+SEALED files, IDD then IBT   -> sequence at 41  (next 42)   ← collision
+PRODUCTION import, any order -> sequence at 47  (next 48)
+PRODUCTION import onto a sequence already at 91 -> stays 91 ← never wound back
+```
+
+After the import the counter stands at **47** and the next certificate issued
+is **000048**, as directed.
+
+One honest note: PostgreSQL sequence operations are **not** transactional. If
+the verification block aborts, the rows roll back but the counter stays where
+`GREATEST` put it. That fails safe — a counter at 47 with nothing imported
+still cannot re-issue 000035–000047.
+
+### Running it
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql
+```
+
+It prints the before-state, the after-state, and a list headed
+**`student record not linked`**. Any child on that list holds a certificate
+that verifies correctly — the certificate row carries their Student ID — but
+has no matching row in `students`, or is filed there under a different
+spelling. Give that list to the Registrar's Office. **Do not edit the SQL to
+force a match.**
+
+---
+
+## 2. Acceptance
+
+A successful import is not acceptance. Acceptance is the public endpoint
+answering correctly to what a holder actually asks it:
+
+```bash
+npm run certificates:accept -- --base https://shroyalschools.com
+```
+
+For all thirteen certificates it checks **nine identifiers each** — the full
 serial, the engraved number with and without its check tail, the document id,
-the archive reference, the verification code beside the QR, and the Student ID —
-and passes a certificate only when all of them resolve to it. It sends nothing
-but numbers already printed on documents in circulation, and it writes nothing.
+the archive reference, the verification code both as printed and ungrouped, the
+Code 128-C archive barcode, and **the QR payload itself**, resolved through the
+`/v/` route a phone camera follows. Each resolution is cross-checked against the
+sheet: right serial, right engraved number, right child in English and Arabic,
+right Student ID, right programme, right status, and **no grade** (the public
+attestation must never carry one).
 
-A clean run ends:
+Then the failure battery, all of which must fail closed:
 
-```
-PASSED — all 13 issued certificate(s) verify on every identifier they print.
-```
+- nonexistent but well-formed SHRS number
+- malformed / not an SHRS number at all
+- empty reference
+- correct number with the **wrong** anti-forgery check tail
+- SQL-injection-shaped reference
+- verification code one hex digit off
+- a 15-digit number that is not a valid Student ID
+- a Student ID naming several certificates → an index, never a verdict
+- a tampered record → never an active credential *(scratch database only)*
+- a revoked certificate → reports revoked *(scratch database only)*
 
-Anything else is printed per certificate and per identifier, with the two
-failures distinguished: a number the school does not issue, versus a number it
-does issue and holds no record of. The second is the missing-import signature,
-and the script says so.
+The rule under test is single and absolute: **no unknown or ambiguous state may
+present as a valid credential.** The public page prints "Genuine — active
+credential" on exactly one condition, `status === 'active'`, so that is the
+field asserted.
 
-Run it after every future issuance, and after any deployment that touches
-verification. **A sheet that has not passed this check should not be handed to
-anyone.** A holder whose number returns nothing has been given a document the
-school itself cannot confirm.
-
-## 4. What was ruled out, and how
-
-These were each checked rather than assumed, because "the site was downgraded"
-would be a very different repair from a missing import:
-
-- **Number parsing and lookup.** All eleven identifier shapes were resolved
-  against the real published serials with the database stubbed. Every one
-  resolved. The verifier's code is not the fault.
-- **The public page.** `verify-certificate/index.html` builds, and the
-  verification script is injected sitewide by `scripts/build.js`.
-- **The short link.** `_redirects` line 12 still carries
-  `/v/*  /verify-certificate/?ref=:splat  301`, which is what every QR code on
-  every sheet points at.
-- **The API route.** `functions/api/certificates/verify.js` is in place at the
-  path the page calls.
-- **Where rows come from.** Grepped: nothing in the repository inserts into
-  `stage_certificates` on the live database. The SQL import is the only path.
-
-## 5. What could **not** be proved from here, stated plainly
-
-The investigation ran in a sandbox whose outbound network access is filtered.
-Requests to `shroyalschools.com` are refused by the proxy —
-`HTTP 403 — Host not in allowlist` — which is the sandbox's own restriction and
-not a fault on the site. **The live database was therefore never queried and
-the live endpoint was never called from here.** The diagnosis above rests on
-reading the code and on the fact that the import step has no record of having
-been run.
-
-The command in §3 is the thing that closes that gap, and it must be run from a
-machine that can actually reach the site.
-
-## 6. The second fault — what the verifier *said*
-
-The missing import is the cause. But it exposed a real defect in what the page
-told the holder, and that has been fixed in the same change.
-
-The endpoint knew whether a reference was a shape this institution issues; it
-already used that fact to decide whether to write an audit-log row. It then
-discarded it, returning an identical "not found" for two completely different
-statements:
-
-- *this is not one of our numbers* — a typo, or someone else's document;
-- *this **is** one of our numbers and we hold no record of it* — which is
-  exactly what all thirteen awardees saw.
-
-Answering the second with the first tells a graduand holding a genuine, signed
-certificate, in public, that their document appears to be nothing. That is an
-accusation, and the school never made it — the page did, on the school's behalf.
-
-The two states are now distinct, in English and Arabic. Neither claims anything
-about the document: `found` stays false, no status is asserted, and **no unknown
-state ever displays as "Genuine."** The recognised state says plainly that this
-is a statement about the school's records and not about the holder's
-certificate, and directs them to the Registrar's Office.
-
-It is also the institution's own alarm. A well-formed certificate number with no
-row behind it means a record is missing or was never created. Nobody can act on
-a warning that reads like a typo.
-
-## 7. So this cannot happen again
-
-Both issuing scripts now end on the step that is still outstanding, rather than
-on "written to …". The last thing on the screen after any issuance names the
-SQL file to import and the verification command to run, and says in terms that
-the certificates do not verify yet.
-
-That is deliberately the final output. The previous ending was a success
-message, and a success message at the end of a run that has not finished is how
-thirteen certificates reached thirteen children with nothing behind them.
+It sends only numbers already printed on documents in circulation, and against
+`--base` it writes nothing.
 
 ---
 
-**Still outstanding after the import** (tracked separately, not part of this
-repair): Abdulbasit Adedokun's Tamhīdiyyah certificate is approved and awaiting
-issuance through the Certificate Generation Centre; the revocation of
-`SHRS-CERT-IBT-2026-000037-22C49` (R-2026-001) is deferred by the Founder's
-instruction; and five Arabic names remain with the Founder.
+## 3. What has been proved, and what has not
+
+### Proved — against a real PostgreSQL 16, running the real endpoint
+
+The rehearsal loads the actual `sql/schema.sql`, runs the actual import, and
+calls `functions/api/certificates/verify.js` **unmodified** — a resolver hook
+swaps only the database driver, because Neon's HTTP client cannot address a
+local server. No test hooks, no re-implementation.
+
+| | Result |
+|---|---|
+| Schema loads | 69 tables, no errors |
+| Import, first run | 13 certificates, sequence 47, next 000048 |
+| Import, runs 2 and 3 | database byte-identical — **idempotent** |
+| Import onto a pre-wound sequence | counter never moved backwards |
+| Import with a planted conflicting row | **aborted and rolled back** |
+| Identifier resolution | **13/13 certificates, 9/9 identifiers each, including QR** |
+| Cross-checks (name, Arabic name, Student ID, programme, engraved number) | all correct; no grade leaked |
+| Failure battery | **10/10 fail closed** |
+| Integrity attestation, key version 1 (IBT) | **7/7 intact → "active"** |
+| Integrity attestation, key version 2 (IDD) | not exercisable here — the production key is not in this environment, and none was invented |
+
+### Acceptance table — local rehearsal, 9 August 2026
+
+| Certificate | Student | QR | Number Lookup | Record | Status |
+|---|---|---|---|---|---|
+| 000035 | Hameedah Adebimpe Ojewumi | PASS | PASS | PASS | active |
+| 000036 | Aisha Anofi | PASS | PASS | PASS | active |
+| 000037 | Abdulbasit Adedokun | PASS | PASS | PASS | active |
+| 000038 | Naheemah Ismail | PASS | PASS | PASS | active |
+| 000039 | Ashrof Akorede | PASS | PASS | PASS | active |
+| 000040 | Imran Adegoke | PASS | PASS | PASS | active |
+| 000041 | Abdulateef Adedokun | PASS | PASS | PASS | active |
+| 000042 | Muhammad Ismail Seriki | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+| 000043 | Baqi Olamiposi Anofi | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+| 000044 | Faridah Ayomide Aliu | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+| 000045 | Thoirah Makinde | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+| 000046 | Abdulbasit Amobi Jabarr | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+| 000047 | Abdullah Oladimeji Anofi | PASS | PASS | PASS | NOT ATTESTED (v2 key absent here) |
+
+The six I'dādiyyah rows resolve on every identifier and cross-check correctly
+against their sheets. Only the final attestation is unavailable, because the v2
+production key is not in this environment and **no substitute was fabricated** —
+a rehearsal that invented a key would have reported all thirteen intact and
+proved the opposite of what it claimed.
+
+### NOT VERIFIED LIVE
+
+**The live database was never queried and the live endpoint was never called.**
+Outbound access to `shroyalschools.com` is refused by this environment's proxy
+(`403 — Host not in allowlist`). That is the sandbox, not a fault on the site.
+
+Everything above proves the **code and the procedure**. It proves nothing about
+production: not its data, not its secrets, not its deployment. The status of
+live verification is **NOT VERIFIED LIVE** until §2 has been run from a machine
+that can reach the site and returns `ACCEPTED`.
+
+---
+
+## 4. The order of operations
+
+1. Set the three variables in §0 on the Cloudflare Pages **production**
+   environment. Redeploy so they take effect.
+2. Run the import in §1 against the live database. Read the `student record not
+   linked` list and pass it to the Registrar's Office.
+3. Run the acceptance in §2 against `https://shroyalschools.com`.
+4. Scan the QR code on one physical printed sheet with a phone, and confirm it
+   lands on the same record. The harness resolves the QR *payload*; only a
+   camera proves the printed code carries it.
+5. Only then is verification fixed. Until step 3 returns `ACCEPTED`, the honest
+   status is NOT VERIFIED LIVE.
+
+**Do not release any further certificate that has not passed step 3.** A holder
+whose number returns nothing — or worse, returns "does not match its
+signature" — has been handed a document the school itself cannot confirm.
+
+---
+
+## 5. On the production key
+
+The Founder's standing instruction stands and is reinforced here: never
+hard-code it, never print it in chat or logs, deliver it as a secure deployment
+file, and no production artefact may reference the development secret.
+
+Two further points, both agreed:
+
+- **Make at least two secure backups before deleting the delivered file.** Do
+  not leave the only copy in a downloads folder or on a single device. If the
+  v2 key is lost, the six I'dādiyyah certificates can never be attested again —
+  they would resolve forever as "integrity check failed", and the only remedy
+  would be revoking and re-issuing six documents already in children's hands.
+- **`DOCUMENT_HASH_SECRET_V1` is the opposite case.** It is already public and
+  needs no protection; it needs only to stay configured, permanently, for as
+  long as any version-1 certificate exists. Removing it from the deployment
+  would silently un-verify the seven Ibtidā'iyyah certificates.
+
+Installing these in Cloudflare is the school's to do — that access is not
+available from here, and the system is not live merely because the code is
+correct.
