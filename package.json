@@ -16,7 +16,9 @@
     "test:offline": "node scripts/test-offline-foundation.mjs",
     "test:offline:shell": "node scripts/test-offline-shell.mjs",
     "test:sync": "node scripts/test-sync-engine.mjs",
-    "test:search": "node scripts/test-offline-search.mjs"
+    "test:search": "node scripts/test-offline-search.mjs",
+    "test:certificate-offline": "node scripts/test-certificate-offline.mjs",
+    "certificates:register": "node scripts/build-certificate-register.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",
