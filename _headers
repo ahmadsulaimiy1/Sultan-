@@ -25,3 +25,9 @@
   Cache-Control: no-cache, no-store, must-revalidate
 /manifest.webmanifest
   Cache-Control: no-cache
+
+# The build stamp must never be answered from a cache — the whole point of it
+# is to report what the ORIGIN currently holds. A cached copy of this file
+# would confirm the very staleness it exists to detect.
+/version.txt
+  Cache-Control: no-cache, no-store, must-revalidate

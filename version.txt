@@ -1,0 +1,15 @@
+Sultan Hanafi Royal Schools — build stamp
+
+commit      6eff26e4edb24afc94f91add7ece676e3cf9b708
+short       6eff26e4
+branch      main
+subject     The chronometer on a phone, the regnal strip, and the 16fps defect
+built (UTC) 2026-08-09T14:59:17Z
+assets      shrs-pwa-959c7f3b73
+pages       143
+
+If the commit above is not the one you expect, the deploy has not run
+or has not finished. If it IS the one you expect but a page still looks
+old, the stale copy is in a cache between this file and your screen:
+reload the page bypassing cache, and on an installed app close every
+window of it once so the service worker can hand over.

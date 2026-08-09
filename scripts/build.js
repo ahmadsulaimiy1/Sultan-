@@ -155,9 +155,21 @@ function versionAssets(html) {
 // verification screens) that are served as-is. Without this, those pages would
 // keep pointing at unversioned /css & /js URLs and could be served stale by a
 // browser or CDN after a deploy.
-function versionAllHtml() {
+function versionAllHtml(stamp) {
   const SKIP = new Set(['node_modules', '.git', '.wrangler', 'dist', 'build']);
   let count = 0;
+  /* The build stamp rides along with the cache-busting pass because that
+     pass already visits every html file in the tree — the hand-authored
+     portal and prospectus pages included, which is exactly where you most
+     want to be able to tell which build you are looking at. */
+  const META = stamp ? `<meta name="shrs-build" content="${stamp}">` : '';
+  const stampHtml = (html) => {
+    if (!META) return html;
+    const cleaned = html.replace(/\s*<meta name="shrs-build"[^>]*>/g, '');
+    return cleaned.includes('</head>')
+      ? cleaned.replace('</head>', META + '\n</head>')
+      : cleaned;
+  };
   function walk(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (entry.name.startsWith('.') && entry.name !== '.') continue;
@@ -167,7 +179,7 @@ function versionAllHtml() {
         walk(full);
       } else if (entry.isFile() && entry.name.endsWith('.html')) {
         const before = fs.readFileSync(full, 'utf8');
-        const after = versionAssets(before);
+        const after = stampHtml(versionAssets(before));
         if (after !== before) {
           fs.writeFileSync(full, after);
           count += 1;
@@ -183,6 +195,72 @@ function versionAllHtml() {
 // CACHE_VERSION string changes. Tie that string to a fingerprint of every
 // css/js file so a content change automatically retires the old cache on the
 // next visit — no manual version bump, no stale installed-PWA copies.
+/* --- The build stamp -----------------------------------------------------
+   Written because of a question neither the school nor anybody helping them
+   could answer from outside: "is the site I am looking at the site that was
+   last built?"
+
+   A push can be correct, complete and on the default branch, and the live
+   site can still be showing something older — the host's git integration
+   never ran, a build failed, an edge cache is holding the old HTML, or an
+   installed PWA is still being served by its previous service worker. From
+   a browser all four look identical: nothing changed.
+
+   So every build now leaves two marks that can be read from outside:
+
+     /version.txt                  the commit, the branch, the build time
+     <meta name="shrs-build">      the asset fingerprint, on every page
+
+   Open shroyalschools.com/version.txt and the answer is immediate. If the
+   commit shown there is the commit you expect, the deploy went through and
+   anything still looking old is a cache on the way to your screen. If it is
+   an older commit, or the file is not there at all, the deploy is what needs
+   attention, not the code.
+
+   The <meta> carries the ASSET FINGERPRINT rather than the time, on purpose:
+   a timestamp would rewrite all 143 pages on every build and bury real
+   changes in noise. The fingerprint changes when the css or js changes and
+   not otherwise, so a page's stamp is stable until its assets genuinely
+   move. */
+function gitFact(args, fallback) {
+  try {
+    const out = require('child_process')
+      .execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    return out.trim() || fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function writeBuildStamp(pageCount, assetVersion) {
+  const sha = gitFact(['rev-parse', 'HEAD'], 'unknown');
+  const short = gitFact(['rev-parse', '--short', 'HEAD'], 'unknown');
+  const branch = gitFact(['rev-parse', '--abbrev-ref', 'HEAD'], 'unknown');
+  const subject = gitFact(['log', '-1', '--pretty=%s'], '');
+  const when = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+  const body = [
+    'Sultan Hanafi Royal Schools — build stamp',
+    '',
+    'commit      ' + sha,
+    'short       ' + short,
+    'branch      ' + branch,
+    'subject     ' + subject,
+    'built (UTC) ' + when,
+    'assets      ' + assetVersion,
+    'pages       ' + pageCount,
+    '',
+    'If the commit above is not the one you expect, the deploy has not run',
+    'or has not finished. If it IS the one you expect but a page still looks',
+    'old, the stale copy is in a cache between this file and your screen:',
+    'reload the page bypassing cache, and on an installed app close every',
+    'window of it once so the service worker can hand over.',
+    ''
+  ].join('\n');
+  fs.writeFileSync(path.join(ROOT, 'version.txt'), body);
+  console.log('build stamp -> version.txt (' + short + ', ' + when + ')');
+  return short;
+}
+
 function updateServiceWorkerVersion() {
   const swPath = path.join(ROOT, 'sw.js');
   let sw;
@@ -211,6 +289,7 @@ function updateServiceWorkerVersion() {
   } else {
     console.log(`service worker cache version unchanged (${version})`);
   }
+  return version;
 }
 // -------------------------------------------------------------------------
 
@@ -877,8 +956,9 @@ function main() {
   buildLocaleRuntime(manifest);
   manifest.forEach((page) => buildPage(page, manifest));
   buildSearchIndex(manifest);
-  versionAllHtml();
-  updateServiceWorkerVersion();
+  const assetVersion = updateServiceWorkerVersion();
+  versionAllHtml(assetVersion);
+  writeBuildStamp(manifest.length, assetVersion);
   reportPartialFallbacks();
   if (missingKeys.size) {
     console.error('\nTemplate keys with no translation (left as literal tokens):');
