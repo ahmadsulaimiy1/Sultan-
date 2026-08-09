@@ -102,7 +102,7 @@ Five institutions under one board, one standard:
 
 ### I. Basic School — Ages 2–10
 Early-years foundation blending secular and Islamic instruction. Led by
-Head Teacher Mrs. Kareemat Abdurazaq.
+Head Teacher Mrs. Mariam Tope AbdulKareem.
 
 ### II. Royal College — Ages 10+, established 2021
 Junior + senior secondary, seven academic departments:

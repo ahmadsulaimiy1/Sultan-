@@ -51,7 +51,7 @@ has Vercel's deployment-count rate limiting.
    - `PORTAL_ADMIN_TOKEN` — a different long random string. This protects
      the endpoint used to enter real student records.
    - Optional: `PORTAL_DEMO_PASSWORD` — if set, the setup step below also
-     creates one demo guardian (`demo@shroyalschools.ng`) with one sample
+     creates one demo guardian (`demo@shroyalschools.com`) with one sample
      student, clearly labelled "sample data" everywhere it appears, so you
      can see the portal working end-to-end before any real family is
      entered. Leave it unset to skip this.
@@ -70,7 +70,7 @@ has Vercel's deployment-count rate limiting.
    demo login.
 
 6. **Try it.** Go to `/portal/login/` and sign in with
-   `demo@shroyalschools.ng` and whatever you set `PORTAL_DEMO_PASSWORD`
+   `demo@shroyalschools.com` and whatever you set `PORTAL_DEMO_PASSWORD`
    to. You should see one sample student's attendance, one result, and a
    fee status — all marked as sample data.
 

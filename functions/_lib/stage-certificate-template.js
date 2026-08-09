@@ -359,6 +359,132 @@ function themedQr(qrSvgMarkup, dark = '#3B2A14', light = '#FDF6E3') {
     .replace(/#000000/gi, dark);
 }
 
+// ── TAMHĪDIYYAH REGALIA ─────────────────────────────────────────────
+// Founder's instruction, 8 August 2026: the Tamhīdiyyah certificate should
+// "look like those of Ibtidā'iyyah, but more flashy."
+//
+// Both halves of that matter. It is the SAME document family — same plate,
+// same border architecture, same measured grid — so nothing below moves an
+// element, changes a size, or touches a shared rule. It is an additive layer,
+// rendered only when the programme code is TMH, and every element sits in
+// space this sheet already leaves empty. The Ibtidā'iyyah and I'dādiyyah
+// sheets render byte for byte as before; that is not a hope, it is what
+// scoping the whole layer behind one code test buys.
+//
+// The empty space is real and was measured on a rendered proof, not assumed.
+// The name band runs y 103–120mm and carries only two lines of type and a
+// centre lozenge; the ground either side of the names, x 30–60 and x 237–267,
+// carries no ink at all. Those are the regions the regalia occupies.
+//
+// FOUR ADDITIONS, in the order they read:
+//   1  a guilloché halo behind the name pair — banknote engraving at whisper
+//      opacity, so the name sits on worked ground rather than plain field
+//   2  gold corner brackets framing the name band, drawn as engraved rules
+//      rather than a box, so the band is bounded without being caged
+//   3  illuminated palmettes flanking the title, mirrored about the centre
+//   4  a sixteen-ray star on the name rule — the stage identifier, on the
+//      same principle the Founder set for I'dādiyyah's khatam: one ornament
+//      distinguishes the stage, and the family still reads as one family
+//
+// Everything is vector. There is no raster in this layer, so it holds at any
+// press resolution, and no new colour enters the sheet — every value is drawn
+// from the existing gold ramp.
+function tmhRegalia() {
+  // 1 · CEREMONIAL RULE, y 70. The plate's own five-star flourish sits centred
+  //     here with clear ground either side of it — measured, not assumed: no
+  //     element of the sheet occupies y 62–77 at any x. Two engraved rules run
+  //     outward from the stars to terminal rosettes near the margins, which
+  //     turns an isolated ornament into a full-width order ribbon. It is the
+  //     single most visible addition and it displaces nothing.
+  const rule = (right) => `<svg class="tmh-rule${right ? ' r' : ''}"
+    viewBox="0 0 96 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs><linearGradient id="tmhR${right ? 'b' : 'a'}" x1="0" x2="1">
+      <stop offset="0" stop-color="#B08A2E" stop-opacity="0"/>
+      <stop offset="0.30" stop-color="#B08A2E" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#8A6A24" stop-opacity="1"/>
+    </linearGradient></defs>
+    <rect x="10" y="3.72" width="80" height="0.34" fill="url(#tmhR${right ? 'b' : 'a'})"/>
+    <rect x="14" y="4.62" width="72" height="0.20" fill="url(#tmhR${right ? 'b' : 'a'})"/>
+    <g transform="translate(93,4)">
+      ${guillocheMedallion(0, 0, 3.1, '#8A6A24', 0.95)}
+      <circle r="0.62" fill="#C9A74A"/>
+    </g>
+  </svg>`;
+
+  // 2 · THE NAME CARTOUCHE. Four loose corner brackets read as crop marks on
+  //     the first proof — present, but not an enclosure. This is a real one:
+  //     a double-cut rule across the top at y 102.2, sides descending x 28 and
+  //     x 269, closed at the foot by the name rule the sheet already carries.
+  //     Open-bottomed on purpose; a fully closed box around a person's name
+  //     reads as a form field, not an engraving.
+  //
+  //     Every edge was placed against the measured ink: the intro line ends at
+  //     y 100.6 (1.6mm above the top rule), the Latin name's glyphs run x 37–123
+  //     and the Arabic x 163–206 (both well inside x 28–269), and the body
+  //     paragraph starts at y 121.0 — below the foot, which is the existing rule.
+  const cart = `<svg class="tmh-cart" viewBox="0 0 241 18" xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true" preserveAspectRatio="none">
+    <g fill="#A9862F">
+      <rect x="0" y="0" width="241" height="0.30"/>
+      <rect x="3.2" y="1.05" width="234.6" height="0.18"/>
+      <rect x="0" y="0" width="0.30" height="18"/>
+      <rect x="240.7" y="0" width="0.30" height="18"/>
+      <rect x="1.05" y="1.05" width="0.18" height="16.95"/>
+      <rect x="239.77" y="1.05" width="0.18" height="16.95"/>
+      <!-- Foot returns. On the first proof the verticals stopped in mid-air:
+           the frame's foot is the sheet's own name rule, which spans x 70–227,
+           so the sides at x 28 and x 269 met nothing and the cartouche read as
+           unfinished. An engraved frame returns inward at the foot; these are
+           that return, cut to the same double hairline as the head. -->
+      <rect x="0" y="17.70" width="15" height="0.30"/>
+      <rect x="226" y="17.70" width="15" height="0.30"/>
+      <rect x="1.05" y="16.65" width="12.2" height="0.18"/>
+      <rect x="227.75" y="16.65" width="12.2" height="0.18"/>
+    </g>
+    <g fill="#B8912F">
+      <circle cx="16.6" cy="17.85" r="0.62"/>
+      <circle cx="224.4" cy="17.85" r="0.62"/>
+    </g>
+    <g fill="#B8912F">
+      <rect x="-0.85" y="-0.85" width="1.9" height="1.9" transform="rotate(45 0.1 0.1)"/>
+      <rect x="239.95" y="-0.85" width="1.9" height="1.9" transform="rotate(45 240.9 0.1)"/>
+    </g>
+    <g transform="translate(120.5,0)">
+      ${guillocheMedallion(0, 0, 2.6, '#A9862F', 0.9)}
+      <circle r="0.5" fill="#C9A74A"/>
+    </g>
+  </svg>`;
+
+  // 3 · Worked ground behind the name pair. Kept quiet deliberately — it is
+  //     paper, not a graphic. The cartouche above it is what carries the weight.
+  const halo = `<svg class="tmh-halo" viewBox="0 0 240 26" xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    ${guillocheMedallion(70, 13, 12.5, '#8C6516', 0.26)}
+    ${guillocheMedallion(170, 13, 12.5, '#8C6516', 0.26)}
+    ${guillocheBand(94, 11.9, 52, 2.2, 4, '#8C6516', 0.34)}
+  </svg>`;
+
+  // 4 · Palmettes flanking the title, in the 17mm of clear ground the sheet
+  //     leaves at each side of the title frame's own 202mm box.
+  const palmette = (flip) => `<svg class="tmh-palm${flip ? ' flip' : ''}"
+    viewBox="0 0 46 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g fill="none" stroke="#A9862F" stroke-width="0.42" stroke-linecap="round">
+      <path d="M2 7 C 10 7, 13 2.4, 19 2.4 C 24 2.4, 25.4 5.2, 23 6.6
+               C 20.6 8, 17.4 6.4, 18.6 4.2"/>
+      <path d="M2 7 C 10 7, 13 11.6, 19 11.6 C 24 11.6, 25.4 8.8, 23 7.4
+               C 20.6 6, 17.4 7.6, 18.6 9.8"/>
+      <path d="M25.5 7 C 31 7, 33.5 3.6, 38 3.6 C 41.6 3.6, 42.6 5.7, 40.9 6.7"/>
+      <path d="M25.5 7 C 31 7, 33.5 10.4, 38 10.4 C 41.6 10.4, 42.6 8.3, 40.9 7.3"/>
+    </g>
+    <circle cx="24.4" cy="7" r="1.05" fill="#B8912F"/>
+    <circle cx="43.4" cy="7" r="0.62" fill="#B8912F"/>
+  </svg>`;
+
+  return `${rule(false)}${rule(true)}
+  ${halo}${cart}
+  ${palmette(false)}${palmette(true)}`;
+}
+
 // ── OFFICIAL BACKGROUND SLOT (Final Creative Direction, 2026-08-05) ──
 // The client's own premium certificate background/border is to be used
 // EXACTLY as provided — not redesigned, not re-bordered. As of this
@@ -1149,6 +1275,14 @@ function verificationGroundSvg(w, h, serial) {
 // obvious way, two characters of the award name silently fell out of Cinzel
 // into whatever serif the print host happened to have.
 const STAGE = {
+  // Tamh\u012bdiyyah \u2014 the preparatory stage. Confirmed by the Founder on 8 August
+  // 2026 and locked in functions/_lib/certificate-serial.js on the same terms
+  // as IBT and IDD; the wording here is that wording, not a second rendering
+  // of it. \u062a\u0645\u0647\u064a\u062f\u064a\u0629 takes hamzat qa\u1e6d\u02bf on no letter and is written \u0627\u0644\u062a\u0645\u0647\u064a\u062f\u064a\u0629 in
+  // the definite form.
+  TMH: { term: 'Tamh\u012bdiyyah', gloss: 'Preparatory Stage Completion',
+    ar: '\u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u062a\u0645\u0647\u064a\u062f\u064a\u0629',
+    bodyEn: 'Tamh\u012bdiyyah (Preparatory)', bodyAr: '\u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u062a\u0645\u0647\u064a\u062f\u064a\u0629' },
   IBT: { term: 'Ibtida\u0304\u2019iyyah', gloss: 'Primary Stage Completion',
     ar: 'المرحلة الابتدائية',
     bodyEn: 'Ibtida\u0304\u2019iyyah (Primary)', bodyAr: 'المرحلة الابتدائية' },
@@ -1272,6 +1406,8 @@ function sheetHtmlOfficial({ cert, qrSvgMarkup, verifyUrl }) {
   })()}
 
   <div class="o5-basmala">&#xFDFD;</div>
+
+  ${progCode === 'TMH' ? tmhRegalia() : ''}
 
   ${plateFor(progCode) ? `<!-- Institutional header, three emblems (Founder directive, mandatory).
        Nigeria left, SHRS crest centred on the page, Lagos right. The three
@@ -1831,6 +1967,54 @@ function docShell(title, sheetsHtml) {
   .o5-name-rule i{width:2mm;height:2mm;background:linear-gradient(135deg,#D8B25A,#8A6A24);transform:rotate(45deg);}
   .o5-name-rule b{width:1.15mm;height:1.15mm;border:.14mm solid #A98A3C;transform:rotate(45deg);
     background:none;flex:0 0 auto;}
+  /* ============ TAMHĪDIYYAH REGALIA (TMH only) ============ */
+  /* Every rule is prefixed with the stage selector, so it cannot reach the
+     Ibtidā'iyyah or I'dādiyyah sheets even by accident — and that is not left
+     as a claim: scripts/verify-stage-sheet-isolation.mjs renders those sheets
+     from the working tree and from a git ref and compares them byte for byte.
+
+     Positions are in the same mm grid as everything above and were taken from a
+     measured ink map of the rendered sheet, not estimated. The two regions used
+     are genuinely empty: y 62–77 carries no element at any x, and the name band
+     leaves x 22–37 and x 206–275 clear. */
+
+  /* 1 · Ceremonial rule at y 70, running outward from the plate's own star
+        flourish to a terminal rosette at each margin. */
+  .sheet[data-stage="TMH"] .tmh-rule{position:absolute;top:66mm;width:96mm;height:8mm;
+    z-index:0;pointer-events:none;}
+  .sheet[data-stage="TMH"] .tmh-rule:not(.r){left:24mm;}
+  .sheet[data-stage="TMH"] .tmh-rule.r{right:24mm;transform:scaleX(-1);}
+
+  /* 2 · The name cartouche. Top rule at 102.2 — 1.6mm below the intro line's
+        measured foot — sides at x 28 and x 269, foot closed by the name rule
+        the sheet already carries at 117.4. preserveAspectRatio is none on the
+        SVG so the hairlines stay hairlines at any scale. */
+  .sheet[data-stage="TMH"] .tmh-cart{position:absolute;left:28mm;top:102.2mm;
+    width:241mm;height:18mm;z-index:0;pointer-events:none;}
+
+  /* 3 · Worked ground behind the name pair. */
+  .sheet[data-stage="TMH"] .tmh-halo{position:absolute;left:28mm;top:99.6mm;
+    width:241mm;height:26mm;z-index:0;pointer-events:none;}
+
+  /* 4 · Palmettes flanking the title, outside its 202mm frame. */
+  .sheet[data-stage="TMH"] .tmh-palm{position:absolute;top:84.4mm;
+    width:26mm;height:8mm;z-index:0;opacity:.92;}
+  .sheet[data-stage="TMH"] .tmh-palm:not(.flip){left:19.5mm;}
+  .sheet[data-stage="TMH"] .tmh-palm.flip{right:19.5mm;transform:scaleX(-1);}
+
+  /* 5 · The stage identifier: a sixteen-ray star struck on the name rule, where
+        Ibtidā'iyyah carries a lozenge and I'dādiyyah an eight-point khatam. One
+        ornament tells the stages apart; the family still reads as one family. */
+  .sheet[data-stage="TMH"] .o5-name-rule i{
+    width:3.5mm;height:3.5mm;transform:none;
+    background:radial-gradient(circle at 38% 34%,#F0DCA4 0%,#C9A74A 30%,#B08A2E 58%,#8A6A24 100%);
+    clip-path:polygon(50% 0%,55.6% 21.5%,69.1% 3.8%,66.4% 26.1%,84.6% 14.6%,
+      74.5% 34.6%,95.1% 30.9%,78.5% 44.6%,100% 50%,78.5% 55.4%,95.1% 69.1%,
+      74.5% 65.4%,84.6% 85.4%,66.4% 73.9%,69.1% 96.2%,55.6% 78.5%,50% 100%,
+      44.4% 78.5%,30.9% 96.2%,33.6% 73.9%,15.4% 85.4%,25.5% 65.4%,4.9% 69.1%,
+      21.5% 55.4%,0% 50%,21.5% 44.6%,4.9% 30.9%,25.5% 34.6%,15.4% 14.6%,
+      33.6% 26.1%,30.9% 3.8%,44.4% 21.5%);}
+
   /* STAGE IDENTIFIER (Founder suggestion, 2026-08-06): keep one border
      architecture across the stages and distinguish them by ONE ornament, so
      the institution reads as a single family and the stage is still legible

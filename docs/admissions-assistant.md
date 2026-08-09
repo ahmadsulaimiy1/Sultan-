@@ -165,7 +165,7 @@ Two free-text fields only — name and (email or phone) — plus whatever
 structured context the branch already collected (age group, interest,
 day/boarding preference, which question they asked). Submitted the same
 way the site's existing contact form is: a POST to FormSubmit
-(`info@shroyalschools.ng`), with the intake answers included as
+(`info@shroyalschools.com`), with the intake answers included as
 structured fields in the email body, subject-lined
 `"New admissions enquiry — Digital Assistant"` so it's visibly distinct
 from direct contact-form submissions in the inbox.

@@ -1,0 +1,467 @@
+{
+  "generatedBy": "scripts/plan-certificate-reissue.mjs",
+  "authority": "Founder’s ruling, 8 August 2026 — the Registrar’s roll governs.",
+  "spentThrough": 47,
+  "allocatedThrough": 85,
+  "identitySpentThrough": 47,
+  "identityAllocatedThrough": 65,
+  "actions": [
+    {
+      "kind": "KEEP",
+      "code": "IBT",
+      "name": "Hameedah Adebimpe Ojewumi",
+      "cert": "SHRS-CERT-IBT-2026-000035-368DC",
+      "id": "714743483445443"
+    },
+    {
+      "kind": "REISSUE",
+      "code": "IBT",
+      "name": "Aisha Anofi",
+      "cert": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "id": "717988020633236",
+      "to": "Aisha Omoshalewa Anofi",
+      "why": "the canonical roll carries a fuller name; the engraved name is hashed into the number and cannot be corrected in place"
+    },
+    {
+      "kind": "REVOKE",
+      "code": "IBT",
+      "name": "Abdulbasit Adedokun",
+      "cert": "SHRS-CERT-IBT-2026-000037-22C49",
+      "id": "711232557821021",
+      "why": "not on the Registrar’s IBT roll"
+    },
+    {
+      "kind": "REISSUE",
+      "code": "IBT",
+      "name": "Naheemah Ismail",
+      "cert": "SHRS-CERT-IBT-2026-000038-2944F",
+      "id": "714477095008816",
+      "to": "Naheemah Ismail Seriki",
+      "why": "the canonical roll carries a fuller name; the engraved name is hashed into the number and cannot be corrected in place"
+    },
+    {
+      "kind": "REISSUE",
+      "code": "IBT",
+      "name": "Ashrof Akorede",
+      "cert": "SHRS-CERT-IBT-2026-000039-518A8",
+      "id": "717721632196601",
+      "to": "Ashraf Korede Ojewumi",
+      "why": "the canonical roll carries a fuller name; the engraved name is hashed into the number and cannot be corrected in place"
+    },
+    {
+      "kind": "REISSUE",
+      "code": "IBT",
+      "name": "Imran Adegoke",
+      "cert": "SHRS-CERT-IBT-2026-000040-60DAF",
+      "id": "710966169384396",
+      "to": "Imran Iremide Adegoke",
+      "why": "the canonical roll carries a fuller name; the engraved name is hashed into the number and cannot be corrected in place"
+    },
+    {
+      "kind": "KEEP",
+      "code": "IBT",
+      "name": "Abdulateef Adedokun",
+      "cert": "SHRS-CERT-IBT-2026-000041-6F66F",
+      "id": "714210706572189"
+    },
+    {
+      "kind": "REVOKE",
+      "code": "IDD",
+      "name": "Muhammad Ismail Seriki",
+      "cert": "SHRS-CERT-IDD-2026-000042-56798",
+      "id": "717455243759974",
+      "why": "not on the Registrar’s IDD roll"
+    },
+    {
+      "kind": "KEEP",
+      "code": "IDD",
+      "name": "Baqi Olamiposi Anofi",
+      "cert": "SHRS-CERT-IDD-2026-000043-6EEAF",
+      "id": "710699780947768"
+    },
+    {
+      "kind": "REVOKE",
+      "code": "IDD",
+      "name": "Faridah Ayomide Aliu",
+      "cert": "SHRS-CERT-IDD-2026-000044-8B125",
+      "id": "713944318135552",
+      "why": "not on the Registrar’s IDD roll"
+    },
+    {
+      "kind": "KEEP",
+      "code": "IDD",
+      "name": "Thoirah Makinde",
+      "cert": "SHRS-CERT-IDD-2026-000045-F546F",
+      "id": "717188855323348"
+    },
+    {
+      "kind": "KEEP",
+      "code": "IDD",
+      "name": "Abdulbasit Amobi Jabarr",
+      "cert": "SHRS-CERT-IDD-2026-000046-7E37A",
+      "id": "710433392511139"
+    },
+    {
+      "kind": "KEEP",
+      "code": "IDD",
+      "name": "Abdullah Oladimeji Anofi",
+      "cert": "SHRS-CERT-IDD-2026-000047-CB9F5",
+      "id": "713677929698929"
+    }
+  ],
+  "toMint": [
+    {
+      "code": "QUR",
+      "name": "Aisha Omoshalewa Anofi",
+      "replaces": null,
+      "identity": "717988020633236",
+      "identityFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "certificateSeq": 48,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000036-B9E10"
+    },
+    {
+      "code": "QUR",
+      "name": "Baqi Olamiposi Anofi",
+      "replaces": null,
+      "identity": "710699780947768",
+      "identityFrom": "SHRS-CERT-IDD-2026-000043-6EEAF",
+      "certificateSeq": 49,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000043-6EEAF"
+    },
+    {
+      "code": "QUR",
+      "name": "Sofiah Anofi",
+      "replaces": null,
+      "identity": "716922466886710",
+      "identityFrom": null,
+      "certificateSeq": 50,
+      "identitySource": "newly issued (identity sequence 48)"
+    },
+    {
+      "code": "QUR",
+      "name": "Zaynab Zakariya Anofi",
+      "replaces": null,
+      "identity": "710167004074504",
+      "identityFrom": null,
+      "certificateSeq": 51,
+      "identitySource": "newly issued (identity sequence 49)"
+    },
+    {
+      "code": "TMH",
+      "name": "Abdulbasit Adedokun",
+      "replaces": null,
+      "identity": "711232557821021",
+      "identityFrom": "SHRS-CERT-IBT-2026-000037-22C49",
+      "certificateSeq": 52,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000037-22C49"
+    },
+    {
+      "code": "IBT",
+      "name": "Aisha Omoshalewa Anofi",
+      "replaces": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "identity": "717988020633236",
+      "identityFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "certificateSeq": 53,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000036-B9E10"
+    },
+    {
+      "code": "IBT",
+      "name": "Ameerah Abdulhafeez",
+      "replaces": null,
+      "identity": "713411541262298",
+      "identityFrom": null,
+      "certificateSeq": 54,
+      "identitySource": "newly issued (identity sequence 50)"
+    },
+    {
+      "code": "IBT",
+      "name": "Ashraf Korede Ojewumi",
+      "replaces": "SHRS-CERT-IBT-2026-000039-518A8",
+      "identity": "717721632196601",
+      "identityFrom": "SHRS-CERT-IBT-2026-000039-518A8",
+      "certificateSeq": 55,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000039-518A8"
+    },
+    {
+      "code": "IBT",
+      "name": "Faridah Ayomide Aliu",
+      "replaces": null,
+      "identity": "713944318135552",
+      "identityFrom": "SHRS-CERT-IDD-2026-000044-8B125",
+      "certificateSeq": 56,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000044-8B125"
+    },
+    {
+      "code": "IBT",
+      "name": "Imran Iremide Adegoke",
+      "replaces": "SHRS-CERT-IBT-2026-000040-60DAF",
+      "identity": "710966169384396",
+      "identityFrom": "SHRS-CERT-IBT-2026-000040-60DAF",
+      "certificateSeq": 57,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000040-60DAF"
+    },
+    {
+      "code": "IBT",
+      "name": "Muhammad Ismail Seriki",
+      "replaces": null,
+      "identity": "717455243759974",
+      "identityFrom": "SHRS-CERT-IDD-2026-000042-56798",
+      "certificateSeq": 58,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000042-56798"
+    },
+    {
+      "code": "IBT",
+      "name": "Naheemah Ismail Seriki",
+      "replaces": "SHRS-CERT-IBT-2026-000038-2944F",
+      "identity": "714477095008816",
+      "identityFrom": "SHRS-CERT-IBT-2026-000038-2944F",
+      "certificateSeq": 59,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000038-2944F"
+    },
+    {
+      "code": "IDD",
+      "name": "Yaseer Balogun",
+      "replaces": null,
+      "identity": "716656078450081",
+      "identityFrom": null,
+      "certificateSeq": 60,
+      "identitySource": "newly issued (identity sequence 51)"
+    },
+    {
+      "code": "PRY",
+      "name": "Aisha Lawal",
+      "replaces": null,
+      "identity": "719900615637876",
+      "identityFrom": null,
+      "certificateSeq": 61,
+      "identitySource": "newly issued (identity sequence 52)"
+    },
+    {
+      "code": "PRY",
+      "name": "Al-ameen Okoh",
+      "replaces": null,
+      "identity": "713145152825668",
+      "identityFrom": null,
+      "certificateSeq": 62,
+      "identitySource": "newly issued (identity sequence 53)"
+    },
+    {
+      "code": "PRY",
+      "name": "Ashraf Korede Ojewumi",
+      "replaces": null,
+      "identity": "717721632196601",
+      "identityFrom": "SHRS-CERT-IBT-2026-000039-518A8",
+      "certificateSeq": 63,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000039-518A8"
+    },
+    {
+      "code": "PRY",
+      "name": "Daud Aliu",
+      "replaces": null,
+      "identity": "716389690013455",
+      "identityFrom": null,
+      "certificateSeq": 64,
+      "identitySource": "newly issued (identity sequence 54)"
+    },
+    {
+      "code": "PRY",
+      "name": "Imran Iremide Adegoke",
+      "replaces": null,
+      "identity": "710966169384396",
+      "identityFrom": "SHRS-CERT-IBT-2026-000040-60DAF",
+      "certificateSeq": 65,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000040-60DAF"
+    },
+    {
+      "code": "PRY",
+      "name": "Naheemah Ismail Seriki",
+      "replaces": null,
+      "identity": "714477095008816",
+      "identityFrom": "SHRS-CERT-IBT-2026-000038-2944F",
+      "certificateSeq": 66,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000038-2944F"
+    },
+    {
+      "code": "JSS",
+      "name": "Abdulrahman Abdullah",
+      "replaces": null,
+      "identity": "719634227201249",
+      "identityFrom": null,
+      "certificateSeq": 67,
+      "identitySource": "newly issued (identity sequence 55)"
+    },
+    {
+      "code": "JSS",
+      "name": "Aisha Omoshalewa Anofi",
+      "replaces": null,
+      "identity": "717988020633236",
+      "identityFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "certificateSeq": 68,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000036-B9E10"
+    },
+    {
+      "code": "JSS",
+      "name": "Allison Ganiyah",
+      "replaces": null,
+      "identity": "712878764389035",
+      "identityFrom": null,
+      "certificateSeq": 69,
+      "identitySource": "newly issued (identity sequence 56)"
+    },
+    {
+      "code": "JSS",
+      "name": "Ameerah Abdulhafeez",
+      "replaces": null,
+      "identity": "713411541262298",
+      "identityFrom": null,
+      "certificateSeq": 70,
+      "identitySource": "newly issued (identity sequence 50)"
+    },
+    {
+      "code": "JSS",
+      "name": "Ameerah Durodola",
+      "replaces": null,
+      "identity": "716123301576828",
+      "identityFrom": null,
+      "certificateSeq": 71,
+      "identitySource": "newly issued (identity sequence 57)"
+    },
+    {
+      "code": "JSS",
+      "name": "Anisa Opeyemi Jokomba",
+      "replaces": null,
+      "identity": "719367838764616",
+      "identityFrom": null,
+      "certificateSeq": 72,
+      "identitySource": "newly issued (identity sequence 58)"
+    },
+    {
+      "code": "JSS",
+      "name": "Baqi Olamiposi Anofi",
+      "replaces": null,
+      "identity": "710699780947768",
+      "identityFrom": "SHRS-CERT-IDD-2026-000043-6EEAF",
+      "certificateSeq": 73,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000043-6EEAF"
+    },
+    {
+      "code": "JSS",
+      "name": "Faridah Ayomide Aliu",
+      "replaces": null,
+      "identity": "713944318135552",
+      "identityFrom": "SHRS-CERT-IDD-2026-000044-8B125",
+      "certificateSeq": 74,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000044-8B125"
+    },
+    {
+      "code": "JSS",
+      "name": "Fatimah Desire Ibrahim",
+      "replaces": null,
+      "identity": "712612375952406",
+      "identityFrom": null,
+      "certificateSeq": 75,
+      "identitySource": "newly issued (identity sequence 59)"
+    },
+    {
+      "code": "JSS",
+      "name": "Fawaz Owolabi",
+      "replaces": null,
+      "identity": "715856913140191",
+      "identityFrom": null,
+      "certificateSeq": 76,
+      "identitySource": "newly issued (identity sequence 60)"
+    },
+    {
+      "code": "JSS",
+      "name": "Hameedah Adebimpe Ojewumi",
+      "replaces": null,
+      "identity": "714743483445443",
+      "identityFrom": "SHRS-CERT-IBT-2026-000035-368DC",
+      "certificateSeq": 77,
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000035-368DC"
+    },
+    {
+      "code": "JSS",
+      "name": "Jubril Lawal",
+      "replaces": null,
+      "identity": "719101450327984",
+      "identityFrom": null,
+      "certificateSeq": 78,
+      "identitySource": "newly issued (identity sequence 61)"
+    },
+    {
+      "code": "JSS",
+      "name": "Muhammad Ismail Seriki",
+      "replaces": null,
+      "identity": "717455243759974",
+      "identityFrom": "SHRS-CERT-IDD-2026-000042-56798",
+      "certificateSeq": 79,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000042-56798"
+    },
+    {
+      "code": "JSS",
+      "name": "Radiah Apatira",
+      "replaces": null,
+      "identity": "712345987515770",
+      "identityFrom": null,
+      "certificateSeq": 80,
+      "identitySource": "newly issued (identity sequence 62)"
+    },
+    {
+      "code": "JSS",
+      "name": "Sa'ad Sanusi",
+      "replaces": null,
+      "identity": "715590524703564",
+      "identityFrom": null,
+      "certificateSeq": 81,
+      "identitySource": "newly issued (identity sequence 63)"
+    },
+    {
+      "code": "SS",
+      "name": "Abdulbasit Amobi Jabarr",
+      "replaces": null,
+      "identity": "710433392511139",
+      "identityFrom": "SHRS-CERT-IDD-2026-000046-7E37A",
+      "certificateSeq": 82,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000046-7E37A"
+    },
+    {
+      "code": "SS",
+      "name": "Aisha Shode",
+      "replaces": null,
+      "identity": "718835061891356",
+      "identityFrom": null,
+      "certificateSeq": 83,
+      "identitySource": "newly issued (identity sequence 64)"
+    },
+    {
+      "code": "SS",
+      "name": "Mazeed Hassan-Murtala",
+      "replaces": null,
+      "identity": "712079599079145",
+      "identityFrom": null,
+      "certificateSeq": 84,
+      "identitySource": "newly issued (identity sequence 65)"
+    },
+    {
+      "code": "SS",
+      "name": "Thoirah Makinde",
+      "replaces": null,
+      "identity": "717188855323348",
+      "identityFrom": "SHRS-CERT-IDD-2026-000045-F546F",
+      "certificateSeq": 85,
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000045-F546F"
+    }
+  ],
+  "openNameQuestions": [],
+  "ruledNameQuestions": [
+    [
+      "Basit Jabarr vs Abdulbasit Amobi Jabarr",
+      "RULED: \"They are one.\" Basit is the short form of Abdulbasit; one boy, two awards. His I‘dādiyyah certificate 000046 already carries the fuller name for the right programme, so it is KEPT rather than revoked."
+    ],
+    [
+      "Balogun Yaseer",
+      "RULED: \"Yaseer Balogun is the name.\" Given-name-first, as every other name on the roll is."
+    ]
+  ]
+}

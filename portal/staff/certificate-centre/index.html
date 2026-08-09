@@ -51,9 +51,18 @@
       <form data-cert-setup-form class="registrar-form-grid">
         <div class="portal-field">
           <label>Programme (Stage)</label>
+          <!-- These four must match PROGRAMMES in functions/_lib/certificate-serial.js.
+               The endpoint rejects a code it does not know, so a missing option is a
+               stage that cannot be issued at all — which is what kept Tamhīdiyyah off
+               this screen. A WRONG option is worse: the label read "I'dādiyyah —
+               Preparatory Stage", and I'dādiyyah is the INTERMEDIATE stage. A registrar
+               looking for the preparatory award would have picked it and conferred the
+               wrong one. Both are corrected here; the stage names below are the engraved
+               wording, not a paraphrase of it. -->
           <select data-cert-programme>
+            <option value="TMH">Tamhīdiyyah — Preparatory Stage (TMH)</option>
             <option value="IBT" selected>Ibtidā’iyyah — Primary Stage (IBT)</option>
-            <option value="IDD">I’dādiyyah — Preparatory Stage (IDD)</option>
+            <option value="IDD">I’dādiyyah — Intermediate Stage (IDD)</option>
             <option value="THN">Thanawiyyah — Secondary Stage (THN)</option>
           </select>
         </div>

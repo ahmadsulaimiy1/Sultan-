@@ -1,0 +1,373 @@
+{
+  "title": "Canonical roll of the Class of 2026",
+  "authority": "The Registrar's Notice of the 2026 Combined Graduation Ceremony, 2 July 2026. Founder’s ruling of 8 August 2026: \"It should be in alignment with the registrar’s one. She knows better.\"",
+  "nameRule": "Founder’s ruling of 8 August 2026: where a fuller form of a child’s name has ever been written down by this institution, the fuller form is the one that prints and is engraved. No name is assembled from parts of two variants.",
+  "generatedBy": "scripts/build-canonical-roll.mjs",
+  "totals": {
+    "awards": 44,
+    "children": 31,
+    "multipleAwards": 11
+  },
+  "categories": [
+    {
+      "code": "QUR",
+      "registrarColumn": "Quran college",
+      "count": 4,
+      "names": [
+        "Aisha Omoshalewa Anofi",
+        "Baqi Olamiposi Anofi",
+        "Sofiah Anofi",
+        "Zaynab Zakariya Anofi"
+      ]
+    },
+    {
+      "code": "TMH",
+      "registrarColumn": "Islamiyyah (Tamyidi)",
+      "count": 1,
+      "names": [
+        "Abdulbasit Adedokun"
+      ]
+    },
+    {
+      "code": "IBT",
+      "registrarColumn": "Ibtidaiyah",
+      "count": 9,
+      "names": [
+        "Abdulateef Adedokun",
+        "Aisha Omoshalewa Anofi",
+        "Ameerah Abdulhafeez",
+        "Ashraf Korede Ojewumi",
+        "Faridah Ayomide Aliu",
+        "Hameedah Adebimpe Ojewumi",
+        "Imran Iremide Adegoke",
+        "Muhammad Ismail Seriki",
+        "Naheemah Ismail Seriki"
+      ]
+    },
+    {
+      "code": "IDD",
+      "registrarColumn": "Idadiyah",
+      "count": 5,
+      "names": [
+        "Abdullah Oladimeji Anofi",
+        "Yaseer Balogun",
+        "Baqi Olamiposi Anofi",
+        "Abdulbasit Amobi Jabarr",
+        "Thoirah Makinde"
+      ]
+    },
+    {
+      "code": "PRY",
+      "registrarColumn": "Basic 5",
+      "count": 6,
+      "names": [
+        "Aisha Lawal",
+        "Al-ameen Okoh",
+        "Ashraf Korede Ojewumi",
+        "Daud Aliu",
+        "Imran Iremide Adegoke",
+        "Naheemah Ismail Seriki"
+      ]
+    },
+    {
+      "code": "JSS",
+      "registrarColumn": "JSS 3",
+      "count": 15,
+      "names": [
+        "Abdulrahman Abdullah",
+        "Aisha Omoshalewa Anofi",
+        "Allison Ganiyah",
+        "Ameerah Abdulhafeez",
+        "Ameerah Durodola",
+        "Anisa Opeyemi Jokomba",
+        "Baqi Olamiposi Anofi",
+        "Faridah Ayomide Aliu",
+        "Fatimah Desire Ibrahim",
+        "Fawaz Owolabi",
+        "Hameedah Adebimpe Ojewumi",
+        "Jubril Lawal",
+        "Muhammad Ismail Seriki",
+        "Radiah Apatira",
+        "Sa'ad Sanusi"
+      ]
+    },
+    {
+      "code": "SS",
+      "registrarColumn": "SSS 3",
+      "count": 4,
+      "names": [
+        "Abdulbasit Amobi Jabarr",
+        "Aisha Shode",
+        "Mazeed Hassan-Murtala",
+        "Thoirah Makinde"
+      ]
+    }
+  ],
+  "fullerNamesAdopted": [
+    {
+      "code": "QUR",
+      "asWritten": "Aisha Anofi",
+      "chosen": "Aisha Omoshalewa Anofi",
+      "from": "QUR issuing roll",
+      "seen": [
+        "Aisha Anofi",
+        "Aisha Omoshalewa Anofi"
+      ]
+    },
+    {
+      "code": "QUR",
+      "asWritten": "Baqi Anofi",
+      "chosen": "Baqi Olamiposi Anofi",
+      "from": "published IDD register",
+      "seen": [
+        "Baqi Anofi",
+        "Baqi Olamiposi Anofi"
+      ]
+    },
+    {
+      "code": "QUR",
+      "asWritten": "Zainab Anofi",
+      "chosen": "Zaynab Zakariya Anofi",
+      "from": "QUR issuing roll",
+      "seen": [
+        "Zainab Anofi",
+        "Zaynab Zakariya Anofi"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Aisha Anofi",
+      "chosen": "Aisha Omoshalewa Anofi",
+      "from": "QUR issuing roll",
+      "seen": [
+        "Aisha Anofi",
+        "Aisha Omoshalewa Anofi"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Ashrof Ojewumi",
+      "chosen": "Ashraf Korede Ojewumi",
+      "from": "PRY issuing roll",
+      "seen": [
+        "Ashrof Ojewumi",
+        "Ashrof Akorede",
+        "Ashraf Korede Ojewumi"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Fareedah Aliu",
+      "chosen": "Faridah Ayomide Aliu",
+      "from": "published IDD register",
+      "seen": [
+        "Fareedah Aliu",
+        "Faridah Ayomide Aliu",
+        "Faridah Aliu"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Hameedah Ojewumi",
+      "chosen": "Hameedah Adebimpe Ojewumi",
+      "from": "published IBT register",
+      "seen": [
+        "Hameedah Ojewumi",
+        "Hameedah Adebimpe Ojewumi"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Imran Adegoke",
+      "chosen": "Imran Iremide Adegoke",
+      "from": "PRY issuing roll",
+      "seen": [
+        "Imran Adegoke",
+        "Imran Iremide Adegoke"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Muhammad Ismail",
+      "chosen": "Muhammad Ismail Seriki",
+      "from": "published IDD register",
+      "seen": [
+        "Muhammad Ismail",
+        "Muhammad Ismail Seriki"
+      ]
+    },
+    {
+      "code": "IBT",
+      "asWritten": "Naheemah Ismaeel",
+      "chosen": "Naheemah Ismail Seriki",
+      "from": "stage withdrawal list",
+      "seen": [
+        "Naheemah Ismaeel",
+        "Naheemah Ismail",
+        "Naheemah Ismai Seriki",
+        "Naheemah Ismail Seriki"
+      ]
+    },
+    {
+      "code": "IDD",
+      "asWritten": "Abdullah Anofi",
+      "chosen": "Abdullah Oladimeji Anofi",
+      "from": "published IDD register",
+      "seen": [
+        "Abdullah Anofi",
+        "Abdullah Oladimeji Anofi"
+      ]
+    },
+    {
+      "code": "IDD",
+      "asWritten": "Balogun Yaseer",
+      "chosen": "Yaseer Balogun",
+      "from": "Founder’s ruling, 8 Aug 2026 — name order corrected to given-name-first",
+      "seen": [
+        "Balogun Yaseer"
+      ]
+    },
+    {
+      "code": "IDD",
+      "asWritten": "Baqi Anofi",
+      "chosen": "Baqi Olamiposi Anofi",
+      "from": "published IDD register",
+      "seen": [
+        "Baqi Anofi",
+        "Baqi Olamiposi Anofi"
+      ]
+    },
+    {
+      "code": "IDD",
+      "asWritten": "Basit Jabarr",
+      "chosen": "Abdulbasit Amobi Jabarr",
+      "from": "published IDD register",
+      "seen": [
+        "Basit Jabarr",
+        "Abdulbasit Amobi Jabarr"
+      ]
+    },
+    {
+      "code": "PRY",
+      "asWritten": "Ashraf Ojewumi",
+      "chosen": "Ashraf Korede Ojewumi",
+      "from": "PRY issuing roll",
+      "seen": [
+        "Ashraf Ojewumi",
+        "Ashrof Akorede",
+        "Ashraf Korede Ojewumi"
+      ]
+    },
+    {
+      "code": "PRY",
+      "asWritten": "Imran Adegoke",
+      "chosen": "Imran Iremide Adegoke",
+      "from": "PRY issuing roll",
+      "seen": [
+        "Imran Adegoke",
+        "Imran Iremide Adegoke"
+      ]
+    },
+    {
+      "code": "PRY",
+      "asWritten": "Naheemah Ismail",
+      "chosen": "Naheemah Ismail Seriki",
+      "from": "stage withdrawal list",
+      "seen": [
+        "Naheemah Ismail",
+        "Naheemah Ismai Seriki",
+        "Naheemah Ismail Seriki"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Aisha Anofi",
+      "chosen": "Aisha Omoshalewa Anofi",
+      "from": "QUR issuing roll",
+      "seen": [
+        "Aisha Anofi",
+        "Aisha Omoshalewa Anofi"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Anisa Jokumba",
+      "chosen": "Anisa Opeyemi Jokomba",
+      "from": "JSS issuing roll",
+      "seen": [
+        "Anisa Jokumba",
+        "Anisa Opeyemi Jokomba"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Baqi Anofi",
+      "chosen": "Baqi Olamiposi Anofi",
+      "from": "published IDD register",
+      "seen": [
+        "Baqi Anofi",
+        "Baqi Olamiposi Anofi"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Fareedah Aliu",
+      "chosen": "Faridah Ayomide Aliu",
+      "from": "published IDD register",
+      "seen": [
+        "Fareedah Aliu",
+        "Faridah Ayomide Aliu",
+        "Faridah Aliu"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Fateemah Ibrahim",
+      "chosen": "Fatimah Desire Ibrahim",
+      "from": "JSS issuing roll",
+      "seen": [
+        "Fateemah Ibrahim",
+        "Fatimah Desire Ibrahim"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Hameedah Ojewumi",
+      "chosen": "Hameedah Adebimpe Ojewumi",
+      "from": "published IBT register",
+      "seen": [
+        "Hameedah Ojewumi",
+        "Hameedah Adebimpe Ojewumi"
+      ]
+    },
+    {
+      "code": "JSS",
+      "asWritten": "Muhammad Ismail",
+      "chosen": "Muhammad Ismail Seriki",
+      "from": "published IDD register",
+      "seen": [
+        "Muhammad Ismail",
+        "Muhammad Ismail Seriki"
+      ]
+    },
+    {
+      "code": "SS",
+      "asWritten": "Abdulbasit Jabarr",
+      "chosen": "Abdulbasit Amobi Jabarr",
+      "from": "published IDD register",
+      "seen": [
+        "Abdulbasit Jabarr",
+        "Abdulbasit Amobi Jabarr"
+      ]
+    }
+  ],
+  "withdrawnByRuling": [
+    {
+      "code": "TMH",
+      "name": "Muhammad fatih",
+      "why": "Founder’s ruling, 8 Aug 2026 — \"Only Abdul Basit Adedokun is now in Tamheediyyah.\"",
+      "standing": "UNPLACED — the ruling states which stage he is not in. It does not state which stage he is in, and this file will not choose one for him. He appears on no roll until the Registrar or the Founder places him, and the preflight reports him on every run.",
+      "alsoOn": []
+    }
+  ]
+}

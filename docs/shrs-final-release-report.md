@@ -107,7 +107,7 @@ groups:
   a full-measure pull quote.
 - Flagship back cover rebuilt to the family standard (crest, wordmark, motto,
   full contact block, edition line) — it was previously a bare crest.
-- The outdated-domain signage (`shroyalschools.ng`) retouched out of the
+- The outdated-domain signage (the retired `.ng` domain) retouched out of the
   campus gate photo used in seven places; the signboard phone-number strips
   blurred on both campus cover photos.
 - Back-cover phone numbers made unbreakable and unified to the imprint format

@@ -1,0 +1,235 @@
+name: Certificate Verification — recovery and standing watch
+
+# WHY THIS RUNS HERE AND NOT WHERE THE CODE IS WRITTEN.
+#
+# Thirteen certificates are in children's hands and none of them resolve on
+# the public verification page, because minting a document and creating its
+# record are two different acts and only the first happened. Fixing that
+# needs three things the development sandbox physically cannot do: reach
+# shroyalschools.com (its proxy refuses the host), reach the Neon production
+# database, and hold the production signing key.
+#
+# GitHub's runners can do all three — the same reason the Android build lives
+# here. So the recovery runs here, on a schedule and on demand, and the
+# Founder's remaining work is reduced to pasting secrets in once.
+#
+# THE PART THAT NEEDS NOTHING AT ALL. The acceptance check asks a PUBLIC
+# endpoint public questions, so it needs no secret and no permission. It runs
+# on every trigger regardless of what is configured, which means this
+# workflow produces an honest, dated, machine-made answer to "do our
+# certificates verify?" from the moment it lands — and keeps producing one
+# every week forever, so this can never quietly break again unnoticed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_import:
+        description: 'Import the certificate records into the live database (safe to repeat — the import is idempotent)'
+        type: boolean
+        default: true
+      configure_cloudflare:
+        description: 'Push the three verification variables to Cloudflare Pages production'
+        type: boolean
+        default: true
+  schedule:
+    # Every Monday, 06:00 UTC (07:00 Lagos). A standing watch: if verification
+    # ever breaks again — a key rotated out, a database restored from an older
+    # snapshot, a deployment reverted — this finds it before a parent does.
+    - cron: '0 6 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'functions/api/certificates/**'
+      - 'functions/_lib/certificate-serial.js'
+      - 'functions/_lib/document-hash.js'
+      - 'js/certificate-verify.js'
+      - 'docs/graduation-registers/**'
+      - '.github/workflows/certificate-verification.yml'
+
+concurrency:
+  # Never let two runs import into the same database at once. The import is
+  # idempotent, but a half-overlapping pair would make the logs unreadable at
+  # exactly the moment somebody needs to read them.
+  group: certificate-verification
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  recover-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      # ── 1. What is configured, and what that means ──────────────────────
+      # Reported before anything runs, because "nothing happened" is a fact
+      # the operator needs stated plainly rather than inferred from a skipped
+      # step. No secret value is ever printed — only whether it is present.
+      - name: Report what this run can and cannot do
+        id: caps
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+          DOC_V2: ${{ secrets.DOCUMENT_HASH_SECRET }}
+        run: |
+          have() { [ -n "$1" ] && echo yes || echo no; }
+          echo "db=$(have "$DATABASE_URL")"        >> "$GITHUB_OUTPUT"
+          echo "cf=$(have "$CF_TOKEN")"            >> "$GITHUB_OUTPUT"
+          echo "v2=$(have "$DOC_V2")"              >> "$GITHUB_OUTPUT"
+          {
+            echo "## What this run is able to do"
+            echo
+            echo "| Capability | Secret required | Present |"
+            echo "|---|---|---|"
+            echo "| Ask the public endpoint (acceptance) | none | **yes — always** |"
+            echo "| Import the records into the live database | \`DATABASE_URL\` | $(have "$DATABASE_URL") |"
+            echo "| Configure Cloudflare production variables | \`CLOUDFLARE_API_TOKEN\`, \`CLOUDFLARE_ACCOUNT_ID\`, \`CLOUDFLARE_PAGES_PROJECT\` | $(have "$CF_TOKEN") |"
+            echo "| Attest the I'dādiyyah batch | \`DOCUMENT_HASH_SECRET\` (v2) | $(have "$DOC_V2") |"
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 2. Cloudflare: the three variables ──────────────────────────────
+      # The order matters and the reason is not obvious, so it is written
+      # down where it is done. The two batches were signed under different key
+      # versions. With DOCUMENT_HASH_SECRET set but DOCUMENT_HASH_KEY_VERSION
+      # left unset, the version defaults to 1, the seven v1 Ibtida'iyyah
+      # certificates get checked against the v2 key, and the public page tells
+      # seven real children their genuine documents "do not match their
+      # cryptographic signature". All three, or none.
+      - name: Configure Cloudflare Pages production variables
+        if: >-
+          steps.caps.outputs.cf == 'yes' &&
+          (github.event_name != 'workflow_dispatch' || inputs.configure_cloudflare)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+          V2: ${{ secrets.DOCUMENT_HASH_SECRET }}
+          # The v1 key is the RETIRED development literal, already public in
+          # this repository — which is exactly why it is retired and may never
+          # sign again. It is not a secret and needs no protection; it needs
+          # only to stay configured forever, or the seven Ibtida'iyyah
+          # certificates stop verifying permanently.
+          V1: batch-issuance-development-secret
+        run: |
+          set -euo pipefail
+          if [ -z "${V2:-}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is set but DOCUMENT_HASH_SECRET is not."
+            echo "::error::Setting the key version without the v2 key it names would make the"
+            echo "::error::I'dadiyyah certificates unverifiable. Refusing to configure a partial state."
+            exit 1
+          fi
+          put() {
+            printf '%s' "$2" | npx --yes wrangler@3 pages secret put "$1" \
+              --project-name "$PROJECT" >/dev/null
+            echo "  set $1"
+          }
+          put DOCUMENT_HASH_SECRET      "$V2"
+          put DOCUMENT_HASH_SECRET_V1   "$V1"
+          put DOCUMENT_HASH_KEY_VERSION "2"
+          echo "### Cloudflare production configured — all three variables" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cloudflare not configured — what to do
+        if: steps.caps.outputs.cf != 'yes'
+        run: |
+          {
+            echo "### Cloudflare variables were NOT set by this run"
+            echo
+            echo "No \`CLOUDFLARE_API_TOKEN\` is stored, so this run could not configure"
+            echo "production. Until the three variables below exist on the Pages project,"
+            echo "the certificates will resolve and then report **integrity check failed**,"
+            echo "which reads as an accusation against genuine documents."
+            echo
+            echo '| Variable | Value |'
+            echo '|---|---|'
+            echo '| `DOCUMENT_HASH_KEY_VERSION` | `2` |'
+            echo '| `DOCUMENT_HASH_SECRET` | the production v2 key |'
+            echo '| `DOCUMENT_HASH_SECRET_V1` | `batch-issuance-development-secret` |'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 3. The import ───────────────────────────────────────────────────
+      # Regenerated from the sealed registers first, so the file that runs is
+      # provably the file in the repository and not a stale copy. The
+      # generator asserts every value tuple byte-identical to its source
+      # before writing; it recomputes no identifier and no hash.
+      - name: Rebuild the production import from the sealed registers
+        run: npm run certificates:import
+
+      - name: Import the certificate records into the live database
+        if: >-
+          steps.caps.outputs.db == 'yes' &&
+          (github.event_name != 'workflow_dispatch' || inputs.run_import)
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          # ON_ERROR_STOP with the file's own transaction means a failed check
+          # rolls the whole import back. Safe to run repeatedly: every insert
+          # carries ON CONFLICT DO NOTHING and the sequence repairs only ever
+          # move a counter forward.
+          psql "$PGCONN" -v ON_ERROR_STOP=1 \
+            -f docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql \
+            2>&1 | tee /tmp/import.log
+          {
+            echo "### Database import"
+            echo
+            echo '```'
+            grep -E 'BEFORE|AFTER|student record not linked|INSERT|UPDATE [0-9]' /tmp/import.log | head -40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Import skipped — no database secret
+        if: steps.caps.outputs.db != 'yes'
+        run: |
+          {
+            echo "### Database import was NOT run"
+            echo
+            echo "No \`DATABASE_URL\` is stored, so the certificate records were not created."
+            echo "Every number will still return *no record on file*."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 4. Acceptance — the only step that decides anything ─────────────
+      # This needs no secret because it asks a public endpoint public
+      # questions, exactly as a holder does. It therefore always runs, and its
+      # verdict is the truth about production regardless of what the earlier
+      # steps did or skipped.
+      - name: Acceptance — ask the live public endpoint
+        id: accept
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run --silent certificates:accept -- --base https://shroyalschools.com 2>&1 \
+            | tee /tmp/accept.log
+
+      - name: Publish the acceptance table
+        if: always()
+        run: |
+          {
+            echo "## Live acceptance — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            echo '```'
+            sed -e 's/\r$//' /tmp/accept.log 2>/dev/null | tail -60 || echo "(the acceptance step produced no output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail the run if the certificates do not verify
+        if: steps.accept.outcome != 'success'
+        run: |
+          echo "::error::Certificate verification is NOT accepted. The thirteen issued"
+          echo "::error::certificates do not all verify on the live public endpoint."
+          echo "::error::Read the job summary above — it names which stage failed for each"
+          echo "::error::certificate: NOT RESOLVED means the record is missing (run the"
+          echo "::error::import), NOT ATTESTED means the record is right and a signing key"
+          echo "::error::is missing from the deployment (set the three Cloudflare variables)."
+          exit 1

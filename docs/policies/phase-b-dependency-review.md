@@ -15,7 +15,7 @@ sync with it.*
 | Principal, Royal College | Dr. Adegoke Musa Olatunji | |
 | Principal, Qur'an College | Shaykh Ahmad Ibrahim | Owns Boarding Regulations, Ijazah Governance Framework, Hifz Regulations. |
 | Principal, School of Islamic & Arabic Studies | Shaykh Abubakr Solah | |
-| Head Teacher, Nursery & Primary | Mrs. Kareemat Abdurazaq | |
+| Head Teacher, Nursery & Primary | Mrs. Mariam Tope AbdulKareem | |
 | VP Administration | Mrs. Anofi-Badmus Fatimat Omolola | Signs as "Fatimah Badmus" on the live policies page — same person, name variant, not a second role. Owns Student Code of Conduct. |
 | Registrar, Royal College | Mrs. Anofi-Abdulkareem Mariam Tope | |
 | ICT Head | Mr. Oguntade Adebola Aliu | Proposed owner, Data Protection & Privacy Policy. |

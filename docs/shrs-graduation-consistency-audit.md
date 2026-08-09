@@ -1,0 +1,949 @@
+# Graduation 2026 — full consistency audit
+
+**Date:** 8 August 2026 · **Revision 7** — extended after the Registrar's
+Notice of 2 July 2026 was supplied.
+**Scope:** the ceremony programme, the running order, and every graduation
+certificate for the Class of 2026.
+**Sources of truth used, in order of authority:**
+
+1. The certificate registers — `docs/graduation-registers/*.json`. The permanent
+   record. Authoritative on who graduated and how a name is spelled.
+2. The certificate rolls in `scripts/issue-royal-college-batch.mjs` — the
+   Founder's lists of 7 August 2026, with his rulings recorded beside them.
+3. The school's own **Programme of Event** (`Programme_of_Event1.docx`, supplied
+   7 August 2026). Authoritative on the running order.
+4. The Registrar's **Notice of the 2026 Combined Graduation Ceremony**,
+   2 July 2026 (`DOC-20260703-WA0002.pdf`). The notice sent to parents.
+   Authoritative on the published time, the venue, the fees and the guest
+   allocation — **and it carries a roll of graduands that does not agree with
+   the certificate rolls.** See §8.
+
+**Verdict: 6 defects found and corrected. 4 of the 6 were mine. 27 of the 40
+certificates cannot be minted in this environment and are blocked on one input.**
+
+---
+
+## 1 · What the uploaded document actually contains
+
+It is the **running order only** — fourteen items, a letterhead, and the
+programme coordinators. **It contains no student names.** If a roll of graduands
+was meant to be attached, it is not in this file.
+
+That is not a problem for the certificates: the full roll of all forty awards is
+already held in the repository, and every name reconciles (§4). It is recorded
+here so nobody assumes a list was received that was not.
+
+---
+
+## 2 · Defects in the source document
+
+Six, all in the times. Every item and every wording is kept; only the minutes
+are resolved, because as written the sequence cannot be run.
+
+| # | As supplied | Problem | Printed as |
+|---|---|---|---|
+| 1 | Introduction of the Graduands `10:10-10:30` | Runs backwards through the anthems and across the whole of the Key Guests' slot `10:15-10:30`. Two items claim the same fifteen minutes. | `10:30 – 10:45` |
+| 2 | Welcome Address `10:30-11:30` | Collides with the above once it is placed. | `10:45 – 11:30` |
+| 3 | Solatu Dhur `12:45 – 1: 1:20` | Malformed — two end times, one of them incomplete. | `12:45 – 13:20` |
+| 4 | Donation `1:00-1:05` | Falls **inside** Ṣolātu Ẓuhr. Duration kept (5 min), placed after the prayer. | `13:35 – 13:40` |
+| 5 | Light Refreshments `1:05-1:20` | Also falls inside the prayer. Duration kept (15 min). | `13:45 – 14:00` |
+| 6 | Royal Students Presentation, Goodwill message | No time given at all. | `13:20 – 13:35` and `13:40 – 13:45` |
+
+Read literally, the supplied document has **five things happening during the
+Ẓuhr prayer**. That is the single most consequential thing in it, and it is why
+the tail had to be resolved rather than transcribed.
+
+**Two wordings are normalised and nothing else is.** "Lecture! Lecture!!
+Lecture!!!" prints as **Lecture**; "Solatu Dhur" prints as **Ṣolātu Ẓuhr**
+beside the Arabic صلاة الظهر. Both are one-line reversions in
+`scripts/build-graduation-programme.mjs` if the Founder prefers his own forms.
+
+**The ceremony ends at 2:00 p.m.** on these resolutions. The last time the
+source states is 1:20 p.m.; the earlier trifold said 3 p.m. All three numbers
+now have a stated basis, and the printed one is the only one that fits the
+items the school listed.
+
+---
+
+## 3 · Defects in my own earlier work — all corrected
+
+Four. Two were reordering, one was an invention, one was a single byte that
+would have reached a permanent record.
+
+### 3.1 · The running order was resequenced while claiming not to be
+
+The programme's own source comment said the items were "in his sequence". They
+were not. Two pairs had been swapped:
+
+- **Introduction of Key Guests / Introduction of the Graduands** — the school
+  lists Key Guests first. I printed the Graduands first.
+- **Donation / Goodwill Message** — the school lists Donation first. I printed
+  the Goodwill Message first.
+
+Both restored to the document's order. This was the worse of the two kinds of
+error in this audit, because the comment asserted a fidelity the code did not
+have — a later reader would have trusted it.
+
+### 3.2 · An item was printed that appears in no school document
+
+`Arrival and Seating of Guests · 10:00 – 10:05` was introduced by my commit
+`8638e2a` and has no source. **Removed.** The ceremony now begins at 10:05, as
+the school wrote it.
+
+### 3.3 · One name differed from its certificate by one character
+
+This is the serious one, and it is the reason this audit was worth running
+before the batches were minted rather than after.
+
+| | Spelling | Codepoint |
+|---|---|---|
+| Ceremony programme | `Sa’ad Sanusi` | U+2019 right single quotation mark |
+| Junior Secondary certificate roll | `Sa'ad Sanusi` | U+0027 apostrophe |
+
+The printed name is one of the fields hashed into the certificate serial
+(`certificateHashFields` → `studentFullName`). Two spellings therefore produce
+**two different certificate numbers and two different verification codes** for
+the same child, and the Registrar's name matching is exact-string.
+
+Resolved in favour of the certificate roll, per the standing rule that the
+permanent record outranks the ephemeral one: the programme now prints
+`Sa'ad Sanusi` with U+0027, byte for byte identical to what will be engraved.
+
+**This is a live decision, and now is the last free moment to make it.** The
+Junior Secondary batch has not been minted. If the Founder wants the
+typographic apostrophe on the certificate instead, say so *before* the batch is
+run and it costs one line. Afterwards it costs a re-mint, because the engraved
+number changes with the name.
+
+### 3.4 · The domain note was imprecise
+
+The school's own letterhead, on this very document, reads
+`https://shroyalschools.com`. Every verification URL, every QR in the registers,
+and the live site are `.com`. A guest who types the `.ng` reaches nothing. The
+`.com` prints; the source comment now cites the letterhead it disagrees with
+rather than describing it vaguely. **Still awaiting the Founder's ruling.**
+
+---
+
+## 4 · Certificate coverage — all forty reconcile
+
+A new preflight, `scripts/preflight-graduation-coverage.mjs`, runs every gate the
+issuance pipeline runs except the signing, and can be run at any time. It writes
+nothing and signs nothing.
+
+```
+CODE   PROGRAMME                        PRINTED  CERTIFICATE  STATE
+QUR    Ḥifẓ of the Glorious Qur’an            3            3  AWAITING KEY
+IBT    Ibtidā’iyyah                           7            7  ISSUED
+IDD    I‘dādiyyah                             6            6  ISSUED
+PRY    Primary School Graduation              7            7  AWAITING KEY
+JSS    Junior Secondary School Graduation    13           13  AWAITING KEY
+SS     Senior Secondary School Graduation     4            4  AWAITING KEY
+                                             40
+```
+
+- **40 awards across 34 distinct graduands.** Six students hold two awards —
+  an Islamic-stage certificate and a secular one in the same year — and each
+  is named under both, as the programme says.
+- **Certificate sequence 35–74, contiguous, forty numbers, no overlap.** The
+  sequence is global: one number is issued once, ever, across every stage and
+  every year.
+- **New Student ID spans:** JSS 48–55, SS 56–57, PRY 58–64, QUR 65–66. No
+  collisions.
+- **8 Student ID carry-overs**, every one resolving against a published
+  register, and every short-form match carrying a Founder's ruling by date.
+- **2 Arabic names** on the outstanding rolls, each traced to a written ruling.
+  No name is transliterated, generated or guessed anywhere in this pipeline.
+- Every Qur'an College entry names its award variant, so a Ten Juz' sheet can
+  never print under "Certificate of Completion".
+
+**Preflight result: PASSED**, after the `Sa'ad Sanusi` correction. It failed on
+exactly that one name before it, which is what it was written to catch.
+
+---
+
+## 5 · Why 27 certificates cannot be minted here
+
+`scripts/issue-royal-college-batch.mjs` refuses to run without
+`DOCUMENT_HASH_SECRET`. That refusal is correct and must not be worked around.
+
+The five characters engraved on a certificate face are the head of an HMAC over
+that certificate's own fields, keyed by that secret. It is what makes the
+printed number self-checking: a forger can invent a plausible sequence number
+but cannot compute a tail that matches it. **A batch minted under any other key
+produces certificates that fail public verification** — and this repository has
+already been through that once, when six real certificates came to be signed by
+a development literal simply because a run succeeded without anyone choosing.
+
+The key lives in the Cloudflare environment and the Board's credential store,
+not in this repository (`docs/certificate-key-deployment.md`). It is not present
+in this environment. **I did not, and will not, mint a batch with a substitute
+key — not even to a scratch directory.**
+
+### To complete the roll-out
+
+Run these four, in this order, on a machine holding the production key. The
+sequence is global and each batch reads the one before it:
+
+```
+DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=JSS \
+  node scripts/issue-royal-college-batch.mjs
+DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=SS  \
+  node scripts/issue-royal-college-batch.mjs
+DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=PRY \
+  node scripts/issue-royal-college-batch.mjs
+DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=QUR \
+  node scripts/issue-royal-college-batch.mjs
+```
+
+Then, per batch, the press artefacts:
+
+```
+node scripts/render-royal-college-batch.mjs dist/certificates/<batch-dir> --dpi 600
+```
+
+Each run writes one HTML sheet per student, the combined print file, the
+register in JSON and Markdown, and the SQL to seed the Registrar's tables. The
+pipeline's own gates — global sequence, cross-register Student ID uniqueness,
+residue-name detection against the rendered HTML — all run before anything is
+written.
+
+**Nothing about the certificate design changes.** The Version 1.0 layout, the
+numbering algorithm, the verification logic and the document identifiers are
+untouched by this audit, as they must be. No grade appears on any certificate or
+on any public verification response.
+
+---
+
+## 6 · Open rulings
+
+Four, none of which blocks the ceremony programme, two of which should be
+settled before the four batches are minted.
+
+| | Question | Cost of deciding late |
+|---|---|---|
+| 1 | **`Sa'ad Sanusi`** — U+0027 as on the certificate roll, or U+2019 as the programme had it? | **High.** After minting, changing it means re-minting: the name is hashed into the engraved number. |
+| 2 | **the retired `.ng` domain or `.com`?** The letterhead says `.ng`; everything that must resolve says `.com`. | **High.** Every certificate QR and verification URL carries it. |
+| 3 | **"Lecture" or "Lecture! Lecture!! Lecture!!!"**, and **"Ṣolātu Ẓuhr" or "Solatu Dhur"**? | Low. Programme only, one line each. |
+| 4 | **Closing time** — 1:20 p.m. (last stated), 2:00 p.m. (printed, from the items listed), or 3 p.m. (earlier trifold)? | Low. Programme only. |
+
+An earlier open item is now closed: the roll-count and spelling differences
+between the old trifold and the registers. The registers and the Founder's own
+certificate rolls agree with each other on all forty awards, and the programme
+now follows them exactly.
+
+---
+
+## 7 · What was verified, and how
+
+- Programme of Event unpacked and read in full from `word/document.xml`; no
+  tables, no second document part, no student list present.
+- All fourteen running-order items diffed against the printed programme by hand.
+- All forty graduand names diffed by script between the programme, the published
+  registers and the Founder's certificate rolls — exact string comparison,
+  which is what caught the apostrophe.
+- Certificate sequence, Student ID spans, carry-overs, Arabic-name provenance
+  and Qur'an award variants checked by `scripts/preflight-graduation-coverage.mjs`.
+- Both editions of the programme rebuilt, all four sides rendered and rastered
+  at 192 DPI, and the corrected order panel read.
+- Cross-edition diff between the press PDF and `word/document.xml` re-run: every
+  graduand, guest and running-order item present in both.
+
+---
+
+# REVISION 2 — the Registrar's Notice of 2 July 2026
+
+## 8 · Two official rolls of the same ceremony, and they disagree
+
+This is the most serious finding in the whole audit, and it is not a defect in
+anything I built. **The institution holds two official rolls of the Class of
+2026 and they name different children.**
+
+| | Registrar's Notice, 2 July | Certificate rolls, 6–7 August |
+|---|---|---|
+| Categories | **seven** (adds *Islamiyyah (Tamyidi)*) | six |
+| Awards | **45** | 40 |
+| Distinct names | 35 | 34 |
+
+```
+
+  REGISTRAR’S NOTICE, 2 JULY 2026        vs        THE ROLLS OF 6–7 AUGUST 2026
+  ────────────────────────────────────────────────────────────────────────────
+  COLUMN                  → PROG   JUL   AUG   STATE
+  Basic 5                → PRY      6     7   DIFFERENT PEOPLE
+  JSS 3                  → JSS     15    13   DIFFERENT PEOPLE
+  SSS 3                  → SS       4     4   same people, spellings differ
+  Quran college          → QUR      4     3   DIFFERENT PEOPLE
+  Islamiyyah (Tamyidi)   → —        2     0   NO SUCH CERTIFICATE PROGRAMME
+  Ibtidaiyah             → IBT      9     7   DIFFERENT PEOPLE
+  Idadiyah               → IDD      5     6   DIFFERENT PEOPLE
+                                   45    40
+
+  ── ON THE REGISTRAR’S ROLL, ON NO CERTIFICATE ROLL ─────────────────────────
+     Each of these is a child who would receive NO certificate for that award.
+     Basic 5                Naheemah Ismail
+     JSS 3                  Allison Ganiyah
+     JSS 3                  Anisa Jokumba
+     JSS 3                  Fareedah Aliu
+     JSS 3                  Fateemah Ibrahim
+     JSS 3                  Jubril Lawal
+     JSS 3                  Muhammad Ismail
+     Quran college          Sofiah Anofi
+     Quran college          Zainab Anofi
+     Islamiyyah (Tamyidi)   Abdulbasit Adedokun
+     Islamiyyah (Tamyidi)   Muhammad fatih
+     Ibtidaiyah             Ameerah Abdulhafeez
+     Ibtidaiyah             Ashrof Ojewumi
+     Ibtidaiyah             Fareedah Aliu
+     Ibtidaiyah             Muhammad Ismail
+     Ibtidaiyah             Naheemah Ismaeel
+     Idadiyah               Balogun Yaseer
+     Idadiyah               Basit Jabarr
+
+  ── ON A CERTIFICATE ROLL, ON NO REGISTRAR COLUMN ───────────────────────────
+     Each of these is an award the Registrar’s notice does not record.
+     Basic 5                Naheemah Ismai Seriki
+     Basic 5                Al-ameen Abidemi Jokomba
+     JSS 3                  Muhammad Ismail Seriki
+     JSS 3                  Fatimah Desire Ibrahim
+     JSS 3                  Faridah Aliu
+     JSS 3                  Anisa Opeyemi Jokomba
+     Quran college          Zaynab Zakariya Anofi
+     Ibtidaiyah             Abdulbasit Adedokun  ← ALREADY MINTED AND PUBLISHED
+     Ibtidaiyah             Naheemah Ismail  ← ALREADY MINTED AND PUBLISHED
+     Ibtidaiyah             Ashrof Akorede  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Muhammad Ismail Seriki  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Faridah Ayomide Aliu  ← ALREADY MINTED AND PUBLISHED
+     Idadiyah               Abdulbasit Amobi Jabarr  ← ALREADY MINTED AND PUBLISHED
+
+  ── SAME PERSON, DIFFERENT SPELLING ─────────────────────────────────────────
+     The certificate spelling is engraved and hashed into its number.
+     PRY   Registrar: Ashraf Ojewumi             Certificate: Ashraf Korede Ojewumi
+     PRY   Registrar: Imran Adegoke              Certificate: Imran Iremide Adegoke
+     JSS   Registrar: Hameedah Ojewumi           Certificate: Hameedah Adebimpe Ojewumi
+     SS    Registrar: Abdulbasit Jabarr          Certificate: Abdulbasit Amobi Jabarr
+     QUR   Registrar: Aisha Anofi                Certificate: Aisha Omoshalewa Anofi
+     QUR   Registrar: Baqi Anofi                 Certificate: Baqi Olamiposi Anofi
+     IBT   Registrar: Hameedah Ojewumi           Certificate: Hameedah Adebimpe Ojewumi  [MINTED]
+     IDD   Registrar: Abdullah Anofi             Certificate: Abdullah Oladimeji Anofi  [MINTED]
+     IDD   Registrar: Baqi Anofi                 Certificate: Baqi Olamiposi Anofi  [MINTED]
+
+  ── POSSIBLY THE SAME CHILD UNDER TWO FAMILY NAMES ──────────────────────────
+     Given name matches; family name does not. Not resolved here — but if any
+     of these IS one child, a permanent record carries the wrong name.
+     PRY   Registrar: Naheemah Ismail          Certificate: Naheemah Ismai Seriki
+     JSS   Registrar: Anisa Jokumba            Certificate: Anisa Opeyemi Jokomba
+     JSS   Registrar: Muhammad Ismail          Certificate: Muhammad Ismail Seriki
+     IBT   Registrar: Ashrof Ojewumi           Certificate: Ashrof Akorede  ← ONE OF THESE IS ALREADY MINTED
+     IBT   Registrar: Naheemah Ismaeel         Certificate: Naheemah Ismail  ← ONE OF THESE IS ALREADY MINTED
+
+  Registrar’s notice: 45 awards · 35 distinct names · 35 distinct children if short forms are merged.
+  Certificate rolls:  40 awards · 34 distinct names · 30 distinct children if short forms are merged.
+  The certificate system mints one permanent Student ID per DISTINCT NAME.
+
+  THIS SCRIPT RESOLVES NOTHING. Both documents are official. The later one
+  carries the Founder’s written rulings and has already been minted for two
+  stages; the earlier one is the notice the parents were sent. Which governs
+  is a ruling for the Founder and the Registrar, and it must be made before
+  the four outstanding batches are signed.
+```
+
+### What each difference would cost
+
+- **18 children are on the Registrar's roll and on no certificate roll.** If
+  the July notice is right, each of them attends their own graduation and
+  receives nothing.
+- **13 awards are on a certificate roll and on no Registrar column** — and
+  **six of those are already minted and published** (Ibtidā'iyyah and
+  I'dādiyyah). If the July notice is right, six certificates have already been
+  issued that should not have been, and they would have to be revoked and
+  re-issued.
+- **There is no Tamyīdī certificate anywhere in this institution's system.**
+  The Registrar names two children under *Islamiyyah (Tamyidi)*; no such award
+  exists in `PROGRAMMES` or `RC_PROGRAMMES`, no wording has ever been approved
+  for it, and no serial range is reserved. If those two are to receive
+  certificates, an award has to be created and worded first — that is a
+  Founder's decision about what the institution confers, not a template edit.
+- **Two children may be carrying the wrong family name on a permanent record.**
+  The Ibtidā'iyyah batch is minted. It engraves **Ashrof Akorede**; the
+  Registrar's roll for the same stage says **Ashrof Ojewumi**, and the Primary
+  roll says **Ashraf Korede Ojewumi**. If these are one child, a certificate
+  already in existence carries his middle name where his family name belongs.
+  The same pattern applies to **Naheemah Ismail / Naheemah Ismaeel /
+  Naheemah Ismai Seriki**.
+
+### What I did about it
+
+Nothing to the rolls. **I changed no name, added no child and removed none.**
+Choosing between two official documents about who graduated is not a decision
+this pipeline may make: guessing wrong either denies a child a certificate at
+their own graduation, or confers an award on a child who did not earn it.
+
+What I built instead is `scripts/reconcile-registrar-roll.mjs`, which
+transcribes the Registrar's roll verbatim, diffs it against the certificate
+rolls, and prints every difference with its consequence. It resolves nothing
+and can be re-run after any ruling.
+
+**This blocks the four outstanding batches.** Minting JSS, SS, PRY and QUR now
+would mint the August set, and if the July set governs, 27 certificates would be
+wrong on the day they were handed out.
+
+---
+
+## 9 · Three more of my errors, corrected — all evidenced by the notice
+
+### 9.1 · The venue was wrong
+
+The notice says **"Venue: School Hall"**, and again in prose: *"The ceremony
+will be held in the school hall."* Both editions printed **School Grounds**,
+which appears in no school document. Corrected to **School Hall** on the face
+and on the Lecture panel.
+
+### 9.2 · The published time was wrong
+
+The notice publishes the ceremony to parents as **10:00 a.m. – 3:00 p.m.** The
+face printed 10:00 a.m. – 2:00 p.m., computed from the last item in the running
+order. Both facts are true and both now print: **the window on the face
+(10:00 – 3:00, as parents were told), the items on the order panel (10:05 to
+2:00, as the school scheduled them).** This closes the open question about the
+closing time — 3 p.m. was never wrong; it is the hall booking, not the last item.
+
+### 9.3 · The school's own motto was displaced
+
+The letterhead carries **"Motto: Learning Today, Leading Tomorrow."** The back
+panel printed the ceremony tagline in the position a reader takes the motto to
+be, so the publication misrepresented the institution to itself. The back panel
+now carries the real motto; the ceremony tagline stays on the face, where it
+belongs.
+
+---
+
+## 10 · One open question closed, one new one opened
+
+**Closed — the apostrophe.** Both official documents write **`Sa'ad Sanusi`**
+with U+0027. The Registrar's notice and the Founder's roll agree, and the
+programme now matches both. Nothing further is needed.
+
+**New — the telephone number.** Two official school documents give two
+different numbers:
+
+| Document | Number |
+|---|---|
+| Programme of Event, 7 August | `+234 (0) 807 374 7650` |
+| Registrar's Notice, 2 July | `+234 802 456 7452` |
+
+The programme prints the first, from the more recent document. **Which is the
+school's line?** It appears on the back panel of four hundred programmes.
+
+**Still open — the domain.** Both letterheads read `shroyalschools.com`. Every
+QR, every verification URL and the live site are `.com`. Now confirmed twice
+from the school's own stationery, and still unruled.
+
+---
+
+## 11 · Revised standing of the roll-out
+
+| | |
+|---|---|
+| Certificates issued and published | **13** (Ibtidā'iyyah 7, I'dādiyyah 6) — **six of them contested by the July roll** |
+| Certificates prepared, not minted | **27** (JSS 13, PRY 7, SS 4, QUR 3) |
+| Blocked on the signing key | all 27 |
+| **Blocked on a ruling about who is on the roll** | **all 27, and possibly 6 already issued** |
+| Children on the July roll with no award defined at all | **2** (Tamyīdī) |
+
+The key alone is no longer the only blocker. Even with the key in hand, minting
+now would commit the August roll permanently. **The roll must be ruled on
+first.**
+
+---
+
+# REVISION 3 — the Founder's rulings of 8 August 2026
+
+Two rulings given. Both applied. Neither closes the batches.
+
+## 12 · "Yes, it's existing. Tamheediy."
+
+The preparatory stage is real. It is now registered as **`TMH`** in
+`functions/_lib/certificate-serial.js`, alongside `IBT`, `IDD` and `THN`, in the
+same shape they use.
+
+**The engraved wording is PROVISIONAL and marked as such in the code.** The
+English — *Tamhīdiyyah — Preparatory Stage* — follows the house pattern set by
+Ibtidā'iyyah and I'dādiyyah. The Arabic — **المرحلة التمهيدية** — is the standard
+stage name in the same المرحلة + adjective construction those two already carry,
+and the Founder's "Tamheediy" reads it as *tamhīdī*. **Neither string has been
+written out by him, so neither is approved**, and nothing can mint under the key
+regardless: no roster and no serial range exist for it. If the sequence is
+extended, TMH continues after QUR's 000074, at **000075**.
+
+### What this ruling opens rather than closes
+
+**Abdulbasit Adedokun has already been given an Ibtidā'iyyah certificate.**
+Certificate `SHRS-CERT-IBT-2026-000037-22C49`, minted and published. The
+Registrar's notice places him under **Tamhīdī**, not Ibtidā'iyyah. Now that the
+Tamhīdī stage is confirmed to exist, that is no longer a categorisation
+question — it is a question of whether a child is holding a certificate for the
+wrong stage. **This needs a ruling of its own, and it cannot be inferred from
+the one given.**
+
+Also unresolved: **"Muhammad fatih"**, as the notice sets it, with a lower-case
+family name and no other document to check it against.
+
+## 13 · "They are one."
+
+Presented with three spellings each for two children, the Founder ruled that
+each set is one child:
+
+| | Minted Ibtidā'iyyah certificate | Registrar's notice | Primary roll |
+|---|---|---|---|
+| | Naheemah Ismail · cert 000038 | Naheemah Ismaeel | Naheemah Ismai Seriki |
+| | Ashrof Akorede · cert 000039 | Ashrof Ojewumi | Ashraf Korede Ojewumi |
+
+### Applied
+
+Each now **carries her or his existing permanent Student ID** into the Primary
+batch instead of being minted a second one. Without this, the Primary run would
+have handed one child two permanent numbers — the single worst outcome this
+pipeline is built to prevent. Recorded in the roll with the date and the
+decision, exactly as every other ruling is.
+
+The Primary batch's fresh Student ID span accordingly shortens from 58–64 to
+**58–62**. The Qur'an College batch still starts at 65; the cross-batch gate
+confirms no collision, and the preflight passes.
+
+The gate was also **tightened while I was here**: it demanded a written ruling
+only for carry-overs matched on a *short form*. A match on a *different family
+name* — precisely what has just been ruled on — could have passed unruled. It
+now requires a ruling for any match that is not exact.
+
+### Not applied, because the ruling does not reach it
+
+**Which spelling is engraved.** The Founder confirmed an identity, not a
+re-spelling, so no printed name was changed. On his ruling, certificate 000039
+carries **Ashrof Akorede** — his middle name where his family name belongs — and
+000038 carries **Naheemah Ismail** where the Primary roll has **Ismai Seriki**.
+
+**Two questions follow, and both are his:**
+
+1. Which spelling should each child's certificates carry?
+2. Do certificates **000038** and **000039**, already minted and published, have
+   to be revoked and reissued to match? The name is hashed into the engraved
+   number, so a corrected name is a new certificate, not an amendment.
+
+---
+
+## 14 · Standing after these rulings
+
+| | |
+|---|---|
+| Certificates issued and published | 13 — **two now known to be spelled against the ruling**, one possibly for the wrong stage |
+| Certificates prepared, not minted | 27 |
+| Awards with a stage but no approved wording | **2** (Tamhīdī) |
+| Blocked on the signing key | all 27 |
+| Blocked on which roll governs | **all 27** |
+
+**The rulings did not unblock the batches.** The question that blocks them —
+whether the Registrar's 45 or the Founder's 40 is the roll of this ceremony — is
+still open, and it is the one that decides whether eighteen children receive a
+certificate on Saturday.
+
+---
+
+# REVISION 4 — "Those who show in Tamheediy shouldn't have the right to Ibtidā'iyyah at all"
+
+The two stages are mutually exclusive. Applied everywhere it reaches.
+
+## 15 · The consequence: one minted certificate must be revoked
+
+The Registrar's notice places **Abdulbasit Adedokun** under Tamhīdī. The
+published Ibtidā'iyyah register places him under Ibtidā'iyyah — and a
+certificate was minted for him there on 8 August:
+
+> `SHRS-CERT-IBT-2026-000037-22C49` · `DID-2026-IBT-0000037` · Student ID `711232557821021`
+
+On this ruling **that certificate confers an award he is not entitled to.**
+
+It is not a transcription error. `TMH` did not exist in this system until today,
+so the roll it was minted from was correct as the institution then understood
+its own stages. It is nonetheless wrong now, and a wrong permanent record does
+not become right by being explicable.
+
+**Revocation R-2026-001 is ordered** and recorded in
+`docs/shrs-certificate-revocations.md`, a new register. It sets out the whole
+remedy: revoke on the live system so public verification returns *revoked* and
+never *genuine*; recover the sheet; issue a Tamhīdiyyah certificate in its
+place **carrying the same permanent Student ID**, because he is one child and
+holds one number for life; and do **not** renumber the Ibtidā'iyyah batch —
+000037 stays consumed, since a number is issued once, ever, and a revoked
+certificate has still been issued.
+
+**It cannot be executed today.** The Ibtidā'iyyah batch is sealed at key version
+1 (the retired development literal), so it can never be re-minted at that
+number under any circumstances; and the replacement Tamhīdiyyah award still has
+no approved wording, no roster and no serial range.
+
+His Arabic name is not a blocker: **عبد الباسط أددوكن** was approved for the
+Ibtidā'iyyah batch and carries across unchanged.
+
+## 16 · What was changed in the publications
+
+- **The Ibtidā'iyyah roll now prints six, not seven.** Abdulbasit Adedokun is
+  off it.
+- **A Tamhīdiyyah roll now prints, with two names**, between the Qur'an College
+  and Ibtidā'iyyah — the stage that precedes Ibtidā'iyyah, printed where it
+  belongs. Both editions.
+- **The published register file was not edited.** It is the true record of what
+  was minted on 8 August and it stays true. The programme states its one
+  departure from it in a single line of source rather than hiding it in data.
+- **"Muhammad fatih" prints as "Muhammad Fatih"** — letter case only, to match
+  every other name on every roll. The spelling is untouched and still awaits a
+  ruling.
+
+The ceremony programme now carries **41 awards across 35 graduands**, up from
+40 and 34.
+
+## 17 · The rule is now a gate, not a note
+
+`scripts/preflight-graduation-coverage.mjs` fails the build if any child appears
+on both the Tamhīdī and the Ibtidā'iyyah roll. It also carries a
+**pending-revocation register**, so a minted certificate that a ruling has put
+beyond entitlement is reported on every run as exactly that — rather than as a
+generic coverage mismatch that would hide real ones behind it.
+
+## 18 · Still open
+
+| | Question |
+|---|---|
+| **1** | **Which roll governs — the Registrar's 45 or the certificate rolls' 40?** Still the blocker on all 27 outstanding certificates. |
+| 2 | The Tamhīdiyyah engraved wording, English and Arabic. Provisional in code, unapproved. |
+| 3 | "Muhammad fatih" — the spelling as the notice sets it. |
+| 4 | Which spelling Ashrof and Naheemah's certificates should carry, and whether 000038 and 000039 must be revoked too. |
+| 5 | The telephone number — two official documents, two numbers. |
+| 6 | the retired `.ng` domain or `.com`. |
+
+---
+
+# REVISION 5 — the Registrar governs, and the fullest name prints
+
+Four rulings, 8 August 2026. All four applied; three of them close open items
+outright.
+
+## 19 · "It should be in alignment with the registrar's one. She knows better."
+
+**The Registrar's Notice of 2 July 2026 is the roll.** Seven categories,
+**45 awards, 33 children**. Every other list is a working paper from here on.
+
+## 20 · "Use the longer one, which means the three names."
+
+Where this institution has ever written a fuller form of a child's name, the
+fuller form prints and is engraved.
+
+This is not applied by hand. **`scripts/build-canonical-roll.mjs`** collects
+every variant from six sources — the Registrar's notice, the two published
+registers, both issuing scripts and their withdrawal lists — clusters them,
+chooses the fullest by rule, and prints the whole derivation. It writes
+`docs/graduation-registers/canonical-roll-2026.json`, and the programme now
+reads that **and nothing else**, so the programme, the certificates and the
+registers cannot disagree about a name again.
+
+**Nothing is invented.** The chosen name always appears verbatim in a source;
+parts are never combined across variants to manufacture a fuller name than any
+document actually carries.
+
+**Eighteen names gained a fuller form.** Among them:
+
+| Registrar wrote | Now prints |
+|---|---|
+| Aisha Anofi | Aisha Omoshalewa Anofi |
+| Zainab Anofi | Zaynab Zakariya Anofi |
+| Ashrof Ojewumi | Ashraf Korede Ojewumi |
+| Naheemah Ismaeel | Naheemah Ismail Seriki |
+| Muhammad Ismail | Muhammad Ismail Seriki |
+| Fareedah Aliu | Faridah Ayomide Aliu |
+| Anisa Jokumba | Anisa Opeyemi Jokomba |
+| Abdulbasit Jabarr | Abdulbasit Amobi Jabarr |
+
+**A bug this caught, worth naming.** The first cut split names on hyphens as
+well as spaces, which made the given name of both *Al-ameen Okoh* and *Al-ameen
+Abidemi Jokomba* the token "al" — and merged two different boys into one child.
+Two boys, one certificate. A hyphen binds a name; it does not divide one. Fixed,
+and the reason is in the source so it is not re-introduced.
+
+**One child is dropped by the ruling.** *Al-ameen Abidemi Jokomba* is on our
+Primary working roll and **is not on the Registrar's Basic 5**. Aligning to her
+roll removes him. If that is wrong, it is a one-line correction — but it must
+be her correction, not mine.
+
+## 21 · The telephone and the domain
+
+**The telephone is the site's**: `+234 807 374 7650`. It appears 934 times
+across the site against 0 for the Registrar's `+234 802 456 7452`. Already what
+the programme printed; now confirmed rather than assumed.
+
+**"Nothing .ng should ever reflect from now on."** Done, and audited: **zero**
+occurrences of `shroyalschools.ng` remain in any tracked file. Live code fixed
+(a seeded guardian address in `functions/api/portal/setup.js`). Across eighteen
+documents, every address a reader could type or click became `.com`; the dozen
+sentences that *record the .ng as a defect we removed* keep their meaning but
+no longer carry the hostname — deleting them would have falsified the audit
+trail, and printing them would have reflected the .ng.
+
+## 22 · The Tamhīdiyyah award, named
+
+Set to the standard of the certificates it joins, with the reasoning in the
+source beside it:
+
+| | |
+|---|---|
+| **English** | **Tamhīdiyyah — Preparatory Stage** |
+| **Arabic** | **المرحلة التمهيدية** |
+| Sentence | "…the preparatory educational stage" · "المرحلة التمهيدية" |
+
+The house pattern is set by the two stages already engraved: the Arabic name of
+the stage, romanised with its diacritics, an em dash, the plain English gloss.
+تمهيدية → *tamhīdiyyah*, in exact parallel with ابتدائية → *Ibtidā'iyyah* and
+إعدادية → *I'dādiyyah*, so the three read as one series on a shelf. The Arabic
+is definite on both words, as its two siblings are. Nothing is composed.
+
+Not *Preparatory Certificate*, not *Foundation Stage*, not *Nursery Islamiyyah*
+— the first two name a level this school does not use, and the third would put
+another department on a child's permanent record.
+
+It holds **one confirmation** before the first sheet is minted, because it is
+engraved text on a permanent record.
+
+## 23 · What is left
+
+**One thing, and it is real work rather than a question.**
+
+```
+THE CERTIFICATE ROLLS ARE NOT YET REBUILT ON THE REGISTRAR'S ROLL
+  programme   certificates
+  QUR      4          3   +1
+  IBT      9          7   +2
+  IDD      5          6   -1
+  PRY      6          7   -1
+  JSS     15         13   +2
+```
+
+The programme moved onto her roll the same day. The issuing rolls have not.
+They still carry the pre-ruling set under the pre-ruling short-form names — and
+the name is hashed into the engraved number, so a short form mints a different
+certificate from a full one. **No batch may be minted until they are rebuilt.**
+The preflight prints this table on every run.
+
+Then, and only then: the signing key.
+
+---
+
+# REVISION 6 — the issuing rolls rebuilt on the plan
+
+## 24 · One roll, read by everything
+
+Revision 5 ended with the one thing left: the certificate rolls still carried
+the pre-ruling set under pre-ruling short-form names, in four hand-written lists
+inside the two issuing scripts. **They are rebuilt.**
+
+They are not rewritten by hand onto the Registrar's list, which would only have
+produced four hand-maintained copies of one reconciliation. Both issuing scripts
+now read `docs/graduation-registers/reissue-plan-2026.json`, computed by
+`scripts/plan-certificate-reissue.mjs` from the canonical roll and the thirteen
+minted certificates, through one shared module, `scripts/_lib/class-of-2026.mjs`.
+
+What each script lost is worth naming, because each was a hand-kept constant
+that had already failed once:
+
+| Removed | What it was | How it failed |
+|---|---|---|
+| `FIRST_CERTIFICATE_SEQ` per batch | the first engraved number | — |
+| `PRIOR_SPANS` | a table of every other batch's numbers, to check the above | maintained against the thing it checked |
+| `FIRST_NEW_IDENTITY_SEQ` per batch | the first permanent Student ID | the first Senior Secondary run restarted it at 48 and handed two children numbers already engraved on two Junior Secondary certificates |
+| four `ROLLS` lists | who is graduating | drifted from the Registrar's roll the moment hers became authoritative |
+| per-batch `withdrawnEn` lists | residue guards | grew by hand as rolls multiplied |
+
+The preflight no longer parses the rolls out of the issuing script's source
+either. It checks the plan — which, now, is the same act.
+
+**The rolls reconcile exactly.** 45 printed awards, 45 certificate places, per
+programme, with no programme differing by one.
+
+## 25 · A second permanent number, caught before it was minted
+
+The plan allocated certificate numbers per certificate and Student IDs alongside
+them. Those are not the same allocation, and this roll contains the case that
+proves it:
+
+> **Ameerah Abdulhafeez** holds no certificate yet and appears **twice** on the
+> Registrar's roll — Ibtidā'iyyah and Junior Secondary.
+
+Allocating per certificate would have minted her **two permanent Student
+numbers in a single run** — the single worst thing this pipeline can produce,
+and the fault it exists to prevent. Allocation is now keyed on the child: she is
+issued `716656078450081` once, and both sheets carry it.
+
+Eight children receive more than one certificate. Each holds one number.
+
+The floor for new numbers is no longer a constant either. The Student ID body is
+a bijection of its sequence value, so the plan recovers the sequence behind
+every already-issued number and starts after the highest — 47, read, not
+remembered.
+
+## 26 · Two records only the Registrar can supply
+
+Rebuilding surfaced two facts the certificates need that no SHRS document
+states. Neither is an Arabic question.
+
+**Sofiah Anofi's Qur'an College award.** Two awards are conferred — complete
+memorisation, and ten juz'. The Registrar's list names her without saying which,
+and the renderer refuses a sheet that names no variant rather than defaulting to
+the first. It is right to: a Ten Juz' sheet headed *Certificate of Completion*
+overstates a child's achievement on a permanent record, and the reverse
+understates it.
+
+**Five graduands' sex.** The wording is gendered in both languages. Twenty-seven
+of thirty-two are on record from an earlier register or an approved roll. These
+five appear for the first time on the Notice of 2 July, which states none:
+
+```
+Sofiah Anofi · Muhammad Fatih · Yaseer Balogun · Allison Ganiyah · Jubril Lawal
+```
+
+Several read unambiguously to a reader of Arabic names. That is not a record,
+and the batch is held rather than a guess kept beside a fact — the same rule
+that governs the Arabic names, applied to the same children.
+
+## 27 · Standing
+
+| | |
+|---|---|
+| The roll | ✅ the Registrar's — 45 awards, 32 children |
+| The issuing rolls | ✅ rebuilt; one source, read by every batch and by the preflight |
+| Certificate numbers | ✅ 000035–000086, contiguous, each claimed once |
+| Permanent Student IDs | ✅ 32 children, 32 numbers, proved in both directions |
+| Tamhīdiyyah wording | ✅ confirmed and locked, 8 August 2026 |
+| Seven Arabic names | ⏳ outstanding — `docs/shrs-arabic-names-for-ruling-2026.md` |
+| Sofiah Anofi's award variant | ⏳ outstanding — the Registrar's record |
+| Five graduands' sex | ⏳ outstanding — the Registrar's record |
+| The signing key | in the Board's credential store, not in this environment |
+
+Every remaining hold is this pipeline refusing to write down something nobody
+told it. None is a defect, and none can be cleared from inside this repository.
+
+---
+
+# REVISION 7 — "Only Abdul Basit Adedokun is now in Tamhīdiyyah"
+
+## 28 · The ruling, and the thing it does not say
+
+> *"Only Abdul Basit Adedokun is now in Tamheediyyah. Issue out his certificate
+> now to look like those of Ibtidā'iyyah, but more flashy."*
+
+The Registrar's Notice lists two under **Islamiyyah (Tamyidi)**. One stands.
+
+Adding or removing a child from a category is the Registrar's act, and the
+Founder's directly — so the removal is recorded in
+`scripts/build-canonical-roll.mjs` under `WITHDRAWN_FROM`, **beside** her
+transcription rather than edited into it, on the same principle as every other
+ruling in that file. Her document stays verbatim; his correction stays visible.
+
+**What the ruling does not do is place Muhammad Fatih anywhere.** It states the
+stage he is not in. It does not state the stage he is in, and nothing in this
+repository is entitled to choose one for a child. He is therefore carried as
+**UNPLACED** — on no roll, in no programme panel, holding no certificate — and
+the preflight names him on every run:
+
+```
+· Muhammad fatih is on NO roll and receives NO certificate.
+  Withdrawn from TMH: Founder's ruling, 8 Aug 2026
+  UNPLACED — the ruling states which stage he is not in…
+```
+
+That is the one outcome a coverage check must never let pass quietly. A child
+who silently disappears from a roll disappears from his own graduation.
+
+**The seven Arabic names became five**, because two of them — محمد and فاتح —
+were only ever needed for his sheet.
+
+## 29 · Tamhīdiyyah is complete
+
+With one graduand the batch has nothing left outstanding:
+
+| | |
+|---|---|
+| Name to engrave | Abdulbasit Adedokun |
+| Arabic | **عبد الباسط أددوكن** — approved on the Ibtidā'iyyah register, carried across |
+| Sex | on the Ibtidā'iyyah register |
+| Certificate number | **000052**, from the plan |
+| Permanent Student ID | **711232557821021** — his own, carried from the certificate being revoked |
+| Standing | **every gate passes; it waits on the signing key alone** |
+
+His Ibtidā'iyyah certificate 000037 is revoked under R-2026-001 and this replaces
+it. Same child, same permanent number, different award — which is exactly what
+the revocation record said would happen.
+
+## 30 · "More flashy" — what was added, and what was protected
+
+The instruction has two halves and both are load-bearing. **Like Ibtidā'iyyah**
+means the same plate, the same border architecture, the same measured grid — it
+is one document family and a graduating class whose certificates do not match is
+not a class. **More flashy** means this sheet carries more.
+
+So the regalia is an ADDITIVE layer behind one programme-code test. It moves no
+element, changes no size, and touches no shared rule; every ornament sits in
+space this sheet already leaves empty, measured on a rendered proof rather than
+assumed. Four additions:
+
+| | |
+|---|---|
+| **Guilloché halo** | two interfering rosettes and a woven band behind the name pair, so the name sits on worked ground rather than plain field |
+| **Corner brackets** | a double cut at each corner of the name band — outer arm heavy, inner arm short, with a lozenge pip where they meet. Cut corners rather than a box: a closed rectangle around a name reads as a form field |
+| **Palmettes** | mirrored illuminated flourishes flanking the title, in the 17mm of clear ground at each side of the title frame |
+| **Sixteen-ray star** | the stage identifier on the name rule, where Ibtidā'iyyah carries a lozenge and I'dādiyyah an eight-point khatam. One ornament tells the stages apart, on the principle the Founder set himself |
+
+Everything is vector. No raster enters the layer, so it holds at any press
+resolution, and no new colour enters the sheet — every value comes from the
+existing gold ramp.
+
+### The protection is proved, not asserted
+
+"Every rule is prefixed `[data-stage="TMH"]`" is a claim about source. The claim
+that matters is about output. `scripts/verify-stage-sheet-isolation.mjs` renders
+the other stages twice — from the working tree and from the template at a git
+ref — and compares the rendered sheets byte for byte:
+
+```
+STAGE ISOLATION — IBT, IDD rendered from the working tree and from HEAD
+  identical   … × 8
+PASSED — all 8 sheet(s) render identically.
+```
+
+A mistyped prefix, an over-matching selector, or a shared element nudged by an
+added sibling would not show in a source diff. This catches all three.
+
+## 31 · A design proof is not a certificate
+
+Artwork cannot be judged from source, so `scripts/proof-certificate-design.mjs`
+renders it. It deliberately cannot reach the signing code — it never imports it
+— and every identifier on a proof is the format's null: sequence `000000`, which
+the global sequence starts past, and check tail `00000`. **SPECIMEN — NOT A
+CERTIFICATE** is struck across the face and repeated in the foot rule, and the
+QR encodes a dead URL rather than the verification host.
+
+That separation is the point. A signed certificate is a permanent institutional
+record; a proof is a picture of one, and producing the second must never become
+a way of accidentally producing the first.
+
+## 32 · Standing
+
+| | |
+|---|---|
+| The roll | ✅ 44 awards, 31 children |
+| Tamhīdiyyah | ✅ **complete — waits on the signing key alone** |
+| Certificate numbers | ✅ 000035–000085, contiguous, each claimed once |
+| Permanent Student IDs | ✅ 31 children, 31 numbers, proved both ways |
+| Ibtidā'iyyah / I'dādiyyah artwork | ✅ pixel-identical, proved by rendering |
+| Five Arabic names | ⏳ outstanding |
+| Sofiah Anofi's award variant | ⏳ outstanding — the Registrar's record |
+| Four graduands' sex | ⏳ outstanding — the Registrar's record |
+| Muhammad Fatih's placement | ⏳ outstanding — the ruling removed him from a stage without naming another |
+| The signing key | in the Board's credential store, not in this environment |

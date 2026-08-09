@@ -235,7 +235,7 @@ Article 50). Its membership, restated by the 2026-08-04 amendment
 | Principal (Mudeer), Sultan Hanafi Qur'an College | Imam Ahmad Sulaimiy |
 | Principal, Sultan Hanafi Royal College | Dr. Adegoke Musa Olatunji |
 | Principal (Ra'ees), Sultan Hanafi School of Islamic and Arabic Studies | Shaykh Abubakr Solah |
-| Head Teacher, Sultan Hanafi Nursery and Primary School | Mrs. Kareemat Abdurazaq |
+| Head Teacher, Sultan Hanafi Nursery and Primary School | Mrs. Mariam Tope AbdulKareem |
 | Head, Sultan Hanafi Online & Distance Learning School | Vacant |
 
 The sixth seat is vacant because Sultan Hanafi Online & Distance

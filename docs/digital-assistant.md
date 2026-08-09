@@ -64,7 +64,7 @@ institutions, admissions steps, boarding terms, governance, contact
 details) that are drawn directly from the published site content. Anything
 not published — exact tuition fees, the academic calendar, scholarship
 criteria, international-admission arrangements — it will say plainly isn't
-published yet, and point to `info@shroyalschools.ng` or
+published yet, and point to `info@shroyalschools.com` or
 `principal@shrschools.ng` instead of guessing. It's free to use its
 general knowledge for actual academic help (English writing, homework
 explanations, exam prep) since that isn't a claim about the school.

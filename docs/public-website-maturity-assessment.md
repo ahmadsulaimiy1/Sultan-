@@ -1,6 +1,6 @@
 # SHRS Public Website Maturity Assessment v1.0
 
-**Scope.** The public-facing website only (`shroyalschools.ng` — marketing
+**Scope.** The public-facing website only (`shroyalschools.com` — marketing
 pages, policies, admissions, and the discoverable edges of the Parent/
 Student/Founder portals). Internal digital-institution work (Staff
 Identity & Role System, the Registrar office, teacher/principal

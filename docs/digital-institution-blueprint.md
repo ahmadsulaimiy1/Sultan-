@@ -66,7 +66,7 @@ boundary a digital system for it would need to enforce.
 
 | | |
 |---|---|
-| **Real actor** | Principal / Head Teacher per institution (named for Basic School: Mrs. Kareemat Abdurazaq; others not named in current docs) |
+| **Real actor** | Principal / Head Teacher per institution (named for Basic School: Mrs. Mariam Tope AbdulKareem; others not named in current docs) |
 | **Digital state today** | None. All `term_results`/`attendance_summary` entry happens via the Registrar-equivalent admin token, not per-teacher, per-subject |
 | **Core workflows missing** | Timetable, subject/curriculum assignment (AC-08 Curriculum Framework is itself only Partial), lesson planning, per-teacher grade entry, report-card generation |
 | **Permission boundary needed** | Principal: read/write within their own institution only. This is the first office where "which institution does this person belong to" becomes a real access-control question — today every admin action is one undifferentiated bearer token |

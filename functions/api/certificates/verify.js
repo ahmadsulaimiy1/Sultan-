@@ -25,6 +25,41 @@ import {
 } from '../../_lib/certificate-serial.js';
 import { hashIpAddress } from '../../_lib/document-hash.js';
 
+// The public attestation must use the award's OWN name. The Islamic-stage
+// certificates are Certificates of Completion; the Royal College Junior
+// Secondary award is a Certificate of Graduation, and a verifier comparing this
+// page against the document in their hand must read the same words on both.
+// Programme codes not listed here keep the original wording, so adding a stage
+// to the v1.0 registry does not silently change what this page says.
+const CREDENTIAL_TYPE_EN = {
+  JSS: (labelEn) => `Certificate of Graduation — ${labelEn}`,
+};
+function credentialTypeEn(row) {
+  const f = CREDENTIAL_TYPE_EN[String(row.programme_code || '').toUpperCase()];
+  return f ? f(row.programme_label_en) : `Certificate of Completion — ${row.programme_label_en}`;
+}
+
+
+// The Code 128-C holder barcode carries the 15-digit Student ID with ONE
+// leading zero, because Code 128-C encodes digits in pairs and therefore needs
+// an even-length payload. A registrar who scans that barcode into this endpoint
+// sends 16 digits, and the parser — which knows the Student ID as 15 digits —
+// refused it. The consequence was the worst failure this system can produce:
+// a genuine certificate, scanned with the scanner it was designed for, told
+// "no certificate found", which reads to everyone in the room as an accusation
+// of forgery.
+//
+// Normalising here rather than in certificate-serial.js is deliberate: that
+// file is inside the v1.0 freeze and is the numbering authority. Nothing about
+// the numbering changes — this only undoes a transport-layer padding before
+// the identifier is parsed, and only for the one shape that padding produces
+// (exactly 16 digits, leading zero, a valid 15-digit ID underneath). Anything
+// else is passed through untouched and fails closed as before.
+function undoBarcodePadding(ref) {
+  const s = String(ref || '').trim();
+  return /^0\d{15}$/.test(s) ? s.slice(1) : s;
+}
+
 // Best-effort verification audit (same verification_log the graduation-
 // document verifier writes) — a failed log write must never break a
 // legitimate verification.
@@ -86,8 +121,9 @@ export async function onRequestGet({ request, env }) {
     // the shapes and for why each one fails closed. What the verifier
     // typed only chooses the row: the integrity check is identical either
     // way, because it recomputes from the STORED serial.
-    const identifier = parseStageCertificateIdentifier(ref);
-    const resolved = identifier ? await resolveStageCertificateIdentifier(sql, ref) : null;
+    const stageRef = undoBarcodePadding(ref);
+    const identifier = parseStageCertificateIdentifier(stageRef);
+    const resolved = identifier ? await resolveStageCertificateIdentifier(sql, stageRef) : null;
     if (resolved && resolved.outcome === 'ambiguous') {
       // Two rows where the identifier names one document means the global
       // serial sequence has been re-scoped, a content hash has collided, or
@@ -102,10 +138,9 @@ export async function onRequestGet({ request, env }) {
       // attestation, because no single document has been identified. The
       // holder is handed the certificate numbers off their own documents
       // and asked which one they mean; nothing here is picked for them.
-      // NOTE for the public page (js/certificate-verify.js, not this file):
-      // kind 'student_certificate_index' needs its own branch — an older
-      // renderer that only knows the single-document shape will badge this
-      // as a verified credential, which it is not.
+      // The public page (js/certificate-verify.js) has its own branch for
+      // kind 'student_certificate_index' and renders it as an index, never as
+      // a verdict — checked by reading that file, not by trusting this note.
       await logVerification(sql, request, ref, 'multiple');
       const rows = resolved.rows;
       return json({
@@ -123,7 +158,7 @@ export async function onRequestGet({ request, env }) {
             serialNo: r.serial_no,
             certificateNo: displayStageCertificateNo(r.serial_no),
             programmeCode: r.programme_code,
-            credentialType: `Certificate of Completion — ${r.programme_label_en}`,
+            credentialType: credentialTypeEn(r),
             credentialTypeAr: r.programme_label_ar ? `شهادة إتمام ${r.programme_label_ar}` : null,
             academicYear: r.academic_year,
             issuedAt: isoDateOnly(r.issued_at),
@@ -148,7 +183,7 @@ export async function onRequestGet({ request, env }) {
         recipientName: row.student_full_name,
         recipientNameAr: row.student_full_name_ar,
         studentIdentityNo: row.student_identity_no,
-        credentialType: `Certificate of Completion — ${row.programme_label_en}`,
+        credentialType: credentialTypeEn(row),
         credentialTypeAr: row.programme_label_ar ? `شهادة إتمام ${row.programme_label_ar}` : null,
         programmeCode: row.programme_code,
         institutionName: row.institution_name,
@@ -221,7 +256,34 @@ export async function onRequestGet({ request, env }) {
     // endpoint fill verification_log with rows on demand, drowning exactly
     // the signal the table is for.
     if (identifier) await logVerification(sql, request, ref, 'not_found');
-    return json({ ok: true, found: false });
+    // TWO DIFFERENT ANSWERS, and until now they were the same one.
+    //
+    // `identifier` is non-null only when the reference is a shape THIS
+    // INSTITUTION ISSUES — a stage-certificate serial, engraved number,
+    // Student ID, verification code, archive path or document id. The
+    // endpoint already relied on that distinction to decide whether to write
+    // an audit row, and then discarded it, returning the identical
+    // `{found:false}` for "this is not one of our numbers" and for "this IS
+    // one of our numbers and we hold no record of it".
+    //
+    // Those are not the same fact and must not read the same way. The second
+    // is what a graduand holding a genuine certificate sees when the record
+    // behind it is missing, and answering that with an undifferentiated "not
+    // found" tells a real awardee, in public, that their document appears to
+    // be nothing — which is the accusation this whole family of code is
+    // written to avoid. It is also the institution's own alarm: a well-formed
+    // number with no row means a record has gone missing or was never
+    // created, and nobody can act on a signal that looks like a typo.
+    //
+    // So the shape is reported. It is not a verdict and is never rendered as
+    // one: `found` stays false, no status is asserted, and nothing here says
+    // the document is genuine — only that the number is one of ours.
+    return json({
+      ok: true,
+      found: false,
+      referenceRecognised: Boolean(identifier),
+      referenceKind: identifier ? identifier.kind : null,
+    });
   } catch (err) {
     console.error('certificate verify error', err);
     return json({ error: 'Could not complete verification: ' + (err && err.message ? err.message : 'unknown error') }, 500);

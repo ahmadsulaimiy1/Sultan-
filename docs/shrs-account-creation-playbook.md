@@ -13,7 +13,7 @@ where that value goes in this codebase.
 
 1. **Create a Cloudflare account** (if one doesn't already exist) at
    `dash.cloudflare.com`, using an institutional email address you
-   control long-term (e.g. `ict@shroyalschools.ng` once that mailbox
+   control long-term (e.g. `ict@shroyalschools.com` once that mailbox
    exists — see Step 3 — or a real person's institutional address in
    the meantime).
 2. **Create a Pages project**: Cloudflare Dashboard → Workers & Pages →
@@ -81,7 +81,7 @@ where that value goes in this codebase.
 3. **Create an API key** — Resend dashboard → API Keys → Create. This
    becomes `RESEND_API_KEY` in Step 1.3.
 4. **Decide the sending address** — e.g.
-   `noreply@shroyalschools.ng` or similar. This becomes
+   `noreply@shroyalschools.com` or similar. This becomes
    `EMAIL_FROM_ADDRESS`. This is a single transactional-sending
    address, **not** the same thing as the institutional mailboxes
    (`admissions@`, `registrar@`, etc.) described in the Deployment
@@ -92,7 +92,7 @@ where that value goes in this codebase.
 
 ## Step 4 — Domain
 
-This playbook does not resolve whether `shroyalschools.ng` (or `.com`)
+This playbook does not resolve whether the retired `.ng` domain (or `.com`)
 is already owned — the Master Deployment Directive confirmed this
 session's outbound network check to that domain was blocked by its own
 sandbox's gateway policy, so it genuinely could not check either way.

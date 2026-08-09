@@ -112,7 +112,7 @@ also what makes the model multi-campus-ready without redesign — see §5.
 | Code | Role | Status | Scope | Real person / source |
 |---|---|---|---|---|
 | **EXE** | Head of Schools / Administrator / Executive Leadership *(role code unchanged; label updated per the 2026-08-04 amendment — no office of CEO exists)* | Established | All institutions | GV-01; Zakariya Olanrewaju Anofi, Founder, Chairman of the Board of Governors & Head of Schools / Administrator |
-| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Kareemat Abdurazaq) |
+| **PRIN** | Principal / Head Teacher | Established | Own institution | GV-01 (per-institution); named for Sultan Hanafi Nursery and Primary School (Mrs. Mariam Tope AbdulKareem) |
 | **VP** | Vice Principal | Proposed | Own institution, mirrors Principal minus final approval authority | Not yet documented — recommended where an institution's size warrants it |
 | **REG** | Registrar | Established | All institutions (academic records are institution-wide) | AC-02, PA-05; Mrs. Anofi-Abdulkareem Mariam Tope |
 | **AREG** | Assistant Registrar | Proposed | Delegated subset of Registrar's scope | Not yet documented — recommended once Registrar workload requires it |
