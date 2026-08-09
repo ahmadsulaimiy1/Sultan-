@@ -136,7 +136,17 @@ jobs:
     if: always()
     steps:
       - name: Ask the live site what it is serving
+        # GitHub runs `run:` blocks under `bash -e`, which aborts the whole
+        # script the moment any command returns non-zero. A grep that finds
+        # nothing returns 1 — and "finds nothing" is a RESULT here, not an
+        # error: the absence of the build stamp is precisely the answer this
+        # job exists to report. Under -e the script died at that grep and
+        # said nothing at all, which is the one outcome a diagnostic must
+        # never have. So this block turns -e off deliberately and decides
+        # its own exit status at the end.
+        shell: bash
         run: |
+          set +e
           set -uo pipefail
           EXPECTED='${{ needs.deploy.outputs.expected }}'
           FAIL=0
@@ -162,7 +172,7 @@ jobs:
 
             # The build stamp, if this deploy has ever landed.
             local stamp
-            stamp=$(grep -o 'name="shrs-build" content="[^"]*"' /tmp/body | head -1 | sed 's/.*content="//;s/"//')
+            stamp=$(grep -o 'name="shrs-build" content="[^"]*"' /tmp/body 2>/dev/null | head -1 | sed 's/.*content="//;s/"//' || true)
             if [ -n "$stamp" ]; then
               echo "build stamp   $stamp" | tee -a "$GITHUB_STEP_SUMMARY"
               if [ -n "$EXPECTED" ] && [ "$stamp" != "$EXPECTED" ]; then
