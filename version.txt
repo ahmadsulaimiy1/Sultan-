@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      b88fe42b3c1aaaab148bc8603aad0ccfdd121252
-short       b88fe42b
+commit      dfd27929ccfed907feec534dc61ec49375b5b1d5
+short       dfd27929
 branch      main
-subject     The panel goes back to how it was, keeps the clock, and holds one row
-built (UTC) 2026-08-09T16:58:17Z
-assets      shrs-pwa-0d7293c2c3
+subject     Two rows, composed rather than wrapped
+built (UTC) 2026-08-09T17:25:47Z
+assets      shrs-pwa-c860bc420d
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

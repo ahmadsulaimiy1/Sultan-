@@ -1374,8 +1374,13 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
   flex:0 0 100%!important;width:100%!important;height:0!important;
   background:none!important;margin:0!important;
 }
+/* The watch leads the DAY, not the hour. With the next prayer restored
+   the lower line carries three entries — the time, the prayer and the
+   link — and adding a dial to it tipped the row onto a third line on a
+   phone. On the upper line beside the date it reads better anyway: a
+   seal at the head of the inscription. */
+.pc-islamic-strip .rlx{order:0;flex:0 0 auto;margin-inline-end:2px;}
 /* the hour */
-.pc-islamic-strip .rlx{order:3;flex:0 0 auto;margin-inline-end:1px;}
 .pc-islamic-strip .pc-strip-clock{order:4;}
 .pc-islamic-strip .pc-strip-clock + .pc-strip-sep{order:5;}
 .pc-islamic-strip .pc-strip-prayer{order:6;}
@@ -1395,6 +1400,17 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
    running together. */
 .pc-islamic-strip .pc-strip-item:empty{display:none!important;}
 .pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none!important;}
+
+@media (max-width:600px){
+  .pc-islamic-strip .rlx .rlx-dial{width:20px;height:20px;}
+  .pc-islamic-strip .pc-strip-item{letter-spacing:0;}
+  /* The countdown is the one thing on the band that is DERIVED rather
+     than stated — it is the difference between two numbers already on
+     the row. On a phone it is what tips the lower line onto a third,
+     so it is the right thing to give up, and the only thing given up:
+     the prayer's name and its time both stay. */
+  .pc-islamic-strip .pc-strip-countdown{display:none;}
+}
 
 /* ---- 3. the Midnight ground, corrected -----------------------------
    MEASURED, and this one is a real defect rather than a matter of

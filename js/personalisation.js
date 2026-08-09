@@ -469,19 +469,47 @@
     });
   }
 
+  /* The prayer times are CALCULATED, not fetched — see js/prayer-times.js
+     for the algorithm and for why.
+
+     This used to be a single request to api.aladhan.com with no
+     fallback: if that server was slow, down, blocked by an ad-blocker
+     or unreachable on a weak connection, the .catch emptied the element
+     and the next prayer silently vanished from the top of every page.
+     On a school built around the five daily prayers that is the last
+     line that should ever be allowed to disappear, and it was the only
+     one with a single point of failure.
+
+     The same Muslim World League method the old request asked for
+     (method=3 — Fajr 18 degrees, Isha 17) is now computed locally, so
+     the numbers are unchanged for anyone already reading them, present
+     on the first paint rather than a second later, correct offline,
+     and no longer bought at the price of sending every visitor's
+     coordinates to a third party on every page view. */
   function fetchPrayerTimes(){
-    var coords = prefs.islamicCoords || SCHOOL_COORDS;
-    var url = 'https://api.aladhan.com/v1/timings/' + Math.floor(Date.now() / 1000)
-      + '?latitude=' + coords.lat + '&longitude=' + coords.lng + '&method=3';
-    fetch(url).then(function(res){
-      if(!res.ok) throw new Error('bad status');
-      return res.json();
-    }).then(function(data){
-      renderPrayerTimes(data && data.data && data.data.timings);
-    }).catch(function(){
+    var lib = window.SHRSPrayerTimes;
+    if(!lib){ renderPrayerTimes(null); return; }
+    var custom = prefs.islamicCoords;
+    var coords = custom || SCHOOL_COORDS;
+    var now = new Date();
+    /* The offset that applies AT THOSE COORDINATES. For the school that
+       is Africa/Lagos, read from the platform's own tz database rather
+       than hard-coded as +1; for a reader who has set their own place,
+       their own clock is the right one to use. */
+    var tz = custom ? undefined : lib.zoneOffset('Africa/Lagos', now);
+    try {
+      renderPrayerTimes(lib.timingsFor(now, coords.lat, coords.lng, { tzOffset: tz }));
+    } catch(err) {
       renderPrayerTimes(null);
-    });
+    }
   }
+
+  /* Re-derived on a slow tick so the countdown stays live, the strip
+     rolls on to the next prayer as each one passes, and the whole set
+     turns over at midnight without a reload. It is pure arithmetic —
+     no request, nothing to fail — so it can simply be redone rather
+     than cached and invalidated. */
+  window.setInterval(fetchPrayerTimes, 30000);
 
   // Live clock + prayer-countdown ticker for the topbar strip. The
   // countdown re-derives from the last-fetched timings (no re-fetch
