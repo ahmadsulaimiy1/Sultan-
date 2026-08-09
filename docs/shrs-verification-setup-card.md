@@ -44,9 +44,14 @@ It will, by itself:
    `DOCUMENT_HASH_SECRET_V1`. All three together, because setting only some of
    them makes the public page accuse genuine certificates of not matching
    their signature.
-2. Rebuild the import from the sealed registers and run it against the live
-   database. Safe to repeat — it is idempotent, and it aborts and rolls back
-   if any record disagrees with the certificate it belongs to.
+2. Apply the database schema, then rebuild the import from the sealed
+   registers and run it against the live database. The schema step is there
+   because the first live run of this workflow found that production has **no
+   `stage_certificates` table at all** — the certificate schema was never
+   applied, which is why every number returns an error rather than a record.
+   Both steps are safe to repeat: the schema creates only what is missing, and
+   the import aborts and rolls back if any record disagrees with the
+   certificate it belongs to.
 3. Ask the **live public endpoint** every number printed on all thirteen
    certificates, plus each QR payload.
 4. Print the acceptance table on the run's summary page and go **green only if
