@@ -1292,110 +1292,96 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
    §18. THE REGNAL STRIP
    -------------------------------------------------------------------
    The band carrying the Hijri date, the hour and the next prayer sits
-   at the very top of every page — it is the first thing the site says,
-   on all one hundred and forty-three of them.
+   at the top of every page. It has now been wrong twice, in opposite
+   directions, and both failures came from the same mistake: treating a
+   LEGEND as a FEATURE.
 
-   IT IS A BAR OF GOLD. Not a brown band with gold writing on it, which
-   is what it was and which is a different thing entirely.
+   First it was a slab of espresso. Then, asked for gold, a slab of
+   polished gold — which was worse, because a full-width bar of bright
+   metal across the top of every page shouts, and the one thing luxury
+   never does is shout. A house that has to tell you it is grand is
+   telling you it is not.
 
-   Metal is not a colour, it is a RANGE, and that is the whole of the
-   difference. A flat gold fill reads as yellow paint. What makes a
-   surface read as struck metal is the way light falls across it: a
-   dark lip at the top where the bevel turns away, the tone rising
-   through the body, a narrow specular band where the surface faces the
-   light square on, then falling back through the deeper tones to a
-   second dark lip at the bottom. Eight stops, top to bottom, in that
-   order — that is the whole trick, and nothing else in this rule
-   matters half as much.
+   THE THIRD ANSWER IS RESTRAINT, and it is the right one.
 
-   Four things are laid over it:
+   Look at where gold actually appears on the objects this school would
+   want to be compared to — a Cartier box, the edge of a fine book, an
+   engraved calling card, the fascia of a good hotel. It is never a
+   field. It is a HAIRLINE, an EDGE, a small MARK, set against a quiet
+   ground. The value comes from the precision of the line and the space
+   around it, not from the quantity of metal.
 
-     · a BRUSHED FINISH — hairline striations, a machined surface
-       rather than a polished mirror, because a mirror at this size
-       reads as plastic
-     · a MILLED EDGE — the fine vertical ticks along the top and bottom
-       lips, the way the rim of a struck coin is milled
-     · TWO DARK LIPS, in neutral black rather than brown, so the bevel
-       still reads when a reader chooses the sapphire, emerald, garnet
-       or platinum livery and the metal is no longer gold
-     · one travelling SPECULAR SWEEP, the light moving over the bar
+   So the ground belongs to the page — ivory over parchment in the
+   Clear edition, black lacquer in Royal and Midnight — and every scrap
+   of gold in this band is in two places only:
 
-   The type is ENGRAVED, not printed: the darkest ink the livery has,
-   with a hairline of white beneath each letter, which is what a letter
-   cut into metal does to the light sitting in the cut. The separators
-   invert too — they were gold lozenges, invisible on gold, and are now
-   struck dark.
+     · a FRENCH RULE above and below: the thick-thin pair a compositor
+       sets under a masthead, one firm line and one hairline with a
+       breath between them. It is four pixels of ornament and it does
+       more than thirty-six pixels of gold did.
+     · the small lozenges between the entries.
 
-   Every colour comes from the livery's own metal ramp (gl, gp, gb, g,
-   gd), deliberately NOT the gt/gt2/gt3 text golds: those invert for the
-   Midnight edition, and a bar of gold that turns pale in the dark is
-   not a bar of gold. The bar is the same metal in all three editions,
-   because a gilt cornice does not change when the room does.
+   The type is engraved into that ground rather than laid on it, small
+   and generously letterspaced, because tracking is what makes a short
+   line of type read as inscribed rather than typed.
 
-   The strip also becomes the chronometer's home on a phone. There is
-   no room for a 38mm dial in a 390px masthead beside the crest, the
+   No sheen, no sweep, no travelling light. This band is the quietest
+   thing on the page on purpose — it is a legend, it is read once, and
+   then it should get out of the way. The movement belongs to the crest
+   and the plates beneath it, which are what a visitor came to look at.
+
+   The strip is also the chronometer's home on a phone. There is no
+   room for a 38mm dial in a 390px masthead beside the crest, the
    reader, the search and the menu — so on a narrow screen the watch
-   goes where the time already is, which is where you would look for
-   it anyway. js/clock.js moves the one instance; it is never drawn
-   twice, so it cannot drift out of step with itself.
+   goes where the time already is. js/clock.js moves the one instance;
+   it is never drawn twice, so it cannot drift out of step with itself.
    ------------------------------------------------------------------- */
 .pc-islamic-strip{
   position:relative;overflow:hidden;
   background:
-    /* the milled edge — fine ticks along both lips, as on a coin rim */
-    repeating-linear-gradient(90deg,rgba(0,0,0,.20) 0 1px,transparent 1px 4px)
-      top    /100% 3px no-repeat,
-    repeating-linear-gradient(90deg,rgba(0,0,0,.20) 0 1px,transparent 1px 4px)
-      bottom /100% 3px no-repeat,
-    /* the brushed finish */
-    repeating-linear-gradient(90deg,
-      rgba(255,255,255,.055) 0 1px,
-      rgba(0,0,0,.035) 1px 2px,
-      transparent 2px 5px),
-    /* the two bevel lips, neutral so they survive a change of metal */
+    /* the French rule, above: one firm line, a breath, one hairline */
     linear-gradient(180deg,
-      rgba(0,0,0,.50),rgba(0,0,0,0) 10%,
-      rgba(0,0,0,0) 86%,rgba(0,0,0,.55)),
-    /* THE METAL: eight stops, dark lip -> body -> specular -> body -> dark lip */
+      rgba(var(--lv-gd,156,122,60),.85) 0 1px,
+      transparent 1px 3px,
+      rgba(var(--lv-g,198,161,91),.42) 3px 4px,
+      transparent 4px) top/100% 4px no-repeat,
+    /* and below, mirrored, so the pair frames the line of type */
+    linear-gradient(0deg,
+      rgba(var(--lv-gd,156,122,60),.85) 0 1px,
+      transparent 1px 3px,
+      rgba(var(--lv-g,198,161,91),.42) 3px 4px,
+      transparent 4px) bottom/100% 4px no-repeat,
+    /* The ground is the page's own paper, but lit from the centre and
+       falling away at both rules — so the band reads as a slightly
+       recessed panel of vellum rather than as a third flat surface
+       stacked on the two flat surfaces around it. The topbar above and
+       the masthead below are both ivory; without this curvature the
+       three of them read as one washed-out block. */
     linear-gradient(180deg,
-      rgb(var(--lv-gd,156,122,60))   0%,
-      rgb(var(--lv-g,198,161,91))   11%,
-      rgb(var(--lv-gb,233,206,138)) 29%,
-      rgb(var(--lv-gl,255,246,223)) 45%,
-      rgb(var(--lv-gp,243,226,188)) 55%,
-      rgb(var(--lv-gb,233,206,138)) 69%,
-      rgb(var(--lv-g,198,161,91))   85%,
-      rgb(var(--lv-gd,156,122,60)) 100%)!important;
+      rgb(var(--lv-p6,234,224,192)) 0%,
+      rgb(var(--lv-p2,252,250,246)) 48%,
+      rgb(var(--lv-p3,247,238,223)) 62%,
+      rgb(var(--lv-p6,234,224,192)) 100%)!important;
   border:0!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.60),
-    inset 0 -1px 0 rgba(0,0,0,.42),
-    0 4px 14px -6px rgba(var(--lv-gd,156,122,60),.75),
-    0 1px 0 rgba(0,0,0,.28);
+  box-shadow:none!important;
 }
-/* The travelling light: one pass of gold along the cornice, slow
-   enough to read as a highlight moving over metal. */
-.pc-islamic-strip::after{
-  content:"";position:absolute;inset-block:0;inset-inline-start:-40%;
-  width:34%;pointer-events:none;z-index:0;
-  /* Light moving over a polished bar: white at the core, warm at the
-     shoulders, and narrow — a wide soft glow reads as fog, not shine. */
-  background:linear-gradient(100deg,
-    transparent,
-    rgba(255,255,255,.07) 38%,
-    rgba(255,255,255,.30) 48%,
-    rgba(255,252,240,.42) 50%,
-    rgba(255,255,255,.30) 52%,
-    rgba(255,255,255,.07) 62%,
-    transparent);
-  /* screen on a band this bright blows the specular to flat white and
-     the engraving under it disappears with it. Held back to a sheen. */
-  mix-blend-mode:screen;
-  animation:rgn-sweep 13s linear infinite;
+/* Royal and Midnight are dark editions; the band follows the chrome
+   rather than punching a pale hole in it. Black lacquer, same rules. */
+html[data-pc-theme="royal"] .pc-islamic-strip,
+html[data-pc-theme="dark"] .pc-islamic-strip{
+  background:
+    linear-gradient(180deg,
+      rgba(var(--lv-gb,233,206,138),.85) 0 1px,
+      transparent 1px 3px,
+      rgba(var(--lv-gb,233,206,138),.34) 3px 4px,
+      transparent 4px) top/100% 4px no-repeat,
+    linear-gradient(0deg,
+      rgba(var(--lv-gb,233,206,138),.85) 0 1px,
+      transparent 1px 3px,
+      rgba(var(--lv-gb,233,206,138),.34) 3px 4px,
+      transparent 4px) bottom/100% 4px no-repeat,
+    linear-gradient(180deg,#17110A,#100B06)!important;
 }
-@keyframes rgn-sweep{to{transform:translateX(410%);}}
-[dir="rtl"] .pc-islamic-strip::after{animation-name:rgn-sweep-rtl;}
-@keyframes rgn-sweep-rtl{to{transform:translateX(-410%);}}
 
 /* .topbar .wrap sets space-between for the row above, and the strip's
    inner IS a .wrap — so the three items were being flung to the two
@@ -1405,67 +1391,67 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
 .pc-islamic-strip .pc-islamic-strip-inner{
   position:relative;z-index:1;
   display:flex;align-items:center;justify-content:center!important;
-  gap:16px!important;padding:8px 24px!important;
-  color:rgb(var(--lv-gp,243,226,188))!important;
+  gap:18px!important;padding:9px 24px!important;
 }
-/* ENGRAVED, not printed. A letter cut into metal is dark in the cut and
-   catches a hairline of light on the lower wall of the cut — which is
-   the whole of why the shadow below is white and the one above is
-   black. Reverse the two and the type reads as embossed instead, which
-   is a different object. */
+
+/* Engraved, not printed — and small. Tracking is what makes a short
+   line read as inscribed rather than typed. */
 .pc-islamic-strip .pc-strip-item,
 html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-item,
 html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-item{
   font-family:var(--font-label,'Cinzel',serif)!important;
-  font-size:.76rem;letter-spacing:.07em;font-weight:700;
-  color:rgb(var(--lv-cfd5,34,23,9))!important;
-  text-shadow:0 1px 0 rgba(255,255,255,.55),
-              0 -1px 0 rgba(0,0,0,.18);
+  font-size:.7rem;letter-spacing:.14em;font-weight:600;
+  color:rgb(var(--lv-cf2,51,40,28))!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);
 }
 .pc-islamic-strip .pc-strip-clock{
-  color:rgb(var(--lv-cfd5,34,23,9))!important;
-  font-variant-numeric:tabular-nums;letter-spacing:.11em;font-weight:700;
-  text-shadow:0 1px 0 rgba(255,255,255,.6),0 -1px 0 rgba(0,0,0,.2);
+  color:rgb(var(--lv-cf2,51,40,28))!important;
+  font-variant-numeric:tabular-nums;letter-spacing:.16em;
 }
 .pc-islamic-strip .pc-strip-countdown{
-  color:rgba(var(--lv-cfd5,34,23,9),.82)!important;opacity:1;font-weight:600;}
-.pc-islamic-strip .pc-strip-icon{
-  color:rgb(var(--lv-cfd5,34,23,9))!important;
-  filter:drop-shadow(0 1px 0 rgba(255,255,255,.5));}
+  color:rgba(var(--lv-cf2,51,40,28),.72)!important;opacity:1;font-weight:500;
+  letter-spacing:.08em;}
+.pc-islamic-strip .pc-strip-icon{color:rgba(var(--lv-gt3,99,72,27),.9)!important;}
 
-/* The lozenges were gold, which on gold is nothing at all. Struck dark,
-   with a lit lower facet, they read as punched into the bar. */
-.pc-islamic-strip .pc-strip-sep{
-  width:7px!important;height:7px!important;flex:0 0 auto;
-  background:linear-gradient(140deg,
-    rgba(var(--lv-cfd5,34,23,9),.85),rgba(var(--lv-cfd5,34,23,9),.55))!important;
-  transform:rotate(45deg);
-  box-shadow:0 0 0 1px rgba(0,0,0,.18),
-             1px 1px 0 rgba(255,255,255,.45);
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-item,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-item,
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-clock,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-clock{
+  color:rgb(var(--lv-gp,243,226,188))!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.5);
 }
-/* An item that has nothing to say — the prayer slot before its times
-   have resolved, or with prayer times switched off — takes its own
-   separator with it, so the strip never shows a gap between two
-   lozenges with nothing in between. */
-.pc-islamic-strip .pc-strip-item:empty{display:none;}
-.pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-countdown,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-countdown{
+  color:rgba(var(--lv-gp,243,226,188),.74)!important;}
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-strip-icon,
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-strip-icon{
+  color:rgba(var(--lv-gb,233,206,138),.9)!important;}
 
-/* The Midnight edition lights every link on the page, with !important,
-   which is right everywhere except here: this link sits on a bar of
-   gold that does not go dark when the page does, and it measured
-   1.05:1 — near-white ink on pale metal. Naming the theme as well as
-   the bar settles it. */
+/* Small. A separator that competes with the words it separates has
+   stopped being punctuation. */
+.pc-islamic-strip .pc-strip-sep{
+  width:4px!important;height:4px!important;flex:0 0 auto;
+  background:rgb(var(--lv-g,198,161,91))!important;
+  transform:rotate(45deg);box-shadow:none;
+}
+
 .pc-islamic-strip .pc-adhkar-link,
 html[data-pc-theme="dark"] .pc-islamic-strip .pc-adhkar-link,
 html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
-  color:rgb(var(--lv-cfd5,34,23,9))!important;
-  border-bottom-color:rgba(var(--lv-cfd5,34,23,9),.45)!important;
+  color:rgb(var(--lv-gt3,99,72,27))!important;
+  border-bottom-color:rgba(var(--lv-gt3,99,72,27),.4)!important;
 }
-.pc-islamic-strip .pc-adhkar-link:hover{
-  color:rgb(var(--lv-cfd5,34,23,9))!important;
-  border-bottom-color:rgba(var(--lv-cfd5,34,23,9),.9)!important;
-  text-shadow:0 1px 0 rgba(255,255,255,.75);
+html[data-pc-theme="dark"] .pc-islamic-strip .pc-adhkar-link,
+html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
+  color:rgb(var(--lv-gb,233,206,138))!important;
+  border-bottom-color:rgba(var(--lv-gb,233,206,138),.4)!important;
 }
+
+/* An item with nothing to say — the prayer slot before its times have
+   resolved — takes its own separator with it, so the strip never shows
+   a gap between two lozenges with nothing in between. */
+.pc-islamic-strip .pc-strip-item:empty{display:none;}
+.pc-islamic-strip .pc-strip-item:empty + .pc-strip-sep{display:none;}
 
 /* ---- the chronometer, in the strip -------------------------------- */
 .pc-islamic-strip .rlx{margin-inline-end:2px;}
@@ -1478,11 +1464,14 @@ html[data-pc-theme="royal"] .pc-islamic-strip .pc-adhkar-link{
 [dir="rtl"] .pc-islamic-strip .rlx-pop{inset-inline-start:auto;inset-inline-end:-8px;transform-origin:top right;}
 
 @media (max-width:640px){
-  .pc-islamic-strip-inner{gap:11px!important;padding:7px 14px!important;}
-  .pc-islamic-strip .pc-strip-item{font-size:.68rem;}
+  .pc-islamic-strip-inner{gap:5px 16px!important;padding:8px 14px!important;}
+  .pc-islamic-strip .pc-strip-item{font-size:.66rem;letter-spacing:.1em;}
+  /* The row wraps on a phone, and a wrapped row puts a separator at the
+     START of the second line — an orphan lozenge with nothing before it
+     to separate. Punctuation that begins a line is not punctuation, so
+     below this width the space does the separating on its own. */
+  .pc-islamic-strip .pc-strip-sep{display:none!important;}
 }
-@media (prefers-reduced-motion:reduce){.pc-islamic-strip::after{animation:none;opacity:0;}}
-html[data-pc-motion="reduced"] .pc-islamic-strip::after{animation:none;opacity:0;}
 
 /* ===================================================================
    §19. THE GOLD DUST, REBUILT — the site's single worst frame cost

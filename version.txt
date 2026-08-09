@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      3173962fa0fed68bb3044f9bd72f2d5582eeea05
-short       3173962f
+commit      0e66ac15a28f48e673cf25ea44f88492d0414707
+short       0e66ac15
 branch      main
-subject     Name the branch in the build stamp, not 'HEAD'
-built (UTC) 2026-08-09T15:26:00Z
-assets      shrs-pwa-332ff41bd3
+subject     The regnal strip is a bar of gold, not a brown band with gold writing
+built (UTC) 2026-08-09T16:15:45Z
+assets      shrs-pwa-2ec874baac
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
