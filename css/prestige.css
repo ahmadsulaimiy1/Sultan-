@@ -3427,10 +3427,28 @@ html[data-pc-theme="light"] .portal-topbar{
   border-bottom:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] .portal-brand{color:var(--pearl-ink);}
 html[data-pc-theme="light"] .portal-card{color:var(--pearl-ink);}
-html[data-pc-theme="light"] .portal-aside-title,
-html[data-pc-theme="light"] .portal-aside-copy,
-html[data-pc-theme="light"] .portal-aside-points li{color:var(--pearl-ink-2)!important;}
-html[data-pc-theme="light"] .portal-aside-eyebrow{color:rgb(var(--lv-gt2,138,106,47))!important;}
+/* THE EDITION-BLIND PATTERN, AGAIN — the fourth time this fault has been
+   found on this site, and the reason it keeps returning is always the same:
+   a "light edition means dark text" rule written without checking what the
+   element is actually standing on.
+     .portal-aside paints its OWN gradient, and that gradient is fixed. It was
+   sampled from the painted pixels in every theme and every livery and came
+   back rgb(49,34,21) each time — light/royal, light/emerald, royal/*, dark/*,
+   all identical. The panel is a dark plate in all editions by design.
+     Darkening its text for the Clear edition therefore put brown ink on brown
+   ground across all nine auth pages: the three value points measured 1.71,
+   1.73 and 1.76:1 against a 4.5 requirement, and the body copy 1.54:1. The
+   only reason it was not obvious is that it is legible-ish on a bright
+   monitor at full brightness.
+     There is nothing to replace these rules with. The base colours in
+   §.portal-aside-* are already stated against this dark ground and are
+   correct in every edition, so the override is simply deleted.
+     The eyebrow's own light-edition override went with it for the same
+   reason; css/portal-chrome.css:174 already pins it to #E4C87F for all
+   editions, which is the value that belongs on a dark plate.
+     RULE: before writing html[data-pc-theme="light"] ... {color:dark}, sample
+   the element's ground with text made transparent. If the ground does not
+   change with the edition, neither may the text. */
 
 /* ---- The closing band and the footer, in pearl ---- */
 html[data-pc-theme="light"] .pr-arrival{

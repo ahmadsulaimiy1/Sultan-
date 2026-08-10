@@ -157,7 +157,12 @@ body.portal-body > *{position:relative;z-index:1;}
 .portal-aside-cta .portal-back-link:hover{color:var(--gold-bright);transform:none;box-shadow:none;}
 
 .portal-form-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:52px 32px;}
-.portal-form-col .portal-card{margin-top:0;}
+/* 420px is the right measure for a card floating alone on a page. Inside the
+   split shell the form column is already ~624px wide, and holding the card to
+   420 left the two-column field rows cramped, the heading broken over three
+   lines, and the three-step rail fighting for 334px of content width. The
+   column can afford 520 without the line length of the prose going long. */
+.portal-form-col .portal-card{margin-top:0;max-width:520px;}
 
 @media (max-width:960px){
   .portal-shell{grid-template-columns:1fr;}
@@ -655,18 +660,32 @@ body.portal-body > *{position:relative;z-index:1;}
 .pfd-action-btn:hover{background:var(--atmos,var(--gold));color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(var(--lv-w04,20,13,4),0.35);}
 .pfd-briefing-text{font-size:0.98rem;line-height:1.7;color:var(--ink);margin:0;}
 
-/* --- Account Creation Journey --- */
-.portal-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:26px;}
-.portal-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;}
+/* --- Account Creation Journey ---
+   The rail's three cells are as wide as their LABELS, not their circles:
+   "Create Account" is 113px and "Your Dashboard" 118px, so the natural row
+   ran 421px inside a 334px card. With flex:0 0 auto nothing could shrink and
+   justify-content:center pushed the overflow out BOTH ends — the first label
+   lost its C to the card's left edge and the last lost its D to the right.
+   The rail now spans the card (each cell an equal 1fr that may shrink to
+   zero), and the labels wrap onto a second line instead of demanding a
+   single unbreakable row. Every label in every one of the four languages
+   fits by construction, because none of them is allowed to set the width. */
+.portal-steps{display:flex;align-items:flex-start;justify-content:center;gap:0;margin-bottom:26px;width:100%;}
+.portal-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1 1 0;min-width:0;}
 .portal-step-circle{
   width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:'Cinzel','Amiri',serif;font-size:0.78rem;border:1.5px solid var(--line);color:var(--ink-soft);background:var(--milk-bg,rgb(var(--lv-p2,252,250,246)));
 }
-.portal-step-label{font-size:0.72rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+/* Wraps at spaces only. break-word here split words down the middle —
+   "CREATE ACCOUN / T", "YOUR DASHBO / ARD" — which is a worse failure than
+   the clipping it replaced. A two-line label is fine; a severed word is not. */
+.portal-step-label{font-size:0.72rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);text-align:center;line-height:1.34;max-width:100%;overflow-wrap:normal;word-break:normal;hyphens:none;}
 .portal-step.is-active .portal-step-circle{border-color:var(--gold);color:var(--portal-heading);background:rgba(var(--lv-gs,198,161,91),0.15);}
 .portal-step.is-active .portal-step-label{color:var(--portal-heading);font-weight:600;}
 .portal-step.is-done .portal-step-circle{border-color:var(--gold);background:var(--gold);color:#fff;}
-.portal-step-line{width:40px;height:1px;background:var(--line);margin:0 6px 18px;flex:0 0 auto;}
+/* The connector sits level with the middle of the 30px circle, which is why
+   it is offset by half the circle rather than by a guessed margin-bottom. */
+.portal-step-line{height:1px;background:var(--line);margin:15px 6px 0;flex:1 1 12px;min-width:8px;}
 .portal-success-icon{
   width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   border:1.5px solid var(--gold);color:var(--gold);margin:0 auto 16px;

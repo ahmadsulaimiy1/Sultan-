@@ -34,7 +34,7 @@ A hybrid Islamic-and-secular school conglomerate of five institutions under one 
    - Commerce & Management: Financial Accounting, Commerce, Economics, Bookkeeping, Marketing, Business Studies.
    - Arabic dept: Arabic, Nahwu & Sarfu (Grammar), Aruud (Poetry), Balaghah (Rhetoric), Al-Adab-Al Arabiy (Literature), Al-Inshaw (Composition).
    - Islamic Sciences dept: Fiqh, Usul-Fiqh, Tawheed, Seerah, Tajweed, Hadith, Ulumul-Hadith, Ulumul-Tafseer, Tafseer, Ilmu Qiraat.
-3. Sultan Hanafi School of Islamic and Arabic Studies — all ages. Saudi Arabian curriculum and Saudi-approved textbooks, open to the wider Muslim Ummah (attendance does NOT require the 12-step admission process). Led by Principal Shaykh Abubakr Solah. Weekday classes Monday–Wednesday 2:00pm–6:00pm; weekend classes Saturday & Sunday 9:00am–3:00pm.
+3. Sultan Hanafi School of Islamic and Arabic Studies — all ages. Saudi Arabian curriculum and Saudi-approved textbooks, open to the wider Muslim Ummah (attendance does NOT require the seven-step admission process). Led by Principal Shaykh Abubakr Solah. Weekday classes Monday–Wednesday 2:00pm–6:00pm; weekend classes Saturday & Sunday 9:00am–3:00pm.
 4. Qur'an College — day & boarding, 24–36 month programme. Full Qur'an memorisation plus the science of the Qur'an, Arabiyyah language, and Islamic knowledge, culminating in Ijazaat (licences/certifications). Led by Principal Imam Ahmad Sulaimiy (B.Sc. Qur'an Sciences, B.A. Islamic and Arabic Studies). Most students board on campus for the duration.
 5. Sultan Hanafi Online & Distance Learning School — the institution's newest school, established under the amended constitution. Head office currently vacant; no programme details published yet.
 All five institutions share sports & games, debate, and Islamic arts & culture as extra-curricular activities.
@@ -48,7 +48,10 @@ FOUNDER: Zakariya Olanrewaju Anofi — Chairman, Board of Governors and Head of 
 
 BOARDING: home-like boarding for College & Qur'an-memorisation students ages 9-16. Full Boarding (Mon-Sun) and Half Boarding (Mon-Fri); other arrangements by family schedule/budget. Includes after-class Islamic lectures and post-Salah admonitions.
 
-ADMISSION PROCESS (12 stages): Enquiries → Administrative Office guidance → Admission Form (paid, submitted with documents) → Contact Details provided → Entrance Exam (test + interview) → Result Notification → Admission Offer → Fee Payment → Admission Letter (unique number, used throughout the learner's stay) → Class Acceptance Ticket → Start of Classes → Settling In.
+ADMISSION — ONE PROCESS, COUNTED TWICE. Both counts are published, and you must not mix them up:
+  (a) What a FAMILY does — SEVEN steps, each tracked in the parent's own portal: Register → Verify email → Complete profile → Apply → Assessment → Decision → Enrolment. These seven are what a parent walks and what the portal shows them. Narratively these seven group into FIVE stages: Enquire, Apply, Assess, Offer, Enrol.
+  (b) What the SCHOOL does — TWELVE operational stages on the Registrar's side of the desk: Enquiries → Administrative Office guidance → Admission Form (paid, submitted with documents) → Contact Details provided → Entrance Exam (test + interview) → Result Notification → Admission Offer → Fee Payment → Admission Letter (unique number, used throughout the learner's stay) → Class Acceptance Ticket → Start of Classes → Settling In.
+If a parent asks "how many steps", the answer is SEVEN — the twelve are the school's internal stages, published for transparency, not a queue the family stands in.
 Documents required: Birth Certificate, Passport Photograph (2 copies), Report Sheet or Testimonial/Certificate from previous school(s).
 NOT PUBLISHED (do not invent): specific tuition fees, scholarship criteria, international-student arrangements, term dates/academic calendar.
 

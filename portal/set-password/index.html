@@ -8,9 +8,9 @@
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=6c54ac2677">
-<link rel="stylesheet" href="/css/portal.css?v=398bb6d4e4">
+<link rel="stylesheet" href="/css/portal.css?v=2d96336c73">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=8e7fdb35cc">
+<link rel="stylesheet" href="/css/prestige.css?v=a04e55c672">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <script src="/js/locale-registry.js?v=4c02adb950"></script>
 <script src="/js/i18n-core.js?v=b56898d96a"></script>
@@ -19,7 +19,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=03d5b327ee">
-<meta name="shrs-build" content="shrs-pwa-2a74a012d3">
+<meta name="shrs-build" content="shrs-pwa-35e93f1295">
 </head>
 <body class="portal-body">
 
@@ -33,7 +33,15 @@
 </div>
 
 <div class="portal-shell">
-  <aside class="portal-aside" aria-hidden="true">
+  <!-- This panel was marked aria-hidden="true" as though it were decoration.
+       It is not: it carries the page's value proposition and, on every one of
+       these nine auth pages, the ONLY route to the other side of the door â
+       "Already have an account? Sign In". A focusable link inside an
+       aria-hidden subtree is a WCAG 4.1.2 failure: the link stays in the tab
+       order but leaves the accessibility tree, so a screen-reader user tabs
+       onto a control their software cannot name. The decorative parts here
+       (the SVG bullets, the lattice) carry their own aria-hidden. -->
+  <aside class="portal-aside">
     <p class="portal-aside-eyebrow" data-i18n="footer.parentPortal">Parent Portal</p>
     <h2 class="portal-aside-title">Welcome. Let's<br>secure your account.</h2>
     <p class="portal-aside-copy">Choose a password for your Parent Portal account — this is the final step before you're in.</p>

@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      198b7bef68984fd01f0d438599ee0904ac5c64a4
-short       198b7bef
+commit      7e8dbfea67364db61749a462a3664345a070f0d2
+short       7e8dbfea
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The countdown is struck rather than printed, and stops rebuilding itself every minute
-built (UTC) 2026-08-10T08:30:26Z
-assets      shrs-pwa-2a74a012d3
+subject     A regression shipped and reverted, the audit that caused it repaired, and the dimmest sentence on the governance chart brightened
+built (UTC) 2026-08-10T09:01:29Z
+assets      shrs-pwa-35e93f1295
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
