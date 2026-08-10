@@ -151,6 +151,39 @@ jobs:
           EXPECTED='${{ needs.deploy.outputs.expected }}'
           FAIL=0
 
+          # WAIT FOR THE PUBLISH BEFORE JUDGING IT.
+          #
+          # This job ran the moment the build job finished — about sixty
+          # seconds after the push — and Cloudflare's Git integration takes
+          # roughly two minutes to publish. So it printed
+          #
+          #   EXPECTED  <stamp>   <-- live site is NOT this build
+          #
+          # on EVERY deploy, the correct ones included, and the line meant
+          # nothing except that the runner had got there first. A check that
+          # cries wolf every single time is worse than no check at all, because
+          # the one occasion it is right reads exactly like the hundred
+          # occasions it was not.
+          #
+          # It now waits for the stamp it expects, up to five minutes, and only
+          # calls the site stale after the publish has had longer than it has
+          # ever needed.
+          WAITED=0
+          if [ -n "$EXPECTED" ]; then
+            echo "Waiting for the publish to land (expecting $EXPECTED)…"
+            for attempt in $(seq 1 20); do
+              live=$(curl -sS -m 20 https://shroyalschools-web.pages.dev/ 2>/dev/null \
+                | grep -o 'name="shrs-build" content="[^"]*"' | head -1 | sed 's/.*content="//;s/"//')
+              if [ "$live" = "$EXPECTED" ]; then
+                echo "Publish landed after ${WAITED}s."
+                break
+              fi
+              sleep 15
+              WAITED=$((WAITED + 15))
+            done
+            echo "Waited ${WAITED}s for the publish to land." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
           probe () {
             local url="$1" label="$2"
             echo "## $label" >> "$GITHUB_STEP_SUMMARY"
@@ -176,7 +209,14 @@ jobs:
             if [ -n "$stamp" ]; then
               echo "build stamp   $stamp" | tee -a "$GITHUB_STEP_SUMMARY"
               if [ -n "$EXPECTED" ] && [ "$stamp" != "$EXPECTED" ]; then
-                echo "EXPECTED      $EXPECTED   <-- live site is NOT this build" | tee -a "$GITHUB_STEP_SUMMARY"
+                echo "EXPECTED      $EXPECTED" | tee -a "$GITHUB_STEP_SUMMARY"
+                if [ "$WAITED" -ge 300 ]; then
+                  echo "STALE — the publish has had five minutes and this host is still serving the old build." \
+                    | tee -a "$GITHUB_STEP_SUMMARY"
+                else
+                  echo "still catching up — the origin has the new build, so this host is behind an edge cache." \
+                    | tee -a "$GITHUB_STEP_SUMMARY"
+                fi
               fi
             else
               echo "build stamp   ABSENT — the live site predates the stamp, so this deploy has never landed" \
