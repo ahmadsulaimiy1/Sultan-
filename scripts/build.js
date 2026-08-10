@@ -709,7 +709,7 @@ ${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${armorialHe
 ${topbar}
 ${headerTop}
 ${announcementRibbonTop}
-${breadcrumbs}${renderPartialNotice(page, lang)}${contentWithBands}
+${breadcrumbs}${renderPartialNotice(page, lang)}${wrapUntranslatedBody(page, contentWithBands)}
 ${footer}
 ${assistant}
 ${search}
@@ -969,6 +969,24 @@ function recordUntranslatedBodies(manifest) {
     const lang = page.lang || I18N.defaultCode();
     untranslatedBodies.add(`${lang}:${I18N.neutralPath('/' + page.output.replace(/index\.html$/, ''))}`);
   });
+}
+
+/* The 72 derived pages declare <html lang="fr"> and <html lang="yo"> because
+   their chrome IS translated — the navigation, the footer, the notice above.
+   Their prose is not. Left unmarked, a screen reader is told the whole document
+   is French and pronounces English sentences with French phonetics, which does
+   not produce accented English; it produces something a listener cannot follow
+   at all. The same applies to Yoruba, whose tonal vowels map onto nothing in
+   English. A browser's translate offer has the same problem in reverse: it
+   offers to translate French that is already English.
+     lang="en" on the body content is the standard mechanism for a document
+   whose parts are in different languages, and it is simply true here. It costs
+   one attribute, it disappears by itself the moment a real translation is
+   authored (because untranslatedBody goes with it), and it makes the honest
+   notice above it honest to a listener as well as a reader. */
+function wrapUntranslatedBody(page, html) {
+  if (!page.untranslatedBody) return html;
+  return `<div lang="${I18N.defaultCode()}">\n${html}\n</div>`;
 }
 
 function renderPartialNotice(page, lang) {
