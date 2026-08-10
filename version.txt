@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      a157c932159df48f5b83905ee26f2be0f6fb9600
-short       a157c932
+commit      5982fc33f7b06d82eb5fe38f79802b263c6cbf5f
+short       5982fc33
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The portal's admission form, and the shared layer that made sixty-nine pages look cheap
-built (UTC) 2026-08-10T06:30:15Z
-assets      shrs-pwa-3be362b88b
+subject     Flagship, first cuts: the broken hero versal, and the one element on the site that belongs to another company
+built (UTC) 2026-08-10T07:17:25Z
+assets      shrs-pwa-03d904a9bb
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

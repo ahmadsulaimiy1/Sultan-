@@ -1,5 +1,12 @@
 <div class="mo-rail" aria-hidden="true"></div>
 <section class="hero">
+  <!-- The photograph gets a layer of its own rather than being the
+       section's background, for one reason: a background-image cannot be
+       transformed, and the slow drift below has to be a transform. Moving
+       an element the compositor already owns costs nothing; animating
+       background-position or background-size on a full-bleed hero repaints
+       the whole thing sixty times a second. -->
+  <div class="hero-plate" aria-hidden="true"></div>
   <div class="frame"></div>
   <div class="corner tl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
   <div class="corner tr"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>

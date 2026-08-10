@@ -298,3 +298,128 @@ header.nav::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height
   box-shadow:0 0 22px -4px rgba(var(--lv-gbs,233,206,138),.55);}
 html[data-pc-ornament="none"] .hero::after,
 html[data-pc-ornament="none"] header.nav::after{display:none;}
+
+/* ===================================================================
+   THE HERO STAGE — a photograph, at last, and a stage built for it
+   -------------------------------------------------------------------
+   The school supplied real photography, and the difference it makes is
+   larger than any effect in this repository. What was here before was a
+   blue-hour snapshot of a building at an angle, so dark that the scrim
+   above had to be almost opaque to carry white text — which meant the
+   page opened on a brown smear that happened to have a building in it.
+   The new frontage is an elevated daylight view with the school's own
+   sign legible in it. It can carry the page, so the treatment gets out
+   of its way.
+
+   THREE CHANGES, all of them consequences of the image being good:
+
+   1. THE SCRIM LIFTS OFF THE SKY. The old wash began at 94% opacity at
+      the very top, which was necessary when the top of the frame was
+      noise and is vandalism now that it is a Lagos sky. It now opens at
+      62%, deepens through the middle where the wordmark sits, and closes
+      firmly at the base under the buttons. The words are still on more
+      darkness than the photograph is.
+   2. THE FRAMING MOVES UP. `center 65%` was chosen for a picture whose
+      subject sat low. This one carries its sign at around two-fifths of
+      the height, so the crop rises to meet it.
+   3. IT DRIFTS. Thirty-eight seconds, one and a half per cent of scale,
+      a hair of translation, and back. At that rate nobody watching sees
+      it move and nobody looking away for a moment finds it where they
+      left it — which is the entire trick. It is a transform on a layer
+      of its own, so the compositor carries it and the paint cost is nil.
+   =================================================================== */
+.hero{ isolation:isolate; background-image:none!important; }
+
+.hero-plate{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:url("/assets/images/gallery/campus-hero.jpg");
+  background-size:cover;
+  background-position:center 40%;
+  transform:scale(1.045);
+  animation:hero-drift 38s ease-in-out infinite alternate;
+}
+@keyframes hero-drift{
+  from{ transform:scale(1.045) translate3d(0,0,0); }
+  to  { transform:scale(1.075) translate3d(-0.9%,-1.1%,0); }
+}
+@media (prefers-reduced-motion:reduce){ .hero-plate{ animation:none; } }
+html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
+
+/* The wash, re-cut for a photograph that deserves to be seen. */
+.hero::before{
+  background:
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.62) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.52) 22%,
+                           rgba(var(--lv-cfd5,34,23,9),.60) 46%,
+                           rgba(var(--lv-cfd5,34,23,9),.78) 74%,
+                           rgba(var(--lv-cfd5,34,23,9),.94) 100%),
+    radial-gradient(72% 56% at 50% 44%,rgba(var(--lv-gs,198,161,91),.13),transparent 70%),
+    radial-gradient(150% 120% at 50% 45%,transparent 42%,rgba(var(--lv-cfd4s,26,16,6),.66) 100%)!important;
+}
+
+/* ---- The wordmark, set rather than stretched ----------------------
+   The promise line carried 0.28em of tracking — at that measure the
+   letters stop forming words and the line reads as a row of characters.
+   And it shared its size and weight with the school's name above it, so
+   the two competed instead of ranking. The name is now the larger, the
+   promise is the smaller and lighter, and the tracking is halved. */
+.hero h1{ letter-spacing:.005em; }
+.hero h1 span.hero-subline{
+  font-size:.46em;
+  letter-spacing:.14em;
+  font-weight:500;
+  margin-top:18px;
+  color:rgb(var(--lv-gb,233,206,138));
+}
+@media (max-width:600px){
+  .hero h1 span.hero-subline{ font-size:.52em; letter-spacing:.10em; }
+}
+.hero .hero-type{ letter-spacing:.01em; }
+
+/* ---- The stage has to be as tall as the picture is deep ------------
+   First cut framed the aerial at `center 40%` in a 660px band. The image
+   is 1121x995 — very nearly square — and `cover` across a 1440px band
+   scales it to 1278px tall and then shows 660 of them. Half the
+   photograph was thrown away, an aerial view came out as a close-up of a
+   brick wall, and the heading landed squarely on the school's own
+   painted sign, so the name appeared twice within an inch of itself.
+
+   A flagship hero is not a band. It is the screen. Taller stage, crop
+   raised so the roofline and the sign sit in the upper third, and the
+   words then fall on the forecourt below them where there is nothing to
+   fight. Capped so it never becomes a nuisance on a laptop, and told to
+   respect a phone's real viewport rather than the one that changes size
+   as the address bar hides. */
+.hero{
+  min-height:min(86vh,880px);
+  min-height:min(86svh,880px);
+  display:flex;align-items:center;
+  padding-block:clamp(70px,9vh,120px);
+}
+.hero-plate{ background-position:center 28%; }
+@media (max-width:860px){
+  .hero{ min-height:min(78svh,760px); }
+  .hero-plate{ background-position:center 34%; }
+}
+
+/* ---- Frame BELOW the sign, not across it --------------------------
+   Raising the crop did not solve the collision, and it could not: the
+   photograph is 1121x995 — near enough square — and a hero band is
+   twice as wide as it is tall, so `cover` throws away two fifths of the
+   height whatever the position. Wherever the sign lands in that window,
+   the heading lands on it, and the school's name appears twice within
+   an inch of itself.
+
+   So the window drops below it. The frame now holds the columns, the
+   forecourt, the palms and the paving — an even, uncluttered ground
+   that type can sit on — and the sign stays above the crop where it
+   belongs. Nothing of the photograph is lost that was carrying meaning;
+   the building is still unmistakably this building.
+
+   The proper answer for a near-square photograph on a wide page is not
+   a crop at all: it is to plate it, framed, beside the words, so the
+   whole picture is seen. That is the next move on this hero and it is a
+   structural one. This is the honest interim — it removes a real
+   collision today without pretending to be the finished thing. */
+.hero-plate{ background-position:center bottom!important; }
+@media (max-width:860px){ .hero-plate{ background-position:center 78%!important; } }
