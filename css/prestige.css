@@ -2052,9 +2052,6 @@
 .portal-brand{font-family:var(--font-label);color:rgb(var(--lv-gl4,255,243,216));letter-spacing:.03em;}
 
 /* the gateway cards — the thing a visitor actually chooses from */
-.gateway-title{font-family:var(--font-label);color:#fff;
-  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.12;}
-.gateway-sub{color:rgba(var(--lv-w03,243,232,212),.8);}
 /* Opaque lacquer, not frosted glass. The card used to be a translucent
    sheet with a 6px backdrop blur, so every one of them showed a smeared
    copy of the page behind it — the single biggest reason the gateway
@@ -2359,9 +2356,6 @@
 
 /* A single gold rule closing the hero, so the eye is handed down to the
    first row of doors rather than left hanging in the dark. */
-.gateway-hero-rule{
-  width:min(260px,50%);height:1px;margin:26px auto 0;
-  background:linear-gradient(90deg,transparent,var(--pr-gold-bright),transparent);}
 
 @media (max-width:760px){
   .gw-group-head{margin:38px auto 14px;letter-spacing:.18em;}
@@ -2399,13 +2393,7 @@ body.portal-body{
       itself it made the entire title vanish for half of every 0.9s, for
       as long as the page stayed open. The caret is the thing that should
       blink, so it blinks — by its own border colour, and only its own. */
-.gateway-typewriter{
-  animation:gateway-typewriter-type 1.7s steps(29,end) .25s forwards,
-            pr-caret-blink .9s steps(1) infinite 1.95s;}
 @keyframes pr-caret-blink{50%{border-inline-end-color:transparent;}}
-@media (prefers-reduced-motion:reduce){
-  .gateway-typewriter{width:100%;animation:none;border-inline-end:none;}
-}
 
 /* 4. FOUR COLUMNS OF 250px. Each door now carries its explanation and
       its list of what stands behind it, and none of that is legible in a
@@ -2425,7 +2413,6 @@ body.portal-body{
 
 /* The crest is a block-level image under the site's own img reset, so
    text-align could never centre it. */
-.gateway-crest{display:block;margin-inline:auto;}
 
 /* -------------------------------------------------------------------
    Floating chrome must stay floating on the portal ground.
@@ -2541,7 +2528,6 @@ body.portal-body > .pwa-install-banner,
    braces for any lead that is centred by a page's own inline style. */
 [style*="text-align:center"].pr-dropcap::first-letter,
 [style*="text-align: center"].pr-dropcap::first-letter,
-.gateway-sub.pr-dropcap::first-letter,
 .pr-section [style*="text-align:center"].pr-dropcap::first-letter{
   float:none;font-size:inherit;line-height:inherit;padding:0;margin:0;
   color:inherit;text-shadow:none;}
@@ -3487,13 +3473,7 @@ html[data-pc-theme="light"] .gateway-card > p{color:var(--pearl-ink-2);}
 html[data-pc-theme="light"] .gw-points li{color:rgb(var(--lv-w105,91,74,50));border-bottom-color:rgba(var(--lv-gs,198,161,91),.16);}
 html[data-pc-theme="light"] .gw-points{border-top-color:rgba(var(--lv-gs,198,161,91),.28);}
 html[data-pc-theme="light"] .gw-need{color:rgb(var(--lv-w106,122,105,73));}
-html[data-pc-theme="light"] .gateway-title,
 html[data-pc-theme="light"] .gw-group-head{color:var(--pearl-ink)!important;}
-html[data-pc-theme="light"] .gateway-sub{color:var(--pearl-ink-2);}
-html[data-pc-theme="light"] .gateway-hero{
-  background:linear-gradient(160deg,rgb(var(--lv-w51,248,241,227)) 0%,rgb(var(--lv-w26,241,231,213)) 65%,rgb(var(--lv-w107,234,223,201)) 100%);
-  border-bottom:1px solid var(--pearl-line);}
-html[data-pc-theme="light"] .gateway-eyebrow,
 html[data-pc-theme="light"] .gateway-card-eyebrow,
 html[data-pc-theme="light"] .gateway-card-cta{color:rgb(var(--lv-gt2,138,106,47));}
 html[data-pc-theme="light"] .portal-topbar{
@@ -4245,8 +4225,7 @@ html[data-pc-theme="light"] .foundation .eyebrow{color:rgb(var(--lv-gt,124,94,40
    the blanket rule above must not reach it. */
 html[data-pc-theme="light"] .hero .eyebrow,
 html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
-html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
-html[data-pc-theme="light"] .gateway-eyebrow{color:var(--pr-gold-bright,rgb(var(--lv-gb,233,206,138)));}
+html[data-pc-theme="light"] .pr-arrival .pr-eyebrow{color:var(--pr-gold-bright,rgb(var(--lv-gb,233,206,138)));}
 
 /* The breadcrumb trail's current page, on the pearl chrome. */
 html[data-pc-theme="light"] .breadcrumbs span,
@@ -4311,13 +4290,11 @@ html[data-pc-theme="light"] .eyebrow,
 html[data-pc-theme="light"] .pr-eyebrow{color:rgb(var(--lv-gt4,116,85,31));}
 html[data-pc-theme="light"] .hero .eyebrow,
 html[data-pc-theme="light"] .pr-hero .pr-eyebrow,
-html[data-pc-theme="light"] .pr-arrival .pr-eyebrow,
-html[data-pc-theme="light"] .gateway-eyebrow{color:var(--pr-gold-bright,rgb(var(--lv-gb,233,206,138)));}
+html[data-pc-theme="light"] .pr-arrival .pr-eyebrow{color:var(--pr-gold-bright,rgb(var(--lv-gb,233,206,138)));}
 
 /* The ledger row gets a plate, so its names are read against a known
    ground rather than against whichever part of the crest watermark
    happens to be behind them. */
-
 
 
 /* The form labels and their optional markers live in .ct-form-card, not
@@ -4465,10 +4442,8 @@ html[data-pc-theme="light"] .governance h2,
 html[data-pc-theme="light"] .governance h1.page-title{color:var(--pearl-ink,rgb(var(--lv-cf2,51,40,28)))!important;}
 
 /* ---- The Clear edition: the gateway ---- */
-html[data-pc-theme="light"] .gateway-eyebrow{color:rgb(var(--lv-gt,124,94,40));}
 html[data-pc-theme="light"] .gateway-card-cta{color:rgb(var(--lv-gt3,99,72,27));}
 html[data-pc-theme="light"] .gateway-card-eyebrow{color:rgb(var(--lv-gt,124,94,40));}
-html[data-pc-theme="light"] .gateway-sub,
 html[data-pc-theme="light"] .gateway-card p,
 html[data-pc-theme="light"] .gw-points li,
 html[data-pc-theme="light"] .gw-need{color:var(--pearl-ink-2,rgb(var(--lv-ink2,87,71,47)));}

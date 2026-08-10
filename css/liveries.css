@@ -556,8 +556,6 @@
 }
 
 
-
-
 /* ===================================================================
    THE MIDNIGHT EDITION
    -------------------------------------------------------------------
@@ -1331,8 +1329,8 @@ html[data-pc-theme="dark"] .adk-num,
 html[data-pc-theme="dark"] span.adk-num{color:#2A1C10!important;}
 html[data-pc-theme="dark"] .fac-school h3,html[data-pc-theme="dark"] .faculty-group h3,
 html[data-pc-theme="dark"] section h3{color:var(--mn-ink)!important;}
-html[data-pc-theme="dark"] .pr-type,html[data-pc-theme="dark"] .pr-typed,
-html[data-pc-theme="dark"] .gateway-typewriter{color:var(--mn-ink)!important;}
+html[data-pc-theme="dark"] .pr-type,
+html[data-pc-theme="dark"] .pr-typed{color:var(--mn-ink)!important;}
 
 /* The charcoal band's own headings and the Digital Campus's small
    labels: both were set by the legibility pass with !important, for a

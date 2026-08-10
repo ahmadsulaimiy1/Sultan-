@@ -133,17 +133,93 @@ body.portal-body > *{position:relative;z-index:1;}
 .portal-shell{flex:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:0;}
 .portal-aside{
   position:relative;overflow:hidden;isolation:isolate;
-  background:radial-gradient(900px 620px at 12% -8%, rgba(var(--lv-gbs,233,206,138),0.16), transparent 60%),
-    linear-gradient(160deg, var(--navy-bg) 0%, var(--navy-deep-bg) 62%, rgb(var(--lv-w260,23,15,6)) 100%);
+  /* The opaque base. The gradient that used to be here is now the scrim on
+     ::before, over the photograph; this is what stands if the photograph
+     never arrives. */
+  background:linear-gradient(160deg, var(--navy-bg) 0%, var(--navy-deep-bg) 62%, rgb(var(--lv-w260,23,15,6)) 100%);
   color:var(--ivory);padding:60px 54px;display:flex;flex-direction:column;justify-content:center;
   border-right:1px solid rgba(var(--lv-gbs,233,206,138),0.2);
 }
 [dir="rtl"] .portal-aside{border-right:none;border-left:1px solid rgba(var(--lv-gbs,233,206,138),0.2);}
+/* ---- THE PANEL IS A PHOTOGRAPH NOW ---------------------------------
+   Half of every sign-in screen on the site was a flat brown rectangle with
+   a diamond lattice ruled across it at five per cent. It is the first
+   surface a parent meets after being told to sign in; it is a third of the
+   window; and it was the same brown on the register screen, the staff
+   screen, the student screen and the password screen. The school was
+   introducing itself, over and over, with a colour.
+
+   Every other full-height panel on this site is a photograph of the
+   school. So is this one: the gate at Ikorodu, drifting slowly, well back
+   behind the gradient that was already here — which stops being the
+   surface and becomes the scrim.
+
+   THE SCRIM IS NOT THE GRADIENT IT REPLACES. It cannot be: an element's
+   own background paints BELOW its negative-z-index pseudo-elements, so a
+   photograph on ::after would have covered the gradient rather than sat
+   under it. The gradient therefore moves onto ::before — where the lattice
+   already lived, folded into the same layer stack — and the element keeps
+   an opaque base underneath so a failed image is still a dark panel and
+   never a white one.
+   Because the scrim is now stated with alpha over a photograph rather than
+   opaque over nothing, every colour above it was re-measured against
+   painted pixels afterwards rather than assumed to be unchanged.
+
+   Imagery off is honoured: a reader who has turned photographs off in the
+   Personalisation Centre gets the panel exactly as it was. */
 .portal-aside::before{
-  content:"";position:absolute;inset:0;z-index:-1;opacity:0.05;pointer-events:none;
-  background-image:repeating-linear-gradient(45deg, var(--gold-bright) 0 1px, transparent 1px 36px),
-    repeating-linear-gradient(-45deg, var(--gold-bright) 0 1px, transparent 1px 36px);
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(var(--lv-gbs,233,206,138),.05) 0 1px, transparent 1px 36px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gbs,233,206,138),.05) 0 1px, transparent 1px 36px),
+    radial-gradient(900px 620px at 12% -8%, rgba(var(--lv-gbs,233,206,138),0.16), transparent 60%),
+    /* Heaviest where the words are and lightest where they are not: the copy
+       is a 420px column against the leading edge, so the scrim is nearly
+       opaque there and thins across the panel until the gate is plainly a
+       photograph of the school. A flat scrim strong enough for the text
+       would have hidden the picture; a flat scrim weak enough for the
+       picture would have thinned the text. */
+    linear-gradient(97deg,
+      rgba(var(--lv-cfs,59,42,29),.95) 0%,
+      rgba(var(--lv-cfs,59,42,29),.93) 34%,
+      rgba(var(--lv-cfd5,34,23,9),.8) 62%,
+      rgba(var(--lv-w260,23,15,6),.6) 100%),
+    linear-gradient(180deg,
+      rgba(var(--lv-w260,23,15,6),.34) 0%,
+      rgba(var(--lv-w260,23,15,6),.1) 40%,
+      rgba(var(--lv-w260,23,15,6),.46) 100%);
 }
+[dir="rtl"] .portal-aside::before{
+  background-image:
+    repeating-linear-gradient(45deg, rgba(var(--lv-gbs,233,206,138),.05) 0 1px, transparent 1px 36px),
+    repeating-linear-gradient(-45deg, rgba(var(--lv-gbs,233,206,138),.05) 0 1px, transparent 1px 36px),
+    radial-gradient(900px 620px at 88% -8%, rgba(var(--lv-gbs,233,206,138),0.16), transparent 60%),
+    linear-gradient(263deg,
+      rgba(var(--lv-cfs,59,42,29),.95) 0%,
+      rgba(var(--lv-cfs,59,42,29),.93) 34%,
+      rgba(var(--lv-cfd5,34,23,9),.8) 62%,
+      rgba(var(--lv-w260,23,15,6),.6) 100%),
+    linear-gradient(180deg,
+      rgba(var(--lv-w260,23,15,6),.34) 0%,
+      rgba(var(--lv-w260,23,15,6),.1) 40%,
+      rgba(var(--lv-w260,23,15,6),.46) 100%);
+}
+.portal-aside::after{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background-image:url("/assets/images/gallery/campus-gate.jpg");
+  background-size:cover;background-position:center 42%;
+  transform:scale(1.05);
+  animation:portal-aside-drift 46s ease-in-out infinite alternate;
+}
+@keyframes portal-aside-drift{
+  from{transform:scale(1.05) translate3d(0,0,0);}
+  to{transform:scale(1.12) translate3d(0,-1.8%,0);}
+}
+@media (prefers-reduced-motion:reduce){
+  .portal-aside::after{animation:none;transform:scale(1.05);}
+}
+html[data-pc-motion="reduced"] .portal-aside::after{animation:none;transform:scale(1.05);}
+html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .portal-aside-eyebrow{
   font-family:'Cinzel','Amiri',serif;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;
   color:var(--gold-bright);margin-bottom:18px;display:flex;align-items:center;gap:10px;
@@ -2198,30 +2274,16 @@ body.portal-body[data-atmosphere="certificates"]::before{
    public verification flows instead of navigating away.
    ============================================================ */
 .gateway-main{padding:0 0 60px;}
-.gateway-hero{
-  position:relative;overflow:hidden;text-align:center;padding:64px 20px 48px;
-  background:linear-gradient(160deg,var(--navy-bg) 0%,var(--navy-deep-bg) 65%,rgb(var(--lv-w22,20,13,5)) 100%);
-  margin-bottom:44px;
-}
-.gateway-crest{width:52px;height:52px;object-fit:contain;opacity:0.95;margin-bottom:18px;filter:drop-shadow(0 0 14px rgba(var(--lv-gbs,233,206,138),0.35));}
-.gateway-eyebrow{
-  position:relative;z-index:1;font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--gold-bright,var(--gold));margin:0 0 10px;
-}
-.gateway-title{
-  position:relative;z-index:1;font-family:'Cormorant Garamond','Amiri',serif;font-size:2.6rem;color:rgb(var(--lv-mk,247,244,233));margin:0 0 16px;
-}
-.gateway-typewriter{
-  display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;
-  border-inline-end:2px solid var(--gold-bright,var(--gold));
-  width:0;animation:gateway-typewriter-type 1.7s steps(29,end) 0.25s forwards, exec-caret-blink 0.9s steps(1) infinite 1.95s;
-}
-.gateway-sub{
-  position:relative;z-index:1;max-width:620px;margin:0 auto;color:rgba(var(--lv-w00,248,244,233),0.78);font-size:0.98rem;line-height:1.65;
-}
-@keyframes gateway-typewriter-type{to{width:100%;}}
-@media (prefers-reduced-motion:reduce){
-  .gateway-typewriter{width:100%;animation:none;border-inline-end:none;}
+/* The threshold is a .pr-hero now — the same photographic head every other
+   page of the site opens on — so everything that used to describe a flat
+   brown panel here has gone with it. What is left is the one thing the shared
+   hero cannot know: how much air belongs between it and the quick rail. It
+   stands a little shorter than a marketing hero, because a reader who has
+   arrived at the gateway has already decided to sign in and the doors are
+   what they came for. */
+.gw-threshold{margin-bottom:44px;min-height:min(58vh,460px);}
+@media (max-width:640px){
+  .gw-threshold{margin-bottom:30px;min-height:min(52vh,380px);}
 }
 
 .gateway-grid{
@@ -2281,10 +2343,6 @@ body.portal-body[data-atmosphere="certificates"]::before{
 
 .gateway-footnote{max-width:1100px;margin:36px auto 0;padding:20px 20px 0;border-top:1px solid var(--line);font-size:0.84rem;color:var(--ink-soft);}
 .gateway-footnote a{color:var(--gold-bright,var(--gold));}
-@media (max-width:640px){
-  .gateway-title{font-size:2rem;}
-  .gateway-hero{padding:48px 16px 36px;}
-}
 
 #office-switcher-mount[hidden]{display:none;}
 .office-switcher{position:relative;}
