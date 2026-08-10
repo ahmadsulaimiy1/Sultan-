@@ -6,6 +6,7 @@
 import { getSql } from '../../_lib/db.js';
 import { readSessionFromRequest } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
+import { idempotencyKey, replayed, remember, compareVersion, conflictBody } from '../../_lib/offline-write.js';
 
 async function requireSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
@@ -54,19 +55,47 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Name, relationship, and phone are all required for an emergency contact.' }, 400);
   }
 
+  const key = idempotencyKey(request);
+
   try {
-    const existing = await sql`SELECT id FROM guardian_emergency_contacts WHERE guardian_id = ${guardianId} AND contact_order = ${order}`;
+    const prior = await replayed(sql, key, 'guardian', guardianId);
+    if (prior) return json(prior.body, prior.status);
+
+    const existing = await sql`
+      SELECT id, contact_order, full_name, relationship, phone, email, updated_at
+      FROM guardian_emergency_contacts WHERE guardian_id = ${guardianId} AND contact_order = ${order}`;
+
     if (existing.rows.length) {
+      // A contact queued on Tuesday and delivered on Friday must not silently
+      // overwrite what someone changed on Wednesday. Only the server knows what
+      // the row says now, so only the server can refuse — and it refuses by
+      // handing back both versions rather than picking one.
+      const row = existing.rows[0];
+      const verdict = compareVersion(row.updated_at, body && body.baseUpdatedAt);
+      if (verdict === 'stale') {
+        const conflict = conflictBody({
+          id: row.id, order: row.contact_order, fullName: row.full_name,
+          relationship: row.relationship, phone: row.phone, email: row.email,
+          updatedAt: row.updated_at,
+        }, 'This emergency contact was changed elsewhere since your device last saw it.');
+        await remember(sql, key, 'guardian', guardianId, 'emergency.contact.save', 409, conflict);
+        return json(conflict, 409);
+      }
       await sql`
         UPDATE guardian_emergency_contacts SET full_name = ${fullName}, relationship = ${relationship}, phone = ${phone}, email = ${email || null}, updated_at = now()
-        WHERE id = ${existing.rows[0].id}`;
+        WHERE id = ${row.id}`;
     } else {
       await sql`
         INSERT INTO guardian_emergency_contacts (guardian_id, contact_order, full_name, relationship, phone, email)
         VALUES (${guardianId}, ${order}, ${fullName}, ${relationship}, ${phone}, ${email || null})`;
     }
-    const res = await sql`SELECT id, contact_order, full_name, relationship, phone, email FROM guardian_emergency_contacts WHERE guardian_id = ${guardianId} ORDER BY contact_order`;
-    return json({ ok: true, contacts: res.rows.map((c) => ({ id: c.id, order: c.contact_order, fullName: c.full_name, relationship: c.relationship, phone: c.phone, email: c.email })) });
+    const res = await sql`SELECT id, contact_order, full_name, relationship, phone, email, updated_at FROM guardian_emergency_contacts WHERE guardian_id = ${guardianId} ORDER BY contact_order`;
+    const payload = { ok: true, contacts: res.rows.map((c) => ({ id: c.id, order: c.contact_order, fullName: c.full_name, relationship: c.relationship, phone: c.phone, email: c.email, updatedAt: c.updated_at })) };
+    // Losing the race between the write above and this record is harmless
+    // here: the write is an upsert keyed by (guardian, contact_order), so a
+    // repeat sets the same row to the same values.
+    await remember(sql, key, 'guardian', guardianId, 'emergency.contact.save', 200, payload);
+    return json(payload);
   } catch (err) {
     console.error('emergency-contacts save error', err);
     return json({ error: 'Could not save that emergency contact right now — please try again shortly.' }, 500);

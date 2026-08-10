@@ -1479,6 +1479,18 @@ const STATEMENTS = [
     updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_guardian_emergency_contacts_guardian ON guardian_emergency_contacts (guardian_id)`,
+  // Deliveries from the offline outbound queue — see sql/schema.sql for why.
+  `CREATE TABLE IF NOT EXISTS sync_operations (
+    idempotency_key TEXT PRIMARY KEY,
+    actor_type      TEXT NOT NULL,
+    actor_id        INTEGER NOT NULL,
+    operation_type  TEXT NOT NULL,
+    response_status INTEGER NOT NULL,
+    response_body   JSONB NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_sync_operations_created ON sync_operations (created_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_sync_operations_actor ON sync_operations (actor_type, actor_id)`,
 
   `CREATE TABLE IF NOT EXISTS guardian_educational_interests (
     guardian_id     INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,

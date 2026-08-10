@@ -67,6 +67,50 @@ export const OPERATIONS = {
     // returned.
     body: (payload) => ({ period: payload.period, completionDate: payload.completionDate }),
   },
+
+  'message.reply': {
+    method: 'POST',
+    path: '/api/portal/messages/reply',
+    kind: 'additive',
+    // A message is appended to a thread; there is no existing value for it to
+    // overwrite, so there is nothing for it to conflict WITH. The thread being
+    // closed is not a conflict either — it is a refusal, and the server
+    // returns 409 for it, which this engine already treats as terminal.
+    replaySafe: true,
+    // NOT "probably fine". functions/api/portal/messages/reply.js records the
+    // Idempotency-Key in sync_operations and replays the stored response, so a
+    // retry after a lost reply returns the first answer rather than posting a
+    // second message into a parent's thread. The one remaining window — the
+    // request dying between the insert and the record — is named in that file
+    // rather than left as an assumption.
+    replaySafeBecause: 'sync_operations replay guard, scoped to (key, actor)',
+    conflict: 'impossible',
+    body: (payload) => ({ threadId: payload.threadId, body: payload.body }),
+  },
+
+  'emergency.contact.save': {
+    method: 'POST',
+    path: '/api/portal/emergency-contacts',
+    // An EDIT, and the first one in this registry. A contact slot already
+    // holds something; delivering Tuesday's correction on Friday must not
+    // erase Wednesday's. So baseUpdatedAt is mandatory at queue time — see
+    // queue() below, which refuses without it rather than sending blind.
+    kind: 'edit',
+    replaySafe: true,
+    replaySafeBecause: 'upsert keyed by (guardian_id, contact_order), plus the sync_operations replay guard',
+    // Real, and exercised: the server compares updated_at and returns 409 with
+    // its own row attached, so the interface can show a person both versions.
+    // The engine does not choose between them. That is the whole rule.
+    conflict: 'server-wins-and-tell-the-person',
+    body: (payload) => ({
+      order: payload.order,
+      fullName: payload.fullName,
+      relationship: payload.relationship,
+      phone: payload.phone,
+      email: payload.email || '',
+      baseUpdatedAt: payload.baseUpdatedAt,
+    }),
+  },
 };
 
 export const SYNC_OUTCOME = {

@@ -1252,6 +1252,30 @@ CREATE TABLE IF NOT EXISTS guardian_emergency_contacts (
 );
 CREATE INDEX IF NOT EXISTS idx_guardian_emergency_contacts_guardian ON guardian_emergency_contacts (guardian_id);
 
+-- Deliveries from the offline outbound queue, recorded so a retry returns the
+-- same answer instead of doing the work twice. A phone that loses signal
+-- mid-request cannot know whether the write landed, so it retries; without
+-- this table that retry becomes a second message in a parent's thread.
+--
+-- Scoped to the actor as well as the key: one account must not be able to
+-- replay — or discover — another account's operation by guessing its id.
+--
+-- Rows are safe to prune once every device that could still be holding the
+-- operation has given up on it. SYNC.retryBackoffMs tops out at thirty minutes
+-- over four attempts, and the offline store keeps a queued operation for seven
+-- days, so anything older than that can go.
+CREATE TABLE IF NOT EXISTS sync_operations (
+  idempotency_key TEXT PRIMARY KEY,
+  actor_type      TEXT NOT NULL,
+  actor_id        INTEGER NOT NULL,
+  operation_type  TEXT NOT NULL,
+  response_status INTEGER NOT NULL,
+  response_body   JSONB NOT NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_sync_operations_created ON sync_operations (created_at);
+CREATE INDEX IF NOT EXISTS idx_sync_operations_actor ON sync_operations (actor_type, actor_id);
+
 -- Multi-select educational interests. institution_key is a fixed,
 -- code-defined set (see functions/_lib/educational-interests.js) —
 -- Online/Weekend/Summer Programmes are included as interest signals

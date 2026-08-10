@@ -147,14 +147,64 @@ it. Blocks that count deliveries exactly now clear the queue first. Recorded
 here because a test that fails for the wrong reason is more dangerous than one
 that fails for the right one — it invites a fix to code that was correct.
 
-## 9. Scope, stated plainly
+## 9. The registry today — three operations
 
-One operation is registered today: `adhkar.complete`. That is not the engine
-being unfinished — it is rule 1 working. Each additional operation needs its
-endpoint's replay behaviour and conflict semantics established before it is
-declared, and that is a per-endpoint piece of work, not a switch. The engine,
-the refusals, the failure taxonomy, the revocation gate and the conflict rules
-are complete and tested; the registry grows one verified entry at a time.
+`npm run test:sync:operations` — 39 checks.
+
+| Type | Kind | Replay-safe because | Conflict |
+|---|---|---|---|
+| `adhkar.complete` | additive | `UNIQUE (guardian_id, period, completion_date)`, `ON CONFLICT DO NOTHING` | impossible |
+| `message.reply` | additive | `sync_operations` replay guard, scoped to (key, actor) | impossible |
+| `emergency.contact.save` | **edit** | upsert by `(guardian_id, contact_order)` plus the replay guard | server wins, and the person is told |
+
+The first entry was easy, and that was misleading: `adhkar.complete` is additive
+and the database already had the right unique constraint, so idempotency was
+free and there was nothing to conflict with. Neither is true of the other two,
+which is why adding them required the server to grow two things it did not have.
+
+### `functions/_lib/offline-write.js`
+
+**The replay guard.** A phone that loses signal mid-request cannot tell a lost
+response from a lost request, so it retries. Without a record of the delivery, a
+retried reply becomes a second message in a parent's thread — and the client
+cannot prevent that, because the duplicate is created by the server after the
+client stopped listening. `sync_operations` stores `(idempotency_key, actor,
+operation, status, body)`; a repeat returns the stored answer verbatim. Scoped to
+the actor as well as the key, so one account cannot replay — or discover —
+another's operation by guessing its id.
+
+The remaining window is named rather than assumed: the request dying between the
+insert and the record. Closing it fully needs both statements in one transaction,
+which the current `sql` helper does not expose. It is written in
+`messages/reply.js` where a future reader will meet it.
+
+**Optimistic concurrency, with three answers not two.** `compareVersion` returns
+`absent` / `stale` / `current`, because "the row is gone" is not "the row
+changed" and a caller that conflates them will do the wrong thing. An edit
+arriving with **no** base version is `stale`, never a pass. The tolerance is one
+second — enough for JSON timestamp noise, tight enough that a false pass, which
+would be the silent overwrite this exists to prevent, cannot slip through.
+
+A 409 carries the server's own row back, so the interface can show a person both
+versions. The engine still does not choose between them.
+
+### Proved, not asserted
+
+The test's server imports the real helper and runs it, so what is exercised is
+production code rather than a second implementation of the same rules. It shows
+a socket dying after the request was read, two retries, and **one** message in
+the thread; a reply to a thread the office closed ending terminal rather than
+retrying for half an hour; an edit with no base version refused at the door; and
+a stale edit refused by the server with the newer value still standing —
+**no last-writer-wins**, with what the person typed still on the device.
+
+What it does not do is talk to Postgres. The helper runs against a Map, so
+`sync_operations` itself is verified only by both `sql/schema.sql` and
+`setup.js` declaring it. A live database run remains REQUIRES EXTERNAL ACTION.
+
+Every further operation still needs its endpoint's replay behaviour and conflict
+semantics established before it is declared. That is rule 1 working, and it is
+per-endpoint work rather than a switch.
 
 `start()` is exported but not yet called from a page. Wiring it into the portal
 shell is a Phase 5 step, once there is a surface that shows a person their
