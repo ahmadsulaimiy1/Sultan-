@@ -12,8 +12,15 @@
   <div class="corner tr"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
   <div class="corner bl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
   <div class="corner br"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
-  <div class="wrap hero-inner hero-split">
-    <div class="hero-words">
+  <!-- RESTORED. This hero was rebuilt as a two-column stage with the
+       photograph plated beside the words. The school prefers the arrangement
+       it had before — one centred column over the photograph, full bleed —
+       so that is what stands here again, with the photograph it carried then.
+       The newer picture and the plated frame are kept in the repository
+       (campus-aerial.jpg, .hero-plate-figure / .hpf-frame in css/atelier.css)
+       rather than deleted, so returning to them is a markup change and not a
+       rebuild. -->
+    <div class="wrap hero-inner">
     <span class="crest-shimmer-wrap"><img src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" class="hero-crest" /></span>
     <p class="eyebrow">Ikorodu · Lagos State · Nigeria</p>
     <h1><span class="hero-type">Sultan Hanafi Royal Schools</span><span class="hero-subline">We Nurture Tomorrow's Leaders</span></h1>
@@ -28,30 +35,8 @@
     <div class="hero-ctas">
       <a href="/portal/login/" class="btn btn-gold mo-mag" data-mag="6">Register / Login <span class="arrow">→</span></a>
       <a href="/admission/" class="btn btn-outline mo-mag" data-mag="6">Start Admission</a>
+      <a href="/contact/" class="btn btn-outline mo-mag" data-mag="6">Contact Admissions</a>
     </div>
-    <!-- Two actions, not three. Register and Start Admission are what a
-         family came to do; contacting the office is what they do if
-         neither fits. Three equal buttons in a half-width column wrapped
-         two-and-one and read as a mistake, and ranking them was the fix
-         rather than shrinking them until they squeezed in. -->
-    <p class="hero-aside"><a href="/contact/">Or speak to Admissions first <span aria-hidden="true">&rarr;</span></a></p>
-    </div><!-- /.hero-words -->
-
-    <!-- The photograph, entire. It was a full-bleed background being
-         cropped by two fifths, because it is near enough square and a hero
-         band is twice as wide as it is tall. Plated, it is simply seen:
-         both teaching blocks, the forecourt between them, the school's own
-         sign across the frontage, and Ikorodu carrying on around it. -->
-    <figure class="hero-plate-figure">
-      <div class="hpf-frame">
-        <img src="/assets/images/gallery/campus-hero.jpg"
-             alt="An elevated view of the Sultan Hanafi Royal Schools campus at Ikorodu, Lagos: the main teaching block with the school's name across its frontage, the paved forecourt, and the neighbourhood beyond"
-             width="1121" height="995" fetchpriority="high" decoding="async" />
-        <span class="hpf-corner tl" aria-hidden="true"></span><span class="hpf-corner tr" aria-hidden="true"></span>
-        <span class="hpf-corner bl" aria-hidden="true"></span><span class="hpf-corner br" aria-hidden="true"></span>
-      </div>
-      <figcaption><span>The campus</span>15 Imowonla Road, Ikorodu, Lagos State</figcaption>
-    </figure>
   </div>
 </section>
 

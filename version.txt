@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      53f1e2f8a90c9523e6bfc077136efde9ee8b421f
-short       53f1e2f8
+commit      bf8880e6cedeeb27496a2706122ddb32d99d3136
+short       bf8880e6
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give the portal card its own ink, and stop fifty-three faults at the source
-built (UTC) 2026-08-10T14:55:47Z
-assets      shrs-pwa-d0cd17bd50
+subject     Royal is not a light edition — the third time, and the worst of them
+built (UTC) 2026-08-10T15:08:14Z
+assets      shrs-pwa-c2a4c96802
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

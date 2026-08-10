@@ -330,11 +330,22 @@ html[data-pc-ornament="none"] header.nav::after{display:none;}
    =================================================================== */
 .hero{ isolation:isolate; background-image:none!important; }
 
+/* RESTORED FRAMING. Before the hero was rebuilt as a plated two-column stage,
+   this photograph was the hero's own full-bleed background at center 65% and
+   full strength — css/brand.css, .hero. The rebuild moved it to this layer so
+   it could be transformed rather than repainted (a background-image cannot be
+   transformed, and the drift below has to be), which is worth keeping; but it
+   also held the picture back to between 14% and 50% opacity and walked its
+   crop around the frame, because in that arrangement the photograph beside the
+   words was the subject and this was only scenery.
+     It is the subject again. Full strength, original crop, and the four later
+   opacity/position overrides are struck out where they stood rather than
+   deleted silently, so it is plain what was removed and why. */
 .hero-plate{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
   background-image:url("/assets/images/gallery/campus-hero.jpg");
   background-size:cover;
-  background-position:center 40%;
+  background-position:center 65%;
   transform:scale(1.045);
   animation:hero-drift 38s ease-in-out infinite alternate;
 }
@@ -396,7 +407,7 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
   display:flex;align-items:center;
   padding-block:clamp(70px,9vh,120px);
 }
-.hero-plate{ background-position:center 28%; }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 @media (max-width:860px){
   .hero{ min-height:min(78svh,760px); }
   .hero-plate{ background-position:center 34%; }
@@ -421,8 +432,8 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
    whole picture is seen. That is the next move on this hero and it is a
    structural one. This is the honest interim — it removes a real
    collision today without pretending to be the finished thing. */
-.hero-plate{ background-position:center bottom!important; }
-@media (max-width:860px){ .hero-plate{ background-position:center 78%!important; } }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 
 /* ===================================================================
    THE HERO, PLATED — the photograph shown rather than cropped
@@ -500,7 +511,7 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
 /* ---- The ground beneath it ---------------------------------------
    Same photograph, held right back. It is scenery now, not the subject,
    so the wash over it can be heavy without costing anything. */
-.hero-plate{ background-position:center 42%!important; opacity:.5; }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 .hero::before{
   background:
     linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.90) 0%,
@@ -531,7 +542,7 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
    at a sixth of its strength: enough that the plate is standing on the
    campus rather than on a brown rectangle, not enough to read as a
    second picture competing with the first. */
-.hero-plate{ opacity:.16!important; }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 .hero::before{
   background:
     linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.93) 0%,
@@ -577,14 +588,14 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
 
 /* The ground drops below the sign as well, so the painted name cannot
    ghost through the promise line even at a sixth of strength. */
-.hero-plate{ background-position:center 82%!important; opacity:.14!important; }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 
 /* The ground takes the sky. Moving it down put the painted sign at the
    top of the frame instead of the middle — still the school's name,
    still ghosting, just somewhere emptier. The only crop of this
    photograph with no lettering anywhere in it is the top: rooftops,
    palms and a Lagos sky, which is texture rather than a message. */
-.hero-plate{ background-position:center 6%!important; opacity:.15!important; }
+/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 
 /* ===================================================================
    THE SCHOOL'S NAME WAS BEING SET AT HALF SIZE, EVERYWHERE
