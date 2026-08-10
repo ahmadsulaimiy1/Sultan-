@@ -155,7 +155,18 @@ body.portal-body > *{position:relative;z-index:1;}
 .portal-aside-points{list-style:none;margin:0 0 36px;padding:0;display:flex;flex-direction:column;gap:16px;max-width:400px;}
 .portal-aside-points li{display:flex;align-items:flex-start;gap:12px;font-size:0.87rem;color:rgba(var(--lv-w00,248,244,233),0.88);line-height:1.5;}
 .portal-aside-points svg{flex:0 0 auto;color:var(--gold-bright);margin-top:2px;}
-.portal-aside-cta{margin-top:auto;padding-top:26px;border-top:1px solid rgba(var(--lv-gbs,233,206,138),0.25);max-width:400px;}
+/* This carried margin-top:auto, which pins it to the foot of the panel while
+   the panel itself centres everything else. On the sign-in screen, where the
+   card is short, that reads as a considered composition. On /portal/register/
+   the card is a nine-field form, so the panel is 1,050px tall against four
+   lines of copy — and all the free space collected in one place, leaving a
+   550px void between "Becomes your Parent Portal login once enrolled" and
+   "Already have an account?". Half the page was empty and the eye had nothing
+   to cross it with.
+     Without the auto margin the panel's own centring does the work: eyebrow,
+   title, copy, points, rule and the way out are one group, optically centred
+   against the card whatever height the card happens to be. */
+.portal-aside-cta{margin-top:34px;padding-top:26px;border-top:1px solid rgba(var(--lv-gbs,233,206,138),0.25);max-width:400px;}
 .portal-aside-cta p{font-size:0.82rem;color:rgba(var(--lv-w00,248,244,233),0.65);margin:0 0 14px;}
 .portal-aside-cta a{
   display:inline-flex;align-items:center;gap:8px;font-family:'Cinzel','Amiri',serif;font-size:0.74rem;
