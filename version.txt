@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      d0c6ca506897688f99ccc5642037afd0988a3a24
-short       d0c6ca50
+commit      43624660543c805ae7ccb7f90564e1d61684dd43
+short       43624660
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Put the school back in the pictures: the gateway's head, and every sign-in panel
-built (UTC) 2026-08-10T19:33:16Z
+subject     Give the gateway two halves instead of one wall
+built (UTC) 2026-08-10T23:15:59Z
 assets      shrs-pwa-5e90b8bcb9
 pages       143
 
