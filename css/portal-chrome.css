@@ -186,7 +186,7 @@
    size and the shimmer, and only needs the face named for the portal's
    shorter bar. */
 .portal-brand .line1{
-  font-size:1rem!important;letter-spacing:.05em!important;text-transform:none!important;}
+  font-size:1rem!important;letter-spacing:.05em!important;text-transform:uppercase!important;}
 
 /* THE WORDMARK IS ON ESPRESSO. IN EVERY EDITION. THE SIXTH TIME.
    The wordmark is not coloured type: it is a gradient clipped to the glyphs
@@ -254,6 +254,11 @@
   content:"";width:44px;height:1px;
   background:linear-gradient(90deg,transparent,rgba(198,161,91,.7));}
 .pch-standing::after{background:linear-gradient(270deg,transparent,rgba(198,161,91,.7));}
+/* Two statements and a raised point, as the marketing masthead sets them.
+   The gap belongs between the phrases, not around the point. */
+.pch-standing{gap:0 12px;}
+.pch-standing-d{color:rgba(198,161,91,.8);letter-spacing:0;margin-inline:-4px;}
+[dir="rtl"] .pch-standing{letter-spacing:normal;}
 
 .pch-clock{display:none;align-items:center;}
 @media (min-width:760px){.pch-clock{display:inline-flex;}}
@@ -453,6 +458,16 @@ html.has-portal-chrome body > .portal-main{flex:1 0 auto;}
 @media (max-width:620px){
   .pch-foot{padding:26px 16px 20px;}
   .pch-foot-inner{justify-content:center;text-align:center;}
+  /* On a phone the foot is a tall, narrow column, and a watermark sized by
+     height came out wider than the page: two cropped letters of the school's
+     name lay across the middle of the links, reading as damage rather than as
+     a watermark. Sized to fit the width instead, it is the crest again. */
+  .pch-foot::before{background-size:contain;background-position:center 6%;}
+  /* The brand column is a two-column grid — crest, then three rows beside it.
+     Centring the text inside it left the crest hard against the leading edge
+     with the school's name floating past it. On one column it stacks. */
+  .pch-col-brand{grid-template-columns:minmax(0,1fr);justify-items:center;gap:8px;}
+  .pch-crest{grid-row:auto;}
 }
 @media (prefers-reduced-motion:reduce){
   .portal-topbar::after{animation:none;transform:scaleX(1);}

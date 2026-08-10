@@ -71,7 +71,13 @@
     var img = brand.querySelector('img');
     var nameEl = brand.querySelector('span');
     var name = nameEl ? nameEl.textContent.trim() : 'Sultan Hanafi';
-    var i18nKey = nameEl ? nameEl.getAttribute('data-i18n') : null;
+    /* The sixty-eight pages spell the name in the markup and none of them
+       marks it for translation, so the crest said "Sultan Hanafi" in Latin
+       letters on a page a reader had put into Arabic. brand.name is the key
+       the marketing masthead uses; taking it here is what makes the two
+       mastheads say the same thing in the same language. The page's own
+       spelling stays as the fallback until the dictionary arrives. */
+    var i18nKey = (nameEl && nameEl.getAttribute('data-i18n')) || 'brand.name';
     if (!img) return;
     brand.classList.add('brand');
     img.classList.add('brand-mark');
@@ -82,7 +88,7 @@
     var text = document.createElement('span');
     text.className = 'brand-text';
     text.innerHTML =
-      '<span class="line1"' + (i18nKey ? ' data-i18n="' + esc(i18nKey) + '"' : '') + '>'
+      '<span class="line1" data-i18n="' + esc(i18nKey) + '">'
       + esc(name) + '</span><br />'
       + '<span class="line2" data-i18n="brand.sub">Royal Schools</span>';
     if (nameEl && nameEl.parentNode) nameEl.parentNode.removeChild(nameEl);
@@ -137,13 +143,28 @@
       + '</div>';
     bar.parentNode.insertBefore(strip, bar);
 
-    // Both calendars, in the order the school reads them.
-    var lang = LANG === 'ar' ? 'ar' : 'en';
+    /* Both calendars, in the order the school reads them.
+       The month name and the Gregorian date are the only text on this band
+       written by hand rather than by the dictionary, so they are the only
+       text that would have stayed English when a reader switched to Arabic
+       mid-page. The switch is a language attribute on <html> — watched here
+       rather than hooked to one event, because the locale arrives by three
+       different routes (a stored preference applied at load, the switcher,
+       and a navigation) and only the attribute is common to all three. */
     var dateEl = strip.querySelector('[data-pch-hijri]');
-    var gregorian = new Date().toLocaleDateString(lang, {
-      day: 'numeric', month: 'short', year: 'numeric'
-    });
-    dateEl.innerHTML = moon + '<span>' + esc(H.label(lang) + ' · ' + gregorian) + '</span>';
+    function renderDate() {
+      var lang = (document.documentElement.lang || 'en').toLowerCase().slice(0, 2) === 'ar' ? 'ar' : 'en';
+      var gregorian = new Date().toLocaleDateString(lang, {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+      dateEl.innerHTML = moon + '<span>' + esc(H.label(lang) + ' · ' + gregorian) + '</span>';
+    }
+    renderDate();
+    document.addEventListener('shrs:locale-changed', renderDate);
+    if ('MutationObserver' in window) {
+      new MutationObserver(renderDate).observe(document.documentElement,
+        { attributes: true, attributeFilter: ['lang'] });
+    }
 
     // The time in Ikorodu, not the time on the reader's wrist — a parent
     // reading this in London is being told when the office is open.
@@ -305,9 +326,17 @@
       var brand = bar.querySelector('.portal-brand');
       dressBrand(brand);
       mountStrip(bar);
+      /* The standing line, in the marketing masthead's own form: two
+         statements with a raised point between them, between two rules.
+         It said "Digital Campus" alone, which named the room but not the
+         institution — the public bar answers "who is this and where" in
+         the same place and the portal may as well answer it too. */
       var standing = document.createElement('span');
       standing.className = 'pch-standing';
-      standing.textContent = T.standing;
+      standing.innerHTML =
+        '<span class="pch-standing-t">' + esc(T.standing) + '</span>'
+        + '<span class="pch-standing-d" aria-hidden="true">&middot;</span>'
+        + '<span class="pch-standing-t" data-i18n="masthead.place">Ikorodu, Lagos State</span>';
       if (brand && brand.nextSibling) bar.insertBefore(standing, brand.nextSibling);
       else bar.appendChild(standing);
 
@@ -348,7 +377,7 @@
       + '<div class="pch-foot-inner">'
       +   '<div class="pch-col pch-col-brand">'
       +     '<img class="pch-crest" src="/assets/images/brand-mark.png" alt="" aria-hidden="true" />'
-      +     '<span class="pch-foot-name">Sultan Hanafi Royal Schools</span>'
+      +     '<span class="pch-foot-name" data-i18n="brand.full">Sultan Hanafi Royal Schools</span>'
       +     '<span class="pch-foot-sig">' + esc(T.sig) + '</span>'
       +     '<p class="pch-note">' + esc(T.note) + '</p>'
       +   '</div>'

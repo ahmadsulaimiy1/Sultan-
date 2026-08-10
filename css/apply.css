@@ -315,6 +315,28 @@
   width:min(1080px, 100% - clamp(1.25rem,5vw,3rem)*2); margin-inline:auto;
 }
 .ap-brand{ display:flex; align-items:center; gap:12px; text-decoration:none; margin-right:auto; }
+/* The standing line, in the form every other masthead on the site sets it:
+   two statements, a raised point between them, a rule on each side. This was
+   the one head with an empty middle, and that is what made a page otherwise
+   in the family read as a form rather than as the school's own paper. It says
+   who and where — it is not a way out, so it costs nothing of the quiet this
+   header was deliberately given. Folded away below 1080px, where the crest
+   and the way back are the only two things with a claim on the room. */
+.ap-standing{
+  display:none; align-items:center; gap:0 12px; margin-inline:auto;
+  font-family:var(--font-label); font-size:.6rem; letter-spacing:.22em;
+  text-transform:uppercase; white-space:nowrap;
+  color:rgba(var(--lv-gbs,233,206,138),.8);
+}
+@media (min-width:1080px){ .ap-standing{ display:flex; } }
+.ap-standing::before,.ap-standing::after{
+  content:""; width:44px; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(var(--lv-gs,198,161,91),.7));
+}
+.ap-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(var(--lv-gs,198,161,91),.7));
+}
+.ap-standing-d{ color:rgba(var(--lv-gs,198,161,91),.8); letter-spacing:0; margin-inline:-4px; }
 .ap-brand img{ width:38px; height:auto; display:block; }
 .ap-brand b{
   display:block; font-family:var(--font-label); font-weight:600; font-size:1rem;

@@ -16,7 +16,7 @@ agrees with it.** Not a computed style, not a sampled pixel — a picture of the
 thing as a reader would see it. Every fix made on this branch was confirmed that
 way first, and roughly two thirds of the tool's findings did not survive it.
 
-## The seven faults, in the order they were found
+## The seven faults of the tool, in the order they were found
 
 1. **Stale rectangles.** The audit scrolled, measured and sampled inside one
    `evaluate()`. `scrollIntoView` honours smooth scrolling, so the rectangles
@@ -63,3 +63,42 @@ Screening, not judgement. It narrows 600 elements a page to a handful worth
 looking at. Every one of this branch's real findings — the auth brand panel at
 1.71:1, the at-a-glance eyebrow at 4.05:1 — was a candidate it raised and a
 screenshot confirmed. So were all the ones that were wrong.
+
+## The eighth fault, which the tool cannot have
+
+**A ratio that passes is not a ground that was intended.**
+
+Every colour in the portal's colophon measured correctly. Forty lines of
+`css/portal-chrome.css` existed to make sure of it: the school's name had once
+been `#FFF6DF` on `#F1E7D5` — 1.06:1, the same colour to within a rounding
+error — and the fix restated every value of the colophon a second time, for
+cream, honestly and against painted pixels. After it, the sweep was clean.
+
+The cream was an accident. `html[data-pc-theme="light"] footer` in
+`css/prestige.css` is a TAG selector written for the marketing footer, which
+really does turn pearl in the Clear edition. It also caught `.pch-foot`, the
+colophon built on all sixty-eight portal pages, whose masthead is espresso in
+every edition. So a dashboard opened espresso at the top and ended cream at the
+bottom — the page changing materials halfway down — and this file's answer had
+been to make the second material legible rather than to ask why there were two.
+
+Nothing about it read as broken. It looked cheap, and a contrast audit cannot
+see cheap. What found it was building two new components on top of that ground
+and watching them arrive pale-on-cream: the fault only became visible when
+something arrived that had not been taught to compensate for it.
+
+So, alongside "no contrast finding is acted on until a screenshot agrees with
+it":
+
+> **When a component needs its colours stated twice, ask which of the two
+> grounds it was supposed to have.** Sometimes the answer is both — the
+> marketing pages really do change edition. Sometimes a tag selector reached
+> somewhere it was never meant to, and the second set of colours is forty lines
+> of evidence that nobody asked.
+
+The same session found four ordinary instances of the edition-blind pattern —
+the wordmark's clipped gradient, the edition switch's `var(--portal-card)`, the
+crest's `screen`-blended foil sweep, the footer watermark sized for a footer a
+quarter as tall. Those are the usual kind: a value stated for the ground the
+component was born on. This one is worse, because the compensation for it
+passed every test that exists.
