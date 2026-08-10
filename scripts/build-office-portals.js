@@ -36,13 +36,27 @@ function pageHtml(office) {
 <title>${name} — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- THE SHARED PORTAL CHROME. These 33 pages are stamped from this file
+     rather than assembled by scripts/build.js, and that is exactly how they
+     came to be the only portal pages in the estate without it: the uplift that
+     gave every other portal page its colophon, its prestige and motion layers,
+     its clock and its arrival went through the other pipeline and never
+     reached here. A site-wide sweep found it — 32 office pages reporting no
+     footer at all while every neighbouring portal page had one, because
+     portal-chrome.js (which injects the colophon at runtime) was not loaded.
+     Anything added to the portal chrome belongs in BOTH templates below. -->
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
 <link rel="stylesheet" href="/css/i18n.css">
+<link rel="stylesheet" href="/css/prestige.css">
+<link rel="stylesheet" href="/css/motion.css">
+<link rel="stylesheet" href="/css/clock.css">
+<link rel="stylesheet" href="/css/portal-chrome.css">
 <script src="/js/locale-registry.js"></script>
 <script src="/js/i18n-core.js"></script>
 <script src="/js/portal-theme.js"></script>
 <script src="/js/i18n.js" defer></script>
+<script src="/js/portal-shell.js"></script>
 </head>
 <body class="portal-body" data-office-slug="${esc(office.slug)}">
 
@@ -261,6 +275,10 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 <script src="/js/portal-office-switcher.js" defer></script>
 <script src="/js/portal-office.js" defer></script>
+<script src="/js/prestige.js" defer></script>
+<script src="/js/motion.js" defer></script>
+<script src="/js/portal-chrome.js" defer></script>
+<script src="/js/clock.js" defer></script>
 </body>
 </html>
 `;
@@ -283,13 +301,27 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 <title>All Offices — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- THE SHARED PORTAL CHROME. These 33 pages are stamped from this file
+     rather than assembled by scripts/build.js, and that is exactly how they
+     came to be the only portal pages in the estate without it: the uplift that
+     gave every other portal page its colophon, its prestige and motion layers,
+     its clock and its arrival went through the other pipeline and never
+     reached here. A site-wide sweep found it — 32 office pages reporting no
+     footer at all while every neighbouring portal page had one, because
+     portal-chrome.js (which injects the colophon at runtime) was not loaded.
+     Anything added to the portal chrome belongs in BOTH templates below. -->
 <link rel="stylesheet" href="/css/brand.css">
 <link rel="stylesheet" href="/css/portal.css">
 <link rel="stylesheet" href="/css/i18n.css">
+<link rel="stylesheet" href="/css/prestige.css">
+<link rel="stylesheet" href="/css/motion.css">
+<link rel="stylesheet" href="/css/clock.css">
+<link rel="stylesheet" href="/css/portal-chrome.css">
 <script src="/js/locale-registry.js"></script>
 <script src="/js/i18n-core.js"></script>
 <script src="/js/portal-theme.js"></script>
 <script src="/js/i18n.js" defer></script>
+<script src="/js/portal-shell.js"></script>
 <style>
   .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
   .office-index-layer{margin-bottom:36px;}
@@ -317,6 +349,11 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 ${layerBlocks}
   </div>
 </main>
+<script src="/js/portal-office-switcher.js" defer></script>
+<script src="/js/prestige.js" defer></script>
+<script src="/js/motion.js" defer></script>
+<script src="/js/portal-chrome.js" defer></script>
+<script src="/js/clock.js" defer></script>
 </body>
 </html>
 `;

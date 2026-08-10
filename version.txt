@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      4e04329cda9ccbb1cb2821803993a11be3d43329
-short       4e04329c
+commit      0c72cac891a53b2ce188a251b9fb1401ca7c942e
+short       0c72cac8
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Resolve the admissions step-count contradiction; repair the auth shell
-built (UTC) 2026-08-10T09:32:22Z
+subject     Unify the department count; rebuild the two step rails that had outgrown their CSS
+built (UTC) 2026-08-10T09:50:28Z
 assets      shrs-pwa-cc1d30565b
 pages       143
 
