@@ -74,6 +74,22 @@
       if (cluster) cluster.classList.add('pch-utility');
     }
 
+    // Error and empty cards get .pch-state so the crest-and-rule treatment can
+    // be addressed precisely. It cannot be inferred from the markup — the full
+    // application form also carries a .portal-back-link — so the cards that are
+    // genuinely a *state* rather than a page are named by the two things only
+    // they have: an id ending -error, or an error-message slot.
+    var STATE = '[id$="-error"], [data-portal-error-card], [data-founder-error-card]';
+    Array.prototype.forEach.call(document.querySelectorAll(STATE), function (el) {
+      var card = el.classList && el.classList.contains('portal-card') ? el : el.closest('.portal-card');
+      if (card) card.classList.add('pch-state');
+    });
+    Array.prototype.forEach.call(
+      document.querySelectorAll('[data-error-message], [data-portal-error-message]'), function (el) {
+        var card = el.closest('.portal-card');
+        if (card) card.classList.add('pch-state');
+      });
+
     // --- the head: add to the bar rather than replace it -------------
     if (bar && !bar.querySelector('.pch-standing')) {
       var brand = bar.querySelector('.portal-brand');

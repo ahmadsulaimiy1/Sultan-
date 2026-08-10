@@ -270,7 +270,7 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
    across three pages, unreadable since the screens were written. They
    take the deep gold wherever the ground is paper; Midnight, whose
    cards really are dark, keeps the bright gold it was written for. */
-html:not([data-pc-theme="dark"]) .portal-card .portal-back-link{
+html:not([data-pc-theme="dark"]) .pch-state .portal-back-link{
   color:rgb(var(--lv-gt3,99,72,27))!important;}
 html:not([data-pc-theme="dark"]) .portal-card .portal-back-link:hover{
   color:rgb(var(--lv-gt,124,84,48))!important;}
@@ -426,3 +426,50 @@ html[data-pc-theme="light"] .pch-foot .pch-adopted{ border-bottom-color:rgba(140
    adopted it into. */
 html[data-pc-theme="light"] .portal-shell-footer,
 html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.82); }
+
+/* ---- The state most people actually see -----------------------------
+   A portal page that cannot load — signed out, session expired, an office
+   you have no access to — is the page a member of staff meets most often,
+   and it was the least designed thing in the building: a bare panel with a
+   heading, one sentence, and an underlined link, stranded at the top of an
+   otherwise empty screen.
+     It is given the same materials as everything else here. The crest above
+   it, so the page still looks like the school's. A gold rule under the
+   heading, which is the site's own way of marking a title. And a way out
+   that looks like a control, because it is the only one on the page.
+     Scoped to .pch-state, which portal-chrome.js puts on error cards only.
+   An earlier draft matched `.portal-card:has(> .portal-back-link)` instead —
+   and the full application form on /portal/apply/ has a back-link as a direct
+   child, so the whole form was centre-aligned with a crest stuck on top of it.
+   A heuristic that catches the wrong card is worse than no treatment at all.
+   ------------------------------------------------------------------- */
+.pch-state:not([hidden]){
+  text-align:center;}
+.pch-state::before{
+  content:"";display:block;width:52px;height:52px;margin:2px auto 16px;
+  background:url("/assets/images/brand-mark.png") center/contain no-repeat;
+  opacity:.9;filter:drop-shadow(0 0 12px rgba(233,206,138,.32));}
+.pch-state h1{position:relative;padding-bottom:15px;}
+.pch-state h1::after{
+  content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:0;
+  width:74px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-bright,#E9CE8A),transparent);}
+
+/* The one control on the page reads as one. */
+.pch-state .portal-back-link{
+  display:inline-flex;align-items:center;gap:9px;width:auto;margin:22px auto 0;
+  font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;letter-spacing:.15em;
+  text-transform:uppercase;font-weight:600;text-decoration:none;
+  padding:11px 22px;border-radius:99px;
+  /* The card's plate is cream in every edition (see the note in
+     css/prestige.css beside .portal-card .sub), so this control is stated once
+     against cream rather than once per theme. */
+  color:#6B4E22;
+  border:1px solid rgba(140,104,52,.45);
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(255,255,255,.25));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+  transition:border-color .3s ease,background .3s ease,transform .3s ease,color .3s ease;}
+.pch-state .portal-back-link:hover,
+.pch-state .portal-back-link:focus-visible{
+  color:#3B2A1D;border-color:rgba(140,104,52,.85);
+  background:rgba(255,255,255,.9);transform:translateY(-1px);}

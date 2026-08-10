@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      ff1f408bb5950a625bdb4dd5a381ad6232c6c35c
-short       ff1f408b
+commit      1802717de4912cdaee04732f53a186e50e682fa7
+short       1802717d
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Repair the heading outline: the footer on every page, and the policy register
-built (UTC) 2026-08-10T13:42:28Z
-assets      shrs-pwa-4764454103
+subject     Settle the remaining heading skips: investigated, and deliberately left
+built (UTC) 2026-08-10T14:07:28Z
+assets      shrs-pwa-0e65094a12
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

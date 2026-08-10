@@ -191,7 +191,14 @@ body.portal-body > *{position:relative;z-index:1;}
   .portal-form-col{padding:28px 14px;}
 }
 
+/* A card was pinned to the top of the column with everything below it empty:
+   on a signed-out teacher portal that is one small panel and nine hundred
+   pixels of nothing under it, which is the state most people see most often.
+   `safe center` puts a short card in the optical centre of the room and falls
+   back to the top the moment the content is taller than the space, so a long
+   dashboard never has its head pushed out of reach. */
 .portal-main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;}
+@supports (align-items:safe center){ .portal-main{align-items:safe center;} }
 .portal-card{
   position:relative;overflow:hidden;
   width:100%;max-width:420px;background:var(--ivory-bg);color:var(--ink);
