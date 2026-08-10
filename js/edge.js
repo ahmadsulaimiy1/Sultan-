@@ -32,6 +32,12 @@
     '.foot-map-panel', '.ann-card', '.press-card', '.mkt-card',
     '.gi-frame', '.gal-item', '.school-block', '.pr-stat', '.pr-metric',
     // the homepage's own furniture
+    // .hpf-frame is the hero plate. It is the one rectangle on the site
+    // that a visitor looks at before anything else, so it gets the edge
+    // light — and it is a RECTANGLE, which is why it gets this device
+    // rather than the turned conic used on circular marks. See the note
+    // at the foot of css/brand.css on why scale, not technique, decides.
+    '.hpf-frame',
     '.hx-mark', '.hx-q', '.hx-track', '.el-stage', '.cl-tile',
     '.pr-chart-card', '.pr-agechart', '.pr-path', '.mv-lead',
     '.contact-item', '.ic-visual', '.mono-letter', '.teaser',

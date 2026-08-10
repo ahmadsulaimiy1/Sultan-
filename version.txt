@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      c3ea3fc905d9397d8e564064bae90599551e0762
-short       c3ea3fc9
+commit      ef0d6bb80950801abbec73b50675e431340fae6c
+short       ef0d6bb8
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     All eight photographs placed, and the two I had named wrong
-built (UTC) 2026-08-10T07:42:58Z
-assets      shrs-pwa-fa129a97eb
+subject     The hero owns the arrival, the photograph is shown whole, and the school's name stops being set at half size
+built (UTC) 2026-08-10T08:00:05Z
+assets      shrs-pwa-1e2887af6e
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

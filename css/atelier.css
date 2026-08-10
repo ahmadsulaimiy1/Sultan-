@@ -673,3 +673,93 @@ html[data-pc-theme="light"] .hero h1 .hero-type{ color:#fff; }
      gets clipped. */
   @media (max-width:420px){ header.nav .rlx{ display:none; } }
 }
+
+/* ===================================================================
+   THE ARRIVAL — a sequence rather than a pile
+   -------------------------------------------------------------------
+   Everything in the hero was already animated, and that was the
+   problem: five entrances all firing at once, in an order that made no
+   sense. The lede arrived at 0.15s and the buttons at 0.3s, while the
+   promise line — the thing they are the consequence of — did not appear
+   until 2.1s, by which time the reader had already read past the gap
+   where it was going to be. Motion that arrives in the wrong order is
+   worse than no motion, because the eye follows it.
+
+   This is the order a herald would use: the ground, then the arms, then
+   where we are, then who we are, then the rule drawn under it, then
+   what we claim, then what we say, then what you may do. Each step
+   waits for the one before to finish rather than racing it. The whole
+   sequence is over in three seconds — long enough to read as ceremony,
+   short enough that nobody waiting to click has to wait.
+
+   One easing curve throughout, and it is not the browser's. `ease` is
+   symmetrical and reads as mechanical; this one leaves quickly and
+   settles slowly, which is how a physical thing comes to rest.
+   =================================================================== */
+:root{ --arr:cubic-bezier(.16,.84,.28,1); }
+
+@keyframes arr-rise{
+  from{ opacity:0; transform:translateY(18px); }
+  to  { opacity:1; transform:none; }
+}
+@keyframes arr-plate{
+  from{ opacity:0; transform:translateY(26px) scale(.972); }
+  to  { opacity:1; transform:none; }
+}
+@keyframes arr-rule{
+  from{ transform:translateX(-50%) scaleX(0); }
+  to  { transform:translateX(-50%) scaleX(1); }
+}
+@keyframes arr-rule-start{
+  from{ transform:scaleX(0); }
+  to  { transform:scaleX(1); }
+}
+
+.hero-split .hero-plate-figure{ animation:arr-plate 1.15s var(--arr) .10s both; }
+.hero-split .hero-crest       { animation:arr-rise  .85s var(--arr) .34s both; }
+.hero-split .eyebrow          { animation:arr-rise  .75s var(--arr) .60s both; }
+.hero-split h1                { animation:arr-rise  .80s var(--arr) .78s both; }
+.hero-split h1 .hero-subline  { animation:arr-rise  .75s var(--arr) 1.92s both; }
+.hero-split p.lede            { animation:arr-rise  .80s var(--arr) 2.16s both; }
+.hero-split .hero-ctas        { animation:arr-rise  .80s var(--arr) 2.40s both; }
+.hero-split .hero-aside       { animation:arr-rise  .75s var(--arr) 2.62s both; }
+.hero-plate-figure figcaption { animation:arr-rise  .75s var(--arr) 2.80s both; }
+
+/* The rule under the name draws itself once the name has been typed,
+   left to right in the split layout, from the centre when centred. */
+.hero-split h1::after{
+  transform-origin:left center;
+  animation:arr-rule-start .9s var(--arr) 1.62s both;
+}
+@media (max-width:940px){
+  .hero-split h1::after{
+    transform-origin:center;
+    animation:arr-rule .9s var(--arr) 1.62s both;
+  }
+}
+
+/* The typewriter waits its turn. js/site.js starts it the moment the
+   script runs; a delay on the transition holds it until the heading has
+   finished rising, so the name is not being typed into a line that is
+   still moving. */
+.hero-type.js-type{ transition-delay:.86s; }
+
+@media (prefers-reduced-motion:reduce){
+  .hero-split .hero-plate-figure,.hero-split .hero-crest,.hero-split .eyebrow,
+  .hero-split h1,.hero-split h1 .hero-subline,.hero-split p.lede,
+  .hero-split .hero-ctas,.hero-split .hero-aside,
+  .hero-plate-figure figcaption,.hero-split h1::after{
+    animation:none!important; opacity:1!important; transform:none!important;
+  }
+}
+html[data-pc-motion="reduced"] .hero-split *{ animation-duration:.001s!important; animation-delay:0s!important; }
+
+/* The plate's edge light is slower and quieter than the site default —
+   it is the largest lit rectangle on any page, and what reads as a
+   glint at card size reads as a strobe at this one. It also holds off
+   until the plate has finished arriving. */
+.hpf-frame{ --rg-dur:16s; }
+.hpf-frame > .rg-edge{ opacity:0; animation-delay:1.3s; transition:opacity 1.2s ease 1.3s; }
+.hero-split .hpf-frame > .rg-edge{ opacity:.5; }
+.hpf-frame:hover > .rg-edge,
+.hpf-frame:focus-within > .rg-edge{ opacity:.9; }

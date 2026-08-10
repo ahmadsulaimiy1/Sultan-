@@ -111,20 +111,57 @@
   // rendered element (not guessed from character count), so it works
   // correctly regardless of the serif display face's proportional metrics.
   const reduceMotionPref = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('.hero-type').forEach(el=>{
-    if(reduceMotionPref) return;
-    const target = el.getBoundingClientRect().width;
-    el.classList.add('js-type');
-    el.style.width = '0px';
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{ el.style.width = target + 'px'; });
-    });
-    el.addEventListener('transitionend', function done(e){
-      if(e.propertyName !== 'width') return;
-      el.classList.add('is-done');
-      el.removeEventListener('transitionend', done);
-    });
-  });
+  /* THE TYPEWRITER, and three things it was getting wrong.
+
+     1. IT MEASURED BEFORE THE FONT ARRIVED. The width was read on the
+        fallback face and then frozen as an inline pixel value. When
+        Cinzel swapped in — always a moment later — the real text no
+        longer fitted the box that had been measured for it, and the end
+        of the school's name was cut off by its own animation container.
+        It now waits for document.fonts.ready.
+     2. IT TYPED AT A FIXED TWENTY-SEVEN STEPS regardless of how many
+        letters there were, so the rhythm changed with the language: the
+        same animation across a longer or shorter name typed faster or
+        slower with no relation to the words. Steps now follow the
+        character count, and the duration with it, so it types at a
+        constant speed in any language.
+     3. IT NEVER LET GO. The inline width stayed after the animation
+        finished — see css/atelier.css, which now clears it on .is-done —
+        so any later reflow was clipped by a measurement taken at load.
+
+     Under reduced motion nothing types: the name is simply there, which
+     is what somebody who asked for less motion asked for. */
+  const typeTargets = [].slice.call(document.querySelectorAll('.hero-type'));
+  if (typeTargets.length && !reduceMotionPref) {
+    const startTyping = () => {
+      typeTargets.forEach(el => {
+        const chars = (el.textContent || '').trim().length || 1;
+        const target = el.getBoundingClientRect().width;
+        if (!target) return;                 // never animate to zero width
+        const steps = Math.max(8, Math.min(chars, 90));
+        const secs = Math.max(.9, Math.min(chars * 0.055, 2.6));
+        el.style.setProperty('--type-steps', steps);
+        el.style.transitionDuration = secs + 's';
+        el.style.transitionTimingFunction = 'steps(' + steps + ', end)';
+        el.classList.add('js-type');
+        el.style.width = '0px';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => { el.style.width = target + 'px'; });
+        });
+        el.addEventListener('transitionend', function done(e){
+          if (e.propertyName !== 'width') return;
+          el.classList.add('is-done');
+          el.style.width = '';               // hand the width back to layout
+          el.removeEventListener('transitionend', done);
+        });
+      });
+    };
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(startTyping).catch(startTyping);
+    } else {
+      startTyping();
+    }
+  }
 
   // threshold:0.12 means a .reveal target needs 12% of ITS OWN height
   // visible to fire — for a single section far taller than ~8x the
