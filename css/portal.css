@@ -37,7 +37,23 @@
    Scoped to .portal-body so it can safely redefine --ink/--ivory/
    --milk/--line — token names also used by the public site's own
    editorial sections — without leaking outside the portal. */
-:root[data-pc-theme="dark"] .portal-body{
+/* ROYAL BELONGS HERE TOO. This block flipped the portal's ink for Midnight
+   only, on the assumption that Midnight is the one dark edition. It is not:
+   the portal's page ground is dark espresso in Royal as well — sampled from
+   painted pixels at rgb(41,28,15) — while Royal was being served the light
+   edition's ink.
+     Anything that sits directly on the page ground rather than inside a card
+   was therefore dark-on-dark for every Royal user. The All Offices directory
+   is the worst of it: the page title, its description and all thirty-two
+   office names measured between 1.03:1 and 1.26:1 — a directory of the whole
+   institution, invisible, on the edition the school's own name is attached to.
+     Cards were spared only because they carry their own cream plate, which is
+   why this went unseen while the card fault beside it was being fixed.
+     Listed explicitly rather than written as :not([data-pc-theme="light"]) so
+   that a fourth edition has to make its own decision about its ground instead
+   of inheriting one by default. */
+:root[data-pc-theme="dark"] .portal-body,
+:root[data-pc-theme="royal"] .portal-body{
   --ink:rgb(var(--lv-w30,241,231,214)); --ink-soft:rgba(var(--lv-w30,241,231,214),0.66);
   --ivory:rgb(var(--lv-w258,24,16,9)); --milk:rgb(var(--lv-cfd5,34,23,9)); --line:rgba(var(--lv-gb,233,206,138),0.22);
   --portal-heading:rgb(var(--lv-gb,233,206,138)); --portal-card:rgb(var(--lv-w259,36,26,16));

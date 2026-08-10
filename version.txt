@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      0251bea975b5aa4ff8e7e835380995767e4f5160
-short       0251bea9
+commit      53f1e2f8a90c9523e6bfc077136efde9ee8b421f
+short       53f1e2f8
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give the portal body the same standing as its chrome
-built (UTC) 2026-08-10T14:24:54Z
-assets      shrs-pwa-473cd452af
+subject     Give the portal card its own ink, and stop fifty-three faults at the source
+built (UTC) 2026-08-10T14:55:47Z
+assets      shrs-pwa-d0cd17bd50
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

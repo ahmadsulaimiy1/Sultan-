@@ -303,16 +303,26 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
 .portal-aside .portal-aside-eyebrow{color:#E4C87F!important;}
 
 /* ---- The office index -----------------------------------------------
-   The staff office index was written for a dark ground and renders on
-   paper: its section headings, its two head links and its eyebrow are
-   all bright gold, measuring 1.37:1, 1.46:1 and 1.56:1. The rows
-   beneath them were inked dark and were right all along. Paper gets the
-   deep gold; Midnight keeps what it was written with. */
-html:not([data-pc-theme="dark"]) .office-index-wrap h3,
-html:not([data-pc-theme="dark"]) .office-index-wrap .portal-aside-eyebrow,
-html:not([data-pc-theme="dark"]) .office-index-wrap p > a{
+   The staff office index was written for a dark ground and renders on paper:
+   its section headings, its two head links and its eyebrow were all bright
+   gold, measuring 1.37:1, 1.46:1 and 1.56:1. Paper gets the deep gold.
+
+   BUT "paper" IS NOT "NOT MIDNIGHT". This block was written as
+   :not([data-pc-theme="dark"]), which is the third time in this codebase that
+   Royal has been treated as a light edition. Royal's portal ground is dark
+   espresso — rgb(41,28,15) sampled from painted pixels — so forcing the deep
+   gold there took the section headings to 1.95:1, and the rows beneath them,
+   which inherit the portal's ink, to 1.03:1. The whole directory of thirty-two
+   offices was unreadable on the edition named after the school.
+
+   The editions whose portal ground is paper are Clear and the no-attribute
+   default. They are named by exclusion of BOTH dark grounds, so a future
+   edition has to declare which kind it is rather than silently inherit paper. */
+html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap h3,
+html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap .portal-aside-eyebrow,
+html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap p > a{
   color:rgb(var(--lv-gt3,99,72,27))!important;}
-html:not([data-pc-theme="dark"]) .office-index-wrap p > a:hover{
+html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap p > a:hover{
   color:rgb(var(--lv-gt,124,84,48))!important;}
 
 /* The shell's own utility strip, taken into the colophon as its top row

@@ -325,9 +325,13 @@ function directoryIndexHtml(officesByLayer, layerLabels) {
 <style>
   .office-index-wrap{max-width:960px;margin:0 auto;padding:40px 20px 80px;}
   .office-index-layer{margin-bottom:36px;}
-  .office-index-layer h3{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px;}
+  /* --gold-bright is the DEEP gold on the pale editions, which is right on
+     cream and 1.95:1 on the espresso ground Royal and Midnight give this page.
+     --portal-heading is the one token that already knows which ground it is
+     standing on, because portal.css flips it per edition. */
+  .office-index-layer h3{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--portal-heading);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px;}
   .office-index-row{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--portal-heading);font-family:'Cormorant Garamond','Amiri',serif;font-size:1.05rem;font-weight:600;transition:padding-inline-start .2s ease,color .2s ease;}
-  .office-index-row:hover{padding-inline-start:12px;color:var(--gold);}
+  .office-index-row:hover{padding-inline-start:12px;color:var(--gold-bright);}
 </style>
 </head>
 <body class="portal-body">
