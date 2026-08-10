@@ -34,13 +34,25 @@
     border-inline-start:1px solid rgba(var(--lv-gb,233,206,138),.24);
     box-shadow:-40px 0 90px -40px rgba(0,0,0,.9);
     transform:translateX(102%);opacity:0;
-    transition:transform .58s cubic-bezier(.16,.8,.24,1),opacity .4s;
+    /* THE CLOSED DRAWER WAS STILL IN THE TAB ORDER. pointer-events:none stops
+       a mouse and does nothing at all for a keyboard, so every page on this
+       site walked a keyboard user through 67 invisible links inside a panel
+       that was shut, before they reached anything on the page itself. It is
+       the same fault as a focusable control inside aria-hidden, except on
+       every page rather than nine.
+         visibility:hidden is the fix: it is the one property that takes a
+       subtree out of both the tab order and the accessibility tree while still
+       allowing the panel to animate. It is delayed by the length of the slide
+       so the drawer stays painted on its way out; .navlinks.open sets it back
+       with no delay, so focus can enter the moment it opens. */
+    visibility:hidden;
+    transition:transform .58s cubic-bezier(.16,.8,.24,1),opacity .4s,visibility 0s linear .58s;
     display:flex!important;pointer-events:none;
   }
   [dir="rtl"] .navlinks{transform:translateX(-102%);
     border-inline-start:0;border-inline-end:1px solid rgba(var(--lv-gb,233,206,138),.24);
     box-shadow:40px 0 90px -40px rgba(0,0,0,.9);}
-  .navlinks.open{transform:none;opacity:1;pointer-events:auto;}
+  .navlinks.open{transform:none;opacity:1;pointer-events:auto;visibility:visible;transition-delay:0s;}
 
   /* A hairline of gold down the leading edge of the panel. */
   .navlinks::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:2px;
