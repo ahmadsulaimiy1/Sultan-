@@ -83,7 +83,7 @@
 </script>
 <meta name="robots" content="noindex,follow" />
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/portal.css?v=7a061eda76">
+<link rel="stylesheet" href="/css/portal.css?v=472a9e23e2">
 <link rel="stylesheet" href="/css/prestige.css?v=e81375ad40">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=2e3e6953e7">
@@ -93,7 +93,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/portal/select/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/portal/select/" />
-<meta name="shrs-build" content="shrs-pwa-0c6c04d831">
+<meta name="shrs-build" content="shrs-pwa-5e90b8bcb9">
 </head>
 <body class="portal-body">
 
@@ -640,6 +640,18 @@
        should not have to read eight explanations to reach their own door,
        so every door is offered here in one row, above the fold, before
        any of the detail below. -->
+
+  <!-- THE TWO HALVES ARE SECTIONS NOW.
+       This page ran as one unbroken cream field from the head to the
+       footnote: a quick rail, eight cards, two group headings and a note,
+       five and a half thousand pixels of it, all on the same ground. The
+       rest of the site does not do that — it alternates bands, and the seam
+       between them is how a reader knows one thing has ended and another has
+       begun. Two .pr-sections, the site's own, so the institutional doors
+       and the family doors read as two halves rather than one wall. The
+       padding is tighter than a marketing band's, because a gateway is a
+       place you pass through. -->
+  <section class="pr-section gw-band">
   <nav class="gw-quick pr-reveal" aria-label="Go straight to your portal">
     <p class="gw-quick-lab">Go straight in</p>
     <div class="gw-quick-row">
@@ -714,6 +726,9 @@
     </a>
   </div>
 
+  </section>
+
+  <section class="pr-section is-ivory gw-band">
   <p class="gw-group-head pr-reveal">II · Families, Applicants &amp; the Public</p>
   <div class="gateway-grid pr-stagger">
     <a class="gateway-card rg-light" data-accent="parent" href="/portal/login/">
@@ -778,6 +793,7 @@
   <div class="gateway-footnote pr-reveal">
     <p>New to the staff portal, or without login credentials yet? Staff, Executive and Board accounts are provisioned by the Institutional Administration Centre — contact your system administrator. Guardians can <a href="/portal/register/">create an account</a> directly, at no cost.</p>
   </div>
+  </section>
 </main>
 
 </div>

@@ -2281,10 +2281,54 @@ body.portal-body[data-atmosphere="certificates"]::before{
    stands a little shorter than a marketing hero, because a reader who has
    arrived at the gateway has already decided to sign in and the doors are
    what they came for. */
-.gw-threshold{margin-bottom:44px;min-height:min(58vh,460px);}
+.gw-threshold{min-height:min(58vh,460px);}
 @media (max-width:640px){
-  .gw-threshold{margin-bottom:30px;min-height:min(52vh,380px);}
+  .gw-threshold{min-height:min(52vh,380px);}
 }
+/* The two bands the doors are set in. A marketing section breathes at up to
+   110px top and bottom because it is one idea a reader has stopped at; a
+   gateway is a place they are passing through, and eight doors do not want a
+   hundred pixels of air above them. */
+/* Stated as .pr-section.gw-band, not .gw-band: both would be one class, and
+   css/prestige.css — which sets the marketing padding — is loaded after this
+   file, so a bare class here loses the tie and the band keeps its 110px. */
+.pr-section.gw-band{padding:clamp(34px,5vh,58px) 0;}
+
+/* THE BAND MUST BE THE GROUND THE CARDS WERE DRAWN FOR.
+   .pr-section carries the marketing ground, and the marketing ground is pale
+   in ALL THREE editions — Royal is a light edition out there; that is the
+   third time this codebase has had to learn it. The gateway's cards are not
+   marketing cards: in Royal and Midnight css/masthead.css paints them as a
+   TRANSLUCENT gold wash at eleven per cent, because they were composed to sit
+   on the portal's dark chrome and to let it through. Put a pale marketing
+   band behind a translucent dark-composed card and every word on it collapses
+   at once — measured, the moment the bands went in: twelve elements between
+   1.00:1 and 1.26:1, the whole gateway, in the Royal edition.
+   So the band states its own ground, for each edition, against what the cards
+   above it need: paper in Clear, and the portal's own espresso in Royal and
+   Midnight, with the two bands a shade apart either way so the alternation
+   survives in all three. */
+html[data-pc-theme="royal"] .pr-section.gw-band,
+html[data-pc-theme="dark"] .pr-section.gw-band{
+  background:
+    radial-gradient(1300px 560px at 82% -14%, rgba(233,206,138,.07), transparent 62%),
+    linear-gradient(180deg,#241708 0%,#1E1309 100%);}
+html[data-pc-theme="royal"] .pr-section.gw-band.is-ivory,
+html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
+  background:
+    radial-gradient(1300px 560px at 18% -14%, rgba(233,206,138,.09), transparent 62%),
+    linear-gradient(180deg,#2C1D0D 0%,#241708 100%);}
+.gw-band > .gw-quick,
+.gw-band > .gw-group-head,
+.gw-band > .gateway-footnote{max-width:1100px;margin-inline:auto;}
+.gw-band > .gw-quick{margin-top:0;}
+/* :first-child, not :first-of-type — the second band opens on its heading and
+   wants no space above it, the first opens on the quick rail and the heading
+   after it wants a rest. Both headings are the first <p> child of their band,
+   so :first-of-type zeroed the wrong one too. */
+.gw-band > .gw-group-head{margin-top:36px;}
+.gw-band > .gw-group-head:first-child{margin-top:0;}
+.gw-band > .gateway-footnote{margin-top:30px;}
 
 .gateway-grid{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;
