@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/css/brand.css?v=6c54ac2677">
 <link rel="stylesheet" href="/css/portal.css?v=2d96336c73">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=a04e55c672">
+<link rel="stylesheet" href="/css/prestige.css?v=cf8f3f67bc">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <script src="/js/locale-registry.js?v=4c02adb950"></script>
 <script src="/js/i18n-core.js?v=b56898d96a"></script>
@@ -19,7 +19,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=03d5b327ee">
-<meta name="shrs-build" content="shrs-pwa-35e93f1295">
+<meta name="shrs-build" content="shrs-pwa-cc1d30565b">
 </head>
 <body class="portal-body">
 
@@ -80,7 +80,14 @@
              what the school calls itself in public. Change one without the
              other and the fault comes straight back. -->
         <div class="portal-field">
-          <label for="apply-institution">Which of the five schools <b class="pa-req">required</b></label>
+          <!-- This read "Which of the five schools" over a list of four, so a
+               parent who counted was left hunting for an option that is not
+               there. The school does have five institutions; the fifth, the
+               Online & Distance Learning School, has no published programme
+               yet — which is exactly what the entry-points table on
+               /admission/ says about it. The label now matches the list, and
+               the hint accounts for the missing one rather than leaving a gap. -->
+          <label for="apply-institution">Which school <b class="pa-req">required</b></label>
           <select id="apply-institution" name="institutionName" required>
             <option value="">Choose one&hellip;</option>
             <option value="Nursery and Primary">Sultan Hanafi Nursery and Primary School &mdash; ages 2 to 10</option>
@@ -88,7 +95,7 @@
             <option value="Islamic and Arabic Studies">Sultan Hanafi School of Islamic and Arabic Studies &mdash; all ages</option>
             <option value="Qur'an College" data-i18n="nav.quranCollege">Sultan Hanafi Qur'an College &mdash; Hifz, day and boarding</option>
           </select>
-          <span class="pa-hint">If you are not certain, choose the one closest to your child's age. No application is ever refused for choosing the wrong door.</span>
+          <span class="pa-hint">If you are not certain, choose the one closest to your child's age. No application is ever refused for choosing the wrong door. The fifth institution, our Online &amp; Distance Learning School, is newly constituted and its programme is not yet published &mdash; ask the admissions office and they will tell you the day it is.</span>
         </div>
 
         <div class="pa-row">

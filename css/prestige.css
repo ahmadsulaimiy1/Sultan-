@@ -783,7 +783,34 @@
 }
 .flow-stage.is-complete::before{background:linear-gradient(90deg,transparent,var(--pr-gold),transparent);}
 .flow-stage.is-terminal::before{background:linear-gradient(90deg,transparent,rgb(var(--lv-w86,168,86,74)),transparent);}
-.flow-arrow{opacity:.5;}
+
+/* ---------- The seven stages, laid out so seven actually fits ----------
+   The row was flex-wrap with flex:1 on each card and a separate <span> arrow
+   between every pair. Seven cards do not divide into a 1280px row: five took
+   the first line and two stretched to fill the second, so the same seven
+   stages appeared at two completely different sizes — and the arrow that had
+   been sitting between 05 and 06 was stranded at the end of the first row,
+   pointing into empty space.
+     It is a grid now, with a column count the layout commits to, so every card
+   is the same size on every row at every width.
+     The arrows are gone rather than repositioned, and that is deliberate. They
+   were the broken part: an inter-item connector cannot know where a row ends,
+   so it always risks pointing at nothing. Rebuilding them as a per-card
+   pseudo-element does not fix that either — the .flow-arrow spans sit BETWEEN
+   the stages in the DOM, so every .flow-stage is an odd child and any
+   :nth-child(4n) rule meant to suppress the end-of-row chevron matches an
+   arrow span instead of a card. The sequence is already stated, unambiguously
+   and in every language, by the 01..07 numbering on the cards themselves.
+   Hiding the spans also takes six glyph-only stops out of a screen reader's
+   path through the diagram. */
+.flow-arrow{display:none;}
+.flow-diagram{
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px; align-items:stretch;
+}
+@media (max-width:1080px){ .flow-diagram{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:720px){ .flow-diagram{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:480px){ .flow-diagram{ grid-template-columns:minmax(0,1fr); } }
 
 .adm-enquiry-cta{
   border-radius:var(--pr-r-lg);border-top:0;

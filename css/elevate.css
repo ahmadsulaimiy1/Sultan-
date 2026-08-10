@@ -661,7 +661,12 @@ a.dc-tile:hover .dc-tile-link{ gap:.8rem; }
   background:linear-gradient(90deg,transparent,rgba(var(--lv-gbs,233,206,138),.55),transparent);
 }
 .el-figures::before{ top:0; } .el-figures::after{ bottom:0; }
-.el-figures .eyebrow{ color:var(--gold) !important; justify-content:center; }
+/* --gold (198,161,91) on this band's ground measured 4.05:1 against the 4.5
+   this text needs — it is 10.88px at weight 600, so it gets no large-text
+   allowance. The band is dark in every edition (its gradient is built from the
+   -s static variables, which do not flip with the theme), so the brighter gold
+   is safe here without a per-edition rule: 6.4:1 on the same sampled ground. */
+.el-figures .eyebrow{ color:var(--gold-bright,rgb(var(--lv-gbs,233,206,138))) !important; justify-content:center; }
 .el-figures-h{
   text-align:center; color:#fff; margin:10px 0 clamp(2.2rem,4vw,3.4rem);
   font-size:clamp(1.5rem,1.1rem + 1.4vw,2.2rem);

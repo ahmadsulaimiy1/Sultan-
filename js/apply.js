@@ -202,6 +202,14 @@
       if (b) { b.disabled = n > current; b.setAttribute('aria-current', n === current ? 'step' : 'false'); }
     });
     rail.style.setProperty('--ap-progress', current);
+    // The rail's column count follows the number of steps that actually exist.
+    // It used to be hard-coded to 7 in CSS; when the form grew from seven steps
+    // to ten, steps 8-10 wrapped onto a second row that the absolutely
+    // positioned track never reached, so the last three sat under a rail that
+    // stopped short and the progress fill was scaled against the wrong divisor.
+    // Counting here means the next time a step is added or removed nothing has
+    // to be remembered.
+    rail.style.setProperty('--ap-steps', railItems.length || steps.length);
     btnBack.hidden = current === 0;
     btnNext.hidden = current === steps.length - 1;
     btnSubmit.hidden = current !== steps.length - 1;

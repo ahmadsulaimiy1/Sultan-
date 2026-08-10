@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      7e8dbfea67364db61749a462a3664345a070f0d2
-short       7e8dbfea
+commit      4e04329cda9ccbb1cb2821803993a11be3d43329
+short       4e04329c
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     A regression shipped and reverted, the audit that caused it repaired, and the dimmest sentence on the governance chart brightened
-built (UTC) 2026-08-10T09:01:29Z
-assets      shrs-pwa-35e93f1295
+subject     Resolve the admissions step-count contradiction; repair the auth shell
+built (UTC) 2026-08-10T09:32:22Z
+assets      shrs-pwa-cc1d30565b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
