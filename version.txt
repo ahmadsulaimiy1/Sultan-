@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      0c72cac891a53b2ce188a251b9fb1401ca7c942e
-short       0c72cac8
+commit      f52a280c4f9b9fd298f2f68bfe31757970cb87ff
+short       f52a280c
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Unify the department count; rebuild the two step rails that had outgrown their CSS
-built (UTC) 2026-08-10T09:50:28Z
-assets      shrs-pwa-cc1d30565b
+subject     Give the 32 office portals the chrome every other portal page already had
+built (UTC) 2026-08-10T10:03:25Z
+assets      shrs-pwa-f1c9ce92fa
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

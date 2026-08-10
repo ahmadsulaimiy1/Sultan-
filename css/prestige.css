@@ -1179,8 +1179,23 @@
 .pr-path-line{transform:scaleX(0);transform-origin:left;
   transition:transform 1.3s var(--pr-ease) .2s;}
 .pr-path.pr-in .pr-path-line{transform:scaleX(1);}
-/* the CTA arrives in three beats rather than one lump */
-.pr-cta h2,.pr-cta p,.pr-cta-row{
+/* The CTA arrives in three beats rather than one lump.
+     THE THIRD SELECTOR HAD LOST ITS ANCESTOR. This read
+       .pr-cta h2, .pr-cta p, .pr-cta-row
+     — and a comma ends a selector. So the first two were correctly scoped to a
+   .pr-cta section, and the third hid EVERY .pr-cta-row on the site, while the
+   only rule that brings one back is .pr-cta.pr-in .pr-cta-row. Any CTA row
+   that does not sit inside a .pr-cta section was therefore set to opacity:0
+   and never set back: it occupied its full height, held its layout, answered
+   getBoundingClientRect with real numbers, and painted nothing, for good.
+     On /admission/ that was "Register / Login" and "Start Admission
+   Application" — the primary call to action on the page the entire site points
+   at for admissions — invisible on the live site. A button that reserves its
+   own space is the worst way to be broken, because nothing collapses to give
+   the fault away; the page just quietly stops asking.
+     Scoped to .pr-cta, which is what the other two selectors say and what the
+   .pr-in rules below assume. */
+.pr-cta h2,.pr-cta p,.pr-cta .pr-cta-row{
   opacity:0;transform:translateY(14px);
   transition:opacity .8s var(--pr-ease),transform .8s var(--pr-ease);
 }
@@ -1190,6 +1205,13 @@
 
 @media (prefers-reduced-motion:reduce){
   .pr-timeline::before,.pr-path-line{transform:none!important;transition:none!important;}
+  /* This one stays unscoped on purpose. It carries the same missing ancestor
+     as the rule above once did, but here the effect is to FORCE every CTA row
+     visible, which is right under reduced motion and is a useful backstop.
+     It is also why the fault above lived so long: anyone testing with reduced
+     motion on saw the buttons exactly as intended, and only visitors with
+     ordinary motion settings — which is to say nearly all of them — got a
+     page whose main call to action never painted. */
   .pr-cta h2,.pr-cta p,.pr-cta-row{opacity:1!important;transform:none!important;transition:none!important;}
   .pr-pledge blockquote{min-height:0;display:block;}
 }
