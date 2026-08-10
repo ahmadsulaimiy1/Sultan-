@@ -1,15 +1,17 @@
 # SHRS Offline Ecosystem — Final Production Matrix
 
-**Date:** 9 August 2026
-**Automated gates:** 159 checks across six suites, plus a build gate over 219
+**Date:** 10 August 2026 (revised — the three NOT BUILT items are now built)
+**Automated gates:** 277 checks across nine suites, plus a build gate over 219
 pages. All green.
 
-Three statuses, kept apart on purpose:
+Four statuses, kept apart on purpose:
 
 - **COMPLETE** — built, tested, and nothing further is needed from anyone.
 - **READY FOR DEPLOYMENT** — finished and green, waiting only to be deployed.
 - **REQUIRES EXTERNAL ACTION** — cannot proceed without something only the
   Founder or a third party can supply.
+- **NOT BUILT** — does not exist. Kept as a status so that "we have not written
+  it" is never quietly absorbed into "it is waiting to deploy".
 
 "Live tested" means **it ran against the production environment**. Nothing is
 marked so, because nothing has. "Real device tested" means **a physical
@@ -28,25 +30,39 @@ handset**. Nothing is marked so either.
 | Conflict handling | ✅ | ✅ (in the 31 + 15) | ❌ | ❌ | READY FOR DEPLOYMENT |
 | Offline documents | ✅ | ✅ 28 | ❌ | ❌ | READY FOR DEPLOYMENT |
 | Certificate verification (offline) | ✅ mechanism | ✅ 20 | ❌ | ❌ | **REQUIRES EXTERNAL ACTION** ² |
-| QR verification (offline) | ❌ not built | ❌ | ❌ | ❌ | **NOT BUILT** ³ |
+| QR scanning (offline) | ✅ | ✅ 32 | ❌ | ❌ | READY FOR DEPLOYMENT (logic) · **REQUIRES EXTERNAL ACTION** (optics) ³ |
 | Multilingual offline | ✅ | ✅ (EN/AR/YO/FR) | ❌ | ❌ | READY FOR DEPLOYMENT — **YO/FR need linguistic review** |
-| Registrar Portal (offline layer) | ⚠️ partial | ✅ store + search | ❌ | ❌ | **NOT WIRED** ⁴ |
-| Student Portal (offline layer) | ⚠️ partial | ✅ store + search | ❌ | ❌ | **NOT WIRED** ⁴ |
+| Parent Portal (offline layer) | ✅ client | ✅ 40 | ❌ | ❌ | **REQUIRES EXTERNAL ACTION** ⁴ |
+| Student Portal (offline layer) | ✅ client | ✅ (in the 40) | ❌ | ❌ | **REQUIRES EXTERNAL ACTION** ⁴ |
+| Registrar Portal (offline layer) | ✅ client | ✅ (in the 40) | ❌ | ❌ | **REQUIRES EXTERNAL ACTION** ⁴ |
+| Sync operation registry | ✅ 3 operations | ✅ 39 | ❌ | ❌ | READY FOR DEPLOYMENT⁵ |
 | Public-site build gate | ✅ | ✅ 219 pages | ❌ | n/a | READY FOR DEPLOYMENT |
 
 ¹ The engine is complete and proven end to end, including a real browser
-restart. Its registry holds **one** verified operation (`adhkar.complete`), and
-`start()` is not yet called from a page — see §4.
+restart. `start()` is still not called from a page — see §9.
 
 ² Blocked on two external things. See §2.
 
-³ The **online** QR path already exists and is live (the verification page
-accepts the QR payload). Offline QR *scanning* — camera access, decode, then a
-register lookup — is not built. It is a genuine gap, not a mislabelled one.
+³ Built: `js/shrs-qr-scan.js` turns a photograph into a reference and hands it
+to whichever checker is honest — the live endpoint online, the on-device
+register offline, which cannot return `genuine` on any path. 32 checks, real
+camera lifecycle with a real `MediaStream`. What is **not** proven is the
+optics: a headless browser has no lens, so no real printed code has been read
+by a real camera. That half is a device test.
 
-⁴ The offline record store, read path, search and sync engine are all built and
-tested, but no portal page yet calls them. Those pages still fetch live and show
-the Phase 3 offline notice rather than reading from the device.
+⁴ The client half is complete and tested (`docs/shrs-portal-offline.md`): the
+parent, student and Registrar surfaces read through the device store, the policy
+names what each view may keep, and the interface distinguishes "not saved on
+this device" from "not yet recorded". It is **inert in production**, and
+correctly so: no endpoint issues per-session offline key material, so the store
+never unlocks and the portal behaves exactly as before — live or nothing. That
+is fail-closed by construction and the test proves it. Issuing the material is a
+security decision with a real trade-off, set out in §10 for the Founder.
+
+⁵ Three operations: `adhkar.complete`, `message.reply`, `emergency.contact.save`
+— two additive, one a real edit with a real 409 and no last-writer-wins. The
+server grew a replay guard (`sync_operations`) and optimistic-concurrency
+checking to earn the last two. See `docs/shrs-sync-engine.md` §9.
 
 ## 2. What only the Founder can unblock
 
@@ -147,6 +163,9 @@ npm run test:sync                  31/31      sync engine, adversarial
 npm run test:sync:lifecycle        15/15      the journey + a real browser restart
 npm run test:search                28/28      search, documents, freshness, eviction
 npm run test:certificate-offline   20/20      offline certificate register
+npm run test:qr                    32/32      QR scanning, camera lifecycle, refusals
+npm run test:portal-offline        40/40      portal views on the device, redaction, wording
+npm run test:sync:operations       39/39      the expanded registry + the server half
 ```
 
 **The certificate-register signing defect is permanently covered.** Two checks
@@ -163,13 +182,63 @@ deliberately reintroducing one.
 
 | | |
 |---|---|
-| **COMPLETE** | Offline shell · offline navigation · local-first store · sync engine · conflict handling · offline documents · freshness · secure eviction · offline search · the certificate register **mechanism** · the public-site build gate |
+| **COMPLETE** | Offline shell · offline navigation · local-first store · sync engine · conflict handling · offline documents · freshness · secure eviction · offline search · the certificate register **mechanism** · offline QR scanning **logic** · the portal offline **client** · the sync **registry and its server half** · the public-site build gate |
 | **READY FOR DEPLOYMENT** | All of the above — green, committed, pushed. Nothing further is needed from anyone to deploy them. |
-| **REQUIRES EXTERNAL ACTION** | Production Ed25519 key pair · certificate records in the live database · six GitHub secrets · real-device testing on Android Chrome · Yoruba and French linguistic review |
-| **NOT BUILT** | Offline QR scanning · portal pages wired to the offline layer · sync registry beyond one operation |
+| **REQUIRES EXTERNAL ACTION** | Production Ed25519 key pair · certificate records in the live database · six GitHub secrets · **the offline key-material decision (§10)** · real-device testing on Android Chrome · a real printed QR code read by a real camera · Yoruba and French linguistic review |
+| **NOT BUILT** | *(empty)* — the three items previously listed here are built and tested. Nothing has been moved into a lighter column without evidence: QR keeps a REQUIRES EXTERNAL ACTION half for its optics, and the portal layer keeps one for its key material. |
 
 Nothing in the first two columns has touched production. The chain the Founder
 named — live database → production keys → signed register → deployed verifier →
 real QR scan → real device offline test — has **not** been run end to end, and
 until it has, no one should announce that offline certificate verification is
 live.
+
+
+## 9. `start()` is still not called from a page
+
+Unchanged, and deliberate. The engine can queue work; no surface yet shows a
+person their pending, conflicted and failed operations. Queueing work with
+nowhere to display it would breach rule 4 — *nothing is ever silently dropped* —
+in spirit while honouring it in code. Wiring `start()` waits on that surface.
+
+## 10. The offline key-material decision — for the Founder
+
+This is the one new decision this round created, and it is not the code's to
+make.
+
+The device store encrypts everything under a key derived from a session secret
+that is never persisted (`shrs-offline-policy.js` §7: `keyPersisted: false`).
+The client cannot fix this itself — a key the browser generates and stores is
+not a key, it is obfuscation, and the policy refuses it. So the server must
+issue per-session offline key material, in one of two shapes:
+
+1. **In the `me` response only**, held in memory. Safe. Dies on reload, which
+   makes a cold offline start impossible — reducing the twelve-hour offline
+   session to the lifetime of a single page, i.e. not an offline session at all.
+2. **A script-readable cookie**, `Secure`, `SameSite=Strict`, expiring with the
+   offline session. Survives a reload, which is the entire point of a
+   twelve-hour window. The cost: script running on the page can read it. That is
+   already true of anything the page can decrypt, but it widens the blast radius
+   of an XSS from "this tab" to "the cache".
+
+Until this is decided, the portal offline layer stays inert and the portal
+behaves as it always has. Nothing degrades; nothing is claimed.
+
+## 11. What changed on 10 August 2026
+
+- **Offline QR scanning** built and tested (32 checks). Exact-host matching, so
+  `shroyalschools.com.evil.example` is refused rather than looked up; a
+  `javascript:` payload never treated as a reference; the browser's own
+  `BarcodeDetector` rather than a third-party decoder in the trust path; the
+  camera stopped in a `finally`; nothing about a frame retained.
+- **Portal pages wired to the offline layer** (40 checks), with a per-view key
+  allowlist in policy, recursive scrubbing of never-cached fields, and — the
+  subtler fix — a separate sentence for "not saved on this device" so an empty
+  panel stops making a claim about the school's records.
+- **The sync registry expanded** to three operations (39 checks), with the
+  server-side replay guard and optimistic-concurrency checking that the two new
+  ones required. No last-writer-wins, proved against the real helper.
+
+Nothing above has touched production. The chain the Founder named — live
+database → production keys → signed register → deployed verifier → real QR scan
+→ real device offline test — has still **not** been run end to end.
