@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      a834edfa2a37eb59392ac90bfb873044961c6d20
-short       a834edfa
+commit      eca03e991a46fb719d0c74a2e4c8fb9e64c28bcb
+short       eca03e99
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The travelling light and the ambient glow are removed
-built (UTC) 2026-08-10T05:52:01Z
-assets      shrs-pwa-03bdfd4c54
+subject     The relief returns and goes further; GOVERNANCE fits; the countdown and both calendars stay; the application grows to ten steps
+built (UTC) 2026-08-10T06:18:04Z
+assets      shrs-pwa-d2c197c05b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

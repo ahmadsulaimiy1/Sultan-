@@ -2257,3 +2257,130 @@ body.portal-body[data-atmosphere="certificates"]::before{
   .office-switcher-menu{position:fixed;top:auto;bottom:0;left:0;right:0;inset-inline-end:auto;max-width:none;max-height:60vh;}
   .office-switcher-toggle{font-size:0.68rem;padding:7px 10px;}
 }
+
+/* ===================================================================
+   FORM CONTROLS ACROSS THE WHOLE PORTAL
+   -------------------------------------------------------------------
+   .portal-field styled `input` and stopped. Every `select` and every
+   `textarea` on sixty-nine portal pages was therefore the browser's
+   own default control — grey, square-cornered, system-font, sitting
+   between two gold-edged inputs. That single omission is most of why
+   these pages read as cheap: the eye does not register "unstyled
+   select", it registers that the page was not finished.
+   =================================================================== */
+.portal-field select,
+.portal-field textarea{
+  font-family:'Inter','Cairo',sans-serif;font-size:0.92rem;
+  padding:12px 14px;width:100%;box-sizing:border-box;
+  border:1px solid var(--line);border-radius:8px;
+  background:var(--milk-bg,rgb(var(--lv-p2,252,250,246)));color:var(--ink);
+  transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.portal-field textarea{ resize:vertical; min-height:76px; line-height:1.6; }
+.portal-field select{
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+  padding-inline-end:40px;
+  /* The chevron is drawn rather than fetched: an inline SVG data URI has
+     no request, no cache entry and no chance of arriving late. */
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238C6834' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-size:17px;
+  background-position:right 13px center;
+}
+[dir="rtl"] .portal-field select{ background-position:left 13px center; padding-inline-end:14px; padding-inline-start:40px; }
+.portal-field select:hover,.portal-field textarea:hover{ border-color:rgba(var(--lv-gs,198,161,91),0.6); }
+.portal-field select:focus,.portal-field textarea:focus{
+  outline:none;border-color:var(--gold);background:var(--portal-card);
+  box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.18);
+}
+.portal-field input::placeholder,
+.portal-field textarea::placeholder{ color:rgba(var(--lv-cfs,59,42,29),.42); }
+
+/* ===================================================================
+   THE APPLICATION FOR ADMISSION, IN THE PORTAL
+   -------------------------------------------------------------------
+   .portal-card is 420px wide, which is right for a login box and wrong
+   for an application: at that measure a two-column row is impossible
+   and fifteen fields become a very long ribbon. This widens the card
+   for this one use and gives the form the parts a document has —
+   numbered movements, a rule under each, and room between them.
+   =================================================================== */
+.portal-card.pa-card{ max-width:760px; padding:clamp(26px,4vw,44px) clamp(20px,4vw,44px); }
+
+.pa-head{ margin-bottom:28px; }
+.pa-eyebrow{
+  font-family:'Cinzel','Amiri',serif;font-size:.62rem;letter-spacing:.22em;
+  text-transform:uppercase;color:#7A5A28;margin:0 0 10px;
+}
+.pa-card h1{ margin:0 0 10px; line-height:1.12; }
+.pa-card .sub{ margin:0; max-width:60ch; }
+
+.pa-sec{
+  margin:0 0 30px; padding:0 0 26px;
+  border-bottom:1px solid rgba(var(--lv-gs,198,161,91),.24);
+}
+.pa-sec:last-of-type{ border-bottom:0; padding-bottom:6px; }
+.pa-sec-h{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Cinzel','Amiri',serif;font-size:.82rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--portal-heading);
+  margin:0 0 20px;font-weight:600;
+}
+.pa-sec-h span{
+  display:grid;place-items:center;flex:0 0 auto;
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid rgba(var(--lv-gs,198,161,91),.55);
+  background:rgba(var(--lv-gs,198,161,91),.10);
+  font-size:.68rem;letter-spacing:.04em;color:#7A5A28;
+}
+
+/* Two to a row where there is room, one where there is not. */
+.pa-row{ display:grid; grid-template-columns:1fr 1fr; gap:0 18px; }
+@media (max-width:620px){ .pa-row{ grid-template-columns:1fr; } }
+
+.pa-req{
+  font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;font-weight:600;color:#8C2F3E;
+  margin-inline-start:6px;
+}
+.pa-hint{
+  display:block;margin-top:6px;font-size:.76rem;line-height:1.55;
+  color:rgba(var(--lv-cfs,59,42,29),.7);
+}
+.pa-submit{ margin-top:10px; }
+.pa-foot-note{
+  margin:12px 0 0;font-size:.76rem;line-height:1.6;
+  color:rgba(var(--lv-cfs,59,42,29),.68);text-align:center;
+}
+
+/* The hand-off panel. It replaces an apology, so it is built to look
+   like a door rather than a footnote. */
+.pa-onward{
+  margin-top:30px;padding:24px 24px 22px;border-radius:16px;
+  background:rgba(var(--lv-gs,198,161,91),.07);
+  border:1px solid rgba(var(--lv-gs,198,161,91),.34);
+}
+.pa-onward h3{
+  margin:0 0 8px;font-family:'Cinzel','Amiri',serif;font-size:.8rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--portal-heading);
+}
+.pa-onward p{ margin:0 0 14px;font-size:.86rem;line-height:1.7;color:var(--ink); }
+.pa-onward-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Cinzel','Amiri',serif;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;text-decoration:none;font-weight:600;
+  padding:12px 22px;border-radius:99px;
+  color:var(--navy-deep,#20160B);
+  background:linear-gradient(135deg,#C6A15B,#E9CE8A 46%,#FFF3D2 56%,#C6A15B);
+  border:1px solid rgba(var(--lv-gs,198,161,91),.6);
+  box-shadow:0 10px 22px -14px rgba(var(--lv-w04,20,13,4),.6);
+  transition:filter .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.pa-onward-btn:hover,.pa-onward-btn:focus-visible{
+  filter:brightness(1.05);transform:translateY(-2px);
+  box-shadow:0 16px 28px -14px rgba(var(--lv-w04,20,13,4),.7);
+}
+.pa-onward-alt{
+  margin:14px 0 0!important;font-size:.78rem!important;line-height:1.65;
+  color:rgba(var(--lv-cfs,59,42,29),.72)!important;
+}
+.pa-onward-alt a{ color:#7A5A28; text-decoration:underline; text-underline-offset:2px; }

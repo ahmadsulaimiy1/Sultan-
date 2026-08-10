@@ -196,3 +196,97 @@ html:not([data-pc-theme="dark"]) .office-index-wrap p > a:hover{
 .pch-foot .pch-adopted a:hover{color:#FFF6DF!important;}
 .pch-foot .pch-adopted,
 .pch-foot .pch-adopted *{color:rgba(247,238,223,.7);}
+
+/* ===================================================================
+   THE LIGHT EDITION OF THE COLOPHON — and the reason it was needed
+   -------------------------------------------------------------------
+   Everything above was written for a dark colophon and states its
+   colours as literals: #FFF6DF for the school's name, rgba(247,238,223,
+   .66) for the signature and the badge, rgba(247,238,223,.56) for the
+   note. That is correct on espresso and catastrophic on cream — and in
+   the Clear edition the ground IS cream, because it is themed
+   elsewhere while these colours were not.
+
+   Measured on the live page: the school's own name was #FFF6DF on
+   #F1E7D5. A CONTRAST RATIO OF 1.06:1. Not "low contrast" — invisible,
+   the same colour to within a rounding error, on sixty-nine portal
+   pages, wherever a reader had chosen the Clear edition. The screenshot
+   that reported it showed a footer that looked like a blank cream
+   panel with three gold links floating in it.
+
+   The lesson is the one this codebase keeps relearning: a colour
+   written as a literal is a colour that cannot follow its ground. Every
+   value below is stated against the ground it actually sits on.
+   =================================================================== */
+html[data-pc-theme="light"] .pch-foot{
+  border-top:1px solid rgba(140,104,52,.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
+}
+html[data-pc-theme="light"] .pch-foot-name{ color:#3B2A1D; }
+html[data-pc-theme="light"] .pch-foot-sig{ color:rgba(59,42,29,.78); }
+html[data-pc-theme="light"] .pch-note{ color:rgba(59,42,29,.72); }
+html[data-pc-theme="light"] .pch-badge{
+  color:#6B4E22; border-color:rgba(140,104,52,.5);
+}
+html[data-pc-theme="light"] .pch-link{
+  color:#6B4E22; border-color:rgba(140,104,52,.42);
+  background:rgba(255,255,255,.5);
+}
+html[data-pc-theme="light"] .pch-link:hover,
+html[data-pc-theme="light"] .pch-link:focus-visible{
+  color:#3B2A1D; border-color:rgba(140,104,52,.85);
+  background:rgba(255,255,255,.9);
+}
+html[data-pc-theme="light"] .pch-rule{
+  background:linear-gradient(90deg,transparent,rgba(140,104,52,.42),transparent);
+}
+html[data-pc-theme="light"] .pch-foot-brand img{ opacity:.9; }
+
+/* ===================================================================
+   THE TOPBAR MUST NOT COLLIDE
+   -------------------------------------------------------------------
+   It was one flex row with space-between and nothing allowed to wrap or
+   shrink: crest, wordmark, a badge, the theme switch, the language
+   globe and the calendar button. On a 390px phone the wordmark ran
+   underneath the badge and the badge ran underneath the controls —
+   three things occupying the same pixels, which is what the screenshot
+   showed. The row now wraps, the wordmark is allowed to shrink, the
+   controls travel together as one group, and below 430px the badge —
+   the only element of the six carrying no function — stands down.
+   =================================================================== */
+.portal-topbar{
+  flex-wrap:wrap; gap:10px 14px; padding:14px clamp(14px,4vw,28px);
+}
+.portal-brand{ min-width:0; flex:0 1 auto; }
+.portal-brand span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.portal-pilot-badge{ flex:0 0 auto; white-space:nowrap; }
+.portal-topbar > .lang-switch-mount{ flex:0 0 auto; margin-inline-start:auto; }
+.portal-topbar .lang-switch-mount{ display:inline-flex; align-items:center; gap:8px; }
+
+@media (max-width:640px){
+  .portal-brand img{ width:30px; height:30px; }
+  .portal-brand span{ font-size:.82rem; letter-spacing:.05em; }
+}
+@media (max-width:430px){
+  .portal-pilot-badge{ display:none; }
+  .portal-topbar{ padding:12px 14px; gap:8px 10px; }
+}
+
+/* The adopted utility strip needs the same treatment, and it is the part
+   that actually failed hardest: its links are set with !important, so
+   the Clear edition could not have corrected them by accident even if
+   somebody had tried. Measured before this block: 1.54:1 for the four
+   verify links, 1.15:1 for the academic year, the copyright line and
+   the version stamp. Below 1.2:1 the text is not "hard to read", it is
+   the same colour as the paper. */
+html[data-pc-theme="light"] .pch-foot .pch-adopted,
+html[data-pc-theme="light"] .pch-foot .pch-adopted *{ color:rgba(59,42,29,.82); }
+html[data-pc-theme="light"] .pch-foot .pch-adopted a{ color:#6B4E22!important; }
+html[data-pc-theme="light"] .pch-foot .pch-adopted a:hover,
+html[data-pc-theme="light"] .pch-foot .pch-adopted a:focus-visible{ color:#3B2A1D!important; }
+html[data-pc-theme="light"] .pch-foot .pch-adopted{ border-bottom-color:rgba(140,104,52,.3); }
+
+/* The standalone shell footer, on any portal page the colophon has not
+   adopted it into. */
+html[data-pc-theme="light"] .portal-shell-footer,
+html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.82); }

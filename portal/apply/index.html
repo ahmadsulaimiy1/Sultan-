@@ -4,11 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>Submit an Application — Sultan Hanafi Royal Schools</title>
+<title>Application for Admission — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=6c54ac2677">
-<link rel="stylesheet" href="/css/portal.css?v=048fe183fb">
+<link rel="stylesheet" href="/css/portal.css?v=398bb6d4e4">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
@@ -18,8 +18,8 @@
 <script src="/js/i18n.js?v=72b58bca9f" defer></script>
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
-<link rel="stylesheet" href="/css/portal-chrome.css?v=11a0d5f19c">
-<meta name="shrs-build" content="shrs-pwa-03bdfd4c54">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=03d5b327ee">
+<meta name="shrs-build" content="shrs-pwa-d2c197c05b">
 </head>
 <body class="portal-body">
 
@@ -33,55 +33,197 @@
 </div>
 
 <main class="portal-main">
-  <div class="portal-card" data-portal-form-card>
-    <h1>Submit an Admissions Enquiry</h1>
-    <p class="sub">Tell us about the prospective student — this is Stage 3 (Admission Application) of our seven-step digital admission journey, and starts your application record on your account.</p>
+  <div class="portal-card pa-card" data-portal-form-card>
+
+    <div class="pa-head">
+      <p class="pa-eyebrow">Admission &middot; Stage III</p>
+      <h1>Application for Admission</h1>
+      <p class="sub">This opens an application on your account, and everything you enter here reaches the Registrar with it. Nothing is decided by this form &mdash; it begins a conversation, and the office writes to you next.</p>
+    </div>
 
     <div class="portal-error" data-portal-error></div>
 
-    <form data-portal-apply-form>
-      <div class="portal-field">
-        <label for="apply-name">Child's full name</label>
-        <input id="apply-name" name="applicantChildName" type="text" required />
-      </div>
-      <div class="portal-field">
-        <label for="apply-institution">Institution of interest</label>
-        <select id="apply-institution" name="institutionName" required>
-          <option value="">Choose one…</option>
-          <option value="Sultan Hanafi Basic School">Sultan Hanafi Basic School</option>
-          <option value="Secular College">Secular College</option>
-          <option value="Islamiyyah College">Islamiyyah College</option>
-          <option value="Qur'an College" data-i18n="nav.quranCollege">Qur'an College</option>
-        </select>
-      </div>
-      <div class="portal-field">
-        <label for="apply-class">Desired class / year (if known)</label>
-        <input id="apply-class" name="desiredClass" type="text" placeholder="e.g. JSS 1, Hifz Year 1" />
-      </div>
-      <div class="portal-field">
-        <label for="apply-notes">Anything else we should know?</label>
-        <input id="apply-notes" name="notes" type="text" placeholder="Optional" / data-i18n-attr="placeholder:form.optional">
-      </div>
-      <button type="submit" class="portal-submit" data-portal-submit>Submit Enquiry</button>
+    <form data-portal-apply-form novalidate>
+
+      <!-- ============================= THE CHILD ============================ -->
+      <section class="pa-sec">
+        <h2 class="pa-sec-h"><span>I</span>The child</h2>
+
+        <div class="portal-field">
+          <label for="apply-name">Full name, as on the birth certificate <b class="pa-req">required</b></label>
+          <input id="apply-name" name="applicantChildName" type="text" autocomplete="off" required />
+        </div>
+
+        <div class="pa-row">
+          <div class="portal-field">
+            <label for="apply-dob">Date of birth</label>
+            <input id="apply-dob" name="dob" type="date" />
+          </div>
+          <div class="portal-field">
+            <label for="apply-gender">Gender</label>
+            <select id="apply-gender" name="gender">
+              <option value="">Select</option>
+              <option>Boy</option>
+              <option>Girl</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- THE OPTION VALUES BELOW ARE NOT DECORATIVE. The endpoint resolves
+             the institution by an exact name match against the institutions
+             table, and silently files the application with NO institution when
+             the match fails. Three of the four names here used to be wrong —
+             "Sultan Hanafi Basic School", "Secular College", "Islamiyyah
+             College" match nothing — so three applications in four arrived at
+             the Registrar's desk with the single most important field empty and
+             nobody was told. The value is the row in the database; the label is
+             what the school calls itself in public. Change one without the
+             other and the fault comes straight back. -->
+        <div class="portal-field">
+          <label for="apply-institution">Which of the five schools <b class="pa-req">required</b></label>
+          <select id="apply-institution" name="institutionName" required>
+            <option value="">Choose one&hellip;</option>
+            <option value="Nursery and Primary">Sultan Hanafi Nursery and Primary School &mdash; ages 2 to 10</option>
+            <option value="Royal College">Sultan Hanafi Royal College &mdash; JSS 1 to SSS 3</option>
+            <option value="Islamic and Arabic Studies">Sultan Hanafi School of Islamic and Arabic Studies &mdash; all ages</option>
+            <option value="Qur'an College" data-i18n="nav.quranCollege">Sultan Hanafi Qur'an College &mdash; Hifz, day and boarding</option>
+          </select>
+          <span class="pa-hint">If you are not certain, choose the one closest to your child's age. No application is ever refused for choosing the wrong door.</span>
+        </div>
+
+        <div class="pa-row">
+          <div class="portal-field">
+            <label for="apply-class">Class or year sought</label>
+            <input id="apply-class" name="desiredClass" type="text" placeholder="e.g. JSS 1, Primary 3, Hifz Year 1" />
+          </div>
+          <div class="portal-field">
+            <label for="apply-term">Intended start</label>
+            <select id="apply-term" name="term">
+              <option value="">Select</option>
+              <option>The coming term</option>
+              <option>Next academic year</option>
+              <option>As soon as a place is available</option>
+              <option>We are still deciding</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="portal-field">
+          <label for="apply-attendance">Day or boarding</label>
+          <select id="apply-attendance" name="attendance">
+            <option value="">Select</option>
+            <option>Day</option>
+            <option>Boarding</option>
+            <option>We would like to discuss it</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- ============================ THE FAMILY ============================ -->
+      <section class="pa-sec">
+        <h2 class="pa-sec-h"><span>II</span>Reaching you</h2>
+
+        <div class="pa-row">
+          <div class="portal-field">
+            <label for="apply-phone">Telephone or WhatsApp</label>
+            <input id="apply-phone" name="phone" type="tel" inputmode="tel" placeholder="+234&hellip;" />
+          </div>
+          <div class="portal-field">
+            <label for="apply-relationship">You are the child's</label>
+            <input id="apply-relationship" name="relationship" type="text" placeholder="Mother, father, guardian&hellip;" />
+          </div>
+        </div>
+
+        <div class="portal-field">
+          <label for="apply-area">Where you live</label>
+          <input id="apply-area" name="area" type="text" placeholder="Area and town &mdash; it tells us about the journey to school" />
+        </div>
+      </section>
+
+      <!-- ================= SCHOOLING, HEALTH AND FORMATION ================== -->
+      <section class="pa-sec">
+        <h2 class="pa-sec-h"><span>III</span>Where your child is now</h2>
+
+        <div class="pa-row">
+          <div class="portal-field">
+            <label for="apply-prev">Present or last school</label>
+            <input id="apply-prev" name="prevSchool" type="text" placeholder="Write &ldquo;None&rdquo; if this is their first" />
+          </div>
+          <div class="portal-field">
+            <label for="apply-prevclass">Class completed there</label>
+            <input id="apply-prevclass" name="prevClass" type="text" />
+          </div>
+        </div>
+
+        <div class="pa-row">
+          <div class="portal-field">
+            <label for="apply-quran">Qur'an memorised so far</label>
+            <select id="apply-quran" name="quran">
+              <option value="">Select</option>
+              <option>None yet</option>
+              <option>A few short surahs</option>
+              <option>Juz' 'Amma</option>
+              <option>1&ndash;5 juz'</option>
+              <option>6&ndash;15 juz'</option>
+              <option>16&ndash;29 juz'</option>
+              <option>The complete Qur'an</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+          <div class="portal-field">
+            <label for="apply-arabic">Arabic</label>
+            <select id="apply-arabic" name="arabic">
+              <option value="">Select</option>
+              <option>None yet</option>
+              <option>Knows the letters</option>
+              <option>Reads with help</option>
+              <option>Reads independently</option>
+              <option>Speaks it</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="portal-field">
+          <label for="apply-health">Anything about your child's health or learning we should know now</label>
+          <textarea id="apply-health" name="health" rows="2" placeholder="A condition, an allergy, a support need. The full health record is taken later &mdash; this is only so nothing urgent waits."></textarea>
+        </div>
+
+        <div class="portal-field">
+          <label for="apply-notes">Anything else</label>
+          <textarea id="apply-notes" name="notes" rows="3" placeholder="Tell us about your child in your own words, if you would like to." data-i18n-attr="placeholder:form.optional"></textarea>
+        </div>
+      </section>
+
+      <button type="submit" class="portal-submit pa-submit" data-portal-submit>Submit application</button>
+      <p class="pa-foot-note">You may return and add to this from your dashboard at any time before the Registrar takes it up.</p>
     </form>
 
-    <p class="portal-notice">
-      Document upload isn't available yet — once your enquiry is reviewed, the Admissions/Registrar office will contact you directly about the required documents (birth certificate, passport photographs, previous school testimonial).
-    </p>
-    <a class="portal-back-link" href="/portal/dashboard/" data-i18n="portal.backToDashboard">← Back to your dashboard</a>
+    <!-- The apology this replaces read "Document upload isn't available yet",
+         which was true of THIS form and untrue of the school: the full
+         application takes birth certificates, photographs and reports today.
+         A dead end has become the route. -->
+    <aside class="pa-onward">
+      <h3>Sending the documents</h3>
+      <p>Birth certificate, passport photographs and the last school report are wanted before a place is confirmed &mdash; and you can attach them now, on the full application, which also asks after health, Qur'an and Arabic, and the permissions the school needs from you.</p>
+      <a class="pa-onward-btn" href="/admission/apply/">Open the full application <span aria-hidden="true">&#8594;</span></a>
+      <p class="pa-onward-alt">Or bring them to the campus office at 15 Imowonla Road, AP Bus Stop, Off Gberigbe Agura Road, Ikorodu &mdash; or send them on WhatsApp to <a href="https://wa.me/2348073747650">+234 807 374 7650</a>.</p>
+    </aside>
+
+    <a class="portal-back-link" href="/portal/dashboard/" data-i18n="portal.backToDashboard">&#8592; Back to your dashboard</a>
   </div>
 
-  <div class="portal-card" data-portal-success-card hidden>
+  <div class="portal-card pa-card" data-portal-success-card hidden>
     <span class="portal-success-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
-    <h1 style="text-align:center;">Enquiry Submitted</h1>
-    <p class="sub" style="text-align:center;">Thank you — our Admissions/Registrar office will be in touch. You can track this application from your dashboard.</p>
-    <a class="portal-submit" style="display:block;text-align:center;text-decoration:none;" href="/portal/dashboard/">Back to Your Dashboard →</a>
+    <h1 style="text-align:center;">Your application is with the Registrar</h1>
+    <p class="sub" style="text-align:center;">It is on your account from this moment, and you can follow it from your dashboard. The Admissions office writes to every family &mdash; if you have not heard within five working days, telephone us and we will find it.</p>
+    <a class="portal-submit pa-submit" style="display:block;text-align:center;text-decoration:none;" href="/portal/dashboard/">Back to your dashboard &#8594;</a>
+    <p class="pa-onward-alt" style="text-align:center;margin-top:18px">The documents can be attached now on the <a href="/admission/apply/">full application</a>.</p>
   </div>
 </main>
 
-<script src="/js/portal-apply.js?v=7c42f15f34" defer></script>
+<script src="/js/portal-apply.js?v=1358d01766" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/portal-chrome.js?v=5c77b5b3d2" defer></script>
