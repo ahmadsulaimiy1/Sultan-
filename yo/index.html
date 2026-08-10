@@ -84,7 +84,7 @@
 <meta name="robots" content="noindex,follow" />
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/elevate.css?v=efa08f979d">
-<link rel="stylesheet" href="/css/prestige.css?v=ba7abda2e5">
+<link rel="stylesheet" href="/css/prestige.css?v=8e7fdb35cc">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=1520b799fa">
 <link rel="stylesheet" href="/css/armorial.css?v=03c38ae694">
@@ -95,7 +95,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/" />
-<meta name="shrs-build" content="shrs-pwa-d2c197c05b">
+<meta name="shrs-build" content="shrs-pwa-3be362b88b">
 </head>
 <body>
 
@@ -610,7 +610,14 @@
     <span class="crest-shimmer-wrap"><img src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" class="hero-crest" /></span>
     <p class="eyebrow">Ikorodu · Lagos State · Nigeria</p>
     <h1><span class="hero-type">Sultan Hanafi Royal Schools</span><span class="hero-subline">We Nurture Tomorrow's Leaders</span></h1>
-    <p class="lede pr-dropcap">A conglomerate of nursery, primary, secondary, Islamic &amp; Arabic, and Qur'anic institutions, delivering the best hybrid — Islamic and secular — education in Lagos, in a secure, serene, and dignified environment.</p>
+    <!-- No versal here. .pr-dropcap floats a 3.5em letter to the inline
+         start, which is correct in left-aligned prose on cream and wrong in
+         every particular on a centred hero deck over a photograph: the "A"
+         detached from its own sentence and sat at the left edge while the
+         rest of the line centred itself around it, in deep gold with a white
+         halo — a colour pair designed for a pale page — over a dark image.
+         A versal belongs where a paragraph begins, not where a page opens. -->
+    <p class="lede">A conglomerate of nursery, primary, secondary, Islamic &amp; Arabic, and Qur'anic institutions, delivering the best hybrid — Islamic and secular — education in Lagos, in a secure, serene, and dignified environment.</p>
     <div class="hero-ctas">
       <a href="/portal/login/" class="btn btn-gold mo-mag" data-mag="6">Register / Login <span class="arrow">→</span></a>
       <a href="/admission/" class="btn btn-outline mo-mag" data-mag="6">Start Admission</a>

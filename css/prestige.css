@@ -4491,3 +4491,53 @@ html[data-pc-theme="light"] .org-node .on-count{color:rgba(var(--lv-w03,243,232,
    gaps and the crest watermark shows between its cells; padding closes
    the gap so the plate is continuous under the whole row. */
 .ledger-row{padding:14px 16px;}
+
+/* ===================================================================
+   THE FLOATING ACTIONS, IN THE HOUSE PALETTE
+   -------------------------------------------------------------------
+   The WhatsApp launcher was WhatsApp's own #25D366 with a green glow
+   under it, fixed to the corner of every page. It is the only element
+   on the site that belongs to another company's brand, and on a cream
+   and gold page it is the first thing the eye lands on — a stock green
+   circle sitting over the hero photograph, which is not a small thing
+   when the whole page is trying to say "considered".
+
+   The mark stays instantly recognisable: the glyph is unchanged and the
+   shape is unchanged, so nobody has to learn anything. It is the DISC
+   that comes into the house — struck gold, with the same two-shadow
+   relief the ribbon plates use, and a green ring left round the edge so
+   the channel is still legible at a glance. Recognition survives;
+   the stock green does not.
+   =================================================================== */
+.whatsapp-launcher{
+  background:linear-gradient(148deg,#C6A15B 0%,#E9CE8A 40%,#FFF3D2 52%,#D9B872 68%,#B08D46 100%)!important;
+  border:1px solid rgba(37,150,90,.55)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -2px 3px -2px rgba(59,42,29,.45),
+    0 2px 4px rgba(59,42,29,.22),
+    0 14px 26px -14px rgba(59,42,29,.5)!important;
+  color:#14603A;
+}
+.whatsapp-launcher svg{ color:#14603A; fill:currentColor; }
+.whatsapp-launcher:hover,
+.whatsapp-launcher:focus-visible{
+  filter:brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.85),
+    inset 0 -2px 4px -2px rgba(59,42,29,.5),
+    0 3px 6px rgba(59,42,29,.26),
+    0 20px 34px -14px rgba(59,42,29,.6),
+    0 0 0 3px rgba(37,150,90,.22)!important;
+}
+
+/* The assistant launcher beneath it is given the same weight, so the two
+   read as a matched pair rather than as two widgets that arrived
+   separately. */
+.ai-launcher,.assistant-launcher{
+  box-shadow:
+    inset 0 1px 0 rgba(255,246,223,.30),
+    inset 0 -2px 3px -2px rgba(0,0,0,.6),
+    0 2px 4px rgba(0,0,0,.3),
+    0 14px 26px -14px rgba(0,0,0,.6);
+}

@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      eca03e991a46fb719d0c74a2e4c8fb9e64c28bcb
-short       eca03e99
+commit      a157c932159df48f5b83905ee26f2be0f6fb9600
+short       a157c932
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The relief returns and goes further; GOVERNANCE fits; the countdown and both calendars stay; the application grows to ten steps
-built (UTC) 2026-08-10T06:18:04Z
-assets      shrs-pwa-d2c197c05b
+subject     The portal's admission form, and the shared layer that made sixty-nine pages look cheap
+built (UTC) 2026-08-10T06:30:15Z
+assets      shrs-pwa-3be362b88b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
