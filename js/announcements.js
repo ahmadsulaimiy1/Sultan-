@@ -94,26 +94,65 @@
   }
 
   function renderCountdown(box, targetDate) {
+    /* THE COUNTER IS BUILT ONCE AND THEN ONLY ITS DIGITS CHANGE.
+
+       It used to rewrite its whole innerHTML every sixty seconds, which
+       is three faults in one line: every element is destroyed and
+       rebuilt to change two characters; anything the reader had focused
+       or selected inside it is thrown away; and a CSS animation on the
+       numerals would replay on all three units every minute, including
+       the two that had not moved. Days does not change ninety-nine
+       times out of a hundred, and a counter where the day figure
+       flinches every minute reads as a fault rather than as a clock.
+
+       Now the plates are made once, and each tick writes a digit only
+       where the digit is different — and marks THAT one, so the turning
+       of a figure is the thing that draws the eye, which is the whole
+       point of a countdown. */
+    var UNITS = [
+      { key: 'd', label: t.days },
+      { key: 'h', label: t.hours },
+      { key: 'm', label: t.mins }
+    ];
+    box.innerHTML = UNITS.map(function (u) {
+      return '<div class="ann-countdown-unit">' +
+             '<span class="ann-countdown-num" data-cd="' + u.key + '">&mdash;</span>' +
+             '<span class="ann-countdown-label">' + escapeHtml(u.label) + '</span></div>';
+    }).join('<span class="ann-countdown-sep" aria-hidden="true">&middot;</span>');
+    box.setAttribute('role', 'timer');
+    box.setAttribute('aria-live', 'off');   // a value that changes every
+                                            // minute must not be spoken
+                                            // every minute
+
+    var cells = {};
+    UNITS.forEach(function (u) { cells[u.key] = box.querySelector('[data-cd="' + u.key + '"]'); });
+
+    function put(cell, value) {
+      if (!cell) return;
+      var next = String(value);
+      if (cell.textContent === next) return;
+      cell.textContent = next;
+      cell.classList.remove('is-turning');
+      // reading offsetWidth restarts the animation; without it the class
+      // is removed and re-added inside one frame and nothing replays
+      void cell.offsetWidth;
+      cell.classList.add('is-turning');
+    }
+
     function tick() {
-      var now = new Date();
-      var diff = targetDate.getTime() - now.getTime();
+      var diff = targetDate.getTime() - Date.now();
       if (diff <= 0) {
         renderCountdownEmpty(box);
+        box.removeAttribute('role');
         if (countdownTimer) clearInterval(countdownTimer);
         return;
       }
-      var days = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var mins = Math.floor((diff % 3600000) / 60000);
-      box.innerHTML =
-        '<div class="ann-countdown-unit"><span class="ann-countdown-num">' + days + '</span><span class="ann-countdown-label">' + escapeHtml(t.days) + '</span></div>' +
-        '<span class="ann-countdown-sep">·</span>' +
-        '<div class="ann-countdown-unit"><span class="ann-countdown-num">' + hours + '</span><span class="ann-countdown-label">' + escapeHtml(t.hours) + '</span></div>' +
-        '<span class="ann-countdown-sep">·</span>' +
-        '<div class="ann-countdown-unit"><span class="ann-countdown-num">' + mins + '</span><span class="ann-countdown-label">' + escapeHtml(t.mins) + '</span></div>';
+      put(cells.d, Math.floor(diff / 86400000));
+      put(cells.h, Math.floor((diff % 86400000) / 3600000));
+      put(cells.m, Math.floor((diff % 3600000) / 60000));
     }
     tick();
-    countdownTimer = setInterval(tick, 60000);
+    countdownTimer = setInterval(tick, 30000);   // never more than 30s stale
   }
 
   function parseEventDateTime(eventDate, eventTime) {

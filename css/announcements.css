@@ -186,3 +186,109 @@
 }
 .ann-archive-empty h4{font-family:var(--font-display);font-size:1.5rem;color:var(--navy);margin:0 0 10px;}
 .ann-archive-empty p{color:var(--ink-soft);max-width:440px;margin:0 auto;}
+
+/* ===================================================================
+   THE COUNTER, STRUCK
+   -------------------------------------------------------------------
+   Three loose numerals separated by middots is a widget. A school
+   counting down to its own graduation is marking time, and marking time
+   deserves plates: each figure struck into its own tile, ruled, lit
+   along the top edge, with the unit named beneath it in small capitals.
+
+   The figures are tabular, which matters more than it sounds: with
+   proportional numerals a 1 is narrower than an 8, so the whole row
+   shifts sideways every time a digit changes and the counter appears to
+   twitch. tabular-nums holds every figure to the same advance width and
+   the row stands still while the numbers move.
+   =================================================================== */
+.ann-countdown{
+  gap:14px; padding:22px 42px;
+  background:
+    radial-gradient(120% 140% at 50% 0%,rgba(var(--lv-gs,198,161,91),.10),transparent 70%),
+    rgba(0,0,0,.18);
+}
+.ann-countdown-unit{
+  position:relative; gap:0;
+  min-width:88px; padding:14px 16px 11px;
+  border-radius:12px;
+  background:linear-gradient(168deg,rgba(var(--lv-gbs,233,206,138),.10),rgba(var(--lv-gs,198,161,91),.03) 62%);
+  border:1px solid rgba(var(--lv-gs,198,161,91),.30);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gbs,233,206,138),.22),
+    inset 0 -1px 0 rgba(0,0,0,.35),
+    0 1px 2px rgba(0,0,0,.4),
+    0 12px 22px -14px rgba(0,0,0,.75);
+}
+.ann-countdown-num{
+  font-size:2.05rem; line-height:1;
+  font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
+  letter-spacing:.01em;
+  text-shadow:0 1px 0 rgba(0,0,0,.4);
+}
+.ann-countdown-label{
+  margin-top:7px; font-family:var(--font-label,'Cinzel',serif);
+  font-size:.56rem; letter-spacing:.18em;
+}
+.ann-countdown-sep{ align-self:center; opacity:.5; }
+
+/* The figure that has just turned is the one worth looking at. A short
+   rise and settle — no flip, no spin: this is a school marking a date,
+   not a departures board. */
+@keyframes ann-cd-turn{
+  0%  { transform:translateY(-38%); opacity:0; }
+  55% { transform:translateY(2%);   opacity:1; }
+  100%{ transform:none; }
+}
+.ann-countdown-num{ display:inline-block; }
+.ann-countdown-num.is-turning{ animation:ann-cd-turn .5s cubic-bezier(.16,.84,.28,1); }
+@media (prefers-reduced-motion:reduce){ .ann-countdown-num.is-turning{ animation:none; } }
+html[data-pc-motion="reduced"] .ann-countdown-num.is-turning{ animation:none; }
+
+/* The empty state is not an error, and should not read as one. */
+.ann-countdown:has(.ann-countdown-empty){ background:none; border-top-color:rgba(var(--lv-gs,198,161,91),.14); }
+.ann-countdown-empty{ font-size:.9rem; }
+
+@media (max-width:600px){
+  .ann-countdown{ padding:16px 14px; gap:10px; }
+  .ann-countdown-unit{ min-width:0; flex:1 1 0; padding:12px 8px 9px; }
+  .ann-countdown-num{ font-size:1.6rem; }
+  .ann-countdown-sep{ display:none; }
+}
+
+/* ---- The counter in the Clear edition -----------------------------
+   Every colour above was chosen against the espresso panel this block
+   used to live on, and stated as a literal or as a cream token:
+   --gold-bright figures, rgba(247,238,223,.55) labels, highlights in
+   pale gold, shadows in black. On the Clear edition's cream panel that
+   is cream on cream — the unit names were invisible and the figures sat
+   at barely two to one.
+
+   This is the third time in this session that a component has turned
+   out to have colours for one edition only, after the portal colophon
+   and the medallion rims. It is worth naming as a pattern rather than
+   as three accidents: any block whose colours are written for the
+   ground it was born on will fail the moment the ground is themed under
+   it. The fix is always the same — state the values against the ground
+   they actually sit on, both of them. */
+html[data-pc-theme="light"] .ann-countdown{
+  background:
+    radial-gradient(120% 140% at 50% 0%,rgba(var(--lv-gs,198,161,91),.14),transparent 70%),
+    rgba(var(--lv-gs,198,161,91),.05);
+  border-top-color:rgba(140,104,52,.28);
+}
+html[data-pc-theme="light"] .ann-countdown-unit{
+  background:linear-gradient(168deg,rgba(255,255,255,.92),rgba(247,238,223,.75) 62%);
+  border-color:rgba(140,104,52,.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -1px 0 rgba(59,42,29,.10),
+    0 1px 2px rgba(59,42,29,.10),
+    0 12px 22px -14px rgba(59,42,29,.35);
+}
+html[data-pc-theme="light"] .ann-countdown-num{
+  color:#6B4E22;
+  text-shadow:0 1px 0 rgba(255,255,255,.9);
+}
+html[data-pc-theme="light"] .ann-countdown-label{ color:rgba(59,42,29,.78); }
+html[data-pc-theme="light"] .ann-countdown-sep{ color:rgba(140,104,52,.45); }
+html[data-pc-theme="light"] .ann-countdown-empty{ color:rgba(59,42,29,.7); }
