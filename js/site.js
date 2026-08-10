@@ -52,7 +52,13 @@
 
   document.querySelectorAll('.policy-head').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      const item = btn.parentElement;
+      // closest('.policy'), not parentElement. The button is now wrapped in an
+      // <h4> so the 25 policies are navigable by heading, and parentElement
+      // then returns that wrapper rather than the policy: querySelector found
+      // no .policy-body, threw, and the accordion stopped opening at all.
+      // closest() asks the question that was always meant — which policy is
+      // this? — and is indifferent to what sits in between.
+      const item = btn.closest('.policy');
       const body = item.querySelector('.policy-body');
       const isOpen = item.classList.contains('open');
       document.querySelectorAll('.policy').forEach(p=>{

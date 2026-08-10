@@ -1967,6 +1967,14 @@
   .policy-list{margin-top:0;display:flex;flex-direction:column;gap:1px;background:var(--line);}
   .policy{background:rgb(var(--lv-wh,255,255,255));transition:box-shadow .3s ease;}
   .policy.open{box-shadow:0 20px 40px -28px rgba(var(--lv-cfd5,34,23,9),0.3);}
+  /* The 25 policy names were bare <button>s. A screen-reader user could not
+     jump policy to policy, and the outline fell from the category h3 straight
+     to the h5 sections inside each policy, implying a level that was not there.
+     Wrapping the control in a heading is the ARIA accordion convention: it
+     supplies the missing level AND makes every instrument in the register
+     navigable by heading. The wrapper is presentationally nothing — the button
+     inside it keeps every pixel of its own styling. */
+  .policy-head-h{margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;line-height:inherit;}
   .policy-head{width:100%;text-align:left;background:none;border:none;cursor:pointer;display:flex;justify-content:flex-start;align-items:baseline;gap:20px;padding:24px 26px;font-family:var(--font-display);font-size:1.2rem;color:var(--navy);position:relative;transition:padding-left .3s ease;}
   .policy.open .policy-head{padding-left:34px;}
   .policy-head .stat-num{font-family:var(--font-label);font-size:0.82rem;color:var(--gold);letter-spacing:0.05em;flex-shrink:0;width:52px;}
@@ -2122,21 +2130,21 @@
   }
   .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;margin:38px 0 30px;}
   @media (max-width:980px){.foot-grid{grid-template-columns:1fr 1fr 1fr;gap:26px;}}
-  .foot-grid h5{color:var(--gold-bright);font-family:var(--font-label);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;position:relative;padding-bottom:8px;}
-  .foot-grid h5 svg{flex-shrink:0;opacity:0.85;}
+  .foot-grid h2{color:var(--gold-bright);font-family:var(--font-label);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;position:relative;padding-bottom:8px;}
+  .foot-grid h2 svg{flex-shrink:0;opacity:0.85;}
   /* Column-heading underline that travels continuously left to right,
      giving each of the five footer zones its own small living accent
      rather than a static rule. */
-  .foot-grid h5::after{
+  .foot-grid h2::after{
     content:"";position:absolute;left:0;bottom:0;width:36px;height:1px;
     background:linear-gradient(90deg,transparent,var(--gold-bright),transparent);
     animation:imperial-underline-travel 6s ease-in-out infinite;
   }
   @keyframes imperial-underline-travel{0%,100%{transform:translateX(0);opacity:0.5;}50%{transform:translateX(28px);opacity:1;}}
-  [dir="rtl"] .foot-grid h5::after{left:auto;right:0;}
-  [dir="rtl"] .foot-grid h5::after{animation-name:imperial-underline-travel-rtl;}
+  [dir="rtl"] .foot-grid h2::after{left:auto;right:0;}
+  [dir="rtl"] .foot-grid h2::after{animation-name:imperial-underline-travel-rtl;}
   @keyframes imperial-underline-travel-rtl{0%,100%{transform:translateX(0);opacity:0.5;}50%{transform:translateX(-28px);opacity:1;}}
-  @media (prefers-reduced-motion:reduce){.foot-grid h5::after{animation:none;}}
+  @media (prefers-reduced-motion:reduce){.foot-grid h2::after{animation:none;}}
   .foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
   .foot-grid ul li a{position:relative;padding-bottom:1px;}
   .foot-grid ul li a::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:1px;background:var(--gold-bright);transition:width .35s cubic-bezier(.4,0,.2,1);}
@@ -2197,8 +2205,8 @@
       background:rgba(var(--lv-gs,198,161,91),0.05);border:1px solid var(--line);border-top:2px solid var(--gold);
       padding:20px 18px;
     }
-    .foot-grid h5{font-size:0.8rem;margin-bottom:14px;gap:10px;}
-    .foot-grid h5 svg{width:26px;height:26px;color:var(--gold);opacity:1;}
+    .foot-grid h2{font-size:0.8rem;margin-bottom:14px;gap:10px;}
+    .foot-grid h2 svg{width:26px;height:26px;color:var(--gold);opacity:1;}
     .foot-grid ul{gap:11px;}
     .foot-grid a{display:inline-block;padding:2px 0;}
     .foot-contact-item{font-size:0.88rem;}
@@ -2645,7 +2653,7 @@
   [dir="rtl"] .director-card .role, [dir="rtl"] .quote-panel .who,
   [dir="rtl"] .gov-sub, [dir="rtl"] .team-card .role, [dir="rtl"] .school-block .tag,
   [dir="rtl"] .schedule-row strong, [dir="rtl"] .contact-item strong,
-  [dir="rtl"] .contact-form label, [dir="rtl"] .foot-grid h5, [dir="rtl"] .seal-quad .glyph,
+  [dir="rtl"] .contact-form label, [dir="rtl"] .foot-grid h2, [dir="rtl"] .seal-quad .glyph,
   [dir="rtl"] .mini-flow span, [dir="rtl"] .en-tag, [dir="rtl"] .policy-head .stat-num,
   [dir="rtl"] .policy-body h5, [dir="rtl"] .sign-row .lab, [dir="rtl"] .placeholder-block .tag,
   [dir="rtl"] .clever-item .word{letter-spacing:normal;}

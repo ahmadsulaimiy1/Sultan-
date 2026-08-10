@@ -3512,7 +3512,7 @@ html[data-pc-theme="light"] .foot-statement p{color:rgb(var(--lv-gt2,138,106,47)
 html[data-pc-theme="light"] footer{
   background:linear-gradient(180deg,rgb(var(--lv-w26,241,231,213)),rgb(var(--lv-w192,233,220,196)));color:var(--pearl-ink-2);
   border-top:1px solid var(--pearl-line);}
-html[data-pc-theme="light"] footer h5,
+html[data-pc-theme="light"] footer h2,
 html[data-pc-theme="light"] footer .fs-sig,
 html[data-pc-theme="light"] footer .fd-item span,
 html[data-pc-theme="light"] footer a{color:var(--pearl-ink);}

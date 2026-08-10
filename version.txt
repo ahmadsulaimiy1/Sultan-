@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      ac051940bc0c38eb8cd1eaa3798c630a12276cc6
-short       ac051940
+commit      5095bd3130d9d07239272ffd09dc7ea394e9cd5c
+short       5095bd31
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Stop the deploy audit reporting every correct deploy as a failure
-built (UTC) 2026-08-10T12:04:10Z
-assets      shrs-pwa-111a9c204b
+subject     Tell assistive technology which parts of the French and Yoruba pages are English
+built (UTC) 2026-08-10T12:18:43Z
+assets      shrs-pwa-5ab1ded885
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
