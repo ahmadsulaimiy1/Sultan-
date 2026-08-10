@@ -3,7 +3,9 @@
 **Candidate release:** `ab1adbaf` on `claude/wec-institutional-design-kt3u0t`
 **Internal baseline:** 277 automated checks across nine suites + a build gate
 over 219 pages, all passing.
-**Status of this document:** NOT YET EXECUTED. Every stage below is UNRUN.
+**Status of this document:** EXECUTED 10 August 2026 — **chain BLOCKED at Stage 1**.
+Results recorded in §8. Stages 2–12 were not executed, per the rule in §4 that a
+failed stage stops the chain.
 
 This is the operational document for taking the frozen candidate into
 production. It is not a feature plan. Nothing in it may be marked PASS on the
@@ -185,3 +187,72 @@ Until that entire chain succeeds, no one should announce the third.
 | Chain executed by | | | |
 | Results verified by | | | |
 | Release accepted by (Founder) | | | |
+
+
+---
+
+## 8. Execution record — 10 August 2026
+
+**Executed by:** automated deployment attempt from the build environment.
+**Outcome: NOT DEPLOYED. The chain is blocked at Stage 1.**
+
+### What was actually established
+
+| Finding | Evidence |
+|---|---|
+| The candidate `ab1adbaf` is **not on the production branch**. `main` is at `7e8dbfea`; 13 commits on the candidate branch are unmerged. | `git merge-base --is-ancestor ab1adbaf origin/main` → false |
+| The build environment **cannot reach production at all**. | `curl https://shroyalschools.com/` → `CONNECT tunnel failed, response 403`; proxy status reports `connect_rejected … policy denial` for `shroyalschools.com:443`. An environment network policy, not a site outage. |
+| The **public site is live** and its Functions are running — reached from GitHub's runners, not from here. | Workflow run #4 made real HTTPS calls to `https://shroyalschools.com` and received HTTP responses. |
+| **`DATABASE_URL` is not stored in GitHub Actions**, so the certificate import has never run. | Run #4 step summary: *"### Database import was NOT run — No `DATABASE_URL` is stored, so the certificate records were not created."* |
+| **`CLOUDFLARE_API_TOKEN` is not stored**, so the run could not configure the three production variables. | Run #4 step summary: *"### Cloudflare variables were NOT set by this run … `DOCUMENT_HASH_KEY_VERSION`=2, `DOCUMENT_HASH_SECRET`, `DOCUMENT_HASH_SECRET_V1`"* |
+| The production database **is connected to the live site but has never had the certificate schema applied**. | Live API returns `relation "stage_certificates" does not exist` — a Postgres error, so the connection succeeds and the table is absent. |
+| **All thirteen certificates: NOT RESOLVED** on the live endpoint. | Run #4 acceptance table, 000035–000047, every row `FAIL FAIL FAIL NOT RESOLVED`; `ACCEPTANCE FAILED`, exit 1. |
+| The import artefact builds correctly and **does not re-mint anything**. | Run #4: *"13 certificate(s), lifted verbatim from 2 sealed register(s) … engraved numbers 000035–000047 … every value tuple asserted byte-identical to its source"* |
+| **No false positive exists in production.** Every failing path returns an error or a 500 — none returns "Genuine". | Run #4 failure-state block: unknown reference, wrong check tail, and altered verification code all return `{"error": …, "http":500}` — never a positive verdict. |
+
+Workflow run history — **all four runs failed**, none has ever succeeded:
+
+| Run | Event | SHA | Conclusion | When |
+|---|---|---|---|---|
+| #4 | schedule | `ef0d6bb8` | failure | 2026-08-10T07:54:36Z |
+| #3 | push | `df287648` | failure | 2026-08-09T14:03:04Z |
+| #2 | workflow_dispatch | `673b0da4` | failure | 2026-08-09T13:55:27Z |
+| #1 | push | `673b0da4` | failure | 2026-08-09T13:55:16Z |
+
+### Stage results
+
+| # | Stage | Result | Evidence / reason |
+|---|---|---|---|
+| 1 | Production database | **BLOCKED** | `DATABASE_URL` not stored in GitHub Actions; certificate schema absent from the live database (`relation "stage_certificates" does not exist`); all thirteen NOT RESOLVED in run #4 |
+| 2 | Production Ed25519 key | **BLOCKED** | Prerequisite 1 UNMET. `TRUSTED_KEYS` is still `Object.freeze({})` in the candidate — fail-closed as designed |
+| 3 | Signed certificate manifest | **BLOCKED** | Depends on Stage 2. `CERT_REGISTER_PRIVATE_KEY` unset; the builder refuses to sign without it |
+| 4 | Deployed verifier | **BLOCKED** | Chain stopped at Stage 1. Separately, the candidate is not on `main`, so it is not the code production is serving |
+| 5 | Real certificate QR | **BLOCKED** | Prerequisite 4 UNMET — physical artefact, not obtainable from this environment |
+| 6 | Real Android camera | **BLOCKED** | Prerequisite 5 UNMET — no physical device |
+| 7 | Online verification | **BLOCKED** | Stage 1 incomplete; live endpoint returns HTTP 500 for every reference |
+| 8 | Disconnect Internet | **BLOCKED** | Requires the handset from Stage 6 |
+| 9 | Offline verification | **BLOCKED — not attempted** | Requires Stages 6–8. **No false-positive risk observed:** production returns no positive verdict on any path today, and the candidate's offline module cannot return `genuine` on any path (20/20 + 32/32 local checks). Neither is a substitute for the device test |
+| 10 | Reconnect | **BLOCKED** | Requires Stage 8 |
+| 11 | Synchronisation | **BLOCKED** | Requires Stage 10 |
+| 12 | Live verification again | **BLOCKED** | Requires Stages 7 and 11 |
+
+### What was deliberately NOT done
+
+- **The workflow was not re-fired.** With `DATABASE_URL` and `CLOUDFLARE_API_TOKEN` absent, a fresh run is deterministic — it would fail identically, touch nothing, and add no information beyond run #4, which is two hours old.
+- **The candidate was not merged to `main`.** Stage 4 sits behind Stage 1, and the runbook forbids proceeding past a failed stage.
+- **No production artefact was created, altered, rotated or substituted.** No certificate was re-minted or renumbered.
+
+### The single blocker, precisely
+
+> **The six deployment secrets are not configured in GitHub Actions.**
+> `DATABASE_URL` is the first one the chain needs, and without it the certificate
+> schema and records cannot reach the production database. `CLOUDFLARE_API_TOKEN`
+> is the second, and without it the three hash variables cannot be set on the
+> Pages project.
+
+Everything downstream follows from that one fact. It is Founder-owned and cannot
+be resolved from the build environment.
+
+Order of resolution, unchanged from §1: secrets → database records → Ed25519 key
+pair → signed register → merge and deploy the candidate → then Stages 5–12 with a
+printed certificate and an Android handset.
