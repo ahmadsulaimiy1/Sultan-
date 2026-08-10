@@ -50,10 +50,12 @@
     catch(e){ return iso; }
   }
 
-  function renderResults(results){
+  function renderResults(results, offline){
     resultsEl.innerHTML = '';
     if(!results || !results.length){
-      resultsEl.appendChild(el('p', null, 'No results recorded yet.'));
+      resultsEl.appendChild(el('p', null, offline
+        ? 'Your results are not saved on this device. Reconnect to see them.'
+        : 'No results recorded yet.'));
       return;
     }
     var table = document.createElement('table');
@@ -101,8 +103,19 @@
     resultsEl.appendChild(islamicNote);
   }
 
-  function renderHifz(hifz){
+  function renderHifz(hifz, offline){
     if(!hifz){
+      if(offline){
+        // Hiding it would say "you are not a Qur'an College student". Showing
+        // an empty grid would say "no Juz' is verified". Neither is known here.
+        hifzCardEl.hidden = false;
+        hifzStageEl.textContent = 'Not saved on this device';
+        hifzStageDescEl.textContent = 'Your Hifz progress will appear when you reconnect.';
+        hifzCountEl.textContent = '';
+        if(juzGridEl) juzGridEl.innerHTML = '';
+        if(ijazahEl) ijazahEl.innerHTML = '';
+        return;
+      }
       hifzCardEl.hidden = true;
       return;
     }
@@ -144,16 +157,40 @@
     }
   }
 
+  async function fetchDashboard(){
+    if(window.SHRSPortalOffline){
+      return window.SHRSPortalOffline.view('portal.student.dashboard', '/api/portal/student/me');
+    }
+    var res = await fetch('/api/portal/student/me', { headers: { 'accept': 'application/json' } });
+    var body = await res.json().catch(function(){ return {}; });
+    return { ok: res.ok, status: res.status, data: body, source: 'network', syncedAt: Date.now(), isLive: true };
+  }
+
   async function load(){
     try{
-      var res = await fetch('/api/portal/student/me', { headers: { 'accept': 'application/json' } });
-      if(res.status === 401){
+      var result = await fetchDashboard();
+      if(result.status === 401){
         window.location.href = '/portal/student/login/';
         return;
       }
-      var data = await res.json().catch(function(){ return {}; });
-      if(!res.ok){
+      // Assembled from the copy held on this device. That copy carries who you
+      // are and where you are enrolled; it deliberately does not carry your
+      // marks, your fees or your Juz' grid (js/shrs-offline-policy.js §9), so
+      // each of those panels has to say so in its own words rather than sit
+      // empty and be read as "nothing recorded".
+      var offline = result.source === 'cache';
+      var data = result.data || {};
+      if(!result.ok){
+        if(window.SHRSPortalOffline && result.source === 'locked'){
+          throw new Error(window.SHRSPortalOffline.lockedMessage('en'));
+        }
+        if(window.SHRSPortalOffline && result.source === 'unavailable'){
+          throw new Error(window.SHRSPortalOffline.unavailableMessage('en'));
+        }
         throw new Error(data.error || 'Could not load your dashboard.');
+      }
+      if(window.SHRSPortalOffline){
+        window.SHRSPortalOffline.stamp(document.querySelector('[data-portal-freshness]'), result, 'en');
       }
 
       helloEl.textContent = 'Welcome, ' + data.fullName;
@@ -185,15 +222,21 @@
         feeValueEl.textContent = balance > 0 ? formatCurrency(balance) + ' due' : 'Paid in full';
         feeLabelEl.textContent = formatCurrency(data.fees.amount_paid) + ' of ' + formatCurrency(data.fees.amount_due) + ' · ' + data.fees.term;
         if(execStatFeeEl) execStatFeeEl.textContent = balance > 0 ? 'Due' : 'Paid';
+      } else if(offline){
+        feeValueEl.textContent = '—';
+        feeLabelEl.textContent = 'Not saved on this device';
+        if(execStatFeeEl) execStatFeeEl.textContent = '—';
       }
 
-      if(execStatHifzEl) execStatHifzEl.textContent = data.hifz ? ('Stage ' + data.hifz.stageNumber + ' / 5') : 'N/A';
+      // 'N/A' is a claim about enrolment. Offline it would be a guess, so the
+      // stat says nothing rather than the wrong thing.
+      if(execStatHifzEl) execStatHifzEl.textContent = data.hifz ? ('Stage ' + data.hifz.stageNumber + ' / 5') : (offline ? '—' : 'N/A');
 
-      renderResults(data.results);
-      renderHifz(data.hifz);
+      renderResults(data.results, offline);
+      renderHifz(data.hifz, offline);
 
       var financeMount = document.querySelector('[data-finance-mount]');
-      if(financeMount && window.SHRSFinance){
+      if(financeMount && window.SHRSFinance && !offline){
         window.SHRSFinance.render(financeMount, data.finance);
       }
 

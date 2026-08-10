@@ -756,7 +756,32 @@
     var admissionNo = searchAdmissionNoEl.value.trim();
     if(!admissionNo) return;
     try{
-      var res = await fetch('/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(admissionNo));
+      var url = '/api/portal/staff/registrar/student?admissionNo=' + encodeURIComponent(admissionNo);
+      if(window.SHRSPortalOffline){
+        var result = await window.SHRSPortalOffline.view('portal.registrar.student', url, { id: admissionNo });
+        if(result.source === 'cache'){
+          // Deliberately NOT renderRecord(). This office is a workbench: every
+          // panel below the summary is either something the device was never
+          // allowed to keep (marks, fees, guardians, the reasons written on a
+          // withdrawal) or an action that needs a live server to be safe. A
+          // half-filled record with live-looking buttons would invite a
+          // Registrar to work from it. So it renders as what it is — a saved
+          // summary, read-only, dated.
+          renderHeldRecord(result);
+          return;
+        }
+        if(!result.ok){
+          throw new Error(result.source === 'locked'
+            ? window.SHRSPortalOffline.lockedMessage('en')
+            : (result.source === 'unavailable'
+              ? 'That record has not been opened on this device, and there is no connection. It is not a statement about whether the student exists.'
+              : ((result.data && result.data.error) || 'Could not load that student record.')));
+        }
+        hideHeldRecord();
+        renderRecord(result.data);
+        return;
+      }
+      var res = await fetch(url);
       var data = await res.json();
       if(!res.ok) throw new Error(data.error || 'Could not load that student record.');
       renderRecord(data);
@@ -765,6 +790,60 @@
       searchErrorEl.textContent = (err && err.message) || 'Could not load that student record.';
     }
   });
+
+  var heldEl = null;
+  function hideHeldRecord(){ if(heldEl) heldEl.hidden = true; }
+
+  function renderHeldRecord(result){
+    recordEl.hidden = true;
+    if(!heldEl){
+      heldEl = el('div', 'registrar-held-record');
+      recordEl.parentNode.insertBefore(heldEl, recordEl);
+    }
+    heldEl.hidden = false;
+    heldEl.innerHTML = '';
+
+    var d = result.data || {};
+    var student = d.student || {};
+    heldEl.appendChild(el('div', 'registrar-held-flag', 'Saved copy on this device — not the live register'));
+    heldEl.appendChild(el('h3', null, student.fullName || '—'));
+    heldEl.appendChild(el('div', 'registrar-held-meta', student.admissionNo || ''));
+
+    var chips = el('div', 'portal-programmes');
+    (d.enrolments || []).forEach(function(e){
+      chips.appendChild(el('span', 'portal-programme-chip' + (e.isPrimary ? ' is-primary' : ''),
+        [e.className, e.institution].filter(Boolean).join(' — ')));
+    });
+    heldEl.appendChild(chips);
+
+    if(student.status){
+      heldEl.appendChild(el('div', 'registrar-held-meta',
+        'Status when last synchronised: ' + student.status.charAt(0).toUpperCase() + student.status.slice(1)));
+    }
+
+    var certs = d.certificates || [];
+    var certWrap = el('div', 'registrar-held-certs');
+    certWrap.appendChild(el('h4', null, 'Certificates on record'));
+    if(certs.length){
+      certs.forEach(function(c){
+        certWrap.appendChild(el('div', 'registrar-guardian-row',
+          [c.certificateType, c.referenceNo, c.revokedAt ? 'REVOKED' : null].filter(Boolean).join(' · ')));
+      });
+    } else {
+      certWrap.appendChild(el('p', 'portal-empty', 'None saved on this device. This is not a statement that none were issued.'));
+    }
+    heldEl.appendChild(certWrap);
+
+    heldEl.appendChild(el('p', 'portal-empty',
+      'Attendance, results, fees, guardians and the lifecycle history are not kept on this device, '
+      + 'and no registry action can be taken from a saved copy. Reconnect to open the live record.'));
+
+    if(window.SHRSPortalOffline){
+      var stampEl = el('div', 'registrar-held-stamp', '');
+      heldEl.appendChild(stampEl);
+      window.SHRSPortalOffline.stamp(stampEl, result, 'en');
+    }
+  }
 
   enrolForm.addEventListener('submit', async function(e){
     e.preventDefault();

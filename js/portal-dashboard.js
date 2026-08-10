@@ -140,7 +140,15 @@
     return '₦' + n.toLocaleString('en-NG', { minimumFractionDigits: 0 });
   }
 
-  function renderChild(child){
+  // `offline` means: this card was assembled from the copy held on this
+  // device. That copy deliberately does not carry fees, marks or Hifz detail
+  // (js/shrs-offline-policy.js §9), so those panels must say "not available
+  // offline" — NOT "not yet recorded". The two sentences look similar and mean
+  // opposite things: one is about this device, the other is a claim about the
+  // school's records. Saying the second when the first is true is the exact
+  // failure the offline directive forbids.
+  function renderChild(child, offline){
+    var absent = offline ? 'Not available offline' : 'Not yet recorded';
     var card = el('div', 'portal-child-card');
 
     var head = el('div', 'portal-child-head');
@@ -175,7 +183,7 @@
       attStat.appendChild(el('div', 'label', child.attendance.days_present + ' / ' + child.attendance.days_total + ' days · ' + child.attendance.term));
     } else {
       attStat.appendChild(el('div', 'value', '—'));
-      attStat.appendChild(el('div', 'label', 'Not yet recorded'));
+      attStat.appendChild(el('div', 'label', absent));
     }
     stats.appendChild(attStat);
 
@@ -187,7 +195,7 @@
       feeStat.appendChild(el('div', 'label', formatCurrency(child.fees.amount_paid) + ' of ' + formatCurrency(child.fees.amount_due) + ' · ' + child.fees.term));
     } else {
       feeStat.appendChild(el('div', 'value', '—'));
-      feeStat.appendChild(el('div', 'label', 'Not yet recorded'));
+      feeStat.appendChild(el('div', 'label', absent));
     }
     stats.appendChild(feeStat);
 
@@ -198,6 +206,9 @@
       hifzSnap.appendChild(el('span', 'phs-badge', 'Stage ' + child.hifz.stageNumber + ' of 5 — ' + (child.hifz.stageLabel || '')));
       hifzSnap.appendChild(el('span', null, child.hifz.juzVerifiedCount + ' of 30 Juz’ verified'));
       card.appendChild(hifzSnap);
+    } else if(offline){
+      // Silence here would read as "this child is not in Qur'an College".
+      card.appendChild(el('div', 'portal-child-hifz-snapshot', 'Hifz progress is not saved on this device — it will appear when you reconnect.'));
     }
 
     var resultsWrap = el('div', 'portal-results');
@@ -224,11 +235,13 @@
       scrollWrap.appendChild(table);
       resultsWrap.appendChild(scrollWrap);
     } else {
-      resultsWrap.appendChild(el('p', null, 'No results recorded yet.'));
+      resultsWrap.appendChild(el('p', null, offline
+        ? 'Results are not saved on this device. Reconnect to see them.'
+        : 'No results recorded yet.'));
     }
     card.appendChild(resultsWrap);
 
-    if(window.SHRSFinance){
+    if(window.SHRSFinance && !offline){
       var financeWrap = el('div', 'portal-finance-wrap');
       window.SHRSFinance.render(financeWrap, child.finance);
       card.appendChild(financeWrap);
@@ -320,16 +333,38 @@
     });
   });
 
+  // The offline bridge if it loaded, a plain fetch if it did not. Written this
+  // way round on purpose: the dashboard's behaviour with no bridge is exactly
+  // what it was before this file learned about offline at all.
+  async function fetchDashboard(){
+    if(window.SHRSPortalOffline){
+      return window.SHRSPortalOffline.view('portal.guardian.dashboard', '/api/portal/me');
+    }
+    var res = await fetch('/api/portal/me', { headers: { 'accept': 'application/json' } });
+    var body = await res.json().catch(function(){ return {}; });
+    return { ok: res.ok, status: res.status, data: body, source: 'network', syncedAt: Date.now(), isLive: true };
+  }
+
   async function load(){
     try{
-      var res = await fetch('/api/portal/me', { headers: { 'accept': 'application/json' } });
-      if(res.status === 401){
+      var result = await fetchDashboard();
+      if(result.status === 401){
         window.location.href = '/portal/login/';
         return;
       }
-      var data = await res.json().catch(function(){ return {}; });
-      if(!res.ok){
+      var offline = result.source === 'cache';
+      var data = result.data || {};
+      if(!result.ok){
+        if(window.SHRSPortalOffline && result.source === 'locked'){
+          throw new Error(window.SHRSPortalOffline.lockedMessage('en'));
+        }
+        if(window.SHRSPortalOffline && result.source === 'unavailable'){
+          throw new Error(window.SHRSPortalOffline.unavailableMessage('en'));
+        }
         throw new Error(data.error || 'Could not load your dashboard.');
+      }
+      if(window.SHRSPortalOffline){
+        window.SHRSPortalOffline.stamp(document.querySelector('[data-portal-freshness]'), result, 'en');
       }
 
       // Hard gate: no dashboard content renders until email is
@@ -369,13 +404,24 @@
           ],
         });
       }
-      loadAdhkar();
-      loadApplications();
+      // These fetch their own live data. From a saved copy there is nothing
+      // for them to fetch, and firing them would only paint empty states that
+      // read as "you have no applications".
+      if(!offline){
+        loadAdhkar();
+        loadApplications();
+      } else {
+        if(adhkarCardEl) adhkarCardEl.hidden = true;
+        if(applicationsListEl){
+          applicationsListEl.innerHTML = '';
+          applicationsListEl.appendChild(el('p', 'portal-empty', 'Your applications are not saved on this device. Reconnect to see them.'));
+        }
+      }
       verifyBanner.hidden = !!data.emailVerified;
 
       childrenEl.innerHTML = '';
       if(data.children && data.children.length){
-        data.children.forEach(function(child){ childrenEl.appendChild(renderChild(child)); });
+        data.children.forEach(function(child){ childrenEl.appendChild(renderChild(child, offline)); });
       } else {
         // .portal-empty's dark ink-soft text needs a light card behind
         // it — bare on this page's dark background it's illegible, the

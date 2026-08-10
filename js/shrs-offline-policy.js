@@ -212,6 +212,151 @@ export const NEVER_QUEUED_OPERATIONS = [
   'record.delete',
 ];
 
+/* ── 9. PORTAL VIEWS — what a whole dashboard may keep ────────────────────
+ *
+ * Sections 1–2 govern RECORDS: a row of the students table, a certificate. A
+ * portal dashboard is not a row. It is an assembled answer — identity, plus
+ * enrolments, plus attendance, plus marks, plus money — and the temptation is
+ * to cache the whole envelope because it arrived as one object. That is
+ * precisely how a fee balance and a term result end up on a device without
+ * anyone deciding they should.
+ *
+ * So each view is named here with a TOP-LEVEL KEY ALLOWLIST, and everything
+ * else in the response is dropped before it is written. A new key added to an
+ * endpoint upstream is excluded by default, exactly as a new column is.
+ *
+ * THE APPROVED SET IS DELIBERATELY SMALL. It is the part that answers "who am
+ * I, where am I enrolled, am I in good standing" — which is what makes a
+ * dashboard worth opening with no signal. Marks, fees and Hifz detail are
+ * listed separately, as PROPOSED, and are NOT cached until the Founder says
+ * so. Turning one on is a single-line edit here and nowhere else.
+ */
+export const PORTAL_VIEWS = {
+  'portal.guardian.dashboard': {
+    keys: [
+      'fullName', 'title', 'preferredName', 'identityNo', 'identityType',
+      'emailVerified', 'mobileVerified', 'profileCompletionPct',
+      'existingChildrenCount', 'prospectiveChildrenCount', 'children',
+      // `sections` is a handful of booleans about which parts of a profile are
+      // filled in, and `recommendedNextStep` is the sentence generated from
+      // them. Neither carries a value the person entered — only whether they
+      // entered one. The onboarding panel is unusable without them.
+      'sections', 'recommendedNextStep',
+    ],
+    // Applied to each entry of `children`, which is the only nested list here.
+    // `attendance` is here for the same reason it is in the student's own view:
+    // it is a count of days, with no free text and nothing about anyone else.
+    childKeys: [
+      'id', 'fullName', 'admissionNo', 'status', 'relationship', 'enrolments',
+      'className', 'institution', 'attendance', 'isSampleData',
+    ],
+    // `email` is absent for the same reason guardian_phone is: it is a way to
+    // reach a person, and a lost device should not carry one. `notifications`
+    // is absent because it is unbounded staff-authored prose — the same
+    // objection as internal_remarks, arriving by a different route.
+  },
+  'portal.student.dashboard': {
+    keys: [
+      'fullName', 'admissionNo', 'identityNo', 'admissionDate', 'academicSession',
+      'status', 'institution', 'className', 'enrolments', 'attendance',
+    ],
+  },
+  'portal.registrar.student': {
+    keys: ['student', 'enrolments', 'certificates'],
+    // `guardians` (names and email addresses), `lifecycleEvents` (free-text
+    // reasons for a withdrawal), `results`, `fees` and `hifz` are all absent.
+    // A Registrar reads those online, where the server can still decide
+    // whether they should.
+  },
+};
+
+/* Named, priced, and switched off. Each entry says what would be cached and
+ * what it would cost if the device were lost. Nothing here is written to a
+ * device while its `approved` flag is false — the code reads this list, so
+ * there is no second place to forget. */
+export const PORTAL_VIEW_EXTENSIONS = [
+  {
+    key: 'results', views: ['portal.student.dashboard', 'portal.registrar.student'],
+    approved: false,
+    gains: 'A student could read their own term results with no signal.',
+    costs: 'A lost, unlocked phone shows a child\'s marks and a teacher\'s written comment about them.',
+  },
+  {
+    key: 'fees', views: ['portal.student.dashboard', 'portal.registrar.student'],
+    approved: false,
+    gains: 'Fee standing visible offline.',
+    costs: 'This is money owed. NEVER_CACHED_FIELDS already refuses outstanding_balance; caching the fee row would be the same data by another name.',
+  },
+  {
+    key: 'finance', views: ['portal.student.dashboard'],
+    approved: false,
+    gains: 'Invoice and receipt history offline.',
+    costs: 'As above, and larger.',
+  },
+  {
+    key: 'hifz', views: ['portal.student.dashboard'],
+    approved: false,
+    gains: 'The Juz\' grid — genuinely the thing a Qur\'an College student checks most.',
+    costs: 'The grid carries muhaffiz notes and assessment commentary about a child. The grid alone might be defensible; it would need separating from the notes first, which is a change to the endpoint, not to this list.',
+  },
+];
+
+function extensionApproved(view, key) {
+  const ext = PORTAL_VIEW_EXTENSIONS.find((e) => e.key === key && e.views.includes(view));
+  return ext ? ext.approved === true : false;
+}
+
+/** True if `key` may be written to a device for `view`. */
+export function isViewKeyCacheable(view, key) {
+  const spec = PORTAL_VIEWS[view];
+  if (!spec) return false;                      // an undeclared view caches nothing
+  if (NEVER_CACHED_FIELDS.includes(key)) return false;
+  if (spec.keys.includes(key)) return true;
+  return extensionApproved(view, key);
+}
+
+/**
+ * Strips an assembled dashboard response down to what policy permits.
+ *
+ * Recursive over objects and arrays for the NEVER_CACHED_FIELDS sweep, because
+ * a forbidden field does not become permitted by being nested one level deeper
+ * than anyone looked.
+ */
+export function redactViewForCache(view, payload) {
+  const spec = PORTAL_VIEWS[view];
+  if (!spec || !payload || typeof payload !== 'object') return null;
+
+  const scrub = (value) => {
+    if (Array.isArray(value)) return value.map(scrub);
+    if (value && typeof value === 'object') {
+      const out = {};
+      for (const [k, v] of Object.entries(value)) {
+        if (NEVER_CACHED_FIELDS.includes(k)) continue;
+        out[k] = scrub(v);
+      }
+      return out;
+    }
+    return value;
+  };
+
+  const out = {};
+  for (const [k, v] of Object.entries(payload)) {
+    if (!isViewKeyCacheable(view, k)) continue;
+    if (k === 'children' && Array.isArray(v) && spec.childKeys) {
+      out[k] = v.map((child) => {
+        const c = {};
+        for (const [ck, cv] of Object.entries(child || {})) {
+          if (spec.childKeys.includes(ck) && !NEVER_CACHED_FIELDS.includes(ck)) c[ck] = scrub(cv);
+        }
+        return c;
+      });
+      continue;
+    }
+    out[k] = scrub(v);
+  }
+  return out;
+}
+
 /* Convenience: the shape the UI needs to show the connectivity state. */
 export const SYNC_STATES = /** @type {const} */ ([
   'pending', 'syncing', 'synced', 'failed', 'conflict',
@@ -219,6 +364,9 @@ export const SYNC_STATES = /** @type {const} */ ([
 
 export function isCacheable(entity, field) {
   if (NEVER_CACHED_FIELDS.includes(field)) return false;
+  // A portal view is an entity too, as far as the store is concerned, so it is
+  // answered here rather than by a second rule somewhere else.
+  if (PORTAL_VIEWS[entity]) return isViewKeyCacheable(entity, field);
   if (entity === 'student') return CACHEABLE_STUDENT_FIELDS.includes(field);
   if (entity === 'certificate') return CACHEABLE_CERTIFICATE_FIELDS.includes(field);
   return false;   // allowlist by default — an unknown entity caches nothing
@@ -226,6 +374,7 @@ export function isCacheable(entity, field) {
 
 /** Strips a server record down to what policy permits on a device. */
 export function redactForCache(entity, record) {
+  if (PORTAL_VIEWS[entity]) return redactViewForCache(entity, record) || {};
   const out = {};
   for (const [k, v] of Object.entries(record || {})) {
     if (isCacheable(entity, k)) out[k] = v;

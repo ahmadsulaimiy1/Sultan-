@@ -2257,3 +2257,32 @@ body.portal-body[data-atmosphere="certificates"]::before{
   .office-switcher-menu{position:fixed;top:auto;bottom:0;left:0;right:0;inset-inline-end:auto;max-width:none;max-height:60vh;}
   .office-switcher-toggle{font-size:0.68rem;padding:7px 10px;}
 }
+
+/* ── Offline freshness, and the saved-copy record ─────────────────────────
+ * Both of these exist to make one distinction visible: whether the screen is
+ * showing the register or a photograph of the register. They are deliberately
+ * plain — a stamp that reads as decoration gets ignored, and a colour alone is
+ * not a sentence.
+ */
+.portal-freshness{
+  margin-top:10px;font-family:'Cinzel','Amiri',serif;font-size:0.7rem;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-inline-start:2px solid var(--gold);padding-inline-start:10px;
+}
+.portal-freshness[data-freshness="cached"]{color:var(--gold);}
+.portal-freshness[data-freshness="locked"],
+.portal-freshness[data-freshness="unavailable"]{color:#a3421f;border-inline-start-color:#a3421f;}
+
+.registrar-held-record{
+  background:var(--portal-card);border:1px solid var(--line);border-top:3px solid var(--gold);
+  padding:22px 24px;margin:20px 0;
+}
+.registrar-held-flag{
+  font-family:'Cinzel','Amiri',serif;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.registrar-held-record h3{margin:0 0 2px;font-size:1.2rem;color:var(--portal-heading);}
+.registrar-held-meta{font-size:0.78rem;color:var(--ink-soft);margin-bottom:8px;}
+.registrar-held-certs{margin-top:16px;}
+.registrar-held-certs h4{margin:0 0 6px;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);}
+.registrar-held-stamp{margin-top:14px;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);}
