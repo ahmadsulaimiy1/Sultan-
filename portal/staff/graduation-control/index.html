@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
-<link rel="stylesheet" href="/css/portal.css?v=472a9e23e2">
+<link rel="stylesheet" href="/css/portal.css?v=325ff1fb81">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=e81375ad40">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
@@ -19,7 +19,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
-<meta name="shrs-build" content="shrs-pwa-5e90b8bcb9">
+<meta name="shrs-build" content="shrs-pwa-ceea3ac0d2">
 </head>
 <body class="portal-body type-administrative" data-atmosphere="registrar">
 
@@ -38,19 +38,28 @@
   </div>
 </div>
 
+<!-- THE TWO STATE CARDS SIT OUTSIDE THE CONTENT, LIKE EVERY OTHER OFFICE.
+     They were inside <div class="portal-wrap" data-portal-content hidden>.
+     js/portal-graduation-control.js reveals the error card on a failure but
+     never reveals that wrapper — correctly, because the wrapper holds a
+     dashboard there is no data for — so on ANY failure this page showed
+     "Loading the graduating roster…" and went on showing it. The office that
+     signs off a child's graduation had no way to tell a member of staff that
+     it could not reach the register. -->
 <main class="portal-main">
+  <div data-portal-loading class="portal-child-card" style="text-align:center;padding:32px;max-width:1100px;margin:0 auto;">
+    <p class="sub" style="margin:0;" data-i18n="state.loading">Loading…</p>
+  </div>
+  <div data-portal-error class="portal-card" hidden>
+    <h1>Could not load the Graduation Control Centre</h1>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/offices/">&#8592; Back to all offices</a>
+  </div>
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="portal-hello">Graduation Control Centre</div></div>
+    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h1 class="portal-hello">Graduation Control Centre</h1></div>
     <div class="cc-tagline">8 August 2026 Ceremony — Institutional Approval Workflow</div>
     <div class="cc-greeting" id="gcc-summary">Loading the graduating roster…</div>
     <div class="portal-hello-sub">Every graduate's live clearance status, in one place — Registry through the Founder, no stage skipped. A record locks itself automatically the moment its last required clearance is granted.</div>
-
-    <div data-portal-loading class="portal-child-card" style="text-align:center;padding:32px;">
-      <p class="sub" style="margin:0;" data-i18n="state.loading">Loading…</p>
-    </div>
-    <div data-portal-error class="portal-child-card" hidden>
-      <h2 style="padding:0 0 8px;" data-portal-error-message>Could not load the Graduation Control Centre.</h2>
-    </div>
 
     <div data-gcc-body hidden>
 

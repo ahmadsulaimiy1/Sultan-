@@ -417,7 +417,14 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
   .pfd-grid{grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px;align-items:start;}
   .pfd-grid .pfd-section{margin-bottom:0;}
 }
-.portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;letter-spacing:0.01em;color:var(--portal-heading);margin-bottom:6px;}
+/* THE PAGE'S OWN NAME IS THE PAGE'S HEADING. It was a <div> on all
+   seventeen dashboards, so every one of them had no h1 at all in its loaded
+   state — the only h1 on the page belonged to the error card nobody sees
+   unless something has gone wrong. It is an <h1> now, which means it also
+   inherits the site's base heading rule (h1,h2,h3,h4 at weight 600 with a
+   1.15 line height). Both are pinned back to what this element already
+   measured, so the tag became correct and nothing moved. */
+.portal-hello{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;letter-spacing:0.01em;color:var(--portal-heading);margin:0 0 6px;font-weight:400;line-height:1.6;}
 .portal-hello-sub{font-size:0.88rem;color:var(--ink-soft);margin-bottom:26px;}
 .portal-logout{
   background:none;border:1px solid var(--navy-bg);border-radius:4px;color:var(--portal-heading);

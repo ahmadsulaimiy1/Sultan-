@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      43624660543c805ae7ccb7f90564e1d61684dd43
-short       43624660
+commit      75c785d5b0b626af8cf342a45c02ec47a251ee58
+short       75c785d5
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give the gateway two halves instead of one wall
-built (UTC) 2026-08-10T23:15:59Z
-assets      shrs-pwa-5e90b8bcb9
+subject     Audit of all 220 pages; five schools open on themselves; institutional words
+built (UTC) 2026-08-10T23:28:33Z
+assets      shrs-pwa-ceea3ac0d2
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
