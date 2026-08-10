@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      1d5e07d505a1c29c19e0fc5bfa2b6921df9f7fe6
-short       1d5e07d5
+commit      3384472228d83b1d5533cc1a795e2f6c693e8837
+short       33844722
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Record the true blast radius of the invisible call-to-action fault
-built (UTC) 2026-08-10T11:03:38Z
+subject     Write down what seven bad contrast readings taught
+built (UTC) 2026-08-10T11:32:20Z
 assets      shrs-pwa-111a9c204b
 pages       143
 
