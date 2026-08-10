@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="/css/brand.css?v=6c54ac2677">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=e27698438e">
-<link rel="stylesheet" href="/css/atelier.css?v=f7d53c3f0f">
+<link rel="stylesheet" href="/css/atelier.css?v=4c8d17c10e">
 <link rel="stylesheet" href="/css/menu.css?v=2c3d7aa04d">
 <link rel="stylesheet" href="/css/regalia.css?v=af55f443de">
 <script>
@@ -95,7 +95,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/" />
-<meta name="shrs-build" content="shrs-pwa-03d904a9bb">
+<meta name="shrs-build" content="shrs-pwa-fa129a97eb">
 </head>
 <body>
 
@@ -521,7 +521,73 @@
     </div>
     <span class="mh-glint" aria-hidden="true"></span>
   </nav>
-  <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
+  </header>
+
+
+<aside class="i18n-partial-notice" role="note">
+  <div class="wrap">
+    <strong>Ìtumọ̀ ń lọ lọ́wọ́</strong>
+    <p>Ìtọ́sọ́nà àti ètò gbogbogbò ojú-òpó wà ní èdè Yorùbá. Àkóónú kíkún ojú-ìwé yìí kò tíì di títúmọ̀, a sì fi hàn ní èdè Gẹ̀ẹ́sì nísàlẹ̀.</p>
+    <a href="/" hreflang="en">Ka ojú-ìwé yìí ní èdè Gẹ̀ẹ́sì</a>
+  </div>
+</aside>
+<div class="mo-rail" aria-hidden="true"></div>
+<section class="hero">
+  <!-- The photograph gets a layer of its own rather than being the
+       section's background, for one reason: a background-image cannot be
+       transformed, and the slow drift below has to be a transform. Moving
+       an element the compositor already owns costs nothing; animating
+       background-position or background-size on a full-bleed hero repaints
+       the whole thing sixty times a second. -->
+  <div class="hero-plate" aria-hidden="true"></div>
+  <div class="frame"></div>
+  <div class="corner tl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
+  <div class="corner tr"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
+  <div class="corner bl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
+  <div class="corner br"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
+  <div class="wrap hero-inner hero-split">
+    <div class="hero-words">
+    <span class="crest-shimmer-wrap"><img src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" class="hero-crest" /></span>
+    <p class="eyebrow">Ikorodu · Lagos State · Nigeria</p>
+    <h1><span class="hero-type">Sultan Hanafi Royal Schools</span><span class="hero-subline">We Nurture Tomorrow's Leaders</span></h1>
+    <!-- No versal here. .pr-dropcap floats a 3.5em letter to the inline
+         start, which is correct in left-aligned prose on cream and wrong in
+         every particular on a centred hero deck over a photograph: the "A"
+         detached from its own sentence and sat at the left edge while the
+         rest of the line centred itself around it, in deep gold with a white
+         halo — a colour pair designed for a pale page — over a dark image.
+         A versal belongs where a paragraph begins, not where a page opens. -->
+    <p class="lede">A conglomerate of nursery, primary, secondary, Islamic &amp; Arabic, and Qur'anic institutions, delivering the best hybrid — Islamic and secular — education in Lagos, in a secure, serene, and dignified environment.</p>
+    <div class="hero-ctas">
+      <a href="/portal/login/" class="btn btn-gold mo-mag" data-mag="6">Register / Login <span class="arrow">→</span></a>
+      <a href="/admission/" class="btn btn-outline mo-mag" data-mag="6">Start Admission</a>
+    </div>
+    <!-- Two actions, not three. Register and Start Admission are what a
+         family came to do; contacting the office is what they do if
+         neither fits. Three equal buttons in a half-width column wrapped
+         two-and-one and read as a mistake, and ranking them was the fix
+         rather than shrinking them until they squeezed in. -->
+    <p class="hero-aside"><a href="/contact/">Or speak to Admissions first <span aria-hidden="true">&rarr;</span></a></p>
+    </div><!-- /.hero-words -->
+
+    <!-- The photograph, entire. It was a full-bleed background being
+         cropped by two fifths, because it is near enough square and a hero
+         band is twice as wide as it is tall. Plated, it is simply seen:
+         both teaching blocks, the forecourt between them, the school's own
+         sign across the frontage, and Ikorodu carrying on around it. -->
+    <figure class="hero-plate-figure">
+      <div class="hpf-frame">
+        <img src="/assets/images/gallery/campus-hero.jpg"
+             alt="An elevated view of the Sultan Hanafi Royal Schools campus at Ikorodu, Lagos: the main teaching block with the school's name across its frontage, the paved forecourt, and the neighbourhood beyond"
+             width="1121" height="995" fetchpriority="high" decoding="async" />
+        <span class="hpf-corner tl" aria-hidden="true"></span><span class="hpf-corner tr" aria-hidden="true"></span>
+        <span class="hpf-corner bl" aria-hidden="true"></span><span class="hpf-corner br" aria-hidden="true"></span>
+      </div>
+      <figcaption><span>The campus</span>15 Imowonla Road, Ikorodu, Lagos State</figcaption>
+    </figure>
+  </div>
+</section>
+<div class="mh-bands-relocated"><div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
     <a href="/about/" class="mnr-item">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
       <span>Ṣàwárí SHRS</span>
@@ -577,8 +643,6 @@
       Ìbánisọ̀rọ̀
     </a>
   </div>
-</header>
-
 <div class="ann-ribbon" data-ann-ribbon aria-live="polite">
   <div class="wrap ann-ribbon-inner">
     <span class="ann-ribbon-tag" aria-hidden="true">
@@ -591,47 +655,7 @@
     <a href="/announcements/" class="ann-ribbon-viewall">View All <span class="arrow">→</span></a>
   </div>
 </div>
-
-<aside class="i18n-partial-notice" role="note">
-  <div class="wrap">
-    <strong>Ìtumọ̀ ń lọ lọ́wọ́</strong>
-    <p>Ìtọ́sọ́nà àti ètò gbogbogbò ojú-òpó wà ní èdè Yorùbá. Àkóónú kíkún ojú-ìwé yìí kò tíì di títúmọ̀, a sì fi hàn ní èdè Gẹ̀ẹ́sì nísàlẹ̀.</p>
-    <a href="/" hreflang="en">Ka ojú-ìwé yìí ní èdè Gẹ̀ẹ́sì</a>
-  </div>
-</aside>
-<div class="mo-rail" aria-hidden="true"></div>
-<section class="hero">
-  <!-- The photograph gets a layer of its own rather than being the
-       section's background, for one reason: a background-image cannot be
-       transformed, and the slow drift below has to be a transform. Moving
-       an element the compositor already owns costs nothing; animating
-       background-position or background-size on a full-bleed hero repaints
-       the whole thing sixty times a second. -->
-  <div class="hero-plate" aria-hidden="true"></div>
-  <div class="frame"></div>
-  <div class="corner tl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
-  <div class="corner tr"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
-  <div class="corner bl"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
-  <div class="corner br"><svg viewBox="0 0 46 46"><path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="2" cy="2" r="3" fill="currentColor"/></svg></div>
-  <div class="wrap hero-inner">
-    <span class="crest-shimmer-wrap"><img src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest" class="hero-crest" /></span>
-    <p class="eyebrow">Ikorodu · Lagos State · Nigeria</p>
-    <h1><span class="hero-type">Sultan Hanafi Royal Schools</span><span class="hero-subline">We Nurture Tomorrow's Leaders</span></h1>
-    <!-- No versal here. .pr-dropcap floats a 3.5em letter to the inline
-         start, which is correct in left-aligned prose on cream and wrong in
-         every particular on a centred hero deck over a photograph: the "A"
-         detached from its own sentence and sat at the left edge while the
-         rest of the line centred itself around it, in deep gold with a white
-         halo — a colour pair designed for a pale page — over a dark image.
-         A versal belongs where a paragraph begins, not where a page opens. -->
-    <p class="lede">A conglomerate of nursery, primary, secondary, Islamic &amp; Arabic, and Qur'anic institutions, delivering the best hybrid — Islamic and secular — education in Lagos, in a secure, serene, and dignified environment.</p>
-    <div class="hero-ctas">
-      <a href="/portal/login/" class="btn btn-gold mo-mag" data-mag="6">Register / Login <span class="arrow">→</span></a>
-      <a href="/admission/" class="btn btn-outline mo-mag" data-mag="6">Start Admission</a>
-      <a href="/contact/" class="btn btn-outline mo-mag" data-mag="6">Contact Admissions</a>
-    </div>
-  </div>
-</section>
+</div>
 
 <section class="ann-hero reveal" id="announcements">
   <div class="wrap">

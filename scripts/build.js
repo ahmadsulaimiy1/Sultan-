@@ -655,6 +655,50 @@ function buildPage(page, manifest) {
   // data-locale gives CSS a stable hook for per-language typography without
   // re-deriving the language from `lang` in every selector (see css/i18n.css),
   // and gives the runtime switcher something to flip on an instant switch.
+  /* ------------------------------------------------------------------
+     THE ARRIVAL ORDER
+     ------------------------------------------------------------------
+     A page opening on a photograph cannot open on six toolbars first.
+     On the homepage the hero was beginning 565px down a 900px screen —
+     contact strip, prayer strip, masthead, the eight-plate ribbon, the
+     quick row and the notices, all above it — and no flagship site in
+     the world opens that way.
+
+     Nothing is removed. The bands are MOVED: everything a visitor needs
+     to navigate still ships on every page, in the same markup, in the
+     same order relative to each other. They simply arrive after the
+     photograph rather than in front of it.
+
+     The page says where, with a single marker, rather than the build
+     guessing by matching tags — which is the difference between a rule
+     somebody can read and a regex that breaks the first time a section
+     is nested. A page without the marker is assembled exactly as
+     before, so this changes one page and risks none of the others.
+     ------------------------------------------------------------------ */
+  const BANDS_MARKER = '<!--SHRS:BANDS-->';
+  let headerTop = header;
+  let announcementRibbonTop = announcementRibbon;
+  let contentWithBands = content;
+
+  if (content.indexOf(BANDS_MARKER) !== -1) {
+    const cut = header.indexOf('<div class="mobile-nav-ribbon"');
+    if (cut === -1) {
+      // The ribbon is not where it was. Assemble as normal and say so
+      // loudly rather than silently shipping a page with no navigation.
+      console.warn('  ! ' + page.out + ': BANDS marker present but the ribbon was not found in the header partial — bands left in place.');
+      contentWithBands = content.replace(BANDS_MARKER, '');
+    } else {
+      const closeHeader = header.lastIndexOf('</header>');
+      const bands = header.slice(cut, closeHeader);
+      headerTop = header.slice(0, cut) + header.slice(closeHeader);
+      announcementRibbonTop = '';
+      contentWithBands = content.replace(
+        BANDS_MARKER,
+        '<div class="mh-bands-relocated">' + bands + announcementRibbon + '</div>'
+      );
+    }
+  }
+
   const html = `<!DOCTYPE html>
 <html lang="${lang}" dir="${dir}" data-locale="${lang}">
 <head>
@@ -663,9 +707,9 @@ ${extraCss}${elevateHead}${prestigeHead}${idcardHead}${mastheadHead}${armorialHe
 <body${bodyAttr}>
 
 ${topbar}
-${header}
-${announcementRibbon}
-${breadcrumbs}${renderPartialNotice(page, lang)}${content}
+${headerTop}
+${announcementRibbonTop}
+${breadcrumbs}${renderPartialNotice(page, lang)}${contentWithBands}
 ${footer}
 ${assistant}
 ${search}

@@ -423,3 +423,253 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
    collision today without pretending to be the finished thing. */
 .hero-plate{ background-position:center bottom!important; }
 @media (max-width:860px){ .hero-plate{ background-position:center 78%!important; } }
+
+/* ===================================================================
+   THE HERO, PLATED — the photograph shown rather than cropped
+   -------------------------------------------------------------------
+   The frontage is 1121x995, near enough square. A hero band is twice as
+   wide as it is tall, so `cover` discarded two fifths of it whatever the
+   position, and wherever the school's painted sign landed in that window
+   the heading landed on top of it. Three crops in, the sign was pushed
+   out of frame entirely and the page was showing a wall.
+
+   So it stops being a background. It is a plate: framed, corner-marked,
+   whole, standing beside the words on a ground of the house's own
+   espresso rather than floating in a photograph. Every part of the
+   picture that carries meaning — both blocks, the forecourt, the sign,
+   the neighbourhood it sits in — is visible at last.
+
+   The full-bleed layer stays underneath at low strength. It is the same
+   photograph, heavily darkened and drifting, doing the job a ground
+   should do: giving the plate somewhere to sit that belongs to it.
+   =================================================================== */
+.hero-split{
+  display:grid;
+  grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);
+  align-items:center;
+  gap:clamp(26px,4vw,58px);
+  max-width:1220px;
+  text-align:start;
+}
+.hero-split .hero-words{ min-width:0; text-align:start; }
+.hero-split .hero-crest{ margin-inline:0; width:118px; }
+.hero-split .eyebrow{ justify-content:flex-start; }
+.hero-split h1{ text-align:start; }
+.hero-split h1::after{ left:0; transform:none; }
+.hero-split .hero-subline{ letter-spacing:.11em; }
+.hero-split p.lede{ margin-inline:0; max-width:52ch; text-align:start; }
+.hero-split .hero-ctas{ justify-content:flex-start; }
+
+/* ---- The plate ---------------------------------------------------- */
+.hero-plate-figure{ margin:0; min-width:0; }
+.hpf-frame{
+  position:relative; border-radius:6px; overflow:hidden;
+  border:1px solid rgba(var(--lv-gb,233,206,138),.5);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gl,255,246,223),.28),
+    0 2px 5px rgba(0,0,0,.42),
+    0 34px 60px -26px rgba(0,0,0,.9);
+}
+.hpf-frame img{ display:block; width:100%; height:auto; }
+/* A hairline inset rule, the same device as the section frames. */
+.hpf-frame::after{
+  content:""; position:absolute; inset:9px; pointer-events:none;
+  border:1px solid rgba(var(--lv-gl,255,246,223),.30);
+}
+.hpf-corner{
+  position:absolute; width:16px; height:16px; pointer-events:none;
+  border:0 solid rgb(var(--lv-gb,233,206,138));
+}
+.hpf-corner.tl{ top:9px;    left:9px;  border-top-width:2px; border-left-width:2px; }
+.hpf-corner.tr{ top:9px;    right:9px; border-top-width:2px; border-right-width:2px; }
+.hpf-corner.bl{ bottom:9px; left:9px;  border-bottom-width:2px; border-left-width:2px; }
+.hpf-corner.br{ bottom:9px; right:9px; border-bottom-width:2px; border-right-width:2px; }
+
+.hero-plate-figure figcaption{
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+  margin-top:14px;
+  font-size:.78rem; line-height:1.5;
+  color:rgba(var(--lv-w00,248,244,233),.72);
+}
+.hero-plate-figure figcaption span{
+  font-family:var(--font-label,'Cinzel',serif);
+  font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
+  color:rgb(var(--lv-gb,233,206,138));
+}
+
+/* ---- The ground beneath it ---------------------------------------
+   Same photograph, held right back. It is scenery now, not the subject,
+   so the wash over it can be heavy without costing anything. */
+.hero-plate{ background-position:center 42%!important; opacity:.5; }
+.hero::before{
+  background:
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.90) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.86) 45%,
+                           rgba(var(--lv-cfd5,34,23,9),.93) 100%),
+    radial-gradient(120% 100% at 50% 45%,transparent 30%,rgba(var(--lv-cfd4s,26,16,6),.7) 100%)!important;
+}
+
+/* ---- One column when there is not room for two -------------------- */
+@media (max-width:940px){
+  .hero-split{ grid-template-columns:1fr; text-align:center; gap:32px; }
+  .hero-split .hero-words{ text-align:center; }
+  .hero-split .hero-crest{ margin-inline:auto; }
+  .hero-split .eyebrow{ justify-content:center; }
+  .hero-split h1{ text-align:center; }
+  .hero-split h1::after{ left:50%; transform:translateX(-50%); }
+  .hero-split p.lede{ margin-inline:auto; text-align:center; }
+  .hero-split .hero-ctas{ justify-content:center; }
+  .hero-plate-figure figcaption{ justify-content:center; }
+  .hero{ min-height:0; }
+}
+
+/* ---- The ground had to give way to the plate ----------------------
+   At half strength the full-bleed layer was still a photograph, and the
+   school's own painted sign came through the middle of the lede at
+   sign-size — the name appearing twice on one screen again, which is the
+   fault this whole rebuild set out to remove. The ground is now scenery
+   at a sixth of its strength: enough that the plate is standing on the
+   campus rather than on a brown rectangle, not enough to read as a
+   second picture competing with the first. */
+.hero-plate{ opacity:.16!important; }
+.hero::before{
+  background:
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.93) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.90) 45%,
+                           rgba(var(--lv-cfd5,34,23,9),.96) 100%),
+    radial-gradient(120% 100% at 26% 45%,rgba(var(--lv-gs,198,161,91),.07),transparent 62%),
+    radial-gradient(130% 110% at 50% 45%,transparent 34%,rgba(var(--lv-cfd4s,26,16,6),.75) 100%)!important;
+}
+
+/* ---- Three buttons, one row, or three rows — never two and a half --
+   At this measure the third button dropped alone onto a second line and
+   sat under a gap, which reads as a mistake rather than as a wrap. The
+   row is allowed to compress before it breaks, and when it does break it
+   breaks cleanly. */
+.hero-split .hero-ctas{ gap:12px; }
+.hero-split .hero-ctas .btn{
+  padding-inline:clamp(16px,1.9vw,28px);
+  font-size:clamp(.7rem,.92vw,.8rem);
+  white-space:nowrap;
+}
+@media (max-width:1180px) and (min-width:941px){
+  .hero-split{ grid-template-columns:minmax(0,1.14fr) minmax(0,1fr); }
+  .hero-split .hero-ctas .btn{ padding-inline:14px; font-size:.68rem; }
+}
+
+/* Two buttons and a line, rather than three buttons. */
+.hero-split .hero-aside{
+  margin:18px 0 0; font-size:.84rem;
+}
+.hero-split .hero-aside a{
+  color:rgba(var(--lv-gb,233,206,138),.9);
+  text-decoration:none;
+  border-bottom:1px solid rgba(var(--lv-gb,233,206,138),.35);
+  padding-bottom:2px;
+  transition:color .3s ease, border-color .3s ease;
+}
+.hero-split .hero-aside a:hover,
+.hero-split .hero-aside a:focus-visible{
+  color:rgb(var(--lv-gl,255,246,223));
+  border-bottom-color:rgba(var(--lv-gl,255,246,223),.8);
+}
+@media (max-width:940px){ .hero-split .hero-aside{ text-align:center; } }
+
+/* The ground drops below the sign as well, so the painted name cannot
+   ghost through the promise line even at a sixth of strength. */
+.hero-plate{ background-position:center 82%!important; opacity:.14!important; }
+
+/* The ground takes the sky. Moving it down put the painted sign at the
+   top of the frame instead of the middle — still the school's name,
+   still ghosting, just somewhere emptier. The only crop of this
+   photograph with no lettering anywhere in it is the top: rooftops,
+   palms and a Lagos sky, which is texture rather than a message. */
+.hero-plate{ background-position:center 6%!important; opacity:.15!important; }
+
+/* ===================================================================
+   THE SCHOOL'S NAME WAS BEING SET AT HALF SIZE, EVERYWHERE
+   -------------------------------------------------------------------
+   css/brand.css:1104 says
+
+       .hero h1 span{ font-size:0.5em; letter-spacing:0.28em; ... }
+
+   and the h1 contains TWO spans:
+
+       <span class="hero-type">Sultan Hanafi Royal Schools</span>
+       <span class="hero-subline">We Nurture Tomorrow's Leaders</span>
+
+   The rule was written for the second and has been hitting both. The
+   school's own name — the largest, most-viewed piece of type on the
+   site — has been rendering at half the h1's size, in the body face
+   rather than the display one, with 0.28em of tracking that made it
+   read as stretched. That is why it looked "letter-spaced and small"
+   and why no amount of adjusting the h1 changed it: the h1 was never
+   the element being drawn.
+
+   On a 390px phone it compounded into absurdity — an 18px heading
+   halved to 9px, smaller than the eyebrow above it and smaller than
+   the body copy below it. The name of the school, the smallest type in
+   the hero.
+
+   Scoped to the subline, which is what it always meant. */
+.hero h1 .hero-type{
+  display:block;
+  font-size:1em;
+  font-family:var(--font-label,'Cinzel','Amiri',serif);
+  font-weight:600;
+  letter-spacing:.01em;
+  color:#fff;
+  margin-top:0;
+}
+html[data-pc-theme="light"] .hero h1 .hero-type{ color:#fff; }
+
+/* And the h1 itself gets a floor that a phone cannot argue with. */
+.hero h1{ font-size:clamp(1.9rem,5.4vw,3.4rem); }
+@media (max-width:600px){ .hero h1{ font-size:clamp(1.75rem,7.4vw,2.4rem); } }
+
+/* ---- The masthead row was 36px wider than the phone ---------------
+   Measured at 390px: nav.wrap scrollWidth exceeded clientWidth by 36,
+   so the MENU button — the only way to the rest of the site on a phone
+   — was clipped by the right edge. The wordmark is allowed to shrink
+   and the row is allowed to compress before anything is pushed off it. */
+@media (max-width:640px){
+  header.nav nav.wrap{ gap:8px; padding-inline:12px; }
+  header.nav .brand-text{ min-width:0; }
+  header.nav .brand-text .line1{ font-size:clamp(.86rem,4.3vw,1.15rem); }
+  header.nav .brand-text .line2{ font-size:.56rem; letter-spacing:.13em; }
+  header.nav .nav-actions,
+  header.nav .nav-right{ gap:6px; flex:0 0 auto; }
+  header.nav .menu-toggle{ padding-inline:12px; }
+}
+
+/* ---- The typewriter must let go when it has finished ---------------
+   js/site.js types the name by animating an inline `width` from 0 to
+   the measured width of the text, with overflow hidden and nowrap. That
+   measurement was taken when the name was rendering at half size, and
+   even now it is a fixed pixel width frozen at first paint — so a name
+   that reflows for any reason afterwards (a font swapping in, a
+   rotation, a text-size preference) gets guillotined by its own
+   animation container.
+
+   When the typing is done, the container has no further business
+   constraining anything. It lets go. */
+.hero-type.js-type.is-done{
+  width:auto!important;
+  overflow:visible;
+  white-space:normal;
+  border-right-color:transparent;
+}
+
+/* ---- The masthead, twenty pixels narrower still -------------------- */
+@media (max-width:640px){
+  header.nav nav.wrap{ gap:6px; padding-inline:10px; }
+  header.nav .brand-text .line1{ font-size:clamp(.8rem,4vw,1.05rem); }
+  header.nav .brand-text .line2{ font-size:.52rem; letter-spacing:.10em; }
+  header.nav .menu-toggle{ padding-inline:10px; font-size:.66rem; }
+  header.nav .menu-toggle svg{ width:15px; height:15px; }
+  /* The clock is the one item here that is decoration rather than
+     navigation, and it already appears in the strip above. Below 420px
+     it stands down so the way into the site is never the thing that
+     gets clipped. */
+  @media (max-width:420px){ header.nav .rlx{ display:none; } }
+}

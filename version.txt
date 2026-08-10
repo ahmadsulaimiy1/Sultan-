@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      0206196aac3f26fd8a5827b49b03a13427139184
-short       0206196a
+commit      c3ea3fc905d9397d8e564064bae90599551e0762
+short       c3ea3fc9
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The school's own photographs, and a hero stage built for them
-built (UTC) 2026-08-10T07:28:44Z
-assets      shrs-pwa-03d904a9bb
+subject     All eight photographs placed, and the two I had named wrong
+built (UTC) 2026-08-10T07:42:58Z
+assets      shrs-pwa-fa129a97eb
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
