@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <script src="/js/portal-office.js" defer></script>
 <script src="/js/prestige.js" defer></script>
 <script src="/js/motion.js" defer></script>
+<script src="/js/edition-toggle.js" defer></script>
 <script src="/js/hijri.js" defer></script>
 <script src="/js/portal-chrome.js" defer></script>
 <script src="/js/footer-live.js" defer></script>
@@ -358,6 +359,7 @@ ${layerBlocks}
 <script src="/js/portal-office-switcher.js" defer></script>
 <script src="/js/prestige.js" defer></script>
 <script src="/js/motion.js" defer></script>
+<script src="/js/edition-toggle.js" defer></script>
 <script src="/js/hijri.js" defer></script>
 <script src="/js/portal-chrome.js" defer></script>
 <script src="/js/footer-live.js" defer></script>

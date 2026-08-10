@@ -3374,6 +3374,18 @@ html[data-pc-theme="light"] .brand-text .line2{color:rgb(var(--lv-gt2,138,106,47
 html[data-pc-theme="light"] .search-toggle,
 html[data-pc-theme="light"] .menu-toggle,
 html[data-pc-theme="light"] .nav-drop-toggle{color:var(--pearl-ink);}
+/* The edition switch, on the Clear edition's pearl band. Written in bright
+   gold for the dark masthead it was first drawn against, it arrived here as a
+   pale ring on cream — legible if you knew where to look for it, which is not
+   a thing a control may require. Deep gold on the pale band, and a border
+   that is actually a border. */
+html[data-pc-theme="light"] .edition-toggle{
+  color:rgb(var(--lv-gt2,138,106,47));
+  border-color:rgba(var(--lv-gt2s,138,106,47),.42);}
+html[data-pc-theme="light"] .edition-toggle:hover,
+html[data-pc-theme="light"] .edition-toggle:focus-visible{
+  color:var(--pearl-ink);border-color:rgba(var(--lv-gt2s,138,106,47),.9);
+  background:rgba(var(--lv-gt2s,138,106,47),.1);}
 html[data-pc-theme="light"] .topbar{
   background:linear-gradient(180deg,rgb(var(--lv-w104,246,239,226)),rgb(var(--lv-w184,239,229,211)));border-bottom:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] .topbar a,

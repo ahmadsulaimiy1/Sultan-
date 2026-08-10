@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/liveries.css?v=3600852bf5">
-<link rel="stylesheet" href="/css/brand.css?v=dfcad46fb0">
+<link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=07ea4832c9">
 <link rel="stylesheet" href="/css/atelier.css?v=4bf48ea969">
@@ -82,7 +82,7 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=7cc6b20661">
+<link rel="stylesheet" href="/css/prestige.css?v=7fe7e68c17">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=1520b799fa">
 <link rel="stylesheet" href="/css/armorial.css?v=03c38ae694">
@@ -92,7 +92,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/faculty/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/faculty/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/faculty/" />
-<meta name="shrs-build" content="shrs-pwa-dcd67f21c7">
+<meta name="shrs-build" content="shrs-pwa-ff7a5ae55b">
 </head>
 <body>
 
@@ -167,6 +167,11 @@
         <span class="rlx-zone">Ikorodu · West Africa Time</span>
       </div>
     </span>
+    <!-- The edition switch. One tap moves between Clear, Royal and Midnight,
+         from the first paint, wherever the reader already is. Its icon and
+         its label are written by js/edition-toggle.js, because both name the
+         edition currently in force. -->
+    <button type="button" class="edition-toggle" data-edition-toggle aria-label="Edition"></button>
     <button class="listen-toggle" data-listen-toggle hidden aria-label="Listen to this page" title="Listen to this page"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="2.5" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="17" y="13.5" width="4.5" height="7" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
     <button class="search-toggle" data-search-toggle aria-label="Search the site" title="Search">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -1606,7 +1611,8 @@
 <script src="/js/prayer-times.js?v=a0ca2f8953" defer></script>
 <script src="/js/hijri.js?v=4bb28b7c28" defer></script>
 <script src="/js/personalisation.js?v=ae5fcbf1b1" defer></script>
-<script src="/js/livery-prompt.js?v=fe97a4bf97" defer></script>
+<script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
+<script src="/js/livery-prompt.js?v=91804e3a7a" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=fba3957e10" defer></script>

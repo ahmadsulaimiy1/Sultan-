@@ -725,6 +725,7 @@ ${personalisation}
 <script src="/js/prayer-times.js" defer></script>
 <script src="/js/hijri.js" defer></script>
 <script src="/js/personalisation.js" defer></script>
+<script src="/js/edition-toggle.js" defer></script>
 <script src="/js/livery-prompt.js" defer></script>
 <script src="/js/atelier.js" defer></script>
 <script src="/js/regalia.js" defer></script>

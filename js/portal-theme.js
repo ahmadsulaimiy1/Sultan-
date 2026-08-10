@@ -23,7 +23,6 @@
   var PREFS_KEY = 'shrsPersonalisation';
   var LOCALE_KEY = 'shrsLocale';
   var ORDER = ['royal', 'light', 'dark'];
-  var LABEL = { royal: 'Royal (Default)', light: 'Light', dark: 'Dark' };
 
   function loadPrefs(){
     try{
@@ -77,55 +76,14 @@
     html.setAttribute('data-locale', stored);
   })();
 
-  var ICONS = {
-    royal: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>',
-    light: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>',
-    dark: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>'
-  };
-
-  var btn;
-  function render(){
-    if(!btn) return;
-    btn.innerHTML = ICONS[theme];
-    var label = (window.SHRS_LOCALE && window.SHRS_LOCALE.t)
-      ? window.SHRS_LOCALE.t('portal.appearance') + ': ' + LABEL[theme]
-      : 'Appearance: ' + LABEL[theme];
-    btn.setAttribute('aria-label', label + '. Activate to change.');
-    btn.title = label;
-  }
-
-  function cycle(){
-    theme = ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length];
-    document.documentElement.setAttribute('data-pc-theme', theme);
-    var p = loadPrefs();
-    p.theme = theme;
-    savePrefs(p);
-    render();
-  }
-
-  function inject(){
-    if(document.querySelector('.portal-theme-toggle')) return;
-    var topbar = document.querySelector('.portal-topbar');
-    if(!topbar) return;
-    var actions = topbar.lastElementChild;
-    var mount = (actions && actions !== topbar.firstElementChild) ? actions : topbar;
-    var prepend = mount === actions ? function(el){ actions.insertBefore(el, actions.firstChild); } : function(el){ topbar.appendChild(el); };
-
-    btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'portal-theme-toggle';
-    btn.addEventListener('click', cycle);
-    render();
-    prepend(btn);
-  }
-
-  // Re-label the appearance button when the reader changes language, since
-  // its accessible name is prose too.
-  document.addEventListener('shrs:locale-changed', render);
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', inject);
-  } else {
-    inject();
-  }
+  /* THE APPEARANCE BUTTON MOVED. It used to be built here — icons, labels,
+     the cycle, the injection — and the marketing pages had nothing like it,
+     so the only way to change the edition out there was to open the
+     Personalisation Centre or to answer an invitation that let itself in over
+     the page. It is one control in one file now, js/edition-toggle.js,
+     mounted on both sides. What is left here is what only the portal needs:
+     stamping the stored edition and locale onto <html> synchronously, before
+     the body paints, because this script is not deferred and that button is.
+     A reader must never see a frame of the wrong edition or the wrong
+     direction. */
 })();

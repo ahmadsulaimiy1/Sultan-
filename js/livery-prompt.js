@@ -97,15 +97,26 @@
   root.querySelector('[data-lvp-dismiss]').addEventListener('click', function () { close('royal'); });
   root.querySelector('[data-lvp-scrim]').addEventListener('click', function () { close(settled); });
 
-  // Wait until the visitor has settled: whichever comes first of eight
-  // seconds on the page or a first deliberate scroll past the fold.
+  /* IT NO LONGER LETS ITSELF IN. This waited eight seconds, or for a scroll
+     past the fold, and then opened itself over the page behind a scrim. All
+     three rules at the head of this file were written to make that intrusion
+     polite — it waits, it previews live, it never traps — and all three are
+     true, and it was still a panel a reader had to deal with before they
+     could carry on reading, on an arrival, to answer a question they had not
+     asked.
+
+     The answer to "let me change how this looks" is a control, not an
+     interruption. js/edition-toggle.js puts one in the masthead from the
+     first paint, and the liveries themselves live in the Personalisation
+     Centre, one tap away on every page.
+
+     The panel is kept and everything it does still works — the swatches, the
+     live preview, the keyboard walk — because it is a good way to choose a
+     livery. It is reachable now rather than unavoidable: anything that wants
+     it calls window.SHRSLiveryPrompt(). Nothing calls it on its own. */
   var fired = false;
-  function arm() {
+  window.SHRSLiveryPrompt = function () {
     if (fired) return; fired = true;
-    window.removeEventListener('scroll', onScroll);
     open();
-  }
-  function onScroll() { if (window.scrollY > window.innerHeight * 0.6) arm(); }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.setTimeout(arm, 8000);
+  };
 })();

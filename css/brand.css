@@ -675,6 +675,27 @@
   }
   .search-toggle:hover{color:var(--gold-bright);border-color:rgba(var(--lv-gbs,233,206,138),0.3);}
 
+  /* The edition switch keeps the masthead's icon-button rhythm — same box,
+     same ink, same hover — but wears a gold hairline all the time, because
+     unlike search and listen it shows a state rather than offering an
+     action, and a reader should be able to see which edition they are in
+     without hovering anything first. */
+  .edition-toggle{
+    display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;
+    color:var(--gold-bright);background:none;cursor:pointer;border-radius:50%;
+    border:1px solid rgba(var(--lv-gbs,233,206,138),0.34);
+    transition:color .25s ease, border-color .25s ease, background .25s ease, transform .25s ease;
+  }
+  .edition-toggle:hover,.edition-toggle:focus-visible{
+    border-color:rgba(var(--lv-gbs,233,206,138),0.85);
+    background:rgba(var(--lv-gbs,233,206,138),0.12);transform:translateY(-1px);
+  }
+  .edition-toggle svg{display:block;}
+  @media (prefers-reduced-motion:reduce){
+    .edition-toggle{transition:none;}
+    .edition-toggle:hover{transform:none;}
+  }
+
   /* Site search overlay — a centered panel over a dimmed backdrop,
      not a full navigation takeover. */
   .search-overlay{

@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      b3aee3d384d213ff8cc5b3269ef9382c69304e53
-short       b3aee3d3
+commit      80c9de87dbcc936e9a51ddba1cfc53466601a4a0
+short       80c9de87
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Take the colophon's watermark down to a whisper
-built (UTC) 2026-08-10T18:28:55Z
-assets      shrs-pwa-dcd67f21c7
+subject     Close the void in the middle of the sign-up page
+built (UTC) 2026-08-10T19:02:23Z
+assets      shrs-pwa-ff7a5ae55b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
