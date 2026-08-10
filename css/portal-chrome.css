@@ -263,17 +263,35 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
   --rlx-hand-edge:rgba(255,246,223,.5);
   --rlx-sec:#D8A24A; --rlx-glass:rgba(255,246,223,.1);}
 
-/* ---- An older defect, found while measuring ------------------------
-   Every .portal-back-link on the sign-in, forgot-password and apply
-   screens is inked in bright gold at 85% — right on a dark panel, and
-   1.31:1 on the pale card those screens actually put it on. Six links
-   across three pages, unreadable since the screens were written. They
-   take the deep gold wherever the ground is paper; Midnight, whose
-   cards really are dark, keeps the bright gold it was written for. */
-html:not([data-pc-theme="dark"]) .pch-state .portal-back-link{
-  color:rgb(var(--lv-gt3,99,72,27))!important;}
-html:not([data-pc-theme="dark"]) .portal-card .portal-back-link:hover{
-  color:rgb(var(--lv-gt,124,84,48))!important;}
+/* ---- THE CARD IS A CREAM PLATE. IN EVERY EDITION. ------------------
+   This is the root of a whole family of faults, and the earlier fix here got
+   it half right. It read: the back-links are gold-on-paper in Clear and Royal,
+   so darken them there — "Midnight, whose cards really are dark, keeps the
+   bright gold it was written for."
+     Midnight's cards are not dark. css/prestige.css paints .portal-card with
+   an unconditional cream gradient and is a later stylesheet than portal.css,
+   so it wins in all three editions. Sampled from painted pixels the plate is
+   rgb(249,244,233) in Clear, Royal and Midnight alike.
+     Meanwhile --ink, --ink-soft and --portal-heading are declared on
+   body.portal-body for the page's DARK ground. So every element inside a card
+   that inherits them was inked for a ground it is not standing on. A sweep of
+   fifteen portal pages across three editions found fifty-three of them: the
+   pilot notices, the contact lines, the register's step labels, the password
+   hint, the section headings on the application, and the secondary links on
+   every sign-in screen — between 1.06:1 and 1.50:1.
+     Patching them one at a time would have meant fifty-three rules and a
+   fifty-fourth the next time something is added to a card. The card declares
+   its own ink instead, once, and everything inside inherits correctly.
+     Scoped to .portal-card deliberately: .portal-aside carries a
+   .portal-back-link too and that panel really is dark in every edition, so it
+   keeps the pale ink it was written with. */
+.portal-card{
+  --ink:rgb(var(--lv-cfd,42,28,16));
+  --ink-soft:rgba(var(--lv-cf,59,42,29),.82);
+  --portal-heading:rgb(var(--lv-cfd,42,28,16));}
+.portal-card .portal-back-link{ color:rgb(var(--lv-gt3,99,72,27)); }
+.portal-card .portal-back-link:hover,
+.portal-card .portal-back-link:focus-visible{ color:rgb(var(--lv-gt,124,84,48)); }
 /* Only the card. The same link inside .portal-aside-cta sits on that
    aside's dark panel, where the pale ink it was written with is right —
    a first pass gave it the deep gold too and took it to 2.1:1. */
