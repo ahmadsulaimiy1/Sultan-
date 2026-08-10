@@ -36,7 +36,13 @@
     if (!svg) return;
     host.setAttribute('data-lum', '');
 
-    var w = document.createElement('span');
+    /* An <i>, not a <span>. Both hosts style their label with a bare
+       `.mnr-item span` / `.fd-item span` descendant selector, which
+       matched the mount and gave a decoration eight pixels of label
+       padding — enough to make the ring an ellipse taller than the mark
+       it rings. An <i> cannot be caught by a label selector, now or
+       when someone adds another one. See css/lumina.css. */
+    var w = document.createElement('i');
     w.className = 'lum-mount';
     /* The wrapper is presentational only. The mark inside it is already
        aria-hidden and the host carries the accessible name, so this
@@ -54,6 +60,10 @@
        standing still waiting for its turn to begin. */
     w.style.setProperty('--lum-dur', (8 + (n % 5) * 1.4).toFixed(2) + 's');
     w.style.setProperty('--lum-delay', (-(n % 7) * 1.9).toFixed(2) + 's');
+    /* The ambient glow breathes on its own period, deliberately close
+       to but not equal to the ring's, so a mark is never seen at its
+       brightest at the same moment on two consecutive cycles. */
+    w.style.setProperty('--lum-adur', (6.4 + (n % 6) * 0.7).toFixed(2) + 's');
     n += 1;
   }
 

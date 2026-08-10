@@ -72,6 +72,24 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
    along the top edge, and a rule beneath the label that draws out from
    the centre when the tile is addressed.
    ------------------------------------------------------------------- */
+/* FLAT BY INSTRUCTION. Everything that used to model these plates and
+   medallions as physical objects has been taken out: the lit top edge,
+   the inset bevel, the seated bottom edge, the drop shadows, the hover
+   lift, the pop on the mark, and the top-lit dome inside each
+   medallion. What is left is flat colour, an even ambient glow and a
+   light that travels the rim (css/lumina.css).
+
+   The dome gradients are the ones worth naming, because they look
+   innocent: `radial-gradient(120% 120% at 50% 0%, ...)` puts the
+   brightest point at the TOP CENTRE of a circle and darkens toward the
+   bottom, which is the oldest way there is of drawing a sphere. Four
+   of them, in four different theme blocks, all saying the same thing:
+   this is a ball. They are now even fills.
+
+   Glows are kept where they are CENTRED, because a centred glow has no
+   light source and therefore no depth — it is light in the room. A
+   glow with a y-offset is a shadow wearing a different property name,
+   and those are gone. */
 .mnr-item{
   position:relative;isolation:isolate;border-radius:14px;
   background:linear-gradient(168deg,
@@ -79,8 +97,6 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
     rgba(var(--lv-g,198,161,91),.028) 62%,
     rgba(var(--lv-g,198,161,91),.06));
   border:1px solid rgba(var(--lv-g,198,161,91),.30);
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.16),
-             0 1px 0 rgba(0,0,0,.22);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease,background .45s ease;}
 .mnr-item::after{
@@ -90,15 +106,12 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
     rgb(var(--lv-gb,233,206,138)),transparent);
   transition:transform .55s cubic-bezier(.16,.8,.24,1);}
 .mnr-item:hover,.mnr-item:focus-visible{
-  transform:translateY(-3px);
   border-color:rgba(var(--lv-gb,233,206,138),.72);
   background:linear-gradient(168deg,
     rgba(var(--lv-gb,233,206,138),.20),
     rgba(var(--lv-g,198,161,91),.06) 62%,
     rgba(var(--lv-g,198,161,91),.10));
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.30),
-             0 14px 26px -18px rgba(0,0,0,.9),
-             0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
+  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
 .mnr-item:hover::after,.mnr-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
 .mnr-item.mnr-more{
   border-style:solid;
@@ -110,12 +123,10 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
 .mnr-item svg{
   width:22px;height:22px;padding:8px;box-sizing:content-box;border-radius:50%;
   border:1px solid rgba(var(--lv-g,198,161,91),.34);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(var(--lv-gb,233,206,138),.16),rgba(var(--lv-g,198,161,91),.04) 70%);
+  background:rgba(var(--lv-g,198,161,91),.07);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease;}
 .mnr-item:hover svg,.mnr-item:focus-visible svg{
-  transform:translateY(-1px) scale(1.06);
   border-color:rgba(var(--lv-gb,233,206,138),.8);
   box-shadow:0 0 16px -2px rgba(var(--lv-gb,233,206,138),.55);}
 .mnr-item span{
@@ -214,7 +225,6 @@ header.nav nav.wrap > .mh-glint{
     rgba(var(--lv-g,198,161,91),.022) 62%,
     rgba(var(--lv-g,198,161,91),.055));
   border:1px solid rgba(var(--lv-g,198,161,91),.26);
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.13);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease,background .45s ease;}
 .fd-item::after{
@@ -224,10 +234,8 @@ header.nav nav.wrap > .mh-glint{
     rgb(var(--lv-gb,233,206,138)),transparent);
   transition:transform .55s cubic-bezier(.16,.8,.24,1);}
 .fd-item:hover,.fd-item:focus-visible{
-  transform:translateY(-3px);
   border-color:rgba(var(--lv-gb,233,206,138),.7);
-  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.26),
-             0 16px 30px -20px rgba(0,0,0,.95);}
+  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
 .fd-item:hover::after,.fd-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
 .fd-item span{
   font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.6rem;letter-spacing:.08em;
@@ -400,37 +408,24 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
   background:linear-gradient(168deg,
     rgba(233,206,138,.155),rgba(198,161,91,.045) 60%,rgba(233,206,138,.10));
-  border-color:rgba(233,206,138,.44);
-  box-shadow:inset 0 1px 0 rgba(255,246,223,.24),0 1px 0 rgba(0,0,0,.4);}
+  border-color:rgba(233,206,138,.44);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:hover,
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:focus-visible,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item:hover{
   border-color:rgba(255,246,223,.85);
   background:linear-gradient(168deg,
     rgba(233,206,138,.30),rgba(198,161,91,.10) 60%,rgba(233,206,138,.18));
-  box-shadow:inset 0 1px 0 rgba(255,246,223,.42),
-             0 16px 30px -18px rgba(0,0,0,.95),
-             0 0 22px -6px rgba(233,206,138,.45);}
+  box-shadow:0 0 22px -6px rgba(233,206,138,.45);}
 
-/* The medallions breathe, staggered, so eight of them read as a set
-   that is alive rather than eight copies of one glow. */
+/* The medallions are flat discs with a gold hairline. The glow that
+   used to breathe here was a box-shadow, which meant a repaint every
+   frame and only ever existed in two of the six liveries; it now lives
+   in css/lumina.css as an even, centred, opacity-animated layer that
+   every livery and every edition gets, staggered per mark. */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item svg{
   border-color:rgba(233,206,138,.5);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(233,206,138,.26),rgba(198,161,91,.06) 72%);
-  animation:mh-breathe 6.5s ease-in-out infinite;}
-@keyframes mh-breathe{
-  0%,100%{box-shadow:0 0 0 0 rgba(233,206,138,0);}
-  50%{box-shadow:0 0 14px -3px rgba(233,206,138,.5);}}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
-html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
+  background:rgba(233,206,138,.10);}
 
 /* ---- The quick row, in gold ---------------------------------------- */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item,
@@ -475,8 +470,7 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item:hover{
              0 0 20px -6px rgba(233,206,138,.4);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item svg{
   border-color:rgba(233,206,138,.46);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(233,206,138,.22),rgba(198,161,91,.05) 72%);}
+  background:rgba(233,206,138,.10);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .foot-seal::before{
   background:linear-gradient(90deg,transparent,
     rgba(198,161,91,.65) 24%,rgba(255,246,223,.9) 50%,
@@ -527,8 +521,7 @@ html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item span{color:#F6EEDC;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg{
   color:#F2DCA6;border-color:rgba(233,206,138,.72);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(255,246,223,.30),rgba(198,161,91,.08) 72%);}
+  background:rgba(255,246,223,.12);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item.mnr-more{
   background:linear-gradient(168deg,rgba(233,206,138,.12),transparent);
   border-color:rgba(233,206,138,.4);}
@@ -720,20 +713,14 @@ html[data-pc-theme="light"] .mobile-nav-ribbon::after{
 /* ---- The plates: a lit top edge, a firmer hairline, a gold ripple -- */
 html[data-pc-theme="light"] .mnr-item,
 html[data-pc-theme="light"] .fd-item{
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.85),transparent 40%),
-    linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
-  border-color:rgba(var(--lv-g,198,161,91),.52);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
-             0 1px 2px rgba(var(--lv-cf,59,42,29),.06);}
+  background:linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
+  border-color:rgba(var(--lv-g,198,161,91),.52);}
 html[data-pc-theme="light"] .mnr-item:hover,
 html[data-pc-theme="light"] .mnr-item:focus-visible,
 html[data-pc-theme="light"] .fd-item:hover,
 html[data-pc-theme="light"] .fd-item:focus-visible{
   border-color:rgb(var(--lv-g,198,161,91));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
-             0 14px 26px -18px rgba(var(--lv-cf,59,42,29),.45),
-             0 0 0 1px rgba(var(--lv-g,198,161,91),.22);}
+  box-shadow:0 0 0 1px rgba(var(--lv-g,198,161,91),.22);}
 html[data-pc-theme="light"] .mnr-item::before,
 html[data-pc-theme="light"] .fd-item::before{
   content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;
@@ -746,25 +733,11 @@ html[data-pc-theme="light"] .mnr-item:focus-within::before,
 html[data-pc-theme="light"] .fd-item:hover::before,
 html[data-pc-theme="light"] .fd-item:focus-within::before{transform:scale(26);opacity:1;}
 
-/* ---- The medallions breathe, staggered ---------------------------- */
+/* ---- The medallions: flat discs, lit by lumina --------------------- */
 html[data-pc-theme="light"] .mnr-item svg,
 html[data-pc-theme="light"] .fd-item svg{
   border-color:rgba(var(--lv-g,198,161,91),.6);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(233,206,138,.34),rgba(255,253,249,.4) 74%);}
-html[data-pc-theme="light"] .mnr-item svg{
-  animation:mh-breathe-lite 6.5s ease-in-out infinite;}
-@keyframes mh-breathe-lite{
-  0%,100%{box-shadow:0 0 0 0 rgba(198,161,91,0);}
-  50%{box-shadow:0 0 12px -3px rgba(198,161,91,.55);}}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
-html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
+  background:rgba(var(--lv-gb,233,206,138),.16);}
 
 /* ---- The gold cell keeps its pass of light ------------------------- */
 html[data-pc-theme="light"] .mqr-item.mqr-cta{
@@ -992,8 +965,7 @@ html[data-pc-theme="light"] .mnr-item span{color:#3B2A1D;}
 html[data-pc-theme="light"] .mnr-item svg{
   color:#7C5E28;
   border-color:rgba(140,104,52,.62);
-  background:radial-gradient(120% 120% at 50% 0%,
-    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);}
+  background:rgba(233,206,138,.26);}
 html[data-pc-theme="light"] .mnr-item{
   border-color:rgba(140,104,52,.5);}
 html[data-pc-theme="light"] .mnr-item:hover,
