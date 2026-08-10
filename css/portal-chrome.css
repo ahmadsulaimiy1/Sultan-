@@ -24,7 +24,70 @@
   border-bottom:1px solid rgba(233,206,138,.45)!important;
   box-shadow:inset 0 1px 0 rgba(233,206,138,.18),
              0 14px 30px -24px rgba(0,0,0,.9)!important;
-  padding:14px 28px!important;}
+  padding:0!important;}
+
+/* ---- The masthead, in two tiers -------------------------------------
+   It was one row: crest, standing line, a theme toggle, a chronometer, an
+   office badge, four bare links, a language control, Sign Out, and the
+   calendar — nine things fighting over 1280px. They wrapped, and the bar's
+   own height cut the second row in half, so "Registrar's Office" and "Sign
+   Out" were sliced through the middle on the page a registrar opens every
+   morning.
+     Two tiers, then, each with one job. Above: who this is — crest, the
+   school's name, the standing line, and the calendar. Below: what you can do
+   from here. The order property does the arranging, because the markup lives
+   in sixty-eight hand-authored pages and is not going to be rewritten
+   sixty-eight times.
+   ------------------------------------------------------------------- */
+.portal-topbar.pch-mast{
+  display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;}
+.pch-mast > .portal-brand{order:1;padding:13px 0 13px 28px;}
+[dir="rtl"] .pch-mast > .portal-brand{padding:13px 28px 13px 0;}
+.pch-mast > .pch-standing{order:2;margin-inline:auto;}
+.pch-mast > .portal-topbar-calendar{order:3;margin-inline-end:28px;}
+/* The working tier: its own full-width band, ruled off from the crest line. */
+.pch-mast > .pch-utility{
+  order:4;flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;
+  gap:9px 12px;padding:9px 28px;margin:0;
+  border-top:1px solid rgba(233,206,138,.16);
+  background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0));}
+/* The account controls sit at the far end, away from the navigation. */
+.pch-mast > .pch-utility > .lang-switch-mount{margin-inline-start:auto;}
+
+/* Bare links beside pills is what made this read as unfinished. Every control
+   on the working tier is a plate now, at one weight, with one rhythm. */
+.pch-mast .portal-topbar-link{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
+  text-transform:uppercase;text-decoration:none;padding:7px 13px;border-radius:99px;
+  border:1px solid rgba(233,206,138,.22);
+  background:linear-gradient(168deg,rgba(233,206,138,.09),rgba(233,206,138,.02));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.10);
+  transition:border-color .3s ease,background .3s ease,color .3s ease,transform .3s ease;}
+.pch-mast .portal-topbar-link:hover,
+.pch-mast .portal-topbar-link:focus-visible{
+  border-color:rgba(233,206,138,.62);background:rgba(233,206,138,.16);
+  color:#FFF6DF!important;transform:translateY(-1px);}
+.pch-mast .portal-pilot-badge{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.15em;
+  text-transform:uppercase;padding:7px 14px;border-radius:99px;
+  color:#1A1006!important;
+  background:linear-gradient(135deg,#E9CE8A,#C6A15B)!important;
+  border:1px solid rgba(255,246,223,.45)!important;
+  box-shadow:0 6px 14px -8px rgba(140,100,40,.9),inset 0 1px 0 rgba(255,255,255,.4);}
+.pch-mast > .portal-topbar-calendar{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.13em;
+  text-transform:uppercase;padding:7px 14px;border-radius:99px;
+  border:1px solid rgba(233,206,138,.28);
+  background:linear-gradient(168deg,rgba(233,206,138,.10),rgba(233,206,138,.02));}
+@media (max-width:820px){
+  .pch-mast > .portal-brand{padding-inline:16px;}
+  .pch-mast > .pch-utility{padding-inline:16px;}
+  /* The calendar wraps onto its own line here, and with only a trailing
+     margin it sat flush against the viewport edge with its rounded corner
+     sliced off. It needs both sides once it is no longer the last thing on
+     a row with something else. */
+  .pch-mast > .portal-topbar-calendar{margin:0 16px 11px;}
+}
 .portal-topbar::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
   background:linear-gradient(90deg,transparent,
@@ -75,38 +138,86 @@
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.05;
   background-image:url("/assets/images/crest-watermark.png");
   background-size:auto 150%;background-repeat:no-repeat;background-position:center;}
+/* ---- The colophon, in columns ---------------------------------------
+   This was a row of bare underlined links, a right-orphaned meta line, four
+   flat lozenges and a dashed box, divided by three stacked rules. It read as
+   the bottom of a form. The school's own footer speaks a different language —
+   columns, Cinzel headings over a gold hairline, a crest that carries weight —
+   and there is no reason the portal should not speak it too.
+   ------------------------------------------------------------------- */
 .pch-foot-inner{
-  max-width:1180px;margin:0 auto;display:flex;align-items:center;
-  justify-content:space-between;gap:22px;flex-wrap:wrap;}
-.pch-foot-brand{display:flex;align-items:center;gap:14px;min-width:0;}
-.pch-foot-brand img{width:38px;height:38px;flex-shrink:0;
-  filter:drop-shadow(0 0 10px rgba(233,206,138,.35));}
+  max-width:1180px;margin:0 auto;
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);
+  gap:30px 42px;align-items:start;}
+.pch-col{min-width:0;}
+.pch-col-brand{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;align-items:center;}
+.pch-crest{grid-row:1 / span 2;width:46px;height:46px;
+  filter:drop-shadow(0 0 12px rgba(233,206,138,.35));}
 .pch-foot-name{
-  display:block;font-family:var(--font-label,'Cinzel',serif);font-size:.84rem;
-  letter-spacing:.06em;color:#FFF6DF;}
-.pch-foot-sig{display:block;font-size:.72rem;color:rgba(247,238,223,.66);margin-top:3px;}
-.pch-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  align-self:end;font-family:var(--font-label,'Cinzel',serif);font-size:.92rem;
+  letter-spacing:.05em;color:#FFF6DF;}
+.pch-foot-sig{align-self:start;font-size:.72rem;color:rgba(247,238,223,.62);}
+.pch-col-brand .pch-note{grid-column:1 / -1;margin:14px 0 0;}
+
+/* The heading treatment the site footer uses: small Cinzel gold, over a rule
+   that runs the width of the column. */
+.pch-h{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;
+  letter-spacing:.17em;text-transform:uppercase;color:#E4C87F;
+  margin:0 0 12px;padding-bottom:9px;position:relative;}
+.pch-h::after{
+  content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+[dir="rtl"] .pch-h::after{
+  background:linear-gradient(270deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+
+.pch-list{display:flex;flex-direction:column;gap:9px;}
+/* Links read as links by their own weight, not by an underline. The gold rule
+   arrives on hover from the leading edge, which is what the site's own
+   navigation does. */
 .pch-link{
-  position:relative;font-family:var(--font-label,'Cinzel',serif);font-size:.64rem;
-  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
-  color:rgba(233,206,138,.9);padding:7px 13px;border-radius:99px;
-  border:1px solid rgba(233,206,138,.3);
-  transition:background .35s ease,border-color .35s ease,color .35s ease,transform .35s ease;}
-.pch-link:hover,.pch-link:focus-visible{
-  color:#FFF6DF;border-color:rgba(233,206,138,.8);transform:translateY(-1px);
-  background:rgba(233,206,138,.14);}
-.pch-badge{
-  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
-  text-transform:uppercase;color:rgba(247,238,223,.66);
-  padding:7px 14px;border-radius:99px;border:1px dashed rgba(233,206,138,.34);}
+  position:relative;width:fit-content;font-size:.8rem;text-decoration:none;
+  color:rgba(247,238,223,.82);padding-bottom:2px;
+  transition:color .3s ease,transform .3s ease;}
+.pch-link::after{
+  content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
+  background:var(--gold-bright,#E9CE8A);transform:scaleX(0);transform-origin:inline-start;
+  transition:transform .38s cubic-bezier(.16,.8,.24,1);}
+.pch-link:hover,.pch-link:focus-visible{color:#FFF6DF;}
+.pch-link:hover::after,.pch-link:focus-visible::after{transform:scaleX(1);}
+
 .pch-rule{
-  max-width:1180px;margin:22px auto 0;height:1px;
+  max-width:1180px;margin:26px auto 0;height:1px;
   background:linear-gradient(90deg,transparent,
     rgba(198,161,91,.45) 20%,rgba(233,206,138,.7) 50%,
     rgba(198,161,91,.45) 80%,transparent);}
+
+.pch-colophon{
+  max-width:1180px;margin:16px auto 0;display:flex;align-items:center;
+  justify-content:space-between;gap:14px 26px;flex-wrap:wrap;}
+.pch-meta{
+  display:flex;flex-wrap:wrap;gap:4px 20px;
+  font-size:.71rem;color:rgba(247,238,223,.56);}
+.pch-meta a{color:inherit;}
+/* A seal, not a dashed placeholder box. */
+.pch-badge{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
+  text-transform:uppercase;color:#E4C87F;white-space:nowrap;
+  padding:8px 16px;border-radius:99px;
+  border:1px solid rgba(233,206,138,.34);
+  background:linear-gradient(168deg,rgba(233,206,138,.10),rgba(233,206,138,.02));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.12);}
 .pch-note{
-  max-width:1180px;margin:14px auto 0;text-align:center;
-  font-size:.7rem;line-height:1.6;color:rgba(247,238,223,.56);}
+  margin:0;font-size:.71rem;line-height:1.62;color:rgba(247,238,223,.56);}
+
+@media (max-width:900px){
+  .pch-foot-inner{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  .pch-col-brand{grid-column:1 / -1;}
+}
+@media (max-width:560px){
+  .pch-foot-inner{grid-template-columns:minmax(0,1fr);}
+  .pch-colophon{justify-content:flex-start;}
+}
 
 /* The whole page becomes a column so the colophon sits at the bottom of
    a short page rather than floating in the middle of the window. */
@@ -228,10 +339,14 @@ html[data-pc-theme="light"] .pch-note{ color:rgba(59,42,29,.72); }
 html[data-pc-theme="light"] .pch-badge{
   color:#6B4E22; border-color:rgba(140,104,52,.5);
 }
+/* The links are no longer pills, so the pill's fill has to go with the pill.
+   Left behind, it painted an opaque cream block behind every link in the
+   colophon — visible in the Clear edition as a rectangle sitting under the
+   words. Colour and the hover rule are all a link needs on either ground. */
 html[data-pc-theme="light"] .pch-link{
-  color:#6B4E22; border-color:rgba(140,104,52,.42);
-  background:rgba(255,255,255,.5);
+  color:#6B4E22; border:0; background:none;
 }
+html[data-pc-theme="light"] .pch-link::after{ background:#8C6834; }
 html[data-pc-theme="light"] .pch-link:hover,
 html[data-pc-theme="light"] .pch-link:focus-visible{
   color:#3B2A1D; border-color:rgba(140,104,52,.85);
@@ -240,7 +355,28 @@ html[data-pc-theme="light"] .pch-link:focus-visible{
 html[data-pc-theme="light"] .pch-rule{
   background:linear-gradient(90deg,transparent,rgba(140,104,52,.42),transparent);
 }
-html[data-pc-theme="light"] .pch-foot-brand img{ opacity:.9; }
+html[data-pc-theme="light"] .pch-foot-brand img,
+html[data-pc-theme="light"] .pch-crest{ opacity:.9; filter:none; }
+
+/* THE EDITION-BLIND PATTERN, AND THIS TIME IT WAS MINE. The colophon's plate
+   is espresso in Royal and Midnight and CREAM in Clear — that is what the
+   block above does — and the columns added below it were coloured for the
+   espresso only. On the Clear edition that put ivory-at-56% on cream: the
+   entire colophon bar, the meta line, and both column headings were washed
+   out to the edge of legibility.
+     Every value the new colophon sets is therefore stated twice, once against
+   each ground. The rule written into docs/measuring-contrast-honestly.md
+   applies to the person adding the component as much as to the person
+   auditing it afterwards. */
+html[data-pc-theme="light"] .pch-h{ color:#6B4E22; }
+html[data-pc-theme="light"] .pch-h::after{
+  background:linear-gradient(90deg,rgba(140,104,52,.55),rgba(140,104,52,.05)); }
+html[data-pc-theme="light"][dir="rtl"] .pch-h::after,
+[dir="rtl"] html[data-pc-theme="light"] .pch-h::after{
+  background:linear-gradient(270deg,rgba(140,104,52,.55),rgba(140,104,52,.05)); }
+html[data-pc-theme="light"] .pch-meta{ color:rgba(59,42,29,.78); }
+html[data-pc-theme="light"] .pch-badge{
+  background:rgba(255,255,255,.42); }
 
 /* ===================================================================
    THE TOPBAR MUST NOT COLLIDE
