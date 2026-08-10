@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      e4a2bda1717872c4571702c0d4b44ebf3e9ebefe
-short       e4a2bda1
+commit      ba13168afd2857ab1cb56085e313ff392b476a32
+short       ba13168a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     One person, one name, two offices — merged across the site, the documents and the generators
-built (UTC) 2026-08-10T03:38:02Z
-assets      shrs-pwa-a156718b40
+subject     The header stops pretending to be an object: flat marks, ambient light, one light travelling the rim
+built (UTC) 2026-08-10T05:10:49Z
+assets      shrs-pwa-03d54e1e83
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

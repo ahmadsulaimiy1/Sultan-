@@ -76,20 +76,26 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
    medallions as physical objects has been taken out: the lit top edge,
    the inset bevel, the seated bottom edge, the drop shadows, the hover
    lift, the pop on the mark, and the top-lit dome inside each
-   medallion. What is left is flat colour, an even ambient glow and a
-   light that travels the rim (css/lumina.css).
+   medallion. What is left is flat colour and the marks' own breathing
+   glow.
 
    The dome gradients are the ones worth naming, because they look
    innocent: `radial-gradient(120% 120% at 50% 0%, ...)` puts the
    brightest point at the TOP CENTRE of a circle and darkens toward the
-   bottom, which is the oldest way there is of drawing a sphere. Four
-   of them, in four different theme blocks, all saying the same thing:
-   this is a ball. They are now even fills.
+   bottom, which is the oldest way there is of drawing a sphere. There
+   were SIX, in six theme blocks, all saying the same thing: this is a
+   ball. They are now even fills.
 
    Glows are kept where they are CENTRED, because a centred glow has no
    light source and therefore no depth — it is light in the room. A
    glow with a y-offset is a shadow wearing a different property name,
-   and those are gone. */
+   and those are gone.
+
+   A travelling light was added round each medallion and then removed
+   again at the school's request. Nothing of it remains; if it is ever
+   wanted back, it is in the history at ba13168a, and the three ways it
+   managed to draw a shadow by accident are written up in that commit
+   message — worth reading before anyone tries it a second time. */
 .mnr-item{
   position:relative;isolation:isolate;border-radius:14px;
   background:linear-gradient(168deg,
@@ -417,15 +423,28 @@ html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item:hover{
     rgba(233,206,138,.30),rgba(198,161,91,.10) 60%,rgba(233,206,138,.18));
   box-shadow:0 0 22px -6px rgba(233,206,138,.45);}
 
-/* The medallions are flat discs with a gold hairline. The glow that
-   used to breathe here was a box-shadow, which meant a repaint every
-   frame and only ever existed in two of the six liveries; it now lives
-   in css/lumina.css as an even, centred, opacity-animated layer that
-   every livery and every edition gets, staggered per mark. */
+/* The medallions breathe, staggered, so eight of them read as a set
+   that is alive rather than eight copies of one glow. This is the glow
+   that was here before this session; it is a centred box-shadow, so it
+   carries no light source and no depth. The dome gradient that used to
+   sit in this same rule is gone and stays gone — that one did model a
+   sphere, and removing it was the instruction. */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item svg{
   border-color:rgba(233,206,138,.5);
-  background:rgba(233,206,138,.10);}
+  background:rgba(233,206,138,.10);
+  animation:mh-breathe 6.5s ease-in-out infinite;}
+@keyframes mh-breathe{
+  0%,100%{box-shadow:0 0 0 0 rgba(233,206,138,0);}
+  50%{box-shadow:0 0 14px -3px rgba(233,206,138,.5);}}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
+html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
 
 /* ---- The quick row, in gold ---------------------------------------- */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mqr-item,
@@ -570,12 +589,7 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon::after{
 
 /* iii. A ripple of gold out of the point of contact on a plate. */
 .mnr-item,.fd-item{overflow:hidden;}
-/* js/lumina.js wraps each mark in a .lum-mount, so the mount is now the
-   direct child that this rule has to reach. The svg selectors stay for
-   any mark that is not mounted — a square one, or one added before the
-   script runs. */
-.mnr-item > svg,.mnr-item > span,.fd-item > svg,.fd-item > span,
-.mnr-item > .lum-mount,.fd-item > .lum-mount{position:relative;z-index:1;}
+.mnr-item > svg,.mnr-item > span,.fd-item > svg,.fd-item > span{position:relative;z-index:1;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item::before,
 html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item::before{
   content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;
@@ -733,11 +747,24 @@ html[data-pc-theme="light"] .mnr-item:focus-within::before,
 html[data-pc-theme="light"] .fd-item:hover::before,
 html[data-pc-theme="light"] .fd-item:focus-within::before{transform:scale(26);opacity:1;}
 
-/* ---- The medallions: flat discs, lit by lumina --------------------- */
+/* ---- The medallions breathe, staggered ---------------------------- */
 html[data-pc-theme="light"] .mnr-item svg,
 html[data-pc-theme="light"] .fd-item svg{
   border-color:rgba(var(--lv-g,198,161,91),.6);
   background:rgba(var(--lv-gb,233,206,138),.16);}
+html[data-pc-theme="light"] .mnr-item svg{
+  animation:mh-breathe-lite 6.5s ease-in-out infinite;}
+@keyframes mh-breathe-lite{
+  0%,100%{box-shadow:0 0 0 0 rgba(198,161,91,0);}
+  50%{box-shadow:0 0 12px -3px rgba(198,161,91,.55);}}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(4) svg{animation-delay:-2.4s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(5) svg{animation-delay:-3.2s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(6) svg{animation-delay:-4.0s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(7) svg{animation-delay:-4.8s;}
+html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(8) svg{animation-delay:-5.6s;}
 
 /* ---- The gold cell keeps its pass of light ------------------------- */
 html[data-pc-theme="light"] .mqr-item.mqr-cta{

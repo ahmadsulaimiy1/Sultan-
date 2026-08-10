@@ -2287,11 +2287,11 @@
      So the ring is gone, the regalia edge does the job alone, the
      panel looks the same, and the colophon runs at 26fps.
 
-     The general rule, now stated in three places in three different
-     words: a conic gradient turned by transform is the right way to
-     run a light round a CIRCLE (css/lumina.css); an animated angle is
-     the right way to run one round a RECTANGLE (css/regalia.css); and
-     neither of them is free once the element is the size of a room. */
+     The general rule, worth keeping whatever else changes: an animated
+     angle is the right way to run a light round a RECTANGLE (see
+     css/regalia.css), a conic gradient turned by transform is the right
+     way round a CIRCLE, and NEITHER of them is free once the element is
+     the size of a room. Scale decides, not technique. */
   .fm-label{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(var(--lv-gs,198,161,91),0.08);border-bottom:1px solid var(--line);}
   .fm-label .fm-campus-name{font-family:var(--font-label);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-bright);}
   .fm-label .fm-campus-tag{font-size:0.68rem;color:rgba(var(--lv-w00,248,244,233),0.74);}
