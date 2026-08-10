@@ -52,6 +52,216 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     THE LOCKUP
+     The bar carried the crest beside one line of Cinzel — "SULTAN
+     HANAFI" and nothing else. The masthead every other page of the
+     school wears carries a lockup: the crest inside a shimmer wrap, the
+     name over "Royal Schools" in gold small caps. That treatment is in
+     css/brand.css, which the portal already loads, so the portal was
+     one span away from wearing it and simply had not been given the
+     markup. This gives it the markup.
+
+     It rewrites rather than replaces, so whatever the page's own crest
+     link points at and whatever the name says in that page's language
+     both survive.
+     ------------------------------------------------------------------ */
+  function dressBrand(brand) {
+    if (!brand || brand.querySelector('.brand-text')) return;
+    var img = brand.querySelector('img');
+    var nameEl = brand.querySelector('span');
+    var name = nameEl ? nameEl.textContent.trim() : 'Sultan Hanafi';
+    var i18nKey = nameEl ? nameEl.getAttribute('data-i18n') : null;
+    if (!img) return;
+    brand.classList.add('brand');
+    img.classList.add('brand-mark');
+    var wrap = document.createElement('span');
+    wrap.className = 'crest-shimmer-wrap';
+    brand.insertBefore(wrap, img);
+    wrap.appendChild(img);
+    var text = document.createElement('span');
+    text.className = 'brand-text';
+    text.innerHTML =
+      '<span class="line1"' + (i18nKey ? ' data-i18n="' + esc(i18nKey) + '"' : '') + '>'
+      + esc(name) + '</span><br />'
+      + '<span class="line2" data-i18n="brand.sub">Royal Schools</span>';
+    if (nameEl && nameEl.parentNode) nameEl.parentNode.removeChild(nameEl);
+    brand.appendChild(text);
+  }
+
+  /* ------------------------------------------------------------------
+     THE CALENDAR BAND
+     Every public page of the school opens on a thin band carrying both
+     calendars — the Hijri date that governs the prayer times and the
+     fasts, and the Gregorian one that governs the timetable — and the
+     time in Ikorodu beside them. It is the single most recognisable
+     thing about the school's chrome, and the Digital Campus did not
+     have it, which is most of why the portal read as a different
+     institution's software.
+
+     It is the same band, not an imitation of one: the same arithmetic
+     (js/hijri.js, shared with the marketing pages) and the same two
+     dates in the same order. What it does NOT carry is the prayer
+     countdown, because that one is fetched from a calculation service
+     and a sign-in page should not be waiting on a network call to
+     finish drawing its own header. The countdown stays one click away,
+     on the Adhkār link at the end of the band.
+     ------------------------------------------------------------------ */
+  function mountStrip(bar) {
+    if (!bar || !bar.parentNode || document.querySelector('.pch-strip')) return;
+    var H = window.SHRSHijri;
+    if (!H) return;                            // hijri.js absent — no half-band
+
+    var moon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"'
+      + ' class="pch-strip-icon"><path d="M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"'
+      + ' fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
+    var dial = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"'
+      + ' class="pch-strip-icon"><circle cx="12" cy="12" r="8.4" fill="none" stroke="currentColor"'
+      + ' stroke-width="1.4"/><path d="M12 7.6V12l3 1.8" fill="none" stroke="currentColor"'
+      + ' stroke-width="1.4" stroke-linecap="round"/></svg>';
+    var lamp = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"'
+      + ' class="pch-strip-icon"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"'
+      + ' fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+
+    var strip = document.createElement('div');
+    strip.className = 'pch-strip';
+    strip.innerHTML =
+      '<div class="pch-strip-inner">'
+      +   '<span class="pch-strip-item pch-strip-date" data-pch-hijri></span>'
+      +   '<span class="pch-strip-sep" aria-hidden="true"></span>'
+      +   '<span class="pch-strip-item pch-strip-time" data-pch-time aria-live="off">'
+      +     dial + '<span data-pch-time-text>&mdash;&mdash;:&mdash;&mdash;</span></span>'
+      +   '<span class="pch-strip-sep" aria-hidden="true"></span>'
+      +   '<a class="pch-strip-item pch-strip-link" href="/adhkar/">'
+      +     lamp + '<span data-i18n="quick.adhkar">Adhkār Centre</span></a>'
+      + '</div>';
+    bar.parentNode.insertBefore(strip, bar);
+
+    // Both calendars, in the order the school reads them.
+    var lang = LANG === 'ar' ? 'ar' : 'en';
+    var dateEl = strip.querySelector('[data-pch-hijri]');
+    var gregorian = new Date().toLocaleDateString(lang, {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+    dateEl.innerHTML = moon + '<span>' + esc(H.label(lang) + ' · ' + gregorian) + '</span>';
+
+    // The time in Ikorodu, not the time on the reader's wrist — a parent
+    // reading this in London is being told when the office is open.
+    var timeEl = strip.querySelector('[data-pch-time-text]');
+    var fmt;
+    try {
+      fmt = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit',
+        second: '2-digit', hour12: false
+      });
+    } catch (e) {
+      // A wrong hour on an institution's own header is worse than none.
+      // The divider that framed it goes with it, or the band ends on a rule.
+      var stale = strip.querySelector('.pch-strip-time');
+      var sep = stale.previousElementSibling;
+      if (sep && sep.className === 'pch-strip-sep') sep.parentNode.removeChild(sep);
+      stale.parentNode.removeChild(stale);
+      return;
+    }
+    function tick() { timeEl.textContent = fmt.format(new Date()); }
+    tick();
+    var timer = window.setInterval(tick, 1000);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { window.clearInterval(timer); timer = null; }
+      else if (!timer) { tick(); timer = window.setInterval(tick, 1000); }
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     THE ARRIVAL
+     The school's own footer does not begin with columns. It begins with
+     a ruled plate: four corner marks, the school's statement set in the
+     display face, and a lozenge under it. Then the columns. That plate
+     is the reason the public footer reads as the close of a document
+     and the portal's read as the bottom of a screen, and there is
+     nothing about it that a portal cannot wear.
+     ------------------------------------------------------------------ */
+  function arrivalHTML() {
+    var corner = '<svg viewBox="0 0 46 46" aria-hidden="true">'
+      + '<path d="M2 44 L2 2 L44 2" stroke="currentColor" stroke-width="1.2" fill="none"/>'
+      + '<circle cx="2" cy="2" r="2.6" fill="currentColor"/></svg>';
+    return '<div class="pch-arrival">'
+      + '<div class="pch-corner tl">' + corner + '</div>'
+      + '<div class="pch-corner tr">' + corner + '</div>'
+      + '<div class="pch-corner bl">' + corner + '</div>'
+      + '<div class="pch-corner br">' + corner + '</div>'
+      + '<p class="pch-statement" data-i18n="footer.tagline">'
+      + '&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>'
+      + '<div class="pch-mark" aria-hidden="true"><svg viewBox="0 0 24 24">'
+      + '<rect x="7" y="7" width="10" height="10" transform="rotate(45 12 12)" fill="none"'
+      + ' stroke="currentColor" stroke-width="1.3"/></svg></div>'
+      + '</div>';
+  }
+
+  /* ------------------------------------------------------------------
+     THE SCHOOL, RIGHT NOW
+     The same live panel the public footer carries, driven by the same
+     js/footer-live.js — the time in Ikorodu, whether the offices are
+     open at this moment, and today's hours. It is arguably worth more
+     here than on the marketing pages: a parent who has just read a fee
+     notice on their dashboard wants to know whether there is anybody at
+     the desk to ring about it.
+
+     THE FIVE STATE STRINGS BELOW ARE THE ONE DUPLICATION IN THIS FILE.
+     footer-live.js reads them from the panel's own attributes, and on
+     the built pages scripts/build.js renders them there from
+     i18n/<lang>.json. Portal pages are not built from partials, so they
+     are stated here instead. Everything a reader can see is marked with
+     data-i18n and comes from the dictionary as usual; only these five,
+     which are read out of attributes before the dictionary has been
+     fetched, are written twice. If now.open / now.closed / now.closesIn
+     / now.opensIn / now.opensOn are ever reworded in i18n/*.json, they
+     have to be reworded here too.
+     ------------------------------------------------------------------ */
+  var NOW = {
+    en: { open: 'Open', closed: 'Closed', closes: 'Closes in {t}',
+          opens: 'Opens in {t}', openson: 'Opens {d} at {t}' },
+    ar: { open: 'مفتوحة', closed: 'مغلقة', closes: 'تُغلق بعد {t}',
+          opens: 'تفتح بعد {t}', openson: 'تفتح {d} الساعة {t}' },
+    yo: { open: 'Ṣí sílẹ̀', closed: 'Tì', closes: 'Yóò tì ní {t}',
+          opens: 'Yóò ṣí ní {t}', openson: 'Yóò ṣí {d} ní {t}' },
+    fr: { open: 'Ouverts', closed: 'Fermés', closes: 'Ferment dans {t}',
+          opens: 'Ouvrent dans {t}', openson: 'Ouvrent {d} à {t}' }
+  }[LANG] || null;
+
+  function nowHTML() {
+    if (!NOW) return '';
+    return '<section class="pch-now" data-now-panel aria-labelledby="pch-now-h"'
+      + ' data-s-open="' + esc(NOW.open) + '" data-s-closed="' + esc(NOW.closed) + '"'
+      + ' data-s-closes="' + esc(NOW.closes) + '" data-s-opens="' + esc(NOW.opens) + '"'
+      + ' data-s-openson="' + esc(NOW.openson) + '">'
+      +   '<div class="pch-now-head">'
+      +     '<p class="pch-now-eyebrow" id="pch-now-h" data-i18n="now.eyebrow">The School, Right Now</p>'
+      +     '<p class="pch-now-place" data-i18n="now.place">Ikorodu, Lagos State &middot; West Africa Time</p>'
+      +   '</div>'
+      +   '<div class="pch-now-grid">'
+      +     '<div class="pch-now-cell">'
+      +       '<span class="pch-now-k" data-i18n="now.time">Local time</span>'
+      +       '<span class="pch-now-clock" data-now-clock role="timer" aria-live="off">&mdash;&mdash;:&mdash;&mdash;</span>'
+      +       '<span class="pch-now-sub" data-now-date>&nbsp;</span>'
+      +     '</div>'
+      +     '<div class="pch-now-cell">'
+      +       '<span class="pch-now-k" data-i18n="now.offices">The offices</span>'
+      +       '<span class="pch-now-state" data-now-state>'
+      +         '<span class="pch-now-dot" aria-hidden="true"></span>'
+      +         '<span data-now-state-text>&nbsp;</span></span>'
+      +       '<span class="pch-now-sub" data-now-next>&nbsp;</span>'
+      +     '</div>'
+      +     '<div class="pch-now-cell">'
+      +       '<span class="pch-now-k" data-i18n="now.today">Today&rsquo;s hours</span>'
+      +       '<span class="pch-now-hours" data-now-hours>&nbsp;</span>'
+      +       '<span class="pch-now-sub"><a class="pch-now-link" href="/contact/"'
+      +         ' data-i18n="now.allHours">All opening hours &rarr;</a></span>'
+      +     '</div>'
+      +   '</div>'
+      + '</section>';
+  }
+
   function mount() {
     var bar = document.querySelector('.portal-topbar');
     var hasHeader = document.querySelector('header.nav');
@@ -93,6 +303,8 @@
     // --- the head: add to the bar rather than replace it -------------
     if (bar && !bar.querySelector('.pch-standing')) {
       var brand = bar.querySelector('.portal-brand');
+      dressBrand(brand);
+      mountStrip(bar);
       var standing = document.createElement('span');
       standing.className = 'pch-standing';
       standing.textContent = T.standing;
@@ -131,7 +343,9 @@
     var foot = document.createElement('footer');
     foot.className = 'pch-foot';
     foot.innerHTML =
-      '<div class="pch-foot-inner">'
+      arrivalHTML()
+      + nowHTML()
+      + '<div class="pch-foot-inner">'
       +   '<div class="pch-col pch-col-brand">'
       +     '<img class="pch-crest" src="/assets/images/brand-mark.png" alt="" aria-hidden="true" />'
       +     '<span class="pch-foot-name">Sultan Hanafi Royal Schools</span>'

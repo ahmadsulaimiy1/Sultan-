@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      bf8880e6cedeeb27496a2706122ddb32d99d3136
-short       bf8880e6
+commit      5b9a4842b36ea2ade8855c162052327bd6c1f0d2
+short       5b9a4842
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Royal is not a light edition — the third time, and the worst of them
-built (UTC) 2026-08-10T15:08:14Z
-assets      shrs-pwa-c2a4c96802
+subject     Put the homepage hero back: the photograph it had, and the arrangement it had
+built (UTC) 2026-08-10T17:28:16Z
+assets      shrs-pwa-e2c30c43a3
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

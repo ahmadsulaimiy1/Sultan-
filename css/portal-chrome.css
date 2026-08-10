@@ -15,6 +15,61 @@
    everything else the school publishes.
    =================================================================== */
 
+/* ---- The calendar band ---------------------------------------------
+   Every public page of the school opens on this: both calendars, the
+   time in Ikorodu, and the way to the Adhkār. The Digital Campus did
+   not have it, and that absence is most of why the portal read as
+   somebody else's software bolted onto the school — the one band a
+   reader recognises before they have read a word was missing.
+
+   It is the deepest tone on the page, under the masthead rather than
+   over it, so the crest line reads as lifted off it. Stated against
+   this band's own ground and nothing else: the ground is written here,
+   in this file, in every edition, so there is no theme underneath it to
+   be wrong about. That is the fifth time that pattern has cost
+   something — see docs/measuring-contrast-honestly.md.
+   ------------------------------------------------------------------- */
+.pch-strip{
+  position:relative;isolation:isolate;
+  background:linear-gradient(180deg,#150C03 0%,#1B1106 100%);
+  border-bottom:1px solid rgba(233,206,138,.14);
+  padding:0 28px;}
+.pch-strip::after{
+  content:"";position:absolute;inset-inline:0;bottom:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(198,161,91,.34) 30%,
+    rgba(198,161,91,.34) 70%,transparent);}
+.pch-strip-inner{
+  max-width:1180px;margin:0 auto;min-height:34px;
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:2px 14px;}
+.pch-strip-item{
+  display:inline-flex;align-items:center;gap:7px;min-width:0;
+  font-size:.72rem;letter-spacing:.02em;line-height:1;
+  color:rgba(233,206,138,.82);}
+.pch-strip-icon{flex:0 0 auto;opacity:.7;}
+/* The time is the one thing here that changes every second, so it is set in
+   the figure face at a fixed advance — otherwise the whole band shuffles
+   sideways once a second, which is the cheapest-looking thing a header can
+   do. */
+.pch-strip-time{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
+.pch-strip-sep{
+  flex:0 0 auto;width:1px;height:12px;
+  background:linear-gradient(180deg,transparent,rgba(198,161,91,.45),transparent);}
+.pch-strip-link{
+  text-decoration:none;position:relative;padding-bottom:2px;
+  transition:color .3s ease;}
+.pch-strip-link::after{
+  content:"";position:absolute;inset-inline-start:0;bottom:0;height:1px;width:100%;
+  background:var(--gold-bright,#E9CE8A);transform:scaleX(0);transform-origin:inline-start;
+  transition:transform .38s cubic-bezier(.16,.8,.24,1);}
+.pch-strip-link:hover,.pch-strip-link:focus-visible{color:#FFF6DF;}
+.pch-strip-link:hover::after,.pch-strip-link:focus-visible::after{transform:scaleX(1);}
+@media (max-width:620px){
+  .pch-strip{padding:0 14px;}
+  .pch-strip-inner{min-height:0;padding:7px 0;gap:2px 10px;}
+  .pch-strip-item{font-size:.66rem;letter-spacing:0;}
+}
+
 /* ---- The head ------------------------------------------------------ */
 .portal-topbar{
   position:relative;isolation:isolate;
@@ -41,13 +96,24 @@
    ------------------------------------------------------------------- */
 .portal-topbar.pch-mast{
   display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;}
+/* EVERY CHILD IS PLACED, NOT JUST THE FOUR THAT WERE NAMED. The first pass
+   gave orders to the brand, the standing line, the calendar and the utility
+   cluster, and left everything else at the initial order:0 — which is ahead
+   of all four. On the pages that HAVE a utility cluster nothing else was
+   loose in the bar and it looked right; on the ones that do not, the pilot
+   badge and the language switcher are loose, so /portal/login/ opened on
+   "PILOT · English · crest SULTAN HANAFI", with the school's own crest third
+   in its own masthead. A default for the unnamed is the whole fix: they sit
+   between the standing line and the calendar, on the trailing side, which is
+   where a badge and a control belong. */
+.pch-mast > *{order:4;}
 .pch-mast > .portal-brand{order:1;padding:13px 0 13px 28px;}
 [dir="rtl"] .pch-mast > .portal-brand{padding:13px 28px 13px 0;}
 .pch-mast > .pch-standing{order:2;margin-inline:auto;}
-.pch-mast > .portal-topbar-calendar{order:3;margin-inline-end:28px;}
+.pch-mast > .portal-topbar-calendar{order:5;margin-inline-end:28px;}
 /* The working tier: its own full-width band, ruled off from the crest line. */
 .pch-mast > .pch-utility{
-  order:4;flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;
+  order:9;flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;
   gap:9px 12px;padding:9px 28px;margin:0;
   border-top:1px solid rgba(233,206,138,.16);
   background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0));}
@@ -97,11 +163,76 @@
   animation:pch-rule 1.4s cubic-bezier(.16,.8,.24,1) .2s forwards;}
 @keyframes pch-rule{to{transform:scaleX(1);}}
 
-.portal-brand{position:relative;}
+/* ---- The lockup ----------------------------------------------------
+   The crest beside two lines, which is what the school's masthead has
+   always been: the name in Cinzel with the gold sweep passing through
+   it, "Royal Schools" under it in gold small caps. The treatment is
+   already written, in css/brand.css, and the portal already loads that
+   file — the bar was one span short of wearing it. js/portal-chrome.js
+   supplies the span. What is written here is only what changes because
+   the ground is espresso rather than the marketing header's own.
+   ------------------------------------------------------------------- */
+.portal-brand{position:relative;align-items:center;gap:12px;}
+/* A 10px blur under a 40px crest is wider than the arms themselves, and once
+   the rotating halo was added around it the two glows overlapped into a
+   luminous plate — the crest looked mounted on a tile. Tightened to a
+   hairline lift, so the halo is the only ring the eye reads. */
 .portal-brand img{
-  width:38px!important;height:38px!important;
-  filter:drop-shadow(0 0 10px rgba(233,206,138,.4));}
-.portal-brand span{color:#FFF6DF!important;}
+  width:40px!important;height:40px!important;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.55));}
+.portal-brand .brand-text{display:block;line-height:1.12;}
+/* Cinzel at the masthead's weight. The single span this replaced was set
+   from css/portal.css at .92rem with wide tracking; .line1 carries its own
+   size and the shimmer, and only needs the face named for the portal's
+   shorter bar. */
+.portal-brand .line1{
+  font-size:1rem!important;letter-spacing:.05em!important;text-transform:none!important;}
+
+/* THE WORDMARK IS ON ESPRESSO. IN EVERY EDITION. THE SIXTH TIME.
+   The wordmark is not coloured type: it is a gradient clipped to the glyphs
+   with -webkit-text-fill-color:transparent, so whichever stylesheet writes
+   that gradient last owns whether the school's name is legible at all.
+   css/prestige.css writes it twice for the Clear edition —
+   html[data-pc-theme="light"] .brand-text .line1 — running the sweep between
+   coffee and dark gold, because the Clear edition's MARKETING masthead is a
+   pale cream band and white-on-cream was invisible there. Correct, for that
+   band.
+     The portal's masthead is espresso in all three editions; it is painted
+   in this file, unconditionally, a few rules above. So the moment the portal
+   was given the real lockup it inherited a gradient written for cream and
+   the school's own name vanished out of its own masthead for every reader on
+   the default edition. Caught in a screenshot, not in a stylesheet: the crop
+   taken without a stored preference looked perfect.
+     Restated here against the ground it actually stands on, and stated for
+   all three editions rather than for the two that happen to be dark — which
+   is the same correction, in the same words, as the fifth time. See
+   docs/measuring-contrast-honestly.md. */
+.portal-brand .line1{
+  background-image:linear-gradient(100deg,
+    rgb(var(--lv-wh,255,255,255)) 30%,
+    var(--gold-bright,#E9CE8A) 45%,
+    rgb(var(--lv-wh,255,255,255)) 60%)!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important;}
+@media (prefers-reduced-motion:reduce){
+  .portal-brand .line1{
+    background:none!important;-webkit-text-fill-color:#FFF6DF!important;color:#FFF6DF!important;}
+}
+
+/* The crest wrap carries two decorations: a rotating gold halo, which is a
+   hairline ring and reads beautifully on espresso, and a foil sweep, which is
+   a RECTANGLE blended with `screen`. Over the marketing header's cream the
+   rectangle is a whisper. Over espresso `screen` lifts the whole square and
+   the crest sits in a visible tan box — a lit panel behind the school's arms.
+   The ring stays; the rectangle goes. */
+.portal-brand .crest-shimmer-wrap::after{display:none;}
+.portal-brand .line2{
+  color:rgba(233,206,138,.9)!important;font-size:.55rem!important;letter-spacing:.22em!important;}
+[dir="rtl"] .portal-brand .line1{letter-spacing:normal!important;}
+[dir="rtl"] .portal-brand .line2{letter-spacing:normal!important;}
+/* Before the lockup existed the bar's only text was this one span, so it was
+   inked here. Anything still arriving as a bare span in the bar — a page that
+   brings its own — keeps that ink. */
+.portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){color:#FFF6DF!important;}
 .portal-topbar-link{color:rgba(247,238,223,.86)!important;}
 .portal-topbar-link:hover{color:#FFF6DF!important;}
 .portal-logout{
@@ -134,10 +265,103 @@
   background:linear-gradient(168deg,#241708 0%,#170E04 100%);
   border-top:1px solid rgba(233,206,138,.4);
   box-shadow:inset 0 1px 0 rgba(233,206,138,.16);}
+/* The crest, watermarked. At 150% of the foot's height and five per cent it
+   was a watermark on a footer 180px tall and a mural on the one that stands
+   here now: the arms filled the whole plate, the statement and the live panel
+   read through a shield, and the espresso ground looked mid-brown because a
+   pale ornament was lying across all of it. A watermark is the thing you
+   notice second. */
 .pch-foot::before{
-  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.026;
   background-image:url("/assets/images/crest-watermark.png");
-  background-size:auto 150%;background-repeat:no-repeat;background-position:center;}
+  background-size:auto 88%;background-repeat:no-repeat;background-position:center 42%;}
+/* ---- The arrival ----------------------------------------------------
+   The school's own footer does not begin with columns; it begins with a
+   ruled plate carrying four corner marks, the statement, and a lozenge.
+   That plate is why the public footer closes a document and the
+   portal's merely ended a screen. The portal has it now, at the weight
+   a working page can carry: one plate, not the marketing footer's full
+   arrival sequence.
+   ------------------------------------------------------------------- */
+.pch-arrival{
+  position:relative;max-width:1180px;margin:0 auto 30px;
+  padding:34px 44px 30px;text-align:center;
+  border:1px solid rgba(233,206,138,.2);border-radius:3px;
+  background:
+    radial-gradient(560px 180px at 50% 0%,rgba(233,206,138,.08),transparent 72%),
+    linear-gradient(168deg,rgba(233,206,138,.045),rgba(0,0,0,.14));
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.08);}
+.pch-corner{position:absolute;width:26px;height:26px;color:rgba(233,206,138,.55);}
+.pch-corner svg{width:100%;height:100%;display:block;}
+.pch-corner.tl{top:9px;inset-inline-start:9px;}
+.pch-corner.tr{top:9px;inset-inline-end:9px;transform:scaleX(-1);}
+.pch-corner.bl{bottom:9px;inset-inline-start:9px;transform:scaleY(-1);}
+.pch-corner.br{bottom:9px;inset-inline-end:9px;transform:scale(-1);}
+.pch-statement{
+  margin:0;font-family:var(--font-display,'Cormorant Garamond',Georgia,serif);
+  font-size:clamp(1.05rem,2.2vw,1.42rem);font-style:italic;line-height:1.5;
+  color:rgb(255,246,223);text-wrap:balance;}
+.pch-mark{
+  margin:16px auto 0;width:20px;height:20px;color:rgba(233,206,138,.75);}
+.pch-mark svg{width:100%;height:100%;display:block;}
+@media (max-width:620px){
+  .pch-arrival{padding:26px 20px 22px;margin-bottom:22px;}
+  .pch-corner{width:18px;height:18px;}
+}
+
+/* ---- The school, right now ------------------------------------------
+   The same live panel the public footer carries, on the same
+   js/footer-live.js: the time in Ikorodu, whether the offices are open
+   at this moment, and today's hours. Worth more here than on the
+   marketing pages — a parent who has just read a fee notice on their
+   dashboard wants to know whether there is anybody at the desk.
+
+   Written against espresso rather than borrowed from css/listen.css,
+   where the public panel's colours live. Those are stated for paper.
+   ------------------------------------------------------------------- */
+.pch-now{
+  position:relative;max-width:1180px;margin:0 auto 30px;
+  padding:24px 30px;border-radius:3px;
+  border:1px solid rgba(233,206,138,.18);
+  background:linear-gradient(168deg,rgba(233,206,138,.05),rgba(0,0,0,.2));}
+.pch-now-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  flex-wrap:wrap;gap:4px 20px;margin-bottom:18px;
+  padding-bottom:12px;border-bottom:1px solid rgba(233,206,138,.16);}
+.pch-now-eyebrow{
+  margin:0;font-family:var(--font-label,'Cinzel',serif);font-size:.68rem;
+  letter-spacing:.19em;text-transform:uppercase;color:#E4C87F;}
+.pch-now-place{margin:0;font-size:.71rem;color:rgba(247,238,223,.56);}
+.pch-now-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 34px;}
+.pch-now-cell{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.pch-now-k{
+  font-family:var(--font-label,'Cinzel',serif);font-size:.58rem;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(233,206,138,.72);}
+.pch-now-clock,.pch-now-hours{
+  font-size:1.14rem;color:#FFF6DF;letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
+.pch-now-state{display:inline-flex;align-items:center;gap:9px;font-size:1.14rem;color:#FFF6DF;}
+.pch-now-dot{
+  width:9px;height:9px;border-radius:50%;flex:0 0 auto;
+  background:rgba(247,238,223,.45);box-shadow:0 0 0 0 rgba(247,238,223,0);}
+[data-now-state="open"] .pch-now-dot{
+  background:#7FCB8E;box-shadow:0 0 10px 1px rgba(127,203,142,.55);}
+[data-now-state="closed"] .pch-now-dot{
+  background:#D08C6A;box-shadow:0 0 10px 1px rgba(208,140,106,.4);}
+.pch-now-sub{font-size:.73rem;color:rgba(247,238,223,.58);}
+.pch-now-link{color:rgba(233,206,138,.86);text-decoration:none;
+  border-bottom:1px solid rgba(233,206,138,.3);padding-bottom:1px;
+  transition:color .3s ease,border-color .3s ease;}
+.pch-now-link:hover,.pch-now-link:focus-visible{color:#FFF6DF;border-color:#E9CE8A;}
+@media (max-width:820px){
+  .pch-now-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:560px){
+  .pch-now{padding:20px 18px;}
+  .pch-now-grid{grid-template-columns:minmax(0,1fr);}
+}
+
 /* ---- The colophon, in columns ---------------------------------------
    This was a row of bare underlined links, a right-orphaned meta line, four
    flat lozenges and a dashed box, divided by three stacked rules. It read as
@@ -241,6 +465,24 @@ html[data-pc-motion="reduced"] .portal-topbar::after{animation:none;transform:sc
    Taking it to espresso means re-lighting its contents; anything left
    behind is dark ink on a dark ground. Measured before and after:
    the calendar link was the one that had been left. */
+/* The edition switch is the clearest case of it. css/portal.css gives the
+   button `background:var(--portal-card)`, which is the colour of the CARD —
+   correct if the button stood on the page, and it does not: it stands in the
+   bar. In Midnight the card is espresso and nobody noticed; in Clear the card
+   is white, so a white disc sat in the masthead beside a gilded chronometer
+   and a gold-ruled plate. It was the cheapest thing in the header and it was
+   one line of CSS pointing at the wrong ground. */
+.portal-topbar .portal-theme-toggle{
+  width:34px;height:34px;
+  background:linear-gradient(168deg,rgba(233,206,138,.11),rgba(233,206,138,.02))!important;
+  border:1px solid rgba(233,206,138,.34)!important;
+  color:#EBD3A0!important;
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.12);}
+.portal-topbar .portal-theme-toggle:hover,
+.portal-topbar .portal-theme-toggle:focus-visible{
+  background:rgba(233,206,138,.18)!important;
+  border-color:rgba(233,206,138,.75)!important;color:#FFF6DF!important;}
+
 .portal-topbar-calendar{
   color:#EBD3A0!important;border-color:rgba(233,206,138,.4)!important;
   border-radius:99px;}
@@ -325,86 +567,32 @@ html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap
 html:not([data-pc-theme="dark"]):not([data-pc-theme="royal"]) .office-index-wrap p > a:hover{
   color:rgb(var(--lv-gt,124,84,48))!important;}
 
-/* The shell's own utility strip, taken into the colophon as its top row
-   rather than left to stack beneath it as a second footer. */
-.pch-foot .pch-adopted{
-  max-width:1180px;margin:0 auto 22px;padding:0 0 18px;
-  border-bottom:1px solid rgba(233,206,138,.22);
-  background:none!important;box-shadow:none!important;border-top:none!important;}
-.pch-foot .pch-adopted a{color:rgba(233,206,138,.88)!important;}
-.pch-foot .pch-adopted a:hover{color:#FFF6DF!important;}
-.pch-foot .pch-adopted,
-.pch-foot .pch-adopted *{color:rgba(247,238,223,.7);}
-
 /* ===================================================================
-   THE LIGHT EDITION OF THE COLOPHON — and the reason it was needed
+   THE COLOPHON HAS ONE GROUND NOW — and the block this replaces
    -------------------------------------------------------------------
-   Everything above was written for a dark colophon and states its
-   colours as literals: #FFF6DF for the school's name, rgba(247,238,223,
-   .66) for the signature and the badge, rgba(247,238,223,.56) for the
-   note. That is correct on espresso and catastrophic on cream — and in
-   the Clear edition the ground IS cream, because it is themed
-   elsewhere while these colours were not.
+   Forty lines stood here restating every colour of the colophon a
+   second time, for cream. They were written because the colophon
+   really was cream in the Clear edition, and the reason it was is
+   that `html[data-pc-theme="light"] footer` in css/prestige.css is a
+   TAG selector: written for the marketing footer, which does turn
+   pearl, it caught .pch-foot as well. So a dashboard opened with an
+   espresso masthead at the top and a cream colophon at the bottom, the
+   page changing materials halfway down, and this file spent forty
+   lines making the accident legible instead of asking whether it
+   should be happening.
 
-   Measured on the live page: the school's own name was #FFF6DF on
-   #F1E7D5. A CONTRAST RATIO OF 1.06:1. Not "low contrast" — invisible,
-   the same colour to within a rounding error, on sixty-nine portal
-   pages, wherever a reader had chosen the Clear edition. The screenshot
-   that reported it showed a footer that looked like a blank cream
-   panel with three gold links floating in it.
+   Nothing there read as broken. Every ratio passed — that block was
+   added after a sweep found the school's own name at 1.06:1 and fixed
+   it honestly. It simply looked cheap, and a contrast audit cannot see
+   cheap. It took building the arrival plate and the live panel on top
+   of it, and watching them arrive pale-on-cream, to notice that the
+   ground underneath had never been intended.
 
-   The lesson is the one this codebase keeps relearning: a colour
-   written as a literal is a colour that cannot follow its ground. Every
-   value below is stated against the ground it actually sits on.
+   prestige.css now excludes .pch-foot, so the Digital Campus is
+   espresso from its calendar band to its seal, in all three editions,
+   and the colophon needs one set of colours rather than two. The forty
+   lines are gone; what they were compensating for is gone with them.
    =================================================================== */
-html[data-pc-theme="light"] .pch-foot{
-  border-top:1px solid rgba(140,104,52,.45);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.75);
-}
-html[data-pc-theme="light"] .pch-foot-name{ color:#3B2A1D; }
-html[data-pc-theme="light"] .pch-foot-sig{ color:rgba(59,42,29,.78); }
-html[data-pc-theme="light"] .pch-note{ color:rgba(59,42,29,.72); }
-html[data-pc-theme="light"] .pch-badge{
-  color:#6B4E22; border-color:rgba(140,104,52,.5);
-}
-/* The links are no longer pills, so the pill's fill has to go with the pill.
-   Left behind, it painted an opaque cream block behind every link in the
-   colophon — visible in the Clear edition as a rectangle sitting under the
-   words. Colour and the hover rule are all a link needs on either ground. */
-html[data-pc-theme="light"] .pch-link{
-  color:#6B4E22; border:0; background:none;
-}
-html[data-pc-theme="light"] .pch-link::after{ background:#8C6834; }
-html[data-pc-theme="light"] .pch-link:hover,
-html[data-pc-theme="light"] .pch-link:focus-visible{
-  color:#3B2A1D; border-color:rgba(140,104,52,.85);
-  background:rgba(255,255,255,.9);
-}
-html[data-pc-theme="light"] .pch-rule{
-  background:linear-gradient(90deg,transparent,rgba(140,104,52,.42),transparent);
-}
-html[data-pc-theme="light"] .pch-foot-brand img,
-html[data-pc-theme="light"] .pch-crest{ opacity:.9; filter:none; }
-
-/* THE EDITION-BLIND PATTERN, AND THIS TIME IT WAS MINE. The colophon's plate
-   is espresso in Royal and Midnight and CREAM in Clear — that is what the
-   block above does — and the columns added below it were coloured for the
-   espresso only. On the Clear edition that put ivory-at-56% on cream: the
-   entire colophon bar, the meta line, and both column headings were washed
-   out to the edge of legibility.
-     Every value the new colophon sets is therefore stated twice, once against
-   each ground. The rule written into docs/measuring-contrast-honestly.md
-   applies to the person adding the component as much as to the person
-   auditing it afterwards. */
-html[data-pc-theme="light"] .pch-h{ color:#6B4E22; }
-html[data-pc-theme="light"] .pch-h::after{
-  background:linear-gradient(90deg,rgba(140,104,52,.55),rgba(140,104,52,.05)); }
-html[data-pc-theme="light"][dir="rtl"] .pch-h::after,
-[dir="rtl"] html[data-pc-theme="light"] .pch-h::after{
-  background:linear-gradient(270deg,rgba(140,104,52,.55),rgba(140,104,52,.05)); }
-html[data-pc-theme="light"] .pch-meta{ color:rgba(59,42,29,.78); }
-html[data-pc-theme="light"] .pch-badge{
-  background:rgba(255,255,255,.42); }
 
 /* ===================================================================
    THE TOPBAR MUST NOT COLLIDE
@@ -436,19 +624,12 @@ html[data-pc-theme="light"] .pch-badge{
   .portal-topbar{ padding:12px 14px; gap:8px 10px; }
 }
 
-/* The adopted utility strip needs the same treatment, and it is the part
-   that actually failed hardest: its links are set with !important, so
-   the Clear edition could not have corrected them by accident even if
-   somebody had tried. Measured before this block: 1.54:1 for the four
-   verify links, 1.15:1 for the academic year, the copyright line and
-   the version stamp. Below 1.2:1 the text is not "hard to read", it is
-   the same colour as the paper. */
-html[data-pc-theme="light"] .pch-foot .pch-adopted,
-html[data-pc-theme="light"] .pch-foot .pch-adopted *{ color:rgba(59,42,29,.82); }
-html[data-pc-theme="light"] .pch-foot .pch-adopted a{ color:#6B4E22!important; }
-html[data-pc-theme="light"] .pch-foot .pch-adopted a:hover,
-html[data-pc-theme="light"] .pch-foot .pch-adopted a:focus-visible{ color:#3B2A1D!important; }
-html[data-pc-theme="light"] .pch-foot .pch-adopted{ border-bottom-color:rgba(140,104,52,.3); }
+/* The .pch-adopted rules that stood here — the strip's own plate and, after
+   it, six more restating its ink for cream — are gone. Nothing sets that
+   class: js/portal-chrome.js stopped inserting the shell's strip whole and
+   started moving its two halves into the Verification column and the colophon
+   bar, so the strip no longer exists to be styled. Dead rules for a dead
+   element, kept alive only by a grep that never found them. */
 
 /* The standalone shell footer, on any portal page the colophon has not
    adopted it into. */

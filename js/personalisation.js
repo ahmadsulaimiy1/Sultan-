@@ -339,33 +339,18 @@
   // Both are estimates, not moon-sighting-verified — disclosed in the
   // panel itself, not hidden in a footnote nobody reads.
   // ================================================================
-  var HIJRI_MONTHS_EN = ['Muharram','Safar',"Rabi' al-Awwal","Rabi' al-Thani",'Jumada al-Awwal','Jumada al-Thani','Rajab',"Sha'ban",'Ramadan','Shawwal',"Dhu al-Qi'dah","Dhu al-Hijjah"];
-  var HIJRI_MONTHS_AR = ['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
-
-  function gregorianToJD(y, m, d){
-    return Math.floor((1461 * (y + 4800 + Math.floor((m - 14) / 12))) / 4)
-      + Math.floor((367 * (m - 2 - 12 * Math.floor((m - 14) / 12))) / 12)
-      - Math.floor((3 * Math.floor((y + 4900 + Math.floor((m - 14) / 12)) / 100)) / 4)
-      + d - 32075;
-  }
-  function jdToHijri(jdIn){
-    var jd = jdIn - 1948440 + 10632;
-    var n = Math.floor((jd - 1) / 10631);
-    jd = jd - 10631 * n + 354;
-    var j = Math.floor((10985 - jd) / 5316) * Math.floor((50 * jd) / 17719) + Math.floor(jd / 5670) * Math.floor((43 * jd) / 15238);
-    jd = jd - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
-    var month = Math.floor((24 * jd) / 709);
-    var day = jd - Math.floor((709 * month) / 24);
-    var year = 30 * n + j - 30;
-    return { year: year, month: month, day: day };
-  }
-  function hijriToJD(year, month, day){
-    return day + Math.ceil(29.5 * (month - 1)) + (year - 1) * 354 + Math.floor((3 + 11 * year) / 30) + 1948440 - 385;
-  }
-  function todayJD(){
-    var now = new Date();
-    return gregorianToJD(now.getFullYear(), now.getMonth() + 1, now.getDate());
-  }
+  /* The arithmetic itself now lives in js/hijri.js. It was moved so the
+     Digital Campus could print the same date without loading this file,
+     which is a thousand lines of preference handling and returns at its
+     second statement on any page without the Personalisation Centre in
+     it — see the note at the head of hijri.js. The local names are kept
+     so everything below reads exactly as it did. */
+  var HIJRI = window.SHRSHijri;
+  var HIJRI_MONTHS_EN = HIJRI.MONTHS_EN;
+  var HIJRI_MONTHS_AR = HIJRI.MONTHS_AR;
+  var jdToHijri = HIJRI.jdToHijri;
+  var hijriToJD = HIJRI.hijriToJD;
+  var todayJD = HIJRI.todayJD;
 
   function gregorianLabel(){
     var now = new Date();

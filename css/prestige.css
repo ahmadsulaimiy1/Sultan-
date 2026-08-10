@@ -3522,13 +3522,23 @@ html[data-pc-theme="light"] .foot-arrival{
     linear-gradient(180deg,rgb(var(--lv-w51,248,241,227)) 0%,rgb(var(--lv-w26,241,231,213)) 58%,rgb(var(--lv-w107,234,223,201)) 100%);
   border-top:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] .foot-statement p{color:rgb(var(--lv-gt2,138,106,47));}
-html[data-pc-theme="light"] footer{
+/* NOT THE DIGITAL CAMPUS'S FOOT. `footer` is a tag, and it caught two of
+   them: the marketing footer, which really does turn pearl in this edition,
+   and .pch-foot — the colophon js/portal-chrome.js builds on all sixty-eight
+   portal pages, which is espresso in every edition because the masthead above
+   it is espresso in every edition. Unexcluded, this rule painted the bottom
+   of every dashboard cream while the top of it stayed coffee, and re-inked
+   the colophon dark to match: the page changed materials halfway down.
+   Nothing there looked broken, which is why it stood — it looked cheap, and
+   that is harder to see in a stylesheet than a contrast failure is.
+   css/portal-chrome.css owns that foot; this edition does not reach into it. */
+html[data-pc-theme="light"] footer:not(.pch-foot){
   background:linear-gradient(180deg,rgb(var(--lv-w26,241,231,213)),rgb(var(--lv-w192,233,220,196)));color:var(--pearl-ink-2);
   border-top:1px solid var(--pearl-line);}
-html[data-pc-theme="light"] footer h2,
-html[data-pc-theme="light"] footer .fs-sig,
-html[data-pc-theme="light"] footer .fd-item span,
-html[data-pc-theme="light"] footer a{color:var(--pearl-ink);}
+html[data-pc-theme="light"] footer:not(.pch-foot) h2,
+html[data-pc-theme="light"] footer:not(.pch-foot) .fs-sig,
+html[data-pc-theme="light"] footer:not(.pch-foot) .fd-item span,
+html[data-pc-theme="light"] footer:not(.pch-foot) a{color:var(--pearl-ink);}
 html[data-pc-theme="light"] footer .fd-item{
   background:linear-gradient(168deg,rgb(var(--lv-w17,255,253,248)),rgb(var(--lv-w38,246,238,223)));border-color:rgba(var(--lv-gs,198,161,91),.26);}
 html[data-pc-theme="light"] footer .fd-item svg{color:rgb(var(--lv-gt2,138,106,47));}
