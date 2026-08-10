@@ -173,3 +173,31 @@ html[data-idle-all] *::before,
 html[data-idle-all] *::after{
   animation-play-state:paused!important;
 }
+
+/* ===================================================================
+   A CORRECTION, KEPT ON THE RECORD
+   -------------------------------------------------------------------
+   A light-edition block was added here on the strength of an automated
+   contrast audit reporting the ticker's emphasis at 1.02:1, and it was
+   WRONG — both the reading and the fix.
+
+   The ticker's band is dark espresso in EVERY edition. It is a
+   deliberately dark strip on a pale page, not a component that follows
+   the theme, so its near-white emphasis on that band was correct all
+   along. The "fix" put brown text on a brown band and made the four
+   most emphatic phrases on the page harder to read than they had been.
+
+   The reading was false because the audit sampled the pixels at a
+   stale bounding rect: it called scrollIntoView, then measured, then
+   screenshotted — and by the screenshot the element had moved. It was
+   sampling a cream section elsewhere on the page and comparing it
+   against the ticker's colours.
+
+   TWO LESSONS, and the second is the one worth keeping. First, measure
+   at the instant you sample, never before. Second — and this is why
+   this comment stays rather than being quietly deleted with the code —
+   a tool that reports a fault is evidence, not a verdict. This one was
+   believed over a screenshot that would have settled it in four
+   seconds, and the result was a real regression shipped in the name of
+   fixing an imaginary one. Look at the thing.
+   =================================================================== */

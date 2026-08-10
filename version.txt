@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      56324075e3c1deff45d55898b1da921611cdc011
-short       56324075
+commit      198b7bef68984fd01f0d438599ee0904ac5c64a4
+short       198b7bef
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The arrival becomes a sequence, the typewriter stops cutting the name off, and the plate takes the edge light
-built (UTC) 2026-08-10T08:08:00Z
-assets      shrs-pwa-ff268af4e0
+subject     The countdown is struck rather than printed, and stops rebuilding itself every minute
+built (UTC) 2026-08-10T08:30:26Z
+assets      shrs-pwa-2a74a012d3
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

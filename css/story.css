@@ -410,7 +410,13 @@ html[data-pc-theme="dark"] .st-rose-seg .ltr,
   fill:rgba(var(--lv-cfd2,42,28,16),.92);stroke:rgb(var(--lv-gb,233,206,138));stroke-width:1.6;
 }
 .st-chain-node.is-crown .t{fill:rgb(var(--lv-gl,255,246,223));}
-.st-chain-node.is-crown .s{fill:rgba(var(--lv-gp,243,226,188),.86);}
+/* The two crown nodes carry an 11px sub-label on a near-black plate,
+   and at .86 alpha of a soft gold they were the dimmest text anywhere
+   in the diagram — "Can overrule the founder" is the single most
+   consequential sentence on the page about how this school is run, and
+   it was the hardest thing on it to read. Full strength, on the pale
+   gold rather than the muted one. */
+.st-chain-node.is-crown .s{fill:rgb(var(--lv-gb,233,206,138));}
 .st-chain-node .t{
   font-family:var(--font-label,'Cinzel',serif);font-size:14px;
   fill:var(--st-ink);text-anchor:middle;
