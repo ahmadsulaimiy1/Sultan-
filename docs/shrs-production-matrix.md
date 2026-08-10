@@ -1,5 +1,7 @@
 # SHRS Offline Ecosystem — Final Production Matrix
 
+**Candidate release:** `ab1adbaf` — **FROZEN**. No further features or
+architectural changes unless a real deployment test exposes a defect.
 **Date:** 10 August 2026 (revised — the three NOT BUILT items are now built)
 **Automated gates:** 277 checks across nine suites, plus a build gate over 219
 pages. All green.
@@ -203,8 +205,28 @@ in spirit while honouring it in code. Wiring `start()` waits on that surface.
 
 ## 10. The offline key-material decision — for the Founder
 
-This is the one new decision this round created, and it is not the code's to
-make.
+Full analysis, with browser-verified evidence and a recommendation:
+**`docs/shrs-offline-key-material-decision.md`**.
+
+Short form: **ship Option A (in-memory only) now — it needs no decision and no
+security change, and delivers offline *continuation* within a live session.
+Adopt Option C (a non-extractable device key in IndexedDB) for cold-start
+offline access, once the Founder accepts the one named trade-off.** A
+script-readable cookie is **rejected on the merits**: the compromise outlives
+the tab, the material travels on every request into logs and proxies, and it
+buys nothing Option C does not.
+
+Option C was verified against the pinned Chromium build rather than assumed —
+the key survives a reload, `exportKey` throws `InvalidAccessError`, the stored
+object is opaque to script, and deleting it makes the cache unreadable at once.
+
+The crux, which no design escapes: **no client-side design can cryptographically
+enforce a wall-clock expiry offline, because offline the clock belongs to
+whoever holds the device.** Today's model appears to enforce it but achieves it
+only by discarding the key on reload — which is the same thing as having no cold
+start. The real choice is persist-with-procedural-expiry or don't-persist.
+
+The original framing follows, for the record.
 
 The device store encrypts everything under a key derived from a session secret
 that is never persisted (`shrs-offline-policy.js` §7: `keyPersisted: false`).
@@ -242,3 +264,20 @@ behaves as it always has. Nothing degrades; nothing is claimed.
 Nothing above has touched production. The chain the Founder named — live
 database → production keys → signed register → deployed verifier → real QR scan
 → real device offline test — has still **not** been run end to end.
+
+
+## 12. Deployment
+
+The candidate is frozen at `ab1adbaf`. Feature development has stopped.
+
+The operational document from here is
+**`docs/shrs-production-deployment-runbook.md`**: the eight external
+prerequisites (all UNMET), the six secrets, and the twelve-stage production
+chain — production database → production Ed25519 key → signed manifest →
+deployed verifier → real certificate QR → real Android camera → online
+verification → disconnect → offline verification → reconnect → synchronisation →
+live verification again — each recorded separately as PASS or FAIL, all
+currently UNRUN.
+
+The next report on this programme should be a **production deployment report**,
+not a feature-development report.
