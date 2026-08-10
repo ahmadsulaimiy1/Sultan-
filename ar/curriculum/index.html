@@ -1498,16 +1498,19 @@
         <div class="pc-card">
           <div class="pc-card-head"><span class="pc-option-title">طلبات الخصوصية والبيانات</span></div>
           <p class="pc-option-desc">اطلب الاطلاع على بياناتك الشخصية لدينا أو تصحيحها أو حذفها، بموجب قانون حماية البيانات النيجيري لعام 2023. سيتابع أحد أفراد الطاقم عبر البريد الإلكتروني.</p>
+          <!-- نموذج طلب نظامي بموجب قانون حماية البيانات النيجيري ٢٠٢٣.
+               النصّ الإرشادي ليس تسمية، وقائمة الاختيار لم تكن تحمل شيئاً.
+               راجع التعليق في partials/personalisation.html -->
           <form class="pc-form" data-pc-privacy-form>
-            <input type="text" name="fullName" placeholder="الاسم الكامل" required />
-            <input type="email" name="email" placeholder="البريد الإلكتروني" required />
-            <select name="requestType" required>
+            <input type="text" name="fullName" placeholder="الاسم الكامل" aria-label="اسمك الكامل" required />
+            <input type="email" name="email" placeholder="البريد الإلكتروني" aria-label="بريدك الإلكتروني" required />
+            <select name="requestType" aria-label="ما الذي تطلب منّا فعله ببياناتك" required>
               <option value="access">طلب الاطلاع على بياناتي</option>
               <option value="correction">طلب تصحيح</option>
               <option value="deletion">طلب حذف</option>
               <option value="other">طلب آخر</option>
             </select>
-            <textarea name="details" placeholder="التفاصيل (اختياري)" rows="3"></textarea>
+            <textarea name="details" placeholder="التفاصيل (اختياري)" aria-label="أيّ تفصيل إضافي (اختياري)" rows="3"></textarea>
             <button type="submit" class="btn btn-gold">إرسال الطلب</button>
             <p class="pc-form-status" data-pc-privacy-status hidden></p>
           </form>

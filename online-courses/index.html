@@ -1421,16 +1421,24 @@
         <div class="pc-card">
           <div class="pc-card-head"><span class="pc-option-title">Privacy &amp; Data Requests</span></div>
           <p class="pc-option-desc">Request access to, correction of, or deletion of the personal data we hold, under the Nigeria Data Protection Act 2023. A staff member will follow up by email.</p>
+          <!-- This is a statutory request form under the Nigeria Data
+               Protection Act 2023, and its controls were the only ones on the
+               site with no accessible name. A placeholder is not a label — it
+               is announced inconsistently and it vanishes the moment anybody
+               types — and the <select> had not even that: it displayed
+               "Request access to my data" and gave a screen-reader user no way
+               to know what was being asked of them. The compact design is kept
+               and each control now carries its own name. -->
           <form class="pc-form" data-pc-privacy-form>
-            <input type="text" name="fullName" placeholder="Full name" required />
-            <input type="email" name="email" placeholder="Email address" required />
-            <select name="requestType" required>
+            <input type="text" name="fullName" placeholder="Full name" aria-label="Your full name" required />
+            <input type="email" name="email" placeholder="Email address" aria-label="Your email address" required />
+            <select name="requestType" aria-label="What you are asking us to do with your data" required>
               <option value="access">Request access to my data</option>
               <option value="correction">Request a correction</option>
               <option value="deletion">Request deletion</option>
               <option value="other">Other request</option>
             </select>
-            <textarea name="details" placeholder="Details (optional)" rows="3"></textarea>
+            <textarea name="details" placeholder="Details (optional)" aria-label="Any further detail (optional)" rows="3"></textarea>
             <button type="submit" class="btn btn-gold">Send Request</button>
             <p class="pc-form-status" data-pc-privacy-status hidden></p>
           </form>

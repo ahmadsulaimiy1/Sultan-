@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      3384472228d83b1d5533cc1a795e2f6c693e8837
-short       33844722
+commit      4150e9c2b8e59a3771c2d2a3d16b163cd0bf6afb
+short       4150e9c2
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Write down what seven bad contrast readings taught
-built (UTC) 2026-08-10T11:32:20Z
+subject     Repair four anchors that pointed at ids no page carried
+built (UTC) 2026-08-10T11:37:34Z
 assets      shrs-pwa-111a9c204b
 pages       143
 
