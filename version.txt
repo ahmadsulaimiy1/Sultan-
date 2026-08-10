@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      e509198a6b5116141dc980c013c6cb747a3135ed
-short       e509198a
+commit      bf6ce734f9cb8f54a862103dd29cbb9911ab3c40
+short       bf6ce734
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give the Digital Campus the school's own masthead and its own colophon
-built (UTC) 2026-08-10T17:54:11Z
-assets      shrs-pwa-d39104073d
+subject     Say the same thing in the same language, and fill the empty middles
+built (UTC) 2026-08-10T18:22:06Z
+assets      shrs-pwa-3f219dc83b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

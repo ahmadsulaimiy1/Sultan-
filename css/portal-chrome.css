@@ -277,9 +277,9 @@
    pale ornament was lying across all of it. A watermark is the thing you
    notice second. */
 .pch-foot::before{
-  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.026;
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.02;
   background-image:url("/assets/images/crest-watermark.png");
-  background-size:auto 88%;background-repeat:no-repeat;background-position:center 42%;}
+  background-size:auto 64%;background-repeat:no-repeat;background-position:center 30%;}
 /* ---- The arrival ----------------------------------------------------
    The school's own footer does not begin with columns; it begins with a
    ruled plate carrying four corner marks, the statement, and a lozenge.
