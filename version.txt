@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      5982fc33f7b06d82eb5fe38f79802b263c6cbf5f
-short       5982fc33
+commit      0206196aac3f26fd8a5827b49b03a13427139184
+short       0206196a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Flagship, first cuts: the broken hero versal, and the one element on the site that belongs to another company
-built (UTC) 2026-08-10T07:17:25Z
+subject     The school's own photographs, and a hero stage built for them
+built (UTC) 2026-08-10T07:28:44Z
 assets      shrs-pwa-03d904a9bb
 pages       143
 
