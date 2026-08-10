@@ -165,7 +165,18 @@
       var res = await fetch('/api/portal/staff/office/' + encodeURIComponent(slug), { headers: { accept: 'application/json' } });
       if (res.status === 401) { window.location.href = '/portal/staff/login/'; return; }
       var data = await res.json().catch(function () { return {}; });
-      if (!res.ok) throw new Error(data.error || 'Could not load this office.');
+      if (!res.ok) {
+        // Only a message the SERVER wrote is fit to show a member of staff.
+        // Anything else gets a sentence written here, tagged so the catch below
+        // can tell an answered request from one that never arrived.
+        var e = new Error(data.error || (res.status === 403
+          ? 'This office is not one your account has been given access to. If that is wrong, the Registrar’s Office can correct it.'
+          : res.status >= 500
+            ? 'The Digital Campus could not answer just now. This is at our end, not yours — please try again in a moment.'
+            : 'Could not load this office.'));
+        e.fromServer = true;
+        throw e;
+      }
       render(data);
       playArrivalSequence(slug, data);
       if (skeletonEl) skeletonEl.hidden = true;
@@ -181,7 +192,23 @@
       if (skeletonEl) skeletonEl.hidden = true;
       if (errorEl) {
         errorEl.hidden = false;
-        errorEl.querySelector('[data-error-message]').textContent = err.message || 'Could not load this office.';
+        var msgEl = errorEl.querySelector('[data-error-message]');
+        // The placeholder in the markup carries data-i18n="portal.tryAgain",
+        // and the i18n pass rewrites every element that still has that
+        // attribute. So the specific reason written here was being put on the
+        // page and then overwritten, a few hundred milliseconds later, with the
+        // generic "Please try again." — meaning staff never once saw why
+        // anything had actually failed. Dropping the attribute is what hands
+        // ownership of this text from the translator to whoever wrote it.
+        if (msgEl) msgEl.removeAttribute('data-i18n');
+        // A fetch that never reached the server rejects with a TypeError whose
+        // message is "Failed to fetch" — a browser's words, not the school's,
+        // and it was being printed to staff verbatim. Only messages this file
+        // or the API actually wrote get shown; everything else is a connection
+        // that did not complete, and is described as one.
+        errorEl.querySelector('[data-error-message]').textContent = err && err.fromServer && err.message
+          ? err.message
+          : 'We could not reach the Digital Campus. Check the connection and try again — nothing you have entered has been lost.';
       }
     }
   }

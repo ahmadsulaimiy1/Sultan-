@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      b4d91cb7ab0a23622604336f1a64bf532e67661b
-short       b4d91cb7
+commit      1d5e07d505a1c29c19e0fc5bfa2b6921df9f7fe6
+short       1d5e07d5
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Make the admissions call to action visible again, and reachable at all
-built (UTC) 2026-08-10T10:37:22Z
-assets      shrs-pwa-ff700c20eb
+subject     Record the true blast radius of the invisible call-to-action fault
+built (UTC) 2026-08-10T11:03:38Z
+assets      shrs-pwa-111a9c204b
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

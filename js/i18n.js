@@ -92,17 +92,40 @@
        data-i18n-html       -> innerHTML, for the few strings carrying markup
      Anything without a translation is left exactly as the build rendered it,
      so a partial dictionary degrades to mixed language rather than to blanks. */
+  /* A translation key names a FIXED string. The moment a script writes its own
+     text into one of these elements, the key no longer describes what is there,
+     and re-applying it destroys real information.
+       That is not hypothetical. Portal error panels carry
+     data-i18n="portal.tryAgain" on the very element their script writes the
+     reason into. applyDict runs once when the dictionary finishes loading — a
+     few hundred milliseconds after page load — and again on every language
+     switch. So the specific reason a page had failed was written, shown, and
+     then replaced by the generic "Please try again."; staff were never once
+     told what had actually gone wrong, and switching language wiped any error
+     already on screen.
+       An element is now considered claimed once its content differs from what
+     this function last wrote into it, and claimed elements are left alone. A
+     language switch still re-translates everything untouched, because that text
+     is exactly what applyDict put there. Nothing needs to be remembered by the
+     twenty-odd scripts that write into these panels, and future ones inherit
+     the behaviour without knowing it exists. */
+  function claimed(el, prop) {
+    return el.__shrsI18n !== undefined && el[prop] !== el.__shrsI18n;
+  }
+
   function applyDict(code) {
     var doc = document;
     doc.querySelectorAll('[data-i18n]').forEach(function (el) {
+      if (claimed(el, 'textContent')) return;
       var key = el.getAttribute('data-i18n');
       var val = I18N.translate(dicts, code, key);
-      if (val.charAt(0) !== '⟦') el.textContent = val; // skip ⟦missing⟧
+      if (val.charAt(0) !== '⟦') { el.textContent = val; el.__shrsI18n = val; } // skip ⟦missing⟧
     });
     doc.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+      if (claimed(el, 'innerHTML')) return;
       var key = el.getAttribute('data-i18n-html');
       var val = I18N.translate(dicts, code, key);
-      if (val.charAt(0) !== '⟦') el.innerHTML = val;
+      if (val.charAt(0) !== '⟦') { el.innerHTML = val; el.__shrsI18n = val; }
     });
     doc.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
       el.getAttribute('data-i18n-attr').split(',').forEach(function (pair) {
