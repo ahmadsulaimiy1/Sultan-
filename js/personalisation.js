@@ -379,9 +379,23 @@
     var h = jdToHijri(todayJD());
     var names = STRIP_LANG === 'ar' ? HIJRI_MONTHS_AR : HIJRI_MONTHS_EN;
     var hijriText = h.day + ' ' + (names[h.month - 1] || '') + ' ' + h.year + 'H';
-    var text = prefs.dateFormat === 'gregorian' ? gregorianLabel()
-      : prefs.dateFormat === 'both' ? (hijriText + ' · ' + gregorianLabel())
-      : hijriText;
+    /* THE HEADER ALWAYS CARRIES BOTH CALENDARS. The school runs on two
+       of them at once — the Hijri date governs the prayer times, the
+       fasts and the Islamic calendar down the page, and the Gregorian
+       one governs term dates, the timetable and every letter that
+       leaves the office — so the strip at the top of every page states
+       both, in that order, rather than making a reader pick one in a
+       settings panel and then wonder what today's other date is.
+
+       The one preference still honoured here is "Gregorian only", which
+       is a deliberate choice to see one calendar rather than an
+       accident of the default. Choosing "Hijri" now narrows the rest of
+       the site's dating to the Hijri calendar and leaves this strip
+       showing both, because this line is the school's masthead rather
+       than a reader's private view of it. */
+    var text = prefs.dateFormat === 'gregorian'
+      ? gregorianLabel()
+      : (hijriText + ' · ' + gregorianLabel());
     if(el) el.textContent = hijriText; // the preview card is always the Hijri date specifically
     var hijriIcon = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" class="pc-strip-icon"><path d="M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>';
     stripEl.forEach(function(s){ s.innerHTML = prefs.islamicHijriCalendar ? hijriIcon + '<span>' + text + '</span>' : ''; });

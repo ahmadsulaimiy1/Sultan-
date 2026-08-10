@@ -1,6 +1,6 @@
 /* ==========================================================================
    SHRS — Application wizard
-   Seven steps, validated per step, saved as you go, reviewable before submit.
+   Ten steps, validated per step, saved as you go, reviewable before submit.
 
    Where applications are delivered
    -------------------------------
@@ -309,13 +309,25 @@
   }
 
   /* ---------------- review ---------------- */
+  /* The step indices below are POSITIONS IN THE DOM, because that is what the
+     Edit buttons jump to. Three steps were inserted into the middle of this
+     form — Health at 4, Qur'an at 5, Permissions at 8 — which pushed Documents,
+     Further and Review down by two. Anything added here later must renumber
+     from the markup rather than from memory: a wrong index does not throw, it
+     just quietly sends a parent to the wrong step when they try to correct
+     something, which is the kind of fault nobody reports and everybody
+     resents. */
   var REVIEW = [
     { step: 0, title: 'Programme', keys: [['institution', 'Institution'], ['entry_class', 'Entry class'], ['entry_term', 'Intended start'], ['attendance', 'Attendance']] },
     { step: 1, title: 'The student', keys: [['student_name', 'Full name'], ['student_preferred', 'Known as'], ['student_dob', 'Date of birth'], ['student_gender', 'Gender'], ['student_nationality', 'Nationality'], ['student_birth_country', 'Country of birth'], ['student_language', 'First language']] },
     { step: 2, title: 'Family and contact', keys: [['g1_name', 'Parent or guardian'], ['g1_relationship', 'Relationship'], ['g1_email', 'Email'], ['g1_phone', 'Telephone'], ['g2_name', 'Second guardian'], ['addr_line1', 'Address'], ['addr_city', 'City'], ['addr_region', 'State or province'], ['addr_region2', 'District'], ['addr_lga', 'Local government'], ['addr_country', 'Country'], ['emg_name', 'Emergency contact']] },
-    { step: 3, title: 'Academic history', keys: [['prev_school', 'Present or last school'], ['prev_country', 'School country'], ['prev_class', 'Class completed'], ['prev_language', 'Language of instruction'], ['prev_reason', 'Reason for leaving'], ['needs', 'Learning support'], ['medical', 'Medical notes']] },
-    { step: 3, title: 'Fees and support', keys: [['prev_tuition', 'Previous school fees'], ['income_band', 'Household income band'], ['bursary', 'Bursary consideration']] },
-    { step: 5, title: 'Additional information', keys: [['heard', 'How you heard of us'], ['sibling', 'Sibling at SHRS'], ['contact_pref', 'Preferred contact'], ['notes', 'Anything else']] }
+    { step: 2, title: 'Who may collect your child', keys: [['coll1_name', 'Authorised to collect'], ['coll1_rel', 'Relationship'], ['coll1_phone', 'Telephone'], ['coll2_name', 'Also authorised'], ['coll2_rel', 'Relationship'], ['coll2_phone', 'Telephone'], ['custody', 'Custody or contact notes']] },
+    { step: 3, title: 'Academic history', keys: [['prev_school', 'Present or last school'], ['prev_country', 'School country'], ['prev_class', 'Class completed'], ['prev_language', 'Language of instruction'], ['prev_reason', 'Reason for leaving'], ['ref_name', 'Referee'], ['ref_contact', 'Referee contact'], ['prev_report', 'Last report'], ['prev_conduct', 'Suspension or exclusion'], ['prev_conduct_note', 'Explanation'], ['needs', 'Learning support']] },
+    { step: 3, title: 'Fees and support', keys: [['prev_tuition', 'Previous school fees'], ['income_band', 'Household income band'], ['bursary', 'Bursary consideration'], ['fees_notes', 'Notes on fees']] },
+    { step: 4, title: 'Health and wellbeing', keys: [['genotype', 'Genotype'], ['blood_group', 'Blood group'], ['cond_detail', 'Conditions'], ['allergies', 'Allergies'], ['allergy_severity', 'Allergy severity'], ['medication', 'Regular medicine'], ['med_school', 'Medicine at school'], ['immunisation', 'Immunisations'], ['dietary', 'Dietary requirements'], ['disability', 'Disability or access needs'], ['doctor_name', 'Doctor or clinic'], ['doctor_phone', 'Their telephone'], ['hmo', 'Health insurance']] },
+    { step: 5, title: 'Qur\u2019an, Arabic and formation', keys: [['faith', 'Faith background'], ['quran_level', 'Qur\u2019an memorised'], ['tajweed', 'Tajw\u012bd'], ['arabic_read', 'Reading Arabic'], ['arabic_speak', 'Speaking Arabic'], ['salah', 'The five prayers'], ['madrasah', 'Islamiyyah attended'], ['quran_goal', 'What you hope for']] },
+    { step: 7, title: 'Additional information', keys: [['heard', 'How you heard of us'], ['sibling', 'Sibling at SHRS'], ['transport', 'Transport'], ['transport_area', 'Bus area'], ['interests', 'What your child loves'], ['awards', 'Prizes and awards'], ['contact_pref', 'Preferred contact'], ['visit', 'A visit before assessment'], ['notes', 'Anything else']] },
+    { step: 8, title: 'Permissions', keys: [['consent_media', 'Photographs and film']] }
   ];
 
   function buildReview() {
@@ -344,7 +356,14 @@
       var label = d.querySelector('b').textContent;
       docRows += '<dt>' + label + '</dt><dd>' + (files[k] ? esc(files[k].name) : '— not attached —') + '</dd>';
     });
-    out += '<div class="ap-rev-block"><h4>Documents<button type="button" data-goto="4">Edit</button></h4><dl>' + docRows + '</dl></div>';
+    /* The Documents block is built here rather than from REVIEW, so its Edit
+       index was hard-coded — and it was still pointing at 4, where Documents
+       used to live before Health and Qur'an were inserted above it. It sends
+       the reader to the step that holds the upload rows, found by looking for
+       them, so it cannot drift again the next time a step is added. */
+    var docStep = steps.indexOf(form.querySelector('.ap-doc').closest('.ap-step'));
+    out += '<div class="ap-rev-block"><h4>Documents<button type="button" data-goto="' +
+           (docStep < 0 ? 0 : docStep) + '">Edit</button></h4><dl>' + docRows + '</dl></div>';
     host.innerHTML = out;
     [].slice.call(host.querySelectorAll('[data-goto]')).forEach(function (b) {
       b.addEventListener('click', function () { show(parseInt(b.getAttribute('data-goto'), 10), true); });

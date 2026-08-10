@@ -72,30 +72,6 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
    along the top edge, and a rule beneath the label that draws out from
    the centre when the tile is addressed.
    ------------------------------------------------------------------- */
-/* FLAT BY INSTRUCTION. Everything that used to model these plates and
-   medallions as physical objects has been taken out: the lit top edge,
-   the inset bevel, the seated bottom edge, the drop shadows, the hover
-   lift, the pop on the mark, and the top-lit dome inside each
-   medallion. What is left is flat colour and the marks' own breathing
-   glow.
-
-   The dome gradients are the ones worth naming, because they look
-   innocent: `radial-gradient(120% 120% at 50% 0%, ...)` puts the
-   brightest point at the TOP CENTRE of a circle and darkens toward the
-   bottom, which is the oldest way there is of drawing a sphere. There
-   were SIX, in six theme blocks, all saying the same thing: this is a
-   ball. They are now even fills.
-
-   Glows are kept where they are CENTRED, because a centred glow has no
-   light source and therefore no depth — it is light in the room. A
-   glow with a y-offset is a shadow wearing a different property name,
-   and those are gone.
-
-   A travelling light was added round each medallion and then removed
-   again at the school's request. Nothing of it remains; if it is ever
-   wanted back, it is in the history at ba13168a, and the three ways it
-   managed to draw a shadow by accident are written up in that commit
-   message — worth reading before anyone tries it a second time. */
 .mnr-item{
   position:relative;isolation:isolate;border-radius:14px;
   background:linear-gradient(168deg,
@@ -103,6 +79,8 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
     rgba(var(--lv-g,198,161,91),.028) 62%,
     rgba(var(--lv-g,198,161,91),.06));
   border:1px solid rgba(var(--lv-g,198,161,91),.30);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.16),
+             0 1px 0 rgba(0,0,0,.22);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease,background .45s ease;}
 .mnr-item::after{
@@ -112,12 +90,15 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
     rgb(var(--lv-gb,233,206,138)),transparent);
   transition:transform .55s cubic-bezier(.16,.8,.24,1);}
 .mnr-item:hover,.mnr-item:focus-visible{
+  transform:translateY(-3px);
   border-color:rgba(var(--lv-gb,233,206,138),.72);
   background:linear-gradient(168deg,
     rgba(var(--lv-gb,233,206,138),.20),
     rgba(var(--lv-g,198,161,91),.06) 62%,
     rgba(var(--lv-g,198,161,91),.10));
-  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.30),
+             0 14px 26px -18px rgba(0,0,0,.9),
+             0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
 .mnr-item:hover::after,.mnr-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
 .mnr-item.mnr-more{
   border-style:solid;
@@ -129,10 +110,12 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
 .mnr-item svg{
   width:22px;height:22px;padding:8px;box-sizing:content-box;border-radius:50%;
   border:1px solid rgba(var(--lv-g,198,161,91),.34);
-  background:rgba(var(--lv-g,198,161,91),.07);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(var(--lv-gb,233,206,138),.16),rgba(var(--lv-g,198,161,91),.04) 70%);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease;}
 .mnr-item:hover svg,.mnr-item:focus-visible svg{
+  transform:translateY(-1px) scale(1.06);
   border-color:rgba(var(--lv-gb,233,206,138),.8);
   box-shadow:0 0 16px -2px rgba(var(--lv-gb,233,206,138),.55);}
 .mnr-item span{
@@ -231,6 +214,7 @@ header.nav nav.wrap > .mh-glint{
     rgba(var(--lv-g,198,161,91),.022) 62%,
     rgba(var(--lv-g,198,161,91),.055));
   border:1px solid rgba(var(--lv-g,198,161,91),.26);
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.13);
   transition:transform .5s cubic-bezier(.16,.8,.24,1),
              border-color .45s ease,box-shadow .45s ease,background .45s ease;}
 .fd-item::after{
@@ -240,8 +224,10 @@ header.nav nav.wrap > .mh-glint{
     rgb(var(--lv-gb,233,206,138)),transparent);
   transition:transform .55s cubic-bezier(.16,.8,.24,1);}
 .fd-item:hover,.fd-item:focus-visible{
+  transform:translateY(-3px);
   border-color:rgba(var(--lv-gb,233,206,138),.7);
-  box-shadow:0 0 0 1px rgba(var(--lv-gb,233,206,138),.12);}
+  box-shadow:inset 0 1px 0 rgba(var(--lv-gb,233,206,138),.26),
+             0 16px 30px -20px rgba(0,0,0,.95);}
 .fd-item:hover::after,.fd-item:focus-visible::after{transform:translateX(-50%) scaleX(1);}
 .fd-item span{
   font-family:var(--font-label,'Cinzel','Amiri',serif);font-size:.6rem;letter-spacing:.08em;
@@ -414,29 +400,44 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
   background:linear-gradient(168deg,
     rgba(233,206,138,.155),rgba(198,161,91,.045) 60%,rgba(233,206,138,.10));
-  border-color:rgba(233,206,138,.44);}
+  border-color:rgba(233,206,138,.44);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.24),0 1px 0 rgba(0,0,0,.4);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:hover,
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item:focus-visible,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item:hover{
   border-color:rgba(255,246,223,.85);
   background:linear-gradient(168deg,
     rgba(233,206,138,.30),rgba(198,161,91,.10) 60%,rgba(233,206,138,.18));
-  box-shadow:0 0 22px -6px rgba(233,206,138,.45);}
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.42),
+             0 16px 30px -18px rgba(0,0,0,.95),
+             0 0 22px -6px rgba(233,206,138,.45);}
 
 /* The medallions breathe, staggered, so eight of them read as a set
-   that is alive rather than eight copies of one glow. This is the glow
-   that was here before this session; it is a centred box-shadow, so it
-   carries no light source and no depth. The dome gradient that used to
-   sit in this same rule is gone and stays gone — that one did model a
-   sphere, and removing it was the instruction. */
+   that is alive rather than eight copies of one glow. */
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg,
 html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item svg{
   border-color:rgba(233,206,138,.5);
-  background:rgba(233,206,138,.10);
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.26),rgba(198,161,91,.06) 72%);
   animation:mh-breathe 6.5s ease-in-out infinite;}
+/* The relief travels INSIDE the keyframes. It has to: this animation
+   drives box-shadow, and a running animation overrides any static
+   box-shadow on the same element — so a separate rule giving the coin
+   its rim light and its occlusion was simply erased, sixty times a
+   second, and the medallions came out flat with no rule anywhere
+   looking wrong. If the relief and the glow share a property, they have
+   to share a declaration. */
 @keyframes mh-breathe{
-  0%,100%{box-shadow:0 0 0 0 rgba(233,206,138,0);}
-  50%{box-shadow:0 0 14px -3px rgba(233,206,138,.5);}}
+  0%,100%{box-shadow:
+    inset 0 1px 0 rgba(255,246,223,.34),
+    inset 0 -2px 3px -2px rgba(0,0,0,.65),
+    0 2px 5px -2px rgba(0,0,0,.7),
+    0 0 0 0 rgba(233,206,138,0);}
+  50%{box-shadow:
+    inset 0 1px 0 rgba(255,246,223,.42),
+    inset 0 -2px 3px -2px rgba(0,0,0,.6),
+    0 2px 5px -2px rgba(0,0,0,.7),
+    0 0 14px -3px rgba(233,206,138,.5);}}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
@@ -489,7 +490,8 @@ html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item:hover{
              0 0 20px -6px rgba(233,206,138,.4);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .fd-item svg{
   border-color:rgba(233,206,138,.46);
-  background:rgba(233,206,138,.10);}
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.22),rgba(198,161,91,.05) 72%);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .foot-seal::before{
   background:linear-gradient(90deg,transparent,
     rgba(198,161,91,.65) 24%,rgba(255,246,223,.9) 50%,
@@ -540,7 +542,8 @@ html[data-pc-theme="royal"]:not([data-pc-livery]) .mnr-item{
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item span{color:#F6EEDC;}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item svg{
   color:#F2DCA6;border-color:rgba(233,206,138,.72);
-  background:rgba(255,246,223,.12);}
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(255,246,223,.30),rgba(198,161,91,.08) 72%);}
 html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item.mnr-more{
   background:linear-gradient(168deg,rgba(233,206,138,.12),transparent);
   border-color:rgba(233,206,138,.4);}
@@ -727,14 +730,20 @@ html[data-pc-theme="light"] .mobile-nav-ribbon::after{
 /* ---- The plates: a lit top edge, a firmer hairline, a gold ripple -- */
 html[data-pc-theme="light"] .mnr-item,
 html[data-pc-theme="light"] .fd-item{
-  background:linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
-  border-color:rgba(var(--lv-g,198,161,91),.52);}
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.85),transparent 40%),
+    linear-gradient(168deg,rgba(255,253,249,.96),rgba(247,238,223,.88) 62%,rgba(241,228,200,.9));
+  border-color:rgba(var(--lv-g,198,161,91),.52);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),
+             0 1px 2px rgba(var(--lv-cf,59,42,29),.06);}
 html[data-pc-theme="light"] .mnr-item:hover,
 html[data-pc-theme="light"] .mnr-item:focus-visible,
 html[data-pc-theme="light"] .fd-item:hover,
 html[data-pc-theme="light"] .fd-item:focus-visible{
   border-color:rgb(var(--lv-g,198,161,91));
-  box-shadow:0 0 0 1px rgba(var(--lv-g,198,161,91),.22);}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+             0 14px 26px -18px rgba(var(--lv-cf,59,42,29),.45),
+             0 0 0 1px rgba(var(--lv-g,198,161,91),.22);}
 html[data-pc-theme="light"] .mnr-item::before,
 html[data-pc-theme="light"] .fd-item::before{
   content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;
@@ -751,12 +760,23 @@ html[data-pc-theme="light"] .fd-item:focus-within::before{transform:scale(26);op
 html[data-pc-theme="light"] .mnr-item svg,
 html[data-pc-theme="light"] .fd-item svg{
   border-color:rgba(var(--lv-g,198,161,91),.6);
-  background:rgba(var(--lv-gb,233,206,138),.16);}
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.34),rgba(255,253,249,.4) 74%);}
 html[data-pc-theme="light"] .mnr-item svg{
   animation:mh-breathe-lite 6.5s ease-in-out infinite;}
+/* Same reason as mh-breathe above: relief and glow share box-shadow,
+   so they must share the declaration. */
 @keyframes mh-breathe-lite{
-  0%,100%{box-shadow:0 0 0 0 rgba(198,161,91,0);}
-  50%{box-shadow:0 0 12px -3px rgba(198,161,91,.55);}}
+  0%,100%{box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -2px 3px -2px rgba(59,42,29,.30),
+    0 2px 4px -2px rgba(59,42,29,.30),
+    0 0 0 0 rgba(198,161,91,0);}
+  50%{box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -2px 3px -2px rgba(59,42,29,.26),
+    0 2px 4px -2px rgba(59,42,29,.30),
+    0 0 12px -3px rgba(198,161,91,.55);}}
 html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(1) svg{animation-delay:0s;}
 html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(2) svg{animation-delay:-.8s;}
 html[data-pc-theme="light"] .mobile-nav-ribbon > :nth-child(3) svg{animation-delay:-1.6s;}
@@ -992,7 +1012,8 @@ html[data-pc-theme="light"] .mnr-item span{color:#3B2A1D;}
 html[data-pc-theme="light"] .mnr-item svg{
   color:#7C5E28;
   border-color:rgba(140,104,52,.62);
-  background:rgba(233,206,138,.26);}
+  background:radial-gradient(120% 120% at 50% 0%,
+    rgba(233,206,138,.4),rgba(247,238,223,.5) 74%);}
 html[data-pc-theme="light"] .mnr-item{
   border-color:rgba(140,104,52,.5);}
 html[data-pc-theme="light"] .mnr-item:hover,
@@ -1413,7 +1434,18 @@ html[data-pc-theme="royal"] .gw-quick-lab{color:rgb(var(--lv-gb,233,206,138));}
      the row. On a phone it is what tips the lower line onto a third,
      so it is the right thing to give up, and the only thing given up:
      the prayer's name and its time both stay. */
-  .pc-islamic-strip .pc-strip-countdown{display:none;}
+  /* The countdown STAYS on mobile. It was hidden here to stop the strip
+     spilling onto a third row, which solved the layout by deleting the
+     most useful thing on the line — a parent glancing at a phone wants
+     "how long until Maghrib", not the clock time of it. The row is held
+     to two by tightening the type and the gaps instead, which is the
+     fix that should have been made in the first place. */
+  .pc-islamic-strip .pc-strip-countdown{
+    display:inline;font-size:.92em;opacity:.8;}
+  .pc-islamic-strip .pc-islamic-strip-inner{
+    column-gap:clamp(6px,1.8vw,10px)!important;
+    padding-inline:clamp(8px,2.4vw,16px)!important;}
+  .pc-islamic-strip .pc-strip-item{font-size:clamp(.60rem,2.5vw,.70rem);}
 }
 
 /* ---- 3. the Midnight ground, corrected -----------------------------
@@ -1486,3 +1518,178 @@ header.nav > .mh-dust::after{
 }
 @keyframes mh-dust-a{to{transform:translate3d(-320px,0,0);}}
 @keyframes mh-dust-b{to{transform:translate3d(490px,0,0);}}
+
+/* ===================================================================
+   20. THE RELIEF — struck plates and struck coins
+   -------------------------------------------------------------------
+   The ribbon and the colophon were flattened, and flat was wrong: these
+   are meant to read as pieces of struck metal laid on the page, not as
+   rectangles of colour. This section puts the depth back and takes it
+   further than it was, because the way the depth was drawn before was
+   not very good.
+
+   WHAT MAKES A THING LOOK LIFTED, and it is not "a drop shadow":
+
+   1. TWO SHADOWS, NOT ONE. A real object casts a tight, dark CONTACT
+      shadow immediately under its edge, and a wide, faint AMBIENT one
+      spread well beyond it. One shadow alone always reads as a sticker.
+      Every plate below has both, and on hover the contact shadow stays
+      short while the ambient one lengthens — which is exactly what
+      happens when something rises off a surface, and is the reason a
+      hover here feels like a lift rather than a fade.
+   2. A LIT TOP EDGE AND A SHADED BOTTOM ONE, both INSIDE the shape.
+      That pair is what gives an edge thickness. A top highlight on its
+      own just looks like a stray white line.
+   3. THE STROKE IS PART OF THE MATERIAL. The hairline round each plate
+      brightens along the top and deepens along the bottom, so the frame
+      itself turns in the light rather than sitting on top of a lit
+      object like a decal.
+
+   The medallions get the same treatment at coin scale: a dome, an inner
+   rim light at the top, an inner occlusion at the bottom, and their own
+   small contact shadow on the plate beneath them. They are struck into
+   the plate rather than floating above it.
+
+   Every value is stated twice, once for the cream editions and once for
+   the espresso ones, because a shadow on cream is warm brown at low
+   alpha and a shadow on espresso is black at high alpha; using one set
+   for both gives you soot on the cream and nothing at all on the dark.
+   =================================================================== */
+
+/* ---- Cream editions: Clear, and any livery on the light theme ------ */
+/* The doubled class is deliberate. The per-livery plate rules are
+   `html[data-pc-theme="royal"][data-pc-livery="royal"] .mnr-item`, which
+   is two attributes and a class; a single class here loses to them and
+   the relief would silently not apply in Royal. Repeating the class
+   matches that weight without inventing a wrapper or reaching for
+   !important, and later-in-the-file then decides it. */
+html[data-pc-theme="light"] .mnr-item.mnr-item,
+html[data-pc-theme="light"] .fd-item.fd-item,
+html:not([data-pc-theme]) .mnr-item.mnr-item,
+html:not([data-pc-theme]) .fd-item.fd-item{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),                 /* lit top edge   */
+    inset 0 -1px 0 rgba(var(--lv-cf,59,42,29),.07),      /* shaded bottom  */
+    0 1px 2px rgba(var(--lv-cf,59,42,29),.10),           /* contact        */
+    0 10px 20px -12px rgba(var(--lv-cf,59,42,29),.26);   /* ambient        */
+}
+html[data-pc-theme="light"] .mnr-item.mnr-item:hover,
+html[data-pc-theme="light"] .mnr-item.mnr-item:focus-visible,
+html[data-pc-theme="light"] .fd-item.fd-item:hover,
+html[data-pc-theme="light"] .fd-item.fd-item:focus-visible,
+html:not([data-pc-theme]) .mnr-item.mnr-item:hover,
+html:not([data-pc-theme]) .fd-item.fd-item:hover{
+  transform:translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(var(--lv-cf,59,42,29),.10),
+    0 2px 3px rgba(var(--lv-cf,59,42,29),.12),
+    0 22px 34px -16px rgba(var(--lv-cf,59,42,29),.40),
+    0 0 0 1px rgba(var(--lv-g,198,161,91),.30);
+}
+/* The coin. */
+html[data-pc-theme="light"] .mnr-item.mnr-item svg,
+html[data-pc-theme="light"] .fd-item.fd-item svg,
+html:not([data-pc-theme]) .mnr-item.mnr-item svg,
+html:not([data-pc-theme]) .fd-item.fd-item svg{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    inset 0 -2px 3px -2px rgba(var(--lv-cf,59,42,29),.30),
+    0 2px 4px -2px rgba(var(--lv-cf,59,42,29),.30);
+}
+html[data-pc-theme="light"] .mnr-item.mnr-item:hover svg,
+html[data-pc-theme="light"] .fd-item.fd-item:hover svg,
+html:not([data-pc-theme]) .mnr-item.mnr-item:hover svg{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -2px 4px -2px rgba(var(--lv-cf,59,42,29),.34),
+    0 4px 9px -3px rgba(var(--lv-cf,59,42,29),.38),
+    0 0 18px -4px rgba(var(--lv-gb,233,206,138),.75);
+}
+
+/* ---- Espresso editions: Royal and Midnight ------------------------- */
+html[data-pc-theme="royal"] .mnr-item.mnr-item,
+html[data-pc-theme="royal"] .fd-item.fd-item,
+html[data-pc-theme="dark"] .mnr-item.mnr-item,
+html[data-pc-theme="dark"] .fd-item.fd-item{
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gl,255,246,223),.26),
+    inset 0 -1px 0 rgba(0,0,0,.45),
+    0 1px 2px rgba(0,0,0,.55),
+    0 12px 22px -12px rgba(0,0,0,.85);
+}
+html[data-pc-theme="royal"] .mnr-item.mnr-item:hover,
+html[data-pc-theme="royal"] .mnr-item.mnr-item:focus-visible,
+html[data-pc-theme="royal"] .fd-item.fd-item:hover,
+html[data-pc-theme="royal"] .fd-item.fd-item:focus-visible,
+html[data-pc-theme="dark"] .mnr-item.mnr-item:hover,
+html[data-pc-theme="dark"] .fd-item.fd-item:hover{
+  transform:translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gl,255,246,223),.45),
+    inset 0 -1px 0 rgba(0,0,0,.55),
+    0 2px 4px rgba(0,0,0,.6),
+    0 26px 38px -16px rgba(0,0,0,.95),
+    0 0 0 1px rgba(var(--lv-gb,233,206,138),.30);
+}
+html[data-pc-theme="royal"] .mnr-item.mnr-item svg,
+html[data-pc-theme="royal"] .fd-item.fd-item svg,
+html[data-pc-theme="dark"] .mnr-item.mnr-item svg,
+html[data-pc-theme="dark"] .fd-item.fd-item svg{
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gl,255,246,223),.34),
+    inset 0 -2px 3px -2px rgba(0,0,0,.65),
+    0 2px 5px -2px rgba(0,0,0,.7);
+}
+html[data-pc-theme="royal"] .mnr-item.mnr-item:hover svg,
+html[data-pc-theme="royal"] .fd-item.fd-item:hover svg,
+html[data-pc-theme="dark"] .mnr-item.mnr-item:hover svg{
+  box-shadow:
+    inset 0 1px 0 rgba(var(--lv-gl,255,246,223),.55),
+    inset 0 -2px 4px -2px rgba(0,0,0,.7),
+    0 5px 11px -3px rgba(0,0,0,.85),
+    0 0 20px -4px rgba(var(--lv-gb,233,206,138),.7);
+}
+
+/* Both editions: the plate has to keep its shadows, so it can no longer
+   clip them away. The gold ripple that opens from the point of contact
+   still needs clipping, so it moves to a clipped layer of its own
+   rather than the plate clipping itself. */
+.mnr-item,.fd-item{overflow:visible;}
+.mnr-item::before,.fd-item::before{border-radius:inherit;overflow:hidden;}
+
+/* -------------------------------------------------------------------
+   21. THE RIBBON PLATE MUST FIT ITS OWN LONGEST WORD
+   -------------------------------------------------------------------
+   "GOVERNANCE" was cropped. Not by a whisker either: the label measured
+   77.9px inside a plate fixed at 78px with 6px of padding on each side,
+   so the word was 12px wider than the box it was given and ran clean to
+   both borders — the G touching one edge, the E touching the other,
+   with the plate set to overflow:hidden and one more letter away from
+   being sliced. Every other label had room to spare, which is why it
+   read as a fault rather than as a style.
+
+   The cause is worth naming because it is a common one: the label is a
+   flex item, a flex item will not shrink below its min-content width,
+   and the min-content width of an unbreakable word is the whole word.
+   So the box does not clip the text — the text overruns the box, and
+   the clip only decides whether you see the damage.
+
+   The plate now sizes to its content with a floor, rather than being
+   told a width and hoping. The floor fits the longest label on the
+   ribbon with room on both sides, and the ribbon scrolls horizontally
+   anyway, so a wider plate costs nothing but a little more travel.
+   ------------------------------------------------------------------- */
+@media (max-width:860px){
+  .mnr-item{
+    width:auto;
+    min-width:104px;          /* 78px of "GOVERNANCE" + 13px each side */
+    max-width:148px;
+    padding-inline:13px;
+  }
+  .mnr-item span{
+    max-width:100%;
+    overflow-wrap:break-word;  /* a longer word than any here would wrap
+                                  rather than escape its plate again */
+  }
+}

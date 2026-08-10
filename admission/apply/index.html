@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Application for Admission — Sultan Hanafi Royal Schools</title>
-<meta name="description" content="Apply for admission to Sultan Hanafi Royal Schools, Ikorodu, Lagos. Seven short steps, saved as you go, with document upload." />
+<meta name="description" content="Apply for admission to Sultan Hanafi Royal Schools, Ikorodu, Lagos. Ten steps, saved as you go, with document upload." />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <meta name="theme-color" content="#3B2A1D">
@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600&family=Inter:wght@400;500;600&family=Amiri:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=6c54ac2677">
-<link rel="stylesheet" href="/css/apply.css?v=39b2e89dd9">
-<meta name="shrs-build" content="shrs-pwa-03d54e1e83">
+<link rel="stylesheet" href="/css/apply.css?v=6cf27d08a1">
+<meta name="shrs-build" content="shrs-pwa-03bdfd4c54">
 </head>
 <body>
 
@@ -35,7 +35,7 @@
     <div class="ap-head">
       <p class="eyebrow">Admission &middot; Stage II</p>
       <h1>Application for Admission</h1>
-      <p>Seven short steps. Everything you enter is kept on this device as you go, so you may stop at any point and return to finish later. Most families complete it in about twenty minutes.</p>
+      <p>Ten steps &mdash; the programme, your child, your family, their schooling so far, their health, their Qur&rsquo;an and Arabic, the documents, a little more, the permissions we need from you, and one last read. Everything you enter is kept on this device as you go, so you may stop at any point and return to finish later. Most families complete it in about half an hour.</p>
       <p class="ap-save" id="ap-save-note">Your progress saves automatically</p>
     </div>
 
@@ -44,9 +44,12 @@
       <li><button type="button" disabled><span>2</span></button><em>Student</em></li>
       <li><button type="button" disabled><span>3</span></button><em>Family</em></li>
       <li><button type="button" disabled><span>4</span></button><em>Schooling</em></li>
-      <li><button type="button" disabled><span>5</span></button><em>Documents</em></li>
-      <li><button type="button" disabled><span>6</span></button><em>Further</em></li>
-      <li><button type="button" disabled><span>7</span></button><em>Review</em></li>
+      <li><button type="button" disabled><span>5</span></button><em>Health</em></li>
+      <li><button type="button" disabled><span>6</span></button><em>Qur&rsquo;an</em></li>
+      <li><button type="button" disabled><span>7</span></button><em>Documents</em></li>
+      <li><button type="button" disabled><span>8</span></button><em>Further</em></li>
+      <li><button type="button" disabled><span>9</span></button><em>Permissions</em></li>
+      <li><button type="button" disabled><span>10</span></button><em>Review</em></li>
     </ol>
 
     <div class="ap-card">
@@ -237,6 +240,28 @@
               <input id="addr_post" name="addr_post" type="text" autocomplete="postal-code"></div>
           </div>
 
+          <!-- Safeguarding, not administration: a school that has not been
+               told in writing who may take a child home has no way to refuse
+               anybody at the gate. -->
+          <h3 style="font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#7A5A28;margin:34px 0 18px">Who may collect your child</h3>
+          <p class="ap-step-s" style="margin:-8px 0 18px">Besides the guardians above. Anyone not named here will not be allowed to take your child from the campus without your written word on the day.</p>
+          <div class="ap-grid">
+            <div class="ap-f"><label for="coll1_name">Name <span class="opt">optional</span></label>
+              <input id="coll1_name" name="coll1_name" type="text" placeholder="Full name"></div>
+            <div class="ap-f"><label for="coll1_rel">Relationship to the child <span class="opt">optional</span></label>
+              <input id="coll1_rel" name="coll1_rel" type="text" placeholder="Grandmother, driver, aunt&hellip;"></div>
+            <div class="ap-f"><label for="coll1_phone">Telephone <span class="opt">optional</span></label>
+              <input id="coll1_phone" name="coll1_phone" type="tel" inputmode="tel"></div>
+            <div class="ap-f"><label for="coll2_name">A second person <span class="opt">optional</span></label>
+              <input id="coll2_name" name="coll2_name" type="text" placeholder="Full name"></div>
+            <div class="ap-f"><label for="coll2_rel">Relationship <span class="opt">optional</span></label>
+              <input id="coll2_rel" name="coll2_rel" type="text"></div>
+            <div class="ap-f"><label for="coll2_phone">Telephone <span class="opt">optional</span></label>
+              <input id="coll2_phone" name="coll2_phone" type="tel" inputmode="tel"></div>
+            <div class="ap-f full"><label for="custody">Anything about custody or contact we must respect <span class="opt">optional</span></label>
+              <textarea id="custody" name="custody" placeholder="A court order, a separation, a person who must not be given information or access. Held by the Registrar and the Designated Safeguarding Lead alone."></textarea></div>
+          </div>
+
           <h3 style="font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#7A5A28;margin:34px 0 18px">Emergency contact</h3>
           <div class="ap-grid">
             <div class="ap-f"><label for="emg_name">Full name <span class="req">*</span></label>
@@ -271,8 +296,25 @@
             <div class="ap-f full"><label for="needs">Learning support or additional needs <span class="opt">optional</span></label>
               <textarea id="needs" name="needs" placeholder="Anything that helps a teacher understand how your child learns best."></textarea>
               <span class="hint">Declaring a need never disadvantages an application. It lets us prepare properly before the first day.</span></div>
-            <div class="ap-f full"><label for="medical">Medical conditions, allergies or medication <span class="opt">optional</span></label>
-              <textarea id="medical" name="medical" placeholder="Asthma, food allergies, regular medication, anything the sick bay should know."></textarea></div>
+            <div class="ap-f"><label for="ref_name">Head teacher or class teacher there <span class="opt">optional</span></label>
+              <input id="ref_name" name="ref_name" type="text" placeholder="Name and title"></div>
+            <div class="ap-f"><label for="ref_contact">How we may reach them <span class="opt">optional</span></label>
+              <input id="ref_contact" name="ref_contact" type="text" placeholder="Telephone or email"></div>
+            <div class="ap-f full"><label for="prev_report">Their last report or results <span class="opt">optional</span></label>
+              <textarea id="prev_report" name="prev_report" placeholder="Position in class, the subjects they carried, anything a teacher wrote that stayed with you. You will attach the report itself at the Documents step."></textarea></div>
+            <div class="ap-f full"><label for="prev_conduct">Has your child ever been suspended, excluded or asked to leave a school? <span class="opt">optional</span></label>
+              <select id="prev_conduct" name="prev_conduct">
+                <option value="">Select</option>
+                <option>No</option>
+                <option>Yes &mdash; and I would like to explain</option>
+              </select>
+              <span class="hint">A yes here has never on its own refused a child a place. Not telling us, and our finding out afterwards, is the thing that causes trouble.</span></div>
+            <div class="ap-f full"><label for="prev_conduct_note">If yes, in your own words <span class="opt">optional</span></label>
+              <textarea id="prev_conduct_note" name="prev_conduct_note" placeholder="What happened, when, and what has changed since."></textarea></div>
+            <!-- The medical free-text that used to sit here is retired: Health
+                 and wellbeing is now a step of its own, and two boxes asking
+                 the same question in different words get two different answers
+                 and no way to tell which one is current. -->
           </div>
 
           <div class="ap-note" role="note">
@@ -322,6 +364,171 @@
 
             <div class="ap-f full"><label for="fees_notes">Anything about fees we should understand <span class="opt">optional</span></label>
               <textarea id="fees_notes" name="fees_notes" placeholder="A change in circumstances, several children at once, a sponsor paying on your behalf — whatever matters."></textarea></div>
+          </div>
+        </section>
+
+
+        <!-- ============================ 5. HEALTH ============================= -->
+        <!-- A school that takes a child for six hours a day is responsible for
+             that child's body as well as their mind, and "any medical notes?"
+             in a free-text box is not a responsible way to ask. Genotype is
+             first here rather than buried, because in Nigeria it is the single
+             most consequential line on a health record and a school that does
+             not know it cannot act properly in an emergency. -->
+        <section class="ap-step" aria-labelledby="s5h">
+          <h2 class="ap-step-h" id="s5h">Health and wellbeing</h2>
+          <p class="ap-step-s">This is held by the school nurse and the Head of your child&rsquo;s institution, and by nobody else. If you are unsure of an answer, say so &mdash; &ldquo;not known&rdquo; is more useful to us than a guess.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="genotype">Genotype <span class="req">*</span></label>
+              <select id="genotype" name="genotype" required>
+                <option value="">Select</option>
+                <option>AA</option><option>AS</option><option>SS</option>
+                <option>AC</option><option>SC</option><option>Not known</option>
+              </select>
+              <span class="hint">If it has never been tested, choose &ldquo;not known&rdquo; and the school nurse will speak with you.</span>
+              <span class="err">Please choose one, or &ldquo;not known&rdquo;.</span></div>
+
+            <div class="ap-f"><label for="blood_group">Blood group <span class="opt">optional</span></label>
+              <select id="blood_group" name="blood_group">
+                <option value="">Select</option>
+                <option>O+</option><option>O&minus;</option><option>A+</option><option>A&minus;</option>
+                <option>B+</option><option>B&minus;</option><option>AB+</option><option>AB&minus;</option>
+                <option>Not known</option>
+              </select></div>
+
+            <div class="ap-f full">
+              <label>Any of these, now or in the past <span class="opt">optional</span></label>
+              <div class="ap-choice ap-choice-wrap" role="group" aria-label="Conditions">
+                <label><input type="checkbox" name="cond_asthma" value="Asthma"><b>Asthma</b></label>
+                <label><input type="checkbox" name="cond_sickle" value="Sickle cell"><b>Sickle cell</b></label>
+                <label><input type="checkbox" name="cond_epilepsy" value="Epilepsy or seizures"><b>Epilepsy or seizures</b></label>
+                <label><input type="checkbox" name="cond_diabetes" value="Diabetes"><b>Diabetes</b></label>
+                <label><input type="checkbox" name="cond_heart" value="A heart condition"><b>Heart condition</b></label>
+                <label><input type="checkbox" name="cond_eczema" value="Eczema or skin condition"><b>Eczema or skin</b></label>
+                <label><input type="checkbox" name="cond_sight" value="Sight"><b>Sight</b></label>
+                <label><input type="checkbox" name="cond_hearing" value="Hearing"><b>Hearing</b></label>
+                <label><input type="checkbox" name="cond_speech" value="Speech"><b>Speech</b></label>
+                <label><input type="checkbox" name="cond_none" value="None of these"><b>None of these</b></label>
+              </div></div>
+
+            <div class="ap-f full"><label for="cond_detail">Tell us more about anything you ticked <span class="opt">optional</span></label>
+              <textarea id="cond_detail" name="cond_detail" placeholder="What happens, what helps, and what a teacher should do if it happens at school."></textarea></div>
+
+            <div class="ap-f full"><label for="allergies">Allergies <span class="opt">optional</span></label>
+              <textarea id="allergies" name="allergies" placeholder="Food, medicine, insect stings, anything else &mdash; and what happens."></textarea></div>
+
+            <div class="ap-f"><label for="allergy_severity">If there are allergies, how serious <span class="opt">optional</span></label>
+              <select id="allergy_severity" name="allergy_severity">
+                <option value="">Select</option>
+                <option>Mild &mdash; discomfort only</option>
+                <option>Moderate &mdash; needs medicine</option>
+                <option>Severe &mdash; carries an adrenaline pen</option>
+              </select></div>
+
+            <div class="ap-f"><label for="medication">Medicine taken regularly <span class="opt">optional</span></label>
+              <input id="medication" name="medication" type="text" placeholder="Name and dose"></div>
+
+            <div class="ap-f full"><label for="med_school">Must any medicine be given during the school day? <span class="opt">optional</span></label>
+              <select id="med_school" name="med_school">
+                <option value="">Select</option>
+                <option>No</option>
+                <option>Yes &mdash; the school nurse should hold and administer it</option>
+                <option>Yes &mdash; my child carries and takes it themselves</option>
+              </select>
+              <span class="hint">If yes, the nurse will send you a short medicine form before the first day.</span></div>
+
+            <div class="ap-f"><label for="immunisation">Immunisations <span class="opt">optional</span></label>
+              <select id="immunisation" name="immunisation">
+                <option value="">Select</option>
+                <option>Up to date</option><option>Partly complete</option>
+                <option>Not started</option><option>Not known</option>
+              </select></div>
+
+            <div class="ap-f"><label for="dietary">Dietary requirements <span class="opt">optional</span></label>
+              <input id="dietary" name="dietary" type="text" placeholder="Beyond halal, which is the whole kitchen"></div>
+
+            <div class="ap-f full"><label for="disability">Disability or accessibility needs <span class="opt">optional</span></label>
+              <textarea id="disability" name="disability" placeholder="Tell us what your child needs from a building, a classroom or a timetable. We would rather know now than discover it in September."></textarea></div>
+
+            <div class="ap-f"><label for="doctor_name">Family doctor or clinic <span class="opt">optional</span></label>
+              <input id="doctor_name" name="doctor_name" type="text" placeholder="Name of doctor or hospital"></div>
+
+            <div class="ap-f"><label for="doctor_phone">Their telephone <span class="opt">optional</span></label>
+              <input id="doctor_phone" name="doctor_phone" type="tel" inputmode="tel" placeholder="For emergencies only"></div>
+
+            <div class="ap-f full"><label for="hmo">Health insurance or HMO <span class="opt">optional</span></label>
+              <input id="hmo" name="hmo" type="text" placeholder="Provider and number, if you have one"></div>
+          </div>
+        </section>
+
+        <!-- ============================ 6. FAITH ============================== -->
+        <!-- The school is Islamic AND secular and takes Muslim and non-Muslim
+             children alike, which is stated on every public page. This step has
+             to be written so that both families can walk through it without
+             either being made to feel like the exception: nothing here is
+             required, the first question offers "prefer not to say", and the
+             Qur'an College block only appears for the people applying to it. -->
+        <section class="ap-step" aria-labelledby="s6f">
+          <h2 class="ap-step-h" id="s6f">Qur&rsquo;an, Arabic and Islamic formation</h2>
+          <p class="ap-step-s">Sultan Hanafi welcomes Muslim and non-Muslim children alike, and none of this is required. It exists so that a child is placed in the right group on the first morning rather than the third week &mdash; there is no right answer, and a child who has memorised nothing is exactly as welcome as one who has memorised ten juz&rsquo;.</p>
+
+          <div class="ap-grid">
+            <div class="ap-f"><label for="faith">Faith background <span class="opt">optional</span></label>
+              <select id="faith" name="faith">
+                <option value="">Select</option>
+                <option>Muslim</option><option>Christian</option>
+                <option>Another faith</option><option>Prefer not to say</option>
+              </select></div>
+
+            <div class="ap-f"><label for="quran_level">Qur&rsquo;an memorised so far <span class="opt">optional</span></label>
+              <select id="quran_level" name="quran_level">
+                <option value="">Select</option>
+                <option>None yet</option>
+                <option>A few short surahs</option>
+                <option>Juz&rsquo; &lsquo;Amma (juz&rsquo; 30)</option>
+                <option>1&ndash;5 juz&rsquo;</option>
+                <option>6&ndash;10 juz&rsquo;</option>
+                <option>11&ndash;20 juz&rsquo;</option>
+                <option>21&ndash;29 juz&rsquo;</option>
+                <option>The complete Qur&rsquo;an</option>
+              </select></div>
+
+            <div class="ap-f"><label for="tajweed">Tajw&#299;d <span class="opt">optional</span></label>
+              <select id="tajweed" name="tajweed">
+                <option value="">Select</option>
+                <option>Not yet begun</option><option>Beginning</option>
+                <option>Reads with some rules</option><option>Reads fluently with tajw&#299;d</option>
+              </select></div>
+
+            <div class="ap-f"><label for="arabic_read">Reading Arabic script <span class="opt">optional</span></label>
+              <select id="arabic_read" name="arabic_read">
+                <option value="">Select</option>
+                <option>Not yet</option><option>Knows the letters</option>
+                <option>Reads with help</option><option>Reads independently</option>
+              </select></div>
+
+            <div class="ap-f"><label for="arabic_speak">Speaking Arabic <span class="opt">optional</span></label>
+              <select id="arabic_speak" name="arabic_speak">
+                <option value="">Select</option>
+                <option>None</option><option>A few words</option>
+                <option>Conversational</option><option>Fluent</option>
+              </select></div>
+
+            <div class="ap-f"><label for="salah">The five daily prayers <span class="opt">optional</span></label>
+              <select id="salah" name="salah">
+                <option value="">Select</option>
+                <option>Not yet praying</option>
+                <option>Learning, and prays with reminders</option>
+                <option>Prays independently</option>
+                <option>Not applicable</option>
+              </select></div>
+
+            <div class="ap-f full"><label for="madrasah">Islamiyyah or madrasah attended before <span class="opt">optional</span></label>
+              <input id="madrasah" name="madrasah" type="text" placeholder="Name and town, and how long"></div>
+
+            <div class="ap-f full"><label for="quran_goal">What you hope for your child in this <span class="opt">optional</span></label>
+              <textarea id="quran_goal" name="quran_goal" placeholder="Full memorisation, a firm grounding alongside secular study, simply that they can read well &mdash; whatever it is, tell us and the Mudeer will read it."></textarea></div>
           </div>
         </section>
 
@@ -404,8 +611,66 @@
                 <option value="">Select</option><option>Yes, please arrange a visit</option>
                 <option>No, I have already visited</option><option>Not necessary</option>
               </select></div>
+            <div class="ap-f"><label for="transport">School transport <span class="opt">optional</span></label>
+              <select id="transport" name="transport">
+                <option value="">Select</option>
+                <option>We will bring and collect our child ourselves</option>
+                <option>We would like a place on the school bus</option>
+                <option>Our child will travel independently</option>
+                <option>We have not decided yet</option>
+              </select></div>
+            <div class="ap-f"><label for="transport_area">If the bus, which area <span class="opt">optional</span></label>
+              <input id="transport_area" name="transport_area" type="text" placeholder="Ikorodu, Agric, Ijede, Ketu&hellip;"></div>
+            <div class="ap-f full"><label for="interests">What your child loves <span class="opt">optional</span></label>
+              <textarea id="interests" name="interests" placeholder="Football, debate, drawing, coding, recitation, chess, taking things apart. It is how a form teacher finds a way in during the first fortnight."></textarea></div>
+            <div class="ap-f full"><label for="awards">Prizes, awards or competitions <span class="opt">optional</span></label>
+              <input id="awards" name="awards" type="text" placeholder="Anything they are proud of"></div>
             <div class="ap-f full"><label for="notes">Anything else you would like us to know <span class="opt">optional</span></label>
               <textarea id="notes" name="notes" placeholder="Tell us about your child in your own words, if you would like to."></textarea></div>
+          </div>
+        </section>
+
+
+        <!-- ============================ 9. CONSENTS ========================== -->
+        <!-- These used to be three checkboxes at the foot of the review step.
+             They are separated here because a consent buried under a submit
+             button is not a consent anybody has actually given, and because
+             this school PUBLISHES CHILDREN'S PHOTOGRAPHS on its own website and
+             in its prospectus. That permission has to be asked for in daylight,
+             separately, with a real "no" available that costs the family
+             nothing. -->
+        <section class="ap-step" aria-labelledby="s9c">
+          <h2 class="ap-step-h" id="s9c">Permissions</h2>
+          <p class="ap-step-s">Three of these are required for a place; the rest are yours to give or withhold, and withholding any of them changes nothing about your child&rsquo;s application or their standing in the school.</p>
+
+          <div class="ap-f full" style="margin-bottom:26px">
+            <label>Photographs and film <span class="req">*</span></label>
+            <div class="ap-choice" data-required-group="consent_media" role="radiogroup" aria-label="Photography consent">
+              <label><input type="radio" name="consent_media" value="Yes — may be published" required>
+                <b>Yes</b><small>My child may appear in photographs and film used on the school website, prospectus and social media</small></label>
+              <label><input type="radio" name="consent_media" value="Internal use only">
+                <b>Internal only</b><small>Inside the school &mdash; report cards, displays, the yearbook &mdash; but never published outside it</small></label>
+              <label><input type="radio" name="consent_media" value="No">
+                <b>No</b><small>My child should not be photographed or filmed at all</small></label>
+              <p class="err full" style="display:none;color:#7C1F2E;font-size:.8rem">Please choose one.</p>
+            </div>
+            <span class="hint">You may change this at any time by writing to the Registrar, and a change applies from the day we receive it.</span>
+          </div>
+
+          <div class="ap-f full">
+            <label>The rest</label>
+            <label class="ap-check"><input type="checkbox" name="consent_medical" value="yes" required>
+              <span>If my child is hurt or taken ill and I cannot be reached, I authorise the school to obtain emergency medical treatment for them. <span class="req" style="color:#7C1F2E">*</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="consent_charter" value="yes" required>
+              <span>I have read the <a href="/policies/" target="_blank" rel="noopener">Student Code of Conduct and the Parent Charter</a>, and I accept them on behalf of my family. <span class="req" style="color:#7C1F2E">*</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="consent_privacy" value="yes" required>
+              <span>I understand how the school holds and protects my family&rsquo;s information, as set out in the <a href="/policies/" target="_blank" rel="noopener">Data Protection &amp; Privacy Policy</a>. <span class="req" style="color:#7C1F2E">*</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="consent_trips" value="yes">
+              <span>My child may take part in supervised educational visits away from the campus. <span class="opt">optional</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="consent_formation" value="yes">
+              <span>I understand that Islamic character formation, the daily prayer and Qur&rsquo;an study are part of the ordinary school day for every child, whatever their family&rsquo;s faith, and that no child is ever required to profess a belief. <span class="opt">optional</span></span></label>
+            <label class="ap-check"><input type="checkbox" name="consent_news" value="yes">
+              <span>Send me the school newsletter and notices of events. <span class="opt">optional</span></span></label>
           </div>
         </section>
 
@@ -502,6 +767,6 @@
 </footer>
 
 <script src="/js/geo-data.js?v=75919f0256"></script>
-<script src="/js/apply.js?v=b470c57cf7" defer></script>
+<script src="/js/apply.js?v=f502006700" defer></script>
 </body>
 </html>

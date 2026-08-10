@@ -506,3 +506,33 @@
   .ap-foot-thread::after{ opacity:0; }
   .ap-foot [data-rise]{ opacity:1 !important; transform:none !important; transition:none !important; }
 }
+
+/* --------------------------------------------------------------------------
+   A COMPACT CHOICE SET
+   The two-column .ap-choice is right for a decision with two or three big
+   answers — "day or boarding", "may we publish photographs". It is wrong for
+   the ten little conditions on the health step, where each answer is one word
+   and the big padded cards turn a glance into a page of scrolling. Same look,
+   same states, laid out to fit the answer rather than the pattern.
+   -------------------------------------------------------------------------- */
+.ap-choice.ap-choice-wrap{
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.ap-choice.ap-choice-wrap label{
+  flex:0 1 auto; padding:11px 17px 11px 44px; border-radius:14px;
+}
+.ap-choice.ap-choice-wrap label b{ font-size:.86rem; }
+/* The mark moves in with the padding. The full-size card sets the circle at
+   left:20px against 56px of padding — 16px of clear space. Shrinking the
+   padding without moving the circle closes that gap to nothing and the text
+   sits on top of the mark, which is exactly what it did on the first try. */
+.ap-choice.ap-choice-wrap label::before{
+  left:15px; top:50%; transform:translateY(-50%); width:17px; height:17px;
+}
+.ap-choice.ap-choice-wrap label::after{
+  left:20px; top:50%; transform:translateY(-50%);
+}
+@media (max-width:720px){
+  .ap-choice.ap-choice-wrap{ display:flex; }
+  .ap-choice.ap-choice-wrap label{ flex:1 1 calc(50% - 5px); }
+}
