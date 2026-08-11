@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      41250b5fb554f0fb6919fcaff70dbbb159cac6cc
-short       41250b5f
+commit      f056d8baadc6c4c9e47b8e11f2e80ae82dc23231
+short       f056d8ba
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The full menu, re-toned: parchment, espresso and a typed letterhead
-built (UTC) 2026-08-11T15:08:51Z
+subject     Never let an ornament be load-bearing
+built (UTC) 2026-08-11T21:04:29Z
 assets      shrs-pwa-7ccb9d662b
 pages       143
 
