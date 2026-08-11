@@ -1,317 +1,704 @@
 /* ===================================================================
-   THE FULL MENU (v6)
+   THE FULL MENU
    -------------------------------------------------------------------
-   The drawer was espresso: a dark, half-transparent sheet with the page
-   showing through it, every one of its eight sections forced open at
-   once, and a head that scrolled its own title over the content beneath
-   it. Five thousand two hundred pixels of it, in a five-hundred-pixel
-   column. It read as jammed, and it was the one surface where the site
-   stopped looking expensive.
+   This file styles ONE thing: the sheet that opens when the Full Menu
+   control in the masthead is pressed. The masthead itself and the site
+   footer are not touched by anything in here, and neither is a single
+   line of the navigation's markup.
 
-   It is a sheet of the school's own paper now. Ivory, opaque, in every
-   edition — a reader who opens the menu is not looking at the page any
-   more, so there is nothing to see through to, and the ink can be
-   stated once against a ground that never changes. The sections are
-   shut when it opens, so it arrives as an index of eight numbered
-   entries rather than a wall; the head is fixed and opaque, so nothing
-   passes through it; and the light that travels along a row is drawn
-   for paper rather than left over from espresso.
+   THAT LAST POINT IS THE WHOLE ARCHITECTURE, and it was learned the
+   expensive way. `.navlinks` is not only the drawer. Above 1440px it IS
+   the masthead's inline navigation row, and between 861px and 1440px
+   js/mega.js clones `.nav-drop-panel` out of it to build the panels that
+   open under the ribbon. An earlier attempt rewrote that markup into
+   something prettier and silently took both of those away. So:
 
-   Everything it did, it still does: the same markup, the same toggle,
-   the same accordion — restored, in fact, since a display:block!important
-   meant for the sub-panel's LAYOUT had been overriding the accordion's
-   display:none and holding all eight open.
+     · every rule below is scoped inside `@media (max-width:1440px)`,
+       which is exactly the range in which a Full Menu control exists at
+       all — above it there is no such button, and `.navlinks` must stay
+       the nav row it has always been;
+     · every rule below is scoped under `.navlinks`, so the clones
+       mega.js lifts out of it are untouched;
+     · nothing is deleted. The panels that were behind a chevron are
+       simply all open at once, which is what a contents page is.
+
+   Three earlier attempts were rejected, each teaching the same lesson
+   from a different direction. A 500px column is a filing cabinet. Three
+   columns of one type size is a sitemap. Forty pill-shaped buttons is
+   forty decisions. What none of them had was AIR.
+
+   So the design is a spacing decision:
+
+     · the sheet is a third margin — the index never exceeds 1140px, and
+       it is centred, so the eye has somewhere to rest;
+     · the divisions are set in real columns, balanced, so it reads as a
+       printed contents page rather than a scroll;
+     · the gap BETWEEN divisions is more than twice the gap INSIDE one,
+       which is what tells a reader that ten things are ten and not
+       forty;
+     · the type has three sizes and only three, so every line announces
+       which level it is on before it is read.
+
+   Ornament is a hairline and a Roman numeral, and the numerals are
+   counted by CSS rather than written into the markup — which is how
+   they stay correct in four languages without a word being added.
+
+   The animation is the arrival: the divisions rise in order, fifty
+   milliseconds apart, and stop. Nothing loops, nothing drifts, nothing
+   moves once it has settled.
    =================================================================== */
 
-/* THE DRAWER'S OWN GROUND. Stated here once, and used by every rule below,
-   so the panel cannot drift between the editions the way the colophon did.
-   These are the site's own pearl values; the drawer simply does not follow
-   the edition, because it is a sheet laid over the page rather than part of
-   it. */
-.navlinks{
-  --mn-paper-1:rgb(var(--lv-w17,255,253,248));
-  --mn-paper-2:rgb(var(--lv-w51,248,241,227));
-  --mn-paper-3:rgb(var(--lv-w26,241,231,213));
-  --mn-ink:rgb(var(--lv-cf2,51,40,28));
-  --mn-ink-2:rgb(var(--lv-ink2,87,71,47));
-  --mn-gold:rgb(var(--lv-gt2,138,106,47));
-  --mn-gold-deep:rgb(var(--lv-gt3,99,72,27));
-  --mn-rule:rgba(var(--lv-gs,198,161,91),.34);
-  --mn-rule-soft:rgba(var(--lv-gs,198,161,91),.18);
-}
-
-/* ---------- The scrim ----------
-   IT CANNOT BE A ::before. It was: position:fixed, inset:0, z-index:-1. A
-   negative-z-index child paints above its own element's BACKGROUND and below
-   its content, so a full-screen scrim inside the drawer covers the drawer's
-   own ground. While that ground was espresso and the scrim was espresso,
-   nothing showed. The moment the drawer became ivory, the scrim printed dark
-   over the paper and the whole panel went brown again — the reader would have
-   seen the redesign fail and had no way to know why.
-   A spread shadow instead. It paints only OUTSIDE the panel, it cannot cover
-   it, it captures no clicks, and it fades in with the panel it belongs to. */
-.navlinks{--mn-scrim:rgba(var(--lv-cfd4,26,16,6),0);}
-.navlinks.open{--mn-scrim:rgba(var(--lv-cfd4,26,16,6),.86);}
+/* The angle the plate's rim light travels on. Registered, because an
+   unregistered custom property cannot be interpolated, and interpolating
+   the ANGLE is the whole point: rotating the element instead — which is
+   what the first attempt did — swings a rectangular ring bodily around
+   and prints a tilted box floating above the plate. It was plainly
+   visible in the screenshot, which is why the screenshot is taken. */
+@property --fm-ang{syntax:'<angle>';initial-value:0deg;inherits:false;}
 
 @media (max-width:1440px){
-  /* ---------- The panel ---------- */
+
+  /* ---------- The five colours ----------
+     Stated as values, never as livery tokens. A token is a colour that
+     FOLLOWS the reader's edition; this sheet does not follow it, because
+     a reader with the menu open is not looking at the page. Writing them
+     as tokens is how two earlier versions put Midnight's pale ink on
+     their own ivory — 1.85:1 and 1.98:1 — through rules that named a
+     dark colour.
+
+     Measured against the paper: ink 12.9:1, ink-2 6.9:1, gold-deep
+     7.9:1. The lighter gold is used for rules and hover glow only, never
+     to carry a word. */
   .navlinks{
-    inset:0 0 0 auto!important;
-    width:min(var(--menu-w,520px),100vw)!important;
+    --fm-paper:#FBF7EF;
+    --fm-ink:#2A2018;
+    --fm-ink-2:#63533F;
+    --fm-gold:#9C7833;
+    --fm-gold-deep:#63481B;
+    --fm-rule:rgba(156,120,51,.26);
+    /* The gilt. Three values that exist only to light metal — a rim, a
+       sheen, a struck edge. None of them ever carries a word, which is
+       why they are allowed to be brighter than the ink rules permit. */
+    --fm-gilt:#C9A961;
+    --fm-gilt-lt:#F3E3BC;
+    --fm-gilt-dk:#8A6A2F;
+    /* The house lozenge, struck once and reused everywhere: under each
+       division, at the centre of the foot's rule, and in the margin of
+       every page in the index. Drawn rather than typed, so it is the
+       same mark at 3px and at 9px and owes nothing to a font. */
+    --fm-lozenge:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%239C7833'/%3E%3C/svg%3E");
+    --fm-lozenge-deep:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%2363481B'/%3E%3C/svg%3E");
+    --fm-ease:cubic-bezier(.16,.8,.24,1);
+    --fm-bar:86px;
+    /* One gutter expression, used by the sheet and by the fixed bar
+       alike, so the crest sits on the same line as the first numeral at
+       every width. */
+    --fm-gutter:max(clamp(20px,6vw,44px),(100% - 1140px)/2);
+  }
+
+  /* ---------- The sheet ----------
+     THE ONE RULE THAT IS NOT ABOUT THE MENU. `.navlinks` sits inside
+     `nav.wrap`, and `nav.wrap` carries `z-index:1`. A stacking context
+     confines its children, so the drawer's own `z-index:250` only ever
+     ranked it against its siblings INSIDE that context — it was never
+     ranked against the masthead's reading-progress bar (6), its glint
+     (2), or the header's own gradient. All three printed across the
+     paper as faint bands, and no amount of raising `.navlinks` could
+     have moved them, because the number was being read in the wrong
+     room. The wrap itself has to be lifted, and only while the sheet is
+     open, which is the one moment the masthead is not being looked at.
+     `body.nav-lock` is set by js/site.js for exactly that moment. */
+  body.nav-lock header.nav > .wrap{z-index:60;}
+  /* And one storey up. The Personalisation Centre's drawer is parked
+     off-screen to the right at z-index 401, which is above the header's
+     260 — and although the drawer itself is out of view, its box-shadow
+     is not: it printed a 140px bruise down the right edge of the paper.
+     Measured, not guessed: the paper reads 251,247,239 and that band
+     fell to 157,142,118. Lifting the header above it while the sheet is
+     open costs nothing, because the drawer is shut whenever it is. */
+  body.nav-lock header.nav{z-index:500;}
+
+  .navlinks{
+    position:fixed!important;inset:0!important;z-index:250;
+    display:block!important;
+    width:auto!important;height:auto!important;max-width:none!important;
+    /* THE PAPER, not a fill.
+       Flat ivory is what made the last version read as dry: correct
+       colour, no depth, nothing for light to happen on. Three washes
+       fix that without a single new element — a broad warm light
+       falling from above the sheet, a deeper warmth pooling at the
+       foot, and a laid-paper grain at 1.6% so the ground has a surface
+       rather than a value. Default background-attachment means all
+       three stay still while the index scrolls over them, which is how
+       paper behaves and how a scrim does not. */
+    background-color:var(--fm-paper)!important;
+    background-image:
+      radial-gradient(1200px 560px at 50% -12%, rgba(255,253,247,.95), rgba(255,253,247,0) 70%),
+      radial-gradient(1000px 460px at 50% 114%, rgba(236,223,196,.55), rgba(236,223,196,0) 72%),
+      repeating-linear-gradient(0deg, rgba(120,92,44,.016) 0 1px, rgba(120,92,44,0) 1px 4px)!important;
+    color:var(--fm-ink);
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:calc(var(--fm-bar) + clamp(30px,5vh,58px)) var(--fm-gutter) clamp(60px,10vh,120px);
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .42s cubic-bezier(.16,.8,.24,1),visibility 0s linear .46s;
+    scrollbar-width:thin;scrollbar-color:var(--fm-rule) transparent;
+  }
+  .navlinks.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s;}
+  .navlinks::-webkit-scrollbar{width:9px;}
+  .navlinks::-webkit-scrollbar-thumb{background:var(--fm-rule);border-radius:99px;}
+  .navlinks::-webkit-scrollbar-track{background:transparent;}
+
+  /* THE FRAME.
+     A hairline inset from the window's edge, struck only at the corners
+     — the house's own device, lifted from `.pr-card`. It is the
+     difference between a page and a mounted plate, and it costs no
+     space at all because it lives where nothing is written. It begins
+     below the bar, so the letterhead is not cut across by it. */
+  .navlinks::before{
+    content:"";position:fixed;z-index:8;pointer-events:none;
+    top:calc(var(--fm-bar) + 14px);bottom:14px;inset-inline:14px;
+    border:1px solid rgba(156,120,51,.45);
+    -webkit-mask:
+      linear-gradient(#000 0 0) top left    /21% 21% no-repeat,
+      linear-gradient(#000 0 0) top right   /21% 21% no-repeat,
+      linear-gradient(#000 0 0) bottom left /21% 21% no-repeat,
+      linear-gradient(#000 0 0) bottom right/21% 21% no-repeat;
+            mask:
+      linear-gradient(#000 0 0) top left    /21% 21% no-repeat,
+      linear-gradient(#000 0 0) top right   /21% 21% no-repeat,
+      linear-gradient(#000 0 0) bottom left /21% 21% no-repeat,
+      linear-gradient(#000 0 0) bottom right/21% 21% no-repeat;
+    opacity:0;transition:opacity .7s var(--fm-ease) .25s;
+  }
+  .navlinks.open::before{opacity:1;}
+
+  /* THE SEAL.
+     A watermark washed behind forty links was the wrong instinct twice
+     over: at an opacity low enough to be safe it is invisible, and at
+     one high enough to be seen it prints the school's own name as ghost
+     text through the Governance column. Measured, both were true.
+
+     So the crest is not a watermark here. It is struck once, at the
+     foot, in the empty space the colophon already leaves — where it can
+     be properly visible because nothing is written over it, and where
+     it closes the sheet the way a seal closes a letter. `column-span`
+     lifts it clear of the index's columns. */
+  .navlinks::after{
+    content:"";display:block;
+    column-span:all;-webkit-column-span:all;
+    height:82px;margin:clamp(30px,5vh,52px) auto 0;
+    background:url("/assets/images/crest-watermark.png") no-repeat center/auto 100%;
+    opacity:.2;pointer-events:none;
+  }
+  html[data-pc-ornament="none"] .navlinks::before,
+  html[data-pc-ornament="none"] .navlinks::after{display:none;}
+
+  /* THE COLUMNS. Real columns, balanced by the browser, so a division of
+     nine pages and a division of one sit in a page rather than in a
+     ragged grid. `break-inside:avoid` keeps a division whole, and a
+     hairline between them is what a printed index has and a web page
+     usually forgets. */
+  @media (min-width:720px){ .navlinks{column-count:2;} }
+  @media (min-width:1080px){ .navlinks{column-count:3;} }
+  .navlinks{
+    column-gap:clamp(38px,5vw,86px);
+    column-rule:1px solid rgba(156,120,51,.075);
+  }
+
+  /* ---------- The bar ----------
+     Fixed rather than sticky, because the sheet is itself the scrolling
+     box and a fixed bar cannot be caught out by a sub-pixel. It carries
+     the crest, the words FULL MENU, and the way out. Nothing else. */
+  .navlinks .nav-drawer-head{
+    position:fixed;top:0;inset-inline:0;z-index:6;
+    display:flex!important;align-items:center;justify-content:space-between;gap:18px;
+    height:var(--fm-bar);
+    padding:0 var(--fm-gutter)!important;margin:0!important;
+    /* Not flat: the bar sits a shade above the paper, the way a
+       letterhead's head does, and it is closed by a rule rather than by
+       a border alone. */
+    background:linear-gradient(180deg,#FFFDF7 0%,#FBF7EF 100%)!important;
+    border:0!important;border-bottom:1px solid var(--fm-rule)!important;
+    box-shadow:0 16px 30px -30px rgba(99,72,27,.85)!important;
+  }
+  /* THE TRAVELLING LIGHT.
+     One slow pass of gilt along the bar's own rule — nine seconds, an
+     organic ease rather than a constant speed, and nothing else on the
+     sheet moves with it. This is the house's own device, the same one
+     that runs the masthead's Menu control; it belongs here because the
+     bar is the one edge a reader's eye returns to. */
+  .navlinks .nav-drawer-head::after{
+    content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,
+      rgba(201,169,97,0) 34%, rgba(201,169,97,.55) 44%,
+      var(--fm-gilt-lt) 50%, rgba(201,169,97,.55) 56%, rgba(201,169,97,0) 66%);
+    background-size:260% 100%;background-repeat:no-repeat;
+    animation:fm-sheen 9s cubic-bezier(.45,0,.55,1) infinite;
+  }
+  @keyframes fm-sheen{0%{background-position:-70% 0;}62%,100%{background-position:172% 0;}}
+
+  /* The crest, struck on the bar. A ring of gilt behind it turns a flat
+     PNG into a mounted mark; the ring is drawn on the container so the
+     glyph itself is never repainted. */
+  .navlinks .nav-drawer-head::before{
+    content:"";flex:0 0 auto;width:42px;height:42px;
+    margin-inline-end:17px;
+    background:url("/assets/images/brand-mark.png") no-repeat center/contain;
+    border-radius:50%;
+    box-shadow:0 0 0 1px rgba(156,120,51,.30), 0 0 0 5px rgba(201,169,97,.09);
+  }
+  html[data-pc-ornament="none"] .navlinks .nav-drawer-head::before{display:none;}
+  html[data-pc-ornament="none"] .navlinks .nav-drawer-head::after{display:none;}
+  .navlinks .ndh-title{
+    flex:1 1 auto;
+    font-family:var(--font-label,'Cinzel',serif);
+    font-size:.64rem;letter-spacing:.34em;text-transform:uppercase;font-weight:600;
+    color:var(--fm-gold-deep)!important;
+    text-shadow:0 1px 0 rgba(255,255,255,.85);
+    white-space:normal;
+  }
+  /* The close control, chased: a struck ring with a lit top edge and a
+     shadow beneath it, rather than a circle with a border. */
+  .navlinks .nav-drawer-close{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    width:48px;height:48px;border-radius:50%;cursor:pointer;padding:0;
+    border:1px solid rgba(156,120,51,.42)!important;
+    background:linear-gradient(158deg,#FFFDF8,#F4EBD9)!important;
+    color:var(--fm-gold-deep)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+               0 10px 20px -16px rgba(99,72,27,.9)!important;
+    transition:transform .42s var(--fm-ease),box-shadow .35s ease,border-color .35s ease;
+  }
+  .navlinks .nav-drawer-close:hover,
+  .navlinks .nav-drawer-close:focus-visible{
+    transform:rotate(90deg);
+    border-color:var(--fm-gilt)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+               0 0 0 4px rgba(201,169,97,.14),
+               0 12px 22px -14px rgba(99,72,27,.9)!important;
+  }
+
+  /* ---------- A division ----------
+     The numerals are counted, not written. Ten divisions in four
+     languages, and not one of them carries a hard-coded "VII". */
+  .navlinks{counter-reset:fm-div;}
+  .navlinks .nav-drop{
+    counter-increment:fm-div;
+    break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;
+    display:block!important;position:static!important;
+    margin:0 0 clamp(44px,6.2vh,72px)!important;padding:0!important;
+    border:0!important;background:none!important;
+    opacity:0;transform:translateY(14px);
+  }
+
+  /* THE HEADING. The largest of the three sizes, in the display face,
+     with the numeral struck small beside it and a hairline drawn under
+     the whole division. This is the line that has to carry the room. */
+  .navlinks .nav-drop-trigger{
+    display:block!important;text-decoration:none;white-space:normal!important;
+    flex:0 0 auto!important;min-height:0!important;
+    font-family:var(--font-display,'Cormorant Garamond',serif)!important;
+    /* brand.css sets 0.86rem !important and uppercase on this element for
+       the old drawer's row treatment. Both have to be answered here, or
+       the division heading arrives as a small tracked label and the
+       three type sizes collapse into two. */
+    font-size:clamp(1.45rem,2.6vw,1.95rem)!important;
+    line-height:1.18!important;font-weight:600!important;
+    letter-spacing:-.004em!important;text-transform:none!important;
+    color:var(--fm-ink)!important;
+    padding:0 0 .52em!important;margin:0 0 .5em!important;
+    border:0!important;
+    background:none!important;
+    transition:color .3s ease;
+  }
+  /* The numeral, struck rather than printed: a hairline of white beneath
+     the letter is what makes small type on paper look pressed into it
+     instead of laid on top. */
+  .navlinks .nav-drop-trigger::before{
+    content:counter(fm-div,upper-roman);
+    display:inline-block;min-width:3.8em;
+    font-family:var(--font-label,'Cinzel',serif);
+    font-size:.34em;letter-spacing:.16em;line-height:1;font-weight:600;
+    color:var(--fm-gold-deep)!important;
+    text-shadow:0 1px 0 rgba(255,255,255,.9);
+    vertical-align:.28em;
+  }
+  /* THE RULE UNDER A DIVISION — an engraving, not a table border.
+     brand.css uses this pseudo for a growing underline, which is taken
+     over here rather than merely switched off. Two layers: the house
+     lozenge struck at the leading edge, and a hairline running away
+     from it and fading out before it reaches the column's far side. A
+     rule that ends in nothing reads as engraved; a rule that ends in a
+     hard stop reads as a spreadsheet. */
+  .navlinks .nav-drop-trigger::after{
+    content:""!important;display:block!important;
+    position:absolute;inset-inline-start:0;bottom:0;
+    width:100%;height:9px;pointer-events:none;
     background:
-      radial-gradient(120% 46% at 50% -6%,rgba(var(--lv-gs,198,161,91),.16),transparent 64%),
-      linear-gradient(168deg,var(--mn-paper-1) 0%,var(--mn-paper-2) 58%,var(--mn-paper-3) 100%)!important;
-    border-inline-start:1px solid var(--mn-rule);
-    box-shadow:-52px 0 110px -46px rgba(0,0,0,.72),0 0 0 100vmax var(--mn-scrim);
-    color:var(--mn-ink);
-    transform:translateX(102%);opacity:0;
-    /* THE CLOSED DRAWER WAS STILL IN THE TAB ORDER. pointer-events:none stops
-       a mouse and does nothing at all for a keyboard, so every page on this
-       site walked a keyboard user through 67 invisible links inside a panel
-       that was shut, before they reached anything on the page itself. It is
-       the same fault as a focusable control inside aria-hidden, except on
-       every page rather than nine.
-         visibility:hidden is the fix: it is the one property that takes a
-       subtree out of both the tab order and the accessibility tree while still
-       allowing the panel to animate. It is delayed by the length of the slide
-       so the drawer stays painted on its way out; .navlinks.open sets it back
-       with no delay, so focus can enter the moment it opens. */
-    visibility:hidden;
-    transition:transform .58s cubic-bezier(.16,.8,.24,1),opacity .4s,
-               box-shadow .5s cubic-bezier(.16,.8,.24,1),visibility 0s linear .58s;
-    display:flex!important;pointer-events:none;
+      var(--fm-lozenge) left center/7px 7px no-repeat,
+      linear-gradient(to right, rgba(156,120,51,.46), rgba(156,120,51,.05) 74%, rgba(156,120,51,0));
+    background-position:left center, left 13px center;
+    background-size:7px 7px, calc(100% - 13px) 1px;
+    background-repeat:no-repeat,no-repeat;
+    transition:background-size .5s var(--fm-ease);
   }
-  [dir="rtl"] .navlinks{transform:translateX(-102%);
-    border-inline-start:0;border-inline-end:1px solid rgba(var(--lv-gb,233,206,138),.24);
-    box-shadow:40px 0 90px -40px rgba(0,0,0,.9),0 0 0 100vmax var(--mn-scrim);}
-  .navlinks.open{transform:none;opacity:1;pointer-events:auto;visibility:visible;transition-delay:0s;}
-
-  /* A hairline of gold down the leading edge of the panel. */
-  .navlinks::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:2px;
-    background:linear-gradient(180deg,transparent,rgb(var(--lv-g,198,161,91)) 16%,
-               rgb(var(--lv-gb,233,206,138)) 50%,rgb(var(--lv-g,198,161,91)) 84%,transparent);
-    opacity:0;transition:opacity .7s ease .18s;pointer-events:none;}
-  .navlinks.open::after{opacity:1;}
-
-  /* ---------- The head ---------- */
-  /* THE HEAD IS OPAQUE AND IT STAYS. It was a transparent gradient in the
-     normal flow, so the moment a reader scrolled, "FULL MENU / Sultan Hanafi
-     Royal Schools" and whatever section had reached the top of the panel were
-     printed over one another. A menu that cannot be scrolled without its own
-     title colliding with its contents is the definition of disorganised. */
-  .nav-drawer-head{
-    position:sticky;top:0;z-index:5;
-    padding:20px 24px 18px!important;
-    background:linear-gradient(180deg,var(--mn-paper-1),var(--mn-paper-2))!important;
-    border-bottom:1px solid var(--mn-rule)!important;
-    box-shadow:0 14px 26px -22px rgba(var(--lv-cfd2s,42,28,16),.55);
-    align-items:center;gap:14px;
+  [dir="rtl"] .navlinks .nav-drop-trigger::after{
+    background-image:
+      var(--fm-lozenge),
+      linear-gradient(to left, rgba(156,120,51,.46), rgba(156,120,51,.05) 74%, rgba(156,120,51,0));
+    background-position:right center, right 13px center;
   }
-  .nav-drawer-head::before{
-    content:"";width:34px;height:34px;flex-shrink:0;border-radius:9px;
-    background:url("/assets/images/brand-mark.png") center/contain no-repeat;
-    filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
-  .ndh-title{flex:1;font-size:.68rem!important;letter-spacing:.24em!important;
-    color:var(--mn-gold)!important;}
-  .ndh-title::after{content:"Sultan Hanafi Royal Schools";display:block;
-    font-family:var(--font-display);font-size:1.06rem;letter-spacing:.01em;
-    text-transform:none;color:var(--mn-ink);margin-top:2px;}
-  [lang="ar"] .ndh-title::after{content:"مدارس السلطان حنفي الملكية";}
-  .nav-drawer-close{border-radius:50%!important;width:42px!important;height:42px!important;
-    border-color:var(--mn-rule)!important;color:var(--mn-gold-deep)!important;
-    background:rgba(255,255,255,.6)!important;
-    transition:transform .4s cubic-bezier(.16,.8,.24,1),border-color .3s,background .3s!important;}
-  .nav-drawer-close:hover{transform:rotate(90deg);
-    border-color:rgb(var(--lv-g,198,161,91))!important;background:rgba(var(--lv-gs,198,161,91),.12)!important;}
-
-  /* ---------- The rows ---------- */
-  .navlinks > .nav-drop{
-    position:relative;isolation:isolate;
-    border-bottom:1px solid var(--mn-rule-soft)!important;
-    counter-increment:navrow;
+  /* The Foundation stands alone — it has no pages beneath it, so its
+     rule would engrave off an empty space. A division with nothing
+     under it ends at its own name, and keeps only the lozenge. */
+  .navlinks .nav-drop--foundation .nav-drop-trigger::after{
+    background-size:7px 7px, 84px 1px;
   }
-  .navlinks{counter-reset:navrow;}
-  /* The numeral. Struck small in the margin, the way a contents page
-     numbers its chapters. */
-  .navlinks > .nav-drop > .nav-drop-trigger::before{
-    content:counter(navrow,decimal-leading-zero);
-    position:absolute;inset-inline-start:24px;top:50%;transform:translateY(-50%);
-    font-family:var(--font-label);font-size:.62rem;letter-spacing:.1em;
-    color:rgba(var(--lv-gs,198,161,91),.85);pointer-events:none;transition:color .35s;}
-  .navlinks > .nav-drop > .nav-drop-trigger{
-    padding-inline-start:64px!important;padding-block:19px!important;
-    font-size:.92rem!important;letter-spacing:.11em!important;
-    color:var(--mn-ink)!important;
-    transition:color .35s,padding-inline-start .4s cubic-bezier(.16,.8,.24,1)!important;}
-  /* A light that travels along the row as the pointer passes it. */
-  .navlinks > .nav-drop::before{
-    content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:linear-gradient(90deg,rgba(var(--lv-gs,198,161,91),.30),rgba(var(--lv-gb,233,206,138),.16) 44%,rgba(var(--lv-gb,233,206,138),.04) 74%,transparent);
-    transform:scaleX(0);transform-origin:left center;
-    transition:transform .5s cubic-bezier(.16,.8,.24,1);}
-  [dir="rtl"] .navlinks > .nav-drop::before{transform-origin:right center;
-    background:linear-gradient(270deg,rgba(var(--lv-gs,198,161,91),.30),rgba(var(--lv-gb,233,206,138),.16) 44%,rgba(var(--lv-gb,233,206,138),.04) 74%,transparent);}
-  .navlinks > .nav-drop:hover::before,
-  .navlinks > .nav-drop:focus-within::before,
-  .navlinks > .nav-drop.is-open::before{transform:scaleX(1);}
-  .navlinks > .nav-drop:hover > .nav-drop-trigger,
-  .navlinks > .nav-drop:focus-within > .nav-drop-trigger{
-    color:var(--mn-gold-deep)!important;padding-inline-start:72px!important;}
-  .navlinks > .nav-drop:hover > .nav-drop-trigger::before{color:var(--mn-gold-deep);}
-  /* A gold rule that draws itself under the row being touched. */
-  .navlinks > .nav-drop::after{
-    content:"";position:absolute;inset-inline:24px;bottom:-1px;height:1px;pointer-events:none;
-    background:linear-gradient(90deg,rgb(var(--lv-g,198,161,91)),rgba(var(--lv-gs,198,161,91),.15) 78%,transparent);
-    transform:scaleX(0);transform-origin:left center;
-    transition:transform .55s cubic-bezier(.16,.8,.24,1);}
-  [dir="rtl"] .navlinks > .nav-drop::after{transform-origin:right center;
-    background:linear-gradient(270deg,rgb(var(--lv-g,198,161,91)),rgba(var(--lv-gs,198,161,91),.15) 78%,transparent);}
-  .navlinks > .nav-drop:hover::after,.navlinks > .nav-drop:focus-within::after{transform:scaleX(1);}
+  .navlinks .nav-drop-trigger:hover,
+  .navlinks .nav-drop-trigger:focus-visible{color:var(--fm-gold-deep)!important;}
+  .navlinks .nav-drop-trigger:hover::after,
+  .navlinks .nav-drop-trigger:focus-visible::after{
+    background-image:
+      var(--fm-lozenge-deep),
+      linear-gradient(to right, rgba(99,72,27,.55), rgba(156,120,51,.10) 82%, rgba(156,120,51,0));
+  }
 
-  /* ---------- The portal row ----------
-     The tenth row is not a section, it is the way in: an <a> carrying
-     .nav-mark, which paints the gold plate. It was being given a row's
-     furniture as well — the contents numeral struck at inset-start 24px and
-     the accordion's chevron at inset-end 20px — so the plate covered its own
-     number and the chevron floated outside it. Two controls and a numeral
-     fighting over one row is most of what made this menu read as jammed.
-     It is a plate now: no numeral, the plate inset like a button, and the
-     chevron on the plate in the plate's own ink. */
-  .navlinks > .nav-drop--portal{border-bottom:0!important;}
-  .navlinks > .nav-drop--portal > .nav-drop-trigger::before{content:none!important;}
-  .navlinks > .nav-drop--portal::before,
-  .navlinks > .nav-drop--portal::after{display:none!important;}
-  /* The row lays itself out: the plate takes the room, the chevron sits
-     beside it. They are two different controls — one goes to the gateway, one
-     opens the list — so the chevron is deliberately outside the plate rather
-     than floating over it, which is what it was doing. */
-  .navlinks > .nav-drop--portal{
-    display:flex!important;flex-wrap:wrap;align-items:center;
-    padding:14px 24px 16px!important;gap:10px;}
-  .navlinks > .nav-drop--portal > .nav-drop-trigger{
-    flex:1 1 auto;min-width:0;
-    display:flex!important;align-items:center;justify-content:center;gap:10px;
-    margin:0!important;padding:15px 22px!important;
-    border-radius:999px!important;
-    color:#241809!important;
-    box-shadow:0 14px 30px -14px rgba(var(--lv-g,198,161,91),.8),inset 0 1px 0 rgba(255,255,255,.5);}
-  .navlinks > .nav-drop--portal:hover > .nav-drop-trigger,
-  .navlinks > .nav-drop--portal:focus-within > .nav-drop-trigger{
-    color:#241809!important;padding-inline-start:22px!important;}
-  .navlinks > .nav-drop--portal > .nav-drop-toggle{
-    position:static!important;flex:0 0 auto;
-    color:var(--mn-gold-deep)!important;
-    border:1px solid var(--mn-rule);background:rgba(255,255,255,.5)!important;
-    width:42px!important;height:42px!important;}
-  .navlinks > .nav-drop--portal > .nav-drop-toggle:hover{
-    background:rgba(var(--lv-gs,198,161,91),.14)!important;color:var(--mn-gold-deep)!important;}
-  .navlinks > .nav-drop--portal > .nav-drop-panel{flex:0 0 100%;margin:6px 0 0!important;}
+  /* The chevron has nothing left to do: nothing is folded away. */
+  .navlinks .nav-drop-toggle{display:none!important;}
 
-  .nav-drop-toggle{
-    inset-inline-end:20px!important;width:42px!important;height:42px!important;
-    border-radius:50%!important;color:var(--mn-gold)!important;
-    transition:transform .42s cubic-bezier(.16,.8,.24,1),background .3s,color .3s!important;}
-  .nav-drop-toggle:hover{background:rgba(var(--lv-gs,198,161,91),.14)!important;
-    color:var(--mn-gold-deep)!important;}
-  .nav-drop-toggle[aria-expanded="true"]{transform:rotate(180deg)!important;}
-
-  /* ---------- The opened sub-panel ---------- */
+  /* ---------- The pages under it ----------
+     Every panel open, every panel bare. The middle type size on a wide
+     leading, so the list breathes; the gap between two of these is
+     deliberately far smaller than the gap between two divisions. */
   .navlinks .nav-drop-panel{
-    background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.07),rgba(var(--lv-gs,198,161,91),.02))!important;
-    border-inline-start:2px solid rgba(var(--lv-gs,198,161,91),.5)!important;
-    border-radius:0 10px 10px 0;
-    margin-inline-start:24px!important;padding:10px 20px 16px!important;
+    display:block!important;position:static!important;
+    width:auto!important;min-width:0!important;max-width:none!important;
+    inset:auto!important;
+    margin:0!important;padding:0!important;
+    background:none!important;border:0!important;box-shadow:none!important;
+    opacity:1!important;visibility:visible!important;transform:none!important;
   }
-  [dir="rtl"] .navlinks .nav-drop-panel{border-radius:10px 0 0 10px;}
-  /* The panel's own heading repeats the row directly above it word for word,
-     so on paper it read as the same title printed twice. It is kept for the
-     outline and for anything reading the page aloud, and taken out of sight. */
-  .navlinks .nav-mega-intro h4{
-    position:absolute!important;width:1px;height:1px;overflow:hidden;
-    clip-path:inset(50%);white-space:nowrap;}
-  .navlinks .nav-mega-intro p{color:var(--mn-ink-2)!important;font-size:.84rem!important;}
-  .navlinks .nav-mega-item{border-radius:10px;padding:11px 12px!important;
-    transition:background .3s,transform .3s cubic-bezier(.16,.8,.24,1)!important;}
-  .navlinks .nav-mega-item:hover{background:rgba(var(--lv-gs,198,161,91),.14)!important;
-    transform:translateX(4px);}
-  [dir="rtl"] .navlinks .nav-mega-item:hover{transform:translateX(-4px);}
-  .navlinks .nav-mega-text .t{color:var(--mn-ink)!important;font-weight:600;}
-  .navlinks .nav-mega-text .d{color:var(--mn-ink-2)!important;}
-  .navlinks .nav-mega-item svg,.navlinks .nav-mega-item .ic{color:var(--mn-gold)!important;}
-  .navlinks .nav-mega-featured{border-top-color:var(--mn-rule)!important;}
-  /* Measured at 4.46:1 on the drawer's paper — four hundredths under the
-     threshold, which is a fail and not a rounding. The deeper gold. */
-  .navlinks .nav-mega-featured-label{color:var(--mn-gold-deep)!important;}
-  .navlinks .nav-mega-featured-link{color:var(--mn-gold-deep)!important;}
-  /* The line under the featured link. It is the only text in the drawer that
-     was never given an ink of its own — it inherited the espresso panel's pale
-     one, so on paper it was the colour of the paper. Measured at 1.2:1 before
-     this line. */
-  .navlinks .nav-mega-featured p{color:var(--mn-ink-2)!important;}
-  .navlinks .nav-drop-panel p,
-  .navlinks .nav-drop-panel span,
-  .navlinks .nav-drop-panel li{color:var(--mn-ink-2);}
-  .navlinks .nav-drop-panel a{color:var(--mn-ink)!important;}
-  .navlinks .nav-drop-panel a:hover{background:rgba(var(--lv-gs,198,161,91),.12)!important;}
+  .navlinks .nav-mega-col,
+  .navlinks .nav-mega-panel,
+  .navlinks .portal-gateway-grid,
+  .navlinks .pgx,
+  .navlinks .pgx-body{
+    display:block!important;width:auto!important;min-width:0!important;
+    gap:0!important;padding:0!important;margin:0!important;
+    background:none!important;border:0!important;box-shadow:none!important;
+  }
 
-  /* ---------- The foot ---------- */
-  .nav-drawer-actions{padding:20px 24px 30px!important;display:flex!important;
-    flex-direction:column;gap:11px;border-top:1px solid var(--mn-rule);
-    background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.05),transparent);}
-  .nav-drawer-actions a:not(.nav-mark){color:var(--mn-ink)!important;
-    border:1px solid var(--mn-rule);border-radius:999px;padding:13px 20px!important;
-    text-align:center;background:rgba(255,255,255,.55);transition:background .3s,border-color .3s;}
-  .nav-drawer-actions a:not(.nav-mark):hover{background:rgba(var(--lv-gs,198,161,91),.12)!important;
-    border-color:rgb(var(--lv-g,198,161,91));}
-  .nav-drawer-actions .nav-mark{
-    text-align:center;padding:15px 20px!important;border-radius:999px!important;
-    background:linear-gradient(120deg,rgb(var(--lv-g,198,161,91)),rgb(var(--lv-gb,233,206,138)))!important;
-    color:#241809!important;border:0!important;
-    box-shadow:0 14px 30px -14px rgba(var(--lv-g,198,161,91),.8),inset 0 1px 0 rgba(255,255,255,.5);}
-  /* THE PLATE IS GOLD IN EVERY EDITION, SO ITS INK IS A LITERAL.
-     The first attempt wrote it as rgb(var(--lv-cfd3,36,24,9)) — a deep coffee
-     in Clear and Royal, and the Midnight edition redefines that same token to
-     a pale one, because in Midnight it is a BACKGROUND rather than an ink. So
-     the button went on printing near-white on its own gold at 1.85:1, through
-     a rule that named a dark colour.
-     A livery token is a colour that follows the edition. This plate does not
-     follow the edition: it is gold on all three, so its ink is stated once,
-     as a value, against the gold it actually sits on. */
-  .nav-drawer-actions .nav-mark,
-  .nav-drawer-actions .nav-mark *{color:#241809!important;}
-  .navlinks > .nav-drop--portal > .nav-drop-trigger,
-  .navlinks > .nav-drop--portal > .nav-drop-trigger *{color:#241809!important;}
-}
+  /* The intro block is a duplicate of the heading wherever a division has
+     a column of pages of its own, and IS the list of pages wherever it
+     does not (Admissions, Governance, Contact). So the wrapper stays and
+     only the duplicated words go. */
+  .navlinks .nav-mega-intro{
+    display:block!important;width:auto!important;
+    padding:0!important;margin:0!important;
+    border:0!important;background:none!important;
+  }
+  .navlinks .nav-mega-intro > h4,
+  .navlinks .nav-mega-intro > p,
+  .navlinks .nav-mega-featured,
+  .navlinks .nav-mega-item .d,
+  .navlinks .pgc-icon,
+  .navlinks .pgc-desc,
+  .navlinks .pgc-enter,
+  .navlinks .pgx-head,
+  .navlinks .pgx-nav,
+  .navlinks .pgx-panes,
+  .navlinks .pgx-foot,
+  .navlinks .pgx-radio{display:none!important;}
 
-/* On a wide screen the drawer is a side panel rather than a full sheet. */
-@media (min-width:721px) and (max-width:1440px){ .navlinks{--menu-w:540px;} }
-@media (max-width:720px){ .navlinks{--menu-w:100vw;} }
+  /* The index is set in from the numeral column, so the whole division
+     hangs on two axes rather than one — numerals at the margin, titles
+     and pages on the same line inside it. */
+  .navlinks .nav-drop-panel{padding-inline-start:26px!important;}
+  @media (max-width:520px){ .navlinks .nav-drop-panel{padding-inline-start:20px!important;} }
 
-@media (prefers-reduced-motion:reduce){
-  .navlinks,.navlinks::after,
-  .navlinks > .nav-drop::before,.navlinks > .nav-drop::after,
-  .nav-drawer-close,.nav-drop-toggle{transition:none!important;}
-  .navlinks{transform:none!important;}
-}
+  /* Every kind of sub-link the markup contains, set as one kind of line.
+     A link is a word: no plate, no border, no chevron, no chip. */
+  .navlinks .nav-mega-item,
+  .navlinks .nmi-cta,
+  .navlinks .nmi-secondary,
+  .navlinks .portal-gateway-card{
+    position:relative;
+    display:block!important;text-decoration:none;white-space:normal!important;
+    min-height:0!important;
+    padding:.36em 0!important;margin:0!important;
+    border:0!important;border-radius:0!important;
+    background:none!important;box-shadow:none!important;
+    font-family:var(--font-body,'Inter',sans-serif)!important;
+    font-size:.93rem!important;line-height:1.6!important;
+    letter-spacing:.005em!important;font-weight:400!important;
+    text-transform:none!important;
+    color:var(--fm-ink-2)!important;
+    /* brand.css dims `.nmi-secondary` to 0.75 for the dark panel it was
+       written against. On paper that reads as two grades of ink in one
+       list, which is what made Governance look faded beside Academics. */
+    opacity:1!important;
+    transition:color .28s ease;
+  }
+  /* The three compact divisions write their trailing arrow into the link
+     itself, and the ones with a column of pages do not. One list cannot
+     have two kinds of line, so the glyph is set aside here — it is still
+     in the markup, still drawn in the masthead's own panels, and it is
+     marked aria-hidden, so nothing is lost by leaving it out of a
+     contents page. */
+  .navlinks .nmi-cta .arrow,
+  .navlinks .nmi-secondary .arrow{display:none!important;}
 
-/* The sub-panel's items inherit the mega-menu's desktop grid, which
-   centres them; inside the drawer they are a list and read as one. */
-@media (max-width:1440px){
-  /* THIS ONE LINE HELD ALL EIGHT SECTIONS OPEN. It was written to change the
-     sub-panel's LAYOUT — the mega menu lays its items out in columns on a wide
-     screen and they should be one list in the drawer — but .nav-mega-panel is
-     also the .nav-drop-panel the accordion collapses with display:none, and
-     !important beat it. So every section stood permanently expanded: five
-     thousand two hundred pixels of menu in a five-hundred-pixel column, and an
-     accordion that appeared not to work. Scoped to the open section, it does
-     what it was for and nothing else. */
-  .navlinks .nav-drop.open .nav-mega-panel{display:block!important;}
-  .navlinks .nav-mega-col{display:block!important;text-align:start!important;}
-  .navlinks .nav-mega-item{display:flex!important;align-items:flex-start;gap:11px;
-    text-align:start!important;justify-content:flex-start!important;}
-  .navlinks .nav-mega-text{text-align:start!important;}
-  .navlinks .nav-mega-item .ic,.navlinks .nav-mega-item svg{flex-shrink:0;margin-top:2px;}
-  .navlinks .nav-mega-featured{margin-top:14px;padding-top:14px;
-    border-top:1px solid rgba(var(--lv-gb,233,206,138),.16);}
-  .navlinks .nav-mega-intro{text-align:start!important;padding:4px 0 10px!important;}
+  /* THE SPINE.
+     A 3px lozenge in the margin of every page in the index — the same
+     mark as the one under each division, struck small. Forty of them
+     aligned down three columns is what turns a list of links into a
+     set, and it is the cheapest ornament on the sheet: no element, no
+     request, no layout. On address it takes the deeper gold and opens
+     slightly, so the row answers before the underline has finished
+     drawing. */
+  .navlinks .nav-mega-item::before,
+  .navlinks .nmi-cta::before,
+  .navlinks .nmi-secondary::before,
+  .navlinks .portal-gateway-card::before{
+    content:""!important;display:block!important;position:absolute;
+    inset-inline-start:-15px;top:.92em;width:5px;height:5px;
+    background:var(--fm-lozenge) center/contain no-repeat;
+    opacity:.55;
+    transition:opacity .3s ease,transform .42s var(--fm-ease);
+  }
+  .navlinks .nav-mega-item:hover::before,.navlinks .nav-mega-item:focus-visible::before,
+  .navlinks .nmi-cta:hover::before,.navlinks .nmi-cta:focus-visible::before,
+  .navlinks .nmi-secondary:hover::before,.navlinks .nmi-secondary:focus-visible::before,
+  .navlinks .portal-gateway-card:hover::before,.navlinks .portal-gateway-card:focus-visible::before{
+    opacity:1;transform:scale(1.5);
+  }
+  html[data-pc-ornament="none"] .navlinks .nav-mega-item::before,
+  html[data-pc-ornament="none"] .navlinks .nmi-cta::before,
+  html[data-pc-ornament="none"] .navlinks .nmi-secondary::before,
+  html[data-pc-ornament="none"] .navlinks .portal-gateway-card::before{display:none!important;}
+  .navlinks .nav-mega-text,
+  .navlinks .nav-mega-item .t,
+  .navlinks .pgc-name{
+    display:inline!important;
+    font-family:inherit!important;
+    font-size:inherit!important;font-weight:inherit!important;text-transform:none!important;
+    letter-spacing:inherit!important;line-height:inherit!important;
+    color:inherit!important;margin:0!important;padding:0!important;
+  }
+  /* The rule draws itself under the word — the one thing on the sheet
+     that moves after the sheet has settled. It is drawn on the row, not
+     on the text, so a two-line entry does not strike through itself. */
+  .navlinks .nav-mega-item::after,
+  .navlinks .nmi-cta::after,
+  .navlinks .nmi-secondary::after,
+  .navlinks .portal-gateway-card::after{
+    content:""!important;display:block!important;
+    position:absolute;inset-inline-start:0;bottom:.16em;
+    width:100%;height:1px;
+    background:var(--fm-gold);
+    transform:scaleX(0);transform-origin:inline-start;
+    transition:transform .4s cubic-bezier(.16,.8,.24,1);
+  }
+  .navlinks .nav-mega-item:hover,.navlinks .nav-mega-item:focus-visible,
+  .navlinks .nmi-cta:hover,.navlinks .nmi-cta:focus-visible,
+  .navlinks .nmi-secondary:hover,.navlinks .nmi-secondary:focus-visible,
+  .navlinks .portal-gateway-card:hover,.navlinks .portal-gateway-card:focus-visible{
+    color:var(--fm-gold-deep)!important;transform:none!important;
+  }
+  .navlinks .nav-mega-item:hover::after,.navlinks .nav-mega-item:focus-visible::after,
+  .navlinks .nmi-cta:hover::after,.navlinks .nmi-cta:focus-visible::after,
+  .navlinks .nmi-secondary:hover::after,.navlinks .nmi-secondary:focus-visible::after,
+  .navlinks .portal-gateway-card:hover::after,.navlinks .portal-gateway-card:focus-visible::after{
+    transform:scaleX(1);
+  }
+
+  /* ---------- The two ways in ----------
+     The gateway chooser is a whole interactive apparatus — eight radio
+     buttons and eight panes. It belongs to the Portal page, and putting
+     it inside a contents page is what made the last version read as
+     jammed. Its door stays; its machinery does not. */
+  .navlinks .nav-drop--portal .nav-drop-panel{display:none!important;}
+  .navlinks .nav-drop--portal,
+  .navlinks .nav-drawer-actions{
+    column-span:all;-webkit-column-span:all;
+    display:block!important;
+    margin:0!important;padding:0!important;
+    background:none!important;border:0!important;
+  }
+  /* THE COLOPHON RULE — the house's `.arm-rule`, drawn without an
+     element: two rules tapering away from a struck lozenge at the
+     centre. It closes the sheet the way a title page is closed. */
+  .navlinks .nav-drop--portal{
+    counter-increment:none;
+    position:relative!important;
+    padding-top:clamp(40px,6vh,66px)!important;
+    margin-top:clamp(14px,2.6vh,28px)!important;
+    border-top:0!important;
+    text-align:center!important;
+  }
+  .navlinks .nav-drop--portal::before{
+    content:""!important;display:block!important;
+    position:absolute;top:0;inset-inline:0;height:11px;pointer-events:none;
+    background:
+      linear-gradient(to right, rgba(156,120,51,0), rgba(156,120,51,.5)),
+      linear-gradient(to left,  rgba(156,120,51,0), rgba(156,120,51,.5)),
+      var(--fm-lozenge);
+    background-position:left center, right center, center;
+    background-size:calc(50% - 15px) 1px, calc(50% - 15px) 1px, 9px 9px;
+    background-repeat:no-repeat,no-repeat,no-repeat;
+  }
+  html[data-pc-ornament="none"] .navlinks .nav-drop--portal::before{
+    background:linear-gradient(to right,rgba(156,120,51,.28),rgba(156,120,51,.28)) center/100% 1px no-repeat;
+  }
+  .navlinks .nav-drawer-actions{margin-top:16px!important;text-align:center!important;}
+
+  /* THE ONE DOOR, STRUCK.
+     A prestige menu is allowed exactly one call to action, and this is
+     it — so it is the one thing on the sheet that is an object rather
+     than a word: a chased plate with a lit top edge, a shadow beneath,
+     and the house's slow halo travelling its rim. Start Admission
+     stays a word, beneath it, so the two are never confused for a pair
+     of buttons. */
+  .navlinks .nav-drop--portal .nav-drop-trigger{
+    display:inline-flex!important;align-items:center;gap:.55em;
+    position:relative;width:auto!important;
+    text-decoration:none;white-space:normal!important;min-height:0!important;
+    font-family:var(--font-label,'Cinzel',serif)!important;
+    font-size:.74rem!important;letter-spacing:.2em!important;
+    text-transform:uppercase!important;font-weight:600!important;
+    color:var(--fm-gold-deep)!important;
+    padding:16px 34px!important;margin:0!important;border-radius:2px!important;
+    border:1px solid rgba(156,120,51,.48)!important;
+    background:linear-gradient(158deg,#FFFDF8 0%,#F4EAD6 100%)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+               0 18px 34px -26px rgba(99,72,27,.95)!important;
+    transition:box-shadow .4s ease,border-color .4s ease,transform .4s var(--fm-ease);
+  }
+  .navlinks .nav-drop--portal .nav-drop-trigger:hover,
+  .navlinks .nav-drop--portal .nav-drop-trigger:focus-visible{
+    transform:translateY(-2px)!important;border-color:var(--fm-gilt)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
+               0 22px 38px -24px rgba(99,72,27,.95)!important;
+  }
+  .navlinks .nav-drop--portal .nav-drop-trigger::before{content:none;}
+  /* The travelling rim light — a masked conic gradient turning around
+     the plate's own rectangle, hairline-thin and unhurried. The same
+     device the masthead's Menu control carries, so the two ends of the
+     journey are lit by one hand. */
+  .navlinks .nav-drop--portal .nav-drop-trigger::after{
+    content:""!important;display:block!important;
+    position:absolute;inset:-2px;pointer-events:none;border-radius:inherit;
+    background:none;width:auto;height:auto;transform:none;
+    background-image:conic-gradient(from var(--fm-ang), transparent 0 66%,
+      rgba(201,169,97,.30) 76%, var(--fm-gilt-lt) 84%, rgba(201,169,97,.30) 92%, transparent 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;padding:1.2px;
+    opacity:.9;animation:fm-halo 15s cubic-bezier(.45,0,.55,1) infinite;
+  }
+  @keyframes fm-halo{to{--fm-ang:360deg;}}
+  html[data-pc-ornament="none"] .navlinks .nav-drop--portal .nav-drop-trigger::after{display:none!important;}
+  .navlinks .nav-drop--portal .nav-drop-trigger .arrow{
+    font-family:inherit;color:inherit;margin-inline-start:.1em;
+  }
+
+  /* Start Admission — a word, quietly ruled. */
+  .navlinks > .nav-drawer-actions .nav-mark{
+    display:inline-block!important;position:relative;
+    width:auto!important;text-align:center!important;
+    text-decoration:none;white-space:normal!important;min-height:0!important;
+    font-family:var(--font-label,'Cinzel',serif)!important;
+    font-size:.66rem!important;letter-spacing:.22em!important;
+    text-transform:uppercase!important;font-weight:600!important;
+    color:var(--fm-gold-deep)!important;
+    padding:12px 2px!important;margin:0!important;
+    border:0!important;border-radius:0!important;
+    background:none!important;box-shadow:none!important;transform:none!important;
+  }
+  .navlinks > .nav-drawer-actions .nav-mark::after{
+    content:""!important;display:block!important;
+    position:absolute;inset-inline-start:0;bottom:6px;
+    width:100%;height:1px;background:rgba(156,120,51,.5);
+    transform:scaleX(1);transform-origin:center;
+    transition:transform .4s var(--fm-ease);
+  }
+  .navlinks > .nav-drawer-actions .nav-mark:hover::after,
+  .navlinks > .nav-drawer-actions .nav-mark:focus-visible::after{transform:scaleX(0);}
+
+  /* ---------- The arrival ----------
+     Each division rises in its turn and stops. Ten steps at fifty
+     milliseconds is half a second from first to last — long enough to
+     read as deliberate, short enough that nobody waits for it. */
+  .navlinks.open .nav-drop,
+  .navlinks.open .nav-drawer-actions{
+    animation:fm-rise .58s cubic-bezier(.16,.8,.24,1) both;
+  }
+  .navlinks.open .nav-drop:nth-child(2){animation-delay:.10s;}
+  .navlinks.open .nav-drop:nth-child(3){animation-delay:.15s;}
+  .navlinks.open .nav-drop:nth-child(4){animation-delay:.20s;}
+  .navlinks.open .nav-drop:nth-child(5){animation-delay:.25s;}
+  .navlinks.open .nav-drop:nth-child(6){animation-delay:.30s;}
+  .navlinks.open .nav-drop:nth-child(7){animation-delay:.35s;}
+  .navlinks.open .nav-drop:nth-child(8){animation-delay:.40s;}
+  .navlinks.open .nav-drop:nth-child(9){animation-delay:.45s;}
+  .navlinks.open .nav-drop:nth-child(10){animation-delay:.50s;}
+  .navlinks.open .nav-drop:nth-child(11){animation-delay:.55s;}
+  .navlinks.open .nav-drawer-actions{animation-delay:.60s;}
+  @keyframes fm-rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  /* ---------- Midnight, answered ----------
+     THE EDITION-BLIND PATTERN, for the tenth time on this site, and this
+     time in reverse. liveries.css holds the masthead's ink LIGHT in the
+     Midnight edition, because in Midnight the band around it went dark:
+
+       html[data-pc-theme="dark"] .nav-drop-trigger{
+         color:var(--mn-ink)!important; -webkit-text-fill-color:...!important; }
+
+     That is right for the masthead and wrong for this sheet, which is
+     ivory in every edition. At (0,2,1) with !important it outranked
+     `.navlinks .nav-drop-trigger`, and the measurement said so plainly:
+     every division heading in Midnight came back at 1.09:1 — pale ink on
+     pale paper, invisible rather than merely faint. `.pgc-name`, which
+     carries the three Verify links, failed the same way.
+
+     Answered at the same shape and one class higher, so the ivory sheet
+     states its own ink no matter what the page around it is wearing. The
+     value is the same literal in all three editions; this block does not
+     follow the edition, it refuses to. */
+  html[data-pc-theme="dark"] .navlinks .nav-drop-trigger,
+  html[data-pc-theme="dark"] .navlinks .nav-drop-trigger span{
+    color:var(--fm-ink)!important;-webkit-text-fill-color:var(--fm-ink)!important;
+  }
+  html[data-pc-theme="dark"] .navlinks .portal-gateway-card,
+  html[data-pc-theme="dark"] .navlinks .pgc-name{
+    color:var(--fm-ink-2)!important;-webkit-text-fill-color:var(--fm-ink-2)!important;
+  }
+  html[data-pc-theme="dark"] .navlinks .nav-drop--portal .nav-drop-trigger,
+  html[data-pc-theme="dark"] .navlinks .nav-drop--portal .nav-drop-trigger span{
+    color:var(--fm-gold-deep)!important;-webkit-text-fill-color:var(--fm-gold-deep)!important;
+  }
+
+  /* A reader who has asked for less motion is given none of it, and the
+     sheet simply is there. */
+  @media (prefers-reduced-motion:reduce){
+    .navlinks{transition:opacity .2s linear,visibility 0s linear .2s;}
+    .navlinks .nav-drop,.navlinks .nav-drawer-actions{opacity:1;transform:none;animation:none!important;}
+    .navlinks .nav-mega-item::after,.navlinks .nmi-cta::after,
+    .navlinks .nmi-secondary::after,.navlinks .portal-gateway-card::after,
+    .navlinks .nav-drawer-close{transition:none;}
+    .navlinks .nav-drawer-close:hover{transform:none;}
+    /* The two lights stop; the metal they were lighting stays. */
+    .navlinks .nav-drawer-head::after{animation:none;background-position:50% 0;opacity:.5;}
+    .navlinks .nav-drop--portal .nav-drop-trigger::after{animation:none;opacity:.5;}
+    .navlinks .nav-drop--portal .nav-drop-trigger:hover{transform:none!important;}
+  }
+  html[data-pc-motion="reduced"] .navlinks .nav-drawer-head::after,
+  html[data-pc-motion="reduced"] .navlinks .nav-drop--portal .nav-drop-trigger::after{
+    animation:none;opacity:.5;
+  }
+  html[data-pc-motion="reduced"] .navlinks .nav-drop,
+  html[data-pc-motion="reduced"] .navlinks .nav-drawer-actions{
+    opacity:1;transform:none;animation:none!important;
+  }
 }
