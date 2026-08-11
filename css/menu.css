@@ -336,7 +336,16 @@
     display:block!important;position:static!important;
     margin:0 0 clamp(44px,6.2vh,72px)!important;padding:0!important;
     border:0!important;background:none!important;
-    opacity:0;transform:translateY(14px);
+    /* THE RESTING STATE IS VISIBLE, DELIBERATELY.
+       This used to read `opacity:0` here, with the arrival animation as
+       the only thing that ever brought a division back. That makes the
+       flourish load-bearing: any browser that declines the animation —
+       an unsupported unit in the delay, a multicol quirk, an engine
+       that skips the keyframes — opens the sheet to a letterhead and
+       nothing else. A menu must never be blank because an ornament
+       failed. `fm-rise` carries its own `from{opacity:0}` and runs with
+       fill-mode `both`, so the entrance looks exactly the same; what
+       changed is what happens when it does not run at all. */
   }
 
   /* THE HEADING. The largest of the three sizes, in the display face,
