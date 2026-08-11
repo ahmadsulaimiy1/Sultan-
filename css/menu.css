@@ -1,286 +1,317 @@
 /* ===================================================================
-   THE FULL MENU  (v7 — rebuilt)
+   THE FULL MENU (v6)
    -------------------------------------------------------------------
-   Every earlier version of this was a drawer: a column at the trailing
-   edge, five hundred pixels wide, holding nine collapsible sections. It
-   was espresso, then it was ivory, and the shape was the problem in
-   both. A reader comparing two divisions had to open one, read it,
-   close it and open the other. That is a filing cabinet.
+   The drawer was espresso: a dark, half-transparent sheet with the page
+   showing through it, every one of its eight sections forced open at
+   once, and a head that scrolled its own title over the content beneath
+   it. Five thousand two hundred pixels of it, in a five-hundred-pixel
+   column. It read as jammed, and it was the one surface where the site
+   stopped looking expensive.
 
-   This is a room. It fills the window on the school's own paper and
-   sets the whole site out at once — nine numbered divisions in
-   editorial columns, each named, described, and with its pages listed
-   beneath it. Nothing hides behind a chevron, so nothing has to be
-   hunted for, and there is no accordion left to go wrong.
+   It is a sheet of the school's own paper now. Ivory, opaque, in every
+   edition — a reader who opens the menu is not looking at the page any
+   more, so there is nothing to see through to, and the ink can be
+   stated once against a ground that never changes. The sections are
+   shut when it opens, so it arrives as an index of eight numbered
+   entries rather than a wall; the head is fixed and opaque, so nothing
+   passes through it; and the light that travels along a row is drawn
+   for paper rather than left over from espresso.
 
-   Three rules govern the finish:
-
-   1. IT IS PAPER, IN EVERY EDITION. A reader who has opened the menu
-      is not looking at the page any more, so there is nothing to see
-      through to and no reason for the ground to follow the edition.
-      Every colour here is stated once, against ivory.
-   2. THE ORNAMENT IS STRUCTURAL. Roman numerals in the margin, a rule
-      under each division, a light that travels the width of a row as
-      the pointer crosses it. No decoration that is not also telling
-      the reader where they are.
-   3. IT CLOSES AS EASILY AS IT OPENS. Escape, the cross, the ground
-      outside the sheet.
+   Everything it did, it still does: the same markup, the same toggle,
+   the same accordion — restored, in fact, since a display:block!important
+   meant for the sub-panel's LAYOUT had been overriding the accordion's
+   display:none and holding all eight open.
    =================================================================== */
 
-/* THE GROUND AND THE INK, ONCE — AND AS VALUES, NOT AS TOKENS.
-   The first pass wrote these as rgb(var(--lv-cf2,…)) and so on, which looks
-   like the careful thing to do and is exactly wrong here. A livery token is a
-   colour that FOLLOWS THE EDITION: --lv-cf2 is a deep coffee on paper and is
-   redefined pale in Midnight, because there it is a background rather than an
-   ink. This sheet does not follow the edition — rule 1 at the head of this
-   file — so tokens gave it Midnight's pale ink on its own ivory and the
-   Start Admission plate measured 1.98:1 while its rule named a dark colour.
-   Stated as values, the paper and its ink cannot come apart. */
+/* THE DRAWER'S OWN GROUND. Stated here once, and used by every rule below,
+   so the panel cannot drift between the editions the way the colophon did.
+   These are the site's own pearl values; the drawer simply does not follow
+   the edition, because it is a sheet laid over the page rather than part of
+   it. */
 .navlinks{
-  --mn-paper-1:#FFFDF8;
-  --mn-paper-2:#F8F1E3;
-  --mn-paper-3:#F1E7D5;
-  --mn-ink:#332820;
-  --mn-ink-2:#57472F;
-  --mn-gold:#8A6A2F;
-  --mn-gold-deep:#63481B;
-  --mn-gold-lit:#C6A15B;
-  --mn-gold-bright:#E9CE8A;
-  --mn-rule:rgba(198,161,91,.34);
-  --mn-rule-soft:rgba(198,161,91,.16);
+  --mn-paper-1:rgb(var(--lv-w17,255,253,248));
+  --mn-paper-2:rgb(var(--lv-w51,248,241,227));
+  --mn-paper-3:rgb(var(--lv-w26,241,231,213));
+  --mn-ink:rgb(var(--lv-cf2,51,40,28));
+  --mn-ink-2:rgb(var(--lv-ink2,87,71,47));
+  --mn-gold:rgb(var(--lv-gt2,138,106,47));
+  --mn-gold-deep:rgb(var(--lv-gt3,99,72,27));
+  --mn-rule:rgba(var(--lv-gs,198,161,91),.34);
+  --mn-rule-soft:rgba(var(--lv-gs,198,161,91),.18);
 }
+
+/* ---------- The scrim ----------
+   IT CANNOT BE A ::before. It was: position:fixed, inset:0, z-index:-1. A
+   negative-z-index child paints above its own element's BACKGROUND and below
+   its content, so a full-screen scrim inside the drawer covers the drawer's
+   own ground. While that ground was espresso and the scrim was espresso,
+   nothing showed. The moment the drawer became ivory, the scrim printed dark
+   over the paper and the whole panel went brown again — the reader would have
+   seen the redesign fail and had no way to know why.
+   A spread shadow instead. It paints only OUTSIDE the panel, it cannot cover
+   it, it captures no clicks, and it fades in with the panel it belongs to. */
+.navlinks{--mn-scrim:rgba(var(--lv-cfd4,26,16,6),0);}
+.navlinks.open{--mn-scrim:rgba(var(--lv-cfd4,26,16,6),.86);}
 
 @media (max-width:1440px){
-
-  /* ---------- The sheet ---------- */
+  /* ---------- The panel ---------- */
   .navlinks{
-    position:fixed!important;inset:0!important;width:auto!important;height:auto!important;
-    z-index:400;
-    display:block!important;
-    overflow:hidden;
+    inset:0 0 0 auto!important;
+    width:min(var(--menu-w,520px),100vw)!important;
     background:
-      radial-gradient(1200px 520px at 78% -12%,rgba(198,161,91,.20),transparent 62%),
-      radial-gradient(900px 420px at 8% 106%,rgba(198,161,91,.12),transparent 60%),
-      linear-gradient(168deg,var(--mn-paper-1) 0%,var(--mn-paper-2) 56%,var(--mn-paper-3) 100%)!important;
+      radial-gradient(120% 46% at 50% -6%,rgba(var(--lv-gs,198,161,91),.16),transparent 64%),
+      linear-gradient(168deg,var(--mn-paper-1) 0%,var(--mn-paper-2) 58%,var(--mn-paper-3) 100%)!important;
+    border-inline-start:1px solid var(--mn-rule);
+    box-shadow:-52px 0 110px -46px rgba(0,0,0,.72),0 0 0 100vmax var(--mn-scrim);
     color:var(--mn-ink);
-    opacity:0;transform:scale(1.012);
-    /* THE CLOSED MENU MUST NOT BE IN THE TAB ORDER. pointer-events:none stops
-       a mouse and does nothing for a keyboard; visibility:hidden is the one
-       property that takes a subtree out of both the tab order and the
-       accessibility tree while still allowing it to animate. Delayed by the
-       length of the fade so the sheet stays painted on its way out. */
-    visibility:hidden;pointer-events:none;
-    transition:opacity .42s cubic-bezier(.16,.8,.24,1),
-               transform .55s cubic-bezier(.16,.8,.24,1),
-               visibility 0s linear .55s;
+    transform:translateX(102%);opacity:0;
+    /* THE CLOSED DRAWER WAS STILL IN THE TAB ORDER. pointer-events:none stops
+       a mouse and does nothing at all for a keyboard, so every page on this
+       site walked a keyboard user through 67 invisible links inside a panel
+       that was shut, before they reached anything on the page itself. It is
+       the same fault as a focusable control inside aria-hidden, except on
+       every page rather than nine.
+         visibility:hidden is the fix: it is the one property that takes a
+       subtree out of both the tab order and the accessibility tree while still
+       allowing the panel to animate. It is delayed by the length of the slide
+       so the drawer stays painted on its way out; .navlinks.open sets it back
+       with no delay, so focus can enter the moment it opens. */
+    visibility:hidden;
+    transition:transform .58s cubic-bezier(.16,.8,.24,1),opacity .4s,
+               box-shadow .5s cubic-bezier(.16,.8,.24,1),visibility 0s linear .58s;
+    display:flex!important;pointer-events:none;
   }
-  .navlinks.open{
-    opacity:1;transform:none;visibility:visible;pointer-events:auto;transition-delay:0s;}
+  [dir="rtl"] .navlinks{transform:translateX(-102%);
+    border-inline-start:0;border-inline-end:1px solid rgba(var(--lv-gb,233,206,138),.24);
+    box-shadow:40px 0 90px -40px rgba(0,0,0,.9),0 0 0 100vmax var(--mn-scrim);}
+  .navlinks.open{transform:none;opacity:1;pointer-events:auto;visibility:visible;transition-delay:0s;}
 
-  /* A hairline of gold across the head of the sheet. */
-  .navlinks::before{
-    content:"";position:absolute;inset-inline:0;top:0;height:2px;pointer-events:none;z-index:3;
-    background:linear-gradient(90deg,transparent,var(--mn-gold-lit) 18%,
-      var(--mn-gold-bright) 50%,var(--mn-gold-lit) 82%,transparent);}
-  /* The crest, watermarked into the paper. Second thing you notice. */
-  .navlinks::after{
-    content:"";position:absolute;inset:0;pointer-events:none;opacity:.028;z-index:0;
-    background:url("/assets/images/crest-watermark.png") no-repeat center 46%/auto 62%;}
-  html[data-pc-ornament="none"] .navlinks::after{display:none;}
-
-  .mnu{
-    position:relative;z-index:1;
-    height:100%;display:flex;flex-direction:column;
-    max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,54px);}
+  /* A hairline of gold down the leading edge of the panel. */
+  .navlinks::after{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:2px;
+    background:linear-gradient(180deg,transparent,rgb(var(--lv-g,198,161,91)) 16%,
+               rgb(var(--lv-gb,233,206,138)) 50%,rgb(var(--lv-g,198,161,91)) 84%,transparent);
+    opacity:0;transition:opacity .7s ease .18s;pointer-events:none;}
+  .navlinks.open::after{opacity:1;}
 
   /* ---------- The head ---------- */
-  .mnu-head{
-    flex:0 0 auto;display:flex;align-items:center;gap:clamp(16px,3vw,34px);
-    padding:clamp(18px,3vh,30px) 0 clamp(14px,2vh,20px);
-    border-bottom:1px solid var(--mn-rule);}
-  .mnu-brand{display:flex;align-items:center;gap:14px;text-decoration:none;flex:0 0 auto;}
-  .mnu-crest{width:46px;height:46px;display:block;
-    filter:drop-shadow(0 2px 5px rgba(42,28,16,.35));}
-  .mnu-brand-t{display:flex;flex-direction:column;gap:3px;min-width:0;}
-  .mnu-kicker{
-    font-family:var(--font-label,'Cinzel',serif);font-size:.62rem;letter-spacing:.26em;
-    text-transform:uppercase;color:var(--mn-gold-deep);}
-  .mnu-name{
-    font-family:var(--font-display,'Cormorant Garamond',serif);font-size:1.24rem;
-    line-height:1.15;color:var(--mn-ink);}
-  .mnu-standing{
-    display:none;align-items:center;gap:0 12px;margin-inline:auto;
-    font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;letter-spacing:.22em;
-    text-transform:uppercase;white-space:nowrap;color:var(--mn-gold-deep);}
-  @media (min-width:1000px){ .mnu-standing{display:flex;} }
-  .mnu-standing::before,.mnu-standing::after{
-    content:"";width:44px;height:1px;
-    background:linear-gradient(90deg,transparent,var(--mn-gold-lit));}
-  .mnu-standing::after{background:linear-gradient(270deg,transparent,var(--mn-gold-lit));}
-  .mnu-standing-d{letter-spacing:0;margin-inline:-4px;}
-  .mnu-close{
-    flex:0 0 auto;margin-inline-start:auto;
-    display:flex!important;align-items:center;justify-content:center;
-    width:46px!important;height:46px!important;border-radius:50%!important;
-    border:1px solid var(--mn-rule)!important;background:rgba(255,255,255,.6)!important;
-    color:var(--mn-gold-deep)!important;cursor:pointer;
-    transition:transform .4s cubic-bezier(.16,.8,.24,1),background .3s,border-color .3s;}
-  .mnu-close:hover,.mnu-close:focus-visible{
-    transform:rotate(90deg);background:rgba(198,161,91,.14)!important;
-    border-color:var(--mn-gold-lit)!important;}
+  /* THE HEAD IS OPAQUE AND IT STAYS. It was a transparent gradient in the
+     normal flow, so the moment a reader scrolled, "FULL MENU / Sultan Hanafi
+     Royal Schools" and whatever section had reached the top of the panel were
+     printed over one another. A menu that cannot be scrolled without its own
+     title colliding with its contents is the definition of disorganised. */
+  .nav-drawer-head{
+    position:sticky;top:0;z-index:5;
+    padding:20px 24px 18px!important;
+    background:linear-gradient(180deg,var(--mn-paper-1),var(--mn-paper-2))!important;
+    border-bottom:1px solid var(--mn-rule)!important;
+    box-shadow:0 14px 26px -22px rgba(var(--lv-cfd2s,42,28,16),.55);
+    align-items:center;gap:14px;
+  }
+  .nav-drawer-head::before{
+    content:"";width:34px;height:34px;flex-shrink:0;border-radius:9px;
+    background:url("/assets/images/brand-mark.png") center/contain no-repeat;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,.5));}
+  .ndh-title{flex:1;font-size:.68rem!important;letter-spacing:.24em!important;
+    color:var(--mn-gold)!important;}
+  .ndh-title::after{content:"Sultan Hanafi Royal Schools";display:block;
+    font-family:var(--font-display);font-size:1.06rem;letter-spacing:.01em;
+    text-transform:none;color:var(--mn-ink);margin-top:2px;}
+  [lang="ar"] .ndh-title::after{content:"مدارس السلطان حنفي الملكية";}
+  .nav-drawer-close{border-radius:50%!important;width:42px!important;height:42px!important;
+    border-color:var(--mn-rule)!important;color:var(--mn-gold-deep)!important;
+    background:rgba(255,255,255,.6)!important;
+    transition:transform .4s cubic-bezier(.16,.8,.24,1),border-color .3s,background .3s!important;}
+  .nav-drawer-close:hover{transform:rotate(90deg);
+    border-color:rgb(var(--lv-g,198,161,91))!important;background:rgba(var(--lv-gs,198,161,91),.12)!important;}
 
-  /* ---------- The body ---------- */
-  .mnu-body{
-    flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-    display:grid;grid-template-columns:1fr;gap:0 clamp(24px,3vw,44px);
-    padding:clamp(18px,3vh,30px) 0 clamp(24px,4vh,40px);
-    scrollbar-width:thin;scrollbar-color:var(--mn-rule) transparent;}
-  .mnu-body::-webkit-scrollbar{width:8px;}
-  .mnu-body::-webkit-scrollbar-thumb{background:var(--mn-rule);border-radius:99px;}
-
-  /* COLUMNS, NOT A GRID. A grid gives every division in a row the height of
-     the tallest one in it, so Academics — which has seven pages under it —
-     left a hand's width of blank paper beside Discover and Student Life. A
-     multi-column flow lets each division take the room it needs and the next
-     one begin directly under it, which is how a contents page is set. */
-  .mnu-index{column-gap:clamp(24px,2.6vw,44px);}
-
-  /* ---------- A division ---------- */
-  /* padding is written in full, not just padding-inline-start: these are
-     <section> elements and the site's own section rule was giving each one
-     120px of padding-top, which is where the hand's width of blank paper
-     above every division came from. Same for white-space below — css/brand.css
-     sets `.navlinks a{white-space:nowrap}` for the horizontal nav this used to
-     be, and it was running every description straight out of its column and
-     across the next one. */
-  .mnu-group{position:relative;break-inside:avoid;
-    padding:0 0 0 38px;min-width:0;margin:0 0 clamp(22px,2.6vh,34px);}
-  [dir="rtl"] .mnu-group{padding:0 38px 0 0;}
-  .navlinks .mnu-list a,.navlinks .mnu-list a span,
-  .navlinks .mnu-g-t,.navlinks .mnu-g-t a,.navlinks .mnu-g-d,
-  .navlinks .mnu-plate,.navlinks .mnu-contact a,.navlinks .mnu-seal{white-space:normal;}
-  .mnu-group:last-child{margin-bottom:0;}
-  /* The numeral, struck in the margin the way a contents page numbers its
-     chapters — the one ornament that is also information. */
-  .mnu-g-n{
-    position:absolute;inset-inline-start:0;top:2px;margin:0;
-    font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;letter-spacing:.08em;
-    color:var(--mn-gold-lit);}
-  [dir="rtl"] .mnu-g-n{inset-inline-start:auto;inset-inline-end:0;}
-  .mnu-g-t{
-    margin:0 0 4px;font-family:var(--font-label,'Cinzel',serif);
-    font-size:.94rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
-    line-height:1.3;}
-  /* SCOPED UNDER .navlinks ON PURPOSE. css/brand.css carries
-     `.navlinks a{color:var(--ivory)}` at (0,1,1) — written when this was a
-     dark drawer — and a bare .mnu-* class at (0,1,0) loses to it. Every ink
-     in this sheet therefore names its ancestor. The first pass did not, and
-     "Start Admission" printed ivory on ivory. */
-  .navlinks .mnu-g-t a{color:var(--mn-ink);text-decoration:none;transition:color .3s ease;}
-  .navlinks .mnu-g-t a:hover,.navlinks .mnu-g-t a:focus-visible{color:var(--mn-gold-deep);}
-  .mnu-g-d{
-    margin:0 0 12px;font-size:.8rem;line-height:1.55;color:var(--mn-ink-2);
-    padding-bottom:12px;position:relative;}
-  .mnu-g-d::after{
-    content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
-    background:linear-gradient(90deg,var(--mn-gold-lit),var(--mn-rule-soft) 62%,transparent);}
-  [dir="rtl"] .mnu-g-d::after{
-    background:linear-gradient(270deg,var(--mn-gold-lit),var(--mn-rule-soft) 62%,transparent);}
-
-  .mnu-list{list-style:none;margin:0;padding:0;}
-  .mnu-list li{margin:0;}
-  .mnu-list a{
-    position:relative;isolation:isolate;display:block;text-decoration:none;min-width:0;
-    padding:9px 12px 9px 13px;border-radius:8px;
-    transition:transform .34s cubic-bezier(.16,.8,.24,1),background .3s ease;}
-  /* The light that travels the row as the pointer crosses it. */
-  .mnu-list a::before{
-    content:"";position:absolute;inset:0;z-index:-1;border-radius:8px;pointer-events:none;
-    background:linear-gradient(90deg,rgba(198,161,91,.30),
-      rgba(233,206,138,.16) 46%,rgba(233,206,138,.03) 78%,transparent);
+  /* ---------- The rows ---------- */
+  .navlinks > .nav-drop{
+    position:relative;isolation:isolate;
+    border-bottom:1px solid var(--mn-rule-soft)!important;
+    counter-increment:navrow;
+  }
+  .navlinks{counter-reset:navrow;}
+  /* The numeral. Struck small in the margin, the way a contents page
+     numbers its chapters. */
+  .navlinks > .nav-drop > .nav-drop-trigger::before{
+    content:counter(navrow,decimal-leading-zero);
+    position:absolute;inset-inline-start:24px;top:50%;transform:translateY(-50%);
+    font-family:var(--font-label);font-size:.62rem;letter-spacing:.1em;
+    color:rgba(var(--lv-gs,198,161,91),.85);pointer-events:none;transition:color .35s;}
+  .navlinks > .nav-drop > .nav-drop-trigger{
+    padding-inline-start:64px!important;padding-block:19px!important;
+    font-size:.92rem!important;letter-spacing:.11em!important;
+    color:var(--mn-ink)!important;
+    transition:color .35s,padding-inline-start .4s cubic-bezier(.16,.8,.24,1)!important;}
+  /* A light that travels along the row as the pointer passes it. */
+  .navlinks > .nav-drop::before{
+    content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(90deg,rgba(var(--lv-gs,198,161,91),.30),rgba(var(--lv-gb,233,206,138),.16) 44%,rgba(var(--lv-gb,233,206,138),.04) 74%,transparent);
     transform:scaleX(0);transform-origin:left center;
-    transition:transform .48s cubic-bezier(.16,.8,.24,1);}
-  [dir="rtl"] .mnu-list a::before{transform-origin:right center;
-    background:linear-gradient(270deg,rgba(198,161,91,.30),
-      rgba(233,206,138,.16) 46%,rgba(233,206,138,.03) 78%,transparent);}
-  .mnu-list a:hover::before,.mnu-list a:focus-visible::before{transform:scaleX(1);}
-  .mnu-list a:hover,.mnu-list a:focus-visible{transform:translateX(4px);}
-  [dir="rtl"] .mnu-list a:hover,[dir="rtl"] .mnu-list a:focus-visible{transform:translateX(-4px);}
-  .navlinks .mnu-t{display:block;font-size:.9rem;font-weight:600;color:var(--mn-ink);line-height:1.35;}
-  .navlinks .mnu-d{display:block;font-size:.76rem;color:var(--mn-ink-2);line-height:1.45;
-    margin-top:1px;overflow-wrap:anywhere;}
-  .navlinks .mnu-list a:hover .mnu-t,.navlinks .mnu-list a:focus-visible .mnu-t{color:var(--mn-gold-deep);}
+    transition:transform .5s cubic-bezier(.16,.8,.24,1);}
+  [dir="rtl"] .navlinks > .nav-drop::before{transform-origin:right center;
+    background:linear-gradient(270deg,rgba(var(--lv-gs,198,161,91),.30),rgba(var(--lv-gb,233,206,138),.16) 44%,rgba(var(--lv-gb,233,206,138),.04) 74%,transparent);}
+  .navlinks > .nav-drop:hover::before,
+  .navlinks > .nav-drop:focus-within::before,
+  .navlinks > .nav-drop.is-open::before{transform:scaleX(1);}
+  .navlinks > .nav-drop:hover > .nav-drop-trigger,
+  .navlinks > .nav-drop:focus-within > .nav-drop-trigger{
+    color:var(--mn-gold-deep)!important;padding-inline-start:72px!important;}
+  .navlinks > .nav-drop:hover > .nav-drop-trigger::before{color:var(--mn-gold-deep);}
+  /* A gold rule that draws itself under the row being touched. */
+  .navlinks > .nav-drop::after{
+    content:"";position:absolute;inset-inline:24px;bottom:-1px;height:1px;pointer-events:none;
+    background:linear-gradient(90deg,rgb(var(--lv-g,198,161,91)),rgba(var(--lv-gs,198,161,91),.15) 78%,transparent);
+    transform:scaleX(0);transform-origin:left center;
+    transition:transform .55s cubic-bezier(.16,.8,.24,1);}
+  [dir="rtl"] .navlinks > .nav-drop::after{transform-origin:right center;
+    background:linear-gradient(270deg,rgb(var(--lv-g,198,161,91)),rgba(var(--lv-gs,198,161,91),.15) 78%,transparent);}
+  .navlinks > .nav-drop:hover::after,.navlinks > .nav-drop:focus-within::after{transform:scaleX(1);}
 
-  /* ---------- The aside ---------- */
-  .mnu-aside{
-    display:flex;flex-direction:column;gap:12px;align-content:start;
-    padding-top:clamp(18px,3vh,26px);margin-top:clamp(18px,3vh,26px);
-    border-top:1px solid var(--mn-rule);}
-  .navlinks .mnu-plate{
-    display:block;text-align:center;text-decoration:none;
-    font-family:var(--font-label,'Cinzel',serif);font-size:.74rem;letter-spacing:.15em;
-    text-transform:uppercase;padding:15px 22px;border-radius:999px;
-    border:1px solid var(--mn-rule);background:rgba(255,255,255,.6);
-    color:var(--mn-ink);
-    transition:background .3s,border-color .3s,transform .3s cubic-bezier(.16,.8,.24,1);}
-  .navlinks .mnu-plate:hover,.navlinks .mnu-plate:focus-visible{
-    background:rgba(198,161,91,.13);border-color:var(--mn-gold-lit);
-    transform:translateY(-1px);}
-  /* THE GOLD PLATE'S INK IS A LITERAL. It is gold on all three editions, so it
-     cannot take a livery token: those follow the edition, and in Midnight the
-     deep-coffee token is redefined pale because there it is a background
-     rather than an ink. That is exactly how the same plate came to print
-     near-white on its own gold at 1.85:1. */
-  .navlinks .mnu-plate.is-gold{
-    border:0;color:#241809;font-weight:700;
-    background:linear-gradient(120deg,var(--mn-gold-lit),var(--mn-gold-bright));
-    box-shadow:0 14px 30px -14px rgba(198,161,91,.8),inset 0 1px 0 rgba(255,255,255,.5);}
-  .navlinks .mnu-plate.is-gold:hover,.navlinks .mnu-plate.is-gold:focus-visible{
-    background:linear-gradient(120deg,var(--mn-gold-bright),var(--mn-gold-lit));}
-  .mnu-contact{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
-  .mnu-c-k{
-    margin:0 0 3px;font-family:var(--font-label,'Cinzel',serif);font-size:.6rem;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--mn-gold-deep);}
-  .navlinks .mnu-contact a{
-    font-size:.82rem;color:var(--mn-ink-2);text-decoration:none;width:fit-content;
-    border-bottom:1px solid transparent;transition:color .3s,border-color .3s;}
-  .navlinks .mnu-contact a:hover,.navlinks .mnu-contact a:focus-visible{
-    color:var(--mn-gold-deep);border-bottom-color:var(--mn-gold-lit);}
-  .mnu-seal{
-    margin:10px 0 0;font-family:var(--font-label,'Cinzel',serif);font-size:.57rem;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--mn-gold-deep);
-    padding:9px 16px;border-radius:99px;text-align:center;
-    border:1px solid var(--mn-rule);background:rgba(255,255,255,.45);}
+  /* ---------- The portal row ----------
+     The tenth row is not a section, it is the way in: an <a> carrying
+     .nav-mark, which paints the gold plate. It was being given a row's
+     furniture as well — the contents numeral struck at inset-start 24px and
+     the accordion's chevron at inset-end 20px — so the plate covered its own
+     number and the chevron floated outside it. Two controls and a numeral
+     fighting over one row is most of what made this menu read as jammed.
+     It is a plate now: no numeral, the plate inset like a button, and the
+     chevron on the plate in the plate's own ink. */
+  .navlinks > .nav-drop--portal{border-bottom:0!important;}
+  .navlinks > .nav-drop--portal > .nav-drop-trigger::before{content:none!important;}
+  .navlinks > .nav-drop--portal::before,
+  .navlinks > .nav-drop--portal::after{display:none!important;}
+  /* The row lays itself out: the plate takes the room, the chevron sits
+     beside it. They are two different controls — one goes to the gateway, one
+     opens the list — so the chevron is deliberately outside the plate rather
+     than floating over it, which is what it was doing. */
+  .navlinks > .nav-drop--portal{
+    display:flex!important;flex-wrap:wrap;align-items:center;
+    padding:14px 24px 16px!important;gap:10px;}
+  .navlinks > .nav-drop--portal > .nav-drop-trigger{
+    flex:1 1 auto;min-width:0;
+    display:flex!important;align-items:center;justify-content:center;gap:10px;
+    margin:0!important;padding:15px 22px!important;
+    border-radius:999px!important;
+    color:#241809!important;
+    box-shadow:0 14px 30px -14px rgba(var(--lv-g,198,161,91),.8),inset 0 1px 0 rgba(255,255,255,.5);}
+  .navlinks > .nav-drop--portal:hover > .nav-drop-trigger,
+  .navlinks > .nav-drop--portal:focus-within > .nav-drop-trigger{
+    color:#241809!important;padding-inline-start:22px!important;}
+  .navlinks > .nav-drop--portal > .nav-drop-toggle{
+    position:static!important;flex:0 0 auto;
+    color:var(--mn-gold-deep)!important;
+    border:1px solid var(--mn-rule);background:rgba(255,255,255,.5)!important;
+    width:42px!important;height:42px!important;}
+  .navlinks > .nav-drop--portal > .nav-drop-toggle:hover{
+    background:rgba(var(--lv-gs,198,161,91),.14)!important;color:var(--mn-gold-deep)!important;}
+  .navlinks > .nav-drop--portal > .nav-drop-panel{flex:0 0 100%;margin:6px 0 0!important;}
 
-  /* ---------- The room widens ---------- */
-  @media (min-width:760px){
-    .mnu-index{column-count:2;}
-  }
-  @media (min-width:1080px){
-    .mnu-body{grid-template-columns:minmax(0,1fr) 276px;}
-    .mnu-index{column-count:3;}
-    .mnu-aside{
-      border-top:0;border-inline-start:1px solid var(--mn-rule);
-      margin-top:0;padding-top:0;padding-inline-start:clamp(22px,2.4vw,36px);}
-  }
+  .nav-drop-toggle{
+    inset-inline-end:20px!important;width:42px!important;height:42px!important;
+    border-radius:50%!important;color:var(--mn-gold)!important;
+    transition:transform .42s cubic-bezier(.16,.8,.24,1),background .3s,color .3s!important;}
+  .nav-drop-toggle:hover{background:rgba(var(--lv-gs,198,161,91),.14)!important;
+    color:var(--mn-gold-deep)!important;}
+  .nav-drop-toggle[aria-expanded="true"]{transform:rotate(180deg)!important;}
 
-  @media (prefers-reduced-motion:reduce){
-    .navlinks{transition:opacity .2s linear;transform:none!important;}
-    .mnu-close,.mnu-list a,.mnu-list a::before,.mnu-plate{transition:none!important;}
-    .mnu-list a:hover{transform:none;}
+  /* ---------- The opened sub-panel ---------- */
+  .navlinks .nav-drop-panel{
+    background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.07),rgba(var(--lv-gs,198,161,91),.02))!important;
+    border-inline-start:2px solid rgba(var(--lv-gs,198,161,91),.5)!important;
+    border-radius:0 10px 10px 0;
+    margin-inline-start:24px!important;padding:10px 20px 16px!important;
   }
+  [dir="rtl"] .navlinks .nav-drop-panel{border-radius:10px 0 0 10px;}
+  /* The panel's own heading repeats the row directly above it word for word,
+     so on paper it read as the same title printed twice. It is kept for the
+     outline and for anything reading the page aloud, and taken out of sight. */
+  .navlinks .nav-mega-intro h4{
+    position:absolute!important;width:1px;height:1px;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;}
+  .navlinks .nav-mega-intro p{color:var(--mn-ink-2)!important;font-size:.84rem!important;}
+  .navlinks .nav-mega-item{border-radius:10px;padding:11px 12px!important;
+    transition:background .3s,transform .3s cubic-bezier(.16,.8,.24,1)!important;}
+  .navlinks .nav-mega-item:hover{background:rgba(var(--lv-gs,198,161,91),.14)!important;
+    transform:translateX(4px);}
+  [dir="rtl"] .navlinks .nav-mega-item:hover{transform:translateX(-4px);}
+  .navlinks .nav-mega-text .t{color:var(--mn-ink)!important;font-weight:600;}
+  .navlinks .nav-mega-text .d{color:var(--mn-ink-2)!important;}
+  .navlinks .nav-mega-item svg,.navlinks .nav-mega-item .ic{color:var(--mn-gold)!important;}
+  .navlinks .nav-mega-featured{border-top-color:var(--mn-rule)!important;}
+  /* Measured at 4.46:1 on the drawer's paper — four hundredths under the
+     threshold, which is a fail and not a rounding. The deeper gold. */
+  .navlinks .nav-mega-featured-label{color:var(--mn-gold-deep)!important;}
+  .navlinks .nav-mega-featured-link{color:var(--mn-gold-deep)!important;}
+  /* The line under the featured link. It is the only text in the drawer that
+     was never given an ink of its own — it inherited the espresso panel's pale
+     one, so on paper it was the colour of the paper. Measured at 1.2:1 before
+     this line. */
+  .navlinks .nav-mega-featured p{color:var(--mn-ink-2)!important;}
+  .navlinks .nav-drop-panel p,
+  .navlinks .nav-drop-panel span,
+  .navlinks .nav-drop-panel li{color:var(--mn-ink-2);}
+  .navlinks .nav-drop-panel a{color:var(--mn-ink)!important;}
+  .navlinks .nav-drop-panel a:hover{background:rgba(var(--lv-gs,198,161,91),.12)!important;}
+
+  /* ---------- The foot ---------- */
+  .nav-drawer-actions{padding:20px 24px 30px!important;display:flex!important;
+    flex-direction:column;gap:11px;border-top:1px solid var(--mn-rule);
+    background:linear-gradient(180deg,rgba(var(--lv-gs,198,161,91),.05),transparent);}
+  .nav-drawer-actions a:not(.nav-mark){color:var(--mn-ink)!important;
+    border:1px solid var(--mn-rule);border-radius:999px;padding:13px 20px!important;
+    text-align:center;background:rgba(255,255,255,.55);transition:background .3s,border-color .3s;}
+  .nav-drawer-actions a:not(.nav-mark):hover{background:rgba(var(--lv-gs,198,161,91),.12)!important;
+    border-color:rgb(var(--lv-g,198,161,91));}
+  .nav-drawer-actions .nav-mark{
+    text-align:center;padding:15px 20px!important;border-radius:999px!important;
+    background:linear-gradient(120deg,rgb(var(--lv-g,198,161,91)),rgb(var(--lv-gb,233,206,138)))!important;
+    color:#241809!important;border:0!important;
+    box-shadow:0 14px 30px -14px rgba(var(--lv-g,198,161,91),.8),inset 0 1px 0 rgba(255,255,255,.5);}
+  /* THE PLATE IS GOLD IN EVERY EDITION, SO ITS INK IS A LITERAL.
+     The first attempt wrote it as rgb(var(--lv-cfd3,36,24,9)) — a deep coffee
+     in Clear and Royal, and the Midnight edition redefines that same token to
+     a pale one, because in Midnight it is a BACKGROUND rather than an ink. So
+     the button went on printing near-white on its own gold at 1.85:1, through
+     a rule that named a dark colour.
+     A livery token is a colour that follows the edition. This plate does not
+     follow the edition: it is gold on all three, so its ink is stated once,
+     as a value, against the gold it actually sits on. */
+  .nav-drawer-actions .nav-mark,
+  .nav-drawer-actions .nav-mark *{color:#241809!important;}
+  .navlinks > .nav-drop--portal > .nav-drop-trigger,
+  .navlinks > .nav-drop--portal > .nav-drop-trigger *{color:#241809!important;}
 }
 
-/* The desktop masthead above 1440px carries its own mega menu; the sheet is
-   still the FULL menu there, so it behaves identically. */
-@media (min-width:1441px){
-  .navlinks{
-    position:fixed;inset:0;z-index:400;display:block;overflow:hidden;
-    background:
-      radial-gradient(1200px 520px at 78% -12%,rgba(198,161,91,.20),transparent 62%),
-      linear-gradient(168deg,var(--mn-paper-1) 0%,var(--mn-paper-2) 56%,var(--mn-paper-3) 100%);
-    color:var(--mn-ink);
-    opacity:0;visibility:hidden;pointer-events:none;
-    transition:opacity .42s cubic-bezier(.16,.8,.24,1),visibility 0s linear .42s;}
-  .navlinks.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s;}
+/* On a wide screen the drawer is a side panel rather than a full sheet. */
+@media (min-width:721px) and (max-width:1440px){ .navlinks{--menu-w:540px;} }
+@media (max-width:720px){ .navlinks{--menu-w:100vw;} }
+
+@media (prefers-reduced-motion:reduce){
+  .navlinks,.navlinks::after,
+  .navlinks > .nav-drop::before,.navlinks > .nav-drop::after,
+  .nav-drawer-close,.nav-drop-toggle{transition:none!important;}
+  .navlinks{transform:none!important;}
+}
+
+/* The sub-panel's items inherit the mega-menu's desktop grid, which
+   centres them; inside the drawer they are a list and read as one. */
+@media (max-width:1440px){
+  /* THIS ONE LINE HELD ALL EIGHT SECTIONS OPEN. It was written to change the
+     sub-panel's LAYOUT — the mega menu lays its items out in columns on a wide
+     screen and they should be one list in the drawer — but .nav-mega-panel is
+     also the .nav-drop-panel the accordion collapses with display:none, and
+     !important beat it. So every section stood permanently expanded: five
+     thousand two hundred pixels of menu in a five-hundred-pixel column, and an
+     accordion that appeared not to work. Scoped to the open section, it does
+     what it was for and nothing else. */
+  .navlinks .nav-drop.open .nav-mega-panel{display:block!important;}
+  .navlinks .nav-mega-col{display:block!important;text-align:start!important;}
+  .navlinks .nav-mega-item{display:flex!important;align-items:flex-start;gap:11px;
+    text-align:start!important;justify-content:flex-start!important;}
+  .navlinks .nav-mega-text{text-align:start!important;}
+  .navlinks .nav-mega-item .ic,.navlinks .nav-mega-item svg{flex-shrink:0;margin-top:2px;}
+  .navlinks .nav-mega-featured{margin-top:14px;padding-top:14px;
+    border-top:1px solid rgba(var(--lv-gb,233,206,138),.16);}
+  .navlinks .nav-mega-intro{text-align:start!important;padding:4px 0 10px!important;}
 }

@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=07ea4832c9">
 <link rel="stylesheet" href="/css/atelier.css?v=4bf48ea969">
-<link rel="stylesheet" href="/css/menu.css?v=14d385eecb">
+<link rel="stylesheet" href="/css/menu.css?v=1a4e8c3320">
 <link rel="stylesheet" href="/css/regalia.css?v=af55f443de">
 <script>
 (function(){
@@ -94,7 +94,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify-certificate/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify-certificate/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-certificate/" />
-<meta name="shrs-build" content="shrs-pwa-b5fb16e192">
+<meta name="shrs-build" content="shrs-pwa-732e1f5945">
 </head>
 <body>
 
@@ -182,158 +182,347 @@
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       <span>Menu</span>
     </button>
-    <!-- ===================================================================
-         THE FULL MENU  (rebuilt)
-         -------------------------------------------------------------------
-         What stood here was a 540px drawer holding nine collapsible
-         sections. Even once the accordion was repaired it was a narrow
-         column that a reader had to open, read, close and open again to
-         compare two things — a filing cabinet, not a contents page.
-
-         This is a room instead. It fills the window, on the school's own
-         paper, and sets the whole site out at once: nine numbered
-         divisions in editorial columns, each with its own standing line
-         and the pages beneath it named and described. Nothing is hidden
-         behind a chevron, so nothing has to be hunted for, and there is
-         no accordion left to go wrong.
-
-         The markup is plain — sections, headings and lists. Its only
-         script is the one that opens and closes it.
-         =================================================================== -->
-      <div class="navlinks" id="site-menu" role="dialog" aria-modal="true" aria-label="Menu complet">
-        <div class="mnu">
-          <header class="mnu-head">
-            <a class="mnu-brand" href="/">
-              <span class="crest-shimmer-wrap"><img class="mnu-crest" src="/assets/images/brand-mark.png" alt="" aria-hidden="true" /></span>
-              <span class="mnu-brand-t">
-                <span class="mnu-kicker">Menu complet</span>
-                <span class="mnu-name">Écoles Royales Sultan Hanafi</span>
-              </span>
+    <div class="navlinks">
+      <div class="nav-drawer-head">
+        <span class="ndh-title">Menu complet</span>
+        <button type="button" class="nav-drawer-close" aria-label="Close menu" onclick="document.querySelector('.navlinks').classList.remove('open')">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--discover">
+        <a href="/about/" class="nav-drop-trigger">Découvrir SHRS</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <h4>Découvrir SHRS</h4>
+            <p>L'histoire, les valeurs et les personnes qui font les Écoles Royales Sultan Hanafi.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/about/">
+              <span class="nav-mega-text"><span class="t">Notre histoire</span><span class="d">Mission, vision et valeurs</span></span>
             </a>
-            <span class="mnu-standing">
-              <span class="mnu-standing-t">Fondée en juillet 2016</span>
-              <span class="mnu-standing-d" aria-hidden="true">&middot;</span>
-              <span class="mnu-standing-t">Ikorodu, État de Lagos</span>
-            </span>
-            <button type="button" class="nav-drawer-close mnu-close" aria-label="Fermer le menu"
-              onclick="document.querySelector('.navlinks').classList.remove('open')">
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            </button>
-          </header>
-
-          <div class="mnu-body">
-            <nav class="mnu-index" aria-label="Menu complet">
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">I</p>
-                <h2 class="mnu-g-t"><a href="/about/">Découvrir SHRS</a></h2>
-                <p class="mnu-g-d">L'histoire, les valeurs et les personnes qui font les Écoles Royales Sultan Hanafi.</p>
-                <ul class="mnu-list">
-                  <li><a href="/about/"><span class="mnu-t">Notre histoire</span><span class="mnu-d">Mission, vision et valeurs</span></a></li>
-                  <li><a href="/gallery/"><span class="mnu-t">Galerie du campus</span><span class="mnu-d">Des photographies authentiques, aucune banque d'images</span></a></li>
-                  <li><a href="/press/"><span class="mnu-t">Le Centre médias SHRS</span><span class="mnu-d">Actualités, galerie, vidéos et dossier de presse</span></a></li>
-                  <li><a href="/about/governance/"><span class="mnu-t">Rencontrer notre direction</span><span class="mnu-d">Le Conseil de gouvernance et l'équipe de direction de l'établissement.</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">II</p>
-                <h2 class="mnu-g-t"><a href="/academics/">Enseignement</a></h2>
-                <p class="mnu-g-d">Cinq institutions sous un même conseil — de la petite enfance au secondaire, avec un programme complet.</p>
-                <ul class="mnu-list">
-                  <li><a href="/academics/nursery-primary/"><span class="mnu-t">École élémentaire</span><span class="mnu-d">2 à 10 ans · Externat</span></a></li>
-                  <li><a href="/academics/royal-college/"><span class="mnu-t">Collège Royal</span><span class="mnu-d">10 ans et plus · Externat · Fondé en 2021</span></a></li>
-                  <li><a href="/academics/arabic-islamic-studies/"><span class="mnu-t">École Islamiyyah</span><span class="mnu-d">Tous âges · Semaine et week-end</span></a></li>
-                  <li><a href="/academics/quran-college/"><span class="mnu-t">Collège coranique</span><span class="mnu-d">Externat et internat · 24 à 36 mois</span></a></li>
-                  <li><a href="/academics/online-distance-learning/"><span class="mnu-t">Enseignement en ligne et à distance</span><span class="mnu-d">Récemment créé</span></a></li>
-                  <li><a href="/curriculum/"><span class="mnu-t">Architecture des programmes</span><span class="mnu-d">Comment les deux cursus s'articulent</span></a></li>
-                  <li><a href="/faculty/"><span class="mnu-t">Annuaire du corps enseignant</span><span class="mnu-d">Rencontrer nos enseignants</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">III</p>
-                <h2 class="mnu-g-t"><a href="/student-life/">Vie scolaire</a></h2>
-                <p class="mnu-g-d">Clubs, concours, encadrement, internat et un campus conçu pour l'étude.</p>
-                <ul class="mnu-list">
-                  <li><a href="/student-life/"><span class="mnu-t">Pôle de la vie scolaire</span><span class="mnu-d">Clubs, concours, leadership et bien plus</span></a></li>
-                  <li><a href="/boarding/"><span class="mnu-t">Internat</span><span class="mnu-d">Internat complet ou partiel, de 9 à 16 ans</span></a></li>
-                  <li><a href="/facilities/"><span class="mnu-t">Installations</span><span class="mnu-d">Campus, laboratoires et espaces d'apprentissage</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">IV</p>
-                <h2 class="mnu-g-t"><a href="/admission/">Admissions</a></h2>
-                <p class="mnu-g-d">Un parcours numérique guidé en sept étapes, de la candidature à l'inscription.</p>
-                <ul class="mnu-list">
-                  <li><a href="/admission/"><span class="mnu-t">Admissions</span><span class="mnu-d">Un parcours numérique guidé en sept étapes, de la candidature à l'inscription.</span></a></li>
-                  <li><a href="/portal/register/"><span class="mnu-t">Créer un compte</span><span class="mnu-d">Un identifiant pour toutes les étapes</span></a></li>
-                  <li><a href="/portal/apply/"><span class="mnu-t">Déposer une demande</span><span class="mnu-d">Étape III, depuis votre compte</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">V</p>
-                <h2 class="mnu-g-t"><a href="/quran-centre/">Le Centre coranique numérique</a></h2>
-                <p class="mnu-g-d">Adhkār, le registre de Ḥifẓ et le wird quotidien</p>
-                <ul class="mnu-list">
-                  <li><a href="/quran-centre/"><span class="mnu-t">Le Centre coranique numérique</span><span class="mnu-d">Adhkār, le registre de Ḥifẓ et le wird quotidien</span></a></li>
-                  <li><a href="/adhkar/"><span class="mnu-t">Adhkār du matin et du soir</span><span class="mnu-d">Invocations quotidiennes, avec leurs sources</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">VI</p>
-                <h2 class="mnu-g-t"><a href="/about/governance/">Gouvernance</a></h2>
-                <p class="mnu-g-d">Comment l'établissement est dirigé, contrôlé et gouverné.</p>
-                <ul class="mnu-list">
-                  <li><a href="/about/governance/"><span class="mnu-t">Gouvernance</span><span class="mnu-d">Comment l'établissement est dirigé, contrôlé et gouverné.</span></a></li>
-                  <li><a href="/foundation/"><span class="mnu-t">Fondation</span><span class="mnu-d">Le bras caritatif de l'école</span></a></li>
-                  <li><a href="/policies/"><span class="mnu-t">Centre des politiques</span><span class="mnu-d">Chaque règlement, publié intégralement</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">VII</p>
-                <h2 class="mnu-g-t"><a href="/digital-campus/">Campus numérique</a></h2>
-                <p class="mnu-g-d">Un ensemble unique de systèmes numériques au service des cinq établissements.</p>
-                <ul class="mnu-list">
-                  <li><a href="/digital-campus/"><span class="mnu-t">Présentation du campus numérique</span><span class="mnu-d">Tous les systèmes, en un seul endroit</span></a></li>
-                  <li><a href="/marketplace/"><span class="mnu-t">Boutique</span><span class="mnu-d">Uniformes, manuels et ouvrages islamiques</span></a></li>
-                  <li><a href="/online-courses/"><span class="mnu-t">Cours en ligne</span><span class="mnu-d">Étude à votre rythme, où que vous soyez</span></a></li>
-                  <li><a href="/portal/select/"><span class="mnu-t">Accès au portail</span><span class="mnu-d">Parents, élèves, personnel, anciens élèves — un seul campus numérique.</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">VIII</p>
-                <h2 class="mnu-g-t"><a href="/verify/">Vérifier un document</a></h2>
-                <p class="mnu-g-d">Confirmez l'authenticité d'un document, en direct dans le registre de l'établissement — aucun compte requis.</p>
-                <ul class="mnu-list">
-                  <li><a href="/verify-certificate/"><span class="mnu-t">Vérifier un certificat</span><span class="mnu-d">Certificats, relevés de notes et Ijāzah — par numéro de référence ou code QR.</span></a></li>
-                  <li><a href="/verify-identity/"><span class="mnu-t">Vérifier une identité</span><span class="mnu-d">Vérifier une carte d'identité d'élève ou de personnel</span></a></li>
-                  <li><a href="/verify-receipt/"><span class="mnu-t">Vérifier un reçu</span><span class="mnu-d">Vérifier un reçu de paiement</span></a></li>
-                </ul>
-              </section>
-              <section class="mnu-group">
-                <p class="mnu-g-n" aria-hidden="true">IX</p>
-                <h2 class="mnu-g-t"><a href="/contact/">Contact</a></h2>
-                <p class="mnu-g-d">Joindre l'établissement, poser une question ou organiser une visite.</p>
-                <ul class="mnu-list">
-                  <li><a href="/contact/"><span class="mnu-t">Contact</span><span class="mnu-d">Joindre l'établissement, poser une question ou organiser une visite.</span></a></li>
-                  <li><a href="/announcements/"><span class="mnu-t">Avis</span><span class="mnu-d">Annonces des bureaux</span></a></li>
-                  <li><a href="/academic-calendar/"><span class="mnu-t">Calendrier académique</span><span class="mnu-d">Trimestres, vacances et dates clés</span></a></li>
-                </ul>
-              </section>
-            </nav>
-
-            <aside class="mnu-aside">
-              <a class="mnu-plate is-gold" href="/portal/select/"><span data-i18n="quick.login">Login to Portal</span> <span aria-hidden="true">&rarr;</span></a>
-              <a class="mnu-plate" href="/admission/">Commencer l'admission</a>
-              <div class="mnu-contact">
-                <p class="mnu-c-k">Contact</p>
-                <a href="tel:+2348073747650">+234 807 374 7650</a>
-                <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>
-                <a href="https://wa.me/2348073747650" target="_blank" rel="noopener">WhatsApp</a>
-              </div>
-              <p class="mnu-seal">Régie par un conseil de gouverneurs</p>
-            </aside>
+            <a class="nav-mega-item" href="/gallery/">
+              <span class="nav-mega-text"><span class="t">Galerie du campus</span><span class="d">Des photographies authentiques, aucune banque d'images</span></span>
+            </a>
+            <a class="nav-mega-item" href="/press/">
+              <span class="nav-mega-text"><span class="t">Le Centre médias SHRS</span><span class="d">Actualités, galerie, vidéos et dossier de presse</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">À la une</span>
+            <a class="nav-mega-featured-link" href="/about/governance/">Rencontrer notre direction →</a>
+            <p>Le Conseil de gouvernance et l'équipe de direction de l'établissement.</p>
           </div>
         </div>
       </div>
+      <div class="nav-drop nav-drop--foundation">
+        <a href="/foundation/" class="nav-drop-trigger">Fondation</a>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--academics">
+        <a href="/academics/" class="nav-drop-trigger">Enseignement</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <h4>Enseignement</h4>
+            <p>Cinq institutions sous un même conseil — de la petite enfance au secondaire, avec un programme complet.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/academics/nursery-primary/">
+              <span class="nav-mega-text"><span class="t">École élémentaire</span><span class="d">2 à 10 ans · Externat</span></span>
+            </a>
+            <a class="nav-mega-item" href="/academics/royal-college/">
+              <span class="nav-mega-text"><span class="t">Collège Royal</span><span class="d">10 ans et plus · Externat · Fondé en 2021</span></span>
+            </a>
+            <a class="nav-mega-item" href="/academics/arabic-islamic-studies/">
+              <span class="nav-mega-text"><span class="t">École Islamiyyah</span><span class="d">Tous âges · Semaine et week-end</span></span>
+            </a>
+            <a class="nav-mega-item" href="/academics/quran-college/">
+              <span class="nav-mega-text"><span class="t">Collège coranique</span><span class="d">Externat et internat · 24 à 36 mois</span></span>
+            </a>
+            <a class="nav-mega-item" href="/academics/online-distance-learning/">
+              <span class="nav-mega-text"><span class="t">Enseignement en ligne et à distance</span><span class="d">Récemment créé</span></span>
+            </a>
+            <a class="nav-mega-item" href="/curriculum/">
+              <span class="nav-mega-text"><span class="t">Architecture des programmes</span><span class="d">Comment les deux cursus s'articulent</span></span>
+            </a>
+            <a class="nav-mega-item" href="/adhkar/">
+              <span class="nav-mega-text"><span class="t">Adhkār du matin et du soir</span><span class="d">Invocations quotidiennes, avec leurs sources</span></span>
+            </a>
+            <a class="nav-mega-item" href="/quran-centre/">
+              <span class="nav-mega-text"><span class="t">Le Centre coranique numérique</span><span class="d">Adhkār, le registre de Ḥifẓ et le wird quotidien</span></span>
+            </a>
+            <a class="nav-mega-item" href="/faculty/">
+              <span class="nav-mega-text"><span class="t">Annuaire du corps enseignant</span><span class="d">Rencontrer nos enseignants</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">Comparer</span>
+            <a class="nav-mega-featured-link" href="/academics/">Nos cinq établissements →</a>
+            <p>Un seul conseil, une seule norme CLEVER, cinq parcours distincts.</p>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--studentlife">
+        <a href="/student-life/" class="nav-drop-trigger">Vie scolaire</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <h4>Vie scolaire</h4>
+            <p>Clubs, concours, encadrement, internat et un campus conçu pour l'étude.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/student-life/">
+              <span class="nav-mega-text"><span class="t">Pôle de la vie scolaire</span><span class="d">Clubs, concours, leadership et bien plus</span></span>
+            </a>
+            <a class="nav-mega-item" href="/boarding/">
+              <span class="nav-mega-text"><span class="t">Internat</span><span class="d">Internat complet ou partiel, de 9 à 16 ans</span></span>
+            </a>
+            <a class="nav-mega-item" href="/facilities/">
+              <span class="nav-mega-text"><span class="t">Installations</span><span class="d">Campus, laboratoires et espaces d'apprentissage</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">Explorer</span>
+            <a class="nav-mega-featured-link" href="/student-life/">Le Pôle de la vie scolaire →</a>
+            <p>Tout ce qui se passe hors de l'emploi du temps, en un seul endroit.</p>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--admissions">
+        <a href="/admission/" class="nav-drop-trigger">Admissions</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <h4>Admissions</h4>
+            <p>Un parcours numérique guidé en sept étapes, de la candidature à l'inscription.</p>
+            <a class="nmi-cta" href="/admission/">Déposer votre candidature →</a>
+            <a class="nmi-secondary" href="/portal/register/">Créer un compte parent →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--governance">
+        <a href="/about/governance/" class="nav-drop-trigger">Gouvernance</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <h4>Gouvernance</h4>
+            <p>Comment l'établissement est dirigé, contrôlé et gouverné.</p>
+            <a class="nmi-cta" href="/about/governance/">Le siège de la gouvernance →</a>
+            <a class="nmi-secondary" href="/about/governance/#board-of-governors">Conseil de gouvernance →</a>
+            <a class="nmi-secondary" href="/about/governance/#board-committees">Committees →</a>
+            <a class="nmi-secondary" href="/about/governance/#school-leadership">Direction de l'établissement →</a>
+            <a class="nmi-secondary" href="/policies/">Centre des politiques →</a>
+            <a class="nmi-secondary" href="/announcements/">Archives des avis →</a>
+            <a class="nmi-secondary" href="/strategic-plan/">Notre orientation →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--digitalcampus">
+        <a href="/digital-campus/" class="nav-drop-trigger">Campus numérique</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel">
+          <div class="nav-mega-intro">
+            <h4>Campus numérique</h4>
+            <p>Un ensemble unique de systèmes numériques au service des cinq établissements.</p>
+          </div>
+          <div class="nav-mega-col">
+            <a class="nav-mega-item" href="/digital-campus/">
+              <span class="nav-mega-text"><span class="t">Présentation du campus numérique</span><span class="d">Tous les systèmes, en un seul endroit</span></span>
+            </a>
+            <a class="nav-mega-item" href="/marketplace/">
+              <span class="nav-mega-text"><span class="t">Boutique</span><span class="d">Uniformes, manuels et ouvrages islamiques</span></span>
+            </a>
+            <a class="nav-mega-item" href="/online-courses/">
+              <span class="nav-mega-text"><span class="t">Cours en ligne</span><span class="d">Étude à votre rythme, où que vous soyez</span></span>
+            </a>
+          </div>
+          <div class="nav-mega-featured">
+            <span class="nav-mega-featured-label">Déjà inscrit ?</span>
+            <a class="nav-mega-featured-link" href="/portal/select/">Accès au portail →</a>
+            <p>Parents, élèves, personnel, anciens élèves — un seul campus numérique.</p>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--contact">
+        <a href="/contact/" class="nav-drop-trigger">Contact</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-compact">
+          <div class="nav-mega-intro">
+            <h4>Contact</h4>
+            <p>Joindre l'établissement, poser une question ou organiser une visite.</p>
+            <a class="nmi-cta" href="/contact/">Nous contacter →</a>
+            <a class="nmi-secondary" href="https://wa.me/2348073747650" target="_blank" rel="noopener">Discuter sur WhatsApp →</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--verify">
+        <a href="/verify-certificate/" class="nav-drop-trigger">Vérifier un document</a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-verify">
+          <div class="nav-mega-intro">
+            <h4>Vérifier un document SHRS</h4>
+            <p>Confirmez l'authenticité d'un document, en direct dans le registre de l'établissement — aucun compte requis.</p>
+          </div>
+          <div class="portal-gateway-grid pg-grid-3">
+            <a class="portal-gateway-card" href="/verify-certificate/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Vérifier un certificat</span>
+              <span class="pgc-desc">Certificats, relevés de notes et Ijāzah — par numéro de référence ou code QR.</span>
+              <span class="pgc-enter">Vérifier →</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-identity/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Vérifier une identité</span>
+              <span class="pgc-desc">Confirm a student, guardian, or staff ID card is real.</span>
+              <span class="pgc-enter">Vérifier →</span>
+            </a>
+            <a class="portal-gateway-card" href="/verify-receipt/">
+              <span class="pgc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M12 7.5v9M9.3 9.8c0-1.1 1.1-2 2.7-2s2.7.9 2.7 2-1.1 1.6-2.7 2c-1.6.4-2.7 1-2.7 2.1s1.1 2 2.7 2 2.7-.9 2.7-2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgc-name">Vérifier un reçu</span>
+              <span class="pgc-desc">Confirm a fee payment receipt was genuinely issued.</span>
+              <span class="pgc-enter">Vérifier →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drop nav-mega nav-drop--portal" id="portal-login-drop">
+        <a href="/portal/select/" class="nav-drop-trigger nav-mark nav-cta"><span data-i18n="quick.login">Login to Portal</span> <span class="arrow" aria-hidden="true">→</span></a>
+        <button type="button" class="nav-drop-toggle" aria-label="Afficher/masquer le sous-menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="nav-drop-panel nav-mega-panel is-portal">
+          <div class="pgx">
+          <input type="radio" name="pgx" id="pgx-parent" class="pgx-radio" checked />
+          <input type="radio" name="pgx" id="pgx-student" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-applicant" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-teacher" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-office" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-executive" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-alumni" class="pgx-radio" />
+          <input type="radio" name="pgx" id="pgx-verify" class="pgx-radio" />
+            <div class="pgx-head">
+              <h4>Which of these are you?</h4>
+              <p>Choose the description that fits you, and the gateway it opens is set out beside it.</p>
+            </div>
+            <div class="pgx-body">
+              <div class="pgx-nav" role="group" aria-label="Choose the category you belong to">
+            <label class="pgx-cat" for="pgx-parent">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 20c0-3.6 2.4-6 5-6s5 2.4 5 6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M13.5 15.2c2.2.4 3.7 2.3 3.7 4.8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a parent or guardian</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-student">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2.5 10 12 14l9.5-4L12 6z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21.5 10v6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a student here</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-applicant">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6V4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 12.5l2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am applying for a place</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-teacher">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6L2 10l10 4 10-4-10-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I teach at the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-office">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="17" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 6.5V5a1.5 1.5 0 011.5-1.5h4A1.5 1.5 0 0115.5 5v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3.5 12h17" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+              <span class="pgx-cat-t">I work in an office of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-executive">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I sit on the Board or the Management Council</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-alumni">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 9.8v4.7c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3V9.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M21 8v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="pgx-cat-t">I am a graduate of the school</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+            <label class="pgx-cat" for="pgx-verify">
+              <span class="pgx-cat-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="pgx-cat-t">I am verifying a document</span>
+              <span class="pgx-cat-arrow" aria-hidden="true">&rarr;</span>
+            </label>
+              </div>
+              <div class="pgx-panes">
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
+              <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
+              <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
+              <a class="pgx-pane-cta" href="/portal/login/">Enter the Parent Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Portail des élèves</h4>
+              <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
+              <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
+              <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
+              <a class="pgx-pane-cta" href="/portal/student/login/">Enter the Student Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
+              <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
+              <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
+              <a class="pgx-pane-cta" href="/portal/apply/">Begin an Application &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
+              <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
+              <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/teacher/">Enter the Academic Staff Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
+              <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
+              <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
+              <a class="pgx-pane-cta" href="/portal/staff/offices/">Enter the Administrative Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
+              <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
+              <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
+              <a class="pgx-pane-cta" href="/portal/founder/">Enter the Executive Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
+              <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
+              <p class="pgx-pane-need">No account is required.</p>
+              <a class="pgx-pane-cta" href="/alumni-portal/">View the Alumni Portal &rarr;</a>
+            </div>
+            <div class="pgx-pane">
+              <p class="pgx-pane-eyebrow">Votre portail</p>
+              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
+              <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
+              <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
+              <a class="pgx-pane-cta" href="/verify/">Verify a Document &rarr;</a>
+            </div>
+              </div>
+            </div>
+            <div class="pgx-foot">
+              <a class="nmi-cta" href="/portal/select/">See all eight gateways &rarr;</a>
+              <a class="nmi-secondary" href="/portal/register/">New here? Create a Parent Account &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-drawer-actions">
+        <a href="/admission/" class="nav-mark">Commencer l'admission</a>
+      </div>
+    </div>
     <span class="mh-glint" aria-hidden="true"></span>
   </nav>
   <div class="mobile-nav-ribbon" role="navigation" aria-label="Institutional sections">
