@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      af45e16dec390a29ad4b68b1688572686638dd4f
-short       af45e16d
+commit      ee32a28ab30f33502d5c4b52a9045edb1d117434
+short       ee32a28a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     An editorial bible for the full menu, before any more of it is built
-built (UTC) 2026-08-11T08:41:10Z
-assets      shrs-pwa-765c279b97
+subject     The full menu, engraved
+built (UTC) 2026-08-11T08:55:18Z
+assets      shrs-pwa-5ac866a783
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

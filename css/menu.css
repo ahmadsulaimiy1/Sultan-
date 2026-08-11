@@ -58,36 +58,66 @@
 
 @media (max-width:1440px){
 
-  /* ---------- The five colours ----------
-     Stated as values, never as livery tokens. A token is a colour that
-     FOLLOWS the reader's edition; this sheet does not follow it, because
-     a reader with the menu open is not looking at the page. Writing them
-     as tokens is how two earlier versions put Midnight's pale ink on
-     their own ivory — 1.85:1 and 1.98:1 — through rules that named a
-     dark colour.
+  /* ---------- THE TONE ----------
+     Every colour the sheet uses is declared here and nowhere else, so
+     the whole thing can be re-toned by editing one block rather than
+     forty declarations. That is not tidiness for its own sake: the ink,
+     the rules, the metal and the relief have to move TOGETHER or the
+     sheet stops looking struck and starts looking recoloured.
 
-     Measured against the paper: ink 12.9:1, ink-2 6.9:1, gold-deep
-     7.9:1. The lighter gold is used for rules and hover glow only, never
-     to carry a word. */
+     Stated as values, never as livery tokens. A livery token is a
+     colour that FOLLOWS the reader's edition; this sheet does not
+     follow it, because a reader with the menu open is not looking at
+     the page. Writing them as tokens is how two earlier versions put
+     Midnight's pale ink on their own ivory — 1.85:1 and 1.98:1.
+
+     PARCHMENT AND ESPRESSO. The first ivory was near-white (#FBF7EF),
+     and near-white photographs as grey: it read correct and thin. This
+     is a warmer, deeper stock with real yellow in it, the ink is
+     espresso rather than near-black, the gold is antique rather than
+     brass — and the letterhead is a deep espresso band, because the
+     sheet had no dark note anywhere and nothing on it could therefore
+     read as rich. */
   .navlinks{
-    --fm-paper:#FBF7EF;
-    --fm-ink:#2A2018;
-    --fm-ink-2:#63533F;
-    --fm-gold:#9C7833;
-    --fm-gold-deep:#63481B;
-    --fm-rule:rgba(156,120,51,.26);
-    /* The gilt. Three values that exist only to light metal — a rim, a
-       sheen, a struck edge. None of them ever carries a word, which is
-       why they are allowed to be brighter than the ink rules permit. */
+    /* the stock */
+    --fm-paper:#F6EFDF;
+    --fm-wash-top:255,251,240;
+    --fm-wash-foot:222,202,163;
+    --fm-grain:rgba(92,66,26,.026);
+    /* the ink */
+    --fm-ink:#241809;
+    --fm-ink-2:#5A4630;
+    /* the metal that carries words */
+    --fm-gold:#8E6A26;
+    --fm-gold-deep:#5C4116;
+    /* the metal that carries none — a rim, a sheen, a struck edge, and
+       so allowed to be brighter than the ink rules permit */
     --fm-gilt:#C9A961;
-    --fm-gilt-lt:#F3E3BC;
-    --fm-gilt-dk:#8A6A2F;
+    --fm-gilt-lt:#F6E8C4;
+    /* the rules, in three weights */
+    --fm-rule:rgba(142,106,38,.34);
+    --fm-rule-strong:rgba(142,106,38,.5);
+    --fm-rule-soft:rgba(142,106,38,.10);
+    --fm-taper-a:rgba(142,106,38,.55);
+    --fm-taper-b:rgba(142,106,38,.06);
+    /* relief and shadow — the lit top edge and the weight beneath it */
+    --fm-relief:rgba(255,255,255,.92);
+    --fm-shadow:92,65,22;
+    /* the letterhead */
+    --fm-bar-bg:linear-gradient(178deg,#31200C 0%,#201406 100%);
+    --fm-bar-ink:#EBD9AE;
+    --fm-bar-rule:rgba(201,169,97,.42);
+    /* the one door */
+    --fm-plate-bg:linear-gradient(158deg,#FFFCF2 0%,#EFDFBE 100%);
+    --fm-plate-ink:#4E360F;
+    --fm-plate-edge:rgba(142,106,38,.55);
+    --fm-seal-op:.20;
     /* The house lozenge, struck once and reused everywhere: under each
        division, at the centre of the foot's rule, and in the margin of
        every page in the index. Drawn rather than typed, so it is the
-       same mark at 3px and at 9px and owes nothing to a font. */
-    --fm-lozenge:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%239C7833'/%3E%3C/svg%3E");
-    --fm-lozenge-deep:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%2363481B'/%3E%3C/svg%3E");
+       same mark at 5px and at 9px and owes nothing to a font. */
+    --fm-lozenge:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%238E6A26'/%3E%3C/svg%3E");
+    --fm-lozenge-deep:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%235C4116'/%3E%3C/svg%3E");
     --fm-ease:cubic-bezier(.16,.8,.24,1);
     --fm-bar:86px;
     /* One gutter expression, used by the sheet and by the fixed bar
@@ -133,9 +163,9 @@
        paper behaves and how a scrim does not. */
     background-color:var(--fm-paper)!important;
     background-image:
-      radial-gradient(1200px 560px at 50% -12%, rgba(255,253,247,.95), rgba(255,253,247,0) 70%),
-      radial-gradient(1000px 460px at 50% 114%, rgba(236,223,196,.55), rgba(236,223,196,0) 72%),
-      repeating-linear-gradient(0deg, rgba(120,92,44,.016) 0 1px, rgba(120,92,44,0) 1px 4px)!important;
+      radial-gradient(1200px 560px at 50% -12%, rgba(var(--fm-wash-top),.95), rgba(var(--fm-wash-top),0) 70%),
+      radial-gradient(1000px 460px at 50% 114%, rgba(var(--fm-wash-foot),.55), rgba(var(--fm-wash-foot),0) 72%),
+      repeating-linear-gradient(0deg, var(--fm-grain) 0 1px, transparent 1px 4px)!important;
     color:var(--fm-ink);
     overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch;
@@ -158,7 +188,7 @@
   .navlinks::before{
     content:"";position:fixed;z-index:8;pointer-events:none;
     top:calc(var(--fm-bar) + 14px);bottom:14px;inset-inline:14px;
-    border:1px solid rgba(156,120,51,.45);
+    border:1px solid var(--fm-rule-strong);
     -webkit-mask:
       linear-gradient(#000 0 0) top left    /21% 21% no-repeat,
       linear-gradient(#000 0 0) top right   /21% 21% no-repeat,
@@ -189,7 +219,7 @@
     column-span:all;-webkit-column-span:all;
     height:82px;margin:clamp(30px,5vh,52px) auto 0;
     background:url("/assets/images/crest-watermark.png") no-repeat center/auto 100%;
-    opacity:.2;pointer-events:none;
+    opacity:var(--fm-seal-op);pointer-events:none;
   }
   html[data-pc-ornament="none"] .navlinks::before,
   html[data-pc-ornament="none"] .navlinks::after{display:none;}
@@ -203,7 +233,7 @@
   @media (min-width:1080px){ .navlinks{column-count:3;} }
   .navlinks{
     column-gap:clamp(38px,5vw,86px);
-    column-rule:1px solid rgba(156,120,51,.075);
+    column-rule:1px solid var(--fm-rule-soft);
   }
 
   /* ---------- The bar ----------
@@ -218,9 +248,9 @@
     /* Not flat: the bar sits a shade above the paper, the way a
        letterhead's head does, and it is closed by a rule rather than by
        a border alone. */
-    background:linear-gradient(180deg,#FFFDF7 0%,#FBF7EF 100%)!important;
-    border:0!important;border-bottom:1px solid var(--fm-rule)!important;
-    box-shadow:0 16px 30px -30px rgba(99,72,27,.85)!important;
+    background:var(--fm-bar-bg)!important;
+    border:0!important;border-bottom:1px solid var(--fm-bar-rule)!important;
+    box-shadow:0 18px 34px -26px rgba(var(--fm-shadow),.55)!important;
   }
   /* THE TRAVELLING LIGHT.
      One slow pass of gilt along the bar's own rule — nine seconds, an
@@ -246,37 +276,54 @@
     margin-inline-end:17px;
     background:url("/assets/images/brand-mark.png") no-repeat center/contain;
     border-radius:50%;
-    box-shadow:0 0 0 1px rgba(156,120,51,.30), 0 0 0 5px rgba(201,169,97,.09);
+    box-shadow:0 0 0 1px rgba(201,169,97,.45), 0 0 0 5px rgba(201,169,97,.13);
   }
   html[data-pc-ornament="none"] .navlinks .nav-drawer-head::before{display:none;}
   html[data-pc-ornament="none"] .navlinks .nav-drawer-head::after{display:none;}
+  /* THE KICKER, TYPED.
+     The two words on the letterhead are set by a plate that travels
+     across them, one step at a time, and a caret that blinks four times
+     and goes out. It is done with clip-path rather than by animating a
+     width in `ch`, because a width in `ch` needs to know how many
+     characters there are — and this string is written by the
+     dictionary, so in Arabic it is not two words and not nine letters.
+     Clipping is blind to the language, which is the only way a
+     typewriter can be honest on a site that speaks four. */
   .navlinks .ndh-title{
-    flex:1 1 auto;
+    flex:0 1 auto;margin-inline-end:auto;
     font-family:var(--font-label,'Cinzel',serif);
     font-size:.64rem;letter-spacing:.34em;text-transform:uppercase;font-weight:600;
-    color:var(--fm-gold-deep)!important;
-    text-shadow:0 1px 0 rgba(255,255,255,.85);
-    white-space:normal;
+    color:var(--fm-bar-ink)!important;
+    white-space:nowrap;
   }
+  .navlinks.open .ndh-title{animation:fm-type .95s steps(18,end) .2s both;}
+  @keyframes fm-type{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0 0 0);}}
+  [dir="rtl"] .navlinks.open .ndh-title{animation-name:fm-type-rtl;}
+  @keyframes fm-type-rtl{from{clip-path:inset(0 0 0 100%);}to{clip-path:inset(0 0 0 0);}}
+  .navlinks .ndh-title::after{
+    content:"";display:inline-block;width:1px;height:.95em;
+    margin-inline-start:.3em;vertical-align:-.08em;
+    background:var(--fm-gilt);opacity:0;
+  }
+  .navlinks.open .ndh-title::after{animation:fm-caret .42s steps(1,end) 1.1s 5 both;}
+  @keyframes fm-caret{0%,49%{opacity:.9;}50%,100%{opacity:0;}}
   /* The close control, chased: a struck ring with a lit top edge and a
      shadow beneath it, rather than a circle with a border. */
   .navlinks .nav-drawer-close{
     flex:0 0 auto;display:flex;align-items:center;justify-content:center;
     width:48px;height:48px;border-radius:50%;cursor:pointer;padding:0;
-    border:1px solid rgba(156,120,51,.42)!important;
-    background:linear-gradient(158deg,#FFFDF8,#F4EBD9)!important;
-    color:var(--fm-gold-deep)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
-               0 10px 20px -16px rgba(99,72,27,.9)!important;
+    border:1px solid rgba(201,169,97,.40)!important;
+    background:linear-gradient(158deg,rgba(255,246,223,.14),rgba(255,246,223,.03))!important;
+    color:var(--fm-bar-ink)!important;
+    box-shadow:inset 0 1px 0 rgba(255,246,223,.14)!important;
     transition:transform .42s var(--fm-ease),box-shadow .35s ease,border-color .35s ease;
   }
   .navlinks .nav-drawer-close:hover,
   .navlinks .nav-drawer-close:focus-visible{
     transform:rotate(90deg);
     border-color:var(--fm-gilt)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
-               0 0 0 4px rgba(201,169,97,.14),
-               0 12px 22px -14px rgba(99,72,27,.9)!important;
+    box-shadow:inset 0 1px 0 rgba(255,246,223,.22),
+               0 0 0 4px rgba(201,169,97,.18)!important;
   }
 
   /* ---------- A division ----------
@@ -305,7 +352,7 @@
        three type sizes collapse into two. */
     font-size:clamp(1.45rem,2.6vw,1.95rem)!important;
     line-height:1.18!important;font-weight:600!important;
-    letter-spacing:-.004em!important;text-transform:none!important;
+    letter-spacing:-.004em;text-transform:none!important;
     color:var(--fm-ink)!important;
     padding:0 0 .52em!important;margin:0 0 .5em!important;
     border:0!important;
@@ -321,7 +368,7 @@
     font-family:var(--font-label,'Cinzel',serif);
     font-size:.34em;letter-spacing:.16em;line-height:1;font-weight:600;
     color:var(--fm-gold-deep)!important;
-    text-shadow:0 1px 0 rgba(255,255,255,.9);
+    text-shadow:0 1px 0 var(--fm-relief);
     vertical-align:.28em;
   }
   /* THE RULE UNDER A DIVISION — an engraving, not a table border.
@@ -337,7 +384,7 @@
     width:100%;height:9px;pointer-events:none;
     background:
       var(--fm-lozenge) left center/7px 7px no-repeat,
-      linear-gradient(to right, rgba(156,120,51,.46), rgba(156,120,51,.05) 74%, rgba(156,120,51,0));
+      linear-gradient(to right, var(--fm-taper-a), var(--fm-taper-b) 74%, transparent);
     background-position:left center, left 13px center;
     background-size:7px 7px, calc(100% - 13px) 1px;
     background-repeat:no-repeat,no-repeat;
@@ -346,7 +393,7 @@
   [dir="rtl"] .navlinks .nav-drop-trigger::after{
     background-image:
       var(--fm-lozenge),
-      linear-gradient(to left, rgba(156,120,51,.46), rgba(156,120,51,.05) 74%, rgba(156,120,51,0));
+      linear-gradient(to left, var(--fm-taper-a), var(--fm-taper-b) 74%, transparent);
     background-position:right center, right 13px center;
   }
   /* The Foundation stands alone — it has no pages beneath it, so its
@@ -361,7 +408,7 @@
   .navlinks .nav-drop-trigger:focus-visible::after{
     background-image:
       var(--fm-lozenge-deep),
-      linear-gradient(to right, rgba(99,72,27,.55), rgba(156,120,51,.10) 82%, rgba(156,120,51,0));
+      linear-gradient(to right, var(--fm-gold-deep), var(--fm-taper-b) 82%, transparent);
   }
 
   /* The chevron has nothing left to do: nothing is folded away. */
@@ -541,15 +588,15 @@
     content:""!important;display:block!important;
     position:absolute;top:0;inset-inline:0;height:11px;pointer-events:none;
     background:
-      linear-gradient(to right, rgba(156,120,51,0), rgba(156,120,51,.5)),
-      linear-gradient(to left,  rgba(156,120,51,0), rgba(156,120,51,.5)),
+      linear-gradient(to right, transparent, var(--fm-rule-strong)),
+      linear-gradient(to left,  transparent, var(--fm-rule-strong)),
       var(--fm-lozenge);
     background-position:left center, right center, center;
     background-size:calc(50% - 15px) 1px, calc(50% - 15px) 1px, 9px 9px;
     background-repeat:no-repeat,no-repeat,no-repeat;
   }
   html[data-pc-ornament="none"] .navlinks .nav-drop--portal::before{
-    background:linear-gradient(to right,rgba(156,120,51,.28),rgba(156,120,51,.28)) center/100% 1px no-repeat;
+    background:linear-gradient(to right,var(--fm-rule),var(--fm-rule)) center/100% 1px no-repeat;
   }
   .navlinks .nav-drawer-actions{margin-top:16px!important;text-align:center!important;}
 
@@ -567,19 +614,19 @@
     font-family:var(--font-label,'Cinzel',serif)!important;
     font-size:.74rem!important;letter-spacing:.2em!important;
     text-transform:uppercase!important;font-weight:600!important;
-    color:var(--fm-gold-deep)!important;
+    color:var(--fm-plate-ink)!important;
     padding:16px 34px!important;margin:0!important;border-radius:2px!important;
-    border:1px solid rgba(156,120,51,.48)!important;
-    background:linear-gradient(158deg,#FFFDF8 0%,#F4EAD6 100%)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
-               0 18px 34px -26px rgba(99,72,27,.95)!important;
+    border:1px solid var(--fm-plate-edge)!important;
+    background:var(--fm-plate-bg)!important;
+    box-shadow:inset 0 1px 0 var(--fm-relief),
+               0 18px 34px -26px rgba(var(--fm-shadow),.95)!important;
     transition:box-shadow .4s ease,border-color .4s ease,transform .4s var(--fm-ease);
   }
   .navlinks .nav-drop--portal .nav-drop-trigger:hover,
   .navlinks .nav-drop--portal .nav-drop-trigger:focus-visible{
     transform:translateY(-2px)!important;border-color:var(--fm-gilt)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.95),
-               0 22px 38px -24px rgba(99,72,27,.95)!important;
+    box-shadow:inset 0 1px 0 var(--fm-relief),
+               0 22px 38px -24px rgba(var(--fm-shadow),.95)!important;
   }
   .navlinks .nav-drop--portal .nav-drop-trigger::before{content:none;}
   /* The travelling rim light — a masked conic gradient turning around
@@ -619,7 +666,7 @@
   .navlinks > .nav-drawer-actions .nav-mark::after{
     content:""!important;display:block!important;
     position:absolute;inset-inline-start:0;bottom:6px;
-    width:100%;height:1px;background:rgba(156,120,51,.5);
+    width:100%;height:1px;background:var(--fm-rule-strong);
     transform:scaleX(1);transform-origin:center;
     transition:transform .4s var(--fm-ease);
   }
@@ -630,22 +677,48 @@
      Each division rises in its turn and stops. Ten steps at fifty
      milliseconds is half a second from first to last — long enough to
      read as deliberate, short enough that nobody waits for it. */
-  .navlinks.open .nav-drop,
-  .navlinks.open .nav-drawer-actions{
-    animation:fm-rise .58s cubic-bezier(.16,.8,.24,1) both;
+  /* Each division carries its own place in the queue, once, and the
+     three things that arrive with it — the block, the heading's
+     tracking, the engraved rule — all time themselves off that one
+     number instead of repeating a table of delays three times. */
+  .navlinks .nav-drop:nth-child(2){--i:0;}
+  .navlinks .nav-drop:nth-child(3){--i:1;}
+  .navlinks .nav-drop:nth-child(4){--i:2;}
+  .navlinks .nav-drop:nth-child(5){--i:3;}
+  .navlinks .nav-drop:nth-child(6){--i:4;}
+  .navlinks .nav-drop:nth-child(7){--i:5;}
+  .navlinks .nav-drop:nth-child(8){--i:6;}
+  .navlinks .nav-drop:nth-child(9){--i:7;}
+  .navlinks .nav-drop:nth-child(10){--i:8;}
+  .navlinks .nav-drop:nth-child(11){--i:9;}
+
+  .navlinks.open .nav-drop{
+    animation:fm-rise .6s var(--fm-ease) both;
+    animation-delay:calc(.10s + var(--i,0) * .05s);
   }
-  .navlinks.open .nav-drop:nth-child(2){animation-delay:.10s;}
-  .navlinks.open .nav-drop:nth-child(3){animation-delay:.15s;}
-  .navlinks.open .nav-drop:nth-child(4){animation-delay:.20s;}
-  .navlinks.open .nav-drop:nth-child(5){animation-delay:.25s;}
-  .navlinks.open .nav-drop:nth-child(6){animation-delay:.30s;}
-  .navlinks.open .nav-drop:nth-child(7){animation-delay:.35s;}
-  .navlinks.open .nav-drop:nth-child(8){animation-delay:.40s;}
-  .navlinks.open .nav-drop:nth-child(9){animation-delay:.45s;}
-  .navlinks.open .nav-drop:nth-child(10){animation-delay:.50s;}
-  .navlinks.open .nav-drop:nth-child(11){animation-delay:.55s;}
-  .navlinks.open .nav-drawer-actions{animation-delay:.60s;}
-  @keyframes fm-rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .navlinks.open .nav-drawer-actions{animation:fm-rise .6s var(--fm-ease) .62s both;}
+  @keyframes fm-rise{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:none;}}
+
+  /* THE TYPE SETTLES. A heading arrives very slightly wide and closes
+     to its set tracking — the way metal type looks as it is pressed
+     home. A quarter of a second, once, and never again. */
+  .navlinks.open .nav-drop-trigger{
+    animation:fm-settle .85s var(--fm-ease) both;
+    animation-delay:calc(.12s + var(--i,0) * .05s);
+  }
+  @keyframes fm-settle{from{letter-spacing:.075em;}to{letter-spacing:-.004em;}}
+
+  /* THE RULE ENGRAVES ITSELF, from the lozenge outward, a beat after
+     the words it belongs to. Clipped rather than sized, so the short
+     rule under Foundation and the long ones under the rest can share
+     one keyframe. */
+  .navlinks.open .nav-drop-trigger::after{
+    animation:fm-engrave .8s var(--fm-ease) both;
+    animation-delay:calc(.26s + var(--i,0) * .05s);
+  }
+  @keyframes fm-engrave{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0 0 0);}}
+  [dir="rtl"] .navlinks.open .nav-drop-trigger::after{animation-name:fm-engrave-rtl;}
+  @keyframes fm-engrave-rtl{from{clip-path:inset(0 0 0 100%);}to{clip-path:inset(0 0 0 0);}}
 
   /* ---------- Midnight, answered ----------
      THE EDITION-BLIND PATTERN, for the tenth time on this site, and this
@@ -684,6 +757,9 @@
   @media (prefers-reduced-motion:reduce){
     .navlinks{transition:opacity .2s linear,visibility 0s linear .2s;}
     .navlinks .nav-drop,.navlinks .nav-drawer-actions{opacity:1;transform:none;animation:none!important;}
+    .navlinks .ndh-title,.navlinks .ndh-title::after,
+    .navlinks .nav-drop-trigger,.navlinks .nav-drop-trigger::after{animation:none!important;}
+    .navlinks .ndh-title::after{opacity:0;}
     .navlinks .nav-mega-item::after,.navlinks .nmi-cta::after,
     .navlinks .nmi-secondary::after,.navlinks .portal-gateway-card::after,
     .navlinks .nav-drawer-close{transition:none;}
@@ -698,7 +774,12 @@
     animation:none;opacity:.5;
   }
   html[data-pc-motion="reduced"] .navlinks .nav-drop,
-  html[data-pc-motion="reduced"] .navlinks .nav-drawer-actions{
+  html[data-pc-motion="reduced"] .navlinks .nav-drawer-actions,
+  html[data-pc-motion="reduced"] .navlinks .ndh-title,
+  html[data-pc-motion="reduced"] .navlinks .ndh-title::after,
+  html[data-pc-motion="reduced"] .navlinks .nav-drop-trigger,
+  html[data-pc-motion="reduced"] .navlinks .nav-drop-trigger::after{
     opacity:1;transform:none;animation:none!important;
   }
+  html[data-pc-motion="reduced"] .navlinks .ndh-title::after{opacity:0;}
 }
