@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      75c785d5b0b626af8cf342a45c02ec47a251ee58
-short       75c785d5
+commit      7049971050ccce7d43a9f4250a785779763b1794
+short       70499710
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Audit of all 220 pages; five schools open on themselves; institutional words
-built (UTC) 2026-08-10T23:28:33Z
-assets      shrs-pwa-ceea3ac0d2
+subject     The office that could not say it had failed, and two more brochure ledes
+built (UTC) 2026-08-11T06:36:41Z
+assets      shrs-pwa-732e1f5945
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
