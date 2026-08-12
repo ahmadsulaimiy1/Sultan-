@@ -1,0 +1,256 @@
+/* Newsroom — the staff surface for the school's own voice.
+ *
+ * WHY THIS SHEET STATES ITS OWN COLOURS
+ *
+ * The portal's `.portal-child-card` paints
+ *   linear-gradient(165deg, rgb(36,26,16) 0%, rgb(247,238,223) 100%)
+ * — near-black at the top, near-white at the bottom. Short cards get
+ * away with it because they never travel far down the ramp. The
+ * newsroom's cards are tall, so they cross the whole thing, and NO
+ * single ink colour is legible across that traverse: light ink vanishes
+ * at the foot, dark ink vanishes at the head. Measured, not assumed —
+ * the first draft of this page inherited the portal ink and the section
+ * headings came out at rgb(59,42,29) on rgb(36,26,16).
+ *
+ * So the newsroom does not sit on that card. It lays its own sheet, and
+ * every colour below is a literal, because a surface that does not
+ * follow the shell must not borrow the shell's ink. Same rule this
+ * codebase already keeps for anything that does not follow the edition.
+ *
+ * The palette is Parchment & Espresso — the same language as the Full
+ * Menu: paper, iron-gall ink, and a gilt rule. An editor writing the
+ * school's public voice should feel they are writing on something.
+ */
+
+.nr-sheet {
+  --nr-paper: #F6EFDF;
+  --nr-paper-2: #FBF6EA;
+  --nr-ink: #241809;
+  --nr-ink-2: #5A4630;
+  --nr-ink-3: #6E5A3E;
+  --nr-gilt: #8E6A26;
+  --nr-gilt-deep: #5C4116;
+  --nr-rule: rgba(92, 65, 22, 0.24);
+  --nr-rule-soft: rgba(92, 65, 22, 0.13);
+
+  background:
+    linear-gradient(178deg, var(--nr-paper-2) 0%, var(--nr-paper) 62%, #EFE5CF 100%);
+  border: 1px solid rgba(92, 65, 22, 0.3);
+  border-top: 2px solid var(--nr-gilt);
+  border-radius: 2px;
+  color: var(--nr-ink);
+  padding: 26px clamp(18px, 3.4vw, 34px) 30px;
+  margin: 0 0 22px;
+  box-shadow: 0 1px 0 rgba(255, 253, 246, 0.7) inset, 0 14px 34px rgba(28, 18, 6, 0.22);
+}
+
+/* Everything inside the sheet takes the sheet's ink, never the shell's. */
+.nr-sheet,
+.nr-sheet h2,
+.nr-sheet h3,
+.nr-sheet p,
+.nr-sheet label,
+.nr-sheet input,
+.nr-sheet select,
+.nr-sheet textarea,
+.nr-sheet button { color: var(--nr-ink); }
+
+/* ---------------------------------------------------------- masthead */
+
+.nr-masthead {
+  border-bottom: 1px solid var(--nr-rule);
+  padding: 0 0 12px;
+  margin: 0 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.nr-sheet .nr-masthead h2 {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(1.02rem, 2.2vw, 1.28rem);
+  letter-spacing: 0.055em;
+  color: var(--nr-ink);
+  margin: 0;
+}
+.nr-masthead-note {
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--nr-gilt-deep);
+}
+
+.nr-sheet .nr-note {
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: var(--nr-ink-2);
+  max-width: 74ch;
+  margin: 0 0 18px;
+}
+
+/* ------------------------------------------------------------- chips */
+
+.nr-chip {
+  display: inline-block;
+  font-size: 0.63rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border: 1px solid var(--nr-rule);
+  border-radius: 2px;
+  color: var(--nr-gilt-deep);
+  white-space: nowrap;
+}
+.nr-chip--category { border-color: rgba(92, 65, 22, 0.34); }
+.nr-chip--published {
+  border-color: var(--nr-gilt);
+  background: rgba(142, 106, 38, 0.12);
+  color: var(--nr-gilt-deep);
+}
+.nr-chip--draft { border-style: dashed; }
+.nr-chip--archived { color: var(--nr-ink-3); border-color: var(--nr-rule-soft); }
+.nr-chip--featured {
+  border-color: var(--nr-gilt-deep);
+  background: var(--nr-gilt-deep);
+  color: #F6E8C4;
+}
+
+/* ------------------------------------------------------------- items */
+
+.nr-list { display: grid; gap: 14px; }
+
+.nr-item {
+  border: 1px solid var(--nr-rule-soft);
+  border-left: 3px solid rgba(92, 65, 22, 0.28);
+  padding: 16px 18px;
+  background: rgba(255, 253, 246, 0.62);
+}
+.nr-item[data-status='published'] { border-left-color: var(--nr-gilt); }
+.nr-item[data-status='archived'] { background: rgba(92, 65, 22, 0.045); }
+.nr-item[data-featured='true'] {
+  border-left-width: 5px;
+  border-left-color: var(--nr-gilt-deep);
+  box-shadow: 0 8px 22px rgba(28, 18, 6, 0.1);
+}
+
+.nr-item-head { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.nr-sheet .nr-item-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.14rem, 2.4vw, 1.4rem);
+  line-height: 1.24;
+  color: var(--nr-ink);
+  margin: 9px 0 6px;
+}
+.nr-sheet .nr-item-summary {
+  font-size: 0.93rem;
+  line-height: 1.62;
+  color: var(--nr-ink-2);
+  max-width: 64ch;
+  margin: 0 0 9px;
+}
+.nr-item-meta {
+  font-size: 0.71rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--nr-ink-3);
+  margin-bottom: 12px;
+}
+
+/* ----------------------------------------------------------- actions */
+
+.nr-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.nr-sheet .nr-btn {
+  font: inherit;
+  font-size: 0.77rem;
+  letter-spacing: 0.05em;
+  padding: 7px 14px;
+  border: 1px solid rgba(92, 65, 22, 0.38);
+  border-radius: 2px;
+  background: rgba(255, 253, 246, 0.8);
+  color: var(--nr-ink);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.nr-sheet .nr-btn:hover:not(:disabled) {
+  border-color: var(--nr-gilt-deep);
+  background: rgba(142, 106, 38, 0.12);
+}
+.nr-sheet .nr-btn:focus-visible { outline: 2px solid var(--nr-gilt-deep); outline-offset: 2px; }
+.nr-sheet .nr-btn:disabled { opacity: 0.45; cursor: default; }
+.nr-sheet .nr-btn--primary {
+  border-color: var(--nr-gilt-deep);
+  background: var(--nr-gilt-deep);
+  color: #F6E8C4;
+}
+.nr-sheet .nr-btn--primary:hover:not(:disabled) { background: #4A3410; color: #F6E8C4; }
+.nr-sheet .nr-btn--quiet { color: var(--nr-ink-2); }
+
+/* ---------------------------------------------------------- composer */
+
+.nr-composer { display: grid; gap: 13px; }
+.nr-field { display: grid; gap: 5px; }
+.nr-sheet .nr-field > label {
+  font-size: 0.69rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--nr-gilt-deep);
+}
+.nr-sheet .nr-field input,
+.nr-sheet .nr-field select,
+.nr-sheet .nr-field textarea {
+  font: inherit;
+  font-size: 0.93rem;
+  padding: 10px 12px;
+  border: 1px solid rgba(92, 65, 22, 0.3);
+  border-radius: 2px;
+  background: #FFFDF6;
+  color: var(--nr-ink);
+  width: 100%;
+}
+.nr-sheet .nr-field textarea { min-height: 92px; resize: vertical; line-height: 1.6; }
+.nr-sheet .nr-field input::placeholder,
+.nr-sheet .nr-field textarea::placeholder { color: rgba(90, 70, 48, 0.62); }
+.nr-sheet .nr-field input:focus,
+.nr-sheet .nr-field select:focus,
+.nr-sheet .nr-field textarea:focus {
+  outline: 2px solid var(--nr-gilt-deep);
+  outline-offset: 1px;
+  border-color: var(--nr-gilt-deep);
+}
+.nr-sheet .nr-field-hint {
+  font-size: 0.79rem;
+  color: var(--nr-ink-2);
+  line-height: 1.55;
+  margin: 1px 0 0;
+}
+.nr-field-optional { text-transform: none; letter-spacing: 0; color: var(--nr-ink-3); }
+.nr-row { display: grid; gap: 13px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+/* The notice sits outside the sheets, on the portal's own dark ground,
+ * so it states light-on-dark colours of its own for the same reason. */
+.nr-notice {
+  border: 1px solid rgba(198, 161, 91, 0.5);
+  border-left: 3px solid #C6A15B;
+  background: #241809;
+  color: #F1E7D6;
+  padding: 11px 15px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0 0 20px;
+  border-radius: 2px;
+}
+.nr-notice[data-tone='error'] { border-left-color: #E08B7A; }
+.nr-notice[hidden] { display: none; }
+
+/* ----------------------------------------------------------- motion */
+
+.nr-item { animation: nr-rise 0.5s cubic-bezier(0.22, 0.68, 0.31, 1) both; }
+@keyframes nr-rise {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nr-item { animation: none; }
+  .nr-sheet .nr-btn { transition: none; }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Newsroom — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
+<link rel="stylesheet" href="/css/portal.css?v=325ff1fb81">
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=e81375ad40">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=1f8648c999"></script>
+<script src="/js/i18n.js?v=9056340187" defer></script>
+<script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
+<link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
+<link rel="stylesheet" href="/css/portal-newsroom.css?v=9e0d7019eb">
+<meta name="shrs-build" content="shrs-pwa-b6d1919da4">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Newsroom</span>
+    <div id="office-switcher-mount" hidden></div>
+    <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <h1 class="portal-hello">Newsroom</h1>
+    <div class="portal-hello-sub">The school&rsquo;s own voice on its own pages. What you publish here appears in the site ribbon and, if you choose, as the homepage hero &mdash; and reaches every family who has turned on notifications.</div>
+
+    <div class="nr-notice" data-nr-notice hidden></div>
+
+    <div class="nr-sheet">
+      <div class="nr-masthead">
+        <h2>Write an announcement</h2>
+        <span class="nr-masthead-note">Saved as a draft first</span>
+      </div>
+      <form class="nr-composer" data-nr-form>
+        <div class="nr-row">
+          <div class="nr-field">
+            <label for="nr-category">Category</label>
+            <select id="nr-category" name="category" data-nr-category required></select>
+          </div>
+          <div class="nr-field">
+            <label for="nr-event-date">Date <span class="nr-field-optional">(if it is an event)</span></label>
+            <input id="nr-event-date" name="eventDate" type="date" />
+          </div>
+          <div class="nr-field">
+            <label for="nr-event-time">Time</label>
+            <input id="nr-event-time" name="eventTime" type="text" placeholder="10:00 AM" />
+          </div>
+        </div>
+
+        <div class="nr-field">
+          <label for="nr-title">Title</label>
+          <input id="nr-title" name="title" type="text" maxlength="180" required />
+        </div>
+
+        <div class="nr-field">
+          <label for="nr-summary">Summary</label>
+          <textarea id="nr-summary" name="summary" maxlength="400" required></textarea>
+          <p class="nr-field-hint">One or two sentences. This is what appears in the ribbon and in the notification a parent receives, so write it to stand alone.</p>
+        </div>
+
+        <div class="nr-field">
+          <label for="nr-body">Full text <span class="nr-field-optional">(optional)</span></label>
+          <textarea id="nr-body" name="body"></textarea>
+        </div>
+
+        <div class="nr-row">
+          <div class="nr-field">
+            <label for="nr-venue">Venue</label>
+            <input id="nr-venue" name="venue" type="text" />
+          </div>
+          <div class="nr-field">
+            <label for="nr-action-label">Button label</label>
+            <input id="nr-action-label" name="actionLabel" type="text" placeholder="Read the notice" />
+          </div>
+          <div class="nr-field">
+            <label for="nr-action-url">Button link</label>
+            <input id="nr-action-url" name="actionUrl" type="text" placeholder="/admissions/" />
+          </div>
+        </div>
+
+        <div class="nr-actions">
+          <button type="submit" class="nr-btn nr-btn--primary">Save as draft</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="nr-sheet">
+      <div class="nr-masthead">
+        <h2>Everything written so far</h2>
+        <span class="nr-masthead-note" data-nr-count>&mdash;</span>
+      </div>
+      <p class="nr-note">Publishing puts an announcement on the site and notifies subscribed families. Making one the homepage hero clears any previous hero. Archiving takes it off the live list and keeps it in the record permanently &mdash; nothing here is ever deleted.</p>
+      <div class="nr-list" data-nr-list></div>
+      <div class="nr-note" data-nr-empty hidden>Nothing has been written yet. The first announcement you save will appear here.</div>
+    </div>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the newsroom&hellip;</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn&rsquo;t load the newsroom</h1>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">&larr; Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-office-switcher.js?v=92e536d6ce" defer></script>
+<script src="/js/portal-staff-newsroom.js?v=e6b9bd9ea4" defer></script>
+<script src="/js/prestige.js?v=58432f532a" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
+<script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
+<script src="/js/hijri.js?v=4bb28b7c28" defer></script>
+<script src="/js/portal-chrome.js?v=af0adbf2a5" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/clock.js?v=c31a88dfc3" defer></script>
+</body>
+</html>

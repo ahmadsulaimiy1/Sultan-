@@ -118,6 +118,62 @@ const CONTENT_FIELDS = [
 // jsonb the way it does for scalar columns), and only makes sense to set
 // post-event, typically well after the initial create.
 
+// The editor's read path. The public list endpoint
+// (functions/api/portal/announcements/list.js) deliberately never
+// returns drafts, which meant an editor could create an announcement
+// and then had no way to see it in order to publish it — from a staff
+// member's point of view the whole lifecycle was write-only.
+//
+// Returns every row in every status. Authority is read from the codes
+// the Matrix actually grants on `communications` (C/E/P/Ar); there is
+// no V row for any role in that area, so checking V would have locked
+// out everyone including the Founder. Reading the newsroom is the
+// lowest of these authorities, so holding any one of them is enough.
+export async function onRequestGet({ request, env }) {
+  const sql = getSql(env);
+  if (!sql) return json({ error: 'No database is linked yet.' }, 500);
+
+  const auth = await resolveAuth(request, env);
+  if (!auth) {
+    return json({ error: 'Not authorised. Sign in with a Registrar, Principal, or Executive staff account.' }, 403);
+  }
+  if (auth.method === 'staff_session') {
+    let allowed = false;
+    for (const code of ['C', 'E', 'P', 'Ar']) {
+      if (!(await checkStaffGrant(sql, auth.staffId, code))) { allowed = true; break; }
+    }
+    if (!allowed) {
+      return json({ error: 'Your role does not carry authority over Communications.' }, 403);
+    }
+  }
+
+  try {
+    const res = await sql`
+      SELECT id, category, title, summary, body, image_url, venue, event_date, event_time,
+             action_label, action_url, is_featured, status, published_at, created_by,
+             created_at, updated_at
+      FROM announcements
+      ORDER BY status = 'archived', is_featured DESC,
+               COALESCE(published_at, created_at) DESC
+      LIMIT 200`;
+    return json({
+      ok: true,
+      categories: CATEGORIES,
+      items: res.rows.map((r) => ({
+        id: r.id, category: r.category, title: r.title, summary: r.summary, body: r.body,
+        imageUrl: r.image_url, venue: r.venue, eventDate: r.event_date, eventTime: r.event_time,
+        actionLabel: r.action_label, actionUrl: r.action_url,
+        isFeatured: r.is_featured, status: r.status,
+        publishedAt: r.published_at, createdBy: r.created_by,
+        createdAt: r.created_at, updatedAt: r.updated_at,
+      })),
+    });
+  } catch (err) {
+    console.error('portal admin announcements list error', err);
+    return json({ error: 'Could not load the newsroom.' }, 500);
+  }
+}
+
 export async function onRequestPost({ request, env }) {
   const sql = getSql(env);
   if (!sql) {

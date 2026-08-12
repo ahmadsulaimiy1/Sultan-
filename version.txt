@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      c04c457b05cf63c25c6e56bb4f5347146948730d
-short       c04c457b
+commit      178c07c23d696ae51b763993cfe9cffeb973588e
+short       178c07c2
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give four write-only tables a read side — the Staff Desk
-built (UTC) 2026-08-12T23:08:30Z
-assets      shrs-pwa-5696c17efb
+subject     Audit: name what is switched off, unreachable, and never built
+built (UTC) 2026-08-12T23:20:11Z
+assets      shrs-pwa-b6d1919da4
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

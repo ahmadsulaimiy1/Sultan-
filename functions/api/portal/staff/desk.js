@@ -21,7 +21,8 @@
 //
 //   notifications  — the caller's own. No extra permission: they were
 //                    addressed to this person by name.
-//   escalations    — `communications` V. Inbound messages from families.
+//   escalations    — Communications authority (C/E/Ar — the area has no
+//                    V row for any role; see canSeeFamilyMessages).
 //   privacyRequests— `system_settings` V. The ICT Office's own seed
 //                    description names it as owning system accounts and
 //                    access logs; data-subject requests sit with it
@@ -58,6 +59,23 @@ async function requireStaffSession(request, env) {
 
 const hidden = (reason) => ({ visible: false, reason, items: [] });
 
+// The `communications` area has no V (view) row for ANY role — its
+// Matrix cells are C/E/P/Ar only. Checking V there would have hidden
+// family messages from every member of staff including the Founder,
+// which is exactly the silent-nothing-to-see failure this page exists
+// to end. So authority is read from the codes that genuinely exist:
+// C, E or Ar — held by REG, PRIN and EXE.
+//
+// TCH is deliberately excluded. Its only communications grant is P,
+// scoped "own class only" and marked in the Matrix itself as not yet
+// built; a fee dispute or a complaint about a colleague is not a class
+// teacher's to read.
+const FAMILY_MESSAGE_CODES = ['C', 'E', 'Ar'];
+
+export function canSeeFamilyMessages(grants) {
+  return FAMILY_MESSAGE_CODES.some((code) => checkGrants(grants, 'communications', code, null).granted);
+}
+
 export async function onRequestGet({ request, env }) {
   const { staffId, error } = await requireStaffSession(request, env);
   if (error) return error;
@@ -66,7 +84,7 @@ export async function onRequestGet({ request, env }) {
 
   try {
     const grants = await effectiveGrants(sql, staffId);
-    const canSeeEscalations = checkGrants(grants, 'communications', 'V', null).granted;
+    const canSeeEscalations = canSeeFamilyMessages(grants);
     const canSeeSystem = checkGrants(grants, 'system_settings', 'V', null).granted;
 
     const notificationsQuery = sql`
@@ -130,7 +148,7 @@ export async function onRequestGet({ request, env }) {
           handledAt: r.handled_at,
           handledByName: r.handled_by_name,
         })),
-      } : hidden('Your role does not include Communications visibility, so requests from families are not shown here.'),
+      } : hidden('Your role does not carry Communications authority, so messages from families are not shown here.'),
       privacyRequests: canSeeSystem ? {
         visible: true,
         items: privacy.rows.map((r) => ({
@@ -175,8 +193,8 @@ export async function onRequestPost({ request, env }) {
 
     if (body.action === 'close-escalation') {
       const grants = await effectiveGrants(sql, staffId);
-      if (!checkGrants(grants, 'communications', 'V', null).granted) {
-        return json({ error: 'Your role does not include Communications visibility.' }, 403);
+      if (!canSeeFamilyMessages(grants)) {
+        return json({ error: 'Your role does not include Communications authority.' }, 403);
       }
       const status = body.status === 'acknowledged' ? 'acknowledged' : 'closed';
       const res = await sql`

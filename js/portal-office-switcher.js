@@ -54,6 +54,15 @@
     // hidden, so the page is never a dead end.
     add('Desk', 'Everything waiting on you', '/portal/staff/desk/');
 
+    // The Newsroom is surfaced to the roles the Matrix actually grants
+    // authority over `communications` — REG, PRIN and EXE. TCH is left
+    // out on purpose: its only grant there is P, scoped "own class
+    // only" and marked in the Matrix as not yet built.
+    var hasCommsAuthority = (data.roles || []).some(function (r) {
+      return r.roleCode === 'REG' || r.roleCode === 'PRIN' || r.roleCode === 'EXE';
+    });
+    if (hasCommsAuthority) add('Newsroom', 'Announcements, ribbon, and homepage hero', '/portal/staff/newsroom/');
+
     (data.myOffices || []).forEach(function (o) {
       add(o.name, o.appointmentTitle + (o.isActing ? ' (Acting)' : ''), '/portal/office/' + o.slug + '/');
       var deep = DEEP_LINKS_BY_SLUG[o.slug];
