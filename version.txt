@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      0d56255d2fbcd0a7abdaa71a28aeaab1e5603eb0
-short       0d56255d
+commit      c04c457b05cf63c25c6e56bb4f5347146948730d
+short       c04c457b
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let the assistant fetch a human instead of answering to the end
-built (UTC) 2026-08-12T23:05:47Z
+subject     Give four write-only tables a read side — the Staff Desk
+built (UTC) 2026-08-12T23:08:30Z
 assets      shrs-pwa-5696c17efb
 pages       143
 
