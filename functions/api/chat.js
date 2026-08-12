@@ -22,6 +22,7 @@ import {
   retrieveRelevantPages,
   sanitizeMessages,
 } from '../_lib/assistant.js';
+import { createEscalationFilter, recordEscalation, transcriptFrom } from '../_lib/escalation.js';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -93,6 +94,11 @@ export async function onRequestPost(context) {
   const encoder = new TextEncoder();
   let buffer = '';
 
+  // Holds back any text that might turn out to be the escalation marker,
+  // so it never reaches the browser — not even for a single frame. See
+  // functions/_lib/escalation.js.
+  const filter = createEscalationFilter();
+
   const stream = new ReadableStream({
     async start(controller) {
       const reader = upstream.body.getReader();
@@ -110,16 +116,34 @@ export async function onRequestPost(context) {
             let evt;
             try { evt = JSON.parse(data); } catch { continue; }
             if (evt.type === 'content_block_delta' && evt.delta && evt.delta.type === 'text_delta') {
-              controller.enqueue(encoder.encode(evt.delta.text));
+              const safe = filter.push(evt.delta.text);
+              if (safe) controller.enqueue(encoder.encode(safe));
             } else if (evt.type === 'error') {
               controller.enqueue(encoder.encode(`\n[assistant error: ${evt.error && evt.error.message ? evt.error.message : 'stream error'}]`));
             }
           }
         }
+        const tail = filter.end();
+        if (tail) controller.enqueue(encoder.encode(tail));
       } catch (err) {
         // client cancelled or upstream dropped — just end the stream
       } finally {
         try { controller.close(); } catch {}
+        // After the visitor has their reply, not before: getting a
+        // person involved must never delay or break the answer they
+        // are reading. waitUntil keeps the Worker alive for it.
+        const escalation = filter.escalation;
+        if (escalation) {
+          const task = recordEscalation(env, {
+            channel: 'web',
+            topic: escalation.topic,
+            summary: escalation.summary,
+            contact: escalation.contact,
+            lang,
+            transcript: transcriptFrom(messages),
+          }).catch((err) => console.error('escalation failed', err));
+          if (context.waitUntil) context.waitUntil(task);
+        }
       }
     },
     cancel() {

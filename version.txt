@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      f056d8baadc6c4c9e47b8e11f2e80ae82dc23231
-short       f056d8ba
+commit      f91c94cf2daae959a3647a6f8d5be85bcff0e3e6
+short       f91c94cf
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Never let an ornament be load-bearing
-built (UTC) 2026-08-11T21:04:29Z
+subject     Connect the assistant to WhatsApp, and give both channels one brain
+built (UTC) 2026-08-12T21:03:26Z
 assets      shrs-pwa-7ccb9d662b
 pages       143
 

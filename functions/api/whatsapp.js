@@ -36,6 +36,7 @@ import {
   retrieveRelevantPages,
   sanitizeMessages,
 } from '../_lib/assistant.js';
+import { recordEscalation, splitEscalation, transcriptFrom } from '../_lib/escalation.js';
 
 const WA_MAX_TOKENS = 640;          // WhatsApp replies are short by design
 const WA_SEGMENT_CHARS = 1400;      // Twilio hard-limits a body to 1600
@@ -341,7 +342,28 @@ export async function onRequestPost(context) {
     clearTimeout(timer);
   }
 
+  // The marker is stripped before anything is sent — the sender only
+  // ever sees the sentence the assistant wrote for them.
+  const { reply: visible, escalation } = splitEscalation(answer);
+  answer = visible;
+
   if (!answer) return reply(unavailable(lang));
+
+  if (escalation) {
+    // The sender's WhatsApp number is the contact whether or not the
+    // model repeated it, so prefer the real one over anything typed.
+    const task = recordEscalation(env, {
+      channel: 'whatsapp',
+      topic: escalation.topic,
+      summary: escalation.summary,
+      contact: from.replace(/^whatsapp:/, '') || escalation.contact,
+      lang,
+      transcript: transcriptFrom([...messages, { role: 'assistant', content: answer }]),
+    }).catch((err) => console.error('escalation failed', err));
+    // Twilio is waiting on this response; hand the work to the runtime
+    // rather than making the sender wait for a database round trip.
+    if (context.waitUntil) context.waitUntil(task); else await task;
+  }
 
   await saveMemory(env, from, [
     ...history,

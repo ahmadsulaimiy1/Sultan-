@@ -13,6 +13,8 @@
 // `channel` argument is undefined for the web panel, which is the
 // no-op path.
 
+import { escalationRule } from './escalation.js';
+
 export const MAX_MESSAGES = 24; // trailing turns kept as context, regardless of what the client sends
 export const MAX_MESSAGE_CHARS = 4000; // per-message cap
 export const MAX_TOTAL_CHARS = 16000; // whole-conversation cap, keeps cost/abuse bounded
@@ -172,6 +174,11 @@ export function buildSystemPrompt(lang, office, style, groundingPages, channel) 
     ? '\nTHIS REPLY IS BEING SENT OVER WHATSAPP. Keep it under about 80 words, in one or two short paragraphs. Do not use markdown, headings, or bullet symbols — WhatsApp shows them as literal characters. Give at most one link, written in full as https://shroyalschools.com/path/. If the answer genuinely needs more room than that, give the essential part and invite them to ask for the rest.\n'
     : '';
 
+  // Knowing when not to answer is part of answering well. See
+  // escalation.js for why the marker this describes never reaches
+  // the visitor, and which office each topic is routed to.
+  const escalationBlock = `\n${escalationRule(channel)}\n`;
+
   const groundingBlock = groundingPages && groundingPages.length
     ? `\nRELEVANT PAGES FROM THIS SITE (auto-retrieved because they mention terms from the user's message — use these to give a more specific, grounded answer, and mention/link the page URL when it directly answers the question; this is real published content from shroyalschools.com, not your general knowledge):\n${groundingPages.map((p) => `- "${p.title}" (${p.url}): ${p.excerpt.replace(/\s+/g, ' ').trim()}`).join('\n')}\n`
     : '';
@@ -179,7 +186,7 @@ export function buildSystemPrompt(lang, office, style, groundingPages, channel) 
   return `You are the Digital Academic Assistant for Sultan Hanafi Royal Schools, a real school in Ikorodu, Lagos State, Nigeria. You run on Claude, an AI model by Anthropic — you are an AI, not a human staff member, and you must say so plainly whenever anyone asks what you are or seems to think they're talking to a person. Never claim to be human, never claim to be "the registration office" or any human officer.
 
 ${langLine}
-${officeLine}${styleLine}${channelLine}
+${officeLine}${styleLine}${channelLine}${escalationBlock}
 You have two jobs:
 1. Answer questions about Sultan Hanafi Royal Schools using ONLY the facts below (and the retrieved page excerpts, if any, which are drawn from the same live site). If something isn't in these facts (exact fees, term dates, scholarship criteria, international-admission specifics, staff names beyond the Director, class sizes, exam results, anything not listed), say plainly that it isn't published yet and direct the person to a real contact channel (info@shroyalschools.com, principal@shrschools.ng, or the phone numbers below). Never invent or guess a number, date, name, or policy detail that isn't in these facts.
 2. Act as a genuine academic assistant/tutor: help with English writing and grammar, homework explanations, study techniques, exam preparation, and general academic subjects, the way a knowledgeable tutor would, using your general knowledge. Be clear when you're giving general educational help versus stating a fact about this specific school.

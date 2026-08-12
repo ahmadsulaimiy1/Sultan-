@@ -65,6 +65,64 @@ reply: `buildSystemPrompt(..., 'whatsapp')` adds a short instruction to
 keep it under about 80 words, in plain sentences with no markdown, and at
 most one link written out in full.
 
+## Knowing when to fetch a human
+
+An assistant that answers everything is not trustworthy — it is only
+confident. Some questions should not end with an AI however well it
+could phrase a reply, and the assistant now recognises them and hands
+them over instead:
+
+- anything about **one named child** — results, behaviour, health,
+  attendance, welfare
+- a **complaint** about the school, a member of staff, or a decision
+- a **fee dispute**, an uncredited payment, a request for a concession
+- anything about a **child's safety or wellbeing**, or a person in
+  distress
+- any **request to speak to a person**, however phrased
+
+When it decides to escalate it writes its own warm sentence — not a
+canned one — telling the family it is passing this to the right office.
+On the website it first asks for a name and a phone number or email so
+the office can reach them; on WhatsApp it already has their number and
+so asks for nothing. It is explicitly forbidden from promising a
+response time, because nobody controls when staff read their messages.
+
+For safeguarding it does not counsel, does not ask probing questions and
+does not delay: it says plainly that it is getting a person, gives
++234 807 374 7650 for anything immediate, and escalates at once.
+
+Under the hood the model ends its reply with a marker line that the
+visitor never sees — `functions/api/chat.js` filters it out of the
+stream before a single frame reaches the browser, and
+`functions/api/whatsapp.js` strips it from the message. Verified across
+every possible chunk boundary, character by character, and over 300
+randomised chunkings; prose that legitimately contains `[[` passes
+through untouched. See `functions/_lib/escalation.js`.
+
+Each escalation is routed by topic to a real office seeded in
+`sql/schema.sql` — admissions, finance, registrar, student affairs, or
+the Head of Schools — and recorded in the `assistant_escalations` table.
+If no staff are appointed to that office yet, it falls back to the
+executive office rather than reaching nobody.
+
+### What this does *not* yet do — read this before relying on it
+
+**Nothing in the staff portal displays these.** The `staff_notifications`
+table has been written by several workflows since it was built, but no
+page or endpoint reads it — the feed view was never made. So a portal
+notification recorded here is, today, a database row nobody looks at.
+
+That leaves **email as the only channel a human actually sees**, and
+email needs `RESEND_API_KEY` and `EMAIL_FROM_ADDRESS` set. Until those
+exist, an escalation is recorded in the database and written to the
+Cloudflare logs, and that is all.
+
+So the order that makes escalation real is: set `RESEND_API_KEY`, and
+optionally `ESCALATION_EMAIL` if escalations should go somewhere other
+than `info@shroyalschools.com`. Building the staff notification feed is
+the proper fix and is worth doing next; the email path is what makes
+this useful in the meantime.
+
 ## WhatsApp — how to turn it on
 
 `functions/api/whatsapp.js` receives Twilio's webhook whenever somebody

@@ -2013,3 +2013,35 @@ CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certifica
 -- documents for the same student reuse the same verified Arabic name.
 ALTER TABLE students ADD COLUMN IF NOT EXISTS full_name_ar TEXT;
 ALTER TABLE students ADD COLUMN IF NOT EXISTS sex TEXT;
+
+-- Digital Assistant escalations — recorded when the assistant decides a
+-- question belongs to a person rather than to it (fee disputes, one
+-- named child, complaints, safeguarding, or an explicit request for a
+-- human). See functions/_lib/escalation.js for the routing table and
+-- why the marker that triggers this never reaches the visitor.
+--
+-- The row is written even when no staff are appointed to the receiving
+-- office and even when email is unconfigured — the point is that an
+-- escalation is never silently lost. Staff notifications are recorded
+-- separately in staff_notifications, exactly as every other workflow
+-- here does it; this table is the durable record of the request itself.
+--
+-- No guardian_id: the visitor is anonymous on the website and known
+-- only by phone number on WhatsApp. `contact` is whatever they chose to
+-- give, and it may legitimately be NULL.
+CREATE TABLE IF NOT EXISTS assistant_escalations (
+  id          SERIAL PRIMARY KEY,
+  channel     TEXT NOT NULL CHECK (channel IN ('web', 'whatsapp')),
+  topic       TEXT NOT NULL CHECK (topic IN ('admissions', 'fees', 'results', 'welfare', 'safeguarding', 'complaint', 'general')),
+  summary     TEXT NOT NULL,
+  contact     TEXT,
+  lang        TEXT,
+  transcript  TEXT,
+  status      TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'acknowledged', 'closed')),
+  handled_by  INTEGER REFERENCES staff(id),
+  handled_at  TIMESTAMPTZ,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+-- The staff view is "what is still open, newest first", so the index
+-- matches that query rather than created_at alone.
+CREATE INDEX IF NOT EXISTS idx_assistant_escalations_open ON assistant_escalations (status, created_at DESC);
