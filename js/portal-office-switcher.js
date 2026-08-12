@@ -48,6 +48,12 @@
       surfaces.push({ label: label, sub: sub || '', href: href });
     }
 
+    // The Desk is every staff member's, unconditionally: its
+    // notifications section holds items addressed to them by name, and
+    // any section their role does not cover says so rather than being
+    // hidden, so the page is never a dead end.
+    add('Desk', 'Everything waiting on you', '/portal/staff/desk/');
+
     (data.myOffices || []).forEach(function (o) {
       add(o.name, o.appointmentTitle + (o.isActing ? ' (Acting)' : ''), '/portal/office/' + o.slug + '/');
       var deep = DEEP_LINKS_BY_SLUG[o.slug];

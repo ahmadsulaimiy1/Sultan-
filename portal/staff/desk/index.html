@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>Tajweed Compliance Framework — Sultan Hanafi Royal Schools Staff</title>
+<title>Desk — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
@@ -29,7 +29,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
-    <span class="portal-pilot-badge">Tajweed Compliance</span>
+    <span class="portal-pilot-badge">Desk</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <span class="lang-switch-mount" data-locale-switcher></span>
@@ -39,38 +39,54 @@
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <h1 class="portal-hello">Tajweed Compliance Framework</h1>
-    <div class="portal-hello-sub">Real infrastructure for the Qur'an College — the standard Makharij/Sifaat/Ahkam/Applied-Recitation categories, each assessed on a real four-tier compliance scale.</div>
+    <h1 class="portal-hello">Your Desk</h1>
+    <div class="portal-hello-sub">Everything waiting on a person: families who asked to speak to someone, notifications addressed to you, data-protection requests, and sign-in activity worth a second look. Sections your role does not cover say so rather than showing an empty list.</div>
 
     <div class="portal-child-card">
-      <div class="portal-child-head"><h2 data-sg-status-title>Tajweed Compliance Status: Operational Framework Ready</h2></div>
-      <p class="registrar-hint">The system exists. The institution has not yet needed to populate it. <strong data-sg-current-records>Current Records: 0</strong></p>
-      <div class="sg-capability-grid" data-sg-capabilities></div>
+      <div class="portal-child-head">
+        <h2>Families asking for a person</h2>
+        <span class="registrar-hint" data-desk-escalations-count>—</span>
+      </div>
+      <p class="registrar-hint">Raised by the Digital Academic Assistant when it judged a question belonged to a member of staff rather than to it — a fee dispute, one named child, a complaint, or a direct request for a human.</p>
+      <div class="registrar-approvals-list" data-desk-escalations></div>
+      <div class="registrar-approvals-empty" data-desk-escalations-empty hidden></div>
     </div>
 
     <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Tajweed Categories</h2></div>
-      <ul class="sg-taxonomy-list" data-sg-categories></ul>
+      <div class="portal-child-head">
+        <h2>Your notifications</h2>
+        <span class="registrar-hint" data-desk-notifications-count>—</span>
+      </div>
+      <div class="registrar-approvals-list" data-desk-notifications></div>
+      <div class="registrar-approvals-empty" data-desk-notifications-empty hidden></div>
     </div>
 
     <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Assessment Register</h2></div>
-      <div class="registrar-approvals-list" data-sg-cases-list></div>
-      <div class="registrar-approvals-empty" data-sg-cases-empty hidden>No Tajweed assessments currently on record.</div>
+      <div class="portal-child-head"><h2>Data-protection requests</h2></div>
+      <p class="registrar-hint">Submitted through the public privacy form. Each one carries a duty to respond.</p>
+      <div class="registrar-approvals-list" data-desk-privacy></div>
+      <div class="registrar-approvals-empty" data-desk-privacy-empty hidden></div>
+    </div>
+
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Sign-in activity worth attention</h2></div>
+      <p class="registrar-hint">Failed sign-ins and lockouts only — successful sign-ins are routine and are not listed here.</p>
+      <div class="registrar-approvals-list" data-desk-auth></div>
+      <div class="registrar-approvals-empty" data-desk-auth-empty hidden></div>
     </div>
   </div>
   <div class="portal-card" data-portal-loading>
-    <p class="sub" style="margin-bottom:0;">Loading the Tajweed Compliance Framework…</p>
+    <p class="sub" style="margin-bottom:0;">Loading your desk…</p>
   </div>
   <div class="portal-card" data-portal-error hidden>
-    <h1>Couldn't load the Tajweed Compliance Framework</h1>
+    <h1>Couldn't load your desk</h1>
     <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
-    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">&larr; Back to sign in</a>
   </div>
 </main>
 
 <script src="/js/portal-office-switcher.js?v=658b227756" defer></script>
-<script src="/js/portal-staff-tajweed-compliance.js?v=9cf71a2c1e" defer></script>
+<script src="/js/portal-staff-desk.js?v=759711ff56" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
