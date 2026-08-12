@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      178c07c23d696ae51b763993cfe9cffeb973588e
-short       178c07c2
+commit      2df3d30e81541ac0ac1bbd69ccd8df5c0ac58414
+short       2df3d30e
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Audit: name what is switched off, unreachable, and never built
-built (UTC) 2026-08-12T23:20:11Z
-assets      shrs-pwa-b6d1919da4
+subject     Newsroom: give the school back its own voice, and fix the Desk's gate
+built (UTC) 2026-08-12T23:26:35Z
+assets      shrs-pwa-a4345e249c
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
