@@ -10,7 +10,8 @@ One design, four outputs. The full rationale is in
 | `letterhead.docx` | Open in Word and type. The two masses are page-anchored images, so they bleed to the edge on every page. |
 | `identity.py` | Builds both HTML sheets, from which the PDFs are printed. |
 | `word.py` | Builds the `.docx` from bands rendered out of `letterhead.html`, so Word and PDF cannot drift. |
-| `build-arms.py` | Re-renders the arms as a single-ink device. Run only when the artwork changes. |
+| `build-arms.py` | Re-renders the arms as a single-ink gold device. Run only when the artwork changes. |
+| `measure.js` | Measures the letter's blocks in Chromium so the pagination standard can be applied automatically. Called by `identity.py`. |
 | `assets/` | The arms (source and single-ink), the letter's text blocks, and the two Word bands. |
 
 ## Building
@@ -31,7 +32,22 @@ runs from any working directory on any machine. Fonts and images are
 embedded as base64, which is why a rendered sheet needs no network and
 prints identically anywhere.
 
-To rebuild the Word file after a design change, re-render the bands out
+**Pagination is automatic.** `identity.py` measures the letter's blocks in
+Chromium and applies the correspondence standard — header on the opening
+sheet, footer on the closing sheet, every sheet between them clean. See
+[`docs/shrs-correspondence-standard.md`](../docs/shrs-correspondence-standard.md).
+It prints what it decided:
+
+```
+letter: 3 sheets — head, clean, foot
+```
+
+If Chromium is not on the machine the build says so and falls back to the
+last stored measurement rather than guessing silently. `PLAYWRIGHT_PATH`
+can point at the `node_modules` holding `playwright-core` if it is not
+resolvable from `brand/`.
+
+To rebuild the Word file after a design change, re-render the ground out
 of `letterhead.html` and then run the builder:
 
 ```

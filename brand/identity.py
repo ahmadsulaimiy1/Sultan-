@@ -38,7 +38,7 @@ The governing numbers, and the reason each exists:
 
 Run:  python3 brand/identity.py [--staff-id X --activation-url Y]
 """
-import argparse, base64, pathlib
+import argparse, base64, json, pathlib, subprocess
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--staff-id')
@@ -69,128 +69,128 @@ FONTS = ''.join(
 # disappears on ivory, so it is re-rendered in one colour by build-arms.py
 # on this architecture the arms sit on the coffee mass, so they take the
 # light artwork; crest-coffee.png is the single-ink version for ivory
-CREST = b64(ROOT / 'assets' / 'crest.png')
+QR = b64(ROOT / 'assets' / 'qr-verify.png')
 
-# ── ink. Burgundy and gold on cream: the school's arms colours, held as
-# two flat specified inks so the sheet has an economical production route.
-BURG, BURG_D, BURG_L = '#4A1228', '#33091B', '#5E1A34'
-GOLD, GOLD_LT, GOLD_D = '#C9A24A', '#E3C577', '#8E6B24'
-PAPER, CREAM = '#FDFBF8', '#F7F1E6'
-INK, INK2 = '#2A2124', '#5A4A50'
+# ── ink. Dark bronze and gold on cream, as the supplied design sets them.
+DARK, DARK_D, DARK_L = '#2A1F16', '#1B130C', '#3C2C1E'
+GOLD, GOLD_LT, GOLD_D = '#C9A24A', '#E8CE8F', '#8E6B24'
+PAPER, CREAM = '#F8F4EC', '#F2ECE0'
+INK, INK2 = '#2B2118', '#6A5A48'
+GOLD_BAR = (f'linear-gradient(100deg,{GOLD_D} 0%,{GOLD} 22%,{GOLD_LT} 46%,'
+            f'{GOLD} 70%,{GOLD_D} 100%)')
 
-AR = 'مدارس السلطان حنفي الملكية'
-LOZ = '<i class="lz"></i>'
-
-HOUSES = ['Nursery &amp; Primary', 'Royal College', 'Islamic &amp; Arabic Studies',
-          'Qur&rsquo;an College', 'Online &amp; Distance Learning']
-INST = f' {LOZ} '.join(HOUSES)
-
+AR = 'مدارس السلطان'
+AR2 = 'حنفي الملكية'
 CREST_G = b64(ROOT / 'assets' / 'crest-gold.png')
 
-# ── the scale. Print floors kept: nothing below 6.2pt anywhere, nothing
-# below 6.6pt reversed out of the burgundy.
-S_MICRO, S_LABEL, S_SMALL, S_BODY = 6.3, 6.6, 8.2, 10.4
-S_NAME, S_SUBJ = 12.6, 12.6
-S_ARABIC = round(S_NAME * 0.92, 1)
+# ── the scale. Print floors kept from docs/letterhead-audit.md: nothing
+# below 6.2pt anywhere, nothing below 6.6pt reversed out of the bronze.
+S_MICRO, S_LABEL, S_SMALL, S_BODY = 6.2, 6.8, 8.2, 10.4
+S_NAME, S_SUBJ = 13.4, 12.6
+S_ARABIC = round(S_NAME * 0.95, 1)   # derived by the parity rule
 
-# ═══ THE ARCHITECTURE ═══
+# ═══ THE ARCHITECTURE ═══ built to the supplied design.
 #
-#   a RAIL down the left edge, burgundy, full height, carrying the school's
-#     name turned on its side — the spine that ties masthead to foot;
-#   a MASS across the head, burgundy, stopping two-thirds across, with the
-#     place of issue set on the cream beyond it;
-#   a MEDALLION straddling the mass's right edge, half on ink and half on
-#     paper, carrying the arms;
-#   a STRIP beneath, naming the five schools and the year of founding,
-#     over a line of MICROTEXT;
-#   the FIELD;
-#   a FOOT cut on a shallow diagonal, carrying the creed on the cream
-#     above it and the record, badged, on the burgundy below.
-RAIL_W, HEAD_H, MASS_W = 7.5, 33, 138
-FOOT_H = 44
-MARGIN = 16.5
-
-MICRO = ('SULTAN HANAFI ROYAL SCHOOLS ' + '◆ ') * 22
+#   a bracketed BRONZE FRAME at head and foot, gold-edged and stepped;
+#   a cream MASTHEAD panel carrying the arms, the bilingual lock and the
+#     motto, with a bronze CONTACT PANEL cut into it at the right;
+#   a left RAIL — a gold hairline with diamond markers and the domain set
+#     vertically;
+#   a blind-embossed CREST in the field;
+#   a bronze FOOT carrying the QR, four badged columns and a medallion,
+#     over a GOVERNANCE strip.
+HEAD_H, FOOT_H, BOT_H = 52, 40, 13
+MARGIN, RAIL_X = 14, 13
+PANEL_X = 140
 
 CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
-body{{background:#241016;display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}}
+body{{background:#181009;display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}}
 .page{{position:relative;width:210mm;height:297mm;overflow:hidden;display:flex;flex-direction:column;
  background:{PAPER};color:{INK};font-family:'Inter',serif;
- font-size:{S_BODY}pt;line-height:1.6;
+ font-size:{S_BODY}pt;line-height:1.62;
  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}}
+/* the geometric ground, very faint, at the left of the field */
+.tile{{position:absolute;left:0;top:0;bottom:0;width:62mm;z-index:0;opacity:.5;pointer-events:none;
+ background:
+  repeating-linear-gradient(60deg,rgba(142,107,36,.05) 0 .3pt,transparent .3pt 5mm),
+  repeating-linear-gradient(-60deg,rgba(142,107,36,.05) 0 .3pt,transparent .3pt 5mm)}}
+/* the arms, blind-embossed into the field */
+.emboss{{position:absolute;right:6mm;bottom:52mm;width:118mm;height:118mm;z-index:0;opacity:.055;
+ pointer-events:none;
+ background:url(data:image/png;base64,{CREST_G}) center/contain no-repeat}}
 
-/* ═══ THE RAIL ═══ full height, so the spine is unbroken between the
-   masthead and the foot. */
-.rail{{position:absolute;left:0;top:0;bottom:0;width:{RAIL_W}mm;z-index:5;
- background:linear-gradient(180deg,{BURG} 0%,{BURG_D} 100%)}}
-.rail b{{position:absolute;left:50%;bottom:44mm;transform:translateX(-50%) rotate(180deg);
- writing-mode:vertical-rl;font-family:'Cinzel',serif;font-weight:700;
- font-size:{S_LABEL}pt;letter-spacing:.34em;text-transform:uppercase;
- color:rgba(227,197,119,.72);white-space:nowrap}}
-/* struck at head and foot, as a rail is */
-.rail::before,.rail::after{{content:'';position:absolute;left:1.5mm;width:4.5mm;height:.5pt;
- background:{GOLD}}}
-.rail::before{{top:14mm}} .rail::after{{bottom:14mm}}
+/* ═══ THE RAIL ═══ */
+.rail{{position:absolute;left:{RAIL_X}mm;top:{HEAD_H + 12}mm;bottom:{FOOT_H + BOT_H + 12}mm;
+ width:.4pt;background:rgba(142,107,36,.45);z-index:2}}
+.rail::before,.rail::after{{content:'';position:absolute;left:-1mm;width:2.2mm;height:2.2mm;
+ background:{GOLD};transform:rotate(45deg)}}
+.rail::before{{top:22%}} .rail::after{{bottom:22%}}
+.railtx{{position:absolute;left:{RAIL_X - 5}mm;top:50%;transform:translateY(-50%) rotate(180deg);
+ writing-mode:vertical-rl;z-index:2;
+ font-family:'Cinzel',serif;font-weight:700;font-size:{S_MICRO}pt;letter-spacing:.42em;
+ text-transform:uppercase;color:{GOLD_D};white-space:nowrap}}
 
 /* ═══ THE HEAD ═══ */
-.head{{flex:0 0 auto;position:relative;height:{HEAD_H}mm;z-index:3}}
-.mass{{position:absolute;left:0;top:0;width:{MASS_W}mm;height:{HEAD_H}mm;
- background:linear-gradient(104deg,{BURG_L} 0%,{BURG} 46%,{BURG_D} 100%);
- clip-path:polygon(0 0,100% 0,100% 84%,96% 100%,0 100%)}}
-/* one raking light across the mass, so it is a plane and not a fill */
-.mass::after{{content:'';position:absolute;left:34%;top:-30%;width:26%;height:170%;
- transform:rotate(19deg);
- background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,236,200,.075),rgba(255,255,255,0))}}
-.wm{{position:absolute;left:{MARGIN}mm;top:8.5mm;z-index:4}}
-.wm .en{{font-family:'Cinzel',serif;font-weight:800;font-size:{S_NAME}pt;letter-spacing:.075em;
- text-transform:uppercase;color:{GOLD_LT};line-height:1;white-space:nowrap}}
-.wm .ar{{margin-top:2.4mm;direction:rtl;font-family:'Amiri',serif;font-size:{S_ARABIC}pt;
- line-height:1;color:{GOLD};white-space:nowrap}}
-/* place of issue, on the cream beyond the mass */
-.place{{position:absolute;right:{MARGIN}mm;top:8mm;z-index:4;text-align:right;
- font-size:{S_LABEL}pt;letter-spacing:.1em;text-transform:uppercase;
- color:{BURG};line-height:2;white-space:nowrap}}
-.place b{{display:block;font-weight:700}}
-/* the medallion, half on ink and half on paper */
-.medal{{position:absolute;left:{MASS_W - 18}mm;top:{HEAD_H / 2 - 14}mm;width:28mm;height:28mm;
- border-radius:50%;z-index:6;
- background:radial-gradient(64% 64% at 40% 32%,#FFFDF8 0%,{CREAM} 62%,#EADFC9 100%);
- box-shadow:0 0 0 .5pt {GOLD},0 .6pt 2.4pt rgba(40,10,22,.28);
- display:flex;align-items:center;justify-content:center}}
-.medal::before{{content:'';position:absolute;inset:1.7mm;border-radius:50%;
- border:.4pt solid rgba(142,107,36,.55)}}
-.medal img{{width:17mm;height:17mm;display:block}}
-
-/* ═══ THE STRIP ═══ the five schools, the year, and the microtext line */
-.strip{{flex:0 0 auto;position:relative;z-index:3;
- padding:4.2mm {MARGIN}mm 0 {MARGIN}mm}}
-.houses{{display:flex;align-items:center;justify-content:space-between;gap:3mm;white-space:nowrap;
- font-size:{S_MICRO}pt;letter-spacing:.02em;text-transform:uppercase;color:{BURG};font-weight:600}}
-.houses .yr{{color:{GOLD_D};letter-spacing:.12em}}
-.lz{{display:inline-block;width:1.4mm;height:1.4mm;background:{GOLD};
- transform:rotate(45deg);margin:0 .6mm;vertical-align:.2mm}}
-.strip .rule{{height:.4pt;background:{GOLD};opacity:.55;margin-top:2.4mm}}
-.micro{{margin-top:.9mm;font-size:{S_MICRO}pt;letter-spacing:.06em;text-transform:uppercase;
- color:rgba(74,18,40,.12);white-space:nowrap;overflow:hidden;height:2.2mm;line-height:2.2mm}}
+.head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:4}}
+/* the bronze frame, stepped and gold-edged */
+.frame{{position:absolute;left:0;right:0;top:0;height:9mm;
+ background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 60%,{DARK_D} 100%);
+ clip-path:polygon(0 0,100% 0,100% 100%,58% 100%,54% 46%,30% 46%,26% 100%,0 100%)}}
+.fedge{{position:absolute;left:0;right:0;top:0;height:9mm;z-index:5;pointer-events:none;
+ background:{GOLD_BAR};
+ clip-path:polygon(0 100%,26% 100%,30% 46%,54% 46%,58% 100%,100% 100%,
+                   100% calc(100% - 1.1pt),58% calc(100% - 1.1pt),
+                   54% calc(46% - 1.1pt),30% calc(46% - 1.1pt),
+                   26% calc(100% - 1.1pt),0 calc(100% - 1.1pt))}}
+/* the contact panel, cut into the masthead at the right */
+.panel{{position:absolute;right:0;top:5mm;width:{210 - PANEL_X}mm;height:{HEAD_H - 5}mm;
+ background:linear-gradient(122deg,{DARK_L} 0%,{DARK} 52%,{DARK_D} 100%);
+ clip-path:polygon(9% 0,100% 0,100% 100%,0 100%);
+ padding:5.4mm 7mm 5mm 12mm;
+ display:flex;flex-direction:column;justify-content:center;gap:2.2mm}}
+.panel::before{{content:'';position:absolute;left:0;top:0;bottom:0;width:1.1pt;background:{GOLD_BAR};
+ clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:skewX(-5.2deg);transform-origin:top left}}
+.panel .l{{display:flex;align-items:flex-start;gap:2.6mm;
+ font-size:{S_SMALL}pt;color:#EFE4D2;line-height:1.4;white-space:nowrap}}
+.panel a{{color:inherit;text-decoration:none}}
+.ico{{flex:0 0 auto;width:4mm;height:4mm;margin-top:.2mm;border-radius:50%;
+ border:.4pt solid rgba(201,162,74,.75);display:flex;align-items:center;justify-content:center}}
+.ico svg{{width:2.5mm;height:2.5mm;display:block;fill:{GOLD}}}
+/* arms, lock and motto on the cream */
+.mast{{position:absolute;left:{MARGIN}mm;top:12mm;z-index:5;display:flex;align-items:center;gap:6mm}}
+.mast .arms{{flex:0 0 auto;text-align:center}}
+.mast .arms img{{width:27mm;height:27mm;display:block}}
+.mast .arms span{{display:block;margin-top:1mm;font-family:'Cinzel',serif;font-size:{S_MICRO}pt;
+ letter-spacing:.04em;color:{GOLD_D}}}
+.lock{{display:flex;align-items:center;gap:5mm}}
+.lock .en{{font-family:'Cinzel',serif;font-weight:700;font-size:{S_NAME}pt;letter-spacing:.045em;
+ text-transform:uppercase;color:{DARK};line-height:1.24;white-space:nowrap}}
+.lock .ar{{direction:rtl;font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.24;
+ color:{DARK};white-space:nowrap;text-align:right}}
+.lock .div{{width:.6pt;align-self:stretch;background:{GOLD};margin:.6mm 0}}
+.motto{{position:absolute;left:{MARGIN + 33}mm;top:{HEAD_H - 9}mm;z-index:5;
+ display:flex;align-items:center;gap:3mm;width:{PANEL_X - MARGIN - 40}mm;
+ font-family:'Cinzel',serif;font-size:{S_LABEL}pt;letter-spacing:.19em;text-transform:uppercase;
+ color:{GOLD_D};white-space:nowrap}}
+.motto::before,.motto::after{{content:'';flex:1;height:.4pt;background:rgba(142,107,36,.42)}}
 
 /* ═══ THE FIELD ═══ */
-.body{{flex:1;position:relative;z-index:2;padding:11mm 30mm 0 34mm;min-width:0}}
-.body.c2{{padding-top:9mm}}
-.body p{{margin-bottom:3.3mm;text-align:justify;hyphens:auto}}
+.body{{flex:1;position:relative;z-index:2;padding:14mm 24mm 0 30mm;min-width:0}}
+.body p{{margin-bottom:3.4mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
-.body a{{color:{BURG};font-weight:600;text-decoration:none;
+.body a{{color:{DARK};font-weight:600;text-decoration:none;
  border-bottom:.4pt solid rgba(201,162,74,.6)}}
 .top{{display:flex;justify-content:space-between;gap:10mm;margin-bottom:8mm;
  font-size:{S_SMALL}pt;color:{INK2}}}
-.top b{{display:block;font-weight:600;color:{BURG};font-size:{S_BODY}pt;margin-top:.8mm}}
+.top b{{display:block;font-weight:600;color:{DARK};font-size:{S_BODY}pt;margin-top:.8mm}}
 .top .r{{text-align:right}}
 .addr{{margin-bottom:7mm!important;line-height:1.45}}
 .subj{{font-family:'Cinzel',serif;font-weight:700;font-size:{S_SUBJ}pt;letter-spacing:.03em;
- text-transform:uppercase;color:{BURG};margin-bottom:5mm;line-height:1.32}}
+ text-transform:uppercase;color:{DARK};margin-bottom:5mm;line-height:1.32}}
 .lead{{font-family:'Cinzel',serif;font-size:{S_SMALL}pt;letter-spacing:.14em;text-transform:uppercase;
- color:{GOLD_D};margin:6.6mm 0 3.3mm!important;text-align:left!important}}
-.val{{font-weight:600;color:{BURG};border-bottom:.4pt solid rgba(201,162,74,.55)}}
+ color:{GOLD_D};margin:6.6mm 0 3.4mm!important;text-align:left!important}}
+.val{{font-weight:600;color:{DARK};border-bottom:.4pt solid rgba(201,162,74,.55)}}
 .signoff{{margin-top:6.6mm}} .sigsp{{height:17mm}}
 .sigrule{{width:52mm;height:.4pt;background:{GOLD};margin-bottom:2.4mm}}
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
@@ -198,101 +198,127 @@ body{{background:#241016;display:flex;flex-direction:column;align-items:center;g
  color:{GOLD_D};margin-bottom:9mm}}
 .blank i{{flex:1;border-bottom:.4pt solid rgba(201,162,74,.5);font-style:normal}}
 
-/* ═══ THE FOOT ═══ cut on a shallow diagonal: the creed on the cream
-   above it, the record badged on the burgundy below. */
-.foot{{flex:0 0 {FOOT_H}mm;position:relative;z-index:3}}
-.creed{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:0;z-index:4;text-align:right;
- font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SUBJ}pt;
- color:{BURG};letter-spacing:.01em}}
-.fmass{{position:absolute;left:0;right:0;bottom:0;height:{FOOT_H - 8}mm;
- background:linear-gradient(284deg,{BURG_L} 0%,{BURG} 48%,{BURG_D} 100%);
- clip-path:polygon(0 14%,100% 0,100% 100%,0 100%)}}
-.fmass::after{{content:'';position:absolute;left:56%;top:-40%;width:22%;height:180%;
- transform:rotate(19deg);
- background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,236,200,.06),rgba(255,255,255,0))}}
-.rec{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;bottom:12mm;z-index:4;
- display:flex;justify-content:space-between;gap:6mm}}
-.rec>div{{display:flex;align-items:flex-start;gap:2.2mm;min-width:0}}
-.rec .fl{{display:block;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
- color:{GOLD};margin-bottom:.8mm}}
-.rec .v{{font-size:{S_SMALL}pt;color:#F3E8DA;line-height:1.4;white-space:nowrap}}
-.rec a{{color:inherit;text-decoration:none}}
-.ico{{flex:0 0 auto;width:4.2mm;height:4.2mm;margin-top:.3mm;border-radius:50%;
- border:.4pt solid rgba(201,162,74,.7);display:flex;align-items:center;justify-content:center}}
-.ico svg{{width:2.3mm;height:2.3mm;display:block;fill:{GOLD}}}
-.gov{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;bottom:4.4mm;z-index:4;
- padding-top:2.6mm;border-top:.4pt solid rgba(201,162,74,.32);
- display:flex;align-items:center;gap:2.4mm;
- font-size:{S_LABEL}pt;letter-spacing:.09em;text-transform:uppercase;color:{GOLD};white-space:nowrap}}
-.gov .lz{{background:{GOLD}}}
+/* ═══ THE FOOT ═══ */
+.foot{{flex:0 0 {FOOT_H + BOT_H}mm;position:relative;z-index:4;
+ background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 46%,{DARK_D} 100%)}}
+.foot::before{{content:'';position:absolute;left:0;right:0;top:0;height:1.1pt;background:{GOLD_BAR}}}
+.fbrack{{position:absolute;left:0;right:0;top:-6mm;height:6mm;z-index:5;
+ background:linear-gradient(178deg,{DARK} 0%,{DARK_D} 100%);
+ clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%)}}
+.fbrack::after{{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:{GOLD_BAR};
+ clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%,
+                   100% calc(100% - 1pt),58% calc(100% - 1pt),54% 1pt,30% 1pt,
+                   26% calc(100% - 1pt),0 calc(100% - 1pt))}}
+.frow{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:6.5mm;z-index:5;
+ display:flex;align-items:flex-start;gap:3.5mm}}
+.qr{{flex:0 0 auto;width:15mm;height:15mm;padding:1.2mm;background:{PAPER};
+ border:.5pt solid {GOLD}}}
+.qr img{{width:100%;height:100%;display:block}}
+.fcols{{flex:1;display:flex;justify-content:space-between;gap:2.5mm;min-width:0}}
+.fcols>div{{display:flex;align-items:flex-start;gap:2.4mm}}
+.fcols .fl{{display:block;font-size:{S_LABEL}pt;letter-spacing:.16em;text-transform:uppercase;
+ color:{GOLD};margin-bottom:.9mm}}
+.fcols .v{{font-size:{S_LABEL}pt;color:#EFE4D2;line-height:1.5;white-space:nowrap}}
+.fcols a{{color:inherit;text-decoration:none}}
+.seal{{flex:0 0 auto;width:15mm;height:15mm;border-radius:50%;
+ background:radial-gradient(64% 64% at 38% 30%,#FFFDF6 0%,{CREAM} 60%,#E4D8C0 100%);
+ box-shadow:0 0 0 .6pt {GOLD};display:flex;align-items:center;justify-content:center}}
+.seal img{{width:9.5mm;height:9.5mm;display:block}}
+.gov{{position:absolute;left:0;right:0;bottom:0;height:{BOT_H}mm;z-index:5;
+ background:{DARK_D};border-top:.4pt solid rgba(201,162,74,.3);
+ display:flex;align-items:center;justify-content:center;gap:9mm;
+ font-size:{S_LABEL}pt;letter-spacing:.19em;text-transform:uppercase;color:{GOLD};white-space:nowrap}}
+.gov span{{position:relative}}
+.gov span+span::before{{content:'';position:absolute;left:-4.5mm;top:-.4mm;bottom:-.4mm;width:.4pt;
+ background:rgba(201,162,74,.42)}}
 
-/* continuation sheets: the mass halves, the medallion and the place drop */
-.head.c2{{height:20mm}} .head.c2 .mass{{height:20mm;width:{MASS_W - 26}mm}}
-.head.c2 .wm{{top:4.6mm}} .head.c2 .wm .en{{font-size:9.6pt}}
-.head.c2 .wm .ar{{font-size:8.8pt;margin-top:1.6mm}}
-.head.c2 .medal{{width:19mm;height:19mm;left:{MASS_W - 38}mm;top:.5mm}}
-.head.c2 .medal img{{width:11.5mm;height:11.5mm}}
+/* ═══ PAGINATION ═══ see docs/shrs-correspondence-standard.md.
+   The head appears on the opening sheet only and the foot on the closing
+   sheet only; every sheet between them is clean, and its field expands to
+   take the room the furniture would have used. */
+.page.nh .head,.page.nf .foot{{display:none}}
+.page.nh .body{{padding-top:32mm}}
+.page.nf .body{{padding-bottom:30mm}}
+.page.nh .rail{{top:26mm}} .page.nf .rail{{bottom:26mm}}
+/* the only mark a middle sheet carries */
+.folio{{position:absolute;right:24mm;bottom:16mm;z-index:3;
+ font-size:{S_MICRO}pt;letter-spacing:.2em;text-transform:uppercase;color:{INK2}}}
 @media print{{body{{background:none;padding:0;gap:0}}
  .page{{page-break-after:always}}.page:last-child{{page-break-after:auto}}}}
 """
 
 GLYPH = {
- 'campus': 'M12 2 3 8v13h6v-6h6v6h6V8z',
- 'phone':  'M20 15.6a12.4 12.4 0 0 1-3.9-.6 1.1 1.1 0 0 0-1.1.3l-1.6 1.6a15 15 0 0 1-6.3-6.3l1.6-1.6a1.1 1.1 0 0 0 .3-1.1A12.4 12.4 0 0 1 8.4 4 1 1 0 0 0 7.4 3H4.3a1 1 0 0 0-1 1A16.7 16.7 0 0 0 20 20.7a1 1 0 0 0 1-1v-3.1a1 1 0 0 0-1-1z',
- 'mail':   'M3 6h18v12H3zm2 2.6V8l7 4.9L19 8v.6l-7 4.9z',
- 'globe':  'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15.6 15.6 0 0 0-1.3-3.6A8 8 0 0 1 18.9 8zM12 4.2c.7 1 1.3 2.3 1.7 3.8h-3.4C10.7 6.5 11.3 5.2 12 4.2zM4.3 14a8 8 0 0 1 0-4h3.3a17 17 0 0 0 0 4zm.8 2h2.9c.3 1.3.8 2.5 1.3 3.6A8 8 0 0 1 5.1 16zm2.9-8H5.1a8 8 0 0 1 4.2-3.6A15.6 15.6 0 0 0 8 8zm4 11.8c-.7-1-1.3-2.3-1.7-3.8h3.4c-.4 1.5-1 2.8-1.7 3.8zm2.1-5.8H9.9a15 15 0 0 1 0-4h4.2a15 15 0 0 1 0 4zm.3 5.6c.5-1.1 1-2.3 1.3-3.6h2.9a8 8 0 0 1-4.2 3.6zm1.7-5.6a17 17 0 0 0 0-4h3.3a8 8 0 0 1 0 4z',
- 'seal':   'M12 2 4 5v6.2C4 16.4 7.4 20.9 12 22c4.6-1.1 8-5.6 8-10.8V5zm-1 13-3.2-3.2 1.4-1.4L11 12.2l4.8-4.8 1.4 1.4z',
+ 'globe': 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15.6 15.6 0 0 0-1.3-3.6A8 8 0 0 1 18.9 8zM12 4.2c.7 1 1.3 2.3 1.7 3.8h-3.4C10.7 6.5 11.3 5.2 12 4.2zM4.3 14a8 8 0 0 1 0-4h3.3a17 17 0 0 0 0 4zm.8 2h2.9c.3 1.3.8 2.5 1.3 3.6A8 8 0 0 1 5.1 16zm2.9-8H5.1a8 8 0 0 1 4.2-3.6A15.6 15.6 0 0 0 8 8zm4 11.8c-.7-1-1.3-2.3-1.7-3.8h3.4c-.4 1.5-1 2.8-1.7 3.8zm2.1-5.8H9.9a15 15 0 0 1 0-4h4.2a15 15 0 0 1 0 4zm.3 5.6c.5-1.1 1-2.3 1.3-3.6h2.9a8 8 0 0 1-4.2 3.6zm1.7-5.6a17 17 0 0 0 0-4h3.3a8 8 0 0 1 0 4z',
+ 'mail':  'M3 6h18v12H3zm2 2.6V8l7 4.9L19 8v.6l-7 4.9z',
+ 'phone': 'M20 15.6a12.4 12.4 0 0 1-3.9-.6 1.1 1.1 0 0 0-1.1.3l-1.6 1.6a15 15 0 0 1-6.3-6.3l1.6-1.6a1.1 1.1 0 0 0 .3-1.1A12.4 12.4 0 0 1 8.4 4 1 1 0 0 0 7.4 3H4.3a1 1 0 0 0-1 1A16.7 16.7 0 0 0 20 20.7a1 1 0 0 0 1-1v-3.1a1 1 0 0 0-1-1z',
+ 'pin':   'M12 2a6.5 6.5 0 0 0-6.5 6.5C5.5 13.4 12 22 12 22s6.5-8.6 6.5-13.5A6.5 6.5 0 0 0 12 2zm0 9a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z',
 }
 ico = lambda k: (f'<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">'
                  f'<path d="{GLYPH[k]}"/></svg></span>')
 
-REC = ('<div class="rec">'
-       f'<div>{ico("campus")}<span><span class="fl">Campus</span>'
-       '<span class="v">Ikorodu, Lagos State, Nigeria</span></span></div>'
-       f'<div>{ico("phone")}<span><span class="fl">Telephone</span>'
-       '<span class="v"><a href="tel:+2348073747650">+234 807 374 7650</a><br />'
-       '<a href="tel:+2348070586860">+234 807 058 6860</a></span></span></div>'
-       f'<div>{ico("mail")}<span><span class="fl">Correspondence</span>'
-       '<span class="v"><a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></span></span></div>'
-       f'<div>{ico("globe")}<span><span class="fl">Online</span>'
-       '<span class="v"><a href="https://shroyalschools.com">shroyalschools.com</a></span></span></div>'
-       '</div>')
+WEB, MAIL = 'shroyalschools.com', 'info@shroyalschools.com'
+TEL1, TEL2 = '+234 807 374 7650', '+234 807 058 6860'
+ADDR = ('15 Imowonla Road,<br />AP Bus Stop, Off Gberigbe<br />'
+        'Agura Road, Ikorodu,<br />Lagos State, Nigeria.')
 
-FOOT = ('<footer class="foot">'
-        '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>'
-        '<div class="fmass"></div>' + REC +
-        f'<div class="gov">{ico("seal")}<span>Established July 2016 {LOZ} '
-        f'Governed by a Board of Governors {LOZ} '
-        'Verifiable at <a href="https://shroyalschools.com/verify" '
-        'style="color:inherit;text-decoration:none">shroyalschools.com/verify</a></span></div>'
-        '</footer>')
+PANEL = ('<div class="panel">'
+         f'<span class="l">{ico("globe")}<a href="https://{WEB}">{WEB}</a></span>'
+         f'<span class="l">{ico("mail")}<a href="mailto:{MAIL}">{MAIL}</a></span>'
+         f'<span class="l">{ico("phone")}<span><a href="tel:+2348073747650">{TEL1}</a><br />'
+         f'<a href="tel:+2348070586860">{TEL2}</a></span></span>'
+         f'<span class="l">{ico("pin")}<span>{ADDR}</span></span>'
+         '</div>')
+
+HEAD = ('<header class="head">'
+        '<div class="frame"></div><div class="fedge"></div>'
+        '<div class="mast">'
+        f'<span class="arms"><img src="data:image/png;base64,{CREST_G}" '
+        'alt="Arms of Sultan Hanafi Royal Schools" />'
+        '<span>Sultan Hanafi Royal Schools</span></span>'
+        '<div class="lock">'
+        '<div class="en">Sultan Hanafi<br />Royal Schools</div>'
+        '<div class="div"></div>'
+        f'<div class="ar">{AR}<br />{AR2}</div>'
+        '</div></div>'
+        '<div class="motto"><span>Learning Today. Leading Tomorrow.</span></div>'
+        + PANEL + '</header>')
+
+FOOT = ('<footer class="foot"><div class="fbrack"></div>'
+        '<div class="frow">'
+        f'<span class="qr"><img src="data:image/png;base64,{QR}" '
+        'alt="QR code linking to shroyalschools.com/verify" /></span>'
+        '<div class="fcols">'
+        f'<div>{ico("globe")}<span><span class="fl">Website</span>'
+        f'<span class="v"><a href="https://{WEB}">{WEB}</a></span></span></div>'
+        f'<div>{ico("mail")}<span><span class="fl">Email</span>'
+        f'<span class="v"><a href="mailto:{MAIL}">{MAIL}</a></span></span></div>'
+        f'<div>{ico("phone")}<span><span class="fl">Telephone</span>'
+        f'<span class="v"><a href="tel:+2348073747650">{TEL1}</a><br />'
+        f'<a href="tel:+2348070586860">{TEL2}</a></span></span></div>'
+        f'<div>{ico("pin")}<span><span class="fl">Head Office</span>'
+        '<span class="v">15 Imowonla Road, AP Bus Stop,<br />'
+        'Off Gberigbe Agura Road,<br />Ikorodu, Lagos State, Nigeria.</span></span></div>'
+        '</div>'
+        f'<span class="seal"><img src="data:image/png;base64,{CREST_G}" alt="" /></span>'
+        '</div>'
+        '<div class="gov"><span>Established July 2016</span>'
+        '<span>Governed by a Board of Governors</span>'
+        '<span>RC: 1402529</span></div></footer>')
+
+RAIL = (f'<div class="rail"></div><div class="railtx">{WEB}</div>')
+GROUND = '<div class="tile"></div><div class="emboss"></div>'
 
 
-def head(first=True):
-    c2 = '' if first else ' c2'
-    place = ('<div class="place">Ikorodu<b>Lagos State</b>'
-             '<b>Federal Republic of Nigeria</b></div>') if first else ''
-    return (f'<header class="head{c2}"><div class="mass"></div>'
-            f'<div class="wm"><div class="en">Sultan Hanafi Royal Schools</div>'
-            f'<div class="ar">{AR}</div></div>{place}'
-            f'<div class="medal"><img src="data:image/png;base64,{CREST_G}" '
-            f'alt="Arms of Sultan Hanafi Royal Schools" /></div></header>')
-
-
-def strip(first=True):
-    if not first:
-        return ''
-    return ('<div class="strip">'
-            f'<div class="houses"><span>{INST}</span>'
-            '<span class="yr">Founded MMXVI</span></div>'
-            f'<div class="rule"></div><div class="micro">{MICRO}</div></div>')
-
-
-def page(inner, first=True):
-    return (f'  <div class="page" data-canvas-width="794" data-canvas-height="1123">\n'
-            f'    <div class="rail"><b>Sultan Hanafi Royal Schools</b></div>\n'
-            f'    {head(first)}\n    {strip(first)}\n'
-            f'    <main class="body{"" if first else " c2"}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
+def page(inner, head=True, foot=True, folio=''):
+    """One sheet. The furniture it carries is decided by the pagination
+    standard, not by the caller's taste — see paginate()."""
+    cls = 'page' + ('' if head else ' nh') + ('' if foot else ' nf')
+    fol = f'<div class="folio">{folio}</div>' if folio else ''
+    return (f'  <div class="{cls}" data-canvas-width="794" data-canvas-height="1123">\n'
+            f'    {GROUND}{RAIL}\n'
+            f'    {HEAD if head else ""}\n'
+            f'    <main class="body">\n{inner}\n    </main>\n'
+            f'    {FOOT if foot else ""}{fol}\n  </div>')
 
 
 def doc(title, pages):
@@ -304,6 +330,51 @@ def doc(title, pages):
 TOP = ('      <div class="top"><div>Reference<b>SHRS/ICT/2026/001</b></div>'
        '<div class="r">Date<b>13 August 2026</b></div></div>')
 
+# ── THE PAGINATION STANDARD ────────────────────────────────────────────
+#
+# The institution introduces itself once, the document speaks for itself,
+# and the institution signs off once. So the head belongs to the opening
+# sheet alone and the foot to the closing sheet alone; every sheet between
+# them is clean and its field expands into the room the furniture would
+# have taken. A single-sheet letter carries both, which closes the frame.
+#
+# This is applied by measurement, not by hand: the blocks are rendered
+# once at the letter's own measure, their heights are read back, and they
+# are packed against each sheet's real capacity. Change the letter and the
+# pagination follows it.
+PAGE_H = 297
+CAP_FULL = PAGE_H - HEAD_H - 14 - FOOT_H - BOT_H          # opening sheet
+CAP_OPEN = PAGE_H - HEAD_H - 14 - 30                      # opens, does not close
+CAP_MID = PAGE_H - 32 - 30                                # neither
+CAP_CLOSE = PAGE_H - 32 - FOOT_H - BOT_H                  # closes, does not open
+
+
+def paginate(heights, extra_first=0.0):
+    """Pack blocks into sheets against each sheet's real capacity, then
+    apply the standard. Returns a list of (slice, head, foot)."""
+    n = len(heights)
+    # try one sheet first — if everything fits, it takes head and foot both
+    if sum(heights) + extra_first <= CAP_FULL:
+        return [((0, n), True, True)]
+    sheets, i, first = [], 0, True
+    while i < n:
+        cap = (CAP_OPEN if first else CAP_MID) - (extra_first if first else 0)
+        used, j = 0.0, i
+        while j < n and used + heights[j] <= cap:
+            used += heights[j]; j += 1
+        if j == i:                       # a block taller than a whole sheet
+            j = i + 1
+        sheets.append([i, j]); i = j; first = False
+    # the closing sheet must also hold the foot; if it cannot, open another
+    last = sheets[-1]
+    while sum(heights[last[0]:last[1]]) > CAP_CLOSE and last[1] - last[0] > 1:
+        last[1] -= 1
+        sheets.append([last[1], len(heights)])
+        last = sheets[-1]
+    out = []
+    for k, (a, b) in enumerate(sheets):
+        out.append(((a, b), k == 0, k == len(sheets) - 1))
+    return out
 # ── the letter
 blocks = (ROOT / 'assets' / 'letter-blocks.html').read_text(encoding='utf-8').split('\n@@@\n')
 
@@ -327,15 +398,38 @@ def rt(b):
 
 blocks = [rt(b) for b in blocks]
 blocks = [b for b in blocks if 'class="refline"' not in b]
-body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
-CUTS = [(0, 5), (5, 11), (11, 16), (16, 21), (21, 26)]
-(ROOT / 'letter-registrar-activation.html').write_text(
-    doc('Sultan Hanafi Royal Schools — Letter',
-        [page((TOP + '\n' if i == 0 else '') + body(a, b), i == 0)
-         for i, (a, b) in enumerate(CUTS)]), encoding='utf-8')
 
-# ── blank stationery
+# ── measure the blocks at the letter's own measure, so the pagination is
+# decided by what the writer actually wrote rather than by a fixed table
+PROBE = (ROOT / '_probe.html')
+PROBE.write_text(doc('probe', [page('\n'.join(f'      <div class="blk">{b}</div>'
+                                              for b in blocks), True, True)]), encoding='utf-8')
+HEIGHTS = ROOT / 'assets' / 'block-heights.json'
+try:
+    subprocess.run(['node', str(ROOT / 'measure.js')], check=True,
+                   capture_output=True, timeout=180, cwd=str(ROOT))
+except Exception as exc:                      # no node, no chromium, no matter
+    print('  ! could not measure blocks (%s); using the last measurement' % type(exc).__name__)
+heights = json.loads(HEIGHTS.read_text()) if HEIGHTS.exists() else [12.0] * len(blocks)
+PROBE.unlink(missing_ok=True)
+
+TOP_MM = 12.0                                  # the reference/date row
+sheets = paginate(heights, extra_first=TOP_MM)
+REF = 'SHRS/ICT/2026/001'
+body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
+pages = []
+for k, ((a, b), hd, ft) in enumerate(sheets):
+    inner = (TOP + '\n' if k == 0 else '') + body(a, b)
+    folio = '' if (hd or ft) else f'{REF} &nbsp;&middot;&nbsp; {k + 1} of {len(sheets)}'
+    pages.append(page(inner, hd, ft, folio))
+(ROOT / 'letter-registrar-activation.html').write_text(
+    doc('Sultan Hanafi Royal Schools — Letter', pages), encoding='utf-8')
+print('letter: %d sheet%s — %s' % (len(sheets), '' if len(sheets) == 1 else 's',
+      ', '.join(('head+foot' if h and f else 'head' if h else 'foot' if f else 'clean')
+                for _, h, f in sheets)))
+
+# ── blank stationery: one sheet, so it carries both, which closes the frame
 BLANK = '      <div class="blank"><span>Ref</span><i></i><span>Date</span><i></i></div>'
 (ROOT / 'letterhead.html').write_text(
-    doc('Sultan Hanafi Royal Schools — Letterhead', [page(BLANK, True)]), encoding='utf-8')
+    doc('Sultan Hanafi Royal Schools — Letterhead', [page(BLANK, True, True)]), encoding='utf-8')
 print('identity built')

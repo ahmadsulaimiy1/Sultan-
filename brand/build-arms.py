@@ -12,9 +12,7 @@ import pathlib
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parent
-INKS = {'crest-coffee.png': ((0x2E, 0x1A, 0x0D), 1.12),
-        'crest-gold.png': ((0xB8, 0x8E, 0x3C), 1.15),
-        'crest-burgundy.png': ((0x4A, 0x12, 0x28), 1.12)}
+INKS = {'crest-gold.png': ((0xB8, 0x8E, 0x3C), 1.15)}
 
 src = Image.open(ROOT / 'assets' / 'crest.png').convert('RGBA')
 W, H = src.size
