@@ -44,7 +44,7 @@ I am pleased to inform you that your official account on the Sultan
 Hanafi Royal Schools Digital Campus has been created, and that the
 Office of the Registrar is now open to you online.
 
-Your Staff Identity Number is **[SHRS-HQ-REG-DDMMYY-000000]**. This
+Your Staff Identity Number is **SHRS-HQ-REG-130826-000004**. This
 number is issued by the institution, is permanent, and identifies you on
 every record, certificate and verification the school produces. Please
 keep it.
@@ -96,6 +96,37 @@ the responsibilities of your office into the system:
   authority to a named colleague for a stated period, with a reason. It
   ends by itself on the date you set; you need not remember to withdraw
   it.
+
+### Also now open to your office
+
+Since your account was prepared, several parts of the Digital Campus that
+belong to the Registry have been completed:
+
+- **The Graduation Control Centre** — graduation is a recorded chain, and
+  your office begins it. Marking a record *under review* or *verified*
+  opens the clearance chain; the Principal of the candidate's own
+  institution then acts at the principal stage, and you retain visibility
+  of the whole chain.
+- **The Certificate Generation Centre** — certificates and transcripts are
+  generated from the record, each carrying a verification address.
+- **Your digital signature** — the one item requiring an action from you
+  before certificates and transcripts can be issued at all. If a required
+  signatory has no signature on file, generation stops with a named
+  vacancy rather than printing a blank signature line.
+- **Examination readiness** — WAEC and NECO, held jointly with Academic
+  Affairs.
+- **Admissions verification** — verification and the waiting list.
+- **Corrections, and the record of them** — attendance and assessment
+  corrections are logged against your name.
+- **The Newsroom** — school-wide academic notices.
+- **Delegation** — authority passed to a named colleague for a stated
+  period, expiring by itself.
+
+### What this office suggests you do first
+
+Sign in, upload your signature, and open the Graduation Control Centre
+once. Those three unblock everything else.
+
 
 ### A note on the record
 

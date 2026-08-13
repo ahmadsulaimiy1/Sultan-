@@ -238,7 +238,7 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
 /* the signatory's own hand, dropped onto the cream. A scan on white
    multiplies out; nothing is drawn or imitated here. */
-.sig{{display:block;height:16mm;width:auto;max-width:64mm;margin:1mm 0 1.4mm;
+.sig{{display:block;height:15mm;width:auto;max-width:52mm;margin:1mm 0 1.2mm;
  mix-blend-mode:multiply}}
 .blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
  color:{GOLD_D};margin-bottom:9mm}}
