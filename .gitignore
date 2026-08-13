@@ -30,3 +30,7 @@ dist/_stage-isolation/
 # module and its gate are the committed source, not the rasters.
 build/certificate-ground/
 build/certificate-plate/
+
+# Python bytecode from the stationery build (brand/build.py and friends).
+__pycache__/
+*.pyc
