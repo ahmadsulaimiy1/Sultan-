@@ -1,5 +1,14 @@
 # Audit — SHRS letterhead, August 2026
 
+> **Status: closed.** Every finding below was acted on in the rebuild that
+> followed. The sheet now measures 5.4% ink coverage, one left edge and
+> one right edge, five type sizes, 72 characters per line, and nothing
+> below 6.7 pt. The measurements in this document describe the revision
+> that was rejected, and are kept so the faults cannot quietly return.
+>
+> **One finding was wrong.** See the correction under item 8.
+
+
 An adversarial review of `brand/letterhead.pdf` and
 `brand/letter-registrar-activation.pdf` at commit `40f8ae9e`.
 
@@ -153,18 +162,22 @@ needs bleed and trim on every sheet.
 The design therefore has no economical production route. That is a
 specification failure, not a taste question.
 
-### 8. The Arabic breaks badly
+### 8. The Arabic breaks badly — ~~finding~~ **withdrawn, and corrected**
 
-`مدارس السلطان حنفي` / `الملكية` orphans the adjective onto a line of its
-own, one word, ragged. The construct is broken from the word that
-qualifies it. This is the Arabic equivalent of setting
+The original finding claimed that `مدارس السلطان حنفي` / `الملكية`
+orphaned the adjective and was the Arabic equivalent of breaking
+`SULTAN HANAFI ROYAL / SCHOOLS`.
 
-> SULTAN HANAFI ROYAL
-> SCHOOLS
+**That was wrong.** The break falls after the *iḍāfa* — `مدارس السلطان
+حنفي`, "the schools of Sultan Hanafi" — which is the tighter grammatical
+unit and the one that must not be split. Of the two available breaks it
+was the better one. The alternative, `مدارس` / `السلطان حنفي الملكية`,
+would have broken the construct itself, which is the real fault.
 
-which we correctly refused to do in English. The rule was applied in one
-language and not the other — precisely the asymmetry the bilingual lock
-was designed to prevent.
+The genuine defect was upstream: the name was being *set at a size that
+forced a break at all*. In the rebuild both names are set on one line, in
+both languages, so the question does not arise. That is the correct fix,
+and it is asserted in the build.
 
 ### 9. Watermarking outgoing correspondence
 

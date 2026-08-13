@@ -10,7 +10,8 @@ One design, four outputs. The full rationale is in
 | `letterhead.docx` | Open in Word and type. The two masses are page-anchored images, so they bleed to the edge on every page. |
 | `identity.py` | Builds both HTML sheets, from which the PDFs are printed. |
 | `word.py` | Builds the `.docx` from bands rendered out of `letterhead.html`, so Word and PDF cannot drift. |
-| `assets/` | Crest, cotton-rag tile, guilloche, microtext, the letter's text blocks, and the two Word bands. |
+| `build-arms.py` | Re-renders the arms as a single-ink device. Run only when the artwork changes. |
+| `assets/` | The arms (source and single-ink), the letter's text blocks, and the two Word bands. |
 
 ## Building
 
@@ -47,19 +48,23 @@ Nothing on this letterhead was invented:
 - **Motto** — "Forming Scholars, Leaders and Guardians of Excellence."
 - **Five institutions**, **contacts**, **campus**, **founding year**,
   **governance** — from the site footer and the database seed.
-- **Colour** — the warm axis only: cocoa, coffee, chestnut, royal gold,
-  antique gold, warm ivory. Tonal range inside one hue, and no second hue
-  anywhere on the sheet.
+- **Colour** — two inks. Coffee `#2E1A0D` and one flat gold, Pantone 872
+  or a single CMYK build. No gradient, and no third colour.
 
 ## Verification
 
 Every build is measured, not eyeballed. The render harness loads both
-documents in Chromium and asserts the sixteen tests listed in the
-manual — canvas size, both bands drawn, the bilingual lock's shared
-centre line and equal measure, the lock sitting on the mass, the Arabic
-presence ratio, head-to-text and ribbon-to-text clearance, footing
-containment on every sheet, fonts loaded, links live, and zero console
-errors. All sixteen pass on the current build.
+documents in Chromium and asserts the twenty tests listed in the manual —
+ink coverage, the single left and right edge, the measure and characters
+per line, the print floor for type both on paper and reversed, the arms
+standing on the Axis unshadowed, the bilingual lock's shared centre line,
+equal measure and unbroken names, the Arabic presence ratio, the absence
+of any simulated texture, containment on every sheet, fonts loaded, links
+live, and zero console errors. **All twenty pass on the current build.**
+
+The thresholds are not taste. They come from `docs/letterhead-audit.md`,
+which measured the previous revision at 51.2% ink coverage, eleven left
+edges, twelve type sizes and four elements set below 6 pt reversed.
 
 **The `.docx` is the exception, and this is worth stating plainly.**
 LibreOffice is broken in the environment this was built in — it fails to

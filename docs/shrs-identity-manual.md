@@ -7,139 +7,98 @@ stationery, rendered from the same sheet so the two cannot drift).
 
 ---
 
-## The signature — the Emergence
+## The signature — the Axis
 
-**The ribbon runs underneath the mass and comes out from beneath it.**
-An over-and-under is the one thing a flat band can never fake, and it is
-what separates a constructed shape from a cropped one.
+The school teaches in two languages and it is **one school**. So the two
+names are not stacked, and neither is a caption to the other: they meet
+at a single vertical gold member, English running right-to-left toward
+it, Arabic running left-to-right toward it. That member is the **Axis**.
 
-Three moves make it, and each is taken from the reference stationery and
-made specific to this school:
+The arms stand on it. Both measures — the 176 mm masthead and the 132 mm
+text — are centred on it. Everything on the sheet is either on the Axis
+or measured from it.
 
-1. **The mass is not a band.** Its lower boundary runs shallow across the
-   right, then turns on a **large radius** into a deep lobe on the left,
-   under the seal — where the seal needs a dark ground. Its top-right
-   corner is **notched away** so the ivory reaches the corner, which is
-   what stops the mass reading as a crop rather than a shape.
-2. **The ribbon runs under it.** It is drawn *before* the mass, so the
-   mass hides it for the first two-thirds of the measure. It emerges from
-   beneath the boundary about a third of the way across and runs off the
-   far edge.
-3. **It folds where it emerges.** At that point the band's **back face**
-   turns over the mass's edge — a duller, cooler plane, because it is the
-   underside of foil. The fold is drawn after the mass, so it laps over
-   it.
+It is the only device the system has, and it is the only one it needs:
 
-The foot is the same construction through a half-turn: its lobe is on the
-right, its ribbon emerges travelling the other way. Head and foot answer
-each other rather than repeat.
+- It says something **true about this institution** that no other
+  institution can say in the same way. It is not a shape borrowed from a
+  template; it is the school's own bilingualism made structural.
+- It **cannot be built in one language alone.** Remove either name and
+  the Axis has nothing to hold.
+- It is **one flat ink, one vertical rule.** It can be foiled, letter-
+  pressed, engraved, embroidered, cast in brass, or typed — at any size,
+  by anyone, anywhere, for almost nothing.
+- **Fifteen-per-cent test:** a fragment showing two languages meeting at
+  a gold vertical, with arms above it, is SHRS and nothing else.
 
-Both bands are drawn in **SVG**, not built from clip-paths. Bézier
-control for the large radius, strokes that hold constant width along a
-curve, a real Gaussian blur for the cast shadow, and — above all — a
-draw order that puts the mass *between* two parts of the same ribbon.
-None of that is available to a polygon, which is why every earlier
-version could only be straight lines.
+## What this sheet deliberately does not do
 
-### Why this is the signature and not something else
+No coffee masses. No ribbon. No gradient. No printed paper texture, no
+vignette, no watermark, no microtext, no drop shadow on the arms, no
+diagonal, no fold, no streaks, no icon badges.
 
-- It is **a relationship, not a shape.** The crest could be redrawn and
-  the identity would survive, because what identifies the school is a
-  band passing under a mass and folding as it comes out.
-- It is **parametric.** Two boundaries and one ribbon line produce the
-  whole family. Nothing is redesigned per artefact.
-- It **degrades gracefully.** Where a format cannot hold the full
-  construction (an ID card, a favicon, a signage plate) the fold alone
-  carries it.
-- It passes the **fifteen-per-cent test.** A corner showing a coffee mass
-  with a gold band emerging from under it, folding as it turns, is
-  sufficient to identify the school.
+Every one of those was present in an earlier revision, and every one was
+removed against a **measured** fault. The audit that removed them is
+`docs/letterhead-audit.md`, and it is kept in the repository precisely so
+that nobody — including a future me — quietly puts them back.
 
-## What the templates taught, and what was left behind
+## The governing numbers
 
-Nine things were taken from the reference stationery:
-
-| Taken | Where it lands |
-|---|---|
-| Large-radius turn | the mass's lobe under the seal |
-| Ribbon folds, showing its back face | at the point of emergence, and at both sheet edges |
-| Over-and-under interleave | the ribbon runs beneath the mass |
-| Contact block as a rounded panel | the registry, with an asymmetric radius |
-| Stepped edge | the notched top-right corner |
-| Light raking the dark plane | four streaks, clipped to the mass |
-| Circular icon badges | campus, telephone, correspondence, record |
-| Ribbon wrapping the corner | the foot's fold |
-| Date on a rule | the blank sheet's Ref/Date row |
-
-One thing was **not** taken. Two of the three templates set the body on a
-white panel inside a coloured frame. On a four-sheet letter that costs
-measure on every page and boxes the text in, so the field here stays
-open, as the other template has it.
-
-## Depth is constructed, not filtered
-
-A flat panel is what makes a sheet look printed rather than made. Four
-constructions give the bands thickness, and none is an effect, so all
-four survive CMYK:
-
-1. **The mass is ramped**, cocoa through coffee to chestnut — tonal range
-   inside one hue, never a second hue.
-2. **The chamfer.** The mass's face is machined back before it meets its
-   boundary, so there is a lit lip and a fall-away beneath it. This is
-   what tells the eye there is thickness.
-3. **The bevelled ribbon.** A lit edge above, a dark edge beneath, and a
-   specular sweep along its length — the difference between folded metal
-   and a painted stripe. The band darkens at both ends where it turns
-   away under the sheet edge.
-4. **One light, one shadow.** Everything is lit from above, and the
-   ribbon assembly casts a single blurred shadow onto the paper.
+| | This sheet | Why |
+|---|---|---|
+| Ink coverage | **5.4%** | Oxford ~5, Cambridge ~6, Aramco ~12. Above about 15% a school cannot afford to print ordinary correspondence on its own letterhead. It was 51.2%. |
+| Left edges, flowed text | **1** | It was eleven, two of them half a millimetre apart. |
+| Right edges, flowed text | **1** | It was fifteen. |
+| Type sizes | **5** | One modular scale, ratio 1.25 from 10.5 pt. It was twelve, four of them inside a 0.7 pt band. |
+| Smallest type anywhere | **6.7 pt** | Nothing below 6.5 pt on paper. |
+| Smallest reversed type | **8.4 pt** | Reversed type below 7 pt fills in on any office laser and closes up entirely under offset dot gain. Four elements were below 6 pt. |
+| Measure | **132 mm** | 72 characters. 45–75 is the readable range; it was 90. |
+| Inks | **2** | Coffee `#2E1A0D` and one flat gold. A gradient gold bands in CMYK, goes green under dot gain, and as foil costs a separate pass on every sheet. |
 
 ## The material
 
-A single flat coffee was one error; a crimson wash across the masses was
-the opposite one. What the sheet actually needs is **tonal range inside
-one hue**.
-
 | Role | Colour | Where |
 |---|---|---|
-| Ground | Deep Cocoa `#140A03` | the cold edge of each mass |
-| Body | Coffee `#2E1A0D` | the mass's centre |
-| Warm | Chestnut `#43220F` | the mass's warm end |
-| Close | Cocoa `#241509` | the far edge |
-| Foil | Royal Gold `#C6A15B` → `#F6E9CE` | the ribbon, the axis, the small caps |
-| Antique | `#9C7A3C` | the second band, and labels on paper |
-| Field | Warm Ivory `#FBF7EF → #EDE3D2` | the paper, graded |
-| Ink | `#241A12`, secondary `#5A4632` | never black; black is toner |
+| Text ink | Coffee `#2E1A0D` | the names, the subject, the foot band |
+| Gold on paper | `#9C7A3C` | the Axis, the rule, the five schools, labels. An ochre that prints honestly in CMYK |
+| Gold reversed | `#C6A15B` | the hairline above the band and the quadrant marks in it |
+| Body ink | `#241A12`, secondary `#5A4632` | never black; black is toner |
+| Paper | `#FBF8F1` | flat. The stock provides the texture — printing a photograph of paper onto paper is a category error |
 
-**No hue outside the warm axis.** A single off-axis colour on a document
-with a warm anchor reads as an accident or a sub-brand. Where the five
-schools must be distinguished, they are distinguished *tonally*.
-
-**Cotton rag** at 26% multiply, **vignette** at the extremes, and a
-**ghost crest** at 3% off the right edge. All three below conscious
-notice, above the threshold of feeling.
+Specified for **Pantone 872** or a single CMYK build, on 350 gsm cotton,
+with the arms blind-debossed and the Axis and rule in foil. All three
+finishes are optional: the sheet is correct in one-colour laser output,
+which is the test that matters for a school.
 
 ## The bilingual lock
 
-Arabic and English are **one identity, not two languages set side by
-side.** Three rules make that structural rather than sentimental:
-
-1. **Neither language is above the other.** They meet at a shared
-   vertical gold member and each runs outward in its own reading
-   direction — English flush right against the axis, Arabic flush left.
-   The build asserts that both blocks share one centre line with the
-   axis, and that the measure either side of the axis is equal.
-2. **The name breaks at the same place in both languages** — two lines
-   each — so the two blocks are of one build, and the lock cannot be
-   assembled in one language alone.
-3. **Arabic is set at 1.15× the Latin size.** Amiri at matched point size
+1. **Neither language is above the other.** They meet at the Axis and run
+   outward in their own reading directions. Asserted: both blocks share
+   one centre line with the Axis.
+2. **Each takes exactly half the masthead measure**, so neither is given
+   more room. Asserted.
+3. **Neither name breaks.** Both are set on one line, which removes the
+   line-break question in both languages at once. Asserted.
+4. **Arabic is set at 1.15× the Latin size.** Amiri at matched point size
    reads smaller, because naskh carries a lower effective x-height
-   relative to its em. Matching the numbers would have made the Arabic
-   subordinate; matching the *presence* is what parity actually requires.
+   relative to its em. Matching the numbers would make the Arabic
+   subordinate; matching the *presence* is what parity requires.
    Asserted: presence ratio 1.15.
-4. **The correct name is مدارس السلطان حنفي الملكية** — plural, with the
-   article, as the school's own Arabic pages set it. The singular names
-   one school; this house has five.
+5. **The correct name is مدارس السلطان حنفي الملكية** — plural, with the
+   article, as the school\'s own Arabic pages set it.
+
+## The arms
+
+Rendered as a **single-ink device** by `brand/build-arms.py`. The stock
+artwork is light line-work drawn to sit on a dark ground — mean
+luminance 188 against a paper of 248 — so on ivory it disappeared. It is
+re-rendered in one colour at the density it was drawn, which is also how
+arms are actually printed.
+
+Flat. **No shadow, no ring, no bevel.** Arms are a heraldic device with a
+traditional and legal character; giving one a drop shadow treats a coat
+of arms as a user-interface button, and no armigerous institution does
+it. Asserted in the build.
 
 ## Typography
 
@@ -147,87 +106,68 @@ side.** Three rules make that structural rather than sentimental:
 |---|---|---|
 | Institutional | Cinzel 800 | Roman inscriptional capitals — carved letterforms, the oldest signal of permanence in the Latin alphabet |
 | Arabic | Amiri | The Bulaq/Amiri Press naskh, Cairo — to Arabic scholarly printing what Garamond is to Latin |
-| Editorial | Cormorant Garamond italic | The one voice where the school speaks of itself |
-| Document | Inter | Neutral, engineered, screen-native — carries the modern half without shouting |
+| Editorial | Cormorant Garamond italic | The one line where the school speaks of itself |
+| Document | Inter | Neutral, engineered, screen-native |
 
-All four already ship with the website, and `identity.py` embeds them
-straight from `assets/fonts/`. **Nothing new is introduced:** a system
-that needs a font purchase to stay consistent will not stay consistent.
+All four ship with the website already, embedded straight from
+`assets/fonts/`. **Nothing new is introduced:** a system that needs a
+font purchase to stay consistent will not stay consistent.
 
-## Grammar of the quadrant
-
-The crest carries four quadrants. Abstracted to a **2×2 gold mark**, it
-becomes the system's only punctuation — separating the five houses and
-the three clauses of the creed. It is heraldically derived, so it is
-defensible: it came from the school's own arms, not from a font.
+The scale is 6.7 · 8.4 · 10.5 · 13.1, ratio 1.25, plus the Arabic at
+10.5 × 1.15 = 12.1 derived by the parity rule rather than chosen. **No
+size exists outside it.**
 
 ## Measurements
 
 - Sheet 210 × 297 mm; canvas 794 × 1123 px at 96 dpi, asserted.
-- Head band 84 mm; its mass 40 mm deep at the right, turning into a 58 mm
-  lobe on the left. Top-right corner notched from 182 mm.
-- Foot band 72 mm, the same boundary half-turned.
-- The ribbon descends 36 mm across the measure — steeper than either
-  boundary, which is why it crosses out from under the mass.
-- Body inset 24 mm each side; ivory field from 84 mm to 225 mm.
-- Continuation sheets: the same drawing compressed to 52 mm, so the
-  ribbon's slope eases with it. **Same construction, less ceremony.**
-
-## Production
-
-Designed for 350 gsm cotton, hot foil on the gold, blind deboss on the
-mass's chamfer, letterpress on the rules.
-
-- Gold is specified so it prints correctly **both** ways: warm ochre in
-  CMYK, true metallic in Pantone 871/872 or foil. A system that is right
-  in one and disappointing in the other is not finished.
-- The masses are the only heavy coverage, and they sit at head and foot
-  where a sheet is gripped — the areas least likely to show roller marks.
-- Microtext in the footing is a genuine authenticity mark, not an
-  ornament, and it is the element that most rewards 2400 dpi.
+- Masthead measure 176 mm, text measure 132 mm, both centred on the Axis.
+- Arms 30 mm, on the Axis, 22 mm from the head.
+- Foot band 16 mm, full bleed, with a gold hairline on its upper edge.
+- Vertical unit 3.5 mm; every vertical dimension a whole multiple.
+- Continuation sheets: the arms reduce to 18 mm and the rule and the five
+  schools drop away. **The device survives its own subtraction** — which
+  is the point of having only one.
 
 ## Acceptance tests — all asserted in the build
 
 1. Canvas exactly 794 × 1123 px.
-2. The head mass bleeds to the top-left corner.
-3. Neither wordmark block wraps, in either language.
-4. Both language blocks share one centre line with the gold axis.
-5. Equal measure either side of the axis.
-6. Arabic presence ratio 1.15.
-7. Both bands are drawn on every sheet.
-7a. The campus line never wraps.
-7b. No footing sits past the foot of its page (overflow measured, not eyeballed).
-8. The head band clears the body text on every sheet.
-9. The bilingual lock sits on the mass, never past its boundary.
-10. The footing's text clears the ribbon crossing above it.
-11. The office line clears the registry block.
-12. The five houses fit the footing measure without truncation.
-13. Every footing sits inside its page, every sheet.
-14. All faces loaded (7 on the letter).
-15. Every URL a live hyperlink (15 anchors on the letter).
-16. No console errors.
+2. Ink coverage at or below 6%.
+3. Flowed text sits on exactly one left edge and one right edge.
+4. Measure 132 mm, 72 characters per line.
+5. No type below 6.7 pt anywhere.
+6. No reversed type below 8.4 pt.
+7. Five type sizes, all on the scale.
+8. The arms stand on the Axis, within 1 px.
+9. Both names share one centre line with the Axis.
+10. Each language takes equal measure either side of the Axis.
+11. Neither name breaks across lines.
+12. Arabic presence ratio 1.15.
+13. The arms carry no filter and no shadow.
+14. No simulated texture, vignette or watermark is present in the DOM.
+15. The five schools fit the masthead measure without truncation.
+16. The foot band fits without truncation.
+17. No footing sits past the foot of its page, on any sheet.
+18. All faces loaded (7 on the letter).
+19. Every URL a live hyperlink (15 anchors on the letter).
+20. No console errors.
 
 ## Building
 
 ```
+python3 brand/build-arms.py            # only when the arms artwork changes
 python3 brand/identity.py \
   --staff-id "SHRS-HQ-REG-130826-000004" \
   --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
-python3 brand/word.py          # after re-rendering the bands
+python3 brand/word.py
 ```
 
-Omit both arguments and the blanks stay visible rather than silently
-wrong. Every asset the generator needs lives in `brand/assets/` and
-`assets/fonts/`, so the build is reproducible on any machine.
+Omit either argument and the blank stays visible rather than silently
+wrong. Every asset lives in `brand/assets/` and `assets/fonts/`, so the
+build is reproducible on any machine from any working directory.
 
 ## What is not yet built
 
-Two things, in order:
-
-- **The website.** Carrying the crossing — the mass, its curve and the
-  ribbon at its second angle — into the masthead, the portal chrome and
-  the section heads is the next piece of work.
-- **The remaining artefacts** — certificate, transcript, examination
-  paper, envelope, folder, business card, staff and student ID, email
-  signature, signage plate. The grammar is settled; applying it is
-  mechanical.
+The remaining artefacts — certificate, transcript, examination paper,
+envelope, folder, business card, staff and student ID, email signature,
+website and portal masthead, signage plate. The Axis carries all of them
+and the grammar is settled; applying it is mechanical.

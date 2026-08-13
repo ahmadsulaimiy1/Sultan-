@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Word stationery — the same sheet, typed into.
 
-A .docx cannot embed the school's faces the way the HTML does, and it
-cannot reproduce a clip-path. So the two masses are placed as images,
-anchored to the *page* rather than to the text, at 0,0 and at the foot.
-That is the only construction Word honours full-bleed: an inline image
-would be pushed inside the margins and the sweep would stop short of the
-edge.
+A .docx cannot embed the school's faces the way the HTML does. So the
+masthead and the foot band are placed as images, anchored to the *page*
+rather than to the text. That is the only construction Word honours
+full-bleed: an inline image would be pushed inside the margins and the
+band would stop short of the edge.
 
 The bands are rendered from `letterhead.html` itself by `bands.js`, so
 the Word sheet and the PDF are the same drawing and cannot drift.
@@ -18,7 +17,7 @@ import pathlib, shutil, zipfile
 ROOT = pathlib.Path(__file__).resolve().parent
 EMU_MM = 36000                      # English Metric Units per millimetre
 PAGE_W, PAGE_H = 210, 297
-HEAD_H, FOOT_H = 84, 72             # the two bands, as identity.py draws them
+HEAD_H, FOOT_H = 68, 34             # the two bands, as identity.py draws them
 
 def emu(mm):
     return int(round(mm * EMU_MM))
@@ -70,8 +69,8 @@ DOCUMENT = (
   '<w:headerReference w:type="default" r:id="rIdH"/>'
   f'<w:pgSz w:w="{twip(PAGE_W)}" w:h="{twip(PAGE_H)}"/>'
   # text sits clear of both masses; the header itself is pinned to the edge
-  f'<w:pgMar w:top="{twip(HEAD_H + 4)}" w:right="{twip(24)}" w:bottom="{twip(FOOT_H + 6)}"'
-  f' w:left="{twip(24)}" w:header="0" w:footer="0" w:gutter="0"/>'
+  f'<w:pgMar w:top="{twip(HEAD_H + 6)}" w:right="{twip(39)}" w:bottom="{twip(FOOT_H + 4)}"'
+  f' w:left="{twip(39)}" w:header="0" w:footer="0" w:gutter="0"/>'
   '<w:titlePg w:val="0"/>'
   '</w:sectPr></w:body></w:document>')
 
