@@ -48,59 +48,55 @@ turns a routine memo into a diploma, which is ridiculous the second time
 you send one. **The target is Institutional with ceremonial density in
 the masthead and foot, and complete calm in between.**
 
-## II-b. The palette is chosen, not assumed
+## II-b. The palette — a correction, and the settled system
 
-Brown-and-gold was never a requirement. It was the *coffee* livery, one
-of six the design system already ships — **coffee, royal, garnet,
-emerald, sapphire, obsidian** — and defaulting to it made the sheet look
-like a cafe menu with a crest on it.
+An earlier revision of this bible moved the stationery to garnet on the
+reasoning that "brown reads rustic, oxblood reads as record". That
+reasoning was sound about brown *in general* and wrong about **this**
+school. Coffee brown is not a default inherited from another file; it is
+SHRS's institutional anchor, and it is more distinctive than the
+navy-and-gold every academic institution reaches for. The error was
+solving a generic problem instead of this one.
 
-The stationery takes **garnet**: deep oxblood `#3B1420 → #14060A` with
-gold `#C9A45E` and an ivory ground. The reasoning is not taste:
+**The settled primaries, and they are not negotiable:**
 
-- Oxblood is the register of charters, chambers and university presses.
-  It reads as *record*, where brown reads as *rustic*.
-- It holds gold better than brown does. Brown and gold are neighbours on
-  the wheel, so gold on brown goes muddy; gold on oxblood separates and
-  reads as metal.
-- It is unmistakably not the website's everyday chrome. Stationery
-  should be recognisably of the same house and not identical to a web
-  page — a letter is a different object.
-
-Sapphire (deep navy) is the legitimate alternative and would read more
-newspaper-editorial, less charter. Emerald is available and carries both
-Islamic and Nigerian resonance, but sits closer to the crest's own gold
-and competes with it.
-
-**The rule this settles:** the palette is a decision with a reason
-attached, taken from the school's own livery system, never a default
-inherited from whatever was open in another file.
-
-### One colour is not a palette — the house spectrum
-
-A sheet in a single hue is not restraint, it is monotony wearing
-restraint's coat. Garnet is the *ground*; it is not the whole story.
-
-The school has five institutions, and the design system has five other
-liveries. So each house takes a colour, and the colour means something:
-
-| Institution | Colour | Livery |
+| Role | Colour | Use |
 |---|---|---|
-| Nursery & Primary | `#2F6B4F` | emerald |
-| Royal College | `#2C4C74` | sapphire |
-| Islamic & Arabic Studies | `#7A2E3E` | garnet |
-| Qur'ān College | `#96702F` | royal |
-| Online & Distance Learning | `#3E4247` | obsidian |
+| **Deep Coffee Brown** | `#2E1C10` → `#1A0F07` | institutional anchor: bands, plinths, rules |
+| **Royal Gold** | `#C6A15B`, foil `#F6E3B4 → #B08D4F` | prestige accent only |
+| **Warm Ivory** | `#FBF7EF` → `#F2EADC` | the paper |
 
-They appear twice, and only twice: a **dot beside each institution's
-name**, and a **five-segment spectrum rule** beneath the masthead. That
-rule is the whole house in one line — five schools, one institution —
-and it is the only place on the sheet where all five colours meet.
+**Supporting, admitted only where they genuinely improve hierarchy:**
+Antique Gold `#9C7A3C` · Champagne `#E6D5B0` · Soft Sand `#DCCDB4` ·
+Warm Stone `#C4B49B` · Deep Bronze `#7A5A2E` · Rich Walnut `#4A2E1B` ·
+Dark Cocoa `#241509` · Graphite `#2A2724` (text only, where ink must be
+neutral rather than warm).
 
-Colour is admitted when it *carries information*. A colour used because
-the page looked plain is decoration, and decoration is what makes a
-document look cheap. A colour that tells you which school is speaking is
-design.
+**Forbidden:** bright colour, saturated blue, any hue outside this warm
+axis, gloss, glow, unnecessary gradient.
+
+### The house spectrum, corrected
+
+The five-institution spectrum introduced emerald, sapphire and obsidian —
+bright, cool, and outside the brand. The idea was right; the execution
+broke the palette. The five houses now differentiate **tonally within the
+warm axis**, which is harder and better:
+
+| Institution | Tone |
+|---|---|
+| Nursery & Primary | Champagne `#E6D5B0` |
+| Royal College | Royal Gold `#C6A15B` |
+| Islamic & Arabic Studies | Deep Bronze `#7A5A2E` |
+| Qur'ān College | Rich Walnut `#4A2E1B` |
+| Online & Distance Learning | Dark Cocoa `#241509` |
+
+Read together they form a single graded ramp from light to dark — one
+family, five members, which is the truer statement about a house of five
+schools than five unrelated hues ever was.
+
+**The rule this settles:** the palette is the school's, not the
+designer's. A colour enters only if it carries information *and* sits on
+the warm axis.
 
 ## II-c. The masthead is a band, not a half-page
 
@@ -344,8 +340,8 @@ A sheet ships only when all ten pass, measured — never eyeballed:
 13. The letter begins on sheet one. Blank stationery ships as its own file.
 14. Five contact icons present, inline SVG, optically aligned to cap-height.
 15. Every vertical gap is a whole multiple of 3.2mm.
-16. Five house colours present, each tied to an institution — never
-    colour for its own sake.
+16. Five house tones present, each tied to an institution, all on the
+    warm axis — never colour for its own sake, never off-brand hue.
 17. **Every URL and address on the sheet is a live hyperlink.** A letter
     that prints a link as dead text is asking its reader to retype it.
     Assert the PDF's `/URI` annotation count, not the visible markup.
