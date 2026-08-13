@@ -7,45 +7,74 @@ stationery, rendered from the same sheet so the two cannot drift).
 
 ---
 
-## The signature — the Crossing
+## The signature — the Emergence
 
-**Every SHRS document is built from two elements at two different angles,
-and it is their crossing that identifies the school.**
+**The ribbon runs underneath the mass and comes out from beneath it.**
+An over-and-under is the one thing a flat band can never fake, and it is
+what separates a constructed shape from a cropped one.
 
-- **The mass** — full bleed at the top, its lower boundary a shallow curve
-  that eases up to the right, so the sheet's weight sits under the seal
-  where the seal needs a dark ground. Its slope is about 2°.
-- **The ribbon** — a bolder diagonal at nearly four times that slope. It
-  begins *inside* the mass at the right and slides out onto the ivory as
-  it travels left.
+Three moves make it, and each is taken from the reference stationery and
+made specific to this school:
 
-Because the two slopes differ, the ribbon **crosses** the mass boundary
-rather than tracing it, and appears to emerge from beneath the mass.
-That crossing is the signature, and it is the reason the shape cannot be
-mistaken for a rectangle with a corner cut off.
+1. **The mass is not a band.** Its lower boundary runs shallow across the
+   right, then turns on a **large radius** into a deep lobe on the left,
+   under the seal — where the seal needs a dark ground. Its top-right
+   corner is **notched away** so the ivory reaches the corner, which is
+   what stops the mass reading as a crop rather than a shape.
+2. **The ribbon runs under it.** It is drawn *before* the mass, so the
+   mass hides it for the first two-thirds of the measure. It emerges from
+   beneath the boundary about a third of the way across and runs off the
+   far edge.
+3. **It folds where it emerges.** At that point the band's **back face**
+   turns over the mass's edge — a duller, cooler plane, because it is the
+   underside of foil. The fold is drawn after the mass, so it laps over
+   it.
 
-The foot is the same construction rotated by half a turn: the mass is
-deep at the right, the ribbon emerges travelling the other way. Head and
-foot therefore answer each other rather than repeat.
+The foot is the same construction through a half-turn: its lobe is on the
+right, its ribbon emerges travelling the other way. Head and foot answer
+each other rather than repeat.
 
-Both bands are drawn in **SVG**, not built from clip-paths. A curve that
-has to meet a ribbon at a second angle is a drawing, and it needs
-Bézier control, stroked bands that follow the curve at constant width,
-and a real blur for the shadow. None of that survives a polygon.
+Both bands are drawn in **SVG**, not built from clip-paths. Bézier
+control for the large radius, strokes that hold constant width along a
+curve, a real Gaussian blur for the cast shadow, and — above all — a
+draw order that puts the mass *between* two parts of the same ribbon.
+None of that is available to a polygon, which is why every earlier
+version could only be straight lines.
 
 ### Why this is the signature and not something else
 
 - It is **a relationship, not a shape.** The crest could be redrawn and
-  the identity would survive, because what identifies the school is the
-  crossing of two angles — not what is drawn inside the mass.
-- It is **parametric.** Two slopes and two depths produce the whole
-  family. Nothing is redesigned per artefact.
-- It **degrades gracefully.** Where a format cannot hold two bands (an ID
-  card, a favicon, a signage plate) the two merge into one and the seal
-  sits at the join. That is part of the grammar, not an exception.
-- It passes the **fifteen-per-cent test.** A corner of any SHRS document
-  shows a coffee mass with a bevelled gold ribbon crossing its boundary
-  at a steeper angle. That alone identifies the school.
+  the identity would survive, because what identifies the school is a
+  band passing under a mass and folding as it comes out.
+- It is **parametric.** Two boundaries and one ribbon line produce the
+  whole family. Nothing is redesigned per artefact.
+- It **degrades gracefully.** Where a format cannot hold the full
+  construction (an ID card, a favicon, a signage plate) the fold alone
+  carries it.
+- It passes the **fifteen-per-cent test.** A corner showing a coffee mass
+  with a gold band emerging from under it, folding as it turns, is
+  sufficient to identify the school.
+
+## What the templates taught, and what was left behind
+
+Nine things were taken from the reference stationery:
+
+| Taken | Where it lands |
+|---|---|
+| Large-radius turn | the mass's lobe under the seal |
+| Ribbon folds, showing its back face | at the point of emergence, and at both sheet edges |
+| Over-and-under interleave | the ribbon runs beneath the mass |
+| Contact block as a rounded panel | the registry, with an asymmetric radius |
+| Stepped edge | the notched top-right corner |
+| Light raking the dark plane | four streaks, clipped to the mass |
+| Circular icon badges | campus, telephone, correspondence, record |
+| Ribbon wrapping the corner | the foot's fold |
+| Date on a rule | the blank sheet's Ref/Date row |
+
+One thing was **not** taken. Two of the three templates set the body on a
+white panel inside a coloured frame. On a four-sheet letter that costs
+measure on every page and boxes the text in, so the field here stays
+open, as the other template has it.
 
 ## Depth is constructed, not filtered
 
@@ -135,10 +164,12 @@ defensible: it came from the school's own arms, not from a font.
 ## Measurements
 
 - Sheet 210 × 297 mm; canvas 794 × 1123 px at 96 dpi, asserted.
-- Head band 78 mm; its mass 48.6 mm deep at the left, 40 mm at the right.
-- Foot band 70 mm; its mass deep at the right, on the mirrored curve.
-- Mass slope ≈ 2°; ribbon slope ≈ 7.6°. The difference is the point.
-- Body inset 24 mm each side; ivory field from 80 mm to 227 mm.
+- Head band 84 mm; its mass 40 mm deep at the right, turning into a 58 mm
+  lobe on the left. Top-right corner notched from 182 mm.
+- Foot band 72 mm, the same boundary half-turned.
+- The ribbon descends 36 mm across the measure — steeper than either
+  boundary, which is why it crosses out from under the mass.
+- Body inset 24 mm each side; ivory field from 84 mm to 225 mm.
 - Continuation sheets: the same drawing compressed to 52 mm, so the
   ribbon's slope eases with it. **Same construction, less ceremony.**
 
@@ -164,6 +195,8 @@ mass's chamfer, letterpress on the rules.
 5. Equal measure either side of the axis.
 6. Arabic presence ratio 1.15.
 7. Both bands are drawn on every sheet.
+7a. The campus line never wraps.
+7b. No footing sits past the foot of its page (overflow measured, not eyeballed).
 8. The head band clears the body text on every sheet.
 9. The bilingual lock sits on the mass, never past its boundary.
 10. The footing's text clears the ribbon crossing above it.
