@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      47e4ad7c80cd6eb1274bdfb44e6d6026e680f0c8
-short       47e4ad7c
+commit      58456e334aa58fb4e11bdf91afcbcd249b95f915
+short       58456e33
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Official letterhead — crest, five institutions, and the school's own faces
-built (UTC) 2026-08-13T10:34:44Z
+subject     Fill the letter from what the school actually publishes
+built (UTC) 2026-08-13T10:45:19Z
 assets      shrs-pwa-caf195dc57
 pages       143
 

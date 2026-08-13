@@ -5,16 +5,14 @@ the five institutions, and the signatory — **Dr. Zakariya Olanrewaju Anofi,
 Founder, Chairman of the Board of Governors & Head of Schools**, as the
 site names him.
 
-**Three blanks remain, and none of them could be filled honestly:**
+**Two blanks remain, and none of them could be filled honestly:**
 
-- **the Registrar's name** — no Registrar is named anywhere on the site
-  or in the database seed, so inventing one was not an option;
 - **the Staff Identity Number** — issued by the system at the moment the
   account is created, and not knowable before then;
 - **the activation link** — a single-use secret generated per person. It
   must never be guessed, and must never live in this repository.
 
-All three appear in the letter underlined in gold so they cannot be
+Both appear in the letter underlined in gold so they cannot be
 missed. Fill them from the Admin Centre screen that creates the account —
 it shows the Staff ID and the link together. — the activation link is generated
 per person in the Admin Centre and pasted in at the moment of sending.
@@ -26,13 +24,13 @@ their portal opens.
 
 **SULTAN HANAFI ROYAL SCHOOLS**
 Ikorodu, Lagos State, Nigeria
-Office of the Founder, Chairman of the Board of Governors & Head of Schools
+ICT Office
 
 ---
 
 **13 August 2026**
 
-**[Full Name]**
+**Mrs. Mariam Tope Anofi-AbdulKareem**
 Registrar
 Sultan Hanafi Royal Schools
 
@@ -40,7 +38,7 @@ Sultan Hanafi Royal Schools
 
 ### ACTIVATION OF YOUR OFFICIAL PORTAL ACCOUNT — OFFICE OF THE REGISTRAR
 
-Dear **[Sir / Madam — as appropriate]**,
+Dear **Madam**,
 
 I am pleased to inform you that your official account on the Sultan
 Hanafi Royal Schools Digital Campus has been created, and that the
@@ -127,9 +125,9 @@ Yours sincerely,
 
 &nbsp;
 
-**Dr. Zakariya Olanrewaju Anofi**
-Founder, Chairman of the Board of Governors & Head of Schools
-Sultan Hanafi Royal Schools
+**Ahmad Sulaimiy**
+Acting Managing-Director
+ICT Office, Sultan Hanafi Royal Schools
 
 ---
 
