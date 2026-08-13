@@ -76,6 +76,32 @@ and competes with it.
 attached, taken from the school's own livery system, never a default
 inherited from whatever was open in another file.
 
+### One colour is not a palette — the house spectrum
+
+A sheet in a single hue is not restraint, it is monotony wearing
+restraint's coat. Garnet is the *ground*; it is not the whole story.
+
+The school has five institutions, and the design system has five other
+liveries. So each house takes a colour, and the colour means something:
+
+| Institution | Colour | Livery |
+|---|---|---|
+| Nursery & Primary | `#2F6B4F` | emerald |
+| Royal College | `#2C4C74` | sapphire |
+| Islamic & Arabic Studies | `#7A2E3E` | garnet |
+| Qur'ān College | `#96702F` | royal |
+| Online & Distance Learning | `#3E4247` | obsidian |
+
+They appear twice, and only twice: a **dot beside each institution's
+name**, and a **five-segment spectrum rule** beneath the masthead. That
+rule is the whole house in one line — five schools, one institution —
+and it is the only place on the sheet where all five colours meet.
+
+Colour is admitted when it *carries information*. A colour used because
+the page looked plain is decoration, and decoration is what makes a
+document look cheap. A colour that tells you which school is speaking is
+design.
+
 ## II-c. The masthead is a band, not a half-page
 
 The single worst fault of the earlier sheets: the identity block —
@@ -318,3 +344,8 @@ A sheet ships only when all ten pass, measured — never eyeballed:
 13. The letter begins on sheet one. Blank stationery ships as its own file.
 14. Five contact icons present, inline SVG, optically aligned to cap-height.
 15. Every vertical gap is a whole multiple of 3.2mm.
+16. Five house colours present, each tied to an institution — never
+    colour for its own sake.
+17. **Every URL and address on the sheet is a live hyperlink.** A letter
+    that prints a link as dead text is asking its reader to retype it.
+    Assert the PDF's `/URI` annotation count, not the visible markup.

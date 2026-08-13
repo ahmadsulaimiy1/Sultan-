@@ -2,14 +2,29 @@
 """Builds the school's stationery. Assets are embedded so the PDF renders
 with no network and no installed fonts. See docs/letterhead-editorial-bible.md
 — every rule below traces to a numbered section there."""
-import json, pathlib, re
+import argparse, json, pathlib, re
+
+ap = argparse.ArgumentParser(description='Build the school stationery.')
+ap.add_argument('--staff-id', default=None, help='Staff Identity Number issued at account creation')
+ap.add_argument('--activation-url', default=None, help='the single-use activation link')
+ARGS = ap.parse_args()
 
 A = json.loads(pathlib.Path('/tmp/assets.json').read_text())
 FONTS, GRAIN, BAND, MICRO, CREST = A['fonts'], A['grain'], A['band'], A['micro'], A['crest']
 
 AR = 'مدارس السلطان حنفي الملكية'          # §Rule 0 — plural, with the article
-INST = ("Nursery &amp; Primary &#9670; Royal College &#9670; Islamic &amp; Arabic Studies "
-        "&#9670; Qur&rsquo;an College &#9670; Online &amp; Distance Learning")
+# One colour per institution, each taken from a livery the design system
+# already ships, so the spectrum means something rather than decorating.
+HOUSE = [
+    ('Nursery &amp; Primary',        '#2F6B4F'),   # emerald
+    ('Royal College',                '#2C4C74'),   # sapphire
+    ('Islamic &amp; Arabic Studies', '#7A2E3E'),   # garnet
+    ('Qur&rsquo;an College',         '#96702F'),   # royal
+    ('Online &amp; Distance',        '#3E4247'),   # obsidian
+]
+INST = "".join(
+    f'<span class="ins"><i style="background:{c}"></i>{n}</span>' for n, c in HOUSE)
+SPECTRUM = "".join(f'<i style="background:{c}"></i>' for _, c in HOUSE)
 
 ic = lambda d: ('<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
                 'stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>')
@@ -67,7 +82,17 @@ body{background:#120509;display:flex;flex-direction:column;align-items:center;ga
 
 .strip{margin:6.4mm 14mm 0 16.6mm;padding-bottom:2.4mm;border-bottom:.5pt solid rgba(122,46,62,.32);
  display:flex;align-items:baseline;gap:4mm}
-.inst{font-size:5.9pt;letter-spacing:.12em;text-transform:uppercase;color:#7A2E3E;white-space:nowrap}
+.inst{display:flex;align-items:center;gap:4.4mm;font-size:5.9pt;letter-spacing:.11em;
+ text-transform:uppercase;white-space:nowrap}
+.ins{display:flex;align-items:center;gap:1.2mm;color:#3A2C30}
+.ins i{width:1.9mm;height:1.9mm;border-radius:50%;display:inline-block;flex:0 0 auto}
+/* the five houses, ruled as one bar */
+.spectrum{display:flex;height:1.1mm;margin:0 14mm 0 16.6mm;border-radius:.6mm;overflow:hidden}
+.spectrum i{flex:1}
+a{color:inherit;text-decoration:none;border-bottom:.5pt solid rgba(122,46,62,.4)}
+a.plain{border-bottom:0}
+.body a{color:#7A2E3E;font-weight:600}
+.fg a,.cipher a{color:inherit;border-bottom:0}
 .est{margin-left:auto;font-size:5.3pt;letter-spacing:.22em;text-transform:uppercase;color:#9A7434;white-space:nowrap}
 .micro{margin:1.6mm 14mm 0 16.6mm;height:2.4mm;opacity:.38;
  background:url(data:image/svg+xml;base64,MICRO__) left center/100% 100% no-repeat}
@@ -123,6 +148,7 @@ MAST = f'''      <header class="mast">
         <div class="place"><b>Ikorodu</b>Lagos State<b>Federal Republic of Nigeria</b></div>
       </header>
       <div class="strip"><span class="inst">{INST}</span><span class="est">Founded MMXVI</span></div>
+      <div class="spectrum">{SPECTRUM}</div>
       <div class="micro"></div>'''
 
 MASTC = f'''      <header class="mastc">
@@ -135,11 +161,11 @@ FOOT = f'''      <footer class="foot">
         <div class="foot-b"><div class="foot-g"></div>
           <div class="fg">
             <div>{PIN}<span><span class="fl">Campus</span>Ikorodu, Lagos State, Nigeria</span></div>
-            <div>{TEL}<span><span class="fl">Telephone</span>+234 807 374 7650<br />+234 807 058 6860</span></div>
-            <div>{ENV}<span><span class="fl">Correspondence</span>info@shroyalschools.com</span></div>
-            <div>{GLB}<span><span class="fl">Online</span>shroyalschools.com</span></div>
+            <div>{TEL}<span><span class="fl">Telephone</span><a class="plain" href="tel:+2348073747650">+234 807 374 7650</a><br /><a class="plain" href="tel:+2348070586860">+234 807 058 6860</a></span></div>
+            <div>{ENV}<span><span class="fl">Correspondence</span><a class="plain" href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></span></div>
+            <div>{GLB}<span><span class="fl">Online</span><a class="plain" href="https://shroyalschools.com">shroyalschools.com</a></span></div>
           </div>
-          <p class="cipher">{SEAL}<span>Established July 2016 &#9670; Governed by a Board of Governors &#9670; Verifiable at shroyalschools.com/verify</span></p>
+          <p class="cipher">{SEAL}<span>Established July 2016 &#9670; Governed by a Board of Governors &#9670; Verifiable at <a class="plain" href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></span></p>
         </div>
       </footer>'''
 
@@ -163,6 +189,32 @@ rt = lambda b: (b.replace('class="addressee"','class="addr"').replace('class="su
   .replace('class="sig-title"','class="sigt"')
   .replace('<p>I write on behalf','<p class="open">I write on behalf'))
 blocks = [rt(b) for b in blocks]
+
+# Real, clickable links — a letter that tells someone to visit a URL and
+# then prints it as dead text is asking them to retype it.
+LINKS = {
+    'shroyalschools.com/portal/staff/login/':
+        '<a href="https://shroyalschools.com/portal/staff/login/">shroyalschools.com/portal/staff/login/</a>',
+    'info@shroyalschools.com':
+        '<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>',
+}
+def linkify(b):
+    for plain, anchor in LINKS.items():
+        if plain in b and '<a ' not in b:
+            b = b.replace(plain, anchor)
+    return b
+blocks = [linkify(b) for b in blocks]
+
+# The two values only the system can know. Supplied -> the letter is
+# finished, and the activation link is a live hyperlink the recipient
+# clicks. Absent -> the gaps stay visible rather than silently wrong.
+if ARGS.staff_id:
+    blocks = [b.replace('[SHRS&#8209;HQ&#8209;REG&#8209;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;]', ARGS.staff_id)
+              for b in blocks]
+if ARGS.activation_url:
+    live = f'<a href="{ARGS.activation_url}">{ARGS.activation_url}</a>'
+    blocks = [b.replace('<span class="val">[activation link]</span>', live).replace('[activation link]', live)
+              for b in blocks]
 body = lambda a, b: '      <main class="body">\n' + "\n".join("        " + x for x in blocks[a:b]) + '\n      </main>'
 
 # §Rule 13 — the letter begins on sheet one.
