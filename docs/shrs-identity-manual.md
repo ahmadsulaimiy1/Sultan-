@@ -20,10 +20,15 @@ Built to the reference stationery the school chose, element for element:
 | **Field** | ivory, with reference at the left and date at the right |
 | **Bar** | coffee, at the foot, with the ribbon mirrored into it and a wedge folded into the opposite corner |
 
-The ribbon is a filled band between two Bézier curves, not a stroked
-line, because only a filled band can carry a real curve *and* a real
-fold — the fold being the darker plane where the band turns and shows its
-underside.
+**The ribbon is a stroked path with a round join, not a pair of Bézier
+curves.** In the reference it is a band of *constant width* that runs
+straight, turns once through a large radius, and ends on a straight cut.
+Two Béziers cannot hold a constant width round a corner, which is why the
+first attempt wobbled like a scarf instead of reading as a folded band of
+material. A stroke holds the width exactly, the round join gives the
+single large radius, and the butt cap gives the straight cut. The fold is
+a darker quadrilateral laid across the band at the turn, where the
+material shows its underside.
 
 ## The Axis survives
 

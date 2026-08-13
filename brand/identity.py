@@ -125,26 +125,29 @@ COFFEE_G = ('<linearGradient id="{i}" x1="0" y1="0" x2="1" y2=".7">'
 FOLD_G = ('<linearGradient id="{i}" x1="0" y1="0" x2=".6" y2="1">'
           '<stop offset="0" stop-color="#8A6A2E"/><stop offset="1" stop-color="#5A4119"/></linearGradient>')
 
-# The ribbon is a filled band between two curves, so it can hold a real
-# curve and a real fold. A stroked line cannot do either.
-HEAD_SVG = f"""<svg class="bnd" viewBox="0 0 210 {HEAD_H + 34}" preserveAspectRatio="none" aria-hidden="true">
+# THE RIBBON. In the reference it is a broad band of *constant width* that
+# runs straight, turns once through a large radius, and ends on a straight
+# cut. That is a stroked path with a round join — not a pair of Bezier
+# curves, which is what made the earlier attempt wobble like a scarf
+# instead of reading as a folded band of material.
+RIB_W = 27
+
+HEAD_SVG = f"""<svg class="bnd" viewBox="0 0 210 {HEAD_H + 40}" preserveAspectRatio="none" aria-hidden="true">
 <defs>{COFFEE_G.format(i='mh')}{GOLD_G.format(i='gh')}{FOLD_G.format(i='fh')}</defs>
 <path d="M0,0 H210 V{HEAD_H} H0 Z" fill="url(#mh)"/>
-<path d="M172,0 L210,0 L210,26 Z" fill="url(#gh)"/>
-<path d="M172,0 L184,0 L210,18 L210,26 Z" fill="url(#fh)" opacity=".55"/>
-<path d="M138,0 C138,20 131,34 114,45 C103,52 96,60 93,74
-         L107,78 C110,66 116,59 127,52 C147,40 154,22 154,0 Z" fill="url(#gh)"/>
-<path d="M120,40 C127,36 131,31 134,26 L149,32 C145,40 139,46 131,52 Z" fill="url(#fh)"/>
+<path d="M168,0 L210,0 L210,29 Z" fill="url(#gh)"/>
+<path d="M168,0 L181,0 L210,20 L210,29 Z" fill="url(#fh)" opacity=".6"/>
+<path d="M141,-8 L141,30 L114,70" fill="none" stroke="url(#gh)" stroke-width="{RIB_W}"
+      stroke-linejoin="round" stroke-linecap="butt"/>
+<path d="M127.5,26 L154.5,26 L150,41 L132,35 Z" fill="url(#fh)"/>
 </svg>"""
 
-FOOT_SVG = f"""<svg class="bnd" viewBox="0 0 210 {FOOT_H + 30}" preserveAspectRatio="none" aria-hidden="true">
+FOOT_SVG = f"""<svg class="bnd" viewBox="0 0 210 {FOOT_H + 34}" preserveAspectRatio="none" aria-hidden="true">
 <defs>{COFFEE_G.format(i='mf')}{GOLD_G.format(i='gf')}{FOLD_G.format(i='ff')}</defs>
-<path d="M0,30 H210 V{FOOT_H + 30} H0 Z" fill="url(#mf)"/>
-<path d="M172,{FOOT_H + 30} L210,{FOOT_H + 30} L210,31 Z" fill="url(#gf)"/>
-<path d="M172,{FOOT_H + 30} L184,{FOOT_H + 30} L210,39 L210,31 Z" fill="url(#ff)" opacity=".55"/>
-<path d="M138,{FOOT_H + 30} C138,46 131,38 114,31 C105,27 99,22 96,15
-         L110,11 C113,19 118,24 127,28 C147,37 154,46 154,{FOOT_H + 30} Z" fill="url(#gf)"/>
-<path d="M122,27 C128,30 132,33 135,37 L149,32 C146,27 141,23 134,19 Z" fill="url(#ff)"/>
+<path d="M0,34 H210 V{FOOT_H + 34} H0 Z" fill="url(#mf)"/>
+<path d="M146,{FOOT_H + 42} L146,30 L184,-2" fill="none" stroke="url(#gf)" stroke-width="{RIB_W}"
+      stroke-linejoin="round" stroke-linecap="butt"/>
+<path d="M132.5,34 L159.5,34 L155,19 L137,25 Z" fill="url(#ff)"/>
 </svg>"""
 
 # Four glyphs, drawn rather than imported: nothing here may depend on an
@@ -170,7 +173,7 @@ body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;g
 /* ═══ THE HEAD ═══ mass, corner wedge, inset panel, and the ribbon that
    sweeps down out of all three. */
 .head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:3}}
-.head .bnd{{top:0;height:{HEAD_H + 34}mm}}
+.head .bnd{{top:0;height:{HEAD_H + 40}mm}}
 .hgrid{{position:absolute;left:{MARGIN}mm;top:14mm;z-index:4;display:flex;align-items:center;gap:4.5mm}}
 .arms{{flex:0 0 auto;width:19mm;height:19mm;display:block}}
 .lock{{display:flex;align-items:stretch}}
@@ -223,7 +226,7 @@ body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;g
 
 /* ═══ THE FOOT ═══ the same three elements, turned through a half turn. */
 .foot{{flex:0 0 {FOOT_H}mm;position:relative;z-index:3}}
-.foot .bnd{{bottom:0;height:{FOOT_H + 30}mm}}
+.foot .bnd{{bottom:0;height:{FOOT_H + 34}mm}}
 /* the creed sits left of the ribbon, in the school's own voice */
 .creed{{position:absolute;left:{MARGIN}mm;width:60mm;top:50%;transform:translateY(-50%);z-index:4;
  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SMALL}pt;
@@ -234,7 +237,7 @@ body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;g
 
 /* continuation sheets: the mass halves and the panel drops away */
 .head.c2{{flex:0 0 {HEAD_H - 22}mm}}
-.head.c2 .bnd{{height:{HEAD_H + 12}mm}}
+.head.c2 .bnd{{height:{HEAD_H + 18}mm}}
 .head.c2 .hgrid{{top:7mm}} .head.c2 .arms{{width:17mm;height:17mm}}
 .head.c2 .lock .en{{font-size:8.4pt}} .head.c2 .lock .ar{{font-size:9.7pt}}
 @media print{{body{{background:none;padding:0;gap:0}}
