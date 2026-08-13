@@ -20,14 +20,18 @@ faces survive in the art, which is where the ceremony lives.
 """
 import pathlib, struct, zipfile
 
+import build as sheet
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / 'brand'
 
 TWIP = 1440 / 25.4                 # twips per mm
 EMU = 36000                        # EMU per mm
-PAGE_W, PAGE_H = 210.0, 297.0      # A4, mm
-MARGIN_L, MARGIN_R = 16.6, 14.0    # the sheet's own text block (§V-b grid)
-UNIT = 3.2                         # the spatial unit (§V-b)
+PXMM = 96 / 25.4
+PAGE_W, PAGE_H = sheet.W, sheet.H
+MARGIN_L = sheet.BODY_L            # the sheet's own text block (§III)
+MARGIN_R = sheet.W - sheet.BODY_R
+UNIT = sheet.NINTH                 # the margin module (§III)
 
 NS = ('xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" '
@@ -65,8 +69,8 @@ def anchor(rid, name, w_mm, h_mm, x_mm, y_mm, z):
 
 
 def build():
-    head_png, foot_png = OUT / 'band-masthead.png', OUT / 'band-foot.png'
-    rail_png = OUT / 'band-rail.png'
+    head_png, foot_png = OUT / 'band-masthead.png', OUT / 'band-record.png'
+    rail_png = OUT / 'band-quarter.png'
     for p in (head_png, foot_png, rail_png):
         if not p.exists():
             raise SystemExit('%s is missing — run brand/render.py first.' % p.name)
@@ -77,17 +81,19 @@ def build():
     # Full-bleed width; height follows the art's own aspect so nothing stretches.
     head_h = PAGE_W * hh / hw
     foot_h = PAGE_W * fh / fw
-    # The rail is the other way round: it spans the sheet's height, and its
-    # width follows from that, so the spine is unbroken on every page.
+    # The Quarter spans the sheet, so its width follows from its height. It is
+    # cut with a pixel of slack either side, which is why it is placed by its
+    # own left edge rather than by QUARTER_X.
     rail_w = PAGE_H * rw / rh
+    rail_x = sheet.QUARTER_X - 1 / PXMM
 
-    # The text block clears both bands by a whole number of units (§V-b).
-    top_mm = head_h + 3 * UNIT
-    bot_mm = foot_h + 2 * UNIT
+    # The text block clears both bands by a whole number of margin modules.
+    top_mm = head_h + UNIT
+    bot_mm = foot_h + UNIT / 2
 
     header = (f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
               f'<w:hdr {NS}><w:p><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr>'
-              + anchor('rId3', 'Rail', rail_w, PAGE_H, 0, 0, 1)
+              + anchor('rId3', 'Quarter', rail_w, PAGE_H, rail_x, 0, 1)
               + anchor('rId1', 'Masthead', PAGE_W, head_h, 0, 0, 2)
               + anchor('rId2', 'Foot', PAGE_W, foot_h, 0, PAGE_H - foot_h, 3)
               + '</w:p></w:hdr>')
@@ -111,7 +117,7 @@ def build():
               f'<w:styles {NS}>'
               f'<w:docDefaults><w:rPrDefault><w:rPr>'
               f'<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:cs="Georgia"/>'
-              f'<w:color w:val="1A1116"/><w:sz w:val="20"/><w:szCs w:val="20"/>'
+              f'<w:color w:val="241A0E"/><w:sz w:val="20"/><w:szCs w:val="20"/>'
               f'</w:rPr></w:rPrDefault>'
               f'<w:pPrDefault><w:pPr><w:spacing w:after="181" w:line="288" w:lineRule="auto"/>'
               f'<w:jc w:val="both"/></w:pPr></w:pPrDefault></w:docDefaults>'
@@ -120,9 +126,9 @@ def build():
               f'<w:style w:type="paragraph" w:styleId="Subject"><w:name w:val="Subject Line"/>'
               f'<w:basedOn w:val="Normal"/><w:qFormat/>'
               f'<w:pPr><w:jc w:val="left"/><w:spacing w:after="363"/>'
-              f'<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="2" w:color="7A2E3E"/></w:pBdr></w:pPr>'
-              f'<w:rPr><w:rFonts w:ascii="Cinzel" w:hAnsi="Cinzel"/><w:b/><w:caps/>'
-              f'<w:color w:val="2C0E17"/><w:sz w:val="20"/></w:rPr></w:style>'
+              f'<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="2" w:color="B08D45"/></w:pBdr></w:pPr>'
+              f'<w:rPr><w:rFonts w:ascii="EB Garamond" w:hAnsi="EB Garamond"/><w:b/><w:caps/>'
+              f'<w:color w:val="1C1409"/><w:sz w:val="20"/></w:rPr></w:style>'
               f'</w:styles>')
 
     types = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
@@ -152,7 +158,7 @@ def build():
                 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
                 '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/masthead.png"/>'
                 '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/foot.png"/>'
-                '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/rail.png"/>'
+                '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/quarter.png"/>'
                 '</Relationships>')
 
     core = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
@@ -173,13 +179,13 @@ def build():
         z.writestr('word/_rels/header1.xml.rels', hdr_rels)
         z.writestr('word/media/masthead.png', head_png.read_bytes())
         z.writestr('word/media/foot.png', foot_png.read_bytes())
-        z.writestr('word/media/rail.png', rail_png.read_bytes())
+        z.writestr('word/media/quarter.png', rail_png.read_bytes())
         z.writestr('docProps/core.xml', core)
 
     print('built: letterhead.docx')
     print('  masthead %.1f x %.1f mm at page (0, 0)' % (PAGE_W, head_h))
     print('  foot     %.1f x %.1f mm at page (0, %.1f)' % (PAGE_W, foot_h, PAGE_H - foot_h))
-    print('  rail     %.1f x %.1f mm at page (0, 0)' % (rail_w, PAGE_H))
+    print('  Quarter  %.2f x %.1f mm at page (%.2f, 0)' % (rail_w, PAGE_H, rail_x))
     print('  text block  top %.1f  bottom %.1f  left %.1f  right %.1f mm'
           % (top_mm, bot_mm, MARGIN_L, MARGIN_R))
     return target, head_h, foot_h, top_mm, bot_mm
@@ -237,11 +243,13 @@ def verify(target, head_h, foot_h, top_mm, bot_mm):
        'masthead %.1f + foot %.1f = %.1f of %.0f mm' % (head_h, foot_h, head_h + foot_h, PAGE_H))
     ok('text block clears both bands', top_mm >= head_h and bot_mm >= foot_h,
        'top %.1f >= %.1f, bottom %.1f >= %.1f mm' % (top_mm, head_h, bot_mm, foot_h))
-    ok('text block clearance is whole units',
-       abs(round((top_mm - head_h) / UNIT) - (top_mm - head_h) / UNIT) < .01
-       and abs(round((bot_mm - foot_h) / UNIT) - (bot_mm - foot_h) / UNIT) < .01,
-       '%.1f and %.1f mm (%.0f and %.0f units)'
-       % (top_mm - head_h, bot_mm - foot_h, (top_mm - head_h) / UNIT, (bot_mm - foot_h) / UNIT))
+    # The point of building the Word file from the sheet's own art is that the
+    # two are one design. That is only true if a typist's text block sits
+    # exactly where the sheet's body sits, so check it rather than trust it.
+    ok('typing area matches the sheet\'s body block',
+       abs(top_mm - sheet.BODY_T) <= .5 and abs((PAGE_H - bot_mm) - sheet.BODY_B) <= .5,
+       'top %.1f vs %.1f, foot %.1f vs %.1f mm'
+       % (top_mm, sheet.BODY_T, PAGE_H - bot_mm, sheet.BODY_B))
 
     # §Rule 0 — the singular Arabic name may not survive anywhere in the file.
     blob = b''.join(z.read(n) for n in names if n.endswith(('.xml', '.rels')))
@@ -249,11 +257,11 @@ def verify(target, head_h, foot_h, top_mm, bot_mm):
     ok('no singular Arabic name (Rule 0)', singular not in blob, 'absent from every part')
 
     # The coffee palette this file used to carry must be gone (§II-b).
-    coffee = [c for c in (b'241809', b'5A4630', b'6E5A3E', b'8E6A26') if c in blob]
-    ok('no coffee palette left (§II-b)', not coffee,
-       'garnet only' if not coffee else 'found %s' % [c.decode() for c in coffee])
+    stale = [c for c in (b'3B1420', b'7A2E3E', b'C9A45E', b'14060A') if c in blob]
+    ok('no garnet left from the old sheet', not stale,
+       'coffee only' if not stale else 'found %s' % [c.decode() for c in stale])
 
-    for part in ('word/media/masthead.png', 'word/media/foot.png', 'word/media/rail.png'):
+    for part in ('word/media/masthead.png', 'word/media/foot.png', 'word/media/quarter.png'):
         d = z.read(part)
         ok('%s is a valid PNG' % part.split('/')[-1], d[:8] == b'\x89PNG\r\n\x1a\n',
            '%dx%d px' % struct.unpack('>II', d[16:24]))
