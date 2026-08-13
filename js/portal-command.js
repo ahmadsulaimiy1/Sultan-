@@ -87,7 +87,7 @@
     registrar: "Office of the Registrar",
     finance:   'Bursary & Finance',
     executive: 'Executive Office',
-    founder:   "Founder's Office"
+    founder:   'Head of Schools · Chairman'
   };
 
   /* The session runs September to August, so a date in January belongs to the
@@ -777,7 +777,12 @@
     registrar: { name: 'Office of the Registrar',       photo: 'graduation-prize-giving.jpg' },
     finance:   { name: 'The Bursary',                   photo: 'campus-aerial.jpg' },
     executive: { name: 'The Executive Office',          photo: 'campus-aerial-hero.jpg' },
-    founder:   { name: "The Founder's Office",          photo: 'graduation-with-founder.jpg' }
+    /* Renamed from the Founder's Office. The data attributes and API paths
+       keep the word 'founder' because they are wired to authentication;
+       renaming those would lock the office out of its own dashboard. Only
+       what a person reads has changed. */
+    founder:   { name: 'Office of the Head of Schools',
+                 photo: 'graduation-with-founder.jpg' }
   };
 
   function dressOffice() {

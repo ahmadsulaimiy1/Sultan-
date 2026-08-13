@@ -932,3 +932,139 @@ body.portal-body .exec-welcome > * { position: relative; z-index: 1; }
   .cmd-reveal.is-in .cmd-kpi-row::after { width: 46px; }
   .cmd-card--lit { transition: none; }
 }
+
+/* ===========================================================================
+   14. THE REGISTRAR, AND THE OFFICE OF THE HEAD OF SCHOOLS
+   ===========================================================================
+   Each office brought its own surfaces, and each was painted for the old
+   espresso ground: the Registrar's .pls-* cards and field rows, the Head of
+   Schools' .pfd-* briefing grid. Read from the markup rather than guessed at.
+   =========================================================================== */
+
+/* --- shared: any office surface sitting on the ivory field ---------------- */
+body.portal-body .pls-card,
+body.portal-body .pls-hero,
+body.portal-body .pfd-grid > *,
+body.portal-body .pfd-briefing-text,
+body.portal-body .pfd-alerts-list,
+body.portal-body .exec-stat-grid > * {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 16px 38px -20px rgba(60,42,16,.24) !important;
+  color: var(--cmd-ink) !important;
+}
+
+/* the Registrar's group heads become the same cream shelf as everywhere else */
+body.portal-body .office-group-head,
+body.portal-body .pls-hero {
+  position: relative;
+  background: linear-gradient(180deg, #FFFDF8 0%, #F6EEDE 100%) !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .office-group-head::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--cmd-foil);
+}
+body.portal-body .office-group-head h2,
+body.portal-body .office-group-head h3,
+body.portal-body .pls-hero h1,
+body.portal-body .pls-hero h2,
+body.portal-body .cc-greeting {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .cc-tagline,
+body.portal-body .pls-row .label,
+body.portal-body .portal-field .label,
+body.portal-body .identity-field .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .pls-row,
+body.portal-body .portal-field,
+body.portal-body .identity-field {
+  background: rgba(255,255,255,.68) !important;
+  border: 1px solid rgba(198,161,91,.22) !important;
+  border-radius: 12px;
+  color: var(--cmd-ink) !important;
+}
+
+/* --- the Head of Schools: a briefing room, not a list --------------------- */
+body.portal-body .pfd-action-btn {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border: 1px solid rgba(247,235,205,.6) !important;
+  font-weight: 600; letter-spacing: .05em; border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(120,88,28,.26) !important;
+}
+body.portal-body .pfd-bars > * { background: var(--cmd-foil) !important; }
+body.portal-body .exec-welcome-narrative,
+body.portal-body .pfd-briefing-text {
+  font-family: 'EB Garamond', Garamond, serif; font-size: 15.5px; line-height: 1.68;
+}
+/* the health line in the hero keeps its light treatment — it is on the photo */
+body.portal-body .exec-welcome-health,
+body.portal-body .exec-welcome-narrative { color: rgba(251,243,223,.90) !important; }
+body.portal-body .exec-welcome-health .dot { box-shadow: 0 0 0 3px rgba(233,206,138,.18); }
+
+/* The Head of Schools opens on the fullest ornament in the house: the crest
+   watermark struck into the hero behind the briefing. */
+body.portal-body[data-atmosphere="founder"] .exec-welcome::before {
+  width: 64px; height: 64px; border-width: 1.5px;
+}
+body.portal-body[data-atmosphere="founder"] .exec-welcome::after {
+  width: 64px; height: 64px; border-width: 1.5px;
+}
+
+/* --- the header on office pages -------------------------------------------
+   The Registrar carries four nav links the dashboard does not, and they were
+   squeezing the identity until the wordmark clipped to "SULTAN HA". The
+   identity is never allowed to shrink — it is the one thing on the bar that
+   must always be legible — and the actions wrap beneath instead. */
+body .portal-topbar.cmd-header { min-height: var(--cmd-header-h); height: auto;
+  padding-top: 6px; padding-bottom: 6px; }
+.cmd-identity { flex: none; }
+.cmd-identity-name, .cmd-identity-sub { overflow: visible; text-overflow: clip; }
+.cmd-actions { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+.cmd-header a[href]:not(.cmd-btn):not(.cmd-identity) {
+  color: var(--cmd-cream); text-decoration: none; font-size: 12px;
+  padding: 0 9px; height: 32px; display: inline-flex; align-items: center;
+  border-radius: 9px; border: 1px solid rgba(233,206,138,.22);
+  white-space: nowrap;
+  transition: border-color .3s var(--cmd-ease), background .3s var(--cmd-ease);
+}
+.cmd-header a[href]:not(.cmd-btn):not(.cmd-identity):hover {
+  border-color: rgba(233,206,138,.55); background: rgba(255,250,240,.10);
+}
+
+/* --- ghosted body copy on office heroes ----------------------------------- */
+body.portal-body .pls-hero p,
+body.portal-body .pls-hero .sub,
+body.portal-body .office-group-head p,
+body.portal-body .portal-card .sub {
+  color: rgba(42,32,22,.78) !important;
+}
+
+/* --- inputs, in the same cream as the cards they sit in -------------------- */
+body.portal-body .portal-card input[type="text"],
+body.portal-body .portal-card input[type="search"],
+body.portal-body .portal-card input[type="email"],
+body.portal-body .portal-card input[type="number"],
+body.portal-body .portal-card select,
+body.portal-body .portal-card textarea,
+body.portal-body .pls-card input,
+body.portal-body .pls-card select {
+  background: #FFFDF8 !important;
+  border: 1px solid rgba(198,161,91,.40) !important;
+  color: var(--cmd-ink) !important;
+  border-radius: 10px !important;
+}
+body.portal-body .portal-card input::placeholder,
+body.portal-body .pls-card input::placeholder { color: rgba(42,32,22,.42) !important; }
+body.portal-body .portal-card input:focus,
+body.portal-body .pls-card input:focus {
+  outline: none; border-color: rgba(198,161,91,.85) !important;
+  box-shadow: 0 0 0 3px rgba(198,161,91,.16) !important;
+}
