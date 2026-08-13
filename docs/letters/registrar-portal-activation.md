@@ -1,8 +1,22 @@
 # Letter — Registrar, portal activation
 
-A template. Everything in **[square brackets]** must be replaced before
-sending. Nothing in this letter names a real person, and no password or
-link is written into this repository — the activation link is generated
+Everything the school publishes is now filled in: the date, the reference,
+the five institutions, and the signatory — **Dr. Zakariya Olanrewaju Anofi,
+Founder, Chairman of the Board of Governors & Head of Schools**, as the
+site names him.
+
+**Three blanks remain, and none of them could be filled honestly:**
+
+- **the Registrar's name** — no Registrar is named anywhere on the site
+  or in the database seed, so inventing one was not an option;
+- **the Staff Identity Number** — issued by the system at the moment the
+  account is created, and not knowable before then;
+- **the activation link** — a single-use secret generated per person. It
+  must never be guessed, and must never live in this repository.
+
+All three appear in the letter underlined in gold so they cannot be
+missed. Fill them from the Admin Centre screen that creates the account —
+it shows the Staff ID and the link together. — the activation link is generated
 per person in the Admin Centre and pasted in at the moment of sending.
 
 Reusable for any officer: change the role paragraph and the list of what
@@ -12,11 +26,11 @@ their portal opens.
 
 **SULTAN HANAFI ROYAL SCHOOLS**
 Ikorodu, Lagos State, Nigeria
-Office of the Head of Schools & Administrator
+Office of the Founder, Chairman of the Board of Governors & Head of Schools
 
 ---
 
-**[Date]**
+**13 August 2026**
 
 **[Full Name]**
 Registrar
@@ -26,7 +40,7 @@ Sultan Hanafi Royal Schools
 
 ### ACTIVATION OF YOUR OFFICIAL PORTAL ACCOUNT — OFFICE OF THE REGISTRAR
 
-Dear **[Madam / Ms / Mrs / Dr — as appropriate]**,
+Dear **[Sir / Madam — as appropriate]**,
 
 I am pleased to inform you that your official account on the Sultan
 Hanafi Royal Schools Digital Campus has been created, and that the
@@ -113,9 +127,8 @@ Yours sincerely,
 
 &nbsp;
 
-**[Full Name]**
-Head of Schools & Administrator
-Chairman, Board of Governors
+**Dr. Zakariya Olanrewaju Anofi**
+Founder, Chairman of the Board of Governors & Head of Schools
 Sultan Hanafi Royal Schools
 
 ---
