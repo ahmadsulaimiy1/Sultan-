@@ -587,3 +587,270 @@ body .portal-topbar.cmd-header {
 .cmd-axis span { flex: 1 1 0; min-width: 0; text-align: center; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap; }
 .cmd-card--deep .cmd-axis { color: rgba(241,231,212,.62); }
+
+/* ===========================================================================
+   10. THE FIELD — brought to the public site's standard
+   ===========================================================================
+
+   The portals were espresso end to end: correct tokens, wrong proportion. On
+   the public site the deep colour is an ACCENT — a masthead strip and an
+   action bar — and the field is ivory going to white, which is what makes the
+   gold read as metal and the photography read as photography. Brown over the
+   whole surface turns gold to mud and leaves no cream anywhere.
+
+   Values below are the public site's own, read off the rendered page rather
+   than guessed: ivory #F7EEDF, cream #F1E4C8, gold #C6A15B, ink #2A2016,
+   espresso #221709.
+   =========================================================================== */
+
+:root {
+  --cmd-ivory:  #F7EEDF;
+  --cmd-cream:  #F1E4C8;
+  --cmd-gold:   #C6A15B;
+  --cmd-champagne: #E9CE8A;
+  --cmd-ink:    #2A2016;
+  --cmd-espresso: #221709;
+
+  /* Real metal. A single hex is flat paint; foil is a ramp through highlight,
+     body, shadow and back to highlight, because a struck surface catches the
+     light along its length. Every gold rule and every gold face uses this. */
+  --cmd-foil: linear-gradient(100deg,
+    #8A6A2E 0%, #C6A15B 14%, #F3E3B8 30%, #E9CE8A 42%,
+    #C6A15B 55%, #9A7734 68%, #E9CE8A 84%, #FBF3DF 100%);
+  --cmd-foil-soft: linear-gradient(100deg,
+    rgba(198,161,91,.55) 0%, rgba(243,227,184,.95) 32%,
+    rgba(198,161,91,.75) 58%, rgba(233,206,138,.95) 100%);
+}
+
+/* The field. Ivory at the head, warming into white — the public site's own
+   ground, applied over whatever the atmosphere layer painted. */
+body.portal-body {
+  background:
+    radial-gradient(1180px 620px at 78% -10%, rgba(233,206,138,.22), transparent 62%),
+    radial-gradient(900px 520px at 6% 104%, rgba(198,161,91,.16), transparent 60%),
+    linear-gradient(180deg, #FBF6EC 0%, #FFFFFF 46%, #FCF8F0 100%) !important;
+  color: var(--cmd-ink);
+}
+
+/* Text that used to sit light-on-espresso now sits on ivory, so it takes ink.
+   Anything on the photographic hero keeps its light treatment (below). */
+.portal-main .account-status-banner span,
+.portal-main .portal-notifications-head span,
+.portal-main .portal-notifications-head .portal-text-btn { color: var(--cmd-ink); }
+
+/* --- cards, in the public site's language -------------------------------- */
+.cmd-card {
+  background: linear-gradient(164deg, #FFFFFF 0%, var(--cmd-ivory) 62%, var(--cmd-cream) 100%);
+  border: 1px solid rgba(198,161,91,.34);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 1px 2px rgba(60,42,16,.05),
+    0 14px 34px -16px rgba(60,42,16,.26);
+}
+.cmd-card:hover {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 3px 8px rgba(60,42,16,.07),
+    0 26px 52px -20px rgba(60,42,16,.34);
+}
+.cmd-card--deep {
+  background: linear-gradient(158deg, #2E2010 0%, #221709 58%, #170F05 100%);
+  border-color: rgba(198,161,91,.42);
+}
+
+/* the travelling light, in metal rather than in paint */
+.cmd-card--lit::before {
+  background: conic-gradient(from var(--cmd-angle),
+    transparent 0turn, transparent .60turn,
+    rgba(198,161,91,.35) .72turn,
+    rgba(233,206,138,.98) .80turn,
+    #FFFDF4 .828turn,
+    rgba(233,206,138,.98) .856turn,
+    rgba(198,161,91,.35) .94turn,
+    transparent 1turn);
+}
+
+/* Rules are struck, not painted. */
+.cmd-record-rule, .cmd-ornament, .cmd-intel-head { border-image: none; }
+.cmd-ornament { background: var(--cmd-foil-soft); height: 1px; opacity: .85; }
+.cmd-intel-head { border-bottom: 0; position: relative; }
+.cmd-intel-head::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--cmd-foil-soft);
+}
+.cmd-intel-head .cmd-card-title {
+  background: var(--cmd-foil); -webkit-background-clip: text; background-clip: text;
+  color: transparent; font-size: 22px;
+}
+.cmd-intel-head .cmd-card-label { color: #8A6A2E; }
+
+/* label and value colours for the light field */
+.cmd-card-label { color: #8A6A2E; }
+.cmd-card-title { color: var(--cmd-ink); }
+.cmd-kpi-value  { color: var(--cmd-espresso); }
+.cmd-kpi-note   { color: rgba(42,32,22,.72); }
+.cmd-empty-title { color: var(--cmd-ink); }
+.cmd-empty-note  { color: rgba(42,32,22,.66); }
+
+/* the header keeps the espresso, because on the public site the deep colour
+   is exactly this: a strip that anchors a light page. Its gold becomes metal. */
+.cmd-identity-name { background: var(--cmd-foil); -webkit-background-clip: text;
+  background-clip: text; color: transparent; }
+.cmd-header::after, .cmd-footer::before { background-image: var(--cmd-foil); }
+
+/* ===========================================================================
+   11. THE PHOTOGRAPHIC HERO
+   The welcome panel becomes what the public site's hero is: a photograph of
+   the school under an espresso veil, with gold brackets and the crest. It is
+   also why the ground can go ivory — the light type in this panel now sits on
+   a photograph, where it belongs, instead of on a brown page.
+   =========================================================================== */
+
+.portal-main .exec-welcome {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-radius: var(--cmd-radius);
+  padding: clamp(30px, 5vw, 58px) clamp(22px, 4vw, 54px);
+  border: 1px solid rgba(198,161,91,.42);
+  background:
+    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.72) 46%, rgba(23,15,5,.93) 100%),
+    url('/assets/images/campus/campus-frontage.jpg') center 32% / cover no-repeat;
+  box-shadow: 0 26px 60px -26px rgba(40,26,8,.55);
+}
+/* the gold brackets, as on the public hero */
+.portal-main .exec-welcome::before,
+.portal-main .exec-welcome::after {
+  content: ''; position: absolute; width: 46px; height: 46px; pointer-events: none;
+  border: 1px solid rgba(233,206,138,.72);
+}
+.portal-main .exec-welcome::before { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.portal-main .exec-welcome::after  { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+.portal-main .exec-welcome h1 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  color: #FFFDF7; font-size: clamp(26px, 3.6vw, 44px); line-height: 1.12;
+  text-shadow: 0 2px 18px rgba(0,0,0,.5);
+}
+.portal-main .exec-welcome-eyebrow,
+.portal-main .exec-welcome-role { color: var(--cmd-champagne); }
+.portal-main .exec-welcome-motto {
+  font-family: 'EB Garamond', Garamond, serif; font-style: italic;
+  color: rgba(251,243,223,.88); font-size: clamp(14px, 1.5vw, 18px);
+}
+.portal-main .exec-welcome-stats {
+  margin-top: calc(var(--cmd-u) * 3); padding-top: calc(var(--cmd-u) * 2.5);
+  position: relative;
+}
+.portal-main .exec-welcome-stats::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--cmd-foil-soft); opacity: .8;
+}
+.portal-main .exec-welcome-stat .value {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  background: var(--cmd-foil); -webkit-background-clip: text; background-clip: text;
+  color: transparent; font-variant-numeric: tabular-nums;
+}
+.portal-main .exec-welcome-stat .label {
+  color: rgba(233,206,138,.78); letter-spacing: .16em; text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-card--lit::before { background: var(--cmd-foil-soft); }
+}
+
+/* ===========================================================================
+   12. THE LEGACY SURFACES, BROUGHT ONTO THE LIGHT FIELD
+   ===========================================================================
+   Every card in the 72 pages was painted for an espresso ground: dark
+   semi-transparent gradients that read as sludge once the field went ivory.
+   Turning the field alone would have been half a job, so the existing
+   surfaces are restated here in the same cream-and-metal language as the new
+   ones. One card treatment across the portal, whichever file drew it.
+   =========================================================================== */
+
+.portal-body .portal-card,
+.portal-body .portal-child-card,
+.portal-body .exec-panel,
+.portal-body .portal-results,
+.portal-body .portal-messaging,
+.portal-body .portal-section {
+  background: linear-gradient(164deg, #FFFFFF 0%, var(--cmd-ivory) 64%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.34) !important;
+  border-radius: var(--cmd-radius);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 1px 2px rgba(60,42,16,.05),
+    0 14px 34px -16px rgba(60,42,16,.24) !important;
+  color: var(--cmd-ink);
+}
+
+/* headers inside those cards */
+.portal-body .portal-card > h2,
+.portal-body .portal-card > h3,
+.portal-body .portal-card-head,
+.portal-body .portal-child-card h2,
+.portal-body .portal-child-card h3,
+.portal-body .portal-results h3,
+.portal-body .exec-panel h2,
+.portal-body .exec-panel h3 {
+  background: transparent !important;
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  border-bottom: 0 !important;
+}
+
+/* body copy, labels and the small print inside them */
+.portal-body .portal-card p,
+.portal-body .portal-card li,
+.portal-body .portal-card td,
+.portal-body .portal-card th,
+.portal-body .portal-card .sub,
+.portal-body .portal-child-card p,
+.portal-body .portal-child-card td,
+.portal-body .portal-child-card th,
+.portal-body .portal-notice { color: rgba(42,32,22,.82) !important; }
+
+.portal-body .portal-stat,
+.portal-body .portal-checklist-item,
+.portal-body .portal-results-scroll {
+  background: rgba(255,255,255,.62) !important;
+  border: 1px solid rgba(198,161,91,.24) !important;
+  border-radius: var(--cmd-radius-sm);
+}
+.portal-body .portal-stat .label,
+.portal-body .portal-checklist-item .label {
+  color: #8A6A2E !important; letter-spacing: .16em; text-transform: uppercase;
+}
+.portal-body .portal-stat .value {
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-variant-numeric: tabular-nums;
+}
+
+/* a progress bar reads as struck metal rather than as a coloured strip */
+.portal-body .portal-progress,
+.portal-body .welcome-progress { background: rgba(42,32,22,.10) !important; }
+.portal-body .portal-progress > *,
+.portal-body .welcome-progress > * { background: var(--cmd-foil) !important; }
+
+/* primary actions */
+.portal-body .portal-submit,
+.portal-body .portal-btn-primary,
+.portal-body .portal-messaging-new {
+  background: var(--cmd-foil) !important;
+  color: #241A0E !important; border: 1px solid rgba(247,235,205,.6) !important;
+  font-weight: 600; letter-spacing: .04em;
+  box-shadow: 0 2px 10px rgba(120,88,28,.24) !important;
+}
+.portal-body .portal-text-btn,
+.portal-body .portal-back-link,
+.portal-body a.portal-link { color: #8A6A2E !important; }
+
+/* The hero's own numbers: the foil ramp is for large display type only. At
+   stat size the gradient loses its highlights and reads as a tint, so these
+   take champagne flat — legible, and still metal-adjacent. */
+.portal-main .exec-welcome-stat .value {
+  background: none; -webkit-background-clip: border-box; background-clip: border-box;
+  color: var(--cmd-champagne);
+}
+
+/* The content column was left-aligned against a wide field. Centre it. */
+.portal-body .portal-wrap { margin-inline: auto; }
