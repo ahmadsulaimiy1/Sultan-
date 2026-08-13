@@ -21,6 +21,24 @@
   var noticeEl = document.querySelector('[data-nr-notice]');
   var formEl = document.querySelector('[data-nr-form]');
   var categoryEl = document.querySelector('[data-nr-category]');
+  var formTitleEl = document.querySelector('[data-nr-form-title]');
+  var formNoteEl = document.querySelector('[data-nr-form-note]');
+  var editingEl = document.querySelector('[data-nr-editing]');
+  var editingTitleEl = document.querySelector('[data-nr-editing-title]');
+  var submitEl = document.querySelector('[data-nr-submit]');
+  var cancelEl = document.querySelector('[data-nr-cancel]');
+
+  // The id being edited, or null when composing. The endpoint has carried
+  // an `update` action since it was written and nothing ever called it,
+  // so a typo in a published notice could only be met with archive and
+  // rewrite — which starts a new row, abandons the RSVP count, and leaves
+  // the wrong wording standing in a record that is never deleted.
+  var editingId = null;
+
+  // Every field the composer can write. Kept in one place because edit
+  // mode has to fill them, clear them, and read them back.
+  var FIELDS = ['category', 'title', 'summary', 'body', 'venue', 'eventDate',
+                'eventTime', 'actionLabel', 'actionUrl', 'imageUrl'];
 
   var CATEGORY_LABELS = {
     admissions: 'Admissions',
@@ -63,6 +81,50 @@
     return b;
   }
 
+  function setField(name, value) {
+    var input = formEl.elements[name];
+    if (input) input.value = value == null ? '' : String(value);
+  }
+
+  // An event_date comes back as a timestamp; <input type="date"> only
+  // accepts YYYY-MM-DD, and silently shows nothing if given anything else
+  // — which would read as "this notice has no date" and clear a real one
+  // on the next save.
+  function dateForInput(v) {
+    if (!v) return '';
+    var s = String(v);
+    return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : '';
+  }
+
+  function stopEditing() {
+    editingId = null;
+    formEl.reset();
+    if (formTitleEl) formTitleEl.textContent = 'Write an announcement';
+    if (formNoteEl) formNoteEl.textContent = 'Saved as a draft first';
+    if (editingEl) editingEl.hidden = true;
+    if (submitEl) submitEl.textContent = 'Save as draft';
+    if (cancelEl) cancelEl.hidden = true;
+  }
+
+  function startEditing(item) {
+    editingId = item.id;
+    FIELDS.forEach(function (k) {
+      setField(k, k === 'eventDate' ? dateForInput(item.eventDate) : item[k]);
+    });
+    if (formTitleEl) formTitleEl.textContent = 'Edit this announcement';
+    if (formNoteEl) {
+      formNoteEl.textContent = item.status === 'published'
+        ? 'Live — your change shows at once' : 'Draft';
+    }
+    if (editingTitleEl) editingTitleEl.textContent = item.title;
+    if (editingEl) editingEl.hidden = false;
+    if (submitEl) submitEl.textContent = 'Save changes';
+    if (cancelEl) cancelEl.hidden = false;
+    if (formEl.scrollIntoView) formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var first = formEl.elements.title;
+    if (first && first.focus) first.focus();
+  }
+
   function renderItem(item) {
     var card = el('div', 'nr-item');
     card.setAttribute('data-status', item.status);
@@ -84,6 +146,9 @@
     card.appendChild(el('div', 'nr-item-meta', meta.join(' · ')));
 
     var actions = el('div', 'nr-actions');
+    // Editing is offered in every status, including archived: the archive
+    // is permanent, so a mistake left in it is left there for good.
+    actions.appendChild(button('Edit', null, function () { startEditing(item); }));
     if (item.status !== 'published') {
       // An archived item can be published again — the endpoint allows
       // it and it is a real need ("run last year's notice again"). But
@@ -159,14 +224,16 @@
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (res.status === 401) { window.location.href = '/portal/staff/login/'; return; }
+      if (res.status === 401) { window.location.href = '/portal/staff/login/'; return false; }
       var data = await res.json().catch(function () { return {}; });
-      if (!res.ok) { notify(data.error || 'That did not go through.', true); await load(); return; }
+      if (!res.ok) { notify(data.error || 'That did not go through.', true); await load(); return false; }
       notify(successMessage, false);
       await load();
+      return true;
     } catch (err) {
       notify('That did not go through — please check your connection and try again.', true);
       await load();
+      return false;
     }
   }
 
@@ -188,23 +255,40 @@
     formEl.addEventListener('submit', async function (e) {
       e.preventDefault();
       var fd = new FormData(formEl);
-      var payload = { action: 'create' };
-      ['category', 'title', 'summary', 'body', 'venue', 'eventDate', 'eventTime', 'actionLabel', 'actionUrl']
-        .forEach(function (k) {
-          var v = (fd.get(k) || '').toString().trim();
-          if (v) payload[k] = v;
-        });
+      var editing = editingId != null;
+      var payload = editing ? { action: 'update', id: editingId } : { action: 'create' };
+      FIELDS.forEach(function (k) {
+        var v = (fd.get(k) || '').toString().trim();
+        // On create, an empty field is simply not sent — the column keeps
+        // its default. On update, an empty field is sent as '', which the
+        // endpoint reads as "clear this"; that is the whole point of an
+        // editor, and it is why the two modes cannot share one rule.
+        if (v) payload[k] = v;
+        else if (editing) payload[k] = '';
+      });
       if (!payload.category || !payload.title || !payload.summary) {
         notify('A category, a title and a summary are the three things every announcement needs.', true);
         return;
       }
-      var submitBtn = formEl.querySelector('[type="submit"]');
+      var submitBtn = submitEl || formEl.querySelector('[type="submit"]');
       if (submitBtn) submitBtn.disabled = true;
-      // Created as a draft, always — the endpoint enforces this, and it
-      // is the right default: nothing reaches families by accident.
-      await act(payload, 'Saved as a draft. Read it once more, then publish it.');
-      formEl.reset();
+      // Created as a draft, always — the endpoint enforces this, and it is
+      // the right default: nothing reaches families by accident.
+      var ok = await act(payload, editing
+        ? 'Saved. The change is live wherever this announcement already appears.'
+        : 'Saved as a draft. Read it once more, then publish it.');
+      // Only clear the composer once the work is safely stored. A failed
+      // save that emptied the form would cost the editor everything they
+      // had just written, which is the worst moment to lose it.
+      if (ok) stopEditing();
       if (submitBtn) submitBtn.disabled = false;
+    });
+  }
+
+  if (cancelEl) {
+    cancelEl.addEventListener('click', function () {
+      stopEditing();
+      notify('Edit abandoned. Nothing was changed.', false);
     });
   }
 
