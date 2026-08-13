@@ -7,66 +7,75 @@ stationery, rendered from the same sheet so the two cannot drift).
 
 ---
 
-## The signature — the Axis
+## The architecture
 
-The school teaches in two languages and it is **one school**. So the two
-names are not stacked, and neither is a caption to the other: they meet
-at a single vertical gold member, English running right-to-left toward
-it, Arabic running left-to-right toward it. That member is the **Axis**.
+Built to the reference stationery the school chose, element for element:
 
-And it does not stop there. **It runs the full height of the sheet**, from
-the top trim to the foot band, and the whole page is built off it:
+| Element | Where |
+|---|---|
+| **Mass** | coffee, across the head, 59 mm |
+| **Wedge** | gold, folded into the top-right corner |
+| **Panel** | contact detail inset at the right, rounded, each line badged with a gold disc |
+| **Ribbon** | gold, sweeping down out of the mass on a curve, **folding** where it crosses the mass's edge and running on into the ivory |
+| **Field** | ivory, with reference at the left and date at the right |
+| **Bar** | coffee, at the foot, with the ribbon mirrored into it and a wedge folded into the opposite corner |
 
-- the **arms stand astride it**, 38 mm, centred on it;
-- **left of it, the margin column** carries the document's apparatus —
-  reference, date, folio — because a scholarly page has always kept its
-  apparatus in the margin, and it is why this sheet has no empty quarter;
-- **right of it, the text**, 104 mm of measure, 51 characters;
-- the **double rule crosses it**, tying the two columns into one page.
+The ribbon is a filled band between two Bézier curves, not a stroked
+line, because only a filled band can carry a real curve *and* a real
+fold — the fold being the darker plane where the band turns and shows its
+underside.
 
-An earlier revision centred everything on the sheet's middle. That was
-the deeper failure, and no amount of correct measurement fixed it:
-**centring is the least designed arrangement available**, it gives a page
-no tension, and it makes the arms, the name, the rule and the schools
-into a stack of four things rather than a composition.
+## The Axis survives
 
-It is the only device the system has, and it is the only one it needs:
+Inside the mass, the two names still meet at a single vertical gold
+member: English running right-to-left toward it, Arabic running
+left-to-right toward it. It is the one thing carried through every
+revision of this identity, because it is the one thing that is true of
+this school and of no other — **the lock cannot be built in one language
+alone.**
 
-- It says something **true about this institution** that no other
-  institution can say in the same way. It is not a shape borrowed from a
-  template; it is the school's own bilingualism made structural.
-- It **cannot be built in one language alone.** Remove either name and
-  the Axis has nothing to hold.
-- It is **one flat ink, one vertical rule.** It can be foiled, letter-
-  pressed, engraved, embroidered, cast in brass, or typed — at any size,
-  by anyone, anywhere, for almost nothing.
-- **Fifteen-per-cent test:** a fragment showing two languages meeting at
-  a gold vertical, with arms above it, is SHRS and nothing else.
+- Both names break into the same number of lines, and the Arabic break
+  falls after the *iḍāfa*, the unit that must not be split.
+- Arabic is set at 1.15× the Latin size, so the two match in *presence*
+  rather than in point size. Asserted.
+- English ends on the Axis and Arabic begins on it, within 2 px. Asserted.
 
-## What this sheet deliberately does not do
+## What this architecture costs, stated plainly
 
-No coffee masses. No ribbon. No gradient. No printed paper texture, no
-vignette, no watermark, no microtext, no drop shadow on the arms, no
-diagonal, no fold, no streaks, no icon badges.
+**Ink coverage is 29% of the sheet** — the mass and the bar together —
+against 4–12% for the institutions named in `docs/letterhead-audit.md`.
 
-Every one of those was present in an earlier revision, and every one was
-removed against a **measured** fault. The audit that removed them is
-`docs/letterhead-audit.md`, and it is kept in the repository precisely so
-that nobody — including a future me — quietly puts them back.
+That is the architecture's own cost, and it is recorded here so it is
+never mistaken for an oversight:
 
-## The governing numbers
+- printing routine correspondence on it is several times the cost of a
+  light sheet;
+- the heavy areas sit where the sheet is gripped, so pages will mark each
+  other in the output tray;
+- it reads as contemporary rather than ancient.
 
-| | This sheet | Why |
-|---|---|---|
-| Ink coverage | **7.4%** | Oxford ~5, Cambridge ~6, Aramco ~12. Above about 15% a school cannot afford to print ordinary correspondence on its own letterhead. It was 51.2%. |
-| Left edges, flowed text | **1** | It was eleven, two of them half a millimetre apart. |
-| Right edges, flowed text | **1** | It was fifteen. |
-| Composition | **asymmetric, off one spine** | It was a centred stack, which is no composition at all. |
-| Type sizes | **5** | One modular scale, ratio 1.25 from 10.5 pt. It was twelve, four of them inside a 0.7 pt band. |
-| Smallest type anywhere | **6.7 pt** | Nothing below 6.5 pt on paper. |
-| Smallest reversed type | **8.4 pt** | Reversed type below 7 pt fills in on any office laser and closes up entirely under offset dot gain. Four elements were below 6 pt. |
-| Measure | **104 mm** | 51 characters. 45–75 is the readable range; it was 90. |
-| Inks | **2** | Coffee `#2E1A0D` and one flat gold. A gradient gold bands in CMYK, goes green under dot gain, and as foil costs a separate pass on every sheet. |
+The school chose this register deliberately, having seen the alternative
+built. The audit's *craft* rules are kept regardless, because they are
+not matters of register:
+
+- nothing below **6.7 pt** anywhere, nothing below **8.4 pt** reversed
+  out of the coffee — reversed type below 7 pt fills in on any office
+  laser and closes entirely under offset dot gain;
+- **five type sizes**, one modular scale;
+- **one left edge and one right edge** for flowed text;
+- the arms carry **no drop shadow and no glow ring** — arms are never
+  shadowed;
+- **no printed paper texture, vignette or watermark** — the stock
+  provides the texture.
+
+## The five schools
+
+They are not on this sheet. The architecture's head is occupied by the
+mass, the panel and the ribbon, and the five names will not fit the foot
+bar at 8.4 pt without running past the trim. They are named in the letter
+itself and on the website, which is where a reader meets them anyway.
+Forcing them on would have meant setting them below the print floor, and
+that is the one thing the audit does not allow.
 
 ## The material
 

@@ -67,7 +67,9 @@ FONTS = ''.join(
     for fam, style, wt, f in FACES)
 # single-ink arms: the stock artwork is drawn light for a dark ground and
 # disappears on ivory, so it is re-rendered in one colour by build-arms.py
-CREST = b64(ROOT / 'assets' / 'crest-coffee.png')
+# on this architecture the arms sit on the coffee mass, so they take the
+# light artwork; crest-coffee.png is the single-ink version for ivory
+CREST = b64(ROOT / 'assets' / 'crest.png')
 
 # ── ink. Two colours and the paper. Coffee is the text ink; gold is one
 # flat specified colour — Pantone 872, or a single CMYK build — because a
@@ -85,171 +87,196 @@ HOUSES = ['Nursery &amp; Primary', 'Royal College', 'Islamic &amp; Arabic Studie
           'Qur&rsquo;an College', 'Online &amp; Distance Learning']
 INST = f' {QUAD} '.join(HOUSES)
 
-# ── the scale. Ratio 1.25 from a 10.5pt body. Five sizes, and one derived:
-# the Arabic is set at 1.15x the Latin, because Amiri at matched point size
-# reads smaller — matching the numbers would make the Arabic subordinate,
-# and it is matching the *presence* that parity actually requires.
+# ── the scale. Ratio 1.25 from a 10.5pt body. The print floors survive
+# from the audit, because they are craft and not register: nothing below
+# 6.7pt anywhere, nothing below 8.4pt reversed out of the coffee.
 S_LABEL, S_SMALL, S_BODY, S_SUBJ = 6.7, 8.4, 10.5, 13.1
-S_ARABIC = round(11.4 * 1.15, 1)   # 13.1 — lands on the scale
+S_NAME = 9.1        # so the derived Arabic lands on 10.5, the body size
+S_ARABIC = round(S_NAME * 1.15, 1)
 
-# ── the grid. Two left edges, two right. Every vertical dimension is a
-# whole multiple of the 3.5mm unit.
-# The masthead is allowed a wider measure than the text — the names must
-# be set at a readable size, and 27 Latin characters will not fit half of
-# 132mm. Both are centred on the same axis, so the sheet still has one
-# vertical centre line and the arms stand on it.
-# The page is built off one vertical line rather than a centre. Left of it
-# is the margin column and its apparatus; right of it is the text. The arms
-# stand astride it and the two names meet on it.
-MARGIN = 24
-AXIS = 74                     # the spine, 74mm from the left trim
-ARMS = 38
-HEAD_H = 112
-LOCK_TOP = 60
-RULE_TOP = 92
-BAND_H = 22
-S_NAME = 11.4
+# ═══ THE ARCHITECTURE ═══
+#
+# Built to the reference stationery, element for element:
+#
+#   a coffee MASS across the head, with a gold WEDGE folded into its
+#   top-right corner and a rounded PANEL of contact detail inset at the
+#   right, each line badged with a gold disc;
+#   a gold RIBBON sweeping down out of the mass on a curve, folding where
+#   it crosses the mass's edge and running on into the ivory;
+#   the ivory FIELD, carrying the addressee at the left and the date at
+#   the right;
+#   a coffee BAR at the foot with the ribbon mirrored into it and a wedge
+#   folded into the opposite corner, so the sheet turns through a half
+#   turn rather than repeating.
+#
+# Coverage is 29% of the sheet, against the 4-12% of the institutions in
+# docs/letterhead-audit.md. That is the architecture's own cost and it is
+# a deliberate choice, recorded here so it is not mistaken for an
+# oversight.
+HEAD_H, FOOT_H = 59, 27
+MARGIN = 28
+
+GOLD_G = ('<linearGradient id="{i}" x1="0" y1="0" x2=".35" y2="1">'
+          '<stop offset="0" stop-color="#E8C77E"/><stop offset=".45" stop-color="#C6A15B"/>'
+          '<stop offset="1" stop-color="#A07E38"/></linearGradient>')
+COFFEE_G = ('<linearGradient id="{i}" x1="0" y1="0" x2="1" y2=".7">'
+            '<stop offset="0" stop-color="#3A2211"/><stop offset=".55" stop-color="#2E1A0D"/>'
+            '<stop offset="1" stop-color="#1C0F06"/></linearGradient>')
+FOLD_G = ('<linearGradient id="{i}" x1="0" y1="0" x2=".6" y2="1">'
+          '<stop offset="0" stop-color="#8A6A2E"/><stop offset="1" stop-color="#5A4119"/></linearGradient>')
+
+# The ribbon is a filled band between two curves, so it can hold a real
+# curve and a real fold. A stroked line cannot do either.
+HEAD_SVG = f"""<svg class="bnd" viewBox="0 0 210 {HEAD_H + 34}" preserveAspectRatio="none" aria-hidden="true">
+<defs>{COFFEE_G.format(i='mh')}{GOLD_G.format(i='gh')}{FOLD_G.format(i='fh')}</defs>
+<path d="M0,0 H210 V{HEAD_H} H0 Z" fill="url(#mh)"/>
+<path d="M172,0 L210,0 L210,26 Z" fill="url(#gh)"/>
+<path d="M172,0 L184,0 L210,18 L210,26 Z" fill="url(#fh)" opacity=".55"/>
+<path d="M138,0 C138,20 131,34 114,45 C103,52 96,60 93,74
+         L107,78 C110,66 116,59 127,52 C147,40 154,22 154,0 Z" fill="url(#gh)"/>
+<path d="M120,40 C127,36 131,31 134,26 L149,32 C145,40 139,46 131,52 Z" fill="url(#fh)"/>
+</svg>"""
+
+FOOT_SVG = f"""<svg class="bnd" viewBox="0 0 210 {FOOT_H + 30}" preserveAspectRatio="none" aria-hidden="true">
+<defs>{COFFEE_G.format(i='mf')}{GOLD_G.format(i='gf')}{FOLD_G.format(i='ff')}</defs>
+<path d="M0,30 H210 V{FOOT_H + 30} H0 Z" fill="url(#mf)"/>
+<path d="M172,{FOOT_H + 30} L210,{FOOT_H + 30} L210,31 Z" fill="url(#gf)"/>
+<path d="M172,{FOOT_H + 30} L184,{FOOT_H + 30} L210,39 L210,31 Z" fill="url(#ff)" opacity=".55"/>
+<path d="M138,{FOOT_H + 30} C138,46 131,38 114,31 C105,27 99,22 96,15
+         L110,11 C113,19 118,24 127,28 C147,37 154,46 154,{FOOT_H + 30} Z" fill="url(#gf)"/>
+<path d="M122,27 C128,30 132,33 135,37 L149,32 C146,27 141,23 134,19 Z" fill="url(#ff)"/>
+</svg>"""
+
+# Four glyphs, drawn rather than imported: nothing here may depend on an
+# icon font being installed where the sheet is printed.
+GLYPH = {
+ 'campus': 'M12 2 3 8v13h6v-6h6v6h6V8z',
+ 'phone':  'M20 15.6a12.4 12.4 0 0 1-3.9-.6 1.1 1.1 0 0 0-1.1.3l-1.6 1.6a15 15 0 0 1-6.3-6.3l1.6-1.6a1.1 1.1 0 0 0 .3-1.1A12.4 12.4 0 0 1 8.4 4 1 1 0 0 0 7.4 3H4.3a1 1 0 0 0-1 1A16.7 16.7 0 0 0 20 20.7a1 1 0 0 0 1-1v-3.1a1 1 0 0 0-1-1z',
+ 'mail':   'M3 6h18v12H3zm2 2.6V8l7 4.9L19 8v.6l-7 4.9z',
+ 'record': 'M12 2 4 5v6.2C4 16.4 7.4 20.9 12 22c4.6-1.1 8-5.6 8-10.8V5zm-1 13-3.2-3.2 1.4-1.4L11 12.2l4.8-4.8 1.4 1.4z',
+}
+ico = lambda k: (f'<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">'
+                 f'<path d="{GLYPH[k]}"/></svg></span>')
 
 CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}}
 .page{{position:relative;width:210mm;height:297mm;overflow:hidden;display:flex;flex-direction:column;
  background:{PAPER};color:{INK};font-family:'Inter',serif;
- font-size:{S_BODY}pt;line-height:1.62;
+ font-size:{S_BODY}pt;line-height:1.6;
  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}}
+.bnd{{position:absolute;left:0;width:100%;display:block}}
 
-/* ═══ THE AXIS ═══ the meeting line of the school's two languages, carried
-   the full height of the sheet as its spine. It is one gold hairline. It
-   is also the only structural line the page has, and everything — the
-   arms, both names, the text block, the marginal column — is placed by
-   it. A centred stack was the failure this replaces: centring is the
-   least designed arrangement available, and it gave the sheet no tension
-   at all. */
-.axis{{position:absolute;left:{AXIS}mm;top:0;bottom:{BAND_H}mm;width:.7pt;background:{GOLD_P};z-index:2}}
-/* it is struck at the head and at the foot, so it reads as a member with
-   ends rather than a rule that simply stops */
-.axis::before,.axis::after{{content:'';position:absolute;left:-2.6mm;width:6mm;height:.7pt;background:{GOLD_P}}}
-.axis::before{{top:{HEAD_H}mm}} .axis::after{{bottom:0}}
-
-/* ═══ THE HEAD ═══ arms astride the Axis, the two names flanking it. */
-.head{{flex:0 0 {HEAD_H}mm;position:relative}}
-.arms{{position:absolute;left:{AXIS}mm;top:16mm;width:{ARMS}mm;height:{ARMS}mm;
- transform:translateX(-50%);z-index:3}}
-.lock{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{LOCK_TOP}mm;z-index:3;
- display:flex;align-items:stretch}}
-.lock .en{{flex:0 0 {AXIS - MARGIN}mm;padding-right:6mm;text-align:right;color:{COFFEE};
+/* ═══ THE HEAD ═══ mass, corner wedge, inset panel, and the ribbon that
+   sweeps down out of all three. */
+.head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:3}}
+.head .bnd{{top:0;height:{HEAD_H + 34}mm}}
+.hgrid{{position:absolute;left:{MARGIN}mm;top:14mm;z-index:4;display:flex;align-items:center;gap:4.5mm}}
+.arms{{flex:0 0 auto;width:19mm;height:19mm;display:block}}
+.lock{{display:flex;align-items:stretch}}
+.lock .en,.lock .ar{{display:flex;flex-direction:column;justify-content:center;color:#F7EFDD}}
+.lock .en{{padding-right:4mm;text-align:right;
  font-family:'Cinzel',serif;font-weight:800;font-size:{S_NAME}pt;letter-spacing:.06em;
- text-transform:uppercase;line-height:1.16}}
-.lock .ar{{flex:1;min-width:0;padding-left:6mm;text-align:left;direction:rtl;color:{COFFEE};
- font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.16;
- display:flex;flex-direction:column;justify-content:center}}
+ text-transform:uppercase;line-height:1.18;white-space:nowrap}}
+.lock .ar{{padding-left:4mm;text-align:left;direction:rtl;
+ font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.18;white-space:nowrap}}
 .lock b{{display:block;font-weight:inherit}}
+/* the Axis survives the change of architecture: it is still where the two
+   languages meet, and it is still the only thing that joins them */
+.lock .axis{{flex:0 0 auto;width:.6pt;background:{GOLD_R};margin:-1mm 0}}
 
-/* the double rule — thick over thin, the engraver's cadence, and the one
-   piece of ornament the sheet allows itself */
-.hrule{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{RULE_TOP}mm;height:1.1pt;
- background:{GOLD_P};z-index:2}}
-.hrule::after{{content:'';position:absolute;left:0;right:0;top:2.1mm;height:.4pt;
- background:{GOLD_P};opacity:.62}}
-.houses{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{RULE_TOP + 5}mm;z-index:2;
- font-size:{S_LABEL}pt;letter-spacing:.055em;text-transform:uppercase;
- color:{GOLD_P};white-space:nowrap;text-align:center}}
-.q{{display:inline-grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.4mm;
- width:1.9mm;height:1.9mm;vertical-align:.1mm;margin:0 .55mm}}
-.q i{{background:{GOLD_P};display:block}}
+/* the inset panel of contact detail, each line badged */
+.panel{{position:absolute;right:{MARGIN}mm;top:9mm;z-index:5;
+ display:grid;grid-template-columns:auto;gap:2.4mm;
+ padding:3.6mm 5mm;border-radius:1.2mm 4mm 1.2mm 4mm;
+ background:rgba(255,244,222,.06);border:.4pt solid rgba(198,161,91,.32)}}
+.panel span.l{{display:flex;align-items:center;gap:2.2mm;
+ font-size:{S_SMALL}pt;color:{PAPER_R};white-space:nowrap}}
+.panel a{{color:inherit;text-decoration:none}}
+.ico{{flex:0 0 auto;width:4.2mm;height:4.2mm;border-radius:50%;
+ background:linear-gradient(152deg,#E8C77E,{GOLD_R} 55%,#8A6A2E);
+ display:flex;align-items:center;justify-content:center}}
+.ico svg{{width:2.4mm;height:2.4mm;display:block;fill:#2A1808}}
 
-/* ═══ THE MARGIN ═══ left of the Axis. The record of the document lives
-   here, which is what the column is for — a scholarly page has always
-   carried its apparatus in the margin, and it is why this sheet has no
-   empty quarter. */
-.marg{{position:absolute;left:{MARGIN}mm;width:{AXIS - MARGIN - 8}mm;top:{HEAD_H + 12}mm;
- z-index:2;text-align:right}}
-.marg dt{{font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;color:{GOLD_P};
- margin-bottom:.8mm}}
-.marg dd{{font-size:{S_SMALL}pt;color:{INK2};margin-bottom:5.25mm;line-height:1.35}}
-.marg .fol{{font-family:'Cinzel',serif;font-size:{S_SUBJ}pt;color:{GOLD_P};margin-top:3.5mm}}
-.marg i{{display:block;border-bottom:.4pt solid rgba(156,122,60,.5);height:4.4mm;font-style:normal}}
-
-/* ═══ THE FIELD ═══ right of the Axis. 106mm of measure, 58 characters. */
-.body{{flex:1;position:relative;z-index:2;padding:12mm {MARGIN}mm 0 {AXIS + 8}mm;min-width:0}}
-.body p{{margin-bottom:3.5mm;text-align:justify;hyphens:auto}}
+/* ═══ THE FIELD ═══ */
+.body{{flex:1;position:relative;z-index:2;padding:34mm {MARGIN}mm 0;min-width:0}}
+.body.c2{{padding-top:20mm}}
+.body p{{margin-bottom:3.4mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
 .body a{{color:{COFFEE};font-weight:600;text-decoration:none;
  border-bottom:.4pt solid rgba(156,122,60,.55)}}
-.addr{{margin-bottom:7mm!important;line-height:1.45}}
+.top{{display:flex;justify-content:space-between;align-items:flex-start;gap:10mm;margin-bottom:9mm}}
+.top .dt{{font-size:{S_SMALL}pt;color:{INK2};white-space:nowrap;text-align:right}}
+.top .dt b{{display:block;font-weight:600;color:{COFFEE};font-size:{S_BODY}pt;margin-top:.8mm}}
+.addr{{line-height:1.45}}
 .subj{{font-family:'Cinzel',serif;font-weight:700;font-size:{S_SUBJ}pt;letter-spacing:.03em;
- text-transform:uppercase;color:{COFFEE};margin-bottom:5.25mm;line-height:1.32}}
+ text-transform:uppercase;color:{COFFEE};margin-bottom:5mm;line-height:1.32}}
 .lead{{font-family:'Cinzel',serif;font-size:{S_SMALL}pt;letter-spacing:.14em;text-transform:uppercase;
- color:{GOLD_P};margin:7mm 0 3.5mm!important;text-align:left!important}}
+ color:{GOLD_P};margin:6.8mm 0 3.4mm!important;text-align:left!important}}
 .val{{font-weight:600;color:{COFFEE};border-bottom:.4pt solid rgba(156,122,60,.5)}}
-.signoff{{margin-top:7mm}} .sigsp{{height:17.5mm}}
+.signoff{{margin-top:6.8mm}} .sigsp{{height:17mm}}
 .sigrule{{width:52mm;height:.4pt;background:{GOLD_P};margin-bottom:2.4mm}}
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
+.blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
+ color:{GOLD_P};margin-bottom:9mm}}
+.blank i{{flex:1;border-bottom:.4pt solid rgba(156,122,60,.5);font-style:normal}}
 
-/* ═══ THE FOOT ═══ one band of ink, carrying the creed in the school's own
-   voice and the record beneath it. */
-.foot{{flex:0 0 {BAND_H}mm;position:relative;background:{COFFEE};
- box-shadow:inset 0 .7pt 0 {GOLD_R};
- display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4mm;
- padding:0 {MARGIN}mm}}
-.creed{{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SUBJ}pt;
- color:{GOLD_R};letter-spacing:.01em}}
-.rec{{display:flex;gap:4mm;font-size:{S_SMALL}pt;color:{PAPER_R};white-space:nowrap}}
-.rec a{{color:inherit;text-decoration:none}}
-.foot .q i{{background:{GOLD_R}}}
+/* ═══ THE FOOT ═══ the same three elements, turned through a half turn. */
+.foot{{flex:0 0 {FOOT_H}mm;position:relative;z-index:3}}
+.foot .bnd{{bottom:0;height:{FOOT_H + 30}mm}}
+/* the creed sits left of the ribbon, in the school's own voice */
+.creed{{position:absolute;left:{MARGIN}mm;width:60mm;top:50%;transform:translateY(-50%);z-index:4;
+ font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SMALL}pt;
+ color:{GOLD_R};letter-spacing:.01em;line-height:1.5}}
+.q{{display:inline-grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.35mm;
+ width:1.6mm;height:1.6mm;vertical-align:.1mm;margin:0 .9mm}}
+.q i{{background:{GOLD_R};display:block}}
 
-/* continuation sheets: the Axis and the arms remain, the rule and the five
-   schools drop away. The device survives its own subtraction, which is the
-   point of having only one. */
-.head.c2{{flex:0 0 {HEAD_H - 34}mm}}
-.head.c2 .arms{{top:12mm;width:{ARMS - 14}mm;height:{ARMS - 14}mm}}
-.body.c2{{padding-top:8mm}}
-.marg.c2{{top:{HEAD_H - 22}mm}}
+/* continuation sheets: the mass halves and the panel drops away */
+.head.c2{{flex:0 0 {HEAD_H - 22}mm}}
+.head.c2 .bnd{{height:{HEAD_H + 12}mm}}
+.head.c2 .hgrid{{top:7mm}} .head.c2 .arms{{width:17mm;height:17mm}}
+.head.c2 .lock .en{{font-size:8.4pt}} .head.c2 .lock .ar{{font-size:9.7pt}}
 @media print{{body{{background:none;padding:0;gap:0}}
  .page{{page-break-after:always}}.page:last-child{{page-break-after:auto}}}}
 """
 
-MARG = ('<div class="marg{c}"><dl><dt>Reference</dt><dd>SHRS/ICT/2026/001</dd>'
-        '<dt>Issued</dt><dd>13 August 2026</dd></dl>'
-        '<div class="fol">{f}</div></div>')
+PANEL = ('<div class="panel">'
+         f'<span class="l">{ico("campus")}Ikorodu, Lagos State</span>'
+         f'<span class="l">{ico("phone")}<a href="tel:+2348073747650">+234 807 374 7650</a></span>'
+         f'<span class="l">{ico("mail")}<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></span>'
+         f'<span class="l">{ico("record")}<a href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></span>'
+         '</div>')
 
-MARG_BLANK = ('<div class="marg"><dl><dt>Reference</dt><dd><i></i></dd>'
-              '<dt>Date</dt><dd><i></i></dd></dl></div>')
-
-FOOT = ('<footer class="foot">'
-        '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>'
-        '<div class="rec"><span>Ikorodu, Lagos State, Nigeria</span>' + QUAD +
-        '<a href="tel:+2348073747650">+234 807 374 7650</a>' + QUAD +
-        '<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>' + QUAD +
-        '<a href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></div>'
+FOOT = ('<footer class="foot">' + FOOT_SVG +
+        '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;'
+        f'&#8195;{QUAD}&#8195;Established July 2016</p>'
         '</footer>')
 
-# The name breaks at the same place in both languages — two lines each, so
-# the two blocks are of one build, and the break in Arabic falls after the
-# idafa, which is the unit that must not be split.
+# The name breaks at the same place in both languages — two lines each — and
+# the break in Arabic falls after the idafa, the unit that must not be split.
 EN_L = '<b>Sultan Hanafi</b><b>Royal Schools</b>'
 AR_L = '<b>{0}</b><b>{1}</b>'.format(*AR.rsplit(' ', 1))
 
 
 def head(first=True):
     c2 = '' if first else ' c2'
-    tail = (f'<div class="hrule"></div><div class="houses">{INST}</div>') if first else ''
-    return (f'<header class="head{c2}">'
+    return (f'<header class="head{c2}">{HEAD_SVG}'
+            f'<div class="hgrid">'
             f'<img class="arms" src="data:image/png;base64,{CREST}" '
             f'alt="Arms of Sultan Hanafi Royal Schools" />'
-            f'<div class="lock"><div class="en">{EN_L}</div><div class="ar">{AR_L}</div></div>'
-            f'{tail}</header>')
+            f'<div class="lock"><div class="en">{EN_L}</div>'
+            f'<div class="axis"></div><div class="ar">{AR_L}</div></div></div>'
+            + (PANEL if first else '') + '</header>')
+
+TOP = ('      <div class="top"><div class="dt">Reference<b>SHRS/ICT/2026/001</b></div>'
+       '<div class="dt">Date<b>13 August 2026</b></div></div>')
 
 
-PAGE_NO = [1]
-
-def page(inner, first=True, marg=None):
-    m = marg if marg is not None else MARG.format(c='' if first else ' c2',
-                                                  f=f'{PAGE_NO[0]:02d}')
-    PAGE_NO[0] += 1
+def page(inner, first=True):
     return (f'  <div class="page" data-canvas-width="794" data-canvas-height="1123">\n'
-            f'    <div class="axis"></div>\n    {head(first)}\n    {m}\n'
-            f'    <main class="body{"" if first else " c2"}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
+            f'    {head(first)}\n    <main class="body{"" if first else " c2"}">\n{inner}\n'
+            f'    </main>\n{FOOT}\n  </div>')
 
 
 def doc(title, pages):
@@ -285,11 +312,11 @@ body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
 CUTS = [(0, 5), (5, 11), (11, 16), (16, 21), (21, 26)]
 (ROOT / 'letter-registrar-activation.html').write_text(
     doc('Sultan Hanafi Royal Schools — Letter',
-        [page(body(a, b), i == 0) for i, (a, b) in enumerate(CUTS)]), encoding='utf-8')
+        [page((TOP + '\n' if i == 0 else '') + body(a, b), i == 0)
+         for i, (a, b) in enumerate(CUTS)]), encoding='utf-8')
 
 # ── blank stationery
-PAGE_NO[0] = 1
+BLANK = '      <div class="blank"><span>Ref</span><i></i><span>Date</span><i></i></div>'
 (ROOT / 'letterhead.html').write_text(
-    doc('Sultan Hanafi Royal Schools — Letterhead',
-        [page('', True, marg=MARG_BLANK)]), encoding='utf-8')
+    doc('Sultan Hanafi Royal Schools — Letterhead', [page(BLANK, True)]), encoding='utf-8')
 print('identity built')
