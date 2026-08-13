@@ -48,6 +48,50 @@ turns a routine memo into a diploma, which is ridiculous the second time
 you send one. **The target is Institutional with ceremonial density in
 the masthead and foot, and complete calm in between.**
 
+## II-b. The palette is chosen, not assumed
+
+Brown-and-gold was never a requirement. It was the *coffee* livery, one
+of six the design system already ships — **coffee, royal, garnet,
+emerald, sapphire, obsidian** — and defaulting to it made the sheet look
+like a cafe menu with a crest on it.
+
+The stationery takes **garnet**: deep oxblood `#3B1420 → #14060A` with
+gold `#C9A45E` and an ivory ground. The reasoning is not taste:
+
+- Oxblood is the register of charters, chambers and university presses.
+  It reads as *record*, where brown reads as *rustic*.
+- It holds gold better than brown does. Brown and gold are neighbours on
+  the wheel, so gold on brown goes muddy; gold on oxblood separates and
+  reads as metal.
+- It is unmistakably not the website's everyday chrome. Stationery
+  should be recognisably of the same house and not identical to a web
+  page — a letter is a different object.
+
+Sapphire (deep navy) is the legitimate alternative and would read more
+newspaper-editorial, less charter. Emerald is available and carries both
+Islamic and Nigerian resonance, but sits closer to the crest's own gold
+and competes with it.
+
+**The rule this settles:** the palette is a decision with a reason
+attached, taken from the school's own livery system, never a default
+inherited from whatever was open in another file.
+
+## II-c. The masthead is a band, not a half-page
+
+The single worst fault of the earlier sheets: the identity block —
+band, medallion, motto, institutions, microtext — stacked into roughly a
+third of the sheet, so the letter began below the fold of its own page.
+
+**A masthead occupies no more than 15% of the sheet.** Measured, on
+every version. Everything in it is merged into *one horizontal band*:
+crest at the left, wordmark and Arabic name beside it, the place-of-
+issue ranged right. One row, not five stacked ones.
+
+What that displaces has to go somewhere honest: the **motto moves to the
+foot**, immediately above the record. It is a statement the school makes
+about itself, and it belongs with the campus, the telephones and the
+verification line rather than in the reader's way.
+
 ## III. Materials
 
 The page must read as *stock*, not as screen. Four properties do this:
@@ -122,7 +166,7 @@ without provenance is a leaflet.
 | Role | Face | Size | Treatment |
 |---|---|---|---|
 | Wordmark | Cinzel 800 | 19pt | 0.086em, gold gradient, **never wraps** |
-| Arabic name | Amiri 400 | 13pt | RTL, beneath the wordmark always |
+| Arabic name | Amiri 400 | 11.6pt | RTL, beneath the wordmark always |
 | Crown / nation | Inter 400 | 6–6.1pt | 0.27–0.42em caps — extreme tracking is the ceremonial signal |
 | Motto | Cormorant Garamond 500 italic | 12.8pt | the one voice where the school speaks of itself |
 | Institutions | Inter 400 | 6.4pt | 0.15em caps, lozenge-separated |
@@ -133,20 +177,24 @@ without provenance is a leaflet.
 **Tracking carries the ceremony.** 0.27em on the nation line does more
 for authority than any ornament, and costs nothing.
 
-## VII. Colour
+## VII. Colour — garnet
 
 | Token | Value | Use |
 |---|---|---|
-| Espresso | `#1C1207` | body ink |
-| Band | `#3A2710 → #150D04` | masthead and foot |
-| Gold rule | `#B08D4F` | rules, frame, terminals |
-| Gold text | `#8C6B28` | small caps, drop initial |
-| Cream | `#E7D6B2` | text on the bands |
+| Ink | `#1A1116` | body |
+| Band | `#3B1420 → #14060A` | masthead and foot |
+| Gold | `#C9A45E` | rules, terminals, foil |
+| Garnet | `#7A2E3E` | small caps, drop initial, rules on paper |
+| Cream | `#EDDCC0` | text on the bands |
+| Ground | `#FFFEFC → #F1EADD` | the sheet |
 
 CMYK-safe by construction: no saturated RGB gold, which prints green.
 
 ## VIII. Rules that are not negotiable
 
+0. **The Arabic name is مدارس السلطان حنفي الملكية** — plural, with the
+   article, exactly as the school's own Arabic pages set it 49 times.
+   The singular مدرسة names one school; this house has five.
 1. **The wordmark never wraps.** Assert it — measure `scrollWidth`
    against `clientWidth`.
 2. **Nothing overlaps the nation line.** The medallion's top edge must
@@ -202,3 +250,6 @@ A sheet ships only when all ten pass, measured — never eyeballed:
 8. No console errors.
 9. No page-break inside a signature block.
 10. No placeholder remaining that the system could have filled.
+11. Masthead ≤ 15% of sheet height.
+12. Drop initial on the opening sentence of the letter — never on the
+    address block. `:first-of-type` catches the addressee; use a class.
