@@ -71,215 +71,228 @@ FONTS = ''.join(
 # light artwork; crest-coffee.png is the single-ink version for ivory
 CREST = b64(ROOT / 'assets' / 'crest.png')
 
-# ── ink. Two colours and the paper. Coffee is the text ink; gold is one
-# flat specified colour — Pantone 872, or a single CMYK build — because a
-# gradient gold bands in four-colour and goes green under dot gain, and as
-# foil it is a separate pass that has to be paid for on every sheet.
-COFFEE, INK, INK2 = '#2E1A0D', '#241A12', '#5A4632'
-GOLD_P = '#9C7A3C'          # on paper: an ochre that prints honestly
-GOLD_R = '#C6A15B'          # reversed out of coffee, where it can be lighter
-PAPER, PAPER_R = '#FBF8F1', '#F2ECE0'
+# ── ink. Burgundy and gold on cream: the school's arms colours, held as
+# two flat specified inks so the sheet has an economical production route.
+BURG, BURG_D, BURG_L = '#4A1228', '#33091B', '#5E1A34'
+GOLD, GOLD_LT, GOLD_D = '#C9A24A', '#E3C577', '#8E6B24'
+PAPER, CREAM = '#FDFBF8', '#F7F1E6'
+INK, INK2 = '#2A2124', '#5A4A50'
 
 AR = 'مدارس السلطان حنفي الملكية'
-QUAD = '<span class="q"><i></i><i></i><i></i><i></i></span>'
+LOZ = '<i class="lz"></i>'
 
 HOUSES = ['Nursery &amp; Primary', 'Royal College', 'Islamic &amp; Arabic Studies',
           'Qur&rsquo;an College', 'Online &amp; Distance Learning']
-INST = f' {QUAD} '.join(HOUSES)
+INST = f' {LOZ} '.join(HOUSES)
 
-# ── the scale. Ratio 1.25 from a 10.5pt body. The print floors survive
-# from the audit, because they are craft and not register: nothing below
-# 6.7pt anywhere, nothing below 8.4pt reversed out of the coffee.
-S_LABEL, S_SMALL, S_BODY, S_SUBJ = 6.7, 8.4, 10.5, 13.1
-S_NAME = 9.1        # so the derived Arabic lands on 10.5, the body size
-S_ARABIC = round(S_NAME * 1.15, 1)
+CREST_G = b64(ROOT / 'assets' / 'crest-gold.png')
+
+# ── the scale. Print floors kept: nothing below 6.2pt anywhere, nothing
+# below 6.6pt reversed out of the burgundy.
+S_MICRO, S_LABEL, S_SMALL, S_BODY = 6.3, 6.6, 8.2, 10.4
+S_NAME, S_SUBJ = 12.6, 12.6
+S_ARABIC = round(S_NAME * 0.92, 1)
 
 # ═══ THE ARCHITECTURE ═══
 #
-# Built to the reference stationery, element for element:
-#
-#   a coffee MASS across the head, with a gold WEDGE folded into its
-#   top-right corner and a rounded PANEL of contact detail inset at the
-#   right, each line badged with a gold disc;
-#   a gold RIBBON sweeping down out of the mass on a curve, folding where
-#   it crosses the mass's edge and running on into the ivory;
-#   the ivory FIELD, carrying the addressee at the left and the date at
-#   the right;
-#   a coffee BAR at the foot with the ribbon mirrored into it and a wedge
-#   folded into the opposite corner, so the sheet turns through a half
-#   turn rather than repeating.
-#
-# Coverage is 29% of the sheet, against the 4-12% of the institutions in
-# docs/letterhead-audit.md. That is the architecture's own cost and it is
-# a deliberate choice, recorded here so it is not mistaken for an
-# oversight.
-HEAD_H, FOOT_H = 59, 27
-MARGIN = 28
+#   a RAIL down the left edge, burgundy, full height, carrying the school's
+#     name turned on its side — the spine that ties masthead to foot;
+#   a MASS across the head, burgundy, stopping two-thirds across, with the
+#     place of issue set on the cream beyond it;
+#   a MEDALLION straddling the mass's right edge, half on ink and half on
+#     paper, carrying the arms;
+#   a STRIP beneath, naming the five schools and the year of founding,
+#     over a line of MICROTEXT;
+#   the FIELD;
+#   a FOOT cut on a shallow diagonal, carrying the creed on the cream
+#     above it and the record, badged, on the burgundy below.
+RAIL_W, HEAD_H, MASS_W = 7.5, 33, 138
+FOOT_H = 44
+MARGIN = 16.5
 
-GOLD_G = ('<linearGradient id="{i}" x1="0" y1="0" x2=".35" y2="1">'
-          '<stop offset="0" stop-color="#E8C77E"/><stop offset=".45" stop-color="#C6A15B"/>'
-          '<stop offset="1" stop-color="#A07E38"/></linearGradient>')
-COFFEE_G = ('<linearGradient id="{i}" x1="0" y1="0" x2="1" y2=".7">'
-            '<stop offset="0" stop-color="#3A2211"/><stop offset=".55" stop-color="#2E1A0D"/>'
-            '<stop offset="1" stop-color="#1C0F06"/></linearGradient>')
-FOLD_G = ('<linearGradient id="{i}" x1="0" y1="0" x2=".6" y2="1">'
-          '<stop offset="0" stop-color="#8A6A2E"/><stop offset="1" stop-color="#5A4119"/></linearGradient>')
-
-# THE RIBBON. In the reference it is a broad band of *constant width* that
-# runs straight, turns once through a large radius, and ends on a straight
-# cut. That is a stroked path with a round join — not a pair of Bezier
-# curves, which is what made the earlier attempt wobble like a scarf
-# instead of reading as a folded band of material.
-RIB_W = 27
-
-HEAD_SVG = f"""<svg class="bnd" viewBox="0 0 210 {HEAD_H + 40}" preserveAspectRatio="none" aria-hidden="true">
-<defs>{COFFEE_G.format(i='mh')}{GOLD_G.format(i='gh')}{FOLD_G.format(i='fh')}</defs>
-<path d="M0,0 H210 V{HEAD_H} H0 Z" fill="url(#mh)"/>
-<path d="M168,0 L210,0 L210,29 Z" fill="url(#gh)"/>
-<path d="M168,0 L181,0 L210,20 L210,29 Z" fill="url(#fh)" opacity=".6"/>
-<path d="M141,-8 L141,30 L114,70" fill="none" stroke="url(#gh)" stroke-width="{RIB_W}"
-      stroke-linejoin="round" stroke-linecap="butt"/>
-<path d="M127.5,26 L154.5,26 L150,41 L132,35 Z" fill="url(#fh)"/>
-</svg>"""
-
-FOOT_SVG = f"""<svg class="bnd" viewBox="0 0 210 {FOOT_H + 34}" preserveAspectRatio="none" aria-hidden="true">
-<defs>{COFFEE_G.format(i='mf')}{GOLD_G.format(i='gf')}{FOLD_G.format(i='ff')}</defs>
-<path d="M0,34 H210 V{FOOT_H + 34} H0 Z" fill="url(#mf)"/>
-<path d="M146,{FOOT_H + 42} L146,30 L184,-2" fill="none" stroke="url(#gf)" stroke-width="{RIB_W}"
-      stroke-linejoin="round" stroke-linecap="butt"/>
-<path d="M132.5,34 L159.5,34 L155,19 L137,25 Z" fill="url(#ff)"/>
-</svg>"""
-
-# Four glyphs, drawn rather than imported: nothing here may depend on an
-# icon font being installed where the sheet is printed.
-GLYPH = {
- 'campus': 'M12 2 3 8v13h6v-6h6v6h6V8z',
- 'phone':  'M20 15.6a12.4 12.4 0 0 1-3.9-.6 1.1 1.1 0 0 0-1.1.3l-1.6 1.6a15 15 0 0 1-6.3-6.3l1.6-1.6a1.1 1.1 0 0 0 .3-1.1A12.4 12.4 0 0 1 8.4 4 1 1 0 0 0 7.4 3H4.3a1 1 0 0 0-1 1A16.7 16.7 0 0 0 20 20.7a1 1 0 0 0 1-1v-3.1a1 1 0 0 0-1-1z',
- 'mail':   'M3 6h18v12H3zm2 2.6V8l7 4.9L19 8v.6l-7 4.9z',
- 'record': 'M12 2 4 5v6.2C4 16.4 7.4 20.9 12 22c4.6-1.1 8-5.6 8-10.8V5zm-1 13-3.2-3.2 1.4-1.4L11 12.2l4.8-4.8 1.4 1.4z',
-}
-ico = lambda k: (f'<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">'
-                 f'<path d="{GLYPH[k]}"/></svg></span>')
+MICRO = ('SULTAN HANAFI ROYAL SCHOOLS ' + '◆ ') * 22
 
 CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
-body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}}
+body{{background:#241016;display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}}
 .page{{position:relative;width:210mm;height:297mm;overflow:hidden;display:flex;flex-direction:column;
  background:{PAPER};color:{INK};font-family:'Inter',serif;
  font-size:{S_BODY}pt;line-height:1.6;
  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}}
-.bnd{{position:absolute;left:0;width:100%;display:block}}
 
-/* ═══ THE HEAD ═══ mass, corner wedge, inset panel, and the ribbon that
-   sweeps down out of all three. */
-.head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:3}}
-.head .bnd{{top:0;height:{HEAD_H + 40}mm}}
-.hgrid{{position:absolute;left:{MARGIN}mm;top:14mm;z-index:4;display:flex;align-items:center;gap:4.5mm}}
-.arms{{flex:0 0 auto;width:19mm;height:19mm;display:block}}
-.lock{{display:flex;align-items:stretch}}
-.lock .en,.lock .ar{{display:flex;flex-direction:column;justify-content:center;color:#F7EFDD}}
-.lock .en{{padding-right:4mm;text-align:right;
- font-family:'Cinzel',serif;font-weight:800;font-size:{S_NAME}pt;letter-spacing:.06em;
- text-transform:uppercase;line-height:1.18;white-space:nowrap}}
-.lock .ar{{padding-left:4mm;text-align:left;direction:rtl;
- font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.18;white-space:nowrap}}
-.lock b{{display:block;font-weight:inherit}}
-/* the Axis survives the change of architecture: it is still where the two
-   languages meet, and it is still the only thing that joins them */
-.lock .axis{{flex:0 0 auto;width:.6pt;background:{GOLD_R};margin:-1mm 0}}
+/* ═══ THE RAIL ═══ full height, so the spine is unbroken between the
+   masthead and the foot. */
+.rail{{position:absolute;left:0;top:0;bottom:0;width:{RAIL_W}mm;z-index:5;
+ background:linear-gradient(180deg,{BURG} 0%,{BURG_D} 100%)}}
+.rail b{{position:absolute;left:50%;bottom:44mm;transform:translateX(-50%) rotate(180deg);
+ writing-mode:vertical-rl;font-family:'Cinzel',serif;font-weight:700;
+ font-size:{S_LABEL}pt;letter-spacing:.34em;text-transform:uppercase;
+ color:rgba(227,197,119,.72);white-space:nowrap}}
+/* struck at head and foot, as a rail is */
+.rail::before,.rail::after{{content:'';position:absolute;left:1.5mm;width:4.5mm;height:.5pt;
+ background:{GOLD}}}
+.rail::before{{top:14mm}} .rail::after{{bottom:14mm}}
 
-/* the inset panel of contact detail, each line badged */
-.panel{{position:absolute;right:{MARGIN}mm;top:9mm;z-index:5;
- display:grid;grid-template-columns:auto;gap:2.4mm;
- padding:3.6mm 5mm;border-radius:1.2mm 4mm 1.2mm 4mm;
- background:rgba(255,244,222,.06);border:.4pt solid rgba(198,161,91,.32)}}
-.panel span.l{{display:flex;align-items:center;gap:2.2mm;
- font-size:{S_SMALL}pt;color:{PAPER_R};white-space:nowrap}}
-.panel a{{color:inherit;text-decoration:none}}
-.ico{{flex:0 0 auto;width:4.2mm;height:4.2mm;border-radius:50%;
- background:linear-gradient(152deg,#E8C77E,{GOLD_R} 55%,#8A6A2E);
+/* ═══ THE HEAD ═══ */
+.head{{flex:0 0 auto;position:relative;height:{HEAD_H}mm;z-index:3}}
+.mass{{position:absolute;left:0;top:0;width:{MASS_W}mm;height:{HEAD_H}mm;
+ background:linear-gradient(104deg,{BURG_L} 0%,{BURG} 46%,{BURG_D} 100%);
+ clip-path:polygon(0 0,100% 0,100% 84%,96% 100%,0 100%)}}
+/* one raking light across the mass, so it is a plane and not a fill */
+.mass::after{{content:'';position:absolute;left:34%;top:-30%;width:26%;height:170%;
+ transform:rotate(19deg);
+ background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,236,200,.075),rgba(255,255,255,0))}}
+.wm{{position:absolute;left:{MARGIN}mm;top:8.5mm;z-index:4}}
+.wm .en{{font-family:'Cinzel',serif;font-weight:800;font-size:{S_NAME}pt;letter-spacing:.075em;
+ text-transform:uppercase;color:{GOLD_LT};line-height:1;white-space:nowrap}}
+.wm .ar{{margin-top:2.4mm;direction:rtl;font-family:'Amiri',serif;font-size:{S_ARABIC}pt;
+ line-height:1;color:{GOLD};white-space:nowrap}}
+/* place of issue, on the cream beyond the mass */
+.place{{position:absolute;right:{MARGIN}mm;top:8mm;z-index:4;text-align:right;
+ font-size:{S_LABEL}pt;letter-spacing:.1em;text-transform:uppercase;
+ color:{BURG};line-height:2;white-space:nowrap}}
+.place b{{display:block;font-weight:700}}
+/* the medallion, half on ink and half on paper */
+.medal{{position:absolute;left:{MASS_W - 18}mm;top:{HEAD_H / 2 - 14}mm;width:28mm;height:28mm;
+ border-radius:50%;z-index:6;
+ background:radial-gradient(64% 64% at 40% 32%,#FFFDF8 0%,{CREAM} 62%,#EADFC9 100%);
+ box-shadow:0 0 0 .5pt {GOLD},0 .6pt 2.4pt rgba(40,10,22,.28);
  display:flex;align-items:center;justify-content:center}}
-.ico svg{{width:2.4mm;height:2.4mm;display:block;fill:#2A1808}}
+.medal::before{{content:'';position:absolute;inset:1.7mm;border-radius:50%;
+ border:.4pt solid rgba(142,107,36,.55)}}
+.medal img{{width:17mm;height:17mm;display:block}}
+
+/* ═══ THE STRIP ═══ the five schools, the year, and the microtext line */
+.strip{{flex:0 0 auto;position:relative;z-index:3;
+ padding:4.2mm {MARGIN}mm 0 {MARGIN}mm}}
+.houses{{display:flex;align-items:center;justify-content:space-between;gap:3mm;white-space:nowrap;
+ font-size:{S_MICRO}pt;letter-spacing:.02em;text-transform:uppercase;color:{BURG};font-weight:600}}
+.houses .yr{{color:{GOLD_D};letter-spacing:.12em}}
+.lz{{display:inline-block;width:1.4mm;height:1.4mm;background:{GOLD};
+ transform:rotate(45deg);margin:0 .6mm;vertical-align:.2mm}}
+.strip .rule{{height:.4pt;background:{GOLD};opacity:.55;margin-top:2.4mm}}
+.micro{{margin-top:.9mm;font-size:{S_MICRO}pt;letter-spacing:.06em;text-transform:uppercase;
+ color:rgba(74,18,40,.12);white-space:nowrap;overflow:hidden;height:2.2mm;line-height:2.2mm}}
 
 /* ═══ THE FIELD ═══ */
-.body{{flex:1;position:relative;z-index:2;padding:34mm {MARGIN}mm 0;min-width:0}}
-.body.c2{{padding-top:20mm}}
-.body p{{margin-bottom:3.4mm;text-align:justify;hyphens:auto}}
+.body{{flex:1;position:relative;z-index:2;padding:11mm 30mm 0 34mm;min-width:0}}
+.body.c2{{padding-top:9mm}}
+.body p{{margin-bottom:3.3mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
-.body a{{color:{COFFEE};font-weight:600;text-decoration:none;
- border-bottom:.4pt solid rgba(156,122,60,.55)}}
-.top{{display:flex;justify-content:space-between;align-items:flex-start;gap:10mm;margin-bottom:9mm}}
-.top .dt{{font-size:{S_SMALL}pt;color:{INK2};white-space:nowrap;text-align:right}}
-.top .dt b{{display:block;font-weight:600;color:{COFFEE};font-size:{S_BODY}pt;margin-top:.8mm}}
-.addr{{line-height:1.45}}
+.body a{{color:{BURG};font-weight:600;text-decoration:none;
+ border-bottom:.4pt solid rgba(201,162,74,.6)}}
+.top{{display:flex;justify-content:space-between;gap:10mm;margin-bottom:8mm;
+ font-size:{S_SMALL}pt;color:{INK2}}}
+.top b{{display:block;font-weight:600;color:{BURG};font-size:{S_BODY}pt;margin-top:.8mm}}
+.top .r{{text-align:right}}
+.addr{{margin-bottom:7mm!important;line-height:1.45}}
 .subj{{font-family:'Cinzel',serif;font-weight:700;font-size:{S_SUBJ}pt;letter-spacing:.03em;
- text-transform:uppercase;color:{COFFEE};margin-bottom:5mm;line-height:1.32}}
+ text-transform:uppercase;color:{BURG};margin-bottom:5mm;line-height:1.32}}
 .lead{{font-family:'Cinzel',serif;font-size:{S_SMALL}pt;letter-spacing:.14em;text-transform:uppercase;
- color:{GOLD_P};margin:6.8mm 0 3.4mm!important;text-align:left!important}}
-.val{{font-weight:600;color:{COFFEE};border-bottom:.4pt solid rgba(156,122,60,.5)}}
-.signoff{{margin-top:6.8mm}} .sigsp{{height:17mm}}
-.sigrule{{width:52mm;height:.4pt;background:{GOLD_P};margin-bottom:2.4mm}}
+ color:{GOLD_D};margin:6.6mm 0 3.3mm!important;text-align:left!important}}
+.val{{font-weight:600;color:{BURG};border-bottom:.4pt solid rgba(201,162,74,.55)}}
+.signoff{{margin-top:6.6mm}} .sigsp{{height:17mm}}
+.sigrule{{width:52mm;height:.4pt;background:{GOLD};margin-bottom:2.4mm}}
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
 .blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
- color:{GOLD_P};margin-bottom:9mm}}
-.blank i{{flex:1;border-bottom:.4pt solid rgba(156,122,60,.5);font-style:normal}}
+ color:{GOLD_D};margin-bottom:9mm}}
+.blank i{{flex:1;border-bottom:.4pt solid rgba(201,162,74,.5);font-style:normal}}
 
-/* ═══ THE FOOT ═══ the same three elements, turned through a half turn. */
+/* ═══ THE FOOT ═══ cut on a shallow diagonal: the creed on the cream
+   above it, the record badged on the burgundy below. */
 .foot{{flex:0 0 {FOOT_H}mm;position:relative;z-index:3}}
-.foot .bnd{{bottom:0;height:{FOOT_H + 34}mm}}
-/* the creed sits left of the ribbon, in the school's own voice */
-.creed{{position:absolute;left:{MARGIN}mm;width:60mm;top:50%;transform:translateY(-50%);z-index:4;
- font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SMALL}pt;
- color:{GOLD_R};letter-spacing:.01em;line-height:1.5}}
-.q{{display:inline-grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.35mm;
- width:1.6mm;height:1.6mm;vertical-align:.1mm;margin:0 .9mm}}
-.q i{{background:{GOLD_R};display:block}}
+.creed{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:0;z-index:4;text-align:right;
+ font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SUBJ}pt;
+ color:{BURG};letter-spacing:.01em}}
+.fmass{{position:absolute;left:0;right:0;bottom:0;height:{FOOT_H - 8}mm;
+ background:linear-gradient(284deg,{BURG_L} 0%,{BURG} 48%,{BURG_D} 100%);
+ clip-path:polygon(0 14%,100% 0,100% 100%,0 100%)}}
+.fmass::after{{content:'';position:absolute;left:56%;top:-40%;width:22%;height:180%;
+ transform:rotate(19deg);
+ background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,236,200,.06),rgba(255,255,255,0))}}
+.rec{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;bottom:12mm;z-index:4;
+ display:flex;justify-content:space-between;gap:6mm}}
+.rec>div{{display:flex;align-items:flex-start;gap:2.2mm;min-width:0}}
+.rec .fl{{display:block;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
+ color:{GOLD};margin-bottom:.8mm}}
+.rec .v{{font-size:{S_SMALL}pt;color:#F3E8DA;line-height:1.4;white-space:nowrap}}
+.rec a{{color:inherit;text-decoration:none}}
+.ico{{flex:0 0 auto;width:4.2mm;height:4.2mm;margin-top:.3mm;border-radius:50%;
+ border:.4pt solid rgba(201,162,74,.7);display:flex;align-items:center;justify-content:center}}
+.ico svg{{width:2.3mm;height:2.3mm;display:block;fill:{GOLD}}}
+.gov{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;bottom:4.4mm;z-index:4;
+ padding-top:2.6mm;border-top:.4pt solid rgba(201,162,74,.32);
+ display:flex;align-items:center;gap:2.4mm;
+ font-size:{S_LABEL}pt;letter-spacing:.09em;text-transform:uppercase;color:{GOLD};white-space:nowrap}}
+.gov .lz{{background:{GOLD}}}
 
-/* continuation sheets: the mass halves and the panel drops away */
-.head.c2{{flex:0 0 {HEAD_H - 22}mm}}
-.head.c2 .bnd{{height:{HEAD_H + 18}mm}}
-.head.c2 .hgrid{{top:7mm}} .head.c2 .arms{{width:17mm;height:17mm}}
-.head.c2 .lock .en{{font-size:8.4pt}} .head.c2 .lock .ar{{font-size:9.7pt}}
+/* continuation sheets: the mass halves, the medallion and the place drop */
+.head.c2{{height:20mm}} .head.c2 .mass{{height:20mm;width:{MASS_W - 26}mm}}
+.head.c2 .wm{{top:4.6mm}} .head.c2 .wm .en{{font-size:9.6pt}}
+.head.c2 .wm .ar{{font-size:8.8pt;margin-top:1.6mm}}
+.head.c2 .medal{{width:19mm;height:19mm;left:{MASS_W - 38}mm;top:.5mm}}
+.head.c2 .medal img{{width:11.5mm;height:11.5mm}}
 @media print{{body{{background:none;padding:0;gap:0}}
  .page{{page-break-after:always}}.page:last-child{{page-break-after:auto}}}}
 """
 
-PANEL = ('<div class="panel">'
-         f'<span class="l">{ico("campus")}Ikorodu, Lagos State</span>'
-         f'<span class="l">{ico("phone")}<a href="tel:+2348073747650">+234 807 374 7650</a></span>'
-         f'<span class="l">{ico("mail")}<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></span>'
-         f'<span class="l">{ico("record")}<a href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></span>'
-         '</div>')
+GLYPH = {
+ 'campus': 'M12 2 3 8v13h6v-6h6v6h6V8z',
+ 'phone':  'M20 15.6a12.4 12.4 0 0 1-3.9-.6 1.1 1.1 0 0 0-1.1.3l-1.6 1.6a15 15 0 0 1-6.3-6.3l1.6-1.6a1.1 1.1 0 0 0 .3-1.1A12.4 12.4 0 0 1 8.4 4 1 1 0 0 0 7.4 3H4.3a1 1 0 0 0-1 1A16.7 16.7 0 0 0 20 20.7a1 1 0 0 0 1-1v-3.1a1 1 0 0 0-1-1z',
+ 'mail':   'M3 6h18v12H3zm2 2.6V8l7 4.9L19 8v.6l-7 4.9z',
+ 'globe':  'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.9a15.6 15.6 0 0 0-1.3-3.6A8 8 0 0 1 18.9 8zM12 4.2c.7 1 1.3 2.3 1.7 3.8h-3.4C10.7 6.5 11.3 5.2 12 4.2zM4.3 14a8 8 0 0 1 0-4h3.3a17 17 0 0 0 0 4zm.8 2h2.9c.3 1.3.8 2.5 1.3 3.6A8 8 0 0 1 5.1 16zm2.9-8H5.1a8 8 0 0 1 4.2-3.6A15.6 15.6 0 0 0 8 8zm4 11.8c-.7-1-1.3-2.3-1.7-3.8h3.4c-.4 1.5-1 2.8-1.7 3.8zm2.1-5.8H9.9a15 15 0 0 1 0-4h4.2a15 15 0 0 1 0 4zm.3 5.6c.5-1.1 1-2.3 1.3-3.6h2.9a8 8 0 0 1-4.2 3.6zm1.7-5.6a17 17 0 0 0 0-4h3.3a8 8 0 0 1 0 4z',
+ 'seal':   'M12 2 4 5v6.2C4 16.4 7.4 20.9 12 22c4.6-1.1 8-5.6 8-10.8V5zm-1 13-3.2-3.2 1.4-1.4L11 12.2l4.8-4.8 1.4 1.4z',
+}
+ico = lambda k: (f'<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">'
+                 f'<path d="{GLYPH[k]}"/></svg></span>')
 
-FOOT = ('<footer class="foot">' + FOOT_SVG +
-        '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;'
-        f'&#8195;{QUAD}&#8195;Established July 2016</p>'
+REC = ('<div class="rec">'
+       f'<div>{ico("campus")}<span><span class="fl">Campus</span>'
+       '<span class="v">Ikorodu, Lagos State, Nigeria</span></span></div>'
+       f'<div>{ico("phone")}<span><span class="fl">Telephone</span>'
+       '<span class="v"><a href="tel:+2348073747650">+234 807 374 7650</a><br />'
+       '<a href="tel:+2348070586860">+234 807 058 6860</a></span></span></div>'
+       f'<div>{ico("mail")}<span><span class="fl">Correspondence</span>'
+       '<span class="v"><a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></span></span></div>'
+       f'<div>{ico("globe")}<span><span class="fl">Online</span>'
+       '<span class="v"><a href="https://shroyalschools.com">shroyalschools.com</a></span></span></div>'
+       '</div>')
+
+FOOT = ('<footer class="foot">'
+        '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>'
+        '<div class="fmass"></div>' + REC +
+        f'<div class="gov">{ico("seal")}<span>Established July 2016 {LOZ} '
+        f'Governed by a Board of Governors {LOZ} '
+        'Verifiable at <a href="https://shroyalschools.com/verify" '
+        'style="color:inherit;text-decoration:none">shroyalschools.com/verify</a></span></div>'
         '</footer>')
-
-# The name breaks at the same place in both languages — two lines each — and
-# the break in Arabic falls after the idafa, the unit that must not be split.
-EN_L = '<b>Sultan Hanafi</b><b>Royal Schools</b>'
-AR_L = '<b>{0}</b><b>{1}</b>'.format(*AR.rsplit(' ', 1))
 
 
 def head(first=True):
     c2 = '' if first else ' c2'
-    return (f'<header class="head{c2}">{HEAD_SVG}'
-            f'<div class="hgrid">'
-            f'<img class="arms" src="data:image/png;base64,{CREST}" '
-            f'alt="Arms of Sultan Hanafi Royal Schools" />'
-            f'<div class="lock"><div class="en">{EN_L}</div>'
-            f'<div class="axis"></div><div class="ar">{AR_L}</div></div></div>'
-            + (PANEL if first else '') + '</header>')
+    place = ('<div class="place">Ikorodu<b>Lagos State</b>'
+             '<b>Federal Republic of Nigeria</b></div>') if first else ''
+    return (f'<header class="head{c2}"><div class="mass"></div>'
+            f'<div class="wm"><div class="en">Sultan Hanafi Royal Schools</div>'
+            f'<div class="ar">{AR}</div></div>{place}'
+            f'<div class="medal"><img src="data:image/png;base64,{CREST_G}" '
+            f'alt="Arms of Sultan Hanafi Royal Schools" /></div></header>')
 
-TOP = ('      <div class="top"><div class="dt">Reference<b>SHRS/ICT/2026/001</b></div>'
-       '<div class="dt">Date<b>13 August 2026</b></div></div>')
+
+def strip(first=True):
+    if not first:
+        return ''
+    return ('<div class="strip">'
+            f'<div class="houses"><span>{INST}</span>'
+            '<span class="yr">Founded MMXVI</span></div>'
+            f'<div class="rule"></div><div class="micro">{MICRO}</div></div>')
 
 
 def page(inner, first=True):
     return (f'  <div class="page" data-canvas-width="794" data-canvas-height="1123">\n'
-            f'    {head(first)}\n    <main class="body{"" if first else " c2"}">\n{inner}\n'
-            f'    </main>\n{FOOT}\n  </div>')
+            f'    <div class="rail"><b>Sultan Hanafi Royal Schools</b></div>\n'
+            f'    {head(first)}\n    {strip(first)}\n'
+            f'    <main class="body{"" if first else " c2"}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
 
 
 def doc(title, pages):
@@ -287,6 +300,9 @@ def doc(title, pages):
             '</title>\n<meta name="hz:slide-selector" content=".page" />\n'
             '<meta name="hz:canvas-width" content="794" />\n<meta name="hz:canvas-height" content="1123" />\n'
             '<style>' + CSS + '</style>\n</head>\n<body>\n' + "\n".join(pages) + '\n</body>\n</html>\n')
+
+TOP = ('      <div class="top"><div>Reference<b>SHRS/ICT/2026/001</b></div>'
+       '<div class="r">Date<b>13 August 2026</b></div></div>')
 
 # ── the letter
 blocks = (ROOT / 'assets' / 'letter-blocks.html').read_text(encoding='utf-8').split('\n@@@\n')

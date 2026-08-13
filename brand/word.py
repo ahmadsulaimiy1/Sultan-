@@ -2,9 +2,9 @@
 """Word stationery — the same sheet, typed into.
 
 A .docx cannot embed the school's faces the way the HTML does, and it
-cannot draw the ribbon's curve or its fold. So the whole ground is placed
-as one image, anchored to the *page* rather than to the text and set
-behind it. That is the only construction Word honours full-bleed: an inline
+cannot draw the rail, the medallion or the foot's diagonal. So the whole
+ground is placed as one image, anchored to the *page* rather than to the
+text and set behind it. That is the only construction Word honours full-bleed: an inline
 image would be pushed inside the margins and the Axis would stop short of
 both edges.
 
@@ -18,7 +18,7 @@ import pathlib, shutil, zipfile
 ROOT = pathlib.Path(__file__).resolve().parent
 EMU_MM = 36000                      # English Metric Units per millimetre
 PAGE_W, PAGE_H = 210, 297
-HEAD_TOP, FOOT_H = 92, 34    # where the typist's text may begin and end             # the two bands, as identity.py draws them
+HEAD_TOP, FOOT_H = 56, 50    # where the typist's text may begin and end             # the two bands, as identity.py draws them
 
 def emu(mm):
     return int(round(mm * EMU_MM))
@@ -71,8 +71,8 @@ DOCUMENT = (
   f'<w:pgSz w:w="{twip(PAGE_W)}" w:h="{twip(PAGE_H)}"/>'
   # text sits clear of both masses; the header itself is pinned to the edge
   # text sits right of the Axis, clear of the masthead and the foot band
-  f'<w:pgMar w:top="{twip(HEAD_TOP)}" w:right="{twip(28)}" w:bottom="{twip(FOOT_H)}"'
-  f' w:left="{twip(28)}" w:header="0" w:footer="0" w:gutter="0"/>'
+  f'<w:pgMar w:top="{twip(HEAD_TOP)}" w:right="{twip(30)}" w:bottom="{twip(FOOT_H)}"'
+  f' w:left="{twip(34)}" w:header="0" w:footer="0" w:gutter="0"/>'
   '<w:titlePg w:val="0"/>'
   '</w:sectPr></w:body></w:document>')
 
@@ -80,7 +80,7 @@ STYLES = (
   '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
   f'<w:styles {NS}><w:docDefaults><w:rPrDefault><w:rPr>'
   '<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:cs="Georgia"/>'
-  '<w:color w:val="241A12"/><w:sz w:val="21"/><w:szCs w:val="21"/>'
+  '<w:color w:val="2A2124"/><w:sz w:val="21"/><w:szCs w:val="21"/>'
   '</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr>'
   '<w:spacing w:after="120" w:line="288" w:lineRule="auto"/>'
   '</w:pPr></w:pPrDefault></w:docDefaults></w:styles>')
