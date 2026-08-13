@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      69e16e2d294162af578146be93327c8070dc8c9c
-short       69e16e2d
+commit      9afccc97e93332fc8a5bfad24907b1fb356e5f2b
+short       9afccc97
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Say why the Admin Centre locked, instead of showing a bare token box
-built (UTC) 2026-08-13T05:49:51Z
-assets      shrs-pwa-94e09c513a
+subject     Delegation gets an interface — cover an absence without a shared token
+built (UTC) 2026-08-13T06:07:58Z
+assets      shrs-pwa-dc748e22ae
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
