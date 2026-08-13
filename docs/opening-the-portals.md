@@ -1,34 +1,31 @@
 # Opening the portals
 
-Everything in the staff portal was built and then locked, because of one
-gap nobody had hit yet: **there was no way to create the first staff
-account.**
+**Correction, and the reason this document was rewritten.** An earlier
+version claimed nothing in this project could create the first staff
+account, and a separate page was built to fix it. That was wrong. The
+**Admin Centre** at `/portal/admin/centre/` has always been able to do
+it: it tries a signed-in staff session first, falls back to a
+`PORTAL_SYSADMIN_TOKEN` gate, and can create staff, grant roles, issue
+activation links, and record appointments. The redundant page has been
+removed. Use the Admin Centre.
 
-`/api/portal/admin/staff` accepts either a staff session or an
-`x-sysadmin-token` header. The Admin Centre only ever sends cookies. So
-creating an account required an account that already held
-`staff_records: MU` — and the only account the setup endpoint seeds is a
-sample Teacher, which holds no such grant.
+---
 
-The result: the Registrar portal, the Newsroom, the Founder Dashboard,
-Safeguarding, the Admin Centre and the Desk's system sections were
-unreachable by anybody, permanently, without `curl`.
+## What you need set in Cloudflare
 
-`/portal/staff/founding/` is the missing hand. Same endpoint, with the
-header the Admin Centre never sent.
-
-## Before it will work
-
-Three secrets must exist in Cloudflare Pages → *Settings* → *Variables
-and secrets*, all marked **Secret**:
+Cloudflare Pages → *Settings* → *Variables and secrets*, all marked
+**Secret**:
 
 | Name | Why |
 |---|---|
 | `DATABASE_URL` | The Neon connection string. Without it every portal route answers "no database is linked". |
-| `SESSION_SECRET` | Signs the session cookies. Without it, sign-in returns "portal is not configured". Use a long random string — 32+ characters. |
-| `PORTAL_SYSADMIN_TOKEN` | What the founding page authenticates with. Long, random, and treated as a master key. |
+| `SESSION_SECRET` | Signs session cookies. Without it, sign-in returns "portal is not configured". 32+ random characters. |
+| `PORTAL_SYSADMIN_TOKEN` | The Admin Centre's bootstrap gate, and the disaster-recovery path if every privileged account is ever locked out. Long, random, treated as a master key. |
 
-Then run the database setup once, if it has never been run:
+Environment variables only take effect on a **new deployment** — after
+adding any of them, use *Deployments* → **Retry deployment**.
+
+If the database has never been initialised, run the setup once:
 
 ```
 POST /api/portal/setup      header: x-setup-token: <PORTAL_SETUP_TOKEN>
@@ -37,68 +34,72 @@ POST /api/portal/setup      header: x-setup-token: <PORTAL_SETUP_TOKEN>
 It is idempotent — every statement is `IF NOT EXISTS`, so running it
 again on a live database changes nothing and drops nothing.
 
-**`RESEND_API_KEY` is not required to open the portals**, but without it
-no activation email, password reset or login code is ever delivered.
-Activation links can be copied by hand from the founding page in the
-meantime; everything else stays dark until it is set.
+## Opening the Registrar's Office, and onboarding staff
 
-## Opening the seats
+Go to **`/portal/admin/centre/`**. If no staff account exists yet it
+will show a token gate — paste `PORTAL_SYSADMIN_TOKEN`. It is kept in
+`sessionStorage` and cleared when the tab closes; there is a **Lock**
+button to clear it sooner.
 
-Go to **`/portal/staff/founding/`**, paste the System Administrator
-token, and open the seats you need.
+For each officer, three steps:
 
-Two rules the page enforces rather than merely states:
+1. **Create the staff record** — name, Staff ID, office, position title.
+2. **Grant the role** — the code from the table below.
+3. **Create the login** — this returns a single-use activation link.
+   Send it to that person; they choose their own password. No password
+   is ever set for them, and nobody else ever sees it.
 
-**It will not invent a person.** Every name, staff number and email is
-typed by the school. The page refuses to submit a seat with an empty
-name. No officer of this institution is named by software.
+Once the Registrar and Head of Schools accounts exist and have signed
+in, the Admin Centre works from their **session** and the token gate is
+no longer needed for day-to-day work. Keep the token set anyway — it is
+the way back in if every privileged account is ever locked out.
 
-**It will not set a password.** Each account is created without one and
-issued a single-use activation link. Give the link to that person; they
-choose their own password. Nobody — not the school, not the page —
-ever sees it. The token you paste is held in memory only: never stored,
-never written to the device, gone on reload.
+### Which seat opens what
 
-### The seats, and what each one opens
+Office names must match exactly; the endpoint resolves offices by name
+and a near-miss silently leaves the person with no office.
 
-| Role | Opens |
-|---|---|
-| **REG** — Registrar | Registrar portal, Newsroom, family escalations, examination readiness |
-| **EXE** — Head of Schools & Administrator | Founder Dashboard, institution-wide oversight, every office view |
-| **SYSADMIN** — System Administrator | Admin Centre, access logs, data-protection requests |
-| **DSL** — Designated Safeguarding Lead | Safeguarding Intelligence Framework |
-| **PRIN** ×4 — Head Teacher and the three Principals | Behaviour, teacher performance, Arabic fluency, Tajwīd compliance, and each institution's own office |
-| **FIN** — Finance Officer | Fee records and the finance views |
+| Role | Office (exact name) | Opens |
+|---|---|---|
+| `REG` | Registrar's Office | Registrar portal, Newsroom, family escalations, examination readiness |
+| `EXE` | Head of Schools / Administrator | Founder Dashboard, institution-wide oversight, every office view |
+| `SYSADMIN` | ICT Office | Admin Centre by session, access logs, data-protection requests |
+| `DSL` | Student Affairs | Safeguarding Intelligence Framework |
+| `PRIN` | Head Teacher — Sultan Hanafi Basic School | Behaviour, teacher performance, that institution's office |
+| `PRIN` | Principal — Sultan Hanafi Secular College | Behaviour, teacher performance, that institution's office |
+| `PRIN` | Office of the Principal, Sultan Hanafi Islamiyyah College | Arabic fluency, that institution's office |
+| `PRIN` | Office of the Principal, Sultan Hanafi Qur'an College | Tajwīd compliance, ḥifẓ oversight, that institution's office |
+| `FIN` | Finance Office | Fee records and the finance views |
 
-You do not have to open all of them. **Start with the Registrar and the
-Head of Schools** — between them they reach every portal built so far.
+**Start with `REG` and `EXE`.** Between them they reach every portal
+built so far.
 
-Role scope is left school-wide on a founding grant. That is deliberate:
-a first appointment should not silently narrow itself to an institution
-nobody has chosen yet. Narrow it in the Admin Centre once you have
-settled which institutions each officer covers.
+A founding role grant can be left school-wide. Narrowing a grant to one
+institution is available in the Admin Centre and is better done once
+you have settled which institutions each officer actually covers — a
+first appointment should not silently narrow itself to an institution
+nobody has chosen yet.
 
-## After the first two accounts exist
+### Onboarding ordinary staff afterwards
 
-**Stop using the founding page.** The Admin Centre
-(`/portal/admin/centre/`) is the right place to appoint staff from then
-on: it works from a signed-in session, it records who did what in the
-staff audit log, and it enforces the permission matrix. The founding
-page bypasses all three, because at the moment it runs there is nobody
-to record and no matrix to enforce.
+Exactly the same three steps, done by the Registrar or Head of Schools
+from their own session rather than the token. From a session, every
+action is recorded in the staff audit log against the person who did
+it — which is the real reason to stop using the token as soon as you
+can. The token records nothing, because when it runs there may be
+nobody to record.
 
-Keep `PORTAL_SYSADMIN_TOKEN` set. Several endpoints keep it as a
-disaster-recovery fallback for exactly the situation this document
-describes — the day every privileged account is locked out.
+Teachers additionally need a class assignment (`assign-class`) before
+the Teacher Portal shows them a roster.
 
 ## What is still shut, and why
 
-- **Parent and student portals** — these already accept self-service
-  registration and admin-created accounts, but no verification email is
-  delivered until `RESEND_API_KEY` is set. That is the blocker, not
-  the accounts.
-- **The assistant** — needs `ANTHROPIC_API_KEY`.
-- **Web push** — needs the three `VAPID_*` values, which appear in no
-  other documentation in this repository.
+- **Activation and reset emails** are not delivered until
+  `RESEND_API_KEY` and `EMAIL_FROM_ADDRESS` are set. Until then the
+  activation link must be copied from the Admin Centre by hand and given
+  to the person directly.
+- **The assistant** needs `ANTHROPIC_API_KEY`.
+- **WhatsApp** needs `TWILIO_AUTH_TOKEN`.
+- **Web push** needs the three `VAPID_*` values.
 
 See `docs/build-audit-2026-08.md` for the full picture.
