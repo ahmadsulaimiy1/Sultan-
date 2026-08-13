@@ -486,35 +486,51 @@
       '<div class="portal-child-card"><div class="portal-child-head"><h2>New Staff Record</h2><div class="meta">Creates a real personnel record. Staff never choose their own password — this generates an activation link, exactly like every other login on this platform.</div></div>'
       + '<form class="admin-form" id="new-staff-form">'
       + '<div class="admin-form-grid">'
-      + '<div class="admin-field"><label>Staff No.</label><input name="staffNo" required placeholder="STF-0100" /></div>'
       + '<div class="admin-field"><label>Full Name</label><input name="fullName" required /></div>'
       + '<div class="admin-field"><label>Preferred Name</label><input name="preferredName" /></div>'
       + '<div class="admin-field"><label>Email (optional — enables OTP login)</label><input name="email" type="email" /></div>'
-      + '<div class="admin-field"><label>Office</label><input name="officeName" list="admin-office-names" /></div>'
-      + '<div class="admin-field"><label>Position Title</label><input name="positionTitle" /></div>'
+      + '<div class="admin-field"><label>Office</label><select name="officeName" required><option value="">Select an office…</option>'
+        + state.offices.map(function (o) { return '<option value="' + esc(o.name) + '">' + esc(o.name) + '</option>'; }).join('')
+        + '</select></div>'
+      + '<div class="admin-field"><label>Position Title</label><select name="positionTitle" required><option value="">Select a position…</option>'
+        + POSITION_TITLES.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('')
+        + '<option value="__other">Other — type it below</option></select></div>'
+      + '<div class="admin-field" id="new-staff-other-title-field" style="display:none;"><label>Position Title (other)</label><input name="positionTitleOther" /></div>'
+      + '<div class="admin-field"><label>Date Joined</label><input name="dateJoined" type="date" required /></div>'
       + '</div>'
-      + '<datalist id="admin-office-names">' + state.offices.map(function (o) { return '<option value="' + esc(o.name) + '">'; }).join('') + '</datalist>'
+      + '<p class="admin-form-status" style="opacity:.8;">The Staff ID is issued by the institution, not typed here — it is built from the office, institution and join date in the form SHRS-UNIT-OFFICE-DDMMYY-000001, and shown once the record is created. Board and Chief Executive seats take their reserved SHRS-BOT / SHRS-CEO numbers instead.</p>'
       + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Create Staff Record</button><span class="admin-form-status" id="new-staff-form-status"></span></div>'
       + '</form>'
       + '<div id="new-staff-activation" style="padding:0 26px 20px;"></div>'
       + '</div>';
+    var titleSel = document.querySelector('#new-staff-form [name="positionTitle"]');
+    if (titleSel) titleSel.addEventListener('change', function () {
+      var other = document.getElementById('new-staff-other-title-field');
+      if (other) other.style.display = titleSel.value === '__other' ? '' : 'none';
+    });
     document.getElementById('new-staff-form').addEventListener('submit', function (e) {
       e.preventDefault();
       var fd = new FormData(e.target);
-      var staffNo = fd.get('staffNo');
+      var title = fd.get('positionTitle');
+      if (title === '__other') title = (fd.get('positionTitleOther') || '').toString().trim();
+      // No staffNo is sent: the server issues it. The number it returns
+      // is what every later call uses, so nothing here has to guess it.
       apiPost('create-staff', {
-        staffNo: staffNo, fullName: fd.get('fullName'), preferredName: fd.get('preferredName') || undefined,
+        fullName: fd.get('fullName'), preferredName: fd.get('preferredName') || undefined,
         email: fd.get('email') || undefined, officeName: fd.get('officeName') || undefined,
-        positionTitle: fd.get('positionTitle') || undefined,
+        positionTitle: title || undefined, dateJoined: fd.get('dateJoined') || undefined,
       }).then(function (r) {
         if (!r.ok) { statusEl('new-staff-form-status', r.data.error || 'Could not create.', false); return; }
-        statusEl('new-staff-form-status', 'Staff record created. Generating activation link…', true);
+        var staffNo = r.data.staffNo;
+        statusEl('new-staff-form-status', 'Staff ID issued: ' + staffNo + '. Generating activation link…', true);
         apiPost('create-login', { staffNo: staffNo }).then(function (r2) {
           var out = document.getElementById('new-staff-activation');
           if (r2.ok && r2.data.activationLink) {
-            out.innerHTML = '<div class="portal-empty" style="border-color:var(--gold);">Activation link (send this to the staff member):<br><code style="word-break:break-all;">' + esc(r2.data.activationLink) + '</code></div>';
+            out.innerHTML = '<div class="portal-empty" style="border-color:var(--gold);">'
+              + '<strong>Staff ID:</strong> <code>' + esc(staffNo) + '</code><br><br>'
+              + 'Activation link (send this to the staff member):<br><code style="word-break:break-all;">' + esc(r2.data.activationLink) + '</code></div>';
           } else if (out) {
-            out.innerHTML = '<div class="portal-empty">Staff record created, but the activation link could not be generated: ' + esc((r2.data && r2.data.error) || 'unknown error') + '</div>';
+            out.innerHTML = '<div class="portal-empty">Staff record created as <code>' + esc(staffNo) + '</code>, but the activation link could not be generated: ' + esc((r2.data && r2.data.error) || 'unknown error') + '</div>';
           }
         });
       });
@@ -537,6 +553,27 @@
     SYSADMIN: 'System Administrator', DSL: 'Designated Safeguarding Lead',
   };
   var ROLE_CODES = Object.keys(ROLE_LABELS);
+
+  // Position titles are what a person is called; roles are what the
+  // system lets them do. They are related but not the same, so this is
+  // its own list rather than a reuse of ROLE_LABELS — a Vice Principal
+  // (Academic) and a Vice Principal (Administration) share one role
+  // code and are not the same job. "Other" stays available because no
+  // fixed list survives contact with a real staffroom.
+  var POSITION_TITLES = [
+    'Head of Schools & Administrator',
+    'Chairman, Board of Governors',
+    'Member, Board of Governors',
+    'Registrar', 'Assistant Registrar',
+    'Principal', 'Head Teacher', 'Vice Principal (Academic)', 'Vice Principal (Administration)',
+    'Admissions Officer', 'Finance Officer', 'Bursar',
+    'Teacher', 'Head of Department', 'Class Teacher', 'Subject Teacher',
+    'Muhaffiz / Muhaffizah', 'Islamic and Arabic Studies Instructor',
+    'Student Affairs Officer', 'Boarding Officer', 'Designated Safeguarding Lead',
+    'ICT Administrator', 'System Administrator',
+    'Librarian', 'Examinations Officer', 'Communications Officer',
+    'Human Resources Officer', 'Administrative Assistant',
+  ];
 
   // Founder Authority Framework — a chronological, read-only register
   // over appointments/staff_roles/delegations (functions/api/portal/

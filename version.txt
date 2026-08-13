@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      f8a09b7e0bd5ea82c2a57674cebef93624c6d590
-short       f8a09b7e
+commit      65fa28df004ad66b03aa0ec468b586d466a785d7
+short       65fa28df
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Readiness: one page that says why anything is still shut
-built (UTC) 2026-08-13T07:50:50Z
-assets      shrs-pwa-dc748e22ae
+subject     Rate limiting — the guard that did not exist
+built (UTC) 2026-08-13T08:06:54Z
+assets      shrs-pwa-caf195dc57
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

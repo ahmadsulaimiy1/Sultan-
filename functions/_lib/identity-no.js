@@ -343,6 +343,43 @@ async function generateAndStoreStaffIdentityNo(sql, staffId, row) {
   return identityNo;
 }
 
+// Builds the number BEFORE the staff row exists, for the creation path.
+//
+// ensureStaffIdentityNo() above needs a staffId because it reads the
+// stored row; at creation there is no row yet, but the same three
+// inputs are already in hand — office, institution, join date. So the
+// format is produced by the same rules rather than a second scheme
+// invented for the form: SHRS-<UNIT>-<OFFICE>-<DDMMYY>-<seq6>, and the
+// reserved Board/CEO seats keep their own SHRS-BOT-nnn / SHRS-CEO-nnn
+// runs.
+//
+// Returns null when there is no join date and the seat is not reserved,
+// exactly as the lazy path does — a number is never built on an
+// invented date.
+export async function buildStaffIdentityNo(sql, { officeSlug, institutionName, dateJoined }) {
+  const row = {
+    office_slug: officeSlug || null,
+    institution_name: institutionName || null,
+    department_id: null,
+    date_joined: dateJoined || null,
+  };
+  const unit = unitCodeFor(row);
+  // officeCodeFor's only use of staffId is a DSL role lookup, and a
+  // staff member being created holds no roles yet — so the office-slug
+  // branch is the whole of it here.
+  const office = row.office_slug && OFFICE_CODE_BY_SLUG[row.office_slug]
+    ? OFFICE_CODE_BY_SLUG[row.office_slug]
+    : 'STF';
+  const reservedPrefix = RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office];
+  if (reservedPrefix) return generateReservedStaffIdentityNo(sql, reservedPrefix);
+
+  const joinDate = formatJoinDate(dateJoined);
+  if (!joinDate) return null;
+  const seqRes = await sql`SELECT nextval('staff_identity_seq') AS seq`;
+  const seq = String(seqRes.rows[0].seq).padStart(6, '0');
+  return `SHRS-${unit}-${office}-${joinDate}-${seq}`;
+}
+
 // Lazy-generate-once, same contract as the student/guardian helpers
 // above: if an identity_no already exists (any format), it is returned
 // unchanged and never touched again. A staff record with no date_joined

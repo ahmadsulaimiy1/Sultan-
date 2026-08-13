@@ -76,7 +76,7 @@ import { readStaffSessionFromRequest, timingSafeEqualString, generateToken } fro
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { logStaffEvent } from '../../../_lib/audit.js';
 import { hasPermissionFor, effectiveGrants } from '../../../_lib/permissions.js';
-import { regenerateStaffIdentityNo, regenerateStudentIdentityNo, regenerateGuardianIdentityNo } from '../../../_lib/identity-no.js';
+import { regenerateStaffIdentityNo, regenerateStudentIdentityNo, regenerateGuardianIdentityNo, buildStaffIdentityNo } from '../../../_lib/identity-no.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const OFFICE_TYPES = ['governance', 'executive', 'academic', 'support'];
@@ -391,8 +391,8 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (action === 'create-staff') {
-      if (!body.staffNo || !body.fullName) {
-        return json({ error: 'staffNo and fullName are required.' }, 400);
+      if (!body.fullName) {
+        return json({ error: 'fullName is required.' }, 400);
       }
       const officeId = await officeIdByName(sql, body.officeName);
       const departmentRes = body.departmentName
@@ -403,7 +403,36 @@ export async function onRequestPost({ request, env }) {
       const institutionId = await institutionIdByName(sql, body.institutionName);
       const email = body.email ? String(body.email).trim().toLowerCase() : null;
 
-      const existing = await sql`SELECT id FROM staff WHERE staff_no = ${body.staffNo}`;
+      // Staff IDs are issued by the institution, not typed by whoever
+      // happens to be filling the form. A hand-entered number is how you
+      // get STF-0100 next to SHR-STF-0901 next to a typo, and none of
+      // them resolvable. When the caller does not supply one, build it
+      // by the documented architecture — SHRS-<UNIT>-<OFFICE>-<DDMMYY>-
+      // <seq6>, or the reserved Board/CEO series — from the office,
+      // institution and join date already on this request.
+      //
+      // A supplied staffNo is still honoured: the bulk importer and the
+      // migration path both pass real, already-issued numbers, and this
+      // must not renumber them.
+      let staffNo = body.staffNo ? String(body.staffNo).trim() : '';
+      if (!staffNo) {
+        const officeSlugRes = officeId
+          ? await sql`SELECT slug FROM offices WHERE id = ${officeId}`
+          : { rows: [] };
+        const instNameRes = institutionId
+          ? await sql`SELECT name FROM institutions WHERE id = ${institutionId}`
+          : { rows: [] };
+        staffNo = await buildStaffIdentityNo(sql, {
+          officeSlug: officeSlugRes.rows[0] ? officeSlugRes.rows[0].slug : null,
+          institutionName: instNameRes.rows[0] ? instNameRes.rows[0].name : null,
+          dateJoined: body.dateJoined || null,
+        });
+        if (!staffNo) {
+          return json({ error: 'A join date is required so the Staff ID can be issued — the number carries it, and nothing invents one.' }, 400);
+        }
+      }
+
+      const existing = await sql`SELECT id FROM staff WHERE staff_no = ${staffNo}`;
       let staffId;
       if (existing.rows.length) {
         staffId = existing.rows[0].id;
@@ -417,7 +446,7 @@ export async function onRequestPost({ request, env }) {
         const created = await sql`
           INSERT INTO staff (staff_no, full_name, preferred_name, office_id, department_id, position_title,
                               reports_to_staff_id, institution_id, date_joined, email)
-          VALUES (${body.staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
+          VALUES (${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
                   ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
           RETURNING id`;
         staffId = created.rows[0].id;
@@ -441,7 +470,7 @@ export async function onRequestPost({ request, env }) {
         }
       }
 
-      return json({ ok: true, staffId });
+      return json({ ok: true, staffId, staffNo });
     }
 
     if (action === 'update-staff-status') {
