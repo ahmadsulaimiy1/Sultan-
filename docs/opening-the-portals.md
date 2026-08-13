@@ -34,6 +34,35 @@ POST /api/portal/setup      header: x-setup-token: <PORTAL_SETUP_TOKEN>
 It is idempotent — every statement is `IF NOT EXISTS`, so running it
 again on a live database changes nothing and drops nothing.
 
+## The token is a bootstrap, not a login
+
+You should paste `PORTAL_SYSADMIN_TOKEN` **once, ever** — to create the
+first account. After that it is only a way back in if every privileged
+account is locked out.
+
+If you are still being asked for it, one of two things is true:
+
+**No account with the right role exists yet.** The Admin Centre needs
+`staff_records: MU`, which the permission matrix grants to **SYSADMIN**
+and **EXE** only. A Registrar or Principal account is correctly refused
+here — `REG` does not carry Manage Users. So create a **Head of Schools
+(EXE)** or **System Administrator (SYSADMIN)** account, set its
+password, and sign in as that. The gate will stop appearing.
+
+**Or the account exists but has no password yet.** Creating a staff
+record and granting a role is not enough — the person also needs a
+login. Use *create login* to get the activation link and open it.
+
+The gate now names which of these it is: if you are signed in but with
+the wrong role, it says who you are, which role you hold, and which
+roles would work, instead of showing a bare token box.
+
+Note the split: the **Registrar portal** at `/portal/staff/registrar/`
+needs no token at all, only a signed-in `REG` session. It is the
+**Admin Centre** — user administration — that requires `MU`. If all you
+want is the Registrar's own office working, sign in at
+`/portal/staff/login/` and the token never enters it.
+
 ## Opening the Registrar's Office, and onboarding staff
 
 Go to **`/portal/admin/centre/`**. If no staff account exists yet it

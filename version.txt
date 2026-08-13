@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      fa10481e9d428836133e3d31d81561d47e330076
-short       fa10481e
+commit      734a551bacf5677cfc6db374a943d14603543660
+short       734a551b
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Founding Officers: the portals had no way to open at all
-built (UTC) 2026-08-13T05:31:56Z
-assets      shrs-pwa-b6d1919da4
+subject     Remove the Founding Officers page — the Admin Centre already did this
+built (UTC) 2026-08-13T05:40:48Z
+assets      shrs-pwa-497249b18c
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

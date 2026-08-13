@@ -30,7 +30,11 @@
           state.token = stored;
           tryLoad();
         } else {
-          showGate();
+          // Falling back to the token gate has two very different
+          // causes, and showing the same bare token box for both leaves
+          // a signed-in officer with no idea why their account was not
+          // enough. Ask who they are and say so.
+          explainWhyLocked();
         }
       }
     });
@@ -67,6 +71,28 @@
     var err = document.getElementById('admin-gate-error');
     if (err) err.textContent = errorMsg || '';
   }
+  // `staff_records: MU` is held by SYSADMIN and EXE only. A Registrar
+  // or Principal signing in here is correctly refused, but silently —
+  // so name the account, name the roles that would work, and say the
+  // token is not the intended answer for a person who already has an
+  // account.
+  function explainWhyLocked() {
+    fetch('/api/portal/staff/me', { headers: { accept: 'application/json' } })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (me) {
+        if (!me || !me.staff) { showGate(); return; }
+        var codes = (me.roles || []).map(function (r) { return r.roleCode; });
+        var who = me.staff.fullName || 'You';
+        showGate(
+          who + ' is signed in' + (codes.length ? ' as ' + codes.join(', ') : ' with no active role') +
+          ', which does not include Manage Users. This page needs a Head of Schools (EXE) or ' +
+          'System Administrator (SYSADMIN) account. Ask one of them to grant your account that role, ' +
+          'or sign in as one — the token below is only for before any account exists.'
+        );
+      })
+      .catch(function () { showGate(); });
+  }
+
   function lock() {
     sessionStorage.removeItem(TOKEN_KEY);
     state.token = null;
