@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      cb01c4a0ccf5fdc8baa23a203bb6bd5d3f75f0c3
-short       cb01c4a0
+commit      15c820225d2bf8d0120824c06f4e8afb85507e05
+short       15c82022
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The house spectrum, and links that are actually links
-built (UTC) 2026-08-13T11:41:50Z
+subject     Stage one: strategy, and twenty structural directions
+built (UTC) 2026-08-13T11:49:12Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
