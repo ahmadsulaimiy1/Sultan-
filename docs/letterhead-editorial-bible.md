@@ -161,6 +161,68 @@ institution states where it can be found and how its documents may be
 verified. It carries equal weight to the masthead, because a document
 without provenance is a leaflet.
 
+## V-b. Composition — the part the earlier drafts had no answer for
+
+Principles alone produced three symmetrical, centred, static sheets.
+Symmetry is the default a machine reaches for; it is *balance without
+tension*, and tension is what makes a page look designed rather than
+assembled. This section is the missing system.
+
+### The grid
+
+Twelve columns across 210mm, 12mm gutter, with a **7mm side rail** taken
+off the left edge before the grid starts. Nothing but the rail lives in
+that 7mm. The body sits on columns 2–12.
+
+### Five devices that put movement into a still page
+
+1. **The side rail.** A garnet strip the full height of the sheet
+   carrying the issuing office in 5pt gold caps, rotated. It costs
+   nothing — that margin was dead — and it turns a rectangle of text
+   into a page with an edge and a spine.
+2. **Asymmetry.** The masthead panel spans roughly two-thirds, not the
+   full width. The remaining third is paper carrying the place of issue
+   in dark type. Full-width bands are stable and dull; a panel that
+   stops has direction.
+3. **The angled edge.** The masthead's lower boundary is cut on a
+   shallow diagonal (about 1.4°), mirrored inverted at the foot. Almost
+   subliminal, and the single cheapest way to stop a layout reading as
+   a stack of boxes.
+4. **Overlap.** The crest disc straddles the panel's edge — half on
+   garnet, half on paper. Overlap creates depth; depth reads as physical.
+5. **One focal accent.** Exactly one element may be the brightest thing
+   on the sheet. Here it is the crest disc. Everything else defers.
+
+### Icons — required, and specified
+
+A modern flagship letterhead marks its contact details. Absence of icons
+is not restraint; it is an unmade decision.
+
+- **Inline SVG only.** No icon font, no image, nothing licensed.
+- **Line, not solid.** 1.1px stroke on a 24px box, round caps and joins.
+- **Gold `#C9A45E` on the bands, garnet `#7A2E3E` on paper.**
+- **4.4mm square**, optically centred to the cap-height of the text
+  beside them, never to its bounding box.
+- **Five, and only five**: pin (campus), telephone, envelope
+  (correspondence), globe (web), seal (verification). A sixth icon means
+  an unnecessary line of foot copy.
+
+Icons never appear in the body of a letter. A letter is prose.
+
+### Spatial rhythm
+
+One unit = 3.2mm. Every vertical gap is a whole multiple: 1, 2, 3, 5, 8.
+Arbitrary gaps are what make a page feel assembled. If a gap needs to be
+4.7mm, the composition is wrong, not the number.
+
+### What the sheet must never do
+
+- Begin the letter on the second page. **A letter starts on page one.**
+  The blank sheet is a separate artefact for a separate purpose and is
+  delivered as its own file — it is not the cover of a letter.
+- Repeat the ceremonial masthead on continuation sheets.
+- Centre everything. Centring is the absence of a decision.
+
 ## VI. Typography
 
 | Role | Face | Size | Treatment |
@@ -253,3 +315,6 @@ A sheet ships only when all ten pass, measured — never eyeballed:
 11. Masthead ≤ 15% of sheet height.
 12. Drop initial on the opening sentence of the letter — never on the
     address block. `:first-of-type` catches the addressee; use a class.
+13. The letter begins on sheet one. Blank stationery ships as its own file.
+14. Five contact icons present, inline SVG, optically aligned to cap-height.
+15. Every vertical gap is a whole multiple of 3.2mm.

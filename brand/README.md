@@ -4,9 +4,11 @@ Three files, one design.
 
 | File | Use |
 |---|---|
-| `letterhead.pdf` | Print it, or attach it. Page 1 is the blank sheet, page 2 is the Registrar letter set on it. |
-| `letterhead.docx` | Open in Word and type. The crest, school details and contacts sit in the page header and footer, so **every page carries them automatically** — however long the letter runs. |
-| `letterhead.html` | The source. Open in any browser and print to PDF; edit the text and re-print for a new letter. |
+| `letter-registrar-activation.pdf` | The letter itself, **beginning on sheet one**. Four sheets. |
+| `letterhead.pdf` | Blank stationery, one sheet. A separate artefact — never the cover of a letter. |
+| `letterhead.docx` | Open in Word and type. Crest and details sit in the page header and footer, so every page carries them. |
+| `build.py` | Regenerates both from the embedded assets. Edit the letter blocks and re-run. |
+| `*.html` | The sources both PDFs are printed from. |
 
 ## What it carries, and where each fact came from
 

@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      78df01c884b7ba6367d581d8d215c7aa77cc8669
-short       78df01c8
+commit      ade14f87bd88f53533acf9360a3cf7f3b5f3ea41
+short       ade14f87
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Letterhead: an editorial bible, then a sheet built against it
-built (UTC) 2026-08-13T11:02:48Z
+subject     Garnet, one band, and the Arabic name corrected
+built (UTC) 2026-08-13T11:16:09Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
