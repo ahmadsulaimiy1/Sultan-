@@ -233,10 +233,60 @@
     existing.forEach(function (c) { actions.appendChild(c); });
     bar.appendChild(actions);
     bar.appendChild(el('div', { class: 'cmd-engrave', 'aria-hidden': 'true' }));
+    buildNavGrid(bar);
 
     tickClock();
     setInterval(tickClock, 30000);
     watchIdentity();
+  }
+
+  /* The public masthead's card grid and action rail, in the portal, built out
+     of the PUBLIC SITE'S OWN CLASSES — .navlinks, .nav-drop, .nav-drop-trigger,
+     .nav-mark.nav-cta. brand.css is already loaded on every portal page, so
+     this is the same treatment rather than a copy of it: if the public
+     masthead is restyled tomorrow, this follows it automatically. Only the
+     content differs, because a signed-in office needs different doors than a
+     visitor does. */
+  var NAV_CARDS = [
+    { label: 'My Dashboard',       href: '/portal/dashboard/' },
+    { label: 'My Children',        href: '/portal/dashboard/#children' },
+    { label: 'Results',            href: '/portal/dashboard/#results' },
+    { label: 'Fees',               href: '/portal/dashboard/#fees' },
+    { label: 'Documents',          href: '/portal/profile/' },
+    { label: 'Verify Certificate', href: '/verify-certificate/' },
+    { label: 'All Offices',        href: '/portal/select/' },
+    { label: 'Full Menu',          href: '/' }
+  ];
+  var NAV_RAIL = [
+    { label: 'My Dashboard',       href: '/portal/dashboard/' },
+    { label: 'Verify a Certificate', href: '/verify-certificate/' },
+    { label: 'Adhkār Centre',      href: '/adhkar/' },
+    { label: 'Prayer Times',       href: '/prayer-times/' },
+    { label: 'Academic Calendar',  href: '/academic-calendar/' }
+  ];
+
+  function buildNavGrid(bar) {
+    if (document.querySelector('.cmd-navgrid')) return;
+    var here = location.pathname.replace(/index\.html?$/, '');
+
+    var links = el('div', { class: 'navlinks' });
+    NAV_CARDS.forEach(function (c) {
+      var drop = el('div', { class: 'nav-drop' });
+      drop.appendChild(el('a', { class: 'nav-drop-trigger', href: c.href, text: c.label }));
+      links.appendChild(drop);
+    });
+
+    var rail = el('div', { class: 'cmd-rail' });
+    NAV_RAIL.forEach(function (c) {
+      var a = el('a', { class: 'nav-drop-trigger nav-mark nav-cta', href: c.href });
+      a.appendChild(el('span', { text: c.label }));
+      a.appendChild(el('span', { class: 'arrow', 'aria-hidden': 'true', text: '→' }));
+      if (here === c.href) a.classList.add('is-here');
+      rail.appendChild(a);
+    });
+
+    var wrap = el('div', { class: 'cmd-navgrid' }, [links, rail]);
+    bar.insertAdjacentElement('afterend', wrap);
   }
 
   function tickClock() {

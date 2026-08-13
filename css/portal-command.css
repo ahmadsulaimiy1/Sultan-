@@ -1210,3 +1210,88 @@ body.portal-body .portal-stats .value {
 /* the form grids the Registrar and the Common Room share */
 body.portal-body .registrar-form-grid { display: grid; gap: 14px; }
 body.portal-body .registrar-form-grid > * { min-width: 0; }
+
+/* ===========================================================================
+   16. THE MASTHEAD GRID, AS ON THE PUBLIC SITE
+   ===========================================================================
+   The cards and the rail use the public site's own classes and therefore its
+   own styling from brand.css: .navlinks, .nav-drop, .nav-drop-trigger and
+   .nav-mark.nav-cta. Only layout and the portal's content are set here, so a
+   change to the public masthead carries straight through.
+   =========================================================================== */
+
+.cmd-navgrid { position: relative; z-index: 5; }
+.cmd-navgrid .navlinks {
+  display: grid !important; position: static !important;
+  visibility: visible !important; opacity: 1 !important; transform: none !important;
+  inset: auto !important; height: auto !important; max-height: none !important;
+  /* Even columns, not auto-fit: a long label like Verify a Certificate was
+     overflowing its track and running under the next card. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px; padding: 18px clamp(12px, 2.4vw, 40px);
+  max-width: 1560px; margin-inline: auto;
+  background: transparent !important; border: 0 !important;
+}
+.cmd-navgrid .nav-drop { position: static !important; }
+
+/* the dark action rail beneath the cards */
+.cmd-rail {
+  display: flex; flex-wrap: wrap; align-items: stretch;
+  background: linear-gradient(180deg, #2A1D0C 0%, #1B1206 100%);
+  border-block: 1px solid rgba(198,161,91,.34);
+  padding: 0 clamp(12px, 2.4vw, 40px);
+}
+.cmd-rail .nav-cta {
+  flex: 1 1 auto; justify-content: center; text-align: center;
+  padding: 14px 18px !important; border-radius: 0 !important;
+  border: 0 !important; border-inline-end: 1px solid rgba(198,161,91,.18) !important;
+  background: transparent !important; color: var(--cmd-champagne) !important;
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  transition: background .32s var(--cmd-ease), color .32s var(--cmd-ease);
+}
+.cmd-rail .nav-cta:last-child { border-inline-end: 0 !important; }
+.cmd-rail .nav-cta .arrow { opacity: .55; transition: transform .32s var(--cmd-ease); }
+.cmd-rail .nav-cta:hover { background: rgba(233,206,138,.10) !important; color: #FFF8E6 !important; }
+.cmd-rail .nav-cta:hover .arrow { transform: translateX(3px); }
+/* the office you are standing in, filled with foil as the public site fills
+   its active tab */
+.cmd-rail .nav-cta.is-here {
+  background: var(--cmd-foil) !important; color: #241A0E !important; font-weight: 600;
+}
+.cmd-rail .nav-cta.is-here .arrow { opacity: .8; }
+
+@media (max-width: 1080px) {
+  .cmd-navgrid .navlinks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .cmd-navgrid .navlinks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; padding: 12px; }
+  .cmd-rail .nav-cta { flex: 1 1 45%; font-size: 10.5px; padding: 11px 10px !important; }
+}
+
+/* brand.css hides .nav-drop-trigger until its parent masthead opens the mega
+   menu. Outside that masthead the cards must stand on their own, so their
+   display is restated here — the only thing overridden; every colour, border
+   and medallion still comes from brand.css. */
+.cmd-navgrid .nav-drop,
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  display: flex !important; visibility: visible !important; opacity: 1 !important;
+  position: static !important; transform: none !important; pointer-events: auto !important;
+}
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  align-items: center; justify-content: center; text-align: center;
+  min-height: 62px; padding: 14px 12px !important;
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 60%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.34) !important; border-radius: 14px !important;
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 11px; letter-spacing: .11em; text-transform: uppercase; font-weight: 600;
+  text-decoration: none; white-space: normal; line-height: 1.35; overflow-wrap: anywhere;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 26px -16px rgba(60,42,16,.30) !important;
+  transition: transform .34s var(--cmd-ease), border-color .34s var(--cmd-ease),
+              box-shadow .34s var(--cmd-ease);
+}
+.cmd-navgrid .navlinks .nav-drop-trigger:hover {
+  transform: translateY(-3px); border-color: rgba(198,161,91,.72) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 18px 36px -18px rgba(60,42,16,.40) !important;
+}
