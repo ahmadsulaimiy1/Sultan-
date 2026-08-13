@@ -134,15 +134,18 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 /* ═══ THE HEAD ═══ */
 .head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:4}}
 /* the bronze frame, stepped and gold-edged */
-.frame{{position:absolute;left:0;right:0;top:0;height:9mm;
+/* The bracket steps DOWN into the cream. Cut the other way it punches a
+   hole through the band, which reads as a missing piece rather than as a
+   bracket — that was the fault. */
+.frame{{position:absolute;left:0;right:0;top:0;height:14mm;
  background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 60%,{DARK_D} 100%);
- clip-path:polygon(0 0,100% 0,100% 100%,58% 100%,54% 46%,30% 46%,26% 100%,0 100%)}}
-.fedge{{position:absolute;left:0;right:0;top:0;height:9mm;z-index:5;pointer-events:none;
+ clip-path:polygon(0 0,100% 0,100% 64%,58% 64%,54% 100%,30% 100%,26% 64%,0 64%)}}
+.fedge{{position:absolute;left:0;right:0;top:0;height:14mm;z-index:5;pointer-events:none;
  background:{GOLD_BAR};
- clip-path:polygon(0 100%,26% 100%,30% 46%,54% 46%,58% 100%,100% 100%,
-                   100% calc(100% - 1.1pt),58% calc(100% - 1.1pt),
-                   54% calc(46% - 1.1pt),30% calc(46% - 1.1pt),
-                   26% calc(100% - 1.1pt),0 calc(100% - 1.1pt))}}
+ clip-path:polygon(0 64%,26% 64%,30% 100%,54% 100%,58% 64%,100% 64%,
+                   100% calc(64% - 1.1pt),58% calc(64% - 1.1pt),
+                   54% calc(100% - 1.1pt),30% calc(100% - 1.1pt),
+                   26% calc(64% - 1.1pt),0 calc(64% - 1.1pt))}}
 /* the contact panel, cut into the masthead at the right */
 .panel{{position:absolute;right:0;top:5mm;width:{210 - PANEL_X}mm;height:{HEAD_H - 5}mm;
  background:linear-gradient(122deg,{DARK_L} 0%,{DARK} 52%,{DARK_D} 100%);
@@ -202,8 +205,8 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 .foot{{flex:0 0 {FOOT_H + BOT_H}mm;position:relative;z-index:4;
  background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 46%,{DARK_D} 100%)}}
 .foot::before{{content:'';position:absolute;left:0;right:0;top:0;height:1.1pt;background:{GOLD_BAR}}}
-.fbrack{{position:absolute;left:0;right:0;top:-6mm;height:6mm;z-index:5;
- background:linear-gradient(178deg,{DARK} 0%,{DARK_D} 100%);
+.fbrack{{position:absolute;left:0;right:0;top:-5mm;height:5mm;z-index:5;
+ background:linear-gradient(2deg,{DARK} 0%,{DARK_D} 100%);
  clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%)}}
 .fbrack::after{{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:{GOLD_BAR};
  clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%,
