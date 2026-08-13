@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      15c820225d2bf8d0120824c06f4e8afb85507e05
-short       15c82022
+commit      8b9b1a13d2533ed0eef2e3542dccaf9b19ba96ad
+short       8b9b1a13
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Stage one: strategy, and twenty structural directions
-built (UTC) 2026-08-13T11:49:12Z
+subject     Stage two: ten systems, each carried across six artefacts
+built (UTC) 2026-08-13T11:57:48Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
