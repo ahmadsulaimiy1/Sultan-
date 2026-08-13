@@ -66,6 +66,23 @@ expands automatically into whatever the furniture does not need:
 A middle sheet therefore carries **22% more text** than the opening
 sheet. That is the whole point of the standard.
 
+**A 5 mm gutter is held back from every one of those depths.** The block
+heights come from one rendering; a different rasteriser, a hinting
+difference or a substituted font moves a long paragraph by a millimetre
+or two. Without the reserve a sheet packed to the last hair collides with
+its own footer on somebody else's machine. It costs about one line of
+text per sheet and it removes a whole class of defect. A build measured
+at 0.6 mm of clearance is what put it there.
+
+## A heading travels with its text
+
+A section lead-in is never the last thing on a sheet. A heading stranded
+above a break announces a section the reader must then turn the page to
+find, which is the one thing a heading exists not to do. The packer marks
+every lead-in *keep-with-next*: if a break would fall immediately after
+one, the break is pulled back so the heading crosses with the text it
+introduces. This is asserted in the build (`noOrphanLead`).
+
 ## How it is applied — by measurement, not by hand
 
 The build does this automatically and re-does it whenever the text

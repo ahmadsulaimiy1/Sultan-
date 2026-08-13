@@ -38,7 +38,8 @@ The governing numbers, and the reason each exists:
 
 Run:  python3 brand/identity.py [--staff-id X --activation-url Y]
 """
-import argparse, base64, json, pathlib, subprocess
+import argparse, base64, json, pathlib, re, subprocess
+import html as html_mod
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--staff-id')
@@ -240,6 +241,15 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
    multiplies out; nothing is drawn or imitated here. */
 .sig{{display:block;height:15mm;width:auto;max-width:52mm;margin:1mm 0 1.2mm;
  mix-blend-mode:multiply}}
+/* the opening invocation, set in the Arabic face and given its own air */
+.bism{{text-align:center;font-family:'Amiri',serif;font-size:12.6pt;direction:rtl;
+ color:{GOLD_D};margin:0 0 6.6mm!important}}
+/* the copy list, closing the letter */
+.cc{{margin-top:9mm;padding-top:3.3mm;border-top:.4pt solid rgba(201,162,74,.4);
+ font-size:{S_SMALL}pt;color:{INK2};line-height:1.5}}
+.cc .ccl{{display:block;font-family:'Cinzel',serif;font-size:{S_LABEL}pt;letter-spacing:.2em;
+ text-transform:uppercase;color:{GOLD_D};margin-bottom:1.4mm}}
+.cc p{{margin:0!important;text-align:left!important}}
 .blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
  color:{GOLD_D};margin-bottom:9mm}}
 .blank i{{flex:1;border-bottom:.4pt solid rgba(201,162,74,.5);font-style:normal}}
@@ -404,16 +414,34 @@ TOP = ('      <div class="top"><div>Reference<b>SHRS/ICT/2026/001</b></div>'
 # are packed against each sheet's real capacity. Change the letter and the
 # pagination follows it.
 PAGE_H = 297
-CAP_FULL = PAGE_H - HEAD_H - 14 - FOOT_H - BOT_H          # opening sheet
-CAP_OPEN = PAGE_H - HEAD_H - 14 - 30                      # opens, does not close
-CAP_MID = PAGE_H - 32 - 30                                # neither
-CAP_CLOSE = PAGE_H - 32 - FOOT_H - BOT_H                  # closes, does not open
+# A gutter is held back from every capacity. The measured heights come from
+# one rendering; a different rasteriser, a hinting difference or a font
+# substitution moves a long block by a millimetre or two, and without this
+# reserve a sheet packed to the last hair collides with its own footer. It is
+# cheap insurance: it costs a line of text and it removes a class of defect.
+GUTTER = 5
+CAP_FULL = PAGE_H - HEAD_H - 14 - FOOT_H - BOT_H - GUTTER   # opening sheet
+CAP_OPEN = PAGE_H - HEAD_H - 14 - 30 - GUTTER               # opens, does not close
+CAP_MID = PAGE_H - 32 - 30 - GUTTER                         # neither
+CAP_CLOSE = PAGE_H - 32 - FOOT_H - BOT_H - GUTTER           # closes, does not open
 
 
-def paginate(heights, extra_first=0.0):
+def paginate(heights, extra_first=0.0, keep_with_next=()):
     """Pack blocks into sheets against each sheet's real capacity, then
-    apply the standard. Returns a list of (slice, head, foot)."""
+    apply the standard. Returns a list of (slice, head, foot).
+
+    `keep_with_next` marks blocks that must not be the last thing on a
+    sheet — a section heading stranded above a break announces a section
+    the reader then has to turn the page to find. It travels with the
+    text it introduces."""
     n = len(heights)
+
+    def settle(a, b):
+        """Pull a sheet's break back past any block that must not end it."""
+        while b - 1 > a and (b - 1) in keep_with_next:
+            b -= 1
+        return b
+
     # try one sheet first — if everything fits, it takes head and foot both
     if sum(heights) + extra_first <= CAP_FULL:
         return [((0, n), True, True)]
@@ -425,11 +453,13 @@ def paginate(heights, extra_first=0.0):
             used += heights[j]; j += 1
         if j == i:                       # a block taller than a whole sheet
             j = i + 1
+        if j < n:                        # a break here, so it must not strand a heading
+            j = settle(i, j)
         sheets.append([i, j]); i = j; first = False
     # the closing sheet must also hold the foot; if it cannot, open another
     last = sheets[-1]
     while sum(heights[last[0]:last[1]]) > CAP_CLOSE and last[1] - last[0] > 1:
-        last[1] -= 1
+        last[1] = settle(last[0], last[1] - 1)
         sheets.append([last[1], len(heights)])
         last = sheets[-1]
     out = []
@@ -461,6 +491,11 @@ def rt(b):
                       f'<a href="{ARGS.activation_url}">{ARGS.activation_url}</a>')
     return b
 
+# The record copy is written from the *source* blocks, with the Staff ID and
+# the activation link still standing as placeholders. Neither is a fact about
+# the letter's design; both are secrets issued per person at the moment of
+# sending, and neither may ever enter the repository.
+SRC = [b for b in blocks if 'class="ref-line ref-line--f"' not in b]
 blocks = [rt(b) for b in blocks]
 blocks = [b for b in blocks if 'class="refline"' not in b]
 
@@ -479,7 +514,9 @@ heights = json.loads(HEIGHTS.read_text()) if HEIGHTS.exists() else [12.0] * len(
 PROBE.unlink(missing_ok=True)
 
 TOP_MM = 12.0                                  # the reference/date row
-sheets = paginate(heights, extra_first=TOP_MM)
+# a section heading belongs to the text under it, not to the sheet above it
+KEEP = {k for k, b in enumerate(blocks) if 'class="lead"' in b}
+sheets = paginate(heights, extra_first=TOP_MM, keep_with_next=KEEP)
 REF = 'SHRS/ICT/2026/001'
 body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
 pages = []
@@ -492,6 +529,67 @@ for k, ((a, b), hd, ft) in enumerate(sheets):
 print('letter: %d sheet%s — %s' % (len(sheets), '' if len(sheets) == 1 else 's',
       ', '.join(('head+foot' if h and f else 'head' if h else 'foot' if f else 'clean')
                 for _, h, f in sheets)))
+
+# ── the record copy, written from the same blocks as the letter
+#
+# This used to be kept by hand, and it drifted: it named the wrong
+# signatory and it was missing whole sections that had been added to the
+# letter. A record of what was sent that disagrees with what was sent is
+# worse than no record, so it is now generated. Edit the blocks; both
+# follow.
+def md(html):
+    t = html
+    for pat, rep in (
+            (r'<p class="lead-in">(.*?)</p>', r'### \1'),
+            (r'<p class="subject">(.*?)</p>', r'### \1'),
+            (r'<p class="addressee">(.*?)</p>', r'\1'),
+            (r'<p class="bism">(.*?)</p>', r'<div dir="rtl">\1</div>'),
+            (r'<span class="ccl">(.*?)</span>', r'**\1:**\n'),
+            (r'<div class="sig-space"></div>', '*(signature of the signatory)*'),
+            (r'<div class="sig-rule"></div>', ''),
+            (r'<a href="[^"]*">(.*?)</a>', r'\1'),
+            (r'<strong>(.*?)</strong>', r'**\1**'),
+            (r'<b>(.*?)</b>', r'**\1**'),
+            (r'<em>(.*?)</em>', r'*\1*'),
+            (r'<i>(.*?)</i>', r'*\1*'),
+            # \x00 marks a hard break; it survives strip(), a trailing space
+            # does not, and the indentation in the source would otherwise be
+            # read as a markdown code block
+            (r'<br\s*/?>', '\x00\n'),
+            (r'</(p|div|h2)>', '\n'),
+            (r'<[^>]+>', '')):
+        t = re.sub(pat, rep, t, flags=re.S)
+    t = html_mod.unescape(t)
+    t = '\n'.join(x.strip() for x in t.strip().split('\n')).replace('\x00', '  ')
+    return re.sub(r'\n{3,}', '\n\n', t)
+
+RECORD = ROOT.parent / 'docs' / 'letters' / 'registrar-portal-activation.md'
+if RECORD.parent.is_dir():
+    RECORD.write_text('\n'.join([
+        '# Letter — Registrar, portal activation',
+        '',
+        '**Generated by `brand/identity.py` from `brand/assets/letter-blocks.html`.**',
+        'Do not edit this file by hand — it is the record of what the letter says,',
+        'and it is rewritten from the letter\'s own source on every build. To change',
+        'the letter, change the blocks.',
+        '',
+        'Two things are never written here and never committed:',
+        '',
+        '- **the Staff Identity Number** — issued by the system when the account is',
+        '  created, and not knowable before then;',
+        '- **the activation link** — a single-use secret generated per person.',
+        '',
+        'Both are passed to the build on the command line at the moment of sending;',
+        'see `brand/README.md`. The rendered letter runs to **%d sheet%s**, paginated'
+        % (len(sheets), '' if len(sheets) == 1 else 's'),
+        'by measurement under `docs/shrs-correspondence-standard.md`.',
+        '',
+        '---',
+        '',
+        '**Reference** %s &nbsp;&middot;&nbsp; **Date** 13 August 2026' % REF,
+        '',
+    ] + [md(b) + '\n' for b in SRC]) + '\n', encoding='utf-8')
+    print('record ->', RECORD.relative_to(ROOT.parent))
 
 # ── blank stationery: one sheet, so it carries both, which closes the frame
 BLANK = '      <div class="blank"><span>Ref</span><i></i><span>Date</span><i></i></div>'

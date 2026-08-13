@@ -13,6 +13,21 @@ One design, four outputs. The full rationale is in
 | `build-arms.py` | Re-renders the arms as a single-ink gold device. Run only when the artwork changes. |
 | `measure.js` | Measures the letter's blocks in Chromium so the pagination standard can be applied automatically. Called by `identity.py`. |
 | `assets/` | The arms (source and single-ink), the letter's text blocks, and the two Word bands. |
+| `../docs/letters/registrar-portal-activation.md` | The record of what the letter says. **Generated** — never edit it by hand. |
+
+## The letter's text lives in one place
+
+`assets/letter-blocks.html` is the only source. The PDF, the sheets and
+the record copy in `docs/letters/` are all written from it on every
+build, so they cannot disagree. The record copy used to be kept by hand
+and it drifted — it named the wrong signatory and was missing whole
+sections that had been added to the letter. A record of what was sent
+that disagrees with what was sent is worse than no record.
+
+The record is written from the blocks **before** the Staff ID and the
+activation link are substituted, so it carries the placeholders and
+neither secret can reach the repository through it. The build checks
+this.
 
 ## Building
 
