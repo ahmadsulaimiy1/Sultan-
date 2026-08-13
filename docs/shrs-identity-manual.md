@@ -14,9 +14,21 @@ names are not stacked, and neither is a caption to the other: they meet
 at a single vertical gold member, English running right-to-left toward
 it, Arabic running left-to-right toward it. That member is the **Axis**.
 
-The arms stand on it. Both measures — the 176 mm masthead and the 132 mm
-text — are centred on it. Everything on the sheet is either on the Axis
-or measured from it.
+And it does not stop there. **It runs the full height of the sheet**, from
+the top trim to the foot band, and the whole page is built off it:
+
+- the **arms stand astride it**, 38 mm, centred on it;
+- **left of it, the margin column** carries the document's apparatus —
+  reference, date, folio — because a scholarly page has always kept its
+  apparatus in the margin, and it is why this sheet has no empty quarter;
+- **right of it, the text**, 104 mm of measure, 51 characters;
+- the **double rule crosses it**, tying the two columns into one page.
+
+An earlier revision centred everything on the sheet's middle. That was
+the deeper failure, and no amount of correct measurement fixed it:
+**centring is the least designed arrangement available**, it gives a page
+no tension, and it makes the arms, the name, the rule and the schools
+into a stack of four things rather than a composition.
 
 It is the only device the system has, and it is the only one it needs:
 
@@ -46,13 +58,14 @@ that nobody — including a future me — quietly puts them back.
 
 | | This sheet | Why |
 |---|---|---|
-| Ink coverage | **5.4%** | Oxford ~5, Cambridge ~6, Aramco ~12. Above about 15% a school cannot afford to print ordinary correspondence on its own letterhead. It was 51.2%. |
+| Ink coverage | **7.4%** | Oxford ~5, Cambridge ~6, Aramco ~12. Above about 15% a school cannot afford to print ordinary correspondence on its own letterhead. It was 51.2%. |
 | Left edges, flowed text | **1** | It was eleven, two of them half a millimetre apart. |
 | Right edges, flowed text | **1** | It was fifteen. |
+| Composition | **asymmetric, off one spine** | It was a centred stack, which is no composition at all. |
 | Type sizes | **5** | One modular scale, ratio 1.25 from 10.5 pt. It was twelve, four of them inside a 0.7 pt band. |
 | Smallest type anywhere | **6.7 pt** | Nothing below 6.5 pt on paper. |
 | Smallest reversed type | **8.4 pt** | Reversed type below 7 pt fills in on any office laser and closes up entirely under offset dot gain. Four elements were below 6 pt. |
-| Measure | **132 mm** | 72 characters. 45–75 is the readable range; it was 90. |
+| Measure | **104 mm** | 51 characters. 45–75 is the readable range; it was 90. |
 | Inks | **2** | Coffee `#2E1A0D` and one flat gold. A gradient gold bands in CMYK, goes green under dot gain, and as foil costs a separate pass on every sheet. |
 
 ## The material
@@ -120,9 +133,14 @@ size exists outside it.**
 ## Measurements
 
 - Sheet 210 × 297 mm; canvas 794 × 1123 px at 96 dpi, asserted.
-- Masthead measure 176 mm, text measure 132 mm, both centred on the Axis.
-- Arms 30 mm, on the Axis, 22 mm from the head.
-- Foot band 16 mm, full bleed, with a gold hairline on its upper edge.
+- The Axis at 74 mm from the left trim, full height, 0.7 pt, struck with a
+  short cross-tick at the head of the field and at the foot.
+- Margin column 24–66 mm; text 82–186 mm. Head zone 112 mm.
+- Arms 38 mm, astride the Axis, 16 mm from the head.
+- Double rule at 92 mm — 1.1 pt over 0.4 pt, the engraver's cadence, and
+  the only ornament the sheet allows itself.
+- Foot band 22 mm, full bleed, with a gold hairline on its upper edge,
+  carrying the creed in the school's own voice and the record beneath it.
 - Vertical unit 3.5 mm; every vertical dimension a whole multiple.
 - Continuation sheets: the arms reduce to 18 mm and the rule and the five
   schools drop away. **The device survives its own subtraction** — which
@@ -138,15 +156,16 @@ size exists outside it.**
 6. No reversed type below 8.4 pt.
 7. Five type sizes, all on the scale.
 8. The arms stand on the Axis, within 1 px.
-9. Both names share one centre line with the Axis.
-10. Each language takes equal measure either side of the Axis.
-11. Neither name breaks across lines.
+9. The Axis runs from the top trim to the foot band.
+10. English ends on the Axis and Arabic begins on it, within 2 px.
+11. Both names share one baseline, and break into the same number of lines.
 12. Arabic presence ratio 1.15.
 13. The arms carry no filter and no shadow.
 14. No simulated texture, vignette or watermark is present in the DOM.
-15. The five schools fit the masthead measure without truncation.
-16. The foot band fits without truncation.
+15. The five schools fit the measure without truncation.
+16. The record line fits the foot band without truncation.
 17. No footing sits past the foot of its page, on any sheet.
+17a. No section lead-in is left orphaned at the foot of a sheet.
 18. All faces loaded (7 on the letter).
 19. Every URL a live hyperlink (15 anchors on the letter).
 20. No console errors.

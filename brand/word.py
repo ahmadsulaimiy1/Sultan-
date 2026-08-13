@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Word stationery — the same sheet, typed into.
 
-A .docx cannot embed the school's faces the way the HTML does. So the
-masthead and the foot band are placed as images, anchored to the *page*
-rather than to the text. That is the only construction Word honours
-full-bleed: an inline image would be pushed inside the margins and the
-band would stop short of the edge.
+A .docx cannot embed the school's faces the way the HTML does, and the
+Axis runs the full height of the sheet. So the whole ground is placed as
+one image, anchored to the *page* rather than to the text and set behind
+it. That is the only construction Word honours full-bleed: an inline
+image would be pushed inside the margins and the Axis would stop short of
+both edges.
 
 The bands are rendered from `letterhead.html` itself by `bands.js`, so
 the Word sheet and the PDF are the same drawing and cannot drift.
@@ -17,7 +18,7 @@ import pathlib, shutil, zipfile
 ROOT = pathlib.Path(__file__).resolve().parent
 EMU_MM = 36000                      # English Metric Units per millimetre
 PAGE_W, PAGE_H = 210, 297
-HEAD_H, FOOT_H = 68, 34             # the two bands, as identity.py draws them
+HEAD_TOP, FOOT_H = 124, 30   # where the typist's text may begin and end             # the two bands, as identity.py draws them
 
 def emu(mm):
     return int(round(mm * EMU_MM))
@@ -52,13 +53,13 @@ def anchor(rid, name, w_mm, h_mm, y_mm):
       f'</a:graphicData></a:graphic></wp:anchor></w:drawing></w:r>')
 
 
-# Both bands live in the header. A header paragraph is drawn on every page
-# and its anchors are page-relative, so one part carries head and foot alike.
+# The Axis runs the height of the sheet, so Word gets one page-sized ground
+# rather than two bands. It lives in the header, which is drawn on every
+# page, and it is anchored to the page and set behind the text.
 HEADER = (
   '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
   f'<w:hdr {NS}><w:p><w:pPr><w:spacing w:after="0" w:line="20" w:lineRule="exact"/></w:pPr>'
-  + anchor('rId1', 'Head', PAGE_W, HEAD_H, 0)
-  + anchor('rId2', 'Foot', PAGE_W, FOOT_H, PAGE_H - FOOT_H)
+  + anchor('rId1', 'Sheet', PAGE_W, PAGE_H, 0)
   + '</w:p></w:hdr>')
 
 DOCUMENT = (
@@ -69,8 +70,9 @@ DOCUMENT = (
   '<w:headerReference w:type="default" r:id="rIdH"/>'
   f'<w:pgSz w:w="{twip(PAGE_W)}" w:h="{twip(PAGE_H)}"/>'
   # text sits clear of both masses; the header itself is pinned to the edge
-  f'<w:pgMar w:top="{twip(HEAD_H + 6)}" w:right="{twip(39)}" w:bottom="{twip(FOOT_H + 4)}"'
-  f' w:left="{twip(39)}" w:header="0" w:footer="0" w:gutter="0"/>'
+  # text sits right of the Axis, clear of the masthead and the foot band
+  f'<w:pgMar w:top="{twip(HEAD_TOP)}" w:right="{twip(24)}" w:bottom="{twip(FOOT_H)}"'
+  f' w:left="{twip(82)}" w:header="0" w:footer="0" w:gutter="0"/>'
   '<w:titlePg w:val="0"/>'
   '</w:sectPr></w:body></w:document>')
 
@@ -110,8 +112,7 @@ DOC_RELS = (
 HEADER_RELS = (
   '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-  '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/head.jpeg"/>'
-  '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/foot.jpeg"/>'
+  '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/sheet.jpeg"/>'
   '</Relationships>')
 
 out = ROOT / 'letterhead.docx'
@@ -123,6 +124,5 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
     z.writestr('word/styles.xml', STYLES)
     z.writestr('word/header1.xml', HEADER)
     z.writestr('word/_rels/header1.xml.rels', HEADER_RELS)
-    z.writestr('word/media/head.jpeg', (ROOT / 'assets' / 'word-head.jpg').read_bytes())
-    z.writestr('word/media/foot.jpeg', (ROOT / 'assets' / 'word-foot.jpg').read_bytes())
+    z.writestr('word/media/sheet.jpeg', (ROOT / 'assets' / 'word-sheet.jpg').read_bytes())
 print('word stationery built ->', out)

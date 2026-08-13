@@ -90,7 +90,7 @@ INST = f' {QUAD} '.join(HOUSES)
 # reads smaller — matching the numbers would make the Arabic subordinate,
 # and it is matching the *presence* that parity actually requires.
 S_LABEL, S_SMALL, S_BODY, S_SUBJ = 6.7, 8.4, 10.5, 13.1
-S_ARABIC = round(S_BODY * 1.15, 1)
+S_ARABIC = round(11.4 * 1.15, 1)   # 13.1 — lands on the scale
 
 # ── the grid. Two left edges, two right. Every vertical dimension is a
 # whole multiple of the 3.5mm unit.
@@ -98,8 +98,17 @@ S_ARABIC = round(S_BODY * 1.15, 1)
 # be set at a readable size, and 27 Latin characters will not fit half of
 # 132mm. Both are centred on the same axis, so the sheet still has one
 # vertical centre line and the arms stand on it.
-MARGIN, MEASURE, HEAD_MEASURE = 39, 132, 176
-HEAD_PAD = (210 - HEAD_MEASURE) // 2
+# The page is built off one vertical line rather than a centre. Left of it
+# is the margin column and its apparatus; right of it is the text. The arms
+# stand astride it and the two names meet on it.
+MARGIN = 24
+AXIS = 74                     # the spine, 74mm from the left trim
+ARMS = 38
+HEAD_H = 112
+LOCK_TOP = 60
+RULE_TOP = 92
+BAND_H = 22
+S_NAME = 11.4
 
 CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -109,92 +118,117 @@ body{{background:#4A423A;display:flex;flex-direction:column;align-items:center;g
  font-size:{S_BODY}pt;line-height:1.62;
  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}}
 
-/* ═══ THE HEAD ═══ arms on the axis, the two names meeting on it, one
-   hairline, and the five schools. Nothing else, and no ink but type. */
-.head{{flex:0 0 auto;padding:22mm {HEAD_PAD}mm 0;text-align:center}}
-/* the arms are a heraldic device: flat, unshadowed, unringed */
-.arms{{width:30mm;height:30mm;display:block;margin:0 auto 7mm}}
+/* ═══ THE AXIS ═══ the meeting line of the school's two languages, carried
+   the full height of the sheet as its spine. It is one gold hairline. It
+   is also the only structural line the page has, and everything — the
+   arms, both names, the text block, the marginal column — is placed by
+   it. A centred stack was the failure this replaces: centring is the
+   least designed arrangement available, and it gave the sheet no tension
+   at all. */
+.axis{{position:absolute;left:{AXIS}mm;top:0;bottom:{BAND_H}mm;width:.7pt;background:{GOLD_P};z-index:2}}
+/* it is struck at the head and at the foot, so it reads as a member with
+   ends rather than a rule that simply stops */
+.axis::before,.axis::after{{content:'';position:absolute;left:-2.6mm;width:6mm;height:.7pt;background:{GOLD_P}}}
+.axis::before{{top:{HEAD_H}mm}} .axis::after{{bottom:0}}
 
-/* both halves take exactly half the masthead measure, so the Axis falls on
-   the sheet's own centre line and neither language is given more room */
-.lock{{width:{HEAD_MEASURE}mm;margin:0 auto;display:flex;align-items:stretch}}
-.lock .en,.lock .ar{{flex:1 1 0;min-width:0;
- display:flex;flex-direction:column;justify-content:center;color:{COFFEE}}}
+/* ═══ THE HEAD ═══ arms astride the Axis, the two names flanking it. */
+.head{{flex:0 0 {HEAD_H}mm;position:relative}}
+.arms{{position:absolute;left:{AXIS}mm;top:16mm;width:{ARMS}mm;height:{ARMS}mm;
+ transform:translateX(-50%);z-index:3}}
+.lock{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{LOCK_TOP}mm;z-index:3;
+ display:flex;align-items:stretch}}
+.lock .en{{flex:0 0 {AXIS - MARGIN}mm;padding-right:6mm;text-align:right;color:{COFFEE};
+ font-family:'Cinzel',serif;font-weight:800;font-size:{S_NAME}pt;letter-spacing:.06em;
+ text-transform:uppercase;line-height:1.16}}
+.lock .ar{{flex:1;min-width:0;padding-left:6mm;text-align:left;direction:rtl;color:{COFFEE};
+ font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.16;
+ display:flex;flex-direction:column;justify-content:center}}
 .lock b{{display:block;font-weight:inherit}}
-.lock .en{{padding-right:5mm;text-align:right;
- font-family:'Cinzel',serif;font-weight:800;font-size:{S_BODY}pt;letter-spacing:.085em;
- text-transform:uppercase;line-height:1.1;white-space:nowrap}}
-.lock .ar{{padding-left:5mm;text-align:left;direction:rtl;
- font-family:'Amiri',serif;font-size:{S_ARABIC}pt;line-height:1.1;white-space:nowrap}}
-/* THE AXIS. One vertical gold member, standing a little proud of the
-   names above and below, so it reads as something the names hang from
-   rather than a rule drawn between them. */
-.axis{{position:relative;flex:0 0 auto;width:.7pt;background:{GOLD_P};margin:-4.5mm 0}}
 
-.hrule{{width:{HEAD_MEASURE}mm;height:.4pt;background:{GOLD_P};margin:7mm auto 0;opacity:.75}}
-.houses{{margin-top:3.5mm;font-size:{S_LABEL}pt;letter-spacing:.11em;text-transform:uppercase;
- color:{GOLD_P};white-space:nowrap}}
+/* the double rule — thick over thin, the engraver's cadence, and the one
+   piece of ornament the sheet allows itself */
+.hrule{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{RULE_TOP}mm;height:1.1pt;
+ background:{GOLD_P};z-index:2}}
+.hrule::after{{content:'';position:absolute;left:0;right:0;top:2.1mm;height:.4pt;
+ background:{GOLD_P};opacity:.62}}
+.houses{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:{RULE_TOP + 5}mm;z-index:2;
+ font-size:{S_LABEL}pt;letter-spacing:.055em;text-transform:uppercase;
+ color:{GOLD_P};white-space:nowrap;text-align:center}}
 .q{{display:inline-grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.4mm;
  width:1.9mm;height:1.9mm;vertical-align:.1mm;margin:0 .55mm}}
 .q i{{background:{GOLD_P};display:block}}
 
-/* ═══ THE FIELD ═══ 132mm of measure, 71 characters, and nothing in it
-   that the writer did not put there. */
-.body{{flex:1;padding:14mm {MARGIN}mm 0;min-width:0}}
+/* ═══ THE MARGIN ═══ left of the Axis. The record of the document lives
+   here, which is what the column is for — a scholarly page has always
+   carried its apparatus in the margin, and it is why this sheet has no
+   empty quarter. */
+.marg{{position:absolute;left:{MARGIN}mm;width:{AXIS - MARGIN - 8}mm;top:{HEAD_H + 12}mm;
+ z-index:2;text-align:right}}
+.marg dt{{font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;color:{GOLD_P};
+ margin-bottom:.8mm}}
+.marg dd{{font-size:{S_SMALL}pt;color:{INK2};margin-bottom:5.25mm;line-height:1.35}}
+.marg .fol{{font-family:'Cinzel',serif;font-size:{S_SUBJ}pt;color:{GOLD_P};margin-top:3.5mm}}
+.marg i{{display:block;border-bottom:.4pt solid rgba(156,122,60,.5);height:4.4mm;font-style:normal}}
+
+/* ═══ THE FIELD ═══ right of the Axis. 106mm of measure, 58 characters. */
+.body{{flex:1;position:relative;z-index:2;padding:12mm {MARGIN}mm 0 {AXIS + 8}mm;min-width:0}}
 .body p{{margin-bottom:3.5mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
 .body a{{color:{COFFEE};font-weight:600;text-decoration:none;
  border-bottom:.4pt solid rgba(156,122,60,.55)}}
-.ref{{float:right;width:52mm;text-align:right;margin:0 0 7mm 10mm}}
-.ref dt{{font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;color:{GOLD_P}}}
-.ref dd{{font-size:{S_SMALL}pt;color:{INK};margin-bottom:2.4mm;line-height:1.35}}
 .addr{{margin-bottom:7mm!important;line-height:1.45}}
-.subj{{clear:right;font-family:'Cinzel',serif;font-weight:700;font-size:{S_SUBJ}pt;letter-spacing:.03em;
+.subj{{font-family:'Cinzel',serif;font-weight:700;font-size:{S_SUBJ}pt;letter-spacing:.03em;
  text-transform:uppercase;color:{COFFEE};margin-bottom:5.25mm;line-height:1.32}}
 .lead{{font-family:'Cinzel',serif;font-size:{S_SMALL}pt;letter-spacing:.14em;text-transform:uppercase;
  color:{GOLD_P};margin:7mm 0 3.5mm!important;text-align:left!important}}
 .val{{font-weight:600;color:{COFFEE};border-bottom:.4pt solid rgba(156,122,60,.5)}}
 .signoff{{margin-top:7mm}} .sigsp{{height:17.5mm}}
-.sigrule{{width:56mm;height:.4pt;background:{GOLD_P};margin-bottom:2.4mm}}
+.sigrule{{width:52mm;height:.4pt;background:{GOLD_P};margin-bottom:2.4mm}}
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
-.blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
- color:{GOLD_P};margin-bottom:10.5mm}}
-.blank i{{flex:1;border-bottom:.4pt solid rgba(156,122,60,.5);font-style:normal}}
 
-/* ═══ THE FOOT ═══ the creed on the paper, the record in the one band of
-   ink on the sheet. 16mm of 297 is 5.4% coverage; everything else on the
-   page is type and two hairlines. */
-.foot{{flex:0 0 34mm;position:relative}}
-.creed{{position:absolute;left:0;right:0;bottom:22mm}}
-.creed{{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;
- font-size:{S_SMALL}pt;color:{INK2};padding:0 {MARGIN}mm}}
-.band{{position:absolute;left:0;right:0;bottom:0;height:16mm;background:{COFFEE};
- box-shadow:inset 0 .5pt 0 {GOLD_R};
- display:flex;align-items:center;justify-content:center;gap:4mm;
- font-size:{S_SMALL}pt;color:{PAPER_R};white-space:nowrap}}
-.band a{{color:inherit;text-decoration:none}}
-.band .q i{{background:{GOLD_R}}}
+/* ═══ THE FOOT ═══ one band of ink, carrying the creed in the school's own
+   voice and the record beneath it. */
+.foot{{flex:0 0 {BAND_H}mm;position:relative;background:{COFFEE};
+ box-shadow:inset 0 .7pt 0 {GOLD_R};
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4mm;
+ padding:0 {MARGIN}mm}}
+.creed{{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:{S_SUBJ}pt;
+ color:{GOLD_R};letter-spacing:.01em}}
+.rec{{display:flex;gap:4mm;font-size:{S_SMALL}pt;color:{PAPER_R};white-space:nowrap}}
+.rec a{{color:inherit;text-decoration:none}}
+.foot .q i{{background:{GOLD_R}}}
 
-/* continuation sheets: the arms reduce and the rule and houses drop away,
-   which is the whole point of having one device — it survives its own
-   subtraction */
-.head.c2{{padding-top:16mm}} .head.c2 .arms{{width:18mm;height:18mm;margin-bottom:4.5mm}}
-.body.c2{{padding-top:10.5mm}}
+/* continuation sheets: the Axis and the arms remain, the rule and the five
+   schools drop away. The device survives its own subtraction, which is the
+   point of having only one. */
+.head.c2{{flex:0 0 {HEAD_H - 34}mm}}
+.head.c2 .arms{{top:12mm;width:{ARMS - 14}mm;height:{ARMS - 14}mm}}
+.body.c2{{padding-top:8mm}}
+.marg.c2{{top:{HEAD_H - 22}mm}}
 @media print{{body{{background:none;padding:0;gap:0}}
  .page{{page-break-after:always}}.page:last-child{{page-break-after:auto}}}}
 """
 
-REF = ('      <div class="ref"><dt>Reference</dt><dd>SHRS/ICT/2026/001</dd>'
-       '<dt>Issued</dt><dd>13 August 2026</dd></div>')
+MARG = ('<div class="marg{c}"><dl><dt>Reference</dt><dd>SHRS/ICT/2026/001</dd>'
+        '<dt>Issued</dt><dd>13 August 2026</dd></dl>'
+        '<div class="fol">{f}</div></div>')
 
-BAND = ('<div class="band"><span>Ikorodu, Lagos State, Nigeria</span>' + QUAD +
-        '<a href="tel:+2348073747650">+234 807 374 7650</a>' + QUAD +
-        '<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>' + QUAD +
-        '<a href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></div>')
+MARG_BLANK = ('<div class="marg"><dl><dt>Reference</dt><dd><i></i></dd>'
+              '<dt>Date</dt><dd><i></i></dd></dl></div>')
 
 FOOT = ('<footer class="foot">'
         '<p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;</p>'
-        + BAND + '</footer>')
+        '<div class="rec"><span>Ikorodu, Lagos State, Nigeria</span>' + QUAD +
+        '<a href="tel:+2348073747650">+234 807 374 7650</a>' + QUAD +
+        '<a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>' + QUAD +
+        '<a href="https://shroyalschools.com/verify">shroyalschools.com/verify</a></div>'
+        '</footer>')
+
+# The name breaks at the same place in both languages — two lines each, so
+# the two blocks are of one build, and the break in Arabic falls after the
+# idafa, which is the unit that must not be split.
+EN_L = '<b>Sultan Hanafi</b><b>Royal Schools</b>'
+AR_L = '<b>{0}</b><b>{1}</b>'.format(*AR.rsplit(' ', 1))
 
 
 def head(first=True):
@@ -203,14 +237,18 @@ def head(first=True):
     return (f'<header class="head{c2}">'
             f'<img class="arms" src="data:image/png;base64,{CREST}" '
             f'alt="Arms of Sultan Hanafi Royal Schools" />'
-            f'<div class="lock"><div class="en"><b>Sultan Hanafi Royal Schools</b></div>'
-            f'<div class="axis"></div><div class="ar"><b>{AR}</b></div></div>'
+            f'<div class="lock"><div class="en">{EN_L}</div><div class="ar">{AR_L}</div></div>'
             f'{tail}</header>')
 
 
-def page(inner, first=True):
+PAGE_NO = [1]
+
+def page(inner, first=True, marg=None):
+    m = marg if marg is not None else MARG.format(c='' if first else ' c2',
+                                                  f=f'{PAGE_NO[0]:02d}')
+    PAGE_NO[0] += 1
     return (f'  <div class="page" data-canvas-width="794" data-canvas-height="1123">\n'
-            f'    {head(first)}\n'
+            f'    <div class="axis"></div>\n    {head(first)}\n    {m}\n'
             f'    <main class="body{"" if first else " c2"}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
 
 
@@ -244,14 +282,14 @@ def rt(b):
 blocks = [rt(b) for b in blocks]
 blocks = [b for b in blocks if 'class="refline"' not in b]
 body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
-CUTS = [(0, 8), (8, 15), (15, 23), (23, 26)]
+CUTS = [(0, 5), (5, 11), (11, 16), (16, 21), (21, 26)]
 (ROOT / 'letter-registrar-activation.html').write_text(
     doc('Sultan Hanafi Royal Schools — Letter',
-        [page((REF + '\n' if i == 0 else '') + body(a, b), i == 0)
-         for i, (a, b) in enumerate(CUTS)]), encoding='utf-8')
+        [page(body(a, b), i == 0) for i, (a, b) in enumerate(CUTS)]), encoding='utf-8')
 
 # ── blank stationery
-BLANK = '      <div class="blank"><span>Ref</span><i></i><span>Date</span><i></i></div>'
+PAGE_NO[0] = 1
 (ROOT / 'letterhead.html').write_text(
-    doc('Sultan Hanafi Royal Schools — Letterhead', [page(BLANK, True)]), encoding='utf-8')
+    doc('Sultan Hanafi Royal Schools — Letterhead',
+        [page('', True, marg=MARG_BLANK)]), encoding='utf-8')
 print('identity built')
