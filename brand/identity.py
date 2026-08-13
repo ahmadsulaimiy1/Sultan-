@@ -57,58 +57,121 @@ RAG = b64(ROOT / 'assets' / 'rag.svg')
 MT  = b64(ROOT / 'assets' / 'microtext.svg')
 GL  = b64(ROOT / 'assets' / 'guilloche.svg')
 
-# ── palette. Not one brown: a ramp with roles.
-#
-# A mass painted in a single coffee is a flat panel, and a flat panel is
-# what makes a sheet look printed rather than made. So every mass runs the
-# ramp — cocoa at the cold edge, through coffee and chestnut, into the
-# school's own crimson at the hot end. The crimson is not invented for this
-# sheet: it is `--crimson` from css/brand.css, already the site's accent
-# livery, so the stationery and the website are one system.
-#
-# Hierarchy follows the ramp: the deepest tone carries weight, the hottest
-# carries attention, and gold is reserved for the ribbon and the axis. No
-# element takes a colour outside it.
+# ── palette. The coffee family, with tonal range inside it — cocoa at the
+# cold edge, chestnut at the warm end — so a mass has depth without ever
+# leaving the one hue. No second colour: an off-axis hue on a document with
+# a warm anchor reads as an accident or a sub-brand.
 COCOA_D, COFFEE, COFFEE2 = '#140A03', '#2E1A0D', '#1A0E06'
-CHEST, OXBLOOD = '#4E2116', '#6E1F26'
-CRIMSON, CRIMSON_BR = '#7C1F2E', '#A8455A'          # css/brand.css tokens
-COCOA = '#241509'
+CHEST, COCOA = '#43220F', '#241509'
 GOLD, GOLD_BR, ANTIQUE = '#C6A15B', '#E9CE8A', '#9C7A3C'
 IVORY, CREAM, PARCH = '#FBF7EF', '#F5EEE1', '#EDE3D2'
 INK, INK2 = '#241A12', '#5A4632'
 
-# the two masses, ramped in opposite directions so head and foot answer
-# each other rather than repeat
-RAMP_HEAD = (f'linear-gradient(112deg,{COCOA_D} 0%,{COFFEE} 24%,{CHEST} 58%,'
-             f'{OXBLOOD} 84%,{CRIMSON} 100%)')
-RAMP_FOOT = (f'linear-gradient(292deg,{COCOA_D} 0%,{COFFEE} 26%,{CHEST} 60%,'
-             f'{OXBLOOD} 86%,{CRIMSON} 100%)')
+# ═══ THE SILHOUETTE ═══
+#
+# The head is not a band with a straight edge. Two elements, at two
+# different angles, which is what makes the shape read as constructed
+# rather than cropped:
+#
+#   the MASS   — full bleed at the top, its lower boundary a shallow curve
+#                that eases up to the right, so the sheet's weight sits
+#                under the seal where the seal needs a dark ground;
+#   the RIBBON — a bolder diagonal at nearly four times that slope, which
+#                begins *inside* the mass at the right and slides out onto
+#                the ivory as it travels left.
+#
+# Because the two slopes differ, the ribbon crosses the mass boundary
+# rather than tracing it, and appears to emerge from beneath the mass.
+# That crossing is the signature. It is also why the shape cannot be
+# mistaken for a rectangle with a corner cut off.
+#
+# The foot is the same construction rotated by half a turn, so head and
+# foot answer each other rather than repeat.
 
-# The cut rises 15.99mm across the 210mm measure on both masses — 4.355°.
-# Every ribbon is a real bar rotated to that angle rather than a polygon,
-# so it can carry a bevel, a specular sweep and a cast shadow: the three
-# things that make a band read as folded metal instead of a flat shape.
-CUT_DEG = '-4.355deg'
-# top bevel, bottom bevel, then the foil itself running along its length
-RIBBON = ('linear-gradient(to bottom,#FCF3DC 0 .17mm,rgba(0,0,0,0) .17mm),'
-          'linear-gradient(to top,rgba(46,26,13,.9) 0 .24mm,rgba(0,0,0,0) .24mm),'
-          'linear-gradient(96deg,#6E5121 0%,#B48F45 11%,#F6E9CE 33%,#E0C68F 49%,'
-          '#9C7A3C 72%,#F2DFAF 91%,#8A6A2E 100%)')
-RIBBON2 = ('linear-gradient(to bottom,rgba(255,225,225,.5) 0 .13mm,rgba(0,0,0,0) .13mm),'
-           'linear-gradient(to top,rgba(30,6,10,.75) 0 .18mm,rgba(0,0,0,0) .18mm),'
-           f'linear-gradient(96deg,#4E1018 0%,{CRIMSON} 26%,{CRIMSON_BR} 52%,'
-           f'{CRIMSON} 76%,#5A1520 100%)')
-# Real foil is not a flat colour: it catches light along its length, so the
-# gradient runs along the ribbon rather than across it.
-FOIL_H = ('linear-gradient(96deg,#8A6A2E 0%,#C6A15B 16%,#F6E9CE 38%,'
-          '#E3CB95 56%,#B08D4F 78%,#F2DFAF 100%)')
+HEAD_H, FOOT_H = 78, 70               # mm; the two bands
+# mass boundary, right to left: 40mm deep at the right, 48.6mm at the left
+HEAD_MASS = 'M0,0 H210 V40 C168,43 130,47.5 96,48 L0,48.6 Z'
+HEAD_EDGE = 'M0,48.6 L96,48 C130,47.5 168,43 210,40'
+FOOT_MASS = 'M0,30 C42,27 80,22.5 114,22 L210,21.4 V70 H0 Z'
+FOOT_EDGE = 'M0,30 C42,27 80,22.5 114,22 L210,21.4'
+
+def band(y0, y1, w):
+    """A ribbon line across the sheet, running off both edges."""
+    return f'M-6,{y0:g} L216,{y1:g}', w
+
+# head assembly, measured from the ribbon's centre line
+H_RIB   = band(60, 32, 7)          # the foil itself
+H_LIP   = band(56.7, 28.7, .38)    # lit edge, above
+H_TOE   = band(63.25, 35.25, .5)   # dark edge, beneath
+H_BAND2 = band(67.55, 39.55, 2.1)  # the second, quieter band
+H_SHAD  = band(71, 43, 10)         # what the assembly casts on the paper
+# foot assembly — the same numbers, half-turned
+F_RIB   = band(38, 10, 7)
+F_LIP   = band(34.7, 6.7, .38)
+F_TOE   = band(41.25, 13.25, .5)
+F_BAND2 = band(30.45, 2.45, 2.1)
+F_SHAD  = band(27, -1, 10)
+
+
+def defs(tag, ramp_x2, ramp_y2):
+    return (
+      f'<linearGradient id="m{tag}" x1="0" y1="0" x2="{ramp_x2}" y2="{ramp_y2}">'
+      f'<stop offset="0" stop-color="{COCOA_D}"/><stop offset=".34" stop-color="{COFFEE}"/>'
+      f'<stop offset=".72" stop-color="{CHEST}"/><stop offset="1" stop-color="{COCOA}"/></linearGradient>'
+      f'<linearGradient id="f{tag}" x1="0" y1="0" x2="1" y2="0">'
+      f'<stop offset="0" stop-color="#6E5121"/><stop offset=".15" stop-color="#B48F45"/>'
+      f'<stop offset=".36" stop-color="#F6E9CE"/><stop offset=".54" stop-color="#DFC58E"/>'
+      f'<stop offset=".77" stop-color="{ANTIQUE}"/><stop offset=".92" stop-color="#F2DFAF"/>'
+      f'<stop offset="1" stop-color="#8A6A2E"/></linearGradient>'
+      f'<linearGradient id="q{tag}" x1="0" y1="0" x2="1" y2="0">'
+      f'<stop offset="0" stop-color="#5E4419"/><stop offset=".46" stop-color="{ANTIQUE}"/>'
+      f'<stop offset="1" stop-color="#C9A868"/></linearGradient>'
+      f'<linearGradient id="c{tag}" x1="0" y1="0" x2="0" y2="1">'
+      f'<stop offset="0" stop-color="#FFF0D4" stop-opacity=".20"/>'
+      f'<stop offset=".5" stop-color="#FFEECE" stop-opacity=".05"/>'
+      f'<stop offset="1" stop-color="#0C0502" stop-opacity=".26"/></linearGradient>'
+      f'<filter id="b{tag}" x="-8%" y="-60%" width="116%" height="260%">'
+      f'<feGaussianBlur stdDeviation="1.15"/></filter>')
+
+
+def stroke(spec, paint, extra=''):
+    d, w = spec
+    return f'<path d="{d}" fill="none" stroke="{paint}" stroke-width="{w:g}" {extra}/>'
+
+
+def sweep(tag, h, mass, edge, rib, lip, toe, band2, shad, chamfer_up):
+    """One band: mass, chamfer, cast shadow, then the ribbon assembly."""
+    cham = (f'<path d="{edge}" fill="none" stroke="url(#c{tag})" stroke-width="4.6" '
+            f'transform="translate(0,{-2.3 if chamfer_up else 2.3:g})"/>')
+    return (
+      f'<svg class="bnd" viewBox="0 0 210 {h}" preserveAspectRatio="none" aria-hidden="true">'
+      f'<defs>{defs(tag, 1 if chamfer_up else -1, 1)}'
+      f'<clipPath id="k{tag}"><path d="{mass}"/></clipPath></defs>'
+      f'<path d="{mass}" fill="url(#m{tag})"/>'
+      f'<g clip-path="url(#k{tag})">{cham}</g>'
+      + stroke(shad, 'rgba(34,16,6,.22)', f'filter="url(#b{tag})"')
+      + stroke(band2, f'url(#q{tag})')
+      + stroke(rib, f'url(#f{tag})')
+      + stroke(lip, '#FCF3DC', 'opacity=".85"')
+      + stroke(toe, '#1E1006', 'opacity=".82"')
+      # the turn: the band darkens where it folds away under the sheet edge
+      + f'<path d="{rib[0]}" fill="none" stroke="url(#t{tag})" stroke-width="{rib[1]:g}"/>'
+      f'<defs><linearGradient id="t{tag}" x1="0" y1="0" x2="1" y2="0">'
+      f'<stop offset="0" stop-color="#2A1D08" stop-opacity=".85"/>'
+      f'<stop offset=".085" stop-color="#2A1D08" stop-opacity="0"/>'
+      f'<stop offset=".915" stop-color="#2A1D08" stop-opacity="0"/>'
+      f'<stop offset="1" stop-color="#2A1D08" stop-opacity=".7"/></linearGradient></defs>'
+      f'</svg>')
 
 AR = 'مدارس السلطان حنفي الملكية'
-QUAD = ('<span class="q"><i></i><i></i><i></i><i></i></span>')   # the crest's four quadrants, abstracted
+QUAD = '<span class="q"><i></i><i></i><i></i><i></i></span>'   # the crest's four quadrants, abstracted
 
 HOUSES = ['Nursery &amp; Primary', 'Royal College', 'Islamic &amp; Arabic Studies',
           'Qur&rsquo;an College', 'Online &amp; Distance Learning']
 INST = f' {QUAD} '.join(HOUSES)
+
+HEAD_SVG = sweep('h', HEAD_H, HEAD_MASS, HEAD_EDGE, H_RIB, H_LIP, H_TOE, H_BAND2, H_SHAD, True)
+FOOT_SVG = sweep('f', FOOT_H, FOOT_MASS, FOOT_EDGE, F_RIB, F_LIP, F_TOE, F_BAND2, F_SHAD, False)
 
 CSS = FONTS + f"""
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -124,58 +187,13 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .ghost{{position:absolute;right:-34mm;top:96mm;width:186mm;height:186mm;pointer-events:none;opacity:.03;
  background:url(data:image/png;base64,{CREST}) center/contain no-repeat}}
 
-/* ═══ THE HEAD — a coffee mass cut on the diagonal, with a royal-gold
-   ribbon riding the cut, mirrored and inverted at the foot. The sheet is
-   held between two sweeps of the same two materials: the mass is the
-   institution, the ribbon is the movement across it. Nothing here is a
-   rectangle sitting on paper. ═══ */
-.head{{position:absolute;left:0;right:0;top:0;height:72mm;z-index:3}}
-.head .mass{{position:absolute;inset:0;overflow:hidden;
- clip-path:polygon(0 0,100% 0,100% 47.2%,0 69.4%);
- background:{RAMP_HEAD};
- box-shadow:inset 0 .5mm 0 -.15mm rgba(255,238,206,.13),inset .5mm 0 0 -.15mm rgba(255,238,206,.09)}}
-/* the light that travels across the mass — depth, not decoration */
-.head .mass::before{{content:'';position:absolute;left:-14%;top:-50%;width:62%;height:210%;
- transform:rotate(21deg);
- background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,244,220,.115) 48%,rgba(255,255,255,0) 100%)}}
-/* the mass is lit from the top left, so its far corner falls away */
-.head .mass::after{{content:'';position:absolute;inset:0;
- background:radial-gradient(120% 150% at 6% -10%,rgba(255,240,212,.10) 0%,rgba(0,0,0,0) 46%,rgba(0,0,0,.28) 100%)}}
-/* The chamfer: the mass is not a slab with a printed edge, it is a solid
-   whose face is machined back before it meets the cut. The chamfer sits at
-   a different angle to the light, so it reads brighter at its lip and falls
-   away beneath — which is what tells the eye there is thickness here. */
-.chm{{position:absolute;left:-16mm;width:242mm;height:8mm;transform:rotate({CUT_DEG});
- pointer-events:none}}
-.head .chm{{top:33.98mm;
- background:linear-gradient(to bottom,rgba(255,242,216,.20) 0 .22mm,
-  rgba(255,238,206,.085) .22mm,rgba(255,238,206,.02) 46%,rgba(12,5,2,.20) 100%)}}
-.foot .chm{{top:17.78mm;
- background:linear-gradient(to top,rgba(255,242,216,.15) 0 .22mm,
-  rgba(255,238,206,.07) .22mm,rgba(255,238,206,.02) 46%,rgba(12,5,2,.18) 100%)}}
-.head.c2 .chm{{top:17.68mm}}
-/* struck arcs — the seal's geometry carried out into the mass */
-.head .arc{{position:absolute;right:-46mm;top:-34mm;width:112mm;height:112mm;border-radius:50%;
- border:2.2mm solid rgba(198,161,91,.18)}}
-.head .arc2{{position:absolute;right:-22mm;top:-54mm;width:96mm;height:96mm;border-radius:50%;
- border:.5pt solid rgba(198,161,91,.38)}}
-/* the ribbon, in two weights, riding the cut and running off both edges */
-/* Ribbons and the shadow they cast are one assembly, rotated together to
-   the angle of the cut. Because each is a real bar and not a clipped
-   polygon, it takes a bevel on both edges and a shadow underneath — which
-   is the whole difference between a folded band and a painted stripe. */
-.rib,.rib2,.rsh{{position:absolute;left:-16mm;width:242mm;z-index:4;pointer-events:none;
- transform:rotate({CUT_DEG})}}
-.rib{{top:41.98mm;height:6mm;background:{RIBBON};
- box-shadow:0 .9pt 2.1pt rgba(20,10,3,.42)}}
-/* the fold: the band turns behind the mass at the left edge */
-.rib::before{{content:'';position:absolute;left:0;top:0;width:22mm;height:100%;
- background:linear-gradient(90deg,#3A2A10 0%,#6E5121 42%,rgba(110,81,33,0) 100%)}}
-.rib2{{top:49.38mm;height:2.2mm;background:{RIBBON2};
- box-shadow:0 .6pt 1.4pt rgba(20,4,8,.4)}}
-/* the assembly floats: this is its shadow on the paper */
-.rsh{{top:51.6mm;height:6mm;
- background:linear-gradient(to bottom,rgba(43,20,10,.20) 0%,rgba(43,20,10,.07) 38%,rgba(43,20,10,0) 100%)}}
+/* ═══ THE HEAD ═══ the silhouette is drawn in SVG (see HEAD_SVG above),
+   because a curve that has to meet a ribbon at a second angle is a drawing,
+   not a rectangle with a corner removed. The SVG carries the mass, its
+   chamfer, the cast shadow and the ribbon assembly; everything set in type
+   sits above it. */
+.head{{position:absolute;left:0;right:0;top:0;height:{HEAD_H}mm;z-index:3}}
+.bnd{{position:absolute;left:0;top:0;width:100%;height:100%;display:block}}
 
 /* ═══ THE LOCK — one bilingual identity, not two languages ═══
    Neither language is above the other. They meet at a shared vertical
@@ -200,23 +218,25 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .lock .axis::before,.lock .axis::after{{content:'';position:absolute;left:-2.4mm;width:6mm;height:.45pt;
  background:rgba(198,161,91,.72)}}
 .lock .axis::before{{top:0}} .lock .axis::after{{bottom:0}}
-.seat{{position:absolute;left:24mm;top:63.4mm;z-index:5;max-width:96mm;white-space:nowrap;
- font-size:5.4pt;letter-spacing:.2em;text-transform:uppercase;color:{ANTIQUE}}}
+/* the office line sits inside the mass, below the lock, where the mass is
+   deepest — reversed out, as a seat line should be */
+.seat{{position:absolute;left:24mm;top:36.4mm;z-index:5;max-width:120mm;white-space:nowrap;
+ font-size:5.4pt;letter-spacing:.24em;text-transform:uppercase;color:rgba(226,203,158,.92)}}
 .seat .q{{margin-right:1.6mm}}
 
 /* ═══ the ivory field ═══ */
 /* the registry: what makes this document a record rather than a page */
-.reg{{position:absolute;right:24mm;top:61mm;z-index:5;display:flex;gap:7mm;text-align:right}}
+.reg{{position:absolute;right:24mm;top:64mm;z-index:5;display:flex;gap:7mm;text-align:right}}
 .reg dt{{font-size:4.7pt;letter-spacing:.24em;text-transform:uppercase;color:{ANTIQUE};margin-bottom:.7mm}}
 .reg dd{{font-size:6.6pt;color:{INK};line-height:1.3}}
-.reg .fold{{font-family:'Cinzel',serif;font-size:9pt;color:{CRIMSON};align-self:flex-end;
- padding-left:6mm;border-left:.4pt solid rgba(124,31,46,.5)}}
+.reg .fold{{font-family:'Cinzel',serif;font-size:9pt;color:{ANTIQUE};align-self:flex-end;
+ padding-left:6mm;border-left:.4pt solid rgba(156,122,60,.45)}}
 .q{{display:inline-grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.42mm;
  width:2.3mm;height:2.3mm;vertical-align:-.15mm}}
 .q i{{background:{GOLD};display:block}}
 
-.body{{position:relative;z-index:1;flex:1;padding:78mm 24mm 0 24mm;font-size:10.4pt;line-height:1.68;color:{INK}}}
-.body.cont{{padding-top:48mm}}
+.body{{position:relative;z-index:1;flex:1;padding:80mm 24mm 0 24mm;font-size:10.4pt;line-height:1.68;color:{INK}}}
+.body.cont{{padding-top:58mm}}
 .body p{{margin-bottom:3.4mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
 .body a{{color:{COFFEE};font-weight:600;border-bottom:.5pt solid rgba(156,122,60,.6);text-decoration:none}}
@@ -225,7 +245,7 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .addr{{margin-bottom:6.4mm!important;line-height:1.5}}
 .subj{{font-family:'Cinzel',serif;font-weight:700;font-size:10.6pt;letter-spacing:.052em;text-transform:uppercase;
  color:{COFFEE};margin-bottom:5mm;line-height:1.44}}
-.lead{{font-family:'Cinzel',serif;font-size:8.2pt;letter-spacing:.16em;text-transform:uppercase;color:{CRIMSON};
+.lead{{font-family:'Cinzel',serif;font-size:8.2pt;letter-spacing:.16em;text-transform:uppercase;color:{ANTIQUE};
  margin:5.4mm 0 2.8mm!important;text-align:left!important}}
 .val{{font-weight:600;color:{COFFEE};border-bottom:.5pt solid rgba(156,122,60,.55)}}
 .signoff{{margin-top:6.4mm}} .sigsp{{height:17mm}}
@@ -235,33 +255,14 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
  color:{ANTIQUE};margin-bottom:8mm}}
 .blank i{{flex:1;border-bottom:.4pt solid rgba(156,122,60,.45);font-style:normal}}
 
-/* ═══ THE FOOT — the same mass and the same ribbon, swept the other way.
-   The record is what the document rests on. ═══ */
-.foot{{position:relative;z-index:2;margin-top:auto;flex:0 0 56mm;height:56mm}}
-.foot .fmass{{position:absolute;inset:0;overflow:hidden;
- clip-path:polygon(0 46%,100% 17.5%,100% 100%,0 100%);
- background:{RAMP_FOOT};
- box-shadow:inset 0 -.5mm 0 -.15mm rgba(255,238,206,.09)}}
-.foot .fmass::before{{content:'';position:absolute;left:24%;top:-60%;width:64%;height:230%;
- transform:rotate(21deg);
- background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,244,220,.095) 48%,rgba(255,255,255,0) 100%)}}
-.foot .fmass::after{{content:'';position:absolute;inset:0;
- background:radial-gradient(120% 160% at 94% 116%,rgba(255,240,212,.09) 0%,rgba(0,0,0,0) 44%,rgba(0,0,0,.26) 100%)}}
-.frib,.frib2,.fsh{{position:absolute;left:-16mm;width:242mm;z-index:3;pointer-events:none;
- transform:rotate({CUT_DEG})}}
-.frib{{top:11.78mm;height:6mm;background:{RIBBON};
- box-shadow:0 -.9pt 2.1pt rgba(20,10,3,.34)}}
-.frib::before{{content:'';position:absolute;right:0;top:0;width:22mm;height:100%;
- background:linear-gradient(270deg,#3A2A10 0%,#6E5121 42%,rgba(110,81,33,0) 100%)}}
-.frib2{{top:8.18mm;height:2.2mm;background:{RIBBON2};
- box-shadow:0 -.6pt 1.4pt rgba(20,4,8,.36)}}
-.fsh{{top:2.2mm;height:6mm;
- background:linear-gradient(to top,rgba(43,20,10,.17) 0%,rgba(43,20,10,.06) 38%,rgba(43,20,10,0) 100%)}}
-.foot .gl{{position:absolute;left:0;right:0;bottom:0;height:11mm;opacity:.3;z-index:2;
+/* ═══ THE FOOT ═══ the same construction, half-turned. The record is what
+   the document rests on. */
+.foot{{position:relative;z-index:2;margin-top:auto;flex:0 0 {FOOT_H}mm;height:{FOOT_H}mm}}
+.foot .gl{{position:absolute;left:0;right:0;bottom:0;height:11mm;opacity:.28;z-index:2;
  background:url(data:image/svg+xml;base64,{GL}) center/100% 100% no-repeat}}
 .foot .mt{{position:absolute;left:0;right:0;bottom:1.4mm;height:2.4mm;opacity:.26;z-index:4;
  background:url(data:image/svg+xml;base64,{MT}) left center/100% 100% no-repeat}}
-.fbody{{position:absolute;left:24mm;right:24mm;top:30mm;z-index:4}}
+.fbody{{position:absolute;left:24mm;right:24mm;top:44.5mm;z-index:4}}
 .fh{{display:flex;align-items:center;gap:2.6mm;justify-content:space-between;white-space:nowrap;
  font-size:5pt;letter-spacing:.1em;text-transform:uppercase;color:rgba(214,186,133,.92);
  padding-bottom:1.8mm;margin-bottom:2mm;border-bottom:.35pt solid rgba(198,161,91,.26)}}
@@ -272,10 +273,11 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .creed{{margin-top:2.6mm;padding-top:2mm;border-top:.35pt solid rgba(198,161,91,.24);
  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:8.6pt;color:{GOLD};letter-spacing:.02em}}
 
-/* continuation: the same two sweeps, shallower. Same grammar, less ceremony */
-.head.c2{{height:44mm}} .head.c2 .mass{{clip-path:polygon(0 0,100% 0,100% 46.7%,0 70%)}}
-.head.c2 .rib{{top:25.68mm}} .head.c2 .rib2{{top:33.08mm}} .head.c2 .rsh{{top:35.3mm}}
-.head.c2 .hgrid{{top:6mm;gap:6mm}} .head.c2 .seal{{width:19mm;height:19mm}}
+/* continuation: the same drawing, compressed vertically. The ribbon's
+   slope eases with it, so the sheet is recognisably the same construction
+   with less ceremony. */
+.head.c2{{height:52mm}}
+.head.c2 .hgrid{{top:5mm;gap:6mm}} .head.c2 .seal{{width:19mm;height:19mm}}
 .head.c2 .seal img{{width:17mm;height:17mm}}
 .head.c2 .lock .en{{font-size:11.4pt;padding-right:4mm}}
 .head.c2 .lock .ar{{font-size:13.1pt;padding-left:4mm}}
@@ -291,9 +293,7 @@ AR_L = '<b>{0}</b><b>{1}</b>'.format(*AR.rsplit(' ', 1))
 def head(first=True):
     c2 = '' if first else ' c2'
     seat = ''
-    return (f'<header class="head{c2}">'
-            f'<div class="mass"><div class="arc"></div><div class="arc2"></div><div class="chm"></div></div>'
-            f'<div class="rib"></div><div class="rib2"></div><div class="rsh"></div>'
+    return (f'<header class="head{c2}">{HEAD_SVG}'
             f'<div class="hgrid">'
             f'<span class="seal"><img src="data:image/png;base64,{CREST}" '
             f'alt="Crest of Sultan Hanafi Royal Schools" /></span>'
@@ -306,8 +306,7 @@ REG = ('<div class="reg"><div><dt>Reference</dt><dd>SHRS/ICT/2026/001</dd></div>
        '<span class="fold">{f}</span></div>'
        '<div class="seat">{QUAD} Information &amp; Communications Technology</div>').replace('{QUAD}', QUAD)
 
-FOOT = ('<footer class="foot"><div class="fmass"><div class="chm"></div></div><div class="gl"></div>'
-        '<div class="fsh"></div><div class="frib"></div><div class="frib2"></div><div class="mt"></div>'
+FOOT = ('<footer class="foot">' + FOOT_SVG + '<div class="gl"></div><div class="mt"></div>'
         f'<div class="fbody"><div class="fh">{INST}</div><div class="fg">'
         '<div><span class="fl">Campus</span>Ikorodu, Lagos State, Nigeria</div>'
         '<div><span class="fl">Telephone</span><a href="tel:+2348073747650">+234 807 374 7650</a></div>'

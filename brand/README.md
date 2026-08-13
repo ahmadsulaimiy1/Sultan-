@@ -47,18 +47,19 @@ Nothing on this letterhead was invented:
 - **Motto** — "Forming Scholars, Leaders and Guardians of Excellence."
 - **Five institutions**, **contacts**, **campus**, **founding year**,
   **governance** — from the site footer and the database seed.
-- **Crimson** `#7C1F2E` and `#A8455A` — `--crimson` and `--accent-bright`
-  from `css/brand.css`. The stationery takes no colour the website does
-  not already hold.
+- **Colour** — the warm axis only: cocoa, coffee, chestnut, royal gold,
+  antique gold, warm ivory. Tonal range inside one hue, and no second hue
+  anywhere on the sheet.
 
 ## Verification
 
 Every build is measured, not eyeballed. The render harness loads both
-documents in Chromium and asserts the fourteen tests listed in the
-manual — canvas size, the parallel cuts, the bilingual lock's shared
-centre line and equal measure, the Arabic presence ratio, ribbon-to-text
-clearance, footing containment on every sheet, fonts loaded, links live,
-and zero console errors. All fourteen pass on the current build.
+documents in Chromium and asserts the sixteen tests listed in the
+manual — canvas size, both bands drawn, the bilingual lock's shared
+centre line and equal measure, the lock sitting on the mass, the Arabic
+presence ratio, head-to-text and ribbon-to-text clearance, footing
+containment on every sheet, fonts loaded, links live, and zero console
+errors. All sixteen pass on the current build.
 
 **The `.docx` is the exception, and this is worth stating plainly.**
 LibreOffice is broken in the environment this was built in — it fails to

@@ -7,80 +7,84 @@ stationery, rendered from the same sheet so the two cannot drift).
 
 ---
 
-## The signature — the Sweep
+## The signature — the Crossing
 
-**Every SHRS document is held between two masses of the same material,
-each cut on the same angle, each with a gold ribbon riding the cut.**
+**Every SHRS document is built from two elements at two different angles,
+and it is their crossing that identifies the school.**
 
-The head mass carries the seal and the bilingual lock. The foot mass
-carries the record. Between them lies an ivory field that is the
-document's own voice and is never encroached on.
+- **The mass** — full bleed at the top, its lower boundary a shallow curve
+  that eases up to the right, so the sheet's weight sits under the seal
+  where the seal needs a dark ground. Its slope is about 2°.
+- **The ribbon** — a bolder diagonal at nearly four times that slope. It
+  begins *inside* the mass at the right and slides out onto the ivory as
+  it travels left.
 
-The two cuts are **parallel**: each rises 15.99 mm across the 210 mm
-measure — 4.355° — and the build asserts they agree within 0.6 mm. The
-head's ramp runs hot to the right; the foot's runs hot to the left. So
-the two masses answer each other rather than repeat, and the sheet reads
-as one object rather than a header and a footer that happen to share a
-colour.
+Because the two slopes differ, the ribbon **crosses** the mass boundary
+rather than tracing it, and appears to emerge from beneath the mass.
+That crossing is the signature, and it is the reason the shape cannot be
+mistaken for a rectangle with a corner cut off.
+
+The foot is the same construction rotated by half a turn: the mass is
+deep at the right, the ribbon emerges travelling the other way. Head and
+foot therefore answer each other rather than repeat.
+
+Both bands are drawn in **SVG**, not built from clip-paths. A curve that
+has to meet a ribbon at a second angle is a drawing, and it needs
+Bézier control, stroked bands that follow the curve at constant width,
+and a real blur for the shadow. None of that survives a polygon.
 
 ### Why this is the signature and not something else
 
 - It is **a relationship, not a shape.** The crest could be redrawn and
   the identity would survive, because what identifies the school is the
-  angle, the ramp and the ribbon — not what is drawn inside the mass.
-- It is **parametric.** One angle and two depths produce the whole
+  crossing of two angles — not what is drawn inside the mass.
+- It is **parametric.** Two slopes and two depths produce the whole
   family. Nothing is redesigned per artefact.
-- It **degrades gracefully.** Where a format cannot hold two masses (an
-  ID card, a favicon, a signage plate) the two merge into one and the
-  seal sits at the join. That is part of the grammar, not an exception.
+- It **degrades gracefully.** Where a format cannot hold two bands (an ID
+  card, a favicon, a signage plate) the two merge into one and the seal
+  sits at the join. That is part of the grammar, not an exception.
 - It passes the **fifteen-per-cent test.** A corner of any SHRS document
-  shows a ramped mass cut on the house angle with a bevelled gold ribbon
-  across it. That alone identifies the school.
+  shows a coffee mass with a bevelled gold ribbon crossing its boundary
+  at a steeper angle. That alone identifies the school.
 
 ## Depth is constructed, not filtered
 
-A flat panel is what makes a sheet look printed rather than made. Five
-constructions give the masses thickness, and every one of them survives
-CMYK because none is an effect:
+A flat panel is what makes a sheet look printed rather than made. Four
+constructions give the bands thickness, and none is an effect, so all
+four survive CMYK:
 
-1. **The ramp.** Each mass is a gradient through four tones, not a fill.
-2. **The chamfer.** The face is machined back before it meets the cut, so
-   there is a lit lip and a fall-away beneath it. This is what tells the
-   eye there is thickness.
-3. **The bevelled ribbon.** Each ribbon is a real bar rotated to the cut
-   angle — not a clipped polygon — so it carries a light edge on top, a
-   dark edge underneath, and a specular sweep along its length. That is
-   the difference between folded metal and a painted stripe.
-4. **The fold.** The ribbon darkens where it turns behind the mass at the
-   sheet edge.
-5. **One light.** Everything is lit from the top left, and the assembly
-   casts a single soft shadow onto the paper below it.
+1. **The mass is ramped**, cocoa through coffee to chestnut — tonal range
+   inside one hue, never a second hue.
+2. **The chamfer.** The mass's face is machined back before it meets its
+   boundary, so there is a lit lip and a fall-away beneath it. This is
+   what tells the eye there is thickness.
+3. **The bevelled ribbon.** A lit edge above, a dark edge beneath, and a
+   specular sweep along its length — the difference between folded metal
+   and a painted stripe. The band darkens at both ends where it turns
+   away under the sheet edge.
+4. **One light, one shadow.** Everything is lit from above, and the
+   ribbon assembly casts a single blurred shadow onto the paper.
 
-## The material — a ramp, not a colour
+## The material
 
-A single coffee brown was the earlier error: it flattened the hierarchy
-and made every element equal.
+A single flat coffee was one error; a crimson wash across the masses was
+the opposite one. What the sheet actually needs is **tonal range inside
+one hue**.
 
 | Role | Colour | Where |
 |---|---|---|
-| Ground | Deep Cocoa `#140A03` | the cold edge of every mass |
+| Ground | Deep Cocoa `#140A03` | the cold edge of each mass |
 | Body | Coffee `#2E1A0D` | the mass's centre |
-| Turn | Chestnut `#4E2116` | where the mass warms |
-| Ember | Oxblood `#6E1F26` | approaching the hot end |
-| Accent | Crimson `#7C1F2E` | the mass's hot end, the second ribbon, section lead-ins, the folio |
-| Accent bright | `#A8455A` | the crimson ribbon's own highlight |
-| Foil | Royal Gold `#C6A15B` → `#F6E9CE` | the ribbon and the axis |
+| Warm | Chestnut `#43220F` | the mass's warm end |
+| Close | Cocoa `#241509` | the far edge |
+| Foil | Royal Gold `#C6A15B` → `#F6E9CE` | the ribbon, the axis, the small caps |
+| Antique | `#9C7A3C` | the second band, and labels on paper |
 | Field | Warm Ivory `#FBF7EF → #EDE3D2` | the paper, graded |
 | Ink | `#241A12`, secondary `#5A4632` | never black; black is toner |
 
-**The crimson is not invented for the stationery.** `#7C1F2E` and
-`#A8455A` are `--crimson` and `--accent-bright` from `css/brand.css` —
-already the site's accent livery. The sheet and the website are one
-system, which is the only reason a second hue is admissible at all.
-
-Hierarchy follows the ramp: the deepest tone carries weight, the hottest
-carries attention, gold is reserved for the ribbon and the axis, and no
-element takes a colour from outside it.
+**No hue outside the warm axis.** A single off-axis colour on a document
+with a warm anchor reads as an accident or a sub-brand. Where the five
+schools must be distinguished, they are distinguished *tonally*.
 
 **Cotton rag** at 26% multiply, **vignette** at the extremes, and a
 **ghost crest** at 3% off the right edge. All three below conscious
@@ -131,17 +135,17 @@ defensible: it came from the school's own arms, not from a font.
 ## Measurements
 
 - Sheet 210 × 297 mm; canvas 794 × 1123 px at 96 dpi, asserted.
-- Head mass 72 mm deep at the left edge falling to 34 mm at the right.
-- Foot mass 56 mm, rising the other way on the same angle.
-- Cut angle 4.355° on both, asserted parallel.
-- Body inset 24 mm each side; ivory field from 78 mm to 241 mm.
-- Continuation sheets: the head halves to 44 mm and the lock reduces, the
-  ribbon assembly rises with it. **Same grammar, less ceremony.**
+- Head band 78 mm; its mass 48.6 mm deep at the left, 40 mm at the right.
+- Foot band 70 mm; its mass deep at the right, on the mirrored curve.
+- Mass slope ≈ 2°; ribbon slope ≈ 7.6°. The difference is the point.
+- Body inset 24 mm each side; ivory field from 80 mm to 227 mm.
+- Continuation sheets: the same drawing compressed to 52 mm, so the
+  ribbon's slope eases with it. **Same construction, less ceremony.**
 
 ## Production
 
 Designed for 350 gsm cotton, hot foil on the gold, blind deboss on the
-chamfer, letterpress on the rules.
+mass's chamfer, letterpress on the rules.
 
 - Gold is specified so it prints correctly **both** ways: warm ochre in
   CMYK, true metallic in Pantone 871/872 or foil. A system that is right
@@ -159,14 +163,16 @@ chamfer, letterpress on the rules.
 4. Both language blocks share one centre line with the gold axis.
 5. Equal measure either side of the axis.
 6. Arabic presence ratio 1.15.
-7. Head cut and foot cut parallel within 0.6 mm.
-8. No ribbon touches the text on any sheet.
-9. The office line clears the registry block.
-10. The five houses fit the footing measure without truncation.
-11. Every footing sits inside its page, every sheet.
-12. All faces loaded (7 on the letter).
-13. Every URL a live hyperlink (15 anchors on the letter).
-14. No console errors.
+7. Both bands are drawn on every sheet.
+8. The head band clears the body text on every sheet.
+9. The bilingual lock sits on the mass, never past its boundary.
+10. The footing's text clears the ribbon crossing above it.
+11. The office line clears the registry block.
+12. The five houses fit the footing measure without truncation.
+13. Every footing sits inside its page, every sheet.
+14. All faces loaded (7 on the letter).
+15. Every URL a live hyperlink (15 anchors on the letter).
+16. No console errors.
 
 ## Building
 
@@ -185,10 +191,9 @@ wrong. Every asset the generator needs lives in `brand/assets/` and
 
 Two things, in order:
 
-- **The website.** The ramp is defined against `css/brand.css` tokens but
-  the site still paints its surfaces flat. Carrying the ramp, the cut and
-  the ribbon into the masthead, the portal chrome and the section heads
-  is the next piece of work.
+- **The website.** Carrying the crossing — the mass, its curve and the
+  ribbon at its second angle — into the masthead, the portal chrome and
+  the section heads is the next piece of work.
 - **The remaining artefacts** — certificate, transcript, examination
   paper, envelope, folder, business card, staff and student ID, email
   signature, signage plate. The grammar is settled; applying it is

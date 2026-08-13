@@ -18,7 +18,7 @@ import pathlib, shutil, zipfile
 ROOT = pathlib.Path(__file__).resolve().parent
 EMU_MM = 36000                      # English Metric Units per millimetre
 PAGE_W, PAGE_H = 210, 297
-HEAD_H, FOOT_H = 78, 56             # the two bands, as identity.py cuts them
+HEAD_H, FOOT_H = 80, 70             # the two bands, as identity.py draws them
 
 def emu(mm):
     return int(round(mm * EMU_MM))
