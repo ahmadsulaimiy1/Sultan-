@@ -126,8 +126,8 @@ Yours sincerely,
 &nbsp;
 
 **Ahmad Sulaimiy**
-Acting Managing-Director
-ICT Office, Sultan Hanafi Royal Schools
+Acting Executive Director
+ICT & Digital Transformation, Sultan Hanafi Royal Schools
 
 ---
 

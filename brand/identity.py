@@ -453,7 +453,7 @@ def rt(b):
     if ARGS.staff_id:
         b = b.replace('[SHRS&#8209;HQ&#8209;REG&#8209;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;]', ARGS.staff_id)
     if ARGS.signature:
-        b = b.replace('<div class="sig-space"></div>',
+        b = b.replace('<div class="sigsp"></div>',
                       '<img class="sig" src="data:image/png;base64,%s" alt="Signature" />'
                       % b64(ARGS.signature))
     if ARGS.activation_url:
