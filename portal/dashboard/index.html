@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="/css/portal-command.css">
 <meta name="shrs-build" content="shrs-pwa-caf195dc57">
 <script src="/js/portal-command.js" defer></script>
+<script src="/js/portal-dashboard-charts.js" defer></script>
 </head>
 <body class="portal-body" data-atmosphere="parent">
 
@@ -159,6 +160,58 @@
       <a class="portal-back-link" href="/adhkar/">Read the full Adhkar Centre →</a>
     </div>
 
+
+
+    <!-- Academic Intelligence. Every figure is drawn from the records the API
+         returned; a card with no record names what is missing rather than
+         drawing a placeholder curve. -->
+    <section class="cmd-intelligence" data-cmd-intelligence hidden aria-labelledby="cmd-intel-title">
+      <div class="cmd-intel-head">
+        <div>
+          <div class="cmd-card-label">Academic Intelligence</div>
+          <h2 class="cmd-card-title" id="cmd-intel-title">Live position this term</h2>
+        </div>
+        <span class="cmd-sample" data-cmd-sample hidden></span>
+      </div>
+      <div class="cmd-grid">
+        <article class="cmd-card cmd-card--lit cmd-reveal cmd-span-3">
+          <div class="cmd-card-head"><span class="cmd-card-label">Attendance</span>
+            <span class="cmd-ico" data-cmd-ico="calendar"></span></div>
+          <div class="cmd-kpi-row"><span class="cmd-kpi-value" data-cmd-stat="attendance">—</span></div>
+          <p class="cmd-kpi-note" data-cmd-stat="attendance-note">Awaiting the register</p>
+          <div data-cmd-chart="attendance" style="margin-top:14px"></div>
+        </article>
+        <article class="cmd-card cmd-card--lit cmd-reveal cmd-span-3">
+          <div class="cmd-card-head"><span class="cmd-card-label">Fees Outstanding</span>
+            <span class="cmd-ico" data-cmd-ico="coin"></span></div>
+          <div class="cmd-kpi-row"><span class="cmd-kpi-value" data-cmd-stat="fees">—</span></div>
+          <p class="cmd-kpi-note" data-cmd-stat="fees-note">Nothing billed yet</p>
+          <div data-cmd-chart="fees" style="margin-top:14px"></div>
+        </article>
+        <article class="cmd-card cmd-card--lit cmd-reveal cmd-span-3">
+          <div class="cmd-card-head"><span class="cmd-card-label">Term Average</span>
+            <span class="cmd-ico" data-cmd-ico="chart"></span></div>
+          <div class="cmd-kpi-row"><span class="cmd-kpi-value" data-cmd-stat="average">—</span></div>
+          <p class="cmd-kpi-note" data-cmd-stat="average-note">Awaiting results</p>
+          <div data-cmd-chart="subjects" style="margin-top:14px"></div>
+        </article>
+        <article class="cmd-card cmd-card--lit cmd-reveal cmd-span-3">
+          <div class="cmd-card-head"><span class="cmd-card-label">Qur&#8217;an</span>
+            <span class="cmd-ico" data-cmd-ico="book"></span></div>
+          <div class="cmd-kpi-row"><span class="cmd-kpi-value" data-cmd-stat="quran">—</span>
+            <span class="cmd-kpi-unit">of 30</span></div>
+          <p class="cmd-kpi-note">Aj&#8203;z&#257;&#702; verified by the Qur&#8217;an College</p>
+          <div data-cmd-chart="quran" style="margin-top:14px"></div>
+        </article>
+        <article class="cmd-card cmd-card--deep cmd-card--lit cmd-reveal cmd-span-12">
+          <div class="cmd-card-head">
+            <h3 class="cmd-card-title">Academic trend</h3>
+            <span class="cmd-card-label">By term</span>
+          </div>
+          <div data-cmd-chart="trend"></div>
+        </article>
+      </div>
+    </section>
 
     <div data-portal-children></div>
   </div>

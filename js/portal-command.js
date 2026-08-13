@@ -63,8 +63,18 @@
     sync:   '<path d="M21 12a9 9 0 0 1-15.5 6.2M3 12A9 9 0 0 1 18.5 5.8"/><path d="M3 5.5V10h4.5M21 18.5V14h-4.5"/>',
     clock:  '<circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.2 1.9"/>',
     chart:  '<path d="M4 19h16"/><path d="m6 15 3.6-4.2 3 2.4L18 7"/>',
-    empty:  '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 10h18M8.5 15h7"/>'
+    empty:  '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 10h18M8.5 15h7"/>',
+    coin:   '<ellipse cx="12" cy="7" rx="7.5" ry="3.2"/><path d="M4.5 7v10c0 1.8 3.4 3.2 7.5 3.2s7.5-1.4 7.5-3.2V7"/><path d="M4.5 12c0 1.8 3.4 3.2 7.5 3.2s7.5-1.4 7.5-3.2"/>',
+    book:   '<path d="M4 4.5h6a3 3 0 0 1 3 3V20a2.6 2.6 0 0 0-2.6-2.2H4z"/><path d="M20 4.5h-6a3 3 0 0 0-3 3V20a2.6 2.6 0 0 1 2.6-2.2H20z"/>'
   };
+
+  /* A card names its icon in markup; the family is drawn once, above. */
+  function fillIcons() {
+    document.querySelectorAll('[data-cmd-ico]').forEach(function (n) {
+      var d = ICONS[n.getAttribute('data-cmd-ico')];
+      if (d && !n.firstChild) n.innerHTML = icon(d);
+    });
+  }
 
   /* --------------------------------------------------------------------- */
   /* 1. THE COMMAND HEADER                                                  */
@@ -643,6 +653,7 @@
   function init() {
     try { buildHeader(); } catch (e) { console.error('[command] header', e); }
     try { buildFooter(); } catch (e) { console.error('[command] footer', e); }
+    try { fillIcons(); } catch (e) { console.error('[command] icons', e); }
     try { reveal(); autoCount(); } catch (e) { console.error('[command] motion', e); }
     document.dispatchEvent(new CustomEvent('shrs:command-ready'));
   }
@@ -657,4 +668,60 @@
   } else {
     setTimeout(init, 0);
   }
+})();
+
+/* ===========================================================================
+   THE WELCOME LINE, TYPED
+   ===========================================================================
+   The dashboard opened on a name that was simply there. Typing it makes the
+   moment of arrival an event — the one place on the page where motion is the
+   content rather than decoration.
+
+   It types the name only, never the greeting, and it types ONCE per session:
+   a line that retypes on every navigation stops being a welcome and becomes
+   a tic. Under reduced motion the line is simply set.
+   =========================================================================== */
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var typed = false;
+
+  function type(node, text) {
+    if (typed) return;
+    typed = true;
+    if (reduced) { node.textContent = text; return; }
+    node.textContent = '';
+    var caret = document.createElement('span');
+    caret.className = 'cmd-caret';
+    node.appendChild(caret);
+    var i = 0;
+    (function step() {
+      if (i <= text.length) {
+        caret.previousSibling && node.removeChild(caret.previousSibling);
+        node.insertBefore(document.createTextNode(text.slice(0, i)), caret);
+        i++;
+        // a shade quicker through a long name, so it never outstays the moment
+        setTimeout(step, text.length > 26 ? 34 : 48);
+      } else {
+        caret.setAttribute('data-done', '');
+      }
+    })();
+  }
+
+  function watch() {
+    var hello = document.querySelector('.exec-welcome h1[data-portal-hello]');
+    if (!hello) return;
+    var run = function () {
+      var t = (hello.textContent || '').trim();
+      if (!t || t === '—' || typed) return;
+      type(hello, t);
+    };
+    run();
+    new MutationObserver(function () { if (!typed) run(); })
+      .observe(hello, { childList: true, characterData: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(watch, 0); });
+  } else { setTimeout(watch, 0); }
 })();

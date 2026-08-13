@@ -625,3 +625,224 @@ body .portal-topbar.cmd-header {
 }
 .cmd-header::after, .cmd-footer::before { background-image: var(--cmd-foil); }
 .cmd-ornament { background: var(--cmd-foil-soft); height: 1px; opacity: .85; }
+
+/* ===========================================================================
+   11. THE INSIDE — the dashboard as a royal college would issue it
+   ===========================================================================
+
+   THE BROWN AT THE EDGES. .portal-wrap capped the column at 760px, so on any
+   real monitor the page was a narrow strip of content floating in a wide
+   brown surround. That surround was the first thing the eye read, and no
+   amount of polish inside the strip could survive it. The column now takes
+   the screen it is given, on desktop and on phone alike, and the ground
+   beneath it is ivory rather than espresso — so there is no brown edge left
+   to see.
+
+   THE FIELD. Deep colour is an accent here, exactly as on the public site: a
+   masthead strip and a footer. The field between them is ivory going to
+   white, which is the only ground on which gold reads as metal and a
+   photograph reads as a photograph.
+   =========================================================================== */
+
+/* --- the screen is used, edge to edge -------------------------------------- */
+body.portal-body .portal-main {
+  /* It was a flex ROW holding four wraps — the content, the verify gate, the
+     loading card and the error card. Whenever two were visible at once they
+     split the width between them, which is what left the content sitting in a
+     narrow strip with a wide surround beside it. A column gives every wrap
+     the full measure, whichever one is showing. */
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: clamp(16px, 2.2vw, 34px) clamp(12px, 2.4vw, 40px) 0 !important;
+}
+body.portal-body .portal-wrap {
+  /* .portal-main is a flex row; without an explicit basis the wrap sized to
+     its content and left a wide brown surround on any real monitor. */
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: min(1560px, 100%) !important;
+  margin-inline: auto !important;
+}
+@media (max-width: 640px) {
+  body.portal-body .portal-main { padding: 12px 12px 0 !important; }
+}
+
+/* --- the field ------------------------------------------------------------ */
+body.portal-body {
+  background:
+    radial-gradient(1180px 620px at 78% -10%, rgba(233,206,138,.20), transparent 62%),
+    radial-gradient(900px 520px at 4% 104%, rgba(198,161,91,.14), transparent 60%),
+    linear-gradient(180deg, #FBF6EC 0%, #FFFFFF 44%, #FDF9F1 100%) !important;
+  color: var(--cmd-ink);
+}
+
+/* --- panels --------------------------------------------------------------- */
+body.portal-body .portal-card,
+body.portal-body .portal-child-card,
+body.portal-body .exec-panel,
+body.portal-body .portal-results,
+body.portal-body .portal-section {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 1px 2px rgba(60,42,16,.05),
+    0 18px 42px -20px rgba(60,42,16,.26) !important;
+  color: var(--cmd-ink) !important;
+  overflow: hidden;
+}
+
+/* The panel head — the bar that was espresso on espresso. It becomes a cream
+   shelf under a struck gold rule, with the title in the institutional face. */
+body.portal-body .portal-child-head,
+body.portal-body .exec-card-head {
+  background: linear-gradient(180deg, #FFFDF8 0%, #F6EEDE 100%) !important;
+  border-bottom: 0 !important;
+  position: relative;
+  padding: 22px 26px 20px 30px !important;
+  margin-bottom: 0 !important;
+}
+body.portal-body .portal-child-head::after,
+body.portal-body .exec-card-head::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--cmd-foil);
+}
+/* the 4px spine on the head becomes struck metal rather than a navy bar */
+body.portal-body .portal-child-head::before {
+  background: var(--cmd-foil) !important; width: 3px !important;
+}
+body.portal-body .portal-child-head h2,
+body.portal-body .exec-card-head h2,
+body.portal-body .portal-card > h2,
+body.portal-body .portal-card > h3,
+body.portal-body .portal-results h3 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+  letter-spacing: .03em; margin: 0 !important;
+}
+body.portal-body .portal-child-head .meta { color: #8A6A2E !important;
+  letter-spacing: .14em; text-transform: uppercase; font-size: 10.5px; margin-top: 5px; }
+
+/* --- copy, fields, labels -------------------------------------------------- */
+body.portal-body .portal-card p,
+body.portal-body .portal-card li,
+body.portal-body .portal-card td,
+body.portal-body .portal-child-card p,
+body.portal-body .portal-child-card td,
+body.portal-body .portal-notice,
+body.portal-body .portal-empty { color: rgba(42,32,22,.80) !important; }
+
+body.portal-body .identity-field-grid > *,
+body.portal-body .portal-stat,
+body.portal-body .portal-checklist-item {
+  background: rgba(255,255,255,.70) !important;
+  border: 1px solid rgba(198,161,91,.24) !important;
+  border-radius: 12px;
+}
+/* the ghosted labels: they were light type meant for an espresso panel */
+body.portal-body .identity-field-grid .label,
+body.portal-body .identity-field-grid > * > *:first-child,
+body.portal-body .portal-stat .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .identity-field-grid > * > *:last-child,
+body.portal-body .portal-stat .value {
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-variant-numeric: tabular-nums;
+}
+
+/* progress reads as struck metal in a channel */
+body.portal-body .profile-progress-track,
+body.portal-body .portal-progress { background: rgba(42,32,22,.09) !important; }
+body.portal-body .profile-progress-fill,
+body.portal-body .portal-progress > * { background: var(--cmd-foil) !important; }
+
+/* actions */
+body.portal-body .portal-submit,
+body.portal-body .portal-messaging-new,
+body.portal-body .exec-cta {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border: 1px solid rgba(247,235,205,.6) !important;
+  font-weight: 600; letter-spacing: .05em;
+  box-shadow: 0 2px 12px rgba(120,88,28,.26) !important;
+}
+body.portal-body .portal-text-btn,
+body.portal-body .portal-back-link,
+body.portal-body a { color: #8A6A2E; }
+body.portal-body .portal-child-card a:hover { color: var(--cmd-espresso); }
+
+/* ===========================================================================
+   12. THE WELCOME — a photograph, and a line that types itself
+   =========================================================================== */
+
+body.portal-body .exec-welcome {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-radius: 20px;
+  padding: clamp(30px, 5vw, 62px) clamp(22px, 4vw, 58px);
+  border: 1px solid rgba(198,161,91,.42);
+  background:
+    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),
+    url('/assets/images/campus/campus-frontage.jpg') center 34% / cover no-repeat;
+  box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
+}
+body.portal-body .exec-welcome::before,
+body.portal-body .exec-welcome::after {
+  content: ''; position: absolute; width: 52px; height: 52px; pointer-events: none;
+  border: 1px solid rgba(233,206,138,.70);
+}
+body.portal-body .exec-welcome::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+body.portal-body .exec-welcome::after  { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
+
+body.portal-body .exec-welcome h1 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  color: #FFFDF7; font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
+  text-shadow: 0 2px 20px rgba(0,0,0,.55); min-height: 1.2em;
+}
+/* the caret that follows the typing */
+body.portal-body .exec-welcome h1 .cmd-caret {
+  display: inline-block; width: 2px; height: .92em; margin-left: 3px;
+  background: var(--cmd-champagne); vertical-align: -.09em;
+  animation: cmd-blink 1.05s steps(1) infinite;
+}
+@keyframes cmd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+body.portal-body .exec-welcome h1 .cmd-caret[data-done] { animation: none; opacity: 0; }
+
+body.portal-body .exec-welcome-eyebrow,
+body.portal-body .exec-welcome-role { color: var(--cmd-champagne) !important; }
+body.portal-body .exec-welcome-motto {
+  font-family: 'EB Garamond', Garamond, serif; font-style: italic;
+  color: rgba(251,243,223,.90) !important; font-size: clamp(14px, 1.5vw, 19px);
+}
+body.portal-body .exec-welcome-stats {
+  margin-top: 26px; padding-top: 22px; position: relative;
+}
+body.portal-body .exec-welcome-stats::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--cmd-foil-soft); opacity: .85;
+}
+body.portal-body .exec-welcome-stat .value {
+  font-family: 'Cinzel', 'EB Garamond', serif; color: var(--cmd-champagne) !important;
+  font-variant-numeric: tabular-nums;
+}
+body.portal-body .exec-welcome-stat .label {
+  color: rgba(233,206,138,.80) !important; letter-spacing: .16em; text-transform: uppercase;
+}
+
+/* A card's icon: a gold medallion, as on the public site's nav cards. */
+.cmd-ico {
+  width: 30px; height: 30px; flex: none; display: grid; place-items: center;
+  border-radius: 50%; color: #8A6A2E;
+  background: linear-gradient(160deg, #FFFDF6, #F2E6CE);
+  border: 1px solid rgba(198,161,91,.42);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 2px 6px rgba(80,58,20,.10);
+}
+.cmd-ico svg { width: 15px; height: 15px; stroke: currentColor; fill: none;
+  stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.cmd-card--deep .cmd-ico {
+  background: linear-gradient(160deg, #3A2A14, #221709); color: var(--cmd-champagne);
+  border-color: rgba(198,161,91,.45); box-shadow: none;
+}
+.cmd-card-head { align-items: center; }
