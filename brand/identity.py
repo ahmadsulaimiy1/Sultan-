@@ -35,6 +35,7 @@ b64 = lambda p: base64.b64encode(pathlib.Path(p).read_bytes()).decode()
 A = json.loads(pathlib.Path('/tmp/assets.json').read_text())
 FONTS, CREST = A['fonts'], A['crest']
 RAG, MT = b64('/tmp/rag.svg'), b64('/tmp/mt.svg')
+GL, BASE = b64('/tmp/gl.svg'), b64('/tmp/base.svg')
 
 # ── palette. Fixed. Coffee dominant, gold as foil, ivory as the field.
 COFFEE, COFFEE2, COCOA = '#2B1A0E', '#1C1006', '#241509'
@@ -70,9 +71,16 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
  background:linear-gradient(158deg,{COFFEE} 0%,{COFFEE2} 62%,#150B03 100%);
  display:flex;align-items:center;justify-content:center;
  box-shadow:inset -0.4pt 0 0 rgba(198,161,91,.34),inset 0 -0.4pt 0 rgba(198,161,91,.34)}}
-.cart img{{width:21mm;height:21mm;display:block}}
-.cart::after{{content:'';position:absolute;right:0;bottom:0;width:5.6mm;height:5.6mm;
- border-right:.5pt solid {GOLD};border-bottom:.5pt solid {GOLD};opacity:.7}}
+.cart img{{position:relative;width:20mm;height:20mm;display:block;z-index:2;
+ filter:drop-shadow(0 .5pt .8pt rgba(0,0,0,.55))}}
+/* foil ring + deboss: the seal is struck into the mass, not printed on it */
+.cart::before{{content:'';position:absolute;left:50%;top:50%;width:25.4mm;height:25.4mm;
+ transform:translate(-50%,-50%);border-radius:50%;
+ border:.5pt solid rgba(198,161,91,.62);
+ box-shadow:0 0 0 .9mm rgba(255,255,255,.045),inset 0 0 2.4mm rgba(0,0,0,.55),
+ 0 .5pt 0 rgba(198,161,91,.28)}}
+.cart::after{{content:'';position:absolute;right:0;bottom:0;width:6.4mm;height:6.4mm;
+ border-right:.6pt solid {GOLD};border-bottom:.6pt solid {GOLD};opacity:.85}}
 
 /* ═══ THE LOCK — one bilingual identity, not two languages ═══
    The rule is dimensioned by the longer language, so the lock cannot be
@@ -80,7 +88,10 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .lock{{position:absolute;left:42mm;top:9.6mm;z-index:2}}
 .lock .en{{font-family:'Cinzel',serif;font-weight:800;font-size:13.4pt;letter-spacing:.058em;
  text-transform:uppercase;white-space:nowrap;color:{COFFEE};line-height:1}}
-.lock .rule{{height:.6pt;background:{GOLD};margin:2.6mm 0 2.2mm}}
+.lock .rule{{position:relative;height:1.1pt;background:{GOLD};margin:2.6mm 0 2.6mm}}
+.lock .rule::before{{content:'';position:absolute;left:0;right:0;top:2.1pt;height:.35pt;
+ background:{ANTIQUE};opacity:.72}}
+.lock .rule::after{{content:'';position:absolute;left:0;top:-1.5pt;width:9mm;height:.35pt;background:{ANTIQUE}}}
 .lock .ar{{font-family:'Amiri',serif;font-size:15.4pt;line-height:1;color:{ANTIQUE};direction:rtl;
  white-space:nowrap}}
 .lock .seat{{margin-top:2.4mm;font-size:5.4pt;letter-spacing:.3em;text-transform:uppercase;color:{ANTIQUE}}}
@@ -95,8 +106,19 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .q i{{background:{GOLD};display:block}}
 .creed .q i{{background:{GOLD};opacity:.85}}
 
-.body{{position:relative;z-index:1;flex:1;padding:56mm 22mm 0 34mm;font-size:9.9pt;line-height:1.72;color:{INK}}}
-.body.cont{{padding-top:26mm}}
+.rail{{position:absolute;left:0;top:38mm;bottom:27mm;width:34mm;z-index:1;
+ padding:14mm 5mm 8mm 6mm;border-right:.4pt solid rgba(156,122,60,.34)}}
+.rail dl{{font-size:5.4pt;line-height:1.5;color:{INK2}}}
+.rail dt{{font-size:4.8pt;letter-spacing:.24em;text-transform:uppercase;color:{ANTIQUE};margin-bottom:.5mm}}
+.rail dd{{margin-bottom:4.2mm;color:{INK}}}
+.rail .folio{{position:absolute;left:6mm;bottom:8mm;font-family:'Cinzel',serif;font-size:8.4pt;color:{ANTIQUE}}}
+.rail .tick{{position:absolute;right:-.35mm;top:0;width:5mm;height:.6pt;background:{GOLD}}}
+/* the invisible grid, made just visible — editorial rhythm you feel rather than read */
+.field{{position:absolute;left:34mm;right:22mm;top:56mm;bottom:27mm;z-index:0;pointer-events:none;opacity:.16;
+ background:url(data:image/svg+xml;base64,{BASE}) repeat-y;background-size:100% 4.53mm}}
+.body{{position:relative;z-index:1;flex:1;padding:56mm 22mm 0 40mm;font-size:9.9pt;line-height:1.72;color:{INK}}}
+.body.cont{{padding-top:30mm}}
+.rail.cont{{top:24mm;padding-top:8mm}}
 .body p{{margin-bottom:3.2mm;text-align:justify;hyphens:auto}}
 .body strong{{font-weight:600}}
 .body a{{color:{COFFEE};font-weight:600;border-bottom:.5pt solid rgba(156,122,60,.6);text-decoration:none}}
@@ -120,6 +142,8 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
 .foot{{position:relative;z-index:2;margin-top:auto;height:27mm;
  background:linear-gradient(174deg,{COFFEE} 0%,{COFFEE2} 58%,#150B03 100%);
  box-shadow:inset 0 .4pt 0 rgba(198,161,91,.4);padding:4.6mm 16mm 0 34mm}}
+.foot .gl{{position:absolute;left:0;right:0;top:0;height:9mm;opacity:.34;
+ background:url(data:image/svg+xml;base64,{GL}) center/100% 100% no-repeat}}
 .foot .mt{{position:absolute;left:0;right:0;bottom:1.6mm;height:2.4mm;opacity:.5;
  background:url(data:image/svg+xml;base64,{MT}) left center/100% 100% no-repeat}}
 .fg{{display:flex;justify-content:space-between;gap:6mm;font-size:6.5pt;color:#EFE1C6;line-height:1.55}}
@@ -137,6 +161,13 @@ body{{background:#0D0703;display:flex;flex-direction:column;align-items:center;g
  .page{{page-break-after:always}}.page:last-child{{page-break-after:auto}}}}
 """
 
+RAILH = ('<aside class="rail{c}"><span class="tick"></span><dl>'
+         '<dt>Reference</dt><dd>SHRS/ICT/2026/001</dd>'
+         '<dt>Office</dt><dd>Information &amp; Communications Technology</dd>'
+         '<dt>Issued</dt><dd>13 August 2026</dd>'
+         '<dt>Record</dt><dd>Verifiable at shroyalschools.com/verify</dd>'
+         '</dl><span class="folio">{f}</span></aside>')
+
 def head(first=True):
     c2 = '' if first else ' c2'
     seat = ('<div class="seat">Office of the ICT</div>' if first else '')
@@ -145,7 +176,7 @@ def head(first=True):
             f'<div class="lock{c2}"><div class="en">Sultan Hanafi Royal Schools</div>'
             f'<div class="rule"></div><div class="ar">{AR}</div>{seat}</div>{houses}')
 
-FOOT = ('<footer class="foot"><div class="mt"></div><div class="fg">'
+FOOT = ('<footer class="foot"><div class="gl"></div><div class="mt"></div><div class="fg">'
         '<div><span class="fl">Campus</span>Ikorodu, Lagos State, Nigeria</div>'
         '<div><span class="fl">Telephone</span><a href="tel:+2348073747650">+234 807 374 7650</a></div>'
         '<div><span class="fl">Correspondence</span><a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a></div>'
@@ -153,11 +184,15 @@ FOOT = ('<footer class="foot"><div class="mt"></div><div class="fg">'
         '</div><p class="creed">&ldquo;Forming Scholars, Leaders and Guardians of Excellence.&rdquo;'
         f'&#8195;{QUAD}&#8195;Established July 2016&#8195;{QUAD}&#8195;Governed by a Board of Governors</p></footer>')
 
+PAGE_NO = [1]
+
 def page(inner, first=True):
     cls = 'body' if first else 'body cont'
+    rail = RAILH.format(c='' if first else ' cont', f=f'{PAGE_NO[0]:02d}')
+    PAGE_NO[0] += 1
     return (f'  <div class="page" data-canvas-width="794" data-canvas-height="1123">\n'
-            f'    <div class="rag"></div><div class="vig"></div><div class="ghost"></div>\n'
-            f'    {head(first)}\n    <main class="{cls}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
+            f'    <div class="rag"></div><div class="vig"></div><div class="ghost"></div><div class="field"></div>\n'
+            f'    {head(first)}\n{rail}\n    <main class="{cls}">\n{inner}\n    </main>\n{FOOT}\n  </div>')
 
 def doc(title, pages):
     return ('<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8" />\n<title>' + title +
@@ -186,6 +221,7 @@ def rt(b):
                       f'<a href="{ARGS.activation_url}">{ARGS.activation_url}</a>')
     return b
 blocks = [rt(b) for b in blocks]
+blocks = [b for b in blocks if 'class="ref"' not in b]
 body = lambda a, b: "\n".join("      " + x for x in blocks[a:b])
 CUTS = [(0, 9), (9, 12), (12, 19), (19, 26)]
 pathlib.Path('brand/letter-registrar-activation.html').write_text(

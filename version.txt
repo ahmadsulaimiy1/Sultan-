@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      8b9b1a13d2533ed0eef2e3542dccaf9b19ba96ad
-short       8b9b1a13
+commit      8b34d2d1ebb2e1567635b2056bd32fee447bc1da
+short       8b34d2d1
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Stage two: ten systems, each carried across six artefacts
-built (UTC) 2026-08-13T11:57:48Z
+subject     The identity: one, and the Counterweight is its signature
+built (UTC) 2026-08-13T12:01:08Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
