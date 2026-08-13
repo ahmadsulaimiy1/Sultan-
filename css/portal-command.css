@@ -1,0 +1,589 @@
+/* ===========================================================================
+   PORTAL COMMAND — the executive layer for every SHRS portal
+   ===========================================================================
+
+   Loaded on every page that carries .portal-topbar (72 of them), so the
+   header, the footer, the grid, the cards, the lighting and the charts are
+   one system rather than 72 opinions.
+
+   THE LIGHT. The brief is right that the existing bloom is wrong: a large
+   soft glow behind a card is the cheapest effect in the medium and it puts
+   haze over the content. Luxury light is SPECULAR, not diffuse — it is the
+   highlight running along a polished edge as the object turns. So the light
+   here is a 1px travelling highlight confined to the BORDER of a card, cut
+   out of the middle by a mask. It never crosses the content, never blooms,
+   and at 12s per revolution it reads as a sheen rather than an animation.
+
+   THE PALETTE is the institutional one: coffee, royal gold, champagne,
+   ivory, cream, espresso. Blue-grey appears only in analytics, where a
+   second hue is doing real work — separating a comparison series from the
+   institutional one — and never as decoration.
+
+   MOTION. Everything here obeys prefers-reduced-motion. Under that setting
+   the travelling light stops, counters land on their final value, charts
+   draw instantly, and nothing is lost but the movement.
+   =========================================================================== */
+
+@property --cmd-angle { syntax: '<angle>'; initial-value: 0turn; inherits: false; }
+
+:root {
+  /* Institutional palette (docs/institutional-identity.md §IV) */
+  --cmd-espresso:  #14100A;
+  --cmd-coffee-900:#1C1409;
+  --cmd-coffee-800:#2A1F12;
+  --cmd-coffee-700:#3B2C19;
+  --cmd-coffee-600:#4E3B22;
+  --cmd-gold:      #B08D45;
+  --cmd-gold-ink:  #856327;
+  --cmd-champagne: #E3C88A;
+  --cmd-champagne-hi:#F7EBCD;
+  --cmd-ivory:     #FCF9F2;
+  --cmd-cream:     #F1E7D4;
+
+  /* Analytics only — a second hue earns its place by carrying comparison. */
+  --cmd-steel:     #5B7A94;
+  --cmd-steel-dim: #8FA6B8;
+
+  /* Rhythm. One scale, used everywhere; nothing is spaced off-grid. */
+  --cmd-u: 8px;
+  --cmd-gap: calc(var(--cmd-u) * 3);
+  --cmd-radius: 16px;
+  --cmd-radius-sm: 11px;
+
+  --cmd-ease: cubic-bezier(.22, .61, .36, 1);
+  --cmd-ease-out: cubic-bezier(.16, 1, .3, 1);
+
+  --cmd-header-h: 68px;
+}
+
+/* ===========================================================================
+   1. THE COMMAND HEADER
+   Deep espresso glass over the page, multi-layer: a tinted base, a fine
+   gold hairline, and one slow specular sweep along that hairline.
+   =========================================================================== */
+
+body .portal-topbar.cmd-header {
+  position: sticky; top: 0; z-index: 900;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--cmd-gap);
+  min-height: var(--cmd-header-h);
+  padding: 0 clamp(14px, 2.4vw, 30px);
+  background:
+    linear-gradient(180deg, rgba(20,16,10,.97) 0%, rgba(28,20,9,.95) 100%);
+  border-bottom: 1px solid rgba(176,141,69,.34);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  box-shadow: 0 1px 0 rgba(227,200,138,.09) inset, 0 10px 34px rgba(10,6,2,.30);
+  overflow: visible;
+}
+
+/* the hairline sweep — 1px tall, travels the full width, then rests */
+.cmd-header::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, transparent 38%,
+    rgba(227,200,138,.85) 47%, rgba(255,252,244,.95) 50%,
+    rgba(227,200,138,.85) 53%, transparent 62%, transparent 100%);
+  background-size: 220% 100%;
+  animation: cmd-sweep 9s var(--cmd-ease-out) infinite;
+  pointer-events: none;
+}
+@keyframes cmd-sweep {
+  0%, 62% { background-position: 130% 0; }
+  100%    { background-position: -30% 0; }
+}
+
+.cmd-identity { display: flex; align-items: center; gap: 11px; text-decoration: none; min-width: 0; }
+.cmd-identity img { width: 34px; height: 34px; flex: none; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+.cmd-identity-text { display: flex; flex-direction: column; line-height: 1.12; min-width: 0; }
+.cmd-identity-name {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 13.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  background: linear-gradient(174deg, #F7EBCD 0%, #E3C88A 34%, #C2A05A 62%, #EFE0BC 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  white-space: nowrap;
+}
+.cmd-identity-sub {
+  font-size: 9.5px; letter-spacing: .19em; text-transform: uppercase;
+  color: rgba(227,200,138,.62); margin-top: 3px; white-space: nowrap;
+}
+
+/* --- centre: breadcrumb over the live strip ------------------------------ */
+.cmd-centre { display: flex; flex-direction: column; gap: 3px; min-width: 0; max-width: 100%;
+  justify-self: center; align-items: center; text-align: center; overflow: hidden; }
+.cmd-crumbs { display: flex; align-items: center; gap: 7px; font-size: 11px; min-width: 0;
+  max-width: 100%; overflow: hidden; }
+.cmd-crumbs a, .cmd-crumbs span { color: rgba(241,231,212,.62); text-decoration: none; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 22ch; }
+.cmd-crumbs a { transition: color .28s var(--cmd-ease); }
+.cmd-crumbs a:hover, .cmd-crumbs a:focus-visible { color: var(--cmd-champagne); }
+.cmd-crumbs .sep { color: rgba(176,141,69,.5); font-size: 9px; }
+.cmd-crumbs [aria-current] { color: var(--cmd-ivory); font-weight: 500; }
+.cmd-live {
+  display: flex; align-items: center; gap: 9px; min-width: 0; max-width: 100%; overflow: hidden;
+  font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: rgba(227,200,138,.72); white-space: nowrap;
+}
+.cmd-live .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--cmd-gold); opacity: .5; }
+
+/* --- right: actions ------------------------------------------------------ */
+.cmd-actions { display: flex; align-items: center; gap: 7px; justify-self: end; }
+
+.cmd-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; height: 36px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,250,240,.085), rgba(255,250,240,.03));
+  border: 1px solid rgba(227,200,138,.26);
+  color: var(--cmd-cream); font: inherit; font-size: 12px; letter-spacing: .02em;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease), box-shadow .3s var(--cmd-ease);
+}
+.cmd-btn:hover, .cmd-btn:focus-visible {
+  border-color: rgba(227,200,138,.62);
+  background: linear-gradient(180deg, rgba(255,250,240,.15), rgba(255,250,240,.06));
+  box-shadow: 0 3px 14px rgba(0,0,0,.32), 0 0 0 1px rgba(227,200,138,.14);
+  transform: translateY(-1px);
+}
+.cmd-btn:active { transform: translateY(0); }
+.cmd-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.cmd-btn--icon { width: 36px; padding: 0; }
+.cmd-btn--gold {
+  background: linear-gradient(180deg, #E3C88A, #B08D45);
+  border-color: rgba(247,235,205,.55); color: #241A0E; font-weight: 600;
+}
+.cmd-btn--gold:hover { background: linear-gradient(180deg, #F2DCA8, #C29B4E); }
+
+/* Controls the pages already owned — the pilot badge, the sign-out button,
+   the language switcher, the calendar link — are restyled into the same
+   button language rather than left in their old one. A header where half the
+   controls are pills from a previous design is the clearest sign that an
+   interface was added to rather than designed. */
+.cmd-header .portal-pilot-badge {
+  height: 26px; display: inline-flex; align-items: center; padding: 0 10px;
+  border-radius: 20px; background: linear-gradient(180deg, rgba(227,200,138,.20), rgba(176,141,69,.12));
+  border: 1px solid rgba(227,200,138,.42); color: var(--cmd-champagne);
+  font-size: 9.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  box-shadow: none;
+}
+.cmd-header .portal-logout,
+.cmd-header .portal-topbar-calendar,
+.cmd-header .lang-switch > summary {
+  height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 0 12px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,250,240,.085), rgba(255,250,240,.03));
+  border: 1px solid rgba(227,200,138,.26); color: var(--cmd-cream);
+  font-size: 12px; font-weight: 500; letter-spacing: .02em; text-transform: none;
+  box-shadow: none; list-style: none;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+.cmd-header .portal-logout:hover,
+.cmd-header .portal-topbar-calendar:hover,
+.cmd-header .lang-switch > summary:hover {
+  border-color: rgba(227,200,138,.62); transform: translateY(-1px);
+  background: linear-gradient(180deg, rgba(255,250,240,.15), rgba(255,250,240,.06));
+}
+.cmd-header .lang-switch > summary::-webkit-details-marker { display: none; }
+
+/* notification count */
+.cmd-badge {
+  position: absolute; top: -5px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: 9px; background: linear-gradient(180deg, #E3C88A, #B08D45);
+  color: #241A0E; font-size: 10px; font-weight: 700; line-height: 17px; text-align: center;
+  box-shadow: 0 0 0 2px rgba(20,16,10,.9);
+}
+.cmd-badge[hidden] { display: none; }
+
+/* search */
+.cmd-search { position: relative; display: flex; align-items: center; }
+.cmd-search input {
+  height: 36px; width: 152px; padding: 0 12px 0 34px; border-radius: 10px;
+  background: rgba(255,250,240,.06); border: 1px solid rgba(227,200,138,.24);
+  color: var(--cmd-ivory); font: inherit; font-size: 12.5px;
+  transition: width .42s var(--cmd-ease-out), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+.cmd-search input::placeholder { color: rgba(241,231,212,.42); }
+.cmd-search input:focus {
+  outline: none; width: 260px; border-color: rgba(227,200,138,.6);
+  background: rgba(255,250,240,.1);
+}
+.cmd-search svg { position: absolute; left: 11px; width: 15px; height: 15px;
+  stroke: rgba(227,200,138,.62); fill: none; stroke-width: 1.6; pointer-events: none; }
+
+/* profile */
+.cmd-profile { display: flex; align-items: center; gap: 9px; padding: 0 4px 0 0; }
+.cmd-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, #4E3B22, #1C1409);
+  border: 1px solid rgba(227,200,138,.45);
+  color: var(--cmd-champagne); font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
+  box-shadow: 0 0 0 3px rgba(176,141,69,.10);
+  transition: box-shadow .35s var(--cmd-ease), transform .35s var(--cmd-ease);
+}
+.cmd-profile:hover .cmd-avatar { box-shadow: 0 0 0 4px rgba(176,141,69,.20); transform: scale(1.04); }
+.cmd-profile-text { display: none; flex-direction: column; line-height: 1.2; }
+.cmd-profile-name { font-size: 12.5px; color: var(--cmd-ivory); font-weight: 500; white-space: nowrap; }
+.cmd-profile-role { font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(227,200,138,.6); white-space: nowrap; }
+
+@media (min-width: 1120px) { .cmd-profile-text { display: flex; } }
+@media (max-width: 1000px) { .cmd-search, .cmd-centre .cmd-crumbs { display: none; } }
+@media (max-width: 720px)  { .cmd-centre { display: none; } .cmd-identity-sub { display: none; } }
+
+/* ===========================================================================
+   2. THE MODULAR GRID
+   Twelve columns, one gap, one rhythm. A card states its span and nothing
+   else; no card carries its own margins.
+   =========================================================================== */
+
+.cmd-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--cmd-gap);
+  align-items: stretch;
+}
+.cmd-grid > .cmd-card { display: flex; flex-direction: column; }
+.cmd-span-3  { grid-column: span 3; }
+.cmd-span-4  { grid-column: span 4; }
+.cmd-span-5  { grid-column: span 5; }
+.cmd-span-6  { grid-column: span 6; }
+.cmd-span-7  { grid-column: span 7; }
+.cmd-span-8  { grid-column: span 8; }
+.cmd-span-9  { grid-column: span 9; }
+.cmd-span-12 { grid-column: span 12; }
+
+@media (max-width: 1080px) {
+  .cmd-span-3, .cmd-span-4, .cmd-span-5 { grid-column: span 6; }
+  .cmd-span-7, .cmd-span-8, .cmd-span-9 { grid-column: span 12; }
+}
+@media (max-width: 660px) {
+  .cmd-grid { gap: calc(var(--cmd-u) * 2); }
+  [class*='cmd-span-'] { grid-column: span 12; }
+}
+
+/* ===========================================================================
+   3. CARDS, AND THE TRAVELLING LIGHT
+   =========================================================================== */
+
+.cmd-card {
+  position: relative;
+  border-radius: var(--cmd-radius);
+  padding: calc(var(--cmd-u) * 2.5);
+  background:
+    linear-gradient(168deg, rgba(255,253,248,.96) 0%, rgba(250,245,235,.92) 100%);
+  border: 1px solid rgba(176,141,69,.20);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 2px 6px rgba(40,28,10,.05),
+    0 12px 30px -14px rgba(40,28,10,.20);
+  transition: transform .42s var(--cmd-ease-out), box-shadow .42s var(--cmd-ease-out);
+  isolation: isolate;
+}
+.cmd-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 4px 10px rgba(40,28,10,.06),
+    0 22px 46px -18px rgba(40,28,10,.30);
+}
+
+/* The travelling light. A conic gradient rotates behind the card, and a mask
+   erases everything except a 1px frame — so the highlight exists ONLY on the
+   border. This is the whole trick, and it is why nothing blooms. */
+.cmd-card--lit::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: conic-gradient(from var(--cmd-angle),
+    transparent 0turn, transparent .62turn,
+    rgba(176,141,69,.30) .74turn,
+    rgba(227,200,138,.95) .82turn,
+    rgba(255,252,244,1)  .845turn,
+    rgba(227,200,138,.95) .87turn,
+    rgba(176,141,69,.30) .95turn,
+    transparent 1turn);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  animation: cmd-travel 12s linear infinite;
+  pointer-events: none; z-index: 2;
+}
+@keyframes cmd-travel { to { --cmd-angle: 1turn; } }
+
+/* staggered, so a grid of cards does not pulse in unison like a christmas tree */
+.cmd-card--lit:nth-child(3n+2)::before { animation-delay: -4s; }
+.cmd-card--lit:nth-child(3n+3)::before { animation-delay: -8s; }
+
+/* a darker card, for the executive tier */
+.cmd-card--deep {
+  background: linear-gradient(166deg, #241A0E 0%, #1A130A 62%, #14100A 100%);
+  border-color: rgba(176,141,69,.30);
+  color: var(--cmd-cream);
+  box-shadow: 0 1px 0 rgba(227,200,138,.10) inset, 0 18px 40px -18px rgba(10,6,2,.66);
+}
+.cmd-card--deep .cmd-card-label { color: rgba(227,200,138,.72); }
+.cmd-card--deep .cmd-kpi-value  { color: var(--cmd-ivory); }
+.cmd-card--deep .cmd-kpi-note   { color: rgba(241,231,212,.6); }
+
+.cmd-card-head { display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--cmd-u); margin-bottom: calc(var(--cmd-u) * 2); }
+.cmd-card-label {
+  font-size: 10px; letter-spacing: .19em; text-transform: uppercase;
+  color: var(--cmd-gold-ink); font-weight: 600;
+}
+.cmd-card-title {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 15px; font-weight: 600; letter-spacing: .04em; color: var(--cmd-coffee-800);
+  margin: 0;
+}
+.cmd-card--deep .cmd-card-title { color: var(--cmd-champagne); }
+
+/* --- KPI ----------------------------------------------------------------- */
+.cmd-kpi-value {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; line-height: 1;
+  color: var(--cmd-coffee-900); letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.cmd-kpi-row { display: flex; align-items: flex-end; gap: 10px; }
+.cmd-kpi-unit { font-size: 15px; color: var(--cmd-gold-ink); font-weight: 600; padding-bottom: 4px; }
+.cmd-kpi-note { margin-top: 7px; font-size: 11.5px; color: var(--cmd-coffee-600); line-height: 1.45; }
+.cmd-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600;
+  padding: 2px 7px; border-radius: 20px; }
+.cmd-delta--up   { color: #2F6B4F; background: rgba(47,107,79,.10); }
+.cmd-delta--down { color: #8C4A3C; background: rgba(140,74,60,.10); }
+.cmd-delta--flat { color: var(--cmd-coffee-600); background: rgba(78,59,34,.08); }
+
+/* ===========================================================================
+   4. CHARTS
+   =========================================================================== */
+
+.cmd-chart { display: block; width: 100%; overflow: visible; }
+.cmd-chart .grid-line { stroke: rgba(78,59,34,.11); stroke-width: 1; }
+.cmd-chart .axis-text { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+  fill: var(--cmd-coffee-600); opacity: .72; }
+.cmd-card--deep .cmd-chart .grid-line { stroke: rgba(227,200,138,.13); }
+.cmd-card--deep .cmd-chart .axis-text { fill: rgba(241,231,212,.62); }
+
+/* the line draws itself once, then stays */
+.cmd-chart .series-line {
+  fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+  animation: cmd-draw 1.5s var(--cmd-ease-out) forwards;
+}
+@keyframes cmd-draw { to { stroke-dashoffset: 0; } }
+.cmd-chart .series-area { opacity: 0; animation: cmd-fade-in .9s var(--cmd-ease-out) .5s forwards; }
+@keyframes cmd-fade-in { to { opacity: 1; } }
+.cmd-chart .series-dot { opacity: 0; animation: cmd-fade-in .5s var(--cmd-ease-out) forwards; }
+
+/* a value the pointer is over */
+.cmd-chart .hit { fill: transparent; cursor: crosshair; }
+.cmd-chart-tip {
+  position: absolute; pointer-events: none; z-index: 6; opacity: 0;
+  transform: translate(-50%, -118%);
+  padding: 7px 10px; border-radius: 9px; white-space: nowrap;
+  background: rgba(20,16,10,.95); border: 1px solid rgba(227,200,138,.34);
+  color: var(--cmd-ivory); font-size: 11.5px; line-height: 1.35;
+  box-shadow: 0 8px 22px rgba(10,6,2,.42);
+  transition: opacity .18s var(--cmd-ease);
+}
+.cmd-chart-tip b { color: var(--cmd-champagne); font-variant-numeric: tabular-nums; }
+.cmd-chart-tip[data-show] { opacity: 1; }
+.cmd-chart-wrap { position: relative; }
+
+/* radial meter / progress ring */
+.cmd-ring-track { fill: none; stroke: rgba(78,59,34,.12); }
+.cmd-card--deep .cmd-ring-track { stroke: rgba(227,200,138,.15); }
+.cmd-ring-value {
+  fill: none; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%;
+  stroke-dasharray: var(--circ); stroke-dashoffset: var(--circ);
+  animation: cmd-ring 1.6s var(--cmd-ease-out) forwards;
+}
+@keyframes cmd-ring { to { stroke-dashoffset: var(--dash); } }
+.cmd-ring-label {
+  font-family: 'Cinzel', 'EB Garamond', serif; font-weight: 600;
+  fill: var(--cmd-coffee-900); text-anchor: middle; font-variant-numeric: tabular-nums;
+}
+.cmd-card--deep .cmd-ring-label { fill: var(--cmd-ivory); }
+
+/* legend */
+.cmd-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: calc(var(--cmd-u) * 1.5); }
+.cmd-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+  color: var(--cmd-coffee-600); }
+.cmd-card--deep .cmd-legend span { color: rgba(241,231,212,.66); }
+.cmd-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+/* ===========================================================================
+   5. EMPTY STATES — never a blank panel, and never a fabricated number
+   =========================================================================== */
+
+.cmd-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: calc(var(--cmd-u) * 4) var(--cmd-u); text-align: center; min-height: 150px;
+}
+.cmd-empty svg { width: 42px; height: 42px; stroke: var(--cmd-gold); fill: none;
+  stroke-width: 1.1; opacity: .55; }
+.cmd-empty-title { font-family: 'Cinzel', 'EB Garamond', serif; font-size: 13.5px;
+  color: var(--cmd-coffee-700); letter-spacing: .04em; }
+.cmd-empty-note { font-size: 11.5px; color: var(--cmd-coffee-600); max-width: 34ch; line-height: 1.55; }
+.cmd-card--deep .cmd-empty-title { color: var(--cmd-champagne); }
+.cmd-card--deep .cmd-empty-note { color: rgba(241,231,212,.6); }
+
+/* a series drawn from sample rather than live data says so, always */
+.cmd-sample {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
+  font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--cmd-gold-ink); border: 1px dashed rgba(176,141,69,.45);
+  border-radius: 20px; padding: 3px 9px;
+}
+
+/* ===========================================================================
+   6. MOTION — reveal on scroll, counters, magnetic hover
+   =========================================================================== */
+
+.cmd-reveal { opacity: 0; transform: translateY(14px); }
+.cmd-reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .72s var(--cmd-ease-out), transform .72s var(--cmd-ease-out);
+}
+.cmd-reveal:nth-child(2) { transition-delay: .06s; }
+.cmd-reveal:nth-child(3) { transition-delay: .12s; }
+.cmd-reveal:nth-child(4) { transition-delay: .18s; }
+
+/* ===========================================================================
+   7. THE EXECUTIVE FOOTER
+   =========================================================================== */
+
+.cmd-footer {
+  position: relative; margin-top: calc(var(--cmd-u) * 6);
+  padding: calc(var(--cmd-u) * 3) clamp(14px, 2.4vw, 30px) calc(var(--cmd-u) * 3);
+  background: linear-gradient(180deg, #1A130A 0%, #14100A 100%);
+  border-top: 1px solid rgba(176,141,69,.30);
+  color: rgba(241,231,212,.72); overflow: hidden;
+}
+.cmd-footer::before {
+  content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, transparent 40%,
+    rgba(227,200,138,.9) 50%, transparent 60%, transparent 100%);
+  background-size: 240% 100%;
+  animation: cmd-sweep 11s var(--cmd-ease-out) infinite;
+}
+.cmd-footer-grid {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: calc(var(--cmd-u) * 3); max-width: 1400px; margin: 0 auto;
+}
+.cmd-footer-seal { display: flex; align-items: center; gap: 11px; }
+.cmd-footer-seal img { width: 40px; height: 40px; opacity: .92; }
+.cmd-footer-seal-text { display: flex; flex-direction: column; line-height: 1.25; }
+.cmd-footer-seal-name {
+  font-family: 'Cinzel', 'EB Garamond', serif; font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--cmd-champagne);
+}
+.cmd-footer-seal-sub { font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(227,200,138,.52); margin-top: 3px; }
+
+.cmd-status { display: flex; flex-wrap: wrap; gap: calc(var(--cmd-u) * 2.5); justify-content: center; }
+.cmd-status-item { display: flex; align-items: center; gap: 7px; font-size: 11px; white-space: nowrap; }
+.cmd-status-item svg { width: 13px; height: 13px; stroke: var(--cmd-gold); fill: none; stroke-width: 1.5; }
+.cmd-status-label { font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(227,200,138,.55); display: block; }
+.cmd-status-value { color: rgba(241,231,212,.86); font-variant-numeric: tabular-nums; }
+
+.cmd-pulse { width: 7px; height: 7px; border-radius: 50%; background: #6FBF8F; flex: none;
+  box-shadow: 0 0 0 0 rgba(111,191,143,.6); animation: cmd-pulse 2.6s var(--cmd-ease) infinite; }
+.cmd-pulse--warn { background: #D9A441; box-shadow: 0 0 0 0 rgba(217,164,65,.6); }
+@keyframes cmd-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(111,191,143,.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(111,191,143,0); }
+  100% { box-shadow: 0 0 0 0 rgba(111,191,143,0); }
+}
+
+.cmd-footer-legal { text-align: right; font-size: 10.5px; line-height: 1.6;
+  color: rgba(241,231,212,.55); }
+.cmd-footer-legal a { color: rgba(227,200,138,.8); text-decoration: none; }
+.cmd-footer-legal a:hover { color: var(--cmd-champagne); text-decoration: underline; }
+
+/* the divider ornament: a rule that thins to nothing at both ends */
+.cmd-ornament {
+  height: 1px; margin: calc(var(--cmd-u) * 2.5) auto 0; max-width: 1400px;
+  background: linear-gradient(90deg, transparent, rgba(176,141,69,.42) 22%,
+              rgba(227,200,138,.6) 50%, rgba(176,141,69,.42) 78%, transparent);
+}
+
+@media (max-width: 900px) {
+  .cmd-footer-grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .cmd-footer-legal { text-align: center; }
+}
+
+/* ===========================================================================
+   8. ACCESSIBILITY
+   Reduced motion is not a downgrade: every animation here is decorative, so
+   removing it costs the user nothing but the movement. Focus is always
+   visible, and the gold focus ring carries 3:1 against both grounds.
+   =========================================================================== */
+
+.cmd-header :focus-visible, .cmd-footer :focus-visible, .cmd-card :focus-visible {
+  outline: 2px solid var(--cmd-champagne); outline-offset: 2px; border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-header::after, .cmd-footer::before,
+  .cmd-card--lit::before, .cmd-pulse { animation: none !important; }
+  .cmd-card--lit::before { background: linear-gradient(180deg,
+      rgba(227,200,138,.42), rgba(176,141,69,.22)); }
+  .cmd-chart .series-line { stroke-dashoffset: 0 !important; animation: none !important; }
+  .cmd-chart .series-area, .cmd-chart .series-dot { opacity: 1 !important; animation: none !important; }
+  .cmd-ring-value { stroke-dashoffset: var(--dash) !important; animation: none !important; }
+  .cmd-reveal { opacity: 1 !important; transform: none !important; }
+  .cmd-card, .cmd-btn, .cmd-avatar, .cmd-search input { transition: none !important; }
+  .cmd-card:hover { transform: none; }
+}
+
+@media (prefers-contrast: more) {
+  .cmd-card { border-color: rgba(120,92,40,.55); }
+  .cmd-card-label, .cmd-kpi-note { color: var(--cmd-coffee-800); }
+  .cmd-crumbs a, .cmd-crumbs span { color: rgba(241,231,212,.9); }
+}
+
+/* Printing a portal page is a legitimate act — an office prints a record.
+   The chrome is furniture; it does not belong on the paper. */
+@media print {
+  .cmd-header, .cmd-footer { display: none !important; }
+  .cmd-card { box-shadow: none; border-color: #C9BCA4; break-inside: avoid; }
+  .cmd-card--lit::before { display: none; }
+  .cmd-reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ===========================================================================
+   9. THE INTELLIGENCE PANEL
+   =========================================================================== */
+
+.cmd-intelligence { margin: calc(var(--cmd-u) * 4) 0; }
+.cmd-intel-head {
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
+  gap: var(--cmd-u); margin-bottom: calc(var(--cmd-u) * 2.5);
+  padding-bottom: calc(var(--cmd-u) * 1.5);
+  border-bottom: 1px solid rgba(176,141,69,.22);
+}
+/* The portal ground is deep espresso, so section-level type takes the dark
+   treatment. Card titles stay coffee because they sit on ivory cards — the
+   two are different grounds and cannot share one colour. */
+.cmd-intel-head .cmd-card-title { font-size: 20px; margin-top: 4px; color: var(--cmd-champagne); }
+.cmd-intel-head .cmd-card-label { color: var(--cmd-gold); }
+.cmd-intelligence[hidden] { display: none; }
+
+/* Categorical axis under a line chart. Rotated only when the labels are long
+   enough to collide, because rotated type is harder to read and should be a
+   response to a real problem rather than a default. */
+.cmd-axis {
+  display: flex; justify-content: space-between; gap: 4px; margin-top: 7px;
+  font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--cmd-coffee-600); opacity: .82;
+}
+.cmd-axis span { flex: 1 1 0; min-width: 0; text-align: center; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.cmd-card--deep .cmd-axis { color: rgba(241,231,212,.62); }

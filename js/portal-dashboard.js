@@ -353,6 +353,11 @@
       renderWelcomePanel(data);
       renderNotifications(data.notifications);
 
+      // The payload is already here, so anything else that needs it listens
+      // rather than fetching /me a second time. portal-dashboard-charts.js
+      // draws the intelligence panel from exactly these rows.
+      document.dispatchEvent(new CustomEvent('shrs:portal-data', { detail: data }));
+
       var idCardMount = document.querySelector('[data-id-card-mount]');
       if(idCardMount && window.SHRSIdCard){
         var linkedChildren = (data.children || []).map(function(c){
