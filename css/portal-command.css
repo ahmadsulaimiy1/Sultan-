@@ -1068,3 +1068,21 @@ body.portal-body .pls-card input:focus {
   outline: none; border-color: rgba(198,161,91,.85) !important;
   box-shadow: 0 0 0 3px rgba(198,161,91,.16) !important;
 }
+
+/* --- the Head of Schools' sign-in route ------------------------------------
+   Signing in is the preferred route and is presented as such: a struck gold
+   action, with the Board token demoted beneath a rule as the fallback it is. */
+body.portal-body .founder-signin {
+  display: block; text-align: center; text-decoration: none;
+  margin: 18px 0 6px; padding: 13px 20px; border-radius: 12px;
+  font-size: 13.5px; letter-spacing: .06em;
+}
+body.portal-body .founder-or {
+  display: flex; align-items: center; gap: 12px; margin: 18px 0 14px;
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: #8A6A2E;
+}
+body.portal-body .founder-or::before,
+body.portal-body .founder-or::after {
+  content: ''; flex: 1; height: 1px; background: var(--cmd-foil-soft); opacity: .7;
+}
