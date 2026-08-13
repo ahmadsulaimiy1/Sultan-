@@ -31,7 +31,13 @@
 //                             leaves password-only login unchanged.
 //   update-staff-status   — { staffNo, status } (active | suspended | archived)
 //   create-login          — { staffNo } -> { activationLink }, same admin-mediated model as
-//                            create-student-login.js — staff never choose or see their own password
+//                            create-student-login.js — staff never choose or see their own password.
+//                            Issuing a link CANCELS any link issued before it: the row holds one
+//                            token. Always relay the newest.
+//   login-status          — { staffNo } -> { state, advice } — whether the account has a password,
+//                            whether a live link is outstanding and when it expires. Never returns
+//                            the token or the hash. This is what to call when someone reports that
+//                            their link does not work.
 //   grant-role            — { staffNo, roleCode, institutionName?, officeName?, grantedByStaffNo?, reason? }
 //   revoke-role           — { staffRoleId, revokedByStaffNo?, reason? }
 //   assign-class          — { staffNo, institutionName, className, subject?, assignedByStaffNo?, reason? }
@@ -495,11 +501,66 @@ export async function onRequestPost({ request, env }) {
         return json({ error: 'No staff member found with that Staff ID.' }, 404);
       }
       const token = generateToken();
+      const prior = await sql`SELECT password_hash IS NOT NULL AS had_password FROM staff_accounts WHERE staff_id = ${staffId}`;
       await sql`
         INSERT INTO staff_accounts (staff_id, reset_token, reset_token_expires)
         VALUES (${staffId}, ${token}, now() + make_interval(days => ${ACTIVATION_TOKEN_TTL_DAYS}))
         ON CONFLICT (staff_id) DO UPDATE SET reset_token = EXCLUDED.reset_token, reset_token_expires = EXCLUDED.reset_token_expires`;
-      return json({ ok: true, staffId, activationLink: '/portal/staff/set-password/?token=' + token });
+      // Issuing a link supersedes any link issued before it — the row holds
+      // exactly one token. Whoever is relaying it needs to know that, or an
+      // older link still sitting in somebody's inbox becomes a support call
+      // that reports itself as "invalid" with no explanation.
+      return json({
+        ok: true,
+        staffId,
+        activationLink: '/portal/staff/set-password/?token=' + token,
+        expiresInDays: ACTIVATION_TOKEN_TTL_DAYS,
+        supersededPreviousLink: true,
+        alreadyHadPassword: !!(prior.rows[0] && prior.rows[0].had_password),
+      });
+    }
+
+    // Answers "what state is this account actually in?" without ever
+    // disclosing the token or the hash. Before this existed, a staff member
+    // reporting "the link does not work" could only be guessed at: a used
+    // link, a superseded link and a link that never existed all fail
+    // identically at set-password.js, which matches on the token alone and
+    // so cannot tell them apart. Diagnosis belongs on the side that knows
+    // whose account it is.
+    if (action === 'login-status') {
+      if (!body.staffNo) {
+        return json({ error: 'staffNo is required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      const r = await sql`
+        SELECT password_hash IS NOT NULL AS has_password,
+               reset_token IS NOT NULL AS has_live_link,
+               reset_token_expires,
+               reset_token_expires IS NOT NULL AND reset_token_expires < now() AS link_expired,
+               failed_attempts, locked_until
+        FROM staff_accounts WHERE staff_id = ${staffId}`;
+      const a = r.rows[0];
+      if (!a) {
+        return json({ ok: true, staffId, state: 'no-account',
+          advice: 'No login has ever been created for this staff member. Run create-login.' });
+      }
+      const state = a.has_password
+        ? (a.has_live_link ? 'active-with-open-reset' : 'active')
+        : (a.has_live_link ? (a.link_expired ? 'link-expired' : 'awaiting-activation') : 'link-used-or-superseded');
+      const advice = {
+        'active': 'The password is already set. Sign in at /portal/staff/login/ — a new activation link is not needed.',
+        'active-with-open-reset': 'The password is set and a reset link is also open. Either will work.',
+        'awaiting-activation': 'A live link is outstanding. It is the only one that works; any earlier link is dead.',
+        'link-expired': 'The link has passed its expiry. Run create-login for a fresh one.',
+        'link-used-or-superseded': 'No live link and no password: the link was superseded by a newer one that was never used, or cleared. Run create-login.',
+      }[state];
+      return json({ ok: true, staffId, state, advice,
+        hasPassword: a.has_password, hasLiveLink: a.has_live_link,
+        linkExpires: a.reset_token_expires, linkExpired: a.link_expired,
+        failedAttempts: a.failed_attempts, lockedUntil: a.locked_until });
     }
 
     if (action === 'grant-role') {

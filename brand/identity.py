@@ -45,7 +45,30 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--staff-id')
 ap.add_argument('--activation-url')
 ap.add_argument('--signature', help='path to the signatory\'s own signature image')
+ap.add_argument('--draft', action='store_true',
+                help='allow a placeholder activation link, for proofing the design only')
 ARGS = ap.parse_args()
+
+# A letter went out carrying "?token=DEMO" — the placeholder used to proof
+# the design — and the Registrar met "this activation link is no longer
+# usable" instead of her account. The build cannot know whether a token is
+# live, but it can refuse to pass off an obvious stand-in as one. Proofing
+# the design is still easy; it just has to say so.
+PLACEHOLDERS = ('demo', 'test', 'example', 'xxx', 'token=...', 'placeholder',
+                'changeme', 'your-token', 'sample')
+if ARGS.activation_url and not ARGS.draft:
+    _u = ARGS.activation_url.lower()
+    _hit = next((p for p in PLACEHOLDERS if p in _u), None)
+    if _hit:
+        ap.error(
+            'the activation link looks like a placeholder (it contains %r).\n'
+            '  A letter built with a placeholder cannot be activated, and the\n'
+            '  reader is told the link is no longer usable.\n'
+            '  Issue a real link:\n'
+            '    curl -sS -X POST https://shroyalschools.com/api/portal/admin/staff \\\n'
+            '      -H "x-admin-token: $PORTAL_ADMIN_TOKEN" -H "content-type: application/json" \\\n'
+            "      -d '{\"action\":\"create-login\",\"staffNo\":\"<the Staff ID>\"}'\n"
+            '  or pass --draft if you are only proofing the design.' % _hit)
 
 ROOT = pathlib.Path(__file__).resolve().parent
 b64 = lambda p: base64.b64encode(pathlib.Path(p).read_bytes()).decode()

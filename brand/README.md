@@ -37,6 +37,24 @@ python3 brand/identity.py \
   --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
 ```
 
+**The activation link must be a real one.** The build refuses an obvious
+placeholder — `DEMO`, `test`, `example` and the like — because a letter
+built with one cannot be activated, and its reader is told the link is no
+longer usable. This is not hypothetical: it happened. Issue a live link
+first:
+
+```
+curl -sS -X POST https://shroyalschools.com/api/portal/admin/staff \
+  -H "x-admin-token: $PORTAL_ADMIN_TOKEN" -H "content-type: application/json" \
+  -d '{"action":"create-login","staffNo":"<the Staff ID>"}'
+```
+
+Pass `--draft` when you only want to proof the design.
+
+**A newly issued link cancels every earlier one** — the account row holds
+exactly one token. Always send the newest, and rebuild the letter from
+it in the same sitting.
+
 A third argument places the signatory's own signature:
 
 ```
