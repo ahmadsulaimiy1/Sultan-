@@ -37,6 +37,7 @@ import {
   sanitizeMessages,
 } from '../_lib/assistant.js';
 import { recordEscalation, splitEscalation, transcriptFrom } from '../_lib/escalation.js';
+import { checkRateLimit, rateLimitMessage } from '../_lib/rate-limit.js';
 
 const WA_MAX_TOKENS = 640;          // WhatsApp replies are short by design
 const WA_SEGMENT_CHARS = 1400;      // Twilio hard-limits a body to 1600
@@ -260,6 +261,15 @@ export async function onRequestPost(context) {
   const from = params.get('From') || '';
   const bodyText = (params.get('Body') || '').trim();
   const lang = detectLang(bodyText);
+
+  // Per sender, not per IP: every Twilio webhook arrives from Twilio's
+  // own addresses, so an IP bucket would throttle the whole school
+  // together. Checked after signature verification so an unverified
+  // request cannot consume somebody else's allowance.
+  const limit = await checkRateLimit(env, 'whatsapp', from || 'unknown');
+  if (!limit.allowed) {
+    return reply(rateLimitMessage(lang));
+  }
 
   if (!env.ANTHROPIC_API_KEY) {
     console.error('WhatsApp webhook reached but ANTHROPIC_API_KEY is not set');

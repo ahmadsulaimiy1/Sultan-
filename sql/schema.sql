@@ -2045,3 +2045,20 @@ CREATE TABLE IF NOT EXISTS assistant_escalations (
 -- The staff view is "what is still open, newest first", so the index
 -- matches that query rather than created_at alone.
 CREATE INDEX IF NOT EXISTS idx_assistant_escalations_open ON assistant_escalations (status, created_at DESC);
+
+-- Rate limiting for the public assistant endpoints. See
+-- functions/_lib/rate-limit.js for why this lives in Postgres rather
+-- than KV (no KV namespace is bound to this project) and why the
+-- windows are fixed rather than sliding.
+--
+-- One row per bucket, updated in place by a single atomic UPSERT — not
+-- one row per request, so there is nothing to sweep up. A lapsed bucket
+-- simply gets reset by the next request that touches it; rows for
+-- visitors who never return are tiny and harmless, and the cleanup
+-- below can be run occasionally if the table is ever worth trimming:
+--   DELETE FROM rate_limits WHERE window_start < now() - interval '2 days';
+CREATE TABLE IF NOT EXISTS rate_limits (
+  bucket       TEXT PRIMARY KEY,
+  window_start TIMESTAMPTZ NOT NULL DEFAULT now(),
+  hits         INTEGER NOT NULL DEFAULT 0
+);

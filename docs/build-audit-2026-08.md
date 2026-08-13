@@ -123,19 +123,41 @@ upgraded Twilio account and Meta business verification.
 
 ## D. Risk
 
-### D1. No rate limiting exists anywhere in this codebase
+### D1. Rate limiting — was absent, now built
 
-Confirmed by search: zero matches for rate limiting of any spelling.
+The audit found none, in any spelling, anywhere. Both assistant
+endpoints were open to the internet with every call billing the
+school's Anthropic account; the existing caps bound the cost of *one
+conversation* and said nothing about how many.
 
-`/api/chat` and `/api/whatsapp` are open to the internet and every call
-bills the school's Anthropic account. The existing caps bound the cost of
-*one conversation*; they do nothing about the number of conversations.
-Anyone who finds the WhatsApp number can run the bill up.
+Now in `functions/_lib/rate-limit.js`, on both endpoints:
 
-**Set a hard spend cap in the Anthropic console on day one.** It takes
-thirty seconds and it is the only protection that exists today. Proper
-per-sender limiting needs a KV namespace and is worth building before the
-number is given to families.
+| Channel | Counted by | Burst | Daily |
+|---|---|---|---|
+| Website assistant | visitor IP (`CF-Connecting-IP`) | 12 / 5 min | 120 / day |
+| WhatsApp | sender's number | 20 / 5 min | 200 / day |
+
+WhatsApp counts per sender rather than per IP because every Twilio
+webhook arrives from Twilio's own addresses — an IP bucket would
+throttle the whole school together. It is checked after signature
+verification, so an unverified request cannot consume somebody else's
+allowance.
+
+Counters live in Postgres today (one atomic UPSERT per check, one row
+per bucket, nothing to sweep up). Bind a KV namespace as `RATE_LIMIT`
+and it uses that instead — cheaper and faster, at the cost of eventual
+consistency, which is the right trade for something protecting a bill
+rather than a vault.
+
+**It fails open.** If every store breaks, requests are allowed and the
+failure is logged. Refusing everyone when the counter breaks would turn
+a storage hiccup into a total outage of the school's front door: the
+money at risk is bounded and recoverable, a parent who cannot reach
+anyone is not. That is a judgement, written down rather than discovered.
+
+**Still set a hard spend cap in the Anthropic console.** This reduces
+exposure; it does not remove it, and no amount of code substitutes for
+a ceiling at the billing account.
 
 ### D2. WhatsApp sender number is a one-way door
 

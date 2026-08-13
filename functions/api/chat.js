@@ -23,6 +23,7 @@ import {
   sanitizeMessages,
 } from '../_lib/assistant.js';
 import { createEscalationFilter, recordEscalation, transcriptFrom } from '../_lib/escalation.js';
+import { checkRateLimit, identityFromRequest, rateLimitMessage } from '../_lib/rate-limit.js';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -40,6 +41,21 @@ export async function onRequestPost(context) {
   }
 
   const lang = body.lang === 'ar' ? 'ar' : 'en';
+
+  // Before any billable work. The body is already parsed so the reply
+  // can be in the visitor's language, but nothing has been sent
+  // upstream and no page retrieval has run.
+  const limit = await checkRateLimit(env, 'chat', identityFromRequest(request));
+  if (!limit.allowed) {
+    return new Response(JSON.stringify({ error: rateLimitMessage(lang) }), {
+      status: 429,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'retry-after': String(limit.retryAfterSeconds),
+        'cache-control': 'no-store',
+      },
+    });
+  }
   const office = typeof body.office === 'string' && OFFICE_PROFILES[body.office] ? body.office : null;
   const style = typeof body.style === 'string' && STYLE_PROFILES[body.style] ? body.style : null;
   const { messages, totalChars } = sanitizeMessages(body.messages);

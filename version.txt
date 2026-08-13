@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      9afccc97e93332fc8a5bfad24907b1fb356e5f2b
-short       9afccc97
+commit      f8a09b7e0bd5ea82c2a57674cebef93624c6d590
+short       f8a09b7e
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Delegation gets an interface — cover an absence without a shared token
-built (UTC) 2026-08-13T06:07:58Z
+subject     Readiness: one page that says why anything is still shut
+built (UTC) 2026-08-13T07:50:50Z
 assets      shrs-pwa-dc748e22ae
 pages       143
 
