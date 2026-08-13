@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      65fa28df004ad66b03aa0ec468b586d466a785d7
-short       65fa28df
+commit      ff171793a658c3a3514b05f949f38748b3058f01
+short       ff171793
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Rate limiting — the guard that did not exist
-built (UTC) 2026-08-13T08:06:54Z
+subject     Staff IDs are issued, not typed; office and position are chosen, not spelt
+built (UTC) 2026-08-13T10:08:40Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
