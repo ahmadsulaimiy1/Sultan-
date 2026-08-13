@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      58456e334aa58fb4e11bdf91afcbcd249b95f915
-short       58456e33
+commit      64bf384a0a4e53ae376be813176e15103b9989e5
+short       64bf384a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Fill the letter from what the school actually publishes
-built (UTC) 2026-08-13T10:45:19Z
+subject     Letterhead rebuilt: engraved, and the letter runs to its own length
+built (UTC) 2026-08-13T10:55:48Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
