@@ -1086,3 +1086,127 @@ body.portal-body .founder-or::before,
 body.portal-body .founder-or::after {
   content: ''; flex: 1; height: 1px; background: var(--cmd-foil-soft); opacity: .7;
 }
+
+/* ===========================================================================
+   15. THE REMAINING OFFICES
+   ===========================================================================
+   The Bursary, the Executive Office, the Common Room, the Staff Desk and the
+   Office Registrar, audited from their markup in one pass. One class named
+   itself: .portal-notice-on-dark was written for the espresso ground and
+   would have gone invisible on ivory — the kind of fault that only shows on
+   the page where it is used, which is why these were read rather than
+   assumed.
+   =========================================================================== */
+
+/* --- panels, tiles, banners ---------------------------------------------- */
+body.portal-body .office-panel,
+body.portal-body .exec-stat-grid > *,
+body.portal-body .office-overview-field,
+body.portal-body .teacher-class-list,
+body.portal-body .registrar-approvals-list,
+body.portal-body .registrar-form-result,
+body.portal-body .office-deeplink-banner {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 14px !important;
+  color: var(--cmd-ink) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset,
+              0 14px 34px -20px rgba(60,42,16,.22) !important;
+}
+
+/* --- the office tab bar: a rail of struck metal, active tab foil-filled --- */
+body.portal-body .office-tabs {
+  background: transparent !important; border: 0 !important;
+  display: flex; flex-wrap: wrap; gap: 8px; position: relative;
+  padding-bottom: 10px; margin-bottom: 18px;
+}
+body.portal-body .office-tabs::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--cmd-foil-soft); opacity: .8;
+}
+body.portal-body .office-tab {
+  background: rgba(255,255,255,.66) !important;
+  border: 1px solid rgba(198,161,91,.30) !important;
+  color: #6B5222 !important; border-radius: 10px !important;
+  padding: 9px 15px !important; font-size: 12.5px; letter-spacing: .04em;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+body.portal-body .office-tab:hover {
+  border-color: rgba(198,161,91,.62) !important; transform: translateY(-1px);
+}
+body.portal-body .office-tab.is-active {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border-color: rgba(247,235,205,.6) !important; font-weight: 600;
+  box-shadow: 0 2px 10px rgba(120,88,28,.24) !important;
+}
+body.portal-body .office-tab-badge {
+  background: rgba(34,23,9,.12) !important; color: #6B5222 !important;
+  border-radius: 20px; padding: 1px 7px; font-size: 10.5px; font-weight: 600;
+}
+body.portal-body .office-tab.is-active .office-tab-badge {
+  background: rgba(34,23,9,.22) !important; color: #241A0E !important;
+}
+
+/* --- registers and rosters: a table an office can read across ------------- */
+body.portal-body .teacher-roster-table,
+body.portal-body .portal-card table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: transparent !important;
+}
+body.portal-body .teacher-roster-table th,
+body.portal-body .portal-card table th {
+  background: linear-gradient(180deg, #FFFDF8, #F4EBD8) !important;
+  color: #6B5222 !important; font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 600;
+  border-bottom: 1px solid rgba(198,161,91,.42) !important;
+  padding: 11px 12px !important; text-align: start;
+}
+body.portal-body .teacher-roster-table td,
+body.portal-body .portal-card table td {
+  color: var(--cmd-ink) !important; padding: 11px 12px !important;
+  border-bottom: 1px solid rgba(198,161,91,.16) !important;
+}
+body.portal-body .teacher-roster-table tbody tr,
+body.portal-body .portal-card table tbody tr { transition: background .25s var(--cmd-ease); }
+body.portal-body .teacher-roster-table tbody tr:hover,
+body.portal-body .portal-card table tbody tr:hover {
+  background: rgba(233,206,138,.13) !important;
+}
+body.portal-body .teacher-roster-scroll { border-radius: 12px; }
+
+/* --- copy that was written for the dark ground ---------------------------- */
+body.portal-body .portal-notice-on-dark,
+body.portal-body .pfd-note,
+body.portal-body .odb-sub,
+body.portal-body .registrar-hint,
+body.portal-body .registrar-approvals-empty,
+body.portal-body .portal-hello-sub,
+body.portal-body .cc-tagline { color: rgba(42,32,22,.78) !important; }
+
+body.portal-body .portal-hello,
+body.portal-body .cc-greeting,
+body.portal-body .pfd-subhead,
+body.portal-body .office-panel > h2,
+body.portal-body .office-panel > h3 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .portal-hello-row { align-items: center; gap: 12px; }
+
+body.portal-body .office-overview-field .label,
+body.portal-body .exec-stat-grid .label,
+body.portal-body .portal-stats .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .office-overview-field .value,
+body.portal-body .exec-stat-grid .value,
+body.portal-body .portal-stats .value {
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-variant-numeric: tabular-nums;
+}
+
+/* the form grids the Registrar and the Common Room share */
+body.portal-body .registrar-form-grid { display: grid; gap: 14px; }
+body.portal-body .registrar-form-grid > * { min-width: 0; }
