@@ -1,76 +1,70 @@
-# Brand — the school's letterhead
+# Brand — the school's stationery
 
-Three files, one design.
+One design, four outputs. The full rationale is in
+[`docs/shrs-identity-manual.md`](../docs/shrs-identity-manual.md).
 
 | File | Use |
 |---|---|
-| `letter-registrar-activation.pdf` | The letter itself, **beginning on sheet one**. Four sheets. |
+| `letter-registrar-activation.pdf` | The letter itself, beginning on sheet one. Four sheets. |
 | `letterhead.pdf` | Blank stationery, one sheet. A separate artefact — never the cover of a letter. |
-| `letterhead.docx` | Open in Word and type. Crest and details sit in the page header and footer, so every page carries them. |
-| `build.py` | Regenerates both from the embedded assets. Edit the letter blocks and re-run. |
-| `*.html` | The sources both PDFs are printed from. |
+| `letterhead.docx` | Open in Word and type. The two masses are page-anchored images, so they bleed to the edge on every page. |
+| `identity.py` | Builds both HTML sheets, from which the PDFs are printed. |
+| `word.py` | Builds the `.docx` from bands rendered out of `letterhead.html`, so Word and PDF cannot drift. |
+| `assets/` | Crest, cotton-rag tile, guilloche, microtext, the letter's text blocks, and the two Word bands. |
+
+## Building
+
+```
+python3 brand/identity.py \
+  --staff-id "SHRS-HQ-REG-130826-000004" \
+  --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
+```
+
+Omit either argument and that blank stays visible in the letter rather
+than silently wrong. The activation link is generated per person in the
+Admin Centre at the moment of sending; it is single-use and must never be
+committed here.
+
+The generator reads only from `brand/assets/` and `assets/fonts/`, so it
+runs from any working directory on any machine. Fonts and images are
+embedded as base64, which is why a rendered sheet needs no network and
+prints identically anywhere.
+
+To rebuild the Word file after a design change, re-render the bands out
+of `letterhead.html` and then run the builder:
+
+```
+python3 brand/word.py
+```
 
 ## What it carries, and where each fact came from
 
-Nothing on this letterhead was invented. Every line is drawn from the
-site or the database seed:
+Nothing on this letterhead was invented:
 
-- **Crest** — `assets/images/brand-mark.png`, the shield alone without the
-  wordmark, so the name can be set in type rather than repeated twice.
-- **Arabic name** — مدرسة سلطان حنفي الملكية, as it appears on the crest itself.
-- **Motto** — "Forming Scholars, Leaders and Guardians of Excellence.",
-  from the site footer.
-- **Five institutions** — the public names as the site presents them.
-- **Contacts, campus, founding year, governance** — from the site footer.
+- **Crest** — the school's own institutional arms.
+- **Arabic name** — مدارس السلطان حنفي الملكية, plural and with the
+  article, as the school's Arabic pages set it.
+- **Motto** — "Forming Scholars, Leaders and Guardians of Excellence."
+- **Five institutions**, **contacts**, **campus**, **founding year**,
+  **governance** — from the site footer and the database seed.
+- **Crimson** `#7C1F2E` and `#A8455A` — `--crimson` and `--accent-bright`
+  from `css/brand.css`. The stationery takes no colour the website does
+  not already hold.
 
-## Typography
+## Verification
 
-The school's own three faces, embedded in the HTML as woff2 so the PDF
-renders in them with no network and no font installation:
+Every build is measured, not eyeballed. The render harness loads both
+documents in Chromium and asserts the fourteen tests listed in the
+manual — canvas size, the parallel cuts, the bilingual lock's shared
+centre line and equal measure, the Arabic presence ratio, ribbon-to-text
+clearance, footing containment on every sheet, fonts loaded, links live,
+and zero console errors. All fourteen pass on the current build.
 
-- **Cinzel** — the wordmark and subject lines. Roman capitals; it is the
-  face the site already uses for institutional headings.
-- **Cormorant Garamond** — the motto and the seal line. Italic, for the
-  one voice on the page that is the school speaking about itself.
-- **Inter** — body text and the small capitals. Quiet on purpose: a
-  letterhead should be the most decorated thing on the page, and the
-  letter the most readable.
-- **Amiri** — the Arabic name.
-
-**The Word file is the exception.** A `.docx` cannot embed fonts the way
-the HTML does, so Word substitutes anything not installed on that
-computer. For an exact match, install **Cinzel** and **Cormorant
-Garamond** (both free, fonts.google.com) on any machine that writes
-letters. Without them Word falls back to a default serif — still
-correct, just not the school's own face. Body text is set in Georgia
-precisely because it is present on every Windows and Mac already.
-
-## Colours
-
-Espresso ink `#241809`, secondary `#5A4630`, gold `#8E6A26`. Chosen to
-print faithfully — deliberately not a saturated RGB gold, which turns
-muddy or greenish on a laser printer.
-
-The sheet is plain white. A tinted stock is the paper's job, not the
-printer's: a full-bleed background costs ink on every page and rarely
-reproduces the way it looks on screen.
-
-## Regenerating the PDF
-
-Open `letterhead.html` in a browser and print to PDF at A4 with margins
-set to **None** and "Background graphics" **on**. The page is already
-sized to 210 × 297 mm, so nothing needs scaling.
-
-## One honest note on verification
-
-The HTML and PDF were rendered and inspected — both pages measured to
-794 × 1123 px (A4 at 96 dpi), all seven fonts confirmed loaded, and the
-footer confirmed to sit inside the sheet on both pages.
-
-The `.docx` was **not** visually verified: LibreOffice is broken in the
-environment this was built in and fails to open even a one-word test
-document, so no rendering could be produced. Its structure was checked
-instead — every XML part well-formed, the image embedded and correctly
-related, header and footer references present, and the header and footer
-text confirmed to read correctly. Please open it once in Word before
-using it for a real letter.
+**The `.docx` is the exception, and this is worth stating plainly.**
+LibreOffice is broken in the environment this was built in — it fails to
+open even a one-word test document — so no rendering of the Word file
+could be produced and it has **not** been visually verified. What was
+checked instead: every XML part parses, every relationship ID referenced
+by `document.xml` and `header1.xml` resolves in its `.rels`, both images
+are valid JPEG, and the page and margin geometry match the PDF's. Please
+open it once in Word before using it for a real letter.
