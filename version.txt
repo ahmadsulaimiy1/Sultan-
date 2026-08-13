@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      734a551bacf5677cfc6db374a943d14603543660
-short       734a551b
+commit      69e16e2d294162af578146be93327c8070dc8c9c
+short       69e16e2d
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Remove the Founding Officers page — the Admin Centre already did this
-built (UTC) 2026-08-13T05:40:48Z
-assets      shrs-pwa-497249b18c
+subject     Say why the Admin Centre locked, instead of showing a bare token box
+built (UTC) 2026-08-13T05:49:51Z
+assets      shrs-pwa-94e09c513a
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

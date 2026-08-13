@@ -121,6 +121,42 @@ nobody to record.
 Teachers additionally need a class assignment (`assign-class`) before
 the Teacher Portal shows them a roster.
 
+## Covering an absence — delegation
+
+`/portal/staff/delegations/` lets an officer hand a role to a colleague
+for a bounded period, and it ends by itself. The Head of Schools
+authorising a Principal to act while travelling is exactly the case it
+was built for.
+
+Four things it requires, and will not proceed without: **who** (the
+colleague's Staff ID), **what** (a role you actually hold — nobody can
+delegate authority they do not have), **why** (a reason, written for
+whoever reads the record later), and **until when** (a date; ninety days
+is the maximum, and there is no open-ended option).
+
+Expiry is computed when permissions are read, not by a scheduled job —
+this project has no cron. So a delegation stops working the moment it
+lapses whether or not anyone is watching. Only the person who created a
+delegation can end it early. Both creating and ending are recorded in
+the staff audit log.
+
+## A note on titles that are not roles
+
+The role catalogue holds job authorities, not honours. **Chairman of the
+Board of Governors is not a role code**, and one has not been invented
+for it — a governance office is not the same thing as a system
+permission, and conflating them would grant authority by title.
+
+Record it the way the schema already supports:
+
+- put the full title in the staff record's **position title**, e.g.
+  *Head of Schools & Administrator; Chairman, Board of Governors*
+- add an **office appointment** to the seeded `Board of Governors`
+  office, which is what the org chart and office views read
+
+The `EXE` grant is what actually opens the system. The chairmanship is
+recorded because it is true, not because it unlocks anything.
+
 ## What is still shut, and why
 
 - **Activation and reset emails** are not delivered until

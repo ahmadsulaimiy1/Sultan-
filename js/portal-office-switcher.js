@@ -54,6 +54,10 @@
     // hidden, so the page is never a dead end.
     add('Desk', 'Everything waiting on you', '/portal/staff/desk/');
 
+    // Delegation is every staff member's: anyone holding a role can
+    // pass it on, and anyone may be handed one to hold.
+    add('Delegation', 'Cover an absence, with an end date', '/portal/staff/delegations/');
+
     // The Newsroom is surfaced to the roles the Matrix actually grants
     // authority over `communications` — REG, PRIN and EXE. TCH is left
     // out on purpose: its only grant there is P, scoped "own class

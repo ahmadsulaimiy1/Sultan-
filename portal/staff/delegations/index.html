@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>Newsroom — Sultan Hanafi Royal Schools Staff</title>
+<title>Delegation — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
@@ -30,7 +30,7 @@
     <span>Sultan Hanafi</span>
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
-    <span class="portal-pilot-badge">Newsroom</span>
+    <span class="portal-pilot-badge">Delegation</span>
     <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <span class="lang-switch-mount" data-locale-switcher></span>
@@ -40,91 +40,73 @@
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <h1 class="portal-hello">Newsroom</h1>
-    <div class="portal-hello-sub">The school&rsquo;s own voice on its own pages. What you publish here appears in the site ribbon and, if you choose, as the homepage hero &mdash; and reaches every family who has turned on notifications.</div>
+    <h1 class="portal-hello">Delegation</h1>
+    <div class="portal-hello-sub">Hand your authority to a colleague for a set period &mdash; a Principal covering while you travel, a deputy during leave. It ends by itself on the date you set. Signed in as <strong data-dg-who>&mdash;</strong>.</div>
 
-    <div class="nr-notice" data-nr-notice hidden></div>
+    <div class="nr-notice" data-dg-notice hidden></div>
 
     <div class="nr-sheet">
       <div class="nr-masthead">
-        <h2>Write an announcement</h2>
-        <span class="nr-masthead-note">Saved as a draft first</span>
+        <h2>Delegate authority</h2>
+        <span class="nr-masthead-note">Who, what, why, until when</span>
       </div>
-      <form class="nr-composer" data-nr-form>
+      <p class="nr-note">You can only pass on a role you actually hold &mdash; nobody can delegate authority they do not have. Ninety days is the longest any single delegation may run; to cover a longer absence, create a fresh one rather than one open-ended grant. Every delegation is recorded against your name in the staff audit log, and so is ending one.</p>
+      <form class="nr-composer" data-dg-form>
         <div class="nr-row">
           <div class="nr-field">
-            <label for="nr-category">Category</label>
-            <select id="nr-category" name="category" data-nr-category required></select>
+            <label for="dg-role">Role to delegate</label>
+            <select id="dg-role" name="roleCode" data-dg-role required></select>
           </div>
           <div class="nr-field">
-            <label for="nr-event-date">Date <span class="nr-field-optional">(if it is an event)</span></label>
-            <input id="nr-event-date" name="eventDate" type="date" />
+            <label for="dg-staff">Colleague&rsquo;s Staff ID</label>
+            <input id="dg-staff" name="delegateStaffNo" type="text" placeholder="SHR-STF-0005" required />
           </div>
           <div class="nr-field">
-            <label for="nr-event-time">Time</label>
-            <input id="nr-event-time" name="eventTime" type="text" placeholder="10:00 AM" />
+            <label for="dg-ends">Ends on</label>
+            <input id="dg-ends" name="endsAt" type="date" required />
           </div>
         </div>
-
         <div class="nr-field">
-          <label for="nr-title">Title</label>
-          <input id="nr-title" name="title" type="text" maxlength="180" required />
+          <label for="dg-reason">Reason</label>
+          <textarea id="dg-reason" name="reason" required placeholder="Covering the Head of Schools during official travel."></textarea>
+          <p class="nr-field-hint">Write it for whoever reads the record later &mdash; an auditor, a successor, or you in six months.</p>
         </div>
-
-        <div class="nr-field">
-          <label for="nr-summary">Summary</label>
-          <textarea id="nr-summary" name="summary" maxlength="400" required></textarea>
-          <p class="nr-field-hint">One or two sentences. This is what appears in the ribbon and in the notification a parent receives, so write it to stand alone.</p>
-        </div>
-
-        <div class="nr-field">
-          <label for="nr-body">Full text <span class="nr-field-optional">(optional)</span></label>
-          <textarea id="nr-body" name="body"></textarea>
-        </div>
-
-        <div class="nr-row">
-          <div class="nr-field">
-            <label for="nr-venue">Venue</label>
-            <input id="nr-venue" name="venue" type="text" />
-          </div>
-          <div class="nr-field">
-            <label for="nr-action-label">Button label</label>
-            <input id="nr-action-label" name="actionLabel" type="text" placeholder="Read the notice" />
-          </div>
-          <div class="nr-field">
-            <label for="nr-action-url">Button link</label>
-            <input id="nr-action-url" name="actionUrl" type="text" placeholder="/admissions/" />
-          </div>
-        </div>
-
         <div class="nr-actions">
-          <button type="submit" class="nr-btn nr-btn--primary">Save as draft</button>
+          <button type="submit" class="nr-btn nr-btn--primary">Delegate</button>
         </div>
       </form>
     </div>
 
     <div class="nr-sheet">
       <div class="nr-masthead">
-        <h2>Everything written so far</h2>
-        <span class="nr-masthead-note" data-nr-count>&mdash;</span>
+        <h2>Authority you have given</h2>
+        <span class="nr-masthead-note">Active now</span>
       </div>
-      <p class="nr-note">Publishing puts an announcement on the site and notifies subscribed families. Making one the homepage hero clears any previous hero. Archiving takes it off the live list and keeps it in the record permanently &mdash; nothing here is ever deleted.</p>
-      <div class="nr-list" data-nr-list></div>
-      <div class="nr-note" data-nr-empty hidden>Nothing has been written yet. The first announcement you save will appear here.</div>
+      <div class="nr-list" data-dg-given></div>
+      <div class="nr-note" data-dg-given-empty hidden>You have not delegated anything. Nobody is currently acting in your place.</div>
+    </div>
+
+    <div class="nr-sheet">
+      <div class="nr-masthead">
+        <h2>Authority you are holding for someone else</h2>
+        <span class="nr-masthead-note">Active now</span>
+      </div>
+      <div class="nr-list" data-dg-held></div>
+      <div class="nr-note" data-dg-held-empty hidden>Nobody has delegated anything to you.</div>
     </div>
   </div>
   <div class="portal-card" data-portal-loading>
-    <p class="sub" style="margin-bottom:0;">Loading the newsroom&hellip;</p>
+    <p class="sub" style="margin-bottom:0;">Loading your delegations&hellip;</p>
   </div>
   <div class="portal-card" data-portal-error hidden>
-    <h1>Couldn&rsquo;t load the newsroom</h1>
+    <h1>Couldn&rsquo;t load your delegations</h1>
     <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
     <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">&larr; Back to sign in</a>
   </div>
 </main>
 
 <script src="/js/portal-office-switcher.js?v=9c9111c05a" defer></script>
-<script src="/js/portal-staff-newsroom.js?v=e6b9bd9ea4" defer></script>
+<script src="/js/portal-staff-delegations.js?v=b47cfe1c3d" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
