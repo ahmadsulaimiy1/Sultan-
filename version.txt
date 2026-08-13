@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      ff171793a658c3a3514b05f949f38748b3058f01
-short       ff171793
+commit      b762c50fa74cec1bbd5472322e5c212c46629d58
+short       b762c50f
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Staff IDs are issued, not typed; office and position are chosen, not spelt
-built (UTC) 2026-08-13T10:08:40Z
+subject     Letter template: activating an officer's portal account
+built (UTC) 2026-08-13T10:21:03Z
 assets      shrs-pwa-caf195dc57
 pages       143
 
