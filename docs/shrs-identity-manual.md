@@ -22,18 +22,67 @@ The medallion straddling the edge is the piece that does the most work: it
 is the only element that belongs to both the ink and the paper, and it is
 what stops the head reading as a band with a logo on it.
 
-## The material
+## The metal
 
-| Role | Colour |
+Flat gold is what made the earlier sheets look printed rather than made.
+Real foil carries three things at once, and it is those — not the colour —
+that read as metal:
+
+1. a **specular band** running along its length, from bronze through gold
+   to a near-white highlight and back;
+2. a **lit edge** on top and a **shadowed edge** beneath, so the bar sits
+   proud of what it lies on;
+3. a **shadow cast** on the plate below it.
+
+Every gold member on the sheet carries all three: the bar under the head
+frame, the panel's leading edge, the rail's diamond markers, the bar at
+the foot's lip, and the medallion's rim.
+
+## The plates
+
+The dark areas are not fills. Each is a **plate**: struck on an eight-fold
+girih ground at 8.5% opacity, glazed with one raking reflection and one
+corner bloom, lit along its upper lip, shadowed along its foot, and
+casting a shadow on the cream beneath.
+
+The ground is deliberately below the threshold of reading. At full
+strength it competed with the contact detail set on it, and the measured
+contrast fell to 4.35 : 1. **Every reversed run on this sheet is now
+measured off painted pixels** — not computed styles — and the worst is
+6.78 : 1.
+
+| Run | Contrast |
 |---|---|
-| Mass, rail, foot | Burgundy `#4A1228`, shaded `#33091B`, lit `#5E1A34` |
-| Gold | `#C9A24A`, light `#E3C577`, deep `#8E6B24` |
-| Paper | `#FDFBF8`, medallion cream `#F7F1E6` |
-| Ink | `#2A2124`, secondary `#5A4A50` |
+| Panel contact lines | 10.25 : 1 |
+| Footing labels | 6.78 : 1 |
+| Footing values | 9.80 : 1 |
+| Governance strip | 7.41 : 1 |
+| Rail, on cream | 6.91 : 1 |
 
-Two flat specified inks and the paper, so the sheet has an economical
-production route: burgundy and gold, with the gold available as Pantone
-or as a single CMYK build, and as foil where the budget allows.
+## The medallion
+
+Struck, not printed: a metal rim with its own bevel, an inner cream field
+with an inset shadow so it sits below the rim, the arms engraved into it,
+and a single specular arc across the upper left. The arc is the one thing
+that says struck rather than printed.
+
+## What the school has not supplied does not appear
+
+An earlier revision carried **"RC: 1402529"** in the governance strip.
+That number was invented. It had no source, and a company registration
+number on a school's letterhead is a statement of record, not an
+ornament. It has been removed, and no identifier — registration, licence,
+accreditation or examination-body number — will appear on this stationery
+unless the school supplies it.
+
+## A note on production
+
+The metal treatment is specified for **screen and PDF**. In print the
+gold members are a **foil pass** or a single flat Pantone; the specular
+band is what the foil does by itself under a light, so it is not printed
+as artwork. The girih ground prints as a 6% tint of the gold. The
+`.docx` carries the rendered ground as an image, so it matches whatever
+the PDF shows.
 
 ## The arms
 

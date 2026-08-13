@@ -76,8 +76,27 @@ DARK, DARK_D, DARK_L = '#2A1F16', '#1B130C', '#3C2C1E'
 GOLD, GOLD_LT, GOLD_D = '#C9A24A', '#E8CE8F', '#8E6B24'
 PAPER, CREAM = '#F8F4EC', '#F2ECE0'
 INK, INK2 = '#2B2118', '#6A5A48'
-GOLD_BAR = (f'linear-gradient(100deg,{GOLD_D} 0%,{GOLD} 22%,{GOLD_LT} 46%,'
-            f'{GOLD} 70%,{GOLD_D} 100%)')
+# ── the metal. Flat gold is what made the sheet look printed rather than
+# made. Real foil carries a specular band along its length, a lit edge on
+# top and a shadowed edge beneath, and it is those three together — not the
+# colour — that read as metal.
+METAL = ('linear-gradient(100deg,#6E4E18 0%,#A87F2E 9%,#D9BC6E 22%,#F6E9BE 34%,'
+         '#FFFDF2 41%,#EDD89C 49%,#C9A24A 62%,#8E6B24 78%,#C9A24A 90%,#7A5A1C 100%)')
+METAL_V = ('linear-gradient(178deg,#FFFBEA 0%,#E4CB86 16%,#C9A24A 44%,'
+           '#9A7628 74%,#6E4E18 100%)')
+# a bevelled gold bar: lit above, shadowed below, sitting proud of the plate
+BEVEL = ('inset 0 .3pt 0 rgba(255,252,236,.85),inset 0 -.3pt 0 rgba(74,52,12,.9),'
+         '0 .5pt 1.4pt rgba(18,11,4,.42)')
+# a bronze plate: lit lip, shadowed foot, and a shadow cast on what is under it
+PLATE = ('inset 0 .4pt 0 rgba(255,238,198,.24),inset 0 -.4pt 0 rgba(0,0,0,.55),'
+         '0 1pt 3.4pt rgba(16,9,3,.34)')
+# glass: one raking reflection and one corner bloom, both far below notice
+GLASS = ('linear-gradient(116deg,rgba(255,255,255,.115) 0%,rgba(255,255,255,.03) 24%,'
+         'rgba(255,255,255,0) 47%),'
+         'radial-gradient(126% 84% at 10% -14%,rgba(255,246,220,.17),rgba(255,255,255,0) 62%)')
+# the eight-fold girih ground the dark plates are struck on
+GIRIH = 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczNCcgaGVpZ2h0PSczNCcgdmlld0JveD0nMCAwIDM0IDM0Jz48ZyBmaWxsPSdub25lJyBzdHJva2U9JyNDOUEyNEEnIHN0cm9rZS13aWR0aD0nLjUnIHN0cm9rZS1vcGFjaXR5PScuMDg1Jz48cGF0aCBkPSdNMTcgMCBMMjQgMTAgTDM0IDE3IEwyNCAyNCBMMTcgMzQgTDEwIDI0IEwwIDE3IEwxMCAxMCBaJy8+PHBhdGggZD0nTTAgMCBMMTAgMTAgTTM0IDAgTDI0IDEwIE0zNCAzNCBMMjQgMjQgTTAgMzQgTDEwIDI0Jy8+PHBhdGggZD0nTTE3IDUuNSBMMjEuNSAxMi41IEwyOC41IDE3IEwyMS41IDIxLjUgTDE3IDI4LjUgTDEyLjUgMjEuNSBMNS41IDE3IEwxMi41IDEyLjUgWicvPjwvZz48L3N2Zz4=)'
+GOLD_BAR = METAL
 
 AR = 'مدارس السلطان'
 AR2 = 'حنفي الملكية'
@@ -124,12 +143,13 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 .rail{{position:absolute;left:{RAIL_X}mm;top:{HEAD_H + 12}mm;bottom:{FOOT_H + BOT_H + 12}mm;
  width:.4pt;background:rgba(142,107,36,.45);z-index:2}}
 .rail::before,.rail::after{{content:'';position:absolute;left:-1mm;width:2.2mm;height:2.2mm;
- background:{GOLD};transform:rotate(45deg)}}
+ background:{METAL_V};transform:rotate(45deg);
+ box-shadow:0 .3pt .7pt rgba(18,11,4,.4),inset 0 .3pt 0 rgba(255,252,236,.7)}}
 .rail::before{{top:22%}} .rail::after{{bottom:22%}}
 .railtx{{position:absolute;left:{RAIL_X - 5}mm;top:50%;transform:translateY(-50%) rotate(180deg);
  writing-mode:vertical-rl;z-index:2;
  font-family:'Cinzel',serif;font-weight:700;font-size:{S_MICRO}pt;letter-spacing:.42em;
- text-transform:uppercase;color:{GOLD_D};white-space:nowrap}}
+ text-transform:uppercase;color:#6E4E18;white-space:nowrap}}
 
 /* ═══ THE HEAD ═══ */
 .head{{flex:0 0 {HEAD_H}mm;position:relative;z-index:4}}
@@ -138,22 +158,40 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
    hole through the band, which reads as a missing piece rather than as a
    bracket — that was the fault. */
 .frame{{position:absolute;left:0;right:0;top:0;height:14mm;
- background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 60%,{DARK_D} 100%);
- clip-path:polygon(0 0,100% 0,100% 64%,58% 64%,54% 100%,30% 100%,26% 64%,0 64%)}}
+ background:{GLASS},{GIRIH},
+  linear-gradient(178deg,{DARK_L} 0%,{DARK} 58%,{DARK_D} 100%);
+ background-size:auto,auto,15mm 15mm,auto;
+ clip-path:polygon(0 0,100% 0,100% 64%,58% 64%,54% 100%,30% 100%,26% 64%,0 64%);
+ filter:drop-shadow(0 .9pt 2.6pt rgba(16,9,3,.36))}}
+/* the bar: struck metal, lit above and shadowed beneath, riding the cut */
 .fedge{{position:absolute;left:0;right:0;top:0;height:14mm;z-index:5;pointer-events:none;
- background:{GOLD_BAR};
+ background:{METAL};
  clip-path:polygon(0 64%,26% 64%,30% 100%,54% 100%,58% 64%,100% 64%,
-                   100% calc(64% - 1.1pt),58% calc(64% - 1.1pt),
-                   54% calc(100% - 1.1pt),30% calc(100% - 1.1pt),
-                   26% calc(64% - 1.1pt),0 calc(64% - 1.1pt))}}
+                   100% calc(64% - 1.5pt),58% calc(64% - 1.5pt),
+                   54% calc(100% - 1.5pt),30% calc(100% - 1.5pt),
+                   26% calc(64% - 1.5pt),0 calc(64% - 1.5pt));
+ filter:drop-shadow(0 .45pt .9pt rgba(18,11,4,.5))}}
+/* a hairline of light immediately beneath the bar, so it reads as raised */
+.fedge2{{position:absolute;left:0;right:0;top:0;height:14mm;z-index:5;pointer-events:none;
+ background:rgba(255,250,232,.5);
+ clip-path:polygon(0 calc(64% - 1.5pt),26% calc(64% - 1.5pt),30% calc(100% - 1.5pt),
+                   54% calc(100% - 1.5pt),58% calc(64% - 1.5pt),100% calc(64% - 1.5pt),
+                   100% calc(64% - 1.85pt),58% calc(64% - 1.85pt),
+                   54% calc(100% - 1.85pt),30% calc(100% - 1.85pt),
+                   26% calc(64% - 1.85pt),0 calc(64% - 1.85pt))}}
 /* the contact panel, cut into the masthead at the right */
 .panel{{position:absolute;right:0;top:5mm;width:{210 - PANEL_X}mm;height:{HEAD_H - 5}mm;
- background:linear-gradient(122deg,{DARK_L} 0%,{DARK} 52%,{DARK_D} 100%);
+ background:{GLASS},{GIRIH},
+  linear-gradient(122deg,{DARK_L} 0%,{DARK} 50%,{DARK_D} 100%);
+ background-size:auto,auto,15mm 15mm,auto;
  clip-path:polygon(9% 0,100% 0,100% 100%,0 100%);
  padding:5.4mm 7mm 5mm 12mm;
- display:flex;flex-direction:column;justify-content:center;gap:2.2mm}}
-.panel::before{{content:'';position:absolute;left:0;top:0;bottom:0;width:1.1pt;background:{GOLD_BAR};
- clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:skewX(-5.2deg);transform-origin:top left}}
+ display:flex;flex-direction:column;justify-content:center;gap:2.2mm;
+ filter:drop-shadow(-1pt 0 2.6pt rgba(16,9,3,.3))}}
+/* its leading edge is a bevelled member, not a rule */
+.panel::before{{content:'';position:absolute;left:-1.2mm;top:0;bottom:0;width:1.6pt;
+ background:{METAL_V};transform:skewX(-5.2deg);transform-origin:top left;
+ box-shadow:.35pt 0 .9pt rgba(18,11,4,.45)}}
 .panel .l{{display:flex;align-items:flex-start;gap:2.6mm;
  font-size:{S_SMALL}pt;color:#EFE4D2;line-height:1.4;white-space:nowrap}}
 .panel a{{color:inherit;text-decoration:none}}
@@ -203,8 +241,12 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 
 /* ═══ THE FOOT ═══ */
 .foot{{flex:0 0 {FOOT_H + BOT_H}mm;position:relative;z-index:4;
- background:linear-gradient(178deg,{DARK_L} 0%,{DARK} 46%,{DARK_D} 100%)}}
-.foot::before{{content:'';position:absolute;left:0;right:0;top:0;height:1.1pt;background:{GOLD_BAR}}}
+ background:{GLASS},{GIRIH},
+  linear-gradient(178deg,{DARK_L} 0%,{DARK} 44%,{DARK_D} 100%);
+ background-size:auto,auto,15mm 15mm,auto;
+ box-shadow:0 -1pt 3.4pt rgba(16,9,3,.3)}}
+.foot::before{{content:'';position:absolute;left:0;right:0;top:0;height:1.5pt;
+ background:{METAL};box-shadow:{BEVEL};z-index:6}}
 .fbrack{{position:absolute;left:0;right:0;top:-5mm;height:5mm;z-index:5;
  background:linear-gradient(2deg,{DARK} 0%,{DARK_D} 100%);
  clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%)}}
@@ -220,15 +262,26 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 .fcols{{flex:1;display:flex;justify-content:space-between;gap:2.5mm;min-width:0}}
 .fcols>div{{display:flex;align-items:flex-start;gap:2.4mm}}
 .fcols .fl{{display:block;font-size:{S_LABEL}pt;letter-spacing:.16em;text-transform:uppercase;
- color:{GOLD};margin-bottom:.9mm}}
+ color:{GOLD_LT};margin-bottom:.9mm}}
 .fcols .v{{font-size:{S_LABEL}pt;color:#EFE4D2;line-height:1.5;white-space:nowrap}}
 .fcols a{{color:inherit;text-decoration:none}}
-.seal{{flex:0 0 auto;width:15mm;height:15mm;border-radius:50%;
- background:radial-gradient(64% 64% at 38% 30%,#FFFDF6 0%,{CREAM} 60%,#E4D8C0 100%);
- box-shadow:0 0 0 .6pt {GOLD};display:flex;align-items:center;justify-content:center}}
+.seal{{flex:0 0 auto;position:relative;width:16mm;height:16mm;border-radius:50%;
+ background:{METAL};padding:1.1mm;
+ box-shadow:0 .7pt 2.2pt rgba(14,8,2,.55),inset 0 .35pt 0 rgba(255,252,236,.8),
+  inset 0 -.35pt 0 rgba(70,48,10,.85);
+ display:flex;align-items:center;justify-content:center}}
+.seal::before{{content:'';position:absolute;inset:1.1mm;border-radius:50%;
+ background:radial-gradient(66% 66% at 36% 28%,#FFFEF9 0%,{CREAM} 58%,#DFD2B6 100%);
+ box-shadow:inset 0 .4pt 1.1pt rgba(90,66,22,.45)}}
+/* the specular arc — the one thing that says struck rather than printed */
+.seal::after{{content:'';position:absolute;left:14%;top:9%;width:56%;height:34%;
+ border-radius:50%;background:linear-gradient(160deg,rgba(255,255,255,.85),rgba(255,255,255,0));
+ opacity:.5}}
+.seal img{{position:relative;z-index:2}}
 .seal img{{width:9.5mm;height:9.5mm;display:block}}
 .gov{{position:absolute;left:0;right:0;bottom:0;height:{BOT_H}mm;z-index:5;
- background:{DARK_D};border-top:.4pt solid rgba(201,162,74,.3);
+ background:linear-gradient(178deg,#221810 0%,{DARK_D} 100%);
+ box-shadow:inset 0 .4pt 0 rgba(201,162,74,.34);
  display:flex;align-items:center;justify-content:center;gap:9mm;
  font-size:{S_LABEL}pt;letter-spacing:.19em;text-transform:uppercase;color:{GOLD};white-space:nowrap}}
 .gov span{{position:relative}}
@@ -273,7 +326,7 @@ PANEL = ('<div class="panel">'
          '</div>')
 
 HEAD = ('<header class="head">'
-        '<div class="frame"></div><div class="fedge"></div>'
+        '<div class="frame"></div><div class="fedge"></div><div class="fedge2"></div>'
         '<div class="mast">'
         f'<span class="arms"><img src="data:image/png;base64,{CREST_G}" '
         'alt="Arms of Sultan Hanafi Royal Schools" />'
@@ -306,7 +359,7 @@ FOOT = ('<footer class="foot"><div class="fbrack"></div>'
         '</div>'
         '<div class="gov"><span>Established July 2016</span>'
         '<span>Governed by a Board of Governors</span>'
-        '<span>RC: 1402529</span></div></footer>')
+        '<span>Ikorodu, Lagos State, Nigeria</span></div></footer>')
 
 RAIL = (f'<div class="rail"></div><div class="railtx">{WEB}</div>')
 GROUND = '<div class="tile"></div><div class="emboss"></div>'
