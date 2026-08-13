@@ -22,7 +22,20 @@ python3 brand/identity.py \
   --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
 ```
 
-Omit either argument and that blank stays visible in the letter rather
+A third argument places the signatory's own signature:
+
+```
+python3 brand/identity.py --signature assets/images/certificates/signature-chairman.png ...
+```
+
+It is dropped onto the cream with `mix-blend-mode:multiply`, so a scan on
+white paper needs no cutting out. **Nothing is drawn or imitated** — with
+no `--signature` the space above the rule stays blank, which is the only
+honest default. Signatures already on file live in
+`assets/images/certificates/`; a new one is a scan of the signatory's own
+hand, supplied by them.
+
+Omit any argument and that blank stays visible in the letter rather
 than silently wrong. The activation link is generated per person in the
 Admin Centre at the moment of sending; it is single-use and must never be
 committed here.

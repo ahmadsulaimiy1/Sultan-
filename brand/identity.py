@@ -43,6 +43,7 @@ import argparse, base64, json, pathlib, subprocess
 ap = argparse.ArgumentParser()
 ap.add_argument('--staff-id')
 ap.add_argument('--activation-url')
+ap.add_argument('--signature', help='path to the signatory\'s own signature image')
 ARGS = ap.parse_args()
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -161,31 +162,31 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
  background:{GLASS},{GIRIH},
   linear-gradient(178deg,{DARK_L} 0%,{DARK} 58%,{DARK_D} 100%);
  background-size:auto,auto,15mm 15mm,auto;
- clip-path:polygon(0 0,100% 0,100% 64%,58% 64%,54% 100%,30% 100%,26% 64%,0 64%);
+ clip-path:polygon(0 0,100% 0,100% 64%,58% 64%,51% 92%,33% 92%,26% 64%,0 64%);
  filter:drop-shadow(0 .9pt 2.6pt rgba(16,9,3,.36))}}
 /* the bar: struck metal, lit above and shadowed beneath, riding the cut */
 .fedge{{position:absolute;left:0;right:0;top:0;height:14mm;z-index:5;pointer-events:none;
  background:{METAL};
- clip-path:polygon(0 64%,26% 64%,30% 100%,54% 100%,58% 64%,100% 64%,
+ clip-path:polygon(0 64%,26% 64%,33% 92%,51% 92%,58% 64%,100% 64%,
                    100% calc(64% - 1.5pt),58% calc(64% - 1.5pt),
-                   54% calc(100% - 1.5pt),30% calc(100% - 1.5pt),
+                   51% calc(92% - 1.5pt),33% calc(92% - 1.5pt),
                    26% calc(64% - 1.5pt),0 calc(64% - 1.5pt));
  filter:drop-shadow(0 .45pt .9pt rgba(18,11,4,.5))}}
 /* a hairline of light immediately beneath the bar, so it reads as raised */
 .fedge2{{position:absolute;left:0;right:0;top:0;height:14mm;z-index:5;pointer-events:none;
  background:rgba(255,250,232,.5);
- clip-path:polygon(0 calc(64% - 1.5pt),26% calc(64% - 1.5pt),30% calc(100% - 1.5pt),
-                   54% calc(100% - 1.5pt),58% calc(64% - 1.5pt),100% calc(64% - 1.5pt),
+ clip-path:polygon(0 calc(64% - 1.5pt),26% calc(64% - 1.5pt),33% calc(92% - 1.5pt),
+                   51% calc(92% - 1.5pt),58% calc(64% - 1.5pt),100% calc(64% - 1.5pt),
                    100% calc(64% - 1.85pt),58% calc(64% - 1.85pt),
-                   54% calc(100% - 1.85pt),30% calc(100% - 1.85pt),
+                   51% calc(92% - 1.85pt),33% calc(92% - 1.85pt),
                    26% calc(64% - 1.85pt),0 calc(64% - 1.85pt))}}
 /* the contact panel, cut into the masthead at the right */
-.panel{{position:absolute;right:0;top:5mm;width:{210 - PANEL_X}mm;height:{HEAD_H - 5}mm;
+.panel{{position:absolute;right:0;top:8.96mm;width:{210 - PANEL_X}mm;height:{HEAD_H - 8.96}mm;
  background:{GLASS},{GIRIH},
   linear-gradient(122deg,{DARK_L} 0%,{DARK} 50%,{DARK_D} 100%);
  background-size:auto,auto,15mm 15mm,auto;
- clip-path:polygon(9% 0,100% 0,100% 100%,0 100%);
- padding:5.4mm 7mm 5mm 12mm;
+ clip-path:polygon(7% 0,100% 0,100% 100%,0 100%);
+ padding:4.6mm 7mm 4.6mm 12mm;
  display:flex;flex-direction:column;justify-content:center;gap:2.2mm;
  filter:drop-shadow(-1pt 0 2.6pt rgba(16,9,3,.3))}}
 /* its leading edge is a bevelled member, not a rule */
@@ -235,6 +236,10 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
 .signoff{{margin-top:6.6mm}} .sigsp{{height:17mm}}
 .sigrule{{width:52mm;height:.4pt;background:{GOLD};margin-bottom:2.4mm}}
 .signm{{line-height:1.45}} .sigt{{font-size:{S_SMALL}pt;color:{INK2}}}
+/* the signatory's own hand, dropped onto the cream. A scan on white
+   multiplies out; nothing is drawn or imitated here. */
+.sig{{display:block;height:16mm;width:auto;max-width:64mm;margin:1mm 0 1.4mm;
+ mix-blend-mode:multiply}}
 .blank{{display:flex;gap:5mm;font-size:{S_LABEL}pt;letter-spacing:.2em;text-transform:uppercase;
  color:{GOLD_D};margin-bottom:9mm}}
 .blank i{{flex:1;border-bottom:.4pt solid rgba(201,162,74,.5);font-style:normal}}
@@ -247,13 +252,13 @@ body{{background:#181009;display:flex;flex-direction:column;align-items:center;g
  box-shadow:0 -1pt 3.4pt rgba(16,9,3,.3)}}
 .foot::before{{content:'';position:absolute;left:0;right:0;top:0;height:1.5pt;
  background:{METAL};box-shadow:{BEVEL};z-index:6}}
-.fbrack{{position:absolute;left:0;right:0;top:-5mm;height:5mm;z-index:5;
+.fbrack{{position:absolute;left:0;right:0;top:-4.4mm;height:4.4mm;z-index:5;
  background:linear-gradient(2deg,{DARK} 0%,{DARK_D} 100%);
- clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%)}}
-.fbrack::after{{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:{GOLD_BAR};
- clip-path:polygon(0 100%,26% 100%,30% 0,54% 0,58% 100%,100% 100%,
-                   100% calc(100% - 1pt),58% calc(100% - 1pt),54% 1pt,30% 1pt,
-                   26% calc(100% - 1pt),0 calc(100% - 1pt))}}
+ clip-path:polygon(0 100%,26% 100%,33% 0,51% 0,58% 100%,100% 100%)}}
+.fbrack::after{{content:'';position:absolute;left:0;right:0;top:0;bottom:0;background:{METAL};
+ clip-path:polygon(0 100%,26% 100%,33% 0,51% 0,58% 100%,100% 100%,
+                   100% calc(100% - 1.2pt),58% calc(100% - 1.2pt),51% 1.2pt,33% 1.2pt,
+                   26% calc(100% - 1.2pt),0 calc(100% - 1.2pt))}}
 .frow{{position:absolute;left:{MARGIN}mm;right:{MARGIN}mm;top:6.5mm;z-index:5;
  display:flex;align-items:flex-start;gap:3.5mm}}
 .qr{{flex:0 0 auto;width:15mm;height:15mm;padding:1.2mm;background:{PAPER};
@@ -447,6 +452,10 @@ def rt(b):
             b = b.replace(plain, f'<a href="{href}">{plain}</a>')
     if ARGS.staff_id:
         b = b.replace('[SHRS&#8209;HQ&#8209;REG&#8209;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;]', ARGS.staff_id)
+    if ARGS.signature:
+        b = b.replace('<div class="sig-space"></div>',
+                      '<img class="sig" src="data:image/png;base64,%s" alt="Signature" />'
+                      % b64(ARGS.signature))
     if ARGS.activation_url:
         b = b.replace('<span class="val">[activation link]</span>',
                       f'<a href="{ARGS.activation_url}">{ARGS.activation_url}</a>')
