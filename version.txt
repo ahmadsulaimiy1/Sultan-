@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      b99807e2120881a80db571da3cc02e51d2ba6005
-short       b99807e2
+commit      7158c31a1982d2324f1c9e8dd10721a68f9bdb00
+short       7158c31a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Make a dead activation link diagnosable, and stop shipping placeholder ones
-built (UTC) 2026-08-13T21:37:49Z
-assets      shrs-pwa-8d19827bde
+subject     Give the Newsroom the one thing it could not do: correct a mistake
+built (UTC) 2026-08-13T22:37:26Z
+assets      shrs-pwa-f8e152f629
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

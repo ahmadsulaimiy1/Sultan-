@@ -45,7 +45,7 @@ first:
 
 ```
 curl -sS -X POST https://shroyalschools.com/api/portal/admin/staff \
-  -H "x-admin-token: $PORTAL_ADMIN_TOKEN" -H "content-type: application/json" \
+  -H "x-sysadmin-token: $PORTAL_SYSADMIN_TOKEN" -H "content-type: application/json" \
   -d '{"action":"create-login","staffNo":"<the Staff ID>"}'
 ```
 

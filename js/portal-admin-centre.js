@@ -50,6 +50,8 @@
     if (staffDirBtn) staffDirBtn.addEventListener('click', function () { renderStaffDirectory(); });
     var authorityBtn = document.getElementById('admin-authority-register-btn');
     if (authorityBtn) authorityBtn.addEventListener('click', function () { renderAuthorityRegister(); });
+    var accessBtn = document.getElementById('admin-staff-access-btn');
+    if (accessBtn) accessBtn.addEventListener('click', function () { renderStaffAccess(); });
   }
 
   function esc(s) {
@@ -179,6 +181,149 @@
     if (!el) return;
     el.textContent = msg || '';
     el.className = 'admin-form-status' + (msg ? (ok ? ' is-ok' : ' is-err') : '');
+  }
+
+  // ================================================================
+  // Staff Access — check an account's state, and re-issue its
+  // activation link.
+  //
+  // `create-login` was reachable from exactly one place: the New Staff
+  // form, as the last step of creating somebody. For a staff member who
+  // already existed there was no screen at all, so the only way to give
+  // them a fresh link was a hand-written curl carrying the sysadmin
+  // token. That is precisely the case that arises most — a link used, a
+  // link expired, a link superseded — and it is the case that had no
+  // button. This is that button.
+  //
+  // It reads `login-status` first and says plainly what the account's
+  // state is, because "the link does not work" has several quite
+  // different causes and only one of them is answered by issuing another
+  // link. Someone who has already set a password needs to be told to
+  // sign in, not handed a new link.
+  // ================================================================
+  var ACCESS_STATE_COPY = {
+    'active': ['Active', 'The password is set. This person should sign in — a new link is not needed, and issuing one does not disturb the password they already have.'],
+    'active-with-open-reset': ['Active, with a reset outstanding', 'The password is set and a reset link is also open. Either will let them in.'],
+    'awaiting-activation': ['Waiting to be activated', 'A live link is outstanding. It is the only one that works — every earlier link is already dead.'],
+    'link-expired': ['Link expired', 'The link passed its expiry. Issue a fresh one below.'],
+    'link-used-or-superseded': ['No live link', 'No password and no live link: the link was used, or replaced by a newer one that was never opened. Issue a fresh one below.'],
+    'no-account': ['No login yet', 'No login has ever been created for this staff member. Issuing one below creates it.'],
+  };
+
+  function accessCard(staff) {
+    return '<div class="portal-child-card">'
+      + '<div class="portal-child-head"><h2>Staff Access</h2>'
+      + '<div class="meta">Check whether an account is active, and issue a fresh activation link. Issuing a link cancels every earlier one &mdash; the account holds a single token, so always send the newest.</div></div>'
+      + '<form class="admin-form" id="access-find-form"><div class="admin-form-grid">'
+      + '<div class="admin-field"><label>Find a staff member</label>'
+      + '<input name="q" placeholder="Name or Staff ID" value="' + esc(staff || '') + '" autocomplete="off" /></div>'
+      + '</div><div class="admin-form-actions"><button type="submit" class="btn-outline">Search</button>'
+      + '<span class="admin-form-status" id="access-status"></span></div></form>'
+      + '<div id="access-results" style="padding:0 26px 20px;"></div>'
+      + '</div>';
+  }
+
+  function renderStaffAccess(prefill) {
+    var el = document.getElementById('admin-right-panel');
+    el.innerHTML = accessCard(prefill);
+    document.getElementById('access-find-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      accessSearch(new FormData(e.target).get('q'));
+    });
+    if (prefill) accessSearch(prefill);
+  }
+
+  function accessSearch(q) {
+    q = (q || '').toString().trim();
+    if (!q) { statusEl('access-status', 'Type a name or a Staff ID.', false); return; }
+    statusEl('access-status', 'Searching…', true);
+    apiGet('staff', { q: q }).then(function (r) {
+      if (!r.ok) { statusEl('access-status', (r.data && r.data.error) || 'Could not search.', false); return; }
+      var list = (r.data && r.data.staff) || [];
+      statusEl('access-status', list.length ? list.length + ' found' : 'Nobody matched that.', Boolean(list.length));
+      var out = document.getElementById('access-results');
+      if (!list.length) { out.innerHTML = ''; return; }
+      out.innerHTML = list.map(function (s) {
+        return '<div class="admin-office-row" data-access-row="' + esc(s.staffNo) + '" style="display:block;">'
+          + '<strong>' + esc(s.fullName) + '</strong> &nbsp;<code>' + esc(s.staffNo) + '</code>'
+          + '<div class="meta">' + esc(s.positionTitle || '') + (s.officeName ? ' &middot; ' + esc(s.officeName) : '')
+          + ' &middot; ' + esc(s.status) + (s.email ? ' &middot; ' + esc(s.email) : ' &middot; no email on file') + '</div>'
+          + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-check="' + esc(s.staffNo) + '">Check access</button></div>'
+          + '<div data-access-detail="' + esc(s.staffNo) + '"></div>'
+          + '</div>';
+      }).join('');
+      out.querySelectorAll('[data-access-check]').forEach(function (b) {
+        b.addEventListener('click', function () { accessCheck(b.getAttribute('data-access-check')); });
+      });
+    });
+  }
+
+  function accessCheck(staffNo) {
+    var box = document.querySelector('[data-access-detail="' + staffNo + '"]');
+    if (!box) return;
+    box.innerHTML = '<div class="meta" style="margin-top:10px;">Checking…</div>';
+    apiPost('login-status', { staffNo: staffNo }).then(function (r) {
+      if (!r.ok) {
+        box.innerHTML = '<div class="meta" style="margin-top:10px;">' + esc((r.data && r.data.error) || 'Could not check.') + '</div>';
+        return;
+      }
+      var d = r.data || {};
+      var copy = ACCESS_STATE_COPY[d.state] || [d.state, d.advice || ''];
+      var expires = d.linkExpires ? new Date(d.linkExpires).toLocaleString('en-GB') : null;
+      box.innerHTML = '<div class="portal-empty" style="margin-top:10px;text-align:left;">'
+        + '<strong>' + esc(copy[0]) + '</strong><br>' + esc(copy[1])
+        + (expires ? '<br><span class="meta">Link expires ' + esc(expires) + '</span>' : '')
+        + (d.lockedUntil ? '<br><span class="meta">Locked until ' + esc(new Date(d.lockedUntil).toLocaleString('en-GB')) + '</span>' : '')
+        + '<div style="margin-top:12px;"><button type="button" class="btn-gold" data-access-issue="' + esc(staffNo) + '">Issue a fresh activation link</button>'
+        + ' <span class="admin-form-status" data-access-issue-status="' + esc(staffNo) + '"></span></div>'
+        + '<div data-access-link="' + esc(staffNo) + '"></div></div>';
+      var btn = box.querySelector('[data-access-issue]');
+      if (btn) btn.addEventListener('click', function () { accessIssue(staffNo, btn); });
+    });
+  }
+
+  function accessIssue(staffNo, btn) {
+    // Named plainly, because it is not reversible in the way people
+    // expect: the previous link stops working the instant this returns.
+    if (!window.confirm('Issue a fresh activation link for ' + staffNo + '?\n\nAny link already sent to this person will stop working immediately.')) return;
+    btn.disabled = true;
+    var st = document.querySelector('[data-access-issue-status="' + staffNo + '"]');
+    if (st) { st.textContent = 'Issuing…'; st.className = 'admin-form-status'; }
+    apiPost('create-login', { staffNo: staffNo }).then(function (r) {
+      btn.disabled = false;
+      var out = document.querySelector('[data-access-link="' + staffNo + '"]');
+      if (!r.ok || !r.data || !r.data.activationLink) {
+        if (st) { st.textContent = (r.data && r.data.error) || 'Could not issue a link.'; st.className = 'admin-form-status is-err'; }
+        return;
+      }
+      if (st) { st.textContent = 'Issued.'; st.className = 'admin-form-status is-ok'; }
+      // The endpoint returns a path. What gets sent to a person has to be
+      // the whole address, or they cannot open it — so it is assembled
+      // here rather than left for whoever is copying it to remember.
+      var full = window.location.origin + r.data.activationLink;
+      var days = r.data.expiresInDays;
+      // .admin-field so the box takes the panel's own ink and ground — a
+      // bare input outside it renders as a white slab on the dark card.
+      out.innerHTML = '<div class="admin-field" style="margin-top:12px;">'
+        + '<label>Send this to ' + esc(staffNo) + '</label>'
+        + '<input readonly value="' + esc(full) + '" data-access-copy="' + esc(staffNo) + '" style="font-family:monospace;font-size:12px;" />'
+        + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-copybtn="' + esc(staffNo) + '">Copy</button>'
+        + ' <span class="meta">Valid ' + esc(days || 7) + ' days, single use'
+        + (r.data.alreadyHadPassword ? '. This account already had a password — the old one still works until this link is opened.' : '.')
+        + ' Any earlier link is now dead.</span></div></div>';
+      var input = out.querySelector('[data-access-copy]');
+      var copyBtn = out.querySelector('[data-access-copybtn]');
+      if (copyBtn) copyBtn.addEventListener('click', function () {
+        input.select();
+        // execCommand is deprecated but is the only path that works
+        // without a secure-context clipboard permission prompt; the
+        // async API is tried first and this catches the rest.
+        var done = function () { copyBtn.textContent = 'Copied'; setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(input.value).then(done, function () { try { document.execCommand('copy'); done(); } catch (err) {} });
+        } else { try { document.execCommand('copy'); done(); } catch (err) {} }
+      });
+    });
   }
 
   // ---- Office detail (selected office) ----

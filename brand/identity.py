@@ -66,7 +66,7 @@ if ARGS.activation_url and not ARGS.draft:
             '  reader is told the link is no longer usable.\n'
             '  Issue a real link:\n'
             '    curl -sS -X POST https://shroyalschools.com/api/portal/admin/staff \\\n'
-            '      -H "x-admin-token: $PORTAL_ADMIN_TOKEN" -H "content-type: application/json" \\\n'
+            '      -H "x-sysadmin-token: $PORTAL_SYSADMIN_TOKEN" -H "content-type: application/json" \\\n'
             "      -d '{\"action\":\"create-login\",\"staffNo\":\"<the Staff ID>\"}'\n"
             '  or pass --draft if you are only proofing the design.' % _hit)
 
