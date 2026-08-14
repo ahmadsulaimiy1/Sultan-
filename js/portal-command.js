@@ -65,7 +65,11 @@
     chart:  '<path d="M4 19h16"/><path d="m6 15 3.6-4.2 3 2.4L18 7"/>',
     empty:  '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 10h18M8.5 15h7"/>',
     coin:   '<ellipse cx="12" cy="7" rx="7.5" ry="3.2"/><path d="M4.5 7v10c0 1.8 3.4 3.2 7.5 3.2s7.5-1.4 7.5-3.2V7"/><path d="M4.5 12c0 1.8 3.4 3.2 7.5 3.2s7.5-1.4 7.5-3.2"/>',
-    book:   '<path d="M4 4.5h6a3 3 0 0 1 3 3V20a2.6 2.6 0 0 0-2.6-2.2H4z"/><path d="M20 4.5h-6a3 3 0 0 0-3 3V20a2.6 2.6 0 0 1 2.6-2.2H20z"/>'
+    book:   '<path d="M4 4.5h6a3 3 0 0 1 3 3V20a2.6 2.6 0 0 0-2.6-2.2H4z"/><path d="M20 4.5h-6a3 3 0 0 0-3 3V20a2.6 2.6 0 0 1 2.6-2.2H20z"/>',
+    people: '<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 19c.2-2.2 1.7-3.7 3.6-3.7 1.7 0 3 1.1 3.4 2.9"/>',
+    doc:    '<path d="M6 3h7l5 5v13H6z"/><path d="M13 3v5h5"/><path d="M9 13h6M9 17h6"/>',
+    building:'<path d="M4 21V6l7-3 7 3v15"/><path d="M4 21h16"/><path d="M9 21v-4h4v4"/><path d="M8 9h2M14 9h2M8 13h2M14 13h2"/>',
+    menu:   '<path d="M4 7h16M4 12h16M4 17h16"/>'
   };
 
   /* A card names its icon in markup; the family is drawn once, above. */
@@ -248,14 +252,14 @@
      content differs, because a signed-in office needs different doors than a
      visitor does. */
   var NAV_CARDS = [
-    { label: 'My Dashboard',       href: '/portal/dashboard/' },
-    { label: 'My Children',        href: '/portal/dashboard/#children' },
-    { label: 'Results',            href: '/portal/dashboard/#results' },
-    { label: 'Fees',               href: '/portal/dashboard/#fees' },
-    { label: 'Documents',          href: '/portal/profile/' },
-    { label: 'Verify Certificate', href: '/verify-certificate/' },
-    { label: 'All Offices',        href: '/portal/select/' },
-    { label: 'Full Menu',          href: '/' }
+    { label: 'My Dashboard',       href: '/portal/dashboard/',            ico: 'grid' },
+    { label: 'My Children',        href: '/portal/dashboard/#children',   ico: 'people' },
+    { label: 'Results',            href: '/portal/dashboard/#results',    ico: 'chart' },
+    { label: 'Fees',               href: '/portal/dashboard/#fees',       ico: 'coin' },
+    { label: 'Documents',          href: '/portal/profile/',              ico: 'doc' },
+    { label: 'Verify Certificate', href: '/verify-certificate/',          ico: 'shield' },
+    { label: 'All Offices',        href: '/portal/select/',               ico: 'building' },
+    { label: 'Full Menu',          href: '/',                             ico: 'menu' }
   ];
   var NAV_RAIL = [
     { label: 'My Dashboard',       href: '/portal/dashboard/' },
@@ -272,7 +276,11 @@
     var links = el('div', { class: 'navlinks' });
     NAV_CARDS.forEach(function (c) {
       var drop = el('div', { class: 'nav-drop' });
-      drop.appendChild(el('a', { class: 'nav-drop-trigger', href: c.href, text: c.label }));
+      var a = el('a', { class: 'nav-drop-trigger', href: c.href });
+      a.appendChild(el('span', { class: 'cmd-medallion',
+                                 html: icon(ICONS[c.ico] || ICONS.grid) }));
+      a.appendChild(el('span', { class: 'cmd-cardlabel', text: c.label }));
+      drop.appendChild(a);
       links.appendChild(drop);
     });
 

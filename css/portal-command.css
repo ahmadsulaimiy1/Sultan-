@@ -1279,19 +1279,55 @@ body.portal-body .registrar-form-grid > * { min-width: 0; }
   position: static !important; transform: none !important; pointer-events: auto !important;
 }
 .cmd-navgrid .navlinks .nav-drop-trigger {
-  align-items: center; justify-content: center; text-align: center;
-  min-height: 62px; padding: 14px 12px !important;
-  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 60%, var(--cmd-cream) 100%) !important;
-  border: 1px solid rgba(198,161,91,.34) !important; border-radius: 14px !important;
+  /* The public masthead's card proportions: a tall panel, a gold medallion
+     over a Cinzel label. My first attempt was a short text pill, which is why
+     it read as a toolbar rather than as a masthead. */
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; text-align: center;
+  min-height: 118px; padding: 20px 14px !important;
+  background: linear-gradient(168deg, #FFFFFF 0%, #FCF8EF 52%, #F3E8D2 100%) !important;
+  border: 1px solid rgba(198,161,91,.38) !important; border-radius: 16px !important;
   color: var(--cmd-espresso) !important;
   font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
-  font-size: 11px; letter-spacing: .11em; text-transform: uppercase; font-weight: 600;
-  text-decoration: none; white-space: normal; line-height: 1.35; overflow-wrap: anywhere;
-  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 26px -16px rgba(60,42,16,.30) !important;
-  transition: transform .34s var(--cmd-ease), border-color .34s var(--cmd-ease),
-              box-shadow .34s var(--cmd-ease);
+  font-size: 11px; letter-spacing: .13em; text-transform: uppercase; font-weight: 600;
+  text-decoration: none; white-space: normal; line-height: 1.34; overflow-wrap: anywhere;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 2px 4px rgba(60,42,16,.05),
+    0 14px 30px -18px rgba(60,42,16,.34) !important;
+  transition: transform .38s var(--cmd-ease-out), border-color .38s var(--cmd-ease),
+              box-shadow .38s var(--cmd-ease-out);
 }
+
+/* the medallion — a struck disc, as on the public nav cards */
+.cmd-navgrid .cmd-medallion {
+  width: 44px; height: 44px; flex: none; display: grid; place-items: center;
+  border-radius: 50%; color: #8A6A2E;
+  background: radial-gradient(circle at 34% 28%, #FFFEFA 0%, #F6EAD2 72%, #EEDFC0 100%);
+  border: 1px solid rgba(198,161,91,.55);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 0 0 4px rgba(198,161,91,.09),
+    0 3px 8px rgba(80,58,20,.14);
+  transition: box-shadow .38s var(--cmd-ease), color .38s var(--cmd-ease);
+}
+.cmd-navgrid .cmd-medallion svg {
+  width: 20px; height: 20px; stroke: currentColor; fill: none;
+  stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round;
+}
+.cmd-navgrid .cmd-cardlabel { display: block; }
+
 .cmd-navgrid .navlinks .nav-drop-trigger:hover {
-  transform: translateY(-3px); border-color: rgba(198,161,91,.72) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 18px 36px -18px rgba(60,42,16,.40) !important;
+  transform: translateY(-4px); border-color: rgba(198,161,91,.78) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 4px 8px rgba(60,42,16,.06),
+    0 26px 46px -20px rgba(60,42,16,.44) !important;
+}
+.cmd-navgrid .navlinks .nav-drop-trigger:hover .cmd-medallion {
+  color: #6B5222;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 0 0 5px rgba(198,161,91,.16),
+    0 4px 12px rgba(80,58,20,.20);
 }
