@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      5da4205b680dd510b6f2762f3a8f99d9fc543fb0
-short       5da4205b
+commit      731b04a6fe198043cb84ae65fd1b653d186ae5e0
+short       731b04a6
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Preconnect the host the fonts actually come from
-built (UTC) 2026-08-14T18:16:52Z
+subject     Let the document outline be correct, and stop the markup serving the CSS
+built (UTC) 2026-08-14T18:19:51Z
 assets      shrs-pwa-8452a92786
 pages       143
 
