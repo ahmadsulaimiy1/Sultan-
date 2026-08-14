@@ -389,26 +389,44 @@ export async function onRequestPost({ request, env }) {
     // it" when in truth nobody can use it. The names turn a dead end into
     // an instruction. It is disclosed only to a signed-in staff member,
     // and it is who administers their own institution.
+    // The question is not "does an administrator exist" but "can anybody
+    // actually sign in as one". A seeded EXE record with no password and
+    // no email on file is not an administrator; it is a name in a table.
+    // Refusing on its account left the institution with no one able to
+    // administer it and no way to appoint anybody — which is precisely
+    // the deadlock this whole path exists to end.
+    //
+    // A holder counts as usable if it has a password (it can sign in) or
+    // an email (it can reset its way in). Only when not one holder has
+    // either is the seat genuinely empty.
     const held = await sql`
-      SELECT s.full_name, s.staff_no, s.email, sr.role_code
-      FROM staff_roles sr JOIN staff s ON s.id = sr.staff_id
+      SELECT s.full_name, s.staff_no, s.email, sr.role_code,
+             (sa.password_hash IS NOT NULL) AS has_password,
+             (s.email IS NOT NULL AND btrim(s.email) <> '') AS has_email
+      FROM staff_roles sr
+      JOIN staff s ON s.id = sr.staff_id
+      LEFT JOIN staff_accounts sa ON sa.staff_id = s.id
       WHERE sr.role_code IN ('SYSADMIN', 'EXE') AND sr.is_active = true AND sr.revoked_at IS NULL
       ORDER BY s.full_name`;
-    if (held.rows.length) {
-      const who = held.rows.map((r) =>
-        `${r.full_name} (${r.staff_no}, ${r.role_code}${r.email ? ', ' + r.email : ', no email on file'})`).join('; ');
+    const usable = held.rows.filter((r) => r.has_password || r.has_email);
+    if (usable.length) {
+      const who = usable.map((r) =>
+        `${r.full_name} (${r.staff_no}, ${r.role_code}${r.email ? ', ' + r.email : ''})`).join('; ');
       return json({ error: 'This is closed — the institution already has: ' + who
-        + '. Sign in as that account and grant your own the role. If that record is a duplicate of '
-        + 'you, or nobody can sign in as it, tell the ICT Office.' }, 409);
+        + '. Sign in as that account and grant your own the role.' }, 409);
     }
+    // Recorded on the grant: which unusable holders were passed over, and
+    // why that was legitimate. An auditor should not have to reconstruct
+    // it later from a bare "first admin" note.
+    const passedOver = held.rows.map((r) => `${r.full_name} (${r.staff_no}, ${r.role_code})`).join('; ') || 'none';
     await sql`
       INSERT INTO staff_roles (staff_id, role_code, is_active, granted_at)
       VALUES (${auth.staffId}, 'SYSADMIN', true, now())`;
     await logStaffEvent(sql, {
       actorStaffId: auth.staffId, eventType: 'sensitive_action',
       targetType: 'staff', targetId: auth.staffId,
-      reason: 'First-admin bootstrap: no active SYSADMIN or EXE existed.',
-      metadata: { action: 'bootstrap-sysadmin', roleCode: 'SYSADMIN' },
+      reason: 'First-admin bootstrap: no SYSADMIN or EXE holder could sign in. Passed over: ' + passedOver,
+      metadata: { action: 'bootstrap-sysadmin', roleCode: 'SYSADMIN', passedOver },
     });
     return json({ ok: true, staffId: auth.staffId, roleCode: 'SYSADMIN' });
   }
