@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      7158c31a1982d2324f1c9e8dd10721a68f9bdb00
-short       7158c31a
+commit      6bb0f15ab672a1a01afc6450b97e9d27b6591cb2
+short       6bb0f15a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give the Newsroom the one thing it could not do: correct a mistake
-built (UTC) 2026-08-13T22:37:26Z
-assets      shrs-pwa-f8e152f629
+subject     Add Staff Access: check an account, and re-issue its activation link
+built (UTC) 2026-08-14T06:17:51Z
+assets      shrs-pwa-565bb47b23
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
