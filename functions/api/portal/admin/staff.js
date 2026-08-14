@@ -382,6 +382,30 @@ export async function onRequestPost({ request, env }) {
     if (auth.method !== 'staff_session') {
       return json({ error: 'This is for a signed-in staff account. Sign in at /portal/staff/login/ first.' }, 403);
     }
+    // SECOND CONDITION, added on review of the first version of this path.
+    //
+    // "No usable administrator" alone is too wide a door. A privileged
+    // record that has been created but not yet activated — an EXE issued
+    // an activation link this morning — satisfies it, and in a school with
+    // fifty signed-in staff that would let any one of them take SYSADMIN
+    // during the hours before the real holder sets a password. That is a
+    // privilege-escalation window, and it is not what this path is for.
+    //
+    // So the claimant must also be the ONLY person who can sign in at all.
+    // That is the true bootstrap condition: an institution whose staff are
+    // already using the portal is not un-administered, it is misconfigured,
+    // and it should recover through PORTAL_SYSADMIN_TOKEN with a human
+    // deciding — not through a button any of them can press.
+    const others = await sql`
+      SELECT count(*)::int AS n
+      FROM staff_accounts
+      WHERE password_hash IS NOT NULL AND staff_id <> ${auth.staffId}`;
+    if (others.rows[0].n > 0) {
+      return json({ error: 'This is closed — ' + others.rows[0].n + ' other staff account'
+        + (others.rows[0].n === 1 ? '' : 's') + ' can already sign in, so this institution is not '
+        + 'un-administered. Recover through the system administrator token, or ask a colleague who '
+        + 'holds Manage Users to grant your account the role.' }, 409);
+    }
     // Naming the holders matters more than it looks. The grant can land on
     // a different staff record than the one its owner later signs in as —
     // a second record made during a first attempt, or the wrong row picked

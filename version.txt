@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      731b04a6fe198043cb84ae65fd1b653d186ae5e0
-short       731b04a6
+commit      f85589d2c80249bdb112e80f51f595bab696c3eb
+short       f85589d2
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let the document outline be correct, and stop the markup serving the CSS
-built (UTC) 2026-08-14T18:19:51Z
+subject     Name the search and assistant fields, and let them speak Yoruba and French
+built (UTC) 2026-08-14T18:23:14Z
 assets      shrs-pwa-8452a92786
 pages       143
 
