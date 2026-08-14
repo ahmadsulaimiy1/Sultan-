@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      534407f3c38ba2eb4ff0e7bfa4ce45307ec5b782
-short       534407f3
+commit      bee1518725fe8f2be29be50ba15c3b3bd05dbfd0
+short       bee15187
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let a staff member's login email be set after the record exists
-built (UTC) 2026-08-14T09:47:52Z
-assets      shrs-pwa-23e74848c0
+subject     Let Staff Access list everyone when nothing is typed
+built (UTC) 2026-08-14T11:23:13Z
+assets      shrs-pwa-fbf02fa76c
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
