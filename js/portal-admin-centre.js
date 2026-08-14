@@ -235,12 +235,20 @@
 
   function accessSearch(q) {
     q = (q || '').toString().trim();
-    if (!q) { statusEl('access-status', 'Type a name or a Staff ID.', false); return; }
+    // An empty search lists everybody — the endpoint already treats a
+    // missing q that way. Refusing it left no way to answer "who exists
+    // at all?", which is exactly the question a search returning nothing
+    // raises, and the answer "nobody matched" was indistinguishable from
+    // "there are no staff records yet".
     statusEl('access-status', 'Searching…', true);
-    apiGet('staff', { q: q }).then(function (r) {
+    apiGet('staff', q ? { q: q } : {}).then(function (r) {
       if (!r.ok) { statusEl('access-status', (r.data && r.data.error) || 'Could not search.', false); return; }
       var list = (r.data && r.data.staff) || [];
-      statusEl('access-status', list.length ? list.length + ' found' : 'Nobody matched that.', Boolean(list.length));
+      statusEl('access-status', list.length
+        ? list.length + (q ? ' found' : ' staff on record')
+        : (q ? 'Nobody matched that. Search again with nothing typed to list everyone.'
+             : 'There are no staff records at all yet. Use "+ New Staff & Login" to create one.'),
+        Boolean(list.length));
       var out = document.getElementById('access-results');
       if (!list.length) { out.innerHTML = ''; return; }
       out.innerHTML = list.map(function (s) {
