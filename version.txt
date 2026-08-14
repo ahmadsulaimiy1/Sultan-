@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      2339ce6b53964989b7cb1ba145efe577f56b4bd4
-short       2339ce6b
+commit      5da4205b680dd510b6f2762f3a8f99d9fc543fb0
+short       5da4205b
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Stop .at-ref painting itself invisible on a cream band
-built (UTC) 2026-08-14T18:07:46Z
-assets      shrs-pwa-27d65802d0
+subject     Preconnect the host the fonts actually come from
+built (UTC) 2026-08-14T18:16:52Z
+assets      shrs-pwa-8452a92786
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
