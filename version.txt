@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      63b0cd162ea65a0669ea975fd4b40285498a6b10
-short       63b0cd16
+commit      49fd1d07ff786705d09f5ad3e513a98c7e77ea40
+short       49fd1d07
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Stop the Admin Centre demanding the token several times a day
-built (UTC) 2026-08-14T11:44:17Z
+subject     Break the first-admin deadlock
+built (UTC) 2026-08-14T11:56:29Z
 assets      shrs-pwa-062d99f2d3
 pages       143
 

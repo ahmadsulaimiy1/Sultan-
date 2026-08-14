@@ -382,12 +382,24 @@ export async function onRequestPost({ request, env }) {
     if (auth.method !== 'staff_session') {
       return json({ error: 'This is for a signed-in staff account. Sign in at /portal/staff/login/ first.' }, 403);
     }
+    // Naming the holders matters more than it looks. The grant can land on
+    // a different staff record than the one its owner later signs in as —
+    // a second record made during a first attempt, or the wrong row picked
+    // in the directory — and then the refusal reads as "someone else has
+    // it" when in truth nobody can use it. The names turn a dead end into
+    // an instruction. It is disclosed only to a signed-in staff member,
+    // and it is who administers their own institution.
     const held = await sql`
-      SELECT count(*)::int AS n FROM staff_roles
-      WHERE role_code IN ('SYSADMIN', 'EXE') AND is_active = true AND revoked_at IS NULL`;
-    if (held.rows[0].n > 0) {
-      return json({ error: 'This is closed — the institution already has a System Administrator or Executive. '
-        + 'Ask them to grant your account the role.' }, 409);
+      SELECT s.full_name, s.staff_no, s.email, sr.role_code
+      FROM staff_roles sr JOIN staff s ON s.id = sr.staff_id
+      WHERE sr.role_code IN ('SYSADMIN', 'EXE') AND sr.is_active = true AND sr.revoked_at IS NULL
+      ORDER BY s.full_name`;
+    if (held.rows.length) {
+      const who = held.rows.map((r) =>
+        `${r.full_name} (${r.staff_no}, ${r.role_code}${r.email ? ', ' + r.email : ', no email on file'})`).join('; ');
+      return json({ error: 'This is closed — the institution already has: ' + who
+        + '. Sign in as that account and grant your own the role. If that record is a duplicate of '
+        + 'you, or nobody can sign in as it, tell the ICT Office.' }, 409);
     }
     await sql`
       INSERT INTO staff_roles (staff_id, role_code, is_active, granted_at)
