@@ -3235,9 +3235,19 @@ cite,.pr-quote cite,.pr-founder-card cite,figure cite{color:rgb(var(--lv-cf,59,4
    they are standing in and step back from it — which is correct on any
    ground, and stays correct when a band is later re-toned. */
 .el-voice .who,.el-voices .who,.quote-panel .who,.el-figures .who,
-.pr-quote cite,.at-ref{
+.pr-quote cite{
   color:inherit!important;opacity:.78;}
-.pr-section.is-royal .at-ref,.chapter-band .at-ref,.chapter-band-alt .at-ref{opacity:.86;}
+
+/* .at-ref is deliberately NOT in that list, and this is the whole reason
+   the exception exists. Taking the band's colour is right for an
+   attribution printed straight onto the band. It is wrong for this one,
+   because .at-ref carries its own dark chip — brand.css sets
+   background:var(--navy-deep-bg) on it — so on a cream band it inherited
+   the band's dark ink and painted dark on dark. Measured at 1.22:1,
+   which is not poor contrast but invisibility.
+   It keeps the bright gold its own ground was chosen for: 11.44:1, and
+   9.81:1 after the opacity below. */
+.at-ref{color:var(--gold-bright)!important;opacity:.92;}
 
 /* The ghost button is ink by default and only goes pale on a dark band —
    the safer way round, since the cream bands outnumber the royal ones. */
