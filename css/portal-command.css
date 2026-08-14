@@ -1398,3 +1398,114 @@ body.portal-body .registrar-form-grid > * { min-width: 0; }
   .cmd-estab-text { letter-spacing: .16em; font-size: 9.5px; white-space: normal; text-align: center; }
   .cmd-estab-name b { font-size: 15px; }
 }
+
+/* ===========================================================================
+   18. MATERIAL — why the cards were flat, and what they are made of now
+   ===========================================================================
+   The cards were a colour fill inside a hairline border. That is a diagram of
+   a card, not a card: nothing on the surface told the eye where the light was
+   coming from, so it read as paper printed on paper.
+
+   Four things make a panel read as an object, and it needs all four:
+
+     1. a BEVEL — a light line along the top edge and a dark one along the
+        bottom, which is the eye's fastest cue for a raised surface
+     2. a METAL EDGE — the border is a gradient, light at the top and shadowed
+        at the foot, because a real gilt edge catches light along its length
+        and a flat rgba border never can
+     3. LAYERED DEPTH — a tight contact shadow AND a wide ambient one. A
+        single soft shadow reads as a sticker; two read as an object resting
+        on a surface
+     4. a SPECULAR SWEEP — one faint diagonal across the face, which is what
+        lacquer and enamel do and what a flat fill cannot
+   =========================================================================== */
+
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  position: relative; overflow: hidden;
+  /* the surface, then the metal edge, painted as two boxes */
+  background:
+    linear-gradient(168deg, #FFFFFF 0%, #FDF9F1 46%, #F6EBD6 100%) padding-box,
+    linear-gradient(160deg,
+      #FBF0D6 0%, #E4C88C 18%, #C6A15B 38%,
+      #9A7734 62%, #C6A15B 82%, #F3E3B8 100%) border-box !important;
+  border: 1px solid transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(140,105,45,.13),
+    0 1px 1px rgba(70,48,16,.05),
+    0 7px 14px -7px rgba(70,48,16,.17),
+    0 22px 42px -20px rgba(70,48,16,.30) !important;
+}
+/* the sweep: one diagonal, low, and it does not move */
+.cmd-navgrid .navlinks .nav-drop-trigger::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(148deg,
+    rgba(255,255,255,.85) 0%, rgba(255,255,255,.30) 26%,
+    rgba(255,255,255,0) 46%, rgba(140,105,45,.045) 100%);
+}
+.cmd-navgrid .navlinks .nav-drop-trigger > * { position: relative; z-index: 1; }
+
+.cmd-navgrid .navlinks .nav-drop-trigger:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(140,105,45,.16),
+    0 2px 2px rgba(70,48,16,.06),
+    0 12px 22px -8px rgba(70,48,16,.22),
+    0 34px 58px -22px rgba(70,48,16,.40) !important;
+}
+
+/* --- the medallion, struck rather than printed --------------------------- */
+.cmd-navgrid .cmd-medallion {
+  width: 46px; height: 46px; border: 0 !important;
+  background:
+    radial-gradient(circle at 36% 26%, #FFFEFA 0%, #F6EACF 54%, #E6D3AC 100%) !important;
+  box-shadow:
+    inset 0 1px 1.5px rgba(255,255,255,.98),
+    inset 0 -1.5px 2px rgba(140,105,45,.22),
+    0 0 0 1px rgba(198,161,91,.62),
+    0 0 0 4px rgba(198,161,91,.09),
+    0 3px 7px rgba(90,64,22,.20) !important;
+}
+/* the icon sits IN the disc: a white light-line under the stroke reads as
+   engraving, which is what a struck medallion actually looks like */
+.cmd-navgrid .cmd-medallion svg {
+  stroke: #7C6127; stroke-width: 1.45;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.95));
+}
+.cmd-navgrid .navlinks .nav-drop-trigger:hover .cmd-medallion {
+  box-shadow:
+    inset 0 1px 1.5px rgba(255,255,255,1),
+    inset 0 -1.5px 2px rgba(140,105,45,.26),
+    0 0 0 1px rgba(198,161,91,.86),
+    0 0 0 5px rgba(198,161,91,.16),
+    0 5px 12px rgba(90,64,22,.26) !important;
+}
+
+/* --- the label: it was the same weight as everything else ---------------- */
+.cmd-navgrid .cmd-cardlabel {
+  font-size: 11.5px; letter-spacing: .155em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* --- the rail's live tab, given the same edge ---------------------------- */
+.cmd-rail .nav-cta.is-here {
+  box-shadow:
+    inset 0 1px 0 rgba(255,252,240,.85),
+    inset 0 -1px 0 rgba(90,64,22,.32),
+    0 6px 16px -6px rgba(0,0,0,.45) !important;
+}
+
+/* --- and the plate's rules, which were a flat tint ----------------------- */
+.cmd-estab-rule {
+  background: linear-gradient(90deg, transparent,
+    rgba(198,161,91,.28) 16%, rgba(243,227,184,.95) 44%,
+    rgba(154,119,52,.95) 56%, rgba(198,161,91,.28) 84%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,.85);
+}
+.cmd-estab-brand img { filter: drop-shadow(0 2px 3px rgba(70,48,16,.28)); }
+.cmd-estab-name b { text-shadow: 0 1px 0 rgba(255,255,255,.95); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-navgrid .navlinks .nav-drop-trigger:hover { transform: none; }
+}
