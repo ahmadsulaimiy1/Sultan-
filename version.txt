@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      8b34d2d1ebb2e1567635b2056bd32fee447bc1da
-short       8b34d2d1
+commit      aabfa0b2a1e69b6027ad6a874534dda70f88cf39
+short       aabfa0b2
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     The identity: one, and the Counterweight is its signature
-built (UTC) 2026-08-13T12:01:08Z
-assets      shrs-pwa-caf195dc57
+subject     Let staff reset their own passwords
+built (UTC) 2026-08-14T06:30:25Z
+assets      shrs-pwa-a67f7e8749
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

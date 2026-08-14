@@ -6,6 +6,12 @@
   var submitBtn = document.querySelector('[data-portal-submit]');
   if(!form) return;
 
+  // Staff and guardians are separate account tables with separate reset
+  // endpoints, but the form, the states and the copy are identical. Each
+  // page names its own endpoint; the guardian page predates the
+  // attribute, so its path remains the default.
+  var endpoint = form.getAttribute('data-portal-forgot-endpoint') || '/api/portal/forgot-password';
+
   form.addEventListener('submit', async function(e){
     e.preventDefault();
     errorEl.classList.remove('is-visible');
@@ -16,7 +22,7 @@
     var email = form.email.value.trim();
 
     try{
-      var res = await fetch('/api/portal/forgot-password', {
+      var res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ email: email }),

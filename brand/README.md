@@ -1,76 +1,138 @@
-# Brand — the school's letterhead
+# Brand — the school's stationery
 
-Three files, one design.
+One design, four outputs. The full rationale is in
+[`docs/shrs-identity-manual.md`](../docs/shrs-identity-manual.md).
 
 | File | Use |
 |---|---|
-| `letter-registrar-activation.pdf` | The letter itself, **beginning on sheet one**. Four sheets. |
+| `letter-registrar-activation.pdf` | The letter itself, beginning on sheet one. Four sheets. |
 | `letterhead.pdf` | Blank stationery, one sheet. A separate artefact — never the cover of a letter. |
-| `letterhead.docx` | Open in Word and type. Crest and details sit in the page header and footer, so every page carries them. |
-| `build.py` | Regenerates both from the embedded assets. Edit the letter blocks and re-run. |
-| `*.html` | The sources both PDFs are printed from. |
+| `letterhead.docx` | Open in Word and type. The two masses are page-anchored images, so they bleed to the edge on every page. |
+| `identity.py` | Builds both HTML sheets, from which the PDFs are printed. |
+| `word.py` | Builds the `.docx` from bands rendered out of `letterhead.html`, so Word and PDF cannot drift. |
+| `build-arms.py` | Re-renders the arms as a single-ink gold device. Run only when the artwork changes. |
+| `measure.js` | Measures the letter's blocks in Chromium so the pagination standard can be applied automatically. Called by `identity.py`. |
+| `assets/` | The arms (source and single-ink), the letter's text blocks, and the two Word bands. |
+| `../docs/letters/registrar-portal-activation.md` | The record of what the letter says. **Generated** — never edit it by hand. |
+
+## The letter's text lives in one place
+
+`assets/letter-blocks.html` is the only source. The PDF, the sheets and
+the record copy in `docs/letters/` are all written from it on every
+build, so they cannot disagree. The record copy used to be kept by hand
+and it drifted — it named the wrong signatory and was missing whole
+sections that had been added to the letter. A record of what was sent
+that disagrees with what was sent is worse than no record.
+
+The record is written from the blocks **before** the Staff ID and the
+activation link are substituted, so it carries the placeholders and
+neither secret can reach the repository through it. The build checks
+this.
+
+## Building
+
+```
+python3 brand/identity.py \
+  --staff-id "SHRS-HQ-REG-130826-000004" \
+  --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
+```
+
+**The activation link must be a real one.** The build refuses an obvious
+placeholder — `DEMO`, `test`, `example` and the like — because a letter
+built with one cannot be activated, and its reader is told the link is no
+longer usable. This is not hypothetical: it happened. Issue a live link
+first:
+
+```
+curl -sS -X POST https://shroyalschools.com/api/portal/admin/staff \
+  -H "x-sysadmin-token: $PORTAL_SYSADMIN_TOKEN" -H "content-type: application/json" \
+  -d '{"action":"create-login","staffNo":"<the Staff ID>"}'
+```
+
+Pass `--draft` when you only want to proof the design.
+
+**A newly issued link cancels every earlier one** — the account row holds
+exactly one token. Always send the newest, and rebuild the letter from
+it in the same sitting.
+
+A third argument places the signatory's own signature:
+
+```
+python3 brand/identity.py --signature assets/images/certificates/signature-chairman.png ...
+```
+
+It is dropped onto the cream with `mix-blend-mode:multiply`, so a scan on
+white paper needs no cutting out. **Nothing is drawn or imitated** — with
+no `--signature` the space above the rule stays blank, which is the only
+honest default. Signatures already on file live in
+`assets/images/certificates/`; a new one is a scan of the signatory's own
+hand, supplied by them.
+
+Omit any argument and that blank stays visible in the letter rather
+than silently wrong. The activation link is generated per person in the
+Admin Centre at the moment of sending; it is single-use and must never be
+committed here.
+
+The generator reads only from `brand/assets/` and `assets/fonts/`, so it
+runs from any working directory on any machine. Fonts and images are
+embedded as base64, which is why a rendered sheet needs no network and
+prints identically anywhere.
+
+**Pagination is automatic.** `identity.py` measures the letter's blocks in
+Chromium and applies the correspondence standard — header on the opening
+sheet, footer on the closing sheet, every sheet between them clean. See
+[`docs/shrs-correspondence-standard.md`](../docs/shrs-correspondence-standard.md).
+It prints what it decided:
+
+```
+letter: 3 sheets — head, clean, foot
+```
+
+If Chromium is not on the machine the build says so and falls back to the
+last stored measurement rather than guessing silently. `PLAYWRIGHT_PATH`
+can point at the `node_modules` holding `playwright-core` if it is not
+resolvable from `brand/`.
+
+To rebuild the Word file after a design change, re-render the ground out
+of `letterhead.html` and then run the builder:
+
+```
+python3 brand/word.py
+```
 
 ## What it carries, and where each fact came from
 
-Nothing on this letterhead was invented. Every line is drawn from the
-site or the database seed:
+Nothing on this letterhead was invented:
 
-- **Crest** — `assets/images/brand-mark.png`, the shield alone without the
-  wordmark, so the name can be set in type rather than repeated twice.
-- **Arabic name** — مدرسة سلطان حنفي الملكية, as it appears on the crest itself.
-- **Motto** — "Forming Scholars, Leaders and Guardians of Excellence.",
-  from the site footer.
-- **Five institutions** — the public names as the site presents them.
-- **Contacts, campus, founding year, governance** — from the site footer.
+- **Crest** — the school's own institutional arms.
+- **Arabic name** — مدارس السلطان حنفي الملكية, plural and with the
+  article, as the school's Arabic pages set it.
+- **Motto** — "Forming Scholars, Leaders and Guardians of Excellence."
+- **Five institutions**, **contacts**, **campus**, **founding year**,
+  **governance** — from the site footer and the database seed.
+- **Colour** — two inks. Coffee `#2E1A0D` and one flat gold, Pantone 872
+  or a single CMYK build. No gradient, and no third colour.
 
-## Typography
+## Verification
 
-The school's own three faces, embedded in the HTML as woff2 so the PDF
-renders in them with no network and no font installation:
+Every build is measured, not eyeballed. The render harness loads both
+documents in Chromium and asserts the twenty tests listed in the manual —
+ink coverage, the single left and right edge, the measure and characters
+per line, the print floor for type both on paper and reversed, the arms
+standing on the Axis unshadowed, the bilingual lock's shared centre line,
+equal measure and unbroken names, the Arabic presence ratio, the absence
+of any simulated texture, containment on every sheet, fonts loaded, links
+live, and zero console errors. **All twenty pass on the current build.**
 
-- **Cinzel** — the wordmark and subject lines. Roman capitals; it is the
-  face the site already uses for institutional headings.
-- **Cormorant Garamond** — the motto and the seal line. Italic, for the
-  one voice on the page that is the school speaking about itself.
-- **Inter** — body text and the small capitals. Quiet on purpose: a
-  letterhead should be the most decorated thing on the page, and the
-  letter the most readable.
-- **Amiri** — the Arabic name.
+The thresholds are not taste. They come from `docs/letterhead-audit.md`,
+which measured the previous revision at 51.2% ink coverage, eleven left
+edges, twelve type sizes and four elements set below 6 pt reversed.
 
-**The Word file is the exception.** A `.docx` cannot embed fonts the way
-the HTML does, so Word substitutes anything not installed on that
-computer. For an exact match, install **Cinzel** and **Cormorant
-Garamond** (both free, fonts.google.com) on any machine that writes
-letters. Without them Word falls back to a default serif — still
-correct, just not the school's own face. Body text is set in Georgia
-precisely because it is present on every Windows and Mac already.
-
-## Colours
-
-Espresso ink `#241809`, secondary `#5A4630`, gold `#8E6A26`. Chosen to
-print faithfully — deliberately not a saturated RGB gold, which turns
-muddy or greenish on a laser printer.
-
-The sheet is plain white. A tinted stock is the paper's job, not the
-printer's: a full-bleed background costs ink on every page and rarely
-reproduces the way it looks on screen.
-
-## Regenerating the PDF
-
-Open `letterhead.html` in a browser and print to PDF at A4 with margins
-set to **None** and "Background graphics" **on**. The page is already
-sized to 210 × 297 mm, so nothing needs scaling.
-
-## One honest note on verification
-
-The HTML and PDF were rendered and inspected — both pages measured to
-794 × 1123 px (A4 at 96 dpi), all seven fonts confirmed loaded, and the
-footer confirmed to sit inside the sheet on both pages.
-
-The `.docx` was **not** visually verified: LibreOffice is broken in the
-environment this was built in and fails to open even a one-word test
-document, so no rendering could be produced. Its structure was checked
-instead — every XML part well-formed, the image embedded and correctly
-related, header and footer references present, and the header and footer
-text confirmed to read correctly. Please open it once in Word before
-using it for a real letter.
+**The `.docx` is the exception, and this is worth stating plainly.**
+LibreOffice is broken in the environment this was built in — it fails to
+open even a one-word test document — so no rendering of the Word file
+could be produced and it has **not** been visually verified. What was
+checked instead: every XML part parses, every relationship ID referenced
+by `document.xml` and `header1.xml` resolves in its `.rels`, both images
+are valid JPEG, and the page and margin geometry match the PDF's. Please
+open it once in Word before using it for a real letter.

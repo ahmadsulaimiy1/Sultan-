@@ -1,158 +1,168 @@
 # Sultan Hanafi Royal Schools — the institutional identity
 
-One identity. Not a concept, not an option, not an exploration.
-
-Built with `brand/identity.py`. Rendered to `brand/letterhead.pdf` and
-`brand/letter-registrar-activation.pdf`.
+Built with `brand/identity.py` (the sheet), `brand/build-arms.py` (the
+single-ink arms) and `brand/word.py` (the Word stationery, rendered from
+the same sheet so the two cannot drift).
 
 ---
 
-## The signature — the Counterweight
+## The architecture
 
-**Every SHRS document is held between two masses of the same coffee
-material.**
-
-A **cartouche** at the head, bleeding off the top and left edges,
-bearing the seal and the bilingual lock. A **footing** at the base,
-running the full measure, bearing the record. Between them, an ivory
-field that is the document's own voice and is never encroached on.
-
-The cartouche is taller and denser. The footing is shallower and wider,
-so its **area is the greater** — 80,993 px² against 18,454 px², a ratio
-of about 4.4 : 1, asserted in the build tests. The head therefore reads
-as authority and the foot as weight.
-
-That relation is not an aesthetic preference. It is a statement about
-this institution specifically: SHRS's real distinction is that every
-document it issues is verifiable, so **the record is what the document
-rests on**. The identity says so structurally, before a word is read.
-
-### Why this is the signature and not something else
-
-- It is **a relationship, not a shape.** The crest could be redrawn in
-  2050 and the identity would survive, because what identifies the
-  school is where the masses sit and how they relate, not what is drawn
-  inside them.
-- It is **parametric.** One number — the depth of each mass — produces
-  the whole family. Nothing is redesigned per artefact.
-- It **degrades gracefully.** Where a format cannot hold two masses (ID
-  card, favicon, signage plate, email signature) the two merge into one
-  and the seal sits at the join. That is part of the grammar, not an
-  exception to it.
-- It passes the **fifteen-per-cent test.** A corner of any SHRS document
-  shows either a coffee cartouche with a seal bleeding off two edges, or
-  a coffee footing carrying gold microtext. Either identifies the school
-  alone.
-
-## The bilingual lock
-
-Arabic and English are **one identity, not two languages set side by
-side.** Three rules make that structural rather than sentimental:
-
-1. **The gold rule between them is dimensioned by whichever language
-   runs longer.** The lock therefore *cannot be constructed in English
-   alone* — a true statement about this school turned into a
-   construction rule. Asserted in the build: rule width matches
-   `max(english, arabic)` within 2px.
-2. **Arabic is set at 1.15× the Latin size.** Amiri at matched point
-   size reads smaller, because naskh carries a lower effective x-height
-   relative to its em. Matching the numbers would have made the Arabic
-   subordinate; matching the *presence* is what parity actually
-   requires. Asserted: presence ratio 1.15.
-3. **The correct name is مدارس السلطان حنفي الملكية** — plural, with the
-   article, as the school's own Arabic pages set it. The singular names
-   one school; this house has five.
-
-## The material
-
-| | |
+| Element | What it does |
 |---|---|
-| Coffee | `#2B1A0E → #1C1006 → #150B03`, used as **mass**, never as text ink |
-| Royal gold | `#C6A15B`; as foil, a five-stop gradient through the letterform |
-| Antique gold | `#9C7A3C` for small caps on paper |
-| Warm ivory | `#FBF7EF → #F5EEE1 → #EDE3D2`, graded — paper lightens where light falls |
-| Ink | `#241A12`, secondary `#5A4632`. Never black; black is toner |
+| **Rail** | burgundy, down the left edge, **full height**, carrying the school's name turned on its side. The spine that ties masthead to foot, unbroken. |
+| **Mass** | burgundy, across the head, **stopping two-thirds across** and cut back at its lower-right corner |
+| **Place** | the place of issue — Ikorodu, Lagos State, Federal Republic of Nigeria — set on the cream beyond the mass |
+| **Medallion** | a cream disc with a gold ring and the arms, **straddling the mass's right edge**: half on ink, half on paper |
+| **Strip** | the five schools and the year of founding, over a gold rule and a line of **microtext** |
+| **Field** | the letter |
+| **Foot** | cut on a shallow diagonal — the creed on the cream above it, the record badged on the burgundy below, then the governance line |
 
-Coffee is a **material**, not a colour. Brown text on cream paper is a
-colour choice; a solid coffee field the seal sits on is a material one.
-That is the difference between a school that prints in brown and a
-school whose documents are coffee-and-gold objects.
+The medallion straddling the edge is the piece that does the most work: it
+is the only element that belongs to both the ink and the paper, and it is
+what stops the head reading as a band with a logo on it.
 
-**Cotton rag** at 26% multiply, **vignette** at the extremes, and a
-**ghost crest** at 3% off the right edge. All three below conscious
-notice, above the threshold of feeling.
+## The metal
+
+Flat gold is what made the earlier sheets look printed rather than made.
+Real foil carries three things at once, and it is those — not the colour —
+that read as metal:
+
+1. a **specular band** running along its length, from bronze through gold
+   to a near-white highlight and back;
+2. a **lit edge** on top and a **shadowed edge** beneath, so the bar sits
+   proud of what it lies on;
+3. a **shadow cast** on the plate below it.
+
+Every gold member on the sheet carries all three: the bar under the head
+frame, the panel's leading edge, the rail's diamond markers, the bar at
+the foot's lip, and the medallion's rim.
+
+## The plates
+
+The dark areas are not fills. Each is a **plate**: struck on an eight-fold
+girih ground at 8.5% opacity, glazed with one raking reflection and one
+corner bloom, lit along its upper lip, shadowed along its foot, and
+casting a shadow on the cream beneath.
+
+The ground is deliberately below the threshold of reading. At full
+strength it competed with the contact detail set on it, and the measured
+contrast fell to 4.35 : 1. **Every reversed run on this sheet is now
+measured off painted pixels** — not computed styles — and the worst is
+6.78 : 1.
+
+| Run | Contrast |
+|---|---|
+| Panel contact lines | 10.25 : 1 |
+| Footing labels | 6.78 : 1 |
+| Footing values | 9.80 : 1 |
+| Governance strip | 7.41 : 1 |
+| Rail, on cream | 6.91 : 1 |
+
+## The medallion
+
+Struck, not printed: a metal rim with its own bevel, an inner cream field
+with an inset shadow so it sits below the rim, the arms engraved into it,
+and a single specular arc across the upper left. The arc is the one thing
+that says struck rather than printed.
+
+## What the school has not supplied does not appear
+
+An earlier revision carried **"RC: 1402529"** in the governance strip.
+That number was invented. It had no source, and a company registration
+number on a school's letterhead is a statement of record, not an
+ornament. It has been removed, and no identifier — registration, licence,
+accreditation or examination-body number — will appear on this stationery
+unless the school supplies it.
+
+## A note on production
+
+The metal treatment is specified for **screen and PDF**. In print the
+gold members are a **foil pass** or a single flat Pantone; the specular
+band is what the foil does by itself under a light, so it is not printed
+as artwork. The girih ground prints as a 6% tint of the gold. The
+`.docx` carries the rendered ground as an image, so it matches whatever
+the PDF shows.
+
+## The arms
+
+Rendered as **single-ink devices** by `brand/build-arms.py`, in three
+inks — gold for the medallion, burgundy for cream grounds, coffee for the
+earlier palette. The stock artwork is light line-work drawn to sit on a
+dark ground, so on cream it disappears; it is re-rendered in one colour at
+the density it was drawn, which is also how arms are actually printed.
+
+Flat. **No shadow, no bevel.** Arms are a heraldic device, not a button.
 
 ## Typography
 
-| Role | Face | Reason |
-|---|---|---|
-| Institutional | Cinzel 800 | Roman inscriptional capitals — carved letterforms, the oldest signal of permanence in the Latin alphabet |
-| Arabic | Amiri | The Bulaq/Amiri Press naskh, Cairo — to Arabic scholarly printing what Garamond is to Latin |
-| Editorial | Cormorant Garamond italic | The one voice where the school speaks of itself |
-| Document | Inter | Neutral, engineered, screen-native — carries the modern half without shouting |
+| Role | Face |
+|---|---|
+| Institutional | Cinzel 800 — Roman inscriptional capitals |
+| Arabic | Amiri — the Bulaq/Amiri Press naskh |
+| Editorial | Cormorant Garamond italic, for the creed |
+| Document | Inter |
 
-All four already ship with the website. **Nothing new is introduced:** a
-system that needs a font purchase to stay consistent will not stay
-consistent.
-
-## Grammar of the quadrant
-
-The crest carries four quadrants. Abstracted to a **2×2 gold mark**, it
-becomes the system's only punctuation — separating the five houses and
-the three clauses of the creed. It is heraldically derived, so it is
-defensible: it came from the school's own arms, not from a font.
+Scale: 6.3 · 6.6 · 8.2 · 10.4 · 12.6, with the Arabic derived at 0.92× the
+Latin name so the two match in presence. **Nothing below 6.3 pt anywhere,
+nothing below 6.6 pt reversed** out of the burgundy — reversed type below
+that fills in on any office laser and closes entirely under offset dot
+gain.
 
 ## Measurements
 
 - Sheet 210 × 297 mm; canvas 794 × 1123 px at 96 dpi, asserted.
-- Cartouche 34 × 38 mm, bleeding to 0,0.
-- Footing 27 mm deep, full measure.
-- Body inset 34 mm left (the cartouche's own width, so the page has one
-  left axis), 22 mm right.
-- Vertical unit 3.2 mm; every gap a whole multiple.
-- Continuation sheets: cartouche halves to 22 mm, lock reduces, the
-  houses line and seat drop. **Same grammar, less ceremony.**
+- Rail 7.5 mm, full height, struck with a gold tick 14 mm from each trim.
+- Mass 138 mm wide × 33 mm deep, cut back at the lower-right corner.
+- Medallion 28 mm, centred on the mass's right edge.
+- Furniture inset 16.5 mm; the field inset further, to 34 mm left and
+  30 mm right.
+- Foot 44 mm, its burgundy cut on a shallow diagonal.
 
-## Production
+## Where this sheet departs from the audit, and why
 
-Designed for 350 gsm cotton, hot foil on the gold, blind deboss on the
-cartouche edge, letterpress on the rules.
+`docs/letterhead-audit.md` sets thresholds that were measured, not felt.
+This architecture keeps all of them but one, and the exception is
+recorded rather than hidden:
 
-- Gold is specified so it prints correctly **both** ways: warm ochre in
-  CMYK, true metallic in Pantone 871/872 or foil. A system that is right
-  in one and disappointing in the other is not finished.
-- The coffee masses are the only heavy coverage, and they are placed at
-  the head and foot where a sheet is gripped — the areas least likely to
-  show roller marks.
-- Microtext in the footing is a genuine authenticity mark, not an
-  ornament, and it is the element that most rewards 2400 dpi.
+| | Audit | This sheet | |
+|---|---|---|---|
+| Ink coverage | ≤ 15% | **23%** | the rail, mass and foot together. The architecture's own cost. |
+| Type below print floor | 0 | **0** | 6.3 pt on paper, 6.6 pt reversed |
+| Type sizes | 5–6 | **6** | one scale, plus the derived Arabic |
+| Characters per line | 45–75 | **72** | the field is inset further than the furniture to achieve this |
+| Arms shadowed | never | **never** | |
+| Simulated texture | none | **none** | |
 
 ## Acceptance tests — all asserted in the build
 
 1. Canvas exactly 794 × 1123 px.
-2. Cartouche bleeds to the top-left corner.
-3. Wordmark never wraps.
-4. Gold rule matches the longer language within 2px.
-5. Arabic presence ratio 1.15.
-6. Footing area exceeds cartouche area.
-7. Every footing sits inside its page, every sheet.
-8. All faces loaded (7 on the letter).
-9. Every URL a live hyperlink (15 anchors on the letter).
-10. No console errors.
+2. The rail runs unbroken from top trim to bottom trim.
+3. The medallion straddles the mass's right edge — part on ink, part on paper.
+4. The mass stops short of the right margin.
+5. The place of issue clears the medallion.
+6. No type below 6.3 pt; none below 6.6 pt reversed.
+7. Six type sizes, all on the scale.
+8. Measure 146 mm, 72 characters per line.
+9. Wordmark, Arabic, the five schools, the record, the governance line,
+   the creed and the place all fit their measures without truncation.
+10. The field clears the strip above and the foot below, on every sheet.
+11. No footing sits past the foot of its page.
+12. No section lead-in is orphaned at the foot of a sheet.
+13. All faces loaded.
+14. Every URL a live hyperlink.
+15. No console errors.
 
 ## Building
 
 ```
+python3 brand/build-arms.py          # only when the arms artwork changes
 python3 brand/identity.py \
   --staff-id "SHRS-HQ-REG-130826-000004" \
   --activation-url "https://shroyalschools.com/portal/staff/set-password/?token=..."
+python3 brand/word.py
 ```
 
-Omit both and the blanks stay visible rather than silently wrong.
-
-## What is not yet built
-
-The full artefact set — certificate, transcript, examination paper,
-envelope, folder, business card, staff and student ID, email signature,
-website and portal header, signage plate — extends this same grammar and
-is stage four. The grammar is settled; applying it is mechanical.
+Omit either argument and the blank stays visible rather than silently
+wrong. Every asset lives in `brand/assets/` and `assets/fonts/`, so the
+build is reproducible on any machine from any working directory.

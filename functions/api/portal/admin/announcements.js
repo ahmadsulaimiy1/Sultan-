@@ -242,20 +242,53 @@ export async function onRequestPost({ request, env }) {
       // COALESCE-per-field so a request only naming a subset of fields
       // leaves the rest untouched — send only what changed, same
       // convention as the attendance/results/fees upserts in
-      // admin/students.js. (A field can't be cleared back to NULL this
-      // way; not needed yet — every field here is optional at create time.)
+      // admin/students.js.
+      //
+      // Clearing. The note here used to say a field could not be set back
+      // to NULL and that this was "not needed yet". It became needed the
+      // moment there was an editor: a venue entered against the wrong
+      // notice, or an event date on something that is not an event, has to
+      // come off — and archive-and-recreate is not a correction. It starts
+      // a new row, abandons the RSVP count, and leaves the wrong version
+      // standing in a record that is never deleted.
+      //
+      // So an explicit empty string means "clear this field", which is a
+      // different instruction from the field being absent, which still
+      // means "leave it alone". The three columns the schema declares NOT
+      // NULL are exempt: an empty title is a mistake, not an instruction.
+      for (const key of ['category', 'title', 'summary']) {
+        if (Object.prototype.hasOwnProperty.call(body, key) && String(body[key] ?? '').trim() === '') {
+          return json({ error: `${key} cannot be emptied — every announcement must carry one.` }, 400);
+        }
+      }
+      // null when absent (COALESCE keeps the stored value), '' when the
+      // editor asked for it to be cleared, otherwise the trimmed value.
+      const f = (key) => {
+        if (!Object.prototype.hasOwnProperty.call(body, key)) return null;
+        const v = body[key];
+        return v === null || String(v).trim() === '' ? '' : String(v).trim();
+      };
+      const cleared = (key) => f(key) === '';
+      const kept = (key) => (f(key) === '' ? null : f(key));
       await sql`
         UPDATE announcements SET
           category = COALESCE(${body.category ?? null}, category),
           title = COALESCE(${body.title ?? null}, title),
           summary = COALESCE(${body.summary ?? null}, summary),
-          body = COALESCE(${body.body ?? null}, body),
-          image_url = COALESCE(${body.imageUrl ?? null}, image_url),
-          venue = COALESCE(${body.venue ?? null}, venue),
-          event_date = COALESCE(${body.eventDate ?? null}, event_date),
-          event_time = COALESCE(${body.eventTime ?? null}, event_time),
-          action_label = COALESCE(${body.actionLabel ?? null}, action_label),
-          action_url = COALESCE(${body.actionUrl ?? null}, action_url),
+          body = CASE WHEN ${cleared('body')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('body')}, body) END,
+          image_url = CASE WHEN ${cleared('imageUrl')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('imageUrl')}, image_url) END,
+          venue = CASE WHEN ${cleared('venue')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('venue')}, venue) END,
+          event_date = CASE WHEN ${cleared('eventDate')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('eventDate')}::date, event_date) END,
+          event_time = CASE WHEN ${cleared('eventTime')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('eventTime')}, event_time) END,
+          action_label = CASE WHEN ${cleared('actionLabel')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('actionLabel')}, action_label) END,
+          action_url = CASE WHEN ${cleared('actionUrl')}::boolean THEN NULL
+                      ELSE COALESCE(${kept('actionUrl')}, action_url) END,
           updated_at = now()
         WHERE id = ${body.id}`;
       // Gallery is set explicitly (not COALESCEd) so it can also be

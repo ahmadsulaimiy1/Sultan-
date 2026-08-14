@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
 <link rel="stylesheet" href="/css/portal-newsroom.css?v=9e0d7019eb">
-<meta name="shrs-build" content="shrs-pwa-caf195dc57">
+<meta name="shrs-build" content="shrs-pwa-a67f7e8749">
 </head>
 <body class="portal-body">
 
@@ -47,9 +47,13 @@
 
     <div class="nr-sheet">
       <div class="nr-masthead">
-        <h2>Write an announcement</h2>
-        <span class="nr-masthead-note">Saved as a draft first</span>
+        <h2 data-nr-form-title>Write an announcement</h2>
+        <span class="nr-masthead-note" data-nr-form-note>Saved as a draft first</span>
       </div>
+      <p class="nr-note" data-nr-editing hidden>
+        You are editing <strong data-nr-editing-title></strong>. Emptying a field clears it.
+        Category, title and summary cannot be emptied &mdash; every announcement must carry all three.
+      </p>
       <form class="nr-composer" data-nr-form>
         <div class="nr-row">
           <div class="nr-field">
@@ -97,8 +101,15 @@
           </div>
         </div>
 
+        <div class="nr-field">
+          <label for="nr-image-url">Image <span class="nr-field-optional">(optional)</span></label>
+          <input id="nr-image-url" name="imageUrl" type="text" placeholder="/assets/images/…" />
+          <p class="nr-field-hint">The address of a picture already on the site. The homepage hero is built around one, so a featured announcement reads best with it. Leave it empty and the hero simply sets the text wider.</p>
+        </div>
+
         <div class="nr-actions">
-          <button type="submit" class="nr-btn nr-btn--primary">Save as draft</button>
+          <button type="submit" class="nr-btn nr-btn--primary" data-nr-submit>Save as draft</button>
+          <button type="button" class="nr-btn nr-btn--quiet" data-nr-cancel hidden>Cancel</button>
         </div>
       </form>
     </div>
@@ -124,7 +135,7 @@
 </main>
 
 <script src="/js/portal-office-switcher.js?v=479a8d8c95" defer></script>
-<script src="/js/portal-staff-newsroom.js?v=e6b9bd9ea4" defer></script>
+<script src="/js/portal-staff-newsroom.js?v=3de6484175" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
