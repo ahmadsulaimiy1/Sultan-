@@ -1331,3 +1331,70 @@ body.portal-body .registrar-form-grid > * { min-width: 0; }
     0 0 0 5px rgba(198,161,91,.16),
     0 4px 12px rgba(80,58,20,.20);
 }
+
+/* ===========================================================================
+   17. THE ESTABLISHMENT BAND
+   ===========================================================================
+   The portal had three dark bands stacked before any content began, which is
+   a lot of chrome and not much identity. This is the piece the public
+   masthead has and the portal did not: an ivory band carrying the crest, the
+   wordmark, and the place and date of foundation between two struck rules.
+
+   It is the only element here that says who the institution is rather than
+   where to click, so it takes the light ground and the quiet setting. The
+   dark bands around it are furniture; this is the plate.
+   =========================================================================== */
+
+.cmd-estab {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: clamp(16px, 3vw, 44px);
+  max-width: 1560px; margin-inline: auto;
+  padding: 20px clamp(12px, 2.4vw, 40px) 18px;
+}
+.cmd-estab-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.cmd-estab-brand img { width: 46px; height: 46px; flex: none;
+  filter: drop-shadow(0 1px 2px rgba(60,42,16,.22)); }
+.cmd-estab-name { display: flex; flex-direction: column; line-height: 1.08; }
+.cmd-estab-name b {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 17px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--cmd-espresso);
+}
+.cmd-estab-name i {
+  font-style: normal; font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10px; letter-spacing: .34em; text-transform: uppercase;
+  color: #8A6A2E; margin-top: 5px;
+}
+
+/* the foundation line, between two rules that thin to nothing at the ends */
+.cmd-estab-line { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.cmd-estab-rule {
+  flex: 1; height: 1px; min-width: 24px;
+  background: linear-gradient(90deg, transparent, rgba(198,161,91,.30) 18%,
+              rgba(198,161,91,.85) 50%, rgba(198,161,91,.30) 82%, transparent);
+}
+.cmd-estab-text {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: #6B5222; white-space: nowrap;
+}
+.cmd-estab-office {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: #8A6A2E; white-space: nowrap; text-align: end;
+}
+
+/* The band is the reason the chrome can be quieter everywhere else: the cards
+   tighten, and the grid stops shouting now that something above it speaks. */
+.cmd-navgrid .navlinks { padding-top: 4px !important; padding-bottom: 20px !important; }
+.cmd-navgrid .navlinks .nav-drop-trigger { min-height: 104px; }
+
+@media (max-width: 900px) {
+  .cmd-estab { grid-template-columns: auto 1fr; row-gap: 12px; padding-bottom: 14px; }
+  .cmd-estab-line { grid-column: 1 / -1; }
+  .cmd-estab-office { grid-column: 2; justify-self: end; }
+}
+@media (max-width: 560px) {
+  .cmd-estab-text { letter-spacing: .16em; font-size: 9.5px; white-space: normal; text-align: center; }
+  .cmd-estab-name b { font-size: 15px; }
+}

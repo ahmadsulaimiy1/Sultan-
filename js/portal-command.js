@@ -273,6 +273,28 @@
     if (document.querySelector('.cmd-navgrid')) return;
     var here = location.pathname.replace(/index\.html?$/, '');
 
+    /* The public masthead's signature, and the piece the portal never had: an
+       ivory band carrying the crest and the wordmark, with the place and date
+       of foundation set between two struck rules. It is what makes that
+       masthead read as an institution rather than as navigation — the dark
+       bands above and below are chrome, this is the identity. */
+    var estab = el('div', { class: 'cmd-estab' }, [
+      el('a', { class: 'cmd-estab-brand', href: '/portal/select/' }, [
+        el('img', { src: '/assets/images/brand-mark.png', alt: '' }),
+        el('span', { class: 'cmd-estab-name' }, [
+          el('b', { text: 'Sultan Hanafi' }),
+          el('i', { text: 'Royal Schools' })
+        ])
+      ]),
+      el('div', { class: 'cmd-estab-line' }, [
+        el('span', { class: 'cmd-estab-rule' }),
+        el('span', { class: 'cmd-estab-text',
+          text: 'Established July 2016 · Ikorodu, Lagos State' }),
+        el('span', { class: 'cmd-estab-rule' })
+      ]),
+      el('div', { class: 'cmd-estab-office', 'data-cmd-office': '' })
+    ]);
+
     var links = el('div', { class: 'navlinks' });
     NAV_CARDS.forEach(function (c) {
       var drop = el('div', { class: 'nav-drop' });
@@ -293,7 +315,7 @@
       rail.appendChild(a);
     });
 
-    var wrap = el('div', { class: 'cmd-navgrid' }, [links, rail]);
+    var wrap = el('div', { class: 'cmd-navgrid' }, [estab, links, rail]);
     bar.insertAdjacentElement('afterend', wrap);
   }
 
