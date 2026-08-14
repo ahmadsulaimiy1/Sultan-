@@ -20,10 +20,19 @@
 <meta name="twitter:title" content="Online & Distance Learning School — Sultan Hanafi Royal Schools">
 <meta name="twitter:description" content="Our fifth school, newly constituted under the Head of Schools / Administrator's office as part of the governance restructuring. Programme details to follow.">
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
+<!-- Two hosts serve the type, not one. fonts.googleapis.com returns the
+     stylesheet; the .woff2 files come from fonts.gstatic.com, and that
+     second connection cannot begin until the stylesheet has arrived and
+     been parsed. Preconnecting only the first host left every visitor
+     paying a fresh DNS lookup, TCP handshake and TLS negotiation on the
+     critical rendering path before a single glyph could be requested.
+     crossorigin is not optional: font fetches are CORS requests, and a
+     preconnect opened without it cannot be reused by one. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/liveries.css?v=2952614320">
-<link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
+<link rel="stylesheet" href="/css/liveries.css?v=6dc90bcf88">
+<link rel="stylesheet" href="/css/brand.css?v=4242997740">
 <link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
 <link rel="stylesheet" href="/css/announcements.css?v=07ea4832c9">
 <link rel="stylesheet" href="/css/atelier.css?v=4bf48ea969">
@@ -82,7 +91,7 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=e81375ad40">
+<link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <link rel="stylesheet" href="/css/masthead.css?v=2e3e6953e7">
 <link rel="stylesheet" href="/css/armorial.css?v=03c38ae694">
@@ -92,7 +101,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/online-distance-learning/" />
-<meta name="shrs-build" content="shrs-pwa-062d99f2d3">
+<meta name="shrs-build" content="shrs-pwa-8452a92786">
 </head>
 <body>
 
@@ -446,7 +455,7 @@
               <div class="pgx-panes">
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Parent / Guardian Portal</h4>
+              <h3 class="pgx-pane-t">Parent / Guardian Portal</h3>
               <p class="pgx-pane-d">The family's side of the institution, and the account most households need. Every family-facing step — an admission, a fee, a report, a record of memorisation — belongs to this one account rather than to four separate logins.</p>
               <ul class="pgx-pane-points"><li>Admission status, from enquiry through to offer</li><li>Fees, payment history and verifiable receipts</li><li>Your child's academic record and Ḥifẓ progress</li><li>Announcements addressed to your family</li></ul>
               <p class="pgx-pane-need">Free to create, and open to any parent or guardian.</p>
@@ -454,7 +463,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Student Portal</h4>
+              <h3 class="pgx-pane-t">Student Portal</h3>
               <p class="pgx-pane-d">Your own record, in your own hands. Open to learners of the Royal College, the School of Islamic and Arabic Studies, and the Qur'ān College.</p>
               <ul class="pgx-pane-points"><li>Your Ḥifẓ journey, recorded portion by portion</li><li>Class enrolment, timetable and results</li><li>Your Digital ID card, verifiable by anyone who asks for it</li></ul>
               <p class="pgx-pane-need">Requires the student credential issued to you at enrolment.</p>
@@ -462,7 +471,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Applicant Portal</h4>
+              <h3 class="pgx-pane-t">Applicant Portal</h3>
               <p class="pgx-pane-d">Where an admission begins. Apply is not a separate system: it is Stage 3 of the same admissions journey, which is why a free Parent/Guardian account comes first and everything submitted afterwards stays attached to it.</p>
               <ul class="pgx-pane-points"><li>Stage 1 — create your Parent/Guardian account</li><li>Stage 2 — confirm the school and the class</li><li>Stage 3 — complete and submit the application</li></ul>
               <p class="pgx-pane-need">Begin here if you hold an account; otherwise create one first, at no cost.</p>
@@ -470,7 +479,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Academic Staff Portal</h4>
+              <h3 class="pgx-pane-t">Academic Staff Portal</h3>
               <p class="pgx-pane-d">The teaching side of the Digital Campus, for principals and teaching staff across every school in the group — the Royal College, the School of Islamic and Arabic Studies, the Qur'ān College, and the Nursery and Primary School.</p>
               <ul class="pgx-pane-points"><li>Your classes, registers and timetable</li><li>Entering and releasing results</li><li>Academic leadership instruments for those who hold them</li></ul>
               <p class="pgx-pane-need">Requires a teaching credential issued by your school's administration.</p>
@@ -478,7 +487,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Administrative Portal</h4>
+              <h3 class="pgx-pane-t">Administrative Portal</h3>
               <p class="pgx-pane-d">One sign-in for every operational office the institution runs. You need not know in advance which office system to open: you sign in once, and an Office Switcher shows exactly which offices your account holds.</p>
               <ul class="pgx-pane-points"><li>Registrar — enrolment, records, transcripts and credentials</li><li>Finance — fees, receipts and institutional accounts</li><li>Human Resources and the wider institutional services</li></ul>
               <p class="pgx-pane-need">Requires a staff credential. Permissions attach to the account, not to the door.</p>
@@ -486,7 +495,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Executive Portal</h4>
+              <h3 class="pgx-pane-t">Executive Portal</h3>
               <p class="pgx-pane-d">The institution-wide command centre, reserved for the offices accountable for the whole of Sultan Hanafi Royal Schools rather than for any single school within it.</p>
               <ul class="pgx-pane-points"><li>Consolidated analytics across every school at once</li><li>Governance papers, council and committee records</li><li>Institution-level oversight of admissions, finance and academic standing</li></ul>
               <p class="pgx-pane-need">Requires an executive credential issued by the Institutional Administration Centre.</p>
@@ -494,7 +503,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Alumni Portal</h4>
+              <h3 class="pgx-pane-t">Alumni Portal</h3>
               <p class="pgx-pane-d">A self-service Alumni Portal is provided for within the Digital Campus and enters service on completion. Until it does, every credential this school has issued remains publicly verifiable, and Alumni Relations may be reached directly.</p>
               <ul class="pgx-pane-points"><li>What the alumni service will hold on entering service</li><li>How to verify your credential today, publicly and instantly</li><li>How to reach Alumni Relations directly</li></ul>
               <p class="pgx-pane-need">No account is required.</p>
@@ -502,7 +511,7 @@
             </div>
             <div class="pgx-pane">
               <p class="pgx-pane-eyebrow">Your Gateway</p>
-              <h4 class="pgx-pane-t">Public Verification Portal</h4>
+              <h3 class="pgx-pane-t">Public Verification Portal</h3>
               <p class="pgx-pane-d">The door that is deliberately open. An employer, a university or an examinations body may confirm that an SHRS document is genuine without ever holding an account here — the only arrangement under which a credential is worth anything to the person carrying it.</p>
               <ul class="pgx-pane-points"><li>Certificates, transcripts and Ijāzah</li><li>Graduation documents</li><li>Student, guardian and staff identity cards</li><li>Fee receipts</li></ul>
               <p class="pgx-pane-need">Public, instant and free. You need only the reference number or the QR code.</p>
@@ -851,7 +860,7 @@
           <button type="button" class="assistant-icon-btn" data-assistant-mic title="Speak your question" aria-label="Speak your question" aria-pressed="false">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 15a3 3 0 003-3V6a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0M12 18v3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <textarea class="assistant-input" data-assistant-input rows="1" placeholder="Ask about admissions, programmes, or get help with schoolwork…" required></textarea>
+          <textarea class="assistant-input" data-assistant-input rows="1" placeholder="Ask about admissions, programmes, or get help with schoolwork…" aria-label="Ask about admissions, programmes, or get help with schoolwork…" required></textarea>
           <button type="submit" class="assistant-send-btn" data-assistant-send aria-label="Send">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12l16-7-6 16-2.5-6.5L4 12z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
           </button>
@@ -893,7 +902,7 @@
   <div class="search-panel">
     <div class="search-panel-head">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <input type="text" data-search-input placeholder="Search the site…" autocomplete="off" />
+      <input type="text" data-search-input placeholder="Search the website…" aria-label="Search the site" autocomplete="off" />
       <button type="button" class="search-close" data-search-close aria-label="Close search">&#10005;</button>
     </div>
     <div class="search-results" data-search-results></div>

@@ -566,7 +566,7 @@ a.dc-tile:hover .dc-tile-link{ gap:.8rem; }
 
 /* Digital Campus — lift the body copy off the brown */
 .dc-tile p{ color:rgba(var(--lv-w00,248,244,233),.80) !important; }
-.dc-tile h4{ letter-spacing:.01em; }
+.dc-tile :is(h3,h4){ letter-spacing:.01em; }
 
 /* Wird — three columns of identical height, links aligned */
 .wird-card .adhkar-teaser-card,

@@ -1342,7 +1342,7 @@ html[data-pc-theme="dark"] .chapter-band-alt > .wrap > h4,
 html[data-pc-theme="dark"] .chapter-band-alt h3{color:var(--mn-ink)!important;}
 html[data-pc-theme="dark"] .chapter-band-alt > .wrap > p{color:var(--mn-ink-2)!important;}
 html[data-pc-theme="dark"] .dc-sys .v,html[data-pc-theme="dark"] .dc-live,
-html[data-pc-theme="dark"] .dc-sys .k,html[data-pc-theme="dark"] .dc-tile h4{
+html[data-pc-theme="dark"] .dc-sys .k,html[data-pc-theme="dark"] .dc-tile :is(h3,h4){
   color:var(--mn-ink)!important;}
 html[data-pc-theme="dark"] .dc-sys .who,html[data-pc-theme="dark"] .dc-tile-link{
   color:var(--mn-gold)!important;}
