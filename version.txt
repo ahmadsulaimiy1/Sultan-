@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      aabfa0b2a1e69b6027ad6a874534dda70f88cf39
-short       aabfa0b2
+commit      bee1518725fe8f2be29be50ba15c3b3bd05dbfd0
+short       bee15187
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let staff reset their own passwords
-built (UTC) 2026-08-14T06:30:25Z
-assets      shrs-pwa-a67f7e8749
+subject     Let Staff Access list everyone when nothing is typed
+built (UTC) 2026-08-14T11:23:13Z
+assets      shrs-pwa-fbf02fa76c
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

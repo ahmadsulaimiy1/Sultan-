@@ -13,6 +13,26 @@
   var TOKEN_KEY = 'shrs_sysadmin_token';
   var state = { offices: [], selected: null, token: null };
 
+  // The token used to live in sessionStorage, cleared the moment the
+  // browser closed. In practice that meant re-typing a 48-character
+  // secret several times a day, which is not security — it is a tax that
+  // pushes people to keep the secret somewhere worse than a browser. It
+  // persists now, and "Lock" clears it deliberately. On a shared machine,
+  // press Lock. Storage is wrapped because a browser in private mode
+  // throws on localStorage rather than returning null.
+  function tokenGet() {
+    try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); }
+    catch (e) { return null; }
+  }
+  function tokenSet(v) {
+    try { localStorage.setItem(TOKEN_KEY, v); }
+    catch (e) { try { sessionStorage.setItem(TOKEN_KEY, v); } catch (e2) {} }
+  }
+  function tokenClear() {
+    try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  }
+
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
@@ -25,7 +45,7 @@
     // or it lacks the required grant.
     tryLoad(function (ok) {
       if (!ok) {
-        var stored = sessionStorage.getItem(TOKEN_KEY);
+        var stored = tokenGet();
         if (stored) {
           state.token = stored;
           tryLoad();
@@ -82,21 +102,32 @@
     fetch('/api/portal/staff/me', { headers: { accept: 'application/json' } })
       .then(function (res) { return res.ok ? res.json() : null; })
       .then(function (me) {
-        if (!me || !me.staff) { showGate(); return; }
+        // Two failures wore the same face — "not signed in at all" and
+        // "signed in but without the grant" — and they need opposite
+        // fixes. Say which one this is, in the first line, every time.
+        if (!me || !me.staff) {
+          showGate('NOT SIGNED IN in this browser. No staff session was found, so the token below '
+            + 'is the only way in. If you believe you signed in, you did it in a different browser '
+            + 'or the session has expired — sign in again at /portal/staff/login/, then reload this page.');
+          return;
+        }
         var codes = (me.roles || []).map(function (r) { return r.roleCode; });
         var who = me.staff.fullName || 'You';
         showGate(
-          who + ' is signed in' + (codes.length ? ' as ' + codes.join(', ') : ' with no active role') +
-          ', which does not include Manage Users. This page needs a Head of Schools (EXE) or ' +
-          'System Administrator (SYSADMIN) account. Ask one of them to grant your account that role, ' +
-          'or sign in as one — the token below is only for before any account exists.'
+          'SIGNED IN as ' + who + ', ' + (codes.length ? 'holding ' + codes.join(', ') : 'holding NO active role')
+          + '. That does not include Manage Users, which this page needs. '
+          + (codes.length
+              ? 'Grant this account SYSADMIN in Staff Directory (unlock with the token below once to do it).'
+              : 'The role grant did not save — this account has no active role at all. '
+                + 'Unlock with the token below, open Staff Directory, find this account and grant SYSADMIN.')
+          + ' The token is only meant for before any account exists.'
         );
       })
       .catch(function () { showGate(); });
   }
 
   function lock() {
-    sessionStorage.removeItem(TOKEN_KEY);
+    tokenClear();
     state.token = null;
     state.offices = [];
     state.selected = null;
@@ -109,7 +140,7 @@
     if (!val) return;
     state.token = val;
     tryLoad(function (ok) {
-      if (ok) { sessionStorage.setItem(TOKEN_KEY, val); }
+      if (ok) { tokenSet(val); }
       else { state.token = null; showGate('That token was rejected. Check it and try again.'); }
     });
   }
@@ -235,12 +266,20 @@
 
   function accessSearch(q) {
     q = (q || '').toString().trim();
-    if (!q) { statusEl('access-status', 'Type a name or a Staff ID.', false); return; }
+    // An empty search lists everybody — the endpoint already treats a
+    // missing q that way. Refusing it left no way to answer "who exists
+    // at all?", which is exactly the question a search returning nothing
+    // raises, and the answer "nobody matched" was indistinguishable from
+    // "there are no staff records yet".
     statusEl('access-status', 'Searching…', true);
-    apiGet('staff', { q: q }).then(function (r) {
+    apiGet('staff', q ? { q: q } : {}).then(function (r) {
       if (!r.ok) { statusEl('access-status', (r.data && r.data.error) || 'Could not search.', false); return; }
       var list = (r.data && r.data.staff) || [];
-      statusEl('access-status', list.length ? list.length + ' found' : 'Nobody matched that.', Boolean(list.length));
+      statusEl('access-status', list.length
+        ? list.length + (q ? ' found' : ' staff on record')
+        : (q ? 'Nobody matched that. Search again with nothing typed to list everyone.'
+             : 'There are no staff records at all yet. Use "+ New Staff & Login" to create one.'),
+        Boolean(list.length));
       var out = document.getElementById('access-results');
       if (!list.length) { out.innerHTML = ''; return; }
       out.innerHTML = list.map(function (s) {
