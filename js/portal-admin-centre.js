@@ -133,6 +133,41 @@
     });
   }
 
+  // Whether the break-glass credential exists at all.
+  //
+  // "That token was rejected" has two causes that look identical from the
+  // gate and need opposite fixes: the deployment holds a different token,
+  // or it holds none, in which case every token on earth is rejected and
+  // no amount of retyping will ever work. An hour was lost to exactly
+  // that ambiguity here. A signed-in staff session already authorises the
+  // readiness report, so the page can answer its own question instead of
+  // asking somebody to go and look.
+  function reportTokenPresence() {
+    var gate = document.getElementById('admin-gate');
+    if (!gate || document.getElementById('admin-tokenstate')) return;
+    fetch('/api/portal/readiness', { headers: { accept: 'application/json' } })
+      .then(function (res) { return res.json().then(function (d) { return { status: res.status, d: d }; }); })
+      .then(function (r) {
+        var missing = null;
+        if (r.d && r.d.configured === false) {
+          missing = true;                       // the endpoint says so outright
+        } else if (r.d && Array.isArray(r.d.secrets)) {
+          var row = r.d.secrets.filter(function (s) { return s.name === 'PORTAL_SYSADMIN_TOKEN'; })[0];
+          if (row) missing = !row.set;
+        }
+        if (missing !== true) return;           // set, or unknowable — say nothing rather than guess
+        var note = document.createElement('div');
+        note.id = 'admin-tokenstate';
+        note.className = 'admin-gate-error';
+        note.style.cssText = 'margin-top:12px;text-align:left;';
+        note.textContent = 'PORTAL_SYSADMIN_TOKEN is not set on this deployment, so the box above '
+          + 'will reject every token including the correct one. Set it in Cloudflare Pages → Settings → '
+          + 'Variables and secrets, then redeploy — a secret only reaches a new deployment.';
+        gate.appendChild(note);
+      })
+      .catch(function () { /* diagnosis is a courtesy; never let it break the gate */ });
+  }
+
   function explainWhyLocked() {
     fetch('/api/portal/staff/me', { headers: { accept: 'application/json' } })
       .then(function (res) { return res.ok ? res.json() : null; })
@@ -153,6 +188,7 @@
         // functions/api/portal/admin/staff.js. Offered rather than done
         // automatically, so it is a deliberate act with a name against it.
         offerBootstrap(who);
+        reportTokenPresence();
         showGate(
           'SIGNED IN as ' + who + ', ' + (codes.length ? 'holding ' + codes.join(', ') : 'holding NO active role')
           + '. That does not include Manage Users, which this page needs. '
@@ -181,7 +217,12 @@
     state.token = val;
     tryLoad(function (ok) {
       if (ok) { tokenSet(val); }
-      else { state.token = null; showGate('That token was rejected. Check it and try again.'); }
+      else {
+        state.token = null;
+        showGate('That token was rejected. Check it and try again.');
+        // The moment it matters most: say whether any token could work.
+        reportTokenPresence();
+      }
     });
   }
 

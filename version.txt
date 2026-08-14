@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      5cc0d03cebf3aeb29a51204a424b1ca69f05b514
-short       5cc0d03c
+commit      52f38bc7b69c698073b2434d941277ba38fe3ef4
+short       52f38bc7
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Name who already holds the administrator role when bootstrap refuses
-built (UTC) 2026-08-14T12:05:31Z
-assets      shrs-pwa-062d99f2d3
+subject     Merge pull request #8 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
+built (UTC) 2026-08-14T17:50:49Z
+assets      shrs-pwa-d4ba911aa4
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
