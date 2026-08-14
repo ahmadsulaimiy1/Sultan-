@@ -358,13 +358,53 @@ export async function onRequestPost({ request, env }) {
   if (!sql) return json({ error: 'No database is linked yet.' }, 500);
   const auth = await resolveAuth(request, env);
   if (!auth) return json({ error: 'Not signed in, and no valid system administrator token was supplied.' }, 403);
+
+  const body = await readJsonBody(request);
+  const action = body && body.action;
+
+  // FIRST-ADMIN BOOTSTRAP.
+  //
+  // Granting the first SYSADMIN required Manage Users, which only a
+  // SYSADMIN or EXE holds — so with no such account in existence the only
+  // way in was the bearer token, and if that token was unset, mistyped or
+  // not yet redeployed, the system was closed to everybody. That is a
+  // deadlock, and it is the state this school was actually left in: a
+  // real signed-in officer looking at a token box that would not open.
+  //
+  // This opens once and closes for good. It is safe because of what it
+  // does NOT do: it grants nothing to a stranger. A staff account cannot
+  // be self-registered — every one is created either by the bearer token
+  // or by an existing Manage-Users holder — so anybody able to sign in at
+  // all was already admitted deliberately. The moment one active
+  // SYSADMIN or EXE grant exists anywhere, this path refuses forever and
+  // the ordinary grant-role route is the only way.
+  if (action === 'bootstrap-sysadmin') {
+    if (auth.method !== 'staff_session') {
+      return json({ error: 'This is for a signed-in staff account. Sign in at /portal/staff/login/ first.' }, 403);
+    }
+    const held = await sql`
+      SELECT count(*)::int AS n FROM staff_roles
+      WHERE role_code IN ('SYSADMIN', 'EXE') AND is_active = true AND revoked_at IS NULL`;
+    if (held.rows[0].n > 0) {
+      return json({ error: 'This is closed — the institution already has a System Administrator or Executive. '
+        + 'Ask them to grant your account the role.' }, 409);
+    }
+    await sql`
+      INSERT INTO staff_roles (staff_id, role_code, is_active, granted_at)
+      VALUES (${auth.staffId}, 'SYSADMIN', true, now())`;
+    await logStaffEvent(sql, {
+      actorStaffId: auth.staffId, eventType: 'sensitive_action',
+      targetType: 'staff', targetId: auth.staffId,
+      reason: 'First-admin bootstrap: no active SYSADMIN or EXE existed.',
+      metadata: { action: 'bootstrap-sysadmin', roleCode: 'SYSADMIN' },
+    });
+    return json({ ok: true, staffId: auth.staffId, roleCode: 'SYSADMIN' });
+  }
+
   if (auth.method === 'staff_session') {
     const err = await checkMuGrant(sql, auth.staffId);
     if (err) return json({ error: err }, 403);
   }
-
-  const body = await readJsonBody(request);
-  const action = body && body.action;
   // A real signed-in session already tells us who's acting — prefer
   // that over the optional *ByStaffNo body params (kept only for the
   // bearer-token path, which has no session identity to draw from).

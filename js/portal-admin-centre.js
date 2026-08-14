@@ -98,6 +98,41 @@
   // so name the account, name the roles that would work, and say the
   // token is not the intended answer for a person who already has an
   // account.
+  // The first-admin escape from the deadlock: no SYSADMIN or EXE can be
+  // granted without Manage Users, which only they hold. The server
+  // refuses this the moment one exists, so the button simply disappears
+  // after the first use.
+  function offerBootstrap(who) {
+    var gate = document.getElementById('admin-gate');
+    if (!gate || document.getElementById('admin-bootstrap')) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'admin-bootstrap';
+    wrap.style.cssText = 'margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,162,74,.35);';
+    wrap.innerHTML = '<p style="margin:0 0 10px;font-size:.9rem;">If no one administers this institution yet, '
+      + 'you can take that authority now as the account already signed in. This closes permanently '
+      + 'once one System Administrator exists.</p>'
+      + '<button type="button" class="btn-gold" id="admin-bootstrap-btn" style="width:100%;">'
+      + 'Make ' + esc(who) + ' the System Administrator</button>'
+      + '<div class="admin-gate-error" id="admin-bootstrap-msg"></div>';
+    gate.appendChild(wrap);
+    document.getElementById('admin-bootstrap-btn').addEventListener('click', function (b) {
+      var btn = document.getElementById('admin-bootstrap-btn');
+      var msg = document.getElementById('admin-bootstrap-msg');
+      btn.disabled = true; msg.textContent = 'Granting…';
+      fetch('/api/portal/admin/staff', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'bootstrap-sysadmin' }),
+      }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+        .then(function (r) {
+          if (!r.ok) { btn.disabled = false; msg.textContent = r.d.error || 'That did not go through.'; return; }
+          msg.textContent = 'Granted. Reloading…';
+          window.location.reload();
+        })
+        .catch(function () { btn.disabled = false; msg.textContent = 'Could not reach the portal.'; });
+    });
+  }
+
   function explainWhyLocked() {
     fetch('/api/portal/staff/me', { headers: { accept: 'application/json' } })
       .then(function (res) { return res.ok ? res.json() : null; })
@@ -113,6 +148,11 @@
         }
         var codes = (me.roles || []).map(function (r) { return r.roleCode; });
         var who = me.staff.fullName || 'You';
+        // If nobody administers this institution yet, the person already
+        // signed in can claim it — see the bootstrap note in
+        // functions/api/portal/admin/staff.js. Offered rather than done
+        // automatically, so it is a deliberate act with a name against it.
+        offerBootstrap(who);
         showGate(
           'SIGNED IN as ' + who + ', ' + (codes.length ? 'holding ' + codes.join(', ') : 'holding NO active role')
           + '. That does not include Manage Users, which this page needs. '

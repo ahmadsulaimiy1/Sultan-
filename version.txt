@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      bee1518725fe8f2be29be50ba15c3b3bd05dbfd0
-short       bee15187
+commit      63b0cd162ea65a0669ea975fd4b40285498a6b10
+short       63b0cd16
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let Staff Access list everyone when nothing is typed
-built (UTC) 2026-08-14T11:23:13Z
-assets      shrs-pwa-fbf02fa76c
+subject     Stop the Admin Centre demanding the token several times a day
+built (UTC) 2026-08-14T11:44:17Z
+assets      shrs-pwa-062d99f2d3
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
