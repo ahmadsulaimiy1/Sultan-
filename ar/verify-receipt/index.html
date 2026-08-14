@@ -20,7 +20,16 @@
 <meta name="twitter:title" content="تحقق من إيصال — مدارس السلطان حنفي الملكية">
 <meta name="twitter:description" content="تأكد من أصالة إيصال رسوم صادر عن مدارس السلطان حنفي الملكية باستخدام رقم الإيصال المطبوع.">
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
+<!-- Two hosts serve the type, not one. fonts.googleapis.com returns the
+     stylesheet; the .woff2 files come from fonts.gstatic.com, and that
+     second connection cannot begin until the stylesheet has arrived and
+     been parsed. Preconnecting only the first host left every visitor
+     paying a fresh DNS lookup, TCP handshake and TLS negotiation on the
+     critical rendering path before a single glyph could be requested.
+     crossorigin is not optional: font fetches are CORS requests, and a
+     preconnect opened without it cannot be reused by one. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/liveries.css?v=2952614320">
 <link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">

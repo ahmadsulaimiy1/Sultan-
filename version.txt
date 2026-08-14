@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      aa7c597861e8c6877c9cfada4edbe962c52c9f28
-short       aa7c5978
+commit      2339ce6b53964989b7cb1ba145efe577f56b4bd4
+short       2339ce6b
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Let the lock screen say whether any token could work
-built (UTC) 2026-08-14T18:00:25Z
+subject     Stop .at-ref painting itself invisible on a cream band
+built (UTC) 2026-08-14T18:07:46Z
 assets      shrs-pwa-27d65802d0
 pages       143
 
