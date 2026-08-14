@@ -30,6 +30,9 @@
 //                             at this staff member's own login (see staff/login.js); omitting it
 //                             leaves password-only login unchanged.
 //   update-staff-status   — { staffNo, status } (active | suspended | archived)
+//   set-staff-email       — { staffNo, email } — the LOGIN address: where password resets and
+//                            sign-in codes are delivered. Not update-staff-profile's publicEmail,
+//                            which is the directory address. Pass "" to remove it.
 //   create-login          — { staffNo } -> { activationLink }, same admin-mediated model as
 //                            create-student-login.js — staff never choose or see their own password.
 //                            Issuing a link CANCELS any link issued before it: the row holds one
@@ -520,6 +523,62 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
+    // The login email — the address the portal actually writes to.
+    //
+    // It could only ever be set at create-staff. There was no way to add
+    // one afterwards, or to correct a typo in one, which meant a staff
+    // member created without an address could never receive an OTP and
+    // could never reset their own password: they were dependent on the
+    // ICT Office issuing links by hand, permanently.
+    //
+    // Not to be confused with update-staff-profile's publicEmail, which
+    // is the directory address printed for the public. This one is a
+    // credential: it is where password resets and sign-in codes go, so
+    // changing it is a sensitive action and is logged as one.
+    if (action === 'set-staff-email') {
+      if (!body.staffNo) {
+        return json({ error: 'staffNo is required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      const raw = body.email === null ? '' : String(body.email ?? '').trim().toLowerCase();
+      // Deliberately permissive but not absent: enough to catch a typed
+      // mistake, not so strict that a legitimate address is refused.
+      if (raw && !/^[^@\s]+@[^@\s.]+(\.[^@\s.]+)+$/.test(raw)) {
+        return json({ error: 'That does not look like an email address.' }, 400);
+      }
+      // The column carries no unique constraint, so it is enforced here.
+      // Two staff sharing a login address would make a reset request
+      // ambiguous — forgot-password matches on the address alone.
+      if (raw) {
+        const clash = await sql`
+          SELECT staff_no FROM staff WHERE lower(email) = ${raw} AND id <> ${staffId}`;
+        if (clash.rows.length) {
+          return json({ error: `That address is already on ${clash.rows[0].staff_no}'s record. A login address must belong to one person.` }, 409);
+        }
+      }
+      const before = await sql`SELECT email FROM staff WHERE id = ${staffId}`;
+      const had = before.rows[0] && before.rows[0].email;
+      await sql`
+        UPDATE staff SET email = ${raw || null},
+          -- a changed address changes where sign-in codes are delivered,
+          -- so any trusted-device cookie issued against the old one must
+          -- stop being honoured. Same reasoning as set-password.js.
+          trust_version = trust_version + 1,
+          updated_at = now()
+        WHERE id = ${staffId}`;
+      await logStaffEvent(sql, {
+        actorStaffId: actingStaffId, eventType: 'sensitive_action',
+        targetType: 'staff', targetId: staffId,
+        reason: body.reason || null,
+        metadata: { action: 'set-staff-email', from: had || null, to: raw || null },
+      });
+      return json({ ok: true, staffId, staffNo: body.staffNo, email: raw || null,
+        replaced: Boolean(had), canSelfServe: Boolean(raw) });
+    }
+
     // Answers "what state is this account actually in?" without ever
     // disclosing the token or the hash. Before this existed, a staff member
     // reporting "the link does not work" could only be guessed at: a used
@@ -949,7 +1008,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, set-staff-email, create-login, login-status, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

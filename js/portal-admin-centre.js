@@ -248,13 +248,49 @@
           + '<strong>' + esc(s.fullName) + '</strong> &nbsp;<code>' + esc(s.staffNo) + '</code>'
           + '<div class="meta">' + esc(s.positionTitle || '') + (s.officeName ? ' &middot; ' + esc(s.officeName) : '')
           + ' &middot; ' + esc(s.status) + (s.email ? ' &middot; ' + esc(s.email) : ' &middot; no email on file') + '</div>'
-          + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-check="' + esc(s.staffNo) + '">Check access</button></div>'
+          // The login address is shown and editable right here, because
+          // without one this person can never reset their own password
+          // and every future lockout comes back to this desk.
+          + '<div class="admin-field" style="margin-top:10px;max-width:420px;">'
+          + '<label>Login email &mdash; where resets and sign-in codes go</label>'
+          + '<input type="email" value="' + esc(s.email || '') + '" placeholder="none on file"'
+          + ' data-access-email="' + esc(s.staffNo) + '" /></div>'
+          + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-check="' + esc(s.staffNo) + '">Check access</button>'
+          + ' <button type="button" class="btn-outline" data-access-saveemail="' + esc(s.staffNo) + '">Save email</button>'
+          + ' <span class="admin-form-status" data-access-emailstatus="' + esc(s.staffNo) + '"></span></div>'
+          + (s.email ? '' : '<div class="meta" style="margin-top:6px;">No address on file &mdash; this person cannot reset their own password until one is set.</div>')
           + '<div data-access-detail="' + esc(s.staffNo) + '"></div>'
           + '</div>';
       }).join('');
       out.querySelectorAll('[data-access-check]').forEach(function (b) {
         b.addEventListener('click', function () { accessCheck(b.getAttribute('data-access-check')); });
       });
+      out.querySelectorAll('[data-access-saveemail]').forEach(function (b) {
+        b.addEventListener('click', function () { accessSaveEmail(b.getAttribute('data-access-saveemail'), b); });
+      });
+    });
+  }
+
+  function accessSaveEmail(staffNo, btn) {
+    var input = document.querySelector('[data-access-email="' + staffNo + '"]');
+    var st = document.querySelector('[data-access-emailstatus="' + staffNo + '"]');
+    if (!input) return;
+    var value = input.value.trim();
+    if (!value && !window.confirm('Remove the login address from ' + staffNo + '?\n\nThey will no longer be able to reset their own password.')) return;
+    btn.disabled = true;
+    if (st) { st.textContent = 'Saving…'; st.className = 'admin-form-status'; }
+    apiPost('set-staff-email', { staffNo: staffNo, email: value }).then(function (r) {
+      btn.disabled = false;
+      if (!r.ok) {
+        if (st) { st.textContent = (r.data && r.data.error) || 'Could not save.'; st.className = 'admin-form-status is-err'; }
+        return;
+      }
+      if (st) {
+        st.textContent = r.data.email
+          ? (r.data.replaced ? 'Replaced. They can now reset their own password.' : 'Saved. They can now reset their own password.')
+          : 'Removed.';
+        st.className = 'admin-form-status is-ok';
+      }
     });
   }
 
