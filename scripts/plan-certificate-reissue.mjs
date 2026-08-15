@@ -78,10 +78,30 @@ for (const [code, rows] of Object.entries(minted)) {
     } else if (match === e.studentEn) {
       actions.push({ kind: 'KEEP', code, name: e.studentEn, cert: e.serialNo, id: e.identityNo });
     } else {
-      actions.push({ kind: 'REISSUE', code, name: e.studentEn, cert: e.serialNo,
-        id: e.identityNo, to: match,
-        why: 'the canonical roll carries a fuller name; the engraved name is '
-          + 'hashed into the number and cannot be corrected in place' });
+      // The same child, under a shorter engraved name than the canonical roll
+      // carries. This USED to be a REISSUE: revoke the sheet in the child's
+      // hands and mint a replacement, because the engraved name is hashed into
+      // the number and cannot be corrected in place.
+      //
+      // FOUNDER'S RULING, 15 August 2026: "Whatever certificate has been issued
+      // before should not be altered."
+      //
+      // So it is kept. The canonical name governs every record the institution
+      // writes from here on — registers, transcripts, the verification portal,
+      // every future award — and the certificate already conferred keeps the
+      // name it was conferred under, because that is what the document in the
+      // child's hands says and the record must match the document.
+      //
+      // Nothing is lost by this. The Student ID is permanent and unchanged, so
+      // the verification portal resolves her older certificate and her newer
+      // ones together under one identity; certificate-serial.js knows the two
+      // spellings are one child and returns the index rather than a fault.
+      actions.push({ kind: 'KEEP', code, name: e.studentEn, cert: e.serialNo,
+        id: e.identityNo, canonicalName: match,
+        why: 'engraved under a shorter name than the canonical roll carries; '
+          + 'KEPT UNALTERED on the Founder’s ruling of 15 Aug 2026. The canonical '
+          + 'name governs every future record; this document keeps the name it '
+          + 'was conferred under.' });
     }
   }
 }
@@ -94,7 +114,12 @@ const toMint = [];
 for (const code of ORDER) {
   for (const n of canon(code)) {
     const held = (minted[code] || []).find((e) => same(n, e.studentEn));
-    if (held && held.studentEn === n) continue;            // KEEP — already valid
+    // Holds a certificate for THIS programme already — under any spelling of
+    // her name. Nothing to mint. The test used to be `held.studentEn === n`,
+    // which minted a replacement whenever the engraved name was shorter than
+    // the canonical one; the Founder's ruling of 15 August 2026 that an issued
+    // certificate is not altered removes that case entirely.
+    if (held) continue;
     // One child, one permanent number, for life — across EVERY programme, not
     // just this one. A child who holds an I'dadiyyah number and is now to
     // receive a Qur'an College certificate carries the same number onto it.

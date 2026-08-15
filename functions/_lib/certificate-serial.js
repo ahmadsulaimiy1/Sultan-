@@ -368,11 +368,36 @@ async function selectByIdentifier(sql, id) {
 // before it ever reached a parent: with only the first thirteen
 // certificates in the database no Student ID is shared at all, so nothing
 // showed until the graduation batches were loaded beside them.
+//
+// SOME PAIRS THE RULE CANNOT REACH, and they are ruled rather than guessed.
+// "Ashrof Akorede" and "Ashraf Korede Ojewumi" are one boy: the given name is
+// spelt two ways AND the second part gained a letter, so no rule that stays
+// safe for strangers will join them. The institution settled it — the group
+// below is the same one scripts/build-canonical-roll.mjs uses to build the
+// canonical roll — and a ruling is a better authority than a cleverer rule.
+// Exported so the preflight and this endpoint cannot drift apart.
+export const RULED_ONE_CHILD = [
+  ['Ashrof Akorede', 'Ashrof Ojewumi', 'Ashraf Ojewumi', 'Ashraf Korede Ojewumi'],
+  ['Naheemah Ismail', 'Naheemah Ismaeel', 'Naheemah Ismai Seriki', 'Naheemah Ismail Seriki'],
+  ['Zainab Anofi', 'Zaynab Anofi', 'Zaynab Zakariya Anofi'],
+  ['Fareedah Aliu', 'Faridah Aliu', 'Faridah Ayomide Aliu'],
+  ['Fateemah Ibrahim', 'Fatimah Desire Ibrahim'],
+  ['Anisa Jokumba', 'Anisa Opeyemi Jokomba'],
+  ['Basit Jabarr', 'Abdulbasit Jabarr', 'Abdulbasit Amobi Jabarr'],
+];
+
 function namesOneChild(a, b) {
-  const parts = (s) => String(s || '').toLowerCase()
-    .replace(/[^a-z\s-]/g, '').trim().split(/\s+/).filter(Boolean);
-  const [x, y] = [parts(a), parts(b)];
-  if (!x.length || !y.length) return false;
+  const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z\s-]/g, '').trim();
+  const [na, nb] = [norm(a), norm(b)];
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  // A ruling, if one covers them. Both names must sit in the SAME group: a
+  // name in no group is not thereby the same child as anyone.
+  const group = (n) => RULED_ONE_CHILD.findIndex((g) => g.some((f) => norm(f) === n));
+  const [ga, gb] = [group(na), group(nb)];
+  if (ga >= 0 || gb >= 0) return ga === gb;
+  const parts = (s) => s.split(/\s+/).filter(Boolean);
+  const [x, y] = [parts(na), parts(nb)];
   if (x[0] !== y[0]) return false;
   const rest = new Set(y.slice(1));
   return x.slice(1).some((t) => rest.has(t));

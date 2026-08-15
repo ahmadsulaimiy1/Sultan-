@@ -105,9 +105,14 @@ const SEX = {
 };
 
 // ── Arabic names approved outside the published registers ───────────────────
-// One entry, and it is here rather than in a register because it was ruled for
-// a Qur'an College sheet that has not yet been minted. The Founder ruled it on
-// 7 August 2026 against this pipeline's own proposal, which he did not adopt.
+// Names the institution holds in Arabic that are not on a published register —
+// because they were ruled for a sheet not yet minted, or, for the last two,
+// written here under the Founder's authorisation.
+//
+// Every entry carries its `source`, and the sources are not interchangeable.
+// "Supplied by the Founder" and "written by this pipeline under his
+// authorisation" are different kinds of fact about a child's name, and the
+// difference is the whole reason this field exists.
 const APPROVED_AR = {
   // Supplied by the Founder on 7 August 2026 for the Qur'an College sheet, and
   // marked LOCKED by him after he corrected it twice himself — "Zainab Anofi",
@@ -119,6 +124,45 @@ const APPROVED_AR = {
   'Zaynab Zakariya Anofi': {
     ar: 'زينب زكريا حنفي',
     source: 'supplied by the Founder, 2026-08-07, and marked LOCKED',
+  },
+  // ── Written under the Founder's authorisation of 15 August 2026 ──────────
+  // "You can issue Arabic name transcription where correct and careful to
+  // understand." Until that ruling this file held no name the institution had
+  // not itself written down. These two are the exception, and they are marked
+  // as such so a reader can always tell which spellings the school ruled and
+  // which it authorised this pipeline to render.
+  //
+  // Neither is a hard case, and the two are not the same kind of thing:
+  //
+  //   أميرة عبد الحفيظ  is not a transcription at all. Both parts are Arabic
+  //     names. عبد الحفيظ is the theophoric on al-Ḥafīẓ — the Preserver, one of
+  //     the Divine Names — and the school's own Ibtidā'iyyah register already
+  //     carries the identical construction twice, in عبد الباسط for Abdulbasit
+  //     and عبد اللطيف for Abdulateef. أميرة is Amīrah. Nothing is invented;
+  //     the name is simply written in the script it comes from.
+  //
+  //   ياسر بالوغون  is half and half, and the half that matters is stated
+  //     plainly. ياسر is Yāsir, an Arabic name. بالوغون is Yoruba and this
+  //     institution has never written it in Arabic — so it is a real
+  //     transcription, and it follows the conventions of the school's OWN
+  //     published registers rather than any general scheme: أدغكي renders the
+  //     Yoruba g of Adegoke with غ, أوجومي the j of Ojewumi with ج. Ba-lo-gun
+  //     therefore takes غ for its g and letters for its long vowels.
+  //
+  // بالوغون is the only spelling on any roll this school received from its
+  // software rather than the other way round. One line replaces it if the
+  // Founder or the family prefers another form; nothing is minted yet.
+  'Ameerah Abdulhafeez': {
+    ar: 'أميرة عبد الحفيظ',
+    source: 'written under the Founder’s authorisation, 2026-08-15 — an Arabic '
+      + 'name in its own script, on the عبد الباسط / عبد اللطيف pattern this '
+      + 'register already carries',
+  },
+  'Yaseer Balogun': {
+    ar: 'ياسر بالوغون',
+    source: 'ياسر is the Arabic name Yāsir; بالوغون is TRANSCRIBED by this '
+      + 'pipeline under the Founder’s authorisation, 2026-08-15, on the '
+      + 'convention of the published registers (غ for the Yoruba g, as in أدغكي)',
   },
   'Aisha Omoshalewa Anofi': {
     ar: 'عائشة أمشالوا حنفي',

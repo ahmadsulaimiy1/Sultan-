@@ -391,13 +391,19 @@ BATCHES.TMH = fromPlan('TMH', {
 // has no approved form. Filing an approved part as "awaiting" to force a hold
 // would be recording a falsehood to get a true outcome.
 BATCHES.IBT2026 = fromPlan('IBT', {
+  // The roll is three. It was six until the Founder's ruling of 15 August 2026
+  // that an issued certificate is not altered: Aisha Omoshalewa Anofi, Ashraf
+  // Korede Ojewumi and Imran Iremide Adegoke each already hold an Ibtida'iyyah
+  // certificate — engraved under a shorter name — and they keep it. Their
+  // provenance entries went with them, because this block describes the names
+  // on THIS roll, and a stale entry naming a child who is no longer on it trips
+  // the residue guard for a name that is not in any student record at all.
   approvedAr: {
     'Faridah Ayomide Aliu': 'فريدة أيومدي علي',
     'Muhammad Ismail Seriki': 'محمد إسماعيل سركي',
-    'Aisha Omoshalewa Anofi': 'عائشة أمشالوا حنفي',
   },
   arabicNames: {
-    status: 'HELD — four of seven names have no approved form at their full length',
+    status: 'READY — every name on this roll has an Arabic form at its full length',
     approvedAndCarriedAcross: {
       Faridah: 'فريدة — approved on the I‘dādiyyah register',
       Ayomide: 'أيومدي — confirmed by the Founder, 2026-08-06',
@@ -405,31 +411,33 @@ BATCHES.IBT2026 = fromPlan('IBT', {
       Muhammad: 'محمد — approved on the I‘dādiyyah register',
       Ismail: 'إسماعيل — approved on both registers',
       Seriki: 'سركي — approved on the I‘dādiyyah register',
-      Aisha: 'عائشة — approved on the Ibtidā’iyyah register',
-      Omoshalewa: 'أمشالوا — ruled by the Founder, 2026-08-07',
-      Anofi: 'حنفي — the school’s own name and the Chairman’s signature block',
-      Ashraf: 'أشرف — approved for him on the Ibtidā’iyyah register',
-      Korede: 'كوردي — the approved form of Korede',
-      Ojewumi: 'أوجومي — approved on the Ibtidā’iyyah register',
-      Naheemah: 'نعيمة — approved on the Ibtidā’iyyah register',
-      Imran: 'عمران — approved on the Ibtidā’iyyah register',
-      Adegoke: 'أدغكي — approved on the Ibtidā’iyyah register',
     },
-    standardArabicNoChoiceToMake: {},
-    awaitingConfirmation: {
-      Ameerah: OUTSTANDING.Ameerah, Abdulhafeez: OUTSTANDING.Abdulhafeez,
-      Iremide: OUTSTANDING.Iremide,
+    standardArabicNoChoiceToMake: {
+      Ameerah: 'أميرة — Amīrah. An Arabic name, not a transcription of one.',
+      Abdulhafeez: 'عبد الحفيظ — ʿAbd al-Ḥafīẓ, on al-Ḥafīẓ, one of the Divine '
+        + 'Names. The same construction this register already carries twice, in '
+        + 'عبد الباسط and عبد اللطيف. Written under the Founder’s authorisation '
+        + 'of 15 Aug 2026.',
     },
+    awaitingConfirmation: {},
   },
 });
 
 BATCHES.IDD2026 = fromPlan('IDD', {
   approvedAr: {},
   arabicNames: {
-    status: 'HELD — the single name on this roll has no approved Arabic form',
+    status: 'READY — the single name on this roll now has an Arabic form',
     approvedAndCarriedAcross: {},
-    standardArabicNoChoiceToMake: {},
-    awaitingConfirmation: { Yaseer: OUTSTANDING.Yaseer, Balogun: OUTSTANDING.Balogun },
+    standardArabicNoChoiceToMake: {
+      Yaseer: 'ياسر — Yāsir. An Arabic name, not a transcription of one.',
+    },
+    transcribedByThisPipeline: {
+      Balogun: 'بالوغون — Yoruba, never written in Arabic by this institution. '
+        + 'Transcribed under the Founder’s authorisation of 15 Aug 2026, on the '
+        + 'convention of the school’s own registers (غ for the Yoruba g, as in '
+        + 'أدغكي for Adegoke).',
+    },
+    awaitingConfirmation: {},
   },
 });
 
@@ -547,10 +555,20 @@ if (guardFaults.length) {
 // block that describes it are two separate acts and only one of them happened.
 //
 // So it is asserted instead. Every name part on every roll must be accounted
-// for in exactly one of the four provenance buckets — approved earlier, standard
-// Arabic, confirmed by the Founder, or still outstanding. Exactly one: a name
-// listed as both confirmed and awaiting is a contradiction about whether it may
-// be printed, and that is the question the whole block exists to answer.
+// for in exactly one of the FIVE provenance buckets — approved earlier, standard
+// Arabic, confirmed by the Founder, transcribed by this pipeline under the
+// Founder's authorisation, or still outstanding. Exactly one: a name listed as
+// both confirmed and awaiting is a contradiction about whether it may be
+// printed, and that is the question the whole block exists to answer.
+//
+// The fifth bucket is new, on the Founder's authorisation of 15 August 2026:
+// "You can issue Arabic name transcription where correct and careful to
+// understand." It is deliberately NOT folded into standardArabicNoChoiceToMake.
+// ياسر is a standard Arabic name and there is genuinely no choice to make;
+// بالوغون is a Yoruba word this institution has never written in Arabic, and
+// somebody made a judgement to render it that way. Filing the second as the
+// first would hide the only spelling on any roll that the school received from
+// this pipeline rather than the other way round.
 //
 // This runs over EVERY batch, not just the one being issued, because the drift
 // is silent in whichever batch is not currently rendering.
@@ -560,6 +578,7 @@ for (const b of Object.values(BATCHES)) {
     approvedAndCarriedAcross: b.arabicNames.approvedAndCarriedAcross || {},
     standardArabicNoChoiceToMake: b.arabicNames.standardArabicNoChoiceToMake || {},
     confirmedByFounder: b.arabicNames.confirmedByFounder?.names || {},
+    transcribedByThisPipeline: b.arabicNames.transcribedByThisPipeline || {},
     awaitingConfirmation: b.arabicNames.awaitingConfirmation || {},
   };
   const homes = new Map();

@@ -39,6 +39,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { AWARDS } from './build-graduation-programme.mjs';
 import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
+import { RULED_ONE_CHILD } from '../functions/_lib/certificate-serial.js';
 import { PLAN, REGISTERS, rollFor } from './_lib/class-of-2026.mjs';
 
 const CANON = JSON.parse(readFileSync('docs/graduation-registers/canonical-roll-2026.json', 'utf8'));
@@ -69,6 +70,38 @@ const placesFor = (code) => [
   ...PLAN.toMint.filter((r) => r.code === code).map((r) => r.name),
 ];
 
+// Is this the same child under two written forms?
+//
+// The Founder ruled on 15 August 2026 that an issued certificate is not
+// altered, so three children now hold an Ibtidā'iyyah sheet engraved under a
+// shorter name than the canonical roll carries — Aisha Anofi, Ashrof Akorede,
+// Imran Adegoke. Compared as strings, each of them reads as two people: one
+// crossing the stage to no certificate, and one holding a certificate for a
+// ceremony they are not in. Both are false, and the Student ID check called
+// each pair an identity collision for the same reason.
+//
+// Same rule as everywhere else this question is asked — the canonical roll's
+// clustering, and certificate-serial.js's — so all three agree by construction:
+// the given name matches, and at least one further part is shared.
+// RULED_ONE_CHILD is imported from the verification endpoint's own module, not
+// copied, so this preflight and the live public lookup can never disagree about
+// who is one child. Some pairs no rule can reach — "Ashrof Akorede" and "Ashraf
+// Korede Ojewumi" differ in the given name AND the second part — and those are
+// ruled rather than guessed.
+const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z\s-]/g, '').trim();
+const sameChild = (a, b) => {
+  const [na, nb] = [norm(a), norm(b)];
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  const group = (n) => RULED_ONE_CHILD.findIndex((g) => g.some((f) => norm(f) === n));
+  const [ga, gb] = [group(na), group(nb)];
+  if (ga >= 0 || gb >= 0) return ga === gb;
+  const [x, y] = [na.split(/\s+/).filter(Boolean), nb.split(/\s+/).filter(Boolean)];
+  if (x[0] !== y[0]) return false;
+  const rest = new Set(y.slice(1));
+  return x.slice(1).some((t) => rest.has(t));
+};
+
 let printedTotal = 0;
 let placesTotal = 0;
 const people = new Set();
@@ -80,13 +113,13 @@ for (const code of ORDER) {
   placesTotal += places.length;
   printed.forEach((n) => people.add(n));
   for (const n of printed) {
-    if (!places.includes(n)) {
+    if (!places.some((p) => sameChild(p, n))) {
       flag(`${code}/${n} is printed in the ceremony programme but holds no `
         + 'certificate place. A graduand crossing the stage to no certificate.');
     }
   }
   for (const n of places) {
-    if (!printed.includes(n)) {
+    if (!printed.some((p) => sameChild(p, n))) {
       flag(`${code}/${n} holds a certificate place but is not printed in the `
         + 'ceremony programme for that award.');
     }
@@ -142,7 +175,7 @@ notes.push(`${printedTotal} awards across ${people.size} distinct graduands`);
       flag(`${name} would hold two permanent Student IDs: `
         + `${byChild.get(name).id} (${byChild.get(name).where}) and ${id} (${where})`);
     }
-    if (byNumber.has(id) && byNumber.get(id).name !== name) {
+    if (byNumber.has(id) && !sameChild(byNumber.get(id).name, name)) {
       flag(`Student ID ${id} would be held by two children: `
         + `${byNumber.get(id).name} (${byNumber.get(id).where}) and ${name} (${where})`);
     }
