@@ -215,6 +215,24 @@ const RULED_ONE = SAME_CHILD.map((g) => g.forms);
 // certificate until that is ruled. He is not silently deleted, and he is not
 // silently moved: either would be this pipeline deciding a child's award.
 const WITHDRAWN_FROM = {
+  QUR: [{
+    name: 'Sofiah Anofi',
+    why: 'Founder’s ruling, 15 Aug 2026 — "names that are existing but with no '
+      + 'verified at all certificate like Anofi Sofiah: there should be no '
+      + 'certification for them. They should be omitted."',
+    standing: 'OMITTED FOR WANT OF A VERIFIED RECORD. She is on the Registrar’s '
+      + 'Qur’an College list and nothing here disputes that she studied. What '
+      + 'the institution has never recorded is WHAT SHE WOULD BE CERTIFIED FOR: '
+      + 'the Qur’an College confers two distinct awards — complete memorisation, '
+      + 'and ten juz’ — and no source states which is hers. Her Arabic name has '
+      + 'never been written down either, and this pipeline does not transliterate '
+      + 'a child’s name. A certificate would therefore have had to invent both '
+      + 'the award and the name on it. The ruling is that no certificate is '
+      + 'issued rather than an invented one. Deleting this entry restores her to '
+      + 'the roll the moment the Registrar supplies the award and the Arabic '
+      + 'form; nothing else has to change, and no number she would have held has '
+      + 'been spent.',
+  }],
   TMH: [{
     name: 'Muhammad fatih',
     why: 'Founder’s ruling, 8 Aug 2026 — "Only Abdul Basit Adedokun is now in '

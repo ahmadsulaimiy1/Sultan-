@@ -4,19 +4,18 @@
   "nameRule": "Founder’s ruling of 8 August 2026: where a fuller form of a child’s name has ever been written down by this institution, the fuller form is the one that prints and is engraved. No name is assembled from parts of two variants.",
   "generatedBy": "scripts/build-canonical-roll.mjs",
   "totals": {
-    "awards": 44,
-    "children": 31,
+    "awards": 43,
+    "children": 30,
     "multipleAwards": 11
   },
   "categories": [
     {
       "code": "QUR",
       "registrarColumn": "Quran college",
-      "count": 4,
+      "count": 3,
       "names": [
         "Aisha Omoshalewa Anofi",
         "Baqi Olamiposi Anofi",
-        "Sofiah Anofi",
         "Zaynab Zakariya Anofi"
       ]
     },
@@ -348,6 +347,13 @@
     }
   ],
   "withdrawnByRuling": [
+    {
+      "code": "QUR",
+      "name": "Sofiah Anofi",
+      "why": "Founder’s ruling, 15 Aug 2026 — \"names that are existing but with no verified at all certificate like Anofi Sofiah: there should be no certification for them. They should be omitted.\"",
+      "standing": "OMITTED FOR WANT OF A VERIFIED RECORD. She is on the Registrar’s Qur’an College list and nothing here disputes that she studied. What the institution has never recorded is WHAT SHE WOULD BE CERTIFIED FOR: the Qur’an College confers two distinct awards — complete memorisation, and ten juz’ — and no source states which is hers. Her Arabic name has never been written down either, and this pipeline does not transliterate a child’s name. A certificate would therefore have had to invent both the award and the name on it. The ruling is that no certificate is issued rather than an invented one. Deleting this entry restores her to the roll the moment the Registrar supplies the award and the Arabic form; nothing else has to change, and no number she would have held has been spent.",
+      "alsoOn": []
+    },
     {
       "code": "TMH",
       "name": "Muhammad fatih",

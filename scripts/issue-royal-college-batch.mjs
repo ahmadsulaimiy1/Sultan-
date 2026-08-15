@@ -314,15 +314,14 @@ if (RC_PROGRAMMES[PROGRAMME].ar) {
   if (missing.length) {
     console.error('\nBATCH HELD — this is a bilingual award and every sheet must carry a matched');
     console.error('name pair. The following Arabic names are not on file:\n');
-    for (const m of missing) {
-      console.error(`  ${m.en}`);
-      if (m.arProposal) {
-        console.error(`      proposed: ${m.arProposal}`);
-        console.error(`      ${m.arNote}`);
-      }
-    }
-    console.error('\nNo Arabic name is ever transliterated or generated here. Supply the form,');
-    console.error('or rule on the proposal above, and the batch issues unchanged.\n');
+    // Name, and the words "Not yet verified" — nothing else. This used to
+    // print a proposed Arabic form beside each name; the Permanent Editorial
+    // Directive of 15 August 2026 forbids generating one, and the field it read
+    // was never populated in any case. A hold states what is missing. It does
+    // not offer a guess for someone to wave through.
+    for (const m of missing) console.error(`  ${m.en}    Arabic transcription: Not yet verified`);
+    console.error('\nNo Arabic name is ever transliterated, generated or proposed here. Supply');
+    console.error('the verified form and the batch issues unchanged.\n');
     process.exit(1);
   }
 }

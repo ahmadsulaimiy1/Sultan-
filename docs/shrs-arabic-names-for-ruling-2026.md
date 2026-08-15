@@ -60,7 +60,7 @@ and عبد اللطيف (Abdulateef), which you approved on that basis.
 |---|---|---|
 | Ameerah | **أميرة** | a standard Arabic name |
 | Abdulhafeez | **عبد الحفيظ** | عبد الباسط · عبد اللطيف · عبد الله, all approved |
-| Yaseer | **ياسر** | a standard Arabic name |
+| Yaseer | *Not yet verified* | never written down by this institution |
 
 ---
 
@@ -77,7 +77,7 @@ be extrapolated.
 | **Omoshalewa** | Aisha Omoshalewa Anofi (IBT) | *see note* |
 | **Iremide** | Imran Iremide Adegoke (IBT) | — |
 | **Balogun** | Yaseer Balogun (IDD) | — |
-| **Abdulhafeez** | Ameerah Abdulhafeez (IBT) | proposed in Group B; confirm or correct |
+| **Abdulhafeez** | Ameerah Abdulhafeez (IBT) | *Not yet verified* — yours to give |
 
 **Note on Omoshalewa — this one may already be settled.** You ruled
 **عائشة أمشالوا حنفي** on 7 August for her Qur'an College sheet. If that is the
@@ -91,8 +91,8 @@ needed. Confirm and Group C reduces to **two** words: *Iremide* and *Balogun*.
 ```
 1  Naheemah Ismail Seriki   نعيمة إسماعيل سركي         confirm assembly
 2  Ashraf Korede Ojewumi    أشرف كوردي أوجومي          confirm assembly
-3  Ameerah Abdulhafeez      أميرة عبد الحفيظ           confirm أميرة عبد الحفيظ
-4  Yaseer Balogun           ياسر ⟨Balogun⟩             ياسر confirm · Balogun YOURS TO GIVE
+3  Ameerah Abdulhafeez      Not yet verified           BOTH PARTS YOURS TO GIVE
+4  Yaseer Balogun           Not yet verified           BOTH PARTS YOURS TO GIVE
 5  Imran Iremide Adegoke    عمران ⟨Iremide⟩ أدغكي      Iremide YOURS TO GIVE
 ```
 

@@ -330,17 +330,28 @@ function fromPlan(code, decl) {
 // they are declared outstanding — see docs/shrs-arabic-names-for-ruling-2026.md.
 // A form approved for "Naheemah Ismail" is not a form approved for "Naheemah
 // Ismail Seriki", and this file will not treat it as one.
+//
+// PERMANENT EDITORIAL DIRECTIVE, 15 August 2026 — this table states FACTS ONLY.
+// Three of these entries used to carry a proposed Arabic form for a part the
+// institution has never written down: عبد الحفيظ "on the عبد الباسط pattern",
+// أميرة "as standard Arabic", ياسر "as standard Arabic". They are gone. The
+// policy is that the institution records verified forms and nothing else — a
+// proposal printed beside a child's name is read as an answer, and a plausible
+// guess is the most dangerous kind of wrong on a permanent record.
+//
+// So each entry below says only which parts ARE on record and which are not.
+// Where nothing is on record the value is exactly "Not yet verified."
 const OUTSTANDING = {
   Omoshalewa: 'أمشالوا was ruled for her Qur’an College sheet on 2026-08-07; '
     + 'whether that is the same child is the Founder’s to confirm',
-  Abdulhafeez: 'عبد الحفيظ proposed on the عبد الباسط / عبد اللطيف pattern — awaiting confirmation',
-  Ameerah: 'أميرة proposed as standard Arabic — awaiting confirmation',
+  Abdulhafeez: 'Not yet verified',
+  Ameerah: 'Not yet verified',
   Korede: 'كوردي is on record; the assembled أشرف كوردي أوجومي awaits confirmation',
   Ashraf: 'أشرف is on record for him as “Ashrof”; the assembly awaits confirmation',
   Ojewumi: 'أوجومي is on record; the assembly awaits confirmation',
-  Iremide: 'Yoruba, no institutional precedent — the Founder’s to give',
-  Balogun: 'Yoruba, no institutional precedent — the Founder’s to give',
-  Yaseer: 'ياسر proposed as standard Arabic — awaiting confirmation',
+  Iremide: 'Not yet verified',
+  Balogun: 'Not yet verified',
+  Yaseer: 'Not yet verified',
   Seriki: 'سركي is on record; the assembled نعيمة إسماعيل سركي awaits confirmation',
   Naheemah: 'نعيمة is on record; the assembly awaits confirmation',
   Ismail: 'إسماعيل is on record; the assembly awaits confirmation',
