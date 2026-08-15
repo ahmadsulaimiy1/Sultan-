@@ -72,13 +72,47 @@ const INSTITUTIONS = [
   ['Online & Distance Learning School', '/academics/online-distance-learning/'],
 ];
 
+/* Confirmed profiles, each linked from the site's own footer on 158+ pages.
+   An earlier pass left sameAs empty on the grounds that no profile was
+   "confirmed" — they were confirmed, in this repository, and leaving the array
+   empty withheld the strongest signal available for consolidating the entity.
+   sameAs is how a search engine knows the Facebook page, the YouTube channel
+   and this domain are one organisation rather than three. */
+const PROFILES = [
+  'https://www.facebook.com/share/1EnMRT3Lrq/',
+  'https://www.instagram.com/shroyal_schools',
+  'https://youtube.com/@shroyalschools',
+];
+
+/* Independent national coverage. Punch is one of Nigeria's largest dailies,
+   and third-party reporting is the kind of corroboration both search engines
+   and answer engines weigh most heavily — it is not something the school can
+   assert about itself. Cited, not claimed. */
+const PRESS = [
+  ['https://punchng.com/sultan-hanafi-royal-schools-illuminating-minds-and-nurturing-communities-olawoyin-edris/',
+   'Sultan Hanafi Royal Schools: Illuminating Minds and Nurturing Communities'],
+  ['https://punchng.com/lagos-school-charges-graduates-to-be-problem-solvers/',
+   'Lagos school charges graduates to be problem-solvers'],
+  ['https://punchng.com/winners-emerge-in-n1-5m-quran-competition/',
+   'Winners emerge in N1.5m Quran competition'],
+];
+
+/* As published on /contact/. Structured hours are what a Maps listing
+   reconciles against, and "when are you open" is among the most common
+   questions asked of a school by a parent who is already on the road. */
+const HOURS = [
+  [['Monday', 'Tuesday', 'Wednesday'], '07:30', '18:00'],
+  [['Thursday', 'Friday'], '07:30', '16:00'],   // Jumu'ah, and the week's close
+  [['Saturday', 'Sunday'], '09:00', '15:00'],   // the Islamic & Arabic Studies desk
+];
+
 function entity() {
   return {
     '@context': 'https://schema.org',
     '@type': ['School', 'EducationalOrganization'],
     '@id': ORIGIN + '/#school',
     name: 'Sultan Hanafi Royal Schools',
-    alternateName: 'SHRS',
+    alternateName: ['SHRS', 'Sultan Hanafi Schools'],
     url: ORIGIN + '/',
     logo: ORIGIN + '/assets/images/brand-mark.png',
     image: ORIGIN + '/assets/images/campus/campus-frontage.jpg',
@@ -93,9 +127,33 @@ function entity() {
     telephone: ['+2348073747650', '+2348070586860'],
     address: {
       '@type': 'PostalAddress',
+      /* THE STREET ADDRESS. It is published on 152 pages of this site and was
+         missing from the first version of this entity, which asserted only a
+         locality. Without a street a listing cannot be reconciled against
+         Google Maps, and Maps is where "school near me" is decided. */
+      streetAddress: '15 Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road',
       addressLocality: 'Ikorodu',
       addressRegion: 'Lagos State',
       addressCountry: 'NG',
+    },
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: 'Ikorodu' },
+      { '@type': 'AdministrativeArea', name: 'Lagos State' },
+      { '@type': 'Country', name: 'Nigeria' },
+    ],
+    openingHoursSpecification: HOURS.map(([days, opens, closes]) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: days.map((d) => 'https://schema.org/' + d),
+      opens, closes,
+    })),
+    founder: {
+      '@type': 'Person',
+      name: 'Zakariya Olanrewaju Anofi',
+      /* Post-nominals as the site states them. Expertise is a person before it
+         is an institution, and a named, credentialled founder is a stronger
+         trust signal than any adjective the school could apply to itself. */
+      honorificSuffix: 'MSc, FCA, FCCA',
+      jobTitle: 'Founder and Proprietor',
     },
     /* The languages the school actually teaches and publishes in — the site
        ships English, Arabic, French and Yoruba mirrors. */
@@ -106,8 +164,13 @@ function entity() {
       name,
       url: ORIGIN + path,
     })),
-    sameAs: [],           // filled only when an official profile is confirmed
-    parentOrganization: undefined,
+    sameAs: PROFILES,
+    subjectOf: PRESS.map(([url, headline]) => ({
+      '@type': 'NewsArticle',
+      headline,
+      url,
+      publisher: { '@type': 'Organization', name: 'The Punch' },
+    })),
   };
 }
 
