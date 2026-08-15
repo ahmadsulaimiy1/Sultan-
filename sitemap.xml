@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://shroyalschools.com/about/governance/</loc>
     <lastmod>2026-08-15</lastmod>
@@ -10,6 +11,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/about/governance/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/about/governance/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/governance/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/about/heritage/</loc>
@@ -17,6 +19,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/heritage/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/heritage/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-aerial-hero.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/about/</loc>
@@ -27,6 +30,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/about/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/about/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academic-calendar/</loc>
@@ -37,6 +41,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academic-calendar/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academic-calendar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academic-calendar/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/arabic-islamic-studies/</loc>
@@ -47,6 +52,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/arabic-islamic-studies/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/arabic-islamic-studies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/arabic-islamic-studies/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/</loc>
@@ -57,6 +63,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/nursery-primary/</loc>
@@ -67,6 +74,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/nursery-primary/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/nursery-primary/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/nursery-primary/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/online-distance-learning/</loc>
@@ -77,6 +85,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/online-distance-learning/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/online-distance-learning/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/online-distance-learning/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/quran-college/</loc>
@@ -87,6 +96,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/quran-college/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/quran-college/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/quran-college/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/royal-college/</loc>
@@ -97,6 +107,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/royal-college/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/royal-college/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/royal-college/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/adhkar/</loc>
@@ -107,6 +118,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/adhkar/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/adhkar/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/adhkar/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/admission/apply/</loc>
@@ -114,6 +126,7 @@
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/admission/apply/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/admission/apply/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/admission/</loc>
@@ -124,6 +137,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/admission/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/admission/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/admission/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/alumni-portal/</loc>
@@ -134,6 +148,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/alumni-portal/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/alumni-portal/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/alumni-portal/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/announcements/</loc>
@@ -144,6 +159,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/announcements/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/announcements/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/announcements/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/boarding/</loc>
@@ -154,6 +170,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/boarding/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/boarding/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/boarding/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/contact/</loc>
@@ -164,6 +181,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/contact/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/contact/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/curriculum/</loc>
@@ -174,6 +192,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/curriculum/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/curriculum/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/curriculum/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/digital-campus/</loc>
@@ -184,6 +203,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/digital-campus/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/digital-campus/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/digital-campus/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/facilities/</loc>
@@ -194,6 +214,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/facilities/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/facilities/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/facilities/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/faculty/</loc>
@@ -204,6 +225,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/faculty/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/faculty/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/faculty/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/foundation/</loc>
@@ -214,6 +236,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/foundation/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/foundation/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/foundation/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/gallery/</loc>
@@ -224,6 +247,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/gallery/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/gallery/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/gallery/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/graduate-profile/</loc>
@@ -234,6 +258,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/graduate-profile/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/graduate-profile/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/graduate-profile/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/</loc>
@@ -244,6 +269,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/marketplace/</loc>
@@ -254,6 +280,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/marketplace/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/marketplace/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/marketplace/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/online-courses/</loc>
@@ -264,6 +291,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/online-courses/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/online-courses/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/online-courses/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/policies/</loc>
@@ -274,6 +302,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/policies/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/policies/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/policies/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/press/</loc>
@@ -284,6 +313,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/press/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/press/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/press/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/graduation-prize-giving.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/aspirational/</loc>
@@ -291,6 +321,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/aspirational/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/aspirational/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/definitive/</loc>
@@ -298,6 +329,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/definitive/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/definitive/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/digital-campus/</loc>
@@ -305,6 +337,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/digital-campus/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/digital-campus/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/</loc>
@@ -312,6 +345,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/masterplan/</loc>
@@ -319,6 +353,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/masterplan/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/masterplan/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/prospectus/student-experience/</loc>
@@ -326,6 +361,7 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/student-experience/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/student-experience/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/campus/campus-frontage.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/quran-centre/</loc>
@@ -336,6 +372,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/quran-centre/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/quran-centre/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/quran-centre/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/strategic-plan/</loc>
@@ -346,6 +383,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/strategic-plan/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/strategic-plan/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/strategic-plan/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/student-life/</loc>
@@ -356,6 +394,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/student-life/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/student-life/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/student-life/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/verify-certificate/</loc>
@@ -366,6 +405,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-certificate/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-certificate/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-certificate/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/verify-graduation-document/</loc>
@@ -376,6 +416,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-graduation-document/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-graduation-document/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-graduation-document/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/verify-identity/</loc>
@@ -386,6 +427,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-identity/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-identity/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-identity/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/verify-receipt/</loc>
@@ -396,6 +438,7 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-receipt/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-receipt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-receipt/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://shroyalschools.com/verify/</loc>
@@ -406,5 +449,6 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify/"/>
     <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify/"/>
+    <image:image><image:loc>https://shroyalschools.com/assets/images/apple-touch-icon.png</image:loc></image:image>
   </url>
 </urlset>

@@ -257,13 +257,20 @@ function sitemap(pages) {
         .map((l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${ORIGIN}/${l}${url}"/>`),
       `    <xhtml:link rel="alternate" hreflang="x-default" href="${loc}"/>`,
     ].join('\n');
+    /* Image sitemap entries: each page's og:image, which is by construction a
+       real, page-relevant photograph (meta-build guarantees one exists). This
+       is what makes the campus photography discoverable in image search. */
+    const og = (readFileSync(full, 'utf8')
+      .match(/property="og:image" content="([^"]+)"/) || [])[1];
+    const img = og ? `\n    <image:image><image:loc>${og}</image:loc></image:image>` : '';
     return `  <url>\n    <loc>${loc}</loc>\n` +
            `    <lastmod>${mtime.toISOString().slice(0, 10)}</lastmod>\n` +
-           `    <priority>${priorityFor(url)}</priority>\n${alts}\n  </url>`;
+           `    <priority>${priorityFor(url)}</priority>\n${alts}${img}\n  </url>`;
   });
   return '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
-    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml"\n' +
+    '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' +
     rows.join('\n') + '\n</urlset>\n';
 }
 
