@@ -61,6 +61,11 @@ const SEX = {
   'Aisha Omoshalewa Anofi': ['female', 'IBT register (as Aisha Anofi) · Qur’an College roll'],
   'Abdulbasit Adedokun': ['male', 'IBT register'],
   'Naheemah Ismail Seriki': ['female', 'IBT register (as Naheemah Ismail) · Primary roll'],
+  // The same child under the shorter form the Founder ruled authoritative for
+  // the Primary record on 15 August 2026 (see NAME_RULING). Not an inference:
+  // the published Ibtida'iyyah register records her under exactly this name,
+  // female, at docs/graduation-registers/2026-08-08-IBT-000035.json.
+  'Naheemah Ismail': ['female', 'IBT register'],
   'Ashraf Korede Ojewumi': ['male', 'IBT register (as Ashrof Akorede) · Primary roll'],
   'Imran Iremide Adegoke': ['male', 'IBT register (as Imran Adegoke) · Primary roll'],
   'Abdulateef Adedokun': ['male', 'IBT register'],
@@ -84,12 +89,18 @@ const SEX = {
   'Aisha Lawal': ['female', 'Primary roll, 2026-08-07'],
   'Daud Aliu': ['male', 'Primary roll, 2026-08-07'],
   'Zaynab Zakariya Anofi': ['female', 'Qur’an College roll, 2026-08-07'],
-  // NOT RECORDED — these five reach this pipeline for the first time on the
-  // Registrar's Notice of 2 July 2026, which lists names and stages and states
-  // no sex. Several read unambiguously to a reader of Arabic names; that is not
-  // a record, and this file does not keep guesses beside facts.
-  //   Sofiah Anofi · Muhammad Fatih · Yaseer Balogun
-  //   Allison Ganiyah · Jubril Lawal
+  // RULED BY THE FOUNDER, 15 August 2026, for the certificate recovery. These
+  // three reached this pipeline on the Registrar's Notice of 2 July 2026, which
+  // states no sex, and the batches held rather than infer one from a name. The
+  // Founder has now stated each. Recorded here — in the canonical data source,
+  // not in a batch script — so the answer is given once and every future run,
+  // for every certificate type, reads the same fact.
+  'Allison Ganiyah': ['female', 'ruled by the Founder, 2026-08-15'],
+  'Jubril Lawal': ['male', 'ruled by the Founder, 2026-08-15'],
+  'Sofiah Anofi': ['female', 'ruled by the Founder, 2026-08-15'],
+  // STILL NOT RECORDED — no ruling covers these two, and neither is on a roll
+  // this recovery issues, so nothing is waiting on them.
+  //   Muhammad Fatih · Yaseer Balogun
 };
 
 // ── Arabic names approved outside the published registers ───────────────────
@@ -97,6 +108,17 @@ const SEX = {
 // a Qur'an College sheet that has not yet been minted. The Founder ruled it on
 // 7 August 2026 against this pipeline's own proposal, which he did not adopt.
 const APPROVED_AR = {
+  // Supplied by the Founder on 7 August 2026 for the Qur'an College sheet, and
+  // marked LOCKED by him after he corrected it twice himself — "Zainab Anofi",
+  // then "Zaynab Omobolanle Anofi", then this. It was carried on the Qur'an
+  // College roll before that roll moved into this file, and was dropped in the
+  // move; the batch then held for want of a name the institution already had.
+  // Restored verbatim from the roll he ruled on, not re-derived: this pipeline
+  // never transliterates a child's name.
+  'Zaynab Zakariya Anofi': {
+    ar: 'زينب زكريا حنفي',
+    source: 'supplied by the Founder, 2026-08-07, and marked LOCKED',
+  },
   'Aisha Omoshalewa Anofi': {
     ar: 'عائشة أمشالوا حنفي',
     source: 'ruled by the Founder, 2026-08-07, for the Qur’an College roll',
@@ -115,6 +137,30 @@ const AWARD_VARIANT = {
   // Sofiah Anofi — NOT RECORDED. She appears on the Registrar's Qur'an College
   // list; which of the two awards she earned is not stated anywhere, and the
   // renderer refuses a sheet that names no variant rather than choosing one.
+};
+
+// ── Engraved-name rulings ───────────────────────────────────────────────────
+// The Founder's ruling of 8 August 2026 set the general rule: where a fuller
+// form of a child's name has ever been written down, the fuller form is the one
+// that prints. A later ruling on a specific award overrides it for that award
+// only, and is recorded here rather than by editing the generated plan — the
+// plan is rebuilt from the roll, so a hand-edit there is erased on the next run.
+//
+// Keyed by programme code and the name the plan carries. The engraved name is
+// hashed into the number beside it, so changing it changes the certificate's
+// identifier: only safe because none of these has been minted.
+const NAME_RULING = {
+  // RULED BY THE FOUNDER, 15 August 2026, for the certificate recovery: "The
+  // correct Primary record is Naheemah Ismail. Treat this as the authoritative
+  // institutional name." The Primary sheet therefore carries the shorter form,
+  // which is also the form her Ibtida'iyyah register entry has always used. Her
+  // Ibtida'iyyah award (plan sequence 59) is NOT covered by this ruling and
+  // keeps the fuller form the 8 August rule gave it; if the Founder intends the
+  // shorter form there too, one line here settles it.
+  'PRY:Naheemah Ismail Seriki': {
+    to: 'Naheemah Ismail',
+    ruling: 'ruled by the Founder, 2026-08-15 — the authoritative Primary record',
+  },
 };
 
 /**
@@ -164,10 +210,17 @@ export function rollFor(code) {
           + `${r.identityFrom}, but that certificate carries ${src[0].identityNo}`);
       }
     }
-    const ar = arabicNameFor(r.name);
-    const sex = SEX[r.name];
+    // A later ruling on the engraved name is applied BEFORE anything is derived
+    // from it, so the Arabic form, the sex lookup and the content hash all read
+    // the same name the sheet will carry.
+    const ruled = NAME_RULING[`${code}:${r.name}`];
+    const name = ruled ? ruled.to : r.name;
+    const ar = arabicNameFor(name);
+    const sex = SEX[name];
     return {
-      en: r.name,
+      en: name,
+      nameRuling: ruled ? ruled.ruling : null,
+      nameWasPlanned: ruled ? r.name : null,
       sex: sex ? sex[0] : null,
       sexSource: sex ? sex[1] : null,
       identityNo: r.identity,
