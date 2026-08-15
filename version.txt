@@ -1,10 +1,10 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      50b94d7e8e6556042a57573766b2feaa366548e2
-short       50b94d7e
+commit      bdd2e15d8430b79e90068f5d0f94e70f44d72115
+short       bdd2e15d
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Render 'signature pending' distinctly from a real integrity failure on the public verify page
-built (UTC) 2026-08-15T01:26:47Z
+subject     Merge pull request #11 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
+built (UTC) 2026-08-15T02:04:25Z
 assets      shrs-pwa-c490a98c12
 pages       143
 
