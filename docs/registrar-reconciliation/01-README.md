@@ -11,12 +11,28 @@ Until the reconciliation in this pack is complete and signed off:
 
 - **No signing key is generated.**
 - **No certificate is minted.**
-- **No database record is created or modified.**
+- **No record is created or modified in the production database, and no
+  institutional record is altered.**
 - **No verification data changes.**
 - **No REISSUE or REVOKE action is performed** — including the Founder-ratified
   plan of 8 August 2026 (`docs/graduation-registers/reissue-plan-2026.json`),
   which remains ratified but unexecuted.
 - **Production is not altered.**
+
+One rehearsal is expressly permitted before Stage 5: the witnessed rollback
+drill of `05-rollback-plan.md` section 5, run exclusively against a
+non-production staging branch with fictitious data. It is the only rehearsal
+the freeze permits; it touches no production record and no institutional
+record.
+
+**Standing-automation note.** The Monday 06:00 UTC schedule of
+`certificate-verification.yml` attempts that workflow's import/configure
+steps automatically. At the evidence baseline those steps skip or fail closed
+because the required secrets (`DATABASE_URL`, `DOCUMENT_HASH_SECRET`) are
+absent from the stored GitHub secrets — but this pack does not rely on that
+remaining true. Every manual dispatch of that workflow during the freeze must
+set `run_import: false` and `configure_cloudflare: false` explicitly (both
+inputs default to true).
 
 Every document in this pack *describes* future actions; none *performs* one, and
 none authorises anyone to perform one outside the sign-off chain in the SOP.
