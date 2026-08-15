@@ -1090,11 +1090,25 @@ CREATE TABLE IF NOT EXISTS verification_log (
   document_reference_no   TEXT NOT NULL,
   verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
   ip_hash                 TEXT,
-  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
+--   key_unavailable  the record and its printed suffix are intact, but the
+--                 signing key of the version the row was signed under is not
+--                 configured, so the content hash cannot be recomputed. The
+--                 endpoint already answers this honestly — found, signature
+--                 pending — and it is emphatically NOT hash_mismatch: one is
+--                 an operator gap, the other is a tamper signal, and a log
+--                 that conflates them is worse than no log.
+--
+--                 It was missing from this list, so every such lookup failed
+--                 the constraint and logVerification swallowed the error:
+--                 certificates signed under a key version the environment
+--                 does not hold were checked by the public with NO audit
+--                 trail at all. Found by running the real endpoint against a
+--                 staging copy of this schema on 15 August 2026.
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'))
 );
 ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check;
 ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
-  CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
+  CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'));
 CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no);
 
 -- Alumni Register (spec §1.3, §16.10) — the data model the honest-shell

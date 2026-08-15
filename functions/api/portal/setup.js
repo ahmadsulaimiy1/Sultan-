@@ -1373,12 +1373,16 @@ const STATEMENTS = [
     document_reference_no   TEXT NOT NULL,
     verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     ip_hash                 TEXT,
-    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'))
   )`,
   `ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check`,
+  // 'key_unavailable' was missing here and in sql/schema.sql, so a lookup of a
+  // certificate signed under a key version this environment does not hold
+  // violated the constraint and left no log row at all. See the note beside
+  // the same constraint in sql/schema.sql; the two must stay identical.
   `DO $$ BEGIN
     ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
-      CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
+      CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'));
   EXCEPTION WHEN duplicate_object THEN NULL;
   END $$`,
   `CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no)`,

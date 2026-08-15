@@ -344,6 +344,40 @@ async function selectByIdentifier(sql, id) {
 // asks which one — with the single exception that if the rows disagree on
 // WHO the student is, that is a real fault again and falls back to
 // 'ambiguous'.
+
+// Do two engraved names name the same child?
+//
+// This decides whether several certificates under one Student ID are a
+// correct academic record or a data fault, so it has to be strict enough to
+// catch a number reused for two different children and loose enough not to
+// call a name CORRECTION a fault.
+//
+// It is the same rule the canonical roll is built with
+// (scripts/build-canonical-roll.mjs, sameChild): the given name must match,
+// and at least one further part must be shared. "Aisha Anofi" and "Aisha
+// Omoshalewa Anofi" are one child; "Aisha Anofi" and "Aisha Shode" are two,
+// and still trip the fault.
+//
+// WHY THIS IS NOT AN EXACT STRING COMPARISON, which is what it used to be.
+// A child whose earlier certificate is engraved with a shorter form of her
+// name — the exact situation the Registrar's roll of 8 August 2026 created,
+// and which the reissue plan exists to resolve — held two rows that read as
+// two different people. The public page then answered a parent scanning a
+// genuine certificate with "that number matches more than one record,
+// contact the Registrar's Office". Caught in staging against real data
+// before it ever reached a parent: with only the first thirteen
+// certificates in the database no Student ID is shared at all, so nothing
+// showed until the graduation batches were loaded beside them.
+function namesOneChild(a, b) {
+  const parts = (s) => String(s || '').toLowerCase()
+    .replace(/[^a-z\s-]/g, '').trim().split(/\s+/).filter(Boolean);
+  const [x, y] = [parts(a), parts(b)];
+  if (!x.length || !y.length) return false;
+  if (x[0] !== y[0]) return false;
+  const rest = new Set(y.slice(1));
+  return x.slice(1).some((t) => rest.has(t));
+}
+
 export async function resolveStageCertificateIdentifier(sql, ref) {
   const id = parseStageCertificateIdentifier(ref);
   if (!id) return null;
@@ -353,8 +387,11 @@ export async function resolveStageCertificateIdentifier(sql, ref) {
   if (rows.length === 0) return { ...base, outcome: 'not_found' };
   if (rows.length === 1) return { ...base, outcome: 'resolved' };
   if (!personScoped) return { ...base, outcome: 'ambiguous' };
-  const names = new Set(rows.map((r) => String(r.student_full_name || '')));
-  return { ...base, outcome: names.size === 1 ? 'multiple' : 'ambiguous' };
+  // Every row must name the same child as the first. Compared pairwise
+  // against one anchor rather than transitively, so a chain of loose
+  // matches cannot quietly merge two people.
+  const oneChild = rows.every((r) => namesOneChild(rows[0].student_full_name, r.student_full_name));
+  return { ...base, outcome: oneChild ? 'multiple' : 'ambiguous' };
 }
 
 // The original two-shape resolver, kept as the narrow contract callers
