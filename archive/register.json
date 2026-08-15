@@ -1,0 +1,43 @@
+{
+ "items": [
+  {
+   "accession": "SHRS-A-2026-001",
+   "file": "archive/vault/SHRS-A-2026-001/about-sultan.mhtml",
+   "sha256": "5368e6f9861075baa3a589b9d4fc7fde73b24d2ddad6881784a0dbf75bbbf9d1",
+   "bytes": 1226215,
+   "desc": "Complete browser capture of the legacy website's About SULTAN page (shroyalschools.ng/about-sultan/)",
+   "date_of_record": "2026-08-15",
+   "accessioned": "2026-08-15",
+   "provenance": "Saved by the school from the live legacy site, 15 Aug 2026, 04:09 +0100; supplied for preservation the same day",
+   "rights": "school-owned",
+   "basis": "capture",
+   "event": "legacy-site-retirement"
+  },
+  {
+   "accession": "SHRS-A-2026-002",
+   "file": "archive/vault/SHRS-A-2026-002/commissioning-day-1.jpg",
+   "sha256": "090b1c7c9e859052adcc7381ef798ac4bb40a87b31129ddf8670cbb7a4de303c",
+   "bytes": 244835,
+   "desc": "Photograph from the commissioning/unveiling ceremony of Sultan Hanafi Royal College: a dignitary seated under the canopy greeting a child; identities and exact date awaiting the school's confirmation",
+   "date_of_record": "2024-11",
+   "accessioned": "2026-08-15",
+   "provenance": "The school's own photographic record, published in the site gallery; original supplied to the repository Aug 2026",
+   "rights": "school-owned",
+   "basis": "original",
+   "event": "unveiling-2024"
+  },
+  {
+   "accession": "SHRS-A-2026-003",
+   "file": "archive/vault/SHRS-A-2026-003/commissioning-day-2.jpg",
+   "sha256": "abfeef445865e3ceb99034f9a9eca3fa2bc5123b52312b8847e2c15b549ecbdf",
+   "bytes": 253481,
+   "desc": "Photograph from the commissioning/unveiling ceremony of Sultan Hanafi Royal College, second frame of the same scene",
+   "date_of_record": "2024-11",
+   "accessioned": "2026-08-15",
+   "provenance": "The school's own photographic record, published in the site gallery; original supplied to the repository Aug 2026",
+   "rights": "school-owned",
+   "basis": "original",
+   "event": "unveiling-2024"
+  }
+ ]
+}

@@ -80,6 +80,42 @@ The tenth-anniversary history, drawn from an archive that was kept as it
 happened rather than reconstructed. By this point "most trusted" is not a
 claim the school makes; it is a pattern others describe.
 
+## 2b. The trust pages — audited, not assumed
+
+The directive's trust-page list, checked against what the site already
+publishes:
+
+| Page | Status |
+|---|---|
+| Governance | **Exists** — `/about/governance/` (board, committees, charter) |
+| Child Protection & Safeguarding | **Exists as policy** — full policy in `/policies/`, Safeguarding Committee in governance, boarding rules apply it. Worth surfacing as a dedicated landing page that *excerpts the adopted policy* — never freshly drafted copy |
+| Facilities | **Exists** — `/facilities/` |
+| Technology | **Exists** — `/digital-campus/` |
+| Islamic Education | **Exists** — `/academics/arabic-islamic-studies/`, `/academics/quran-college/`, `/quran-centre/` |
+| Community Outreach | **Exists** — `/foundation/`; strengthen with the oral-history corroboration of COVID relief, road maintenance, electrification |
+| Academic Quality | **Partial** — `/curriculum/`, `/graduate-profile/`; needs a results-and-outcomes page once the registrar supplies the first cohorts' data |
+| Assessment & Examinations | **Gap** — BECE/WAEC/NECO are mentioned, not explained; a parent-facing page on how assessment works is buildable from the school's real practice, after the registrar interview |
+| Inspection & Compliance | **Gap, blocked on one fact** — the Ministry approval number. The page is worth building the day the certificate is scanned, and not before |
+
+Rule for all of these: pages that state commitments (safeguarding, compliance)
+are published from documents the school has adopted, never from drafted copy.
+A policy invented for SEO is a liability wearing a trust signal's clothes.
+
+## 2c. The archive institutions (added August 2026)
+
+- **The vault** — `archive/` with an accession register: permanent numbers,
+  SHA-256 hashes, provenance, rights, and a corrections discipline that
+  amends without deleting. First three accessions made: the legacy-site
+  capture and the two unveiling photographs. Governance in
+  `docs/archive-governance.md`.
+- **The oral-history programme** — `docs/oral-history-programme.md`:
+  interview protocols for the founder, registrar, early staff, founding
+  parents, community leaders and the Qur'an College director, each targeted
+  at named holes in the record (`wanted_facts` in the institutional record).
+- **The objective, restated**: not "rank higher" but *become the
+  authoritative record of Sultan Hanafi Royal Schools*. Search visibility is
+  a consequence of being the source, not the goal.
+
 ## 3. Measurement
 
 | Measure | Instrument | Cadence |

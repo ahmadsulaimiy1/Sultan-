@@ -186,6 +186,24 @@
     "note": "The archive records the chain; the migration map governs the redirects."
   },
 
+  "wanted_facts": {
+    "note": "The timeline slots that exist in memory but not yet in the record. Each names its likely source; the oral-history programme (docs/oral-history-programme.md) is the collection instrument. An entry moves into `milestones` only with a date and a basis.",
+    "slots": [
+      { "slot": "Land acquisition", "likely_source": "founder interview + deed" },
+      { "slot": "Construction period and first building", "likely_source": "founder + early staff interviews, photographs" },
+      { "slot": "First admission day and first pupil", "likely_source": "founder + registrar; earliest enrolment register" },
+      { "slot": "First graduation", "likely_source": "early staff; photographs; programme if printed" },
+      { "slot": "Exact date of the November 2024 unveiling", "likely_source": "printed programme, invitation card, camera-original EXIF" },
+      { "slot": "First Qur'an competition (2024): date, winners", "likely_source": "Director Ahmed Sulaimon; school records" },
+      { "slot": "Ministry of Education approval: number and date", "likely_source": "registrar; the certificate" },
+      { "slot": "SPELL Africa gold: edition, year, student", "likely_source": "school records; organiser's published results" },
+      { "slot": "COVID-19 relief: scope, dates", "likely_source": "community leaders; foundation records; photographs" },
+      { "slot": "Road maintenance and community electrification: dates, scope", "likely_source": "community leaders; receipts" },
+      { "slot": "Scholarly visit(s): who, when, occasion", "likely_source": "Director Qur'an College; the photographs' subjects" },
+      { "slot": "Identity of every person in commissioning-day photographs", "likely_source": "the school; the guests themselves" }
+    ]
+  },
+
   "coverage_absences": {
     "note": "Verified absences, recorded so nobody re-searches them and so growth is measurable.",
     "checked_2026_08": [
