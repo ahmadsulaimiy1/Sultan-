@@ -543,13 +543,20 @@ export async function onRequestPost({ request, env }) {
           UPDATE staff SET full_name = ${body.fullName}, preferred_name = ${body.preferredName || null},
             office_id = ${officeId}, department_id = ${departmentId}, position_title = ${body.positionTitle || null},
             reports_to_staff_id = ${reportsToId}, institution_id = ${institutionId},
-            date_joined = ${body.dateJoined || null}, email = COALESCE(${email}, email), updated_at = now()
+            date_joined = ${body.dateJoined || null}, email = COALESCE(${email}, email),
+            identity_no = COALESCE(identity_no, staff_no), updated_at = now()
           WHERE id = ${staffId}`;
       } else {
+        // identity_no is stored with staff_no, not left for a later lazy
+        // pass to fill in. When it was left null the two numbers drifted:
+        // one record carried staff_no SHR-STF-0001 and identity_no
+        // SHR-STF-2026-000001 — two different numbers for one person,
+        // and no way to tell which the certificate would print. They are
+        // the same number and are now written together, once.
         const created = await sql`
-          INSERT INTO staff (staff_no, full_name, preferred_name, office_id, department_id, position_title,
+          INSERT INTO staff (staff_no, identity_no, full_name, preferred_name, office_id, department_id, position_title,
                               reports_to_staff_id, institution_id, date_joined, email)
-          VALUES (${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
+          VALUES (${staffNo}, ${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
                   ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
           RETURNING id`;
         staffId = created.rows[0].id;
