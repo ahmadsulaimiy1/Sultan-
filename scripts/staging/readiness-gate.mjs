@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 /**
- * PRODUCTION READINESS GATE — eleven checks, run rather than asserted.
+ * PRODUCTION READINESS GATE — twelve checks, run rather than asserted.
+ *
+ * Eleven are the Founder's, named in the authorisation of 15 August 2026.
+ * The twelfth covers the Institution Credential ID, added after those
+ * eleven first passed; it is gated rather than merely documented because
+ * its claim — that the identifier survives a rebuild — is exactly the kind
+ * a comment cannot substantiate.
  *
  *     ./scripts/staging/gate.sh
  *
@@ -19,6 +25,7 @@ import { join } from 'node:path';
 import pg from 'pg';
 import { RULED_ONE_CHILD, displayStageCertificateNo } from '../../functions/_lib/certificate-serial.js';
 import { computeDocumentHash, verifyDocumentHash } from '../../functions/_lib/document-hash.js';
+import { credentialIdFor } from '../../functions/_lib/credential-id.js';
 
 const DB = process.env.DATABASE_URL;
 const pool = new pg.Pool({ connectionString: DB, max: 4 });
@@ -236,6 +243,31 @@ const dupes = (arr) => {
     `${nBefore} rows → sql/rollback-graduation-2026.sql → ${nRolled} rows (the original `
     + `thirteen, byte-identical) → transaction reverted → ${nRestored}. The deployment `
     + `workflow runs this same file, so the tested procedure is the executed one.`);
+}
+
+// 12 · THE INSTITUTION CREDENTIAL ID IS PERMANENT AND REPRODUCIBLE. Not in the
+//      Founder's eleven — it is the architectural addition made after the gate
+//      first passed, and it earns a check of its own because its whole claim is
+//      one a column comment cannot substantiate.
+//
+//      The claim: this identifier survives a rebuild. So it is tested the way
+//      the claim would be broken — by deriving all 46 from the sealed registers
+//      alone, with no database involved, and asserting the live rows agree. If
+//      any row were still carrying the column's gen_random_uuid() default,
+//      this is where it would show, because a random UUID cannot match a
+//      derivation.
+{
+  const derived = new Map(fresh.concat(
+    existingSerials.map((s) => ({ serialNo: s })),
+  ).map((e) => [e.serialNo, credentialIdFor(e.serialNo)]));
+  const rows = await q('SELECT serial_no, credential_id FROM stage_certificates');
+  const wrong = rows.filter((r) => derived.get(r.serial_no) !== r.credential_id);
+  const distinct = new Set(rows.map((r) => r.credential_id)).size;
+  check(12, 'every credential carries a permanent, reproducible ICID',
+    wrong.length === 0 && distinct === rows.length && rows.length === derived.size,
+    `${rows.length} certificates, ${distinct} distinct ICIDs, ${wrong.length} disagreeing with `
+    + `the value derived from the sealed register alone. Derivation is UUIDv5 over the stored `
+    + `serial, so a database rebuilt from the registers reproduces every one of them.`);
 }
 
 // ── Report ──────────────────────────────────────────────────────────────────

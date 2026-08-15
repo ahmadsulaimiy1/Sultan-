@@ -27,6 +27,7 @@ import {
   renderStageCertificate, renderStageCertificateBatch,
 } from '../functions/_lib/stage-certificate-template.js';
 import { formatStudentIdentityNo, isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
+import { credentialIdFor } from '../functions/_lib/credential-id.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 import { PLAN, assertSexOnRecord, rollFor } from './_lib/class-of-2026.mjs';
 
@@ -690,6 +691,10 @@ for (const [i, student] of CLASS_ROLL.entries()) {
   const certId = FIRST_CERTIFICATE_SEQ + i;
   issued.push({
     certId,
+    // The Institution Credential ID — permanent, internal, never printed.
+    // Derived from the stored serial so a database rebuilt from this register
+    // reproduces it rather than inventing a new one. See credential-id.js.
+    credentialId: credentialIdFor(gen.serialNo),
     // Which signing key produced contentHash. Stored on the row so this
     // certificate still verifies after the key rotates — see document-hash.js.
     hashKeyVersion: gen.keyVersion,
@@ -890,7 +895,7 @@ const sqlOut = [
   // have recomputed the hash over '' instead of 'Excellent', and every one of
   // these certificates would have publicly reported 'integrity check failed'
   // — six correct documents called forgeries by their own registry.
-  ...issued.map((r) => `INSERT INTO stage_certificates (id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version) VALUES (${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)}, ${r.hashKeyVersion});`),
+  ...issued.map((r) => `INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version) VALUES (${r.certId}, ${q(r.credentialId)}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.studentAr)}, ${q(r.sex)}, ${q(PROGRAMME)}, ${q(PROGRAMMES[PROGRAMME].labelEn)}, ${q(PROGRAMMES[PROGRAMME].labelAr)}, ${q(INSTITUTION_NAME)}, ${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, ${q(PLACE_AR)}, ${q(ISSUED_AT)}, ${q(formatHijri(ISSUED_AT, 'en') || '')}, ${q(formatHijri(ISSUED_AT, 'ar') || '')}, ${q(r.contentHash)}, ${r.hashKeyVersion});`),
   '',
   '-- The sequence name is stage_certificate_serial_seq (sql/schema.sql).',
   '-- An earlier version of this file said stage_certificate_seq, which does',

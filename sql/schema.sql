@@ -1104,8 +1104,31 @@ CREATE TABLE IF NOT EXISTS verification_log (
 --                 does not hold were checked by the public with NO audit
 --                 trail at all. Found by running the real endpoint against a
 --                 staging copy of this schema on 15 August 2026.
-  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'))
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable')),
+  -- WHICH credential this lookup resolved to, by its permanent internal name.
+  --
+  -- document_reference_no above is what the VISITOR TYPED — a serial, a
+  -- printed number, a verification code, a Student ID, or a near-miss that
+  -- resolved to nothing. It is the right thing to keep (it is the evidence of
+  -- what was actually asked) and the wrong thing to query by, because five
+  -- spellings of one certificate produce five values and none of them is the
+  -- certificate.
+  --
+  -- NULL is meaningful and common: 'not_found' resolved to no credential,
+  -- 'multiple' resolved to a person rather than a document, and 'ambiguous'
+  -- deliberately refuses to pick one. Only a lookup that identified exactly
+  -- one certificate fills this in.
+  -- NO FOREIGN KEY, for two reasons that both bite in practice. This table is
+  -- created ~900 lines before stage_certificates, so an inline reference makes
+  -- the CREATE TABLE fail outright — which is how this comment came to be
+  -- written: the constraint was added, the staging harness swallowed the
+  -- error, and the audit table simply stopped existing. And a FK would make
+  -- the tested rollback fail the moment any of the certificates it removes had
+  -- ever been looked up, which is the opposite of what a rollback is for.
+  -- An audit record outliving the row it describes is correct behaviour.
+  credential_id           UUID
 );
+CREATE INDEX IF NOT EXISTS idx_verification_log_credential ON verification_log(credential_id);
 ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check;
 ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
   CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'));
@@ -1997,6 +2020,32 @@ CREATE TABLE IF NOT EXISTS stage_certificate_batches (
 
 CREATE TABLE IF NOT EXISTS stage_certificates (
   id                    SERIAL PRIMARY KEY,
+  -- INSTITUTION CREDENTIAL ID (ICID). The permanent internal name of this
+  -- credential, assigned once and never changed. It is NOT printed on the
+  -- certificate and NOT returned by the public verification endpoint: it is
+  -- what the institution's own systems — audit logs, revocations, reissues,
+  -- transcripts, future APIs — use to refer to a credential without depending
+  -- on anything that can legitimately change around it.
+  --
+  -- Everything else on this row is either public or presentational. The serial
+  -- is engraved and therefore immutable, but it encodes a programme code and a
+  -- year, and formats evolve; `id` is a database sequence and would be
+  -- re-assigned by any rebuild. The ICID is neither. It survives a restore
+  -- from the sealed registers, because it is IN the sealed registers: the
+  -- issuing pipeline mints it and writes it into the register SQL, so the
+  -- repository — not this database — is its authority.
+  --
+  -- NOT part of the content hash (functions/_lib/certificate-serial.js,
+  -- certificateHashFields). It must not be: the five characters engraved on
+  -- the face derive from that hash, so anything added to it would change a
+  -- printed number. An internal identifier that could alter a printed
+  -- certificate would defeat its own purpose.
+  --
+  -- The DEFAULT exists only for rows that predate this column — the thirteen
+  -- certificates of 8 August, which are assigned fixed ICIDs by
+  -- docs/graduation-registers/2026-08-15-CREDENTIAL-IDS.sql. New rows always
+  -- supply their own.
+  credential_id         UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(),
   serial_no             TEXT NOT NULL UNIQUE,
   batch_id              INTEGER REFERENCES stage_certificate_batches(id),
   student_id            INTEGER REFERENCES students(id) ON DELETE SET NULL,

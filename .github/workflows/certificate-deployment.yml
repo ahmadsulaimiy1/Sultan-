@@ -199,6 +199,7 @@ jobs:
         run: |
           node scripts/build-production-import.mjs issued
           node scripts/build-production-import.mjs graduation
+          node scripts/build-credential-ids.mjs --write
           git --no-pager diff --stat -- docs/graduation-registers/ || true
           if ! git diff --quiet -- docs/graduation-registers/; then
             echo "::error::The generated imports differ from the committed ones."
@@ -225,7 +226,7 @@ jobs:
           echo "certificates=$n" >> "$GITHUB_OUTPUT"
           echo "  production held $n certificate(s) before this deployment"
 
-      - name: Apply the three register files
+      - name: Apply the four register files
         if: inputs.apply_imports && steps.caps.outputs.db == 'yes'
         env:
           PGCONN: ${{ secrets.DATABASE_URL }}
@@ -236,6 +237,7 @@ jobs:
           for f in \
             docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql \
             docs/graduation-registers/2026-08-15-GRADUATION-IMPORT.sql \
+            docs/graduation-registers/2026-08-15-CREDENTIAL-IDS.sql \
             docs/graduation-registers/2026-08-15-IDENTITY-NAMES.sql
           do
             echo "── $f"

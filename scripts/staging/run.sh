@@ -40,8 +40,17 @@ psql -h 127.0.0.1 -p "$PORT" -U shrs -d postgres -qc "CREATE DATABASE $DB;"
 echo "  up on 127.0.0.1:$PORT"
 
 echo "── schema ───────────────────────────────────────────────"
-psql -q "$URL" -f "$ROOT/sql/schema.sql" >/dev/null 2>&1
+# NOT >/dev/null 2>&1. That is how a broken schema hid here on 15 August 2026:
+# a foreign key referencing a table defined 900 lines later made CREATE TABLE
+# verification_log fail, the error went to the void, and the harness reported a
+# healthy database with no audit table in it. Errors are shown, and a missing
+# table is a hard stop.
+psql -q "$URL" -f "$ROOT/sql/schema.sql" 2>&1 | grep -E '^psql:.*ERROR' && { echo "  SCHEMA ERRORS ABOVE — refusing to continue"; exit 1; }
 echo "  $(psql -tA "$URL" -c "select count(*) from information_schema.tables where table_schema='public';") tables"
+for t in stage_certificates verification_log student_identity_names; do
+  psql -tA "$URL" -c "select to_regclass('public.$t');" | grep -q "^$t$" \
+    || { echo "  MISSING TABLE: $t — the schema did not apply cleanly"; exit 1; }
+done
 
 echo "── certificates ─────────────────────────────────────────"
 # The thirteen already issued, verbatim from the production import, so the
@@ -59,6 +68,11 @@ echo "  $(psql -tA "$URL" -c 'select count(*) from stage_certificates;') rows, s
 
 # The identity name history, derived from the same two sources everything else
 # reads. Loaded here so the historical-name note is exercised, not assumed.
+# The Institution Credential IDs, pinned from the sealed registers rather than
+# left at the column's database default — the same file the deployment applies.
+psql -q "$URL" -f "$ROOT/docs/graduation-registers/2026-08-15-CREDENTIAL-IDS.sql" >/dev/null
+echo "  $(psql -tA "$URL" -c 'select count(distinct credential_id) from stage_certificates;') distinct credential ids"
+
 psql -q "$URL" -f "$ROOT/docs/graduation-registers/2026-08-15-IDENTITY-NAMES.sql" >/dev/null
 echo "  $(psql -tA "$URL" -c 'select count(*) from student_identity_names;') identity names, $(psql -tA "$URL" -c 'select count(*) from student_identity_names where not is_current;') historical"
 

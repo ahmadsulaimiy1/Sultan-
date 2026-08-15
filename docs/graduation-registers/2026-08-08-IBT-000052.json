@@ -28,6 +28,7 @@
   "entries": [
     {
       "certId": 52,
+      "credentialId": "0f51015e-cdea-5beb-8ed4-577f80cac38d",
       "hashKeyVersion": 3,
       "studentEn": "Ameerah Abdulhafeez",
       "studentAr": "أميرة عبد الحفيظ",
@@ -45,6 +46,7 @@
     },
     {
       "certId": 53,
+      "credentialId": "b107d3f6-7a90-5226-b8f7-1864fe14095b",
       "hashKeyVersion": 3,
       "studentEn": "Faridah Ayomide Aliu",
       "studentAr": "فريدة أيومدي علي",
@@ -62,6 +64,7 @@
     },
     {
       "certId": 54,
+      "credentialId": "73a1df58-f84d-56c4-960b-b1305f23625f",
       "hashKeyVersion": 3,
       "studentEn": "Muhammad Ismail Seriki",
       "studentAr": "محمد إسماعيل سركي",

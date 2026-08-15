@@ -43,6 +43,7 @@
   "entries": [
     {
       "certId": 77,
+      "credentialId": "6dff2c42-b05a-5acc-b638-4725235d551b",
       "hashKeyVersion": 3,
       "studentEn": "Abdulbasit Amobi Jabarr",
       "sex": "male",
@@ -69,6 +70,7 @@
     },
     {
       "certId": 78,
+      "credentialId": "4463c322-cde8-548c-a7b5-24427deb9840",
       "hashKeyVersion": 3,
       "studentEn": "Aisha Shode",
       "sex": "female",
@@ -95,6 +97,7 @@
     },
     {
       "certId": 79,
+      "credentialId": "3433a325-3dc3-557e-8f62-1d7a87dd8b4c",
       "hashKeyVersion": 3,
       "studentEn": "Mazeed Hassan-Murtala",
       "sex": "male",
@@ -121,6 +124,7 @@
     },
     {
       "certId": 80,
+      "credentialId": "0efda1a2-4b7b-589d-8b4d-50f0fe96d543",
       "hashKeyVersion": 3,
       "studentEn": "Thoirah Makinde",
       "sex": "female",

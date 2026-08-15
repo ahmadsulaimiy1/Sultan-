@@ -46,6 +46,7 @@
   "entries": [
     {
       "certId": 48,
+      "credentialId": "f87e5a9a-8d5a-5ed2-8db4-f1d870022aa0",
       "hashKeyVersion": 3,
       "studentEn": "Aisha Omoshalewa Anofi",
       "sex": "female",
@@ -77,6 +78,7 @@
     },
     {
       "certId": 49,
+      "credentialId": "01c27ca7-532d-510d-9599-b3eed949ca9f",
       "hashKeyVersion": 3,
       "studentEn": "Baqi Olamiposi Anofi",
       "sex": "male",
@@ -103,6 +105,7 @@
     },
     {
       "certId": 50,
+      "credentialId": "64047284-0043-5313-9eea-c952f9bd06dd",
       "hashKeyVersion": 3,
       "studentEn": "Zaynab Zakariya Anofi",
       "sex": "female",

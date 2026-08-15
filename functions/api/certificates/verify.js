@@ -63,12 +63,17 @@ function undoBarcodePadding(ref) {
 // Best-effort verification audit (same verification_log the graduation-
 // document verifier writes) — a failed log write must never break a
 // legitimate verification.
-async function logVerification(sql, request, refNo, outcome) {
+// `credentialId` is the ICID of the certificate this lookup RESOLVED TO, and
+// is null whenever it resolved to none — not_found, or a Student ID that names
+// a person rather than a document, or a number the endpoint refused to
+// disambiguate. refNo stays what the visitor typed, because that is the
+// evidence of what was asked; the ICID is what the row can be joined on.
+async function logVerification(sql, request, refNo, outcome, credentialId = null) {
   try {
     const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || null;
     await sql`
-      INSERT INTO verification_log (document_reference_no, ip_hash, outcome)
-      VALUES (${refNo}, ${hashIpAddress(ip)}, ${outcome})`;
+      INSERT INTO verification_log (document_reference_no, ip_hash, outcome, credential_id)
+      VALUES (${refNo}, ${hashIpAddress(ip)}, ${outcome}, ${credentialId})`;
   } catch (logErr) {
     console.error('verification_log write failed', logErr);
   }
@@ -211,7 +216,7 @@ export async function onRequestGet({ request, env }) {
     if (resolved && resolved.outcome === 'resolved') {
       const row = resolved.rows[0];
       const state = stageCertificateState(env, row);
-      await logVerification(sql, request, ref, state.outcome);
+      await logVerification(sql, request, ref, state.outcome, row.credential_id || null);
       const nameNow = await currentInstitutionalName(sql, row.student_identity_no);
       return json({
         ok: true,
@@ -268,7 +273,10 @@ export async function onRequestGet({ request, env }) {
       FROM certificates WHERE reference_no = ${ref}`;
     if (cert.rows.length) {
       const row = cert.rows[0];
-      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid');
+      // null: this row is from `certificates` / `ijazah_register`, which the ICID
+      // does not yet cover. Stated rather than read off a field that is always
+      // undefined, which would look like an oversight later.
+      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid', null);
       return json({
         ok: true,
         found: true,
@@ -288,7 +296,10 @@ export async function onRequestGet({ request, env }) {
       FROM ijazah_register WHERE reference_no = ${ref}`;
     if (ijazah.rows.length) {
       const row = ijazah.rows[0];
-      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid');
+      // null: this row is from `certificates` / `ijazah_register`, which the ICID
+      // does not yet cover. Stated rather than read off a field that is always
+      // undefined, which would look like an oversight later.
+      await logVerification(sql, request, row.reference_no, row.revoked_at ? 'revoked' : 'valid', null);
       return json({
         ok: true,
         found: true,

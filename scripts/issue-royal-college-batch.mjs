@@ -29,6 +29,7 @@ import { join } from 'node:path';
 
 import { generateStageCertificateSerial, displayStageCertificateNo, formatHijri } from '../functions/_lib/certificate-serial.js';
 import { isValidStudentIdentityNo } from '../functions/_lib/identity-no.js';
+import { credentialIdFor } from '../functions/_lib/credential-id.js';
 import { qrSvgForPrint } from '../functions/_lib/qrcode.js';
 import {
   RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
@@ -370,6 +371,10 @@ for (const [i, student] of roll.entries()) {
   const certId = FIRST_CERTIFICATE_SEQ + i;
   issued.push({
     certId,
+    // The Institution Credential ID — permanent, internal, never printed.
+    // Derived from the stored serial so a database rebuilt from this register
+    // reproduces it rather than inventing a new one. See credential-id.js.
+    credentialId: credentialIdFor(gen.serialNo),
     hashKeyVersion: gen.keyVersion,
     studentEn: student.en,
     sex: student.sex,
@@ -641,10 +646,10 @@ const sqlOut = [
   '-- taken over it, and the public verifier recomputes it from this column. A',
   '-- row imported without it verifies as tampered.',
   '',
-  ...issued.map((r) => 'INSERT INTO stage_certificates (id, serial_no, student_identity_no, '
+  ...issued.map((r) => 'INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, '
     + 'student_full_name, student_sex, programme_code, programme_label_en, institution_name, '
     + 'academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES ('
-    + `${r.certId}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.sex)}, `
+    + `${r.certId}, ${q(r.credentialId)}, ${q(r.serialNo)}, ${q(r.identityNo)}, ${q(r.studentEn)}, ${q(r.sex)}, `
     + `${q(PROGRAMME)}, ${q(RC_PROGRAMMES[PROGRAMME].labelEn)}, ${q(INSTITUTION_NAME)}, `
     + `${q(ACADEMIC_YEAR)}, ${q(r.gradeEn)}, ${qOrNull(r.gradeAr)}, ${q(PLACE_EN)}, `
     + `${q(ISSUED_AT)}, ${q(r.contentHash)}, ${r.hashKeyVersion});`),

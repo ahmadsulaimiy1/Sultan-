@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stand up staging exactly as run.sh does, then put it through the eleven
+# Stand up staging exactly as run.sh does, then put it through the twelve
 # production readiness checks. Same cluster, same data, nothing live touched.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"

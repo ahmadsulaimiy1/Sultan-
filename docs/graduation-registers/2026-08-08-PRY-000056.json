@@ -53,6 +53,7 @@
   "entries": [
     {
       "certId": 56,
+      "credentialId": "cc453f5d-9b76-5a80-9679-5e6398f9d589",
       "hashKeyVersion": 3,
       "studentEn": "Aisha Lawal",
       "sex": "female",
@@ -79,6 +80,7 @@
     },
     {
       "certId": 57,
+      "credentialId": "1a8b1eac-65ec-5d35-9f7e-d9689ad9a9eb",
       "hashKeyVersion": 3,
       "studentEn": "Al-ameen Okoh",
       "sex": "male",
@@ -105,6 +107,7 @@
     },
     {
       "certId": 58,
+      "credentialId": "e9731034-d6d5-5740-afe6-69701b21cb10",
       "hashKeyVersion": 3,
       "studentEn": "Ashraf Korede Ojewumi",
       "sex": "male",
@@ -131,6 +134,7 @@
     },
     {
       "certId": 59,
+      "credentialId": "8a59683c-36dd-580f-9967-dea018676319",
       "hashKeyVersion": 3,
       "studentEn": "Daud Aliu",
       "sex": "male",
@@ -157,6 +161,7 @@
     },
     {
       "certId": 60,
+      "credentialId": "4c1c6c18-79f9-5f0f-9b6a-d454d83e7469",
       "hashKeyVersion": 3,
       "studentEn": "Imran Iremide Adegoke",
       "sex": "male",
@@ -183,6 +188,7 @@
     },
     {
       "certId": 61,
+      "credentialId": "0c8f4bb9-7ec9-5abe-9f98-bff60159b9f6",
       "hashKeyVersion": 3,
       "studentEn": "Naheemah Ismail",
       "sex": "female",

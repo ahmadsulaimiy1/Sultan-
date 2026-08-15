@@ -1822,6 +1822,30 @@ const STATEMENTS = [
   // verification for a reason no one could trace.
   `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
   `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
+  // INSTITUTION CREDENTIAL ID — the permanent internal name of a credential.
+  // Never printed, never returned to the public. sql/schema.sql carries the
+  // full reasoning; the short version is that everything else on the row is
+  // either engraved (and so cannot absorb a format change) or a database
+  // sequence (and so cannot survive a rebuild).
+  //
+  // The volatile default is what makes this migration safe on a table that
+  // already holds rows: PostgreSQL evaluates gen_random_uuid() per row rather
+  // than once, so every existing certificate gets its own. The thirteen of
+  // 8 August are then pinned to fixed values by
+  // docs/graduation-registers/2026-08-15-CREDENTIAL-IDS.sql, so that a
+  // database rebuilt from the sealed registers reproduces the same ICIDs
+  // rather than inventing new ones — which is the entire point of an
+  // identifier that audit logs and revocations are allowed to reference.
+  `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS credential_id UUID NOT NULL DEFAULT gen_random_uuid()`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS stage_certificates_credential_id_key ON stage_certificates(credential_id)`,
+  // The audit trail refers to a credential by its ICID, not by whatever the
+  // visitor happened to type. NULL where the lookup identified no single
+  // certificate — not_found, multiple, ambiguous — which is most of the
+  // interesting rows and is why the column is nullable. No foreign key: an
+  // audit record must outlive the row it describes, and a FK would make the
+  // tested rollback fail on any certificate that had ever been looked up.
+  `ALTER TABLE verification_log ADD COLUMN IF NOT EXISTS credential_id UUID`,
+  `CREATE INDEX IF NOT EXISTS idx_verification_log_credential ON verification_log(credential_id)`,
 ];
 
 async function handle({ request, env }) {
