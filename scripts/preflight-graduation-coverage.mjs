@@ -58,6 +58,7 @@ const KEEP = PLAN.actions.filter((a) => a.kind === 'KEEP');
 const problems = [];
 const held = [];
 const notes = [];
+const omitted = [];
 const flag = (m) => problems.push(m);
 const hold = (m) => held.push(m);
 
@@ -294,11 +295,19 @@ const BILINGUAL = ['TMH', 'IBT', 'IDD'];
 // That is a real outcome and it is reported here every run — the one thing a
 // coverage check must never do is let a child fall quietly out of his own
 // graduation.
+//
+// A DECISION and a QUESTION are different states, and they are reported
+// differently. `ruledOn` is set when the institution has closed the matter —
+// omit, and no certificate. That is settled, and listing it under "rulings
+// still owed" would ask the Founder, on every run, for an answer he has
+// already given. Without it the child is still an open question and stays in
+// the hold list until someone places him.
 for (const u of CANON.withdrawnByRuling || []) {
   if (u.alsoOn && u.alsoOn.length) continue;      // withdrawn here, placed elsewhere
-  hold(`${u.name} is on NO roll and receives NO certificate.\n`
+  const line = `${u.name} is on NO roll and receives NO certificate.\n`
     + `      Withdrawn from ${u.code}: ${u.why}\n`
-    + `      ${u.standing}`);
+    + `      ${u.standing}`;
+  if (u.ruledOn) omitted.push(line); else hold(line);
 }
 
 // ── What the Registrar must do on the live system ───────────────────────────
@@ -334,6 +343,14 @@ console.log(`  To be minted: ${PLAN.toMint.length}, numbers `
 if (held.length) {
   console.log(`\n  ${held.length} BATCH HOLD(S) — nothing is wrong; these are rulings still owed:`);
   for (const h of held) console.log(`    · ${h}`);
+}
+
+// Settled, and printed every run anyway. A child left off the roll is the one
+// outcome a coverage check must never allow to go quiet — but it is reported
+// as a decision on the record, not as something the institution still owes.
+if (omitted.length) {
+  console.log(`\n  ${omitted.length} OMITTED BY RULING — decided, not outstanding:`);
+  for (const o of omitted) console.log(`    · ${o}`);
 }
 
 console.log('\n  To mint, with the production key from the Board’s credential store:');

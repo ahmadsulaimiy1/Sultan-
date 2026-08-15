@@ -232,15 +232,26 @@ const WITHDRAWN_FROM = {
       + 'the roll the moment the Registrar supplies the award and the Arabic '
       + 'form; nothing else has to change, and no number she would have held has '
       + 'been spent.',
+    ruledOn: '2026-08-15',
   }],
   TMH: [{
     name: 'Muhammad fatih',
     why: 'Founder’s ruling, 8 Aug 2026 — "Only Abdul Basit Adedokun is now in '
-      + 'Tamheediyyah."',
-    standing: 'UNPLACED — the ruling states which stage he is not in. It does '
-      + 'not state which stage he is in, and this file will not choose one for '
-      + 'him. He appears on no roll until the Registrar or the Founder places '
-      + 'him, and the preflight reports him on every run.',
+      + 'Tamheediyyah." Omitted outright by the Founder’s ruling of 15 Aug 2026.',
+    standing: 'OMITTED. The ruling of 8 August took him off the Tamhīdiyyah '
+      + 'roll without saying which stage he is in, so he was carried here as '
+      + 'UNPLACED — an open question the preflight raised on every run, waiting '
+      + 'for the Registrar or the Founder to place him. On 15 August 2026 the '
+      + 'Founder closed it: omit. He is on no roll and receives no certificate '
+      + 'in this recovery. That is now a decision on the record, not a gap in '
+      + 'it, and the preflight reports it as settled rather than owed. Nothing '
+      + 'here says he did not study, and no certificate number has been spent '
+      + 'on him: deleting this entry puts him back on the Tamhīdiyyah roll the '
+      + 'moment the institution places him.',
+    // Distinguishes a closed decision from an open question. The preflight
+    // lists these separately, because "we have decided" and "we are waiting"
+    // are not the same state and a reader has to be able to tell them apart.
+    ruledOn: '2026-08-15',
   }],
 };
 
