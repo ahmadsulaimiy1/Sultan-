@@ -2,153 +2,402 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://shroyalschools.com/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/" />
+    <loc>https://shroyalschools.com/about/governance/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/governance/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/governance/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/about/governance/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/about/governance/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/governance/"/>
   </url>
   <url>
     <loc>https://shroyalschools.com/about/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/" />
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/about/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/about/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/about/governance/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/governance/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/governance/" />
-  </url>
-  <url>
-    <loc>https://shroyalschools.com/academics/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/" />
-  </url>
-  <url>
-    <loc>https://shroyalschools.com/academics/nursery-primary/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/nursery-primary/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/nursery-primary/" />
-  </url>
-  <url>
-    <loc>https://shroyalschools.com/academics/royal-college/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/royal-college/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/royal-college/" />
+    <loc>https://shroyalschools.com/academic-calendar/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academic-calendar/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academic-calendar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academic-calendar/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academic-calendar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academic-calendar/"/>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/arabic-islamic-studies/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/arabic-islamic-studies/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/arabic-islamic-studies/" />
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/arabic-islamic-studies/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/arabic-islamic-studies/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/arabic-islamic-studies/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/arabic-islamic-studies/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/arabic-islamic-studies/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/academics/quran-college/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/quran-college/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/quran-college/" />
+    <loc>https://shroyalschools.com/academics/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/academics/nursery-primary/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/nursery-primary/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/nursery-primary/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/nursery-primary/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/nursery-primary/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/nursery-primary/"/>
   </url>
   <url>
     <loc>https://shroyalschools.com/academics/online-distance-learning/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/online-distance-learning/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/online-distance-learning/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/online-distance-learning/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/boarding/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/boarding/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/boarding/" />
+    <loc>https://shroyalschools.com/academics/quran-college/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/quran-college/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/quran-college/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/quran-college/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/quran-college/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/quran-college/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/academics/royal-college/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/royal-college/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/royal-college/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/academics/royal-college/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/academics/royal-college/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/academics/royal-college/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/adhkar/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/adhkar/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/adhkar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/adhkar/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/adhkar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/adhkar/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/admission/apply/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/admission/apply/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/admission/apply/"/>
   </url>
   <url>
     <loc>https://shroyalschools.com/admission/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/admission/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/admission/" />
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/admission/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/admission/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/admission/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/admission/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/admission/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/facilities/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/facilities/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/facilities/" />
+    <loc>https://shroyalschools.com/alumni-portal/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/alumni-portal/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/alumni-portal/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/alumni-portal/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/alumni-portal/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/alumni-portal/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/foundation/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/foundation/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/foundation/" />
+    <loc>https://shroyalschools.com/announcements/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/announcements/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/announcements/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/announcements/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/announcements/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/announcements/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/policies/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/policies/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/policies/" />
+    <loc>https://shroyalschools.com/boarding/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/boarding/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/boarding/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/boarding/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/boarding/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/boarding/"/>
   </url>
   <url>
     <loc>https://shroyalschools.com/contact/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/contact/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/contact/" />
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/contact/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/contact/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/" />
+    <loc>https://shroyalschools.com/curriculum/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/curriculum/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/curriculum/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/curriculum/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/curriculum/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/curriculum/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/about/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/" />
+    <loc>https://shroyalschools.com/digital-campus/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/digital-campus/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/digital-campus/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/digital-campus/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/digital-campus/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/digital-campus/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/about/governance/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/about/governance/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/about/governance/" />
+    <loc>https://shroyalschools.com/facilities/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/facilities/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/facilities/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/facilities/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/facilities/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/facilities/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/" />
+    <loc>https://shroyalschools.com/faculty/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/faculty/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/faculty/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/faculty/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/faculty/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/faculty/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/nursery-primary/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/nursery-primary/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/nursery-primary/" />
+    <loc>https://shroyalschools.com/foundation/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/foundation/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/foundation/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/foundation/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/foundation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/foundation/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/royal-college/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/royal-college/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/royal-college/" />
+    <loc>https://shroyalschools.com/gallery/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/gallery/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/gallery/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/gallery/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/gallery/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/gallery/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/arabic-islamic-studies/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/arabic-islamic-studies/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/arabic-islamic-studies/" />
+    <loc>https://shroyalschools.com/graduate-profile/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/graduate-profile/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/graduate-profile/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/graduate-profile/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/graduate-profile/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/graduate-profile/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/quran-college/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/quran-college/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/quran-college/" />
+    <loc>https://shroyalschools.com/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/academics/online-distance-learning/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/academics/online-distance-learning/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/academics/online-distance-learning/" />
+    <loc>https://shroyalschools.com/marketplace/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/marketplace/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/marketplace/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/marketplace/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/marketplace/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/marketplace/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/boarding/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/boarding/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/boarding/" />
+    <loc>https://shroyalschools.com/online-courses/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/online-courses/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/online-courses/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/online-courses/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/online-courses/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/online-courses/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/admission/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/admission/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/admission/" />
+    <loc>https://shroyalschools.com/policies/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/policies/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/policies/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/policies/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/policies/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/policies/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/facilities/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/facilities/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/facilities/" />
+    <loc>https://shroyalschools.com/press/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/press/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/press/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/press/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/press/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/press/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/foundation/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/foundation/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/foundation/" />
+    <loc>https://shroyalschools.com/prospectus/aspirational/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/aspirational/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/aspirational/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/policies/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/policies/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/policies/" />
+    <loc>https://shroyalschools.com/prospectus/definitive/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/definitive/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/definitive/"/>
   </url>
   <url>
-    <loc>https://shroyalschools.com/ar/contact/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/contact/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/contact/" />
+    <loc>https://shroyalschools.com/prospectus/digital-campus/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/digital-campus/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/digital-campus/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/prospectus/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/prospectus/masterplan/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/masterplan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/masterplan/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/prospectus/student-experience/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/prospectus/student-experience/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/prospectus/student-experience/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/quran-centre/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/quran-centre/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/quran-centre/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/quran-centre/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/quran-centre/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/quran-centre/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/strategic-plan/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/strategic-plan/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/strategic-plan/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/strategic-plan/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/strategic-plan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/strategic-plan/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/student-life/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/student-life/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/student-life/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/student-life/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/student-life/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/student-life/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/verify-certificate/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify-certificate/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify-certificate/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-certificate/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-certificate/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-certificate/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/verify-graduation-document/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify-graduation-document/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify-graduation-document/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-graduation-document/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-graduation-document/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-graduation-document/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/verify-identity/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify-identity/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify-identity/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-identity/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-identity/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-identity/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/verify-receipt/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify-receipt/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify-receipt/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify-receipt/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify-receipt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify-receipt/"/>
+  </url>
+  <url>
+    <loc>https://shroyalschools.com/verify/</loc>
+    <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://shroyalschools.com/verify/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/verify/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://shroyalschools.com/fr/verify/"/>
+    <xhtml:link rel="alternate" hreflang="yo" href="https://shroyalschools.com/yo/verify/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/verify/"/>
   </url>
 </urlset>
