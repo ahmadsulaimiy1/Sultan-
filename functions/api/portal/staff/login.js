@@ -39,17 +39,35 @@ export async function onRequestPost({ request, env }) {
   const staffNo = ((body && body.staffNo) || '').trim();
   const password = (body && body.password) || '';
   if (!staffNo || !password) {
-    return json({ error: 'Staff ID and password are required.' }, 400);
+    return json({ error: 'Staff ID or email, and password, are required.' }, 400);
   }
 
-  const genericError = { error: 'Incorrect Staff ID or password.' };
+  const genericError = { error: 'Incorrect Staff ID, email, or password.' };
 
   try {
+    // Either the Staff ID or the email address on the record signs a
+    // member in.
+    //
+    // Requiring the Staff ID was a real barrier, not a theoretical one:
+    // it is a long number issued by the institution
+    // (SHRS-HQ-REG-130826-000004), nobody memorises it, and it is shown
+    // once, when the account is created. Someone who has not written it
+    // down is locked out of a portal whose password they know perfectly
+    // well — and the way back in was to ask the ICT Office to look the
+    // number up, which is precisely the errand this platform keeps trying
+    // to stop being necessary.
+    //
+    // lower() on the email because addresses are not case-sensitive in
+    // practice and people type them as they please. The Staff ID stays
+    // exact: it is issued in one canonical form and should match it.
+    const identifier = staffNo.toLowerCase();
     const result = await sql`
       SELECT s.id, s.full_name, s.status, s.email, s.trust_version, sa.password_hash, sa.password_salt, sa.failed_attempts, sa.locked_until
       FROM staff s
       JOIN staff_accounts sa ON sa.staff_id = s.id
-      WHERE s.staff_no = ${staffNo}`;
+      WHERE s.staff_no = ${staffNo}
+         OR (s.email IS NOT NULL AND btrim(lower(s.email)) = ${identifier})
+      LIMIT 1`;
     const staff = result.rows[0];
 
     if (!staff) {

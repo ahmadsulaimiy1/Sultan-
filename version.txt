@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      f85589d2c80249bdb112e80f51f595bab696c3eb
-short       f85589d2
+commit      50b94d7e8e6556042a57573766b2feaa366548e2
+short       50b94d7e
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Name the search and assistant fields, and let them speak Yoruba and French
-built (UTC) 2026-08-14T18:23:14Z
-assets      shrs-pwa-8452a92786
+subject     Render 'signature pending' distinctly from a real integrity failure on the public verify page
+built (UTC) 2026-08-15T01:26:47Z
+assets      shrs-pwa-c490a98c12
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
