@@ -20,16 +20,13 @@ Every canonical tag, the sitemap, the robots directive and the entity that this
 programme installs all declare `.com`. They are being declared for a domain the
 index currently associates less strongly with the school than a second one.
 
-This is not a technical defect to fix in code. It is a decision:
-
-| Option | What it means |
-|---|---|
-| **`.com` is the school** | 301 every `.ng` URL to its `.com` equivalent. The `.ng` domain keeps its registration and its authority flows to `.com`. This is the recommendation — it is the site with the institution's real work in it. |
-| **`.ng` is the school** | Then this repository's SEO work is pointed at the wrong host and should be re-declared. |
-| **Do nothing** | Two sites compete for one name. Links, citations and brand searches split between them, and neither accumulates enough authority to hold a competitive term. |
-
-**Nothing else in this programme returns as much as resolving this.** A 301 is
-an afternoon's work for whoever controls the `.ng` DNS and hosting.
+**DECIDED (15 Aug 2026): `.com` is the single authoritative digital home.**
+The `.ng` site is a legacy source of institutional history, to be archived and
+then redirected page-by-page — never a blanket redirect to the homepage. The
+full audit, content-preservation matrix and URL migration map live in
+`docs/legacy-migration/`. The redirects themselves must be deployed on the
+`.ng` host by whoever controls its DNS and hosting; this repository can only
+prepare the map.
 
 ### 0.2 The school already has national press, and was not claiming it
 
