@@ -21,7 +21,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
-<meta name="shrs-build" content="shrs-pwa-c490a98c12">
+<meta name="shrs-build" content="shrs-pwa-eba450e0fb">
 </head>
 <body class="portal-body">
 
@@ -32,6 +32,17 @@
   </a>
   <div style="display:flex;align-items:center;gap:14px;">
     <span class="portal-pilot-badge">Staff</span>
+    <!-- This page is deliberately an identity card, not a dashboard (see
+         functions/api/portal/staff/me.js's own header comment), which is
+         correct — but it is also the page everyone lands on straight
+         after signing in, and it carried no way OUT of itself beyond two
+         generic links. A SYSADMIN or EXE account had no path to the
+         Institutional Administration Centre from here at all; the only
+         route was already knowing the URL. The switcher fixes that: it
+         reads the same roles/offices this page already fetches and
+         surfaces exactly the tools each signed-in account actually
+         holds. -->
+    <div id="office-switcher-mount" hidden></div>
     <a class="portal-topbar-link" href="/portal/staff/offices/" data-i18n="all-offices">All Offices</a>
     <a class="portal-topbar-link" href="/portal/staff/documents/" data-i18n="staff-documents">Staff Documents</a>
     <span class="lang-switch-mount" data-locale-switcher></span>
@@ -144,6 +155,7 @@
 </main>
 
 <script src="/js/id-card.js?v=78f0d35fa1" defer></script>
+<script src="/js/portal-office-switcher.js?v=65698cf144" defer></script>
 <script src="/js/portal-onboarding-wizard.js?v=66ef283427" defer></script>
 <script src="/js/portal-staff-identity.js?v=19e2906580" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
