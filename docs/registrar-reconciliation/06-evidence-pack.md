@@ -6,7 +6,8 @@
 
 > **The freeze is in force.** This document is a citation index: it records where the proof
 > for every workbook row lives. It performs no action and authorises none. No signing key is
-> generated, no certificate is minted, no database record is created or modified, and no
+> generated, no certificate is minted, no record is created or modified in the production
+> database, and no
 > reissue or revocation is executed until the full sign-off chain of the SOP (`04-sop.md`) —
 > **Registrar → Technical → Cryptographic → Founder** — has been completed for that action.
 > Every future step named here happens only **after sign-off**, when authorised.
@@ -38,17 +39,23 @@ commit `afb80e87` (full: `afb80e8724c1a19c36aa0126ffa4f87bbb74adc5`).
 | **E3** | **Cloudflare environment-name audit** — the read-only GitHub Actions workflow `cloudflare-env-audit.yml`, prior run as cited by the audit §3. It lists environment-variable **names only**; no secret value is ever read or displayed. | `DOCUMENT_HASH_SECRET` (the v2 key, SHA-256 fingerprint `24bb0f683233486a`) is **absent from both Production and Preview** — key v2 is lost and, per E9 §3, unrecoverable. `DOCUMENT_HASH_SECRET_V1` (the retired v1 key) is **present in Production**, so the 7 IBT certificates remain fully verifiable. |
 | **E4** | **The full audit** — `docs/shrs-certificate-cryptographic-integrity-audit-2026-08-15.md`. | The primary evidence narrative: the 13-certificate ledger (§2.1), the formal key history v1/v2/v3 (§3), the per-item proof that no record, signature, QR, verification code, or sealed register exists for the 38 planned certificates (§4.1–4.6), the explicit statement that physical existence of paper is **not** provable from the systems (§4.7), and the immutability proof that a future v3 key cannot touch the existing 13 (§5). |
 | **E5** | **Sealed register, IBT batch** — `docs/graduation-registers/2026-08-08-IBT-000035.json`, `….md`, `….sql`. | The project's own sealed record that the 7 IBT certificates (000035–000041) were generated and signed under key v1 on 2026-08-08. The SQL file omits `hash_key_version` and takes the default of 1, which is correct for this batch (E9 §6). |
-| **E6** | **Sealed register, IDD batch** — `docs/graduation-registers/2026-08-08-IDD-000042.json`, `….md`, `….sql` (a `….sha256` seal file is also present alongside them, as is the combined `2026-08-08-PRODUCTION-IMPORT.sql`). | The sealed record that the 6 IDD certificates (000042–000047) were generated and signed under key v2 on 2026-08-08 (re-minted under v2 on 2026-08-06 per E9 §5). The SQL writes `hash_key_version = 2` explicitly. |
+| **E6** | **Sealed register, IDD batch** — `docs/graduation-registers/2026-08-08-IDD-000042.json`, `….md`, `….sql` (a `….sha256` seal file is also present alongside them, as is the combined `2026-08-08-PRODUCTION-IMPORT.sql`). | The sealed record that the 6 IDD certificates (000042–000047), issue-dated 2026-08-08, were re-minted and signed under key v2 on 2026-08-06 (E9 §5); the SQL writes `hash_key_version = 2` explicitly. |
 | **E7** | **The canonical roll** — `docs/graduation-registers/canonical-roll-2026.json`. The Registrar's own Founder-ratified roll: 44 awards, 31 children, 7 categories (QUR 4, TMH 1, IBT 9, IDD 5, PRY 6, JSS 15, SS 4). | The institutional answer to "who is owed what award" — the register evidence for every planned row. |
 | **E8** | **The ratified reissue plan** — `docs/graduation-registers/reissue-plan-2026.json`, Founder-ratified 8 August 2026. `actions`: 6 KEEP / 4 REISSUE / 3 REVOKE against the 13 issued certificates. `toMint`: 38 planned certificates with **provisional** sequence allocations 48–85. **Ratified but unexecuted** — under the freeze it remains a plan, not a record. | The plan-side evidence for every row: what was proposed for each issued certificate, and which student, programme, and provisional sequence each planned certificate carries. Its allocations 48–85 are provisional and will be renumbered around whatever is physically in circulation (invariant I1, `03-decision-tree.md` §7). |
 | **E9** | **Key custody and deployment record** — `docs/certificate-key-deployment.md`. | What each key signs and proves (§1), the environment variables (§2), the custody rule and the consequence of loss (§3 — "read this part twice"), the rotation procedure (§4), and the 2026-08-06 v2 re-mint record with the before/after tails (§5). |
-| **E10** | **Key repository commits** (all reachable from `main` at the baseline): **(a)** `7090fddd` — "Build the Certificate Generation System (Ibtida'iyyah certificate engine)": the certificate system build; **(b)** `f24544fe` — "Production import for the thirteen, and the key configuration it needs": the production import of the 13; **(c)** the JSS visual-template series `cc7b5da`, `d084ed1`, `8e8e97f`, `cb5bbce`, `5ad2e5c`, `963d815` — approved artwork/template work whose own commit message states plainly: *"Visual template only: no signatory map entry, no issuance endpoint"* (audit §4.7); **(d)** `afb80e87` — the commit the whole evidence baseline is pinned to. | (a) and (b) are the repository history of the 13 issued certificates' generation and import. (c) proves a JSS **template** exists — which is a separate fact from any specific student's document ever having been rendered from it. (d) fixes the exact state of the repository every citation in this pack refers to. |
+| **E10** | **Key repository commits** (all reachable from `main` at the baseline): **(a)** `7090fddd` — "Build the Certificate Generation System (Ibtida'iyyah certificate engine)": the certificate system build (engine code only — it contains no register file). The IBT sealed register (E5) was first added at `f586ca6a` ("Issue the first production batch", 2026-08-05); its current sealed content dates from `c3afdb4b` (2026-08-06 — regeneration on the final authoritative list of seven), last touched at `4bbe28d7`; **(b)** `f24544fe` — "Production import for the thirteen, and the key configuration it needs": the production import of the 13; **(c)** the JSS visual-template series `cc7b5da`, `d084ed1`, `8e8e97f`, `cb5bbce`, `5ad2e5c`, `963d815` — approved artwork/template work whose own commit message states plainly: *"Visual template only: no signatory map entry, no issuance endpoint"* (audit §4.7); **(d)** `afb80e87` — the commit the whole evidence baseline is pinned to. | (a) and (b) are the repository history of the 13 issued certificates' generation and import. (c) proves a JSS **template** exists — which is a separate fact from any specific student's document ever having been rendered from it. (d) fixes the exact state of the repository every citation in this pack refers to. |
 
 **One honest limitation, stated once (audit §4.7).** E1–E10 together prove everything about
 the database, the keys, the repository, and the live service. They prove **nothing either
 way** about which pieces of paper physically exist in students' hands. That question belongs
 to Stage 1 (Registrar Review), and its evidence — the physical documents and their
 photographs — joins this index as it is gathered (Sections 4 and 5).
+
+**A second stated limitation — the legacy `certificates` register.** The contents of the
+legacy `certificates` register are **not** covered by the baseline presence sweep: run
+`31862779664` (E1) queries `stage_certificates` row ids only. A read-only enumeration of
+that table may be added during Stage 2 as a GET-only check; until then this pack treats
+its contents as unknown.
 
 ---
 
@@ -71,13 +78,13 @@ How to read the columns:
 
 | Row | Certificate | Register evidence | Database evidence | Repository evidence | Workflow evidence | Production evidence | Reconciliation notes |
 |---|---|---|---|---|---|---|---|
-| 1 | `SHRS-CERT-IBT-2026-000035-368DC` — Hameedah Adebimpe Ojewumi (IBT) | E5, entry 000035; E8 `actions`: KEEP | Found — E1 | E5 (committed at E10a; imported at E10b) | E1 (`31862779664`), E2 (`31857567994`) | Live: `active`, integrity `intact` — E2 | |
-| 2 | `SHRS-CERT-IBT-2026-000036-B9E10` — Aisha Anofi (IBT) | E5, entry 000036; E8 `actions`: REISSUE (to "Aisha Omoshalewa Anofi", plan seq 53) | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
-| 3 | `SHRS-CERT-IBT-2026-000037-22C49` — Abdulbasit Adedokun (IBT) | E5, entry 000037; E8 `actions`: REVOKE ("not on the Registrar's IBT roll") | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
-| 4 | `SHRS-CERT-IBT-2026-000038-2944F` — Naheemah Ismail (IBT) | E5, entry 000038; E8 `actions`: REISSUE (to "Naheemah Ismail Seriki", plan seq 59) | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
-| 5 | `SHRS-CERT-IBT-2026-000039-518A8` — Ashrof Akorede (IBT) | E5, entry 000039; E8 `actions`: REISSUE (to "Ashraf Korede Ojewumi", plan seq 55) | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
-| 6 | `SHRS-CERT-IBT-2026-000040-60DAF` — Imran Adegoke (IBT) | E5, entry 000040; E8 `actions`: REISSUE (to "Imran Iremide Adegoke", plan seq 57) | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
-| 7 | `SHRS-CERT-IBT-2026-000041-6F66F` — Abdulateef Adedokun (IBT) | E5, entry 000041; E8 `actions`: KEEP | Found — E1 | E5 (E10a, E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 1 | `SHRS-CERT-IBT-2026-000035-368DC` — Hameedah Adebimpe Ojewumi (IBT) | E5, entry 000035; E8 `actions`: KEEP | Found — E1 | E5 (engine built at E10a; register first added `f586ca6a`, current sealed content `c3afdb4b`/`4bbe28d7` — see E10a; imported at E10b) | E1 (`31862779664`), E2 (`31857567994`) | Live: `active`, integrity `intact` — E2 | |
+| 2 | `SHRS-CERT-IBT-2026-000036-B9E10` — Aisha Anofi (IBT) | E5, entry 000036; E8 `actions`: REISSUE (to "Aisha Omoshalewa Anofi", plan seq 53) | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 3 | `SHRS-CERT-IBT-2026-000037-22C49` — Abdulbasit Adedokun (IBT) | E5, entry 000037; E8 `actions`: REVOKE ("not on the Registrar's IBT roll") | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 4 | `SHRS-CERT-IBT-2026-000038-2944F` — Naheemah Ismail (IBT) | E5, entry 000038; E8 `actions`: REISSUE (to "Naheemah Ismail Seriki", plan seq 59) | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 5 | `SHRS-CERT-IBT-2026-000039-518A8` — Ashrof Akorede (IBT) | E5, entry 000039; E8 `actions`: REISSUE (to "Ashraf Korede Ojewumi", plan seq 55) | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 6 | `SHRS-CERT-IBT-2026-000040-60DAF` — Imran Adegoke (IBT) | E5, entry 000040; E8 `actions`: REISSUE (to "Imran Iremide Adegoke", plan seq 57) | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
+| 7 | `SHRS-CERT-IBT-2026-000041-6F66F` — Abdulateef Adedokun (IBT) | E5, entry 000041; E8 `actions`: KEEP | Found — E1 | E5 (register commits per E10a; imported at E10b) | E1, E2 | Live: `active`, `intact` — E2 | |
 | 8 | `SHRS-CERT-IDD-2026-000042-56798` — Muhammad Ismail Seriki (IDD) | E6, entry 000042; E8 `actions`: REVOKE ("not on the Registrar's IDD roll"; roll awards at plan seq 58 and 79) | Found — E1 | E6 (E10b) | E1, E2 | Live: `active`, `pending_signature` (honest key-unavailable state, not a mismatch — E3, E4 §3) — E2 | |
 | 9 | `SHRS-CERT-IDD-2026-000043-6EEAF` — Baqi Olamiposi Anofi (IDD) | E6, entry 000043; E8 `actions`: KEEP | Found — E1 | E6 (E10b) | E1, E2 | Live: `active`, `pending_signature` — E2 | |
 | 10 | `SHRS-CERT-IDD-2026-000044-8B125` — Faridah Ayomide Aliu (IDD) | E6, entry 000044; E8 `actions`: REVOKE ("not on the Registrar's IDD roll"; roll awards at plan seq 56 and 74) | Found — E1 | E6 (E10b) | E1, E2 | Live: `active`, `pending_signature` — E2 | |
@@ -194,11 +201,21 @@ freeze applies to it exactly as to everything else.
    **never** committed to the public repository, attached to a public page, or sent over any
    channel other than the transfer channel agreed with the Founder's office before Stage 1
    begins (`04-sop.md` §3): [TO BE CONFIRMED BY REGISTRAR].
-5. **Read-only means read-only.** Every workflow and query cited in this index (E1, E2, E3,
-   and any fresh Stage 2 query) performs GET requests or name-listing only. Re-running them
-   during the reconciliation is permitted under the freeze precisely because they write
-   nothing. Any evidence-gathering step that would create or modify a record is not
-   evidence-gathering and is prohibited until authorised through the sign-off chain.
+5. **Read-only means read-only — established per instrument, never assumed.** Of the
+   workflows cited in this index, only `certificate-presence-audit.yml` (E1) is read-only by
+   construction, and `cloudflare-env-audit.yml` (E3) lists environment-variable names only.
+   `certificate-verification.yml` (the instrument behind E2) is read-only **only** when
+   dispatched with `run_import: false` **and** `configure_cloudflare: false` — both inputs
+   **default to true**, and its Monday 06:00 UTC schedule and its push triggers run the
+   import/configure steps unconditionally when the required secrets are present. Every
+   freeze-period run of it must therefore be dispatched with both inputs explicitly false.
+   (At the baseline the stored GitHub secrets include neither `DATABASE_URL` nor
+   `DOCUMENT_HASH_SECRET`, so the mutating steps currently skip or fail closed on scheduled
+   runs — but this pack must not rely on that remaining true.) Re-running a genuinely
+   read-only query during the reconciliation is permitted under the freeze precisely
+   because it writes nothing. Any evidence-gathering step that would create or modify a
+   record is not evidence-gathering and is prohibited until authorised through the
+   sign-off chain.
 6. **No secret values in evidence.** No signing key, in whole or in part, ever appears in
    this index, a photograph caption, a workbook cell, or any note. The only key-related
    value that may be written down is a SHA-256 fingerprint (first 16 hex characters), as

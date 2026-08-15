@@ -6,10 +6,13 @@
 
 > **The freeze is in force throughout.** Until the closing entry of Stage 6 is signed by both
 > the Registrar and the Founder: no signing key is generated (save the single, fully gated
-> ceremony inside Stage 3, and only on the condition stated there), no certificate is minted,
-> no database record is created or modified, no reissue or revocation is performed, and
-> production is not altered. Every action named in this procedure happens only **after
-> sign-off**, at its own stage, in its own order — never before, and never out of order.
+> generation-and-custody ceremony inside Stage 3, which touches no live system, and only on
+> the condition stated there — the key's installation into Cloudflare is itself a signed
+> Stage 5 action), no certificate is minted, no record is created or modified in the
+> production database, no
+> reissue or revocation is performed, and production is not altered. Every action named in
+> this procedure happens only **after sign-off**, at its own stage, in its own order — never
+> before, and never out of order.
 
 ---
 
@@ -19,7 +22,7 @@
 |---|---|---|---|---|
 | 1 | Registrar Review | Registrar | Completed, signed observation workbook + photograph set | The Registrar has signed and dated the completed workbook (checklist in `02-workbook-guide.md` §7 fully ticked) |
 | 2 | Technical Review (joint) | Technical Reviewer, with the Registrar | Classified workbook (every row has `final_classification` + `recommended_action_code`) + draft approved-actions list | The `registrar_signoff` and `auditor_signoff` columns are complete for all 51 rows; Registrar and Technical Reviewer have both signed |
-| 3 | Cryptographic Review | Cryptographic Reviewer | Written custody decision; v3 generation ceremony record (only if the stated condition is met); registry-wording memorandum | The Cryptographic Reviewer has signed the Stage 3 record and the Founder has countersigned the custody memorandum |
+| 3 | Cryptographic Review | Cryptographic Reviewer | Written custody decision; v3 generation ceremony record (only if the stated condition is met); registry-wording memorandum | The Cryptographic Reviewer has signed the Stage 3 record; the Founder has countersigned the custody memorandum; and, where the ceremony was held, the ceremony record is countersigned by the Founder or another non-executing role-holder |
 | 4 | Founder Approval | Founder | Signed approved-actions list; written P1/P2 policy selection; signed registry wording | The Founder has signed every document; unsigned rows are formally recorded as frozen |
 | 5 | Implementation | Technical Reviewer (executor), Auditor observing | Every signed action executed exactly per `07-implementation-plan.md`, verified batch by batch | Every signed action is executed or formally aborted with its rollback; the final verification runs are green and countersigned |
 | 6 | Audit Logging | Auditor | Complete implementation log + closing five-sources-agree entry | The closing entry is signed by the Registrar **and** the Founder — only then does the freeze lift |
@@ -37,7 +40,7 @@ written in real time *during* Stage 5 (Section "Stage 6" explains how the two in
 | **Registrar** | The school Registrar | Owner of the institutional facts: completes the workbook observations, gathers the registers and student records, signs Stages 1, 2, and the closing entry of Stage 6 |
 | **Technical Reviewer** | [TO BE CONFIRMED BY REGISTRAR] | Verifies workbook entries against the live database and the repository; runs forensic test F1; applies the decision tree jointly with the Registrar; executes Stage 5 |
 | **Cryptographic Reviewer** | [TO BE CONFIRMED BY REGISTRAR] | Custody decision for key v3; conducts the generation ceremony if and only if the Stage 3 condition is met; drafts the registry-wording memorandum |
-| **Founder** | The Founder | Selects the P1/P2 policy; signs or withholds signature on every proposed action; countersigns the custody memorandum and the closing entry |
+| **Founder** | The Founder | Selects the P1/P2 policy; signs or withholds signature on every proposed action; countersigns the custody memorandum (and, where held, the v3 ceremony record, unless another non-executing role-holder countersigns it) and the closing entry |
 | **Auditor** | [TO BE CONFIRMED BY REGISTRAR] | Keeps the implementation log; countersigns the `auditor_signoff` column at Stage 2; observes Stage 5; prepares the Stage 6 closing entry |
 
 **Dual-role rule.** One person may hold two of these roles. But **no action may be signed off
@@ -144,11 +147,18 @@ Neither works on the classification columns alone.
 
 **Steps.**
 
-1. Confirm the baseline still holds: if desired, re-run the two read-only GitHub Actions
-   workflows — `certificate-presence-audit.yml` and `certificate-verification.yml` — against
-   production. Both perform only GET queries and are permitted under the freeze. Expected at
-   baseline: exactly 13 records (000035–000047); 7 IBT `intact`; 6 IDD `pending_signature`;
-   nothing else found.
+1. Confirm the baseline still holds: if desired, re-run the two GitHub Actions verification
+   workflows against production. **Only `certificate-presence-audit.yml` is read-only by
+   construction.** `certificate-verification.yml` is read-only **only** when dispatched with
+   `run_import: false` **and** `configure_cloudflare: false` — **both inputs default to
+   true**, and on its Monday 06:00 UTC schedule and its push triggers the import/configure
+   steps run unconditionally whenever the required secrets are present. **Every
+   freeze-period run of `certificate-verification.yml` must therefore be dispatched with
+   both inputs explicitly set to false.** (At the baseline the stored GitHub secrets include
+   neither `DATABASE_URL` nor `DOCUMENT_HASH_SECRET`, so the mutating steps currently skip
+   or fail closed on scheduled runs — but this procedure must not rely on that remaining
+   true.) Expected at baseline: exactly 13 records (000035–000047); 7 IBT `intact`; 6 IDD
+   `pending_signature`; nothing else found.
 2. Verify every workbook entry against the live database and the repository: for each of the
    13 issued rows, that the stored serial, student, programme, and live status match the
    locked columns; for each of the 38 planned rows, that no record exists; for every printed
@@ -157,7 +167,10 @@ Neither works on the classification columns alone.
    — a physical document exists carrying a printed number with a 5-character tail, but no
    matching database record. Record the result (reproduced / not reproduced) on the row.
 4. Walk every one of the 51 rows through `03-decision-tree.md`, in row order, and record the
-   outcome in `final_classification` and `recommended_action_code`. The tree is applied
+   outcome in `final_classification` and `recommended_action_code`. A B-category row whose
+   terminal depends on the Founder's P1/P2 selection is recorded as **"B2 — pending P1/P2"**
+   — a valid Stage 2 classification; the Founder's Stage 4 selection then resolves every
+   such row mechanically to B2a (under P1) or B2b (under P2). The tree is applied
    mechanically — no per-row improvisation, no "special cases" invented at the table.
 5. Raise and minute any physical certificate that matches no row at all, and any row where
    the observations and the systems cannot be reconciled by the tree; such rows are marked
@@ -173,14 +186,23 @@ Neither works on the classification columns alone.
 > Rebuild the canonical field set (`certificateHashFields` in
 > `functions/_lib/certificate-serial.js`: `serialBase`, `studentIdentityNo`,
 > `studentFullName`, `programmeCode`, `academicYear`, `gradeEn`, `issuedAt`) from the paper
-> exactly as transcribed in the workbook; compute the HMAC-SHA256 keyed with the v1 value
-> (the development literal `batch-issuance-development-secret` — already public in git
-> history, so this test involves no secret handling); compare the first **five** hex
-> characters, uppercased, against the printed tail, and — where a printed verification code
-> exists — the first **twelve** against it.
+> as transcribed in the workbook, applying the defined normalisations: the printed issue
+> date is converted to the ISO `YYYY-MM-DD` (Gregorian) form before hashing — matching
+> `isoDateOnly()` and the sealed registers (`"issuedAt": "2026-08-08"`) — and `gradeEn` is
+> tried both exactly as printed and as the batch convention `Excellent`. The reviewer
+> records exactly which combination, if any, reproduced the suffix. Compute the HMAC-SHA256
+> keyed with the retired v1 key — the value held in Cloudflare Production as
+> `DOCUMENT_HASH_SECRET_V1`, recorded in `docs/certificate-key-deployment.md` §2; the key
+> value itself is never written into this pack (Section 3) — and compare the first **five**
+> hex characters, uppercased, against the printed tail, and — where a printed verification
+> code exists — the first **twelve** against it. If the 5-character tail matches but the
+> printed 12-character verification code does not (or vice versa), the result is **NO
+> MATCH**; record both values on the worksheet.
 > **Reproduced** → the printed number was genuinely derived under v1 and the row is a B1a
-> candidate. **Not reproduced** → the number was produced outside the signing pipeline and
-> the row falls to the B2 family.
+> candidate. **Not reproduced** → record the finding plainly and only as: **"not
+> reproducible under v1 with the recorded fields."** A negative F1 is **not** proof of
+> forgery — a one-character difference in the recorded name, identity number, or date
+> breaks the HMAC completely. The row falls to the B2 family.
 > F1 computes and compares only. It writes nothing, anywhere, ever.
 
 **Outputs.** The classified workbook (all 51 rows carrying `final_classification` and
@@ -189,7 +211,9 @@ the F1 results record; minutes of any unresolved rows.
 
 **Exit criteria — before Stage 3 may begin.**
 
-- Every row is classified, or explicitly marked unresolved with no action code.
+- Every row is classified — **"B2 — pending P1/P2" is a valid classification** for
+  B-category rows whose terminal awaits the Founder's Stage 4 selection — or explicitly
+  marked unresolved with no action code.
 - F1 has been run and recorded wherever the tree required it.
 - The draft approved-actions list exists and cross-references `05-rollback-plan.md`.
 - **Signed by:** the Registrar (`registrar_signoff` column plus dated signature) and the
@@ -211,7 +235,9 @@ the F1 results record; minutes of any unresolved rows.
 **Purpose.** Settle key v3 custody before any key exists; conduct the v3 generation ceremony
 **only** if the reconciliation actually requires a new key; and put the programme-registry
 wording in front of the Founder in final form. This stage prepares cryptographic material and
-paperwork — it signs nothing and mints nothing.
+paperwork — it signs nothing, mints nothing, and touches no live system: the generated key's
+installation into Cloudflare is the **first item of Stage 5**, executed only under the
+Founder's signed approval.
 
 **Who leads.** The Cryptographic Reviewer.
 
@@ -237,17 +263,27 @@ paperwork — it signs nothing and mints nothing.
 3. The Founder countersigns the custody memorandum. No generation happens before that
    countersignature.
 4. **The v3 generation ceremony — conducted IF AND ONLY IF the draft approved-actions list
-   contains at least one C1 or B2b.** If the list contains neither, record in writing that no
-   new key is required, and skip to step 9. When the condition is met and the custody
-   memorandum is countersigned, the ceremony is authorised and proceeds as follows:
+   contains at least one C1 row, OR any "B2 — pending P1/P2" row is outstanding, OR the
+   Founder's P1/P2 selection is P2.** (The selection is made at Stage 4; if Stage 4 selects
+   P2 and no ceremony was held, the procedure returns to this stage for the ceremony before
+   Stage 4 concludes — see Stage 4 step 2.) If none of these conditions holds, record in
+   writing that no new key is required, and continue at step 6. When the condition is met
+   and the custody memorandum is countersigned, the ceremony is authorised. It is conducted
+   by the Cryptographic Reviewer **in the presence of a second role-holder as witness**, and
+   proceeds as follows:
    1. Generate **64 bytes from the operating-system CSPRNG** (the same specification as key
       v2, per `docs/certificate-key-deployment.md` §5).
    2. Compute the key's SHA-256 fingerprint and **record its first 16 hex characters in
       writing** in the ceremony record — the same way `24bb0f683233486a` was recorded for
       v2. The fingerprint, and only the fingerprint, may be written down and circulated.
-   3. Install the key to **both** custody locations named in the memorandum.
-   4. **Warning — the two Cloudflare variables must change together, in one save.** When the
-      key is installed to Cloudflare, `DOCUMENT_HASH_SECRET` (the new value) and
+   3. Place the key in the durable custody location named in the memorandum (the store that
+      holds the Board's own irreplaceable documents). **The key is NOT installed into
+      Cloudflare at this stage** — production is not touched at Stage 3. The Cloudflare
+      installation is the **first item of Stage 5**, executed only under the Founder's
+      signed approval.
+   4. **Warning — governing the Stage 5 installation: the two Cloudflare variables must
+      change together, in one save.** When the
+      key is installed to Cloudflare at Stage 5, `DOCUMENT_HASH_SECRET` (the new value) and
       `DOCUMENT_HASH_KEY_VERSION` (set to `3`) must be updated in the same change. Setting
       the secret while the version variable still reads `2` would cause the live verifier to
       check the six v2 certificates (000042–000047) against the new key
@@ -255,26 +291,37 @@ paperwork — it signs nothing and mints nothing.
       current version, the current secret is used) — publicly reporting genuine certificates
       as failed, the exact harm key versioning exists to prevent. Set both, in Production
       and Preview, per `docs/certificate-key-deployment.md` §2.
-   5. Verify the installed value **by fingerprint** in both locations, without revealing it
+   5. Verify the custody copy **by fingerprint**, without revealing the value
       (`docs/certificate-key-deployment.md` §3):
       `printf %s "$DOCUMENT_HASH_SECRET" | sha256sum | cut -c1-16` — the output must equal
-      the fingerprint recorded at step 4.2.
-   6. Re-run the read-only acceptance workflow (`certificate-verification.yml`) against
-      production and confirm the 13 existing certificates answer **exactly as at the
+      the fingerprint recorded at step 4.2. The same fingerprint check is repeated against
+      the installed Cloudflare value at Stage 5, immediately after the installation.
+   6. Re-run the acceptance workflow (`certificate-verification.yml`) against production —
+      **dispatched with `run_import: false` and `configure_cloudflare: false`** (Stage 2
+      step 1) — and confirm the 13 existing certificates answer **exactly as at the
       baseline** — 7 `intact`, 6 `pending_signature` (the structural proof that a v3
-      rotation cannot touch them is §5 of the audit). Any other result halts the stage.
+      rotation cannot touch them is §5 of the audit). Nothing in this ceremony has touched
+      production, so any other result halts the stage.
+   7. The ceremony record — the fingerprint, the custody confirmation, the fingerprint
+      verification check, and the baseline re-check — names the witness and is
+      countersigned by the Founder or another non-executing role-holder.
 5. Destroy every transient copy of the key made during the ceremony (terminal history,
-   downloaded file, clipboard), so that exactly the two custody copies remain.
+   downloaded file, clipboard), so that exactly the copies held in custody per the
+   memorandum remain — at this stage the durable custody copy; the Cloudflare copy comes
+   into existence only at its Stage 5 installation.
 6. **Registry-wording memorandum.** For every programme code that appears on the draft
    approved-actions list under a minting code (C1 or B2b), document the proposed
    `PROGRAMMES` registry entry in `functions/_lib/certificate-serial.js` — the bilingual
    labels (`labelEn`, `labelAr`, `stageEn`, `stageAr`) in the house pattern the file itself
-   documents. At the evidence baseline the registry carries IBT, IDD, THN, and a TMH entry
-   whose wording the Founder confirmed on 8 August 2026 (recorded in the file itself); so:
-   QUR, PRY, JSS, and SS require **new** wording drafted for Founder approval, and TMH
-   requires **confirmation** that the engraved entry stands. Nothing is added to the code at
+   documents. At the evidence baseline (main, `afb80e87`) the registry holds **four**
+   programme codes — IBT, IDD, THN, and TMH — the TMH entry Founder-confirmed on
+   8 August 2026 and locked in the file itself. New registry entries are therefore required
+   **only for QUR, PRY, JSS, and SS**. TMH needs **no registry change**: the file's own
+   belt-and-braces note that the engraved wording holds one confirmation before the first
+   sheet is minted is satisfied by the Founder's Stage 4 signature on the TMH mint action.
+   Nothing is added to the code at
    this stage — the memorandum's wording, once Founder-signed at Stage 4, is applied as a
-   Stage 5 implementation action. No QUR, TMH, PRY, JSS, or SS certificate can be minted
+   Stage 5 implementation action. No QUR, PRY, JSS, or SS certificate can be minted
    before its registry entry exists with Founder-approved wording.
 7. Prepare the **P1/P2 policy decision memorandum** for the Founder (jointly with the
    Registrar): a one-page statement of the choice the Founder must make once, in writing,
@@ -295,12 +342,14 @@ P1/P2 policy memorandum.
 
 - The custody memorandum is signed by the Cryptographic Reviewer and countersigned by the
   Founder.
-- If the ceremony was held: the fingerprint is recorded, both custody copies verify by
-  fingerprint, and the baseline re-check (step 4.6) is green. If not held: the
-  no-key-required record is signed.
+- If the ceremony was held: it was witnessed by a second role-holder; the fingerprint is
+  recorded; the custody copy verifies by fingerprint; the baseline re-check (step 4.6) is
+  green; and the ceremony record is countersigned by the Founder or another non-executing
+  role-holder (step 4.7). If not held: the no-key-required record is signed.
 - The registry-wording and P1/P2 memoranda are complete.
-- **Signed by:** the Cryptographic Reviewer (Stage 3 record) and the Founder (custody
-  memorandum countersignature).
+- **Signed by:** the Cryptographic Reviewer (Stage 3 record), the Founder (custody
+  memorandum countersignature), and — where the ceremony was held — the Founder or another
+  non-executing role-holder (ceremony record countersignature).
 
 **FORBIDDEN during Stage 3.**
 
@@ -308,6 +357,9 @@ P1/P2 policy memorandum.
   test certificate, not a sample, not a "dry run" — until the Founder has signed at Stage 4
   and the action appears on the signed list executed at Stage 5.
 - Minting any certificate; creating or modifying any database record.
+- **Installing the key into Cloudflare** — Production or Preview — or changing any live
+  environment variable. The installation is the first item of Stage 5, executed only under
+  the Founder's signed approval.
 - Adding the registry entries to the code (that is a Stage 5 action on the signed list).
 - Writing the key value into any written channel whatsoever (Section 3).
 
@@ -333,11 +385,15 @@ Nothing unsigned may ever be implemented.
 
 1. The Founder reviews the classified workbook row by row against the draft approved-actions
    list.
-2. **The Founder Policy Gate.** If any row carries a B2 classification, the Founder selects
+2. **The Founder Policy Gate.** If any row carries a B2 classification (recorded at Stage 2
+   as "B2 — pending P1/P2"), the Founder selects
    **once, in writing**, between **P1** and **P2** (as defined in the memorandum and in
    `02-workbook-guide.md` §4). The selection then applies mechanically to every B2 row —
    under P1 each becomes B2a; under P2 each becomes B2b — and the approved-actions list is
-   finalised accordingly. There is no per-certificate discretion, for anyone, at any later
+   finalised accordingly. If the selection is **P2** and no v3 generation ceremony was held
+   at Stage 3, the procedure **returns to Stage 3** for the ceremony before Stage 4
+   concludes — the finalised list is not signed until the ceremony record exists. There is
+   no per-certificate discretion, for anyone, at any later
    point.
 3. The Founder signs each document: the finalised approved-actions list (each row
    individually signed or covered by a signed row-list), the policy selection, and the
@@ -361,8 +417,10 @@ registry wording; the recorded list of frozen (unsigned) rows.
   can show the full chain: Registrar (Stages 1–2) → Technical (Stage 2) → Cryptographic
   (Stage 3) → Founder (Stage 4).
 - If any B2 action is on the list, the written P1/P2 selection exists.
-- If any C1 or B2b action is on the list: the v3 ceremony record exists (Stage 3), and the
-  registry wording for every affected programme is Founder-signed.
+- If any C1 or B2b action is on the list: the v3 ceremony record exists (Stage 3, including
+  the return path of step 2 where P2 was selected without a ceremony), and the registry
+  wording for every affected programme either already stands Founder-confirmed in the file
+  (TMH, confirmed 8 August 2026) or is Founder-signed in the memorandum (QUR, PRY, JSS, SS).
 - **Signed by:** the Founder.
 
 **FORBIDDEN during Stage 4.**
@@ -377,7 +435,8 @@ registry wording; the recorded list of frozen (unsigned) rows.
 ## Stage 5 — Implementation
 
 **Purpose.** Execute the signed approved-actions list — exactly, completely, and nothing
-else. This is the only stage of the six in which any live system is changed, and every change
+else. This is the only stage of the six in which any live system is changed — the v3 key's
+installation into Cloudflare included — and every change
 it makes was written down, classified, reviewed, and signed before the stage opened.
 
 **Who leads.** The Technical Reviewer, as executor, with the Auditor observing and logging
@@ -394,17 +453,35 @@ log (opened per Stage 6 before the first action).
 2. Execute the signed actions **only in the order and batches set by
    `07-implementation-plan.md`**. The plan is an execution script: no redesign, no
    reinterpretation, no assumptions.
+   **The first item, whenever the signed list contains any C1 or B2b action, is the
+   installation of key v3 into Cloudflare.** Under the Founder's signed approval, the
+   executor sets `DOCUMENT_HASH_SECRET` (the v3 value, from the Stage 3 custody copy) and
+   `DOCUMENT_HASH_KEY_VERSION` (set to `3`) **together, in one save**, in Production and
+   Preview, per `docs/certificate-key-deployment.md` §2 and the Stage 3 step 4.4 warning;
+   verifies the installed value by fingerprint against the ceremony record; and re-runs the
+   acceptance workflow (dispatched with `run_import: false` and
+   `configure_cloudflare: false`) to confirm the 13 baseline certificates still answer
+   7 `intact`, 6 `pending_signature` before any minting action runs. No v3-signed action
+   may precede this installation.
 3. Before each action is executed, stage its pre-written rollback from
    `05-rollback-plan.md` alongside it — the rollback artefact must exist and be to hand
    *before* the forward action runs, and its reference is recorded in the log entry.
 4. Execute each action exactly as written. If reality deviates from the plan in any way —
    an unexpected database state, a number already occupied, an error, anything — **halt the
    batch**, invoke the staged rollback for any partially applied action, record the
-   deviation in the log, and escalate to the Founder. Execution does not resume until the
+   deviation in the log, and escalate to the Founder. A mid-batch rollback of a
+   **partially applied** action under this halt rule is pre-authorised by the Founder's
+   Stage 4 signature on that action's paired forward/rollback artefact; any
+   **post-completion** rollback — an error discovered after an action completed — requires
+   a fresh written instruction from the Founder. Execution does not resume until the
    deviation is resolved through the chain (back to Stage 2 or 4 as its nature requires).
 5. **Verify after every batch:** re-run the acceptance workflow
    (`certificate-verification.yml`) and the presence audit
-   (`certificate-presence-audit.yml`) against production. The batch passes only if:
+   (`certificate-presence-audit.yml`) against production. Every verification run of
+   `certificate-verification.yml` is dispatched with `run_import: false` and
+   `configure_cloudflare: false`; its mutating inputs are set to true only where the signed
+   batch definition in `07-implementation-plan.md` explicitly requires that batch's import
+   or configure step. The batch passes only if:
    - every certificate acted on in the batch now answers exactly as its signed action code
      specifies; and
    - every certificate **not** on the signed list answers exactly as at the 15 August 2026
@@ -415,8 +492,8 @@ log (opened per Stage 6 before the first action).
    Record both run IDs in the log against the batch.
 6. Each executed action is logged at the moment of execution, per Stage 6's entry format.
 7. When the last signed action is executed (or formally aborted with its rollback and the
-   Founder informed), run the two workflows once more as the final verification, and record
-   the run IDs.
+   Founder informed), run the two workflows once more as the final verification (dispatched
+   per step 5), and record the run IDs.
 
 **Outputs.** Every signed action executed (or formally aborted and rolled back, with the
 Founder informed); per-batch and final green verification runs, with run IDs logged; a
@@ -520,7 +597,7 @@ Founder-signed at Stage 4, and none is performed before Stage 5. The table match
 | **B2a** | Record the printed number in the legacy certificates register. It then resolves publicly, with no cryptographic self-check; the paper is unchanged. |
 | **B2b** | Formal reissue under a new, fully-signed number; the printed document is formally superseded. |
 | **C0** | No award due — record and close. |
-| **C1** | Mint fresh under key v3, after all gates (including v3 generation at Stage 3 — v3 does not yet exist). |
+| **C1** | Mint fresh under key v3, after all gates (including v3 generation at Stage 3 and its Cloudflare installation as the first Stage 5 item — v3 does not yet exist). |
 
 **Why B2a works without a key.** The public verifier
 (`functions/api/certificates/verify.js`) deliberately lets a well-formed stage-certificate

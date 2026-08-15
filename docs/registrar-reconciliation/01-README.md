@@ -9,7 +9,12 @@
 
 Until the reconciliation in this pack is complete and signed off:
 
-- **No signing key is generated.**
+- **No signing key is generated** — save the single, fully gated
+  generation-and-custody ceremony inside Stage 3 of `04-sop.md`, which occurs
+  only if the draft approved-actions list requires it, is witnessed by a second
+  role-holder, has its ceremony record countersigned, and touches no live
+  system: the key's installation into Cloudflare is itself a signed Stage 5
+  action.
 - **No certificate is minted.**
 - **No record is created or modified in the production database, and no
   institutional record is altered.**

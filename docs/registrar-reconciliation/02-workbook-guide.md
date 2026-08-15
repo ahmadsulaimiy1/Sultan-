@@ -6,8 +6,8 @@
 computer system. It is observation and record only.
 
 > **The freeze remains in force while you work.** Nothing in this guide asks you — or permits
-> anyone — to generate a key, create or change a database record, print, reissue, or revoke
-> anything. Every future action named here happens only **after** the full sign-off chain
+> anyone — to generate a key, create or change a record in the production database, print,
+> reissue, or revoke anything. Every future action named here happens only **after** the full sign-off chain
 > (Registrar → Technical → Cryptographic → Founder) has approved it, as set out in `04-sop.md`.
 
 ---
@@ -187,7 +187,7 @@ technical reviewer present, by walking each finished row through the decision tr
 | Column | Who fills it, and when |
 |---|---|
 | `final_classification` | Joint Technical Review. Each row is classified A, B, or C by the decision tree — mechanically, from your observations, with no per-row improvisation. |
-| `recommended_action_code` | Joint Technical Review. One of the pack's terminal action codes (table below). Recording a code here is a **recommendation only** — no code is executed until the full sign-off chain (Registrar → Technical → Cryptographic → Founder) has approved it. |
+| `recommended_action_code` | Joint Technical Review. One of the pack's terminal action codes (table below), or the holding value **`B2 — pending P1/P2`** for a B-category row awaiting the Founder's one-time written P1/P2 policy selection (it resolves mechanically to `B2a` or `B2b` the moment that selection exists). Recording a code here is a **recommendation only** — no code is executed until the full sign-off chain (Registrar → Technical → Cryptographic → Founder) has approved it. |
 | `registrar_signoff` | You — but only at the formal sign-off step in `04-sop.md`, after the classification columns are complete, not while observing. |
 | `auditor_signoff` | The technical/audit reviewer, at the same formal step. |
 

@@ -5,13 +5,15 @@
 **Status:** PREPARED — AWAITING THE REGISTRAR. No lifecycle action has been taken.
 
 > **The freeze is in force.** Nothing in this document performs, or authorises anyone to
-> perform, any action. No key is generated, no certificate is minted, no database record
-> is created or modified, and no REISSUE or REVOKE is executed until the full sign-off
-> chain of the SOP (`04-sop.md`) — **Registrar → Technical → Cryptographic → Founder** —
-> has been completed for that action. This document describes how each *authorised*
-> action, once executed during Stage 5 (Implementation), is reversed if an error is
-> discovered **before publication**. While the freeze holds, nothing has been executed,
-> so there is nothing to roll back.
+> perform, any action. No key is generated, no certificate is minted, no record is
+> created or modified in the production database, no institutional record is altered,
+> and no REISSUE or REVOKE is executed until the full sign-off chain of the SOP
+> (`04-sop.md`) — **Registrar → Technical → Cryptographic → Founder** — has been
+> completed for that action. The one witnessed rehearsal expressly permitted before
+> Stage 5 by `01-README.md` is the staging-only rollback drill of Section 5. This
+> document describes how each *authorised* action, once executed during Stage 5
+> (Implementation), is reversed if an error is discovered **before publication**. While
+> the freeze holds, nothing has been executed, so there is nothing to roll back.
 
 ---
 
@@ -29,9 +31,21 @@ one of the pack's terminal action codes: **A1, A2-R, A2-V, B1a, B2a, B2b, C0, C1
 5. the log entries required.
 
 A rollback is itself an institutional action. It is executed only within the
-pre-publication window defined in Section 2, only on the written instruction of the
-Founder (or the person `04-sop.md` names for this purpose), by the Technical reviewer,
-with the Registrar witnessing, and it is logged exactly as the forward action was.
+pre-publication window defined in Section 2, by the Technical reviewer, with the
+Registrar witnessing, and it is logged exactly as the forward action was. Its
+authorisation takes exactly one of two forms — both written, both the Founder's:
+
+1. **A mid-batch rollback of a PARTIALLY applied action** under the Stage 5 halt rule
+   (`04-sop.md` Stage 5; `07-implementation-plan.md` §4) is **pre-authorised by the
+   Founder's Stage 4 signature on that action's paired forward/rollback artefact**: the
+   signature that approved the forward action approved its pre-written reversal with
+   it, so the halt-and-roll-back sequence needs no further instruction before the
+   escalation that follows it.
+2. **Any post-completion rollback** — an error discovered after an action completed —
+   requires a **fresh written instruction from the Founder**. No one else may give it.
+
+Wherever a reversal step below says "Founder's written rollback instruction", read it
+as whichever of these two forms applies to the case at hand.
 
 **The rule of pairs.** No forward artefact is signed off unless its rollback artefact is
 attached to the same sign-off. The two are drafted together, reviewed together, and
@@ -59,20 +73,49 @@ test — it is a question of fact, answered from the record.
 
 ### 2.2 The operational test for limb P-3
 
-Every public lookup is recorded in the `verification_log` table (the endpoint writes a
-row for each verification — `functions/api/certificates/verify.js`, `logVerification`).
-The test is therefore mechanical:
+**What `verification_log` is — and is not.** The `verification_log` table is
+**best-effort and shape-filtered, not complete**. Three gaps in
+`functions/api/certificates/verify.js` and `sql/schema.sql` mean a third-party lookup
+can occur and leave no row:
+
+1. **Shape filter.** A lookup whose reference does not parse as an institution-issued
+   shape is never logged at all.
+2. **Swallowed failures.** `logVerification` deliberately swallows failed log writes
+   ("a failed log write must never break a legitimate verification"), so any lookup can
+   complete without leaving a row.
+3. **The `key_unavailable` constraint gap.** At the baseline, the table's CHECK
+   constraint (`sql/schema.sql`; permitted outcomes `'valid'`, `'revoked'`,
+   `'hash_mismatch'`, `'not_found'`, `'ambiguous'`, `'multiple'`) does **not** include
+   the `'key_unavailable'` outcome the endpoint reports for every v2-signed certificate
+   lookup — so those lookups currently leave **no log row at all**. Every lookup of the
+   six v2-signed IDD certificates (000042–000047) falls into this gap.
+
+**An empty log is therefore INCONCLUSIVE — never proof of non-reliance.** The boundary
+cannot fail closed on the log alone. The test is:
 
 1. During Stage 5, every check the implementation team itself performs against the live
    service is logged in the implementation log **at the time it is made** (timestamp,
    reference queried, who queried).
 2. Before any rollback is executed, the Technical reviewer reads `verification_log`
    (read-only) for the affected reference number(s), from the moment of execution to
-   the present.
-3. Every `verification_log` row for that reference must be matched to a recorded
+   the present. Every row found for that reference must be matched to a recorded
    implementation-team check. **Any lookup that cannot be positively matched is treated
-   as third-party reliance, and the action is treated as published.** When in doubt, the
-   action is published — the boundary fails closed.
+   as third-party reliance, and the action is treated as published.**
+3. A clean or empty log is **not sufficient on its own**. It must be corroborated by:
+   a short exposure window between execution and the rollback decision; the absence of
+   any announcement or distribution of the affected number; and, where available, the
+   Cloudflare access logs for the window.
+4. **Any window involving a v2-signed certificate is treated conservatively as
+   published** unless and until the `key_unavailable` gap is closed — for the six IDD
+   certificates the log records nothing, so limb P-3 cannot be cleared from the log for
+   them at all.
+5. When in doubt, the action is published.
+
+**Required corrective action (not performed during the freeze).** Extending the
+`verification_log` CHECK constraint to include `'key_unavailable'` is a required
+corrective action, listed in `07-implementation-plan.md` and executed only through the
+full sign-off chain — Registrar → Technical → Cryptographic → Founder. Until it has
+been executed, rule 4 above stands.
 
 ### 2.3 After the boundary: the correction procedure, never rollback
 
@@ -103,23 +146,28 @@ wrong row.
 
 ### 3.2 Pinning the prior state
 
-Immediately **before** any forward action is executed, the two read-only audits
-(Section 3.3) are run and their run IDs recorded on the forward artefact. That fresh
+Immediately **before** any forward action is executed, the two audits of Section 3.3
+are run — dispatched read-only per that section — and their run IDs recorded on the
+forward artefact. That fresh
 pre-execution snapshot — not the 15 August 2026 baseline alone — is the "prior state" a
 rollback must restore, because earlier authorised actions may already have changed the
 counts legitimately.
 
-### 3.3 Verifying a rollback: re-run the two read-only audits
+### 3.3 Verifying a rollback: re-run the two audits (read-only dispatch)
 
-Both instruments already exist in this repository and touch nothing:
+Both instruments already exist in this repository, but **only one of them is read-only
+by construction**:
 
 | Instrument | What it is | Baseline (2026-08-15) |
 |---|---|---|
-| **Presence audit** | `.github/workflows/certificate-presence-audit.yml`, running `scripts/audit-certificate-presence.mjs`: read-only GET queries of sequence numbers 1–150 against `https://shroyalschools.com` | Run `31862779664`, 03:48–03:50 UTC, commit `afb80e87`: exactly 13 records (000035–000047), 137 not found, 0 errors |
-| **Live acceptance** | `.github/workflows/certificate-verification.yml`: read-only verification of every printed identifier and QR payload of the issued certificates | Run `31857567994`, 01:50 UTC: all 13 verify, status active (7 IBT `intact`, 6 IDD `pending_signature`) |
+| **Presence audit** | `.github/workflows/certificate-presence-audit.yml`, running `scripts/audit-certificate-presence.mjs`: read-only GET queries of sequence numbers 1–150 against `https://shroyalschools.com`. **Read-only by construction.** | Run `31862779664`, 03:48–03:50 UTC, commit `afb80e87`: exactly 13 records (000035–000047), 137 not found, 0 errors |
+| **Live acceptance** | `.github/workflows/certificate-verification.yml`: verification of every printed identifier and QR payload of the issued certificates. **Read-only ONLY when dispatched with `run_import: false` AND `configure_cloudflare: false` — both inputs DEFAULT TO TRUE**, and the workflow's Monday 06:00 UTC schedule and its push triggers run the import/configure steps unconditionally when the required secrets are present. **Every freeze-period run must be dispatched with both inputs explicitly false.** (At the baseline the stored GitHub secrets include neither `DATABASE_URL` nor `DOCUMENT_HASH_SECRET`, so the mutating steps currently skip or fail closed on scheduled runs — but this pack must not rely on that remaining true.) | Run `31857567994`, 01:50 UTC: all 13 verify, status active (7 IBT `intact`, 6 IDD `pending_signature`) |
 
-After every rollback, both are re-run and compared with the pre-execution snapshot of
-Section 3.2. Where the affected reference is not one the presence audit's sequence sweep
+After every rollback, both are re-run — **the acceptance run dispatched with
+`run_import: false` and `configure_cloudflare: false`, never with the defaults** — and
+compared with the pre-execution snapshot of Section 3.2. While any rollback is in
+effect, the workflow's schedule/push import path is gated or disabled by a reviewed
+commit on the Founder's instruction (Section 4.2). Where the affected reference is not one the presence audit's sequence sweep
 would see (Section 5.3), a direct read-only lookup of the exact reference is added. A
 rollback is complete only when the post-rollback runs match the pre-execution snapshot
 exactly; any difference is escalated to the Founder before anything else is done.
@@ -190,8 +238,10 @@ stage_certificates (id, serial_no, …) VALUES (…)`, followed by the sequence
 advancement statements that file documents.
 
 **Pre-written rollback artefact.** Written in the same file set as the forward SQL,
-before execution, in this form (placeholders filled with the approved values at drafting
-time — never at execution time):
+before execution. It has **two parts, executed together** — the one-row DELETE **and**
+the git revert of the repository commits the forward action made — because the DELETE
+alone is not durable (see below). Part one, with placeholders filled with the approved
+values at drafting time — never at execution time:
 
 ```sql
 -- ROLLBACK for <forward artefact reference>.
@@ -205,15 +255,32 @@ The double condition (`id` **and** `serial_no`) is deliberate: the statement can
 ever remove the precise row the forward artefact created, and affects zero rows — a
 loud failure — if the database does not contain exactly what the artefact expects.
 
+**Why the DELETE alone is not durable.** The forward action also commits the sealed
+register to `docs/graduation-registers/` and extends the import generator, and
+`certificate-verification.yml` re-applies the rebuilt production import (every insert
+`ON CONFLICT DO NOTHING`) on its Monday schedule, on push to
+`docs/graduation-registers/**`, and on any dispatch left at the default
+`run_import: true` — which would silently re-insert the very row the rollback deleted,
+with no human action and no log entry. Part two of the artefact is therefore the
+identified list of the sealed-register and import-generator commit hashes, recorded at
+merge time, with the instruction to `git revert` each (per Section 4.7's pattern — a
+revert, never a history rewrite) in the same rollback, so the rebuilt import no longer
+contains the row. Additionally: every post-rollback verification run is dispatched with
+`run_import: false` and `configure_cloudflare: false` (Section 3.3), and while any
+rollback is in effect the workflow's schedule/push import path is gated or disabled by
+a reviewed commit on the Founder's instruction.
+
 **Reversal steps.**
 
 1. Confirm the Section 2 publication test: not announced, not printed (for C1, the new
    certificate must not yet have been printed; for B1a the *paper* already exists, but
-   the registration result must not have been announced or relied on), and the
-   `verification_log` review of Section 2.2 is clean.
+   the registration result must not have been announced or relied on), and the full
+   Section 2.2 test for limb P-3 is passed — a clean log alone is inconclusive.
 2. Founder's written rollback instruction obtained (Section 1).
-3. Execute the rollback artefact inside a transaction; confirm exactly 1 row affected;
-   commit.
+3. Execute both parts of the rollback artefact together: the DELETE inside a
+   transaction (confirm exactly 1 row affected; commit), and the `git revert` of the
+   listed sealed-register and import-generator commits, so the schedule/push import
+   path cannot re-insert the deleted row.
 4. **Sequence numbers are not wound back.** If the forward artefact advanced
    `stage_certificate_serial_seq` (or the `id` sequence, per the `setval` statements the
    register files document), those advancements stand. A sequence number consumed by an
@@ -222,9 +289,8 @@ loud failure — if the database does not contain exactly what the artefact expe
    invariant I1 (`03-decision-tree.md` §7): a gap in the numbering costs nothing, while
    re-using a number that may meanwhile exist on any printed or shared artefact risks
    the exact two-documents-one-number ambiguity the suffix system exists to prevent.
-   Exception: [TO BE CONFIRMED BY REGISTRAR] — the joint review may resolve, case by
-   case and in writing, that a spent number is provably unprinted and may be reused;
-   the default is that it is not.
+   **Numbers spent by rolled-back actions stay spent. No exception, and no case-by-case
+   discretion** (matching `07-implementation-plan.md` §3.5).
 5. Rollback restores **"no record"**: the state for that sequence number returns to
    exactly what the presence audit reported for it before execution — `found: false`.
 
@@ -259,10 +325,10 @@ DELETE FROM certificates
 
 **Reversal steps.**
 
-1. Section 2 publication test, including the `verification_log` review — note that for
-   B2a the *printed document pre-exists and is already with the family*; what must not
-   yet have happened is the **announcement of the registration** or any third-party
-   lookup of the now-resolving number.
+1. Section 2 publication test, including the full Section 2.2 test for limb P-3 —
+   note that for B2a the *printed document pre-exists and is already with the family*;
+   what must not yet have happened is the **announcement of the registration** or any
+   third-party lookup of the now-resolving number.
 2. Founder's written rollback instruction.
 3. Execute inside a transaction; confirm exactly 1 row; commit.
 4. Rollback restores "no record": the printed number returns to resolving nothing,
@@ -301,9 +367,11 @@ UPDATE stage_certificates
 **Reversal steps.**
 
 1. Section 2 publication test — in particular, the revocation must not have been
-   announced to the family, and no third party may have seen the `revoked` answer
-   (Section 2.2 review of `verification_log` for this serial and every identifier that
-   resolves to it).
+   announced to the family, and no third party may have seen the post-revocation
+   answer (the full Section 2.2 test for this serial and every identifier that
+   resolves to it — noting that for a v2-signed certificate the log records nothing
+   (Section 2.2, gap 3), so limb P-3 is treated conservatively per Section 2.2
+   rule 4).
 2. Founder's written rollback instruction.
 3. Execute inside a transaction; confirm exactly 1 row; commit.
 4. **The row itself is never deleted** — not by the forward action, and not by the
@@ -356,11 +424,18 @@ UPDATE stage_certificates
    AND revoked_at IS NOT NULL;
 ```
 
+Because the replacement row is a C1-class mint, statement 1 carries the same
+durability requirement as Section 4.2: the artefact also lists, and the rollback also
+executes together with it, the `git revert` of the sealed-register and
+import-generator commits made for the replacement, and the Section 3.3 dispatch and
+schedule-gating rules apply.
+
 **Reversal steps.**
 
 1. Section 2 publication test — neither the supersedure nor the replacement may have
-   been announced; the replacement must not have been printed; the `verification_log`
-   review must be clean for **both** serials.
+   been announced; the replacement must not have been printed; the full Section 2.2
+   test must be passed for **both** serials (a clean log alone is inconclusive, and
+   any v2-signed serial falls under Section 2.2 rule 4).
 2. Founder's written rollback instruction.
 3. Execute both statements in one transaction; confirm exactly 1 row each; commit.
 4. The replacement's sequence number is treated as spent, per Section 4.2 step 4.
@@ -517,9 +592,13 @@ is the second one ever performed, not the first.
    filed with the pack. Stage 5 does not begin until this record exists.
 
 The drill changes nothing in production, mints nothing, signs nothing, and requires no
-key — it is compatible with the freeze's terms provided it is executed only against the
-non-production database and only with fictitious drill data. If the Founder prefers, it
-may nevertheless be scheduled after sign-off and immediately before Stage 5:
+key. Its permission does not rest on this document: the freeze as stated in
+`01-README.md` forbids creating or modifying records in the **production** database and
+altering institutional records, and **expressly permits** this one witnessed rehearsal
+— the rollback drill of this section, run exclusively against a non-production staging
+branch with fictitious data. Those two conditions are the terms of that express
+permission, not this document's gloss on it. If the Founder prefers, the drill may
+nevertheless be scheduled after sign-off and immediately before Stage 5:
 [TO BE CONFIRMED BY REGISTRAR] with the Founder's office when Stage 5 is scheduled.
 
 ---
