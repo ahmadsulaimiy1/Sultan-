@@ -2,7 +2,7 @@
   "generatedBy": "scripts/plan-certificate-reissue.mjs",
   "authority": "Founder’s ruling, 8 August 2026 — the Registrar’s roll governs.",
   "spentThrough": 47,
-  "allocatedThrough": 85,
+  "allocatedThrough": 84,
   "identitySpentThrough": 47,
   "identityAllocatedThrough": 65,
   "actions": [
@@ -31,13 +31,11 @@
       "why": "not on the Registrar’s IBT roll"
     },
     {
-      "kind": "REISSUE",
+      "kind": "KEEP",
       "code": "IBT",
       "name": "Naheemah Ismail",
       "cert": "SHRS-CERT-IBT-2026-000038-2944F",
-      "id": "714477095008816",
-      "to": "Naheemah Ismail Seriki",
-      "why": "the canonical roll carries a fuller name; the engraved name is hashed into the number and cannot be corrected in place"
+      "id": "714477095008816"
     },
     {
       "kind": "REISSUE",
@@ -210,21 +208,12 @@
       "identitySource": "carried from SHRS-CERT-IDD-2026-000042-56798"
     },
     {
-      "code": "IBT",
-      "name": "Naheemah Ismail Seriki",
-      "replaces": "SHRS-CERT-IBT-2026-000038-2944F",
-      "identity": "714477095008816",
-      "identityFrom": "SHRS-CERT-IBT-2026-000038-2944F",
-      "certificateSeq": 59,
-      "identitySource": "carried from SHRS-CERT-IBT-2026-000038-2944F"
-    },
-    {
       "code": "IDD",
       "name": "Yaseer Balogun",
       "replaces": null,
       "identity": "716656078450081",
       "identityFrom": null,
-      "certificateSeq": 60,
+      "certificateSeq": 59,
       "identitySource": "newly issued (identity sequence 51)"
     },
     {
@@ -233,7 +222,7 @@
       "replaces": null,
       "identity": "719900615637876",
       "identityFrom": null,
-      "certificateSeq": 61,
+      "certificateSeq": 60,
       "identitySource": "newly issued (identity sequence 52)"
     },
     {
@@ -242,7 +231,7 @@
       "replaces": null,
       "identity": "713145152825668",
       "identityFrom": null,
-      "certificateSeq": 62,
+      "certificateSeq": 61,
       "identitySource": "newly issued (identity sequence 53)"
     },
     {
@@ -251,7 +240,7 @@
       "replaces": null,
       "identity": "717721632196601",
       "identityFrom": "SHRS-CERT-IBT-2026-000039-518A8",
-      "certificateSeq": 63,
+      "certificateSeq": 62,
       "identitySource": "carried from SHRS-CERT-IBT-2026-000039-518A8"
     },
     {
@@ -260,7 +249,7 @@
       "replaces": null,
       "identity": "716389690013455",
       "identityFrom": null,
-      "certificateSeq": 64,
+      "certificateSeq": 63,
       "identitySource": "newly issued (identity sequence 54)"
     },
     {
@@ -269,16 +258,16 @@
       "replaces": null,
       "identity": "710966169384396",
       "identityFrom": "SHRS-CERT-IBT-2026-000040-60DAF",
-      "certificateSeq": 65,
+      "certificateSeq": 64,
       "identitySource": "carried from SHRS-CERT-IBT-2026-000040-60DAF"
     },
     {
       "code": "PRY",
-      "name": "Naheemah Ismail Seriki",
+      "name": "Naheemah Ismail",
       "replaces": null,
       "identity": "714477095008816",
       "identityFrom": "SHRS-CERT-IBT-2026-000038-2944F",
-      "certificateSeq": 66,
+      "certificateSeq": 65,
       "identitySource": "carried from SHRS-CERT-IBT-2026-000038-2944F"
     },
     {
@@ -287,7 +276,7 @@
       "replaces": null,
       "identity": "719634227201249",
       "identityFrom": null,
-      "certificateSeq": 67,
+      "certificateSeq": 66,
       "identitySource": "newly issued (identity sequence 55)"
     },
     {
@@ -296,7 +285,7 @@
       "replaces": null,
       "identity": "717988020633236",
       "identityFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
-      "certificateSeq": 68,
+      "certificateSeq": 67,
       "identitySource": "carried from SHRS-CERT-IBT-2026-000036-B9E10"
     },
     {
@@ -305,7 +294,7 @@
       "replaces": null,
       "identity": "712878764389035",
       "identityFrom": null,
-      "certificateSeq": 69,
+      "certificateSeq": 68,
       "identitySource": "newly issued (identity sequence 56)"
     },
     {
@@ -314,7 +303,7 @@
       "replaces": null,
       "identity": "713411541262298",
       "identityFrom": null,
-      "certificateSeq": 70,
+      "certificateSeq": 69,
       "identitySource": "newly issued (identity sequence 50)"
     },
     {
@@ -323,7 +312,7 @@
       "replaces": null,
       "identity": "716123301576828",
       "identityFrom": null,
-      "certificateSeq": 71,
+      "certificateSeq": 70,
       "identitySource": "newly issued (identity sequence 57)"
     },
     {
@@ -332,7 +321,7 @@
       "replaces": null,
       "identity": "719367838764616",
       "identityFrom": null,
-      "certificateSeq": 72,
+      "certificateSeq": 71,
       "identitySource": "newly issued (identity sequence 58)"
     },
     {
@@ -341,7 +330,7 @@
       "replaces": null,
       "identity": "710699780947768",
       "identityFrom": "SHRS-CERT-IDD-2026-000043-6EEAF",
-      "certificateSeq": 73,
+      "certificateSeq": 72,
       "identitySource": "carried from SHRS-CERT-IDD-2026-000043-6EEAF"
     },
     {
@@ -350,7 +339,7 @@
       "replaces": null,
       "identity": "713944318135552",
       "identityFrom": "SHRS-CERT-IDD-2026-000044-8B125",
-      "certificateSeq": 74,
+      "certificateSeq": 73,
       "identitySource": "carried from SHRS-CERT-IDD-2026-000044-8B125"
     },
     {
@@ -359,7 +348,7 @@
       "replaces": null,
       "identity": "712612375952406",
       "identityFrom": null,
-      "certificateSeq": 75,
+      "certificateSeq": 74,
       "identitySource": "newly issued (identity sequence 59)"
     },
     {
@@ -368,7 +357,7 @@
       "replaces": null,
       "identity": "715856913140191",
       "identityFrom": null,
-      "certificateSeq": 76,
+      "certificateSeq": 75,
       "identitySource": "newly issued (identity sequence 60)"
     },
     {
@@ -377,7 +366,7 @@
       "replaces": null,
       "identity": "714743483445443",
       "identityFrom": "SHRS-CERT-IBT-2026-000035-368DC",
-      "certificateSeq": 77,
+      "certificateSeq": 76,
       "identitySource": "carried from SHRS-CERT-IBT-2026-000035-368DC"
     },
     {
@@ -386,7 +375,7 @@
       "replaces": null,
       "identity": "719101450327984",
       "identityFrom": null,
-      "certificateSeq": 78,
+      "certificateSeq": 77,
       "identitySource": "newly issued (identity sequence 61)"
     },
     {
@@ -395,7 +384,7 @@
       "replaces": null,
       "identity": "717455243759974",
       "identityFrom": "SHRS-CERT-IDD-2026-000042-56798",
-      "certificateSeq": 79,
+      "certificateSeq": 78,
       "identitySource": "carried from SHRS-CERT-IDD-2026-000042-56798"
     },
     {
@@ -404,7 +393,7 @@
       "replaces": null,
       "identity": "712345987515770",
       "identityFrom": null,
-      "certificateSeq": 80,
+      "certificateSeq": 79,
       "identitySource": "newly issued (identity sequence 62)"
     },
     {
@@ -413,7 +402,7 @@
       "replaces": null,
       "identity": "715590524703564",
       "identityFrom": null,
-      "certificateSeq": 81,
+      "certificateSeq": 80,
       "identitySource": "newly issued (identity sequence 63)"
     },
     {
@@ -422,7 +411,7 @@
       "replaces": null,
       "identity": "710433392511139",
       "identityFrom": "SHRS-CERT-IDD-2026-000046-7E37A",
-      "certificateSeq": 82,
+      "certificateSeq": 81,
       "identitySource": "carried from SHRS-CERT-IDD-2026-000046-7E37A"
     },
     {
@@ -431,7 +420,7 @@
       "replaces": null,
       "identity": "718835061891356",
       "identityFrom": null,
-      "certificateSeq": 83,
+      "certificateSeq": 82,
       "identitySource": "newly issued (identity sequence 64)"
     },
     {
@@ -440,7 +429,7 @@
       "replaces": null,
       "identity": "712079599079145",
       "identityFrom": null,
-      "certificateSeq": 84,
+      "certificateSeq": 83,
       "identitySource": "newly issued (identity sequence 65)"
     },
     {
@@ -449,7 +438,7 @@
       "replaces": null,
       "identity": "717188855323348",
       "identityFrom": "SHRS-CERT-IDD-2026-000045-F546F",
-      "certificateSeq": 85,
+      "certificateSeq": 84,
       "identitySource": "carried from SHRS-CERT-IDD-2026-000045-F546F"
     }
   ],

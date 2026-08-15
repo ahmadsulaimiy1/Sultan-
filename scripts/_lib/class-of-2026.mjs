@@ -60,11 +60,12 @@ const SEX = {
   'Hameedah Adebimpe Ojewumi': ['female', 'IBT register'],
   'Aisha Omoshalewa Anofi': ['female', 'IBT register (as Aisha Anofi) · Qur’an College roll'],
   'Abdulbasit Adedokun': ['male', 'IBT register'],
-  'Naheemah Ismail Seriki': ['female', 'IBT register (as Naheemah Ismail) · Primary roll'],
-  // The same child under the shorter form the Founder ruled authoritative for
-  // the Primary record on 15 August 2026 (see NAME_RULING). Not an inference:
-  // the published Ibtida'iyyah register records her under exactly this name,
-  // female, at docs/graduation-registers/2026-08-08-IBT-000035.json.
+  // The Founder ruled this the authoritative institutional name on 15 August
+  // 2026 and the canonical roll now carries it on both her awards, so the
+  // longer variant it used to carry is gone from every roll. Her sex is not an
+  // inference either way: the published Ibtida'iyyah register records her under
+  // exactly this name, female, at
+  // docs/graduation-registers/2026-08-08-IBT-000035.json.
   'Naheemah Ismail': ['female', 'IBT register'],
   'Ashraf Korede Ojewumi': ['male', 'IBT register (as Ashrof Akorede) · Primary roll'],
   'Imran Iremide Adegoke': ['male', 'IBT register (as Imran Adegoke) · Primary roll'],
@@ -139,29 +140,16 @@ const AWARD_VARIANT = {
   // renderer refuses a sheet that names no variant rather than choosing one.
 };
 
-// ── Engraved-name rulings ───────────────────────────────────────────────────
-// The Founder's ruling of 8 August 2026 set the general rule: where a fuller
-// form of a child's name has ever been written down, the fuller form is the one
-// that prints. A later ruling on a specific award overrides it for that award
-// only, and is recorded here rather than by editing the generated plan — the
-// plan is rebuilt from the roll, so a hand-edit there is erased on the next run.
+// ── Engraved names are NOT ruled on here ────────────────────────────────────
+// A ruling that changes the name a certificate is engraved with belongs in
+// scripts/build-canonical-roll.mjs (RULED_FORM), beside the Registrar's own
+// transcription and the fullest-form rule it overrides — not here, and not in
+// the generated plan, which is rebuilt from the roll on every run.
 //
-// Keyed by programme code and the name the plan carries. The engraved name is
-// hashed into the number beside it, so changing it changes the certificate's
-// identifier: only safe because none of these has been minted.
-const NAME_RULING = {
-  // RULED BY THE FOUNDER, 15 August 2026, for the certificate recovery: "The
-  // correct Primary record is Naheemah Ismail. Treat this as the authoritative
-  // institutional name." The Primary sheet therefore carries the shorter form,
-  // which is also the form her Ibtida'iyyah register entry has always used. Her
-  // Ibtida'iyyah award (plan sequence 59) is NOT covered by this ruling and
-  // keeps the fuller form the 8 August rule gave it; if the Founder intends the
-  // shorter form there too, one line here settles it.
-  'PRY:Naheemah Ismail Seriki': {
-    to: 'Naheemah Ismail',
-    ruling: 'ruled by the Founder, 2026-08-15 — the authoritative Primary record',
-  },
-};
+// The reason is not tidiness. The engraved name is hashed into the certificate
+// number, so the name has to be settled before the roll is built, or the plan
+// allocates a sequence against a name that is about to change. A ruling applied
+// downstream of the plan renumbers nothing and silently disagrees with it.
 
 /**
  * The Arabic name on file for a child, at the exact name to be engraved.
@@ -210,17 +198,15 @@ export function rollFor(code) {
           + `${r.identityFrom}, but that certificate carries ${src[0].identityNo}`);
       }
     }
-    // A later ruling on the engraved name is applied BEFORE anything is derived
-    // from it, so the Arabic form, the sex lookup and the content hash all read
-    // the same name the sheet will carry.
-    const ruled = NAME_RULING[`${code}:${r.name}`];
-    const name = ruled ? ruled.to : r.name;
-    const ar = arabicNameFor(name);
-    const sex = SEX[name];
+    // The name is taken from the plan as it stands. It is not adjusted here:
+    // the plan was allocated against this exact string, and the string is
+    // hashed into the certificate number, so a correction made at this point
+    // would produce a number the plan does not know about. Corrections belong
+    // in build-canonical-roll.mjs, upstream of the allocation.
+    const ar = arabicNameFor(r.name);
+    const sex = SEX[r.name];
     return {
-      en: name,
-      nameRuling: ruled ? ruled.ruling : null,
-      nameWasPlanned: ruled ? r.name : null,
+      en: r.name,
       sex: sex ? sex[0] : null,
       sexSource: sex ? sex[1] : null,
       identityNo: r.identity,

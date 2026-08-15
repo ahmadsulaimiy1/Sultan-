@@ -162,6 +162,36 @@ const RULED_FORM = {
   // given-name-first, and he confirmed the order.
   'Balogun Yaseer': { to: 'Yaseer Balogun',
     why: 'Founder’s ruling, 8 Aug 2026 — name order corrected to given-name-first' },
+  // 15 August 2026: "The correct Primary record is Naheemah Ismail. Treat this
+  // as the authoritative institutional name. Discard the conflicting 'Naheemah
+  // Ismai Seriki' variant unless you find conclusive evidence that it refers to
+  // a different student."
+  //
+  // The evidence was looked for and is not there: every one of the four forms
+  // this institution has written down for her — Naheemah Ismaeel, Naheemah
+  // Ismail, Naheemah Ismai Seriki, Naheemah Ismail Seriki — clusters to one
+  // child, and no source anywhere describes a second. So the ruling is applied,
+  // and it is applied to BOTH the forms the Registrar wrote, not only the
+  // Primary one, because he ruled on the institutional name and not on a single
+  // sheet.
+  //
+  // It has to be a RULED_FORM rather than a fuller-name choice, because the
+  // fullest-form rule of 8 August would otherwise reach past it: it had picked
+  // 'Naheemah Ismail Seriki' off the stage withdrawal list — the same working
+  // paper that also spells her 'Naheemah Ismai Seriki', the very variant this
+  // ruling discards. A form taken from a document whose spelling of the name is
+  // now discarded cannot outrank the form the Founder has given.
+  //
+  // CONSEQUENCE, stated because it changes a certificate that already exists:
+  // her minted Ibtidā'iyyah sheet SHRS-CERT-IBT-2026-000038-2944F is engraved
+  // 'Naheemah Ismail'. Under the 8 August rule the plan had it REISSUED to the
+  // fuller form; under this ruling the engraved name is already the right one,
+  // so it is KEPT and the reissue disappears. A certificate in a child's hands
+  // stays in her hands.
+  'Naheemah Ismaeel': { to: 'Naheemah Ismail',
+    why: 'Founder’s ruling, 15 Aug 2026 — the authoritative institutional name' },
+  'Naheemah Ismail': { to: 'Naheemah Ismail',
+    why: 'Founder’s ruling, 15 Aug 2026 — the authoritative institutional name' },
 };
 const RULED_ONE = SAME_CHILD.map((g) => g.forms);
 
