@@ -1,0 +1,54 @@
+# ===========================================================================
+# shroyalschools.ng -> shroyalschools.com
+# Deploy ON THE .NG HOST: prepend to the WordPress .htaccess (above the
+# "# BEGIN WordPress" block), or enter the same rules in the Redirection
+# plugin. Order matters: specific rules first, catch-all last.
+#
+# Every rule is a 301 to the TOPICAL equivalent — never a blanket redirect to
+# the homepage. Generated from docs/legacy-migration/migration-map.md; the
+# map's evidence and rationale live there.
+# ===========================================================================
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# --- uploads keep serving for the transition year; do NOT redirect them ---
+RewriteRule ^wp-content/uploads/ - [L]
+
+# --- machine endpoints: gone after the grace period (swap G for R=301 / until then) ---
+RewriteRule ^wp-json/ - [G,L]
+RewriteRule ^feed/? - [G,L]
+
+# --- pages, specific first ------------------------------------------------
+RewriteRule ^about-sultan/?$                                https://shroyalschools.com/about/ [R=301,L]
+RewriteRule ^about/?$                                       https://shroyalschools.com/about/ [R=301,L]
+RewriteRule ^directors-speech/?$                            https://shroyalschools.com/about/heritage/ [R=301,L]
+RewriteRule ^governance/?$                                  https://shroyalschools.com/about/governance/ [R=301,L]
+RewriteRule ^sultan-hanafi-structure/?$                     https://shroyalschools.com/about/governance/ [R=301,L]
+RewriteRule ^management-team/?$                             https://shroyalschools.com/about/governance/ [R=301,L]
+RewriteRule ^lukman/?$                                      https://shroyalschools.com/press/ [R=301,L]
+RewriteRule ^career/?$                                      https://shroyalschools.com/contact/ [R=301,L]
+RewriteRule ^policies/?$                                    https://shroyalschools.com/policies/ [R=301,L]
+RewriteRule ^sultan-hanafi-nursery-and-primary-school/?$    https://shroyalschools.com/academics/nursery-primary/ [R=301,L]
+RewriteRule ^sultan-hanafi-royal-college/?$                 https://shroyalschools.com/academics/royal-college/ [R=301,L]
+RewriteRule ^school-of-islamic-and-arabic-studies/?$        https://shroyalschools.com/academics/arabic-islamic-studies/ [R=301,L]
+RewriteRule ^sultan-hanafi-quran-college/?$                 https://shroyalschools.com/academics/quran-college/ [R=301,L]
+RewriteRule ^admission/?$                                   https://shroyalschools.com/admission/ [R=301,L]
+RewriteRule ^boarding/?$                                    https://shroyalschools.com/boarding/ [R=301,L]
+RewriteRule ^facilities/?$                                  https://shroyalschools.com/facilities/ [R=301,L]
+RewriteRule ^foundation/?$                                  https://shroyalschools.com/foundation/ [R=301,L]
+RewriteRule ^gallery/?$                                     https://shroyalschools.com/gallery/ [R=301,L]
+RewriteRule ^video-gallery/?$                               https://shroyalschools.com/gallery/ [R=301,L]
+RewriteRule ^news-events/?$                                 https://shroyalschools.com/press/ [R=301,L]
+RewriteRule ^contact/?$                                     https://shroyalschools.com/contact/ [R=301,L]
+
+# --- legacy portal bookmarks ---------------------------------------------
+RewriteRule ^(school-portal|admin-portal|teachers-portal|parents-portal|students-portal)/?$ https://shroyalschools.com/portal/select/ [R=301,L]
+
+# --- individual news posts: add one rule per post from the WP export ------
+# RewriteRule ^news-events/<post-slug>/?$  https://shroyalschools.com/press/ [R=301,L]
+
+# --- catch-all, last resort ----------------------------------------------
+RewriteRule ^$ https://shroyalschools.com/ [R=301,L]
+RewriteRule .* https://shroyalschools.com/ [R=301,L]
+</IfModule>
