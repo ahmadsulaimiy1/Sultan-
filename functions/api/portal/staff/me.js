@@ -11,7 +11,7 @@
 // office module (Registrar's Office, Teacher Portal, etc.) actually
 // needs them. See docs/staff-identity-architecture.md.
 import { getSql } from '../../../_lib/db.js';
-import { readStaffSessionFromRequest } from '../../../_lib/session.js';
+import { readStaffSessionFromRequest, createStaffSessionCookie } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { effectiveGrants } from '../../../_lib/permissions.js';
 import { ensureStaffIdentityNo } from '../../../_lib/identity-no.js';
@@ -103,6 +103,23 @@ export async function onRequestGet({ request, env }) {
         ORDER BY oa.is_primary DESC, o.name`,
     ]);
 
+    // A SLIDING SESSION, renewed here.
+    //
+    // The cookie carried a fixed expiry stamped at sign-in and never
+    // renewed, so a member of staff using the portal every single day was
+    // still turned out after seven days, mid-task, with no warning — and
+    // the seven days ran from the last sign-in rather than the last time
+    // they did anything. Re-issuing on each identity check turns that
+    // into seven days of *inactivity*, which is what people expect of a
+    // system they use daily and what makes repeated sign-ins stop being a
+    // tax on the working day.
+    //
+    // This endpoint is the right place: every portal page calls it on
+    // load to learn who is signed in, so the renewal follows real use
+    // without adding a request. It re-issues nothing but the same
+    // staffId, signed afresh — it cannot elevate anyone, and a session
+    // that has already expired never reaches here, because
+    // readStaffSessionFromRequest rejected it above.
     return json({
       staff: {
         staffNo: staff.staff_no,
@@ -139,7 +156,7 @@ export async function onRequestGet({ request, env }) {
         id: r.id, name: r.name, slug: r.slug, officeType: r.office_type, officeKind: r.office_kind,
         layer: r.layer, appointmentTitle: r.appointment_title, isPrimary: r.is_primary, isActing: r.is_acting,
       })),
-    });
+    }, 200, { 'Set-Cookie': createStaffSessionCookie(session.staffId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('staff portal me error', err);
     return json({ error: 'Could not load your identity record right now — please try again shortly.' }, 500);
