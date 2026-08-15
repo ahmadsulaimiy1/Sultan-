@@ -1,0 +1,320 @@
+name: Certificate deployment — key rotation, graduation import, live acceptance
+
+# THE ONE PLACE THIS CAN RUN.
+#
+# The development sandbox cannot reach shroyalschools.com, cannot reach the
+# Neon production database, and must never hold a production signing key. A
+# GitHub runner can do the first two and can be handed the third for the
+# length of one job. So the deployment runs here, in the open, with every step
+# named and every refusal explicit.
+#
+# WHAT IT DOES, IN THE AUTHORISED ORDER:
+#   1. Rotate the signing key to version 3 on Cloudflare Pages production,
+#      retaining V1 and V2 so nothing already issued stops verifying.
+#   2. Redeploy, because Pages reads its variables at deployment time and a
+#      variable set without a redeploy is a variable that has not taken effect.
+#   3. Apply the schema and the two register imports.
+#   4. Ask the live public endpoint about every certificate.
+#   5. Roll back, automatically, if acceptance fails.
+#
+# WHAT IT REFUSES TO DO. It will not mint. It will not generate a key. It will
+# not proceed on a partial configuration. Every one of those refusals is a
+# step below with an ::error:: and a non-zero exit, not a comment.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_imports:
+        description: 'Apply the schema and register imports to the live database'
+        type: boolean
+        default: true
+      rotate_key:
+        description: 'Rotate Cloudflare production to key version 3 (needs DOCUMENT_HASH_SECRET_V3)'
+        type: boolean
+        default: true
+      redeploy:
+        description: 'Trigger a production redeploy so the new variables take effect'
+        type: boolean
+        default: true
+
+concurrency:
+  group: certificate-deployment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci || npm install
+      - name: Install psql
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+      # ── 0 · What is configured ──────────────────────────────────────────
+      # Presence only. No secret value is printed anywhere in this workflow,
+      # including in error messages.
+      - name: Report what this run can and cannot do
+        id: caps
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          V2: ${{ secrets.DOCUMENT_HASH_SECRET }}
+          V3: ${{ secrets.DOCUMENT_HASH_SECRET_V3 }}
+        run: |
+          have() { [ -n "$1" ] && echo yes || echo no; }
+          {
+            echo "db=$(have "$DATABASE_URL")"
+            echo "cf=$(have "$CF_TOKEN")"
+            echo "v2=$(have "$V2")"
+            echo "v3=$(have "$V3")"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "## Deployment capability"
+            echo
+            echo "| Step | Secret required | Present |"
+            echo "|---|---|---|"
+            echo "| Rotate Cloudflare to key version 3 | \`DOCUMENT_HASH_SECRET_V3\`, \`CLOUDFLARE_API_TOKEN\` | $(have "$V3") / $(have "$CF_TOKEN") |"
+            echo "| Retain version 2 for the six I'dadiyyah certificates | \`DOCUMENT_HASH_SECRET\` | $(have "$V2") |"
+            echo "| Apply schema and register imports | \`DATABASE_URL\` | $(have "$DATABASE_URL") |"
+            echo "| Ask the live public endpoint | none | **yes — always** |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 1 · The key rotation ────────────────────────────────────────────
+      # ALL FOUR VARIABLES OR NONE. The failure mode of a partial rotation is
+      # not an outage, it is a lie: with the version bumped and a retained key
+      # missing, the public page tells the holder of a genuine certificate
+      # that it cannot be confirmed. document-hash.js distinguishes that from
+      # tampering internally, but no parent reads release notes.
+      - name: Refuse a partial rotation
+        if: >-
+          inputs.rotate_key &&
+          (steps.caps.outputs.v3 != 'yes' || steps.caps.outputs.v2 != 'yes' || steps.caps.outputs.cf != 'yes')
+        run: |
+          echo "::error::Refusing to rotate on a partial configuration."
+          echo "::error::Version 3 signs the thirty-three graduation certificates; version 2 still"
+          echo "::error::verifies the six I'dadiyyah certificates 000042-000047 and nothing else can."
+          echo "::error::Setting one without the other makes genuine documents unverifiable."
+          {
+            echo "### Rotation refused — configuration incomplete"
+            echo
+            echo "Add the missing repository secret(s), then re-run:"
+            echo
+            echo '| Secret | Holds |'
+            echo '|---|---|'
+            echo '| `DOCUMENT_HASH_SECRET_V3` | the new version 3 key (generated 15 Aug 2026, fingerprint `0bc874387474a85f`) |'
+            echo '| `DOCUMENT_HASH_SECRET` | the version 2 key, unchanged — it becomes `DOCUMENT_HASH_SECRET_V2` on Cloudflare |'
+            echo '| `CLOUDFLARE_API_TOKEN` | permission to write Pages variables |'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Rotate Cloudflare Pages production to key version 3
+        if: inputs.rotate_key && steps.caps.outputs.v3 == 'yes'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+          V3: ${{ secrets.DOCUMENT_HASH_SECRET_V3 }}
+          V2: ${{ secrets.DOCUMENT_HASH_SECRET }}
+          # The v1 key is the RETIRED development literal, public in this
+          # repository's history — which is why it is retired and may never
+          # sign again. It is not a secret. It must simply stay configured
+          # forever, or the seven Ibtida'iyyah certificates stop verifying.
+          V1: batch-issuance-development-secret
+        run: |
+          set -euo pipefail
+          put() {
+            printf '%s' "$2" | npx --yes wrangler@3 pages secret put "$1" \
+              --project-name "$PROJECT" >/dev/null
+            echo "  set $1"
+          }
+          # Retained keys FIRST. If the run dies midway, an environment with a
+          # retained key it does not yet use is harmless; an environment on
+          # version 3 with no version 2 key is six unverifiable certificates.
+          put DOCUMENT_HASH_SECRET_V1   "$V1"
+          put DOCUMENT_HASH_SECRET_V2   "$V2"
+          put DOCUMENT_HASH_SECRET      "$V3"
+          put DOCUMENT_HASH_KEY_VERSION "3"
+          {
+            echo "### Cloudflare production rotated to key version 3"
+            echo
+            echo "\`DOCUMENT_HASH_SECRET\` = v3 · \`DOCUMENT_HASH_SECRET_V2\` = v2 (retained) ·"
+            echo "\`DOCUMENT_HASH_SECRET_V1\` = the retired literal (retained) · \`DOCUMENT_HASH_KEY_VERSION\` = 3"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 2 · Make the variables real ─────────────────────────────────────
+      # Cloudflare Pages binds environment variables at DEPLOYMENT time. A
+      # variable written to the project and never redeployed is configuration
+      # that exists in the dashboard and not in production — which is exactly
+      # the class of fault this whole recovery began with.
+      - name: Redeploy production so the new variables take effect
+        if: inputs.redeploy && steps.caps.outputs.cf == 'yes'
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          set -euo pipefail
+          api="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/$CF_PROJECT/deployments"
+          latest=$(curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "$api?env=production&per_page=1" | node -e '
+              let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                const j=JSON.parse(s);
+                if(!j.success){console.error(JSON.stringify(j.errors));process.exit(1);}
+                const d=j.result?.[0];
+                if(!d){console.error("no production deployment found");process.exit(1);}
+                process.stdout.write(d.id);
+              });')
+          echo "  retrying production deployment $latest"
+          curl -sS -X POST -H "Authorization: Bearer $CF_TOKEN" "$api/$latest/retry" \
+            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                const j=JSON.parse(s);
+                if(!j.success){console.error(JSON.stringify(j.errors));process.exit(1);}
+                console.log("  new deployment", j.result.id, j.result.latest_stage?.status||"");});'
+          echo "  waiting for the new deployment to go live"
+          for i in $(seq 1 40); do
+            st=$(curl -sS -H "Authorization: Bearer $CF_TOKEN" "$api?env=production&per_page=1" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                  const d=JSON.parse(s).result?.[0];
+                  process.stdout.write(d?.latest_stage?.status||"unknown");});')
+            echo "    [$i] $st"
+            [ "$st" = "success" ] && break
+            [ "$st" = "failure" ] && { echo "::error::Production redeploy failed."; exit 1; }
+            sleep 15
+          done
+          echo "### Production redeployed — the rotated variables are live" >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 3 · The database ────────────────────────────────────────────────
+      # Regenerated from the sealed registers first, so the files that run are
+      # provably the files in this repository and not a stale copy. The
+      # generator asserts every value tuple byte-identical to its source and
+      # recomputes no identifier and no hash.
+      - name: Rebuild both imports from the sealed registers
+        run: |
+          node scripts/build-production-import.mjs issued
+          node scripts/build-production-import.mjs graduation
+          git --no-pager diff --stat -- docs/graduation-registers/ || true
+          if ! git diff --quiet -- docs/graduation-registers/; then
+            echo "::error::The generated imports differ from the committed ones."
+            echo "::error::Refusing to apply files that do not match the repository."
+            git --no-pager diff -- docs/graduation-registers/ | head -60
+            exit 1
+          fi
+          echo "  both imports regenerate byte-identical to the committed files"
+
+      - name: Apply the schema (idempotent — creates only what is missing)
+        if: inputs.apply_imports && steps.caps.outputs.db == 'yes'
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+        run: psql "$PGCONN" -v ON_ERROR_STOP=1 -f sql/schema.sql 2>&1 | tail -20
+
+      - name: Capture the pre-deployment state, for the rollback
+        id: before
+        if: inputs.apply_imports && steps.caps.outputs.db == 'yes'
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          n=$(psql -tA "$PGCONN" -c 'SELECT count(*) FROM stage_certificates;')
+          echo "certificates=$n" >> "$GITHUB_OUTPUT"
+          echo "  production held $n certificate(s) before this deployment"
+
+      - name: Apply the three register files
+        if: inputs.apply_imports && steps.caps.outputs.db == 'yes'
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          # Each file is one transaction with its own end-of-file assertions.
+          # ON_ERROR_STOP means a failed assertion rolls that file back whole.
+          for f in \
+            docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql \
+            docs/graduation-registers/2026-08-15-GRADUATION-IMPORT.sql \
+            docs/graduation-registers/2026-08-15-IDENTITY-NAMES.sql
+          do
+            echo "── $f"
+            psql "$PGCONN" -v ON_ERROR_STOP=1 -f "$f" 2>&1 | tee -a /tmp/import.log
+          done
+          {
+            echo "### Register import"
+            echo
+            echo '```'
+            grep -E 'BEFORE|AFTER|student record not linked|INSERT|UPDATE [0-9]' /tmp/import.log | head -60 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 4 · Acceptance — the only step whose verdict counts ──────────────
+      # Needs no secret, because it asks a public endpoint the questions a
+      # holder asks. It therefore always runs, and its answer is the truth
+      # about production regardless of what the steps above did or skipped.
+      - name: Acceptance — ask the live public endpoint about all 46
+        id: accept
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run --silent certificates:accept -- --base https://shroyalschools.com 2>&1 \
+            | tee /tmp/accept.log
+
+      - name: Publish the acceptance table
+        if: always()
+        run: |
+          {
+            echo "## Live acceptance — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            echo '```'
+            sed -e 's/\r$//' /tmp/accept.log 2>/dev/null | tail -80 || echo "(the acceptance step produced no output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── 5 · Rollback, on any acceptance failure ─────────────────────────
+      # The tested procedure, run automatically rather than remembered: remove
+      # exactly what this deployment added and nothing else. Rows 1–47 are
+      # never touched — they are the thirteen certificates already in
+      # circulation, and this deployment has no business editing them under
+      # any circumstance, including its own failure.
+      - name: Roll back — remove only what this deployment added
+        if: steps.accept.outcome != 'success' && inputs.apply_imports && steps.caps.outputs.db == 'yes'
+        env:
+          PGCONN: ${{ secrets.DATABASE_URL }}
+          BEFORE: ${{ steps.before.outputs.certificates }}
+        run: |
+          set -euo pipefail
+          echo "::warning::Acceptance failed. Rolling back the graduation batch."
+          # The same file readiness-gate.mjs check 11 rehearsed against a
+          # staging clone. -1 wraps it in a single transaction; the file itself
+          # carries no BEGIN/COMMIT so the rehearsal could revert it.
+          psql "$PGCONN" -v ON_ERROR_STOP=1 -1 -f sql/rollback-graduation-2026.sql \
+            2>&1 | tee /tmp/rollback.log
+          now=$(psql -tA "$PGCONN" -c 'SELECT count(*) FROM stage_certificates;')
+          echo "  production now holds $now certificate(s); it held $BEFORE before this run"
+          {
+            echo "### ROLLED BACK"
+            echo
+            echo "Acceptance did not pass, so the thirty-three graduation certificates were"
+            echo "removed. Production holds **$now** certificate(s); it held **$BEFORE** before"
+            echo "this run. The certificates already in circulation were not touched."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail the run if acceptance did not pass
+        if: steps.accept.outcome != 'success'
+        run: |
+          echo "::error::Live acceptance did not pass. Read the table in the job summary:"
+          echo "::error::  NOT RESOLVED  — the record is missing (the import did not apply)"
+          echo "::error::  NOT ATTESTED  — the record is right and a signing key is missing"
+          echo "::error::                  from the deployment (the rotation did not take effect)"
+          exit 1
+
+      - name: Declare the deployment complete
+        run: |
+          {
+            echo "### Deployment complete"
+            echo
+            echo "All 46 certificates answer the live public endpoint correctly:"
+            echo "7 at key version 1, 6 at version 2, 33 at version 3."
+          } >> "$GITHUB_STEP_SUMMARY"

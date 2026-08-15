@@ -1,0 +1,134 @@
+{
+  "programme": "QUR",
+  "programmeLabelEn": "Hifz of the Glorious Qur’an",
+  "school": "Sultan Hanafi Qur’an College",
+  "award": [
+    "Memorisation of Ten Juz’ of the Glorious Qur’an",
+    "Completion of the Memorisation of the Glorious Qur’an (Thirty Juz’)"
+  ],
+  "institutionName": "Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College",
+  "academicYear": "2025/2026",
+  "issuedAt": "2026-08-08",
+  "issuedAtHijri": "25 Ṣafar 1448 A.H.",
+  "issuedAtHijriAr": "25 صفر 1448هـ",
+  "place": "Ikorodu, Lagos, Nigeria",
+  "language": "English only — Founder directive, 2026-08-06",
+  "firstCertificateSeq": 48,
+  "count": 3,
+  "identityCarryOver": {
+    "rule": "The Student ID is permanent and there is one per person. A student already holding an SHRS certificate carries the same number onto this one.",
+    "resolved": [
+      {
+        "student": "Aisha Omoshalewa Anofi",
+        "identityNo": "717988020633236",
+        "source": "carried from SHRS-CERT-IBT-2026-000036-B9E10"
+      },
+      {
+        "student": "Baqi Olamiposi Anofi",
+        "identityNo": "710699780947768",
+        "source": "carried from SHRS-CERT-IDD-2026-000043-6EEAF"
+      }
+    ],
+    "carriedFrom": [
+      {
+        "student": "Aisha Omoshalewa Anofi",
+        "identityNo": "717988020633236",
+        "certificate": "SHRS-CERT-IBT-2026-000036-B9E10"
+      },
+      {
+        "student": "Baqi Olamiposi Anofi",
+        "identityNo": "710699780947768",
+        "certificate": "SHRS-CERT-IDD-2026-000043-6EEAF"
+      }
+    ]
+  },
+  "reissues": [],
+  "entries": [
+    {
+      "certId": 48,
+      "hashKeyVersion": 3,
+      "studentEn": "Aisha Omoshalewa Anofi",
+      "sex": "female",
+      "identityNo": "717988020633236",
+      "identitySource": "carried from SHRS-CERT-IBT-2026-000036-B9E10",
+      "carriedFrom": "SHRS-CERT-IBT-2026-000036-B9E10",
+      "replaces": null,
+      "sexSource": "IBT register (as Aisha Anofi) · Qur’an College roll",
+      "nameAr": "عائشة أمشالوا حنفي",
+      "arSource": "ruled by the Founder, 2026-08-07, for the Qur’an College roll",
+      "arRuling": {
+        "ar": "عائشة أمشالوا حنفي",
+        "source": "ruled by the Founder, 2026-08-07, for the Qur’an College roll",
+        "pipelineProposed": "عائشة أوموشاليوا حنفي",
+        "note": "The Founder’s form differs from the proposal and governs. A family’s own spelling of its own name is not a pattern to be extrapolated."
+      },
+      "awardVariant": "JUZ10",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-QUR-2026-000048-64881",
+      "contentHash": "6488133848a46191f61d2043c191a8609eb7b635a1ea9b39899ffcb2e86728b3",
+      "verifyCode": "6488-1338-48A4",
+      "documentId": "DID-2026-QUR-0000048",
+      "archiveRef": "ARCH/QUR/2026/000048",
+      "holderBarcode": "0717988020633236",
+      "printedNo": "SHRS-CERT-QUR-000048-64881",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-QUR-2026-000048-64881",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-QUR-2026-000048-64881"
+    },
+    {
+      "certId": 49,
+      "hashKeyVersion": 3,
+      "studentEn": "Baqi Olamiposi Anofi",
+      "sex": "male",
+      "identityNo": "710699780947768",
+      "identitySource": "carried from SHRS-CERT-IDD-2026-000043-6EEAF",
+      "carriedFrom": "SHRS-CERT-IDD-2026-000043-6EEAF",
+      "replaces": null,
+      "sexSource": "IDD register",
+      "nameAr": "باقي أولاميبوسي حنفي",
+      "arSource": "carried from the IDD register",
+      "arRuling": null,
+      "awardVariant": "COMPLETE",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-QUR-2026-000049-1E924",
+      "contentHash": "1e9243d7cbc60da3bccf82eeef1794999a44cb004afc27e639f05843670553b3",
+      "verifyCode": "1E92-43D7-CBC6",
+      "documentId": "DID-2026-QUR-0000049",
+      "archiveRef": "ARCH/QUR/2026/000049",
+      "holderBarcode": "0710699780947768",
+      "printedNo": "SHRS-CERT-QUR-000049-1E924",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-QUR-2026-000049-1E924",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-QUR-2026-000049-1E924"
+    },
+    {
+      "certId": 50,
+      "hashKeyVersion": 3,
+      "studentEn": "Zaynab Zakariya Anofi",
+      "sex": "female",
+      "identityNo": "716922466886710",
+      "identitySource": "newly issued (identity sequence 48)",
+      "carriedFrom": null,
+      "replaces": null,
+      "sexSource": "Qur’an College roll, 2026-08-07",
+      "nameAr": "زينب زكريا حنفي",
+      "arSource": "supplied by the Founder, 2026-08-07, and marked LOCKED",
+      "arRuling": {
+        "ar": "زينب زكريا حنفي",
+        "source": "supplied by the Founder, 2026-08-07, and marked LOCKED"
+      },
+      "awardVariant": "COMPLETE",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-QUR-2026-000050-1FBB5",
+      "contentHash": "1fbb5cf55454a4c002ef3b5993bb8067b200393b9b11f8f96789e02f4a5f3796",
+      "verifyCode": "1FBB-5CF5-5454",
+      "documentId": "DID-2026-QUR-0000050",
+      "archiveRef": "ARCH/QUR/2026/000050",
+      "holderBarcode": "0716922466886710",
+      "printedNo": "SHRS-CERT-QUR-000050-1FBB5",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-QUR-2026-000050-1FBB5",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-QUR-2026-000050-1FBB5"
+    }
+  ]
+}

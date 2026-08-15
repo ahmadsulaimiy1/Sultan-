@@ -1,0 +1,81 @@
+{
+  "programme": "IBT",
+  "programmeLabelEn": "Ibtida’iyyah — Primary Stage",
+  "programmeLabelAr": "المرحلة الابتدائية",
+  "academicYear": "2025/2026",
+  "issuedAt": "2026-08-08",
+  "issuedAtHijri": "25 Ṣafar 1448 A.H.",
+  "place": "Ikorodu, Lagos, Nigeria",
+  "firstCertificateSeq": 52,
+  "count": 3,
+  "arabicNames": {
+    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived. Anything this pipeline could only propose was put to the Founder before print: once ruled on it moves to confirmedByFounder with the date of his approval, and anything still outstanding stays under awaitingConfirmation. A name is never generated, transliterated or guessed here.",
+    "status": "READY — every name on this roll has an Arabic form at its full length",
+    "approvedAndCarriedAcross": {
+      "Faridah": "فريدة — approved on the I‘dādiyyah register",
+      "Ayomide": "أيومدي — confirmed by the Founder, 2026-08-06",
+      "Aliu": "علي — the approved form, NOT عليو",
+      "Muhammad": "محمد — approved on the I‘dādiyyah register",
+      "Ismail": "إسماعيل — approved on both registers",
+      "Seriki": "سركي — approved on the I‘dādiyyah register"
+    },
+    "standardArabicNoChoiceToMake": {
+      "Ameerah": "أميرة — Amīrah. An Arabic name, not a transcription of one.",
+      "Abdulhafeez": "عبد الحفيظ — ʿAbd al-Ḥafīẓ, on al-Ḥafīẓ, one of the Divine Names. The same construction this register already carries twice, in عبد الباسط and عبد اللطيف. Written under the Founder’s authorisation of 15 Aug 2026."
+    },
+    "awaitingConfirmation": {}
+  },
+  "entries": [
+    {
+      "certId": 52,
+      "hashKeyVersion": 3,
+      "studentEn": "Ameerah Abdulhafeez",
+      "studentAr": "أميرة عبد الحفيظ",
+      "sex": "female",
+      "identityNo": "710167004074504",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-IBT-2026-000052-21455",
+      "contentHash": "21455e1fdb6c5bc0b49f62663658b5e76d5381813ea06b45a572ae4a842ad8d0",
+      "verifyCode": "2145-5E1F-DB6C",
+      "documentId": "DID-2026-IBT-0000052",
+      "archiveRef": "ARCH/IBT/2026/000052",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000052-21455",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000052-21455"
+    },
+    {
+      "certId": 53,
+      "hashKeyVersion": 3,
+      "studentEn": "Faridah Ayomide Aliu",
+      "studentAr": "فريدة أيومدي علي",
+      "sex": "female",
+      "identityNo": "713944318135552",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-IBT-2026-000053-DAEF7",
+      "contentHash": "daef7da163af4312b508bb03d5ae03b49fabc9c289a36a84a44784a3813f8d44",
+      "verifyCode": "DAEF-7DA1-63AF",
+      "documentId": "DID-2026-IBT-0000053",
+      "archiveRef": "ARCH/IBT/2026/000053",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000053-DAEF7",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000053-DAEF7"
+    },
+    {
+      "certId": 54,
+      "hashKeyVersion": 3,
+      "studentEn": "Muhammad Ismail Seriki",
+      "studentAr": "محمد إسماعيل سركي",
+      "sex": "male",
+      "identityNo": "717455243759974",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-IBT-2026-000054-72EF6",
+      "contentHash": "72ef65b35ed95b4182096658a9659e8567fc9147f41ca96a8fdbea3151364269",
+      "verifyCode": "72EF-65B3-5ED9",
+      "documentId": "DID-2026-IBT-0000054",
+      "archiveRef": "ARCH/IBT/2026/000054",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IBT-2026-000054-72EF6",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IBT-2026-000054-72EF6"
+    }
+  ]
+}

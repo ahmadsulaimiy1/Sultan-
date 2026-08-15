@@ -353,15 +353,19 @@ if (omitted.length) {
   for (const o of omitted) console.log(`    · ${o}`);
 }
 
+// Version 3, not 2. Version 2 signed the six I‘dadiyyah certificates on
+// 2026-08-06 and is RETIRED for signing — document-hash.js throws rather than
+// let it sign again — so it is not a default that can be left in place by
+// inattention. These batches mint under the key rotated in on 2026-08-15.
 console.log('\n  To mint, with the production key from the Board’s credential store:');
 for (const b of ['QUR', 'PRY', 'JSS', 'SS']) {
-  console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 SHRS_BATCH=${b} \\`);
+  console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=3 SHRS_BATCH=${b} \\`);
   console.log('      node scripts/issue-royal-college-batch.mjs');
 }
 for (const b of ['TMH', 'IBT2026', 'IDD2026']) {
-  console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=2 \\`);
+  console.log(`    DOCUMENT_HASH_SECRET=… DOCUMENT_HASH_KEY_VERSION=3 \\`);
   console.log(`      node scripts/issue-certificate-batch.mjs ${b}`);
 }
-console.log('  Certificate numbers come from the plan, so batch order does not change');
-console.log('  them — but the three stage batches stay HELD until the Arabic names and');
-console.log('  the two records above are supplied.\n');
+console.log('  Certificate numbers come from the plan, so batch order does not');
+console.log('  change them. Nothing is held: every batch above mints on a clean run,');
+console.log(`  and the ${omitted.length} omissions listed are rulings, not gaps.\n`);

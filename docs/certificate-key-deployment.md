@@ -140,6 +140,64 @@ must be destroyed rather than filed — two documents bearing the same certifica
 sequence with different tails is precisely the ambiguity the tail exists to
 prevent.
 
+## 5a. What was done on 2026-08-15 — the rotation to version 3
+
+The graduation recovery minted thirty-three certificates, numbers 000048–000080,
+for the rest of the Class of 2026. They were signed under a **new key, version
+3**, generated the same way as v2: 64 bytes from the OS CSPRNG, never written
+into this repository.
+
+| | |
+|---|---|
+| Fingerprint (SHA-256, first 16 hex) | `0bc874387474a85f` |
+| Signed | 33 certificates, 000048–000080, all `hash_key_version = 3` |
+| Retired at the same time | version 2, added to `RETIRED_KEYS` in `functions/_lib/document-hash.js` |
+
+### The four variables after this rotation
+
+| Variable | Value |
+|---|---|
+| `DOCUMENT_HASH_SECRET` | the **v3** key |
+| `DOCUMENT_HASH_KEY_VERSION` | `3` |
+| `DOCUMENT_HASH_SECRET_V2` | the v2 key — the *previous* value of `DOCUMENT_HASH_SECRET` |
+| `DOCUMENT_HASH_SECRET_V1` | `batch-issuance-development-secret` |
+
+All four, in **Production and Preview**. `.github/workflows/certificate-deployment.yml`
+writes them in that order — retained keys first, current key last — so that a
+run interrupted midway leaves an environment holding a key it does not yet use,
+rather than an environment on version 3 with no version 2 key and six
+unverifiable certificates.
+
+### Why rotate at all, when v2 was not compromised
+
+Because rotating **on issuance** is what keeps the blast radius of any future
+exposure to one batch. v1 covers seven certificates, v2 six, v3 thirty-three;
+no key spans two ceremonies. The alternative — one long-lived key — means a
+single exposure someday invalidates the cryptographic standing of every
+certificate the school has ever issued.
+
+### Cloudflare binds variables at deployment time
+
+Setting the four variables is not the same as production using them. Pages
+attaches environment variables to a *deployment*; until a new deployment is
+made, the running one keeps the values it was built with. The deploy workflow
+therefore retries the latest production deployment and waits for it to go live
+before running acceptance. A rotation without that step is configuration that
+exists in the dashboard and not in production — which is the same class of
+fault as a certificate minted with no record created.
+
+### Custody of the v3 key
+
+Same discipline as §3, and it is not optional. There must be **two** copies:
+the Cloudflare variable (which cannot be read back) and one in the school's
+store for its most sensitive credentials. The repository secret
+`DOCUMENT_HASH_SECRET_V3` is what lets the deploy workflow install and reinstall
+it without a human holding the value in a chat window; it is a working copy,
+not the archive copy. If every copy is lost, the thirty-three certificates
+remain valid documents on the school's own register, but the public page can
+only ever say it cannot confirm them cryptographically — `key_unavailable`,
+which the code deliberately does not present as a failed integrity check.
+
 ## 6. Database
 
 `hash_key_version` is on `stage_certificates` and `graduation_documents`,

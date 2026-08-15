@@ -215,23 +215,27 @@ const dupes = (arr) => {
     `${v3[0].n} rows at key version 3, sequence ${v3[0].lo}–${v3[0].hi}; 0 rows at or below 000047 carry it`);
 }
 
-// 11 · ROLLBACK, EXECUTED. The plan is run against the staging database and
-//      the thirteen are compared byte for byte before and after.
+// 11 · ROLLBACK, EXECUTED — and executed from the same file the deployment
+//      workflow runs, not a paraphrase of it. sql/rollback-graduation-2026.sql
+//      deliberately contains no transaction control, so the rehearsal can wrap
+//      it in a BEGIN it then reverts while the real run wraps it in psql -1.
+//      The thirteen are compared byte for byte before and after.
 {
+  const ROLLBACK = readFileSync('sql/rollback-graduation-2026.sql', 'utf8');
   const snap = () => q('SELECT id, serial_no, content_hash, student_full_name, student_identity_no FROM stage_certificates WHERE id <= 47 ORDER BY id');
   const before = JSON.stringify(await snap());
   const nBefore = (await q('SELECT count(*)::int AS n FROM stage_certificates'))[0].n;
   await q('BEGIN');
-  await q('DELETE FROM student_identity_names WHERE student_identity_no IN (SELECT student_identity_no FROM stage_certificates WHERE id > 47)');
-  await q('DELETE FROM stage_certificates WHERE id > 47');
+  await q(ROLLBACK);
   const nRolled = (await q('SELECT count(*)::int AS n FROM stage_certificates'))[0].n;
   const afterRoll = JSON.stringify(await snap());
   await q('ROLLBACK');
   const nRestored = (await q('SELECT count(*)::int AS n FROM stage_certificates'))[0].n;
   check(11, 'rollback has been tested in staging',
     afterRoll === before && nRolled === 13 && nRestored === nBefore,
-    `${nBefore} rows → rollback → ${nRolled} rows (the original thirteen, byte-identical) → `
-    + `transaction reverted → ${nRestored}. The rollback removes only what this deployment added.`);
+    `${nBefore} rows → sql/rollback-graduation-2026.sql → ${nRolled} rows (the original `
+    + `thirteen, byte-identical) → transaction reverted → ${nRestored}. The deployment `
+    + `workflow runs this same file, so the tested procedure is the executed one.`);
 }
 
 // ── Report ──────────────────────────────────────────────────────────────────

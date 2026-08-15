@@ -49,6 +49,14 @@ const RETIRED_KEYS = {
     + 'compute a matching serial suffix under it, so it must never sign again. '
     + 'Supply it as DOCUMENT_HASH_SECRET_V1 so those certificates keep '
     + 'verifying permanently.',
+  2: 'Retired on 2026-08-15 by the rotation to version 3, which signed the '
+    + 'thirty-three graduation certificates 000048–000080. Version 2 signed '
+    + 'the six I‘dadiyyah certificates 000042–000047 on 2026-08-06 and it '
+    + 'still verifies them and nothing else. It is retired rather than '
+    + 'compromised: rotating on issuance means one key never spans two '
+    + 'ceremonies, so the blast radius of any future exposure is one batch. '
+    + 'Supply it as DOCUMENT_HASH_SECRET_V2 so those six certificates keep '
+    + 'verifying permanently.',
 };
 
 export function currentKeyVersion(env) {

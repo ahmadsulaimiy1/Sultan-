@@ -1,0 +1,42 @@
+{
+  "programme": "IDD",
+  "programmeLabelEn": "I’dādiyyah — Intermediate Stage",
+  "programmeLabelAr": "المرحلة الإعدادية",
+  "academicYear": "2025/2026",
+  "issuedAt": "2026-08-08",
+  "issuedAtHijri": "25 Ṣafar 1448 A.H.",
+  "place": "Ikorodu, Lagos, Nigeria",
+  "firstCertificateSeq": 55,
+  "count": 1,
+  "arabicNames": {
+    "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived. Anything this pipeline could only propose was put to the Founder before print: once ruled on it moves to confirmedByFounder with the date of his approval, and anything still outstanding stays under awaitingConfirmation. A name is never generated, transliterated or guessed here.",
+    "status": "READY — the single name on this roll now has an Arabic form",
+    "approvedAndCarriedAcross": {},
+    "standardArabicNoChoiceToMake": {
+      "Yaseer": "ياسر — Yāsir. An Arabic name, not a transcription of one."
+    },
+    "transcribedByThisPipeline": {
+      "Balogun": "بالوغون — Yoruba, never written in Arabic by this institution. Transcribed under the Founder’s authorisation of 15 Aug 2026, on the convention of the school’s own published registers, which render a Yoruba g with غ and give the long vowels their letters. (The worked example is on the Ibtidā’iyyah register; it is not named here because naming another stage’s graduand inside this register is exactly what the residue guard exists to catch.)"
+    },
+    "awaitingConfirmation": {}
+  },
+  "entries": [
+    {
+      "certId": 55,
+      "hashKeyVersion": 3,
+      "studentEn": "Yaseer Balogun",
+      "studentAr": "ياسر بالوغون",
+      "sex": "male",
+      "identityNo": "713411541262298",
+      "gradeEn": "Excellent",
+      "gradeAr": null,
+      "serialNo": "SHRS-CERT-IDD-2026-000055-0CF24",
+      "contentHash": "0cf24ba76de01290f3cf4ff85cf261bfaf04310f662bd1055484450c9e0741e7",
+      "verifyCode": "0CF2-4BA7-6DE0",
+      "documentId": "DID-2026-IDD-0000055",
+      "archiveRef": "ARCH/IDD/2026/000055",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000055-0CF24",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000055-0CF24"
+    }
+  ]
+}
