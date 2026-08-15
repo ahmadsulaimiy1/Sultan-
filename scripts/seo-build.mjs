@@ -88,13 +88,20 @@ const PROFILES = [
    and third-party reporting is the kind of corroboration both search engines
    and answer engines weigh most heavily — it is not something the school can
    assert about itself. Cited, not claimed. */
+/* Four, not three: the research sweep surfaced a FOURTH Punch article — the
+   November 2024 unveiling of Royal College, at which Governor Seyi Makinde
+   announced a N10m educational gift. Dates are as search-indexed; each article
+   is being archived in docs/legacy-migration so the citations outlive the
+   links. */
 const PRESS = [
   ['https://punchng.com/sultan-hanafi-royal-schools-illuminating-minds-and-nurturing-communities-olawoyin-edris/',
-   'Sultan Hanafi Royal Schools: Illuminating Minds and Nurturing Communities'],
-  ['https://punchng.com/lagos-school-charges-graduates-to-be-problem-solvers/',
-   'Lagos school charges graduates to be problem-solvers'],
+   'Sultan Hanafi Royal Schools: Illuminating Minds and Nurturing Communities', '2023-08-29'],
+  ['https://punchng.com/education-projects-seeds-for-future-generations-makinde/',
+   'Education projects, seeds for future generations – Makinde', '2024-11-14'],
   ['https://punchng.com/winners-emerge-in-n1-5m-quran-competition/',
-   'Winners emerge in N1.5m Quran competition'],
+   'Winners emerge in N1.5m Quran competition', '2025-03-21'],
+  ['https://punchng.com/lagos-school-charges-graduates-to-be-problem-solvers/',
+   'Lagos school charges graduates to be problem-solvers', '2026-08-15'],
 ];
 
 /* As published on /contact/. Structured hours are what a Maps listing
@@ -165,10 +172,11 @@ function entity() {
       url: ORIGIN + path,
     })),
     sameAs: PROFILES,
-    subjectOf: PRESS.map(([url, headline]) => ({
+    subjectOf: PRESS.map(([url, headline, datePublished]) => ({
       '@type': 'NewsArticle',
       headline,
       url,
+      datePublished,
       publisher: { '@type': 'Organization', name: 'The Punch' },
     })),
   };
