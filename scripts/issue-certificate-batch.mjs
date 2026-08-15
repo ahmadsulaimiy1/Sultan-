@@ -434,8 +434,11 @@ BATCHES.IDD2026 = fromPlan('IDD', {
     transcribedByThisPipeline: {
       Balogun: 'بالوغون — Yoruba, never written in Arabic by this institution. '
         + 'Transcribed under the Founder’s authorisation of 15 Aug 2026, on the '
-        + 'convention of the school’s own registers (غ for the Yoruba g, as in '
-        + 'أدغكي for Adegoke).',
+        + 'convention of the school’s own published registers, which render a '
+        + 'Yoruba g with غ and give the long vowels their letters. (The worked '
+        + 'example is on the Ibtidā’iyyah register; it is not named here because '
+        + 'naming another stage’s graduand inside this register is exactly what '
+        + 'the residue guard exists to catch.)',
     },
     awaitingConfirmation: {},
   },

@@ -2046,6 +2046,51 @@ CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(ba
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_identity_no ON stage_certificates(student_identity_no);
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certificates (left(lower(content_hash), 12));
 
+-- ── The name history of one permanent identity ─────────────────────────────
+-- The Student ID is the person. A name is an ATTRIBUTE of that identity, and
+-- attributes change: a child is entered under a short form, the Registrar's
+-- roll later carries a fuller one, the Founder rules on a spelling. Before
+-- this table the institution had no way to say so, and the two available
+-- answers were both wrong — rewrite the record (which falsifies the document
+-- in the child's hands) or say nothing (which leaves a parent holding a
+-- certificate that does not match the portal).
+--
+-- So the third answer is recorded instead. Every name this identity has
+-- carried, with the date it took effect, where it came from, and why it
+-- changed. Verification can then explain a legitimate historical difference
+-- rather than hiding or "correcting" it:
+--
+--   "Issued under the name Ashrof Akorede. The current institutional record
+--    for this Student ID is Ashraf Korede Ojewumi. Both are the same student."
+--
+-- NOT hand-maintained. Every row is derived — the engraved names come from
+-- the published graduation registers, the current name from the canonical
+-- roll — so this cannot drift from the documents or from the roll. Exactly
+-- one row per identity may be current, which the partial unique index below
+-- enforces rather than trusts.
+CREATE TABLE IF NOT EXISTS student_identity_names (
+  id                    BIGSERIAL PRIMARY KEY,
+  student_identity_no   TEXT NOT NULL,
+  full_name             TEXT NOT NULL,
+  full_name_ar          TEXT,
+  is_current            BOOLEAN NOT NULL DEFAULT FALSE,
+  effective_from        DATE NOT NULL,
+  -- Where the institution wrote this name down: 'published register',
+  -- 'Registrar roll', 'Founder ruling', 'original certificate'.
+  source                TEXT NOT NULL,
+  -- Why it changed, in words a Registrar would use to a parent.
+  reason                TEXT,
+  recorded_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_identity_no, full_name, effective_from)
+);
+CREATE INDEX IF NOT EXISTS idx_student_identity_names_no
+  ON student_identity_names(student_identity_no);
+-- One current name per identity. A second would make "the institution's
+-- current record" ambiguous, which is the one thing this table exists to
+-- settle.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_student_identity_names_one_current
+  ON student_identity_names(student_identity_no) WHERE is_current;
+
 -- Bilingual identity fields the certificate roster captures — stored on
 -- the student record too (not only the certificate snapshot) so future
 -- documents for the same student reuse the same verified Arabic name.

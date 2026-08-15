@@ -57,6 +57,11 @@ for f in "$ROOT"/dist/certificates/*/register-*.sql "$ROOT"/dist/certificates/*/
 done
 echo "  $(psql -tA "$URL" -c 'select count(*) from stage_certificates;') rows, sequence $(psql -tA "$URL" -c 'select min(id)||E'"'"'-'"'"'||max(id) from stage_certificates;')"
 
+# The identity name history, derived from the same two sources everything else
+# reads. Loaded here so the historical-name note is exercised, not assumed.
+psql -q "$URL" -f "$ROOT/docs/graduation-registers/2026-08-15-IDENTITY-NAMES.sql" >/dev/null
+echo "  $(psql -tA "$URL" -c 'select count(*) from student_identity_names;') identity names, $(psql -tA "$URL" -c 'select count(*) from student_identity_names where not is_current;') historical"
+
 echo
 DATABASE_URL="$URL" DOCUMENT_HASH_SECRET="$KEY" DOCUMENT_HASH_KEY_VERSION="$KEYVER" \
   node --import "$ROOT/scripts/staging/register.mjs" "$ROOT/scripts/staging/staging-test.mjs"

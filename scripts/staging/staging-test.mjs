@@ -39,7 +39,7 @@ const check = (name, cond, detail = '') => {
 // ── The twenty-six regenerated certificates ─────────────────────────────
 const DIR = new URL('../../dist/certificates', import.meta.url).pathname;
 const entries = [];
-for (const b of readdirSync(DIR).filter((d) => /-(QUR|TMH|IBT2026|IDD2026|PRY|JSS|SS)-/.test(d)).sort()) {
+for (const b of readdirSync(DIR).filter((d) => !/-IBT-0000(14|35)$/.test(d)).sort()) {
   const f = readdirSync(join(DIR, b))
     .find((x) => /^register-.*\.json$/.test(x) || x === 'graduation-register.json');
   if (!f) continue;
@@ -136,6 +136,28 @@ if (twoAwards.length) {
     r.body.kind === 'student_certificate_index' || r.body.status === 'multiple_matches',
     `kind=${r.body.kind} status=${r.body.status}`);
 }
+
+// 7. HISTORICAL NAMES. A certificate engraved under a name the institution has
+//    since replaced must say so — not quietly show the new name (which would
+//    contradict the document) and not stay silent (which leaves a parent
+//    comparing two names with no explanation).
+console.log('\n7. Historical names — a legitimate difference is explained, not hidden');
+const HISTORICAL = [
+  ['SHRS-CERT-IBT-2026-000036-B9E10', 'Aisha Anofi', 'Aisha Omoshalewa Anofi'],
+  ['SHRS-CERT-IBT-2026-000039-518A8', 'Ashrof Akorede', 'Ashraf Korede Ojewumi'],
+  ['SHRS-CERT-IBT-2026-000040-60DAF', 'Imran Adegoke', 'Imran Iremide Adegoke'],
+];
+for (const [serial, engravedName, nowName] of HISTORICAL) {
+  const r = await call(serial);
+  check(`${engravedName} → ${nowName}`,
+    r.body.recipientName === engravedName && r.body.currentInstitutionalName === nowName,
+    `engraved=${r.body.recipientName} now=${r.body.currentInstitutionalName}`);
+}
+// And a certificate whose engraved name IS current carries no note at all.
+const plain = await call(entries[0].serialNo);
+check('a certificate under its current name carries no historical note',
+  plain.body.currentInstitutionalName === null,
+  `got ${plain.body.currentInstitutionalName}`);
 
 console.log(`\n${'─'.repeat(64)}`);
 console.log(`TOTAL: ${pass} pass, ${fail} fail`);

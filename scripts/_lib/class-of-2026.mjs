@@ -99,9 +99,15 @@ const SEX = {
   'Allison Ganiyah': ['female', 'ruled by the Founder, 2026-08-15'],
   'Jubril Lawal': ['male', 'ruled by the Founder, 2026-08-15'],
   'Sofiah Anofi': ['female', 'ruled by the Founder, 2026-08-15'],
-  // STILL NOT RECORDED — no ruling covers these two, and neither is on a roll
-  // this recovery issues, so nothing is waiting on them.
-  //   Muhammad Fatih · Yaseer Balogun
+  // The last fact this recovery was waiting on. His I‘dādiyyah sheet is the
+  // only one still held, and it was held here — the certificate wording is
+  // gendered, so an unrecorded sex is not a blank field but a sheet that would
+  // have to guess. Confirmed by the Founder rather than read off the name,
+  // which is the whole point of this table.
+  'Yaseer Balogun': ['male', 'confirmed by the Founder, 2026-08-15'],
+  // STILL NOT RECORDED — no ruling covers him, and he is on no roll this
+  // recovery issues, so nothing is waiting on it.
+  //   Muhammad Fatih
 };
 
 // ── Arabic names approved outside the published registers ───────────────────
@@ -145,9 +151,9 @@ const APPROVED_AR = {
   //     plainly. ياسر is Yāsir, an Arabic name. بالوغون is Yoruba and this
   //     institution has never written it in Arabic — so it is a real
   //     transcription, and it follows the conventions of the school's OWN
-  //     published registers rather than any general scheme: أدغكي renders the
-  //     Yoruba g of Adegoke with غ, أوجومي the j of Ojewumi with ج. Ba-lo-gun
-  //     therefore takes غ for its g and letters for its long vowels.
+  //     published registers rather than any general scheme: they render a
+  //     Yoruba g with غ and a j with ج, and give the long vowels their letters.
+  //     Ba-lo-gun therefore comes out با-لو-غون.
   //
   // بالوغون is the only spelling on any roll this school received from its
   // software rather than the other way round. One line replaces it if the
@@ -162,7 +168,8 @@ const APPROVED_AR = {
     ar: 'ياسر بالوغون',
     source: 'ياسر is the Arabic name Yāsir; بالوغون is TRANSCRIBED by this '
       + 'pipeline under the Founder’s authorisation, 2026-08-15, on the '
-      + 'convention of the published registers (غ for the Yoruba g, as in أدغكي)',
+      + 'convention of the published registers — غ for a Yoruba g, and letters '
+      + 'for the long vowels',
   },
   'Aisha Omoshalewa Anofi': {
     ar: 'عائشة أمشالوا حنفي',

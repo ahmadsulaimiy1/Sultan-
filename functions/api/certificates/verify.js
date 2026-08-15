@@ -74,6 +74,32 @@ async function logVerification(sql, request, refNo, outcome) {
   }
 }
 
+// The name the institution uses for this permanent Student ID TODAY.
+//
+// The Student ID is the person; a name is an attribute of that identity, and
+// student_identity_names holds every name it has carried with the date each
+// took effect. Only the current one is wanted here — the engraved name is
+// already on the row, and the difference between the two is what the caller
+// explains to a parent.
+//
+// Best effort, exactly like the audit write above and for the same reason: a
+// missing table or an empty history is a gap in a supporting record, not a
+// reason to refuse to attest a genuine certificate. Returns null and the
+// response simply carries no historical note.
+async function currentInstitutionalName(sql, identityNo) {
+  if (!identityNo) return null;
+  try {
+    const res = await sql`
+      SELECT full_name FROM student_identity_names
+      WHERE student_identity_no = ${identityNo} AND is_current
+      LIMIT 1`;
+    return res.rows[0]?.full_name || null;
+  } catch (err) {
+    console.error('student_identity_names lookup failed', err);
+    return null;
+  }
+}
+
 // One place decides what a stage certificate's state IS, so the single
 // attestation below and the disambiguation list cannot come to different
 // conclusions about the same row. A hash check that throws (missing
@@ -186,6 +212,7 @@ export async function onRequestGet({ request, env }) {
       const row = resolved.rows[0];
       const state = stageCertificateState(env, row);
       await logVerification(sql, request, ref, state.outcome);
+      const nameNow = await currentInstitutionalName(sql, row.student_identity_no);
       return json({
         ok: true,
         found: true,
@@ -198,6 +225,21 @@ export async function onRequestGet({ request, env }) {
         recipientName: row.student_full_name,
         recipientNameAr: row.student_full_name_ar,
         studentIdentityNo: row.student_identity_no,
+        // A legitimate historical difference, explained rather than hidden.
+        //
+        // recipientName is what is ENGRAVED, and it never changes: the sheet in
+        // the holder's hands says it, the content hash is taken over it, and
+        // rewriting it here would make the portal disagree with the document.
+        // But a child entered under a short form whose roll later carried a
+        // fuller one has a certificate that does not match the institution's
+        // current record, and a parent comparing the two deserves to be told
+        // why rather than left to wonder which is wrong.
+        //
+        // Present only when the two genuinely differ, so the ordinary case
+        // carries no extra noise. Null when they agree, when the identity has
+        // no recorded history, or when the table has not been seeded — never a
+        // reason for the lookup itself to fail.
+        currentInstitutionalName: nameNow && nameNow !== row.student_full_name ? nameNow : null,
         credentialType: credentialTypeEn(row),
         credentialTypeAr: row.programme_label_ar ? `شهادة إتمام ${row.programme_label_ar}` : null,
         programmeCode: row.programme_code,
