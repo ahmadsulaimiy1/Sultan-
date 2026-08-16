@@ -26,7 +26,7 @@
 // cannot be used at all, so naming that single fact discloses nothing
 // an attacker could act on, and it is the first thing to fix anyway.
 import { getSql } from '../../_lib/db.js';
-import { readStaffSessionFromRequest, timingSafeEqualString } from '../../_lib/session.js';
+import { readStaffSessionFromRequest, createStaffSessionCookie, timingSafeEqualString } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 
 // name -> what stops working without it. Written for whoever is trying
@@ -49,18 +49,24 @@ const SECRETS = [
   { name: 'ANTHROPIC_MODEL', group: 'Assistant', blocks: 'Nothing — the assistant uses its default model unless this overrides it.', optional: true },
 ];
 
+// Returns { kind: 'session', staffId } | { kind: 'token' } |
+// { kind: 'no_token_configured' } | null (unauthorised). staffId is
+// carried through only for the 'session' case, so the caller can renew
+// that session the same way every other staff-session endpoint does —
+// a token-authorised request has no session cookie to renew.
 function authorise(request, env) {
   if (env.SESSION_SECRET) {
     try {
-      if (readStaffSessionFromRequest(request, env.SESSION_SECRET)) return 'session';
+      const session = readStaffSessionFromRequest(request, env.SESSION_SECRET);
+      if (session) return { kind: 'session', staffId: session.staffId };
     } catch { /* fall through to the token */ }
   }
   if (env.PORTAL_SYSADMIN_TOKEN) {
     const supplied = request.headers.get('x-sysadmin-token');
-    if (supplied && timingSafeEqualString(supplied, env.PORTAL_SYSADMIN_TOKEN)) return 'token';
+    if (supplied && timingSafeEqualString(supplied, env.PORTAL_SYSADMIN_TOKEN)) return { kind: 'token' };
     return null;
   }
-  return 'no_token_configured';
+  return { kind: 'no_token_configured' };
 }
 
 // Counts that answer "can anybody actually use this yet". Each query is
@@ -93,7 +99,7 @@ export async function onRequestGet({ request, env }) {
   if (!auth) {
     return json({ error: 'Not authorised.' }, 403);
   }
-  if (auth === 'no_token_configured') {
+  if (auth.kind === 'no_token_configured') {
     return json({
       configured: false,
       message: 'PORTAL_SYSADMIN_TOKEN is not set in this deployment. Set it in Cloudflare Pages → Settings → Variables and secrets, redeploy, then reload this page.',
@@ -135,13 +141,22 @@ export async function onRequestGet({ request, env }) {
     pushWorks: Boolean(env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY && env.VAPID_SUBJECT),
   };
 
+  // Sliding session, same as /api/portal/staff/me — but only when this
+  // request actually carried a staff session cookie. A token-authorised
+  // request (auth.kind === 'token') has no cookie to renew, and issuing
+  // one here would sign a fresh session cookie for a caller who never
+  // proved they hold one, which is not what this endpoint is for.
+  const extraHeaders = auth.kind === 'session'
+    ? { 'Set-Cookie': createStaffSessionCookie(auth.staffId, env.SESSION_SECRET) }
+    : {};
+
   return json({
     configured: true,
-    checkedVia: auth,
+    checkedVia: auth.kind,
     database,
     counts,
     secrets,
     readiness,
     note: 'Environment variables only take effect on a new deployment. After changing any of them, use Deployments → Retry deployment.',
-  });
+  }, 200, extraHeaders);
 }

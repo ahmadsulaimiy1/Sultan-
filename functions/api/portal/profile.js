@@ -7,7 +7,7 @@
 // filling in one section at a time, exactly as the directive's staged
 // UI implies).
 import { getSql } from '../../_lib/db.js';
-import { readSessionFromRequest } from '../../_lib/session.js';
+import { readSessionFromRequest, createSessionCookie } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
 import { computeProfileCompletion, recommendNextStep } from '../../_lib/profile-completion.js';
 
@@ -125,7 +125,10 @@ export async function onRequestGet({ request, env }) {
   try {
     const profile = await loadProfile(sql, guardianId);
     if (!profile) return json({ error: 'Not signed in.' }, 401);
-    return json(profile);
+    // Sliding session, same as /api/portal/me — Profile is a page a
+    // guardian can visit and stay on for a whole session without ever
+    // loading the dashboard, so it needs its own renewal too.
+    return json(profile, 200, { 'Set-Cookie': createSessionCookie(guardianId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('portal profile get error', err);
     return json({ error: 'Could not load your profile right now — please try again shortly.' }, 500);
@@ -160,7 +163,7 @@ export async function onRequestPost({ request, env }) {
   try {
     await sql(`UPDATE guardians SET ${setClauses.join(', ')} WHERE id = $1`, values);
     const profile = await loadProfile(sql, guardianId);
-    return json({ ok: true, ...profile });
+    return json({ ok: true, ...profile }, 200, { 'Set-Cookie': createSessionCookie(guardianId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('portal profile update error', err);
     return json({ error: 'Could not save your profile right now — please try again shortly.' }, 500);

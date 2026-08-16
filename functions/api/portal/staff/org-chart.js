@@ -8,7 +8,7 @@
 // a root; an office with no filled primary seat renders as "Vacant —
 // Awaiting Appointment" exactly like everywhere else in this system.
 import { getSql } from '../../../_lib/db.js';
-import { readStaffSessionFromRequest } from '../../../_lib/session.js';
+import { readStaffSessionFromRequest, createStaffSessionCookie } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 
 export async function onRequestGet({ request, env }) {
@@ -74,7 +74,10 @@ export async function onRequestGet({ request, env }) {
       }
     });
 
-    return json({ roots, totalOffices: officesRes.rows.length });
+    // Sliding session, same as /api/portal/staff/me — Org Chart is a
+    // page staff can visit and stay on without ever loading a
+    // /me-calling page, so it needs its own renewal too.
+    return json({ roots, totalOffices: officesRes.rows.length }, 200, { 'Set-Cookie': createStaffSessionCookie(session.staffId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('org-chart error', err);
     return json({ error: 'Could not load the organisational chart: ' + (err && err.message ? err.message : 'unknown error') }, 500);

@@ -18,7 +18,7 @@
 // doc, Section 7, Stage 5). Naming that plainly rather than shipping an
 // upload control that goes nowhere.
 import { getSql } from '../../_lib/db.js';
-import { readSessionFromRequest } from '../../_lib/session.js';
+import { readSessionFromRequest, createSessionCookie } from '../../_lib/session.js';
 import { json, readJsonBody } from '../../_lib/http.js';
 
 const DEFAULT_SESSION = '2025/2026';
@@ -93,7 +93,10 @@ export async function onRequestGet({ request, env }) {
       graduationSession,
       record: toRecord(r.id ? r : null),
     }));
-    return json({ ok: true, session: graduationSession, children });
+    // Sliding session, same as /api/portal/me — Graduation is a page a
+    // guardian can visit and stay on for a whole session without ever
+    // loading the dashboard, so it needs its own renewal too.
+    return json({ ok: true, session: graduationSession, children }, 200, { 'Set-Cookie': createSessionCookie(guardianId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('graduation-records list error', err);
     return json({ error: 'Could not load your graduation information right now — please try again shortly.' }, 500);
@@ -220,7 +223,7 @@ export async function onRequestPost({ request, env }) {
         WHERE graduation_record_id = ${row.id} AND status = 'correction_requested'`;
     }
 
-    return json({ ok: true, recordId: row.id, status: row.status, submittedAt: row.submitted_at });
+    return json({ ok: true, recordId: row.id, status: row.status, submittedAt: row.submitted_at }, 200, { 'Set-Cookie': createSessionCookie(guardianId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('graduation-records save error', err);
     return json({ error: 'Could not save your graduation information right now — please try again shortly.' }, 500);
