@@ -62,6 +62,75 @@
     return data;
   }
 
+  // generate_batch alone streams newline-delimited JSON — one real event
+  // per student as the server actually issues them, not a bulk response
+  // at the end (see functions/api/portal/staff/registrar/stage-certificates.js).
+  // Every parsed line is re-broadcast as a DOM CustomEvent so the Certificate
+  // Forge 3D scene (js/portal-cert-forge-3d.js) can animate against the
+  // school's real issuance, not a fixed-duration loop of its own — this
+  // file has no dependency on that scene existing (plain document-level
+  // events, not a module import), so the portal still works if WebGL is
+  // unavailable and the 3D module never loads.
+  function broadcast(type, detail){
+    document.dispatchEvent(new CustomEvent('sultan:cert-generate-' + type, { detail: detail || {} }));
+  }
+
+  async function postGenerateBatch(payload){
+    broadcast('start', { total: payload.rows.length });
+    var res;
+    try{
+      res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    }catch(err){
+      broadcast('end', { ok: false });
+      throw err;
+    }
+    if(!res.ok || !res.body || !res.body.getReader){
+      // Validation failures (bad programme, missing fields, no authority)
+      // never reach the streaming branch server-side — they return a
+      // plain JSON error body instead, same shape the rest of this file
+      // already expects. A body-less/unreadable response falls back the
+      // same way, so an environment without a streaming fetch body still
+      // gets a correct (just unanimated) result rather than a hang.
+      var data = {};
+      try{ data = await res.json(); }catch(err){}
+      broadcast('end', { ok: res.ok });
+      if(!res.ok) throw new Error(data.error || 'Request failed.');
+      return data;
+    }
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var buffer = '';
+    var finalEvent = null;
+    var streamErrorMessage = null;
+    try{
+      for(;;){
+        var chunk = await reader.read();
+        if(chunk.done) break;
+        buffer += decoder.decode(chunk.value, { stream: true });
+        var lines = buffer.split('\n');
+        buffer = lines.pop();
+        for(var i = 0; i < lines.length; i++){
+          var line = lines[i].trim();
+          if(!line) continue;
+          var event;
+          try{ event = JSON.parse(line); }catch(parseErr){ continue; }
+          broadcast('progress', event);
+          if(event.type === 'batch_done') finalEvent = event;
+          else if(event.type === 'error') streamErrorMessage = event.error;
+        }
+      }
+    }finally{
+      broadcast('end', { ok: !!finalEvent && !streamErrorMessage });
+    }
+    if(streamErrorMessage) throw new Error(streamErrorMessage);
+    if(!finalEvent) throw new Error('The connection closed before the batch finished — check the register before retrying, some certificates may already be issued.');
+    return finalEvent;
+  }
+
   // ── Roster parsing ────────────────────────────────────────────────
   // Accepts comma/semicolon/tab separated lines; a first line that
   // mentions "name" is treated as a header. Column order:
@@ -229,7 +298,7 @@
       generateBtn.disabled = true;
       generateBtn.textContent = 'Generating…';
       try{
-        var data = await post({
+        var data = await postGenerateBatch({
           action: 'generate_batch',
           programmeCode: programmeEl.value,
           academicYear: academicYearEl.value.trim(),

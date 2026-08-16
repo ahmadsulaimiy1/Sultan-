@@ -44,9 +44,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var sessionCount = 0;
   var lcd = null; // assigned once the scene builds below
 
-  function setStageDisplay(t, serial) {
+  function setStageDisplay(t, serial, statusOverride) {
     var pct = Math.round(Math.min(t, 1) * 100);
-    var stage = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
+    var stage = statusOverride || (t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))]);
     if (lcd) {
       lcd.setLines([
         { text: stage, size: 30 },
@@ -230,11 +230,12 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     sessionCount++;
     return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
   }
-  function spawnCertificate() {
+  function spawnCertificate(overrideName, overrideSerial) {
     if (curTex) curTex.dispose();
-    curTex = drawCertificateFace(NAMES[nameIdx % NAMES.length]);
-    nameIdx++;
-    curSerial = nextSerial();
+    var name = overrideName || NAMES[nameIdx % NAMES.length];
+    curTex = drawCertificateFace(name);
+    if (!overrideName) nameIdx++;
+    curSerial = overrideSerial || nextSerial();
     var geo = new THREE.PlaneGeometry(3.4, 2.32, 24, 1);
     var mat = new THREE.MeshStandardMaterial({ map: curTex, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
@@ -246,15 +247,78 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   }
   function playSound() { if (window.__certForgeChime) window.__certForgeChime(); }
 
+  // ---- Live generation — driven by the REAL batch this staff member
+  // just started, not this scene's own clock.
+  // js/portal-staff-certificate-centre.js's postGenerateBatch() streams
+  // one 'sultan:cert-generate-progress' CustomEvent per student as the
+  // server actually issues them (see that file, and functions/api/
+  // portal/staff/registrar/stage-certificates.js's generate_batch
+  // action) — plain document-level events, not a module import, so this
+  // scene has no hard dependency on that page's script existing, and the
+  // reverse is equally true: certificate generation works with WebGL
+  // unavailable, this scene simply never receives the events.
+  //   The ambient loop above (spawnCertificate() with no arguments,
+  // nextSerial()'s fabricated number) is unchanged and keeps running
+  // whenever no real batch is in flight — it was always honestly labelled
+  // as illustrative, and stays that way. Only while liveActive is true
+  // does this scene stop inventing names and serials and start drawing
+  // the ones actually returned by the server.
+  var liveActive = false, liveEnded = false, liveQueue = [], liveCurrent = null, liveCycleMs = CYCLE;
+  var LIVE_SHOW_BUDGET_MS = 16000; // a 500-row batch should not take 35 real minutes to finish watching
+  var LIVE_MIN_ROW_MS = 180;
+  document.addEventListener('sultan:cert-generate-start', function (e) {
+    liveActive = true; liveEnded = false; liveQueue = []; liveCurrent = null;
+    var total = (e.detail && e.detail.total) || 1;
+    liveCycleMs = Math.max(LIVE_MIN_ROW_MS, Math.min(CYCLE, LIVE_SHOW_BUDGET_MS / total));
+    // Interrupt the ambient cycle NOW rather than letting the current
+    // illustrative sheet finish its 4-second rise while real issuance is
+    // already underway — zeroing the clock makes the next frame spawn
+    // from the live queue the moment its first row lands.
+    cycleStart = 0;
+    if (userPaused) { userPaused = false; if (engineInput) engineInput.checked = true; }
+    start();
+  });
+  document.addEventListener('sultan:cert-generate-progress', function (e) {
+    var d = e.detail;
+    if (d && d.type === 'row') liveQueue.push(d);
+  });
+  document.addEventListener('sultan:cert-generate-end', function () {
+    liveEnded = true; // the queue may still hold un-shown rows — drain it, then fall back to idle
+  });
+
   var cycleStart = 0;
   function animateCycle(now) {
-    if (!cur || now - cycleStart > CYCLE) {
-      cycleStart = now;
-      spawnCertificate();
-      playSound();
+    var needNext = !cur || now - cycleStart > (liveActive ? liveCycleMs : CYCLE);
+    if (needNext) {
+      if (liveActive && liveQueue.length) {
+        cycleStart = now;
+        liveCurrent = liveQueue.shift();
+        var shownName = liveCurrent.fullName || liveCurrent.studentFullName || 'Student';
+        spawnCertificate(shownName, liveCurrent.serialNo || null);
+        var goodTone = liveCurrent.status === 'issued' ? 0xC6A15B : (liveCurrent.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
+        slotMat.emissive.setHex(goodTone);
+        playSound();
+      } else if (liveActive && liveEnded && !liveQueue.length) {
+        liveActive = false; liveCurrent = null;
+        slotMat.emissive.setHex(0xC6A15B);
+        cycleStart = now;
+        spawnCertificate();
+        playSound();
+      } else if (!liveActive) {
+        cycleStart = now;
+        spawnCertificate();
+        playSound();
+      }
+      // else: a real batch is running but the next row hasn't arrived yet
+      // (network latency) — hold on the last certificate rather than
+      // conjure a fake one to fill the gap.
     }
-    var t = Math.min((now - cycleStart) / CYCLE, 1);
-    setStageDisplay(t, curSerial);
+    var span = liveActive ? liveCycleMs : CYCLE;
+    var t = Math.min((now - cycleStart) / span, 1);
+    var statusLabel = liveCurrent && liveCurrent.status !== 'issued'
+      ? (liveCurrent.status === 'skipped' ? 'Skipped — already issued' : 'Failed — ' + (liveCurrent.problem || 'see register'))
+      : null;
+    setStageDisplay(t, curSerial, statusLabel);
     var rise = Math.min(t / 0.55, 1);
     var eased = 1 - Math.pow(1 - rise, 3);
     var y = -1.9 + eased * 2.5;
