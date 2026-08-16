@@ -1,0 +1,33 @@
+name: Cloudflare env var audit — names only, never values
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List Preview and Production variable NAMES (values never requested or printed)
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          if [ -z "$CF_TOKEN" ] || [ -z "$CF_ACCOUNT" ] || [ -z "$CF_PROJECT" ]; then
+            echo "::error::Missing one of CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_PAGES_PROJECT."
+            exit 1
+          fi
+          curl -sS -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/$CF_PROJECT" \
+            -o /tmp/project.json
+          echo "## Cloudflare Pages project: variable names present" >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          echo "### Production" >> "$GITHUB_STEP_SUMMARY"
+          node -e "
+            const d = require('/tmp/project.json');
+            if (!d.success) { console.error(JSON.stringify(d.errors)); process.exit(1); }
+            const prod = d.result?.deployment_configs?.production?.env_vars || {};
+            const prev = d.result?.deployment_configs?.preview?.env_vars || {};
+            console.log('PRODUCTION keys:', Object.keys(prod).sort().join(', ') || '(none)');
+            console.log('PREVIEW keys:', Object.keys(prev).sort().join(', ') || '(none)');
+          " | tee -a "$GITHUB_STEP_SUMMARY"

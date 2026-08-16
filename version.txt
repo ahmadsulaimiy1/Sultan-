@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      ade14f87bd88f53533acf9360a3cf7f3b5f3ea41
-short       ade14f87
+commit      38ccdd8dbc06769d82dbdae9075fe3943a248a3c
+short       38ccdd8d
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Garnet, one band, and the Arabic name corrected
-built (UTC) 2026-08-13T11:16:09Z
-assets      shrs-pwa-caf195dc57
+subject     Merge pull request #12 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
+built (UTC) 2026-08-15T02:32:21Z
+assets      shrs-pwa-c490a98c12
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

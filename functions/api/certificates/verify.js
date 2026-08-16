@@ -79,18 +79,33 @@ async function logVerification(sql, request, refNo, outcome) {
 // conclusions about the same row. A hash check that throws (missing
 // DOCUMENT_HASH_SECRET on a deployment) is reported as an integrity
 // failure, never as "intact" by default.
+//
+// 'key_unavailable' is deliberately NOT treated as a failure here, the same
+// precedent already established in graduation-documents/verify.js: a
+// deployment missing a signing key is an operator's gap, not evidence a
+// document was altered, and publicly branding a genuine certificate as
+// failed over an unset environment variable is the exact harm this
+// distinction exists to prevent. The suffix cross-check is kept regardless —
+// it compares two values already stored on the row and needs no key, so it
+// remains a real guard even when the deeper signature can't be recomputed.
+// `contentVerified` carries the honest, narrower fact (was the cryptographic
+// hash itself recomputed and matched) for anything that wants it.
 function stageCertificateState(env, row) {
-  let integrity = { hashValid: false, suffixValid: false };
+  let integrity = { hashValid: false, suffixValid: false, reason: undefined };
   try {
     integrity = verifyStageCertificateIntegrity(env, row);
   } catch (hashErr) {
     console.error('stage certificate integrity check unavailable', hashErr);
   }
-  const intact = integrity.hashValid && integrity.suffixValid;
+  const keyUnavailable = integrity.reason === 'key_unavailable';
+  const contentVerified = integrity.hashValid && integrity.suffixValid;
+  const intact = integrity.suffixValid && (integrity.hashValid || keyUnavailable);
   return {
     intact,
+    contentVerified,
+    signaturePending: intact && keyUnavailable,
     status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
-    outcome: !intact ? 'hash_mismatch' : row.revoked_at ? 'revoked' : 'valid',
+    outcome: !intact ? 'hash_mismatch' : keyUnavailable ? 'key_unavailable' : row.revoked_at ? 'revoked' : 'valid',
   };
 }
 
@@ -195,7 +210,8 @@ export async function onRequestGet({ request, env }) {
         issuedAt: isoDateOnly(row.issued_at),
         issuedAtHijri: row.issued_at_hijri,
         batchNo: row.batch_no,
-        integrity: state.intact ? 'intact' : 'integrity_check_failed',
+        integrity: state.signaturePending ? 'pending_signature' : state.intact ? 'intact' : 'integrity_check_failed',
+        contentVerified: state.contentVerified,
         status: state.status,
         revokedAt: row.revoked_at,
         revocationNote: row.revoked_at ? row.revocation_note : null,

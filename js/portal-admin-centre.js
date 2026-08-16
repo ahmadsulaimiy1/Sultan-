@@ -13,6 +13,26 @@
   var TOKEN_KEY = 'shrs_sysadmin_token';
   var state = { offices: [], selected: null, token: null };
 
+  // The token used to live in sessionStorage, cleared the moment the
+  // browser closed. In practice that meant re-typing a 48-character
+  // secret several times a day, which is not security — it is a tax that
+  // pushes people to keep the secret somewhere worse than a browser. It
+  // persists now, and "Lock" clears it deliberately. On a shared machine,
+  // press Lock. Storage is wrapped because a browser in private mode
+  // throws on localStorage rather than returning null.
+  function tokenGet() {
+    try { return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY); }
+    catch (e) { return null; }
+  }
+  function tokenSet(v) {
+    try { localStorage.setItem(TOKEN_KEY, v); }
+    catch (e) { try { sessionStorage.setItem(TOKEN_KEY, v); } catch (e2) {} }
+  }
+  function tokenClear() {
+    try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  }
+
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
@@ -25,7 +45,7 @@
     // or it lacks the required grant.
     tryLoad(function (ok) {
       if (!ok) {
-        var stored = sessionStorage.getItem(TOKEN_KEY);
+        var stored = tokenGet();
         if (stored) {
           state.token = stored;
           tryLoad();
@@ -50,6 +70,8 @@
     if (staffDirBtn) staffDirBtn.addEventListener('click', function () { renderStaffDirectory(); });
     var authorityBtn = document.getElementById('admin-authority-register-btn');
     if (authorityBtn) authorityBtn.addEventListener('click', function () { renderAuthorityRegister(); });
+    var accessBtn = document.getElementById('admin-staff-access-btn');
+    if (accessBtn) accessBtn.addEventListener('click', function () { renderStaffAccess(); });
   }
 
   function esc(s) {
@@ -76,25 +98,112 @@
   // so name the account, name the roles that would work, and say the
   // token is not the intended answer for a person who already has an
   // account.
+  // The first-admin escape from the deadlock: no SYSADMIN or EXE can be
+  // granted without Manage Users, which only they hold. The server
+  // refuses this the moment one exists, so the button simply disappears
+  // after the first use.
+  function offerBootstrap(who) {
+    var gate = document.getElementById('admin-gate');
+    if (!gate || document.getElementById('admin-bootstrap')) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'admin-bootstrap';
+    wrap.style.cssText = 'margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,162,74,.35);';
+    wrap.innerHTML = '<p style="margin:0 0 10px;font-size:.9rem;">If no one administers this institution yet, '
+      + 'you can take that authority now as the account already signed in. This closes permanently '
+      + 'once one System Administrator exists.</p>'
+      + '<button type="button" class="btn-gold" id="admin-bootstrap-btn" style="width:100%;">'
+      + 'Make ' + esc(who) + ' the System Administrator</button>'
+      + '<div class="admin-gate-error" id="admin-bootstrap-msg"></div>';
+    gate.appendChild(wrap);
+    document.getElementById('admin-bootstrap-btn').addEventListener('click', function (b) {
+      var btn = document.getElementById('admin-bootstrap-btn');
+      var msg = document.getElementById('admin-bootstrap-msg');
+      btn.disabled = true; msg.textContent = 'Granting…';
+      fetch('/api/portal/admin/staff', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'bootstrap-sysadmin' }),
+      }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+        .then(function (r) {
+          if (!r.ok) { btn.disabled = false; msg.textContent = r.d.error || 'That did not go through.'; return; }
+          msg.textContent = 'Granted. Reloading…';
+          window.location.reload();
+        })
+        .catch(function () { btn.disabled = false; msg.textContent = 'Could not reach the portal.'; });
+    });
+  }
+
+  // Whether the break-glass credential exists at all.
+  //
+  // "That token was rejected" has two causes that look identical from the
+  // gate and need opposite fixes: the deployment holds a different token,
+  // or it holds none, in which case every token on earth is rejected and
+  // no amount of retyping will ever work. An hour was lost to exactly
+  // that ambiguity here. A signed-in staff session already authorises the
+  // readiness report, so the page can answer its own question instead of
+  // asking somebody to go and look.
+  function reportTokenPresence() {
+    var gate = document.getElementById('admin-gate');
+    if (!gate || document.getElementById('admin-tokenstate')) return;
+    fetch('/api/portal/readiness', { headers: { accept: 'application/json' } })
+      .then(function (res) { return res.json().then(function (d) { return { status: res.status, d: d }; }); })
+      .then(function (r) {
+        var missing = null;
+        if (r.d && r.d.configured === false) {
+          missing = true;                       // the endpoint says so outright
+        } else if (r.d && Array.isArray(r.d.secrets)) {
+          var row = r.d.secrets.filter(function (s) { return s.name === 'PORTAL_SYSADMIN_TOKEN'; })[0];
+          if (row) missing = !row.set;
+        }
+        if (missing !== true) return;           // set, or unknowable — say nothing rather than guess
+        var note = document.createElement('div');
+        note.id = 'admin-tokenstate';
+        note.className = 'admin-gate-error';
+        note.style.cssText = 'margin-top:12px;text-align:left;';
+        note.textContent = 'PORTAL_SYSADMIN_TOKEN is not set on this deployment, so the box above '
+          + 'will reject every token including the correct one. Set it in Cloudflare Pages → Settings → '
+          + 'Variables and secrets, then redeploy — a secret only reaches a new deployment.';
+        gate.appendChild(note);
+      })
+      .catch(function () { /* diagnosis is a courtesy; never let it break the gate */ });
+  }
+
   function explainWhyLocked() {
     fetch('/api/portal/staff/me', { headers: { accept: 'application/json' } })
       .then(function (res) { return res.ok ? res.json() : null; })
       .then(function (me) {
-        if (!me || !me.staff) { showGate(); return; }
+        // Two failures wore the same face — "not signed in at all" and
+        // "signed in but without the grant" — and they need opposite
+        // fixes. Say which one this is, in the first line, every time.
+        if (!me || !me.staff) {
+          showGate('NOT SIGNED IN in this browser. No staff session was found, so the token below '
+            + 'is the only way in. If you believe you signed in, you did it in a different browser '
+            + 'or the session has expired — sign in again at /portal/staff/login/, then reload this page.');
+          return;
+        }
         var codes = (me.roles || []).map(function (r) { return r.roleCode; });
         var who = me.staff.fullName || 'You';
+        // If nobody administers this institution yet, the person already
+        // signed in can claim it — see the bootstrap note in
+        // functions/api/portal/admin/staff.js. Offered rather than done
+        // automatically, so it is a deliberate act with a name against it.
+        offerBootstrap(who);
+        reportTokenPresence();
         showGate(
-          who + ' is signed in' + (codes.length ? ' as ' + codes.join(', ') : ' with no active role') +
-          ', which does not include Manage Users. This page needs a Head of Schools (EXE) or ' +
-          'System Administrator (SYSADMIN) account. Ask one of them to grant your account that role, ' +
-          'or sign in as one — the token below is only for before any account exists.'
+          'SIGNED IN as ' + who + ', ' + (codes.length ? 'holding ' + codes.join(', ') : 'holding NO active role')
+          + '. That does not include Manage Users, which this page needs. '
+          + (codes.length
+              ? 'Grant this account SYSADMIN in Staff Directory (unlock with the token below once to do it).'
+              : 'The role grant did not save — this account has no active role at all. '
+                + 'Unlock with the token below, open Staff Directory, find this account and grant SYSADMIN.')
+          + ' The token is only meant for before any account exists.'
         );
       })
       .catch(function () { showGate(); });
   }
 
   function lock() {
-    sessionStorage.removeItem(TOKEN_KEY);
+    tokenClear();
     state.token = null;
     state.offices = [];
     state.selected = null;
@@ -107,8 +216,13 @@
     if (!val) return;
     state.token = val;
     tryLoad(function (ok) {
-      if (ok) { sessionStorage.setItem(TOKEN_KEY, val); }
-      else { state.token = null; showGate('That token was rejected. Check it and try again.'); }
+      if (ok) { tokenSet(val); }
+      else {
+        state.token = null;
+        showGate('That token was rejected. Check it and try again.');
+        // The moment it matters most: say whether any token could work.
+        reportTokenPresence();
+      }
     });
   }
 
@@ -179,6 +293,193 @@
     if (!el) return;
     el.textContent = msg || '';
     el.className = 'admin-form-status' + (msg ? (ok ? ' is-ok' : ' is-err') : '');
+  }
+
+  // ================================================================
+  // Staff Access — check an account's state, and re-issue its
+  // activation link.
+  //
+  // `create-login` was reachable from exactly one place: the New Staff
+  // form, as the last step of creating somebody. For a staff member who
+  // already existed there was no screen at all, so the only way to give
+  // them a fresh link was a hand-written curl carrying the sysadmin
+  // token. That is precisely the case that arises most — a link used, a
+  // link expired, a link superseded — and it is the case that had no
+  // button. This is that button.
+  //
+  // It reads `login-status` first and says plainly what the account's
+  // state is, because "the link does not work" has several quite
+  // different causes and only one of them is answered by issuing another
+  // link. Someone who has already set a password needs to be told to
+  // sign in, not handed a new link.
+  // ================================================================
+  var ACCESS_STATE_COPY = {
+    'active': ['Active', 'The password is set. This person should sign in — a new link is not needed, and issuing one does not disturb the password they already have.'],
+    'active-with-open-reset': ['Active, with a reset outstanding', 'The password is set and a reset link is also open. Either will let them in.'],
+    'awaiting-activation': ['Waiting to be activated', 'A live link is outstanding. It is the only one that works — every earlier link is already dead.'],
+    'link-expired': ['Link expired', 'The link passed its expiry. Issue a fresh one below.'],
+    'link-used-or-superseded': ['No live link', 'No password and no live link: the link was used, or replaced by a newer one that was never opened. Issue a fresh one below.'],
+    'no-account': ['No login yet', 'No login has ever been created for this staff member. Issuing one below creates it.'],
+  };
+
+  function accessCard(staff) {
+    return '<div class="portal-child-card">'
+      + '<div class="portal-child-head"><h2>Staff Access</h2>'
+      + '<div class="meta">Check whether an account is active, and issue a fresh activation link. Issuing a link cancels every earlier one &mdash; the account holds a single token, so always send the newest.</div></div>'
+      + '<form class="admin-form" id="access-find-form"><div class="admin-form-grid">'
+      + '<div class="admin-field"><label>Find a staff member</label>'
+      + '<input name="q" placeholder="Name or Staff ID" value="' + esc(staff || '') + '" autocomplete="off" /></div>'
+      + '</div><div class="admin-form-actions"><button type="submit" class="btn-outline">Search</button>'
+      + '<span class="admin-form-status" id="access-status"></span></div></form>'
+      + '<div id="access-results" style="padding:0 26px 20px;"></div>'
+      + '</div>';
+  }
+
+  function renderStaffAccess(prefill) {
+    var el = document.getElementById('admin-right-panel');
+    el.innerHTML = accessCard(prefill);
+    document.getElementById('access-find-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      accessSearch(new FormData(e.target).get('q'));
+    });
+    if (prefill) accessSearch(prefill);
+  }
+
+  function accessSearch(q) {
+    q = (q || '').toString().trim();
+    // An empty search lists everybody — the endpoint already treats a
+    // missing q that way. Refusing it left no way to answer "who exists
+    // at all?", which is exactly the question a search returning nothing
+    // raises, and the answer "nobody matched" was indistinguishable from
+    // "there are no staff records yet".
+    statusEl('access-status', 'Searching…', true);
+    apiGet('staff', q ? { q: q } : {}).then(function (r) {
+      if (!r.ok) { statusEl('access-status', (r.data && r.data.error) || 'Could not search.', false); return; }
+      var list = (r.data && r.data.staff) || [];
+      statusEl('access-status', list.length
+        ? list.length + (q ? ' found' : ' staff on record')
+        : (q ? 'Nobody matched that. Search again with nothing typed to list everyone.'
+             : 'There are no staff records at all yet. Use "+ New Staff & Login" to create one.'),
+        Boolean(list.length));
+      var out = document.getElementById('access-results');
+      if (!list.length) { out.innerHTML = ''; return; }
+      out.innerHTML = list.map(function (s) {
+        return '<div class="admin-office-row" data-access-row="' + esc(s.staffNo) + '" style="display:block;">'
+          + '<strong>' + esc(s.fullName) + '</strong> &nbsp;<code>' + esc(s.staffNo) + '</code>'
+          + '<div class="meta">' + esc(s.positionTitle || '') + (s.officeName ? ' &middot; ' + esc(s.officeName) : '')
+          + ' &middot; ' + esc(s.status) + (s.email ? ' &middot; ' + esc(s.email) : ' &middot; no email on file') + '</div>'
+          // The login address is shown and editable right here, because
+          // without one this person can never reset their own password
+          // and every future lockout comes back to this desk.
+          + '<div class="admin-field" style="margin-top:10px;max-width:420px;">'
+          + '<label>Login email &mdash; where resets and sign-in codes go</label>'
+          + '<input type="email" value="' + esc(s.email || '') + '" placeholder="none on file"'
+          + ' data-access-email="' + esc(s.staffNo) + '" /></div>'
+          + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-check="' + esc(s.staffNo) + '">Check access</button>'
+          + ' <button type="button" class="btn-outline" data-access-saveemail="' + esc(s.staffNo) + '">Save email</button>'
+          + ' <span class="admin-form-status" data-access-emailstatus="' + esc(s.staffNo) + '"></span></div>'
+          + (s.email ? '' : '<div class="meta" style="margin-top:6px;">No address on file &mdash; this person cannot reset their own password until one is set.</div>')
+          + '<div data-access-detail="' + esc(s.staffNo) + '"></div>'
+          + '</div>';
+      }).join('');
+      out.querySelectorAll('[data-access-check]').forEach(function (b) {
+        b.addEventListener('click', function () { accessCheck(b.getAttribute('data-access-check')); });
+      });
+      out.querySelectorAll('[data-access-saveemail]').forEach(function (b) {
+        b.addEventListener('click', function () { accessSaveEmail(b.getAttribute('data-access-saveemail'), b); });
+      });
+    });
+  }
+
+  function accessSaveEmail(staffNo, btn) {
+    var input = document.querySelector('[data-access-email="' + staffNo + '"]');
+    var st = document.querySelector('[data-access-emailstatus="' + staffNo + '"]');
+    if (!input) return;
+    var value = input.value.trim();
+    if (!value && !window.confirm('Remove the login address from ' + staffNo + '?\n\nThey will no longer be able to reset their own password.')) return;
+    btn.disabled = true;
+    if (st) { st.textContent = 'Saving…'; st.className = 'admin-form-status'; }
+    apiPost('set-staff-email', { staffNo: staffNo, email: value }).then(function (r) {
+      btn.disabled = false;
+      if (!r.ok) {
+        if (st) { st.textContent = (r.data && r.data.error) || 'Could not save.'; st.className = 'admin-form-status is-err'; }
+        return;
+      }
+      if (st) {
+        st.textContent = r.data.email
+          ? (r.data.replaced ? 'Replaced. They can now reset their own password.' : 'Saved. They can now reset their own password.')
+          : 'Removed.';
+        st.className = 'admin-form-status is-ok';
+      }
+    });
+  }
+
+  function accessCheck(staffNo) {
+    var box = document.querySelector('[data-access-detail="' + staffNo + '"]');
+    if (!box) return;
+    box.innerHTML = '<div class="meta" style="margin-top:10px;">Checking…</div>';
+    apiPost('login-status', { staffNo: staffNo }).then(function (r) {
+      if (!r.ok) {
+        box.innerHTML = '<div class="meta" style="margin-top:10px;">' + esc((r.data && r.data.error) || 'Could not check.') + '</div>';
+        return;
+      }
+      var d = r.data || {};
+      var copy = ACCESS_STATE_COPY[d.state] || [d.state, d.advice || ''];
+      var expires = d.linkExpires ? new Date(d.linkExpires).toLocaleString('en-GB') : null;
+      box.innerHTML = '<div class="portal-empty" style="margin-top:10px;text-align:left;">'
+        + '<strong>' + esc(copy[0]) + '</strong><br>' + esc(copy[1])
+        + (expires ? '<br><span class="meta">Link expires ' + esc(expires) + '</span>' : '')
+        + (d.lockedUntil ? '<br><span class="meta">Locked until ' + esc(new Date(d.lockedUntil).toLocaleString('en-GB')) + '</span>' : '')
+        + '<div style="margin-top:12px;"><button type="button" class="btn-gold" data-access-issue="' + esc(staffNo) + '">Issue a fresh activation link</button>'
+        + ' <span class="admin-form-status" data-access-issue-status="' + esc(staffNo) + '"></span></div>'
+        + '<div data-access-link="' + esc(staffNo) + '"></div></div>';
+      var btn = box.querySelector('[data-access-issue]');
+      if (btn) btn.addEventListener('click', function () { accessIssue(staffNo, btn); });
+    });
+  }
+
+  function accessIssue(staffNo, btn) {
+    // Named plainly, because it is not reversible in the way people
+    // expect: the previous link stops working the instant this returns.
+    if (!window.confirm('Issue a fresh activation link for ' + staffNo + '?\n\nAny link already sent to this person will stop working immediately.')) return;
+    btn.disabled = true;
+    var st = document.querySelector('[data-access-issue-status="' + staffNo + '"]');
+    if (st) { st.textContent = 'Issuing…'; st.className = 'admin-form-status'; }
+    apiPost('create-login', { staffNo: staffNo }).then(function (r) {
+      btn.disabled = false;
+      var out = document.querySelector('[data-access-link="' + staffNo + '"]');
+      if (!r.ok || !r.data || !r.data.activationLink) {
+        if (st) { st.textContent = (r.data && r.data.error) || 'Could not issue a link.'; st.className = 'admin-form-status is-err'; }
+        return;
+      }
+      if (st) { st.textContent = 'Issued.'; st.className = 'admin-form-status is-ok'; }
+      // The endpoint returns a path. What gets sent to a person has to be
+      // the whole address, or they cannot open it — so it is assembled
+      // here rather than left for whoever is copying it to remember.
+      var full = window.location.origin + r.data.activationLink;
+      var days = r.data.expiresInDays;
+      // .admin-field so the box takes the panel's own ink and ground — a
+      // bare input outside it renders as a white slab on the dark card.
+      out.innerHTML = '<div class="admin-field" style="margin-top:12px;">'
+        + '<label>Send this to ' + esc(staffNo) + '</label>'
+        + '<input readonly value="' + esc(full) + '" data-access-copy="' + esc(staffNo) + '" style="font-family:monospace;font-size:12px;" />'
+        + '<div style="margin-top:8px;"><button type="button" class="btn-outline" data-access-copybtn="' + esc(staffNo) + '">Copy</button>'
+        + ' <span class="meta">Valid ' + esc(days || 7) + ' days, single use'
+        + (r.data.alreadyHadPassword ? '. This account already had a password — the old one still works until this link is opened.' : '.')
+        + ' Any earlier link is now dead.</span></div></div>';
+      var input = out.querySelector('[data-access-copy]');
+      var copyBtn = out.querySelector('[data-access-copybtn]');
+      if (copyBtn) copyBtn.addEventListener('click', function () {
+        input.select();
+        // execCommand is deprecated but is the only path that works
+        // without a secure-context clipboard permission prompt; the
+        // async API is tried first and this catches the rest.
+        var done = function () { copyBtn.textContent = 'Copied'; setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(input.value).then(done, function () { try { document.execCommand('copy'); done(); } catch (err) {} });
+        } else { try { document.execCommand('copy'); done(); } catch (err) {} }
+      });
+    });
   }
 
   // ---- Office detail (selected office) ----

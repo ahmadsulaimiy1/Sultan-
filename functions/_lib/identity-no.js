@@ -213,15 +213,25 @@ function formatYYMMDD(date) {
 //          (staff_identity_seq — sql/schema.sql), not the previous
 //          COUNT(*)+1 pattern, which had a genuine race condition under
 //          concurrent requests.
-// NOTE: the 'CEO' and 'BOT' values below are stable 3-letter identity-
-// number codes, not display labels — already-issued numbers like
-// SHRS-CEO-000001/SHRS-BOT-000001 depend on them and they are
-// deliberately NOT renamed. The office they represent is now titled
-// "Head of Schools / Administrator" (slug 'executive') and "Board of
-// Governors" (slug 'board-of-trustees') respectively wherever a human
-// sees the name.
+// ONE FORMAT FOR EVERY MEMBER OF STAFF.
+//
+// Two seats — the top executive office and the board — used to take a
+// short reserved number (SHRS-CEO-001, SHRS-BOT-001) on the reasoning
+// that they are permanent seats rather than join-dated appointments. In
+// practice it produced two classes of credential: the Head of Schools
+// carried SHRS-BOT-001 while the Registrar carried
+// SHRS-HQ-REG-140826-000001, and the short one reads as an afterthought
+// beside it. The institution has settled the question the other way —
+// every member of staff, from the Board to the newest teacher, carries
+// SHRS-<UNIT>-<OFFICE>-<DDMMYY>-<seq6>.
+//
+// These 3-letter values are stable identity codes, not display labels.
+// 'HSA' replaces the former 'CEO' because the office itself was renamed
+// Head of Schools & Administrator; 'GOV' covers the Board of Governors
+// and its committees, which previously collapsed into 'BOT' for both the
+// unit and the office segment and read as SHRS-BOT-BOT-…
 const OFFICE_CODE_BY_SLUG = {
-  'executive': 'CEO',
+  'executive': 'HSA',
   'registrar': 'REG',
   'finance': 'FIN',
   'principal-royal-college': 'PRN',
@@ -230,7 +240,7 @@ const OFFICE_CODE_BY_SLUG = {
   'mudeer': 'MDR',
   'student-affairs': 'SAO',
   'digital-services': 'ICT', // ICT Office's real slug
-  'board-of-trustees': 'BOT',
+  'board-of-trustees': 'GOV',
   'management-council': 'MGT',
   'strategic-planning': 'SPL',
   'quality-assurance': 'QAS',
@@ -269,7 +279,7 @@ function unitCodeFor(row) {
 
 async function officeCodeFor(sql, staffId, row) {
   if (row.office_slug) {
-    if (row.office_slug.startsWith('committee-')) return 'BOT';
+    if (row.office_slug.startsWith('committee-')) return 'GOV';
     if (OFFICE_CODE_BY_SLUG[row.office_slug]) return OFFICE_CODE_BY_SLUG[row.office_slug];
   }
   if (row.department_id) return 'EDU';
@@ -317,23 +327,9 @@ async function loadStaffIdentityRow(sql, staffId) {
 // shared staff_identity_seq, so the Board and the CEO office each get
 // their own gapless 001, 002, ... run instead of borrowing numbers out of
 // the general staff sequence.
-const RESERVED_OFFICE_PREFIX = { BOT: 'SHRS-BOT-', CEO: 'SHRS-CEO-' };
-
-async function generateReservedStaffIdentityNo(sql, prefix) {
-  const countRes = await sql`SELECT count(*)::int AS n FROM staff WHERE identity_no LIKE ${prefix + '%'}`;
-  const seq = (countRes.rows[0].n || 0) + 1;
-  return `${prefix}${String(seq).padStart(3, '0')}`;
-}
-
 async function generateAndStoreStaffIdentityNo(sql, staffId, row) {
   const unit = unitCodeFor(row);
   const office = await officeCodeFor(sql, staffId, row);
-  const reservedPrefix = RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office];
-  if (reservedPrefix) {
-    const identityNo = await generateReservedStaffIdentityNo(sql, reservedPrefix);
-    await sql`UPDATE staff SET identity_no = ${identityNo} WHERE id = ${staffId}`;
-    return identityNo;
-  }
   const joinDate = formatJoinDate(row.date_joined);
   if (!joinDate) return null;
   const seqRes = await sql`SELECT nextval('staff_identity_seq') AS seq`;
@@ -370,9 +366,6 @@ export async function buildStaffIdentityNo(sql, { officeSlug, institutionName, d
   const office = row.office_slug && OFFICE_CODE_BY_SLUG[row.office_slug]
     ? OFFICE_CODE_BY_SLUG[row.office_slug]
     : 'STF';
-  const reservedPrefix = RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office];
-  if (reservedPrefix) return generateReservedStaffIdentityNo(sql, reservedPrefix);
-
   const joinDate = formatJoinDate(dateJoined);
   if (!joinDate) return null;
   const seqRes = await sql`SELECT nextval('staff_identity_seq') AS seq`;
@@ -405,9 +398,10 @@ export async function ensureStaffIdentityNo(sql, staffId) {
 export async function regenerateStaffIdentityNo(sql, staffId) {
   const row = await loadStaffIdentityRow(sql, staffId);
   if (!row) return null;
-  const unit = unitCodeFor(row);
-  const office = await officeCodeFor(sql, staffId, row);
-  const isReserved = Boolean(RESERVED_OFFICE_PREFIX[unit] || RESERVED_OFFICE_PREFIX[office]);
-  if (!isReserved && !row.date_joined) return null;
+  // Every number is join-dated now, so a record with no join date on
+  // file cannot be issued one — there is no reserved form left to fall
+  // back to. Returning null leaves the record untouched rather than
+  // inventing a date.
+  if (!row.date_joined) return null;
   return generateAndStoreStaffIdentityNo(sql, staffId, row);
 }

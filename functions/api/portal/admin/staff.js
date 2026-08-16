@@ -30,8 +30,17 @@
 //                             at this staff member's own login (see staff/login.js); omitting it
 //                             leaves password-only login unchanged.
 //   update-staff-status   — { staffNo, status } (active | suspended | archived)
+//   set-staff-email       — { staffNo, email } — the LOGIN address: where password resets and
+//                            sign-in codes are delivered. Not update-staff-profile's publicEmail,
+//                            which is the directory address. Pass "" to remove it.
 //   create-login          — { staffNo } -> { activationLink }, same admin-mediated model as
-//                            create-student-login.js — staff never choose or see their own password
+//                            create-student-login.js — staff never choose or see their own password.
+//                            Issuing a link CANCELS any link issued before it: the row holds one
+//                            token. Always relay the newest.
+//   login-status          — { staffNo } -> { state, advice } — whether the account has a password,
+//                            whether a live link is outstanding and when it expires. Never returns
+//                            the token or the hash. This is what to call when someone reports that
+//                            their link does not work.
 //   grant-role            — { staffNo, roleCode, institutionName?, officeName?, grantedByStaffNo?, reason? }
 //   revoke-role           — { staffRoleId, revokedByStaffNo?, reason? }
 //   assign-class          — { staffNo, institutionName, className, subject?, assignedByStaffNo?, reason? }
@@ -349,13 +358,107 @@ export async function onRequestPost({ request, env }) {
   if (!sql) return json({ error: 'No database is linked yet.' }, 500);
   const auth = await resolveAuth(request, env);
   if (!auth) return json({ error: 'Not signed in, and no valid system administrator token was supplied.' }, 403);
+
+  const body = await readJsonBody(request);
+  const action = body && body.action;
+
+  // FIRST-ADMIN BOOTSTRAP.
+  //
+  // Granting the first SYSADMIN required Manage Users, which only a
+  // SYSADMIN or EXE holds — so with no such account in existence the only
+  // way in was the bearer token, and if that token was unset, mistyped or
+  // not yet redeployed, the system was closed to everybody. That is a
+  // deadlock, and it is the state this school was actually left in: a
+  // real signed-in officer looking at a token box that would not open.
+  //
+  // This opens once and closes for good. It is safe because of what it
+  // does NOT do: it grants nothing to a stranger. A staff account cannot
+  // be self-registered — every one is created either by the bearer token
+  // or by an existing Manage-Users holder — so anybody able to sign in at
+  // all was already admitted deliberately. The moment one active
+  // SYSADMIN or EXE grant exists anywhere, this path refuses forever and
+  // the ordinary grant-role route is the only way.
+  if (action === 'bootstrap-sysadmin') {
+    if (auth.method !== 'staff_session') {
+      return json({ error: 'This is for a signed-in staff account. Sign in at /portal/staff/login/ first.' }, 403);
+    }
+    // SECOND CONDITION, added on review of the first version of this path.
+    //
+    // "No usable administrator" alone is too wide a door. A privileged
+    // record that has been created but not yet activated — an EXE issued
+    // an activation link this morning — satisfies it, and in a school with
+    // fifty signed-in staff that would let any one of them take SYSADMIN
+    // during the hours before the real holder sets a password. That is a
+    // privilege-escalation window, and it is not what this path is for.
+    //
+    // So the claimant must also be the ONLY person who can sign in at all.
+    // That is the true bootstrap condition: an institution whose staff are
+    // already using the portal is not un-administered, it is misconfigured,
+    // and it should recover through PORTAL_SYSADMIN_TOKEN with a human
+    // deciding — not through a button any of them can press.
+    const others = await sql`
+      SELECT count(*)::int AS n
+      FROM staff_accounts
+      WHERE password_hash IS NOT NULL AND staff_id <> ${auth.staffId}`;
+    if (others.rows[0].n > 0) {
+      return json({ error: 'This is closed — ' + others.rows[0].n + ' other staff account'
+        + (others.rows[0].n === 1 ? '' : 's') + ' can already sign in, so this institution is not '
+        + 'un-administered. Recover through the system administrator token, or ask a colleague who '
+        + 'holds Manage Users to grant your account the role.' }, 409);
+    }
+    // Naming the holders matters more than it looks. The grant can land on
+    // a different staff record than the one its owner later signs in as —
+    // a second record made during a first attempt, or the wrong row picked
+    // in the directory — and then the refusal reads as "someone else has
+    // it" when in truth nobody can use it. The names turn a dead end into
+    // an instruction. It is disclosed only to a signed-in staff member,
+    // and it is who administers their own institution.
+    // The question is not "does an administrator exist" but "can anybody
+    // actually sign in as one". A seeded EXE record with no password and
+    // no email on file is not an administrator; it is a name in a table.
+    // Refusing on its account left the institution with no one able to
+    // administer it and no way to appoint anybody — which is precisely
+    // the deadlock this whole path exists to end.
+    //
+    // A holder counts as usable if it has a password (it can sign in) or
+    // an email (it can reset its way in). Only when not one holder has
+    // either is the seat genuinely empty.
+    const held = await sql`
+      SELECT s.full_name, s.staff_no, s.email, sr.role_code,
+             (sa.password_hash IS NOT NULL) AS has_password,
+             (s.email IS NOT NULL AND btrim(s.email) <> '') AS has_email
+      FROM staff_roles sr
+      JOIN staff s ON s.id = sr.staff_id
+      LEFT JOIN staff_accounts sa ON sa.staff_id = s.id
+      WHERE sr.role_code IN ('SYSADMIN', 'EXE') AND sr.is_active = true AND sr.revoked_at IS NULL
+      ORDER BY s.full_name`;
+    const usable = held.rows.filter((r) => r.has_password || r.has_email);
+    if (usable.length) {
+      const who = usable.map((r) =>
+        `${r.full_name} (${r.staff_no}, ${r.role_code}${r.email ? ', ' + r.email : ''})`).join('; ');
+      return json({ error: 'This is closed — the institution already has: ' + who
+        + '. Sign in as that account and grant your own the role.' }, 409);
+    }
+    // Recorded on the grant: which unusable holders were passed over, and
+    // why that was legitimate. An auditor should not have to reconstruct
+    // it later from a bare "first admin" note.
+    const passedOver = held.rows.map((r) => `${r.full_name} (${r.staff_no}, ${r.role_code})`).join('; ') || 'none';
+    await sql`
+      INSERT INTO staff_roles (staff_id, role_code, is_active, granted_at)
+      VALUES (${auth.staffId}, 'SYSADMIN', true, now())`;
+    await logStaffEvent(sql, {
+      actorStaffId: auth.staffId, eventType: 'sensitive_action',
+      targetType: 'staff', targetId: auth.staffId,
+      reason: 'First-admin bootstrap: no SYSADMIN or EXE holder could sign in. Passed over: ' + passedOver,
+      metadata: { action: 'bootstrap-sysadmin', roleCode: 'SYSADMIN', passedOver },
+    });
+    return json({ ok: true, staffId: auth.staffId, roleCode: 'SYSADMIN' });
+  }
+
   if (auth.method === 'staff_session') {
     const err = await checkMuGrant(sql, auth.staffId);
     if (err) return json({ error: err }, 403);
   }
-
-  const body = await readJsonBody(request);
-  const action = body && body.action;
   // A real signed-in session already tells us who's acting — prefer
   // that over the optional *ByStaffNo body params (kept only for the
   // bearer-token path, which has no session identity to draw from).
@@ -440,13 +543,20 @@ export async function onRequestPost({ request, env }) {
           UPDATE staff SET full_name = ${body.fullName}, preferred_name = ${body.preferredName || null},
             office_id = ${officeId}, department_id = ${departmentId}, position_title = ${body.positionTitle || null},
             reports_to_staff_id = ${reportsToId}, institution_id = ${institutionId},
-            date_joined = ${body.dateJoined || null}, email = COALESCE(${email}, email), updated_at = now()
+            date_joined = ${body.dateJoined || null}, email = COALESCE(${email}, email),
+            identity_no = COALESCE(identity_no, staff_no), updated_at = now()
           WHERE id = ${staffId}`;
       } else {
+        // identity_no is stored with staff_no, not left for a later lazy
+        // pass to fill in. When it was left null the two numbers drifted:
+        // one record carried staff_no SHR-STF-0001 and identity_no
+        // SHR-STF-2026-000001 — two different numbers for one person,
+        // and no way to tell which the certificate would print. They are
+        // the same number and are now written together, once.
         const created = await sql`
-          INSERT INTO staff (staff_no, full_name, preferred_name, office_id, department_id, position_title,
+          INSERT INTO staff (staff_no, identity_no, full_name, preferred_name, office_id, department_id, position_title,
                               reports_to_staff_id, institution_id, date_joined, email)
-          VALUES (${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
+          VALUES (${staffNo}, ${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
                   ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
           RETURNING id`;
         staffId = created.rows[0].id;
@@ -495,11 +605,122 @@ export async function onRequestPost({ request, env }) {
         return json({ error: 'No staff member found with that Staff ID.' }, 404);
       }
       const token = generateToken();
+      const prior = await sql`SELECT password_hash IS NOT NULL AS had_password FROM staff_accounts WHERE staff_id = ${staffId}`;
       await sql`
         INSERT INTO staff_accounts (staff_id, reset_token, reset_token_expires)
         VALUES (${staffId}, ${token}, now() + make_interval(days => ${ACTIVATION_TOKEN_TTL_DAYS}))
         ON CONFLICT (staff_id) DO UPDATE SET reset_token = EXCLUDED.reset_token, reset_token_expires = EXCLUDED.reset_token_expires`;
-      return json({ ok: true, staffId, activationLink: '/portal/staff/set-password/?token=' + token });
+      // Issuing a link supersedes any link issued before it — the row holds
+      // exactly one token. Whoever is relaying it needs to know that, or an
+      // older link still sitting in somebody's inbox becomes a support call
+      // that reports itself as "invalid" with no explanation.
+      return json({
+        ok: true,
+        staffId,
+        activationLink: '/portal/staff/set-password/?token=' + token,
+        expiresInDays: ACTIVATION_TOKEN_TTL_DAYS,
+        supersededPreviousLink: true,
+        alreadyHadPassword: !!(prior.rows[0] && prior.rows[0].had_password),
+      });
+    }
+
+    // The login email — the address the portal actually writes to.
+    //
+    // It could only ever be set at create-staff. There was no way to add
+    // one afterwards, or to correct a typo in one, which meant a staff
+    // member created without an address could never receive an OTP and
+    // could never reset their own password: they were dependent on the
+    // ICT Office issuing links by hand, permanently.
+    //
+    // Not to be confused with update-staff-profile's publicEmail, which
+    // is the directory address printed for the public. This one is a
+    // credential: it is where password resets and sign-in codes go, so
+    // changing it is a sensitive action and is logged as one.
+    if (action === 'set-staff-email') {
+      if (!body.staffNo) {
+        return json({ error: 'staffNo is required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      const raw = body.email === null ? '' : String(body.email ?? '').trim().toLowerCase();
+      // Deliberately permissive but not absent: enough to catch a typed
+      // mistake, not so strict that a legitimate address is refused.
+      if (raw && !/^[^@\s]+@[^@\s.]+(\.[^@\s.]+)+$/.test(raw)) {
+        return json({ error: 'That does not look like an email address.' }, 400);
+      }
+      // The column carries no unique constraint, so it is enforced here.
+      // Two staff sharing a login address would make a reset request
+      // ambiguous — forgot-password matches on the address alone.
+      if (raw) {
+        const clash = await sql`
+          SELECT staff_no FROM staff WHERE lower(email) = ${raw} AND id <> ${staffId}`;
+        if (clash.rows.length) {
+          return json({ error: `That address is already on ${clash.rows[0].staff_no}'s record. A login address must belong to one person.` }, 409);
+        }
+      }
+      const before = await sql`SELECT email FROM staff WHERE id = ${staffId}`;
+      const had = before.rows[0] && before.rows[0].email;
+      await sql`
+        UPDATE staff SET email = ${raw || null},
+          -- a changed address changes where sign-in codes are delivered,
+          -- so any trusted-device cookie issued against the old one must
+          -- stop being honoured. Same reasoning as set-password.js.
+          trust_version = trust_version + 1,
+          updated_at = now()
+        WHERE id = ${staffId}`;
+      await logStaffEvent(sql, {
+        actorStaffId: actingStaffId, eventType: 'sensitive_action',
+        targetType: 'staff', targetId: staffId,
+        reason: body.reason || null,
+        metadata: { action: 'set-staff-email', from: had || null, to: raw || null },
+      });
+      return json({ ok: true, staffId, staffNo: body.staffNo, email: raw || null,
+        replaced: Boolean(had), canSelfServe: Boolean(raw) });
+    }
+
+    // Answers "what state is this account actually in?" without ever
+    // disclosing the token or the hash. Before this existed, a staff member
+    // reporting "the link does not work" could only be guessed at: a used
+    // link, a superseded link and a link that never existed all fail
+    // identically at set-password.js, which matches on the token alone and
+    // so cannot tell them apart. Diagnosis belongs on the side that knows
+    // whose account it is.
+    if (action === 'login-status') {
+      if (!body.staffNo) {
+        return json({ error: 'staffNo is required.' }, 400);
+      }
+      const staffId = await staffIdByNo(sql, body.staffNo);
+      if (!staffId) {
+        return json({ error: 'No staff member found with that Staff ID.' }, 404);
+      }
+      const r = await sql`
+        SELECT password_hash IS NOT NULL AS has_password,
+               reset_token IS NOT NULL AS has_live_link,
+               reset_token_expires,
+               reset_token_expires IS NOT NULL AND reset_token_expires < now() AS link_expired,
+               failed_attempts, locked_until
+        FROM staff_accounts WHERE staff_id = ${staffId}`;
+      const a = r.rows[0];
+      if (!a) {
+        return json({ ok: true, staffId, state: 'no-account',
+          advice: 'No login has ever been created for this staff member. Run create-login.' });
+      }
+      const state = a.has_password
+        ? (a.has_live_link ? 'active-with-open-reset' : 'active')
+        : (a.has_live_link ? (a.link_expired ? 'link-expired' : 'awaiting-activation') : 'link-used-or-superseded');
+      const advice = {
+        'active': 'The password is already set. Sign in at /portal/staff/login/ — a new activation link is not needed.',
+        'active-with-open-reset': 'The password is set and a reset link is also open. Either will work.',
+        'awaiting-activation': 'A live link is outstanding. It is the only one that works; any earlier link is dead.',
+        'link-expired': 'The link has passed its expiry. Run create-login for a fresh one.',
+        'link-used-or-superseded': 'No live link and no password: the link was superseded by a newer one that was never used, or cleared. Run create-login.',
+      }[state];
+      return json({ ok: true, staffId, state, advice,
+        hasPassword: a.has_password, hasLiveLink: a.has_live_link,
+        linkExpires: a.reset_token_expires, linkExpired: a.link_expired,
+        failedAttempts: a.failed_attempts, lockedUntil: a.locked_until });
     }
 
     if (action === 'grant-role') {
@@ -888,7 +1109,7 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, create-login, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
+    return json({ error: 'Unknown action. Expected one of: create-office, create-department, create-staff, update-staff-status, update-staff-profile, set-staff-email, create-login, login-status, grant-role, revoke-role, assign-class, revoke-class-assignment, create-appointment, update-appointment, end-appointment, create-meeting, update-meeting, create-document, update-office-content, create-resolution, update-resolution, create-action-item, update-action-item, regenerate-identity-numbers.' }, 400);
   } catch (err) {
     console.error('portal admin staff error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

@@ -20,6 +20,7 @@
         + 'holding a certificate issued by the school, please contact the Registrar’s '
         + 'Office with the number and it will be resolved.',
       integrityFailed: 'Integrity check failed — this record does not match its cryptographic signature. Contact the Registrar.',
+      integrityPending: 'Record confirmed against the Registrar’s own file. The cryptographic signature check is not yet available on this deployment — that is a configuration gap, not a question about this document.',
       indexBadge: 'This is a Student ID, not a certificate number',
       indexNote: 'It identifies a student who holds the credentials below. Verify a single credential by its own certificate number.',
       unknownState: 'This record is in a state this page does not recognise — contact the Registrar’s Office',
@@ -44,6 +45,7 @@
         + 'غير صحيحة. فإن كنت تحمل شهادةً صادرةً عن المدرسة، فيُرجى مراجعة مكتب المسجِّل '
         + 'بهذا الرقم ليُعالَج الأمر.',
       integrityFailed: 'فشل فحص السلامة — لا يطابق هذا السجل توقيعه التشفيري. يرجى التواصل مع مكتب المسجّل.',
+      integrityPending: 'تم تأكيد هذا السجل مقابل ملف المسجِّل نفسه. فحص التوقيع التشفيري غير متاح بعد على هذا الإصدار — وهذه فجوة إعدادية، لا شكٌّ في هذه الوثيقة.',
       indexBadge: 'هذا رقم أكاديمي للطالب، وليس رقم شهادة',
       indexNote: 'يشير إلى طالب يحمل الشهادات المدرجة أدناه. للتحقق من شهادة بعينها، استخدم رقم الشهادة الخاص بها.',
       unknownState: 'هذا السجل في حالة لا تعرفها هذه الصفحة — يرجى التواصل مع مكتب المسجّل',
@@ -143,7 +145,15 @@
     }
     rows += field(t.issued, data.issuedAt);
     if (data.kind === 'stage_certificate' && data.issuedAtHijri) rows += field(t.hijri, data.issuedAtHijri);
-    if (data.kind === 'stage_certificate' && !integrityFailed) rows += field(t.integrity, t.integrityIntact);
+    // Three distinct facts, never collapsed into two: 'intact' (the signature
+    // was recomputed and matches), 'pending_signature' (record confirmed, the
+    // deployment simply lacks the key to recompute a signature at all — an
+    // operator gap, not a mark against the document), and integrityFailed
+    // (a real mismatch). Only the first two reach this line at all, since
+    // integrityFailed already earns the revoked-style badge above.
+    if (data.kind === 'stage_certificate' && !integrityFailed) {
+      rows += field(t.integrity, data.integrity === 'pending_signature' ? t.integrityPending : t.integrityIntact);
+    }
     if (isRevoked && data.revocationNote) rows += field(t.revokedNote, data.revocationNote);
 
     resultEl.innerHTML =

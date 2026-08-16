@@ -1,0 +1,50 @@
+name: Certificate presence audit — read-only, asks the public endpoint only
+
+# Forensic tool for the certificate cryptographic integrity review. Writes
+# NOTHING — no database write, no Cloudflare config, no re-import. It only
+# asks the live public verification endpoint, once per candidate sequence
+# number, whether ANY record exists — the same question a parent's browser
+# asks when they type a number in. See scripts/audit-certificate-presence.mjs
+# for exactly what it does and why the archive-barcode identifier shape was
+# chosen (it does not require knowing the programme code in advance).
+
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: 'Origin to audit'
+        type: string
+        default: 'https://shroyalschools.com'
+      from:
+        description: 'First sequence number to check'
+        type: string
+        default: '1'
+      to:
+        description: 'Last sequence number to check'
+        type: string
+        default: '120'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run presence audit against the live public endpoint
+        run: |
+          node scripts/audit-certificate-presence.mjs \
+            --base "${{ inputs.base }}" \
+            --from "${{ inputs.from }}" \
+            --to "${{ inputs.to }}" \
+            | tee /tmp/audit.log
+      - name: Publish to job summary
+        run: |
+          {
+            echo "## Certificate presence audit — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            echo '```'
+            cat /tmp/audit.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

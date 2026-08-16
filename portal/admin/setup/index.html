@@ -7,10 +7,10 @@
 <title>Database Setup — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link rel="stylesheet" href="/css/fonts.css">
-<link rel="stylesheet" href="/css/brand.css?v=b9bfd93fe9">
+<link rel="stylesheet" href="/css/brand.css?v=4242997740">
 <link rel="stylesheet" href="/css/portal.css?v=325ff1fb81">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=e81375ad40">
+<link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
 <script src="/js/locale-registry.js?v=4c02adb950"></script>
 <script src="/js/i18n-core.js?v=b56898d96a"></script>
@@ -19,9 +19,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
-<link rel="stylesheet" href="/css/portal-command.css">
-<meta name="shrs-build" content="shrs-pwa-caf195dc57">
-<script src="/js/portal-command.js" defer></script>
+<meta name="shrs-build" content="shrs-pwa-c490a98c12">
 </head>
 <body class="portal-body">
 
@@ -52,6 +50,23 @@
       The "Setup Token" is the value you entered as <code>PORTAL_SETUP_TOKEN</code> in this environment's Cloudflare Pages settings — paste that exact value above, then click the button. Nothing else is needed.
     </p>
     <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
+  </div>
+
+  <!-- Break-glass recovery. Reached with the same setup token, because a
+       person holding it can already create and alter every table in the
+       schema — so putting an email on a record and issuing an activation
+       link grants nothing they did not already have. It exists for the
+       state where the only account that can administer the institution
+       cannot sign in, its record carries no email to reset through, and
+       the sysadmin token is unset or lost. Without it, the way back in is
+       hand-written SQL. -->
+  <div class="portal-card" style="margin-top:22px;">
+    <h1 style="font-size:1.5rem;">Locked out of every account?</h1>
+    <p class="sub">Uses the same Setup Token above. It puts an email address on a staff record and issues a fresh activation link, so the account holder can choose their own new password. It cannot read or set anybody&rsquo;s password.</p>
+
+    <button type="button" class="portal-submit" data-rec-list>Show the staff records</button>
+    <div class="portal-error" data-rec-error></div>
+    <div data-rec-out style="margin-top:16px;"></div>
   </div>
 </main>
 
@@ -98,6 +113,79 @@ document.querySelector('[data-run-setup]').addEventListener('click', async funct
     btn.textContent = 'Run Setup';
   }
 });
+
+// ---- Break-glass recovery ----------------------------------------------
+(function () {
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  };
+  var listBtn = document.querySelector('[data-rec-list]');
+  var errBox = document.querySelector('[data-rec-error]');
+  var out = document.querySelector('[data-rec-out]');
+  if (!listBtn) return;
+
+  function token() { return (document.getElementById('setup-token').value || '').trim(); }
+
+  function post(payload) {
+    return fetch('/api/portal/admin/recover-account', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-setup-token': token() },
+      body: JSON.stringify(payload),
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); });
+  }
+
+  function fail(msg) { errBox.textContent = msg; errBox.classList.add('is-visible'); }
+
+  listBtn.addEventListener('click', function () {
+    errBox.classList.remove('is-visible');
+    if (!token()) return fail('Paste the Setup Token in the box above first.');
+    listBtn.disabled = true; listBtn.textContent = 'Loading…';
+    post({ action: 'list' }).then(function (r) {
+      listBtn.disabled = false; listBtn.textContent = 'Show the staff records';
+      if (!r.ok) return fail(r.d.error || 'Could not read the staff records.');
+      var rows = r.d.staff || [];
+      if (!rows.length) { out.innerHTML = '<p class="sub">There are no staff records at all yet.</p>'; return; }
+      out.innerHTML = rows.map(function (s) {
+        var state = s.hasPassword ? 'has a password' : (s.hasLiveLink ? 'has a live activation link' : 'cannot sign in');
+        return '<div style="border:1px solid rgba(201,162,74,.35);padding:14px;margin-bottom:12px;border-radius:6px;">'
+          + '<strong>' + esc(s.fullName) + '</strong> &nbsp;<code>' + esc(s.staffNo) + '</code>'
+          + '<div class="sub" style="margin:4px 0 10px;">' + esc(s.status) + ' &middot; ' + state
+          + ' &middot; ' + (s.email ? esc(s.email) : 'no email on file') + '</div>'
+          + '<div class="portal-field"><label>Email to put on this record</label>'
+          + '<input type="email" data-rec-email="' + esc(s.staffNo) + '" value="' + esc(s.email || '') + '" placeholder="name@example.com" /></div>'
+          + '<button type="button" class="portal-submit" data-rec-go="' + esc(s.staffNo) + '">Save email and issue a new activation link</button>'
+          + '<div data-rec-res="' + esc(s.staffNo) + '"></div></div>';
+      }).join('');
+      out.querySelectorAll('[data-rec-go]').forEach(function (b) {
+        b.addEventListener('click', function () { recover(b.getAttribute('data-rec-go'), b); });
+      });
+    }).catch(function () { listBtn.disabled = false; listBtn.textContent = 'Show the staff records'; fail('Could not reach the server.'); });
+  });
+
+  function recover(staffNo, btn) {
+    errBox.classList.remove('is-visible');
+    var email = (document.querySelector('[data-rec-email="' + staffNo + '"]').value || '').trim();
+    var res = document.querySelector('[data-rec-res="' + staffNo + '"]');
+    btn.disabled = true; btn.textContent = 'Working…';
+    post({ action: 'recover', staffNo: staffNo, email: email || undefined }).then(function (r) {
+      btn.disabled = false; btn.textContent = 'Save email and issue a new activation link';
+      if (!r.ok) { res.innerHTML = '<p class="portal-error is-visible">' + esc(r.d.error || 'That did not work.') + '</p>'; return; }
+      // The endpoint returns a path; a person needs the whole address.
+      var full = window.location.origin + r.d.activationLink;
+      res.innerHTML = '<div style="margin-top:12px;">'
+        + '<p class="sub" style="margin-bottom:6px;">Open this link to choose a new password. Valid '
+        + esc(r.d.expiresInDays) + ' days, single use. ' + esc(r.d.note) + '</p>'
+        + '<input readonly value="' + esc(full) + '" style="width:100%;font-family:monospace;font-size:12px;" />'
+        + '<p style="margin-top:8px;"><a class="portal-submit" style="display:inline-block;text-decoration:none;" href="'
+        + esc(full) + '">Open it now</a></p></div>';
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = 'Save email and issue a new activation link';
+      fail('Could not reach the server.');
+    });
+  }
+})();
 </script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>

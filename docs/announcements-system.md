@@ -20,12 +20,18 @@ unfinished.
 - **Public read API** — `GET /api/portal/announcements/list` — no
   authentication, since this is public communications content, not
   student/guardian data. Powers all three frontend surfaces below.
-- **Staff write API** — `POST /api/portal/admin/announcements` —
-  no admin UI yet, same "protected raw API" convention as
+- **Staff write API** — `POST /api/portal/admin/announcements` — driven
+  by the Newsroom at `/portal/staff/newsroom/`, and still callable
+  directly with the same "protected raw API" convention as
   `admin/students.js`. Auth is now dual: a real staff session (Registrar,
   Principal, or Executive, via the Permission Engine) is the primary
   path, with `PORTAL_ADMIN_TOKEN` kept as a fallback — see the section
   below.
+- **The Newsroom** — `/portal/staff/newsroom/`, the staff UI over that
+  endpoint: compose, **edit**, publish, pull back, feature, archive.
+  Every action is one explicit request and the list is re-read after each
+  one, so the page shows what the database says rather than what it hoped
+  happened.
 - **The ribbon** — a thin strip between the header and page content on
   every page, site-wide, EN+AR. Shows the latest published
   announcements as a horizontally scrollable row of pills; shows "No
@@ -248,3 +254,51 @@ with and without an event date, and archive filtering — not against a
 real Neon database. Once you complete the setup above, publish a real
 announcement and confirm it appears correctly across all four surfaces
 before relying on this for a real event.
+
+---
+
+## Editing, and why clearing a field had to be possible
+
+`update` existed from the day the endpoint was written and nothing ever
+called it. The Newsroom could compose, publish, feature and archive — but
+not correct. A typo in a live notice could only be met by archiving it
+and writing it again, which starts a new row, abandons the RSVP count,
+and leaves the wrong wording standing in a record that is **never
+deleted**. The archive is permanent, so a mistake left in it is left
+there for good. That is why **Edit is offered in every status, archived
+included**.
+
+The update is COALESCE-per-field, so a request naming three fields
+changes three fields. That convention had one gap: a field could be
+changed but never emptied. An editor needs both — a venue entered against
+the wrong notice, or an event date on something that is not an event, has
+to come off.
+
+So the two shapes are now distinct:
+
+| The editor sends | The endpoint does |
+|---|---|
+| field absent | leaves the stored value alone |
+| field present, empty | **clears it to NULL** |
+| field present, with a value | sets it |
+
+`category`, `title` and `summary` are exempt: the schema declares them
+NOT NULL, and an empty title is a mistake rather than an instruction, so
+it is refused with a message saying so.
+
+The composer sends the two shapes differently on purpose — on create an
+empty field is simply not sent, so the column keeps its default; on
+update an empty field is sent as `""`. One rule could not serve both.
+
+**A failed save never empties the composer.** The request reports whether
+it succeeded, and the form is only cleared once the work is safely
+stored. Losing what someone has just written is the worst possible moment
+to lose it.
+
+## The image field
+
+`image_url` has been on the table since the beginning and was reachable
+from no screen — not at create, not after. The homepage hero is built
+around a picture, so in practice the hero could never have one. The
+composer now carries the field, and the editor can add a picture to a
+notice already published.

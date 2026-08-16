@@ -33,7 +33,14 @@ export async function onRequestPost({ request, env }) {
       SELECT staff_id, reset_token_expires FROM staff_accounts WHERE reset_token = ${token}`;
     const account = result.rows[0];
     if (!account) {
-      return json({ error: 'This activation link is invalid. Ask the ICT Office to send you a new one.' }, 400);
+      // A token that matches no row has three quite different histories: it
+      // was used (line 46 clears it), it was superseded by a newer link
+      // (admin/staff.js create-login overwrites), or it never existed. They
+      // are indistinguishable from the token alone — so the message must not
+      // assert one of them. It used to send everyone to the ICT Office,
+      // including people whose accounts were already working and who only
+      // needed to sign in.
+      return json({ error: 'This activation link is no longer usable — it has already been used, or a newer link has replaced it. If you have already set your password, sign in at /portal/staff/login/. Otherwise ask the ICT Office for a fresh link, and be sure to open the most recent one they sent.' }, 400);
     }
     if (!account.reset_token_expires || new Date(account.reset_token_expires).getTime() < Date.now()) {
       return json({ error: 'This activation link has expired. Ask the ICT Office to send you a new one.' }, 400);

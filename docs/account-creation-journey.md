@@ -210,3 +210,63 @@ and reading the real DOM state caught them. Also added
 `Cache-Control: no-store` to every portal API response, since none of
 them are ever safe to serve stale — a defensible hardening independent
 of the two bugs above, not itself the fix for either.
+
+---
+
+## Re-issuing an activation link — Staff Access
+
+`create-login` was reachable from exactly one screen: the New Staff form,
+as the final step of creating somebody. For a staff member who already
+existed there was **no screen at all**, so the only way to give them a
+fresh link was a hand-written `curl` carrying the sysadmin token.
+
+That is the case that arises most — a link used, a link expired, a link
+replaced — and it was the case with no button. It cost the Registrar her
+first week of access.
+
+**Admin Centre → Staff Access** now does it: search by name or Staff ID,
+read the account's state, and issue a fresh link that is shown as a
+complete address with a Copy button.
+
+### It checks before it issues
+
+"The link does not work" has several causes and only some are answered by
+issuing another link. The panel calls `login-status` first and says which
+it is:
+
+| State | What it means |
+|---|---|
+| `active` | Password already set. **Sign in — a new link is not needed.** |
+| `active-with-open-reset` | Password set, and a reset link is also open. |
+| `awaiting-activation` | A live link is outstanding; it is the only one that works. |
+| `link-expired` | Past its expiry. Issue a fresh one. |
+| `link-used-or-superseded` | No password, no live link. Issue a fresh one. |
+| `no-account` | No login has ever been created. |
+
+`login-status` never returns the token or the password hash.
+
+### Issuing cancels every earlier link
+
+`create-login` is `ON CONFLICT DO UPDATE` and the account row holds a
+single token, so the moment a new link is issued every earlier one stops
+working. The panel says so before it acts and asks for confirmation,
+because that is not what "issue another link" sounds like it does. An
+older link still sitting in somebody's inbox reports itself only as
+unusable, with no explanation of why — which is exactly how this looked
+from the outside.
+
+### The address is assembled here
+
+The endpoint returns a path. What gets sent to a person has to be the
+whole address or they cannot open it, so the panel joins it to the site
+origin rather than leaving that to whoever is copying it.
+
+### Authentication
+
+The Admin Centre unlocks automatically for a signed-in staff account
+holding **MU on `staff_records`** — per `docs/role-permission-matrix.md`
+§4.20, SYSADMIN and EXE. The token box is a bootstrap and
+disaster-recovery fallback only. Note the header: it is
+**`x-sysadmin-token`** carrying **`PORTAL_SYSADMIN_TOKEN`** — *not*
+`x-admin-token` / `PORTAL_ADMIN_TOKEN`, which belong to other endpoints
+and are rejected here with a 403.

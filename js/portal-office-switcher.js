@@ -36,7 +36,13 @@
     registrar: { label: "Registrar Operations", href: '/portal/staff/registrar/' },
     finance: { label: 'Finance Operations', href: '/portal/staff/finance/' },
     admissions: { label: 'Admissions Review Centre', href: '/portal/staff/admissions/' },
-    'digital-services': { label: 'Digital Identity Tools', href: '/portal/staff/identity/' },
+    // Pointed at /portal/staff/identity/ — the very page this switcher
+    // renders on — which made it a link to nowhere: clicking it did not
+    // even navigate. The real operational tool for the ICT Office is the
+    // Admin Centre; deduped against the SYSADMIN/EXE entry above by the
+    // seen[href] check, so it costs nothing to also offer it here for an
+    // ICT Office seat-holder who does not carry either role.
+    'digital-services': { label: 'Institutional Administration Centre', href: '/portal/admin/centre/' },
   };
 
   function render(mount, data) {
@@ -80,6 +86,16 @@
 
     var hasExe = (data.roles || []).some(function (r) { return r.roleCode === 'EXE'; });
     if (hasExe) add('Founder Dashboard', 'Institution-wide analytics', '/portal/founder/');
+
+    // The Admin Centre needs Manage Users (permission-matrix.js §staff_records),
+    // which only SYSADMIN and EXE hold — but this switcher works from role
+    // codes already in hand rather than an extra permission call, so it
+    // checks the same two roles the Matrix actually grants MU to. Before
+    // this, SYSADMIN had NO entry here at all: the account that runs the
+    // school's technical administration had no way to discover its own
+    // primary tool except by already knowing the URL.
+    var hasAdminAccess = (data.roles || []).some(function (r) { return r.roleCode === 'SYSADMIN' || r.roleCode === 'EXE'; });
+    if (hasAdminAccess) add('Institutional Administration Centre', 'Offices, staff, roles, activation links', '/portal/admin/centre/');
 
     // Safeguarding is a Matrix-wide role grant (DSL), not an office
     // appointment — surfaced by role code, same as the EXE check above,
