@@ -863,15 +863,34 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .identity-delegation-meta{font-size:0.72rem;color:var(--ink-soft);margin-top:4px;}
 .identity-empty{padding:16px 20px;font-size:0.85rem;color:var(--ink-soft);font-style:italic;}
 
-/* --- Registrar's Office --- */
-.registrar-search-row{display:flex;gap:10px;padding:16px 20px;flex-wrap:wrap;}
+/* --- Registrar's Office ---
+   Elevated to the same .pr-* flagship language used on the public
+   site (soft gradient plates, pill buttons, gold focus glow, hover
+   lift) instead of the bare-bordered utilitarian look this shared
+   .registrar-* vocabulary started with. --pr-* custom properties come
+   from css/prestige.css, loaded on every page that uses these classes;
+   each falls back to the equivalent --* token so nothing breaks if a
+   future page reuses these classes without prestige.css. */
+.registrar-search-row{display:flex;gap:12px;padding:18px 20px;flex-wrap:wrap;}
 .registrar-search-row input{
-  flex:1;min-width:220px;font-family:'Inter','Cairo',sans-serif;font-size:0.9rem;padding:10px 12px;
-  border:1px solid var(--line);background:var(--portal-card);color:var(--ink);
+  flex:1;min-width:220px;font-family:'Inter','Cairo',sans-serif;font-size:0.92rem;padding:12px 16px;
+  border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-sm,8px);
+  background:var(--pr-milk-bg,var(--portal-card));color:var(--ink);
+  transition:border-color .25s ease,box-shadow .25s ease;
 }
-.registrar-search-row input:focus{outline:2px solid var(--gold);outline-offset:1px;}
-.registrar-search-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;}
-.registrar-hint{font-size:0.8rem;color:var(--ink-soft);padding:0 20px;margin:14px 0;}
+.registrar-search-row input:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
+/* Filter/lookup fields sitting outside .registrar-search-row (the
+   graduation status filter, register session, verification-history
+   reference) — same field treatment, previously hand-styled inline. */
+.registrar-search-row-select{
+  font-family:'Inter','Cairo',sans-serif;font-size:0.88rem;padding:11px 14px;
+  border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-sm,8px);
+  background:var(--pr-milk-bg,var(--portal-card));color:var(--ink);
+  transition:border-color .25s ease,box-shadow .25s ease;
+}
+.registrar-search-row-select:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
+.registrar-search-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;border-radius:var(--pr-r-xs,6px);}
+.registrar-hint{font-size:0.8rem;color:var(--ink-soft);padding:0 20px;margin:14px 0;line-height:1.6;}
 /* Safeguarding Intelligence Framework — Institutional Capability
    Framework presentation pattern ("Operational Framework Ready" +
    sub-capability tiles + real seeded taxonomy). Reused by every future
@@ -886,28 +905,46 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .sg-taxonomy-list li{font-size:0.85rem;line-height:1.55;color:var(--ink);padding:8px 0;border-bottom:1px solid var(--line);}
 .sg-taxonomy-list li:last-child{border-bottom:none;}
 .registrar-field{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;font-size:0.85rem;font-weight:600;color:var(--portal-heading);}
-.registrar-field select,.registrar-field textarea{font-family:inherit;font-size:0.9rem;font-weight:400;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--portal-card);}
-.registrar-btn{background:none;border:1px solid var(--line);border-radius:4px;color:var(--portal-heading);padding:8px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;}
-.registrar-btn:hover{border-color:var(--gold);}
+.registrar-field select,.registrar-field textarea{font-family:inherit;font-size:0.9rem;font-weight:400;color:var(--ink);padding:9px 12px;border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-xs,6px);background:var(--pr-milk-bg,var(--portal-card));}
+/* A gold ghost pill, matching .pr-btn.is-ghost — fills softly and
+   lifts on hover instead of just swapping a border colour. */
+.registrar-btn{
+  display:inline-flex;align-items:center;gap:.5em;background:transparent;
+  border:1px solid rgba(var(--lv-gbs,233,206,138),.6);border-radius:var(--pr-r-pill,999px);
+  color:var(--pr-gold-deep,var(--portal-heading));padding:9px 20px;font-size:0.82rem;font-weight:600;
+  letter-spacing:0.01em;cursor:pointer;text-decoration:none;
+  transition:transform .3s var(--pr-ease,ease),box-shadow .3s ease,background .3s ease,border-color .3s ease;
+}
+.registrar-btn:hover{background:rgba(var(--lv-gbs,233,206,138),.14);border-color:var(--pr-gold,var(--gold));transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(var(--lv-gs,198,161,91),.5);}
+.registrar-btn:active{transform:translateY(0);}
 .sg-report-form{padding:14px 20px 4px;border-top:1px solid var(--line);margin-bottom:10px;}
-.registrar-form-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:0 16px;padding:0 20px 20px;align-items:start;}
+.registrar-form-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:4px 16px;padding:0 20px 20px;align-items:start;}
 .registrar-field-wide{grid-column:1 / -1;}
 .registrar-form-grid .portal-field select,
 .registrar-form-grid .portal-field textarea{
-  font-family:'Inter','Cairo',sans-serif;font-size:0.9rem;padding:10px 12px;
-  border:1px solid var(--line);background:var(--portal-card);color:var(--ink);resize:vertical;
+  font-family:'Inter','Cairo',sans-serif;font-size:0.9rem;padding:11px 13px;
+  border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-xs,6px);
+  background:var(--pr-milk-bg,var(--portal-card));color:var(--ink);resize:vertical;
+  transition:border-color .25s ease,box-shadow .25s ease;
 }
 .registrar-form-grid .portal-field select:focus,
-.registrar-form-grid .portal-field textarea:focus{outline:2px solid var(--gold);outline-offset:1px;}
-.registrar-form-submit{grid-column:1 / -1;width:auto;padding:12px 24px;}
+.registrar-form-grid .portal-field textarea:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
+.registrar-form-submit{grid-column:1 / -1;width:auto;padding:13px 28px;}
 .registrar-btn-danger{background:var(--crimson);border-color:var(--crimson);color:#fff;}
-.registrar-btn-danger:hover{background:#5e1824;}
-.registrar-form-result{margin:0 20px 20px;padding:10px 14px;font-size:0.84rem;}
+.registrar-btn-danger:hover{background:#7a2534;border-color:#7a2534;box-shadow:0 10px 22px -12px rgba(124,31,46,.55);}
+.registrar-form-result{margin:0 20px 20px;padding:12px 16px;font-size:0.84rem;border-radius:var(--pr-r-sm,8px);}
 .registrar-form-result.is-ok{background:rgba(var(--lv-gs,198,161,91),0.12);border:1px solid var(--gold);color:var(--portal-heading);}
 .registrar-form-result.is-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);}
 .registrar-cert-issued{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .registrar-cert-issued-text{flex:1;min-width:200px;line-height:1.6;}
-.registrar-cert-qr{border-radius:var(--radius-sm);background:var(--portal-card);padding:4px;border:1px solid var(--line);flex-shrink:0;}
+/* A framed plate, not a bare bordered box — the same soft-shadow/bevel
+   language every .pr-card on the public site carries, sized down for
+   a QR code rather than a full card. */
+.registrar-cert-qr{
+  border-radius:var(--pr-r-sm,10px);background:var(--pr-milk-bg,var(--portal-card));padding:10px;
+  border:1px solid var(--pr-line,var(--line));flex-shrink:0;
+  box-shadow:var(--pr-shadow-soft,0 6px 18px -8px rgba(0,0,0,.18)),var(--pr-bevel,inset 0 1px 0 rgba(255,255,255,.6));
+}
 
 /* --- Graduation Information Form (guardian-facing) --- */
 .graduation-child-card{margin-bottom:22px;}
@@ -991,8 +1028,21 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .registrar-guardians-head{font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
 .registrar-guardian-row{font-size:0.82rem;color:var(--ink);padding:4px 0;}
 
-.registrar-timeline{padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
-.registrar-timeline-row{border-inline-start:3px solid var(--gold);background:var(--ivory-bg);padding:10px 14px;}
+/* Dot-marker timeline — the same connecting-line-plus-medallion grammar
+   as .pr-timeline/.gcc-timeline elsewhere on the platform, in place of
+   a bare left-border row. */
+.registrar-timeline{position:relative;padding:16px 20px;margin-top:2px;}
+.registrar-timeline::before{
+  content:'';position:absolute;left:31px;top:22px;bottom:22px;width:2px;
+  background:linear-gradient(180deg,var(--pr-gold,var(--gold)),rgba(var(--lv-gs,198,161,91),.15));
+}
+.registrar-timeline-row{position:relative;margin:0 0 16px;padding:2px 0 2px 34px;}
+.registrar-timeline-row:last-child{margin-bottom:0;}
+.registrar-timeline-row::before{
+  content:'';position:absolute;left:0;top:3px;width:14px;height:14px;border-radius:50%;
+  background:linear-gradient(140deg,var(--pr-gold-bright,var(--gold-bright)),var(--pr-gold,var(--gold)));
+  box-shadow:0 0 0 4px var(--pr-ivory-bg,var(--ivory-bg,#fff));z-index:1;
+}
 .registrar-timeline-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 .registrar-timeline-type{font-family:'Cinzel','Amiri',serif;font-size:0.82rem;color:var(--portal-heading);}
 .registrar-timeline-date{font-size:0.74rem;color:var(--ink-soft);}
@@ -1005,15 +1055,54 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 @media (max-width:680px){.registrar-cert-forms{grid-template-columns:1fr;}}
 .registrar-field-note{grid-column:1/-1;font-size:0.78rem;color:var(--ink-soft);font-style:italic;margin:2px 0 10px;}
 
-.registrar-approvals-list{padding:0 20px 16px;display:flex;flex-direction:column;gap:10px;}
-.registrar-approval-card{border:1px solid var(--line);border-inline-start:3px solid var(--gold);border-radius:6px;padding:12px 14px;background:var(--portal-card);}
+.registrar-approvals-list{padding:0 20px 16px;display:flex;flex-direction:column;gap:12px;}
+/* The same elevated-card language as .pr-card: soft gradient surface,
+   a gold rule that draws in on hover, a hover lift — in place of a
+   bare bordered box. */
+.registrar-approval-card{
+  position:relative;overflow:hidden;
+  border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-md,12px);
+  padding:16px 18px;background:linear-gradient(168deg,var(--pr-milk-bg,#fff),var(--pr-ivory-bg,var(--ivory-bg)) 90%);
+  box-shadow:var(--pr-shadow-soft,0 6px 18px -10px rgba(0,0,0,.16)),var(--pr-bevel,inset 0 1px 0 rgba(255,255,255,.6));
+  transition:transform .35s var(--pr-ease,ease),box-shadow .35s ease;
+}
+.registrar-approval-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pr-gold-deep,var(--gold)),var(--pr-gold-bright,var(--gold-bright)),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .5s;
+}
+.registrar-approval-card:hover{transform:translateY(-3px);box-shadow:var(--pr-shadow-lift,0 20px 40px -18px rgba(0,0,0,.28)),var(--pr-bevel,inset 0 1px 0 rgba(255,255,255,.6));}
+.registrar-approval-card:hover::before{transform:scaleX(1);}
 .registrar-approval-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:0.9rem;color:var(--portal-heading);font-weight:600;}
 .registrar-approval-meta{font-size:0.78rem;color:var(--ink-soft);margin-top:2px;}
-.registrar-approval-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
-.registrar-approval-actions input[type="text"]{flex:1;min-width:160px;padding:6px 10px;border:1px solid var(--line);border-radius:4px;font-size:0.82rem;}
-.registrar-approval-approve{background:var(--forest-green, #2f6b46);border-color:var(--forest-green, #2f6b46);color:#fff;padding:6px 14px;border-radius:4px;font-size:0.82rem;cursor:pointer;}
-.registrar-approval-reject{background:var(--crimson);border-color:var(--crimson);color:#fff;padding:6px 14px;border-radius:4px;font-size:0.82rem;cursor:pointer;}
-.registrar-approvals-empty{padding:8px 20px 16px;color:var(--ink-soft);font-size:0.86rem;}
+.registrar-approval-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;}
+.registrar-approval-actions input[type="text"]{flex:1;min-width:160px;padding:8px 12px;border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-xs,6px);font-size:0.82rem;}
+.registrar-approval-approve{background:var(--forest-green, #2f6b46);border:1px solid var(--forest-green, #2f6b46);color:#fff;padding:8px 18px;border-radius:var(--pr-r-pill,999px);font-size:0.82rem;font-weight:600;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;}
+.registrar-approval-approve:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(47,107,70,.5);}
+.registrar-approval-reject{background:var(--crimson);border:1px solid var(--crimson);color:#fff;padding:8px 18px;border-radius:var(--pr-r-pill,999px);font-size:0.82rem;font-weight:600;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;}
+.registrar-approval-reject:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(124,31,46,.5);}
+.registrar-approvals-empty{padding:8px 20px 16px;color:var(--ink-soft);font-size:0.86rem;font-style:italic;}
+
+/* Certificate Centre roster preview, batch register, and certificate
+   register — previously a bare, unstyled <table> (browser defaults);
+   the same ledger treatment as .gcc-roster-table elsewhere. */
+.registrar-history-table{width:100%;border-collapse:collapse;font-size:0.86rem;}
+.registrar-history-table th{text-align:start;font-family:'Cinzel','Amiri',serif;font-size:0.66rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-soft);padding:10px 12px;border-bottom:2px solid var(--pr-gold,var(--gold));white-space:nowrap;}
+.registrar-history-table td{padding:10px 12px;border-bottom:1px solid var(--pr-line,var(--line));vertical-align:middle;}
+.registrar-history-table tbody tr{transition:background .15s ease;}
+.registrar-history-table tbody tr:hover{background:rgba(var(--lv-gs,198,161,91),0.08);}
+.registrar-history-table tbody tr:last-child td{border-bottom:none;}
+
+/* File/text roster intake on the Certificate Centre — previously
+   hand-styled inline. */
+.registrar-file-input{font-family:'Inter',sans-serif;font-size:0.85rem;color:var(--ink);}
+.registrar-roster-textarea{
+  width:100%;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;line-height:1.7;padding:14px 16px;
+  border:1px solid var(--pr-line,var(--line));border-radius:var(--pr-r-sm,8px);
+  background:var(--pr-milk-bg,var(--portal-card));color:var(--ink);resize:vertical;
+  transition:border-color .25s ease,box-shadow .25s ease;
+}
+.registrar-roster-textarea:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
 
 .teacher-class-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;padding:16px 20px;}
 .teacher-class-card{

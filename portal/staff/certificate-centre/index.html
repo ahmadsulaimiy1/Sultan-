@@ -97,12 +97,11 @@
       <div class="portal-child-head"><h2>Upload or Paste the Cohort</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">One student per line. Columns (comma, semicolon, or tab separated): <strong>English Name, Arabic Name, Sex (male/female), Grade (English), Grade (Arabic), Admission No (optional)</strong>. A header row is detected automatically. Students already on the register are matched (by admission number, or exact name); new names get a full student record, a generated admission number, and a permanent Student ID. Nothing is issued until you review the preview and press Generate.</p>
       <div style="padding:0 20px 8px;">
-        <input type="file" data-cert-roster-file accept=".csv,.tsv,.txt" style="font-family:'Inter',sans-serif;font-size:0.85rem;color:var(--ink);" />
+        <input type="file" data-cert-roster-file accept=".csv,.tsv,.txt" class="registrar-file-input" />
       </div>
       <div style="padding:0 20px 14px;">
-        <textarea data-cert-roster-text rows="8" spellcheck="false" placeholder="Abdul Samod Ayomide Jimoh, عبد الصمد أيوميدي جيمو, male, Excellent, ممتاز
-Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
-          style="width:100%;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;line-height:1.7;padding:12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);resize:vertical;"></textarea>
+        <textarea data-cert-roster-text rows="8" spellcheck="false" class="registrar-roster-textarea" placeholder="Abdul Samod Ayomide Jimoh, عبد الصمد أيوميدي جيمو, male, Excellent, ممتاز
+Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"></textarea>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
         <button type="button" class="registrar-btn" data-cert-preview-btn>Preview &amp; Validate Roster</button>
@@ -131,7 +130,7 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
       <div class="portal-child-head"><h2>Certificate Register</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">Search by serial number, student name, or Student ID. Every certificate can be re-opened, re-printed, publicly verified, or revoked (with a mandatory note) — revocation shows instantly at the public verification page; the serial is never reused.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
-        <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:280px;" />
+        <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="min-width:280px;" />
         <button type="button" class="registrar-btn" data-cert-register-lookup>Search Register</button>
       </div>
       <div class="registrar-approvals-list" data-cert-register-list></div>
