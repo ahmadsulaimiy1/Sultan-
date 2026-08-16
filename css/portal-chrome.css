@@ -730,6 +730,15 @@ body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]){
   --rgo-ink:#2A1C10; --rgo-ink-soft:rgba(59,42,29,.74);
   --rgo-gold-deep:#8C6834; --rgo-gold-mid:#6B4E22;
   --rgo-line:rgba(140,104,52,.32);
+  /* Royal navy, joining the gold rather than replacing it — a crest is
+     traditionally cut in both metals, never one alone. --navy-bg
+     elsewhere in this codebase resolves to a warm coffee brown (the
+     visitor's chosen livery, see css/liveries.css); these are genuine
+     blue, stated once here so every rule below can reach for real
+     sapphire without depending on a livery token that was never
+     guaranteed to render as blue in the first place. */
+  --rgo-navy-deep:#0F2247; --rgo-navy:#1B3A66;
+  --rgo-sapphire:#2C5DA8; --rgo-sapphire-bright:#8FB4E8;
 }
 
 /* ---- The page itself, not just its chrome ---------------------------
@@ -1191,6 +1200,124 @@ body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) 
   padding-inline-start:14px;padding-inline-end:26px;}
 [dir="rtl"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-pilot-badge::before{
   inset-inline-start:auto;inset-inline-end:11px;}
+
+/* ===================================================================
+   THE TRAVELLING LIGHT, PAST THE FOOTER — ON EVERY CARD IN THE ROOM
+   -------------------------------------------------------------------
+   The footer's badges got a ring; the body's own cards — Look Up a
+   Student, Enrol from Admissions, every .portal-child-card on both
+   pages — still had a static edge.
+     The first version of this carried the badge's own conic-gradient
+   ring straight up to card scale, and it was wrong the moment it
+   rendered: a conic gradient is a polar shape, drawn as true rings only
+   on a box close to square, and a card here runs five, eight, ten times
+   wider than it is tall. Stretched that far the "ring" stopped reading
+   as one at all — it showed as a single hard diagonal streak, the same
+   wedge fault WEC's own css/brand.css documents at .vessel::before
+   ("a conic gradient fills its whole box from the centre outward... a
+   PIE SLICE"), arrived at by a different road (aspect ratio, not a
+   broken mask) but visually the same failure. Caught in a screenshot of
+   the actual card, not assumed to work because the identical technique
+   worked on the circular badges above.
+     A travelling LINEAR gradient in its place: two short bands, gold
+   and sapphire, swept along the frame by animating background-position
+   the same way .pch-col's own glass sheen already does a few hundred
+   lines up — a technique with no polar coordinates to distort on a wide
+   box. Masked to the frame with the same content-box/border-box
+   exclude trick as the badge ring, so it still reads as light moving
+   round an edge rather than across a surface.
+     inset:-3px rather than a fixed pixel size: unlike the footer's
+   fixed-diameter badges, these cards vary in height page to page, so
+   the frame has to scale to whatever box it is drawn on. .portal-
+   child-card already draws its own inset bevel on ::after (see
+   css/portal.css, "a faint engraved bevel line set slightly inside the
+   card edge") — this uses ::before instead, unclaimed until now. Every
+   card also gets a small cast-gold diamond on its own head, echoing the
+   colophon's section-heading mark at working scale. */
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-card{
+  isolation:isolate;}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-card::before{
+  content:"";position:absolute;inset:-3px;z-index:2;border-radius:inherit;
+  padding:2.5px;pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  background-image:linear-gradient(90deg,
+    transparent 0%,transparent 4%,
+    rgba(44,93,168,.2) 8%,var(--rgo-sapphire) 11%,#CFE0F7 13%,var(--rgo-sapphire) 15%,rgba(44,93,168,.2) 18%,
+    transparent 24%,transparent 60%,
+    rgba(140,104,52,.22) 65%,#D4AF37 69%,#FFF6DA 72%,#D4AF37 75%,rgba(140,104,52,.22) 79%,
+    transparent 85%,transparent 100%);
+  background-size:280% 100%;background-position:280% 0;
+  filter:drop-shadow(0 0 3px rgba(44,93,168,.22));
+  animation:pchFrameTravel 9s linear infinite;}
+@keyframes pchFrameTravel{to{background-position:-280% 0;}}
+@media (prefers-reduced-motion:reduce){
+  body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-card::before{
+    animation:none;opacity:.7;background-position:0 0;}
+}
+html[data-pc-motion="reduced"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-card::before{
+  animation:none;opacity:.7;background-position:0 0;}
+
+/* The head's own accent bar, restated in real navy rather than the
+   brown --navy-bg resolves to elsewhere — the one place on the card a
+   solid block of the second metal belongs, since a ring already
+   carries the travelling version of it — and a small gold diamond at
+   the head's trailing edge, .portal-child-head's own ::after being
+   free (only ::before, the accent bar itself, was claimed). */
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head{
+  position:relative;}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head::before{
+  background:linear-gradient(180deg,#E9CE8A 0%,var(--rgo-navy) 100%);}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head::after{
+  content:"";position:absolute;inset-inline-end:26px;top:50%;
+  width:10px;height:10px;transform:translateY(-50%) rotate(45deg);
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.9) 0%,transparent 38%),
+    linear-gradient(155deg,#F3DFA0,#C6A15B 55%,#8C6834 100%);
+  box-shadow:0 0 7px 0 rgba(140,104,52,.55),inset 0 0 0 1px rgba(255,255,255,.4);}
+[dir="rtl"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head::after{
+  inset-inline-end:auto;inset-inline-start:26px;}
+
+/* The arrival plate's inner frame, and the live-hours panel's own
+   previously-unclaimed ::before, take the same travelling linear frame
+   as the cards above rather than the conic ring — both are wide,
+   short panels, exactly the aspect ratio the conic version broke on. */
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-arrival::before{
+  inset:5px;padding:2px;border:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  background-image:linear-gradient(90deg,
+    transparent 0%,transparent 4%,
+    rgba(44,93,168,.2) 8%,var(--rgo-sapphire) 11%,#CFE0F7 13%,var(--rgo-sapphire) 15%,rgba(44,93,168,.2) 18%,
+    transparent 24%,transparent 60%,
+    rgba(140,104,52,.22) 65%,#D4AF37 69%,#FFF6DA 72%,#D4AF37 75%,rgba(140,104,52,.22) 79%,
+    transparent 85%,transparent 100%);
+  background-size:280% 100%;background-position:280% 0;
+  filter:drop-shadow(0 0 3px rgba(44,93,168,.22));
+  animation:pchFrameTravel 9s linear infinite;}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-now::before{
+  content:"";position:absolute;inset:4px;border-radius:inherit;padding:2px;
+  pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  background-image:linear-gradient(90deg,
+    transparent 0%,transparent 4%,
+    rgba(140,104,52,.22) 8%,#D4AF37 11%,#FFF6DA 13%,#D4AF37 15%,rgba(140,104,52,.22) 18%,
+    transparent 24%,transparent 60%,
+    rgba(44,93,168,.2) 65%,var(--rgo-sapphire) 69%,#CFE0F7 72%,var(--rgo-sapphire) 75%,rgba(44,93,168,.2) 79%,
+    transparent 85%,transparent 100%);
+  background-size:280% 100%;background-position:-280% 0;
+  filter:drop-shadow(0 0 3px rgba(140,104,52,.22));
+  animation:pchFrameTravelRev 11s linear infinite;}
+@keyframes pchFrameTravelRev{to{background-position:280% 0;}}
+@media (prefers-reduced-motion:reduce){
+  body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-arrival::before,
+  body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-now::before{
+    animation:none;opacity:.7;background-position:0 0;}
+}
+html[data-pc-motion="reduced"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-arrival::before,
+html[data-pc-motion="reduced"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-now::before{
+  animation:none;opacity:.7;background-position:0 0;}
 
 /* The one control on the page reads as one. */
 .pch-state .portal-back-link{
