@@ -30,11 +30,18 @@
 
    THE TECHNIQUE. A dim, static rail — an always-visible hairline, so the
    edge reads as finished even for a visitor with reduced motion — and,
-   riding it, a brighter, narrower streak that fades in, travels, fades out,
-   and loops. Confined to a 1.5px line, so there is no bloom to manage: the
-   whole effect is a point of light moving along a rail, not a glow. Header
-   and footer share a period but run on opposite phase (delay offset by half
-   the period) so the two are never seen pulsing in lockstep.
+   riding it, a bright travelling core with a soft drop-shadow bloom, so it
+   reads unmistakably as a point of LIGHT crossing the edge, not a moving
+   stripe. Header and footer share a period but run on opposite phase
+   (delay offset by half the period) so the two are never seen pulsing in
+   lockstep.
+
+   REVISED from the first pass, which kept the line at 1.5px with no glow at
+   all: correct in mechanism, invisible in effect — a visitor would need to
+   know exactly where to look and when. This version is built to be seen at
+   a glance: thicker core, a real bloom via layered drop-shadow (cheap —
+   still one pseudo-element, no extra paint layer), a hotter white centre,
+   and a longer visible dwell in the cycle.
 
    footer:not(.ap-foot) excludes the admission-apply page's own bespoke
    footer, which already carries an equivalent thread (css/apply.css,
@@ -44,47 +51,54 @@
 header.nav{ position:relative; --rl-period:15s; --rl-delay:0s; }
 footer:not(.ap-foot){ position:relative; --rl-period:15s; --rl-delay:-7.5s; }
 
-/* ---- footer's rail: the header already has one, sitewide, from
-        atelier.css; the footer has never had one outside elevate.css ---- */
+/* ---- the rail: brighter and wider than before, so the edge itself reads
+        as gilt even with the comet mid-fade ---- */
 footer:not(.ap-foot)::before{
   content:"";
   position:absolute; left:0; right:0; top:0; height:1px; z-index:2;
   pointer-events:none;
   background:linear-gradient(90deg,
-    transparent 0%, rgba(var(--lv-gs,198,161,91),.16) 18%,
-    rgba(var(--lv-gs,198,161,91),.16) 82%, transparent 100%);
+    transparent 0%, rgba(var(--lv-gs,198,161,91),.26) 14%,
+    rgba(var(--lv-gs,198,161,91),.26) 86%, transparent 100%);
 }
 
-/* ---- the comets: a bright, narrow travelling point of light, one on the
-        header's own free pseudo-element, one on the footer's ---- */
+/* ---- the comets: a bright core with a real bloom, not a thin gradient
+        line — the drop-shadow is what makes it read as LIGHT rather than
+        as a stripe sliding past ---- */
 header.nav::before{
   content:"";
-  position:absolute; left:0; bottom:0; height:1.5px; width:26%; z-index:3;
+  position:absolute; left:0; bottom:0; height:2.5px; width:34%; z-index:3;
   pointer-events:none;
   background:linear-gradient(90deg,
-    transparent 0%, rgba(var(--lv-gbs,233,206,138),.55) 38%,
-    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.55) 62%, transparent 100%);
+    transparent 0%, rgba(var(--lv-gbs,233,206,138),.7) 32%,
+    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.7) 68%, transparent 100%);
+  filter:
+    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.9))
+    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.55));
   animation: rl-travel var(--rl-period) cubic-bezier(.45,0,.55,1) infinite;
   animation-delay: var(--rl-delay);
   will-change: transform, opacity;
 }
 footer:not(.ap-foot)::after{
   content:"";
-  position:absolute; left:0; top:0; height:1.5px; width:26%; z-index:3;
+  position:absolute; left:0; top:0; height:2.5px; width:34%; z-index:3;
   pointer-events:none;
   background:linear-gradient(90deg,
-    transparent 0%, rgba(var(--lv-gbs,233,206,138),.55) 38%,
-    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.55) 62%, transparent 100%);
+    transparent 0%, rgba(var(--lv-gbs,233,206,138),.7) 32%,
+    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.7) 68%, transparent 100%);
+  filter:
+    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.9))
+    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.55));
   animation: rl-travel var(--rl-period) cubic-bezier(.45,0,.55,1) infinite;
   animation-delay: var(--rl-delay);
   will-change: transform, opacity;
 }
 
 @keyframes rl-travel{
-  0%   { transform:translateX(-120%); opacity:0; }
-  10%  { opacity:1; }
-  90%  { opacity:1; }
-  100% { transform:translateX(480%); opacity:0; }
+  0%   { transform:translateX(-140%); opacity:0; }
+  8%   { opacity:1; }
+  92%  { opacity:1; }
+  100% { transform:translateX(400%); opacity:0; }
 }
 
 /* Reading direction: in RTL the comet travels the way the eye does. */
@@ -94,10 +108,10 @@ footer:not(.ap-foot)::after{
   animation-name: rl-travel-rtl;
 }
 @keyframes rl-travel-rtl{
-  0%   { transform:translateX(120%); opacity:0; }
-  10%  { opacity:1; }
-  90%  { opacity:1; }
-  100% { transform:translateX(-480%); opacity:0; }
+  0%   { transform:translateX(140%); opacity:0; }
+  8%   { opacity:1; }
+  92%  { opacity:1; }
+  100% { transform:translateX(-400%); opacity:0; }
 }
 
 /* The personalisation and reduced-motion systems this site already has —

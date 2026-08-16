@@ -139,8 +139,8 @@ def svg_tile(stroke, stroke_width, opacity):
     )
 
 
-LIGHT = svg_tile("#8A6A2E", 0.6, 1)   # deep gold ink, for the ivory header
-DARK = svg_tile("#E9CE8A", 0.65, 1)   # bright foil gold, for the coffee footer
+LIGHT = svg_tile("#8A6A2E", 1.1, 1)   # deep gold ink, for the ivory header
+DARK = svg_tile("#E9CE8A", 1.2, 1)    # bright foil gold, for the coffee footer
 
 OUT = ROOT / "assets/patterns"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -171,15 +171,22 @@ css = f"""/* ===================================================================
    html[data-pc-ornament="restrained"|"none"] opacity rules on
    .imperial-motion / .foot-motion for free.
 
+   REVISED from the first pass: 0.6/0.65 stroke and 0.24/0.18 opacity at a
+   2x tile were correct geometry rendered too faintly to register at a
+   glance, on the same complaint pattern as the running-light rework —
+   technically present, practically invisible. This pass nearly doubles the
+   stroke weight, raises opacity meaningfully, and tightens the repeat to
+   1.6x tile so more stars sit in view at once.
+
        python3 scripts/islamic-pattern-build.py
    =========================================================================== */
 .imperial-motion::after{{
   content:"";
   position:absolute; inset:0;
   background-image:url("{data_uri(LIGHT)}");
-  background-size:{TILE*2:.1f}px {TILE*2:.1f}px;
+  background-size:{TILE*1.6:.1f}px {TILE*1.6:.1f}px;
   background-repeat:repeat;
-  opacity:.24;
+  opacity:.4;
   pointer-events:none;
 }}
 
@@ -187,9 +194,9 @@ css = f"""/* ===================================================================
   content:"";
   position:absolute; inset:0;
   background-image:url("{data_uri(DARK)}");
-  background-size:{TILE*2:.1f}px {TILE*2:.1f}px;
+  background-size:{TILE*1.6:.1f}px {TILE*1.6:.1f}px;
   background-repeat:repeat;
-  opacity:.18;
+  opacity:.32;
   pointer-events:none;
 }}
 """
