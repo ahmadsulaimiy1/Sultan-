@@ -889,6 +889,18 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
   transition:border-color .25s ease,box-shadow .25s ease;
 }
 .registrar-search-row-select:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
+/* When this class lands on a <select> (the graduation status filter),
+   it needs the same drawn-chevron treatment .portal-field select
+   already gets — otherwise it's the one native-chrome dropdown arrow
+   left standing next to inputs that were all given one. Same inline
+   SVG data URI, so there's no request and no chance of it arriving
+   late or looking different from the rest. */
+select.registrar-search-row-select{
+  -webkit-appearance:none;appearance:none;cursor:pointer;padding-inline-end:38px;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238C6834' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-size:16px;background-position:right 12px center;
+}
+[dir="rtl"] select.registrar-search-row-select{background-position:left 12px center;padding-inline-end:14px;padding-inline-start:38px;}
 .registrar-search-error{background:rgba(124,31,46,0.08);border:1px solid var(--crimson);color:var(--crimson);font-size:0.82rem;padding:9px 12px;margin:0 20px 16px;border-radius:var(--pr-r-xs,6px);}
 .registrar-hint{font-size:0.8rem;color:var(--ink-soft);padding:0 20px;margin:14px 0;line-height:1.6;}
 /* Safeguarding Intelligence Framework — Institutional Capability
@@ -929,6 +941,18 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 }
 .registrar-form-grid .portal-field select:focus,
 .registrar-form-grid .portal-field textarea:focus{outline:none;border-color:var(--pr-gold,var(--gold));box-shadow:0 0 0 3px rgba(var(--lv-gs,198,161,91),0.22);}
+/* The `background` shorthand two rules up resets background-image to
+   none, which silently erased .portal-field select's drawn chevron
+   for every select inside a .registrar-form-grid (Certificate Type,
+   Lifecycle Action) — restored here rather than reworking the
+   shorthand above, so a future edit to the field's fill colour can't
+   reintroduce the same silent loss. */
+.registrar-form-grid .portal-field select{
+  -webkit-appearance:none;appearance:none;cursor:pointer;padding-inline-end:38px;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238C6834' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-size:16px;background-position:right 12px center;
+}
+[dir="rtl"] .registrar-form-grid .portal-field select{background-position:left 12px center;padding-inline-end:14px;padding-inline-start:38px;}
 .registrar-form-submit{grid-column:1 / -1;width:auto;padding:13px 28px;}
 .registrar-btn-danger{background:var(--crimson);border-color:var(--crimson);color:#fff;}
 .registrar-btn-danger:hover{background:#7a2534;border-color:#7a2534;box-shadow:0 10px 22px -12px rgba(124,31,46,.55);}
