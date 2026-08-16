@@ -680,7 +680,7 @@ html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.8
   background:linear-gradient(90deg,transparent,var(--gold-bright,#E9CE8A),transparent);}
 
 /* ===================================================================
-   THE REGISTRAR'S OFFICE — A GLOSSIER CHROME
+   THE REGISTRAR'S OFFICE — THE PUBLIC SITE'S OWN LIGHT, NOT ESPRESSO
    -------------------------------------------------------------------
    Scoped to body[data-office-page="registrar"], which only
    portal/staff/registrar/index.html carries — not the other pages
@@ -688,26 +688,214 @@ html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.8
    graduation-control). This is one office's furniture, not a rewrite
    of the chrome the other sixty-seven pages depend on.
 
-   Two things layer onto the base chrome above, on every surface —
-   the calendar strip, the masthead, the colophon, the arrival plate,
-   the live-hours panel: a faint ledger grid, the ruled hairlines of a
-   registry book, and a slow gloss sweep in the same restrained
-   language as .portal-card's Living Gold Reflection in css/portal.css
-   (a soft diagonal band moved by animating background-position, nothing
-   blended with `screen` — that mistake is already documented above,
-   at .crest-shimmer-wrap::after, and this does not repeat it).
+   The base chrome above is deliberately espresso in every edition —
+   that is the whole point of the "ONE GROUND NOW" block a page up.
+   This office asked to leave that ground: ivory and parchment, gold
+   hairlines and deep-gold-brown ink, sampled from the school's own
+   public masthead and footer rather than invented — the same
+   --ivory-bg / --cream-bg / --parchment-bg values css/brand.css
+   already declares, and the same ink (#2A1C10, #6B4E22, #8C6834)
+   .pch-state's own back-link already uses for the one thing in this
+   file that has always stood on cream. Hardcoded rather than read
+   from those custom properties, on purpose, matching how the espresso
+   ground above is hardcoded too: a visitor's chosen livery must not
+   be able to turn this office espresso again, or ivory-on-something-
+   the-livery-picked, any more than it could before.
 
-   Both layers live on one pseudo-element per surface, painted at
-   z-index:-1 — above that surface's own background, below its real
-   content — the same placement .pch-foot's crest watermark already
-   uses. .pch-arrival and .pch-now don't establish their own stacking
-   context in the base rules (position:relative with the default
-   z-index:auto isn't enough), so isolation:isolate is added here to
-   keep each surface's pseudo-element from escaping to a parent's.
+   Every rule below repaints a selector the base chrome already
+   states for its dark ground — background, border, text, the gloss
+   and grid overlay's own colours — for this light one instead. Two
+   new things ride on top of the repaint: a ledger-grid-and-gloss
+   overlay (unchanged in technique from the espresso version, only
+   retinted) and a grid of bordered tiles for the colophon's link
+   columns, in place of a plain list — the layout idea the last round
+   of this brief pointed at in Worldwide English College's own
+   footer, built here in this school's own materials rather than
+   copied in theirs.
    ------------------------------------------------------------------- */
+body[data-office-page="registrar"]{
+  --rgo-cream-1:rgb(251,246,234); --rgo-cream-2:rgb(247,238,223);
+  --rgo-parchment:rgb(241,228,200);
+  --rgo-ink:#2A1C10; --rgo-ink-soft:rgba(59,42,29,.74);
+  --rgo-gold-deep:#8C6834; --rgo-gold-mid:#6B4E22;
+  --rgo-line:rgba(140,104,52,.32);
+}
+
+/* ---- The surfaces, repainted ---------------------------------------- */
+body[data-office-page="registrar"] .pch-strip{
+  background:linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-parchment) 100%);
+  border-bottom:1px solid var(--rgo-line);}
+body[data-office-page="registrar"] .pch-strip::after{
+  background:linear-gradient(90deg,transparent,rgba(140,104,52,.4) 30%,rgba(140,104,52,.4) 70%,transparent);}
+body[data-office-page="registrar"] .portal-topbar.pch-mast{
+  background:
+    radial-gradient(700px 160px at 50% -60%,rgba(198,161,91,.16),transparent 74%),
+    linear-gradient(180deg,var(--rgo-cream-1) 0%,var(--rgo-cream-2) 100%)!important;
+  border-bottom:1px solid var(--rgo-line)!important;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.7),0 14px 30px -26px rgba(60,40,20,.22)!important;}
+body[data-office-page="registrar"] .pch-mast > .pch-utility{
+  background:linear-gradient(180deg,rgba(140,104,52,.06),rgba(140,104,52,0));
+  border-top:1px solid var(--rgo-line);}
+body[data-office-page="registrar"] .portal-topbar::after{
+  background:linear-gradient(90deg,transparent,rgba(140,104,52,.55) 16%,
+    rgba(140,104,52,.95) 50%,rgba(140,104,52,.55) 84%,transparent);}
+body[data-office-page="registrar"] .pch-foot{
+  background:linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-parchment) 100%);
+  border-top:1px solid var(--rgo-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
+body[data-office-page="registrar"] .pch-arrival{
+  background:
+    radial-gradient(560px 180px at 50% 0%,rgba(198,161,91,.12),transparent 72%),
+    linear-gradient(168deg,rgba(255,255,255,.55),rgba(233,206,138,.10));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 0 0 1px var(--rgo-line),
+    0 22px 46px -30px rgba(60,40,20,.28);
+  border-color:var(--rgo-line);}
+body[data-office-page="registrar"] .pch-arrival::before{
+  content:"";position:absolute;inset:5px;z-index:-1;pointer-events:none;
+  border:1px solid rgba(140,104,52,.16);border-radius:2px;}
+body[data-office-page="registrar"] .pch-now{
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.12));
+  border-color:var(--rgo-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 40px -28px rgba(60,40,20,.22);}
+body[data-office-page="registrar"] .pch-now-head{border-bottom-color:var(--rgo-line);}
+@media (min-width:821px){
+  body[data-office-page="registrar"] .pch-now-cell:not(:first-child){
+    border-inline-start:1px solid var(--rgo-line);padding-inline-start:20px;}
+}
+
+/* ---- The ink -------------------------------------------------------- */
+body[data-office-page="registrar"] .pch-strip-item{color:var(--rgo-ink-soft);}
+body[data-office-page="registrar"] .pch-strip-icon{opacity:.62;color:var(--rgo-gold-deep);}
+body[data-office-page="registrar"] .pch-strip-sep{
+  background:linear-gradient(180deg,transparent,rgba(140,104,52,.4),transparent);}
+body[data-office-page="registrar"] .pch-strip-link:hover,
+body[data-office-page="registrar"] .pch-strip-link:focus-visible{color:var(--rgo-ink);}
+
+body[data-office-page="registrar"] .portal-brand .line1{
+  background-image:linear-gradient(100deg,var(--rgo-ink) 30%,var(--rgo-gold-deep) 45%,var(--rgo-ink) 60%)!important;}
+@media (prefers-reduced-motion:reduce){
+  body[data-office-page="registrar"] .portal-brand .line1{
+    background:none!important;-webkit-text-fill-color:var(--rgo-ink)!important;color:var(--rgo-ink)!important;}
+}
+body[data-office-page="registrar"] .portal-brand .line2{color:var(--rgo-gold-mid)!important;}
+body[data-office-page="registrar"] .portal-brand > span:not(.brand-text):not(.crest-shimmer-wrap){
+  color:var(--rgo-ink)!important;}
+body[data-office-page="registrar"] .portal-topbar-link{color:var(--rgo-ink-soft)!important;}
+body[data-office-page="registrar"] .portal-topbar-link:hover{color:var(--rgo-ink)!important;}
+body[data-office-page="registrar"] .pch-mast .portal-topbar-link{
+  color:var(--rgo-gold-mid);border-color:var(--rgo-line);
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+body[data-office-page="registrar"] .pch-mast .portal-topbar-link:hover,
+body[data-office-page="registrar"] .pch-mast .portal-topbar-link:focus-visible{
+  border-color:rgba(140,104,52,.6);background:rgba(233,206,138,.18);
+  color:var(--rgo-ink)!important;}
+body[data-office-page="registrar"] .pch-mast > .portal-topbar-calendar{
+  color:var(--rgo-gold-mid)!important;border-color:var(--rgo-line)!important;
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08));}
+body[data-office-page="registrar"] .portal-topbar-calendar:hover{
+  color:var(--rgo-ink)!important;border-color:rgba(140,104,52,.7)!important;
+  background:rgba(233,206,138,.16);}
+body[data-office-page="registrar"] .portal-topbar .portal-theme-toggle{
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08))!important;
+  border-color:var(--rgo-line)!important;color:var(--rgo-gold-mid)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+body[data-office-page="registrar"] .portal-topbar .portal-theme-toggle:hover,
+body[data-office-page="registrar"] .portal-topbar .portal-theme-toggle:focus-visible{
+  background:rgba(233,206,138,.2)!important;border-color:rgba(140,104,52,.7)!important;
+  color:var(--rgo-ink)!important;}
+body[data-office-page="registrar"] .portal-topbar .lang-switch > summary{
+  color:var(--rgo-gold-mid)!important;border-color:var(--rgo-line)!important;}
+body[data-office-page="registrar"] .portal-topbar .lang-switch > summary:hover{
+  color:var(--rgo-ink)!important;border-color:rgba(140,104,52,.7)!important;
+  background:rgba(233,206,138,.16);}
+body[data-office-page="registrar"] .portal-logout{
+  border-color:var(--rgo-line)!important;
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08))!important;
+  color:var(--rgo-gold-mid)!important;}
+body[data-office-page="registrar"] .portal-logout:hover{
+  border-color:#C6A15B!important;color:#1A1006!important;
+  background:linear-gradient(135deg,#C6A15B,#E9CE8A)!important;}
+body[data-office-page="registrar"] .pch-standing{color:var(--rgo-gold-mid);}
+body[data-office-page="registrar"] .pch-standing::before,
+body[data-office-page="registrar"] .pch-standing::after{
+  background:linear-gradient(90deg,transparent,rgba(140,104,52,.55));}
+body[data-office-page="registrar"] .pch-standing::after{
+  background:linear-gradient(270deg,transparent,rgba(140,104,52,.55));}
+body[data-office-page="registrar"] .pch-standing-d{color:rgba(140,104,52,.7);}
+
+body[data-office-page="registrar"] .pch-statement{color:var(--rgo-ink);}
+body[data-office-page="registrar"] .pch-mark,
+body[data-office-page="registrar"] .pch-corner{color:rgba(140,104,52,.6);}
+body[data-office-page="registrar"] .pch-now-eyebrow{color:var(--rgo-gold-deep);}
+body[data-office-page="registrar"] .pch-now-place,
+body[data-office-page="registrar"] .pch-now-sub{color:var(--rgo-ink-soft);}
+body[data-office-page="registrar"] .pch-now-clock,
+body[data-office-page="registrar"] .pch-now-hours,
+body[data-office-page="registrar"] .pch-now-state{color:var(--rgo-ink);}
+body[data-office-page="registrar"] .pch-now-dot{background:rgba(59,42,29,.3);}
+body[data-office-page="registrar"] .pch-now-link{
+  color:var(--rgo-gold-deep);border-color:rgba(140,104,52,.4);}
+body[data-office-page="registrar"] .pch-now-link:hover,
+body[data-office-page="registrar"] .pch-now-link:focus-visible{
+  color:var(--rgo-ink);border-color:var(--rgo-gold-deep);}
+
+body[data-office-page="registrar"] .pch-h{color:var(--rgo-gold-deep);}
+body[data-office-page="registrar"] .pch-h::after{
+  background:linear-gradient(90deg,rgba(140,104,52,.5),rgba(140,104,52,.05));}
+[dir="rtl"] body[data-office-page="registrar"] .pch-h::after{
+  background:linear-gradient(270deg,rgba(140,104,52,.5),rgba(140,104,52,.05));}
+body[data-office-page="registrar"] .pch-foot-name{color:var(--rgo-ink);}
+body[data-office-page="registrar"] .pch-foot-sig,
+body[data-office-page="registrar"] .pch-meta,
+body[data-office-page="registrar"] .pch-note{color:var(--rgo-ink-soft);}
+body[data-office-page="registrar"] .pch-rule{
+  background:linear-gradient(90deg,transparent,rgba(140,104,52,.4) 20%,
+    rgba(140,104,52,.7) 50%,rgba(140,104,52,.4) 80%,transparent);}
+body[data-office-page="registrar"] .pch-badge{
+  color:var(--rgo-gold-mid);border-color:rgba(140,104,52,.4);
+  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.1));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+body[data-office-page="registrar"] .pch-crest{
+  filter:drop-shadow(0 0 12px rgba(198,161,91,.4));}
+
+/* ---- The colophon's links, as a grid of tiles rather than a list ----
+   The plain underlined-on-hover list read fine on the espresso base
+   but this office asked for the same sophistication Worldwide English
+   College's own footer carries — bordered, iconed tiles in a grid. The
+   dot standing for the icon is drawn, not fetched: the file already
+   speaks in small SVG marks (.pch-mark, .pch-corner) rather than an
+   icon font, and a plain gold point keeps that same restraint. */
+body[data-office-page="registrar"] .pch-list{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px 12px;}
+body[data-office-page="registrar"] .pch-link{
+  display:flex;align-items:center;gap:9px;width:auto;padding:10px 13px;
+  border-radius:9px;border:1px solid var(--rgo-line);color:var(--rgo-ink-soft);
+  background:linear-gradient(168deg,rgba(255,255,255,.55),rgba(233,206,138,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  transition:border-color .3s ease,background .3s ease,transform .3s ease,color .3s ease;}
+body[data-office-page="registrar"] .pch-link::before{
+  content:"";flex:0 0 auto;width:5px;height:5px;border-radius:50%;
+  background:var(--rgo-gold-deep);box-shadow:0 0 4px 0 rgba(140,104,52,.5);}
+body[data-office-page="registrar"] .pch-link::after{display:none;}
+body[data-office-page="registrar"] .pch-link:hover,
+body[data-office-page="registrar"] .pch-link:focus-visible{
+  color:var(--rgo-ink);border-color:rgba(140,104,52,.55);
+  background:rgba(233,206,138,.16);transform:translateY(-1px);}
+
+/* ---- The ledger grid and gloss sweep, retinted for ivory ------------
+   Same technique as the espresso version this replaces — one
+   pseudo-element per surface at z-index:-1, painted above that
+   surface's own background and below its real content — only the
+   colour stops change: a warm gold sheen in place of a near-white one
+   (near-white read as a glossy highlight against espresso; against
+   ivory it would all but disappear), and slightly higher-opacity grid
+   hairlines, since gold-on-cream carries less contrast than gold-on-
+   espresso did. */
 body[data-office-page="registrar"] .pch-arrival,
 body[data-office-page="registrar"] .pch-now{isolation:isolate;}
-
 body[data-office-page="registrar"] .pch-strip::before,
 body[data-office-page="registrar"] .pch-mast::before,
 body[data-office-page="registrar"] .pch-foot::after,
@@ -715,10 +903,10 @@ body[data-office-page="registrar"] .pch-arrival::after,
 body[data-office-page="registrar"] .pch-now::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
   background-image:
-    linear-gradient(115deg,transparent 40%,rgba(255,246,223,.12) 48%,
-      rgba(255,246,223,.20) 50%,rgba(255,246,223,.12) 52%,transparent 60%),
-    linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+    linear-gradient(115deg,transparent 40%,rgba(140,104,52,.07) 48%,
+      rgba(140,104,52,.13) 50%,rgba(140,104,52,.07) 52%,transparent 60%),
+    linear-gradient(rgba(140,104,52,.065) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(140,104,52,.06) 1px,transparent 1px);
   background-size:240% 240%,34px 34px,34px 34px;
   background-position:140% -40%,0 0,0 0;
   animation:pchRegistrarGloss 10s ease-in-out infinite;
@@ -738,8 +926,8 @@ body[data-office-page="registrar"] .pch-now::after{animation-duration:13s;animat
   body[data-office-page="registrar"] .pch-now::after{
     animation:none;
     background-image:
-      linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+      linear-gradient(rgba(140,104,52,.065) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(140,104,52,.06) 1px,transparent 1px);
     background-size:34px 34px,34px 34px;background-position:0 0,0 0;}
 }
 html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-strip::before,
@@ -749,46 +937,20 @@ html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-arrival::
 html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-now::after{
   animation:none;
   background-image:
-    linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+    linear-gradient(rgba(140,104,52,.065) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(140,104,52,.06) 1px,transparent 1px);
   background-size:34px 34px,34px 34px;background-position:0 0,0 0;}
 
-/* The arrival plate, in a double frame — the outer border the base rule
-   already draws, and a second hairline set 5px in from it, which is
-   what a jewel box's inner bevel looks like rather than a single flat
-   rule. The drop shadow is lifted further off the page too, since this
-   plate is meant to read as set apart from the espresso behind it. */
-body[data-office-page="registrar"] .pch-arrival{
-  border-color:rgba(233,206,138,.32);
-  box-shadow:
-    inset 0 1px 0 rgba(255,246,223,.1),
-    inset 0 0 0 1px rgba(233,206,138,.10),
-    0 22px 46px -30px rgba(0,0,0,.65);}
-body[data-office-page="registrar"] .pch-arrival::before{
-  content:"";position:absolute;inset:5px;z-index:-1;pointer-events:none;
-  border:1px solid rgba(233,206,138,.14);border-radius:2px;}
-
-/* The live-hours panel gets the same lift, and — at the width where its
-   three stats actually sit in one row — a hairline between them, so
-   Attendance, Average Score and Fee Status read as three ruled entries
-   in a ledger rather than three numbers floating in a grid gap. */
-body[data-office-page="registrar"] .pch-now{
-  border-color:rgba(233,206,138,.3);
-  box-shadow:inset 0 1px 0 rgba(255,246,223,.1),0 18px 40px -28px rgba(0,0,0,.6);}
-@media (min-width:821px){
-  body[data-office-page="registrar"] .pch-now-cell:not(:first-child){
-    border-inline-start:1px solid rgba(233,206,138,.16);padding-inline-start:20px;}
-}
-
-/* The office's own badge, in the masthead's working tier, sealed rather
-   than flat: a small set stone before the name and a third gradient
-   stop so the gold reads as cast metal rather than a two-colour chip. */
+/* ---- The office's own badge, sealed rather than flat ----------------
+   Already an opaque gold pill, so it stands on ivory exactly as it
+   stood on espresso — only the outer ring is deepened slightly, since
+   a pale cream ring on pale cream ground read as almost no ring here. */
 body[data-office-page="registrar"] .portal-pilot-badge{
   position:relative;padding-inline-start:26px;
   background:linear-gradient(135deg,#F3DFA0,#C6A15B,#9C7A3C)!important;
-  border-color:rgba(255,246,223,.55)!important;
+  border-color:rgba(107,78,34,.5)!important;
   box-shadow:
-    0 6px 16px -8px rgba(140,100,40,.95),
+    0 6px 16px -8px rgba(140,100,40,.75),
     inset 0 1px 0 rgba(255,255,255,.55),
     inset 0 0 0 1px rgba(255,246,223,.4);}
 body[data-office-page="registrar"] .portal-pilot-badge::before{
