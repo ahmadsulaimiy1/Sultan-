@@ -1509,3 +1509,57 @@ body.portal-body .registrar-form-grid > * { min-width: 0; }
 @media (prefers-reduced-motion: reduce) {
   .cmd-navgrid .navlinks .nav-drop-trigger:hover { transform: none; }
 }
+
+/* ===========================================================================
+   19. TABLES — the working lists, dressed out of their default grid
+   ===========================================================================
+   Every table in the staff wing — batch lists, issued-certificate registers,
+   the approval matrix, the graduation control roster — was a bare <table>
+   with the browser's own 1px grey grid, whether written by hand in the HTML
+   or built by JS (js/portal-staff-certificate-centre.js creates four this
+   way). Neither had ever been reached by this file, because the entire
+   portal/staff/* wing was built after this system and wired in separately
+   (scripts/portal-command-wire.mjs) — this section is the other half of
+   that catch-up: it was never enough to gild the chrome around a table that
+   still looked like a spreadsheet.
+
+   The treatment is the same one already established for cards and rails
+   elsewhere in this file: no grid lines at all, a hairline UNDER each row
+   rather than a box AROUND each cell, a small-caps gold label register for
+   the header (matching .portal-field .label), and a warm hover wash so a
+   row reads as addressable rather than printed. Works on any table inside
+   .portal-body — hand-written or JS-built — with no markup change. */
+body.portal-body table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(198,161,91,.22);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 8px 22px -16px rgba(70,48,16,.22);
+}
+body.portal-body table th,
+body.portal-body table td {
+  /* Reset first, then re-add only the one hairline that is actually
+     wanted (the row's foot) — a table dropped in with its own `border`
+     attribute (legacy markup, or a builder that predates this rule) can
+     otherwise keep a full grid on every side via the UA stylesheet even
+     after border-collapse. */
+  border: 0; border-bottom: 1px solid rgba(198,161,91,.14);
+}
+body.portal-body table thead th {
+  text-align: left; padding: 11px 14px;
+  background: linear-gradient(180deg, rgba(198,161,91,.14), rgba(198,161,91,.05));
+  color: #8A6A2E; letter-spacing: .1em; text-transform: uppercase;
+  font-size: 10px; font-weight: 700;
+  border-bottom: 1px solid rgba(198,161,91,.28);
+}
+body.portal-body table tbody td {
+  padding: 10px 14px; color: var(--cmd-ink, #241A0E);
+  vertical-align: middle;
+}
+body.portal-body table tbody tr:last-child td { border-bottom: 0; }
+body.portal-body table tbody tr {
+  transition: background-color .3s ease;
+}
+body.portal-body table tbody tr:hover {
+  background: rgba(198,161,91,.08);
+}
