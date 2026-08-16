@@ -2399,6 +2399,15 @@ CREATE TABLE IF NOT EXISTS stage_certificates (
   issued_by_staff_id    INTEGER REFERENCES staff(id),
   revoked_at            TIMESTAMPTZ,
   revocation_note       TEXT,
+  -- Reissue management (corrections are revoke + reissue — the design
+  -- note above). revoked_by_staff_id records the revoking officer ON
+  -- THE ROW (parity with graduation_documents), not only in the audit
+  -- log. replaces_serial_no on a NEW certificate names the serial it
+  -- supersedes; the successor of a revoked certificate is found by
+  -- looking this column up in reverse. The foreign key guarantees the
+  -- link can only ever name a real certificate.
+  revoked_by_staff_id   INTEGER REFERENCES staff(id),
+  replaces_serial_no    TEXT REFERENCES stage_certificates(serial_no),
   created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id);
@@ -2418,6 +2427,20 @@ CREATE INDEX IF NOT EXISTS idx_stage_certificates_batch ON stage_certificates(ba
 -- is a LIKE against a low-cardinality table.
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_identity_no ON stage_certificates(student_identity_no);
 CREATE INDEX IF NOT EXISTS idx_stage_certificates_hash_prefix ON stage_certificates (left(lower(content_hash), 12));
+-- Reissue columns for databases created before them (additive,
+-- re-runnable — the same pattern as hash_key_version below). These
+-- ALTERs MUST precede the successor index below: on a pre-reissue
+-- database the CREATE TABLE above is a no-op, so the index can only
+-- resolve its column after the ALTER has added it.
+ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS revoked_by_staff_id INTEGER REFERENCES staff(id);
+ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS replaces_serial_no TEXT REFERENCES stage_certificates(serial_no);
+-- Successor lookups ("which certificate replaced this serial?") walk
+-- replaces_serial_no in reverse — the register listing and the public
+-- verifier both ask it. UNIQUE is the invariant, not just speed: a
+-- serial can be replaced at most ONCE, and two concurrent reissues of
+-- the same certificate must fail loudly here rather than mint two
+-- active replacements.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_stage_certificates_replaces ON stage_certificates(replaces_serial_no);
 
 -- Bilingual identity fields the certificate roster captures — stored on
 -- the student record too (not only the certificate snapshot) so future

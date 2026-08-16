@@ -93,6 +93,16 @@
   function dashDone(data){
     if(!dashEl) return;
     dashEl.classList.remove('is-live');
+    // A reissue is a single administrative act with no batch number and
+    // no combined batch PDF — the banner must not claim either.
+    if(data.reissue){
+      dashSet('title', 'Reissue Complete');
+      dashSet('current', 'Replacement archived to the Certificate Register');
+      dashSet('audit', 'Registered & audit-logged');
+      var rnote = dashField('note');
+      if(rnote) rnote.textContent = 'The replacement certificate is in the Certificate Register below; the serial it supersedes is revoked and permanently names it.';
+      return;
+    }
     dashSet('title', 'Production Complete — ' + data.batchNo);
     dashSet('current', 'Batch archived to the Certificate Register');
     dashSet('audit', 'Registered & audit-logged');
@@ -227,7 +237,13 @@
     diagSet('registry', 'ACTIVE');
     diagSet('audit', 'PENDING');
     if(consoleEl) consoleEl.innerHTML = '';
-    logLine('ProductionLine', 'Start(rows=' + ((e.detail && e.detail.total) || 0) + ', programme=' + (programmeEl ? programmeEl.value : '?') + ', profile=' + qualityProfile() + ')');
+    // A reissue names itself — never the roster form's programme, which
+    // has nothing to do with the certificate being replaced.
+    if(e.detail && e.detail.reissue){
+      logLine('ProductionLine', 'Start(reissue, replaces=' + (e.detail.replacesSerialNo || '?') + ')');
+    }else{
+      logLine('ProductionLine', 'Start(rows=' + ((e.detail && e.detail.total) || 0) + ', programme=' + (programmeEl ? programmeEl.value : '?') + ', profile=' + qualityProfile() + ')');
+    }
     logLine('PressLine', 'PowerUp()');
   });
   document.addEventListener('sultan:cert-generate-progress', function(e){
@@ -255,8 +271,14 @@
       dashDone(d);
       diagSet('registry', 'SYNCED');
       diagSet('audit', 'APPENDED');
-      logLine('AuditLedger', 'Append(batch=' + d.batchNo + ', issued=' + d.issued + ', skipped=' + d.skipped + ', failed=' + d.failed + ')', 'ok');
-      logLine('RenderEngine', 'CompileBatchPdf(order=issuance)', 'ok');
+      // A reissue is a single administrative act, not a batch — no
+      // batch ledger line, and no batch PDF is compiled for it.
+      if(d.reissue){
+        logLine('AuditLedger', 'Append(reissue, issued=' + d.issued + ')', 'ok');
+      }else{
+        logLine('AuditLedger', 'Append(batch=' + d.batchNo + ', issued=' + d.issued + ', skipped=' + d.skipped + ', failed=' + d.failed + ')', 'ok');
+        logLine('RenderEngine', 'CompileBatchPdf(order=issuance)', 'ok');
+      }
       logLine('ProductionLine', 'Complete()', 'ok');
     }
     if(d.type === 'error'){
@@ -625,6 +647,89 @@
   if(batchesRefreshBtn) batchesRefreshBtn.addEventListener('click', loadBatches);
 
   // ── Register + revoke ────────────────────────────────────────────
+  // ── Reissue dialog ───────────────────────────────────────────────
+  // Corrections are revoke + reissue as one administrative act: the
+  // student record is corrected first (it is the source of truth), a
+  // new serial is minted from it, the old serial is retired naming its
+  // successor — and the press manufactures the replacement live, from
+  // its own official master.
+  var reissueDialog = document.querySelector('[data-cert-reissue-dialog]');
+  function openReissueDialog(c){
+    if(!reissueDialog || typeof reissueDialog.showModal !== 'function'){
+      showResult(registerResultEl, false, 'This browser cannot open the reissue form.');
+      return;
+    }
+    reissueDialog.querySelector('[data-reissue-serial]').textContent = c.serialNo;
+    reissueDialog.querySelector('[data-reissue-name]').value = c.studentFullName || '';
+    reissueDialog.querySelector('[data-reissue-name-ar]').value = c.studentFullNameAr || '';
+    reissueDialog.querySelector('[data-reissue-sex]').value = c.studentSex || '';
+    reissueDialog.querySelector('[data-reissue-reason]').value = '';
+    var errEl = reissueDialog.querySelector('[data-reissue-error]');
+    errEl.hidden = true; errEl.textContent = '';
+    reissueDialog.returnValue = '';
+    reissueDialog.showModal();
+    var form = reissueDialog.querySelector('form');
+    var submitBtn = reissueDialog.querySelector('[data-reissue-submit]');
+    function cleanup(){
+      form.removeEventListener('submit', onSubmit);
+    }
+    async function onSubmit(ev){
+      ev.preventDefault();
+      var reason = reissueDialog.querySelector('[data-reissue-reason]').value.trim();
+      if(!reason){
+        errEl.textContent = 'A reason is required — it is recorded permanently in the audit ledger.';
+        errEl.hidden = false;
+        return;
+      }
+      var corrections = {
+        fullName: reissueDialog.querySelector('[data-reissue-name]').value.trim(),
+        fullNameAr: reissueDialog.querySelector('[data-reissue-name-ar]').value.trim(),
+      };
+      var sexVal = reissueDialog.querySelector('[data-reissue-sex]').value;
+      if(sexVal) corrections.sex = sexVal;
+      submitBtn.disabled = true;
+      try{
+        var res = await post({ action: 'reissue', serialNo: c.serialNo, reason: reason, corrections: corrections });
+        cleanup();
+        reissueDialog.close();
+        showResult(registerResultEl, true, c.serialNo + ' reissued as ' + res.serialNo + '.');
+        // The production studio manufactures the replacement — real
+        // events carrying the real new serial and its official master.
+        // (The start event clears the engine log, so the Reissue entry
+        // is written after it.)
+        document.dispatchEvent(new CustomEvent('sultan:cert-generate-start', { detail: { total: 1, reissue: true, replacesSerialNo: c.serialNo } }));
+        logLine('RegistrySync', 'Reissue(replaces=' + c.serialNo + ', serial=' + res.serialNo + ')', 'ok');
+        document.dispatchEvent(new CustomEvent('sultan:cert-generate-progress', { detail: {
+          type: 'row', index: 0, total: 1, fullName: res.studentFullName, status: 'issued',
+          serialNo: res.serialNo, studentIdentityNo: res.studentIdentityNo,
+          pngUrl: res.pngUrl, viewUrl: res.viewUrl,
+        } }));
+        document.dispatchEvent(new CustomEvent('sultan:cert-generate-progress', { detail: {
+          type: 'batch_done', ok: true, reissue: true, issued: 1, skipped: 0, failed: 0,
+        } }));
+        document.dispatchEvent(new CustomEvent('sultan:cert-generate-end', { detail: { ok: true } }));
+        loadRegister();
+      }catch(err){
+        // The dialog may have been dismissed (Esc/Cancel) while the
+        // request was in flight — a failure must still reach the
+        // registrar, so it falls through to the page-level result line.
+        if(reissueDialog.open){
+          errEl.textContent = err.message;
+          errEl.hidden = false;
+          submitBtn.disabled = false;
+        }else{
+          showResult(registerResultEl, false, 'Reissue of ' + c.serialNo + ' failed: ' + err.message);
+        }
+      }
+    }
+    form.addEventListener('submit', onSubmit);
+    reissueDialog.addEventListener('close', function onClose(){
+      reissueDialog.removeEventListener('close', onClose);
+      cleanup();
+      submitBtn.disabled = false;
+    });
+  }
+
   async function loadRegister(){
     registerListEl.innerHTML = '';
     registerResultEl.hidden = true;
@@ -642,7 +747,13 @@
       var tbody = el('tbody');
       data.certificates.forEach(function(c){
         var tr = el('tr');
-        tr.appendChild(el('td', null, c.serialNo));
+        var serialTd = el('td', null, c.serialNo);
+        // A reissued certificate names the serial it replaced — the
+        // lineage is visible in the register itself.
+        if(c.replacesSerialNo){
+          serialTd.appendChild(el('div', 'cc-register-lineage', 'Reissue of ' + c.replacesSerialNo));
+        }
+        tr.appendChild(serialTd);
         tr.appendChild(el('td', null, c.studentFullName));
         tr.appendChild(el('td', null, c.studentIdentityNo || '—'));
         tr.appendChild(el('td', null, c.programmeCode));
@@ -650,6 +761,9 @@
         tr.appendChild(el('td', null, c.gradeEn || '—'));
         var st = el('td', null, c.status === 'revoked' ? ('Revoked — ' + (c.revocationNote || '')) : 'Active');
         st.style.color = c.status === 'revoked' ? 'var(--portal-danger, #B3261E)' : 'var(--portal-ok, #2E7D32)';
+        if(c.status === 'revoked' && c.supersededBySerialNo){
+          st.appendChild(el('div', 'cc-register-lineage', 'Reissued as ' + c.supersededBySerialNo));
+        }
         tr.appendChild(st);
         var td = el('td');
         var open = el('a', 'text-link', 'Open');
@@ -678,12 +792,27 @@
             try{
               await post({ action: 'revoke', serialNo: c.serialNo, revocationNote: note.trim() });
               showResult(registerResultEl, true, c.serialNo + ' revoked.');
+              logLine('AuditLedger', 'Revoke(serial=' + c.serialNo + ')', 'warn');
               loadRegister();
             }catch(err){
               showResult(registerResultEl, false, err.message);
             }
           });
           td.appendChild(revoke);
+        }
+        // Reissue: available until a successor exists — a certificate
+        // already replaced can never be replaced twice. Stage
+        // programmes only: Royal College certificates are reissued by
+        // their own batch pipeline (the server refuses them too — this
+        // just spares the registrar a dead button).
+        var STAGE_REISSUE_CODES = { TMH: 1, IBT: 1, IDD: 1, THN: 1 };
+        if(!c.supersededBySerialNo && STAGE_REISSUE_CODES[c.programmeCode]){
+          td.appendChild(document.createTextNode(' '));
+          var reissue = el('button', 'text-link', 'Reissue…');
+          reissue.type = 'button';
+          reissue.style.background = 'none'; reissue.style.border = 'none'; reissue.style.cursor = 'pointer'; reissue.style.padding = '0';
+          reissue.addEventListener('click', function(){ openReissueDialog(c); });
+          td.appendChild(reissue);
         }
         tr.appendChild(td);
         tbody.appendChild(tr);

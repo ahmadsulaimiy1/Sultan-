@@ -26,7 +26,7 @@
       unknownState: 'This record is in a state this page does not recognise — contact the Registrar’s Office',
       heldCredentials: 'Credentials held', ofRecord: 'Student',
       recipient: 'Recipient', credential: 'Credential', scope: 'Scope', examiners: 'Examining Scholars',
-      issued: 'Issued', reference: 'Reference No.', revokedNote: 'Revocation note', checking: 'Checking…',
+      issued: 'Issued', reference: 'Reference No.', revokedNote: 'Revocation note', supersededBy: 'Replaced by certificate', checking: 'Checking…',
       studentId: 'Student ID', institution: 'Institution', academicYear: 'Academic Year',
       grade: 'Grade', hijri: 'Hijri Date', integrity: 'Integrity',
       integrityIntact: 'Intact — cryptographic hash and serial suffix verified',
@@ -51,7 +51,7 @@
       unknownState: 'هذا السجل في حالة لا تعرفها هذه الصفحة — يرجى التواصل مع مكتب المسجّل',
       heldCredentials: 'الشهادات المسجَّلة', ofRecord: 'الطالب',
       recipient: 'الاسم', credential: 'الشهادة', scope: 'النطاق', examiners: 'العلماء الممتحنون',
-      issued: 'تاريخ الإصدار', reference: 'الرقم المرجعي', revokedNote: 'ملاحظة الإلغاء', checking: 'جارٍ التحقق…',
+      issued: 'تاريخ الإصدار', reference: 'الرقم المرجعي', revokedNote: 'ملاحظة الإلغاء', supersededBy: 'حلّت محلها الشهادة', checking: 'جارٍ التحقق…',
       studentId: 'الرقم الأكاديمي الدائم', institution: 'المؤسسة', academicYear: 'العام الدراسي',
       grade: 'التقدير', hijri: 'التاريخ الهجري', integrity: 'سلامة الوثيقة',
       integrityIntact: 'سليمة — تم التحقق من البصمة التشفيرية ولاحقة الرقم التسلسلي',
@@ -155,6 +155,9 @@
       rows += field(t.integrity, data.integrity === 'pending_signature' ? t.integrityPending : t.integrityIntact);
     }
     if (isRevoked && data.revocationNote) rows += field(t.revokedNote, data.revocationNote);
+    // A revoked-and-reissued certificate points the verifier to the
+    // serial that now attests the award — verify THAT number instead.
+    if (isRevoked && data.supersededBySerialNo) rows += field(t.supersededBy, data.supersededBySerialNo);
 
     resultEl.innerHTML =
       '<div class="cert-verify-result ' + ((isRevoked || integrityFailed) ? 'is-revoked' : 'is-valid') + '">' +

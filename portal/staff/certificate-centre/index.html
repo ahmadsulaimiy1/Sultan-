@@ -233,13 +233,45 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"></textarea>
     <div class="office-group-head">4 — Certificate Register &amp; Revocation</div>
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Certificate Register</h2></div>
-      <p class="registrar-field-note" style="padding:0 20px;">Search by serial number, student name, or Student ID. Every certificate can be re-opened, re-printed, publicly verified, or revoked (with a mandatory note) — revocation shows instantly at the public verification page; the serial is never reused.</p>
+      <p class="registrar-field-note" style="padding:0 20px;">Search by serial number, student name, or Student ID. Every certificate can be re-opened, re-printed, publicly verified, revoked (with a mandatory note), or reissued — a reissue corrects the student record, mints a new serial that names the one it replaces, and retires the old serial in the same act. Revocations and reissues show instantly at the public verification page; serials are never reused.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
         <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="min-width:280px;" />
         <button type="button" class="registrar-btn" data-cert-register-lookup>Search Register</button>
       </div>
       <div class="registrar-approvals-list" data-cert-register-list></div>
       <div class="registrar-form-result" data-cert-register-result hidden></div>
+      <!-- Reissue: revoke + replace as ONE administrative act. The form
+           corrects the student record (the source of truth), the server
+           mints the replacement serial naming the serial it supersedes,
+           and the production studio manufactures the new certificate
+           from its official master. -->
+      <dialog class="cc-reissue-dialog" data-cert-reissue-dialog>
+        <form method="dialog" novalidate>
+          <h3>Reissue Certificate</h3>
+          <p class="cc-reissue-serial-line">Replacing <strong data-reissue-serial>—</strong> — the old serial is revoked and permanently names its successor.</p>
+          <label>Full name (English)
+            <input type="text" data-reissue-name autocomplete="off" />
+          </label>
+          <label>Full name (Arabic)
+            <input type="text" data-reissue-name-ar dir="rtl" autocomplete="off" />
+          </label>
+          <label>Sex
+            <select data-reissue-sex>
+              <option value="">— unchanged —</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+          <label>Reason for reissue (required — recorded permanently in the audit ledger and shown to public verifiers on the revoked serial's page)
+            <textarea data-reissue-reason rows="3" required></textarea>
+          </label>
+          <p class="cc-reissue-error" data-reissue-error hidden></p>
+          <div class="cc-reissue-actions">
+            <button type="button" class="registrar-btn cc-reissue-cancel" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="submit" class="registrar-btn" data-reissue-submit>Reissue Certificate</button>
+          </div>
+        </form>
+      </dialog>
     </div>
 
     <div class="office-group-head">Records Integrity</div>

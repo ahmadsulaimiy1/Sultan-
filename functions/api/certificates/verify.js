@@ -186,6 +186,26 @@ export async function onRequestGet({ request, env }) {
       const row = resolved.rows[0];
       const state = stageCertificateState(env, row);
       await logVerification(sql, request, ref, state.outcome);
+      // A revoked certificate that was REISSUED names its successor, so
+      // the holder (and any verifier) is pointed at the document that
+      // now attests the award. Tolerant of a database that predates the
+      // reissue schema: it simply has no successor to name.
+      let supersededBy = null;
+      if (row.revoked_at) {
+        try {
+          const succ = await sql`
+            SELECT serial_no FROM stage_certificates
+            WHERE replaces_serial_no = ${row.serial_no} LIMIT 1`;
+          supersededBy = succ.rows[0] ? succ.rows[0].serial_no : null;
+        } catch (succErr) {
+          // Only a database that predates the reissue schema is a
+          // legitimate "no successor to name". Any OTHER failure must
+          // surface — silently answering "revoked" while hiding a real
+          // replacement is the exact misleading answer this field
+          // exists to prevent.
+          if (!/replaces_serial_no/.test((succErr && succErr.message) || '')) throw succErr;
+        }
+      }
       return json({
         ok: true,
         found: true,
@@ -215,6 +235,10 @@ export async function onRequestGet({ request, env }) {
         status: state.status,
         revokedAt: row.revoked_at,
         revocationNote: row.revoked_at ? row.revocation_note : null,
+        // Reissue linkage: which serial this document replaced, and —
+        // when this one is revoked — which serial replaced it.
+        replacesSerialNo: row.replaces_serial_no || null,
+        supersededBySerialNo: supersededBy,
       });
     }
     // A well-formed stage identifier that matched nothing still falls

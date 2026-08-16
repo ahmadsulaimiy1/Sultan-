@@ -1785,6 +1785,8 @@ const STATEMENTS = [
     issued_by_staff_id    INTEGER REFERENCES staff(id),
     revoked_at            TIMESTAMPTZ,
     revocation_note       TEXT,
+    revoked_by_staff_id   INTEGER REFERENCES staff(id),
+    replaces_serial_no    TEXT REFERENCES stage_certificates(serial_no),
     created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
   `CREATE INDEX IF NOT EXISTS idx_stage_certificates_student ON stage_certificates(student_id)`,
@@ -1806,6 +1808,16 @@ const STATEMENTS = [
   // verification for a reason no one could trace.
   `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
   `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
+  // Reissue management (corrections are revoke + reissue): the revoking
+  // officer on the row itself, and the serial a new certificate
+  // supersedes — mirrors sql/schema.sql, additive and re-runnable.
+  `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS revoked_by_staff_id INTEGER REFERENCES staff(id)`,
+  `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS replaces_serial_no TEXT REFERENCES stage_certificates(serial_no)`,
+  // Successor lookups — AFTER the ALTERs above, because on a
+  // pre-reissue database the CREATE TABLE is a no-op and the index can
+  // only resolve its column once the ALTER adds it. UNIQUE enforces
+  // "a serial is replaced at most once" — mirrors sql/schema.sql.
+  `CREATE UNIQUE INDEX IF NOT EXISTS idx_stage_certificates_replaces ON stage_certificates(replaces_serial_no)`,
 
   // These two existed in sql/schema.sql and had drifted out of this file —
   // this file's own header says "Mirrors sql/schema.sql — keep the two in
