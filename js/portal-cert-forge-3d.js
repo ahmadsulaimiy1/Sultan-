@@ -194,6 +194,7 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     // A single, finished frame: the certificate fully emerged, nothing moving.
     var still = spawnCertificate();
     still.position.y = 0.6; still.scale.y = 1; still.rotation.x = 0;
+    camera.lookAt(0, -0.4, 0);
     resize();
     renderer.render(scene, camera);
   } else {
