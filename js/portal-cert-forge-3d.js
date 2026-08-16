@@ -66,8 +66,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // The press's own finishing stations, as named on its shoulder panel
   // in the master reference. These are the SIMULATION's beats — the
   // LCD keeps reporting the real backend pipeline during live batches.
-  var FINISH_STAGES = ['UV Print', 'Laser Seal', 'Emboss', 'QR Engrave', 'Signature', 'Encryption'];
-  var FINISH_STARTS = [0.10, 0.36, 0.50, 0.62, 0.72, 0.80];
+  // In true production order along the line — the shoulder panel lights
+  // each lamp as the sheet reaches that station.
+  var FINISH_STAGES = ['UV Print', 'Emboss Seal', 'QR Engrave', 'Signature', 'Laser Inspect', 'Vault Archive'];
+  var FINISH_STARTS = [0.32, 0.42, 0.52, 0.61, 0.69, 0.905];
   var lastAnnouncedStage = '';
   var sessionCount = 0;
   var lcd = null; // assigned once the scene builds below
@@ -128,6 +130,22 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       ctx.font = '600 20px "Courier New", monospace'; ctx.fillStyle = '#6B4E22';
       ctx.fillText(serial, c.width / 2, 640);
     }
+    if (built.uv) {
+      // The UV station's microtext band — rows of near-invisible
+      // security type across the lower field, the anti-copy layer the
+      // real sheets carry as guilloche/microtext.
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      ctx.fillStyle = '#8C6834';
+      ctx.font = '600 9px "Courier New", monospace';
+      for (var mr = 0; mr < 3; mr++) {
+        var my = 452 + mr * 16;
+        var band = '';
+        while (band.length < 130) band += 'SULTAN HANAFI ROYAL SCHOOLS \u00b7 SECURE \u00b7 ';
+        ctx.fillText(band.slice(0, 130), c.width / 2, my);
+      }
+      ctx.restore();
+    }
     if (built.qr) {
       var qx = c.width - 190, qy = c.height - 190, cell = 8;
       for (var i = 0; i < 14; i++) {
@@ -177,11 +195,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   var scene = new THREE.Scene();
+  // Depth: the hall recedes into haze the way a real production floor
+  // does under industrial lighting — this is what sells the room's
+  // scale more than any single mesh.
+  scene.fog = new THREE.Fog(0x150D05, 15, 34);
   var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
   camera.position.set(0, -0.4, 11.5);
 
-  scene.add(new THREE.AmbientLight(0xE9CE8A, 0.5));
-  var key = new THREE.DirectionalLight(0xFFF3DE, 1.1);
+  scene.add(new THREE.AmbientLight(0xE9CE8A, 0.68));
+  var key = new THREE.DirectionalLight(0xFFF3DE, 1.3);
   key.position.set(3, 4, 5);
   scene.add(key);
   var rim = new THREE.DirectionalLight(0xC6A15B, 0.6);
@@ -193,19 +215,29 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // The platen mouth's own light, spilling onto the conveyor the way
   // the reference's gold lamp bar does.
   var mouthLight = new THREE.PointLight(0xE9CE8A, 0.7, 5);
-  mouthLight.position.set(0, -1.1, 1.4);
+  mouthLight.position.set(-3.2, -1.1, 1.4);
   scene.add(mouthLight);
+  [-1.5, 1.3, 4.2].forEach(function (x) {
+    var down = new THREE.PointLight(0xFFE9C0, 1.5, 9);
+    down.position.set(x, 0.7, 1.3);
+    scene.add(down);
+  });
+  // The travelling work light: each station's task lamp, rendered as
+  // one light that rides with the sheet down the line.
+  var workLight = new THREE.PointLight(0xFFF3DE, 0.9, 5.5);
+  workLight.position.set(-3.2, -0.3, 2.3);
+  scene.add(workLight);
 
   // A brass plaque in place of what used to be a plain DOM caption.
   var plaque = buildPlaque(THREE, "Where the Institution's Credentials Are Made", 4.4, 0.5);
-  plaque.mesh.position.set(0, 2.35, 0);
+  plaque.mesh.position.set(1, 1.72, -2.6);
   scene.add(plaque.mesh);
 
   // ================= THE LABORATORY =================
   // Dark reflective floor, a lit backdrop, and two idle robot arms —
   // the room the reference places the press inside.
   var floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(26, 7),
+    new THREE.PlaneGeometry(34, 8),
     new THREE.MeshStandardMaterial({ color: 0x120C05, metalness: 0.75, roughness: 0.35 })
   );
   floor.rotation.x = -Math.PI / 2;
@@ -213,6 +245,17 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // sits lower and nearer the camera) is never occluded by it.
   floor.position.set(0, -2.45, -2.4);
   scene.add(floor);
+  // Emissive floor guide-strips running the length of the line — the
+  // polished-hall light reflections that move as the camera dollies.
+  [-0.2, 2.6].forEach(function (z, i) {
+    var strip = new THREE.Mesh(
+      new THREE.PlaneGeometry(22, 0.05),
+      new THREE.MeshBasicMaterial({ color: 0xC6A15B, transparent: true, opacity: 0.18 + i * 0.06, toneMapped: false })
+    );
+    strip.rotation.x = -Math.PI / 2;
+    strip.position.set(1, -2.44, z);
+    scene.add(strip);
+  });
 
   function drawBackdrop() {
     var c = document.createElement('canvas');
@@ -242,11 +285,28 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     return tex;
   }
   var backdrop = new THREE.Mesh(
-    new THREE.PlaneGeometry(24, 9.5),
+    new THREE.PlaneGeometry(34, 10),
     new THREE.MeshBasicMaterial({ map: drawBackdrop(), toneMapped: false, transparent: true, opacity: 0.9 })
   );
-  backdrop.position.set(0, 0.6, -4.2);
+  backdrop.position.set(1, 0.6, -4.4);
   scene.add(backdrop);
+
+  // The overhead gantry crane, traversing the hall on its own
+  // schedule — the room working at something other than this sheet.
+  var craneRail = new THREE.Mesh(new THREE.BoxGeometry(20, 0.14, 0.14), new THREE.MeshStandardMaterial({ color: 0x1A1109, metalness: 0.7, roughness: 0.4 }));
+  craneRail.position.set(1, 2.75, -1.6);
+  scene.add(craneRail);
+  var craneTrolley = new THREE.Group();
+  var trolleyBody = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.3), new THREE.MeshStandardMaterial({ color: 0x2A1E0E, metalness: 0.8, roughness: 0.35 }));
+  craneTrolley.add(trolleyBody);
+  var craneHook = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.8, 8), new THREE.MeshStandardMaterial({ color: 0xC6A15B, metalness: 0.85, roughness: 0.3 }));
+  craneHook.position.y = -0.55;
+  craneTrolley.add(craneHook);
+  var craneLamp = new THREE.Mesh(new THREE.CircleGeometry(0.05, 8), new THREE.MeshBasicMaterial({ color: 0xE9CE8A, toneMapped: false }));
+  craneLamp.position.set(0, -0.16, 0.16);
+  craneTrolley.add(craneLamp);
+  craneTrolley.position.set(-4, 2.75, -1.6);
+  scene.add(craneTrolley);
 
   function buildRobotArm(side) {
     var group = new THREE.Group();
@@ -277,15 +337,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     elbow.rotation.z = side * 0.75;
     return group;
   }
-  var armL = buildRobotArm(1); armL.position.set(-4.3, -2.45, -2.2); scene.add(armL);
-  var armR = buildRobotArm(-1); armR.position.set(4.3, -2.45, -2.2); scene.add(armR);
+  var armL = buildRobotArm(1); armL.position.set(-5.6, -2.45, -2.0); scene.add(armL);
+  var armR = buildRobotArm(-1); armR.position.set(3.1, -2.45, -1.6); scene.add(armR);
 
   // ================= THE PRESS =================
   // Recreated from the master reference: chamfered dark body, gold
   // trim, crest nameplate, glowing platen mouth with feed rollers, the
   // six-station shoulder panel, and the slatted output conveyor.
   var press = new THREE.Group();
-  press.position.set(0, 0, -0.3);
+  press.position.set(-3.2, 0, -0.3);
   scene.add(press);
 
   var bodyMat = new THREE.MeshStandardMaterial({ color: 0x1A1109, metalness: 0.6, roughness: 0.42 });
@@ -466,40 +526,159 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     conveyor.add(rail);
   });
 
-  // ---- The emboss station: a gantry astride the conveyor whose
-  // hydraulic die descends onto the sheet as it passes — the moment
-  // the wax seal comes into existence on the face. Heavy motion:
-  // the die accelerates down, lands with a thud and a camera shudder,
-  // dwells, and withdraws. ----
-  var emboss = new THREE.Group();
-  emboss.position.set(0, 0, 2.05);
-  scene.add(emboss);
-  [-2.35, 2.35].forEach(function (x) {
-    var post = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.7, 0.16), bodyDarkMat);
-    post.position.set(x, -1.15, 0);
-    emboss.add(post);
+  // ================= THE PRODUCTION LINE =================
+  // The hall's spine: a long automated conveyor running rightward from
+  // the press's mouth through every finishing station to the archival
+  // vault. Each station is its own machine straddling the line, built
+  // in the same industrial vocabulary as the master-reference press —
+  // and each acts on the sheet as it passes, in production order.
+  var LINE = { y: -1.52, z: 1.35, tilt: -1.35 };
+  var STATION_X = { press: -3.2, uv: -1.55, emboss: -0.05, qr: 1.25, sig: 2.05, inspect: 2.95, pack: 4.15, vault: 5.6 };
+
+  var lineGroup = new THREE.Group();
+  scene.add(lineGroup);
+  var lineBed = new THREE.Mesh(new THREE.BoxGeometry(10.2, 0.1, 2.0), bodyDarkMat);
+  lineBed.position.set(1.15, LINE.y - 0.22, LINE.z);
+  lineGroup.add(lineBed);
+  for (var ls = 0; ls < 26; ls++) {
+    var lslat = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.035, 1.9), ls % 2 ? bodyDarkMat : rollerMat);
+    lslat.position.set(-3.6 + ls * 0.385, LINE.y - 0.14, LINE.z);
+    lineGroup.add(lslat);
+  }
+  [LINE.z - 0.98, LINE.z + 0.98].forEach(function (z) {
+    var lrail = new THREE.Mesh(new THREE.BoxGeometry(10.2, 0.05, 0.06), trimMat);
+    lrail.position.set(1.15, LINE.y - 0.1, z);
+    lineGroup.add(lrail);
   });
-  var crossbar = new THREE.Mesh(new THREE.BoxGeometry(4.9, 0.22, 0.3), bodyMat);
-  crossbar.position.set(0, -0.35, 0);
-  emboss.add(crossbar);
-  var crossTrim = new THREE.Mesh(new THREE.BoxGeometry(4.9, 0.035, 0.31), trimMat);
-  crossTrim.position.set(0, -0.24, 0);
-  emboss.add(crossTrim);
-  // A fixed guide rod descends from the crossbar; the die travels
-  // along it — the rod never moves, the die does, as a real press's.
+  // Line support legs down to the floor.
+  [-3.2, -0.9, 1.4, 3.7, 5.6].forEach(function (x) {
+    [LINE.z - 0.8, LINE.z + 0.8].forEach(function (z) {
+      var leg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.75, 0.1), bodyDarkMat);
+      leg.position.set(x, LINE.y - 0.62, z);
+      lineGroup.add(leg);
+    });
+  });
+
+  // A station gantry: two posts astride the line and a crossbeam — the
+  // shared frame the UV arch, emboss die, QR laser and inspection head
+  // all hang from, so the hall reads as one engineered system.
+  function buildGantry(x, beamMat) {
+    var g = new THREE.Group();
+    g.position.set(x, 0, LINE.z);
+    [-1.05, 1.05].forEach(function (z) {
+      var post = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.75, 0.16), bodyDarkMat);
+      post.position.set(0, -1.15, z);
+      g.add(post);
+    });
+    var beam = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.24, 2.35), beamMat || bodyMat);
+    beam.position.set(0, -0.32, 0);
+    g.add(beam);
+    var beamTrim = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.035, 2.36), trimMat);
+    beamTrim.position.set(0, -0.19, 0);
+    g.add(beamTrim);
+    scene.add(g);
+    return g;
+  }
+
+  // -- UV curing arch: a violet-lit tunnel the sheet passes beneath --
+  var uvGantry = buildGantry(STATION_X.uv);
+  var uvLampMat = new THREE.MeshBasicMaterial({ color: 0x8A5CF6, transparent: true, opacity: 0.25, toneMapped: false });
+  var uvLamp = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.06, 1.9), uvLampMat);
+  uvLamp.position.set(0, -0.46, 0);
+  uvGantry.add(uvLamp);
+  var uvLight = new THREE.PointLight(0x8A5CF6, 0, 4);
+  uvLight.position.set(STATION_X.uv, -0.9, LINE.z);
+  scene.add(uvLight);
+
+  // -- Emboss die on its gantry: guide rod, collar, travelling die --
+  var embossGantry = buildGantry(STATION_X.emboss);
   var guideRod = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.15, 12), rollerMat);
-  guideRod.position.set(-1.06, -0.98, 0);
-  emboss.add(guideRod);
+  guideRod.position.set(0, -0.98, 0);
+  embossGantry.add(guideRod);
   var piston = new THREE.Group();
   var pistonCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.16, 14), bodyDarkMat);
   pistonCollar.position.y = 0.14;
   piston.add(pistonCollar);
   var pistonHead = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.22, 18), trimMat);
   piston.add(pistonHead);
-  // The die hangs over the seal's own printed position on the sheet.
-  piston.position.set(-1.06, -0.62, 0);
-  emboss.add(piston);
-  var PISTON_REST = -0.62, PISTON_STRIKE = -1.36;
+  piston.position.set(0, -0.62, 0);
+  embossGantry.add(piston);
+  var PISTON_REST = -0.62, PISTON_STRIKE = -1.28;
+
+  // -- QR laser engraver: a compact head that pulses while it burns --
+  var qrGantry = buildGantry(STATION_X.qr);
+  var qrHead = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.36, 0.3), bodyDarkMat);
+  qrHead.position.set(0, -0.58, 0);
+  qrGantry.add(qrHead);
+  var qrLens = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.09, 0.12, 12), trimMat);
+  qrLens.position.set(0, -0.8, 0);
+  qrGantry.add(qrLens);
+  var qrBeamMat = new THREE.MeshBasicMaterial({ color: 0xFF6A4D, transparent: true, opacity: 0, toneMapped: false });
+  var qrBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.03, 0.7, 8), qrBeamMat);
+  qrBeam.position.set(STATION_X.qr, -1.2, LINE.z);
+  scene.add(qrBeam);
+
+  // -- Signature applicator: a small plotter arm over the line --
+  var sigGantry = buildGantry(STATION_X.sig);
+  var sigArm = new THREE.Group();
+  var sigArmBar = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.5, 0.08), rollerMat);
+  sigArmBar.position.y = -0.25;
+  sigArm.add(sigArmBar);
+  var sigNib = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.16, 10), trimMat);
+  sigNib.rotation.x = Math.PI;
+  sigNib.position.y = -0.56;
+  sigArm.add(sigNib);
+  sigArm.position.set(0, -0.55, 0);
+  sigGantry.add(sigArm);
+
+  // -- Inspection station: the sheet is lifted to the glass for
+  // examination — scan sweep, then cleared. A camera head watches. --
+  var inspectGantry = buildGantry(STATION_X.inspect);
+  var inspectCam = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 10), bodyDarkMat);
+  inspectCam.position.set(0, -0.55, 0.4);
+  inspectGantry.add(inspectCam);
+  var inspectEye = new THREE.Mesh(new THREE.CircleGeometry(0.05, 10), new THREE.MeshBasicMaterial({ color: 0x9FE8FF, toneMapped: false }));
+  inspectEye.position.set(0, -0.55, 0.55);
+  inspectGantry.add(inspectEye);
+
+  // -- The archival vault: the line's real destination. Its door
+  // opens for each finished certificate and seals behind it — and the
+  // destination is honest: every issued certificate IS in the
+  // Certificate Register this page shows below. --
+  var vault = new THREE.Group();
+  vault.position.set(STATION_X.vault, 0, LINE.z);
+  scene.add(vault);
+  var vaultBody = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.5, 2.4), bodyMat);
+  vaultBody.position.set(0.55, -1.2, 0);
+  vault.add(vaultBody);
+  var vaultTrim = new THREE.Mesh(new THREE.BoxGeometry(1.62, 0.05, 2.42), trimMat);
+  vaultTrim.position.set(0.55, -0.06, 0);
+  vault.add(vaultTrim);
+  var vaultGlowMat = new THREE.MeshBasicMaterial({ color: 0xE9CE8A, transparent: true, opacity: 0.25, toneMapped: false });
+  var vaultGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 1.3), vaultGlowMat);
+  vaultGlow.rotation.y = -Math.PI / 2;
+  vaultGlow.position.set(-0.28, -1.5, 0);
+  vault.add(vaultGlow);
+  var vaultDoorMat = new THREE.MeshStandardMaterial({ color: 0x3A2A14, metalness: 0.75, roughness: 0.3 });
+  var vaultDoor = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.6, 2.0), vaultDoorMat);
+  vaultDoor.position.set(-0.3, -1.45, 0);
+  vault.add(vaultDoor);
+  var VAULT_DOOR_CLOSED = -1.45, VAULT_DOOR_OPEN = 0.15;
+  function drawVaultPlate() {
+    var c = document.createElement('canvas');
+    c.width = 256; c.height = 64;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#0D0803'; ctx.fillRect(0, 0, 256, 64);
+    ctx.strokeStyle = 'rgba(233,206,138,0.6)'; ctx.lineWidth = 2; ctx.strokeRect(4, 4, 248, 56);
+    ctx.fillStyle = '#E9CE8A'; ctx.font = '600 22px "Courier New", monospace'; ctx.textAlign = 'center';
+    ctx.fillText('ARCHIVE VAULT', 128, 40);
+    var tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+  var vaultPlate = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.25), new THREE.MeshBasicMaterial({ map: drawVaultPlate(), toneMapped: false }));
+  vaultPlate.position.set(0.55, -0.45, 1.22);
+  vault.add(vaultPlate);
 
   // Status lamps on the body — alive even at idle.
   var idleLamps = [];
@@ -721,12 +900,87 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     if (el) el.disabled = false;
   });
 
+  // ---- Post-processing: a compact hand-rolled bloom — bright-pass,
+  // separable gaussian at half resolution, additive composite — so the
+  // gold lamps, beams and bursts BLOOM the way film renders them
+  // rather than clipping. No external passes library: the site
+  // self-hosts three's core module only, so the composer is written
+  // here from render targets and fullscreen shader quads. Standard
+  // tier renders direct for performance; Professional and Prestige
+  // take the glow.
+  var BLOOM = true; // reassigned by the display tier
+  var bloom = null;
+  function makeFullscreenPass(frag, uniforms) {
+    var mat = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+      fragmentShader: frag,
+      depthTest: false, depthWrite: false,
+    });
+    var s = new THREE.Scene();
+    s.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat));
+    return { scene: s, mat: mat };
+  }
+  function initBloom() {
+    var rtScene = new THREE.WebGLRenderTarget(2, 2);
+    // Scene target flagged sRGB so the encode happens on write and the
+    // composite can pass values straight to the screen.
+    rtScene.texture.colorSpace = THREE.SRGBColorSpace;
+    return {
+      quadCam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1),
+      rtScene: rtScene,
+      rtA: new THREE.WebGLRenderTarget(2, 2),
+      rtB: new THREE.WebGLRenderTarget(2, 2),
+      bright: makeFullscreenPass(
+        'uniform sampler2D tex; varying vec2 vUv; void main(){ vec4 c = texture2D(tex, vUv); float l = dot(c.rgb, vec3(0.299, 0.587, 0.114)); gl_FragColor = l > 0.62 ? c : vec4(0.0); }',
+        { tex: { value: null } }),
+      blur: makeFullscreenPass(
+        'uniform sampler2D tex; uniform vec2 dir; varying vec2 vUv; void main(){ vec4 s = texture2D(tex, vUv) * 0.227; s += (texture2D(tex, vUv + dir * 1.384) + texture2D(tex, vUv - dir * 1.384)) * 0.316; s += (texture2D(tex, vUv + dir * 3.230) + texture2D(tex, vUv - dir * 3.230)) * 0.070; gl_FragColor = s; }',
+        { tex: { value: null }, dir: { value: new THREE.Vector2() } }),
+      comp: makeFullscreenPass(
+        'uniform sampler2D base; uniform sampler2D glow; varying vec2 vUv; void main(){ gl_FragColor = texture2D(base, vUv) + texture2D(glow, vUv) * 0.85; }',
+        { base: { value: null }, glow: { value: null } }),
+    };
+  }
+  function sizeBloom() {
+    if (!bloom) return;
+    var sz = new THREE.Vector2();
+    renderer.getDrawingBufferSize(sz);
+    bloom.rtScene.setSize(Math.max(2, sz.x), Math.max(2, sz.y));
+    bloom.rtA.setSize(Math.max(1, sz.x >> 1), Math.max(1, sz.y >> 1));
+    bloom.rtB.setSize(Math.max(1, sz.x >> 1), Math.max(1, sz.y >> 1));
+  }
+  function renderScene() {
+    if (!BLOOM) { renderer.render(scene, camera); return; }
+    if (!bloom) { bloom = initBloom(); sizeBloom(); }
+    renderer.setRenderTarget(bloom.rtScene);
+    renderer.render(scene, camera);
+    var sz = new THREE.Vector2();
+    renderer.getDrawingBufferSize(sz);
+    bloom.bright.mat.uniforms.tex.value = bloom.rtScene.texture;
+    renderer.setRenderTarget(bloom.rtA);
+    renderer.render(bloom.bright.scene, bloom.quadCam);
+    bloom.blur.mat.uniforms.tex.value = bloom.rtA.texture;
+    bloom.blur.mat.uniforms.dir.value.set(1 / Math.max(1, sz.x >> 1), 0);
+    renderer.setRenderTarget(bloom.rtB);
+    renderer.render(bloom.blur.scene, bloom.quadCam);
+    bloom.blur.mat.uniforms.tex.value = bloom.rtB.texture;
+    bloom.blur.mat.uniforms.dir.value.set(0, 1 / Math.max(1, sz.y >> 1));
+    renderer.setRenderTarget(bloom.rtA);
+    renderer.render(bloom.blur.scene, bloom.quadCam);
+    bloom.comp.mat.uniforms.base.value = bloom.rtScene.texture;
+    bloom.comp.mat.uniforms.glow.value = bloom.rtA.texture;
+    renderer.setRenderTarget(null);
+    renderer.render(bloom.comp.scene, bloom.quadCam);
+  }
+
   function resize() {
     var w = mount.clientWidth, h = mount.clientHeight;
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    sizeBloom();
     if (!running) renderer.render(scene, camera);
   }
   var ro = ('ResizeObserver' in window) ? new ResizeObserver(resize) : null;
@@ -740,14 +994,40 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // the display canvas is blank paper until the press reaches each band.
   var BANDS = 8;
   var SHEET_W = 3.4, SHEET_H = 2.32;
-  var CYCLE = 9000; // ms per certificate — adjustable by the View dial
+  var CYCLE = 12000; // ms per certificate — adjustable by the View dial
   var swayAmplitude = 0.35;
   var cur = null, curTex = null, curFull = null, curDisp = null, curBands = -1;
   var nameIdx = 0, curSerial = '—';
   // Mouth grip point in world space (press at z=-0.3; throat front ~z 1.05+(-0.3)).
-  var MOUTH = { x: 0, y: -0.98, z: 0.86 };
-  var FEED_TILT = -1.22; // lying along the conveyor, face up toward camera
-  var PRESENT = { x: 0, y: 1.72, z: 2.0, tilt: -0.1 };
+  var MOUTH = { x: -3.2, y: -1.05, z: 0.75 };
+  var FEED_TILT = LINE.tilt; // lying on the line, face up toward camera
+  // The inspection lift — the one moment the sheet is raised to the
+  // camera for reading, mid-line, before packaging and the vault.
+  var PRESENT = { x: STATION_X.inspect, y: 0.62, z: 2.2, tilt: -0.12 };
+  // The sheet's travel schedule along the line: [tStart, tEnd, xFrom, xTo].
+  // Between segments the sheet dwells at its station while that
+  // station's machinery works.
+  var TRAVEL = [
+    [0.26, 0.32, STATION_X.press, STATION_X.uv],
+    [0.38, 0.42, STATION_X.uv, STATION_X.emboss],
+    [0.48, 0.52, STATION_X.emboss, STATION_X.qr],
+    [0.58, 0.61, STATION_X.qr, STATION_X.sig],
+    [0.66, 0.69, STATION_X.sig, STATION_X.inspect],
+    [0.78, 0.81, STATION_X.inspect, STATION_X.pack],
+    [0.87, 0.925, STATION_X.pack, STATION_X.vault + 0.15],
+    [0.925, 0.96, STATION_X.vault + 0.15, STATION_X.vault + 0.55],
+  ];
+  function sheetXAt(t) {
+    var x = STATION_X.press;
+    for (var i = 0; i < TRAVEL.length; i++) {
+      var seg = TRAVEL[i];
+      if (t >= seg[1]) { x = seg[3]; continue; }
+      if (t > seg[0]) { x = seg[2] + (seg[3] - seg[2]) * easeInOut((t - seg[0]) / (seg[1] - seg[0])); }
+      break;
+    }
+    return x;
+  }
+  var curSheetX = STATION_X.press;
 
   function nextSerial() {
     sessionCount++;
@@ -892,6 +1172,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     folder.visible = false;
     folderFrontMat.opacity = 1;
     folderBackMat.opacity = 1;
+    uvLight.intensity = 0;
+    uvLampMat.opacity = 0.25;
+    qrBeamMat.opacity = 0;
+    vaultDoor.position.y = VAULT_DOOR_CLOSED;
+    sigArm.position.y = -0.55;
   }
 
   function animateCycle(now, dtMs) {
@@ -949,9 +1234,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     setStageDisplay(t, curSerial, statusLabel, caption, !!liveCurrent);
 
     // ---- Motor: spin up, hold, spin down — nothing moves without it ----
-    var motorTarget = t < 0.08 ? t / 0.08 : (t < 0.88 ? 1 : Math.max(0, 1 - (t - 0.88) / 0.1));
+    var motorTarget = t < 0.06 ? t / 0.06 : (t < 0.93 ? 1 : Math.max(0, 1 - (t - 0.93) / 0.06));
     motorLevel += (motorTarget - motorLevel) * Math.min(1, dtMs / 160);
-    var feeding = t >= 0.1 && t < 0.62;
+    var feeding = t >= 0.06 && t < 0.26;
     var spin = motorLevel * (feeding ? 1 : 0.25) * dtMs * 0.012;
     rollers.forEach(function (r) { r.rotation.x -= spin; });
     mediaRoll.rotation.x -= feeding ? spin * 0.45 : 0;
@@ -961,11 +1246,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     slotMat.emissiveIntensity = feeding ? 1.1 + Math.sin(now / 50) * 0.3 : 0.6 + motorLevel * 0.3;
     mouthLight.intensity = 0.35 + motorLevel * 0.35 + (feeding ? Math.sin(now / 50) * 0.08 : 0);
 
-    // ---- Sheet mechanics per phase ----
+    // ---- Sheet mechanics: the journey down the line ----
     if (cur) {
-      if (t < 0.62) {
-        // Feed & print: pinned at the mouth, extending along the conveyor.
-        var fp = Math.max(0, (t - 0.1) / 0.52);
+      if (t < 0.26) {
+        // Feed & print: pinned at the press mouth, emerging band by band.
+        var fp = Math.max(0, (t - 0.06) / 0.2);
         var emerged = 0.02 + easeInOut(fp) * 0.98;
         cur.position.set(MOUTH.x, MOUTH.y, MOUTH.z);
         cur.rotation.x = FEED_TILT;
@@ -978,54 +1263,76 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         revealBands(Math.ceil(Math.min(1, emerged + 0.06) * BANDS));
         cur.material.opacity = 1;
         cur.material.transparent = false;
+        curSheetX = MOUTH.x;
       } else {
-        // Fully fed. Lift from the conveyor to presentation.
+        // On the line: travel between stations, dwell while each works.
         cur.scale.y = 1;
         curTex.repeat.y = 1;
         curTex.offset.y = 0;
         revealBands(BANDS);
-        var lp = Math.min(1, (t - 0.62) / 0.16);
-        var e = easeOutCubic(lp);
+        curSheetX = sheetXAt(t);
+        // The inspection lift raises the sheet to the camera and lays
+        // it back down; everywhere else it rides the line.
+        var liftE = 0;
+        if (t >= 0.69 && t < 0.78) liftE = easeOutCubic(Math.min(1, (t - 0.69) / 0.04));
+        else if (t >= 0.78 && t < 0.81) liftE = 1 - easeInOut((t - 0.78) / 0.03);
         cur.position.set(
-          MOUTH.x + (PRESENT.x - MOUTH.x) * e,
-          MOUTH.y + (PRESENT.y - MOUTH.y) * e,
-          MOUTH.z + (PRESENT.z - MOUTH.z) * e
+          curSheetX,
+          MOUTH.y + (PRESENT.y - MOUTH.y) * liftE,
+          MOUTH.z + (PRESENT.z - MOUTH.z) * liftE
         );
-        cur.rotation.x = FEED_TILT + (PRESENT.tilt - FEED_TILT) * e;
+        cur.rotation.x = FEED_TILT + (PRESENT.tilt - FEED_TILT) * liftE;
+        cur.material.transparent = false;
+        cur.material.opacity = 1;
 
-        // The remaining stations work the lifted sheet in order.
-        if (t >= 0.62 && sheetOk()) stationBuild('qr');
-        if (t >= 0.72 && sheetOk()) { if (!curBuilt.signature && spanLongEnough()) playServo(); stationBuild('signature'); }
+        // -- UV station: violet cure over the dwelling sheet; the
+        // microtext security layer exists only after it. --
+        if (t >= 0.32 && t < 0.38 && sheetOk()) {
+          uvLight.intensity = 1.6 + Math.sin(now / 60) * 0.5;
+          uvLampMat.opacity = 0.85;
+          stationBuild('uv');
+        } else {
+          uvLight.intensity = Math.max(0, uvLight.intensity - dtMs * 0.01);
+          uvLampMat.opacity = 0.25;
+        }
 
-        if (PACKAGING && sheetOk()) {
-          // Packaging: the crested folder rises to receive the sheet,
-          // then carries it away toward the register.
-          if (t >= 0.9) {
-            folder.visible = true;
-            var fp2 = Math.min(1, (t - 0.9) / 0.055);
-            var fy = -2.7 + (PRESENT.y - SHEET_H / 2 - (-2.7)) * easeOutCubic(fp2);
-            var slide = t >= 0.965 ? (t - 0.965) / 0.035 : 0;
-            var offX = easeInCubic(slide) * 3.4;
-            folder.position.set(PRESENT.x + offX, fy, PRESENT.z + 0.02);
-            folder.rotation.x = PRESENT.tilt;
-            cur.position.x = PRESENT.x + offX;
-            var gone = slide > 0 ? 1 - slide : 1;
-            folderFrontMat.opacity = gone;
-            folderBackMat.opacity = gone;
-            cur.material.transparent = slide > 0;
-            cur.material.opacity = gone;
+        // -- Signature applicator: the nib dips while the hand appears --
+        if (t >= 0.61 && t < 0.66 && sheetOk()) {
+          sigArm.position.y = -0.55 - easeInOut(Math.min(1, (t - 0.61) / 0.02)) * 0.42
+            + (t > 0.63 ? Math.sin(now / 70) * 0.02 : 0);
+          if (t >= 0.625) {
+            if (!curBuilt.signature && spanLongEnough()) playServo(0.25);
+            stationBuild('signature');
           }
         } else {
-          cur.material.transparent = t > 0.95;
-          cur.material.opacity = t > 0.95 ? 1 - (t - 0.95) / 0.05 : 1;
+          sigArm.position.y += (-0.55 - sigArm.position.y) * 0.1;
+        }
+
+        // -- Packaging: the crested folder rises to receive the sheet
+        // as it dwells at the packaging station, then rides with it
+        // into the vault. Standard tier skips the ceremony. --
+        if (PACKAGING && sheetOk() && t >= 0.81) {
+          folder.visible = true;
+          var fr = Math.min(1, (t - 0.81) / 0.05);
+          var fy = -2.7 + ((MOUTH.y - SHEET_H / 2 * 0.22) - (-2.7)) * easeOutCubic(fr);
+          folder.position.set(curSheetX, fy + 0.55, MOUTH.z + 1.05);
+          folder.rotation.x = FEED_TILT;
+        }
+        // Inside the vault: sheet (and folder) fade as the door seals.
+        if (t >= 0.93) {
+          var gone = 1 - Math.min(1, (t - 0.93) / 0.04);
+          cur.material.transparent = true;
+          cur.material.opacity = gone;
+          folderFrontMat.opacity = gone;
+          folderBackMat.opacity = gone;
         }
       }
     }
 
     // ---- The emboss die: accelerate down, land with weight, dwell,
     // withdraw — the seal exists on the face only after the strike. ----
-    if (t >= 0.5 && t < 0.62 && cur && sheetOk()) {
-      var ep = (t - 0.5) / 0.12;
+    if (t >= 0.42 && t < 0.48 && cur && sheetOk()) {
+      var ep = (t - 0.42) / 0.06;
       var py;
       if (ep < 0.3) py = PISTON_REST + (PISTON_STRIKE - PISTON_REST) * easeInCubic(ep / 0.3);
       else if (ep < 0.5) {
@@ -1034,7 +1341,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
           pistonStruck = true;
           stationBuild('seal');
           shakeAmp = 1;
-          if (soundOn && spanLongEnough()) playThud();
+          if (soundOn && spanLongEnough()) playThud(0);
         }
       } else py = PISTON_STRIKE + (PISTON_REST - PISTON_STRIKE) * easeOutCubic((ep - 0.5) / 0.5);
       piston.position.y = py;
@@ -1043,13 +1350,22 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       piston.position.y = PISTON_REST + Math.sin(now / 2600) * 0.012;
     }
 
-    // ---- Steam clears as the finished sheet is presented ----
-    if (t >= 0.88 && !steamFired && sheetOk()) {
+    // ---- The vault door: opens ahead of the arriving sheet, seals
+    // behind it. Its glow breathes while open. ----
+    var doorE = 0;
+    if (t >= 0.87 && t < 0.905) doorE = easeInOut((t - 0.87) / 0.035);
+    else if (t >= 0.905 && t < 0.94) doorE = 1;
+    else if (t >= 0.94 && t < 0.97) doorE = 1 - easeInOut((t - 0.94) / 0.03);
+    vaultDoor.position.y = VAULT_DOOR_CLOSED + (VAULT_DOOR_OPEN - VAULT_DOOR_CLOSED) * doorE;
+    vaultGlowMat.opacity = 0.1 + doorE * 0.75 + (doorE > 0 ? Math.sin(now / 300) * 0.1 : 0);
+
+    // ---- Steam as the sheet clears into the vault ----
+    if (t >= 0.9 && !steamFired && sheetOk()) {
       steamFired = true;
       fireSteam();
     }
 
-    // ---- The shoulder panel's stations, in order ----
+    // ---- The shoulder panel's stations, in production order ----
     var finishIdx = -1;
     for (var fi = FINISH_STARTS.length - 1; fi >= 0; fi--) {
       if (t >= FINISH_STARTS[fi]) { finishIdx = fi; break; }
@@ -1058,31 +1374,31 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     if (finishIdx !== stagePanelActive) {
       stagePanelActive = finishIdx;
       drawStagePanel(finishIdx);
-      if (finishIdx >= 0 && spanLongEnough()) playServo();
+      if (finishIdx >= 0 && spanLongEnough()) playServo(curSheetX / 8);
     }
 
-    // ---- QR engrave beat: the spark works the QR corner of the sheet ----
-    if (cur && t >= 0.62 && t < 0.72 && sheetOk()) {
-      // The QR sits at the sheet's lower-right (see drawFaceCanvas:
-      // ~81% across, ~81% down) — resolved through the sheet's own
-      // transform rather than re-derived trigonometry, so the spark
-      // stays on the code wherever the sheet is on its lift path.
+    // ---- QR engrave: the laser head fires while the code is burned --
+    if (cur && t >= 0.52 && t < 0.58 && sheetOk()) {
+      if (t >= 0.53) stationBuild('qr');
       cur.updateMatrixWorld();
       var qrLocal = new THREE.Vector3(SHEET_W * 0.31, -SHEET_H * 0.81, 0.03);
       var qrWorld = cur.localToWorld(qrLocal);
       qrSpark.position.copy(qrWorld);
       qrSpark.rotation.x = cur.rotation.x;
       qrSparkMat.opacity = (Math.sin(now / 28) * 0.5 + 0.5) * 0.9;
+      // The visible beam connects the head's lens to the work point.
+      qrBeam.position.set(qrWorld.x, (qrWorld.y + (-0.8 - 0.32)) / 2 + 0.28, qrWorld.z);
+      qrBeam.scale.y = 1;
+      qrBeamMat.opacity = 0.55 + Math.sin(now / 40) * 0.3;
     } else {
       qrSparkMat.opacity = 0;
+      qrBeamMat.opacity = 0;
     }
 
-    // ---- Seal laser: one sweep down the presented face — resolved
-    // through the sheet's own transform (as the QR spark is), so the
-    // beam rides the tilted surface instead of sinking behind it and
-    // losing the depth test for most of the sweep (confirmed in
-    // adversarial review). ----
-    var scanPhase = (t - 0.8) / 0.08;
+    // ---- Inspection laser: one sweep down the lifted face — resolved
+    // through the sheet's own transform so the beam rides the tilted
+    // surface instead of sinking behind it. ----
+    var scanPhase = (t - 0.72) / 0.05;
     if (cur && scanPhase > 0 && scanPhase < 1 && sheetOk()) {
       cur.updateMatrixWorld();
       var beamWorld = cur.localToWorld(new THREE.Vector3(0, -SHEET_H * scanPhase, 0.04));
@@ -1097,8 +1413,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       laserGlowMat.opacity = 0;
     }
 
-    // ---- The spark of completion — real issuance only ----
-    if (cur && t >= 0.9 && !burstFiredThisCycle && sheetOk()) {
+    // ---- The spark of inspection passed — real issuance only ----
+    if (cur && t >= 0.775 && !burstFiredThisCycle && sheetOk()) {
       burstFiredThisCycle = true;
       fireBurst(cur.position.x, cur.position.y - SHEET_H / 2 + 0.3, cur.position.z + 0.1);
       playSound();
@@ -1111,9 +1427,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       rimTarget.setHex(STAGE_TINTS[stageIdx]);
       keyPulse = 1;
     }
+    workLight.position.x = curSheetX;
     rim.color.lerp(rimTarget, 0.06);
     keyPulse *= 0.94;
-    key.intensity = 1.1 + keyPulse * 0.35;
+    key.intensity = 1.3 + keyPulse * 0.35;
     lastCycleT = t;
   }
   function sheetOk() { return !liveCurrent || liveCurrent.status === 'issued'; }
@@ -1121,7 +1438,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   function feedTickWanted() { return soundOn && spanLongEnough(); }
 
   var raf = null, running = false, userPaused = false, heroVisible = true;
-  var lastTs = 0, camZ = 11.5;
+  var lastTs = 0, camZ = 8.6, camX = -2.6, lookX = -3.0;
   function frame(ts) {
     if (!running) return;
     var dtMs = lastTs ? ts - lastTs : 16;
@@ -1140,21 +1457,30 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     idleLamps.forEach(function (l) {
       l.mat.opacity = 0.35 + 0.4 * (0.5 + 0.5 * Math.sin(ts / 700 + l.phase));
     });
-    // The camera never sits still: lateral sway, a breathing dolly, a
-    // push-in while a real batch runs, a slow arc around the presented
-    // sheet, and — when the die lands — a shudder with real decay.
-    var camZTarget = (liveActive ? 9.7 : 10.7) + Math.sin(ts / 13000) * 0.18;
-    camZ += (camZTarget - camZ) * 0.02;
+    // The crane trolley traverses the hall on its own long schedule.
+    craneTrolley.position.x = 1 + Math.sin(ts / 21000) * 6.5;
+    // ---- The camera rig: a continuous dolly that tracks the sheet
+    // down the line, pushing in for inspection, easing wide at the
+    // vault — damped throughout so there is never a cut, with the
+    // lateral sway, presentation arc, and die-strike shudder layered
+    // on top. ----
+    var tphase = lastCycleT;
+    var followX = Math.max(-3.6, Math.min(4.6, curSheetX * 0.85));
+    var zBase = tphase < 0.26 ? 8.8 : (tphase < 0.66 ? 8.0 : (tphase < 0.81 ? 6.9 : 7.8));
+    if (liveActive) zBase -= 0.7;
+    camX += (followX - camX) * 0.035;
+    camZ += ((zBase + Math.sin(ts / 13000) * 0.18) - camZ) * 0.03;
+    lookX += (Math.max(-3.4, Math.min(5.2, curSheetX)) - lookX) * 0.045;
     var orbitX = 0;
-    if (lastCycleT >= 0.72 && lastCycleT < 0.92) {
-      orbitX = Math.sin(((lastCycleT - 0.72) / 0.2) * Math.PI) * ORBIT;
+    if (tphase >= 0.69 && tphase < 0.81) {
+      orbitX = Math.sin(((tphase - 0.69) / 0.12) * Math.PI) * ORBIT;
     }
     camera.position.z = camZ;
-    camera.position.x = Math.sin(ts / 9000) * swayAmplitude + orbitX + (Math.random() - 0.5) * shakeAmp * 0.1;
-    camera.position.y = -0.4 + Math.sin(ts / 11000) * 0.08 + (Math.random() - 0.5) * shakeAmp * 0.07;
+    camera.position.x = camX + Math.sin(ts / 9000) * swayAmplitude * 0.6 + orbitX + (Math.random() - 0.5) * shakeAmp * 0.1;
+    camera.position.y = -0.15 + Math.sin(ts / 11000) * 0.08 + (Math.random() - 0.5) * shakeAmp * 0.07;
     shakeAmp *= 0.88;
-    camera.lookAt(0, -0.65, 0.4);
-    renderer.render(scene, camera);
+    camera.lookAt(lookX, -1.0, 1.2);
+    renderScene();
     raf = requestAnimationFrame(frame);
   }
   function start() {
@@ -1174,6 +1500,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     still.position.set(PRESENT.x, PRESENT.y, PRESENT.z);
     still.rotation.x = PRESENT.tilt;
     still.scale.y = 1;
+    stationBuild('uv');
     stationBuild('seal');
     stationBuild('qr');
     stationBuild('signature');
@@ -1215,6 +1542,20 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     }
     return audioCtx;
   }
+  // Spatial audio: every mechanical sound is panned to its station's
+  // position on the line, so with headphones the press hums at the
+  // left, the die lands centre, and the vault chimes to the right.
+  function spatialOut(node, pan) {
+    var ctx = audioCtx;
+    if (ctx.createStereoPanner) {
+      var p = ctx.createStereoPanner();
+      p.pan.value = Math.max(-1, Math.min(1, pan || 0));
+      node.connect(p);
+      p.connect(ctx.destination);
+    } else {
+      node.connect(ctx.destination);
+    }
+  }
   var motorNodes = null;
   function motorUpdate(level) {
     if (!soundOn || !running) level = 0;
@@ -1225,7 +1566,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       var osc2 = ctx.createOscillator(); osc2.type = 'triangle'; osc2.frequency.value = 124;
       var filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 260; filter.Q.value = 0.8;
       var gain = ctx.createGain(); gain.gain.value = 0;
-      osc.connect(filter); osc2.connect(filter); filter.connect(gain).connect(ctx.destination);
+      osc.connect(filter); osc2.connect(filter); filter.connect(gain);
+      spatialOut(gain, -0.4); // the press stands at the line's left
       osc.start(); osc2.start();
       motorNodes = { osc: osc, osc2: osc2, gain: gain, filter: filter };
     }
@@ -1242,7 +1584,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       }
     }
   }
-  function playServo() {
+  function playServo(pan) {
     if (!soundOn) return;
     var ctx = ensureAudioCtx();
     if (!ctx) return;
@@ -1257,7 +1599,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     bp.frequency.linearRampToValueAtTime(1500, t0 + len * 0.6);
     bp.frequency.linearRampToValueAtTime(700, t0 + len);
     var g = ctx.createGain(); g.gain.value = 0.03;
-    src.connect(bp).connect(g).connect(ctx.destination);
+    src.connect(bp).connect(g);
+    spatialOut(g, pan);
     src.start(t0);
   }
   function playFeedTick() {
@@ -1268,12 +1611,13 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.016, t0);
     g.gain.exponentialRampToValueAtTime(0.0004, t0 + 0.035);
-    osc.connect(g).connect(ctx.destination);
+    osc.connect(g);
+    spatialOut(g, -0.4);
     osc.start(t0); osc.stop(t0 + 0.04);
   }
   // The emboss die landing: a deep, weighted thud — low sine body with
   // a short mechanical click on top.
-  function playThud() {
+  function playThud(pan) {
     var ctx = ensureAudioCtx();
     if (!ctx) return;
     var t0 = ctx.currentTime;
@@ -1283,13 +1627,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.11, t0);
     g.gain.exponentialRampToValueAtTime(0.0008, t0 + 0.3);
-    osc.connect(g).connect(ctx.destination);
+    osc.connect(g);
+    spatialOut(g, pan);
     osc.start(t0); osc.stop(t0 + 0.32);
     var click = ctx.createOscillator(); click.type = 'square'; click.frequency.value = 700;
     var cg = ctx.createGain();
     cg.gain.setValueAtTime(0.025, t0);
     cg.gain.exponentialRampToValueAtTime(0.0005, t0 + 0.05);
-    click.connect(cg).connect(ctx.destination);
+    click.connect(cg);
+    spatialOut(cg, pan);
     click.start(t0); click.stop(t0 + 0.06);
   }
   // The production announcer — the browser's own speech synthesis, no
@@ -1316,13 +1662,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     var noise = ctx.createBufferSource(); noise.buffer = buf;
     var noiseFilter = ctx.createBiquadFilter(); noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 1800;
     var noiseGain = ctx.createGain(); noiseGain.gain.setValueAtTime(0.06, t0); noiseGain.gain.linearRampToValueAtTime(0, t0 + 0.18);
-    noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
+    noise.connect(noiseFilter).connect(noiseGain);
+    spatialOut(noiseGain, 0.35);
     noise.start(t0);
     var osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, t0 + 0.1);
     var oscGain = ctx.createGain(); oscGain.gain.setValueAtTime(0, t0 + 0.1);
     oscGain.gain.linearRampToValueAtTime(0.05, t0 + 0.13);
     oscGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.7);
-    osc.connect(oscGain).connect(ctx.destination);
+    osc.connect(oscGain);
+    spatialOut(oscGain, 0.35);
     osc.start(t0 + 0.1); osc.stop(t0 + 0.75);
   };
   // Kept for compatibility with anything already calling it — the
@@ -1371,9 +1719,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // of it is this workstation's own display preference — the real
   // generation engine is identical at every setting.
   var QUALITY_TIERS = [
-    { cycle: 11000, sway: 0.2, particleOpacity: 0.55, packaging: false, orbit: 0 },
-    { cycle: 9000, sway: 0.35, particleOpacity: 0.75, packaging: true, orbit: 0.45 },
-    { cycle: 7200, sway: 0.5, particleOpacity: 0.95, packaging: true, orbit: 0.9 },
+    { cycle: 14000, sway: 0.2, particleOpacity: 0.55, packaging: false, orbit: 0, bloom: false },
+    { cycle: 12000, sway: 0.35, particleOpacity: 0.75, packaging: true, orbit: 0.45, bloom: true },
+    { cycle: 10000, sway: 0.5, particleOpacity: 0.95, packaging: true, orbit: 0.9, bloom: true },
   ];
   var PACKAGING = QUALITY_TIERS[1].packaging;
   var ORBIT = QUALITY_TIERS[1].orbit;
@@ -1387,6 +1735,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       particles.material.opacity = tier.particleOpacity;
       PACKAGING = tier.packaging;
       ORBIT = tier.orbit;
+      BLOOM = tier.bloom;
       // The label teaches tier NAMES; the slider must speak them too,
       // not bare numbers (confirmed in adversarial review).
       qualityInput.setAttribute('aria-valuetext', TIER_NAMES[idx] || TIER_NAMES[1]);
