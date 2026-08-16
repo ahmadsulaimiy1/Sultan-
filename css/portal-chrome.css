@@ -741,6 +741,26 @@ body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]){
   --rgo-sapphire:#2C5DA8; --rgo-sapphire-bright:#8FB4E8;
 }
 
+/* ===================================================================
+   THE CERTIFICATE CENTRE'S OWN SECOND METAL
+   -------------------------------------------------------------------
+   Two sister offices, not one office rendered twice. Both stand on the
+   same ivory ground and reach for the same gold, but the Registrar's
+   own second colour is a records office's navy; the Certificate Centre
+   issues sealed, signed documents, and its own second colour is the
+   deep crimson of a wax seal instead — the --rgo-sapphire/--rgo-navy
+   custom properties are simply redefined here, later in the cascade
+   and at equal specificity to the shared block above (body[attr] vs
+   body:is([attr],[attr]) — one attribute selector either way, so
+   source order decides), so every rule already written against those
+   two names — the travelling card frame, the child-head accent bar —
+   repaints itself in the Certificate Centre's own colour without a
+   second copy of any of them. */
+body[data-office-page="certificate-centre"]{
+  --rgo-navy-deep:#4A0E14; --rgo-navy:#7A2530;
+  --rgo-sapphire:#A02638; --rgo-sapphire-bright:#E5A8AF;
+}
+
 /* ---- The page itself, not just its chrome ---------------------------
    The ivory masthead and colophon were landing on the espresso ground
    css/prestige.css's own body.portal-body{...} paints underneath them
@@ -1318,6 +1338,97 @@ body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) 
 html[data-pc-motion="reduced"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-arrival::before,
 html[data-pc-motion="reduced"] body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-now::before{
   animation:none;opacity:.7;background-position:0 0;}
+
+/* ===================================================================
+   THE CERTIFICATE CENTRE, CINEMATICALLY — ITS OWN ENTRANCE
+   -------------------------------------------------------------------
+   Two sister offices sharing one construction (the ivory ground, the
+   badge, the travelling frame) is not the same as two offices that
+   look interchangeable. This office issues sealed documents, and gets
+   an entrance built on that: the wordmark catches a single pass of ink
+   light on load, the cards settle into place the way a stack of
+   freshly pressed certificates does rather than simply appearing, and
+   each card's own diamond arrives a half-beat later as a seal actually
+   struck — an impact with a little overshoot and settle, not a fade.
+     One-shot animations, all of them, played once on load rather than
+   looped — a working dashboard staff open forty times a day should not
+   perform for them every time; the first arrival is the moment worth
+   the show. All three respect prefers-reduced-motion and the site's
+   own html[data-pc-motion="reduced"] toggle by simply not animating
+   the entrance is not a loss of content, only of the choreography.
+   =================================================================== */
+
+/* The wordmark: one slow pass of light, like foil catching light as a
+   fresh certificate is turned toward it. */
+body[data-office-page="certificate-centre"] .portal-hello{
+  background-image:linear-gradient(100deg,
+    var(--rgo-ink) 35%,var(--rgo-gold-deep) 48%,#FFF6DA 52%,var(--rgo-gold-deep) 56%,var(--rgo-ink) 68%);
+  background-size:320% 100%;background-position:150% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  animation:pchInkPass 2.4s cubic-bezier(.3,.1,.2,1) .3s 1 backwards;}
+@keyframes pchInkPass{
+  0%{background-position:150% 0;}
+  100%{background-position:-90% 0;}
+}
+@media (prefers-reduced-motion:reduce){
+  body[data-office-page="certificate-centre"] .portal-hello{
+    animation:none;background:none;-webkit-text-fill-color:var(--rgo-ink);color:var(--rgo-ink);}
+}
+html[data-pc-motion="reduced"] body[data-office-page="certificate-centre"] .portal-hello{
+  animation:none;background:none;-webkit-text-fill-color:var(--rgo-ink);color:var(--rgo-ink);}
+
+/* The cards: settling into place as each one is actually scrolled to,
+   not on a fixed page-load clock.
+     The first version of this staggered by :nth-of-type, and it was
+   wrong for two separate reasons, both caught by inspecting the
+   computed animation-delay in a browser rather than trusting the
+   selectors on paper. First: :nth-of-type counts a DIV's position
+   among ALL sibling <div>s sharing its parent, by tag alone — it does
+   not filter by .portal-child-card first. Every card on this page sits
+   inside its own numbered section (1 — Batch Setup, 2 — Student
+   Roster...) with its own heading and paragraph divs ahead of it, so
+   each card's real sibling-of-type position was nowhere near 1, 2, 3;
+   one measured at 7+ and silently fell into the catch-all delay.
+   Second, and worse even if the count had been right: a fixed delay
+   from page load fires and finishes for every card immediately,
+   including the ones several sections below the fold that a reader has
+   not scrolled to yet — by the time they arrive, the entrance already
+   played to an empty viewport.
+     animation-timeline:view() fixes both at once: each card's entrance
+   is driven by ITS OWN visibility crossing the viewport, not by
+   counting siblings, and it only plays once that card is actually
+   coming into view — a reader scrolling down through Batch Setup,
+   Student Roster and the rest sees each section arrive as they reach
+   it, which is the effect a fixed page-load stagger was only ever
+   approximating for whatever happened to be above the fold. Guarded by
+   @supports: browsers without scroll-driven animations (Safari and
+   older Firefox, at the time this was written) simply render every
+   card in its resting state with no animation, rather than a broken
+   or unsupported declaration doing something stranger. */
+@supports (animation-timeline:view()){
+  body[data-office-page="certificate-centre"] .portal-child-card{
+    animation:pchSealDrop .6s cubic-bezier(.16,.8,.24,1) both;
+    animation-timeline:view();animation-range:entry 0% cover 35%;}
+  body[data-office-page="certificate-centre"] .portal-child-head::after{
+    animation:pchStampImpact .5s cubic-bezier(.34,1.56,.64,1) both;
+    animation-timeline:view();animation-range:entry 8% cover 42%;}
+}
+@keyframes pchSealDrop{
+  0%{opacity:0;transform:translateY(20px) scale(.97);}
+  62%{opacity:1;transform:translateY(-3px) scale(1.006);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+@keyframes pchStampImpact{
+  0%{opacity:0;transform:translateY(-50%) rotate(45deg) scale(2.4);}
+  55%{opacity:1;transform:translateY(-50%) rotate(45deg) scale(.82);}
+  100%{opacity:1;transform:translateY(-50%) rotate(45deg) scale(1);}
+}
+@media (prefers-reduced-motion:reduce){
+  body[data-office-page="certificate-centre"] .portal-child-card,
+  body[data-office-page="certificate-centre"] .portal-child-head::after{animation:none;}
+}
+html[data-pc-motion="reduced"] body[data-office-page="certificate-centre"] .portal-child-card,
+html[data-pc-motion="reduced"] body[data-office-page="certificate-centre"] .portal-child-head::after{animation:none;}
 
 /* The one control on the page reads as one. */
 .pch-state .portal-back-link{
