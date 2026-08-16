@@ -679,6 +679,128 @@ html[data-pc-theme="light"] .portal-shell-footer-links a{ color:rgba(59,42,29,.8
   width:74px;height:1px;
   background:linear-gradient(90deg,transparent,var(--gold-bright,#E9CE8A),transparent);}
 
+/* ===================================================================
+   THE REGISTRAR'S OFFICE — A GLOSSIER CHROME
+   -------------------------------------------------------------------
+   Scoped to body[data-office-page="registrar"], which only
+   portal/staff/registrar/index.html carries — not the other pages
+   that share data-atmosphere="registrar" (certificate-centre,
+   graduation-control). This is one office's furniture, not a rewrite
+   of the chrome the other sixty-seven pages depend on.
+
+   Two things layer onto the base chrome above, on every surface —
+   the calendar strip, the masthead, the colophon, the arrival plate,
+   the live-hours panel: a faint ledger grid, the ruled hairlines of a
+   registry book, and a slow gloss sweep in the same restrained
+   language as .portal-card's Living Gold Reflection in css/portal.css
+   (a soft diagonal band moved by animating background-position, nothing
+   blended with `screen` — that mistake is already documented above,
+   at .crest-shimmer-wrap::after, and this does not repeat it).
+
+   Both layers live on one pseudo-element per surface, painted at
+   z-index:-1 — above that surface's own background, below its real
+   content — the same placement .pch-foot's crest watermark already
+   uses. .pch-arrival and .pch-now don't establish their own stacking
+   context in the base rules (position:relative with the default
+   z-index:auto isn't enough), so isolation:isolate is added here to
+   keep each surface's pseudo-element from escaping to a parent's.
+   ------------------------------------------------------------------- */
+body[data-office-page="registrar"] .pch-arrival,
+body[data-office-page="registrar"] .pch-now{isolation:isolate;}
+
+body[data-office-page="registrar"] .pch-strip::before,
+body[data-office-page="registrar"] .pch-mast::before,
+body[data-office-page="registrar"] .pch-foot::after,
+body[data-office-page="registrar"] .pch-arrival::after,
+body[data-office-page="registrar"] .pch-now::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+  background-image:
+    linear-gradient(115deg,transparent 40%,rgba(255,246,223,.12) 48%,
+      rgba(255,246,223,.20) 50%,rgba(255,246,223,.12) 52%,transparent 60%),
+    linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+  background-size:240% 240%,34px 34px,34px 34px;
+  background-position:140% -40%,0 0,0 0;
+  animation:pchRegistrarGloss 10s ease-in-out infinite;
+}
+body[data-office-page="registrar"] .pch-foot::after,
+body[data-office-page="registrar"] .pch-arrival::after,
+body[data-office-page="registrar"] .pch-now::after{animation-duration:13s;animation-delay:.6s;}
+@keyframes pchRegistrarGloss{
+  0%,18%{background-position:140% -40%,0 0,0 0;}
+  62%,100%{background-position:-40% 70%,0 0,0 0;}
+}
+@media (prefers-reduced-motion:reduce){
+  body[data-office-page="registrar"] .pch-strip::before,
+  body[data-office-page="registrar"] .pch-mast::before,
+  body[data-office-page="registrar"] .pch-foot::after,
+  body[data-office-page="registrar"] .pch-arrival::after,
+  body[data-office-page="registrar"] .pch-now::after{
+    animation:none;
+    background-image:
+      linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+    background-size:34px 34px,34px 34px;background-position:0 0,0 0;}
+}
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-strip::before,
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-mast::before,
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-foot::after,
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-arrival::after,
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-now::after{
+  animation:none;
+  background-image:
+    linear-gradient(rgba(233,206,138,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,206,138,.05) 1px,transparent 1px);
+  background-size:34px 34px,34px 34px;background-position:0 0,0 0;}
+
+/* The arrival plate, in a double frame — the outer border the base rule
+   already draws, and a second hairline set 5px in from it, which is
+   what a jewel box's inner bevel looks like rather than a single flat
+   rule. The drop shadow is lifted further off the page too, since this
+   plate is meant to read as set apart from the espresso behind it. */
+body[data-office-page="registrar"] .pch-arrival{
+  border-color:rgba(233,206,138,.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255,246,223,.1),
+    inset 0 0 0 1px rgba(233,206,138,.10),
+    0 22px 46px -30px rgba(0,0,0,.65);}
+body[data-office-page="registrar"] .pch-arrival::before{
+  content:"";position:absolute;inset:5px;z-index:-1;pointer-events:none;
+  border:1px solid rgba(233,206,138,.14);border-radius:2px;}
+
+/* The live-hours panel gets the same lift, and — at the width where its
+   three stats actually sit in one row — a hairline between them, so
+   Attendance, Average Score and Fee Status read as three ruled entries
+   in a ledger rather than three numbers floating in a grid gap. */
+body[data-office-page="registrar"] .pch-now{
+  border-color:rgba(233,206,138,.3);
+  box-shadow:inset 0 1px 0 rgba(255,246,223,.1),0 18px 40px -28px rgba(0,0,0,.6);}
+@media (min-width:821px){
+  body[data-office-page="registrar"] .pch-now-cell:not(:first-child){
+    border-inline-start:1px solid rgba(233,206,138,.16);padding-inline-start:20px;}
+}
+
+/* The office's own badge, in the masthead's working tier, sealed rather
+   than flat: a small set stone before the name and a third gradient
+   stop so the gold reads as cast metal rather than a two-colour chip. */
+body[data-office-page="registrar"] .portal-pilot-badge{
+  position:relative;padding-inline-start:26px;
+  background:linear-gradient(135deg,#F3DFA0,#C6A15B,#9C7A3C)!important;
+  border-color:rgba(255,246,223,.55)!important;
+  box-shadow:
+    0 6px 16px -8px rgba(140,100,40,.95),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 0 0 1px rgba(255,246,223,.4);}
+body[data-office-page="registrar"] .portal-pilot-badge::before{
+  content:"";position:absolute;inset-inline-start:11px;top:50%;
+  width:6px;height:6px;border-radius:50%;transform:translateY(-50%);
+  background:radial-gradient(circle at 35% 30%,#FFF6DF,#8C6834 78%);
+  box-shadow:0 0 6px 1px rgba(233,206,138,.7);}
+[dir="rtl"] body[data-office-page="registrar"] .portal-pilot-badge{
+  padding-inline-start:14px;padding-inline-end:26px;}
+[dir="rtl"] body[data-office-page="registrar"] .portal-pilot-badge::before{
+  inset-inline-start:auto;inset-inline-end:11px;}
+
 /* The one control on the page reads as one. */
 .pch-state .portal-back-link{
   display:inline-flex;align-items:center;gap:9px;width:auto;margin:22px auto 0;
