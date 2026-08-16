@@ -888,45 +888,76 @@ body[data-office-page="registrar"] .pch-crest{
    icon, keeping the file's own habit (.pch-mark, .pch-corner) of
    small SVG-or-CSS marks over an icon font — and reading, on a page
    of verification tools, as what these links actually do: confirm. */
-body[data-office-page="registrar"] .pch-foot-inner{gap:24px 22px;}
+/* Full-width stacked sections rather than three columns shoulder to
+   shoulder — the piece of WEC's own footer this was still missing.
+   Their EXPLORE FURTHER, STUDY, ADMISSIONS and so on are not one of
+   several narrow columns in a row; each is its own full-width card,
+   and the tiles inside it run in as wide a grid as the card allows.
+   Three columns cannot carry that — a column a third of 1180px has no
+   room for a six-wide grid — so the brand plate, Verification and
+   Campus now stack, each the full width of the footer. */
+body[data-office-page="registrar"] .pch-foot-inner{
+  grid-template-columns:minmax(0,1fr);gap:20px;}
 body[data-office-page="registrar"] .pch-col{
-  padding:22px 22px 24px;border-radius:14px;
+  padding:24px 26px 28px;border-radius:16px;
   background:linear-gradient(168deg,rgba(255,255,255,.85),rgba(255,255,255,.5));
   box-shadow:
     0 26px 50px -32px rgba(60,40,20,.4),
     0 0 0 1px var(--rgo-line),
     inset 0 1px 0 rgba(255,255,255,.85);}
+body[data-office-page="registrar"] .pch-col-brand{grid-column:auto;}
+
+/* A small mark beside each section heading — the file's own diamond
+   (see .pch-mark) rather than WEC's icon-in-a-circle, so the heading
+   stays in this file's language while still announcing the section
+   the way theirs does. */
+body[data-office-page="registrar"] .pch-h{
+  display:flex;align-items:center;gap:9px;}
+body[data-office-page="registrar"] .pch-h::before{
+  content:"";flex:0 0 auto;width:7px;height:7px;transform:rotate(45deg);
+  background:linear-gradient(155deg,#F3DFA0,#8C6834);
+  box-shadow:0 0 5px 0 rgba(140,104,52,.5);}
+
+/* The tiles: icon above, label below, centred — WEC's own tile shape —
+   in a grid wide enough to run six or more across the full-width card
+   rather than the two a narrow column allowed. auto-fit rather than
+   auto-fill so four tiles (Verification, Campus) stretch to fill the
+   row exactly as WEC's own four-tile GET IN TOUCH section does, instead
+   of leaving empty track width unclaimed at the row's end. */
 body[data-office-page="registrar"] .pch-list{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 12px;}
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:14px 12px;}
 body[data-office-page="registrar"] .pch-link{
-  position:relative;display:flex;align-items:center;width:auto;
-  padding-inline-start:46px;padding-inline-end:14px;padding-block:10px;
-  border-radius:11px;border:1px solid var(--rgo-line);color:var(--rgo-ink-soft);
-  background:linear-gradient(168deg,rgba(255,255,255,.7),rgba(233,206,138,.08));
-  box-shadow:0 3px 10px -7px rgba(107,78,34,.4),inset 0 1px 0 rgba(255,255,255,.75);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:11px;width:auto;text-align:center;padding:18px 10px 15px;
+  border-radius:14px;border:1px solid var(--rgo-line);color:var(--rgo-ink-soft);
+  font-size:.76rem;font-weight:600;line-height:1.35;letter-spacing:.005em;
+  background:linear-gradient(168deg,rgba(255,255,255,.72),rgba(233,206,138,.08));
+  box-shadow:0 4px 12px -8px rgba(107,78,34,.4),inset 0 1px 0 rgba(255,255,255,.78);
   transition:border-color .3s ease,background .3s ease,transform .3s ease,
     color .3s ease,box-shadow .3s ease;}
+/* The badge — a cast gold disc with its own highlight, rim and shadow —
+   carries a drawn checkmark as one more background layer rather than a
+   second pseudo-element, since a link only gets ::before and ::after
+   between them and ::after is unused once the mark lives here. Reading,
+   on a page of verification tools, as what these links actually do. */
 body[data-office-page="registrar"] .pch-link::before{
-  content:"";position:absolute;inset-inline-start:10px;top:50%;
-  transform:translateY(-50%);width:26px;height:26px;border-radius:50%;
-  background:
+  content:"";flex:0 0 auto;width:46px;height:46px;border-radius:50%;
+  background-image:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFBEF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E"),
     radial-gradient(circle at 32% 26%,rgba(255,255,255,.92),transparent 46%),
     linear-gradient(155deg,#F3DFA0,#C6A15B 55%,#8C6834 100%);
+  background-repeat:no-repeat;background-position:center;
+  background-size:20px 20px,100% 100%,100% 100%;
   border:1px solid rgba(255,255,255,.65);
   box-shadow:
-    0 4px 10px -4px rgba(107,78,34,.65),
+    0 5px 12px -4px rgba(107,78,34,.65),
     inset 0 1px 1px rgba(255,255,255,.75),
     inset 0 -1px 2px rgba(107,78,34,.4);}
-body[data-office-page="registrar"] .pch-link::after{
-  content:"";position:absolute;inset-inline-start:19px;top:50%;
-  width:7px;height:4px;margin-top:-2px;
-  border-left:1.6px solid #FFFBEF;border-bottom:1.6px solid #FFFBEF;
-  transform:rotate(-45deg);}
 body[data-office-page="registrar"] .pch-link:hover,
 body[data-office-page="registrar"] .pch-link:focus-visible{
   color:var(--rgo-ink);border-color:rgba(140,104,52,.6);
-  background:rgba(233,206,138,.22);transform:translateY(-2px);
-  box-shadow:0 12px 22px -12px rgba(107,78,34,.5),inset 0 1px 0 rgba(255,255,255,.75);}
+  background:rgba(233,206,138,.22);transform:translateY(-3px);
+  box-shadow:0 16px 26px -14px rgba(107,78,34,.5),inset 0 1px 0 rgba(255,255,255,.78);}
 
 /* ---- The ledger grid and gloss sweep, retinted for ivory ------------
    Same technique as the espresso version this replaces — one
