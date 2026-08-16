@@ -40,18 +40,28 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var liveEl = document.querySelector('[data-cert-forge-live]');
 
   var STAGES = ['Validating Identity', 'Cryptographic Signing', 'Embossing Seal', 'Publishing Verification'];
+  // What the server genuinely does for each streamed row, in order — see
+  // functions/api/portal/staff/registrar/stage-certificates.js's
+  // generate_batch loop: matchStudent, ensureStudentIdentityNo,
+  // generateStageCertificateSerial (an HMAC-keyed serial), INSERT INTO
+  // stage_certificates. A row event arrives after its row has fully
+  // completed server-side, so these labels replay the real pipeline of a
+  // finished issuance — a description of work done, not an invention of
+  // work that never happened.
+  var LIVE_STAGES = ['Matching Student Record', 'Assigning Student ID', 'Cryptographic Serial', 'Recorded in Register'];
   var lastAnnouncedStage = '';
   var sessionCount = 0;
   var lcd = null; // assigned once the scene builds below
 
-  function setStageDisplay(t, serial, statusOverride) {
+  function setStageDisplay(t, serial, statusOverride, caption, live) {
     var pct = Math.round(Math.min(t, 1) * 100);
-    var stage = statusOverride || (t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))]);
+    var stageSet = live ? LIVE_STAGES : STAGES;
+    var stage = statusOverride || (t >= 0.85 ? (live ? 'Issued' : 'Archived') : stageSet[Math.min(3, Math.floor(t * 4))]);
     if (lcd) {
       lcd.setLines([
         { text: stage, size: 30 },
         { text: serial || '—', size: 26 },
-        { text: 'Session ' + String(sessionCount).padStart(4, '0') + '   ' + pct + '%', size: 22, caption: true },
+        { text: (caption || 'Session ' + String(sessionCount).padStart(4, '0')) + '   ' + pct + '%', size: 22, caption: true },
       ]);
     }
     if (leds) leds.setActive(Math.min(3, Math.floor(t * 4)));
@@ -157,6 +167,64 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   var particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0xE9CE8A, size: 0.035, transparent: true, opacity: 0.75 }));
   scene.add(particles);
+
+  // ---- Cinematic apparatus: the verification laser, and the spark
+  // burst a finished certificate throws. Both are part of the staged
+  // sequence in animateCycle, not free-running decorations. ----
+  var laserMat = new THREE.MeshBasicMaterial({ color: 0x9FE8FF, transparent: true, opacity: 0, toneMapped: false });
+  var laser = new THREE.Mesh(new THREE.PlaneGeometry(3.55, 0.05), laserMat);
+  laser.position.set(0, 0.6, 0.47);
+  scene.add(laser);
+  var laserGlowMat = new THREE.MeshBasicMaterial({ color: 0x9FE8FF, transparent: true, opacity: 0, toneMapped: false });
+  var laserGlow = new THREE.Mesh(new THREE.PlaneGeometry(3.55, 0.22), laserGlowMat);
+  laserGlow.position.set(0, 0.6, 0.465);
+  scene.add(laserGlow);
+
+  var BURST_N = 42;
+  var burstPos = new Float32Array(BURST_N * 3);
+  var burstVel = new Float32Array(BURST_N * 3);
+  var burstGeo = new THREE.BufferGeometry();
+  burstGeo.setAttribute('position', new THREE.BufferAttribute(burstPos, 3));
+  var burstMat = new THREE.PointsMaterial({ color: 0xFFE9A8, size: 0.06, transparent: true, opacity: 0, toneMapped: false });
+  var burst = new THREE.Points(burstGeo, burstMat);
+  scene.add(burst);
+  var burstStart = -1;
+  function fireBurst(cx, cy) {
+    for (var b = 0; b < BURST_N; b++) {
+      burstPos[b * 3] = cx + (Math.random() - 0.5) * 0.4;
+      burstPos[b * 3 + 1] = cy + (Math.random() - 0.5) * 0.3;
+      burstPos[b * 3 + 2] = 0.5;
+      var ang = Math.random() * Math.PI * 2;
+      var speed = 0.4 + Math.random() * 1.4;
+      burstVel[b * 3] = Math.cos(ang) * speed;
+      burstVel[b * 3 + 1] = Math.abs(Math.sin(ang)) * speed * 0.9 + 0.3;
+      burstVel[b * 3 + 2] = (Math.random() - 0.5) * 0.4;
+    }
+    burstGeo.attributes.position.needsUpdate = true;
+    burstStart = performance.now();
+  }
+  function updateBurst(now, dtMs) {
+    if (burstStart < 0) { burstMat.opacity = 0; return; }
+    var age = (now - burstStart) / 900;
+    if (age >= 1) { burstStart = -1; burstMat.opacity = 0; return; }
+    var dt = Math.min(dtMs, 50) / 1000;
+    for (var b = 0; b < BURST_N; b++) {
+      burstVel[b * 3 + 1] -= 2.2 * dt; // gravity
+      burstPos[b * 3] += burstVel[b * 3] * dt;
+      burstPos[b * 3 + 1] += burstVel[b * 3 + 1] * dt;
+      burstPos[b * 3 + 2] += burstVel[b * 3 + 2] * dt;
+    }
+    burstGeo.attributes.position.needsUpdate = true;
+    burstMat.opacity = 0.95 * (1 - age);
+  }
+
+  // Stage-keyed rim lighting — each phase of the sequence has its own
+  // cast of light, lerped rather than snapped so the room reads as one
+  // continuous space with the work moving through it.
+  var STAGE_TINTS = [0x8FB4E8, 0xE9CE8A, 0xFFD9A0, 0xB9E7CB];
+  var rimTarget = new THREE.Color(0xC6A15B);
+  var lastStageIdx = -1;
+  var keyPulse = 0;
 
   // ---- The instrument console — a tilted metal plate below the
   // housing, holding every control that used to be a DOM element. ----
@@ -287,25 +355,30 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   });
 
   var cycleStart = 0;
+  var burstFiredThisCycle = false;
   function animateCycle(now) {
     var needNext = !cur || now - cycleStart > (liveActive ? liveCycleMs : CYCLE);
     if (needNext) {
       if (liveActive && liveQueue.length) {
         cycleStart = now;
+        burstFiredThisCycle = false;
         liveCurrent = liveQueue.shift();
         var shownName = liveCurrent.fullName || liveCurrent.studentFullName || 'Student';
         spawnCertificate(shownName, liveCurrent.serialNo || null);
         var goodTone = liveCurrent.status === 'issued' ? 0xC6A15B : (liveCurrent.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
         slotMat.emissive.setHex(goodTone);
         playSound();
+        if (window.__certForgePrintWhirr) window.__certForgePrintWhirr();
       } else if (liveActive && liveEnded && !liveQueue.length) {
         liveActive = false; liveCurrent = null;
         slotMat.emissive.setHex(0xC6A15B);
         cycleStart = now;
+        burstFiredThisCycle = false;
         spawnCertificate();
         playSound();
       } else if (!liveActive) {
         cycleStart = now;
+        burstFiredThisCycle = false;
         spawnCertificate();
         playSound();
       }
@@ -318,7 +391,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     var statusLabel = liveCurrent && liveCurrent.status !== 'issued'
       ? (liveCurrent.status === 'skipped' ? 'Skipped — already issued' : 'Failed — ' + (liveCurrent.problem || 'see register'))
       : null;
-    setStageDisplay(t, curSerial, statusLabel);
+    var caption = liveCurrent
+      ? 'Certificate ' + (liveCurrent.index + 1) + ' of ' + liveCurrent.total
+      : null;
+    setStageDisplay(t, curSerial, statusLabel, caption, !!liveCurrent);
     var rise = Math.min(t / 0.55, 1);
     var eased = 1 - Math.pow(1 - rise, 3);
     var y = -1.9 + eased * 2.5;
@@ -329,14 +405,65 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     cur.material.opacity = 1;
     cur.material.transparent = t > 0.82;
     if (t > 0.82) cur.material.opacity = 1 - (t - 0.82) / 0.18;
+
+    // ---- The staged apparatus, keyed to the same clock ----
+    // The slot burns brighter while the sheet is actually emerging —
+    // the print head working — and settles once the paper is clear.
+    slotMat.emissiveIntensity = t < 0.55 ? 0.9 + Math.sin(now / 55) * 0.25 : 0.5;
+
+    // Verification laser: one sweep down the risen sheet during the
+    // third quarter (the sequence's verification beat), reading the
+    // sheet the way a scanner bed reads a page.
+    var scanPhase = (t - 0.58) / 0.2;
+    if (scanPhase > 0 && scanPhase < 1 && (!liveCurrent || liveCurrent.status === 'issued')) {
+      var certTop = y + 1.16 * unfurl;
+      var certBottom = y - 1.16 * unfurl;
+      laser.position.y = certTop - (certTop - certBottom) * scanPhase;
+      laserGlow.position.y = laser.position.y;
+      laserMat.opacity = 0.85;
+      laserGlowMat.opacity = 0.18;
+    } else {
+      laserMat.opacity = 0;
+      laserGlowMat.opacity = 0;
+    }
+
+    // The spark of completion — real issuance only. A skipped or failed
+    // row leaves the hall quietly, tinted by the slot lamp; celebration
+    // belongs to the certificates that actually exist now.
+    if (t >= 0.8 && !burstFiredThisCycle && (!liveCurrent || liveCurrent.status === 'issued')) {
+      burstFiredThisCycle = true;
+      fireBurst(0, y + 0.4);
+    }
+
+    // Stage-cast light on the rim.
+    var stageIdx = Math.min(3, Math.floor(t * 4));
+    if (stageIdx !== lastStageIdx) {
+      lastStageIdx = stageIdx;
+      rimTarget.setHex(STAGE_TINTS[stageIdx]);
+      keyPulse = 1;
+    }
+    rim.color.lerp(rimTarget, 0.06);
+    keyPulse *= 0.94;
+    key.intensity = 1.1 + keyPulse * 0.35;
   }
 
   var raf = null, running = false, userPaused = false;
+  var lastTs = 0, camZ = 11.5;
   function frame(ts) {
     if (!running) return;
+    var dtMs = lastTs ? ts - lastTs : 16;
+    lastTs = ts;
     animateCycle(ts);
+    updateBurst(ts, dtMs);
     particles.rotation.y += 0.0008;
+    // The camera never sits still: the existing lateral sway, a slow
+    // breathing dolly, and — while a real batch runs — a push-in toward
+    // the press, eased rather than cut.
+    var camZTarget = (liveActive ? 10.4 : 11.5) + Math.sin(ts / 13000) * 0.18;
+    camZ += (camZTarget - camZ) * 0.02;
+    camera.position.z = camZ;
     camera.position.x = Math.sin(ts / 9000) * swayAmplitude;
+    camera.position.y = -0.5 + Math.sin(ts / 11000) * 0.08;
     camera.lookAt(0, -0.9, 0);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
@@ -402,6 +529,37 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     oscGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.7);
     osc.connect(oscGain).connect(ctx.destination);
     osc.start(t0 + 0.1); osc.stop(t0 + 0.75);
+  };
+
+  // The press itself, heard only during a real batch: a short motor
+  // whirr under two roller ticks — synthesised like the chime, no audio
+  // file, and gated behind the same sound switch.
+  window.__certForgePrintWhirr = function () {
+    if (!soundOn) return;
+    var ctx = ensureAudioCtx();
+    if (!ctx) return;
+    var t0 = ctx.currentTime;
+    var whirrLen = 0.4;
+    var bufferSize = Math.floor(ctx.sampleRate * whirrLen);
+    var buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < bufferSize; i++) {
+      var env = Math.sin((i / bufferSize) * Math.PI);
+      data[i] = (Math.random() * 2 - 1) * env * 0.5 + Math.sin(i / 18) * env * 0.25;
+    }
+    var motor = ctx.createBufferSource(); motor.buffer = buf;
+    var motorFilter = ctx.createBiquadFilter(); motorFilter.type = 'bandpass'; motorFilter.frequency.value = 240; motorFilter.Q.value = 1.4;
+    var motorGain = ctx.createGain(); motorGain.gain.value = 0.055;
+    motor.connect(motorFilter).connect(motorGain).connect(ctx.destination);
+    motor.start(t0);
+    [0.08, 0.22].forEach(function (dt) {
+      var tick = ctx.createOscillator(); tick.type = 'square'; tick.frequency.value = 1400;
+      var tickGain = ctx.createGain();
+      tickGain.gain.setValueAtTime(0.02, t0 + dt);
+      tickGain.gain.exponentialRampToValueAtTime(0.0005, t0 + dt + 0.04);
+      tick.connect(tickGain).connect(ctx.destination);
+      tick.start(t0 + dt); tick.stop(t0 + dt + 0.05);
+    });
   };
 
   if (soundInput) {

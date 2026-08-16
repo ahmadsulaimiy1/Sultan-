@@ -119,6 +119,12 @@
           var event;
           try{ event = JSON.parse(line); }catch(parseErr){ continue; }
           broadcast('progress', event);
+          if(event.type === 'row' && generateBtn){
+            // The button is the truthful progress meter: this count is the
+            // number of students the server has actually finished, not a
+            // timer's guess.
+            generateBtn.textContent = 'Generating… ' + (event.index + 1) + ' of ' + event.total;
+          }
           if(event.type === 'batch_done') finalEvent = event;
           else if(event.type === 'error') streamErrorMessage = event.error;
         }
