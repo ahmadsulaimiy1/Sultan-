@@ -22,6 +22,22 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ---- Console readouts ----
+  var serialEl = document.querySelector('[data-registry-hall-serial]');
+  var stageEl = document.querySelector('[data-registry-hall-stage]');
+  var progressEl = document.querySelector('[data-registry-hall-progress]');
+  var countEl = document.querySelector('[data-registry-hall-count]');
+  var leds = document.querySelectorAll('[data-registry-hall-led]');
+  var STAGES = ['Identifying Student', 'Verifying Standing', 'Applying Official Seal', 'Writing to the Register'];
+  function setStageDisplay(t) {
+    if (stageEl) stageEl.textContent = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
+    if (progressEl) progressEl.textContent = Math.round(Math.min(t, 1) * 100) + '%';
+    var activeLed = Math.min(3, Math.floor(t * 4));
+    leds.forEach(function (led, i) {
+      led.classList.toggle('is-active', i <= activeLed);
+    });
+  }
+
   var RECORDS = [
     { name: 'Abdul Samod A. Jimoh', no: 'SHRS-STU-000198', institution: "Royal College", cls: "I'dādiyyah 1", status: 'Active' },
     { name: 'Aisha Bello', no: 'SHRS-STU-000214', institution: "Qur'an College", cls: "Ibtidā'iyyah 3", status: 'Active' },
@@ -157,13 +173,24 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
   resize();
 
   // ---- The record cycle: card flips in, seal presses, card flips out ----
-  var CYCLE = 4600;
-  var cur = null, curFace = null, recIdx = 0, sealed = false;
+  var CYCLE = 4600; // ms per record — adjustable by the "View" control below
+  var swayAmplitude = 0.3; // also adjustable by "View" — how far the camera drifts
+  var cur = null, curFace = null, recIdx = 0, sealed = false, sessionCount = 0;
+  // An institutional-record-number-shaped identifier for this
+  // demonstration — illustrative, the same way the names on the card
+  // are, not a real record number (the Student Registry above issues
+  // those for real, tied to an actual student).
+  function nextRecordNo() {
+    sessionCount++;
+    if (countEl) countEl.textContent = String(sessionCount).padStart(4, '0');
+    return 'SHRS-REG-2026-' + String(80 + sessionCount).padStart(6, '0');
+  }
   function spawnRecord() {
     if (curFace) curFace.texture.dispose();
     curFace = drawRecordFace(RECORDS[recIdx % RECORDS.length]);
     recIdx++;
     sealed = false;
+    if (serialEl) serialEl.textContent = nextRecordNo();
     var geo = new THREE.PlaneGeometry(3.6, 2.46);
     var mat = new THREE.MeshStandardMaterial({ map: curFace.texture, side: THREE.DoubleSide, roughness: 0.6, metalness: 0.04 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
@@ -182,6 +209,7 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
       spawnRecord();
     }
     var t = Math.min((now - cycleStart) / CYCLE, 1);
+    setStageDisplay(t);
 
     // 0 - 0.22: card flips onto the desk.
     var flipIn = Math.min(t / 0.22, 1);
@@ -206,17 +234,17 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     }
   }
 
-  var raf = null, running = false;
+  var raf = null, running = false, userPaused = false;
   function frame(ts) {
     if (!running) return;
     animateCycle(ts);
     motes.rotation.y += 0.0004;
-    camera.position.x = Math.sin(ts / 10000) * 0.3;
+    camera.position.x = Math.sin(ts / 10000) * swayAmplitude;
     camera.lookAt(0, 0.15, 0);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
-  function start() { if (running) return; running = true; raf = requestAnimationFrame(frame); }
+  function start() { if (running || userPaused) return; running = true; raf = requestAnimationFrame(frame); }
   function stop() { running = false; if (raf) cancelAnimationFrame(raf); }
 
   if (reduceMotion) {
@@ -224,6 +252,7 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     still.rotation.y = 0;
     seal.position.y = 0.15;
     embossSeal(curFace);
+    setStageDisplay(1);
     camera.lookAt(0, 0.15, 0);
     resize();
     renderer.render(scene, camera);
@@ -271,6 +300,45 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
       soundBtn.setAttribute('aria-pressed', String(soundOn));
       soundBtn.textContent = soundOn ? '🔊 Sound: On' : '🔈 Sound: Off';
       if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+    });
+  }
+
+  // ---- Pause: a real control — stops the loop outright rather than
+  // just muting it, and overrides the IntersectionObserver so scrolling
+  // the hero back into view doesn't silently un-pause it. ----
+  var pauseBtn = document.querySelector('[data-registry-hall-pause]');
+  if (pauseBtn && !reduceMotion) {
+    pauseBtn.addEventListener('click', function () {
+      userPaused = !userPaused;
+      pauseBtn.setAttribute('aria-pressed', String(userPaused));
+      pauseBtn.textContent = userPaused ? '▶ Resume' : '⏸ Pause';
+      if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
+      else { start(); }
+    });
+  } else if (pauseBtn) {
+    pauseBtn.disabled = true;
+    pauseBtn.textContent = 'Reduced Motion';
+    pauseBtn.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+  }
+
+  // ---- View: a real control that changes the pace of this
+  // demonstration only — never the real registry, which this scene
+  // does not touch. ----
+  var QUALITY_TIERS = [
+    { label: 'View: Standard', cycle: 5800, sway: 0.18, moteOpacity: 0.35 },
+    { label: 'View: Professional', cycle: 4600, sway: 0.3, moteOpacity: 0.5 },
+    { label: 'View: Prestige', cycle: 3600, sway: 0.44, moteOpacity: 0.7 },
+  ];
+  var qualityIdx = 1;
+  var qualityBtn = document.querySelector('[data-registry-hall-quality]');
+  if (qualityBtn) {
+    qualityBtn.addEventListener('click', function () {
+      qualityIdx = (qualityIdx + 1) % QUALITY_TIERS.length;
+      var tier = QUALITY_TIERS[qualityIdx];
+      CYCLE = tier.cycle;
+      swayAmplitude = tier.sway;
+      motes.material.opacity = tier.moteOpacity;
+      qualityBtn.textContent = tier.label;
     });
   }
 })();

@@ -20,6 +20,22 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ---- Console readouts ----
+  var serialEl = document.querySelector('[data-cert-forge-serial]');
+  var stageEl = document.querySelector('[data-cert-forge-stage]');
+  var progressEl = document.querySelector('[data-cert-forge-progress]');
+  var countEl = document.querySelector('[data-cert-forge-count]');
+  var leds = document.querySelectorAll('[data-cert-forge-led]');
+  var STAGES = ['Validating Identity', 'Cryptographic Signing', 'Embossing Seal', 'Publishing Verification'];
+  function setStageDisplay(t) {
+    if (stageEl) stageEl.textContent = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
+    if (progressEl) progressEl.textContent = Math.round(Math.min(t, 1) * 100) + '%';
+    var activeLed = Math.min(3, Math.floor(t * 4));
+    leds.forEach(function (led, i) {
+      led.classList.toggle('is-active', i <= activeLed);
+    });
+  }
+
   // ---- Certificate face texture, drawn procedurally (no image asset) ----
   function drawCertificateFace(seedName) {
     var c = document.createElement('canvas');
@@ -132,12 +148,23 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
   resize();
 
   // ---- The certificate emergence cycle ----
-  var CYCLE = 4200; // ms per certificate
-  var cur = null, curTex = null, nameIdx = 0;
+  var CYCLE = 4200; // ms per certificate — adjustable by the "View" control below
+  var swayAmplitude = 0.35; // also adjustable by "View" — how far the camera drifts
+  var cur = null, curTex = null, nameIdx = 0, sessionCount = 0;
+  // A realistic-looking serial in the format used elsewhere on this
+  // site (SHR-XXX-YYYY-000001) — illustrative for this demonstration,
+  // the same way the names on the certificate are, not a real issued
+  // number (the Certificate Register below issues those for real).
+  function nextSerial() {
+    sessionCount++;
+    if (countEl) countEl.textContent = String(sessionCount).padStart(4, '0');
+    return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
+  }
   function spawnCertificate() {
     if (curTex) curTex.dispose();
     curTex = drawCertificateFace(NAMES[nameIdx % NAMES.length]);
     nameIdx++;
+    if (serialEl) serialEl.textContent = nextSerial();
     var geo = new THREE.PlaneGeometry(3.4, 2.32, 24, 1);
     var mat = new THREE.MeshStandardMaterial({ map: curTex, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
@@ -157,6 +184,7 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
       playSound();
     }
     var t = Math.min((now - cycleStart) / CYCLE, 1);
+    setStageDisplay(t);
     // Ease out for the rise, hold, then a gentle fade/slide-away in the last 20%.
     var rise = Math.min(t / 0.55, 1);
     var eased = 1 - Math.pow(1 - rise, 3);
@@ -170,18 +198,18 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     if (t > 0.82) cur.material.opacity = 1 - (t - 0.82) / 0.18;
   }
 
-  var raf = null, running = false;
+  var raf = null, running = false, userPaused = false;
   function frame(ts) {
     if (!running) return;
     animateCycle(ts);
     particles.rotation.y += 0.0008;
-    camera.position.x = Math.sin(ts / 9000) * 0.35;
+    camera.position.x = Math.sin(ts / 9000) * swayAmplitude;
     camera.lookAt(0, -0.4, 0);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
   function start() {
-    if (running) return;
+    if (running || userPaused) return;
     running = true;
     raf = requestAnimationFrame(frame);
   }
@@ -194,6 +222,7 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     // A single, finished frame: the certificate fully emerged, nothing moving.
     var still = spawnCertificate();
     still.position.y = 0.6; still.scale.y = 1; still.rotation.x = 0;
+    setStageDisplay(1);
     camera.lookAt(0, -0.4, 0);
     resize();
     renderer.render(scene, camera);
@@ -252,6 +281,47 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
       soundBtn.setAttribute('aria-pressed', String(soundOn));
       soundBtn.textContent = soundOn ? '🔊 Sound: On' : '🔈 Sound: Off';
       if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+    });
+  }
+
+  // ---- Pause: a real control, not decorative — stops the loop outright
+  // rather than just muting it, and overrides the IntersectionObserver
+  // so scrolling the hero back into view doesn't silently un-pause it. ----
+  var pauseBtn = document.querySelector('[data-cert-forge-pause]');
+  if (pauseBtn && !reduceMotion) {
+    pauseBtn.addEventListener('click', function () {
+      userPaused = !userPaused;
+      pauseBtn.setAttribute('aria-pressed', String(userPaused));
+      pauseBtn.textContent = userPaused ? '▶ Resume' : '⏸ Pause';
+      if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
+      else { start(); }
+    });
+  } else if (pauseBtn) {
+    // Nothing is looping under reduced motion — say so rather than
+    // offering a pause control with nothing behind it.
+    pauseBtn.disabled = true;
+    pauseBtn.textContent = 'Reduced Motion';
+    pauseBtn.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+  }
+
+  // ---- View: a real control that changes the pace of this
+  // demonstration only — never the real certificate-generation engine,
+  // which this scene does not touch. ----
+  var QUALITY_TIERS = [
+    { label: 'View: Standard', cycle: 5200, sway: 0.2, particleOpacity: 0.55 },
+    { label: 'View: Professional', cycle: 4200, sway: 0.35, particleOpacity: 0.75 },
+    { label: 'View: Prestige', cycle: 3400, sway: 0.5, particleOpacity: 0.95 },
+  ];
+  var qualityIdx = 1;
+  var qualityBtn = document.querySelector('[data-cert-forge-quality]');
+  if (qualityBtn) {
+    qualityBtn.addEventListener('click', function () {
+      qualityIdx = (qualityIdx + 1) % QUALITY_TIERS.length;
+      var tier = QUALITY_TIERS[qualityIdx];
+      CYCLE = tier.cycle;
+      swayAmplitude = tier.sway;
+      particles.material.opacity = tier.particleOpacity;
+      qualityBtn.textContent = tier.label;
     });
   }
 })();

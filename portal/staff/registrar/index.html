@@ -52,9 +52,34 @@
     <div class="registry-hall portal-forge-hero" data-registry-hall>
       <canvas data-registry-hall-canvas aria-hidden="true"></canvas>
       <noscript><p class="portal-forge-hero-noscript">Every record entered here is checked against your assigned roles and recorded in the staff audit log — see Records Integrity below.</p></noscript>
-      <div class="portal-forge-hero-caption">
-        <p class="portal-forge-hero-eyebrow">One Honest Source Per Student</p>
-        <button type="button" class="portal-forge-hero-sound-toggle" data-registry-hall-sound aria-pressed="false">🔈 Sound: Off</button>
+      <div class="pfc-console">
+        <div class="pfc-top">
+          <p class="pfc-eyebrow">One Honest Source Per Student</p>
+          <span class="pfc-system-chip"><i aria-hidden="true"></i>System Nominal</span>
+        </div>
+        <div class="pfc-top" style="margin-bottom:12px;">
+          <div class="pfc-leds" aria-hidden="true">
+            <span class="pfc-led" data-registry-hall-led="0"><i></i>Identify</span>
+            <span class="pfc-led" data-registry-hall-led="1"><i></i>Verify</span>
+            <span class="pfc-led" data-registry-hall-led="2"><i></i>Seal</span>
+            <span class="pfc-led" data-registry-hall-led="3"><i></i>Archive</span>
+          </div>
+        </div>
+        <div class="pfc-bottom">
+          <dl class="pfc-readouts">
+            <div class="pfc-readout"><dt>Record No.</dt><dd data-registry-hall-serial>—</dd></div>
+            <div class="pfc-readout"><dt>Stage</dt><dd data-registry-hall-stage>Standing By</dd></div>
+            <div class="pfc-readout"><dt>Progress</dt><dd data-registry-hall-progress>0%</dd></div>
+            <div class="pfc-readout"><dt>This Session</dt><dd data-registry-hall-count>0000</dd></div>
+          </dl>
+          <div class="pfc-controls">
+            <button type="button" class="pfc-btn" data-registry-hall-quality aria-pressed="false">View: Professional</button>
+            <button type="button" class="pfc-btn" data-registry-hall-pause aria-pressed="false">⏸ Pause</button>
+            <button type="button" class="pfc-btn" data-registry-hall-sound aria-pressed="false">🔈 Sound: Off</button>
+            <button type="button" class="pfc-btn" disabled title="Not connected to a live diagnostics feed">Diagnostics</button>
+            <button type="button" class="pfc-btn" disabled title="No calibration step exists for this view">Calibrate</button>
+          </div>
+        </div>
       </div>
     </div>
 

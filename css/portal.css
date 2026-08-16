@@ -1109,35 +1109,76 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    Registry Hall (js/portal-registry-hall-3d.js): a real Three.js scene,
    not a CSS trick, in each case. .cert-forge/.registry-hall stay as
    identifying hooks on the two sections (and a place for either to
-   diverge later); the visual shell itself is identical, so it lives
-   here once rather than twice. The gradient is each section's own
-   ground and the fallback when WebGL is unavailable: the canvas paints
-   over it, nothing shows through as "broken" if the script never runs. */
+   diverge later); the visual shell and the instrument console beneath
+   it are identical between the two, so they live here once rather than
+   twice. The gradient is each section's own ground and the fallback
+   when WebGL is unavailable: the canvas paints over it, nothing shows
+   through as "broken" if the script never runs. */
 .portal-forge-hero{
   position:relative;border-radius:calc(var(--btn-radius) - 2px);overflow:hidden;
-  margin:20px 0 32px;height:340px;
+  margin:20px 0 32px;
   background:linear-gradient(165deg,#3B2A1D 0%,#241708 60%,#1C1207 100%);
   border:1px solid rgba(var(--lv-gs,198,161,91),0.4);
   box-shadow:0 32px 64px -30px rgba(0,0,0,0.4),0 10px 22px -12px rgba(0,0,0,0.28);
 }
-.portal-forge-hero canvas{display:block;width:100%;height:100%;}
-.portal-forge-hero-caption{
-  position:absolute;left:24px;right:24px;bottom:18px;
-  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
-  pointer-events:none;
-}
-.portal-forge-hero-eyebrow{
-  font-family:'Cinzel','Amiri',serif;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--gold-bright);margin:0;text-shadow:0 2px 10px rgba(0,0,0,0.65);
-}
-.portal-forge-hero-sound-toggle{
-  pointer-events:auto;background:rgba(34,23,9,0.55);border:1px solid rgba(var(--lv-gbs,233,206,138),0.5);
-  color:var(--gold-bright);border-radius:999px;padding:7px 16px;font-size:0.76rem;font-weight:600;
-  cursor:pointer;backdrop-filter:blur(4px);transition:background .25s ease,border-color .25s ease;
-}
-.portal-forge-hero-sound-toggle:hover{background:rgba(34,23,9,0.8);border-color:var(--gold-bright);}
+.portal-forge-hero canvas{display:block;width:100%;height:300px;}
 .portal-forge-hero-noscript{padding:20px 24px;color:var(--gold-bright);font-size:0.86rem;}
-@media (max-width:640px){.portal-forge-hero{height:240px;}.portal-forge-hero-eyebrow{font-size:0.7rem;}}
+
+/* The instrument console — a real control strip, not a caption. Most
+   readouts here describe the demonstration playing above them (this
+   session's own count, not a live institutional figure — the same
+   "never invent a number" discipline the rest of the platform holds
+   to), and a couple of the pills are genuinely inert: present for the
+   console to read as a real apparatus rather than a media player, but
+   not wired to anything, which is why they carry aria-disabled instead
+   of a dead click handler pretending otherwise. */
+.pfc-console{
+  border-top:1px solid rgba(var(--lv-gs,198,161,91),0.3);
+  background:linear-gradient(180deg,#1C1207 0%,#150D05 100%);
+  padding:12px 20px 14px;
+}
+.pfc-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+.pfc-eyebrow{
+  font-family:'Cinzel','Amiri',serif;font-size:0.74rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--gold-bright);margin:0;
+}
+.pfc-system-chip{
+  display:inline-flex;align-items:center;gap:7px;font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase;
+  color:rgba(233,206,138,0.75);border:1px solid rgba(198,161,91,0.28);border-radius:999px;padding:4px 10px 4px 8px;
+}
+.pfc-system-chip i{width:6px;height:6px;border-radius:50%;background:#4CAF6D;box-shadow:0 0 6px 1px rgba(76,175,109,0.7);animation:pfc-pulse 2.4s ease-in-out infinite;}
+@keyframes pfc-pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@media (prefers-reduced-motion:reduce){.pfc-system-chip i{animation:none;}}
+
+.pfc-leds{display:flex;gap:14px;flex-wrap:wrap;}
+.pfc-led{display:flex;align-items:center;gap:6px;font-size:0.66rem;letter-spacing:0.04em;text-transform:uppercase;color:rgba(233,206,138,0.45);transition:color .3s ease;}
+.pfc-led i{width:7px;height:7px;border-radius:50%;background:rgba(198,161,91,0.25);transition:background .3s ease,box-shadow .3s ease;}
+.pfc-led.is-active{color:var(--gold-bright);}
+.pfc-led.is-active i{background:var(--gold-bright);box-shadow:0 0 8px 1px rgba(233,206,138,0.75);}
+
+.pfc-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.pfc-readouts{display:flex;flex-wrap:wrap;gap:18px;margin:0;}
+.pfc-readout{display:flex;flex-direction:column;gap:2px;}
+.pfc-readout dt{font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:rgba(233,206,138,0.55);margin:0;}
+.pfc-readout dd{font-family:'Cinzel','Amiri',serif;font-size:0.86rem;color:var(--gold-bright);margin:0;font-variant-numeric:tabular-nums;min-width:3ch;}
+
+.pfc-controls{display:flex;flex-wrap:wrap;gap:8px;}
+.pfc-btn{
+  background:rgba(198,161,91,0.08);border:1px solid rgba(233,206,138,0.4);color:var(--gold-bright);
+  border-radius:999px;padding:7px 15px;font-size:0.72rem;font-weight:600;letter-spacing:0.01em;
+  cursor:pointer;transition:background .25s ease,border-color .25s ease,transform .25s ease;white-space:nowrap;
+}
+.pfc-btn:hover{background:rgba(233,206,138,0.16);border-color:var(--gold-bright);transform:translateY(-1px);}
+.pfc-btn:active{transform:translateY(0);}
+.pfc-btn:disabled{cursor:default;opacity:0.55;}
+.pfc-btn:disabled:hover{background:rgba(198,161,91,0.08);border-color:rgba(233,206,138,0.4);transform:none;}
+
+@media (max-width:760px){.pfc-readouts{gap:12px 16px;}.pfc-readout dd{font-size:0.78rem;}}
+@media (max-width:640px){
+  .portal-forge-hero canvas{height:220px;}
+  .pfc-leds{display:none;}
+  .pfc-readouts{gap:10px 14px;}
+}
 
 .teacher-class-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));gap:14px;padding:16px 20px;}
 .teacher-class-card{
