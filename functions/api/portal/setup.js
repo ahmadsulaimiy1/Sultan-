@@ -1806,6 +1806,37 @@ const STATEMENTS = [
   // verification for a reason no one could trace.
   `ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
   `ALTER TABLE graduation_documents ADD COLUMN IF NOT EXISTS hash_key_version INTEGER NOT NULL DEFAULT 1`,
+
+  // These two existed in sql/schema.sql and had drifted out of this file —
+  // this file's own header says "Mirrors sql/schema.sql — keep the two in
+  // sync" and that promise was broken silently. The practical effect: a
+  // school that had only ever run Setup, never a hand-run schema.sql
+  // migration, was missing both tables entirely. staff/desk.js queries
+  // assistant_escalations directly and unconditionally for anyone with
+  // Communications authority (REG/PRIN/EXE) — a missing table there
+  // throws inside Promise.all, the whole Desk request fails, and the page
+  // reads as "Could not load the desk" with no clue why. Appended after
+  // the staff table (line ~314), which assistant_escalations.handled_by
+  // references — table creation order matters for the foreign key.
+  `CREATE TABLE IF NOT EXISTS assistant_escalations (
+    id          SERIAL PRIMARY KEY,
+    channel     TEXT NOT NULL CHECK (channel IN ('web', 'whatsapp')),
+    topic       TEXT NOT NULL CHECK (topic IN ('admissions', 'fees', 'results', 'welfare', 'safeguarding', 'complaint', 'general')),
+    summary     TEXT NOT NULL,
+    contact     TEXT,
+    lang        TEXT,
+    transcript  TEXT,
+    status      TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'acknowledged', 'closed')),
+    handled_by  INTEGER REFERENCES staff(id),
+    handled_at  TIMESTAMPTZ,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_assistant_escalations_open ON assistant_escalations (status, created_at DESC)`,
+  `CREATE TABLE IF NOT EXISTS rate_limits (
+    bucket       TEXT PRIMARY KEY,
+    window_start TIMESTAMPTZ NOT NULL DEFAULT now(),
+    hits         INTEGER NOT NULL DEFAULT 0
+  )`,
 ];
 
 async function handle({ request, env }) {
