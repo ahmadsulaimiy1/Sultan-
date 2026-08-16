@@ -269,6 +269,12 @@
       logLine('ProductionLine', 'Interrupted() — check the register before retrying', 'error');
     }
   });
+  // The 3D studio halts its display when the registry's render service
+  // cannot supply an official master — the engineering log records the
+  // real reason. Issuance itself is a separate path and keeps running.
+  document.addEventListener('sultan:cert-forge-halt', function(e){
+    logLine('RenderService', 'MasterUnavailable(' + ((e.detail && e.detail.reason) || 'render unavailable') + ') — production display halted; issuance unaffected', 'error');
+  });
 
   function el(tag, className, text){
     var e = document.createElement(tag);

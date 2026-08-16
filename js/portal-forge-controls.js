@@ -22,7 +22,13 @@ export function makeLCDTexture(THREE, opts) {
   var ctx = c.getContext('2d');
   var tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+  var lastKey = null;
   function draw(lines) {
+    // Redraw + GPU re-upload only when the content actually changed —
+    // per-frame callers with static text cost nothing.
+    var key = JSON.stringify(lines);
+    if (key === lastKey) return;
+    lastKey = key;
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = '#0E0904';
     ctx.fillRect(0, 0, w, h);

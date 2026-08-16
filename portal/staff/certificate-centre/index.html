@@ -56,6 +56,15 @@
         <p>The full cinematic 3D production hall runs on desktop and tablet workstations. This device continues in Companion Mode: the complete certificate issuance workflow below runs at full speed, with live production progress, the register, and every artefact link.</p>
       </div>
       <noscript><p class="portal-forge-hero-noscript">This institution's certificates are produced under permission-checked, audit-logged authority — see the Certificate Register below.</p></noscript>
+      <!-- The official-masters guarantee: the production engine only ever
+           shows the registry's own render of the approved template. If the
+           render service cannot supply a master during a live batch, the
+           engine halts its display behind this notice rather than showing
+           a substitute. Issuance itself is a separate, unaffected path. -->
+      <div class="cc-forge-halt" data-cert-forge-halt hidden role="alert">
+        <strong>Official certificate template unavailable. Production cannot continue.</strong>
+        <span>The registry's rendering service did not return the approved master for this batch. The production display has stopped — no substitute template will be shown. Certificate issuance itself is unaffected: every result is recorded in the Certificate Register below.</span>
+      </div>
       <!-- The console rendered on the canvas above (dial, switches, VU
            meter, LCD readouts) is a 3D skin on these real controls —
            js/portal-forge-controls.js treats them as the source of

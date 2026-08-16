@@ -81,7 +81,23 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var sessionCount = 0;
   var lcd = null; // assigned once the scene builds below
 
-  function setStageDisplay(t, serial, statusOverride, caption, live) {
+  function setStageDisplay(t, serial, statusOverride, caption, live, reportOnly) {
+    // A report dwell (skipped/failed row) is a STATUS readout, not a
+    // manufacturing run: the LCD states the outcome, but the pipeline
+    // LEDs, VU meter and percentage must not perform progress that
+    // is not happening (confirmed in adversarial review).
+    if (reportOnly) {
+      if (lcd) {
+        lcd.setLines([
+          { text: statusOverride || 'No document produced', size: 28 },
+          { text: serial || '—', size: 26 },
+          { text: (caption || 'Live production') + '   —', size: 22, caption: true },
+        ]);
+      }
+      if (leds) leds.setActive(-1);
+      if (vu) vu.setLevel(0.06);
+      return;
+    }
     var pct = Math.round(Math.min(t, 1) * 100);
     var stageSet = live ? LIVE_STAGES : STAGES;
     var stage = statusOverride || (t >= 0.85 ? (live ? 'Issued' : 'Archived') : stageSet[Math.min(3, Math.floor(t * 4))]);
@@ -89,7 +105,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       lcd.setLines([
         { text: stage, size: 30 },
         { text: serial || '—', size: 26 },
-        { text: (caption || 'Session ' + String(sessionCount).padStart(4, '0')) + '   ' + pct + '%', size: 22, caption: true },
+        { text: (caption || 'Demonstration · Specimen') + '   ' + pct + '%', size: 22, caption: true },
       ]);
     }
     if (leds) leds.setActive(Math.min(3, Math.floor(t * 4)));
@@ -102,13 +118,17 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     // the demonstration is silent to assistive tech.
   }
 
-  // ---- Certificate face texture, drawn procedurally (no image asset).
-  // The face is CONSTRUCTED in stages, exactly as the finishing
-  // stations claim: the press prints the base (border, wording, name,
-  // serial); the Emboss station stamps the seal; the QR Engrave
-  // station burns the code; the Signature station applies the hand.
-  // Until a station has run, its element does not exist on the sheet —
-  // the registrar watches the document being built, layer by layer. ----
+  // ---- The DEMONSTRATION face — used ONLY by the idle demonstration
+  // loop and the reduced-motion still, never by live production. Live
+  // batches texture the registry's own render of the approved template
+  // (see spawnOfficialCertificate below); if that render cannot be
+  // obtained the engine halts rather than showing this face. Because
+  // this drawn sheet is not an official document, it carries an
+  // unmissable SPECIMEN watermark at all times. The face is
+  // CONSTRUCTED in stages, exactly as the finishing stations claim:
+  // the press prints the base; the Emboss station stamps the seal; the
+  // QR Engrave station burns the code; the Signature station applies
+  // the hand. ----
   function drawFaceCanvas(seedName, serial, built) {
     built = built || {};
     var c = document.createElement('canvas');
@@ -186,6 +206,27 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       ctx.font = '15px Georgia, serif'; ctx.fillStyle = '#5A4A38';
       ctx.fillText('Registrar', c.width / 2, 602);
     }
+    // The SPECIMEN watermark — always on the drawn face, so a
+    // demonstration sheet can never be mistaken for an issued
+    // certificate, on screen or in a screenshot.
+    ctx.save();
+    ctx.translate(c.width / 2, c.height / 2);
+    ctx.rotate(-0.32);
+    ctx.globalAlpha = 0.14;
+    ctx.fillStyle = '#7C5430';
+    ctx.font = '700 92px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('DEMONSTRATION', 0, -20);
+    ctx.font = '700 44px Georgia, serif';
+    ctx.fillText('SPECIMEN — NOT AN ISSUED DOCUMENT', 0, 48);
+    ctx.restore();
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = '#8A3A2E';
+    ctx.font = '700 20px "Courier New", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('SPECIMEN', c.width - 64, 84);
+    ctx.restore();
     return c;
   }
 
@@ -209,6 +250,58 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
   camera.position.set(0, -0.4, 11.5);
 
+  // ---- The reflection environment ----
+  // Every polished surface in the hall reflects a real environment: a
+  // one-time PMREM capture of a dark room hung with the hall's own gold
+  // and warm-white light panels. This is what separates "dark boxes"
+  // from black titanium and brushed metal — the materials pick it up
+  // through scene.environment. Rendered once at init; degrades to plain
+  // shading if the prefilter fails on a constrained GPU.
+  try {
+    var envScene = new THREE.Scene();
+    envScene.add(new THREE.Mesh(
+      new THREE.BoxGeometry(40, 22, 40),
+      new THREE.MeshBasicMaterial({ color: 0x0B0703, side: THREE.BackSide })
+    ));
+    [
+      [-8, 8, -6, 0xFFE9C0, 7, 2.4], [5, 9, 3, 0xE9CE8A, 6, 2],
+      [10, 7, -8, 0xFFF3DE, 5, 1.6], [-3, 8, 9, 0xC6A15B, 8, 1.2],
+      [0, -9, 0, 0x241708, 26, 26],
+    ].forEach(function (spec) {
+      var panel = new THREE.Mesh(
+        new THREE.PlaneGeometry(spec[4], spec[5]),
+        new THREE.MeshBasicMaterial({ color: spec[3], side: THREE.DoubleSide })
+      );
+      panel.position.set(spec[0], spec[1], spec[2]);
+      panel.lookAt(0, 0, 0);
+      envScene.add(panel);
+    });
+    // Vertical gold strips around the walls, like the backdrop's.
+    for (var es = 0; es < 8; es++) {
+      var ang = (es / 8) * Math.PI * 2;
+      var strip = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.5, 7),
+        new THREE.MeshBasicMaterial({ color: 0xC6A15B, side: THREE.DoubleSide })
+      );
+      strip.position.set(Math.cos(ang) * 17, 1.5, Math.sin(ang) * 17);
+      strip.lookAt(0, 1.5, 0);
+      envScene.add(strip);
+    }
+    var pmrem = new THREE.PMREMGenerator(renderer);
+    try {
+      var envRT = pmrem.fromScene(envScene, 0.04);
+      scene.environment = envRT.texture;
+    } finally {
+      pmrem.dispose();
+      // The capture scene's own GPU resources are one-shot — release
+      // them once the prefiltered environment exists.
+      envScene.traverse(function (obj) {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) obj.material.dispose();
+      });
+    }
+  } catch (envErr) { /* no environment — standard shading still stands */ }
+
     var hallAmbient = new THREE.AmbientLight(0xE9CE8A, 0.68);
   scene.add(hallAmbient);
   var key = new THREE.DirectionalLight(0xFFF3DE, 1.3);
@@ -222,18 +315,21 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   scene.add(panelLight);
   // The platen mouth's own light, spilling onto the conveyor the way
   // the reference's gold lamp bar does.
-  var mouthLight = new THREE.PointLight(0xE9CE8A, 0.7, 5);
-  mouthLight.position.set(-3.2, -1.1, 1.4);
+  // Inside the throat, BEHIND the emerging sheet's plane — the glow
+  // lights the press mouth and slot, never a hotspot on the paper face
+  // (the face's normal points away from it).
+  var mouthLight = new THREE.PointLight(0xE9CE8A, 0.42, 5);
+  mouthLight.position.set(-3.2, -0.9, 0.45);
   scene.add(mouthLight);
   [-1.5, 1.3, 4.2].forEach(function (x) {
-    var down = new THREE.PointLight(0xFFE9C0, 1.5, 9);
+    var down = new THREE.PointLight(0xFFE9C0, 1.05, 9);
     down.position.set(x, 0.7, 1.3);
     scene.add(down);
   });
   // The travelling work light: each station's task lamp, rendered as
   // one light that rides with the sheet down the line.
-  var workLight = new THREE.PointLight(0xFFF3DE, 0.9, 5.5);
-  workLight.position.set(-3.2, -0.3, 2.3);
+  var workLight = new THREE.PointLight(0xFFF3DE, 0.36, 6.5);
+  workLight.position.set(-3.2, 0.5, 2.3);
   scene.add(workLight);
 
   // A brass plaque in place of what used to be a plain DOM caption.
@@ -246,7 +342,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // the room the reference places the press inside.
   var floor = new THREE.Mesh(
     new THREE.PlaneGeometry(34, 8),
-    new THREE.MeshStandardMaterial({ color: 0x120C05, metalness: 0.75, roughness: 0.35 })
+    new THREE.MeshStandardMaterial({ color: 0x120C05, metalness: 0.82, roughness: 0.18 })
   );
   floor.rotation.x = -Math.PI / 2;
   // The floor ends before the console's station so the console (which
@@ -371,9 +467,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   press.position.set(-3.2, 0, -0.3);
   scene.add(press);
 
-  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x1A1109, metalness: 0.6, roughness: 0.42 });
-  var bodyDarkMat = new THREE.MeshStandardMaterial({ color: 0x0F0A04, metalness: 0.55, roughness: 0.5 });
-  var trimMat = new THREE.MeshStandardMaterial({ color: 0xE9CE8A, emissive: 0xC6A15B, emissiveIntensity: 0.55, metalness: 0.7, roughness: 0.3 });
+  // Polished black titanium and gold — low roughness so the PMREM
+  // environment reads in every chamfer.
+  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x1A1109, metalness: 0.78, roughness: 0.26 });
+  var bodyDarkMat = new THREE.MeshStandardMaterial({ color: 0x0F0A04, metalness: 0.7, roughness: 0.34 });
+  var trimMat = new THREE.MeshStandardMaterial({ color: 0xE9CE8A, emissive: 0xC6A15B, emissiveIntensity: 0.55, metalness: 0.85, roughness: 0.22 });
 
   var bodyLower = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.35, 2.2), bodyMat);
   bodyLower.position.set(0, -1.6, 0);
@@ -682,79 +780,136 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   vaultGlow.rotation.y = -Math.PI / 2;
   vaultGlow.position.set(-0.28, -1.5, 0);
   vault.add(vaultGlow);
-  var vaultDoorMat = new THREE.MeshStandardMaterial({ color: 0x3A2A14, metalness: 0.75, roughness: 0.3 });
+  var vaultDoorMat = new THREE.MeshStandardMaterial({ color: 0x3A2A14, metalness: 0.85, roughness: 0.2 });
   var vaultDoor = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.6, 2.0), vaultDoorMat);
   vaultDoor.position.set(-0.3, -1.45, 0);
   vault.add(vaultDoor);
   var VAULT_DOOR_CLOSED = -1.45, VAULT_DOOR_OPEN = 0.15;
-  function drawVaultPlate() {
+  // The vault's identity lives on its etched machine plate below — no
+  // separate floating text plate.
+
+  // ---- Machine identity — ON the machines ----------------------------
+  // No floating labels: each station identifies ITSELF. The model name
+  // is laser-etched into a brushed-stainless plate bolted to the
+  // machine's own body, and the live status word glows on a small OLED
+  // strip beneath it — READY when idle, its working verb while the
+  // sheet is with it, COMPLETE in the batch ceremony.
+  var STATUS_COLORS = { READY: '#8C6834', COMPLETE: '#59C289' };
+  function drawEtchedPlate(model, name) {
     var c = document.createElement('canvas');
-    c.width = 256; c.height = 64;
+    c.width = 768; c.height = 176;
     var ctx = c.getContext('2d');
-    ctx.fillStyle = '#0D0803'; ctx.fillRect(0, 0, 256, 64);
-    ctx.strokeStyle = 'rgba(233,206,138,0.6)'; ctx.lineWidth = 2; ctx.strokeRect(4, 4, 248, 56);
-    ctx.fillStyle = '#E9CE8A'; ctx.font = '600 22px "Courier New", monospace'; ctx.textAlign = 'center';
-    ctx.fillText('ARCHIVE VAULT', 128, 40);
+    // Brushed stainless: vertical light gradient with horizontal streaks.
+    var g = ctx.createLinearGradient(0, 0, 0, c.height);
+    g.addColorStop(0, '#938D82'); g.addColorStop(0.42, '#CFC9BC');
+    g.addColorStop(0.58, '#B7B1A3'); g.addColorStop(1, '#7E786C');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, c.width, c.height);
+    for (var i = 0; i < 110; i++) {
+      var y = (i * 29) % c.height;
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.02 + (i % 5) * 0.008) + ')';
+      ctx.fillRect(0, y, c.width, 1);
+      ctx.fillStyle = 'rgba(40,36,28,' + (0.018 + (i % 4) * 0.007) + ')';
+      ctx.fillRect(0, (y + 4) % c.height, c.width, 1);
+    }
+    // Gold inset frame and corner bolts.
+    ctx.strokeStyle = 'rgba(154,124,58,0.85)'; ctx.lineWidth = 5;
+    ctx.strokeRect(12, 12, c.width - 24, c.height - 24);
+    [[26, 26], [c.width - 26, 26], [26, c.height - 26], [c.width - 26, c.height - 26]].forEach(function (p) {
+      ctx.beginPath(); ctx.arc(p[0], p[1], 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#6E6858'; ctx.fill();
+      ctx.strokeStyle = 'rgba(30,26,20,0.6)'; ctx.lineWidth = 2; ctx.stroke();
+    });
+    // Laser-etched text: a light cut edge under a dark engraved fill.
+    ctx.textAlign = 'left';
+    ctx.font = '700 52px Georgia, serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText(model, 42, 80);
+    ctx.fillStyle = '#302C25';
+    ctx.fillText(model, 40, 78);
+    ctx.font = '400 27px Georgia, serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.32)';
+    ctx.fillText(name, 42, 136);
+    ctx.fillStyle = '#443F36';
+    ctx.fillText(name, 40, 134);
     var tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
   }
-  var vaultPlate = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.25), new THREE.MeshBasicMaterial({ map: drawVaultPlate(), toneMapped: false }));
-  vaultPlate.position.set(0.55, -0.45, 1.22);
-  vault.add(vaultPlate);
-
-  // ---- Machine identity plates ---------------------------------------
-  // Every station is its own named machine with a model plate, a live
-  // status word, and an indicator lamp — READY when idle, its working
-  // verb while the sheet is with it, COMPLETE in the batch ceremony.
-  var STATUS_COLORS = { READY: '#8C6834', COMPLETE: '#59C289' };
-  function buildStationPlate(model, name, x, y, z) {
-    var c = document.createElement('canvas');
-    c.width = 512; c.height = 128;
-    var tex = new THREE.CanvasTexture(c);
-    tex.colorSpace = THREE.SRGBColorSpace;
+  function buildMachineIdentity(parent, model, name, opts) {
+    var group = new THREE.Group();
+    group.position.set(opts.x || 0, opts.y || 0, opts.z || 0);
+    if (opts.ry) group.rotation.y = opts.ry;
+    var w = opts.w || 0.8;
+    var plateH = w * (176 / 768) * 1.05;
+    // The backing block bolts the plate to the machine body.
+    var backing = new THREE.Mesh(new THREE.BoxGeometry(w + 0.05, plateH + 0.04, 0.035), bodyDarkMat);
+    group.add(backing);
+    var plateMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, plateH),
+      new THREE.MeshStandardMaterial({ map: drawEtchedPlate(model, name), metalness: 0.8, roughness: 0.34 })
+    );
+    plateMesh.position.z = 0.02;
+    group.add(plateMesh);
+    // The OLED status strip: black glass, glowing status word.
+    var oc = document.createElement('canvas');
+    oc.width = 384; oc.height = 84;
+    var otex = new THREE.CanvasTexture(oc);
+    otex.colorSpace = THREE.SRGBColorSpace;
+    var oledW = w * 0.62, oledH = oledW * (84 / 384);
+    var oled = new THREE.Mesh(
+      new THREE.PlaneGeometry(oledW, oledH),
+      new THREE.MeshBasicMaterial({ map: otex, toneMapped: false })
+    );
+    oled.position.set(0, -(plateH / 2) - oledH / 2 - 0.015, 0.02);
+    group.add(oled);
+    parent.add(group);
     var plateObj = { status: null };
     plateObj.set = function (status) {
       if (status === plateObj.status) return;
       plateObj.status = status;
-      var ctx = c.getContext('2d');
-      ctx.fillStyle = '#0D0803';
-      ctx.fillRect(0, 0, 512, 128);
-      ctx.strokeStyle = 'rgba(233,206,138,0.55)'; ctx.lineWidth = 3;
-      ctx.strokeRect(6, 6, 500, 116);
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#E9CE8A';
-      ctx.font = '700 30px Georgia, serif';
-      ctx.fillText(model, 22, 46);
-      ctx.fillStyle = 'rgba(233,206,138,0.7)';
-      ctx.font = '400 20px Georgia, serif';
-      ctx.fillText(name, 22, 76);
+      var ctx = oc.getContext('2d');
+      var bg = ctx.createLinearGradient(0, 0, 0, oc.height);
+      bg.addColorStop(0, '#0A0F14'); bg.addColorStop(0.5, '#04070A'); bg.addColorStop(1, '#020406');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, oc.width, oc.height);
+      // Sapphire-glass sheen along the top edge.
+      ctx.fillStyle = 'rgba(120,170,220,0.12)';
+      ctx.fillRect(0, 0, oc.width, 10);
+      ctx.strokeStyle = 'rgba(70,80,96,0.8)'; ctx.lineWidth = 3;
+      ctx.strokeRect(3, 3, oc.width - 6, oc.height - 6);
       var col = STATUS_COLORS[status] || '#FFE9A8';
-      ctx.beginPath(); ctx.arc(36, 102, 9, 0, Math.PI * 2);
+      ctx.beginPath(); ctx.arc(34, oc.height / 2, 10, 0, Math.PI * 2);
       ctx.fillStyle = col; ctx.fill();
+      ctx.textAlign = 'left';
       ctx.fillStyle = col;
-      ctx.font = '600 20px "Courier New", monospace';
-      ctx.fillText(status, 56, 109);
-      tex.needsUpdate = true;
+      ctx.font = '600 34px "Courier New", monospace';
+      ctx.fillText(status, 58, oc.height / 2 + 12);
+      otex.needsUpdate = true;
     };
     plateObj.set('READY');
-    var mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.3, 0.325),
-      new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
-    );
-    mesh.position.set(x, y, z);
-    scene.add(mesh);
     return plateObj;
   }
+  // The packaging pedestal — the PackMaster is a real machine standing
+  // at the line's side, not a label in the air.
+  var packPedestal = new THREE.Group();
+  packPedestal.position.set(STATION_X.pack + 0.85, 0, LINE.z + 0.9);
+  scene.add(packPedestal);
+  var packBody = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.5, 0.5), bodyMat);
+  packBody.position.set(0, -1.7, 0);
+  packPedestal.add(packBody);
+  var packTrim = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.04, 0.52), trimMat);
+  packTrim.position.set(0, -0.96, 0);
+  packPedestal.add(packTrim);
   var PLATES = {
-    press: buildStationPlate('StromeX\u2122 5400', 'Precision Credential Imaging Engine', STATION_X.press, -0.05, 1.45),
-    uv: buildStationPlate('StromeX\u2122 SecureCure UV-900', 'UV Security Curing Module', STATION_X.uv, 0.05, 1.35 + 1.12),
-    emboss: buildStationPlate('StromeX\u2122 UltraSeal 4500 HD', 'Embossing & Security Seal Module', STATION_X.emboss, 0.05, 1.35 + 1.12),
-    qr: buildStationPlate('StromeX\u2122 QRForge 3200', 'Precision QR & Security Marking', STATION_X.qr, 0.05, 1.35 + 1.12),
-    sig: buildStationPlate('StromeX\u2122 SignScribe S2', 'Registrar Signature Applicator', STATION_X.sig, 0.05, 1.35 + 1.12),
-    inspect: buildStationPlate('StromeX\u2122 VisionInspect X8', 'Optical Quality Inspection System', STATION_X.inspect, 0.05, 1.35 + 1.12),
-    pack: buildStationPlate('StromeX\u2122 PackMaster Elite', 'Presentation Folder Assembly', STATION_X.pack, -0.35, 1.45),
-    vault: buildStationPlate('StromeX\u2122 ArchiveVault Pro', 'Digital Registration & Archiving', STATION_X.vault + 0.55, -0.85, 1.25),
+    press: buildMachineIdentity(press, 'StromeX\u2122 5400', 'Precision Credential Imaging Engine', { x: -1.5, y: -1.42, z: 1.115, w: 1.15 }),
+    uv: buildMachineIdentity(uvGantry, 'StromeX\u2122 SecureCure UV-900', 'UV Security Curing Module', { x: 0, y: -0.34, z: 1.155, w: 0.78 }),
+    emboss: buildMachineIdentity(embossGantry, 'StromeX\u2122 UltraSeal 4500 HD', 'Embossing & Security Seal Module', { x: 0, y: -0.34, z: 1.155, w: 0.78 }),
+    qr: buildMachineIdentity(qrGantry, 'StromeX\u2122 QRForge 3200', 'Precision QR & Security Marking', { x: 0, y: -0.34, z: 1.155, w: 0.78 }),
+    sig: buildMachineIdentity(sigGantry, 'StromeX\u2122 SignScribe S2', 'Registrar Signature Applicator', { x: 0, y: -0.34, z: 1.155, w: 0.78 }),
+    inspect: buildMachineIdentity(inspectGantry, 'StromeX\u2122 VisionInspect X8', 'Optical Quality Inspection System', { x: 0, y: -0.34, z: 1.155, w: 0.78 }),
+    pack: buildMachineIdentity(packPedestal, 'StromeX\u2122 PackMaster Elite', 'Presentation Folder Assembly', { x: 0, y: -1.35, z: 0.27, w: 0.56 }),
+    vault: buildMachineIdentity(vault, 'StromeX\u2122 ArchiveVault Pro', 'Digital Registration & Archiving', { x: 0.55, y: -0.78, z: 1.215, w: 0.95 }),
   };
   function setPlates(t, ceremony) {
     if (ceremony) {
@@ -779,6 +934,170 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     lamp.position.set(x, -1.35, 1.06);
     press.add(lamp);
     idleLamps.push({ mat: lampMat, phase: i * 2.1 });
+  });
+
+  // ================= INDUSTRIAL DETAIL =================
+  // The believable components a real production machine carries —
+  // cooling, cable management, guide rollers, pneumatics, servo rails,
+  // ring-lit optics — each one either moving with the machine's real
+  // state or breathing at idle. Nothing here is a dead prop.
+
+  // -- Press cooling: slotted vent grilles and a spinning fan in a
+  // circular housing on the press's right flank. --
+  function drawVentGrille() {
+    var c = document.createElement('canvas');
+    c.width = 256; c.height = 128;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#0B0703'; ctx.fillRect(0, 0, 256, 128);
+    for (var v = 0; v < 9; v++) {
+      ctx.fillStyle = 'rgba(0,0,0,0.9)';
+      ctx.fillRect(14, 12 + v * 12, 228, 6);
+      ctx.fillStyle = 'rgba(233,206,138,0.12)';
+      ctx.fillRect(14, 10 + v * 12, 228, 2);
+    }
+    var tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+  var ventTex = drawVentGrille();
+  [[-1.1, -0.35], [0.4, -0.35]].forEach(function (p) {
+    var vent = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.8, 0.4),
+      new THREE.MeshStandardMaterial({ map: ventTex, metalness: 0.6, roughness: 0.5 })
+    );
+    vent.position.set(p[0], p[1], -1.11);
+    vent.rotation.y = Math.PI;
+    press.add(vent);
+  });
+  var fanHousing = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.1, 20), bodyDarkMat);
+  fanHousing.rotation.z = Math.PI / 2;
+  fanHousing.position.set(2.83, -0.4, -0.2);
+  press.add(fanHousing);
+  var fanRing = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.025, 8, 22), trimMat);
+  fanRing.rotation.y = Math.PI / 2;
+  fanRing.position.set(2.89, -0.4, -0.2);
+  press.add(fanRing);
+  var pressFan = new THREE.Group();
+  for (var fb = 0; fb < 5; fb++) {
+    var blade = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.22, 0.07), rollerMat);
+    blade.position.y = 0.13;
+    var holder = new THREE.Group();
+    holder.rotation.x = (fb / 5) * Math.PI * 2;
+    holder.add(blade);
+    pressFan.add(holder);
+  }
+  var fanHub = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.06, 10), trimMat);
+  fanHub.rotation.z = Math.PI / 2;
+  pressFan.add(fanHub);
+  pressFan.position.set(2.9, -0.4, -0.2);
+  press.add(pressFan);
+
+  // -- Guide rollers along the line: they spin only while the motor
+  // does, at the motor's speed. --
+  var guideRollers = [];
+  [STATION_X.uv - 0.55, STATION_X.emboss - 0.55, STATION_X.qr - 0.5, STATION_X.sig - 0.45, STATION_X.inspect - 0.5, STATION_X.pack - 0.6].forEach(function (gx) {
+    var gr = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.86, 12), rollerMat);
+    gr.rotation.z = Math.PI / 2;
+    gr.position.set(gx, LINE.y - 0.06, LINE.z);
+    lineGroup.add(gr);
+    guideRollers.push(gr);
+  });
+
+  // -- Pneumatic cylinders on the emboss gantry: twin air rams whose
+  // rods extend with the die's real stroke. --
+  var pneuRods = [];
+  [-0.24, 0.24].forEach(function (px) {
+    var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.42, 12), bodyDarkMat);
+    tube.position.set(px, -0.55, 0);
+    embossGantry.add(tube);
+    var rod = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.5, 10), rollerMat);
+    rod.position.set(px, -0.85, 0);
+    embossGantry.add(rod);
+    pneuRods.push(rod);
+    var fitting = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.05, 10), trimMat);
+    fitting.position.set(px, -0.34, 0);
+    embossGantry.add(fitting);
+  });
+
+  // -- Cable management: an energy chain and a gold cable run along the
+  // line's near rail. --
+  var cableTube = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 9.6, 8), trimMat);
+  cableTube.rotation.z = Math.PI / 2;
+  cableTube.position.set(1.15, LINE.y - 0.3, LINE.z + 1.03);
+  lineGroup.add(cableTube);
+  for (var cl = 0; cl < 17; cl++) {
+    var link = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.07, 0.1), bodyDarkMat);
+    link.position.set(-3.3 + cl * 0.56, LINE.y - 0.3 + Math.sin(cl * 1.7) * 0.012, LINE.z + 1.03);
+    link.rotation.z = Math.sin(cl * 1.7) * 0.08;
+    lineGroup.add(link);
+  }
+
+  // -- The signature station's servo rail: the pen carriage rides a
+  // linear rail while the hand is drawn. --
+  var sigRail = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.045, 0.07), rollerMat);
+  sigRail.position.set(0, -0.44, 0.12);
+  sigGantry.add(sigRail);
+  var sigCarriage = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.09, 0.12), bodyDarkMat);
+  sigCarriage.position.set(0, -0.44, 0.12);
+  sigGantry.add(sigCarriage);
+
+  // -- The inspection optics: a glowing ring light around the camera
+  // head, brightening while it examines. --
+  var inspectRingMat = new THREE.MeshBasicMaterial({ color: 0x9FE8FF, transparent: true, opacity: 0.14, toneMapped: false });
+  var inspectRing = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.018, 8, 24), inspectRingMat);
+  inspectRing.position.set(0, -0.55, 0.42);
+  inspectRing.rotation.x = -0.25;
+  inspectGantry.add(inspectRing);
+
+  // -- Heatsink fins on the QR laser head. --
+  for (var hf = 0; hf < 4; hf++) {
+    var fin = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.016, 0.3), rollerMat);
+    fin.position.set(0, -0.36 + hf * 0.045, 0);
+    qrGantry.add(fin);
+  }
+
+  // -- The packaging gripper: two fingers on the pedestal arm that
+  // close as the folder rises to receive the sheet. --
+  var packArm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.1), bodyDarkMat);
+  packArm.position.set(-0.6, -0.92, 0);
+  packPedestal.add(packArm);
+  var packFingers = [];
+  [-0.1, 0.1].forEach(function (fz) {
+    var finger = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.3, 0.045), rollerMat);
+    finger.position.set(-1.0, -1.06, fz);
+    packPedestal.add(finger);
+    packFingers.push({ mesh: finger, home: fz });
+  });
+
+  // -- Overhead: two hung luminaires whose panels genuinely light the
+  // hall's reflections (they're in the PMREM environment too). --
+  [[-1.6, 2.5], [3.4, 2.5]].forEach(function (lp) {
+    var housing = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.12, 0.5), bodyDarkMat);
+    housing.position.set(lp[0], lp[1], 0.2);
+    scene.add(housing);
+    var panel = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.4, 0.42),
+      new THREE.MeshBasicMaterial({ color: 0xFFE9C0, transparent: true, opacity: 0.85, toneMapped: false })
+    );
+    panel.rotation.x = Math.PI / 2;
+    panel.position.set(lp[0], lp[1] - 0.07, 0.2);
+    scene.add(panel);
+    [-0.6, 0.6].forEach(function (cx) {
+      var wire = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 1.4, 6), bodyDarkMat);
+      wire.position.set(lp[0] + cx, lp[1] + 0.75, 0.2);
+      scene.add(wire);
+    });
+  });
+
+  // -- Station status LEDs on the gantry posts: hard on/off blinks at
+  // staggered phases, the way real PLC indicators behave. --
+  var blinkLamps = [];
+  [uvGantry, embossGantry, qrGantry, sigGantry, inspectGantry].forEach(function (g, gi) {
+    var bmat = new THREE.MeshBasicMaterial({ color: gi % 2 ? 0xB9E7CB : 0xE9CE8A, transparent: true, opacity: 0.7, toneMapped: false });
+    var bl = new THREE.Mesh(new THREE.CircleGeometry(0.022, 8), bmat);
+    bl.position.set(0, -0.75 - (gi % 3) * 0.12, 1.135);
+    g.add(bl);
+    blinkLamps.push({ mat: bmat, phase: gi * 1.37 });
   });
 
   // ---- Steam at the mouth as a finished sheet clears — slow, soft,
@@ -1027,7 +1346,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       rtA: new THREE.WebGLRenderTarget(2, 2),
       rtB: new THREE.WebGLRenderTarget(2, 2),
       bright: makeFullscreenPass(
-        'uniform sampler2D tex; varying vec2 vUv; void main(){ vec4 c = texture2D(tex, vUv); float l = dot(c.rgb, vec3(0.299, 0.587, 0.114)); gl_FragColor = l > 0.62 ? c : vec4(0.0); }',
+        'uniform sampler2D tex; varying vec2 vUv; void main(){ vec4 c = texture2D(tex, vUv); float l = dot(c.rgb, vec3(0.299, 0.587, 0.114)); gl_FragColor = l > 0.72 ? c : vec4(0.0); }',
         { tex: { value: null } }),
       blur: makeFullscreenPass(
         'uniform sampler2D tex; uniform vec2 dir; varying vec2 vUv; void main(){ vec4 s = texture2D(tex, vUv) * 0.227; s += (texture2D(tex, vUv + dir * 1.384) + texture2D(tex, vUv - dir * 1.384)) * 0.316; s += (texture2D(tex, vUv + dir * 3.230) + texture2D(tex, vUv - dir * 3.230)) * 0.070; gl_FragColor = s; }',
@@ -1098,7 +1417,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var FEED_TILT = LINE.tilt; // lying on the line, face up toward camera
   // The inspection lift — the one moment the sheet is raised to the
   // camera for reading, mid-line, before packaging and the vault.
-  var PRESENT = { x: STATION_X.inspect, y: 0.62, z: 2.2, tilt: -0.12 };
+  // Raised FORWARD of the gantry posts (z 2.4) so nothing stands
+  // between the lens and the document at its hero moment.
+  var PRESENT = { x: STATION_X.inspect, y: 0.62, z: 2.78, tilt: -0.12 };
   // The sheet's travel schedule along the line: [tStart, tEnd, xFrom, xTo].
   // Between segments the sheet dwells at its station while that
   // station's machinery works.
@@ -1124,71 +1445,108 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   }
   var curSheetX = STATION_X.press;
 
+  // Demonstration sheets carry an explicit SPECIMEN designation, never
+  // a string that could be read as a real SHRS serial.
   function nextSerial() {
     sessionCount++;
-    return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
+    return 'SPECIMEN-' + String(sessionCount).padStart(4, '0');
   }
   var curName = '', curSerialPrint = null, curBuilt = null;
   var sheetsProduced = 0;
   var curReal = false, spawnToken = 0;
-  // The OFFICIAL face: for real rows the press manufactures the actual
-  // approved template — the same frozen server-side master that prints
+  var curH = SHEET_H; // the CURRENT sheet's world size — official
+  var curW = SHEET_W; // masters set it from their own aspect ratio
+  // ================= OFFICIAL MASTERS ONLY =================
+  // The engine never invents a certificate. For live production the
+  // sheet's face IS the registry's own render of the approved template
+  // — the same frozen server-side master that prints
   // (functions/_lib/stage-certificate-template.js and its Royal College
   // sibling, dispatched per programme by the registry), rendered by the
-  // same headless-Chromium service as the PDFs and fetched here as the
-  // sheet's texture. The engine never knows a template's layout: it
-  // textures whatever the registry renders for that serial, so present
-  // and future certificate families flow through with no change here.
-  // Until the render arrives (or when Browser Rendering is unavailable
-  // on the deployment), the sheet carries the illustrative face, and
-  // the demonstration loop always does — it has no real serial to ask
-  // for.
-  function loadRealFace(url, token) {
-    fetch(url, { credentials: 'same-origin' }).then(function (res) {
-      if (!res.ok) throw new Error('render unavailable');
-      return res.blob();
-    }).then(function (blob) {
-      if (window.createImageBitmap) return window.createImageBitmap(blob);
-      return new Promise(function (resolve, reject) {
-        var img = new Image();
-        var objUrl = URL.createObjectURL(blob);
-        img.onload = function () { URL.revokeObjectURL(objUrl); resolve(img); };
-        img.onerror = function () { URL.revokeObjectURL(objUrl); reject(new Error('decode failed')); };
-        img.src = objUrl;
+  // same headless-Chromium service as the PDFs. The engine never knows
+  // a template's layout: it textures whatever the registry renders for
+  // that serial, so present and future certificate families flow
+  // through with no change here. Each issued row's render is fetched
+  // the moment its row event arrives (ahead of its turn on the line);
+  // a sheet only feeds once its master is in hand. If the registry
+  // cannot supply a master after retries, the production DISPLAY halts
+  // behind an explicit notice — it never substitutes a drawn face.
+  // Issuance itself is a separate path and is never blocked by this.
+  function prefetchOfficialFace(row) {
+    var url = row.pngUrl || (row.viewUrl ? row.viewUrl + '&format=png' : null);
+    if (!url) {
+      // An issued row the server gave us no render URL for — the master
+      // is unobtainable by definition.
+      row.faceState = 'error';
+      row.faceError = 'no render URL on the issued row';
+      return;
+    }
+    // The scene texture needs ~1200px — the 'standard' profile; the
+    // registrar's chosen archival profile governs the saved artefacts,
+    // not this preview texture.
+    url += '&quality=standard';
+    row.faceState = 'pending';
+    var attempt = 0;
+    function go() {
+      if (row.abandoned) return; // a newer batch or a halt superseded this row
+      attempt += 1;
+      // A hung render service must FAIL the attempt, not hold the
+      // display at "Requesting Official Master" forever — each attempt
+      // carries its own deadline (confirmed in adversarial review).
+      var ctrl = ('AbortController' in window) ? new AbortController() : null;
+      var deadline = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 20000) : null;
+      fetch(url, ctrl ? { credentials: 'same-origin', signal: ctrl.signal } : { credentials: 'same-origin' }).then(function (res) {
+        if (deadline) window.clearTimeout(deadline);
+        if (!res.ok) throw new Error('render service returned ' + res.status);
+        return res.blob();
+      }).then(function (blob) {
+        if (window.createImageBitmap) return window.createImageBitmap(blob);
+        return new Promise(function (resolve, reject) {
+          var img = new Image();
+          var objUrl = URL.createObjectURL(blob);
+          img.onload = function () { URL.revokeObjectURL(objUrl); resolve(img); };
+          img.onerror = function () { URL.revokeObjectURL(objUrl); reject(new Error('decode failed')); };
+          img.src = objUrl;
+        });
+      }).then(function (bmp) {
+        // A bitmap resolving after its row was abandoned is closed on
+        // the spot — decoded masters hold real graphics memory.
+        if (row.abandoned) { if (bmp.close) bmp.close(); return; }
+        row.faceBitmap = bmp;
+        row.faceState = 'ready';
+      }).catch(function (err) {
+        if (row.abandoned) return;
+        if (attempt < 3) { window.setTimeout(go, attempt * 700); return; }
+        row.faceState = 'error';
+        row.faceError = err && err.message ? err.message : 'render unavailable';
       });
-    }).then(function (bmp) {
-      if (token !== spawnToken || !curFull) { if (bmp.close) bmp.close(); return; }
-      var ctx = curFull.getContext('2d');
-      ctx.fillStyle = '#F7EEDF';
-      ctx.fillRect(0, 0, curFull.width, curFull.height);
-      var fit = Math.min(curFull.width / bmp.width, curFull.height / bmp.height);
-      var w = bmp.width * fit, h = bmp.height * fit;
-      ctx.drawImage(bmp, (curFull.width - w) / 2, (curFull.height - h) / 2, w, h);
-      curReal = true;
-      var hpx = Math.round(curFull.height * (Math.max(curBands, 0) / BANDS));
-      if (hpx > 0) {
-        curDisp.getContext('2d').drawImage(curFull, 0, 0, curFull.width, hpx, 0, 0, curFull.width, hpx);
-        curTex.needsUpdate = true;
-      }
-      if (bmp.close) bmp.close();
-    }).catch(function () { /* honest fallback: the illustrative face stays */ });
+    }
+    go();
   }
-  function spawnCertificate(overrideName, overrideSerial, artUrl) {
+  // Masters are fetched a few rows ahead of the line, never all at once
+  // — a 200-row batch must not hold 200 decoded A4 bitmaps in memory
+  // (confirmed in adversarial review).
+  var PREFETCH_WINDOW = 4;
+  function pumpPrefetch() {
+    for (var i = 0; i < liveQueue.length && i < PREFETCH_WINDOW; i++) {
+      var row = liveQueue[i];
+      if (row.status === 'issued' && !row.faceState) prefetchOfficialFace(row);
+    }
+  }
+  function discardQueueBitmaps() {
+    liveQueue.forEach(function (row) {
+      row.abandoned = true;
+      if (row.faceBitmap) {
+        if (row.faceBitmap.close) row.faceBitmap.close();
+        row.faceBitmap = null;
+      }
+    });
+  }
+  // Shared sheet construction — the ONLY difference between a
+  // demonstration sheet and a production sheet is where the face art
+  // comes from; the mechanics are identical.
+  function spawnSheet(fullCanvas, isReal) {
     if (curTex) curTex.dispose();
-    var name = overrideName || NAMES[nameIdx % NAMES.length];
-    if (!overrideName) nameIdx++;
-    // A REAL row with no serial (a failed row never received one) must
-    // show none — inventing a demonstration serial under a real
-    // student's failure line would put a number on the LCD that exists
-    // in no register (confirmed in adversarial review).
-    curSerial = overrideSerial || (overrideName ? '—' : nextSerial());
-    curName = name;
-    curSerialPrint = overrideSerial || null;
-    curBuilt = {}; // no seal, no QR, no signature — the stations add them
-    curReal = false;
-    spawnToken += 1;
-    if (artUrl) loadRealFace(artUrl, spawnToken);
-    curFull = drawFaceCanvas(curName, curSerialPrint, curBuilt);
+    curFull = fullCanvas;
     curDisp = document.createElement('canvas');
     curDisp.width = curFull.width; curDisp.height = curFull.height;
     var dctx = curDisp.getContext('2d');
@@ -1197,9 +1555,20 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     curTex = new THREE.CanvasTexture(curDisp);
     curTex.colorSpace = THREE.SRGBColorSpace;
     curBands = -1;
-    var geo = new THREE.PlaneGeometry(SHEET_W, SHEET_H, 24, 1);
-    geo.translate(0, -SHEET_H / 2, 0); // origin at the top (gripped) edge
-    var mat = new THREE.MeshStandardMaterial({ map: curTex, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05, emissive: 0x000000 });
+    curReal = isReal;
+    spawnToken += 1;
+    // The sheet's world proportions come from the artwork itself — an
+    // official master is shown at its true aspect ratio, uncropped and
+    // unletterboxed. A portrait master keeps its aspect too: height is
+    // capped and WIDTH shrinks, so the line's clearances still hold.
+    curW = SHEET_W;
+    curH = SHEET_W * (curFull.height / curFull.width);
+    if (curH > 2.6) { curW = SHEET_W * (2.6 / curH); curH = 2.6; }
+    var geo = new THREE.PlaneGeometry(curW, curH, 24, 1);
+    geo.translate(0, -curH / 2, 0); // origin at the top (gripped) edge
+    // Paper is matte — high roughness keeps close task lights from
+    // washing the artwork out into a specular blob.
+    var mat = new THREE.MeshStandardMaterial({ map: curTex, side: THREE.DoubleSide, roughness: 0.94, metalness: 0.0, emissive: 0x000000 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
     cur = new THREE.Mesh(geo, mat);
     cur.position.set(MOUTH.x, MOUTH.y, MOUTH.z);
@@ -1207,6 +1576,91 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     cur.scale.y = 0.02;
     scene.add(cur);
     return cur;
+  }
+  function clearSheet() {
+    if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); cur = null; }
+    if (curTex) { curTex.dispose(); curTex = null; }
+    curFull = null; curDisp = null; curBands = -1; curReal = false;
+    spawnToken += 1;
+  }
+  function spawnDemoCertificate() {
+    var name = NAMES[nameIdx % NAMES.length];
+    nameIdx++;
+    curSerial = nextSerial();
+    curName = name;
+    curSerialPrint = null;
+    curBuilt = {}; // no seal, no QR, no signature — the stations add them
+    return spawnSheet(drawFaceCanvas(name, null, curBuilt), false);
+  }
+  function spawnOfficialCertificate(bmp, name, serial) {
+    curSerial = serial || '—';
+    curName = name;
+    curSerialPrint = serial || null;
+    // The official master already carries its seal, QR, signature and
+    // security layers — the stations PRESENT what the document truly
+    // bears rather than drawing stand-ins over the official art.
+    curBuilt = { uv: true, seal: true, qr: true, signature: true };
+    var c = document.createElement('canvas');
+    var cw = Math.min(1280, bmp.width);
+    c.width = cw;
+    c.height = Math.max(2, Math.round(bmp.height * (cw / bmp.width)));
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    if (bmp.close) bmp.close();
+    return spawnSheet(c, true);
+  }
+  // ---- The masters-unavailable halt ----
+  var masterHalt = false;
+  var haltEl = document.querySelector('[data-cert-forge-halt]');
+  function enterMasterHalt(reason) {
+    if (masterHalt) return;
+    masterHalt = true;
+    clearSheet();
+    // Nothing further will be consumed: release every decoded master
+    // still waiting in the queue, and retire the batch's display state
+    // so the drain branch is never needed to unwind it.
+    discardQueueBitmaps();
+    liveQueue = [];
+    liveCurrent = null;
+    liveActive = false;
+    liveEnded = true;
+    cycleMode = null;
+    // Whatever the stations were doing stops with the line.
+    resetCycleApparatus();
+    stagePanelActive = -1;
+    drawStagePanel(-1);
+    laserMat.opacity = 0;
+    laserGlowMat.opacity = 0;
+    qrSparkMat.opacity = 0;
+    if (haltEl) haltEl.hidden = false;
+    if (lcd) {
+      lcd.setLines([
+        { text: 'MASTER UNAVAILABLE', size: 30 },
+        { text: 'Production display halted', size: 22 },
+        { text: 'Issuance continues in the register', size: 20, caption: true },
+      ]);
+    }
+    // No aria-live write here: the overlay is role="alert" and carries
+    // the full message — a second announcement would double-speak it
+    // (confirmed in adversarial review).
+    if (leds) leds.setActive(-1);
+    if (vu) vu.setLevel(0);
+    document.dispatchEvent(new CustomEvent('sultan:cert-forge-halt', { detail: { reason: reason || 'render unavailable' } }));
+    // The loop is about to stand down, so the periodic flush cannot be
+    // relied on to report this state — publish it now.
+    if (window.__certForgeTelemetry) {
+      window.__certForgeTelemetry.mode = 'halted';
+      window.__certForgeTelemetry.live = false;
+      window.__certForgeTelemetry.real = false;
+    }
+    // One more frame renders the halted tableau behind the notice, then
+    // the loop stands down (the running guard exits on the next frame)
+    // — a halted display does not burn the full render pipeline behind
+    // a near-opaque overlay, and an off-screen halt cannot leak a loop.
+    stop();
+  }
+  function clearMasterHalt() {
+    masterHalt = false;
+    if (haltEl) haltEl.hidden = true;
   }
   function revealBands(n) {
     if (n <= curBands || !curFull) return;
@@ -1255,10 +1709,34 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       if (liveEl) liveEl.textContent = 'Credential production started: ' + total + ' certificate' + (total === 1 ? '' : 's') + ' queued.';
       return;
     }
+    // Any previous batch's undelivered masters are released before the
+    // queue is replaced.
+    discardQueueBitmaps();
     liveActive = true; liveEnded = false; liveQueue = []; liveCurrent = null;
     liveCycleMs = Math.max(LIVE_MIN_ROW_MS, Math.min(CYCLE, LIVE_SHOW_BUDGET_MS / total));
-    cycleStart = 0; // interrupt the demonstration cycle immediately
-    overviewNextAt = performance.now() + 9000;
+    // The demonstration asset disappears COMPLETELY the moment real
+    // production begins — the specimen sheet is removed at once, and
+    // the line waits for the first official master.
+    clearMasterHalt();
+    clearSheet();
+    // A batch can begin mid-demonstration-cycle: every piece of station
+    // apparatus (folder, vault door, lasers, stage panel) returns to
+    // rest, and a leftover completion ceremony is cancelled — the
+    // awaiting-master hold must read READY, not COMPLETE, and never
+    // show a frozen tableau.
+    resetCycleApparatus();
+    stagePanelActive = -1;
+    drawStagePanel(-1);
+    laserMat.opacity = 0;
+    laserGlowMat.opacity = 0;
+    qrSparkMat.opacity = 0;
+    ceremonyUntil = 0;
+    cycleMode = null;
+    cycleStart = 0;
+    // Scheduled on the FRAME timeline (first frame after start), not the
+    // wall clock — the two are the same origin in a browser, but the
+    // rig's cues must live on the clock the rig itself runs on.
+    overviewNextAt = -1;
     overviewUntil = 0;
     announce('Credential production initiated. ' + total + ' certificate' + (total === 1 ? '' : 's') + ' queued.');
     // Performance mode is the user's explicit choice and it HOLDS: a
@@ -1266,6 +1744,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     // label promises exactly that). The button counter and results
     // table carry the progress; the queue simply drains unshown.
     if (!userPaused) start();
+    // A paused (or otherwise stopped) canvas would keep the LAST frame
+    // — a demonstration sheet — on screen through a real batch. One
+    // fresh frame shows the cleared line instead (confirmed in
+    // adversarial review).
+    else renderScene();
   });
   var lastRowAnnounce = 0;
   document.addEventListener('sultan:cert-generate-progress', function (e) {
@@ -1283,7 +1766,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         }
         return;
       }
+      // Queue the row; the pump fetches official masters a few rows
+      // ahead of the line — only issued rows have a document to show.
       liveQueue.push(d);
+      pumpPrefetch();
     }
     if (d.type === 'batch_done') {
       var parts = ['Batch complete.', d.issued + ' issued.'];
@@ -1308,8 +1794,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   //  0.86–1.00  present, burst, spin-down; fade at the very end
   var cycleStart = 0;
   var ceremonyUntil = 0;
+  // What the line is doing right now: null = between cycles (awaiting a
+  // master, or idle at a halt); 'sheet' = a certificate is physically on
+  // the line (demonstration or official); 'report' = a brief dwell
+  // reporting a skipped/failed row — nothing is manufactured for a row
+  // that produced no document.
+  var cycleMode = null;
+  var curSpan = CYCLE;
   var burstFiredThisCycle = false;
-  var pistonStruck = false, steamFired = false;
+  var pistonStruck = false, steamFired = false, sigServoPlayed = false;
   var shakeAmp = 0, lastCycleT = 0;
   var motorLevel = 0; // 0..1, eased — drives rollers, roll, hum
   function easeInOut(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
@@ -1319,6 +1812,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     burstFiredThisCycle = false;
     pistonStruck = false;
     steamFired = false;
+    sigServoPlayed = false;
     folder.visible = false;
     folderFrontMat.opacity = 1;
     folderBackMat.opacity = 1;
@@ -1330,37 +1824,81 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   }
 
   function animateCycle(now, dtMs) {
-    var span = liveActive ? liveCycleMs : CYCLE;
-    var needNext = !cur || now - cycleStart > span;
+    // A halted display manufactures nothing: motor spins down, every
+    // machine reads READY, and the halt notice carries the message.
+    // Only the next batch start clears this state.
+    if (masterHalt) {
+      motorLevel += (0 - motorLevel) * Math.min(1, dtMs / 300);
+      motorUpdate(motorLevel);
+      setPlates(0, false);
+      slotMat.emissiveIntensity = 0.45;
+      lastCycleT = 0;
+      return;
+    }
+    var needNext = cycleMode === null || now - cycleStart > curSpan;
+    var consumed = false;
     if (needNext) {
       if (liveActive && liveQueue.length) {
-        cycleStart = now;
-        resetCycleApparatus();
-        liveCurrent = liveQueue.shift();
-        var shownName = liveCurrent.fullName || liveCurrent.studentFullName || 'Student';
-        // The scene texture needs ~1024px — the 'standard' profile; the
-        // registrar's chosen archival profile governs the saved
-        // artefacts, not this preview texture.
-        var artUrl = liveCurrent.status === 'issued'
-          ? ((liveCurrent.pngUrl || (liveCurrent.viewUrl ? liveCurrent.viewUrl + '&format=png' : null)))
-          : null;
-        if (artUrl) artUrl += '&quality=standard';
-        spawnCertificate(shownName, liveCurrent.serialNo || null, artUrl);
-        var goodTone = liveCurrent.status === 'issued' ? 0xC6A15B : (liveCurrent.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
-        slotMat.emissive.setHex(goodTone);
-        // Real progress to assistive tech, one write per row, throttled
-        // so compressed batches cannot flood a screen reader.
-        var rowNow = Date.now();
-        if (liveEl && (rowNow - lastRowAnnounce > 1500 || liveCurrent.index + 1 === liveCurrent.total)) {
-          lastRowAnnounce = rowNow;
-          liveEl.textContent = 'Certificate ' + (liveCurrent.index + 1) + ' of ' + liveCurrent.total + ' — ' + shownName + ': ' + liveCurrent.status + '.';
+        var nextRow = liveQueue[0];
+        if (nextRow.status !== 'issued') {
+          // A skipped or failed row produced NO document — nothing runs
+          // through the press for it. The line reports the outcome on
+          // the LCD for a short dwell instead of manufacturing a sheet
+          // that exists nowhere.
+          liveQueue.shift();
+          pumpPrefetch();
+          consumed = true;
+          cycleStart = now;
+          resetCycleApparatus();
+          liveCurrent = nextRow;
+          cycleMode = 'report';
+          curSpan = Math.min(liveCycleMs, 2200);
+          clearSheet();
+          curSerial = nextRow.serialNo || '—';
+          slotMat.emissive.setHex(nextRow.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
+          var repName = nextRow.fullName || nextRow.studentFullName || 'Student';
+          var repNow = Date.now();
+          if (liveEl && (repNow - lastRowAnnounce > 1500 || nextRow.index + 1 === nextRow.total)) {
+            lastRowAnnounce = repNow;
+            liveEl.textContent = 'Certificate ' + (nextRow.index + 1) + ' of ' + nextRow.total + ' — ' + repName + ': ' + nextRow.status + '.';
+          }
+        } else if (nextRow.faceState === 'ready') {
+          liveQueue.shift();
+          pumpPrefetch();
+          consumed = true;
+          cycleStart = now;
+          resetCycleApparatus();
+          liveCurrent = nextRow;
+          cycleMode = 'sheet';
+          curSpan = liveCycleMs;
+          var shownName = nextRow.fullName || nextRow.studentFullName || 'Student';
+          spawnOfficialCertificate(nextRow.faceBitmap, shownName, nextRow.serialNo || null);
+          nextRow.faceBitmap = null;
+          slotMat.emissive.setHex(0xC6A15B);
+          // Real progress to assistive tech, one write per row, throttled
+          // so compressed batches cannot flood a screen reader.
+          var rowNow = Date.now();
+          if (liveEl && (rowNow - lastRowAnnounce > 1500 || nextRow.index + 1 === nextRow.total)) {
+            lastRowAnnounce = rowNow;
+            liveEl.textContent = 'Certificate ' + (nextRow.index + 1) + ' of ' + nextRow.total + ' — ' + shownName + ': ' + nextRow.status + '.';
+          }
+        } else if (nextRow.faceState === 'error') {
+          // The registry could not supply the approved master. Halt the
+          // display — never substitute.
+          enterMasterHalt(nextRow.faceError);
+          return;
         }
+        // else: the master is still rendering — hold rather than show
+        // anything unofficial.
       } else if (liveActive && liveEnded && !liveQueue.length) {
         liveActive = false; liveCurrent = null;
+        consumed = true;
         slotMat.emissive.setHex(0xC6A15B);
         cycleStart = now;
         resetCycleApparatus();
-        spawnCertificate();
+        spawnDemoCertificate();
+        cycleMode = 'sheet';
+        curSpan = CYCLE;
         // The batch completion ceremony: the hall's own light lifts,
         // every machine reads COMPLETE, and the room settles back to
         // ready — the moment the work is genuinely done.
@@ -1372,33 +1910,67 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         // in adversarial review).
         if (!heroVisible) stop();
       } else if (!liveActive) {
+        consumed = true;
         cycleStart = now;
         resetCycleApparatus();
-        spawnCertificate();
+        spawnDemoCertificate();
+        cycleMode = 'sheet';
+        curSpan = CYCLE;
       }
-      // else: a real batch is running but the next row hasn't arrived yet
-      // (network latency) — hold on the last certificate rather than
-      // conjure a fake one to fill the gap.
-      span = liveActive ? liveCycleMs : CYCLE;
+      // else: a real batch is running but the next row (or its official
+      // master) isn't ready yet — hold rather than conjure a fake one.
     }
-    var t = Math.min((now - cycleStart) / span, 1);
-    // Holding for the network: freeze BEFORE the fade/packaging beats,
-    // so the held sheet stays visible at presentation instead of
-    // fading to an empty conveyor (t clamped to 1 used to walk it
-    // straight through opacity 0 — confirmed in adversarial review).
-    if (liveActive && !liveQueue.length && !liveEnded && needNext) t = Math.min(t, 0.88);
+    // A finished report dwell with nothing consumable hands over to the
+    // awaiting-master readout rather than freezing on the stale row.
+    if (liveActive && needNext && !consumed && cycleMode === 'report') {
+      cycleMode = null;
+      liveCurrent = null;
+    }
+    // The line has nothing yet: a live batch has begun and the next
+    // official master is still rendering. Say exactly that — and show
+    // no manufacturing progress, because there is none.
+    if (cycleMode === null) {
+      if (lcd) {
+        lcd.setLines([
+          { text: 'Requesting Official Master', size: 28 },
+          { text: 'Registry render service', size: 22 },
+          { text: 'Live production', size: 20, caption: true },
+        ]);
+      }
+      if (leds) leds.setActive(-1);
+      if (vu) vu.setLevel(0.08);
+      motorLevel += (0.16 - motorLevel) * Math.min(1, dtMs / 250);
+      motorUpdate(motorLevel);
+      setPlates(0, ceremonyUntil > now);
+      slotMat.emissiveIntensity = 0.5 + Math.sin(now / 600) * 0.12;
+      lastCycleT = 0;
+      return;
+    }
+    var t = Math.min((now - cycleStart) / curSpan, 1);
+    // Holding for the network or the render service: freeze BEFORE the
+    // fade/packaging beats, so the held sheet stays visible at
+    // presentation instead of fading to an empty conveyor (t clamped to
+    // 1 used to walk it straight through opacity 0 — confirmed in
+    // adversarial review).
+    if (liveActive && needNext && !consumed && cycleMode === 'sheet') t = Math.min(t, 0.88);
     var statusLabel = liveCurrent && liveCurrent.status !== 'issued'
       ? (liveCurrent.status === 'skipped' ? 'Skipped — already issued' : 'Failed — ' + (liveCurrent.problem || 'see register'))
       : null;
     var caption = liveCurrent
       ? 'Certificate ' + (liveCurrent.index + 1) + ' of ' + liveCurrent.total
       : null;
-    setStageDisplay(t, curSerial, statusLabel, caption, !!liveCurrent);
+    setStageDisplay(t, curSerial, statusLabel, caption, !!liveCurrent, cycleMode === 'report');
 
-    // ---- Motor: spin up, hold, spin down — nothing moves without it ----
-    var motorTarget = t < 0.06 ? t / 0.06 : (t < 0.93 ? 1 : Math.max(0, 1 - (t - 0.93) / 0.06));
+    // ---- Motor: spin up, hold, spin down — nothing moves without it.
+    // A report dwell (skipped/failed row) manufactures nothing, so the
+    // press idles rather than spinning for absent work. ----
+    var motorTarget = cycleMode === 'report'
+      ? 0.12
+      : (t < 0.06 ? t / 0.06 : (t < 0.93 ? 1 : Math.max(0, 1 - (t - 0.93) / 0.06)));
     motorLevel += (motorTarget - motorLevel) * Math.min(1, dtMs / 160);
-    var feeding = t >= 0.06 && t < 0.26;
+    // Only a sheet actually being printed drives the feed theatre — a
+    // report dwell must not pulse the lamp or spin the feed rollers.
+    var feeding = cycleMode === 'sheet' && t >= 0.06 && t < 0.26;
     var spin = motorLevel * (feeding ? 1 : 0.25) * dtMs * 0.012;
     rollers.forEach(function (r) { r.rotation.x -= spin; });
     mediaRoll.rotation.x -= feeding ? spin * 0.45 : 0;
@@ -1406,7 +1978,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
 
     // ---- The lamp works hardest while printing ----
     slotMat.emissiveIntensity = feeding ? 1.1 + Math.sin(now / 50) * 0.3 : 0.6 + motorLevel * 0.3;
-    mouthLight.intensity = 0.35 + motorLevel * 0.35 + (feeding ? Math.sin(now / 50) * 0.08 : 0);
+    mouthLight.intensity = 0.14 + motorLevel * 0.16 + (feeding ? Math.sin(now / 50) * 0.04 : 0);
 
     // ---- Sheet mechanics: the journey down the line ----
     if (cur) {
@@ -1463,7 +2035,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
           sigArm.position.y = -0.55 - easeInOut(Math.min(1, (t - 0.61) / 0.02)) * 0.42
             + (t > 0.63 ? Math.sin(now / 70) * 0.02 : 0);
           if (t >= 0.625) {
-            if (!curBuilt.signature && spanLongEnough()) playServo(0.25);
+            if (!sigServoPlayed && spanLongEnough()) { sigServoPlayed = true; playServo(0.25); }
             stationBuild('signature');
           }
         } else {
@@ -1476,7 +2048,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         if (PACKAGING && sheetOk() && t >= 0.81) {
           folder.visible = true;
           var fr = Math.min(1, (t - 0.81) / 0.05);
-          var fy = -2.7 + ((MOUTH.y - SHEET_H / 2 * 0.22) - (-2.7)) * easeOutCubic(fr);
+          var fy = -2.7 + ((MOUTH.y - curH / 2 * 0.22) - (-2.7)) * easeOutCubic(fr);
           folder.position.set(curSheetX, fy + 0.55, MOUTH.z + 1.05);
           folder.rotation.x = FEED_TILT;
         }
@@ -1511,13 +2083,40 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       // At rest the hydraulics still breathe — tiny idle adjustments.
       piston.position.y = PISTON_REST + Math.sin(now / 2600) * 0.012;
     }
+    // The air rams' rods follow the die's real stroke.
+    pneuRods.forEach(function (rod) {
+      rod.position.y = piston.position.y - 0.16;
+    });
+
+    // The signature carriage rides its rail only while the hand is
+    // being drawn; otherwise it eases home.
+    if (t >= 0.61 && t < 0.66 && cur && sheetOk()) {
+      sigCarriage.position.x = Math.sin((t - 0.61) / 0.05 * Math.PI * 2.2) * 0.16;
+    } else {
+      sigCarriage.position.x += (0 - sigCarriage.position.x) * 0.08;
+    }
+
+    // The inspection ring light works while the optics do.
+    inspectRingMat.opacity = (t >= 0.69 && t < 0.78 && cycleMode === 'sheet' && sheetOk())
+      ? 0.55 + Math.sin(now / 90) * 0.25
+      : 0.14;
+
+    // The packaging gripper closes around the rising folder.
+    var gripClose = folder.visible ? 1 : 0;
+    packFingers.forEach(function (f) {
+      var target = f.home * (1 - gripClose * 0.55);
+      f.mesh.position.z += (target - f.mesh.position.z) * 0.12;
+    });
 
     // ---- The vault door: opens ahead of the arriving sheet, seals
-    // behind it. Its glow breathes while open. ----
+    // behind it. Its glow breathes while open. No sheet, no door — a
+    // report dwell never plays the archive theatre. ----
     var doorE = 0;
-    if (t >= 0.87 && t < 0.905) doorE = easeInOut((t - 0.87) / 0.035);
-    else if (t >= 0.905 && t < 0.94) doorE = 1;
-    else if (t >= 0.94 && t < 0.97) doorE = 1 - easeInOut((t - 0.94) / 0.03);
+    if (cycleMode === 'sheet' && sheetOk()) {
+      if (t >= 0.87 && t < 0.905) doorE = easeInOut((t - 0.87) / 0.035);
+      else if (t >= 0.905 && t < 0.94) doorE = 1;
+      else if (t >= 0.94 && t < 0.97) doorE = 1 - easeInOut((t - 0.94) / 0.03);
+    }
     vaultDoor.position.y = VAULT_DOOR_CLOSED + (VAULT_DOOR_OPEN - VAULT_DOOR_CLOSED) * doorE;
     vaultGlowMat.opacity = 0.1 + doorE * 0.75 + (doorE > 0 ? Math.sin(now / 300) * 0.1 : 0);
 
@@ -1527,10 +2126,13 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       fireSteam();
     }
 
-    // ---- The shoulder panel's stations, in production order ----
+    // ---- The shoulder panel's stations, in production order — only a
+    // sheet actually on the line lights them ----
     var finishIdx = -1;
-    for (var fi = FINISH_STARTS.length - 1; fi >= 0; fi--) {
-      if (t >= FINISH_STARTS[fi]) { finishIdx = fi; break; }
+    if (cycleMode === 'sheet' && sheetOk()) {
+      for (var fi = FINISH_STARTS.length - 1; fi >= 0; fi--) {
+        if (t >= FINISH_STARTS[fi]) { finishIdx = fi; break; }
+      }
     }
     if (t >= 0.97) finishIdx = -1; // reset between sheets
     if (finishIdx !== stagePanelActive) {
@@ -1543,7 +2145,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     if (cur && t >= 0.52 && t < 0.58 && sheetOk()) {
       if (t >= 0.53) stationBuild('qr');
       cur.updateMatrixWorld();
-      var qrLocal = new THREE.Vector3(SHEET_W * 0.31, -SHEET_H * 0.81, 0.03);
+      var qrLocal = new THREE.Vector3(curW * 0.31, -curH * 0.81, 0.03);
       var qrWorld = cur.localToWorld(qrLocal);
       qrSpark.position.copy(qrWorld);
       qrSpark.rotation.x = cur.rotation.x;
@@ -1563,7 +2165,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     var scanPhase = (t - 0.72) / 0.05;
     if (cur && scanPhase > 0 && scanPhase < 1 && sheetOk()) {
       cur.updateMatrixWorld();
-      var beamWorld = cur.localToWorld(new THREE.Vector3(0, -SHEET_H * scanPhase, 0.04));
+      var beamWorld = cur.localToWorld(new THREE.Vector3(0, -curH * scanPhase, 0.04));
       laser.position.copy(beamWorld);
       laser.rotation.x = cur.rotation.x;
       laserGlow.position.copy(beamWorld);
@@ -1582,7 +2184,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       // demonstration cycles keep the celebration burst but must never
       // inflate a number the registrar could read as issuance.
       if (liveCurrent && liveCurrent.status === 'issued') sheetsProduced += 1;
-      fireBurst(cur.position.x, cur.position.y - SHEET_H / 2 + 0.3, cur.position.z + 0.1);
+      fireBurst(cur.position.x, cur.position.y - curH / 2 + 0.3, cur.position.z + 0.1);
       playSound();
     }
 
@@ -1594,7 +2196,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       keyPulse = 1;
     }
     workLight.position.x = curSheetX;
-    setPlates(t, ceremonyUntil > now);
+    // A report dwell keeps every machine at READY — the stations only
+    // claim work when a sheet is genuinely with them.
+    setPlates(cycleMode === 'sheet' && sheetOk() ? t : 0, ceremonyUntil > now);
     rim.color.lerp(rimTarget, 0.06);
     keyPulse *= 0.94;
     key.intensity = 1.3 + keyPulse * 0.35;
@@ -1605,8 +2209,54 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   function feedTickWanted() { return soundOn && spanLongEnough(); }
 
   var raf = null, running = false, userPaused = false, heroVisible = true;
-  var lastTs = 0, camZ = 8.6, camX = -2.6, lookX = -3.0;
+  var lastTs = 0, camZ = 8.6, camX = -2.6, camY = -0.15, lookX = -3.0, lookY = -1.0, lookZ = 1.2;
   var overviewUntil = 0, overviewNextAt = 0;
+  // ---- The documentary framing table ----
+  // The certificate is the star: for every operation the camera moves
+  // to ITS close-up — the print head as the sheet emerges, macro on
+  // the die strike and the QR burn, the frontal hero shot at
+  // inspection — and the machines simply enter and leave the frame as
+  // the sheet travels. The wide establishing view exists only in the
+  // brief control-room overview beats.
+  function camTargetFor(tp) {
+    var sx = curSheetX;
+    var lx = Math.max(-3.4, Math.min(5.2, sx));
+    var x = Math.max(-3.6, Math.min(4.8, sx * 0.9));
+    var y, z, ly, lz;
+    if (tp < 0.06) {
+      // Spin-up: settle onto the press before the sheet exists.
+      y = 0.1; z = 7.0; ly = -1.15; lz = 1.2;
+    } else if (tp < 0.26) {
+      // The print head close-up: looking down onto the emerging sheet,
+      // pushing slowly in as the official art appears band by band.
+      var fp = (tp - 0.06) / 0.2;
+      y = 0.6; z = 5.8 - fp * 0.5; ly = -1.35; lz = 1.4;
+    } else if (tp < 0.42) {
+      // High three-quarter tracking shot into the UV arch — offset so
+      // the gantry post frames the document instead of blocking it.
+      x += 1.15; y = 1.35; z = 5.5; ly = -1.6; lz = 1.35;
+    } else if (tp < 0.48) {
+      // The die strike, three-quarter macro.
+      x += 1.05; y = 1.1; z = 5.1; ly = -1.55; lz = 1.35;
+    } else if (tp < 0.61) {
+      // The QR burn, leaning toward the engraved corner.
+      x += 1.2; y = 1.2; z = 5.2; ly = -1.55; lz = 1.35; lx += 0.35;
+    } else if (tp < 0.66) {
+      // The signature stroke.
+      x += 1.05; y = 1.1; z = 5.1; ly = -1.5; lz = 1.4;
+    } else if (tp < 0.81) {
+      // The inspection hero shot: the certificate lifted to the lens,
+      // filling the frame with nothing in front of it.
+      y = 0.4; z = 6.9; ly = -0.5; lz = 2.78;
+    } else if (tp < 0.87) {
+      // The folder receives the sheet.
+      y = 0.35; z = 5.9; ly = -1.1; lz = 1.7;
+    } else {
+      // Into the vault.
+      y = 0.1; z = 6.6; ly = -1.3; lz = 1.3;
+    }
+    return { x: x, y: y, z: z, lookX: lx, lookY: ly, lookZ: lz };
+  }
   var telemFrames = 0, telemAccum = 0;
   function frame(ts) {
     if (!running) return;
@@ -1626,6 +2276,17 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     idleLamps.forEach(function (l) {
       l.mat.opacity = 0.35 + 0.4 * (0.5 + 0.5 * Math.sin(ts / 700 + l.phase));
     });
+    // Nothing in the hall is perfectly still: the cooling fan idles and
+    // races with the motor's real load, PLC indicators blink on their
+    // own staggered schedules, the guide rollers turn only when the
+    // drive does, and the line bed carries a faint drive vibration.
+    pressFan.rotation.x -= dtMs * (0.004 + motorLevel * 0.014);
+    blinkLamps.forEach(function (b) {
+      b.mat.opacity = Math.sin(ts / 900 + b.phase) > 0.15 ? 0.85 : 0.1;
+    });
+    var rollerSpin = motorLevel * dtMs * 0.02;
+    guideRollers.forEach(function (r) { r.rotation.x -= rollerSpin; });
+    lineGroup.position.y = Math.sin(ts / 43) * 0.004 * motorLevel;
     // The crane trolley traverses the hall on its own long schedule,
     // and the transport cart crosses the floor behind the line.
     craneTrolley.position.x = 1 + Math.sin(ts / 21000) * 6.5;
@@ -1643,26 +2304,41 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     // occasionally pulls wide for a beat or two — enough to read the
     // whole line's state — then returns to the single certificate's
     // own cinematic journey.
+    if (liveActive && overviewNextAt < 0) overviewNextAt = ts + 11500;
     if (liveActive && ts > overviewNextAt) {
       overviewUntil = ts + 2400;
       overviewNextAt = ts + 14000;
     }
-    var overview = ts < overviewUntil;
-    var followX = overview ? 1.1 : Math.max(-3.6, Math.min(4.6, curSheetX * 0.85));
-    var zBase = overview ? 12.6 : (tphase < 0.26 ? 8.8 : (tphase < 0.66 ? 8.0 : (tphase < 0.81 ? 6.9 : 7.8)));
-    if (liveActive && !overview) zBase -= 0.7;
-    camX += (followX - camX) * 0.035;
-    camZ += ((zBase + Math.sin(ts / 13000) * 0.18) - camZ) * 0.03;
-    lookX += ((overview ? 1.1 : Math.max(-3.4, Math.min(5.2, curSheetX))) - lookX) * 0.045;
+    // The wide shot: overview beats, report dwells (a skipped row is a
+    // line-status moment, not a manufacturing one), the awaiting-master
+    // hold, and the halt — everything that is not a sheet's own journey.
+    var overview = ts < overviewUntil || cycleMode !== 'sheet';
+    var camT = overview
+      ? { x: 1.1, y: -0.15, z: 12.6, lookX: 1.1, lookY: -1.0, lookZ: 1.2 }
+      : camTargetFor(tphase);
+    var zTarget = camT.z;
+    if (liveActive && !overview) zTarget -= 0.35;
+    camX += (camT.x - camX) * 0.035;
+    camY += (camT.y - camY) * 0.03;
+    camZ += ((zTarget + Math.sin(ts / 13000) * 0.18) - camZ) * 0.03;
+    lookX += (camT.lookX - lookX) * 0.045;
+    lookY += (camT.lookY - lookY) * 0.04;
+    lookZ += (camT.lookZ - lookZ) * 0.04;
     var orbitX = 0;
-    if (tphase >= 0.69 && tphase < 0.81) {
+    if (!overview && tphase >= 0.69 && tphase < 0.81) {
       orbitX = Math.sin(((tphase - 0.69) / 0.12) * Math.PI) * ORBIT;
+    }
+    // QA hook: exact-frame captures (frozen-clock beat tests) snap the
+    // damped rig straight to its target — never set in production.
+    if (window.__certForgeSnapCamera) {
+      camX = camT.x; camY = camT.y; camZ = zTarget;
+      lookX = camT.lookX; lookY = camT.lookY; lookZ = camT.lookZ;
     }
     camera.position.z = camZ;
     camera.position.x = camX + Math.sin(ts / 9000) * swayAmplitude * 0.6 + orbitX + (Math.random() - 0.5) * shakeAmp * 0.1;
-    camera.position.y = -0.15 + Math.sin(ts / 11000) * 0.08 + (Math.random() - 0.5) * shakeAmp * 0.07;
+    camera.position.y = camY + Math.sin(ts / 11000) * 0.08 + (Math.random() - 0.5) * shakeAmp * 0.07;
     shakeAmp *= 0.88;
-    camera.lookAt(lookX, -1.0, 1.2);
+    camera.lookAt(lookX, lookY, lookZ);
     renderScene();
     // Real renderer telemetry for the diagnostics board — measured
     // frame time and three.js's own draw-call/triangle counters, not
@@ -1680,6 +2356,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         // motor level and its real cumulative output this session.
         motor: +motorLevel.toFixed(2),
         produced: sheetsProduced,
+        // Which face the line is showing and in which mode — the
+        // official-masters guarantee, observable from outside.
+        mode: masterHalt ? 'halted' : (cycleMode === 'sheet' ? (liveCurrent ? 'live' : 'demo') : (cycleMode || (liveActive ? 'awaiting' : 'idle'))),
+        real: curReal,
+        cycleT: +lastCycleT.toFixed(4),
       };
       telemFrames = 0;
       telemAccum = 0;
@@ -1699,7 +2380,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   }
 
   if (reduceMotion) {
-    var still = spawnCertificate();
+    var still = spawnDemoCertificate();
     still.position.set(PRESENT.x, PRESENT.y, PRESENT.z);
     still.rotation.x = PRESENT.tilt;
     still.scale.y = 1;

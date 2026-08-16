@@ -2767,3 +2767,12 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
   transition:background .3s ease,border-color .3s ease,color .3s ease;}
 .cc-eng-toggle:hover,.cc-eng-toggle:focus-visible{border-color:#E9CE8A;background:rgba(233,206,138,.2);color:#FFF6DF;}
 @media (prefers-reduced-motion:reduce){.cc-prod-tech .cc-prod-console{transition:none;}}
+/* The official-masters halt notice: shown only when the registry's
+   render service cannot supply the approved template during a live
+   batch. Sits over the production hall, never over the workflow. */
+.cc-forge-halt{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;text-align:center;padding:32px clamp(20px,8vw,120px);background:rgba(10,6,2,.88);backdrop-filter:blur(3px);}
+.cc-forge-halt[hidden]{display:none;}
+.cc-forge-halt strong{font-family:'Cinzel','Amiri',serif;font-size:clamp(1rem,2vw,1.35rem);letter-spacing:.06em;color:#F3DFAE;
+  border:1px solid rgba(233,206,138,.5);border-radius:8px;padding:14px 22px;background:linear-gradient(168deg,rgba(138,58,46,.28),rgba(138,58,46,.1));}
+.cc-forge-halt span{font-size:.82rem;line-height:1.6;color:rgba(247,238,223,.85);max-width:52ch;}
