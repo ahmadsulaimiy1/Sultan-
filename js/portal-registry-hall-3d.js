@@ -14,6 +14,7 @@
 // honest source per student," made physical — then the card flips
 // away for the next one.
 import * as THREE from '/js/vendor/three/three.module.min.js';
+import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
 
 (function () {
   var mount = document.querySelector('[data-registry-hall]');
@@ -28,13 +29,18 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
   var progressEl = document.querySelector('[data-registry-hall-progress]');
   var countEl = document.querySelector('[data-registry-hall-count]');
   var leds = document.querySelectorAll('[data-registry-hall-led]');
+  var vuSegs = document.querySelectorAll('[data-registry-hall] .pfc-vu-seg');
   var STAGES = ['Identifying Student', 'Verifying Standing', 'Applying Official Seal', 'Writing to the Register'];
   function setStageDisplay(t) {
+    var pct = Math.round(Math.min(t, 1) * 100);
     if (stageEl) stageEl.textContent = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
-    if (progressEl) progressEl.textContent = Math.round(Math.min(t, 1) * 100) + '%';
+    if (progressEl) progressEl.textContent = pct + '%';
     var activeLed = Math.min(3, Math.floor(t * 4));
-    leds.forEach(function (led, i) {
-      led.classList.toggle('is-active', i <= activeLed);
+    leds.forEach(function (led, i) { led.classList.toggle('is-active', i <= activeLed); });
+    var litCount = Math.round((pct / 100) * vuSegs.length);
+    vuSegs.forEach(function (seg, i) {
+      seg.classList.toggle('is-lit', i < litCount);
+      seg.classList.toggle('is-peak', i === litCount - 1 && pct < 100);
     });
   }
 
@@ -293,52 +299,53 @@ import * as THREE from '/js/vendor/three/three.module.min.js';
     osc.start(t0); osc.stop(t0 + 0.32);
   };
 
-  var soundBtn = document.querySelector('[data-registry-hall-sound]');
-  if (soundBtn) {
-    soundBtn.addEventListener('click', function () {
-      soundOn = !soundOn;
-      soundBtn.setAttribute('aria-pressed', String(soundOn));
-      soundBtn.textContent = soundOn ? '🔊 Sound: On' : '🔈 Sound: Off';
-      if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  var soundSwitchEl = document.querySelector('[data-registry-hall-sound]');
+  if (soundSwitchEl) {
+    makeSwitch(soundSwitchEl, {
+      onLabel: 'ON', offLabel: 'OFF',
+      onChange: function (on) {
+        soundOn = on;
+        if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+      },
     });
   }
 
-  // ---- Pause: a real control — stops the loop outright rather than
-  // just muting it, and overrides the IntersectionObserver so scrolling
-  // the hero back into view doesn't silently un-pause it. ----
-  var pauseBtn = document.querySelector('[data-registry-hall-pause]');
-  if (pauseBtn && !reduceMotion) {
-    pauseBtn.addEventListener('click', function () {
-      userPaused = !userPaused;
-      pauseBtn.setAttribute('aria-pressed', String(userPaused));
-      pauseBtn.textContent = userPaused ? '▶ Resume' : '⏸ Pause';
-      if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
-      else { start(); }
+  // ---- Engine switch: a real control — stops the loop outright rather
+  // than just muting it, and overrides the IntersectionObserver so
+  // scrolling the hero back into view doesn't silently un-pause a
+  // deliberate stop. ----
+  var pauseSwitchEl = document.querySelector('[data-registry-hall-pause]');
+  if (pauseSwitchEl) {
+    makeSwitch(pauseSwitchEl, {
+      initial: true, onLabel: 'RUN', offLabel: 'HALT', disabled: reduceMotion,
+      onChange: function (on) {
+        userPaused = !on;
+        if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
+        else { start(); }
+      },
     });
-  } else if (pauseBtn) {
-    pauseBtn.disabled = true;
-    pauseBtn.textContent = 'Reduced Motion';
-    pauseBtn.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+    if (reduceMotion) pauseSwitchEl.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
   }
 
-  // ---- View: a real control that changes the pace of this
+  // ---- View dial: a real control that changes the pace of this
   // demonstration only — never the real registry, which this scene
   // does not touch. ----
   var QUALITY_TIERS = [
-    { label: 'View: Standard', cycle: 5800, sway: 0.18, moteOpacity: 0.35 },
-    { label: 'View: Professional', cycle: 4600, sway: 0.3, moteOpacity: 0.5 },
-    { label: 'View: Prestige', cycle: 3600, sway: 0.44, moteOpacity: 0.7 },
+    { label: 'Standard', cycle: 5800, sway: 0.18, moteOpacity: 0.35 },
+    { label: 'Professional', cycle: 4600, sway: 0.3, moteOpacity: 0.5 },
+    { label: 'Prestige', cycle: 3600, sway: 0.44, moteOpacity: 0.7 },
   ];
-  var qualityIdx = 1;
-  var qualityBtn = document.querySelector('[data-registry-hall-quality]');
-  if (qualityBtn) {
-    qualityBtn.addEventListener('click', function () {
-      qualityIdx = (qualityIdx + 1) % QUALITY_TIERS.length;
-      var tier = QUALITY_TIERS[qualityIdx];
-      CYCLE = tier.cycle;
-      swayAmplitude = tier.sway;
-      motes.material.opacity = tier.moteOpacity;
-      qualityBtn.textContent = tier.label;
+  var qualityDialEl = document.querySelector('[data-registry-hall-quality]');
+  if (qualityDialEl) {
+    makeDial(qualityDialEl.closest('.pfc-dial'), {
+      labelEl: document.querySelector('[data-registry-hall-quality-label]'),
+      labels: QUALITY_TIERS.map(function (t) { return t.label; }),
+      onChange: function (idx) {
+        var tier = QUALITY_TIERS[idx];
+        CYCLE = tier.cycle;
+        swayAmplitude = tier.sway;
+        motes.material.opacity = tier.moteOpacity;
+      },
     });
   }
 })();

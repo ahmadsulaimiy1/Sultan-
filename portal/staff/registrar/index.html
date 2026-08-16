@@ -65,19 +65,56 @@
             <span class="pfc-led" data-registry-hall-led="3"><i></i>Archive</span>
           </div>
         </div>
-        <div class="pfc-bottom">
-          <dl class="pfc-readouts">
-            <div class="pfc-readout"><dt>Record No.</dt><dd data-registry-hall-serial>—</dd></div>
-            <div class="pfc-readout"><dt>Stage</dt><dd data-registry-hall-stage>Standing By</dd></div>
-            <div class="pfc-readout"><dt>Progress</dt><dd data-registry-hall-progress>0%</dd></div>
-            <div class="pfc-readout"><dt>This Session</dt><dd data-registry-hall-count>0000</dd></div>
-          </dl>
-          <div class="pfc-controls">
-            <button type="button" class="pfc-btn" data-registry-hall-quality aria-pressed="false">View: Professional</button>
-            <button type="button" class="pfc-btn" data-registry-hall-pause aria-pressed="false">⏸ Pause</button>
-            <button type="button" class="pfc-btn" data-registry-hall-sound aria-pressed="false">🔈 Sound: Off</button>
-            <button type="button" class="pfc-btn" disabled title="Not connected to a live diagnostics feed">Diagnostics</button>
-            <button type="button" class="pfc-btn" disabled title="No calibration step exists for this view">Calibrate</button>
+        <div class="pfc-modules">
+          <div class="pfc-module">
+            <p class="pfc-module-label">Status</p>
+            <p class="pfc-stage-value" data-registry-hall-stage>Standing By</p>
+            <div class="pfc-lcd"><span class="pfc-lcd-caption">Record No.</span><span class="pfc-lcd-value" data-registry-hall-serial>—</span></div>
+          </div>
+          <div class="pfc-module">
+            <p class="pfc-module-label">Progress</p>
+            <div class="pfc-vu-wrap">
+              <div class="pfc-vu" aria-hidden="true">
+                <span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span>
+                <span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span>
+              </div>
+              <span class="pfc-vu-pct" data-registry-hall-progress>0%</span>
+            </div>
+            <div class="pfc-lcd"><span class="pfc-lcd-caption">This Session</span><span class="pfc-lcd-value" data-registry-hall-count>0000</span></div>
+          </div>
+          <div class="pfc-module">
+            <p class="pfc-module-label">View</p>
+            <div class="pfc-dial">
+              <input type="range" min="0" max="2" step="1" value="1" data-registry-hall-quality aria-label="Rendering view: Standard, Professional, or Prestige — changes only this demonstration's pace, not the real registry">
+              <div class="pfc-dial-face">
+                <span class="pfc-dial-tick" style="transform:rotate(-42deg) translate(0,-20px);"></span>
+                <span class="pfc-dial-tick is-active" style="transform:rotate(0deg) translate(0,-20px);"></span>
+                <span class="pfc-dial-tick" style="transform:rotate(42deg) translate(0,-20px);"></span>
+                <span class="pfc-dial-needle"></span>
+                <span class="pfc-dial-center"></span>
+              </div>
+            </div>
+            <p class="pfc-dial-label" data-registry-hall-quality-label>Professional</p>
+          </div>
+          <div class="pfc-module">
+            <p class="pfc-module-label">Controls</p>
+            <button type="button" class="pfc-switch" role="switch" aria-checked="false" data-registry-hall-pause>
+              <span class="pfc-switch-track"><span class="pfc-switch-thumb"></span></span>
+              <span>Engine</span><span class="pfc-switch-state">RUN</span>
+            </button>
+            <button type="button" class="pfc-switch" role="switch" aria-checked="false" data-registry-hall-sound>
+              <span class="pfc-switch-track"><span class="pfc-switch-thumb"></span></span>
+              <span>Sound</span><span class="pfc-switch-state">OFF</span>
+            </button>
+          </div>
+          <div class="pfc-module">
+            <p class="pfc-module-label">Guarded</p>
+            <div class="pfc-guarded" title="Not connected to a live diagnostics feed — this switch is decorative">
+              <span class="pfc-guarded-track">
+                <svg class="pfc-guarded-lock" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.6"/></svg>
+              </span>
+              <span>Diagnostics</span>
+            </div>
           </div>
         </div>
       </div>
