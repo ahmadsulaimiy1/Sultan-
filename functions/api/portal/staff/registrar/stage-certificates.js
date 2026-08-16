@@ -23,7 +23,7 @@ import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
-import { logStaffEvent } from '../../../../_lib/audit.js';
+import { logStaffEvent, requestAuditContext } from '../../../../_lib/audit.js';
 import { ensureStudentIdentityNo, generateAdmissionNo } from '../../../../_lib/identity-no.js';
 import {
   PROGRAMMES, generateStageCertificateSerial, generateCertificateBatchNo,
@@ -511,31 +511,55 @@ export async function onRequestPost({ request, env }) {
       const search = String((body && body.search) || '').trim();
       const batchId = Number.isInteger(body && body.batchId) ? body.batchId : null;
       const like = `%${search}%`;
-      const rows = batchId
-        ? (await sql`
-            SELECT sc.*, b.batch_no FROM stage_certificates sc
+      // The successor join names the certificate that replaced each
+      // revoked serial. A database that has not yet applied the reissue
+      // schema upgrade lacks the column — the register must still
+      // answer, so the query falls back to the pre-reissue shape
+      // instead of turning the whole listing into a 500.
+      const listQuery = (withSuccessor) => {
+        const succSelect = withSuccessor ? 'succ.serial_no AS superseded_by_serial_no' : 'NULL AS superseded_by_serial_no';
+        const succJoin = withSuccessor ? 'LEFT JOIN stage_certificates succ ON succ.replaces_serial_no = sc.serial_no' : '';
+        if (batchId) {
+          return sql(`
+            SELECT sc.*, b.batch_no, ${succSelect} FROM stage_certificates sc
             LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-            WHERE sc.batch_id = ${batchId}
-            ORDER BY sc.serial_no LIMIT 500`).rows
-        : search
-          ? (await sql`
-              SELECT sc.*, b.batch_no FROM stage_certificates sc
-              LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-              WHERE sc.serial_no ILIKE ${like} OR sc.student_full_name ILIKE ${like}
-                 OR sc.student_identity_no ILIKE ${like}
-              ORDER BY sc.created_at DESC LIMIT 200`).rows
-          : (await sql`
-              SELECT sc.*, b.batch_no FROM stage_certificates sc
-              LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
-              ORDER BY sc.created_at DESC LIMIT 200`).rows;
+            ${succJoin}
+            WHERE sc.batch_id = $1
+            ORDER BY sc.serial_no LIMIT 500`, [batchId]);
+        }
+        if (search) {
+          return sql(`
+            SELECT sc.*, b.batch_no, ${succSelect} FROM stage_certificates sc
+            LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+            ${succJoin}
+            WHERE sc.serial_no ILIKE $1 OR sc.student_full_name ILIKE $1
+               OR sc.student_identity_no ILIKE $1
+            ORDER BY sc.created_at DESC LIMIT 200`, [like]);
+        }
+        return sql(`
+          SELECT sc.*, b.batch_no, ${succSelect} FROM stage_certificates sc
+          LEFT JOIN stage_certificate_batches b ON b.id = sc.batch_id
+          ${succJoin}
+          ORDER BY sc.created_at DESC LIMIT 200`);
+      };
+      let rows;
+      try {
+        rows = (await listQuery(true)).rows;
+      } catch (colErr) {
+        if (!/replaces_serial_no/.test((colErr && colErr.message) || '')) throw colErr;
+        rows = (await listQuery(false)).rows;
+      }
       return json({
         ok: true,
         certificates: rows.map((r) => ({
           serialNo: r.serial_no, batchNo: r.batch_no, studentFullName: r.student_full_name,
           studentFullNameAr: r.student_full_name_ar, studentIdentityNo: r.student_identity_no,
+          studentSex: r.student_sex || null,
           programmeCode: r.programme_code, academicYear: r.academic_year, gradeEn: r.grade_en,
           issuedAt: isoDateOnly(r.issued_at), status: r.revoked_at ? 'revoked' : 'active',
           revokedAt: r.revoked_at, revocationNote: r.revoked_at ? r.revocation_note : null,
+          replacesSerialNo: r.replaces_serial_no || null,
+          supersededBySerialNo: r.superseded_by_serial_no || null,
         })),
       });
     }
@@ -572,21 +596,221 @@ export async function onRequestPost({ request, env }) {
       if (!serialNo || !revocationNote) {
         return json({ error: 'serialNo and revocationNote are both required to revoke a certificate.' }, 400);
       }
-      const updated = await sql`
-        UPDATE stage_certificates SET revoked_at = now(), revocation_note = ${revocationNote}
-        WHERE serial_no = ${serialNo} AND revoked_at IS NULL
-        RETURNING id`;
+      // The revoking officer is recorded on the row itself, not only in
+      // the audit log — with a fallback for a database that has not yet
+      // applied the reissue schema upgrade.
+      let updated;
+      try {
+        updated = await sql`
+          UPDATE stage_certificates
+          SET revoked_at = now(), revocation_note = ${revocationNote}, revoked_by_staff_id = ${staffId}
+          WHERE serial_no = ${serialNo} AND revoked_at IS NULL
+          RETURNING id`;
+      } catch (colErr) {
+        if (!/revoked_by_staff_id/.test((colErr && colErr.message) || '')) throw colErr;
+        updated = await sql`
+          UPDATE stage_certificates SET revoked_at = now(), revocation_note = ${revocationNote}
+          WHERE serial_no = ${serialNo} AND revoked_at IS NULL
+          RETURNING id`;
+      }
       if (!updated.rows.length) {
         return json({ error: 'No active certificate found with that serial number.' }, 404);
       }
       await logStaffEvent(sql, {
         actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate', targetId: updated.rows[0].id,
         reason: revocationNote, metadata: { serialNo, revoked: true },
+        ...requestAuditContext(request),
       });
       return json({ ok: true, certificateId: updated.rows[0].id });
     }
 
-    return json({ error: 'Unknown action. Expected one of: preview_roster, generate_batch, list_register, list_batches, revoke.' }, 400);
+    // ── Reissue (revoke + replace as ONE administrative act) ─────────
+    // The schema's own doctrine: a certificate row is a snapshot, and
+    // corrections are revoke + reissue with the full audit trail. The
+    // new certificate carries replaces_serial_no; the old serial is
+    // revoked naming its successor; the public verifier reports both
+    // sides honestly. Only stage programmes reissue here — a Royal
+    // College certificate is issued by its own batch pipeline
+    // (scripts/issue-royal-college-batch.mjs) and must be reissued
+    // there, under the same controls that issued it.
+    if (action === 'reissue') {
+      const institutionId = await issuingInstitutionId(sql);
+      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
+      if (!grant.granted) return json({ error: 'Your role does not have authority to reissue certificates.' }, 403);
+      const serialNo = String((body && body.serialNo) || '').trim();
+      const reason = String((body && body.reason) || '').trim();
+      if (!serialNo || !reason) {
+        return json({ error: 'serialNo and reason are both required to reissue a certificate.' }, 400);
+      }
+      // Same deterministic pre-check as generate_batch: without the
+      // integrity-hash secret no serial can be minted, and failing HERE
+      // means failing before anything has been touched.
+      if (!env.DOCUMENT_HASH_SECRET) {
+        return json({ error: 'DOCUMENT_HASH_SECRET is not configured — certificates cannot be reissued without the integrity-hash secret.' }, 500);
+      }
+      const corrections = (body && typeof body.corrections === 'object' && body.corrections) || {};
+      const corrFullName = corrections.fullName != null ? String(corrections.fullName).trim() : null;
+      const corrFullNameAr = corrections.fullNameAr != null ? String(corrections.fullNameAr).trim() : null;
+      const corrSex = corrections.sex != null ? String(corrections.sex).trim().toLowerCase() : null;
+      if (corrFullName === '') return json({ error: 'A corrected full name cannot be empty.' }, 400);
+      if (corrSex && corrSex !== 'male' && corrSex !== 'female') {
+        return json({ error: "A corrected sex must be 'male' or 'female'." }, 400);
+      }
+
+      const oldRes = await sql`
+        SELECT * FROM stage_certificates WHERE serial_no = ${serialNo}`;
+      const old = oldRes.rows[0];
+      if (!old) return json({ error: 'No certificate found with that serial number.' }, 404);
+      if (!PROGRAMMES[old.programme_code]) {
+        return json({ error: `${old.programme_code} certificates are issued by the Royal College batch pipeline and must be reissued there — this route reissues stage certificates only.` }, 400);
+      }
+      if (!old.student_id) {
+        return json({ error: 'The student record behind this certificate no longer exists — a reissue must snapshot a real student record.' }, 409);
+      }
+      let successor;
+      try {
+        successor = await sql`
+          SELECT serial_no FROM stage_certificates WHERE replaces_serial_no = ${serialNo} LIMIT 1`;
+      } catch (colErr) {
+        if (!/replaces_serial_no/.test((colErr && colErr.message) || '')) throw colErr;
+        return json({ error: 'The reissue schema upgrade has not been applied to this database yet — run Portal Setup once (/portal/admin/setup/), then retry.' }, 503);
+      }
+      if (successor.rows[0]) {
+        return json({ error: `This certificate was already reissued as ${successor.rows[0].serial_no}.` }, 409);
+      }
+
+      // Corrections land on the STUDENT RECORD first — the register is
+      // the source of truth and the new certificate snapshots it.
+      const studentRes = await sql`
+        SELECT id, full_name, full_name_ar, sex, identity_no FROM students WHERE id = ${old.student_id}`;
+      const student = studentRes.rows[0];
+      if (!student) {
+        return json({ error: 'The student record behind this certificate no longer exists — a reissue must snapshot a real student record.' }, 409);
+      }
+      const before = { fullName: student.full_name, fullNameAr: student.full_name_ar, sex: student.sex };
+      // A field counts as a CORRECTION only when the registrar actually
+      // edited it away from what the form prefilled — the OLD
+      // CERTIFICATE's snapshot. A field left as prefilled means "no
+      // opinion", and the current student record (which may be newer
+      // than the snapshot) stands. This is what stops an untouched
+      // form from silently reverting or erasing later student updates.
+      const editedName = corrFullName !== null && corrFullName !== old.student_full_name;
+      const editedNameAr = corrFullNameAr !== null && corrFullNameAr !== (old.student_full_name_ar || '');
+      const editedSex = corrSex !== null && corrSex !== '' && corrSex !== (old.student_sex || '');
+      const nextFullName = editedName ? corrFullName : student.full_name;
+      const nextFullNameAr = editedNameAr ? (corrFullNameAr || null) : student.full_name_ar;
+      const nextSex = editedSex ? corrSex : student.sex;
+      const studentChanged = nextFullName !== student.full_name
+        || (nextFullNameAr || null) !== (student.full_name_ar || null)
+        || (nextSex || null) !== (student.sex || null);
+      const identityNo = old.student_identity_no || await ensureStudentIdentityNo(sql, student.id);
+
+      // One student, one programme, one year, one ACTIVE certificate —
+      // the same guard issuance enforces.
+      const dup = await sql`
+        SELECT serial_no FROM stage_certificates
+        WHERE student_id = ${student.id} AND programme_code = ${old.programme_code}
+          AND academic_year = ${old.academic_year} AND revoked_at IS NULL
+          AND serial_no <> ${serialNo}`;
+      if (dup.rows[0]) {
+        return json({ error: `This student already holds another active ${old.programme_code} certificate for ${old.academic_year} (${dup.rows[0].serial_no}).` }, 409);
+      }
+
+      const issuedAtIso = isoDateOnly(old.issued_at);
+      const { serialNo: newSerialNo, fullHash, keyVersion } = await generateStageCertificateSerial(sql, env, {
+        programmeCode: old.programme_code,
+        issuedAt: issuedAtIso,
+        studentIdentityNo: identityNo,
+        studentFullName: nextFullName,
+        academicYear: old.academic_year,
+        gradeEn: old.grade_en,
+      });
+
+      // EVERY mutation commits or fails together — the student
+      // correction, the replacement's registration, and the old
+      // serial's retirement are one transaction. No half-applied
+      // correction, never both serials active, never a revoked serial
+      // whose replacement vanished. The UNIQUE index on
+      // replaces_serial_no makes a concurrent double-reissue fail
+      // loudly here instead of minting two replacements. (Residual,
+      // accepted: a plain revoke landing in the instant between the
+      // guards above and this commit leaves the replacement active
+      // over an independently-revoked original — coherent, auditable,
+      // and visible in the register.)
+      const supersedeNote = `Superseded by reissue ${newSerialNo} — ${reason}`;
+      const mutations = [];
+      if (studentChanged) {
+        mutations.push(sql`
+          UPDATE students SET full_name = ${nextFullName}, full_name_ar = ${nextFullNameAr}, sex = ${nextSex}
+          WHERE id = ${student.id}`);
+      }
+      const insertAt = mutations.length;
+      mutations.push(sql`
+        INSERT INTO stage_certificates
+          (serial_no, batch_id, student_id, student_identity_no, student_full_name, student_full_name_ar,
+           student_sex, programme_code, programme_label_en, programme_label_ar, institution_name,
+           academic_year, grade_en, grade_ar, place_en, place_ar,
+           issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version,
+           issued_by_staff_id, replaces_serial_no)
+        VALUES
+          (${newSerialNo}, ${old.batch_id}, ${student.id}, ${identityNo}, ${nextFullName}, ${nextFullNameAr},
+           ${nextSex}, ${old.programme_code}, ${old.programme_label_en}, ${old.programme_label_ar}, ${old.institution_name},
+           ${old.academic_year}, ${old.grade_en}, ${old.grade_ar}, ${old.place_en}, ${old.place_ar},
+           ${issuedAtIso}, ${old.issued_at_hijri}, ${old.issued_at_hijri_ar}, ${fullHash}, ${keyVersion},
+           ${staffId}, ${serialNo})
+        RETURNING id`);
+      if (!old.revoked_at) {
+        mutations.push(sql`
+          UPDATE stage_certificates
+          SET revoked_at = now(), revocation_note = ${supersedeNote}, revoked_by_staff_id = ${staffId}
+          WHERE serial_no = ${serialNo} AND revoked_at IS NULL`);
+      }
+      let txResults;
+      try {
+        txResults = await sql.transaction(mutations);
+      } catch (txErr) {
+        const msg = (txErr && txErr.message) || '';
+        if (/idx_stage_certificates_replaces|duplicate key/.test(msg)) {
+          return json({ error: 'This certificate was reissued by another session a moment ago — refresh the register to see its replacement.' }, 409);
+        }
+        throw txErr;
+      }
+      const newId = txResults[insertAt].rows[0].id;
+
+      if (studentChanged) {
+        await logStaffEvent(sql, {
+          actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'student', targetId: student.id,
+          reason: `Correction applied during certificate reissue of ${serialNo}: ${reason}`,
+          previousValue: before,
+          newValue: { fullName: nextFullName, fullNameAr: nextFullNameAr, sex: nextSex },
+          ...requestAuditContext(request),
+        });
+      }
+      await logStaffEvent(sql, {
+        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate', targetId: newId,
+        reason,
+        metadata: {
+          reissued: true, serialNo: newSerialNo, replacesSerialNo: serialNo,
+          correctionsApplied: studentChanged,
+        },
+        ...requestAuditContext(request),
+      });
+
+      const encoded = encodeURIComponent(newSerialNo);
+      return json({
+        ok: true,
+        serialNo: newSerialNo,
+        replacesSerialNo: serialNo,
+        studentFullName: nextFullName,
+        studentIdentityNo: identityNo,
+        viewUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}`,
+        pdfUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=pdf`,
+        pngUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=png`,
+        verifyUrl: verifyUrlFor(env, newSerialNo),
+      });
+    }
+
+    return json({ error: 'Unknown action. Expected one of: preview_roster, generate_batch, list_register, list_batches, revoke, reissue.' }, 400);
   } catch (err) {
     console.error('registrar stage-certificates error', err);
     return json({ error: 'Could not complete that action: ' + (err && err.message ? err.message : 'unknown error') }, 500);

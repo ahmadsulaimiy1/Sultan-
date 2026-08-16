@@ -409,6 +409,31 @@ for (const outcome of ['ambiguous', 'multiple']) {
     new RegExp(`CHECK \\(outcome IN \\([^)]*'${outcome}'`).test(schemaSql)
     && new RegExp(`CHECK \\(outcome IN \\([^)]*'${outcome}'`).test(setupJs));
 }
+// Reissue management columns: the register listing, the reissue action
+// and the verifier's successor lookup all depend on these — asserted as
+// whole ALTER statements in BOTH schema copies, same reasoning as the
+// indexes above.
+const REPLACES_ALTER = /ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS replaces_serial_no TEXT REFERENCES stage_certificates\(serial_no\)/;
+const REVOKED_BY_ALTER = /ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS revoked_by_staff_id INTEGER REFERENCES staff\(id\)/;
+const REPLACES_INDEX = /CREATE UNIQUE INDEX IF NOT EXISTS idx_stage_certificates_replaces ON stage_certificates\(replaces_serial_no\)/;
+// Ordering is load-bearing, not style: on a pre-reissue database the
+// CREATE TABLE is a no-op, so the successor index can only resolve its
+// column if the ALTER that adds it runs FIRST. Both upgrade paths (psql
+// -f schema.sql under ON_ERROR_STOP, and Portal Setup's transactional
+// batches) abort outright when the order is wrong.
+function altersPrecedeIndex(text) {
+  const alterAt = text.indexOf('ADD COLUMN IF NOT EXISTS replaces_serial_no');
+  const indexAt = text.indexOf('idx_stage_certificates_replaces');
+  return alterAt !== -1 && indexAt !== -1 && alterAt < indexAt;
+}
+check('the replaces_serial_no ALTER precedes the successor index in both schema copies',
+  altersPrecedeIndex(schemaSql) && altersPrecedeIndex(setupJs));
+check('the replaces_serial_no column upgrade exists in both schema copies',
+  REPLACES_ALTER.test(schemaSql) && REPLACES_ALTER.test(setupJs));
+check('the revoked_by_staff_id column upgrade exists in both schema copies',
+  REVOKED_BY_ALTER.test(schemaSql) && REVOKED_BY_ALTER.test(setupJs));
+check('the successor-lookup index exists in both schema copies',
+  REPLACES_INDEX.test(schemaSql) && REPLACES_INDEX.test(setupJs));
 
 console.log(`\n${failures ? `${failures} FAILED` : 'every printed identifier resolves'}`);
 process.exit(failures ? 1 : 0);

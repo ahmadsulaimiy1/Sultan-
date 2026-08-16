@@ -45,6 +45,10 @@ on:
       - 'js/certificate-verify.js'
       - 'docs/graduation-registers/**'
       - '.github/workflows/certificate-verification.yml'
+      # Schema changes must reach the live database the same way code
+      # reaches the live site — this workflow's psql step applies
+      # sql/schema.sql idempotently, so a schema commit triggers it.
+      - 'sql/schema.sql'
 
 concurrency:
   # Never let two runs import into the same database at once. The import is

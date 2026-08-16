@@ -2776,3 +2776,18 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
 .cc-forge-halt strong{font-family:'Cinzel','Amiri',serif;font-size:clamp(1rem,2vw,1.35rem);letter-spacing:.06em;color:#F3DFAE;
   border:1px solid rgba(233,206,138,.5);border-radius:8px;padding:14px 22px;background:linear-gradient(168deg,rgba(138,58,46,.28),rgba(138,58,46,.1));}
 .cc-forge-halt span{font-size:.82rem;line-height:1.6;color:rgba(247,238,223,.85);max-width:52ch;}
+/* Reissue dialog + register lineage notes */
+.cc-register-lineage{font-size:.68rem;color:rgba(233,206,138,.75);margin-top:2px;}
+.cc-reissue-dialog{border:1px solid rgba(233,206,138,.45);border-radius:12px;background:#17100A;color:#F7EEDF;
+  padding:26px 28px;max-width:520px;width:calc(100vw - 48px);box-shadow:0 24px 80px rgba(0,0,0,.6);}
+.cc-reissue-dialog::backdrop{background:rgba(8,5,2,.72);backdrop-filter:blur(2px);}
+.cc-reissue-dialog h3{font-family:'Cinzel','Amiri',serif;letter-spacing:.06em;color:#F3DFAE;margin:0 0 8px;}
+.cc-reissue-serial-line{font-size:.8rem;line-height:1.55;color:rgba(247,238,223,.8);margin:0 0 14px;}
+.cc-reissue-serial-line strong{color:#E9CE8A;font-family:'Courier New',monospace;}
+.cc-reissue-dialog label{display:block;font-size:.74rem;letter-spacing:.04em;color:rgba(233,206,138,.85);margin:0 0 12px;}
+.cc-reissue-dialog input,.cc-reissue-dialog select,.cc-reissue-dialog textarea{display:block;width:100%;margin-top:5px;
+  background:#0E0903;border:1px solid rgba(233,206,138,.3);border-radius:7px;color:#F7EEDF;padding:8px 10px;font-size:.9rem;}
+.cc-reissue-dialog input:focus,.cc-reissue-dialog select:focus,.cc-reissue-dialog textarea:focus{outline:2px solid rgba(233,206,138,.55);outline-offset:1px;}
+.cc-reissue-error{font-size:.78rem;color:#E08A7A;margin:0 0 10px;}
+.cc-reissue-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+.cc-reissue-cancel{opacity:.75;}
