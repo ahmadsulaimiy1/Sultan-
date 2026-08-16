@@ -61,6 +61,20 @@
            render service cannot supply a master during a live batch, the
            engine halts its display behind this notice rather than showing
            a substitute. Issuance itself is a separate, unaffected path. -->
+      <!-- Production Environment Check: a brief boot sequence over the
+           hero while the studio initialises. Every line is a REAL,
+           just-measured fact (device class, GPU, station count, render
+           tier, audio, session) and the Experience Score is derived
+           from those same facts — nothing theatrical is invented.
+           Never shown under prefers-reduced-motion or on phones. -->
+      <div class="cc-env-check" data-cert-env-check hidden>
+        <div class="cc-env-inner">
+          <div class="cc-env-head">Production Environment Check</div>
+          <ul class="cc-env-steps" data-env-steps></ul>
+          <div class="cc-env-score" data-env-score hidden></div>
+        </div>
+        <button type="button" class="cc-env-enter" data-env-enter>Enter Production Studio</button>
+      </div>
       <div class="cc-forge-halt" data-cert-forge-halt hidden role="alert">
         <strong>Official certificate template unavailable. Production cannot continue.</strong>
         <span>The registry's rendering service did not return the approved master for this batch. The production display has stopped — no substitute template will be shown. Certificate issuance itself is unaffected: every result is recorded in the Certificate Register below.</span>

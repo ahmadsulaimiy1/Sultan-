@@ -2776,6 +2776,32 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
 .cc-forge-halt strong{font-family:'Cinzel','Amiri',serif;font-size:clamp(1rem,2vw,1.35rem);letter-spacing:.06em;color:#F3DFAE;
   border:1px solid rgba(233,206,138,.5);border-radius:8px;padding:14px 22px;background:linear-gradient(168deg,rgba(138,58,46,.28),rgba(138,58,46,.1));}
 .cc-forge-halt span{font-size:.82rem;line-height:1.6;color:rgba(247,238,223,.85);max-width:52ch;}
+/* Production Environment Check — boot sequence over the hero */
+.cc-env-check{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;background:linear-gradient(178deg,rgba(10,6,2,.94),rgba(16,10,4,.9));opacity:1;transition:opacity .6s ease;}
+.cc-env-check[hidden]{display:none;}
+.cc-env-check.is-leaving{opacity:0;pointer-events:none;}
+.cc-env-inner{min-width:min(520px,86%);}
+.cc-env-head{font-family:'Cinzel','Amiri',serif;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:#E9CE8A;
+  border-bottom:1px solid rgba(233,206,138,.35);padding-bottom:10px;margin-bottom:14px;}
+.cc-env-steps{list-style:none;margin:0;padding:0;font-family:'Consolas','Menlo','Courier New',monospace;font-size:.78rem;}
+.cc-env-steps li{display:flex;justify-content:space-between;gap:18px;padding:4px 0;color:rgba(247,238,223,.85);
+  opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease;}
+.cc-env-steps li.is-on{opacity:1;transform:none;}
+.cc-env-steps li .k{color:rgba(233,206,138,.7);letter-spacing:.08em;}
+.cc-env-steps li .v{text-align:right;color:#B9E7CB;}
+.cc-env-steps li .v.is-wait{color:rgba(233,206,138,.6);}
+.cc-env-score{margin-top:14px;padding-top:10px;border-top:1px solid rgba(233,206,138,.35);
+  font-family:'Cinzel','Amiri',serif;font-size:.82rem;letter-spacing:.1em;color:#F3DFAE;
+  opacity:0;transition:opacity .5s ease;}
+.cc-env-score.is-on{opacity:1;}
+.cc-env-score .stars{color:#E9CE8A;letter-spacing:.2em;margin-right:10px;}
+.cc-env-score .hint{display:block;font-family:'Consolas','Menlo',monospace;font-size:.66rem;letter-spacing:.04em;
+  color:rgba(247,238,223,.6);margin-top:5px;}
+.cc-env-enter{font-family:'Cinzel','Amiri',serif;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#E9CE8A;background:rgba(233,206,138,.08);border:1px solid rgba(233,206,138,.4);border-radius:99px;
+  padding:8px 22px;cursor:pointer;transition:background .3s ease,border-color .3s ease;}
+.cc-env-enter:hover,.cc-env-enter:focus-visible{border-color:#E9CE8A;background:rgba(233,206,138,.18);}
 /* Reissue dialog + register lineage notes */
 .cc-register-lineage{font-size:.68rem;color:rgba(233,206,138,.75);margin-top:2px;}
 .cc-reissue-dialog{border:1px solid rgba(233,206,138,.45);border-radius:12px;background:#17100A;color:#F7EEDF;

@@ -838,6 +838,11 @@
       if(!res.ok) throw new Error(data.error || 'Could not load your staff session.');
       loadingEl.hidden = true;
       contentEl.hidden = false;
+      // The Production Environment Check's "registry session" line is
+      // driven by this REAL check having succeeded — flag + event so
+      // it reads verified whether it renders before or after this.
+      window.__shrsSessionOk = true;
+      document.dispatchEvent(new CustomEvent('sultan:portal-session-ok'));
       if(window.SHRSExecArrival){
         window.SHRSExecArrival.play({
           key: 'certificate-centre',
