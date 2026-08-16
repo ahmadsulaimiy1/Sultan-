@@ -42,6 +42,214 @@
     return (qualityProfileEl && qualityProfileEl.value) || 'high';
   }
 
+  // ── Live production dashboard ─────────────────────────────────────
+  // Every figure is read from the real issuance stream — queue,
+  // completions, the measured average time per certificate — never a
+  // timer's invention. The audit line flips only when the server's
+  // batch_done confirms the audit-logged batch.
+  var dashEl = document.querySelector('[data-cert-prod-dash]');
+  function dashField(name){ return dashEl ? dashEl.querySelector('[data-dash-' + name + ']') : null; }
+  var dash = {
+    startedAt: 0, total: 0, done: 0, issued: 0, skipped: 0, failed: 0,
+  };
+  function dashSet(name, text){
+    var el = dashField(name);
+    if(el) el.textContent = text;
+  }
+  function dashStart(total){
+    if(!dashEl) return;
+    dash.startedAt = Date.now();
+    dash.total = total; dash.done = 0; dash.issued = 0; dash.skipped = 0; dash.failed = 0;
+    dashEl.hidden = false;
+    dashEl.classList.add('is-live');
+    dashSet('title', 'Production Line — Live');
+    dashSet('queue', String(total));
+    dashSet('done', '0');
+    dashSet('issued', '0');
+    dashSet('problem', '0 / 0');
+    dashSet('current', 'Starting…');
+    dashSet('avg', '—');
+    dashSet('profile', qualityProfile().toUpperCase());
+    dashSet('audit', 'In progress…');
+    var bar = dashField('bar');
+    if(bar) bar.style.width = '0%';
+  }
+  function dashRow(d){
+    if(!dashEl) return;
+    dash.done += 1;
+    if(d.status === 'issued') dash.issued += 1;
+    else if(d.status === 'skipped') dash.skipped += 1;
+    else dash.failed += 1;
+    dashSet('queue', String(Math.max(0, dash.total - dash.done)));
+    dashSet('done', dash.done + ' of ' + dash.total);
+    dashSet('issued', String(dash.issued));
+    dashSet('problem', dash.skipped + ' / ' + dash.failed);
+    dashSet('current', (d.fullName || 'Student') + (d.serialNo ? ' — ' + d.serialNo : ''));
+    var elapsed = Date.now() - dash.startedAt;
+    dashSet('avg', (elapsed / dash.done / 1000).toFixed(2) + 's per certificate');
+    var bar = dashField('bar');
+    if(bar) bar.style.width = Math.round((dash.done / Math.max(1, dash.total)) * 100) + '%';
+  }
+  function dashDone(data){
+    if(!dashEl) return;
+    dashEl.classList.remove('is-live');
+    dashSet('title', 'Production Complete — ' + data.batchNo);
+    dashSet('current', 'Batch archived to the Certificate Register');
+    dashSet('audit', 'Registered & audit-logged');
+    var note = dashField('note');
+    if(note) note.textContent = 'All ' + data.issued + ' issued certificate(s) are in the Certificate Register below. The combined batch PDF compiles every certificate in issuance order.';
+  }
+  function dashFail(){
+    if(!dashEl) return;
+    dashEl.classList.remove('is-live');
+    dashSet('title', 'Production Interrupted');
+    dashSet('audit', 'Check the register before retrying');
+  }
+  // ── The engineering console ───────────────────────────────────────
+  // Timestamped log of the REAL operations in the stream: template
+  // family, each serial's registration, the audit event. Lines badged
+  // PRESS describe the visual production sequence and say so by their
+  // badge — nothing here invents a security claim.
+  var consoleEl = document.querySelector('[data-cert-prod-console]');
+  var CONSOLE_MAX = 80;
+  function logLine(badge, msg, level){
+    if(!consoleEl) return;
+    var line = el('div', 'cc-prod-line' + (level ? ' is-' + level : ''));
+    line.appendChild(el('span', 'cc-prod-ts', new Date().toISOString()));
+    line.appendChild(el('span', 'cc-prod-badge', level === 'error' ? 'ERROR' : (level === 'warn' ? 'WARN' : 'INFO')));
+    line.appendChild(el('span', 'cc-prod-msg', badge + '::' + msg));
+    consoleEl.appendChild(line);
+    while(consoleEl.children.length > CONSOLE_MAX) consoleEl.removeChild(consoleEl.firstChild);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  // ── The diagnostics board — real telemetry only ───────────────────
+  // Render figures come from the 3D engine's own measured counters
+  // (window.__certForgeTelemetry, written by js/portal-cert-forge-3d.js
+  // from renderer.info); heap from performance.memory where the browser
+  // exposes it; stream figures measured from the row events themselves.
+  var diagEl = document.querySelector('[data-cert-prod-diag]');
+  function diagField(name){ return diagEl ? diagEl.querySelector('[data-diag-' + name + ']') : null; }
+  var frameSeries = [], thruSeries = [], rowTimes = [];
+  var flowParticles = [];
+  function diagSet(name, text){ var f = diagField(name); if(f) f.textContent = text; }
+  function drawSeries(canvas, series, maxHint, color){
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if(!series.length) return;
+    var max = Math.max(maxHint, Math.max.apply(null, series));
+    ctx.strokeStyle = color; ctx.lineWidth = 1.4; ctx.beginPath();
+    for(var i = 0; i < series.length; i++){
+      var x = (i / Math.max(1, series.length - 1)) * (canvas.width - 4) + 2;
+      var y = canvas.height - 3 - (series[i] / max) * (canvas.height - 8);
+      if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  var FLOW_NODES = ['PRESS', 'REGISTRY', 'AUDIT', 'ARCHIVE'];
+  function drawFlow(canvas){
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var y = canvas.height / 2;
+    var xs = FLOW_NODES.map(function(_, i){ return 18 + i * ((canvas.width - 36) / (FLOW_NODES.length - 1)); });
+    ctx.strokeStyle = 'rgba(198,161,91,.4)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xs[0], y); ctx.lineTo(xs[xs.length - 1], y); ctx.stroke();
+    ctx.font = '8px "Courier New", monospace'; ctx.textAlign = 'center';
+    xs.forEach(function(x, i){
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#C6A15B'; ctx.fill();
+      ctx.fillStyle = 'rgba(233,206,138,.75)';
+      ctx.fillText(FLOW_NODES[i], x, y - 9);
+    });
+    // One particle per REAL row event, travelling the pipeline once.
+    var nowMs = Date.now();
+    flowParticles = flowParticles.filter(function(p){ return nowMs - p.born < 2200; });
+    flowParticles.forEach(function(p){
+      var f = (nowMs - p.born) / 2200;
+      var x = xs[0] + (xs[xs.length - 1] - xs[0]) * f;
+      ctx.beginPath(); ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = p.color; ctx.fill();
+    });
+  }
+  var diagTimer = null;
+  function diagTick(){
+    var t = window.__certForgeTelemetry;
+    if(t) diagSet('render', t.fps + ' fps · ' + t.frameMs + ' ms · ' + t.calls + ' draw calls');
+    else diagSet('render', 'studio idle on this device');
+    if(t) diagSet('geo', (t.triangles / 1000).toFixed(1) + 'k triangles/frame');
+    if(performance.memory){
+      diagSet('heap', (performance.memory.usedJSHeapSize / 1048576).toFixed(0) + ' / ' + (performance.memory.jsHeapSizeLimit / 1048576).toFixed(0) + ' MB');
+    } else {
+      diagSet('heap', 'not exposed by this browser');
+    }
+    var nowMs = Date.now();
+    rowTimes = rowTimes.filter(function(ts2){ return nowMs - ts2 < 10000; });
+    var thru = rowTimes.length / 10;
+    diagSet('stream', dash.done ? thru.toFixed(1) + ' certs/s (10s window)' : 'awaiting batch');
+    diagSet('queue', dashEl && !dashEl.hidden ? String(Math.max(0, dash.total - dash.done)) : '—');
+    if(t){ frameSeries.push(t.frameMs); if(frameSeries.length > 60) frameSeries.shift(); }
+    thruSeries.push(thru); if(thruSeries.length > 60) thruSeries.shift();
+    drawSeries(diagEl && diagEl.querySelector('[data-diag-frame]'), frameSeries, 32, '#B9E7CB');
+    drawSeries(diagEl && diagEl.querySelector('[data-diag-thru]'), thruSeries, 2, '#E9CE8A');
+    drawFlow(diagEl && diagEl.querySelector('[data-diag-flow]'));
+  }
+  function diagStart(){
+    if(diagTimer || !diagEl) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    diagTimer = window.setInterval(diagTick, reduce ? 1500 : 450);
+    diagTick();
+  }
+  document.addEventListener('sultan:cert-generate-start', function(e){
+    dashStart((e.detail && e.detail.total) || 0);
+    diagStart();
+    diagSet('registry', 'ACTIVE');
+    diagSet('audit', 'PENDING');
+    if(consoleEl) consoleEl.innerHTML = '';
+    logLine('ProductionLine', 'Start(rows=' + ((e.detail && e.detail.total) || 0) + ', programme=' + (programmeEl ? programmeEl.value : '?') + ', profile=' + qualityProfile() + ')');
+    logLine('PressLine', 'PowerUp()');
+  });
+  document.addEventListener('sultan:cert-generate-progress', function(e){
+    var d = e.detail || {};
+    if(d.type === 'batch_start'){
+      logLine('RegistrySync', 'OpenBatch(' + d.batchNo + ')', 'ok');
+    }
+    if(d.type === 'row'){
+      dashRow(d);
+      var who = d.fullName || 'Student';
+      rowTimes.push(Date.now());
+      flowParticles.push({ born: Date.now(), color: d.status === 'issued' ? '#7FCB8E' : (d.status === 'skipped' ? '#E4C87F' : '#E08A7A') });
+      if(d.status === 'issued'){
+        logLine('RegistrySync', 'Commit(serial=' + d.serialNo + ', student=' + who + ')', 'ok');
+        if(d.studentIdentityNo) logLine('IdentityNo', 'Assign(' + d.studentIdentityNo + ')', 'ok');
+        logLine('RenderEngine', 'ExportAvailable(pdf, png, serial=' + d.serialNo + ')');
+        logLine('PressLine', 'Sequence(print, uv, emboss, qr, sign, inspect, pack, vault)');
+      }else if(d.status === 'skipped'){
+        logLine('RegistrySync', 'Skip(' + who + ': ' + (d.problem || 'already active') + ')', 'warn');
+      }else{
+        logLine('RegistrySync', 'Fail(' + who + ': ' + (d.problem || 'see register') + ')', 'error');
+      }
+    }
+    if(d.type === 'batch_done'){
+      dashDone(d);
+      diagSet('registry', 'SYNCED');
+      diagSet('audit', 'APPENDED');
+      logLine('AuditLedger', 'Append(batch=' + d.batchNo + ', issued=' + d.issued + ', skipped=' + d.skipped + ', failed=' + d.failed + ')', 'ok');
+      logLine('RenderEngine', 'CompileBatchPdf(order=issuance)', 'ok');
+      logLine('ProductionLine', 'Complete()', 'ok');
+    }
+    if(d.type === 'error'){
+      logLine('ProductionLine', 'Error(' + (d.error || 'stream') + ')', 'error');
+    }
+  });
+  document.addEventListener('sultan:cert-generate-end', function(e){
+    if(!(e.detail && e.detail.ok)){
+      dashFail();
+      logLine('ProductionLine', 'Interrupted() — check the register before retrying', 'error');
+    }
+  });
+
   function el(tag, className, text){
     var e = document.createElement(tag);
     if(className) e.className = className;

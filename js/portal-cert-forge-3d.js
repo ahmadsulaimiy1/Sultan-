@@ -43,6 +43,13 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var mount = document.querySelector('[data-cert-forge]');
   var canvas = document.querySelector('[data-cert-forge-canvas]');
   if (!mount || !canvas) return;
+  // Phone Companion Mode: the CSS shows the standing panel and hides
+  // this canvas; the studio itself never initialises, so no battery is
+  // spent rendering a hidden hall. Desktop and tablet-class screens
+  // get the full production studio. Issuance itself is identical
+  // everywhere — the workflow below the hero never depends on this
+  // module.
+  if (window.matchMedia && window.matchMedia('(max-width: 700px) and (pointer: coarse)').matches) return;
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -202,7 +209,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
   camera.position.set(0, -0.4, 11.5);
 
-  scene.add(new THREE.AmbientLight(0xE9CE8A, 0.68));
+    var hallAmbient = new THREE.AmbientLight(0xE9CE8A, 0.68);
+  scene.add(hallAmbient);
   var key = new THREE.DirectionalLight(0xFFF3DE, 1.3);
   key.position.set(3, 4, 5);
   scene.add(key);
@@ -679,6 +687,74 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var vaultPlate = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.25), new THREE.MeshBasicMaterial({ map: drawVaultPlate(), toneMapped: false }));
   vaultPlate.position.set(0.55, -0.45, 1.22);
   vault.add(vaultPlate);
+
+  // ---- Machine identity plates ---------------------------------------
+  // Every station is its own named machine with a model plate, a live
+  // status word, and an indicator lamp — READY when idle, its working
+  // verb while the sheet is with it, COMPLETE in the batch ceremony.
+  var STATUS_COLORS = { READY: '#8C6834', COMPLETE: '#59C289' };
+  function buildStationPlate(model, name, x, y, z) {
+    var c = document.createElement('canvas');
+    c.width = 512; c.height = 128;
+    var tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    var plateObj = { status: null };
+    plateObj.set = function (status) {
+      if (status === plateObj.status) return;
+      plateObj.status = status;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#0D0803';
+      ctx.fillRect(0, 0, 512, 128);
+      ctx.strokeStyle = 'rgba(233,206,138,0.55)'; ctx.lineWidth = 3;
+      ctx.strokeRect(6, 6, 500, 116);
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#E9CE8A';
+      ctx.font = '700 30px Georgia, serif';
+      ctx.fillText(model, 22, 46);
+      ctx.fillStyle = 'rgba(233,206,138,0.7)';
+      ctx.font = '400 20px Georgia, serif';
+      ctx.fillText(name, 22, 76);
+      var col = STATUS_COLORS[status] || '#FFE9A8';
+      ctx.beginPath(); ctx.arc(36, 102, 9, 0, Math.PI * 2);
+      ctx.fillStyle = col; ctx.fill();
+      ctx.fillStyle = col;
+      ctx.font = '600 20px "Courier New", monospace';
+      ctx.fillText(status, 56, 109);
+      tex.needsUpdate = true;
+    };
+    plateObj.set('READY');
+    var mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.3, 0.325),
+      new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
+    );
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+    return plateObj;
+  }
+  var PLATES = {
+    press: buildStationPlate('StromeX\u2122 5400', 'Precision Credential Imaging Engine', STATION_X.press, -0.05, 1.45),
+    uv: buildStationPlate('StromeX\u2122 SecureCure UV-900', 'UV Security Curing Module', STATION_X.uv, 0.05, 1.35 + 1.12),
+    emboss: buildStationPlate('StromeX\u2122 UltraSeal 4500 HD', 'Embossing & Security Seal Module', STATION_X.emboss, 0.05, 1.35 + 1.12),
+    qr: buildStationPlate('StromeX\u2122 QRForge 3200', 'Precision QR & Security Marking', STATION_X.qr, 0.05, 1.35 + 1.12),
+    sig: buildStationPlate('StromeX\u2122 SignScribe S2', 'Registrar Signature Applicator', STATION_X.sig, 0.05, 1.35 + 1.12),
+    inspect: buildStationPlate('StromeX\u2122 VisionInspect X8', 'Optical Quality Inspection System', STATION_X.inspect, 0.05, 1.35 + 1.12),
+    pack: buildStationPlate('StromeX\u2122 PackMaster Elite', 'Presentation Folder Assembly', STATION_X.pack, -0.35, 1.45),
+    vault: buildStationPlate('StromeX\u2122 ArchiveVault Pro', 'Digital Registration & Archiving', STATION_X.vault + 0.55, -0.85, 1.25),
+  };
+  function setPlates(t, ceremony) {
+    if (ceremony) {
+      Object.keys(PLATES).forEach(function (k) { PLATES[k].set('COMPLETE'); });
+      return;
+    }
+    PLATES.press.set(t >= 0.02 && t < 0.06 ? 'CALIBRATING' : (t >= 0.06 && t < 0.26 ? 'PRINTING' : 'READY'));
+    PLATES.uv.set(t >= 0.32 && t < 0.38 ? 'CURING' : 'READY');
+    PLATES.emboss.set(t >= 0.42 && t < 0.48 ? 'EMBOSSING' : 'READY');
+    PLATES.qr.set(t >= 0.52 && t < 0.58 ? 'ENGRAVING' : 'READY');
+    PLATES.sig.set(t >= 0.61 && t < 0.66 ? 'SIGNING' : 'READY');
+    PLATES.inspect.set(t >= 0.69 && t < 0.78 ? 'INSPECTING' : 'READY');
+    PLATES.pack.set(t >= 0.81 && t < 0.87 ? 'PACKAGING' : 'READY');
+    PLATES.vault.set(t >= 0.87 && t < 0.97 ? 'ARCHIVING' : 'READY');
+  }
 
   // Status lamps on the body — alive even at idle.
   var idleLamps = [];
@@ -1162,6 +1238,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     liveActive = true; liveEnded = false; liveQueue = []; liveCurrent = null;
     liveCycleMs = Math.max(LIVE_MIN_ROW_MS, Math.min(CYCLE, LIVE_SHOW_BUDGET_MS / total));
     cycleStart = 0; // interrupt the demonstration cycle immediately
+    overviewNextAt = performance.now() + 9000;
+    overviewUntil = 0;
     announce('Credential production initiated. ' + total + ' certificate' + (total === 1 ? '' : 's') + ' queued.');
     // Performance mode is the user's explicit choice and it HOLDS: a
     // batch never force-restarts a press the user switched off (the
@@ -1209,6 +1287,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   //  0.80–0.88  seal laser sweep across the presented face
   //  0.86–1.00  present, burst, spin-down; fade at the very end
   var cycleStart = 0;
+  var ceremonyUntil = 0;
   var burstFiredThisCycle = false;
   var pistonStruck = false, steamFired = false;
   var shakeAmp = 0, lastCycleT = 0;
@@ -1262,6 +1341,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         cycleStart = now;
         resetCycleApparatus();
         spawnCertificate();
+        // The batch completion ceremony: the hall's own light lifts,
+        // every machine reads COMPLETE, and the room settles back to
+        // ready — the moment the work is genuinely done.
+        ceremonyUntil = now + 2600;
         // A batch begun while the hero was scrolled out of view kept the
         // loop alive past the IntersectionObserver's last word — once the
         // real work drains, the visibility rule resumes (confirmed leak
@@ -1486,6 +1569,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       keyPulse = 1;
     }
     workLight.position.x = curSheetX;
+    setPlates(t, ceremonyUntil > now);
     rim.color.lerp(rimTarget, 0.06);
     keyPulse *= 0.94;
     key.intensity = 1.3 + keyPulse * 0.35;
@@ -1497,6 +1581,8 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
 
   var raf = null, running = false, userPaused = false, heroVisible = true;
   var lastTs = 0, camZ = 8.6, camX = -2.6, lookX = -3.0;
+  var overviewUntil = 0, overviewNextAt = 0;
+  var telemFrames = 0, telemAccum = 0;
   function frame(ts) {
     if (!running) return;
     var dtMs = lastTs ? ts - lastTs : 16;
@@ -1523,12 +1609,24 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     // lateral sway, presentation arc, and die-strike shudder layered
     // on top. ----
     var tphase = lastCycleT;
-    var followX = Math.max(-3.6, Math.min(4.6, curSheetX * 0.85));
-    var zBase = tphase < 0.26 ? 8.8 : (tphase < 0.66 ? 8.0 : (tphase < 0.81 ? 6.9 : 7.8));
-    if (liveActive) zBase -= 0.7;
+    // The hall breathes brighter through the completion ceremony.
+    var ceremonyGlow = ceremonyUntil > ts ? Math.sin(Math.min(1, (ceremonyUntil - ts) / 2600) * Math.PI) : 0;
+    hallAmbient.intensity = 0.68 + ceremonyGlow * 0.3;
+    // The control-room overview: during a long live batch the camera
+    // occasionally pulls wide for a beat or two — enough to read the
+    // whole line's state — then returns to the single certificate's
+    // own cinematic journey.
+    if (liveActive && ts > overviewNextAt) {
+      overviewUntil = ts + 2400;
+      overviewNextAt = ts + 14000;
+    }
+    var overview = ts < overviewUntil;
+    var followX = overview ? 1.1 : Math.max(-3.6, Math.min(4.6, curSheetX * 0.85));
+    var zBase = overview ? 12.6 : (tphase < 0.26 ? 8.8 : (tphase < 0.66 ? 8.0 : (tphase < 0.81 ? 6.9 : 7.8)));
+    if (liveActive && !overview) zBase -= 0.7;
     camX += (followX - camX) * 0.035;
     camZ += ((zBase + Math.sin(ts / 13000) * 0.18) - camZ) * 0.03;
-    lookX += (Math.max(-3.4, Math.min(5.2, curSheetX)) - lookX) * 0.045;
+    lookX += ((overview ? 1.1 : Math.max(-3.4, Math.min(5.2, curSheetX))) - lookX) * 0.045;
     var orbitX = 0;
     if (tphase >= 0.69 && tphase < 0.81) {
       orbitX = Math.sin(((tphase - 0.69) / 0.12) * Math.PI) * ORBIT;
@@ -1539,6 +1637,22 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     shakeAmp *= 0.88;
     camera.lookAt(lookX, -1.0, 1.2);
     renderScene();
+    // Real renderer telemetry for the diagnostics board — measured
+    // frame time and three.js's own draw-call/triangle counters, not
+    // invented numbers.
+    telemFrames += 1;
+    telemAccum += dtMs;
+    if (telemAccum >= 500) {
+      window.__certForgeTelemetry = {
+        fps: Math.round(telemFrames * 1000 / telemAccum),
+        frameMs: +(telemAccum / telemFrames).toFixed(1),
+        calls: renderer.info.render.calls,
+        triangles: renderer.info.render.triangles,
+        live: liveActive,
+      };
+      telemFrames = 0;
+      telemAccum = 0;
+    }
     raf = requestAnimationFrame(frame);
   }
   function start() {

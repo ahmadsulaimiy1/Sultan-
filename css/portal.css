@@ -2686,3 +2686,68 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
   color:rgba(var(--lv-cfs,59,42,29),.72)!important;
 }
 .pa-onward-alt a{ color:#7A5A28; text-decoration:underline; text-underline-offset:2px; }
+
+/* ── Certificate Centre: live production dashboard ─────────────────────
+   Every figure it shows is read from the real issuance stream (see
+   js/portal-staff-certificate-centre.js) — the lamp and bar animate
+   while live, and stand down under prefers-reduced-motion. */
+.cc-prod-dash{margin-top:18px;border:1px solid rgba(198,161,91,.4);border-radius:12px;padding:16px 18px;background:linear-gradient(165deg,rgb(26,17,9),rgb(15,10,4));color:#F7EEDF;}
+.cc-prod-dash-head{display:flex;align-items:center;gap:10px;font-family:'Cinzel','Amiri',serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#E9CE8A;margin-bottom:12px;}
+.cc-prod-dash-lamp{width:10px;height:10px;border-radius:50%;flex:0 0 auto;background:#59C289;box-shadow:0 0 8px 1px rgba(89,194,137,.8);}
+.cc-prod-dash.is-live .cc-prod-dash-lamp{animation:ccDashPulse 1.2s ease-in-out infinite;}
+@keyframes ccDashPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.cc-prod-dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 22px;}
+.cc-prod-cell{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.cc-prod-k{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,206,138,.72);font-family:'Cinzel','Amiri',serif;}
+.cc-prod-v{font-size:.9rem;color:#FFF6DF;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cc-prod-bar{margin-top:14px;height:6px;border-radius:3px;background:rgba(233,206,138,.15);overflow:hidden;}
+.cc-prod-bar-fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#C6A15B,#E9CE8A);transition:width .4s ease;}
+.cc-prod-dash.is-live .cc-prod-bar-fill{background-image:linear-gradient(90deg,#C6A15B,#FFE9A8,#C6A15B);background-size:200% 100%;animation:ccBarSheen 1.6s linear infinite;}
+@keyframes ccBarSheen{to{background-position:-200% 0;}}
+.cc-prod-note{margin:12px 0 0;font-size:.72rem;line-height:1.6;color:rgba(247,238,223,.6);}
+@media (prefers-reduced-motion:reduce){
+  .cc-prod-dash.is-live .cc-prod-dash-lamp,.cc-prod-dash.is-live .cc-prod-bar-fill{animation:none;}
+}
+
+/* ── Certificate Centre: phone Companion Mode ──────────────────────────
+   The full 3D Production Studio runs on desktop and tablet-class
+   screens; a phone gets this premium standing panel instead — and the
+   complete issuance workflow below it, at full speed, unblocked. The
+   3D module checks the same media condition and never initialises on
+   phones, so no battery is spent rendering a hidden canvas. */
+.cc-companion{display:none;}
+@media (max-width:700px) and (pointer:coarse){
+  .portal-forge-hero canvas[data-cert-forge-canvas]{display:none;}
+  .cc-companion{display:block;padding:30px 20px;text-align:center;color:#F7EEDF;}
+  .cc-companion h2{font-family:'Cinzel','Amiri',serif;font-size:1rem;letter-spacing:.1em;color:#E9CE8A;margin:0 0 10px;}
+  .cc-companion p{font-size:.8rem;line-height:1.65;color:rgba(247,238,223,.75);margin:0 auto;max-width:34em;}
+  .cc-companion .cc-companion-mark{width:44px;height:44px;margin:0 auto 14px;border-radius:50%;
+    background:radial-gradient(circle at 32% 26%,#F3DFA0,#C6A15B 55%,#8C6834 100%);
+    box-shadow:0 6px 16px -6px rgba(140,100,40,.8),inset 0 1px 1px rgba(255,255,255,.6);}
+}
+
+/* The technical strip: engine log beside the diagnostics board —
+   together they take the supporting 20% of attention; the hall above
+   keeps the stage. */
+.cc-prod-tech{margin-top:14px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;}
+@media (max-width:760px){.cc-prod-tech{grid-template-columns:minmax(0,1fr);}}
+.cc-prod-console{max-height:190px;overflow-y:auto;border:1px solid rgba(198,161,91,.28);border-radius:8px;
+  background:#0A0602;padding:10px 12px;font-family:'Courier New',monospace;font-size:.66rem;line-height:1.55;scroll-behavior:smooth;}
+.cc-prod-console:empty{display:none;}
+.cc-prod-line{display:flex;gap:8px;align-items:baseline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cc-prod-ts{color:rgba(233,206,138,.5);flex:0 0 auto;}
+.cc-prod-badge{flex:0 0 auto;font-size:.58rem;letter-spacing:.08em;padding:0 5px;border-radius:3px;border:1px solid rgba(233,206,138,.35);color:#E9CE8A;}
+.cc-prod-line.is-ok .cc-prod-msg{color:#7FCB8E;}
+.cc-prod-line.is-warn .cc-prod-msg{color:#E4C87F;}
+.cc-prod-line.is-error .cc-prod-msg{color:#E08A7A;}
+.cc-prod-msg{color:rgba(247,238,223,.85);overflow:hidden;text-overflow:ellipsis;}
+
+/* The diagnostics board — real telemetry only. */
+.cc-prod-diag{border:1px solid rgba(198,161,91,.28);border-radius:8px;background:#0A0602;padding:10px 12px;
+  font-family:'Courier New',monospace;font-size:.66rem;color:rgba(247,238,223,.85);}
+.cc-diag-table{width:100%;border-collapse:collapse;}
+.cc-diag-table td{padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:0;}
+.cc-diag-table td:first-child{color:rgba(233,206,138,.65);letter-spacing:.06em;width:42%;}
+.cc-diag-table td:last-child{color:#B9E7CB;font-variant-numeric:tabular-nums;}
+.cc-diag-graphs{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
+.cc-diag-graphs canvas{width:100%;height:auto;display:block;border-radius:4px;background:rgba(233,206,138,.05);}
