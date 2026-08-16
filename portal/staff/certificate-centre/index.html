@@ -48,6 +48,15 @@
     <div class="cc-greeting" id="cc-greeting">Every certificate issued here carries a permanent Student ID, a unique anti-forgery serial, and live QR verification.</div>
     <div class="portal-hello-sub">Upload a cohort roster once — the system matches or creates each student record, assigns permanent Student IDs (SHRS-STU-…), issues uniquely serialled certificates (SHRS-CERT-…), and produces print-ready bilingual documents, individually or as one batch.</div>
 
+    <div class="cert-forge" data-cert-forge>
+      <canvas data-cert-forge-canvas aria-hidden="true"></canvas>
+      <noscript><p class="cert-forge-noscript">This institution's certificates are produced under permission-checked, audit-logged authority — see the Certificate Register below.</p></noscript>
+      <div class="cert-forge-caption">
+        <p class="cert-forge-eyebrow">Where the Institution's Credentials Are Made</p>
+        <button type="button" class="cert-forge-sound-toggle" data-cert-forge-sound aria-pressed="false">🔈 Sound: Off</button>
+      </div>
+    </div>
+
     <div class="office-group-head">1 — Batch Setup</div>
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Programme &amp; Issuance Details</h2></div>
@@ -157,6 +166,7 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"></textarea>
 <script src="/js/portal-office-switcher.js?v=479a8d8c95" defer></script>
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>
 <script src="/js/portal-staff-certificate-centre.js?v=fa6fc3c4e5" defer></script>
+<script src="/js/portal-cert-forge-3d.js?v=1" type="module"></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
