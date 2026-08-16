@@ -173,6 +173,18 @@
       ctx.fillStyle = p.color; ctx.fill();
     });
   }
+  // The Engineering Console toggle — pure DOM state; switching never
+  // reloads the page or interrupts a running batch.
+  var techEl = document.querySelector('.cc-prod-tech');
+  var engToggle = document.querySelector('[data-cert-eng-toggle]');
+  if(engToggle && techEl){
+    engToggle.addEventListener('click', function(){
+      var expanded = techEl.classList.toggle('is-expanded');
+      engToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      engToggle.textContent = expanded ? 'Production Studio' : 'Engineering Console';
+    });
+  }
+  var buildMeta = document.querySelector('meta[name="shrs-build"]');
   var diagTimer = null;
   function diagTick(){
     var t = window.__certForgeTelemetry;
@@ -191,6 +203,14 @@
     diagSet('queue', dashEl && !dashEl.hidden ? String(Math.max(0, dash.total - dash.done)) : '—');
     if(t){ frameSeries.push(t.frameMs); if(frameSeries.length > 60) frameSeries.shift(); }
     thruSeries.push(thru); if(thruSeries.length > 60) thruSeries.shift();
+    if(t){
+      diagSet('motor', Math.round(t.motor * 100) + '% duty');
+      // Diegetic press temperature: derived from the simulation's own
+      // real motor level, not a hardware claim.
+      diagSet('temp', (24 + t.motor * 16).toFixed(1) + '\u00b0C (sim)');
+      diagSet('produced', String(t.produced));
+    }
+    diagSet('build', buildMeta ? buildMeta.getAttribute('content') : '\u2014');
     drawSeries(diagEl && diagEl.querySelector('[data-diag-frame]'), frameSeries, 32, '#B9E7CB');
     drawSeries(diagEl && diagEl.querySelector('[data-diag-thru]'), thruSeries, 2, '#E9CE8A');
     drawFlow(diagEl && diagEl.querySelector('[data-diag-flow]'));

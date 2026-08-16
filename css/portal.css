@@ -1151,7 +1151,7 @@ select.registrar-search-row-select{
    3d.js), lit by the scene's own lights, not a DOM panel standing in
    for one with CSS gradients. The taller aspect than a typical hero
    image gives that console room to read at a legible size. */
-.portal-forge-hero canvas{display:block;width:100%;height:540px;cursor:default;}
+.portal-forge-hero canvas{display:block;width:100%;height:min(72vh,680px);cursor:default;}
 .portal-forge-hero-noscript{padding:20px 24px;color:var(--gold-bright);font-size:0.86rem;}
 @media (max-width:640px){.portal-forge-hero canvas{height:460px;}}
 
@@ -2751,3 +2751,19 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
 .cc-diag-table td:last-child{color:#B9E7CB;font-variant-numeric:tabular-nums;}
 .cc-diag-graphs{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
 .cc-diag-graphs canvas{width:100%;height:auto;display:block;border-radius:4px;background:rgba(233,206,138,.05);}
+
+/* The Production Studio / Engineering Console mode switch: default is
+   the studio — hall dominant, a compact activity strip below; the
+   Engineering Console button expands the full control room in place.
+   Pure DOM state, so switching never reloads or interrupts the batch. */
+.cc-prod-tech{transition:none;}
+.cc-prod-tech .cc-prod-console{max-height:118px;transition:max-height .5s cubic-bezier(.16,.8,.24,1);}
+.cc-prod-tech .cc-prod-diag .cc-diag-row-eng{display:none;}
+.cc-prod-tech.is-expanded .cc-prod-console{max-height:360px;}
+.cc-prod-tech.is-expanded .cc-prod-diag .cc-diag-row-eng{display:table-row;}
+.cc-eng-toggle{margin-inline-start:auto;flex:0 0 auto;font-family:'Cinzel','Amiri',serif;font-size:.6rem;
+  letter-spacing:.12em;text-transform:uppercase;color:#E9CE8A;background:linear-gradient(168deg,rgba(233,206,138,.12),rgba(233,206,138,.03));
+  border:1px solid rgba(233,206,138,.4);border-radius:99px;padding:5px 14px;cursor:pointer;
+  transition:background .3s ease,border-color .3s ease,color .3s ease;}
+.cc-eng-toggle:hover,.cc-eng-toggle:focus-visible{border-color:#E9CE8A;background:rgba(233,206,138,.2);color:#FFF6DF;}
+@media (prefers-reduced-motion:reduce){.cc-prod-tech .cc-prod-console{transition:none;}}

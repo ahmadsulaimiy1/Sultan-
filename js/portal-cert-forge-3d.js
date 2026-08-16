@@ -345,6 +345,21 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     elbow.rotation.z = side * 0.75;
     return group;
   }
+  var cart = new THREE.Group();
+  var cartBody = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.28, 0.55), new THREE.MeshStandardMaterial({ color: 0x241708, metalness: 0.7, roughness: 0.4 }));
+  cartBody.position.y = 0.24;
+  cart.add(cartBody);
+  var cartStripe = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.03, 0.56), new THREE.MeshBasicMaterial({ color: 0xE9CE8A, transparent: true, opacity: 0.6, toneMapped: false }));
+  cartStripe.position.y = 0.4;
+  cart.add(cartStripe);
+  [[-0.3, -0.2], [0.3, -0.2], [-0.3, 0.2], [0.3, 0.2]].forEach(function (p) {
+    var wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.05, 10), new THREE.MeshStandardMaterial({ color: 0x0D0803, metalness: 0.5, roughness: 0.6 }));
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(p[0], 0.09, p[1]);
+    cart.add(wheel);
+  });
+  cart.position.set(-7, -2.45, -1.1);
+  scene.add(cart);
   var armL = buildRobotArm(1); armL.position.set(-5.6, -2.45, -2.0); scene.add(armL);
   var armR = buildRobotArm(-1); armR.position.set(3.1, -2.45, -1.6); scene.add(armR);
 
@@ -925,6 +940,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     new THREE.MeshStandardMaterial({ color: 0x1C1207, metalness: 0.45, roughness: 0.5 })
   );
   consoleGroup.add(plate);
+  // The console is itself a named StromeX machine.
+  var registryCorePlaque = buildPlaque(THREE, 'StromeX\u2122 RegistryCore Enterprise', 3.2, 0.32);
+  registryCorePlaque.mesh.position.set(1.9, 0.62, 0.12);
+  consoleGroup.add(registryCorePlaque.mesh);
   var plateFrontZ = 0.08 + 0.03;
 
   var leds = buildLEDRow(THREE, 4, { gap: 0.17 });
@@ -1110,6 +1129,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
   }
   var curName = '', curSerialPrint = null, curBuilt = null;
+  var sheetsProduced = 0;
   var curReal = false, spawnToken = 0;
   // The OFFICIAL face: for real rows the press manufactures the actual
   // approved template — the same frozen server-side master that prints
@@ -1345,6 +1365,7 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         // every machine reads COMPLETE, and the room settles back to
         // ready — the moment the work is genuinely done.
         ceremonyUntil = now + 2600;
+        playCompletionMotif();
         // A batch begun while the hero was scrolled out of view kept the
         // loop alive past the IntersectionObserver's last word — once the
         // real work drains, the visibility rule resumes (confirmed leak
@@ -1554,9 +1575,13 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       laserGlowMat.opacity = 0;
     }
 
-    // ---- The spark of inspection passed — real issuance only ----
+    // ---- The spark of inspection passed ----
     if (cur && t >= 0.775 && !burstFiredThisCycle && sheetOk()) {
       burstFiredThisCycle = true;
+      // The session sheet counter tallies REAL issued certificates only —
+      // demonstration cycles keep the celebration burst but must never
+      // inflate a number the registrar could read as issuance.
+      if (liveCurrent && liveCurrent.status === 'issued') sheetsProduced += 1;
       fireBurst(cur.position.x, cur.position.y - SHEET_H / 2 + 0.3, cur.position.z + 0.1);
       playSound();
     }
@@ -1601,8 +1626,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     idleLamps.forEach(function (l) {
       l.mat.opacity = 0.35 + 0.4 * (0.5 + 0.5 * Math.sin(ts / 700 + l.phase));
     });
-    // The crane trolley traverses the hall on its own long schedule.
+    // The crane trolley traverses the hall on its own long schedule,
+    // and the transport cart crosses the floor behind the line.
     craneTrolley.position.x = 1 + Math.sin(ts / 21000) * 6.5;
+    cart.position.x = -8 + ((ts / 26000) % 1) * 17;
     // ---- The camera rig: a continuous dolly that tracks the sheet
     // down the line, pushing in for inspection, easing wide at the
     // vault — damped throughout so there is never a cut, with the
@@ -1649,6 +1676,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         calls: renderer.info.render.calls,
         triangles: renderer.info.render.triangles,
         live: liveActive,
+        // The press's own operating state — the simulation's real
+        // motor level and its real cumulative output this session.
+        motor: +motorLevel.toFixed(2),
+        produced: sheetsProduced,
       };
       telemFrames = 0;
       telemAccum = 0;
@@ -1787,6 +1818,26 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     spatialOut(g, -0.4);
     osc.start(t0); osc.stop(t0 + 0.04);
   }
+  // The completion motif: three rising notes, synthesised, behind the
+  // same opt-in switch — the room's own way of saying the batch is done.
+  function playCompletionMotif() {
+    if (!soundOn) return;
+    var ctx = ensureAudioCtx();
+    if (!ctx) return;
+    var t0 = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach(function (freq, i) {
+      var osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq;
+      var g = ctx.createGain();
+      var at = t0 + i * 0.22;
+      g.gain.setValueAtTime(0, at);
+      g.gain.linearRampToValueAtTime(0.05, at + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + 0.9);
+      osc.connect(g);
+      spatialOut(g, 0.15);
+      osc.start(at); osc.stop(at + 1);
+    });
+  }
+
   // The emboss die landing: a deep, weighted thud — low sine body with
   // a short mechanical click on top.
   function playThud(pan) {
