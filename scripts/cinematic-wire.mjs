@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 /* ===========================================================================
-   CINEMATIC WIRE — link the khatam pattern and running-light stylesheets
+   CINEMATIC WIRE — link the cinematic-pass stylesheets, sitewide
    ===========================================================================
-   Adds both new stylesheets to every page that carries the public masthead
-   (detected by the presence of class="imperial-motion", which is unique to
-   that chrome — the portal has its own separate header and is untouched).
+   Adds each stylesheet below to every page that carries the public masthead
+   (detected by class="imperial-motion", unique to that chrome — the portal
+   has its own separate header and is untouched).
 
-   Link order matters: both go in EARLY (right after brand.css, before
-   atelier.css/elevate.css), so that on the 4 pages which also load
-   elevate.css, elevate.css's later, more elaborate header/footer treatment
-   cascades on top of this file's sitewide baseline rather than losing to it.
+   Idempotent PER STYLESHEET, not per page: each entry in SHEETS is checked
+   and inserted independently, so adding a new sheet to this list and
+   re-running only adds what's missing — a page that already has the first
+   two from an earlier run gets just the new ones appended after them,
+   preserving cascade order (khatam pattern, then running light, then the
+   icon and photo liveliness passes, in that order after brand.css and
+   before atelier.css/elevate.css — so the 4 elevate.css pages still cascade
+   their bespoke header/footer treatment on top of all of this).
 
        node scripts/cinematic-wire.mjs [--dry]
    =========================================================================== */
@@ -23,8 +27,12 @@ const SKIP = new Set(['.git', 'node_modules', 'portal', 'dist', 'scripts', 'func
   'docs', 'mobile-app', 'pages', 'archive', 'data']);
 
 const ANCHOR = '<link rel="stylesheet" href="/css/brand.css';
-const TAGS = '<link rel="stylesheet" href="/css/islamic-pattern.css?v=1">\n' +
-             '<link rel="stylesheet" href="/css/running-light.css?v=1">';
+const SHEETS = [
+  '/css/islamic-pattern.css',
+  '/css/running-light.css',
+  '/css/lively-icons.css',
+  '/css/lively-photos.css',
+];
 
 function walk(dir, out = []) {
   for (const n of readdirSync(dir)) {
@@ -36,16 +44,35 @@ function walk(dir, out = []) {
   return out;
 }
 
-let wired = 0, already = 0, noMasthead = 0;
+let touched = 0, noMasthead = 0, alreadyComplete = 0;
+const perSheet = Object.fromEntries(SHEETS.map((s) => [s, 0]));
+
 for (const f of walk(ROOT)) {
-  const html = readFileSync(f, 'utf8');
+  let html = readFileSync(f, 'utf8');
   if (!html.includes('imperial-motion')) { noMasthead++; continue; }
-  if (html.includes('/css/islamic-pattern.css')) { already++; continue; }
-  const i = html.indexOf(ANCHOR);
-  if (i === -1) continue;
-  const lineEnd = html.indexOf('\n', i);
-  const out = html.slice(0, lineEnd + 1) + TAGS + '\n' + html.slice(lineEnd + 1);
-  wired++;
-  if (!DRY) writeFileSync(f, out);
+
+  const missing = SHEETS.filter((s) => !html.includes(s));
+  if (!missing.length) { alreadyComplete++; continue; }
+
+  const anchorIdx = html.indexOf(ANCHOR);
+  if (anchorIdx === -1) continue;
+  // Insert after the last already-present cinematic sheet if any, else
+  // right after brand.css — keeps the declared SHEETS order intact even
+  // when only some of them are already wired on this page.
+  let insertAfterLine = html.indexOf('\n', anchorIdx);
+  for (const s of SHEETS) {
+    const idx = html.indexOf(s);
+    if (idx !== -1) {
+      const lineEnd = html.indexOf('\n', idx);
+      if (lineEnd > insertAfterLine) insertAfterLine = lineEnd;
+    }
+  }
+  const tags = missing.map((s) => `<link rel="stylesheet" href="${s}?v=1">`).join('\n');
+  html = html.slice(0, insertAfterLine + 1) + tags + '\n' + html.slice(insertAfterLine + 1);
+  missing.forEach((s) => perSheet[s]++);
+  touched++;
+  if (!DRY) writeFileSync(f, html);
 }
-console.log(`${DRY ? 'would wire' : 'wired'}: ${wired}   already: ${already}   no masthead (skipped): ${noMasthead}`);
+
+console.log(`${DRY ? 'would touch' : 'touched'}: ${touched}   already complete: ${alreadyComplete}   no masthead: ${noMasthead}`);
+for (const s of SHEETS) console.log(`  ${s}: +${perSheet[s]}`);

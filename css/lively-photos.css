@@ -1,0 +1,49 @@
+/* ===========================================================================
+   LIVELY PHOTOS — a travelling light crossing the hero photograph
+   ===========================================================================
+
+   The Ken Burns zoom already exists (prestige.css, 26s ease-in-out
+   alternate) — the photograph breathes, but nothing about it catches
+   light. This adds the missing half: a warm diagonal specular band that
+   crosses the hero image on a slow loop, the way light moves across
+   lacquer or a struck medallion rather than a static photograph under
+   glass.
+
+   Attachment point: .pr-hero-media::after. Checked free before writing
+   this — .pr-hero-frame and its own ::before/::after/nested <i> own the
+   four corner brackets; .pr-hero::before/::after belong to the outer
+   section (a background wash); .pr-hero-media itself carries only the
+   photograph. A fresh ::after here overwrites nothing.
+
+   blend-mode:screen means the sweep can only brighten what is already
+   there — it cannot wash a photograph out or dull it, so a light or dark
+   image both take the sweep the same way.
+   =========================================================================== */
+
+.pr-hero-media{ isolation:isolate; }
+.pr-hero-media::after{
+  content:"";
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(115deg,
+    transparent 22%,
+    rgba(var(--lv-gbs,233,206,138),.20) 42%,
+    rgb(var(--lv-w36,255,248,228)) 50%,
+    rgba(var(--lv-gbs,233,206,138),.20) 58%,
+    transparent 78%);
+  background-size:300% 300%;
+  background-position:120% -20%;
+  mix-blend-mode:screen;
+  animation: lp-sweep 9s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+@keyframes lp-sweep{
+  0%, 8%   { background-position:130% -30%; }
+  46%,54%  { background-position:-30% 130%; }
+  100%     { background-position:-30% 130%; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .pr-hero-media::after{ animation:none; opacity:0; }
+}
+html[data-pc-motion="reduced"] .pr-hero-media::after{ animation:none; opacity:0; }
+html[data-pc-ornament="none"] .pr-hero-media::after{ display:none; }

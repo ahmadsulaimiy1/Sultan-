@@ -1,0 +1,77 @@
+/* ===========================================================================
+   LIVELY ICONS — the medallion row, catching light without being asked to
+   ===========================================================================
+
+   THE GAP. brand.css already has this exact technique — a thin, continuously
+   rotating gold arc, carved from a conic-gradient circle via a radial-
+   gradient mask — but scoped deliberately to the four topbar social icons
+   only, at 0.45 opacity, 22s per turn. The eight medallions in the quick-nav
+   row (.mnr-item svg — Discover SHRS, Academics, Student Life, Admissions,
+   Governance, Digital Campus, Contact, Full Menu) are the most prominent
+   icon set on every page and had NO idle animation at all: gold ring border,
+   static, until a pointer arrived. A visitor never hovers eight icons on
+   arrival — so the row read as inert.
+
+   THIS FILE gives the medallion row its own always-running halo, using the
+   same mask trick (nothing new to verify — the geometry is a circle, not a
+   star; the only question was proven), then turns the same dial up on the
+   topbar's existing halo, per the direction to push every icon and photo as
+   far as taste allows.
+
+   Attachment point: .mnr-item svg::before. Checked free before writing this
+   (no existing rule anywhere targets it). SVG elements accept generated
+   content in every evergreen renderer; verified by rendering it, not
+   assumed.
+
+       Wired sitewide by scripts/cinematic-wire.mjs, same as the other
+       cinematic-pass stylesheets.
+   =========================================================================== */
+
+.mnr-item svg{ position:relative; }
+.mnr-item svg::before{
+  content:"";
+  position:absolute; inset:-6px; border-radius:50%; pointer-events:none;
+  background:conic-gradient(from 0deg,
+    transparent 0 40%,
+    rgba(var(--lv-gbs,233,206,138),.35) 60%,
+    rgb(var(--lv-w36,255,248,228)) 78%,
+    rgba(var(--lv-gbs,233,206,138),.35) 92%,
+    transparent 100%);
+  opacity:1;
+  animation: li-halo-spin 9s linear infinite, li-halo-breathe 5s ease-in-out infinite;
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 2.2px), #000 calc(100% - 2.2px));
+          mask:radial-gradient(farthest-side, transparent calc(100% - 2.2px), #000 calc(100% - 2.2px));
+  filter: drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.6));
+}
+/* Staggered per medallion so eight rings never sweep in lockstep — the
+   same reasoning the header/footer comets already run on opposite phase
+   for. Negative delays start each ring already mid-turn. */
+.mnr-item:nth-child(1) svg::before{ animation-delay: 0s,    0s;   }
+.mnr-item:nth-child(2) svg::before{ animation-delay: -1.6s, -.7s; }
+.mnr-item:nth-child(3) svg::before{ animation-delay: -3.2s, -1.4s;}
+.mnr-item:nth-child(4) svg::before{ animation-delay: -4.8s, -2.1s;}
+.mnr-item:nth-child(5) svg::before{ animation-delay: -6.5s, -2.8s;}
+.mnr-item:nth-child(6) svg::before{ animation-delay: -8.1s, -3.5s;}
+.mnr-item:nth-child(7) svg::before{ animation-delay: -9.7s, -4.2s;}
+.mnr-item:nth-child(8) svg::before{ animation-delay: -11.3s,-4.9s;}
+
+@keyframes li-halo-spin{ to{ transform:rotate(360deg); } }
+@keyframes li-halo-breathe{ 0%,100%{ opacity:.82; } 50%{ opacity:1; } }
+
+.mnr-item:hover svg::before,.mnr-item:focus-visible svg::before{
+  opacity:1;
+  animation-duration: 6s, 6s;
+}
+
+/* ---- the topbar social set: the same dial, turned further ---- */
+.social-icon::before{
+  opacity:.7 !important;
+  animation-duration: 10s, 7s !important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .mnr-item svg::before{ animation:none; opacity:.55; }
+}
+html[data-pc-motion="reduced"] .mnr-item svg::before{ animation:none; opacity:.55; }
+html[data-pc-ornament="restrained"] .mnr-item svg::before{ opacity:.5; }
+html[data-pc-ornament="none"] .mnr-item svg::before{ display:none; }
