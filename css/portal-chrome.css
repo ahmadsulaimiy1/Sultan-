@@ -906,6 +906,28 @@ body[data-office-page="registrar"] .pch-col{
     0 0 0 1px var(--rgo-line),
     inset 0 1px 0 rgba(255,255,255,.85);}
 body[data-office-page="registrar"] .pch-col-brand{grid-column:auto;}
+/* A glass sheen crossing each card, on top of the content rather than
+   behind it — the way a highlight crosses a photograph under real
+   glass, not a texture painted onto the card's surface. Kept faint
+   (peak alpha .5, overlay-blended) so it reads as glazing rather than
+   as fog sitting over the tiles. */
+body[data-office-page="registrar"] .pch-col{position:relative;isolation:isolate;}
+body[data-office-page="registrar"] .pch-col::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  border-radius:inherit;mix-blend-mode:overlay;
+  background:linear-gradient(120deg,transparent 32%,rgba(255,255,255,.28) 46%,
+    rgba(255,255,255,.5) 50%,rgba(255,255,255,.28) 54%,transparent 68%);
+  background-size:260% 260%;background-position:135% -25%;
+  animation:pchCardGlass 12s ease-in-out infinite;}
+@keyframes pchCardGlass{
+  0%,22%{background-position:135% -25%;}
+  62%,100%{background-position:-35% 65%;}
+}
+@media (prefers-reduced-motion:reduce){
+  body[data-office-page="registrar"] .pch-col::before{animation:none;opacity:.5;}
+}
+html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-col::before{
+  animation:none;opacity:.5;}
 
 /* A small mark beside each section heading — the file's own diamond
    (see .pch-mark) rather than WEC's icon-in-a-circle, so the heading
@@ -914,9 +936,11 @@ body[data-office-page="registrar"] .pch-col-brand{grid-column:auto;}
 body[data-office-page="registrar"] .pch-h{
   display:flex;align-items:center;gap:9px;}
 body[data-office-page="registrar"] .pch-h::before{
-  content:"";flex:0 0 auto;width:7px;height:7px;transform:rotate(45deg);
-  background:linear-gradient(155deg,#F3DFA0,#8C6834);
-  box-shadow:0 0 5px 0 rgba(140,104,52,.5);}
+  content:"";flex:0 0 auto;width:9px;height:9px;transform:rotate(45deg);
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.9) 0%,transparent 38%),
+    linear-gradient(155deg,#F3DFA0,#C6A15B 55%,#8C6834 100%);
+  box-shadow:0 0 6px 0 rgba(140,104,52,.55),inset 0 0 0 1px rgba(255,255,255,.4);}
 
 /* The tiles: icon above, label below, centred — WEC's own tile shape —
    in a grid wide enough to run six or more across the full-width card
@@ -954,32 +978,41 @@ body[data-office-page="registrar"] .pch-link{
    and ::after between them and ::after already carries the arc, so
    this is the one arc rather than two — the same idea at one remove,
    not a shortcut taken silently. */
+body[data-office-page="registrar"] .pch-link{
+  --pch-dome-hi:#EAD09A; --pch-dome-mid:#C6A15B; --pch-dome-lo:#7A5A28;
+  --pch-ring-soft:rgba(212,175,55,.5); --pch-ring-mid:#D4AF37; --pch-ring-peak:#FFF6DA;}
 body[data-office-page="registrar"] .pch-link::before{
-  content:"";flex:0 0 auto;width:48px;height:48px;border-radius:50%;
+  content:"";flex:0 0 auto;width:54px;height:54px;border-radius:50%;
   background-image:
     var(--pch-icon,url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFBEF' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E")),
-    linear-gradient(128deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.14) 22%,
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFFFFF' d='M12 2 14 10 22 12 14 14 12 22 10 14 2 12 10 10Z'/%3E%3C/svg%3E"),
+    linear-gradient(128deg,rgba(255,255,255,.6) 0%,rgba(255,255,255,.16) 22%,
       transparent 46%,transparent 60%,rgba(0,0,0,.24) 100%),
-    radial-gradient(circle at 32% 24%,#EAD09A 0%,#C6A15B 55%,#7A5A28 100%);
-  background-repeat:no-repeat;background-position:center;
-  background-size:21px 21px,100% 100%,100% 100%;
-  background-blend-mode:normal,overlay,normal;
-  border:1px solid rgba(255,255,255,.5);
+    radial-gradient(circle at 32% 24%,var(--pch-dome-hi) 0%,var(--pch-dome-mid) 55%,var(--pch-dome-lo) 100%);
+  background-repeat:no-repeat;background-position:center,top 4px right 6px,center,center;
+  background-size:23px 23px,10px 10px,100% 100%,100% 100%;
+  background-blend-mode:normal,screen,overlay,normal;
+  border:1px solid rgba(255,255,255,.55);
   box-shadow:
-    inset 0 3px 4px rgba(255,255,255,.4),
+    inset 0 3px 4px rgba(255,255,255,.42),
     inset 0 -4px 6px rgba(90,62,20,.4),
     0 6px 12px -7px rgba(60,40,20,.55),
-    0 0 0 1.5px rgba(140,104,52,.32);}
+    0 0 0 1.5px rgba(140,104,52,.35),
+    0 0 0 4.5px rgba(255,255,255,.6),
+    0 0 0 6px rgba(140,104,52,.28);}
+/* The bezel above reads as a medal's edge; the ring below is the light
+   that moves round it — sized and centred to that 54px badge plus its
+   6px bezel (66px), not to the tile. */
 body[data-office-page="registrar"] .pch-link::after{
-  content:"";position:absolute;top:18px;left:50%;margin-left:-31px;
-  width:62px;height:62px;border-radius:50%;padding:2.5px;pointer-events:none;
+  content:"";position:absolute;top:15px;left:50%;margin-left:-36px;
+  width:72px;height:72px;border-radius:50%;padding:2.5px;pointer-events:none;
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
   background:conic-gradient(from 0deg,
     transparent 0deg,transparent 230deg,
-    rgba(212,175,55,.5) 250deg,#D4AF37 285deg,#FFF6DA 320deg,#D4AF37 345deg,
-    rgba(212,175,55,.4) 358deg,transparent 360deg);
-  filter:blur(.7px) drop-shadow(0 0 3px rgba(212,175,55,.5));
+    var(--pch-ring-soft) 250deg,var(--pch-ring-mid) 285deg,var(--pch-ring-peak) 320deg,
+    var(--pch-ring-mid) 345deg,var(--pch-ring-soft) 358deg,transparent 360deg);
+  filter:blur(.7px) drop-shadow(0 0 4px var(--pch-ring-soft));
   animation:pchVesselSpin 4.5s linear infinite;}
 @keyframes pchVesselSpin{to{transform:rotate(360deg);}}
 @media (prefers-reduced-motion:reduce){
@@ -987,6 +1020,24 @@ body[data-office-page="registrar"] .pch-link::after{
 }
 html[data-pc-motion="reduced"] body[data-office-page="registrar"] .pch-link::after{
   animation:none;opacity:.75;}
+
+/* A royal treasury does not set every stone in the same metal: three of
+   the eight badges below are cut in sapphire, emerald and ruby rather
+   than gold, gold staying the majority so the office still reads as
+   itself rather than a gem sampler. Picked by what the link actually
+   is, not at random — the lock (data protection) in a warning-adjacent
+   but still jewelled ruby, the receipt (a paid, settled record) in
+   emerald, identity verification in sapphire, the trust colour for an
+   ID document. */
+body[data-office-page="registrar"] [data-pch-verify] .pch-link:nth-child(2){
+  --pch-dome-hi:#B7D3F5; --pch-dome-mid:#3E6FB8; --pch-dome-lo:#16305A;
+  --pch-ring-soft:rgba(111,168,232,.5); --pch-ring-mid:#6FA8E8; --pch-ring-peak:#EAF3FF;}
+body[data-office-page="registrar"] [data-pch-verify] .pch-link:nth-child(3){
+  --pch-dome-hi:#B9E7CB; --pch-dome-mid:#3F9564; --pch-dome-lo:#173D28;
+  --pch-ring-soft:rgba(89,194,137,.5); --pch-ring-mid:#59C289; --pch-ring-peak:#EAFBF1;}
+body[data-office-page="registrar"] [data-pch-verify] .pch-link:nth-child(4){
+  --pch-dome-hi:#F3B9BE; --pch-dome-mid:#B23A46; --pch-dome-lo:#4E1319;
+  --pch-ring-soft:rgba(216,93,104,.5); --pch-ring-mid:#D85D68; --pch-ring-peak:#FFE9EB;}
 
 /* Verification: seal, passport, receipt, lock — fixed order, since
    js/portal-shell.js always writes Certificate / Identity / Receipt /
