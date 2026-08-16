@@ -85,15 +85,23 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     }
     if (leds) leds.setActive(Math.min(3, Math.floor(t * 4)));
     if (vu) vu.setLevel(pct / 100);
-    if (liveEl && stage !== lastAnnouncedStage) {
-      lastAnnouncedStage = stage;
-      liveEl.textContent = stage + ', ' + pct + ' percent complete.';
-    }
+    // NOTE deliberately absent: no aria-live writes here. The idle
+    // demonstration used to narrate itself into the live region five
+    // times per cycle, forever — perpetual screen-reader interruption
+    // from decorative motion (confirmed in adversarial review). Real
+    // batches announce per ROW, throttled, where the row is consumed;
+    // the demonstration is silent to assistive tech.
   }
 
   // ---- Certificate face texture, drawn procedurally (no image asset).
-  // The real serial is printed on the sheet itself when one exists. ----
-  function drawFaceCanvas(seedName, serial) {
+  // The face is CONSTRUCTED in stages, exactly as the finishing
+  // stations claim: the press prints the base (border, wording, name,
+  // serial); the Emboss station stamps the seal; the QR Engrave
+  // station burns the code; the Signature station applies the hand.
+  // Until a station has run, its element does not exist on the sheet —
+  // the registrar watches the document being built, layer by layer. ----
+  function drawFaceCanvas(seedName, serial, built) {
+    built = built || {};
     var c = document.createElement('canvas');
     c.width = 1024; c.height = 700;
     var ctx = c.getContext('2d');
@@ -120,17 +128,39 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       ctx.font = '600 20px "Courier New", monospace'; ctx.fillStyle = '#6B4E22';
       ctx.fillText(serial, c.width / 2, 640);
     }
-    var qx = c.width - 190, qy = c.height - 190, cell = 8;
-    for (var i = 0; i < 14; i++) {
-      for (var j = 0; j < 14; j++) {
-        if ((i * 7 + j * 13) % 5 === 0) { ctx.fillStyle = '#221709'; ctx.fillRect(qx + i * cell, qy + j * cell, cell - 1, cell - 1); }
+    if (built.qr) {
+      var qx = c.width - 190, qy = c.height - 190, cell = 8;
+      for (var i = 0; i < 14; i++) {
+        for (var j = 0; j < 14; j++) {
+          if ((i * 7 + j * 13) % 5 === 0) { ctx.fillStyle = '#221709'; ctx.fillRect(qx + i * cell, qy + j * cell, cell - 1, cell - 1); }
+        }
       }
     }
-    var sx = 190, sy = c.height - 150;
-    var grad = ctx.createRadialGradient(sx, sy, 4, sx, sy, 46);
-    grad.addColorStop(0, '#E9CE8A'); grad.addColorStop(1, '#9C7A3C');
-    ctx.beginPath(); ctx.arc(sx, sy, 46, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill();
-    ctx.strokeStyle = '#3B2A1D'; ctx.lineWidth = 2; ctx.stroke();
+    if (built.seal) {
+      var sx = 190, sy = c.height - 150;
+      var grad = ctx.createRadialGradient(sx, sy, 4, sx, sy, 46);
+      grad.addColorStop(0, '#E9CE8A'); grad.addColorStop(1, '#9C7A3C');
+      ctx.beginPath(); ctx.arc(sx, sy, 46, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill();
+      ctx.strokeStyle = '#3B2A1D'; ctx.lineWidth = 2; ctx.stroke();
+      // The embossed ring the press's die leaves around the wax.
+      ctx.beginPath(); ctx.arc(sx, sy, 58, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(156,122,60,0.5)'; ctx.lineWidth = 3; ctx.stroke();
+    }
+    if (built.signature) {
+      // The registrar's hand — a drawn stroke, not a font.
+      var bx = c.width / 2 - 110, by = 560;
+      ctx.strokeStyle = '#2A1C10'; ctx.lineWidth = 3.2; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(bx, by);
+      ctx.bezierCurveTo(bx + 40, by - 46, bx + 62, by + 18, bx + 96, by - 14);
+      ctx.bezierCurveTo(bx + 126, by - 40, bx + 150, by + 12, bx + 186, by - 6);
+      ctx.quadraticCurveTo(bx + 208, by - 16, bx + 222, by - 2);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(59,42,29,0.65)'; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(c.width / 2 - 140, 580); ctx.lineTo(c.width / 2 + 140, 580); ctx.stroke();
+      ctx.font = '15px Georgia, serif'; ctx.fillStyle = '#5A4A38';
+      ctx.fillText('Registrar', c.width / 2, 602);
+    }
     return c;
   }
 
@@ -436,6 +466,129 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     conveyor.add(rail);
   });
 
+  // ---- The emboss station: a gantry astride the conveyor whose
+  // hydraulic die descends onto the sheet as it passes — the moment
+  // the wax seal comes into existence on the face. Heavy motion:
+  // the die accelerates down, lands with a thud and a camera shudder,
+  // dwells, and withdraws. ----
+  var emboss = new THREE.Group();
+  emboss.position.set(0, 0, 2.05);
+  scene.add(emboss);
+  [-2.35, 2.35].forEach(function (x) {
+    var post = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.7, 0.16), bodyDarkMat);
+    post.position.set(x, -1.15, 0);
+    emboss.add(post);
+  });
+  var crossbar = new THREE.Mesh(new THREE.BoxGeometry(4.9, 0.22, 0.3), bodyMat);
+  crossbar.position.set(0, -0.35, 0);
+  emboss.add(crossbar);
+  var crossTrim = new THREE.Mesh(new THREE.BoxGeometry(4.9, 0.035, 0.31), trimMat);
+  crossTrim.position.set(0, -0.24, 0);
+  emboss.add(crossTrim);
+  // A fixed guide rod descends from the crossbar; the die travels
+  // along it — the rod never moves, the die does, as a real press's.
+  var guideRod = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.15, 12), rollerMat);
+  guideRod.position.set(-1.06, -0.98, 0);
+  emboss.add(guideRod);
+  var piston = new THREE.Group();
+  var pistonCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.16, 14), bodyDarkMat);
+  pistonCollar.position.y = 0.14;
+  piston.add(pistonCollar);
+  var pistonHead = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.22, 18), trimMat);
+  piston.add(pistonHead);
+  // The die hangs over the seal's own printed position on the sheet.
+  piston.position.set(-1.06, -0.62, 0);
+  emboss.add(piston);
+  var PISTON_REST = -0.62, PISTON_STRIKE = -1.36;
+
+  // Status lamps on the body — alive even at idle.
+  var idleLamps = [];
+  [1.55, 1.8, 2.05].forEach(function (x, i) {
+    var lampMat = new THREE.MeshBasicMaterial({ color: i === 2 ? 0xB9E7CB : 0xE9CE8A, transparent: true, opacity: 0.6, toneMapped: false });
+    var lamp = new THREE.Mesh(new THREE.CircleGeometry(0.035, 10), lampMat);
+    lamp.position.set(x, -1.35, 1.06);
+    press.add(lamp);
+    idleLamps.push({ mat: lampMat, phase: i * 2.1 });
+  });
+
+  // ---- Steam at the mouth as a finished sheet clears — slow, soft,
+  // rising, nothing like the sparks. ----
+  var STEAM_N = 22;
+  var steamPos = new Float32Array(STEAM_N * 3);
+  var steamGeo = new THREE.BufferGeometry();
+  steamGeo.setAttribute('position', new THREE.BufferAttribute(steamPos, 3));
+  var steamMat = new THREE.PointsMaterial({ color: 0xF7EEDF, size: 0.11, transparent: true, opacity: 0, toneMapped: false });
+  var steam = new THREE.Points(steamGeo, steamMat);
+  scene.add(steam);
+  var steamStart = -1;
+  function fireSteam() {
+    for (var s2 = 0; s2 < STEAM_N; s2++) {
+      steamPos[s2 * 3] = (Math.random() - 0.5) * 3.2;
+      steamPos[s2 * 3 + 1] = -1.0 + (Math.random() - 0.5) * 0.2;
+      steamPos[s2 * 3 + 2] = 0.9 + Math.random() * 0.5;
+    }
+    steamGeo.attributes.position.needsUpdate = true;
+    steamStart = performance.now();
+  }
+  function updateSteam(now, dtMs) {
+    if (steamStart < 0) { steamMat.opacity = 0; return; }
+    var age = (now - steamStart) / 1700;
+    if (age >= 1) { steamStart = -1; steamMat.opacity = 0; return; }
+    var dt = Math.min(dtMs, 50) / 1000;
+    for (var s3 = 0; s3 < STEAM_N; s3++) {
+      steamPos[s3 * 3 + 1] += (0.35 + (s3 % 5) * 0.06) * dt;
+      steamPos[s3 * 3] += Math.sin(now / 700 + s3) * 0.04 * dt;
+    }
+    steamGeo.attributes.position.needsUpdate = true;
+    steamMat.opacity = 0.4 * Math.sin(Math.min(age * Math.PI, Math.PI));
+  }
+
+  // ---- The archival folder: the finished certificate is packaged,
+  // not merely faded — a crested folder rises to receive the sheet,
+  // then carries it away to the register. The folder's destination
+  // line is real: every issued certificate IS recorded in the
+  // Certificate Register below this hero. ----
+  function drawFolderFace() {
+    var c = document.createElement('canvas');
+    c.width = 512; c.height = 360;
+    var ctx = c.getContext('2d');
+    ctx.fillStyle = '#171008';
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.strokeStyle = 'rgba(233,206,138,0.85)'; ctx.lineWidth = 6;
+    ctx.strokeRect(14, 14, c.width - 28, c.height - 28);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(26, 26, c.width - 52, c.height - 52);
+    // Ribbon band.
+    ctx.fillStyle = 'rgba(198,161,91,0.9)';
+    ctx.fillRect(0, c.height / 2 - 14, c.width, 28);
+    // Crest ring over the ribbon.
+    ctx.beginPath(); ctx.arc(c.width / 2, c.height / 2, 52, 0, Math.PI * 2);
+    ctx.fillStyle = '#171008'; ctx.fill();
+    ctx.strokeStyle = '#E9CE8A'; ctx.lineWidth = 4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(c.width / 2, c.height / 2, 38, 0, Math.PI * 2); ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#E9CE8A';
+    ctx.font = '700 26px Georgia, serif';
+    ctx.fillText('SHRS', c.width / 2, c.height / 2 + 9);
+    ctx.font = '600 17px Georgia, serif';
+    ctx.fillStyle = 'rgba(233,206,138,0.8)';
+    ctx.fillText('OFFICIAL ACADEMIC RECORD', c.width / 2, c.height - 44);
+    var tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }
+  var folderFrontMat = new THREE.MeshStandardMaterial({ map: drawFolderFace(), roughness: 0.5, metalness: 0.25, transparent: true });
+  var folderBackMat = new THREE.MeshStandardMaterial({ color: 0x171008, roughness: 0.55, metalness: 0.2, transparent: true });
+  var folder = new THREE.Group();
+  var folderFront = new THREE.Mesh(new THREE.PlaneGeometry(3.72, 2.6), folderFrontMat);
+  folderFront.position.z = 0.05;
+  folder.add(folderFront);
+  var folderBack = new THREE.Mesh(new THREE.PlaneGeometry(3.72, 2.6), folderBackMat);
+  folderBack.position.z = -0.05;
+  folder.add(folderBack);
+  folder.visible = false;
+  scene.add(folder);
+
   // Ambient dust motes in the mouth light.
   var particleCount = 26;
   var positions = new Float32Array(particleCount * 3);
@@ -531,27 +684,42 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   vu.group.position.set(1.55, 0.15, plateFrontZ);
   consoleGroup.add(vu.group);
 
-  var dial = bindDial(THREE, qualityInput);
-  dial.group.position.set(-2.3, -0.45, plateFrontZ + 0.02);
-  consoleGroup.add(dial.group);
-
-  var engineSwitch = bindSwitch(THREE, engineInput);
-  engineSwitch.group.position.set(-0.85, -0.5, plateFrontZ);
-  consoleGroup.add(engineSwitch.group);
-
-  var soundSwitch = bindSwitch(THREE, soundInput);
-  soundSwitch.group.position.set(-0.15, -0.5, plateFrontZ);
-  consoleGroup.add(soundSwitch.group);
-
+  // Each console control exists only when its source-of-truth input
+  // does — the rest of this file already treats these inputs as
+  // optional, so their binds must too (a missing input previously
+  // threw during construction and killed the whole scene).
+  var raycastTargets = [];
+  if (qualityInput) {
+    var dial = bindDial(THREE, qualityInput);
+    dial.group.position.set(-2.3, -0.45, plateFrontZ + 0.02);
+    consoleGroup.add(dial.group);
+    raycastTargets.push({ mesh: dial.hitMesh, onHit: dial.advance });
+  }
+  if (engineInput) {
+    var engineSwitch = bindSwitch(THREE, engineInput);
+    engineSwitch.group.position.set(-0.85, -0.5, plateFrontZ);
+    consoleGroup.add(engineSwitch.group);
+    raycastTargets.push({ mesh: engineSwitch.hitMesh, onHit: engineSwitch.flip });
+  }
+  if (soundInput) {
+    var soundSwitch = bindSwitch(THREE, soundInput);
+    soundSwitch.group.position.set(-0.15, -0.5, plateFrontZ);
+    consoleGroup.add(soundSwitch.group);
+    raycastTargets.push({ mesh: soundSwitch.hitMesh, onHit: soundSwitch.flip });
+  }
   var guarded = buildGuardedSwitch(THREE);
   guarded.group.position.set(0.65, -0.5, plateFrontZ);
   consoleGroup.add(guarded.group);
 
-  wireRaycast(THREE, canvas, camera, [
-    { mesh: dial.hitMesh, onHit: dial.advance },
-    { mesh: engineSwitch.hitMesh, onHit: engineSwitch.flip },
-    { mesh: soundSwitch.hitMesh, onHit: soundSwitch.flip },
-  ]);
+  if (raycastTargets.length) wireRaycast(THREE, canvas, camera, raycastTargets);
+
+  // The hidden inputs ship disabled in the markup so that keyboard and
+  // screen-reader users never meet live-sounding controls for a scene
+  // that failed to exist (no WebGL, module load failure). Only a
+  // successfully-built scene switches them on.
+  [soundInput, engineInput, qualityInput].forEach(function (el) {
+    if (el) el.disabled = false;
+  });
 
   function resize() {
     var w = mount.clientWidth, h = mount.clientHeight;
@@ -585,12 +753,20 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     sessionCount++;
     return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
   }
+  var curName = '', curSerialPrint = null, curBuilt = null;
   function spawnCertificate(overrideName, overrideSerial) {
     if (curTex) curTex.dispose();
     var name = overrideName || NAMES[nameIdx % NAMES.length];
     if (!overrideName) nameIdx++;
-    curSerial = overrideSerial || nextSerial();
-    curFull = drawFaceCanvas(name, overrideSerial || null);
+    // A REAL row with no serial (a failed row never received one) must
+    // show none — inventing a demonstration serial under a real
+    // student's failure line would put a number on the LCD that exists
+    // in no register (confirmed in adversarial review).
+    curSerial = overrideSerial || (overrideName ? '—' : nextSerial());
+    curName = name;
+    curSerialPrint = overrideSerial || null;
+    curBuilt = {}; // no seal, no QR, no signature — the stations add them
+    curFull = drawFaceCanvas(curName, curSerialPrint, curBuilt);
     curDisp = document.createElement('canvas');
     curDisp.width = curFull.width; curDisp.height = curFull.height;
     var dctx = curDisp.getContext('2d');
@@ -620,6 +796,19 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     }
     if (feedTickWanted()) playFeedTick();
   }
+  // A station has altered the face — rebuild the master art and re-blit
+  // whatever the press has already revealed, so the new element appears
+  // exactly where the station worked.
+  function stationBuild(flag) {
+    if (!curBuilt || curBuilt[flag]) return;
+    curBuilt[flag] = true;
+    curFull = drawFaceCanvas(curName, curSerialPrint, curBuilt);
+    var h = Math.round(curFull.height * (Math.max(curBands, 0) / BANDS));
+    if (h > 0) {
+      curDisp.getContext('2d').drawImage(curFull, 0, 0, curFull.width, h, 0, 0, curFull.width, h);
+      curTex.needsUpdate = true;
+    }
+  }
   function playSound() { if (window.__certForgeChime) window.__certForgeChime(); }
 
   // ---- Live generation — driven by the REAL batch this staff member
@@ -627,19 +816,56 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   var liveActive = false, liveEnded = false, liveQueue = [], liveCurrent = null, liveCycleMs = CYCLE;
   var LIVE_SHOW_BUDGET_MS = 16000;
   var LIVE_MIN_ROW_MS = 180;
+  // Under prefers-reduced-motion the press must NEVER animate — not
+  // even for a real batch (that is precisely the motion the user asked
+  // not to see; confirmed as a real defect in adversarial review). The
+  // real progress still reaches them: the aria-live region reports each
+  // row's actual outcome, the Generate button counts, and the results
+  // table renders in full — only the cinematography is withheld.
   document.addEventListener('sultan:cert-generate-start', function (e) {
-    liveActive = true; liveEnded = false; liveQueue = []; liveCurrent = null;
     var total = (e.detail && e.detail.total) || 1;
+    if (reduceMotion) {
+      if (liveEl) liveEl.textContent = 'Credential production started: ' + total + ' certificate' + (total === 1 ? '' : 's') + ' queued.';
+      return;
+    }
+    liveActive = true; liveEnded = false; liveQueue = []; liveCurrent = null;
     liveCycleMs = Math.max(LIVE_MIN_ROW_MS, Math.min(CYCLE, LIVE_SHOW_BUDGET_MS / total));
     cycleStart = 0; // interrupt the demonstration cycle immediately
-    if (userPaused) { userPaused = false; if (engineInput) engineInput.checked = true; }
-    start();
+    announce('Credential production initiated. ' + total + ' certificate' + (total === 1 ? '' : 's') + ' queued.');
+    // Performance mode is the user's explicit choice and it HOLDS: a
+    // batch never force-restarts a press the user switched off (the
+    // label promises exactly that). The button counter and results
+    // table carry the progress; the queue simply drains unshown.
+    if (!userPaused) start();
   });
+  var lastRowAnnounce = 0;
   document.addEventListener('sultan:cert-generate-progress', function (e) {
     var d = e.detail;
-    if (d && d.type === 'row') liveQueue.push(d);
+    if (!d) return;
+    if (d.type === 'row') {
+      if (reduceMotion) {
+        // Real per-row progress for reduced-motion users, throttled so a
+        // fast batch cannot flood a screen reader — the final row always
+        // lands because batch_done follows it.
+        var nowMs = Date.now();
+        if (liveEl && (nowMs - lastRowAnnounce > 1500 || d.index + 1 === d.total)) {
+          lastRowAnnounce = nowMs;
+          liveEl.textContent = 'Certificate ' + (d.index + 1) + ' of ' + d.total + ' — ' + (d.fullName || 'student') + ': ' + d.status + '.';
+        }
+        return;
+      }
+      liveQueue.push(d);
+    }
+    if (d.type === 'batch_done') {
+      var parts = ['Batch complete.', d.issued + ' issued.'];
+      if (d.skipped) parts.push(d.skipped + ' skipped.');
+      if (d.failed) parts.push(d.failed + ' failed.');
+      if (reduceMotion) { if (liveEl) liveEl.textContent = parts.join(' '); }
+      else announce(parts.join(' '));
+    }
   });
   document.addEventListener('sultan:cert-generate-end', function () {
+    if (reduceMotion) return;
     liveEnded = true; // drain the queue, then fall back to idle
   });
 
@@ -653,9 +879,20 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   //  0.86–1.00  present, burst, spin-down; fade at the very end
   var cycleStart = 0;
   var burstFiredThisCycle = false;
+  var pistonStruck = false, steamFired = false;
+  var shakeAmp = 0, lastCycleT = 0;
   var motorLevel = 0; // 0..1, eased — drives rollers, roll, hum
   function easeInOut(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
   function easeOutCubic(x) { return 1 - Math.pow(1 - x, 3); }
+  function easeInCubic(x) { return x * x * x; }
+  function resetCycleApparatus() {
+    burstFiredThisCycle = false;
+    pistonStruck = false;
+    steamFired = false;
+    folder.visible = false;
+    folderFrontMat.opacity = 1;
+    folderBackMat.opacity = 1;
+  }
 
   function animateCycle(now, dtMs) {
     var span = liveActive ? liveCycleMs : CYCLE;
@@ -663,21 +900,33 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     if (needNext) {
       if (liveActive && liveQueue.length) {
         cycleStart = now;
-        burstFiredThisCycle = false;
+        resetCycleApparatus();
         liveCurrent = liveQueue.shift();
         var shownName = liveCurrent.fullName || liveCurrent.studentFullName || 'Student';
         spawnCertificate(shownName, liveCurrent.serialNo || null);
         var goodTone = liveCurrent.status === 'issued' ? 0xC6A15B : (liveCurrent.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
         slotMat.emissive.setHex(goodTone);
+        // Real progress to assistive tech, one write per row, throttled
+        // so compressed batches cannot flood a screen reader.
+        var rowNow = Date.now();
+        if (liveEl && (rowNow - lastRowAnnounce > 1500 || liveCurrent.index + 1 === liveCurrent.total)) {
+          lastRowAnnounce = rowNow;
+          liveEl.textContent = 'Certificate ' + (liveCurrent.index + 1) + ' of ' + liveCurrent.total + ' — ' + shownName + ': ' + liveCurrent.status + '.';
+        }
       } else if (liveActive && liveEnded && !liveQueue.length) {
         liveActive = false; liveCurrent = null;
         slotMat.emissive.setHex(0xC6A15B);
         cycleStart = now;
-        burstFiredThisCycle = false;
+        resetCycleApparatus();
         spawnCertificate();
+        // A batch begun while the hero was scrolled out of view kept the
+        // loop alive past the IntersectionObserver's last word — once the
+        // real work drains, the visibility rule resumes (confirmed leak
+        // in adversarial review).
+        if (!heroVisible) stop();
       } else if (!liveActive) {
         cycleStart = now;
-        burstFiredThisCycle = false;
+        resetCycleApparatus();
         spawnCertificate();
       }
       // else: a real batch is running but the next row hasn't arrived yet
@@ -686,6 +935,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       span = liveActive ? liveCycleMs : CYCLE;
     }
     var t = Math.min((now - cycleStart) / span, 1);
+    // Holding for the network: freeze BEFORE the fade/packaging beats,
+    // so the held sheet stays visible at presentation instead of
+    // fading to an empty conveyor (t clamped to 1 used to walk it
+    // straight through opacity 0 — confirmed in adversarial review).
+    if (liveActive && !liveQueue.length && !liveEnded && needNext) t = Math.min(t, 0.88);
     var statusLabel = liveCurrent && liveCurrent.status !== 'issued'
       ? (liveCurrent.status === 'skipped' ? 'Skipped — already issued' : 'Failed — ' + (liveCurrent.problem || 'see register'))
       : null;
@@ -738,9 +992,61 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
           MOUTH.z + (PRESENT.z - MOUTH.z) * e
         );
         cur.rotation.x = FEED_TILT + (PRESENT.tilt - FEED_TILT) * e;
-        cur.material.transparent = t > 0.95;
-        cur.material.opacity = t > 0.95 ? 1 - (t - 0.95) / 0.05 : 1;
+
+        // The remaining stations work the lifted sheet in order.
+        if (t >= 0.62 && sheetOk()) stationBuild('qr');
+        if (t >= 0.72 && sheetOk()) { if (!curBuilt.signature && spanLongEnough()) playServo(); stationBuild('signature'); }
+
+        if (PACKAGING && sheetOk()) {
+          // Packaging: the crested folder rises to receive the sheet,
+          // then carries it away toward the register.
+          if (t >= 0.9) {
+            folder.visible = true;
+            var fp2 = Math.min(1, (t - 0.9) / 0.055);
+            var fy = -2.7 + (PRESENT.y - SHEET_H / 2 - (-2.7)) * easeOutCubic(fp2);
+            var slide = t >= 0.965 ? (t - 0.965) / 0.035 : 0;
+            var offX = easeInCubic(slide) * 3.4;
+            folder.position.set(PRESENT.x + offX, fy, PRESENT.z + 0.02);
+            folder.rotation.x = PRESENT.tilt;
+            cur.position.x = PRESENT.x + offX;
+            var gone = slide > 0 ? 1 - slide : 1;
+            folderFrontMat.opacity = gone;
+            folderBackMat.opacity = gone;
+            cur.material.transparent = slide > 0;
+            cur.material.opacity = gone;
+          }
+        } else {
+          cur.material.transparent = t > 0.95;
+          cur.material.opacity = t > 0.95 ? 1 - (t - 0.95) / 0.05 : 1;
+        }
       }
+    }
+
+    // ---- The emboss die: accelerate down, land with weight, dwell,
+    // withdraw — the seal exists on the face only after the strike. ----
+    if (t >= 0.5 && t < 0.62 && cur && sheetOk()) {
+      var ep = (t - 0.5) / 0.12;
+      var py;
+      if (ep < 0.3) py = PISTON_REST + (PISTON_STRIKE - PISTON_REST) * easeInCubic(ep / 0.3);
+      else if (ep < 0.5) {
+        py = PISTON_STRIKE;
+        if (!pistonStruck) {
+          pistonStruck = true;
+          stationBuild('seal');
+          shakeAmp = 1;
+          if (soundOn && spanLongEnough()) playThud();
+        }
+      } else py = PISTON_STRIKE + (PISTON_REST - PISTON_STRIKE) * easeOutCubic((ep - 0.5) / 0.5);
+      piston.position.y = py;
+    } else {
+      // At rest the hydraulics still breathe — tiny idle adjustments.
+      piston.position.y = PISTON_REST + Math.sin(now / 2600) * 0.012;
+    }
+
+    // ---- Steam clears as the finished sheet is presented ----
+    if (t >= 0.88 && !steamFired && sheetOk()) {
+      steamFired = true;
+      fireSteam();
     }
 
     // ---- The shoulder panel's stations, in order ----
@@ -771,14 +1077,18 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       qrSparkMat.opacity = 0;
     }
 
-    // ---- Seal laser: one sweep down the presented face ----
+    // ---- Seal laser: one sweep down the presented face — resolved
+    // through the sheet's own transform (as the QR spark is), so the
+    // beam rides the tilted surface instead of sinking behind it and
+    // losing the depth test for most of the sweep (confirmed in
+    // adversarial review). ----
     var scanPhase = (t - 0.8) / 0.08;
     if (cur && scanPhase > 0 && scanPhase < 1 && sheetOk()) {
-      var top = cur.position.y;
-      var bottom = cur.position.y - SHEET_H;
-      laser.position.set(cur.position.x, top - (top - bottom) * scanPhase, cur.position.z + 0.04);
+      cur.updateMatrixWorld();
+      var beamWorld = cur.localToWorld(new THREE.Vector3(0, -SHEET_H * scanPhase, 0.04));
+      laser.position.copy(beamWorld);
       laser.rotation.x = cur.rotation.x;
-      laserGlow.position.copy(laser.position);
+      laserGlow.position.copy(beamWorld);
       laserGlow.rotation.x = cur.rotation.x;
       laserMat.opacity = 0.85;
       laserGlowMat.opacity = 0.18;
@@ -804,12 +1114,13 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     rim.color.lerp(rimTarget, 0.06);
     keyPulse *= 0.94;
     key.intensity = 1.1 + keyPulse * 0.35;
+    lastCycleT = t;
   }
   function sheetOk() { return !liveCurrent || liveCurrent.status === 'issued'; }
   function spanLongEnough() { return (liveActive ? liveCycleMs : CYCLE) > 900; }
   function feedTickWanted() { return soundOn && spanLongEnough(); }
 
-  var raf = null, running = false, userPaused = false;
+  var raf = null, running = false, userPaused = false, heroVisible = true;
   var lastTs = 0, camZ = 11.5;
   function frame(ts) {
     if (!running) return;
@@ -817,20 +1128,31 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     lastTs = ts;
     animateCycle(ts, dtMs);
     updateBurst(ts, dtMs);
+    updateSteam(ts, dtMs);
     particles.rotation.y += 0.0008;
-    // The laboratory keeps living: the arms drift through a slow idle.
+    // The laboratory keeps living: the arms drift through a slow idle,
+    // the status lamps breathe.
     [armL, armR].forEach(function (arm) {
       var ph = ts / 5200 + arm.userData.phase;
       arm.userData.shoulder.rotation.y = Math.sin(ph) * 0.4;
       arm.userData.elbow.rotation.z = (arm === armL ? 1 : -1) * (0.75 + Math.sin(ph * 1.3) * 0.12);
     });
+    idleLamps.forEach(function (l) {
+      l.mat.opacity = 0.35 + 0.4 * (0.5 + 0.5 * Math.sin(ts / 700 + l.phase));
+    });
     // The camera never sits still: lateral sway, a breathing dolly, a
-    // push-in while a real batch runs.
-    var camZTarget = (liveActive ? 10.3 : 11.5) + Math.sin(ts / 13000) * 0.18;
+    // push-in while a real batch runs, a slow arc around the presented
+    // sheet, and — when the die lands — a shudder with real decay.
+    var camZTarget = (liveActive ? 9.7 : 10.7) + Math.sin(ts / 13000) * 0.18;
     camZ += (camZTarget - camZ) * 0.02;
+    var orbitX = 0;
+    if (lastCycleT >= 0.72 && lastCycleT < 0.92) {
+      orbitX = Math.sin(((lastCycleT - 0.72) / 0.2) * Math.PI) * ORBIT;
+    }
     camera.position.z = camZ;
-    camera.position.x = Math.sin(ts / 9000) * swayAmplitude;
-    camera.position.y = -0.4 + Math.sin(ts / 11000) * 0.08;
+    camera.position.x = Math.sin(ts / 9000) * swayAmplitude + orbitX + (Math.random() - 0.5) * shakeAmp * 0.1;
+    camera.position.y = -0.4 + Math.sin(ts / 11000) * 0.08 + (Math.random() - 0.5) * shakeAmp * 0.07;
+    shakeAmp *= 0.88;
     camera.lookAt(0, -0.65, 0.4);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
@@ -852,6 +1174,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     still.position.set(PRESENT.x, PRESENT.y, PRESENT.z);
     still.rotation.x = PRESENT.tilt;
     still.scale.y = 1;
+    stationBuild('seal');
+    stationBuild('qr');
+    stationBuild('signature');
     revealBands(BANDS);
     drawStagePanel(FINISH_STAGES.length - 1);
     setStageDisplay(1, curSerial);
@@ -861,7 +1186,10 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   } else {
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+        entries.forEach(function (e) {
+          heroVisible = e.isIntersecting;
+          if (e.isIntersecting) start(); else stop();
+        });
       }, { threshold: 0.1 });
       io.observe(mount);
     } else {
@@ -943,6 +1271,39 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     osc.connect(g).connect(ctx.destination);
     osc.start(t0); osc.stop(t0 + 0.04);
   }
+  // The emboss die landing: a deep, weighted thud — low sine body with
+  // a short mechanical click on top.
+  function playThud() {
+    var ctx = ensureAudioCtx();
+    if (!ctx) return;
+    var t0 = ctx.currentTime;
+    var osc = ctx.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(85, t0);
+    osc.frequency.exponentialRampToValueAtTime(42, t0 + 0.22);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.11, t0);
+    g.gain.exponentialRampToValueAtTime(0.0008, t0 + 0.3);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(t0); osc.stop(t0 + 0.32);
+    var click = ctx.createOscillator(); click.type = 'square'; click.frequency.value = 700;
+    var cg = ctx.createGain();
+    cg.gain.setValueAtTime(0.025, t0);
+    cg.gain.exponentialRampToValueAtTime(0.0005, t0 + 0.05);
+    click.connect(cg).connect(ctx.destination);
+    click.start(t0); click.stop(t0 + 0.06);
+  }
+  // The production announcer — the browser's own speech synthesis, no
+  // recordings, gated behind the same opt-in sound switch, and speaking
+  // only real facts (queued counts, issued counts) from the stream.
+  function announce(text) {
+    if (!soundOn) return;
+    if (!('speechSynthesis' in window)) return;
+    try {
+      var u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95; u.pitch = 0.85; u.volume = 0.55;
+      window.speechSynthesis.speak(u);
+    } catch (err) { /* speech unavailable — the LCD already says it */ }
+  }
   window.__certForgeChime = function () {
     if (!soundOn) return;
     var ctx = ensureAudioCtx();
@@ -987,6 +1348,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       engineInput.checked = false;
       engineInput.disabled = true;
       engineInput.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+      // The 3D lever renders from the checkbox on 'change' — dispatch
+      // one and re-render the still so the lever agrees with the state
+      // it now reports, instead of frozen mid-ON from construction.
+      engineInput.dispatchEvent(new Event('change', { bubbles: false }));
+      renderer.render(scene, camera);
     } else {
       engineInput.addEventListener('change', function () {
         userPaused = !engineInput.checked;
@@ -999,17 +1365,33 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   // ---- View dial: pace/atmosphere of this demonstration only — never
   // the real certificate-generation engine, which this scene does not
   // touch. ----
+  // Standard runs a brisk sequence with no packaging ceremony;
+  // Professional adds the folder and a gentle presentation arc;
+  // Prestige runs the full ceremony with the widest camera work. All
+  // of it is this workstation's own display preference — the real
+  // generation engine is identical at every setting.
   var QUALITY_TIERS = [
-    { cycle: 11000, sway: 0.2, particleOpacity: 0.55 },
-    { cycle: 9000, sway: 0.35, particleOpacity: 0.75 },
-    { cycle: 7200, sway: 0.5, particleOpacity: 0.95 },
+    { cycle: 11000, sway: 0.2, particleOpacity: 0.55, packaging: false, orbit: 0 },
+    { cycle: 9000, sway: 0.35, particleOpacity: 0.75, packaging: true, orbit: 0.45 },
+    { cycle: 7200, sway: 0.5, particleOpacity: 0.95, packaging: true, orbit: 0.9 },
   ];
+  var PACKAGING = QUALITY_TIERS[1].packaging;
+  var ORBIT = QUALITY_TIERS[1].orbit;
   if (qualityInput) {
-    qualityInput.addEventListener('input', function () {
-      var tier = QUALITY_TIERS[Number(qualityInput.value)];
+    var TIER_NAMES = ['Standard', 'Professional', 'Prestige'];
+    var applyTier = function () {
+      var idx = Number(qualityInput.value);
+      var tier = QUALITY_TIERS[idx] || QUALITY_TIERS[1];
       CYCLE = tier.cycle;
       swayAmplitude = tier.sway;
       particles.material.opacity = tier.particleOpacity;
-    });
+      PACKAGING = tier.packaging;
+      ORBIT = tier.orbit;
+      // The label teaches tier NAMES; the slider must speak them too,
+      // not bare numbers (confirmed in adversarial review).
+      qualityInput.setAttribute('aria-valuetext', TIER_NAMES[idx] || TIER_NAMES[1]);
+    };
+    qualityInput.addEventListener('input', applyTier);
+    applyTier();
   }
 })();

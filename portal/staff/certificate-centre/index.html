@@ -59,12 +59,16 @@
            itself being drawn as one. See js/portal-cert-forge-3d.js. -->
       <p class="pr-sr" data-cert-forge-live aria-live="polite"></p>
       <div class="pr-sr">
+        <!-- These ship disabled: js/portal-cert-forge-3d.js enables them
+             only once the WebGL scene they control actually exists, so
+             keyboard/screen-reader users never meet live-sounding
+             controls for a simulation that failed to build. -->
         <label for="cert-forge-engine">Certificate Press performance mode: full cinematic simulation when on; switched off, the press halts entirely for instant, animation-free working — certificate generation itself always runs at full speed either way</label>
-        <input type="checkbox" id="cert-forge-engine" checked data-cert-forge-pause />
-        <label for="cert-forge-sound">Certificate Forge demonstration: sound effects</label>
-        <input type="checkbox" id="cert-forge-sound" data-cert-forge-sound />
-        <label for="cert-forge-view">Certificate Forge demonstration: rendering pace — Standard, Professional, or Prestige. Changes only this demonstration, never certificate generation.</label>
-        <input type="range" id="cert-forge-view" min="0" max="2" step="1" value="1" data-cert-forge-quality />
+        <input type="checkbox" id="cert-forge-engine" checked disabled data-cert-forge-pause />
+        <label for="cert-forge-sound">Certificate Press sound: motors, servos, seal strikes, chimes, and spoken production announcements — all off until switched on</label>
+        <input type="checkbox" id="cert-forge-sound" disabled data-cert-forge-sound />
+        <label for="cert-forge-view">Certificate Press display richness — Standard, Professional, or Prestige. Changes only this workstation's display, never certificate generation.</label>
+        <input type="range" id="cert-forge-view" min="0" max="2" step="1" value="1" disabled data-cert-forge-quality />
       </div>
     </div>
 
