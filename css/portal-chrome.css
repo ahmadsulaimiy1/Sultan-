@@ -740,25 +740,29 @@ body[data-office-page="registrar"] .portal-topbar::after{
   background:linear-gradient(90deg,transparent,rgba(140,104,52,.55) 16%,
     rgba(140,104,52,.95) 50%,rgba(140,104,52,.55) 84%,transparent);}
 body[data-office-page="registrar"] .pch-foot{
-  background:linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-parchment) 100%);
+  background:
+    radial-gradient(1000px 280px at 50% -8%,rgba(198,161,91,.16),transparent 68%),
+    linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-parchment) 100%);
   border-top:1px solid var(--rgo-line);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
 body[data-office-page="registrar"] .pch-arrival{
   background:
-    radial-gradient(560px 180px at 50% 0%,rgba(198,161,91,.12),transparent 72%),
-    linear-gradient(168deg,rgba(255,255,255,.55),rgba(233,206,138,.10));
+    radial-gradient(560px 180px at 50% 0%,rgba(198,161,91,.14),transparent 72%),
+    linear-gradient(168deg,rgba(255,255,255,.68),rgba(233,206,138,.12));
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 1px 0 rgba(255,255,255,.8),
     inset 0 0 0 1px var(--rgo-line),
-    0 22px 46px -30px rgba(60,40,20,.28);
+    0 30px 60px -32px rgba(60,40,20,.4);
   border-color:var(--rgo-line);}
 body[data-office-page="registrar"] .pch-arrival::before{
   content:"";position:absolute;inset:5px;z-index:-1;pointer-events:none;
   border:1px solid rgba(140,104,52,.16);border-radius:2px;}
 body[data-office-page="registrar"] .pch-now{
-  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.12));
+  background:linear-gradient(168deg,rgba(255,255,255,.72),rgba(233,206,138,.14));
   border-color:var(--rgo-line);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 18px 40px -28px rgba(60,40,20,.22);}
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.8),
+    0 26px 52px -30px rgba(60,40,20,.35);}
 body[data-office-page="registrar"] .pch-now-head{border-bottom-color:var(--rgo-line);}
 @media (min-width:821px){
   body[data-office-page="registrar"] .pch-now-cell:not(:first-child){
@@ -786,12 +790,15 @@ body[data-office-page="registrar"] .portal-topbar-link{color:var(--rgo-ink-soft)
 body[data-office-page="registrar"] .portal-topbar-link:hover{color:var(--rgo-ink)!important;}
 body[data-office-page="registrar"] .pch-mast .portal-topbar-link{
   color:var(--rgo-gold-mid);border-color:var(--rgo-line);
-  background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
+  background:linear-gradient(168deg,rgba(255,255,255,.7),rgba(233,206,138,.08));
+  box-shadow:0 3px 9px -6px rgba(107,78,34,.4),inset 0 1px 0 rgba(255,255,255,.75);
+  transition:border-color .3s ease,background .3s ease,color .3s ease,
+    transform .3s ease,box-shadow .3s ease;}
 body[data-office-page="registrar"] .pch-mast .portal-topbar-link:hover,
 body[data-office-page="registrar"] .pch-mast .portal-topbar-link:focus-visible{
-  border-color:rgba(140,104,52,.6);background:rgba(233,206,138,.18);
-  color:var(--rgo-ink)!important;}
+  border-color:rgba(140,104,52,.6);background:rgba(233,206,138,.2);
+  color:var(--rgo-ink)!important;
+  box-shadow:0 8px 16px -8px rgba(107,78,34,.5),inset 0 1px 0 rgba(255,255,255,.75);}
 body[data-office-page="registrar"] .pch-mast > .portal-topbar-calendar{
   color:var(--rgo-gold-mid)!important;border-color:var(--rgo-line)!important;
   background:linear-gradient(168deg,rgba(255,255,255,.6),rgba(233,206,138,.08));}
@@ -861,29 +868,65 @@ body[data-office-page="registrar"] .pch-badge{
 body[data-office-page="registrar"] .pch-crest{
   filter:drop-shadow(0 0 12px rgba(198,161,91,.4));}
 
-/* ---- The colophon's links, as a grid of tiles rather than a list ----
-   The plain underlined-on-hover list read fine on the espresso base
-   but this office asked for the same sophistication Worldwide English
-   College's own footer carries — bordered, iconed tiles in a grid. The
-   dot standing for the icon is drawn, not fetched: the file already
-   speaks in small SVG marks (.pch-mark, .pch-corner) rather than an
-   icon font, and a plain gold point keeps that same restraint. */
+/* ---- The colophon, as floating cards with a glossy grid of tiles ----
+   The first pass matched the public site's own footer, which lays its
+   columns flat on one ground with no card of their own — correct for
+   that page, and exactly what read as thin here once seen beside
+   Worldwide English College's footer, where each section is its own
+   bright panel lifted off the navy behind it. That lift is the piece
+   worth taking: not WEC's navy (this office's ground stays the ivory
+   the public masthead already stands on — the brief before this one
+   was explicit that brown, in any depth, does not come back), but the
+   contrast of a brighter card sitting on top of it with real shadow
+   under it, and — inside that card — a grid of tiles with their own
+   glossy badge rather than a flat list.
+     The badge is a drawn circle, layered like a cast disc: a bright
+   highlight near the top-left, a metal gradient under it, a hairline
+   rim, and a shadow that lifts it off the tile — the same layering a
+   pressed coin or a wax seal actually has, not a flat dot standing in
+   for one. A small drawn check sits inside it rather than a fetched
+   icon, keeping the file's own habit (.pch-mark, .pch-corner) of
+   small SVG-or-CSS marks over an icon font — and reading, on a page
+   of verification tools, as what these links actually do: confirm. */
+body[data-office-page="registrar"] .pch-foot-inner{gap:24px 22px;}
+body[data-office-page="registrar"] .pch-col{
+  padding:22px 22px 24px;border-radius:14px;
+  background:linear-gradient(168deg,rgba(255,255,255,.85),rgba(255,255,255,.5));
+  box-shadow:
+    0 26px 50px -32px rgba(60,40,20,.4),
+    0 0 0 1px var(--rgo-line),
+    inset 0 1px 0 rgba(255,255,255,.85);}
 body[data-office-page="registrar"] .pch-list{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px 12px;}
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px 12px;}
 body[data-office-page="registrar"] .pch-link{
-  display:flex;align-items:center;gap:9px;width:auto;padding:10px 13px;
-  border-radius:9px;border:1px solid var(--rgo-line);color:var(--rgo-ink-soft);
-  background:linear-gradient(168deg,rgba(255,255,255,.55),rgba(233,206,138,.06));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-  transition:border-color .3s ease,background .3s ease,transform .3s ease,color .3s ease;}
+  position:relative;display:flex;align-items:center;width:auto;
+  padding-inline-start:46px;padding-inline-end:14px;padding-block:10px;
+  border-radius:11px;border:1px solid var(--rgo-line);color:var(--rgo-ink-soft);
+  background:linear-gradient(168deg,rgba(255,255,255,.7),rgba(233,206,138,.08));
+  box-shadow:0 3px 10px -7px rgba(107,78,34,.4),inset 0 1px 0 rgba(255,255,255,.75);
+  transition:border-color .3s ease,background .3s ease,transform .3s ease,
+    color .3s ease,box-shadow .3s ease;}
 body[data-office-page="registrar"] .pch-link::before{
-  content:"";flex:0 0 auto;width:5px;height:5px;border-radius:50%;
-  background:var(--rgo-gold-deep);box-shadow:0 0 4px 0 rgba(140,104,52,.5);}
-body[data-office-page="registrar"] .pch-link::after{display:none;}
+  content:"";position:absolute;inset-inline-start:10px;top:50%;
+  transform:translateY(-50%);width:26px;height:26px;border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 26%,rgba(255,255,255,.92),transparent 46%),
+    linear-gradient(155deg,#F3DFA0,#C6A15B 55%,#8C6834 100%);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:
+    0 4px 10px -4px rgba(107,78,34,.65),
+    inset 0 1px 1px rgba(255,255,255,.75),
+    inset 0 -1px 2px rgba(107,78,34,.4);}
+body[data-office-page="registrar"] .pch-link::after{
+  content:"";position:absolute;inset-inline-start:19px;top:50%;
+  width:7px;height:4px;margin-top:-2px;
+  border-left:1.6px solid #FFFBEF;border-bottom:1.6px solid #FFFBEF;
+  transform:rotate(-45deg);}
 body[data-office-page="registrar"] .pch-link:hover,
 body[data-office-page="registrar"] .pch-link:focus-visible{
-  color:var(--rgo-ink);border-color:rgba(140,104,52,.55);
-  background:rgba(233,206,138,.16);transform:translateY(-1px);}
+  color:var(--rgo-ink);border-color:rgba(140,104,52,.6);
+  background:rgba(233,206,138,.22);transform:translateY(-2px);
+  box-shadow:0 12px 22px -12px rgba(107,78,34,.5),inset 0 1px 0 rgba(255,255,255,.75);}
 
 /* ---- The ledger grid and gloss sweep, retinted for ivory ------------
    Same technique as the espresso version this replaces — one
