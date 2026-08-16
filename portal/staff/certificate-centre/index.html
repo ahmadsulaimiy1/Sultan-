@@ -51,71 +51,20 @@
     <div class="cert-forge portal-forge-hero" data-cert-forge>
       <canvas data-cert-forge-canvas aria-hidden="true"></canvas>
       <noscript><p class="portal-forge-hero-noscript">This institution's certificates are produced under permission-checked, audit-logged authority — see the Certificate Register below.</p></noscript>
-      <div class="pfc-console">
-        <div class="pfc-top">
-          <p class="pfc-eyebrow">Where the Institution's Credentials Are Made</p>
-          <span class="pfc-system-chip"><i aria-hidden="true"></i>System Nominal</span>
-        </div>
-        <div class="pfc-top" style="margin-bottom:12px;">
-          <div class="pfc-leds" aria-hidden="true">
-            <span class="pfc-led" data-cert-forge-led="0"><i></i>Validate</span>
-            <span class="pfc-led" data-cert-forge-led="1"><i></i>Sign</span>
-            <span class="pfc-led" data-cert-forge-led="2"><i></i>Emboss</span>
-            <span class="pfc-led" data-cert-forge-led="3"><i></i>Archive</span>
-          </div>
-        </div>
-        <div class="pfc-modules">
-          <div class="pfc-module">
-            <p class="pfc-module-label">Status</p>
-            <p class="pfc-stage-value" data-cert-forge-stage>Standing By</p>
-            <div class="pfc-lcd"><span class="pfc-lcd-caption">Serial</span><span class="pfc-lcd-value" data-cert-forge-serial>—</span></div>
-          </div>
-          <div class="pfc-module">
-            <p class="pfc-module-label">Progress</p>
-            <div class="pfc-vu-wrap">
-              <div class="pfc-vu" aria-hidden="true">
-                <span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span>
-                <span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span><span class="pfc-vu-seg"></span>
-              </div>
-              <span class="pfc-vu-pct" data-cert-forge-progress>0%</span>
-            </div>
-            <div class="pfc-lcd"><span class="pfc-lcd-caption">This Session</span><span class="pfc-lcd-value" data-cert-forge-count>0000</span></div>
-          </div>
-          <div class="pfc-module">
-            <p class="pfc-module-label">View</p>
-            <div class="pfc-dial">
-              <input type="range" min="0" max="2" step="1" value="1" data-cert-forge-quality aria-label="Rendering view: Standard, Professional, or Prestige — changes only this demonstration's pace, not certificate generation">
-              <div class="pfc-dial-face">
-                <span class="pfc-dial-tick" style="transform:rotate(-42deg) translate(0,-20px);"></span>
-                <span class="pfc-dial-tick is-active" style="transform:rotate(0deg) translate(0,-20px);"></span>
-                <span class="pfc-dial-tick" style="transform:rotate(42deg) translate(0,-20px);"></span>
-                <span class="pfc-dial-needle"></span>
-                <span class="pfc-dial-center"></span>
-              </div>
-            </div>
-            <p class="pfc-dial-label" data-cert-forge-quality-label>Professional</p>
-          </div>
-          <div class="pfc-module">
-            <p class="pfc-module-label">Controls</p>
-            <button type="button" class="pfc-switch" role="switch" aria-checked="false" data-cert-forge-pause>
-              <span class="pfc-switch-track"><span class="pfc-switch-thumb"></span></span>
-              <span>Engine</span><span class="pfc-switch-state">RUN</span>
-            </button>
-            <button type="button" class="pfc-switch" role="switch" aria-checked="false" data-cert-forge-sound>
-              <span class="pfc-switch-track"><span class="pfc-switch-thumb"></span></span>
-              <span>Sound</span><span class="pfc-switch-state">OFF</span>
-            </button>
-          </div>
-          <div class="pfc-module">
-            <p class="pfc-module-label">Guarded</p>
-            <div class="pfc-guarded" title="Not connected to a live diagnostics feed — this switch is decorative">
-              <span class="pfc-guarded-track">
-                <svg class="pfc-guarded-lock" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.6"/></svg>
-              </span>
-              <span>Diagnostics</span>
-            </div>
-          </div>
-        </div>
+      <!-- The console rendered on the canvas above (dial, switches, VU
+           meter, LCD readouts) is a 3D skin on these real controls —
+           js/portal-forge-controls.js treats them as the source of
+           truth, so keyboard and screen-reader access work exactly as
+           they would for visible form controls, without the console
+           itself being drawn as one. See js/portal-cert-forge-3d.js. -->
+      <p class="pr-sr" data-cert-forge-live aria-live="polite"></p>
+      <div class="pr-sr">
+        <label for="cert-forge-engine">Certificate Forge demonstration: engine running</label>
+        <input type="checkbox" id="cert-forge-engine" checked data-cert-forge-pause />
+        <label for="cert-forge-sound">Certificate Forge demonstration: sound effects</label>
+        <input type="checkbox" id="cert-forge-sound" data-cert-forge-sound />
+        <label for="cert-forge-view">Certificate Forge demonstration: rendering pace — Standard, Professional, or Prestige. Changes only this demonstration, never certificate generation.</label>
+        <input type="range" id="cert-forge-view" min="0" max="2" step="1" value="1" data-cert-forge-quality />
       </div>
     </div>
 

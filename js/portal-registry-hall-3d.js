@@ -1,20 +1,24 @@
 // Registry Hall — the Registrar's Office companion to the Certificate
 // Centre's Certificate Forge (js/portal-cert-forge-3d.js): a real
-// Three.js scene, not a CSS trick, self-hosted from
-// js/vendor/three/three.module.min.js (already vendored for the Forge;
-// no second download, no CDN). Same engineering discipline as that
-// file — see its header comment for the honesty/perf contract this
-// mirrors (WebGL-missing fallback, prefers-reduced-motion still frame,
-// visibility-gated animation, disposed geometry/material each cycle) —
-// this file repeats it rather than importing it, since the two scenes
-// share almost no scene-graph code, only the same *shape* of harness.
+// Three.js scene with a real 3D instrument console beneath it — a
+// rotating dial, physical switch levers, an emissive VU meter, LCD
+// readouts — self-hosted from js/vendor/three/three.module.min.js
+// (already vendored for the Forge; no second download, no CDN). Same
+// engineering discipline as that file — see its header comment for
+// the honesty/perf contract this mirrors (WebGL-missing fallback,
+// prefers-reduced-motion still frame, visibility-gated animation,
+// disposed geometry/material each cycle, native hidden <input>s as the
+// single source of truth behind every 3D control) — this file repeats
+// it rather than importing it, since the two scenes share almost no
+// scene-graph code, only the same *shape* of harness (and the console
+// builders in js/portal-forge-controls.js, which both do share).
 //
 // The scene: a student record card flips onto the desk, an
 // institutional seal descends and presses an emboss into it — "one
 // honest source per student," made physical — then the card flips
 // away for the next one.
 import * as THREE from '/js/vendor/three/three.module.min.js';
-import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
+import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGuardedSwitch, buildPlaque, wireRaycast } from '/js/portal-forge-controls.js';
 
 (function () {
   var mount = document.querySelector('[data-registry-hall]');
@@ -23,25 +27,34 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Console readouts ----
-  var serialEl = document.querySelector('[data-registry-hall-serial]');
-  var stageEl = document.querySelector('[data-registry-hall-stage]');
-  var progressEl = document.querySelector('[data-registry-hall-progress]');
-  var countEl = document.querySelector('[data-registry-hall-count]');
-  var leds = document.querySelectorAll('[data-registry-hall-led]');
-  var vuSegs = document.querySelectorAll('[data-registry-hall] .pfc-vu-seg');
+  // ---- Accessible source-of-truth inputs (visually hidden — see
+  // .pr-sr in css/prestige.css — the 3D console is a skin on these) ----
+  var soundInput = document.querySelector('[data-registry-hall-sound]');
+  var engineInput = document.querySelector('[data-registry-hall-pause]');
+  var qualityInput = document.querySelector('[data-registry-hall-quality]');
+  var liveEl = document.querySelector('[data-registry-hall-live]');
+
   var STAGES = ['Identifying Student', 'Verifying Standing', 'Applying Official Seal', 'Writing to the Register'];
-  function setStageDisplay(t) {
+  var lastAnnouncedStage = '';
+  var sessionCount = 0;
+  var lcd = null;
+
+  function setStageDisplay(t, recordNo) {
     var pct = Math.round(Math.min(t, 1) * 100);
-    if (stageEl) stageEl.textContent = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
-    if (progressEl) progressEl.textContent = pct + '%';
-    var activeLed = Math.min(3, Math.floor(t * 4));
-    leds.forEach(function (led, i) { led.classList.toggle('is-active', i <= activeLed); });
-    var litCount = Math.round((pct / 100) * vuSegs.length);
-    vuSegs.forEach(function (seg, i) {
-      seg.classList.toggle('is-lit', i < litCount);
-      seg.classList.toggle('is-peak', i === litCount - 1 && pct < 100);
-    });
+    var stage = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
+    if (lcd) {
+      lcd.setLines([
+        { text: stage, size: 30 },
+        { text: recordNo || '—', size: 26 },
+        { text: 'Session ' + String(sessionCount).padStart(4, '0') + '   ' + pct + '%', size: 22, caption: true },
+      ]);
+    }
+    if (leds) leds.setActive(Math.min(3, Math.floor(t * 4)));
+    if (vu) vu.setLevel(pct / 100);
+    if (liveEl && stage !== lastAnnouncedStage) {
+      lastAnnouncedStage = stage;
+      liveEl.textContent = stage + ', ' + pct + ' percent complete.';
+    }
   }
 
   var RECORDS = [
@@ -116,8 +129,8 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  camera.position.set(0, 0.6, 8.6);
+  var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
+  camera.position.set(0, -0.6, 12.2);
 
   scene.add(new THREE.AmbientLight(0xE9CE8A, 0.55));
   var key = new THREE.DirectionalLight(0xFFF3DE, 1.05);
@@ -126,6 +139,13 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   var rim = new THREE.DirectionalLight(0x41618C, 0.35); // a hint of the Registrar's own atmosphere colour
   rim.position.set(-4, 1, -3);
   scene.add(rim);
+  var panelLight = new THREE.PointLight(0xE9CE8A, 0.9, 8);
+  panelLight.position.set(0, -2.9, 2);
+  scene.add(panelLight);
+
+  var plaque = buildPlaque(THREE, 'One Honest Source Per Student', 4.4, 0.5);
+  plaque.mesh.position.set(0, 2.3, 0);
+  scene.add(plaque.mesh);
 
   // The desk — a simple dark surface the record card lies on.
   var desk = new THREE.Mesh(
@@ -136,20 +156,21 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   desk.rotation.x = -0.06;
   scene.add(desk);
 
-  // The seal — a squat cylinder on a thin handle, hanging above the
-  // desk until its cycle to descend.
+  // The seal — a squat cylinder on a shortened handle, hanging above
+  // the desk until its cycle to descend.
   var seal = new THREE.Group();
   var sealHead = new THREE.Mesh(
     new THREE.CylinderGeometry(0.42, 0.46, 0.28, 28),
     new THREE.MeshStandardMaterial({ color: 0xC6A15B, metalness: 0.75, roughness: 0.28 })
   );
   var sealHandle = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.09, 0.09, 1.1, 16),
+    new THREE.CylinderGeometry(0.09, 0.09, 0.7, 16),
     new THREE.MeshStandardMaterial({ color: 0x3B2A1D, metalness: 0.2, roughness: 0.7 })
   );
-  sealHandle.position.y = 0.68;
+  sealHandle.position.y = 0.45;
   seal.add(sealHead); seal.add(sealHandle);
-  seal.position.set(1.05, 2.7, 0.75);
+  var SEAL_REST_Y = 1.75, SEAL_PRESS_Y = -0.2;
+  seal.position.set(1.05, SEAL_REST_Y, 0.75);
   scene.add(seal);
 
   // Dust motes drifting in the light — an archival-room mood in place
@@ -166,6 +187,54 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   var motes = new THREE.Points(moteGeo, new THREE.PointsMaterial({ color: 0xE9CE8A, size: 0.022, transparent: true, opacity: 0.5 }));
   scene.add(motes);
 
+  // ---- The instrument console — a tilted metal plate below the desk,
+  // holding every control that used to be a DOM element. ----
+  var consoleGroup = new THREE.Group();
+  consoleGroup.position.set(0, -2.85, 0.35);
+  consoleGroup.rotation.x = -0.22;
+  scene.add(consoleGroup);
+
+  var plate = new THREE.Mesh(
+    new THREE.BoxGeometry(6.3, 1.75, 0.16),
+    new THREE.MeshStandardMaterial({ color: 0x1C1207, metalness: 0.45, roughness: 0.5 })
+  );
+  consoleGroup.add(plate);
+  var plateFrontZ = 0.08 + 0.03;
+
+  var leds = buildLEDRow(THREE, 4, { gap: 0.17 });
+  leds.group.position.set(-2.75, 0.55, plateFrontZ);
+  consoleGroup.add(leds.group);
+
+  lcd = buildLCDPlane(THREE, 2.2, 0.62, { texH: 176 });
+  lcd.group.position.set(-1.15, 0.4, plateFrontZ);
+  consoleGroup.add(lcd.group);
+
+  var vu = buildVUStrip(THREE, 10, { maxHeight: 0.55 });
+  vu.group.position.set(1.55, 0.15, plateFrontZ);
+  consoleGroup.add(vu.group);
+
+  var dial = bindDial(THREE, qualityInput);
+  dial.group.position.set(-2.3, -0.45, plateFrontZ + 0.02);
+  consoleGroup.add(dial.group);
+
+  var engineSwitch = bindSwitch(THREE, engineInput);
+  engineSwitch.group.position.set(-0.85, -0.5, plateFrontZ);
+  consoleGroup.add(engineSwitch.group);
+
+  var soundSwitch = bindSwitch(THREE, soundInput);
+  soundSwitch.group.position.set(-0.15, -0.5, plateFrontZ);
+  consoleGroup.add(soundSwitch.group);
+
+  var guarded = buildGuardedSwitch(THREE);
+  guarded.group.position.set(0.65, -0.5, plateFrontZ);
+  consoleGroup.add(guarded.group);
+
+  wireRaycast(THREE, canvas, camera, [
+    { mesh: dial.hitMesh, onHit: dial.advance },
+    { mesh: engineSwitch.hitMesh, onHit: engineSwitch.flip },
+    { mesh: soundSwitch.hitMesh, onHit: soundSwitch.flip },
+  ]);
+
   function resize() {
     var w = mount.clientWidth, h = mount.clientHeight;
     if (!w || !h) return;
@@ -179,16 +248,15 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   resize();
 
   // ---- The record cycle: card flips in, seal presses, card flips out ----
-  var CYCLE = 4600; // ms per record — adjustable by the "View" control below
-  var swayAmplitude = 0.3; // also adjustable by "View" — how far the camera drifts
-  var cur = null, curFace = null, recIdx = 0, sealed = false, sessionCount = 0;
+  var CYCLE = 4600; // ms per record — adjustable by the View dial
+  var swayAmplitude = 0.3; // also adjustable by View — how far the camera drifts
+  var cur = null, curFace = null, recIdx = 0, sealed = false, curRecordNo = '—';
   // An institutional-record-number-shaped identifier for this
   // demonstration — illustrative, the same way the names on the card
   // are, not a real record number (the Student Registry above issues
   // those for real, tied to an actual student).
   function nextRecordNo() {
     sessionCount++;
-    if (countEl) countEl.textContent = String(sessionCount).padStart(4, '0');
     return 'SHRS-REG-2026-' + String(80 + sessionCount).padStart(6, '0');
   }
   function spawnRecord() {
@@ -196,7 +264,7 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     curFace = drawRecordFace(RECORDS[recIdx % RECORDS.length]);
     recIdx++;
     sealed = false;
-    if (serialEl) serialEl.textContent = nextRecordNo();
+    curRecordNo = nextRecordNo();
     var geo = new THREE.PlaneGeometry(3.6, 2.46);
     var mat = new THREE.MeshStandardMaterial({ map: curFace.texture, side: THREE.DoubleSide, roughness: 0.6, metalness: 0.04 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
@@ -215,7 +283,7 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
       spawnRecord();
     }
     var t = Math.min((now - cycleStart) / CYCLE, 1);
-    setStageDisplay(t);
+    setStageDisplay(t, curRecordNo);
 
     // 0 - 0.22: card flips onto the desk.
     var flipIn = Math.min(t / 0.22, 1);
@@ -227,10 +295,10 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     if (t >= pressStart && t <= pressEnd) {
       var p = (t - pressStart) / (pressEnd - pressStart);
       var down = p < 0.5 ? p * 2 : (1 - p) * 2;
-      seal.position.y = 2.7 - down * 2.55;
+      seal.position.y = SEAL_REST_Y - down * (SEAL_REST_Y - SEAL_PRESS_Y);
       if (!sealed && p >= 0.48) { sealed = true; embossSeal(curFace); playSound(); }
     } else {
-      seal.position.y = 2.7;
+      seal.position.y = SEAL_REST_Y;
     }
 
     // 0.78 - 1: card flips away.
@@ -246,7 +314,7 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     animateCycle(ts);
     motes.rotation.y += 0.0004;
     camera.position.x = Math.sin(ts / 10000) * swayAmplitude;
-    camera.lookAt(0, 0.15, 0);
+    camera.lookAt(0, -0.9, 0);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
@@ -256,10 +324,10 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   if (reduceMotion) {
     var still = spawnRecord();
     still.rotation.y = 0;
-    seal.position.y = 0.15;
+    seal.position.y = SEAL_PRESS_Y;
     embossSeal(curFace);
-    setStageDisplay(1);
-    camera.lookAt(0, 0.15, 0);
+    setStageDisplay(1, curRecordNo);
+    camera.lookAt(0, -0.9, 0);
     resize();
     renderer.render(scene, camera);
   } else {
@@ -299,53 +367,45 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     osc.start(t0); osc.stop(t0 + 0.32);
   };
 
-  var soundSwitchEl = document.querySelector('[data-registry-hall-sound]');
-  if (soundSwitchEl) {
-    makeSwitch(soundSwitchEl, {
-      onLabel: 'ON', offLabel: 'OFF',
-      onChange: function (on) {
-        soundOn = on;
-        if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
-      },
+  if (soundInput) {
+    soundInput.addEventListener('change', function () {
+      soundOn = soundInput.checked;
+      if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
     });
   }
 
-  // ---- Engine switch: a real control — stops the loop outright rather
+  // ---- Engine input: a real control — stops the loop outright rather
   // than just muting it, and overrides the IntersectionObserver so
   // scrolling the hero back into view doesn't silently un-pause a
   // deliberate stop. ----
-  var pauseSwitchEl = document.querySelector('[data-registry-hall-pause]');
-  if (pauseSwitchEl) {
-    makeSwitch(pauseSwitchEl, {
-      initial: true, onLabel: 'RUN', offLabel: 'HALT', disabled: reduceMotion,
-      onChange: function (on) {
-        userPaused = !on;
-        if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
+  if (engineInput) {
+    if (reduceMotion) {
+      engineInput.checked = false;
+      engineInput.disabled = true;
+      engineInput.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+    } else {
+      engineInput.addEventListener('change', function () {
+        userPaused = !engineInput.checked;
+        if (userPaused) { stop(); if (liveEl) liveEl.textContent = 'Paused.'; }
         else { start(); }
-      },
-    });
-    if (reduceMotion) pauseSwitchEl.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+      });
+    }
   }
 
   // ---- View dial: a real control that changes the pace of this
   // demonstration only — never the real registry, which this scene
   // does not touch. ----
   var QUALITY_TIERS = [
-    { label: 'Standard', cycle: 5800, sway: 0.18, moteOpacity: 0.35 },
-    { label: 'Professional', cycle: 4600, sway: 0.3, moteOpacity: 0.5 },
-    { label: 'Prestige', cycle: 3600, sway: 0.44, moteOpacity: 0.7 },
+    { cycle: 5800, sway: 0.18, moteOpacity: 0.35 },
+    { cycle: 4600, sway: 0.3, moteOpacity: 0.5 },
+    { cycle: 3600, sway: 0.44, moteOpacity: 0.7 },
   ];
-  var qualityDialEl = document.querySelector('[data-registry-hall-quality]');
-  if (qualityDialEl) {
-    makeDial(qualityDialEl.closest('.pfc-dial'), {
-      labelEl: document.querySelector('[data-registry-hall-quality-label]'),
-      labels: QUALITY_TIERS.map(function (t) { return t.label; }),
-      onChange: function (idx) {
-        var tier = QUALITY_TIERS[idx];
-        CYCLE = tier.cycle;
-        swayAmplitude = tier.sway;
-        motes.material.opacity = tier.moteOpacity;
-      },
+  if (qualityInput) {
+    qualityInput.addEventListener('input', function () {
+      var tier = QUALITY_TIERS[Number(qualityInput.value)];
+      CYCLE = tier.cycle;
+      swayAmplitude = tier.sway;
+      motes.material.opacity = tier.moteOpacity;
     });
   }
 })();

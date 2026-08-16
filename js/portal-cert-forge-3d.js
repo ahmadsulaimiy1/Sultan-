@@ -1,18 +1,29 @@
 // Certificate Forge — a real, running Three.js scene for the Certificate
 // Generation Centre hero: a stylised certificate lifting from a print
-// slot, gold-bordered and text-bearing, on a loop. This is genuine 3D
-// (real depth, real lighting, a real material response on the gold
-// trim) rendered live in the browser — not a photorealistic pre-rendered
-// film, which real-time WebGL cannot produce, and not a video file,
-// which this static site has no pipeline to author. Self-hosted
-// (js/vendor/three/three.module.min.js, MIT-licensed, no CDN
-// dependency) so the page never depends on a third party being up.
+// slot, gold-bordered and text-bearing, on a loop, above a real 3D
+// instrument console — a rotating dial, physical switch levers, an
+// emissive VU meter, and LCD readouts, all built from actual geometry
+// and lit by the scene's own lights. This is genuine 3D (real depth,
+// real lighting, a real material response on the gold trim) rendered
+// live in the browser — not a photorealistic pre-rendered film, which
+// real-time WebGL cannot produce, and not a video file, which this
+// static site has no pipeline to author, and not a DOM control panel
+// standing in for one with CSS gradients. Self-hosted (js/vendor/
+// three/three.module.min.js, MIT-licensed, no CDN dependency) so the
+// page never depends on a third party being up.
+//
+// Every interactive piece of the console is a visual skin on a real,
+// native, hidden <input> (a checkbox per switch, a range for the
+// dial) — see js/portal-forge-controls.js's header for why: the input
+// is the single source of truth, keyboard/screen-reader operable, and
+// a raycast hit on a 3D mesh does nothing but set that input's value
+// and dispatch the same event a real interaction would.
 //
 // Degrades honestly: no WebGL, a failed module load, or
 // prefers-reduced-motion all fall back to a single still frame (reduced
 // motion) or the plain CSS background (no WebGL) — never a blank box.
 import * as THREE from '/js/vendor/three/three.module.min.js';
-import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
+import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGuardedSwitch, buildPlaque, wireRaycast } from '/js/portal-forge-controls.js';
 
 (function () {
   var mount = document.querySelector('[data-cert-forge]');
@@ -21,25 +32,34 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---- Console readouts ----
-  var serialEl = document.querySelector('[data-cert-forge-serial]');
-  var stageEl = document.querySelector('[data-cert-forge-stage]');
-  var progressEl = document.querySelector('[data-cert-forge-progress]');
-  var countEl = document.querySelector('[data-cert-forge-count]');
-  var leds = document.querySelectorAll('[data-cert-forge-led]');
-  var vuSegs = document.querySelectorAll('[data-cert-forge] .pfc-vu-seg');
+  // ---- Accessible source-of-truth inputs (visually hidden — see
+  // .pr-sr in css/prestige.css — the 3D console is a skin on these) ----
+  var soundInput = document.querySelector('[data-cert-forge-sound]');
+  var engineInput = document.querySelector('[data-cert-forge-pause]');
+  var qualityInput = document.querySelector('[data-cert-forge-quality]');
+  var liveEl = document.querySelector('[data-cert-forge-live]');
+
   var STAGES = ['Validating Identity', 'Cryptographic Signing', 'Embossing Seal', 'Publishing Verification'];
-  function setStageDisplay(t) {
+  var lastAnnouncedStage = '';
+  var sessionCount = 0;
+  var lcd = null; // assigned once the scene builds below
+
+  function setStageDisplay(t, serial) {
     var pct = Math.round(Math.min(t, 1) * 100);
-    if (stageEl) stageEl.textContent = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
-    if (progressEl) progressEl.textContent = pct + '%';
-    var activeLed = Math.min(3, Math.floor(t * 4));
-    leds.forEach(function (led, i) { led.classList.toggle('is-active', i <= activeLed); });
-    var litCount = Math.round((pct / 100) * vuSegs.length);
-    vuSegs.forEach(function (seg, i) {
-      seg.classList.toggle('is-lit', i < litCount);
-      seg.classList.toggle('is-peak', i === litCount - 1 && pct < 100);
-    });
+    var stage = t >= 0.85 ? 'Archived' : STAGES[Math.min(3, Math.floor(t * 4))];
+    if (lcd) {
+      lcd.setLines([
+        { text: stage, size: 30 },
+        { text: serial || '—', size: 26 },
+        { text: 'Session ' + String(sessionCount).padStart(4, '0') + '   ' + pct + '%', size: 22, caption: true },
+      ]);
+    }
+    if (leds) leds.setActive(Math.min(3, Math.floor(t * 4)));
+    if (vu) vu.setLevel(pct / 100);
+    if (liveEl && stage !== lastAnnouncedStage) {
+      lastAnnouncedStage = stage;
+      liveEl.textContent = stage + ', ' + pct + ' percent complete.';
+    }
   }
 
   // ---- Certificate face texture, drawn procedurally (no image asset) ----
@@ -49,12 +69,10 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     var ctx = c.getContext('2d');
     ctx.fillStyle = '#F7EEDF';
     ctx.fillRect(0, 0, c.width, c.height);
-    // Gold double-rule border
     ctx.strokeStyle = '#C6A15B'; ctx.lineWidth = 10;
     ctx.strokeRect(28, 28, c.width - 56, c.height - 56);
     ctx.lineWidth = 3;
     ctx.strokeRect(48, 48, c.width - 96, c.height - 96);
-    // Corner marks
     [[70, 70], [c.width - 70, 70], [70, c.height - 70], [c.width - 70, c.height - 70]].forEach(function (p) {
       ctx.beginPath(); ctx.arc(p[0], p[1], 5, 0, Math.PI * 2); ctx.fillStyle = '#C6A15B'; ctx.fill();
     });
@@ -68,14 +86,12 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     ctx.font = '18px Georgia, serif'; ctx.fillStyle = '#5A4A38';
     ctx.fillText('has fulfilled every requirement of this institution', c.width / 2, 370);
     ctx.fillText('and is hereby awarded this certificate.', c.width / 2, 400);
-    // A small QR-like grid, drawn not decoded — a mark, not a real code
     var qx = c.width - 190, qy = c.height - 190, cell = 8;
     for (var i = 0; i < 14; i++) {
       for (var j = 0; j < 14; j++) {
         if ((i * 7 + j * 13) % 5 === 0) { ctx.fillStyle = '#221709'; ctx.fillRect(qx + i * cell, qy + j * cell, cell - 1, cell - 1); }
       }
     }
-    // Wax-seal medallion
     var sx = 190, sy = c.height - 150;
     var grad = ctx.createRadialGradient(sx, sy, 4, sx, sy, 46);
     grad.addColorStop(0, '#E9CE8A'); grad.addColorStop(1, '#9C7A3C');
@@ -99,8 +115,8 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
-  camera.position.set(0, 0.4, 7.5);
+  var camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
+  camera.position.set(0, -0.5, 11.5);
 
   scene.add(new THREE.AmbientLight(0xE9CE8A, 0.55));
   var key = new THREE.DirectionalLight(0xFFF3DE, 1.1);
@@ -109,6 +125,14 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   var rim = new THREE.DirectionalLight(0xC6A15B, 0.6);
   rim.position.set(-4, 1, -3);
   scene.add(rim);
+  var panelLight = new THREE.PointLight(0xE9CE8A, 0.9, 8);
+  panelLight.position.set(0, -3.1, 2);
+  scene.add(panelLight);
+
+  // A brass plaque in place of what used to be a plain DOM caption.
+  var plaque = buildPlaque(THREE, "Where the Institution's Credentials Are Made", 4.4, 0.5);
+  plaque.mesh.position.set(0, 2.2, 0);
+  scene.add(plaque.mesh);
 
   // The printer housing — a simple dark plate with a lit slot, just
   // enough geometry to read as "an apparatus," not a literal printer
@@ -122,7 +146,6 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   slot.position.set(0, -1.79, 0.4);
   scene.add(slot);
 
-  // Gold sparkle particles near the slot.
   var particleCount = 26;
   var positions = new Float32Array(particleCount * 3);
   for (var p = 0; p < particleCount; p++) {
@@ -135,18 +158,60 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   var particles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0xE9CE8A, size: 0.035, transparent: true, opacity: 0.75 }));
   scene.add(particles);
 
+  // ---- The instrument console — a tilted metal plate below the
+  // housing, holding every control that used to be a DOM element. ----
+  var consoleGroup = new THREE.Group();
+  consoleGroup.position.set(0, -3.35, 0.35);
+  consoleGroup.rotation.x = -0.22;
+  scene.add(consoleGroup);
+
+  var plate = new THREE.Mesh(
+    new THREE.BoxGeometry(6.3, 1.75, 0.16),
+    new THREE.MeshStandardMaterial({ color: 0x1C1207, metalness: 0.45, roughness: 0.5 })
+  );
+  consoleGroup.add(plate);
+  var plateFrontZ = 0.08 + 0.03;
+
+  var leds = buildLEDRow(THREE, 4, { gap: 0.17 });
+  leds.group.position.set(-2.75, 0.55, plateFrontZ);
+  consoleGroup.add(leds.group);
+
+  lcd = buildLCDPlane(THREE, 2.2, 0.62, { texH: 176 });
+  lcd.group.position.set(-1.15, 0.4, plateFrontZ);
+  consoleGroup.add(lcd.group);
+
+  var vu = buildVUStrip(THREE, 10, { maxHeight: 0.55 });
+  vu.group.position.set(1.55, 0.15, plateFrontZ);
+  consoleGroup.add(vu.group);
+
+  var dial = bindDial(THREE, qualityInput);
+  dial.group.position.set(-2.3, -0.45, plateFrontZ + 0.02);
+  consoleGroup.add(dial.group);
+
+  var engineSwitch = bindSwitch(THREE, engineInput);
+  engineSwitch.group.position.set(-0.85, -0.5, plateFrontZ);
+  consoleGroup.add(engineSwitch.group);
+
+  var soundSwitch = bindSwitch(THREE, soundInput);
+  soundSwitch.group.position.set(-0.15, -0.5, plateFrontZ);
+  consoleGroup.add(soundSwitch.group);
+
+  var guarded = buildGuardedSwitch(THREE);
+  guarded.group.position.set(0.65, -0.5, plateFrontZ);
+  consoleGroup.add(guarded.group);
+
+  wireRaycast(THREE, canvas, camera, [
+    { mesh: dial.hitMesh, onHit: dial.advance },
+    { mesh: engineSwitch.hitMesh, onHit: engineSwitch.flip },
+    { mesh: soundSwitch.hitMesh, onHit: soundSwitch.flip },
+  ]);
+
   function resize() {
     var w = mount.clientWidth, h = mount.clientHeight;
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    // The hero starts inside [data-portal-content], which is `hidden`
-    // until sign-in resolves — this element has zero size until then,
-    // so the first real resize() happens later, via this same
-    // ResizeObserver callback. Outside the running animation loop
-    // (reduced motion, or not yet started) nothing else will repaint
-    // the new size, so do it here.
     if (!running) renderer.render(scene, camera);
   }
   var ro = ('ResizeObserver' in window) ? new ResizeObserver(resize) : null;
@@ -154,23 +219,22 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   resize();
 
   // ---- The certificate emergence cycle ----
-  var CYCLE = 4200; // ms per certificate — adjustable by the "View" control below
-  var swayAmplitude = 0.35; // also adjustable by "View" — how far the camera drifts
-  var cur = null, curTex = null, nameIdx = 0, sessionCount = 0;
+  var CYCLE = 4200; // ms per certificate — adjustable by the View dial
+  var swayAmplitude = 0.35; // also adjustable by View — how far the camera drifts
+  var cur = null, curTex = null, nameIdx = 0, curSerial = '—';
   // A realistic-looking serial in the format used elsewhere on this
   // site (SHR-XXX-YYYY-000001) — illustrative for this demonstration,
   // the same way the names on the certificate are, not a real issued
   // number (the Certificate Register below issues those for real).
   function nextSerial() {
     sessionCount++;
-    if (countEl) countEl.textContent = String(sessionCount).padStart(4, '0');
     return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
   }
   function spawnCertificate() {
     if (curTex) curTex.dispose();
     curTex = drawCertificateFace(NAMES[nameIdx % NAMES.length]);
     nameIdx++;
-    if (serialEl) serialEl.textContent = nextSerial();
+    curSerial = nextSerial();
     var geo = new THREE.PlaneGeometry(3.4, 2.32, 24, 1);
     var mat = new THREE.MeshStandardMaterial({ map: curTex, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05 });
     if (cur) { scene.remove(cur); cur.geometry.dispose(); cur.material.dispose(); }
@@ -190,8 +254,7 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
       playSound();
     }
     var t = Math.min((now - cycleStart) / CYCLE, 1);
-    setStageDisplay(t);
-    // Ease out for the rise, hold, then a gentle fade/slide-away in the last 20%.
+    setStageDisplay(t, curSerial);
     var rise = Math.min(t / 0.55, 1);
     var eased = 1 - Math.pow(1 - rise, 3);
     var y = -1.9 + eased * 2.5;
@@ -210,7 +273,7 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     animateCycle(ts);
     particles.rotation.y += 0.0008;
     camera.position.x = Math.sin(ts / 9000) * swayAmplitude;
-    camera.lookAt(0, -0.4, 0);
+    camera.lookAt(0, -0.9, 0);
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
@@ -225,11 +288,10 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
   }
 
   if (reduceMotion) {
-    // A single, finished frame: the certificate fully emerged, nothing moving.
     var still = spawnCertificate();
     still.position.y = 0.6; still.scale.y = 1; still.rotation.x = 0;
-    setStageDisplay(1);
-    camera.lookAt(0, -0.4, 0);
+    setStageDisplay(1, curSerial);
+    camera.lookAt(0, -0.9, 0);
     resize();
     renderer.render(scene, camera);
   } else {
@@ -261,7 +323,6 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     var ctx = ensureAudioCtx();
     if (!ctx) return;
     var t0 = ctx.currentTime;
-    // A soft paper-riffle: filtered noise burst.
     var bufferSize = ctx.sampleRate * 0.18;
     var buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     var data = buf.getChannelData(0);
@@ -271,7 +332,6 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     var noiseGain = ctx.createGain(); noiseGain.gain.setValueAtTime(0.06, t0); noiseGain.gain.linearRampToValueAtTime(0, t0 + 0.18);
     noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
     noise.start(t0);
-    // A short gold chime.
     var osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, t0 + 0.1);
     var oscGain = ctx.createGain(); oscGain.gain.setValueAtTime(0, t0 + 0.1);
     oscGain.gain.linearRampToValueAtTime(0.05, t0 + 0.13);
@@ -280,53 +340,45 @@ import { makeSwitch, makeDial } from '/js/portal-forge-controls.js';
     osc.start(t0 + 0.1); osc.stop(t0 + 0.75);
   };
 
-  var soundSwitchEl = document.querySelector('[data-cert-forge-sound]');
-  if (soundSwitchEl) {
-    makeSwitch(soundSwitchEl, {
-      onLabel: 'ON', offLabel: 'OFF',
-      onChange: function (on) {
-        soundOn = on;
-        if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
-      },
+  if (soundInput) {
+    soundInput.addEventListener('change', function () {
+      soundOn = soundInput.checked;
+      if (soundOn) { ensureAudioCtx(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
     });
   }
 
-  // ---- Engine switch: a real control, not decorative — stops the loop
+  // ---- Engine input: a real control, not decorative — stops the loop
   // outright rather than just muting it, and overrides the
   // IntersectionObserver so scrolling the hero back into view doesn't
   // silently un-pause a deliberate stop. ----
-  var pauseSwitchEl = document.querySelector('[data-cert-forge-pause]');
-  if (pauseSwitchEl) {
-    makeSwitch(pauseSwitchEl, {
-      initial: true, onLabel: 'RUN', offLabel: 'HALT', disabled: reduceMotion,
-      onChange: function (on) {
-        userPaused = !on;
-        if (userPaused) { stop(); if (stageEl) stageEl.textContent = 'Paused'; }
+  if (engineInput) {
+    if (reduceMotion) {
+      engineInput.checked = false;
+      engineInput.disabled = true;
+      engineInput.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+    } else {
+      engineInput.addEventListener('change', function () {
+        userPaused = !engineInput.checked;
+        if (userPaused) { stop(); if (liveEl) liveEl.textContent = 'Paused.'; }
         else { start(); }
-      },
-    });
-    if (reduceMotion) pauseSwitchEl.title = 'Animation is already stopped — this browser/OS requested reduced motion.';
+      });
+    }
   }
 
   // ---- View dial: a real control that changes the pace of this
   // demonstration only — never the real certificate-generation engine,
   // which this scene does not touch. ----
   var QUALITY_TIERS = [
-    { label: 'Standard', cycle: 5200, sway: 0.2, particleOpacity: 0.55 },
-    { label: 'Professional', cycle: 4200, sway: 0.35, particleOpacity: 0.75 },
-    { label: 'Prestige', cycle: 3400, sway: 0.5, particleOpacity: 0.95 },
+    { cycle: 5200, sway: 0.2, particleOpacity: 0.55 },
+    { cycle: 4200, sway: 0.35, particleOpacity: 0.75 },
+    { cycle: 3400, sway: 0.5, particleOpacity: 0.95 },
   ];
-  var qualityDialEl = document.querySelector('[data-cert-forge-quality]');
-  if (qualityDialEl) {
-    makeDial(qualityDialEl.closest('.pfc-dial'), {
-      labelEl: document.querySelector('[data-cert-forge-quality-label]'),
-      labels: QUALITY_TIERS.map(function (t) { return t.label; }),
-      onChange: function (idx) {
-        var tier = QUALITY_TIERS[idx];
-        CYCLE = tier.cycle;
-        swayAmplitude = tier.sway;
-        particles.material.opacity = tier.particleOpacity;
-      },
+  if (qualityInput) {
+    qualityInput.addEventListener('input', function () {
+      var tier = QUALITY_TIERS[Number(qualityInput.value)];
+      CYCLE = tier.cycle;
+      swayAmplitude = tier.sway;
+      particles.material.opacity = tier.particleOpacity;
     });
   }
 })();
