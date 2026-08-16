@@ -2399,7 +2399,15 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           heroVisible = e.isIntersecting;
-          if (e.isIntersecting) start(); else stop();
+          if (e.isIntersecting) start();
+          // Visibility pauses ONLY the idle demonstration. A live batch
+          // keeps its engine: observer delivery is asynchronous, and a
+          // scroll's "hero left view" notice can land AFTER a batch has
+          // begun — an unconditional stop() here put a running batch's
+          // display to sleep permanently (confirmed by lifecycle trace).
+          // Real work ends through the drain branch, which stops the
+          // loop itself once the queue empties off-screen.
+          else if (!liveActive) stop();
         });
       }, { threshold: 0.1 });
       io.observe(mount);
@@ -2647,4 +2655,112 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     qualityInput.addEventListener('input', applyTier);
     applyTier();
   }
+
+  // ================= PRODUCTION ENVIRONMENT CHECK =================
+  // A brief boot sequence over the hero while the studio settles in.
+  // Discipline: every line is a fact measured RIGHT HERE — the device
+  // class that admitted the full studio, the GPU that built the scene,
+  // the real station count, the selected render tier, the audio
+  // engine's actual state, and the registry session check the page
+  // genuinely ran. The Experience Score is computed from those same
+  // facts, with the honest hint for any missing star. Never shown
+  // under prefers-reduced-motion (it is pure motion) — and phones
+  // never reach this module at all.
+  (function envCheck() {
+    var envEl = document.querySelector('[data-cert-env-check]');
+    if (!envEl || reduceMotion) return;
+    var stepsEl = envEl.querySelector('[data-env-steps]');
+    var scoreEl = envEl.querySelector('[data-env-score]');
+    var enterBtn = envEl.querySelector('[data-env-enter]');
+    if (!stepsEl || !scoreEl || !enterBtn) return;
+
+    var gpuName = null;
+    try {
+      var gl = renderer.getContext();
+      var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      if (dbg) gpuName = String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '');
+    } catch (gpuErr) { /* the context exists — only the name is optional */ }
+    if (gpuName && gpuName.length > 44) gpuName = gpuName.slice(0, 44) + '…';
+
+    var audioAvailable = !!(window.AudioContext || window.webkitAudioContext);
+    var tierIdx = qualityInput ? Number(qualityInput.value) : 1;
+    var tierName = ['Standard', 'Professional', 'Prestige'][tierIdx] || 'Professional';
+    var stationCount = Object.keys(STATION_X).length;
+
+    var steps = [
+      { k: 'WORKSTATION', v: 'Desktop-class — full production studio' },
+      { k: 'GRAPHICS', v: gpuName ? 'Accelerated — ' + gpuName : 'Hardware-accelerated WebGL' },
+      { k: 'PRODUCTION HALL', v: stationCount + ' stations on the line' },
+      { k: 'RENDER PIPELINE', v: tierName + (BLOOM ? ' · cinema bloom' : ' · direct render') },
+      { k: 'AUDIO ENGINE', v: audioAvailable ? (soundOn ? 'Enabled' : 'Standing by — sound switch on the console') : 'Unavailable in this browser', wait: audioAvailable && !soundOn },
+      { k: 'REGISTRY SESSION', v: window.__shrsSessionOk ? 'Verified' : 'Verifying…', wait: !window.__shrsSessionOk, session: true },
+    ];
+    var lis = steps.map(function (s) {
+      var li = document.createElement('li');
+      var k = document.createElement('span'); k.className = 'k'; k.textContent = s.k;
+      var v = document.createElement('span'); v.className = 'v' + (s.wait ? ' is-wait' : ''); v.textContent = s.v;
+      li.appendChild(k); li.appendChild(v);
+      stepsEl.appendChild(li);
+      return { li: li, v: v, s: s };
+    });
+    // QA record of exactly what the check measured and showed — the
+    // sequence is transient by design, so tests read this instead of
+    // racing the animation.
+    var envRecord = {
+      steps: steps.map(function (s) { return { k: s.k, v: s.v }; }),
+      stars: 0, hints: [], dismissed: false,
+    };
+    window.__certForgeEnvCheck = envRecord;
+    // The session check may resolve while the sequence is playing.
+    document.addEventListener('sultan:portal-session-ok', function () {
+      lis.forEach(function (e) {
+        if (e.s.session) { e.v.textContent = 'Verified'; e.v.classList.remove('is-wait'); }
+      });
+      envRecord.steps.forEach(function (s) { if (s.k === 'REGISTRY SESSION') s.v = 'Verified'; });
+    });
+
+    // The score IS the checklist: one star per fact that holds, and an
+    // honest hint naming the star that is missing.
+    var stars = 0; var hints = [];
+    stars += 1; // full studio admitted (phones never construct this scene)
+    stars += 1; // WebGL built the hall (this code cannot run otherwise)
+    if (tierIdx >= 1) stars += 1; else hints.push('raise the View dial for the cinematic pipeline');
+    if (audioAvailable) stars += 1; else hints.push('audio engine unavailable in this browser');
+    stars += 1; // full motion (reduced-motion never shows this overlay)
+    var starText = '';
+    for (var st = 0; st < 5; st++) starText += st < stars ? '★' : '☆';
+    envRecord.stars = stars;
+    envRecord.hints = hints;
+
+    var dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      envRecord.dismissed = true;
+      envEl.classList.add('is-leaving');
+      window.setTimeout(function () { envEl.hidden = true; }, 650);
+    }
+    enterBtn.addEventListener('click', dismiss);
+
+    envEl.hidden = false;
+    lis.forEach(function (e, i) {
+      window.setTimeout(function () { e.li.classList.add('is-on'); }, 260 + i * 240);
+    });
+    window.setTimeout(function () {
+      scoreEl.textContent = '';
+      var starsSpan = document.createElement('span'); starsSpan.className = 'stars'; starsSpan.textContent = starText;
+      scoreEl.appendChild(starsSpan);
+      scoreEl.appendChild(document.createTextNode('Experience ' + stars + ' / 5'));
+      if (hints.length) {
+        var hint = document.createElement('span'); hint.className = 'hint';
+        hint.textContent = hints.join(' · ');
+        scoreEl.appendChild(hint);
+      }
+      scoreEl.hidden = false;
+      scoreEl.classList.add('is-on');
+    }, 260 + lis.length * 240 + 150);
+    // QA hook: a harness can hold the sequence open to inspect it —
+    // never set in production; the Enter button always works.
+    if (!window.__envCheckHold) window.setTimeout(dismiss, 6500);
+  })();
 })();
