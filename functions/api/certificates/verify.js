@@ -23,20 +23,39 @@ import {
   parseStageCertificateIdentifier, resolveStageCertificateIdentifier,
   displayStageCertificateNo, verifyStageCertificateIntegrity, isoDateOnly,
 } from '../../_lib/certificate-serial.js';
+import { RC_PROGRAMMES } from '../../_lib/royal-college-certificate.js';
 import { hashIpAddress } from '../../_lib/document-hash.js';
 
 // The public attestation must use the award's OWN name. The Islamic-stage
-// certificates are Certificates of Completion; the Royal College Junior
-// Secondary award is a Certificate of Graduation, and a verifier comparing this
-// page against the document in their hand must read the same words on both.
-// Programme codes not listed here keep the original wording, so adding a stage
-// to the v1.0 registry does not silently change what this page says.
-const CREDENTIAL_TYPE_EN = {
-  JSS: (labelEn) => `Certificate of Graduation — ${labelEn}`,
-};
+// certificates are Certificates of Completion; every Royal College award —
+// JSS, SS, and now NUR/PRY as they join the Registrar's issuing route — is a
+// Certificate of Graduation, and a verifier comparing this page against the
+// document in their hand must read the same words on both.
+//
+// This used to be a lookup table with exactly one entry (JSS), hand-added
+// when Junior Secondary shipped and never revisited when SS, PRY and QUR
+// joined RC_PROGRAMMES — so a Primary certificate's own template already
+// printed "Primary School Graduation Certificate" while this endpoint would
+// have told a verifier "Certificate of Completion — Primary School": correct
+// award, wrong words, on the one page whose entire job is confirming the two
+// match. Reading straight from RC_PROGRAMMES instead of a hand-kept list
+// means a programme's public wording can no longer drift from what its own
+// sheet says — there is only the one place either is written.
 function credentialTypeEn(row) {
-  const f = CREDENTIAL_TYPE_EN[String(row.programme_code || '').toUpperCase()];
-  return f ? f(row.programme_label_en) : `Certificate of Completion — ${row.programme_label_en}`;
+  const prog = RC_PROGRAMMES[String(row.programme_code || '').toUpperCase()];
+  if (prog) {
+    // A variant-bearing award (only QUR today) names itself per student, not
+    // by the programme alone — see the identical guard in
+    // royal-college-certificate.js's sheetHtml. award_variant is issuance-time
+    // wording, not a stored column (scripts/issue-royal-college-batch.mjs
+    // never writes one back to the row), so a QUR row with no resolvable
+    // variant falls through to the generic default below — the same thing
+    // this endpoint already did for every Royal College programme before
+    // this fix — rather than printing a made-up title.
+    const award = prog.variants ? prog.variants[String(row.award_variant || '').toUpperCase()] : prog;
+    if (award && award.title) return `${award.title} — ${award.labelEn || prog.labelEn}`;
+  }
+  return `Certificate of Completion — ${row.programme_label_en}`;
 }
 
 
