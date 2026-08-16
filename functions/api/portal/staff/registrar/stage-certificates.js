@@ -43,13 +43,15 @@ import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
 // master (functions/_lib/royal-college-certificate.js, v1.1); everything else
 // keeps the frozen v1.0 path, byte for byte.
 //
-// Note what this does NOT do: it does not let the Registrar's Office ISSUE a
-// Royal College batch. Issuance here is scoped to one institution throughout
-// (issuingInstitutionId, hasIssueAuthority, INSTITUTION_INTERNAL_NAME below),
-// and widening that is a larger change to a live route than reprinting needs.
-// Royal College batches are issued by scripts/issue-royal-college-batch.mjs,
-// exactly as the Ibtida'iyyah and I'dadiyyah batches were. This is the reprint
-// path: a JSS row that reaches it renders correctly instead of throwing.
+// What this does and does not let the Registrar's Office ISSUE (as opposed to
+// just reprint, which every programme code below supports either way): NUR
+// and PRY — Nursery and Primary's own Royal-College-family awards — issue
+// through this route's roster workflow now, exactly like the Islamic stages
+// (see the note on INSTITUTIONS_BY_PROGRAMME below for why those two and not
+// the others). JSS, SS and QUR remain reprint-only here — they belong to a
+// different school with its own Principal approval chain, and are issued by
+// scripts/issue-royal-college-batch.mjs, exactly as before. A JSS/SS/QUR row
+// that reaches this GET path renders correctly instead of throwing either way.
 function renderCertificateFor(cert, args) {
   return RC_PROGRAMMES[String(cert.programme_code || '').toUpperCase()]
     ? renderRoyalCollegeCertificate(args)
@@ -69,12 +71,44 @@ function renderCertificateBatch(title, items) {
     : renderStageCertificateBatch(title, items);
 }
 
-// The issuing school for the Ibtida'iyyah certificate family. The
-// institutions table's internal name vs. the certificate's formal
-// display name (Official Institutional Nomenclature Directive,
-// 2026-08-05) are different registers of the same school.
-const INSTITUTION_INTERNAL_NAME = 'Islamic and Arabic Studies';
-const INSTITUTION_DISPLAY_NAME = 'Sultan Hanafi School of Islamic and Arabic Studies';
+// Two issuing schools now sit behind this one route. The institutions
+// table's internal name vs. the certificate's formal display name
+// (Official Institutional Nomenclature Directive, 2026-08-05) are
+// different registers of the same school, for each of them.
+//
+// Nursery and Primary was added alongside NUR/PRY joining RC_PROGRAMMES
+// (functions/_lib/royal-college-certificate.js). It is issued through
+// THIS roster workflow — unlike JSS/SS/QUR, which stay on the
+// scripts/issue-royal-college-batch.mjs path described below — because
+// it is the Registrar's Office's own day-to-day authority the same way
+// the Islamic stages are: schema.sql's own Registrar's Office entry
+// describes certificate authority "across all four institutions", and
+// Nursery and Primary is one of the four. JSS/SS/QUR belong to a
+// different school with its own Principal approval chain, which is a
+// materially different authority question this change does not decide.
+const INSTITUTIONS_BY_PROGRAMME = {
+  TMH: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
+  IBT: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
+  IDD: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
+  THN: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
+  NUR: { internalName: 'Nursery and Primary', displayName: 'Sultan Hanafi Nursery and Primary School' },
+  PRY: { internalName: 'Nursery and Primary', displayName: 'Sultan Hanafi Nursery and Primary School' },
+};
+// The Royal College codes this route (not the script) is authorised to
+// issue. RC_PROGRAMMES also holds JSS, SS and QUR — deliberately absent
+// here; see the comment above.
+const PORTAL_ROYAL_COLLEGE_CODES = ['NUR', 'PRY'];
+
+// Looks up a programme's wording from whichever registry defines it —
+// the Islamic-stage PROGRAMMES, or the two Royal College codes this
+// route is authorised to issue — or null if this route does not know it
+// (which covers JSS/SS/QUR, on purpose).
+function issuableProgramme(programmeCode) {
+  if (PROGRAMMES[programmeCode]) return PROGRAMMES[programmeCode];
+  if (PORTAL_ROYAL_COLLEGE_CODES.includes(programmeCode)) return RC_PROGRAMMES[programmeCode];
+  return null;
+}
+const ISSUABLE_PROGRAMME_CODES = [...Object.keys(PROGRAMMES), ...PORTAL_ROYAL_COLLEGE_CODES];
 
 const MAX_ROSTER_ROWS = 500;
 
@@ -139,8 +173,10 @@ async function hasViewAuthority(sql, staffId, institutionId) {
   return c.granted;
 }
 
-async function issuingInstitutionId(sql) {
-  const res = await sql`SELECT id FROM institutions WHERE name = ${INSTITUTION_INTERNAL_NAME}`;
+async function issuingInstitutionId(sql, programmeCode) {
+  const internalName = INSTITUTIONS_BY_PROGRAMME[programmeCode]?.internalName;
+  if (!internalName) return null;
+  const res = await sql`SELECT id FROM institutions WHERE name = ${internalName}`;
   return res.rows[0] ? res.rows[0].id : null;
 }
 
@@ -177,8 +213,13 @@ export async function onRequestGet({ request, env }) {
   if (!serial && !batchNo) return json({ error: 'Provide ?serial= or ?batch=.' }, 400);
 
   try {
-    const institutionId = await issuingInstitutionId(sql);
-    if (!(await hasViewAuthority(sql, staffId, institutionId))) {
+    // Not scoped to one institution: a serial or batch number can name a
+    // certificate from either issuing school this route now serves, and the
+    // Registrar's Office authority over 'certificates' is not institution-
+    // scoped in the first place (permission-matrix.js: no "own institution"
+    // qualifier on its 'V'/'C' grant) — see the fuller note on
+    // INSTITUTIONS_BY_PROGRAMME above.
+    if (!(await hasViewAuthority(sql, staffId, null))) {
       return json({ error: 'Your role does not have authority to view certificates.' }, 403);
     }
 
@@ -247,15 +288,15 @@ export async function onRequestPost({ request, env }) {
     if (action === 'preview_roster') {
       const programmeCode = String((body && body.programmeCode) || '').toUpperCase();
       const academicYear = String((body && body.academicYear) || '').trim();
-      if (!PROGRAMMES[programmeCode]) {
-        return json({ error: `Unknown programme code "${programmeCode}". Known: ${Object.keys(PROGRAMMES).join(', ')}.` }, 400);
+      if (!issuableProgramme(programmeCode)) {
+        return json({ error: `Unknown programme code "${programmeCode}". Known: ${ISSUABLE_PROGRAMME_CODES.join(', ')}.` }, 400);
       }
       if (!Array.isArray(body.rows) || !body.rows.length) return json({ error: 'rows is required.' }, 400);
       if (body.rows.length > MAX_ROSTER_ROWS) {
         return json({ error: `A batch is capped at ${MAX_ROSTER_ROWS} rows — split larger cohorts into multiple batches.` }, 400);
       }
 
-      const institutionId = await issuingInstitutionId(sql);
+      const institutionId = await issuingInstitutionId(sql, programmeCode);
       const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
       if (!grant.granted) return json({ error: 'Your role does not have authority to issue certificates.' }, 403);
 
@@ -297,7 +338,7 @@ export async function onRequestPost({ request, env }) {
     // ── Batch generation: the real issuing act ───────────────────────
     if (action === 'generate_batch') {
       const programmeCode = String((body && body.programmeCode) || '').toUpperCase();
-      const programme = PROGRAMMES[programmeCode];
+      const programme = issuableProgramme(programmeCode);
       const academicYear = String((body && body.academicYear) || '').trim();
       const issuedAt = String((body && body.issuedAt) || '').trim() || new Date().toISOString().slice(0, 10);
       const placeEn = String((body && body.placeEn) || '').trim() || null;
@@ -305,7 +346,7 @@ export async function onRequestPost({ request, env }) {
       const description = String((body && body.description) || '').trim() || null;
 
       if (!programme) {
-        return json({ error: `Unknown programme code "${programmeCode}". Known: ${Object.keys(PROGRAMMES).join(', ')}.` }, 400);
+        return json({ error: `Unknown programme code "${programmeCode}". Known: ${ISSUABLE_PROGRAMME_CODES.join(', ')}.` }, 400);
       }
       if (!/^\d{4}\/\d{4}$/.test(academicYear)) {
         return json({ error: 'academicYear must look like 2025/2026.' }, 400);
@@ -321,7 +362,7 @@ export async function onRequestPost({ request, env }) {
         return json({ error: 'DOCUMENT_HASH_SECRET is not configured — certificates cannot be issued without the integrity-hash secret.' }, 500);
       }
 
-      const institutionId = await issuingInstitutionId(sql);
+      const institutionId = await issuingInstitutionId(sql, programmeCode);
       const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
       if (!grant.granted) return json({ error: 'Your role does not have authority to issue certificates.' }, 403);
 
@@ -363,7 +404,7 @@ export async function onRequestPost({ request, env }) {
 
           let student = match.student || null;
           if (!student) {
-            const admissionNo = await generateAdmissionNo(sql, INSTITUTION_INTERNAL_NAME, admissionYear);
+            const admissionNo = await generateAdmissionNo(sql, INSTITUTIONS_BY_PROGRAMME[programmeCode].internalName, admissionYear);
             const ins = await sql`
               INSERT INTO students (full_name, full_name_ar, sex, admission_no, status)
               VALUES (${row.fullName}, ${row.fullNameAr || null}, ${row.sex}, ${admissionNo}, 'active')
@@ -410,7 +451,7 @@ export async function onRequestPost({ request, env }) {
                issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version, issued_by_staff_id)
             VALUES
               (${serialNo}, ${batchId}, ${student.id}, ${identityNo}, ${student.full_name}, ${student.full_name_ar || row.fullNameAr || null},
-               ${student.sex || row.sex}, ${programmeCode}, ${programme.labelEn}, ${programme.labelAr}, ${INSTITUTION_DISPLAY_NAME},
+               ${student.sex || row.sex}, ${programmeCode}, ${programme.labelEn}, ${programme.labelAr || null}, ${INSTITUTIONS_BY_PROGRAMME[programmeCode].displayName},
                ${academicYear}, ${row.gradeEn || null}, ${row.gradeAr || null}, ${placeEn}, ${placeAr},
                ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${keyVersion}, ${staffId})`;
 
@@ -440,8 +481,10 @@ export async function onRequestPost({ request, env }) {
 
     // ── Register listing ─────────────────────────────────────────────
     if (action === 'list_register') {
-      const institutionId = await issuingInstitutionId(sql);
-      if (!(await hasViewAuthority(sql, staffId, institutionId))) {
+      // Cross-institution by construction — the query below has no
+      // institution filter, and neither does the Registrar's authority
+      // over it (see the note on INSTITUTIONS_BY_PROGRAMME above).
+      if (!(await hasViewAuthority(sql, staffId, null))) {
         return json({ error: 'Your role does not have authority to view the certificate register.' }, 403);
       }
       const search = String((body && body.search) || '').trim();
@@ -477,8 +520,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (action === 'list_batches') {
-      const institutionId = await issuingInstitutionId(sql);
-      if (!(await hasViewAuthority(sql, staffId, institutionId))) {
+      if (!(await hasViewAuthority(sql, staffId, null))) {
         return json({ error: 'Your role does not have authority to view certificate batches.' }, 403);
       }
       const rows = (await sql`
@@ -500,8 +542,9 @@ export async function onRequestPost({ request, env }) {
 
     // ── Revocation (per-certificate, never per-batch) ────────────────
     if (action === 'revoke') {
-      const institutionId = await issuingInstitutionId(sql);
-      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
+      // Revocation is by serial number, not by programme — the same
+      // cross-institution authority as list_register/list_batches above.
+      const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', null);
       if (!grant.granted) return json({ error: 'Your role does not have authority to revoke certificates.' }, 403);
       const serialNo = String((body && body.serialNo) || '').trim();
       const revocationNote = String((body && body.revocationNote) || '').trim();
