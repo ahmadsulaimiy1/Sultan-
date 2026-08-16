@@ -732,6 +732,38 @@ body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]){
   --rgo-line:rgba(140,104,52,.32);
 }
 
+/* ---- The page itself, not just its chrome ---------------------------
+   The ivory masthead and colophon were landing on the espresso ground
+   css/prestige.css's own body.portal-body{...} paints underneath them
+   — unconditionally, in every edition, for the same reason the base
+   chrome above used to be espresso too. The seam was the actual
+   complaint: a light bar, a dark room, a light bar again.
+     Fixed the same way .portal-card re-inks its own contents a few
+   hundred lines up in this file — not by chasing every element that
+   sits directly on the page (the hero title, the section dividers,
+   the eyebrow lines) with an individual override, but by redeclaring
+   the custom properties they already read (--ink, --ink-soft,
+   --portal-heading, --ivory, --milk, --line) so all of them re-ink at
+   once, the same way every element inside .portal-card already does.
+   !important, and not by choice: the default theme (js/portal-theme.js,
+   'royal' when no preference is stored) stamps data-pc-theme="royal" on
+   <html> before first paint, and :root[data-pc-theme="royal"] .portal-
+   body in css/portal.css sets these same custom properties for that
+   theme — two compound selectors joined by a descendant combinator, which
+   out-specifies this rule's one compound selector even with the
+   attribute qualifier added. Measured, not assumed: the pale ink was
+   still showing on .cc-greeting and .portal-hello-sub without this. */
+body.portal-body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]){
+  --ink:var(--rgo-ink) !important; --ink-soft:var(--rgo-ink-soft) !important;
+  --portal-heading:var(--rgo-gold-deep) !important;
+  --ivory:var(--rgo-cream-1) !important; --milk:var(--rgo-cream-2) !important;
+  --line:var(--rgo-line) !important;
+  background:
+    radial-gradient(1200px 620px at 78% -12%,rgba(198,161,91,.16),transparent 62%),
+    radial-gradient(900px 500px at 8% 108%,rgba(198,161,91,.10),transparent 60%),
+    linear-gradient(180deg,var(--rgo-cream-1) 0%,var(--rgo-parchment) 100%);
+  color:var(--rgo-ink);}
+
 /* ---- The surfaces, repainted ---------------------------------------- */
 body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .pch-strip{
   background:linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-parchment) 100%);
