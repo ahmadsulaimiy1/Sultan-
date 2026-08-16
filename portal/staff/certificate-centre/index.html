@@ -113,6 +113,17 @@
           <label>Place (Arabic)</label>
           <input type="text" data-cert-place-ar dir="rtl" value="مدينة إكورودو، ولاية لاغوس، نيجيريا" />
         </div>
+        <div class="portal-field">
+          <label>Output Quality Profile (archival image resolution)</label>
+          <select data-cert-quality-profile>
+            <option value="draft">Draft — 1× render, fastest, smallest files</option>
+            <option value="standard">Standard — 1.5× render</option>
+            <option value="high" selected>High Quality — 2× render</option>
+            <option value="press">Print Press — 3× render</option>
+            <option value="archive">Archive — 4× render, largest files</option>
+          </select>
+          <p class="portal-field-hint">Applies to the archival PNG image of each certificate. PDFs are vector at every profile — resolution-independent by construction — and every profile renders the same official template masters.</p>
+        </div>
       </form>
     </div>
 

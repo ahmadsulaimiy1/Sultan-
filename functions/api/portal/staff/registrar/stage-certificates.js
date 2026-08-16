@@ -33,7 +33,7 @@ import { renderStageCertificate, renderStageCertificateBatch } from '../../../..
 import {
   RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
 } from '../../../../_lib/royal-college-certificate.js';
-import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
+import { renderHtmlToPdf, renderHtmlToPng, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
 import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
 
 // ── Which master renders which programme ────────────────────────────────────
@@ -224,6 +224,30 @@ export async function onRequestGet({ request, env }) {
           return json({ error: pdfErr.message }, 503);
         }
         throw pdfErr;
+      }
+    }
+    if (url.searchParams.get('format') === 'png') {
+      // The archival raster of the exact approved template — single
+      // certificates only; a multi-page batch has no single-image form.
+      if (!serial) return json({ error: 'PNG output is per-certificate — provide ?serial=.' }, 400);
+      // Output quality profiles, honestly stated: a Chromium raster's
+      // one real quality axis is render resolution (device scale).
+      // PDF output is vector at every profile and needs no scale.
+      const QUALITY_SCALE = { draft: 1, standard: 1.5, high: 2, press: 3, archive: 4 };
+      const scale = QUALITY_SCALE[(url.searchParams.get('quality') || 'high').toLowerCase()] || 2;
+      try {
+        const png = await renderHtmlToPng(env, html, { scale });
+        return new Response(png, {
+          headers: {
+            'Content-Type': 'image/png',
+            'Content-Disposition': `inline; filename="${filename.replace(/\.pdf$/, '')}.png"`,
+          },
+        });
+      } catch (pngErr) {
+        if (pngErr instanceof PdfRenderUnavailableError) {
+          return json({ error: pngErr.message }, 503);
+        }
+        throw pngErr;
       }
     }
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
@@ -427,10 +451,17 @@ export async function onRequestPost({ request, env }) {
                            ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${keyVersion}, ${staffId})`;
 
                       issued += 1;
+                      const encoded = encodeURIComponent(serialNo);
                       outcome = {
                         ...row, status: 'issued', serialNo, studentIdentityNo: identityNo,
                         admissionNo: student.admission_no, newStudent: match.status === 'new',
-                        viewUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encodeURIComponent(serialNo)}`,
+                        viewUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}`,
+                        // Both artefacts of the record, straight from the
+                        // registered row through the official template
+                        // masters — the render is deterministic from the
+                        // record, so the record IS the registration of both.
+                        pdfUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=pdf`,
+                        pngUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=png`,
                         verifyUrl: verifyUrlFor(env, serialNo),
                       };
                     }

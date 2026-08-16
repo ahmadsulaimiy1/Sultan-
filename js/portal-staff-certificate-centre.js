@@ -37,6 +37,10 @@
 
   var API = '/api/portal/staff/registrar/stage-certificates';
   var lastValidatedRows = null;
+  var qualityProfileEl = document.querySelector('[data-cert-quality-profile]');
+  function qualityProfile(){
+    return (qualityProfileEl && qualityProfileEl.value) || 'high';
+  }
 
   function el(tag, className, text){
     var e = document.createElement(tag);
@@ -274,13 +278,19 @@
       tr.appendChild(el('td', null, row.studentIdentityNo || '—'));
       var actions = el('td');
       if(row.status === 'issued'){
+        var profile = qualityProfile();
         var view = el('a', 'text-link', 'Open');
         view.href = row.viewUrl; view.target = '_blank'; view.rel = 'noopener';
         actions.appendChild(view);
         actions.appendChild(document.createTextNode(' '));
         var pdf = el('a', 'text-link', 'PDF');
-        pdf.href = row.viewUrl + '&format=pdf'; pdf.target = '_blank'; pdf.rel = 'noopener';
+        pdf.href = (row.pdfUrl || row.viewUrl + '&format=pdf'); pdf.target = '_blank'; pdf.rel = 'noopener';
         actions.appendChild(pdf);
+        actions.appendChild(document.createTextNode(' '));
+        var png = el('a', 'text-link', 'PNG');
+        png.href = (row.pngUrl || row.viewUrl + '&format=png') + '&quality=' + profile;
+        png.target = '_blank'; png.rel = 'noopener';
+        actions.appendChild(png);
         actions.appendChild(document.createTextNode(' '));
         var verify = el('a', 'text-link', 'Verify');
         verify.href = row.verifyUrl; verify.target = '_blank'; verify.rel = 'noopener';
@@ -320,8 +330,15 @@
         renderResults(data);
         var printAll = el('a', 'registrar-btn', 'Open Full Batch for Printing (' + data.issued + ' certificates)');
         printAll.href = data.batchPrintUrl; printAll.target = '_blank'; printAll.rel = 'noopener';
-        printAll.style.display = 'inline-block'; printAll.style.margin = '10px 20px';
+        printAll.style.display = 'inline-block'; printAll.style.margin = '10px 8px 10px 20px';
         resultsListEl.appendChild(printAll);
+        // The combined batch PDF — every certificate of the batch in
+        // issuance order, compiled server-side; nobody merges PDFs by
+        // hand.
+        var batchPdf = el('a', 'registrar-btn', 'Combined Batch PDF (issuance order)');
+        batchPdf.href = data.batchPrintUrl + '&format=pdf'; batchPdf.target = '_blank'; batchPdf.rel = 'noopener';
+        batchPdf.style.display = 'inline-block'; batchPdf.style.margin = '10px 8px';
+        resultsListEl.appendChild(batchPdf);
         loadBatches();
       }catch(err){
         showResult(generateResultEl, false, err.message);

@@ -70,3 +70,33 @@ export async function renderHtmlToPdf(env, html) {
     }
   }
 }
+
+// Renders the same self-contained certificate HTML to a PNG raster —
+// the archival-image artefact of the exact approved template, through
+// the exact same headless-Chromium service as the PDF, so the two can
+// never drift apart. `scale` is the device scale factor: it is the one
+// honest quality axis a Chromium screenshot has (render resolution).
+// Colour is whatever the template's own CSS states — no profile is
+// invented here, and PDF output stays vector regardless (Chromium's
+// page.pdf embeds the drawing commands, not a raster).
+export async function renderHtmlToPng(env, html, opts) {
+  if (!env.BROWSER) {
+    throw new PdfRenderUnavailableError('the BROWSER binding is not configured on this environment');
+  }
+  const scale = Math.min(4, Math.max(1, (opts && opts.scale) || 2));
+  let browser;
+  try {
+    browser = await puppeteer.launch(env.BROWSER);
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1240, height: 877, deviceScaleFactor: scale });
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+    const png = await page.screenshot({ type: 'png', fullPage: true });
+    return png;
+  } catch (err) {
+    throw new PdfRenderUnavailableError(err && err.message ? err.message : 'browser rendering failed');
+  } finally {
+    if (browser) {
+      try { await browser.close(); } catch { /* best-effort cleanup */ }
+    }
+  }
+}

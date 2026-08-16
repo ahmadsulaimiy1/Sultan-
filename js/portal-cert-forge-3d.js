@@ -1034,7 +1034,50 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     return 'SHR-CERT-2026-' + String(40 + sessionCount).padStart(6, '0');
   }
   var curName = '', curSerialPrint = null, curBuilt = null;
-  function spawnCertificate(overrideName, overrideSerial) {
+  var curReal = false, spawnToken = 0;
+  // The OFFICIAL face: for real rows the press manufactures the actual
+  // approved template — the same frozen server-side master that prints
+  // (functions/_lib/stage-certificate-template.js and its Royal College
+  // sibling, dispatched per programme by the registry), rendered by the
+  // same headless-Chromium service as the PDFs and fetched here as the
+  // sheet's texture. The engine never knows a template's layout: it
+  // textures whatever the registry renders for that serial, so present
+  // and future certificate families flow through with no change here.
+  // Until the render arrives (or when Browser Rendering is unavailable
+  // on the deployment), the sheet carries the illustrative face, and
+  // the demonstration loop always does — it has no real serial to ask
+  // for.
+  function loadRealFace(url, token) {
+    fetch(url, { credentials: 'same-origin' }).then(function (res) {
+      if (!res.ok) throw new Error('render unavailable');
+      return res.blob();
+    }).then(function (blob) {
+      if (window.createImageBitmap) return window.createImageBitmap(blob);
+      return new Promise(function (resolve, reject) {
+        var img = new Image();
+        var objUrl = URL.createObjectURL(blob);
+        img.onload = function () { URL.revokeObjectURL(objUrl); resolve(img); };
+        img.onerror = function () { URL.revokeObjectURL(objUrl); reject(new Error('decode failed')); };
+        img.src = objUrl;
+      });
+    }).then(function (bmp) {
+      if (token !== spawnToken || !curFull) { if (bmp.close) bmp.close(); return; }
+      var ctx = curFull.getContext('2d');
+      ctx.fillStyle = '#F7EEDF';
+      ctx.fillRect(0, 0, curFull.width, curFull.height);
+      var fit = Math.min(curFull.width / bmp.width, curFull.height / bmp.height);
+      var w = bmp.width * fit, h = bmp.height * fit;
+      ctx.drawImage(bmp, (curFull.width - w) / 2, (curFull.height - h) / 2, w, h);
+      curReal = true;
+      var hpx = Math.round(curFull.height * (Math.max(curBands, 0) / BANDS));
+      if (hpx > 0) {
+        curDisp.getContext('2d').drawImage(curFull, 0, 0, curFull.width, hpx, 0, 0, curFull.width, hpx);
+        curTex.needsUpdate = true;
+      }
+      if (bmp.close) bmp.close();
+    }).catch(function () { /* honest fallback: the illustrative face stays */ });
+  }
+  function spawnCertificate(overrideName, overrideSerial, artUrl) {
     if (curTex) curTex.dispose();
     var name = overrideName || NAMES[nameIdx % NAMES.length];
     if (!overrideName) nameIdx++;
@@ -1046,6 +1089,9 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
     curName = name;
     curSerialPrint = overrideSerial || null;
     curBuilt = {}; // no seal, no QR, no signature — the stations add them
+    curReal = false;
+    spawnToken += 1;
+    if (artUrl) loadRealFace(artUrl, spawnToken);
     curFull = drawFaceCanvas(curName, curSerialPrint, curBuilt);
     curDisp = document.createElement('canvas');
     curDisp.width = curFull.width; curDisp.height = curFull.height;
@@ -1082,6 +1128,11 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
   function stationBuild(flag) {
     if (!curBuilt || curBuilt[flag]) return;
     curBuilt[flag] = true;
+    // A real row's face IS the official master — it already carries its
+    // seal, QR, signature and security layers; the stations' physical
+    // acts present what the document truly bears rather than drawing
+    // stand-ins over the official art.
+    if (curReal) return;
     curFull = drawFaceCanvas(curName, curSerialPrint, curBuilt);
     var h = Math.round(curFull.height * (Math.max(curBands, 0) / BANDS));
     if (h > 0) {
@@ -1188,7 +1239,14 @@ import { buildLCDPlane, buildVUStrip, buildLEDRow, bindDial, bindSwitch, buildGu
         resetCycleApparatus();
         liveCurrent = liveQueue.shift();
         var shownName = liveCurrent.fullName || liveCurrent.studentFullName || 'Student';
-        spawnCertificate(shownName, liveCurrent.serialNo || null);
+        // The scene texture needs ~1024px — the 'standard' profile; the
+        // registrar's chosen archival profile governs the saved
+        // artefacts, not this preview texture.
+        var artUrl = liveCurrent.status === 'issued'
+          ? ((liveCurrent.pngUrl || (liveCurrent.viewUrl ? liveCurrent.viewUrl + '&format=png' : null)))
+          : null;
+        if (artUrl) artUrl += '&quality=standard';
+        spawnCertificate(shownName, liveCurrent.serialNo || null, artUrl);
         var goodTone = liveCurrent.status === 'issued' ? 0xC6A15B : (liveCurrent.status === 'skipped' ? 0x8C6834 : 0x8A3A2E);
         slotMat.emissive.setHex(goodTone);
         // Real progress to assistive tech, one write per row, throttled
