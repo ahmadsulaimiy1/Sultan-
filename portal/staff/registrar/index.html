@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
 <meta name="shrs-build" content="shrs-pwa-c490a98c12">
 </head>
-<body class="portal-body type-administrative" data-atmosphere="registrar">
+<body class="portal-body type-administrative" data-atmosphere="registrar" data-office-page="registrar">
 
 <div class="portal-topbar">
   <a class="portal-brand" href="/">
@@ -48,6 +48,26 @@
     <div class="cc-tagline" id="cc-tagline">Registry Headquarters</div>
     <div class="cc-greeting" id="cc-greeting">Registry systems are operational.</div>
     <div class="portal-hello-sub">Academic records, enrolment, lifecycle events, and certification — one honest source per student, not a spreadsheet.</div>
+
+    <div class="registry-hall portal-forge-hero" data-registry-hall>
+      <canvas data-registry-hall-canvas aria-hidden="true"></canvas>
+      <noscript><p class="portal-forge-hero-noscript">Every record entered here is checked against your assigned roles and recorded in the staff audit log — see Records Integrity below.</p></noscript>
+      <!-- The console rendered on the canvas above (dial, switches, VU
+           meter, LCD readouts) is a 3D skin on these real controls —
+           js/portal-forge-controls.js treats them as the source of
+           truth, so keyboard and screen-reader access work exactly as
+           they would for visible form controls, without the console
+           itself being drawn as one. See js/portal-registry-hall-3d.js. -->
+      <p class="pr-sr" data-registry-hall-live aria-live="polite"></p>
+      <div class="pr-sr">
+        <label for="registry-hall-engine">Registry Hall demonstration: engine running</label>
+        <input type="checkbox" id="registry-hall-engine" checked data-registry-hall-pause />
+        <label for="registry-hall-sound">Registry Hall demonstration: sound effects</label>
+        <input type="checkbox" id="registry-hall-sound" data-registry-hall-sound />
+        <label for="registry-hall-view">Registry Hall demonstration: rendering pace — Standard, Professional, or Prestige. Changes only this demonstration, never the real registry.</label>
+        <input type="range" id="registry-hall-view" min="0" max="2" step="1" value="1" data-registry-hall-quality />
+      </div>
+    </div>
 
     <div class="office-group-head">Admissions Intelligence &amp; Student Registry</div>
 
@@ -117,7 +137,7 @@
       <div class="portal-child-head"><h2>Graduation Information Submissions</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">Guardians submit these from their own dashboard — nothing here is typed in by staff. Review a submission, request a correction if something looks wrong, then mark it verified once the details and results are confirmed. Marking a record verified starts the full institutional Graduation Approval Workflow — Academic, Examinations, Finance, Disciplinary, Library, ICT, Principal, both Vice Principals, and the Founder where required — tracked on the <a class="text-link" href="/portal/staff/graduation-control/">Graduation Control Centre →</a>, not here. A record locks itself automatically once every stage clears.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;">
-        <select data-graduation-status-filter class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);">
+        <select data-graduation-status-filter class="registrar-search-row-select">
           <option value="">All statuses</option>
           <option value="submitted">Submitted</option>
           <option value="under_review">Under review</option>
@@ -135,7 +155,7 @@
       <div class="portal-child-head"><h2>Graduation Register</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">The full ceremony roster for one graduation session — every locked record, in one institutional publication. This is not an individually-verifiable credential: it carries no reference number, seal, or verification code of its own (each graduate's own documents carry those separately).</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
-        <input type="text" data-register-session placeholder="e.g. 2025/2026" class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);" />
+        <input type="text" data-register-session placeholder="e.g. 2025/2026" class="registrar-search-row-select" />
         <button type="button" class="registrar-btn" data-register-generate>Open Register</button>
         <button type="button" class="registrar-btn" data-register-generate-pdf>Download PDF</button>
       </div>
@@ -156,7 +176,7 @@
       <div class="portal-child-head"><h2>Lifetime Verification History</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">Every time a document's reference number has been checked at the public verification page, since the document was issued — the anomaly-review purpose this exists for is repeated or suspicious checks against one document.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
-        <input type="text" data-verification-history-ref placeholder="Reference number, e.g. SHRS-AR-..." class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:260px;" />
+        <input type="text" data-verification-history-ref placeholder="Reference number, e.g. SHRS-AR-..." class="registrar-search-row-select" style="min-width:260px;" />
         <button type="button" class="registrar-btn" data-verification-history-lookup>View History</button>
       </div>
       <div class="registrar-approvals-list" data-verification-history-list></div>
@@ -371,6 +391,7 @@
 <script src="/js/portal-office-switcher.js?v=479a8d8c95" defer></script>
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>
 <script src="/js/portal-staff-registrar.js?v=05b7367b14" defer></script>
+<script src="/js/portal-registry-hall-3d.js?v=1" type="module"></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

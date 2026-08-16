@@ -16,7 +16,7 @@
 // graduation-workflow.js's decideStage() 'escalate_to_founder' action
 // for that one-off, per-record path.
 import { getSql } from '../../../_lib/db.js';
-import { readStaffSessionFromRequest } from '../../../_lib/session.js';
+import { readStaffSessionFromRequest, createStaffSessionCookie } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { effectiveGrants } from '../../../_lib/permissions.js';
 import { logStaffEvent, requestAuditContext } from '../../../_lib/audit.js';
@@ -60,6 +60,9 @@ export async function onRequestGet({ request, env }) {
       SELECT gar.*, s.full_name AS created_by_name FROM graduation_approval_rules gar
       LEFT JOIN staff s ON s.id = gar.created_by_staff_id
       ORDER BY gar.is_active DESC, gar.created_at DESC`;
+    // Sliding session, same as /api/portal/staff/me — the Approval
+    // Matrix is a page staff can visit and stay on without ever loading
+    // a /me-calling page, so it needs its own renewal too.
     return json({
       ok: true,
       stages: Object.values(STAGE_BY_CODE).map((s) => ({ code: s.code, label: s.label })),
@@ -68,7 +71,7 @@ export async function onRequestGet({ request, env }) {
         appliesGlobally: r.applies_globally, isActive: r.is_active, createdByName: r.created_by_name, createdAt: r.created_at,
         deactivatedAt: r.deactivated_at,
       })),
-    });
+    }, 200, { 'Set-Cookie': createStaffSessionCookie(staffId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('approval-matrix GET error', err);
     return json({ error: 'Could not load the Approval Matrix right now — please try again shortly.' }, 500);
@@ -106,7 +109,7 @@ export async function onRequestPost({ request, env }) {
         reason: body.referenceText || null, metadata: { action: 'create_rule', targetStageCode, triggerType },
         ipAddress: auditCtx.ipAddress, userAgent: auditCtx.userAgent, newValue: { targetStageCode, triggerType, isActive: true },
       });
-      return json({ ok: true, ruleId: inserted.rows[0].id });
+      return json({ ok: true, ruleId: inserted.rows[0].id }, 200, { 'Set-Cookie': createStaffSessionCookie(staffId, env.SESSION_SECRET) });
     }
 
     if (action === 'deactivate_rule') {
@@ -123,7 +126,7 @@ export async function onRequestPost({ request, env }) {
         ipAddress: auditCtx.ipAddress, userAgent: auditCtx.userAgent,
         previousValue: { isActive: true }, newValue: { isActive: false },
       });
-      return json({ ok: true, ruleId });
+      return json({ ok: true, ruleId }, 200, { 'Set-Cookie': createStaffSessionCookie(staffId, env.SESSION_SECRET) });
     }
 
     return json({ error: 'Unknown action. Expected one of: create_rule, deactivate_rule.' }, 400);

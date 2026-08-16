@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="/css/portal-chrome.css?v=52b58898ef">
 <meta name="shrs-build" content="shrs-pwa-c490a98c12">
 </head>
-<body class="portal-body type-administrative" data-atmosphere="registrar">
+<body class="portal-body type-administrative" data-atmosphere="registrar" data-office-page="certificate-centre">
 
 <div class="portal-topbar">
   <a class="portal-brand" href="/">
@@ -47,6 +47,44 @@
     <div class="cc-tagline" id="cc-tagline">Credential Issuance Authority</div>
     <div class="cc-greeting" id="cc-greeting">Every certificate issued here carries a permanent Student ID, a unique anti-forgery serial, and live QR verification.</div>
     <div class="portal-hello-sub">Upload a cohort roster once — the system matches or creates each student record, assigns permanent Student IDs (SHRS-STU-…), issues uniquely serialled certificates (SHRS-CERT-…), and produces print-ready bilingual documents, individually or as one batch.</div>
+
+    <div class="cert-forge portal-forge-hero" data-cert-forge>
+      <canvas data-cert-forge-canvas aria-hidden="true"></canvas>
+      <div class="cc-companion" data-cert-forge-companion>
+        <div class="cc-companion-mark" aria-hidden="true"></div>
+        <h2>Professional Credential Production Studio</h2>
+        <p>The full cinematic 3D production hall runs on desktop and tablet workstations. This device continues in Companion Mode: the complete certificate issuance workflow below runs at full speed, with live production progress, the register, and every artefact link.</p>
+      </div>
+      <noscript><p class="portal-forge-hero-noscript">This institution's certificates are produced under permission-checked, audit-logged authority — see the Certificate Register below.</p></noscript>
+      <!-- The official-masters guarantee: the production engine only ever
+           shows the registry's own render of the approved template. If the
+           render service cannot supply a master during a live batch, the
+           engine halts its display behind this notice rather than showing
+           a substitute. Issuance itself is a separate, unaffected path. -->
+      <div class="cc-forge-halt" data-cert-forge-halt hidden role="alert">
+        <strong>Official certificate template unavailable. Production cannot continue.</strong>
+        <span>The registry's rendering service did not return the approved master for this batch. The production display has stopped — no substitute template will be shown. Certificate issuance itself is unaffected: every result is recorded in the Certificate Register below.</span>
+      </div>
+      <!-- The console rendered on the canvas above (dial, switches, VU
+           meter, LCD readouts) is a 3D skin on these real controls —
+           js/portal-forge-controls.js treats them as the source of
+           truth, so keyboard and screen-reader access work exactly as
+           they would for visible form controls, without the console
+           itself being drawn as one. See js/portal-cert-forge-3d.js. -->
+      <p class="pr-sr" data-cert-forge-live aria-live="polite"></p>
+      <div class="pr-sr">
+        <!-- These ship disabled: js/portal-cert-forge-3d.js enables them
+             only once the WebGL scene they control actually exists, so
+             keyboard/screen-reader users never meet live-sounding
+             controls for a simulation that failed to build. -->
+        <label for="cert-forge-engine">Certificate Press performance mode: full cinematic simulation when on; switched off, the press halts entirely for instant, animation-free working — certificate generation itself always runs at full speed either way</label>
+        <input type="checkbox" id="cert-forge-engine" checked disabled data-cert-forge-pause />
+        <label for="cert-forge-sound">Certificate Press sound: motors, servos, seal strikes, chimes, and spoken production announcements — all off until switched on</label>
+        <input type="checkbox" id="cert-forge-sound" disabled data-cert-forge-sound />
+        <label for="cert-forge-view">Certificate Press display richness — Standard, Professional, or Prestige. Changes only this workstation's display, never certificate generation.</label>
+        <input type="range" id="cert-forge-view" min="0" max="2" step="1" value="1" disabled data-cert-forge-quality />
+      </div>
+    </div>
 
     <div class="office-group-head">1 — Batch Setup</div>
     <div class="portal-child-card">
@@ -89,6 +127,17 @@
           <label>Place (Arabic)</label>
           <input type="text" data-cert-place-ar dir="rtl" value="مدينة إكورودو، ولاية لاغوس، نيجيريا" />
         </div>
+        <div class="portal-field">
+          <label>Output Quality Profile (archival image resolution)</label>
+          <select data-cert-quality-profile>
+            <option value="draft">Draft — 1× render, fastest, smallest files</option>
+            <option value="standard">Standard — 1.5× render</option>
+            <option value="high" selected>High Quality — 2× render</option>
+            <option value="press">Print Press — 3× render</option>
+            <option value="archive">Archive — 4× render, largest files</option>
+          </select>
+          <p class="portal-field-hint">Applies to the archival PNG image of each certificate. PDFs are vector at every profile — resolution-independent by construction — and every profile renders the same official template masters.</p>
+        </div>
       </form>
     </div>
 
@@ -97,12 +146,11 @@
       <div class="portal-child-head"><h2>Upload or Paste the Cohort</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">One student per line. Columns (comma, semicolon, or tab separated): <strong>English Name, Arabic Name, Sex (male/female), Grade (English), Grade (Arabic), Admission No (optional)</strong>. A header row is detected automatically. Students already on the register are matched (by admission number, or exact name); new names get a full student record, a generated admission number, and a permanent Student ID. Nothing is issued until you review the preview and press Generate.</p>
       <div style="padding:0 20px 8px;">
-        <input type="file" data-cert-roster-file accept=".csv,.tsv,.txt" style="font-family:'Inter',sans-serif;font-size:0.85rem;color:var(--ink);" />
+        <input type="file" data-cert-roster-file accept=".csv,.tsv,.txt" class="registrar-file-input" />
       </div>
       <div style="padding:0 20px 14px;">
-        <textarea data-cert-roster-text rows="8" spellcheck="false" placeholder="Abdul Samod Ayomide Jimoh, عبد الصمد أيوميدي جيمو, male, Excellent, ممتاز
-Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
-          style="width:100%;font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;line-height:1.7;padding:12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);resize:vertical;"></textarea>
+        <textarea data-cert-roster-text rows="8" spellcheck="false" class="registrar-roster-textarea" placeholder="Abdul Samod Ayomide Jimoh, عبد الصمد أيوميدي جيمو, male, Excellent, ممتاز
+Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"></textarea>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
         <button type="button" class="registrar-btn" data-cert-preview-btn>Preview &amp; Validate Roster</button>
@@ -111,6 +159,62 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
       <div class="registrar-approvals-list" data-cert-preview-list></div>
       <div style="display:none;padding:0 20px 20px;" data-cert-generate-row>
         <button type="button" class="portal-submit registrar-form-submit" data-cert-generate-btn>Generate Certificates for This Cohort</button>
+        <!-- The live production dashboard: every figure on it is read
+             from the real issuance stream — queue, completions, stage,
+             measured per-certificate time — never a timer's guess. -->
+        <div class="cc-prod-dash" data-cert-prod-dash hidden>
+          <div class="cc-prod-dash-head">
+            <span class="cc-prod-dash-lamp" aria-hidden="true"></span>
+            <span data-dash-title>Production Line — Live</span>
+            <button type="button" class="cc-eng-toggle" data-cert-eng-toggle aria-expanded="false">Engineering Console</button>
+          </div>
+          <div class="cc-prod-dash-grid">
+            <div class="cc-prod-cell"><span class="cc-prod-k">Queue Remaining</span><span class="cc-prod-v" data-dash-queue>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Completed</span><span class="cc-prod-v" data-dash-done>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Issued</span><span class="cc-prod-v" data-dash-issued>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Skipped / Failed</span><span class="cc-prod-v" data-dash-problem>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Current Certificate</span><span class="cc-prod-v" data-dash-current>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Avg. Production Time</span><span class="cc-prod-v" data-dash-avg>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Quality Profile</span><span class="cc-prod-v" data-dash-profile>—</span></div>
+            <div class="cc-prod-cell"><span class="cc-prod-k">Registry &amp; Audit</span><span class="cc-prod-v" data-dash-audit>—</span></div>
+          </div>
+          <div class="cc-prod-bar"><div class="cc-prod-bar-fill" data-dash-bar></div></div>
+          <p class="cc-prod-note" data-dash-note>Certificates register to the live Certificate Register as they issue; PDF and archival PNG render on demand from each registered record.</p>
+          <!-- The technical strip: three restrained layers on one row.
+               Layer 1 — the engine log: REAL operations from the
+               issuance stream in engine-log form. Layer 2 — the
+               diagnostics board: REAL telemetry (the render engine's
+               measured fps/frame-time/draw-calls, real JS heap where
+               the browser exposes it, real stream throughput and queue
+               depth). Layer 3 — live graphics drawn from those same
+               real series. No invented cluster nodes, no decorative
+               hexadecimal. -->
+          <div class="cc-prod-tech">
+            <div class="cc-prod-console" data-cert-prod-console aria-label="Production engineering log" role="log"></div>
+            <div class="cc-prod-diag" data-cert-prod-diag aria-label="Live system diagnostics">
+              <table class="cc-diag-table">
+                <tbody>
+                  <tr><td>RENDER ENGINE</td><td data-diag-render>—</td></tr>
+                  <tr><td>GEOMETRY</td><td data-diag-geo>—</td></tr>
+                  <tr><td>JS HEAP</td><td data-diag-heap>—</td></tr>
+                  <tr><td>STREAM</td><td data-diag-stream>—</td></tr>
+                  <tr><td>QUEUE DEPTH</td><td data-diag-queue>—</td></tr>
+                  <tr><td>REGISTRY</td><td data-diag-registry>READY</td></tr>
+                  <tr><td>AUDIT LEDGER</td><td data-diag-audit>READY</td></tr>
+                  <tr class="cc-diag-row-eng"><td>PRESS MOTOR</td><td data-diag-motor>—</td></tr>
+                  <tr class="cc-diag-row-eng"><td>PRESS TEMP</td><td data-diag-temp>—</td></tr>
+                  <tr class="cc-diag-row-eng"><td>SHEETS THIS SESSION</td><td data-diag-produced>—</td></tr>
+                  <tr class="cc-diag-row-eng"><td>PLATFORM BUILD</td><td data-diag-build>—</td></tr>
+                </tbody>
+              </table>
+              <div class="cc-diag-graphs">
+                <canvas data-diag-flow width="260" height="46" aria-hidden="true"></canvas>
+                <canvas data-diag-frame width="260" height="34" aria-hidden="true"></canvas>
+                <canvas data-diag-thru width="260" height="34" aria-hidden="true"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="registrar-form-result" data-cert-generate-result hidden></div>
       <div class="registrar-approvals-list" data-cert-results-list></div>
@@ -131,7 +235,7 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
       <div class="portal-child-head"><h2>Certificate Register</h2></div>
       <p class="registrar-field-note" style="padding:0 20px;">Search by serial number, student name, or Student ID. Every certificate can be re-opened, re-printed, publicly verified, or revoked (with a mandatory note) — revocation shows instantly at the public verification page; the serial is never reused.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 14px;align-items:center;">
-        <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="font-family:'Inter','Cairo',sans-serif;font-size:0.85rem;padding:8px 12px;border:1px solid var(--line);background:var(--portal-card);color:var(--ink);min-width:280px;" />
+        <input type="text" data-cert-register-search placeholder="Serial, name, or Student ID" class="registrar-search-row-select" style="min-width:280px;" />
         <button type="button" class="registrar-btn" data-cert-register-lookup>Search Register</button>
       </div>
       <div class="registrar-approvals-list" data-cert-register-list></div>
@@ -158,6 +262,7 @@ Aisha Bello, عائشة بلو, female, Very Good, جيد جدًا"
 <script src="/js/portal-office-switcher.js?v=479a8d8c95" defer></script>
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>
 <script src="/js/portal-staff-certificate-centre.js?v=fa6fc3c4e5" defer></script>
+<script src="/js/portal-cert-forge-3d.js?v=1" type="module"></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

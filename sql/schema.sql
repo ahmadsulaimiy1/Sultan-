@@ -600,6 +600,417 @@ CREATE INDEX IF NOT EXISTS idx_admissions_applications_guardian ON admissions_ap
 CREATE INDEX IF NOT EXISTS idx_admissions_applications_status ON admissions_applications (status);
 
 -- ============================================================
+-- Safeguarding Intelligence Framework
+-- ============================================================
+-- Real, governance-grounded infrastructure per the Founder's
+-- "Institutional Capability Framework" directive: schema + reference
+-- taxonomy + audit trail, built and populated as real structure even
+-- though transactional case records are (honestly) zero until the
+-- institution has a real concern to log. Case categories and the DSL's
+-- case-by-case decision vocabulary are transcribed directly from the
+-- adopted Child Protection & Safeguarding Policy (Section 4/7.1/7.4),
+-- not invented — see docs/policies/child-protection-safeguarding-policy.md.
+-- Deliberately separate from staff_audit_log: the policy (Section 7.3)
+-- requires the safeguarding log to be "a single, confidential...log
+-- ...separate from academic and disciplinary records, with access
+-- restricted to the DSL and Deputy DSLs" — a shared audit table would
+-- not satisfy that restriction.
+CREATE TABLE IF NOT EXISTS safeguarding_case_categories (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS safeguarding_risk_levels (
+  id             SERIAL PRIMARY KEY,
+  code           TEXT NOT NULL UNIQUE,
+  label          TEXT NOT NULL,
+  description    TEXT NOT NULL,
+  severity_rank  INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS safeguarding_cases (
+  id                    SERIAL PRIMARY KEY,
+  case_no               TEXT NOT NULL UNIQUE,
+  institution_id        INTEGER REFERENCES institutions(id),
+  student_id            INTEGER REFERENCES students(id),
+  category_id           INTEGER NOT NULL REFERENCES safeguarding_case_categories(id),
+  risk_level_id         INTEGER REFERENCES safeguarding_risk_levels(id),
+  status                TEXT NOT NULL DEFAULT 'reported' CHECK (status IN (
+                           'reported', 'under_review', 'early_help', 'referred_external', 'resolved', 'closed'
+                         )),
+  decision              TEXT CHECK (decision IN ('early_help', 'referral', 'both')),
+  summary               TEXT NOT NULL,
+  external_agency       TEXT,
+  parent_notified       BOOLEAN NOT NULL DEFAULT false,
+  reported_by_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+  reported_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_at           TIMESTAMPTZ,
+  closed_at             TIMESTAMPTZ,
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_safeguarding_cases_status ON safeguarding_cases (status);
+CREATE INDEX IF NOT EXISTS idx_safeguarding_cases_institution ON safeguarding_cases (institution_id);
+CREATE TABLE IF NOT EXISTS safeguarding_case_log (
+  id                SERIAL PRIMARY KEY,
+  case_id           INTEGER NOT NULL REFERENCES safeguarding_cases(id) ON DELETE CASCADE,
+  action            TEXT NOT NULL CHECK (action IN (
+                      'reported', 'reviewed', 'risk_assessed', 'early_help_started',
+                      'referred_external', 'parent_notified', 'resolved', 'closed', 'reopened'
+                    )),
+  actor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+  notes             TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_safeguarding_case_log_case ON safeguarding_case_log (case_id);
+INSERT INTO safeguarding_case_categories (code, label, description, sort_order) VALUES
+  ('physical_abuse', 'Physical Abuse', 'Hitting, shaking, or otherwise causing physical harm, including fabricated or induced illness.', 1),
+  ('emotional_abuse', 'Emotional Abuse', 'Persistent emotional maltreatment causing severe adverse effects on a child''s development.', 2),
+  ('sexual_abuse', 'Sexual Abuse', 'Forcing or enticing a child into sexual activity, including non-contact activities such as online grooming.', 3),
+  ('neglect', 'Neglect', 'Persistent failure to meet a child''s basic physical or psychological needs.', 4),
+  ('exploitation', 'Exploitation', 'A child manipulated or coerced into an activity for another''s advantage, including trafficking and boarding-context coercion.', 5),
+  ('peer_on_peer', 'Peer-on-Peer Abuse', 'Abuse of one child by another, treated as a distinct safeguarding category, not automatically a lesser concern.', 6),
+  ('radicalisation', 'Radicalisation Concern', 'A general awareness duty regarding a person coming to support extremist ideology.', 7)
+  ON CONFLICT (code) DO NOTHING;
+INSERT INTO safeguarding_risk_levels (code, label, description, severity_rank) VALUES
+  ('low', 'Low', 'A concern worth recording; no immediate risk indicators.', 1),
+  ('medium', 'Medium', 'A concern meriting active DSL monitoring and a defined follow-up.', 2),
+  ('high', 'High', 'A concern indicating the child may be at risk of harm.', 3),
+  ('critical', 'Critical', 'An immediate risk of harm requiring same-day DSL and, where applicable, external-agency action.', 4)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Behaviour Management Framework
+-- ============================================================
+-- Same Institutional Capability Framework pattern as Safeguarding.
+-- Demerit categories and the three-tier severity escalation are
+-- transcribed from the adopted Student Code of Conduct (SD-02 §7.1-7.4),
+-- not invented; the merit side is real new structure the policy doesn't
+-- yet define — recorded as such, not asserted as policy-derived.
+CREATE TABLE IF NOT EXISTS behaviour_categories (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  kind         TEXT NOT NULL CHECK (kind IN ('merit', 'demerit')),
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  points       INTEGER NOT NULL DEFAULT 0,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS behaviour_incidents (
+  id                    SERIAL PRIMARY KEY,
+  incident_no           TEXT NOT NULL UNIQUE,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  institution_id        INTEGER REFERENCES institutions(id),
+  category_id           INTEGER NOT NULL REFERENCES behaviour_categories(id),
+  severity              TEXT CHECK (severity IN ('minor', 'moderate', 'serious', 'suspension_expulsion')),
+  description           TEXT NOT NULL,
+  status                TEXT NOT NULL DEFAULT 'recorded' CHECK (status IN (
+                           'recorded', 'under_review', 'intervention', 'resolved', 'escalated'
+                         )),
+  parent_notified       BOOLEAN NOT NULL DEFAULT false,
+  recorded_by_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+  occurred_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_at           TIMESTAMPTZ,
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_behaviour_incidents_student ON behaviour_incidents (student_id);
+CREATE INDEX IF NOT EXISTS idx_behaviour_incidents_status ON behaviour_incidents (status);
+CREATE TABLE IF NOT EXISTS behaviour_intervention_log (
+  id               SERIAL PRIMARY KEY,
+  incident_id      INTEGER NOT NULL REFERENCES behaviour_incidents(id) ON DELETE CASCADE,
+  action           TEXT NOT NULL CHECK (action IN (
+                     'recorded', 'reviewed', 'intervention_started', 'parent_engaged',
+                     'escalated', 'resolved', 'reopened'
+                   )),
+  actor_staff_id    INTEGER NOT NULL REFERENCES staff(id),
+  notes            TEXT,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_behaviour_intervention_log_incident ON behaviour_intervention_log (incident_id);
+INSERT INTO behaviour_categories (code, kind, label, description, points, sort_order) VALUES
+  ('academic_excellence', 'merit', 'Academic Excellence', 'Recognised achievement in classroom work, an assessment, or a competition.', 5, 1),
+  ('leadership', 'merit', 'Leadership', 'Taking initiative or responsibility beyond what was required.', 5, 2),
+  ('islamic_character', 'merit', 'Islamic Character', 'A demonstrated act reflecting the Islamic creed expectations SD-01 establishes.', 5, 3),
+  ('community_service', 'merit', 'Community Service', 'A voluntary contribution to the school or wider community.', 5, 4),
+  ('sporting_achievement', 'merit', 'Sporting Achievement', 'Recognised achievement in sport or physical education.', 5, 5),
+  ('minor_misconduct', 'demerit', 'Minor Misconduct', 'Addressed directly by the class teacher — informal, per SD-02 §7.1, logged here only if repeated.', -1, 6),
+  ('moderate_misconduct', 'demerit', 'Repeated or Moderate Misconduct', 'Referred to VP Administration per SD-02 §7.2 — logged, guardian informed.', -3, 7),
+  ('serious_misconduct', 'demerit', 'Serious Misconduct', 'Referred to the Principal per SD-02 §7.3 — guardian informed the same day, may result in suspension.', -5, 8)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Teacher Performance Framework
+-- ============================================================
+-- Same Institutional Capability Framework pattern. Unlike
+-- Safeguarding/Behaviour, no dedicated Performance Management Policy
+-- exists yet (Staff Handbook §7 names this a real, known gap —
+-- "evaluated, not fully drafted" in the HR Governance Framework). The
+-- observation domains below are real, internationally standard
+-- classroom-observation categories (the same structure widely used in
+-- teacher evaluation frameworks), not policy-derived and not fabricated
+-- performance data — the schema is real infrastructure built ahead of
+-- that policy's completion.
+CREATE TABLE IF NOT EXISTS teacher_performance_categories (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS teacher_observations (
+  id                 SERIAL PRIMARY KEY,
+  observation_no     TEXT NOT NULL UNIQUE,
+  teacher_staff_id   INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  institution_id     INTEGER REFERENCES institutions(id),
+  category_id        INTEGER NOT NULL REFERENCES teacher_performance_categories(id),
+  observer_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+  rating             TEXT CHECK (rating IN ('developing', 'proficient', 'accomplished', 'distinguished')),
+  notes              TEXT NOT NULL,
+  status             TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN (
+                        'scheduled', 'completed', 'follow_up_required', 'closed'
+                      )),
+  observed_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_observations_teacher ON teacher_observations (teacher_staff_id);
+CREATE TABLE IF NOT EXISTS teacher_pd_records (
+  id                SERIAL PRIMARY KEY,
+  teacher_staff_id  INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  title             TEXT NOT NULL,
+  provider          TEXT,
+  hours             NUMERIC(5,1),
+  completed_at      DATE,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_pd_records_teacher ON teacher_pd_records (teacher_staff_id);
+CREATE TABLE IF NOT EXISTS teacher_reviews (
+  id                 SERIAL PRIMARY KEY,
+  review_no          TEXT NOT NULL UNIQUE,
+  teacher_staff_id   INTEGER NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  institution_id     INTEGER REFERENCES institutions(id),
+  review_period      TEXT NOT NULL,
+  reviewer_staff_id  INTEGER NOT NULL REFERENCES staff(id),
+  overall_rating     TEXT CHECK (overall_rating IN ('developing', 'proficient', 'accomplished', 'distinguished')),
+  strengths          TEXT,
+  growth_areas       TEXT,
+  status             TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN (
+                        'scheduled', 'in_progress', 'completed', 'acknowledged'
+                      )),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_reviews_teacher ON teacher_reviews (teacher_staff_id);
+CREATE TABLE IF NOT EXISTS teacher_performance_log (
+  id            SERIAL PRIMARY KEY,
+  target_type   TEXT NOT NULL CHECK (target_type IN ('observation', 'review')),
+  target_id     INTEGER NOT NULL,
+  action        TEXT NOT NULL CHECK (action IN (
+                   'scheduled', 'completed', 'follow_up_assigned', 'pd_recommended', 'acknowledged', 'resolved'
+                 )),
+  actor_staff_id INTEGER NOT NULL REFERENCES staff(id),
+  notes         TEXT,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_performance_log_target ON teacher_performance_log (target_type, target_id);
+INSERT INTO teacher_performance_categories (code, label, description, sort_order) VALUES
+  ('lesson_planning', 'Lesson Planning & Preparation', 'Clarity of objectives, sequencing, and alignment to the curriculum.', 1),
+  ('classroom_management', 'Classroom Management', 'Routines, behaviour management, and use of instructional time.', 2),
+  ('instructional_delivery', 'Instructional Delivery', 'Explanation quality, questioning technique, and differentiation.', 3),
+  ('assessment_for_learning', 'Assessment for Learning', 'Use of formative checks and feedback to adjust teaching in real time.', 4),
+  ('professional_responsibilities', 'Professional Responsibilities', 'Punctuality, record-keeping, and engagement with professional development.', 5)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Examination Readiness Framework
+-- ============================================================
+-- One shared, real engine covering both external boards the Founder
+-- named as separate Tier 1 priorities (WAEC and NECO), parametrized by
+-- exam_body rather than duplicated table-for-table: both boards need
+-- identical real structure (candidate tracking, subject readiness, mock
+-- results, risk indicators), and Registrar/Examinations offices in
+-- practice track both boards through one register, not two parallel
+-- systems. Standard, real exam-readiness risk factors — not invented
+-- data.
+CREATE TABLE IF NOT EXISTS exam_readiness_risk_indicators (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS exam_candidates (
+  id                    SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  exam_body              TEXT NOT NULL CHECK (exam_body IN ('WAEC', 'NECO')),
+  exam_year              INTEGER NOT NULL,
+  institution_id         INTEGER REFERENCES institutions(id),
+  registration_status    TEXT NOT NULL DEFAULT 'not_registered' CHECK (registration_status IN (
+                            'not_registered', 'registered', 'confirmed', 'sat'
+                          )),
+  created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_id, exam_body, exam_year)
+);
+CREATE INDEX IF NOT EXISTS idx_exam_candidates_body_year ON exam_candidates (exam_body, exam_year);
+CREATE TABLE IF NOT EXISTS exam_subject_readiness (
+  id                SERIAL PRIMARY KEY,
+  candidate_id       INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+  subject            TEXT NOT NULL,
+  readiness_status   TEXT NOT NULL DEFAULT 'on_track' CHECK (readiness_status IN ('on_track', 'at_risk', 'critical')),
+  notes              TEXT,
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_exam_subject_readiness_candidate ON exam_subject_readiness (candidate_id);
+CREATE TABLE IF NOT EXISTS exam_mock_results (
+  id                  SERIAL PRIMARY KEY,
+  candidate_id         INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+  subject              TEXT NOT NULL,
+  mock_round           TEXT NOT NULL,
+  score                NUMERIC(5,2) NOT NULL,
+  max_score            NUMERIC(5,2) NOT NULL DEFAULT 100,
+  recorded_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+  recorded_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_exam_mock_results_candidate ON exam_mock_results (candidate_id);
+CREATE TABLE IF NOT EXISTS exam_readiness_flags (
+  id                 SERIAL PRIMARY KEY,
+  candidate_id        INTEGER NOT NULL REFERENCES exam_candidates(id) ON DELETE CASCADE,
+  indicator_id        INTEGER NOT NULL REFERENCES exam_readiness_risk_indicators(id),
+  notes               TEXT,
+  flagged_by_staff_id INTEGER NOT NULL REFERENCES staff(id),
+  flagged_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_at         TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_exam_readiness_flags_candidate ON exam_readiness_flags (candidate_id);
+INSERT INTO exam_readiness_risk_indicators (code, label, description, sort_order) VALUES
+  ('registration_incomplete', 'Registration Incomplete', 'The candidate is not yet fully registered with the exam body ahead of the deadline.', 1),
+  ('subject_coverage_gap', 'Subject Coverage Gap', 'The syllabus for one or more registered subjects is behind schedule.', 2),
+  ('mock_underperformance', 'Mock Underperformance', 'A mock result fell below the pass threshold for a registered subject.', 3),
+  ('attendance_gap', 'Attendance Gap', 'Attendance below the level needed to complete subject coverage on time.', 4),
+  ('fee_outstanding', 'Fee Outstanding', 'An outstanding balance that could affect the candidate''s exam-body registration.', 5)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Arabic Fluency Framework
+-- ============================================================
+-- Same Institutional Capability Framework pattern. Assessment bands are
+-- a standard five-tier language-proficiency scale (the same shape used
+-- across real language programmes worldwide), not policy-derived and
+-- not fabricated student data — real professional structure, zero
+-- records yet.
+CREATE TABLE IF NOT EXISTS arabic_fluency_bands (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS arabic_fluency_assessments (
+  id                  SERIAL PRIMARY KEY,
+  student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  institution_id        INTEGER REFERENCES institutions(id),
+  skill                 TEXT NOT NULL CHECK (skill IN ('reading', 'writing', 'listening', 'speaking')),
+  band_id               INTEGER NOT NULL REFERENCES arabic_fluency_bands(id),
+  assessment_cycle      TEXT NOT NULL,
+  notes                 TEXT,
+  assessor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+  assessed_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_arabic_fluency_assessments_student ON arabic_fluency_assessments (student_id);
+INSERT INTO arabic_fluency_bands (code, label, description, sort_order) VALUES
+  ('beginner', 'Beginner', 'Recognises isolated letters/words; minimal independent production.', 1),
+  ('elementary', 'Elementary', 'Reads/produces simple, familiar sentences with support.', 2),
+  ('intermediate', 'Intermediate', 'Handles everyday topics independently with some errors.', 3),
+  ('advanced', 'Advanced', 'Handles a range of topics fluently with occasional support.', 4),
+  ('fluent', 'Fluent', 'Near-native command across all four skills.', 5)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Tajweed Compliance Framework
+-- ============================================================
+-- Same pattern, scoped to Qur'anic recitation rules rather than general
+-- Arabic fluency. Categories (Makharij, Sifaat, Ahkam, Application) are
+-- the standard, real divisions of Tajweed study used in Qur'an education
+-- generally, not invented for this system.
+CREATE TABLE IF NOT EXISTS tajweed_categories (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS tajweed_assessments (
+  id                  SERIAL PRIMARY KEY,
+  student_id           INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  institution_id        INTEGER REFERENCES institutions(id),
+  category_id           INTEGER NOT NULL REFERENCES tajweed_categories(id),
+  compliance_level      TEXT NOT NULL CHECK (compliance_level IN ('developing', 'competent', 'proficient', 'mastered')),
+  assessment_cycle      TEXT NOT NULL,
+  remediation_plan      TEXT,
+  notes                 TEXT,
+  assessor_staff_id     INTEGER NOT NULL REFERENCES staff(id),
+  assessed_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_tajweed_assessments_student ON tajweed_assessments (student_id);
+INSERT INTO tajweed_categories (code, label, description, sort_order) VALUES
+  ('makharij', 'Makharij al-Huruf', 'Correct articulation points of each letter.', 1),
+  ('sifaat', 'Sifaat al-Huruf', 'The inherent characteristics of each letter''s pronunciation.', 2),
+  ('ahkam', 'Ahkam al-Tajweed', 'Rules governing letter interaction — noon/meem rulings, madd, qalqalah, etc.', 3),
+  ('application', 'Applied Recitation', 'Fluent, rule-compliant recitation of continuous passages under real recitation pace.', 4)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Boarding Intelligence Framework
+-- ============================================================
+-- Same Institutional Capability Framework pattern. Welfare categories
+-- are transcribed from the adopted Boarding Regulations (SD-04
+-- §7.2/7.4/7.7/7.8/7.10), not invented. Room checks are the real,
+-- policy-required nightly attendance mechanism for boarding (SD-04
+-- §7.2) — a dedicated table rather than reusing the day-school
+-- attendance_summary table, since boarding attendance is checked
+-- nightly, not by class period. Zero transactional records exist yet.
+CREATE TABLE IF NOT EXISTS boarding_welfare_categories (
+  id           SERIAL PRIMARY KEY,
+  code         TEXT NOT NULL UNIQUE,
+  label        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  sort_order   INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS boarding_welfare_logs (
+  id                    SERIAL PRIMARY KEY,
+  student_id             INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  institution_id         INTEGER REFERENCES institutions(id),
+  category_id            INTEGER NOT NULL REFERENCES boarding_welfare_categories(id),
+  severity               TEXT NOT NULL DEFAULT 'routine' CHECK (severity IN ('routine', 'concern', 'urgent')),
+  notes                  TEXT NOT NULL,
+  status                 TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'resolved')),
+  parent_notified        BOOLEAN NOT NULL DEFAULT false,
+  recorded_by_staff_id   INTEGER NOT NULL REFERENCES staff(id),
+  recorded_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  resolved_at            TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_boarding_welfare_logs_student ON boarding_welfare_logs (student_id);
+CREATE TABLE IF NOT EXISTS boarding_room_checks (
+  id                   SERIAL PRIMARY KEY,
+  student_id            INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  institution_id         INTEGER REFERENCES institutions(id),
+  check_date             DATE NOT NULL DEFAULT CURRENT_DATE,
+  present                BOOLEAN NOT NULL DEFAULT true,
+  notes                  TEXT,
+  recorded_by_staff_id   INTEGER NOT NULL REFERENCES staff(id),
+  recorded_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (student_id, check_date)
+);
+CREATE INDEX IF NOT EXISTS idx_boarding_room_checks_student ON boarding_room_checks (student_id);
+INSERT INTO boarding_welfare_categories (code, label, description, sort_order) VALUES
+  ('room_check', 'Room Check', 'A nightly presence/wellbeing check, per SD-04 §7.2.', 1),
+  ('health_medical', 'Health & Medical', 'Any medical or health matter arising in the boarding house, per SD-04 §7.4.', 2),
+  ('homesickness_support', 'Homesickness & Settling-In', 'Support provided for homesickness or settling-in difficulty, per SD-04 §7.10.', 3),
+  ('weekend_leave', 'Weekend & Leave-Out', 'A weekend or leave-out request and its outcome, per SD-04 §7.8.', 4),
+  ('discipline', 'Discipline', 'A boarding-specific disciplinary matter, per SD-04 §7.7 (alongside the Student Code of Conduct, SD-02).', 5)
+  ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
 -- Registrar's Office — real academic-lifecycle events
 -- ============================================================
 -- Replaces students.status as the ONLY trace of promotion, transfer,

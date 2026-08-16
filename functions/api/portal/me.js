@@ -1,5 +1,5 @@
 import { getSql } from '../../_lib/db.js';
-import { readSessionFromRequest } from '../../_lib/session.js';
+import { readSessionFromRequest, createSessionCookie } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel } from '../../_lib/hifz.js';
 import { computeProfileCompletion, recommendNextStep } from '../../_lib/profile-completion.js';
@@ -117,6 +117,12 @@ export async function onRequestGet({ request, env }) {
 
     const identityNo = await ensureGuardianIdentityNo(sql, session.guardianId);
 
+    // A SLIDING SESSION, renewed here — same fix as staff/me.js
+    // (182c718f), applied to the guardian session that shared its fixed-
+    // expiry bug but never got the fix. Re-issues nothing but the same
+    // guardianId, signed afresh; a session that had already expired
+    // never reaches here, because readSessionFromRequest rejected it
+    // above.
     return json({
       fullName: guardian.full_name,
       title: guardian.title,
@@ -133,7 +139,7 @@ export async function onRequestGet({ request, env }) {
       prospectiveChildrenCount: prospectiveChildrenRes.rows[0] ? prospectiveChildrenRes.rows[0].n : 0,
       children,
       notifications: notificationsRes.rows,
-    });
+    }, 200, { 'Set-Cookie': createSessionCookie(session.guardianId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('portal me error', err);
     return json({ error: 'Could not load your dashboard right now — please try again shortly.' }, 500);

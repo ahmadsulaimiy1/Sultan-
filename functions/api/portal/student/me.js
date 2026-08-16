@@ -11,7 +11,7 @@
 // frontend renders an honest empty state for that section instead of
 // this endpoint fabricating placeholder data.
 import { getSql } from '../../../_lib/db.js';
-import { readStudentSessionFromRequest } from '../../../_lib/session.js';
+import { readStudentSessionFromRequest, createStudentSessionCookie } from '../../../_lib/session.js';
 import { json } from '../../../_lib/http.js';
 import { isQuranCollegeInstitution, hifzStageLabel, hifzStageDescription, fillJuzGrid } from '../../../_lib/hifz.js';
 import { ensureStudentIdentityNo } from '../../../_lib/identity-no.js';
@@ -83,6 +83,12 @@ export async function onRequestGet({ request, env }) {
     const identityNo = await ensureStudentIdentityNo(sql, student.id);
     const finance = await loadStudentFinanceSummary(sql, student.id);
 
+    // A SLIDING SESSION, renewed here — same fix as staff/me.js
+    // (182c718f), applied to the student session that shared its fixed-
+    // expiry bug but never got the fix. Re-issues nothing but the same
+    // studentId, signed afresh; a session that had already expired never
+    // reaches here, because readStudentSessionFromRequest rejected it
+    // above.
     return json({
       fullName: student.full_name,
       admissionNo: student.admission_no,
@@ -98,7 +104,7 @@ export async function onRequestGet({ request, env }) {
       fees: fees.rows[0] || null,
       finance,
       hifz,
-    });
+    }, 200, { 'Set-Cookie': createStudentSessionCookie(session.studentId, env.SESSION_SECRET) });
   } catch (err) {
     console.error('student portal me error', err);
     return json({ error: 'Could not load your dashboard right now — please try again shortly.' }, 500);

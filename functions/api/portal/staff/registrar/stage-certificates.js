@@ -33,7 +33,7 @@ import { renderStageCertificate, renderStageCertificateBatch } from '../../../..
 import {
   RC_PROGRAMMES, renderRoyalCollegeCertificate, renderRoyalCollegeCertificateBatch,
 } from '../../../../_lib/royal-college-certificate.js';
-import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
+import { renderHtmlToPdf, renderHtmlToPng, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
 import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
 
 // ── Which master renders which programme ────────────────────────────────────
@@ -226,6 +226,30 @@ export async function onRequestGet({ request, env }) {
         throw pdfErr;
       }
     }
+    if (url.searchParams.get('format') === 'png') {
+      // The archival raster of the exact approved template — single
+      // certificates only; a multi-page batch has no single-image form.
+      if (!serial) return json({ error: 'PNG output is per-certificate — provide ?serial=.' }, 400);
+      // Output quality profiles, honestly stated: a Chromium raster's
+      // one real quality axis is render resolution (device scale).
+      // PDF output is vector at every profile and needs no scale.
+      const QUALITY_SCALE = { draft: 1, standard: 1.5, high: 2, press: 3, archive: 4 };
+      const scale = QUALITY_SCALE[(url.searchParams.get('quality') || 'high').toLowerCase()] || 2;
+      try {
+        const png = await renderHtmlToPng(env, html, { scale });
+        return new Response(png, {
+          headers: {
+            'Content-Type': 'image/png',
+            'Content-Disposition': `inline; filename="${filename.replace(/\.pdf$/, '')}.png"`,
+          },
+        });
+      } catch (pngErr) {
+        if (pngErr instanceof PdfRenderUnavailableError) {
+          return json({ error: pngErr.message }, 503);
+        }
+        throw pngErr;
+      }
+    }
     return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
   } catch (err) {
     console.error('stage-certificates view error', err);
@@ -336,105 +360,145 @@ export async function onRequestPost({ request, env }) {
         VALUES (${batchNo}, ${programmeCode}, ${academicYear}, ${issuedAt}, ${description}, ${staffId})
         RETURNING id`;
       const batchId = batchRes.rows[0].id;
-
       const admissionYear = new Date(issuedAt).getUTCFullYear();
-      const results = [];
-      let issued = 0; let created = 0; let skipped = 0; let failed = 0;
+      const totalRows = body.rows.length;
 
-      for (const raw of body.rows) {
-        const row = cleanRow(raw);
-        if (!row.fullName) {
-          failed += 1;
-          results.push({ ...row, status: 'failed', problem: 'Full name (English) is required.' });
-          continue;
-        }
-        try {
-          const match = await matchStudent(sql, row);
-          if (match.status === 'ambiguous') {
-            failed += 1;
-            results.push({ ...row, status: 'failed', problem: `Multiple students share this name (${(match.candidates || []).join(', ')}) — add the admission number.` });
-            continue;
+      // Streamed as newline-delimited JSON rather than one JSON object at
+      // the end (Cinematic Certificate Generation Directive, 2026-08-16):
+      // the loop below already issues one student at a time, so this
+      // exposes that real per-row progress instead of making the client
+      // wait — and, on the frontend, fabricate a fake progress bar against
+      // it. Each line is one event; the client tells a row's own outcome
+      // apart from every other row's by its own 'row' event rather than
+      // waiting for a bulk array at the end. The shape of the final
+      // 'batch_done' event is deliberately identical to what this endpoint
+      // used to return as its one-shot JSON body, so anything upstream
+      // that already reads batchNo/issued/results etc. keeps working.
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        async start(controller) {
+          const send = (event) => controller.enqueue(encoder.encode(JSON.stringify(event) + '\n'));
+          send({ type: 'batch_start', batchNo, batchId, total: totalRows });
+          const results = [];
+          let issued = 0; let created = 0; let skipped = 0; let failed = 0;
+          try {
+            for (let index = 0; index < body.rows.length; index += 1) {
+              const raw = body.rows[index];
+              const row = cleanRow(raw);
+              let outcome;
+              if (!row.fullName) {
+                failed += 1;
+                outcome = { ...row, status: 'failed', problem: 'Full name (English) is required.' };
+              } else {
+                try {
+                  const match = await matchStudent(sql, row);
+                  if (match.status === 'ambiguous') {
+                    failed += 1;
+                    outcome = { ...row, status: 'failed', problem: `Multiple students share this name (${(match.candidates || []).join(', ')}) — add the admission number.` };
+                  } else if (match.status === 'admission_no_not_found') {
+                    failed += 1;
+                    outcome = { ...row, status: 'failed', problem: 'No student holds that admission number.' };
+                  } else {
+                    let student = match.student || null;
+                    if (!student) {
+                      const admissionNo = await generateAdmissionNo(sql, INSTITUTION_INTERNAL_NAME, admissionYear);
+                      const ins = await sql`
+                        INSERT INTO students (full_name, full_name_ar, sex, admission_no, status)
+                        VALUES (${row.fullName}, ${row.fullNameAr || null}, ${row.sex}, ${admissionNo}, 'active')
+                        RETURNING id, full_name, full_name_ar, sex, identity_no, admission_no`;
+                      student = ins.rows[0];
+                      created += 1;
+                    } else if ((!student.full_name_ar && row.fullNameAr) || (!student.sex && row.sex)) {
+                      // Enrich blanks only — an existing verified value is
+                      // never overwritten by a roster upload.
+                      await sql`
+                        UPDATE students SET
+                          full_name_ar = COALESCE(full_name_ar, ${row.fullNameAr || null}),
+                          sex = COALESCE(sex, ${row.sex})
+                        WHERE id = ${student.id}`;
+                      student.full_name_ar = student.full_name_ar || row.fullNameAr || null;
+                      student.sex = student.sex || row.sex;
+                    }
+
+                    const identityNo = await ensureStudentIdentityNo(sql, student.id);
+
+                    const dup = await sql`
+                      SELECT serial_no FROM stage_certificates
+                      WHERE student_id = ${student.id} AND programme_code = ${programmeCode}
+                        AND academic_year = ${academicYear} AND revoked_at IS NULL`;
+                    if (dup.rows[0]) {
+                      skipped += 1;
+                      outcome = { ...row, status: 'skipped', serialNo: dup.rows[0].serial_no, problem: 'Already holds an active certificate for this programme and year.' };
+                    } else {
+                      const { serialNo, fullHash, keyVersion } = await generateStageCertificateSerial(sql, env, {
+                        programmeCode, issuedAt,
+                        studentIdentityNo: identityNo,
+                        studentFullName: student.full_name,
+                        academicYear,
+                        gradeEn: row.gradeEn,
+                      });
+
+                      await sql`
+                        INSERT INTO stage_certificates
+                          (serial_no, batch_id, student_id, student_identity_no, student_full_name, student_full_name_ar,
+                           student_sex, programme_code, programme_label_en, programme_label_ar, institution_name,
+                           academic_year, grade_en, grade_ar, place_en, place_ar,
+                           issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version, issued_by_staff_id)
+                        VALUES
+                          (${serialNo}, ${batchId}, ${student.id}, ${identityNo}, ${student.full_name}, ${student.full_name_ar || row.fullNameAr || null},
+                           ${student.sex || row.sex}, ${programmeCode}, ${programme.labelEn}, ${programme.labelAr}, ${INSTITUTION_DISPLAY_NAME},
+                           ${academicYear}, ${row.gradeEn || null}, ${row.gradeAr || null}, ${placeEn}, ${placeAr},
+                           ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${keyVersion}, ${staffId})`;
+
+                      issued += 1;
+                      const encoded = encodeURIComponent(serialNo);
+                      outcome = {
+                        ...row, status: 'issued', serialNo, studentIdentityNo: identityNo,
+                        admissionNo: student.admission_no, newStudent: match.status === 'new',
+                        viewUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}`,
+                        // Both artefacts of the record, straight from the
+                        // registered row through the official template
+                        // masters — the render is deterministic from the
+                        // record, so the record IS the registration of both.
+                        pdfUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=pdf`,
+                        pngUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encoded}&format=png`,
+                        verifyUrl: verifyUrlFor(env, serialNo),
+                      };
+                    }
+                  }
+                } catch (rowErr) {
+                  failed += 1;
+                  outcome = { ...row, status: 'failed', problem: rowErr && rowErr.message ? rowErr.message : 'unknown error' };
+                }
+              }
+              results.push(outcome);
+              send({ type: 'row', index, total: totalRows, ...outcome });
+            }
+
+            await logStaffEvent(sql, {
+              actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate_batch', targetId: batchId,
+              reason: description, metadata: { batchNo, programmeCode, academicYear, issuedAt, issued, created, skipped, failed },
+            });
+
+            send({
+              type: 'batch_done', ok: true, batchNo, batchId, issued, studentsCreated: created, skipped, failed, results,
+              batchPrintUrl: `/api/portal/staff/registrar/stage-certificates?batch=${encodeURIComponent(batchNo)}`,
+            });
+          } catch (streamErr) {
+            // The outer try/catch below this action block cannot help once
+            // headers have gone out for a streaming response — the error
+            // has to travel as one more line of the stream itself, not a
+            // change of HTTP status this far in.
+            console.error('registrar stage-certificates generate_batch stream error', streamErr);
+            send({ type: 'error', error: 'Could not complete the batch: ' + (streamErr && streamErr.message ? streamErr.message : 'unknown error') });
+          } finally {
+            controller.close();
           }
-          if (match.status === 'admission_no_not_found') {
-            failed += 1;
-            results.push({ ...row, status: 'failed', problem: 'No student holds that admission number.' });
-            continue;
-          }
-
-          let student = match.student || null;
-          if (!student) {
-            const admissionNo = await generateAdmissionNo(sql, INSTITUTION_INTERNAL_NAME, admissionYear);
-            const ins = await sql`
-              INSERT INTO students (full_name, full_name_ar, sex, admission_no, status)
-              VALUES (${row.fullName}, ${row.fullNameAr || null}, ${row.sex}, ${admissionNo}, 'active')
-              RETURNING id, full_name, full_name_ar, sex, identity_no, admission_no`;
-            student = ins.rows[0];
-            created += 1;
-          } else if ((!student.full_name_ar && row.fullNameAr) || (!student.sex && row.sex)) {
-            // Enrich blanks only — an existing verified value is never
-            // overwritten by a roster upload.
-            await sql`
-              UPDATE students SET
-                full_name_ar = COALESCE(full_name_ar, ${row.fullNameAr || null}),
-                sex = COALESCE(sex, ${row.sex})
-              WHERE id = ${student.id}`;
-            student.full_name_ar = student.full_name_ar || row.fullNameAr || null;
-            student.sex = student.sex || row.sex;
-          }
-
-          const identityNo = await ensureStudentIdentityNo(sql, student.id);
-
-          const dup = await sql`
-            SELECT serial_no FROM stage_certificates
-            WHERE student_id = ${student.id} AND programme_code = ${programmeCode}
-              AND academic_year = ${academicYear} AND revoked_at IS NULL`;
-          if (dup.rows[0]) {
-            skipped += 1;
-            results.push({ ...row, status: 'skipped', serialNo: dup.rows[0].serial_no, problem: 'Already holds an active certificate for this programme and year.' });
-            continue;
-          }
-
-          const { serialNo, fullHash, keyVersion } = await generateStageCertificateSerial(sql, env, {
-            programmeCode, issuedAt,
-            studentIdentityNo: identityNo,
-            studentFullName: student.full_name,
-            academicYear,
-            gradeEn: row.gradeEn,
-          });
-
-          await sql`
-            INSERT INTO stage_certificates
-              (serial_no, batch_id, student_id, student_identity_no, student_full_name, student_full_name_ar,
-               student_sex, programme_code, programme_label_en, programme_label_ar, institution_name,
-               academic_year, grade_en, grade_ar, place_en, place_ar,
-               issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version, issued_by_staff_id)
-            VALUES
-              (${serialNo}, ${batchId}, ${student.id}, ${identityNo}, ${student.full_name}, ${student.full_name_ar || row.fullNameAr || null},
-               ${student.sex || row.sex}, ${programmeCode}, ${programme.labelEn}, ${programme.labelAr}, ${INSTITUTION_DISPLAY_NAME},
-               ${academicYear}, ${row.gradeEn || null}, ${row.gradeAr || null}, ${placeEn}, ${placeAr},
-               ${issuedAt}, ${hijriEn}, ${hijriAr}, ${fullHash}, ${keyVersion}, ${staffId})`;
-
-          issued += 1;
-          results.push({
-            ...row, status: 'issued', serialNo, studentIdentityNo: identityNo,
-            admissionNo: student.admission_no, newStudent: match.status === 'new',
-            viewUrl: `/api/portal/staff/registrar/stage-certificates?serial=${encodeURIComponent(serialNo)}`,
-            verifyUrl: verifyUrlFor(env, serialNo),
-          });
-        } catch (rowErr) {
-          failed += 1;
-          results.push({ ...row, status: 'failed', problem: rowErr && rowErr.message ? rowErr.message : 'unknown error' });
-        }
-      }
-
-      await logStaffEvent(sql, {
-        actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate_batch', targetId: batchId,
-        reason: description, metadata: { batchNo, programmeCode, academicYear, issuedAt, issued, created, skipped, failed },
+        },
       });
-
-      return json({
-        ok: true, batchNo, batchId, issued, studentsCreated: created, skipped, failed, results,
-        batchPrintUrl: `/api/portal/staff/registrar/stage-certificates?batch=${encodeURIComponent(batchNo)}`,
+      return new Response(stream, {
+        status: 200,
+        headers: { 'content-type': 'application/x-ndjson', 'cache-control': 'no-store' },
       });
     }
 
