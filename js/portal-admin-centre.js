@@ -997,7 +997,12 @@
         + '<div class="admin-field"><label>Reason</label><input name="reason" placeholder="Why is this being granted?" /></div>'
         + '</div>'
         + '<datalist id="admin-institution-names">'
-        + ['Nursery and Primary School', 'Royal College', 'Islamic and Arabic Studies', "Qur'an College"].map(function (n) { return '<option value="' + esc(n) + '">'; }).join('')
+        // These MUST be the registry dbNames (functions/_lib/institutions.js):
+        // the server resolves them with SELECT id FROM institutions WHERE
+        // name = $1, so a near-miss spelling (this list once appended
+        // "School" to the nursery entry) matches nothing and the grant
+        // silently loses its institution scope.
+        + ['Nursery and Primary', 'Royal College', 'Islamic and Arabic Studies', "Qur'an College"].map(function (n) { return '<option value="' + esc(n) + '">'; }).join('')
         + '</datalist>'
         + '<datalist id="admin-office-names">' + state.offices.map(function (o) { return '<option value="' + esc(o.name) + '">'; }).join('') + '</datalist>'
         + '<div class="admin-form-actions"><button type="submit" class="btn-gold">Grant Role</button><span class="admin-form-status" id="staff-detail-grant-status"></span></div>'

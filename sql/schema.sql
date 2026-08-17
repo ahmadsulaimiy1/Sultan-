@@ -2442,6 +2442,33 @@ ALTER TABLE stage_certificates ADD COLUMN IF NOT EXISTS replaces_serial_no TEXT 
 -- active replacements.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_stage_certificates_replaces ON stage_certificates(replaces_serial_no);
 
+-- ── Register normalisation: one spelling per issuing school ──────────
+-- Three issuance pipelines wrote three spellings of the same school into
+-- institution_name: the Islamic-stage batch script wrote
+-- 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies',
+-- the Royal College batch script prefixed the umbrella onto a display
+-- name that already carries it, and the Registrar's portal route writes
+-- the canonical registry displayName. The public verifier returns this
+-- column verbatim, so the same school showed three different names
+-- depending on which pipeline issued the certificate. Canonical is the
+-- registry displayName (functions/_lib/institutions.js) — the name the
+-- certificate artwork itself prints. institution_name is NOT among the
+-- content-hash fields (certificateHashFields in certificate-serial.js:
+-- serial, student, programme, year, grade, date), so this correction
+-- cannot invalidate any signature. The historical register files under
+-- docs/graduation-registers/ are attested records and keep their
+-- original spellings; these idempotent UPDATEs normalise the LIVE rows,
+-- and the import workflow re-applies this file straight after any
+-- import so fresh rows are canonical in the same run.
+UPDATE stage_certificates SET institution_name = 'Sultan Hanafi School of Islamic and Arabic Studies'
+ WHERE institution_name = 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies';
+UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Royal College'
+ WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Royal College';
+UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Nursery and Primary School'
+ WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Nursery and Primary School';
+UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Qur’an College'
+ WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College';
+
 -- Bilingual identity fields the certificate roster captures — stored on
 -- the student record too (not only the certificate snapshot) so future
 -- documents for the same student reuse the same verified Arabic name.

@@ -228,6 +228,12 @@ jobs:
           psql "$PGCONN" -v ON_ERROR_STOP=1 \
             -f docs/graduation-registers/2026-08-08-PRODUCTION-IMPORT.sql \
             2>&1 | tee /tmp/import.log
+          # The historical import files are attested records and carry the
+          # spellings of their day. Re-applying the idempotent schema runs
+          # its register-normalisation UPDATEs over the freshly imported
+          # rows, so a first-ever import is canonical in this same run
+          # rather than after next Monday's scheduled pass.
+          psql "$PGCONN" -v ON_ERROR_STOP=1 -f sql/schema.sql > /dev/null
           {
             echo "### Database import"
             echo

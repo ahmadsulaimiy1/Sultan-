@@ -46,6 +46,12 @@ const ISSUED_AT = '2026-08-08';
 // institution_name is NOT NULL in stage_certificates. The renderer never
 // reads it (the institution is set in the locked artwork), so it was
 // missing here until the register SQL was checked against the schema.
+// This spelling is kept VERBATIM so the script keeps reproducing the
+// attested 2026-08-08 register files byte-for-byte (they are sha256-sealed
+// under docs/graduation-registers/). The live database rows are normalised
+// to the registry displayName by sql/schema.sql's register-normalisation
+// block after import; any NEW batch pipeline must write
+// institutionForProgramme(code).displayName instead of copying this.
 const INSTITUTION_NAME = 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies';
 const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const PLACE_AR = 'إكورودو، لاغوس، نيجيريا';

@@ -48,7 +48,11 @@ const ISSUED_AT = '2026-08-08';
 // banner: this string is written into the register, into the DB import SQL and
 // into stage_certificates.institution_name, so a wrong value here puts the
 // wrong school on the Registrar's permanent record of a child's award.
-const INSTITUTION_NAME = `Sultan Hanafi Royal Schools — ${RC_PROGRAMMES[PROGRAMME].school}`;
+// The value is the registry displayName exactly as the certificate artwork
+// prints it (RC_PROGRAMMES[*].school is golden-pinned to it) — an earlier
+// version prefixed the umbrella onto a name that already carries
+// 'Sultan Hanafi', and the public verifier showed the doubled form.
+const INSTITUTION_NAME = RC_PROGRAMMES[PROGRAMME].school;
 const PLACE_EN = 'Ikorodu, Lagos, Nigeria';
 const ORIGIN = 'https://www.shroyalschools.com';
 
