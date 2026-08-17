@@ -89,6 +89,12 @@
   // here just means this account can't decide approvals, not that
   // something is broken — rendered as the honest empty list, not an
   // error banner.
+  // The Office Directory's live lines — set only from data this page
+  // genuinely loaded; '—' stands until then, never an invented number.
+  function setDirCount(name, text){
+    var f = document.querySelector('[data-dir-count="' + name + '"]');
+    if(f) f.textContent = text;
+  }
   async function loadPendingApprovals(){
     try{
       var res = await fetch('/api/portal/staff/registrar/certificates', {
@@ -101,6 +107,7 @@
         return;
       }
       renderPendingApprovals(data.pending || []);
+      setDirCount('approvals', (data.pending || []).length + ' awaiting approval');
     }catch(err){
       pendingApprovalsListEl.innerHTML = '';
       pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending approvals.'));
@@ -204,6 +211,7 @@
         return;
       }
       renderGraduationRecords(data.records || []);
+      setDirCount('graduation', (data.records || []).length + ' submissions in view');
     }catch(err){
       graduationRecordsListEl.innerHTML = '';
       graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load graduation records.'));
