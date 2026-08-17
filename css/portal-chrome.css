@@ -1448,3 +1448,19 @@ html[data-pc-motion="reduced"] body[data-office-page="certificate-centre"] .port
 .pch-state .portal-back-link:focus-visible{
   color:#3B2A1D;border-color:rgba(140,104,52,.85);
   background:rgba(255,255,255,.9);transform:translateY(-1px);}
+
+/* ── Module-body legibility (Office elevation pass) ──────────────────
+   At rest, the card's dark-to-ivory gradient put the first rows of
+   body text — field labels above all — on the DARK span, at unreadable
+   contrast (measured on the live capture). The head keeps its dark
+   worked-metal band; everything beneath it now sits on solid parchment
+   with full-ink text. !important matches the re-inking layer above,
+   which this must override at equal specificity. */
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-card{
+  background:linear-gradient(180deg,var(--rgo-cream-2) 0%,var(--rgo-cream-1) 100%) !important;
+  color:var(--rgo-ink) !important;}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head{
+  background:linear-gradient(172deg,#241606 0%,#191006 70%,#20130A 100%) !important;
+  border-bottom:1px solid rgba(198,161,91,.5) !important;}
+body:is([data-office-page="registrar"],[data-office-page="certificate-centre"]) .portal-child-head h2{
+  color:#F3DFAE !important;}
