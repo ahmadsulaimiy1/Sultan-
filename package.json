@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Sultan Hanafi Royal Schools \u2014 website build scripts, Parent Portal API, and AI assistant, deployed as Cloudflare Pages + Pages Functions with a Neon Postgres database",
   "scripts": {
-    "build": "node scripts/build.js",
+    "build": "node scripts/build.js && node scripts/cinematic-wire.mjs && node scripts/seo-build.mjs && node scripts/meta-build.mjs && node scripts/measure-wire.mjs",
     "i18n:check": "node scripts/i18n-check.js",
     "i18n:check:strict": "node scripts/i18n-check.js --strict",
     "i18n:templatise": "node scripts/i18n-templatise.js",

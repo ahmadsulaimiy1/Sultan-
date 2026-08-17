@@ -632,11 +632,14 @@
   {
     "slug": "press",
     "output": "press/index.html",
-    "title": "Press & News Room — Sultan Hanafi Royal Schools",
-    "description": "Official news, notices, and a media kit for journalists and partners.",
+    "title": "Press Centre — Sultan Hanafi Royal Schools",
+    "description": "The SHRS Press Centre: national coverage cited and dated, the fact sheet, executive biographies, brand assets, and a media desk that answers with sources.",
     "contentFile": "pages/press.html",
     "altHref": "/ar/press/",
-    "prestige": true
+    "prestige": true,
+    "homefx": true,
+    "story": true,
+    "ogImage": "/assets/images/campus/graduation-prize-giving.jpg"
   },
   {
     "slug": "press-ar",
