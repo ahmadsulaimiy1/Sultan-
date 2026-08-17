@@ -2817,3 +2817,48 @@ html[data-pc-theme="dark"] .pr-section.gw-band.is-ivory{
 .cc-reissue-error{font-size:.78rem;color:#E08A7A;margin:0 0 10px;}
 .cc-reissue-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
 .cc-reissue-cancel{opacity:.75;}
+
+/* ── The Registrar's Office Directory — six wings, one language ── */
+.reg-directory{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:26px 0 34px;}
+.reg-dir-card{--dirtone:#C6A15B;position:relative;display:flex;flex-direction:column;gap:7px;padding:20px 20px 16px;
+  border-radius:14px;text-decoration:none;overflow:hidden;isolation:isolate;
+  background:linear-gradient(168deg,#231506 0%,#170E05 55%,#1D1207 100%);
+  border:1px solid rgba(198,161,91,.4);box-shadow:0 14px 34px rgba(23,13,3,.35);
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;}
+.reg-dir-card::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;z-index:-1;
+  background:conic-gradient(from var(--tlangle,0deg),transparent 0 78%,var(--dirtone) 88%,#FFF3DE 92%,var(--dirtone) 96%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s ease;}
+@property --tlangle{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.reg-dir-card:hover,.reg-dir-card:focus-visible{transform:translateY(-3px);border-color:var(--dirtone);
+  box-shadow:0 22px 48px rgba(23,13,3,.5);}
+.reg-dir-card:hover::before,.reg-dir-card:focus-visible::before{opacity:1;animation:regDirSweep 2.6s linear infinite;}
+@keyframes regDirSweep{to{--tlangle:360deg;}}
+.reg-dir-gem{width:30px;height:30px;border-radius:8px;transform:rotate(45deg);margin:2px 0 6px 4px;
+  background:linear-gradient(135deg,var(--dirtone),#0E0803 78%);
+  box-shadow:0 0 14px color-mix(in srgb,var(--dirtone) 55%,transparent),inset 0 0 5px rgba(255,243,222,.55);
+  border:1px solid color-mix(in srgb,var(--dirtone) 80%,#FFF3DE);}
+.reg-dir-name{font-family:'Cinzel','Amiri',serif;font-size:.95rem;letter-spacing:.05em;color:#F3DFAE;}
+.reg-dir-desc{font-size:.76rem;line-height:1.55;color:rgba(247,238,223,.72);}
+.reg-dir-live{margin-top:auto;padding-top:9px;font-family:'Consolas','Menlo',monospace;font-size:.66rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dirtone);
+  border-top:1px solid color-mix(in srgb,var(--dirtone) 35%,transparent);}
+.reg-dir-card.is-sapphire{--dirtone:#7FA7DC;}
+.reg-dir-card.is-gold{--dirtone:#E9CE8A;}
+.reg-dir-card.is-garnet{--dirtone:#C97B6E;}
+.reg-dir-card.is-emerald{--dirtone:#84BE9C;}
+.reg-dir-card.is-amethyst{--dirtone:#A98FCB;}
+.reg-dir-card.is-bronze{--dirtone:#C6A15B;}
+@media (prefers-reduced-motion:reduce){
+  .reg-dir-card,.reg-dir-card:hover{transform:none;transition:none;}
+  .reg-dir-card:hover::before,.reg-dir-card:focus-visible::before{animation:none;opacity:.8;}
+}
+/* Gilded section banners replacing the thin rule-lines */
+.office-group-head{position:relative;display:flex;align-items:center;gap:14px;margin:38px 0 18px;padding:13px 20px;
+  border-radius:11px;background:linear-gradient(172deg,#241606 0%,#191006 60%,#20130A 100%);
+  border:1px solid rgba(198,161,91,.45);color:#E9CE8A;box-shadow:0 10px 26px rgba(23,13,3,.28);
+  scroll-margin-top:90px;}
+.office-group-head::before{content:'';flex:0 0 11px;height:11px;transform:rotate(45deg);border-radius:3px;opacity:1;
+  background:linear-gradient(135deg,#E9CE8A,#8C6834);box-shadow:0 0 9px rgba(233,206,138,.6);}
+.office-group-head::after{content:'';flex:1 1 auto;height:1px;
+  background:linear-gradient(90deg,rgba(233,206,138,.55),rgba(233,206,138,.05));opacity:1;}

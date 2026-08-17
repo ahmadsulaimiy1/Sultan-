@@ -69,7 +69,49 @@
       </div>
     </div>
 
-    <div class="office-group-head">Admissions Intelligence &amp; Student Registry</div>
+    <!-- The Office Directory: every wing of the Registrar's Office as a
+         premium module card — one design language, live counts where the
+         page genuinely loads that data (never invented numbers). -->
+    <nav class="reg-directory" aria-label="Registrar's Office modules">
+      <a class="reg-dir-card is-sapphire" href="#reg-wing-admissions">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Admissions &amp; Student Registry</span>
+        <span class="reg-dir-desc">Look up any student; enrol admitted applications into real records.</span>
+        <span class="reg-dir-live" data-dir-count="registry">Registry workspace</span>
+      </a>
+      <a class="reg-dir-card is-gold" href="#reg-wing-certificates">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Certificates &amp; Verification</span>
+        <span class="reg-dir-desc">The Credential Press, approvals, and the public verification tools.</span>
+        <span class="reg-dir-live" data-dir-count="approvals">&mdash;</span>
+      </a>
+      <a class="reg-dir-card is-garnet" href="#reg-wing-graduation">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Graduation Records</span>
+        <span class="reg-dir-desc">Ceremony submissions, the graduation register, and document approvals.</span>
+        <span class="reg-dir-live" data-dir-count="graduation">&mdash;</span>
+      </a>
+      <a class="reg-dir-card is-emerald" href="#reg-wing-admissions">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Transcripts &amp; Academic Standing</span>
+        <span class="reg-dir-desc">Per-student standing, attendance and assessment records &mdash; open a student to begin.</span>
+        <span class="reg-dir-live">Opens with a student record</span>
+      </a>
+      <a class="reg-dir-card is-amethyst" href="#reg-wing-admissions">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Lifecycle &amp; Maintenance</span>
+        <span class="reg-dir-desc">Lifecycle timeline and record maintenance for the student in view.</span>
+        <span class="reg-dir-live">Opens with a student record</span>
+      </a>
+      <a class="reg-dir-card is-bronze" href="#reg-wing-integrity">
+        <span class="reg-dir-gem" aria-hidden="true"></span>
+        <span class="reg-dir-name">Records Integrity</span>
+        <span class="reg-dir-desc">The authority, audit and serial guarantees behind every act above.</span>
+        <span class="reg-dir-live">Standing guarantees</span>
+      </a>
+    </nav>
+
+    <div class="office-group-head" id="reg-wing-admissions">Admissions Intelligence &amp; Student Registry</div>
 
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Look Up a Student</h2></div>
@@ -105,7 +147,7 @@
       <div class="registrar-form-result" data-enrol-result hidden></div>
     </div>
 
-    <div class="office-group-head">Certificates &amp; Verification</div>
+    <div class="office-group-head" id="reg-wing-certificates">Certificates &amp; Verification</div>
 
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Certificate Generation Centre</h2></div>
@@ -131,7 +173,7 @@
       </div>
     </div>
 
-    <div class="office-group-head">Graduation Records — 8 August 2026 Ceremony</div>
+    <div class="office-group-head" id="reg-wing-graduation">Graduation Records — 8 August 2026 Ceremony</div>
 
     <div class="portal-child-card">
       <div class="portal-child-head"><h2>Graduation Information Submissions</h2></div>
@@ -371,7 +413,7 @@
 
     </div>
 
-    <div class="office-group-head">Records Integrity</div>
+    <div class="office-group-head" id="reg-wing-integrity">Records Integrity</div>
     <p class="portal-notice-on-dark">
       Every lookup, event, and certificate action is checked against your assigned roles under the SHRS Role &amp; Permission Matrix and recorded in the staff audit log. If an action is refused and you believe it shouldn't be, contact the ICT Office at
       <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a>.
