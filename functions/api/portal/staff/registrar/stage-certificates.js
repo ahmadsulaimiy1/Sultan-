@@ -35,6 +35,7 @@ import {
 } from '../../../../_lib/royal-college-certificate.js';
 import { renderHtmlToPdf, renderHtmlToPng, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
 import { qrSvgForPrint } from '../../../../_lib/qrcode.js';
+import { INSTITUTIONS_BY_PROGRAMME, PORTAL_ROYAL_COLLEGE_CODES } from '../../../../_lib/institutions.js';
 
 // ── Which master renders which programme ────────────────────────────────────
 // The v1.0 stage template throws on a programme code it has no award wording
@@ -86,18 +87,14 @@ function renderCertificateBatch(title, items) {
 // Nursery and Primary is one of the four. JSS/SS/QUR belong to a
 // different school with its own Principal approval chain, which is a
 // materially different authority question this change does not decide.
-const INSTITUTIONS_BY_PROGRAMME = {
-  TMH: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
-  IBT: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
-  IDD: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
-  THN: { internalName: 'Islamic and Arabic Studies', displayName: 'Sultan Hanafi School of Islamic and Arabic Studies' },
-  NUR: { internalName: 'Nursery and Primary', displayName: 'Sultan Hanafi Nursery and Primary School' },
-  PRY: { internalName: 'Nursery and Primary', displayName: 'Sultan Hanafi Nursery and Primary School' },
-};
+// Consumed from the canonical registry (functions/_lib/institutions.js)
+// — byte-identical to the literal map this replaced, pinned by
+// scripts/test-institution-registry.mjs.
+// (imported at top of file)
 // The Royal College codes this route (not the script) is authorised to
 // issue. RC_PROGRAMMES also holds JSS, SS and QUR — deliberately absent
 // here; see the comment above.
-const PORTAL_ROYAL_COLLEGE_CODES = ['NUR', 'PRY'];
+// PORTAL_ROYAL_COLLEGE_CODES now comes from the registry import above.
 
 // Looks up a programme's wording from whichever registry defines it —
 // the Islamic-stage PROGRAMMES, or the two Royal College codes this

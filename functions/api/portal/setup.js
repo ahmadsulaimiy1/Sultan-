@@ -6,6 +6,7 @@
 //
 // Mirrors sql/schema.sql — keep the two in sync if either changes.
 import { getSql } from '../../_lib/db.js';
+import { INSTITUTION_SEED_NAMES } from '../../_lib/institutions.js';
 import { hashPassword, timingSafeEqualString } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
 
@@ -389,8 +390,11 @@ const STATEMENTS = [
   // explicit admin action (see docs/staff-identity-architecture.md),
   // the same "admin enters real data on purpose" convention already
   // used for guardians/students, never auto-created by this endpoint.
+  // Seed rows come from the canonical registry (functions/_lib/
+  // institutions.js) — adding an institution there seeds it here with
+  // no second list to forget.
   `INSERT INTO institutions (name) VALUES
-    ('Nursery and Primary'), ('Royal College'), ('Islamic and Arabic Studies'), ('Qur''an College')
+    ${INSTITUTION_SEED_NAMES.map((n) => `('${n.replace(/'/g, "''")}')`).join(', ')}
     ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
