@@ -49,6 +49,16 @@ on:
       # reaches the live site — this workflow's psql step applies
       # sql/schema.sql idempotently, so a schema commit triggers it.
       - 'sql/schema.sql'
+      # The institution registry and the numbering/master modules it
+      # derives are pinned by golden tests (npm run test:certificates).
+      # Any edit to these paths must face that wall on push, not only
+      # in a PR someone remembered to open.
+      - 'functions/_lib/institutions.js'
+      - 'functions/_lib/identity-no.js'
+      - 'functions/_lib/royal-college-certificate.js'
+      - 'functions/_lib/document-seals.js'
+      - 'scripts/test-verify-identifiers.mjs'
+      - 'scripts/test-institution-registry.mjs'
 
 concurrency:
   # Never let two runs import into the same database at once. The import is
@@ -72,6 +82,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci || npm install
+
+      # ── 0. The golden-test wall ─────────────────────────────────────────
+      # Pure Node, no secrets, no network: identifier resolution rules and
+      # the institution registry's byte-parity with the literals it
+      # replaced (serials, admission/staff numbering codes, certificate
+      # school names, seed rows, seal keys). If this fails, nothing else in
+      # this run is trustworthy — so it runs first and fails the run.
+      - name: Certificate suites — identifiers and institution registry
+        run: npm run test:certificates
 
       # ── 1. What is configured, and what that means ──────────────────────
       # Reported before anything runs, because "nothing happened" is a fact
