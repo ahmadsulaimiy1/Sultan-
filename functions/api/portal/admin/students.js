@@ -18,16 +18,10 @@
 import { getSql } from '../../../_lib/db.js';
 import { timingSafeEqualString, generateToken } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
+import { resolveClassId } from '../../../_lib/classes.js';
 
 const ACTIVATION_TOKEN_TTL_DAYS = 7;
 const VALID_STATUSES = ['active', 'graduated', 'withdrawn', 'suspended'];
-
-async function resolveClassId(sql, institution, className) {
-  const existingClass = await sql`SELECT id FROM classes WHERE institution = ${institution} AND name = ${className}`;
-  if (existingClass.rows.length) return existingClass.rows[0].id;
-  const createdClass = await sql`INSERT INTO classes (institution, name) VALUES (${institution}, ${className}) RETURNING id`;
-  return createdClass.rows[0].id;
-}
 
 export async function onRequestPost({ request, env }) {
   const adminToken = env.PORTAL_ADMIN_TOKEN;
