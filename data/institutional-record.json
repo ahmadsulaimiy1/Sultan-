@@ -1,0 +1,217 @@
+{
+  "_meta": {
+    "title": "SHRS Institutional Record",
+    "discipline": "Every entry carries `basis`: how we know it. Levels: capture (preserved page in docs/legacy-migration/), press-snippet (search-index snippet of an article whose body is not yet archived), registry-snippet (CAC-derived aggregator snippet), self-published (the school's own statement), school-confirmation-needed (awaiting a fact only the school holds). Nothing may be promoted a level without new evidence. Generated pages must render the caveat wherever basis is not 'capture' or 'archived-original'.",
+    "updated": "2026-08-15"
+  },
+
+  "sources": [
+    {
+      "id": "punch-2023-illuminating",
+      "outlet": "The Punch",
+      "headline": "Sultan Hanafi Royal Schools: Illuminating Minds and Nurturing Communities",
+      "byline": "Olawoyin Edris",
+      "url": "https://punchng.com/sultan-hanafi-royal-schools-illuminating-minds-and-nurturing-communities-olawoyin-edris/",
+      "date": "2023-08-29",
+      "date_basis": "search-result summaries, twice independently; not yet read on-page",
+      "type": "bylined feature",
+      "basis": "press-snippet",
+      "key_quotes": [
+        "Nestled within Imowonla town, in the Ikorodu area of Lagos State, the school radiates the light of knowledge, offering a lifeline of hope"
+      ],
+      "notes": "First known national coverage. Snippets also carry the Fashola-era origin of the founding idea."
+    },
+    {
+      "id": "punch-2024-makinde",
+      "outlet": "The Punch",
+      "headline": "Education projects, seeds for future generations – Makinde",
+      "byline": null,
+      "url": "https://punchng.com/education-projects-seeds-for-future-generations-makinde/",
+      "date": "2024-11-14",
+      "date_basis": "search-result summaries; Edugist mirror dated a day later",
+      "type": "news report",
+      "basis": "press-snippet",
+      "key_quotes": [
+        "He spoke at the unveiling of a faith-based Sultan Hanafi Royal College in Ikorodu, Lagos, and donated N10m to help train less privileged students.",
+        "Mr Anofi is not only a colleague but my Chief Accountant, and if he had not been a person of integrity, I wouldn't be here today.",
+        "When you start an educational project, you are planting a seed for the future."
+      ],
+      "syndication": [
+        { "outlet": "Edugist", "url": "https://edugist.org/education-projects-seeds-for-future-generations-makinde/", "date": "2024-11-15" }
+      ],
+      "notes": "The unveiling of Sultan Hanafi Royal College. Single independent origin (the Edugist copy is a reprint of the same text). Adversarial verification: identity with THIS school confirmed by three independent query paths; corroboration remains single-source until the article body is archived."
+    },
+    {
+      "id": "punch-2025-quran",
+      "outlet": "The Punch",
+      "headline": "Winners emerge in N1.5m Quran competition",
+      "byline": null,
+      "url": "https://punchng.com/winners-emerge-in-n1-5m-quran-competition/",
+      "date": "2025-03-21",
+      "date_basis": "search-result summaries; consistent with Ramadan 2025 (1–30 March)",
+      "type": "news report",
+      "basis": "press-snippet",
+      "key_quotes": [
+        "Winners have emerged in the second Ramadan Quran competition organised by the Sultan Hanafi Royal College, Ikorodu, Lagos.",
+        "This is the second year we are organising the Sultan Annual Quran Competition, and it is already the best and first of its kind in Nigeria."
+      ],
+      "syndication": [
+        { "outlet": "MSN", "url": "https://www.msn.com/en-xl/africa/nigeria/winners-emerge-in-n1-5m-quran-competition/ar-AA1BmkHx", "date": null }
+      ],
+      "notes": "Names the category winners and quotes the College's director, Ahmed Sulaimon."
+    },
+    {
+      "id": "punch-2026-graduation",
+      "outlet": "The Punch",
+      "headline": "Lagos school charges graduates to be problem-solvers",
+      "byline": null,
+      "url": "https://punchng.com/lagos-school-charges-graduates-to-be-problem-solvers/",
+      "date": "2026-08-15",
+      "date_basis": "surfaced as published hours before a search run on 2026-08-15",
+      "type": "news report",
+      "basis": "press-snippet",
+      "key_quotes": [
+        "Building the Future Ummah Through Holistic Education",
+        "Be a problem solver and not add to the problems we already have at hand"
+      ],
+      "notes": "Class of 2026 combined graduation: Basic School, JSS, SSS, Qur'an College and Islamiyah School. Renders the founder's name as 'Hanafi Olanrewaju' — see name_renderings."
+    },
+    {
+      "id": "registry-islamic-arabic",
+      "outlet": "CAC registry (via ng-check.com / nigeria24.me mirrors)",
+      "headline": "SULTAN HANAFI SCHOOL OF ISLAMIC & ARABIC STUDIES — RC 2564261",
+      "url": "https://ng-check.com/sultan-hanafi-school-of-islamic-arabic-studies/4931331.html",
+      "date": "2017-12-19",
+      "date_basis": "registration date per registry snippet",
+      "type": "company registration",
+      "basis": "registry-snippet",
+      "key_quotes": [
+        "SULTAN HOUSE, 21, H ROAD, OLAIFE ESTATE, IMOWONLA TOWN, OFF GBERIGBE"
+      ],
+      "notes": "Registered office differs from the campus address — the legal seat, not the school gate. Mirrors disagree on entity type; resolve from the CAC certificate the school holds."
+    },
+    {
+      "id": "registry-foundation",
+      "outlet": "CAC registry (via nigeria24.me mirror)",
+      "headline": "SULTAN ZAKARIYA HANAFI FOUNDATION — Incorporated Trustee, RC/IT 101703",
+      "url": "https://nigeria24.me/sultan-zakariya-hanafi-foundation",
+      "date": "2017-10-13",
+      "date_basis": "registration date per registry snippet",
+      "type": "incorporated trustee registration",
+      "basis": "registry-snippet",
+      "notes": "The philanthropic arm, registered as a foundation-based association."
+    },
+    {
+      "id": "ng-about-capture",
+      "outlet": "shroyalschools.ng (legacy site, school's own)",
+      "headline": "About SULTAN",
+      "url": "https://shroyalschools.ng/about-sultan/",
+      "date": "2026-08-15",
+      "date_basis": "browser capture in docs/legacy-migration/captures/about-sultan.mhtml",
+      "type": "self-published, preserved capture",
+      "basis": "capture",
+      "notes": "Authoritative for the legacy mission/vision text, the CLEVER expansion, and the Saudi-curriculum statement."
+    }
+  ],
+
+  "name_renderings": {
+    "canonical": "Zakariya Olanrewaju Anofi",
+    "credentials": "B.Sc. Applied Accounting (Oxford Brookes University); M.Sc. Financial Management (Edinburgh Business School, Heriot-Watt University); FCA (ICAN); FCCA (UK)",
+    "press_variants": ["Olanrewaju Anofi", "Zakaria Hanafi", "Hanafi Olanrewaju"],
+    "note": "Press articles render the founder's name inconsistently. The archive uses the canonical rendering and records the variants so citations remain traceable."
+  },
+
+  "milestones": [
+    { "date": "2016-07", "title": "Founded", "account": "Sultan Hanafi Royal Schools is founded in Ikorodu, named in honour of the founder's late father, Anofi Aliu Akano — a Nigerian Ports Authority clerk whose own education was limited, and who was determined his children's would not be.", "source_ids": ["punch-2023-illuminating"], "basis": "self-published, corroborated by press-snippet" },
+    { "date": "2017", "title": "The Imowonla campus", "account": "The school takes root at its present home: 15 Imowonla Road, AP Bus Stop, off the Gberigbe–Agura Road.", "source_ids": [], "basis": "self-published" },
+    { "date": "2017-10-13", "title": "The Foundation is registered", "account": "The Sultan Zakariya Hanafi Foundation is registered as an Incorporated Trustee (RC/IT 101703) — the institution's philanthropic arm.", "source_ids": ["registry-foundation"], "basis": "registry-snippet" },
+    { "date": "2017-12-19", "title": "The Islamic & Arabic School is registered", "account": "Sultan Hanafi School of Islamic & Arabic Studies is registered with the CAC (RC 2564261), seated at Sultan House, 21 H Road, Olaife Estate, Imowonla.", "source_ids": ["registry-islamic-arabic"], "basis": "registry-snippet" },
+    { "date": "2020", "title": "Community first", "account": "Humanitarian relief through the COVID-19 lockdown.", "source_ids": [], "basis": "self-published" },
+    { "date": "2021", "title": "Royal College established", "account": "The secondary college is established.", "source_ids": [], "basis": "self-published" },
+    { "date": "2023-08-29", "title": "National recognition", "account": "The Punch publishes Olawoyin Edris's feature on the school — 'a lifeline of hope' in Imowonla — its first known national coverage.", "source_ids": ["punch-2023-illuminating"], "basis": "press-snippet" },
+    { "date": "2024-11-14", "title": "The unveiling of Royal College", "account": "Sultan Hanafi Royal College is unveiled. Governor Seyi Makinde of Oyo State attends in a personal capacity and announces a ₦10 million gift toward educating less-privileged students.", "source_ids": ["punch-2024-makinde"], "basis": "press-snippet", "school_confirmation_needed": "exact event date; identities in the commissioning-day photographs" },
+    { "date": "2025-03-21", "title": "The Second Sultan Annual Qur'an Competition", "account": "Winners emerge in the second Ramadan Qur'an competition, with ₦1.5m committed to prizes.", "source_ids": ["punch-2025-quran"], "basis": "press-snippet" },
+    { "date": "2026-03", "title": "The Third Qur'an Competition advertised", "account": "The 2026 Ramadan Annual Qur'an Competition — the third edition — is announced.", "source_ids": [], "basis": "self-published" },
+    { "date": "2026-08", "title": "Class of 2026", "account": "A combined graduation for the Basic School, Junior and Senior Secondary, Qur'an College and Islamiyah School, themed 'Building the Future Ummah Through Holistic Education'.", "source_ids": ["punch-2026-graduation"], "basis": "press-snippet" }
+  ],
+
+  "visitors": [
+    {
+      "name": "His Excellency Engr. Seyi Makinde",
+      "role": "Governor of Oyo State",
+      "capacity": "personal — long-standing associate of the founder, who served as chief accountant in his company before the governorship",
+      "occasion": "Unveiling of Sultan Hanafi Royal College",
+      "date": "2024-11",
+      "date_basis": "press-snippet; exact day awaiting the school's records",
+      "acts": [
+        "Spoke at the unveiling of the faith-based Sultan Hanafi Royal College",
+        "Announced a ₦10 million gift toward educating less-privileged students",
+        "Publicly credited the founder's integrity: 'Mr Anofi is not only a colleague but my Chief Accountant, and if he had not been a person of integrity, I wouldn't be here today.'"
+      ],
+      "source_ids": ["punch-2024-makinde"],
+      "photos": ["assets/images/gallery/commissioning-day-1.jpg", "assets/images/gallery/commissioning-day-2.jpg"],
+      "photo_status": "The school's photographs of the ceremony; identities and date await the school's confirmation before captions name anyone.",
+      "status": "documented-press-snippet"
+    },
+    {
+      "name": "Visiting scholars (names not yet recorded)",
+      "role": "Senior Islamic scholars",
+      "capacity": "scholarly",
+      "occasion": "Scholarly visit — photographs preserved in the school's gallery",
+      "date": null,
+      "date_basis": "no record yet — awaiting the school's account",
+      "acts": [],
+      "source_ids": [],
+      "photos": ["assets/images/gallery/scholarly-visit-1.jpg", "assets/images/gallery/scholarly-visit-2.jpg"],
+      "photo_status": "Preserved; uncaptioned. The school should record who visited, when, and on what occasion.",
+      "status": "school-confirmation-needed"
+    }
+  ],
+
+  "trust_signals": [
+    { "signal": "Independent national press coverage — four Punch articles across three years", "evidence": "punch-2023-illuminating, punch-2024-makinde, punch-2025-quran, punch-2026-graduation", "status": "documented (snippet level; archive the article bodies)" },
+    { "signal": "A sitting governor's public tribute to the founder's integrity, and a ₦10m educational gift", "evidence": "punch-2024-makinde", "status": "documented (snippet level)" },
+    { "signal": "Syndication of coverage beyond the origin outlet (Edugist, MSN)", "evidence": "punch-2024-makinde, punch-2025-quran syndication fields", "status": "documented" },
+    { "signal": "CAC-registered legal entities behind the school and its foundation", "evidence": "registry-islamic-arabic, registry-foundation", "status": "documented (registry-snippet; the school holds the certificates)" },
+    { "signal": "A decade of continuous operation (2016–present) across five institutions", "evidence": "self-published, consistent with all press", "status": "self-published" },
+    { "signal": "₦1.5m annual Qur'an competition, described by its director as first of its kind in Nigeria", "evidence": "punch-2025-quran", "status": "documented (snippet level)" },
+    { "signal": "COVID-19 community relief", "evidence": "school's own timeline", "status": "self-published — gather photographs/records to document" },
+    { "signal": "Verifiable credentials infrastructure (certificate/identity/receipt verification, live against the school's record)", "evidence": "shroyalschools.com/verify/", "status": "operational on the site" },
+    { "signal": "Founder's professional credentials (FCA, FCCA; Oxford Brookes; Heriot-Watt)", "evidence": "self-published + LinkedIn (unconfirmed)", "status": "self-published — confirm LinkedIn for sameAs" },
+    { "signal": "Ministry of Education approval", "evidence": "none found via search", "status": "NOT YET DOCUMENTED — if the school holds an approval number, publishing it is the single strongest addition available" }
+  ],
+
+  "identity_chain": {
+    "domains": ["shrschools.ng (email identity in legacy contact page)", "shroyalschools.ng (WordPress site, 2023–2026)", "shroyalschools.com (canonical from 2026)"],
+    "note": "The archive records the chain; the migration map governs the redirects."
+  },
+
+  "wanted_facts": {
+    "note": "The timeline slots that exist in memory but not yet in the record. Each names its likely source; the oral-history programme (docs/oral-history-programme.md) is the collection instrument. An entry moves into `milestones` only with a date and a basis.",
+    "slots": [
+      { "slot": "Land acquisition", "likely_source": "founder interview + deed" },
+      { "slot": "Construction period and first building", "likely_source": "founder + early staff interviews, photographs" },
+      { "slot": "First admission day and first pupil", "likely_source": "founder + registrar; earliest enrolment register" },
+      { "slot": "First graduation", "likely_source": "early staff; photographs; programme if printed" },
+      { "slot": "Exact date of the November 2024 unveiling", "likely_source": "printed programme, invitation card, camera-original EXIF" },
+      { "slot": "First Qur'an competition (2024): date, winners", "likely_source": "Director Ahmed Sulaimon; school records" },
+      { "slot": "Ministry of Education approval: number and date", "likely_source": "registrar; the certificate" },
+      { "slot": "SPELL Africa gold: edition, year, student", "likely_source": "school records; organiser's published results" },
+      { "slot": "COVID-19 relief: scope, dates", "likely_source": "community leaders; foundation records; photographs" },
+      { "slot": "Road maintenance and community electrification: dates, scope", "likely_source": "community leaders; receipts" },
+      { "slot": "Scholarly visit(s): who, when, occasion", "likely_source": "Director Qur'an College; the photographs' subjects" },
+      { "slot": "Identity of every person in commissioning-day photographs", "likely_source": "the school; the guests themselves" }
+    ]
+  },
+
+  "coverage_absences": {
+    "note": "Verified absences, recorded so nobody re-searches them and so growth is measurable.",
+    "checked_2026_08": [
+      "Vanguard, The Guardian Nigeria, The Nation, Nigerian Tribune, Daily Trust, ThisDay, Leadership, Daily Post, Premium Times, The Sun, PM News, Legit.ng, Pulse.ng — zero coverage",
+      "Television and radio — none found on any Nigerian broadcaster",
+      "Edugist beyond the one syndicated Makinde piece — none",
+      "Education-sector outlets (EduTimes Africa, schoolings.org, educeleb.com) — none",
+      "Lagos State schools portal / Ministry listings — none surfaced by search"
+    ]
+  }
+}

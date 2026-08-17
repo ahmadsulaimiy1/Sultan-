@@ -1323,6 +1323,45 @@ export const RC_PROGRAMMES = {
       ink: '/assets/images/certificates/signature-royal-college-principal.svg',
     },
   },
+  // ── Nursery — the stage this school's own prospectus opens with ────────────
+  // The Registrar's Office (schema.sql, role seed) holds certificate authority
+  // "across all four institutions", and Nursery and Primary is one of the
+  // four — the only gap was that this route never had wording for its first
+  // stage. pages/academics-nursery-primary.html is this school's own account
+  // of itself: "Sultan Hanafi Nursery and Primary School takes children from
+  // the age of two to the age of ten, from Creche through to Primary 6."
+  // Nursery is the years inside that range that precede Primary 1; the page
+  // gives no further breakdown (no "Nursery 1 / Nursery 2", no year count for
+  // the stage on its own), so none is invented here — the same restraint PRY
+  // below already applies to its own missing year count.
+  NUR: {
+    code: 'NUR',
+    labelEn: 'Nursery School',
+    // Same institution as PRY, same wording, same source: the site's own name
+    // for the school both stages belong to.
+    school: 'Sultan Hanafi Nursery and Primary School',
+    title: 'Certificate of Graduation',
+    award: 'Nursery School Graduation Certificate',
+    // No year count or age bracket beyond "the age of two" — the site never
+    // separates Nursery's own span from the school's combined range, and a
+    // number invented for this sheet would be the exact error the Founder
+    // has already ruled against once, on PRY, below.
+    stageEn: 'the Nursery School programme',
+    progressesTo: 'the Primary School',
+    border: 'open',
+    // The warm-copper accent PRY carries is the SCHOOL's own identity, not a
+    // per-stage marker — Nursery and Primary are one institution under one
+    // Head Teacher, so the same accent applies here for the same reason PRY
+    // gives for using it: it must read as this school's award at a glance,
+    // distinct from the Islamic-stage and Royal College sheets.
+    accent: '#C9784B',
+    // Same office holder as PRY — one Head Teacher for the one school.
+    signatory: {
+      name: 'Mrs. Mariam Tope Anofi-AbdulKareem',
+      role: 'Head Teacher, Nursery and Primary School',
+      ink: '/assets/images/certificates/signature-head-teacher.png',
+    },
+  },
   PRY: {
     code: 'PRY',
     // The site names this school "Sultan Hanafi Nursery and Primary School" —

@@ -1,0 +1,201 @@
+{
+  "generated_by": "scripts/keyword-build.mjs",
+  "volume_data": "NONE — no keyword tool is connected. difficulty and opportunity are MODELLED, not measured.",
+  "total": 15597,
+  "byPriority": {
+    "P1": 434,
+    "P2": 918,
+    "P3": 3141,
+    "P4": 11104
+  },
+  "byIntent": {
+    "navigational": 837,
+    "transactional": 1040,
+    "commercial": 12936,
+    "informational": 784
+  },
+  "byFunnel": {
+    "decision": 1877,
+    "consideration": 12936,
+    "awareness": 784
+  },
+  "byCluster": {
+    "brand": 160,
+    "quran": 2285,
+    "islamic": 1936,
+    "boarding": 986,
+    "early": 2205,
+    "core": 2205,
+    "secondary": 1764,
+    "online": 914,
+    "sen": 882,
+    "intl": 1828,
+    "choosing": 114,
+    "curriculum": 108,
+    "welfare": 72,
+    "development": 72,
+    "money": 66
+  },
+  "byGeo": {
+    "ikorodu": 1841,
+    "lagos": 2806,
+    "nigeria": 2770,
+    "lagos_area": 5346,
+    "intl": 272,
+    "neighbourhood": 2178,
+    "none": 384
+  },
+  "directorySerps": 570,
+  "top25": [
+    {
+      "k": "sultan hanafi royal schools",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools school fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools fees per term",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools tuition fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools admission requirements",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools how to apply",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools application form",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools requirements for admission",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools mid term admission",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi royal schools boarding fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school school fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school fees per term",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school tuition fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school admission requirements",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school how to apply",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school application form",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school requirements for admission",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school mid term admission",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "sultan hanafi school boarding fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "shrs ikorodu",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "shrs ikorodu school fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "shrs ikorodu fees per term",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "shrs ikorodu tuition fees",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    },
+    {
+      "k": "shrs ikorodu admission requirements",
+      "opp": 92,
+      "diff": 3,
+      "page": "/"
+    }
+  ]
+}

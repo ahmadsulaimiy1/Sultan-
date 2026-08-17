@@ -1,0 +1,1565 @@
+/* ===========================================================================
+   PORTAL COMMAND — the executive layer for every SHRS portal
+   ===========================================================================
+
+   Loaded on every page that carries .portal-topbar (72 of them), so the
+   header, the footer, the grid, the cards, the lighting and the charts are
+   one system rather than 72 opinions.
+
+   THE LIGHT. The brief is right that the existing bloom is wrong: a large
+   soft glow behind a card is the cheapest effect in the medium and it puts
+   haze over the content. Luxury light is SPECULAR, not diffuse — it is the
+   highlight running along a polished edge as the object turns. So the light
+   here is a 1px travelling highlight confined to the BORDER of a card, cut
+   out of the middle by a mask. It never crosses the content, never blooms,
+   and at 12s per revolution it reads as a sheen rather than an animation.
+
+   THE PALETTE is the institutional one: coffee, royal gold, champagne,
+   ivory, cream, espresso. Blue-grey appears only in analytics, where a
+   second hue is doing real work — separating a comparison series from the
+   institutional one — and never as decoration.
+
+   MOTION. Everything here obeys prefers-reduced-motion. Under that setting
+   the travelling light stops, counters land on their final value, charts
+   draw instantly, and nothing is lost but the movement.
+   =========================================================================== */
+
+@property --cmd-angle { syntax: '<angle>'; initial-value: 0turn; inherits: false; }
+
+:root {
+  /* Institutional palette (docs/institutional-identity.md §IV) */
+  --cmd-espresso:  #14100A;
+  --cmd-coffee-900:#1C1409;
+  --cmd-coffee-800:#2A1F12;
+  --cmd-coffee-700:#3B2C19;
+  --cmd-coffee-600:#4E3B22;
+  --cmd-gold:      #B08D45;
+  --cmd-gold-ink:  #856327;
+  --cmd-champagne: #E3C88A;
+  --cmd-champagne-hi:#F7EBCD;
+  --cmd-ivory:     #FCF9F2;
+  --cmd-cream:     #F1E7D4;
+
+  /* Analytics only — a second hue earns its place by carrying comparison. */
+  --cmd-steel:     #5B7A94;
+  --cmd-steel-dim: #8FA6B8;
+
+  /* Rhythm. One scale, used everywhere; nothing is spaced off-grid. */
+  --cmd-u: 8px;
+  --cmd-gap: calc(var(--cmd-u) * 3);
+  --cmd-radius: 16px;
+  --cmd-radius-sm: 11px;
+
+  --cmd-ease: cubic-bezier(.22, .61, .36, 1);
+  --cmd-ease-out: cubic-bezier(.16, 1, .3, 1);
+
+  --cmd-header-h: 68px;
+}
+
+/* ===========================================================================
+   1. THE COMMAND HEADER
+   Deep espresso glass over the page, multi-layer: a tinted base, a fine
+   gold hairline, and one slow specular sweep along that hairline.
+   =========================================================================== */
+
+body .portal-topbar.cmd-header {
+  position: sticky; top: 0; z-index: 900;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--cmd-gap);
+  min-height: var(--cmd-header-h);
+  padding: 0 clamp(14px, 2.4vw, 30px);
+  background:
+    linear-gradient(180deg, rgba(20,16,10,.97) 0%, rgba(28,20,9,.95) 100%);
+  border-bottom: 1px solid rgba(176,141,69,.34);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  box-shadow: 0 1px 0 rgba(227,200,138,.09) inset, 0 10px 34px rgba(10,6,2,.30);
+  overflow: visible;
+}
+
+/* the hairline sweep — 1px tall, travels the full width, then rests */
+.cmd-header::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, transparent 38%,
+    rgba(227,200,138,.85) 47%, rgba(255,252,244,.95) 50%,
+    rgba(227,200,138,.85) 53%, transparent 62%, transparent 100%);
+  background-size: 220% 100%;
+  animation: cmd-sweep 9s var(--cmd-ease-out) infinite;
+  pointer-events: none;
+}
+@keyframes cmd-sweep {
+  0%, 62% { background-position: 130% 0; }
+  100%    { background-position: -30% 0; }
+}
+
+.cmd-identity { display: flex; align-items: center; gap: 11px; text-decoration: none; min-width: 0; }
+.cmd-identity img { width: 34px; height: 34px; flex: none; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+.cmd-identity-text { display: flex; flex-direction: column; line-height: 1.12; min-width: 0; }
+.cmd-identity-name {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 13.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  background: linear-gradient(174deg, #F7EBCD 0%, #E3C88A 34%, #C2A05A 62%, #EFE0BC 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  white-space: nowrap;
+}
+.cmd-identity-sub {
+  font-size: 9.5px; letter-spacing: .19em; text-transform: uppercase;
+  color: rgba(227,200,138,.62); margin-top: 3px; white-space: nowrap;
+}
+
+/* --- centre: breadcrumb over the live strip ------------------------------ */
+.cmd-centre { display: flex; flex-direction: column; gap: 3px; min-width: 0; max-width: 100%;
+  justify-self: center; align-items: center; text-align: center; overflow: hidden; }
+.cmd-crumbs { display: flex; align-items: center; gap: 7px; font-size: 11px; min-width: 0;
+  max-width: 100%; overflow: hidden; }
+.cmd-crumbs a, .cmd-crumbs span { color: rgba(241,231,212,.62); text-decoration: none; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 22ch; }
+.cmd-crumbs a { transition: color .28s var(--cmd-ease); }
+.cmd-crumbs a:hover, .cmd-crumbs a:focus-visible { color: var(--cmd-champagne); }
+.cmd-crumbs .sep { color: rgba(176,141,69,.5); font-size: 9px; }
+.cmd-crumbs [aria-current] { color: var(--cmd-ivory); font-weight: 500; }
+.cmd-live {
+  display: flex; align-items: center; gap: 9px; min-width: 0; max-width: 100%; overflow: hidden;
+  font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: rgba(227,200,138,.72); white-space: nowrap;
+}
+.cmd-live .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--cmd-gold); opacity: .5; }
+
+/* --- right: actions ------------------------------------------------------ */
+.cmd-actions { display: flex; align-items: center; gap: 7px; justify-self: end; }
+
+.cmd-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; height: 36px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,250,240,.085), rgba(255,250,240,.03));
+  border: 1px solid rgba(227,200,138,.26);
+  color: var(--cmd-cream); font: inherit; font-size: 12px; letter-spacing: .02em;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease), box-shadow .3s var(--cmd-ease);
+}
+.cmd-btn:hover, .cmd-btn:focus-visible {
+  border-color: rgba(227,200,138,.62);
+  background: linear-gradient(180deg, rgba(255,250,240,.15), rgba(255,250,240,.06));
+  box-shadow: 0 3px 14px rgba(0,0,0,.32), 0 0 0 1px rgba(227,200,138,.14);
+  transform: translateY(-1px);
+}
+.cmd-btn:active { transform: translateY(0); }
+.cmd-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.cmd-btn--icon { width: 36px; padding: 0; }
+.cmd-btn--gold {
+  background: linear-gradient(180deg, #E3C88A, #B08D45);
+  border-color: rgba(247,235,205,.55); color: #241A0E; font-weight: 600;
+}
+.cmd-btn--gold:hover { background: linear-gradient(180deg, #F2DCA8, #C29B4E); }
+
+/* Controls the pages already owned — the pilot badge, the sign-out button,
+   the language switcher, the calendar link — are restyled into the same
+   button language rather than left in their old one. A header where half the
+   controls are pills from a previous design is the clearest sign that an
+   interface was added to rather than designed. */
+.cmd-header .portal-pilot-badge {
+  height: 26px; display: inline-flex; align-items: center; padding: 0 10px;
+  border-radius: 20px; background: linear-gradient(180deg, rgba(227,200,138,.20), rgba(176,141,69,.12));
+  border: 1px solid rgba(227,200,138,.42); color: var(--cmd-champagne);
+  font-size: 9.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  box-shadow: none;
+}
+.cmd-header .portal-logout,
+.cmd-header .portal-topbar-calendar,
+.cmd-header .lang-switch > summary {
+  height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 0 12px; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(180deg, rgba(255,250,240,.085), rgba(255,250,240,.03));
+  border: 1px solid rgba(227,200,138,.26); color: var(--cmd-cream);
+  font-size: 12px; font-weight: 500; letter-spacing: .02em; text-transform: none;
+  box-shadow: none; list-style: none;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+.cmd-header .portal-logout:hover,
+.cmd-header .portal-topbar-calendar:hover,
+.cmd-header .lang-switch > summary:hover {
+  border-color: rgba(227,200,138,.62); transform: translateY(-1px);
+  background: linear-gradient(180deg, rgba(255,250,240,.15), rgba(255,250,240,.06));
+}
+.cmd-header .lang-switch > summary::-webkit-details-marker { display: none; }
+
+/* notification count */
+.cmd-badge {
+  position: absolute; top: -5px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: 9px; background: linear-gradient(180deg, #E3C88A, #B08D45);
+  color: #241A0E; font-size: 10px; font-weight: 700; line-height: 17px; text-align: center;
+  box-shadow: 0 0 0 2px rgba(20,16,10,.9);
+}
+.cmd-badge[hidden] { display: none; }
+
+/* search */
+.cmd-search { position: relative; display: flex; align-items: center; }
+.cmd-search input {
+  height: 36px; width: 152px; padding: 0 12px 0 34px; border-radius: 10px;
+  background: rgba(255,250,240,.06); border: 1px solid rgba(227,200,138,.24);
+  color: var(--cmd-ivory); font: inherit; font-size: 12.5px;
+  transition: width .42s var(--cmd-ease-out), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+.cmd-search input::placeholder { color: rgba(241,231,212,.42); }
+.cmd-search input:focus {
+  outline: none; width: 260px; border-color: rgba(227,200,138,.6);
+  background: rgba(255,250,240,.1);
+}
+.cmd-search svg { position: absolute; left: 11px; width: 15px; height: 15px;
+  stroke: rgba(227,200,138,.62); fill: none; stroke-width: 1.6; pointer-events: none; }
+
+/* profile */
+.cmd-profile { display: flex; align-items: center; gap: 9px; padding: 0 4px 0 0; }
+.cmd-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, #4E3B22, #1C1409);
+  border: 1px solid rgba(227,200,138,.45);
+  color: var(--cmd-champagne); font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
+  box-shadow: 0 0 0 3px rgba(176,141,69,.10);
+  transition: box-shadow .35s var(--cmd-ease), transform .35s var(--cmd-ease);
+}
+.cmd-profile:hover .cmd-avatar { box-shadow: 0 0 0 4px rgba(176,141,69,.20); transform: scale(1.04); }
+.cmd-profile-text { display: none; flex-direction: column; line-height: 1.2; }
+.cmd-profile-name { font-size: 12.5px; color: var(--cmd-ivory); font-weight: 500; white-space: nowrap; }
+.cmd-profile-role { font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(227,200,138,.6); white-space: nowrap; }
+
+@media (min-width: 1120px) { .cmd-profile-text { display: flex; } }
+@media (max-width: 1000px) { .cmd-search, .cmd-centre .cmd-crumbs { display: none; } }
+@media (max-width: 720px)  { .cmd-centre { display: none; } .cmd-identity-sub { display: none; } }
+
+/* ===========================================================================
+   2. THE MODULAR GRID
+   Twelve columns, one gap, one rhythm. A card states its span and nothing
+   else; no card carries its own margins.
+   =========================================================================== */
+
+.cmd-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--cmd-gap);
+  align-items: stretch;
+}
+.cmd-grid > .cmd-card { display: flex; flex-direction: column; }
+.cmd-span-3  { grid-column: span 3; }
+.cmd-span-4  { grid-column: span 4; }
+.cmd-span-5  { grid-column: span 5; }
+.cmd-span-6  { grid-column: span 6; }
+.cmd-span-7  { grid-column: span 7; }
+.cmd-span-8  { grid-column: span 8; }
+.cmd-span-9  { grid-column: span 9; }
+.cmd-span-12 { grid-column: span 12; }
+
+@media (max-width: 1080px) {
+  .cmd-span-3, .cmd-span-4, .cmd-span-5 { grid-column: span 6; }
+  .cmd-span-7, .cmd-span-8, .cmd-span-9 { grid-column: span 12; }
+}
+@media (max-width: 660px) {
+  .cmd-grid { gap: calc(var(--cmd-u) * 2); }
+  [class*='cmd-span-'] { grid-column: span 12; }
+}
+
+/* ===========================================================================
+   3. CARDS, AND THE TRAVELLING LIGHT
+   =========================================================================== */
+
+.cmd-card {
+  position: relative;
+  border-radius: var(--cmd-radius);
+  padding: calc(var(--cmd-u) * 2.5);
+  background:
+    linear-gradient(168deg, rgba(255,253,248,.96) 0%, rgba(250,245,235,.92) 100%);
+  border: 1px solid rgba(176,141,69,.20);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 2px 6px rgba(40,28,10,.05),
+    0 12px 30px -14px rgba(40,28,10,.20);
+  transition: transform .42s var(--cmd-ease-out), box-shadow .42s var(--cmd-ease-out);
+  isolation: isolate;
+}
+.cmd-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 4px 10px rgba(40,28,10,.06),
+    0 22px 46px -18px rgba(40,28,10,.30);
+}
+
+/* The travelling light. A conic gradient rotates behind the card, and a mask
+   erases everything except a 1px frame — so the highlight exists ONLY on the
+   border. This is the whole trick, and it is why nothing blooms. */
+.cmd-card--lit::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: conic-gradient(from var(--cmd-angle),
+    transparent 0turn, transparent .62turn,
+    rgba(176,141,69,.30) .74turn,
+    rgba(227,200,138,.95) .82turn,
+    rgba(255,252,244,1)  .845turn,
+    rgba(227,200,138,.95) .87turn,
+    rgba(176,141,69,.30) .95turn,
+    transparent 1turn);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+  animation: cmd-travel 12s linear infinite;
+  pointer-events: none; z-index: 2;
+}
+@keyframes cmd-travel { to { --cmd-angle: 1turn; } }
+
+/* staggered, so a grid of cards does not pulse in unison like a christmas tree */
+.cmd-card--lit:nth-child(3n+2)::before { animation-delay: -4s; }
+.cmd-card--lit:nth-child(3n+3)::before { animation-delay: -8s; }
+
+/* a darker card, for the executive tier */
+.cmd-card--deep {
+  background: linear-gradient(166deg, #241A0E 0%, #1A130A 62%, #14100A 100%);
+  border-color: rgba(176,141,69,.30);
+  color: var(--cmd-cream);
+  box-shadow: 0 1px 0 rgba(227,200,138,.10) inset, 0 18px 40px -18px rgba(10,6,2,.66);
+}
+.cmd-card--deep .cmd-card-label { color: rgba(227,200,138,.72); }
+.cmd-card--deep .cmd-kpi-value  { color: var(--cmd-ivory); }
+.cmd-card--deep .cmd-kpi-note   { color: rgba(241,231,212,.6); }
+
+.cmd-card-head { display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--cmd-u); margin-bottom: calc(var(--cmd-u) * 2); }
+.cmd-card-label {
+  font-size: 10px; letter-spacing: .19em; text-transform: uppercase;
+  color: var(--cmd-gold-ink); font-weight: 600;
+}
+.cmd-card-title {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 15px; font-weight: 600; letter-spacing: .04em; color: var(--cmd-coffee-800);
+  margin: 0;
+}
+.cmd-card--deep .cmd-card-title { color: var(--cmd-champagne); }
+
+/* --- KPI ----------------------------------------------------------------- */
+.cmd-kpi-value {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; line-height: 1;
+  color: var(--cmd-coffee-900); letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.cmd-kpi-row { display: flex; align-items: flex-end; gap: 10px; }
+.cmd-kpi-unit { font-size: 15px; color: var(--cmd-gold-ink); font-weight: 600; padding-bottom: 4px; }
+.cmd-kpi-note { margin-top: 7px; font-size: 11.5px; color: var(--cmd-coffee-600); line-height: 1.45; }
+.cmd-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600;
+  padding: 2px 7px; border-radius: 20px; }
+.cmd-delta--up   { color: #2F6B4F; background: rgba(47,107,79,.10); }
+.cmd-delta--down { color: #8C4A3C; background: rgba(140,74,60,.10); }
+.cmd-delta--flat { color: var(--cmd-coffee-600); background: rgba(78,59,34,.08); }
+
+/* ===========================================================================
+   4. CHARTS
+   =========================================================================== */
+
+.cmd-chart { display: block; width: 100%; overflow: visible; }
+.cmd-chart .grid-line { stroke: rgba(78,59,34,.11); stroke-width: 1; }
+.cmd-chart .axis-text { font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+  fill: var(--cmd-coffee-600); opacity: .72; }
+.cmd-card--deep .cmd-chart .grid-line { stroke: rgba(227,200,138,.13); }
+.cmd-card--deep .cmd-chart .axis-text { fill: rgba(241,231,212,.62); }
+
+/* the line draws itself once, then stays */
+.cmd-chart .series-line {
+  fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+  animation: cmd-draw 1.5s var(--cmd-ease-out) forwards;
+}
+@keyframes cmd-draw { to { stroke-dashoffset: 0; } }
+.cmd-chart .series-area { opacity: 0; animation: cmd-fade-in .9s var(--cmd-ease-out) .5s forwards; }
+@keyframes cmd-fade-in { to { opacity: 1; } }
+.cmd-chart .series-dot { opacity: 0; animation: cmd-fade-in .5s var(--cmd-ease-out) forwards; }
+
+/* a value the pointer is over */
+.cmd-chart .hit { fill: transparent; cursor: crosshair; }
+.cmd-chart-tip {
+  position: absolute; pointer-events: none; z-index: 6; opacity: 0;
+  transform: translate(-50%, -118%);
+  padding: 7px 10px; border-radius: 9px; white-space: nowrap;
+  background: rgba(20,16,10,.95); border: 1px solid rgba(227,200,138,.34);
+  color: var(--cmd-ivory); font-size: 11.5px; line-height: 1.35;
+  box-shadow: 0 8px 22px rgba(10,6,2,.42);
+  transition: opacity .18s var(--cmd-ease);
+}
+.cmd-chart-tip b { color: var(--cmd-champagne); font-variant-numeric: tabular-nums; }
+.cmd-chart-tip[data-show] { opacity: 1; }
+.cmd-chart-wrap { position: relative; }
+
+/* radial meter / progress ring */
+.cmd-ring-track { fill: none; stroke: rgba(78,59,34,.12); }
+.cmd-card--deep .cmd-ring-track { stroke: rgba(227,200,138,.15); }
+.cmd-ring-value {
+  fill: none; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%;
+  stroke-dasharray: var(--circ); stroke-dashoffset: var(--circ);
+  animation: cmd-ring 1.6s var(--cmd-ease-out) forwards;
+}
+@keyframes cmd-ring { to { stroke-dashoffset: var(--dash); } }
+.cmd-ring-label {
+  font-family: 'Cinzel', 'EB Garamond', serif; font-weight: 600;
+  fill: var(--cmd-coffee-900); text-anchor: middle; font-variant-numeric: tabular-nums;
+}
+.cmd-card--deep .cmd-ring-label { fill: var(--cmd-ivory); }
+
+/* legend */
+.cmd-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: calc(var(--cmd-u) * 1.5); }
+.cmd-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+  color: var(--cmd-coffee-600); }
+.cmd-card--deep .cmd-legend span { color: rgba(241,231,212,.66); }
+.cmd-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+/* ===========================================================================
+   5. EMPTY STATES — never a blank panel, and never a fabricated number
+   =========================================================================== */
+
+.cmd-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: calc(var(--cmd-u) * 4) var(--cmd-u); text-align: center; min-height: 150px;
+}
+.cmd-empty svg { width: 42px; height: 42px; stroke: var(--cmd-gold); fill: none;
+  stroke-width: 1.1; opacity: .55; }
+.cmd-empty-title { font-family: 'Cinzel', 'EB Garamond', serif; font-size: 13.5px;
+  color: var(--cmd-coffee-700); letter-spacing: .04em; }
+.cmd-empty-note { font-size: 11.5px; color: var(--cmd-coffee-600); max-width: 34ch; line-height: 1.55; }
+.cmd-card--deep .cmd-empty-title { color: var(--cmd-champagne); }
+.cmd-card--deep .cmd-empty-note { color: rgba(241,231,212,.6); }
+
+/* a series drawn from sample rather than live data says so, always */
+.cmd-sample {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
+  font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--cmd-gold-ink); border: 1px dashed rgba(176,141,69,.45);
+  border-radius: 20px; padding: 3px 9px;
+}
+
+/* ===========================================================================
+   6. MOTION — reveal on scroll, counters, magnetic hover
+   =========================================================================== */
+
+.cmd-reveal { opacity: 0; transform: translateY(14px); }
+.cmd-reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .72s var(--cmd-ease-out), transform .72s var(--cmd-ease-out);
+}
+.cmd-reveal:nth-child(2) { transition-delay: .06s; }
+.cmd-reveal:nth-child(3) { transition-delay: .12s; }
+.cmd-reveal:nth-child(4) { transition-delay: .18s; }
+
+/* ===========================================================================
+   7. THE EXECUTIVE FOOTER
+   =========================================================================== */
+
+.cmd-footer {
+  position: relative; margin-top: calc(var(--cmd-u) * 6);
+  padding: calc(var(--cmd-u) * 3) clamp(14px, 2.4vw, 30px) calc(var(--cmd-u) * 3);
+  background: linear-gradient(180deg, #1A130A 0%, #14100A 100%);
+  border-top: 1px solid rgba(176,141,69,.30);
+  color: rgba(241,231,212,.72); overflow: hidden;
+}
+.cmd-footer::before {
+  content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, transparent 40%,
+    rgba(227,200,138,.9) 50%, transparent 60%, transparent 100%);
+  background-size: 240% 100%;
+  animation: cmd-sweep 11s var(--cmd-ease-out) infinite;
+}
+.cmd-footer-grid {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: calc(var(--cmd-u) * 3); max-width: 1400px; margin: 0 auto;
+}
+.cmd-footer-seal { display: flex; align-items: center; gap: 11px; }
+.cmd-footer-seal img { width: 40px; height: 40px; opacity: .92; }
+.cmd-footer-seal-text { display: flex; flex-direction: column; line-height: 1.25; }
+.cmd-footer-seal-name {
+  font-family: 'Cinzel', 'EB Garamond', serif; font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--cmd-champagne);
+}
+.cmd-footer-seal-sub { font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(227,200,138,.52); margin-top: 3px; }
+
+.cmd-status { display: flex; flex-wrap: wrap; gap: calc(var(--cmd-u) * 2.5); justify-content: center; }
+.cmd-status-item { display: flex; align-items: center; gap: 7px; font-size: 11px; white-space: nowrap; }
+.cmd-status-item svg { width: 13px; height: 13px; stroke: var(--cmd-gold); fill: none; stroke-width: 1.5; }
+.cmd-status-label { font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(227,200,138,.55); display: block; }
+.cmd-status-value { color: rgba(241,231,212,.86); font-variant-numeric: tabular-nums; }
+
+.cmd-pulse { width: 7px; height: 7px; border-radius: 50%; background: #6FBF8F; flex: none;
+  box-shadow: 0 0 0 0 rgba(111,191,143,.6); animation: cmd-pulse 2.6s var(--cmd-ease) infinite; }
+.cmd-pulse--warn { background: #D9A441; box-shadow: 0 0 0 0 rgba(217,164,65,.6); }
+@keyframes cmd-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(111,191,143,.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(111,191,143,0); }
+  100% { box-shadow: 0 0 0 0 rgba(111,191,143,0); }
+}
+
+.cmd-footer-legal { text-align: right; font-size: 10.5px; line-height: 1.6;
+  color: rgba(241,231,212,.55); }
+.cmd-footer-legal a { color: rgba(227,200,138,.8); text-decoration: none; }
+.cmd-footer-legal a:hover { color: var(--cmd-champagne); text-decoration: underline; }
+
+/* the divider ornament: a rule that thins to nothing at both ends */
+.cmd-ornament {
+  height: 1px; margin: calc(var(--cmd-u) * 2.5) auto 0; max-width: 1400px;
+  background: linear-gradient(90deg, transparent, rgba(176,141,69,.42) 22%,
+              rgba(227,200,138,.6) 50%, rgba(176,141,69,.42) 78%, transparent);
+}
+
+@media (max-width: 900px) {
+  .cmd-footer-grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .cmd-footer-legal { text-align: center; }
+}
+
+/* ===========================================================================
+   8. ACCESSIBILITY
+   Reduced motion is not a downgrade: every animation here is decorative, so
+   removing it costs the user nothing but the movement. Focus is always
+   visible, and the gold focus ring carries 3:1 against both grounds.
+   =========================================================================== */
+
+.cmd-header :focus-visible, .cmd-footer :focus-visible, .cmd-card :focus-visible {
+  outline: 2px solid var(--cmd-champagne); outline-offset: 2px; border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-header::after, .cmd-footer::before,
+  .cmd-card--lit::before, .cmd-pulse { animation: none !important; }
+  .cmd-card--lit::before { background: linear-gradient(180deg,
+      rgba(227,200,138,.42), rgba(176,141,69,.22)); }
+  .cmd-chart .series-line { stroke-dashoffset: 0 !important; animation: none !important; }
+  .cmd-chart .series-area, .cmd-chart .series-dot { opacity: 1 !important; animation: none !important; }
+  .cmd-ring-value { stroke-dashoffset: var(--dash) !important; animation: none !important; }
+  .cmd-reveal { opacity: 1 !important; transform: none !important; }
+  .cmd-card, .cmd-btn, .cmd-avatar, .cmd-search input { transition: none !important; }
+  .cmd-card:hover { transform: none; }
+}
+
+@media (prefers-contrast: more) {
+  .cmd-card { border-color: rgba(120,92,40,.55); }
+  .cmd-card-label, .cmd-kpi-note { color: var(--cmd-coffee-800); }
+  .cmd-crumbs a, .cmd-crumbs span { color: rgba(241,231,212,.9); }
+}
+
+/* Printing a portal page is a legitimate act — an office prints a record.
+   The chrome is furniture; it does not belong on the paper. */
+@media print {
+  .cmd-header, .cmd-footer { display: none !important; }
+  .cmd-card { box-shadow: none; border-color: #C9BCA4; break-inside: avoid; }
+  .cmd-card--lit::before { display: none; }
+  .cmd-reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ===========================================================================
+   9. THE INTELLIGENCE PANEL
+   =========================================================================== */
+
+.cmd-intelligence { margin: calc(var(--cmd-u) * 4) 0; }
+.cmd-intel-head {
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
+  gap: var(--cmd-u); margin-bottom: calc(var(--cmd-u) * 2.5);
+  padding-bottom: calc(var(--cmd-u) * 1.5);
+  border-bottom: 1px solid rgba(176,141,69,.22);
+}
+/* The portal ground is deep espresso, so section-level type takes the dark
+   treatment. Card titles stay coffee because they sit on ivory cards — the
+   two are different grounds and cannot share one colour. */
+.cmd-intel-head .cmd-card-title { font-size: 20px; margin-top: 4px; color: var(--cmd-champagne); }
+.cmd-intel-head .cmd-card-label { color: var(--cmd-gold); }
+.cmd-intelligence[hidden] { display: none; }
+
+/* Categorical axis under a line chart. Rotated only when the labels are long
+   enough to collide, because rotated type is harder to read and should be a
+   response to a real problem rather than a default. */
+.cmd-axis {
+  display: flex; justify-content: space-between; gap: 4px; margin-top: 7px;
+  font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--cmd-coffee-600); opacity: .82;
+}
+.cmd-axis span { flex: 1 1 0; min-width: 0; text-align: center; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.cmd-card--deep .cmd-axis { color: rgba(241,231,212,.62); }
+
+/* ===========================================================================
+   10. THE HOUSE VALUES — read off the public site, used by the gateways
+   ===========================================================================
+   The portal previously ran a darker, browner gold than the house one. These
+   are the public site's own values, read off its rendered page rather than
+   guessed, so the header and the footer are struck in the same metal as the
+   masthead a visitor sees before they sign in.
+
+   They are tokens only. Nothing here paints the inside of a portal page.
+   =========================================================================== */
+
+:root {
+  --cmd-ivory:  #F7EEDF;
+  --cmd-cream:  #F1E4C8;
+  --cmd-gold:   #C6A15B;
+  --cmd-champagne: #E9CE8A;
+  --cmd-ink:    #2A2016;
+  --cmd-espresso: #221709;
+
+  /* Real metal. A single hex is flat paint; foil is a ramp through highlight,
+     body, shadow and back to highlight, because a struck surface catches the
+     light along its length. */
+  --cmd-foil: linear-gradient(100deg,
+    #8A6A2E 0%, #C6A15B 14%, #F3E3B8 30%, #E9CE8A 42%,
+    #C6A15B 55%, #9A7734 68%, #E9CE8A 84%, #FBF3DF 100%);
+  --cmd-foil-soft: linear-gradient(100deg,
+    rgba(198,161,91,.55) 0%, rgba(243,227,184,.95) 32%,
+    rgba(198,161,91,.75) 58%, rgba(233,206,138,.95) 100%);
+}
+
+/* The gateways, struck in that metal. */
+.cmd-identity-name {
+  background: var(--cmd-foil); -webkit-background-clip: text;
+  background-clip: text; color: transparent;
+}
+.cmd-header::after, .cmd-footer::before { background-image: var(--cmd-foil); }
+.cmd-ornament { background: var(--cmd-foil-soft); height: 1px; opacity: .85; }
+
+/* ===========================================================================
+   11. THE INSIDE — the dashboard as a royal college would issue it
+   ===========================================================================
+
+   THE BROWN AT THE EDGES. .portal-wrap capped the column at 760px, so on any
+   real monitor the page was a narrow strip of content floating in a wide
+   brown surround. That surround was the first thing the eye read, and no
+   amount of polish inside the strip could survive it. The column now takes
+   the screen it is given, on desktop and on phone alike, and the ground
+   beneath it is ivory rather than espresso — so there is no brown edge left
+   to see.
+
+   THE FIELD. Deep colour is an accent here, exactly as on the public site: a
+   masthead strip and a footer. The field between them is ivory going to
+   white, which is the only ground on which gold reads as metal and a
+   photograph reads as a photograph.
+   =========================================================================== */
+
+/* --- the screen is used, edge to edge -------------------------------------- */
+body.portal-body .portal-main {
+  /* It was a flex ROW holding four wraps — the content, the verify gate, the
+     loading card and the error card. Whenever two were visible at once they
+     split the width between them, which is what left the content sitting in a
+     narrow strip with a wide surround beside it. A column gives every wrap
+     the full measure, whichever one is showing. */
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: clamp(16px, 2.2vw, 34px) clamp(12px, 2.4vw, 40px) 0 !important;
+}
+body.portal-body .portal-wrap {
+  /* .portal-main is a flex row; without an explicit basis the wrap sized to
+     its content and left a wide brown surround on any real monitor. */
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: min(1560px, 100%) !important;
+  margin-inline: auto !important;
+}
+@media (max-width: 640px) {
+  body.portal-body .portal-main { padding: 12px 12px 0 !important; }
+}
+
+/* --- the field ------------------------------------------------------------ */
+body.portal-body {
+  background:
+    radial-gradient(1180px 620px at 78% -10%, rgba(233,206,138,.20), transparent 62%),
+    radial-gradient(900px 520px at 4% 104%, rgba(198,161,91,.14), transparent 60%),
+    linear-gradient(180deg, #FBF6EC 0%, #FFFFFF 44%, #FDF9F1 100%) !important;
+  color: var(--cmd-ink);
+}
+
+/* --- panels --------------------------------------------------------------- */
+body.portal-body .portal-card,
+body.portal-body .portal-child-card,
+body.portal-body .exec-panel,
+body.portal-body .portal-results,
+body.portal-body .portal-section {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 1px 2px rgba(60,42,16,.05),
+    0 18px 42px -20px rgba(60,42,16,.26) !important;
+  color: var(--cmd-ink) !important;
+  overflow: hidden;
+}
+
+/* The panel head — the bar that was espresso on espresso. It becomes a cream
+   shelf under a struck gold rule, with the title in the institutional face. */
+body.portal-body .portal-child-head,
+body.portal-body .exec-card-head {
+  background: linear-gradient(180deg, #FFFDF8 0%, #F6EEDE 100%) !important;
+  border-bottom: 0 !important;
+  position: relative;
+  padding: 22px 26px 20px 30px !important;
+  margin-bottom: 0 !important;
+}
+body.portal-body .portal-child-head::after,
+body.portal-body .exec-card-head::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--cmd-foil);
+}
+/* the 4px spine on the head becomes struck metal rather than a navy bar */
+body.portal-body .portal-child-head::before {
+  background: var(--cmd-foil) !important; width: 3px !important;
+}
+body.portal-body .portal-child-head h2,
+body.portal-body .exec-card-head h2,
+body.portal-body .portal-card > h2,
+body.portal-body .portal-card > h3,
+body.portal-body .portal-results h3 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+  letter-spacing: .03em; margin: 0 !important;
+}
+body.portal-body .portal-child-head .meta { color: #8A6A2E !important;
+  letter-spacing: .14em; text-transform: uppercase; font-size: 10.5px; margin-top: 5px; }
+
+/* --- copy, fields, labels -------------------------------------------------- */
+body.portal-body .portal-card p,
+body.portal-body .portal-card li,
+body.portal-body .portal-card td,
+body.portal-body .portal-child-card p,
+body.portal-body .portal-child-card td,
+body.portal-body .portal-notice,
+body.portal-body .portal-empty { color: rgba(42,32,22,.80) !important; }
+
+body.portal-body .identity-field-grid > *,
+body.portal-body .portal-stat,
+body.portal-body .portal-checklist-item {
+  background: rgba(255,255,255,.70) !important;
+  border: 1px solid rgba(198,161,91,.24) !important;
+  border-radius: 12px;
+}
+/* the ghosted labels: they were light type meant for an espresso panel */
+body.portal-body .identity-field-grid .label,
+body.portal-body .identity-field-grid > * > *:first-child,
+body.portal-body .portal-stat .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .identity-field-grid > * > *:last-child,
+body.portal-body .portal-stat .value {
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-variant-numeric: tabular-nums;
+}
+
+/* progress reads as struck metal in a channel */
+body.portal-body .profile-progress-track,
+body.portal-body .portal-progress { background: rgba(42,32,22,.09) !important; }
+body.portal-body .profile-progress-fill,
+body.portal-body .portal-progress > * { background: var(--cmd-foil) !important; }
+
+/* actions */
+body.portal-body .portal-submit,
+body.portal-body .portal-messaging-new,
+body.portal-body .exec-cta {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border: 1px solid rgba(247,235,205,.6) !important;
+  font-weight: 600; letter-spacing: .05em;
+  box-shadow: 0 2px 12px rgba(120,88,28,.26) !important;
+}
+body.portal-body .portal-text-btn,
+body.portal-body .portal-back-link,
+body.portal-body a { color: #8A6A2E; }
+body.portal-body .portal-child-card a:hover { color: var(--cmd-espresso); }
+
+/* ===========================================================================
+   12. THE WELCOME — a photograph, and a line that types itself
+   =========================================================================== */
+
+body.portal-body .exec-welcome {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-radius: 20px;
+  padding: clamp(30px, 5vw, 62px) clamp(22px, 4vw, 58px);
+  border: 1px solid rgba(198,161,91,.42);
+  background:
+    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),
+    url('/assets/images/campus/campus-frontage.jpg') center 34% / cover no-repeat;
+  box-shadow: 0 30px 66px -28px rgba(40,26,8,.55);
+}
+body.portal-body .exec-welcome::before,
+body.portal-body .exec-welcome::after {
+  content: ''; position: absolute; width: 52px; height: 52px; pointer-events: none;
+  border: 1px solid rgba(233,206,138,.70);
+}
+body.portal-body .exec-welcome::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+body.portal-body .exec-welcome::after  { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
+
+body.portal-body .exec-welcome h1 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  color: #FFFDF7; font-size: clamp(25px, 3.5vw, 46px); line-height: 1.14;
+  text-shadow: 0 2px 20px rgba(0,0,0,.55); min-height: 1.2em;
+}
+/* the caret that follows the typing */
+body.portal-body .exec-welcome h1 .cmd-caret {
+  display: inline-block; width: 2px; height: .92em; margin-left: 3px;
+  background: var(--cmd-champagne); vertical-align: -.09em;
+  animation: cmd-blink 1.05s steps(1) infinite;
+}
+@keyframes cmd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+body.portal-body .exec-welcome h1 .cmd-caret[data-done] { animation: none; opacity: 0; }
+
+body.portal-body .exec-welcome-eyebrow,
+body.portal-body .exec-welcome-role { color: var(--cmd-champagne) !important; }
+body.portal-body .exec-welcome-motto {
+  font-family: 'EB Garamond', Garamond, serif; font-style: italic;
+  color: rgba(251,243,223,.90) !important; font-size: clamp(14px, 1.5vw, 19px);
+}
+body.portal-body .exec-welcome-stats {
+  margin-top: 26px; padding-top: 22px; position: relative;
+}
+body.portal-body .exec-welcome-stats::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--cmd-foil-soft); opacity: .85;
+}
+body.portal-body .exec-welcome-stat .value {
+  font-family: 'Cinzel', 'EB Garamond', serif; color: var(--cmd-champagne) !important;
+  font-variant-numeric: tabular-nums;
+}
+body.portal-body .exec-welcome-stat .label {
+  color: rgba(233,206,138,.80) !important; letter-spacing: .16em; text-transform: uppercase;
+}
+
+/* A card's icon: a gold medallion, as on the public site's nav cards. */
+.cmd-ico {
+  width: 30px; height: 30px; flex: none; display: grid; place-items: center;
+  border-radius: 50%; color: #8A6A2E;
+  background: linear-gradient(160deg, #FFFDF6, #F2E6CE);
+  border: 1px solid rgba(198,161,91,.42);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 2px 6px rgba(80,58,20,.10);
+}
+.cmd-ico svg { width: 15px; height: 15px; stroke: currentColor; fill: none;
+  stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.cmd-card--deep .cmd-ico {
+  background: linear-gradient(160deg, #3A2A14, #221709); color: var(--cmd-champagne);
+  border-color: rgba(198,161,91,.45); box-shadow: none;
+}
+.cmd-card-head { align-items: center; }
+
+/* ===========================================================================
+   13. ORNAMENT, AND THE OFFICES
+   ===========================================================================
+   Ornament is generated by rule (JS builds the lathe), never a stored
+   texture — the standard the stationery is held to. The band below is
+   literally the letterhead's guilloche: four cycles against nine, coprime,
+   so the interference never repeats across the width.
+   =========================================================================== */
+
+/* the engraved band under the header */
+.cmd-header { position: relative; }
+.cmd-header .cmd-engrave,
+.cmd-footer .cmd-engrave {
+  position: absolute; left: 0; right: 0; height: 13px; pointer-events: none;
+  background: var(--cmd-guilloche) center / 100% 100% no-repeat;
+  opacity: .34; mix-blend-mode: screen;
+}
+.cmd-header .cmd-engrave { bottom: 1px; }
+.cmd-footer .cmd-engrave { top: 1px; height: 20px;
+  background-image: var(--cmd-guilloche-deep); opacity: .26; }
+
+/* the crest catches the light, once, slowly — as a struck seal would */
+.cmd-identity img { position: relative; }
+.cmd-identity::after {
+  content: ''; position: absolute; left: 0; top: 50%; width: 34px; height: 34px;
+  transform: translateY(-50%); border-radius: 50%; pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255,252,240,.55) 48%,
+              transparent 58%);
+  background-size: 260% 100%;
+  animation: cmd-shine 7.5s var(--cmd-ease-out) infinite;
+}
+@keyframes cmd-shine {
+  0%, 74% { background-position: 150% 0; }
+  100%    { background-position: -60% 0; }
+}
+
+/* corner filigree on the executive cards — three nested quarter-arcs, fine
+   enough to read as engraving rather than as a frame from a template */
+.cmd-card--lit::after {
+  content: ''; position: absolute; top: 9px; right: 9px; width: 26px; height: 26px;
+  pointer-events: none; opacity: .5;
+  border-top: 1px solid rgba(198,161,91,.75);
+  border-right: 1px solid rgba(198,161,91,.75);
+  border-top-right-radius: 10px;
+}
+.cmd-card--deep.cmd-card--lit::after { border-color: rgba(233,206,138,.6); }
+
+/* the office name, set beneath the crest in the hero */
+.cmd-office {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--cmd-champagne); margin-bottom: 12px;
+}
+.cmd-office::before, .cmd-office::after {
+  content: ''; width: 26px; height: 1px; background: var(--cmd-foil-soft);
+}
+
+/* each office opens on its own photograph */
+body.portal-body .exec-welcome {
+  background:
+    linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),
+    var(--cmd-office-photo, url('/assets/images/campus/campus-frontage.jpg'))
+      center 34% / cover no-repeat !important;
+}
+/* the hero's own engraved field, very faint, under the type */
+body.portal-body .exec-welcome > * { position: relative; z-index: 1; }
+
+/* the KPI value counts up and the rule beneath it draws in */
+.cmd-kpi-row { position: relative; }
+.cmd-reveal.is-in .cmd-kpi-row::after {
+  content: ''; position: absolute; left: 0; bottom: -7px; height: 1px;
+  background: var(--cmd-foil); width: 0;
+  animation: cmd-rule-draw 1.1s var(--cmd-ease-out) .25s forwards;
+}
+@keyframes cmd-rule-draw { to { width: 46px; } }
+
+/* magnetic tilt is applied inline by script; give it something to ease on */
+.cmd-card--lit { transition: transform .5s var(--cmd-ease-out), box-shadow .42s var(--cmd-ease-out); }
+.cmd-card--lit[data-magnetic]:hover { transition: transform .12s linear, box-shadow .42s var(--cmd-ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-identity::after, .cmd-reveal.is-in .cmd-kpi-row::after { animation: none; }
+  .cmd-reveal.is-in .cmd-kpi-row::after { width: 46px; }
+  .cmd-card--lit { transition: none; }
+}
+
+/* ===========================================================================
+   14. THE REGISTRAR, AND THE OFFICE OF THE HEAD OF SCHOOLS
+   ===========================================================================
+   Each office brought its own surfaces, and each was painted for the old
+   espresso ground: the Registrar's .pls-* cards and field rows, the Head of
+   Schools' .pfd-* briefing grid. Read from the markup rather than guessed at.
+   =========================================================================== */
+
+/* --- shared: any office surface sitting on the ivory field ---------------- */
+body.portal-body .pls-card,
+body.portal-body .pls-hero,
+body.portal-body .pfd-grid > *,
+body.portal-body .pfd-briefing-text,
+body.portal-body .pfd-alerts-list,
+body.portal-body .exec-stat-grid > * {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 16px 38px -20px rgba(60,42,16,.24) !important;
+  color: var(--cmd-ink) !important;
+}
+
+/* the Registrar's group heads become the same cream shelf as everywhere else */
+body.portal-body .office-group-head,
+body.portal-body .pls-hero {
+  position: relative;
+  background: linear-gradient(180deg, #FFFDF8 0%, #F6EEDE 100%) !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .office-group-head::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--cmd-foil);
+}
+body.portal-body .office-group-head h2,
+body.portal-body .office-group-head h3,
+body.portal-body .pls-hero h1,
+body.portal-body .pls-hero h2,
+body.portal-body .cc-greeting {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .cc-tagline,
+body.portal-body .pls-row .label,
+body.portal-body .portal-field .label,
+body.portal-body .identity-field .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .pls-row,
+body.portal-body .portal-field,
+body.portal-body .identity-field {
+  background: rgba(255,255,255,.68) !important;
+  border: 1px solid rgba(198,161,91,.22) !important;
+  border-radius: 12px;
+  color: var(--cmd-ink) !important;
+}
+
+/* --- the Head of Schools: a briefing room, not a list --------------------- */
+body.portal-body .pfd-action-btn {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border: 1px solid rgba(247,235,205,.6) !important;
+  font-weight: 600; letter-spacing: .05em; border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(120,88,28,.26) !important;
+}
+body.portal-body .pfd-bars > * { background: var(--cmd-foil) !important; }
+body.portal-body .exec-welcome-narrative,
+body.portal-body .pfd-briefing-text {
+  font-family: 'EB Garamond', Garamond, serif; font-size: 15.5px; line-height: 1.68;
+}
+/* the health line in the hero keeps its light treatment — it is on the photo */
+body.portal-body .exec-welcome-health,
+body.portal-body .exec-welcome-narrative { color: rgba(251,243,223,.90) !important; }
+body.portal-body .exec-welcome-health .dot { box-shadow: 0 0 0 3px rgba(233,206,138,.18); }
+
+/* The Head of Schools opens on the fullest ornament in the house: the crest
+   watermark struck into the hero behind the briefing. */
+body.portal-body[data-atmosphere="founder"] .exec-welcome::before {
+  width: 64px; height: 64px; border-width: 1.5px;
+}
+body.portal-body[data-atmosphere="founder"] .exec-welcome::after {
+  width: 64px; height: 64px; border-width: 1.5px;
+}
+
+/* --- the header on office pages -------------------------------------------
+   The Registrar carries four nav links the dashboard does not, and they were
+   squeezing the identity until the wordmark clipped to "SULTAN HA". The
+   identity is never allowed to shrink — it is the one thing on the bar that
+   must always be legible — and the actions wrap beneath instead. */
+body .portal-topbar.cmd-header { min-height: var(--cmd-header-h); height: auto;
+  padding-top: 6px; padding-bottom: 6px; }
+.cmd-identity { flex: none; }
+.cmd-identity-name, .cmd-identity-sub { overflow: visible; text-overflow: clip; }
+.cmd-actions { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+.cmd-header a[href]:not(.cmd-btn):not(.cmd-identity) {
+  color: var(--cmd-cream); text-decoration: none; font-size: 12px;
+  padding: 0 9px; height: 32px; display: inline-flex; align-items: center;
+  border-radius: 9px; border: 1px solid rgba(233,206,138,.22);
+  white-space: nowrap;
+  transition: border-color .3s var(--cmd-ease), background .3s var(--cmd-ease);
+}
+.cmd-header a[href]:not(.cmd-btn):not(.cmd-identity):hover {
+  border-color: rgba(233,206,138,.55); background: rgba(255,250,240,.10);
+}
+
+/* --- ghosted body copy on office heroes ----------------------------------- */
+body.portal-body .pls-hero p,
+body.portal-body .pls-hero .sub,
+body.portal-body .office-group-head p,
+body.portal-body .portal-card .sub {
+  color: rgba(42,32,22,.78) !important;
+}
+
+/* --- inputs, in the same cream as the cards they sit in -------------------- */
+body.portal-body .portal-card input[type="text"],
+body.portal-body .portal-card input[type="search"],
+body.portal-body .portal-card input[type="email"],
+body.portal-body .portal-card input[type="number"],
+body.portal-body .portal-card select,
+body.portal-body .portal-card textarea,
+body.portal-body .pls-card input,
+body.portal-body .pls-card select {
+  background: #FFFDF8 !important;
+  border: 1px solid rgba(198,161,91,.40) !important;
+  color: var(--cmd-ink) !important;
+  border-radius: 10px !important;
+}
+body.portal-body .portal-card input::placeholder,
+body.portal-body .pls-card input::placeholder { color: rgba(42,32,22,.42) !important; }
+body.portal-body .portal-card input:focus,
+body.portal-body .pls-card input:focus {
+  outline: none; border-color: rgba(198,161,91,.85) !important;
+  box-shadow: 0 0 0 3px rgba(198,161,91,.16) !important;
+}
+
+/* --- the Head of Schools' sign-in route ------------------------------------
+   Signing in is the preferred route and is presented as such: a struck gold
+   action, with the Board token demoted beneath a rule as the fallback it is. */
+body.portal-body .founder-signin {
+  display: block; text-align: center; text-decoration: none;
+  margin: 18px 0 6px; padding: 13px 20px; border-radius: 12px;
+  font-size: 13.5px; letter-spacing: .06em;
+}
+body.portal-body .founder-or {
+  display: flex; align-items: center; gap: 12px; margin: 18px 0 14px;
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: #8A6A2E;
+}
+body.portal-body .founder-or::before,
+body.portal-body .founder-or::after {
+  content: ''; flex: 1; height: 1px; background: var(--cmd-foil-soft); opacity: .7;
+}
+
+/* ===========================================================================
+   15. THE REMAINING OFFICES
+   ===========================================================================
+   The Bursary, the Executive Office, the Common Room, the Staff Desk and the
+   Office Registrar, audited from their markup in one pass. One class named
+   itself: .portal-notice-on-dark was written for the espresso ground and
+   would have gone invisible on ivory — the kind of fault that only shows on
+   the page where it is used, which is why these were read rather than
+   assumed.
+   =========================================================================== */
+
+/* --- panels, tiles, banners ---------------------------------------------- */
+body.portal-body .office-panel,
+body.portal-body .exec-stat-grid > *,
+body.portal-body .office-overview-field,
+body.portal-body .teacher-class-list,
+body.portal-body .registrar-approvals-list,
+body.portal-body .registrar-form-result,
+body.portal-body .office-deeplink-banner {
+  background: linear-gradient(164deg, #FFFFFF 0%, #FBF6EA 62%, var(--cmd-cream) 100%) !important;
+  border: 1px solid rgba(198,161,91,.32) !important;
+  border-radius: 14px !important;
+  color: var(--cmd-ink) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset,
+              0 14px 34px -20px rgba(60,42,16,.22) !important;
+}
+
+/* --- the office tab bar: a rail of struck metal, active tab foil-filled --- */
+body.portal-body .office-tabs {
+  background: transparent !important; border: 0 !important;
+  display: flex; flex-wrap: wrap; gap: 8px; position: relative;
+  padding-bottom: 10px; margin-bottom: 18px;
+}
+body.portal-body .office-tabs::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--cmd-foil-soft); opacity: .8;
+}
+body.portal-body .office-tab {
+  background: rgba(255,255,255,.66) !important;
+  border: 1px solid rgba(198,161,91,.30) !important;
+  color: #6B5222 !important; border-radius: 10px !important;
+  padding: 9px 15px !important; font-size: 12.5px; letter-spacing: .04em;
+  transition: transform .3s var(--cmd-ease), border-color .3s var(--cmd-ease),
+              background .3s var(--cmd-ease);
+}
+body.portal-body .office-tab:hover {
+  border-color: rgba(198,161,91,.62) !important; transform: translateY(-1px);
+}
+body.portal-body .office-tab.is-active {
+  background: var(--cmd-foil) !important; color: #241A0E !important;
+  border-color: rgba(247,235,205,.6) !important; font-weight: 600;
+  box-shadow: 0 2px 10px rgba(120,88,28,.24) !important;
+}
+body.portal-body .office-tab-badge {
+  background: rgba(34,23,9,.12) !important; color: #6B5222 !important;
+  border-radius: 20px; padding: 1px 7px; font-size: 10.5px; font-weight: 600;
+}
+body.portal-body .office-tab.is-active .office-tab-badge {
+  background: rgba(34,23,9,.22) !important; color: #241A0E !important;
+}
+
+/* --- registers and rosters: a table an office can read across ------------- */
+body.portal-body .teacher-roster-table,
+body.portal-body .portal-card table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: transparent !important;
+}
+body.portal-body .teacher-roster-table th,
+body.portal-body .portal-card table th {
+  background: linear-gradient(180deg, #FFFDF8, #F4EBD8) !important;
+  color: #6B5222 !important; font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 600;
+  border-bottom: 1px solid rgba(198,161,91,.42) !important;
+  padding: 11px 12px !important; text-align: start;
+}
+body.portal-body .teacher-roster-table td,
+body.portal-body .portal-card table td {
+  color: var(--cmd-ink) !important; padding: 11px 12px !important;
+  border-bottom: 1px solid rgba(198,161,91,.16) !important;
+}
+body.portal-body .teacher-roster-table tbody tr,
+body.portal-body .portal-card table tbody tr { transition: background .25s var(--cmd-ease); }
+body.portal-body .teacher-roster-table tbody tr:hover,
+body.portal-body .portal-card table tbody tr:hover {
+  background: rgba(233,206,138,.13) !important;
+}
+body.portal-body .teacher-roster-scroll { border-radius: 12px; }
+
+/* --- copy that was written for the dark ground ---------------------------- */
+body.portal-body .portal-notice-on-dark,
+body.portal-body .pfd-note,
+body.portal-body .odb-sub,
+body.portal-body .registrar-hint,
+body.portal-body .registrar-approvals-empty,
+body.portal-body .portal-hello-sub,
+body.portal-body .cc-tagline { color: rgba(42,32,22,.78) !important; }
+
+body.portal-body .portal-hello,
+body.portal-body .cc-greeting,
+body.portal-body .pfd-subhead,
+body.portal-body .office-panel > h2,
+body.portal-body .office-panel > h3 {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif !important;
+  color: var(--cmd-espresso) !important;
+}
+body.portal-body .portal-hello-row { align-items: center; gap: 12px; }
+
+body.portal-body .office-overview-field .label,
+body.portal-body .exec-stat-grid .label,
+body.portal-body .portal-stats .label {
+  color: #8A6A2E !important; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+}
+body.portal-body .office-overview-field .value,
+body.portal-body .exec-stat-grid .value,
+body.portal-body .portal-stats .value {
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', serif; font-variant-numeric: tabular-nums;
+}
+
+/* the form grids the Registrar and the Common Room share */
+body.portal-body .registrar-form-grid { display: grid; gap: 14px; }
+body.portal-body .registrar-form-grid > * { min-width: 0; }
+
+/* ===========================================================================
+   16. THE MASTHEAD GRID, AS ON THE PUBLIC SITE
+   ===========================================================================
+   The cards and the rail use the public site's own classes and therefore its
+   own styling from brand.css: .navlinks, .nav-drop, .nav-drop-trigger and
+   .nav-mark.nav-cta. Only layout and the portal's content are set here, so a
+   change to the public masthead carries straight through.
+   =========================================================================== */
+
+.cmd-navgrid { position: relative; z-index: 5; }
+.cmd-navgrid .navlinks {
+  display: grid !important; position: static !important;
+  visibility: visible !important; opacity: 1 !important; transform: none !important;
+  inset: auto !important; height: auto !important; max-height: none !important;
+  /* Even columns, not auto-fit: a long label like Verify a Certificate was
+     overflowing its track and running under the next card. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px; padding: 18px clamp(12px, 2.4vw, 40px);
+  max-width: 1560px; margin-inline: auto;
+  background: transparent !important; border: 0 !important;
+}
+.cmd-navgrid .nav-drop { position: static !important; }
+
+/* the dark action rail beneath the cards */
+.cmd-rail {
+  display: flex; flex-wrap: wrap; align-items: stretch;
+  background: linear-gradient(180deg, #2A1D0C 0%, #1B1206 100%);
+  border-block: 1px solid rgba(198,161,91,.34);
+  padding: 0 clamp(12px, 2.4vw, 40px);
+}
+.cmd-rail .nav-cta {
+  flex: 1 1 auto; justify-content: center; text-align: center;
+  padding: 14px 18px !important; border-radius: 0 !important;
+  border: 0 !important; border-inline-end: 1px solid rgba(198,161,91,.18) !important;
+  background: transparent !important; color: var(--cmd-champagne) !important;
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  transition: background .32s var(--cmd-ease), color .32s var(--cmd-ease);
+}
+.cmd-rail .nav-cta:last-child { border-inline-end: 0 !important; }
+.cmd-rail .nav-cta .arrow { opacity: .55; transition: transform .32s var(--cmd-ease); }
+.cmd-rail .nav-cta:hover { background: rgba(233,206,138,.10) !important; color: #FFF8E6 !important; }
+.cmd-rail .nav-cta:hover .arrow { transform: translateX(3px); }
+/* the office you are standing in, filled with foil as the public site fills
+   its active tab */
+.cmd-rail .nav-cta.is-here {
+  background: var(--cmd-foil) !important; color: #241A0E !important; font-weight: 600;
+}
+.cmd-rail .nav-cta.is-here .arrow { opacity: .8; }
+
+@media (max-width: 1080px) {
+  .cmd-navgrid .navlinks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .cmd-navgrid .navlinks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; padding: 12px; }
+  .cmd-rail .nav-cta { flex: 1 1 45%; font-size: 10.5px; padding: 11px 10px !important; }
+}
+
+/* brand.css hides .nav-drop-trigger until its parent masthead opens the mega
+   menu. Outside that masthead the cards must stand on their own, so their
+   display is restated here — the only thing overridden; every colour, border
+   and medallion still comes from brand.css. */
+.cmd-navgrid .nav-drop,
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  display: flex !important; visibility: visible !important; opacity: 1 !important;
+  position: static !important; transform: none !important; pointer-events: auto !important;
+}
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  /* The public masthead's card proportions: a tall panel, a gold medallion
+     over a Cinzel label. My first attempt was a short text pill, which is why
+     it read as a toolbar rather than as a masthead. */
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; text-align: center;
+  min-height: 118px; padding: 20px 14px !important;
+  background: linear-gradient(168deg, #FFFFFF 0%, #FCF8EF 52%, #F3E8D2 100%) !important;
+  border: 1px solid rgba(198,161,91,.38) !important; border-radius: 16px !important;
+  color: var(--cmd-espresso) !important;
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 11px; letter-spacing: .13em; text-transform: uppercase; font-weight: 600;
+  text-decoration: none; white-space: normal; line-height: 1.34; overflow-wrap: anywhere;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 2px 4px rgba(60,42,16,.05),
+    0 14px 30px -18px rgba(60,42,16,.34) !important;
+  transition: transform .38s var(--cmd-ease-out), border-color .38s var(--cmd-ease),
+              box-shadow .38s var(--cmd-ease-out);
+}
+
+/* the medallion — a struck disc, as on the public nav cards */
+.cmd-navgrid .cmd-medallion {
+  width: 44px; height: 44px; flex: none; display: grid; place-items: center;
+  border-radius: 50%; color: #8A6A2E;
+  background: radial-gradient(circle at 34% 28%, #FFFEFA 0%, #F6EAD2 72%, #EEDFC0 100%);
+  border: 1px solid rgba(198,161,91,.55);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 0 0 4px rgba(198,161,91,.09),
+    0 3px 8px rgba(80,58,20,.14);
+  transition: box-shadow .38s var(--cmd-ease), color .38s var(--cmd-ease);
+}
+.cmd-navgrid .cmd-medallion svg {
+  width: 20px; height: 20px; stroke: currentColor; fill: none;
+  stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round;
+}
+.cmd-navgrid .cmd-cardlabel { display: block; }
+
+.cmd-navgrid .navlinks .nav-drop-trigger:hover {
+  transform: translateY(-4px); border-color: rgba(198,161,91,.78) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 4px 8px rgba(60,42,16,.06),
+    0 26px 46px -20px rgba(60,42,16,.44) !important;
+}
+.cmd-navgrid .navlinks .nav-drop-trigger:hover .cmd-medallion {
+  color: #6B5222;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 0 0 5px rgba(198,161,91,.16),
+    0 4px 12px rgba(80,58,20,.20);
+}
+
+/* ===========================================================================
+   17. THE ESTABLISHMENT BAND
+   ===========================================================================
+   The portal had three dark bands stacked before any content began, which is
+   a lot of chrome and not much identity. This is the piece the public
+   masthead has and the portal did not: an ivory band carrying the crest, the
+   wordmark, and the place and date of foundation between two struck rules.
+
+   It is the only element here that says who the institution is rather than
+   where to click, so it takes the light ground and the quiet setting. The
+   dark bands around it are furniture; this is the plate.
+   =========================================================================== */
+
+.cmd-estab {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: clamp(16px, 3vw, 44px);
+  max-width: 1560px; margin-inline: auto;
+  padding: 20px clamp(12px, 2.4vw, 40px) 18px;
+}
+.cmd-estab-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.cmd-estab-brand img { width: 46px; height: 46px; flex: none;
+  filter: drop-shadow(0 1px 2px rgba(60,42,16,.22)); }
+.cmd-estab-name { display: flex; flex-direction: column; line-height: 1.08; }
+.cmd-estab-name b {
+  font-family: 'Cinzel', 'EB Garamond', Garamond, serif;
+  font-size: 17px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--cmd-espresso);
+}
+.cmd-estab-name i {
+  font-style: normal; font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10px; letter-spacing: .34em; text-transform: uppercase;
+  color: #8A6A2E; margin-top: 5px;
+}
+
+/* the foundation line, between two rules that thin to nothing at the ends */
+.cmd-estab-line { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.cmd-estab-rule {
+  flex: 1; height: 1px; min-width: 24px;
+  background: linear-gradient(90deg, transparent, rgba(198,161,91,.30) 18%,
+              rgba(198,161,91,.85) 50%, rgba(198,161,91,.30) 82%, transparent);
+}
+.cmd-estab-text {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: #6B5222; white-space: nowrap;
+}
+.cmd-estab-office {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: #8A6A2E; white-space: nowrap; text-align: end;
+}
+
+/* The band is the reason the chrome can be quieter everywhere else: the cards
+   tighten, and the grid stops shouting now that something above it speaks. */
+.cmd-navgrid .navlinks { padding-top: 4px !important; padding-bottom: 20px !important; }
+.cmd-navgrid .navlinks .nav-drop-trigger { min-height: 104px; }
+
+@media (max-width: 900px) {
+  .cmd-estab { grid-template-columns: auto 1fr; row-gap: 12px; padding-bottom: 14px; }
+  .cmd-estab-line { grid-column: 1 / -1; }
+  .cmd-estab-office { grid-column: 2; justify-self: end; }
+}
+@media (max-width: 560px) {
+  .cmd-estab-text { letter-spacing: .16em; font-size: 9.5px; white-space: normal; text-align: center; }
+  .cmd-estab-name b { font-size: 15px; }
+}
+
+/* ===========================================================================
+   18. MATERIAL — why the cards were flat, and what they are made of now
+   ===========================================================================
+   The cards were a colour fill inside a hairline border. That is a diagram of
+   a card, not a card: nothing on the surface told the eye where the light was
+   coming from, so it read as paper printed on paper.
+
+   Four things make a panel read as an object, and it needs all four:
+
+     1. a BEVEL — a light line along the top edge and a dark one along the
+        bottom, which is the eye's fastest cue for a raised surface
+     2. a METAL EDGE — the border is a gradient, light at the top and shadowed
+        at the foot, because a real gilt edge catches light along its length
+        and a flat rgba border never can
+     3. LAYERED DEPTH — a tight contact shadow AND a wide ambient one. A
+        single soft shadow reads as a sticker; two read as an object resting
+        on a surface
+     4. a SPECULAR SWEEP — one faint diagonal across the face, which is what
+        lacquer and enamel do and what a flat fill cannot
+   =========================================================================== */
+
+.cmd-navgrid .navlinks .nav-drop-trigger {
+  position: relative; overflow: hidden;
+  /* the surface, then the metal edge, painted as two boxes */
+  background:
+    linear-gradient(168deg, #FFFFFF 0%, #FDF9F1 46%, #F6EBD6 100%) padding-box,
+    linear-gradient(160deg,
+      #FBF0D6 0%, #E4C88C 18%, #C6A15B 38%,
+      #9A7734 62%, #C6A15B 82%, #F3E3B8 100%) border-box !important;
+  border: 1px solid transparent !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(140,105,45,.13),
+    0 1px 1px rgba(70,48,16,.05),
+    0 7px 14px -7px rgba(70,48,16,.17),
+    0 22px 42px -20px rgba(70,48,16,.30) !important;
+}
+/* the sweep: one diagonal, low, and it does not move */
+.cmd-navgrid .navlinks .nav-drop-trigger::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(148deg,
+    rgba(255,255,255,.85) 0%, rgba(255,255,255,.30) 26%,
+    rgba(255,255,255,0) 46%, rgba(140,105,45,.045) 100%);
+}
+.cmd-navgrid .navlinks .nav-drop-trigger > * { position: relative; z-index: 1; }
+
+.cmd-navgrid .navlinks .nav-drop-trigger:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(140,105,45,.16),
+    0 2px 2px rgba(70,48,16,.06),
+    0 12px 22px -8px rgba(70,48,16,.22),
+    0 34px 58px -22px rgba(70,48,16,.40) !important;
+}
+
+/* --- the medallion, struck rather than printed --------------------------- */
+.cmd-navgrid .cmd-medallion {
+  width: 46px; height: 46px; border: 0 !important;
+  background:
+    radial-gradient(circle at 36% 26%, #FFFEFA 0%, #F6EACF 54%, #E6D3AC 100%) !important;
+  box-shadow:
+    inset 0 1px 1.5px rgba(255,255,255,.98),
+    inset 0 -1.5px 2px rgba(140,105,45,.22),
+    0 0 0 1px rgba(198,161,91,.62),
+    0 0 0 4px rgba(198,161,91,.09),
+    0 3px 7px rgba(90,64,22,.20) !important;
+}
+/* the icon sits IN the disc: a white light-line under the stroke reads as
+   engraving, which is what a struck medallion actually looks like */
+.cmd-navgrid .cmd-medallion svg {
+  stroke: #7C6127; stroke-width: 1.45;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.95));
+}
+.cmd-navgrid .navlinks .nav-drop-trigger:hover .cmd-medallion {
+  box-shadow:
+    inset 0 1px 1.5px rgba(255,255,255,1),
+    inset 0 -1.5px 2px rgba(140,105,45,.26),
+    0 0 0 1px rgba(198,161,91,.86),
+    0 0 0 5px rgba(198,161,91,.16),
+    0 5px 12px rgba(90,64,22,.26) !important;
+}
+
+/* --- the label: it was the same weight as everything else ---------------- */
+.cmd-navgrid .cmd-cardlabel {
+  font-size: 11.5px; letter-spacing: .155em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* --- the rail's live tab, given the same edge ---------------------------- */
+.cmd-rail .nav-cta.is-here {
+  box-shadow:
+    inset 0 1px 0 rgba(255,252,240,.85),
+    inset 0 -1px 0 rgba(90,64,22,.32),
+    0 6px 16px -6px rgba(0,0,0,.45) !important;
+}
+
+/* --- and the plate's rules, which were a flat tint ----------------------- */
+.cmd-estab-rule {
+  background: linear-gradient(90deg, transparent,
+    rgba(198,161,91,.28) 16%, rgba(243,227,184,.95) 44%,
+    rgba(154,119,52,.95) 56%, rgba(198,161,91,.28) 84%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,.85);
+}
+.cmd-estab-brand img { filter: drop-shadow(0 2px 3px rgba(70,48,16,.28)); }
+.cmd-estab-name b { text-shadow: 0 1px 0 rgba(255,255,255,.95); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-navgrid .navlinks .nav-drop-trigger:hover { transform: none; }
+}
+
+/* ===========================================================================
+   19. TABLES — the working lists, dressed out of their default grid
+   ===========================================================================
+   Every table in the staff wing — batch lists, issued-certificate registers,
+   the approval matrix, the graduation control roster — was a bare <table>
+   with the browser's own 1px grey grid, whether written by hand in the HTML
+   or built by JS (js/portal-staff-certificate-centre.js creates four this
+   way). Neither had ever been reached by this file, because the entire
+   portal/staff/* wing was built after this system and wired in separately
+   (scripts/portal-command-wire.mjs) — this section is the other half of
+   that catch-up: it was never enough to gild the chrome around a table that
+   still looked like a spreadsheet.
+
+   The treatment is the same one already established for cards and rails
+   elsewhere in this file: no grid lines at all, a hairline UNDER each row
+   rather than a box AROUND each cell, a small-caps gold label register for
+   the header (matching .portal-field .label), and a warm hover wash so a
+   row reads as addressable rather than printed. Works on any table inside
+   .portal-body — hand-written or JS-built — with no markup change. */
+body.portal-body table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(198,161,91,.22);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 8px 22px -16px rgba(70,48,16,.22);
+}
+body.portal-body table th,
+body.portal-body table td {
+  /* Reset first, then re-add only the one hairline that is actually
+     wanted (the row's foot) — a table dropped in with its own `border`
+     attribute (legacy markup, or a builder that predates this rule) can
+     otherwise keep a full grid on every side via the UA stylesheet even
+     after border-collapse. */
+  border: 0; border-bottom: 1px solid rgba(198,161,91,.14);
+}
+body.portal-body table thead th {
+  text-align: left; padding: 11px 14px;
+  background: linear-gradient(180deg, rgba(198,161,91,.14), rgba(198,161,91,.05));
+  color: #8A6A2E; letter-spacing: .1em; text-transform: uppercase;
+  font-size: 10px; font-weight: 700;
+  border-bottom: 1px solid rgba(198,161,91,.28);
+}
+body.portal-body table tbody td {
+  padding: 10px 14px; color: var(--cmd-ink, #241A0E);
+  vertical-align: middle;
+}
+body.portal-body table tbody tr:last-child td { border-bottom: 0; }
+body.portal-body table tbody tr {
+  transition: background-color .3s ease;
+}
+body.portal-body table tbody tr:hover {
+  background: rgba(198,161,91,.08);
+}

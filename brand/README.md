@@ -100,7 +100,7 @@ of `letterhead.html` and then run the builder:
 python3 brand/word.py
 ```
 
-## What it carries, and where each fact came from
+## Building
 
 Nothing on this letterhead was invented:
 

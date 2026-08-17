@@ -1,0 +1,47 @@
+/* ===========================================================================
+   THE KHĀTAM PATTERN — generated, do not hand-edit
+   ===========================================================================
+   An eight-point star, the classic two-squares construction, its actual
+   outline computed (outer corners at r=30.0, inner waist at r=22.96 —
+   both verified, not assumed) rather than two overlapping square outlines
+   drawn on top of each other. Tiled at 75.0px with a smaller star
+   completing each corner, the ordinary repeat rhythm of this motif in
+   architectural use.
+
+   Laid onto ::after of the site's existing ambient overlay elements —
+   .imperial-motion (header) and .foot-motion (footer) — deliberately NOT
+   onto the elements themselves, which already carry the gold-dust
+   background (brand.css) and the diagonal sweep (::before). A fresh ::after
+   layer means nothing is overwritten, and because CSS opacity on a parent
+   dims its pseudo-elements too, this inherits the existing
+   html[data-pc-ornament="restrained"|"none"] opacity rules on
+   .imperial-motion / .foot-motion for free.
+
+   REVISED from the first pass: 0.6/0.65 stroke and 0.24/0.18 opacity at a
+   2x tile were correct geometry rendered too faintly to register at a
+   glance, on the same complaint pattern as the running-light rework —
+   technically present, practically invisible. This pass nearly doubles the
+   stroke weight, raises opacity meaningfully, and tightens the repeat to
+   1.6x tile so more stars sit in view at once.
+
+       python3 scripts/islamic-pattern-build.py
+   =========================================================================== */
+.imperial-motion::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NS4wMDAiIGhlaWdodD0iNzUuMDAwIiB2aWV3Qm94PSIwIDAgNzUuMDAwIDc1LjAwMCI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEE2QTJFIiBzdHJva2Utd2lkdGg9IjEuMSIgc3Ryb2tlLW9wYWNpdHk9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0gNjcuNTAwIDM3LjUwMCBMIDU4LjcxMyA0Ni4yODcgTCA1OC43MTMgNTguNzEzIEwgNDYuMjg3IDU4LjcxMyBMIDM3LjUwMCA2Ny41MDAgTCAyOC43MTMgNTguNzEzIEwgMTYuMjg3IDU4LjcxMyBMIDE2LjI4NyA0Ni4yODcgTCA3LjUwMCAzNy41MDAgTCAxNi4yODcgMjguNzEzIEwgMTYuMjg3IDE2LjI4NyBMIDI4LjcxMyAxNi4yODcgTCAzNy41MDAgNy41MDAgTCA0Ni4yODcgMTYuMjg3IEwgNTguNzEzIDE2LjI4NyBMIDU4LjcxMyAyOC43MTMgWiIvPjx1c2UgaHJlZj0iI2MiIHg9IjAiIHk9IjAiLz48dXNlIGhyZWY9IiNjIiB4PSI3NS4wMDAiIHk9IjAiLz48dXNlIGhyZWY9IiNjIiB4PSIwIiB5PSI3NS4wMDAiLz48dXNlIGhyZWY9IiNjIiB4PSI3NS4wMDAiIHk9Ijc1LjAwMCIvPjwvZz48ZGVmcz48cGF0aCBpZD0iYyIgZD0iTSAxMi42MDAgLTAuMDAwIEwgOC45MTAgMy42OTAgTCA4LjkxMCA4LjkxMCBMIDMuNjkwIDguOTEwIEwgMC4wMDAgMTIuNjAwIEwgLTMuNjkwIDguOTEwIEwgLTguOTEwIDguOTEwIEwgLTguOTEwIDMuNjkwIEwgLTEyLjYwMCAwLjAwMCBMIC04LjkxMCAtMy42OTAgTCAtOC45MTAgLTguOTEwIEwgLTMuNjkwIC04LjkxMCBMIC0wLjAwMCAtMTIuNjAwIEwgMy42OTAgLTguOTEwIEwgOC45MTAgLTguOTEwIEwgOC45MTAgLTMuNjkwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhBNkEyRSIgc3Ryb2tlLXdpZHRoPSIxLjEiIHN0cm9rZS1vcGFjaXR5PSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9kZWZzPjwvc3ZnPg==");
+  background-size:120.0px 120.0px;
+  background-repeat:repeat;
+  opacity:.4;
+  pointer-events:none;
+}
+
+.foot-motion::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NS4wMDAiIGhlaWdodD0iNzUuMDAwIiB2aWV3Qm94PSIwIDAgNzUuMDAwIDc1LjAwMCI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRTlDRThBIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLW9wYWNpdHk9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0gNjcuNTAwIDM3LjUwMCBMIDU4LjcxMyA0Ni4yODcgTCA1OC43MTMgNTguNzEzIEwgNDYuMjg3IDU4LjcxMyBMIDM3LjUwMCA2Ny41MDAgTCAyOC43MTMgNTguNzEzIEwgMTYuMjg3IDU4LjcxMyBMIDE2LjI4NyA0Ni4yODcgTCA3LjUwMCAzNy41MDAgTCAxNi4yODcgMjguNzEzIEwgMTYuMjg3IDE2LjI4NyBMIDI4LjcxMyAxNi4yODcgTCAzNy41MDAgNy41MDAgTCA0Ni4yODcgMTYuMjg3IEwgNTguNzEzIDE2LjI4NyBMIDU4LjcxMyAyOC43MTMgWiIvPjx1c2UgaHJlZj0iI2MiIHg9IjAiIHk9IjAiLz48dXNlIGhyZWY9IiNjIiB4PSI3NS4wMDAiIHk9IjAiLz48dXNlIGhyZWY9IiNjIiB4PSIwIiB5PSI3NS4wMDAiLz48dXNlIGhyZWY9IiNjIiB4PSI3NS4wMDAiIHk9Ijc1LjAwMCIvPjwvZz48ZGVmcz48cGF0aCBpZD0iYyIgZD0iTSAxMi42MDAgLTAuMDAwIEwgOC45MTAgMy42OTAgTCA4LjkxMCA4LjkxMCBMIDMuNjkwIDguOTEwIEwgMC4wMDAgMTIuNjAwIEwgLTMuNjkwIDguOTEwIEwgLTguOTEwIDguOTEwIEwgLTguOTEwIDMuNjkwIEwgLTEyLjYwMCAwLjAwMCBMIC04LjkxMCAtMy42OTAgTCAtOC45MTAgLTguOTEwIEwgLTMuNjkwIC04LjkxMCBMIC0wLjAwMCAtMTIuNjAwIEwgMy42OTAgLTguOTEwIEwgOC45MTAgLTguOTEwIEwgOC45MTAgLTMuNjkwIFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U5Q0U4QSIgc3Ryb2tlLXdpZHRoPSIxLjIiIHN0cm9rZS1vcGFjaXR5PSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9kZWZzPjwvc3ZnPg==");
+  background-size:120.0px 120.0px;
+  background-repeat:repeat;
+  opacity:.32;
+  pointer-events:none;
+}

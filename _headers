@@ -31,3 +31,12 @@
 # would confirm the very staleness it exists to detect.
 /version.txt
   Cache-Control: no-cache, no-store, must-revalidate
+
+# Security headers, sitewide. CSP is deliberately absent: the pages carry
+# inline scripts and styles throughout, and a Content-Security-Policy added
+# casually would break them silently — it needs its own audited pass.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains

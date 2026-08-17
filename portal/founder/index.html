@@ -4,11 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
-<title>Founder Dashboard (Pilot) — Sultan Hanafi Royal Schools</title>
+<title>Office of the Head of Schools — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/brand.css?v=4242997740">
 <link rel="stylesheet" href="/css/portal.css?v=325ff1fb81">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
@@ -43,8 +41,10 @@
 
 <main class="portal-main">
   <div class="portal-card" data-founder-gate>
-    <h1>Founder Dashboard</h1>
-    <p class="sub">Institution-wide, read-only view across all four SHRS institutions. Not a login — enter the Founder Dashboard token to view.</p>
+    <h1>Office of the Head of Schools</h1>
+    <p class="sub">Institution-wide, read-only view across all four SHRS institutions &mdash; for the Head of Schools, the Chairman and the Board of Governors.</p>
+    <a class="portal-submit founder-signin" href="/portal/staff/login/">Sign in with your staff account</a>
+    <p class="founder-or"><span>or use the Board access token</span></p>
     <div class="portal-error" data-founder-error></div>
     <form data-founder-token-form>
       <div class="portal-field">
@@ -53,7 +53,7 @@
       </div>
       <button type="submit" class="portal-submit" data-founder-submit>View Dashboard</button>
     </form>
-    <p class="portal-notice">This token is held by the Chairman/Board only, separate from the tokens used for day-to-day data entry. It is kept only in this browser tab's session storage — closing the tab clears it.</p>
+    <p class="portal-notice">Signing in is the preferred route: it names who viewed the office and when. The token remains as a fallback for a Board member who has no staff account yet &mdash; every use of it is recorded in the audit log as an unnamed viewing. It is held only in this browser tab and clears when the tab closes.</p>
     <a class="portal-back-link" href="/" data-i18n="portal.backToMainSite">← Back to the main site</a>
   </div>
 
@@ -65,7 +65,7 @@
   <div class="portal-wrap" data-founder-content hidden>
     <div class="exec-welcome">
       <div class="exec-welcome-eyebrow-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.9 1.1 5.7L12 15.6l-4.9 2.9 1.1-5.7-4.2-3.9 5.6-.6L12 3z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span><div class="exec-welcome-eyebrow">Executive Command Centre</div></div>
-      <h1>Founder Dashboard</h1>
+      <h1>Office of the Head of Schools</h1>
       <div class="exec-welcome-role" data-founder-auth-status>Institution-wide, read-only view</div>
       <div class="exec-welcome-motto" data-founder-generated></div>
       <p class="exec-welcome-narrative" data-founder-narrative style="max-width:560px;font-size:0.94rem;line-height:1.6;color:rgba(248,244,233,0.85);margin:0 0 6px;"></p>

@@ -24,9 +24,25 @@
  * question.
  *
  * So the label is checked against PROGRAMMES too, not just the code.
+ *
+ * Two registries feed the picker now, not one: the Islamic-stage PROGRAMMES
+ * (certificate-serial.js), plus exactly the two Royal College codes the
+ * Registrar's Office route is authorised to issue directly — NUR and PRY,
+ * Nursery and Primary's own awards. RC_PROGRAMMES also defines JSS, SS and
+ * QUR, which stay deliberately OFF this picker (a different school, a
+ * different Principal approval chain, issued only by
+ * scripts/issue-royal-college-batch.mjs) — so ROYAL_COLLEGE_CODES below is
+ * the same short list stage-certificates.js hardcodes as
+ * PORTAL_ROYAL_COLLEGE_CODES, kept in sync by hand rather than imported,
+ * because that file is a Workers API handler and this is a plain Node
+ * script; a drift between the two shows up here as a picker/engine mismatch
+ * either way, which is exactly the failure this gate exists to catch.
  */
 import { readFileSync } from 'node:fs';
 import { PROGRAMMES } from '../functions/_lib/certificate-serial.js';
+import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
+
+const ROYAL_COLLEGE_CODES = ['NUR', 'PRY'];
 
 const PAGE = 'portal/staff/certificate-centre/index.html';
 const html = readFileSync(PAGE, 'utf8');
@@ -37,7 +53,9 @@ const options = [...block.slice(0, block.indexOf('</select>')).matchAll(
   /<option value="([A-Z0-9]{2,4})"[^>]*>([^<]+)<\/option>/g)]
   .map((m) => ({ code: m[1], label: m[2].trim() }));
 
-const known = Object.keys(PROGRAMMES);
+const registryFor = (code) => (PROGRAMMES[code] ? PROGRAMMES
+  : ROYAL_COLLEGE_CODES.includes(code) ? RC_PROGRAMMES : null);
+const known = [...Object.keys(PROGRAMMES), ...ROYAL_COLLEGE_CODES];
 const faults = [];
 
 for (const code of known) {
@@ -47,18 +65,21 @@ for (const code of known) {
   }
 }
 for (const o of options) {
-  if (!known.includes(o.code)) {
+  const registry = registryFor(o.code);
+  if (!registry) {
     faults.push(`"${o.code}" is offered in the picker but the issuing engine does not `
       + 'know it — selecting it returns an error rather than a certificate.');
     continue;
   }
   // The label must carry the programme's own stage name. Compared on the
   // stage word rather than the whole string, because the picker legitimately
-  // adds the code in brackets and the engine's label does not.
-  const stage = PROGRAMMES[o.code].labelEn.split('—').pop().trim();
+  // adds the code in brackets and the engine's label does not. A label with
+  // no em dash (Nursery/Primary's own labelEn) has nothing to split, so the
+  // whole label is the stage name.
+  const stage = registry[o.code].labelEn.split('—').pop().trim();
   if (!o.label.toLowerCase().includes(stage.toLowerCase())) {
     faults.push(`${o.code} is labelled "${o.label}" but the engraved wording is `
-      + `"${PROGRAMMES[o.code].labelEn}". A registrar picks by the words, not the code.`);
+      + `"${registry[o.code].labelEn}". A registrar picks by the words, not the code.`);
   }
 }
 
