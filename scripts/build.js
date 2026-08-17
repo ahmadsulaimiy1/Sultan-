@@ -491,7 +491,10 @@ function buildPage(page, manifest) {
     TITLE: page.title,
     DESCRIPTION: page.description,
     OG_URL: `${SITE_ORIGIN}${pagePath}`,
-    OG_IMAGE: `${SITE_ORIGIN}/assets/images/apple-touch-icon.png`,
+    // ogImage in the manifest overrides the crest fallback — a page whose
+    // subject has a real photograph (the Press Centre's graduation shot)
+    // should share as that photograph, not as the app icon.
+    OG_IMAGE: `${SITE_ORIGIN}${page.ogImage || '/assets/images/apple-touch-icon.png'}`,
   });
   /* The legacy {{ALT_HREF}} token addressed "the other language" — a question
      that only has an answer while there are exactly two. The real N-way
