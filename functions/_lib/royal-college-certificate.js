@@ -1,3 +1,4 @@
+import { UMBRELLA, INSTITUTIONS } from './institutions.js';
 // Sultan Hanafi Royal College — Junior Secondary Graduation Certificate.
 // Certificate System v1.1, programme code JSS. English only, by Founder
 // directive of 2026-08-06.
@@ -271,14 +272,20 @@ function voidPantograph(uid) {
 // The security thread. Windows: short, frequent and low-contrast. The first cut
 // used 2.7 x 5.4mm at 9.4mm centres, which read on the proof as a column of
 // pale capsules rather than as a thread surfacing through paper.
-function securityThread(x, y0, y1, serial, uid, side) {
+function securityThread(x, y0, y1, serial, uid, side, school) {
   const windows = [];
   const step = 6.2;
   for (let y = y0 + 2.4; y < y1 - 2.4; y += step) {
     windows.push(`<rect x="${(x - 0.72).toFixed(2)}" y="${y.toFixed(2)}" width="1.44" height="2.9" rx="0.28"
       fill="url(#rcThread${uid})" stroke="${GOLD_DEEP}" stroke-width="0.07" opacity="0.6"/>`);
   }
-  const micro = `${serial} · SHRS ROYAL COLLEGE · `.repeat(5);
+  // The thread names the ISSUING school (short form: umbrella prefix
+  // dropped, uppercased) — 'SHRS ROYAL COLLEGE' stays byte-identical for
+  // JSS/SS; a Primary or Qur'an sheet no longer carries another school's
+  // name in its own security thread. Fallback preserves the historic text
+  // for any caller that predates the parameter.
+  const threadSchool = String(school || 'Royal College').replace(/^Sultan Hanafi /, '').toUpperCase();
+  const micro = `${serial} · SHRS ${threadSchool} · `.repeat(5);
   return `<g>
     <path d="M ${x} ${y0} V ${y1}" stroke="${GOLD_DEEP}" stroke-width="0.5" opacity="0.26"/>
     <path d="M ${x} ${y0} V ${y1}" stroke="url(#rcThread${uid})" stroke-width="0.34" opacity="0.72"/>
@@ -737,7 +744,10 @@ function openSecurityField(uid, serial, prog = {}) {
   const micro = (y, fs, txt, op) => `<text x="${W / 2}" y="${y}" font-family="Cinzel, serif"
     font-size="${(fs * PT).toFixed(3)}" letter-spacing="${(0.3 * PT).toFixed(3)}"
     fill="${MICRO_INK}" text-anchor="middle" opacity="${op}">${txt}</text>`;
-  const line1 = `SULTAN HANAFI ROYAL SCHOOLS · SULTAN HANAFI ROYAL COLLEGE · OFFICE OF THE REGISTRAR · ${s} · `;
+  // The rail names the ISSUING school — byte-identical for the Royal
+  // College's own sheets, corrected for every other school's (a Primary
+  // sheet's frame must not read ROYAL COLLEGE under a loupe).
+  const line1 = `SULTAN HANAFI ROYAL SCHOOLS · ${String(prog.school || 'Sultan Hanafi Royal College').toUpperCase()} · OFFICE OF THE REGISTRAR · ${s} · `;
   const line2 = `CERTIFICATE OF AUTHENTICITY · VERIFIED ACADEMIC CREDENTIAL · ${s} · `;
   out.push(micro(5.6, 1.2, esc(line1.repeat(3)), 0.8));
   out.push(micro(13.6, 0.9, esc(line2.repeat(4)), 0.72));
@@ -996,8 +1006,8 @@ function groundSvg(serial, uid, style = 'ring', groundProg = {}) {
 `}
 
   <!-- Security threads, in the field's quiet margin, symmetric about centre. -->
-  ${securityThread(23.6, 44, 134, serial, uid, 'L')}
-  ${securityThread(W - 23.6, 44, 134, serial, uid, 'R')}
+  ${securityThread(23.6, 44, 134, serial, uid, 'L', groundProg.school)}
+  ${securityThread(W - 23.6, 44, 134, serial, uid, 'R', groundProg.school)}
 
   ${fibres(serial)}
 
@@ -1233,7 +1243,7 @@ function plaque(w, h, uid) {
 // layers under it — a lathe ground, a latent-image screen that photocopies as a
 // solid block, and the FULL serial in microtext. The face prints the timeless
 // short form; the covert layer keeps the year and the anti-forgery tail.
-function numberCartouche(displayNo, fullSerial, uid, school = 'Sultan Hanafi Royal College') {
+function numberCartouche(displayNo, fullSerial, uid, school) {
   const w = 62; const h = 18;
   // The microtext rail names the ISSUING SCHOOL. It was hardcoded to the
   // Royal College, which put that school's name in microtext on the foot of
@@ -1287,7 +1297,7 @@ export const RC_PROGRAMMES = {
   JSS: {
     code: 'JSS',
     labelEn: 'Junior Secondary School · JSS 1 – JSS 3',
-    school: 'Sultan Hanafi Royal College',
+    school: INSTITUTIONS.royal_college.displayName,
     title: 'Certificate of Graduation',
     // NOT "Basic Education Certificate". That is a national award made on the
     // BECE by the state examination board, not by a school; a school
@@ -1306,7 +1316,7 @@ export const RC_PROGRAMMES = {
   SS: {
     code: 'SS',
     labelEn: 'Senior Secondary School · SS 1 – SS 3',
-    school: 'Sultan Hanafi Royal College',
+    school: INSTITUTIONS.royal_college.displayName,
     title: 'Certificate of Graduation',
     // NOT "West African Senior School Certificate" and NOT "Senior School
     // Certificate". Those are national awards made by WAEC and NECO on their
@@ -1339,7 +1349,7 @@ export const RC_PROGRAMMES = {
     labelEn: 'Nursery School',
     // Same institution as PRY, same wording, same source: the site's own name
     // for the school both stages belong to.
-    school: 'Sultan Hanafi Nursery and Primary School',
+    school: INSTITUTIONS.nursery_primary.displayName,
     title: 'Certificate of Graduation',
     award: 'Nursery School Graduation Certificate',
     // No year count or age bracket beyond "the age of two" — the site never
@@ -1367,7 +1377,7 @@ export const RC_PROGRAMMES = {
     // The site names this school "Sultan Hanafi Nursery and Primary School" —
     // "and", not an ampersand — and that is the name used here.
     labelEn: 'Primary School',
-    school: 'Sultan Hanafi Nursery and Primary School',
+    school: INSTITUTIONS.nursery_primary.displayName,
     title: 'Certificate of Graduation',
     // NOT "First School Leaving Certificate" and NOT "Primary School Leaving
     // Certificate". Both are national awards made by a state examination
@@ -1410,7 +1420,7 @@ export const RC_PROGRAMMES = {
   QUR: {
     code: 'QUR',
     labelEn: 'Hifz of the Glorious Qur’an',
-    school: 'Sultan Hanafi Qur’an College',
+    school: INSTITUTIONS.quran_college.displayName,
     // The College's own motto, taken from its own crest — the Arabic band
     // beneath the open muṣḥaf reads الشعار (al-shiʿār, "the motto") and then
     // this line. Nothing here is composed: it is transcribed from the emblem
@@ -1543,7 +1553,7 @@ export const RC_PROGRAMMES = {
   },
 };
 
-const INSTITUTION = 'Sultan Hanafi Royal Schools';
+const INSTITUTION = UMBRELLA.en;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
   'August', 'September', 'October', 'November', 'December'];
 
