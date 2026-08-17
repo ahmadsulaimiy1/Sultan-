@@ -1,3 +1,4 @@
+import { SCHOOL_CODE_BY_INSTITUTION_NAME, UNIT_BY_INSTITUTION_NAME } from './institutions.js';
 // Institutional Identity Number Architecture Directive (Founder, Head of
 // Schools & Chairman-approved correction of the original Digital Identity
 // System pattern):
@@ -153,12 +154,9 @@ export async function regenerateGuardianIdentityNo(sql, guardianId) {
 // finance numbers (see functions/_lib/finance-no.js) — admission volume
 // is far too low for the race condition that justified a real sequence
 // for staff/student/guardian numbers.
-const SCHOOL_CODE_BY_INSTITUTION_NAME = {
-  'Royal College': 'RC',
-  'Nursery and Primary': 'NP',
-  'Islamic and Arabic Studies': 'IAS',
-  "Qur'an College": 'QC',
-};
+// SCHOOL_CODE_BY_INSTITUTION_NAME comes from the canonical registry
+// (functions/_lib/institutions.js) - byte-identical to the literal it
+// replaced, pinned by scripts/test-institution-registry.mjs.
 
 export async function generateAdmissionNo(sql, institutionName, admissionYear) {
   const school = SCHOOL_CODE_BY_INSTITUTION_NAME[institutionName] || 'GEN';
@@ -260,12 +258,9 @@ const OFFICE_CODE_BY_SLUG = {
   'knowledge-base': 'KBS',
 };
 
-const UNIT_BY_INSTITUTION_NAME = {
-  'Royal College': 'RC',
-  'Nursery and Primary': 'NPS',
-  'Islamic and Arabic Studies': 'IAS',
-  "Qur'an College": 'QC',
-};
+// UNIT_BY_INSTITUTION_NAME likewise comes from the registry - the
+// deliberate NP (admission) vs NPS (staff unit) divergence is
+// preserved there, never unified.
 
 function unitCodeFor(row) {
   const slug = row.office_slug;
