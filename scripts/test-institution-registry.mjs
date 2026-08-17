@@ -128,5 +128,44 @@ check('registrar enrol + lifecycle inputs use the datalist',
   registrarHtml.includes('data-enrol-institution list="registry-institution-names"')
   && registrarHtml.includes('data-lifecycle-institution list="registry-institution-names"'));
 
+// ── classes.institution_id — phase one of retiring the string join ──
+// Both schema copies must carry the FK column, the backfill, and the
+// index; in setup.js the backfill must run AFTER the institutions seed
+// (a fresh database backfills in the same Setup run), and in schema.sql
+// the ALTER must come after the institutions table exists.
+const CLASSES_ALTER = 'ALTER TABLE classes ADD COLUMN IF NOT EXISTS institution_id INTEGER REFERENCES institutions(id)';
+const CLASSES_BACKFILL = 'UPDATE classes SET institution_id = i.id FROM institutions i';
+const CLASSES_INDEX = 'CREATE INDEX IF NOT EXISTS idx_classes_institution_id ON classes(institution_id)';
+for (const [label, text] of [['sql/schema.sql', schemaSql], ['setup.js', setupJs]]) {
+  check(`${label} carries the classes.institution_id column, backfill and index`,
+    text.includes(CLASSES_ALTER) && text.includes(CLASSES_BACKFILL) && text.includes(CLASSES_INDEX));
+}
+check('setup.js backfills classes AFTER seeding institutions',
+  setupJs.indexOf('INSERT INTO institutions (name) VALUES') !== -1
+  && setupJs.indexOf('INSERT INTO institutions (name) VALUES') < setupJs.indexOf(CLASSES_BACKFILL));
+check('schema.sql adds the FK column after the institutions table exists',
+  schemaSql.indexOf('CREATE TABLE IF NOT EXISTS institutions') !== -1
+  && schemaSql.indexOf('CREATE TABLE IF NOT EXISTS institutions') < schemaSql.indexOf(CLASSES_ALTER));
+
+// The three write routes must share the one dual-writing helper — an
+// inline INSERT INTO classes outside _lib/classes.js and the Setup
+// seeds would dodge the dual-write and reopen the drift.
+const CLASS_WRITE_ROUTES = [
+  '../functions/api/portal/staff/registrar/enrol.js',
+  '../functions/api/portal/staff/registrar/lifecycle-events.js',
+  '../functions/api/portal/admin/students.js',
+];
+for (const rel of CLASS_WRITE_ROUTES) {
+  const src = readFileSync(new URL(rel, import.meta.url), 'utf-8');
+  check(`${rel.split('/').pop()} uses the shared dual-writing resolveClassId`,
+    src.includes("from '") && /import \{ resolveClassId \} from '[^']*_lib\/classes\.js'/.test(src)
+    && !src.includes('INSERT INTO classes'));
+}
+const classesLib = readFileSync(new URL('../functions/_lib/classes.js', import.meta.url), 'utf-8');
+check('_lib/classes.js dual-writes institution_id with a pre-migration fallback',
+  classesLib.includes('INSERT INTO classes (institution, name, institution_id)')
+  && classesLib.includes('INSERT INTO classes (institution, name) VALUES')
+  && classesLib.includes('/institution_id/'));
+
 console.log(`\n${failures ? `${failures} FAILED` : 'the registry preserves every replaced literal'}`);
 process.exit(failures ? 1 : 0);

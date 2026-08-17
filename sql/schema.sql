@@ -388,6 +388,21 @@ CREATE TABLE IF NOT EXISTS institutions (
   is_active BOOLEAN NOT NULL DEFAULT true
 );
 
+-- Phase one of retiring the classes.institution free-text join
+-- (docs/institution-registry.md, decision 2). The FK column arrives
+-- alongside the string, never instead of it: every read path still
+-- joins on the string, writes now dual-write both (functions/_lib/
+-- classes.js), and this backfill converges existing rows whose string
+-- matches a seeded institution. Rows whose string matches nothing stay
+-- NULL — exactly the scope the string join yields for them today.
+-- Phase two (switching the ~23 read joins to the id) only happens
+-- after this column is live in production. NOT NULL is deliberately
+-- absent: live rows may carry unmatched historical strings.
+ALTER TABLE classes ADD COLUMN IF NOT EXISTS institution_id INTEGER REFERENCES institutions(id);
+UPDATE classes SET institution_id = i.id FROM institutions i
+ WHERE i.name = classes.institution AND classes.institution_id IS NULL;
+CREATE INDEX IF NOT EXISTS idx_classes_institution_id ON classes(institution_id);
+
 -- Future-campus-ready per the directive's "Future Campuses" requirement
 -- — one real row today (the only real campus), more added later without
 -- any other table changing shape.

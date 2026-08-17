@@ -116,14 +116,29 @@ signature. Mechanics:
   never rewritten — normalisation applies to live rows only.
 - All of it is pinned by `scripts/test-institution-registry.mjs`.
 
-### 2. `classes.institution` is a free-text string join
+### 2. `classes.institution` is a free-text string join — PHASE ONE LANDED
 
 `classes.institution` matches `institutions.name` by string equality rather
-than foreign key. The registry's `dbName` field documents the contract, and
-`sql/schema.sql`'s institutions header acknowledges the debt. The fix is a
-schema migration (`institution_id` FK + backfill + constraint) — safe only
-with a migration plan for existing rows and every query that joins on the
-string.
+than foreign key. The ~23 `LEFT JOIN institutions ci ON ci.name =
+c.institution` sites feed permission checks, so a mismatched string
+silently degrades to a null scope. The migration runs in two phases:
+
+**Phase one (landed 2026-08-17):** `classes.institution_id INTEGER
+REFERENCES institutions(id)` exists in both schema copies, with an
+idempotent backfill (string → seeded institution) and an index. All three
+class-creating routes now share one dual-writing helper
+(`functions/_lib/classes.js`) that sets both the string and the FK, heals
+a found row whose FK is NULL, and falls back to the legacy shape on a
+pre-migration database (production's schema advances only via Setup or
+the CI psql step, while Pages deploys code immediately). The string
+column remains the read-path source of truth. NOT NULL is deliberately
+absent — live rows may carry unmatched historical strings.
+
+**Phase two (pending):** switch the ~23 read joins and the
+school-leadership `WHERE c.institution = $name` filters to the id. Only
+safe after the column is confirmed live in production (first CI psql run
+with `DATABASE_URL`, or a Setup run) — flipping reads first would error
+on a database that lacks the column.
 
 ### 3. The Online & Distance Learning School
 

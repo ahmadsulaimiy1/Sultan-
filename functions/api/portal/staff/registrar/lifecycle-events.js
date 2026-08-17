@@ -17,6 +17,7 @@ import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
+import { resolveClassId } from '../../../../_lib/classes.js';
 
 const EVENT_TYPES = {
   promote: 'promotion',
@@ -25,13 +26,6 @@ const EVENT_TYPES = {
   graduate: 'graduation',
   reinstate: 'reinstatement',
 };
-
-async function resolveClassId(sql, institution, className) {
-  const existing = await sql`SELECT id FROM classes WHERE institution = ${institution} AND name = ${className}`;
-  if (existing.rows.length) return existing.rows[0].id;
-  const created = await sql`INSERT INTO classes (institution, name) VALUES (${institution}, ${className}) RETURNING id`;
-  return created.rows[0].id;
-}
 
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };

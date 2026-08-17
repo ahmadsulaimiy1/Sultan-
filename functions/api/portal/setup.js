@@ -396,6 +396,17 @@ const STATEMENTS = [
   `INSERT INTO institutions (name) VALUES
     ${INSTITUTION_SEED_NAMES.map((n) => `('${n.replace(/'/g, "''")}')`).join(', ')}
     ON CONFLICT (name) DO NOTHING`,
+
+  // Phase one of retiring the classes.institution free-text join
+  // (docs/institution-registry.md, decision 2): FK column alongside the
+  // string, backfilled where the string matches a seeded institution.
+  // Placed AFTER the institutions seed above so a fresh database
+  // backfills in the same Setup run. Mirrors sql/schema.sql.
+  `ALTER TABLE classes ADD COLUMN IF NOT EXISTS institution_id INTEGER REFERENCES institutions(id)`,
+  `UPDATE classes SET institution_id = i.id FROM institutions i
+    WHERE i.name = classes.institution AND classes.institution_id IS NULL`,
+  `CREATE INDEX IF NOT EXISTS idx_classes_institution_id ON classes(institution_id)`,
+
   `INSERT INTO campuses (name, is_primary) VALUES ('Main Campus — Ikorodu', true) ON CONFLICT (name) DO NOTHING`,
   `INSERT INTO roles (code, name, status, scope_description, source_note) VALUES
     ('EXE', 'Head of Schools / Administrator', 'established', 'All institutions', 'GV-01; Founder, Head of Schools & Chairman of the Board of Governors — Zakariya Olanrewaju Anofi'),
@@ -1920,7 +1931,7 @@ async function handle({ request, env }) {
           RETURNING id`;
         const guardianId = guardian.rows[0].id;
 
-        const cls = await sql`INSERT INTO classes (institution, name) VALUES ('Royal College', 'JSS 1') RETURNING id`;
+        const cls = await sql`INSERT INTO classes (institution, name, institution_id) VALUES ('Royal College', 'JSS 1', (SELECT id FROM institutions WHERE name = 'Royal College')) RETURNING id`;
         const classId = cls.rows[0].id;
 
         const student = await sql`
@@ -1944,7 +1955,7 @@ async function handle({ request, env }) {
         // Tracker can be tried end-to-end without hand-calling the admin
         // API. Linked to the same sample guardian so the guardian
         // dashboard also shows a Hifz snapshot alongside the first child.
-        const qCls = await sql`INSERT INTO classes (institution, name) VALUES (${"Qur'an College"}, 'Hifz Year 2') RETURNING id`;
+        const qCls = await sql`INSERT INTO classes (institution, name, institution_id) VALUES (${"Qur'an College"}, 'Hifz Year 2', (SELECT id FROM institutions WHERE name = ${"Qur'an College"})) RETURNING id`;
         const qClassId = qCls.rows[0].id;
         const qStudent = await sql`
           INSERT INTO students (full_name, admission_no, class_id, status, is_sample_data)
@@ -1958,7 +1969,7 @@ async function handle({ request, env }) {
         // Islamic and Arabic Studies, alongside their primary Qur'an
         // College programme — exactly the "belongs to more than one
         // programme at once" case the Student Portal needs to support.
-        const arCls = await sql`INSERT INTO classes (institution, name) VALUES ('Islamic and Arabic Studies', 'Iʿdādiyyah 1') RETURNING id`;
+        const arCls = await sql`INSERT INTO classes (institution, name, institution_id) VALUES ('Islamic and Arabic Studies', 'Iʿdādiyyah 1', (SELECT id FROM institutions WHERE name = 'Islamic and Arabic Studies')) RETURNING id`;
         await sql`INSERT INTO student_classes (student_id, class_id, is_primary) VALUES (${qStudentId}, ${arCls.rows[0].id}, false)`;
 
         const { hash: qHash, salt: qSalt } = hashPassword(env.PORTAL_DEMO_PASSWORD);
