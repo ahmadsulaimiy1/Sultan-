@@ -135,7 +135,12 @@
         </div>
         <div class="portal-field">
           <label>Institution</label>
-          <input type="text" data-enrol-institution required />
+          <!-- The datalist carries the registry dbNames (functions/_lib/
+               institutions.js). classes.institution and the admission-number
+               school code both key off this exact string — an unlisted
+               spelling still saves, but the admission number degrades to the
+               generic GEN code and reports lose the class from their scope. -->
+          <input type="text" data-enrol-institution list="registry-institution-names" required />
         </div>
         <div class="portal-field">
           <label>Class</label>
@@ -354,7 +359,7 @@
           </div>
           <div class="portal-field" data-lifecycle-institution-field hidden>
             <label>New Institution</label>
-            <input type="text" data-lifecycle-institution />
+            <input type="text" data-lifecycle-institution list="registry-institution-names" />
           </div>
           <div class="portal-field" data-lifecycle-class-field hidden>
             <label>New Class</label>
@@ -428,6 +433,17 @@
     <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
   </div>
 </main>
+
+<!-- Shared by the enrolment and lifecycle institution inputs. The four
+     values are the registry dbNames from functions/_lib/institutions.js —
+     the exact strings classes.institution, the institutions table, and
+     the admission-number school-code map all key off. -->
+<datalist id="registry-institution-names">
+  <option value="Islamic and Arabic Studies"></option>
+  <option value="Nursery and Primary"></option>
+  <option value="Royal College"></option>
+  <option value="Qur'an College"></option>
+</datalist>
 
 <script src="/js/portal-office-switcher.js?v=479a8d8c95" defer></script>
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>

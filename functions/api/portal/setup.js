@@ -1823,6 +1823,22 @@ const STATEMENTS = [
   // "a serial is replaced at most once" — mirrors sql/schema.sql.
   `CREATE UNIQUE INDEX IF NOT EXISTS idx_stage_certificates_replaces ON stage_certificates(replaces_serial_no)`,
 
+  // Register normalisation — one spelling per issuing school. The batch
+  // scripts historically wrote umbrella-prefixed spellings into
+  // institution_name while the portal route writes the registry
+  // displayName; the public verifier shows this column verbatim.
+  // Canonical is the registry displayName (functions/_lib/institutions.js).
+  // institution_name is not a content-hash field, so this cannot
+  // invalidate a signature. Mirrors sql/schema.sql's normalisation block.
+  `UPDATE stage_certificates SET institution_name = 'Sultan Hanafi School of Islamic and Arabic Studies'
+    WHERE institution_name = 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies'`,
+  `UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Royal College'
+    WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Royal College'`,
+  `UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Nursery and Primary School'
+    WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Nursery and Primary School'`,
+  `UPDATE stage_certificates SET institution_name = 'Sultan Hanafi Qur’an College'
+    WHERE institution_name = 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College'`,
+
   // These two existed in sql/schema.sql and had drifted out of this file —
   // this file's own header says "Mirrors sql/schema.sql — keep the two in
   // sync" and that promise was broken silently. The practical effect: a

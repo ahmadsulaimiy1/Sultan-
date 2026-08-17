@@ -76,5 +76,57 @@ for (const n of INSTITUTION_SEED_NAMES) {
     seals.includes(`PRIN:${n}`) || seals.includes(`"PRIN:${n}"`) || seals.includes(`'PRIN:${n}'`));
 }
 
+// ── Register normalisation: institution_name converges on displayName ──
+// Three pipelines historically wrote three spellings; the public verifier
+// shows the column verbatim. Both schema copies must carry an idempotent
+// UPDATE per legacy spelling, targeting the registry displayName exactly.
+const schemaSql = readFileSync(new URL('../sql/schema.sql', import.meta.url), 'utf-8');
+const setupJs = readFileSync(new URL('../functions/api/portal/setup.js', import.meta.url), 'utf-8');
+const UMBRELLA_PREFIX = 'Sultan Hanafi Royal Schools — ';
+const NORMALISATIONS = [
+  { legacy: `${UMBRELLA_PREFIX}School of Islamic & Arabic Studies`, target: INSTITUTIONS.islamic_arabic_studies.displayName },
+  ...Object.values(INSTITUTIONS).filter((i) => i.rcFamily)
+    .map((i) => ({ legacy: `${UMBRELLA_PREFIX}${i.displayName}`, target: i.displayName })),
+];
+for (const { legacy, target } of NORMALISATIONS) {
+  const hasBoth = (text) =>
+    text.includes(`SET institution_name = '${target}'`) && text.includes(`= '${legacy}'`);
+  check(`both schema copies normalise '${legacy.slice(UMBRELLA_PREFIX.length)}' to the registry displayName`,
+    hasBoth(schemaSql) && hasBoth(setupJs));
+}
+
+// ── The issuance scripts write what the registry says ──
+// The RC-family batch script must take the school straight from
+// RC_PROGRAMMES (golden-pinned to registry displayNames above) and never
+// rebuild the umbrella-prefixed doubled form. The Islamic-stage script
+// keeps its historical literal VERBATIM — it reproduces sha256-attested
+// register files — and the schema normalisation covers its rows.
+const rcScript = readFileSync(new URL('./issue-royal-college-batch.mjs', import.meta.url), 'utf-8');
+check('RC batch script takes INSTITUTION_NAME from RC_PROGRAMMES[*].school',
+  rcScript.includes('const INSTITUTION_NAME = RC_PROGRAMMES[PROGRAMME].school'));
+check('RC batch script no longer builds the umbrella-prefixed doubled name',
+  !rcScript.includes('Royal Schools — ${'));
+const islamicScript = readFileSync(new URL('./issue-certificate-batch.mjs', import.meta.url), 'utf-8');
+check('Islamic-stage script keeps its attested historical spelling verbatim',
+  islamicScript.includes(`'${UMBRELLA_PREFIX}School of Islamic & Arabic Studies'`));
+
+// ── Client institution pickers offer only registry dbNames ──
+// The server resolves these with SELECT id FROM institutions WHERE
+// name = $1 — a near-miss spelling matches nothing and silently degrades
+// (a role grant loses its scope; an admission number falls back to GEN).
+const adminCentre = readFileSync(new URL('../js/portal-admin-centre.js', import.meta.url), 'utf-8');
+check("admin centre datalist no longer offers 'Nursery and Primary School'",
+  !adminCentre.includes("'Nursery and Primary School'"));
+check('admin centre datalist offers every registry dbName',
+  INSTITUTION_SEED_NAMES.every((n) => adminCentre.includes(n)));
+const registrarHtml = readFileSync(new URL('../portal/staff/registrar/index.html', import.meta.url), 'utf-8');
+check('registrar page carries the shared registry-institution-names datalist',
+  registrarHtml.includes('id="registry-institution-names"')
+  && INSTITUTION_SEED_NAMES.every((n) => registrarHtml.includes(`<option value="${n}">`))
+  && !registrarHtml.includes('value="Nursery and Primary School"'));
+check('registrar enrol + lifecycle inputs use the datalist',
+  registrarHtml.includes('data-enrol-institution list="registry-institution-names"')
+  && registrarHtml.includes('data-lifecycle-institution list="registry-institution-names"'));
+
 console.log(`\n${failures ? `${failures} FAILED` : 'the registry preserves every replaced literal'}`);
 process.exit(failures ? 1 : 0);

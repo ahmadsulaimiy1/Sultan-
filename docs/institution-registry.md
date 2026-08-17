@@ -86,20 +86,35 @@ a golden value is a real institutional decision (it changes what certificates
 print or how numbers are minted), and the change must update the golden test
 in the same commit, deliberately, with the reason in the commit message.
 
-## Known, deliberate gaps — the three open decisions
+## The open decisions
 
 These are documented here so no future session mistakes them for oversights.
 Each is a **real decision**, not a code cleanup; none should be "fixed"
 casually.
 
-### 1. The batch scripts' three inconsistent `institution_name` strings
+### 1. ~~The batch scripts' three inconsistent `institution_name` strings~~ — RESOLVED
 
-The historical certificate-import scripts wrote three different
-`institution_name` spellings into live graduation-register rows. The registry
-cannot unify them retroactively without a data decision: which spelling do
-the live rows converge on, and does anything (exported registers, printed
-documents) depend on the old strings? Resolving this is a data migration on
-production rows, taken with the Registrar, not a code edit.
+**Decision taken (2026-08-17): `stage_certificates.institution_name`
+converges on the registry `displayName`.** Rationale: it is the name the
+certificate artwork itself prints, it is what the portal issuance route
+already writes, the public verifier returns the column verbatim (so the
+three spellings were publicly visible), and `institution_name` is not
+among the content-hash fields, so the correction cannot invalidate any
+signature. Mechanics:
+
+- `sql/schema.sql` (mirrored in `setup.js`) carries idempotent
+  normalisation UPDATEs mapping each legacy spelling — the Islamic batch's
+  `…Royal Schools — School of Islamic & Arabic Studies` and the RC batch's
+  umbrella-prefixed doubled forms — to the registry `displayName`.
+- The CI import step re-applies the schema immediately after any register
+  import, so freshly imported rows are canonical in the same run.
+- `issue-royal-college-batch.mjs` now writes `RC_PROGRAMMES[*].school`
+  (golden-pinned to the registry) for future batches.
+- `issue-certificate-batch.mjs` deliberately keeps its historical literal:
+  it reproduces the sha256-attested 2026-08-08 register files
+  byte-for-byte. The attested files under `docs/graduation-registers/` are
+  never rewritten — normalisation applies to live rows only.
+- All of it is pinned by `scripts/test-institution-registry.mjs`.
 
 ### 2. `classes.institution` is a free-text string join
 
