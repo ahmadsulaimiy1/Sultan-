@@ -1,0 +1,30 @@
+{
+  "observedAt": "2026-08-18",
+  "source": "Neon project shrs-production (orange-dawn-28507285), read directly from the live database",
+  "certificateSequence": 50,
+  "studentIdentitySequence": 49,
+  "certificatesOnFile": 16,
+  "why": [
+    "The published registers are not the only thing that spends a certificate number.",
+    "The Registrar's Office issues certificates through the live system, and on",
+    "16 August 2026 it issued three: 000048 (IBT), 000049 (IDD) and 000050 (THN),",
+    "each linked to a student record and none revoked. Those numbers are engraved",
+    "facts now.",
+    "",
+    "The graduation batch had been planned from the published registers alone, which",
+    "end at 000047, so it allocated 000048-000080 and would have claimed all three.",
+    "The import would not have corrupted anything - every insert carries ON CONFLICT",
+    "DO NOTHING and the end-of-file assertion compares hash, name and Student ID, so",
+    "it would have aborted the transaction - but it would have failed at the last",
+    "possible moment, in production, for a reason nobody had written down.",
+    "",
+    "So the floor is recorded here as institutional data, with the date and the",
+    "source, and the plan takes the greater of this and the registers. A number the",
+    "live system has spent can never be re-allocated by a plan computed offline."
+  ],
+  "readBefore": [
+    "Re-read this from production before any future batch. It is a snapshot, not a",
+    "constant: it was true on the date above and the live system moves without",
+    "asking this repository."
+  ]
+}

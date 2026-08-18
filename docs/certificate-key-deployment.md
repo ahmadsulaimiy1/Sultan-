@@ -142,15 +142,15 @@ prevent.
 
 ## 5a. What was done on 2026-08-15 — the rotation to version 3
 
-The graduation recovery minted thirty-three certificates, numbers 000048–000080,
+The graduation recovery minted thirty-three certificates, numbers 000051–000083,
 for the rest of the Class of 2026. They were signed under a **new key, version
 3**, generated the same way as v2: 64 bytes from the OS CSPRNG, never written
 into this repository.
 
 | | |
 |---|---|
-| Fingerprint (SHA-256, first 16 hex) | `0bc874387474a85f` |
-| Signed | 33 certificates, 000048–000080, all `hash_key_version = 3` |
+| Fingerprint (SHA-256, first 16 hex) | `b42595ffc1305a2a` |
+| Signed | 33 certificates, 000051–000083, all `hash_key_version = 3` |
 | Retired at the same time | version 2, added to `RETIRED_KEYS` in `functions/_lib/document-hash.js` |
 
 ### The four variables after this rotation

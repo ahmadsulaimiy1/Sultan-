@@ -152,9 +152,32 @@ notes.push(`${printedTotal} awards across ${people.size} distinct graduands`);
   for (const r of PLAN.toMint) claim(r.certificateSeq, `mint ${r.code} ${r.name}`);
   const lo = Math.min(...claims.keys());
   const hi = Math.max(...claims.keys());
+  // CONTIGUOUS, BUT THIS REPOSITORY IS NOT THE ONLY ISSUER.
+  //
+  // The rule is that a global sequence has no holes: a number nobody can
+  // account for is a number that might be on a sheet somewhere. But the
+  // Registrar's Office issues through the LIVE system too, and those numbers
+  // appear in no published register here. On 16 August 2026 it issued
+  // 000048, 000049 and 000050 while this batch was planned and unminted.
+  //
+  // So a number at or below the recorded live floor is ACCOUNTED FOR — spent
+  // by the live system — rather than skipped. Above the floor, every number
+  // must still be claimed by this plan, and that is where a real hole would
+  // show. The floor is dated data with its source, not a constant; re-read it
+  // from production before any future batch.
+  const LIVE_FLOOR = JSON.parse(
+    readFileSync('docs/graduation-registers/live-sequence-floor.json', 'utf8'));
+  const spentLive = [];
   for (let n = lo; n <= hi; n += 1) {
-    if (!claims.has(n)) flag(`the certificate sequence skips ${String(n).padStart(6, '0')} — `
+    if (claims.has(n)) continue;
+    if (n <= LIVE_FLOOR.certificateSequence) { spentLive.push(n); continue; }
+    flag(`the certificate sequence skips ${String(n).padStart(6, '0')} — `
       + 'the sequence is global and must be contiguous');
+  }
+  if (spentLive.length) {
+    notes.push(`${spentLive.length} number(s) in range spent by the live system, not by this `
+      + `plan: ${spentLive.map((n) => String(n).padStart(6, '0')).join(', ')} `
+      + `(issued through the Registrar's Office, floor recorded ${LIVE_FLOOR.observedAt})`);
   }
   if (hi !== PLAN.allocatedThrough) {
     flag(`the plan says it allocated through ${PLAN.allocatedThrough} but the highest `

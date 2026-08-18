@@ -14,17 +14,19 @@
 --
 -- WHAT IT REMOVES, AND THE BOUND THAT MATTERS.
 --
--- Exactly the thirty-three certificates this deployment created: ids 48–80,
--- engraved numbers 000048–000080. The bound is closed at BOTH ends and that
--- is not fussiness. `id > 47` would be correct today and wrong the first time
--- the Registrar issues 000081, silently deleting a certificate this
--- deployment never created. Ids 1–47 are the thirteen certificates already in
--- children's hands; nothing here may touch them under any circumstance,
+-- Exactly the thirty-three certificates this deployment created: ids 51-83,
+-- engraved numbers 000051-000083. The bound is closed at BOTH ends and that
+-- is not fussiness. `id > 50` would be correct today and wrong the first time
+-- the Registrar issues 000084, silently deleting a certificate this
+-- deployment never created - and the Registrar HAS issued outside this plan:
+-- 000048, 000049 and 000050 were issued through the live system on 16 August
+-- 2026 and sit inside the range an open-ended bound would sweep. Ids 1-50 are
+-- certificates this deployment did not create; nothing here may touch them under any circumstance,
 -- including this deployment's own failure.
 
 DELETE FROM student_identity_names;
 
-DELETE FROM stage_certificates WHERE id BETWEEN 48 AND 80;
+DELETE FROM stage_certificates WHERE id BETWEEN 51 AND 83;
 
 -- The serial counter follows the table down, never below what remains, so a
 -- re-run of the deployment allocates the same numbers again rather than

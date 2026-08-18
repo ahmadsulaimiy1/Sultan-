@@ -108,7 +108,7 @@ jobs:
             echo
             echo '| Secret | Holds |'
             echo '|---|---|'
-            echo '| `DOCUMENT_HASH_SECRET_V3` | the new version 3 key (generated 15 Aug 2026, fingerprint `0bc874387474a85f`) |'
+            echo '| `DOCUMENT_HASH_SECRET_V3` | the new version 3 key (generated 15 Aug 2026, fingerprint `b42595ffc1305a2a`) |'
             echo '| `DOCUMENT_HASH_SECRET` | the version 2 key, unchanged — it becomes `DOCUMENT_HASH_SECRET_V2` on Cloudflare |'
             echo '| `CLOUDFLARE_API_TOKEN` | permission to write Pages variables |'
           } >> "$GITHUB_STEP_SUMMARY"
@@ -255,7 +255,7 @@ jobs:
       # Needs no secret, because it asks a public endpoint the questions a
       # holder asks. It therefore always runs, and its answer is the truth
       # about production regardless of what the steps above did or skipped.
-      - name: Acceptance — ask the live public endpoint about all 46
+      - name: Acceptance — ask the live public endpoint about every certificate
         id: accept
         continue-on-error: true
         run: |
@@ -276,10 +276,11 @@ jobs:
 
       # ── 5 · Rollback, on any acceptance failure ─────────────────────────
       # The tested procedure, run automatically rather than remembered: remove
-      # exactly what this deployment added and nothing else. Rows 1–47 are
-      # never touched — they are the thirteen certificates already in
-      # circulation, and this deployment has no business editing them under
-      # any circumstance, including its own failure.
+      # exactly what this deployment added and nothing else. Rows 1–50 are
+      # never touched — the thirteen already in circulation plus the three the
+      # Registrar issued live on 16 August. This deployment did not create them
+      # and has no business editing them under any circumstance, including its
+      # own failure.
       - name: Roll back — remove only what this deployment added
         if: steps.accept.outcome != 'success' && inputs.apply_imports && steps.caps.outputs.db == 'yes'
         env:
@@ -317,6 +318,6 @@ jobs:
           {
             echo "### Deployment complete"
             echo
-            echo "All 46 certificates answer the live public endpoint correctly:"
-            echo "7 at key version 1, 6 at version 2, 33 at version 3."
+            echo "All 49 certificates answer the live public endpoint correctly:"
+            echo "7 at key version 1, 9 at version 2, 33 at version 3."
           } >> "$GITHUB_STEP_SUMMARY"

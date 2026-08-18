@@ -31,12 +31,12 @@ UPDATE stage_certificates SET credential_id = '9d1e403d-cdc0-50aa-ac5b-a4c8c707e
   WHERE serial_no = 'SHRS-CERT-IBT-2026-000040-60DAF';  -- Imran Adegoke
 UPDATE stage_certificates SET credential_id = '835e27e5-c7a8-5781-880f-edae9fe76201'::uuid
   WHERE serial_no = 'SHRS-CERT-IBT-2026-000041-6F66F';  -- Abdulateef Adedokun
-UPDATE stage_certificates SET credential_id = '0f51015e-cdea-5beb-8ed4-577f80cac38d'::uuid
-  WHERE serial_no = 'SHRS-CERT-IBT-2026-000052-21455';  -- Ameerah Abdulhafeez
-UPDATE stage_certificates SET credential_id = 'b107d3f6-7a90-5226-b8f7-1864fe14095b'::uuid
-  WHERE serial_no = 'SHRS-CERT-IBT-2026-000053-DAEF7';  -- Faridah Ayomide Aliu
-UPDATE stage_certificates SET credential_id = '73a1df58-f84d-56c4-960b-b1305f23625f'::uuid
-  WHERE serial_no = 'SHRS-CERT-IBT-2026-000054-72EF6';  -- Muhammad Ismail Seriki
+UPDATE stage_certificates SET credential_id = '40e6c648-7b63-5c43-8b61-2bb91083c01e'::uuid
+  WHERE serial_no = 'SHRS-CERT-IBT-2026-000055-1F758';  -- Ameerah Abdulhafeez
+UPDATE stage_certificates SET credential_id = '559ab3d1-21ab-5695-b02f-b89242f874c3'::uuid
+  WHERE serial_no = 'SHRS-CERT-IBT-2026-000056-C1244';  -- Faridah Ayomide Aliu
+UPDATE stage_certificates SET credential_id = '37a0d8a5-cff6-55e0-a324-f526f169affb'::uuid
+  WHERE serial_no = 'SHRS-CERT-IBT-2026-000057-91D78';  -- Muhammad Ismail Seriki
 UPDATE stage_certificates SET credential_id = '4faf90d7-6a22-5f00-8b04-63db084d9845'::uuid
   WHERE serial_no = 'SHRS-CERT-IDD-2026-000042-56798';  -- Muhammad Ismail Seriki
 UPDATE stage_certificates SET credential_id = '0fb29e10-ecf4-5b26-b18d-ba857ccde322'::uuid
@@ -49,66 +49,66 @@ UPDATE stage_certificates SET credential_id = '715854e9-9744-5d26-b843-5c797d99f
   WHERE serial_no = 'SHRS-CERT-IDD-2026-000046-7E37A';  -- Abdulbasit Amobi Jabarr
 UPDATE stage_certificates SET credential_id = 'afa918e7-4300-586f-b52e-53525f32b08d'::uuid
   WHERE serial_no = 'SHRS-CERT-IDD-2026-000047-CB9F5';  -- Abdullah Oladimeji Anofi
-UPDATE stage_certificates SET credential_id = '148d6a3f-cff4-5870-a6e9-39b5e6a68bd4'::uuid
-  WHERE serial_no = 'SHRS-CERT-IDD-2026-000055-0CF24';  -- Yaseer Balogun
-UPDATE stage_certificates SET credential_id = '5fbecf7f-3485-59ec-8a1b-b2fcaaa6b125'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000062-1EA9D';  -- Abdulrahman Abdullah
-UPDATE stage_certificates SET credential_id = '7d9ef26b-e0b1-5b04-a30f-28989894f4b4'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000063-3D4DB';  -- Aisha Omoshalewa Anofi
-UPDATE stage_certificates SET credential_id = '69467331-9144-56ab-a280-56cb6d4597c2'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000064-F0A24';  -- Allison Ganiyah
-UPDATE stage_certificates SET credential_id = '9655a84f-a296-5fea-93b8-fe19dc2346d5'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000065-F6DBC';  -- Ameerah Abdulhafeez
-UPDATE stage_certificates SET credential_id = 'aca9596e-c24d-53f8-ba0c-9abe22f580cd'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000066-A58EF';  -- Ameerah Durodola
-UPDATE stage_certificates SET credential_id = '03863597-85d1-5455-b40a-de6849dbdb11'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000067-2286C';  -- Anisa Opeyemi Jokomba
-UPDATE stage_certificates SET credential_id = '88a3b9aa-bf56-51c2-8a16-c9a18a060cd5'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000068-9135F';  -- Baqi Olamiposi Anofi
-UPDATE stage_certificates SET credential_id = '45bfd040-9990-5242-b1a0-5a3a2842c07b'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000069-05B08';  -- Faridah Ayomide Aliu
-UPDATE stage_certificates SET credential_id = 'fc7e0273-4c9e-5bd8-964d-082d24cfbb02'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000070-6F953';  -- Fatimah Desire Ibrahim
-UPDATE stage_certificates SET credential_id = '7b052883-38d0-580e-a7bd-4ff7b174cc0d'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000071-04B3B';  -- Fawaz Owolabi
-UPDATE stage_certificates SET credential_id = 'cebf43bd-2b8c-5551-be6f-d903d6e6a3fe'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000072-51814';  -- Hameedah Adebimpe Ojewumi
-UPDATE stage_certificates SET credential_id = '3d4d24ce-15fe-57b0-b66e-5c91b1707aae'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000073-4A78F';  -- Jubril Lawal
-UPDATE stage_certificates SET credential_id = '3065b33a-203a-51f3-bc83-9312936facbc'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000074-CE1DD';  -- Muhammad Ismail Seriki
-UPDATE stage_certificates SET credential_id = '0908840f-9781-5df6-ba64-b13b2f7860c0'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000075-DD467';  -- Radiah Apatira
-UPDATE stage_certificates SET credential_id = '2c18330d-3ee4-5b8d-8246-94947005848d'::uuid
-  WHERE serial_no = 'SHRS-CERT-JSS-2026-000076-6D23B';  -- Sa'ad Sanusi
-UPDATE stage_certificates SET credential_id = 'cc453f5d-9b76-5a80-9679-5e6398f9d589'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000056-52FC6';  -- Aisha Lawal
-UPDATE stage_certificates SET credential_id = '1a8b1eac-65ec-5d35-9f7e-d9689ad9a9eb'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000057-341A7';  -- Al-ameen Okoh
-UPDATE stage_certificates SET credential_id = 'e9731034-d6d5-5740-afe6-69701b21cb10'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000058-FE5E3';  -- Ashraf Korede Ojewumi
-UPDATE stage_certificates SET credential_id = '8a59683c-36dd-580f-9967-dea018676319'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000059-D277B';  -- Daud Aliu
-UPDATE stage_certificates SET credential_id = '4c1c6c18-79f9-5f0f-9b6a-d454d83e7469'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000060-B52D7';  -- Imran Iremide Adegoke
-UPDATE stage_certificates SET credential_id = '0c8f4bb9-7ec9-5abe-9f98-bff60159b9f6'::uuid
-  WHERE serial_no = 'SHRS-CERT-PRY-2026-000061-00887';  -- Naheemah Ismail
-UPDATE stage_certificates SET credential_id = 'f87e5a9a-8d5a-5ed2-8db4-f1d870022aa0'::uuid
-  WHERE serial_no = 'SHRS-CERT-QUR-2026-000048-64881';  -- Aisha Omoshalewa Anofi
-UPDATE stage_certificates SET credential_id = '01c27ca7-532d-510d-9599-b3eed949ca9f'::uuid
-  WHERE serial_no = 'SHRS-CERT-QUR-2026-000049-1E924';  -- Baqi Olamiposi Anofi
-UPDATE stage_certificates SET credential_id = '64047284-0043-5313-9eea-c952f9bd06dd'::uuid
-  WHERE serial_no = 'SHRS-CERT-QUR-2026-000050-1FBB5';  -- Zaynab Zakariya Anofi
-UPDATE stage_certificates SET credential_id = '6dff2c42-b05a-5acc-b638-4725235d551b'::uuid
-  WHERE serial_no = 'SHRS-CERT-SS-2026-000077-BC006';  -- Abdulbasit Amobi Jabarr
-UPDATE stage_certificates SET credential_id = '4463c322-cde8-548c-a7b5-24427deb9840'::uuid
-  WHERE serial_no = 'SHRS-CERT-SS-2026-000078-76263';  -- Aisha Shode
-UPDATE stage_certificates SET credential_id = '3433a325-3dc3-557e-8f62-1d7a87dd8b4c'::uuid
-  WHERE serial_no = 'SHRS-CERT-SS-2026-000079-3F6AD';  -- Mazeed Hassan-Murtala
-UPDATE stage_certificates SET credential_id = '0efda1a2-4b7b-589d-8b4d-50f0fe96d543'::uuid
-  WHERE serial_no = 'SHRS-CERT-SS-2026-000080-9260B';  -- Thoirah Makinde
-UPDATE stage_certificates SET credential_id = '171671e3-56dc-5d93-9b27-afda0a903f00'::uuid
-  WHERE serial_no = 'SHRS-CERT-TMH-2026-000051-B6558';  -- Abdulbasit Adedokun
+UPDATE stage_certificates SET credential_id = 'f9241001-f497-53c9-9281-3c780ef2e5ae'::uuid
+  WHERE serial_no = 'SHRS-CERT-IDD-2026-000058-C6381';  -- Yaseer Balogun
+UPDATE stage_certificates SET credential_id = '95986098-483f-50a2-aee1-63129a88e93c'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000065-48606';  -- Abdulrahman Abdullah
+UPDATE stage_certificates SET credential_id = '32cfea0b-5837-50bc-8de0-cbb6ff20db43'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000066-C52E5';  -- Aisha Omoshalewa Anofi
+UPDATE stage_certificates SET credential_id = '60a0bf86-df08-58e1-832a-422a8be3f229'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000067-9C9B2';  -- Allison Ganiyah
+UPDATE stage_certificates SET credential_id = '29c5cd9e-6b1d-52a2-bf4c-2d4e5b22af69'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000068-65F5F';  -- Ameerah Abdulhafeez
+UPDATE stage_certificates SET credential_id = '1a2496f6-e8ef-5b15-8380-b617f3845fd9'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000069-77D29';  -- Ameerah Durodola
+UPDATE stage_certificates SET credential_id = '6ec1c72c-7c2a-569e-a69b-f0de4dd7339d'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000070-2D5A6';  -- Anisa Opeyemi Jokomba
+UPDATE stage_certificates SET credential_id = '0f74cf88-15fe-51c1-aa69-ccd097fd55d2'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000071-14CDF';  -- Baqi Olamiposi Anofi
+UPDATE stage_certificates SET credential_id = '2b2a298a-6239-5ecf-9ee0-375abc74760a'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000072-8EF9D';  -- Faridah Ayomide Aliu
+UPDATE stage_certificates SET credential_id = '9f744b41-ce25-5a46-873c-8421b7a44a99'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000073-2C155';  -- Fatimah Desire Ibrahim
+UPDATE stage_certificates SET credential_id = '084be30f-45e6-5eb5-a31f-496d353c650b'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000074-23BC0';  -- Fawaz Owolabi
+UPDATE stage_certificates SET credential_id = '69470a21-05d9-59a0-b2d0-cd018e593d47'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000075-0F568';  -- Hameedah Adebimpe Ojewumi
+UPDATE stage_certificates SET credential_id = 'c2d5a744-da8a-576b-a06e-16d88282fd0d'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000076-B151F';  -- Jubril Lawal
+UPDATE stage_certificates SET credential_id = '02c15237-9429-580c-9e9c-6cd78187be4c'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000077-FBCD3';  -- Muhammad Ismail Seriki
+UPDATE stage_certificates SET credential_id = '589ad2a1-deb4-5a4f-a82f-06fbc4949b55'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000078-2EE5D';  -- Radiah Apatira
+UPDATE stage_certificates SET credential_id = '5a710d09-56f1-52fb-8f8f-ea877aa7fc37'::uuid
+  WHERE serial_no = 'SHRS-CERT-JSS-2026-000079-163F2';  -- Sa'ad Sanusi
+UPDATE stage_certificates SET credential_id = '9445d630-6454-58dc-a71a-60b8a8701dd3'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000059-C7997';  -- Aisha Lawal
+UPDATE stage_certificates SET credential_id = '99c1c327-8452-596b-88d2-15e806727c82'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000060-F3021';  -- Al-ameen Okoh
+UPDATE stage_certificates SET credential_id = 'f252e986-0b78-5d14-9f0d-2a15893a49a2'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000061-33E36';  -- Ashraf Korede Ojewumi
+UPDATE stage_certificates SET credential_id = '79c7eda4-467c-5875-9870-166388875e5a'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000062-91BD3';  -- Daud Aliu
+UPDATE stage_certificates SET credential_id = '0bd1e0b8-f9c1-552c-ad54-d0aaf28d226f'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000063-E9A53';  -- Imran Iremide Adegoke
+UPDATE stage_certificates SET credential_id = '57dad779-855d-5a47-9b28-f72c0047b74d'::uuid
+  WHERE serial_no = 'SHRS-CERT-PRY-2026-000064-B2C46';  -- Naheemah Ismail
+UPDATE stage_certificates SET credential_id = '813e02e7-d90b-5bcc-bf81-642e71088309'::uuid
+  WHERE serial_no = 'SHRS-CERT-QUR-2026-000051-890BF';  -- Aisha Omoshalewa Anofi
+UPDATE stage_certificates SET credential_id = '4d3a35db-442d-5d42-bb10-cd77b23429ab'::uuid
+  WHERE serial_no = 'SHRS-CERT-QUR-2026-000052-0BFD3';  -- Baqi Olamiposi Anofi
+UPDATE stage_certificates SET credential_id = 'c86a85f8-2723-5ff5-aae5-fbe141653b38'::uuid
+  WHERE serial_no = 'SHRS-CERT-QUR-2026-000053-7556C';  -- Zaynab Zakariya Anofi
+UPDATE stage_certificates SET credential_id = '3b1184c1-36b7-57e7-b0f7-c88f55077d76'::uuid
+  WHERE serial_no = 'SHRS-CERT-SS-2026-000080-29DD5';  -- Abdulbasit Amobi Jabarr
+UPDATE stage_certificates SET credential_id = '6bc8e0aa-ddf6-5f66-91c4-410537c85867'::uuid
+  WHERE serial_no = 'SHRS-CERT-SS-2026-000081-A3178';  -- Aisha Shode
+UPDATE stage_certificates SET credential_id = '3e3610a8-bb73-5904-87e6-a613cd919b41'::uuid
+  WHERE serial_no = 'SHRS-CERT-SS-2026-000082-5CC78';  -- Mazeed Hassan-Murtala
+UPDATE stage_certificates SET credential_id = '2343c9f0-744d-5c0d-ac58-c6e1d0a6cebf'::uuid
+  WHERE serial_no = 'SHRS-CERT-SS-2026-000083-AA6F4';  -- Thoirah Makinde
+UPDATE stage_certificates SET credential_id = '795124d7-7eb2-5745-8776-053fd4b23008'::uuid
+  WHERE serial_no = 'SHRS-CERT-TMH-2026-000054-7CC6F';  -- Abdulbasit Adedokun
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- THE ASSERTION. Two ways this could go wrong quietly, both checked:
@@ -134,45 +134,45 @@ BEGIN
     '83a7321f-47ba-5abb-a22f-36afaeae1305'::uuid,
     '9d1e403d-cdc0-50aa-ac5b-a4c8c707e316'::uuid,
     '835e27e5-c7a8-5781-880f-edae9fe76201'::uuid,
-    '0f51015e-cdea-5beb-8ed4-577f80cac38d'::uuid,
-    'b107d3f6-7a90-5226-b8f7-1864fe14095b'::uuid,
-    '73a1df58-f84d-56c4-960b-b1305f23625f'::uuid,
+    '40e6c648-7b63-5c43-8b61-2bb91083c01e'::uuid,
+    '559ab3d1-21ab-5695-b02f-b89242f874c3'::uuid,
+    '37a0d8a5-cff6-55e0-a324-f526f169affb'::uuid,
     '4faf90d7-6a22-5f00-8b04-63db084d9845'::uuid,
     '0fb29e10-ecf4-5b26-b18d-ba857ccde322'::uuid,
     'a74ad80e-7fe9-5d15-a31a-cdb388e8b9cb'::uuid,
     'bcd05722-edb0-5aba-987f-520f3c528e17'::uuid,
     '715854e9-9744-5d26-b843-5c797d99fec0'::uuid,
     'afa918e7-4300-586f-b52e-53525f32b08d'::uuid,
-    '148d6a3f-cff4-5870-a6e9-39b5e6a68bd4'::uuid,
-    '5fbecf7f-3485-59ec-8a1b-b2fcaaa6b125'::uuid,
-    '7d9ef26b-e0b1-5b04-a30f-28989894f4b4'::uuid,
-    '69467331-9144-56ab-a280-56cb6d4597c2'::uuid,
-    '9655a84f-a296-5fea-93b8-fe19dc2346d5'::uuid,
-    'aca9596e-c24d-53f8-ba0c-9abe22f580cd'::uuid,
-    '03863597-85d1-5455-b40a-de6849dbdb11'::uuid,
-    '88a3b9aa-bf56-51c2-8a16-c9a18a060cd5'::uuid,
-    '45bfd040-9990-5242-b1a0-5a3a2842c07b'::uuid,
-    'fc7e0273-4c9e-5bd8-964d-082d24cfbb02'::uuid,
-    '7b052883-38d0-580e-a7bd-4ff7b174cc0d'::uuid,
-    'cebf43bd-2b8c-5551-be6f-d903d6e6a3fe'::uuid,
-    '3d4d24ce-15fe-57b0-b66e-5c91b1707aae'::uuid,
-    '3065b33a-203a-51f3-bc83-9312936facbc'::uuid,
-    '0908840f-9781-5df6-ba64-b13b2f7860c0'::uuid,
-    '2c18330d-3ee4-5b8d-8246-94947005848d'::uuid,
-    'cc453f5d-9b76-5a80-9679-5e6398f9d589'::uuid,
-    '1a8b1eac-65ec-5d35-9f7e-d9689ad9a9eb'::uuid,
-    'e9731034-d6d5-5740-afe6-69701b21cb10'::uuid,
-    '8a59683c-36dd-580f-9967-dea018676319'::uuid,
-    '4c1c6c18-79f9-5f0f-9b6a-d454d83e7469'::uuid,
-    '0c8f4bb9-7ec9-5abe-9f98-bff60159b9f6'::uuid,
-    'f87e5a9a-8d5a-5ed2-8db4-f1d870022aa0'::uuid,
-    '01c27ca7-532d-510d-9599-b3eed949ca9f'::uuid,
-    '64047284-0043-5313-9eea-c952f9bd06dd'::uuid,
-    '6dff2c42-b05a-5acc-b638-4725235d551b'::uuid,
-    '4463c322-cde8-548c-a7b5-24427deb9840'::uuid,
-    '3433a325-3dc3-557e-8f62-1d7a87dd8b4c'::uuid,
-    '0efda1a2-4b7b-589d-8b4d-50f0fe96d543'::uuid,
-    '171671e3-56dc-5d93-9b27-afda0a903f00'::uuid
+    'f9241001-f497-53c9-9281-3c780ef2e5ae'::uuid,
+    '95986098-483f-50a2-aee1-63129a88e93c'::uuid,
+    '32cfea0b-5837-50bc-8de0-cbb6ff20db43'::uuid,
+    '60a0bf86-df08-58e1-832a-422a8be3f229'::uuid,
+    '29c5cd9e-6b1d-52a2-bf4c-2d4e5b22af69'::uuid,
+    '1a2496f6-e8ef-5b15-8380-b617f3845fd9'::uuid,
+    '6ec1c72c-7c2a-569e-a69b-f0de4dd7339d'::uuid,
+    '0f74cf88-15fe-51c1-aa69-ccd097fd55d2'::uuid,
+    '2b2a298a-6239-5ecf-9ee0-375abc74760a'::uuid,
+    '9f744b41-ce25-5a46-873c-8421b7a44a99'::uuid,
+    '084be30f-45e6-5eb5-a31f-496d353c650b'::uuid,
+    '69470a21-05d9-59a0-b2d0-cd018e593d47'::uuid,
+    'c2d5a744-da8a-576b-a06e-16d88282fd0d'::uuid,
+    '02c15237-9429-580c-9e9c-6cd78187be4c'::uuid,
+    '589ad2a1-deb4-5a4f-a82f-06fbc4949b55'::uuid,
+    '5a710d09-56f1-52fb-8f8f-ea877aa7fc37'::uuid,
+    '9445d630-6454-58dc-a71a-60b8a8701dd3'::uuid,
+    '99c1c327-8452-596b-88d2-15e806727c82'::uuid,
+    'f252e986-0b78-5d14-9f0d-2a15893a49a2'::uuid,
+    '79c7eda4-467c-5875-9870-166388875e5a'::uuid,
+    '0bd1e0b8-f9c1-552c-ad54-d0aaf28d226f'::uuid,
+    '57dad779-855d-5a47-9b28-f72c0047b74d'::uuid,
+    '813e02e7-d90b-5bcc-bf81-642e71088309'::uuid,
+    '4d3a35db-442d-5d42-bb10-cd77b23429ab'::uuid,
+    'c86a85f8-2723-5ff5-aae5-fbe141653b38'::uuid,
+    '3b1184c1-36b7-57e7-b0f7-c88f55077d76'::uuid,
+    '6bc8e0aa-ddf6-5f66-91c4-410537c85867'::uuid,
+    '3e3610a8-bb73-5904-87e6-a613cd919b41'::uuid,
+    '2343c9f0-744d-5c0d-ac58-c6e1d0a6cebf'::uuid,
+    '795124d7-7eb2-5745-8776-053fd4b23008'::uuid
   );
   IF n > 0 THEN
     RAISE EXCEPTION E'ABORTED — % certificate(s) still carry a database-generated ICID rather than their derived one:\n    %', n, stray;

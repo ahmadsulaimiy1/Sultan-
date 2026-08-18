@@ -133,8 +133,28 @@ for (const code of ORDER) {
   }
 }
 
-// The sequence is global and 000035–000047 are spent, revoked or not.
-const SPENT_TO = 47;
+// THE FLOOR IS NOT ONLY WHAT THIS REPOSITORY HAS PUBLISHED.
+//
+// The sequence is global and 000035-000047 are spent by the published registers,
+// revoked or not. But the Registrar's Office also issues certificates through
+// the LIVE system, and it does not consult this repository when it does. On
+// 16 August 2026 it issued three - 000048, 000049, 000050 - while this batch sat
+// planned and unminted against a floor of 47.
+//
+// Reading the floor from the registers alone would have allocated those three
+// numbers to graduation certificates as well. Nothing would have been corrupted
+// (the import's own assertion compares hash, name and Student ID and would have
+// aborted the transaction) but it would have failed in production, at the last
+// step, for a reason written down nowhere.
+//
+// So the floor is the GREATER of what this repository published and what the
+// live database has actually spent, the latter recorded as dated institutional
+// data with its source. Read it again before any future batch: it is a snapshot
+// of a system that moves without asking.
+const LIVE_FLOOR = JSON.parse(
+  readFileSync('docs/graduation-registers/live-sequence-floor.json', 'utf8'));
+const REGISTER_SPENT_TO = 47;
+const SPENT_TO = Math.max(REGISTER_SPENT_TO, LIVE_FLOOR.certificateSequence);
 let seq = SPENT_TO;
 for (const r of toMint) { seq += 1; r.certificateSeq = seq; }
 
@@ -178,7 +198,12 @@ const identityTaken = new Map();          // identityNo → who already holds it
     }
   }
 }
-const identitySpentTo = Math.max(...Object.values(minted).flat().map((e) => e.identitySeq));
+// Same discipline for the permanent Student ID. A Student ID is issued once and
+// carried for life, so re-allocating one the live system has already given to a
+// child is the least recoverable mistake in this whole pipeline.
+const identitySpentTo = Math.max(
+  ...Object.values(minted).flat().map((e) => e.identitySeq),
+  LIVE_FLOOR.studentIdentitySequence);
 let idSeq = identitySpentTo;
 const perChild = new Map();
 for (const r of toMint) {

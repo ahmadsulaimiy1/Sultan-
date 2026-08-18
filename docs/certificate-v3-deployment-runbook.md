@@ -12,9 +12,9 @@ document.
 
 | | |
 |---|---|
-| Version 3 signing key | **generated** — fingerprint `0bc874387474a85f`, delivered as a file, in no commit |
+| Version 3 signing key | **generated** — fingerprint `b42595ffc1305a2a`, delivered as a file, in no commit |
 | Version 2 | **retired for signing** (`RETIRED_KEYS` in `functions/_lib/document-hash.js`); still verifies 000042–000047 forever |
-| The 33 certificates | **minted**, numbers 000048–000080, contiguous, all at key version 3 |
+| The 33 certificates | **minted**, numbers 000051–000083, contiguous, all at key version 3 |
 | Sealed registers | **published** — seven files in `docs/graduation-registers/` |
 | Production imports | **built** and byte-identical on regeneration |
 | Readiness gate | **12/12 PASS** against the real minted output |
@@ -60,7 +60,7 @@ six I'dādiyyah certificates 000042–000047.
 
 ```bash
 printf %s "$(cat DOCUMENT_HASH_SECRET_V3.key)" | sha256sum | cut -c1-16
-# expect: 0bc874387474a85f
+# expect: b42595ffc1305a2a
 ```
 
 **4. Delete the delivered file** from wherever it was downloaded and from
@@ -151,7 +151,7 @@ and that property is gone for every certificate the school has ever issued and
 every one it ever will — which is not a hypothetical, because it is precisely
 what version 1 was, and why it may never sign again.
 
-The repository holds the fingerprint (`0bc874387474a85f`), which proves a
+The repository holds the fingerprint (`b42595ffc1305a2a`), which proves a
 pasted value is the right one without disclosing it. That is the correct thing
 to keep here. The key belongs in Cloudflare, in the GitHub secret store, and in
 the Board's credential store — three places, none of them a git history.
