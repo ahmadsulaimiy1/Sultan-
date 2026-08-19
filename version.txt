@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      1e8d6ee8ab23a19973beda770f1d488be61a3827
-short       1e8d6ee8
+commit      4ca901b31d6897251b2396c49eb7011819771d43
+short       4ca901b3
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Merge pull request #27 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
-built (UTC) 2026-08-17T11:50:58Z
-assets      shrs-pwa-9157881968
+subject     Merge pull request #28 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
+built (UTC) 2026-08-19T10:55:25Z
+assets      shrs-pwa-a25a9699d4
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
