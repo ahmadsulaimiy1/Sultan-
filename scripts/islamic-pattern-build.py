@@ -139,12 +139,10 @@ def svg_tile(stroke, stroke_width, opacity):
     )
 
 
-LIGHT = svg_tile("#8A6A2E", 1.1, 1)   # deep gold ink, for the ivory header
 DARK = svg_tile("#E9CE8A", 1.2, 1)    # bright foil gold, for the coffee footer
 
 OUT = ROOT / "assets/patterns"
 OUT.mkdir(parents=True, exist_ok=True)
-(OUT / "khatam-light.svg").write_text(LIGHT)
 (OUT / "khatam-dark.svg").write_text(DARK)
 
 
@@ -162,34 +160,21 @@ css = f"""/* ===================================================================
    completing each corner, the ordinary repeat rhythm of this motif in
    architectural use.
 
-   Laid onto ::after of the site's existing ambient overlay elements —
-   .imperial-motion (header) and .foot-motion (footer) — deliberately NOT
-   onto the elements themselves, which already carry the gold-dust
-   background (brand.css) and the diagonal sweep (::before). A fresh ::after
-   layer means nothing is overwritten, and because CSS opacity on a parent
-   dims its pseudo-elements too, this inherits the existing
+   Laid onto ::after of the site's existing ambient overlay element
+   .foot-motion (footer) ONLY — deliberately not onto the element itself,
+   which already carries the gold-dust background (brand.css) and the
+   diagonal sweep (::before). A fresh ::after layer means nothing is
+   overwritten, and because CSS opacity on a parent dims its
+   pseudo-elements too, this inherits the existing
    html[data-pc-ornament="restrained"|"none"] opacity rules on
-   .imperial-motion / .foot-motion for free.
+   .foot-motion for free.
 
-   REVISED from the first pass: 0.6/0.65 stroke and 0.24/0.18 opacity at a
-   2x tile were correct geometry rendered too faintly to register at a
-   glance, on the same complaint pattern as the running-light rework —
-   technically present, practically invisible. This pass nearly doubles the
-   stroke weight, raises opacity meaningfully, and tightens the repeat to
-   1.6x tile so more stars sit in view at once.
+   The matching .imperial-motion::after (header) rule was removed by
+   request — the header no longer carries this pattern. The footer rule
+   is unaffected.
 
        python3 scripts/islamic-pattern-build.py
    =========================================================================== */
-.imperial-motion::after{{
-  content:"";
-  position:absolute; inset:0;
-  background-image:url("{data_uri(LIGHT)}");
-  background-size:{TILE*1.6:.1f}px {TILE*1.6:.1f}px;
-  background-repeat:repeat;
-  opacity:.4;
-  pointer-events:none;
-}}
-
 .foot-motion::after{{
   content:"";
   position:absolute; inset:0;
@@ -205,5 +190,5 @@ CSS_OUT = ROOT / "css" / "islamic-pattern.css"
 CSS_OUT.write_text(css)
 
 print(f"tile: {TILE:.2f}px, star outer r={R}, inner r={inner_r:.3f}")
-print(f"wrote assets/patterns/khatam-light.svg, khatam-dark.svg")
+print(f"wrote assets/patterns/khatam-dark.svg")
 print(f"wrote {CSS_OUT.relative_to(ROOT)} ({len(css)} bytes)")
