@@ -46,7 +46,30 @@
    footer:not(.ap-foot) excludes the admission-apply page's own bespoke
    footer, which already carries an equivalent thread (css/apply.css,
    .ap-foot-thread).
-   =========================================================================== */
+
+   THE LUXURY PASS. header.nav has exactly one free pseudo-element
+   (::after belongs to atelier.css's static rail — see the selector map
+   above, and the git history's account of the draft that silently
+   deleted it by reusing that same selector). footer:not(.ap-foot) has
+   likewise already spent both of its own (::before the rail, ::after
+   the comet). So a richer effect cannot come from adding elements —
+   every upgrade below lives inside the ONE pseudo-element each edge
+   already had, still one paint layer, still no JS:
+
+     - the core gradient gained two colour stops either side of the
+       hot centre (a deep bronze shoulder before the amber, an amber
+       shoulder before the white) so the light reads as metal catching
+       a real light source, not a three-stop blend;
+     - a third drop-shadow ring, wide and faint, seats the comet in an
+       ambient wash rather than a hard-edged glow;
+     - layered box-shadow places two small trailing sparks behind the
+       main point — box-shadow is free relative to filter, so this
+       costs nothing extra to paint — reading as a comet WITH a tail,
+       the way a real point of light dragging through darkness leaves
+       an afterglow, rather than a single travelling blip;
+     - a mid-cycle scale pulse (98% -> 100% -> 98%) gives the travel a
+       very slight breathing quality, the difference between a light
+       that moves and a light that is alive. */
 
 header.nav{ position:relative; --rl-period:15s; --rl-delay:0s; }
 footer:not(.ap-foot){ position:relative; --rl-period:15s; --rl-delay:-7.5s; }
@@ -67,51 +90,72 @@ footer:not(.ap-foot)::before{
         as a stripe sliding past ---- */
 header.nav::before{
   content:"";
-  position:absolute; left:0; bottom:0; height:2.5px; width:34%; z-index:3;
+  position:absolute; left:0; bottom:0; height:3px; width:32%; z-index:3;
   pointer-events:none;
   background:linear-gradient(90deg,
-    transparent 0%, rgba(var(--lv-gbs,233,206,138),.7) 32%,
-    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.7) 68%, transparent 100%);
+    transparent 0%, rgba(var(--lv-gs,198,161,91),.5) 14%,
+    rgba(var(--lv-gbs,233,206,138),.85) 34%,
+    rgb(var(--lv-w36,255,248,228)) 50%,
+    rgba(var(--lv-gbs,233,206,138),.85) 66%,
+    rgba(var(--lv-gs,198,161,91),.5) 86%, transparent 100%);
   filter:
-    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.9))
-    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.55));
+    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.95))
+    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.6))
+    drop-shadow(0 0 20px rgba(var(--lv-gbs,233,206,138),.28));
+  box-shadow:
+    -14px 0 5px -2px rgba(var(--lv-gbs,233,206,138),.22),
+    -26px 0 8px -3px rgba(var(--lv-gs,198,161,91),.13);
   animation: rl-travel var(--rl-period) cubic-bezier(.45,0,.55,1) infinite;
   animation-delay: var(--rl-delay);
   will-change: transform, opacity;
 }
 footer:not(.ap-foot)::after{
   content:"";
-  position:absolute; left:0; top:0; height:2.5px; width:34%; z-index:3;
+  position:absolute; left:0; top:0; height:3px; width:32%; z-index:3;
   pointer-events:none;
   background:linear-gradient(90deg,
-    transparent 0%, rgba(var(--lv-gbs,233,206,138),.7) 32%,
-    rgb(var(--lv-w36,255,248,228)) 50%, rgba(var(--lv-gbs,233,206,138),.7) 68%, transparent 100%);
+    transparent 0%, rgba(var(--lv-gs,198,161,91),.5) 14%,
+    rgba(var(--lv-gbs,233,206,138),.85) 34%,
+    rgb(var(--lv-w36,255,248,228)) 50%,
+    rgba(var(--lv-gbs,233,206,138),.85) 66%,
+    rgba(var(--lv-gs,198,161,91),.5) 86%, transparent 100%);
   filter:
-    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.9))
-    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.55));
+    drop-shadow(0 0 3px rgba(var(--lv-gbs,233,206,138),.95))
+    drop-shadow(0 0 9px rgba(var(--lv-gbs,233,206,138),.6))
+    drop-shadow(0 0 20px rgba(var(--lv-gbs,233,206,138),.28));
+  box-shadow:
+    -14px 0 5px -2px rgba(var(--lv-gbs,233,206,138),.22),
+    -26px 0 8px -3px rgba(var(--lv-gs,198,161,91),.13);
   animation: rl-travel var(--rl-period) cubic-bezier(.45,0,.55,1) infinite;
   animation-delay: var(--rl-delay);
   will-change: transform, opacity;
 }
 
 @keyframes rl-travel{
-  0%   { transform:translateX(-140%); opacity:0; }
+  0%   { transform:translateX(-140%) scaleX(.98); opacity:0; }
   8%   { opacity:1; }
+  50%  { transform:translateX(130%) scaleX(1); }
   92%  { opacity:1; }
-  100% { transform:translateX(400%); opacity:0; }
+  100% { transform:translateX(400%) scaleX(.98); opacity:0; }
 }
 
-/* Reading direction: in RTL the comet travels the way the eye does. */
+/* Reading direction: in RTL the comet — and its trailing sparks, which
+   box-shadow offsets in the opposite direction — travels the way the eye
+   does. */
 [dir="rtl"] header.nav::before,
 [dir="rtl"] footer:not(.ap-foot)::after{
   left:auto; right:0;
   animation-name: rl-travel-rtl;
+  box-shadow:
+    14px 0 5px -2px rgba(var(--lv-gbs,233,206,138),.22),
+    26px 0 8px -3px rgba(var(--lv-gs,198,161,91),.13);
 }
 @keyframes rl-travel-rtl{
-  0%   { transform:translateX(140%); opacity:0; }
+  0%   { transform:translateX(140%) scaleX(.98); opacity:0; }
   8%   { opacity:1; }
+  50%  { transform:translateX(-130%) scaleX(1); }
   92%  { opacity:1; }
-  100% { transform:translateX(-400%); opacity:0; }
+  100% { transform:translateX(-400%) scaleX(.98); opacity:0; }
 }
 
 /* The personalisation and reduced-motion systems this site already has —
