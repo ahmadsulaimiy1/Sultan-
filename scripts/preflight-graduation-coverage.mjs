@@ -39,7 +39,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { AWARDS } from './build-graduation-programme.mjs';
 import { RC_PROGRAMMES } from '../functions/_lib/royal-college-certificate.js';
-import { PLAN, REGISTERS, rollFor } from './_lib/class-of-2026.mjs';
+import { PLAN, REGISTERS, rollFor, ALSO_ISSUED_LIVE } from './_lib/class-of-2026.mjs';
 
 const CANON = JSON.parse(readFileSync('docs/graduation-registers/canonical-roll-2026.json', 'utf8'));
 
@@ -116,6 +116,10 @@ notes.push(`${printedTotal} awards across ${people.size} distinct graduands`);
   };
   for (const a of PLAN.actions) claim(Number(a.cert.match(/-(\d{6})-/)[1]), `${a.kind} ${a.name}`);
   for (const r of PLAN.toMint) claim(r.certificateSeq, `mint ${r.code} ${r.name}`);
+  // Numbers spent by the live system on matters outside this plan (see
+  // ALSO_ISSUED_LIVE) are real and claimed too — a gap in THIS plan's own
+  // numbers, but not a gap in the global sequence the check below enforces.
+  for (const e of ALSO_ISSUED_LIVE) claim(e.certificateSeq, `live issuance ${e.studentEn}`);
   const lo = Math.min(...claims.keys());
   const hi = Math.max(...claims.keys());
   for (let n = lo; n <= hi; n += 1) {

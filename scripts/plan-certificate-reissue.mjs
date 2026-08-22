@@ -29,6 +29,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 import { formatStudentIdentityNo } from '../functions/_lib/identity-no.js';
+import { ALSO_ISSUED_LIVE } from './_lib/class-of-2026.mjs';
 
 const CANON = JSON.parse(readFileSync('docs/graduation-registers/canonical-roll-2026.json', 'utf8'));
 const canon = (c) => (CANON.categories.find((x) => x.code === c) || { names: [] }).names;
@@ -108,8 +109,10 @@ for (const code of ORDER) {
   }
 }
 
-// The sequence is global and 000035–000047 are spent, revoked or not.
-const SPENT_TO = 47;
+// The sequence is global and 000035–000047 are spent, revoked or not — and
+// so, since 8 August, are the certificate numbers in ALSO_ISSUED_LIVE
+// (scripts/_lib/class-of-2026.mjs), for live issuances outside this plan.
+const SPENT_TO = Math.max(47, ...ALSO_ISSUED_LIVE.map((e) => e.certificateSeq));
 let seq = SPENT_TO;
 for (const r of toMint) { seq += 1; r.certificateSeq = seq; }
 
@@ -152,8 +155,23 @@ const identityTaken = new Map();          // identityNo → who already holds it
       e.identitySeq = s;
     }
   }
+  // Same read-not-assumed treatment for the live one-off issuances above —
+  // their Student IDs are taken too, whether or not they are on any roll.
+  for (const e of ALSO_ISSUED_LIVE) {
+    identityTaken.set(e.identityNo, { name: e.studentEn, code: 'LIVE' });
+    const s = bySeq.get(e.identityNo);
+    if (s === undefined) {
+      console.error(`  ${e.identityNo} (${e.studentEn}) is not in the first 5000 of the `
+        + 'Student ID sequence — the allocation floor below cannot be computed.');
+      process.exit(1);
+    }
+    e.identitySeq = s;
+  }
 }
-const identitySpentTo = Math.max(...Object.values(minted).flat().map((e) => e.identitySeq));
+const identitySpentTo = Math.max(
+  ...Object.values(minted).flat().map((e) => e.identitySeq),
+  ...ALSO_ISSUED_LIVE.map((e) => e.identitySeq),
+);
 let idSeq = identitySpentTo;
 const perChild = new Map();
 for (const r of toMint) {

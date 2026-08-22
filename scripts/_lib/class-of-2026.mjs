@@ -39,6 +39,21 @@ import { readFileSync } from 'node:fs';
 export const PLAN = JSON.parse(
   readFileSync('docs/graduation-registers/reissue-plan-2026.json', 'utf8'));
 
+// Certificates issued through the live Certificate Generation Centre AFTER
+// this plan was first computed (8 August), for matters unrelated to the
+// Class of 2026 roll — ordinary one-off issuances. Their certificate numbers
+// and Student IDs are real and already held by real children, so anything
+// that reasons about the global sequence (the plan generator's own
+// allocation, and the preflight's contiguity check) must treat these as
+// legitimately spent rather than as a gap or a name to reconcile. This is
+// the one place both read it from, so a later one-off issuance only needs
+// updating here.
+export const ALSO_ISSUED_LIVE = [
+  { certificateSeq: 48, studentEn: 'Muhammad Awwal', identityNo: '716922466886710' },
+  { certificateSeq: 49, studentEn: 'Abdulsamad Musa Al-Ameen', identityNo: '710167004074504' },
+  { certificateSeq: 50, studentEn: 'Abdulsamad Musa Al-Ameen', identityNo: '710167004074504' },
+];
+
 // The registers this roll's Arabic names and carried Student IDs are read from.
 export const REGISTERS = {
   IBT: 'docs/graduation-registers/2026-08-08-IBT-000035.json',
