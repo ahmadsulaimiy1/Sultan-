@@ -28,12 +28,20 @@ async function activeRoleGrants(sql, staffId) {
 // schedule; a computed check can't silently fall out of date).
 async function activeDelegationGrants(sql, staffId) {
   const res = await sql`
-    SELECT role_code, institution_id, office_id
+    SELECT id, role_code, institution_id, office_id, delegator_staff_id
     FROM delegations
     WHERE delegate_staff_id = ${staffId}
       AND revoked_at IS NULL
       AND now() BETWEEN starts_at AND ends_at`;
-  return res.rows.map((r) => ({ roleCode: r.role_code, institutionId: r.institution_id, officeId: r.office_id, source: 'delegation' }));
+  // delegationId/delegatorStaffId ride alongside role/scope so a caller
+  // that persists what authorised an action (e.g. stage_certificate_batches'
+  // delegation_id column) can record the SPECIFIC grant, not just that some
+  // delegation existed — two active delegations to the same staff member
+  // must never collapse into one indistinguishable "via delegation" note.
+  return res.rows.map((r) => ({
+    roleCode: r.role_code, institutionId: r.institution_id, officeId: r.office_id,
+    source: 'delegation', delegationId: r.id, delegatorStaffId: r.delegator_staff_id,
+  }));
 }
 
 // Every role a staff member effectively holds right now, from either

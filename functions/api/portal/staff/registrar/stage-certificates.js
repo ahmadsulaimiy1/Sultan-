@@ -386,6 +386,13 @@ export async function onRequestPost({ request, env }) {
       const institutionId = await issuingInstitutionId(sql, programmeCode);
       const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
       if (!grant.granted) return json({ error: 'Your role does not have authority to issue certificates.' }, 403);
+      // grant.via.source is 'delegation' when this staff member's authority
+      // to issue came from an active row in `delegations` rather than their
+      // own staff_roles — recorded on the batch itself (delegation_id) so
+      // the permanent institutional record shows delegated authority as
+      // delegated, never indistinguishable from the delegate's own standing
+      // role (StromeX delegation-of-authority requirement, 2026-08-22).
+      const delegationId = grant.via && grant.via.source === 'delegation' ? grant.via.delegationId : null;
 
       // Hijri snapshot, computed once per batch (all certificates in a
       // batch share one issue date) — see certificate-serial.js.
@@ -394,8 +401,8 @@ export async function onRequestPost({ request, env }) {
 
       const batchNo = await generateCertificateBatchNo(sql, issuedAt);
       const batchRes = await sql`
-        INSERT INTO stage_certificate_batches (batch_no, programme_code, academic_year, issued_at, description, created_by_staff_id)
-        VALUES (${batchNo}, ${programmeCode}, ${academicYear}, ${issuedAt}, ${description}, ${staffId})
+        INSERT INTO stage_certificate_batches (batch_no, programme_code, academic_year, issued_at, description, created_by_staff_id, delegation_id)
+        VALUES (${batchNo}, ${programmeCode}, ${academicYear}, ${issuedAt}, ${description}, ${staffId}, ${delegationId})
         RETURNING id`;
       const batchId = batchRes.rows[0].id;
       const admissionYear = new Date(issuedAt).getUTCFullYear();
@@ -516,6 +523,7 @@ export async function onRequestPost({ request, env }) {
             await logStaffEvent(sql, {
               actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate_batch', targetId: batchId,
               reason: description, metadata: { batchNo, programmeCode, academicYear, issuedAt, issued, created, skipped, failed },
+              delegationId,
             });
 
             send({
@@ -631,6 +639,7 @@ export async function onRequestPost({ request, env }) {
       // cross-institution authority as list_register/list_batches above.
       const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', null);
       if (!grant.granted) return json({ error: 'Your role does not have authority to revoke certificates.' }, 403);
+      const delegationId = grant.via && grant.via.source === 'delegation' ? grant.via.delegationId : null;
       const serialNo = String((body && body.serialNo) || '').trim();
       const revocationNote = String((body && body.revocationNote) || '').trim();
       if (!serialNo || !revocationNote) {
@@ -658,7 +667,7 @@ export async function onRequestPost({ request, env }) {
       }
       await logStaffEvent(sql, {
         actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'stage_certificate', targetId: updated.rows[0].id,
-        reason: revocationNote, metadata: { serialNo, revoked: true },
+        reason: revocationNote, metadata: { serialNo, revoked: true }, delegationId,
         ...requestAuditContext(request),
       });
       return json({ ok: true, certificateId: updated.rows[0].id });
@@ -677,6 +686,7 @@ export async function onRequestPost({ request, env }) {
       const institutionId = await issuingInstitutionId(sql);
       const grant = await hasPermissionFor(sql, staffId, 'certificates', 'C', institutionId);
       if (!grant.granted) return json({ error: 'Your role does not have authority to reissue certificates.' }, 403);
+      const delegationId = grant.via && grant.via.source === 'delegation' ? grant.via.delegationId : null;
       const serialNo = String((body && body.serialNo) || '').trim();
       const reason = String((body && body.reason) || '').trim();
       if (!serialNo || !reason) {
@@ -823,6 +833,7 @@ export async function onRequestPost({ request, env }) {
           reason: `Correction applied during certificate reissue of ${serialNo}: ${reason}`,
           previousValue: before,
           newValue: { fullName: nextFullName, fullNameAr: nextFullNameAr, sex: nextSex },
+          delegationId,
           ...requestAuditContext(request),
         });
       }
@@ -833,6 +844,7 @@ export async function onRequestPost({ request, env }) {
           reissued: true, serialNo: newSerialNo, replacesSerialNo: serialNo,
           correctionsApplied: studentChanged,
         },
+        delegationId,
         ...requestAuditContext(request),
       });
 

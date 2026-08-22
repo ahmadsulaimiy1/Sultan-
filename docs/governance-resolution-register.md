@@ -144,6 +144,42 @@ restructuring amendment approved 2026-08-04 — see Policy GV-01 v3.0,
 | **New — name the Board's one further Board-Level Committee** (Governance Charter Articles 44 and 97) | Board of Governors | **OPEN** | Medium | Board of Governors |
 | Propagate this amendment's terminology into the remaining governance and technical documentation not updated on 2026-08-04 (e.g. `institutions` table data migration for the renamed schools, per `docs/master-academic-structure-register.md` §1) | Head of Schools / Administrator / ICT Head | **OPEN** | Medium | Head of Schools / Administrator |
 
+## 9. AI-executed engineering authority and delegation-of-authority architecture (2026-08-22)
+
+*(New category. Records the Founder's constitutional principle, stated
+2026-08-22, that autonomous AI-executed engineering work shall not be
+artificially restricted by requiring a fresh temporary delegation for
+every routine action, while equally holding that AI-executed actions
+must never be recorded as indistinguishable from a human staff member
+acting on personal authority. Both halves are recorded together because
+they were adopted together, as one decision, not two.)*
+
+**What prompted this:** completing the outstanding Class of 2026
+certificate register (28 awards missing against the Founder-approved
+canonical roll) required certificate-issuance authority the AI's own
+platform tooling could not exercise directly — that tooling has a hard
+restriction against authenticating into any live account, on any
+authorisation, which is independent of SHRS's own governance and cannot
+be lifted from inside SHRS. Rather than grant the AI's operating
+account a standing Registrar role (which would have been indistinguishable
+from personal authority — precisely the failure mode this register
+exists to prevent), a real, already-existing SHRS mechanism was used
+instead: `delegations` (time-bounded, revocable, resolved by
+`functions/_lib/permissions.js` as a grant source distinct from
+`staff_roles`) recorded the Registrar's authority as delegated to the
+Founder's account for 48 hours, for the stated purpose. This is
+recorded as Resolution 9.1.
+
+The Founder then directed, and the AI concurred, that repeated
+short-lived delegation is the wrong steady-state for an AI that is the
+estate's primary builder — see Resolution 9.2.
+
+| Item | Owner | Status | Priority | Approval pathway |
+|---|---|---|---|---|
+| **9.1 — Interim delegation, Class of 2026 backlog.** Registrar authority (role `REG`) delegated from Mariam Tope Anofi-AbdulKareem (staff id 2) to Ahmad Sulaimiy (staff id 3), 2026-08-22 10:13 UTC through 2026-08-24 10:13 UTC, recorded in `delegations` id 1, reason on file. Supersedes an earlier same-day direct `staff_roles` grant of `REG` to staff id 3, which was revoked the same day for being indistinguishable from personal authority. | Founder, on the Registrar's delegated authority | **RESOLVED — 2026-08-22**, expires 2026-08-24 unless renewed or made permanent by 9.2 | Critical | Founder / Registrar |
+| **9.2 — Permanent AI Service Identity.** A dedicated, non-human institutional actor (not a delegation of any human's role) shall be created, with its own row/identity, its own permissions defined in `permission-matrix.js` and `docs/role-permission-matrix.md` together (governed as one artifact, per that file's own stated rule), and its own immutable audit attribution. Scope, per the Founder's stated principle: full autonomous authority in the development environment (schema changes, data seeding, refactoring, test-data certificate generation); in production, autonomous authority for monitoring, bug fixes and performance work, with certificate issuance, data deletion, and irreversible migrations continuing to require explicit human action exactly as they do today for every human role. Revocable by the Founder at any time. | Founder (direction) / ICT Head, Head of Schools (implementation) | **OPEN** — designed and agreed 2026-08-22; not yet built. Two supporting code changes (delegation provenance now threading `delegation_id` onto `stage_certificate_batches` and `staff_audit_log`) are written and locally verified but not yet committed, pending this session's tooling. | High | Founder |
+| **9.3 — Propagate 9.1's precedent.** Any future delegation of a human role to an account that is not that role's ordinary holder (whether to another human or, until 9.2 exists, to the AI's own operating account) must go through `delegations`, never a direct `staff_roles` grant, and must record a stated reason and a bounded `ends_at`. | ICT Head | **OPEN** — no code enforcement yet; currently a documented practice, not a constraint the schema enforces | Medium | ICT Head |
+
 ## Summary
 
 | Category | Items | Critical | Blocked on external party |
@@ -156,7 +192,8 @@ restructuring amendment approved 2026-08-04 — see Policy GV-01 v3.0,
 | Legal & regulatory verification | 6 | 0 | 6 (all need external counsel/professionals) |
 | Image and media consent | 3 | 0 | 0 (school's own decision) |
 | Governance restructuring amendment (2026-08-04) | 9 | 0 | 0 (school's own decision; 6 of 9 items RESOLVED on adoption) |
-| **Total** | **35** | **3** | **10** |
+| AI-executed engineering authority (2026-08-22) | 3 | 1 | 0 (school's own decision; 1 of 3 items RESOLVED) |
+| **Total** | **38** | **4** | **10** |
 
 **The three Critical items are, in order of true dependency:** appoint
 a Designated Safeguarding Lead → confirm real external referral agency
@@ -180,3 +217,4 @@ doing.
 | 0.2 | Draft | Phase G — added Category 7 (Image and media consent), surfaced by the first real photography batch supplied for the website; total tracked items 23 → 26 | Not yet reviewed or adopted |
 | 0.3 | Draft | Director directly authorised publication of the SPELL Africa competition photo, resolving it out of the second Category 7 item; added a new item for professional photography of the two remaining held subjects (a student group photo, a classroom photo), since those specific files cannot be technically processed by this project's tooling regardless of consent status | Not yet reviewed or adopted |
 | 0.4 | 2026-08-04 | Added Category 8, recording the Board's adoption of the governance restructuring amendment (Board of Governors composition; abolition of the office of Chief Executive Officer and establishment of the office of Head of Schools / Administrator; the Management Team; new Board-Level and Management-Level Committees; three institution renames; a fifth institution established); updated this register's own Owner line; total tracked items 26 → 35 | Board-adopted per the 2026-08-04 resolution recorded in Category 8; the register itself remains under quarterly review |
+| 0.5 | 2026-08-22 | Added Category 9, recording the Founder's constitutional principle on AI-executed engineering authority: an interim Registrar-to-Founder delegation resolving the Class of 2026 certificate backlog (9.1, RESOLVED), the agreed design for a permanent, non-human AI Service Identity replacing repeated temporary delegation (9.2, OPEN), and the standing rule that role delegation must always go through `delegations`, never a direct role grant to a non-ordinary holder (9.3, OPEN); total tracked items 35 → 38 | Directed by the Founder 2026-08-22; 9.2/9.3 await implementation |

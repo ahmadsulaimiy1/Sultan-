@@ -2538,3 +2538,18 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   window_start TIMESTAMPTZ NOT NULL DEFAULT now(),
   hits         INTEGER NOT NULL DEFAULT 0
 );
+
+-- StromeX delegation-of-authority requirement (2026-08-22): a governed
+-- action performed under delegated authority must be provably
+-- distinguishable, in the permanent record, from the delegate acting on
+-- their own standing role — the actor field alone can never carry that
+-- distinction, no matter how legitimate the delegation. `delegations`
+-- already existed (role_code, delegator/delegate, time-bounded,
+-- revocable) and functions/_lib/permissions.js already resolved it into
+-- effective grants; what was missing was recording WHICH delegation
+-- authorised a specific governed action, on the action's own row.
+--
+-- Both additions are nullable and additive: an action taken on native
+-- staff_roles authority (the ordinary case) simply leaves this NULL.
+ALTER TABLE stage_certificate_batches ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id);
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id);

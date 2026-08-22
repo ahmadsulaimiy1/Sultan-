@@ -20,16 +20,25 @@
 // outcome, is reconstructable. Every existing caller that doesn't pass
 // them keeps working unchanged; only callers that genuinely have this
 // context (a request object, a before/after state) need to supply it.
+// delegationId (optional, default null): the specific `delegations.id` row
+// that authorised actorStaffId to take this action, when their authority
+// came from a delegation rather than their own staff_roles. StromeX
+// delegation-of-authority requirement, 2026-08-22: a delegated action must
+// be provably distinguishable from the delegate acting on personal
+// authority, and the actor field alone can never carry that distinction —
+// so callers that resolved a grant via effectiveGrants()/hasPermissionFor()
+// pass its `via.delegationId` straight through rather than dropping it.
 export async function logStaffEvent(sql, {
   actorStaffId, eventType, targetType, targetId, reason, metadata,
-  ipAddress, userAgent, previousValue, newValue,
+  ipAddress, userAgent, previousValue, newValue, delegationId,
 }) {
   if (!sql) return;
   await sql`
-    INSERT INTO staff_audit_log (actor_staff_id, event_type, target_type, target_id, reason, metadata, ip_address, user_agent, previous_value, new_value)
+    INSERT INTO staff_audit_log (actor_staff_id, event_type, target_type, target_id, reason, metadata, ip_address, user_agent, previous_value, new_value, delegation_id)
     VALUES (
       ${actorStaffId ?? null}, ${eventType}, ${targetType ?? null}, ${targetId ?? null}, ${reason ?? null}, ${metadata ? JSON.stringify(metadata) : null},
-      ${ipAddress ?? null}, ${userAgent ?? null}, ${previousValue ? JSON.stringify(previousValue) : null}, ${newValue ? JSON.stringify(newValue) : null}
+      ${ipAddress ?? null}, ${userAgent ?? null}, ${previousValue ? JSON.stringify(previousValue) : null}, ${newValue ? JSON.stringify(newValue) : null},
+      ${delegationId ?? null}
     )`;
 }
 
