@@ -99,18 +99,36 @@ const SEX = {
   'Aisha Lawal': ['female', 'Primary roll, 2026-08-07'],
   'Daud Aliu': ['male', 'Primary roll, 2026-08-07'],
   'Zaynab Zakariya Anofi': ['female', 'Qur’an College roll, 2026-08-07'],
-  // NOT RECORDED — these five reach this pipeline for the first time on the
-  // Registrar's Notice of 2 July 2026, which lists names and stages and states
-  // no sex. Several read unambiguously to a reader of Arabic names; that is not
-  // a record, and this file does not keep guesses beside facts.
-  //   Sofiah Anofi · Muhammad Fatih · Yaseer Balogun
-  //   Allison Ganiyah · Jubril Lawal
+  // These three reached this pipeline on the Registrar's Notice of 2 July 2026
+  // with no sex recorded anywhere. The Founder ruled all three on 22 August
+  // 2026, from the conventions of the names themselves: "Yaseer"/Yasir is a
+  // male Arabic name with no female form; "Jubril" is the Nigerian Muslim
+  // rendering of Jibril (Gabriel), given only to boys; "Ganiyah" carries the
+  // Arabic feminine "-iyyah" ending (as in Ghaniyyah), paired with "Allison"
+  // as the given name.
+  'Yaseer Balogun': ['male', 'Founder’s ruling, 2026-08-22 — the name admits no female form'],
+  'Allison Ganiyah': ['female', 'Founder’s ruling, 2026-08-22 — from the feminine "-iyyah" ending'],
+  'Jubril Lawal': ['male', 'Founder’s ruling, 2026-08-22 — Jibril/Gabriel, given only to boys'],
+  // NOT RECORDED — Muhammad Fatih is withdrawn from every roll by a separate
+  // ruling (see canonical-roll-2026.json) and never reaches this pipeline as
+  // a graduand, so his sex is moot rather than outstanding.
 };
 
 // ── Arabic names approved outside the published registers ───────────────────
-// One entry, and it is here rather than in a register because it was ruled for
-// a Qur'an College sheet that has not yet been minted. The Founder ruled it on
-// 7 August 2026 against this pipeline's own proposal, which he did not adopt.
+// Entries are here rather than in a register because each was ruled for a
+// sheet that has not yet been minted. The Founder ruled the first on 7 August
+// 2026 against this pipeline's own proposal, which he did not adopt.
+//
+// The five ruled 22 August 2026 were proposed BY this pipeline (standard
+// Arabic components reused byte-for-byte from an already-approved register —
+// Ojewumi, Adegoke, Ismail, Seriki, Imran, Ashraf all carry across unchanged
+// from IBT-000035 / IDD-000042) and adopted by the Founder as his ruling.
+// Three components have no institutional precedent because they are Yoruba,
+// not Arabic — Korede, Iremide, and Balogun — and are transliterated
+// phonetically, in the same register-name style already used for Adebimpe,
+// Adedokun, Adegoke and Akorede. A phonetic transliteration is a spelling
+// choice, not a fact to get right or wrong the way a sex or an identity is;
+// the Founder’s adoption of it is what makes it the engraved form.
 const APPROVED_AR = {
   'Aisha Omoshalewa Anofi': {
     ar: 'عائشة أمشالوا حنفي',
@@ -118,6 +136,37 @@ const APPROVED_AR = {
     pipelineProposed: 'عائشة أوموشاليوا حنفي',
     note: 'The Founder’s form differs from the proposal and governs. A family’s '
       + 'own spelling of its own name is not a pattern to be extrapolated.',
+  },
+  'Ameerah Abdulhafeez': {
+    ar: 'أميرة عبد الحفيظ',
+    source: 'ruled by the Founder, 2026-08-22 — standard Arabic, no transliteration choice to make',
+  },
+  'Ashraf Korede Ojewumi': {
+    ar: 'أشرف كوريدي أوجومي',
+    source: 'ruled by the Founder, 2026-08-22, adopting this pipeline’s proposal',
+    note: 'Ashraf and Ojewumi carry across unchanged from IBT-000035 (there spelled '
+      + 'for "Ashrof Akorede" and "Hameedah ... Ojewumi"). Korede — the fuller '
+      + 'roll’s form, replacing "Akorede" — is transliterated phonetically; it is '
+      + 'Yoruba, with no institutional precedent under this exact spelling.',
+  },
+  'Imran Iremide Adegoke': {
+    ar: 'عمران إيريميدي أدغكي',
+    source: 'ruled by the Founder, 2026-08-22, adopting this pipeline’s proposal',
+    note: 'Imran and Adegoke carry across unchanged from IBT-000035. Iremide is '
+      + 'Yoruba, transliterated phonetically, with no institutional precedent.',
+  },
+  'Naheemah Ismail Seriki': {
+    ar: 'نعيمة إسماعيل سركي',
+    source: 'ruled by the Founder, 2026-08-22, adopting this pipeline’s proposal',
+    note: 'All three components carry across unchanged: Naheemah and Ismail from '
+      + 'IBT-000035, Seriki from IDD-000042’s already-approved table.',
+  },
+  'Yaseer Balogun': {
+    ar: 'ياسر بالوغون',
+    source: 'ruled by the Founder, 2026-08-22, adopting this pipeline’s proposal',
+    note: 'Yaseer/Yasir is standard Arabic. Balogun is a Yoruba title (a war '
+      + 'chief’s rank, also used as a surname), transliterated phonetically, '
+      + 'with no institutional precedent.',
   },
 };
 

@@ -4,19 +4,18 @@
   "nameRule": "Founder’s ruling of 8 August 2026: where a fuller form of a child’s name has ever been written down by this institution, the fuller form is the one that prints and is engraved. No name is assembled from parts of two variants.",
   "generatedBy": "scripts/build-canonical-roll.mjs",
   "totals": {
-    "awards": 44,
-    "children": 31,
+    "awards": 43,
+    "children": 30,
     "multipleAwards": 11
   },
   "categories": [
     {
       "code": "QUR",
       "registrarColumn": "Quran college",
-      "count": 4,
+      "count": 3,
       "names": [
         "Aisha Omoshalewa Anofi",
         "Baqi Olamiposi Anofi",
-        "Sofiah Anofi",
         "Zaynab Zakariya Anofi"
       ]
     },
@@ -362,6 +361,13 @@
     }
   ],
   "withdrawnByRuling": [
+    {
+      "code": "QUR",
+      "name": "Sofiah Anofi",
+      "why": "Founder’s ruling, 22 Aug 2026 — not authorised for this certification and does not require it.",
+      "standing": "WITHDRAWN, FINAL — unlike Muhammad Fatih above, this is not a placement question deferred to a later ruling. The Founder’s ruling is that she does not hold this award; she is not carried anywhere else and is not expected to be.",
+      "alsoOn": []
+    },
     {
       "code": "TMH",
       "name": "Muhammad fatih",

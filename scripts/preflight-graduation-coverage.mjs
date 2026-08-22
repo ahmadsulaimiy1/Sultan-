@@ -317,5 +317,10 @@ for (const b of ['TMH', 'IBT2026', 'IDD2026']) {
   console.log(`      node scripts/issue-certificate-batch.mjs ${b}`);
 }
 console.log('  Certificate numbers come from the plan, so batch order does not change');
-console.log('  them — but the three stage batches stay HELD until the Arabic names and');
-console.log('  the two records above are supplied.\n');
+const blocking = held.filter((h) => !/is on NO roll and receives NO certificate/.test(h));
+if (blocking.length) {
+  console.log(`  them — but ${blocking.length} batch(es) stay HELD on the ruling(s) above.\n`);
+} else {
+  console.log('  them. Every batch above is clear to mint — the hold(s) above name');
+  console.log('  children who are withdrawn by ruling, not a gap in any batch that runs.\n');
+}

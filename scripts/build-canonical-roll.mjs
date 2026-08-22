@@ -194,6 +194,15 @@ const WITHDRAWN_FROM = {
       + 'him. He appears on no roll until the Registrar or the Founder places '
       + 'him, and the preflight reports him on every run.',
   }],
+  QUR: [{
+    name: 'Sofiah Anofi',
+    why: 'Founder’s ruling, 22 Aug 2026 — not authorised for this certification '
+      + 'and does not require it.',
+    standing: 'WITHDRAWN, FINAL — unlike Muhammad Fatih above, this is not a '
+      + 'placement question deferred to a later ruling. The Founder’s ruling is '
+      + 'that she does not hold this award; she is not carried anywhere else and '
+      + 'is not expected to be.',
+  }],
 };
 
 const norm = (s) => s.toLowerCase().replace(/[^a-z\s-]/g, '').trim();
