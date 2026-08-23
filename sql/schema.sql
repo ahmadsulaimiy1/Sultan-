@@ -1474,6 +1474,37 @@ CREATE INDEX IF NOT EXISTS idx_graduation_documents_record ON graduation_documen
 CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type);
 CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id);
 
+-- Institutional identifier trust requirement (Founder's ruling, 2026-08-23;
+-- stromex/editorial-bible/16-ai-operating-constitution.md §16.18): every
+-- official identifier must be collision-safe by construction, not by
+-- convention. functions/_lib/graduation-document-no.js's
+-- getOrCreateVerificationId() originally computed the Permanent
+-- Verification ID as COUNT(DISTINCT verification_id)+1 with no UNIQUE
+-- constraint anywhere backing it — the one identifier in this audit that
+-- could collide SILENTLY: two students' first graduation documents,
+-- issued concurrently in the same session, could both read the same count
+-- before either committed and mint the SAME "permanent" verification ID
+-- for two different children. No production data ever existed under the
+-- old scheme (checked before this change; table was empty), so this is a
+-- prevention, not a migration.
+--
+-- Two tables replace the inline COUNT(...): one row per graduation record
+-- (PRIMARY KEY makes "does this record already have one" atomic via
+-- INSERT ... ON CONFLICT DO NOTHING), and one atomic per-session counter
+-- (claimed via UPDATE ... RETURNING, which is row-locked) so numbering
+-- still starts at 1 per session exactly as the original format intended.
+CREATE TABLE IF NOT EXISTS graduation_verification_session_seq (
+  graduation_session TEXT PRIMARY KEY,
+  next_seq            INTEGER NOT NULL DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS graduation_verification_ids (
+  graduation_record_id INTEGER PRIMARY KEY REFERENCES graduation_records(id),
+  graduation_session    TEXT NOT NULL,
+  seq                   INTEGER NOT NULL,
+  verification_id       TEXT NOT NULL UNIQUE,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Locked, immutable copy of the exact term_results rows a Transcript (or
 -- Diploma Supplement) was generated from (spec §16.2, §8) — a later
 -- correction to term_results must never silently alter an already-issued

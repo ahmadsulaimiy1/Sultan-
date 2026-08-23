@@ -1369,6 +1369,21 @@ const STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS idx_graduation_documents_type ON graduation_documents(document_type)`,
   `CREATE INDEX IF NOT EXISTS idx_graduation_documents_verification_id ON graduation_documents(verification_id)`,
 
+  // Institutional identifier trust requirement (2026-08-23) — mirrors
+  // sql/schema.sql. Replaces an inline COUNT(DISTINCT...)+1 that could
+  // silently collide two students' first documents under concurrency.
+  `CREATE TABLE IF NOT EXISTS graduation_verification_session_seq (
+    graduation_session TEXT PRIMARY KEY,
+    next_seq            INTEGER NOT NULL DEFAULT 1
+  )`,
+  `CREATE TABLE IF NOT EXISTS graduation_verification_ids (
+    graduation_record_id INTEGER PRIMARY KEY REFERENCES graduation_records(id),
+    graduation_session    TEXT NOT NULL,
+    seq                   INTEGER NOT NULL,
+    verification_id       TEXT NOT NULL UNIQUE,
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+
   `CREATE TABLE IF NOT EXISTS transcript_snapshots (
     id                    SERIAL PRIMARY KEY,
     graduation_record_id  INTEGER NOT NULL REFERENCES graduation_records(id) ON DELETE CASCADE,
