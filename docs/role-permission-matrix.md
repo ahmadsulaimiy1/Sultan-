@@ -533,3 +533,35 @@ classifier) even though the code path exists and is tested — treated
 here as a feature of the environment, not a gap to route around. See
 `docs/governance-resolution-register.md` Category 9.10 for the account
 of what was built versus what still needs a human hand.
+
+**`safeguarding` is denied wholesale, every permission code, not only
+`C`/`E`.** Every other area's denylist entry blocks specific write
+codes because the Founder's ruling named writes; `safeguarding` blocks
+the whole area, including `V` (view), because SW-01 §7.3's
+confidentiality requirement is about *read* access to a child's case
+content in the first place — see Governance Resolution Register 9.11.
+
+**One real endpoint wired in, as a worked example (9.11):**
+`functions/api/portal/setup.js` (schema migrations) now accepts an
+AESI bearer token granted `system_settings:E` as an alternative to the
+static `PORTAL_SETUP_TOKEN` it has used since before AESI existed — the
+static token stays as an unchanged break-glass fallback. This was
+chosen deliberately over wiring AESI into any of §4's institutional-data
+areas: it is pure infrastructure (an idempotent `CREATE ... IF NOT
+EXISTS` migration runner), not a record about a real child or member of
+staff, and the bottleneck it removed — a shared secret with no
+per-actor audit trail — was a genuine historical-workflow artifact, not
+a governance line anyone had drawn on purpose. To grant it:
+
+```sql
+-- one-time: create the identity (or use an existing one)
+-- see createServiceIdentity() in functions/_lib/service-identity.js
+
+-- grant it the one permission setup.js checks for
+INSERT INTO service_identity_grants (service_identity_id, area_code, permission_code, granted_by)
+VALUES (<service_identity_id>, 'system_settings', 'E', <staff_id>);
+```
+
+No other staff-portal area has been wired to accept AESI auth. Each one
+that is, going forward, should have its own named reason recorded here
+— the same discipline every human grant in this matrix already follows.

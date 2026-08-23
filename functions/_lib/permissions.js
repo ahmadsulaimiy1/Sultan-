@@ -102,13 +102,25 @@ export async function hasPermissionFor(sql, staffId, areaCode, permissionCode, i
 // grants table — a wrong row, a copy-paste, a future migration bug —
 // must be unable to cross this line; only a code change can move it,
 // and a code change is reviewed the way every other change here is.
+//
+// safeguarding is blocked WHOLESALE — every permission code, including
+// V (view) — narrower than the ruling's literal "writes" because the
+// area's own design already goes further than the rest of this engine:
+// safeguarding.js keeps its audit trail "deliberately separate from
+// staff_audit_log per SW-01 §7.3's confidentiality requirement," and a
+// child's case content is exactly the kind of record where "a machine
+// can technically read it" and "a machine should be able to read it"
+// are different questions. Read access for a machine identity is its
+// own decision, not a side effect of the write-side ruling, and it is
+// not one this session takes on the Founder's behalf.
 const SERVICE_IDENTITY_DENYLIST = new Set([
   'certificates:C', 'certificates:E',
   'finance:C', 'finance:E',
-  'safeguarding:C', 'safeguarding:E',
 ]);
+const SERVICE_IDENTITY_DENIED_AREAS = new Set(['safeguarding']);
 function serviceIdentityDenied(areaCode, permissionCode) {
   if (permissionCode === 'D') return true; // delete, in any area, always
+  if (SERVICE_IDENTITY_DENIED_AREAS.has(areaCode)) return true; // every permission code in this area, always
   return SERVICE_IDENTITY_DENYLIST.has(`${areaCode}:${permissionCode}`);
 }
 

@@ -5,10 +5,26 @@
 // drops or rewrites existing data. See docs/parent-portal.md.
 //
 // Mirrors sql/schema.sql — keep the two in sync if either changes.
+//
+// A SECOND, AUDITED auth path (Governance Resolution Register 9.11): the
+// static PORTAL_SETUP_TOKEN predates the StromeX Autonomous Engineering
+// Service Identity (AESI) and is a genuine historical-workflow artifact,
+// not a deliberate governance choice — whoever holds that one string is
+// indistinguishable from anyone else who ever held it, on an action
+// (schema migration) that Governance Resolution Register 9.2's own
+// Development Authority list names explicitly ("provision infrastructure;
+// ... execute migrations; configure CI/CD"). An AESI bearer token granted
+// system_settings:E runs the exact same idempotent statements, but every
+// run is attributed to a specific, revocable service identity and
+// recorded in staff_audit_log — the PORTAL_SETUP_TOKEN path stays, as a
+// break-glass fallback, but is no longer the only way in.
 import { getSql } from '../../_lib/db.js';
 import { INSTITUTION_SEED_NAMES } from '../../_lib/institutions.js';
 import { hashPassword, timingSafeEqualString } from '../../_lib/session.js';
 import { json } from '../../_lib/http.js';
+import { readServiceIdentityFromRequest } from '../../_lib/service-identity.js';
+import { hasPermissionForServiceIdentity } from '../../_lib/permissions.js';
+import { logStaffEvent } from '../../_lib/audit.js';
 
 const STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS guardians (
@@ -1954,16 +1970,28 @@ const STATEMENTS = [
 ];
 
 async function handle({ request, env }) {
-  const setupToken = env.PORTAL_SETUP_TOKEN;
-  if (!setupToken) {
-    return json({ error: 'Portal is not configured yet — PORTAL_SETUP_TOKEN is not set on this deployment.' }, 500);
-  }
-  if (!timingSafeEqualString(request.headers.get('x-setup-token'), setupToken)) {
-    return json({ error: 'Invalid setup token.' }, 403);
-  }
   const sql = getSql(env);
   if (!sql) {
     return json({ error: 'No database is linked yet — add a Neon Postgres connection string as DATABASE_URL, then retry.' }, 500);
+  }
+
+  // Two independent auth paths, either sufficient — see the file header
+  // for why. The AESI path is tried first only because it costs a query;
+  // whichever succeeds, only one is recorded as the actor.
+  let actorServiceIdentity = null;
+  const svc = await readServiceIdentityFromRequest(request, sql);
+  if (svc) {
+    const grant = await hasPermissionForServiceIdentity(sql, svc.serviceIdentityId, 'system_settings', 'E', null);
+    if (grant.granted) actorServiceIdentity = svc;
+  }
+  if (!actorServiceIdentity) {
+    const setupToken = env.PORTAL_SETUP_TOKEN;
+    if (!setupToken) {
+      return json({ error: 'Portal is not configured yet — PORTAL_SETUP_TOKEN is not set on this deployment.' }, 500);
+    }
+    if (!timingSafeEqualString(request.headers.get('x-setup-token'), setupToken)) {
+      return json({ error: 'Invalid setup token, and no AESI bearer token with system_settings:E was presented.' }, 403);
+    }
   }
 
   try {
@@ -2122,6 +2150,16 @@ async function handle({ request, env }) {
       marketplaceSeeded = true;
     }
 
+    if (actorServiceIdentity) {
+      // The one thing the PORTAL_SETUP_TOKEN path could never do: name
+      // exactly which actor ran this, distinguishably from a human and
+      // from any other service identity.
+      await logStaffEvent(sql, {
+        actorServiceIdentityId: actorServiceIdentity.serviceIdentityId,
+        eventType: 'sensitive_action', targetType: 'portal_setup', reason: 'AESI-authenticated schema setup/migration run',
+        metadata: { serviceIdentityName: actorServiceIdentity.name, demoSeeded, marketplaceSeeded },
+      });
+    }
     return json({ ok: true, tablesReady: true, demoSeeded, marketplaceSeeded });
   } catch (err) {
     console.error('portal setup error', err);
