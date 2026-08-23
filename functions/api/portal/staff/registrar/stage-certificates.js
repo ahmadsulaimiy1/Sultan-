@@ -25,6 +25,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent, requestAuditContext } from '../../../../_lib/audit.js';
 import { ensureStudentIdentityNo, generateAdmissionNo } from '../../../../_lib/identity-no.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 import {
   PROGRAMMES, generateStageCertificateSerial, generateCertificateBatchNo,
   formatHijri, isoDateOnly,
@@ -399,12 +400,18 @@ export async function onRequestPost({ request, env }) {
       const hijriEn = formatHijri(issuedAt, 'en');
       const hijriAr = formatHijri(issuedAt, 'ar');
 
-      const batchNo = await generateCertificateBatchNo(sql, issuedAt);
-      const batchRes = await sql`
-        INSERT INTO stage_certificate_batches (batch_no, programme_code, academic_year, issued_at, description, created_by_staff_id, delegation_id)
-        VALUES (${batchNo}, ${programmeCode}, ${academicYear}, ${issuedAt}, ${description}, ${staffId}, ${delegationId})
-        RETURNING id`;
-      const batchId = batchRes.rows[0].id;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const batchOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateCertificateBatchNo(sql, issuedAt),
+        (no) => sql`
+          INSERT INTO stage_certificate_batches (batch_no, programme_code, academic_year, issued_at, description, created_by_staff_id, delegation_id)
+          VALUES (${no}, ${programmeCode}, ${academicYear}, ${issuedAt}, ${description}, ${staffId}, ${delegationId})
+          RETURNING id`
+      );
+      const batchNo = batchOutcome.value;
+      const batchId = batchOutcome.result.rows[0].id;
       const admissionYear = new Date(issuedAt).getUTCFullYear();
       const totalRows = body.rows.length;
 
@@ -446,12 +453,17 @@ export async function onRequestPost({ request, env }) {
                   } else {
                     let student = match.student || null;
                     if (!student) {
-                      const admissionNo = await generateAdmissionNo(sql, INSTITUTIONS_BY_PROGRAMME[programmeCode].internalName, admissionYear);
-                      const ins = await sql`
-                        INSERT INTO students (full_name, full_name_ar, sex, admission_no, status)
-                        VALUES (${row.fullName}, ${row.fullNameAr || null}, ${row.sex}, ${admissionNo}, 'active')
-                        RETURNING id, full_name, full_name_ar, sex, identity_no, admission_no`;
-                      student = ins.rows[0];
+                      // TD-2: candidate + INSERT retried together on a
+                      // unique-violation (docs/technical-debt-register.md).
+                      const insOutcome = await generateWithRetryOnConflict(
+                        sql,
+                        () => generateAdmissionNo(sql, INSTITUTIONS_BY_PROGRAMME[programmeCode].internalName, admissionYear),
+                        (admissionNo) => sql`
+                          INSERT INTO students (full_name, full_name_ar, sex, admission_no, status)
+                          VALUES (${row.fullName}, ${row.fullNameAr || null}, ${row.sex}, ${admissionNo}, 'active')
+                          RETURNING id, full_name, full_name_ar, sex, identity_no, admission_no`
+                      );
+                      student = insOutcome.result.rows[0];
                       created += 1;
                     } else if ((!student.full_name_ar && row.fullNameAr) || (!student.sex && row.sex)) {
                       // Enrich blanks only — an existing verified value is

@@ -15,6 +15,7 @@ import { readStaffSessionFromRequest } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { effectiveGrants, checkGrants } from '../../../_lib/permissions.js';
 import { hasPermission } from '../../../_lib/permission-matrix.js';
+import { generateWithRetryOnConflict } from '../../../_lib/generate-with-retry.js';
 
 const SUB_CAPABILITIES = [
   { key: 'behaviour_categories', label: 'Behaviour Categories', description: 'A seeded merit/demerit taxonomy — demerit tiers transcribed from SD-02 §7.1-7.3, merit categories built as new recognition structure.' },
@@ -147,13 +148,21 @@ export async function onRequestPost({ request, env }) {
       const severity = category.kind === 'demerit' && ['minor', 'moderate', 'serious', 'suspension_expulsion'].includes(body.severity) ? body.severity : null;
 
       const year = new Date().getFullYear();
-      const countRes = await sql`SELECT COUNT(*)::int AS n FROM behaviour_incidents WHERE EXTRACT(YEAR FROM occurred_at) = ${year}`;
-      const incidentNo = `SHR-BH-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
-
-      const inserted = await sql`
-        INSERT INTO behaviour_incidents (incident_no, student_id, institution_id, category_id, severity, description, recorded_by_staff_id)
-        VALUES (${incidentNo}, ${body.studentId}, ${body.institutionId || null}, ${category.id}, ${severity}, ${body.description.trim()}, ${staffId})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const incidentOutcome = await generateWithRetryOnConflict(
+        sql,
+        async () => {
+          const countRes = await sql`SELECT COUNT(*)::int AS n FROM behaviour_incidents WHERE EXTRACT(YEAR FROM occurred_at) = ${year}`;
+          return `SHR-BH-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
+        },
+        (no) => sql`
+          INSERT INTO behaviour_incidents (incident_no, student_id, institution_id, category_id, severity, description, recorded_by_staff_id)
+          VALUES (${no}, ${body.studentId}, ${body.institutionId || null}, ${category.id}, ${severity}, ${body.description.trim()}, ${staffId})
+          RETURNING id`
+      );
+      const incidentNo = incidentOutcome.value;
+      const inserted = incidentOutcome.result;
       const incidentId = inserted.rows[0].id;
       await sql`
         INSERT INTO behaviour_intervention_log (incident_id, action, actor_staff_id, notes)

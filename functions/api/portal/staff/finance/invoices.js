@@ -14,6 +14,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { generateInvoiceNo } from '../../../../_lib/finance-no.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
@@ -179,12 +180,18 @@ export async function onRequestPost({ request, env }) {
       }
       const totalAmount = Math.max(0, subtotal - discount);
 
-      const invoiceNo = await generateInvoiceNo(sql, new Date());
-      const created = await sql`
-        INSERT INTO invoices (invoice_no, student_id, institution_id, term, student_category, due_date, subtotal, scholarship_discount, total_amount, notes, created_by_staff_id)
-        VALUES (${invoiceNo}, ${student.id}, ${institutionId}, ${term}, ${studentCategory}, ${body.dueDate || null}, ${subtotal}, ${discount}, ${totalAmount}, ${body.notes || null}, ${staffId})
-        RETURNING id`;
-      const invoiceId = created.rows[0].id;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const invoiceOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateInvoiceNo(sql, new Date()),
+        (no) => sql`
+          INSERT INTO invoices (invoice_no, student_id, institution_id, term, student_category, due_date, subtotal, scholarship_discount, total_amount, notes, created_by_staff_id)
+          VALUES (${no}, ${student.id}, ${institutionId}, ${term}, ${studentCategory}, ${body.dueDate || null}, ${subtotal}, ${discount}, ${totalAmount}, ${body.notes || null}, ${staffId})
+          RETURNING id`
+      );
+      const invoiceNo = invoiceOutcome.value;
+      const invoiceId = invoiceOutcome.result.rows[0].id;
 
       for (const it of items) {
         await sql`

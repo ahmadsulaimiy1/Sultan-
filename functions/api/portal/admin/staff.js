@@ -553,12 +553,26 @@ export async function onRequestPost({ request, env }) {
         // SHR-STF-2026-000001 — two different numbers for one person,
         // and no way to tell which the certificate would print. They are
         // the same number and are now written together, once.
-        const created = await sql`
-          INSERT INTO staff (staff_no, identity_no, full_name, preferred_name, office_id, department_id, position_title,
-                              reports_to_staff_id, institution_id, date_joined, email)
-          VALUES (${staffNo}, ${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
-                  ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
-          RETURNING id`;
+        // TD-1 (docs/technical-debt-register.md): a caller-supplied
+        // staffNo (the bulk importer) is checked-then-inserted, not
+        // atomic — a genuine race surfaces here as a raw unique-
+        // violation rather than the SELECT above catching it. Caught
+        // specifically so the ICT Head running an import sees a plain
+        // instruction instead of a raw database error.
+        let created;
+        try {
+          created = await sql`
+            INSERT INTO staff (staff_no, identity_no, full_name, preferred_name, office_id, department_id, position_title,
+                                reports_to_staff_id, institution_id, date_joined, email)
+            VALUES (${staffNo}, ${staffNo}, ${body.fullName}, ${body.preferredName || null}, ${officeId}, ${departmentId},
+                    ${body.positionTitle || null}, ${reportsToId}, ${institutionId}, ${body.dateJoined || null}, ${email})
+            RETURNING id`;
+        } catch (err) {
+          if (err && err.code === '23505') {
+            return json({ error: 'That Staff ID is already assigned — choose another or omit it to auto-generate one.' }, 400);
+          }
+          throw err;
+        }
         staffId = created.rows[0].id;
       }
 

@@ -14,6 +14,7 @@ import { readStaffSessionFromRequest } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { effectiveGrants, checkGrants } from '../../../_lib/permissions.js';
 import { hasPermission } from '../../../_lib/permission-matrix.js';
+import { generateWithRetryOnConflict } from '../../../_lib/generate-with-retry.js';
 
 const SUB_CAPABILITIES = [
   { key: 'observations', label: 'Classroom Observations', description: 'Real observation records against five standard domains (planning, classroom management, delivery, assessment, professional responsibilities).' },
@@ -126,13 +127,21 @@ export async function onRequestPost({ request, env }) {
       if (!catRes.rows.length) return json({ error: 'Unknown observation domain code.' }, 400);
 
       const year = new Date().getFullYear();
-      const countRes = await sql`SELECT COUNT(*)::int AS n FROM teacher_observations WHERE EXTRACT(YEAR FROM observed_at) = ${year}`;
-      const observationNo = `SHR-TO-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
-
-      const inserted = await sql`
-        INSERT INTO teacher_observations (observation_no, teacher_staff_id, institution_id, category_id, observer_staff_id, notes)
-        VALUES (${observationNo}, ${body.teacherStaffId}, ${body.institutionId || null}, ${catRes.rows[0].id}, ${staffId}, ${body.notes.trim()})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const obsOutcome = await generateWithRetryOnConflict(
+        sql,
+        async () => {
+          const countRes = await sql`SELECT COUNT(*)::int AS n FROM teacher_observations WHERE EXTRACT(YEAR FROM observed_at) = ${year}`;
+          return `SHR-TO-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
+        },
+        (no) => sql`
+          INSERT INTO teacher_observations (observation_no, teacher_staff_id, institution_id, category_id, observer_staff_id, notes)
+          VALUES (${no}, ${body.teacherStaffId}, ${body.institutionId || null}, ${catRes.rows[0].id}, ${staffId}, ${body.notes.trim()})
+          RETURNING id`
+      );
+      const observationNo = obsOutcome.value;
+      const inserted = obsOutcome.result;
       await sql`INSERT INTO teacher_performance_log (target_type, target_id, action, actor_staff_id) VALUES ('observation', ${inserted.rows[0].id}, 'scheduled', ${staffId})`;
       return json({ ok: true, observationId: inserted.rows[0].id, observationNo });
     }
@@ -157,12 +166,21 @@ export async function onRequestPost({ request, env }) {
         return json({ error: 'teacherStaffId (number) and a non-empty reviewPeriod are required.' }, 400);
       }
       const year = new Date().getFullYear();
-      const countRes = await sql`SELECT COUNT(*)::int AS n FROM teacher_reviews WHERE EXTRACT(YEAR FROM created_at) = ${year}`;
-      const reviewNo = `SHR-TR-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
-      const inserted = await sql`
-        INSERT INTO teacher_reviews (review_no, teacher_staff_id, institution_id, review_period, reviewer_staff_id)
-        VALUES (${reviewNo}, ${body.teacherStaffId}, ${body.institutionId || null}, ${body.reviewPeriod.trim()}, ${staffId})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const reviewOutcome = await generateWithRetryOnConflict(
+        sql,
+        async () => {
+          const countRes = await sql`SELECT COUNT(*)::int AS n FROM teacher_reviews WHERE EXTRACT(YEAR FROM created_at) = ${year}`;
+          return `SHR-TR-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
+        },
+        (no) => sql`
+          INSERT INTO teacher_reviews (review_no, teacher_staff_id, institution_id, review_period, reviewer_staff_id)
+          VALUES (${no}, ${body.teacherStaffId}, ${body.institutionId || null}, ${body.reviewPeriod.trim()}, ${staffId})
+          RETURNING id`
+      );
+      const reviewNo = reviewOutcome.value;
+      const inserted = reviewOutcome.result;
       await sql`INSERT INTO teacher_performance_log (target_type, target_id, action, actor_staff_id) VALUES ('review', ${inserted.rows[0].id}, 'scheduled', ${staffId})`;
       return json({ ok: true, reviewId: inserted.rows[0].id, reviewNo });
     }

@@ -29,6 +29,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { createApprovalRequest, listPendingApprovals, decideApproval } from '../../../../_lib/approvals.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 
 const TYPE_ABBREVIATIONS = {
   nursery_graduation: 'NUR', primary_graduation: 'PRI', junior_secondary: 'JSS', senior_secondary: 'SSS',
@@ -143,12 +144,22 @@ export async function onRequestPost({ request, env }) {
         approvalId: body.approvalId, decidingStaffId: staffId, decision: action === 'approve' ? 'approve' : 'reject',
         note: body.note || null, areaCode: 'certificates', permissionCode: 'A',
         performOnApprove: async ({ payload, approval, decidingStaffId: approverId }) => {
-          let referenceNo = payload.referenceNo;
-          if (!referenceNo) referenceNo = await generateReferenceNo(sql, payload.certificateType, payload.issuedAt);
-          await sql`
+          const insertCertificate = (no) => sql`
             INSERT INTO certificates (student_id, student_full_name, certificate_type, reference_no, issued_at, issued_by_staff_id, approved_by_staff_id)
-            VALUES (${payload.studentId}, ${payload.studentFullName}, ${payload.certificateType}, ${referenceNo}, ${payload.issuedAt}, ${approval.requested_by_staff_id}, ${approverId})`;
-          return referenceNo;
+            VALUES (${payload.studentId}, ${payload.studentFullName}, ${payload.certificateType}, ${no}, ${payload.issuedAt}, ${approval.requested_by_staff_id}, ${approverId})`;
+          if (payload.referenceNo) {
+            await insertCertificate(payload.referenceNo);
+            return payload.referenceNo;
+          }
+          // TD-2: candidate + INSERT retried together on a unique-violation
+          // (docs/technical-debt-register.md) — only for the auto-generated
+          // case; a staff-supplied reference is never silently replaced.
+          const outcome = await generateWithRetryOnConflict(
+            sql,
+            () => generateReferenceNo(sql, payload.certificateType, payload.issuedAt),
+            insertCertificate
+          );
+          return outcome.value;
         },
       });
       if (result.error) return json({ error: result.error }, 403);

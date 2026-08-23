@@ -21,6 +21,7 @@ import { readStaffSessionFromRequest } from '../../../_lib/session.js';
 import { json, readJsonBody } from '../../../_lib/http.js';
 import { effectiveGrants, checkGrants } from '../../../_lib/permissions.js';
 import { hasPermission } from '../../../_lib/permission-matrix.js';
+import { generateWithRetryOnConflict } from '../../../_lib/generate-with-retry.js';
 
 const SUB_CAPABILITIES = [
   { key: 'incident_tracking', label: 'Incident Tracking', description: 'Every reported concern is logged the same day, with category, narrative, and reporting staff member on record.' },
@@ -137,13 +138,21 @@ export async function onRequestPost({ request, env }) {
       if (!catRes.rows.length) return json({ error: 'Unknown category code.' }, 400);
 
       const year = new Date().getFullYear();
-      const countRes = await sql`SELECT COUNT(*)::int AS n FROM safeguarding_cases WHERE EXTRACT(YEAR FROM reported_at) = ${year}`;
-      const caseNo = `SHR-SG-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
-
-      const inserted = await sql`
-        INSERT INTO safeguarding_cases (case_no, institution_id, student_id, category_id, summary, reported_by_staff_id)
-        VALUES (${caseNo}, ${body.institutionId || null}, ${body.studentId || null}, ${catRes.rows[0].id}, ${body.summary.trim()}, ${staffId})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const caseOutcome = await generateWithRetryOnConflict(
+        sql,
+        async () => {
+          const countRes = await sql`SELECT COUNT(*)::int AS n FROM safeguarding_cases WHERE EXTRACT(YEAR FROM reported_at) = ${year}`;
+          return `SHR-SG-${year}-${String((countRes.rows[0].n || 0) + 1).padStart(5, '0')}`;
+        },
+        (no) => sql`
+          INSERT INTO safeguarding_cases (case_no, institution_id, student_id, category_id, summary, reported_by_staff_id)
+          VALUES (${no}, ${body.institutionId || null}, ${body.studentId || null}, ${catRes.rows[0].id}, ${body.summary.trim()}, ${staffId})
+          RETURNING id`
+      );
+      const caseNo = caseOutcome.value;
+      const inserted = caseOutcome.result;
       const caseId = inserted.rows[0].id;
       await sql`
         INSERT INTO safeguarding_case_log (case_id, action, actor_staff_id, notes)

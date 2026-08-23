@@ -18,6 +18,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { generateReceiptNo } from '../../../../_lib/finance-no.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 
 async function requireStaffSession(request, env) {
   if (!env.SESSION_SECRET) return { error: json({ error: 'Portal is not configured yet.' }, 500) };
@@ -118,11 +119,18 @@ export async function onRequestPost({ request, env }) {
       if (invoice.status === 'cancelled') return json({ error: 'This invoice was cancelled — no further payments can be recorded against it.' }, 400);
 
       const paidAt = body.paidAt || new Date().toISOString();
-      const receiptNo = await generateReceiptNo(sql, paidAt);
-      const created = await sql`
-        INSERT INTO receipts (receipt_no, invoice_id, amount, payment_method, paid_at, recorded_by_staff_id)
-        VALUES (${receiptNo}, ${invoiceId}, ${amount}, ${paymentMethod}, ${paidAt}, ${staffId})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md).
+      const receiptOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateReceiptNo(sql, paidAt),
+        (no) => sql`
+          INSERT INTO receipts (receipt_no, invoice_id, amount, payment_method, paid_at, recorded_by_staff_id)
+          VALUES (${no}, ${invoiceId}, ${amount}, ${paymentMethod}, ${paidAt}, ${staffId})
+          RETURNING id`
+      );
+      const receiptNo = receiptOutcome.value;
+      const created = receiptOutcome.result;
       const receiptId = created.rows[0].id;
 
       const newStatus = await recomputeInvoiceStatus(sql, invoiceId);

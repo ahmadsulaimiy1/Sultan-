@@ -13,7 +13,7 @@
     "certificates:import": "node scripts/build-production-import.mjs",
     "certificates:accept": "node scripts/verify-certificate-acceptance.mjs",
     "certificates:rehearse": "node --import ./scripts/_lib/neon-pg-register.mjs scripts/verify-certificate-acceptance.mjs",
-    "test:certificates": "node scripts/test-verify-identifiers.mjs && node scripts/test-institution-registry.mjs && node scripts/test-key-continuity.mjs && node scripts/test-recovery-attestation.mjs && node scripts/test-graduation-verification-id.mjs"
+    "test:certificates": "node scripts/test-verify-identifiers.mjs && node scripts/test-institution-registry.mjs && node scripts/test-key-continuity.mjs && node scripts/test-recovery-attestation.mjs && node scripts/test-graduation-verification-id.mjs && node scripts/test-generate-with-retry.mjs"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "^1.2.0",

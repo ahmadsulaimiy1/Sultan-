@@ -22,6 +22,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { generateDocumentReferenceNo, getOrCreateVerificationId } from '../../../../_lib/graduation-document-no.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 import { computeDocumentHash } from '../../../../_lib/document-hash.js';
 import { resolveSignatories, resolveCertificateSignatories, SignatoryVacancyError } from '../../../../_lib/document-signatories.js';
 import { renderDocumentShell } from '../../../../_lib/document-template-shell.js';
@@ -324,19 +325,27 @@ export async function onRequestPost({ request, env }) {
       }
 
       const issuedAt = new Date().toISOString();
-      const referenceNo = await generateDocumentReferenceNo(sql, 'alumni_registration', issuedAt);
       const verificationId = await getOrCreateVerificationId(sql, recordId, record.graduation_session);
-      const hashFields = { graduationRecordId: recordId, documentType: 'alumni_registration', referenceNo, issuedAt };
-      const { fullHash } = computeDocumentHash(env, hashFields);
-
-      const inserted = await sql`
-        INSERT INTO graduation_documents
-          (graduation_record_id, document_type, document_kind, reference_no, verification_id,
-           issued_at, issued_by_staff_id, signatories, content_hash)
-        VALUES
-          (${recordId}, 'alumni_registration', 'original', ${referenceNo}, ${verificationId},
-           ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md) — the hash is recomputed per
+      // attempt since it is derived from the candidate reference number.
+      const docOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateDocumentReferenceNo(sql, 'alumni_registration', issuedAt),
+        (no) => {
+          const { fullHash } = computeDocumentHash(env, { graduationRecordId: recordId, documentType: 'alumni_registration', referenceNo: no, issuedAt });
+          return sql`
+            INSERT INTO graduation_documents
+              (graduation_record_id, document_type, document_kind, reference_no, verification_id,
+               issued_at, issued_by_staff_id, signatories, content_hash)
+            VALUES
+              (${recordId}, 'alumni_registration', 'original', ${no}, ${verificationId},
+               ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash})
+            RETURNING id`;
+        }
+      );
+      const referenceNo = docOutcome.value;
+      const inserted = docOutcome.result;
 
       await sql`
         INSERT INTO alumni_register (student_id, graduation_record_id, permanent_graduate_id)
@@ -402,19 +411,27 @@ export async function onRequestPost({ request, env }) {
       }
 
       const issuedAt = new Date().toISOString();
-      const referenceNo = await generateDocumentReferenceNo(sql, 'certificate', issuedAt);
       const verificationId = await getOrCreateVerificationId(sql, recordId, record.graduation_session);
-      const hashFields = { graduationRecordId: recordId, documentType: 'certificate', referenceNo, issuedAt };
-      const { fullHash } = computeDocumentHash(env, hashFields);
-
-      const inserted = await sql`
-        INSERT INTO graduation_documents
-          (graduation_record_id, document_type, document_kind, reference_no, verification_id,
-           issued_at, issued_by_staff_id, signatories, content_hash)
-        VALUES
-          (${recordId}, 'certificate', 'original', ${referenceNo}, ${verificationId},
-           ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md) — the hash is recomputed per
+      // attempt since it is derived from the candidate reference number.
+      const docOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateDocumentReferenceNo(sql, 'certificate', issuedAt),
+        (no) => {
+          const { fullHash } = computeDocumentHash(env, { graduationRecordId: recordId, documentType: 'certificate', referenceNo: no, issuedAt });
+          return sql`
+            INSERT INTO graduation_documents
+              (graduation_record_id, document_type, document_kind, reference_no, verification_id,
+               issued_at, issued_by_staff_id, signatories, content_hash)
+            VALUES
+              (${recordId}, 'certificate', 'original', ${no}, ${verificationId},
+               ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash})
+            RETURNING id`;
+        }
+      );
+      const referenceNo = docOutcome.value;
+      const inserted = docOutcome.result;
 
       await logStaffEvent(sql, {
         actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_document', targetId: inserted.rows[0].id,
@@ -555,25 +572,31 @@ export async function onRequestPost({ request, env }) {
           }
 
           const issuedAt = new Date().toISOString();
-          const referenceNo = await generateDocumentReferenceNo(sql, documentType, issuedAt);
           const verificationId = await getOrCreateVerificationId(sql, payload.recordId, record.graduation_session);
-          const hashFields = { graduationRecordId: payload.recordId, documentType, referenceNo, issuedAt };
-          const { fullHash } = computeDocumentHash(env, hashFields);
-
-          await sql`
-            INSERT INTO graduation_documents
-              (graduation_record_id, document_type, document_kind, reference_no, verification_id,
-               issued_at, issued_by_staff_id, signatories, content_hash, content_data)
-            VALUES
-              (${payload.recordId}, ${documentType}, 'original', ${referenceNo}, ${verificationId},
-               ${issuedAt}, ${approval.requested_by_staff_id}, ${JSON.stringify(signatories)}, ${fullHash}, ${JSON.stringify(contentData)})
-            RETURNING id`;
+          // TD-2: candidate + INSERT retried together on a unique-violation
+          // (docs/technical-debt-register.md) — the hash is recomputed per
+          // attempt since it is derived from the candidate reference number.
+          const docOutcome = await generateWithRetryOnConflict(
+            sql,
+            () => generateDocumentReferenceNo(sql, documentType, issuedAt),
+            (no) => {
+              const { fullHash } = computeDocumentHash(env, { graduationRecordId: payload.recordId, documentType, referenceNo: no, issuedAt });
+              return sql`
+                INSERT INTO graduation_documents
+                  (graduation_record_id, document_type, document_kind, reference_no, verification_id,
+                   issued_at, issued_by_staff_id, signatories, content_hash, content_data)
+                VALUES
+                  (${payload.recordId}, ${documentType}, 'original', ${no}, ${verificationId},
+                   ${issuedAt}, ${approval.requested_by_staff_id}, ${JSON.stringify(signatories)}, ${fullHash}, ${JSON.stringify(contentData)})
+                RETURNING id`;
+            }
+          );
 
           // result_ref (staff_approvals.result_ref) is a plain TEXT
           // column, the same "e.g. the certificate's reference_no"
           // contract certificates.js already established — return just
           // the string, not an object, so it stores correctly.
-          return referenceNo;
+          return docOutcome.value;
         },
       });
       if (result.error) return json({ error: result.error }, 403);
@@ -654,19 +677,27 @@ export async function onRequestPost({ request, env }) {
       }));
 
       const issuedAt = new Date().toISOString();
-      const referenceNo = await generateDocumentReferenceNo(sql, 'clearance_certificate', issuedAt);
       const verificationId = await getOrCreateVerificationId(sql, recordId, record.graduation_session);
-      const hashFields = { graduationRecordId: recordId, documentType: 'clearance_certificate', referenceNo, issuedAt };
-      const { fullHash } = computeDocumentHash(env, hashFields);
-
-      const inserted = await sql`
-        INSERT INTO graduation_documents
-          (graduation_record_id, document_type, document_kind, reference_no, verification_id,
-           issued_at, issued_by_staff_id, signatories, content_hash, content_data)
-        VALUES
-          (${recordId}, 'clearance_certificate', 'original', ${referenceNo}, ${verificationId},
-           ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash}, ${JSON.stringify({ clearanceRows: clearanceSnapshot })})
-        RETURNING id`;
+      // TD-2: candidate + INSERT retried together on a unique-violation
+      // (docs/technical-debt-register.md) — the hash is recomputed per
+      // attempt since it is derived from the candidate reference number.
+      const docOutcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateDocumentReferenceNo(sql, 'clearance_certificate', issuedAt),
+        (no) => {
+          const { fullHash } = computeDocumentHash(env, { graduationRecordId: recordId, documentType: 'clearance_certificate', referenceNo: no, issuedAt });
+          return sql`
+            INSERT INTO graduation_documents
+              (graduation_record_id, document_type, document_kind, reference_no, verification_id,
+               issued_at, issued_by_staff_id, signatories, content_hash, content_data)
+            VALUES
+              (${recordId}, 'clearance_certificate', 'original', ${no}, ${verificationId},
+               ${issuedAt}, ${staffId}, ${JSON.stringify(signatories)}, ${fullHash}, ${JSON.stringify({ clearanceRows: clearanceSnapshot })})
+            RETURNING id`;
+        }
+      );
+      const referenceNo = docOutcome.value;
+      const inserted = docOutcome.result;
 
       await logStaffEvent(sql, {
         actorStaffId: staffId, eventType: 'sensitive_action', targetType: 'graduation_document', targetId: inserted.rows[0].id,

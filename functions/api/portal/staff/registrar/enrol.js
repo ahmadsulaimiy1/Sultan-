@@ -15,6 +15,7 @@ import { hasPermissionFor } from '../../../../_lib/permissions.js';
 import { logStaffEvent } from '../../../../_lib/audit.js';
 import { generateAdmissionNo } from '../../../../_lib/identity-no.js';
 import { resolveClassId } from '../../../../_lib/classes.js';
+import { generateWithRetryOnConflict } from '../../../../_lib/generate-with-retry.js';
 
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) {
@@ -63,19 +64,33 @@ export async function onRequestPost({ request, env }) {
     // SHRS-<SCHOOL>-<YY>-<seq6> Institutional Student Number
     // server-side, so admission no longer depends on staff typing a
     // number correctly.
-    if (!admissionNo) {
-      admissionNo = await generateAdmissionNo(sql, institution, admissionYear);
-    }
-    const existingStudent = await sql`SELECT id FROM students WHERE admission_no = ${admissionNo}`;
-    if (existingStudent.rows.length) {
-      return json({ error: 'A student already exists with that Institutional Student Number.' }, 409);
-    }
-
     const classId = await resolveClassId(sql, institution, className);
-    const createdStudent = await sql`
-      INSERT INTO students (full_name, admission_no, class_id, status)
-      VALUES (${application.applicant_child_name}, ${admissionNo}, ${classId}, 'active')
-      RETURNING id`;
+    let createdStudent;
+    if (admissionNo) {
+      const existingStudent = await sql`SELECT id FROM students WHERE admission_no = ${admissionNo}`;
+      if (existingStudent.rows.length) {
+        return json({ error: 'A student already exists with that Institutional Student Number.' }, 409);
+      }
+      createdStudent = await sql`
+        INSERT INTO students (full_name, admission_no, class_id, status)
+        VALUES (${application.applicant_child_name}, ${admissionNo}, ${classId}, 'active')
+        RETURNING id`;
+    } else {
+      // TD-2 (docs/technical-debt-register.md): the COUNT(*)+1 candidate
+      // and its INSERT are retried together on a unique-violation, so a
+      // rare concurrent-generation race self-heals instead of surfacing a
+      // raw database error.
+      const outcome = await generateWithRetryOnConflict(
+        sql,
+        () => generateAdmissionNo(sql, institution, admissionYear),
+        (no) => sql`
+          INSERT INTO students (full_name, admission_no, class_id, status)
+          VALUES (${application.applicant_child_name}, ${no}, ${classId}, 'active')
+          RETURNING id`
+      );
+      admissionNo = outcome.value;
+      createdStudent = outcome.result;
+    }
     const studentId = createdStudent.rows[0].id;
 
     await sql`
