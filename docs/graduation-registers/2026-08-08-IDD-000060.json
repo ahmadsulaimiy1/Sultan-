@@ -6,7 +6,7 @@
   "issuedAt": "2026-08-08",
   "issuedAtHijri": "25 Ṣafar 1448 A.H.",
   "place": "Ikorodu, Lagos, Nigeria",
-  "firstCertificateSeq": 58,
+  "firstCertificateSeq": 60,
   "count": 1,
   "arabicNames": {
     "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived. Anything this pipeline could only propose was put to the Founder before print: once ruled on it moves to confirmedByFounder with the date of his approval, and anything still outstanding stays under awaitingConfirmation. A name is never generated, transliterated or guessed here.",
@@ -22,22 +22,22 @@
   },
   "entries": [
     {
-      "certId": 58,
-      "credentialId": "f9241001-f497-53c9-9281-3c780ef2e5ae",
+      "certId": 60,
+      "credentialId": "397875b2-5a77-5673-9f0a-1f9baff4293a",
       "hashKeyVersion": 3,
       "studentEn": "Yaseer Balogun",
       "studentAr": "ياسر بالوغون",
       "sex": "male",
-      "identityNo": "719900615637876",
+      "identityNo": "713145152825668",
       "gradeEn": "Excellent",
       "gradeAr": null,
-      "serialNo": "SHRS-CERT-IDD-2026-000058-C6381",
-      "contentHash": "c6381bd4930bbf49c5c5c3b78715a21b4d74cb721cb963cf2a684ded2f453df5",
-      "verifyCode": "C638-1BD4-930B",
-      "documentId": "DID-2026-IDD-0000058",
-      "archiveRef": "ARCH/IDD/2026/000058",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000058-C6381",
-      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000058-C6381"
+      "serialNo": "SHRS-CERT-IDD-2026-000060-9051A",
+      "contentHash": "9051ad852be630c3cd7d0490504bc55cb594510db3cd1c9b379fdde276772706",
+      "verifyCode": "9051-AD85-2BE6",
+      "documentId": "DID-2026-IDD-0000060",
+      "archiveRef": "ARCH/IDD/2026/000060",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-IDD-2026-000060-9051A",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-IDD-2026-000060-9051A"
     }
   ]
 }

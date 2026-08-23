@@ -68,13 +68,13 @@ const TARGETS = {
   graduation: {
     out: '2026-08-15-GRADUATION-IMPORT.sql',
     sources: [
-      '2026-08-08-QUR-000051.sql',
-      '2026-08-08-TMH-000054.sql',
-      '2026-08-08-IBT-000055.sql',
-      '2026-08-08-IDD-000058.sql',
-      '2026-08-08-PRY-000059.sql',
-      '2026-08-08-JSS-000065.sql',
-      '2026-08-08-SS-000080.sql',
+      '2026-08-08-QUR-000053.sql',
+      '2026-08-08-TMH-000056.sql',
+      '2026-08-08-IBT-000057.sql',
+      '2026-08-08-IDD-000060.sql',
+      '2026-08-08-PRY-000061.sql',
+      '2026-08-08-JSS-000067.sql',
+      '2026-08-08-SS-000082.sql',
     ],
     standing: 'minted on 15 August 2026 under key version 3 for the\n'
       + '-- graduands of the 8 August ceremony who had no certificate record at all.\n'

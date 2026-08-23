@@ -1,18 +1,18 @@
 -- SHRS graduation register — Sultan Hanafi Qur’an College
--- Hifz of the Glorious Qur’an · 2026-08-08 · certificates 000051–000053
+-- Hifz of the Glorious Qur’an · 2026-08-08 · certificates 000053–000055
 --
 -- grade_en is written even though it is never printed: the content hash is
 -- taken over it, and the public verifier recomputes it from this column. A
 -- row imported without it verifies as tampered.
 
-INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (51, '813e02e7-d90b-5bcc-bf81-642e71088309', 'SHRS-CERT-QUR-2026-000051-890BF', '717988020633236', 'Aisha Omoshalewa Anofi', 'female', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', '890bf4bca1618975c05a14be26df5da073f84a18a1ecd0187bad4b0c0c8d8033', 3);
-INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (52, '4d3a35db-442d-5d42-bb10-cd77b23429ab', 'SHRS-CERT-QUR-2026-000052-0BFD3', '710699780947768', 'Baqi Olamiposi Anofi', 'male', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', '0bfd30841933c6c585e83962990dd1c68060eb1892108c9482a3ea969e6ef933', 3);
-INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (53, 'c86a85f8-2723-5ff5-aae5-fbe141653b38', 'SHRS-CERT-QUR-2026-000053-7556C', '713411541262298', 'Zaynab Zakariya Anofi', 'female', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', '7556c80b8d963ae55af71445756bfdb0165edc7f04fcf37a0a2f6f6fae4e5c6e', 3);
+INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (53, '01c0500b-3410-5166-91d4-e3a88aed1b86', 'SHRS-CERT-QUR-2026-000053-1ADE9', '717988020633236', 'Aisha Omoshalewa Anofi', 'female', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', '1ade9bd8950c1b9324591e95491407cfecad1c8d8d88316418765dd1faa85c60', 3);
+INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (54, '8492a16f-6d55-549b-bcb7-a707cfaa39a0', 'SHRS-CERT-QUR-2026-000054-FC895', '710699780947768', 'Baqi Olamiposi Anofi', 'male', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', 'fc895519391ab1ba4b63cfb6081e421ea00e4ae2945f1f9f786f2e75c3922d4b', 3);
+INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_sex, programme_code, programme_label_en, institution_name, academic_year, grade_en, grade_ar, place_en, issued_at, content_hash, hash_key_version) VALUES (55, '65d14162-3e21-5042-a95f-50885175515e', 'SHRS-CERT-QUR-2026-000055-D7E3F', '716656078450081', 'Zaynab Zakariya Anofi', 'female', 'QUR', 'Hifz of the Glorious Qur’an', 'Sultan Hanafi Royal Schools — Sultan Hanafi Qur’an College', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', '2026-08-08', 'd7e3fd84b322195dc6e7d736da7e3e1f92fe868d19c2f5e108a95fec362e17fd', 3);
 
 -- Move the sequences past what this batch consumed, so the next issuance
 -- cannot mint a number that is already engraved on a printed document.
-SELECT setval('stage_certificate_serial_seq', 53, true);
-SELECT setval('student_identity_seq', 66, true);
+SELECT setval('stage_certificate_serial_seq', 55, true);
+SELECT setval('student_identity_seq', 67, true);
 
 -- ── Linking each certificate to its student record ───────────────────────
 -- The rows above are complete and verifiable on their own: every certificate
@@ -44,5 +44,5 @@ UPDATE stage_certificates sc
 SELECT serial_no, student_identity_no, student_full_name,
        CASE WHEN student_id IS NULL THEN 'NOT LINKED — link by hand' ELSE 'linked' END AS student_record
   FROM stage_certificates
- WHERE programme_code = 'QUR' AND id BETWEEN 51 AND 53
+ WHERE programme_code = 'QUR' AND id BETWEEN 53 AND 55
  ORDER BY id;

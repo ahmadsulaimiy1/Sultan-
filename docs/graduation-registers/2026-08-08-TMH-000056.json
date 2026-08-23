@@ -6,7 +6,7 @@
   "issuedAt": "2026-08-08",
   "issuedAtHijri": "25 Ṣafar 1448 A.H.",
   "place": "Ikorodu, Lagos, Nigeria",
-  "firstCertificateSeq": 54,
+  "firstCertificateSeq": 56,
   "count": 1,
   "arabicNames": {
     "reason": "The Founder’s directive supplied English names only. English is authoritative. Where a spelling had already been approved on an earlier register it is carried across unchanged rather than re-derived. Anything this pipeline could only propose was put to the Founder before print: once ruled on it moves to confirmedByFounder with the date of his approval, and anything still outstanding stays under awaitingConfirmation. A name is never generated, transliterated or guessed here.",
@@ -20,8 +20,8 @@
   },
   "entries": [
     {
-      "certId": 54,
-      "credentialId": "795124d7-7eb2-5745-8776-053fd4b23008",
+      "certId": 56,
+      "credentialId": "a96eff19-8f27-578c-8c98-3ae3cea3d15a",
       "hashKeyVersion": 3,
       "studentEn": "Abdulbasit Adedokun",
       "studentAr": "عبد الباسط أددوكن",
@@ -29,13 +29,13 @@
       "identityNo": "711232557821021",
       "gradeEn": "Excellent",
       "gradeAr": null,
-      "serialNo": "SHRS-CERT-TMH-2026-000054-7CC6F",
-      "contentHash": "7cc6fe3de08868d008d3357ca8ae95c59f3d1639e0ef002c08369ce6bb4ffd6f",
-      "verifyCode": "7CC6-FE3D-E088",
-      "documentId": "DID-2026-TMH-0000054",
-      "archiveRef": "ARCH/TMH/2026/000054",
-      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-TMH-2026-000054-7CC6F",
-      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-TMH-2026-000054-7CC6F"
+      "serialNo": "SHRS-CERT-TMH-2026-000056-8DD83",
+      "contentHash": "8dd83efd591de4c472c732f970ce7e697cca579a188201a3da3a0742ec124a60",
+      "verifyCode": "8DD8-3EFD-591D",
+      "documentId": "DID-2026-TMH-0000056",
+      "archiveRef": "ARCH/TMH/2026/000056",
+      "verifyUrl": "https://www.shroyalschools.com/verify-certificate/?ref=SHRS-CERT-TMH-2026-000056-8DD83",
+      "qrUrl": "https://shroyalschools.com/v/SHRS-CERT-TMH-2026-000056-8DD83"
     }
   ]
 }

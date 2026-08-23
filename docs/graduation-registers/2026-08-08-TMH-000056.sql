@@ -3,9 +3,9 @@
 -- rather than generated, and the sequence is advanced past them so the
 -- registrar never re-issues one of these values to a different student.
 UPDATE students SET identity_no = '711232557821021' WHERE full_name = 'Abdulbasit Adedokun' AND identity_no IS NULL;
-SELECT setval('student_identity_seq', 66, true);
+SELECT setval('student_identity_seq', 67, true);
 
-INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version) VALUES (54, '795124d7-7eb2-5745-8776-053fd4b23008', 'SHRS-CERT-TMH-2026-000054-7CC6F', '711232557821021', 'Abdulbasit Adedokun', 'عبد الباسط أددوكن', 'male', 'TMH', 'Tamhīdiyyah — Preparatory Stage', 'المرحلة التمهيدية', 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', 'إكورودو، لاغوس، نيجيريا', '2026-08-08', '25 Ṣafar 1448 A.H.', '25 صفر 1448هـ', '7cc6fe3de08868d008d3357ca8ae95c59f3d1639e0ef002c08369ce6bb4ffd6f', 3);
+INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_no, student_full_name, student_full_name_ar, student_sex, programme_code, programme_label_en, programme_label_ar, institution_name, academic_year, grade_en, grade_ar, place_en, place_ar, issued_at, issued_at_hijri, issued_at_hijri_ar, content_hash, hash_key_version) VALUES (56, 'a96eff19-8f27-578c-8c98-3ae3cea3d15a', 'SHRS-CERT-TMH-2026-000056-8DD83', '711232557821021', 'Abdulbasit Adedokun', 'عبد الباسط أددوكن', 'male', 'TMH', 'Tamhīdiyyah — Preparatory Stage', 'المرحلة التمهيدية', 'Sultan Hanafi Royal Schools — School of Islamic & Arabic Studies', '2025/2026', 'Excellent', NULL, 'Ikorodu, Lagos, Nigeria', 'إكورودو، لاغوس، نيجيريا', '2026-08-08', '25 Ṣafar 1448 A.H.', '25 صفر 1448هـ', '8dd83efd591de4c472c732f970ce7e697cca579a188201a3da3a0742ec124a60', 3);
 
 -- The sequence name is stage_certificate_serial_seq (sql/schema.sql).
 -- An earlier version of this file said stage_certificate_seq, which does
@@ -14,7 +14,7 @@ INSERT INTO stage_certificates (id, credential_id, serial_no, student_identity_n
 -- student in a later year — and because the number PRINTED on the
 -- certificate is now SHRS-CERT-IBT-000035 with no year, those two
 -- documents would carry the identical printed number.
-SELECT setval('stage_certificate_serial_seq', 54, true);
+SELECT setval('stage_certificate_serial_seq', 56, true);
 
 -- stage_certificates.id has a sequence of its own (id SERIAL PRIMARY KEY —
 -- sql/schema.sql), and an INSERT that supplies id explicitly, as every row
@@ -36,7 +36,7 @@ SELECT setval('stage_certificate_serial_seq', 54, true);
 -- order the registers are imported in: importing IBT after IDD must not
 -- wind the sequence back to this batch's own last id.
 SELECT setval(pg_get_serial_sequence('stage_certificates', 'id'),
-              GREATEST((SELECT MAX(id) FROM stage_certificates), 54), true);
+              GREATEST((SELECT MAX(id) FROM stage_certificates), 56), true);
 
 -- Make the PRINTED number unique in the database, not merely unique by
 -- convention. serial_no already has a UNIQUE constraint, but two rows
