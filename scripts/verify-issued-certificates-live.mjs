@@ -2,7 +2,7 @@
 /**
  * Does every certificate this school has issued actually verify in public?
  *
- *     node scripts/verify-issued-certificates-live.mjs [--base https://shroyalschools.com]
+ *     node scripts/verify-issued-certificates-live.mjs [--base https://shroyalschools.com] [--db <postgres-url>]
  *
  * WHY THIS EXISTS, IN ONE SENTENCE: certificates were printed, signed and
  * handed to graduands, and none of them resolved on the public verification
@@ -22,17 +22,28 @@
  * document id, the archive reference, the verification code and the Student
  * ID. A certificate is only counted good when all of them resolve to it.
  *
+ * REGISTER FILES ARE NOT THE WHOLE STORY (Founder's mandatory production
+ * requirement, 2026-08-23: regression coverage of "every previously issued
+ * certificate", not only the ones that happened to get a sealed register).
+ * Certificates issued one at a time through the live Certificate Generation
+ * Centre — 000048, 000049, 000050, and everything after — have no register
+ * file at all. Pass --db and this ALSO reads every non-revoked serial
+ * straight from stage_certificates and checks it, so the register files are
+ * a floor, not a ceiling, on what this script covers.
+ *
  * It sends nothing but numbers that are already printed on documents in
- * circulation, and it writes nothing. Run it after every issuance, and again
- * after any deployment that touches verification.
+ * circulation, and it writes nothing (--db only reads). Run it after every
+ * issuance, and again after any deployment that touches verification.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { displayStageCertificateNo } from '../functions/_lib/certificate-serial.js';
 
-const i = process.argv.indexOf('--base');
-const BASE = (i > 0 ? process.argv[i + 1] : 'https://shroyalschools.com').replace(/\/$/, '');
+const argv = process.argv;
+const flag = (name) => { const i = argv.indexOf(name); return i > 0 ? argv[i + 1] : null; };
+const BASE = (flag('--base') || 'https://shroyalschools.com').replace(/\/$/, '');
+const DB_URL = flag('--db');
 const DIR = 'docs/graduation-registers';
 
 const entries = [];
@@ -40,8 +51,40 @@ for (const f of readdirSync(DIR).filter((x) => x.endsWith('.json') && /^\d{4}-/.
   const reg = JSON.parse(readFileSync(join(DIR, f), 'utf8'));
   for (const e of reg.entries || []) entries.push({ file: f, ...e });
 }
+
+// Every serial the register files did not name, straight from the database
+// that actually decides what "issued" means. A minimal identifier set only
+// (full serial, engraved number, Student ID) — the register-file entries
+// keep checking every identifier a printed sheet carries; these carry the
+// three that matter most for a certificate this script has no sheet layout
+// for at all.
+if (DB_URL) {
+  let pg;
+  try { ({ default: pg } = await import('pg')); } catch {
+    console.error('\n  --db needs node-postgres, a devDependency: run `npm install` first.\n');
+    process.exit(2);
+  }
+  const known = new Set(entries.map((e) => e.serialNo));
+  const pool = new pg.Pool({ connectionString: DB_URL, max: 2 });
+  try {
+    const res = await pool.query(
+      `SELECT serial_no, student_full_name, student_identity_no
+         FROM stage_certificates WHERE revoked_at IS NULL ORDER BY id`);
+    for (const row of res.rows) {
+      if (known.has(row.serial_no)) continue;
+      entries.push({
+        file: '(database — no register file)', serialNo: row.serial_no,
+        studentEn: row.student_full_name, identityNo: row.student_identity_no,
+        minimalCheck: true,
+      });
+    }
+  } finally {
+    await pool.end();
+  }
+}
+
 if (!entries.length) {
-  console.error(`  No published registers found in ${DIR}.`);
+  console.error(`  No published registers found in ${DIR}${DB_URL ? ' and none in the database either' : ''}.`);
   process.exit(2);
 }
 

@@ -99,17 +99,42 @@ async function logVerification(sql, request, refNo, outcome) {
 // DOCUMENT_HASH_SECRET on a deployment) is reported as an integrity
 // failure, never as "intact" by default.
 //
-// 'key_unavailable' is deliberately NOT treated as a failure here, the same
-// precedent already established in graduation-documents/verify.js: a
-// deployment missing a signing key is an operator's gap, not evidence a
-// document was altered, and publicly branding a genuine certificate as
-// failed over an unset environment variable is the exact harm this
-// distinction exists to prevent. The suffix cross-check is kept regardless —
-// it compares two values already stored on the row and needs no key, so it
-// remains a real guard even when the deeper signature can't be recomputed.
-// `contentVerified` carries the honest, narrower fact (was the cryptographic
-// hash itself recomputed and matched) for anything that wants it.
-function stageCertificateState(env, row) {
+// Four canonical outcomes, per the Founder's mandatory production
+// requirement (2026-08-23; docs/governance-resolution-register.md Category
+// 9.5): every certificate resolves to exactly one of verified / revoked /
+// verified_institutional_recovery / invalid. There is no fifth "cannot
+// verify" state a genuine document can land in over an internal
+// engineering or operational gap.
+//
+//   verified                        the hash was recomputed and matches.
+//   revoked                         a well-formed record the school has
+//                                   withdrawn — independent of the crypto
+//                                   check, which a withdrawn award does not
+//                                   need re-run.
+//   verified_institutional_recovery the suffix (needs no key) is intact, the
+//                                   deep signature could not be recomputed,
+//                                   and EITHER no key is configured for this
+//                                   document's era at all (categorically
+//                                   never a tamper signal — nothing a forger
+//                                   can cause) OR a human with the authority
+//                                   to do so has recorded a
+//                                   certificate_recovery_attestations row
+//                                   explaining why, citing a governance
+//                                   record. The second case is deliberately
+//                                   never self-granted by this function —
+//                                   see that table's own comment in
+//                                   sql/schema.sql for why widening this
+//                                   would defeat the point of tamper
+//                                   evidence.
+//   invalid                         the suffix itself does not match (the
+//                                   one check that needs no key at all), or
+//                                   the deep hash mismatches under an
+//                                   AVAILABLE key with no attestation on
+//                                   file. This is the state that should
+//                                   never quietly persist — see
+//                                   scripts/verify-issued-certificates-live.mjs,
+//                                   the gate run before any new issuance.
+export async function stageCertificateState(env, sql, row) {
   let integrity = { hashValid: false, suffixValid: false, reason: undefined };
   try {
     integrity = verifyStageCertificateIntegrity(env, row);
@@ -118,13 +143,48 @@ function stageCertificateState(env, row) {
   }
   const keyUnavailable = integrity.reason === 'key_unavailable';
   const contentVerified = integrity.hashValid && integrity.suffixValid;
-  const intact = integrity.suffixValid && (integrity.hashValid || keyUnavailable);
+
+  // Only a real mismatch under an AVAILABLE key needs the attestation
+  // lookup — a genuine match needs no recovery, and an unconfigured
+  // retired key is already, structurally, never a tamper signal.
+  let attestation = null;
+  if (integrity.suffixValid && !integrity.hashValid && !keyUnavailable) {
+    try {
+      const res = await sql`
+        SELECT reason, governance_ref, attested_by, attested_at
+        FROM certificate_recovery_attestations
+        WHERE serial_no = ${row.serial_no} AND revoked_at IS NULL`;
+      attestation = res.rows[0] || null;
+    } catch (attestErr) {
+      console.error('recovery attestation lookup failed', attestErr);
+    }
+  }
+
+  const recovered = keyUnavailable || Boolean(attestation);
+  const intact = integrity.suffixValid && (integrity.hashValid || recovered);
+
+  let verificationOutcome;
+  if (!integrity.suffixValid) verificationOutcome = 'invalid';
+  else if (row.revoked_at) verificationOutcome = 'revoked';
+  else if (integrity.hashValid) verificationOutcome = 'verified';
+  else if (recovered) verificationOutcome = 'verified_institutional_recovery';
+  else verificationOutcome = 'invalid';
+
   return {
     intact,
     contentVerified,
-    signaturePending: intact && keyUnavailable,
-    status: !intact ? 'integrity_check_failed' : row.revoked_at ? 'revoked' : 'active',
-    outcome: !intact ? 'hash_mismatch' : keyUnavailable ? 'key_unavailable' : row.revoked_at ? 'revoked' : 'valid',
+    signaturePending: intact && !integrity.hashValid,
+    verificationOutcome,
+    attestation: attestation ? {
+      reason: attestation.reason, governanceRef: attestation.governance_ref,
+      attestedBy: attestation.attested_by, attestedAt: attestation.attested_at,
+    } : null,
+    status: verificationOutcome === 'invalid' ? 'integrity_check_failed'
+      : verificationOutcome === 'revoked' ? 'revoked' : 'active',
+    outcome: verificationOutcome === 'invalid' ? 'hash_mismatch'
+      : verificationOutcome === 'revoked' ? 'revoked'
+        : verificationOutcome === 'verified' ? 'valid'
+          : attestation ? 'institutional_recovery' : 'key_unavailable',
   };
 }
 
@@ -186,8 +246,8 @@ export async function onRequestGet({ request, env }) {
         recipientName: rows[0].student_full_name,
         recipientNameAr: rows[0].student_full_name_ar,
         matchCount: rows.length,
-        matches: rows.map((r) => {
-          const state = stageCertificateState(env, r);
+        matches: await Promise.all(rows.map(async (r) => {
+          const state = await stageCertificateState(env, sql, r);
           return {
             serialNo: r.serial_no,
             certificateNo: displayStageCertificateNo(r.serial_no),
@@ -197,13 +257,14 @@ export async function onRequestGet({ request, env }) {
             academicYear: r.academic_year,
             issuedAt: isoDateOnly(r.issued_at),
             status: state.status,
+            verificationOutcome: state.verificationOutcome,
           };
-        }),
+        })),
       });
     }
     if (resolved && resolved.outcome === 'resolved') {
       const row = resolved.rows[0];
-      const state = stageCertificateState(env, row);
+      const state = await stageCertificateState(env, sql, row);
       await logVerification(sql, request, ref, state.outcome);
       // A revoked certificate that was REISSUED names its successor, so
       // the holder (and any verifier) is pointed at the document that
@@ -252,6 +313,13 @@ export async function onRequestGet({ request, env }) {
         integrity: state.signaturePending ? 'pending_signature' : state.intact ? 'intact' : 'integrity_check_failed',
         contentVerified: state.contentVerified,
         status: state.status,
+        // The four-outcome model (Founder's mandatory production
+        // requirement, 2026-08-23): 'verified' | 'revoked' |
+        // 'verified_institutional_recovery' | 'invalid'. Authoritative —
+        // status/integrity above are kept for existing consumers, but a
+        // new integration should read this field.
+        verificationOutcome: state.verificationOutcome,
+        recoveryAttestation: state.attestation,
         revokedAt: row.revoked_at,
         revocationNote: row.revoked_at ? row.revocation_note : null,
         // Reissue linkage: which serial this document replaced, and —

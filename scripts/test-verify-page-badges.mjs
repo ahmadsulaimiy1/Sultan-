@@ -39,6 +39,25 @@ const CASES = [
     expect:'index' },
   { name:'status this page has never seen', body:{ ok:true, found:true, kind:'stage_certificate',
       status:'suspended_pending_review', referenceNo:'X', recipientName:'Y', credentialType:'Z' }, expect:'unknown' },
+  // Institutional Recovery Attestation (Founder's mandatory production
+  // requirement, 2026-08-23). Genuine, but reached through an audited
+  // human attestation rather than a live cryptographic recompute — it
+  // must earn its OWN badge, never the plain 'ok' green (that would
+  // overstate what was actually checked) and never 'revoked'/'unknown'
+  // (that would falsely accuse a genuine, attested-real document).
+  { name:'verified through institutional recovery', body:{ ok:true, found:true, kind:'stage_certificate',
+      status:'active', verificationOutcome:'verified_institutional_recovery',
+      referenceNo:'SHRS-CERT-IDD-2026-000042-56798', recipientName:'Y', credentialType:'Z',
+      recoveryAttestation:{ reason:'Key lost to an undocumented rotation.',
+        attestedBy:'Founder (Ahmad Sulaimiy)', attestedAt:'2026-08-23',
+        governanceRef:'Governance Resolution Register 9.5' } }, expect:'recovery' },
+  // The SAME status:'active' shape as the very first case, but now carrying
+  // the new field explicitly saying 'verified' — must still earn the plain
+  // green, proving the new field does not accidentally downgrade an
+  // ordinary, fully cryptographically verified certificate.
+  { name:'active certificate, new field present', body:{ ok:true, found:true, kind:'stage_certificate',
+      status:'active', verificationOutcome:'verified',
+      referenceNo:'SHRS-CERT-IBT-2026-000035-368DC', recipientName:'Y', credentialType:'Z' }, expect:'ok' },
 ];
 
 let bad = 0;

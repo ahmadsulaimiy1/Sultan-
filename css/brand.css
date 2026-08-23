@@ -1870,6 +1870,12 @@
      so an unrecognised state lands here rather than silently rendering as
      verified — which is what it did before. */
   .cert-verify-badge.unknown{background:rgba(201,120,75,0.14);color:var(--terracotta-text,#964E24);}
+  /* Genuine, confirmed against the Registrar's own record — but reached
+     through an audited institutional attestation rather than a live
+     cryptographic recompute. Distinct from .ok on purpose: it is a real,
+     positive outcome, not a warning, but the page must not claim the
+     strongest form of proof when it is presenting a different one. */
+  .cert-verify-badge.recovery{background:rgba(28,44,74,0.12);color:var(--navy);}
   .cert-verify-note{font-size:var(--caption-size);color:var(--ink-soft);margin:0 0 var(--space-sm);max-width:52ch;}
   .cert-verify-field{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--small-size);}
   .cert-verify-field:last-child{border-bottom:none;}

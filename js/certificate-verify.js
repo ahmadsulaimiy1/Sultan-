@@ -21,6 +21,9 @@
         + 'Office with the number and it will be resolved.',
       integrityFailed: 'Integrity check failed — this record does not match its cryptographic signature. Contact the Registrar.',
       integrityPending: 'Record confirmed against the Registrar’s own file. The cryptographic signature check is not yet available on this deployment — that is a configuration gap, not a question about this document.',
+      recoveredBadge: 'Genuine — verified through institutional recovery',
+      recoveredNote: 'This record is confirmed genuine against the Registrar’s own permanent file. Its original cryptographic signature cannot currently be independently re-verified — the institution has recorded, on the audited record below, why and under whose authority this document is attested as genuine.',
+      recoveryReason: 'Recovery reason', recoveryAuthority: 'Attested by', recoveryDate: 'Attested on', recoveryRef: 'Governance record',
       indexBadge: 'This is a Student ID, not a certificate number',
       indexNote: 'It identifies a student who holds the credentials below. Verify a single credential by its own certificate number.',
       unknownState: 'This record is in a state this page does not recognise — contact the Registrar’s Office',
@@ -46,6 +49,9 @@
         + 'بهذا الرقم ليُعالَج الأمر.',
       integrityFailed: 'فشل فحص السلامة — لا يطابق هذا السجل توقيعه التشفيري. يرجى التواصل مع مكتب المسجّل.',
       integrityPending: 'تم تأكيد هذا السجل مقابل ملف المسجِّل نفسه. فحص التوقيع التشفيري غير متاح بعد على هذا الإصدار — وهذه فجوة إعدادية، لا شكٌّ في هذه الوثيقة.',
+      recoveredBadge: 'أصلية — تم التحقق عبر الاسترداد المؤسسي',
+      recoveredNote: 'تم تأكيد صحة هذا السجل مقابل ملف المسجِّل الدائم نفسه. لا يمكن حاليًا إعادة التحقق المستقل من توقيعه التشفيري الأصلي — وقد سجّلت المؤسسة، في السجل المدقَّق أدناه، سبب اعتماد هذه الوثيقة كأصلية والجهة صاحبة الصلاحية بذلك.',
+      recoveryReason: 'سبب الاسترداد', recoveryAuthority: 'اعتمدها', recoveryDate: 'تاريخ الاعتماد', recoveryRef: 'السجل الحوكمي',
       indexBadge: 'هذا رقم أكاديمي للطالب، وليس رقم شهادة',
       indexNote: 'يشير إلى طالب يحمل الشهادات المدرجة أدناه. للتحقق من شهادة بعينها، استخدم رقم الشهادة الخاص بها.',
       unknownState: 'هذا السجل في حالة لا تعرفها هذه الصفحة — يرجى التواصل مع مكتب المسجّل',
@@ -115,18 +121,28 @@
         '</div>';
       return;
     }
-    var isRevoked = data.status === 'revoked';
-    var integrityFailed = data.status === 'integrity_check_failed';
+    // Four canonical outcomes (Founder's mandatory production requirement,
+    // 2026-08-23): 'verified' | 'revoked' | 'verified_institutional_recovery'
+    // | 'invalid'. Falls back to the older status-only whitelist for a
+    // response from before this field existed, so a cached or older
+    // deployment never silently renders as verified either.
+    var outcome = data.verificationOutcome;
+    var isRevoked = outcome ? outcome === 'revoked' : data.status === 'revoked';
+    var integrityFailed = outcome ? outcome === 'invalid' : data.status === 'integrity_check_failed';
+    var isRecovered = outcome === 'verified_institutional_recovery';
     // WHITELIST, never a blacklist. This read `integrityFailed || isRevoked ?
     // 'revoked' : 'ok'`, which meant any status the page had not been taught
     // about rendered as the green "Genuine — active credential" badge. Adding
     // one status to the endpoint was therefore enough to make an unverified
-    // record look verified on a public page. Only 'active' earns the green.
-    var isValid = data.status === 'active';
-    var badgeClass = isValid ? 'ok' : (integrityFailed || isRevoked) ? 'revoked' : 'unknown';
+    // record look verified on a public page. Only 'active'/'verified' earns
+    // the green; institutional recovery earns its own distinct badge, never
+    // the plain green one — it is genuine, but by a different kind of proof.
+    var isValid = outcome ? outcome === 'verified' : data.status === 'active';
+    var badgeClass = isValid ? 'ok' : isRecovered ? 'recovery' : (integrityFailed || isRevoked) ? 'revoked' : 'unknown';
     var badgeText = isValid ? t.valid
-      : integrityFailed ? t.integrityFailed
-        : isRevoked ? t.revoked : t.unknownState;
+      : isRecovered ? t.recoveredBadge
+        : integrityFailed ? t.integrityFailed
+          : isRevoked ? t.revoked : t.unknownState;
     var rows = '';
     rows += field(t.reference, data.referenceNo);
     var recipient = data.recipientName;
@@ -152,7 +168,21 @@
     // (a real mismatch). Only the first two reach this line at all, since
     // integrityFailed already earns the revoked-style badge above.
     if (data.kind === 'stage_certificate' && !integrityFailed) {
-      rows += field(t.integrity, data.integrity === 'pending_signature' ? t.integrityPending : t.integrityIntact);
+      rows += field(t.integrity, isRecovered ? t.recoveredNote
+        : data.integrity === 'pending_signature' ? t.integrityPending : t.integrityIntact);
+    }
+    // The audited human record behind a recovery outcome — never rendered
+    // for any other outcome, and never fabricated if the API did not send
+    // one (which it will not, for a genuinely 'verified_institutional_recovery'
+    // result, since that outcome requires either an unconfigured retired key
+    // or an attestation row; only the attestation case has these fields).
+    if (isRecovered && data.recoveryAttestation) {
+      rows += field(t.recoveryReason, data.recoveryAttestation.reason);
+      rows += field(t.recoveryAuthority, data.recoveryAttestation.attestedBy);
+      if (data.recoveryAttestation.attestedAt) {
+        rows += field(t.recoveryDate, String(data.recoveryAttestation.attestedAt).slice(0, 10));
+      }
+      rows += field(t.recoveryRef, data.recoveryAttestation.governanceRef);
     }
     if (isRevoked && data.revocationNote) rows += field(t.revokedNote, data.revocationNote);
     // A revoked-and-reissued certificate points the verifier to the

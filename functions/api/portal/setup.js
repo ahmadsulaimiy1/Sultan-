@@ -1388,12 +1388,12 @@ const STATEMENTS = [
     document_reference_no   TEXT NOT NULL,
     verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     ip_hash                 TEXT,
-    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery'))
   )`,
   `ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check`,
   `DO $$ BEGIN
     ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
-      CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
+      CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery'));
   EXCEPTION WHEN duplicate_object THEN NULL;
   END $$`,
   `CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no)`,
@@ -1880,6 +1880,30 @@ const STATEMENTS = [
     window_start TIMESTAMPTZ NOT NULL DEFAULT now(),
     hits         INTEGER NOT NULL DEFAULT 0
   )`,
+
+  // StromeX delegation-of-authority requirement (2026-08-22) — mirrors
+  // sql/schema.sql, which had these and this file did not: the same
+  // "mirrors sql/schema.sql" drift the comment above already found once.
+  `ALTER TABLE stage_certificate_batches ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id)`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id)`,
+
+  // Institutional Recovery Attestation (Founder's mandatory production
+  // requirement, 2026-08-23) — mirrors sql/schema.sql. A row here is a
+  // deliberate, audited human act, never something verification grants
+  // itself; see sql/schema.sql's fuller comment on this table.
+  `CREATE TABLE IF NOT EXISTS certificate_recovery_attestations (
+    id                   SERIAL PRIMARY KEY,
+    serial_no            TEXT NOT NULL REFERENCES stage_certificates(serial_no),
+    reason               TEXT NOT NULL,
+    governance_ref       TEXT NOT NULL,
+    attested_by          TEXT NOT NULL,
+    attested_by_staff_id INTEGER REFERENCES staff(id),
+    attested_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    revoked_at           TIMESTAMPTZ,
+    created_at           TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS idx_certificate_recovery_attestations_active
+    ON certificate_recovery_attestations (serial_no) WHERE revoked_at IS NULL`,
 ];
 
 async function handle({ request, env }) {

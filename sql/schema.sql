@@ -1516,11 +1516,18 @@ CREATE TABLE IF NOT EXISTS verification_log (
   document_reference_no   TEXT NOT NULL,
   verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
   ip_hash                 TEXT,
-  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'))
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery'))
 );
+-- 'key_unavailable' has been an outcome functions/api/certificates/verify.js
+-- could emit since 2026-08-06 (the key-versioning work) and was never added
+-- here — the exact same silent-drop failure this section's own comment
+-- above already describes happening once before with 'ambiguous'/'multiple'.
+-- 'institutional_recovery' is new with certificate_recovery_attestations
+-- (2026-08-23). Both added the same way: DROP + ADD, so a database created
+-- before either existed picks them up on re-run.
 ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check;
 ALTER TABLE verification_log ADD CONSTRAINT verification_log_outcome_check
-  CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple'));
+  CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery'));
 CREATE INDEX IF NOT EXISTS idx_verification_log_ref ON verification_log(document_reference_no);
 
 -- Alumni Register (spec §1.3, §16.10) — the data model the honest-shell
@@ -2553,3 +2560,35 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 -- staff_roles authority (the ordinary case) simply leaves this NULL.
 ALTER TABLE stage_certificate_batches ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id);
 ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS delegation_id INTEGER REFERENCES delegations(id);
+
+-- Institutional Recovery Attestation (Founder's mandatory production
+-- requirement, 2026-08-23; docs/governance-resolution-register.md Category
+-- 9.5): "every legitimately issued SHRS certificate shall remain verifiable
+-- throughout its entire institutional lifetime," and if a cryptographic key
+-- is permanently unavailable, "implement an institutional recovery
+-- verification mechanism that clearly identifies the certificate as a
+-- genuine institutional record while preserving full auditability. Never
+-- silently fail."
+--
+-- This is that mechanism, and it is deliberately narrow: a row here is a
+-- DELIBERATE, AUDITED human act — never something the verification code
+-- grants itself. A hash mismatch with no attestation on file must keep
+-- reading as unverified (the certificate service's own gate, run before any
+-- new issuance, is what surfaces that as a Priority-1 incident) — an
+-- attestation is the record that a human with the authority to make that
+-- call actually made it, and why. Widening this into an auto-attest on any
+-- mismatch would trade the one property tamper-evidence exists to guarantee
+-- for the exact convenience that guarantee is supposed to withstand.
+CREATE TABLE IF NOT EXISTS certificate_recovery_attestations (
+  id                  SERIAL PRIMARY KEY,
+  serial_no           TEXT NOT NULL REFERENCES stage_certificates(serial_no),
+  reason              TEXT NOT NULL,               -- what made the original cryptographic proof unrecoverable
+  governance_ref      TEXT NOT NULL,               -- e.g. "Governance Resolution Register 9.5" — the audit trail this attestation rests on, never asserted standalone
+  attested_by         TEXT NOT NULL,                -- name/role of the human who made this call (may predate/exceed the staff_id system, e.g. "Founder")
+  attested_by_staff_id INTEGER REFERENCES staff(id),
+  attested_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  revoked_at          TIMESTAMPTZ,                  -- set if the attestation itself is later withdrawn (e.g. the original key IS recovered, making this unnecessary)
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_certificate_recovery_attestations_active
+  ON certificate_recovery_attestations (serial_no) WHERE revoked_at IS NULL;
