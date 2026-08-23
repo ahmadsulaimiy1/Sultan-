@@ -1,9 +1,9 @@
 {
   "observedAt": "2026-08-18",
   "source": "Neon project shrs-production (orange-dawn-28507285), read directly from the live database",
-  "certificateSequence": 50,
-  "studentIdentitySequence": 49,
-  "certificatesOnFile": 16,
+  "certificateSequence": 52,
+  "studentIdentitySequence": 50,
+  "certificatesOnFile": 18,
   "why": [
     "The published registers are not the only thing that spends a certificate number.",
     "The Registrar's Office issues certificates through the live system, and on",
@@ -26,5 +26,61 @@
     "Re-read this from production before any future batch. It is a snapshot, not a",
     "constant: it was true on the date above and the live system moves without",
     "asking this repository."
-  ]
+  ],
+  "liveIssued": [
+    {
+      "id": 48,
+      "serialNo": "SHRS-CERT-IBT-2026-000048-0B67B",
+      "programmeCode": "IBT",
+      "issuedAt": "2026-08-16"
+    },
+    {
+      "id": 49,
+      "serialNo": "SHRS-CERT-IDD-2026-000049-0BEE7",
+      "programmeCode": "IDD",
+      "issuedAt": "2026-08-21"
+    },
+    {
+      "id": 50,
+      "serialNo": "SHRS-CERT-THN-2026-000050-62EEC",
+      "programmeCode": "THN",
+      "issuedAt": "2026-08-21"
+    }
+  ],
+  "liveIssuedWhy": [
+    "Recorded by SERIAL, with no name and no hash. Two reasons.",
+    "",
+    "The ICID assignment must cover every certificate on file, and its assertion",
+    "is that no row carries a database-generated default. These three are on file",
+    "and are not in any published register here, so without them the assertion",
+    "fails against production - correctly, because it would be true that three",
+    "certificates carried an accidental permanent identifier.",
+    "",
+    "And the serial is all that is needed: the ICID is UUIDv5 over the stored",
+    "serial, so recording the serial reproduces the identifier without this",
+    "repository holding anything about the child. Their names, hashes and records",
+    "belong to the live system that issued them; nothing here restates them."
+  ],
+  "reservation": {
+    "reservedAt": "2026-08-18",
+    "certificateNumbers": "000053-000085",
+    "studentIdentities": "51-67",
+    "method": "setval on stage_certificate_serial_seq, stage_certificates_id_seq and student_identity_seq, executed against production before minting",
+    "why": [
+      "READING A FLOOR IS A RACE. THIS IS THE FIX.",
+      "",
+      "The floor was read at 50, the batch renumbered to 000051-000083, and by the",
+      "time the schema migration finished the live system had issued two more and",
+      "the sequence stood at 52. The Registrar issues while this pipeline works;",
+      "any number chosen from a number read earlier may already be gone.",
+      "",
+      "A certificate number cannot be allocated at import time, because the five",
+      "characters engraved on the face are the head of a hash taken over the number",
+      "itself - it must be known at mint. So the block is RESERVED in the live",
+      "sequence first, then minted into. The live system allocates above the",
+      "reservation from that moment, and the race is closed rather than re-run.",
+      "",
+      "Reserve before minting. Do not read a floor and hope."
+    ]
+  }
 }

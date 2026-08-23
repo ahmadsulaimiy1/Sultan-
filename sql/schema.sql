@@ -1104,7 +1104,7 @@ CREATE TABLE IF NOT EXISTS verification_log (
 --                 does not hold were checked by the public with NO audit
 --                 trail at all. Found by running the real endpoint against a
 --                 staging copy of this schema on 15 August 2026.
-  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable')),
+  outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery')),
   -- WHICH credential this lookup resolved to, by its permanent internal name.
   --
   -- document_reference_no above is what the VISITOR TYPED — a serial, a

@@ -52,6 +52,22 @@ for (const f of readdirSync(DIR).filter((x) => x.endsWith('.json') && /^\d{4}-/.
 }
 if (!rows.length) { console.error(`  No published registers in ${DIR}.`); process.exit(2); }
 
+// Certificates the LIVE system issued, which appear in no published register
+// here. They are on file in production, so the assertion at the foot of this
+// file - that no certificate is left carrying a database-generated ICID - is
+// only true if they are covered. Recorded by serial alone in
+// live-sequence-floor.json, which is all the derivation needs.
+const FLOOR = JSON.parse(readFileSync(`${DIR}/live-sequence-floor.json`, 'utf8'));
+for (const c of FLOOR.liveIssued || []) {
+  rows.push({
+    serial: c.serialNo,
+    icid: credentialIdFor(c.serialNo),
+    name: `issued live ${c.issuedAt} (${c.programmeCode})`,
+    sealed: false,
+  });
+}
+rows.sort((a, b) => a.serial.localeCompare(b.serial));
+
 const dupes = rows.filter((r, i) => rows.findIndex((x) => x.icid === r.icid) !== i);
 if (dupes.length) {
   console.error(`  ${dupes.length} ICID collision(s). Refusing to write.`);

@@ -1373,7 +1373,7 @@ const STATEMENTS = [
     document_reference_no   TEXT NOT NULL,
     verified_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
     ip_hash                 TEXT,
-    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable'))
+    outcome                 TEXT NOT NULL CHECK (outcome IN ('valid', 'revoked', 'hash_mismatch', 'not_found', 'ambiguous', 'multiple', 'key_unavailable', 'institutional_recovery'))
   )`,
   `ALTER TABLE verification_log DROP CONSTRAINT IF EXISTS verification_log_outcome_check`,
   // 'key_unavailable' was missing here and in sql/schema.sql, so a lookup of a
