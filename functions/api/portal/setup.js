@@ -1919,6 +1919,38 @@ const STATEMENTS = [
   )`,
   `CREATE UNIQUE INDEX IF NOT EXISTS idx_certificate_recovery_attestations_active
     ON certificate_recovery_attestations (serial_no) WHERE revoked_at IS NULL`,
+
+  // StromeX Autonomous Engineering Service Identity (AESI) — Governance
+  // Resolution Register 9.2/9.10 — mirrors sql/schema.sql. See that
+  // file's fuller comment, and functions/_lib/permissions.js's
+  // hasPermissionForServiceIdentity() for the code-level denylist this
+  // table's contents can never override.
+  `CREATE TABLE IF NOT EXISTS service_identities (
+    id              SERIAL PRIMARY KEY,
+    name            TEXT NOT NULL UNIQUE,
+    description     TEXT,
+    api_key_hash    TEXT NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_by      INTEGER REFERENCES staff(id),
+    revoked_at      TIMESTAMPTZ,
+    revoked_by      INTEGER REFERENCES staff(id),
+    revocation_note TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS service_identity_grants (
+    id                   SERIAL PRIMARY KEY,
+    service_identity_id  INTEGER NOT NULL REFERENCES service_identities(id),
+    area_code            TEXT NOT NULL,
+    permission_code      TEXT NOT NULL,
+    institution_id       INTEGER REFERENCES institutions(id),
+    granted_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    granted_by           INTEGER NOT NULL REFERENCES staff(id),
+    revoked_at           TIMESTAMPTZ,
+    revoked_by           INTEGER REFERENCES staff(id),
+    UNIQUE (service_identity_id, area_code, permission_code, institution_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_service_identity_grants_active
+    ON service_identity_grants (service_identity_id) WHERE revoked_at IS NULL`,
+  `ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS actor_service_identity_id INTEGER REFERENCES service_identities(id)`,
 ];
 
 async function handle({ request, env }) {

@@ -2623,3 +2623,45 @@ CREATE TABLE IF NOT EXISTS certificate_recovery_attestations (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_certificate_recovery_attestations_active
   ON certificate_recovery_attestations (serial_no) WHERE revoked_at IS NULL;
+
+-- StromeX Autonomous Engineering Service Identity (AESI) — Governance
+-- Resolution Register 9.2/9.10, realising the "Permanent AI Service
+-- Identity" the Founder agreed on 2026-08-22: a dedicated, non-human
+-- institutional actor, its own row, its own permissions, its own
+-- immutable audit attribution — never a staff_roles grant, never
+-- indistinguishable from a human acting on personal authority. See
+-- functions/_lib/service-identity.js and functions/_lib/permissions.js's
+-- hasPermissionForServiceIdentity() for the full account, including the
+-- code-level denylist (certificate issuance, finance writes, safeguarding
+-- writes, any delete) that this table's contents can never override.
+CREATE TABLE IF NOT EXISTS service_identities (
+  id              SERIAL PRIMARY KEY,
+  name            TEXT NOT NULL UNIQUE,
+  description     TEXT,
+  api_key_hash    TEXT NOT NULL,   -- SHA-256 of the bearer token; the plaintext is shown once, at creation, and never stored
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by      INTEGER REFERENCES staff(id),
+  revoked_at      TIMESTAMPTZ,
+  revoked_by      INTEGER REFERENCES staff(id),
+  revocation_note TEXT
+);
+
+CREATE TABLE IF NOT EXISTS service_identity_grants (
+  id                   SERIAL PRIMARY KEY,
+  service_identity_id  INTEGER NOT NULL REFERENCES service_identities(id),
+  area_code            TEXT NOT NULL,     -- matches permission-matrix.js area codes
+  permission_code      TEXT NOT NULL,     -- C/E/V/X/A; 'D' is refused at the code level regardless of a row here
+  institution_id       INTEGER REFERENCES institutions(id),
+  granted_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  granted_by           INTEGER NOT NULL REFERENCES staff(id),
+  revoked_at           TIMESTAMPTZ,
+  revoked_by           INTEGER REFERENCES staff(id),
+  UNIQUE (service_identity_id, area_code, permission_code, institution_id)
+);
+CREATE INDEX IF NOT EXISTS idx_service_identity_grants_active
+  ON service_identity_grants (service_identity_id) WHERE revoked_at IS NULL;
+
+-- actor_service_identity_id is set INSTEAD of actor_staff_id, never
+-- alongside it — a row attributed to AESI must never read as, or be
+-- confusable with, a human staff member acting on personal authority.
+ALTER TABLE staff_audit_log ADD COLUMN IF NOT EXISTS actor_service_identity_id INTEGER REFERENCES service_identities(id);

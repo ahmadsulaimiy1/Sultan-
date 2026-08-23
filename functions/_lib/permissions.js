@@ -10,6 +10,7 @@
 // staff_roles rows has zero effective grants and every requirePermission()
 // call fails closed (403), not open.
 import { hasPermission } from './permission-matrix.js';
+import { effectiveGrantsForServiceIdentity } from './service-identity.js';
 
 // Active role assignments, scoped by institution/office exactly as
 // staff_roles recorded them.
@@ -82,4 +83,44 @@ export function checkGrants(grants, areaCode, permissionCode, institutionId) {
 export async function hasPermissionFor(sql, staffId, areaCode, permissionCode, institutionId) {
   const grants = await effectiveGrants(sql, staffId);
   return checkGrants(grants, areaCode, permissionCode, institutionId);
+}
+
+// ── StromeX Autonomous Engineering Service Identity (AESI) ─────────────
+// Governance Resolution Register 9.2/9.10. A service identity's grants
+// come from service_identity_grants (functions/_lib/service-identity.js),
+// never from staff_roles or delegations — deliberately a THIRD, separate
+// resolution path rather than a role a service identity could be
+// "granted" through the human system, which is exactly the conflation
+// 9.3 already rules against.
+//
+// SERVICE_IDENTITY_DENYLIST is enforced HERE, in code, ahead of any
+// database lookup — never only by what service_identity_grants happens
+// to contain. The Founder's ruling (Governance Resolution Register 9.2)
+// draws one line: certificate issuance, finance writes, safeguarding
+// writes, and any delete are a human act, full stop, regardless of what
+// a machine identity is nominally granted. A seeding mistake in the
+// grants table — a wrong row, a copy-paste, a future migration bug —
+// must be unable to cross this line; only a code change can move it,
+// and a code change is reviewed the way every other change here is.
+const SERVICE_IDENTITY_DENYLIST = new Set([
+  'certificates:C', 'certificates:E',
+  'finance:C', 'finance:E',
+  'safeguarding:C', 'safeguarding:E',
+]);
+function serviceIdentityDenied(areaCode, permissionCode) {
+  if (permissionCode === 'D') return true; // delete, in any area, always
+  return SERVICE_IDENTITY_DENYLIST.has(`${areaCode}:${permissionCode}`);
+}
+
+export async function hasPermissionForServiceIdentity(sql, serviceIdentityId, areaCode, permissionCode, institutionId) {
+  if (serviceIdentityDenied(areaCode, permissionCode)) {
+    return { granted: false, scope: null, via: null, denyReason: 'reserved for a human act — Governance Resolution Register 9.2' };
+  }
+  const grants = await effectiveGrantsForServiceIdentity(sql, serviceIdentityId);
+  for (const grant of grants) {
+    if (grant.areaCode !== areaCode || grant.permissionCode !== permissionCode) continue;
+    if (grant.institutionId != null && institutionId != null && grant.institutionId !== institutionId) continue;
+    return { granted: true, scope: 'service_identity_grant', via: { source: 'service_identity', serviceIdentityId } };
+  }
+  return { granted: false, scope: null, via: null };
 }

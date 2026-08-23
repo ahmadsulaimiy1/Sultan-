@@ -28,15 +28,24 @@
 // authority, and the actor field alone can never carry that distinction —
 // so callers that resolved a grant via effectiveGrants()/hasPermissionFor()
 // pass its `via.delegationId` straight through rather than dropping it.
+//
+// actorServiceIdentityId (optional, default null): set instead of
+// actorStaffId when the action was taken by the StromeX Autonomous
+// Engineering Service Identity (AESI — Governance Resolution Register
+// 9.2/9.10), never alongside it — a row attributed to a machine identity
+// must never read as, or be confusable with, a human staff member acting
+// on personal authority. Callers that authenticated a request via
+// service-identity.js's readServiceIdentityFromRequest() pass its
+// serviceIdentityId here and leave actorStaffId unset.
 export async function logStaffEvent(sql, {
-  actorStaffId, eventType, targetType, targetId, reason, metadata,
+  actorStaffId, actorServiceIdentityId, eventType, targetType, targetId, reason, metadata,
   ipAddress, userAgent, previousValue, newValue, delegationId,
 }) {
   if (!sql) return;
   await sql`
-    INSERT INTO staff_audit_log (actor_staff_id, event_type, target_type, target_id, reason, metadata, ip_address, user_agent, previous_value, new_value, delegation_id)
+    INSERT INTO staff_audit_log (actor_staff_id, actor_service_identity_id, event_type, target_type, target_id, reason, metadata, ip_address, user_agent, previous_value, new_value, delegation_id)
     VALUES (
-      ${actorStaffId ?? null}, ${eventType}, ${targetType ?? null}, ${targetId ?? null}, ${reason ?? null}, ${metadata ? JSON.stringify(metadata) : null},
+      ${actorStaffId ?? null}, ${actorServiceIdentityId ?? null}, ${eventType}, ${targetType ?? null}, ${targetId ?? null}, ${reason ?? null}, ${metadata ? JSON.stringify(metadata) : null},
       ${ipAddress ?? null}, ${userAgent ?? null}, ${previousValue ? JSON.stringify(previousValue) : null}, ${newValue ? JSON.stringify(newValue) : null},
       ${delegationId ?? null}
     )`;

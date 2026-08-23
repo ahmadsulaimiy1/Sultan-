@@ -484,3 +484,52 @@ either role.
 
 See `docs/data-ownership-register.md` for the companion document mapping
 each record type to its owner, retention authority, and approval chain.
+
+---
+
+## 7. AESI — the StromeX Autonomous Engineering Service Identity
+
+Governance Resolution Register 9.2/9.10 (Founder's ruling, 2026-08-22,
+built 2026-08-23). AESI is **not a role** and does not appear in §3's
+role directory — it is a separate, non-human actor type with its own
+tables (`service_identities`, `service_identity_grants`,
+`sql/schema.sql`) and its own resolution path
+(`hasPermissionForServiceIdentity()`, `functions/_lib/permissions.js`),
+parallel to but never merged with `staff_roles`/`delegations`. That
+separation is deliberate and is the same principle Resolution 9.3
+already stated for a *human* delegate acting outside their ordinary
+role: authority exercised by an actor other than its ordinary human
+holder must remain provably distinguishable in the audit trail, never
+indistinguishable from personal authority. A machine identity gets no
+exception, and its own audit column
+(`staff_audit_log.actor_service_identity_id`) makes the distinction
+structural rather than a matter of discipline.
+
+**Default grant: none.** A newly created service identity has zero
+`service_identity_grants` rows, exactly as a newly created staff member
+with no `staff_roles` rows has zero effective permissions (§2's
+least-privilege principle applies identically here). Every grant is a
+specific, reasoned, auditable act — `granted_by` a real `staff.id`,
+never blanket, never assumed.
+
+**Hard code-level denylist, not a matrix cell.** Unlike every role in
+§4, AESI's ceiling is not expressed as a table a future edit could
+loosen — it is enforced in `hasPermissionForServiceIdentity()` itself:
+`certificates:C`/`E`, `finance:C`/`E`, `safeguarding:C`/`E`, and any `D`
+(delete), in any area, are refused regardless of what
+`service_identity_grants` contains. This is the Founder's own line from
+the ruling: *"certificate issuance, data deletion, and irreversible
+migrations continu[e] to require explicit human action exactly as they
+do today for every human role."* A future engineer adding a row to the
+grants table cannot cross it — only a reviewed change to
+`permissions.js` can, which is the point.
+
+**Provisioning is not automatic.** Creating a service identity mints a
+live bearer credential (`functions/_lib/service-identity.js`,
+`createServiceIdentity()`) — shown once, stored only as a SHA-256 hash,
+unrecoverable if lost. This session's own tooling refused to generate
+one autonomously (blocked by the operating environment's own permission
+classifier) even though the code path exists and is tested — treated
+here as a feature of the environment, not a gap to route around. See
+`docs/governance-resolution-register.md` Category 9.10 for the account
+of what was built versus what still needs a human hand.
