@@ -1,0 +1,15 @@
+{
+  "_read_this_first": "SHA-256 fingerprints (first 16 hex characters) of every DOCUMENT_HASH_SECRET this institution has ever deployed, one entry per hash_key_version. A fingerprint is NOT the secret and is safe to commit — docs/certificate-key-deployment.md already publishes v2's in plaintext for exactly this cross-check. scripts/verify-key-continuity.mjs compares the LIVE key's fingerprint against the entry recorded here for its version and fails loudly on any mismatch. This file exists because that check did not, and a rotation done outside the documented procedure on or shortly after 2026-08-06 silently replaced the v2 secret without updating DOCUMENT_HASH_KEY_VERSION or preserving the original as DOCUMENT_HASH_SECRET_V2 — see docs/certificate-key-deployment.md §7 and docs/governance-resolution-register.md Category 9.5.",
+  "versions": {
+    "1": {
+      "fingerprint": null,
+      "note": "The development literal ('batch-issuance-development-secret'), committed in plaintext at scripts/issue-certificate-batch.mjs:355 and used to sign the 2026-08-08 Ibtida'iyyah batch. Not tracked here because it is already public in git history, not because it is exempt from continuity checking — verify-key-continuity.mjs special-cases version 1 by comparing DOCUMENT_HASH_SECRET_V1 against the known literal directly, not against a fingerprint."
+    },
+    "2": {
+      "fingerprint": "24bb0f683233486a",
+      "recordedAt": "2026-08-06",
+      "recordedBy": "docs/certificate-key-deployment.md §3, at generation",
+      "note": "64 bytes from the OS CSPRNG. Signed the six I'dadiyyah certificates (000042-000047) re-minted 2026-08-06. Known to have been overwritten in Cloudflare's DOCUMENT_HASH_SECRET without a version bump sometime before 2026-08-16 — the six certificates it signed report a hash mismatch under the live key as of that date. If recovered from a second custody copy, install it as DOCUMENT_HASH_SECRET_V2 (never overwrite DOCUMENT_HASH_SECRET with it) and verify it against this fingerprint BEFORE deploying: printf %s \"$CANDIDATE\" | sha256sum | cut -c1-16"
+    }
+  }
+}

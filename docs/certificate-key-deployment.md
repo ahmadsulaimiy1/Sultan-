@@ -140,6 +140,99 @@ must be destroyed rather than filed — two documents bearing the same certifica
 sequence with different tails is precisely the ambiguity the tail exists to
 prevent.
 
+## 7. What went wrong, and how it is caught next time
+
+**Incident, discovered 2026-08-16, root-caused 2026-08-22.** Sometime between
+2026-08-06 and 2026-08-16, `DOCUMENT_HASH_SECRET` on Cloudflare was overwritten
+with a different value while `DOCUMENT_HASH_KEY_VERSION` stayed at `2` — not
+the rotation procedure in §4, which requires moving the *old* value to
+`DOCUMENT_HASH_SECRET_V2` and bumping the version *first*. Cloudflare secrets
+cannot be read back once set, so the original v2 key is not recoverable from
+the platform itself; it exists only if the second custody copy required by §3
+step 2 was actually kept somewhere.
+
+**Effect:** all six I'dadiyyah certificates (000042–000047) — genuine,
+unaltered, correctly-registered documents — report `integrity_check_failed`
+to the public verifier, because `verifyDocumentHash()` compares their stored
+hash against the *current* `DOCUMENT_HASH_SECRET` (version still reads as
+"2") rather than the key that actually signed them. This is a real HMAC
+mismatch, not a missing key, so the system correctly cannot tell the
+difference between this and tampering **from the mismatch alone** — which is
+exactly why it must never be allowed to happen from a version-number's
+perspective again.
+
+**What this is not.** The verification architecture itself did not fail.
+`functions/api/certificates/verify.js`'s `key_unavailable` / `pending_signature`
+path — which reports "record confirmed, signature check unavailable" rather
+than "integrity check failed" — is exactly the safe landing this situation
+calls for, and it already existed before this incident, built for precisely
+this class of gap. It did not activate because the live environment reports a
+key IS available for version 2 (`DOCUMENT_HASH_SECRET`, just the wrong value)
+— `verificationKey()` has no way to know the value behind an unchanged
+version number changed. That is the actual gap, and it is a continuity-
+checking gap, not a verification-architecture gap.
+
+### Recovering the original key, if possible
+
+Before accepting the key as lost: check whatever the school uses for its most
+sensitive credentials for a second copy delivered alongside the original
+key file (§3 step 2). If one exists, confirm it is the RIGHT key — not
+merely *a* key — before installing anything:
+
+```bash
+printf %s "$CANDIDATE" | sha256sum | cut -c1-16
+# must read: 24bb0f683233486a
+```
+
+If it matches: set it as `DOCUMENT_HASH_SECRET_V2` (never as
+`DOCUMENT_HASH_SECRET` — that would repeat the exact mistake this section
+describes), add version 2 to `RETIRED_KEYS` in
+`functions/_lib/document-hash.js`, and run
+`scripts/verify-key-continuity.mjs` to confirm before relying on it. This
+fully restores cryptographic verification for all six certificates — nothing
+about them needs to change.
+
+### If the key is genuinely gone
+
+It is mathematically not recoverable — a 64-byte CSPRNG value with no
+surviving copy cannot be reconstructed by any amount of engineering. The
+correct response is not to attempt repair; it is to stop the false accusation
+and be honest about the gap:
+
+1. **Bump `DOCUMENT_HASH_KEY_VERSION` to `3`.** The live `DOCUMENT_HASH_SECRET`
+   value does not need to change — only its version number, so it stops being
+   compared against documents it never signed.
+2. **Do not set `DOCUMENT_HASH_SECRET_V2`.** Leaving it unset is what makes
+   `verificationKey()` return `null` for version 2 instead of the wrong
+   current secret — which is what turns the six certificates' status from a
+   false `integrity_check_failed` into the honest, already-built
+   `key_unavailable` / "signature check unavailable" state. This is a config
+   change only; no code deploy is required for it to take effect.
+3. **Add version 2 to `RETIRED_KEYS`** in `functions/_lib/document-hash.js`
+   with the reason (the exact account above is sufficient), so nothing can
+   ever sign under it again by accident.
+4. **Record the fingerprint you now hold as version 3** in
+   `docs/certificate-key-fingerprints.json`, so this exact incident cannot
+   recur silently for version 3.
+
+Either path is safe, reversible (bumping the version number back has no
+destructive effect), and requires no re-mint, no revocation, and no change to
+any certificate already in a student's hands.
+
+### The check that should have caught this
+
+`scripts/verify-key-continuity.mjs` compares the live key's SHA-256
+fingerprint, per version, against `docs/certificate-key-fingerprints.json` —
+recorded once, at generation, and never containing the secret itself. Run it:
+
+- after every deploy that could touch `DOCUMENT_HASH_SECRET` or
+  `DOCUMENT_HASH_KEY_VERSION`;
+- every time a rotation is performed, not only when one is suspected;
+- as part of investigating any report that a certificate "looks tampered."
+
+A drift it reports means exactly what happened here: a version number that
+stopped matching the value behind it, silently, until someone looked.
+
 ## 6. Database
 
 `hash_key_version` is on `stage_certificates` and `graduation_documents`,
