@@ -2538,3 +2538,43 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   window_start TIMESTAMPTZ NOT NULL DEFAULT now(),
   hits         INTEGER NOT NULL DEFAULT 0
 );
+
+-- Institutional Writing & Document Intelligence Centre — AI-assisted
+-- drafting of office correspondence (letters, memos, circulars,
+-- notices), rendered on the general-purpose letterhead
+-- functions/_lib/correspondence-shell.js implements from
+-- docs/letterhead-editorial-bible.md. Deliberately its own table, not a
+-- new document_type inside graduation_documents (that table is scoped
+-- to the graduation-event lifecycle, per its own header) and not
+-- office_documents (that table is an upload/record register, not a
+-- generation-and-branding pipeline). Every office already has a row in
+-- `offices` and needs no new configuration to appear here — the office
+-- picker in the Writing Centre is simply "offices this staff member
+-- can act on" (functions/_lib/office-access.js), the same population
+-- Institutional Messaging already uses.
+CREATE TABLE IF NOT EXISTS office_correspondence (
+  id                   SERIAL PRIMARY KEY,
+  office_id            INTEGER NOT NULL REFERENCES offices(id),
+  institution_id       INTEGER REFERENCES institutions(id),
+  document_type        TEXT NOT NULL CHECK (document_type IN ('letter', 'memo', 'circular', 'notice')),
+  tone                 TEXT,
+  title                TEXT,
+  subject              TEXT,
+  recipient_name       TEXT,
+  recipient_role       TEXT,
+  source_notes         TEXT,
+  body_html            TEXT NOT NULL,
+  signatory_name       TEXT,
+  signatory_title      TEXT,
+  reference_no         TEXT UNIQUE,
+  content_hash         TEXT,
+  hash_key_version     INTEGER,
+  status               TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'issued', 'revoked')),
+  drafted_by_staff_id  INTEGER REFERENCES staff(id),
+  issued_by_staff_id   INTEGER REFERENCES staff(id),
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+  issued_at            TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_office_correspondence_office ON office_correspondence (office_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_office_correspondence_status ON office_correspondence (status);

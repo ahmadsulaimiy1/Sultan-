@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Writing Centre — Sultan Hanafi Royal Schools Staff</title>
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link rel="stylesheet" href="/css/fonts.css?v=9c04a7b6b7">
+<link rel="stylesheet" href="/css/brand.css?v=4242997740">
+<link rel="stylesheet" href="/css/portal.css?v=a9f4b53d18">
+<link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
+<link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
+<link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
+<script src="/js/locale-registry.js?v=4c02adb950"></script>
+<script src="/js/i18n-core.js?v=b56898d96a"></script>
+<script src="/js/portal-theme.js?v=1f8648c999"></script>
+<script src="/js/i18n.js?v=9056340187" defer></script>
+<script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
+<link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
+<link rel="stylesheet" href="/css/portal-chrome.css?v=9cf4527d2c">
+<link rel="stylesheet" href="/css/portal-command.css?v=931b9c8248">
+</head>
+<body class="portal-body">
+
+<div class="portal-topbar">
+  <a class="portal-brand" href="/">
+    <img src="/assets/images/brand-mark.png" alt="Sultan Hanafi Royal Schools crest" />
+    <span>Sultan Hanafi</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="portal-pilot-badge">Staff</span>
+    <a class="portal-topbar-link" href="/portal/staff/identity/" data-i18n="portal.myIdentity">My Identity</a>
+    <span class="lang-switch-mount" data-locale-switcher></span>
+    <button type="button" class="portal-logout" data-portal-logout data-i18n="sign-out">Sign Out</button>
+  </div>
+</div>
+
+<main class="portal-main">
+  <div class="portal-wrap" data-portal-content hidden>
+    <h1 class="portal-hello">Writing Centre</h1>
+    <div class="portal-hello-sub">Paste rough notes for a letter, memo, circular, or notice; the assistant drafts it, you review and edit, then issue it on your office's own letterhead — numbered, hashed, and recorded, the same discipline every other document this platform issues follows.</div>
+
+    <div class="office-group-head">1 — Office &amp; Document</div>
+    <div class="portal-child-card">
+      <form data-wc-setup-form class="registrar-form-grid">
+        <div class="portal-field">
+          <label>Issuing Office</label>
+          <select data-wc-office required></select>
+          <p class="portal-field-hint">Only offices you currently hold appear here.</p>
+        </div>
+        <div class="portal-field">
+          <label>Document Type</label>
+          <select data-wc-type>
+            <option value="letter" selected>Letter</option>
+            <option value="memo">Internal Memorandum</option>
+            <option value="circular">Circular</option>
+            <option value="notice">Notice</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Register / Tone</label>
+          <select data-wc-tone>
+            <option value="professional" selected>Professional</option>
+            <option value="diplomatic">Diplomatic</option>
+            <option value="formal">Formal</option>
+            <option value="executive">Executive</option>
+            <option value="academic">Academic</option>
+          </select>
+        </div>
+        <div class="portal-field">
+          <label>Recipient Name (optional)</label>
+          <input type="text" data-wc-recipient-name placeholder="e.g. The Registrar" />
+        </div>
+        <div class="portal-field">
+          <label>Recipient Role (optional)</label>
+          <input type="text" data-wc-recipient-role placeholder="e.g. Sultan Hanafi Royal College" />
+        </div>
+      </form>
+    </div>
+
+    <div class="office-group-head">2 — Notes</div>
+    <div class="portal-child-card">
+      <div class="portal-child-head"><h2>Paste Your Notes</h2></div>
+      <p class="registrar-field-note" style="padding:0 20px;">Bullet points, a rough paragraph, a voice transcript — anything. The assistant restructures it into the chosen document type without inventing facts; anything it's genuinely missing (a date, a figure) is left as a clearly marked placeholder for you to fill in.</p>
+      <div style="padding:0 20px 14px;">
+        <textarea data-wc-notes rows="8" class="registrar-roster-textarea" placeholder="e.g. Need to remind all Heads of Department that third term scheme of work is due Friday. Late submission attracts the usual sanction. Should go out today."></textarea>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
+        <button type="button" class="registrar-btn" data-wc-generate-btn>Generate Draft</button>
+        <span class="registrar-field-note" data-wc-generate-status></span>
+      </div>
+    </div>
+
+    <div class="office-group-head" data-wc-draft-section hidden>3 — Draft</div>
+    <div class="portal-child-card" data-wc-draft-section hidden>
+      <div class="portal-child-head"><h2>Review &amp; Edit</h2></div>
+      <form class="registrar-form-grid" style="padding:0 20px;">
+        <div class="portal-field">
+          <label>Internal Title</label>
+          <input type="text" data-wc-title placeholder="Short internal title" />
+        </div>
+        <div class="portal-field">
+          <label>Subject Line (letters/circulars)</label>
+          <input type="text" data-wc-subject placeholder="Subject line, if applicable" />
+        </div>
+        <div class="portal-field">
+          <label>Signatory Name</label>
+          <input type="text" data-wc-signatory-name placeholder="Full name of the person issuing this" />
+        </div>
+        <div class="portal-field">
+          <label>Signatory Title</label>
+          <input type="text" data-wc-signatory-title placeholder="e.g. Registrar, Sultan Hanafi Royal College" />
+        </div>
+      </form>
+      <div style="padding:14px 20px 4px;">
+        <label style="display:block;font-weight:600;font-size:0.86rem;margin-bottom:8px;">Body</label>
+        <div data-wc-body contenteditable="true" class="registrar-roster-textarea" style="min-height:220px;line-height:1.6;padding:14px;"></div>
+        <p class="portal-field-hint">Edit directly here. Formatting is simple HTML — paragraphs and lists carry through to the letterhead exactly as written.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px 20px;align-items:center;">
+        <button type="button" class="registrar-btn" data-wc-save-btn>Save Draft</button>
+        <button type="button" class="registrar-btn" data-wc-preview-btn disabled>Preview Letterhead</button>
+        <button type="button" class="portal-submit registrar-form-submit" data-wc-issue-btn disabled>Issue Document</button>
+        <span class="registrar-field-note" data-wc-draft-status></span>
+      </div>
+    </div>
+
+    <div class="office-group-head">Recent Documents</div>
+    <div class="portal-child-card">
+      <div class="registrar-approvals-list" data-wc-list>
+        <p class="registrar-field-note" style="padding:14px 20px;">Loading…</p>
+      </div>
+    </div>
+
+    <p class="portal-notice-on-dark">
+      Issuing a document assigns it a permanent reference number and a tamper-evident content hash, and records who issued it and when — it cannot be edited afterward. Save it as a draft and use Preview as many times as you like first.
+    </p>
+  </div>
+  <div class="portal-card" data-portal-loading>
+    <p class="sub" style="margin-bottom:0;">Loading the Writing Centre…</p>
+  </div>
+  <div class="portal-card" data-portal-error hidden>
+    <h1>Couldn't load this page</h1>
+    <p class="sub" data-portal-error-message data-i18n="portal.trySignInAgain">Please try signing in again.</p>
+    <a class="portal-back-link" href="/portal/staff/login/" data-i18n="portal.backToSignIn">← Back to sign in</a>
+  </div>
+</main>
+
+<script src="/js/portal-staff-writing-centre.js?v=1" defer></script>
+<script src="/js/prestige.js?v=58432f532a" defer></script>
+<script src="/js/motion.js?v=5b8669b440" defer></script>
+<script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
+<script src="/js/hijri.js?v=4bb28b7c28" defer></script>
+<script src="/js/portal-chrome.js?v=af0adbf2a5" defer></script>
+<script src="/js/footer-live.js?v=9b675c12c3" defer></script>
+<script src="/js/clock.js?v=c31a88dfc3" defer></script>
+</body>
+</html>
