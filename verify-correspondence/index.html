@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify a Document — Sultan Hanafi Royal Schools</title>
+<meta name="description" content="Verify an official Sultan Hanafi Royal Schools letter, memo, circular, or notice. Enter the reference number printed on the document to confirm it was genuinely issued.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+<link rel="canonical" href="https://shroyalschools.com/verify-correspondence/">
+<style>
+  :root {
+    --coffee-dark: #1A0F07; --coffee: #2E1C10; --gold: #C6A15B; --ivory: #F2EADC; --ivory-light: #FBF7EF;
+    --garnet: #7A2E3E; --ink: #2A2018;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Inter', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: radial-gradient(ellipse at 50% 0%, var(--coffee) 0%, var(--coffee-dark) 100%);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    width: 100%; max-width: 520px;
+    background: linear-gradient(180deg, var(--ivory-light), var(--ivory));
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    padding: 36px 32px;
+  }
+  .crest { width: 48px; height: 48px; display: block; margin: 0 auto 14px; }
+  h1 { font-size: 1.25rem; text-align: center; margin: 0 0 4px; color: var(--coffee-dark); }
+  .sub { text-align: center; font-size: 0.86rem; color: #6B5A44; margin: 0 0 22px; line-height: 1.5; }
+  .field { display: flex; gap: 8px; }
+  input[type=text] {
+    flex: 1; padding: 11px 14px; border: 1px solid #D9CBB0; border-radius: 4px;
+    font-size: 0.92rem; background: #fff; color: var(--ink);
+  }
+  button {
+    padding: 11px 20px; border: none; border-radius: 4px; cursor: pointer;
+    background: linear-gradient(180deg, var(--gold), #9C7A3C); color: #1A0F07;
+    font-weight: 600; font-size: 0.88rem;
+  }
+  button:disabled { opacity: 0.6; cursor: default; }
+  .result { margin-top: 22px; padding: 18px; border-radius: 5px; font-size: 0.88rem; line-height: 1.7; display: none; }
+  .result.show { display: block; }
+  .result.valid { background: #EAF5EC; border: 1px solid #A9CFB1; }
+  .result.revoked { background: #FBEFE6; border: 1px solid #E3B98A; }
+  .result.invalid { background: #FBEAEA; border: 1px solid #E3A0A0; }
+  .result-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 8px; }
+  .result-row { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+  .result-row span:first-child { color: #6B5A44; }
+  .result-row span:last-child { font-weight: 600; text-align: right; }
+  .hint { font-size: 0.78rem; color: #6B5A44; margin-top: 8px; text-align: center; }
+  a.home { display: block; text-align: center; margin-top: 20px; font-size: 0.82rem; color: #6B5A44; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="crest" src="/assets/images/crest-full.png" alt="Sultan Hanafi Royal Schools crest">
+  <h1>Verify an SHRS Document</h1>
+  <p class="sub">Confirm a letter, memo, circular, or notice was genuinely issued by Sultan Hanafi Royal Schools. Enter the reference number printed on the document.</p>
+  <div class="field">
+    <input type="text" id="ref-input" placeholder="e.g. SHRS-LTR-2026-000001" autocapitalize="characters" />
+    <button type="button" id="verify-btn">Verify</button>
+  </div>
+  <p class="hint">This confirms the document is genuine — it does not display its contents.</p>
+  <div class="result" id="result"></div>
+  <a class="home" href="https://shroyalschools.com/">&larr; shroyalschools.com</a>
+</div>
+<script src="/js/verify-correspondence.js" defer></script>
+</body>
+</html>

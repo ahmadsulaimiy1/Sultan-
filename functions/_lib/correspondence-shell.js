@@ -28,6 +28,8 @@
 // a printed name — inventing a mark would violate the bible's "every
 // mark must be true" rule (§I.3) the same way a fabricated seal would.
 
+import { qrSvgForPrint } from './qrcode.js';
+
 const CREST_URL = '/assets/images/crest-full.png';
 
 function escapeHtml(s) {
@@ -95,7 +97,8 @@ export function renderCorrespondenceShell({
   documentType = 'letter', lang = 'en', dir = 'ltr',
   dateDisplay, referenceNo, status = 'draft',
   recipientName, recipientRole, subject, bodyHtml,
-  signatoryName, signatoryTitle,
+  signatoryName, signatoryTitle, signatureImageData = null,
+  verifyUrl = null,
 }) {
   const typeLabel = correspondenceTypeLabel(documentType, lang);
   const accent = accentForInstitution(accentInstitution);
@@ -118,11 +121,36 @@ export function renderCorrespondenceShell({
   const subjectLine = subject
     ? `<div class="subject">${lang === 'ar' ? 'الموضوع' : 'Subject'}: ${escapeHtml(subject)}</div>`
     : '';
+  // A real uploaded signature (staff_signatures.image_data, looked up
+  // by the caller) draws in place of the blank line — never fabricated,
+  // and only ever this specific staff member's own signature on file,
+  // matching the same "every mark must be true" rule the resignation
+  // letter and the certificate shell both hold to. No image on file is
+  // the ordinary case, not an error: it falls back to the line.
+  const sigMark = signatureImageData
+    ? `<img class="sig-image" src="${escapeHtml(signatureImageData)}" alt="Signature of ${escapeHtml(signatoryName || '')}" />`
+    : `<div class="sig-line"></div>`;
   const sigBlock = signatoryName
     ? `<div class="sig-block">
-        <div class="sig-line"></div>
+        ${sigMark}
         <div class="sig-printed">${escapeHtml(signatoryName)}</div>
         ${signatoryTitle ? `<div class="sig-title">${escapeHtml(signatoryTitle)}</div>` : ''}
+      </div>`
+    : '';
+
+  // Only an ISSUED document gets a QR/verification band — a draft has
+  // no reference number to verify, and printing one would invite
+  // exactly the confusion this exists to prevent. Rendered as inline
+  // SVG (not <img src="/api/...">) so it survives Cloudflare Browser
+  // Rendering's PDF pass without depending on that headless browser
+  // making a second network round-trip back to this same Worker.
+  const verifyBand = (!isDraft && verifyUrl)
+    ? `<div class="verify-band">
+        ${qrSvgForPrint(verifyUrl, { width: 68, errorCorrectionLevel: 'M' })}
+        <div class="verify-band-text">
+          <div class="verify-band-label">${lang === 'ar' ? 'التحقق من صحة الوثيقة' : 'Verify this document'}</div>
+          <div class="verify-band-url">${escapeHtml(verifyUrl.replace(/^https?:\/\//, ''))}</div>
+        </div>
       </div>`
     : '';
 
@@ -208,8 +236,17 @@ export function renderCorrespondenceShell({
   .body li { margin-bottom: 1.6mm; }
   .sig-block { margin-top: 12mm; break-inside: avoid; }
   .sig-line { width: 55mm; border-top: 0.6pt solid #4A2E1B; margin-top: 10mm; }
+  .sig-image { max-height: 18mm; max-width: 60mm; display: block; margin-top: 2mm; }
   .sig-printed { font-family: 'Inter'; font-weight: 600; font-size: 9.5pt; margin-top: 2mm; letter-spacing: 0.02em; }
   .sig-title { font-family: 'Inter'; font-weight: 400; font-size: 8.6pt; color: #4A2E1B; margin-top: 0.6mm; }
+  .verify-band {
+    display: flex; align-items: center; gap: 4mm; margin-top: 10mm;
+    padding-top: 4mm; border-top: 0.4pt solid rgba(74,46,27,0.35);
+    break-inside: avoid;
+  }
+  .verify-band svg { width: 16mm; height: 16mm; flex: none; }
+  .verify-band-label { font-family: 'Inter'; font-weight: 600; font-size: 7.4pt; color: #4A2E1B; text-transform: uppercase; letter-spacing: 0.05em; }
+  .verify-band-url { font-family: 'Inter'; font-weight: 400; font-size: 7.4pt; color: #7A5A2E; margin-top: 0.6mm; }
   .foot {
     margin-left: 7mm;
     background: linear-gradient(120deg,#1A0F07 0%,#2E1C10 100%);
@@ -258,6 +295,7 @@ export function renderCorrespondenceShell({
     ${subjectLine}
     <div class="body">${bodyHtml || ''}</div>
     ${sigBlock}
+    ${verifyBand}
   </div>
 
   <div class="foot">

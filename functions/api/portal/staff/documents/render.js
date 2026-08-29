@@ -42,6 +42,22 @@ export async function onRequestGet({ request, env }) {
     const canAct = await staffCanActOnOffice(sql, session.staffId, row.office_id);
     if (!canAct) return json({ error: 'You do not currently hold this office.' }, 403);
 
+    // A real uploaded signature, matched by name — never fabricated,
+    // and only ever drawn when this specific person genuinely has one
+    // on file (staff_signatures, the same table the certificate/
+    // graduation-document pipeline already uses). No match is the
+    // ordinary case, not an error.
+    let signatureImageData = null;
+    if (row.signatory_name) {
+      const sigRes = await sql`
+        SELECT ss.image_data FROM staff s
+        JOIN staff_signatures ss ON ss.staff_id = s.id
+        WHERE ss.is_active = true AND ss.signature_type = 'uploaded_image'
+          AND lower(s.full_name) = lower(${row.signatory_name})
+        LIMIT 1`;
+      signatureImageData = sigRes.rows[0]?.image_data || null;
+    }
+
     const dateDisplay = new Date(row.issued_at || row.created_at).toISOString().slice(0, 10);
     const specificInstitution = institutionByDbName(row.institution_name);
     const filenameBase = row.reference_no || `draft-${row.id}`;
@@ -84,6 +100,10 @@ export async function onRequestGet({ request, env }) {
       bodyHtml: row.body_html,
       signatoryName: row.signatory_name,
       signatoryTitle: row.signatory_title,
+      signatureImageData,
+      verifyUrl: row.status === 'issued' && row.reference_no
+        ? `${env.SITE_ORIGIN || url.origin}/verify-correspondence/?ref=${encodeURIComponent(row.reference_no)}`
+        : null,
     });
 
     if (format === 'pdf') {
