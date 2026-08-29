@@ -77,6 +77,12 @@
             <option value="legal">Legal / Precise</option>
             <option value="persuasive">Persuasive</option>
             <option value="friendly">Friendly</option>
+            <option value="royal_formal">Royal Formal</option>
+            <option value="government_circular">Government Circular</option>
+            <option value="board_resolution">Board Resolution</option>
+            <option value="policy_manual">Policy Manual</option>
+            <option value="public_communication">Public Communication</option>
+            <option value="administrative">Administrative</option>
           </select>
         </div>
         <div class="portal-field">
@@ -136,6 +142,53 @@
         <div data-wc-body contenteditable="true" class="registrar-roster-textarea" style="min-height:220px;line-height:1.6;padding:14px;"></div>
         <p class="portal-field-hint">Edit directly here. Formatting is simple HTML — paragraphs and lists carry through to the letterhead exactly as written.</p>
       </div>
+
+      <div style="padding:10px 20px 4px;">
+        <label style="display:block;font-weight:600;font-size:0.86rem;margin-bottom:8px;">Writing Intelligence — ask the assistant to revise what's above</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button type="button" class="registrar-btn" data-wc-quick="simplify">Simplify</button>
+          <button type="button" class="registrar-btn" data-wc-quick="expand">Expand</button>
+          <button type="button" class="registrar-btn" data-wc-quick="proofread">Proofread &amp; Tighten</button>
+          <button type="button" class="registrar-btn" data-wc-quick="more_formal">More Formal</button>
+          <button type="button" class="registrar-btn" data-wc-quick="more_diplomatic">More Diplomatic</button>
+          <button type="button" class="registrar-btn" data-wc-quick="more_concise">More Concise</button>
+          <button type="button" class="registrar-btn" data-wc-quick="summarize">Summarise</button>
+          <button type="button" class="registrar-btn" data-wc-quick="improve_structure">Improve Structure</button>
+        </div>
+        <div class="registrar-form-grid" style="padding:0;">
+          <div class="portal-field">
+            <label>Custom Instruction (optional)</label>
+            <input type="text" data-wc-custom-instruction placeholder="e.g. Remove the second paragraph and add a line about the deadline" />
+          </div>
+          <div class="portal-field">
+            <label>Translate To (optional)</label>
+            <input type="text" data-wc-target-lang placeholder="e.g. Arabic" />
+          </div>
+          <div class="portal-field">
+            <label>Convert Document Type To (optional)</label>
+            <select data-wc-target-type>
+              <option value="">— no change —</option>
+              <option value="letter">Letter</option>
+              <option value="memo">Internal Memorandum</option>
+              <option value="circular">Circular</option>
+              <option value="notice">Notice</option>
+              <option value="report">Report</option>
+              <option value="minutes">Minutes of Meeting</option>
+              <option value="appointment_letter">Letter of Appointment</option>
+              <option value="warning_letter">Letter of Warning</option>
+              <option value="promotion_letter">Letter of Promotion</option>
+              <option value="invitation">Invitation</option>
+              <option value="press_release">Press Release</option>
+              <option value="proposal">Proposal</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;padding:10px 0 4px;align-items:center;">
+          <button type="button" class="registrar-btn" data-wc-apply-revision>Apply</button>
+          <button type="button" class="registrar-btn" data-wc-undo-revision disabled>Undo Last Revision</button>
+          <span class="registrar-field-note" data-wc-revise-status></span>
+        </div>
+      </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px 20px;align-items:center;">
         <button type="button" class="registrar-btn" data-wc-save-btn>Save Draft</button>
         <button type="button" class="registrar-btn" data-wc-preview-btn disabled>Preview Letterhead</button>
@@ -147,8 +200,13 @@
       </div>
     </div>
 
-    <div class="office-group-head">Recent Documents</div>
+    <div class="office-group-head">Documents — Search &amp; Archive</div>
     <div class="portal-child-card">
+      <div style="display:flex;gap:10px;padding:16px 20px 0;">
+        <input type="text" data-wc-search placeholder="Search by title, subject, recipient, reference number, or body text…" style="flex:1;" />
+        <button type="button" class="registrar-btn" data-wc-search-btn>Search</button>
+        <button type="button" class="registrar-btn" data-wc-search-clear>Clear</button>
+      </div>
       <div class="registrar-approvals-list" data-wc-list>
         <p class="registrar-field-note" style="padding:14px 20px;">Loading…</p>
       </div>

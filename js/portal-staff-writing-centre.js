@@ -1,8 +1,10 @@
-// Writing Centre — office-scoped AI drafting + issuance of letters,
-// memos, circulars, and notices. Session gate matches every other
-// staff page (see portal-staff-documents.js); everything else is this
-// page's own draft -> save -> preview -> issue flow against
-// functions/api/portal/staff/documents/{draft,save,render,issue,list}.js.
+// Writing Centre — office-scoped AI drafting, revision, and issuance of
+// institutional correspondence (see correspondence-types.js for the
+// full document-type list). Session gate matches every other staff
+// page (see portal-staff-documents.js); everything else is this page's
+// own draft -> revise -> save -> preview/export -> issue flow, plus
+// search, against functions/api/portal/staff/documents/
+// {draft,revise,save,get,render,issue,list}.js.
 (function () {
   var loadingEl = document.querySelector('[data-portal-loading]');
   var errorEl = document.querySelector('[data-portal-error]');
@@ -35,13 +37,31 @@
   var clarifyEl = document.querySelector('[data-wc-clarify]');
   var clarifyQuestionsEl = document.querySelector('[data-wc-clarify-questions]');
 
+  var customInstructionInput = document.querySelector('[data-wc-custom-instruction]');
+  var targetLangInput = document.querySelector('[data-wc-target-lang]');
+  var targetTypeSelect = document.querySelector('[data-wc-target-type]');
+  var applyRevisionBtn = document.querySelector('[data-wc-apply-revision]');
+  var undoRevisionBtn = document.querySelector('[data-wc-undo-revision]');
+  var reviseStatus = document.querySelector('[data-wc-revise-status]');
+  var quickActionBtns = document.querySelectorAll('[data-wc-quick]');
+  var lastBodyHtml = null;
+
   var listEl = document.querySelector('[data-wc-list]');
+  var searchInput = document.querySelector('[data-wc-search]');
+  var searchBtn = document.querySelector('[data-wc-search-btn]');
+  var searchClearBtn = document.querySelector('[data-wc-search-clear]');
   var exportBtns = [previewBtn, pdfBtn, mdBtn, txtBtn];
 
   var currentId = null;
 
   function showDraftSection() {
     draftSections.forEach(function (el) { el.hidden = false; });
+  }
+
+  function escapeHtml(s) {
+    var div = document.createElement('div');
+    div.textContent = s == null ? '' : String(s);
+    return div.innerHTML;
   }
 
   async function fetchJson(url, options) {
@@ -51,12 +71,13 @@
     return data;
   }
 
-  async function loadList() {
+  async function loadList(query) {
     listEl.innerHTML = '<p class="registrar-field-note" style="padding:14px 20px;">Loading…</p>';
     try {
-      var data = await fetchJson('/api/portal/staff/documents/list');
+      var url = '/api/portal/staff/documents/list' + (query ? '?q=' + encodeURIComponent(query) : '');
+      var data = await fetchJson(url);
       officeSelect.innerHTML = data.offices.map(function (o) {
-        return '<option value="' + o.id + '">' + o.name + '</option>';
+        return '<option value="' + o.id + '">' + escapeHtml(o.name) + '</option>';
       }).join('');
       if (!data.offices.length) {
         listEl.innerHTML = '<p class="registrar-field-note" style="padding:14px 20px;">You do not currently hold an office, so there is nothing to draft on behalf of yet.</p>';
@@ -64,7 +85,7 @@
         return;
       }
       if (!data.documents.length) {
-        listEl.innerHTML = '<p class="registrar-field-note" style="padding:14px 20px;">No documents yet.</p>';
+        listEl.innerHTML = '<p class="registrar-field-note" style="padding:14px 20px;">' + (query ? 'No documents match "' + escapeHtml(query) + '".' : 'No documents yet.') + '</p>';
         return;
       }
       listEl.innerHTML = data.documents.map(function (d) {
@@ -73,9 +94,9 @@
         var actions = '<button type="button" class="registrar-btn" data-wc-open="' + d.id + '">Open</button> '
           + '<button type="button" class="registrar-btn" data-wc-preview="' + d.id + '">Preview</button>';
         return '<div class="registrar-approval-row">'
-          + '<div><strong>' + (d.title || '(untitled)') + '</strong><br>'
-          + '<span class="registrar-field-note">' + d.officeName + ' &middot; ' + d.documentType + ' &middot; ' + statusLabel
-          + (d.referenceNo ? ' &middot; ' + d.referenceNo : '') + ' &middot; ' + when.toISOString().slice(0, 10) + '</span></div>'
+          + '<div><strong>' + escapeHtml(d.title || '(untitled)') + '</strong><br>'
+          + '<span class="registrar-field-note">' + escapeHtml(d.officeName) + ' &middot; ' + escapeHtml(d.documentType) + ' &middot; ' + statusLabel
+          + (d.referenceNo ? ' &middot; ' + escapeHtml(d.referenceNo) : '') + ' &middot; ' + when.toISOString().slice(0, 10) + '</span></div>'
           + '<div>' + actions + '</div>'
           + '</div>';
       }).join('');
@@ -118,6 +139,9 @@
       bodyEl.innerHTML = full.bodyHtml || '';
       exportBtns.forEach(function (b) { b.disabled = false; });
       issueBtn.disabled = full.status !== 'draft';
+      lastBodyHtml = null;
+      undoRevisionBtn.disabled = true;
+      reviseStatus.textContent = '';
       showDraftSection();
       draftStatus.textContent = 'Loaded draft #' + id + ' — edit below, then Save.';
       window.scrollTo({ top: draftSections[0].offsetTop - 20, behavior: 'smooth' });
@@ -147,7 +171,7 @@
       });
       if (data.needsInfo) {
         clarifyQuestionsEl.innerHTML = data.questions.map(function (q) {
-          return '<li>' + q + '</li>';
+          return '<li>' + escapeHtml(q) + '</li>';
         }).join('');
         clarifyEl.hidden = false;
         generateStatus.textContent = 'A few questions below before it can draft this.';
@@ -161,6 +185,9 @@
       bodyEl.innerHTML = data.bodyHtml || '';
       exportBtns.forEach(function (b) { b.disabled = true; });
       issueBtn.disabled = true;
+      lastBodyHtml = null;
+      undoRevisionBtn.disabled = true;
+      reviseStatus.textContent = '';
       showDraftSection();
       draftStatus.textContent = 'Drafted. Review, add a signatory, then Save.';
       generateStatus.textContent = 'Draft ready below.';
@@ -223,6 +250,57 @@
     window.open('/api/portal/staff/documents/render?id=' + currentId + '&format=text', '_blank');
   });
 
+  async function applyRevision(payload) {
+    var current = bodyEl.innerHTML.trim();
+    if (!current) { reviseStatus.textContent = 'There is nothing in the body to revise yet.'; return; }
+    payload.bodyHtml = current;
+    payload.currentDocumentType = typeSelect.value;
+    applyRevisionBtn.disabled = true;
+    quickActionBtns.forEach(function (b) { b.disabled = true; });
+    reviseStatus.textContent = 'Revising…';
+    try {
+      var data = await fetchJson('/api/portal/staff/documents/revise', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      lastBodyHtml = current;
+      bodyEl.innerHTML = data.bodyHtml || '';
+      undoRevisionBtn.disabled = false;
+      reviseStatus.textContent = 'Revised — remember to Save.';
+    } catch (err) {
+      reviseStatus.textContent = err.message;
+    } finally {
+      applyRevisionBtn.disabled = false;
+      quickActionBtns.forEach(function (b) { b.disabled = false; });
+    }
+  }
+
+  quickActionBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      applyRevision({ quickAction: btn.getAttribute('data-wc-quick') });
+    });
+  });
+
+  applyRevisionBtn.addEventListener('click', function () {
+    var instruction = customInstructionInput.value.trim();
+    var targetLang = targetLangInput.value.trim();
+    var targetDocumentType = targetTypeSelect.value;
+    if (!instruction && !targetLang && !targetDocumentType) {
+      reviseStatus.textContent = 'Write an instruction, a language, or a target document type first.';
+      return;
+    }
+    applyRevision({ instruction: instruction, targetLang: targetLang, targetDocumentType: targetDocumentType || null });
+  });
+
+  undoRevisionBtn.addEventListener('click', function () {
+    if (lastBodyHtml === null) return;
+    bodyEl.innerHTML = lastBodyHtml;
+    lastBodyHtml = null;
+    undoRevisionBtn.disabled = true;
+    reviseStatus.textContent = 'Reverted to the previous version.';
+  });
+
   issueBtn.addEventListener('click', async function () {
     if (!currentId) return;
     if (!signatoryNameInput.value.trim()) {
@@ -272,6 +350,17 @@
   logoutBtn.addEventListener('click', async function () {
     try { await fetch('/api/portal/staff/logout', { method: 'POST' }); } catch (err) {}
     window.location.href = '/portal/staff/login/';
+  });
+
+  searchBtn.addEventListener('click', function () {
+    loadList(searchInput.value.trim());
+  });
+  searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); loadList(searchInput.value.trim()); }
+  });
+  searchClearBtn.addEventListener('click', function () {
+    searchInput.value = '';
+    loadList();
   });
 
   load();

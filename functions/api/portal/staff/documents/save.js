@@ -10,6 +10,7 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { staffCanActOnOffice } from '../../../../_lib/office-access.js';
 import { sanitizeCorrespondenceHtml } from '../../../../_lib/sanitize-html.js';
 import { DOCUMENT_TYPES } from '../../../../_lib/correspondence-types.js';
+import { logStaffEvent } from '../../../../_lib/audit.js';
 
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) return json({ error: 'Portal is not configured yet.' }, 500);
@@ -66,6 +67,10 @@ export async function onRequestPost({ request, env }) {
           signatory_name = ${fields.signatoryName}, signatory_title = ${fields.signatoryTitle},
           updated_at = now()
         WHERE id = ${id}`;
+      await logStaffEvent(sql, {
+        actorStaffId: session.staffId, eventType: 'sensitive_action', targetType: 'office_correspondence',
+        targetId: id, reason: null, metadata: { action: 'draft_updated', documentType, officeId },
+      });
       return json({ id, status: 'draft' });
     }
 
@@ -81,7 +86,12 @@ export async function onRequestPost({ request, env }) {
          ${fields.recipientName}, ${fields.recipientRole}, ${fields.sourceNotes}, ${bodyHtml},
          ${fields.signatoryName}, ${fields.signatoryTitle}, 'draft', ${session.staffId})
       RETURNING id`;
-    return json({ id: inserted.rows[0].id, status: 'draft' });
+    const newId = inserted.rows[0].id;
+    await logStaffEvent(sql, {
+      actorStaffId: session.staffId, eventType: 'sensitive_action', targetType: 'office_correspondence',
+      targetId: newId, reason: null, metadata: { action: 'draft_created', documentType, officeId },
+    });
+    return json({ id: newId, status: 'draft' });
   } catch (err) {
     console.error('writing centre save error', err);
     return json({ error: 'Could not save this document right now — please try again shortly.' }, 500);
