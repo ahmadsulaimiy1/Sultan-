@@ -1,7 +1,9 @@
 // Institutional Correspondence letterhead — implements
 // docs/letterhead-editorial-bible.md, which specifies this exact
-// general-purpose stationery (letters, memos, circulars, notices) as a
-// register deliberately distinct from document-template-shell.js's
+// general-purpose stationery (letters, memos, circulars, notices,
+// reports, minutes, appointment/warning/promotion letters, invitations,
+// press releases, proposals — functions/_lib/correspondence-types.js)
+// as a register deliberately distinct from document-template-shell.js's
 // ceremonial certificate shell: "Institutional, tending Ceremonial" —
 // masthead no more than 15% of the sheet as ONE horizontal band, motto
 // moved to the foot, Deep Coffee Brown / Royal Gold / Warm Ivory only,
@@ -38,6 +40,14 @@ const DOCUMENT_TYPE_LABEL = {
   memo: { en: 'Internal Memorandum', ar: 'مذكرة داخلية' },
   circular: { en: 'Circular', ar: 'تعميم' },
   notice: { en: 'Notice', ar: 'إشعار' },
+  report: { en: 'Report', ar: 'تقرير' },
+  minutes: { en: 'Minutes of Meeting', ar: 'محضر اجتماع' },
+  appointment_letter: { en: 'Letter of Appointment', ar: 'خطاب تعيين' },
+  warning_letter: { en: 'Letter of Warning', ar: 'خطاب إنذار' },
+  promotion_letter: { en: 'Letter of Promotion', ar: 'خطاب ترقية' },
+  invitation: { en: 'Invitation', ar: 'دعوة' },
+  press_release: { en: 'Press Release', ar: 'بيان صحفي' },
+  proposal: { en: 'Proposal', ar: 'اقتراح' },
 };
 
 export function correspondenceTypeLabel(documentType, lang = 'en') {
@@ -45,17 +55,53 @@ export function correspondenceTypeLabel(documentType, lang = 'en') {
   return entry ? (entry[lang] || entry.en) : (documentType || 'Document');
 }
 
+// The bible's "house spectrum" (docs/letterhead-editorial-bible.md
+// §II-b) — the five institutions differentiate tonally within the same
+// warm axis rather than getting five unrelated colours. Keyed by the
+// exact institutions.dbName string (functions/_lib/institutions.js) so
+// it can never silently drift from the one place institution identity
+// is authored. Anything without a specific institution (a governance-
+// or conglomerate-level office) gets Royal Gold, the neutral/primary
+// accent — never a colour that implies a school it doesn't belong to.
+//
+// Used only where it sits on the light ivory sheet (the subject rule,
+// the drop-cap), never on the dark masthead/rail — the bible's own
+// spectrum runs light-to-dark, and its darkest members (Rich Walnut,
+// Dark Cocoa) would be unreadable as text against a masthead that is
+// already dark espresso. Nursery & Primary's literal Champagne
+// (#E6D5B0) is likewise too close to the ivory paper itself to read as
+// a rule/drop-cap there, so it's substituted with Antique Gold
+// (#9C7A3C, one of the bible's own admitted "supporting" colours,
+// §II-b) — same light end of the ramp, actually legible on cream.
+const INSTITUTION_ACCENT = {
+  'Nursery and Primary': '#9C7A3C',
+  'Royal College': '#C6A15B',
+  'Islamic and Arabic Studies': '#7A5A2E',
+  "Qur'an College": '#4A2E1B',
+  'Online and Distance Learning': '#241509',
+};
+const DEFAULT_ACCENT = '#C6A15B';
+
+function accentForInstitution(institutionDbName) {
+  return INSTITUTION_ACCENT[institutionDbName] || DEFAULT_ACCENT;
+}
+
 // bodyHtml is a sequence of already-built <p>...</p> (and, occasionally,
 // <ol>/<ul>) blocks — the caller (the drafting endpoint, or a staff
 // member's own edit) owns the prose; this function only ever wraps it.
 export function renderCorrespondenceShell({
   officeName, institutionName = 'Sultan Hanafi Royal Schools',
+  specificInstitutionName = null, accentInstitution = null,
   documentType = 'letter', lang = 'en', dir = 'ltr',
   dateDisplay, referenceNo, status = 'draft',
   recipientName, recipientRole, subject, bodyHtml,
   signatoryName, signatoryTitle,
 }) {
   const typeLabel = correspondenceTypeLabel(documentType, lang);
+  const accent = accentForInstitution(accentInstitution);
+  const subOfficeLine = specificInstitutionName
+    ? `<div class="mh-suboffice">${escapeHtml(specificInstitutionName)}</div>`
+    : '';
   const isDraft = status !== 'issued';
   const draftStamp = isDraft
     ? `<div class="corr-draft-stamp">${lang === 'ar' ? 'مسودة — لم تصدر بعد' : 'DRAFT — NOT YET ISSUED'}</div>`
@@ -89,6 +135,7 @@ export function renderCorrespondenceShell({
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Amiri:wght@400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  :root { --accent: ${accent}; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
@@ -130,6 +177,10 @@ export function renderCorrespondenceShell({
     font-family: 'Inter'; font-weight: 600; font-size: 8pt; letter-spacing: 0.1em;
     text-transform: uppercase; color: #C6A15B;
   }
+  .mh-suboffice {
+    font-family: 'Cormorant Garamond'; font-style: italic; font-weight: 500; font-size: 8.4pt;
+    color: #E6D5B0; margin-top: 0.8mm;
+  }
   .mh-nation {
     font-family: 'Inter'; font-weight: 400; font-size: 6.4pt; letter-spacing: 0.08em;
     text-transform: uppercase; color: #C9A45E; line-height: 1.85; margin-top: 1.5mm;
@@ -146,11 +197,11 @@ export function renderCorrespondenceShell({
   .addressee .to { font-weight: 600; }
   .subject {
     font-family: 'Cinzel'; font-weight: 700; font-size: 10pt; letter-spacing: 0.05em;
-    text-transform: uppercase; border-bottom: 0.5pt solid #C6A15B; padding-bottom: 2.4mm; margin-bottom: 6mm;
+    text-transform: uppercase; border-bottom: 0.5pt solid var(--accent); padding-bottom: 2.4mm; margin-bottom: 6mm;
   }
   .body p { font-size: 10.3pt; line-height: 1.68; text-align: justify; margin: 0 0 4.2mm 0; break-inside: avoid; }
   .body p:first-of-type::first-letter {
-    font-family: 'Cinzel'; font-weight: 700; font-size: 22pt; color: #7A5A2E;
+    font-family: 'Cinzel'; font-weight: 700; font-size: 22pt; color: var(--accent);
     float: left; line-height: 0.8; padding-right: 2mm; padding-top: 1mm;
   }
   .body ol, .body ul { font-size: 10.3pt; line-height: 1.68; margin: 0 0 4.2mm 0; padding-left: 6mm; }
@@ -192,6 +243,7 @@ export function renderCorrespondenceShell({
     </div>
     <div class="mh-right">
       <div class="mh-office">${escapeHtml(officeName || '')}</div>
+      ${subOfficeLine}
       <div class="mh-nation"><div>Ikorodu, Lagos State</div><div>Federal Republic of Nigeria</div></div>
     </div>
   </div>

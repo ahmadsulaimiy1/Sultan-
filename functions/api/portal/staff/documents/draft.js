@@ -14,9 +14,11 @@ import { json, readJsonBody } from '../../../../_lib/http.js';
 import { staffCanActOnOffice } from '../../../../_lib/office-access.js';
 import { correspondenceTypeLabel } from '../../../../_lib/correspondence-shell.js';
 import { sanitizeCorrespondenceHtml } from '../../../../_lib/sanitize-html.js';
+import { institutionByDbName } from '../../../../_lib/institutions.js';
+import { DOCUMENT_TYPES } from '../../../../_lib/correspondence-types.js';
 
 const DEFAULT_MODEL = 'claude-sonnet-5';
-const MAX_TOKENS = 2048;
+const MAX_TOKENS = 2560;
 const MAX_NOTES_CHARS = 6000;
 
 const TONE_INSTRUCTIONS = {
@@ -25,37 +27,65 @@ const TONE_INSTRUCTIONS = {
   formal: 'A formal, institutional register — full sentences, no contractions, precise and impersonal.',
   executive: 'An executive register — concise, decisive, structured for a busy senior reader; short paragraphs, no padding.',
   academic: 'An academic register — precise terminology, measured claims, a scholarly cadence appropriate to an educational institution.',
+  legal: 'A legally precise register — exact, unambiguous terms, careful about what is a fact versus what is an allegation or a decision still open to review, no loose colloquial phrasing.',
+  persuasive: 'A persuasive register — makes the strongest honest case the notes actually support, with a clear ask, but never invents a benefit, statistic, or urgency the notes did not state.',
+  friendly: 'A friendly, approachable register — still correct and institutional, but warmer and more conversational than "formal"; short sentences, plain words.',
 };
 
+// Each entry pairs a structural description (folded into the prompt)
+// with whether the type genuinely needs a named recipient before it
+// can be drafted honestly — used by the clarifying-question pass below
+// rather than hardcoding "letters need a recipient" as a separate list
+// that could drift from this one.
 const DOCUMENT_TYPE_GUIDANCE = {
-  letter: 'A formal letter, addressed to a named recipient, with an opening and a closing.',
-  memo: 'An internal memorandum — lead with the point in the first sentence, then supporting detail. No salutation/closing needed; addressed by role, not by personal greeting.',
-  circular: 'A circular being sent to a group (a whole office, department, or the wider staff/student body) — state clearly who it applies to and what they need to do or know.',
-  notice: 'A short, formal notice — the shortest of the four types, stating one fact or instruction plainly, with no elaboration beyond what is necessary.',
+  letter: { needsRecipient: true, text: 'A formal letter, addressed to a named recipient, with an opening and a closing.' },
+  memo: { needsRecipient: false, text: 'An internal memorandum — lead with the point in the first sentence, then supporting detail. No salutation/closing needed; addressed by role, not by personal greeting.' },
+  circular: { needsRecipient: false, text: 'A circular being sent to a group (a whole office, department, or the wider staff/student body) — state clearly who it applies to and what they need to do or know.' },
+  notice: { needsRecipient: false, text: 'A short, formal notice — the shortest of the types, stating one fact or instruction plainly, with no elaboration beyond what is necessary.' },
+  report: { needsRecipient: false, text: 'A structured report: a brief opening summary of what it covers, then the body organised under its own natural sections (background, findings/activity, conclusion/recommendation as applicable) — use <ul>/<ol> for any itemised findings or recommendations rather than burying them in a paragraph.' },
+  minutes: { needsRecipient: false, text: 'Minutes of a meeting: state the meeting\'s subject and who it concerns in the opening line, then record what was discussed and decided as a numbered list of items in the order raised. Never invent an attendee, a vote, or a decision not present in the notes — if the notes don\'t give a decision on an item, record it as discussed but undecided.' },
+  appointment_letter: { needsRecipient: true, text: 'A letter of appointment: states the role/position being offered or confirmed, effective date if given, and reporting line if given. Congratulatory but precise — no invented start date, salary, or terms beyond what the notes state.' },
+  warning_letter: { needsRecipient: true, text: 'A formal letter of warning: states the specific conduct/performance concern factually (no character attack), any prior discussion referenced in the notes, and the expectation going forward. Serious, measured, procedurally fair register — never inflammatory, never a punishment beyond what the notes describe.' },
+  promotion_letter: { needsRecipient: true, text: 'A letter of promotion: confirms the new role/title and effective date if given, briefly acknowledges the basis for it if the notes state one, states any new reporting line if given. Warm but dignified, not effusive.' },
+  invitation: { needsRecipient: true, text: 'A formal invitation: what the occasion is, when and where (exactly as given — never invent a date, time, or venue), and how to respond if the notes mention an RSVP.' },
+  press_release: { needsRecipient: false, text: 'A press release: a clear headline-style opening line stating the news, then the substantive detail, written for an external reader with no prior context — do not assume the reader already knows the school. No promotional superlatives beyond what the notes support.' },
+  proposal: { needsRecipient: false, text: 'A proposal: what is being proposed, why (the need or opportunity, as stated in the notes), and what it would involve — organised so a decision-maker can see the ask clearly. Use a list for distinct components if the notes describe several.' },
 };
 
 function buildDraftingPrompt({ officeName, institutionName, documentType, tone, recipientName, recipientRole, notes }) {
   const toneLine = TONE_INSTRUCTIONS[tone] || TONE_INSTRUCTIONS.professional;
-  const typeLine = DOCUMENT_TYPE_GUIDANCE[documentType] || DOCUMENT_TYPE_GUIDANCE.letter;
+  const guidance = DOCUMENT_TYPE_GUIDANCE[documentType] || DOCUMENT_TYPE_GUIDANCE.letter;
   const recipientLine = recipientName
     ? `It is addressed to ${recipientName}${recipientRole ? ` (${recipientRole})` : ''}.`
-    : 'No specific recipient was named — write it addressed generally, appropriate to the document type.';
+    : guidance.needsRecipient
+      ? 'No specific recipient was named. If the notes name one, use it; otherwise this is missing information — see the needs_info rule below.'
+      : 'No specific recipient was named — write it addressed generally, appropriate to the document type.';
 
   return `You are drafting an official ${correspondenceTypeLabel(documentType)} on behalf of the ${officeName} of ${institutionName}, a real school in Ikorodu, Lagos State, Nigeria.
 
-DOCUMENT TYPE: ${typeLine}
+DOCUMENT TYPE: ${guidance.text}
 REGISTER: ${toneLine}
 ${recipientLine}
 
 RULES — these are not optional:
-- State only what the staff member's notes below actually say. Never invent a fact, a date, a name, a number, or a claim that isn't in the notes. If the notes are missing something the document genuinely needs (a date, a recipient, a specific figure), leave a clearly marked placeholder like [DATE] or [FIGURE] rather than inventing one.
+- State only what the staff member's notes below actually say. Never invent a fact, a date, a name, a number, or a claim that isn't in the notes.
 - Do not fabricate letterhead elements — no date line, no reference number, no signature block, no "Dear Sir/Madam" salutation-and-closing boilerplate. Those are added separately by the system. Write ONLY the substantive body.
 - Do not claim any government approval, ministry endorsement, award, or affiliation that isn't stated in the notes.
-- Output valid HTML body content only: a sequence of <p>...</p> paragraphs (and <ol>/<ul><li> where the notes are naturally a list). No <html>, <head>, <body>, or markdown — just the paragraph/list markup itself.
+- Output valid HTML body content only where you do draft: a sequence of <p>...</p> paragraphs (and <ol>/<ul><li> where the notes are naturally a list). No <html>, <head>, <body>, or markdown — just the paragraph/list markup itself.
 - Keep the institution's voice dignified and precise, never salesy, never exaggerated.
 
-Also produce, on the very first line before the HTML, a one-line JSON object exactly in this form (then a blank line, then the HTML body):
-{"title": "short internal title for this document", "subject": "one-line subject/purpose statement, or empty string if not applicable to this document type"}
+BEFORE drafting, judge whether the notes actually give you enough to write an honest, complete document of this type — not just "could I write something", but "would this be missing something a reader would need" (this document type needing a named recipient and none being given or inferable from the notes is one clear case; a fact central to the document type — a date for a notice/invitation, an effective date for an appointment/promotion letter, the specific concern for a warning letter — being entirely absent is another). Minor omissions that don't change what the document needs to say are NOT a reason to ask — only ask when drafting without the answer would mean guessing or leaving the document useless.
+
+Respond in ONE of exactly two shapes. First line is always a single-line JSON object, then a blank line, then (for the ready case only) the HTML body.
+
+If you have enough to draft:
+{"status": "ready", "title": "short internal title for this document", "subject": "one-line subject/purpose statement, or empty string if not applicable to this document type"}
+
+<the HTML body>
+
+If genuinely missing something essential:
+{"status": "needs_info", "questions": ["specific question 1", "specific question 2"]}
+(no HTML body follows in this case — at most 3 questions, each answerable in a short phrase)
 
 STAFF MEMBER'S ROUGH NOTES (transform these into the polished document — do not just lightly edit them, restructure them into a properly composed document while preserving every fact and intention they contain):
 """
@@ -66,18 +96,21 @@ ${notes}
 function parseDraftResponse(raw) {
   const trimmed = String(raw || '').trim();
   const firstNewline = trimmed.indexOf('\n');
-  if (firstNewline === -1) return { title: '', subject: '', bodyHtml: trimmed };
-  const firstLine = trimmed.slice(0, firstNewline).trim();
-  const rest = trimmed.slice(firstNewline).trim();
+  const firstLine = (firstNewline === -1 ? trimmed : trimmed.slice(0, firstNewline)).trim();
+  const rest = (firstNewline === -1 ? '' : trimmed.slice(firstNewline)).trim();
   try {
     const meta = JSON.parse(firstLine);
+    if (meta.status === 'needs_info' && Array.isArray(meta.questions)) {
+      return { needsInfo: true, questions: meta.questions.filter((q) => typeof q === 'string').slice(0, 3) };
+    }
     return {
+      needsInfo: false,
       title: typeof meta.title === 'string' ? meta.title : '',
       subject: typeof meta.subject === 'string' ? meta.subject : '',
       bodyHtml: rest,
     };
   } catch {
-    return { title: '', subject: '', bodyHtml: trimmed };
+    return { needsInfo: false, title: '', subject: '', bodyHtml: trimmed };
   }
 }
 
@@ -101,14 +134,14 @@ export async function onRequestPost({ request, env }) {
 
   const body = await readJsonBody(request);
   const officeId = Number(body.officeId);
-  const documentType = ['letter', 'memo', 'circular', 'notice'].includes(body.documentType) ? body.documentType : null;
+  const documentType = DOCUMENT_TYPES.includes(body.documentType) ? body.documentType : null;
   const tone = TONE_INSTRUCTIONS[body.tone] ? body.tone : 'professional';
   const notes = typeof body.notes === 'string' ? body.notes.trim().slice(0, MAX_NOTES_CHARS) : '';
   const recipientName = typeof body.recipientName === 'string' ? body.recipientName.trim().slice(0, 200) : '';
   const recipientRole = typeof body.recipientRole === 'string' ? body.recipientRole.trim().slice(0, 200) : '';
 
   if (!Number.isInteger(officeId)) return json({ error: 'officeId is required.' }, 400);
-  if (!documentType) return json({ error: 'documentType must be one of letter, memo, circular, notice.' }, 400);
+  if (!documentType) return json({ error: `documentType must be one of ${DOCUMENT_TYPES.join(', ')}.` }, 400);
   if (!notes) return json({ error: 'Paste some notes for the assistant to draft from.' }, 400);
 
   const canAct = await staffCanActOnOffice(sql, session.staffId, officeId);
@@ -120,7 +153,8 @@ export async function onRequestPost({ request, env }) {
     WHERE o.id = ${officeId}`;
   const office = officeRes.rows[0];
   if (!office) return json({ error: 'Office not found.' }, 404);
-  const institutionName = office.institution_name || 'Sultan Hanafi Royal Schools';
+  const specificInstitution = institutionByDbName(office.institution_name);
+  const institutionName = specificInstitution ? specificInstitution.displayName : 'Sultan Hanafi Royal Schools';
 
   const prompt = buildDraftingPrompt({
     officeName: office.office_name,
@@ -162,10 +196,18 @@ export async function onRequestPost({ request, env }) {
 
   const data = await upstream.json();
   const rawText = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
-  const { title, subject, bodyHtml } = parseDraftResponse(rawText);
+  const parsed = parseDraftResponse(rawText);
+
+  if (parsed.needsInfo) {
+    return json({
+      needsInfo: true, questions: parsed.questions,
+      officeName: office.office_name, institutionName, documentType, tone,
+    });
+  }
 
   return json({
-    title, subject, bodyHtml: sanitizeCorrespondenceHtml(bodyHtml),
+    needsInfo: false, title: parsed.title, subject: parsed.subject,
+    bodyHtml: sanitizeCorrespondenceHtml(parsed.bodyHtml),
     officeName: office.office_name,
     institutionName,
     documentType, tone,

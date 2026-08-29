@@ -2556,7 +2556,11 @@ CREATE TABLE IF NOT EXISTS office_correspondence (
   id                   SERIAL PRIMARY KEY,
   office_id            INTEGER NOT NULL REFERENCES offices(id),
   institution_id       INTEGER REFERENCES institutions(id),
-  document_type        TEXT NOT NULL CHECK (document_type IN ('letter', 'memo', 'circular', 'notice')),
+  document_type        TEXT NOT NULL CHECK (document_type IN (
+    'letter', 'memo', 'circular', 'notice', 'report', 'minutes',
+    'appointment_letter', 'warning_letter', 'promotion_letter',
+    'invitation', 'press_release', 'proposal'
+  )),
   tone                 TEXT,
   title                TEXT,
   subject              TEXT,

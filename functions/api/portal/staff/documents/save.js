@@ -9,8 +9,7 @@ import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json, readJsonBody } from '../../../../_lib/http.js';
 import { staffCanActOnOffice } from '../../../../_lib/office-access.js';
 import { sanitizeCorrespondenceHtml } from '../../../../_lib/sanitize-html.js';
-
-const DOCUMENT_TYPES = ['letter', 'memo', 'circular', 'notice'];
+import { DOCUMENT_TYPES } from '../../../../_lib/correspondence-types.js';
 
 export async function onRequestPost({ request, env }) {
   if (!env.SESSION_SECRET) return json({ error: 'Portal is not configured yet.' }, 500);
@@ -32,7 +31,7 @@ export async function onRequestPost({ request, env }) {
   const bodyHtml = sanitizeCorrespondenceHtml(typeof body.bodyHtml === 'string' ? body.bodyHtml : '');
 
   if (!Number.isInteger(officeId)) return json({ error: 'officeId is required.' }, 400);
-  if (!documentType) return json({ error: 'documentType must be one of letter, memo, circular, notice.' }, 400);
+  if (!documentType) return json({ error: `documentType must be one of ${DOCUMENT_TYPES.join(', ')}.` }, 400);
   if (!bodyHtml.trim()) return json({ error: 'The document body is empty.' }, 400);
 
   const canAct = await staffCanActOnOffice(sql, session.staffId, officeId);

@@ -7,8 +7,10 @@ import { getSql } from '../../../../_lib/db.js';
 import { readStaffSessionFromRequest } from '../../../../_lib/session.js';
 import { json } from '../../../../_lib/http.js';
 import { staffCanActOnOffice } from '../../../../_lib/office-access.js';
-import { renderCorrespondenceShell } from '../../../../_lib/correspondence-shell.js';
+import { renderCorrespondenceShell, correspondenceTypeLabel } from '../../../../_lib/correspondence-shell.js';
 import { renderHtmlToPdf, PdfRenderUnavailableError } from '../../../../_lib/pdf-render.js';
+import { institutionByDbName } from '../../../../_lib/institutions.js';
+import { htmlToMarkdown, htmlToPlainText } from '../../../../_lib/html-to-text.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.SESSION_SECRET) return json({ error: 'Portal is not configured yet.' }, 500);
@@ -41,9 +43,37 @@ export async function onRequestGet({ request, env }) {
     if (!canAct) return json({ error: 'You do not currently hold this office.' }, 403);
 
     const dateDisplay = new Date(row.issued_at || row.created_at).toISOString().slice(0, 10);
+    const specificInstitution = institutionByDbName(row.institution_name);
+    const filenameBase = row.reference_no || `draft-${row.id}`;
+    const format = url.searchParams.get('format');
+
+    if (format === 'markdown' || format === 'text') {
+      const header = [
+        `${correspondenceTypeLabel(row.document_type)} — ${row.office_name}`,
+        specificInstitution ? specificInstitution.displayName : 'Sultan Hanafi Royal Schools',
+        `Date: ${dateDisplay}`,
+        row.reference_no ? `Ref: ${row.reference_no}` : 'No reference yet (draft)',
+        row.recipient_name ? `To: ${row.recipient_name}${row.recipient_role ? ` (${row.recipient_role})` : ''}` : null,
+        row.subject ? `Subject: ${row.subject}` : null,
+      ].filter(Boolean).join('\n');
+      const converted = format === 'markdown' ? htmlToMarkdown(row.body_html) : htmlToPlainText(row.body_html);
+      const sig = row.signatory_name
+        ? `\n\n${row.signatory_name}${row.signatory_title ? `\n${row.signatory_title}` : ''}`
+        : '';
+      const body = `${header}\n\n---\n\n${converted}${sig}`;
+      return new Response(body, {
+        headers: {
+          'Content-Type': format === 'markdown' ? 'text/markdown; charset=utf-8' : 'text/plain; charset=utf-8',
+          'Content-Disposition': `inline; filename="${filenameBase}.${format === 'markdown' ? 'md' : 'txt'}"`,
+        },
+      });
+    }
+
     const html = renderCorrespondenceShell({
       officeName: row.office_name,
-      institutionName: row.institution_name || 'Sultan Hanafi Royal Schools',
+      institutionName: 'Sultan Hanafi Royal Schools',
+      specificInstitutionName: specificInstitution ? specificInstitution.displayName : null,
+      accentInstitution: row.institution_name,
       documentType: row.document_type,
       dateDisplay,
       referenceNo: row.reference_no,
@@ -56,13 +86,13 @@ export async function onRequestGet({ request, env }) {
       signatoryTitle: row.signatory_title,
     });
 
-    if (url.searchParams.get('format') === 'pdf') {
+    if (format === 'pdf') {
       try {
         const pdf = await renderHtmlToPdf(env, html);
         return new Response(pdf, {
           headers: {
             'Content-Type': 'application/pdf',
-            'Content-Disposition': `inline; filename="${row.reference_no || `draft-${row.id}`}.pdf"`,
+            'Content-Disposition': `inline; filename="${filenameBase}.pdf"`,
           },
         });
       } catch (pdfErr) {

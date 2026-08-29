@@ -5,6 +5,9 @@
 // from certificates and graduation documents.
 const TYPE_ABBREVIATIONS = {
   letter: 'LTR', memo: 'MEMO', circular: 'CIRC', notice: 'NOTE',
+  report: 'RPT', minutes: 'MIN', appointment_letter: 'APPT',
+  warning_letter: 'WARN', promotion_letter: 'PROM', invitation: 'INVT',
+  press_release: 'PRES', proposal: 'PROP',
 };
 
 export function abbreviateCorrespondenceType(documentType) {

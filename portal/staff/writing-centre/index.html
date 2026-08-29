@@ -56,6 +56,14 @@
             <option value="memo">Internal Memorandum</option>
             <option value="circular">Circular</option>
             <option value="notice">Notice</option>
+            <option value="report">Report</option>
+            <option value="minutes">Minutes of Meeting</option>
+            <option value="appointment_letter">Letter of Appointment</option>
+            <option value="warning_letter">Letter of Warning</option>
+            <option value="promotion_letter">Letter of Promotion</option>
+            <option value="invitation">Invitation</option>
+            <option value="press_release">Press Release</option>
+            <option value="proposal">Proposal</option>
           </select>
         </div>
         <div class="portal-field">
@@ -66,6 +74,9 @@
             <option value="formal">Formal</option>
             <option value="executive">Executive</option>
             <option value="academic">Academic</option>
+            <option value="legal">Legal / Precise</option>
+            <option value="persuasive">Persuasive</option>
+            <option value="friendly">Friendly</option>
           </select>
         </div>
         <div class="portal-field">
@@ -89,6 +100,13 @@
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px;align-items:center;">
         <button type="button" class="registrar-btn" data-wc-generate-btn>Generate Draft</button>
         <span class="registrar-field-note" data-wc-generate-status></span>
+      </div>
+      <div data-wc-clarify hidden style="padding:0 20px 20px;">
+        <div class="registrar-approvals-list">
+          <p class="registrar-field-note" style="padding:10px 14px 4px;">The assistant needs a bit more before it can draft this honestly:</p>
+          <ul data-wc-clarify-questions style="padding:0 14px 10px 30px;font-size:0.86rem;line-height:1.7;"></ul>
+          <p class="registrar-field-note" style="padding:0 14px 10px;">Add the answers to your notes above (anywhere in the text is fine), then generate again.</p>
+        </div>
       </div>
     </div>
 
@@ -121,6 +139,9 @@
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:14px 20px 20px;align-items:center;">
         <button type="button" class="registrar-btn" data-wc-save-btn>Save Draft</button>
         <button type="button" class="registrar-btn" data-wc-preview-btn disabled>Preview Letterhead</button>
+        <button type="button" class="registrar-btn" data-wc-pdf-btn disabled>Download PDF</button>
+        <button type="button" class="registrar-btn" data-wc-md-btn disabled>Export Markdown</button>
+        <button type="button" class="registrar-btn" data-wc-txt-btn disabled>Export Plain Text</button>
         <button type="button" class="portal-submit registrar-form-submit" data-wc-issue-btn disabled>Issue Document</button>
         <span class="registrar-field-note" data-wc-draft-status></span>
       </div>

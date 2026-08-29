@@ -27,10 +27,16 @@
   var bodyEl = document.querySelector('[data-wc-body]');
   var saveBtn = document.querySelector('[data-wc-save-btn]');
   var previewBtn = document.querySelector('[data-wc-preview-btn]');
+  var pdfBtn = document.querySelector('[data-wc-pdf-btn]');
+  var mdBtn = document.querySelector('[data-wc-md-btn]');
+  var txtBtn = document.querySelector('[data-wc-txt-btn]');
   var issueBtn = document.querySelector('[data-wc-issue-btn]');
   var draftStatus = document.querySelector('[data-wc-draft-status]');
+  var clarifyEl = document.querySelector('[data-wc-clarify]');
+  var clarifyQuestionsEl = document.querySelector('[data-wc-clarify-questions]');
 
   var listEl = document.querySelector('[data-wc-list]');
+  var exportBtns = [previewBtn, pdfBtn, mdBtn, txtBtn];
 
   var currentId = null;
 
@@ -110,8 +116,8 @@
       signatoryNameInput.value = full.signatoryName || '';
       signatoryTitleInput.value = full.signatoryTitle || '';
       bodyEl.innerHTML = full.bodyHtml || '';
-      previewBtn.disabled = false;
-      issueBtn.disabled = false;
+      exportBtns.forEach(function (b) { b.disabled = false; });
+      issueBtn.disabled = full.status !== 'draft';
       showDraftSection();
       draftStatus.textContent = 'Loaded draft #' + id + ' — edit below, then Save.';
       window.scrollTo({ top: draftSections[0].offsetTop - 20, behavior: 'smooth' });
@@ -125,6 +131,7 @@
     if (!notes) { generateStatus.textContent = 'Paste some notes first.'; return; }
     generateBtn.disabled = true;
     generateStatus.textContent = 'Drafting…';
+    clarifyEl.hidden = true;
     try {
       var data = await fetchJson('/api/portal/staff/documents/draft', {
         method: 'POST',
@@ -138,12 +145,22 @@
           notes: notes,
         }),
       });
+      if (data.needsInfo) {
+        clarifyQuestionsEl.innerHTML = data.questions.map(function (q) {
+          return '<li>' + q + '</li>';
+        }).join('');
+        clarifyEl.hidden = false;
+        generateStatus.textContent = 'A few questions below before it can draft this.';
+        return;
+      }
       currentId = null;
       titleInput.value = data.title || '';
       subjectInput.value = data.subject || '';
       signatoryNameInput.value = '';
       signatoryTitleInput.value = '';
       bodyEl.innerHTML = data.bodyHtml || '';
+      exportBtns.forEach(function (b) { b.disabled = true; });
+      issueBtn.disabled = true;
       showDraftSection();
       draftStatus.textContent = 'Drafted. Review, add a signatory, then Save.';
       generateStatus.textContent = 'Draft ready below.';
@@ -178,7 +195,7 @@
         }),
       });
       currentId = data.id;
-      previewBtn.disabled = false;
+      exportBtns.forEach(function (b) { b.disabled = false; });
       issueBtn.disabled = false;
       draftStatus.textContent = 'Saved as draft #' + currentId + '.';
       loadList();
@@ -192,6 +209,18 @@
   previewBtn.addEventListener('click', function () {
     if (!currentId) return;
     window.open('/api/portal/staff/documents/render?id=' + currentId, '_blank');
+  });
+  pdfBtn.addEventListener('click', function () {
+    if (!currentId) return;
+    window.open('/api/portal/staff/documents/render?id=' + currentId + '&format=pdf', '_blank');
+  });
+  mdBtn.addEventListener('click', function () {
+    if (!currentId) return;
+    window.open('/api/portal/staff/documents/render?id=' + currentId + '&format=markdown', '_blank');
+  });
+  txtBtn.addEventListener('click', function () {
+    if (!currentId) return;
+    window.open('/api/portal/staff/documents/render?id=' + currentId + '&format=text', '_blank');
   });
 
   issueBtn.addEventListener('click', async function () {
