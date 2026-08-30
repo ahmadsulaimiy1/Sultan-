@@ -236,18 +236,30 @@ html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!impor
    a corner fall-off that stops the frame reading as a rectangle. The
    type ends up on more darkness than before, not less — the wash is
    heavier where the words are and lighter where they are not.
+
+   Lightened a second time on direct instruction: the founder's read on
+   the first pass was still "not dark" — the photograph is the school's
+   real front elevation and it should be seen at close to full strength,
+   not viewed through a haze. The middle band, where the building sits,
+   drops from roughly half-opacity to barely a tenth; the type still
+   gets a firm ramp at the very top and bottom, and the text-shadow rules
+   further down this file carry the rest of the legibility on their own.
+   This is now the SOLE `.hero::before` rule in the file — the three
+   later definitions that used to override it (survivors of an abandoned
+   two-column "plated hero" layout) have been removed rather than left
+   to shadow this one silently.
    =================================================================== */
 .hero::before{
   background:/* the words, top and bottom */
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.94) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.62) 26%,
-                           rgba(var(--lv-cfd5,34,23,9),.50) 50%,
-                           rgba(var(--lv-cfd5,34,23,9),.72) 76%,
-                           rgba(var(--lv-cfd5,34,23,9),.95) 100%),
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.42) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.14) 26%,
+                           rgba(var(--lv-cfd5,34,23,9),.10) 50%,
+                           rgba(var(--lv-cfd5,34,23,9),.24) 76%,
+                           rgba(var(--lv-cfd5,34,23,9),.50) 100%),
     /* the building, lit */
-    radial-gradient(78% 62% at 50% 46%,rgba(var(--lv-gs,198,161,91),.16),transparent 68%),
+    radial-gradient(78% 62% at 50% 46%,rgba(var(--lv-gs,198,161,91),.10),transparent 68%),
     /* the corners, fallen away */
-    radial-gradient(150% 120% at 50% 45%,transparent 38%,rgba(var(--lv-cfd4s,26,16,6),.72) 100%)!important;}
+    radial-gradient(150% 120% at 50% 45%,transparent 50%,rgba(var(--lv-cfd4s,26,16,6),.34) 100%)!important;}
 /* The photograph itself gets a touch more presence: a school building in
    Lagos sunlight is a warm picture and it should look like one. */
 .hero{background-blend-mode:normal;}
@@ -343,30 +355,28 @@ html[data-pc-ornament="none"] header.nav::after{display:none;}
    deleted silently, so it is plain what was removed and why. */
 .hero-plate{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background-image:url("/assets/images/gallery/campus-hero.jpg");
+  background-image:url("/assets/images/gallery/campus-aerial-facade.jpg");
   background-size:cover;
-  background-position:center 65%;
-  transform:scale(1.045);
+  background-position:center 42%;
+  transform:scale(1.03);
   animation:hero-drift 38s ease-in-out infinite alternate;
 }
+/* Swapped to the school's own freshly supplied front-elevation
+   photograph, real resolution (1121x995) rather than the older,
+   repeatedly-upscaled gallery still. The drift's scale range is pulled
+   in a touch (was 1.045→1.075) so the modest source resolution never
+   gets pushed past its own detail. */
 @keyframes hero-drift{
-  from{ transform:scale(1.045) translate3d(0,0,0); }
-  to  { transform:scale(1.075) translate3d(-0.9%,-1.1%,0); }
+  from{ transform:scale(1.03) translate3d(0,0,0); }
+  to  { transform:scale(1.05) translate3d(-0.7%,-0.8%,0); }
 }
 @media (prefers-reduced-motion:reduce){ .hero-plate{ animation:none; } }
 html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
 
-/* The wash, re-cut for a photograph that deserves to be seen. */
-.hero::before{
-  background:
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.62) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.52) 22%,
-                           rgba(var(--lv-cfd5,34,23,9),.60) 46%,
-                           rgba(var(--lv-cfd5,34,23,9),.78) 74%,
-                           rgba(var(--lv-cfd5,34,23,9),.94) 100%),
-    radial-gradient(72% 56% at 50% 44%,rgba(var(--lv-gs,198,161,91),.13),transparent 70%),
-    radial-gradient(150% 120% at 50% 45%,transparent 42%,rgba(var(--lv-cfd4s,26,16,6),.66) 100%)!important;
-}
+/* The wash for this photograph now lives in one place only — the
+   `.hero::before` rule under "THE ARRIVAL" above. A second, competing
+   definition used to sit here and silently win the cascade by being
+   later in the file; removed rather than left as a trap. */
 
 /* ---- The wordmark, set rather than stretched ----------------------
    The promise line carried 0.28em of tracking — at that measure the
@@ -512,13 +522,6 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
    Same photograph, held right back. It is scenery now, not the subject,
    so the wash over it can be heavy without costing anything. */
 /* removed on restore: tuned for the plated hero — see the note at .hero-plate */
-.hero::before{
-  background:
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.90) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.86) 45%,
-                           rgba(var(--lv-cfd5,34,23,9),.93) 100%),
-    radial-gradient(120% 100% at 50% 45%,transparent 30%,rgba(var(--lv-cfd4s,26,16,6),.7) 100%)!important;
-}
 
 /* ---- One column when there is not room for two -------------------- */
 @media (max-width:940px){
@@ -543,14 +546,6 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
    campus rather than on a brown rectangle, not enough to read as a
    second picture competing with the first. */
 /* removed on restore: tuned for the plated hero — see the note at .hero-plate */
-.hero::before{
-  background:
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.40) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.38) 45%,
-                           rgba(var(--lv-cfd5,34,23,9),.46) 100%),
-    radial-gradient(120% 100% at 26% 45%,rgba(var(--lv-gs,198,161,91),.07),transparent 62%),
-    radial-gradient(130% 110% at 50% 45%,transparent 40%,rgba(var(--lv-cfd4s,26,16,6),.36) 100%)!important;
-}
 
 /* ---- Three buttons, one row, or three rows — never two and a half --
    At this measure the third button dropped alone onto a second line and

@@ -9,21 +9,28 @@
 // Obsidian. Those five exist so a reader can pick a different hue at
 // the *same* visual weight as the house livery. Pearl is not another
 // preference alongside Royal Gold — it is the founder's flagship
-// replacement for it, and the brief was explicit: brighter and whiter
-// than any existing livery holds, not just a different colour at the
-// same brightness. So this script trades luminance-preservation for
+// replacement for it. But the brief, corrected after the first pass
+// overcorrected: white/off-white grounds instead of cream, and gold
+// and coffee brown made brighter and richer — NOT gold replaced by
+// red. Crimson stays a deliberate, narrow accent (primary CTAs, the
+// Personalisation Centre's accent slot) applied separately in
+// css/brand.css under [data-pc-livery="pearl"], not baked into this
+// token generator. So this script trades luminance-preservation for
 // three rules, applied per token:
 //
 //   PAPER  (the named p1-p6/mk family, or anything already very light)
 //          -> pushed to true white/off-white, desaturated hard.
-//   INK    (anything already dark) -> stays dark, for contrast; only a
-//          faint hue shift so body text doesn't visibly change weight.
-//   GOLD/BRONZE/EMERALD (the named accent family, or any mid-tone
-//          colourful token) -> rotated fully onto the site's own
-//          --crimson (#7C1F2E, css/brand.css) and enriched — this is
-//          the "royal red accent" the founder asked for, applied
-//          site-wide through the token system rather than hand-patched
-//          per component.
+//   INK / COFFEE (the named cf/cf2/cfd*/ch/chd band-identity family,
+//          or anything already dark) -> stays dark enough for
+//          contrast, but richer: saturation lifted, and the coffee
+//          family specifically lightened a controlled amount so the
+//          dark bands read as a lively coffee brown rather than
+//          near-black.
+//   GOLD/BRONZE (the named accent family: g, gb, gd, gl*, gp, gt*,
+//          bz, bzb, em, or any mid-tone colourful token) -> same gold
+//          hue, preserved — only brighter and more saturated. This is
+//          "brighter, more attractive, more catchy," not a different
+//          colour.
 //
 // Usage: node scripts/generate-pearl-livery.mjs
 // Prints the two new blocks (light + dark) to stdout; paste-replace
@@ -73,28 +80,37 @@ function hsl2rgb(h, s, l) {
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
-// Anchor hue: the site's own --crimson (#7C1F2E, css/brand.css) — Pearl's
-// red must match the brand crimson already defined, not invent a new one.
+// Anchor hue: the site's own --crimson (#7C1F2E, css/brand.css) — used
+// ONLY for the paper family's whisper of warmth, matching the accent
+// that css/brand.css layers on separately. Not used for gold anymore.
 const [ANCHOR_H] = rgb2hsl(0x7C, 0x1F, 0x2E);
 
 const PAPER_NAMES = new Set(['p1','p2','p3','p4','p5','p6','mk','w00','w02','w03','w05','w06','w15','w17','w19','w25','w26','w36','w38','w40','w41','w43','w46','w50','w51']);
 const GOLD_NAMES = new Set(['g','gb','gd','gl','gl2','gl3','gl4','gp','gt','gt2','gt3','gt4','gt5','bz','bzb','em','w116','w220','w221']);
+const COFFEE_NAMES = new Set(['cf','cf2','cfd','cfd2','cfd3','cfd4','cfd5','ch','chd']);
 
 function transformToken(name, r, g, b) {
   const [h, s, l] = rgb2hsl(r, g, b);
   let nh, ns, nl;
   if (PAPER_NAMES.has(name)) {
     nh = ANCHOR_H; ns = Math.min(s * 0.08, 0.035); nl = Math.min(0.99, l + (1 - l) * 0.85);
+  } else if (COFFEE_NAMES.has(name)) {
+    // The dark band identity colour — richer and a controlled amount
+    // brighter, still its own coffee-brown hue, still dark enough to
+    // carry white/gold text.
+    nh = h; ns = Math.min(1, s * 1.12 + 0.05); nl = Math.min(0.34, l * 1.5 + 0.04);
   } else if (GOLD_NAMES.has(name)) {
-    nh = ANCHOR_H; ns = Math.min(1, s * 1.05 + 0.15); nl = l;
+    nh = h; ns = Math.min(1, s * 1.18 + 0.06); nl = Math.min(0.78, l * 1.12 + 0.04);
   } else if (l >= 0.80) {
     nh = ANCHOR_H; ns = Math.min(s * 0.12, 0.05); nl = Math.min(0.99, l + (1 - l) * 0.7);
   } else if (l <= 0.28) {
-    nh = ANCHOR_H; ns = Math.min(s * 0.6, 0.24); nl = l;
+    nh = h; ns = Math.min(1, s * 1.1); nl = l;
   } else if (s < 0.12) {
-    nh = ANCHOR_H; ns = Math.min(s, 0.08); nl = l;
+    nh = h; ns = Math.min(s, 0.1); nl = l;
   } else {
-    nh = ANCHOR_H; ns = Math.min(1, s * 1.0 + 0.12); nl = l * 0.96;
+    // Unnamed mid-tone — this whole palette is coffee+gold, so treat
+    // it the same way as the named gold family: brighter, same hue.
+    nh = h; ns = Math.min(1, s * 1.18 + 0.06); nl = Math.min(0.78, l * 1.1 + 0.03);
   }
   return hsl2rgb(nh, ns, nl);
 }

@@ -103,6 +103,18 @@
     --accent:var(--gold); --accent-bright:var(--gold-bright);
     --accent-shadow:rgba(var(--lv-g,198,161,91),0.55); --accent-wash:rgba(var(--lv-g,198,161,91),0.12);
   }
+  /* Pearl's own deliberate accent: the founder asked for crimson used
+     strategically on CTAs and interactive elements, NOT for gold
+     replaced by red everywhere — so this sets the default only, the
+     same values already offered as the "Burgundy" accent choice above.
+     A visitor who explicitly picks a different accent in the
+     Personalisation Centre still gets it: the data-pc-accent rules
+     below come later in the cascade at equal specificity, so an
+     explicit choice always wins over this automatic default. */
+  :root[data-pc-livery="pearl"]{
+    --accent:#7C1F2E; --accent-bright:#A8455A;
+    --accent-shadow:rgba(124,31,46,0.55); --accent-wash:rgba(124,31,46,0.12);
+  }
   :root[data-pc-accent="coffee-brown"]{
     --accent:rgb(var(--lv-w70,139,94,52)); --accent-bright:rgb(var(--lv-w221,185,134,83)); --accent-shadow:rgba(var(--lv-w70,139,94,52),0.55); --accent-wash:rgba(var(--lv-w70,139,94,52),0.12);
   }

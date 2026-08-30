@@ -126,6 +126,19 @@
     --fm-gutter:max(clamp(20px,6vw,44px),(100% - 1140px)/2);
   }
 
+  /* Pearl's crimson on "the one door" — the founder's brief asked
+     specifically for the primary call-to-action in the accent colour;
+     Login to Portal is the single most consequential action in the
+     Full Menu, so it takes the same crimson as .nav-cta elsewhere
+     (css/brand.css) instead of the antique-gold plate every other
+     livery uses. More specific selector than .navlinks alone, so it
+     wins without needing !important on top of the rule already here. */
+  [data-pc-livery="pearl"] .navlinks{
+    --fm-plate-bg:linear-gradient(158deg,#8C2A3C 0%,#7C1F2E 100%);
+    --fm-plate-ink:#FFFFFF;
+    --fm-plate-edge:rgba(124,31,46,.55);
+  }
+
   /* ---------- The sheet ----------
      THE ONE RULE THAT IS NOT ABOUT THE MENU. `.navlinks` sits inside
      `nav.wrap`, and `nav.wrap` carries `z-index:1`. A stacking context
