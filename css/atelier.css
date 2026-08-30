@@ -545,11 +545,11 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
 /* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 .hero::before{
   background:
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.93) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.90) 45%,
-                           rgba(var(--lv-cfd5,34,23,9),.96) 100%),
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.40) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.38) 45%,
+                           rgba(var(--lv-cfd5,34,23,9),.46) 100%),
     radial-gradient(120% 100% at 26% 45%,rgba(var(--lv-gs,198,161,91),.07),transparent 62%),
-    radial-gradient(130% 110% at 50% 45%,transparent 34%,rgba(var(--lv-cfd4s,26,16,6),.75) 100%)!important;
+    radial-gradient(130% 110% at 50% 45%,transparent 40%,rgba(var(--lv-cfd4s,26,16,6),.36) 100%)!important;
 }
 
 /* ---- Three buttons, one row, or three rows — never two and a half --

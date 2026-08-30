@@ -51,7 +51,7 @@ html[data-pc-ornament="none"] .mh-progress{display:none;}
    centred on the same 1180px measure the masthead uses, so the three
    rows read as one masthead instead of three unrelated strips.
    ------------------------------------------------------------------- */
-@media (min-width:861px) and (max-width:1440px){
+@media (min-width:861px) and (max-width:2000px){
   .mobile-nav-ribbon,.mobile-quick-row{
     padding-inline:max(24px,calc((100% - 1180px) / 2));
     overflow:visible;scroll-snap-type:none;}
@@ -278,7 +278,7 @@ html[data-pc-motion="reduced"] header.nav nav.wrap::after{animation:none;transfo
    and the menu belong together on the right; the space between them
    and the crest is where a masthead says who and where it is.
    ------------------------------------------------------------------- */
-@media (max-width:1440px){
+@media (max-width:2000px){
   header.nav nav.wrap{justify-content:flex-start;gap:16px;}
   header.nav nav.wrap > .brand{margin-inline-end:auto;}
 }

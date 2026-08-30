@@ -182,6 +182,8 @@
   "footer.registerLogin": "Créer un compte / Se connecter",
   "footer.startAdmission": "Commencer l'admission",
   "footer.notices": "Avis",
+  "ann.empty": "Aucune annonce active pour le moment.",
+  "ann.viewAll": "Voir tout",
   "footer.pressNews": "Presse et actualités",
   "footer.visitTitle": "Visiter notre campus",
   "footer.visitBlurb": "Découvrez notre cadre d'apprentissage, rencontrez nos enseignants et explorez les parcours qui forment des savants, des dirigeants et des gardiens de l'excellence.",

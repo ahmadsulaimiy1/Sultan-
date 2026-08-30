@@ -182,6 +182,8 @@
   "footer.registerLogin": "إنشاء حساب / تسجيل الدخول",
   "footer.startAdmission": "ابدأ إجراءات القبول",
   "footer.notices": "الإشعارات",
+  "ann.empty": "لا توجد إشعارات نشطة حالياً.",
+  "ann.viewAll": "عرض الكل",
   "footer.pressNews": "الصحافة والأخبار",
   "footer.visitTitle": "زُر حرمنا الجامعي",
   "footer.visitBlurb": "عِش بيئتنا التعليمية، وتعرّف على معلمينا، واكتشف المسارات التي تصنع العلماء والقادة وحُماة التميّز.",

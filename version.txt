@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      2f1d91437a3e4ce7b86e34c6e2806e00b3ed63d4
-short       2f1d9143
-branch      claude/sultan-hanife-deploy-5xdx58
-subject     Merge pull request #30 from ahmadsulaimiy1/claude/sultan-hanife-deploy-5xdx58
-built (UTC) 2026-08-19T14:03:57Z
-assets      shrs-pwa-b01f2c1451
+commit      659ad4eb73034c24b5563bedf860a44ff6754e73
+short       659ad4eb
+branch      claude/main-design-fixes
+subject     Harden AESI's safeguarding denylist and close one real historical-workflow bottleneck
+built (UTC) 2026-08-30T16:04:31Z
+assets      shrs-pwa-f0621baadb
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
