@@ -73,7 +73,7 @@ html[data-pc-motion="reduced"] .pc-drawer{transition:none;}
 
 @media (min-width:640px){
   .pc-drawer{flex-direction:row;}
-  .pc-head, .pc-body{width:100%;}
+  .pc-head{width:100%;}
   .pc-drawer > .pc-head{position:absolute;top:0;left:0;right:0;}
   .pc-tabs{position:absolute;top:78px;bottom:0;left:0;width:150px;flex-direction:column;flex-wrap:nowrap;border-inline-end:1px solid var(--line);border-bottom:none;overflow-x:hidden;overflow-y:auto;}
   [dir="rtl"] .pc-tabs{left:auto;right:0;}
