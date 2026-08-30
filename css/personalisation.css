@@ -440,6 +440,7 @@ html[data-pc-imagery="lean"] .mo-par-img img{transform:none!important;}
 .pc-lv-swatch[data-lv="emerald"] {background:linear-gradient(100deg,#AFDAC5 0 34%,#213029 34% 67%,#E5F2EC 67% 100%);}
 .pc-lv-swatch[data-lv="garnet"]  {background:linear-gradient(100deg,#E9CD9A 0 34%,#45232C 34% 67%,#F7EEE0 67% 100%);}
 .pc-lv-swatch[data-lv="obsidian"]{background:linear-gradient(100deg,#CFD0D3 0 34%,#2D2E2F 34% 67%,#EFEFF0 67% 100%);}
+.pc-lv-swatch[data-lv="pearl"]   {background:linear-gradient(100deg,#D9485F 0 34%,#261A1C 34% 67%,#FDFCFC 67% 100%);}
 .pc-lv-name{font-family:var(--font-label);font-size:.8rem;line-height:1.2;}
 .pc-lv-sub{font-size:.68rem;opacity:.72;line-height:1.3;}
 

@@ -506,7 +506,7 @@
   }
   .brand-text{display:flex;flex-direction:column;justify-content:center;gap:4px;line-height:1;}
   .brand-text .line1{
-    font-size:1.34rem;font-weight:700;letter-spacing:0.025em;font-family:var(--font-label);white-space:nowrap;line-height:1.1;
+    font-size:1.58rem;font-weight:700;letter-spacing:0.025em;font-family:var(--font-label);white-space:nowrap;line-height:1.1;
     background-image:linear-gradient(100deg,rgb(var(--lv-wh,255,255,255)) 30%,var(--gold-bright) 45%,rgb(var(--lv-wh,255,255,255)) 60%);
     background-size:280% 100%;background-position:280% 0;
     -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
@@ -514,7 +514,16 @@
   }
   @keyframes imperial-text-shimmer{0%,50%{background-position:280% 0;}85%,100%{background-position:-60% 0;}}
   @media (prefers-reduced-motion:reduce){.brand-text .line1{animation:none;background:none;-webkit-text-fill-color:#fff;color:#fff;}}
-  .brand-text .line2{font-size:0.7rem;letter-spacing:0.19em;color:var(--gold-bright);text-transform:uppercase;font-family:var(--font-body);white-space:nowrap;line-height:1.1;}
+  .brand-text .line2{font-size:0.78rem;letter-spacing:0.19em;color:var(--gold-bright);text-transform:uppercase;font-family:var(--font-body);white-space:nowrap;line-height:1.1;}
+  /* Executive Refinement: the real Arabic/English name, third line under
+     the crest — the founder's directive was for the two names to read
+     as one identity, not the Arabic held back for the /ar/ site alone.
+     Quieter than line2 (smaller, softer opacity) so the hierarchy stays
+     crest -> line1 -> line2 -> this, not four competing headlines. */
+  .brand-text .line-dual{
+    font-size:0.68rem;letter-spacing:0.01em;font-family:var(--font-display);
+    color:var(--gold-bright);opacity:.82;white-space:nowrap;line-height:1.15;
+  }
   .navlinks{display:flex;gap:30px;align-items:center;}
   .navlinks a{color:var(--ivory);font-size:0.84rem;font-weight:500;letter-spacing:0.01em;padding:8px 0;border-bottom:1px solid transparent;position:relative;transition:color .3s ease;white-space:nowrap;}
   .navlinks a::after{content:"";position:absolute;left:0;bottom:-1px;width:0;height:1px;background:var(--gold-bright);transition:width .35s cubic-bezier(.4,0,.2,1);}
@@ -677,8 +686,9 @@
       opacity:0.2;filter:blur(9px);pointer-events:none;
     }
     .brand-mark{width:58px;height:58px;position:relative;}
-    .brand-text .line1{font-size:1.12rem;}
-    .brand-text .line2{font-size:0.62rem;}
+    .brand-text .line1{font-size:1.28rem;}
+    .brand-text .line2{font-size:0.66rem;}
+    .brand-text .line-dual{font-size:0.58rem;}
   }
   .search-toggle{
     display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;
@@ -2911,6 +2921,31 @@
     .whatsapp-float{bottom:82px;right:16px;}
     [dir="rtl"] .whatsapp-float{left:16px;}
   }
+
+  /* Executive Refinement: the two floating actions arrive rather than
+     simply appear — WhatsApp first, the assistant a beat after it, so
+     they read as one considered pair instead of two unrelated buttons
+     that happened to load. One run only, on first paint; nothing loops,
+     matching the house rule that a repeating effect turns into wallpaper
+     and an effect that announces itself has failed. */
+  @media (prefers-reduced-motion:no-preference){
+    .whatsapp-launcher,.assistant-launcher{
+      animation:fab-arrive .62s cubic-bezier(.16,.8,.24,1) both;
+    }
+    .whatsapp-launcher{animation-delay:.12s;}
+    .assistant-launcher{animation-delay:.36s;}
+    @keyframes fab-arrive{
+      from{opacity:0;transform:translateY(16px) scale(.8);}
+      to{opacity:1;transform:translateY(0) scale(1);}
+    }
+  }
+  /* Elevation deepens on hover rather than only lifting — the two
+     buttons already translate on :hover (above); adding the shadow's
+     own growth to that same transition is what reads as the button
+     coming toward you instead of just sliding. */
+  .whatsapp-launcher,.assistant-launcher{transition:transform .25s ease,box-shadow .25s ease;}
+  .whatsapp-launcher:hover{box-shadow:0 20px 36px -14px rgba(37,211,102,0.68);}
+  .assistant-launcher:hover{box-shadow:0 20px 40px -14px rgba(var(--lv-cfd5,34,23,9),0.62);}
 
   /* Floating-action collision reduction: four fixed-position buttons
      (Call School, Apply Now, WhatsApp, Assistant) sit in the bottom

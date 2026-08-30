@@ -648,6 +648,7 @@ html[data-pc-theme="light"] .hero h1 .hero-type{ color:#fff; }
   header.nav .brand-text{ min-width:0; }
   header.nav .brand-text .line1{ font-size:clamp(.86rem,4.3vw,1.15rem); }
   header.nav .brand-text .line2{ font-size:.56rem; letter-spacing:.13em; }
+  header.nav .brand-text .line-dual{ font-size:.52rem; }
   header.nav .nav-actions,
   header.nav .nav-right{ gap:6px; flex:0 0 auto; }
   header.nav .menu-toggle{ padding-inline:12px; }
@@ -676,6 +677,7 @@ html[data-pc-theme="light"] .hero h1 .hero-type{ color:#fff; }
   header.nav nav.wrap{ gap:6px; padding-inline:10px; }
   header.nav .brand-text .line1{ font-size:clamp(.8rem,4vw,1.05rem); }
   header.nav .brand-text .line2{ font-size:.52rem; letter-spacing:.10em; }
+  header.nav .brand-text .line-dual{ font-size:.48rem; }
   header.nav .menu-toggle{ padding-inline:10px; font-size:.66rem; }
   header.nav .menu-toggle svg{ width:15px; height:15px; }
   /* The clock is the one item here that is decoration rather than
