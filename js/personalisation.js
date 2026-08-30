@@ -5,7 +5,7 @@
   var DEFAULTS = {
     textSize: 'medium',
     theme: 'light',   // the Clear edition is the house default
-    livery: 'royal',
+    livery: 'ivory',
     ornament: 'full',
     corners: 'soft',
     depth: 'standard',

@@ -34,7 +34,7 @@
 
   var prefs = load();
   // Answered before, or arriving with a livery already chosen: say nothing.
-  if (prefs.liveryPromptSeen || (prefs.livery && prefs.livery !== 'royal')) return;
+  if (prefs.liveryPromptSeen || (prefs.livery && prefs.livery !== 'ivory')) return;
   // A visitor who has told us they want less motion is not shown a
   // modal that fades in over their reading, either.
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -42,7 +42,7 @@
 
   var html = document.documentElement;
   var grid = root.querySelector('[data-lvp-grid]');
-  var chosen = prefs.livery || 'royal';
+  var chosen = prefs.livery || 'ivory';
   var settled = chosen;
 
   function paint(v) { html.setAttribute('data-pc-livery', v); }
@@ -94,7 +94,7 @@
   });
 
   root.querySelector('[data-lvp-accept]').addEventListener('click', function () { close(settled); });
-  root.querySelector('[data-lvp-dismiss]').addEventListener('click', function () { close('royal'); });
+  root.querySelector('[data-lvp-dismiss]').addEventListener('click', function () { close('ivory'); });
   root.querySelector('[data-lvp-scrim]').addEventListener('click', function () { close(settled); });
 
   /* IT NO LONGER LETS ITSELF IN. This waited eight seconds, or for a scroll

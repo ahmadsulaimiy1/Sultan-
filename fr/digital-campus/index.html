@@ -21,13 +21,9 @@
 <meta name="twitter:description" content="Parent Portal, Student Portal, Staff Identity, Founder Dashboard, and more — one shared set of digital systems serving all five institutions.">
 <meta name="twitter:image" content="https://shroyalschools.com/assets/images/apple-touch-icon.png">
 <link rel="stylesheet" href="/css/fonts.css?v=9c04a7b6b7">
-<link rel="stylesheet" href="/css/liveries.css?v=6dc90bcf88">
+<link rel="stylesheet" href="/css/liveries.css?v=d42ed5c16c">
 <link rel="stylesheet" href="/css/brand.css?v=4242997740">
-<link rel="stylesheet" href="/css/islamic-pattern.css?v=1">
-<link rel="stylesheet" href="/css/running-light.css?v=1">
-<link rel="stylesheet" href="/css/lively-icons.css?v=1">
-<link rel="stylesheet" href="/css/lively-photos.css?v=1">
-<link rel="stylesheet" href="/css/personalisation.css?v=3743703e12">
+<link rel="stylesheet" href="/css/personalisation.css?v=331e1c1ceb">
 <link rel="stylesheet" href="/css/announcements.css?v=07ea4832c9">
 <link rel="stylesheet" href="/css/atelier.css?v=4bf48ea969">
 <link rel="stylesheet" href="/css/menu.css?v=1116ec2e9a">
@@ -39,7 +35,7 @@
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
     html.setAttribute('data-pc-theme', p.theme || 'light');
-    html.setAttribute('data-pc-livery', p.livery || 'royal');
+    html.setAttribute('data-pc-livery', p.livery || 'ivory');
     html.setAttribute('data-pc-ornament', p.ornament || 'full');
     html.setAttribute('data-pc-corners', p.corners || 'soft');
     html.setAttribute('data-pc-depth', p.depth || 'standard');
@@ -88,7 +84,7 @@
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<link rel="stylesheet" href="/css/masthead.css?v=2e3e6953e7">
+<link rel="stylesheet" href="/css/masthead.css?v=9b8846043f">
 <link rel="stylesheet" href="/css/armorial.css?v=03c38ae694">
 <link rel="stylesheet" href="/css/kinetic.css?v=52e4ccffc3">
 <link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
@@ -96,8 +92,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/digital-campus/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/digital-campus/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/digital-campus/" />
-<meta name="shrs-build" content="shrs-pwa-b01f2c1451">
-<script defer src="/js/measure.js?v=1"></script>
+<meta name="shrs-build" content="shrs-pwa-1338feccc5">
 </head>
 <body>
 
@@ -1160,7 +1155,7 @@
 
 <!-- The livery invitation. Shown once, on a visitor's first arrival,
      and never again once they have answered it either way. It is a
-     genuine offer rather than a notice: the six swatches are live, so
+     genuine offer rather than a notice: the seven swatches are live, so
      the page recolours under the panel as the pointer moves across
      them, and the choice is made by seeing rather than by reading. -->
 <div class="lvp-root" data-livery-prompt hidden>
@@ -1169,9 +1164,10 @@
     <span class="lvp-crest" aria-hidden="true"><img src="/assets/images/brand-mark.png" alt="" width="46" height="46" /></span>
     <p class="lvp-eyebrow">Before you begin</p>
     <h2 class="lvp-title" id="lvp-t">Dress the school in your own colour</h2>
-    <p class="lvp-desc" id="lvp-d">This site is published in six liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
+    <p class="lvp-desc" id="lvp-d">This site is published in seven liveries. Every one of them carries the same words, the same photographs and the same standard of legibility &mdash; only the colour changes. Move across them to see the page change beneath, and choose the one you would rather read in. You can change it again at any time in the Personalisation Centre.</p>
     <div class="lvp-grid" data-lvp-grid role="radiogroup" aria-label="Choose a livery">
-      <button type="button" data-value="royal" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
+      <button type="button" data-value="ivory" class="is-active"><span class="pc-lv-swatch" data-lv="ivory" aria-hidden="true"></span><span class="lvp-n">Ivory</span></button>
+      <button type="button" data-value="royal"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="lvp-n">Royal Gold</span></button>
       <button type="button" data-value="coffee"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="lvp-n">Coffee Brown</span></button>
       <button type="button" data-value="sapphire"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="lvp-n">Sapphire Blue</span></button>
       <button type="button" data-value="emerald"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="lvp-n">Emerald Green</span></button>
@@ -1291,7 +1287,8 @@
         <div class="pc-option pc-option-livery">
           <div class="pc-option-label"><span class="pc-option-title">Livery</span><p class="pc-option-desc">The colour the whole institution is dressed in — accent, grounds, papers and inks together. Every livery is checked for legibility to the same standard; the crest, the photographs and the five schools&rsquo; own colours never move.</p></div>
           <div class="pc-livery-grid" data-pc-set="livery" role="radiogroup" aria-label="Livery">
-            <button type="button" data-value="royal" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">The house livery &mdash; coffee &amp; gold</span></button>
+            <button type="button" data-value="ivory" role="radio" aria-checked="true" class="is-active"><span class="pc-lv-swatch" data-lv="ivory" aria-hidden="true"></span><span class="pc-lv-name">Ivory</span><span class="pc-lv-sub">The house livery &mdash; polished white &amp; gold</span></button>
+            <button type="button" data-value="royal" role="radio"><span class="pc-lv-swatch" data-lv="royal" aria-hidden="true"></span><span class="pc-lv-name">Royal Gold</span><span class="pc-lv-sub">Coffee &amp; gold</span></button>
             <button type="button" data-value="coffee" role="radio"><span class="pc-lv-swatch" data-lv="coffee" aria-hidden="true"></span><span class="pc-lv-name">Coffee Brown</span><span class="pc-lv-sub">Latte ground, espresso bands</span></button>
             <button type="button" data-value="sapphire" role="radio"><span class="pc-lv-swatch" data-lv="sapphire" aria-hidden="true"></span><span class="pc-lv-name">Sapphire Blue</span><span class="pc-lv-sub">Deep &amp; scholarly</span></button>
             <button type="button" data-value="emerald" role="radio"><span class="pc-lv-swatch" data-lv="emerald" aria-hidden="true"></span><span class="pc-lv-name">Emerald Green</span><span class="pc-lv-sub">Calm &amp; verdant</span></button>
@@ -1783,9 +1780,9 @@
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
 <script src="/js/prayer-times.js?v=a0ca2f8953" defer></script>
 <script src="/js/hijri.js?v=4bb28b7c28" defer></script>
-<script src="/js/personalisation.js?v=ae5fcbf1b1" defer></script>
+<script src="/js/personalisation.js?v=da5d5016bd" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
-<script src="/js/livery-prompt.js?v=91804e3a7a" defer></script>
+<script src="/js/livery-prompt.js?v=d6a76160b7" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=fba3957e10" defer></script>

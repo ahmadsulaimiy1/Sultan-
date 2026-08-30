@@ -442,6 +442,7 @@ html[data-pc-imagery="lean"] .mo-par-img img{transform:none!important;}
    meant every swatch was repainted in the livery currently on — so all six
    looked alike and the chooser showed nothing to choose between. A swatch
    must always be its own livery's accent, band and paper, whatever is on. */
+.pc-lv-swatch[data-lv="ivory"]   {background:linear-gradient(100deg,#E9CE8A 0 34%,#2E2925 34% 67%,#FCFBFB 67% 100%);}
 .pc-lv-swatch[data-lv="royal"]   {background:linear-gradient(100deg,#E9CE8A 0 34%,#3B2A1D 34% 67%,#F7EEDF 67% 100%);}
 .pc-lv-swatch[data-lv="coffee"]  {background:linear-gradient(100deg,#E9CE8A 0 34%,#200E07 34% 67%,#EEDFD1 67% 100%);}
 .pc-lv-swatch[data-lv="sapphire"]{background:linear-gradient(100deg,#C1D3E6 0 34%,#252F39 34% 67%,#EAEFF6 67% 100%);}
@@ -599,7 +600,7 @@ html[data-pc-width="narrow"] .hx-faq-lede{max-width:var(--measure-max);}
   line-height:1.24;margin:0 0 12px;color:rgb(var(--lv-cf,59,42,29));}
 .lvp-desc{margin:0 auto 22px;max-width:52ch;font-size:.92rem;line-height:1.7;
   color:rgb(var(--lv-ink2,87,71,47));}
-.lvp-grid{display:grid;gap:9px;grid-template-columns:repeat(3,1fr);margin-bottom:22px;}
+.lvp-grid{display:grid;gap:9px;grid-template-columns:repeat(4,1fr);margin-bottom:22px;}
 @media (max-width:520px){.lvp-grid{grid-template-columns:repeat(2,1fr);}}
 .lvp-grid button{display:flex;flex-direction:column;gap:7px;align-items:stretch;cursor:pointer;
   padding:10px 10px 9px;border-radius:12px;font:inherit;color:inherit;
