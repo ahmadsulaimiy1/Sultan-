@@ -3047,18 +3047,26 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
    stays bright so the device still reads as gilt. */
 .eyebrow,.pr-eyebrow{color:var(--pr-gold-deep,rgb(var(--lv-gd,156,122,60)));}
 .eyebrow::before,.pr-eyebrow::before{background:linear-gradient(90deg,var(--pr-gold),var(--pr-gold-bright));}
-/* On every dark ground the bright gold is correct and is restored. */
+/* On every dark ground the bright gold is correct and is restored.
+   .hero was in this list when the eyebrow sat over the photograph; it
+   now sits on the page's own white/off-white ground below the photo,
+   so it takes the base rule above (gold-deep, already tuned for a
+   light ground) like every other on-page eyebrow. */
 .pr-section.is-royal .pr-eyebrow,.pr-hero .pr-eyebrow,.pr-arrival .pr-eyebrow,
 .chapter-band .eyebrow,.chapter-band-alt .eyebrow,
 .academics > .wrap .eyebrow,.policies > .wrap .eyebrow,
 .portal-body .eyebrow,footer .eyebrow,.contact .eyebrow,
 .digital-campus-teaser .eyebrow,.governance .eyebrow,.adhkar-teaser .eyebrow,
-.hero .eyebrow,.foundation .eyebrow,.ct-hours .pr-eyebrow{
+.foundation .eyebrow,.ct-hours .pr-eyebrow{
   color:var(--pr-gold-bright,rgb(var(--lv-gb,233,206,138)));}
 
 /* ---- The outline button, on cream ------------------------------------
    Designed for a dark band, where bright gold on near-black is correct.
-   On the cream it measured 1.31:1. It keeps its shape and takes the ink. */
+   On the cream it measured 1.31:1. It keeps its shape and takes the ink.
+   .hero used to be excluded here because its CTAs sat over the
+   photograph; they now sit on the page's own ground below it, so the
+   hero's outline button takes the same on-light treatment as everywhere
+   else instead of the gold-on-dark variant. */
 .pr-section.is-ivory .btn-outline,
 .wrap > .cl-foot .btn-outline,
 .plib .btn-outline,
@@ -3066,7 +3074,7 @@ header.nav .brand-text .line2{opacity:1;max-height:1.4em;transition:opacity .3s,
    they were dark bands. Measured, both are pale on every page that
    carries them, and the Governance Library's own print button was
    therefore left at 1.31:1. */
-section:not(.is-royal):not(.hero):not(.contact) .btn-outline{
+section:not(.is-royal):not(.contact) .btn-outline{
   color:var(--pr-gold-text,rgb(var(--lv-gt,124,94,40)));
   border-color:rgba(var(--lv-gs,198,161,91),.55);
   background:linear-gradient(168deg,rgb(var(--lv-p1,255,253,249)),rgb(var(--lv-w50,245,236,220)));}

@@ -223,49 +223,33 @@ html[data-pc-motion="reduced"] section h2::after,
 html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!important;}
 
 /* ===================================================================
-   11. THE ARRIVAL — the default livery, raised
+   11. THE ARRIVAL — the photograph, undecorated
    -------------------------------------------------------------------
-   The hero's scrim was a flat 88–93% wash from top to bottom, which is
-   heavy enough to grey the photograph out and even enough to leave the
-   frame without a subject. The photograph is the school's own building,
-   and it is worth seeing.
+   The hero's scrim went through two rounds of lightening and was still
+   the wrong fix, because the actual problem was never the scrim's
+   opacity: the words were sitting on top of a photograph that already
+   has words on it. The school's real front elevation carries its own
+   painted signage, and in Arabic especially the overlaid heading and
+   the building's own English lettering occupied the same patch of the
+   frame — neither legible, both fighting for it.
 
-   The scrim is rebuilt as three layers doing three separate jobs: a
-   spotlight that opens the middle of the frame where the building is; a
-   vertical ramp that closes the top and bottom where the type sits; and
-   a corner fall-off that stops the frame reading as a rectangle. The
-   type ends up on more darkness than before, not less — the wash is
-   heavier where the words are and lighter where they are not.
-
-   Lightened a second time on direct instruction: the founder's read on
-   the first pass was still "not dark" — the photograph is the school's
-   real front elevation and it should be seen at close to full strength,
-   not viewed through a haze. The middle band, where the building sits,
-   drops from roughly half-opacity to barely a tenth; the type still
-   gets a firm ramp at the very top and bottom, and the text-shadow rules
-   further down this file carry the rest of the legibility on their own.
-   This is now the SOLE `.hero::before` rule in the file — the three
-   later definitions that used to override it (survivors of an abandoned
-   two-column "plated hero" layout) have been removed rather than left
-   to shadow this one silently.
-   =================================================================== */
-.hero::before{
-  background:/* the words, top and bottom */
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.42) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.14) 26%,
-                           rgba(var(--lv-cfd5,34,23,9),.10) 50%,
-                           rgba(var(--lv-cfd5,34,23,9),.24) 76%,
-                           rgba(var(--lv-cfd5,34,23,9),.50) 100%),
-    /* the building, lit */
-    radial-gradient(78% 62% at 50% 46%,rgba(var(--lv-gs,198,161,91),.10),transparent 68%),
-    /* the corners, fallen away */
-    radial-gradient(150% 120% at 50% 45%,transparent 50%,rgba(var(--lv-cfd4s,26,16,6),.34) 100%)!important;}
-/* The photograph itself gets a touch more presence: a school building in
-   Lagos sunlight is a warm picture and it should look like one. */
-.hero{background-blend-mode:normal;}
-@supports (filter:saturate(1)){
-  .hero{background-image:url("/assets/images/gallery/campus-hero.jpg");}
+   The photograph now carries no type at all. What is left here is a
+   light photographic vignette — not a legibility device, just a corner
+   fall-off so the frame doesn't read as a flat rectangle — scoped to
+   `.hero-photo`, the box that now holds only the picture. The heading
+   moved below it, onto the page's own ground; see `.hero-inner` further
+   down this file. */
+.hero-photo::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(150% 120% at 50% 45%,transparent 62%,rgba(var(--lv-cfd4s,26,16,6),.22) 100%);
 }
+/* css/brand.css's original `.hero::before` — a near-opaque dark wash —
+   was written for the old one-layer hero, where `.hero` itself was the
+   photo box. It now sits behind the text band instead (nothing paints
+   over it there), which would tint the page's own white ground dark
+   for no reason. The vignette above, scoped to `.hero-photo`, is the
+   only overlay this hero needs now. */
+.hero::before{display:none;}
 
 /* The drawn frame becomes a double rule — a heavy line and a hairline
    inside it, at the width a certificate border is set. */
@@ -289,17 +273,15 @@ header.nav::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height
 
 /* Display type at this size does not need to be spread to fill the
    frame; it needs to be set. Tighter tracking, a heavier optical
-   weight, and a shadow deep enough to seat it on the photograph. */
+   weight — no shadow to speak of, now that it sits on the page's own
+   ground rather than on the photograph. */
 .hero h1{letter-spacing:.012em;}
-.hero .hero-type,.hero .hero-subline{
-  text-shadow:0 2px 22px rgba(var(--lv-cfd4s,26,16,6),.72),
-              0 1px 2px rgba(var(--lv-cfd4s,26,16,6),.5);}
-.hero .lede{text-shadow:0 1px 14px rgba(var(--lv-cfd4s,26,16,6),.6);}
-.hero-inner .eyebrow{text-shadow:0 1px 10px rgba(var(--lv-cfd4s,26,16,6),.7);}
 
-/* A gilded threshold where the hero meets the page — the join a bound
-   volume has between the board and the first leaf. */
-.hero::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;z-index:3;
+/* A gilded threshold where the photograph meets the words — the join a
+   bound volume has between the board and the first leaf. Moved from
+   the foot of the whole section to the foot of the photograph itself,
+   now that the two are separate blocks rather than one stacked scene. */
+.hero-photo::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;z-index:3;
   pointer-events:none;
   background:linear-gradient(90deg,
     transparent,
@@ -308,39 +290,41 @@ header.nav::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height
     rgba(var(--lv-gds,156,122,60),.5) 88%,
     transparent);
   box-shadow:0 0 22px -4px rgba(var(--lv-gbs,233,206,138),.55);}
-html[data-pc-ornament="none"] .hero::after,
+html[data-pc-ornament="none"] .hero-photo::after,
 html[data-pc-ornament="none"] header.nav::after{display:none;}
 
 /* ===================================================================
-   THE HERO STAGE — a photograph, at last, and a stage built for it
+   THE HERO STAGE — a photograph on its own, and words on their own
    -------------------------------------------------------------------
-   The school supplied real photography, and the difference it makes is
-   larger than any effect in this repository. What was here before was a
-   blue-hour snapshot of a building at an angle, so dark that the scrim
-   above had to be almost opaque to carry white text — which meant the
-   page opened on a brown smear that happened to have a building in it.
-   The new frontage is an elevated daylight view with the school's own
-   sign legible in it. It can carry the page, so the treatment gets out
-   of its way.
-
-   THREE CHANGES, all of them consequences of the image being good:
-
-   1. THE SCRIM LIFTS OFF THE SKY. The old wash began at 94% opacity at
-      the very top, which was necessary when the top of the frame was
-      noise and is vandalism now that it is a Lagos sky. It now opens at
-      62%, deepens through the middle where the wordmark sits, and closes
-      firmly at the base under the buttons. The words are still on more
-      darkness than the photograph is.
-   2. THE FRAMING MOVES UP. `center 65%` was chosen for a picture whose
-      subject sat low. This one carries its sign at around two-fifths of
-      the height, so the crop rises to meet it.
-   3. IT DRIFTS. Thirty-eight seconds, one and a half per cent of scale,
-      a hair of translation, and back. At that rate nobody watching sees
-      it move and nobody looking away for a moment finds it where they
-      left it — which is the entire trick. It is a transform on a layer
-      of its own, so the compositor carries it and the paint cost is nil.
+   The hero used to be one full-bleed scene: photograph and words on the
+   same stacked layer, sized to fill most of the viewport so the words
+   would have somewhere dark enough to sit. That is exactly what put the
+   heading on top of the building's own painted sign. Splitting the two
+   into a photograph block followed by a text block removes the need for
+   any of it — the photograph is free to be shown at a natural, generous
+   size without reserving space for type, and the words get their own
+   plain ground immediately under it, on the page.
    =================================================================== */
-.hero{ isolation:isolate; background-image:none!important; }
+.hero{ padding-block:0; background-image:none!important; }
+.hero-photo{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  width:100%;
+  height:clamp(300px,52vh,560px);
+}
+/* The words' own ground. `.hero-inner` used to be a flex child centred
+   over the photograph and inherited `.hero`'s ivory text colour because
+   it needed to read on a dark image. It now sits on the page below the
+   photograph — the same white/off-white ground every other section
+   opens on — so it takes the page's own dark ink, and gets the
+   generous top-and-bottom air the rest of the site's sections get. */
+.hero-inner{
+  color:var(--ink-soft);
+  padding-block:56px 64px;
+}
+.hero p.lede{color:var(--ink-soft);}
+@media (max-width:600px){ .hero-inner{ padding-block:32px 40px; } }
 
 /* RESTORED FRAMING. Before the hero was rebuilt as a plated two-column stage,
    this photograph was the hero's own full-bleed background at center 65% and
@@ -357,7 +341,7 @@ html[data-pc-ornament="none"] header.nav::after{display:none;}
   position:absolute;inset:0;z-index:-1;pointer-events:none;
   background-image:url("/assets/images/gallery/campus-aerial-facade.jpg");
   background-size:cover;
-  background-position:center 42%;
+  background-position:center 28%;
   transform:scale(1.03);
   animation:hero-drift 38s ease-in-out infinite alternate;
 }
@@ -372,11 +356,6 @@ html[data-pc-ornament="none"] header.nav::after{display:none;}
 }
 @media (prefers-reduced-motion:reduce){ .hero-plate{ animation:none; } }
 html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
-
-/* The wash for this photograph now lives in one place only — the
-   `.hero::before` rule under "THE ARRIVAL" above. A second, competing
-   definition used to sit here and silently win the cascade by being
-   later in the file; removed rather than left as a trap. */
 
 /* ---- The wordmark, set rather than stretched ----------------------
    The promise line carried 0.28em of tracking — at that measure the
@@ -397,53 +376,21 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
 }
 .hero .hero-type{ letter-spacing:.01em; }
 
-/* ---- The stage has to be as tall as the picture is deep ------------
-   First cut framed the aerial at `center 40%` in a 660px band. The image
-   is 1121x995 — very nearly square — and `cover` across a 1440px band
-   scales it to 1278px tall and then shows 660 of them. Half the
-   photograph was thrown away, an aerial view came out as a close-up of a
-   brick wall, and the heading landed squarely on the school's own
-   painted sign, so the name appeared twice within an inch of itself.
-
-   A flagship hero is not a band. It is the screen. Taller stage, crop
-   raised so the roofline and the sign sit in the upper third, and the
-   words then fall on the forecourt below them where there is nothing to
-   fight. Capped so it never becomes a nuisance on a laptop, and told to
-   respect a phone's real viewport rather than the one that changes size
-   as the address bar hides. */
-.hero{
-  min-height:min(86vh,880px);
-  min-height:min(86svh,880px);
-  display:flex;align-items:center;
-  padding-block:clamp(70px,9vh,120px);
-}
-/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
+/* ---- Sizing the photograph on its own terms ------------------------
+   With the words no longer sharing the frame, the photograph's crop no
+   longer has to dodge anything — it just has to look like a good
+   picture of the school. A fixed height (not an aspect-ratio — mixing
+   aspect-ratio with a max-height clamp on a block box made the browser
+   shrink the box's WIDTH to satisfy the ratio instead of just capping
+   its height, leaving pale margins down both sides) keeps the roofline
+   and the painted sign in view without the extreme cover-crop a
+   full-viewport-height stage used to demand. A phone gets a shorter
+   band still, since the source photograph (1121×995) is nearly square
+   and needs less height to show as much of itself. */
 @media (max-width:860px){
-  .hero{ min-height:min(78svh,760px); }
-  .hero-plate{ background-position:center 34%; }
+  .hero-photo{ height:clamp(260px,46vh,420px); }
+  .hero-plate{ background-position:center 24%; }
 }
-
-/* ---- Frame BELOW the sign, not across it --------------------------
-   Raising the crop did not solve the collision, and it could not: the
-   photograph is 1121x995 — near enough square — and a hero band is
-   twice as wide as it is tall, so `cover` throws away two fifths of the
-   height whatever the position. Wherever the sign lands in that window,
-   the heading lands on it, and the school's name appears twice within
-   an inch of itself.
-
-   So the window drops below it. The frame now holds the columns, the
-   forecourt, the palms and the paving — an even, uncluttered ground
-   that type can sit on — and the sign stays above the crop where it
-   belongs. Nothing of the photograph is lost that was carrying meaning;
-   the building is still unmistakably this building.
-
-   The proper answer for a near-square photograph on a wide page is not
-   a crop at all: it is to plate it, framed, beside the words, so the
-   whole picture is seen. That is the next move on this hero and it is a
-   structural one. This is the honest interim — it removes a real
-   collision today without pretending to be the finished thing. */
-/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
-/* removed on restore: tuned for the plated hero — see the note at .hero-plate */
 
 /* ===================================================================
    THE HERO, PLATED — the photograph shown rather than cropped
@@ -624,10 +571,15 @@ html[data-pc-motion="reduced"] .hero-plate{ animation:none; }
   font-family:var(--font-label,'Cinzel','Amiri',serif);
   font-weight:600;
   letter-spacing:.01em;
-  color:#fff;
+  color:var(--ink);
   margin-top:0;
 }
-html[data-pc-theme="light"] .hero h1 .hero-type{ color:#fff; }
+/* The heading used to sit on the photograph and needed white ink to
+   read against it. It now sits on the page's own ground below the
+   photograph, so it takes the page's own dark ink instead — the same
+   colour every other heading on the site uses. Midnight theme still
+   gets its own gold via css/liveries.css, !important, further down
+   the cascade. */
 
 /* And the h1 itself gets a floor that a phone cannot argue with. */
 .hero h1{ font-size:clamp(1.9rem,5.4vw,3.4rem); }
