@@ -239,15 +239,15 @@ html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!impor
    =================================================================== */
 .hero::before{
   background:/* the words, top and bottom */
-    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.94) 0%,
-                           rgba(var(--lv-cfd5,34,23,9),.62) 26%,
-                           rgba(var(--lv-cfd5,34,23,9),.50) 50%,
-                           rgba(var(--lv-cfd5,34,23,9),.72) 76%,
-                           rgba(var(--lv-cfd5,34,23,9),.95) 100%),
+    linear-gradient(180deg,rgba(var(--lv-cfd5,34,23,9),.42) 0%,
+                           rgba(var(--lv-cfd5,34,23,9),.20) 26%,
+                           rgba(var(--lv-cfd5,34,23,9),.14) 50%,
+                           rgba(var(--lv-cfd5,34,23,9),.28) 76%,
+                           rgba(var(--lv-cfd5,34,23,9),.48) 100%),
     /* the building, lit */
     radial-gradient(78% 62% at 50% 46%,rgba(var(--lv-gs,198,161,91),.16),transparent 68%),
     /* the corners, fallen away */
-    radial-gradient(150% 120% at 50% 45%,transparent 38%,rgba(var(--lv-cfd4s,26,16,6),.72) 100%)!important;}
+    radial-gradient(150% 120% at 50% 45%,transparent 38%,rgba(var(--lv-cfd4s,26,16,6),.38) 100%)!important;}
 /* The photograph itself gets a touch more presence: a school building in
    Lagos sunlight is a warm picture and it should look like one. */
 .hero{background-blend-mode:normal;}
