@@ -48,29 +48,37 @@ html[data-pc-motion="reduced"] .pc-drawer{transition:none;}
 }
 .pc-close:hover{border-color:var(--gold-bright);color:#fff;}
 
-/* --- Tabs (vertical rail desktop, horizontal scroll strip mobile) --- */
+/* --- Tabs (vertical rail desktop, horizontal scroll strip mobile) ---
+   Mobile is the base case: a single row that scrolls sideways, so the
+   eight tabs never eat the vertical space the settings themselves need.
+   flex-wrap is pinned to nowrap — without it, a narrow viewport wraps
+   the row back into a column and reproduces the exact cut-off/can't-
+   scroll bug this was fixed for. Desktop (>=640px) opts back into the
+   column rail inside the media query below. */
 .pc-tabs{
-  display:flex;flex-direction:column;gap:2px;flex-shrink:0;
+  display:flex;flex-direction:row;flex-wrap:nowrap;gap:2px;flex-shrink:0;
   background:rgba(var(--lv-cfs,59,42,29),0.04);border-bottom:1px solid var(--line);
-  overflow-x:auto;
+  overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
 }
 .pc-tab{
   display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;
-  padding:12px 20px;font-family:var(--font-body);font-size:0.82rem;color:var(--on-surface-soft);
-  text-align:start;border-inline-start:3px solid transparent;transition:color .2s ease,border-color .2s ease,background .2s ease;
-  white-space:nowrap;
+  padding:12px 16px;font-family:var(--font-body);font-size:0.82rem;color:var(--on-surface-soft);
+  text-align:start;border-bottom:3px solid transparent;transition:color .2s ease,border-color .2s ease,background .2s ease;
+  white-space:nowrap;flex-shrink:0;
 }
 .pc-tab svg{flex-shrink:0;opacity:0.8;}
 .pc-tab:hover{color:var(--on-surface);background:rgba(var(--lv-gs,198,161,91),0.08);}
-.pc-tab.is-active{color:var(--navy);border-inline-start-color:var(--accent);background:var(--accent-wash);font-weight:600;}
+.pc-tab.is-active{color:var(--navy);border-bottom-color:var(--accent);background:var(--accent-wash);font-weight:600;}
 :root[data-pc-theme="dark"] .pc-tab.is-active{color:var(--accent-bright);}
 
 @media (min-width:640px){
   .pc-drawer{flex-direction:row;}
   .pc-head, .pc-body{width:100%;}
   .pc-drawer > .pc-head{position:absolute;top:0;left:0;right:0;}
-  .pc-tabs{position:absolute;top:78px;bottom:0;left:0;width:150px;flex-direction:column;border-inline-end:1px solid var(--line);border-bottom:none;overflow-y:auto;}
+  .pc-tabs{position:absolute;top:78px;bottom:0;left:0;width:150px;flex-direction:column;flex-wrap:nowrap;border-inline-end:1px solid var(--line);border-bottom:none;overflow-x:hidden;overflow-y:auto;}
   [dir="rtl"] .pc-tabs{left:auto;right:0;}
+  .pc-tab{padding:12px 20px;border-inline-start:3px solid transparent;border-bottom:none;}
+  .pc-tab.is-active{border-inline-start-color:var(--accent);border-bottom-color:transparent;}
   .pc-body{position:absolute;top:78px;bottom:0;left:150px;right:0;}
   [dir="rtl"] .pc-body{left:0;right:150px;}
 }
