@@ -56,7 +56,7 @@
    visible in the screenshot, which is why the screenshot is taken. */
 @property --fm-ang{syntax:'<angle>';initial-value:0deg;inherits:false;}
 
-@media (max-width:1440px){
+@media (max-width:2000px){
 
   /* ---------- THE TONE ----------
      Every colour the sheet uses is declared here and nowhere else, so

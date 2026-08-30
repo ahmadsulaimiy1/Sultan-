@@ -242,7 +242,7 @@
     if(!navlinks) return;
     var closeBtn = navlinks.querySelector('.nav-drawer-close');
     function isDrawerOpen(){
-      return navlinks.classList.contains('open') && window.matchMedia('(max-width:1440px)').matches;
+      return navlinks.classList.contains('open') && window.matchMedia('(max-width:2000px)').matches;
     }
     function closeDrawer(){ navlinks.classList.remove('open'); }
     new MutationObserver(function(){

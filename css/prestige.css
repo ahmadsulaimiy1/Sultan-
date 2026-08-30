@@ -318,7 +318,7 @@
 .pr-hero-media img{width:100%;height:100%;object-fit:cover;
   transform:scale(1.08);animation:pr-kenburns 22s ease-out forwards;}
 .pr-hero::after{content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(var(--lv-w01,20,12,4),.34) 0%,rgba(var(--lv-w01,20,12,4),.12) 34%,rgba(var(--lv-w37,24,15,6),.7) 78%,rgba(var(--lv-w01,20,12,4),.92) 100%);}
+  background:linear-gradient(180deg,rgba(var(--lv-w01,20,12,4),.18) 0%,rgba(var(--lv-w01,20,12,4),.05) 34%,rgba(var(--lv-w37,24,15,6),.4) 78%,rgba(var(--lv-w01,20,12,4),.62) 100%);}
 .pr-hero-inner{width:min(1180px,92%);margin:0 auto;padding:0 0 clamp(48px,8vh,110px);}
 .pr-hero .pr-eyebrow{color:var(--pr-gold-bright);}
 .pr-hero .pr-eyebrow::before{background:linear-gradient(90deg,transparent,var(--pr-gold-bright));}
@@ -900,7 +900,7 @@
 /* vignette + soft hand-off into the band below, replacing the hard cut */
 .pr-hero::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(120% 90% at 50% 30%, transparent 40%, rgba(var(--lv-w39,12,7,2),.50) 100%),
+  background:radial-gradient(120% 90% at 50% 30%, transparent 45%, rgba(var(--lv-w39,12,7,2),.32) 100%),
     linear-gradient(180deg,transparent 74%, rgba(var(--lv-w85,242,231,213),.10) 94%, var(--pr-ground) 100%);
 }
 /* Cinzel counters mush at 4.6rem over a photo with only one soft halo —
@@ -2694,7 +2694,7 @@ header.nav.is-condensed{
   box-shadow:0 18px 40px -28px rgba(0,0,0,.95),0 1px 0 rgba(var(--lv-gbs,233,206,138),.14);}
 header.nav .brand-mark,header.nav .brand-mark img{
   transition:width .4s var(--pr-ease),height .4s var(--pr-ease);}
-header.nav.is-condensed .brand-mark{width:38px;height:38px;}
+header.nav.is-condensed .brand-mark{width:48px;height:48px;}
 header.nav .nav.wrap,header.nav nav.wrap{
   transition:padding .4s var(--pr-ease);}
 header.nav.is-condensed nav.wrap{padding-top:8px;padding-bottom:8px;}
@@ -3080,14 +3080,14 @@ section:not(.is-royal):not(.hero):not(.contact) .btn-outline{
    measuring 1.23 and 2.59. The fall of shadow behind them is deepened
    until the type carries, without darkening the photograph as a whole. */
 .pr-hero::after{
-  background:linear-gradient(180deg,rgba(var(--lv-w01,20,12,4),.42) 0%,rgba(var(--lv-w01,20,12,4),.24) 28%,
-             rgba(var(--lv-w37,24,15,6),.78) 68%,rgba(var(--lv-w01,20,12,4),.95) 100%);}
+  background:linear-gradient(180deg,rgba(var(--lv-w01,20,12,4),.20) 0%,rgba(var(--lv-w01,20,12,4),.10) 28%,
+             rgba(var(--lv-w37,24,15,6),.36) 68%,rgba(var(--lv-w01,20,12,4),.55) 100%);}
 .pr-hero-inner{position:relative;}
 .pr-hero-inner::before{
   content:"";position:absolute;inset:-40px -40px -30px -40px;z-index:-1;pointer-events:none;
-  background:radial-gradient(120% 90% at 22% 78%, rgba(var(--lv-w08,16,10,3),.72), transparent 72%);}
+  background:radial-gradient(120% 90% at 22% 78%, rgba(var(--lv-w08,16,10,3),.34), transparent 72%);}
 [dir="rtl"] .pr-hero-inner::before{
-  background:radial-gradient(120% 90% at 78% 78%, rgba(var(--lv-w08,16,10,3),.72), transparent 72%);}
+  background:radial-gradient(120% 90% at 78% 78%, rgba(var(--lv-w08,16,10,3),.34), transparent 72%);}
 .pr-hero .pr-eyebrow{color:rgb(var(--lv-w98,245,228,184));text-shadow:0 1px 10px rgba(0,0,0,.75);}
 .pr-hero-sub{color:rgba(var(--lv-w80,255,252,246),.96);text-shadow:0 1px 14px rgba(0,0,0,.7);}
 
@@ -3388,6 +3388,10 @@ html[data-pc-theme="light"] .topbar a,
 html[data-pc-theme="light"] .topbar .contacts a,
 html[data-pc-theme="light"] .pc-trigger,
 html[data-pc-theme="light"] .social-icon{color:var(--pearl-ink-2);}
+html[data-pc-theme="light"] .social-icon.ico-whatsapp{color:#25D366;}
+html[data-pc-theme="light"] .social-icon.ico-facebook{color:#1877F2;}
+html[data-pc-theme="light"] .social-icon.ico-instagram{color:#C13584;}
+html[data-pc-theme="light"] .social-icon.ico-youtube{color:#FF0000;}
 html[data-pc-theme="light"] .ann-ribbon{
   background:linear-gradient(180deg,rgb(var(--lv-w185,249,243,232)),rgb(var(--lv-w186,242,233,217)));border-bottom:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] .ann-ribbon *{color:var(--pearl-ink-2);}
