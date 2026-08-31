@@ -1061,6 +1061,45 @@ html[data-pc-theme="light"] .breadcrumbs{
   border-bottom:1px solid rgba(140,104,52,.28);}
 
 /* ===================================================================
+   15b. PEARL: THE ROYAL BROWN BECOMES THE ROYAL RED, AND THE RIBBON
+        WHITENS
+   -------------------------------------------------------------------
+   Section 15 above was written when Royal Gold was the only livery the
+   Clear edition carried, and it colours the masthead's two bands —
+   the quick row and the section-tile ribbon — with hardcoded coffee
+   hex rather than livery tokens. Pearl inherited that coffee wash
+   unchanged, which is not Pearl's palette: gold and coffee-brown stay
+   the identity colour everywhere else on Pearl, and crimson is the
+   deliberate, narrow accent — CTAs, active states, a handful of
+   interactive surfaces. The single dark band at the front of every
+   page is exactly that kind of surface.
+
+   The quick row takes the same crimson as "Login to Portal" in the
+   Full Menu (css/menu.css) and the personalisation accent default
+   (css/brand.css); its one gold cell — Login to Portal itself — keeps
+   its fill, so the row still reads as "mostly quiet, one bright key"
+   rather than turning uniformly red. The section-tile ribbon drops its
+   gold-brown wash for a plain near-white one: the tiles underneath it
+   were already white, so the wash was the only thing reading as cream. */
+html[data-pc-theme="light"][data-pc-livery="pearl"] .mobile-quick-row{
+  background:linear-gradient(180deg,#6E1A28 0%,#4A1119 100%);
+  border-top:1px solid rgba(168,69,90,.5);
+  border-bottom:1px solid rgba(168,69,90,.55);
+  box-shadow:inset 0 1px 0 rgba(233,206,138,.14),
+             inset 0 -8px 18px -14px rgba(0,0,0,.9);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .mqr-item + .mqr-item::before{
+  background:linear-gradient(180deg,transparent,
+    rgba(233,206,138,.3) 22%,rgba(233,206,138,.3) 78%,transparent);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .mobile-nav-ribbon{
+  background:linear-gradient(180deg,rgba(var(--lv-wh,255,255,255),.9),rgba(var(--lv-p4,247,240,226),.6));
+  border-top-color:rgba(var(--lv-gs,198,161,91),.24);
+  border-bottom-color:rgba(var(--lv-gs,198,161,91),.28);}
+html[data-pc-theme="light"][data-pc-livery="pearl"] .mobile-nav-ribbon::after{
+  background:linear-gradient(90deg,transparent,
+    rgba(var(--lv-gs,198,161,91),.2) 12%,rgba(var(--lv-gd,156,122,60),.75) 50%,
+    rgba(var(--lv-gs,198,161,91),.2) 88%,transparent);}
+
+/* ===================================================================
    16. THE SIX WAYS IN
    -------------------------------------------------------------------
    The homepage runs to eighteen sections. A visitor arrives as one of

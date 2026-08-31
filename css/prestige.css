@@ -914,6 +914,17 @@
    at scale(1.02) after 22s — a visitor scrolling back up finds a still image */
 .pr-hero-media img{animation:pr-kenburns 26s ease-in-out infinite alternate;}
 
+/* This component carries a dozen different photographs across a dozen
+   different pages — a gate, a hall, a laboratory, a classroom — each one
+   genuinely the right picture for its own page, so swapping them all for
+   a single repeated image would trade one complaint for the one this
+   whole redesign started with. Several were shot indoors or in
+   overcast light and read as flatly dark once the scrim (further down
+   this file) sits over them. A straight exposure lift, applied here
+   rather than to any one image, gets every one of them closer to how
+   the room actually looked without needing new photography. */
+.pr-hero-media img{filter:brightness(1.16) contrast(1.04) saturate(1.06);}
+
 @media (prefers-reduced-motion:reduce){
   .pr-hero-media img{animation:none!important;transform:scale(1.02);}
 }

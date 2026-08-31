@@ -80,8 +80,33 @@
   }
 
   // --- Instant mode --------------------------------------------------------
+  /* A single [data-i18n] span lives in the shared header — the "Login to
+   * Portal" quick-row cell, translated in place so it keeps working across
+   * an instant switch on portal pages — and that span is present on EVERY
+   * page, including the pre-rendered public site. Checking for [data-i18n]
+   * ANYWHERE used to let that one shared span flag the whole page as
+   * instant-capable: switching language on the homepage (and every other
+   * static page) flipped <html lang>/dir to Arabic/RTL while the actual
+   * body content, which has no dictionary and was never meant to
+   * translate in place, stayed in English — a page that announced itself
+   * as Arabic and showed almost none.
+   *
+   * Scoping the search to .portal-main (every portal page's own wrapper)
+   * fixes the public site but breaks the other direction: a few portal
+   * pages — the gateway at /portal/select/ among them — carry no
+   * dictionary-driven content of their own, only that same shared header
+   * span, so the scoped DOM check reports false for them too. That sends
+   * them into NAVIGATE mode, which redirects to an /ar/portal/... URL
+   * that has never existed — no portal page has a translated URL mirror,
+   * only in-place translation via this runtime. So the real distinction
+   * is not "does this page currently contain translatable content" but
+   * "does this page have a navigable translated URL at all" — which is a
+   * property of the /portal/ namespace itself, not of any one page's
+   * markup on any one day. Checking the path directly is what the file's
+   * own opening comment already describes ("the 69 portal pages") and
+   * sidesteps content-sniffing altogether. */
   function pageSupportsInstant() {
-    return document.querySelector('[data-i18n]') !== null;
+    return /^\/portal\//.test(window.location.pathname);
   }
 
   /* Applies a dictionary over the page. Three attribute forms are honoured:
