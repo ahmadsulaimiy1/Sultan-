@@ -1830,6 +1830,42 @@
   /* facilities */
   .facilities{background:var(--navy-bg);color:var(--ivory);}
   .facilities .eyebrow{color:var(--gold-bright);} .facilities h2{color:#fff;}
+
+  /* ===================================================================
+     THE CHAPTER OPEN
+     -------------------------------------------------------------------
+     Fourteen pages — Faculty, Gallery, Foundation, the Alumni Portal,
+     Facilities' own siblings and more — opened on a medallion icon
+     floating in an otherwise empty cream band: real craft in the icon
+     (see css/armorial.css), nothing around it to carry the weight of a
+     chapter opening. Facilities already solved this for itself with a
+     dark band; this generalises the same device — the identical coffee
+     radial gradient and gold-dot texture already proven on
+     .pr-section.is-royal — to every plain page's own opening block,
+     wrapped in its own <section class="ch-open"> rather than colouring
+     the whole page the way .facilities does, since most of these pages'
+     later content (grids, lists) is built for a light ground. */
+  .ch-open{
+    position:relative;overflow:hidden;isolation:isolate;
+    background:radial-gradient(1000px 600px at 15% 0%,rgb(var(--lv-w158,58,40,20)),rgb(var(--lv-cfd,36,23,8)) 62%,rgb(var(--lv-w159,28,18,8)));
+    padding-block:52px 60px;
+  }
+  .ch-open::before{
+    content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;z-index:0;
+    background-image:radial-gradient(circle at 1px 1px,rgba(var(--lv-gbs,233,206,138),.16) 1px,transparent 0);
+    background-size:26px 26px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,#000 60%,transparent);
+            mask-image:linear-gradient(180deg,transparent,#000 40%,#000 60%,transparent);
+  }
+  .ch-open > .wrap{position:relative;z-index:1;}
+  .ch-open .eyebrow{color:var(--gold-bright);}
+  /* Pearl's own light-theme rule forces .academics > .wrap h1.page-title
+     (and several siblings) to dark ink with !important — correct for
+     every one of those pages on its normal cream ground, wrong here
+     where the ground is dark. Matched and outweighed in kind. */
+  section.ch-open > .wrap h1.page-title{color:#fff!important;}
+  .ch-open > .wrap > p:not(.eyebrow){color:rgba(var(--lv-w06,244,234,212),.86);}
+  .ch-open .pr-dropcap:first-letter{color:var(--gold-bright);}
   .fac-grid{margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
   @media (max-width:900px){.fac-grid{grid-template-columns:repeat(2,1fr);}}
   @media (max-width:520px){.fac-grid{grid-template-columns:1fr;}}

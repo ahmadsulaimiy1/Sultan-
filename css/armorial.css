@@ -206,7 +206,7 @@ html[data-pc-theme="dark"] .page-hero-icon::before,
              0 22px 40px -18px rgba(var(--lv-gd,156,122,60),.9),
              0 0 30px -6px rgba(var(--lv-gb,233,206,138),.55);
 }
-.is-royal .page-hero-icon,.governance .page-hero-icon,
+.is-royal .page-hero-icon,.governance .page-hero-icon,.ch-open .page-hero-icon,
 html[data-pc-theme="dark"] .page-hero-icon{
   background:
     var(--arm-studs),
