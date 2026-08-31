@@ -251,12 +251,13 @@ html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!impor
    only overlay this hero needs now. */
 .hero::before{display:none;}
 
-/* The drawn frame becomes a double rule — a heavy line and a hairline
-   inside it, at the width a certificate border is set. */
-.hero .frame{box-shadow:inset 0 0 0 1px rgba(var(--lv-gbs,233,206,138),.14);}
-html[data-pc-ornament="full"] .hero .frame::after{
-  content:"";position:absolute;inset:7px;border:1px solid rgba(var(--lv-gs,198,161,91),.22);
-  pointer-events:none;}
+/* The drawn frame — a rectangular border with four corner brackets laid
+   over the photograph — read as a decorative afterthought rather than
+   as part of the photograph itself, and the founder asked for the
+   photograph clean, without lines over it. Hidden rather than deleted:
+   the markup (.frame, .corner) still exists in pages/home.html and
+   pages/home.ar.html should anyone want it back. */
+.hero .frame,.hero .corner{display:none;}
 
 /* The masthead sits on the page rather than floating above it: a lit
    edge along its foot, the way a raised surface catches light. */

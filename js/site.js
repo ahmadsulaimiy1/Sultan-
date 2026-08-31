@@ -320,3 +320,32 @@
       }
     });
   });
+
+  // Progressive disclosure for long paragraphs. Mark a block
+  // data-readmore (optionally data-readmore-lines="N", default 4) and it
+  // clamps to that many lines with a "Read more" toggle that expands it
+  // in place — no navigation, no reload, no page getting longer until a
+  // reader asks for it to. Opt-in per element, and only actually clamps
+  // blocks that overflow their own clamp height, so a short paragraph
+  // carrying the attribute by mistake never grows an empty toggle.
+  document.querySelectorAll('[data-readmore]').forEach((block) => {
+    const lines = block.dataset.readmoreLines || '4';
+    block.style.setProperty('--rm-lines', lines);
+    requestAnimationFrame(() => {
+      if (block.scrollHeight <= block.clientHeight + 4) return;
+      const moreText = block.dataset.readmoreMore || 'Read more';
+      const lessText = block.dataset.readmoreLess || 'Show less';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'readmore-toggle';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.innerHTML = `<span class="label">${moreText}</span><span class="arrow" aria-hidden="true">&#8964;</span>`;
+      btn.addEventListener('click', () => {
+        const open = block.classList.toggle('is-expanded');
+        btn.classList.toggle('is-open', open);
+        btn.querySelector('.label').textContent = open ? lessText : moreText;
+        btn.setAttribute('aria-expanded', String(open));
+      });
+      block.insertAdjacentElement('afterend', btn);
+    });
+  });

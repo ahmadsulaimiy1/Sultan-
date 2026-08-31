@@ -376,6 +376,25 @@
   .text-link:hover{border-color:var(--crimson);}
   .text-link.on-dark{color:var(--gold-bright);border-bottom-color:rgba(var(--lv-gbs,233,206,138),0.4);}
   .text-link.on-dark:hover{border-color:var(--gold-bright);}
+
+  /* Progressive disclosure — a long paragraph clamped to a few lines
+     with a toggle beneath it (js/site.js). The crimson matches the
+     site's one other "this is clickable, plain text" signal above
+     (.text-link) rather than inventing a second link colour. */
+  [data-readmore]{
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--rm-lines,4);
+    overflow:hidden;
+  }
+  [data-readmore].is-expanded{-webkit-line-clamp:unset;overflow:visible;display:block;}
+  .readmore-toggle{
+    display:inline-flex;align-items:center;gap:.4em;margin-top:10px;
+    font-family:var(--font-label);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    color:var(--crimson);background:none;border:0;border-bottom:1px solid rgba(124,31,46,0.35);
+    padding:0 0 1px;cursor:pointer;transition:border-color .25s ease,color .25s ease;
+  }
+  .readmore-toggle:hover,.readmore-toggle:focus-visible{color:var(--crimson);border-color:var(--crimson);}
+  .readmore-toggle .arrow{display:inline-block;font-size:.85em;line-height:1;transition:transform .3s ease;}
+  .readmore-toggle.is-open .arrow{transform:rotate(180deg);}
   .ledger-row a{border-bottom:1px solid transparent;}
   .ledger-row a:hover{color:var(--crimson);border-color:var(--crimson);}
   /* Cross-links between sibling pages (e.g. the four Academics schools) —
@@ -509,14 +528,24 @@
     background-size:220% 100%;opacity:0.7;animation:header-gold-drift 24s ease-in-out infinite;
   }
   @media (prefers-reduced-motion:reduce){nav.wrap::before{animation:none;}}
-  .brand{display:flex;align-items:center;gap:18px;flex-shrink:0;position:relative;}
+  .brand{display:flex;align-items:center;gap:20px;flex-shrink:0;position:relative;}
   .brand .crest-shimmer-wrap{display:inline-flex;position:relative;z-index:1;}
   .brand .crest-shimmer-wrap::after{animation-duration:10s;}
+  /* The crest leads. It was sized to roughly match the wordmark's own
+     stacked height (66px against a ~62px text block) — the two read as
+     equal partners rather than as a seal carrying a name. Enlarged so
+     the crest is unmistakably the senior element and the wordmark sits
+     within its authority, the way a seal actually works on a letterhead. */
   .brand-mark{
-    width:66px;height:66px;flex-shrink:0;
+    width:92px;height:92px;flex-shrink:0;
     animation:crestIn .9s ease .1s both, crestBreathe 9s ease-in-out 1.1s infinite;
   }
-  .brand-text{display:flex;flex-direction:column;justify-content:center;gap:4px;line-height:1;}
+  /* Centred rather than left-set: "Sultan Hanafi", "Royal Schools" and
+     the Arabic line are three different widths, and left-aligning them
+     left a ragged right edge with no relationship to the crest beside
+     it. Centring stacks them on one axis, the way a seal's own legend
+     is set. */
+  .brand-text{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;line-height:1;}
   .brand-text .line1{
     font-size:1.58rem;font-weight:700;letter-spacing:0.025em;font-family:var(--font-label);white-space:nowrap;line-height:1.1;
     background-image:linear-gradient(100deg,rgb(var(--lv-wh,255,255,255)) 30%,var(--gold-bright) 45%,rgb(var(--lv-wh,255,255,255)) 60%);
@@ -697,7 +726,7 @@
       background:radial-gradient(circle,var(--gold-bright) 0%,transparent 70%);
       opacity:0.2;filter:blur(9px);pointer-events:none;
     }
-    .brand-mark{width:58px;height:58px;position:relative;}
+    .brand-mark{width:76px;height:76px;position:relative;}
     .brand-text .line1{font-size:1.28rem;}
     .brand-text .line2{font-size:0.66rem;}
     .brand-text .line-dual{font-size:0.58rem;}

@@ -897,6 +897,14 @@
 .pr-hero-frame > i::after{bottom:-1px;left:-1px;border-right:0;border-top:0;
   border-top-left-radius:0;border-top-right-radius:0;border-bottom-right-radius:0;}
 
+/* v3.5 above rounded and lit this frame as a compromise, on the same
+   complaint raised again since: a rectangle of lines laid over a
+   photograph of the school reads as decoration bolted on, not as part
+   of the photograph. Hidden outright this time rather than softened
+   again. Left in the markup on every .pr-hero page, so restoring it is
+   a CSS change and not a rebuild. */
+.pr-hero-frame{display:none;}
+
 /* vignette + soft hand-off into the band below, replacing the hard cut */
 .pr-hero::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -2705,7 +2713,7 @@ header.nav.is-condensed{
   box-shadow:0 18px 40px -28px rgba(0,0,0,.95),0 1px 0 rgba(var(--lv-gbs,233,206,138),.14);}
 header.nav .brand-mark,header.nav .brand-mark img{
   transition:width .4s var(--pr-ease),height .4s var(--pr-ease);}
-header.nav.is-condensed .brand-mark{width:48px;height:48px;}
+header.nav.is-condensed .brand-mark{width:64px;height:64px;}
 header.nav .nav.wrap,header.nav nav.wrap{
   transition:padding .4s var(--pr-ease);}
 header.nav.is-condensed nav.wrap{padding-top:8px;padding-bottom:8px;}
