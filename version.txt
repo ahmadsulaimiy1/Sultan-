@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      659ad4eb73034c24b5563bedf860a44ff6754e73
-short       659ad4eb
-branch      claude/main-design-fixes
-subject     Harden AESI's safeguarding denylist and close one real historical-workflow bottleneck
-built (UTC) 2026-08-30T16:04:31Z
-assets      shrs-pwa-f0621baadb
+commit      2d0fcd02e305a243ddb2534157db8a3ee40f6042
+short       2d0fcd02e
+branch      main
+subject     Give the 14 plain page-headers the flagship dark chapter-open band
+built (UTC) 2026-09-02T16:25:48Z
+assets      shrs-pwa-73fdc2d679
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
