@@ -931,7 +931,13 @@
    this file) sits over them. A straight exposure lift, applied here
    rather than to any one image, gets every one of them closer to how
    the room actually looked without needing new photography. */
-.pr-hero-media img{filter:brightness(1.16) contrast(1.04) saturate(1.06);}
+/* Uniformly scaling every pixel brighter clips highlights first — a
+   photograph with real sky or a light-coloured roof in frame (most of
+   this site's campus photography) gets those areas pushed toward flat,
+   detail-less white, which reads as a hazy or "blurred" patch rather
+   than a bright photograph. Pulled back from 1.16 to keep the lift
+   visible without blowing out what was already light in the source. */
+.pr-hero-media img{filter:brightness(1.06) contrast(1.03) saturate(1.1);}
 
 @media (prefers-reduced-motion:reduce){
   .pr-hero-media img{animation:none!important;transform:scale(1.02);}

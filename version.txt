@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      2d0fcd02e305a243ddb2534157db8a3ee40f6042
-short       2d0fcd02e
-branch      main
-subject     Give the 14 plain page-headers the flagship dark chapter-open band
-built (UTC) 2026-09-02T16:25:48Z
-assets      shrs-pwa-73fdc2d679
+commit      8c7058a4bdd822d69a9f30daa149a289bd58a6ce
+short       8c7058a4
+branch      claude/color-and-blur-fixes
+subject     Reconstruct and document the branding/hero-image investigation
+built (UTC) 2026-09-03T06:42:30Z
+assets      shrs-pwa-193159ae45
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

@@ -1720,6 +1720,29 @@
 
   .ic-identity{display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,var(--navy-bg) 0%,var(--navy-deep-bg) 100%);}
   .ic-identity-ais{background:linear-gradient(135deg,var(--crimson) 0%,var(--navy-deep-bg) 100%);}
+  /* The five schools, five identities — extending the same per-page accent
+     system already established for individual academic pages (Qur'an
+     College's Forest Green, Nursery & Primary's Terracotta, Arabic &
+     Islamic Studies' Crimson: see the .page-hero-icon rules) onto the
+     homepage cards where a family compares all five side by side. Royal
+     College takes Sapphire (scholarly, examination-led) and Online &
+     Distance Learning takes Rosewood (its own register, distinct from
+     the other four) — both tokens already existed for the portal
+     atmosphere system and were otherwise unused on the public site. */
+  .ic-identity-np{background:linear-gradient(135deg,var(--terracotta-text,#964E24) 0%,var(--navy-deep-bg) 100%);}
+  .ic-identity-odl{background:linear-gradient(135deg,var(--rosewood,#8C4A57) 0%,var(--navy-deep-bg) 100%);}
+  .institution-card[data-institution="nursery-primary"] .ic-tag{color:var(--terracotta-text,#964E24);}
+  .institution-card[data-institution="royal-college"] .ic-tag{color:var(--sapphire,#3F4C8C);}
+  .institution-card[data-institution="arabic-islamic-studies"] .ic-tag{color:var(--crimson);}
+  .institution-card[data-institution="quran-college"] .ic-tag{color:var(--forest-green);}
+  .institution-card[data-institution="online-distance-learning"] .ic-tag{color:var(--rosewood,#8C4A57);}
+  .institution-card[data-institution="nursery-primary"] .ic-meta{border-inline-start-color:var(--terracotta-text,#964E24);}
+  .institution-card[data-institution="royal-college"] .ic-meta{border-inline-start-color:var(--sapphire,#3F4C8C);}
+  .institution-card[data-institution="arabic-islamic-studies"] .ic-meta{border-inline-start-color:var(--crimson);}
+  .institution-card[data-institution="quran-college"] .ic-meta{border-inline-start-color:var(--forest-green);}
+  .institution-card[data-institution="online-distance-learning"] .ic-meta{border-inline-start-color:var(--rosewood,#8C4A57);}
+  .institution-card[data-institution="royal-college"] .ic-dot.is-active{background:var(--sapphire-bright,#8C97D6);border-color:var(--sapphire-bright,#8C97D6);}
+  .institution-card[data-institution="quran-college"] .ic-dot.is-active{background:var(--forest-green);border-color:var(--forest-green);}
   .ic-mini-foundations{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
   .ic-mf-card{
     display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;

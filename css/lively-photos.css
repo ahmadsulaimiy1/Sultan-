@@ -1,49 +1,19 @@
 /* ===========================================================================
-   LIVELY PHOTOS — a travelling light crossing the hero photograph
+   LIVELY PHOTOS — a photograph brightened, not veiled
    ===========================================================================
 
-   The Ken Burns zoom already exists (prestige.css, 26s ease-in-out
-   alternate) — the photograph breathes, but nothing about it catches
-   light. This adds the missing half: a warm diagonal specular band that
-   crosses the hero image on a slow loop, the way light moves across
-   lacquer or a struck medallion rather than a static photograph under
-   glass.
+   This used to run a continuous diagonal light-sweep across every
+   .pr-hero-media photograph (mix-blend-mode:screen, 9s loop). The intent
+   was a catch-light sheen; in practice a bright near-white band crossing
+   a photo on a loop reads, at almost any moment someone actually looks
+   at the page, as a patch of the photograph gone soft or foggy — which is
+   exactly the "blurred" complaint raised against it. A moving veil over a
+   photograph is not the same thing as a bright, sharp photograph.
 
-   Attachment point: .pr-hero-media::after. Checked free before writing
-   this — .pr-hero-frame and its own ::before/::after/nested <i> own the
-   four corner brackets; .pr-hero::before/::after belong to the outer
-   section (a background wash); .pr-hero-media itself carries only the
-   photograph. A fresh ::after here overwrites nothing.
-
-   blend-mode:screen means the sweep can only brighten what is already
-   there — it cannot wash a photograph out or dull it, so a light or dark
-   image both take the sweep the same way.
+   Removed outright rather than tuned down: any strength of a band that
+   sweeps across the image will, at some point in its loop, sit on top of
+   the subject. The permanent, non-obscuring brightness lift already
+   applied to the image itself (css/prestige.css, .pr-hero-media img —
+   brightness/contrast/saturate) is the correct way to make a photograph
+   read as bright and premium: uniformly, all the time, not periodically.
    =========================================================================== */
-
-.pr-hero-media{ isolation:isolate; }
-.pr-hero-media::after{
-  content:"";
-  position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:linear-gradient(115deg,
-    transparent 22%,
-    rgba(var(--lv-gbs,233,206,138),.20) 42%,
-    rgb(var(--lv-w36,255,248,228)) 50%,
-    rgba(var(--lv-gbs,233,206,138),.20) 58%,
-    transparent 78%);
-  background-size:300% 300%;
-  background-position:120% -20%;
-  mix-blend-mode:screen;
-  animation: lp-sweep 9s ease-in-out infinite;
-  animation-delay: 1.2s;
-}
-@keyframes lp-sweep{
-  0%, 8%   { background-position:130% -30%; }
-  46%,54%  { background-position:-30% 130%; }
-  100%     { background-position:-30% 130%; }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .pr-hero-media::after{ animation:none; opacity:0; }
-}
-html[data-pc-motion="reduced"] .pr-hero-media::after{ animation:none; opacity:0; }
-html[data-pc-ornament="none"] .pr-hero-media::after{ display:none; }
