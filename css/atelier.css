@@ -241,7 +241,7 @@ html[data-pc-motion="reduced"] section h1.page-title::after{transform:none!impor
    down this file. */
 .hero-photo::before{
   content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(150% 120% at 50% 45%,transparent 62%,rgba(var(--lv-cfd4s,26,16,6),.22) 100%);
+  background:radial-gradient(150% 120% at 50% 45%,transparent 62%,rgba(124,31,46,.14) 100%);
 }
 /* css/brand.css's original `.hero::before` — a near-opaque dark wash —
    was written for the old one-layer hero, where `.hero` itself was the

@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      8c7058a4bdd822d69a9f30daa149a289bd58a6ce
-short       8c7058a4
-branch      claude/color-and-blur-fixes
-subject     Reconstruct and document the branding/hero-image investigation
-built (UTC) 2026-09-03T06:42:30Z
-assets      shrs-pwa-193159ae45
+commit      9f811e8767a97ea295a95ab85df8c557f4a6caad
+short       9f811e87
+branch      claude/remove-black-overlays
+subject     Merge pull request #33: Fix the photo "blur" complaint, and give the five schools their own colours
+built (UTC) 2026-09-03T07:22:52Z
+assets      shrs-pwa-6ef321faee
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run
