@@ -344,6 +344,7 @@ html[data-pc-ornament="none"] header.nav::after{display:none;}
   background-size:cover;
   background-position:center 28%;
   transform:scale(1.03);
+  filter:brightness(1.06) contrast(1.03) saturate(1.1);
   animation:hero-drift 38s ease-in-out infinite alternate;
 }
 /* Swapped to the school's own freshly supplied front-elevation
