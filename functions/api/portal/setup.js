@@ -123,6 +123,37 @@ const STATEMENTS = [
     updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (student_id, term)
   )`,
+  // Coursework layer (LMS Phase 1): deliberately separate from
+  // term_results (the official CA/exam ledger feeding report cards,
+  // transcripts and graduation) — this is homework/classwork, not the
+  // certified academic record.
+  `CREATE TABLE IF NOT EXISTS assignments (
+    id           SERIAL PRIMARY KEY,
+    class_id     INTEGER NOT NULL REFERENCES classes(id),
+    subject      TEXT NOT NULL,
+    staff_id     INTEGER NOT NULL REFERENCES staff(id),
+    term         TEXT NOT NULL,
+    title        TEXT NOT NULL,
+    instructions TEXT,
+    max_score    NUMERIC(5,2) NOT NULL DEFAULT 100,
+    due_at       TIMESTAMPTZ,
+    status       TEXT NOT NULL DEFAULT 'published',
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+  )`,
+  `CREATE TABLE IF NOT EXISTS assignment_submissions (
+    id                 SERIAL PRIMARY KEY,
+    assignment_id      INTEGER NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
+    student_id         INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    submission_text    TEXT,
+    submitted_at       TIMESTAMPTZ,
+    status             TEXT NOT NULL DEFAULT 'not_submitted',
+    score              NUMERIC(5,2),
+    teacher_feedback   TEXT,
+    graded_at          TIMESTAMPTZ,
+    graded_by_staff_id INTEGER REFERENCES staff(id),
+    UNIQUE (assignment_id, student_id)
+  )`,
   `CREATE TABLE IF NOT EXISTS notifications (
     id          SERIAL PRIMARY KEY,
     guardian_id INTEGER NOT NULL REFERENCES guardians(id) ON DELETE CASCADE,

@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      350d0f5a79c455b86d34f28776c732a0f1df9432
-short       350d0f5a
+commit      9dc41e00a24c1ed0fe26c785fc8cb3487a8c40e8
+short       9dc41e00a
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Add Ivory, a polished-white livery, and make it the new house default
-built (UTC) 2026-09-04T15:12:25Z
-assets      shrs-pwa-aed3aa89a0
+subject     Give all five institutions a class-by-class academic architecture
+built (UTC) 2026-09-04T15:54:49Z
+assets      shrs-pwa-d1e26a8fc4
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

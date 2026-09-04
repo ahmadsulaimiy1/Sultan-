@@ -29,6 +29,7 @@ export const SYSTEM_AREAS = {
   staff_records:          { name: 'Staff Records (portal account only, not an HR file)', ownerOffice: null, governingPolicy: null },
   attendance:             { name: 'Attendance', ownerOffice: 'Registrar / Academic Office', governingPolicy: 'SD-05 (Missing)' },
   assessments:            { name: 'Assessments (raw CA/exam score entry)', ownerOffice: 'Teacher, subject to Registrar oversight', governingPolicy: 'AC-01; AC-03 (Missing)' },
+  assignments:            { name: 'Assignments & Coursework', ownerOffice: 'Teacher, subject to Registrar/Principal oversight', governingPolicy: null },
   results:                { name: 'Results (finalised per-term aggregate)', ownerOffice: 'Registrar, jointly with Principal', governingPolicy: 'AC-02' },
   report_cards:           { name: 'Report Cards', ownerOffice: 'Registrar', governingPolicy: null },
   hifz_records:           { name: "Hifz & Muraja'ah Records", ownerOffice: "Qur'an College", governingPolicy: 'IQ-01, IQ-03' },
@@ -94,6 +95,13 @@ export const MATRIX = {
     { role: 'ARB', permissions: ['V', 'C', 'E'], scope: 'own subject/class' },
     { role: 'PRIN', permissions: ['V'], scope: 'own institution' },
     { role: 'REG', permissions: ['V', 'E'], scope: 'correction only, logged' },
+  ],
+  assignments: [
+    { role: 'TCH', permissions: ['V', 'C', 'E', 'D'], scope: 'own subject/class' },
+    { role: 'MUH', permissions: ['V', 'C', 'E', 'D'], scope: 'own subject/class' },
+    { role: 'ARB', permissions: ['V', 'C', 'E', 'D'], scope: 'own subject/class' },
+    { role: 'PRIN', permissions: ['V'], scope: 'own institution' },
+    { role: 'REG', permissions: ['V'], scope: 'oversight only, no edit rights — this is coursework, not the official record REG corrects' },
   ],
   results: [
     { role: 'REG', permissions: ['V', 'A', 'P', 'X'], scope: null },

@@ -20,6 +20,24 @@
   var currentClassId = null;
   var currentRoster = null;
 
+  var assignmentsCard = document.querySelector('[data-assignments-card]');
+  var assignmentsMetaEl = document.querySelector('[data-assignments-meta]');
+  var assignmentSubjectSelect = document.querySelector('[data-assignment-subject]');
+  var assignmentTitleInput = document.querySelector('[data-assignment-title]');
+  var assignmentDueInput = document.querySelector('[data-assignment-due]');
+  var assignmentMaxInput = document.querySelector('[data-assignment-max]');
+  var assignmentInstructionsInput = document.querySelector('[data-assignment-instructions]');
+  var assignmentCreateBtn = document.querySelector('[data-assignment-create-btn]');
+  var assignmentFormResultEl = document.querySelector('[data-assignment-form-result]');
+  var assignmentListEl = document.querySelector('[data-assignment-list]');
+  var assignmentListEmptyEl = document.querySelector('[data-assignment-list-empty]');
+  var gradingPanel = document.querySelector('[data-grading-panel]');
+  var gradingTitleEl = document.querySelector('[data-grading-title]');
+  var gradingBodyEl = document.querySelector('[data-grading-body]');
+  var gradingSaveBtn = document.querySelector('[data-grading-save-btn]');
+  var gradingResultEl = document.querySelector('[data-grading-result]');
+  var currentGradingAssignmentId = null;
+
   function el(tag, className, text){
     var e = document.createElement(tag);
     if(className) e.className = className;
@@ -194,11 +212,158 @@
       buildRosterTable(data);
       rosterCard.hidden = false;
       rosterCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      assignmentSubjectSelect.innerHTML = '';
+      data.subjects.forEach(function(s){
+        var opt = document.createElement('option');
+        opt.value = s; opt.textContent = s;
+        assignmentSubjectSelect.appendChild(opt);
+      });
+      gradingPanel.hidden = true;
+      assignmentsCard.hidden = false;
+      loadAssignments(classId);
     }catch(err){
       showResult((err && err.message) || 'Could not load that class roster.', false);
       rosterCard.hidden = false;
     }
   }
+
+  function formatDue(dueAt){
+    if(!dueAt) return 'No due date';
+    var d = new Date(dueAt);
+    return 'Due ' + d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function renderAssignmentList(classId, assignments){
+    var forClass = assignments.filter(function(a){ return a.class_id === classId; });
+    assignmentListEl.innerHTML = '';
+    if(!forClass.length){
+      assignmentListEmptyEl.hidden = false;
+      assignmentsMetaEl.textContent = '';
+      return;
+    }
+    assignmentListEmptyEl.hidden = true;
+    assignmentsMetaEl.textContent = forClass.length + ' assignment' + (forClass.length === 1 ? '' : 's') + ' set for this class';
+    forClass.forEach(function(a){
+      var row = el('div', 'teacher-class-card');
+      row.appendChild(el('div', 'teacher-class-name', a.subject + ' — ' + a.title));
+      var tags = el('div', 'teacher-class-tags');
+      tags.appendChild(el('span', 'portal-programme-chip', formatDue(a.due_at)));
+      tags.appendChild(el('span', 'portal-programme-chip', a.submitted_count + ' of ' + a.roster_size + ' submitted'));
+      tags.appendChild(el('span', 'portal-programme-chip', a.graded_count + ' graded'));
+      row.appendChild(tags);
+      var gradeBtn = el('button', 'portal-submit teacher-save-btn', 'Open & Grade');
+      gradeBtn.type = 'button';
+      gradeBtn.addEventListener('click', function(){ loadGrading(a.id, a.subject + ' — ' + a.title); });
+      row.appendChild(gradeBtn);
+      assignmentListEl.appendChild(row);
+    });
+  }
+
+  async function loadAssignments(classId){
+    try{
+      var res = await fetch('/api/portal/staff/teacher/assignments');
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not load assignments.');
+      renderAssignmentList(classId, data.assignments || []);
+    }catch(err){
+      assignmentsMetaEl.textContent = (err && err.message) || 'Could not load assignments.';
+    }
+  }
+
+  assignmentCreateBtn.addEventListener('click', async function(){
+    assignmentFormResultEl.hidden = true;
+    var term = termInput.value.trim();
+    var subject = assignmentSubjectSelect.value;
+    var title = assignmentTitleInput.value.trim();
+    if(!term){ assignmentFormResultEl.hidden = false; assignmentFormResultEl.className = 'registrar-form-result is-error'; assignmentFormResultEl.textContent = 'Enter a term in the roster section above first.'; return; }
+    if(!subject || !title){ assignmentFormResultEl.hidden = false; assignmentFormResultEl.className = 'registrar-form-result is-error'; assignmentFormResultEl.textContent = 'Subject and title are required.'; return; }
+    try{
+      var res = await fetch('/api/portal/staff/teacher/assignments', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          classId: currentClassId, subject: subject, term: term, title: title,
+          instructions: assignmentInstructionsInput.value.trim() || null,
+          maxScore: assignmentMaxInput.value || 100,
+          dueAt: assignmentDueInput.value ? new Date(assignmentDueInput.value).toISOString() : null,
+        }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not set that assignment.');
+      assignmentFormResultEl.hidden = false; assignmentFormResultEl.className = 'registrar-form-result is-ok'; assignmentFormResultEl.textContent = 'Assignment set.';
+      assignmentTitleInput.value = ''; assignmentDueInput.value = ''; assignmentInstructionsInput.value = '';
+      loadAssignments(currentClassId);
+    }catch(err){
+      assignmentFormResultEl.hidden = false; assignmentFormResultEl.className = 'registrar-form-result is-error';
+      assignmentFormResultEl.textContent = (err && err.message) || 'Could not set that assignment.';
+    }
+  });
+
+  async function loadGrading(assignmentId, title){
+    currentGradingAssignmentId = assignmentId;
+    gradingResultEl.hidden = true;
+    gradingTitleEl.textContent = 'Grade — ' + title;
+    gradingPanel.hidden = false;
+    gradingPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    try{
+      var res = await fetch('/api/portal/staff/teacher/assignment-grading?assignmentId=' + encodeURIComponent(assignmentId));
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not load submissions.');
+      gradingBodyEl.innerHTML = '';
+      (data.roster || []).forEach(function(r){
+        var tr = document.createElement('tr');
+        tr.dataset.studentId = r.student_id;
+        tr.appendChild(el('td', null, r.full_name));
+        var subTd = document.createElement('td');
+        subTd.className = 'portal-assignment-desc';
+        subTd.textContent = r.submission_text ? r.submission_text : (r.status === 'not_submitted' || !r.status ? 'Not submitted' : r.status);
+        tr.appendChild(subTd);
+        var scoreTd = document.createElement('td');
+        var scoreInput = document.createElement('input');
+        scoreInput.type = 'number'; scoreInput.min = '0'; scoreInput.step = '0.5'; scoreInput.dataset.field = 'score';
+        if(r.score != null) scoreInput.value = r.score;
+        scoreTd.appendChild(scoreInput);
+        tr.appendChild(scoreTd);
+        var fbTd = document.createElement('td');
+        var fbInput = document.createElement('input');
+        fbInput.type = 'text'; fbInput.dataset.field = 'feedback';
+        if(r.teacher_feedback) fbInput.value = r.teacher_feedback;
+        fbTd.appendChild(fbInput);
+        tr.appendChild(fbTd);
+        gradingBodyEl.appendChild(tr);
+      });
+    }catch(err){
+      gradingResultEl.hidden = false; gradingResultEl.className = 'registrar-form-result is-error';
+      gradingResultEl.textContent = (err && err.message) || 'Could not load submissions.';
+    }
+  }
+
+  gradingSaveBtn.addEventListener('click', async function(){
+    gradingResultEl.hidden = true;
+    var records = [];
+    Array.prototype.slice.call(gradingBodyEl.querySelectorAll('tr')).forEach(function(tr){
+      var score = tr.querySelector('[data-field="score"]');
+      var feedback = tr.querySelector('[data-field="feedback"]');
+      if((score && score.value !== '') || (feedback && feedback.value !== '')){
+        records.push({ studentId: Number(tr.dataset.studentId), score: score.value !== '' ? score.value : null, teacherFeedback: feedback.value || null });
+      }
+    });
+    if(!records.length){ gradingResultEl.hidden = false; gradingResultEl.className = 'registrar-form-result is-error'; gradingResultEl.textContent = 'Enter at least one score or comment before saving.'; return; }
+    try{
+      var res = await fetch('/api/portal/staff/teacher/assignment-grading', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignmentId: currentGradingAssignmentId, records: records }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not save grades.');
+      gradingResultEl.hidden = false; gradingResultEl.className = 'registrar-form-result is-ok';
+      gradingResultEl.textContent = 'Saved grades for ' + data.saved + ' student(s).';
+      loadAssignments(currentClassId);
+    }catch(err){
+      gradingResultEl.hidden = false; gradingResultEl.className = 'registrar-form-result is-error';
+      gradingResultEl.textContent = (err && err.message) || 'Could not save grades.';
+    }
+  });
 
   logoutBtn.addEventListener('click', async function(){
     try{ await fetch('/api/portal/staff/logout', { method: 'POST' }); }catch(err){}

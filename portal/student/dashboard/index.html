@@ -7,8 +7,8 @@
 <title>Student Portal (Pilot) — Sultan Hanafi Royal Schools</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link rel="stylesheet" href="/css/fonts.css?v=9c04a7b6b7">
-<link rel="stylesheet" href="/css/brand.css?v=4242997740">
-<link rel="stylesheet" href="/css/portal.css?v=498d0ed830">
+<link rel="stylesheet" href="/css/brand.css?v=885b631b8a">
+<link rel="stylesheet" href="/css/portal.css?v=cd81e7b9f5">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
@@ -19,7 +19,7 @@
 <script src="/js/portal-shell.js?v=4cccdbf1a2"></script>
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=811a34bf7b">
-<meta name="shrs-build" content="shrs-pwa-1338feccc5">
+<meta name="shrs-build" content="shrs-pwa-d1e26a8fc4">
 </head>
 <body class="portal-body" data-atmosphere="student">
 
@@ -101,8 +101,15 @@
 
     <div class="portal-child-card">
       <div class="portal-results" style="padding:18px 20px;">
-        <h3>Assignments &amp; Announcements</h3>
-        <p class="portal-empty">This activates once course content is added to the Student Portal — there isn't a live course system yet, so nothing is shown here rather than a placeholder.</p>
+        <h3>Assignments</h3>
+        <div data-assignments-list></div>
+        <p class="portal-empty" data-assignments-empty hidden>No assignments have been set for you yet.</p>
+        <div data-submission-form hidden style="margin-top:16px;">
+          <div class="meta" data-submission-title style="margin-bottom:8px;"></div>
+          <textarea data-submission-text rows="4" placeholder="Type your answer here…" style="width:100%;"></textarea>
+          <div class="teacher-save-row" style="margin-top:10px;"><button type="button" class="portal-submit teacher-save-btn" data-submission-save-btn>Submit</button></div>
+          <div class="registrar-form-result" data-submission-result hidden></div>
+        </div>
       </div>
     </div>
   </div>
@@ -119,7 +126,7 @@
 <script src="/js/id-card.js?v=78f0d35fa1" defer></script>
 <script src="/js/finance-widget.js?v=6836be756f" defer></script>
 <script src="/js/portal-onboarding-wizard.js?v=66ef283427" defer></script>
-<script src="/js/portal-student-dashboard.js?v=3dd341bab9" defer></script>
+<script src="/js/portal-student-dashboard.js?v=7da2207df1" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

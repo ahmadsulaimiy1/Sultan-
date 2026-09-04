@@ -33,14 +33,31 @@ the school's own published 5-stage Hifz Journey, and a permanent Ijazah
 register. A small `auth_audit_log` table records login attempts across
 both roles.
 
-Still not built, and still real future work (see below, mostly
-unchanged): a full LMS (courses, modules, lessons, assessments,
-certificates, content authoring, video/PDF/slide hosting, discussion
-boards, learning analytics), Teacher/Principal/Administrator/Admissions/
-Finance roles, MFA/SSO, payment integration, ID cards, a public Ijazah
-verification endpoint, and Arabic translation / Personalisation Centre
-support for the portal (both portals are English-only, hand-authored
-pages outside the site's build pipeline — a pre-existing gap, not new).
+**Since this document was last updated**, and separately from the LMS work
+below, Teacher/Registrar/Finance/HR/Governance roles were also built out
+and are now real and database-backed (see `functions/api/portal/staff/`
+and `functions/api/portal/admin/`) — noted here because the paragraph
+above still describes only the guardian/student state.
+
+**As of LMS Phase 1**, a real coursework layer exists on top of that:
+teachers set assignments and grade them, students submit text answers and
+see feedback, and guardians see a read-only due/graded summary per child
+(`assignments`, `assignment_submissions` — see `docs/role-permission-matrix.md`
+§4.5a). This is deliberately narrow: text-only submissions, one flat
+max-score per assignment, no weighted grade categories, no curriculum
+mapping. It replaces the "there isn't a live course system yet" empty
+state that both dashboards previously showed with the honest first real
+slice of one.
+
+Still not built, and still real future work: course content itself
+(lessons, curriculum mapping, scheme of work, video/PDF/slide hosting),
+CBT/quizzes and a question bank, discussion boards, learning analytics,
+file/media submission (needs an object-storage decision — see below),
+MFA/SSO, payment integration, ID cards as a physical/printable artefact
+(a digital ID card exists in-portal), a public Ijazah verification
+endpoint, and Arabic translation / Personalisation Centre support for the
+portal (both portals are English-only, hand-authored pages outside the
+site's build pipeline — a pre-existing gap, not new).
 
 A Digital Campus with student/parent/teacher/admin portals, results,
 attendance, fees, ID cards, Qur'an memorisation tracking, and messaging is

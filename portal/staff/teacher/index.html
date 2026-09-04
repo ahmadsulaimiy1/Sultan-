@@ -7,8 +7,8 @@
 <title>Teacher Portal — Sultan Hanafi Royal Schools Staff</title>
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link rel="stylesheet" href="/css/fonts.css?v=9c04a7b6b7">
-<link rel="stylesheet" href="/css/brand.css?v=4242997740">
-<link rel="stylesheet" href="/css/portal.css?v=498d0ed830">
+<link rel="stylesheet" href="/css/brand.css?v=885b631b8a">
+<link rel="stylesheet" href="/css/portal.css?v=cd81e7b9f5">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=811a34bf7b">
 <link rel="stylesheet" href="/css/portal-command.css?v=931b9c8248">
-<meta name="shrs-build" content="shrs-pwa-1338feccc5">
+<meta name="shrs-build" content="shrs-pwa-d1e26a8fc4">
 </head>
 <body class="portal-body" data-atmosphere="teacher">
 
@@ -71,6 +71,54 @@
       <div class="registrar-form-result" data-roster-result hidden></div>
     </div>
 
+    <div class="portal-child-card" data-assignments-card hidden>
+      <div class="portal-child-head">
+        <h2>Assignments &amp; Coursework</h2>
+        <div class="meta" data-assignments-meta></div>
+      </div>
+      <form data-assignment-form class="registrar-form-grid" style="padding-top:16px;">
+        <div class="portal-field">
+          <label>Subject</label>
+          <select data-assignment-subject required></select>
+        </div>
+        <div class="portal-field">
+          <label>Title</label>
+          <input type="text" data-assignment-title placeholder="e.g. Chapter 4 exercises" required />
+        </div>
+        <div class="portal-field">
+          <label>Due date (optional)</label>
+          <input type="datetime-local" data-assignment-due />
+        </div>
+        <div class="portal-field">
+          <label>Max score</label>
+          <input type="number" data-assignment-max value="100" min="1" step="0.5" />
+        </div>
+        <div class="portal-field" style="grid-column:1/-1;">
+          <label>Instructions (optional)</label>
+          <textarea data-assignment-instructions rows="2"></textarea>
+        </div>
+      </form>
+      <div class="teacher-save-row">
+        <button type="button" class="portal-submit teacher-save-btn" data-assignment-create-btn>Set Assignment</button>
+      </div>
+      <div class="registrar-form-result" data-assignment-form-result hidden></div>
+
+      <div class="teacher-assignment-list" data-assignment-list style="margin-top:20px;"></div>
+      <div class="portal-empty" data-assignment-list-empty hidden>No assignments set for this class yet.</div>
+
+      <div data-grading-panel hidden style="margin-top:20px;">
+        <div class="portal-child-head"><h3 data-grading-title>Grade</h3></div>
+        <div class="teacher-roster-scroll">
+          <table class="teacher-roster-table">
+            <thead><tr><th>Student</th><th>Submission</th><th>Score</th><th>Feedback</th></tr></thead>
+            <tbody data-grading-body></tbody>
+          </table>
+        </div>
+        <div class="teacher-save-row"><button type="button" class="portal-submit teacher-save-btn" data-grading-save-btn>Save Grades</button></div>
+        <div class="registrar-form-result" data-grading-result hidden></div>
+      </div>
+    </div>
+
     <p class="portal-notice-on-dark">
       Every attendance and score submission is checked against your active class/subject assignments and recorded in the staff audit log. If a class you actually teach isn't listed above, contact the ICT Office at
       <a href="mailto:info@shroyalschools.com">info@shroyalschools.com</a> to have your assignment added.
@@ -86,7 +134,7 @@
   </div>
 </main>
 
-<script src="/js/portal-staff-teacher.js?v=fce60bf974" defer></script>
+<script src="/js/portal-staff-teacher.js?v=15b1dc3b19" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

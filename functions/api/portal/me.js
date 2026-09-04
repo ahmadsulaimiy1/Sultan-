@@ -48,10 +48,27 @@ export async function onRequestGet({ request, env }) {
 
     const children = [];
     for (const student of studentsRes.rows) {
-      const [attendance, results, fees, enrolmentsRes] = await Promise.all([
+      const [attendance, results, fees, enrolmentsRes, assignmentsSummaryRes] = await Promise.all([
         sql`SELECT term, days_present, days_total FROM attendance_summary WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
         sql`SELECT term, subject, ca_score, exam_score, total_score, teacher_comment FROM term_results WHERE student_id = ${student.id} ORDER BY updated_at DESC`,
         sql`SELECT term, amount_due, amount_paid FROM fee_status WHERE student_id = ${student.id} ORDER BY updated_at DESC LIMIT 1`,
+        // Read-only coursework summary for the guardian dashboard — the
+        // full list/detail lives on the student's own portal; a parent
+        // gets upcoming-due and recent-grade counts, not the assignment
+        // text itself.
+        sql`
+          SELECT
+            (SELECT COUNT(*)::int FROM assignments a
+              JOIN student_classes sc ON sc.class_id = a.class_id AND sc.student_id = ${student.id}
+              LEFT JOIN assignment_submissions sub ON sub.assignment_id = a.id AND sub.student_id = ${student.id}
+              WHERE a.status = 'published' AND a.due_at > now()
+                AND (sub.status IS NULL OR sub.status NOT IN ('submitted', 'late', 'graded'))
+            ) AS upcoming_due_count,
+            (SELECT COUNT(*)::int FROM assignment_submissions sub
+              JOIN assignments a ON a.id = sub.assignment_id
+              JOIN student_classes sc ON sc.class_id = a.class_id AND sc.student_id = ${student.id}
+              WHERE sub.student_id = ${student.id} AND sub.status = 'graded' AND sub.graded_at > now() - interval '14 days'
+            ) AS recently_graded_count`,
         // A student may belong to more than one class at once (e.g. a
         // Royal College student also enrolled in Qur'an College and/or
         // Islamic and Arabic Studies) — see sql/schema.sql's student_classes.
@@ -86,6 +103,7 @@ export async function onRequestGet({ request, env }) {
       }
 
       const finance = await loadStudentFinanceSummary(sql, student.id);
+      const assignmentsSummaryRow = assignmentsSummaryRes.rows[0] || {};
 
       children.push({
         id: student.id,
@@ -102,6 +120,10 @@ export async function onRequestGet({ request, env }) {
         fees: fees.rows[0] || null,
         finance,
         hifz,
+        assignmentsSummary: {
+          upcomingDueCount: assignmentsSummaryRow.upcoming_due_count || 0,
+          recentlyGradedCount: assignmentsSummaryRow.recently_graded_count || 0,
+        },
       });
     }
 

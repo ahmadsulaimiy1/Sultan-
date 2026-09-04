@@ -1165,6 +1165,16 @@ select.registrar-search-row-select{
 .teacher-class-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
 .teacher-class-count{font-size:0.74rem;color:var(--ink-soft);margin-top:8px;}
 
+/* LMS Phase 1 — assignment cards on the Student Portal (each assignment,
+   its due date, status chip, and a submit/update action) and the shared
+   muted-description paragraph used both there and in the Teacher
+   Portal's grading table. Same visual family as .teacher-class-card,
+   not a new design system. */
+.portal-assignment-card{background:var(--milk-bg);border:1px solid var(--line);border-inline-start:3px solid var(--gold);padding:14px 16px;margin-bottom:12px;}
+.portal-assignment-card .meta{font-size:0.78rem;color:var(--ink-soft);margin-top:2px;}
+.portal-assignment-card .portal-programme-chip{margin-top:8px;}
+.portal-assignment-desc{font-size:0.82rem;color:var(--ink-soft);line-height:1.5;margin:8px 0 0;}
+
 .teacher-roster-scroll{overflow-x:auto;padding:0 20px 16px;}
 .teacher-roster-table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:520px;}
 .teacher-roster-table th{

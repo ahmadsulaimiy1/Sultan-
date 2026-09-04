@@ -20,6 +20,14 @@
   var juzGridEl = document.querySelector('[data-portal-juz-grid]');
   var ijazahEl = document.querySelector('[data-portal-ijazah]');
   var logoutBtn = document.querySelector('[data-portal-logout]');
+  var assignmentsListEl = document.querySelector('[data-assignments-list]');
+  var assignmentsEmptyEl = document.querySelector('[data-assignments-empty]');
+  var submissionFormEl = document.querySelector('[data-submission-form]');
+  var submissionTitleEl = document.querySelector('[data-submission-title]');
+  var submissionTextEl = document.querySelector('[data-submission-text]');
+  var submissionSaveBtn = document.querySelector('[data-submission-save-btn]');
+  var submissionResultEl = document.querySelector('[data-submission-result]');
+  var currentSubmissionAssignmentId = null;
   var execStatAttendanceEl = document.querySelector('[data-exec-stat-attendance]');
   var execStatFeeEl = document.querySelector('[data-exec-stat-fee]');
   var execStatProgrammesEl = document.querySelector('[data-exec-stat-programmes]');
@@ -144,6 +152,81 @@
     }
   }
 
+  function openSubmission(assignmentId, title){
+    currentSubmissionAssignmentId = assignmentId;
+    submissionTitleEl.textContent = 'Answering: ' + title;
+    submissionTextEl.value = '';
+    submissionResultEl.hidden = true;
+    submissionFormEl.hidden = false;
+    submissionFormEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function renderAssignments(assignments){
+    assignmentsListEl.innerHTML = '';
+    if(!assignments || !assignments.length){
+      assignmentsEmptyEl.hidden = false;
+      return;
+    }
+    assignmentsEmptyEl.hidden = true;
+    assignments.forEach(function(a){
+      var card = el('div', 'portal-assignment-card');
+      card.appendChild(el('h4', null, a.subject + ' — ' + a.title));
+      var dueText = a.due_at ? 'Due ' + new Date(a.due_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : 'No due date';
+      card.appendChild(el('div', 'meta', dueText));
+      if(a.instructions) card.appendChild(el('p', 'portal-assignment-desc', a.instructions));
+
+      var status = a.status || 'not_submitted';
+      if(status === 'graded'){
+        card.appendChild(el('div', 'portal-programme-chip is-primary', 'Graded: ' + a.score + ' / ' + a.max_score));
+        if(a.teacher_feedback) card.appendChild(el('p', 'portal-assignment-desc', 'Feedback: ' + a.teacher_feedback));
+      } else if(status === 'submitted' || status === 'late'){
+        card.appendChild(el('div', 'portal-programme-chip', (status === 'late' ? 'Submitted late' : 'Submitted') + ' — awaiting grade'));
+        var editBtn = el('button', 'portal-submit teacher-save-btn', 'Update Submission');
+        editBtn.type = 'button';
+        editBtn.addEventListener('click', function(){ openSubmission(a.id, a.subject + ' — ' + a.title); });
+        card.appendChild(editBtn);
+      } else {
+        var submitBtn = el('button', 'portal-submit teacher-save-btn', 'Submit');
+        submitBtn.type = 'button';
+        submitBtn.addEventListener('click', function(){ openSubmission(a.id, a.subject + ' — ' + a.title); });
+        card.appendChild(submitBtn);
+      }
+      assignmentsListEl.appendChild(card);
+    });
+  }
+
+  async function loadAssignments(){
+    try{
+      var res = await fetch('/api/portal/student/assignments');
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not load assignments.');
+      renderAssignments(data.assignments || []);
+    }catch(err){
+      assignmentsEmptyEl.hidden = false;
+      assignmentsEmptyEl.textContent = (err && err.message) || 'Could not load assignments right now.';
+    }
+  }
+
+  submissionSaveBtn.addEventListener('click', async function(){
+    submissionResultEl.hidden = true;
+    var text = submissionTextEl.value.trim();
+    if(!text){ submissionResultEl.hidden = false; submissionResultEl.className = 'registrar-form-result is-error'; submissionResultEl.textContent = 'Write your answer before submitting.'; return; }
+    try{
+      var res = await fetch('/api/portal/student/assignments', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignmentId: currentSubmissionAssignmentId, submissionText: text }),
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not submit your answer.');
+      submissionResultEl.hidden = false; submissionResultEl.className = 'registrar-form-result is-ok';
+      submissionResultEl.textContent = data.status === 'late' ? 'Submitted (marked late).' : 'Submitted.';
+      loadAssignments();
+    }catch(err){
+      submissionResultEl.hidden = false; submissionResultEl.className = 'registrar-form-result is-error';
+      submissionResultEl.textContent = (err && err.message) || 'Could not submit your answer.';
+    }
+  });
+
   async function load(){
     try{
       var res = await fetch('/api/portal/student/me', { headers: { 'accept': 'application/json' } });
@@ -191,6 +274,7 @@
 
       renderResults(data.results);
       renderHifz(data.hifz);
+      loadAssignments();
 
       var financeMount = document.querySelector('[data-finance-mount]');
       if(financeMount && window.SHRSFinance){

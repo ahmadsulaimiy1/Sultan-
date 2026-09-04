@@ -235,6 +235,21 @@ gated on FN-03/04/05.
 No Publish here — see Results. Grade corrections must remain visible in
 history (AC-02 provides for appeals), never silently overwritten.
 
+### 4.5a Assignments & Coursework
+*Owner office: Teacher, subject to Registrar/Principal oversight. Governing: none yet.*
+
+| Role | V | C | E | D |
+|---|---|---|---|---|
+| TCH / MUH / ARB | own subject/class | ✓ (own subject/class) | ✓ (own subject/class) | ✓ (own subject/class) |
+| PRIN | own institution | | | |
+| REG | ✓ | | | |
+
+A separate coursework layer from Assessments/Results — homework and
+classwork a teacher sets and grades (`assignments`,
+`assignment_submissions`), not the official CA/exam ledger that feeds
+report cards, transcripts and graduation. REG holds View only here: this
+is not the certified record REG corrects under §4.5/4.6.
+
 ### 4.6 Results (finalised per-term aggregate)
 *Owner office: Registrar, jointly with Principal per AC-02's stated joint promotion/probation threshold-setting.*
 

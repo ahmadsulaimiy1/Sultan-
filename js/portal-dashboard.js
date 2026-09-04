@@ -200,6 +200,20 @@
       card.appendChild(hifzSnap);
     }
 
+    // Read-only coursework summary — counts only, no assignment text or
+    // grading here; the child's own Student Portal is where they answer
+    // and see feedback.
+    if(child.assignmentsSummary && (child.assignmentsSummary.upcomingDueCount > 0 || child.assignmentsSummary.recentlyGradedCount > 0)){
+      var assignSnap = el('div', 'portal-child-hifz-snapshot');
+      if(child.assignmentsSummary.upcomingDueCount > 0){
+        assignSnap.appendChild(el('span', 'phs-badge', child.assignmentsSummary.upcomingDueCount + ' assignment' + (child.assignmentsSummary.upcomingDueCount === 1 ? '' : 's') + ' due soon'));
+      }
+      if(child.assignmentsSummary.recentlyGradedCount > 0){
+        assignSnap.appendChild(el('span', null, child.assignmentsSummary.recentlyGradedCount + ' graded in the last 2 weeks'));
+      }
+      card.appendChild(assignSnap);
+    }
+
     var resultsWrap = el('div', 'portal-results');
     resultsWrap.appendChild(el('h3', null, 'Latest Term Results'));
     if(child.results && child.results.length){
