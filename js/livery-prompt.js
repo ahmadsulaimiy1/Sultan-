@@ -17,7 +17,7 @@
    so the two can never disagree.
    =================================================================== */
 (function () {
-  var KEY = 'shrsPersonalisation';
+  var KEY = 'shrsPersonalisation_v2';
   var root = document.querySelector('[data-livery-prompt]');
   if (!root) return;
 

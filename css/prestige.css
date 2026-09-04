@@ -3394,10 +3394,15 @@ html[data-pc-theme="light"]{
   --pearl-line:rgba(var(--lv-g,198,161,91),.34);
 }
 
-/* ---- The masthead, in porcelain ---- */
+/* ---- The masthead, in platinum ----
+   Previously ran to an actual cream (rgb 243,234,219) at 130% — a
+   deliberate choice at the time ("the bands keep their cream", see
+   masthead.css), reversed by direct request: white/platinum, not
+   cream, for the header. The gold radial glow stays — it's the accent,
+   not the ground. */
 html[data-pc-theme="light"] header.nav{
-  background:radial-gradient(700px 140px at 12% 0%, rgba(var(--lv-gbs,233,206,138),.24), transparent 65%),
-    linear-gradient(155deg,rgb(var(--lv-w17,255,253,248)) 0%,rgb(var(--lv-w103,243,234,219)) 130%);
+  background:radial-gradient(700px 140px at 12% 0%, rgba(var(--lv-gbs,233,206,138),.16), transparent 65%),
+    linear-gradient(155deg,#FFFFFF 0%,#F7F7F8 130%);
   border-bottom:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] header.nav::before{opacity:.05;}
 html[data-pc-theme="light"] .navlinks > a,
@@ -3555,14 +3560,14 @@ html[data-pc-theme="light"] .portal-card{color:var(--pearl-ink);}
    the element's ground with text made transparent. If the ground does not
    change with the edition, neither may the text. */
 
-/* ---- The closing band and the footer, in pearl ---- */
+/* ---- The closing band and the footer, in true platinum, not cream ---- */
 html[data-pc-theme="light"] .pr-arrival{
-  background:linear-gradient(168deg,rgb(var(--lv-w17,255,253,248)),rgb(var(--lv-w103,243,234,219)))!important;color:var(--pearl-ink)!important;}
+  background:linear-gradient(168deg,#FFFFFF,#F2F3F5)!important;color:var(--pearl-ink)!important;}
 html[data-pc-theme="light"] .pr-arrival h2{color:var(--pearl-ink)!important;}
 html[data-pc-theme="light"] .pr-arrival .lead{color:var(--pearl-ink-2)!important;}
 html[data-pc-theme="light"] .foot-arrival{
   background:radial-gradient(760px 260px at 50% 0%, rgba(var(--lv-gbs,233,206,138),.3), transparent 66%),
-    linear-gradient(180deg,rgb(var(--lv-w51,248,241,227)) 0%,rgb(var(--lv-w26,241,231,213)) 58%,rgb(var(--lv-w107,234,223,201)) 100%);
+    linear-gradient(180deg,#FFFFFF 0%,#F5F6F7 58%,#EFF0F2 100%);
   border-top:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] .foot-statement p{color:rgb(var(--lv-gt2,138,106,47));}
 /* NOT THE DIGITAL CAMPUS'S FOOT. `footer` is a tag, and it caught two of
@@ -3576,14 +3581,14 @@ html[data-pc-theme="light"] .foot-statement p{color:rgb(var(--lv-gt2,138,106,47)
    that is harder to see in a stylesheet than a contrast failure is.
    css/portal-chrome.css owns that foot; this edition does not reach into it. */
 html[data-pc-theme="light"] footer:not(.pch-foot){
-  background:linear-gradient(180deg,rgb(var(--lv-w26,241,231,213)),rgb(var(--lv-w192,233,220,196)));color:var(--pearl-ink-2);
+  background:linear-gradient(180deg,#FFFFFF,#F2F3F5);color:var(--pearl-ink-2);
   border-top:1px solid var(--pearl-line);}
 html[data-pc-theme="light"] footer:not(.pch-foot) h2,
 html[data-pc-theme="light"] footer:not(.pch-foot) .fs-sig,
 html[data-pc-theme="light"] footer:not(.pch-foot) .fd-item span,
 html[data-pc-theme="light"] footer:not(.pch-foot) a{color:var(--pearl-ink);}
 html[data-pc-theme="light"] footer .fd-item{
-  background:linear-gradient(168deg,rgb(var(--lv-w17,255,253,248)),rgb(var(--lv-w38,246,238,223)));border-color:rgba(var(--lv-gs,198,161,91),.26);}
+  background:linear-gradient(168deg,#FFFFFF,#F5F6F7);border-color:rgba(var(--lv-gs,198,161,91),.26);}
 html[data-pc-theme="light"] footer .fd-item svg{color:rgb(var(--lv-gt2,138,106,47));}
 /* The footer's map block is a photograph with a near-black overlay, and
    it stays a photograph in the Clear edition — a pearl page does not
@@ -4233,11 +4238,11 @@ html[data-pc-theme="light"] .mobile-nav-ribbon{
   border-top:1px solid rgba(var(--lv-gs,198,161,91),.24);
   border-bottom:1px solid rgba(var(--lv-gs,198,161,91),.24);}
 html[data-pc-theme="light"] .mnr-item{
-  background:linear-gradient(168deg,rgb(var(--lv-wh,255,255,255)),rgb(var(--lv-p4,247,240,226)));
+  background:linear-gradient(168deg,#FFFFFF,#F7F7F8);
   border-color:rgba(var(--lv-gs,198,161,91),.32);}
 html[data-pc-theme="light"] .mnr-item:hover,
 html[data-pc-theme="light"] .mnr-item:active{
-  background:linear-gradient(168deg,rgb(var(--lv-w108s,255,253,246)),rgb(var(--lv-w207,242,231,210)));border-color:rgba(var(--lv-gs,198,161,91),.6);}
+  background:linear-gradient(168deg,#FFFFFF,#F2F3F5);border-color:rgba(var(--lv-gs,198,161,91),.6);}
 html[data-pc-theme="light"] .mobile-quick-row{
   background:linear-gradient(180deg,rgba(var(--lv-w17,255,253,248),.9),rgba(var(--lv-w38,246,238,223),.9));
   border-bottom:1px solid rgba(var(--lv-gs,198,161,91),.24);}

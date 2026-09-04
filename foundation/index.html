@@ -35,7 +35,7 @@
 <script>
 (function(){
   try{
-    var raw = localStorage.getItem('shrsPersonalisation');
+    var raw = localStorage.getItem('shrsPersonalisation_v2');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
     html.setAttribute('data-pc-theme', p.theme || 'light');
@@ -85,9 +85,9 @@
 })();
 </script>
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
-<link rel="stylesheet" href="/css/prestige.css?v=afe3c7d36a">
+<link rel="stylesheet" href="/css/prestige.css?v=806857fa06">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
-<link rel="stylesheet" href="/css/masthead.css?v=a169164bb1">
+<link rel="stylesheet" href="/css/masthead.css?v=877b2c63ea">
 <link rel="stylesheet" href="/css/armorial.css?v=067739c718">
 <link rel="stylesheet" href="/css/kinetic.css?v=52e4ccffc3">
 <link rel="stylesheet" href="/css/listen.css?v=bd3da8cf87">
@@ -95,7 +95,7 @@
 <link rel="alternate" hreflang="en" href="https://shroyalschools.com/foundation/" />
 <link rel="alternate" hreflang="ar" href="https://shroyalschools.com/ar/foundation/" />
 <link rel="alternate" hreflang="x-default" href="https://shroyalschools.com/foundation/" />
-<meta name="shrs-build" content="shrs-pwa-6ef321faee">
+<meta name="shrs-build" content="shrs-pwa-c4d43793e2">
 <script type="application/ld+json" data-seo="entity">{"@context":"https://schema.org","@type":["School","EducationalOrganization"],"@id":"https://shroyalschools.com/#school","name":"Sultan Hanafi Royal Schools","alternateName":["SHRS","Sultan Hanafi Schools"],"url":"https://shroyalschools.com/","logo":"https://shroyalschools.com/assets/images/brand-mark.png","image":"https://shroyalschools.com/assets/images/campus/campus-frontage.jpg","description":"Sultan Hanafi Royal Schools is a hybrid Islamic and secular institution in Ikorodu, Lagos State, Nigeria, comprising a Nursery and Primary School, Royal College, School of Islamic and Arabic Studies, Qur’an College, and an Online & Distance Learning School.","foundingDate":"2016-07","slogan":"Forming Scholars, Leaders and Guardians of Excellence.","email":"info@shroyalschools.com","telephone":["+2348073747650","+2348070586860"],"address":{"@type":"PostalAddress","streetAddress":"15 Imowonla Road, AP Bus Stop, Off Gberigbe–Agura Road","addressLocality":"Ikorodu","addressRegion":"Lagos State","addressCountry":"NG"},"areaServed":[{"@type":"AdministrativeArea","name":"Ikorodu"},{"@type":"AdministrativeArea","name":"Lagos State"},{"@type":"Country","name":"Nigeria"}],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["https://schema.org/Monday","https://schema.org/Tuesday","https://schema.org/Wednesday"],"opens":"07:30","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["https://schema.org/Thursday","https://schema.org/Friday"],"opens":"07:30","closes":"16:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["https://schema.org/Saturday","https://schema.org/Sunday"],"opens":"09:00","closes":"15:00"}],"founder":{"@type":"Person","name":"Zakariya Olanrewaju Anofi","honorificSuffix":"MSc, FCA, FCCA","jobTitle":"Founder and Proprietor"},"availableLanguage":["en","ar","fr","yo"],"knowsLanguage":["en","ar","fr","yo"],"department":[{"@type":"EducationalOrganization","name":"Sultan Hanafi Nursery and Primary School","url":"https://shroyalschools.com/academics/nursery-primary/"},{"@type":"EducationalOrganization","name":"Royal College","url":"https://shroyalschools.com/academics/royal-college/"},{"@type":"EducationalOrganization","name":"School of Islamic and Arabic Studies","url":"https://shroyalschools.com/academics/arabic-islamic-studies/"},{"@type":"EducationalOrganization","name":"Qur'an College","url":"https://shroyalschools.com/academics/quran-college/"},{"@type":"EducationalOrganization","name":"Online & Distance Learning School","url":"https://shroyalschools.com/academics/online-distance-learning/"}],"sameAs":["https://www.facebook.com/share/1EnMRT3Lrq/","https://www.instagram.com/shroyal_schools","https://youtube.com/@shroyalschools"],"subjectOf":[{"@type":"NewsArticle","headline":"Sultan Hanafi Royal Schools: Illuminating Minds and Nurturing Communities","url":"https://punchng.com/sultan-hanafi-royal-schools-illuminating-minds-and-nurturing-communities-olawoyin-edris/","datePublished":"2023-08-29","publisher":{"@type":"Organization","name":"The Punch"}},{"@type":"NewsArticle","headline":"Education projects, seeds for future generations – Makinde","url":"https://punchng.com/education-projects-seeds-for-future-generations-makinde/","datePublished":"2024-11-14","publisher":{"@type":"Organization","name":"The Punch"}},{"@type":"NewsArticle","headline":"Winners emerge in N1.5m Quran competition","url":"https://punchng.com/winners-emerge-in-n1-5m-quran-competition/","datePublished":"2025-03-21","publisher":{"@type":"Organization","name":"The Punch"}},{"@type":"NewsArticle","headline":"Lagos school charges graduates to be problem-solvers","url":"https://punchng.com/lagos-school-charges-graduates-to-be-problem-solvers/","datePublished":"2026-08-15","publisher":{"@type":"Organization","name":"The Punch"}}]}</script>
 <script type="application/ld+json" data-seo="website">{"@context":"https://schema.org","@type":"WebSite","@id":"https://shroyalschools.com/#website","url":"https://shroyalschools.com/","name":"Sultan Hanafi Royal Schools","publisher":{"@id":"https://shroyalschools.com/#school"},"inLanguage":"en","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://shroyalschools.com/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
 <script defer src="/js/measure.js?v=1"></script>
@@ -1557,16 +1557,16 @@
 <script src="/js/portal-password-strength.js?v=b9de66017a" defer></script>
 <script src="/js/prayer-times.js?v=a0ca2f8953" defer></script>
 <script src="/js/hijri.js?v=4bb28b7c28" defer></script>
-<script src="/js/personalisation.js?v=46dca3f774" defer></script>
-<script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>
-<script src="/js/livery-prompt.js?v=befa35a415" defer></script>
+<script src="/js/personalisation.js?v=30c1a17b64" defer></script>
+<script src="/js/edition-toggle.js?v=dce1ef6847" defer></script>
+<script src="/js/livery-prompt.js?v=073b848a14" defer></script>
 <script src="/js/atelier.js?v=e191b0dd6c" defer></script>
 <script src="/js/regalia.js?v=dcbc4f952c" defer></script>
 <script src="/js/site.js?v=01a7da405f" defer></script>
 <script src="/js/adhkar-app.js?v=4f342859f6" defer></script>
 <script src="/js/announcements.js?v=692ee2d4bd" defer></script>
 <script src="/js/assistant-data.en.js?v=e017ffd1dd" defer></script>
-<script src="/js/assistant.js?v=a375c41bb3" defer></script>
+<script src="/js/assistant.js?v=fc0323c134" defer></script>
 <script src="/js/whatsapp-float.js?v=3be83b7d80" defer></script>
 <script src="/js/institution-carousel.js?v=0bf8b2ac96" defer></script>
 <script src="/js/marketplace.js?v=d244d57c65" defer></script>
@@ -1581,7 +1581,7 @@
 <script src="/js/site-chrome.js?v=bf1fba9706" defer></script>
 <script src="/js/pwa-install.js?v=1ef157657c" defer></script>
 <script src="/js/intro.js?v=d736fc8544" defer></script>
-<script src="/js/listen.js?v=235af538fc" defer></script>
+<script src="/js/listen.js?v=bab52c6276" defer></script>
 <script src="/js/footer-live.js?v=9b675c12c3" defer></script>
 <script src="/js/mega.js?v=23b6a172e2" defer></script>
 <script src="/js/edge.js?v=d66e1b4c05" defer></script>

@@ -1,6 +1,6 @@
 /* Portal appearance toggle, and the portal's synchronous locale bootstrap.
  *
- * Reuses the exact same shrsPersonalisation localStorage key + data-pc-theme
+ * Reuses the exact same shrsPersonalisation_v2 localStorage key + data-pc-theme
  * attribute mechanism as the public site's Personalisation Centre
  * (js/personalisation.js, applied via the inline FOUC-prevention script in
  * partials/head.html) so a visitor's theme choice is one unified preference
@@ -20,7 +20,7 @@
  * js/i18n.js, which is shared with the public site.
  */
 (function(){
-  var PREFS_KEY = 'shrsPersonalisation';
+  var PREFS_KEY = 'shrsPersonalisation_v2';
   var LOCALE_KEY = 'shrsLocale';
   var ORDER = ['royal', 'light', 'dark'];
 

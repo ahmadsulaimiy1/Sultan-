@@ -28,7 +28,7 @@
 <script>
 (function(){
   try{
-    var raw = localStorage.getItem('shrsPersonalisation');
+    var raw = localStorage.getItem('shrsPersonalisation_v2');
     var p = raw ? JSON.parse(raw) : {};
     var html = document.documentElement;
     html.setAttribute('data-pc-theme', p.theme || 'light');
