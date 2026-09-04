@@ -2542,6 +2542,64 @@
   .timetable-legend span{display:inline-flex;align-items:center;gap:6px;}
   .timetable-legend .tl-dot{width:9px;height:9px;border-radius:2px;background:rgba(124,31,46,0.09);border:1px solid var(--crimson);display:inline-block;}
 
+  /* ---------- Class Architecture ladder ---------------------------------
+     A class-by-class academic pathway, shared across all five institution
+     pages: a vertical run of numbered rungs, grouped into named phases,
+     ending in a milestone. Two of the five institutions (Basic School,
+     Royal College) already publish their class levels in prose elsewhere
+     on the same page — the ladder there is pure presentation, no new
+     claims. The other three carry an explicit .ladder-tag ("Proposed" or
+     "Planned") wherever the structure is new rather than already adopted
+     — see each page's own framing text for what that tag means there.
+     Logical (inline-start) properties throughout so RTL mirrors for free,
+     no [dir="rtl"] overrides needed. */
+  .class-ladder{position:relative;margin-top:30px;max-width:720px;}
+  .class-ladder::before{
+    content:"";position:absolute;inset-inline-start:23px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg,var(--gold) 0%,var(--terracotta,var(--gold)) 100%);opacity:.32;
+  }
+  .ladder-phase-label{
+    display:block;font-family:var(--font-label);font-size:0.72rem;font-weight:700;
+    letter-spacing:0.09em;text-transform:uppercase;color:var(--terracotta-text,#964E24);
+    margin:26px 0 8px 64px;
+  }
+  .ladder-phase:first-child .ladder-phase-label{margin-top:0;}
+  .rung{position:relative;display:flex;align-items:flex-start;gap:18px;padding:10px 0;}
+  .rung-n{
+    flex:0 0 48px;height:48px;display:flex;align-items:center;justify-content:center;
+    border-radius:50%;position:relative;z-index:1;font-family:var(--font-label);font-weight:700;font-size:0.9rem;
+    background:linear-gradient(165deg,rgb(var(--lv-wh,255,255,255)) 0%,var(--surface-tertiary-bg) 100%);
+    border:2px solid var(--gold);color:var(--terracotta-text,#964E24);
+    transition:border-color .25s ease,box-shadow .25s ease;
+  }
+  .rung:hover .rung-n{border-color:var(--terracotta-text,#964E24);box-shadow:0 10px 22px -14px rgba(var(--lv-cfd5,34,23,9),0.4);}
+  .rung-body{padding-top:4px;}
+  .rung-body h4{font-family:var(--font-label);font-size:0.98rem;letter-spacing:0.01em;color:var(--navy);margin:0 0 4px;display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px;}
+  .rung-body p{font-size:0.85rem;color:rgb(var(--lv-w12,92,91,84));line-height:1.55;margin:0;}
+  .rung.is-milestone .rung-n{
+    background:linear-gradient(140deg,var(--gold-bright),var(--gold));border-color:transparent;
+    color:var(--navy-deep);box-shadow:0 0 0 6px rgba(var(--lv-gs,198,161,91),0.16);
+  }
+  .rung.is-milestone .rung-body h4{color:var(--terracotta-text,#964E24);}
+  .ladder-tag{
+    display:inline-block;padding:2px 9px;border-radius:999px;font-size:0.64rem;font-weight:700;
+    letter-spacing:0.05em;text-transform:uppercase;line-height:1.7;
+  }
+  .ladder-tag.is-proposed{background:rgba(124,31,46,0.08);color:var(--crimson);border:1px solid rgba(124,31,46,0.24);}
+  .ladder-tag.is-planned{background:rgba(var(--lv-w45,122,106,82),0.10);color:rgb(var(--lv-w45,122,106,82));border:1px dashed rgba(var(--lv-w45,122,106,82),0.4);}
+  /* Online & Distance Learning: every rung is provisional, so the whole
+     ladder — not just a tag — reads as not-yet-real: dashed rung markers,
+     muted ink, no gold. Same component, honest about what it isn't yet. */
+  .class-ladder.is-planned::before{background:rgb(var(--lv-w45,122,106,82));opacity:.28;background-image:none;}
+  .class-ladder.is-planned .rung-n{border-style:dashed;border-color:rgb(var(--lv-w45,122,106,82));color:rgb(var(--lv-w45,122,106,82));background:transparent;}
+  .class-ladder.is-planned .rung-body h4{color:rgb(var(--lv-w16,90,74,56));}
+  .ladder-note{max-width:680px;color:rgb(var(--lv-w12,92,91,84));font-size:0.86rem;line-height:1.6;margin:16px 0 0;padding:14px 18px;border:1px solid var(--line);border-inline-start:3px solid var(--crimson);background:rgba(124,31,46,0.04);}
+  @media (max-width:560px){
+    .class-ladder::before{inset-inline-start:19px;}
+    .rung-n{flex-basis:40px;height:40px;font-size:0.8rem;}
+    .ladder-phase-label{margin-inline-start:40px;}
+  }
+
   /* ============================================================
      Phase 5 — process-flow diagrams, org chart, large hero icons.
      Built only from data already published elsewhere on the site
