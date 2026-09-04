@@ -298,6 +298,27 @@
         revenueSummaryEl.appendChild(statTile('Outstanding', formatCurrency(data.totalOutstanding)));
       }
 
+      var execCollected = document.querySelector('[data-exec-stat="collected"]');
+      var execOutstanding = document.querySelector('[data-exec-stat="outstanding"]');
+      var execRate = document.querySelector('[data-exec-stat="rate"]');
+      if(execCollected && data.revenue) execCollected.textContent = formatCurrency(data.revenue.totalCollected);
+      if(execOutstanding) execOutstanding.textContent = formatCurrency(data.totalOutstanding);
+      if(execRate && data.revenue) execRate.textContent = data.revenue.collectionRatePercent != null ? data.revenue.collectionRatePercent + '%' : '—';
+
+      var chartMount = document.querySelector('[data-revenue-chart]');
+      if(chartMount && window.SHRSChart && data.revenue && data.revenue.totalInvoiced > 0){
+        window.SHRSChart.donut(chartMount, {
+          segments: [
+            { label: 'Collected', value: Math.round(data.revenue.totalCollected), color: '#B08D45' },
+            { label: 'Outstanding', value: Math.round(data.totalOutstanding), color: '#5B7A94' },
+          ],
+          display: (data.revenue.collectionRatePercent != null ? data.revenue.collectionRatePercent : 0) + '%',
+          title: 'Collection', size: 148, stroke: 16, format: formatCurrency,
+        });
+      }else if(chartMount && window.SHRSChart){
+        window.SHRSChart.empty(chartMount, 'No invoices yet', 'The collection chart draws itself once the first invoice is issued.');
+      }
+
       if(executiveAlertsEl){
         var severelyOverdue = data.debtors.filter(function(d){ return d.daysOverdue > 90; });
         executiveAlertsEl.innerHTML = '';

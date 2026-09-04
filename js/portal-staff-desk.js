@@ -42,6 +42,8 @@
 
   function renderEscalations(section, mountEl, emptyEl, countEl) {
     if (countEl) countEl.textContent = section.open ? section.open + ' open' : 'None open';
+    var execEsc = document.querySelector('[data-exec-stat="escalations"]');
+    if (execEsc) execEsc.textContent = section.open || 0;
     mountEl.innerHTML = '';
     if (!section.items.length) {
       emptyEl.textContent = 'Nobody has asked for a person yet.';
@@ -75,6 +77,8 @@
 
   function renderNotifications(section, mountEl, emptyEl, countEl) {
     if (countEl) countEl.textContent = section.unread ? section.unread + ' unread' : 'All read';
+    var execNotif = document.querySelector('[data-exec-stat="notifications"]');
+    if (execNotif) execNotif.textContent = section.unread || 0;
     mountEl.innerHTML = '';
     if (!section.items.length) {
       emptyEl.textContent = 'You have no notifications.';

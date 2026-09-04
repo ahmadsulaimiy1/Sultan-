@@ -95,6 +95,13 @@
     var f = document.querySelector('[data-dir-count="' + name + '"]');
     if(f) f.textContent = text;
   }
+  // The same live counts as the Office Directory line above, echoed into
+  // the exec-welcome header's stat pills — one source of truth, two
+  // places it's shown.
+  function setExecStat(name, value){
+    var f = document.querySelector('[data-exec-stat="' + name + '"]');
+    if(f) f.textContent = value;
+  }
   async function loadPendingApprovals(){
     try{
       var res = await fetch('/api/portal/staff/registrar/certificates', {
@@ -108,6 +115,7 @@
       }
       renderPendingApprovals(data.pending || []);
       setDirCount('approvals', (data.pending || []).length + ' awaiting approval');
+      setExecStat('approvals', (data.pending || []).length);
     }catch(err){
       pendingApprovalsListEl.innerHTML = '';
       pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending approvals.'));
@@ -212,6 +220,7 @@
       }
       renderGraduationRecords(data.records || []);
       setDirCount('graduation', (data.records || []).length + ' submissions in view');
+      setExecStat('graduation', (data.records || []).length);
     }catch(err){
       graduationRecordsListEl.innerHTML = '';
       graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load graduation records.'));

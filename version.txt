@@ -1,11 +1,11 @@
 Sultan Hanafi Royal Schools — build stamp
 
-commit      9dc41e00a24c1ed0fe26c785fc8cb3487a8c40e8
-short       9dc41e00a
+commit      df6b397a1aa65fe30a66164dbde6597f5f467734
+short       df6b397a1
 branch      claude/sultan-hanife-deploy-5xdx58
-subject     Give all five institutions a class-by-class academic architecture
-built (UTC) 2026-09-04T15:54:49Z
-assets      shrs-pwa-d1e26a8fc4
+subject     LMS Phase 1: real assignments and a gradebook layer
+built (UTC) 2026-09-04T16:50:59Z
+assets      shrs-pwa-1d2b9e0687
 pages       143
 
 If the commit above is not the one you expect, the deploy has not run

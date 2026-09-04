@@ -387,6 +387,24 @@
       renderClassList(classesData.classes);
       loadingEl.hidden = true;
       contentEl.hidden = false;
+
+      var execClasses = document.querySelector('[data-exec-stat="classes"]');
+      var execStudents = document.querySelector('[data-exec-stat="students"]');
+      var execPendingGrading = document.querySelector('[data-exec-stat="pending-grading"]');
+      if(execClasses) execClasses.textContent = classesData.classes.length;
+      if(execStudents) execStudents.textContent = classesData.classes.reduce(function(a, c){ return a + Number(c.studentCount || 0); }, 0);
+      if(execPendingGrading){
+        try{
+          var allAssignRes = await fetch('/api/portal/staff/teacher/assignments');
+          var allAssignData = await allAssignRes.json();
+          if(allAssignRes.ok){
+            var pending = (allAssignData.assignments || []).reduce(function(a, x){
+              return a + Math.max(0, Number(x.submitted_count || 0) - Number(x.graded_count || 0));
+            }, 0);
+            execPendingGrading.textContent = pending;
+          }
+        }catch(e){ /* stat pill stays at its default dash */ }
+      }
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Teacher Portal.';

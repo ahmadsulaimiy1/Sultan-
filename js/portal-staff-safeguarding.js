@@ -45,6 +45,8 @@
   function renderFramework(data) {
     statusTitleEl.textContent = 'Safeguarding Intelligence Status: ' + data.framework.status;
     currentRecordsEl.textContent = 'Current Records: ' + data.currentRecords;
+    var execRecords = document.querySelector('[data-exec-stat="records"]');
+    if (execRecords) execRecords.textContent = data.currentRecords;
 
     capabilitiesEl.innerHTML = '';
     data.framework.subCapabilities.forEach(function (cap) {

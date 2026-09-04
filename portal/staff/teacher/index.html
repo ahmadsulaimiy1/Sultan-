@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="/assets/images/favicon.png">
 <link rel="stylesheet" href="/css/fonts.css?v=9c04a7b6b7">
 <link rel="stylesheet" href="/css/brand.css?v=885b631b8a">
-<link rel="stylesheet" href="/css/portal.css?v=cd81e7b9f5">
+<link rel="stylesheet" href="/css/portal.css?v=943645c0b9">
 <link rel="stylesheet" href="/css/i18n.css?v=224d43da84">
 <link rel="stylesheet" href="/css/prestige.css?v=cd23166fc9">
 <link rel="stylesheet" href="/css/motion.css?v=51e00b75d3">
@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=811a34bf7b">
 <link rel="stylesheet" href="/css/portal-command.css?v=931b9c8248">
-<meta name="shrs-build" content="shrs-pwa-d1e26a8fc4">
+<meta name="shrs-build" content="shrs-pwa-1d2b9e0687">
 </head>
 <body class="portal-body" data-atmosphere="teacher">
 
@@ -41,8 +41,17 @@
 
 <main class="portal-main">
   <div class="portal-wrap" data-portal-content hidden>
-    <div class="portal-hello-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 20l3-4 3 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h1 class="portal-hello">Teacher Portal</h1></div>
-    <div class="portal-hello-sub">Your assigned classes, one roster at a time — attendance and scores go straight to the same record the Registrar's Office and every parent/student dashboard already read.</div>
+    <div class="exec-welcome">
+      <div class="exec-welcome-eyebrow-row"><span class="exec-atmos-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M9 20l3-4 3 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="exec-welcome-eyebrow">Teaching Workspace</div></div>
+      <h1>Teacher Portal</h1>
+      <div class="exec-welcome-role">Your assigned classes, one roster at a time — attendance and scores go straight to the same record the Registrar's Office and every parent/student dashboard already read.</div>
+      <div class="exec-welcome-stats">
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat="classes">—</span><span class="label">Classes Taught</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat="students">—</span><span class="label">Students Across Classes</span></div>
+        <div class="exec-welcome-stat"><span class="value" data-exec-stat="pending-grading">—</span><span class="label">Awaiting Your Grading</span></div>
+      </div>
+    </div>
+    <div class="ai-capability-card"><span class="ai-capability-label">Future Capability</span><p>AI-assisted marking and feedback drafting on submitted assignments — planned.</p></div>
 
     <div class="portal-child-card" data-classes-card>
       <div class="portal-child-head"><h2>My Classes</h2></div>
@@ -134,7 +143,7 @@
   </div>
 </main>
 
-<script src="/js/portal-staff-teacher.js?v=15b1dc3b19" defer></script>
+<script src="/js/portal-staff-teacher.js?v=b370d02d38" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

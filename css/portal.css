@@ -688,6 +688,23 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
 .pfd-unavailable-row:first-child{border-top:none;}
 .pfd-unavailable-row strong{color:var(--ink);}
 
+/* AI-ready placeholder — reserves a consistent spot on every office
+   workspace for a future AI capability, without pretending it exists.
+   Deliberately NOT styled like .pfd-unavailable (that's a "the data
+   can't support this yet" admission); this is a "not built yet, on
+   purpose, later" note — gold-dashed rather than crimson-solid, no
+   warning tone. */
+.ai-capability-card{
+  border:1px dashed rgba(var(--lv-gs,198,161,91),0.5);border-radius:calc(var(--btn-radius) - 2px);
+  background:rgba(var(--lv-gs,198,161,91),0.05);padding:16px 18px;margin-top:16px;
+}
+.ai-capability-label{
+  display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel','Amiri',serif;font-size:0.68rem;
+  font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-bright,var(--gold));
+}
+.ai-capability-label::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;}
+.ai-capability-card p{font-size:0.82rem;color:var(--ink-soft);margin:6px 0 0;line-height:1.5;}
+
 /* Founder Command Centre — Four Schools intelligence cards. Deliberately
    text/typography-led (per the "reduce icons, increase hierarchy"
    design directive) rather than icon-heavy — each school's own accent

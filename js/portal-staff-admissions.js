@@ -51,10 +51,35 @@
       }
       allApplications = data.applications || [];
       renderList();
+      renderExecStats();
     } catch (err) {
       listEl.innerHTML = '';
       emptyEl.hidden = false;
       emptyEl.textContent = 'Could not load applications right now.';
+    }
+  }
+
+  function renderExecStats() {
+    var totalEl = document.querySelector('[data-exec-stat="total"]');
+    var awaitingEl = document.querySelector('[data-exec-stat="awaiting"]');
+    var admittedEl = document.querySelector('[data-exec-stat="admitted"]');
+    if (totalEl) totalEl.textContent = allApplications.length;
+    if (awaitingEl) awaitingEl.textContent = allApplications.filter(function (a) { return a.status === 'submitted' || a.status === 'under_review'; }).length;
+    if (admittedEl) admittedEl.textContent = allApplications.filter(function (a) { return a.status === 'admitted'; }).length;
+
+    var chartMount = document.querySelector('[data-pipeline-chart]');
+    if (chartMount && window.SHRSChart) {
+      var counts = {};
+      STATUS_ORDER.forEach(function (s) { counts[s] = 0; });
+      allApplications.forEach(function (a) { if (counts[a.status] != null) counts[a.status] += 1; });
+      var colors = { submitted: '#B08D45', under_review: '#E3C88A', waitlisted: '#5B7A94', offered: '#4E3B22', admitted: '#2F6F4F', declined: '#8A8A8A', withdrawn: '#8A8A8A' };
+      var segments = STATUS_ORDER.filter(function (s) { return counts[s] > 0; }).map(function (s) {
+        return { label: STATUS_LABEL[s], value: counts[s], color: colors[s] };
+      });
+      window.SHRSChart.donut(chartMount, {
+        segments: segments, display: String(allApplications.length),
+        title: 'Admissions pipeline', size: 148, stroke: 16,
+      });
     }
   }
 
