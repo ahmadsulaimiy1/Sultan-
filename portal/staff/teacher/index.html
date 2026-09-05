@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=811a34bf7b">
 <link rel="stylesheet" href="/css/portal-command.css?v=931b9c8248">
-<meta name="shrs-build" content="shrs-pwa-1d2b9e0687">
+<meta name="shrs-build" content="shrs-pwa-59c07c0760">
 </head>
 <body class="portal-body" data-atmosphere="teacher">
 
@@ -51,6 +51,21 @@
         <div class="exec-welcome-stat"><span class="value" data-exec-stat="pending-grading">—</span><span class="label">Awaiting Your Grading</span></div>
       </div>
     </div>
+    <div class="pfd-section">
+      <h2>Briefing</h2>
+      <p class="pfd-briefing-text" data-teacher-briefing></p>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Attention Needed</h2>
+      <div data-teacher-alerts></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Recent Activity</h2>
+      <div data-teacher-timeline></div>
+    </div>
+
     <div class="ai-capability-card"><span class="ai-capability-label">Future Capability</span><p>AI-assisted marking and feedback drafting on submitted assignments — planned.</p></div>
 
     <div class="portal-child-card" data-classes-card>
@@ -143,7 +158,7 @@
   </div>
 </main>
 
-<script src="/js/portal-staff-teacher.js?v=b370d02d38" defer></script>
+<script src="/js/portal-staff-teacher.js?v=83d9d033ff" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

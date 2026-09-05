@@ -370,6 +370,66 @@
     window.location.href = '/portal/staff/login/';
   });
 
+  // Institutional Intelligence — same pattern as js/portal-founder-dashboard.js's
+  // Briefing/Alerts/Timeline: plain sentences and rows over fields already
+  // computed above, nothing fabricated, a line simply omitted when its
+  // figure isn't available.
+  function alertRow(label, count, detail){
+    var row = el('div', 'pfd-alert-row' + (count > 0 ? ' has-attention' : ' is-quiet'));
+    var left = el('div');
+    left.appendChild(el('div', 'pfd-alert-label', label));
+    if(detail) left.appendChild(el('div', 'pfd-alert-detail', detail));
+    row.appendChild(left);
+    row.appendChild(el('div', 'pfd-alert-count', String(count)));
+    return row;
+  }
+
+  function renderTeacherBriefing(classCount, studentCount, pending, pendingClasses){
+    var mount = document.querySelector('[data-teacher-briefing]');
+    if(!mount) return;
+    var sentences = ['You teach ' + classCount + ' class' + (classCount === 1 ? '' : 'es') +
+      ', ' + studentCount + ' student' + (studentCount === 1 ? '' : 's') + ' in total.'];
+    if(pending > 0){
+      sentences.push(pending + ' submission' + (pending === 1 ? '' : 's') + ' across ' +
+        pendingClasses + ' assignment' + (pendingClasses === 1 ? '' : 's') + ' await grading.');
+    }else{
+      sentences.push('Nothing is currently awaiting your grading.');
+    }
+    mount.textContent = sentences.join(' ');
+  }
+
+  function renderTeacherAlerts(pending, pendingClasses){
+    var mount = document.querySelector('[data-teacher-alerts]');
+    if(!mount) return;
+    mount.innerHTML = '';
+    mount.appendChild(alertRow('Assignments Awaiting Grading', pending,
+      pending > 0 ? 'Across ' + pendingClasses + ' assignment' + (pendingClasses === 1 ? '' : 's') + '.' : 'Everything set so far has been graded.'));
+  }
+
+  function renderTeacherTimeline(assignments){
+    var mount = document.querySelector('[data-teacher-timeline]');
+    if(!mount) return;
+    if(!assignments.length){
+      mount.innerHTML = '<div class="portal-empty">No assignments set yet — this fills in as soon as you set one.</div>';
+      return;
+    }
+    var events = [];
+    assignments.forEach(function(a){
+      events.push({ at: a.created_at, label: a.subject + ' — ' + a.title + ' set', category: a.class_name + ' · ' + a.institution });
+      if(a.due_at) events.push({ at: a.due_at, label: a.subject + ' — ' + a.title + ' due', category: a.class_name + ' · ' + a.institution });
+    });
+    events.sort(function(x, y){ return new Date(y.at) - new Date(x.at); });
+    var now = Date.now();
+    mount.innerHTML = events.slice(0, 8).map(function(ev){
+      var when = new Date(ev.at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+      var isNew = Math.abs(now - new Date(ev.at).getTime()) < 24 * 60 * 60 * 1000;
+      return '<div class="pfd-alert-row">'
+        + '<div><div class="pfd-alert-label"><span class="pfd-timeline-dot" aria-hidden="true"></span>' + ev.label + (isNew ? '<span class="pfd-timeline-new">New</span>' : '') + '</div><div class="pfd-alert-detail">' + ev.category + '</div></div>'
+        + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + when + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
   (async function init(){
     try{
       var meRes = await fetch('/api/portal/staff/me');
@@ -391,20 +451,27 @@
       var execClasses = document.querySelector('[data-exec-stat="classes"]');
       var execStudents = document.querySelector('[data-exec-stat="students"]');
       var execPendingGrading = document.querySelector('[data-exec-stat="pending-grading"]');
+      var studentCount = classesData.classes.reduce(function(a, c){ return a + Number(c.studentCount || 0); }, 0);
       if(execClasses) execClasses.textContent = classesData.classes.length;
-      if(execStudents) execStudents.textContent = classesData.classes.reduce(function(a, c){ return a + Number(c.studentCount || 0); }, 0);
-      if(execPendingGrading){
-        try{
-          var allAssignRes = await fetch('/api/portal/staff/teacher/assignments');
-          var allAssignData = await allAssignRes.json();
-          if(allAssignRes.ok){
-            var pending = (allAssignData.assignments || []).reduce(function(a, x){
-              return a + Math.max(0, Number(x.submitted_count || 0) - Number(x.graded_count || 0));
-            }, 0);
-            execPendingGrading.textContent = pending;
-          }
-        }catch(e){ /* stat pill stays at its default dash */ }
-      }
+      if(execStudents) execStudents.textContent = studentCount;
+
+      try{
+        var allAssignRes = await fetch('/api/portal/staff/teacher/assignments');
+        var allAssignData = await allAssignRes.json();
+        if(allAssignRes.ok){
+          var assignments = allAssignData.assignments || [];
+          var pending = assignments.reduce(function(a, x){
+            return a + Math.max(0, Number(x.submitted_count || 0) - Number(x.graded_count || 0));
+          }, 0);
+          var pendingClasses = assignments.filter(function(x){
+            return (Number(x.submitted_count || 0) - Number(x.graded_count || 0)) > 0;
+          }).length;
+          if(execPendingGrading) execPendingGrading.textContent = pending;
+          renderTeacherBriefing(classesData.classes.length, studentCount, pending, pendingClasses);
+          renderTeacherAlerts(pending, pendingClasses);
+          renderTeacherTimeline(assignments);
+        }
+      }catch(e){ /* stat pill and widgets stay at their default state */ }
     }catch(err){
       loadingEl.hidden = true;
       errorMessageEl.textContent = (err && err.message) || 'Could not load the Teacher Portal.';

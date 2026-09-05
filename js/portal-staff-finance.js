@@ -12,6 +12,16 @@
     return e;
   }
 
+  function alertRow(label, count, detail){
+    var row = el('div', 'pfd-alert-row' + (count > 0 ? ' has-attention' : ' is-quiet'));
+    var left = el('div');
+    left.appendChild(el('div', 'pfd-alert-label', label));
+    if(detail) left.appendChild(el('div', 'pfd-alert-detail', detail));
+    row.appendChild(left);
+    row.appendChild(el('div', 'pfd-alert-count', String(count)));
+    return row;
+  }
+
   function formatCurrency(amount){
     return '₦' + Number(amount || 0).toLocaleString('en-NG', { minimumFractionDigits: 0 });
   }
@@ -319,13 +329,47 @@
         window.SHRSChart.empty(chartMount, 'No invoices yet', 'The collection chart draws itself once the first invoice is issued.');
       }
 
+      var severelyOverdue = data.debtors.filter(function(d){ return d.daysOverdue > 90; });
+      var dueSoon = data.debtors.filter(function(d){
+        if(!d.dueDate) return false;
+        var days = Math.ceil((new Date(d.dueDate).getTime() - Date.now()) / 86400000);
+        return days >= 0 && days <= 7;
+      });
       if(executiveAlertsEl){
-        var severelyOverdue = data.debtors.filter(function(d){ return d.daysOverdue > 90; });
         executiveAlertsEl.innerHTML = '';
-        if(!severelyOverdue.length){
-          executiveAlertsEl.appendChild(el('p', 'portal-empty', 'No invoices are more than 90 days overdue.'));
+        executiveAlertsEl.appendChild(alertRow('More Than 90 Days Overdue', severelyOverdue.length,
+          severelyOverdue.length ? 'See the Outstanding Collections list below for names and amounts.' : 'Nothing this overdue on file.'));
+        executiveAlertsEl.appendChild(alertRow('Due in the Next 7 Days', dueSoon.length,
+          dueSoon.length ? 'Worth a reminder before they lapse into overdue.' : 'Nothing due this soon.'));
+      }
+
+      var financeBriefingEl = document.querySelector('[data-finance-briefing]');
+      if(financeBriefingEl && data.revenue){
+        var fbSentences = ['Collection rate stands at ' + (data.revenue.collectionRatePercent != null ? data.revenue.collectionRatePercent + '%' : 'not yet computed') +
+          ', with ' + formatCurrency(data.totalOutstanding) + ' outstanding.'];
+        if(severelyOverdue.length || dueSoon.length){
+          var fbParts = [];
+          if(severelyOverdue.length) fbParts.push(severelyOverdue.length + ' invoice(s) more than 90 days overdue');
+          if(dueSoon.length) fbParts.push(dueSoon.length + ' due within 7 days');
+          fbSentences.push('Currently requiring attention: ' + fbParts.join('; ') + '.');
+        }
+        financeBriefingEl.textContent = fbSentences.join(' ');
+      }
+
+      var financeTimelineEl = document.querySelector('[data-finance-timeline]');
+      if(financeTimelineEl){
+        var dated = data.debtors.filter(function(d){ return d.dueDate; })
+          .slice().sort(function(x, y){ return new Date(y.dueDate) - new Date(x.dueDate); });
+        if(!dated.length){
+          financeTimelineEl.innerHTML = '<div class="portal-empty">No outstanding invoices with a due date on file.</div>';
         }else{
-          executiveAlertsEl.appendChild(el('p', 'registrar-hint', severelyOverdue.length + ' invoice(s) are more than 90 days overdue — see the Outstanding Collections list below for names and amounts.'));
+          financeTimelineEl.innerHTML = dated.slice(0, 8).map(function(d){
+            var when = new Date(d.dueDate).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+            return '<div class="pfd-alert-row' + (d.daysOverdue > 0 ? ' has-attention' : '') + '">'
+              + '<div><div class="pfd-alert-label">' + d.invoiceNo + ' — ' + d.studentFullName + '</div><div class="pfd-alert-detail">' + d.institutionName + ' · ' + d.term + '</div></div>'
+              + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + (d.daysOverdue > 0 ? d.daysOverdue + 'd overdue' : 'Due ' + when) + '</div>'
+              + '</div>';
+          }).join('');
         }
       }
 

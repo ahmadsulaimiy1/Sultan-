@@ -102,6 +102,77 @@
     var f = document.querySelector('[data-exec-stat="' + name + '"]');
     if(f) f.textContent = value;
   }
+
+  // Institutional Intelligence — same Briefing/Alerts/Timeline pattern as
+  // js/portal-founder-dashboard.js, over the two lists this page already
+  // loads (pending certificate approvals, graduation submissions). Each
+  // load function below re-renders this with whatever it currently has;
+  // nothing here is fabricated or fetched separately.
+  var lastPendingApprovals = [];
+  var lastGraduationRecords = [];
+
+  function alertRow(label, count, detail){
+    var row = el('div', 'pfd-alert-row' + (count > 0 ? ' has-attention' : ' is-quiet'));
+    var left = el('div');
+    left.appendChild(el('div', 'pfd-alert-label', label));
+    if(detail) left.appendChild(el('div', 'pfd-alert-detail', detail));
+    row.appendChild(left);
+    row.appendChild(el('div', 'pfd-alert-count', String(count)));
+    return row;
+  }
+
+  function renderRegistrarIntelligence(){
+    var approvals = lastPendingApprovals.length;
+    var graduation = lastGraduationRecords.length;
+
+    var briefing = document.querySelector('[data-registrar-briefing]');
+    if(briefing){
+      var sentences = [];
+      if(approvals > 0 || graduation > 0){
+        var parts = [];
+        if(approvals > 0) parts.push(approvals + ' certificate' + (approvals === 1 ? '' : 's') + ' awaiting your approval');
+        if(graduation > 0) parts.push(graduation + ' graduation submission' + (graduation === 1 ? '' : 's') + ' in view');
+        sentences.push('Currently requiring attention: ' + parts.join('; ') + '.');
+      }else{
+        sentences.push('Nothing currently requires your approval.');
+      }
+      briefing.textContent = sentences.join(' ');
+    }
+
+    var alertsMount = document.querySelector('[data-registrar-alerts]');
+    if(alertsMount){
+      alertsMount.innerHTML = '';
+      alertsMount.appendChild(alertRow('Certificates Awaiting Approval', approvals,
+        approvals > 0 ? 'Requested by staff, waiting on your decision.' : 'Nothing outstanding.'));
+      alertsMount.appendChild(alertRow('Graduation Submissions in View', graduation,
+        graduation > 0 ? 'Across the current filter.' : 'Nothing in the current filter.'));
+    }
+
+    var timelineMount = document.querySelector('[data-registrar-timeline]');
+    if(timelineMount){
+      var events = [];
+      lastPendingApprovals.forEach(function(item){
+        if(item.requestedAt) events.push({ at: item.requestedAt, label: (item.certificateType || 'Certificate') + ' requested — ' + item.studentFullName, category: item.requestedByName ? 'Requested by ' + item.requestedByName : 'Certificate Centre' });
+      });
+      lastGraduationRecords.forEach(function(item){
+        if(item.submittedAt) events.push({ at: item.submittedAt, label: 'Graduation form submitted — ' + (item.preferredCertificateName || item.fullName), category: item.institutionName || 'Graduation' });
+      });
+      if(!events.length){
+        timelineMount.innerHTML = '<div class="portal-empty">No dated activity on record yet — this fills in as requests and submissions arrive.</div>';
+      }else{
+        events.sort(function(x, y){ return new Date(y.at) - new Date(x.at); });
+        var now = Date.now();
+        timelineMount.innerHTML = events.slice(0, 8).map(function(ev){
+          var when = new Date(ev.at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+          var isNew = Math.abs(now - new Date(ev.at).getTime()) < 24 * 60 * 60 * 1000;
+          return '<div class="pfd-alert-row">'
+            + '<div><div class="pfd-alert-label"><span class="pfd-timeline-dot" aria-hidden="true"></span>' + ev.label + (isNew ? '<span class="pfd-timeline-new">New</span>' : '') + '</div><div class="pfd-alert-detail">' + ev.category + '</div></div>'
+            + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + when + '</div>'
+            + '</div>';
+        }).join('');
+      }
+    }
+  }
   async function loadPendingApprovals(){
     try{
       var res = await fetch('/api/portal/staff/registrar/certificates', {
@@ -116,6 +187,8 @@
       renderPendingApprovals(data.pending || []);
       setDirCount('approvals', (data.pending || []).length + ' awaiting approval');
       setExecStat('approvals', (data.pending || []).length);
+      lastPendingApprovals = data.pending || [];
+      renderRegistrarIntelligence();
     }catch(err){
       pendingApprovalsListEl.innerHTML = '';
       pendingApprovalsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load pending approvals.'));
@@ -221,6 +294,8 @@
       renderGraduationRecords(data.records || []);
       setDirCount('graduation', (data.records || []).length + ' submissions in view');
       setExecStat('graduation', (data.records || []).length);
+      lastGraduationRecords = data.records || [];
+      renderRegistrarIntelligence();
     }catch(err){
       graduationRecordsListEl.innerHTML = '';
       graduationRecordsListEl.appendChild(el('p', 'registrar-approvals-empty', 'Could not load graduation records.'));

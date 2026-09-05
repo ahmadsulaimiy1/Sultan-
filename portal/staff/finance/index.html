@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/css/clock.css?v=46b07f8c17">
 <link rel="stylesheet" href="/css/portal-chrome.css?v=811a34bf7b">
 <link rel="stylesheet" href="/css/portal-command.css?v=931b9c8248">
-<meta name="shrs-build" content="shrs-pwa-1d2b9e0687">
+<meta name="shrs-build" content="shrs-pwa-59c07c0760">
 </head>
 <body class="portal-body type-administrative" data-atmosphere="finance">
 
@@ -67,10 +67,21 @@
     </div>
     <div class="ai-capability-card"><span class="ai-capability-label">Future Capability</span><p>Financial forecasting and budget-variance insights — planned, once more than one full term of collections history is on file.</p></div>
 
-    <div class="portal-child-card">
-      <div class="portal-child-head"><h2>Executive Alerts</h2></div>
-      <p class="registrar-hint">Invoices more than 90 days overdue — the one alert this office has real data to raise honestly today.</p>
-      <div data-executive-alerts style="padding:0 20px 20px;"></div>
+    <div class="pfd-section">
+      <h2>Briefing</h2>
+      <p class="pfd-briefing-text" data-finance-briefing></p>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Attention Needed</h2>
+      <p class="pfd-note" style="margin-top:0;">Computed from the same debtors ledger as the figures above — the two alerts this office has real, dated data to raise honestly today.</p>
+      <div data-executive-alerts></div>
+    </div>
+
+    <div class="pfd-section">
+      <h2>Recent Activity</h2>
+      <p class="pfd-note" style="margin-top:0;">The outstanding invoices this office currently has on file — not a full ledger; settled invoices aren't fetched by this view.</p>
+      <div data-finance-timeline></div>
     </div>
 
     <div class="office-group-head">Fee Architecture</div>
@@ -288,7 +299,7 @@
 
 <script src="/js/portal-office-switcher.js?v=65698cf144" defer></script>
 <script src="/js/portal-arrival.js?v=0646a3f0bf" defer></script>
-<script src="/js/portal-staff-finance.js?v=d893f991a3" defer></script>
+<script src="/js/portal-staff-finance.js?v=3baa5eb23f" defer></script>
 <script src="/js/prestige.js?v=58432f532a" defer></script>
 <script src="/js/motion.js?v=5b8669b440" defer></script>
 <script src="/js/edition-toggle.js?v=74d4d763c9" defer></script>

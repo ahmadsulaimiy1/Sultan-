@@ -59,13 +59,58 @@
     }
   }
 
+  function alertRow(label, count, detail) {
+    var row = el('div', 'pfd-alert-row' + (count > 0 ? ' has-attention' : ' is-quiet'));
+    var left = el('div');
+    left.appendChild(el('div', 'pfd-alert-label', label));
+    if (detail) left.appendChild(el('div', 'pfd-alert-detail', detail));
+    row.appendChild(left);
+    row.appendChild(el('div', 'pfd-alert-count', String(count)));
+    return row;
+  }
+
   function renderExecStats() {
     var totalEl = document.querySelector('[data-exec-stat="total"]');
     var awaitingEl = document.querySelector('[data-exec-stat="awaiting"]');
     var admittedEl = document.querySelector('[data-exec-stat="admitted"]');
+    var awaiting = allApplications.filter(function (a) { return a.status === 'submitted' || a.status === 'under_review'; }).length;
+    var admitted = allApplications.filter(function (a) { return a.status === 'admitted'; }).length;
     if (totalEl) totalEl.textContent = allApplications.length;
-    if (awaitingEl) awaitingEl.textContent = allApplications.filter(function (a) { return a.status === 'submitted' || a.status === 'under_review'; }).length;
-    if (admittedEl) admittedEl.textContent = allApplications.filter(function (a) { return a.status === 'admitted'; }).length;
+    if (awaitingEl) awaitingEl.textContent = awaiting;
+    if (admittedEl) admittedEl.textContent = admitted;
+
+    var briefingEl = document.querySelector('[data-admissions-briefing]');
+    if (briefingEl) {
+      var sentences = [allApplications.length + ' application(s) are on file, ' + admitted + ' admitted so far.'];
+      sentences.push(awaiting > 0 ? awaiting + ' await a decision.' : 'Nothing is currently awaiting a decision.');
+      briefingEl.textContent = sentences.join(' ');
+    }
+
+    var alertsMount = document.querySelector('[data-admissions-alerts]');
+    if (alertsMount) {
+      alertsMount.innerHTML = '';
+      alertsMount.appendChild(alertRow('Awaiting Decision', awaiting,
+        awaiting > 0 ? 'Submitted or under review — see the queue below.' : 'Nothing outstanding.'));
+    }
+
+    var timelineMount = document.querySelector('[data-admissions-timeline]');
+    if (timelineMount) {
+      var dated = allApplications.filter(function (a) { return a.submittedAt; })
+        .slice().sort(function (x, y) { return new Date(y.submittedAt) - new Date(x.submittedAt); });
+      if (!dated.length) {
+        timelineMount.innerHTML = '<div class="portal-empty">No dated applications on file yet.</div>';
+      } else {
+        var now = Date.now();
+        timelineMount.innerHTML = dated.slice(0, 8).map(function (a) {
+          var when = new Date(a.submittedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+          var isNew = Math.abs(now - new Date(a.submittedAt).getTime()) < 24 * 60 * 60 * 1000;
+          return '<div class="pfd-alert-row">'
+            + '<div><div class="pfd-alert-label"><span class="pfd-timeline-dot" aria-hidden="true"></span>' + (a.fullName || 'Application') + ' submitted' + (isNew ? '<span class="pfd-timeline-new">New</span>' : '') + '</div><div class="pfd-alert-detail">' + (STATUS_LABEL[a.status] || a.status) + '</div></div>'
+            + '<div class="pfd-alert-count" style="font-size:0.82rem;color:var(--ink-soft);">' + when + '</div>'
+            + '</div>';
+        }).join('');
+      }
+    }
 
     var chartMount = document.querySelector('[data-pipeline-chart]');
     if (chartMount && window.SHRSChart) {
