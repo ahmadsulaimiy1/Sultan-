@@ -512,9 +512,9 @@ html[data-pc-imagery="none"] .portal-aside::after{display:none;}
    background as a jarring solid block. Each .portal-stat carries its
    own border instead, so it never depends on the row being full. */
 .portal-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:1px;}
-.portal-stat{background:var(--ivory-bg);padding:22px 24px;border:1px solid var(--line);}
+.portal-stat{background:var(--ivory-bg);padding:22px 24px;border:1px solid var(--line);border-top:2px solid var(--gold);}
 .portal-stat .label{font-size:0.76rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);}
-.portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--portal-heading);margin-top:5px;}
+.portal-stat .value{font-family:'Cinzel','Amiri',serif;font-size:1.55rem;color:var(--portal-heading);margin-top:5px;font-variant-numeric:tabular-nums;}
 .portal-results{padding:24px 26px;}
 .portal-results h3{font-family:'Cinzel','Amiri',serif;font-size:var(--h4-size,1.3rem);color:var(--portal-heading);margin:0 0 12px;}
 .portal-results-scroll{overflow-x:auto;}
@@ -1478,6 +1478,27 @@ select.registrar-search-row-select{
   border:1px solid rgba(var(--lv-gbs,233,206,138),0.4);border-radius:999px;background:rgba(0,0,0,0.15);
   font-family:'Cinzel','Amiri',serif;font-size:0.76rem;letter-spacing:0.05em;
 }
+/* Founder hero photograph — the Founder page is the one dashboard that
+   doesn't load css/portal-command.css (its layout predates that file and
+   still uses the rest of this stylesheet's own .exec-welcome), so it never
+   got the photographic backdrop the "rich" command pages already carry.
+   Restated here, scoped to this one page, rather than loading the whole
+   portal-command.css file (a separate --cmd-* card/table system this page
+   doesn't otherwise use) just for one background. Same dark-gradient-over-
+   photo ratio portal-command.css already ships on 72 live pages. The
+   sweep/corner-frame background layers above are for the plain navy
+   ground; over a photo they're dropped rather than force-fit onto a
+   mismatched layer count, so the animation is turned off here too. */
+body[data-atmosphere="founder"] .exec-welcome{
+  animation:none;
+  background-image:
+    linear-gradient(168deg, rgba(20,13,4,.90) 0%, rgba(20,13,4,.72) 46%, rgba(10,7,2,.95) 100%),
+    url('/assets/images/campus/campus-frontage.jpg');
+  background-size:auto, cover;
+  background-position:0 0, center 34%;
+  background-repeat:no-repeat, no-repeat;
+}
+@media (prefers-reduced-motion:reduce){body[data-atmosphere="founder"] .exec-welcome{animation:none;}}
 .exec-welcome-health .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;animation:health-dot-pulse 2.4s ease-in-out infinite;}
 .exec-welcome-health.is-excellent .dot{background:#7fd99a;box-shadow:0 0 8px #7fd99a;}
 .exec-welcome-health.is-strong .dot{background:var(--gold-bright);box-shadow:0 0 8px var(--gold-bright);}

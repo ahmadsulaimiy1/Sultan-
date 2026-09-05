@@ -904,7 +904,16 @@ body.portal-body .exec-welcome-stat .label {
   content: ''; width: 26px; height: 1px; background: var(--cmd-foil-soft);
 }
 
-/* each office opens on its own photograph */
+/* each office opens on its own photograph — --cmd-office-photo is the
+   hook; only the Registrar's Office actually sets it below, using the
+   other real campus photograph on file, so it reads as its own place
+   rather than the same shared frontage shot every other command page
+   shows. The rest keep the frontage default until more photography
+   exists to set the others honestly rather than repeating one image
+   under a variable that implies each office has its own. */
+body.portal-body[data-office-page="registrar"] {
+  --cmd-office-photo: url('/assets/images/gallery/campus-gate.jpg');
+}
 body.portal-body .exec-welcome {
   background:
     linear-gradient(168deg, rgba(34,23,9,.90) 0%, rgba(34,23,9,.70) 44%, rgba(20,13,4,.94) 100%),

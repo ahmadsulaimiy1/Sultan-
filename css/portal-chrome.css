@@ -393,12 +393,25 @@
 .pch-h{
   font-family:var(--font-label,'Cinzel',serif);font-size:.66rem;font-weight:600;
   letter-spacing:.17em;text-transform:uppercase;color:#E4C87F;
-  margin:0 0 12px;padding-bottom:9px;position:relative;}
+  margin:0 0 12px;padding-bottom:9px;position:relative;overflow:hidden;}
 .pch-h::after{
   content:"";position:absolute;inset-inline:0;bottom:0;height:1px;
   background:linear-gradient(90deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
 [dir="rtl"] .pch-h::after{
   background:linear-gradient(270deg,rgba(233,206,138,.62),rgba(233,206,138,.06));}
+/* One restrained travelling glint on the rule beneath each footer heading —
+   the same technique (and the same restraint) the public footer's own
+   .foot-grid h2::after already uses: a short brighter segment sliding along
+   a fixed hairline, not a wash across it. Thin enough that it doesn't
+   reproduce the crest foil-sweep's "lit box" problem above. */
+.pch-h::before{
+  content:"";position:absolute;inset-block-end:0;inset-inline-start:0;
+  width:34px;height:1px;background:rgba(255,246,223,.85);
+  animation:pch-h-travel 6s ease-in-out infinite;}
+[dir="rtl"] .pch-h::before{animation-name:pch-h-travel-rtl;}
+@keyframes pch-h-travel{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(28px);opacity:1;}}
+@keyframes pch-h-travel-rtl{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(-28px);opacity:1;}}
+@media (prefers-reduced-motion:reduce){.pch-h::before{animation:none;opacity:.7;}}
 
 .pch-list{display:flex;flex-direction:column;gap:9px;}
 /* Links read as links by their own weight, not by an underline. The gold rule
